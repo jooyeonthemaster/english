@@ -1,0 +1,39 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "difficulty": "ADVANCED",
+  "strategy": "s15-cn-glm52",
+  "ok": false,
+  "ms": 135164,
+  "attempts": 1,
+  "calls": 1,
+  "callLog": [
+    {
+      "purpose": "generate#failed",
+      "modelId": "z-ai/glm-5.2",
+      "ms": 135164,
+      "attempts": 1,
+      "inputTokens": null,
+      "outputTokens": null,
+      "costUsd": null,
+      "costSource": "unknown"
+    }
+  ],
+  "models": [
+    "z-ai/glm-5.2"
+  ],
+  "costUsd": null,
+  "costSource": "unknown",
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "error": "No object generated: could not parse the response.",
+  "question": null,
+  "passageText": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing."
+}

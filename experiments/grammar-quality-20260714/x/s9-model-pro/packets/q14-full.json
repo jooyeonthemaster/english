@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go1_20231219-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "주장",
+    "words": 146
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-answer-nonword-forced",
+    "grammar-obvious-pronoun-agreement",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=a  (C):ANS=d  (D):dec=f  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 118,
+        "relPos": 0.145,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 175,
+        "relPos": 0.215,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 368,
+        "relPos": 0.452,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 512,
+        "relPos": 0.629,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 650,
+        "relPos": 0.799,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.799,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race laid out for them. They do well enough in school to keep advancing. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey ends with college. They have checked all the boxes in the life that was laid out for them and now lack a road map describing the right ways to move forward and continue to grow. In truth, that's when the journey really begins. When school is finished, your growth becomes voluntary. Like healthy eating habits or a regular exercise program, you need to commit to it and devote thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "laid out",
+        "isError": false,
+        "correction": "laid out",
+        "errorExpression": "laid out",
+        "surroundingText": "Instead, they simply run the race laid out for them. ",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "advancing",
+        "isError": false,
+        "correction": "advancing",
+        "errorExpression": "advancing",
+        "surroundingText": "They do well enough in school to keep advancing. ",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "was",
+        "isError": true,
+        "correction": "was",
+        "errorExpression": "were",
+        "surroundingText": "They have checked all the boxes in the life that was laid out for them",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "really",
+        "isError": false,
+        "correction": "really",
+        "errorExpression": "really",
+        "surroundingText": "In truth, that's when the journey really begins.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "to commit",
+        "isError": false,
+        "correction": "to commit",
+        "errorExpression": "to commit",
+        "surroundingText": "you need to commit to it and devote thought, time, and energy to it.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "laid out"
+      },
+      {
+        "label": "(B)",
+        "text": "advancing"
+      },
+      {
+        "label": "(C)",
+        "text": "were"
+      },
+      {
+        "label": "(D)",
+        "text": "really"
+      },
+      {
+        "label": "(E)",
+        "text": "to commit"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "the race를 후위 수식하는 과거분사구입니다. 경주가 '마련된' 것이므로 수동 의미의 과거분사 laid out은 적절합니다.",
+      "(B)": "동사 keep의 목적어로 동명사 advancing을 쓴 것은 어법상 올바릅니다.",
+      "(D)": "동사 begins를 수식하는 부사 really는 올바르게 사용되었습니다.",
+      "(E)": "동사 need의 목적어로 to부정사 to commit을 사용한 것은 올바릅니다."
+    },
+    "explanation": "(C) \"were\"는 어법상 틀린 표현이며 \"was\"로 고쳐야 한다. ① 문장의 뼈대를 보면 'all the boxes in the life' 뒤에 관계대명사 that절이 수식하고 있습니다. ② 관계대명사 that의 선행사는 'boxes'가 아니라 전치사구 'in the life'의 명사 'the life'입니다. 마련된 것은 상자들이 아니라 삶이기 때문입니다. ③ 따라서 선행사 단수명사 the life에 수일치하여 동사를 단수형 was로 써야 합니다. 이를 were로 쓰면 틀립니다.",
+    "keyPoints": [
+      "(C) 주격 관계대명사절의 수일치 — 선행사 정확하게 파악하기",
+      "(A) 과거분사의 명사 후위 수식",
+      "(E) to부정사 명사적 용법"
+    ],
+    "tags": [
+      "어법",
+      "수일치",
+      "관계대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race __(A) laid out__ for them. They do well enough in school to keep __(B) advancing__. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey ends with college. They have checked all the boxes in the life that __(C) were__ laid out for them and now lack a road map describing the right ways to move forward and continue to grow. In truth, that's when the journey __(D) really__ begins. When school is finished, your growth becomes voluntary. Like healthy eating habits or a regular exercise program, you need __(E) to commit__ to it and devote thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result."
+  }
+}

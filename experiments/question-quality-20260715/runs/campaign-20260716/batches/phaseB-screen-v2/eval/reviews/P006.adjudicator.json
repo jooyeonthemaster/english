@@ -1,0 +1,44 @@
+{
+  "pid": "P006",
+  "finalV2": false,
+  "winningAnswer": "②",
+  "reason": "솔버1·솔버2·감사자 판정을 지문·선지 원문 기준으로 전부 독립 재검증했다. 상대 비교 층위에서는 ②가 유일한 의도 정답이 맞다 — ①은 극성 반전(금지→허용, 'all day' 무근거), ③은 직후 절 'but we can stop to pick up passengers'와 정면 모순, ④는 승객 픽업 허용 및 서사 자체(친구가 Carol을 태우러 옴)와 모순, ⑤는 'any temporary stops' 절대 표현이 픽업 정차(그 자체가 temporary stop)를 허용하는 뒤 절과 자기모순이며 'No Stopping' 표지의 의미다. 솔버들이 놓친 대안 해석도, 과잉 판정도 없다. 그러나 절대 성립 층위에서 감사자의 V2=false가 옳다: 빈칸 주어가 1인칭 복수 'we'인데 다섯 선지 전부 3인칭 단수 규제동사(allows/prohibits/requires/restricts/bans)로 시작해, ②를 넣으면 'That means we prohibits parking for extended periods, ...'라는 수일치 비문이 되고 생략·도치·축약 관계절 등 어떤 구제 파스도 존재하지 않는다. 수일치를 가정 교정해 'we prohibit parking'으로 읽어도 행위자 전도 — 원문 span 'we cannot park cars there'에서 we는 규제를 받는 쪽인데 선지는 we를 금지 주체로 만들어 명제적으로 거짓이 된다. 'for extended periods' 한정도 원문에 없는 첨가다. 따라서 문법적이면서 참인 완성문을 만드는 선지 집합은 공집합이며, 선언된 단일정답 집합 {②}와 불일치한다. '결함이 5개 선지에 균일하므로 변별은 가능하다'는 솔버 논리는 상대 최선 선택 가능성을 보일 뿐 정답 유효성을 구제하지 못한다. 최종 판정: finalV2=false. ②는 '의도된 정답이자 상대적 유일 최선지'로 기록하되, 슬롯 재설계(예: 'That means the sign _____'로 주어 교체 또는 'cannot leave our cars parked there' 류 we-술부 호환 선지로 전면 교체) 없이는 문항 무효.",
+  "perDispute": [
+    {
+      "label": "②-seam-grammar",
+      "claim": "감사자(V3-SLOT-AGREEMENT): ② 삽입 시 'That means we prohibits parking for extended periods'는 주어-동사 수일치 비문이며 어떤 선지도 문법적 완성문을 만들지 못한다.",
+      "verdict": "CONFIRMED (감사자 유지)",
+      "evidence": "빈칸 직전 주어는 'we'(1인칭 복수)이고 ②는 'prohibits'(3인칭 단수)로 시작한다. 'means we prohibits' 연쇄에는 생략·도치·축약 관계절 등 어떤 구제 파스도 적용되지 않는다. ①(allows)·③(requires)·④(restricts)·⑤(bans)도 동일하게 비문 — 선지 세트가 'the sign/that' 류 주어를 전제로 설계된 슬롯 불일치. 솔버1·솔버2도 이 결함 자체는 모두 인정했다."
+    },
+    {
+      "label": "②-agent-inversion",
+      "claim": "감사자(V2-EMPTY-ANSWER-SET 제2 논거): 수일치를 교정해 'we prohibit parking'으로 읽어도 피규제자 we가 금지 주체로 전도되어 명제적으로 거짓이므로 유효한 정답 완성이 아니다.",
+      "verdict": "CONFIRMED (감사자 유지)",
+      "evidence": "원문 span은 'we cannot park cars there' — 양상 술어로 we가 규제를 받는 쪽이다. 'we prohibit parking'은 Carol과 친구가 주차를 금지하는 규제 주체라는 뜻이 되어, 친구가 표지판의 의미를 설명하는 발화 맥락에서 참일 수 없다. ②의 복원은 독자가 주어를 'the sign'으로 바꿔 읽는 수리 행위를 요구하며, 이는 빈칸 완성의 성립이 아니라 문항 결함의 대리 교정이다."
+    },
+    {
+      "label": "②-extended-periods",
+      "claim": "감사자(V4): 'for extended periods' 한정은 지문에 없는 첨가이며 해설의 패러프레이즈 동치 주장('cannot park cars there' = 'prohibits parking for extended periods')은 부정확하다.",
+      "verdict": "CONFIRMED (단독으로는 비결정적)",
+      "evidence": "친구의 발화는 단순히 'cannot park cars there'로 기간 한정이 없고, 실제 미국 'No Standing' 표지는 장시간뿐 아니라 대기(standing) 자체를 금지하므로 'for extended periods'는 완화 왜곡이다. 다만 이 흠만으로는 소거 사유가 되지 못하며(상대 비교상 여전히 유일 최근접), V2 부결의 결정 근거는 위 두 항목이다."
+    },
+    {
+      "label": "uniform-defect-rescue",
+      "claim": "솔버1·솔버2: 수일치 결함이 5개 선지에 균일하므로 변별에는 영향이 없고 ②가 유일 정답으로 좁혀진다 (multipleDefensible=false, 후보 {②}).",
+      "verdict": "부분 기각 (상대 최선성은 인정, V2 구제는 기각)",
+      "evidence": "상대 채점 전략을 쓰는 수험자는 ②를 고를 수 있고 경쟁 선지가 전무하므로 그 유일성 자체는 참이다. 그러나 V2는 '선언 정답이 문법적·명제적으로 참인 완성문을 이루는 유일한 선지'인지를 묻는 기준이므로, 전 선지 공멸 상황(유효 정답 집합 = ∅)은 선언 집합 {②}와 불일치한다. '모두 비문이니 의미만 보고 고르면 된다'는 논리는 문항 유효성 기준을 풀이 가능성 기준으로 바꿔치기한 것이라 채택하지 않는다."
+    },
+    {
+      "label": "⑤-alternative",
+      "claim": "잠재 대안 해석: 'but'을 예외 도입 표지로 읽으면 ⑤ 'bans any temporary vehicular stops'가 실제 법규 의미(정차 원칙 금지, 픽업 예외)에 부합하여 제2정답이 될 가능성.",
+      "verdict": "REJECTED (⑤ 성립 불가 — 솔버 판정 유지)",
+      "evidence": "{stop to pick up passengers} ⊂ {temporary vehicular stops}이므로 'bans ANY temporary stops'는 직후 허용 절과 형식적 자기모순이다. 절대 한정사 'any'는 예외 절과 양립 불가하고, 예외 독법으로 구제해도 실제 'No Standing'은 픽업 정차를 애초에 금지하지 않으므로 표지판 의미 서술로서 여전히 거짓이다. '모든 일시 정차 금지'는 'No Stopping' 표지의 의미. 두 솔버 모두 정확히 소거했으며 과잉 판정 없음."
+    },
+    {
+      "label": "①③④-eliminations",
+      "claim": "솔버들의 ①③④ 소거가 타당한지, 놓친 대안 해석이 존재하는지.",
+      "verdict": "CONFIRMED (대안 해석 없음 — 솔버 판정 유지)",
+      "evidence": "① 'allows cars to park all day'는 금지 표지의 극성 반전이며 'all day'는 무근거이고 but 대조 구조(허용+허용)를 파괴한다. ③ 'requires drivers to drive without stopping'은 직후 절의 정차 허용 명시와 정면 모순('No Stopping' 계열 미끼). ④ 'restricts passengers from getting in cars'는 픽업 허용 및 서사 사실(친구가 Carol을 차에 태움)과 이중 모순이며 규제 대상(차량 행위 vs 승객 승차)도 왜곡. 세 선지 모두 어떤 독법으로도 성립하지 않는다."
+    }
+  ]
+}

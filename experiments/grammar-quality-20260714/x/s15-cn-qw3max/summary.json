@@ -1,0 +1,45 @@
+{
+  "strategy": "s15-cn-qw3max",
+  "describe": "minimal 동일 프롬프트, 모델만 qwen/qwen3-max — Qwen3 Max",
+  "callPlan": "qwen/qwen3-max x1",
+  "total": 10,
+  "ok": 9,
+  "failed": 1,
+  "avgMs": 28470,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.05589,
+  "avgCostUsd": 0.00621,
+  "costRecordedCalls": 9,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 1,
+  "avgErrorCount": 8.33,
+  "zeroErrorItems": 0,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.847,
+  "avgAnswerRelPos": 0.438,
+  "answerRelPosInBand": 8,
+  "models": {
+    "qwen/qwen3-max": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 2,
+      "zeroError": 0
+    }
+  ]
+}

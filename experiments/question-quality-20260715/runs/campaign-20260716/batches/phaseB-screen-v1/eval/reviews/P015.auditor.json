@@ -1,0 +1,84 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERMINOLOGY-MISTRANSLATION",
+      "severity": "major",
+      "evidence": "오답 해설 ⑤가 지문의 'disciplinary specialists'를 '징계전문가들의 공인(authorized by disciplinary specialists)'으로 번역했다. 이 문맥에서 disciplinary는 '학문 분과의'를 뜻하며(과학 커뮤니케이션 규범·동료 검토 맥락), 본 해설 자체도 같은 구를 '분과 전문가들'로 옳게 번역하고 있어 내부 모순까지 발생한다. '징계전문가'는 존재하지 않는 손상 용어로, 학생에게 오개념(disciplinary=징계의)을 가르칠 수 있는 용어 오류다."
+    },
+    {
+      "code": "V5-KEYPOINT-TYPO-NONWORD",
+      "severity": "minor",
+      "evidence": "keyPoints 두 번째 항목의 '집동적 구성체'는 '집단적 구성체'의 오탈자(비단어). 라벨·선지·해설 간 동기화 자체는 깨지지 않아 V5는 통과로 두되 수정 필요."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 span 'only one stage in its construction'을 '집단적 승인을 향한 예비 단계'로 추상화. 'collective product' 결론 문장과 직결.",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 다만 직전 문장의 'collective product'와 'collective'가 축자적으로 겹쳐 어휘 매칭만으로 도달 가능한 단서 누출이 있다(C4 감점 사유)."
+    },
+    {
+      "label": "②",
+      "intent": "지문 전반부의 개인주의적 수사('they speak for themselves')를 축자 재활용한 극성 반전 함정.",
+      "temptingBecause": "'speak for themselves'가 지문에 그대로 등장하여 표면 어휘 일치가 강하다.",
+      "decisiveFlaw": "지문 후반부가 'nature does not speak unambiguously'로 이 수사를 명시적으로 반박하므로 논지와 정반대."
+    },
+    {
+      "label": "③",
+      "intent": "scope 확대('complete process') + 승인 주체 교체('immediate public support') 함정.",
+      "temptingBecause": "'process/gaining' 프레임이 정답과 유사하고 press conference·public contexts 어휘 앵커가 있다.",
+      "decisiveFlaw": "원문은 'only one stage'라 하여 완결성(complete)을 부정하고, 승인 주체는 대중이 아닌 분과 전문가이며 '즉각적(immediate)'도 검토 절차와 모순."
+    },
+    {
+      "label": "④",
+      "intent": "'too powerfully... for prejudiced humans to silence them'을 축자 재활용한 개인주의 수사 반복(행위자 전환 포함) 함정.",
+      "temptingBecause": "'silence'와 'prejudiced'가 지문에 그대로 등장해 표면 매칭이 강하다.",
+      "decisiveFlaw": "그 진술은 지문이 반박하는 개인주의적 수사의 일부이며, 실험실 결과는 그 자체로 궁극적 증거가 아니라 집단적 구성의 한 단계일 뿐이다."
+    },
+    {
+      "label": "⑤",
+      "intent": "동료 검토 우회라는 인과·극성 반전 함정.",
+      "temptingBecause": "expert reviewers·peer review 주제 어휘가 지문 핵심 소재와 겹친다.",
+      "decisiveFlaw": "지문은 검토를 우회한 발표가 'castigated'된다고 하여 우회 통로 해석을 정면으로 배제한다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MISTRANSLATION",
+      "severity": "major",
+      "evidence": "⑤ 해설의 '징계전문가들' — disciplinary specialists의 오역. 본 해설의 '분과 전문가들'과도 상충(V4 실패 근거)."
+    },
+    {
+      "code": "VERBOSITY",
+      "severity": "minor",
+      "evidence": "본 해설이 지문 요약을 길게 반복한 뒤 결론에 도달해 다소 장황하다. 정답 근거(only one stage → preliminary step, collective product → collective validation)와 핵심 함정 분리는 가능하나 압축이 필요."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": [
+    "불충족: '최소 두 문장/두 논리 단서 연결' — 빈칸 직전 문장 'A scientific truth has little standing until it becomes a collective product' 하나만으로 정답 도달이 가능하며, 정답 선지에 'collective'가 축자적으로 포함되어 어휘 에코만으로 선택 가능하다.",
+    "불충족: '극성 하나로 정답을 찍을 수 없다' — ②④⑤는 모두 지문이 반박하는 개인주의 수사(반집단 극성)이고 ③은 완결/즉시성 주장이어서, 지문의 친집단 극성 판단 하나로 ①이 유일하게 남는다.",
+    "부분 불충족: 오답 함정 다양성 — ③(scope shift+half-truth)은 구별되나 ②④⑤가 사실상 동일한 '반박된 개인주의 수사 축자 재활용/극성 반전' 메커니즘을 공유한다.",
+    "충족: 다섯 선지 모두 동일 통사 슬롯(NP after 'is')에 들어가며 문법으로 탈락하는 오답 없음.",
+    "충족: 정답이 source span 'only one stage in its construction'의 의미를 보존하며 추상화."
+  ],
+  "grade": "F",
+  "notes": "V1~V3·V5 통과, 정답 유일성도 견고하나, ⑤ 오답 해설의 'disciplinary specialists → 징계전문가들' 오역(본 해설의 '분과 전문가들'과 내부 모순)이 V4 용어 오류로 치명. keyPoints의 비단어 '집동적'(→집단적)도 수정 필요. 공예 측면에서는 마지막 결론 문장을 빈칸화한 출제 지점 자체는 정전급(C1=4)이지만, 정답 선지의 'collective' 축자 에코와 극성 단일 단서 해결 가능성 때문에 KILLER 난이도 요건을 충족하지 못한다(C4=2, C5=1). 오역 수정 + 정답 선지의 'collective' 어휘 은폐(예: 'joint disciplinary endorsement' 계열 재추상화) + ②④⑤ 함정 메커니즘 분화가 이루어지면 B 이상으로 회복 가능."
+}

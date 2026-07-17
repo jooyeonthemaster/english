@@ -1,0 +1,44 @@
+{
+  "pid": "P004",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "독립 재검증 결과 오류는 (C) 하나뿐이다. 'may cause us remembering an experience'에서 cause는 목적격보어로 to부정사만을 요구하는 동사(cause + O + to-V)이며 동명사/현재분사 보어를 허용하지 않는다. 구제 해석 3종을 모두 검토했으나 전부 불성립: (i) 수여동사 cause us [동명사구] 읽기 — cause의 이중목적어는 trouble/pain류 명사구에 한정되고 동명사절은 비관용적, (ii) remembering을 us 수식 분사로 읽기 — cause의 필수 보문이 사라져 통사·의미 모두 붕괴, (iii) 부대상황 분사구 읽기 — 'and may cause us ___' 병렬 구조가 차단. 같은 문장의 'will cause us either to face...'가 올바른 틀을 보여주고, 'to remember'로 교정하면 원문이 정확히 복원되는 최소대립쌍이다. 나머지 네 밑줄은 모두 정문: (A) when (it is) triggered 수동 축약 부사절, (B) either to V1 or V2의 to 공유 생략(표준 용법, 원문 동일 — 최강 디코이지만 오류 아님), (D) 선행사 ways + 완전절 앞 in which, (E) help + O + 원형부정사. 지문 잔여부에도 부수 오류 없음. 솔버 1·2의 판정에 과잉·누락 없으며 정답 집합 {(C)} 유일 — 선언 정답과 일치, V2 확정.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "when triggered가 능동 triggering이어야 한다는 잠재 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "'a kind of program that, when triggered, directs...'는 when (it is) triggered의 축약이며 생략 주어는 관계대명사 that(= program/emotion). 감정은 유발되는 대상(피동)이므로 과거분사 triggered가 필수. 능동 triggering은 '감정이 무언가를 유발하는 시점'이라는 비정합 의미가 되어 불성립."
+    },
+    {
+      "label": "(B)",
+      "claim": "either to face ... or avoid의 두 번째 to 누락이 병렬 위반이라는 이의 (최강 디코이)",
+      "verdict": "기각 — 정문",
+      "evidence": "cause us to [face ... or avoid ...]로 to가 공유되는 생략 구조는 표준 영어에서 완전히 허용되며 원지문도 동일 형태. either의 위치에 대한 엄격 병렬 선호는 문체 규범이지 어법 오류가 아니고, KSAT 관행상 to 공유 생략은 오답 처리 대상이 아님. 두 솔버 모두 과잉 판정 없이 정문 처리 — 타당."
+    },
+    {
+      "label": "(C)",
+      "claim": "cause us remembering이 비문이라는 판정 및 대안 해석 성립 여부",
+      "verdict": "확정 — 유일 오류(정답)",
+      "evidence": "cause는 보문으로 O + to부정사만 취함(동명사·원형·분사 보어 불허). 대안 해석 전수 검토: (i) 이중목적어 cause us [remembering an experience] — cause의 간접목적어 구문은 trouble/pain/problems류 명사에 한정되어 동명사절 직접목적어는 비관용·불성립, (ii) remembering을 us의 후치 분사 수식어로 읽기 — cause의 필수 보문 부재로 통사 붕괴, (iii) 부대상황 분사구 — 병렬 접속 'and may cause us ___' 구조상 불가. 동일 문장 선행부 'will cause us either to face...'가 to부정사 틀의 장거리 단서. 'to remember' 교정 시 원문 정확 복원."
+    },
+    {
+      "label": "(D)",
+      "claim": "in which 대신 which/that/how여야 한다는 잠재 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "선행사 'the specific ways' + 후행절 'they activate our systems'는 주어·동사·목적어를 갖춘 완전한 절이므로 전치사+관계대명사 in which가 정확히 옳음(기저: they activate our systems in ways). 완전절 앞 in which는 표준."
+    },
+    {
+      "label": "(E)",
+      "claim": "helped us 뒤 원형 survive가 to 누락 오류라는 잠재 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "준사역동사 help는 목적격보어로 원형부정사와 to부정사를 모두 허용(help + O + (to) V). 삽입 괄호구 (as a species)는 통사 구조에 영향 없음. 'have helped us survive challenges'는 완전한 정문."
+    },
+    {
+      "label": "(전체 지문)",
+      "claim": "밑줄 외 부위의 부수 오류로 인한 복수 정답 가능성",
+      "verdict": "기각 — 부수 오류 없음",
+      "evidence": "'makes/narrows/will cause/may cause'의 시제 혼재는 원문 그대로의 문체적 선택이며 밑줄 대상도 아님. 종결부 가정법 과거완료 'If they had not helped..., they would not have evolved...'도 정확. 정답 집합 {(C)} 유일 확인."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'stick to your scheduled routines'는 지문이 수사의문문('Is it more important to stick to some rigid work schedule or to be available to my four-year-old?')으로 기각하는 태도의 표면 재활용. 대입 시 문법 결합은 성립하나(must stick to + 목적어 + most of the time) 'to become a more peaceful person'의 결론 및 빈칸 뒤 '계획 변경 불가피성 수용' 조언과 정면 충돌. 'minimize emotional friction'이 'peaceful'과 표면적으로 어울려 보이는 미끼 요소가 있으나, 지문이 제시하는 평화의 수단은 일정 고수가 아니라 유연성."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "빈칸 직전 이분법 질문 'getting what I want and keeping my plans, or learning to go with the flow?'에서 저자는 후자를 택해야 평화로운 사람이 된다고 결론짓는다. 'embrace a mind that accommodates unexpected disruptions'는 'go with the flow' 및 'make allowances in your mind for this inevitability'의 정확한 패러프레이즈('in your mind' ↔ 'a mind that accommodates'). 대입 시 seam 완전: must embrace(동사원형) + a mind + that 관계절(선행사 단수 a mind에 accommodates 수 일치) + most of the time 부사구."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "개인 목표 vs 외부 사회적 요구라는 대립 구도가 지문에 없음. 지문의 대립축은 '내 계획 고수 vs 흐름 수용'이며, four-year-old 사례는 사회적 요구가 아니라 우선순위 재고의 예시. 오히려 지문은 외부 상황에 자신을 맞추라는 방향이므로 'isolate'는 방향 자체가 반대. 문법 결합은 무난하나 논리 적합성 전무."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "①과 동일 계열의 역논지 오답. 'establish a systematic plan and follow it without hesitation'은 'keeping my plans' 쪽 선택으로, 빈칸 뒤 'expect that a certain percentage of plans will change'와 직접 모순. 문법 결합(must + establish and follow 병렬)은 정상이나 논리상 확실히 배제."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "가장 유혹적인 오답 — 실제로 잠시 끌렸음. 빈칸 뒤 'I have also found it helpful to expect that a certain percentage of plans will change'의 'expect'를 'predict'로 등치시키면 그럴듯해 보인다. 그러나 (1) 지문의 expect는 '일정 비율의 계획 변경을 마음속으로 감안(make allowances)'하라는 수용적 태도이지 'every single change를 in advance에 predict'하는 능력이 아님 — 'every single'의 절대 표현이 'a certain percentage'와 정면 충돌. (2) 예측 능력 의존은 통제·계획 유지 쪽 태도로 'go with the flow' 결론과 반대. 극단 한정어가 배제 근거를 제공하는 전형적 매력 오답."
+    }
+  ],
+  "note": "최상위권 수험생 렌즈, 실전 풀이 순서 기록: 빈칸 앞 이분법(keeping my plans vs go with the flow)에서 결론 방향 확정 → 빈칸 뒤 '일정 비율 변경 예상·허용' 문장으로 재확인 → ② 즉시 확정. 유혹 기록: ⑤가 빈칸 뒤 문장과 어휘적으로 닿아 2초간 끌렸으나 'predict every single change in advance'의 극단성이 지문의 겸손한 수용 태도와 충돌해 기각. ①·④는 반논지 쌍둥이 오답, ③은 무관 소재. 오답 매력도 배분 ⑤>①>④>③으로 양호. 출처 추정: Richard Carlson 'Don't Sweat the Small Stuff' 계열. 단일 정답으로 깔끔히 수렴하는 건전한 문항."
+}

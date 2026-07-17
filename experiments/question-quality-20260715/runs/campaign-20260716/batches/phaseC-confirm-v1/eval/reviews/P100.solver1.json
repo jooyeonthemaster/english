@@ -1,0 +1,35 @@
+{
+  "pid": "P100",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'pledge to eliminate any unscheduled pauses'를 대입하면 '미루기를 막으려면 (무계획 휴식을 취하는 대신) 무계획 중단을 없애겠다고 다짐하라'가 되어, 지문의 핵심 주장(scheduled breaks는 유지하되 unscheduled breaks는 unwarranted하므로 제거)과 정확히 일치한다. 명령문 형태로 'So to prevent procrastination, ___ instead.' 구조와 문법적으로 자연스럽게 결합하고, 'instead'가 직전 문장의 '커피 핑계 무계획 휴식'과 명확히 대비된다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'무계획적으로 아무렇게나 휴식을 취하라'는 지문이 명시적으로 비판하는 행동(unscheduled breaks = procrastination trap) 그 자체로, 주장과 정반대. 논리적으로 즉시 배제된다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "지문에서 커피는 'You may rationalize that you're only getting a cup of coffee...'로 미루기의 합리화 사례로 부정적으로 제시된다. 이를 해법으로 뒤집은 표면어휘(coffee, alert) 재활용 미끼이며, 대입 시 지문 논리가 붕괴된다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "scheduled breaks는 'keep you on track by being strategic, re-energizing methods of self-reinforcement'로 명시적으로 긍정되는 대상이다. 이를 전부 취소하라는 것은 첫 문장 'Breaks are necessary'와 지문 전체 대비 구도(scheduled=좋음/unscheduled=나쁨) 모두와 충돌한다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'you're just trying to avoid having to work on a task at your desk'에서 '책상에 계속 앉아 있으라'로 비약하도록 유도하며 실전에서 잠시 끌린다. 그러나 'stay seated constantly(끊임없이 앉아 있어라)'는 첫 문장 'Breaks are necessary to revive your energy levels'와 정면 모순되고, 지문이 허용하는 '하루 중 적절한 시점의 계획된 휴식'까지 부정하는 과잉 진술이라 옹호 불가."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 빈칸 문장 'So to prevent procrastination, ___ instead.'의 'instead'는 직전의 무계획 커피 휴식과의 대비를 요구하며, 지문 전체가 scheduled(긍정)/unscheduled(부정) 이분 구도이므로 1번이 유일 정답. 5번이 유일하게 유혹적인 미끼였으나 'constantly'의 극단성이 도입부 전제와 충돌해 배제 근거가 명확하다. 미끼 설계(3: 표면어휘 재활용, 5: 부분 진술 비약)가 기능하되 정답 유일성은 견고하다."
+}

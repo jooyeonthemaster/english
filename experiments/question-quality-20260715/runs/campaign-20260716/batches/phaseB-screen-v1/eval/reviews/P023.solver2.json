@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "when은 접속사로서 완전한 절(they first consider experimenting with social media)을 이끌며, 축약 관계절 'made by organizations'(mistakes 수식)의 분사 made에 시간 부사절로 걸린다. 접속사+완전절 구조 충족 — 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 문두의 One (of the most common mistakes...). 핵명사 One은 단수이고 of구는 수식어이므로 단수 동사 is가 정확. 보어는 that절. 근접 명사(media/organizations)에 의한 수일치 착시를 배제하면 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "with a thorough ___ of...에서 관사 a + 형용사 thorough 뒤는 명사 자리인데 understood는 과거분사로 명사가 아니다. 병렬 'begins not with insight ... but with a thorough ___'에서도 insight(명사)와 대응하는 명사 자리임이 확인된다. 축약 관계절로 구제하려 해도 수식받을 핵명사 자체가 없어 어떤 대안 해석으로도 정문이 되지 않는다. 정형은 동명사형 명사 understanding. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "재귀대명사 itself의 선행사는 동일절 주어인 동명사구 'Being in social media'(단수 취급)로 조응 조건 충족. 'in and of itself'는 '그 자체로'라는 정착된 관용 표현 — 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "must 뒤 either A or B 상관 병렬: 병렬 시작점이 must 직후이므로 A=solve(동사원형), B=result in(동사원형)으로 정합. 주어 단수에 이끌려 solves로 오판하게 하는 함정이나 조동사 지배 하 원형이 맞다 — 정문."
+    }
+  ],
+  "note": "정답 (C)가 유일하게 옹호 가능. 명사 자리(a + thorough + N + of)에 과거분사 understood가 온 명백한 품사 오류로, 병렬 단서(not with insight but with ~)까지 겹쳐 이중으로 확정된다. 나머지 네 밑줄은 각각 접속사+완전절, One 단수 수일치, 재귀 관용구, must-either-or 병렬로 모두 정문이며 복수 정답 소지 없음."
+}

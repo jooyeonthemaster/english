@@ -1,0 +1,45 @@
+{
+  "strategy": "s3-minimal",
+  "describe": "제약 최소 — 핵심 요구 4줄 + 스키마만 (후보블록·체크리스트·규칙 목록 전부 없음)",
+  "callPlan": "flash x1",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 10789,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.18191,
+  "avgCostUsd": 0.01819,
+  "costRecordedCalls": 10,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 1.6,
+  "zeroErrorItems": 1,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.865,
+  "avgAnswerRelPos": 0.595,
+  "answerRelPosInBand": 8,
+  "models": {
+    "google/gemini-3.5-flash": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

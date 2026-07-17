@@ -1,0 +1,696 @@
+{
+  "id": "u04-c4",
+  "unitId": "u04",
+  "order": 4,
+  "title": "자동사 분사 예외",
+  "oneLiner": "진행·미완이면 목적어 없이도 -ing(a sleeping baby), 완료면 p.p.(fallen leaves) — '목적어 없으면 p.p.' 암기의 반례입니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고2",
+    "csatPoints": [],
+    "sourceRefs": [
+      "커리큘럼 백본 u04-c4(자동사 분사 예외) — src/lib/grammar-drill/curriculum.ts",
+      "기존 드릴 뱅크 u04-choice(u04-c4-ch-001~012) — 자동사 분사의 진행·완료 대조",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L3 의미상 주어 대조",
+      "천일문 고등 GRAMMAR — 분사의 능동·수동과 자동사 분사"
+    ]
+  },
+  "lenses": ["L3", "L2"],
+  "confusableWith": ["u04-c1", "u04-c3", "u03-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Rescue workers searched for the tourists remaining on the island.",
+        "Rescue workers searched for the tourists remained on the island."
+      ],
+      "answer": 0,
+      "afterText": "두 문장 모두 분사 뒤에 목적어가 없으니 과거분사가 옳아 보였다면, 그 판단이 어디서 무너지는지를 이 레슨이 보여 줍니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "자동사",
+      "question": "자동사가 대체 무엇이고, 왜 분사 문제에서 이것부터 따집니까?",
+      "plain": "자동사는 목적어를 데리고 다니지 않는 동사입니다. sleep·rise·fall처럼 동작이 주어 안에서 완결되어, '무엇을'이라는 대상이 필요 없습니다.",
+      "analogy": "타동사가 공을 남에게 던지는 동사라면, 자동사는 혼자 그 자리에서 뛰는 동사입니다. 받는 사람이 없으니 '누구에게 당한다'는 수동도 성립하지 않습니다.",
+      "whyItMatters": "분사 문제에서 흔히 외우는 '목적어 없으면 과거분사' 규칙은 타동사에만 통합니다. 밑줄의 원형이 자동사임을 알아채는 순간 그 규칙이 꺼지고, 남는 판단은 진행이냐 완료냐뿐입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "분사 뒤에 목적어가 없으면 과거분사를 쓰면 됩니다.",
+      "truth": "그 규칙은 목적어를 가질 수 있는 타동사에만 적용됩니다. 자동사는 애초에 목적어를 갖지 않고 수동태도 만들지 못하므로, 목적어가 없다는 사실은 자동사에서 아무런 판단 근거가 되지 못합니다. 남는 판단은 진행(-ing)이냐 완료(p.p.)냐뿐입니다.",
+      "counterExample": {
+        "en": "The number of people **lived** alone in this district has grown for ten years.",
+        "ko": "이 지역에서 혼자 사는 사람의 수는 십 년째 늘어 왔습니다.",
+        "note": "live 는 목적어를 갖지 않는 자동사입니다. 수동태가 없으므로 lived 로 명사를 수식할 수 없고 living 이어야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "자동사 분사 판별 필기",
+      "intro": "자동사 분사를 판정하는 데 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "자동사 — 목적어가 없는 동사",
+          "body": "sleep·rise·fall·remain 처럼 '무엇을'이라는 대상을 직접 취하지 않습니다. 대상을 밝히려면 for·from·on 같은 전치사를 빌립니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "수동태 없음 — 능·수동 규칙의 예외",
+          "body": "목적어가 없으니 수동태를 만들 수 없습니다. 그래서 '목적어 없으면 과거분사' 규칙이 자동사에는 적용되지 않습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "-ing — 진행·미완",
+          "body": "자동사의 현재분사는 목적어가 없어도 옳습니다. 동작이 지금 진행 중이거나 아직 끝나지 않았음을 나타냅니다.",
+          "example": {
+            "en": "Smoke **rising** from the campfire drifted into the trees.",
+            "ko": "모닥불에서 피어오르는 연기가 나무 사이로 흘러들었습니다.",
+            "note": "rise 는 자동사여서 목적어가 없어도 rising 이 옳습니다."
+          }
+        },
+        {
+          "head": "p.p. — 완료된 상태",
+          "body": "자동사의 과거분사는 수동이 아니라 이미 끝나 남은 결과 상태를 뜻합니다. 주로 명사 앞에 놓입니다.",
+          "example": {
+            "en": "**Fallen** leaves covered the stone steps in the courtyard.",
+            "ko": "떨어진 낙엽이 안뜰의 돌계단을 덮고 있었습니다.",
+            "note": "fallen 은 이미 떨어져 버린 완료 상태를 나타냅니다."
+          }
+        },
+        {
+          "head": "p.p.가 되는 자동사는 한정적",
+          "body": "fall·retire·collapse 처럼 상태가 변하는 자동사만 과거분사 수식이 됩니다. sleep·cry·wait 는 결과 상태가 남지 않아 불가능합니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "자동사 반사 판정",
+      "instruction": "명제가 옳으면 ○, 틀리면 ×를 제한시간 안에 누르십시오. 자동사 판별은 결국 반사 속도입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "자동사는 목적어가 없으므로 수동태를 만들지 못합니다.",
+          "isTrue": true,
+          "why": "목적어가 없으니 '당하는' 수동 자체가 성립하지 않습니다."
+        },
+        {
+          "statement": "smoke rising from the chimney 는 목적어가 없어도 옳은 표현입니다.",
+          "isTrue": true,
+          "why": "rise 는 자동사이므로 현재분사가 목적어 없이 명사를 수식합니다."
+        },
+        {
+          "statement": "자동사 뒤에 목적어가 없으니 과거분사를 쓰면 됩니다.",
+          "isTrue": false,
+          "why": "'목적어 없으면 과거분사'는 타동사 규칙입니다. 자동사에는 적용되지 않습니다."
+        },
+        {
+          "statement": "fallen leaves 의 fallen 은 잎이 떨어짐을 당했다는 수동입니다.",
+          "isTrue": false,
+          "why": "fallen 은 수동이 아니라 이미 떨어져 버린 완료 상태를 뜻합니다."
+        },
+        {
+          "statement": "sleep·cry·wait 는 과거분사로 명사를 수식할 수 있습니다.",
+          "isTrue": false,
+          "why": "이 자동사들은 결과 상태가 남지 않아 과거분사 수식이 불가능합니다."
+        },
+        {
+          "statement": "같은 자동사라도 진행이면 -ing, 완료면 과거분사로 갈립니다.",
+          "isTrue": true,
+          "why": "falling snow(진행)와 fallen snow(완료)처럼 문맥이 형태를 정합니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "자동사는 목적어를 갖지 않고 수동태로도 쓰이지 않습니다. 따라서 자동사에서 나온 -ing 는 뒤에 목적어가 없어도 그대로 옳습니다.",
+      "examples": [
+        {
+          "en": "The baby **sleeping** in the stroller did not wake up during the concert.",
+          "ko": "유모차에서 자고 있는 그 아기는 연주회 내내 깨지 않았습니다.",
+          "note": "sleep 은 자동사입니다. 목적어가 없는 것이 정상이므로 sleeping 이 옳습니다."
+        },
+        {
+          "en": "Smoke **rising** from the chimney was visible from the far side of the valley.",
+          "ko": "굴뚝에서 피어오르는 연기가 계곡 반대편에서도 보였습니다.",
+          "note": "rise 는 자동사여서 수동태가 없습니다. 연기가 스스로 오르는 것이므로 rising 이 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "자동사의 과거분사는 수동이 아니라 이미 완료된 상태를 나타내며, 주로 명사 앞에서 형용사처럼 쓰입니다.",
+      "examples": [
+        {
+          "en": "**Fallen** leaves blocked the drain along the narrow lane after the storm.",
+          "ko": "폭풍이 지난 뒤 떨어진 낙엽이 좁은 골목의 배수구를 막았습니다.",
+          "note": "fallen 은 '떨어짐을 당한'이 아니라 '이미 떨어져 버린' 상태를 뜻합니다. 수동이 아니라 완료입니다."
+        },
+        {
+          "en": "The city rebuilt the **collapsed** bridge within two years of the earthquake.",
+          "ko": "그 도시는 지진이 난 지 2년 안에 붕괴된 다리를 다시 세웠습니다.",
+          "note": "collapse 는 자동사입니다. collapsed 는 무너진 결과 상태를 나타내며 명사 앞에서 쓰입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "과거분사가 되는 자동사 외우기",
+      "target": "과거분사로 명사를 꾸미는 자동사(상태 변화형)",
+      "why": "이 부류의 자동사만 fallen·retired 처럼 완료 분사가 됩니다. 목록 밖 자동사(sleep·cry·wait)에 과거분사를 붙이면 그 자체가 오답이므로, '되는 쪽'을 외워 두면 판단이 빨라집니다.",
+      "device": "'변하면 남는다'로 묶습니다 — 떨어지고(fall) 은퇴하고(retire) 무너지고(collapse) 탈출하는(escape) 동작은 끝난 뒤 새 상태가 '남습니다'. 남는 상태가 있으면 과거분사가 섭니다.",
+      "items": [
+        { "cue": "fall (떨어지다)", "answer": "fallen leaves — 완료 O" },
+        { "cue": "retire (은퇴하다)", "answer": "a retired officer — 완료 O" },
+        { "cue": "collapse (무너지다)", "answer": "the collapsed wall — 완료 O" },
+        { "cue": "sleep (자다)", "answer": "a slept child — 불가 X (sleeping 만)" },
+        { "cue": "wait (기다리다)", "answer": "a waited guest — 불가 X (waiting 만)" }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "진행과 완료 짝짓기",
+      "instruction": "왼쪽 표현과 오른쪽 뜻을 짝지으십시오. 진행(-ing)과 완료(p.p.)를 가르는 감각을 굳힙니다.",
+      "pairs": [
+        {
+          "a": "falling snow",
+          "b": "지금 내리는 중인 눈 — 진행",
+          "why": "-ing 는 아직 끝나지 않은 진행을 나타냅니다."
+        },
+        {
+          "a": "fallen snow",
+          "b": "이미 쌓여 남은 눈 — 완료",
+          "why": "과거분사는 이미 끝난 결과 상태를 나타냅니다."
+        },
+        {
+          "a": "a retiring officer",
+          "b": "곧 은퇴할 사람 — 미완",
+          "why": "retiring 은 은퇴가 아직 끝나지 않았음을 뜻합니다."
+        },
+        {
+          "a": "a retired officer",
+          "b": "은퇴가 끝난 사람 — 완료",
+          "why": "retired 는 은퇴가 이미 완료된 상태입니다."
+        },
+        {
+          "a": "a crying baby",
+          "b": "우는 중 — 과거분사는 없음",
+          "why": "cry 는 결과 상태가 남지 않아 진행형만 가능합니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "같은 자동사라도 -ing 는 진행·미완을, 과거분사는 완료를 나타내므로 둘 다 성립할 때는 문맥이 형태를 결정합니다.",
+      "examples": [
+        {
+          "en": "**Falling** snow made the mountain road nearly invisible to the drivers.",
+          "ko": "내리는 눈 때문에 산길이 운전자들에게 거의 보이지 않았습니다.",
+          "note": "지금 내리고 있는 눈이므로 진행을 뜻하는 -ing 입니다."
+        },
+        {
+          "en": "The **retired** engineer still visits the factory where he worked for thirty years.",
+          "ko": "은퇴한 그 기술자는 삼십 년간 일한 공장을 여전히 찾아갑니다.",
+          "note": "retire 는 자동사이고, retired 는 은퇴가 이미 끝난 상태를 뜻합니다. 은퇴를 앞둔 사람이라면 retiring 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "자동사 분사가 낀 긴 주어의 해부",
+      "tokens": [
+        { "t": "The tourists", "role": "S" },
+        { "t": "remaining on the island", "role": "M" },
+        { "t": "were rescued", "role": "V" },
+        { "t": "by helicopter", "role": "M" }
+      ],
+      "ko": "섬에 남아 있던 관광객들은 헬리콥터로 구조되었습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "remaining on the island 는 앞 명사를 뒤에서 꾸미는 분사구이고, by helicopter 는 부사구입니다. 둘 다 뼈대가 아니므로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어(핵 명사)를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The tourists 입니다. 이 주어가 remain 이라는 동작의 의미상 주어이기도 합니다."
+        },
+        {
+          "label": "③ 본동사를 찾고 분사의 형태를 판정합니다",
+          "roles": ["V"],
+          "note": "시제를 가진 동사는 were rescued 하나입니다. remain 은 자동사여서 수동이 없으므로 분사는 remaining 이어야 하며, remained 를 쓰면 시제 동사가 둘이 되어 문장이 무너집니다."
+        }
+      ],
+      "conclusion": "관광객이 '남겨진' 것이 아니라 스스로 '남아 있는' 것이므로, 목적어가 없어도 현재분사 remaining 이 옳습니다."
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "자동사 분사를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 친 분사의 원형이 목적어를 가질 수 있는 동사인지(타동사) 아닌지(자동사) 먼저 확인합니다.",
+          "applyNote": "rise 와 smolder 는 목적어를 가질 수 없는 자동사입니다. 따라서 능·수동으로 가르는 규칙의 대상이 아닙니다."
+        },
+        {
+          "text": "자동사라면 수동태 자체가 없으므로 '목적어가 없다 → 과거분사' 규칙을 적용하지 않습니다.",
+          "applyNote": "smoke 가 '올려지는' 것이 아니라 스스로 오르는 것이므로 risen 을 떠올릴 이유가 없습니다."
+        },
+        {
+          "text": "동작이 진행 중이거나 아직 끝나지 않았으면 현재분사(-ing)를 씁니다.",
+          "applyNote": "연기는 지금 피어오르는 중이고 잔해는 지금 타고 있으므로 rising·smoldering 이 옳습니다."
+        },
+        {
+          "text": "동작이 이미 끝나 그 결과 상태가 남았고 명사 앞에 놓이는 자리라면 과거분사가 가능합니다(fallen·retired 등). 자동사의 과거분사는 주로 명사 앞에서 완료 상태를 나타내며, 명사 뒤에 놓이더라도 반드시 완료(결과 상태) 의미여야 합니다. 그래서 어법 문항에서는 원형이 완료분사 형용사를 아예 만들지 못하는 자동사(remain·wait·live·sleep 등)일 때, 명사를 뒤에서 수식하는 과거분사가 확정적으로 오답이 됩니다.",
+          "applyNote": "만약 벽이 이미 무너진 뒤라면 the collapsed wall 처럼 명사 앞에서 완료 상태를 나타낼 수 있습니다."
+        }
+      ],
+      "example": {
+        "en": "Smoke **rising** from the **smoldering** ruins alarmed the residents nearby.",
+        "ko": "타고 있는 잔해에서 피어오르는 연기가 근처 주민들을 놀라게 했습니다.",
+        "note": "두 분사 모두 목적어가 없지만, 자동사 용법이므로 과거분사가 아니라 현재분사가 옳습니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The passengers ( waiting / waited ) at the gate were told that the flight had been delayed.",
+      "steps": [
+        {
+          "title": "① 동사의 성격을 확인합니다",
+          "body": "wait 는 목적어를 직접 취하지 않는 자동사입니다. 기다리는 대상은 for 뒤에 옵니다. 따라서 목적어가 없는 것이 정상입니다."
+        },
+        {
+          "title": "② 목적어 유무 규칙을 적용하지 않습니다",
+          "body": "자동사는 수동태를 만들지 못합니다. 승객이 '기다려지는' 것이 아니므로 수동을 뜻하는 과거분사는 후보가 아닙니다."
+        },
+        {
+          "title": "③ 본동사 자리를 확인합니다",
+          "body": "시제를 가진 동사는 were told 입니다. 접속사가 없으므로 괄호는 본동사가 아니라 분사 자리입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "승객이 스스로 기다리는 중이므로 진행을 뜻하는 waiting 이 옳습니다. waited 를 쓰면 자동사에 없는 수동 수식이 되어 문장이 성립하지 않습니다."
+        }
+      ],
+      "answer": "waiting",
+      "ko": "탑승구에서 기다리던 승객들은 항공편이 지연되었다는 통보를 받았습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u04-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The children {{blank}} in the next room did not hear the doorbell.",
+          "options": ["sleeping", "slept"],
+          "answer": 0,
+          "translation": "옆방에서 자고 있던 아이들은 초인종 소리를 듣지 못했습니다.",
+          "explanation": "sleep 은 자동사여서 수동태가 없고, 상태 변화를 뜻하지 않으므로 과거분사로 명사를 수식하지도 못합니다. 본동사 did not hear 가 이미 있으므로 분사 자리이며 sleeping 이 옳습니다.",
+          "trapTags": ["intransitive-participle", "no-object-decoy"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "자동사의 -ing 와 과거분사",
+      "columns": ["자동사 + -ing (진행·미완)", "자동사 + p.p. (완료된 상태)"],
+      "rows": [
+        {
+          "criterion": "의미",
+          "a": "동작이 진행 중이거나 아직 끝나지 않았습니다",
+          "b": "동작이 이미 끝나 그 결과 상태가 남았습니다"
+        },
+        {
+          "criterion": "대표 짝",
+          "a": "falling leaves / a retiring officer / an escaping prisoner",
+          "b": "fallen leaves / a retired officer / an escaped prisoner"
+        },
+        {
+          "criterion": "쓰이는 자리",
+          "a": "명사 앞과 명사 뒤 모두 가능합니다",
+          "b": "주로 명사 앞에서 형용사처럼 쓰입니다"
+        },
+        {
+          "criterion": "가능한 동사",
+          "a": "모든 자동사",
+          "b": "상태 변화를 뜻하는 자동사만 가능합니다. sleep·cry·wait 처럼 결과 상태가 남지 않는 자동사는 과거분사 수식이 불가능합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "**Falling** leaves drifted slowly across the empty courtyard.",
+          "ko": "떨어지는 낙엽이 텅 빈 안뜰을 가로질러 천천히 흩날렸습니다.",
+          "note": "아직 떨어지는 중이므로 진행을 뜻하는 -ing 입니다."
+        },
+        {
+          "en": "**Fallen** leaves lay in thick piles at the foot of the stone wall.",
+          "ko": "떨어진 낙엽이 돌담 밑에 두껍게 쌓여 있었습니다.",
+          "note": "이미 떨어져 쌓인 결과 상태이므로 과거분사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "자동사 분사 사냥",
+      "instruction": "이 문장에서 자동사에서 나온 분사를 전부 탭하십시오. 시제를 가진 본동사는 사냥감이 아닙니다.",
+      "hitLabel": "자동사에서 나온 분사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "passengers", "hit": false },
+        { "t": "waiting", "hit": true },
+        { "t": "at", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "gate", "hit": false },
+        { "t": "watched", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "fallen", "hit": true },
+        { "t": "leaves", "hit": false },
+        { "t": "drifting", "hit": true },
+        { "t": "across", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "floor.", "hit": false }
+      ],
+      "ko": "탑승구에서 기다리던 승객들은 바닥을 가로질러 흩날리는 낙엽을 바라보았습니다.",
+      "explain": "waiting(wait)·fallen(fall)·drifting(drift)은 모두 목적어를 갖지 않는 자동사에서 나왔습니다. waiting·drifting 은 진행을 뜻하는 현재분사, fallen 은 완료 상태를 뜻하는 과거분사입니다. watched 는 시제를 가진 본동사이므로 사냥감이 아닙니다."
+    },
+    {
+      "id": "b17",
+      "type": "SORT",
+      "tier": 2,
+      "instruction": "각 표현이 어법상 성립하는지 분류하십시오.",
+      "buckets": [
+        { "id": "ok", "label": "성립합니다" },
+        { "id": "no", "label": "성립하지 않습니다" }
+      ],
+      "chips": [
+        {
+          "text": "a sleeping child",
+          "bucketId": "ok",
+          "why": "자동사 sleep 의 현재분사로 진행 상태를 나타냅니다."
+        },
+        {
+          "text": "fallen leaves",
+          "bucketId": "ok",
+          "why": "fall 은 상태 변화를 뜻하는 자동사이므로 완료를 나타내는 과거분사 수식이 가능합니다."
+        },
+        {
+          "text": "a retired officer",
+          "bucketId": "ok",
+          "why": "retire 는 자동사이고, 은퇴가 완료된 결과 상태를 나타냅니다."
+        },
+        {
+          "text": "an escaped prisoner",
+          "bucketId": "ok",
+          "why": "escape 는 목적어를 취하기도 하지만 여기서는 자동사 용법이며, 탈출이 완료된 상태를 나타낼 수 있습니다."
+        },
+        {
+          "text": "a slept child",
+          "bucketId": "no",
+          "why": "sleep 은 수동태도 없고 결과 상태 변화도 남기지 않으므로 과거분사로 명사를 수식하지 못합니다."
+        },
+        {
+          "text": "a cried baby",
+          "bucketId": "no",
+          "why": "cry 역시 결과 상태가 남지 않는 자동사이므로 과거분사 수식이 불가능합니다. crying baby 만 성립합니다."
+        },
+        {
+          "text": "a happened accident",
+          "bucketId": "no",
+          "why": "happen 은 자동사여서 수동이 없고 과거분사로 명사를 수식하지도 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 목적어가 없다는 이유로 과거분사를 고르는 순간",
+      "body": "밑줄 친 분사 뒤가 전치사구로 이어지면 '목적어가 없으니 수동'이라는 반사가 나옵니다. 그러나 그 반사는 타동사에서만 유효합니다. 원형이 자동사인지부터 확인하면 수동이라는 선택지 자체가 사라집니다.",
+      "example": {
+        "en": "The number of students **lived** in the dormitory has doubled in five years.",
+        "ko": "기숙사에 사는 학생 수가 오 년 만에 두 배가 되었습니다.",
+        "note": "live in 은 자동사 + 전치사구입니다. 목적어가 없는 것이 정상이므로 living 이어야 하고, lived 는 성립하지 않습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u04-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Workers cleared away the [[u:fallen]] branches from the playground after the storm.",
+          "isCorrect": true,
+          "translation": "인부들은 폭풍이 지난 뒤 운동장에서 떨어진 나뭇가지들을 치웠습니다.",
+          "explanation": "fall 은 자동사여서 수동태가 없지만, 과거분사 fallen 은 이미 떨어져 버린 완료 상태를 나타내며 명사 앞에서 형용사처럼 쓰입니다. 따라서 옳습니다.",
+          "trapTags": ["intransitive-participle", "perfect-participle"]
+        },
+        {
+          "id": "u04-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The number of households {{blank}} on a single income has increased steadily since 2010.",
+          "options": ["depending", "depended", "being depended"],
+          "answer": 0,
+          "translation": "단일 소득에 의존하는 가구의 수가 2010년 이후 꾸준히 늘어 왔습니다.",
+          "explanation": "depend 는 전치사 on 을 통해서만 대상을 취하는 자동사이므로 수동태가 없습니다. 본동사 has increased 가 이미 있으므로 빈칸은 분사 자리이며, 능동·진행을 나타내는 depending 만 성립합니다.",
+          "trapTags": ["intransitive-participle", "no-object-decoy"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Officials interviewed the residents ( remaining / remained ) in the flooded village that morning.",
+      "givenSteps": [
+        "① 본동사를 찾습니다 — interviewed 가 시제를 가진 동사이고 접속사는 없습니다. 따라서 괄호는 분사 자리입니다.",
+        "② 동사의 성격을 확인합니다 — remain 은 목적어를 갖지 않는 자동사이므로 수동태가 없습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "remaining — 주민들이 스스로 남아 있는 쪽이고, 명사를 뒤에서 수식하는 자리이므로 현재분사입니다",
+        "remained — 뒤에 목적어가 없으므로 과거분사여야 합니다",
+        "remained — 남아 있던 일이 이미 끝났으므로 명사 뒤에서도 과거분사를 씁니다"
+      ],
+      "answer": 0,
+      "explain": "remain 은 목적어를 갖지 않는 자동사여서 수동태가 없고, sleep·wait 처럼 결과 상태가 남지 않아 과거분사(remained)로 명사를 수식하지도 못합니다. 그래서 '목적어 없음 → 과거분사' 규칙도, '완료라서 과거분사' 논리도 성립하지 않으며, 진행을 뜻하는 remaining 만 옳습니다."
+    },
+    {
+      "id": "b21",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 remaining 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "remain 이 자동사로 쓰여 수동태가 없고, 주민이 스스로 남아 있는 능동 주체이기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 원형이 자동사인지 확인하는 순간 수동이라는 선택지가 사라지고, 남는 것은 진행이냐 완료냐뿐입니다."
+        },
+        {
+          "text": "remaining 뒤에 목적어가 없기 때문입니다.",
+          "correct": false,
+          "feedback": "목적어의 유무는 자동사에서 판단 근거가 되지 못합니다. 자동사는 원래 목적어를 갖지 않으므로 목적어가 없다는 사실은 아무것도 알려 주지 않습니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어 진행형이 더 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제의 자연스러움은 분사 형태를 결정하지 않습니다. 판단 근거는 동사가 자동사인가, 동작이 진행인가 완료인가입니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "Volunteers cleared the [[1:fallen]] branches from the road, and the families [[2:remained]] in the shelter received hot meals, while smoke [[3:rising]] from the ruined houses slowly [[4:disappeared]].",
+      "answer": 2,
+      "correction": "remaining",
+      "rationales": [
+        "fall 은 자동사이고, fallen 은 이미 떨어진 완료 상태를 나타내며 명사 앞에서 쓰입니다. 옳습니다.",
+        "remain 은 자동사여서 수동태가 없고, 본동사 received 가 이미 있으므로 이 자리는 분사입니다. 가족들이 스스로 남아 있는 것이므로 remaining 으로 고쳐야 합니다.",
+        "rise 는 자동사이며, 연기가 지금 피어오르는 중이므로 현재분사 rising 이 옳습니다.",
+        "while 이 절을 열었으므로 그 절에는 시제를 가진 동사가 필요합니다. disappeared 가 그 본동사입니다."
+      ],
+      "ko": "자원봉사자들이 도로에서 떨어진 나뭇가지를 치웠고, 대피소에 남아 있던 가족들은 따뜻한 식사를 받았으며, 그동안 무너진 집에서 피어오르던 연기는 서서히 사라졌습니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 자동사의 과거분사를 명사 뒤에 붙인 문장을 주고 '어법상 틀린 부분을 고쳐 쓰시오'로 물어봅니다. 자동사에 수동이 없다는 점을 근거로 현재분사로 고쳐야 만점입니다.",
+          "sample": {
+            "en": "The tourists remained on the island were rescued by a navy ship.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "remained → remaining. remain 은 자동사여서 수동태가 없으므로 명사를 뒤에서 수식하는 분사는 현재분사여야 합니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 자동사 분사에 밑줄을 긋고, 뒤에 목적어가 없다는 점을 미끼로 씁니다. 밑줄의 원형이 자동사이면 목적어 유무로 판단하지 말고 진행인가 완료인가만 따져야 합니다.",
+          "sample": {
+            "en": "Passengers [[u:waited]] for the delayed train filled every corner of the platform.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "waiting. wait 는 자동사여서 수동태가 없고, 본동사 filled 가 이미 있으므로 명사를 뒤에서 수식하는 분사는 waiting 이어야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coastal cities are changing faster than planners expected. [[u:Residents living on the lowest streets now move their furniture upstairs every summer, and city crews clear the fallen branches that block the drains before each storm.]] Engineers warn that the pattern will continue for decades.",
+      "instruction": "밑줄 친 문장에서 자동사에서 나온 분사를 모두 찾고, 각각이 진행인지 완료인지 판정하십시오.",
+      "found": "living 은 자동사 live 의 현재분사로, 주민들이 지금 살고 있다는 진행 상태를 나타내며 명사를 뒤에서 수식합니다. fallen 은 자동사 fall 의 과거분사로, 이미 떨어진 완료 상태를 나타내며 명사 앞에서 쓰입니다. 둘 다 목적어가 없지만 수동과는 무관합니다.",
+      "gist": "해안 도시의 주민들이 해마다 침수에 대응하며 살아가고 있다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "무목적어 함정의 관리인",
+      "intro": "이 문 앞에는 목적어가 없다는 이유 하나로 과거분사를 골랐다가 무너진 답안이 산더미로 쌓여 있습니다. 원형이 자동사인지부터 짚는 눈이 없으면 당신의 답안도 그 산에 얹힙니다. 네 건으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "Smoke {{blank}} from the smoldering ruins alarmed the firefighters.",
+          "options": ["rising", "risen"],
+          "answer": 0,
+          "why": "rise 는 자동사여서 수동이 없고, 연기가 지금 피어오르는 진행이므로 rising 이 옳습니다. risen 은 이미 다 오른 완료 상태를 명사 앞에서 나타낼 때 쓰입니다."
+        },
+        {
+          "prompt": "The city removed the {{blank}} trees that had blocked the mountain road.",
+          "options": ["fallen", "falling"],
+          "answer": 0,
+          "why": "나무는 이미 쓰러져 길을 막은 완료 상태이고 명사 앞자리이므로 fallen 이 옳습니다. falling 은 지금 쓰러지는 중이라는 뜻이 되어 맞지 않습니다."
+        },
+        {
+          "prompt": "The number of families {{blank}} in temporary shelters has risen sharply.",
+          "options": ["living", "lived"],
+          "answer": 0,
+          "why": "live 는 자동사여서 수동이 없고, 본동사 has risen 이 이미 있으므로 빈칸은 분사 자리입니다. 가족들이 스스로 사는 진행이므로 living 이 옳습니다."
+        },
+        {
+          "prompt": "다음 중 어법상 성립하는 표현은 무엇입니까?",
+          "options": ["a sleeping passenger", "a slept passenger"],
+          "answer": 0,
+          "why": "sleep 은 결과 상태가 남지 않는 자동사라 과거분사 수식이 불가능합니다. 진행을 뜻하는 sleeping 만 성립합니다."
+        }
+      ],
+      "winText": "관리인이 함정의 산을 옆으로 치웁니다. 목적어의 유무가 아니라 원형의 성격을 먼저 보는 눈 — 그것이 이 함정 전체를 무력화하는 열쇠이고, 방금 당신 손에 들어왔습니다.",
+      "loseText": "관리인이 답안을 돌려줍니다. 네 건 모두 물은 것은 하나였습니다 — '이 동사가 목적어를 가질 수 있는가.' 자동사라면 수동은 없고, 남는 것은 진행이냐 완료냐뿐입니다. 판별 절차를 다시 짚고 오면 문은 그대로 열려 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "분사의 원형이 ___ 이면 수동태가 없으므로 목적어 유무로 판단하지 않고, 동작이 ___ 이면 -ing, ___ 이면 과거분사를 씁니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "자동사는 목적어를 갖지 않고 수동태도 없으므로 '목적어 없음 → 과거분사' 규칙의 적용 대상이 아닙니다.",
+        "자동사의 -ing 는 목적어가 없어도 옳습니다(a sleeping baby, smoke rising from the chimney).",
+        "자동사의 과거분사는 수동이 아니라 완료된 상태를 뜻하며, 상태 변화를 뜻하는 자동사에서만 주로 명사 앞에 놓입니다(fallen leaves, a retired officer).",
+        "sleep·cry·wait 처럼 결과 상태가 남지 않는 자동사는 과거분사로 명사를 수식하지 못합니다."
+      ],
+      "keySentence": {
+        "en": "The tourists **remaining** on the island were rescued, and volunteers cleared the **fallen** branches from the road.",
+        "ko": "섬에 남아 있던 관광객들은 구조되었고, 자원봉사자들은 도로에서 떨어진 나뭇가지를 치웠습니다.",
+        "note": "remaining 은 진행, fallen 은 완료입니다. 둘 다 목적어가 없지만 수동과는 관계가 없습니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u04-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The students {{blank}} in the library until closing time missed the last bus home.",
+          "options": ["remaining", "remained"],
+          "answer": 0,
+          "translation": "폐관 시간까지 도서관에 남아 있던 학생들은 막차를 놓쳤습니다.",
+          "explanation": "remain 은 자동사여서 수동태가 없습니다. 본동사 missed 가 이미 있으므로 빈칸은 분사 자리이고, 학생들이 스스로 남아 있는 것이므로 remaining 이 옳습니다.",
+          "trapTags": ["intransitive-participle", "no-object-decoy"]
+        },
+        {
+          "id": "u04-c4-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Geologists analyze the gases [[u:escaped]] from cracks in the ocean floor.",
+          "isCorrect": false,
+          "correction": "escaping",
+          "translation": "지질학자들은 해저의 갈라진 틈에서 새어 나오는 기체를 분석합니다.",
+          "explanation": "여기서 escape 는 from 을 데리고 쓰인 자동사이므로 수동태가 없습니다. 기체가 스스로 새어 나오는 진행 중인 동작이고 명사를 뒤에서 수식하는 자리이므로 escaping 이어야 합니다.",
+          "trapTags": ["intransitive-participle", "no-object-decoy"]
+        },
+        {
+          "id": "u04-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "A committee {{blank}} of five outside experts reviewed the safety report last week.",
+          "options": ["consisting", "consisted", "consists"],
+          "answer": 0,
+          "translation": "외부 전문가 다섯 명으로 구성된 위원회가 지난주에 안전 보고서를 검토했습니다.",
+          "explanation": "consist 는 of 를 통해서만 대상을 밝히는 자동사이므로 수동태가 없습니다. 본동사 reviewed 가 이미 있고 접속사도 없으므로 시제 동사 consisted·consists 는 들어갈 수 없으며, 분사 consisting 만 성립합니다.",
+          "trapTags": ["intransitive-participle", "no-object-decoy"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "pid": "P069",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "correct answer — reconstructs the source span 'mistakenly screens out something essential' (blindly=mistakenly, discards crucial elements=screens out something essential) and ties it to the opening theme via 'based on past habits'",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none — when inserted, 'When that filter blindly discards crucial elements based on past habits, then even seasoned masters can make mistakes.' is grammatical and preserves the source meaning exactly"
+    },
+    {
+      "label": "2",
+      "intent": "mechanism-vs-result blur: names the passage's headline concept (beginner's mind) instead of the filter's specific malfunction",
+      "temptingBecause": "reuses the salient keyword 'beginner's mind' that the passage builds up as its central prescription",
+      "decisiveFlaw": "actor mismatch — the subject of the blank is 'that filter' (= experience), which is the antithesis of beginner's mind and cannot itself 'apply the beginner's mind'; the sentence becomes semantically incoherent and does not describe the screening-out mechanism"
+    },
+    {
+      "label": "3",
+      "intent": "polarity reversal of the passage's thesis",
+      "temptingBecause": "mentions 'familiar tools' and 'irrelevant', both salient lexical anchors from the passage",
+      "decisiveFlaw": "the passage says people over-rely on familiar tools; claiming the filter treats familiar tools as irrelevant inverts the stated relationship"
+    },
+    {
+      "label": "4",
+      "intent": "actor swap — attributes the beginner's trait to the expert's filter",
+      "temptingBecause": "'absorb every detail' is copied verbatim from the beginners sentence",
+      "decisiveFlaw": "absorbing every detail is what beginners do and is framed positively for novel problems; it cannot be the condition under which masters make mistakes, and a filter's function is to screen, not to encourage absorption"
+    },
+    {
+      "label": "5",
+      "intent": "scope shift on the filter's object",
+      "temptingBecause": "connects to the novelty/unfamiliarity theme of the first two sentences, so it feels consistent with 'familiar-tool reliance fails on novel problems'",
+      "decisiveFlaw": "the filter, as defined in the immediately preceding sentence, separates essential from irrelevant elements of a problem; the mistake condition in the source is discarding something essential, not blocking out unfamiliar situations wholesale"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "All validity gates pass: the render is an exact substitution of the source span, the answer is unique (each distractor independently fails on actor mismatch, polarity reversal, actor swap, or scope shift), all five options fill the same syntactic slot grammatically, the explanation's structural analysis matches the actual text, and all fields are synchronized. The item fails as a KILLER, however. RUBRIC §D requires (a) the correct answer to abstract the source span to a level matching the difficulty and (b) at least two sentences/logical cues to be required. Here ① 'blindly discards crucial elements' is a near-literal paraphrase of 'mistakenly screens out something essential', and the immediately preceding sentence ('filter to separate the essential from the irrelevant') alone suffices to select it — 'based on past habits' merely confirms and is not needed to discriminate ① from the distractors. This makes actual difficulty mid-range (C5=1) and limits real discrimination (C3=2): only ② and ⑤ exert any pull, while ③ (blatant reversal) and ④ (obvious beginner trait) fall to quick local checks. Distractor taxonomy is genuinely varied (C2=3) and the blank sits on the passage's crux causal mechanism (C1=4). Craft total 16 with C5 below 2 → grade C: valid and shippable as a mid-difficulty item, but requires redesign (deeper abstraction of the answer, distractors that survive the local essential/irrelevant cue) to justify the KILLER label."
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "question-quality-linux-ext4-observed-host-v1",
+  "status": "READ_ONLY_OBSERVATION_NOT_AUTHORIZATION",
+  "observed": {
+    "distro": "Ubuntu-24.04",
+    "wslVersion": 2,
+    "kernelRelease": "6.6.87.2-microsoft-standard-WSL2",
+    "machine": "x86_64",
+    "home": {
+      "probePath": "/home",
+      "findmntTarget": "/",
+      "findmntSource": "/dev/sdd",
+      "findmntFilesystemType": "ext4",
+      "findmntOptions": "rw,relatime,discard,errors=remount-ro,data=ordered",
+      "statfsTypeLabel": "ext2/ext3",
+      "blockSize": 4096,
+      "fundamentalBlockSize": 4096
+    },
+    "windowsD": {
+      "probePath": "/mnt/d",
+      "findmntTarget": "/mnt/d",
+      "findmntSource": "D:\\",
+      "findmntFilesystemType": "9p",
+      "statfsTypeLabel": "v9fs",
+      "blockSize": 4096,
+      "fundamentalBlockSize": 4096
+    },
+    "node": {
+      "executable": "/usr/bin/node",
+      "version": "v22.22.0",
+      "modules": "127",
+      "napi": "10",
+      "v8": "12.4.254.21-node.33",
+      "platform": "linux",
+      "arch": "x64"
+    },
+    "npm": {
+      "executable": "/usr/bin/npm",
+      "version": "10.9.4"
+    }
+  },
+  "interpretation": {
+    "homeIsNativeExt4Candidate": true,
+    "windowsDIsNineP": true,
+    "ninePFsyncSuccessWouldProveCrashDurability": false,
+    "readOnlyObservationProvesLiveExecutionSafety": false,
+    "readOnlyObservationProvesProductionParity": false
+  },
+  "activity": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "privateArtifactReads": 0,
+    "budgetLedgerMutations": 0,
+    "filesystemProbeWrites": 0
+  }
+}

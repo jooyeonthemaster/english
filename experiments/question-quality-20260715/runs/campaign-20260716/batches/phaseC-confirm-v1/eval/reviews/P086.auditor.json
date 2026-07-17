@@ -1,0 +1,76 @@
+{
+  "pid": "P086",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-POLARITY-OPT3",
+      "severity": "major",
+      "evidence": "오답 해설 ③은 '바로 앞 문장의 show them kindness와 상충합니다'라고 주장하지만, 발문 slot이 'just don't ___'이므로 ③을 넣은 완성문은 'just don't avoid engaging in any social interactions with them' = '교류를 회피하지 말라'가 되어 친절 권고와 상충하지 않고 오히려 일치한다. 해설이 선지를 부정어 없이 단독으로 평가하여 완성문의 실제 극성을 오설명했다. ③의 실제 결함은 '앞 절의 친절 권고를 중복 재진술할 뿐 slot이 요구하는 대조적 경고(감정 전염 주의)를 담지 못함'이다."
+    },
+    {
+      "code": "V4-POLARITY-OPT5",
+      "severity": "major",
+      "evidence": "오답 해설 ⑤는 '공감 자체를 억제하라는 주장은 본문과 대치됩니다'라고 하지만, 완성문은 'just don't suppress your own desire to show basic human empathy' = '공감을 억누르지 말라'로 본문 주장과 일치한다. 대치되기는커녕 본문 친화적 진술이 된다. 실제 오답 사유(경고 기능 부재·앞 절과의 중복)를 제시하지 못하고 극성을 뒤집은 잘못된 소거 논리를 학생에게 제공한다."
+    },
+    {
+      "code": "V4-SENTENCE-ATTRIBUTION",
+      "severity": "minor",
+      "evidence": "정답 해설이 'We do a good service to others by remaining detached...'를 '다섯 번째 문장'이라 지목하나, 실제 문장 순서는 1) Other people's views... 2) Don't damage yourself... 3) If you encounter... 4) Remember to discriminate... 5) Remind yourself: \"What hurts...\" 6) We do a good service... 로 여섯 번째 문장이다. 문장 귀속 오류."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "친절 권고를 '문제를 직접 해결해 줄 책임'으로 부풀리는 scope inflation / half-truth",
+      "temptingBecause": "괴로워하는 친구를 돕는 맥락과 detachment 주제에서 '책임지지 말라'는 완성문이 그럴듯하게 들린다",
+      "decisiveFlaw": "본문은 해결 책임을 한 번도 논하지 않는다. 경고의 대상은 타인의 문제 해결 의무가 아니라 자신의 감정 상태(virus, be overcome, pulled down)다. 근거 앵커 부재."
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 'allow yourself to be pulled down too'의 추상화 패러프레이즈",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 첫 문장의 감정 전염 비유와 셋째 문장 'not to be overcome by the misfortune'이 이중 앵커로 필연성을 보장한다."
+    },
+    {
+      "label": "③",
+      "intent": "detachment를 '전면적 교류 차단'으로 과확장시키려는 의도이나, 부정 발문 아래에서 극성이 반전되는 설계 결함",
+      "temptingBecause": "사회적 교류라는 소재가 본문 상황과 겹치고 detached 개념을 연상시킨다",
+      "decisiveFlaw": "완성문 'don't avoid engaging...'은 앞 절 'show them kindness'의 중복 재진술이 되어 'just don't'가 요구하는 대조적 경고 기능을 수행하지 못한다. (해설이 제시한 '상충' 사유는 극성 오분석으로 사실과 다름.)"
+    },
+    {
+      "label": "④",
+      "intent": "대화 상황에서 연상되는 무관한 대인 불안(비판·오해 걱정) 삽입",
+      "temptingBecause": "대화·대인관계라는 표면 맥락만 공유한다",
+      "decisiveFlaw": "본문에 비판·오해에 대한 언급이 전혀 없어 앵커가 0이며 즉시 소거된다."
+    },
+    {
+      "label": "⑤",
+      "intent": "detachment = 공감 억제라는 개념 혼동을 노린 함정이나, 부정 발문 아래에서 극성이 반전되는 설계 결함",
+      "temptingBecause": "'remaining detached'가 공감 억제를 함의하는 것처럼 보인다",
+      "decisiveFlaw": "완성문 'don't suppress your empathy'는 본문 권고와 일치하는 진술이 되어 앞 절과 중복될 뿐, slot이 요구하는 마지막 경고(감정 전염 주의)를 담지 못한다. (해설의 '본문과 대치' 사유는 극성 오분석.)"
+    }
+  ],
+  "explanationIssues": [
+    "③ 오답 해설이 'show them kindness와 상충'이라 하나 완성문은 부정어로 인해 친절 권고와 일치한다 — 극성 오분석 (major)",
+    "⑤ 오답 해설이 '본문과 대치'라 하나 완성문 'don't suppress empathy'는 본문과 일치한다 — 극성 오분석 (major)",
+    "'We do a good service...' 문장을 다섯 번째 문장으로 지목했으나 실제로는 여섯 번째 문장 — 문장 귀속 오류 (minor)",
+    "정답 해설 자체의 정답 근거(첫 문장 virus 비유 + detached 유지 명제 + pulled down 패러프레이즈)는 정확함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과. 정답 ②는 이중 앵커(1문장 virus, 3문장 be overcome)로 유일성이 확실하다. 그러나 부정 발문('just don't ___') 유형에서 오답 해설 두 건(③⑤)이 선지를 부정어 없이 단독 평가하여 완성문의 실제 극성과 반대되는 소거 논리를 제시했고, 문장 번호 귀속 오류도 있어 V4 실패 → F. 공예 측면에서도 ③⑤가 부정 시 본문 친화 진술이 되는 극성 설계 약점 때문에 시험 요령만으로(경고 형태인 선지는 ②뿐) 소거 가능해 C3/C4가 2에 머문다. 수리 방향: (a) ③⑤를 부정 시에도 본문과 어긋나는 내용(예: 'stay long enough to absorb their mood' 류)으로 교체하거나 오답 해설을 완성문 기준으로 재작성, (b) 해설의 문장 번호 수정. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님."
+}

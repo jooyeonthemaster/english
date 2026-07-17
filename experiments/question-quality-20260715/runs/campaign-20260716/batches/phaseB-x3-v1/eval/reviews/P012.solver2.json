@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'based on their race or ethnicity'의 their는 'a person's'를 받는 대명사. 단수 총칭 명사(a person)를 받는 singular they는 현대 표준 용법으로 확립되어 있고, 수능·교과서에서도 정문으로 처리된다. 선행사-대명사 일치가 성립하므로 어법상 옳다. (보수적 규범문법에서 his or her를 선호한다는 이견은 있으나, 오답 근거로 삼기에는 현대 용법상 방어 불가.)"
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'experiential microaggressions ... can be seen in statements ...'에서 주어 microaggressions는 see의 행위자가 아니라 대상이므로 수동태가 요구된다. 조동사 can 뒤 원형 be + 과거분사 seen 구조도 형태상 완전하다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'When people speak to him, they often raise their voices.'는 시간 부사절 접속사 When + 완전한 절(주어 people, 동사 speak) 구조. 주절과의 논리 관계(사람들이 그에게 말할 때마다 목소리를 높인다)도 성립. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "INCORRECT",
+      "reason": "'A well-meaning nurse was actually yelling at him when given him directions ...' — 축약 부사절 'when + 분사'의 의미상 주어는 주절 주어 nurse. nurse는 지시를 '주는' 행위자이므로 능동 현재분사 giving이 필요하다(when [she was] giving him directions). 수동 해석(when [she was] given ...)을 시도하면 수여동사 give의 수동태에서 간접목적어 승격 시 잔류할 수 있는 것은 직접목적어뿐이므로 'she was given directions'까지만 정문이고 'she was given him directions'처럼 him이 잔류하는 구조는 성립 불가. 또한 의미상으로도 간호사가 지시를 받는 쪽이 아니다. 어떤 대안 해석으로도 정문이 되지 않으므로 어법상 틀림. given → giving."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a hidden message that a person with a disability is defined as lesser ...' — that절은 message의 동격절로 완전한 절이 와야 하며 실제로 완전하다. define A as B의 수동형 'A is defined as B'는 형태·논리 모두 성립. 주절 implied(과거)와의 시제 불일치는 동격절 내용이 일반적 통념(총칭 진술)이므로 현재시제 허용 범위 내. 정문."
+    }
+  ],
+  "note": "정답 후보는 (D) 단일. 핵심 규칙: 분사 축약 부사절에서 의미상 주어(주절 주어 nurse)와 분사의 태 일치 — 간호사가 지시를 '주는' 능동 관계이므로 giving이어야 함. 수동 given이 성립하려면 잔류 목적어 구조(she was given him directions)가 필요하나 이는 영어 수여동사 수동태에서 비문. (A)의 singular they는 대안 정답으로 방어 불가(현대 표준 용법). 문항 자체는 깨끗하게 단일 정답으로 수렴."
+}

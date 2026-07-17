@@ -1,0 +1,75 @@
+{
+  "pid": "P048",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-markedExpressions-form",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression 필드가 'like'(원문형)인데, 비오류 항목 4개는 expression에 렌더 표시형을 담고 있어 필드 의미가 엔트리 간 불일치. 다만 학생 노출 필드(렌더 지문 'alike', 선지 '(E) alike', 정답 라벨, 해설의 alike→like 교정)는 전부 동기화되어 있어 치명 아님."
+    },
+    {
+      "code": "V4-minor-keyPoints-category-label",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E)를 '형용사 vs 부사'로 분류했으나 실제 판정은 '전치사(like) vs 서술형용사/부사(alike)' — 설명문 자체('명사구를 목적어로 취하는 전치사 자리 판정')는 정확하므로 카테고리 라벨만 어긋난 경미한 태깅 오류. (A)도 같은 카테고리 라벨을 공유."
+    },
+    {
+      "code": "V1-note-clean-diff",
+      "severity": "minor",
+      "evidence": "원지문 대비 렌더 지문 전수 대조 결과 의도된 변형(like→alike) 외 접합 파손·중복·누락·오탈자 없음. 라벨 (A)~(E)와 선지 텍스트 완전 일치. 문제 없음을 확인한 기록."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분리 부정사(to + 부사 + 동사원형)의 정문성 판단 — 부사 위치 포인트",
+      "temptingBecause": "'to와 동사원형 사이에 다른 요소가 오면 안 된다'는 규범주의적 오개념을 가진 학생이 오류로 오인하기 쉬움",
+      "decisiveFlaw": "분리 부정사는 현대 영어에서 완전히 정문이며 creatively가 solve를 적절히 수식 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "능동태 vs 수동태 — 주어와 동사의 의미역 관계 판정",
+      "temptingBecause": "enhance가 타동사라서 능동 'greatly enhance'를 기대하고 수동형을 어색하게 느낄 수 있음",
+      "decisiveFlaw": "주어 critical thinking skills는 향상되는 대상(피동작주)이므로 수동태 are greatly enhanced가 정확 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "복합명사 구조 확인 — 그러나 실질적 문법 판정 지점이 없는 필러",
+      "temptingBecause": "매력 요인이 사실상 없음. substance abuse는 고정된 복합명사로 대안 형태(관사·수·품사 교체)가 문법 쟁점을 형성하지 않음",
+      "decisiveFlaw": "정문. 어떤 문법 규칙도 시험되지 않아 즉시 통과 — 디코이로서 기능 부재(필러)"
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사 뒤 동명사 필수 — of + being + 서술형용사 구조 판정",
+      "temptingBecause": "'being + 형용사' 연쇄가 생소해 be동사 삭제나 명사 loneliness로의 교체를 기대할 수 있음",
+      "decisiveFlaw": "전치사 of의 목적어 자리에는 동명사가 필요하고 being lonely는 정확한 동명사구 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 전치사 like vs 서술형용사/부사 alike의 품사·통사 기능 구별",
+      "temptingBecause": "alike와 like의 형태 유사성 때문에 눈으로 훑으면 like로 읽고 지나치기 쉬움",
+      "decisiveFlaw": "alike는 서술 위치 형용사 또는 부사로만 쓰여 명사구(obesity, smoking, and heart disease)를 보어로 취할 수 없음 — 예시를 이끄는 전치사 like로 교정해야 하며 교정 시 정확히 원문 복원"
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints의 (E) 카테고리 라벨 '형용사 vs 부사'가 실제 포인트(전치사 자리 판정)와 불일치 — 설명문 내용 자체는 정확",
+    "keyPoints가 (A)(B)(E) 3개만 다루고 (C)(D)는 누락 — 오답 해설에는 존재하므로 정보 결손은 아니나 밀도 낮음",
+    "(C) 오답 해설이 '복합명사로 올바르다'는 동어반복 수준 — 어떤 오개념을 겨냥했는지 설명 불가(필러 자백에 가까움)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 유일 오류 (E) alike(→like)가 최소대립쌍이고 교정 시 원문과 정확히 일치하며, 나머지 4개 밑줄은 독립 검증에서 모두 정문. 해설도 사실적으로 정확. 그러나 KILLER 요청 대비 공예가 크게 미달: (1) alike/like는 한국 수험가에서 고빈도로 암기되는 국소 어휘·품사 지식이라 구조 독해 없이 한 단어만 보고 즉시 판정 가능 — §C '구조를 읽어야 하며 즉시 드러나지 않는다' 위반. (2) (C) substance abuse는 문법 판정 지점이 전무한 필러 — §C '설명이 안 되는 디코이는 필러다' 위반. (3) (A)와 (E)가 동일 pointCode 'f'를 공유해 정답과 같은 계열의 쉬운 디코이가 배치됨. (4) 디코이 (B)(D)도 중하위 난도의 표준 포인트라 상위권 학생에게 실제 판단 부하가 거의 없음. C5=1(라벨 KILLER vs 실제 중난도), 합계 13 — 재설계 필요. killerConditionsMet=false. 등급 C (모든 V 통과, 공예 결함)."
+}

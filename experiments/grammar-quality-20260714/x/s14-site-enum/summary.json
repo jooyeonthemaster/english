@@ -1,0 +1,45 @@
+{
+  "strategy": "s14-site-enum",
+  "describe": "정답 자리 공개 오디션 — 후보 5곳 나열·비교를 응답 스키마의 reasoning 필드로 강제, 최고 1곳 확정 후 문항 완성",
+  "callPlan": "flash x1",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 12518,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.20073,
+  "avgCostUsd": 0.02007,
+  "costRecordedCalls": 10,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 0.8,
+  "zeroErrorItems": 5,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.869,
+  "avgAnswerRelPos": 0.66,
+  "answerRelPosInBand": 8,
+  "models": {
+    "google/gemini-3.5-flash": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 4
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

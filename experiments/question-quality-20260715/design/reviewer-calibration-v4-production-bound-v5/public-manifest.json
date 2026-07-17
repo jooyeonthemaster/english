@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-v5-public-manifest-1",
+  "artifactId": "reviewer-calibration-v4-production-bound-v5",
+  "status": "AUTHOR_EVIDENCE_COMPLETE_PENDING_FRESH_INDEPENDENT_AUDIT_NO_PASS_OR_AUTHORITY",
+  "subjectOnlyAuthorEvidence": true,
+  "independentAuditCompletedInThisArtifact": false,
+  "immutableSuccessor": {
+    "predecessorArtifactId": "reviewer-calibration-v4-production-bound-v3",
+    "predecessorSubjectManifestSha256": "39f9d4729e9a09c7c4dc9644477bcdbd81c2f09b15b31f6837ea80ee73c59cd6",
+    "predecessorIndependentAuditManifestSha256": "d9f8256c9307a47e3ee11408b895f59d0047581058d5f82fa01107d5432adea5",
+    "predecessorIndependentAuditJsonSha256": "679e0ead6ae9cae524b2f4072a78c34f523f70ecee7e50c8f3e3cfe695eac80d",
+    "predecessorAuditVerdict": "FAIL_BLOCKERS",
+    "predecessorBlockerCount": 6,
+    "predecessorOrAuditModifiedByThisArtifact": false,
+    "freshIndependentAuditRequiredForV4": true
+  },
+  "predecessorBlockerCodes": [
+    "V3-B1B2-ACTOR_IDENTITY_ALIAS_NOT_MATERIALLY_BOUND",
+    "V3-B3-PASSED_EVENT_NOT_BOUND_TO_MATERIALIZED_SLOT",
+    "V3-B4-CANONICAL_BYTES_HASH_DOMAIN_UNDEFINED",
+    "V3-B6-FINGERPRINTS_NOT_DERIVED_FROM_COMMITTED_CONTENT",
+    "V3-B7-POLICY_MATRIX_OMITS_ALLOWED_ROLES",
+    "V3-B7-GRANT_NOT_BOUND_TO_NONEMPTY_POLICY_STATE"
+  ],
+  "upstreams": [
+    {
+      "id": "predecessor-v3-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v4-production-bound-v3/MANIFEST.sha256",
+      "sha256": "39f9d4729e9a09c7c4dc9644477bcdbd81c2f09b15b31f6837ea80ee73c59cd6"
+    },
+    {
+      "id": "predecessor-v3-independent-fail-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v4-production-bound-v3-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "d9f8256c9307a47e3ee11408b895f59d0047581058d5f82fa01107d5432adea5"
+    },
+    {
+      "id": "predecessor-v2-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v4-production-bound-v2/MANIFEST.sha256",
+      "sha256": "10801e127bb612e2bb6909acf857ff6fa2ef0cac667a0fd7e4e39f774e656413"
+    },
+    {
+      "id": "predecessor-v2-independent-fail-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v4-production-bound-v2-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "f78ba69b164f737b6531c2e7415bd26cf147afc6012265a13a8434882b891bc5"
+    },
+    {
+      "id": "evaluation-authority-v2-public-manifest",
+      "path": "experiments/question-quality-20260715/design/evaluation-authority-v2/public-manifest.json",
+      "sha256": "c62fb02e27b0342ce31fe8fc38ec32034738bfe2ddadec9fe2861a1ae8e614bd"
+    },
+    {
+      "id": "evaluation-authority-v2-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/evaluation-authority-v2/MANIFEST.sha256",
+      "sha256": "ac4ed7ee8bd5eb21bd45837f2a7396219142e6ccd3a1fe933916238e447f0180"
+    },
+    {
+      "id": "evaluation-authority-v2-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/evaluation-authority-v2-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "0cdf9d676bdec820e728a3b3890237b3b80d201caa2c20afc7af46ed6482adf5"
+    },
+    {
+      "id": "production-type-binding-v4-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4/MANIFEST.sha256",
+      "sha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04"
+    },
+    {
+      "id": "production-type-binding-v4-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-protocol",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+      "sha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/MANIFEST.sha256",
+      "sha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64"
+    }
+  ],
+  "acceptedPublicLineage": {
+    "directUpstreamBytesRehashed": 11,
+    "directManifestRowsRehashed": 50,
+    "safeManifestRowsRehashed": 50,
+    "forbiddenPrivateRowsRefusedUnopened": 0,
+    "evaluationNestedUpstreamBytesRehashed": 10,
+    "evaluationNestedManifestRows": 24,
+    "evaluationNestedSafeRowsRehashed": 23,
+    "evaluationNestedForbiddenPrivateRowsRefusedUnopened": 1,
+    "productionTypeBindingSnapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+    "productionTypeBindingJsonSha256": "47df395f54179538d27a714ac0df4dc9e82f04b767bc82f45b8473c38d04cc3d",
+    "productionTypeBindingSemanticSha256": "433d72598f123a19950b57e4684d0ba004031d3beb0860fc5d5d226ddcf8022b"
+  },
+  "closureEvidence": {
+    "B1_B8Preserved": true,
+    "stablePrincipalIdentity": "HMAC_DOMAIN_SEPARATED_SOURCE_AND_PRINCIPAL_PLUS_PRETRUSTED_ED25519_CUSTODIAN_SIGNATURE_AND_PRINCIPAL_LEVEL_EXCLUSIONS",
+    "materializedCoverage": "EXACT_EVENT_MATERIALIZATION_SLOT_TYPE_FAMILY_PHASE_DERIVED_FINGERPRINT_TERMINAL_DECISION_AND_DISTINCTNESS_RECOMPUTATION",
+    "typedCanonicalBytes": "STRICT_DUPLICATE_FREE_JSON_RFC8785_JCS_EXACT_TYPED_PROJECTIONS_DOMAIN_VERSION_KIND_PROFILE_AND_LENGTH_FRAMING",
+    "derivedFingerprints": "ACTUAL_PRIVATE_INPUT_RECOMPUTATION_SEVEN_COMPONENTS_SLOT_DERIVATION_PROOF_AUTHOR_TYPE_FAMILY_EPOCH_BINDING",
+    "exactRolePolicy": "ALL_PHASE_STATE_RESOURCE_ALLOW_OR_DEFAULT_DENY_TUPLES_WITH_EXACT_NONEMPTY_ROLE_PARTITIONS_AND_ACTIVE_PRINCIPAL_ROLE_BINDING",
+    "sealedGrantPolicy": "NONEMPTY_READY_SEALED_POLICY_ALL_COMPONENT_ROOTS_PREEXISTING_AUDIT_LEDGER_ORDER_AND_THREE_PRINCIPAL_SEPARATION"
+  },
+  "hostileEvidence": {
+    "schemaEngine": "python-jsonschema Draft202012Validator",
+    "branchCount": 23,
+    "validStructuralBaselines": 23,
+    "structuralMutations": 3142,
+    "detectedStructuralMutations": 3142,
+    "structuralDigestSha256": "3634dfdcc64b94ebaa77d5ae55d7cacf7ab83bebc2521cd4373eafd0de87e72c",
+    "acceptedSemanticBaselines": 280,
+    "semanticBypasses": 4081,
+    "rejectedSemanticBypasses": 4081,
+    "semanticDigestSha256": "fc4d2fdc23c7dc41094910fc67538794869d87348cab75af8dbe780df2946ab7",
+    "totalHostileCases": 7223,
+    "caseDigestSha256": "0b3add9c031c79abab801652b03c0fb90d95b9b93bd7e89d3fd81a4c61694fd6"
+  },
+  "packageFiles": [
+    { "path": "PROTOCOL.md", "bytes": 7639, "sha256": "bfd9f1df67f0c197e31fa2e84a144835e4db7af6c9b51db26c84bbbe92afa775" },
+    { "path": "README.md", "bytes": 3217, "sha256": "75152178aaade123e536ea35dfb5644937cedf189140d8639d22572c9fabc654" },
+    { "path": "canonicalize.mjs", "bytes": 10904, "sha256": "7a3fe6f44ee10943e04f002e1dcb8ddfe9880bd6ccb91502c57d5a41ed5fd117" },
+    { "path": "event-schemas.json", "bytes": 57693, "sha256": "90b4656cb2cfa501558402afc03f01175fcf37ee18ba3715616b65d19441dc4b" },
+    { "path": "fingerprint.mjs", "bytes": 13287, "sha256": "7ea222779ce93769d5e0f82592d86a1e8a736bb3fa13ff1f94085bd9ec97a06e" },
+    { "path": "hostile-fixtures.json", "bytes": 7867, "sha256": "83eb35d250017b1faafcefde3ad9953f4533376222966a3a6d6f3c005c43d50c" },
+    { "path": "protocol.json", "bytes": 45914, "sha256": "cd0ce0b25eb53b388df793aa8b5e6d708278e666b2d15c42e5897ff1e336a80b" },
+    { "path": "registries.json", "bytes": 14648, "sha256": "bc878ce071d710ac9bc380cac3eecc9f241cf50d5c9537d26a8483ef0b6966be" },
+    { "path": "schema-hostile.py", "bytes": 10641, "sha256": "d6c7988d07871e802cb591f23e28cdcdeb86ae5cebb789e9533bd27f1abb74cd" },
+    { "path": "semantics.mjs", "bytes": 45439, "sha256": "8f8e821cc5c7d840e22c6aff6acc087949951359b5c48063aa3111b60a7399d3" },
+    { "path": "verify.mjs", "bytes": 77440, "sha256": "ffd82bbe2a1a8c8d4d979f32e8eab7409bdb93cc171e88535409cf6f12bd6f48" }
+  ],
+  "authority": {
+    "executionAuthorized": false,
+    "evaluatorAuthorityGranted": false,
+    "scoringAuthorityGranted": false,
+    "resultAccessAuthorized": false,
+    "reviewerCertificatesIssued": 0,
+    "activationCandidates": 0,
+    "activationAuditReports": 0,
+    "activationGrants": 0
+  },
+  "activity": {
+    "privateReads": 0,
+    "itemAnswerGoldRevealReadsOrWrites": 0,
+    "actorReadsOrWrites": 0,
+    "envReads": 0,
+    "databaseCalls": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0
+  }
+}

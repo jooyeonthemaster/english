@@ -1,0 +1,35 @@
+{
+  "pid": "P049",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "seam: 'the strength and stamina to focus entirely on developing flawless golf swings' is grammatical but logically incoherent — swing development is a practice-range activity, and the immediately preceding clause asserts 'not just on the practice range but in the weight room.' 'entirely' formally contradicts the 'not just X but Y' structure. Also, strength/stamina is not a stated enabling condition for swing perfection, and swing perfection does not connect to 'close out opponents in major tournaments' via endurance, which is the passage's causal chain (cf. negotiation parallel: stamina → see the deal through)."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "seam: 'the strength and stamina to gain a psychological edge alongside their bodily strength in order to close out their opponents' — grammatically well-formed infinitive complement of 'strength and stamina to ___'. Logic: the passage's argument is physical conditioning → superiority over rivals ('head and shoulders above', 'so much better shape than the others') → winning at the decisive close (parallel to the negotiator whose stamina lets him 'see the deal through'). Being fitter down the stretch plausibly confers a mental/psychological advantage in addition to the physical one, which directly serves 'in order to close out their opponents in major tournaments.' Minor stylistic redundancy ('strength ... alongside their bodily strength') but no contradiction; the only option consistent with every prior claim."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Formal self-contradiction: the matrix clause asserts they HAVE 'the strength and stamina', so an infinitive 'to overcome their lack of physical stamina' predicates a lack of the very property the subject NP asserts. P ∧ ¬P — logically unsatisfiable in context. Also reverses the passage's causal direction (physical → success), replacing it with mental compensation for a physical deficit the golfers do not have."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'depend solely on superior physical traits rather than tactics' is an over-claim the passage never licenses: the text says physical shape is 'one of the reasons' for superiority and never sets up a physical-vs-tactics opposition or exclusivity. The seam is also circular/vacuous — 'the strength and stamina to depend on physical traits' predicates dependence on the very traits just asserted, adding no enabling content that would explain closing out opponents."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Directly reverses the stated fact pattern: 'not just on the practice range but in the weight room' asserts they do BOTH, with weight training highlighted as the differentiator; 'substitute extensive practice range activities for lifting weights' means replacing weight lifting with range work — the negation of the passage's claim. Also incoherent as a purpose enabled by strength/stamina for closing out tournament opponents."
+    }
+  ],
+  "note": "Cloze anchored by two long-range constraints: (a) the negotiation analogy (physical stamina → seeing the deal through → winning) fixes the blank as an advantage flowing FROM fitness toward beating rivals at the finish; (b) the 'not just practice range but weight room' contrast eliminates any option privileging range work or pure technique (1, 5). Options 3 and 4 fail formally (self-contradiction; unlicensed exclusivity + circularity). Option 2 is uniquely consistent, though stylistically slightly redundant ('alongside their bodily strength' after 'strength and stamina'). Single defensible answer: 2."
+}

@@ -1,0 +1,983 @@
+{
+ "P001": {
+  "itemId": "B-B-A0-01",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-049",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ]
+ },
+ "P002": {
+  "itemId": "B-B-A0-05",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-124",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:blank-killer-span-too-wide",
+  "correctAnswer": "⑤",
+  "gateIssues": null
+ },
+ "P003": {
+  "itemId": "B-G-D1-03",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-050",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-decoy-point-monotony",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P004": {
+  "itemId": "B-G-D1-08",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-020",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-marker-too-dense,grammar-killer-generic-answer-point,grammar-explanation-lint",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P005": {
+  "itemId": "B-G-A0-07",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-011",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": []
+ },
+ "P006": {
+  "itemId": "B-G-G2-01",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-006",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": []
+ },
+ "P007": {
+  "itemId": "B-G-A0-04",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-055",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P008": {
+  "itemId": "B-G-X1-05",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-071",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated,grammar-killer-overdrilled-answer,grammar-explanation-lint",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P009": {
+  "itemId": "B-B-A0-08",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-042",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P010": {
+  "itemId": "B-B-B2-06",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-150",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:blank-killer-span-too-wide",
+  "correctAnswer": "①",
+  "gateIssues": null
+ },
+ "P011": {
+  "itemId": "B-B-B2-02",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-052",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P012": {
+  "itemId": "B-B-A0-10",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-062",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P013": {
+  "itemId": "B-G-G2-02",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-017",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:grammar-decoy-point-monotony,grammar-shallow-participle-adjective-answer,grammar-underline-punctuated-fragment",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P014": {
+  "itemId": "B-G-A0-05",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-071",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-local-agreement,grammar-killer-overdrilled-answer,grammar-agreement-explanation-too-thin,grammar-explanation-lint",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P015": {
+  "itemId": "B-B-B2-10",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-062",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ]
+ },
+ "P016": {
+  "itemId": "B-B-A0-02",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-052",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ]
+ },
+ "P017": {
+  "itemId": "B-G-X1-02",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-017",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P018": {
+  "itemId": "B-G-A0-08",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-020",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-marker-too-dense",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P019": {
+  "itemId": "B-G-V1-07",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-011",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-explanation-lint",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P020": {
+  "itemId": "B-G-V1-04",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-055",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": []
+ },
+ "P021": {
+  "itemId": "B-G-A0-01",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-006",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P022": {
+  "itemId": "B-B-A0-09",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-046",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P023": {
+  "itemId": "B-G-V1-06",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-160",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-pointcode-span-mismatch,grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P024": {
+  "itemId": "B-G-G2-04",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-055",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:grammar-explanation-lint",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P025": {
+  "itemId": "B-B-B2-03",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-080",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ]
+ },
+ "P026": {
+  "itemId": "B-G-V1-01",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-006",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:option-count,grammar-marker-count,grammar-render-marker-count",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P027": {
+  "itemId": "B-G-D1-10",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-032",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-generic-answer-point,grammar-pointcode-span-mismatch",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P028": {
+  "itemId": "B-G-X1-07",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-011",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-shallow-participle-adjective-answer,grammar-killer-generic-answer-point",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P029": {
+  "itemId": "B-G-V1-09",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-028",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P030": {
+  "itemId": "B-G-D1-04",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-055",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-too-basic-decoys",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P031": {
+  "itemId": "B-G-A0-03",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-050",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-shallow-participle-adjective-answer",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P032": {
+  "itemId": "B-G-G2-03",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-050",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P033": {
+  "itemId": "B-G-A0-09",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-028",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-marker-too-dense,grammar-killer-overdrilled-answer,grammar-noun-clause-pronoun-mislabel",
+  "correctAnswer": "(A)",
+  "gateIssues": null
+ },
+ "P034": {
+  "itemId": "B-G-A0-02",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-017",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-shallow-participle-adjective-answer,grammar-decoy-filler-span,grammar-underline-punctuated-fragment",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P035": {
+  "itemId": "B-G-X1-09",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-028",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-adjacent-sv-agreement",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P036": {
+  "itemId": "B-B-B2-07",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-037",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P037": {
+  "itemId": "B-G-G3-10",
+  "armId": "G-G3",
+  "frameId": "grammar-frame-v2-032",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "G3_SITE_CERTIFICATE",
+  "sourceKind": "gate_rejected:grammar-marker-count,grammar-render-marker-count,grammar-pointcode-span-mismatch,grammar-answer-point-not-core",
+  "correctAnswer": "(F)",
+  "gateIssues": null
+ },
+ "P038": {
+  "itemId": "B-B-B2-08",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-042",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:blank-killer-polarity-shortcut",
+  "correctAnswer": "①",
+  "gateIssues": null
+ },
+ "P039": {
+  "itemId": "B-G-X1-03",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-050",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-local-agreement,grammar-pointcode-span-mismatch,grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P040": {
+  "itemId": "B-G-V1-10",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-032",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-overdrilled-answer,grammar-noun-clause-pronoun-mislabel",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P041": {
+  "itemId": "B-G-X1-04",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-055",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": []
+ },
+ "P042": {
+  "itemId": "B-B-A0-06",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-150",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": []
+ },
+ "P043": {
+  "itemId": "B-G-X1-06",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-160",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-thin-connector,grammar-answer-point-not-core,grammar-explanation-lint",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P044": {
+  "itemId": "B-G-G2-06",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-160",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:grammar-killer-generic-answer-point",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P045": {
+  "itemId": "B-G-V1-02",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-017",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-error-not-mutated,grammar-error-not-mutated",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P046": {
+  "itemId": "B-G-G2-10",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-032",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P047": {
+  "itemId": "B-B-B2-01",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-049",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P048": {
+  "itemId": "B-B-B2-05",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-124",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ]
+ },
+ "P049": {
+  "itemId": "B-B-A0-03",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-080",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ]
+ },
+ "P050": {
+  "itemId": "B-G-V1-08",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-020",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-marker-too-dense,grammar-killer-answer-point-repeated",
+  "correctAnswer": "(A)",
+  "gateIssues": null
+ },
+ "P051": {
+  "itemId": "B-G-X1-08",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-020",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-adjacent-sv-agreement,grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(A)",
+  "gateIssues": null
+ },
+ "P052": {
+  "itemId": "B-B-B2-09",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-046",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:blank-weak-distractors",
+  "correctAnswer": "③",
+  "gateIssues": null
+ },
+ "P053": {
+  "itemId": "B-G-A0-06",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-160",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-pointcode-span-mismatch,grammar-keypoint-choice-mismatch,grammar-explanation-lint",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P054": {
+  "itemId": "B-G-D1-01",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-006",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-perception-complement-toggle,grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P055": {
+  "itemId": "B-G-V1-05",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-071",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-local-agreement,grammar-killer-overdrilled-answer,grammar-explanation-lint",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P056": {
+  "itemId": "B-G-G2-08",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-020",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:grammar-explanation-lint",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P057": {
+  "itemId": "B-G-V1-03",
+  "armId": "G-V1",
+  "frameId": "grammar-frame-v2-050",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P058": {
+  "itemId": "B-G-X1-10",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-032",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": []
+ },
+ "P059": {
+  "itemId": "B-G-G3-03",
+  "armId": "G-G3",
+  "frameId": "grammar-frame-v2-050",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "G3_SITE_CERTIFICATE",
+  "sourceKind": "gate_rejected:grammar-obvious-adjacent-sv-agreement",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P060": {
+  "itemId": "B-G-D1-09",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-028",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P061": {
+  "itemId": "B-B-A0-07",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-037",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P062": {
+  "itemId": "B-B-B2-04",
+  "armId": "B-B2",
+  "frameId": "blank-supply-v2-101",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": "B2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:blank-weak-distractors",
+  "correctAnswer": "②",
+  "gateIssues": null
+ },
+ "P063": {
+  "itemId": "B-G-A0-10",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-032",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-overdrilled-answer,grammar-noun-clause-pronoun-mislabel",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P064": {
+  "itemId": "B-G-D1-05",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-071",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-explanation-lint",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P065": {
+  "itemId": "B-B-A0-04",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-101",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P066": {
+  "itemId": "B-G-G2-07",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-011",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:grammar-shallow-participle-adjective-answer,grammar-killer-generic-answer-point",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P067": {
+  "itemId": "B-G-D1-02",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-017",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P068": {
+  "itemId": "B-G-X1-01",
+  "armId": "G-X1",
+  "frameId": "grammar-frame-v2-006",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-keypoint-nonexistent-label,grammar-keypoint-choice-mismatch,grammar-answer-point-not-core",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P069": {
+  "itemId": "B-G-G2-05",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-071",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:grammar-killer-overdrilled-answer",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P070": {
+  "itemId": "B-G-G2-09",
+  "armId": "G-G2",
+  "frameId": "grammar-frame-v2-028",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": "G2_POSITIVE_COMPACT",
+  "sourceKind": "gate_rejected:grammar-obvious-local-agreement,grammar-killer-overdrilled-answer,grammar-noun-clause-pronoun-mislabel,grammar-agreement-explanation-too-thin",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P071": {
+  "itemId": "B-G-D1-06",
+  "armId": "G-D1",
+  "frameId": "grammar-frame-v2-160",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-marker-too-dense,grammar-killer-overdrilled-answer",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'just don't shut them completely out of your thoughts' clashes with the immediately preceding coordinate clause ('show them kindness and give them a sympathetic ear'): the caveat introduced by 'just don't' must restrict the concession, not restate it. The passage's warned danger is over-absorption of others' negativity, never exclusion of the sufferer, so the caveat has no antecedent in the argument."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Grammatical seam is clean (let + NP + bare infinitive). Logically it reprises the governing thesis exactly: 'spread like a virus', 'Don't damage yourself by adopting negative, unproductive attitudes', 'be careful not to be overcome by the misfortune'. The concession-caveat structure 'Still, ... show kindness ...; just don't [be dragged down yourself]' is precisely the argument's intended conclusion. Unique best fit."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'just don't avoid any interaction with troubled colleagues' is vacuous after 'show them kindness and give them a sympathetic ear' (interaction is already asserted), so the caveat adds nothing; moreover the passage endorses detachment and never warns against avoidance, so the restriction contradicts the discourse function of 'just don't'."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Lexical-echo distractor on 'What hurts this person is not the occurrence itself but the response...'. The passage does discuss the real cause of hurt, but the post-concession caveat concerns guarding the listener's own emotional state, not diagnosing the sufferer's problem; inserting this breaks the 'Still ... just don't' contrastive logic."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Strongest distractor: grammatically clean and echoes 'avoiding melodramatic reactions'. But (a) that point was already asserted as settled one sentence earlier, so the final caveat would merely repeat a subordinate point rather than the thesis; (b) the governing warning is self-contamination ('Don't damage yourself', 'not to be overcome'), which only option 2 states; (c) 'overly dramatic and emotional attitude' targets outward display, while the argued danger is inward adoption of negativity. Inferior to 2, not independently defensible as 'most appropriate'."
+    }
+  ],
+  "note": "Passage is an Epictetus-derived (Lebell-style) text on emotional contagion. The blank is the concluding caveat after a concession ('Still, ... show kindness ...; just don't ___') and must reassert the thesis of protecting oneself from others' negativity, which option 2 does uniquely. Option 5 is a well-built near-miss distractor repeating a subordinate point; options 1/3 contradict or duplicate the preceding clause; option 4 is a lexical echo that misassigns the caveat's target. Single defensible answer: 2."
+}

@@ -1,0 +1,162 @@
+{
+  "passageId": "2019_06_5023285-q29",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "6월",
+    "origType": "함축의미",
+    "words": 146
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):ANS=b  (C):dec=f  (D):dec=g  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 51,
+        "relPos": 0.06,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 194,
+        "relPos": 0.227,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 269,
+        "relPos": 0.315,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 350,
+        "relPos": 0.41,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 473,
+        "relPos": 0.555,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.555,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Here's an interesting thought. If glaciers started re-forming, they have a great deal more water now to draw on ― Hudson Bay, the Great Lakes, the hundreds of thousands of lakes of Canada, none of which existed to fuel the last ice sheet ― so they would grow very much quicker. And if they did start to advance again, what exactly would we do? Blast them with TNT or maybe nuclear missiles? Well, doubtless we would, but consider this. In 1964, the largest earthquake ever recorded in North America rocked Alaska with 200,000 megatons of concentrated might, the equivalent of 2,000 nuclear bombs. Almost 3,000 miles away in Texas, water sloshed out of swimming pools. A street in Anchorage fell twenty feet. The quake devastated 24,000 square miles of wilderness, much of it glaciated. And what effect did all this might have on Alaska's glaciers? None.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 가장 적절하지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "re-forming",
+        "isError": false,
+        "errorExpression": "re-forming",
+        "surroundingText": "Here's an interesting thought. If glaciers started re-forming, they have a great deal",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "of which",
+        "isError": true,
+        "correction": "of which",
+        "errorExpression": "of what",
+        "surroundingText": "of the hundreds of thousands of lakes of Canada, none of which existed to fuel the last",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "quicker",
+        "isError": false,
+        "errorExpression": "quicker",
+        "surroundingText": "fuel the last ice sheet ― so they would grow very much quicker. And if they did start",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "them",
+        "isError": false,
+        "errorExpression": "them",
+        "surroundingText": "what exactly would we do? Blast them with TNT or maybe nuclear missiles?",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "recorded",
+        "isError": false,
+        "errorExpression": "recorded",
+        "surroundingText": "In 1964, the largest earthquake ever recorded in North America rocked Alaska",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "re-forming"
+      },
+      {
+        "label": "(B)",
+        "text": "of what"
+      },
+      {
+        "label": "(C)",
+        "text": "quicker"
+      },
+      {
+        "label": "(D)",
+        "text": "them"
+      },
+      {
+        "label": "(E)",
+        "text": "recorded"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(C)": "이 자리는 2형식 연결동사인 'grow' 뒤에서 부사적 성격을 띤 비교급 형용사보어로 쓰인 'quicker'가 문법상 적절합니다.",
+      "(D)": "이 대명사는 문맥상 복수 명사인 'glaciers'를 가리키므로 'them'으로 지칭하는 것이 적절합니다.",
+      "(E)": "이 자리는 주어 명사구인 'the largest earthquake'를 뒤에서 수식하는 과거분사 'recorded'가 명백히 옳습니다.",
+      "(A)": "동사 'start'는 목적어로 동명사와 to부정사를 모두 취할 수 있으므로, 동명사 're-forming'이 쓰인 구조는 어법상 적절합니다."
+    },
+    "explanation": "(B) 'of what'이 속한 부분은 앞의 선행사 명사구들(Hudson Bay, the Great Lakes, the hundreds of thousands of lakes of Canada)을 부가적으로 설명하는 관계사절의 일부입니다. 'what'은 선행사를 자체적으로 포함하는 명사절 관계대명사이므로, 이처럼 앞에 명시적인 선행사들이 나열된 상태에서 수식을 받는 구조에는 쓰일 수 없습니다. 따라서 선행사들과의 연결을 지속하면서 전치사 'of'의 목적어 역할을 할 수 있는 계속적 용법의 관계대명사 'of which'로 고쳐야 합니다. 관계대명사의 선행사가 문장 전체나 나열된 명사구인 경우에는 'what'을 사용할 수 없다는 점에 유의해야 합니다.",
+    "keyPoints": [
+      "(B) 관계대명사 vs 관계부사 ― 선행사 존재 유무와 결손 구조 판정",
+      "(E) 분사의 후치 수식 ― 수식받는 명사와의 수동/능동 관계 판정",
+      "(A) to-v/v-ing ― 특정 동사의 목적어로 쓰인 준동사 형태의 적절성 판정"
+    ],
+    "tags": [
+      "어법",
+      "고난도구문",
+      "관계사",
+      "분사",
+      "대명사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Here's an interesting thought. If glaciers started __(A) re-forming__, they have a great deal more water now to draw on ― Hudson Bay, the Great Lakes, the hundreds of thousands of lakes of Canada, none __(B) of what__ existed to fuel the last ice sheet ― so they would grow very much __(C) quicker__. And if they did start to advance again, what exactly would we do? Blast __(D) them__ with TNT or maybe nuclear missiles? Well, doubtless we would, but consider this. In 1964, the largest earthquake ever __(E) recorded__ in North America rocked Alaska with 200,000 megatons of concentrated might, the equivalent of 2,000 nuclear bombs. Almost 3,000 miles away in Texas, water sloshed out of swimming pools. A street in Anchorage fell twenty feet. The quake devastated 24,000 square miles of wilderness, much of it glaciated. And what effect did all this might have on Alaska's glaciers? None.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

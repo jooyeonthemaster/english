@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-generic-answer-point",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=c  (C):ANS=a  (D):dec=d  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 26,
+        "relPos": 0.033,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 233,
+        "relPos": 0.299,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 539,
+        "relPos": 0.691,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 598,
+        "relPos": 0.767,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 687,
+        "relPos": 0.881,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.881,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "working",
+        "isError": false,
+        "correction": "working",
+        "errorExpression": "working",
+        "surroundingText": "Suppose that you are busy working on a project one day and you have no time to buy lunch.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "buying",
+        "isError": false,
+        "correction": "buying",
+        "errorExpression": "buying",
+        "surroundingText": "he wants to help you out by buying you the sandwich.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "I like",
+        "isError": true,
+        "correction": "I like",
+        "errorExpression": "do I like",
+        "surroundingText": "how do you know what kind of sandwich do I like to eat?",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is",
+        "errorExpression": "is",
+        "surroundingText": "The key difference between these two cases is the level of trust.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "knowing",
+        "isError": false,
+        "correction": "knowing",
+        "errorExpression": "knowing",
+        "surroundingText": "you won't worry about him knowing you too well",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "working"
+      },
+      {
+        "label": "(B)",
+        "text": "buying"
+      },
+      {
+        "label": "(C)",
+        "text": "do I like"
+      },
+      {
+        "label": "(D)",
+        "text": "is"
+      },
+      {
+        "label": "(E)",
+        "text": "knowing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'be busy ~ing(~하느라 바쁘다)' 구문의 올바른 형태이므로 working은 적절합니다.",
+      "(B)": "전치사 by의 목적어로 쓰인 동명사이므로 buying은 올바릅니다.",
+      "(D)": "문장의 주어가 단수명사 The key difference이므로 단수동사 is를 쓰는 것이 맞습니다.",
+      "(E)": "전치사 about의 목적어로 쓰인 동명사이거나 명사(him)를 수식하는 현재분사로 볼 수 있으며, 능동의 의미를 지니므로 knowing이 적절합니다."
+    },
+    "explanation": "문법적으로 잘못된 부분은 (C)입니다. 문장의 골격을 살펴보면, 'how do you know' 뒤에 목적어로 의문사절(what kind of sandwich ~)이 왔습니다. 간접의문문은 의문사 뒤에 '주어+동사'의 평서문 어순을 따라야 합니다. 따라서 의문사구인 'what kind of sandwich' 뒤에는 주어와 동사가 평서문 어순으로 와야 합니다. 'do I like'라는 직접의문문 어순은 이곳 전후 구조상 간접의문문이어야 할 자리에 맞지 않아 비문이 됩니다. 따라서 'do I like'를 'I like'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 간접의문문 어순 — 의문사절 내 평서문 어순 확인",
+      "(D) 수일치 — 주어와 동사의 수 확인",
+      "(A) 관용적 동명사 표현 — be busy ~ing 구조 파악"
+    ],
+    "tags": [
+      "어법",
+      "간접의문문",
+      "수일치",
+      "동명사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy __(A) working__ on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by __(B) buying__ you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich __(C) do I like__ to eat?\" The key difference between these two cases __(D) is__ the level of trust. You trust your best friend so much that you won't worry about him __(E) knowing__ you too well, but you certainly would not give the same level of trust to a stranger."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "Seam parses grammatically ('answers' [pl.] licenses relative 'that flout'), but the composed NP is semantically incoherent: 'immediate and straightforward answers that flout principles of efficient communication' is a near-contradiction, since straightforward answers conform to efficiency maxims rather than flout them. Logically it also directly contradicts the passage's conclusion that readers do 'not immediately ask what do you mean by that?' and that they 'put up with many obscurities'. Rejected."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Seam parses ('poetic values' [pl.] agrees with 'flout', and poetic values flouting Gricean maxims for a further goal is semantically passable). But it inverts the passage's thesis: under the 'hyper-protected' cooperative principle, readers of literature precisely do NOT prioritize efficient communication — they tolerate inefficiency and obscurity on the assumption of an ultimate communicative purpose. Contradiction with the frame 'instead of imagining that the writer is being uncooperative, they ___'. Rejected."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "Seam parses ('the difficult parts' [pl.] agrees with 'flout'). Logically unsupported: the passage attributes the interpretive work to the reader's own effort ('the results of our reading efforts', 'the willingness of readers to pay attention, to explore uncertainties'). The prior selection by others (publication, review, reprinting) supplies assurance that the work is 'worth it', not explanations of difficult parts. Deflecting interpretation to other readers does not fill the contrast frame, which demands the reader's own interpretive stance toward the flouting elements. Rejected."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "Seam grammatical: 'complex meanings' [pl.] serves as antecedent of 'that flout' with correct plural agreement, yielding 'make a patient effort to decipher complex meanings that flout principles of efficient communication in the interests of some further communicative goal.' Minor quibble: strictly it is linguistic elements/complications (Culler's original: 'struggle to interpret elements that flout...'), not 'meanings', that flout maxims — a loose metonymy, but acceptable in this register. Logically it uniquely satisfies the frame: matches 'put up with many obscurities', 'complications of language ultimately have a communicative purpose', and 'pay attention, explore uncertainties, and not immediately ask what do you mean'. Accepted as the sole defensible answer."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Seam ungrammatical: after 'they assume the author has failed to communicate', the trailing relative 'that flout principles...' has no plural nominal antecedent ('the author' is singular; a complementizer reading of 'that' fails because 'flout principles...' has no subject and is not a finite clause). No alternative parse (reduced relative, inversion, etc.) rescues it. Logically it is also the direct negation of the passage: readers, 'instead of imagining that the speaker or writer is being uncooperative', assume a communicative purpose. Rejected on both formal and logical grounds."
+    }
+  ],
+  "note": "Blank-fill over Culler's hyper-protected cooperative principle passage. Formal long-distance cue: the stranded relative clause 'that flout principles of efficient communication...' forces the filler to end in a plural NP antecedent, which options ①-④ satisfy but ⑤ fails outright. Logic then eliminates ①-③ (each contradicts or lacks support in the passage), leaving ④ as the unique defensible answer. The item is well-formed; the only cosmetic imperfection is the metonymic 'meanings that flout' (vs. the original's 'elements that flout'), which does not create a second defensible option."
+}

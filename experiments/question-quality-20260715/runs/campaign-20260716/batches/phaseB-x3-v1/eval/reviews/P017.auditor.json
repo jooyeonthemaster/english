@@ -1,0 +1,82 @@
+{
+  "pid": "P017",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-EXPLANATION-MISANALYSIS",
+      "severity": "critical",
+      "evidence": "정답 해설이 '수동의 뜻을 갖는 과거분사 understood는 목적어를 취할 수 없어 문장 구조상 들어올 수 없습니다'라고 설명하지만, 해당 자리에는 직접목적어가 아예 없다. 'of the organization's own goals and objectives'는 명사 understanding의 전치사 보충어(of-PP)다. understood가 틀린 실제 결정적 이유는 관사+형용사('a thorough') 뒤 명사 핵 자리에 과거분사가 올 수 없다는 품사(어형) 판정인데, 해설은 이를 '분사의 태·목적어 수반' 문제로 오설명했다. 해설의 논리대로라면 understanding도 이 문자열에서 직접목적어를 취하지 않으므로 정답형과 오답형을 구별하지 못하는 자기모순적 설명이다."
+    },
+    {
+      "code": "V4-KEYPOINT-CATEGORY-MISLABEL",
+      "severity": "major",
+      "evidence": "keyPoints가 (B)를 '분사구문과 분사의 태 — 의미상 목적어를 취하는 능동 구조 판정'으로 분류했으나, 해당 문장에 분사구문은 존재하지 않는다. 출제 포인트는 명사 자리(a thorough ___ of)에서의 명사 vs 과거분사 어형 판정이며, 분사구문/태와 무관하다. '명사절 that을 관계대명사로 부르는 류'의 범주 오분류에 해당한다."
+    },
+    {
+      "code": "V4-VAGUE-STRUCTURE-CLAIM",
+      "severity": "major",
+      "evidence": "해설의 '(B)가 포함된 마디는 전체 전치사구 내의 핵심 수식 구조를 이룹니다'는 실제 구조와 불일치한다. understanding은 with-전치사구 내부 명사구의 핵 명사이지 수식 구조가 아니다. '전치사구 명사를 매개로 연결' 같은 표현도 통사적으로 규정 불가능한 손상된 서술이다."
+    },
+    {
+      "code": "V4-TERMINOLOGY-MINOR",
+      "severity": "minor",
+      "evidence": "오답 해설 (C)에서 'it'을 '지시대명사'로 지칭했으나 it은 인칭대명사다. 또한 (A) 해설의 '복수 명사에 수식을 받는 단수 명사인 One'은 의미 전달은 되나 조사 사용이 어색한 서술이다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주어-동사 수일치 — 'One of + 복수명사 + when절 수식'으로 진짜 주어 핵(One)을 가린 뒤 단수동사 판정",
+      "temptingBecause": "동사 직전까지 organizations, they, social media 등 복수·삽입 요소가 길게 이어져 mistakes를 주어로 착각하기 쉽다",
+      "decisiveFlaw": "주어 핵은 단수 One이므로 is가 정확히 옳다. 수능 최빈출 패턴이라 훈련된 학생은 즉시 소거한다"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — 관사+형용사(a thorough) 뒤 명사 핵 자리에 과거분사 understood를 넣은 어형(품사) 오류. 교정형 understanding으로 고치면 정확히 원문이 된다",
+      "temptingBecause": "understand의 파생형이 여럿(understanding/understood)이고 'thorough understood'가 소리로는 익숙한 연쇄로 들릴 수 있다",
+      "decisiveFlaw": "'a thorough ___ of NP' 슬롯은 명사 핵을 요구하며 과거분사는 이 자리를 채울 수 없다. 다만 이 판정은 4단어 국소 창에서 즉시 드러나 구조 독해가 필요 없다 — KILLER 요구와 불일치"
+    },
+    {
+      "label": "(C)",
+      "intent": "대명사 목적어의 수·지시 적합성 판정",
+      "temptingBecause": "선행 내용이 구 단위 활동이라 지시 대상이 모호하게 느껴질 수 있다",
+      "decisiveFlaw": "'everyone else is doing it'은 완전히 자연스러운 관용적 표현으로 오답 매력도가 거의 없는 준필러다. (D)와 pointCode(g)도 중복된다"
+    },
+    {
+      "label": "(D)",
+      "intent": "재귀대명사 — 관용구 'in and of itself'에서 동명사구 주어를 지시하는 itself 적합성",
+      "temptingBecause": "선행사가 사람이 아닌 동명사구('Being in social media')라 itself/it 선택을 한 번 따져보게 한다",
+      "decisiveFlaw": "in and of itself는 고정 관용구이며 재귀 지시가 정확히 성립한다. 관용구를 아는 학생에게는 즉시 소거된다"
+    },
+    {
+      "label": "(E)",
+      "intent": "상관접속사 either A or B — 조동사 must 뒤 동사원형 병렬 판정",
+      "temptingBecause": "solve와 result 사이 거리가 있고 result in이라는 자동사 패턴이 섞여 병렬 짝 확인이 필요하다",
+      "decisiveFlaw": "must either solve ... or result in으로 두 동사원형이 정확히 병렬이며 옳다"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 오류 원인을 '과거분사는 목적어를 취할 수 없다'는 태/목적어 논리로 오설명 — 실제 결정 근거(관사+형용사 뒤 명사 자리)를 제시하지 못하고, 그 논리로는 정답형 understanding도 구별되지 않는다",
+    "keyPoints의 (B) 항목이 존재하지 않는 '분사구문' 및 '분사의 태'를 출제 포인트로 지목 — 범주 오분류",
+    "'전치사구 명사를 매개로 연결', '핵심 수식 구조' 등 통사적으로 규정 불가능한 모호·손상 서술",
+    "(C) 해설의 'it = 지시대명사' 용어 오류(인칭대명사가 옳다)",
+    "keyPoints가 3개 밑줄만 다루고 (C)·(D)는 누락 — 동기화 모순은 아니나 밀도 저하"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 통과: 렌더 지문은 의도된 (B) 치환 외 원지문과 완전 일치하고, 독립 검증 결과 정답 집합은 정확히 {(B)} 하나이며, 교정 시 원문이 복원된다. 그러나 V4 실패 — 정답 해설의 핵심 구조 분석이 사실과 다르고(직접목적어가 없는 자리를 '목적어 수반 불가'로 오설명, 분사구문/태 오분류), 이는 학생에게 오개념을 가르치는 수준이라 공예 점수로 상쇄 불가. KILLER 조건도 미충족: 정답 오류가 'a thorough understood of'라는 국소 어형 오류로 4단어 창에서 즉시 노출되어 구조 독해가 불필요하고(§C 4번 위반), (C)는 준필러로 (D)와 pointCode가 중복된다. 요청 난이도 KILLER 대비 실제 난이도는 중하위(C5=1). 재사용하려면 해설 전면 재작성 + 정답 포인트를 구조 의존형으로 교체 필요."
+}

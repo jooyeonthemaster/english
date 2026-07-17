@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "explanation-concision-source-hashes-v1",
+  "files": [
+    {
+      "path": "experiments/question-quality-20260715/baseline-evidence.json",
+      "bytes": 34083,
+      "sha256": "33f5348378a4d70306f1385d70662cf5edaca615104e7dbe2a65eedce62eafaa"
+    },
+    {
+      "path": "experiments/question-quality-20260715/baseline/jul15-dawn/private/manifest-private.json",
+      "bytes": 171569,
+      "sha256": "b01d8db26a8f43e99005766c673fe6b0f467d089a5af944652513d1d258fef32"
+    },
+    {
+      "path": "experiments/question-quality-20260715/offline/production-deployment-provenance.json",
+      "bytes": 60074,
+      "sha256": "74a5a3c09f5dddf25f2acfc87d7ff57b0c14f646df78959a88aa030eaf2db636"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/explanation-concision-offline-audit-v1/manual-review.json",
+      "bytes": 15200,
+      "sha256": "88e2d5a8959f77a5feba8e7ab252886e430cdac1d91f61fac35d96cfa7e39061"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/jul15-dawn/adjudication.json",
+      "bytes": 15012,
+      "sha256": "05a5b00d61ea2d35473fa15c4ceb1a6fd3553118494713547475da4dc16cdcb1"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/jul15-dawn/rater-1-final.json",
+      "bytes": 41879,
+      "sha256": "0faa513b2374bd38ffcb46e4e7b16d1303b431b86ddc89e6b77acb8d5e7f7cb0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/jul15-dawn/rater-2-final.json",
+      "bytes": 69933,
+      "sha256": "32ed09c67162c7ee47022b20e5043523bc1c3a3a4282093fa7c224f1f5bef93d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/adjudication/adjudication-final.json",
+      "bytes": 115259,
+      "sha256": "7e2cb58a7811cb7d7baba68fe898c5ed7a90d2c0d7f598cbf1f8b2ea902e0614"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/adjudication/adjudication-final.md",
+      "bytes": 15762,
+      "sha256": "9c1d5e525a70e5fa71efef3086a94bcec1cb7ae872dea3f48a95fd0af5256ee0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/sealed-manifest.json",
+      "bytes": 752380,
+      "sha256": "f442014ea6c02cf7a95dc2452642888ddc172bbb1a4c6c7fd6958ce72ba2893c"
+    },
+    {
+      "path": "scripts/_gen_audit_out/jul15-dawn-questions.json",
+      "bytes": 150411,
+      "sha256": "9f71809e3166fe50e2f9e8e0faadcf5a9a0daed719517036051f36bf0cd5dad3"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/prompts.ts",
+      "bytes": 11104,
+      "sha256": "7d6f0d25e2933f122323dda29d3f65bacb03dafc62444f4cff72088e8422bf59"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "bytes": 20991,
+      "sha256": "648692ad0708d941d024b67d15c6d510db0f61f2fc9674f0f98316b4f63a16b9"
+    },
+    {
+      "path": "src/lib/question-ai-schemas-mc.ts",
+      "bytes": 49303,
+      "sha256": "c538452b7810e0efd8dd1d2c9345c3b1a64f8650a4590afc11850ce0d2bb5694"
+    },
+    {
+      "path": "src/lib/question-generation-prompt-contract.ts",
+      "bytes": 46240,
+      "sha256": "5fcf0144529af8b5cc72616c25fd45535d5920098acc5434e7c7ec428e9cd354"
+    },
+    {
+      "path": "src/lib/question-quality/dispatcher.ts",
+      "bytes": 116286,
+      "sha256": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99"
+    },
+    {
+      "path": "src/lib/question-quality/validators/grammar/combo.ts",
+      "bytes": 21122,
+      "sha256": "87de4597408121dac763b8b050b4bd50286b3d2cb16037922692cce7b967119d"
+    },
+    {
+      "path": "src/lib/question-quality/validators/grammar/explanation-lint.ts",
+      "bytes": 8896,
+      "sha256": "0794ed2b0b2cb778ae6ea96beb4a9caae01084da53b586c04d3e8ebc9b08ac34"
+    },
+    {
+      "path": "src/lib/question-quality/validators/grammar/shared.ts",
+      "bytes": 80295,
+      "sha256": "fb57409f1695f10f8d3ba2fdf1ce9845f0c273b724b8711e5e17fefa9b99931b"
+    },
+    {
+      "path": "src/lib/question-quality/validators/misc.ts",
+      "bytes": 3813,
+      "sha256": "340e7a7e6fdc570d2488e54dc33d181726a841492ee3d8e94fd1e880e44d497b"
+    },
+    {
+      "path": "src/lib/question-quality/validators/options.ts",
+      "bytes": 9268,
+      "sha256": "e5f50756acebc6db9d95e1f9111c5d5a43936cc2f729834ccdae8c61f9451503"
+    }
+  ]
+}

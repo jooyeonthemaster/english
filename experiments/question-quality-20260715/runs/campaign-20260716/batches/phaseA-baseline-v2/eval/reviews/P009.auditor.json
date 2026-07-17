@@ -1,0 +1,69 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal): 감정의 정확한 표현이라는 논지를 감정 억제로 뒤집음",
+      "temptingBecause": "'중립적 태도 유지'가 갈등 완화에 도움이 될 것 같은 상식적 직관과, 지문의 감정 소재(emotions, moods)와의 어휘 중첩",
+      "decisiveFlaw": "지문은 'express emotions, feelings and moods accurately'로 감정의 정확한 표현을 명시적으로 옹호하므로 억제(suppressing)는 직접 모순"
+    },
+    {
+      "label": "②",
+      "intent": "정답: 원문 'Appreciation of differences'의 패러프레이즈. 직전 문장의 관점 수용(take the perspective of the other group members)과 반응 방식 이해를 수렴",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 다만 'perspectives'가 직전 문장의 'perspective'와 직접 어휘 반향을 이루고, 5개 중 유일한 긍정·수용 지향 선지여서 표면 단서만으로도 도달 가능 — 정답성 자체는 유일하고 확실함"
+    },
+    {
+      "label": "③",
+      "intent": "조건 상실/절반 진실(condition loss, half-truth): 협력 개념에서 '자신의 필요'를 탈락시키고 집단 우선으로 왜곡",
+      "temptingBecause": "'cooperate', 'needs of others' 등 협력 어휘와의 중첩으로 집단 조화 담론처럼 보임",
+      "decisiveFlaw": "지문은 'accommodate their own needs as well as the needs of others'로 자신과 타인의 필요를 모두 수용한다고 명시. 'Unconditionally ... over individual needs'는 이 균형을 파괴. 절대어 'Unconditionally'만으로도 소거 가능(킬러 조건 위배 요인)"
+    },
+    {
+      "label": "④",
+      "intent": "어휘 연상 함정(lexical association): 'emotion vocabulary', 'clear communication'에서 착안한 소재 이탈",
+      "temptingBecause": "'linguistic rules', 'clear speech'가 지문의 어휘·명료한 소통 표현과 표면적으로 겹침",
+      "decisiveFlaw": "지문의 주제는 감정 이해와 관점 수용이지 언어 표준화가 아님. 논지와 무관한 소재라 구조 독해 없이도 비교적 빨리 탈락"
+    },
+    {
+      "label": "⑤",
+      "intent": "목표 왜곡(goal distortion): 갈등의 '건설적 해결'을 갈등 '회피'로 치환",
+      "temptingBecause": "갈등(conflict) 소재 중첩과 '분쟁 회피 = 집단 화합'이라는 상식적 오독",
+      "decisiveFlaw": "빈칸이 포함된 바로 그 문장의 tail이 'promotes constructive conflict resolution'으로 갈등의 해결을 명시 — 회피와 정면 모순. 절대어 'any'로도 소거 가능. 국소 단서 하나로 즉시 탈락하는 얕은 함정"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "OVERSTATED_NECESSITY",
+      "severity": "minor",
+      "evidence": "해설의 '그들의 반응 방식을 이해해야만 열린 소통과 건설적인 갈등 해결이 가능해진다고 논증합니다'는 원문(Appreciation of differences creates an arena...)의 촉진 관계를 필요조건('~해야만')으로 다소 강화해 서술. 오분석 수준은 아니며 정답 판단에 영향 없음."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "syntacticSlotUniformity": true,
+    "answerPreservesSourceMeaning": true,
+    "distractorAnchorOverlapFlaw": true,
+    "requiresMultiSentenceSynthesis": false,
+    "variedTrapTaxonomy": true,
+    "detail": "§D 4번 조건 실패가 결정적: (a) 정답 ②는 빈칸 직전 문장 하나('take the perspective of the other group members and understand why they are reacting')만으로 도달 가능하고, 'perspectives/diverse'라는 직접 어휘 반향까지 존재. (b) ③의 'Unconditionally', ⑤의 'any'는 절대어 하나로 소거 가능. (c) ②는 5개 중 유일한 긍정·수용 지향 선지라 극성만으로 찍기 가능. 두 문장 이상의 논리 단서 연결이 강제되지 않음."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 무결, 정답 유일(각 선지 독립 검증 완료), 완성문 문법성 양호(5개 선지 모두 동일 동명사구 주어 슬롯에 적합 — suffix 기반 문법 소거 없음), 해설 사실성 양호, 필드 동기화 일치. 그러나 요청 난이도 KILLER 대비 실제 난이도가 중위권 수준: 정답이 직전 문장의 국소 단서 + 'perspective(s)' 어휘 반향 + 유일한 긍정 극성으로 노출되고(C4=2), ①·④·⑤가 표면 단서로 즉시 소거되어 실질 경합은 ③ 하나뿐(C3=2), 난이도 라벨 정합 실패(C5=1). 원문 span 'Appreciation of differences'의 추상화 수준도 KILLER 요구 대비 낮음('team members'로 오히려 구체화 + 어휘 반향 잔존). C 합계 15, C5<2로 B 기준 미달. 등급 C — 출하하려면 정답 선지의 어휘 반향 제거, 극성 위장(오답 중 최소 1개를 긍정 지향으로), 절대어 제거, 다문장 종합 강제 재설계 필요."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Inserting it yields 'show them kindness and give them a sympathetic ear; just don't absorb their emotional distress' — a clean grammatical seam and a direct paraphrase of the passage's core: troubles 'spread like a virus', 'be careful not to be overcome by the misfortune', 'remaining detached'. The blank must name the emotional contagion the whole passage warns against, and this option does exactly that."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'Just don't ignore their cries for help' would restate rather than contrast with 'show them kindness and give them a sympathetic ear'; the concessive structure requires the blank to limit the kindness, not reinforce it. The passage never warns against ignoring sufferers — it warns against over-identifying with them."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Prohibiting analysis reverses the passage's advice: it explicitly encourages discriminating 'between events themselves and your interpretations of them', i.e., an analytical stance toward misfortune. 'Don't analyze the cause' contradicts the Stoic method the passage endorses."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong-but-attractive",
+      "reason": "The designed attractor — I felt the pull because 'take on their burdens' superficially echoes the detachment theme. But 'burdens' points to practical problems, whereas the passage is specifically about emotional/attitudinal contagion (views, attitudes, uncritically adopted responses, melodramatic reactions). Worse, 'completely' implies partial burden-taking is acceptable — a hedge the passage never makes; its warning is against catching the negative emotion at all. A degraded paraphrase of option 1, distinguishable on both lexical scope and the hedge."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Directly contradicts the sentence containing the blank: 'if you find yourself in a conversation with someone... show them kindness and give them a sympathetic ear' presupposes the conversation happens. 'Avoid any conversation entirely' also contradicts 'we do a good service to others', which assumes engagement while detached."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. The passage is Stoic (Epictetus/Enchiridion-style) advice on emotional contagion; the concessive 'Still, ... just don't ___' requires the blank to state the limit on sympathy, i.e., not catching the sufferer's emotion. Option 1 fits uniquely; option 4 is a well-crafted near-miss trap but fails on 'burdens' (practical, not emotional) and the 'completely' hedge. Alternative readings were checked: no grammatical seam issues in option 1; options 2/3/5 each contradict explicit passage content, so no second defensible label exists. Distractor quality is good — 4 will pull mid-level students."
+}

@@ -1,0 +1,100 @@
+{
+  "pid": "P026",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-surroundingText",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 surroundingText가 'so that they can be transcribed easily afterwards.'로 교정형(원지문) 문장을 담고 있어, 렌더 지문의 실제 표시형('can transcribe')과 다르다. (A)(B)(D)(E)는 렌더형과 일치하므로 필드 의미가 비일관적이다. 렌더 지문 자체는 정상이라 학생 노출 오류는 아니므로 V5 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V2-note-middle-voice",
+      "severity": "minor",
+      "evidence": "'they can transcribe easily'를 중간태(middle construction, cf. 'this book reads easily')로 읽을 이론적 여지가 있으나 transcribe는 관용적 중간태 동사가 아니고, 문장 내 유일한 복수 선행사가 'the key answers'(피동 대상)이므로 능동은 성립하지 않는다. 정답 유일성은 유지됨."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 'while'(a while = 잠시 동안, lasts의 지속 보충어) vs 접속사 'while' 혼동 유도",
+      "temptingBecause": "학생은 while을 절을 이끄는 접속사로만 알고 있어 'a while'이라는 명사 용법을 비문으로 오인할 수 있다",
+      "decisiveFlaw": "'last + a while'은 표준 지속 표현으로 어법상 완전히 옳다. 오답."
+    },
+    {
+      "label": "(B)",
+      "intent": "가주어-진주어 구문의 주격보어 자리에서 형용사 vs 부사(more efficiently) 판별",
+      "temptingBecause": "바로 뒤의 동사구 'to develop'을 수식한다고 착각하면 부사가 필요해 보인다",
+      "decisiveFlaw": "be동사의 보어로서 진주어 'to develop...'을 서술하므로 형용사 비교급이 옳다. 오답."
+    },
+    {
+      "label": "(C)",
+      "intent": "정답. 태(능동 vs 수동) + 대명사 지시 해소: they = the key answers(피동 대상)이므로 can be transcribed가 필요",
+      "temptingBecause": "조동사 can 뒤 동사원형이라 국소적으로는 형태 위반이 없어 보이고, they를 사람(기록자)으로 오독하면 능동이 자연스러워 보인다",
+      "decisiveFlaw": "타동사 transcribe에 목적어가 없고 주어 they의 유일한 선행사가 'the key answers'로 행위의 대상이므로 능동태는 성립 불가. be transcribed로 교정하면 정확히 원지문이 된다."
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사 of의 목적어 자리 동명사 vs to부정사 판별",
+      "temptingBecause": "'try to get into the habit of' 뒤에서 to부정사 연쇄에 이끌려 to edit을 기대할 수 있다",
+      "decisiveFlaw": "전치사 뒤는 동명사이므로 editing out이 옳다. 다만 기계적으로 소거되는 매우 쉬운 포인트라 디코이로서의 견인력이 약하다(준필러)."
+    },
+    {
+      "label": "(E)",
+      "intent": "5형식 make의 목적격보어 자리 형용사 vs 부사(more easily) 판별",
+      "temptingBecause": "뒤의 'to handle'을 수식한다고 보면 부사가 필요해 보인다(much가 비교급 강조로 붙어 있어 표면이 복잡함)",
+      "decisiveFlaw": "make + O + 형용사 보어 구조(tough-구문 'easier to handle')이므로 형용사 비교급이 옳다. 오답."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설이 각 밑줄의 'why correct'만 서술하고 'why tempting'(무엇 때문에 헷갈리는지)을 전혀 다루지 않는다. 특히 (A)는 '명사구의 일부로 쓰인 while'이라고만 하여 접속사 용법과의 대비가 없다.",
+      "recommendation": "각 오답 해설에 오인 유발 지점(접속사 while 오인, develop 수식 오인, to부정사 연쇄, handle 수식 오인)을 한 문장씩 추가"
+    }
+  ],
+  "issues": [
+    {
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER 대비 실제 난이도 불일치(C5=1). 정답 (C)는 '타동사 + 목적어 부재 + 부사'라는 한국 수능 어법에서 가장 많이 훈련되는 국소 패턴으로, 숙련 학생은 they의 선행사를 따지기 전에 목적어 부재만으로 즉시 수동태 오류를 식별한다. RUBRIC §C의 '즉시 드러나지 않는다' 요건에 부합한다고 보기 어렵다.",
+      "recommendation": "KILLER로 쓰려면 목적어 부재가 표면에 드러나지 않는 자리(예: 관계절 내부 태, 도치·삽입으로 가려진 구조)로 정답 포인트를 옮기거나 난이도 라벨을 중상으로 하향"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(D) editing out은 '전치사 + 동명사'라는 즉시 소거형 포인트로 KILLER 선지 구성에서 준필러에 가깝다.",
+      "recommendation": "(D)를 판단 부하가 있는 포인트(예: 분사구문 태, 병렬 구조)로 교체"
+    },
+    {
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 surroundingText가 렌더형이 아닌 교정형 문장을 담아 다른 항목과 필드 의미가 비일관적이다.",
+      "recommendation": "surroundingText를 렌더 지문 기준으로 통일하고 교정형은 correction 필드에만 둔다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allUnderlinesDocumented": false,
+    "notImmediatelyRevealed": false,
+    "noShadowingEasyDecoy": true,
+    "note": "최소대립쌍(be transcribed→transcribe→교정 시 원문 복원)과 명확한 문법 판단은 충족. 그러나 (1) 각 밑줄의 why-tempting 문서화 부재, (2) 정답이 '타동사+목적어 부재'라는 국소 단서로 즉시 드러나 KILLER 은닉 요건 미충족, (3) (D) 준필러로 5선지 의도 밀도 약화."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 (C) 한 곳(be transcribed→transcribe)만 의도적으로 변형되었고 나머지는 원지문과 일치하며, 정답은 (C)로 유일하고, 해설의 통사 분석(they의 선행사=the key answers, 수동태 필요, 가주어/전치사 목적어/목적격보어 설명)은 모두 사실과 부합한다. 그러나 공예 합계 15점(C5=1)으로 B 기준(최저 2, 합계 17) 미달. 핵심 결함은 난이도 정합: KILLER 요청에 대해 가장 정형화된 태 오류 패턴을 출제하여 라벨과 실제 사고 부하가 크게 어긋난다. 문항 자체는 중상 난이도용으로는 출하 가능한 품질."
+}

@@ -1,0 +1,74 @@
+{
+  "pid": "P049",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-TYPO",
+      "severity": "minor",
+      "evidence": "오답 해설 1의 '단순 기술 훈련(스잉)'에서 '스잉'은 '스윙(swing)'의 오탈자(비단어). 의미 복원이 즉각 가능하고 구조·논리 분석 자체는 정확하므로 V4 실격이 아닌 경미 결함으로 기록."
+    },
+    {
+      "code": "V3-MINOR-REDUNDANCY",
+      "severity": "minor",
+      "evidence": "정답 완성문 'they have the strength and stamina to gain a psychological edge alongside their bodily strength...'에서 strength가 주절과 선지에 중복되어 문체상 어색함(준순환적). 문법적으로는 성립하며 의미 전달에 지장 없음 — 비문 아님."
+    },
+    {
+      "code": "V4-MINOR-LOOSE-SUMMARY",
+      "severity": "minor",
+      "evidence": "본 해설 말미 '오답들은 ... 인과 역전이나 단순 기술훈련으로 축소하는 함정으로 설계되었습니다'는 오답 4(절대화·조건 상실)와 5(대체 관계 왜곡)를 포괄하지 못하는 느슨한 총평. 다만 오답별 개별 해설은 각 선지 내용과 정확히 대응하므로 사실성 위반은 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "scope shift(과협소): 훈련 목적을 스윙 기술 완성으로만 축소",
+      "temptingBecause": "골프 소재와 practice range 앵커가 있어 '정상급 골퍼 = 완벽한 스윙'이라는 상식적 연상이 작동한다",
+      "decisiveFlaw": "'entirely'가 빈칸 바로 앞 'not just on the practice range but in the weight room'과 정면 충돌 — 빈칸이 든 문장 하나만 읽어도 소거된다. mental game 귀결도 누락"
+    },
+    {
+      "label": "2",
+      "intent": "정답: source span 'win not just the physical game but the mental game'의 추상화 재진술 (physical game→bodily strength, mental game→psychological edge, not just A but B→B alongside A)",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 사업가 사례(신체적 스태미나→협상이라는 정신적 대결 승리)와 골퍼 결론부를 종합하면 유일하게 성립. 다만 완성문에서 strength 중복으로 문체가 다소 어색"
+    },
+    {
+      "label": "3",
+      "intent": "causal reversal(인과 역전): 정신력으로 체력 부족을 보완",
+      "temptingBecause": "mental focus, stamina 등 지문 핵심 어휘를 재사용해 표면 겹침이 크다",
+      "decisiveFlaw": "슬롯 내 자기모순 — 'the strength and stamina to overcome their lack of physical stamina'는 같은 절 안에서 즉시 파탄. 지문은 골퍼들이 체력이 '더 좋다'고 명시하므로 lack 전제 자체가 거짓. 국소 단서만으로 즉사하는 약한 디코이"
+    },
+    {
+      "label": "4",
+      "intent": "condition loss + 절대화: 정신적 차원을 삭제하고 신체 특성 단독 의존으로 왜곡",
+      "temptingBecause": "지문이 사업가·골퍼 모두에서 신체 조건의 우위를 반복 강조하므로 절반은 참(half-truth 성격)",
+      "decisiveFlaw": "'solely ... rather than tactics'가 결론부가 존재하는 이유인 mental game 절반을 지운다. 절대어 solely가 시험 요령만으로도 소거 단서가 되는 부수 결함"
+    },
+    {
+      "label": "5",
+      "intent": "relation distortion(half-truth): 병렬(둘 다)을 대체(하나 대신 하나)로 뒤집음",
+      "temptingBecause": "practice range와 weights 둘 다 지문 축자 앵커라 표면 일치도가 가장 높다",
+      "decisiveFlaw": "빈칸 문장 자체가 'not just on the practice range but in the weight room'으로 가산적 병렬을 명시 — substitute A for B는 정반대 관계. 역시 국소 단서만으로 소거됨"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 1의 '(스잉)'은 '(스윙)'의 오탈자(비단어) — 경미하나 손상 용어로 기록",
+    "본 해설 총평 문장이 오답 4·5의 함정 유형(절대화, 대체 왜곡)을 포괄하지 못하고 인과 역전·기술 축소 두 유형만 언급 — 개별 오답 해설은 정확하므로 사실 오류는 아님"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 프로그램 diff로 확인 — 원지문에서 정확히 'win not just the physical game but the mental game' 한 span만 '_____'로 치환, 그 외 접합 파손·중복·누락·오탈자 없음. 발문·라벨 1~5와 선지 일치. V2: 5개 선지 독립 대입 검증 — 1(entirely가 weight room 병렬과 충돌), 3(슬롯 내 자기모순+지문 명제와 충돌), 4(solely가 mental game 귀결과 충돌), 5(병렬을 대체로 역전)로 각각 유일 결정적 결함이 있고 2만 성립 — 단일 정답 유일성 확보. V3: 지문·발문·완성문 모두 문법적(완성문의 strength 중복은 문체 결함 수준). 다섯 선지 모두 'to ___ in order to...' 동일 통사 슬롯에 들어가며 tail로 인한 문법 탈락 없음. V4: 구조 분석(결론부 귀결, 사업가 사례와의 종합, 재진술 매핑) 모두 실제 지문과 일치, 오답 해설도 각 선지 내용과 대응 — '스잉' 오탈자만 경미 결함. V5: 정답 라벨 2 = 해설 지목 선지 = keyPoints 재진술 매핑, 오답 해설 키(1,3,4,5) 완비 — 동기화 이상 없음. 공예: 결론부 핵심 종합을 묻는 지점 선정은 좋으나(C1=3), 디코이 4개 중 3개(1·3·5)가 빈칸이 든 문장의 국소 단서만으로 소거되고 3은 자기모순으로 즉사, 1·4가 entirely/solely 절대어를 공유해 test-wise 소거에 취약(C3=2, C4=2). 정답 2가 유일한 포용형('alongside') 선지라는 균형 선지 티도 누출 요인. KILLER 요청 대비 실제 난이도는 중(中) 수준 — 다문장 종합 없이 소거만으로 도달 가능해 난이도 정합 미달(C5=1). KILLER 조건(§D): 슬롯 균일성·의미 보존·함정 다양성은 충족하나 '최소 두 문장/두 논리 단서 연결 필수' 및 '단서 하나로 찍기 불가' 조건이 국소 소거 경로와 절대어 패턴 때문에 실질 미충족 → killerConditionsMet=false. 등급: 전 V 통과이나 C5=1로 B 최저선(전 축 2 이상) 미달, 합계 14 < 17 → C(재설계 필요: 디코이 3 교체, entirely/solely 절대어 제거, 국소 모순 대신 원거리 단서 요구형 디코이로 재설계 권고)."
+}

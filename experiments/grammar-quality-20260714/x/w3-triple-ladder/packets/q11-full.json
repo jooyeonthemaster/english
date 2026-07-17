@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20221123-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 153
+  },
+  "attempts": 6,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=g  (B):dec=d  (C):dec=f  (D):dec=e  (E):ANS=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 406,
+        "relPos": 0.445,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 445,
+        "relPos": 0.487,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 627,
+        "relPos": 0.687,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 782,
+        "relPos": 0.857,
+        "sentenceIndex": 9,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 822,
+        "relPos": 0.9,
+        "sentenceIndex": 10,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.9,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Our language helps to reveal our deeper assumptions. Think of these revealing phrases: When we accomplish something important, we say it took \"blood, sweat, and tears.\" We say important achievements are \"hard-earned.\" We recommend a \"hard day's work\" when \"day's work\" would be enough. When we talk of \"easy money,\" we are implying it was obtained through illegal or questionable means. We use the phrase \"That's easy for you to say\" as a criticism, usually when we are seeking to invalidate someone's opinion. It's like we all automatically accept that the \"right\" way is, inevitably, the harder one. In my experience this is hardly ever questioned. What would happen if you do challenge this sacred cow? We don't even pause to consider that something important and valuable could be made easy. What if the biggest thing keeping us from doing what matters is the false assumption that it has to take huge effort?",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "That",
+        "isError": false,
+        "correction": "That",
+        "errorExpression": "That",
+        "surroundingText": "We use the phrase \"That's easy for you to say\" as a criticism",
+        "pointCode": "g"
+      },
+      {
+        "label": "(B)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is",
+        "errorExpression": "is",
+        "surroundingText": "It's like we all automatically accept that the \"right\" way is, inevitably, the harder one.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "hardly",
+        "isError": false,
+        "correction": "hardly",
+        "errorExpression": "hardly",
+        "surroundingText": "In my experience this is hardly ever questioned.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "be made",
+        "isError": false,
+        "correction": "be made",
+        "errorExpression": "be made",
+        "surroundingText": "We don't even pause to consider that something important and valuable could be made easy.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "keeping",
+        "isError": true,
+        "correction": "keeping",
+        "errorExpression": "kept",
+        "surroundingText": "What if the biggest thing keeping us from doing what matters is the false assumption that it has to take huge effort?",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "That"
+      },
+      {
+        "label": "(B)",
+        "text": "is"
+      },
+      {
+        "label": "(C)",
+        "text": "hardly"
+      },
+      {
+        "label": "(D)",
+        "text": "be made"
+      },
+      {
+        "label": "(E)",
+        "text": "kept"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "문맥상 특정한 상황이나 말을 가리키는 대명사이므로 단수형 That의 쓰임은 어법상 적절합니다.",
+      "(B)": "접속사 that절 내부의 진짜 주어 핵인 'way'가 단수이므로, 뒤에 단수 동사 is가 오는 것은 어법상 올바릅니다.",
+      "(C)": "진술 전체를 부정하며 수식하는 부사 자리이므로 hardly의 쓰임은 적절합니다.",
+      "(D)": "주어인 'something important and valuable'가 행위의 대상이고, 목적어 없이 목적격 보어만 남은 구조이므로 수동태인 be made가 적절합니다."
+    },
+    "explanation": "이 문장은 'the biggest thing'이 진짜 주어이고 'is'가 정동사인 구조입니다. (E) kept는 'the biggest thing'을 수식하는 분사 자리인데, 뒤에 목적어 'us'가 이어지며 의미상 주어인 명사가 직접 우리를 막는 주체이므로 과거분사를 쓰면 비문이 됩니다. 따라서 kept를 현재분사인 keeping으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 분사 능동 v-ing vs 수동 p.p. — 뒤에 목적어가 오는지에 따른 분사 판별",
+      "(B) 수일치 — 수식어를 걷어내고 주어 핵을 찾기",
+      "(D) 능동태 vs 수동태 — 주어와 수동 관계이고 목적어가 없는지 확인"
+    ],
+    "tags": [
+      "어법",
+      "분사구문",
+      "수일치"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "Our language helps to reveal our deeper assumptions. Think of these revealing phrases: When we accomplish something important, we say it took \"blood, sweat, and tears.\" We say important achievements are \"hard-earned.\" We recommend a \"hard day's work\" when \"day's work\" would be enough. When we talk of \"easy money,\" we are implying it was obtained through illegal or questionable means. We use the phrase \"__(A) That__'s easy for you to say\" as a criticism, usually when we are seeking to invalidate someone's opinion. It's like we all automatically accept that the \"right\" way __(B) is__, inevitably, the harder one. In my experience this is __(C) hardly__ ever questioned. What would happen if you do challenge this sacred cow? We don't even pause to consider that something important and valuable could __(D) be made__ easy. What if the biggest thing __(E) kept__ us from doing what matters is the false assumption that it has to take huge effort?"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합(seam): 'is to synchronize your daily routine with your team members' — to부정사 보어로 정문, 결합 문제 없음. 논리: 지문은 '각자 자신의(their own) 신체 리듬을 존중하라'고 명시하고, 팀 언급도 '같은 원리(개인별 리듬 존중)를 팀 활동 계획에 적용하라'는 것이지 팀원들과 일과를 '동기화'하라는 것이 아니다. 오히려 마지막 문장('아침형이 다수지만 오후에 컨디션이 오르는 사람도 있다')은 개인차 존중을 강조하므로 동기화 주장과 논리적으로 충돌한다. 형식적으로 반박 가능: P(개인차 존중) ∧ 1번(동기화) → 모순."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "문법 결합: 'is to complete all heavy tasks at dawn without fail' — 정문. 논리: 지문은 조건문 'If you have lots of energy early in the morning, that is when you should schedule difficult activities'로 아침 배치를 조건부로만 권하고, 마지막 문장에서 'there are those who differ and hit their stride later in the day'로 보편 명제를 명시적으로 부정한다. 'all ... at dawn without fail'의 전칭·무예외 양화는 지문의 조건부·개인차 논리와 직접 모순. 기각 확실."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 결합: 'is to monitor your energy levels solely to determine breaks' — 정문(solely가 목적 부사구를 한정). 논리: 지문에서 에너지 관찰의 일차 용도는 '어려운 활동(브레인스토밍·글쓰기·연습)의 배치'이고 휴식 배치는 부차적 언급이다. 'solely to determine breaks'는 용도를 휴식 결정으로만 배타 한정하므로 지문 내용과 정면 배치. 배타 양화어(solely)가 반례(어려운 활동 배치)에 의해 형식적으로 반증됨."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법 결합: 'is to prioritize extending break intervals between meetings' — prioritize + 동명사 목적어, 정문. 논리: 지문은 'Schedule intervals of productive time and breaks'로 생산 시간과 휴식의 '배치'를 말할 뿐, 휴식 간격의 '연장'을 우선하라는 내용은 어디에도 없다. 지지 전제 부재 — 무근거 도입(unsupported premise)으로 기각."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "문법 결합: 'is to match your critical tasks with your peak periods' — match A with B 구문, to부정사 보어로 정문. 논리: 빈칸 직후 문장들이 정확히 이 명제의 전개다 — (i) 자신의 신체 리듬·에너지 등락을 파악하라, (ii) 에너지가 높은 시간대에 어려운 활동을 배치하라, (iii) 같은 원리를 팀에도 적용하라, (iv) 피크 시간대는 사람마다 다르다(아침형 다수, 오후형 존재). '중요 과업 ↔ 피크 시간대 매칭'은 이 모든 세부를 포섭하는 유일한 일반화이며, 개인차 단서와도 정합(피크가 언제든 그때에 맞추라). 유일 정답."
+    }
+  ],
+  "note": "빈칸 뒤 지시문들(Know/respect/pay attention → schedule difficult activities at high-energy times → 팀 적용 → 개인차)이 모두 5번의 하위 전개로 환원된다. 1번은 개인차 존중과 모순, 2번은 전칭 양화(all/without fail)가 명시적 반례로 반증, 3번은 배타 한정(solely)이 반증, 4번은 무근거. 다섯 선지 모두 문법 결합 자체는 정문이므로 순수 논리 적합성으로만 변별되며, 변별은 깨끗하다. 복수 정답 여지 없음."
+}

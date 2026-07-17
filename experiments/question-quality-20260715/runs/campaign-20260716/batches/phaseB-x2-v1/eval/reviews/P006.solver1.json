@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸은 'the willingness of readers to pay attention, _____, and not immediately ask ...'의 3항 병렬 중 두 번째 to부정사 자리. ①을 넣으면 'to pay attention, to tolerate and investigate ambiguities, and not (to) immediately ask'로 병렬 결합(seam)이 매끄럽다. 내용상으로도 앞 문맥의 'We can put up with many obscurities and apparent irrelevancies'(= tolerate)와 'they struggle to interpret elements that flout principles of efficient communication'(= investigate)를 정확히 압축한 패러프레이즈. 원전으로 보이는 Culler의 해당 대목에서 이 자리는 'to explore uncertainties of meaning'으로, ①은 그 자리의 충실한 대체다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'표준 규칙을 위반하는 언어를 거부한다'는 논지 정반대. 지문은 규칙을 어기는(flout) 언어조차 소통 목적이 있다고 가정하고 해석하려 애쓴다고 명시. 'violates ... rules'가 'flout principles'와 표면 어휘가 겹쳐 순간 눈길이 가지만 방향(거부 vs 수용)이 반대라 즉시 배제. 넣으면 바로 뒤 'not immediately ask'와도 태도가 충돌한다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'예측 가능하고 단순화된 서사를 요구한다'는 'put up with many obscurities'와 정면 충돌. 문학 독자는 언어적 복잡성(complications of language)을 감내하는 존재로 그려지므로 논지 반대 방향 오답."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'published, reviewed, and reprinted', 'institutional label' 등 제도적 검증 프레임에 끌려 잠시 진지하게 고려했다(유혹 기록). 그러나 빈칸 문장은 독자가 독서 중에 보이는 태도(pay attention ~ not immediately ask)의 나열이고, 제도적 선별은 그 태도를 가능하게 하는 전제(assurance의 근거)이지 독자가 수행하는 행위가 아니다. 병렬로 넣으면 '주의를 기울이고, 학계 권위의 검증을 구하고, 즉시 묻지 않는다'는 층위 어긋난 나열이 되어 응집이 깨진다. 문법 결합은 성립하나 논리상 배제."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'즉각적이고 축어적인 해명을 요구한다'는 병렬의 마지막 항 'and not immediately ask what do you mean by that?'과 같은 문장 안에서 자기모순을 일으킨다. 'immediate'가 뒤 문장 어휘와 겹쳐 스캐닝 풀이자를 노리는 표면 미끼이나 정독 시 즉시 배제."
+    }
+  ],
+  "note": "출전은 Jonathan Culler, Literary Theory: A Very Short Introduction의 hyper-protected cooperative principle 대목으로 판단. 병렬 구조 단서(콤마 나열 + and not immediately ask)가 강력하고 지문의 두 축(견디기/해석하기)을 ①만 충족하므로 정답이 하나로 수렴. 실전 유혹 강도: ④ > ② > ⑤ > ③ 순이나 ④조차 병렬 층위 확인으로 배제 가능. 복수 정답 소지 없음. 대안 해석으로 정문/오답 판정이 뒤집힐 여지도 없음."
+}

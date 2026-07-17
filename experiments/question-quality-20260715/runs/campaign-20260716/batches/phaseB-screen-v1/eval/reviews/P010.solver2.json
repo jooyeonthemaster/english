@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "문법 결합: 'Rather, it should be to provide...' — 주어 it(= the goal of the modern artist)의 보어로 to부정사 명사적 용법이 성립하고, 직전 문장의 'should not be simply to utilize...'와 to-V ↔ to-V 병렬로 정확히 맞물린다. 논리 성립: 빈칸은 'not A. Rather, B' 구조에서 B 자리이며, B는 지문 3문장 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'의 재진술이어야 한다. ①의 'profound insights that challenge their conventional worldviews'는 이 정의문의 충실한 패러프레이즈(perceptions of the world ↔ conventional worldviews, challenges ↔ challenge, changes thoughts/feelings ↔ profound insights). 형식적으로 유일하게 대조 구조를 완성한다. 정답."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "문법 결합(to maximize...)은 성립하나 논리 부적합. '더 많은 사람이 예술을 생산·공유'는 도입부의 배경 사실이자 비평가들이 우려를 표한 현상이지, 지문이 예술가의 목표로 지지한 명제가 아니다. 편집 소프트웨어 보급을 목표로 삼는 것은 '기술은 도구일 뿐'이라는 결론 방향과 무관하며 오히려 'technology for its own sake'의 변주에 가깝다. 도입부 어휘를 재활용한 미끼로, 어떤 독해로도 옹호 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립하나 직전 문장과 형식적 모순. 'to master cutting-edge technological media to demonstrate... skills'는 곧 부정된 항 A('to utilize technology for its own sake')의 구체화다. 'not A. Rather, ___'의 빈칸에 A를 다시 넣는 것이므로 ¬A ∧ A의 자기모순이 되어 논리적으로 불성립. 명백한 오답."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립하나 과잉 극단으로 지문 명제와 직접 모순. 지문은 'new technologies are nothing more than tools that can be used in the creative process'라 하여 기술의 도구적 사용을 긍정한다. 'avoiding any interference from digital devices'(디지털 기기 전면 배제)와 'conform strictly to traditional aesthetics'(전통 미학 엄수)는 이 명제와 양립 불가하며, '지각에 도전하는' 위대한 예술의 정의와도 무관하다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립하나 논리 비약·날조. 비평가들의 우려는 '진정 위대한 예술이 무엇인지에 대한 감각의 상실'이지 보수적 미 기준으로의 회귀 요구가 아니며, '비평가 만족'이 목표로 제시된 바도 없다. 'reverting to conservative standards of beauty'는 great art의 정의(지각에 도전, 사고·감정을 영원히 변화)와 오히려 상충(도전 vs 보수적 순응)한다."
+    }
+  ],
+  "note": "빈칸 유형. 다섯 선지 모두 to부정사로 시작해 'it should be ___'의 보어 자리 문법 결합(seam)은 전 선지에서 성립하므로 판별은 순수 논리 문제다. 'not A. Rather, B' 대조 구조에서 B는 지문 내 great art 정의문의 패러프레이즈여야 하며 ①만 충족(어휘 대응이 명시적). ③은 부정된 A의 재진술로 자기모순, ④는 지문 명제('tools that can be used')와 직접 모순, ②·⑤는 지문 내 지지 근거 부재. 대안 해석으로 다른 선지가 정문·정답이 되는 경로를 탐색했으나 발견되지 않음. 단일 정답 ①로 수렴."
+}

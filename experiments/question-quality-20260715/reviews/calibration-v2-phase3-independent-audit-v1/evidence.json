@@ -1,0 +1,477 @@
+{
+  "schemaVersion": "calibration-v2-phase3-independent-audit-evidence-v1",
+  "artifactId": "calibration-v2-phase3-independent-audit-v1",
+  "auditDate": "2026-07-15",
+  "mode": {
+    "offline": true,
+    "freshHostileAuditor": true,
+    "authorConclusionsTreatedAsAuthority": false,
+    "trustedGoldRead": false,
+    "trustedGoldWrite": false,
+    "networkCalls": 0,
+    "apiOrModelCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "configurationEnvironmentReads": 0,
+    "budgetLedgerMutations": 0,
+    "originalInputMutations": 0
+  },
+  "authorValidator": {
+    "command": "node --import tsx experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase3/validator.mts",
+    "exitCode": 0,
+    "reportedValid": true,
+    "itemCount": 24,
+    "gradeCounts": {
+      "A": 4,
+      "B": 4,
+      "C": 7,
+      "F": 9
+    },
+    "fatalCount": 9,
+    "compositionEligible": false,
+    "metricThresholdPass": {
+      "A": false,
+      "B": false,
+      "C": false
+    },
+    "interpretation": "This is a deterministic self-consistency result, not independent semantic or provenance proof."
+  },
+  "independentVerifier": {
+    "command": "node --import tsx experiments/question-quality-20260715/reviews/calibration-v2-phase3-independent-audit-v1/verify.mts",
+    "exitCode": 0,
+    "reportedValid": true,
+    "auditVerdict": "FAIL",
+    "issuanceRecommendation": "BLOCK"
+  },
+  "mechanicalChecks": {
+    "publicItemIds": 24,
+    "uniqueOneToOneIds": true,
+    "blocks": {
+      "GRAMMAR": 8,
+      "BLANK": 8,
+      "NONFOCUS": 8
+    },
+    "sourceChains": {
+      "A": "PASS",
+      "B": "PASS",
+      "C": "PASS"
+    },
+    "phase1SubmissionSealRevealBindings": "PASS",
+    "surfaceAndPseudonymBindings": "PASS",
+    "relabelInverseAndRowHashBindings": "PASS",
+    "blindAnswerFreeze": "PASS",
+    "aScoreBoundMechanicalChanges": {
+      "relabelMapSha256": 0,
+      "phase2RevealSha256": 24,
+      "otherJudgmentFieldsChanged": 0
+    },
+    "bScoreBoundMechanicalChanges": {
+      "relabelMapSha256": 24,
+      "phase2RevealSha256": 0,
+      "otherJudgmentFieldsChanged": 0
+    }
+  },
+  "phase3Hashes": {
+    "adjudication-records.json": {
+      "bytesSha256": "7baa3fc25e1186ea3df5e94be34952805f170799e7db7ef3268806a70895ff30",
+      "semanticSha256": "fcde70a47273b32b7127e186a247d4d11c0f65447bb450a4f782efb247f31baf"
+    },
+    "final-gold-proposal.json": {
+      "bytesSha256": "d8a75673498f373074a0bfee88795cb28eb712c5337dabf09fe7e7e6bb8f07da",
+      "semanticSha256": "39c7b1dbdccd451afd744f7509de445a9443b63458e61b213c0e9cd08cac2b7c"
+    },
+    "final-labels.json": {
+      "bytesSha256": "7065fcc419be4a1b4c47095ef4f25a379ccbbcb9ca15763e947d007af15aabef",
+      "semanticSha256": "8533c6184fbf54be80b23b870b16ad5e865a4419322160637531eeef0c2f8150"
+    },
+    "report.json": {
+      "bytesSha256": "9d679aeaf4839a0ab39e7be11dbe680182c39db7e31e91f170a8ae3ce748fcfe",
+      "semanticSha256": "9bf83be9db81f0a37860d97398a9820c94d28c4ce85ad805f8bcc0430edb1d1c"
+    },
+    "validator.mts": {
+      "bytesSha256": "0ceb9b0cc9776fd03320e2212ef33b14a3ffbaef1139f32cfa61162d0ce1384e"
+    }
+  },
+  "cIndependenceChronology": {
+    "aPhase2ReviewModifiedUtc": "2026-07-15T11:16:09.751Z",
+    "bPhase2ReviewModifiedUtc": "2026-07-15T11:31:47.204Z",
+    "cPhase1SealEmbeddedAt": "2026-07-15T20:39:51.089207+09:00",
+    "cPhase1SealEquivalentUtc": "2026-07-15T11:39:51.089207Z",
+    "cRevealModifiedUtc": "2026-07-15T11:40:02.911Z",
+    "abInteragreementReportModifiedUtc": "2026-07-15T11:44:18.759Z",
+    "cPhase2ReviewModifiedUtc": "2026-07-15T11:46:53.632Z",
+    "cPhase2SemanticSha256": "1680233f49f01d937e33539b3c24d64570b60e5a34a6c4d07aa951279f5bd8ad",
+    "cPhase2EmbeddedCompletionTimestamp": false,
+    "accessLogOrSignedPreAccessCommitment": false,
+    "gitCommitEvidenceForReviewFiles": false,
+    "finding": "C phase1 and phase2 artifacts postdate the availability of raw A/B phase2 reviews; C phase2 also postdates the A/B interagreement report. Hashes bind content but not non-access or completion time."
+  },
+  "constructedAnswerAudit": {
+    "canonicalization": {
+      "exactTextHashRecomputed": true,
+      "nfkcWhitespaceNormalizedHashRecomputed": true,
+      "duplicateExactMembersRejected": true,
+      "duplicateNormalizedMembersRejected": true,
+      "answerSetIdentityUsesSortedExactMemberHashes": true,
+      "multipleTextsMemberOrderInvariant": true
+    },
+    "N05": {
+      "acceptedSetCount": 9,
+      "uniqueSetCount": 9,
+      "structuralResult": "PASS",
+      "grammarResult": "PASS_FOR_ALL_NINE",
+      "semanticResult": "CONTESTED",
+      "issues": [
+        "The unchanged source sentence is accepted even though the direction says rewrite.",
+        "Only-when, must-before, and only-after forms add temporal or modal framing and are defensible only under a loose necessary-condition reading.",
+        "The exact list is not closed; for example, The council will not open the trail until both retaining walls have passed an independent inspection. meets the stated constraints but is not accepted."
+      ]
+    },
+    "N06": {
+      "acceptedSetCount": 16,
+      "uniqueSetCount": 16,
+      "activeMemberCount": 4,
+      "passiveMemberCount": 4,
+      "fullCrossProduct": true,
+      "memberOrderInvariant": true,
+      "structuralResult": "PASS",
+      "grammarResult": "PASS_FOR_ALL_MEMBERS",
+      "semanticResult": "CONTESTED_AND_NONEXHAUSTIVE",
+      "issues": [
+        "Eight cross-aspect pairs combine simple-past and past-perfect members, so they are not exact tense-aspect voice transformations even though both preserve pre-trial time.",
+        "The open wording admits additional exact grammatical pairs, such as prior-to-the-start variants, which the 16 hashes reject."
+      ]
+    },
+    "N07": {
+      "acceptedSetCount": 2,
+      "uniqueSetCount": 2,
+      "structuralResult": "PASS",
+      "grammarResult": "CANONICAL_PASS_SECOND_ORDER_MARKED_BUT_DEFENSIBLE",
+      "semanticResult": "NONEXHAUSTIVE_UNDER_EXACT_BYTES",
+      "issues": [
+        "The postposed-object order is a marked heavy-NP-shift construction and is not uniformly natural.",
+        "Exact-byte scoring rejects otherwise defensible punctuation variants, including an introductory-clause comma, because punctuation is not normalized."
+      ]
+    }
+  },
+  "adjudicationEvidenceDefects": {
+    "RCAL2-N01": {
+      "authorizedSourceFact": "The bridge closes Saturday morning and the path below stays open.",
+      "recordedConcreteFinding": "The evidence supports canonical option 3: the upper path remains open while the lower path closes.",
+      "result": "DIRECT_CONTRADICTION",
+      "finalLabelEffect": "The F/fatal conclusion remains independently supportable from the mapped options and revealed false key, but the written rationale is not trustworthy as recorded."
+    },
+    "RCAL2-B02": {
+      "revealedExplanationFact": "The explanation claims no future leak can be missed and false alarms are impossible.",
+      "recordedConcreteFinding": "The revealed explanation falsely claims the protocol makes delay, error, and manipulation impossible.",
+      "result": "UNSUPPORTED_EXPANSION",
+      "finalLabelEffect": "The F/fatal conclusion remains supportable, but manipulation and delay were invented by the rationale rather than observed in the explanation."
+    }
+  },
+  "finalLabelAndCompositionChecks": {
+    "gradeCounts": {
+      "A": 4,
+      "B": 4,
+      "C": 7,
+      "F": 9
+    },
+    "fatalCount": 9,
+    "byBlock": {
+      "GRAMMAR": {
+        "items": 8,
+        "fatal": 2,
+        "grades": {
+          "A": 2,
+          "B": 2,
+          "C": 2,
+          "F": 2
+        }
+      },
+      "BLANK": {
+        "items": 8,
+        "fatal": 2,
+        "grades": {
+          "A": 2,
+          "B": 2,
+          "C": 2,
+          "F": 2
+        }
+      },
+      "NONFOCUS": {
+        "items": 8,
+        "fatal": 5,
+        "grades": {
+          "C": 3,
+          "F": 5
+        }
+      }
+    },
+    "compositionEligible": false,
+    "compositionIssues": [
+      "NONFOCUS_FATAL_COUNT_NOT_2",
+      "NONFOCUS_GRADE_A_COUNT_NOT_2",
+      "NONFOCUS_GRADE_B_COUNT_NOT_2",
+      "NONFOCUS_GRADE_C_COUNT_NOT_2",
+      "NONFOCUS_GRADE_F_COUNT_NOT_2"
+    ]
+  },
+  "scorerPreview": {
+    "A": {
+      "pass": false,
+      "reasonCodes": [
+        "GLOBAL_BLINDSOLVEEXACTAGREEMENT",
+        "GLOBAL_BLANKOPTIONAGREEMENT",
+        "BLANK_BLANKOPTIONAGREEMENT",
+        "NONFOCUS_BLINDSOLVEEXACTAGREEMENT"
+      ]
+    },
+    "B": {
+      "pass": false,
+      "reasonCodes": [
+        "GLOBAL_FATALSENSITIVITY",
+        "GLOBAL_BLANKOPTIONAGREEMENT",
+        "BLANK_BLANKOPTIONAGREEMENT",
+        "NONFOCUS_FATALSENSITIVITY",
+        "NONFOCUS_QUADRATICWEIGHTEDKAPPAGRADE"
+      ]
+    },
+    "C": {
+      "pass": false,
+      "reasonCodes": [
+        "GLOBAL_FATALSENSITIVITY",
+        "GLOBAL_BLANKOPTIONAGREEMENT",
+        "BLANK_BLANKOPTIONAGREEMENT",
+        "NONFOCUS_FATALSENSITIVITY",
+        "NONFOCUS_QUADRATICWEIGHTEDKAPPAGRADE"
+      ]
+    }
+  },
+  "proposalAndCertificate": {
+    "proposalPathIsTrustedGoldPath": false,
+    "proposalTrustedOrInstalled": false,
+    "certificateIssued": false,
+    "blockedBeforeCertificateIssuance": true,
+    "effectiveDecision": "FAILED",
+    "proposalStatusField": "FINAL_ADJUDICATED_GOLD",
+    "interpretation": "The status field satisfies the proposal schema, but the separate composition gate fails and the proposal was not read from or written to the trusted gold location."
+  },
+  "hostileMutations": [
+    {
+      "name": "delete_item",
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "evidence": "final labels count"
+    },
+    {
+      "name": "duplicate_id",
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "evidence": "final label ids: duplicate values"
+    },
+    {
+      "name": "binding_swap",
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "evidence": "C: review solve binding Q001"
+    },
+    {
+      "name": "accepted_set_change",
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "evidence": "RCAL2-N05: final accepted sets"
+    },
+    {
+      "name": "grade_fatal_drift",
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "evidence": "reviewed grade/fatal vector drift RCAL2-G03"
+    },
+    {
+      "name": "forced_composition_balance",
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "evidence": "reviewed grade/fatal vector drift RCAL2-N01"
+    },
+    {
+      "name": "constructed_duplicate_member",
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "evidence": "hostile N06 duplicate: exact text hashes: duplicate values"
+    },
+    {
+      "name": "declared_semantic_hash_drift",
+      "expected": "REJECT",
+      "result": "REJECTED",
+      "evidence": "report final label semantic hash"
+    },
+    {
+      "name": "multiple_text_member_order",
+      "expected": "ACCEPT_SAME_IDENTITY",
+      "result": "ACCEPTED_SAME_IDENTITY",
+      "setSha256": "79a0544c96c3215f40f5621cb6b1ac9b7a1caaa9680d0d212bbc63a4a7f42fc4"
+    }
+  ],
+  "sourceInventory": [
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/contract.mts",
+      "bytes": 27181,
+      "bytesSha256": "1d7480788648b73d03c05974fa9760bc60a52aea81a32dc2f9b2e87dc2438ccb"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/metrics.mts",
+      "bytes": 11838,
+      "bytesSha256": "3168d5b9f76aaca52b505409ef8fd3e0a99096e83a4b719ebd98c99f05b404d3"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/score.mts",
+      "bytes": 14650,
+      "bytesSha256": "fd702ed5d2af08ab0094acab0072871659305840730ef4e376353953fab9690e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/protocol.json",
+      "bytes": 2043,
+      "bytesSha256": "57d6dfbe461f27fb3eaa0cd59d886e3648e4885fd8a441db7965267351756f5b"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/packet-public.json",
+      "bytes": 16158,
+      "bytesSha256": "cb84231ce1c070b855542acf51159ebded6e231ff89816eb32d0cf7e869d2533"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/items.private.json",
+      "bytes": 177504,
+      "bytesSha256": "5e6fb536026042813049f570778283dbafb9aad2e7f071dc1f163eb4c490e129",
+      "accessMode": "HASH_ONLY_NOT_PARSED_FOR_SEMANTIC_JUDGMENT"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/calibration-v2-rater-interagreement-v1/report.json",
+      "bytes": 21491,
+      "bytesSha256": "7de8cd8feda45f0d0cd685b55cdcdb0a05227c3d5258beda52479d74a34ffef6"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/calibration-v2-rater-interagreement-v1/private/rater-a-review-records-score-bound.json",
+      "bytes": 64267,
+      "bytesSha256": "fa4c957556759badba59c8bccdeb159bdc55fd184d8bc321238b3fb4e832dd56"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/calibration-v2-rater-interagreement-v1/private/rater-b-review-records-score-bound.json",
+      "bytes": 60936,
+      "bytesSha256": "dbd3f6b5dc55ff6b59616dcbe5451cfea8516bc210a29af1b09fd699a97e6202"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/phase1.json",
+      "bytes": 26684,
+      "bytesSha256": "2b7395ae96d1be745035e2a34be1ce97905ca50e446e441306981c3cf6a03fe3"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/submission.json",
+      "bytes": 14458,
+      "bytesSha256": "db163b7a4f4404020f9fc4674974d8d1a4a3558754ef0629c110b38357076aa2"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/seal.json",
+      "bytes": 3606,
+      "bytesSha256": "76289e827d6caf0a942ba2281cb0d67cafff50fd2ee7c2212da573c66494b660"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/private-map.json",
+      "bytes": 10535,
+      "bytesSha256": "b3acad636673295755501a23e2d6ff771a6c130f6a6acfb9badbdb6da5652494"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/reveal.json",
+      "bytes": 37012,
+      "bytesSha256": "d514902040919cbccc8565ab3fff0ec0011e68650977a986cf051cb973af9084"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/review-records.json",
+      "bytes": 64267,
+      "bytesSha256": "417278502b572787eef1871b416779bed5de39aa976528193740ff562c8a45bb"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/phase1.json",
+      "bytes": 26684,
+      "bytesSha256": "947a4ec0614a118491e1ee2e7733dd9dadb4d246f0bf116c9346522c7e3abc4d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/submission.json",
+      "bytes": 12114,
+      "bytesSha256": "9c3743e71f8ecfa38bfe4bcd6b3834de48529f278949bdd862adcf999c3ab37f"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/seal.json",
+      "bytes": 3606,
+      "bytesSha256": "44997d6d716ebb40dd845eda30ee296564e61461b7b50776aa81106bc6c58f55"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/private-map.json",
+      "bytes": 10535,
+      "bytesSha256": "55cffdf9dd6abeb2692fb1818f81669f7889889551826fb40e402fe5a96d31eb"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/reveal.json",
+      "bytes": 37012,
+      "bytesSha256": "fe7d78e4f4ef8529dc113ee77922c2fb922f43e7695ff0dc10224acf2f3f556e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/review-records.json",
+      "bytes": 45739,
+      "bytesSha256": "5ecb7f458897cd372445a7fecb7d49e18d9c67d216c5962de65bd65edf06b7a6"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase1.json",
+      "bytes": 26690,
+      "bytesSha256": "dd6ad8762657971096328310957a570c3a3e46b91c8a76b1708ee9113ec31627"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/submission.json",
+      "bytes": 11111,
+      "bytesSha256": "c5d8a62a0e671ec1a1c9d67eb2f6d46a76d43828235ab327759eb97f608ad479"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/seal.json",
+      "bytes": 3617,
+      "bytesSha256": "333ec505c6a4e06c098196bd3bd1a161ef3f54179567ceee5b73b64a1ed856a4"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/private-map.json",
+      "bytes": 10541,
+      "bytesSha256": "2cb978082bc6f2c7dcb1815f0189299883cd115b799d9470f262395e8b174e5c"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/reveal.json",
+      "bytes": 37018,
+      "bytesSha256": "9c081a684d72b98019ce4fa7ba10b437e8a86b59eef2adfbdb8711dd80e46e5f"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/review-records.json",
+      "bytes": 61750,
+      "bytesSha256": "b0c21477dd665f5d0b6654263a7d1617962877bcb4ebf4cd3e17ed61b4b11402"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase3/adjudication-records.json",
+      "bytes": 186060,
+      "bytesSha256": "7baa3fc25e1186ea3df5e94be34952805f170799e7db7ef3268806a70895ff30"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase3/final-gold-proposal.json",
+      "bytes": 87326,
+      "bytesSha256": "d8a75673498f373074a0bfee88795cb28eb712c5337dabf09fe7e7e6bb8f07da"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase3/final-labels.json",
+      "bytes": 58954,
+      "bytesSha256": "7065fcc419be4a1b4c47095ef4f25a379ccbbcb9ca15763e947d007af15aabef"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase3/report.json",
+      "bytes": 24223,
+      "bytesSha256": "9d679aeaf4839a0ab39e7be11dbe680182c39db7e31e91f170a8ae3ce748fcfe"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase3/validator.mts",
+      "bytes": 50886,
+      "bytesSha256": "0ceb9b0cc9776fd03320e2212ef33b14a3ffbaef1139f32cfa61162d0ce1384e"
+    }
+  ]
+}

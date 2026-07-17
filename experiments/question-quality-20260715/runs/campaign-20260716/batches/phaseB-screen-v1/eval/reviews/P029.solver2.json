@@ -1,0 +1,35 @@
+{
+  "pid": "P029",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) that",
+      "verdict": "correct",
+      "reason": "명사 recognition 뒤의 동격 that절(appositive content clause). that절 내부는 'although 양보절 + these principles vary ...'로 주어·동사를 갖춘 완전한 절이므로 접속사 that이 요구되는 자리가 맞다. 장거리 점검: that 직후에 although절이 삽입되어 있어도 recognition–that 연결은 끊기지 않는다. 어법상 옳음."
+    },
+    {
+      "label": "(B) acting",
+      "verdict": "correct",
+      "reason": "'define X as Y' 구문의 수동형에서 as 뒤 Y 자리는 명사 상당어구가 와야 하며, 동명사 acting이 이를 충족한다. 주어 자리의 동명사 'being ethical'과도 형태상 평행하다(상태 동명사 = 행위 동명사 대응). 정형동사나 원형부정사는 여기서 비문이 되므로 동명사가 유일하게 허가되는 형태. 어법상 옳음."
+    },
+    {
+      "label": "(C) are considered",
+      "verdict": "correct",
+      "reason": "관계절 'that are considered correct'의 선행사 핵명사는 복수 principles이다(of conduct는 후치 수식 전치사구로 수일치 대상이 아니고, 의미상으로도 '옳다고 여겨지는' 것은 원칙들이다). 따라서 복수 are가 정확하며, 5형식 'consider X correct'의 수동태에서 목적보어 correct가 잔류하는 구조도 정문. 장거리 수일치 함정이지만 표기 그대로 옳다."
+    },
+    {
+      "label": "(D) both between or",
+      "verdict": "incorrect",
+      "reason": "상관접속사 both는 'both A and B'로만 호응하며 'both ... or'는 어떤 어역에서도 허가되지 않는다. 대안 해석 탐색: (i) both를 individuals에 걸리는 유동 수량사로 보는 독법은 both가 등위된 전치사 between/within 앞에 위치하므로 불성립하고, 설령 그 독법을 취해도 등위사는 and여야 한다. (ii) either가 없으므로 or를 either...or로 구제할 수도 없다. 'both between and within individuals'로 고쳐야만 정문이 된다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E) make different choices",
+      "verdict": "correct",
+      "reason": "조동사 may 뒤 동사원형 make로 형태가 맞고, 단수 주어 'the same individual'도 조동사 뒤에서는 수일치 문제를 일으키지 않는다. 'make choices'는 표준 연어이며 different는 복수명사 choices를 적절히 수식한다. 주어 앞에 길게 쌓인 부사구·부사절('under different circumstances, at a different time, when they are feeling a different way')도 동사 형태에 영향을 주지 않는다. 어법상 옳음."
+    }
+  ],
+  "note": "형식문법 관점에서 깨끗한 문항. 네 개 밑줄은 각각 동격 that절, define-as+동명사, 복수 핵명사 수일치+5형식 수동, 조동사+원형이라는 지배 규칙 아래 정문임이 증명되고, (D)는 both...and라는 경성 상관접속 제약을 위반한다. 유동 수량사·생략 등 어떤 대안 해석으로도 'both between or within'을 정문으로 만들 수 없다. 옹호 가능한 정답은 (D) 단일."
+}

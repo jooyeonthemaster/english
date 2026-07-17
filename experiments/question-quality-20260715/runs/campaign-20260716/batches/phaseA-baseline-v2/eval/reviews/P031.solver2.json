@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'made by organizations when they first consider...'에서 when은 시간 부사절 접속사로, 과거분사구 'made by organizations'가 수식하는 mistakes의 발생 시점을 한정한다. 절 내부(they first consider)가 완전한 정형절이므로 when의 결합은 형식적으로 완전하다. 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'with a thoroughly understood of the organization's own goals' — 부정관사 a 뒤, 그리고 전치사 of 앞이라는 두 개의 형태통사적 단서가 모두 그 자리에 명사(핵)를 요구한다. understood는 과거분사(형용사적)일 뿐 명사가 될 수 없고, 부사 thoroughly의 수식을 받는 것도 명사 자리와 모순된다. 정문이 되려면 'a thorough understanding of'여야 한다. 축약 관계절·명사화 등 어떤 대안 분석으로도 'a + [부사+과거분사] + of' 구조는 구제되지 않는다. 어법상 틀린 것으로 확정."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct (with format defect)",
+      "reason": "형식 결함: 지문에 __(C)__ 밑줄 표기가 아예 없다. 선지는 'managing'이지만 지문 해당 위치 문장은 'a vague need to manage a presence'로 to부정사형이 그대로 인쇄되어 있다. 지문에 보이는 형태(to manage)는 need + to-V 구조로 어법상 옳다. 만약 출제 의도대로 'managing'이 밑줄로 삽입되었다면 'a vague need managing...'은 need가 스스로 manage한다는 비문이 되어 (B)와 복수 정답 충돌이 났을 것이다. 현재 인쇄본 기준으로는 (C)를 판정할 대상 자체가 지문에 없다는 것이 결함이다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'\"Being in social media\" serves no purpose in and of itself'에서 재귀대명사 itself의 선행사는 동명사구 주어 'Being in social media'(단수·무생물)이며, 관용구 'in and of itself'(그 자체로)로서 수·인칭 일치가 성립한다. 어법상 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'must either solve a problem ... or result in an improvement' — 병렬 시작점은 조동사 must 뒤이며, either A or B의 A(solve)와 B(result)가 모두 원형동사로 정확히 병렬된다. 어법상 옳다."
+    }
+  ],
+  "note": "정답은 (B). 'a thoroughly understood of'는 관사와 of 사이 명사 핵 부재로 형식적으로 비문이며 유일하게 옹호 불가능. 단, 문항 자체에 제작 결함이 있다: (C) 밑줄이 지문에 누락되어 있고 지문에는 'to manage'(정문 형태)가 그대로 남아 있어, 선지 (C) 'managing'과 지문이 불일치한다. 출제 의도(managing 삽입)대로였다면 (B)/(C) 복수 정답 논란 소지. 현재 인쇄 상태 기준으로는 (B) 단독 정답."
+}

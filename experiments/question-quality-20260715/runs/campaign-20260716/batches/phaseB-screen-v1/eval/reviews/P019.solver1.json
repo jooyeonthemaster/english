@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) are",
+      "verdict": "correct",
+      "reason": "장거리 수일치 함정. 주어의 핵은 복수 명사 'Racial microaggressions'이고, 사이에 낀 'such as assumptions about a person's intelligence or work ethic based on their race or ethnicity'는 삽입 예시구일 뿐이다. 삽입구 끝의 단수 명사(ethnicity)에 끌려 is를 기대하게 만드는 전형적 미끼이나, 핵 명사가 복수이므로 are가 정확하다. 보어 'commonplace ... indignities'도 복수로 호응한다."
+    },
+    {
+      "label": "(B) be seen",
+      "verdict": "correct",
+      "reason": "'experiential microaggressions are also common and can be seen in statements...' — 조동사 can 뒤 원형 be + 과거분사 seen의 수동태. microaggressions는 '보이는' 대상이므로 수동이 의미상 맞고, and는 'are also common'과 'can be seen'의 술어 병렬이므로 문제 없다. 능동 see로 바꿔 유혹할 여지도 문맥상 없다."
+    },
+    {
+      "label": "(C) given",
+      "verdict": "incorrect",
+      "reason": "정답(틀린 것). 'A well-meaning nurse was actually yelling at him when given him directions...' — when 분사구문의 의미상 주어는 주절 주어 nurse이다. nurse는 지시를 '주는' 행위자이므로 능동 현재분사 giving him directions여야 한다. 대안 해석으로 수여동사 수동태의 잔류 목적어 구조(when [she was] given directions = 그녀가 지시를 받았을 때)를 적극 검토했으나, 그 구조라면 'when given directions'여야 하며 간접목적어 him이 잔류할 수 없다('she was given him directions'는 비문). 즉 him의 존재가 수동 해석을 원천 차단하므로 given은 어느 해석으로도 정문이 되지 않는다. giving으로 고쳐야 한다."
+    },
+    {
+      "label": "(D) is defined",
+      "verdict": "correct",
+      "reason": "동격 that절 내부: 'a hidden message that a person with a disability is defined as lesser...' — 단수 주어 a person에 is 수일치가 맞고, define A as B의 수동태 'A is defined as B' 구조로 as 뒤 형용사 보어 lesser도 성립한다. 수동태 + as 보어 조합이 낯설어 끌릴 수 있으나(실전에서 가장 오래 검토한 선지), '사람이 ~로 규정된다'는 의미가 문맥(숨은 메시지의 내용)과 정확히 부합하므로 정문이다."
+    },
+    {
+      "label": "(E) more equitable",
+      "verdict": "correct",
+      "reason": "'create a more equitable future' — 명사 future를 수식하는 형용사 equitable의 비교급을 more로 만든 형태. 3음절 형용사라 -er 불가, more가 유일한 비교급 형성 방식이며 관사 a와의 어순(a more equitable future)도 정상이다."
+    }
+  ],
+  "note": "실전 풀이 순서: (A)에서 삽입구 뒤 단수 명사에 잠깐 is 유혹을 느꼈으나 핵 명사 microaggressions 복수 확인으로 즉시 해소. (D)에서 'is defined as lesser'가 다소 어색하게 들려 가장 오래 머물렀으나 define A as B 수동태로 완전한 정문. (C)는 잔류 목적어 수동 해석까지 검토해도 간접목적어 him이 남는 순간 비문이 확정되므로 유일하게 틀린 선지. 정답은 (C) 하나로 좁혀지며 복수 정답 소지 없음."
+}

@@ -1,0 +1,387 @@
+import { createHash } from "node:crypto";
+import { readFile, writeFile } from "node:fs/promises";
+import http from "node:http";
+import https from "node:https";
+import net from "node:net";
+import tls from "node:tls";
+import dns from "node:dns";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+type BlindCase = {
+  blindId: string;
+  family: string;
+  language: string;
+  fixture: Record<string, unknown>;
+};
+
+type QualityIssue = {
+  severity: "error" | "warning";
+  code: string;
+  message: string;
+};
+
+const [repoRootArg, blindPathArg, outputDirectoryArg, expectedBlindSha256] =
+  process.argv.slice(2);
+if (
+  !repoRootArg ||
+  !blindPathArg ||
+  !outputDirectoryArg ||
+  !/^[a-f0-9]{64}$/u.test(expectedBlindSha256 ?? "")
+) {
+  throw new Error(
+    "usage: tsx run_blind_predictions.ts <repo-root> <blinded-cases.json> <output-directory> <expected-blind-sha256>",
+  );
+}
+
+assertSanitizedEnvironment();
+const networkGuard = installNetworkGuard();
+
+const repoRoot = path.resolve(repoRootArg);
+const blindPath = path.resolve(blindPathArg);
+const outputDirectory = path.resolve(outputDirectoryArg);
+const runnerPath = fileURLToPath(import.meta.url);
+const blindBytes = await readFile(blindPath);
+const blindSha256 = sha256(blindBytes);
+if (blindSha256 !== expectedBlindSha256) {
+  throw new Error(
+    `blinded input hash mismatch: expected ${expectedBlindSha256}, received ${blindSha256}`,
+  );
+}
+
+const blindPayload = JSON.parse(blindBytes.toString("utf8")) as {
+  caseCount: number;
+  sourceSha256: string;
+  authorSeal: string;
+  cases: BlindCase[];
+};
+if (!Array.isArray(blindPayload.cases) || blindPayload.cases.length !== 200) {
+  throw new Error(`expected 200 blinded cases, received ${blindPayload.cases?.length}`);
+}
+assertProjectionIsBlind(blindPayload);
+
+const productionSourcePaths = [
+  "src/lib/question-quality/validators/summary/mc.ts",
+  "src/lib/question-quality/validators/grammar/shared.ts",
+  "src/lib/question-quality/validators/sentence-order.ts",
+  "src/lib/question-quality/core.ts",
+  "src/lib/question-quality/validators/summary/killer-trap.ts",
+  "src/lib/passage-sentence-utils.ts",
+  "src/lib/question-postprocess/types.ts",
+];
+const productionSourceHashes = await Promise.all(
+  productionSourcePaths.map(async (relativePath) => ({
+    path: relativePath,
+    sha256: sha256(await readFile(path.join(repoRoot, relativePath))),
+  })),
+);
+
+const summaryModule = await import(
+  pathToFileURL(
+    path.join(repoRoot, "src/lib/question-quality/validators/summary/mc.ts"),
+  ).href
+);
+const grammarModule = await import(
+  pathToFileURL(
+    path.join(repoRoot, "src/lib/question-quality/validators/grammar/shared.ts"),
+  ).href
+);
+const sentenceOrderModule = await import(
+  pathToFileURL(
+    path.join(repoRoot, "src/lib/question-quality/validators/sentence-order.ts"),
+  ).href
+);
+
+const predictions = blindPayload.cases.map((caseValue) => {
+  switch (caseValue.family) {
+    case "SUMMARY_COMPLETE_MC":
+      return predictSummary(caseValue);
+    case "GRAMMAR_ERROR_LEADING_LABEL":
+      return predictGrammarLeadingLabel(caseValue);
+    case "SENTENCE_ORDER_COMPLETE_UNITS":
+      return predictSentenceOrderCompleteUnits(caseValue);
+    case "SENTENCE_ORDER_STANDALONE_LABELS":
+      return predictSentenceOrderStandaloneLabels(caseValue);
+    default:
+      throw new Error(
+        `unsupported family ${String(caseValue.family)} at ${caseValue.blindId}`,
+      );
+  }
+});
+
+if (new Set(predictions.map(({ blindId }) => blindId)).size !== 200) {
+  throw new Error("prediction ids are not unique");
+}
+
+const familyCounts = Object.fromEntries(
+  [...new Set(predictions.map(({ family }) => family))]
+    .sort()
+    .map((family) => [
+      family,
+      {
+        total: predictions.filter((item) => item.family === family).length,
+        defect: predictions.filter(
+          (item) => item.family === family && item.prediction === "DEFECT",
+        ).length,
+        normal: predictions.filter(
+          (item) => item.family === family && item.prediction === "NORMAL",
+        ).length,
+      },
+    ]),
+);
+
+const runnerSha256 = sha256(await readFile(runnerPath));
+const predictionPayload = {
+  schemaVersion: "deterministic-structural-v10-independent-predictions-v1",
+  blindSha256,
+  sourcePayloadSha256: blindPayload.sourceSha256,
+  authorSeal: blindPayload.authorSeal,
+  runnerSha256,
+  productionSourceHashes,
+  caseCount: predictions.length,
+  familyCounts,
+  executionAttestation: {
+    processKind: "fresh tsx process",
+    onlyCaseInputRead: path.basename(blindPath),
+    oracleInputRead: false,
+    sealedMapRead: false,
+    priorAuditInputRead: false,
+    actualProductionFunctionsInvoked: [
+      "findSummaryMcAnswerObjectMismatch",
+      "findGrammarKeypointNonexistentLabel",
+      "validateSentenceOrderQuestion",
+    ],
+    apiCalls: 0,
+    networkAttempts: networkGuard.attempts,
+    databaseCalls: 0,
+    secretsRead: 0,
+    estimatedCostUsd: 0,
+  },
+  predictions,
+};
+const predictionBytes = canonicalJsonBytes(predictionPayload);
+const predictionsSha256 = sha256(predictionBytes);
+const sealPayload = {
+  schemaVersion: "deterministic-structural-v10-independent-prediction-seal-v1",
+  predictionsFile: "predictions.json",
+  predictionsSha256,
+  blindSha256,
+  runnerSha256,
+  caseCount: predictions.length,
+  productionSourceHashes,
+};
+
+// The prediction file and its cryptographic seal are emitted by this same
+// fresh process before any oracle-bearing file can be opened by adjudication.
+await Promise.all([
+  writeFile(path.join(outputDirectory, "predictions.json"), predictionBytes),
+  writeFile(
+    path.join(outputDirectory, "PREDICTION_SEAL.json"),
+    canonicalJsonBytes(sealPayload),
+  ),
+]);
+
+process.stdout.write(
+  [
+    "BLIND_PREDICTION_AND_SEAL_OK",
+    `COUNT ${predictions.length}`,
+    `BLIND_SHA256 ${blindSha256}`,
+    `RUNNER_SHA256 ${runnerSha256}`,
+    `PREDICTIONS_SHA256 ${predictionsSha256}`,
+    `NETWORK_ATTEMPTS ${networkGuard.attempts}`,
+    "API_CALLS 0",
+    "DATABASE_CALLS 0",
+    "ESTIMATED_COST_USD 0",
+  ].join("\n") + "\n",
+);
+
+function predictSummary(caseValue: BlindCase) {
+  const fixture = caseValue.fixture;
+  const options = asArrayOfRecords(fixture.options).map((option) => ({
+    label: option.key,
+    text: option.text,
+  }));
+  const carrier = asRecord(fixture.carrier);
+  const finding = summaryModule.findSummaryMcAnswerObjectMismatch(
+    carrier.text,
+    options,
+    fixture.storedKey,
+  ) as string | null;
+  return {
+    blindId: caseValue.blindId,
+    family: caseValue.family,
+    language: caseValue.language,
+    prediction: finding ? "DEFECT" : "NORMAL",
+    productionFunction: "findSummaryMcAnswerObjectMismatch",
+    targetedFinding: finding,
+  };
+}
+
+function predictGrammarLeadingLabel(caseValue: BlindCase) {
+  const fixture = caseValue.fixture;
+  const renderedLabels = Array.isArray(fixture.renderedLabels)
+    ? fixture.renderedLabels
+    : [];
+  const finding = grammarModule.findGrammarKeypointNonexistentLabel(
+    [fixture.keyPoint],
+    renderedLabels.map((label) => ({ label })),
+  ) as string | null;
+  return {
+    blindId: caseValue.blindId,
+    family: caseValue.family,
+    language: caseValue.language,
+    prediction: finding ? "DEFECT" : "NORMAL",
+    productionFunction: "findGrammarKeypointNonexistentLabel",
+    targetedFinding: finding,
+  };
+}
+
+function predictSentenceOrderCompleteUnits(caseValue: BlindCase) {
+  const paragraphs = Array.isArray(caseValue.fixture.paragraphs)
+    ? caseValue.fixture.paragraphs
+    : [];
+  const issues = runSentenceOrderValidator(
+    paragraphs.map((text, index) => ({
+      label: ["(A)", "(B)", "(C)"][index],
+      text,
+    })),
+    [],
+  );
+  const targetIssues = issues.filter(
+    ({ code }) => code === "sentence-order-dependent-fragment",
+  );
+  return {
+    blindId: caseValue.blindId,
+    family: caseValue.family,
+    language: caseValue.language,
+    prediction: targetIssues.length > 0 ? "DEFECT" : "NORMAL",
+    productionFunction: "validateSentenceOrderQuestion",
+    targetedCodes: [...new Set(targetIssues.map(({ code }) => code))],
+    targetedMessages: targetIssues.map(({ message }) => message),
+  };
+}
+
+function predictSentenceOrderStandaloneLabels(caseValue: BlindCase) {
+  const entries = asArrayOfRecords(caseValue.fixture.entries);
+  const issues = runSentenceOrderValidator(
+    entries.map((entry) => ({
+      label: entry.labelNode,
+      text: entry.paragraph,
+    })),
+    Array.isArray(caseValue.fixture.incidentalMentions)
+      ? caseValue.fixture.incidentalMentions
+      : [],
+  );
+  const structuralCodes = new Set([
+    "sentence-order-paragraph-count",
+    "sentence-order-paragraph-labels",
+    "sentence-order-paragraph-body-label",
+    "sentence-order-label-order-leak",
+  ]);
+  const targetIssues = issues.filter(({ code }) => structuralCodes.has(code));
+  return {
+    blindId: caseValue.blindId,
+    family: caseValue.family,
+    language: caseValue.language,
+    prediction: targetIssues.length > 0 ? "DEFECT" : "NORMAL",
+    productionFunction: "validateSentenceOrderQuestion",
+    targetedCodes: [...new Set(targetIssues.map(({ code }) => code))],
+    targetedMessages: targetIssues.map(({ message }) => message),
+  };
+}
+
+function runSentenceOrderValidator(
+  paragraphs: Array<Record<string, unknown>>,
+  incidentalMentions: unknown[],
+): QualityIssue[] {
+  const issues: QualityIssue[] = [];
+  sentenceOrderModule.validateSentenceOrderQuestion(
+    {
+      givenSentence: "The source introduces the situation clearly.",
+      paragraphs,
+      // Preserve explicitly incidental prose as non-structural context. The
+      // production validator receives it as an unrelated field, so it cannot
+      // be confused with paragraph.label structural nodes.
+      incidentalMentions,
+      options: [
+        { label: "①", text: "(B)-(C)-(A)" },
+        { label: "②", text: "(C)-(A)-(B)" },
+        { label: "③", text: "(B)-(A)-(C)" },
+        { label: "④", text: "(C)-(B)-(A)" },
+        { label: "⑤", text: "(A)-(C)-(B)" },
+      ],
+      correctAnswer: "①",
+    },
+    undefined,
+    (severity: "error" | "warning", code: string, message: string) => {
+      issues.push({ severity, code, message });
+    },
+  );
+  return issues;
+}
+
+function assertProjectionIsBlind(value: unknown) {
+  const forbidden = /^(?:id|pair(?:id)?|expected|oracle(?:reason)?|reason|rationale|classificationlabels|unitanalysis|leadingreference|quotedtext)$/iu;
+  const visit = (node: unknown, pointer: string) => {
+    if (Array.isArray(node)) {
+      node.forEach((item, index) => visit(item, `${pointer}/${index}`));
+      return;
+    }
+    if (!node || typeof node !== "object") return;
+    for (const [key, child] of Object.entries(node)) {
+      if (key !== "blindId" && forbidden.test(key)) {
+        throw new Error(`oracle-bearing field ${key} reached runner at ${pointer}`);
+      }
+      visit(child, `${pointer}/${key}`);
+    }
+  };
+  visit(value, "$");
+}
+
+function assertSanitizedEnvironment() {
+  const forbiddenName =
+    /(?:API[_-]?KEY|TOKEN|SECRET|PASSWORD|DATABASE[_-]?URL|GEMINI|OPENAI|ANTHROPIC|SUPABASE|POSTGRES|MYSQL|MONGODB|REDIS)/iu;
+  const present = Object.keys(process.env).filter((name) => forbiddenName.test(name));
+  if (present.length > 0) {
+    throw new Error(
+      `prediction process inherited forbidden credential environment names: ${present.sort().join(", ")}`,
+    );
+  }
+}
+
+function installNetworkGuard() {
+  const state = { attempts: 0 };
+  const blocked = (..._args: unknown[]): never => {
+    state.attempts += 1;
+    throw new Error("network access is prohibited during the blind audit");
+  };
+  globalThis.fetch = blocked as typeof fetch;
+  http.request = blocked as typeof http.request;
+  http.get = blocked as typeof http.get;
+  https.request = blocked as typeof https.request;
+  https.get = blocked as typeof https.get;
+  net.connect = blocked as typeof net.connect;
+  net.createConnection = blocked as typeof net.createConnection;
+  tls.connect = blocked as typeof tls.connect;
+  dns.lookup = blocked as typeof dns.lookup;
+  dns.resolve = blocked as typeof dns.resolve;
+  return state;
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+function asArrayOfRecords(value: unknown): Array<Record<string, unknown>> {
+  return Array.isArray(value) ? value.map(asRecord) : [];
+}
+
+function canonicalJsonBytes(value: unknown): Buffer {
+  return Buffer.from(`${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function sha256(value: string | Buffer): string {
+  return createHash("sha256").update(value).digest("hex");
+}

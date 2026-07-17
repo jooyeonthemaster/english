@@ -1,0 +1,5 @@
+84102ca56b862b32ee20f814d9c20eab40a101dca10dade2ce2f6da3de8b0d65  experiments/question-quality-20260715/reviews/deterministic-v7-summary-remediation/AUDIT.md
+aa7b019934f1e089d8575e1b0be3df0d3c28b017ebf222ce2fa63380c9e70b39  experiments/question-quality-20260715/reviews/deterministic-v7-summary-remediation/replay.mts
+a2e767be5d3d468088952680c6ed1561dc6e2e2afae50cca19eee9303664da6d  experiments/question-quality-20260715/reviews/deterministic-v7-summary-remediation/verify.mjs
+f720d8d091b958c37e2ebb18942f7f64d52c50de8e4f7cded545d6c0be985cd4  src/lib/question-quality/validators/summary/mc.ts
+b8af7a7deaf2051396cb2eac7d259598aa6246dc0dd1f27d46bc63ec1dcc9caa  tests/unit/summary-mc-direction-split.test.mjs

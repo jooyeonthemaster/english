@@ -1,0 +1,39 @@
+{
+  "passageId": "ebsi_go1_20241015-q20",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 135
+  },
+  "difficulty": "KILLER",
+  "strategy": "s15-cn-kimi26",
+  "ok": false,
+  "ms": 300005,
+  "attempts": 1,
+  "calls": 1,
+  "callLog": [
+    {
+      "purpose": "generate#failed",
+      "modelId": "moonshotai/kimi-k2.5",
+      "ms": 300005,
+      "attempts": 1,
+      "inputTokens": null,
+      "outputTokens": null,
+      "costUsd": null,
+      "costSource": "unknown"
+    }
+  ],
+  "models": [
+    "moonshotai/kimi-k2.5"
+  ],
+  "costUsd": null,
+  "costSource": "unknown",
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "error": "The operation was aborted due to timeout",
+  "question": null,
+  "passageText": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health."
+}

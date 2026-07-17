@@ -1,0 +1,814 @@
+{
+  "id": "b01-c1",
+  "unitId": "b01",
+  "order": 1,
+  "title": "8품사 — 단어의 신분증",
+  "oneLiner": "단어는 형태가 아니라 문장에서 맡는 일로 품사가 정해집니다.",
+  "gradeStamp": {
+    "introduced": "초4",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 품사(초·중 도입)",
+      "천일문 중등 GRAMMAR Level 1 — 문장의 구성과 품사",
+      "docs/study-os-spec.md §2.3 b01 품사와 문장성분"
+    ]
+  },
+  "lenses": ["L2", "L5"],
+  "confusableWith": ["b01-c2", "b01-c4", "b06-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The team recorded the data carefully.",
+        "The team recorded the data careful."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 마지막 단어 하나입니다. 이 레슨을 마치면 careful 이 왜 그 자리에 올 수 없는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "품사",
+      "question": "그런데 품사가 대체 무엇입니까?",
+      "plain": "품사는 단어의 직업입니다. 문장 안에서 그 단어가 무슨 일을 하는지에 따라 이름을 붙인 것으로, 영어에는 여덟 가지 직업이 있습니다.",
+      "analogy": "학교에 선생님·학생·조리사·경비원이 있듯, 문장에도 이름을 대는 단어·서술하는 단어·꾸미는 단어가 있습니다. 같은 사람이 낮에는 학생, 저녁에는 아르바이트생이 되듯 같은 단어도 자리가 바뀌면 직업이 바뀝니다.",
+      "whyItMatters": "어법 문제의 절반은 결국 \"이 자리에 어떤 직업의 단어가 서야 하는가\"를 묻습니다. 품사를 알면 밑줄을 보는 눈이 생기고, 모르면 감으로 찍게 됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "8품사, 하나씩 정면으로",
+      "intro": "여덟 직업을 한 항목씩 만납니다. 각 항목의 예문에서 굵은 단어가 그 품사입니다.",
+      "entries": [
+        {
+          "head": "명사 — 이름을 대는 말",
+          "body": "사람·사물·장소·생각의 이름입니다. 문장에서 주어·목적어·보어 자리를 차지하는 몸통입니다.",
+          "example": {
+            "en": "The **library** keeps old **maps** of the **city**.",
+            "ko": "그 도서관은 도시의 오래된 지도들을 보관합니다.",
+            "note": "library·maps·city 모두 무언가의 이름을 대므로 명사입니다."
+          }
+        },
+        {
+          "head": "대명사 — 명사를 대신하는 말",
+          "body": "같은 이름을 반복하지 않도록 명사 대신 서는 단어입니다. I·you·he·she·it·they·this 가 대표입니다.",
+          "example": {
+            "en": "The workers finished early because **they** started at dawn.",
+            "ko": "그 인부들은 새벽에 시작했기 때문에 일찍 끝냈습니다.",
+            "note": "they 가 the workers 를 대신합니다."
+          }
+        },
+        {
+          "head": "동사 — 서술하는 말",
+          "body": "주어가 무엇을 하는지, 어떤 상태인지 말해 주는 문장의 심장입니다. 동사가 없으면 문장이 아닙니다.",
+          "example": {
+            "en": "Ice **melts** quickly in warm water.",
+            "ko": "얼음은 따뜻한 물에서 빨리 녹습니다.",
+            "note": "melts 가 주어 Ice 를 서술합니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "형용사 — 명사를 꾸미는 말",
+          "body": "명사의 모양·성질·상태를 설명합니다. 명사 앞에서 꾸미거나, be·seem 뒤에서 보어가 됩니다. 보어란 주어의 상태를 받아 채우는 자리이며, 성분으로서의 정식 정의는 다음 레슨에서 다룹니다.",
+          "example": {
+            "en": "A **narrow** road leads to the **quiet** village.",
+            "ko": "좁은 길 하나가 그 조용한 마을로 이어집니다.",
+            "note": "narrow 는 road 를, quiet 는 village 를 꾸밉니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "부사 — 명사 빼고 다 꾸미는 말",
+          "body": "동사·형용사·다른 부사·문장 전체를 꾸밉니다. 단, 명사는 꾸미지 못하고 보어도 되지 못합니다.",
+          "example": {
+            "en": "The nurse spoke **softly** to the frightened child.",
+            "ko": "간호사는 겁먹은 아이에게 부드럽게 말했습니다.",
+            "note": "softly 는 동사 spoke 를 꾸밉니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "전치사 — 명사 앞에 서는 말",
+          "body": "in·at·on·from 처럼 명사 앞에 서서 시간·장소·방향의 덩어리(전치사구)를 만듭니다. 전치사 뒤에는 반드시 명사(구)가 옵니다.",
+          "example": {
+            "en": "The keys **under** the sofa belong to my uncle.",
+            "ko": "소파 밑의 그 열쇠들은 우리 삼촌의 것입니다.",
+            "note": "under the sofa 가 하나의 덩어리로 keys 를 꾸밉니다."
+          }
+        },
+        {
+          "head": "접속사 — 말과 말을 잇는 말",
+          "body": "and·but·or 는 단어·구·절을 대등하게 잇고, because·when·if 는 절을 절에 종속시켜 잇습니다.",
+          "example": {
+            "en": "The wind stopped, **and** the sea became calm.",
+            "ko": "바람이 멎었고, 바다는 잔잔해졌습니다.",
+            "note": "and 가 두 절을 잇습니다."
+          }
+        },
+        {
+          "head": "감탄사 — 감정을 홀로 내뱉는 말",
+          "body": "Oh·Wow 처럼 문장 구조에 끼지 않고 감정만 나타냅니다. 어법 판별에는 거의 등장하지 않습니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "8품사 한 장 정리",
+      "columns": ["품사", "맡은 일", "대표 선수"],
+      "rows": [
+        {
+          "cells": ["명사", "이름을 댑니다", "water, library, idea"],
+          "example": {
+            "en": "**Water** is precious in the desert.",
+            "ko": "사막에서 물은 귀합니다.",
+            "note": "주어 자리의 이름 — 명사입니다."
+          }
+        },
+        {
+          "cells": ["대명사", "명사를 대신합니다", "he, they, it, this"]
+        },
+        {
+          "cells": ["동사", "서술합니다", "record, seem, melt"],
+          "example": {
+            "en": "Farmers **record** the daily rainfall.",
+            "ko": "농부들은 매일의 강우량을 기록합니다.",
+            "note": "목적어를 데리고 서술 — 동사입니다."
+          }
+        },
+        {
+          "cells": ["형용사", "명사를 꾸밉니다 · 보어가 됩니다", "careful, bright, old"],
+          "example": {
+            "en": "The instructions were **clear**.",
+            "ko": "그 설명서는 명확했습니다.",
+            "note": "were 뒤의 보어 — 형용사입니다."
+          }
+        },
+        {
+          "cells": ["부사", "동사·형용사·부사·문장을 꾸밉니다", "carefully, very, quite"],
+          "example": {
+            "en": "She reads **very** carefully.",
+            "ko": "그녀는 매우 주의 깊게 읽습니다.",
+            "note": "very 는 부사 carefully 를 다시 꾸미는 부사입니다."
+          }
+        },
+        {
+          "cells": ["전치사", "명사 앞에서 덩어리를 만듭니다", "in, at, from, under"]
+        },
+        {
+          "cells": ["접속사", "말과 말을 잇습니다", "and, but, because, when"]
+        },
+        {
+          "cells": ["감탄사", "감정을 홀로 나타냅니다", "oh, wow"]
+        }
+      ],
+      "takeaway": "이 표에서 시험에 가장 자주 불려 나오는 줄은 형용사와 부사입니다. 두 줄의 \"맡은 일\" 차이를 눈에 새겨 두십시오."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "8품사의 이름",
+      "why": "8품사는 앞으로 모든 어법 설명에 쓰이는 기본 어휘입니다. \"명사 자리\", \"부사는 보어 불가\" 같은 말을 들을 때마다 목록을 더듬으면 설명 자체를 놓칩니다. 구구단처럼 즉시 나와야 도구가 됩니다.",
+      "device": "명·대·동·형·부·전·접·감 — 앞의 넷(명대동형)은 문장의 몸통을 만들고, 뒤의 넷(부전접감)은 둘레에서 돕습니다. \"명대동형이 몸통, 부전접감이 부품\"이라고 두 박자로 끊어 세 번 소리 내어 읽으십시오.",
+      "items": [
+        { "cue": "명", "answer": "명사 — 이름을 대는 말" },
+        { "cue": "대", "answer": "대명사 — 명사를 대신하는 말" },
+        { "cue": "동", "answer": "동사 — 서술하는 말" },
+        { "cue": "형", "answer": "형용사 — 명사를 꾸미는 말" },
+        { "cue": "부", "answer": "부사 — 명사 빼고 다 꾸미는 말" },
+        { "cue": "전", "answer": "전치사 — 명사 앞에 서는 말" },
+        { "cue": "접", "answer": "접속사 — 말과 말을 잇는 말" },
+        { "cue": "감", "answer": "감탄사 — 감정을 홀로 내뱉는 말" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "첫 번째 관문",
+      "mission": "8품사에 속하는 것만 전부 고르십시오. 품사가 아닌 침입자가 셋 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "명사",
+        "주어",
+        "대명사",
+        "동사",
+        "목적어",
+        "형용사",
+        "부사",
+        "전치사",
+        "관사",
+        "접속사",
+        "감탄사"
+      ],
+      "answers": [
+        "명사",
+        "대명사",
+        "동사",
+        "형용사",
+        "부사",
+        "전치사",
+        "접속사",
+        "감탄사"
+      ],
+      "passText": "여덟을 전부 가려냈습니다. 침입자 셋은 성격이 서로 다릅니다 — 주어·목적어는 품사가 아니라 단어가 앉는 \"자리\"의 이름이고, 관사(a·the)는 명사를 한정하지만 전통 8품사에는 넣지 않는 별개의 말입니다. 여기까지 눈치챘다면 다음 개념의 절반은 이미 끝났습니다.",
+      "retryText": "아깝습니다. 힌트 — 침입자는 셋입니다. 주어·목적어는 단어의 직업이 아니라 단어가 앉는 \"의자\"의 이름이고, 관사(a·the)는 명사를 한정하지만 전통 8품사에는 넣지 않습니다. 암기 카드의 여덟 글자를 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "품사는 형태가 아니라 자리가 정합니다",
+      "rule": "같은 단어라도 문장에서 맡는 일이 달라지면 품사가 달라집니다. 단어를 외울 때 품사를 하나로 못 박아 두면 문장을 잘못 읽게 됩니다.",
+      "examples": [
+        {
+          "en": "Farmers **water** the dry fields at dawn.",
+          "ko": "농부들은 새벽에 마른 밭에 물을 줍니다.",
+          "note": "water 가 주어 뒤에서 목적어 the dry fields 를 데리고 서술하므로 동사입니다."
+        },
+        {
+          "en": "The **water** from the river reaches every row.",
+          "ko": "강에서 온 그 물은 모든 이랑에 닿습니다.",
+          "note": "water 가 관사 the 뒤에서 주어 노릇을 하므로 명사입니다. 형태는 같지만 자리가 다릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "품사로 뼈대와 수식어를 가릅니다",
+      "tokens": [
+        { "t": "The scientists", "role": "S" },
+        { "t": "in the small laboratory", "role": "M" },
+        { "t": "carefully", "role": "M" },
+        { "t": "recorded", "role": "V" },
+        { "t": "every change", "role": "O" }
+      ],
+      "ko": "그 작은 실험실의 과학자들은 모든 변화를 주의 깊게 기록했습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "in the small laboratory 는 전치사 in 이 이끄는 전치사구이고, carefully 는 부사입니다. 둘 다 뼈대가 아니므로 묶어서 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어 자리에는 명사 scientists 가 남습니다. 주어 자리는 명사·대명사가 맡습니다."
+        },
+        {
+          "label": "③ 서술하는 동사를 찾습니다",
+          "roles": ["V"],
+          "note": "recorded 가 시제를 가진 동사이며 문장을 서술합니다. 한 절의 뼈대는 주어와 동사입니다."
+        },
+        {
+          "label": "④ 동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "recorded 는 목적어를 부르는 동사이고, 명사구 every change 가 그 목적어입니다."
+        }
+      ],
+      "conclusion": "품사를 알면 어느 덩어리가 뼈대이고 어느 덩어리가 수식어인지 곧바로 갈라집니다. 전치사구와 부사는 아무리 길어도 뼈대가 아닙니다."
+    },
+    {
+      "id": "b9",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "명사 사냥",
+      "instruction": "이 문장에서 명사를 전부 찾아 탭하십시오. 이름을 대는 단어가 명사입니다.",
+      "hitLabel": "명사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "farmers", "hit": true },
+        { "t": "grow", "hit": false },
+        { "t": "rice", "hit": true },
+        { "t": "near", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "river", "hit": true },
+        { "t": "every", "hit": false },
+        { "t": "summer", "hit": true }
+      ],
+      "ko": "그 농부들은 여름마다 강 근처에서 벼를 재배합니다.",
+      "explain": "farmers(사람)·rice(사물)·river(장소)·summer(시간)는 모두 무언가의 이름을 대므로 명사입니다. grow 는 서술하는 동사, near 는 명사 앞에 선 전치사, The·the·every 는 명사 앞에서 범위를 정해 주는 말입니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "형용사와 부사의 분업",
+      "rule": "형용사는 명사를 꾸미거나 보어가 됩니다. 부사는 동사·형용사·부사·문장 전체를 꾸미며, 보어 자리에는 올 수 없습니다.",
+      "examples": [
+        {
+          "en": "The evidence seems **reliable** to most economists.",
+          "ko": "그 증거는 대부분의 경제학자에게 신뢰할 만해 보입니다.",
+          "note": "seem 뒤는 주어의 상태를 설명하는 보어 자리이므로 형용사 reliable 이 옵니다. 부사 reliably 는 보어가 되지 못합니다."
+        },
+        {
+          "en": "The temperature dropped **suddenly** during the night.",
+          "ko": "밤사이 기온이 갑자기 떨어졌습니다.",
+          "note": "suddenly 는 동사 dropped 를 꾸미는 부사입니다. 동사를 꾸미는 일은 형용사가 하지 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "품사를 정하는 4단계",
+      "steps": [
+        {
+          "text": "그 단어가 문장에서 무슨 일을 하는지 봅니다. 이름을 대면 명사, 서술하면 동사입니다.",
+          "applyNote": "Farmers 는 이름을 대므로 명사입니다. 앞 절의 water 는 목적어 the dry fields 를 데리고 서술하므로 동사입니다."
+        },
+        {
+          "text": "꾸미는 말이라면 무엇을 꾸미는지 봅니다. 명사를 꾸미면 형용사, 동사·형용사·부사·문장을 꾸미면 부사입니다.",
+          "applyNote": "dry 는 명사 fields 를 꾸미므로 형용사입니다. 꾸미는 대상이 명사인지 아닌지가 형용사와 부사를 가릅니다."
+        },
+        {
+          "text": "뒤에 명사(구)를 데리고 덩어리를 이루면 전치사이고, 단어·구·절을 대등하게 잇거나(and, but, or) 절을 종속시켜 이으면(because, when) 접속사입니다.",
+          "applyNote": "at dawn 과 from the river 는 전치사구입니다. and 는 여기에서 두 절을 잇는 등위접속사이며, 같은 and 가 단어끼리도 이을 수 있습니다."
+        },
+        {
+          "text": "형태(어미)는 단서일 뿐입니다. 형태와 자리가 어긋나면 자리를 따릅니다.",
+          "applyNote": "뒤 절의 water 는 형태가 앞 절과 같지만 관사 the 뒤에서 주어 노릇을 하므로 명사입니다."
+        }
+      ],
+      "example": {
+        "en": "Farmers **water** the dry fields at dawn, and the **water** from the river reaches every row.",
+        "ko": "농부들은 새벽에 마른 밭에 물을 주고, 강에서 온 그 물은 모든 이랑에 닿습니다.",
+        "note": "앞 절의 water 는 동사이고 뒤 절의 water 는 명사입니다. 같은 형태라도 자리가 다르면 품사가 다릅니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 근거를 절차대로 확인하십시오.",
+      "stem": "The laboratory stayed ( bright / brightly ) even after midnight.",
+      "steps": [
+        {
+          "title": "① 괄호 앞의 동사를 봅니다",
+          "body": "stay 는 be동사처럼 주어의 상태를 이어 주는 동사입니다. 뒤에 보어를 부릅니다."
+        },
+        {
+          "title": "② 괄호가 무엇을 꾸미는지 확인합니다",
+          "body": "괄호 뒤에는 꾸밀 명사가 없습니다. 앞의 동사를 꾸미는 자리도 아닙니다. 이 자리는 주어의 상태를 설명하는 보어 자리입니다."
+        },
+        {
+          "title": "③ 보어가 될 수 있는 품사를 떠올립니다",
+          "body": "보어 자리에 올 수 있는 것은 명사와 형용사입니다. 부사는 보어가 되지 못합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "형용사 bright 가 보어로 들어가야 합니다. brightly 를 넣으면 보어 자리에 부사가 놓여 문장이 성립하지 않습니다."
+        }
+      ],
+      "answer": "bright",
+      "ko": "그 실험실은 자정이 지난 뒤에도 환했습니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b01-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Her answer to the question was completely {{blank}}.",
+          "options": ["correct", "correctly"],
+          "answer": 0,
+          "translation": "그 질문에 대한 그녀의 답은 완전히 옳았습니다.",
+          "explanation": "was 뒤는 주어의 상태를 설명하는 보어 자리입니다. 보어에는 형용사가 오므로 correct 가 옳습니다. 부사 correctly 는 보어가 되지 못합니다.",
+          "trapTags": ["adj-adv", "complement"]
+        },
+        {
+          "id": "b01-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The committee reached its decision [[u:quick]] despite the disagreement.",
+          "isCorrect": false,
+          "correction": "quickly",
+          "translation": "그 위원회는 의견 차이에도 불구하고 신속하게 결정에 이르렀습니다.",
+          "explanation": "밑줄은 동사 reached 를 꾸미는 자리입니다. 동사를 꾸미는 것은 부사의 일이므로 형용사 quick 이 아니라 quickly 가 옳습니다.",
+          "trapTags": ["adj-adv"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "형용사와 부사의 대조",
+      "columns": ["형용사", "부사"],
+      "rows": [
+        {
+          "criterion": "꾸미는 대상",
+          "a": "명사(구)",
+          "b": "동사·형용사·부사·문장 전체"
+        },
+        {
+          "criterion": "보어가 될 수 있는가",
+          "a": "될 수 있습니다",
+          "b": "될 수 없습니다"
+        },
+        {
+          "criterion": "주로 서는 자리",
+          "a": "명사 앞, be·seem·stay·become 뒤",
+          "b": "동사 앞·뒤(타동사와 목적어 사이는 제외), 형용사·부사 앞, 문장 앞"
+        },
+        {
+          "criterion": "대표 형태",
+          "a": "clear / careful / reliable",
+          "b": "clearly / carefully / reliably"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The signal was **clear** even at a great distance.",
+          "ko": "그 신호는 먼 거리에서도 뚜렷했습니다.",
+          "note": "was 의 보어 자리이므로 형용사 clear 가 옵니다."
+        },
+        {
+          "en": "The engineers explained the results **clearly** to the audience.",
+          "ko": "그 기술자들은 청중에게 결과를 명확하게 설명했습니다.",
+          "note": "동사 explained 를 꾸미는 자리이므로 부사 clearly 가 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "단어와 직업 연결하기",
+      "instruction": "왼쪽 단어가 예문 속에서 맡은 직업을 오른쪽에서 찾아 연결하십시오.",
+      "pairs": [
+        {
+          "a": "carefully",
+          "b": "부사",
+          "why": "recorded 처럼 동사를 꾸미는 자리에 서는 말입니다."
+        },
+        {
+          "a": "reliable",
+          "b": "형용사",
+          "why": "명사를 꾸미거나 seem 뒤에서 보어가 되는 말입니다."
+        },
+        {
+          "a": "because",
+          "b": "접속사",
+          "why": "절과 절을 이어 이유를 붙이는 말입니다."
+        },
+        {
+          "a": "under",
+          "b": "전치사",
+          "why": "명사 앞에 서서 under the sofa 같은 덩어리를 만듭니다."
+        },
+        {
+          "a": "they",
+          "b": "대명사",
+          "why": "앞에 나온 명사를 대신해 주어 자리에 서는 말입니다."
+        },
+        {
+          "a": "evidence",
+          "b": "명사",
+          "why": "\"증거\"라는 이름을 대는 말로, 주어·목적어 자리를 차지합니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현에서 record·study·answer 가 어떤 품사로 쓰였는지 분류하십시오.",
+      "buckets": [
+        { "id": "n", "label": "명사로 쓰였습니다" },
+        { "id": "v", "label": "동사로 쓰였습니다" }
+      ],
+      "chips": [
+        {
+          "text": "record the results",
+          "bucketId": "v",
+          "why": "뒤에 목적어 the results 를 데리고 서술하므로 동사입니다."
+        },
+        {
+          "text": "a detailed record",
+          "bucketId": "n",
+          "why": "관사와 형용사의 꾸밈을 받는 자리이므로 명사입니다."
+        },
+        {
+          "text": "study the data",
+          "bucketId": "v",
+          "why": "뒤에 목적어 the data 를 데리고 서술하므로 동사입니다."
+        },
+        {
+          "text": "a recent study",
+          "bucketId": "n",
+          "why": "관사와 형용사 recent 의 꾸밈을 받으므로 명사입니다."
+        },
+        {
+          "text": "answer the question",
+          "bucketId": "v",
+          "why": "뒤에 목적어 the question 을 데리고 서술하므로 동사입니다."
+        },
+        {
+          "text": "a clear answer",
+          "bucketId": "n",
+          "why": "형용사 clear 의 꾸밈을 받는 자리이므로 명사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "품사 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 손보다 눈이 먼저 자리를 봐야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "보어 자리에는 부사가 올 수 없습니다.",
+          "isTrue": true,
+          "why": "보어가 되는 것은 명사와 형용사뿐입니다. 부사는 보어 자리에 서지 못합니다."
+        },
+        {
+          "statement": "-ly 로 끝나는 단어는 전부 부사입니다.",
+          "isTrue": false,
+          "why": "friendly·lovely·costly 는 -ly 로 끝나지만 형용사입니다. 어미는 단서일 뿐입니다."
+        },
+        {
+          "statement": "water 는 문장에 따라 동사도 되고 명사도 됩니다.",
+          "isTrue": true,
+          "why": "Farmers water the fields 에서는 동사, the water from the river 에서는 명사입니다."
+        },
+        {
+          "statement": "형용사는 동사를 꾸밀 수 있습니다.",
+          "isTrue": false,
+          "why": "동사를 꾸미는 일은 부사의 몫입니다. 형용사는 명사를 꾸미거나 보어가 됩니다."
+        },
+        {
+          "statement": "전치사 뒤에는 명사(구)가 옵니다.",
+          "isTrue": true,
+          "why": "전치사는 명사 앞에 서서 덩어리를 만드는 말입니다. under the sofa 처럼 씁니다."
+        },
+        {
+          "statement": "주어·목적어도 8품사에 속합니다.",
+          "isTrue": false,
+          "why": "주어·목적어는 품사(단어의 직업)가 아니라 문장성분(단어가 앉는 자리)의 이름입니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 낡은 시계는 아직도 정확하게 작동합니다.",
+      "answer": ["The old clock", "still", "works", "accurately"],
+      "tiles": ["The old clock", "still", "works", "accurately", "accurate"],
+      "explanation": "works 뒤의 자리는 동사 works 를 꾸미는 자리이므로 부사 accurately 가 들어갑니다. 형용사 accurate 는 명사를 꾸미거나 보어가 될 뿐이므로 쓰이지 않습니다."
+    },
+    {
+      "id": "b19",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The engineers checked the safety valves ( regular / regularly ) during the winter.",
+      "givenSteps": [
+        "① 괄호가 무엇과 관계있는지 봅니다 — 앞의 동사 checked 가 어떻게 이루어졌는지를 말하는 자리입니다.",
+        "② 꾸밀 명사가 있는지 봅니다 — 괄호 뒤에는 꾸밀 명사가 없습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 어떤 품사가 들어가야 합니까?",
+      "options": [
+        "regularly — 동사를 꾸미는 자리이므로 부사입니다",
+        "regular — 목적어 the safety valves 를 꾸미기 때문입니다",
+        "regular — 형태가 짧아 문장이 더 자연스럽기 때문입니다"
+      ],
+      "answer": 0,
+      "explain": "동사를 꾸미는 일은 부사가 합니다. 형용사 regular 는 명사 앞이나 보어 자리에만 서므로 이 자리에 올 수 없습니다."
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "-ly 로 끝나면 부사라는 착각",
+      "body": "-ly 는 부사를 만드는 흔한 어미이지만 절대적인 표지가 아닙니다. friendly·lovely·costly·lonely·silly 는 -ly 로 끝나지만 형용사입니다. 형태가 아니라 자리가 품사를 정합니다.",
+      "example": {
+        "en": "The guide was very **friendly**, and she answered every question **politely**.",
+        "ko": "그 안내인은 매우 친절했고, 모든 질문에 정중하게 답했습니다.",
+        "note": "friendly 는 -ly 로 끝나지만 was 의 보어이므로 형용사입니다. 동사 answered 를 꾸미는 politely 가 부사입니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "형태가 같은 형용사·부사, 뜻이 다른 -ly 짝",
+      "body": "hard·fast·late·early·high 는 형용사와 부사의 형태가 같습니다. 반면 hardly·lately 는 hard·late 의 부사형이 아니라 뜻이 전혀 다른 부사입니다.",
+      "example": {
+        "en": "The researchers worked **hard**, but they **hardly** slept during the final week.",
+        "ko": "그 연구자들은 열심히 일했지만, 마지막 주에는 거의 잠을 자지 못했습니다.",
+        "note": "hard 는 동사 worked 를 꾸미는 부사입니다. hardly 는 '거의 ~하지 않다'라는 뜻이므로 hard 의 부사형으로 바꿔 쓸 수 없습니다."
+      }
+    },
+    {
+      "id": "b22",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "품사가 다른 하나",
+      "instruction": "각 묶음에서 품사가 다른 하나를 찾아 탭하십시오. 형태에 속지 말고 그 단어의 직업을 보십시오.",
+      "rounds": [
+        {
+          "words": ["friendly", "lovely", "costly", "quickly"],
+          "odd": 3,
+          "why": "quickly 만 동사를 꾸미는 부사입니다. 나머지 셋은 -ly 로 끝나지만 명사를 꾸미는 형용사입니다."
+        },
+        {
+          "words": ["evidence", "happiness", "decide", "information"],
+          "odd": 2,
+          "why": "decide 만 서술하는 동사입니다. 나머지 셋은 이름을 대는 명사입니다."
+        },
+        {
+          "words": ["in", "at", "during", "and"],
+          "odd": 3,
+          "why": "and 만 말과 말을 잇는 접속사입니다. 나머지 셋은 명사 앞에 서는 전치사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b01-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The evidence from the two experiments seemed {{blank}} to the reviewers.",
+          "options": ["convincing", "convincingly"],
+          "answer": 0,
+          "translation": "두 실험에서 나온 그 증거는 심사자들에게 설득력 있어 보였습니다.",
+          "explanation": "seem 은 주어의 상태를 설명하는 보어를 부르는 동사입니다. 보어 자리에는 형용사가 오므로 convincing 이 옳습니다. 부사 convincingly 는 보어가 되지 못합니다.",
+          "trapTags": ["adj-adv", "complement"]
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 convincing 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "seemed 가 보어를 부르는 동사이고, 보어 자리에는 형용사가 오며 부사는 올 수 없기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 자리가 품사를 정합니다. 보어 자리에 부사를 놓을 수는 없습니다."
+        },
+        {
+          "text": "증거가 스스로 설득하는 것이 아니라 설득력을 지니는 것이므로 -ing 형이 의미상 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "이 문항의 근거는 seemed 뒤가 보어 자리라는 구조입니다. 의미가 근거가 되는 문제도 있지만, 여기에서는 자리 규칙이 먼저입니다."
+        },
+        {
+          "text": "convincingly 가 문장 끝에 오면 발음하기 어색하게 들리기 때문입니다.",
+          "correct": false,
+          "feedback": "어색하다는 느낌은 근거가 아닙니다. 부사는 보어가 될 수 없다는 자리 규칙이 근거입니다."
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 밑줄 친 단어의 품사를 쓰고 근거를 서술하게 합니다. 형태가 아니라 자리를 근거로 대야 만점입니다.",
+          "sample": {
+            "en": "The storage room stays cool all year.",
+            "ask": "이 문장에서 cool 의 품사를 쓰고, 그렇게 판단한 근거를 서술하십시오.",
+            "answer": "형용사 — stay 는 보어를 부르는 동사이고 cool 은 그 보어입니다. 이 자리에 부사는 올 수 없습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항은 부사 자리에 형용사를, 보어 자리에 부사를 놓아 밑줄을 칩니다. 밑줄이 무엇을 꾸미는 자리인지부터 확인해야 합니다.",
+          "sample": {
+            "en": "Sales of electric vehicles rose [[u:sharp]] after the new subsidy took effect.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "sharply — 동사 rose 를 꾸미는 자리이므로 형용사가 아니라 부사가 와야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "품사 미궁의 문지기",
+      "intro": "여덟 직업의 이름을 외운 정도로는 이 문을 지날 수 없습니다. 자리를 보는 눈이 있는지, 네 번의 판단으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The results of the survey were quite {{blank}}.",
+          "options": ["surprising", "surprisingly"],
+          "answer": 0,
+          "why": "were 뒤는 주어의 상태를 설명하는 보어 자리입니다. 보어에는 형용사가 옵니다."
+        },
+        {
+          "prompt": "The nurse checked the patient's pulse {{blank}}.",
+          "options": ["regular", "regularly"],
+          "answer": 1,
+          "why": "동사 checked 를 꾸미는 자리이므로 부사 regularly 가 옵니다."
+        },
+        {
+          "prompt": "He spoke so {{blank}} that everyone in the hall believed him.",
+          "options": ["confident", "confidently"],
+          "answer": 1,
+          "why": "동사 spoke 를 꾸미는 자리입니다. so 뒤라도 꾸미는 대상이 동사이면 부사입니다."
+        },
+        {
+          "prompt": "The soup in the pot tastes {{blank}}.",
+          "options": ["strange", "strangely"],
+          "answer": 0,
+          "why": "taste 는 주어의 상태를 전하는 동사로 보어를 부릅니다. 보어 자리에는 형용사 strange 가 옵니다."
+        }
+      ],
+      "winText": "문지기가 길을 내어 줍니다. 형태에 속지 않고 자리를 본 판단이 네 번 모두 정확했습니다. 이 눈이 앞으로 모든 어법 문항의 출발점이 됩니다.",
+      "loseText": "문지기는 아직 비켜서지 않습니다. 오답의 공통점을 보십시오 — 전부 \"이 자리가 무엇을 꾸미는 자리인가\"를 묻고 있었습니다. 대조표를 다시 보고 오면 문은 열립니다."
+    },
+    {
+      "id": "b27",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "품사는 단어의 ___가 아니라 문장에서 맡는 ___이 정합니다. 명사를 꾸미면 ___, 동사를 꾸미면 ___입니다."
+    },
+    {
+      "id": "b28",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "8품사는 명사·대명사·동사·형용사·부사·전치사·접속사·감탄사입니다. 명대동형이 몸통, 부전접감이 부품입니다.",
+        "품사는 단어의 형태가 아니라 문장에서 맡는 일로 정해집니다. water 는 동사도 되고 명사도 됩니다.",
+        "형용사는 명사를 꾸미거나 보어가 되고, 부사는 동사·형용사·부사·문장을 꾸미며 보어가 되지 못합니다.",
+        "-ly 는 단서일 뿐입니다. friendly·costly 는 형용사이고, hard·fast 는 형용사와 부사의 형태가 같습니다.",
+        "전치사구와 부사는 수식어이므로, 뼈대를 볼 때는 괄호로 묶어 치웁니다."
+      ],
+      "keySentence": {
+        "en": "The scientists in the small laboratory carefully **recorded** every change.",
+        "ko": "그 작은 실험실의 과학자들은 모든 변화를 주의 깊게 기록했습니다.",
+        "note": "명사 scientists 가 주어, 동사 recorded 가 서술이며, 전치사구와 부사는 수식어입니다."
+      }
+    },
+    {
+      "id": "b29",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b01-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The committee reviewed the proposal {{blank}} before the final vote.",
+          "options": ["careful", "carefully"],
+          "answer": 1,
+          "translation": "위원회는 최종 표결 전에 그 제안서를 주의 깊게 검토했습니다.",
+          "explanation": "빈칸은 동사 reviewed 를 꾸미는 자리이므로 부사 carefully 가 옳습니다. 형용사 careful 은 명사를 꾸미거나 보어가 될 뿐입니다.",
+          "trapTags": ["adj-adv"]
+        },
+        {
+          "id": "b01-c1-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Farmers [[u:water]] the young trees twice a day during the dry season.",
+          "isCorrect": true,
+          "translation": "농부들은 건기 동안 어린 나무들에 하루에 두 번 물을 줍니다.",
+          "explanation": "water 는 명사로도 동사로도 쓰입니다. 여기서는 주어 Farmers 뒤에서 목적어 the young trees 를 데리고 서술하므로 동사이며, 따라서 이 문장은 옳습니다.",
+          "trapTags": ["word-class-shift"]
+        },
+        {
+          "id": "b01-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The lecture was postponed {{blank}} the heavy snow.",
+          "options": ["because", "because of"],
+          "answer": 1,
+          "translation": "그 강연은 폭설 때문에 연기되었습니다.",
+          "explanation": "빈칸 뒤에는 명사구 the heavy snow 만 있고 주어와 동사를 갖춘 절이 없습니다. 명사구 앞에는 전치사가 오므로 because of 가 옳습니다. 접속사 because 뒤에는 절이 와야 합니다.",
+          "trapTags": ["preposition-conjunction"]
+        }
+      ]
+    }
+  ]
+}

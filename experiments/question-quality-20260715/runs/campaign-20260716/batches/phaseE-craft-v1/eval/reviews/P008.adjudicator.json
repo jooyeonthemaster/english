@@ -1,0 +1,38 @@
+{
+  "pid": "P008",
+  "finalV2": true,
+  "winningAnswer": "C",
+  "reason": "GRAMMAR_ERROR 문항. 독립 재검증 결과 밑줄 5개 중 유일한 비문은 (C) revealing이다. 문장 'The fact that other species depend on or are greatly affected by the keystone species [revealing] when the keystone species is removed.'에서 주어는 'The fact', 뒤의 that절은 동격절이며, 동격절 종료 후 주어 'The fact'에 호응하는 정형(finite) 본동사가 필요하다. 그러나 'revealing'은 현재분사여서 본동사가 될 수 없어 주절에 정동사가 부재한 미완성 문장(fragment)이 된다. 원문대로 수동 정동사 'is revealed'로 고쳐야 한다. (C)를 'keystone species'를 수식하는 축약관계절/분사구문으로 재해석해도 문장 전체에 본동사가 여전히 없어 비문이 유지되므로 어떤 대안 해석으로도 성립하지 않는다. 나머지 (A)(B)(D)(E)는 모두 어법상 옳아 오류가 될 수 없으므로 정답은 (C)로 유일하다. 솔버1·솔버2·감사자 판정과 일치하며, 과잉 판정이나 놓친 대안 해석은 발견되지 않았다. (감사자가 지적한 keyPoints의 '(F)'→'(D)' 라벨 오기는 V5 태그 문제일 뿐 정답 유일성(V2)에는 영향 없음.)",
+  "perDispute": [
+    {
+      "label": "A",
+      "claim": "called가 능동 calling이어야 하거나 정동사여야 한다는 오판 가능성",
+      "verdict": "correct(오류 아님)",
+      "evidence": "'Such species, called keystone species, are vital...'에서 called는 주어 Such species를 수식하는 과거분사(축약 관계절 = which are called). 종은 keystone species라 '불리는' 수동 대상이므로 과거분사가 정확하다. 주절 정동사는 'are vital'로 별도 존재한다. 삽입 콤마 구조도 정상."
+    },
+    {
+      "label": "B",
+      "claim": "관계대명사 which로 바꿔야 한다는 오판 가능성",
+      "verdict": "correct(오류 아님)",
+      "evidence": "'The fact that other species depend on or are greatly affected by the keystone species'는 성분 결손 없는 완전한 절(주어 other species + 병렬 술어 depend on / are greatly affected by + 목적어 the keystone species)을 이끈다. 따라서 관계대명사가 아니라 추상명사 fact의 내용을 설명하는 동격 접속사 that이 옳다."
+    },
+    {
+      "label": "C",
+      "claim": "revealing이 본동사 자리를 채울 수 있다는(분사구문/축약관계절) 주장",
+      "verdict": "incorrect(어법상 틀림 — 정답)",
+      "evidence": "주어 'The fact (that ...동격절...)'에 대응하는 정형 본동사가 문장에 전무하다. depend/are affected는 동격절 내부, is removed는 when절 내부에 있어 모두 주절 동사가 아니다. 준동사 revealing은 정동사가 될 수 없어 주절이 미완성된다. 'keystone species revealing'을 분사 수식으로 재해석해도 문장 전체 본동사가 여전히 없어 fragment가 유지된다. 어떤 대안 해석으로도 정문이 되지 않으며, 원문 수동 정동사 'is revealed'로 고쳐야 하는 최소대립쌍이다. 유일한 오류."
+    },
+    {
+      "label": "D",
+      "claim": "가산명사 fruits 때문에 fewer가 맞다는 오판 가능성",
+      "verdict": "correct(오류 아님)",
+      "evidence": "'other fruits are less plentiful'에서 plentiful은 be동사의 형용사 보어이고 부사 less가 이를 수식(덜 풍부한)하는 구조로 옳다. fewer는 가산명사를 직접 한정할 때 쓰므로 형용사 plentiful을 수식하는 이 자리에 적용되지 않는다."
+    },
+    {
+      "label": "E",
+      "claim": "Should 도치 뒤 동사형/어순이 틀렸다는 오판 가능성",
+      "verdict": "correct(오류 아님)",
+      "evidence": "'Should the fig trees disappear, ... would be eliminated'는 if 생략 도치 가정법(= If the fig trees should disappear)이다. 조동사 Should가 문두로 도치된 뒤 주어 다음에는 동사원형 disappear가 와야 하며, 귀결절 would be eliminated와도 정확히 호응한다."
+    }
+  ]
+}

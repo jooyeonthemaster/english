@@ -1,0 +1,692 @@
+{
+  "id": "b03-c3",
+  "unitId": "b03",
+  "order": 3,
+  "title": "진행형 — be + -ing",
+  "oneLiner": "진행형은 be + -ing 가 한 짝입니다. be동사 없이 -ing 혼자서는 본동사가 되지 못합니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 교육과정 별책14 별표4 언어형식 — 진행형(중 ●)",
+      "docs/study-os-spec.md §2.3 b03 동사와 시제의 기본",
+      "docs/study-os-spec.md §2.5 판별 5렌즈 L2·L5"
+    ]
+  },
+  "lenses": ["L2", "L5"],
+  "confusableWith": ["b03-c1", "b03-c2", "b03-c4", "u01-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The scientists in the next room are analyzing the samples.",
+        "The scientists in the next room analyzing the samples."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 단어 하나입니다. 이 레슨을 마치면 왜 두 번째가 문장이 되지 못하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "진행형",
+      "question": "그런데 진행형이 대체 무엇입니까?",
+      "plain": "진행형은 지금 또는 그때 한창 벌어지고 있는 동작을 나타내는 동사의 형태입니다. be동사와 -ing 형, 두 단어가 한 짝이 되어 하나의 본동사 노릇을 합니다.",
+      "analogy": "-ing 는 모터이고 be동사는 배터리입니다. 모터가 아무리 좋아도 배터리를 꽂지 않으면 돌지 않듯, -ing 는 be동사가 시제라는 전원을 넣어 줘야 비로소 문장을 움직입니다.",
+      "whyItMatters": "시험은 be동사를 슬쩍 지우거나 주어와 수가 어긋난 be동사를 놓고 밑줄을 칩니다. \"이 -ing 앞에 be 가 있는가, 그 be 는 핵 주어와 맞는가\"를 보는 눈이 이 레슨에서 생깁니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "진행형 필기노트",
+      "intro": "진행형을 다섯 항목으로 나눠 적습니다. 예문의 굵은 부분이 그 항목의 핵심입니다.",
+      "entries": [
+        {
+          "head": "공식 — be + -ing",
+          "body": "be동사와 -ing 형이 합쳐야 하나의 본동사가 됩니다. 둘 중 하나라도 빠지면 진행형이 아닙니다.",
+          "example": {
+            "en": "The pianist **is practicing** for the evening concert.",
+            "ko": "그 피아니스트는 저녁 연주회를 위해 연습하고 있습니다.",
+            "note": "is 와 practicing 이 합쳐 하나의 본동사가 됩니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "be동사의 일 — 시제와 수를 집니다",
+          "body": "현재는 am·is·are, 과거는 was·were 입니다. 주어의 수·인칭과 시제는 전부 be동사가 책임집니다.",
+          "example": {
+            "en": "The guards **were patrolling** the hall at midnight.",
+            "ko": "경비원들은 자정에 복도를 순찰하고 있었습니다.",
+            "note": "복수 주어의 과거이므로 be동사는 were 입니다."
+          }
+        },
+        {
+          "head": "-ing 의 일 — 동작만 나타냅니다",
+          "body": "-ing 는 어떤 동작인지 알려 줄 뿐 시제를 지지 못합니다. 주어가 바뀌어도, 시제가 바뀌어도 -ing 의 형태는 그대로입니다."
+        },
+        {
+          "head": "be 없는 -ing — 본동사가 아닙니다",
+          "body": "명사 바로 뒤에 be동사 없이 붙은 -ing 는 앞의 명사를 꾸미는 수식어입니다. 이 구별이 이 레슨의 승부처입니다.",
+          "example": {
+            "en": "The runners **crossing** the bridge waved at us.",
+            "ko": "다리를 건너고 있던 주자들이 우리에게 손을 흔들었습니다.",
+            "note": "crossing 앞에 be 가 없으므로 본동사는 waved 이고, crossing 은 runners 를 꾸밉니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "진행형을 쓰는 때 — 한창 진행 중",
+          "body": "지금 또는 그때 벌어지고 있는 일시적 동작에 씁니다. 반복되는 일정과 변하지 않는 사실은 단순시제의 몫입니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "주어·시점으로 고르는 진행형 be동사",
+      "why": "다섯 형태(암·이즈·아, 워즈·워)는 c1에서 이미 외웠습니다. 진행형에서 -ing 는 늘 그대로이므로 정답은 언제나 be동사에서 갈리는데, 이제 필요한 것은 목록 재암기가 아니라 주어·시점을 보고 다섯 중 하나를 즉시 고르는 손입니다.",
+      "device": "c1에서 외운 그 다섯 형태를 다시 꺼내되, 이제 외울 것은 목록이 아니라 '주어·시점 → 어느 be' 짝짓기입니다. 지금이면 현재 셋에서 주어의 수·인칭으로, 그때면 과거 둘에서 고른 뒤 -ing 를 붙이십시오. 현재 셋 가운데 am 은 오직 I 한 사람만 섬기는 전속 비서입니다.",
+      "items": [
+        { "cue": "I + 지금", "answer": "am + -ing" },
+        { "cue": "단수 주어 + 지금", "answer": "is + -ing" },
+        { "cue": "복수 주어 + 지금", "answer": "are + -ing" },
+        { "cue": "I·단수 주어 + 그때", "answer": "was + -ing" },
+        { "cue": "you·복수 주어 + 그때", "answer": "were + -ing" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "시제의 관문",
+      "mission": "이 관문은 be동사인지 아닌지를 묻던 c1의 관문과 다릅니다 — being·been 처럼 be동사이면서도 시제를 지지 못하는 형태를 걸러, 시제를 질 수 있는 다섯 형태만 전부 고르십시오.",
+      "mode": "SET",
+      "pool": ["am", "is", "are", "was", "were", "being", "been", "do"],
+      "answers": ["am", "is", "are", "was", "were"],
+      "passText": "다섯 형태를 전부 가려냈습니다. being 과 been 은 be동사의 얼굴을 하고 있지만 시제를 지지 못한다는 것까지 보였다면, 이 레슨의 절반은 이미 넘은 것입니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 시제를 지는 형태는 \"현재 셋, 과거 둘\"뿐입니다. being·been 은 시제가 없어 혼자서는 문장을 세우지 못합니다."
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "진행형은 be동사와 -ing 형이 한 짝을 이루는 동사구입니다. 시제는 be동사가 지고, -ing 는 동작을 나타냅니다.",
+      "examples": [
+        {
+          "en": "The city **is building** a new library near the station.",
+          "ko": "그 도시는 역 근처에 새 도서관을 짓고 있습니다.",
+          "note": "is 가 현재 시제를 지고 building 이 동작을 나타냅니다. is building 전체가 하나의 본동사입니다."
+        },
+        {
+          "en": "The visitors **were waiting** in front of the museum.",
+          "ko": "방문객들은 박물관 앞에서 기다리고 있었습니다.",
+          "note": "과거진행은 was·were + -ing 입니다. 시제는 were 가 지고 waiting 은 형태가 그대로입니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "be동사는 주어의 수·인칭과 시제에 맞춥니다. 현재는 am·is·are, 과거는 was·were 이며 -ing 형은 바뀌지 않습니다.",
+      "examples": [
+        {
+          "en": "The engineer **is checking** the safety report today.",
+          "ko": "그 기술자는 오늘 안전 보고서를 검토하고 있습니다.",
+          "note": "주어 The engineer 가 단수이므로 be동사는 is 입니다."
+        },
+        {
+          "en": "The engineers **are checking** the safety report today.",
+          "ko": "그 기술자들은 오늘 안전 보고서를 검토하고 있습니다.",
+          "note": "주어가 복수가 되면 be동사만 are 로 바뀝니다. checking 은 그대로입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "주어와 be동사 짝짓기",
+      "instruction": "왼쪽의 주어와 시점에 맞는 be동사를 오른쪽에서 찾아 연결하십시오. 진행형의 정답은 언제나 be동사에서 갈립니다.",
+      "pairs": [
+        {
+          "a": "I ___ writing (지금)",
+          "b": "am",
+          "why": "1인칭 단수 I 의 현재 be동사는 am 하나뿐입니다."
+        },
+        {
+          "a": "The judge ___ listening (지금)",
+          "b": "is",
+          "why": "단수 주어의 현재이므로 is 입니다."
+        },
+        {
+          "a": "The players ___ stretching (지금)",
+          "b": "are",
+          "why": "복수 주어의 현재이므로 are 입니다."
+        },
+        {
+          "a": "The baker ___ kneading (어제)",
+          "b": "was",
+          "why": "단수 주어의 과거이므로 was 입니다."
+        },
+        {
+          "a": "The dancers ___ rehearsing (어제)",
+          "b": "were",
+          "why": "복수 주어의 과거이므로 were 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "-ing 가 붙어 있으면 '~하는 중'이라는 뜻이 되므로 그것만으로 진행형 문장이 됩니다.",
+      "truth": "-ing 는 동작을 나타낼 뿐 시제를 갖지 못합니다. 시제와 수는 be동사가 집니다. be동사가 없으면 그 -ing 는 본동사가 아닙니다. 명사 뒤에 붙었다면 그 명사를 꾸미는 분사입니다.",
+      "counterExample": {
+        "en": "The train **arriving** at platform three in five minutes.",
+        "ko": "5분 뒤 3번 승강장에 도착하는 그 열차 (…무엇?)",
+        "note": "arriving 앞에 be동사가 없습니다. 시제를 가진 동사가 하나도 없으므로 이것은 문장이 아니라 명사 덩어리입니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b10",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "진행형 문장의 해부",
+      "tokens": [
+        { "t": "The students", "role": "S" },
+        { "t": "in the front row", "role": "M" },
+        { "t": "are taking", "role": "V" },
+        { "t": "notes", "role": "O" },
+        { "t": "carefully", "role": "M" }
+      ],
+      "ko": "앞줄에 앉은 그 학생들은 필기를 꼼꼼히 하고 있습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "전치사구 in the front row 와 부사 carefully 는 뼈대가 아닙니다. 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 핵 주어는 The students 입니다. 복수이므로 be동사는 are 여야 합니다."
+        },
+        {
+          "label": "③ 본동사를 확인합니다",
+          "roles": ["V"],
+          "note": "are taking 이 be + -ing 동사구 전체로 본동사입니다. taking 만으로는 시제가 없어 본동사가 되지 못합니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "take 는 목적어를 부르는 동사이고, notes 가 그 목적어입니다."
+        }
+      ],
+      "conclusion": "be동사 are 가 시제와 수를 지고 taking 이 동작을 나타냅니다. 둘이 합쳐야 비로소 하나의 본동사가 됩니다."
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "밑줄이 -ing 형일 때의 4단계",
+      "steps": [
+        {
+          "text": "-ing 바로 앞에 be동사(am·is·are·was·were)가 있는지 확인합니다.",
+          "applyNote": "repairing 앞에는 be동사가 없고, blocking 앞에는 are 가 있습니다."
+        },
+        {
+          "text": "be동사가 있으면 그 -ing 는 진행형 본동사의 일부입니다. be동사가 없으면 그 -ing 는 본동사가 아니며, 이 레슨에서 다루는 <명사 바로 뒤에 붙은 -ing>는 앞의 명사를 꾸미는 분사구입니다. (주어·목적어 자리의 동명사, 콤마로 분리된 분사구문은 별개 개념으로 뒤에서 다룹니다.)",
+          "applyNote": "are blocking 이 본동사이고, repairing the old bridge 는 The workers 를 뒤에서 꾸미는 분사구입니다."
+        },
+        {
+          "text": "수식어를 걷어내 핵 주어를 찾고, be동사의 수·인칭을 그 핵 주어에 맞춥니다.",
+          "applyNote": "핵 주어는 The workers 로 복수이므로 are 가 옳습니다. bridge 에 이끌려 is 를 쓰면 오류입니다."
+        },
+        {
+          "text": "절 안에 시제를 가진 동사가 하나도 남지 않으면, 그 -ing 앞에 be동사를 세워야 합니다.",
+          "applyNote": "are 를 지우면 시제 동사가 사라져 문장이 조각으로 무너집니다."
+        }
+      ],
+      "example": {
+        "en": "The workers **repairing** the old bridge **are blocking** one lane of the road.",
+        "ko": "그 낡은 다리를 수리하는 인부들이 도로의 한 차선을 막고 있습니다.",
+        "note": "-ing 가 둘이지만 be동사를 앞에 둔 것은 blocking 하나뿐입니다. 그래서 본동사는 are blocking 입니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "본동사 사냥",
+      "instruction": "이 문장에서 본동사를 이루는 어절 두 개를 찾아 탭하십시오. -ing 라고 해서 전부 본동사는 아닙니다.",
+      "hitLabel": "본동사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "children", "hit": false },
+        { "t": "playing", "hit": false },
+        { "t": "in", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "park", "hit": false },
+        { "t": "are", "hit": true },
+        { "t": "wearing", "hit": true },
+        { "t": "warm", "hit": false },
+        { "t": "coats", "hit": false }
+      ],
+      "ko": "공원에서 놀고 있는 그 아이들은 따뜻한 외투를 입고 있습니다.",
+      "explain": "playing 앞에는 be동사가 없으므로 playing 은 The children 을 뒤에서 꾸미는 분사입니다. 시제를 진 are 와 동작을 맡은 wearing 이 합쳐 are wearing, 이 문장의 유일한 본동사가 됩니다."
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The tourists waiting at the gate ( is / are ) taking photographs of the old palace.",
+      "steps": [
+        {
+          "title": "① 괄호가 무슨 자리인지 확인합니다",
+          "body": "괄호 뒤에 taking 이 있습니다. 진행형은 be + -ing 이므로 괄호는 be동사 자리입니다."
+        },
+        {
+          "title": "② 수식어를 걷어냅니다",
+          "body": "waiting at the gate 는 be동사 없이 쓰인 -ing 이므로 앞의 명사를 꾸미는 분사구입니다. 괄호로 묶어 치웁니다."
+        },
+        {
+          "title": "③ 핵 주어에 수를 맞춥니다",
+          "body": "남은 핵 주어는 The tourists 로 복수입니다. 따라서 be동사는 are 입니다. 가까이 있는 the gate 에 이끌려 is 를 고르면 틀립니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "are taking 이 하나의 본동사이고 waiting 은 수식하는 분사입니다. 답은 are 입니다."
+        }
+      ],
+      "answer": "are",
+      "ko": "정문에서 기다리고 있는 관광객들이 그 오래된 궁궐의 사진을 찍고 있습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b03-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The professor {{blank}} explaining the results to the class now.",
+          "options": ["is", "are"],
+          "translation": "그 교수는 지금 학급에 결과를 설명하고 있습니다.",
+          "answer": 0,
+          "explanation": "진행형은 be + -ing 이며 be동사는 주어의 수에 맞춥니다. 주어 The professor 가 단수이므로 is 가 옳습니다.",
+          "trapTags": ["progressive-be", "subject-verb-agreement"]
+        },
+        {
+          "id": "b03-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The students in the laboratory [[u:preparing]] a report on water quality.",
+          "isCorrect": false,
+          "correction": "are preparing",
+          "translation": "실험실에 있는 그 학생들은 수질에 관한 보고서를 작성하고 있습니다.",
+          "explanation": "이 문장에는 시제를 가진 동사가 하나도 없습니다. -ing 는 be동사 없이 본동사가 될 수 없으므로 복수 주어에 맞춰 are preparing 으로 고쳐야 합니다.",
+          "trapTags": ["missing-be", "missing-main-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "be가 있는 -ing 와 없는 -ing",
+      "columns": ["be + -ing (진행형 본동사)", "be 없는 -ing (수식어)"],
+      "rows": [
+        {
+          "criterion": "시제",
+          "a": "be동사가 시제를 집니다 (is / are / was / were)",
+          "b": "시제가 없습니다"
+        },
+        {
+          "criterion": "혼자서 문장을 세울 수 있는가",
+          "a": "세울 수 있습니다",
+          "b": "세울 수 없습니다"
+        },
+        {
+          "criterion": "문장 안의 역할",
+          "a": "문장의 본동사",
+          "b": "앞의 명사를 뒤에서 꾸미는 분사구"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The volunteers **are cleaning** the riverbank this morning.",
+          "ko": "자원봉사자들이 오늘 아침 강둑을 청소하고 있습니다.",
+          "note": "are 가 시제를 지므로 are cleaning 전체가 본동사이고, 문장이 완성됩니다."
+        },
+        {
+          "en": "The volunteers **cleaning** the riverbank this morning.",
+          "ko": "오늘 아침 강둑을 청소하고 있는 자원봉사자들 (…무엇?)",
+          "note": "be동사가 없으면 cleaning 은 앞의 명사를 꾸미는 분사일 뿐이어서 문장이 완성되지 않습니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "진행형은 지금 또는 그때 진행 중인 일시적 동작에 씁니다. 반복되는 일정이나 변하지 않는 사실은 단순시제로 씁니다.",
+      "examples": [
+        {
+          "en": "The library **opens** at nine every morning.",
+          "ko": "그 도서관은 매일 아침 아홉 시에 문을 엽니다.",
+          "note": "every morning 은 반복되는 일정입니다. 반복은 단순현재로 나타냅니다."
+        },
+        {
+          "en": "The technician **is repairing** the projector at the moment.",
+          "ko": "그 기술자는 지금 프로젝터를 수리하고 있습니다.",
+          "note": "at the moment 는 지금 진행 중임을 가리킵니다. 이때 진행형을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "소유·소속·인식·구성처럼 상태를 나타내는 동사(know, believe, belong, own, contain, resemble 등)는 원칙적으로 진행형으로 쓰지 않습니다.",
+      "examples": [
+        {
+          "en": "The archive **contains** thousands of early photographs.",
+          "ko": "그 기록보관소는 수천 장의 초기 사진을 소장하고 있습니다.",
+          "note": "contain 은 포함 상태를 나타내므로 진행형이 아니라 단순현재로 씁니다."
+        },
+        {
+          "en": "The museum **is belonging** to the city.",
+          "ko": "그 박물관은 시에 속해 있습니다 (어법상 틀린 문장입니다).",
+          "note": "belong 은 소속 상태를 나타내므로 진행형으로 쓰지 않습니다. belongs 처럼 단순현재로 써야 옳습니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현을 진행형으로 쓸 수 있는 것과 쓰지 않는 것으로 분류하십시오.",
+      "buckets": [
+        { "id": "prog", "label": "진행형으로 쓸 수 있다" },
+        { "id": "state", "label": "진행형으로 쓰지 않는다" }
+      ],
+      "chips": [
+        {
+          "text": "build a bridge",
+          "bucketId": "prog",
+          "why": "다리를 짓는 것은 진행 중인 동작이므로 is building 처럼 쓸 수 있습니다."
+        },
+        {
+          "text": "wait for the results",
+          "bucketId": "prog",
+          "why": "기다리는 것은 일시적으로 진행되는 동작입니다."
+        },
+        {
+          "text": "prepare a report",
+          "bucketId": "prog",
+          "why": "보고서를 작성하는 것은 진행 중인 동작입니다."
+        },
+        {
+          "text": "know the answer",
+          "bucketId": "state",
+          "why": "know 는 인식 상태를 나타내므로 진행형으로 쓰지 않습니다."
+        },
+        {
+          "text": "belong to the museum",
+          "bucketId": "state",
+          "why": "belong 은 소속 상태를 나타내므로 진행형으로 쓰지 않습니다."
+        },
+        {
+          "text": "contain three chapters",
+          "bucketId": "state",
+          "why": "contain 은 구성·포함 상태를 나타내므로 진행형으로 쓰지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The buildings near the harbor ( is / are ) losing their old paint in the salty sea air.",
+      "givenSteps": [
+        "① 괄호 뒤에 losing 이 있습니다. 진행형은 be + -ing 이므로 괄호는 be동사 자리입니다.",
+        "② 수식어를 걷어냅니다 — near the harbor 는 전치사구이므로 문장의 뼈대가 아닙니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "are — 수식어를 걷어낸 핵 주어 The buildings 가 복수이기 때문입니다",
+        "is — be동사 바로 앞의 the harbor 가 단수이기 때문입니다",
+        "be — 진행형에는 be동사의 원형을 쓰기 때문입니다"
+      ],
+      "answer": 0,
+      "explain": "be동사는 바로 앞의 명사가 아니라 핵 주어에 맞춥니다. 핵 주어 The buildings 가 복수이므로 are 가 옳습니다. 원형 be 는 시제가 없어 본동사가 되지 못합니다."
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 핵 주어와 멀어진 be동사",
+      "body": "주어 뒤에 전치사구나 분사구가 길게 끼면 be동사 바로 앞의 명사에 수를 맞추기 쉽습니다. 수식어를 괄호로 묶어 걷어낸 뒤, 남은 핵 주어에 be동사를 맞춰야 합니다.",
+      "example": {
+        "en": "The boxes of laboratory equipment **is** blocking the hallway.",
+        "ko": "실험 장비가 담긴 상자들이 복도를 막고 있습니다.",
+        "note": "be동사 바로 앞의 equipment 에 이끌려 is 를 쓴 오류입니다. 핵 주어는 The boxes 로 복수이므로 are blocking 이 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "title": "직접 만들어 봅니다",
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 두 기술자는 새 장비를 시험하고 있습니다.",
+      "answer": ["The two engineers", "are", "testing", "the new equipment"],
+      "tiles": [
+        "The two engineers",
+        "are",
+        "testing",
+        "the new equipment",
+        "is"
+      ],
+      "explanation": "진행형은 be + -ing 이므로 testing 앞에는 반드시 be동사가 필요합니다. 주어 The two engineers 가 복수이므로 is 가 아니라 are 를 씁니다."
+    },
+    {
+      "id": "b22",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b03-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The lamps in the old reading room {{blank}} flickering again tonight.",
+          "options": ["are", "is", "being"],
+          "answer": 0,
+          "translation": "그 오래된 열람실의 램프들이 오늘 밤 또다시 깜박이고 있습니다.",
+          "explanation": "전치사구 in the old reading room 을 걷어내면 핵 주어는 The lamps 로 복수이므로 be동사는 are 입니다. being 은 시제가 없어 본동사가 되지 못합니다.",
+          "trapTags": ["subject-verb-agreement", "progressive-be", "long-subject"]
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 are 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "수식어를 걷어내면 핵 주어가 The lamps 로 복수이고, 진행형에는 시제를 가진 be동사가 반드시 필요하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 핵 주어 추출과 be동사의 존재 확인이 판단의 두 축입니다."
+        },
+        {
+          "text": "flickering 이 -ing 형이므로 그 앞에는 언제나 are 를 쓰기 때문입니다.",
+          "correct": false,
+          "feedback": "be동사의 형태를 정하는 것은 -ing 가 아니라 주어의 수·인칭과 시제입니다. 주어가 단수였다면 is 가 옳았을 것입니다."
+        },
+        {
+          "text": "tonight 이 현재를 가리키므로 현재형 are 가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시간 부사는 시제를 고르는 근거는 되지만 be동사의 수를 결정하지 못합니다. is 도 똑같이 현재형입니다."
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The researchers [[1:working]] in the desert station [[2:are recording]] the temperature throughout the dry season, and the information they collect [[3:is helping]] scientists who [[4:studying]] long-term climate change.",
+      "answer": 4,
+      "correction": "study",
+      "rationales": [
+        "working 앞에는 be동사가 없습니다. 주절의 본동사는 뒤의 are recording 이므로 working 은 앞의 명사를 꾸미는 분사구입니다.",
+        "핵 주어 The researchers 가 복수이므로 are 가 옳고, are recording 이 주절의 본동사입니다.",
+        "핵 주어 the information 이 단수이므로 is 가 옳습니다. is helping 이 and 뒤 절의 본동사입니다.",
+        "관계대명사 who 가 절을 열었으므로 그 절에는 시제를 가진 동사가 있어야 합니다. studying 은 be동사가 없어 본동사가 되지 못하므로 study 로 고칩니다(선행사 scientists 가 복수이므로 are studying 으로 고쳐도 옳습니다)."
+      ],
+      "ko": "사막 관측소에서 일하는 연구자들은 건기 내내 기온을 기록하고 있으며, 그들이 수집하는 정보는 장기적인 기후 변화를 연구하는 과학자들에게 도움이 되고 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 괄호 안의 동사를 진행형으로 바꿔 쓰게 합니다. be동사를 빠뜨리거나 주어의 수에 맞추지 못하면 감점됩니다.",
+          "sample": {
+            "en": "The two committees ( work ) on the same problem right now.",
+            "ask": "괄호 안의 동사를 현재진행형으로 바꿔 문장을 완성하십시오.",
+            "answer": "are working"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서는 긴 주어 뒤에 진행형을 놓아 be동사의 수를 흐립니다. 밑줄이 be + -ing 이면 수식어를 걷어내고 핵 주어의 수를 먼저 확인합니다.",
+          "sample": {
+            "en": "The number of students who take the online course [[u:are increasing]] these days.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "is increasing — 핵 주어는 The number 로 단수이므로 be동사는 is 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "시제를 삼킨 안개 유령",
+      "intro": "이 유령은 문장에서 be동사를 지워 시제를 삼킵니다. -ing 만 남은 안개 속에서 본동사를 다시 세울 수 있는지, 네 번의 판단으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The volunteers at the shelter {{blank}} sorting the donated clothes right now.",
+          "options": ["are", "is", "being"],
+          "answer": 0,
+          "why": "전치사구 at the shelter 를 걷어내면 핵 주어는 The volunteers 로 복수입니다. being 은 시제가 없어 본동사를 세우지 못합니다."
+        },
+        {
+          "prompt": "The chef {{blank}} every recipe by heart, so he never opens the cookbook.",
+          "options": ["knows", "is knowing"],
+          "answer": 0,
+          "why": "know 는 인식 상태를 나타내는 동사이므로 진행형으로 쓰지 않습니다. 상태는 단순시제로 나타냅니다."
+        },
+        {
+          "prompt": "The dog [[u:barking]] at the gate all night. — 밑줄 부분은 어법상 옳습니까?",
+          "options": ["옳습니다", "틀립니다 — be동사가 필요합니다"],
+          "answer": 1,
+          "why": "barking 앞에 be동사가 없어 이 문장에는 시제를 가진 동사가 하나도 없습니다. was barking 처럼 be동사를 세워야 문장이 됩니다."
+        },
+        {
+          "prompt": "The ferry {{blank}} the island twice a day.",
+          "options": ["visits", "is visiting"],
+          "answer": 0,
+          "why": "twice a day 는 반복되는 일정입니다. 반복은 단순현재로 쓰고, 진행형은 지금 한창 진행 중인 일시적 동작에 씁니다."
+        }
+      ],
+      "winText": "안개가 걷힙니다. 시제를 누가 지는가를 묻는 네 번의 판단이 전부 정확했습니다. 이제 -ing 를 보면 손보다 눈이 먼저 be동사를 찾을 것입니다.",
+      "loseText": "유령은 아직 안개 속에 있습니다. 오답의 공통점을 보십시오 — 전부 \"시제를 누가 지는가\"를 묻고 있었습니다. be동사의 다섯 형태와 상태동사 목록을 다시 확인하면 안개는 걷힙니다."
+    },
+    {
+      "id": "b27",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "진행형은 ___ + ___ 이고, be동사는 ___의 수·인칭에 맞춥니다. be동사가 없으면 -ing 는 ___가 됩니다."
+    },
+    {
+      "id": "b28",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "진행형은 be동사 + -ing 이며, 시제와 수는 be동사가 집니다. 현재 셋(am·is·are), 과거 둘(was·were)입니다.",
+        "be동사 없이 -ing 혼자서는 본동사가 되지 못하며, 명사 뒤에 붙은 -ing 는 앞의 명사를 꾸미는 수식어가 됩니다.",
+        "be동사는 바로 앞의 명사가 아니라, 수식어를 걷어낸 핵 주어의 수·인칭에 맞춥니다.",
+        "진행형은 진행 중인 일시적 동작에 씁니다. 반복되는 일정이나 변하지 않는 사실은 단순시제로 씁니다.",
+        "know·believe·belong·contain 처럼 상태를 나타내는 동사는 원칙적으로 진행형으로 쓰지 않습니다."
+      ],
+      "keySentence": {
+        "en": "The workers **repairing** the old bridge **are blocking** one lane of the road.",
+        "ko": "그 낡은 다리를 수리하는 인부들이 도로의 한 차선을 막고 있습니다.",
+        "note": "be동사를 앞세운 -ing 만이 본동사입니다. repairing 은 수식어, are blocking 이 본동사입니다."
+      }
+    },
+    {
+      "id": "b29",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b03-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The professor {{blank}} that the earlier results need more evidence.",
+          "options": ["believes", "is believing"],
+          "answer": 0,
+          "translation": "그 교수는 이전의 결과에 더 많은 증거가 필요하다고 생각합니다.",
+          "explanation": "believe 는 인식 상태를 나타내는 동사이므로 진행형으로 쓰지 않습니다. 상태를 나타내는 동사는 단순시제로 씁니다.",
+          "trapTags": ["stative-verb"]
+        },
+        {
+          "id": "b03-c3-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The two technicians [[u:is repairing]] the broken sensor at the moment.",
+          "isCorrect": false,
+          "correction": "are repairing",
+          "translation": "그 두 기술자는 지금 고장 난 센서를 수리하고 있습니다.",
+          "explanation": "진행형의 be동사는 주어의 수에 맞춥니다. 핵 주어 The two technicians 가 복수이므로 are repairing 이 옳습니다.",
+          "trapTags": ["subject-verb-agreement", "progressive-be"]
+        },
+        {
+          "id": "b03-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Snow {{blank}} on the mountain roads, and drivers are moving slowly.",
+          "options": ["is falling", "falling", "are falling"],
+          "answer": 0,
+          "translation": "산악 도로에 눈이 내리고 있고, 운전자들은 천천히 이동하고 있습니다.",
+          "explanation": "등위접속사 and 가 절을 하나 더 열었으므로 앞 절에도 시제를 가진 동사가 필요합니다. falling 은 be동사 없이 본동사가 될 수 없고, 핵 주어 Snow 는 단수 취급하므로 is falling 이 옳습니다.",
+          "trapTags": ["missing-be", "coordination", "subject-verb-agreement"]
+        }
+      ]
+    }
+  ]
+}

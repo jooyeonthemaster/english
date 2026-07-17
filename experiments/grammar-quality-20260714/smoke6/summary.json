@@ -1,0 +1,30 @@
+{
+  "round": "smoke6",
+  "total": 2,
+  "ok": 2,
+  "failed": 0,
+  "relaxed": 0,
+  "avgAttempts": 2,
+  "avgMs": 29236,
+  "avgLastMarkerRelPos": 0.921,
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 1,
+      "ok": 1,
+      "relaxed": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 1,
+      "ok": 1,
+      "relaxed": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 0,
+      "ok": 0,
+      "relaxed": 0
+    }
+  ]
+}

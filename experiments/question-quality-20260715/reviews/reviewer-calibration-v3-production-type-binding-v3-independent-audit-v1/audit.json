@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "reviewer-calibration-v3-production-type-binding-v3-independent-audit-1",
+  "artifactId": "reviewer-calibration-v3-production-type-binding-v3-independent-audit-v1",
+  "subjectArtifactId": "reviewer-calibration-v3-production-type-binding-v3",
+  "subjectCandidateManifestSha256": "d01349a4856097992ea4ef48f65221ed6adb44ca4b7baad9198d99ecb9638481",
+  "subjectAuditCoreSha256": "356085dcf0a5d34b5026519b03ea2d1e098db97de5a5e5b769aba8ff6fcc60cb",
+  "verdict": "FAIL_BLOCKERS",
+  "mathVerdict": "PASS_CANONICAL_AND_ROTATION_MATH",
+  "executionAuthorityVerdict": "FAIL_NOT_ISSUABLE",
+  "blockers": [
+    {
+      "code": "SECONDARY_BATCH_NOT_REACHABLE_FROM_REQUESTED_ROUTE",
+      "severity": "BLOCKER",
+      "claim": "The immutable subject claims a SECONDARY_BATCH path from the requested manual-English route through useGenerationHandlers to fast or legacy dispatch.",
+      "evidence": [
+        "GeneratePageClient obtains handleBatchGenerate but contains no CallExpression that invokes it.",
+        "The only GeneratePageClient GenerationConfigPanel instance passes hideGenerateButtons=true; the panel guards its library-generation CTA with !hideGenerateButtons.",
+        "GeneratePageClient also passes handleBatchGenerate to PassageCardGrid, but PassageCardGrid only destructures the prop and never invokes or forwards it.",
+        "The live requested-route dispatch is PRIMARY_WORKSPACE via handleWorkspaceGenerate; the asserted secondary path is dead from this route."
+      ],
+      "impact": "Presence of a hook and endpoint text is not route reachability. The subject's whole execution-authority claim is false."
+    },
+    {
+      "code": "LEGACY_TRIGGER_BRANCH_IS_DEAD_CODE",
+      "severity": "BLOCKER",
+      "claim": "The immutable subject claims the secondary handler can choose the legacy endpoint and therefore reach the Trigger task.",
+      "evidence": [
+        "createQuestionGenerationJob is called only inside the nested enqueueJob callback.",
+        "enqueueJob has zero CallExpressions in use-generation-handlers.ts; its only non-declaration reference is a React dependency-array entry.",
+        "handleBatchGenerate calls runManualUnitsWithFastPath, whose reachable request creator is createFastQuestionGenerationJob only.",
+        "The subject verifier checks a legacy fetch literal globally but never requires a reachable call from handleBatchGenerate to createQuestionGenerationJob or enqueueJob."
+      ],
+      "impact": "The standalone legacy route and Trigger task exist, but they are not a dispatch branch of the requested UI route."
+    },
+    {
+      "code": "SCHEMA_RUNTIME_SOURCE_CLOSURE_FAIL_OPEN",
+      "severity": "BLOCKER",
+      "claim": "The immutable subject treats 17 files as a complete execution/schema authority chain.",
+      "evidence": [
+        "question-ai-schemas-mc.ts directly imports question-generation-research-schema.ts and question-schemas-mc.ts, neither of which is in sourceAuthority.productionSources.",
+        "run-question-generation.ts directly imports question-generation-research-schema.ts, question-generation-research-profiles.ts, and question-generation-research-runtime.ts; none is source-bound by the subject.",
+        "question-generation-research-schema.ts, question-generation-research-profiles.ts, and question-generation-research-runtime.ts are currently untracked production imports.",
+        "question-schemas.ts imports its MC schema values from the tracked but unbound question-schemas-mc.ts.",
+        "The subject checks registry key syntax, not the imported schema values or the actually selected AI-schema branch's executable closure."
+      ],
+      "impact": "Untracked or unbound direct dependencies can change or break schema execution while every subject hash, Git snapshot check, and AST key-set check still passes."
+    },
+    {
+      "code": "INTERACTIVE_DISPATCH_CLOSURE_INCOMPLETE",
+      "severity": "BLOCKER",
+      "claim": "The immutable subject calls its AST list an actual route-to-dispatch authority chain.",
+      "evidence": [
+        "The source list omits generation-config-panel-parts/type-numeric-detail.tsx, which owns the library CTA callback.",
+        "The source list omits passage-card-grid.tsx, which receives but does not use handleBatchGenerate.",
+        "The source list omits workspace/passage-generate-modal.tsx, which owns the primary modal's onGenerate event surface."
+      ],
+      "impact": "The artifact binds callback construction but not all event surfaces needed to prove user-reachable dispatch."
+    }
+  ],
+  "evidenceSources": [
+    {
+      "path": "src/app/(director)/director/workbench/generate/passage-card-grid.tsx",
+      "sha256": "5b8475a1df9f7f218b8b3383c666ac9d197f0144801a2775f3f85162ada162a6",
+      "subjectBound": false,
+      "tracked": true
+    },
+    {
+      "path": "src/app/(director)/director/workbench/generate/generation-config-panel-parts/type-numeric-detail.tsx",
+      "sha256": "c77057cb6e9c4596caf522b8711af047789c5ea0b91a977be908a677bcd9c464",
+      "subjectBound": false,
+      "tracked": true
+    },
+    {
+      "path": "src/app/(director)/director/workbench/generate/workspace/passage-generate-modal.tsx",
+      "sha256": "f346b14986fba34d9d93e7080805130b2b5eeedaac13b8a22b35f670709037a1",
+      "subjectBound": false,
+      "tracked": true
+    },
+    {
+      "path": "src/lib/question-schemas-mc.ts",
+      "sha256": "5d0808a048469ebbedfd840632e732f860eca0fd824724a792f17a5b1dd26345",
+      "subjectBound": false,
+      "tracked": true
+    },
+    {
+      "path": "src/lib/question-generation-research-schema.ts",
+      "sha256": "a507b40880ad83940c754687a9bb04db00490bdf8b7ad554f7f34d9cdad1d7e5",
+      "subjectBound": false,
+      "tracked": false
+    },
+    {
+      "path": "src/lib/question-generation-research-profiles.ts",
+      "sha256": "aad875be9e4cc678f345d38f670d3b6fe51b8d579a46b503a937dfa162c0f094",
+      "subjectBound": false,
+      "tracked": false
+    },
+    {
+      "path": "src/lib/question-generation-research-runtime.ts",
+      "sha256": "727905b19ba7003a0f7983310c65492a13f28257720c921be6fa60319009d10b",
+      "subjectBound": false,
+      "tracked": false
+    }
+  ],
+  "repositoryAttributeEvidence": {
+    "path": ".gitattributes",
+    "sha256": "36923f3cf770959cc50fa1a6602b90adfc4939e34d2db05c69a36d75f0fe20d4",
+    "headBlobSha1": "90f1b61a9775b85cf8f2006bd78f0021c3cb4dac",
+    "infoAttributesAbsent": true,
+    "coreAttributesFileConfigured": false,
+    "relevantSourceFilterAttribute": "unspecified",
+    "guard": "Every subject source is independently rehashed both raw and with Git path filters; filtered-output drift is fail-closed."
+  },
+  "subjectVerifierUsedAsAuthority": false,
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0
+  }
+}

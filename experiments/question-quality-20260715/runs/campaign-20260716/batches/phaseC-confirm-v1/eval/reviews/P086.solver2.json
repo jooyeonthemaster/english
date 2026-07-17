@@ -1,0 +1,35 @@
+{
+  "pid": "P086",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법적으로는 성립하나 논리 근거 부재. 지문의 경고는 '타인의 부정적 감정이 바이러스처럼 전염되어 나를 해치는 것'(spread like a virus / don't damage yourself / not to be overcome)이지, 타인의 문제를 '해결해 줄 책임감'에 대한 언급은 지문 어디에도 없다. 주제 이탈."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합 완전(let + 목적어 + 원형부정사). 논리적으로 'just don't ___'의 대조적 제한 기능(공감하되 ~는 하지 마라)을 정확히 수행하며, 지문 전체의 전염 프레임(spread like a virus, be overcome by the misfortune, remaining detached)과 형식적으로 일치. 원전(에픽테토스 'just don't allow yourself to be pulled down too')의 취지와도 정합."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "삽입 시 'don't avoid engaging...' = '교류를 피하지 마라'가 되어 직전 명령(show them kindness, give a sympathetic ear)과 중복되는 동어반복이며, 'just don't'가 요구하는 대조·제한 기능이 소멸한다. 논리적 잉여로 부적합."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'오해받거나 비판받을 걱정'은 지문 어디에서도 도입되지 않은 신규 개념. 지문의 관심사는 타인의 불행에 대한 나의 정서적 오염이지 타인의 평가가 아님. 텍스트 근거 전무."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "삽입 시 '공감 욕구를 억누르지 마라' = '공감하라'가 되어 직전 절과 중복될 뿐 아니라, 지문의 실제 경계(정서적 몰입의 제한, remaining detached)와 방향이 정반대. 'just don't'의 제한적 대조 기능을 위반."
+    }
+  ],
+  "note": "빈칸 문장의 'just don't ___'는 양보-제한 구조(공감은 하되 X는 하지 마라)로, X는 지문 전체가 경고한 '감정 전염에 의한 자기 손상'이어야 한다. ②만이 이 형식적 요구를 충족하며 나머지는 주제 이탈(①④) 또는 동어반복/방향 역전(③⑤). 복수 정답 여지 없음. 원전은 Epictetus, The Art of Living."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P098",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "콜론 뒤 'writing a research paper'는 선행 명사구 'a typical high school task'와 동격을 이루는 동명사구. 동격 명사구 자리는 명사 상당어구를 요구하며 동명사구가 이를 충족한다. (to write도 가능하지만 writing이 비문인 것은 아님.) 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'memorized things like how to spell words'에서 전치사 like의 목적어 자리에 '의문사+to부정사'(how to spell ~) 명사 상당어구가 온 구조. 의문사구 how to-V는 명사절 축약형으로 전치사 목적어가 될 수 있고, spell은 타동사로 목적어 words를 취한다. 어법상 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'those brain activities don't get the workout today that they ___ for previous generations'에서 관계절의 공백은 선행사 the workout이며, 관계절 내 동사는 주절의 일반동사 술어 'get (the workout)'을 대신하는 대동사여야 한다. 일반동사 get의 대용은 do-대용(did)이어야 하며 be동사(were)는 이를 대신할 수 없다. 즉 'the workout that they did [= got] for previous generations'가 정문. 대안 해석 검토: 'the workout that they were'를 서술 명사구 공백의 계사 관계절(cf. 'he is not the man that he was')로 읽으면 형식상으로는 성립하나, 그 경우 의미가 '그 두뇌 활동들이 이전 세대에게 있어 그 자체로 workout이었다'가 되어, 같은 문장에서 활동이 workout을 '받는(get)' 수혜자이면서 동시에 workout '그 자체'라는 모순된 술어 결합이 발생한다. today vs. for previous generations의 시점 대조 구문은 동일 술어 get the workout의 반복을 전제하므로 대용형은 did가 유일하게 정합적이다. 어법상 틀렸다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'Today's young brains are heavily focused on scanning and processing ~'는 be focused on(~에 집중되어 있다)의 수동/형용사적 구문으로, 주어 brains(복수)와 are의 수 일치, 전치사 on 뒤 동명사 병렬(scanning and processing)이 모두 정확하다. 어법상 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes them highly tuned to require more stimulation and (to) become more easily bored'에서 tuned는 '조율된/맞춰진'의 형용사적 과거분사이고, to require는 결과·방향을 나타내는 to부정사로 tuned를 보충한다(be tuned to-V: ~하도록 맞춰지다). and 뒤 become은 to require의 to에 병렬로 걸리는 원형(require and become)으로 병렬 시작점이 성립한다. 어법상 옳다."
+    }
+  ],
+  "note": "출제 포인트는 대동사 선택: 일반동사 술어 get the workout의 대용은 do-대용(did)이어야 하며 be동사(were)는 불가. (C)의 계사 관계절 대안 해석('the workout that they were')은 형식적으로는 존재하나 지문의 today/previous generations 대조 논리와 술어 의미상 성립 불가하므로 정답은 (C) 하나로 좁혀진다. 나머지 밑줄은 모두 정문."
+}

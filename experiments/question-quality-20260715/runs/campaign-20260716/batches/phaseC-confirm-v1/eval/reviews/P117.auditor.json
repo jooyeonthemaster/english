@@ -1,0 +1,71 @@
+{
+  "pid": "P117",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3_SLOT_GRAMMAR_ELIMINATION",
+      "severity": "critical",
+      "evidence": "빈칸 뒤에 남은 tail이 '― both for language development and attitudes toward school ― are worthwhile'로 복수 동사 are를 포함한다. ① 'an immediate boost'(단수), ③ 'complete freedom'(단수), ④ 'a disconnection'(단수)을 넣으면 주어-동사 수일치가 깨져 완성문이 비문이 된다. BLANK_INFERENCE 유형의 의도는 모든 선지가 동일 통사 슬롯에 문법적으로 들어가고 의미로만 변별되는 것인데, 오답 3개가 문법만으로 즉시 탈락한다(V3 두 번째 조항 '오답의 비문 여부가 유형 의도와 정확히 일치' 위반). 남는 것은 ②/⑤뿐이고 ⑤는 'short-term' 한 단어로 탈락하므로 지문을 읽지 않고도 정답에 도달할 수 있다."
+    },
+    {
+      "code": "C4_APPOSITIVE_CONTENT_LEAK",
+      "severity": "major",
+      "evidence": "빈칸 직후에 원문의 동격 삽입구 'both for language development and attitudes toward school'가 그대로 남아 빈칸 내용의 두 차원(언어 발달·학교에 대한 태도)을 사전에 명시한다. 정답 ②의 'in both growth and connection'은 이 삽입구의 'both'를 어휘적으로 반향하여(both…both) 메타 단서를 추가로 누출한다."
+    },
+    {
+      "code": "STYLE_BOTH_REDUNDANCY",
+      "severity": "minor",
+      "evidence": "정답 ②를 넣은 완성문은 'enduring positive outcomes in both growth and connection ― both for language development and attitudes toward school ―'로 both가 연속 중복되어 문법적이긴 하나 부자연스럽다. 또한 'growth and connection'은 원문 span('language development and attitudes toward school')의 추상화로 다소 모호하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "양보절과의 극성/즉시성 모순 함정 (immediacy contradiction)",
+      "temptingBecause": "첫 문장의 'educational opportunities'와 연결되는 'academic test scores'라는 지문 앵커가 있다.",
+      "decisiveFlaw": "직전 양보절 'results won't be apparent immediately'와 정면 모순('immediate boost'). 다만 그 이전에 단수 주어 'a boost'가 복수 동사 are와 충돌해 문법만으로 즉시 탈락한다 — 의미 함정이 작동할 기회가 없다."
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'the long-range benefits'의 추상화 (enduring positive outcomes).",
+      "temptingBecause": "정답이므로 해당 없음. 'enduring'이 long-range를, 'growth and connection'이 언어 발달·학교 태도를 포착한다.",
+      "decisiveFlaw": "없음(정답). 단, 직후 삽입구의 'both'와 어휘 반향을 일으켜 단서 누출에 기여하며, 복수형이라는 문법 단서로도 ⑤와 함께 살아남는 2택으로 좁혀진다."
+    },
+    {
+      "label": "③",
+      "intent": "scope overextension — 지문이 언급한 스펙트럼의 한 극단('complete acceptance')을 지문의 주장으로 과확장.",
+      "temptingBecause": "지문에 'complete acceptance'라는 표현이 실제로 등장한다.",
+      "decisiveFlaw": "지문의 입장은 '수용 후 표준어로 확장'이지 표준 지침의 전면 거부가 아니다. 그러나 이 판단 이전에 단수 주어 'complete freedom'이 are와 충돌해 문법으로 즉시 탈락한다."
+    },
+    {
+      "label": "④",
+      "intent": "relation reversal — 언어 발달과 정서/태도 성장이 함께 발전한다는 논지를 '단절'로 역전.",
+      "temptingBecause": "'language', 'emotional growth' 등 지문 핵심 어휘를 재사용한다.",
+      "decisiveFlaw": "지문은 두 영역의 동반 발전(benefits for both)을 말하므로 방향이 반대. 역시 단수 주어 'a disconnection'이 are와 충돌하고, '단절이 가치 있다(worthwhile)'는 완성문 자체가 삽입구와도 의미 충돌하여 문법·의미 양면에서 즉시 소거된다."
+    },
+    {
+      "label": "⑤",
+      "intent": "scope narrowing / half-truth — 도입부의 구직 언급을 근거로 한 범위 축소.",
+      "temptingBecause": "2문장 'interview for a first job'이라는 실제 지문 앵커가 있고, 유일하게 복수형이라 문법 관문을 통과한다.",
+      "decisiveFlaw": "'short-term'이 양보절('결과가 즉시 드러나지 않는다')과 정면 충돌 — 극성 단어 하나로 탈락하므로 KILLER 요구(단일 단서로 찍기 불가)에 못 미친다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 렌더 지문은 원지문에서 'the long-range benefits'만 빈칸 치환한 것 외에 손상·중복·누락 없음, 라벨 ①~⑤와 선지 일치. V2: 정답 집합은 정확히 {②} — ①③④는 수일치 비문+의미 모순, ⑤는 short-term 모순으로 배제되어 유일성은 성립. V3 실패: 오답 3개(①③④)를 빈칸에 넣은 완성문이 단수 주어 vs 복수 동사 are로 비문이 되어, 의미 변별을 의도하는 빈칸 유형의 '오답은 문법적이어야 한다'는 유형 의도와 불일치(치명). V4: 해설의 구조 분석(양보절 지목, source span 'the long-range benefits' 귀속, 각 오답 해설과 선지 내용의 대응)은 모두 사실과 일치. V5: 정답 라벨·선지·해설·오답 해설·keyPoints 간 모순 없음. KILLER 조건: §D-1(동일 통사 슬롯, tail로 일부 오답만 문법 탈락 금지) 위반, §D-4(단일 단서로 정답 도달 불가) 위반 — 수일치+short-term 극성만으로 무독해 풀이 가능. §D-2는 충족(의미 보존·추상화), §D-5는 설계상 서로 다른 함정(극성 모순/과확장/역전/축소)을 갖춰 부분 충족이나 문법 누수로 무력화. C5=0: 요청 난이도 KILLER 대비 실제 난이도는 하(무독해 shortcut 존재)로 라벨과 불일치. 재설계 방향: 빈칸 span을 동격 삽입구까지 포함해 확장하거나 모든 선지를 복수 명사구로 통일하고, 삽입구의 'both' 반향을 제거해야 한다."
+}

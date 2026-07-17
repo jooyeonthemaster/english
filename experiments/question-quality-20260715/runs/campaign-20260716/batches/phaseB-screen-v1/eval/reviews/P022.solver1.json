@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "빈칸에 넣으면 'we are allowed to wait on the corner but cannot let any car stop to pick up passengers'. '너는 당연히 서 있어도 된다'는 친구의 말을 표면적으로 반복해 유혹적이지만, 주어 we가 운전자 측이며 '차가 승객을 태우려 정차할 수 없다'는 주장은 친구가 방금 그 코너에서 Carol을 태운 행동과 정면 모순. 'No Standing'의 실제 의미(승객 승하차용 순간 정차는 허용)와도 불일치."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'must keep driving without any deceleration even when someone is waiting to pick up passengers' — 후행 to부정사와의 결합(seam)이 붕괴됨: 'someone is waiting to pick up passengers'로 읽혀 기다리는 사람이 승객을 태우는 주체가 되는 비문 수준의 의미. 내용상으로도 'No Stopping'(정차 전면 금지)의 의미이며 친구의 정차 행위와 모순."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'we are forbidden to park our vehicles but are allowed a momentary halt to pick up passengers' — 'a momentary halt to pick up passengers'에서 목적의 to부정사가 자연스럽게 연결(seam 완벽). 미국 교통표지 'No Standing'의 실제 의미(차량의 대기/주차 금지, 승객 승하차를 위한 순간 정차만 허용)와 정확히 일치. 친구가 코너에 잠깐 정차해 Carol을 태운 상황, 그리고 '보행자가 아니라 차량에 대한 표지'라는 웃음 포인트와 완전 정합."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'can park the car as long as we remain inside to wait for someone to pick up passengers' — 'wait for someone to pick up passengers'로 이어져 의미가 뒤엉키는 결합 불량. 내용상으로도 운전자가 차 안에서 대기하는 것이 바로 표지가 금지하는 'standing'이므로 사실관계가 정반대."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "가장 강한 매력적 오답. 'No Standing = 차가 설 수 없다'로 단순화하면 'must not stop the vehicle under any circumstances to load passengers'가 그럴듯해 보임. 그러나 'under any circumstances'가 승객 탑승 목적의 정차까지 전면 금지해 친구 자신이 방금 Carol을 태운 행위를 위반으로 만들며, 이는 'No Stopping' 표지의 의미. 웃으며 설명하는 장면의 논리(승객 픽업은 허용됨)와 모순되어 탈락."
+    }
+  ],
+  "note": "장르: 일화형 빈칸(교통표지 'No Standing' 오해 유머). 결정적 장거리 단서 2개: (1) 친구가 바로 그 코너에서 정차해 Carol을 태웠다는 사실 — 승객 픽업 정차가 허용됨을 함의, (2) 후행 'to pick up passengers'와의 문법 결합. 두 기준 모두에서 ③만 생존. 최상위권 기준 ⑤의 유혹(표지=정차금지 단순화)이 실재하나 'under any circumstances'와 상황 논리로 배제 가능. 단일 정답으로 수렴, 이의신청 여지 낮음."
+}

@@ -1,0 +1,1193 @@
+{
+  "schemaVersion": "deterministic-structural-v10-independent-adjudication-v1",
+  "preAdjudicationSealVerified": true,
+  "authorPayloadSha256": "002ed425202c28f3dc7476d9381a6b65bce8e66f0616ebbeddb000d56221a222",
+  "blindSha256": "6cffb121e362dd40fe19fdb71890824cee8851b7aab4a2f2b02795aae164a171",
+  "predictionsSha256": "fc5a1dfe5fbc198eaf9488daf07f9c4c8745f2344a4cd29bdc142c06f37657f6",
+  "caseCount": 200,
+  "overall": {
+    "total": 200,
+    "correct": 125,
+    "disagreements": 75,
+    "accuracy": 0.625,
+    "expected": {
+      "defect": 100,
+      "normal": 100
+    },
+    "predicted": {
+      "defect": 25,
+      "normal": 175
+    },
+    "confusion": {
+      "expectedDefectPredictedDefect": 25,
+      "expectedDefectPredictedNormal": 75,
+      "expectedNormalPredictedDefect": 0,
+      "expectedNormalPredictedNormal": 100
+    }
+  },
+  "byFamily": {
+    "GRAMMAR_ERROR_LEADING_LABEL": {
+      "total": 50,
+      "correct": 31,
+      "disagreements": 19,
+      "accuracy": 0.62,
+      "expected": {
+        "defect": 25,
+        "normal": 25
+      },
+      "predicted": {
+        "defect": 6,
+        "normal": 44
+      },
+      "confusion": {
+        "expectedDefectPredictedDefect": 6,
+        "expectedDefectPredictedNormal": 19,
+        "expectedNormalPredictedDefect": 0,
+        "expectedNormalPredictedNormal": 25
+      }
+    },
+    "SENTENCE_ORDER_COMPLETE_UNITS": {
+      "total": 50,
+      "correct": 30,
+      "disagreements": 20,
+      "accuracy": 0.6,
+      "expected": {
+        "defect": 25,
+        "normal": 25
+      },
+      "predicted": {
+        "defect": 5,
+        "normal": 45
+      },
+      "confusion": {
+        "expectedDefectPredictedDefect": 5,
+        "expectedDefectPredictedNormal": 20,
+        "expectedNormalPredictedDefect": 0,
+        "expectedNormalPredictedNormal": 25
+      }
+    },
+    "SENTENCE_ORDER_STANDALONE_LABELS": {
+      "total": 50,
+      "correct": 39,
+      "disagreements": 11,
+      "accuracy": 0.78,
+      "expected": {
+        "defect": 25,
+        "normal": 25
+      },
+      "predicted": {
+        "defect": 14,
+        "normal": 36
+      },
+      "confusion": {
+        "expectedDefectPredictedDefect": 14,
+        "expectedDefectPredictedNormal": 11,
+        "expectedNormalPredictedDefect": 0,
+        "expectedNormalPredictedNormal": 25
+      }
+    },
+    "SUMMARY_COMPLETE_MC": {
+      "total": 50,
+      "correct": 25,
+      "disagreements": 25,
+      "accuracy": 0.5,
+      "expected": {
+        "defect": 25,
+        "normal": 25
+      },
+      "predicted": {
+        "defect": 0,
+        "normal": 50
+      },
+      "confusion": {
+        "expectedDefectPredictedDefect": 0,
+        "expectedDefectPredictedNormal": 25,
+        "expectedNormalPredictedDefect": 0,
+        "expectedNormalPredictedNormal": 25
+      }
+    }
+  },
+  "disagreements": [
+    {
+      "blindId": "B001",
+      "sourceId": "GL-08-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B005",
+      "sourceId": "SU-07-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a quoted dependent although-clause without a matrix clause; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B006",
+      "sourceId": "SC-14-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "blindId": "B009",
+      "sourceId": "SC-07-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option B, but storedKey is C."
+    },
+    {
+      "blindId": "B012",
+      "sourceId": "SC-15-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "blindId": "B013",
+      "sourceId": "SC-04-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option C, but storedKey is B."
+    },
+    {
+      "blindId": "B017",
+      "sourceId": "SU-17-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 독립절 없는 목적 표현; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B018",
+      "sourceId": "SC-12-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "blindId": "B020",
+      "sourceId": "SC-01-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "blindId": "B023",
+      "sourceId": "SU-14-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a noun phrase without a finite predicate; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B025",
+      "sourceId": "SC-17-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "blindId": "B026",
+      "sourceId": "SU-04-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a supplementary participial phrase without a matrix clause; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B027",
+      "sourceId": "SC-06-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "blindId": "B028",
+      "sourceId": "SU-08-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a nominal head plus nonfinite complement without a finite predicate; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B029",
+      "sourceId": "SC-22-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "blindId": "B032",
+      "sourceId": "GL-24-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B039",
+      "sourceId": "SL-09-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B041",
+      "sourceId": "GL-23-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "fr",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B043",
+      "sourceId": "SC-19-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "blindId": "B044",
+      "sourceId": "GL-02-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The key point explicitly starts with a label token, but the rendered label inventory supplies no literal labels."
+    },
+    {
+      "blindId": "B049",
+      "sourceId": "SL-10-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B050",
+      "sourceId": "SC-02-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option C, but storedKey is A."
+    },
+    {
+      "blindId": "B052",
+      "sourceId": "SU-22-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 콜론 뒤 명사화 표현만 있는 비정형 단편; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B053",
+      "sourceId": "GL-12-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B057",
+      "sourceId": "GL-22-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "el",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B059",
+      "sourceId": "SL-08-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B064",
+      "sourceId": "SL-14-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B069",
+      "sourceId": "SC-21-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "blindId": "B070",
+      "sourceId": "GL-16-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B074",
+      "sourceId": "SU-21-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 따옴표 안에 있어도 주절이 없는 시간 부사절; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B075",
+      "sourceId": "SU-19-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 의존 명사절 형태의 의문 단편; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B076",
+      "sourceId": "SC-10-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "blindId": "B078",
+      "sourceId": "SU-20-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 뒤 절이 빠진 양보 연결절; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B082",
+      "sourceId": "SC-18-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option B, but storedKey is C."
+    },
+    {
+      "blindId": "B083",
+      "sourceId": "GL-03-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The key point explicitly starts with a label token, but the rendered label inventory supplies no literal labels."
+    },
+    {
+      "blindId": "B086",
+      "sourceId": "SL-03-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B089",
+      "sourceId": "GL-01-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The key point explicitly starts with a label token, but the rendered label inventory supplies no literal labels."
+    },
+    {
+      "blindId": "B091",
+      "sourceId": "SC-25-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "blindId": "B098",
+      "sourceId": "SC-16-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "blindId": "B099",
+      "sourceId": "GL-11-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B100",
+      "sourceId": "SU-12-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a prepositional gerund phrase without an independent clause; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B103",
+      "sourceId": "SU-24-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 주절이 빠진 연결 어미 구문; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B105",
+      "sourceId": "GL-10-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B106",
+      "sourceId": "SC-08-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "blindId": "B107",
+      "sourceId": "SL-02-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B109",
+      "sourceId": "SU-15-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a quoted subordinate when-clause posed as a fragment; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B117",
+      "sourceId": "SL-19-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B119",
+      "sourceId": "SC-09-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "blindId": "B120",
+      "sourceId": "GL-13-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B121",
+      "sourceId": "GL-25-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B123",
+      "sourceId": "SU-23-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 대시로 이어진 명사구에 유한 서술어가 없음; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B129",
+      "sourceId": "GL-05-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B130",
+      "sourceId": "SL-01-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B131",
+      "sourceId": "SC-20-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "blindId": "B132",
+      "sourceId": "GL-09-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B133",
+      "sourceId": "SU-09-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a dash-linked nominal fragment without a finite predicate; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B141",
+      "sourceId": "GL-18-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B144",
+      "sourceId": "SL-13-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B147",
+      "sourceId": "SU-18-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 서술어가 없는 명사구; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B149",
+      "sourceId": "GL-15-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B151",
+      "sourceId": "SC-24-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option B, but storedKey is C."
+    },
+    {
+      "blindId": "B152",
+      "sourceId": "SC-23-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "blindId": "B153",
+      "sourceId": "SU-10-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a dependent phrase and nominal phrase joined by a semicolon; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B154",
+      "sourceId": "SC-13-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "blindId": "B156",
+      "sourceId": "SU-25-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a 의존적인 간접의문 명사절 단편; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B161",
+      "sourceId": "SU-16-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a matrix clause 없는 의존적 시간 부사절; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B162",
+      "sourceId": "GL-17-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "blindId": "B166",
+      "sourceId": "SC-11-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "blindId": "B173",
+      "sourceId": "SL-07-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B176",
+      "sourceId": "SL-15-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "blindId": "B186",
+      "sourceId": "SC-05-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "blindId": "B187",
+      "sourceId": "SU-05-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a nominal phrase without a finite predicate; punctuation does not make it independent."
+    },
+    {
+      "blindId": "B188",
+      "sourceId": "GL-04-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findGrammarKeypointNonexistentLabel",
+        "targetedFinding": null
+      },
+      "oracleReason": "The key point explicitly starts with a label token, but the rendered label inventory supplies no literal labels."
+    },
+    {
+      "blindId": "B192",
+      "sourceId": "SC-03-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "findSummaryMcAnswerObjectMismatch",
+        "targetedFinding": null
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "blindId": "B196",
+      "sourceId": "SU-11-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "expected": "DEFECT",
+      "prediction": "NORMAL",
+      "correct": false,
+      "productionEvidence": {
+        "productionFunction": "validateSentenceOrderQuestion",
+        "targetedCodes": [],
+        "targetedMessages": []
+      },
+      "oracleReason": "The middle paragraph is a passive participial remnant without a finite auxiliary; punctuation does not make it independent."
+    }
+  ]
+}

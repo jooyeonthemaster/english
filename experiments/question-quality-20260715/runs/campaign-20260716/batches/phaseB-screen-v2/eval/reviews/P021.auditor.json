@@ -1,0 +1,69 @@
+{
+  "pid": "P021",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 span 'keeps it in check'(it = man's affective life)의 의미 보존 paraphrase. 후속 두 문장('It tries to ensure that we are not overwhelmed...', 'The law obsessively tries to suppress affects')과 정합.",
+      "temptingBecause": "정답이므로 해당 없음. 'restrains'/'emotional aspects'가 'suppress affects'의 직접적 재진술이라 매력도가 오히려 과도하게 노출됨.",
+      "decisiveFlaw": "없음 (정답)."
+    },
+    {
+      "label": "②",
+      "intent": "기각된 개념의 오귀속(distortion/misattribution) — 지문이 명시적으로 부정한 대상을 법의 기능으로 연결.",
+      "temptingBecause": "'abstract truth as a value in itself'가 2번째 문장에서 verbatim으로 등장하여 키워드 매칭 풀이자를 유인.",
+      "decisiveFlaw": "지문은 'Rather than an abstract desire for truth as a value in itself, the law deals with the messiness of human relations'라고 하여 법이 추상적 진리와 무관함을 명시 — 법이 그것을 '규제'한다는 진술은 원문과 정면 모순."
+    },
+    {
+      "label": "③",
+      "intent": "주체 뒤바꾸기(actor swap) — 영화의 기능을 법에 귀속.",
+      "temptingBecause": "마지막 문장 'forcing us to identify the most unbearable ones in ourselves'의 near-verbatim 재사용으로 국소 단서상 가장 매력적.",
+      "decisiveFlaw": "해당 행위의 주체는 cinema('cinema introduces us to our affects, often forcing us...')이며 법이 아님. 빈칸 문장의 대조 구조(while cinema..., the law...)와도 충돌."
+    },
+    {
+      "label": "④",
+      "intent": "극성 역전(polarity/direction reversal) — 법의 억제 기능을 증폭으로 뒤집음.",
+      "temptingBecause": "'drives'와 'state of nature'라는 지문 키워드를 재사용하여 표면적 근거가 있어 보임.",
+      "decisiveFlaw": "법은 욕망·충동을 억제하는 존재('suppress affects', 'ensure that we are not overwhelmed and destroyed by our desires and drives')이며 증폭과 정반대. 'drives to exist in a state of nature'는 원문 'too violent to exist in a state of nature'의 맥락을 왜곡 접합한 표현."
+    },
+    {
+      "label": "⑤",
+      "intent": "공통점의 차이점화(scope shift / commonality-as-difference) — 두 분야의 공유 속성을 법만의 변별 기능으로 배치.",
+      "temptingBecause": "3번째 문장 'Both disciplines struggle... try to communicate to us something about our existence'의 어휘(struggle, communicate, existence)를 그대로 반향.",
+      "decisiveFlaw": "빈칸은 'However... an important difference' 이하의 대조 슬롯이므로 공통 속성으로 채울 수 없고, 후속 문장 'It tries to ensure that we are not overwhelmed...'과 논리적으로 연결되지 않음. 'directly'는 지문에 근거 없음."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TERMINOLOGY_LOOSE",
+      "severity": "minor",
+      "evidence": "④ 오답 해설의 '역인과적'이라는 명명 — 실제 함정 기제는 인과 역전이 아니라 극성(억제↔증폭) 역전임. 다만 실질 기술('정반대로 증폭시킨다고 진술')은 정확하여 V4 실패에는 해당하지 않음."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": false,
+    "distractorAnchorOverlapFlaw": true,
+    "multiCueRequired": false,
+    "diverseTrapTypes": true,
+    "evidence": "빈칸 직후 두 문장('It tries to ensure that we are not overwhelmed and destroyed by our desires and drives', 'The law obsessively tries to suppress affects')이 정답을 사실상 verbatim으로 재진술한다. 'suppress affects' → 'restrains the emotional aspects'는 1-hop 어휘 치환 수준의 얕은 paraphrase로, 단일 인접 단서만으로 정답 도달이 가능하여 KILLER의 '최소 두 문장/두 논리 단서 연결' 및 '난이도에 맞는 추상화' 조건을 충족하지 못한다."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 의도된 빈칸화('keeps it in check' 제거) 외 원지문과 완전 일치, 정답 ①은 유일하며(각 선지 독립 검증 완료), seam 비문 없음, 해설의 인용·귀속·구조 분석 정확, 필드 동기화 정상. 공예 측면에서 빈칸 위치(글의 핵심 대조 지점)와 오답 설계(4개 오답이 각각 오귀속·주체교체·극성역전·공통점차이화라는 서로 다른 함정을 서로 다른 문장에 앵커링)는 우수하다(C1=4, C2=4). 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 정답이 빈칸 직후 문장들에서 거의 그대로 재진술되어('suppress affects') 다문장 종합 없이 단일 인접 단서로 풀리고, paraphrase 추상화 깊이도 얕다(C5=1). B등급 최저선(C 전축 2 이상)을 C5가 하회하므로 등급 C. 재설계 방향: (a) 빈칸 직후의 직접 재진술 문장을 빈칸에서 더 멀리 배치하거나 정답 표현의 추상화 수준을 높여(예: 은유적/기능적 재기술) 최소 두 단서의 종합을 강제할 것, (b) 또는 난이도 라벨을 중상(ADVANCED)으로 하향하면 현재 설계로도 출하 가능 품질."
+}

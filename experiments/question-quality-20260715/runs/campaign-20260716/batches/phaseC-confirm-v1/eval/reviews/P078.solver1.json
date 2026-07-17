@@ -1,0 +1,35 @@
+{
+  "pid": "P078",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'실험 중 가해지는 신체적 고통을 최소화하지 못하는 것'은 곧 '동물을 비인도적으로 대우하는 것'과 동일한 복지(welfare) 차원의 문제다. 빈칸 문장이 명시적으로 'not one about treating animals inhumanely'라며 배제한 바로 그 층위이므로 정답이 될 수 없는 안티-정답."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong (매력적 오답)",
+      "reason": "권리(rights) 진영의 어휘를 그대로 써서 실제로 끌린다 — '권리 옹호자들이 원하는 것'처럼 보이기 때문. 그러나 빈칸 구문은 'the problem is ... one about ___'로, 빈칸에는 권리론이 진단하는 '잘못된 관행'이 들어가야 한다. '인간과 동일한 도덕적·법적 지위를 부여하는 것'을 problem 자리에 넣으면 지위 부여 자체가 문제라는 뜻이 되어 논지가 정반대로 뒤집힌다. 지위 부여는 권리론의 해법이지 문제가 아니다. 병렬 구조('treating animals inhumanely'와 대구를 이루는 잘못된 행위 명사구)가 결정적으로 배제한다."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "직전 문장 'animals are not the kinds of thing that humans should use in this way at all'의 직접 패러프레이즈. 권리론이 지적하는 더 근본적인 문제는 대우의 질(비인도성)이 아니라 동물을 인간의 효용을 위한 도구로 사용하는 행위 자체다. 'one about + 동명사구(잘못된 관행)' 문법 결합도 자연스럽다. 'interactive living beings'라는 표현이 'sentient beings'보다 어색한 감은 있으나 제2의 정답을 만들 정도의 결함은 아니다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "법 집행력 상실은 지문 어디에서도 논점이 아니다. 권리론의 비판은 복지 입법이 '무엇을 용인하는가'(동물의 식용·실험용 사용 수용)에 관한 것이지 법이 오래되어 집행이 안 된다는 실효성 문제가 아니다. 첫 문장의 'for decades, even for centuries'에서 단어만 낚아챈 표면적 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "인간과 비인간 종의 생물학적 구별은 지문에 등장하지 않는 소재이며, 논리적으로도 역방향 — 권리 옹호자라면 도덕적으로 유의미한 구별을 '부정'하는 쪽에 가깝지, 구별을 부정하는 것이 '문제'라고 진단하지 않는다."
+    }
+  ],
+  "note": "빈칸 문장의 'not A but B' 병렬 구조가 강력한 장거리 단서: A(treating animals inhumanely)=복지 층위의 잘못, B=더 근본적 잘못이어야 하며, 직전 문장이 그 내용을 'use in this way at all'로 미리 제시한다. ③이 유일하게 이 패러프레이즈를 수행한다. 실전에서 ②에 실제로 끌렸으나(권리 어휘 매칭), 'problem is one about ___' 프레임에 대입하면 논지가 뒤집혀 탈락 — 잘 설계된 매력적 오답. 유일 정답 ③, 신뢰도 high."
+}

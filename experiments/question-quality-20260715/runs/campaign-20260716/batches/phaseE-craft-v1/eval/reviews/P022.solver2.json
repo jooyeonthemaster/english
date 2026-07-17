@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) born",
+      "verdict": "correct",
+      "reason": "Past-participial adjunct 'Originally born in France' (reduced from '(being/having been) born in France') modifying the matrix subject Brunel. Dangling-modifier test passes: the implicit subject of 'born' = Brunel, who was indeed born in France. Grammatical."
+    },
+    {
+      "label": "(B) supplying",
+      "verdict": "incorrect (answer)",
+      "reason": "Strip the fronted PP 'During the Napoleonic Wars': what remains is 'Brunel's factory supplying British troops with boots' — an NP plus a participial modifier with no finite verb, i.e., a sentence fragment. Alternative parses all fail: (i) absolute construction requires an accompanying matrix clause, none exists; (ii) reduced relative 'factory [which was] supplying...' still leaves no predicate; (iii) no other licensing construction. A finite verb is required: 'supplied' or 'was supplying'. Ungrammatical."
+    },
+    {
+      "label": "(C) buying",
+      "verdict": "correct",
+      "reason": "'stopped buying his boots' — stop + gerund (= cease the activity of buying) is the required complementation, and the cessation reading fits the discourse ('he went out of business'). Grammatical."
+    },
+    {
+      "label": "(D) because of",
+      "verdict": "correct",
+      "reason": "'because of' is a complex preposition governing an NP; 'his debt' is an NP. Plain 'because' would require a finite clause, so 'because of' is the correct form here. Grammatical."
+    },
+    {
+      "label": "(E) to move",
+      "verdict": "correct",
+      "reason": "'ways for people and goods to move across it' — infinitival relative on 'ways' with the for-phrase supplying the semantic (notional) subject of the infinitive. Standard construction. Grammatical."
+    }
+  ],
+  "note": "Only (B) fails: removing the temporal adjunct exposes a verbless main clause (fragment). No alternative parse (absolute construction, reduced relative, inversion, etc.) rescues it. All other underlines are provably well-formed under their governing rules, so the answer set is a singleton."
+}

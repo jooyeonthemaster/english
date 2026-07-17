@@ -1,0 +1,76 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-DISTRACTOR-MISANALYSIS-A",
+      "severity": "critical",
+      "evidence": "오답 해설 (A): \"이 자리는 뒤에 명사구가 아닌 주어와 동사(the interview lasts)를 갖춘 부사절이 오므로 접속사 'while'이 어법상 옳습니다.\" 그러나 밑줄 친 토큰은 'If the interview lasts a __while__'의 명사 while이다. 관사 a 뒤·동사 lasts의 지속 기간 명사구('a while') 내부에 있으며, 절 'the interview lasts'는 while 뒤가 아니라 앞에 온다. 이 문장의 실제 부사절 접속사는 if다. 해설이 존재하지 않는 '접속사 while + 절' 구조를 지목한 명백한 구조 오분석이다."
+    },
+    {
+      "code": "V4-KEYPOINT-TERM-MISMATCH-C",
+      "severity": "minor",
+      "evidence": "keyPoints의 (C) 항목이 '관계사 — 완전한 절과 연결되는 목적의 부사절 접속사 so that 판단'으로 시작한다. 판정 포인트의 범주 라벨은 '관계사'가 아니라 '접속사(관계대명사 what vs 접속사 that)'여야 한다. 설명 본문은 정확하나 범주 라벨이 어긋난다."
+    },
+    {
+      "code": "V4-KEYPOINTS-INCOMPLETE",
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(D)(E)만 다루고 (A)(B)에 대한 포인트가 없다. INTERMEDIATE이므로 §C(KILLER 어법 조건)의 5개 밑줄 전수 요건은 강제되지 않으나, 디코이 (A)(B)의 의도가 필드상 설명되지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 while('a while' 지속 기간 명사구) vs 접속사 while 혼동 유도로 추정되나, 출제측 해설 자체가 접속사로 오분석하여 의도가 붕괴됨",
+      "temptingBecause": "while을 접속사로만 알고 있는 학생은 'lasts a while'의 명사 용법을 낯설게 느껴 오류로 의심할 수 있음",
+      "decisiveFlaw": "'a while'은 lasts의 지속 기간을 나타내는 명사구로 완전히 문법적이다. 절 'the interview lasts'는 while 앞에 오며 이 문장의 접속사는 if다"
+    },
+    {
+      "label": "(B)",
+      "intent": "가주어 It + 외치된 to부정사 진주어 구조에서의 수일치 판단",
+      "temptingBecause": "It과 진주어 to develop... 사이 거리, 뒤따르는 삽입 괄호구로 주어 파악이 흐려질 수 있음",
+      "decisiveFlaw": "가주어 It은 단수이므로 is가 정확하다. 즉시 소거 가능한 약한 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답. 'so that + 완전한 절'(목적)의 접속사 that 자리에 불완전한 절을 요구하는 what을 배치한 최소대립쌍",
+      "temptingBecause": "so 뒤 연결사 자리에서 what/that 형태 유사성; 완전/불완전 절 판정을 건너뛰는 학생은 지나칠 수 있음",
+      "decisiveFlaw": "후속 절 'they can be transcribed easily afterwards'는 필수 성분이 모두 갖춰진 완전한 절이므로 what은 불가하며 that으로 고치면 정확히 원문이 된다"
+    },
+    {
+      "label": "(D)",
+      "intent": "능동 vs 수동 판단 — they(= key answers)와 transcribe의 의미 관계",
+      "temptingBecause": "조동사 can 뒤 수동 원형 be transcribed가 형태상 낯설고, they를 행위자로 착각하면 능동을 기대할 수 있음",
+      "decisiveFlaw": "they는 전사되는 대상(피동)이므로 can be transcribed가 정확하다"
+    },
+    {
+      "label": "(E)",
+      "intent": "5형식 make의 목적격보어 자리 형용사 vs 부사 판단",
+      "temptingBecause": "동사 수식으로 읽어 부사 easily를 기대하거나, 'much easier and quicker to handle'의 tough 구문이 낯설 수 있음",
+      "decisiveFlaw": "make + 목적어 + 형용사 보어 구조이므로 비교급 형용사 easier가 정확하다(quicker와 병렬)"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 오답 해설이 밑줄 친 명사 while('lasts a while')을 '뒤에 주어+동사를 갖춘 부사절이 오는 접속사 while'로 오분석 — 실제 문장 구조와 불일치 (critical)",
+    "keyPoints (C)의 범주 라벨 '관계사'가 실제 판정 포인트(접속사 that vs 관계대명사 what)와 어긋남 (minor)",
+    "keyPoints가 (A)(B)를 다루지 않아 디코이 의도가 문서화되지 않음 (minor)",
+    "정답 해설 본문 자체는 정확: what=불완전 절 유도, 후속 절 완전성, so that 목적 접속사 교정 모두 실제 구조와 일치"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 통과. 렌더 지문은 의도된 that→what 변형 외 손상이 없고, 5개 밑줄 독립 검증 결과 정답 집합은 정확히 {(C)} 하나다. 그러나 (A) 오답 해설이 밑줄 친 명사 while을 존재하지 않는 '접속사 while + 절' 구조로 오분석하여 V4 실패 → 규정상 F. 학생이 이 해설을 읽으면 'a while'의 명사 용법에 대한 오개념을 학습하게 되므로 출하 불가. 수정 방향: (A) 해설을 \"lasts의 지속 기간을 나타내는 명사구 'a while'의 명사 while이므로 어법상 옳다(접속사 아님)\"로 교체하고, keyPoints (C)의 범주 라벨을 '접속사'로 정정하면 공예 수준(C 합계 14, C6 회복 시 17±)은 B권 진입이 가능하다. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(killerConditionsMet=false)."
+}

@@ -1,0 +1,44 @@
+{
+  "pid": "P036",
+  "finalV2": true,
+  "winningAnswer": "(D)",
+  "reason": "독립 재검증 결과 (D) 'what'만이 어법상 틀리고 나머지 네 밑줄은 모두 정문이므로 정답 유일성이 성립한다. 분쟁 요약의 '선언된 정답=①'은 full 파일의 '## 선언된 정답 (D)'와 모순되는 오케스트레이터 메타데이터의 원문자 라벨 변환 오류로 판단된다(실질적 정답 키 충돌 아님). 솔버1·솔버2 모두 (D) 단일 후보로 수렴했고 각자의 대안 해석 기각(자유관계사·동격·전치사 탈락 상정)도 전부 타당하며 과잉 판정은 없었다. 감사자 V2=true 판정 유지.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "복수 대명사 they가 주어 자리에 적법한가",
+      "verdict": "정문",
+      "evidence": "'Garcia replied as they entered the lively shopping center.' 직전 담화에서 Jeff가 도착해 사과하고 Garcia가 응답하는 장면으로, 두 사람이 함께 입장한다. Garcia+Jeff를 받는 복수 주격 they는 수·격·조응 모두 정확하다. 단수로 읽을 대안 해석 없음."
+    },
+    {
+      "label": "(B)",
+      "claim": "축약 관계절 내 과거완료 had found가 적법한가",
+      "verdict": "정문",
+      "evidence": "'a patterned red shirt and yellow pants (that) he had found in the store' — 목적격 관계대명사 생략 관계절. '발견' 시점이 과거 시점의 pointing/asked보다 선행하므로 대과거가 시제 선후를 정확히 표시한다. 단순과거 found도 가능하나 그것이 had found를 비문으로 만들지는 않는다."
+    },
+    {
+      "label": "(C)",
+      "claim": "would look great on my brother 구성이 적법한가",
+      "verdict": "정문",
+      "evidence": "조동사 would 뒤 동사원형 look, 연결동사 look의 형용사 보어 great, 관용 결합 'look great on + 사람' 모두 표준. think 목적어절 내 평서 어순도 정상. 부사 greatly를 요구할 근거 없음."
+    },
+    {
+      "label": "(D)",
+      "claim": "완전한 주절 뒤의 what 절이 어떤 해석으로든 구제되는가",
+      "verdict": "비문 확정 (유일 정답)",
+      "evidence": "'His confidence was, however, quickly changed to nervousness what he thought of how many people would be there.' 주절이 이미 완전하므로 뒤에는 시간 부사절 접속사가 필요하다. what 절은 명사성(자유관계사/간접의문)이라 명사 자리를 요구하나 그런 자리가 없다: (i) nervousness 앞뒤에 전치사가 없어 전치사 목적어 불가, (ii) nervousness를 선행사로 한 관계절이라면 절 내 공백이 필요하나 'he thought of how many people would be there'는 무공백 완전절, (iii) 동격은 that 절 또는 명사구를 요구하며 무휴지 what 절 동격은 비표준, (iv) 감탄문 해석은 통사·의미 모두 불성립. when으로 교정 시 원지문과 정확히 일치. 모든 대안 해석이 실패하므로 명백한 비문."
+    },
+    {
+      "label": "(E)",
+      "claim": "유정 주어 the band에 was finished(수동형)가 적법한가",
+      "verdict": "정문",
+      "evidence": "be finished는 '(활동을) 다 마친 상태이다'를 뜻하는 확립된 형용사적 과거분사 구문으로 유정 주어와 표준적으로 결합한다(When I was finished, I left / Are you finished?). 수동태 오용이 아니라 상태 서술이며, 'When the band was finished(연주를 마쳤을 때)'는 완전한 정문. 능동 had finished를 강제할 규칙 없음. 최대 유혹 디코이이나 오류 아님."
+    },
+    {
+      "label": "(메타) 선언된 정답 라벨 불일치",
+      "claim": "분쟁 요약의 '선언된 정답=①'과 full 파일의 '(D)'가 충돌",
+      "verdict": "메타데이터 변환 오류로 판정",
+      "evidence": "full/P036.md의 '## 선언된 정답'은 (D)이고 markedExpressions에서도 isError=true인 항목은 (D) 하나뿐(what→when). 문항 원본 데이터 어디에도 (A)를 정답으로 선언한 흔적이 없다. 따라서 '①'은 오케스트레이터의 원문자 번호 매핑 아티팩트이며, 실질 선언 정답 (D)와 솔버 2인의 답 (D)는 일치한다."
+    }
+  ]
+}

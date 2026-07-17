@@ -1,0 +1,190 @@
+{
+  "passageId": "ebsi_go3_20191015-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "요지",
+    "words": 172
+  },
+  "attempts": 6,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-killer-overdrilled-answer",
+    "grammar-decoy-filler-span"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-overdrilled-answerx2",
+    "grammar-error-pos-changex2",
+    "grammar-killer-generic-answer-pointx1",
+    "grammar-killer-thin-answerx1",
+    "grammar-obvious-adjacent-sv-agreementx1"
+  ],
+  "layout": "(A):dec=k  (B):dec=b  (C):dec=i  (D):dec=d  (E):ANS=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 8,
+        "relPos": 0.008,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 82,
+        "relPos": 0.079,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 462,
+        "relPos": 0.443,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 550,
+        "relPos": 0.527,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 769,
+        "relPos": 0.737,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.737,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to think of technology as shiny tools and gadgets. Even if we acknowledge that technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie. The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "to think",
+        "isError": false,
+        "correction": "to think",
+        "errorExpression": "to think",
+        "surroundingText": "We tend to think of technology as shiny tools and gadgets.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "Even if we acknowledge that technology can exist in disembodied form",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "change",
+        "isError": false,
+        "correction": "change",
+        "errorExpression": "change",
+        "surroundingText": "They both can change our behavior, alter the course of events, or enable",
+        "pointCode": "i"
+      },
+      {
+        "label": "(D)",
+        "expression": "are",
+        "isError": false,
+        "correction": "are",
+        "errorExpression": "are",
+        "surroundingText": "A Shakespeare sonnet and a Schubert symphony, then, are in the same category as",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "responsible",
+        "isError": true,
+        "correction": "responsible",
+        "errorExpression": "responsibly",
+        "surroundingText": "We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "to think"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "change"
+      },
+      {
+        "label": "(D)",
+        "text": "are"
+      },
+      {
+        "label": "(E)",
+        "text": "responsibly"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 tend 동사의 목적으로 쓰인 준동사 자리로, tend는 목적어로 to부정사를 취하므로 'to think'는 어법상 옳습니다.",
+      "(B)": "이 자리는 타동사 acknowledge의 목적어 역할을 하는 명사절을 이끄는 접속사 자리로, 뒤에 완전한 절이 이어지므로 명사절 접속사 'that'은 어법상 옳습니다.",
+      "(D)": "이 자리는 'A Shakespeare sonnet and a Schubert symphony'라는 복수 주어의 정동사 자리이므로 복수형 동사 'are'는 어법상 옳습니다.",
+      "(C)": "이 자리는 조동사 can에 공동으로 걸리는 병렬 구조의 첫 번째 정동사 원형 자리이므로 'change'는 어법상 옳습니다."
+    },
+    "explanation": "정답이 포함된 문장의 명사구 'the multiple overlapping technologies' 뒤에 전치사구인 'for a Lord of the Rings movie'의 수식을 받는 형용사구가 와서 선행 명사구를 후치 수식해야 합니다. 따라서 명사를 수식하는 형용사구의 핵 역할을 해야 하는 자리에 부사인 'responsibly'는 올 수 없으며, 형용사인 'responsible'로 고쳐야 합니다. 부사가 동사를 단독 수식하는 패턴에만 익숙한 학생들은 명사 수식의 다양한 위치(후치 수식 구조)를 확인하지 못해 함정에 빠지기 쉽습니다.",
+    "keyPoints": [
+      "(E) 형용사 자리 vs 부사 자리 — 명사를 뒤에서 후치 수식하는 수식어구의 핵은 형용사이어야 함",
+      "(B) 명사절 접속사 vs 관계대명사 — 동사 뒤에 완전한 절을 이끄는 명사절 접속사 판단",
+      "(D) 주어-동사 수일치 — and로 연결된 복수 개념의 주어와 복수 동사의 수일치 확인"
+    ],
+    "tags": [
+      "어법",
+      "형용사 자리 vs 부사 자리",
+      "후치 수식",
+      "명사절 접속사",
+      "수일치"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We tend __(A) to think__ of technology as shiny tools and gadgets. Even if we acknowledge __(B) that__ technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can __(C) change__ our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, __(D) are__ in the same category as Google's search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies __(E) responsibly__ for a Lord of the Rings movie. The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-decoy-filler-span",
+        "message": "Decoy underline (C) is a decorative filler span — a bare verb (\"change\") directly after \"can\" leaves no alternative form to weigh — only the base form is possible there. Replace only this decoy with a structural grammar judgment site (a different pointCode from the answer) where students genuinely weigh whether the form is correct."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-killer-overdrilled-answer",
+        "message": "KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled adjective↔adverb (-ly) swap (\"responsible\" ↔ \"responsibly\") — a BASIC/INTERMEDIATE point every student drills. Move the error to a deeper site already in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break."
+      }
+    ],
+    "_qualityMode": "relaxed",
+    "_reviewRecommended": true,
+    "_generationNotice": "여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — 요청 난이도 대비 깊이가 얕을 수 있음. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다."
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-NONWORD-TERM",
+      "severity": "major",
+      "evidence": "keyPoints[2]: \"마지막 대조 구문(cannot park... but we can stop...)을 일반적인 학술적 어휘로 재원언(paraphrase)하는 능력\" — '재원언'은 존재하지 않는 손상 용어(비단어). 의도된 표준어는 '환언' 또는 '재진술'. 감사 기준이 명시한 '비단어·손상 용어' 유형에 해당하며 학생/교사 노출 필드에 남아 있다."
+    },
+    {
+      "code": "V4-LOOSE-TAG-OPT1",
+      "severity": "minor",
+      "evidence": "오답해설 ①의 태그 '[극성 반전]' 및 '차량 통제 방식과 정반대되는 논리'는 부정확한 라벨링. ①의 실제 결함은 행위 주체 혼동(보행자 vs 차량, Carol의 축자적 오독)이며, 친구의 발화 'Of course you can stand there'와의 직접 모순이 결정적 근거다. 극성 반전만으로는 구조를 오설명한다."
+    },
+    {
+      "code": "V4-RATIONALE-FRAME-OPT5",
+      "severity": "minor",
+      "evidence": "오답해설 ⑤ '일반적인 표지판의 의미(일시 정차 허용)를 완전히 포괄하지 못합니다' — ⑤가 틀린 결정적 이유는 '포괄 부족'이 아니라 본문 서사와의 모순(친구가 11:30에 그 코너에 정차해 Carol을 태움 = 일시 정차 허용)과 본문에 없는 조건(peak hours, immediately)의 날조다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "Carol의 축자적 오독(보행자 정지 금지) 재진술 — 표면 의미 함정",
+      "temptingBecause": "표지판 문구 'No Standing'의 문자적 의미 및 Carol이 배회한 행동(walking back and forth)과 직접 공명한다. 지문 전반부만 읽은 학생이 고른다.",
+      "decisiveFlaw": "친구의 명시적 발화 'Of course you can stand there'와 웃음(burst into laughter)이 이 해석을 직접 반박한다. 빈칸은 오해의 '교정' 내용이지 오해의 재확인이 아니다."
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 삭제 span 'we cannot park cars there, but we can stop to pick up passengers'를 보존·추상화(prolonged parking forbidden / brief stops for boarding allowed)",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 친구가 실제로 그 코너에 정차해 Carol을 태운 서사적 사실과 유일하게 정합한다."
+    },
+    {
+      "label": "③",
+      "intent": "[과확장] 표지판 정의를 일반 교통 원리(주행 차량 우선권)로 확장",
+      "temptingBecause": "차량·도로 어휘로 교통 규정의 격식을 흉내낸다.",
+      "decisiveFlaw": "본문에 우선권 개념의 anchor가 전무하며, 'No Standing' 표지판의 의미 설명도, 친구가 정차해 태울 수 있었던 이유도 설명하지 못한다. 즉시 소거 가능."
+    },
+    {
+      "label": "④",
+      "intent": "[자격 날조] 본문에 없는 '등록된 운전자' 조건 도입",
+      "temptingBecause": "공식 규제 문구처럼 들린다.",
+      "decisiveFlaw": "'registered drivers'는 본문 어디에도 근거가 없고, 친구가 자유롭게 정차한 사실과도 무관하다. 즉시 소거 가능."
+    },
+    {
+      "label": "⑤",
+      "intent": "[과협소/절대 조건] peak hours·immediately라는 극단 조건 부가",
+      "temptingBecause": "금지·명령 어조가 교통 표지판의 레지스터와 유사하다.",
+      "decisiveFlaw": "친구가 11:30에 그 코너에 정차해 승객을 태웠다는 서사와 정면 모순이며, 혼잡 시간대 조건은 본문에 존재하지 않는다."
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints[2]의 '재원언(paraphrase)' — 비단어/손상 용어 (V4 실패 근거)",
+    "오답해설 ① 태그 '[극성 반전]'이 실제 결함 구조(행위 주체 혼동 + 명시 발화와의 모순)를 부정확하게 라벨링",
+    "오답해설 ⑤가 모순 관계를 '포괄 부족'으로 오프레이밍",
+    "본 해설이 ③④⑤를 '자의적 해석'으로 일괄 처리 — 개별 함정 구분은 오답해설에만 존재"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "syntacticSlotUniform": true,
+    "answerPreservesSourceSpan": true,
+    "distractorsHaveAnchorOverlapFlaw": false,
+    "requiresTwoClueLinking": false,
+    "distinctTrapMechanisms": false,
+    "detail": "③④⑤는 source anchor·tempting overlap이 사실상 없어 즉시 소거된다. 정답 ②는 유일하게 주차/승차를 언급하는 선지로서 'pick her up'/'get into her car'와의 어휘 공명 단일 단서로 도달 가능하다. 두 논리 단서 연결 강제 조건 미충족. 함정 다양성 라벨(과확장/자격 날조/과협소)은 선언만 있고 본문 앵커가 없어 실질은 random off-topic에 가깝다."
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 원지문에서 마지막 절만 정확히 블랭크 처리되어 손상 없음, ②가 유일 정답, 완성문 문법·자연스러움 양호, 필드 동기화 정상. 그러나 V4에서 학생/교사 노출 필드(keyPoints)의 비단어 '재원언'이 감사 기준의 '비단어·손상 용어' 유형에 정확히 해당하여 실패(보수적 판정). 난이도 정합도 심각: 요청 난이도 KILLER 대비 실제는 쉬운 일화형 지문 + 1단계 반전 추론 + 3개 선지 즉시 소거로 easy~medium 수준(C5=1). ③④⑤에 본문 앵커를 부여하고(예: 'standing' 다의성·시간·행위주체를 비트는 근접 함정), keyPoints 용어를 교정하며, KILLER를 원하면 더 밀도 있는 지문으로 재출제가 필요하다. 공예 합계 14/24이나 V4 실패로 등급은 F."
+}

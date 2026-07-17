@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "형식 결합: 'you must stick to your scheduled routines to minimize emotional friction most of the time'는 문법적으로 정문(stick to+명사구, to부정사 목적구 결합 무흠결). 논리 검증: 지문의 수사의문문 'Is it more important to stick to some rigid work schedule or to be available to my four-year-old?'는 전자를 열등한 극으로 제시하는 구조이고, 빈칸 문장은 'to become a more peaceful person'의 필요조건이다. 일정 고수는 지문이 옹호하는 'learning to go with the flow'와 정면 모순(반테제). 'minimize emotional friction'이 '평화'와 표면 공명하도록 설계된 미끼이나 수단의 방향이 역이므로 성립 불가. 기각."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "형식 결합: 'you must embrace a mind that accommodates unexpected disruptions most of the time' — embrace(타동사)+명사구 목적어, 제한적 관계절 that의 선행사 'a mind'와 단수 동사 accommodates 일치 정확, 부사구 most of the time이 must embrace(또는 accommodates)를 수식하며 정문. 논리 검증: 직전의 이항 대립('getting what I want and keeping my plans, or learning to go with the flow')에서 후자를 택해야 평화로워진다는 결론이 요구되며, 'a mind that accommodates unexpected disruptions'는 go with the flow의 정확한 환언. 결정적 장거리 단서로 빈칸 직후 문장의 'I have ALSO found it helpful to expect that a certain percentage of plans will change'의 also가 빈칸 내용이 '계획 변경 수용'과 동일 계열의 조언임을 강제한다. 'make allowances for this inevitability'와도 순방향 정합. 유일 정답."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "형식 결합: isolate A from B 구문으로 정문. 논리 검증: 지문에 '개인 목표 vs. 외부 사회적 요구의 분리'라는 축이 존재하지 않는다. 네 살 아이 예시는 오히려 타인에게 available해지는 유연성(외부를 향한 개방)을 옹호하므로, 외부 요구로부터의 격리는 무관하거나 역방향. 지문 소재를 오독 프레임으로 유도하는 무관 선지. 기각."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "형식 결합: 'establish a systematic plan and follow it without hesitation' — 등위 병렬(establish/follow) 성립, it의 지시 대상 'a systematic plan' 명확, 정문. 논리 검증: ①과 동일 계열의 반테제로, 지문이 명시적으로 평화와 대립시킨 'keeping my plans' 극을 택한다. 'without hesitation'은 유연성 부정을 강화해 'expect that a certain percentage of plans will change'와 형식적 모순을 심화. 기각."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "형식 결합: 'rely on your ability to predict every single change in advance' — rely on+명사구, to부정사의 명사 수식으로 정문. 논리 검증: 지문의 'expect that a certain percentage of plans will change'는 '일부 계획이 변한다'는 통계적 예기이지 '모든 개별 변경의 사전 예측'이 아니다. 전칭 양화 'every single'이 지문 명제를 과잉 강화했고, 지문은 변경을 inevitability(통제·예측 불가한 것)로 규정해 완전 예측 가능성을 오히려 부정한다. expect→predict 의미 전환을 노린 근접 미끼이나 성립 불가. 기각."
+    }
+  ],
+  "note": "빈칸 문항(출전은 Richard Carlson류 자기계발 논지로 추정). 빈칸 문장은 '평화로운 사람이 되기 위한 필요조건' 진술이며, 직후 문장의 also가 빈칸 내용을 '계획 변경 수용' 계열로 강제하는 장거리 단서. 다섯 선지 모두 빈칸 삽입 시 문법 결합(seam)은 흠결 없이 정문이므로 판별은 순수 논리 층위에서 이루어진다: ①·④는 반테제, ③은 무관 축, ⑤는 expect→predict 전환+every single 극단화 미끼, ②만이 go with the flow의 환언으로 전후 문맥과 정합. 대안 해석(축약 관계절·도치 등)으로 타 선지가 구제될 여지 없음 — 쟁점이 문법이 아니라 명제 방향이기 때문. 정답 ② 유일 수렴."
+}

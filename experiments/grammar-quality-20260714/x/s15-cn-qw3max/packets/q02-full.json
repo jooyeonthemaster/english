@@ -1,0 +1,174 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch",
+    "grammar-explanation-too-long"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=c  (C):dec=c  (D):ANS=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 0,
+        "relPos": 0,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 199,
+        "relPos": 0.247,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 268,
+        "relPos": 0.333,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 422,
+        "relPos": 0.524,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 700,
+        "relPos": 0.87,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.87,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중 어법상 옳지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "We all enjoy the pleasure of being left alone with a good book.",
+        "isError": false,
+        "errorExpression": "We all enjoy the pleasure of being left alone with a good book.",
+        "surroundingText": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others ...",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "In this situation, we are suffering from reading-induced loneliness.",
+        "isError": false,
+        "errorExpression": "In this situation, we are suffering from reading-induced loneliness.",
+        "surroundingText": "... the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading ...",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "The solution is to read in the company of other people who are reading",
+        "isError": false,
+        "errorExpression": "The solution is to read in the company of other people who are reading",
+        "surroundingText": "... reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library ...",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "your reading friend or partner at the other end of the sofa",
+        "isError": true,
+        "errorExpression": "your reading friend or partner on the other end of the sofa",
+        "surroundingText": "... whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa.",
+        "pointCode": "d",
+        "correction": "your reading friend or partner at the other end of the sofa"
+      },
+      {
+        "label": "(E)",
+        "expression": "Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+        "isError": false,
+        "errorExpression": "Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+        "surroundingText": "... share an otherwise internal and solitary experience.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "We all enjoy the pleasure of being left alone with a good book."
+      },
+      {
+        "label": "(B)",
+        "text": "In this situation, we are suffering from reading-induced loneliness."
+      },
+      {
+        "label": "(C)",
+        "text": "The solution is to read in the company of other people who are reading"
+      },
+      {
+        "label": "(D)",
+        "text": "your reading friend or partner on the other end of the sofa"
+      },
+      {
+        "label": "(E)",
+        "text": "Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 표현은 완전히 옳습니다. 'the pleasure of ~ing' 구문은 '~하는 즐거움'을 나타내는 정형 표현입니다. 또한, 'be left alone'은 '혼자 남겨지다'라는 의미로 자연스럽습니다.",
+      "(B)": "'suffer from + 질병/상태'는 고정 표현이며, 여기서 'reading-induced loneliness'(독서로 인해 유발된 외로움)는 복합 형용사로 올바르게 구성되었습니다. 'induced'는 과거분사가 앞에 와서 명사를 수식하는 형식으로, 문법적으로 타당합니다.",
+      "(C)": "이 문장은 'The solution is to ~' 동사원형(to 부정사)으로 주어를 받는 구조로, 완전히 자연스럽습니다. 관계사절 'who are reading'도 현재 진행형으로 '지금 읽고 있는 사람들'을 의미하며 어법상 문제가 없습니다.",
+      "(E)": "주어인 동명사 'Reading a book collaboratively'와 동사 'is'가 잘 호응하며, 'otherwise internal and solitary experience'도 의미상·문법상 자연스러운 표현입니다. 'otherwise'는 '그렇지 않으면', 즉 '공동으로 읽지 않는 한'이라는 뉘앙스를 전달합니다."
+    },
+    "explanation": "(D) \"your reading friend or partner on the other end of the sofa\"는 어법상 틀린 표현이며 \"your reading friend or partner at the other end of the sofa\"로 고쳐야 한다. 정답은 ④번 (D)입니다. 'sofa(소파)' 위에 사람이 앉아 있을 때는 전치사 'on'을 사용해야 합니다. 'at the other end of the sofa'는 공간적 위치를 나타낼 때는 맞을 수 있지만, '사람이 소파 끝에 앉아 있다'는 의미에서는 반드시 'on the other end of the sofa'가 되어야 합니다. 영어에서는 가구(furniture) 위에 사람이 위치할 경우 일반적으로 'on'을 사용합니다(예: sit on the chair/sofa/bed). 'at'은 보다 포인트(point)에 초점을 둔 위치를 나타낼 때 쓰이지만, 여기서는 사람의 '앉아 있는 위치'를 기술하는 것이므로 'on'이 적절합니다. 따라서 원문에 충실하면서도 어법상 명백히 틀린 'at'을 사용한 (D)가 정답입니다.",
+    "keyPoints": [
+      "전치사(at vs. on)의 공간적 용법 구분",
+      "가구 위에 사람이 위치할 때의 전치사 선택",
+      "복합 형용사 구성",
+      "동명사 주어와 to부정사 보어의 호응",
+      "suffer from + 상태/질병 표현"
+    ],
+    "tags": [
+      "advanced",
+      "preposition",
+      "furniture",
+      "grammar-in-context",
+      "suneung"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "__(A) We all enjoy the pleasure of being left alone with a good book.__ But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. __(B) In this situation, we are suffering from reading-induced loneliness.__ __(C) The solution is to read in the company of other people who are reading__ - whether in a public space such as a café or a library, or in your own home, with __(D) your reading friend or partner on the other end of the sofa__. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. __(E) Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.__"
+  }
+}

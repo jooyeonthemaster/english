@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "campaign-v6-s1-offline-isolation-source-hashes-v1",
+  "algorithm": "sha256",
+  "productionRuntimeRoot": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.ts",
+  "productionRuntimeClosure": [
+    "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/materialize.ts",
+    "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+    "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.ts",
+    "experiments/question-quality-20260715/harness/atlas-controller.ts",
+    "experiments/question-quality-20260715/harness/ledger.ts",
+    "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts",
+    "src/lib/atlas-fetch-scope-coordinator.ts",
+    "src/lib/atlas-research-fetch-boundary.ts",
+    "src/lib/question-generation-research-runtime.ts"
+  ],
+  "targetInventories": {
+    "s1": [
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/MANIFEST.sha256",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/README.md",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/build-fixture.ts",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/controller-materialization-fixture-v1.json",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/fixture/controller-bundle-v1.json",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/materialize.test.ts",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/materialize.ts",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.hostile-types.ts",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.test-support.ts",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.ts",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/tsconfig.json",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/tsconfig.tsbuildinfo",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/verify.mts"
+    ],
+    "preflight": [
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/MANIFEST.sha256",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/README.md",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/compile-exact-wire-preflight.mts",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/exact-wire-preflight-v1.json",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/private/.gitignore",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/private/exact-wire-preflight-v1.json",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/tsconfig.json",
+      "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/verify.mts"
+    ]
+  },
+  "seals": {
+    "s1ManifestSha256": "3ed71284aaf28c6c0f78f89d75c13bc30f86d894f17ccecf88f24d4cd5c1614b",
+    "preflightManifestSha256": "b92c3772879e974c16b3a87527cb27d11c2a6cd90ac5018ac485f6989135c95e",
+    "privatePreflightArtifactSha256": "96318916c4ef714ae55febab3a63b992e93d6e2911f03235698487f40601ca7a"
+  },
+  "files": [
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/MANIFEST.sha256", "bytes": 1046, "sha256": "3ed71284aaf28c6c0f78f89d75c13bc30f86d894f17ccecf88f24d4cd5c1614b" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/README.md", "bytes": 9350, "sha256": "733ccf5d5fc813746fa2b7f841b6232185790f1a969689efbc2b79ea549b821b" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/build-fixture.ts", "bytes": 16939, "sha256": "d4f3885da48ca99ddd1255668eaf804f0c9a93f6bd5c8cddce664b467ca3aa17" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/controller-materialization-fixture-v1.json", "bytes": 6301, "sha256": "eda217dba61f7e844d95b32de161958da8d4667da92998de118e2c7caa978099" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/fixture/controller-bundle-v1.json", "bytes": 1174949, "sha256": "d1d3ad868e8296f0faa4b3017d213b4e0b5811df2bb2fdd8c291483652661d96" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/materialize.test.ts", "bytes": 68980, "sha256": "ea13a4d99a567d19dd68f30dbc384c69dda535f2392eb308f502252cc0d0c216" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/materialize.ts", "bytes": 37129, "sha256": "dd6496cf78629c8a97667a319c7c049c28f7ede0c2ea82aef8ea5138bb161771" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts", "bytes": 4095, "sha256": "529bf8a63e794d3bc3c3d4eb834cd9ef48c720bc203190c5499cc8e613c58438" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.hostile-types.ts", "bytes": 1979, "sha256": "94327dd0775fd1bbd3a0db08f28127a0c30a6c1a8e158f02b551f497cb69aaef" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.test-support.ts", "bytes": 24989, "sha256": "9145446a47665d75f6a2eb665e9b5675eedba60e5b30bf53e5dce334583bfc0a" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.ts", "bytes": 31002, "sha256": "48e6a6b13027896c546bb7e2715aac58a58b8aa852efc52d0d8e45a4227362ca" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/tsconfig.json", "bytes": 398, "sha256": "dca9441d6b8ed615ded123cd398fd2fd4aa0dee76853ee1c280400ff90a89592" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/tsconfig.tsbuildinfo", "bytes": 45790, "sha256": "1d27fe84c95559116b1a5b3aef66105db8870e4a9250e628e670f1224bfb51fb" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/verify.mts", "bytes": 11778, "sha256": "3c09626d3e4c34f36abc8fe3e0686878394e6dce6c2c3fb49540a6c13cdd7c51" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/MANIFEST.sha256", "bytes": 512, "sha256": "b92c3772879e974c16b3a87527cb27d11c2a6cd90ac5018ac485f6989135c95e" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/README.md", "bytes": 4900, "sha256": "c57a929c6f186134b09924a4b259381bec093eeabeeba0a6129ba44d1c191ce2" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/compile-exact-wire-preflight.mts", "bytes": 52561, "sha256": "02a331299bc93f28b4664a1a67ea227cf5141d37101e48ba6872ff53d9416554" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/exact-wire-preflight-v1.json", "bytes": 7457, "sha256": "2579fbe791197f55ef2a0a80396d47fd18ef05445eeba33f1bfd2c5b6caca835" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/private/.gitignore", "bytes": 14, "sha256": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/private/exact-wire-preflight-v1.json", "bytes": 508746, "sha256": "96318916c4ef714ae55febab3a63b992e93d6e2911f03235698487f40601ca7a" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/tsconfig.json", "bytes": 273, "sha256": "2ec7574657cd336d022eb35abb91c29a2d45e22a1751a6ce46b3a8ff89473933" },
+    { "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/verify.mts", "bytes": 20200, "sha256": "7c1c9a85ce54345a00a042fb55b7384acca56c153fae466ef09286de404af140" },
+    { "path": "experiments/question-quality-20260715/harness/atlas-controller.test.ts", "bytes": 41966, "sha256": "40cedf94a35612462564f6c78b23863fffa7362df19576acedb86600cba0e1c2" },
+    { "path": "experiments/question-quality-20260715/harness/atlas-controller.ts", "bytes": 109444, "sha256": "b8812dbe0dc89ee103961563698a5fa47ac97add6d637be94737e886c30e3511" },
+    { "path": "experiments/question-quality-20260715/harness/ledger.ts", "bytes": 244663, "sha256": "8a1ad1b22daf4f449242c9f122c4271650cb18991d56040d54f5659e09d3833e" },
+    { "path": "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.test.ts", "bytes": 34563, "sha256": "d282690b96b73e99c182ff2b55f4f11e06c5b64b043aac5fd673de58a885d9ce" },
+    { "path": "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts", "bytes": 19747, "sha256": "658a08f5d0d61fb217e9da2d6d76f523e6c0c332c37e81b340c241f4d92d75f6" },
+    { "path": "experiments/question-quality-20260715/harness/test.ts", "bytes": 55698, "sha256": "3a56278c680292657b84c720abc6d02e8cf33b78338639ad944fa3e0fe653e27" },
+    { "path": "src/lib/atlas-fetch-scope-coordinator.ts", "bytes": 588, "sha256": "fd58c3e226279045f9f53ee56d320cfb2a0739387ebe1abfbc1d8afa750ca874" },
+    { "path": "src/lib/atlas-research-fetch-boundary.ts", "bytes": 52523, "sha256": "0aefa4a2ca66e0997f3f012d153dc273cae46f60cbdde4306c7aa2d8bce89e1d" },
+    { "path": "src/lib/question-generation-research-runtime.ts", "bytes": 7447, "sha256": "727905b19ba7003a0f7983310c65492a13f28257720c921be6fa60319009d10b" },
+    { "path": "tests/unit/atlas-research-fetch-boundary.test.ts", "bytes": 44430, "sha256": "48c4c61471f0e58a51d19bd87bd8604c7e55d27bbd706985f823a27a97ad6f9e" }
+  ]
+}

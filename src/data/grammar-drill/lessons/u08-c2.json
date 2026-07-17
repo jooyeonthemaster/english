@@ -1,0 +1,682 @@
+{
+  "id": "u08-c2",
+  "unitId": "u08",
+  "order": 2,
+  "title": "대표 짝 암기",
+  "oneLiner": "뜻이 같은 대표 짝은 뒤에 절이 오면 접속사(while·although·because), 명사구가 오면 전치사(during·despite·because of)입니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "커리큘럼 백본 u08-c2(대표 짝 암기) — src/lib/grammar-drill/curriculum.ts",
+      "기존 드릴 뱅크 u08-choice.json(u08-c2-ch-001~) — trapTag: while-during·despite-although·because-of·despite-of",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 접속사·전치사(중 ●)",
+      "천일문 고등 GRAMMAR — 부사절을 이끄는 접속사와 전치사의 목적어",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L1 절의 완전성"
+    ]
+  },
+  "lenses": ["L1", "L2"],
+  "confusableWith": ["u08-c1", "u08-c3"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Although the harbor was frozen, the cargo ships kept arriving.",
+        "Despite the harbor was frozen, the cargo ships kept arriving."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 뜻은 같습니다. 그런데도 하나만 옳습니다. 이 레슨을 마치면 그 이유를 뒤에 오는 구조 하나로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "대표 짝",
+      "question": "앞 레슨에서 절과 명사구를 가려냈습니다. 그렇다면 그 앞에 오는 연결어들은 어떻게 정리해 두어야 합니까?",
+      "plain": "뜻이 같은 접속사와 전치사를 한 쌍으로 묶은 것이 대표 짝입니다. while·during 처럼 해석은 같아도 왼쪽은 절을, 오른쪽은 명사구를 받으니, 이 좌우를 통째로 외워 두면 앞 레슨의 판정을 더 빨리 씁니다.",
+      "analogy": "대표 짝은 앞뒤가 다른 한 장의 카드와 같습니다. 같은 뜻이라는 앞면 아래, 뒷면에는 while 은 '절', during 은 '명사구'라는 서로 다른 자격이 찍혀 있습니다.",
+      "whyItMatters": "수능과 내신은 뜻이 같은 짝(while/during 같은)을 나란히 세워 놓고 하나만 옳게 만듭니다. 뒤에 오는 단위만 확인하면 해석에 흔들리지 않고 답을 고를 수 있습니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "뜻이 같은 연결어는 서로 바꿔 써도 됩니다. while 과 during 은 둘 다 '~하는 동안'이므로 자리도 같습니다.",
+      "truth": "이 원리는 앞 레슨에서 이미 세웠습니다. 대표 짝에서는 그것을 짝의 좌우에 그대로 적용합니다 — while 은 접속사여서 뒤에 '주어+동사'를 갖춘 절이 와야 하고, during 은 전치사여서 뒤에 명사(구)만 올 수 있습니다. 어법 판단은 뜻이 아니라 뒤에 오는 구조에서 나옵니다.",
+      "counterExample": {
+        "en": "**During** the negotiations continued, both sides refused to speak to the press.",
+        "ko": "협상이 계속되는 동안 양측은 언론과의 접촉을 거부했다는 뜻이지만, 이 문장은 성립하지 않습니다.",
+        "note": "During 뒤에 the negotiations continued 라는 절이 왔습니다. 전치사는 절을 이끌 수 없으므로 접속사 While 로 바꾸어야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "대표 짝 판별 필기",
+      "intro": "판단에 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "접속사 — 절을 이끄는 연결어",
+          "body": "뒤에 '주어+시제 동사'를 갖춘 절이 옵니다. while·although·because 가 대표적인 접속사입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "전치사 — 명사구를 받는 연결어",
+          "body": "뒤에 동사 없는 명사(구)나 동명사만 옵니다. during·despite·because of 가 대표적인 전치사입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "대표 짝 — 뜻은 같고 품사가 다른 한 쌍",
+          "body": "해석이 같은 두 연결어가 접속사와 전치사로 갈라져 있습니다. 시험은 이 짝을 나란히 세워 자리를 바꿔 놓습니다.",
+          "example": {
+            "en": "**Because** it rained hard, the match stopped; **because of** the mud, it never resumed.",
+            "ko": "비가 심하게 왔기 때문에 경기가 중단되었고, 진흙 때문에 다시 시작되지 못했습니다.",
+            "note": "because 뒤에는 절(it rained hard)이, because of 뒤에는 명사구(the mud)가 왔습니다."
+          }
+        },
+        {
+          "head": "판단은 뒤 구조로 — 뜻으로 고르지 않습니다",
+          "body": "짝의 두 연결어는 해석이 같습니다. 접속사인지 전치사인지는 오직 뒤에 절이 오는지 명사구가 오는지로만 가립니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "명사구 속 동사에 속지 않기",
+          "body": "명사구를 꾸미는 관계사절·분사구 안의 동사는 그 명사구의 술어가 아닙니다. 연결어가 직접 이끄는 단위만 셉니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "대표 짝을 이어 봅니다",
+      "instruction": "왼쪽 접속사를 뜻이 같은 오른쪽 전치사와 연결하십시오.",
+      "pairs": [
+        {
+          "a": "while — 때",
+          "b": "during",
+          "why": "둘 다 '~하는 동안'을 뜻하지만 while 은 절을, during 은 명사구를 받습니다."
+        },
+        {
+          "a": "although — 양보",
+          "b": "despite",
+          "why": "둘 다 '~에도 불구하고'를 뜻하지만 although 뒤에는 절, despite 뒤에는 명사구가 옵니다."
+        },
+        {
+          "a": "because — 이유",
+          "b": "because of",
+          "why": "둘 다 '~때문에'를 뜻하는 짝입니다. because 는 절을, because of 는 명사구를 이끕니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "세 짝을 손에 붙입니다",
+      "target": "세 대표 짝과 좌우 자리",
+      "why": "판별의 절반은 어느 쪽이 접속사이고 어느 쪽이 전치사인지 즉시 떠올리는 데서 끝납니다. 짝을 외워 두면 뒤 구조를 확인하는 데만 집중할 수 있습니다.",
+      "device": "왼쪽은 '절 편', 오른쪽은 '명사 편'으로 나눠 외웁니다. 오른쪽 전치사는 during·despite·because of 처럼 짧거나 of 가 붙어 '명사 하나만 데려온다'고 기억합니다. because of 의 of 는 명사를 데려오는 손잡이입니다.",
+      "items": [
+        { "cue": "때(~하는 동안) · 뒤에 절", "answer": "while" },
+        { "cue": "때(~하는 동안) · 뒤에 명사구", "answer": "during" },
+        { "cue": "양보(~에도 불구하고) · 뒤에 절", "answer": "although / though / even though" },
+        { "cue": "양보(~에도 불구하고) · 뒤에 명사구", "answer": "despite / in spite of" },
+        { "cue": "이유(~때문에) · 뒤에 절", "answer": "because / since / as" },
+        { "cue": "이유(~때문에) · 뒤에 명사구", "answer": "because of / due to / owing to" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "접속사만 골라내는 관문",
+      "mission": "뒤에 절을 이끄는 접속사만 전부 골라내십시오. 전치사가 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "while",
+        "although",
+        "because",
+        "even though",
+        "during",
+        "despite",
+        "because of",
+        "in spite of"
+      ],
+      "answers": ["while", "although", "because", "even though"],
+      "passText": "절과 명사구를 가르는 눈이 손에 붙었습니다. 관문이 열립니다.",
+      "retryText": "짝의 왼쪽만 접속사입니다. during·despite·because of·in spite of 는 뒤에 명사구를 데려오는 전치사이니 다시 골라 보십시오."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "접속사 뒤에는 '주어+동사'를 갖춘 절이 오고, 전치사 뒤에는 명사(구)나 동명사가 옵니다.",
+      "examples": [
+        {
+          "en": "**While** the machines were running, the technicians recorded the temperature every hour.",
+          "ko": "기계가 가동되는 동안 기술자들은 매시간 온도를 기록했습니다.",
+          "note": "While 뒤에 주어 the machines 와 동사 were running 이 있습니다. 절이므로 접속사 자리입니다."
+        },
+        {
+          "en": "**During** the trial run, the technicians recorded the temperature every hour.",
+          "ko": "시험 가동 동안 기술자들은 매시간 온도를 기록했습니다.",
+          "note": "During 뒤의 the trial run 에는 동사가 없습니다. 명사구이므로 전치사 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "대표 짝 세 쌍",
+      "columns": ["접속사 — 뒤에 절(주어+동사)", "전치사 — 뒤에 명사구"],
+      "rows": [
+        {
+          "criterion": "때 (~하는 동안)",
+          "a": "while",
+          "b": "during"
+        },
+        {
+          "criterion": "양보 (~에도 불구하고)",
+          "a": "although / though / even though",
+          "b": "despite / in spite of"
+        },
+        {
+          "criterion": "이유 (~때문에)",
+          "a": "because / since / as",
+          "b": "because of / due to / owing to"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The ferry service was suspended **because** the wind exceeded safety limits.",
+          "ko": "바람이 안전 기준을 넘었기 때문에 여객선 운항이 중단되었습니다.",
+          "note": "뒤에 the wind exceeded safety limits 라는 절이 있으므로 접속사 because 가 옳습니다."
+        },
+        {
+          "en": "The ferry service was suspended **because of** the unusually strong wind.",
+          "ko": "이례적으로 강한 바람 때문에 여객선 운항이 중단되었습니다.",
+          "note": "뒤에 동사가 없는 명사구만 있으므로 구전치사 because of 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 연결어 뒤에 무엇이 와야 하는지 분류하십시오.",
+      "buckets": [
+        { "id": "clause", "label": "뒤에 절(주어+동사)" },
+        { "id": "np", "label": "뒤에 명사구" }
+      ],
+      "chips": [
+        { "text": "while", "bucketId": "clause", "why": "때를 나타내는 접속사이므로 뒤에 절이 옵니다." },
+        { "text": "although", "bucketId": "clause", "why": "양보를 나타내는 접속사이므로 뒤에 절이 옵니다." },
+        { "text": "because", "bucketId": "clause", "why": "이유를 나타내는 접속사이므로 뒤에 절이 옵니다." },
+        { "text": "even though", "bucketId": "clause", "why": "although 를 강조한 접속사이며 뒤에 절이 옵니다." },
+        { "text": "during", "bucketId": "np", "why": "때를 나타내는 전치사이므로 뒤에 명사구가 옵니다." },
+        { "text": "despite", "bucketId": "np", "why": "양보를 나타내는 전치사이므로 뒤에 명사구가 옵니다." },
+        { "text": "in spite of", "bucketId": "np", "why": "despite 와 뜻이 같은 구전치사이며 뒤에 명사구가 옵니다." },
+        { "text": "because of", "bucketId": "np", "why": "이유를 나타내는 구전치사이므로 뒤에 명사구가 옵니다." }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "전치사가 이끄는 문장의 해부",
+      "tokens": [
+        { "t": "Despite", "role": "X" },
+        { "t": "the sudden budget cuts,", "role": "M" },
+        { "t": "the research team", "role": "S" },
+        { "t": "persevered.", "role": "V" }
+      ],
+      "ko": "갑작스러운 예산 삭감에도 불구하고 그 연구진은 버텨 냈습니다.",
+      "layers": [
+        {
+          "label": "① 연결어를 먼저 표시합니다",
+          "roles": ["X"],
+          "note": "판단의 출발점은 연결어입니다. Despite 는 전치사이므로 뒤에 무엇이 오는지가 이 문장의 옳고 그름을 결정합니다."
+        },
+        {
+          "label": "② 연결어 바로 뒤를 끊어 봅니다",
+          "roles": ["M"],
+          "note": "the sudden budget cuts 에는 시제를 가진 동사가 없습니다. 주어와 동사의 짝이 없으므로 절이 아니라 명사구이며, 이것이 전치사 Despite 의 목적어입니다."
+        },
+        {
+          "label": "③ 주절의 뼈대를 확인합니다",
+          "roles": ["S", "V"],
+          "note": "쉼표 뒤의 the research team persevered 가 주절입니다. 핵 주어는 the research team, 본동사는 persevered 하나입니다."
+        }
+      ],
+      "conclusion": "연결어 뒤에 온 것이 절이 아니라 명사구이므로 접속사 Although 는 들어설 수 없고 전치사 Despite 가 옳습니다."
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "대표 짝을 고르는 4단계",
+      "steps": [
+        {
+          "text": "밑줄이나 괄호에 놓인 연결어의 바로 뒤에서 문장을 끊습니다.",
+          "applyNote": "Although 뒤를 끊으면 the sensors failed twice 가 남습니다."
+        },
+        {
+          "text": "끊어 낸 부분에 '주어+시제 동사' 짝이 있는지 셉니다. 있으면 절, 명사(구)·동명사뿐이면 명사구입니다.",
+          "applyNote": "주어 the sensors 와 시제 동사 failed 가 짝을 이룹니다. 따라서 절입니다."
+        },
+        {
+          "text": "절이면 접속사(while·although·because)를, 명사구면 전치사(during·despite·because of)를 고릅니다.",
+          "applyNote": "절이므로 접속사 쪽인 Although 가 옳습니다. Despite 를 쓰면 전치사가 절을 이끌게 되어 무너집니다."
+        },
+        {
+          "text": "해석이 같다는 이유로 짝의 반대편을 고르지 않습니다. despite of 처럼 존재하지 않는 형태도 경계합니다.",
+          "applyNote": "'~에도 불구하고'라는 해석만 보고 Despite 를 고르면 뒤 구조를 확인하지 않은 것입니다."
+        }
+      ],
+      "example": {
+        "en": "**Although** the sensors failed twice, the launch proceeded on schedule.",
+        "ko": "센서가 두 번 고장 났지만 발사는 예정대로 진행되었습니다.",
+        "note": "연결어 뒤가 절이므로 접속사 자리이며, 짝의 왼쪽인 Although 가 옳습니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "넷 중 뒤에 오는 단위가 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["while", "although", "because", "during"],
+          "odd": 3,
+          "why": "while·although·because 는 절을 이끄는 접속사이고, during 만 명사구를 받는 전치사입니다."
+        },
+        {
+          "words": ["despite", "because of", "in spite of", "since"],
+          "odd": 3,
+          "why": "despite·because of·in spite of 는 명사구를 받는 전치사(구)이고, since 만 절을 이끄는 접속사입니다."
+        },
+        {
+          "words": ["during", "despite", "though", "because of"],
+          "odd": 2,
+          "why": "during·despite·because of 는 전치사(구)이고, though 만 절을 이끄는 접속사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "( During / While ) the excavation was under way, two of the ancient walls collapsed without warning.",
+      "steps": [
+        {
+          "title": "① 연결어 뒤를 끊습니다",
+          "body": "괄호 뒤에 남는 것은 the excavation was under way 입니다. 여기까지가 첫 번째 판단 대상입니다."
+        },
+        {
+          "title": "② 주어와 동사를 셉니다",
+          "body": "주어 the excavation 과 시제 동사 was 가 짝을 이룹니다. 따라서 이 부분은 명사구가 아니라 절입니다."
+        },
+        {
+          "title": "③ 짝의 어느 쪽인지 정합니다",
+          "body": "절 앞에 설 수 있는 것은 접속사뿐입니다. while/during 짝에서 접속사는 while 입니다."
+        },
+        {
+          "title": "④ 반대편을 넣어 확인합니다",
+          "body": "During 을 넣으면 전치사가 절을 이끌게 되어 문장이 성립하지 않습니다. During the excavation 처럼 명사구가 와야만 옳습니다."
+        }
+      ],
+      "answer": "While",
+      "ko": "발굴이 진행되는 동안 고대 성벽 두 곳이 예고 없이 무너졌습니다."
+    },
+    {
+      "id": "b15",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u08-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The gallery remained open {{blank}} the renovation of the east wing.",
+          "options": ["during", "while"],
+          "answer": 0,
+          "translation": "동관 보수 공사 동안 그 미술관은 계속 문을 열었습니다.",
+          "explanation": "빈칸 뒤의 the renovation of the east wing 에는 시제를 가진 동사가 없습니다. 명사구이므로 while/during 짝에서 전치사인 during 이 옳습니다. while 은 접속사여서 '주어+동사'를 갖춘 절을 이끌어야 합니다.",
+          "trapTags": ["while-during", "clause-vs-np"]
+        },
+        {
+          "id": "u08-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "[[u:Despite]] the committee rejected the first proposal, the architect submitted a revised plan within a week.",
+          "isCorrect": false,
+          "correction": "Although",
+          "translation": "위원회가 첫 번째 안을 거부했지만, 그 건축가는 일주일 안에 수정안을 제출했습니다.",
+          "explanation": "밑줄 뒤의 the committee rejected the first proposal 은 주어와 시제 동사를 갖춘 절입니다. Despite 는 전치사여서 절을 이끌 수 없으므로 접속사 Although 로 고쳐야 합니다.",
+          "trapTags": ["despite-although", "clause-vs-np"]
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "절이냐 명사구냐 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 판별은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "during 은 뒤에 '주어+동사' 절을 이끌 수 있습니다.",
+          "isTrue": false,
+          "why": "during 은 전치사입니다. 절을 이끌려면 접속사 while 을 써야 합니다."
+        },
+        {
+          "statement": "although 뒤에는 '주어+동사'를 갖춘 절이 옵니다.",
+          "isTrue": true,
+          "why": "although 는 양보의 접속사이므로 뒤에 절이 옵니다."
+        },
+        {
+          "statement": "despite of 는 '~에도 불구하고'를 뜻하는 표준 구전치사입니다.",
+          "isTrue": false,
+          "why": "despite of 라는 형태는 존재하지 않습니다. despite 또는 in spite of 를 씁니다."
+        },
+        {
+          "statement": "because of 뒤에는 명사구가 옵니다.",
+          "isTrue": true,
+          "why": "because of 는 of 가 붙은 구전치사이므로 명사구만 받습니다."
+        },
+        {
+          "statement": "while 은 '~인 반면'의 대조 뜻으로 쓰여도 여전히 접속사입니다.",
+          "isTrue": true,
+          "why": "while 의 두 용법은 모두 접속사이므로 뒤에는 언제나 절이 옵니다."
+        },
+        {
+          "statement": "in spite of 뒤에는 '주어+동사' 절이 바로 올 수 있습니다.",
+          "isTrue": false,
+          "why": "in spite of 는 구전치사여서 명사구만 받습니다. 절의 내용을 담으려면 the fact that 을 끼워야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The concert went ahead ( despite / although ) the heavy snow that fell overnight.",
+      "givenSteps": [
+        "① 연결어 뒤를 끊어 읽습니다 — the heavy snow that fell overnight 입니다.",
+        "② 동사처럼 보이는 fell 이 있지만, 그것은 관계사 that 이 이끄는 절의 동사입니다. the heavy snow 와 짝을 이루는 시제 동사는 따로 없습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 옳습니까?",
+      "options": [
+        "despite — 연결어 뒤가 관계사절의 수식을 받은 명사구이므로 전치사 자리입니다",
+        "although — fell 이라는 동사가 보이므로 절입니다",
+        "despite of — 뜻이 강해지므로 더 안전한 형태입니다"
+      ],
+      "answer": 0,
+      "explain": "the heavy snow that fell overnight 은 전체가 하나의 명사구입니다. fell 은 관계사절 안의 동사일 뿐이어서 the heavy snow 의 술어가 아닙니다. 명사구 앞이므로 전치사 despite 가 옳으며, despite of 라는 형태는 존재하지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "전치사 뒤에 절의 내용을 담아야 한다면 the fact that 을 끼워 명사구로 만듭니다. 전치사의 목적어는 명사 the fact 이고, that절은 그 명사를 설명합니다.",
+      "examples": [
+        {
+          "en": "**Despite the fact that** the funding had been cut, the project continued for another year.",
+          "ko": "예산이 삭감되었다는 사실에도 불구하고 그 사업은 한 해 더 지속되었습니다.",
+          "note": "전치사 Despite 의 목적어는 명사 the fact 입니다. 절이 직접 온 것이 아니므로 옳은 형태입니다."
+        },
+        {
+          "en": "The committee met its deadline **in spite of the fact that** two members had resigned.",
+          "ko": "두 명의 위원이 사임했다는 사실에도 불구하고 위원회는 기한을 지켰습니다.",
+          "note": "in spite of 뒤에도 명사구가 필요하며, the fact that 이 그 자리를 채웁니다. 전치사가 절을 직접 이끄는 것은 여전히 불가능합니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 존재하지 않는 형태와 전치사 뒤의 절",
+      "body": "despite 는 그 자체로 '~에도 불구하고'를 뜻하는 한 단어 전치사입니다. in spite of 에 이끌려 of 를 덧붙인 despite of 는 존재하지 않습니다. 반대로 because of 는 of 가 붙은 구전치사이므로 뒤에 절을 이끌 수 없습니다. 짝의 오른쪽은 어떤 경우에도 명사구만 받습니다.",
+      "example": {
+        "en": "The flight was canceled **because of** the fog was too thick over the runway.",
+        "ko": "활주로 위의 안개가 너무 짙어서 항공편이 결항되었다는 뜻이지만, 이 문장은 성립하지 않습니다.",
+        "note": "because of 뒤에 the fog was too thick 이라는 절이 왔습니다. 접속사 because 로 고치거나, because of the thick fog 처럼 명사구로 바꾸어야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b20",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u08-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The expedition pressed on {{blank}} the equipment failures that had delayed it for weeks.",
+          "options": ["despite", "although", "despite of"],
+          "answer": 0,
+          "translation": "몇 주 동안 탐사를 지연시킨 장비 고장에도 불구하고 원정대는 계속 나아갔습니다.",
+          "explanation": "빈칸 뒤의 the equipment failures that had delayed it for weeks 는 관계사절의 수식을 받은 명사구입니다. had delayed 는 관계사절 안의 동사일 뿐이므로 절이 온 것이 아닙니다. 따라서 전치사 despite 가 옳고, 접속사 although 는 절을 요구하므로 쓸 수 없으며 despite of 는 존재하지 않는 형태입니다.",
+          "trapTags": ["despite-although", "despite-of", "clause-vs-np"]
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — while 의 두 얼굴",
+      "body": "while 은 '~하는 동안'(때)뿐 아니라 '~인 반면'(대조)의 뜻으로도 쓰입니다. 두 용법 모두 접속사이므로 뒤에는 언제나 절이 옵니다. 반면 during 에는 대조의 뜻이 없고, 절을 이끌 수도 없습니다. 해석이 '반면'으로 나온다고 해서 판단이 달라지지 않습니다.",
+      "example": {
+        "en": "**While** the first study relied on questionnaires, the second used direct field measurements.",
+        "ko": "첫 번째 연구가 설문에 의존한 반면, 두 번째 연구는 직접적인 현장 측정을 활용했습니다.",
+        "note": "여기서 While 은 대조를 나타내지만 여전히 접속사입니다. 뒤에 주어 the first study 와 동사 relied 가 있으므로 절이며, During 은 이 자리에 올 수 없습니다."
+      }
+    },
+    {
+      "id": "b22",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 despite 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "연결어 뒤의 동사 had delayed 가 관계사절에 속해 있어서, 연결어가 이끄는 것은 절이 아니라 명사구였기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 명사구 안에 들어 있는 동사는 그 명사구의 술어가 아닙니다. 연결어가 직접 이끄는 단위가 무엇인지가 판단의 근거입니다."
+        },
+        {
+          "text": "문맥이 '~에도 불구하고'로 해석되므로 despite 가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "해석은 although 와 despite 가 동일합니다. 뜻으로는 두 후보를 가를 수 없으며, 뒤에 오는 구조만이 근거가 됩니다."
+        },
+        {
+          "text": "despite 가 although 보다 격식 있는 표현이어서 학술적인 문장에 더 맞기 때문입니다.",
+          "correct": false,
+          "feedback": "격식은 어법 판단의 기준이 아닙니다. 뒤에 절이 왔다면 아무리 격식을 갖추어도 despite 는 쓸 수 없습니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 다리는 폭우 때문에 이틀 동안 폐쇄되었습니다.",
+      "answer": ["The bridge", "was closed for two days", "because of", "the heavy rain"],
+      "tiles": [
+        "The bridge",
+        "was closed for two days",
+        "because of",
+        "the heavy rain",
+        "because"
+      ],
+      "explanation": "연결어 뒤에 오는 the heavy rain 은 동사가 없는 명사구입니다. 명사구 앞에는 구전치사 because of 가 와야 하므로 접속사 because 는 쓰이지 않습니다."
+    },
+    {
+      "id": "b24",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "[[1:Although]] the museum reopened in March, attendance remained low [[2:because of]] the ongoing construction, and the staff kept the galleries open late [[3:during]] the summer festival [[4:despite]] the rise in operating costs was steep.",
+      "answer": 4,
+      "correction": "although",
+      "rationales": [
+        "뒤에 the museum reopened in March 라는 절이 있으므로 접속사 Although 가 옳습니다.",
+        "뒤의 the ongoing construction 은 동사가 없는 명사구이므로 구전치사 because of 가 옳습니다.",
+        "뒤의 the summer festival 은 명사구이므로 전치사 during 이 옳습니다.",
+        "뒤의 the rise in operating costs was steep 은 주어와 시제 동사를 갖춘 절입니다. despite 는 전치사여서 절을 이끌 수 없으므로 접속사 although 로 고쳐야 합니다."
+      ],
+      "ko": "그 미술관은 3월에 다시 문을 열었지만 계속되는 공사 때문에 관람객이 적었고, 운영비 상승이 가팔랐음에도 직원들은 여름 축제 동안 전시실을 늦게까지 열어 두었습니다."
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 연결어가 잘못 쓰인 문장을 주고 '어법에 맞게 고쳐 쓰시오'로 물어봅니다. 뒤에 오는 것이 절인지 명사구인지 밝히고 짝의 반대편으로 바꾸어야 만점입니다.",
+          "sample": {
+            "en": "Despite of the noise from the construction site, she kept reading in the library.",
+            "ask": "이 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "Despite the noise from the construction site, she kept reading in the library. — despite of 는 존재하지 않는 형태이며, 뒤가 명사구이므로 despite 만 씁니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 연결어에 밑줄을 긋고, 뒤에 오는 단위를 절과 명사구 사이에서 뒤집어 오답을 만듭니다. 밑줄 뒤에서 '주어+시제 동사' 짝을 찾는 것이 판단의 전부입니다.",
+          "sample": {
+            "en": "[[u:Despite]] the region receives very little rainfall, its farmers have sustained rice cultivation for centuries.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "Although — 밑줄 뒤에 the region receives very little rainfall 이라는 절이 왔으므로 전치사 Despite 는 쓸 수 없습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coastal cities have long relied on concrete seawalls to hold back the sea. [[u:Despite their considerable cost, such barriers remain the most common defense against storm surges.]] Engineers point out, however, that a wall fails the moment the water rises faster than its designers assumed. While the debate continues, several cities have begun to restore wetlands as a second line of defense.",
+      "instruction": "밑줄 친 문장에서 연결어 뒤의 단위가 절인지 명사구인지 확인하고, 왜 그 연결어가 옳은지 설명하십시오.",
+      "found": "Despite 뒤의 their considerable cost 에는 시제를 가진 동사가 없습니다. 명사구이므로 전치사 Despite 가 옳으며, Although 를 쓰려면 '주어+동사'를 갖춘 절이 필요합니다. 마지막 문장의 While the debate continues 는 반대로 절이 왔으므로 접속사 자리입니다.",
+      "gist": "해안 도시가 오랫동안 방조제에 의존해 왔으나, 일부 도시는 습지 복원을 두 번째 방어선으로 삼기 시작했다는 내용입니다."
+    },
+    {
+      "id": "b27",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "연결어 국경의 문지기",
+      "intro": "이 국경에는 두 나라가 있습니다. 절의 나라는 접속사만, 명사구의 나라는 전치사만 통과시킵니다. 뜻이 같다는 위조 서류로는 문이 열리지 않습니다. 네 건의 통행 심사로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The negotiations resumed {{blank}} the two governments still disagreed on the border.",
+          "options": ["although", "despite"],
+          "answer": 0,
+          "why": "빈칸 뒤 the two governments still disagreed 는 주어와 시제 동사를 갖춘 절입니다. 절을 이끄는 것은 접속사 although 뿐이고, despite 는 전치사여서 절을 받지 못합니다."
+        },
+        {
+          "prompt": "The harvest failed {{blank}} the prolonged drought across the region.",
+          "options": ["because", "because of"],
+          "answer": 1,
+          "why": "빈칸 뒤 the prolonged drought 는 동사가 없는 명사구입니다. 명사구를 받는 것은 구전치사 because of 이고, because 는 절을 요구합니다."
+        },
+        {
+          "prompt": "{{blank}} the ceremony was under way, the power failed twice without warning.",
+          "options": ["During", "While"],
+          "answer": 1,
+          "why": "빈칸 뒤 the ceremony was under way 는 절입니다. 절 앞에는 접속사 While 만 설 수 있고, During 은 전치사여서 명사구만 받습니다."
+        },
+        {
+          "prompt": "The airline maintained its schedule {{blank}} the fact that two runways were closed.",
+          "options": ["despite", "although"],
+          "answer": 0,
+          "why": "the fact that 이하는 the fact 를 핵으로 하는 명사구입니다. 명사구 앞이므로 전치사 despite 가 옳고, although 는 명사구를 직접 받지 못합니다."
+        }
+      ],
+      "winText": "네 건 모두 뒤에 온 단위를 정확히 읽어 냈습니다. 문이 열립니다. 뜻이 같은 짝을 나란히 세워도 이제 자리를 혼동하지 않습니다.",
+      "loseText": "문지기가 서류를 돌려줍니다. 네 건 모두 물음은 하나였습니다 — '뒤에 온 것이 절인가, 명사구인가.' 짝의 왼쪽은 절, 오른쪽은 명사구임을 다시 확인하고 오면 문은 그대로 있습니다."
+    },
+    {
+      "id": "b28",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "연결어 뒤에 ___가 있으면 접속사(while·although·because)를 쓰고, ___만 있으면 전치사(during·despite·because of)를 씁니다."
+    },
+    {
+      "id": "b29",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "판단은 뜻이 아니라 연결어 뒤에 오는 단위로 합니다. 절이면 접속사, 명사구면 전치사입니다.",
+        "대표 짝은 while/during, although·though/despite·in spite of, because/because of 이며 왼쪽만 절을 이끕니다.",
+        "명사구 안의 관계사절·분사구에 들어 있는 동사는 그 명사구의 술어가 아닙니다. 연결어가 직접 이끄는 단위만 셉니다.",
+        "전치사 뒤에 절의 내용을 담으려면 the fact that 을 끼워 명사구로 만듭니다. despite of 라는 형태는 존재하지 않습니다."
+      ],
+      "keySentence": {
+        "en": "**Although** the harbor was frozen, the cargo ships kept arriving **despite** the thick ice.",
+        "ko": "항구가 얼어붙었지만, 두꺼운 얼음에도 불구하고 화물선들은 계속 들어왔습니다.",
+        "note": "같은 문장 안에서 Although 뒤에는 절이, despite 뒤에는 명사구가 왔습니다. 짝의 좌우가 자리로 갈립니다."
+      }
+    },
+    {
+      "id": "b30",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u08-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "{{blank}} the results were inconclusive, the team published the entire data set.",
+          "options": ["In spite of", "Although"],
+          "answer": 1,
+          "translation": "결과가 결정적이지 않았지만, 연구진은 전체 데이터를 공개했습니다.",
+          "explanation": "빈칸 뒤의 the results were inconclusive 는 주어와 시제 동사를 갖춘 절입니다. 절 앞에는 접속사만 설 수 있으므로 Although 가 옳습니다. In spite of 는 구전치사여서 명사구만 이끌 수 있습니다.",
+          "trapTags": ["despite-although", "clause-vs-np"]
+        },
+        {
+          "id": "u08-c2-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Attendance at the evening lectures fell sharply [[u:because of]] the recording of each session became available online.",
+          "isCorrect": false,
+          "correction": "because",
+          "translation": "각 강의의 녹화본이 온라인으로 제공되었기 때문에 저녁 강의 참석률이 크게 떨어졌습니다.",
+          "explanation": "밑줄 뒤의 the recording of each session became available online 은 주어 the recording 과 시제 동사 became 을 갖춘 절입니다. because of 는 구전치사여서 절을 이끌 수 없으므로 접속사 because 로 고쳐야 합니다.",
+          "trapTags": ["because-of", "clause-vs-np"]
+        },
+        {
+          "id": "u08-c2-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The archive stayed accessible to researchers {{blank}} the building was being repaired.",
+          "options": ["while", "during", "despite"],
+          "answer": 0,
+          "translation": "건물이 보수되는 동안에도 그 기록보관소는 연구자들에게 계속 개방되었습니다.",
+          "explanation": "빈칸 뒤의 the building was being repaired 는 주어와 시제 동사를 갖춘 절입니다. 절을 이끌 수 있는 것은 접속사뿐이므로 while 이 옳습니다. during 과 despite 는 모두 전치사여서 명사구만 받습니다.",
+          "trapTags": ["while-during", "clause-vs-np"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1888 @@
+{
+  "schemaVersion": "deterministic-structural-v10-independent-predictions-v1",
+  "blindSha256": "6cffb121e362dd40fe19fdb71890824cee8851b7aab4a2f2b02795aae164a171",
+  "sourcePayloadSha256": "002ed425202c28f3dc7476d9381a6b65bce8e66f0616ebbeddb000d56221a222",
+  "authorSeal": "2ddce4ecbebdcbb5d411a812185f2613d3639a727ab4ded3e8aa594c231fbc03",
+  "runnerSha256": "9586c15b3ac1eeb1eb36ea83ff1c7de89b15203982692196c286cb1b18ba9e79",
+  "productionSourceHashes": [
+    {
+      "path": "src/lib/question-quality/validators/summary/mc.ts",
+      "sha256": "200e497fd99c82d13db3ddb5e752722b150f39d3cf4428b46f81814ef369c00c"
+    },
+    {
+      "path": "src/lib/question-quality/validators/grammar/shared.ts",
+      "sha256": "fb57409f1695f10f8d3ba2fdf1ce9845f0c273b724b8711e5e17fefa9b99931b"
+    },
+    {
+      "path": "src/lib/question-quality/validators/sentence-order.ts",
+      "sha256": "dcb1314d70a9877716802cafe2037be43feebebb036f7608f29a104746be3bc5"
+    },
+    {
+      "path": "src/lib/question-quality/core.ts",
+      "sha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35"
+    },
+    {
+      "path": "src/lib/question-quality/validators/summary/killer-trap.ts",
+      "sha256": "1705ad8aca1e5b6f7428d924e9f2ed94139a02a5bdca6a81be5d4fae23d09174"
+    },
+    {
+      "path": "src/lib/passage-sentence-utils.ts",
+      "sha256": "572dc2dbab87731faee1caa15055a096b5a0695b216e836e63c0a1bc9f2f8aa6"
+    },
+    {
+      "path": "src/lib/question-postprocess/types.ts",
+      "sha256": "95d082598f8974b15ac26987f4090a8b94cd511603e5e1f5d0c1224cf45ab4b7"
+    }
+  ],
+  "caseCount": 200,
+  "familyCounts": {
+    "GRAMMAR_ERROR_LEADING_LABEL": {
+      "total": 50,
+      "defect": 6,
+      "normal": 44
+    },
+    "SENTENCE_ORDER_COMPLETE_UNITS": {
+      "total": 50,
+      "defect": 5,
+      "normal": 45
+    },
+    "SENTENCE_ORDER_STANDALONE_LABELS": {
+      "total": 50,
+      "defect": 14,
+      "normal": 36
+    },
+    "SUMMARY_COMPLETE_MC": {
+      "total": 50,
+      "defect": 0,
+      "normal": 50
+    }
+  },
+  "executionAttestation": {
+    "processKind": "fresh tsx process",
+    "onlyCaseInputRead": "blinded-cases.json",
+    "oracleInputRead": false,
+    "sealedMapRead": false,
+    "priorAuditInputRead": false,
+    "actualProductionFunctionsInvoked": [
+      "findSummaryMcAnswerObjectMismatch",
+      "findGrammarKeypointNonexistentLabel",
+      "validateSentenceOrderQuestion"
+    ],
+    "apiCalls": 0,
+    "networkAttempts": 0,
+    "databaseCalls": 0,
+    "secretsRead": 0,
+    "estimatedCostUsd": 0
+  },
+  "predictions": [
+    {
+      "blindId": "B001",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B002",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B003",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B004",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B005",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B006",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B007",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (가).",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (가), (나).",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (가), (나), (다)."
+      ]
+    },
+    {
+      "blindId": "B008",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B009",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B010",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B011",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B012",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B013",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B014",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B015",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B016",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B017",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B018",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B019",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B020",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B021",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-dependent-fragment"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph (B) contains a standalone dependent fragment. Restore the independent clause from the source passage."
+      ]
+    },
+    {
+      "blindId": "B022",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B023",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B024",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B025",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B026",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B027",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B028",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B029",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B030",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B031",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (C).",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (C), (C)."
+      ]
+    },
+    {
+      "blindId": "B032",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B033",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B034",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B035",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B036",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B037",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B038",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B039",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B040",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B041",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "fr",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B042",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B043",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B044",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B045",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B046",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B047",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B048",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B049",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B050",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B051",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B052",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B053",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B054",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B055",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B056",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B057",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "el",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B058",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B059",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B060",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B061",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-body-label",
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph (A) repeats a structural label inside its text ((A)). Keep the label only in paragraph.label.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got .",
+        "SENTENCE_ORDER paragraph (B) repeats a structural label inside its text ((B)). Keep the label only in paragraph.label.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got , .",
+        "SENTENCE_ORDER paragraph (C) repeats a structural label inside its text ((C)). Keep the label only in paragraph.label.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got , , ."
+      ]
+    },
+    {
+      "blindId": "B062",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B063",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B064",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B065",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B066",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B067",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (甲).",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (甲), (乙).",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (甲), (乙), (丙)."
+      ]
+    },
+    {
+      "blindId": "B068",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B069",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B070",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B071",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-label-order-leak",
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "단락 라벨에 순서 숫자가 포함돼 정답 순서가 노출됩니다. 라벨은 (A)/(B)/(C)만 쓰세요.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got ①.",
+        "단락 라벨에 순서 숫자가 포함돼 정답 순서가 노출됩니다. 라벨은 (A)/(B)/(C)만 쓰세요.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got ①, ②.",
+        "단락 라벨에 순서 숫자가 포함돼 정답 순서가 노출됩니다. 라벨은 (A)/(B)/(C)만 쓰세요.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got ①, ②, ③."
+      ]
+    },
+    {
+      "blindId": "B072",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B073",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B074",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B075",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B076",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B077",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B078",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B079",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": "Grammar keyPoint 1 references 〈Tip〉, but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice."
+    },
+    {
+      "blindId": "B080",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B081",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B082",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B083",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B084",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B085",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B086",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B087",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B088",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B089",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B090",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B091",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B092",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-body-label",
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph (C) repeats a structural label inside its text ((C)). Keep the label only in paragraph.label.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (A), (B), ."
+      ]
+    },
+    {
+      "blindId": "B093",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B094",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B095",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B096",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B097",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B098",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B099",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B100",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B101",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B102",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "fr",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B103",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B104",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B105",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B106",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B107",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B108",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B109",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B110",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B111",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B112",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B113",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B114",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B115",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B116",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-dependent-fragment"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph (B) contains a standalone dependent fragment. Restore the independent clause from the source passage."
+      ]
+    },
+    {
+      "blindId": "B117",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B118",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-dependent-fragment"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph (B) contains a standalone dependent fragment. Restore the independent clause from the source passage."
+      ]
+    },
+    {
+      "blindId": "B119",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B120",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B121",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B122",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B123",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B124",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B125",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B126",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got ㈎.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got ㈎, ㈏.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got ㈎, ㈏, ㈐."
+      ]
+    },
+    {
+      "blindId": "B127",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B128",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B129",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B130",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B131",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B132",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B133",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B134",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B135",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": "Grammar keyPoint 1 references [Check], but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice."
+    },
+    {
+      "blindId": "B136",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B137",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B138",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B139",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B140",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B141",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B142",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-dependent-fragment"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph (B) contains a standalone dependent fragment. Restore the independent clause from the source passage."
+      ]
+    },
+    {
+      "blindId": "B143",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B144",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B145",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B146",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": "Grammar keyPoint 1 references ［도움］, but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice."
+    },
+    {
+      "blindId": "B147",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B148",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B149",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B150",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B151",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B152",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B153",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B154",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B155",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got Ⓐ.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got Ⓐ, Ⓑ.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got Ⓐ, Ⓑ, Ⓒ."
+      ]
+    },
+    {
+      "blindId": "B156",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B157",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B158",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "el",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B159",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (I).",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (I), (II).",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (I), (II), (III)."
+      ]
+    },
+    {
+      "blindId": "B160",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B161",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B162",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B163",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B164",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B165",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B166",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B167",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B168",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (A), (B), (D)."
+      ]
+    },
+    {
+      "blindId": "B169",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": "Grammar keyPoint 1 references (Clue), but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice."
+    },
+    {
+      "blindId": "B170",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B171",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": "Grammar keyPoint 1 references （A）, but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice."
+    },
+    {
+      "blindId": "B172",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-count"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER must have exactly 3 paragraphs, got 2."
+      ]
+    },
+    {
+      "blindId": "B173",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B174",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B175",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-count",
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER must have exactly 3 paragraphs, got 4.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (A), (B), (C), (D)."
+      ]
+    },
+    {
+      "blindId": "B176",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B177",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B178",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B179",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B180",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-label-order-leak",
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "단락 라벨에 순서 숫자가 포함돼 정답 순서가 노출됩니다. 라벨은 (A)/(B)/(C)만 쓰세요.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (1).",
+        "단락 라벨에 순서 숫자가 포함돼 정답 순서가 노출됩니다. 라벨은 (A)/(B)/(C)만 쓰세요.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (1), (2).",
+        "단락 라벨에 순서 숫자가 포함돼 정답 순서가 노출됩니다. 라벨은 (A)/(B)/(C)만 쓰세요.",
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (1), (2), (3)."
+      ]
+    },
+    {
+      "blindId": "B181",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-paragraph-labels"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got (A), (A)."
+      ]
+    },
+    {
+      "blindId": "B182",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B183",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B184",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B185",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B186",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B187",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B188",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B189",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B190",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B191",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B192",
+      "family": "SUMMARY_COMPLETE_MC",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findSummaryMcAnswerObjectMismatch",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B193",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B194",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": "Grammar keyPoint 1 references [Tip], but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice."
+    },
+    {
+      "blindId": "B195",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "DEFECT",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [
+        "sentence-order-dependent-fragment"
+      ],
+      "targetedMessages": [
+        "SENTENCE_ORDER paragraph (B) contains a standalone dependent fragment. Restore the independent clause from the source passage."
+      ]
+    },
+    {
+      "blindId": "B196",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B197",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    },
+    {
+      "blindId": "B198",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "ko",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B199",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "validateSentenceOrderQuestion",
+      "targetedCodes": [],
+      "targetedMessages": []
+    },
+    {
+      "blindId": "B200",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "language": "en",
+      "prediction": "NORMAL",
+      "productionFunction": "findGrammarKeypointNonexistentLabel",
+      "targetedFinding": null
+    }
+  ]
+}

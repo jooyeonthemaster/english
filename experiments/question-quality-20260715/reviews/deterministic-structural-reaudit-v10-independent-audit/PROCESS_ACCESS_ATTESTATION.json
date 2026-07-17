@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "deterministic-structural-v10-prediction-process-access-attestation-v1",
+  "qualification": "code-derived attestation; no OS-level file-access trace or filesystem sandbox",
+  "freshProcess": true,
+  "caseDataReads": [
+    {
+      "path": "blinded-cases.json",
+      "sha256": "6cffb121e362dd40fe19fdb71890824cee8851b7aab4a2f2b02795aae164a171"
+    }
+  ],
+  "caseDataNotReadByRunnerSource": [
+    "../deterministic-structural-reaudit-v10/cases.json",
+    "../deterministic-structural-reaudit-v10/ORACLE_PROTOCOL.md",
+    "sealed-blind-map.json",
+    "prior v8/v9 results",
+    "remediation reports",
+    "author rationale"
+  ],
+  "productionImports": {
+    "entryFunctions": [
+      "findSummaryMcAnswerObjectMismatch",
+      "findGrammarKeypointNonexistentLabel",
+      "validateSentenceOrderQuestion"
+    ],
+    "sourceClosureFile": "SOURCE_CLOSURE.json",
+    "sourceClosureFileCount": 56,
+    "sourceClosureAggregateSha256": "c77ed3b68eaf67da61ef157a182c84d4366833d6a5c0373bec318440517427f7"
+  },
+  "executedRunner": {
+    "path": "run_blind_predictions.pre-adjudication-sealed.txt",
+    "sha256": "9586c15b3ac1eeb1eb36ea83ff1c7de89b15203982692196c286cb1b18ba9e79"
+  },
+  "environment": {
+    "credentialNamedVariablesRejected": true,
+    "secretsRead": 0
+  },
+  "externalSystems": {
+    "networkGuardInstalled": true,
+    "networkAttempts": 0,
+    "apiCalls": 0,
+    "databaseCalls": 0,
+    "estimatedCostUsd": 0
+  },
+  "supervisorContaminationDisclosed": true,
+  "supervisorContaminationFile": "PROCESS_INTEGRITY.md"
+}

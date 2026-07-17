@@ -1,0 +1,1030 @@
+{
+  "schema_version": "1.0.0",
+  "audit_id": "deterministic-structural-reaudit-v9-independent-adjudication",
+  "visibility": "private-row-level",
+  "corpus_id": "deterministic-structural-reaudit-v9-blind-holdout",
+  "method": {
+    "allowed_inputs_only": true,
+    "production_source_read": false,
+    "tests_read": false,
+    "v7_v8_artifacts_read": false,
+    "research_note_conclusions_read": false,
+    "author_messages_read": false,
+    "api_network_database_secrets_candidates_used": false,
+    "disagreement_rows_expected": 60,
+    "disagreement_rows_reviewed": 60,
+    "paired_controls_reviewed": 60,
+    "skipped_rows": 0
+  },
+  "classification_definitions": {
+    "CONFIRMED_ORACLE": "The production target verdict is substantively wrong under the sealed student-surface contract.",
+    "PRODUCT_CONTRACT_SCOPE_MISMATCH": "The generic sealed oracle is internally coherent, but an exact product format can legitimately reject that surface.",
+    "REDUNDANT_WRAPPER_EXPECTED": "The target helper misses, but results evidence proves a separate explicit wrapper invariant catches this surface consistently and distinguishes its paired control.",
+    "AMBIGUOUS": "The allowed evidence is insufficient for one of the other determinations."
+  },
+  "summary": {
+    "total": 60,
+    "by_adjudication": {
+      "CONFIRMED_ORACLE": 46,
+      "PRODUCT_CONTRACT_SCOPE_MISMATCH": 13,
+      "REDUNDANT_WRAPPER_EXPECTED": 1,
+      "AMBIGUOUS": 0
+    },
+    "by_family": {
+      "F1_SUMMARY_KEY_OPTION_COHESION": {
+        "disagreements": 14,
+        "CONFIRMED_ORACLE": 14,
+        "PRODUCT_CONTRACT_SCOPE_MISMATCH": 0,
+        "REDUNDANT_WRAPPER_EXPECTED": 0,
+        "AMBIGUOUS": 0
+      },
+      "F2_GRAMMAR_RENDERED_LABEL_REFERENCE": {
+        "disagreements": 18,
+        "CONFIRMED_ORACLE": 18,
+        "PRODUCT_CONTRACT_SCOPE_MISMATCH": 0,
+        "REDUNDANT_WRAPPER_EXPECTED": 0,
+        "AMBIGUOUS": 0
+      },
+      "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION": {
+        "disagreements": 13,
+        "CONFIRMED_ORACLE": 0,
+        "PRODUCT_CONTRACT_SCOPE_MISMATCH": 13,
+        "REDUNDANT_WRAPPER_EXPECTED": 0,
+        "AMBIGUOUS": 0
+      },
+      "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY": {
+        "disagreements": 15,
+        "CONFIRMED_ORACLE": 14,
+        "PRODUCT_CONTRACT_SCOPE_MISMATCH": 0,
+        "REDUNDANT_WRAPPER_EXPECTED": 1,
+        "AMBIGUOUS": 0
+      }
+    }
+  },
+  "rows": [
+    {
+      "case_id": "v9-f1-p01-defect",
+      "paired_control_case_id": "v9-f1-p01-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "explanation",
+        "selected_full_surface": "pollinators shifted their visits toward native flowers.",
+        "selected_label": "B",
+        "defect_key": "D",
+        "control_key": "B"
+      },
+      "reason": "The explanation quotes option B verbatim while the defect key names D. The complete-surface mismatch is explicit, not semantic or inferential.",
+      "paired_control_check": "The only structural repair is key B, and the paired control is TN.",
+      "recommended_fix_boundary": "At the summary mismatch helper, bind an exact full-option occurrence in the declared authoritative carrier to its option label and compare that label with the key; do not broaden to semantic similarity."
+    },
+    {
+      "case_id": "v9-f1-p02-defect",
+      "paired_control_case_id": "v9-f1-p02-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "stem",
+        "selected_full_surface": "humidity was lowered before the photographs were rehoused.",
+        "selected_label": "③",
+        "defect_key": "①",
+        "control_key": "③"
+      },
+      "reason": "The stem directly supplies the full text of option ③, but the defect key is ①.",
+      "paired_control_check": "The paired control keys ③ and is TN with the same stem and options.",
+      "recommended_fix_boundary": "Support exact full-option binding in the stem for the existing option inventory, including non-ASCII labels, without adding fuzzy matching."
+    },
+    {
+      "case_id": "v9-f1-p03-defect",
+      "paired_control_case_id": "v9-f1-p03-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "explanation",
+        "selected_full_surface": "the shaded seeds sprouted earlier but grew shorter stems.",
+        "selected_label": "ㄱ",
+        "defect_key": "ㄴ",
+        "control_key": "ㄱ"
+      },
+      "reason": "The final explanation sentence is an exact option ㄱ surface, whereas the key points to ㄴ.",
+      "paired_control_check": "The same carrier and inventory with key ㄱ form a TN control.",
+      "recommended_fix_boundary": "Keep the fix inside exact carrier-to-option-label resolution; label script must not be restricted to Latin or numeric forms."
+    },
+    {
+      "case_id": "v9-f1-p04-defect",
+      "paired_control_case_id": "v9-f1-p04-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "stem",
+        "selected_full_surface": "real-time signs reduced uncertainty more than extra buses did.",
+        "selected_label": "II",
+        "defect_key": "III",
+        "control_key": "II"
+      },
+      "reason": "The stem identifies option II word-for-word, and key III contradicts that selection.",
+      "paired_control_check": "Replacing only the key with II yields the TN control.",
+      "recommended_fix_boundary": "Recognize exact full-option selection in the stem and compare labels literally; retain the complete-surface confidence requirement."
+    },
+    {
+      "case_id": "v9-f1-p09-defect",
+      "paired_control_case_id": "v9-f1-p09-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "explanation",
+        "selected_full_surface": "vegetated banks trapped sediment before it reached the channel.",
+        "selected_label": "㉡",
+        "defect_key": "㉣",
+        "control_key": "㉡"
+      },
+      "reason": "The explanation expressly states the completed summary using the entire ㉡ option, but the key names ㉣.",
+      "paired_control_check": "The paired control keys ㉡ and is TN.",
+      "recommended_fix_boundary": "Extend exact selection-cue binding to this carrier wording and label form, while requiring a unique full-option match."
+    },
+    {
+      "case_id": "v9-f1-p10-defect",
+      "paired_control_case_id": "v9-f1-p10-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "stem",
+        "selected_full_surface": "meaningful paraphrases were retained better after the longer delay.",
+        "selected_label": "Ⓒ",
+        "defect_key": "Ⓐ",
+        "control_key": "Ⓒ"
+      },
+      "reason": "The stem directly quotes the full Ⓒ choice while the defect key selects Ⓐ.",
+      "paired_control_check": "The exact same surface with key Ⓒ is a TN.",
+      "recommended_fix_boundary": "Handle unique verbatim full-option matches independently of the option-label glyph; do not infer from topical overlap."
+    },
+    {
+      "case_id": "v9-f1-p12-defect",
+      "paired_control_case_id": "v9-f1-p12-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "stem",
+        "selected_full_surface": "customers returned containers more often when deposits were visible.",
+        "selected_label": "α",
+        "defect_key": "δ",
+        "control_key": "α"
+      },
+      "reason": "The declared blank surface exactly equals option α; key δ is a direct answer-object contradiction.",
+      "paired_control_check": "Key α is the sole structural delta in the TN control.",
+      "recommended_fix_boundary": "Resolve exact full-option strings before applying label comparisons; preserve literal label identity."
+    },
+    {
+      "case_id": "v9-f1-p13-defect",
+      "paired_control_case_id": "v9-f1-p13-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "explanation",
+        "selected_full_surface": "amber lamps attracted fewer moths while preserving walkway visibility.",
+        "selected_label": "(Ⅲ)",
+        "defect_key": "(Ⅰ)",
+        "control_key": "(Ⅲ)"
+      },
+      "reason": "The explanation fixes the full option (Ⅲ) sentence; the defect key instead names (Ⅰ).",
+      "paired_control_check": "The paired control keys (Ⅲ) and is TN.",
+      "recommended_fix_boundary": "Permit exact carrier cues around a uniquely matched option surface; keep Roman-glyph labels literal."
+    },
+    {
+      "case_id": "v9-f1-p14-defect",
+      "paired_control_case_id": "v9-f1-p14-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "stem",
+        "selected_full_surface": "short daily rehearsals improved timing more than one long session.",
+        "selected_label": "A)",
+        "defect_key": "B)",
+        "control_key": "A)"
+      },
+      "reason": "The prompt explicitly requires the complete A) sentence, but the key identifies B).",
+      "paired_control_check": "The A)-keyed counterpart is TN.",
+      "recommended_fix_boundary": "Add this unambiguous full-surface carrier form to the exact-match path, not to a general semantic cue detector."
+    },
+    {
+      "case_id": "v9-f1-p15-defect",
+      "paired_control_case_id": "v9-f1-p15-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "explanation",
+        "selected_full_surface": "landmarks made unfamiliar routes easier to remember.",
+        "selected_label": "[2]",
+        "defect_key": "[4]",
+        "control_key": "[2]"
+      },
+      "reason": "The explanation names the entire [2] option and the [4] key conflicts with it.",
+      "paired_control_check": "The [2]-keyed control is TN with otherwise identical content.",
+      "recommended_fix_boundary": "Compare the key with the label of a unique verbatim option occurrence; accept bracketed labels as opaque identifiers."
+    },
+    {
+      "case_id": "v9-f1-p16-defect",
+      "paired_control_case_id": "v9-f1-p16-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "stem",
+        "selected_full_surface": "linked barrels captured more water during moderate storms.",
+        "selected_label": "③번",
+        "defect_key": "②번",
+        "control_key": "③번"
+      },
+      "reason": "The stem quotes the full ③번 option, yet the defect answer key is ②번.",
+      "paired_control_check": "The paired ③번 key is TN.",
+      "recommended_fix_boundary": "Treat localized label suffixes as part of the opaque option label after establishing an exact unique surface match."
+    },
+    {
+      "case_id": "v9-f1-p18-defect",
+      "paired_control_case_id": "v9-f1-p18-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "stem",
+        "selected_full_surface": "slower cooling reduced cracks in the thinner bowls.",
+        "selected_label": "ⅰ",
+        "defect_key": "ⅳ",
+        "control_key": "ⅰ"
+      },
+      "reason": "The instruction closes the summary with the exact ⅰ sentence while the key points to ⅳ.",
+      "paired_control_check": "The ⅰ-keyed paired case is TN.",
+      "recommended_fix_boundary": "Support exact surface-to-label binding for lowercase Roman numerals without case-folding label identity."
+    },
+    {
+      "case_id": "v9-f1-p19-defect",
+      "paired_control_case_id": "v9-f1-p19-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "explanation",
+        "selected_full_surface": "polite reminders reduced loud conversations near the pond.",
+        "selected_label": "{B}",
+        "defect_key": "{A}",
+        "control_key": "{B}"
+      },
+      "reason": "The explanation says its selection exactly matches the complete {B} sentence; key {A} is inconsistent.",
+      "paired_control_check": "The same surface with key {B} is TN.",
+      "recommended_fix_boundary": "Use a unique exact option occurrence and compare opaque labels; avoid proximity-only abstention once exact identity is established."
+    },
+    {
+      "case_id": "v9-f1-p20-defect",
+      "paired_control_case_id": "v9-f1-p20-normal",
+      "family_id": "F1_SUMMARY_KEY_OPTION_COHESION",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "authoritative_channel": "stem",
+        "selected_full_surface": "additional folds increased strength until the paper began to tear.",
+        "selected_label": "W",
+        "defect_key": "Y",
+        "control_key": "W"
+      },
+      "reason": "The required final surface is a verbatim W option, but Y is keyed.",
+      "paired_control_check": "Key W produces the TN control.",
+      "recommended_fix_boundary": "Cover declarative exact-surface cues in the stem while still requiring an unambiguous full-option match."
+    },
+
+    {
+      "case_id": "v9-f2-p01-defect",
+      "paired_control_case_id": "v9-f2-p01-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "①",
+        "defect_rendered_inventory": [],
+        "control_rendered_inventory": ["①"],
+        "nonrendered_trap": "aria-label attribute"
+      },
+      "reason": "The key point begins with ①, but no ① is rendered; an aria-label attribute is not student-visible text.",
+      "paired_control_check": "The control visibly renders ① and is TN.",
+      "recommended_fix_boundary": "At the rendered-label helper, evaluate a recognized leading reference even when the rendered inventory is empty; never count an HTML attribute as rendered evidence."
+    },
+    {
+      "case_id": "v9-f2-p03-defect",
+      "paired_control_case_id": "v9-f2-p03-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "[A]",
+        "defect_rendered_inventory": ["(A)"],
+        "control_rendered_inventory": ["[A]"],
+        "nonrendered_trap": "alternate brackets"
+      },
+      "reason": "[A] and (A) are different rendered labels under the exact sealed contract; the referenced [A] is absent.",
+      "paired_control_check": "The exact [A] inventory control is TN.",
+      "recommended_fix_boundary": "Perform exact label existence before any punctuation canonicalization; do not collapse square brackets and parentheses."
+    },
+    {
+      "case_id": "v9-f2-p04-defect",
+      "paired_control_case_id": "v9-f2-p04-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "Ａ",
+        "defect_rendered_inventory": ["A"],
+        "control_rendered_inventory": ["Ａ"],
+        "nonrendered_trap": "fullwidth versus ASCII Latin"
+      },
+      "reason": "The key point references fullwidth Ａ, while only ASCII A is rendered.",
+      "paired_control_check": "The control renders the exact fullwidth label and is TN.",
+      "recommended_fix_boundary": "Preserve code-point identity for rendered-label existence; avoid NFKC width collapse in the defect decision."
+    },
+    {
+      "case_id": "v9-f2-p05-defect",
+      "paired_control_case_id": "v9-f2-p05-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "Ⅰ",
+        "defect_rendered_inventory": ["I"],
+        "control_rendered_inventory": ["Ⅰ"],
+        "nonrendered_trap": "Roman numeral glyph versus Latin I"
+      },
+      "reason": "Roman numeral Ⅰ is not the rendered Latin letter I; the exact reference is missing.",
+      "paired_control_check": "Rendering Ⅰ exactly yields the TN control.",
+      "recommended_fix_boundary": "Do not compatibility-normalize Roman numeral glyphs into Latin letters for exact existence checks."
+    },
+    {
+      "case_id": "v9-f2-p06-defect",
+      "paired_control_case_id": "v9-f2-p06-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "⑴",
+        "defect_rendered_inventory": ["①"],
+        "control_rendered_inventory": ["⑴"],
+        "nonrendered_trap": "parenthesized digit versus circled digit"
+      },
+      "reason": "The leading reference is ⑴, but the student surface contains only ①.",
+      "paired_control_check": "The exact ⑴ control is TN.",
+      "recommended_fix_boundary": "Keep distinct enclosed-number forms distinct during rendered-label comparison."
+    },
+    {
+      "case_id": "v9-f2-p07-defect",
+      "paired_control_case_id": "v9-f2-p07-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "Ⓐ",
+        "defect_rendered_inventory": ["ⓐ"],
+        "control_rendered_inventory": ["Ⓐ"],
+        "nonrendered_trap": "circled uppercase versus circled lowercase"
+      },
+      "reason": "Ⓐ is referenced, while only lowercase ⓐ is rendered; case is structural in the label system.",
+      "paired_control_check": "The exact uppercase circled label is TN in the control.",
+      "recommended_fix_boundary": "Avoid case-folding enclosed-alphanumeric labels before exact membership is established."
+    },
+    {
+      "case_id": "v9-f2-p08-defect",
+      "paired_control_case_id": "v9-f2-p08-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "③",
+        "defect_rendered_inventory": ["³"],
+        "control_rendered_inventory": ["③"],
+        "nonrendered_trap": "superscript decoration"
+      },
+      "reason": "A superscript ³ does not render the referenced circled label ③.",
+      "paired_control_check": "The control renders ③ and is TN.",
+      "recommended_fix_boundary": "Require exact rendered-token membership and keep superscripts distinct from circled labels."
+    },
+    {
+      "case_id": "v9-f2-p10-defect",
+      "paired_control_case_id": "v9-f2-p10-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "【나】",
+        "defect_rendered_inventory": ["[나]"],
+        "control_rendered_inventory": ["【나】"],
+        "nonrendered_trap": "CJK lenticular versus ASCII square brackets"
+      },
+      "reason": "The exact 【나】 reference is absent when the surface renders [나].",
+      "paired_control_check": "The 【나】 control is TN.",
+      "recommended_fix_boundary": "Do not canonicalize visibly different bracket families into one label for ghost-reference detection."
+    },
+    {
+      "case_id": "v9-f2-p11-defect",
+      "paired_control_case_id": "v9-f2-p11-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "(B)",
+        "defect_rendered_inventory": ["（B）"],
+        "control_rendered_inventory": ["(B)"],
+        "nonrendered_trap": "fullwidth parentheses"
+      },
+      "reason": "ASCII (B) is referenced, but only fullwidth （B） is rendered.",
+      "paired_control_check": "The exact ASCII-parenthesis label is TN in the control.",
+      "recommended_fix_boundary": "Apply exact membership before width normalization and retain the visible delimiter distinction."
+    },
+    {
+      "case_id": "v9-f2-p12-defect",
+      "paired_control_case_id": "v9-f2-p12-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "i.",
+        "defect_rendered_inventory": [],
+        "control_rendered_inventory": ["i."],
+        "nonrendered_trap": "HTML italic tag name"
+      },
+      "reason": "The key point starts with the list label i., but italic markup contributes no visible i. token.",
+      "paired_control_check": "The control visibly renders i. and is TN.",
+      "recommended_fix_boundary": "Recognize the leading dotted-lowercase reference and compare only against rendered labels, including an empty inventory."
+    },
+    {
+      "case_id": "v9-f2-p13-defect",
+      "paired_control_case_id": "v9-f2-p13-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "④",
+        "defect_rendered_inventory": [],
+        "control_rendered_inventory": ["④"],
+        "nonrendered_trap": "stripped HTML comment"
+      },
+      "reason": "④ appears only in a non-rendered comment, so the student-visible inventory does not contain the referenced label.",
+      "paired_control_check": "The visible ④ control is TN.",
+      "recommended_fix_boundary": "Treat an empty rendered inventory as decisive for a recognized leading reference and ignore comments."
+    },
+    {
+      "case_id": "v9-f2-p14-defect",
+      "paired_control_case_id": "v9-f2-p14-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "[K]",
+        "defect_rendered_inventory": [],
+        "control_rendered_inventory": ["[K]"],
+        "nonrendered_trap": "data-label metadata"
+      },
+      "reason": "A data-label attribute does not place [K] on the rendered student surface.",
+      "paired_control_check": "The control visibly renders [K] and is TN.",
+      "recommended_fix_boundary": "Base existence solely on the mapped rendered-label inventory; do not count metadata attributes."
+    },
+    {
+      "case_id": "v9-f2-p15-defect",
+      "paired_control_case_id": "v9-f2-p15-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "V.",
+        "defect_rendered_inventory": [],
+        "control_rendered_inventory": ["V."],
+        "nonrendered_trap": "CSS class metadata"
+      },
+      "reason": "The CSS class V is invisible and does not satisfy the visible V. reference.",
+      "paired_control_check": "The control renders V. and is TN.",
+      "recommended_fix_boundary": "Recognize dotted Roman/Latin list references and test the rendered inventory even when empty; exclude class metadata."
+    },
+    {
+      "case_id": "v9-f2-p16-defect",
+      "paired_control_case_id": "v9-f2-p16-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "〈C〉",
+        "defect_rendered_inventory": [],
+        "control_rendered_inventory": ["〈C〉"],
+        "nonrendered_trap": "HTML element name removal"
+      },
+      "reason": "The tag-like source is stripped, leaving no visible 〈C〉 label for the key-point reference.",
+      "paired_control_check": "A literal rendered 〈C〉 is TN in the control.",
+      "recommended_fix_boundary": "Use the rendered inventory rather than raw tag names and support the declared leading-label syntax literally."
+    },
+    {
+      "case_id": "v9-f2-p17-defect",
+      "paired_control_case_id": "v9-f2-p17-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "2)",
+        "defect_rendered_inventory": ["2."],
+        "control_rendered_inventory": ["2)"],
+        "nonrendered_trap": "dotted versus parenthesized list number"
+      },
+      "reason": "The key point references 2), but the rendered marker is 2.; punctuation is part of the label.",
+      "paired_control_check": "The exact 2) control is TN.",
+      "recommended_fix_boundary": "Compare the full leading marker, including its delimiter, before any list-style canonicalization."
+    },
+    {
+      "case_id": "v9-f2-p18-defect",
+      "paired_control_case_id": "v9-f2-p18-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "[X–1]",
+        "defect_rendered_inventory": ["[X-1]"],
+        "control_rendered_inventory": ["[X–1]"],
+        "nonrendered_trap": "en dash versus ASCII hyphen"
+      },
+      "reason": "[X–1] with an en dash is not present when [X-1] with a hyphen is rendered.",
+      "paired_control_check": "The exact en-dash label is TN in the control.",
+      "recommended_fix_boundary": "Preserve punctuation code points for rendered-label identity rather than dash-folding them."
+    },
+    {
+      "case_id": "v9-f2-p19-defect",
+      "paired_control_case_id": "v9-f2-p19-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "Α",
+        "defect_rendered_inventory": ["A"],
+        "control_rendered_inventory": ["Α"],
+        "nonrendered_trap": "Greek Alpha versus Latin A"
+      },
+      "reason": "Greek Α is referenced but only the visually similar Latin A is rendered.",
+      "paired_control_check": "The exact Greek label is TN in the control.",
+      "recommended_fix_boundary": "Do not confusable-fold distinct scripts for exact rendered-label existence."
+    },
+    {
+      "case_id": "v9-f2-p20-defect",
+      "paired_control_case_id": "v9-f2-p20-normal",
+      "family_id": "F2_GRAMMAR_RENDERED_LABEL_REFERENCE",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "reference": "1️⃣",
+        "defect_rendered_inventory": ["1."],
+        "control_rendered_inventory": ["1️⃣"],
+        "nonrendered_trap": "keycap sequence versus dotted digit"
+      },
+      "reason": "The keycap sequence 1️⃣ is absent from a surface that renders only 1.",
+      "paired_control_check": "The exact keycap marker is TN in the control.",
+      "recommended_fix_boundary": "Compare complete grapheme sequences exactly and do not reduce keycaps to their base digit."
+    },
+
+    {
+      "case_id": "v9-f3-p03-normal",
+      "paired_control_case_id": "v9-f3-p03-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["①", "②", "③"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "②"
+      },
+      "reason": "All three circled numerals lead their own normal blocks, satisfying the generic oracle, but production explicitly reports that SENTENCE_ORDER labels must be (A)/(B)/(C).",
+      "paired_control_check": "The defect control has only two leading blocks and is TP, so the generic contrast itself remains sound.",
+      "recommended_fix_boundary": "Do not broaden production solely for this row. First decide and document whether SENTENCE_ORDER is contractually fixed to (A)/(B)/(C); only a product-schema change should authorize alternate labels."
+    },
+    {
+      "case_id": "v9-f3-p04-normal",
+      "paired_control_case_id": "v9-f3-p04-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["I.", "II.", "III."],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "II."
+      },
+      "reason": "The Roman-numbered blocks are structurally complete under the sealed generic contract, while the emitted product error enforces a different exact label schema.",
+      "paired_control_check": "The control omits the II. leading block and is correctly caught through the two-paragraph structure.",
+      "recommended_fix_boundary": "Keep the (A)/(B)/(C) check unless product requirements explicitly add Roman-numbered order blocks; otherwise scope the holdout expectation to the product schema."
+    },
+    {
+      "case_id": "v9-f3-p05-normal",
+      "paired_control_case_id": "v9-f3-p05-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["(가)", "(나)", "(다)"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "(나)"
+      },
+      "reason": "The Korean labels introduce three valid generic blocks, but they do not meet the product's explicitly emitted (A)/(B)/(C) format requirement.",
+      "paired_control_check": "The (나)-missing control has two blocks and is TP.",
+      "recommended_fix_boundary": "Treat localization of the label schema as a product decision; do not silently accept arbitrary label alphabets in the existing validator."
+    },
+    {
+      "case_id": "v9-f3-p07-normal",
+      "paired_control_case_id": "v9-f3-p07-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["{1}", "{2}", "{3}"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "{3}"
+      },
+      "reason": "Brace-numbered blocks satisfy the generic leading-position rule but conflict with the product's exact sentence-order label contract.",
+      "paired_control_check": "The control's quoted {3} is non-structural and the wrapper correctly sees only two paragraphs.",
+      "recommended_fix_boundary": "Require an explicit product-format expansion before supporting brace labels; if expanded, configure an allowlisted schema rather than accepting any token."
+    },
+    {
+      "case_id": "v9-f3-p10-normal",
+      "paired_control_case_id": "v9-f3-p10-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["㉠", "㉡", "㉢"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "㉡"
+      },
+      "reason": "The circled Hangul markers are proper leading delimiters generically, yet production's error messages establish the narrower (A)/(B)/(C) product surface.",
+      "paired_control_check": "The defect has no leading ㉡ block and is TP.",
+      "recommended_fix_boundary": "Do not interpret this FP as evidence that broad label acceptance is correct; resolve the product localization contract first."
+    },
+    {
+      "case_id": "v9-f3-p11-normal",
+      "paired_control_case_id": "v9-f3-p11-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["[Ⅰ]", "[Ⅱ]", "[Ⅲ]"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "[Ⅰ]"
+      },
+      "reason": "Bracketed Roman markers form three generic blocks, but the product validator explicitly rejects their format in favor of (A)/(B)/(C).",
+      "paired_control_check": "The [Ⅰ]-missing control has only two leading blocks and is TP.",
+      "recommended_fix_boundary": "Keep product schema enforcement unless requirements add a bracketed-Roman variant; then implement the variant as an explicit configured format."
+    },
+    {
+      "case_id": "v9-f3-p12-normal",
+      "paired_control_case_id": "v9-f3-p12-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["(1)", "(2)", "(3)"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "(2)"
+      },
+      "reason": "The numbered blocks are structurally valid in the generic oracle, but they are a different exact format from the product's declared letter labels.",
+      "paired_control_check": "The mid-sentence (2) in the defect is not a delimiter, and the two-block control is TP.",
+      "recommended_fix_boundary": "Do not generalize to numeric labels without a product contract change; preserve explicit schema-level validation."
+    },
+    {
+      "case_id": "v9-f3-p13-normal",
+      "paired_control_case_id": "v9-f3-p13-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["ⓐ", "ⓑ", "ⓒ"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "ⓒ"
+      },
+      "reason": "Three circled lowercase letters meet the generic block rule, while production normalizes/reports them as non-(A)/(B)/(C) labels and rejects the exact format.",
+      "paired_control_check": "The defect's inline-code ⓒ does not create a third block and is TP.",
+      "recommended_fix_boundary": "Do not fix by unconstrained normalization or broadening; only add a circled-letter schema if the product explicitly supports it."
+    },
+    {
+      "case_id": "v9-f3-p14-normal",
+      "paired_control_case_id": "v9-f3-p14-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["가.", "나.", "다."],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "나."
+      },
+      "reason": "Dotted Hangul labels delimit three blocks generically but violate the product's emitted exact label requirement.",
+      "paired_control_check": "The defect mentions 나. lexically but has only two leading blocks and is TP.",
+      "recommended_fix_boundary": "Decide localization at the product contract layer; avoid changing structural validation until an allowed localized label set is specified."
+    },
+    {
+      "case_id": "v9-f3-p17-normal",
+      "paired_control_case_id": "v9-f3-p17-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["[첫째]", "[둘째]", "[셋째]"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "[둘째]"
+      },
+      "reason": "The word-based ordinal labels correctly head three generic blocks, but they are outside the validator's explicit product format.",
+      "paired_control_check": "The quoted [둘째] in the defect is non-structural; its two-block control is TP.",
+      "recommended_fix_boundary": "Retain the current product schema unless word-based localized labels are formally added; then allow only that declared variant."
+    },
+    {
+      "case_id": "v9-f3-p18-normal",
+      "paired_control_case_id": "v9-f3-p18-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["(i)", "(ii)", "(iii)"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "(ii)"
+      },
+      "reason": "Lowercase Roman blocks satisfy the sealed generic structure; production's case normalization and label errors reflect its narrower exact format.",
+      "paired_control_check": "The defect uses (ii) only mid-sentence and is correctly caught as two paragraphs.",
+      "recommended_fix_boundary": "Do not treat case-folded Roman labels as product-valid absent an explicit schema revision."
+    },
+    {
+      "case_id": "v9-f3-p19-normal",
+      "paired_control_case_id": "v9-f3-p19-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["α)", "β)", "γ)"],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "β)"
+      },
+      "reason": "Greek-letter markers provide three generic leading blocks, but production explicitly demands the Latin parenthesized sequence.",
+      "paired_control_check": "The literal-string β) in the defect is non-structural and the control is TP.",
+      "recommended_fix_boundary": "Keep alternate scripts out unless the product contract enumerates them; avoid broad confusable or case normalization."
+    },
+    {
+      "case_id": "v9-f3-p20-normal",
+      "paired_control_case_id": "v9-f3-p20-defect",
+      "family_id": "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION",
+      "source_classification": "FP",
+      "adjudication": "PRODUCT_CONTRACT_SCOPE_MISMATCH",
+      "evidence": {
+        "generic_labels": ["Q1.", "Q2.", "Q3."],
+        "production_required_labels": ["(A)", "(B)", "(C)"],
+        "paired_control_missing_label": "Q2."
+      },
+      "reason": "Q-number labels are valid generic line leaders, but the product validator is entitled to reject them if SENTENCE_ORDER is fixed to (A)/(B)/(C).",
+      "paired_control_check": "The defect's Q2. appears only inside a string and the resulting two-block surface is TP.",
+      "recommended_fix_boundary": "Do not broaden to arbitrary identifier-like labels; either preserve the exact product schema or add a separately specified Q-label variant."
+    },
+
+    {
+      "case_id": "v9-f4-p02-defect",
+      "paired_control_case_id": "v9-f4-p02-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "Including three adapters, e.g., a USB-C coupler.",
+        "control_candidate": "The kit includes three adapters, e.g., a USB-C coupler.",
+        "structural_difference": "participial Including versus finite includes",
+        "wrapper_differential": "None; defect and control emit the same non-target short/thin/imbalance codes in all positions."
+      },
+      "reason": "Including heads a participial phrase and supplies no independent finite predicate; the abbreviation and final period do not complete it.",
+      "paired_control_check": "The control has subject The kit plus finite includes and is TN.",
+      "recommended_fix_boundary": "Add a narrow participial-opener fragment certificate with a finite-matrix guard; do not rely on punctuation or wrapper length diagnostics."
+    },
+    {
+      "case_id": "v9-f4-p03-defect",
+      "paired_control_case_id": "v9-f4-p03-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "“Because the curator whispered, ‘Leave the gate open.’”",
+        "control_candidate": "“Leave the gate open,” the curator whispered.",
+        "structural_difference": "the whole defect is a because-clause; the control has an independent reporting clause",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "The outer Because subordinates the only finite clause; quoted imperative punctuation does not create a matrix clause outside it.",
+      "paired_control_check": "The control's reporting clause the curator whispered is independent and is TN.",
+      "recommended_fix_boundary": "Teach the fragment helper to track outer subordinators across quotations while exempting independent reporting-clause constructions."
+    },
+    {
+      "case_id": "v9-f4-p04-defect",
+      "paired_control_case_id": "v9-f4-p04-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "Why the signal faded?",
+        "control_candidate": "Why did the signal fade?",
+        "structural_difference": "embedded-question order versus auxiliary inversion",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "The non-inverted why-clause has embedded-interrogative syntax and lacks a matrix clause despite its question mark.",
+      "paired_control_check": "Auxiliary inversion in the control creates a direct question and is TN.",
+      "recommended_fix_boundary": "Add a narrow wh-interrogative order check paired with an inversion exemption; do not classify from terminal punctuation alone."
+    },
+    {
+      "case_id": "v9-f4-p05-defect",
+      "paired_control_case_id": "v9-f4-p05-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "To finish before dusk.",
+        "control_candidate": "To finish before dusk, the crew shortened the route.",
+        "structural_difference": "standalone purpose infinitive versus infinitive attached to a finite matrix clause",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "A standalone purpose infinitive has no finite independent spine.",
+      "paired_control_check": "The control adds the finite matrix clause the crew shortened the route and is TN.",
+      "recommended_fix_boundary": "Detect sentence-initial infinitival phrases only when no later finite matrix clause is present."
+    },
+    {
+      "case_id": "v9-f4-p06-defect",
+      "paired_control_case_id": "v9-f4-p06-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "The courier who reached the desk first.",
+        "control_candidate": "The courier who reached the desk first signed the log.",
+        "structural_difference": "noun phrase plus relative clause versus finite matrix predicate signed",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "Reached is inside the who-relative clause; the head noun phrase has no matrix predicate.",
+      "paired_control_check": "The control adds signed outside the relative clause and is TN.",
+      "recommended_fix_boundary": "Add a relative-clause noun-phrase pattern with an explicit search for a post-relative matrix predicate."
+    },
+    {
+      "case_id": "v9-f4-p08-defect",
+      "paired_control_case_id": "v9-f4-p08-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "The lights dimming; the audience silent.",
+        "control_candidate": "The lights dimmed; the audience fell silent.",
+        "structural_difference": "nonfinite/verbless halves versus two finite clauses",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "Dimming is nonfinite and the audience silent is verbless; a semicolon cannot supply either missing predicate.",
+      "paired_control_check": "Dimmed and fell are finite predicates in the TN control.",
+      "recommended_fix_boundary": "Require a finite spine on at least one purported independent semicolon segment and guard against valid finite coordination."
+    },
+    {
+      "case_id": "v9-f4-p09-defect",
+      "paired_control_case_id": "v9-f4-p09-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "Because only one task remained: locking the archive.",
+        "control_candidate": "Only one task remained: lock the archive.",
+        "structural_difference": "outer Because subordinates remained; the colon complement is nonfinite",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "Because subordinates the only finite clause, and the gerund phrase after the colon does not restore independence.",
+      "paired_control_check": "Without Because, Only one task remained is an independent TN clause.",
+      "recommended_fix_boundary": "Track an initial subordinator through colon supplements and require a genuine matrix completion."
+    },
+    {
+      "case_id": "v9-f4-p10-defect",
+      "paired_control_case_id": "v9-f4-p10-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "The final train—already delayed—at midnight.",
+        "control_candidate": "The final train—already delayed—arrived at midnight.",
+        "structural_difference": "noun phrase plus modifiers versus matrix predicate arrived",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "The dashed parenthetical and final prepositional phrase modify the train but provide no finite predicate.",
+      "paired_control_check": "Arrived supplies the missing matrix predicate in the TN control.",
+      "recommended_fix_boundary": "Strip or bracket parentheticals before testing for a finite matrix predicate, with a control for verbs outside the dash."
+    },
+    {
+      "case_id": "v9-f4-p12-defect",
+      "paired_control_case_id": "v9-f4-p12-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "REDUNDANT_WRAPPER_EXPECTED",
+      "evidence": {
+        "defect_candidate": "Whether Mina asked, “Are we early?”",
+        "control_candidate": "“Are we early?” Mina asked.",
+        "structural_difference": "outer Whether subordination versus independent reporting clause",
+        "wrapper_differential": "sentence-order-paragraph-too-short is emitted for the defect in positions (A), (B), and (C), and is absent for the paired control in all three positions; thin/imbalance codes are shared."
+      },
+      "reason": "The target fragment helper misses a genuine whether-clause fragment, but the sealed results prove a separate paragraph-too-short wrapper issue on the defect in every probed position and not on its paired control.",
+      "paired_control_check": "The normal reporting-clause surface is TN for the target and lacks the differential paragraph-too-short issue in A/B/C.",
+      "recommended_fix_boundary": "Do not count this row as requiring wrapper-level rejection expansion. Preserve it as a helper-specific coverage gap; add a whether-clause certificate only if callers or diagnostics require the target fragment code itself."
+    },
+    {
+      "case_id": "v9-f4-p13-defect",
+      "paired_control_case_id": "v9-f4-p13-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "A sign reading, “Do not enter.”",
+        "control_candidate": "The sign read, “Do not enter.”",
+        "structural_difference": "participial reading versus finite read",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "Reading is a participle modifying sign; the quoted command does not supply a matrix predicate for the outer noun phrase.",
+      "paired_control_check": "The sign read is a finite independent reporting clause and is TN.",
+      "recommended_fix_boundary": "Differentiate participial noun-phrase frames from finite reporting clauses before accepting quotation punctuation as completion."
+    },
+    {
+      "case_id": "v9-f4-p14-defect",
+      "paired_control_case_id": "v9-f4-p14-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "Whether the backup battery can power the lift?",
+        "control_candidate": "Can the backup battery power the lift?",
+        "structural_difference": "embedded whether order versus modal-subject inversion",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "Whether introduces an embedded interrogative that still needs a matrix clause; a question mark does not turn it into a direct question.",
+      "paired_control_check": "Modal inversion creates a direct interrogative in the TN control.",
+      "recommended_fix_boundary": "Add a whether/if embedded-interrogative certificate with a guard for direct auxiliary inversion and for an actual matrix clause."
+    },
+    {
+      "case_id": "v9-f4-p15-defect",
+      "paired_control_case_id": "v9-f4-p15-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "To apologize now.",
+        "control_candidate": "To apologize now would help.",
+        "structural_difference": "bare infinitival phrase versus infinitival subject licensed by finite would help",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "The infinitive has no finite predicate in the defect.",
+      "paired_control_check": "Would help supplies a finite matrix predicate in the TN control.",
+      "recommended_fix_boundary": "Flag standalone to-infinitives only after checking for a following finite predicate that licenses an infinitival subject."
+    },
+    {
+      "case_id": "v9-f4-p16-defect",
+      "paired_control_case_id": "v9-f4-p16-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "To verify the total before publication.",
+        "control_candidate": "The analyst paused to verify the total.",
+        "structural_difference": "unattached infinitival phrase versus finite paused with purpose infinitive",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "The purpose infinitive is unattached and contains no independent finite clause.",
+      "paired_control_check": "Paused supplies the control's independent spine and the control is TN.",
+      "recommended_fix_boundary": "Cover unattached purpose infinitives while exempting infinitives governed by a preceding finite matrix predicate."
+    },
+    {
+      "case_id": "v9-f4-p17-defect",
+      "paired_control_case_id": "v9-f4-p17-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "The editor who found the error before publication.",
+        "control_candidate": "The editor who found the error corrected it.",
+        "structural_difference": "relative-clause noun phrase versus outside matrix predicate corrected",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "Found belongs to the relative clause; the editor noun phrase has no matrix predicate.",
+      "paired_control_check": "Corrected is outside the relative clause in the TN control.",
+      "recommended_fix_boundary": "Recognize noun phrases closed by relative material when no matrix predicate follows; preserve the post-relative finite-verb control."
+    },
+    {
+      "case_id": "v9-f4-p18-defect",
+      "paired_control_case_id": "v9-f4-p18-normal",
+      "family_id": "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY",
+      "source_classification": "FN",
+      "adjudication": "CONFIRMED_ORACLE",
+      "evidence": {
+        "defect_candidate": "What the witness remembered before dawn.",
+        "control_candidate": "What the witness remembered changed the timeline.",
+        "structural_difference": "standalone fused-relative nominal versus fused-relative subject plus matrix predicate changed",
+        "wrapper_differential": "None; paired non-target wrapper codes are identical."
+      },
+      "reason": "The what-clause is a nominal constituent standing alone; remembered is internal and there is no matrix predicate.",
+      "paired_control_check": "Changed licenses the fused relative as its subject in the TN control.",
+      "recommended_fix_boundary": "Add a fused-relative nominal check that searches beyond the embedded predicate for a genuine matrix predicate."
+    }
+  ]
+}

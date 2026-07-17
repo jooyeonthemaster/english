@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'overwhelms the beginner's mind completely'는 지문의 핵심어(beginner's mind)를 재활용한 미끼. 그러나 seasoned masters는 beginner's mind로 작동하는 주체가 아니며, 'mistakenly'가 요구하는 것은 필터가 자기 기능(본질/비본질 분류)에서 저지르는 오류다. 필터가 초심을 압도한다는 것은 분류 오류 서술이 아니므로 논리 부적합. 주제어 노출 때문에 순간적 유인력은 있음."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'attempts to absorb every irrelevant detail'은 초보자의 행동(absorb every detail)을 필터에 전가한 것. 지문에서 모든 디테일 흡수는 novel problem 상황에서 오히려 권장되는 태도이며, 필터가 '흡수를 시도한다'는 행위주 결합도 어색. 대가의 실수를 낳는 오류 경로가 아님."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "필터의 정의된 기능은 essential과 irrelevant의 분리. 그 필터의 오작동은 곧 본질적 요소를 비본질로 오판해 버리는 것이며, 이것이 novel problem에서 익숙한 도구 의존이 실패한다는 지문 전체 논지와 정확히 맞물려 seasoned masters의 실수를 설명한다. 유일하게 논리적으로 성립. 결합(seam) 결함 하나: 'mistakenly inappropriately dismisses'로 부사가 중복 적층되어 문체상 잉여이나 비문은 아님."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'forces them to abandon their prior skills' — 기존 기술을 내려놓는 것은 지문이 novel problem에 대해 권장하는 방향(assume nothing)에 가깝고, 대가의 실수 원인으로 성립하지 않음. 'them'의 지시 대상 결속도 느슨함."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'relies solely on familiar martial arts tools'는 첫 문장(familiar tools 의존)을 메아리치는 강한 미끼. 그러나 주어가 'that filter'인데 필터가 도구에 의존한다는 결합은 범주 불일치(도구에 의존하는 것은 사람이고 필터 자체가 경험의 산물)이며, 필터의 분류 오류를 서술하지 못함. 훑어 읽는 수험생이 끌릴 수 있으나 seam에서 탈락."
+    }
+  ],
+  "note": "빈칸 주어 'that filter'의 정의된 기능(essential/irrelevant 분리)이 지배 단서. 필터의 오류 = 본질을 비본질로 오판하여 배제하는 것이므로 3번이 유일 정답. 매력 오답은 1(핵심어 재활용)과 5(첫 문장 메아리)이나 둘 다 필터의 기능 오류를 서술하지 못해 탈락. craft 결함: 3번 삽입 시 'mistakenly inappropriately'의 부사 중복이 어색하며, 이는 문항 완성도 감점 요인(정답 판별에는 지장 없음)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P108",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'no two performances'는 부정 한정사 no가 붙은 복수 명사구이므로 복수 동사 'are'와 수 일치 정문. 'identical'은 상호 술어로 복수 주어와 자연 결합('어떤 두 공연도 동일하지 않다'). 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "전치사+관계대명사 'without which'의 선행사는 직전 삽입구 'making it present here and now'(=음악을 현재화하는 행위). which는 without의 목적어로 격 기능을 충족하고, 관계절 내부 'it will not be music at all'은 완전한 절. '그 행위 없이는 그것이 음악이 아니게 된다'는 논리도 성립. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 장거리 삽입구(making it present..., without which...)를 건너뛴 'the necessity (of present-ing music)'로 단수. 따라서 단수 조동사 'does not sit'이 정확. 삽입구 내 복수 명사에 의한 근접 일치 함정을 배제하면 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "지배 구조는 'it would seem logical to acknowledge this difference and (to) give prominence...'. 등위접속사 and의 병렬 시작점이 to부정사 'to acknowledge'이므로 둘째 등위항은 '(to) give'여야 한다. 대안 해석 탐색: (i) 분사구문 — 가주어 it + logical 보어 구조에서 의미상 주어가 성립하지 않아 불가, (ii) 동명사 병렬 — 첫 항이 동명사가 아니므로 불가. 'giving'은 어떤 분석으로도 정문이 되지 않는다. 어법상 틀린 밑줄."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the emphasis is still on pupils absorbing factual information'에서 absorbing은 전치사 on의 목적어인 동명사이고 pupils는 그 의미상 주어(대격 주어 동명사 구문, 표준 용법). 대안으로 pupils를 on의 목적어, absorbing을 현재분사 후치수식으로 읽어도 정문. 두 분석 모두 성립하므로 옳다."
+    }
+  ],
+  "note": "정답 후보는 (D) 단독. (A)(C)는 수일치(장거리 삽입 함정), (B)는 전치사+관계사, (E)는 동명사 의미상 주어로 모두 형식적으로 정문임을 검증. 병렬 위반인 (D)는 분사구문·동명사 병렬 등 어떤 대안 해석으로도 구제 불가. 복수 정답 여지 없음."
+}

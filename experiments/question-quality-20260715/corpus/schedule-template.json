@@ -1,0 +1,5687 @@
+{
+  "activeUiTypeCount": 25,
+  "dev": {
+    "cells": [
+      {
+        "cellId": "dev:BLANK_INFERENCE:STANDARD:BASIC",
+        "contentHash": "33e8b1f6b7a4458d08a25083a4e23d98bce293817d8d60df812800a82566e8a1",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqespvyu001cmm1wqpn5spu6",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "dev:BLANK_INFERENCE:STANDARD:INTERMEDIATE",
+        "contentHash": "9f38946debe0e2593ddbc83fe8c349fb8876aa1854b81542bf5c33452d9ded01",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9ey0013l204nnoouqbe",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "dev:BLANK_INFERENCE:STANDARD:KILLER",
+        "contentHash": "872b9fa8c3ddbc45b7d4cabcb92f92eec991517a0e1a34740dbb0b3e10303863",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqjjnqp6000wkz04f6gbsna2",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "dev:BLANK_INFERENCE:PREMIUM:BASIC",
+        "contentHash": "413dc3acd3894ce9f84dc4188a727bff4cd43544e69fe015ed980231b9407bdb",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20171017-q21",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "dev:BLANK_INFERENCE:PREMIUM:INTERMEDIATE",
+        "contentHash": "5e2109ca40e6f284ed84add0f86befe7d09b7d1bfd4957b1eabb1e06b6bae330",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20241015-q40",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "dev:BLANK_INFERENCE:PREMIUM:KILLER",
+        "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5hc1u3000fmmsgd1dr5yp5",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "dev:GRAMMAR_ERROR:STANDARD:BASIC",
+        "contentHash": "cdab92872c70905307c3a667afec8593e0bb14183f58c07beb9857c91f88f5b0",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2024_SN_5086091-q24",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "dev:GRAMMAR_ERROR:STANDARD:INTERMEDIATE",
+        "contentHash": "c6a3cd3a1b254542f979f299598fc2165c1fa66ad089280940d1aa9da7a15727",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzxhf000ebmmykkcjht729",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "dev:GRAMMAR_ERROR:STANDARD:KILLER",
+        "contentHash": "9cfb3a8de41605d76a83ed142da5b0a81e094bdbcc50cf516fc6246d3e6981d5",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20201027-q21",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "dev:GRAMMAR_ERROR:PREMIUM:BASIC",
+        "contentHash": "8c6f7a971cb2b29afddf3e5b02a6b25521fb6298dddd50c1d8159660808ebb64",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpqvdzht0001mmu80piqom02",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "dev:GRAMMAR_ERROR:PREMIUM:INTERMEDIATE",
+        "contentHash": "d3846b8cf6e42ab792ef4dbcfc2622c4fc1f0fc53760ea7a0b50d32e21e4da80",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20230906-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "dev:GRAMMAR_ERROR:PREMIUM:KILLER",
+        "contentHash": "0af5c2b9eda3d6693c84074336147a991f3e3539c79afe2a1a25343ff7c83632",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqkuogfd0001jd0b65526r18",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CHOICE_COMBO:STANDARD:BASIC",
+        "contentHash": "337a3c3bec9daca7f528979b929289f02454151687a52ec026f5abe170c088da",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnwv10r00brmmykiusnyi5u",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CHOICE_COMBO:STANDARD:INTERMEDIATE",
+        "contentHash": "7de0d274124be149a26f8bf62c29e24dca4138dfe4953b9125cb74907d0bab6b",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20190604-q24",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CHOICE_COMBO:STANDARD:KILLER",
+        "contentHash": "9ec41d9c336bc3a91297fb8e8aeda74dfbcffe2ec9df7b6d8f94ef1522320271",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20251014-q23",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CHOICE_COMBO:PREMIUM:BASIC",
+        "contentHash": "ad68cb28ba66384d3f393d305eaaab93d67926717bf4f5db295bdf586d7fe1a8",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpcjkl72000bmmekh9qerp2m",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CHOICE_COMBO:PREMIUM:INTERMEDIATE",
+        "contentHash": "30452628bb82d4e4fb937bec78f2b66e6a951fa8fc4b2ff1e7c6cb8ba70d3041",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2024_09_5085155-q40",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CHOICE_COMBO:PREMIUM:KILLER",
+        "contentHash": "c1bbf1e33510cf6251a9475497dbdf359d299effa7dead0c48f92a89f0a674c1",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpczyrsu000emmfkzbyivz87",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "dev:VOCAB_CHOICE:STANDARD:BASIC",
+        "contentHash": "90b4b7bd041bc4c2c3fae2ad7d4090311931cb74040edca2cc1b0dd1dfdebdef",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20230906-q23",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "dev:VOCAB_CHOICE:STANDARD:INTERMEDIATE",
+        "contentHash": "4ecad99feb9a97ed0719bba5b17cf5cc48537ed6dce95d70101d1e7107b65772",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2018_06_5013302-q21",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "dev:VOCAB_CHOICE:STANDARD:KILLER",
+        "contentHash": "46d8adcad5bb3e2872f46bb5de5252e70f45311c5e44318fe84309e12dd5821b",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_SN_5061633-q40",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "dev:VOCAB_CHOICE:PREMIUM:BASIC",
+        "contentHash": "f112a111b5b9fb4c5cc567943aa11bb42a1cd766ef80364c7b935e28d7e573c0",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_SN_5061633-q22",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "dev:VOCAB_CHOICE:PREMIUM:INTERMEDIATE",
+        "contentHash": "175d4de2810df43d6cf417011da4e7c41c83f494a3d140a9bd577aa775592d30",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20221012-q40",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "dev:VOCAB_CHOICE:PREMIUM:KILLER",
+        "contentHash": "b8970b1638bdd257490bd4a98c189c9034cdeb2ef7c845537e236678dccb81e4",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpcjkklg0007mmekwcm6abax",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "dev:SENTENCE_ORDER:STANDARD:BASIC",
+        "contentHash": "5ebbe160063f9cf00d0aab4cf2fe13a7d5e68abfcfe79ef5d8693315fff0109d",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_06_5049916-q40",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "dev:SENTENCE_ORDER:STANDARD:INTERMEDIATE",
+        "contentHash": "691198660ab2be3e0a41a50aa9dc04ea566bb80d872b20e0d9d534dc138cd3ea",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpbepm5s006bmmagu1g6yb7a",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "dev:SENTENCE_ORDER:STANDARD:KILLER",
+        "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnwuz3l00bnmmyk39jucvka",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "dev:SENTENCE_ORDER:PREMIUM:BASIC",
+        "contentHash": "dc41e90fb8ede2075f701df74b16e0bac497d5552977e5a219dc5246e584b0ff",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2027_06_5095396-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "dev:SENTENCE_ORDER:PREMIUM:INTERMEDIATE",
+        "contentHash": "344f925217cd0d3a6692455f1ca2ca676270c632f40d953e081abfaedb54dd3d",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20240904-q23",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "dev:SENTENCE_ORDER:PREMIUM:KILLER",
+        "contentHash": "ae482a9441221088112528fc5450dff45e632465566b2dced08add9ecf86138a",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpr7xftn0013mm3cad44usfx",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "dev:SENTENCE_INSERT:STANDARD:BASIC",
+        "contentHash": "b62b4b588fe50791fda9d7e89b93e87537bc3a4e2ff57bdf87861e8c8becb521",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzwb3o00ddmmyk13z8u5d0",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "dev:SENTENCE_INSERT:STANDARD:INTERMEDIATE",
+        "contentHash": "920b245f8ea7801f57bef019592a35233e0ef2e812718d7c6508ab58b9801a2b",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpyx7b260001jp04vjeholew",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "dev:SENTENCE_INSERT:STANDARD:KILLER",
+        "contentHash": "09a21271a58ffdc862a2862954c6508596c7d3c2bb019162d003c045b3de93d9",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2014_SN_3022251_B-q26",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "dev:SENTENCE_INSERT:PREMIUM:BASIC",
+        "contentHash": "3356e61661c5492499cd351a7433d8348e6c0265fa07ea3432ef8e5482b15930",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpwuhv4u001nmm1ch5ypzx9f",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "dev:SENTENCE_INSERT:PREMIUM:INTERMEDIATE",
+        "contentHash": "02821003dcfab2c22b79f729e54d2f5c39a57c320d7ef7a0096f7ce8c6171229",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2011_SN_3000996-q45",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "dev:SENTENCE_INSERT:PREMIUM:KILLER",
+        "contentHash": "c35a6bdd76af1ca4954f682c56ecd3f0fc7442c2bc1273a76084a54473b84164",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20140710_A-q20",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "dev:TOPIC:STANDARD:BASIC",
+        "contentHash": "8f21c16ccda142960c5a7b1abcc4403d666d9b0eb89a11a16e029a8deefddc5d",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpr52qe10003k40442ys37jt",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "dev:TOPIC:STANDARD:INTERMEDIATE",
+        "contentHash": "f450c0385502047f479fde899cc24a7fa9f7be42e70f8c3c8de7b61f4c640f24",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20260324-q26",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "dev:TOPIC:STANDARD:KILLER",
+        "contentHash": "a40a5bfa656122e27c1726d1d95c0e089653a4c5ad8f8c8395ced7a42435162b",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5hc0l8000dmmsgr6tozs5b",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "dev:TOPIC:PREMIUM:BASIC",
+        "contentHash": "a03260ea9005fb3aab697c27f29c3c6b5e763d05519144c49480bd6866f04339",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpr6wbbt0002mm3coikj9suy",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "dev:TOPIC:PREMIUM:INTERMEDIATE",
+        "contentHash": "cbe130e246644385a900620f1e0f2f97a6c6a741edea89c69950c1f47acc5c99",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9e5000zl2049ba7eosv",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "dev:TOPIC:PREMIUM:KILLER",
+        "contentHash": "0f1d60825696e14177dc1ac930373e64e7f950800698e95758666f827c96da9e",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20200916-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "dev:MAIN_IDEA:STANDARD:BASIC",
+        "contentHash": "a0b45651b3a93c205f42d4801d1db9f03de15bc19fa5183055f7e01a6b2458bc",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9dr000xl204fygq66tv",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "dev:MAIN_IDEA:STANDARD:INTERMEDIATE",
+        "contentHash": "0d5ec269b3f33bda901c607388b1763c813ab3dcc7cd817ee0b1b98ac4169030",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2012_SN_3001002-q34",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "dev:MAIN_IDEA:STANDARD:KILLER",
+        "contentHash": "b501039c33ded5331fb86951cb43f2c49c92cf084c89853606ca7e1e22d0d02e",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpvm7wwx0010mmbcwneeym36",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "dev:MAIN_IDEA:PREMIUM:BASIC",
+        "contentHash": "8feb42f9014fde247685a0735270ade7fcbd433f01b0d3951f85b55a55acf43f",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20140612-q19",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "dev:MAIN_IDEA:PREMIUM:INTERMEDIATE",
+        "contentHash": "84eae23dd627c2d87d3439b44519c463e0a51d9b5fc2cd603758f90740928039",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20190307-q25",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "dev:MAIN_IDEA:PREMIUM:KILLER",
+        "contentHash": "ea52a3eab92aae53efcb71cc2d14a6ea1eb3931afc61863fcf123161505761ae",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzw5sd00d9mmykdtoiyyb9",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "dev:TITLE:STANDARD:BASIC",
+        "contentHash": "718fe7ae7e688dd19bd3ef3e35dfceebaadde33755d573dff56cd77d189d7c92",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2006_SN_3000977-q44",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "dev:TITLE:STANDARD:INTERMEDIATE",
+        "contentHash": "59f433c2c42987b38e239cbeb8315a24c817f6472d94483de2027de67ba067e6",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq2410r40001jo04k2iz5yp1",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "dev:TITLE:STANDARD:KILLER",
+        "contentHash": "aa84aab3d1eb6c1eef1df34235cdadb5985d781e49223d260e6536341e426083",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2013_09_3011547-q40",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "dev:TITLE:PREMIUM:BASIC",
+        "contentHash": "6fef09a662f475563fe8b32701f93a95eb51c5559c4033707d7e3544b93188fa",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20180308-q30",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "dev:TITLE:PREMIUM:INTERMEDIATE",
+        "contentHash": "396213f817b8ef47f5d5d0fb4b229bfbc33c2d0dd2783cdb4404e5bb812610a2",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272tkj001qmmcsvh7zb296",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "dev:TITLE:PREMIUM:KILLER",
+        "contentHash": "bac707d4a6906eed222f287cdc522a73b5b4509702d523a9da53fa9e89f33c13",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqanec030005ic04e2e7rryn",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "dev:IMPLIED_MEANING:STANDARD:BASIC",
+        "contentHash": "bf5243f8c4a6ef65eb963e25daee7a6cf0f94153c773ea2b88b83e5eab7401ef",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzx9ra00e5mmykfthbdaj9",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "dev:IMPLIED_MEANING:STANDARD:INTERMEDIATE",
+        "contentHash": "a03260ea9005fb3aab697c27f29c3c6b5e763d05519144c49480bd6866f04339",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpr6wbbt0002mm3coikj9suy",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "dev:IMPLIED_MEANING:STANDARD:KILLER",
+        "contentHash": "5ebbe160063f9cf00d0aab4cf2fe13a7d5e68abfcfe79ef5d8693315fff0109d",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_06_5049916-q40",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "dev:IMPLIED_MEANING:PREMIUM:BASIC",
+        "contentHash": "7de0d274124be149a26f8bf62c29e24dca4138dfe4953b9125cb74907d0bab6b",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20190604-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "dev:IMPLIED_MEANING:PREMIUM:INTERMEDIATE",
+        "contentHash": "9f38946debe0e2593ddbc83fe8c349fb8876aa1854b81542bf5c33452d9ded01",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9ey0013l204nnoouqbe",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "dev:IMPLIED_MEANING:PREMIUM:KILLER",
+        "contentHash": "b501039c33ded5331fb86951cb43f2c49c92cf084c89853606ca7e1e22d0d02e",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpvm7wwx0010mmbcwneeym36",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "dev:REFERENCE:STANDARD:BASIC",
+        "contentHash": "e0953f8aae52b7e41e9e9f8b3eb4b1b567009b5120306ab5da112a4669af4072",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2025_09_5087695-q20",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "dev:REFERENCE:STANDARD:INTERMEDIATE",
+        "contentHash": "ee195b26d4185349bad5e777ad6b47ed455afd09c405674052cc4c1ce2937538",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20091117-q37",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "dev:REFERENCE:STANDARD:KILLER",
+        "contentHash": "e91ad1d1962172285ca6ef575c53559ce95fad60f89ed4a3381f9941c9ed0293",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272ubl001ummcsjq36tqew",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "dev:REFERENCE:PREMIUM:BASIC",
+        "contentHash": "73ae3025adc80fe8400230bded63df05c68651e67e756c9ea5d345b7431e989c",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpx1dv0o0001l404hw03gfmr",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "dev:REFERENCE:PREMIUM:INTERMEDIATE",
+        "contentHash": "6524c852cfcfc5598216afd9446ef87bee8c0eb55e4e1338592a380351c33358",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20131114-q30",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "dev:REFERENCE:PREMIUM:KILLER",
+        "contentHash": "a0b45651b3a93c205f42d4801d1db9f03de15bc19fa5183055f7e01a6b2458bc",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9dr000xl204fygq66tv",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "dev:CONTENT_MATCH:STANDARD:BASIC",
+        "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnwuz3l00bnmmyk39jucvka",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "dev:CONTENT_MATCH:STANDARD:INTERMEDIATE",
+        "contentHash": "cbe130e246644385a900620f1e0f2f97a6c6a741edea89c69950c1f47acc5c99",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9e5000zl2049ba7eosv",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "dev:CONTENT_MATCH:STANDARD:KILLER",
+        "contentHash": "ae482a9441221088112528fc5450dff45e632465566b2dced08add9ecf86138a",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpr7xftn0013mm3cad44usfx",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "dev:CONTENT_MATCH:PREMIUM:BASIC",
+        "contentHash": "33e8b1f6b7a4458d08a25083a4e23d98bce293817d8d60df812800a82566e8a1",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqespvyu001cmm1wqpn5spu6",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "dev:CONTENT_MATCH:PREMIUM:INTERMEDIATE",
+        "contentHash": "dc41e90fb8ede2075f701df74b16e0bac497d5552977e5a219dc5246e584b0ff",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2027_06_5095396-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "dev:CONTENT_MATCH:PREMIUM:KILLER",
+        "contentHash": "d3846b8cf6e42ab792ef4dbcfc2622c4fc1f0fc53760ea7a0b50d32e21e4da80",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20230906-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE_MC:STANDARD:BASIC",
+        "contentHash": "b62b4b588fe50791fda9d7e89b93e87537bc3a4e2ff57bdf87861e8c8becb521",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzwb3o00ddmmyk13z8u5d0",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE_MC:STANDARD:INTERMEDIATE",
+        "contentHash": "9cfb3a8de41605d76a83ed142da5b0a81e094bdbcc50cf516fc6246d3e6981d5",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20201027-q21",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE_MC:STANDARD:KILLER",
+        "contentHash": "9ec41d9c336bc3a91297fb8e8aeda74dfbcffe2ec9df7b6d8f94ef1522320271",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20251014-q23",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE_MC:PREMIUM:BASIC",
+        "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5hc1u3000fmmsgd1dr5yp5",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE_MC:PREMIUM:INTERMEDIATE",
+        "contentHash": "691198660ab2be3e0a41a50aa9dc04ea566bb80d872b20e0d9d534dc138cd3ea",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpbepm5s006bmmagu1g6yb7a",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE_MC:PREMIUM:KILLER",
+        "contentHash": "b8970b1638bdd257490bd4a98c189c9034cdeb2ef7c845537e236678dccb81e4",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpcjkklg0007mmekwcm6abax",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "dev:IRRELEVANT:STANDARD:BASIC",
+        "contentHash": "5e2109ca40e6f284ed84add0f86befe7d09b7d1bfd4957b1eabb1e06b6bae330",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20241015-q40",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "dev:IRRELEVANT:STANDARD:INTERMEDIATE",
+        "contentHash": "09a21271a58ffdc862a2862954c6508596c7d3c2bb019162d003c045b3de93d9",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2014_SN_3022251_B-q26",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "dev:IRRELEVANT:STANDARD:KILLER",
+        "contentHash": "344f925217cd0d3a6692455f1ca2ca676270c632f40d953e081abfaedb54dd3d",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20240904-q23",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "dev:IRRELEVANT:PREMIUM:BASIC",
+        "contentHash": "175d4de2810df43d6cf417011da4e7c41c83f494a3d140a9bd577aa775592d30",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20221012-q40",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "dev:IRRELEVANT:PREMIUM:INTERMEDIATE",
+        "contentHash": "30452628bb82d4e4fb937bec78f2b66e6a951fa8fc4b2ff1e7c6cb8ba70d3041",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2024_09_5085155-q40",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "dev:IRRELEVANT:PREMIUM:KILLER",
+        "contentHash": "0af5c2b9eda3d6693c84074336147a991f3e3539c79afe2a1a25343ff7c83632",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqkuogfd0001jd0b65526r18",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "dev:CONDITIONAL_WRITING:STANDARD:BASIC",
+        "contentHash": "f450c0385502047f479fde899cc24a7fa9f7be42e70f8c3c8de7b61f4c640f24",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20260324-q26",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "dev:CONDITIONAL_WRITING:STANDARD:INTERMEDIATE",
+        "contentHash": "920b245f8ea7801f57bef019592a35233e0ef2e812718d7c6508ab58b9801a2b",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpyx7b260001jp04vjeholew",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "dev:CONDITIONAL_WRITING:STANDARD:KILLER",
+        "contentHash": "413dc3acd3894ce9f84dc4188a727bff4cd43544e69fe015ed980231b9407bdb",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20171017-q21",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "dev:CONDITIONAL_WRITING:PREMIUM:BASIC",
+        "contentHash": "cdab92872c70905307c3a667afec8593e0bb14183f58c07beb9857c91f88f5b0",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2024_SN_5086091-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "dev:CONDITIONAL_WRITING:PREMIUM:INTERMEDIATE",
+        "contentHash": "337a3c3bec9daca7f528979b929289f02454151687a52ec026f5abe170c088da",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnwv10r00brmmykiusnyi5u",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "dev:CONDITIONAL_WRITING:PREMIUM:KILLER",
+        "contentHash": "84eae23dd627c2d87d3439b44519c463e0a51d9b5fc2cd603758f90740928039",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20190307-q25",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "dev:SENTENCE_TRANSFORM:STANDARD:BASIC",
+        "contentHash": "718fe7ae7e688dd19bd3ef3e35dfceebaadde33755d573dff56cd77d189d7c92",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2006_SN_3000977-q44",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "dev:SENTENCE_TRANSFORM:STANDARD:INTERMEDIATE",
+        "contentHash": "4ecad99feb9a97ed0719bba5b17cf5cc48537ed6dce95d70101d1e7107b65772",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2018_06_5013302-q21",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "dev:SENTENCE_TRANSFORM:STANDARD:KILLER",
+        "contentHash": "e91ad1d1962172285ca6ef575c53559ce95fad60f89ed4a3381f9941c9ed0293",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272ubl001ummcsjq36tqew",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "dev:SENTENCE_TRANSFORM:PREMIUM:BASIC",
+        "contentHash": "02821003dcfab2c22b79f729e54d2f5c39a57c320d7ef7a0096f7ce8c6171229",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2011_SN_3000996-q45",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "dev:SENTENCE_TRANSFORM:PREMIUM:INTERMEDIATE",
+        "contentHash": "8f21c16ccda142960c5a7b1abcc4403d666d9b0eb89a11a16e029a8deefddc5d",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpr52qe10003k40442ys37jt",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "dev:SENTENCE_TRANSFORM:PREMIUM:KILLER",
+        "contentHash": "bac707d4a6906eed222f287cdc522a73b5b4509702d523a9da53fa9e89f33c13",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqanec030005ic04e2e7rryn",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "dev:FILL_BLANK_KEY:STANDARD:BASIC",
+        "contentHash": "872b9fa8c3ddbc45b7d4cabcb92f92eec991517a0e1a34740dbb0b3e10303863",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqjjnqp6000wkz04f6gbsna2",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "dev:FILL_BLANK_KEY:STANDARD:INTERMEDIATE",
+        "contentHash": "f112a111b5b9fb4c5cc567943aa11bb42a1cd766ef80364c7b935e28d7e573c0",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_SN_5061633-q22",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "dev:FILL_BLANK_KEY:STANDARD:KILLER",
+        "contentHash": "c1bbf1e33510cf6251a9475497dbdf359d299effa7dead0c48f92a89f0a674c1",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpczyrsu000emmfkzbyivz87",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "dev:FILL_BLANK_KEY:PREMIUM:BASIC",
+        "contentHash": "c35a6bdd76af1ca4954f682c56ecd3f0fc7442c2bc1273a76084a54473b84164",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20140710_A-q20",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "dev:FILL_BLANK_KEY:PREMIUM:INTERMEDIATE",
+        "contentHash": "0f1d60825696e14177dc1ac930373e64e7f950800698e95758666f827c96da9e",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20200916-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "dev:FILL_BLANK_KEY:PREMIUM:KILLER",
+        "contentHash": "3356e61661c5492499cd351a7433d8348e6c0265fa07ea3432ef8e5482b15930",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpwuhv4u001nmm1ch5ypzx9f",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE:STANDARD:BASIC",
+        "contentHash": "90b4b7bd041bc4c2c3fae2ad7d4090311931cb74040edca2cc1b0dd1dfdebdef",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20230906-q23",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE:STANDARD:INTERMEDIATE",
+        "contentHash": "8c6f7a971cb2b29afddf3e5b02a6b25521fb6298dddd50c1d8159660808ebb64",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpqvdzht0001mmu80piqom02",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE:STANDARD:KILLER",
+        "contentHash": "59f433c2c42987b38e239cbeb8315a24c817f6472d94483de2027de67ba067e6",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq2410r40001jo04k2iz5yp1",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE:PREMIUM:BASIC",
+        "contentHash": "46d8adcad5bb3e2872f46bb5de5252e70f45311c5e44318fe84309e12dd5821b",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_SN_5061633-q40",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE:PREMIUM:INTERMEDIATE",
+        "contentHash": "691198660ab2be3e0a41a50aa9dc04ea566bb80d872b20e0d9d534dc138cd3ea",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpbepm5s006bmmagu1g6yb7a",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "dev:SUMMARY_COMPLETE:PREMIUM:KILLER",
+        "contentHash": "8c6f7a971cb2b29afddf3e5b02a6b25521fb6298dddd50c1d8159660808ebb64",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpqvdzht0001mmu80piqom02",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "dev:SUMMARY_WRITING:STANDARD:BASIC",
+        "contentHash": "5ebbe160063f9cf00d0aab4cf2fe13a7d5e68abfcfe79ef5d8693315fff0109d",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_06_5049916-q40",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "dev:SUMMARY_WRITING:STANDARD:INTERMEDIATE",
+        "contentHash": "90b4b7bd041bc4c2c3fae2ad7d4090311931cb74040edca2cc1b0dd1dfdebdef",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20230906-q23",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "dev:SUMMARY_WRITING:STANDARD:KILLER",
+        "contentHash": "09a21271a58ffdc862a2862954c6508596c7d3c2bb019162d003c045b3de93d9",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2014_SN_3022251_B-q26",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "dev:SUMMARY_WRITING:PREMIUM:BASIC",
+        "contentHash": "cdab92872c70905307c3a667afec8593e0bb14183f58c07beb9857c91f88f5b0",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2024_SN_5086091-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "dev:SUMMARY_WRITING:PREMIUM:INTERMEDIATE",
+        "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5hc1u3000fmmsgd1dr5yp5",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "dev:SUMMARY_WRITING:PREMIUM:KILLER",
+        "contentHash": "344f925217cd0d3a6692455f1ca2ca676270c632f40d953e081abfaedb54dd3d",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20240904-q23",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "dev:WORD_ORDER:STANDARD:BASIC",
+        "contentHash": "ee195b26d4185349bad5e777ad6b47ed455afd09c405674052cc4c1ce2937538",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20091117-q37",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "dev:WORD_ORDER:STANDARD:INTERMEDIATE",
+        "contentHash": "0d5ec269b3f33bda901c607388b1763c813ab3dcc7cd817ee0b1b98ac4169030",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2012_SN_3001002-q34",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "dev:WORD_ORDER:STANDARD:KILLER",
+        "contentHash": "8feb42f9014fde247685a0735270ade7fcbd433f01b0d3951f85b55a55acf43f",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20140612-q19",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "dev:WORD_ORDER:PREMIUM:BASIC",
+        "contentHash": "73ae3025adc80fe8400230bded63df05c68651e67e756c9ea5d345b7431e989c",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpx1dv0o0001l404hw03gfmr",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "dev:WORD_ORDER:PREMIUM:INTERMEDIATE",
+        "contentHash": "6fef09a662f475563fe8b32701f93a95eb51c5559c4033707d7e3544b93188fa",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20180308-q30",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "dev:WORD_ORDER:PREMIUM:KILLER",
+        "contentHash": "c6a3cd3a1b254542f979f299598fc2165c1fa66ad089280940d1aa9da7a15727",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzxhf000ebmmykkcjht729",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "dev:TOPIC_SENTENCE_WRITING:STANDARD:BASIC",
+        "contentHash": "ad68cb28ba66384d3f393d305eaaab93d67926717bf4f5db295bdf586d7fe1a8",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpcjkl72000bmmekh9qerp2m",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "dev:TOPIC_SENTENCE_WRITING:STANDARD:INTERMEDIATE",
+        "contentHash": "a40a5bfa656122e27c1726d1d95c0e089653a4c5ad8f8c8395ced7a42435162b",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5hc0l8000dmmsgr6tozs5b",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "dev:TOPIC_SENTENCE_WRITING:STANDARD:KILLER",
+        "contentHash": "bf5243f8c4a6ef65eb963e25daee7a6cf0f94153c773ea2b88b83e5eab7401ef",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzx9ra00e5mmykfthbdaj9",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "dev:TOPIC_SENTENCE_WRITING:PREMIUM:BASIC",
+        "contentHash": "c35a6bdd76af1ca4954f682c56ecd3f0fc7442c2bc1273a76084a54473b84164",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20140710_A-q20",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "dev:TOPIC_SENTENCE_WRITING:PREMIUM:INTERMEDIATE",
+        "contentHash": "9cfb3a8de41605d76a83ed142da5b0a81e094bdbcc50cf516fc6246d3e6981d5",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20201027-q21",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "dev:TOPIC_SENTENCE_WRITING:PREMIUM:KILLER",
+        "contentHash": "dc41e90fb8ede2075f701df74b16e0bac497d5552977e5a219dc5246e584b0ff",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2027_06_5095396-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CORRECTION:STANDARD:BASIC",
+        "contentHash": "ea52a3eab92aae53efcb71cc2d14a6ea1eb3931afc61863fcf123161505761ae",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzw5sd00d9mmykdtoiyyb9",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CORRECTION:STANDARD:INTERMEDIATE",
+        "contentHash": "aa84aab3d1eb6c1eef1df34235cdadb5985d781e49223d260e6536341e426083",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2013_09_3011547-q40",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CORRECTION:STANDARD:KILLER",
+        "contentHash": "6524c852cfcfc5598216afd9446ef87bee8c0eb55e4e1338592a380351c33358",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20131114-q30",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CORRECTION:PREMIUM:BASIC",
+        "contentHash": "396213f817b8ef47f5d5d0fb4b229bfbc33c2d0dd2783cdb4404e5bb812610a2",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272tkj001qmmcsvh7zb296",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CORRECTION:PREMIUM:INTERMEDIATE",
+        "contentHash": "aa84aab3d1eb6c1eef1df34235cdadb5985d781e49223d260e6536341e426083",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2013_09_3011547-q40",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "dev:GRAMMAR_CORRECTION:PREMIUM:KILLER",
+        "contentHash": "9f38946debe0e2593ddbc83fe8c349fb8876aa1854b81542bf5c33452d9ded01",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9ey0013l204nnoouqbe",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "dev:CONTEXT_MEANING:STANDARD:BASIC",
+        "contentHash": "e0953f8aae52b7e41e9e9f8b3eb4b1b567009b5120306ab5da112a4669af4072",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2025_09_5087695-q20",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "dev:CONTEXT_MEANING:STANDARD:INTERMEDIATE",
+        "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnwuz3l00bnmmyk39jucvka",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "dev:CONTEXT_MEANING:STANDARD:KILLER",
+        "contentHash": "c1bbf1e33510cf6251a9475497dbdf359d299effa7dead0c48f92a89f0a674c1",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpczyrsu000emmfkzbyivz87",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "dev:CONTEXT_MEANING:PREMIUM:BASIC",
+        "contentHash": "0f1d60825696e14177dc1ac930373e64e7f950800698e95758666f827c96da9e",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20200916-q24",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "dev:CONTEXT_MEANING:PREMIUM:INTERMEDIATE",
+        "contentHash": "337a3c3bec9daca7f528979b929289f02454151687a52ec026f5abe170c088da",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnwv10r00brmmykiusnyi5u",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "dev:CONTEXT_MEANING:PREMIUM:KILLER",
+        "contentHash": "b62b4b588fe50791fda9d7e89b93e87537bc3a4e2ff57bdf87861e8c8becb521",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzwb3o00ddmmyk13z8u5d0",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "dev:SYNONYM:STANDARD:BASIC",
+        "contentHash": "d3846b8cf6e42ab792ef4dbcfc2622c4fc1f0fc53760ea7a0b50d32e21e4da80",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20230906-q24",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "dev:SYNONYM:STANDARD:INTERMEDIATE",
+        "contentHash": "396213f817b8ef47f5d5d0fb4b229bfbc33c2d0dd2783cdb4404e5bb812610a2",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272tkj001qmmcsvh7zb296",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "dev:SYNONYM:STANDARD:KILLER",
+        "contentHash": "920b245f8ea7801f57bef019592a35233e0ef2e812718d7c6508ab58b9801a2b",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpyx7b260001jp04vjeholew",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "dev:SYNONYM:PREMIUM:BASIC",
+        "contentHash": "30452628bb82d4e4fb937bec78f2b66e6a951fa8fc4b2ff1e7c6cb8ba70d3041",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2024_09_5085155-q40",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "dev:SYNONYM:PREMIUM:INTERMEDIATE",
+        "contentHash": "73ae3025adc80fe8400230bded63df05c68651e67e756c9ea5d345b7431e989c",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpx1dv0o0001l404hw03gfmr",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "dev:SYNONYM:PREMIUM:KILLER",
+        "contentHash": "ad68cb28ba66384d3f393d305eaaab93d67926717bf4f5db295bdf586d7fe1a8",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpcjkl72000bmmekh9qerp2m",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "dev:ANTONYM:STANDARD:BASIC",
+        "contentHash": "b501039c33ded5331fb86951cb43f2c49c92cf084c89853606ca7e1e22d0d02e",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpvm7wwx0010mmbcwneeym36",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "dev:ANTONYM:STANDARD:INTERMEDIATE",
+        "contentHash": "6fef09a662f475563fe8b32701f93a95eb51c5559c4033707d7e3544b93188fa",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20180308-q30",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "dev:ANTONYM:STANDARD:KILLER",
+        "contentHash": "9ec41d9c336bc3a91297fb8e8aeda74dfbcffe2ec9df7b6d8f94ef1522320271",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20251014-q23",
+        "plan": "STANDARD",
+        "split": "dev",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "dev:ANTONYM:PREMIUM:BASIC",
+        "contentHash": "872b9fa8c3ddbc45b7d4cabcb92f92eec991517a0e1a34740dbb0b3e10303863",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqjjnqp6000wkz04f6gbsna2",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "dev:ANTONYM:PREMIUM:INTERMEDIATE",
+        "contentHash": "6524c852cfcfc5598216afd9446ef87bee8c0eb55e4e1338592a380351c33358",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20131114-q30",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "dev:ANTONYM:PREMIUM:KILLER",
+        "contentHash": "718fe7ae7e688dd19bd3ef3e35dfceebaadde33755d573dff56cd77d189d7c92",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2006_SN_3000977-q44",
+        "plan": "PREMIUM",
+        "split": "dev",
+        "type": "ANTONYM"
+      }
+    ],
+    "fallbackCells": 0,
+    "passageUseCounts": {
+      "cmpaqf9dr000xl204fygq66tv": 2,
+      "cmpaqf9e5000zl2049ba7eosv": 2,
+      "cmpaqf9ey0013l204nnoouqbe": 3,
+      "cmpbepm5s006bmmagu1g6yb7a": 3,
+      "cmpcjkklg0007mmekwcm6abax": 2,
+      "cmpcjkl72000bmmekh9qerp2m": 3,
+      "cmpczyrsu000emmfkzbyivz87": 3,
+      "cmpnwuz3l00bnmmyk39jucvka": 3,
+      "cmpnwv10r00brmmykiusnyi5u": 3,
+      "cmpnzw5sd00d9mmykdtoiyyb9": 2,
+      "cmpnzwb3o00ddmmyk13z8u5d0": 3,
+      "cmpnzx9ra00e5mmykfthbdaj9": 2,
+      "cmpnzxhf000ebmmykkcjht729": 2,
+      "cmpqvdzht0001mmu80piqom02": 3,
+      "cmpr52qe10003k40442ys37jt": 2,
+      "cmpr6wbbt0002mm3coikj9suy": 2,
+      "cmpr7xftn0013mm3cad44usfx": 2,
+      "cmpvm7wwx0010mmbcwneeym36": 3,
+      "cmpwuhv4u001nmm1ch5ypzx9f": 2,
+      "cmpx1dv0o0001l404hw03gfmr": 3,
+      "cmpyx7b260001jp04vjeholew": 3,
+      "cmq2410r40001jo04k2iz5yp1": 2,
+      "cmq272tkj001qmmcsvh7zb296": 3,
+      "cmq272ubl001ummcsjq36tqew": 2,
+      "cmq5hc0l8000dmmsgr6tozs5b": 2,
+      "cmq5hc1u3000fmmsgd1dr5yp5": 3,
+      "cmqanec030005ic04e2e7rryn": 2,
+      "cmqespvyu001cmm1wqpn5spu6": 2,
+      "cmqjjnqp6000wkz04f6gbsna2": 3,
+      "cmqkuogfd0001jd0b65526r18": 2,
+      "repo:2006_SN_3000977-q44": 3,
+      "repo:2011_SN_3000996-q45": 2,
+      "repo:2012_SN_3001002-q34": 2,
+      "repo:2013_09_3011547-q40": 3,
+      "repo:2014_SN_3022251_B-q26": 3,
+      "repo:2018_06_5013302-q21": 2,
+      "repo:2021_06_5049916-q40": 3,
+      "repo:2021_SN_5061633-q22": 2,
+      "repo:2021_SN_5061633-q40": 2,
+      "repo:2024_09_5085155-q40": 3,
+      "repo:2024_SN_5086091-q24": 3,
+      "repo:2025_09_5087695-q20": 2,
+      "repo:2027_06_5095396-q24": 3,
+      "repo:ebsi_go1_20260324-q26": 2,
+      "repo:ebsi_go2_20091117-q37": 2,
+      "repo:ebsi_go2_20131114-q30": 3,
+      "repo:ebsi_go2_20140612-q19": 2,
+      "repo:ebsi_go2_20180308-q30": 3,
+      "repo:ebsi_go2_20190307-q25": 2,
+      "repo:ebsi_go2_20190604-q24": 2,
+      "repo:ebsi_go2_20200916-q24": 3,
+      "repo:ebsi_go2_20230906-q23": 3,
+      "repo:ebsi_go2_20230906-q24": 3,
+      "repo:ebsi_go2_20240904-q23": 3,
+      "repo:ebsi_go2_20251014-q23": 3,
+      "repo:ebsi_go3_20140710_A-q20": 3,
+      "repo:ebsi_go3_20171017-q21": 2,
+      "repo:ebsi_go3_20201027-q21": 3,
+      "repo:ebsi_go3_20221012-q40": 2,
+      "repo:ebsi_go3_20241015-q40": 2
+    }
+  },
+  "difficulties": [
+    "BASIC",
+    "INTERMEDIATE",
+    "KILLER"
+  ],
+  "holdout": {
+    "cells": [
+      {
+        "cellId": "holdout:BLANK_INFERENCE:STANDARD:BASIC",
+        "contentHash": "d7bc08b3c5fc80d6b93d0bb42fb2020cecf186807be5c5d75ceddb5e75eb6474",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20201118-q21",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "holdout:BLANK_INFERENCE:STANDARD:INTERMEDIATE",
+        "contentHash": "b020c669017ca57a360621b65c2b92baf721c27164633ffebfda2cc33a41033b",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpchv9xq0003ky0484e1e7y4",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "holdout:BLANK_INFERENCE:STANDARD:KILLER",
+        "contentHash": "edb3d4a283cfe08b1d54a74b8afe0171a7866c17536d0a65215d9e0b2ffa3f4f",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5gpplq0001mmsg2fi1puqg",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "holdout:BLANK_INFERENCE:PREMIUM:BASIC",
+        "contentHash": "d39709eeeb00c7c257aa3cce5ee4d47c8bebcdac42a3c1178a64bde0d639cb17",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20150902-q20",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "holdout:BLANK_INFERENCE:PREMIUM:INTERMEDIATE",
+        "contentHash": "c9aa67aba49a7e63b1064e1f772fb19e371717736dd98612d3f73e5577079aeb",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq742ju90015mm1gk4pzfggd",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "holdout:BLANK_INFERENCE:PREMIUM:KILLER",
+        "contentHash": "12976b2165fc710a77f8f0450a15bb32c195f5cef78e8f7720023a5c65b69c75",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9a4000fl2042odbrdj0",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "BLANK_INFERENCE"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_ERROR:STANDARD:BASIC",
+        "contentHash": "33bd5e650e5b0e5956421a1ba261c61851a07176bedf52b4fa3ba60831137624",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2007_SN_3000983-q49-50",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_ERROR:STANDARD:INTERMEDIATE",
+        "contentHash": "568154d8bc4d522eef680080676fc047611f66f7742f0300633af91ebd37c088",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf997000bl204g2nptcrl",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_ERROR:STANDARD:KILLER",
+        "contentHash": "f0c4e69a0301c2056c6ea22d11b17626f4ad6d5cd33c400ecd8bf6b1ca1bd1f6",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20160901-q21",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_ERROR:PREMIUM:BASIC",
+        "contentHash": "8eb195031ee874946ec49b406a42698d1f2d3d7724d73ea067e1daee1b643aba",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq20ulw9000kmmcsd6rn4vv1",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_ERROR:PREMIUM:INTERMEDIATE",
+        "contentHash": "dd13c3b0479f50ac7de6e2f6584225d684446d2467b1dc6b9f06b0e1c67cf33c",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqb48s000001l70497mch8x0",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_ERROR:PREMIUM:KILLER",
+        "contentHash": "707496c4845dd233a250c8c1bfb783f97515ee363872caad44d876b56f40e505",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_06_3001149-q48-49-50",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_ERROR"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CHOICE_COMBO:STANDARD:BASIC",
+        "contentHash": "fe1637edcf53eff326b04a337c96552b296ee310fc50b563a4b665dbcaf63572",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpbeploy0069mmag6t6caoiu",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CHOICE_COMBO:STANDARD:INTERMEDIATE",
+        "contentHash": "1d675848d384976f3148331c5868a55b9d4134babb6eab7a5d622c3740d525a2",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20191120-q26",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CHOICE_COMBO:STANDARD:KILLER",
+        "contentHash": "0865a2a429656eff7bd43aad610acce3153bd22eef97a2e99e035c8452498605",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2011_09_3001251-q19",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CHOICE_COMBO:PREMIUM:BASIC",
+        "contentHash": "e200693ad0fe69c61a74bcc7d04dd669580cbfd0bb7f2d73006f6774e797c113",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq50ifrc003ummm8xv9ppk4g",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CHOICE_COMBO:PREMIUM:INTERMEDIATE",
+        "contentHash": "7631a174c99bcee7f202e6252b31f845ff1f502ca3ac17c65232d5a8ccc1e75b",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5c5cip001lmmrwty0eg9zg",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CHOICE_COMBO:PREMIUM:KILLER",
+        "contentHash": "6846806b9d02886d74e287872da01ced42b068c3fedcbb6e05c369cbc7e657b7",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20181121-q25",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_CHOICE_COMBO"
+      },
+      {
+        "cellId": "holdout:VOCAB_CHOICE:STANDARD:BASIC",
+        "contentHash": "5e46fb6e5a5d2a3086b3ababd4f4498cb6ea31dfa5a0e4f2a900cf4db31ff702",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf96q0001l204lnt7f5y9",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "holdout:VOCAB_CHOICE:STANDARD:INTERMEDIATE",
+        "contentHash": "e047f728febca8b85e829c7de7fbb5f84d1674a8ea0d13a12ff5ce7860673b99",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqfkcut40032mmzcjq5riqxl",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "holdout:VOCAB_CHOICE:STANDARD:KILLER",
+        "contentHash": "45c4303f65dd4011e2dfba8afe86d1300d3a9e685ec2b44b53a637a5a5f63d27",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2025_06_5086961-q22",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "holdout:VOCAB_CHOICE:PREMIUM:BASIC",
+        "contentHash": "993b5cf8a0c61b9e9cc0414d6fa194e73db8211adcd103719269018f91f284e3",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20260324-q21",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "holdout:VOCAB_CHOICE:PREMIUM:INTERMEDIATE",
+        "contentHash": "c60a3a1a0020f9afce966b355a41339ec7dc557c26134ffe57487ed84c4d800f",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqg66544000emm60nvhh17iu",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "holdout:VOCAB_CHOICE:PREMIUM:KILLER",
+        "contentHash": "51e891581c5ef3a6a403873eda3859c51e978b75e377b6af3d40580029d9cd19",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2018_SN_5019793-q40",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "VOCAB_CHOICE"
+      },
+      {
+        "cellId": "holdout:SENTENCE_ORDER:STANDARD:BASIC",
+        "contentHash": "5f6141ba762adbca9ec45c71fa929b443fdf66132b7775797042add3768682e3",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9ay000jl204pew667f2",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "holdout:SENTENCE_ORDER:STANDARD:INTERMEDIATE",
+        "contentHash": "20abadcb12fcaa65c7dfc2b77ad0f049d46901f847e324007b0a84c46569e658",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20210831-q24",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "holdout:SENTENCE_ORDER:STANDARD:KILLER",
+        "contentHash": "ab513657d0fc03843e10ef93c58222eb6b8f309298eff94cf3bcc2715ba3bcef",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2010_06_3001224-q49-50",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "holdout:SENTENCE_ORDER:PREMIUM:BASIC",
+        "contentHash": "039ee2f59b38f2e4c6f1aa9e7b1d79e09aa4f72d01abfd7ee21a6bd7b33e372c",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20210707-q26",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "holdout:SENTENCE_ORDER:PREMIUM:INTERMEDIATE",
+        "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq2capq3000ammm8iftgy9tp",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "holdout:SENTENCE_ORDER:PREMIUM:KILLER",
+        "contentHash": "17e01cadebf532d311f3b17b05260946bfbc1057925e9dfd28fd18f04de6a822",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20191120-q22",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_ORDER"
+      },
+      {
+        "cellId": "holdout:SENTENCE_INSERT:STANDARD:BASIC",
+        "contentHash": "907d3c22ae3b25cb96a8caf3e59c8e5cc4d0da786179a5d806c2684123e6d8a4",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20141007-q29",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "holdout:SENTENCE_INSERT:STANDARD:INTERMEDIATE",
+        "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf97g0003l204jhi59d8z",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "holdout:SENTENCE_INSERT:STANDARD:KILLER",
+        "contentHash": "72227044f103d8e3bea3f3a8fd2a32b509b2ab8e6fd3dee5c46f0ae23a2aa274",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_SN_5061633-q24",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "holdout:SENTENCE_INSERT:PREMIUM:BASIC",
+        "contentHash": "7b3df089a04ee06a8910d06b0c1d5c77f4b9b16403653f2061553e1483103f07",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_YB_5006647-q46-47",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "holdout:SENTENCE_INSERT:PREMIUM:INTERMEDIATE",
+        "contentHash": "a540069c0eb98af59db454cba3432a3b9796697d8971a3a6de398fe3279131b7",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2019_SN_5031122-q23",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "holdout:SENTENCE_INSERT:PREMIUM:KILLER",
+        "contentHash": "8654ea86fbd9b865e93bf72f3d274fe9af723bd6de3271f1415edb3d6eab5591",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq23op900017mmcsgdlfr18c",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_INSERT"
+      },
+      {
+        "cellId": "holdout:TOPIC:STANDARD:BASIC",
+        "contentHash": "89b3ce21b702f51b6619144530b97e8182f709f2d940505530d81c0de235fd0b",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_09_3001156-q48-49-50",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "holdout:TOPIC:STANDARD:INTERMEDIATE",
+        "contentHash": "c73936758b2a6baafa87a6a44b9e4601a4162d2bbbe14c1753674a5158593614",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9aj000hl20466bzeiga",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "holdout:TOPIC:STANDARD:KILLER",
+        "contentHash": "5fcc6ce9a539c909c5cc504b2234c7f33f6d5acc2093b6fe4a94148148fba0b3",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20230601-q22",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "holdout:TOPIC:PREMIUM:BASIC",
+        "contentHash": "ea5b502237e5c7a5414210eae274792ade3580f6ca835cfdd5e9346e0d7453ec",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9fr0017l204rcz69oyr",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "holdout:TOPIC:PREMIUM:INTERMEDIATE",
+        "contentHash": "697c79ba3fd6193f2c19fc65fc5822d25a84501cf30562268e1c9870ab978988",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20170601-q25",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "holdout:TOPIC:PREMIUM:KILLER",
+        "contentHash": "1dc9422616e30f84e83283a30e69e2f3caf3492ded1df6185f5659150444c1c9",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20251014-q23",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TOPIC"
+      },
+      {
+        "cellId": "holdout:MAIN_IDEA:STANDARD:BASIC",
+        "contentHash": "d231e0f932d27130cbc66c0f45c8c6e20d2a75077663a8934777e532c2943113",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2022_06_5063572-q26",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "holdout:MAIN_IDEA:STANDARD:INTERMEDIATE",
+        "contentHash": "2bfa5b6713508071fff9d961f711c17d7c5b8afb77fa30e58bf9dc84e3649a95",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_YB_5006647-q48-49-50",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "holdout:MAIN_IDEA:STANDARD:KILLER",
+        "contentHash": "3761807cb1852e6a7222de9aecb17cb2228678fa9db78c0de5f554f084a528a8",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20241015-q20",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "holdout:MAIN_IDEA:PREMIUM:BASIC",
+        "contentHash": "b42cf83a0841f5043369e09c7ad5d77612acc3f969c2fdd537755338f46f68f2",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf99o000dl204pyve3pdv",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "holdout:MAIN_IDEA:PREMIUM:INTERMEDIATE",
+        "contentHash": "220f8817d0a321e58a5d3bb5b81b0a08f5bc2eeb4dc7583502a20888a9b508e3",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq20um9t000mmmcs8wc3qpj3",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "holdout:MAIN_IDEA:PREMIUM:KILLER",
+        "contentHash": "1e369ebc778684fbe2f6bbae552dfe062e001f573ac6a280c0d14aa8d6dc4765",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpv7gfl00001mmbc0u8d49ep",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "MAIN_IDEA"
+      },
+      {
+        "cellId": "holdout:TITLE:STANDARD:BASIC",
+        "contentHash": "977d6bc2d6945fa183236f67ab485199953020bba284841017df14d48e962adf",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzw9ay00dbmmykw8e1lclh",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "holdout:TITLE:STANDARD:INTERMEDIATE",
+        "contentHash": "5c86912f2c0d4c08137b6c1d756844cfc6e13d29478079900b80c0290cec851c",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpwtrzov0001jd0b5z38rzdv",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "holdout:TITLE:STANDARD:KILLER",
+        "contentHash": "6e695417470285daf06a97318e349b86edf9fa6cb56c68db79c59073ddd736a6",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf97v0005l204xjjvssdr",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "holdout:TITLE:PREMIUM:BASIC",
+        "contentHash": "6bddb198a4061b29a40e6fa586b6455fe4fbacb1c50113b0edb3333f881a6901",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2027_06_5095396-q20",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "holdout:TITLE:PREMIUM:INTERMEDIATE",
+        "contentHash": "7db8ce2037b98d296cf62e8e7508062bbea59e14a36307c84c18e863832a655d",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_09_5050886-q22",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "holdout:TITLE:PREMIUM:KILLER",
+        "contentHash": "2c3ffd187ff4f9d654a546f4718a52e1b3958eab7eefd16d08094c3a8e3e12a2",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20130903-q40",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TITLE"
+      },
+      {
+        "cellId": "holdout:IMPLIED_MEANING:STANDARD:BASIC",
+        "contentHash": "b50f599d06dde2703b827c0c08959f252d74d2033814465e63ac501498abd063",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzxg1100e7mmykv46al2g6",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "holdout:IMPLIED_MEANING:STANDARD:INTERMEDIATE",
+        "contentHash": "7224cb1ea6a626fa46bbffdd3fdd8042944a49c4b60e43e693b58fd70c71c05d",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq56mbbc0001mm6cabjbecw8",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "holdout:IMPLIED_MEANING:STANDARD:KILLER",
+        "contentHash": "3761807cb1852e6a7222de9aecb17cb2228678fa9db78c0de5f554f084a528a8",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20241015-q20",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "holdout:IMPLIED_MEANING:PREMIUM:BASIC",
+        "contentHash": "b50f599d06dde2703b827c0c08959f252d74d2033814465e63ac501498abd063",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzxg1100e7mmykv46al2g6",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "holdout:IMPLIED_MEANING:PREMIUM:INTERMEDIATE",
+        "contentHash": "977d6bc2d6945fa183236f67ab485199953020bba284841017df14d48e962adf",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzw9ay00dbmmykw8e1lclh",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "holdout:IMPLIED_MEANING:PREMIUM:KILLER",
+        "contentHash": "51e891581c5ef3a6a403873eda3859c51e978b75e377b6af3d40580029d9cd19",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2018_SN_5019793-q40",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "IMPLIED_MEANING"
+      },
+      {
+        "cellId": "holdout:REFERENCE:STANDARD:BASIC",
+        "contentHash": "d6605167a600feaf35c926331b11d9398a4ae678695ea060e0eb0a00c4f9272e",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq23oovd0015mmcsd9fjq8gf",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "holdout:REFERENCE:STANDARD:INTERMEDIATE",
+        "contentHash": "088549edc120cc86ea621932df5b3ceeb4c0340fbb292afad4e5b2c6997edff7",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20190604-q20",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "holdout:REFERENCE:STANDARD:KILLER",
+        "contentHash": "f81792bff8e500e39764302d7de1e3b4c987a2b8e9c6712a112194064d35c2a0",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272sfm001kmmcsay23lmyc",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "holdout:REFERENCE:PREMIUM:BASIC",
+        "contentHash": "d0261be75d49a681b21f4573e964d449cb2c099f98ffeb09c037559706d29c23",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272t6z001ommcsbneh6fby",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "holdout:REFERENCE:PREMIUM:INTERMEDIATE",
+        "contentHash": "17e01cadebf532d311f3b17b05260946bfbc1057925e9dfd28fd18f04de6a822",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20191120-q22",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "holdout:REFERENCE:PREMIUM:KILLER",
+        "contentHash": "5e46fb6e5a5d2a3086b3ababd4f4498cb6ea31dfa5a0e4f2a900cf4db31ff702",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "hasReferents = true"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf96q0001l204lnt7f5y9",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "REFERENCE"
+      },
+      {
+        "cellId": "holdout:CONTENT_MATCH:STANDARD:BASIC",
+        "contentHash": "a540069c0eb98af59db454cba3432a3b9796697d8971a3a6de398fe3279131b7",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2019_SN_5031122-q23",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "holdout:CONTENT_MATCH:STANDARD:INTERMEDIATE",
+        "contentHash": "907d3c22ae3b25cb96a8caf3e59c8e5cc4d0da786179a5d806c2684123e6d8a4",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20141007-q29",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "holdout:CONTENT_MATCH:STANDARD:KILLER",
+        "contentHash": "8654ea86fbd9b865e93bf72f3d274fe9af723bd6de3271f1415edb3d6eab5591",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq23op900017mmcsgdlfr18c",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "holdout:CONTENT_MATCH:PREMIUM:BASIC",
+        "contentHash": "edb3d4a283cfe08b1d54a74b8afe0171a7866c17536d0a65215d9e0b2ffa3f4f",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5gpplq0001mmsg2fi1puqg",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "holdout:CONTENT_MATCH:PREMIUM:INTERMEDIATE",
+        "contentHash": "dd13c3b0479f50ac7de6e2f6584225d684446d2467b1dc6b9f06b0e1c67cf33c",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqb48s000001l70497mch8x0",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "holdout:CONTENT_MATCH:PREMIUM:KILLER",
+        "contentHash": "d0261be75d49a681b21f4573e964d449cb2c099f98ffeb09c037559706d29c23",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272t6z001ommcsbneh6fby",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONTENT_MATCH"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE_MC:STANDARD:BASIC",
+        "contentHash": "d6605167a600feaf35c926331b11d9398a4ae678695ea060e0eb0a00c4f9272e",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq23oovd0015mmcsd9fjq8gf",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE_MC:STANDARD:INTERMEDIATE",
+        "contentHash": "220f8817d0a321e58a5d3bb5b81b0a08f5bc2eeb4dc7583502a20888a9b508e3",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq20um9t000mmmcs8wc3qpj3",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE_MC:STANDARD:KILLER",
+        "contentHash": "d7bc08b3c5fc80d6b93d0bb42fb2020cecf186807be5c5d75ceddb5e75eb6474",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20201118-q21",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE_MC:PREMIUM:BASIC",
+        "contentHash": "45c4303f65dd4011e2dfba8afe86d1300d3a9e685ec2b44b53a637a5a5f63d27",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2025_06_5086961-q22",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE_MC:PREMIUM:INTERMEDIATE",
+        "contentHash": "72227044f103d8e3bea3f3a8fd2a32b509b2ab8e6fd3dee5c46f0ae23a2aa274",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_SN_5061633-q24",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE_MC:PREMIUM:KILLER",
+        "contentHash": "c9aa67aba49a7e63b1064e1f772fb19e371717736dd98612d3f73e5577079aeb",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq742ju90015mm1gk4pzfggd",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE_MC"
+      },
+      {
+        "cellId": "holdout:IRRELEVANT:STANDARD:BASIC",
+        "contentHash": "ab513657d0fc03843e10ef93c58222eb6b8f309298eff94cf3bcc2715ba3bcef",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2010_06_3001224-q49-50",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "holdout:IRRELEVANT:STANDARD:INTERMEDIATE",
+        "contentHash": "7db8ce2037b98d296cf62e8e7508062bbea59e14a36307c84c18e863832a655d",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2021_09_5050886-q22",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "holdout:IRRELEVANT:STANDARD:KILLER",
+        "contentHash": "1dc9422616e30f84e83283a30e69e2f3caf3492ded1df6185f5659150444c1c9",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20251014-q23",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "holdout:IRRELEVANT:PREMIUM:BASIC",
+        "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf97g0003l204jhi59d8z",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "holdout:IRRELEVANT:PREMIUM:INTERMEDIATE",
+        "contentHash": "20abadcb12fcaa65c7dfc2b77ad0f049d46901f847e324007b0a84c46569e658",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20210831-q24",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "holdout:IRRELEVANT:PREMIUM:KILLER",
+        "contentHash": "993b5cf8a0c61b9e9cc0414d6fa194e73db8211adcd103719269018f91f284e3",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "sentenceCount >= 6",
+            "wordCount >= 170"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20260324-q21",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "IRRELEVANT"
+      },
+      {
+        "cellId": "holdout:CONDITIONAL_WRITING:STANDARD:BASIC",
+        "contentHash": "5fcc6ce9a539c909c5cc504b2234c7f33f6d5acc2093b6fe4a94148148fba0b3",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20230601-q22",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "holdout:CONDITIONAL_WRITING:STANDARD:INTERMEDIATE",
+        "contentHash": "6e695417470285daf06a97318e349b86edf9fa6cb56c68db79c59073ddd736a6",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf97v0005l204xjjvssdr",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "holdout:CONDITIONAL_WRITING:STANDARD:KILLER",
+        "contentHash": "2bfa5b6713508071fff9d961f711c17d7c5b8afb77fa30e58bf9dc84e3649a95",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_YB_5006647-q48-49-50",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "holdout:CONDITIONAL_WRITING:PREMIUM:BASIC",
+        "contentHash": "c60a3a1a0020f9afce966b355a41339ec7dc557c26134ffe57487ed84c4d800f",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqg66544000emm60nvhh17iu",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "holdout:CONDITIONAL_WRITING:PREMIUM:INTERMEDIATE",
+        "contentHash": "d231e0f932d27130cbc66c0f45c8c6e20d2a75077663a8934777e532c2943113",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2022_06_5063572-q26",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "holdout:CONDITIONAL_WRITING:PREMIUM:KILLER",
+        "contentHash": "e047f728febca8b85e829c7de7fbb5f84d1674a8ea0d13a12ff5ce7860673b99",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqfkcut40032mmzcjq5riqxl",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONDITIONAL_WRITING"
+      },
+      {
+        "cellId": "holdout:SENTENCE_TRANSFORM:STANDARD:BASIC",
+        "contentHash": "7b3df089a04ee06a8910d06b0c1d5c77f4b9b16403653f2061553e1483103f07",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_YB_5006647-q46-47",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "holdout:SENTENCE_TRANSFORM:STANDARD:INTERMEDIATE",
+        "contentHash": "2c3ffd187ff4f9d654a546f4718a52e1b3958eab7eefd16d08094c3a8e3e12a2",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20130903-q40",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "holdout:SENTENCE_TRANSFORM:STANDARD:KILLER",
+        "contentHash": "1d675848d384976f3148331c5868a55b9d4134babb6eab7a5d622c3740d525a2",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20191120-q26",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "holdout:SENTENCE_TRANSFORM:PREMIUM:BASIC",
+        "contentHash": "6846806b9d02886d74e287872da01ced42b068c3fedcbb6e05c369cbc7e657b7",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20181121-q25",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "holdout:SENTENCE_TRANSFORM:PREMIUM:INTERMEDIATE",
+        "contentHash": "7224cb1ea6a626fa46bbffdd3fdd8042944a49c4b60e43e693b58fd70c71c05d",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq56mbbc0001mm6cabjbecw8",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "holdout:SENTENCE_TRANSFORM:PREMIUM:KILLER",
+        "contentHash": "b020c669017ca57a360621b65c2b92baf721c27164633ffebfda2cc33a41033b",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpchv9xq0003ky0484e1e7y4",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SENTENCE_TRANSFORM"
+      },
+      {
+        "cellId": "holdout:FILL_BLANK_KEY:STANDARD:BASIC",
+        "contentHash": "89b3ce21b702f51b6619144530b97e8182f709f2d940505530d81c0de235fd0b",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_09_3001156-q48-49-50",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "holdout:FILL_BLANK_KEY:STANDARD:INTERMEDIATE",
+        "contentHash": "039ee2f59b38f2e4c6f1aa9e7b1d79e09aa4f72d01abfd7ee21a6bd7b33e372c",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20210707-q26",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "holdout:FILL_BLANK_KEY:STANDARD:KILLER",
+        "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq2capq3000ammm8iftgy9tp",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "holdout:FILL_BLANK_KEY:PREMIUM:BASIC",
+        "contentHash": "33bd5e650e5b0e5956421a1ba261c61851a07176bedf52b4fa3ba60831137624",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2007_SN_3000983-q49-50",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "holdout:FILL_BLANK_KEY:PREMIUM:INTERMEDIATE",
+        "contentHash": "12976b2165fc710a77f8f0450a15bb32c195f5cef78e8f7720023a5c65b69c75",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9a4000fl2042odbrdj0",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "holdout:FILL_BLANK_KEY:PREMIUM:KILLER",
+        "contentHash": "d39709eeeb00c7c257aa3cce5ee4d47c8bebcdac42a3c1178a64bde0d639cb17",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "blankSuitability = central-span"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20150902-q20",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "FILL_BLANK_KEY"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE:STANDARD:BASIC",
+        "contentHash": "f81792bff8e500e39764302d7de1e3b4c987a2b8e9c6712a112194064d35c2a0",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272sfm001kmmcsay23lmyc",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE:STANDARD:INTERMEDIATE",
+        "contentHash": "1e369ebc778684fbe2f6bbae552dfe062e001f573ac6a280c0d14aa8d6dc4765",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpv7gfl00001mmbc0u8d49ep",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE:STANDARD:KILLER",
+        "contentHash": "707496c4845dd233a250c8c1bfb783f97515ee363872caad44d876b56f40e505",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_06_3001149-q48-49-50",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE:PREMIUM:BASIC",
+        "contentHash": "8eb195031ee874946ec49b406a42698d1f2d3d7724d73ea067e1daee1b643aba",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq20ulw9000kmmcsd6rn4vv1",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE:PREMIUM:INTERMEDIATE",
+        "contentHash": "e200693ad0fe69c61a74bcc7d04dd669580cbfd0bb7f2d73006f6774e797c113",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq50ifrc003ummm8xv9ppk4g",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "holdout:SUMMARY_COMPLETE:PREMIUM:KILLER",
+        "contentHash": "5f6141ba762adbca9ec45c71fa929b443fdf66132b7775797042add3768682e3",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9ay000jl204pew667f2",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_COMPLETE"
+      },
+      {
+        "cellId": "holdout:SUMMARY_WRITING:STANDARD:BASIC",
+        "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf97g0003l204jhi59d8z",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "holdout:SUMMARY_WRITING:STANDARD:INTERMEDIATE",
+        "contentHash": "b020c669017ca57a360621b65c2b92baf721c27164633ffebfda2cc33a41033b",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpchv9xq0003ky0484e1e7y4",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "holdout:SUMMARY_WRITING:STANDARD:KILLER",
+        "contentHash": "d6605167a600feaf35c926331b11d9398a4ae678695ea060e0eb0a00c4f9272e",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq23oovd0015mmcsd9fjq8gf",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "holdout:SUMMARY_WRITING:PREMIUM:BASIC",
+        "contentHash": "039ee2f59b38f2e4c6f1aa9e7b1d79e09aa4f72d01abfd7ee21a6bd7b33e372c",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20210707-q26",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "holdout:SUMMARY_WRITING:PREMIUM:INTERMEDIATE",
+        "contentHash": "dd13c3b0479f50ac7de6e2f6584225d684446d2467b1dc6b9f06b0e1c67cf33c",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqb48s000001l70497mch8x0",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "holdout:SUMMARY_WRITING:PREMIUM:KILLER",
+        "contentHash": "8eb195031ee874946ec49b406a42698d1f2d3d7724d73ea067e1daee1b643aba",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 170",
+            "sentenceCount >= 5"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq20ulw9000kmmcsd6rn4vv1",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SUMMARY_WRITING"
+      },
+      {
+        "cellId": "holdout:WORD_ORDER:STANDARD:BASIC",
+        "contentHash": "ea5b502237e5c7a5414210eae274792ade3580f6ca835cfdd5e9346e0d7453ec",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9fr0017l204rcz69oyr",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "holdout:WORD_ORDER:STANDARD:INTERMEDIATE",
+        "contentHash": "fe1637edcf53eff326b04a337c96552b296ee310fc50b563a4b665dbcaf63572",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpbeploy0069mmag6t6caoiu",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "holdout:WORD_ORDER:STANDARD:KILLER",
+        "contentHash": "6bddb198a4061b29a40e6fa586b6455fe4fbacb1c50113b0edb3333f881a6901",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2027_06_5095396-q20",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "holdout:WORD_ORDER:PREMIUM:BASIC",
+        "contentHash": "c73936758b2a6baafa87a6a44b9e4601a4162d2bbbe14c1753674a5158593614",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9aj000hl20466bzeiga",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "holdout:WORD_ORDER:PREMIUM:INTERMEDIATE",
+        "contentHash": "5c86912f2c0d4c08137b6c1d756844cfc6e13d29478079900b80c0290cec851c",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpwtrzov0001jd0b5z38rzdv",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "holdout:WORD_ORDER:PREMIUM:KILLER",
+        "contentHash": "088549edc120cc86ea621932df5b3ceeb4c0340fbb292afad4e5b2c6997edff7",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20190604-q20",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "WORD_ORDER"
+      },
+      {
+        "cellId": "holdout:TOPIC_SENTENCE_WRITING:STANDARD:BASIC",
+        "contentHash": "568154d8bc4d522eef680080676fc047611f66f7742f0300633af91ebd37c088",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf997000bl204g2nptcrl",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "holdout:TOPIC_SENTENCE_WRITING:STANDARD:INTERMEDIATE",
+        "contentHash": "6846806b9d02886d74e287872da01ced42b068c3fedcbb6e05c369cbc7e657b7",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20181121-q25",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "holdout:TOPIC_SENTENCE_WRITING:STANDARD:KILLER",
+        "contentHash": "e200693ad0fe69c61a74bcc7d04dd669580cbfd0bb7f2d73006f6774e797c113",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq50ifrc003ummm8xv9ppk4g",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "holdout:TOPIC_SENTENCE_WRITING:PREMIUM:BASIC",
+        "contentHash": "7b3df089a04ee06a8910d06b0c1d5c77f4b9b16403653f2061553e1483103f07",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2005_YB_5006647-q46-47",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "holdout:TOPIC_SENTENCE_WRITING:PREMIUM:INTERMEDIATE",
+        "contentHash": "977d6bc2d6945fa183236f67ab485199953020bba284841017df14d48e962adf",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpnzw9ay00dbmmykw8e1lclh",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "holdout:TOPIC_SENTENCE_WRITING:PREMIUM:KILLER",
+        "contentHash": "6e695417470285daf06a97318e349b86edf9fa6cb56c68db79c59073ddd736a6",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "wordCount >= 150",
+            "discourse is argumentative or expository"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf97v0005l204xjjvssdr",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "TOPIC_SENTENCE_WRITING"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CORRECTION:STANDARD:BASIC",
+        "contentHash": "7631a174c99bcee7f202e6252b31f845ff1f502ca3ac17c65232d5a8ccc1e75b",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq5c5cip001lmmrwty0eg9zg",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CORRECTION:STANDARD:INTERMEDIATE",
+        "contentHash": "0865a2a429656eff7bd43aad610acce3153bd22eef97a2e99e035c8452498605",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2011_09_3001251-q19",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CORRECTION:STANDARD:KILLER",
+        "contentHash": "f0c4e69a0301c2056c6ea22d11b17626f4ad6d5cd33c400ecd8bf6b1ca1bd1f6",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20160901-q21",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CORRECTION:PREMIUM:BASIC",
+        "contentHash": "51e891581c5ef3a6a403873eda3859c51e978b75e377b6af3d40580029d9cd19",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2018_SN_5019793-q40",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CORRECTION:PREMIUM:INTERMEDIATE",
+        "contentHash": "ea5b502237e5c7a5414210eae274792ade3580f6ca835cfdd5e9346e0d7453ec",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf9fr0017l204rcz69oyr",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "holdout:GRAMMAR_CORRECTION:PREMIUM:KILLER",
+        "contentHash": "33bd5e650e5b0e5956421a1ba261c61851a07176bedf52b4fa3ba60831137624",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "grammarSuitability != scarce",
+            "sentenceCount >= 4"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2007_SN_3000983-q49-50",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "GRAMMAR_CORRECTION"
+      },
+      {
+        "cellId": "holdout:CONTEXT_MEANING:STANDARD:BASIC",
+        "contentHash": "b42cf83a0841f5043369e09c7ad5d77612acc3f969c2fdd537755338f46f68f2",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf99o000dl204pyve3pdv",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "holdout:CONTEXT_MEANING:STANDARD:INTERMEDIATE",
+        "contentHash": "697c79ba3fd6193f2c19fc65fc5822d25a84501cf30562268e1c9870ab978988",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20170601-q25",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "holdout:CONTEXT_MEANING:STANDARD:KILLER",
+        "contentHash": "6bddb198a4061b29a40e6fa586b6455fe4fbacb1c50113b0edb3333f881a6901",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2027_06_5095396-q20",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "holdout:CONTEXT_MEANING:PREMIUM:BASIC",
+        "contentHash": "7224cb1ea6a626fa46bbffdd3fdd8042944a49c4b60e43e693b58fd70c71c05d",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq56mbbc0001mm6cabjbecw8",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "holdout:CONTEXT_MEANING:PREMIUM:INTERMEDIATE",
+        "contentHash": "568154d8bc4d522eef680080676fc047611f66f7742f0300633af91ebd37c088",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf997000bl204g2nptcrl",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "holdout:CONTEXT_MEANING:PREMIUM:KILLER",
+        "contentHash": "c9aa67aba49a7e63b1064e1f772fb19e371717736dd98612d3f73e5577079aeb",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq742ju90015mm1gk4pzfggd",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "CONTEXT_MEANING"
+      },
+      {
+        "cellId": "holdout:SYNONYM:STANDARD:BASIC",
+        "contentHash": "3761807cb1852e6a7222de9aecb17cb2228678fa9db78c0de5f554f084a528a8",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20241015-q20",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "holdout:SYNONYM:STANDARD:INTERMEDIATE",
+        "contentHash": "088549edc120cc86ea621932df5b3ceeb4c0340fbb292afad4e5b2c6997edff7",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go1_20190604-q20",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "holdout:SYNONYM:STANDARD:KILLER",
+        "contentHash": "17e01cadebf532d311f3b17b05260946bfbc1057925e9dfd28fd18f04de6a822",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go2_20191120-q22",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "holdout:SYNONYM:PREMIUM:BASIC",
+        "contentHash": "b42cf83a0841f5043369e09c7ad5d77612acc3f969c2fdd537755338f46f68f2",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf99o000dl204pyve3pdv",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "holdout:SYNONYM:PREMIUM:INTERMEDIATE",
+        "contentHash": "5c86912f2c0d4c08137b6c1d756844cfc6e13d29478079900b80c0290cec851c",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpwtrzov0001jd0b5z38rzdv",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "holdout:SYNONYM:PREMIUM:KILLER",
+        "contentHash": "907d3c22ae3b25cb96a8caf3e59c8e5cc4d0da786179a5d806c2684123e6d8a4",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:ebsi_go3_20141007-q29",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "SYNONYM"
+      },
+      {
+        "cellId": "holdout:ANTONYM:STANDARD:BASIC",
+        "contentHash": "fe1637edcf53eff326b04a337c96552b296ee310fc50b563a4b665dbcaf63572",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpbeploy0069mmag6t6caoiu",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "holdout:ANTONYM:STANDARD:INTERMEDIATE",
+        "contentHash": "d231e0f932d27130cbc66c0f45c8c6e20d2a75077663a8934777e532c2943113",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "repo:2022_06_5063572-q26",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "holdout:ANTONYM:STANDARD:KILLER",
+        "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq2capq3000ammm8iftgy9tp",
+        "plan": "STANDARD",
+        "split": "holdout",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "holdout:ANTONYM:PREMIUM:BASIC",
+        "contentHash": "d0261be75d49a681b21f4573e964d449cb2c099f98ffeb09c037559706d29c23",
+        "difficulty": "BASIC",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmq272t6z001ommcsbneh6fby",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "holdout:ANTONYM:PREMIUM:INTERMEDIATE",
+        "contentHash": "5e46fb6e5a5d2a3086b3ababd4f4498cb6ea31dfa5a0e4f2a900cf4db31ff702",
+        "difficulty": "INTERMEDIATE",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmpaqf96q0001l204lnt7f5y9",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "ANTONYM"
+      },
+      {
+        "cellId": "holdout:ANTONYM:PREMIUM:KILLER",
+        "contentHash": "c60a3a1a0020f9afce966b355a41339ec7dc557c26134ffe57487ed84c4d800f",
+        "difficulty": "KILLER",
+        "feasibility": {
+          "criteria": [
+            "automaticStatus = CLEAN_CANDIDATE"
+          ],
+          "notes": [
+            "Heuristic fit only; this does not certify item-level validity."
+          ],
+          "status": "PREFERRED"
+        },
+        "passageId": "cmqg66544000emm60nvhh17iu",
+        "plan": "PREMIUM",
+        "split": "holdout",
+        "type": "ANTONYM"
+      }
+    ],
+    "fallbackCells": 0,
+    "passageUseCounts": {
+      "cmpaqf96q0001l204lnt7f5y9": 3,
+      "cmpaqf97g0003l204jhi59d8z": 3,
+      "cmpaqf97v0005l204xjjvssdr": 3,
+      "cmpaqf997000bl204g2nptcrl": 3,
+      "cmpaqf99o000dl204pyve3pdv": 3,
+      "cmpaqf9a4000fl2042odbrdj0": 2,
+      "cmpaqf9aj000hl20466bzeiga": 2,
+      "cmpaqf9ay000jl204pew667f2": 2,
+      "cmpaqf9fr0017l204rcz69oyr": 3,
+      "cmpbeploy0069mmag6t6caoiu": 3,
+      "cmpchv9xq0003ky0484e1e7y4": 3,
+      "cmpnzw9ay00dbmmykw8e1lclh": 3,
+      "cmpnzxg1100e7mmykv46al2g6": 2,
+      "cmpv7gfl00001mmbc0u8d49ep": 2,
+      "cmpwtrzov0001jd0b5z38rzdv": 3,
+      "cmq20ulw9000kmmcsd6rn4vv1": 3,
+      "cmq20um9t000mmmcs8wc3qpj3": 2,
+      "cmq23oovd0015mmcsd9fjq8gf": 3,
+      "cmq23op900017mmcsgdlfr18c": 2,
+      "cmq272sfm001kmmcsay23lmyc": 2,
+      "cmq272t6z001ommcsbneh6fby": 3,
+      "cmq2capq3000ammm8iftgy9tp": 3,
+      "cmq50ifrc003ummm8xv9ppk4g": 3,
+      "cmq56mbbc0001mm6cabjbecw8": 3,
+      "cmq5c5cip001lmmrwty0eg9zg": 2,
+      "cmq5gpplq0001mmsg2fi1puqg": 2,
+      "cmq742ju90015mm1gk4pzfggd": 3,
+      "cmqb48s000001l70497mch8x0": 3,
+      "cmqfkcut40032mmzcjq5riqxl": 2,
+      "cmqg66544000emm60nvhh17iu": 3,
+      "repo:2005_06_3001149-q48-49-50": 2,
+      "repo:2005_09_3001156-q48-49-50": 2,
+      "repo:2005_YB_5006647-q46-47": 3,
+      "repo:2005_YB_5006647-q48-49-50": 2,
+      "repo:2007_SN_3000983-q49-50": 3,
+      "repo:2010_06_3001224-q49-50": 2,
+      "repo:2011_09_3001251-q19": 2,
+      "repo:2018_SN_5019793-q40": 3,
+      "repo:2019_SN_5031122-q23": 2,
+      "repo:2021_09_5050886-q22": 2,
+      "repo:2021_SN_5061633-q24": 2,
+      "repo:2022_06_5063572-q26": 3,
+      "repo:2025_06_5086961-q22": 2,
+      "repo:2027_06_5095396-q20": 3,
+      "repo:ebsi_go1_20130903-q40": 2,
+      "repo:ebsi_go1_20150902-q20": 2,
+      "repo:ebsi_go1_20170601-q25": 2,
+      "repo:ebsi_go1_20190604-q20": 3,
+      "repo:ebsi_go1_20230601-q22": 2,
+      "repo:ebsi_go2_20160901-q21": 2,
+      "repo:ebsi_go2_20181121-q25": 3,
+      "repo:ebsi_go2_20191120-q22": 3,
+      "repo:ebsi_go2_20191120-q26": 2,
+      "repo:ebsi_go2_20201118-q21": 2,
+      "repo:ebsi_go2_20210831-q24": 2,
+      "repo:ebsi_go2_20260324-q21": 2,
+      "repo:ebsi_go3_20141007-q29": 3,
+      "repo:ebsi_go3_20210707-q26": 3,
+      "repo:ebsi_go3_20241015-q20": 3,
+      "repo:ebsi_go3_20251014-q23": 2
+    }
+  },
+  "plans": [
+    "STANDARD",
+    "PREMIUM"
+  ],
+  "policy": {
+    "feasibilityWarning": "Type-fit labels are heuristics and require a pre-generation human check.",
+    "legacyExcluded": [
+      "TOPIC_MAIN_IDEA"
+    ],
+    "rotation": "Least-used feasible passage, then seeded SHA-256 tie-break per cell."
+  },
+  "schemaVersion": 1,
+  "seed": "question-quality-20260715-corpus-v1"
+}

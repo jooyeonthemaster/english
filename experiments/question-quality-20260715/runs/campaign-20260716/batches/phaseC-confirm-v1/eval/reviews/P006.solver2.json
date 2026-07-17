@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the stream of remote associations coming from the right hemisphere' — 'coming' is a present participle heading a reduced relative clause ('associations that come from...'). Head noun is the notional subject of the active intransitive 'come', so the active participle is licensed. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'necessary when solving problems analytically' — elliptical 'when [one is] solving problems' with a generic human subject. Strictly the matrix subject ('this pattern of attention') does not co-refer, a technical dangling ellipsis, but 'when + V-ing' with generic subject is standard attested usage and uniformly treated as grammatical in KSAT convention. Not a competing answer."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'the connections that leads to creative insights' — relative pronoun 'that' has the plural antecedent 'the connections'; no singular antecedent or alternative parse (no cleft, no demonstrative reading, gerund 'detecting' cannot host this restrictive relative) is available. Subject-verb agreement requires plural 'lead'. Ungrammatical — this is the error."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'so many insights happen during warm showers' — plural subject 'insights' agrees with plural verb 'happen'. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'It's not until we're being massaged... that we're finally able to...' — canonical it-cleft of a 'not until' adverbial ('It is not until X that Y'); 'that' is the obligatory cleft complementizer. Grammatical."
+    }
+  ],
+  "note": "Unique error at (C): plural antecedent 'connections' forces 'lead'. Adversarial search for alternative parses that would rescue 'leads' (demonstrative 'that', cleft, attraction to a singular head) found none. (B) is the only item with any theoretical wrinkle (dangling 'when solving'), but generic-subject 'when + V-ing' is standard and never treated as an error in this item format, so the answer set does not split."
+}

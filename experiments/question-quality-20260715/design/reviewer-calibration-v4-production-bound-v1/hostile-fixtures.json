@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-hostile-fixtures-1",
+  "status": "SYNTHETIC_MUTATIONS_ONLY_NO_OPERATIONAL_EVENTS",
+  "fixtures": [
+    {
+      "fixtureId": "H01_OMIT_CANONICAL_TYPE",
+      "mutation": "REMOVE_LAST_TYPE_FROM_FAMILY_8",
+      "expectedReasonCode": "NONFOCUS_COVERAGE_MISMATCH"
+    },
+    {
+      "fixtureId": "H02_DUPLICATE_CANONICAL_TYPE",
+      "mutation": "ADD_TOPIC_TO_FAMILY_2",
+      "expectedReasonCode": "NONFOCUS_DUPLICATE"
+    },
+    {
+      "fixtureId": "H03_REBALANCE_BY_RELABEL",
+      "mutation": "ENABLE_OUTCOME_RELABEL",
+      "expectedReasonCode": "OUTCOME_RELABEL_FORBIDDEN"
+    },
+    {
+      "fixtureId": "H04_GRADE_TARGETED_AUTHOR_BRIEF",
+      "mutation": "SET_FIRST_BRIEF_TARGET_GRADE_A",
+      "expectedReasonCode": "GRADE_TARGET_IN_AUTHOR_BRIEF"
+    },
+    {
+      "fixtureId": "H05_POST_ISSUE_ACCEPTED_EXPANSION",
+      "mutation": "ENABLE_POST_ISSUE_GRAMMAR_CONSTRAINT_EXPANSION",
+      "expectedReasonCode": "POST_ISSUE_SCORER_EXPANSION_FORBIDDEN"
+    },
+    {
+      "fixtureId": "H06_ACCESS_BEFORE_PRESEAL",
+      "mutation": "SYNTHETIC_RECEIPT_TIMESTAMP_BEFORE_AUTHORIZATION",
+      "expectedReasonCode": "ACCESS_BEFORE_PRESEAL"
+    },
+    {
+      "fixtureId": "H07_ROLE_OVERLAP",
+      "mutation": "BIND_AUTHOR_AND_RATER_TO_SAME_ACTOR",
+      "expectedReasonCode": "INCOMPATIBLE_ROLE_OVERLAP"
+    },
+    {
+      "fixtureId": "H08_TYPE_DRIFT",
+      "mutation": "ADD_UNBOUND_NONFOCUS_TYPE",
+      "expectedReasonCode": "BINDING_TYPE_DRIFT"
+    },
+    {
+      "fixtureId": "H09_UPSTREAM_BYTE_DRIFT",
+      "mutation": "CORRUPT_BINDING_UPSTREAM_MANIFEST_HASH",
+      "expectedReasonCode": "UPSTREAM_HASH_DRIFT"
+    },
+    {
+      "fixtureId": "H10_ROTATION_CHERRY_PICK",
+      "mutation": "REPLACE_EPOCH1_MAIN_FAMILY1_TYPE_WITH_TITLE",
+      "expectedReasonCode": "ROTATION_PLAN_MISMATCH"
+    },
+    {
+      "fixtureId": "H11_APPEND_ONLY_CHAIN_GAP",
+      "mutation": "SYNTHETIC_REJECTION_SEQUENCE_GAP",
+      "expectedReasonCode": "APPEND_ONLY_CHAIN_BROKEN"
+    },
+    {
+      "fixtureId": "H12_NONEMPTY_SURFACE_AT_DESIGN_FREEZE",
+      "mutation": "ADD_MATERIALIZED_CANDIDATE_ROW",
+      "expectedReasonCode": "DESIGN_PACKET_NOT_EMPTY"
+    },
+    {
+      "fixtureId": "H13_PRIOR_LOGICAL_UNIVERSE_REUSE",
+      "mutation": "ENABLE_PRIOR_LOGICAL_TYPES",
+      "expectedReasonCode": "PRIOR_LOGICAL_TYPES_FORBIDDEN"
+    },
+    {
+      "fixtureId": "H14_ROTATION_OUTCOME_SKIP",
+      "mutation": "ENABLE_OUTCOME_AWARE_TYPE_SUBSTITUTION",
+      "expectedReasonCode": "ROTATION_CHERRY_PICK_FORBIDDEN"
+    }
+  ]
+}

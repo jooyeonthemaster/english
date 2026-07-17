@@ -1,0 +1,38 @@
+{
+  "pid": "P071",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "독립 재검증 결과 선언된 정답 (C)가 유일한 어법 오류로 확정된다. 문장의 주어 NP 'One of the most common mistakes made by organizations when they first consider experimenting with social media'의 핵은 단수 'One'이며, of-전치사구·분사구·when부사절은 모두 수일치를 지배하지 못하므로 본동사는 is여야 하고 are는 비문이다. 'one of + 복수명사 + that/who + 복수동사'처럼 복수 일치가 표준적으로 허용되는 구조는 관계절 내부 동사일 때뿐인데, (C) 자리는 that절 보어를 취하는 모문 계사이므로 그 예외가 적용될 여지가 없다. 근접 일치(attraction)는 규범·표준 문법 모두에서 오류로 취급된다. 나머지 네 밑줄 (A) made(축약 수동 관계절), (B) experimenting(consider+동명사), (D) that(완전절을 이끄는 명사절 접속사), (E) result(must either V or V 원형 병렬)는 각각 대안 파스를 전수 탐색해도 비문이 되는 경로가 없어 모두 정문이다. 솔버1·솔버2의 판정에 과잉 판정이나 누락된 대안 해석은 발견되지 않았고, 교정형 is를 대입하면 원지문이 정확히 복원된다. 정답 유일성(V2) 성립.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "made는 mistakes를 후치수식하는 수동 과거분사로 정문이다",
+      "verdict": "정문 확정 — 대안 해석 없음",
+      "evidence": "'mistakes [that are] made by organizations'의 축약 수동 관계절. mistakes는 make의 피동작주이고 by organizations 행위자구가 수동을 확증한다. made를 정형 과거동사로 읽는 대안 파스를 시도하면 뒤의 are가 주어를 잃어 문장이 성립하지 않으므로, 분사 독법이 유일 파스이며 그 독법에서 made는 정확하다."
+    },
+    {
+      "label": "(B)",
+      "claim": "experimenting은 consider의 동명사 목적어로 정문이다",
+      "verdict": "정문 확정 — 대안 해석 없음",
+      "evidence": "consider는 '~해 볼 것을 고려하다' 의미에서 동명사 보충어를 취한다(consider + V-ing). 'consider to experiment'는 비표준이며, 'first consider experimenting with social media'는 표준 결합. 현재분사 수식 등 다른 독법으로 experimenting이 비문이 되는 경로 없음."
+    },
+    {
+      "label": "(C)",
+      "claim": "are는 단수 주어 핵 'One'과 불일치하는 수일치 오류이다 (선언된 정답)",
+      "verdict": "오류 확정 — 유일 정답",
+      "evidence": "주어 NP 핵은 단수 'One'. 'of the most common mistakes made by...'는 of-PP 내부 수식이라 일치를 지배하지 못하고, 'when they first consider...'는 부가절. 따라서 모문 계사는 is여야 하며 are는 비문. 복수 일치가 허용되는 'one of the Ns that ARE ...' 구조는 관계절 내부 동사에만 적용되는데 여기 (C)는 that절 보어를 취하는 모문 동사이므로 해당 없음. 도치·존재문 등 복수 핵을 세울 대안 파스도 없음(보어가 that절이므로 주어-보어 재배열 불가). is로 교정 시 원지문과 정확히 일치."
+    },
+    {
+      "label": "(D)",
+      "claim": "that은 완전한 절을 이끄는 명사절 접속사로 정문이다",
+      "verdict": "정문 확정 — 대안 해석 없음",
+      "evidence": "계사 뒤 주격 보어 명사절을 이끄는 접속사 that. 후속절 'they focus too much on X and not enough on Y'는 결핍 성분이 없는 완전한 절이므로 what은 불가하고 that이 정확. 관계대명사 독법을 강제할 선행 명사도 구조상 없음. (오답 해설이 'be동사 is 뒤에서'라고 교정 후 형태로 서술한 것은 해설 표기 문제일 뿐 문법 판정에는 영향 없음.)"
+    },
+    {
+      "label": "(E)",
+      "claim": "result는 must either solve ... or result의 원형 병렬로 정문이다",
+      "verdict": "정문 확정 — 대안 해석 없음",
+      "evidence": "either가 조동사 must 뒤, 원형 solve 앞에 위치하므로 병렬 시작점은 must의 보충어 자리이고 두 등위항 모두 원형부정사여야 한다: 'must either solve a problem ... or result in an improvement'. results(주어 단수 유혹)나 resulting으로 바꾸면 병렬이 붕괴한다. 병렬 기준점을 달리 잡아 result를 비문으로 만들 대안 파스 없음."
+    }
+  ]
+}

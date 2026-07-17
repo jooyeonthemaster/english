@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "repeats the identical leap forward — 동일 도약을 반복하면 긴장이 배가되어 gap fill 원리(도약 후 방향 전환·귀환 경향) 및 'bringing the melody back toward home again'과 정면 충돌. 빈칸에 넣으면 직전 문장과 논리 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "narrows the distance created by the leap — 옥타브 도약이 만든 거리를 좁혀 home 쪽으로 다가가되 완전히 귀환하지는 않음. 직전 절 'bringing the melody back toward home again, but not by too much because he wants to continue to build tension'을 정확히 구현. 문법 결합(3인칭 단수 동사 + 목적어구)도 자연스러움. 실제 곡(Some-where-o: C→C'→B)의 진행과도 일치."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "brings us entirely back home at once — 최고 매력 오답. 'home'·'back' 어휘 반복으로 실전에서 순간 끌린다. 그러나 'but not by too much because he wants to continue to build tension'이 'entirely/at once'(완전·즉시 귀환)를 명시적으로 배제. 부분 귀환이어야 하므로 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "violates the schematic expectation completely — 앞 문장의 'strong schematic violation'을 메아리치는 어휘 재활용 미끼. 스키마 위반은 첫 옥타브 도약이 한 것이고, 셋째 음은 그 위반을 보상·완화(rewards and soothes)하는 역할이므로 논리 반전."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "eliminates the need for stepwise motion — stepwise motion은 전형적 멜로디의 특성으로 소개됐을 뿐 '필요 제거' 논의는 지문에 없음. 무관 소재 미끼."
+    }
+  ],
+  "note": "정답 유일성 확실. 빈칸 직전 문장 'back toward home again, but not by too much'가 ②(부분적 거리 축소)만 허용하고 ③(완전 귀환)·①(도약 반복)·④(추가 위반)를 각각 명시적으로 배제하는 깔끔한 설계. 매력적 오답 위계: ③ > ④ > ① > ⑤. ③을 옹호할 대안 해석('rewards and soothes'가 완전 귀환을 함의한다는 독해)을 적극 시도했으나 'not by too much'가 양보 없이 차단하므로 성립 불가. 모든 선지가 빈칸 자리에서 문법적으로 결합 가능하여 문법 seam으로 답이 새지 않음 — 순수 논리 문항으로 양호."
+}

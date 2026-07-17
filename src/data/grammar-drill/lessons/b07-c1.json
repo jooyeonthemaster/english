@@ -1,0 +1,657 @@
+{
+  "id": "b07-c1",
+  "unitId": "b07",
+  "order": 1,
+  "title": "전치사의 목적어는 명사(구)",
+  "oneLiner": "전치사 뒤에는 명사·대명사의 목적격·동명사가 오고, 동사원형·to부정사·that절은 오지 못합니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 전치사(구)(중 ●)",
+      "천일문 중등 GRAMMAR — 전치사의 목적어(명사·대명사·동명사)",
+      "천일문 고등 GRAMMAR — 전치사 vs 접속사(during·while / despite·although)"
+    ]
+  },
+  "lenses": ["L1", "L2"],
+  "confusableWith": ["b07-c3", "b07-c4", "u08-c1"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The students look forward to visiting the science museum next week.",
+        "The students look forward to visit the science museum next week."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 to 뒤의 형태 하나입니다. 이 레슨을 마치면 이 to 가 무엇인지, 왜 visiting 이어야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "전치사의 목적어",
+      "question": "전치사의 목적어가 대체 무엇입니까?",
+      "plain": "전치사는 늘 뒤에 짝을 하나 데리고 다닙니다. 그 짝, 곧 전치사 바로 뒤에 붙는 명사(구)를 전치사의 목적어라고 부릅니다.",
+      "analogy": "전치사는 손을 내미는 사람과 같습니다. 손을 내밀었으면 반드시 잡아 줄 상대가 있어야 하듯, 전치사가 서면 그 손을 잡아 줄 명사가 뒤에 와야 합니다. 그 상대가 바로 목적어입니다.",
+      "whyItMatters": "전치사 뒤 밑줄은 수능·내신 어법의 단골입니다. 그 자리에 명사 노릇을 못 하는 동사원형이나 to부정사를 슬쩍 놓아 오답을 만듭니다. 목적어 자리를 알아보면 이 함정이 그냥 보입니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "전치사 뒤에 설 수 있는 것과 없는 것",
+      "intro": "전치사 뒤 자리에는 오직 '명사 노릇을 하는 말'만 들어갑니다. 들어갈 수 있는 셋과 들어갈 수 없는 셋을 한 항목씩 봅니다.",
+      "entries": [
+        {
+          "head": "명사(구) — 목적어의 기본",
+          "body": "사람·사물·생각의 이름인 명사와 그 덩어리는 전치사의 가장 흔한 목적어입니다.",
+          "example": {
+            "en": "The report **on climate change** drew wide attention.",
+            "ko": "기후 변화에 관한 그 보고서는 폭넓은 주목을 받았습니다.",
+            "note": "전치사 on 의 목적어는 명사구 climate change 입니다."
+          }
+        },
+        {
+          "head": "대명사의 목적격 — 주격은 못 온다",
+          "body": "대명사가 전치사의 목적어가 될 때는 목적격을 씁니다. 주격 I·he·we 가 아니라 me·him·us 입니다.",
+          "example": {
+            "en": "This decision rests **with them**, not with the committee.",
+            "ko": "이 결정은 위원회가 아니라 그들에게 달려 있습니다.",
+            "note": "전치사 with 의 목적어이므로 주격 they 가 아니라 목적격 them 이 옵니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "동명사(-ing) — 동사의 뜻을 담는 그릇",
+          "body": "동사의 뜻을 전치사 뒤에 넣어야 하면 동명사로 바꿉니다. 동명사는 동사에서 왔지만 명사 노릇을 합니다.",
+          "example": {
+            "en": "She succeeded **in solving** the difficult puzzle.",
+            "ko": "그녀는 그 어려운 퍼즐을 푸는 데 성공했습니다.",
+            "note": "전치사 in 의 목적어 자리에 동명사 solving 이 왔습니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "동사원형 — 자격 없음",
+          "body": "동사원형은 명사가 아니므로 전치사의 목적어가 되지 못합니다. 이 자리에 놓이면 곧바로 비문입니다."
+        },
+        {
+          "head": "to부정사 — 자격 없음",
+          "body": "to부정사도 전치사의 목적어 자리에 오지 못합니다. 동사의 뜻이 필요하면 to부정사가 아니라 동명사로 바꿉니다."
+        },
+        {
+          "head": "that절 — 바로는 못 온다",
+          "body": "that절은 전치사 뒤에 바로 놓지 못합니다. the fact that … 처럼 명사를 앞세우거나 전치사를 지워야 합니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "전치사 뒤에는 반드시 목적어가 하나 오며, 그 자리에는 명사(구)나 대명사의 목적격이 옵니다.",
+      "examples": [
+        {
+          "en": "The new gallery stands **beside the old library**.",
+          "ko": "그 새 미술관은 오래된 도서관 옆에 있습니다.",
+          "note": "전치사 beside 의 목적어는 명사구 the old library 입니다. 전치사는 목적어 없이 홀로 서지 못합니다."
+        },
+        {
+          "en": "The teacher explained the rule **to us** twice.",
+          "ko": "그 교사는 우리에게 그 규칙을 두 번 설명했습니다.",
+          "note": "전치사 to 의 목적어 자리이므로 대명사는 주격 we 가 아니라 목적격 us 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현이 전치사 뒤(전치사의 목적어 자리)에 올 수 있는지 분류하십시오.",
+      "buckets": [
+        { "id": "ok", "label": "전치사 뒤에 온다" },
+        { "id": "no", "label": "전치사 뒤에 못 온다" }
+      ],
+      "chips": [
+        { "text": "the final report", "bucketId": "ok", "why": "명사구는 전치사의 대표적인 목적어입니다." },
+        { "text": "him", "bucketId": "ok", "why": "대명사의 목적격은 전치사의 목적어가 됩니다." },
+        { "text": "reading the report", "bucketId": "ok", "why": "동명사구는 명사 노릇을 하므로 전치사의 목적어가 됩니다." },
+        { "text": "read the report", "bucketId": "no", "why": "동사원형은 명사가 아니므로 전치사의 목적어가 되지 못합니다." },
+        { "text": "to read the report", "bucketId": "no", "why": "to부정사는 전치사의 목적어 자리에 오지 못합니다. 동명사로 바꾸어야 합니다." },
+        { "text": "that he read the report", "bucketId": "no", "why": "that절은 전치사의 목적어가 되지 못합니다. the fact that … 처럼 명사를 앞세워야 합니다." }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "전치사 뒤에 동사의 뜻을 넣어야 하면 동명사(-ing)로 바꿉니다. 동사원형과 to부정사는 전치사의 목적어가 되지 못합니다.",
+      "examples": [
+        {
+          "en": "She improved her grades **by reviewing** her notes every night.",
+          "ko": "그 학생은 매일 밤 필기를 복습함으로써 성적을 올렸습니다.",
+          "note": "전치사 by 의 목적어는 동명사 reviewing 입니다. 동명사는 동사에서 나왔지만 명사 노릇을 합니다."
+        },
+        {
+          "en": "She improved her grades **by review** her notes every night.",
+          "ko": "(의도) 매일 밤 필기를 복습함으로써 성적을 올렸다 — 그러나 이 형태로는 이 뜻을 만들 수 없습니다.",
+          "note": "동사원형 review 는 명사가 아니므로 전치사 by 의 목적어가 되지 못합니다. review 를 명사로 읽더라도 명사는 her notes 를 목적어로 받을 수 없어 her notes 가 갈 곳을 잃습니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "to 가 전치사인 표현들",
+      "why": "to 를 보면 반사적으로 동사원형을 쓰는 습관 때문에 이 표현들에서 오답이 쏟아집니다. 이 목록이 손에 붙어 있어야 to 를 보고도 동명사를 떠올립니다.",
+      "device": "네 표현을 뜻으로 묶습니다 — '고대·반대·익숙·기여'. look forward to(고대), object to·be opposed to(반대), be used to(익숙), contribute to(기여). 각 to 뒤에 명사를 넣어 말이 되면 그 to 는 전치사라고 스스로 확인하십시오.",
+      "items": [
+        { "cue": "look forward to", "answer": "~을 고대하다 — to 뒤에 동명사" },
+        { "cue": "object to / be opposed to", "answer": "~에 반대하다 — to 뒤에 동명사" },
+        { "cue": "be used to", "answer": "~에 익숙하다 — to 뒤에 동명사 (단, be used to + 동사원형 은 별개 뜻)" },
+        { "cue": "contribute to", "answer": "~에 기여하다 — to 뒤에 동명사" },
+        { "cue": "devote oneself to", "answer": "~에 헌신하다 — to 뒤에 동명사" }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "전치사 to 관문",
+      "mission": "to 가 전치사여서 뒤에 동명사가 오는 표현만 전부 고르십시오. to부정사를 부르는 침입자가 셋 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "look forward to",
+        "object to",
+        "be opposed to",
+        "be used to (익숙하다)",
+        "contribute to",
+        "want to",
+        "decide to",
+        "plan to"
+      ],
+      "answers": [
+        "look forward to",
+        "object to",
+        "be opposed to",
+        "be used to (익숙하다)",
+        "contribute to"
+      ],
+      "passText": "전치사 to 다섯을 전부 가려냈습니다. want·decide·plan 뒤의 to 는 to부정사의 to 라는 것까지 갈랐다면, 이 개념의 절반은 이미 손에 들어왔습니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 뒤에 명사를 넣어 말이 되면 그 to 는 전치사입니다. 'be used to it'은 되지만 'want to it'은 되지 않습니다. 다시 골라 보십시오."
+    },
+    {
+      "id": "b9",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "전치사구가 둘인 문장의 해부",
+      "tokens": [
+        { "t": "The success", "role": "S" },
+        { "t": "of the project", "role": "M" },
+        { "t": "depends", "role": "V" },
+        { "t": "on", "role": "X" },
+        { "t": "careful planning", "role": "O" }
+      ],
+      "ko": "그 사업의 성공은 세심한 계획에 달려 있습니다.",
+      "layers": [
+        {
+          "label": "① 주어를 꾸미는 전치사구를 걷어냅니다",
+          "roles": ["M"],
+          "note": "of the project 는 앞의 명사를 뒤에서 꾸미는 전치사구입니다. 문장의 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "전치사구를 걷어내면 주어는 The success 입니다. project 는 전치사 of 의 목적어이므로 주어 후보가 아닙니다."
+        },
+        {
+          "label": "③ 본동사를 확인합니다",
+          "roles": ["V"],
+          "note": "본동사는 depends 입니다. 핵 주어 The success 가 단수이므로 단수형입니다."
+        },
+        {
+          "label": "④ 전치사의 목적어를 확인합니다",
+          "roles": ["X", "O"],
+          "note": "on 은 전치사이고 그 목적어가 명사구 careful planning 입니다. 여기서 '목적어'는 동사 depends 의 목적어가 아니라 전치사 on 의 목적어를 뜻합니다. 이 자리에 동사원형 plan 을 넣으면 전치사의 목적어가 사라집니다."
+        }
+      ],
+      "conclusion": "전치사 of 와 on 은 각각 목적어를 하나씩 데리고 있습니다(the project, careful planning). careful planning 은 전치사 on 의 목적어이지 동사 depends 의 목적어가 아닙니다. 전치사의 목적어는 문장의 주어가 될 수 없으므로 핵 주어는 The success 하나뿐입니다."
+    },
+    {
+      "id": "b10",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "전치사 뒤 자리를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "문장에서 전치사를 찾고 그 바로 뒤를 봅니다.",
+          "applyNote": "전치사는 in, without, of 셋입니다. of 뒤에는 이미 명사구 the product 가 있으므로, 형태를 판단해야 하는 곳은 in 과 without 의 뒤입니다."
+        },
+        {
+          "text": "뒤에 '주어 + 동사'를 갖춘 절이 있는지 확인합니다. 절이 있으면 그 자리는 전치사가 아니라 접속사 자리입니다.",
+          "applyNote": "in 뒤에도 without 뒤에도 주어와 동사의 짝이 없습니다. 따라서 둘 다 전치사 자리이며, 명사 노릇을 하는 말이 와야 합니다."
+        },
+        {
+          "text": "동사의 뜻을 넣어야 하면 동명사(-ing)로 바꿉니다. 동사원형·to부정사는 이 자리에 오지 못합니다.",
+          "applyNote": "reduce 와 lower 를 그대로 쓸 수 없으므로 동명사 reducing 과 lowering 으로 바꿉니다."
+        },
+        {
+          "text": "목적어가 대명사이면 목적격인지 확인합니다.",
+          "applyNote": "이 문장에는 대명사가 없습니다. costs 를 대명사로 바꾼다면 주격 they 가 아니라 목적격 them 이 됩니다."
+        }
+      ],
+      "example": {
+        "en": "The team succeeded **in reducing** costs without **lowering** the quality of the product.",
+        "ko": "그 팀은 제품의 품질을 낮추지 않고 비용을 줄이는 데 성공했습니다.",
+        "note": "in 과 without 은 모두 전치사이므로 뒤에 동명사 reducing 과 lowering 이 왔습니다."
+      }
+    },
+    {
+      "id": "b11",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Many parents object to ( allow / allowing ) students to use phones during class.",
+      "steps": [
+        {
+          "title": "① 괄호 앞의 to 가 무엇인지 봅니다",
+          "body": "object 는 to 와 짝을 이루어 목적어를 받는 동사입니다. 이 to 는 to부정사의 to 가 아니라 전치사입니다."
+        },
+        {
+          "title": "② 뒤에 절이 있는지 확인합니다",
+          "body": "to 뒤에 '주어 + 동사'의 짝이 없습니다. 따라서 이 자리는 전치사의 목적어 자리입니다."
+        },
+        {
+          "title": "③ 들어갈 형태를 정합니다",
+          "body": "전치사의 목적어에는 명사 노릇을 하는 말만 옵니다. 동사원형 allow 는 자격이 없으므로 동명사 allowing 이 필요합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "allowing 을 넣으면 allowing students to use phones 라는 동명사구가 to 의 목적어가 되어 문장이 완성됩니다."
+        }
+      ],
+      "answer": "allowing",
+      "ko": "많은 학부모가 학생들이 수업 중에 휴대전화를 사용하도록 허용하는 것에 반대합니다."
+    },
+    {
+      "id": "b12",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b07-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The children were tired after {{blank}} for two hours.",
+          "options": ["walking", "walk"],
+          "answer": 0,
+          "translation": "그 아이들은 두 시간 동안 걸은 뒤 지쳤습니다.",
+          "explanation": "after 는 전치사이고 그 뒤에는 주어와 동사의 짝이 없습니다. 전치사의 목적어 자리이므로 명사 노릇을 하는 동명사 walking 이 옳습니다. 동사원형 walk 는 이 자리에 오지 못합니다.",
+          "trapTags": ["prep-gerund"]
+        },
+        {
+          "id": "b07-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The volunteers cleaned the riverside park without [[u:complain]] about the heat.",
+          "isCorrect": false,
+          "correction": "complaining",
+          "translation": "그 자원봉사자들은 더위에 대해 불평하지 않고 강변 공원을 청소했습니다.",
+          "explanation": "without 은 전치사이므로 뒤에 명사 노릇을 하는 말이 와야 합니다. 동사원형 complain 은 전치사의 목적어가 되지 못하므로 동명사 complaining 으로 고쳐야 합니다.",
+          "trapTags": ["prep-gerund"]
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "전치사구(전치사 + 목적어)는 통째로 수식어입니다. 그 안의 명사는 이미 전치사의 목적어이므로 문장의 주어가 되지 못합니다.",
+      "examples": [
+        {
+          "en": "The cost **of the repairs** was higher than the owner expected.",
+          "ko": "그 수리의 비용은 주인이 예상한 것보다 높았습니다.",
+          "note": "of the repairs 는 전치사구 수식어입니다. 핵 주어는 The cost 이므로 동사는 단수형 was 입니다."
+        },
+        {
+          "en": "One **of the students** has already finished the assignment.",
+          "ko": "그 학생들 중 한 명은 이미 그 과제를 끝냈습니다.",
+          "note": "students 는 전치사 of 의 목적어이므로 주어가 될 수 없습니다. 핵 주어 One 에 맞추어 has 가 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "뒤에 무엇이 오는가 — 전치사와 접속사",
+      "columns": ["전치사 (뒤에 명사구)", "접속사 (뒤에 절)"],
+      "rows": [
+        { "criterion": "시간", "a": "during the lecture", "b": "while the lecture continued" },
+        { "criterion": "양보", "a": "despite / in spite of the delay", "b": "although / though the train was delayed" },
+        { "criterion": "이유", "a": "because of the heavy snow", "b": "because the snow was heavy" }
+      ],
+      "examples": [
+        {
+          "en": "**During the lecture**, the students took careful notes.",
+          "ko": "강의 중에 그 학생들은 꼼꼼히 필기했습니다.",
+          "note": "During 뒤에는 명사구 the lecture 가 옵니다. 주어와 동사의 짝이 없습니다."
+        },
+        {
+          "en": "**While the lecture continued**, the students took careful notes.",
+          "ko": "강의가 계속되는 동안 그 학생들은 꼼꼼히 필기했습니다.",
+          "note": "While 뒤에는 주어 the lecture 와 동사 continued 를 갖춘 절이 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "전치사와 짝 접속사 잇기",
+      "instruction": "왼쪽의 전치사와 뜻이 같으면서 뒤에 '주어 + 동사'의 절을 이끄는 오른쪽 접속사를 짝지으십시오. 이 접속사들이 이끄는 절 자체는 뒤 레슨에서 정면으로 다루고, 여기서는 전치사와 짝만 맞춰 둡니다.",
+      "pairs": [
+        {
+          "a": "during",
+          "b": "while",
+          "why": "during 뒤에는 명사구가, while 뒤에는 '주어 + 동사'를 갖춘 절이 옵니다. 둘 다 '~하는 동안'입니다."
+        },
+        {
+          "a": "despite",
+          "b": "although",
+          "why": "despite 는 명사구를, although 는 절을 이끕니다. 뜻은 '~에도 불구하고'로 거의 같습니다."
+        },
+        {
+          "a": "because of",
+          "b": "because",
+          "why": "because of 뒤에는 명사구가, because 뒤에는 절이 옵니다. 둘 다 이유를 나타냅니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The morning flight was delayed ( because / because of ) the heavy snow.",
+      "givenSteps": [
+        "① 괄호 뒤를 봅니다 — the heavy snow 는 명사구입니다.",
+        "② 주어와 동사의 짝을 찾습니다 — the heavy snow 안에는 동사가 없습니다. 절이 아닙니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "because of — 뒤가 명사구이므로 전치사구를 만드는 because of 가 옳습니다",
+        "because — 이유를 나타내므로 because 가 자연스럽습니다",
+        "because — 뒤의 snow 가 주어이므로 절입니다"
+      ],
+      "answer": 0,
+      "explain": "because 는 접속사이므로 뒤에 '주어 + 동사'를 갖춘 절이 와야 합니다. 여기서는 명사구 the heavy snow 만 있으므로 전치사 역할을 하는 because of 가 옳습니다. because 를 쓰려면 because the snow was heavy 처럼 절로 바꾸어야 합니다."
+    },
+    {
+      "id": "b17",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b07-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "{{blank}} the noise from the street, the lecture continued without interruption.",
+          "options": ["Despite", "Although"],
+          "answer": 0,
+          "translation": "거리에서 나는 소음에도 불구하고 그 강의는 중단 없이 계속되었습니다.",
+          "explanation": "빈칸 뒤의 the noise from the street 는 동사가 없는 명사구입니다. 명사구 앞자리이므로 전치사 Despite 가 옳습니다. Although 는 접속사여서 뒤에 '주어 + 동사'를 갖춘 절이 와야 합니다.",
+          "trapTags": ["despite-although", "clause-vs-np"]
+        },
+        {
+          "id": "b07-c1-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The researchers are looking forward to [[u:present]] their findings at the international conference.",
+          "isCorrect": false,
+          "correction": "presenting",
+          "translation": "그 연구자들은 국제 학회에서 자신들의 연구 결과를 발표하기를 고대하고 있습니다.",
+          "explanation": "look forward to 의 to 는 to부정사의 to 가 아니라 전치사입니다. 전치사의 목적어 자리이므로 동사원형 present 가 아니라 동명사 presenting 이 옳습니다.",
+          "trapTags": ["prep-to-gerund"]
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 Despite 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "빈칸 뒤가 동사 없는 명사구여서 절을 이끄는 접속사는 설 수 없고, 명사구를 목적어로 받는 전치사가 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 뒤에 절이 있는가, 명사구가 있는가가 전치사와 접속사를 가르는 유일한 기준입니다."
+        },
+        {
+          "text": "문장이 '그럼에도 불구하고'라는 양보의 뜻이므로 Despite 가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "Despite 와 Although 는 뜻이 거의 같습니다. 뜻으로는 두 후보를 가를 수 없고, 뒤에 오는 형태로만 가릅니다."
+        },
+        {
+          "text": "Despite 가 문장 맨 앞에 오는 것이 더 흔한 표현이기 때문입니다.",
+          "correct": false,
+          "feedback": "Although 도 문장 맨 앞에 자주 옵니다. 위치가 아니라 뒤따르는 것이 명사구인지 절인지가 판단 근거입니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "to 가 전치사인 표현들",
+      "body": "to 를 보면 반사적으로 동사원형을 쓰는 습관이 오답을 만듭니다. look forward to, object to, be used to(익숙하다), be opposed to, contribute to, devote oneself to 의 to 는 전치사이므로 뒤에 동명사가 옵니다. 뒤에 명사구가 들어갈 수 있는지 넣어 보면 전치사인지 확인됩니다.",
+      "example": {
+        "en": "The speaker is used to **addressing** large audiences.",
+        "ko": "그 연설자는 많은 청중 앞에서 연설하는 데 익숙합니다.",
+        "note": "be used to 뒤에 명사구를 넣어 보면(is used to large audiences) 말이 되므로 이 to 는 전치사입니다. 따라서 동사는 동명사 addressing 으로 씁니다."
+      }
+    },
+    {
+      "id": "b20",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. 전치사 뒤에 설 수 있는가, 그리고 전치사인가 접속사인가를 보십시오.",
+      "rounds": [
+        {
+          "words": ["the report", "reading it", "him", "to read it"],
+          "odd": 3,
+          "why": "to read it 은 to부정사여서 전치사의 목적어가 되지 못합니다. 나머지 셋은 명사구·동명사구·목적격 대명사로 모두 전치사 뒤에 설 수 있습니다."
+        },
+        {
+          "words": ["during", "despite", "because of", "although"],
+          "odd": 3,
+          "why": "although 만 뒤에 절을 이끄는 접속사입니다. 나머지 셋은 뒤에 명사구를 두는 전치사입니다."
+        },
+        {
+          "words": ["object to", "look forward to", "want to", "be used to (익숙하다)"],
+          "odd": 2,
+          "why": "want to 의 to 는 to부정사의 to 여서 뒤에 동사원형이 옵니다. 나머지 셋(object to·look forward to·be used to(익숙하다))의 to 는 전치사여서 뒤에 동명사가 옵니다. be used to 는 '익숙하다' 뜻으로 고정했으므로 전치사이며, 'be used to + 동사원형(~하는 데 쓰이다)'의 별개 용법과 혼동하지 마십시오."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 학생들은 필기를 복습함으로써 성적을 올렸습니다.",
+      "answer": ["The students", "raised", "their grades", "by reviewing", "their notes"],
+      "tiles": [
+        "The students",
+        "raised",
+        "their grades",
+        "by reviewing",
+        "their notes",
+        "by review"
+      ],
+      "explanation": "by 는 전치사이므로 목적어 자리에 명사 노릇을 하는 동명사 reviewing 이 옵니다. 동사원형 review 는 명사가 아니어서 by 의 목적어가 되지 못하고, review 를 명사로 읽으면 뒤의 their notes 를 받을 수 없어 문장이 무너집니다. 그래서 by review 타일은 쓰이지 않습니다."
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 전치사 뒤에 that절을 두는 오류",
+      "body": "전치사의 목적어 자리에 that절을 바로 놓을 수 없습니다. 절의 내용을 전치사 뒤에 넣으려면 the fact that … 처럼 명사를 앞세우거나, 전치사를 지우고 that절을 동사나 형용사에 직접 붙여야 합니다(be certain **that** …, know **that** …). 완전한 절이 전치사 뒤에 곧바로 올 수 있는 예외가 있는지는 명사절을 배우는 뒤 레슨에서 이어집니다.",
+      "example": {
+        "en": "The engineers were certain about **that the bridge would hold**.",
+        "ko": "(의도) 다리가 견딜 것이라고 확신했다 — 그러나 about 뒤에 that절을 둔 이 형태는 비문입니다.",
+        "note": "전치사 about 뒤에 that절을 바로 둘 수 없습니다. about the fact that the bridge would hold 로 고치거나 전치사를 지우고 certain that the bridge would hold 로 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b23",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "[[1:Despite]] the heavy traffic, the delegates arrived on time, and they insisted [[2:on]] [[3:begin]] the session [[4:without]] further delay.",
+      "answer": 3,
+      "correction": "beginning",
+      "rationales": [
+        "뒤에 동사가 없는 명사구 the heavy traffic 이 오므로 전치사 Despite 가 옳습니다. 절이 왔다면 Although 를 써야 합니다.",
+        "insist 는 전치사 on 과 짝을 이루어 목적어를 받습니다. 여기서 on 은 전치사가 맞습니다.",
+        "전치사 on 의 목적어 자리이므로 명사 노릇을 하는 말이 와야 합니다. 동사원형 begin 은 자격이 없으므로 동명사 beginning 으로 고칩니다.",
+        "without 은 전치사이고 뒤에 명사구 further delay 가 왔으므로 옳습니다."
+      ],
+      "ko": "교통이 매우 혼잡했음에도 대표단은 제시간에 도착했고, 그들은 더 이상 지체 없이 회의를 시작할 것을 주장했습니다."
+    },
+    {
+      "id": "b24",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 괄호 안의 동사를 알맞은 형태로 바꾸어 쓰게 합니다. 앞의 to 가 전치사임을 알아채고 동명사로 써야 만점입니다.",
+          "sample": {
+            "en": "The residents are opposed to (build) a factory near the river.",
+            "ask": "괄호 안의 동사를 어법에 맞는 형태로 바꾸어 쓰십시오.",
+            "answer": "building — be opposed to 의 to 는 전치사이므로 목적어 자리에 동명사가 옵니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 전치사 뒤에 동사원형·to부정사를 놓아 오답 선지를 만들거나, 명사구 앞에 접속사를 놓아 despite 와 although 를 뒤바꿉니다. 밑줄 앞이 전치사이면 뒤가 명사 노릇을 하는 말인지부터 확인합니다.",
+          "sample": {
+            "en": "Many species survive the winter by [[u:lower]] their body temperature for several months.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "lowering — 전치사 by 의 목적어 자리이므로 동사원형이 아니라 동명사가 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "전치사 뒤 자리의 문지기",
+      "intro": "전치사 뒤에는 아무나 세울 수 없습니다. 명사 노릇을 하는 자만 이 자리에 들입니다. 네 번의 판단으로 그 자격을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The success of the plan depends on {{blank}} the deadline.",
+          "options": ["meeting", "meet"],
+          "answer": 0,
+          "why": "전치사 on 의 목적어 자리이므로 동사원형 meet 이 아니라 동명사 meeting 이 옳습니다."
+        },
+        {
+          "prompt": "{{blank}} the loud noise, the audience stayed until the end.",
+          "options": ["Despite", "Although"],
+          "answer": 0,
+          "why": "뒤의 the loud noise 는 동사가 없는 명사구입니다. 명사구 앞에는 전치사 Despite 가 오고, Although 는 절을 이끕니다."
+        },
+        {
+          "prompt": "Everyone congratulated the team on {{blank}} the award.",
+          "options": ["winning", "to win"],
+          "answer": 0,
+          "why": "전치사 on 뒤에는 명사 노릇을 하는 동명사 winning 이 옵니다. to부정사는 전치사의 목적어가 되지 못합니다."
+        },
+        {
+          "prompt": "The engineers were certain {{blank}} the bridge would hold.",
+          "options": ["that", "about that"],
+          "answer": 0,
+          "why": "certain 뒤에는 that절을 바로 붙입니다. 전치사 about 뒤에는 that절을 둘 수 없으므로 about that 은 비문입니다."
+        }
+      ],
+      "winText": "문지기가 물러섭니다. 명사 노릇을 하는 말만 전치사 뒤에 들인다는 원칙을 네 번 모두 지켰습니다. 이제 to 를 보고도 동요하지 않는 눈을 얻었습니다.",
+      "loseText": "문지기는 아직 비켜서지 않습니다. 오답을 다시 보십시오 — 전부 '전치사 뒤에 명사 노릇을 하는 말이 왔는가'를 묻고 있었습니다. 필기노트를 한 번 더 보고 오면 문은 열립니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "전치사 뒤에는 ___ 노릇을 하는 말만 오므로, 동사를 넣어야 하면 ___ 로 바꿉니다. 뒤에 '주어 + 동사'가 있으면 그 자리는 ___ 자리입니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "전치사는 목적어를 하나 데리고 다닙니다. 그 자리에는 명사(구)·대명사의 목적격·동명사가 옵니다.",
+        "동사원형과 to부정사는 전치사의 목적어가 되지 못합니다. 동사의 뜻이 필요하면 동명사(-ing)로 바꿉니다.",
+        "look forward to·object to·be used to(익숙하다)·be opposed to 의 to 는 전치사이므로 뒤에 동명사가 옵니다.",
+        "뒤에 명사구가 오면 전치사(during·despite·because of), '주어 + 동사'를 갖춘 절이 오면 접속사(while·although·because)입니다.",
+        "전치사구 안의 명사는 이미 전치사의 목적어이므로 문장의 주어가 될 수 없습니다."
+      ],
+      "keySentence": {
+        "en": "The team succeeded **in reducing** costs without **lowering** the quality of the product.",
+        "ko": "그 팀은 제품의 품질을 낮추지 않고 비용을 줄이는 데 성공했습니다.",
+        "note": "전치사 in 과 without 의 목적어 자리에 각각 동명사 reducing 과 lowering 이 왔습니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b07-c1-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The manager apologized for {{blank}} the meeting without notice.",
+          "options": ["canceling", "cancel"],
+          "answer": 0,
+          "translation": "그 관리자는 통보 없이 회의를 취소한 것에 대해 사과했습니다.",
+          "explanation": "for 는 전치사이므로 목적어 자리에 명사 노릇을 하는 말이 와야 합니다. 동사원형 cancel 은 올 수 없고 동명사 canceling 이 옳습니다.",
+          "trapTags": ["prep-gerund"]
+        },
+        {
+          "id": "b07-c1-ls-006",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The library stayed open [[u:during]] the entire exam period, and many students used it late at night.",
+          "isCorrect": true,
+          "translation": "그 도서관은 시험 기간 내내 열려 있었고, 많은 학생이 밤늦게까지 그곳을 이용했습니다.",
+          "explanation": "during 은 전치사이고 뒤에 동사가 없는 명사구 the entire exam period 가 왔으므로 옳습니다. 만약 절이 왔다면 접속사 while 을 써야 합니다.",
+          "trapTags": ["while-during", "clause-vs-np"]
+        },
+        {
+          "id": "b07-c1-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "{{blank}} the fact that the data were incomplete, the team published the report on schedule.",
+          "options": ["Despite", "Although", "Even though"],
+          "answer": 0,
+          "translation": "자료가 불완전하다는 사실에도 불구하고 그 팀은 예정대로 보고서를 발표했습니다.",
+          "explanation": "the fact that … 은 전체가 명사구입니다. 명사구 앞자리이므로 전치사 Despite 가 옳습니다. Although 와 Even though 는 접속사여서 뒤에 '주어 + 동사'를 갖춘 절이 바로 와야 합니다.",
+          "trapTags": ["despite-although", "clause-vs-np"]
+        }
+      ]
+    }
+  ]
+}

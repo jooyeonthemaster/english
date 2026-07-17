@@ -1,0 +1,81 @@
+{
+  "pid": "P076",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4_DISTRACTOR_RATIONALE_MISEXPLANATION",
+      "severity": "major",
+      "evidence": "오답 1 해설: '실험에서의 효용성을 극대화한다는 것은 동물 권리론자들이 비판하는 바로 그 행위를 조장하는 극성 반전 오답입니다.' 그러나 빈칸 프레임은 'The problem ... is not one about treating animals inhumanely, but instead one about ___'이므로, 선지 1을 넣으면 'maximizing their utility in experimental practices'가 문제점으로 지목(비판)되는 문장이 되지 조장(promote)되는 문장이 되지 않는다. 앞 병렬항 'one about treating animals inhumanely'가 '그 행위 자체가 문제'라는 독법을 강제한다. 실제 결정적 결함(과잉/처우 수준의 프레이밍 + 실험으로의 과협소화로, 권리론이 말하는 '더 근본적인' 지위 차원의 문제와 불일치)은 해설에 없다. '극성 반전' 분류 자체도 완성문 기준으로는 오적용이다. 학생에게 오답 소거의 잘못된 논리 모델을 제공하는 담화 기능·인과 오설명이므로 V4 실패."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "처우·정도(excess) 수준의 함정 — 출제자는 '극성 반전' 디코이로 설계한 것으로 보임",
+      "temptingBecause": "지문의 experimentation/experimental subjects 어휘와 '이용' 비판 테마를 재사용하고, 정답과 같은 utility 어휘를 공유한다",
+      "decisiveFlaw": "완성문은 '효용 극대화'라는 정도·관행 수준의 문제 제기가 되는데, 지문은 문제가 그보다 'more fundamental'(이용 자체·지위의 문제)이라고 명시한다. 또한 음식+실험 양쪽을 포괄하는 원문 비판을 실험으로 과협소화한다. 'understanding them as human resources'와 의미상 불일치"
+    },
+    {
+      "label": "2",
+      "intent": "복지론/권리론 입장 스왑(actor/position swap)",
+      "temptingBecause": "지문의 'insufficient food and space' 등 사육 환경 개선이라는 복지론 소재를 그대로 반향한다",
+      "decisiveFlaw": "물리적 환경 개선은 권리론이 '불충분하다'고 비판하는 복지론의 목표이므로, 권리론이 지목하는 근본 문제일 수 없다. 완성문도 '문제는 환경 개선에 관한 것'이라는 부자연스러운 의미가 된다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span 'understanding them as human resources'의 패러프레이즈",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 직전 문장 'animals are not the kinds of thing that humans should use in this way at all'과 not-X-but-Y 대조 구조가 지위(도구화) 차원의 보어를 요구하며 3만 이를 충족. 단, 원문 span의 근접-직역 수준이라 추상화 깊이는 낮다"
+    },
+    {
+      "label": "4",
+      "intent": "법·입법 소재 연상 + 과협소화(scope narrowing)",
+      "temptingBecause": "지문 전반의 legislation/legal protection 소재를 차용한다",
+      "decisiveFlaw": "법적 절차 지연은 지문 어디에도 없고, 절차·행정 차원 이슈로 축소되어 개념적 비판(자원화)과 무관 — '지문에 미언급'만으로 즉시 소거 가능"
+    },
+    {
+      "label": "5",
+      "intent": "복지 집행 자원 소재 연상(topic association)",
+      "temptingBecause": "welfare/enforcement 등 복지 법안 어휘를 차용한다",
+      "decisiveFlaw": "자금 부족은 지문에 전혀 언급되지 않으며, 권리론의 '동물의 자원화' 비판과 논리적 접점이 없다 — 역시 '미언급'만으로 소거 가능"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "DISCOURSE_FUNCTION_MISREAD_ODA1",
+      "severity": "major",
+      "evidence": "오답 1 해설이 선지를 빈칸에 넣었을 때의 실제 의미(그 행위를 '문제'로 지목=비판)를 '그 행위를 조장'으로 오설명. 실제 결함(정도/관행 수준 프레이밍, 실험 과협소화)은 미제시"
+    },
+    {
+      "code": "MINOR_STYLE_ANSWER_PHRASING",
+      "severity": "minor",
+      "evidence": "정답 선지의 'instrumental entities for our utility'는 문법적으로 허용되나 'for our use/purposes' 대비 다소 어색한 콜로케이션. 또한 정답(3)과 오답(1)이 utility를 공유해 어휘 단서 상쇄에는 기여하나 표현 반복이 있다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "sameSyntacticSlot": true,
+    "answerPreservesSourceMeaning": true,
+    "answerAbstractionAdequate": false,
+    "eachDistractorAnchorOverlapFlaw": false,
+    "requiresMultiSentenceSynthesis": false,
+    "distinctTrapTypes": "부분 충족(1=정도/관행 프레이밍, 2=입장 스왑은 양질이나 4·5는 모두 '미언급 소재 연상'으로 함정 유형 중복)",
+    "rationale": "정답이 직전 문장('should not use in this way at all')의 근접-직역 패러프레이즈여서 인접 단서 하나 + not-X-but-Y 대조 프레임만으로 도달 가능(두 문장/두 논리 단서 연결 요건 미충족). 4·5는 지문 미언급만으로 즉시 소거되는 약한 디코이. KILLER 요구 깊이에 못 미침"
+  },
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 모두 통과했고, 빈칸 지점 자체는 지문의 핵심 논지(처우의 문제 vs 지위의 문제)를 겨냥해 출제 가치가 높다(C1=4). 그러나 오답 1 해설이 완성문의 담화 기능을 오설명('문제로 지목'을 '조장'으로)하여 V4 실패 → 규정상 F. 공예 측면에서도 실질 경쟁 선지는 1 vs 3뿐이고(4·5 즉시 소거, C2=2/C3=2), 정답이 인접 문장의 근접-직역이라 요청 난이도 KILLER와 불일치(C5=1). 수정 방향: (1) 오답 1 해설을 '정도·관행 수준 프레이밍 + 실험 과협소화'로 재작성, (2) 정답을 한 단계 추상화(예: 'defining their moral status by their usefulness to us' 류)하고 4·5를 지문 근거가 있는 half-truth/scope-shift 디코이로 교체하면 B 이상 회복 가능."
+}

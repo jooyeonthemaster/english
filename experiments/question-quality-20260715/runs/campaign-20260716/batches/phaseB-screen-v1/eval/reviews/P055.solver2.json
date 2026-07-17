@@ -1,0 +1,35 @@
+{
+  "pid": "P055",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) not seen",
+      "verdict": "correct",
+      "reason": "'of a kind and magnitude not seen before'는 축약 관계절(= a kind and magnitude that has/have not been seen before)이다. 'kind and magnitude'는 보는(see) 행위의 대상이므로 수동 의미의 과거분사 'seen'이 요구되고, 부정어 not이 분사 앞에 놓이는 어순도 정문이다. 능동 'not seeing'이어야 할 근거가 없으므로 어법상 옳다."
+    },
+    {
+      "label": "(B) are",
+      "verdict": "incorrect",
+      "reason": "자유관계절 'What ___ new about cyberspace'가 주어인데, 여기서 what은 '사이버스페이스에 관해 새로운 (단일한) 것'을 가리키는 단수 취급 대상이다. 형식적 증거: (i) 관계절 내부 서술어가 형용사 'new' 하나로, 복수 지시를 강제할 명사적 복수 표지가 전혀 없다. (ii) 결정적으로 모문(matrix) 동사가 단수 'is'('is its interactive nature')이고 보어도 단수 명사구 'its interactive nature'다. what-분열문에서 관계절 내부 동사와 모문 동사는 수 일치가 정합해야 하는데 'What are ... is ...'는 내부적으로 모순이다. 복수 해석(예: What are new ... are X and Y)이 성립하려면 모문도 복수여야 하나 그렇지 않다. 따라서 'are'는 'is'로 고쳐야 하는 어법 오류다."
+    },
+    {
+      "label": "(C) where",
+      "verdict": "correct",
+      "reason": "선행사 'a space'는 장소이고, 뒤따르는 절 'real people have actual interactions with other real people'은 주어(real people)·동사(have)·목적어(actual interactions)를 모두 갖춘 완전한 절이다. 완전한 절 앞에서 장소 선행사를 받는 관계부사 where는 정문이다(= in which). which였다면 절 내에 공백이 필요하므로 오히려 비문이 된다."
+    },
+    {
+      "label": "(D) while being",
+      "verdict": "correct",
+      "reason": "'while being able to shape ...'는 접속사 while이 남은 분사구문(= while they are able to shape)이다. 의미상 주어는 주절 주어 'real people'로 일치하고, be동사의 현재분사 being + 형용사 able 결합은 표준적이다. 'while able'로 축약할 수도 있으나 being을 남기는 것도 완전한 정문이므로 오류가 아니다."
+    },
+    {
+      "label": "(E) their",
+      "verdict": "correct",
+      "reason": "'shape ... their own and other people's personalities'에서 their의 선행사는 주절 주어 'real people'(복수)이다. 복수 대명사 their가 복수 선행사와 일치하고, 'their own and other people's personalities'라는 등위 소유 구조도 성립한다. 어법상 옳다."
+    }
+  ],
+  "note": "정답은 (B) 하나로 수렴한다. what-분열문에서 관계절 내부 동사(are)와 모문 동사(is)의 수 일치 모순이 결정적 장거리 단서로, 'What is new about cyberspace is its interactive nature'가 정문이다. 나머지 밑줄은 축약 관계절(A), 관계부사+완전절(C), 접속사 유지 분사구문(D), 복수 대명사 일치(E)로 각각 대안 해석까지 검토해도 모두 정문이며 복수 정답 시비 소지는 발견되지 않았다."
+}

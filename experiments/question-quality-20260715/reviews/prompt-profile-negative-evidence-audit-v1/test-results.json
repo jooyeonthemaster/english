@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-07-15T17:26:21.0403873+09:00",
+  "worktreeRoot": "D:/Desktop/2026project/nara",
+  "focusedRegression": {
+    "command": "npx.cmd tsx --test tests/unit/question-generation-research-profiles.test.ts tests/unit/question-generation-research-profile-wire.test.ts tests/unit/question-generation-research-profile-response.test.ts tests/unit/question-generation-retry-envelope.test.ts tests/unit/question-generation-response-cardinality.test.ts tests/unit/atlas-research-fetch-boundary.test.ts experiments/question-quality-20260715/harness/question-generation-callsite-adapter.test.ts experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts",
+    "tests": 71,
+    "passed": 71,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exitCode": 0
+  },
+  "typecheck": {
+    "command": "npx.cmd tsc --noEmit --pretty false",
+    "exitCode": 0
+  },
+  "eslint": {
+    "command": "npx.cmd eslint src/lib/question-generation-research-profiles.ts tests/unit/question-generation-research-profiles.test.ts tests/unit/question-generation-research-profile-response.test.ts tests/unit/question-generation-research-profile-wire.test.ts experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts experiments/question-quality-20260715/reviews/prompt-profile-negative-evidence-audit-v1/verify.ts",
+    "errors": 0,
+    "warnings": 0,
+    "exitCode": 0
+  },
+  "auditVerifier": {
+    "command": "npx.cmd tsx experiments/question-quality-20260715/reviews/prompt-profile-negative-evidence-audit-v1/verify.ts",
+    "dynamicAssertionGroups": 31,
+    "exitCode": 0
+  },
+  "coverage": {
+    "providerSchemaSerializesWithoutAnyOfOrOneOf": true,
+    "minimalAbstentionParsesAndIsObservedThenRejected": true,
+    "hostileAbstentionsRejected": 5,
+    "certifiedQuestionFieldsDeletionTested": 10,
+    "certifiedBindingFieldsDeletionTested": 10,
+    "falseB3GrammarAttestationBlockedByActualGate": true,
+    "falseB3SemanticAttestationReservedForIndependentAdjudication": true,
+    "all15ProfilePlanWiresRemainSingleDispatch": true,
+    "ordinaryNoProfileIdentityPreserved": true
+  },
+  "staleTestMaintenance": {
+    "files": [
+      "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts",
+      "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts"
+    ],
+    "change": "Replaced obsolete {require_parameters:true}-only expectations with the already-production ATLAS_RESEARCH_OPENROUTER_PROVIDER_ROUTING constant. No production transport behavior changed."
+  },
+  "sideEffects": {
+    "externalApiCalls": 0,
+    "networkCalls": 0,
+    "applicationDatabaseReads": 0,
+    "applicationDatabaseWrites": 0,
+    "profileMockProviderResponses": 7,
+    "campaignCandidatesConsumed": 0,
+    "secretsRead": 0
+  }
+}

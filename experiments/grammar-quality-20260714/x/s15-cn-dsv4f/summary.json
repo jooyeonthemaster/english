@@ -1,0 +1,45 @@
+{
+  "strategy": "s15-cn-dsv4f",
+  "describe": "minimal 동일 프롬프트, 모델만 deepseek/deepseek-v4-flash — DeepSeek 최신 경량 ($0.09/$0.18 — gemini 대비 1/16 가격)",
+  "callPlan": "deepseek/deepseek-v4-flash x1",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 64197,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.01171,
+  "avgCostUsd": 0.00117,
+  "costRecordedCalls": 10,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 5.4,
+  "zeroErrorItems": 0,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.752,
+  "avgAnswerRelPos": 0.676,
+  "answerRelPosInBand": 3,
+  "models": {
+    "deepseek/deepseek-v4-flash": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

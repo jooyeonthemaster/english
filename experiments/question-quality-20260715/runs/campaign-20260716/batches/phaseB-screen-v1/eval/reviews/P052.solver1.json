@@ -1,0 +1,35 @@
+{
+  "pid": "P052",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'구역 접근에 공식 허가를 받아야 한다'는 개념은 지문에 전혀 등장하지 않는다. 표지판 오해 서사와 무관."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "낯선 사람과의 안전거리 유지는 지문 어디에도 근거가 없다. 'No Standing'의 어떤 해석과도 연결되지 않음."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "빈칸은 Carol이 'No Standing' 표지판을 문자 그대로 '사람이 서 있으면 안 됨'으로 오해한 내용을 친구에게 설명하는 자리다. 그녀가 표지판을 피해 왔다갔다 걸었던 행동(walking back and forth), 친구의 반박 'Of course you can stand there', 이후 진짜 의미(차량 주차 금지) 해설과 모두 정합한다. 'aren't allowed to remain bodily stationary at that specific spot'의 문법 결합도 자연스럽다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "길을 건너 교통을 방해한다는 내용은 지문에 없다. Carol은 인도 모퉁이에서 기다렸을 뿐이며 표지판 오해와도 무관."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "가장 매력적인 오답. 표지판의 실제 의미(차량 규제)를 아는 수험생이 끌릴 수 있으나 이중으로 틀렸다. (a) 빈칸 발화 시점의 Carol은 차량 규제임을 전혀 몰랐고 빈칸은 그녀의 오해를 담는 자리다. (b) 실제 의미도 '감속(decelerate) 금지'가 아니라 '정차/주차 금지'이며, 친구가 'we can stop to pick up passengers'라고 말하므로 감속·정지는 오히려 허용된다."
+    }
+  ],
+  "note": "빈칸 화자가 Carol이고 발화 시점이 오해 해소 전이라는 점이 'She excitedly explained'로 명확해 정답이 ③으로 유일하게 좁혀진다. ⑤는 표지판의 실제 의미 쪽으로 낚는 설계된 미끼로 기능하나 어휘 선택(decelerate)이 실제 의미와도 어긋나 옹호 불가. 선지 영어의 난도(bodily stationary 등 추상화된 패러프레이즈)가 지문 난도 대비 다소 높지만 변별 기능은 정상."
+}

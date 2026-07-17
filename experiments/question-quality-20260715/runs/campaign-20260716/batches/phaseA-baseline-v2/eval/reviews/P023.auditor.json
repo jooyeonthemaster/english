@@ -1,0 +1,71 @@
+{
+  "pid": "P023",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "해설: \"바로 앞에 복수 형태인 'events'가 있지만 이는 전치사 of의 목적어구 안에 속한 수식어구에 불과하므로 주어 핵으로 삼을 수 없습니다.\" 실제 문장은 'a clock that do not depend on a repetitive cycle of events'로 'events'는 동사 뒤(depend on의 목적어 내부)에 위치한다. 동사 앞에 개입하는 복수 명사(근접 일치 함정)는 이 문장에 존재하지 않으며, 선행사 a clock — that — 동사가 모두 직인접해 있다. '주어 핵으로 삼을 수 없다'는 서술은 동사 뒤 명사에는 애초 성립 불가능한 허구적 구조 기술이다. keyPoints의 \"수식어구 속에 낀 복수 명사에 낚이지 않고\"도 동일한 오분석을 반복한다(존재하지 않는 attraction 함정 환각)."
+    },
+    {
+      "code": "V4-minor",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설이 \"주어인 any process가 스스로를 반복하는\"이라 하나 repeats의 통사적 주어는 관계대명사 that(선행사 any process)이다. 지시 관계 설명으로는 통하나 통사 기술로는 부정확한 단순화."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 1,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 후치수식 과거분사 vs 현재분사/정동사 판별 (a process embodied in a machine)",
+      "temptingBecause": "process와 embodied 사이에 관계사가 없어 정동사(embodies)나 현재분사(embodying)를 기대할 수 있음",
+      "decisiveFlaw": "embody의 대상이 process(수동 관계)이고 뒤에 목적어가 없으므로 과거분사 후치수식이 정확 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "재귀대명사 vs 일반 대명사 지시 일치 (that repeats itself)",
+      "temptingBecause": "관계절 내부라 주어가 표면에 없어 it/themselves와의 구별을 요구하는 것처럼 보임",
+      "decisiveFlaw": "관계절 주어 that = any process(단수)와 목적어가 동일 지시이므로 itself가 정확 — 오류 아님. 다만 즉시 소거 가능한 약한 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "주격 관계절 내 동사와 단수 선행사의 수일치 (정답)",
+      "temptingBecause": "일반 진술 문맥과 절 말미의 복수 'events'가 복수형을 자연스럽게 느끼게 할 수 있다는 설계 의도이나, 'events'는 동사 뒤에 있어 실제 견인 효과가 거의 없음",
+      "decisiveFlaw": "선행사 a clock(단수)이 that에 직인접하므로 do → does. 교정 시 원문과 정확히 일치하는 최소대립쌍. 단, 인접 단순 수일치라 즉시 드러남"
+    },
+    {
+      "label": "(D)",
+      "intent": "부사 vs 형용사 자리 판별 (comes to mind readily)",
+      "temptingBecause": "동사구 뒤 위치가 보어 자리처럼 보여 ready와의 혼동을 노림",
+      "decisiveFlaw": "동사구 'comes to mind'를 수식하는 자리이므로 부사 readily가 정확 — 오류 아님. 표면적으로도 자연스러워 유인력 낮음"
+    },
+    {
+      "label": "(E)",
+      "intent": "접속사 + 주어·be 생략(although (it is) at first masked) 구문 적법성 판별",
+      "temptingBecause": "although 뒤에 정동사 절이 없고 부사구+분사만 남아 전치사(despite)나 분사구문으로 바꿔야 할 것처럼 보임 — 5개 중 가장 실질적인 디코이",
+      "decisiveFlaw": "주절 주어와 동일한 주어 + be 생략은 양보 접속사에서 표준 용법이므로 정확 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 존재하지 않는 근접 일치 함정을 기술: 'events'가 동사 '바로 앞에' 있다고 주장하나 실제로는 동사 뒤 전치사구 내부에 위치 (V4 실패의 근거)",
+    "keyPoints (C) \"수식어구 속에 낀 복수 명사에 낚이지 않고\" — 선행사와 동사 사이에 낀 명사가 전혀 없으므로 사실과 불일치",
+    "(B) 해설이 repeats의 주어를 'any process'로 기술 — 통사적 주어는 관계대명사 that (경미한 단순화)",
+    "(D) 해설 \"부사 'readily'는 형용사가 쓰일 자리가 아니므로 어법상 옳습니다\" — 순환적·어색한 진술이나 사실 오류는 아님"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더는 의도된 (C) 변형 외 원문과 완전 일치하고, 정답 집합은 정확히 {(C)} 하나이며, 교정 시 원문이 그대로 복원되고, 필드 간 동기화도 무결하다. 그러나 V4 실패: 해설과 keyPoints가 이 문장에 존재하지 않는 '동사 앞 개입 복수 명사(events) 견인 함정'을 구조적 사실처럼 기술한다(events는 동사 뒤 목적어구 내부). 템플릿형 attraction 해설을 부적합한 문장에 이식한 구조 오분석/환각이다. KILLER 조건 미충족: RUBRIC §C의 '붙어 있는 단순 수일치로 즉시 드러나지 않아야 한다'를 정면 위반 — 선행사 a clock이 that에 직인접한 가장 기초적인 수일치 형태로, 개입 명사구조차 없어 정답이 즉시 노출된다(C3=1, C5=1의 근거). 디코이 중 (E)만 실질적 유인력이 있고 (B)(D)는 즉시 소거된다. 재설계 방향: (1) 해설의 허구 함정 기술 제거 또는 실제로 개입 복수 명사가 있는 자리로 오류 지점 이동(예: 'the decay of atoms of carbon-14 is' 자리), (2) KILLER 라벨에 맞게 구조 독해가 필요한 포인트(도치·병렬·분사구문 주어 판별 등)로 정답 포인트 교체."
+}

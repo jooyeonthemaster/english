@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "blind-adjudication-power-results-v1",
+  "apiCandidatesConsumed": 0,
+  "allocations": {
+    "S0_CONNECTIVITY_RUN_IN": 2,
+    "S0_FOCUS_BASIC_SENTINELS": 4,
+    "S1_SCREEN": 180,
+    "S2_FOCUS_FIRST_LOOK": 480,
+    "S3_ALL_TYPE_SENTINELS": 92,
+    "S4_FOCUS_EXTENSION": 240,
+    "LOCKED_UNUSED": 2,
+    "TOTAL_SCHEDULED_MAX": 998,
+    "GLOBAL_CAP": 1000
+  },
+  "fatalZeroEventBounds": {
+    "cellN60PerCell95": 0.04870291331009746,
+    "cellN60FourCellFamily95": 0.07043056879850473,
+    "minimumCellN86FourCellFamily95": 0.04967742375192541,
+    "maximumCellN90FourCellFamily95": 0.04752287196351679
+  },
+  "primaryCraftPowerScenarios": [
+    {
+      "pChallengerOnly": 0.3,
+      "pControlOnly": 0.1,
+      "interimN": 120,
+      "interimAlpha": 0.005,
+      "interimPower": 0.8086140788616097,
+      "finalN": 180,
+      "finalAlpha": 0.02,
+      "finalPower": 0.9880030907990207
+    },
+    {
+      "pChallengerOnly": 0.25,
+      "pControlOnly": 0.1,
+      "interimN": 120,
+      "interimAlpha": 0.005,
+      "interimPower": 0.5444061935012661,
+      "finalN": 180,
+      "finalAlpha": 0.02,
+      "finalPower": 0.9064070517085722
+    },
+    {
+      "pChallengerOnly": 0.25,
+      "pControlOnly": 0.05,
+      "interimN": 120,
+      "interimAlpha": 0.005,
+      "interimPower": 0.9391810660191279,
+      "finalN": 180,
+      "finalAlpha": 0.02,
+      "finalPower": 0.9991158402788918
+    }
+  ],
+  "alphaArithmetic": {
+    "focusTypes": 2,
+    "interimPerType": 0.005,
+    "finalPerType": 0.02,
+    "unionBoundFamilywiseAlpha": 0.05
+  },
+  "qualifications": [
+    "Power is unconditional exact paired McNemar power for the stated discordance probabilities.",
+    "Fatal bounds use the exact zero-event one-sided Clopper-Pearson expression.",
+    "Plan-specific craft superiority is not powered; the primary craft test pools independent plan strata within type.",
+    "No result is evidence from generated questions; all values are design calculations."
+  ]
+}

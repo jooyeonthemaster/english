@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "지문 논지와 정반대. 지문은 'rigid work schedule 고수 vs. go with the flow' 대비에서 후자를 택해야 평화로운 사람이 된다고 주장하므로 원래 계획·규칙 고수는 역방향 오답. 부가적으로 선지 자체가 'original arrangements plans and rules'로 명사가 중복 나열된 오탈자성 표기(arrangements와 plans 사이 접속/구두점 누락)라 표면 형식도 결함. 빈칸에 넣으면 문법적으로는 성립하나(you must stick to ... most of the time) 논리 붕괴."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'accept changes'까지는 지문 방향과 일치해 순간적으로 끌리지만, 'only when they benefit your goals'라는 조건 제한이 치명적. 지문은 '일정 비율의 계획 변경은 불가피(inevitability)하므로 미리 마음의 여지를 두고 받아들이라'고 하여 무조건적·일반적 수용을 요구한다. 자기 목표에 이로울 때만 수용하는 것은 'getting what I want and keeping my plans' 쪽 태도로 회귀하는 것이라 오히려 지문이 비판하는 입장. 실전에서 절반쯤 끌렸다가 'only'에서 탈락시킴."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "두 번째 매력 오답. 빈칸 뒤 문장 'expect that a certain percentage of plans will change'와 표면상 겹쳐 보이지만, 그 문장은 'I have ALSO found it helpful'로 시작하는 부가 조언이지 빈칸(주장 핵심)의 내용이 아니다. 또한 지문의 요지는 변경의 불가피성을 인정하고 유연하게 반응하라는 것이지 '미래 변수를 예측(predict)하는 법을 최우선으로 삼으라'는 통제 지향 태도가 아님. predict는 make allowances for inevitability와 방향이 다르다."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "지문의 핵심 대비(sticking to some rigid work schedule vs. learning to go with the flow)를 정확히 재진술. 'value adaptable responses more than strict schedules'는 비교 구문까지 지문의 'What's more important - keeping my plans, or going with the flow?' 구조와 평행하다. 빈칸에 삽입 시 'you must value ... more than strict schedules most of the time'로 문법 결합도 자연스럽고, 뒤따르는 '계획 변경 비율을 미리 예상하라'는 부가 조언과도 논리적으로 매끄럽게 연결된다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "지문에 타인 의존이라는 개념 자체가 등장하지 않음. 지문은 자기 자신의 우선순위 설정과 마음가짐(make allowances in your mind)을 다루므로 'rely on others'는 무관 소재 오답. 즉시 소거."
+    }
+  ],
+  "note": "정답 ④가 유일하게 옹호 가능. 유혹 기록: ②는 accept changes로 시작해 끌리지만 only 조건절이 지문의 무조건적 수용(inevitability 수용)과 충돌, ③은 후속 문장(expect that a certain percentage of plans will change)과 어휘가 겹쳐 끌리지만 그 문장은 'also' 부가 조언이며 predict(예측·통제)와 make allowances(수용)의 방향이 다름. 품질 결함 하나: 선지 ①의 'original arrangements plans and rules'는 명사 중복 나열 오탈자로 보임(arrangements, plans 사이 쉼표 또는 둘 중 하나 삭제 필요) — 정답 판별에는 영향 없으나 표기 수정 요망. 지문 내 시점 혼용(our plans → my four-year-old → your priorities)은 원문(Richard Carlson 류 에세이) 특유의 구어체로 허용 범위."
+}

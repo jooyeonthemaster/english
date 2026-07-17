@@ -1,0 +1,35 @@
+{
+  "pid": "P080",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'adjust better to a strict morning routine' contradicts the setup: 'those who differ' are contrasted with the morning-productive majority, so they cannot be the ones suited to a morning routine. Anti-answer."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'lose their focus and energy entirely' has no textual support; the passage says energy 'ebbs and flows' during the day, never that anyone loses it completely. Overly negative and off-logic."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "'require more frequent breaks' recycles the earlier sentence 'Schedule intervals of productive time and breaks', creating real lexical pull. But the final contrast is explicitly about time of day ('most people are far more productive in the morning, but...'), not stamina or break frequency. The lure is surface-word overlap, not logical completion."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'refuse to schedule any important tasks' is unsupported; the passage is about WHEN to schedule difficult tasks, and no one in the text refuses scheduling. Irrelevant."
+    },
+    {
+      "label": "5",
+      "verdict": "correct",
+      "reason": "'reach their peak performance in the evening' completes the morning-vs-other-time contrast set up by 'most people are far more productive in the morning, but there are those who differ and ___', and matches the body-rhythm thesis (respect your internal clock, energy ebbs and flows). Grammatical seam with 'those who differ and ...' is clean."
+    }
+  ],
+  "note": "Single defensible answer. Option 3 is the designed attractive distractor via verbatim recycling of 'breaks' from the team-scheduling sentence, but it fails the time-of-day contrast the final sentence demands. No alternative grammatical or logical reading rescues options 1-4."
+}

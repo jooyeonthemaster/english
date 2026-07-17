@@ -1,0 +1,353 @@
+{
+  "schemaVersion": "question-quality-v6-connectivity-pilot-protocol-v5",
+  "artifactId": "campaign-v6-connectivity-pilot-v5",
+  "status": "OFFLINE_AUTHOR_FREEZE_LIVE_EXECUTION_BLOCKED_PENDING_INDEPENDENT_AUDIT",
+  "lineage": {
+    "preserves": [
+      "campaign-v6-connectivity-pilot-v2",
+      "campaign-v6-connectivity-pilot-v3",
+      "campaign-v6-connectivity-pilot-v4"
+    ],
+    "replacesExecutionPackage": true,
+    "v2Unmodified": true,
+    "v3Unmodified": true,
+    "v4Unmodified": true,
+    "v2AuditDisposition": "REJECTED_TEST_TRANSPORT_SEAM_AND_INCOMPLETE_LIVE_CLOSURE",
+    "v3AuditDisposition": "REJECTED_INCOMPLETE_COMPILER_CLOSURE_AND_PERMISSIVE_RESPONSE_PARSER",
+    "v4AuditDisposition": "REJECTED_DYNAMIC_COMPILER_INPUTS_METADATA_GUARD_PARSER_BILLING_AND_RECONCILIATION_GAPS",
+    "v4IndependentAuditPins": {
+      "directory": "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v4-independent-audit-v1",
+      "verdict": "FAIL",
+      "protocolV4Sha256": "18d7eb7c60fdfc1d4b49fb868ef887d64e62db6d217abf8eaec0fbbeab8ffec9",
+      "authorGatesSha256": "5b0346fb581b5cd12381484061fee8b4fc17e56a10882d7e29651ee8cbf613b0",
+      "evidenceSha256": "2aff0d69c81169f2f806dcd59f9053ce939927603d75cb7d7c2a60cab501f3b6",
+      "reportSha256": "8f135466efc5182843cf5a257c5bb361cafb2c91122798c29768839d0f31fae3",
+      "verifierSha256": "2211da72c2249c1302eddac8f138acf91c4c302a36fbb7810d24f20035c73dd0",
+      "manifestFileSha256": "2b7fb398cad98647698c7dd4120f819c50645116c71e8ffe79ccb53530ba0791",
+      "manifestRows": 9
+    }
+  },
+  "fixedProductionInput": {
+    "sourcePublicId": "OCVP-B01",
+    "questionType": "BLANK_INFERENCE",
+    "profileId": "B0_CURRENT_CONTROL",
+    "difficulty": "INTERMEDIATE",
+    "schoolType": "고등학교",
+    "gradeInfo": "2학년",
+    "count": 1,
+    "qualityMode": "strict",
+    "attemptIndex": 0,
+    "teacherIntentBlock": "",
+    "analysisContext": "",
+    "customPrompt": "",
+    "targetPoints": []
+  },
+  "providerContract": {
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "exactEndpointTag": "google-vertex/global",
+    "order": [
+      "google-vertex/global"
+    ],
+    "only": [
+      "google-vertex/global"
+    ],
+    "allowFallbacks": false,
+    "requireParameters": true,
+    "dataCollection": "deny",
+    "zdr": true,
+    "reasoning": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "completionCount": 1,
+    "strictJsonSchema": true,
+    "terminalFinishReasons": [
+      "stop"
+    ],
+    "fullResponseSchemaValidation": true,
+    "safeIntegerUsageAndExactTotal": true,
+    "maxResponseBodyUtf8Bytes": 2097152,
+    "maxActualCostUsdPerResponse": 1000,
+    "maxUsageTokensPerResponse": 10000000,
+    "exactMessageShapeRequired": true,
+    "independentBillingExtractionOnTerminalFailure": true,
+    "duplicateJsonKeysRejected": true,
+    "reasoningUsageMustBeZeroIfPresent": true,
+    "cacheUsageMustBeZeroIfPresent": true,
+    "rawCandidateCardinalityObserved": true,
+    "globalCandidateQuarantineOnAffirmativeExcessOrValidJsonAmbiguity": true,
+    "ordinaryInvalidTransportBodyDoesNotGlobalQuarantine": true,
+    "exactRequestHasNoImageToolPluginOrCacheSurface": true,
+    "byokUsageMustBeExplicitlyFalse": true,
+    "incompletePostSendBodyObservationGlobalQuarantine": true,
+    "postSendChargeConstructionFailureSynthesizesManualQuarantineCharge": true,
+    "dispatchedAttemptCannotSettleWithZeroCharges": true
+  },
+  "durableBounds": {
+    "sharedCandidateCap": 2,
+    "sharedPhysicalFetchCap": 2,
+    "sharedCompletionCap": 2,
+    "concurrency": 1,
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "perAssignmentCandidateCap": 1,
+    "perAssignmentPhysicalFetchCap": 1,
+    "perAssignmentCompletionCap": 1,
+    "retryAllowed": false,
+    "repairAllowed": false,
+    "fallbackAllowed": false,
+    "replacementAllowed": false,
+    "topUpAllowed": false,
+    "failureTimeoutUnknownTerminal": true,
+    "reserveBeforeNetwork": true,
+    "assignments": [
+      {
+        "ordinal": 1,
+        "plan": "STANDARD",
+        "modelId": "google/gemini-3.5-flash",
+        "exactWireBodyUtf8Bytes": 53354,
+        "exactWireBodySha256": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003",
+        "maxOutputTokens": 4000,
+        "emergencyInputUsdPer1M": 2.7,
+        "emergencyOutputUsdPer1M": 32.4,
+        "emergencyRequestUsd": 0,
+        "calculatedWorstCaseUsdCap": 0.313186501,
+        "timeoutMs": 60000
+      },
+      {
+        "ordinal": 2,
+        "plan": "PREMIUM",
+        "modelId": "google/gemini-3.1-pro-preview",
+        "exactWireBodyUtf8Bytes": 24943,
+        "exactWireBodySha256": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643",
+        "maxOutputTokens": 4000,
+        "emergencyInputUsdPer1M": 7.2,
+        "emergencyOutputUsdPer1M": 64.8,
+        "emergencyRequestUsd": 0,
+        "calculatedWorstCaseUsdCap": 0.515108881,
+        "timeoutMs": 180000
+      }
+    ],
+    "sharedCostCapUsd": 0.828295382
+  },
+  "pricingEvidenceContract": {
+    "schemaVersion": "question-quality-openrouter-public-price-snapshot-v5",
+    "maximumAgeMs": 900000,
+    "exactEndpointCardinality": 1,
+    "requiredParameters": [
+      "response_format",
+      "structured_outputs"
+    ],
+    "canonicalSlugRequired": true,
+    "allActiveEndpointsAndOverridesRequired": true,
+    "chargeDimensionsRequired": true,
+    "contentHashRequired": true,
+    "serverTokenOverheadUpperBound": 4096,
+    "safetyMultiplier": 1.1,
+    "maxMetadataResponseBodyUtf8Bytes": 16777216,
+    "fixedRequestFeesIncludedInReserve": true,
+    "knownInapplicableUnitDimensionsRequireRequestNonUseAndResponseAttestation": true,
+    "unknownChargeDimensionsRejected": true,
+    "rawHttpEvidenceBundleRequired": true,
+    "rawHttpDuplicateKeysRejected": true,
+    "omittedFixedRequestFeeAssumedZero": false,
+    "privateBundlePreReadMaxBytes": 306184192,
+    "topLevelFixedRequestIncludedInEmergencyCeiling": true,
+    "topLevelPromptAndCompletionIncludedInEmergencyCeiling": true,
+    "cacheReadWriteRatesIncludedInEmergencyInputCeiling": true,
+    "reasoningRatesIncludedInEmergencyOutputCeiling": true,
+    "imageAndWebSearchZeroUseProvenByExactRequestShape": true,
+    "privateBundleFdBoundExactReadRequired": true,
+    "captureToLiveInMemoryFileAndBundleHashHandoffRequired": true
+  },
+  "exactWireCommitment": {
+    "privateArtifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/private/exact-wire-v5.private.json",
+    "privateArtifactSha256": "f27e851c6dcf4072bc3fd17b33115e422edfd9e7f19861dc96bf721083d659da",
+    "publicArtifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/offline-exact-wire-seal-v5.json",
+    "publicArtifactSha256": "1cfdd96afc0e6873a6eab8b0a42ca454a46714881d22b588deb831a0c5ac3137",
+    "locallyInterceptedProductionCompilerFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0
+  },
+  "compilerClosureContract": {
+    "artifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/compiler-closure-v5.json",
+    "artifactSha256": "eeed64b31af88947ba853bc7b8f8a6ca9995224c3b216ab584b07177f4cd127f",
+    "semanticSha256": "c1938124a83b21f147bb3d81b9c24d1b3258a3fe5c7f47c086437917371e6e2c",
+    "algorithm": "INDEPENDENT_AST_PLUS_DYNAMIC_SOURCE_PLUS_DATA_PLUS_EXTERNAL_INPUTS_V3",
+    "entrypoints": [
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/compiler-child.mts"
+    ],
+    "exactSourceFiles": 195,
+    "exactDynamicSourceInputs": 3,
+    "exactDeclaredDataInputs": 4,
+    "exactTotalFiles": 202,
+    "exactEqualityRequired": true,
+    "zeroUnresolvedLocalRequired": true,
+    "zeroNonliteralDynamicRequired": true,
+    "minimumCountChecksForbidden": true,
+    "inheritedThirtyTwoRowSubsetAuthority": false,
+    "externalInputsExactEqualityRequired": true,
+    "compilerFsReadSitesStaticallyEnumerated": true,
+    "isolatedChildEnvironmentRequired": true
+  },
+  "globalResearchLedger": {
+    "path": "experiments/question-quality-20260715/budget-ledger.json",
+    "globalCap": 1000,
+    "requiredPreAuthorUsed": 0,
+    "requiredPreAuthorReserved": 0,
+    "liveReservation": 2,
+    "authorFreezeMutationAllowed": false,
+    "privateStoreReservationAlsoRequired": true,
+    "atomicLockRequired": true,
+    "globalCapacityQuarantineOnCandidateExcessOrAmbiguity": true,
+    "ordinaryInvalidBodySettlesSingleOpportunityWithoutGlobalQuarantine": true,
+    "postCommitCleanupOutcomeRequired": true
+  },
+  "liveClosureContract": {
+    "artifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/live-closure-v5.json",
+    "algorithm": "TYPESCRIPT_AST_TRANSITIVE_IMPORTS_PLUS_DECLARED_RUNTIME_DATA_V1",
+    "exactEntrypointSetRequired": true,
+    "exactTransitiveFileSetRequired": true,
+    "exactBytesAndSha256Required": true,
+    "literalDynamicImportsIncluded": true,
+    "runtimeDataReadsClassified": true,
+    "minimumCountChecksForbidden": true,
+    "testSupportExcluded": true,
+    "exactExpectedFiles": 23,
+    "declaredFrozenRuntimeArtifactsIncluded": true,
+    "exactExpectedExternalFiles": 1,
+    "externalNodeExecutableIdentityRequired": true
+  },
+  "frozenRuntimeContract": {
+    "artifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-runtime-v5.json",
+    "artifactSha256": "92269c3a91934d93ffd8eddec8351ab3869c2f1fd9c00a0b7aed26c30b29d236",
+    "artifactContentSha256": "1c46dc1b46f8f6248744af5e9563de8deed154e3b2b6c3bcddc75f3f7df6812a",
+    "bundleSetSha256": "2a905ad6efe9b84368da7c0bf3f6debf046864e44f8ad7994201c7ceafe6e812",
+    "executionLoader": "PLAIN_NODE_ESM_BUNDLES",
+    "entrypoints": [
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/capture-price-snapshot-v5.bundle.mjs",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/live-child-v5.bundle.mjs",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/operator-wrapper-v5.bundle.mjs"
+    ],
+    "nodeVersion": "v24.7.0",
+    "nodeExecutableSha256": "c1b274a8d0a23e060fc42ce71c3cdfa1569b83d91ba82cc59fa907da97a425e9",
+    "allBundleBytesRequired": true,
+    "nodeExecutableIdentityRequired": true,
+    "sourceTsxRuntimeAllowed": false,
+    "externalRuntimePackagesAllowed": false,
+    "authorFreezePermanentlyNoDispatch": true,
+    "authorizationPackagePolicy": "SEPARATE_DIRECTORY_NEW_BUNDLES_SUBJECT_AND_INDEPENDENT_AUDIT_MANIFESTS_REQUIRED"
+  },
+  "processIsolation": {
+    "liveLauncherExplicitEnvironmentNames": [
+      "SystemRoot",
+      "WINDIR",
+      "PATH",
+      "PATHEXT",
+      "TEMP",
+      "TMP",
+      "COMSPEC",
+      "OPENROUTER_API_KEY",
+      "QUESTION_QUALITY_CONNECTIVITY_PILOT_V5_LIVE_CHILD"
+    ],
+    "metadataLauncherExplicitEnvironmentNames": [
+      "SystemRoot",
+      "WINDIR",
+      "PATH",
+      "PATHEXT",
+      "TEMP",
+      "TMP",
+      "COMSPEC"
+    ],
+    "windowsObservedAutoInjectedEnvironmentNames": [
+      "HOMEDRIVE",
+      "HOMEPATH",
+      "LOGONSERVER",
+      "SYSTEMDRIVE",
+      "USERDOMAIN",
+      "USERNAME",
+      "USERPROFILE"
+    ],
+    "nonWindowsObservedAutoInjectedEnvironmentNames": [],
+    "exactObservedNameSetRequired": true,
+    "ambientPreloadNamesForbidden": [
+      "NODE_OPTIONS",
+      "NODE_PATH"
+    ],
+    "credentialNamesForbiddenExcept": [
+      "OPENROUTER_API_KEY"
+    ]
+  },
+  "privatePersistence": {
+    "exclusiveNewRunDirectory": true,
+    "durableEventJournal": true,
+    "rawRequestAndResponsePrivateOnly": true,
+    "credentialNeverPersisted": true,
+    "unknownAfterSendNeverReplay": true,
+    "publicAllowlistOnly": true,
+    "terminalReconciliationIntentBeforeSettlement": true,
+    "settlementFailureNoReplayEvidence": true,
+    "absentOrMalformedBillingUsesReservedEffectiveCost": true,
+    "durableNoReplayMarkerBeforeGlobalReservation": true,
+    "boundedModelResponseBeforeMaterialization": true,
+    "explicitPositiveUnrepresentableCostRequiresManualReconciliation": true,
+    "rawPriceHttpEvidencePersisted": true,
+    "privateInputsCanonicalRealRegularFiles": true,
+    "privateOutputAncestorsRealDirectories": true,
+    "priceEvidencePreReadBounded": true,
+    "soleCredentialSourceCanonicalDirectRealRegularFile": true,
+    "frozenPlainEsmRuntimeRequired": true,
+    "credentialFdBoundExactReadAndPostAttestation": true,
+    "mutableLedgerFdBoundDuplicateFreeNoBom": true,
+    "mutableLedgerCommitTargetReattested": true,
+    "priceCaptureFdBoundAndInMemoryHashHandoff": true,
+    "postSendChargeCoverageEqualsDispatches": true,
+    "byokNonFalseManualReconciliation": true
+  },
+  "publicResultContract": {
+    "allowlist": [
+      "schemaVersion",
+      "status",
+      "startedAssignments",
+      "settledAssignments",
+      "successfulAssignments",
+      "candidateOpportunitiesConsumed",
+      "physicalFetches",
+      "completionsRequested",
+      "actualCostUsd",
+      "effectiveCostUsd",
+      "actualCostKnownAssignments",
+      "usageEvidenceComplete",
+      "routeEvidenceComplete",
+      "parserEvidenceComplete",
+      "serialOrderComplete",
+      "globalReservationBound",
+      "executionArtifactSha256"
+    ],
+    "forbiddenNamePattern": "prompt|passage|question|option|answer|explanation|response|generation|credential|providerRequestId|raw",
+    "requiresTwoSuccessfulAssignments": true,
+    "requiresUsageRouteParserEvidence": true,
+    "twoRowsNotQualityComparison": true
+  },
+  "authorization": {
+    "liveExecutionAuthorized": false,
+    "metadataNetworkAuthorized": false,
+    "hostileAuditPassed": false,
+    "dispatchCommandPresent": false
+  },
+  "authorFreezeActivity": {
+    "externalNetworkCalls": 0,
+    "metadataNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "productionDatabaseCalls": 0,
+    "realCredentialValuesRead": 0,
+    "globalLedgerReservationMutations": 0
+  }
+}

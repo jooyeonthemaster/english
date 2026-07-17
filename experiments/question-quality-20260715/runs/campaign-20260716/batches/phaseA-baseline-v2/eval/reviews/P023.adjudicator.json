@@ -1,0 +1,38 @@
+{
+  "pid": "P023",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "분쟁 요약에는 '선언된 정답=(D)'로 기재되어 있으나, 권위 있는 원본 파일(eval/full/P023.md 26행 '## 선언된 정답 (C)' 및 markedExpressions에서 (C)만 isError:true, correction 'does not depend'가 원문을 정확히 복원)에 따르면 실제 선언 정답은 (C)이다. 즉 (D)는 오케스트레이션 단계의 전사 오류이며 실제 솔버-정답키 불일치는 존재하지 않는다. 독립 재검증 결과 5개 선지 중 어법 오류는 (C) 하나뿐이다: 주격 관계대명사 that의 선행사가 직인접 단수 명사 'a clock'이므로 관계절 동사는 does not depend여야 하며, 원형 do가 허용될 환경(가정법 현재 mandative subjunctive 트리거, 명령문, 도치, 복수 선행사)은 이 구조에 전무하다. (A)(B)(D)(E)는 각각 수동 과거분사 후치수식, 의무적 재귀사, 자동사구 수식 부사, although+주어·be 생략의 표준 구문으로 모두 정문임을 확인했다. 따라서 정답 집합은 정확히 {(C)} 하나로 유일성이 성립하고, 두 솔버의 (C) 판정과 감사자 V2=true는 모두 옳다. finalV2=true. (부기: 감사자가 지적한 V4 실패 — 해설이 동사 뒤 전치사구 내부의 'events'를 '동사 바로 앞의 근접 일치 함정'처럼 허구적으로 기술 — 는 타당한 해설 품질 결함이나, 정답 유일성(V2)에는 영향이 없다.)",
+  "perDispute": [
+    {
+      "label": "(C)",
+      "claim": "솔버1·솔버2: 'do not depend'는 단수 선행사 a clock과의 수일치 위반으로 유일한 어법 오류 (선언 정답과의 불일치 주장은 분쟁 요약의 '(D)' 기재에서 발생)",
+      "verdict": "솔버 판정 인용 — (C)가 유일 오류이며, 실제 파일상 선언 정답도 (C)여서 분쟁 자체가 전사 오류",
+      "evidence": "지문: 'it is almost impossible to think of a clock that do not depend on a repetitive cycle of events.' 관계대명사 that의 선행사는 직인접한 단수 'a clock' → does not depend 필수. 원형 do가 정문이 될 대안 해석 전수 검토: (1) mandative subjunctive — insist/suggest/essential류 트리거 부재, 이 that은 명사절 접속사가 아닌 관계대명사; (2) 명령문·도치 — 해당 없음; (3) 복수 선행사 재해석 — events는 depend on의 목적어구 내부(동사 뒤)라 통사적으로 선행사 불가. 교정 시 원지문('does not depend')과 정확히 일치. eval/full/P023.md 26행의 선언 정답은 (C)이고 markedExpressions도 (C)만 isError:true."
+    },
+    {
+      "label": "(D)",
+      "claim": "분쟁 요약이 선언 정답을 (D) readily로 기재 — (D)가 오류로 성립하는지 검증 필요",
+      "verdict": "기각 — (D)는 명백한 정문이며, '선언 정답=(D)'는 원본 파일과 모순되는 전사 오류",
+      "evidence": "'The only example that comes to mind readily is a candle marked in hours.'에서 readily는 자동사구 comes to mind를 수식하는 부사로 형식적으로 요구되는 형태다. 보어 자리가 아니므로 형용사 ready는 오히려 비문. (D)를 정답으로 삼을 문법적 근거가 전혀 없다. 원본 파일(eval/full/P023.md)의 '## 선언된 정답'은 (C)이고, 해설·keyPoints·markedExpressions 전부 (C)를 정답으로 동기화되어 있어, 분쟁 요약의 '(D)'는 오케스트레이터의 라벨 전사 오류로 판정한다."
+    },
+    {
+      "label": "(A)",
+      "claim": "과거분사 embodied의 후치수식이 정문인지 (현재분사/정동사 대안)",
+      "verdict": "정문 확인 — 오류 아님",
+      "evidence": "'a process embodied in a machine' = 'a process [that is] embodied in a machine'. embody는 타동사이고 machine이 process를 구현하는 수동 관계이며 embodied 뒤에 목적어가 없으므로 과거분사가 유일하게 적법. embodying이면 목적어 결여로 비문."
+    },
+    {
+      "label": "(B)",
+      "claim": "재귀대명사 itself의 적법성",
+      "verdict": "정문 확인 — 오류 아님",
+      "evidence": "'any process that repeats itself'에서 관계절 주어 that(=process, 3인칭 단수)과 repeats의 목적어가 동일 지시이므로 재귀사가 의무적(repeat itself는 표준 결합). it이면 오히려 결속 원리 위반."
+    },
+    {
+      "label": "(E)",
+      "claim": "although + 축약절(at first masked)의 적법성 — 전치사 despite 대체 필요 여부",
+      "verdict": "정문 확인 — 오류 아님",
+      "evidence": "'an iterative process, although at first masked' = 'although (it is) at first masked'. 양보 접속사 뒤 주어+be 생략은 주절 주어와 동일 지시 조건을 충족하는 표준 용법. 지문 말미의 'although on a large scale it gives...'와도 병행 사용되어 문체적으로 정합. 5개 중 가장 실질적인 디코이지만 오류 아님."
+    }
+  ]
+}

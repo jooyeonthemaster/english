@@ -1,0 +1,855 @@
+{
+  "schemaVersion": 1,
+  "study": "deterministic-structural-v12-remediation-independent-v1",
+  "auditDate": "2026-07-15",
+  "verdict": "PASS",
+  "scope": {
+    "apiCalls": 0,
+    "networkAccess": false,
+    "databaseAccess": false,
+    "productionSourceEditedByAudit": false,
+    "claim": "The minimal five-code v12 remediation closes all 15 A rows while all 36 C rows remain covered by independently rerun upstream/redundancy certificates."
+  },
+  "sealedInputs": {
+    "parentCorpus": {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v12-blind/corpus.json",
+      "sha256": "8695bc1b7c0539594ec08e57c6b107e52a943c85c13b460879c845e22f90ca52"
+    },
+    "parentOracle": {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v12-blind/oracle.json",
+      "sha256": "8096ca7e386b7fc146eb4837e2d6d06b284e36efcde15481d983a1900ecf7573"
+    },
+    "parentResults": {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v12-blind/results.json",
+      "sha256": "6ded1eb1a66027e4eaa94f1bf6b7750a03e09ac8dcd8fe605a9a29bbfa895460"
+    },
+    "parentSeal": {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v12-blind/seal.json",
+      "sha256": "c32fcc7637ec9b10300a51ba4cff6f27fa63586cdbd1138ce8807e4b3a454299"
+    },
+    "independentAdjudication": {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v12-blind/adjudication-independent-v1/adjudication.json",
+      "sha256": "cafab240581e4656ce2c4d1bf17f160e6d8278a13a035660892780206eefab12"
+    }
+  },
+  "adjudicationPopulation": {
+    "rowCounts": {
+      "A": 15,
+      "B": 0,
+      "C": 36,
+      "D": 0
+    },
+    "codeCounts": {
+      "A": 5,
+      "B": 0,
+      "C": 12,
+      "D": 0
+    },
+    "productionFalseNegativePopulationMatched": true
+  },
+  "remediationPolicy": {
+    "expectedFatalCodes": [
+      "generic-answer-count",
+      "generic-multi-answer-direction",
+      "sentence-insert-missing-given",
+      "sentence-order-dependent-fragment",
+      "sentence-order-paragraph-body-label"
+    ],
+    "anchoredAdditions": [
+      "generic-answer-count",
+      "generic-multi-answer-direction",
+      "sentence-insert-missing-given",
+      "sentence-order-dependent-fragment",
+      "sentence-order-paragraph-body-label"
+    ],
+    "exactAnchoredAdditions": true,
+    "policyRows": [
+      {
+        "code": "generic-answer-count",
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "generic-multi-answer-direction",
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "sentence-insert-missing-given",
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "sentence-order-dependent-fragment",
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "sentence-order-paragraph-body-label",
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      }
+    ],
+    "redundantPolicyRows": [
+      {
+        "code": "multi-blank-correct-option-mismatch",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "multi-blank-count",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "multi-blank-duplicate-option",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "multi-blank-expression-not-in-passage",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "multi-blank-label",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "multi-blank-marker-count",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "multi-blank-missing-expression",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "multi-blank-missing-passage",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "multi-blank-option-values",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "scrambled-near-answer-order",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "summary-complete-missing-blank-answer",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      {
+        "code": "type-foreign-field",
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      }
+    ],
+    "noUnintendedAdditionsWithinAdjudicated17": true
+  },
+  "fatalCertificates": [
+    {
+      "code": "generic-answer-count",
+      "schemaAccepted": true,
+      "postProcessAccepted": true,
+      "targetIssueEmitted": true,
+      "blockedByTarget": true,
+      "otherBlockingCodes": [],
+      "issueCodes": [
+        "generic-answer-count"
+      ],
+      "blockingCodes": [
+        "generic-answer-count"
+      ]
+    },
+    {
+      "code": "generic-multi-answer-direction",
+      "schemaAccepted": true,
+      "postProcessAccepted": true,
+      "targetIssueEmitted": true,
+      "blockedByTarget": true,
+      "otherBlockingCodes": [],
+      "issueCodes": [
+        "generic-multi-answer-direction"
+      ],
+      "blockingCodes": [
+        "generic-multi-answer-direction"
+      ]
+    },
+    {
+      "code": "sentence-order-paragraph-body-label",
+      "schemaAccepted": true,
+      "postProcessAccepted": true,
+      "targetIssueEmitted": true,
+      "blockedByTarget": true,
+      "otherBlockingCodes": [],
+      "issueCodes": [
+        "sentence-order-paragraph-body-label"
+      ],
+      "blockingCodes": [
+        "sentence-order-paragraph-body-label"
+      ]
+    },
+    {
+      "code": "sentence-order-dependent-fragment",
+      "schemaAccepted": true,
+      "postProcessAccepted": true,
+      "targetIssueEmitted": true,
+      "blockedByTarget": true,
+      "otherBlockingCodes": [],
+      "issueCodes": [
+        "sentence-order-dependent-fragment"
+      ],
+      "blockingCodes": [
+        "sentence-order-dependent-fragment"
+      ]
+    },
+    {
+      "code": "sentence-insert-missing-given",
+      "schemaAccepted": true,
+      "postProcessAccepted": true,
+      "targetIssueEmitted": true,
+      "blockedByTarget": true,
+      "otherBlockingCodes": [],
+      "issueCodes": [
+        "sentence-insert-missing-given"
+      ],
+      "blockingCodes": [
+        "sentence-insert-missing-given"
+      ]
+    }
+  ],
+  "aRowCertificates": [
+    {
+      "id": "generic-answer-count-v1-defect",
+      "variant": 1,
+      "targetCode": "generic-answer-count",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "generic-answer-count-v2-defect",
+      "variant": 2,
+      "targetCode": "generic-answer-count",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "generic-answer-count-v3-defect",
+      "variant": 3,
+      "targetCode": "generic-answer-count",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "generic-multi-direction-v1-defect",
+      "variant": 1,
+      "targetCode": "generic-multi-answer-direction",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "generic-multi-direction-v2-defect",
+      "variant": 2,
+      "targetCode": "generic-multi-answer-direction",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "generic-multi-direction-v3-defect",
+      "variant": 3,
+      "targetCode": "generic-multi-answer-direction",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "order-body-label-v1-defect",
+      "variant": 1,
+      "targetCode": "sentence-order-paragraph-body-label",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "order-body-label-v2-defect",
+      "variant": 2,
+      "targetCode": "sentence-order-paragraph-body-label",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "order-body-label-v3-defect",
+      "variant": 3,
+      "targetCode": "sentence-order-paragraph-body-label",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "order-dependent-fragment-v1-defect",
+      "variant": 1,
+      "targetCode": "sentence-order-dependent-fragment",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "order-dependent-fragment-v2-defect",
+      "variant": 2,
+      "targetCode": "sentence-order-dependent-fragment",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "order-dependent-fragment-v3-defect",
+      "variant": 3,
+      "targetCode": "sentence-order-dependent-fragment",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "insert-given-v1-defect",
+      "variant": 1,
+      "targetCode": "sentence-insert-missing-given",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "insert-given-v2-defect",
+      "variant": 2,
+      "targetCode": "sentence-insert-missing-given",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    },
+    {
+      "id": "insert-given-v3-defect",
+      "variant": 3,
+      "targetCode": "sentence-insert-missing-given",
+      "relaxedBlocking": true,
+      "salvageRelaxable": false,
+      "shipFirstWarning": false,
+      "schemaCertificatePassed": true
+    }
+  ],
+  "redundancyCertificates": [
+    {
+      "code": "type-foreign-field",
+      "mechanism": "production schema strips the foreign field",
+      "observed": true,
+      "evidence": {
+        "foreignFieldPresentAfterParse": false
+      }
+    },
+    {
+      "code": "scrambled-near-answer-order",
+      "mechanism": "deterministic finalizer rewrites near-answer chip order",
+      "observed": true,
+      "evidence": {
+        "before": true,
+        "after": false,
+        "changed": true
+      }
+    },
+    {
+      "code": "summary-complete-missing-blank-answer",
+      "mechanism": "production schema rejects a blank without answer",
+      "observed": true,
+      "evidence": {
+        "validAccepted": true,
+        "missingAnswerAccepted": false
+      }
+    },
+    {
+      "code": "multi-blank-count",
+      "mechanism": "dynamic production schema rejects the wrong blank count",
+      "observed": true,
+      "evidence": {
+        "baseAccepted": true,
+        "defectAccepted": false
+      }
+    },
+    {
+      "code": "multi-blank-label",
+      "mechanism": "dynamic production schema rejects a non-contract label",
+      "observed": true,
+      "evidence": {
+        "baseAccepted": true,
+        "defectAccepted": false
+      }
+    },
+    {
+      "code": "multi-blank-option-values",
+      "mechanism": "dynamic production schema rejects incomplete blankValues",
+      "observed": true,
+      "evidence": {
+        "baseAccepted": true,
+        "defectAccepted": false
+      }
+    },
+    {
+      "code": "multi-blank-missing-expression",
+      "mechanism": "production post-process rejects an empty source expression",
+      "observed": true,
+      "evidence": {
+        "schemaAccepted": true,
+        "postProcessAccepted": false
+      }
+    },
+    {
+      "code": "multi-blank-expression-not-in-passage",
+      "mechanism": "production post-process rejects a source span it cannot locate",
+      "observed": true,
+      "evidence": {
+        "schemaAccepted": true,
+        "postProcessAccepted": false
+      }
+    },
+    {
+      "code": "multi-blank-missing-passage",
+      "mechanism": "production post-process synthesizes passageWithBlank",
+      "observed": true,
+      "evidence": {
+        "renderedLength": 110
+      }
+    },
+    {
+      "code": "multi-blank-marker-count",
+      "mechanism": "production post-process emits one canonical marker per blank",
+      "observed": true,
+      "evidence": {
+        "markerA": 1,
+        "markerB": 1
+      }
+    },
+    {
+      "code": "multi-blank-correct-option-mismatch",
+      "mechanism": "SOURCE_EXACT production post-process auto-fixes the correct values",
+      "observed": true,
+      "evidence": {
+        "correctedValues": "compare multiple sources|document every uncertainty"
+      }
+    },
+    {
+      "code": "multi-blank-duplicate-option",
+      "mechanism": "existing duplicate-option-text relaxed blocker covers the final candidate",
+      "observed": true,
+      "evidence": {
+        "schemaAccepted": true,
+        "postProcessAccepted": true,
+        "targetEmitted": true,
+        "blockingCodes": [
+          "duplicate-option-text"
+        ]
+      }
+    }
+  ],
+  "cRowCertificates": [
+    {
+      "id": "generic-foreign-field-v1-defect",
+      "variant": 1,
+      "targetCode": "type-foreign-field",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production schema strips the foreign field"
+    },
+    {
+      "id": "generic-foreign-field-v2-defect",
+      "variant": 2,
+      "targetCode": "type-foreign-field",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production schema strips the foreign field"
+    },
+    {
+      "id": "generic-foreign-field-v3-defect",
+      "variant": 3,
+      "targetCode": "type-foreign-field",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production schema strips the foreign field"
+    },
+    {
+      "id": "word-near-order-v1-defect",
+      "variant": 1,
+      "targetCode": "scrambled-near-answer-order",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "deterministic finalizer rewrites near-answer chip order"
+    },
+    {
+      "id": "word-near-order-v2-defect",
+      "variant": 2,
+      "targetCode": "scrambled-near-answer-order",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "deterministic finalizer rewrites near-answer chip order"
+    },
+    {
+      "id": "word-near-order-v3-defect",
+      "variant": 3,
+      "targetCode": "scrambled-near-answer-order",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "deterministic finalizer rewrites near-answer chip order"
+    },
+    {
+      "id": "summary-answer-v1-defect",
+      "variant": 1,
+      "targetCode": "summary-complete-missing-blank-answer",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production schema rejects a blank without answer"
+    },
+    {
+      "id": "summary-answer-v2-defect",
+      "variant": 2,
+      "targetCode": "summary-complete-missing-blank-answer",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production schema rejects a blank without answer"
+    },
+    {
+      "id": "summary-answer-v3-defect",
+      "variant": 3,
+      "targetCode": "summary-complete-missing-blank-answer",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production schema rejects a blank without answer"
+    },
+    {
+      "id": "multi-count-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-count",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects the wrong blank count"
+    },
+    {
+      "id": "multi-count-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-count",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects the wrong blank count"
+    },
+    {
+      "id": "multi-count-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-count",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects the wrong blank count"
+    },
+    {
+      "id": "multi-label-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-label",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects a non-contract label"
+    },
+    {
+      "id": "multi-label-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-label",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects a non-contract label"
+    },
+    {
+      "id": "multi-label-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-label",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects a non-contract label"
+    },
+    {
+      "id": "multi-expression-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-missing-expression",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process rejects an empty source expression"
+    },
+    {
+      "id": "multi-expression-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-missing-expression",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process rejects an empty source expression"
+    },
+    {
+      "id": "multi-expression-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-missing-expression",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process rejects an empty source expression"
+    },
+    {
+      "id": "multi-source-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-expression-not-in-passage",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process rejects a source span it cannot locate"
+    },
+    {
+      "id": "multi-source-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-expression-not-in-passage",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process rejects a source span it cannot locate"
+    },
+    {
+      "id": "multi-source-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-expression-not-in-passage",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process rejects a source span it cannot locate"
+    },
+    {
+      "id": "multi-passage-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-missing-passage",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process synthesizes passageWithBlank"
+    },
+    {
+      "id": "multi-passage-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-missing-passage",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process synthesizes passageWithBlank"
+    },
+    {
+      "id": "multi-passage-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-missing-passage",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process synthesizes passageWithBlank"
+    },
+    {
+      "id": "multi-marker-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-marker-count",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process emits one canonical marker per blank"
+    },
+    {
+      "id": "multi-marker-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-marker-count",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process emits one canonical marker per blank"
+    },
+    {
+      "id": "multi-marker-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-marker-count",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "production post-process emits one canonical marker per blank"
+    },
+    {
+      "id": "multi-option-values-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-option-values",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects incomplete blankValues"
+    },
+    {
+      "id": "multi-option-values-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-option-values",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects incomplete blankValues"
+    },
+    {
+      "id": "multi-option-values-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-option-values",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "dynamic production schema rejects incomplete blankValues"
+    },
+    {
+      "id": "multi-duplicate-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-duplicate-option",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "existing duplicate-option-text relaxed blocker covers the final candidate"
+    },
+    {
+      "id": "multi-duplicate-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-duplicate-option",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "existing duplicate-option-text relaxed blocker covers the final candidate"
+    },
+    {
+      "id": "multi-duplicate-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-duplicate-option",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "existing duplicate-option-text relaxed blocker covers the final candidate"
+    },
+    {
+      "id": "multi-correct-mismatch-v1-defect",
+      "variant": 1,
+      "targetCode": "multi-blank-correct-option-mismatch",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "SOURCE_EXACT production post-process auto-fixes the correct values"
+    },
+    {
+      "id": "multi-correct-mismatch-v2-defect",
+      "variant": 2,
+      "targetCode": "multi-blank-correct-option-mismatch",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "SOURCE_EXACT production post-process auto-fixes the correct values"
+    },
+    {
+      "id": "multi-correct-mismatch-v3-defect",
+      "variant": 3,
+      "targetCode": "multi-blank-correct-option-mismatch",
+      "relaxedBlocking": false,
+      "certificateObserved": true,
+      "mechanism": "SOURCE_EXACT production post-process auto-fixes the correct values"
+    }
+  ],
+  "sourceClosure": {
+    "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts": {
+      "sha256": "50d33bba9a532eff59d8205e3913abfeec6c178082ae5c061339b71164bc2e21",
+      "bytes": 29924
+    },
+    "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts": {
+      "sha256": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2",
+      "bytes": 106853
+    },
+    "src/lib/question-ai-schemas-mc.ts": {
+      "sha256": "c538452b7810e0efd8dd1d2c9345c3b1a64f8650a4590afc11850ce0d2bb5694",
+      "bytes": 49303
+    },
+    "src/lib/question-postprocess/index.ts": {
+      "sha256": "3752b4522a5b7c4b59ea08b99a5dd9054f77886c8528973246dc5bdcb98a22bf",
+      "bytes": 11598
+    },
+    "src/lib/question-postprocess/processors/blank-inference.ts": {
+      "sha256": "2655e85d000cb57046680db5a3c548db07e1b18c0dd9d6b56f3aff10d9786716",
+      "bytes": 11636
+    },
+    "src/lib/question-postprocess/processors/sentence-insert.ts": {
+      "sha256": "88d2cdcafd0e2aff921d742e7b5af0f127be4bf927c162128b484c6e6804c9e2",
+      "bytes": 12973
+    },
+    "src/lib/question-postprocess/types.ts": {
+      "sha256": "95d082598f8974b15ac26987f4090a8b94cd511603e5e1f5d0c1224cf45ab4b7",
+      "bytes": 2757
+    },
+    "src/lib/question-quality/core.ts": {
+      "sha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+      "bytes": 18736
+    },
+    "src/lib/question-quality/dispatcher.ts": {
+      "sha256": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "bytes": 116286
+    },
+    "src/lib/question-quality/index.ts": {
+      "sha256": "2db502873ac6fbb295afdd8315fb166d5a6a408fdc213f3def1be1a300a4137f",
+      "bytes": 500
+    },
+    "src/lib/question-quality/validators/blank/multi.ts": {
+      "sha256": "d0378e496976fc40fd08606a10c6f37b8b8c189edeb6de24e412ba2b07bdf5d6",
+      "bytes": 10127
+    },
+    "src/lib/question-quality/validators/misc.ts": {
+      "sha256": "340e7a7e6fdc570d2488e54dc33d181726a841492ee3d8e94fd1e880e44d497b",
+      "bytes": 3813
+    },
+    "src/lib/question-quality/validators/sentence-insert.ts": {
+      "sha256": "60d37028fb25035f7137faa35df1ec8b01ba13a4aa05abf68a4059db3610f63d",
+      "bytes": 15035
+    },
+    "src/lib/question-quality/validators/sentence-order.ts": {
+      "sha256": "6a0229491f01e9c90e623fd290938fd23a76987e603510e70cbbca8d16f421db",
+      "bytes": 31977
+    },
+    "src/lib/question-quality/validators/summary/complete.ts": {
+      "sha256": "c40994506c42d57954bdace5b5054f2665125003357cd2344c74f776a5cc71ff",
+      "bytes": 3137
+    },
+    "src/lib/topic-sentence-writing.ts": {
+      "sha256": "c7fd8411ff87451618eb0670b2a9fd55092bb6aba030fa4a9c53079a7498829e",
+      "bytes": 10937
+    },
+    "tests/unit/deterministic-structural-v12-remediation.test.ts": {
+      "sha256": "e0de2ef1f242baa3df3f0e4e5e2e5d6fa47c8863f3ea4d08c01c16ee4baae8d2",
+      "bytes": 1112
+    }
+  }
+}

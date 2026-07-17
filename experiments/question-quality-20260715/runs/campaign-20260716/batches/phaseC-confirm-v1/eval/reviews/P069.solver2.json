@@ -1,0 +1,35 @@
+{
+  "pid": "P069",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'that filter blindly discards crucial elements based on past habits' — 3인칭 단수 주어-동사 일치 정문. 논리: 지문의 두 전제(과거 경험 기반 접근은 novel 문제에서 실패한다 / 숙련자는 경험을 필터로 essential과 irrelevant를 분리한다)에서 형식적으로 도출되는 유일한 실패 모드 — novel 상황에서 필터가 과거 습관 기준으로 실제 crucial한 요소를 irrelevant로 오분류해 폐기하면 masters도 실수한다. 완전 성립."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "문법 seam은 정문이나 범주 오류. 필터는 beginner's mind를 '적용하는' 행위자가 아니라 그 반대 개념(경험 기반 선별) 자체다. beginner's mind를 적용하는 필터는 정의상 무선별 흡수 = 필터가 아님(자기모순). 마인드셋 적용의 주체는 무술가이지 필터가 아니므로 행위성 귀속이 성립하지 않는다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "논리 역전. 지문의 문제 상황은 익숙한 도구에의 과의존이지 익숙한 도구를 irrelevant로 폐기하는 것이 아니다. 또한 필터의 작동 대상은 문제의 디테일이지 도구 자체가 아니므로 이중으로 부정합."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'them'의 후방조응(seasoned masters)은 문법상 가능하나 논리가 정반대. 모든 디테일 흡수는 지문이 novel 문제에 권장하는 beginner's mind 그 자체이므로, 이것이 masters의 실수 원인이 된다는 진술은 지문 논지와 모순."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "부분 유인력이 있으나 두 결함으로 탈락: (a) 필터의 작동 단위는 상황 내 요소/디테일('separate the essential from the irrelevant')이지 '상황 전체'가 아님. (b) 'altogether(통째 차단)'는 과잉 주장 — 숙련자의 실패는 novel 상황의 회피가 아니라 그 안에서 crucial 요소를 과거 기준으로 오분류하는 것. 1번의 정밀 명제를 조악하게 확대한 오답으로, 1번 대비 논리적으로 열등."
+    }
+  ],
+  "note": "빈칸 문장은 '경험 필터의 실패 메커니즘'을 요구하며, 지문 전반부(익숙한 도구 의존이 novel 문제에서 실패)와 후반부(필터=경험 기반 essential/irrelevant 분리)의 결합에서 1번만이 형식적으로 도출된다. 5번은 최유력 미끼이나 작동 단위(요소 vs 상황)와 강도(altogether)에서 지문 초과. 복수 정답 여지 없음."
+}

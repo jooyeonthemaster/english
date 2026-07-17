@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'One of the most common mistakes made by organizations when they first consider experimenting...' — 'when' introduces a temporal adverbial clause modifying the participial phrase 'made by organizations'. The long subject is later resolved by singular 'is', and the structure is sound. A hasty reader might momentarily expect 'is when' or suspect the clause placement, but the underlined 'when' is grammatically unimpeachable."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect",
+      "reason": "'with a thorough understood of the organization's own goals' — after article + adjective ('a thorough ___ of NP') a head noun is required: 'a thorough understanding of'. 'Understood' is a past participle and cannot head this NP. Actively searched for rescue readings (nominalized adjective 'the understood', reduced relative, etc.) — none is compatible with 'a thorough ___ of'. Clearly and uniquely wrong."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'serves no purpose in and of itself' — fixed idiom with the reflexive pronoun referring back to the gerund subject 'Being in social media'. Correct."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'must either solve a problem ... or result in an improvement' — base verb required after modal 'must'; 'either solve ... or result' is properly parallel. Distractor pull: singular subject 'a social media presence' tempts toward 'solves', but the modal governs, so the base form is right."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'preferably a measurable one' — adjective modifying the pronoun 'one' (= improvement). The adverb 'measurably' would be wrong here; the adjective is correct."
+    }
+  ],
+  "note": "Clean single-answer item. (B) 'understood' vs required noun 'understanding' is a decisive, non-controversial error. (A)/(D) carry mild attractive-distractor pull (clause-attachment doubt for A, subject-verb agreement lure for D) but both survive scrutiny. No alternative parse makes (B) grammatical, and no other option is defensibly wrong."
+}

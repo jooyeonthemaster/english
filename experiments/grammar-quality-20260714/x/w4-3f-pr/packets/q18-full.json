@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20190307-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "요지",
+    "words": 118
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=h  (C):dec=c  (D):dec=k  (E):ANS=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 101,
+        "relPos": 0.146,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 322,
+        "relPos": 0.464,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 382,
+        "relPos": 0.55,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 540,
+        "relPos": 0.778,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 624,
+        "relPos": 0.899,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.899,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - to join a group that has a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier. Volunteers report a sense of satisfaction at enriching their social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who is lonely might benefit from helping others. Also, they might benefit from being involved in a voluntary program where they receive support and help to build their own social network.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "to join",
+        "isError": false,
+        "correction": "to join",
+        "errorExpression": "to join",
+        "surroundingText": "there is one sure way for lonely patients to make a friend - to join a group that has a shared purpose.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "to be",
+        "isError": false,
+        "correction": "to be",
+        "errorExpression": "to be",
+        "surroundingText": "Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "enriching",
+        "isError": false,
+        "correction": "enriching",
+        "errorExpression": "enriching",
+        "surroundingText": "Volunteers report a sense of satisfaction at enriching their social network in the service of others.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "helping",
+        "isError": false,
+        "correction": "helping",
+        "errorExpression": "helping",
+        "surroundingText": "First, someone who is lonely might benefit from helping others.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "where",
+        "isError": true,
+        "correction": "where",
+        "errorExpression": "which",
+        "surroundingText": "Also, they might benefit from being involved in a voluntary program where they receive support and help to build their own social network.",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "to join"
+      },
+      {
+        "label": "(B)",
+        "text": "to be"
+      },
+      {
+        "label": "(C)",
+        "text": "enriching"
+      },
+      {
+        "label": "(D)",
+        "text": "helping"
+      },
+      {
+        "label": "(E)",
+        "text": "which"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "앞선 'to make a friend'와 병렬 구조를 이루며 'one sure way'를 구체적으로 설명하는 보어 역할을 하는 to부정사(to join)이므로 적절합니다.",
+      "(B)": "동사 tend는 목적어로 to부정사를 취하며, 주어인 people의 상태가 '~한 경향이 있다'는 의미를 나타내는 be동사(to be)는 어법상 맞습니다.",
+      "(C)": "전치사 at의 목적어로 동명사(enriching)가 사용되었으며, 타동사의 성격상 뒤에 그 목적어인 'their social network'를 적절히 동반하고 있습니다.",
+      "(D)": "전치사 from 뒤에 동명사(helping)가 위치하여 '다른 사람을 돕는 것으로부터'라는 의미를 형성하므로 문법적으로 옳습니다."
+    },
+    "explanation": "해당 문장에서 a voluntary program을 수식하는 관계사절 뒤에는 '그들이 지원을 받다'라는 의미의 완전한 문장(they receive support...)이 이어지고 있습니다. 관계대명사 which는 절 내에서 주어나 목적어와 같은 명사 역할을 수행해야 하므로 뒤에 불완전한 문장이 와야 하지만, 여기서는 빠진 격이 없는 완전한 구조이므로 장소나 상황의 부사 역할을 하는 관계부사 where가 오는 것이 적절합니다. 따라서 which를 where 또는 in which로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 관계대명사 vs 관계부사 — 뒤따르는 절이 완전한지 불완전한지에 따라 판분",
+      "(B) 목적격보어 — 특정 동사(tend)가 요구하는 목적격보어의 형태 판단",
+      "(A) 명사 수식 및 병렬 — 문맥상 동일한 수식 대상을 가지는 부정사의 병렬 확인"
+    ],
+    "tags": [
+      "수능어법",
+      "관계사",
+      "완전불완전구조",
+      "동명사",
+      "to부정사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - __(A) to join__ a group that has a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who are engaged in service to others, such as volunteering, tend __(B) to be__ happier. Volunteers report a sense of satisfaction at __(C) enriching__ their social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who is lonely might benefit from __(D) helping__ others. Also, they might benefit from being involved in a voluntary program __(E) which__ they receive support and help to build their own social network."
+  }
+}

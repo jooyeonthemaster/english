@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "campaign-v5-s1-independent-audit-v1",
+  "capturedAtKst": "2026-07-15T15:08:54+09:00",
+  "verdict": "PASS_DESIGN_INTEGRITY_EXECUTION_REMAINS_BLOCKED",
+  "scope": "Offline independent audit of the frozen S1 design queue; no efficacy or production-topology claim",
+  "officialReplay": {
+    "builderWritePassed": true,
+    "officialVerifierPassed": true,
+    "prePostHashesIdentical": true,
+    "targetedTypecheckPassed": true,
+    "designSourceEslintPassed": true
+  },
+  "independentVerifierPassed": true,
+  "passages": 12,
+  "historyBinding": {
+    "selectedRows": 76,
+    "historyCleanRows": 76,
+    "exposedRows": 0,
+    "exactDevelopmentRowsJoined": 12,
+    "grammarDevelopmentRows": 6,
+    "blankDevelopmentRows": 6
+  },
+  "assignments": 180,
+  "allocation": {
+    "grammar": 96,
+    "blank": 84,
+    "standard": 96,
+    "premium": 84,
+    "intermediate": 90,
+    "killer": 90,
+    "b1Premium": 0
+  },
+  "wire": {
+    "standardModel": "google/gemini-3.5-flash",
+    "premiumModel": "google/gemini-3.1-pro-preview",
+    "reasoningEnabled": false,
+    "reasoningEffort": "none",
+    "reasoningExcluded": true,
+    "providerRequireParameters": true,
+    "questionsPerAssignment": 1,
+    "grammarMaxOutputTokens": 6000,
+    "blankMaxOutputTokens": 4000,
+    "candidateOpportunities": 180,
+    "physicalFetchCap": 180,
+    "sdkRetriesPerAssignment": 0,
+    "outerAttemptsPerAssignment": 1
+  },
+  "reservation": {
+    "grammarStandard": {
+      "calls": 48,
+      "capUsd": 0.2,
+      "reservedUsd": 9.6
+    },
+    "grammarPremium": {
+      "calls": 48,
+      "capUsd": 0.43,
+      "reservedUsd": 20.64
+    },
+    "blankStandard": {
+      "calls": 48,
+      "capUsd": 0.14,
+      "reservedUsd": 6.72
+    },
+    "blankPremium": {
+      "calls": 36,
+      "capUsd": 0.2,
+      "reservedUsd": 7.2
+    },
+    "totalHardReservationUsd": 44.16
+  },
+  "hashes": {
+    "privateQueueFileSha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+    "privateQueueSemanticSha256": "c120ebcc5aea5f83c1c9e97447c2913b0ebf76932e2a0cf91d2e10887a86225e",
+    "publicArtifactSha256": "5b06e262850239d2fd86eb827028515f28bd2674f6f326b15d6ba70536606e59",
+    "designManifestSha256": "d64e98ad52a7ffc8afbaebc9e868a1f0ed4a8002d1638f67b902403a407e4355"
+  },
+  "privacy": {
+    "privateQueueGitIgnored": true,
+    "privateQueueGitTracked": false,
+    "publicPrivateValueLeaks": 0,
+    "credentialLeaks": 0
+  },
+  "authorization": {
+    "campaignEligibleAssignments": 0,
+    "generationAuthorized": false,
+    "apiCandidateCount": 0,
+    "globalCandidateLimit": 1000,
+    "auditEvidenceHoldSatisfied": true,
+    "remainingNonAuditHolds": 5
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretAccesses": 0,
+    "productionFilesEdited": 0,
+    "privateQueueSemanticEdits": 0
+  }
+}

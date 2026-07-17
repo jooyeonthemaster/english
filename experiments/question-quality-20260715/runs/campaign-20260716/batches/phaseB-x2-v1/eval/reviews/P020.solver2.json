@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 seam 성립(make sure you focus...)이나 논리 부적합. 지문은 학습시간 극대화를 논한 적이 없고, 빈칸은 'get involved in the activities that are most meaningful to you'와 and로 등위 접속되어 활동 참여를 전제한다. 'focus only on study hours'는 활동 참여 권고와 의미적으로 충돌하며, 'only'의 배타성이 지문의 moderation(절제) 명제와도 불일치."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 seam 성립이나 논리 정면 모순. 지문 명제 'Joining too many clubs can reduce a large amount of your free time' 및 'exercise some moderation'과 직접 배치되는 반의(反意) 미끼. 더 많은 클럽을 떠맡으라는 권고는 지문 결론에서 도출 불가능."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 정문: make sure you [learn to [prioritize and portion] your commitments] — prioritize/portion 병렬 시작점이 learn to 이하 원형에서 일치하고 공유 목적어 your commitments가 두 동사 모두와 결합 가능. 논리 정합: 'draw the line'(한계 설정)→portion, 'most meaningful to you'(선별)→prioritize, 'Pacing is important'와 'exercise some moderation'의 실행 지침으로 지문 전체 논증과 완전 대응. 유일 채택."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 seam 성립(negotiate and delay ... with your teachers 병렬 가능)이나 논리 부적합. deadline은 crunch time의 '예시'로만 등장했고 지문의 해법은 마감 연기가 아니라 활동량 절제다. 예시 세부어(deadline)를 결론 위치에 재활용한 미끼. 또한 school newspaper 마감을 'your teachers'와 협상한다는 결합도 지문 근거 없음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 seam 성립이나 논리 부적합. 지문의 'stressed out'은 과외활동 과부하로 인한 스트레스이지 사회 불안(social anxiety)이 아니며, 'eliminate all sources'는 지문의 'some moderation'(부분 절제)과 양립 불가능한 전칭 과잉 주장. 어휘 왜곡+극단화 미끼."
+    }
+  ],
+  "note": "빈칸 유형. 다섯 선지 모두 'make sure you + VP' 문법 결합은 성립하므로 판별은 전적으로 논리 적합성. 지문의 핵심 명제(draw the line / moderation / pacing / most meaningful 선별)에 대응하는 선지는 ③뿐이며, ②는 반의, ④는 예시 세부어 재활용, ①·⑤는 무관 주제+극단화로 각각 배제된다. 복수 정답 여지 없음."
+}

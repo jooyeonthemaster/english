@@ -1,0 +1,149 @@
+[
+ {
+  "pid": "P001",
+  "itemId": "A4-b-kil-prem-04",
+  "armId": "B-A0-PREMIUM-KILLER",
+  "frameId": "blank-supply-v2-101",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V3-minor-nonstandard-plural",
+    "severity": "minor",
+    "evidence": "Option 5 'a sign of failed cooperations' uses a nonstandard countable plural of 'cooperation' (normally uncountable; should be 'failed cooperation'). The inserted sentence remains parseable and a solver cannot confidently eliminate the option on grammar alone, so V3 is not failed, but it is a blemish on a premium item."
+   }
+  ]
+ },
+ {
+  "pid": "P002",
+  "itemId": "A4-b-int-prem-04",
+  "armId": "B-A0-PREMIUM-INTERMEDIATE",
+  "frameId": "blank-supply-v2-101",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5-minor-keypoint-source-leak",
+    "severity": "minor",
+    "evidence": "keyPoints[1] 'put up with, put up with obscurities의 문맥상 의미 추론능력 배양'은 (a) 렌더 지문에서 이미 제거된 원문 표현(put up with many obscurities)을 학습 포인트로 지목하고 있고 (b) 'put up with, put up with obscurities'라는 어구 중복이 있다. 정답·선지·해설과 모순되지는 않으므로 V5 실패로는 판정하지 않으나 필드 다듬기가 필요하다."
+   }
+  ]
+ },
+ {
+  "pid": "P003",
+  "itemId": "A4-b-kil-prem-03",
+  "armId": "B-A0-PREMIUM-KILLER",
+  "frameId": "blank-supply-v2-080",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ }
+]

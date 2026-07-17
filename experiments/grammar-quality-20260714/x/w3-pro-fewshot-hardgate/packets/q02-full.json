@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):dec=b  (C):ANS=c  (D):dec=b  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 29,
+        "relPos": 0.036,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 323,
+        "relPos": 0.401,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 540,
+        "relPos": 0.671,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 641,
+        "relPos": 0.796,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 731,
+        "relPos": 0.908,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.908,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "being left",
+        "isError": false,
+        "correction": "being left",
+        "errorExpression": "being left",
+        "surroundingText": "We all enjoy the pleasure of being left alone with a good book.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "who",
+        "isError": false,
+        "correction": "who",
+        "errorExpression": "who",
+        "surroundingText": "The solution is to read in the company of other people who are reading",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "immersed",
+        "isError": true,
+        "correction": "immersed",
+        "errorExpression": "immersing",
+        "surroundingText": "Next time you look up, you'll see someone else similarly immersed",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "in which",
+        "isError": false,
+        "correction": "in which",
+        "errorExpression": "in which",
+        "surroundingText": "Consider joining a reading group in which everybody takes turns reading aloud from a novel.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is",
+        "errorExpression": "is",
+        "surroundingText": "Reading a book collaboratively is a wonderful way to share an otherwise internal",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "being left"
+      },
+      {
+        "label": "(B)",
+        "text": "who"
+      },
+      {
+        "label": "(C)",
+        "text": "immersing"
+      },
+      {
+        "label": "(D)",
+        "text": "in which"
+      },
+      {
+        "label": "(E)",
+        "text": "is"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 of의 목적어로 쓰인 동명사이면서, 뒤에 목적어가 없고 alone(보어)가 남겨진 수동적 의미를 지니므로 수동 동명사 being left가 적절합니다.",
+      "(B)": "선행사 other people을 수식하고 뒤에 동사 are reading이 이어지므로 주격 관계대명사 who가 올바릅니다.",
+      "(D)": "선행사 a reading group을 수식하며, 뒤에 완전한 절(everybody takes turns ~)이 이어지므로 전치사+관계대명사인 in which의 사용은 올바릅니다.",
+      "(E)": "동명사구(Reading a book collaboratively)가 문장의 주어 역할을 하므로, 단수 동사 is가 오는 것이 맞습니다."
+    },
+    "explanation": "정답 문장의 골격을 살펴보면 지각동사 see 뒤에 목적어 someone else와 목적격 보어가 오는 구조입니다. 여기서 목적어인 someone else가 독서에 '몰두된(빠진)' 수동의 의미를 지니며 형태상으로도 목적어가 뒤따르지 않으므로, 능동형 분사 'immersing'은 비문이 됩니다. 따라서 과거분사형인 'immersed'로 고쳐야 합니다. 학생들은 지각동사 뒤에 ~ing가 올 수 있다는 규칙에만 치중하여 능수동의 의미 관계를 놓치는 함정에 빠지기 쉽습니다.",
+    "keyPoints": [
+      "(C) 분사의 능동 vs 수동 — 목적어와 목적격 보어의 의미 관계 파악",
+      "(A) 능동태 vs 수동태 — 전치사의 목적어 자리 동명사 태",
+      "(E) 주어-동사 수일치 — 동명사구 주어의 취급"
+    ],
+    "tags": [
+      "능동수동",
+      "지각동사",
+      "목적격보어",
+      "분사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We all enjoy the pleasure of __(A) being left__ alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people __(B) who__ are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly __(C) immersing__, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group __(D) in which__ everybody takes turns reading aloud from a novel. Reading a book collaboratively __(E) is__ a wonderful way to share an otherwise internal and solitary experience."
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "campaign-v6-observer-independent-reaudit-evidence-v4",
+  "reviewId": "campaign-v6-connectivity-pilot-v6-observer-independent-reaudit-v4",
+  "createdAt": "2026-07-16T03:36:58.7612457+09:00",
+  "verdict": "PASS_NO_BLOCKERS",
+  "authority": "NONE",
+  "scope": "OBSERVER_ONLY",
+  "authorizesV6": false,
+  "subject": {
+    "strictObserverPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/strict-json-observer.ts",
+    "strictObserverSha256": "8df2072304c3bc48873dac05889c6d22ddf313f25fa321f9e6baac69fcc1fd3a",
+    "coordinatedOfflineTestPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/offline.test.ts",
+    "coordinatedOfflineTestObservedSha256": "212dadaad0f3812c2f4c2836bf4048694f237f8aeb618937bf09cd44149f5172",
+    "coordinatedTestImportedExecutedOrInspected": false,
+    "subjectEdits": 0
+  },
+  "legacyReplay": {
+    "priorReviewPath": "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v6-observer-independent-reaudit-v3",
+    "sealedPredecessorReplaySha256": "d11331a55ecb9380cfb567de4f47b404eddb5bcb6fc01f91732a27ec184bd47a",
+    "sealedFreshAuditSha256": "98457fdb533bf3a88b54f59351cccad6a62cc3121cfb77e042382a93ea0cb847",
+    "transformation": "in-memory exact old subject/offline hash replacement only",
+    "cases": 1903,
+    "passing": 1903,
+    "failing": 0,
+    "predecessor917": {
+      "cases": 917,
+      "passing": 917,
+      "failing": 0,
+      "matrixFingerprintSha256": "d03275523a39930086f490ef5857a95ea75797739a0caadba05061e1bf249fda"
+    },
+    "fresh986": {
+      "cases": 986,
+      "passing": 986,
+      "failing": 0,
+      "matrixFingerprintSha256": "fd9c88b6c2838f125bb974e13a05653982fe956e821797326674076bf31ea50d"
+    }
+  },
+  "freshIndependentMatrix": {
+    "cases": 1950,
+    "passing": 1950,
+    "failing": 0,
+    "distinctRawBodies": 1627,
+    "streamScheduleCases": 320,
+    "matrixFingerprintSha256": "35dd30ef4331961889d6d12196cc11e3502508b655261b84484dd2610a42eae4",
+    "resultFingerprintSha256": "a0bf61afcbe8b8d7e6a72b415fa9b01c530cf7bf3a855c7b7d079955cc091db3",
+    "failureFingerprintSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "categoryCounts": {
+      "complete-neutral-quoted-prose": 144,
+      "complete-neutral-recovery-cap": 12,
+      "hard-bound-controls": 24,
+      "malformed-string-later-root": 120,
+      "multiple-roots-prefix-suffix": 240,
+      "nested-braces-brackets-unicode": 160,
+      "nested-escaped-unicode-wrapper": 240,
+      "raw-boundary-backslash-parity": 288,
+      "streaming-utf8-chunk-split": 320,
+      "truncation-every-position": 402
+    },
+    "categoryFailures": {},
+    "oracleCounts": {
+      "EXACT": 884,
+      "QUARANTINE": 664,
+      "INVARIANTS": 402
+    },
+    "referenceScannerCases": 720,
+    "handClassCases": 1230,
+    "boundsObserved": {
+      "byteCap": 2097152,
+      "nodeCap": 50000,
+      "depthCap": 128,
+      "candidateCap": 1001,
+      "recoveryCap": 4096
+    }
+  },
+  "combined": {
+    "cases": 3853,
+    "passing": 3853,
+    "failing": 0,
+    "matrixBindingFingerprintSha256": "d3fb25e744b2ac941ac9118e7a144777ac34db3f97eb9c504e2af912cf946bae"
+  },
+  "independence": {
+    "freshGeneratorOrFixtureCopiedFromPriorAudit": false,
+    "referenceScannerAndHandClassCrossUsed": true,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "secretReads": 0,
+    "privateArtifactReads": 0,
+    "ledgerReads": 0,
+    "ledgerWrites": 0,
+    "buildOrFreezeCommands": 0,
+    "liveCommands": 0
+  }
+}

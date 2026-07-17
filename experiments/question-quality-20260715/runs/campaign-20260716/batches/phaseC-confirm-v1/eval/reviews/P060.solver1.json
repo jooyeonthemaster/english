@@ -1,0 +1,35 @@
+{
+  "pid": "P060",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "attractive-distractor",
+      "reason": "separate their athletic performance from psychological pressure — 실전에서 가장 끌리는 오답. '메이저 대회 = 압박 상황'이라는 배경지식과 stamina라는 단어가 '압박을 견딘다'는 프레임을 유도한다. 그러나 지문의 인과 구조는 '체력이 압박으로부터 경기력을 분리·차단해 준다'가 아니라 '신체적 우위가 신체·정신 양 영역의 승리로 이어진다'이다(협상 사례: physical stamina to see the deal through). '분리(separate)'라는 개념은 지문 어디에도 근거가 없다. 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "prevail in both bodily and psychological realms — 협상 사례(신체적 체력 → 정신적 지구전인 협상에서 승리)와 골퍼 사례(웨이트룸 체력 단련 → 메이저에서 상대 제압)를 정확히 일반화한다. 'the strength and stamina to prevail ... in order to close out their opponents'로 문법 결합도 자연스럽고, 지문 전체의 '신체 관리 = 인생 전반의 과녁 명중' 논지와 일치. 유일한 정답."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "prioritize mental techniques over physical conditioning — 지문 전체가 physical conditioning의 결정적 우위를 강조하므로 정면 모순. 바로 뒤 문장 자체가 weight room 단련(신체)을 근거로 제시한다. 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "compensate for a lack of natural athletic abilities — world-class 골퍼가 타고난 재능이 부족하다는 언급이 전혀 없다. 오히려 동시대 최고 수준으로 전제되어 있다. 무근거. 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "neglect proper nutrition to spend more time practicing — 영양 소홀은 지문이 첫머리에서 정의한 'sin(과녁 빗나감)' 그 자체이므로 정면 모순. 탈락."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: ①이 유일한 유의미한 미끼였다. '압박 하 수행'이라는 그럴듯한 스포츠심리 프레임을 걸지만, 지문의 협상 사례가 '신체 → 정신 영역 승리'라는 이행 구조를 명시하므로 '분리'가 아닌 '양 영역 제패'(②)만이 텍스트 근거를 갖는다. ③⑤는 정면 모순, ④는 무근거로 즉시 소거 가능. 단일 정답으로 수렴하는 깨끗한 문항."
+}

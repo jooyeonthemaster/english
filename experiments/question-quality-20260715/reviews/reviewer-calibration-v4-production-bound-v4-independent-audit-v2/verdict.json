@@ -1,0 +1,348 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-v4-independent-audit-verdict-2",
+  "artifactId": "reviewer-calibration-v4-production-bound-v4-independent-audit-v2",
+  "verdict": "FAIL_BLOCKERS",
+  "disposition": "DESIGN_ONLY_ZERO_AUTHORITY_SUBJECT_NOT_ACCEPTED",
+  "acceptance": {
+    "subjectAccepted": false,
+    "calibrationExecutionAuthorized": false,
+    "c0Authorized": false,
+    "s1Authorized": false,
+    "authorityGranted": false,
+    "resultAccessAuthorized": false,
+    "successorRequired": true
+  },
+  "scope": {
+    "kind": "LOCAL_DATA_AND_MODEL_CONFORMANCE_ONLY",
+    "covered": [
+      "research-data-lineage",
+      "identity-bijection-and-role-separation",
+      "coverage-and-grant-scope",
+      "authoritative-state-transition",
+      "policy-recomputation",
+      "preexisting-audit-sequence-binding",
+      "single-use-capability",
+      "fingerprint-reservation-tombstone-disjointness"
+    ],
+    "excluded": [
+      "user-input-security",
+      "permission-security",
+      "private-rows",
+      "actors",
+      "item-answer-gold-content",
+      "databases",
+      "networks",
+      "providers",
+      "models",
+      "generation-ledgers",
+      "question-generation"
+    ]
+  },
+  "independentHarness": {
+    "sourceReviewRelativePath": "experiments/question-quality-20260715/reviews/reviewer-calibration-v4-production-bound-v4-independent-audit-v1",
+    "independentVerifier": {
+      "path": "independent-verify.py",
+      "bytes": 53435,
+      "sha256": "46914b7ab81c8f24114c8b3b63fc2fa79645dd84cd760407b728c70521d39cab"
+    },
+    "targetConformanceProbe": {
+      "path": "target-conformance-probe.mjs",
+      "bytes": 24342,
+      "sha256": "5dab21abffa6749656b6b30de2782c886e289a940cf7bea18f89fc0fd0705370"
+    },
+    "subjectAuthorTestsOrFixturesExecuted": false,
+    "subjectVerifyExecuted": false,
+    "subjectSchemaHostileExecuted": false,
+    "subjectHostileFixturesParsed": false,
+    "subjectAuthorTestsTrusted": false,
+    "identityCryptoOrKeysUsed": false
+  },
+  "reproduction": {
+    "requiredPlainRuns": [
+      {
+        "ordinal": 1,
+        "status": "PASS_INDEPENDENT_VERIFIER_EXPECTED_SUBJECT_FAIL",
+        "subjectVerdict": "FAIL_BLOCKERS",
+        "totalCases": 17816,
+        "caseDigestSha256": "9d9ce9978678b602d4d60ba6c1daf4b54a696d88f0ec3cc9ad71368422e4ab0c",
+        "subjectSnapshotSha256": "bcc3a013fd504abaddcf5203e895ddd24e34897183d711788be75ad524afcec0",
+        "subjectSnapshotStable": true,
+        "blockerCount": 7,
+        "sourceReviewManifestPresent": false
+      },
+      {
+        "ordinal": 2,
+        "status": "PASS_INDEPENDENT_VERIFIER_EXPECTED_SUBJECT_FAIL",
+        "subjectVerdict": "FAIL_BLOCKERS",
+        "totalCases": 17816,
+        "caseDigestSha256": "9d9ce9978678b602d4d60ba6c1daf4b54a696d88f0ec3cc9ad71368422e4ab0c",
+        "subjectSnapshotSha256": "bcc3a013fd504abaddcf5203e895ddd24e34897183d711788be75ad524afcec0",
+        "subjectSnapshotStable": true,
+        "blockerCount": 7,
+        "sourceReviewManifestPresent": false
+      }
+    ],
+    "jsonEvidenceExtractionRun": {
+      "status": "PASS_INDEPENDENT_VERIFIER_EXPECTED_SUBJECT_FAIL",
+      "subjectVerdict": "FAIL_BLOCKERS",
+      "totalCases": 17816,
+      "caseDigestSha256": "9d9ce9978678b602d4d60ba6c1daf4b54a696d88f0ec3cc9ad71368422e4ab0c",
+      "subjectSnapshotSha256": "bcc3a013fd504abaddcf5203e895ddd24e34897183d711788be75ad524afcec0",
+      "subjectSnapshotStable": true,
+      "blockerCount": 7
+    },
+    "allRunsIdenticalOnSealedFields": true
+  },
+  "subject": {
+    "relativePath": "experiments/question-quality-20260715/design/reviewer-calibration-v4-production-bound-v4",
+    "manifestFileSha256": "303b954e729f89fc21b95271d5cd895434c96bd193c24a31a393052b0ba63b05",
+    "snapshotBeforeSha256": "bcc3a013fd504abaddcf5203e895ddd24e34897183d711788be75ad524afcec0",
+    "snapshotAfterSha256": "bcc3a013fd504abaddcf5203e895ddd24e34897183d711788be75ad524afcec0",
+    "snapshotStable": true,
+    "files": {
+      "MANIFEST.sha256": {
+        "bytes": 982,
+        "sha256": "303b954e729f89fc21b95271d5cd895434c96bd193c24a31a393052b0ba63b05"
+      },
+      "PROTOCOL.md": {
+        "bytes": 7639,
+        "sha256": "bfd9f1df67f0c197e31fa2e84a144835e4db7af6c9b51db26c84bbbe92afa775"
+      },
+      "README.md": {
+        "bytes": 3217,
+        "sha256": "75152178aaade123e536ea35dfb5644937cedf189140d8639d22572c9fabc654"
+      },
+      "canonicalize.mjs": {
+        "bytes": 10904,
+        "sha256": "7a3fe6f44ee10943e04f002e1dcb8ddfe9880bd6ccb91502c57d5a41ed5fd117"
+      },
+      "event-schemas.json": {
+        "bytes": 57693,
+        "sha256": "90b4656cb2cfa501558402afc03f01175fcf37ee18ba3715616b65d19441dc4b"
+      },
+      "fingerprint.mjs": {
+        "bytes": 13287,
+        "sha256": "7ea222779ce93769d5e0f82592d86a1e8a736bb3fa13ff1f94085bd9ec97a06e"
+      },
+      "hostile-fixtures.json": {
+        "bytes": 7867,
+        "sha256": "83eb35d250017b1faafcefde3ad9953f4533376222966a3a6d6f3c005c43d50c"
+      },
+      "protocol.json": {
+        "bytes": 45914,
+        "sha256": "cd0ce0b25eb53b388df793aa8b5e6d708278e666b2d15c42e5897ff1e336a80b"
+      },
+      "public-manifest.json": {
+        "bytes": 8736,
+        "sha256": "edf8f97a72de445b36992effb0d50fd39dd6f3f0de8419d5263f8f4d202401fa"
+      },
+      "registries.json": {
+        "bytes": 14648,
+        "sha256": "bc878ce071d710ac9bc380cac3eecc9f241cf50d5c9537d26a8483ef0b6966be"
+      },
+      "schema-hostile.py": {
+        "bytes": 10641,
+        "sha256": "d6c7988d07871e802cb591f23e28cdcdeb86ae5cebb789e9533bd27f1abb74cd"
+      },
+      "semantics.mjs": {
+        "bytes": 45439,
+        "sha256": "8f8e821cc5c7d840e22c6aff6acc087949951359b5c48063aa3111b60a7399d3"
+      },
+      "verify.mjs": {
+        "bytes": 77440,
+        "sha256": "ffd82bbe2a1a8c8d4d979f32e8eab7409bdb93cc171e88535409cf6f12bd6f48"
+      }
+    },
+    "closure": {
+      "manifestRows": 12,
+      "packageRows": 11,
+      "authorityFieldsZeroOrFalse": 8,
+      "activityFieldsZero": 10
+    },
+    "lineage": {
+      "directUpstreamBytesRehashed": 11,
+      "publicAuditJsonsOpened": 4,
+      "requiredNegativeBlockerCodesConfirmed": 14,
+      "privateRowsOpened": 0
+    }
+  },
+  "caseMatrix": {
+    "totalCases": 17816,
+    "caseDigestSha256": "9d9ce9978678b602d4d60ba6c1daf4b54a696d88f0ec3cc9ad71368422e4ab0c",
+    "byCategory": {
+      "accessDisconnectedChains": 1024,
+      "canonicalDomainSeparation": 384,
+      "canonicalFieldOrder": 3072,
+      "canonicalFieldSet": 354,
+      "canonicalNumbers": 288,
+      "canonicalStrictJson": 384,
+      "canonicalUnicode": 256,
+      "coverageDistinctMaterialization": 1024,
+      "fingerprintBindingSwaps": 1024,
+      "fingerprintClaimValidation": 512,
+      "fingerprintContentDerivation": 5000,
+      "fingerprintCrossImplementation": 1,
+      "fingerprintTombstoneOracle": 512,
+      "grantAuditMaterializationOracle": 512,
+      "grantScopeOracle": 512,
+      "identityBijectionOracle": 512,
+      "identityCanonicalization": 512,
+      "identityOpaqueBase64Canonicality": 16,
+      "identityRoleSeparationOracle": 204,
+      "policyExactRoleResourceMatrix": 1666,
+      "schemaCompilation": 47
+    }
+  },
+  "blockers": [
+    {
+      "code": "V4-B1-IDENTITY_REGISTRY_SEAL_DOES_NOT_REVALIDATE_BIJECTION",
+      "severity": "BLOCKER",
+      "concern": "crossed-pseudonym identity binding",
+      "minimumReproduction": {
+        "setup": "Create principals p1/p2 and aliases a1/a2. Store canonicalPseudonymsByPrincipal[p1]=[a1], canonicalPseudonymsByPrincipal[p2]=[a2], but cross principalByCanonicalPseudonym to a1->p2 and a2->p1. Store only opaque attestation SHA-256 values and no custodian attestation objects.",
+        "operation": "Call sealIdentityRegistry(registry), then validateRoleAssignmentIdentity for alias a1, principal p2, and p2's opaque attestation digest.",
+        "expected": "Reject before sealing or assignment because the forward and reverse identity maps are not a bijection and the asserted principal/alias binding is not independently attested.",
+        "observed": "The registry becomes ready=true and sealed=true, a root is returned, and the crossed a1->p2 role assignment returns true.",
+        "targetChecks": [
+          "crossedIdentityRegistrySealed=true",
+          "crossedPseudonymRoleAssignmentAccepted=true"
+        ]
+      }
+    },
+    {
+      "code": "V4-B1-ATTESTATION_BASE64_HAS_NONCANONICAL_ALIASES",
+      "severity": "BLOCKER",
+      "concern": "noncanonical attestation representation",
+      "minimumReproduction": {
+        "setup": "Take the canonical Base64 encoding of 64 zero bytes and replace its final data character with each of A through P before the terminal == padding.",
+        "operation": "Validate all 16 strings as identityCustodianAttestation records, decode them, then round-trip encode the decoded bytes.",
+        "expected": "Accept exactly one canonical Base64 representation and reject the 15 aliases that decode to the same bytes.",
+        "observed": "All 16 records are schema-valid and decode to the same 64 bytes; 15 fail canonical round-trip equality.",
+        "counts": {
+          "schemaValidAliases": 16,
+          "noncanonicalAliases": 15
+        }
+      }
+    },
+    {
+      "code": "V4-B7-SEALED_POLICY_VALIDATOR_REREADS_MUTABLE_DERIVED_STATE",
+      "severity": "BLOCKER",
+      "concern": "recomputed policy versus caller-owned derived tuples",
+      "minimumReproduction": {
+        "setup": "Clone a valid sealed policy. Leave source policyRows unchanged. Mutate a derived MAIN_CERTIFICATION_PHASE1/RAW_PRIVATE_TRUSTED_GOLD tuple from DENY to ALLOW for PACKET_AUTHOR and replace its tuple/role roots plus the caller-owned matrix root.",
+        "operation": "Build an authorization matching the mutated derived tuple and call validateAuthorizationAgainstPolicy.",
+        "expected": "Use only tuples and roots returned by recomputing the immutable source policy; reject the caller-mutated derived tuple and roots.",
+        "observed": "The seal recomputation checks only the original sealed root, then authorization rereads policyRegistry.tuples and policyRegistry.roots from the mutated caller object and returns true.",
+        "targetChecks": [
+          "mutableDerivedPolicyAuthorizationAccepted=true"
+        ]
+      }
+    },
+    {
+      "code": "V4-B7-AUTHORIZATION_DOES_NOT_DEREFERENCE_AUTHORITATIVE_STATE_OR_ALIAS",
+      "severity": "BLOCKER",
+      "concern": "authoritative current-state and current-alias derivation",
+      "minimumReproduction": {
+        "setup": "Create a post-activation authorization that self-claims currentState=ACTIVATION_GRANTED and presents different_alias_0001 while its active role assignment records assignment_alias_0001. Do not supply an authoritative state-event chain or sealed identity registry to the validator.",
+        "operation": "Call validateAuthorizationAgainstPolicy using only the caller-supplied authorization, policy registry, and role-assignment list.",
+        "expected": "Derive current state from the authoritative event sequence and resolve the actor's current canonical alias from the sealed identity/assignment state; reject either mismatch.",
+        "observed": "The function trusts authorization.currentState, never compares the presented alias with the assignment alias, and returns true.",
+        "targetChecks": [
+          "selfClaimedFutureStateAndAliasAccepted=true"
+        ]
+      }
+    },
+    {
+      "code": "V4-B3B4-GRANT_DOES_NOT_DEREFERENCE_SCOPE_CERTIFICATES_OR_AUDIT_EVENTS",
+      "severity": "BLOCKER",
+      "concern": "FOCUS_ONLY-to-ALL_25 scope escalation and hashes-only preexisting audit",
+      "minimumReproduction": {
+        "setup": "Build a candidate and two reviewer certificate claims with FOCUS_ONLY for GRAMMAR_ERROR and BLANK_INFERENCE. Build a grant with grantedCoverageEvidence=ALL_25. Reuse one opaque coverageRecomputationRoot scalar across candidate/audit/grant. Supply a preexistingAuditRecord made only of arbitrary well-formed hashes, monotone integer ordinals 10/11/11 before grant ordinal 12, and recordedBeforeGrant=true.",
+        "operation": "Call validateGrantAgainstSealedPolicy without certificate event bodies, candidate/audit append-only sequence entries, or audit manifest/report content.",
+        "expected": "Require grant scope to be a subset of the candidate request and every dereferenced certificate scope; dereference and canonicalize exact candidate/audit/manifest events from an authoritative append-only sequence and verify exact content and ordinals.",
+        "observed": "No nested scope-subset check or event-body dereference occurs; the FOCUS_ONLY candidate produces an ALL_25 grant and hashes-only audit record is accepted, returning true.",
+        "targetChecks": [
+          "focusCandidateAll25GrantAccepted=true"
+        ],
+        "independentOracleCases": {
+          "focusToAll25ScopeRejections": 512,
+          "hashesOnlyAuditMaterializationRejections": 512
+        }
+      }
+    },
+    {
+      "code": "V4-B6-NO_REPLAY_TOMBSTONE_DISJOINTNESS_VALIDATOR_NOT_EXPORTED",
+      "severity": "BLOCKER",
+      "concern": "fingerprint reservation/materialization/tombstone disjointness",
+      "minimumReproduction": {
+        "setup": "Place a valid derived composite fingerprint in an independent tombstone set and present the same composite again for reuse.",
+        "operation": "Search the public semantics/fingerprint export surfaces for a reservation, tombstone, disjointness, or replay validator and attempt to identify a callable whole-registry invariant check.",
+        "expected": "An exported validator must recompute fingerprint claims and reject any reservation/materialization/tombstone overlap or reuse across the authoritative registry lifecycle.",
+        "observed": "The independent oracle identifies the replay in all 512 cases, but the subject exports no reservation/tombstone/disjointness/replay validator, so the lifecycle invariant is not enforceable through the public implementation.",
+        "counts": {
+          "independentReplayOracleCases": 512,
+          "matchingPublicValidatorExports": 0
+        }
+      }
+    },
+    {
+      "code": "V4-B8-ACCESS_CHAIN_AND_SINGLE_USE_VALIDATOR_NOT_EXPORTED",
+      "severity": "BLOCKER",
+      "concern": "AUTHORIZATION-OPEN-CAPABILITY_CONSUME-CLOSE chain and single use",
+      "minimumReproduction": {
+        "setup": "For each seed, create four individually schema-valid AUTHORIZATION, OPEN, CAPABILITY_CONSUME, and CLOSE records with different transaction IDs and capability tokens, nonconsecutive ordinals, mismatched event hashes, and reversed timestamps.",
+        "operation": "Validate each record against its JSON Schema and search the public semantic exports for an access/transaction/capability/open/consume/close sequence validator.",
+        "expected": "A semantic validator must reject the disconnected chain, bind one transaction and capability across all four events, enforce order and time monotonicity, and atomically prevent a second consume through authoritative capability state.",
+        "observed": "All individual schemas accept each disconnected record in 1,024 constructed chains, and no matching semantic validator is exported.",
+        "counts": {
+          "individuallySchemaValidDisconnectedChains": 1024,
+          "matchingPublicValidatorExports": 0
+        }
+      }
+    }
+  ],
+  "positiveFindings": [
+    "ALL_DRAFT_2020_12_SCHEMAS_COMPILE_INDEPENDENTLY",
+    "CANONICAL_PAYLOAD_FIELD_ORDER_NUMBER_UNICODE_AND_DOMAIN_VECTORS_CONFORM",
+    "SEVEN_COMPONENT_FINGERPRINT_SAMPLE_MATCHES_INDEPENDENT_DERIVATION",
+    "FOCUS_COVERAGE_RECOMPUTATION_REJECTS_REUSED_SLOT",
+    "POLICY_SOURCE_TABLE_HAS_98_TUPLES_AND_EXACT_17_ROLE_PARTITIONS"
+  ],
+  "supportingMeasurements": {
+    "compiledDefinitionCount": 46,
+    "eventBranchCount": 23,
+    "policyTupleCount": 98,
+    "policyRoleResourceCases": 1666,
+    "policyDefaultDenyTupleCount": 59,
+    "canonicalTargetPermutationChecks": 768,
+    "typeFamilyCount": 25,
+    "targetProbeDigestSha256": "f9cd8699647ac12170f2f340619f1316db13b44eadc62196d412e061a1d431ab"
+  },
+  "failureSeal": {
+    "status": "SEALED_FAIL_BLOCKERS",
+    "blockerCount": 7,
+    "blockerCodesInOrder": [
+      "V4-B1-IDENTITY_REGISTRY_SEAL_DOES_NOT_REVALIDATE_BIJECTION",
+      "V4-B1-ATTESTATION_BASE64_HAS_NONCANONICAL_ALIASES",
+      "V4-B7-SEALED_POLICY_VALIDATOR_REREADS_MUTABLE_DERIVED_STATE",
+      "V4-B7-AUTHORIZATION_DOES_NOT_DEREFERENCE_AUTHORITATIVE_STATE_OR_ALIAS",
+      "V4-B3B4-GRANT_DOES_NOT_DEREFERENCE_SCOPE_CERTIFICATES_OR_AUDIT_EVENTS",
+      "V4-B6-NO_REPLAY_TOMBSTONE_DISJOINTNESS_VALIDATOR_NOT_EXPORTED",
+      "V4-B8-ACCESS_CHAIN_AND_SINGLE_USE_VALIDATOR_NOT_EXPORTED"
+    ],
+    "reopenCondition": "A new immutable successor subject must fix all seven blockers and pass a fresh independent audit. This sealed v4 subject cannot be accepted by reinterpretation of this report.",
+    "subjectMutationPermittedByThisReview": false
+  },
+  "activity": {
+    "privateReads": 0,
+    "actorReadsOrWrites": 0,
+    "itemAnswerGoldRevealReadsOrWrites": 0,
+    "secretOrEnvironmentReads": 0,
+    "networkCalls": 0,
+    "providerOrModelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0
+  }
+}

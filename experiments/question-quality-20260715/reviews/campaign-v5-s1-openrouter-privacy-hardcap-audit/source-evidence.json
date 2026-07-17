@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "campaign-v5-s1-openrouter-public-source-evidence-v1",
+  "documentationCapturedAtUtc": "2026-07-15T07:08:33.1645125+00:00",
+  "documentationCapturedAtKst": "2026-07-15T16:08:33.1645125+09:00",
+  "sources": [
+    {
+      "url": "https://openrouter.ai/docs/llms.txt",
+      "status": 200,
+      "bytes": 39258,
+      "sha256": "5dc3b99d19ea7462cd0aeb08aa0c59ccd5e2fc02b8cd5bf1839484a37719c746"
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/features/zdr.md",
+      "status": 200,
+      "bytes": 8448,
+      "sha256": "d0b571639c00e7921facd603204df1f0647c8255d546f01c602c3f1486860918"
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/routing/provider-selection.md",
+      "status": 200,
+      "bytes": 67568,
+      "sha256": "4eacc20b6faf5abcb5352a2c4b1f0c7a05e6eb9e44ffb2707b3b79537d381e11"
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/privacy/data-collection.md",
+      "status": 200,
+      "bytes": 2464,
+      "sha256": "af6354747b1e4dc4c1fa84f34de8205d7e2578764341aa06ccd9c4998a4dde17"
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/privacy/provider-logging.md",
+      "status": 200,
+      "bytes": 4903,
+      "sha256": "f45b4d539ffd694606f1038f7a63a3e24644e02b2ecae15baaac1804cfb761ea"
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/features/input-output-logging.md",
+      "status": 200,
+      "bytes": 5160,
+      "sha256": "db458cbf408e7c8d46e337564482ef6ebeb93dcc6e3b4ff99cb2ef9deda8fba5"
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/features/guardrails.md",
+      "status": 200,
+      "bytes": 10632,
+      "sha256": "571d0d1dc6af94dec060dd9fec892a59dcdff0f960d43f8ebd590b2863d07424"
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/features/workspaces/workspace-budgets.md",
+      "status": 200,
+      "bytes": 7378,
+      "sha256": "597c7441b6d91f5ab0c035f73f29e4e87a20663718c7dddaeb210d4cd6bec0b9"
+    },
+    {
+      "url": "https://openrouter.ai/docs/api_reference/limits.md",
+      "status": 200,
+      "bytes": 15831,
+      "sha256": "494cb505c76b65357c72e9047646614886a565b3f9a9b033a0ab96023fe39b11"
+    },
+    {
+      "url": "https://openrouter.ai/openapi.yaml",
+      "status": 200,
+      "bytes": 1197926,
+      "sha256": "461c895eaac8d709be7213d8cd1d4159f27244e2042758336f2afa29ff7f7769"
+    }
+  ],
+  "zdrEndpointPreview": {
+    "url": "https://openrouter.ai/api/v1/endpoints/zdr",
+    "capturedAtUtc": "2026-07-15T07:09:41.1991095+00:00",
+    "capturedAtKst": "2026-07-15T16:09:41.1991095+09:00",
+    "status": 200,
+    "sha256": "63298b9dc19b693f6e6d0620130a83cbb711fce77961f5ca061b9736e7c85efd",
+    "totalZdrEndpoints": 694,
+    "exactTargetRows": 6,
+    "targetModelsFound": [
+      "google/gemini-3.1-pro-preview",
+      "google/gemini-3.5-flash"
+    ],
+    "rows": [
+      {
+        "modelId": "google/gemini-3.1-pro-preview",
+        "providerName": "Google",
+        "tag": "google-vertex/global",
+        "status": -2,
+        "supportsReasoning": true,
+        "supportsResponseFormat": true
+      },
+      {
+        "modelId": "google/gemini-3.1-pro-preview",
+        "providerName": "Google",
+        "tag": "google-vertex/global/flex",
+        "status": -2,
+        "supportsReasoning": true,
+        "supportsResponseFormat": true
+      },
+      {
+        "modelId": "google/gemini-3.1-pro-preview",
+        "providerName": "Google",
+        "tag": "google-vertex/global/priority",
+        "status": -2,
+        "supportsReasoning": true,
+        "supportsResponseFormat": true
+      },
+      {
+        "modelId": "google/gemini-3.5-flash",
+        "providerName": "Google",
+        "tag": "google-vertex/global",
+        "status": 0,
+        "supportsReasoning": true,
+        "supportsResponseFormat": true
+      },
+      {
+        "modelId": "google/gemini-3.5-flash",
+        "providerName": "Google",
+        "tag": "google-vertex/global/flex",
+        "status": 0,
+        "supportsReasoning": true,
+        "supportsResponseFormat": true
+      },
+      {
+        "modelId": "google/gemini-3.5-flash",
+        "providerName": "Google",
+        "tag": "google-vertex/global/priority",
+        "status": 0,
+        "supportsReasoning": true,
+        "supportsResponseFormat": true
+      }
+    ],
+    "authenticated": false,
+    "purpose": "privacy and endpoint-policy preview only",
+    "pricingValuesExtracted": false,
+    "pricingValuesPersisted": false,
+    "executionPriceSnapshot": false
+  }
+}

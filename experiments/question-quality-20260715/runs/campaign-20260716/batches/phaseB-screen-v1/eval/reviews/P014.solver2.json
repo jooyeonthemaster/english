@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'of a kind and magnitude not seen before' is a reduced passive relative clause ('a kind and magnitude [that has not been] seen before'). The head noun is what gets seen, so the passive past participle 'seen' is licensed. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (the error)",
+      "reason": "'What are new about cyberspace is its interactive nature' — the free relative 'what' is the singular subject of its clause. Long-distance evidence locks this: the matrix verb is singular 'is' and the predicate complement 'its interactive nature' is a singular NP ('and this interactivity has made...' is a separate independent clause with its own finite verb, so it cannot be conjoined into the complement to justify plurality). 'are' violates subject-verb agreement; it must be 'is'. No alternative parse rescues 'are'."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Subject 'this interactivity' is singular; 'has made it a psychological reality' is a well-formed make+O+OC construction with singular present-perfect agreement. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Antecedent 'a space' is locative and the following clause 'real people have actual interactions with other real people' is complete (no gap), so the relative adverb 'where' is correct; 'which' would require a missing argument. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'while being able to shape...' is an elliptical adverbial clause ('while [they are] being able...'); the implied subject corefers with the matrix subject 'real people', so the participial reduction is licensed. Grammatical (at most stylistically heavy, not an error)."
+    }
+  ],
+  "note": "Clean single-error item. (B) is decisively ungrammatical via number agreement anchored by two independent singular cues (matrix 'is' and singular complement). Actively searched for rescue parses for every option (reduced relatives, participial adjuncts, plural construal of 'what'); none makes a second answer defensible."
+}

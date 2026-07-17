@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'도약 운동이 계속 유지되어야 한다'는 gap fill 원리(큰 도약 후 방향 전환·출발점 복귀)와 정반대. 빈칸 뒤 'tones that follow need to bring us closer and closer to our starting point'와 직접 충돌."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "빈칸은 'the melody wants to return to the jumping-off point'의 환언(this is another way to say) 자리. '원래 음높이에서의 이탈이 오래가지 않을 것'이라는 기대는 복귀 기대와 정확히 동치이며, 뒤 절의 점진적 복귀(closer and closer to our starting point, or harmonic home)와 and로 자연스럽게 접속된다. expect that + would 시제 결합도 정문."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "옥타브는 뒤의 'Over the Rainbow' 예시에서만 등장하는 특수 사례. 두뇌의 일반적 기대가 '도약이 정확히 옥타브를 이뤄야 한다'일 이유가 없다. 예시 어휘(octave) 재활용형 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문은 큰 도약이 긴장을 '만들고'(strong schematic violation, continue to build tension) 복귀가 보상이라고 진술. '갑작스러운 전환이 필연적으로 긴장을 제거한다'는 인과 역전."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "가장 매력적인 오답. 'the next note should change direction'만 스캔하면 opposite라는 표현에 실제로 끌린다(첫 독해에서 잠깐 후보로 잡았음). 그러나 (a) 지문의 복귀는 'closer and closer', 'but not by too much'로 명시된 점진적 접근이므로 'immediate opposite leap(즉각적 반대 도약)'은 과잉 진술이며, (b) 빈칸은 방향 전환 규칙이 아니라 '출발점으로 돌아가고 싶어 한다'(직전 절)의 환언 자리다. this의 지시 대상 분석으로 배제 가능."
+    }
+  ],
+  "note": "정답 2 단독 옹호. 빈칸 뒤 and-절(점진적 복귀 요구)과 'this is another way to say'의 지시 대상(복귀 성향)이 이중 장거리 단서로 작동해 5의 유혹(방향 전환→opposite)을 확실히 차단한다. 미끼 설계가 좋은 문항: 5는 지문 표현(change direction)을 표면 재활용하되 'immediate leap'으로 과잉 진술해 배제 가능하게 만들었다. 원전(Levitin, This Is Your Brain on Music)의 'the leap was only temporary'와 2번이 의미상 일치."
+}

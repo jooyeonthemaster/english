@@ -1,0 +1,35 @@
+{
+  "pid": "P090",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "that절 내부에서 'dropping their masks'가 동명사구 주어로 'would make'의 주어 역할을 수행. 'to drop'이어야 한다는 유혹이 잠깐 들 수 있으나 동명사 주어는 완전한 정문이며 의미('가면을 벗는 것이 약해 보이게 만들 것')도 자연스럽다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'perceive A as B' 구문의 과거시제 본동사. 주어 'the leader's subordinates'와 수 일치하고, 지문 전체의 연구 서술 과거시제(were concerned, encouraged)와도 일관된다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "앞 절 전체(부하들이 똑같이 가면을 벗은 일)의 결과를 나타내는 결과 분사구문. 'created로 병렬이어야 하지 않나'라는 매력적 유혹이 있으나(실제로 잠시 끌렸음), 콤마 뒤 현재분사로 결과를 표현하는 것은 표준 용법이므로 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "문장의 주어 'Some of the ways (we helped the CEOs remove their masks)'에 대응하는 정형동사가 없다. 'being'을 쓰면 문장 전체에 본동사가 부재하여 비문이며 'were'로 고쳐야 한다. 절대구문 해석을 적극 시도했으나 뒤따르는 주절이 존재하지 않아 성립 불가. 뒤의 'to name, explore, and ask' 병렬은 정상이므로 오류는 오직 being."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a leadership identity based on values...'에서 based는 명사를 후치 수식하는 과거분사(축약 관계절 = which is/was based on). identity가 '기반을 두는' 대상이므로 수동 분사가 적절하다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 매력적 오답은 (C) creating(과거동사 병렬로 착각 유도)과 (A) dropping(to부정사 선호 직관 유도)이지만, 둘 다 표준 용법으로 방어된다. (D)는 문장 전체에 본동사가 없어지는 구조적 결함이라 장거리 단서(주어 Some of the ways + 관계절 축약 we helped...)를 추적하면 유일 정답으로 확정된다. 복수정답 소지 없음."
+}

@@ -1,0 +1,40 @@
+{
+  "batchId": "pilot-conn-v1",
+  "phase": "PILOT",
+  "atKst": "2026-07-16T19:19:45.936+09:00",
+  "assignments": 2,
+  "slotsConsumed": 2,
+  "accepted": 1,
+  "modelCalls": 2,
+  "inputTokens": 34479,
+  "outputTokens": 2756,
+  "costUsd": 0.076523,
+  "ledgerAfter": {
+    "used": 2,
+    "cap": 1000,
+    "costUsd": 0.076523
+  },
+  "byArm": {
+    "G-A0-STD": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.047541
+    },
+    "B-A0-STD": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.028982
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 26060
+}

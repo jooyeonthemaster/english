@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "campaign-v6-observer-independent-reaudit-manifest-v2",
+  "reviewId": "campaign-v6-connectivity-pilot-v6-observer-independent-reaudit-v2",
+  "createdAt": "2026-07-16T01:19:44.5917140+09:00",
+  "verdict": "FAIL_BLOCKERS",
+  "authority": "NONE",
+  "scope": "OBSERVER_ONLY",
+  "authorizesV6": false,
+  "subject": {
+    "strictObserverPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/strict-json-observer.ts",
+    "strictObserverSha256": "41969f7b9c7cad9c2e1da8568be86f646d103de4297038b9085c955a73002187",
+    "coordinatedOfflineTestPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/offline.test.ts",
+    "coordinatedOfflineTestObservedSha256": "e06274726e50281e30015067910d20de50127a75798ada87ff320882acba880c",
+    "coordinatedTestImportedExecutedOrInspected": false
+  },
+  "predecessor": {
+    "reviewPath": "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v6-observer-independent-reaudit-v1",
+    "manifestSha256": "85530e1ed417e4fbedfc09010efbad6f20165cce94e7ebbe2d6cd9cb3c6863a7",
+    "role": "failure provenance and 461-case contract only"
+  },
+  "matrix": {
+    "totalCases": 917,
+    "passingCases": 773,
+    "failingCases": 144,
+    "predecessorCases": 461,
+    "predecessorPassingCases": 461,
+    "freshNonDerivedCases": 456,
+    "freshPassingCases": 312,
+    "freshFailingCases": 144,
+    "exactFullOutputCases": 753,
+    "safetyPredicateCases": 164,
+    "matrixFingerprintSha256": "d03275523a39930086f490ef5857a95ea75797739a0caadba05061e1bf249fda",
+    "failureFingerprintSha256": "b1046d570c5c3547a74a61647b4800f9144e32f226b5d0e2483534a4429196b4",
+    "failureCategories": {
+      "fresh-quoted-wrapper": 44,
+      "fresh-swallowed-string": 100
+    }
+  },
+  "blockers": [
+    {
+      "id": "B1_QUOTED_OUTPUT_ROOT_START_BLIND_SPOT",
+      "failures": 44,
+      "unsafeState": "affirmative multiplicity can become choices=0, units=1, ambiguous=false, saturated=false"
+    },
+    {
+      "id": "B2_ESCAPED_PAYLOAD_SWALLOWED_BY_MALFORMED_STRING",
+      "failures": 100,
+      "unsafeState": "unterminated or invalid-escape string can hide escaped provider/question payload without quarantine"
+    }
+  ],
+  "staticRecoveryProof": {
+    "parserOffsetInitializations": 1,
+    "parserOffsetIncrements": 19,
+    "parserOffsetDecrements": 0,
+    "scanStartsAtPriorOffset": true,
+    "recoveryParsesAtFoundStart": true,
+    "recoveryAdvancesPastAttemptAndParsedEnd": true,
+    "parsedSpansDisjointByMonotonicInduction": true,
+    "unboundedQuadraticRewindOrRescanFound": false,
+    "recoveryAttemptCapBound": true,
+    "decodedExpansionByteBound": true
+  },
+  "reviewFiles": [
+    "AUDIT-REPORT.md",
+    "audit.ts",
+    "manifest.json",
+    "verify.mts"
+  ],
+  "activity": {
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "secretReads": 0,
+    "privateArtifactReads": 0,
+    "ledgerReads": 0,
+    "ledgerWrites": 0,
+    "buildOrFreezeCommands": 0,
+    "liveCommands": 0,
+    "subjectEdits": 0
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Recording an interview ... can be less unnerving to an interviewee' — 감정 유발 주체(녹음 행위)가 주어이고 경험자는 'to an interviewee'로 표시되므로 현재분사형 형용사 unnerving이 정확하다. unnerved(과거분사)로 바꾸면 오히려 비문. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'If the interview lasts a while, listen to it again to select the quotes you wish to use can be time-consuming' — 'can be'의 진짜 주어 자리이므로 동명사 listening이어야 한다. 명령문(imperative) 대안 해석을 적극 검토했으나, 그 경우 'can be time-consuming'이 주어 없이 고아가 되어 문장이 붕괴하므로 성립 불가. 유일하게 어법상 틀린 밑줄."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'if you are working to a tight deadline' — 'work to a (tight) deadline'은 확립된 관용 연어(특히 영국 영어)이고 현재진행형도 문맥상 자연스럽다. 'under a deadline이어야 하지 않나'라는 순간적 유혹이 있으나 to가 표준 표현. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'writing down the key answers ... so that they can be transcribed easily afterwards' — they의 선행사는 the key answers이고 수동태 결합이 문법적으로 완전하다. '이미 받아 적은 것을 또 transcribe하나?'라는 의미적 의심이 가장 강한 매력 오답 포인트지만, 메모를 나중에 정서/타이핑한다는 의미로 자연스러워 어법 결함이 없다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle afterwards' — 비교급 easier/quicker를 강조하는 부사로 much는 정확하다(very는 불가). 병렬 'easier and quicker' 모두 비교급으로 정합. 정문."
+    }
+  ],
+  "note": "정답은 (B) 유일. 주어 자리 동명사(listening) 요구 vs 원형 listen — 장거리 단서는 후행 동사구 'can be time-consuming'. 명령문 대안 해석도 후행 술어가 고아가 되어 불성립. 매력 오답은 (D)(수동태 의미 의심)와 (C)(work to a deadline 연어 낯섦)이지만 둘 다 정문으로 확정 가능."
+}

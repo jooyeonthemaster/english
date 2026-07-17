@@ -1,0 +1,198 @@
+{
+  "schemaVersion": "explanation-concision-manual-review-v1",
+  "reviewedAt": "2026-07-15",
+  "reviewMethod": "Read the complete student-facing main explanation, wrong-option explanations and keyPoints against the displayed item. Classify the explanation, then cross-check factual-invalid calls against the already sealed independent adjudications. No model, network, API, database or secret access was used.",
+  "rubric": {
+    "CONCISE_SUFFICIENT": "The decisive rule/evidence and correction or answer inference are present, accurate and non-repetitive; removing more would materially reduce usefulness.",
+    "LONG_BUT_NECESSARY": "Longer than the lean target, but the extra length carries distinct evidence, multi-answer coverage or a genuinely needed ambiguity disproof.",
+    "REDUNDANT": "Substantively accurate, but repeats premises/conclusion, duplicates wrong-option analysis already stored elsewhere, or contains procedural/meta prose that can be removed without losing proof.",
+    "FACTUALLY_INVALID": "Contains a material false grammar/content claim, endorses a non-unique/no-answer item as categorical, mismatches the tested label/key, or omits a displayed contradiction so decisive that the stated proof is unsound. Length cannot rescue this class."
+  },
+  "latest15": [
+    {
+      "itemId": "Q001",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "Wrong-option explanation for (D) admits a preceding-clause antecedent for plural 'help'; a sentential antecedent would require singular 'helps'."
+    },
+    {
+      "itemId": "Q002",
+      "classification": "REDUNDANT",
+      "clearFactualError": false,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": true,
+      "proceduralFiller": true,
+      "note": "The answer is adequately proved, but the 518-character paragraph restates liberty/non-restraint twice and narrates that the source was abstractly paraphrased. The item's punctuation defect is outside explanation accuracy."
+    },
+    {
+      "itemId": "Q003",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": true,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "It calls the first 'that' an object relative pronoun after 'the same things'; the actual structure is 'acknowledging + that-clause', and 'expect' already has its object."
+    },
+    {
+      "itemId": "Q004",
+      "classification": "CONCISE_SUFFICIENT",
+      "clearFactualError": false,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "It links two separated counter-adaptation statements and gives the conclusion without unnecessary option-by-option duplication."
+    },
+    {
+      "itemId": "Q005",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": true,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": true,
+      "proceduralFiller": true,
+      "note": "It repeatedly translates the general legal framework/order as judiciary-specific '사법 체계/사법 질서' and adds meta wording about academic paraphrase."
+    },
+    {
+      "itemId": "Q006",
+      "classification": "CONCISE_SUFFICIENT",
+      "clearFactualError": false,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "It explains both sides of the garden/shade metaphor and ties them to intergenerational responsibility in four compact sentences."
+    },
+    {
+      "itemId": "Q007",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": true,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "The possessive relation is described with the nonsensical term '질의 관계'."
+    },
+    {
+      "itemId": "Q008",
+      "classification": "REDUNDANT",
+      "clearFactualError": false,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": true,
+      "repeatedPremiseOrKeyRestatement": true,
+      "proceduralFiller": true,
+      "note": "The 614-character semantic proof repeats the feedback premise and duplicates all four wrong-option verdicts, yet never audits the fixed suffix's unequal grammatical fit. The sealed final adjudication treated the semantic claims as accurate, so this is omission/redundancy rather than an asserted factual error."
+    },
+    {
+      "itemId": "Q009",
+      "classification": "LONG_BUT_NECESSARY",
+      "clearFactualError": false,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "At 410 characters it is longer than a lean gist explanation, but separately connects responsibility, the seven-generation example and the garden/shade metaphor."
+    },
+    {
+      "itemId": "Q010",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": true,
+      "decisiveEvidenceOmitted": true,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "It categorically rejects 'imbalance' while omitting the immediately preceding 'not a matter of natural balance', which licenses that reading; rendered marker and explanation namespaces are also unsynchronized."
+    },
+    {
+      "itemId": "Q011",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": true,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": true,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "It falsely says a following noun phrase makes passive impossible and calls the predicate '비인칭'; English licenses retained-object passives such as 'be permitted something'."
+    },
+    {
+      "itemId": "Q012",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": true,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "The (A) analysis repeats the complementizer/relative-pronoun error, and the (C) analysis describes modification of 'response' although the displayed construction tests 'absent reader'."
+    },
+    {
+      "itemId": "Q013",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": true,
+      "repeatedPremiseOrKeyRestatement": true,
+      "proceduralFiller": true,
+      "note": "It claims non-textile art is indispensable but never reconciles the displayed conclusion's corrupted 'unlikely', which states the opposite proposition."
+    },
+    {
+      "itemId": "Q014",
+      "classification": "FACTUALLY_INVALID",
+      "clearFactualError": true,
+      "unsupportedTerminology": true,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": true,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "The (B) explanation permits a sentential antecedent incompatible with plural 'help', and the (C) explanation does not eliminate a defensible reduced-passive parse of 'shaded'."
+    },
+    {
+      "itemId": "Q015",
+      "classification": "CONCISE_SUFFICIENT",
+      "clearFactualError": false,
+      "unsupportedTerminology": false,
+      "labelOrKeyMismatch": false,
+      "decisiveEvidenceOmitted": false,
+      "repeatedPremiseOrKeyRestatement": false,
+      "proceduralFiller": false,
+      "note": "The local contrast between too much/too little information and appropriate proportion is accurately stated; the underlying KILLER item is too easy, but the explanation itself is sufficient."
+    }
+  ],
+  "premiumGrammar60Stratified": [
+    {"itemId":"PG001","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":false,"labelOrKeyMismatch":true,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"The (D) wrong-option explanation binds the underline to the wrong infinitival relation."},
+    {"itemId":"PG041","classification":"CONCISE_SUFFICIENT","clearFactualError":false,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Same passage cluster as PG001, but this run accurately explains fronted only-phrase inversion."},
+    {"itemId":"PG002","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":true,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"It says 'hoped' cannot take a following that-clause; the actual failure is an uncoordinated second finite verb."},
+    {"itemId":"PG017","classification":"CONCISE_SUFFICIENT","clearFactualError":false,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Same passage cluster as PG002; the count/subject agreement proof is short and accurate."},
+    {"itemId":"PG005","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":true,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":true,"proceduralFiller":true,"note":"It reverses the partitive structure: 'the rest' is the head and 'of the penguins' its complement, not vice versa."},
+    {"itemId":"PG009","classification":"REDUNDANT","clearFactualError":false,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":true,"proceduralFiller":true,"note":"Same passage cluster as PG005 and accurate, but 323 characters repeatedly states that a finite verb is needed."},
+    {"itemId":"PG010","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":true,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Wrong-option metadata blurs interrogative pronoun/complement analysis and relative-pronoun terminology."},
+    {"itemId":"PG035","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":true,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Same passage cluster as PG010; keyPoints invent a number-agreement check for invariant 'which' and past 'meant'."},
+    {"itemId":"PG021","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":true,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"It labels 'able + to-infinitive' as a nominal infinitive rather than the adjective's infinitival complement."},
+    {"itemId":"PG031","classification":"CONCISE_SUFFICIENT","clearFactualError":false,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Same passage cluster as PG021; it accurately distinguishes the main predicate and passive patient."},
+    {"itemId":"PG023","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":true,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"It declares a comma-splice invariant although the dash-delimited list admits a header/left-dislocation reading, leaving no categorical error."},
+    {"itemId":"PG040","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":true,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Repeat of the PG023 passage and same unsound categorical comma-splice claim."},
+    {"itemId":"PG024","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":true,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"The wrong-option explanation allows a purpose reading where 'enough to keep advancing' is a degree/result complement."},
+    {"itemId":"PG043","classification":"CONCISE_SUFFICIENT","clearFactualError":false,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Same passage cluster as PG024; it gives a correct finite-verb/coordination analysis."},
+    {"itemId":"PG046","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":true,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"A plain coordinated noun list is mislabeled as a correlative-conjunction construction."},
+    {"itemId":"PG054","classification":"CONCISE_SUFFICIENT","clearFactualError":false,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Same passage and near-duplicate target as PG046, but the explanation simply and correctly names the plural list."},
+    {"itemId":"PG048","classification":"FACTUALLY_INVALID","clearFactualError":true,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":true,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"It confuses contextual oddity with grammar: 'stop to run' is a normal purpose-infinitive structure, so the item has no categorical grammar error."},
+    {"itemId":"PG049","classification":"CONCISE_SUFFICIENT","clearFactualError":false,"unsupportedTerminology":false,"labelOrKeyMismatch":false,"decisiveEvidenceOmitted":false,"repeatedPremiseOrKeyRestatement":false,"proceduralFiller":false,"note":"Same passage cluster as PG048; it accurately identifies an uncoordinated second finite verb and the participial fix."}
+  ]
+}

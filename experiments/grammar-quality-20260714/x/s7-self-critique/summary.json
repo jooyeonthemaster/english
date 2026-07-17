@@ -1,0 +1,45 @@
+{
+  "strategy": "s7-self-critique",
+  "describe": "생성 → 같은 모델의 학생 시점 블라인드 풀이+결함 3개 지적 → 지적 반영 수정 1회",
+  "callPlan": "flash x3 (직렬: 생성→비평→수정)",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 29058,
+  "avgAttempts": 3.1,
+  "avgCalls": 3,
+  "totalCostUsd": 0.48391,
+  "avgCostUsd": 0.04839,
+  "costRecordedCalls": 30,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 2.5,
+  "zeroErrorItems": 1,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.831,
+  "avgAnswerRelPos": 0.493,
+  "answerRelPosInBand": 8,
+  "models": {
+    "google/gemini-3.5-flash": 30
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

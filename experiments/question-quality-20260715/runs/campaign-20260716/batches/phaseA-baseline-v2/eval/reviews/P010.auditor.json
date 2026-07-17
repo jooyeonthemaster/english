@@ -1,0 +1,77 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TYPO-MINOR",
+      "severity": "minor",
+      "evidence": "⑤ 오답해설의 '환택하거나 환영한다'에서 '환택'은 비단어(오탈자, '환대' 의도로 추정). 내용 자체는 정확하며 오개념을 유발하지 않으므로 V4 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-STYLE-MINOR",
+      "severity": "minor",
+      "evidence": "정답 해설 문장 '...긴밀하게 연결되며 영화의 감정 발산적 성격과 대조를 이루며 들어갈 말로는, ...가 가장 적절합니다'가 '~며'가 중복된 만연체로 비문에 가깝게 꼬여 있음. 구조 분석 내용은 정확."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "scope shift — 법을 '차가운 계약'이라는 형식주의 스테레오타입으로 치환",
+      "temptingBecause": "'the law deals with the messiness of human relations'의 '인간관계' 앵커와 법=계약이라는 배경지식이 겹침",
+      "decisiveFlaw": "본문은 오히려 법이 추상적 진리보다 인간관계의 '지저분함'을 다룬다고 명시하며, 빈칸 뒤 'fearing the horror of their consequences' 및 영화와의 감정 대조 구조와 무관"
+    },
+    {
+      "label": "②",
+      "intent": "actor/object swap + 과확장 — 억압 대상을 인간의 감정이 아닌 예술 매체(이미지 검열)로 바꿈",
+      "temptingBecause": "'interaction between cinema and law' 및 법의 억압(suppress) 테마가 검열 프레임을 연상시킴",
+      "decisiveFlaw": "본문 어디에도 법이 매체·이미지를 규제한다는 언급이 없음. 법이 억제하는 것은 인간 내부의 affects이며, whereas 절의 대조(영화는 우리를 감정에 노출시킴)와도 축이 어긋남"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'obsessively tries to suppress affects'의 의미 보존 패러프레이즈",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'keeps it in check', 'ensure that we are not overwhelmed and destroyed by our desires and drives'와 정합하고 'their consequences'(감정 충동의 결과)와 자연 연결"
+    },
+    {
+      "label": "④",
+      "intent": "keyword splice + 관계 왜곡 — 'anxiety'(인간 본성에 대한 법의 불안)와 cinema를 임의 재조합해 '법이 영화를 감독한다'는 허구 관계 생성",
+      "temptingBecause": "cinema·anxiety·통제라는 본문 고빈도 핵심어가 모두 들어 있어 표면 일치도가 높음",
+      "decisiveFlaw": "본문의 anxiety는 '법이 인간 본성에 대해 갖는 불안'이지 영화가 포착하는 대상이 아니며, 본문은 법·영화의 대조를 말할 뿐 법의 영화 감독 관계를 진술하지 않음"
+    },
+    {
+      "label": "⑤",
+      "intent": "polarity reversal — 법의 태도를 억제에서 환영으로 뒤집음",
+      "temptingBecause": "'affective expressions'라는 주제 어휘를 그대로 재사용해 표면적으로 본문 소재와 일치",
+      "decisiveFlaw": "'the law keeps it in check'와 정면 모순이고, 빈칸 뒤 'fearing the horror of their consequences'(두려워한다)와 논리적으로 양립 불가"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "⑤ 오답해설 '환택하거나' — 비단어 오탈자",
+      "recommendation": "'환대하거나' 또는 '환영한다는'으로 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설이 한 문장에 '~며'를 두 번 겹쳐 쓴 만연체로 가독성이 낮음",
+      "recommendation": "근거 문장 제시와 정답 선택 이유를 두 문장으로 분리"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문에서 'obsessively tries to suppress affects' 단일 span만 빈칸화했고 손상 없음. 각 선지 독립 검증 결과 ③만 성립하는 유일 정답이며, 다섯 선지 모두 'The law ___' 정형 VP 슬롯에 통사적으로 들어가고 tail의 'their'는 앞 문장 'our desires and drives'로 해소 가능해 문법만으로 탈락하는 오답이 없음. 그러나 요청 난이도 KILLER 대비 치명적 공예 결함: 빈칸이 바로 앞 두 문장('keeps it in check', 'ensure that we are not overwhelmed... by our desires and drives')의 명시적 재진술 위치라 인접 한 문장 단서 + 극성/주제 일치만으로 풀림. §D KILLER 조건(두 문장 이상의 논리 단서 연결 필수, 극성 하나로 정답 특정 불가) 불충족 — '법+감정+억제' 극성을 가진 선지가 ③뿐이고 ⑤는 사실상 random opposite. 또한 ②·④가 '법이 영화를 통제한다'는 동일 함정 계열을 공유해 오답 의도 밀도가 희석됨. C5=1(라벨 불일치)로 재설계 필요 → 등급 C. 수리 방향: 빈칸을 재진술 위치가 아닌 첫 단락의 공통점(both are human artifacts directed at man)과 후반 대조를 결합해야 도달 가능한 추상 span으로 이동하고, 억제 극성을 공유하되 대상·범위가 어긋나는 경쟁 선지를 2개 이상 배치."
+}

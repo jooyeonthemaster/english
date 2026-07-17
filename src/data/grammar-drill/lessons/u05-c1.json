@@ -1,0 +1,668 @@
+{
+  "id": "u05-c1",
+  "unitId": "u05",
+  "order": 1,
+  "title": "등위접속사 병렬 — 짝 찾기",
+  "oneLiner": "and·or·but 을 보면 무엇과 무엇이 연결되는지 짝부터 찾습니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 병렬구조(등위접속사가 잇는 두 항의 형태 일치)",
+      "천일문 고등 GRAMMAR — 병렬구조(and·or·but)",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 등위접속사(중 ●)",
+      "SMOAT 어법 드릴 뱅크 u05-choice(u05-c1-ch-001~012, trapTag: coord-pair·distant-parallel)"
+    ]
+  },
+  "lenses": ["L4", "L2"],
+  "confusableWith": ["u05-c2", "u05-c3", "u01-c1"],
+  "estimatedMinutes": 18,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The committee reviewed the proposal carefully and approving it without delay.",
+        "The committee reviewed the proposal carefully and approved it without delay."
+      ],
+      "answer": 1,
+      "afterText": "두 문장의 차이는 and 뒤 한 단어의 형태입니다. 이 레슨을 마치면 그 형태가 무엇과 짝을 이루어야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "병렬(구조)",
+      "question": "병렬이 대체 무엇이고, and 뒤에는 왜 아무 형태나 오면 안 됩니까?",
+      "plain": "병렬은 등위접속사 and·or·but 이 잇는 두 항이 문장 안에서 같은 역할을 맡는 구조입니다. 역할이 같으면 형태도 같아야 하므로, 한쪽이 동사면 다른 쪽도 동사여야 합니다.",
+      "analogy": "and 는 양팔 저울입니다. 왼쪽 접시에 동사를 올리면 오른쪽에도 동사를 올려야 저울이 수평을 이룹니다. 한쪽은 동사, 다른 쪽은 -ing 를 올리면 저울이 기울어 문장이 무너집니다.",
+      "whyItMatters": "수능 어법은 밑줄 자리에 형태가 다른 준동사를 놓아 병렬을 깨뜨리는 문항을 즐겨 냅니다. 판별 도구 '병렬 축 찾기(L4)'가 바로 이 개념에서 출발합니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "and 뒤의 항은 접속사 바로 앞에 붙어 있는 단어와 짝을 이룹니다.",
+      "truth": "짝을 정하는 것은 거리가 아니라 역할입니다. 접속사 뒤 항과 문장 안에서 같은 역할·같은 형태를 가진 항이 짝이며, 그 짝은 접속사에서 멀리 떨어져 있을 수 있습니다.",
+      "counterExample": {
+        "en": "The survey team **measured** the water levels of the river and **warned** the nearby villages.",
+        "ko": "그 조사팀은 강의 수위를 측정했고 인근 마을들에 경고했습니다.",
+        "note": "and 바로 앞 단어는 명사 river 이지만, warned 의 짝은 저 앞의 본동사 measured 입니다. 인접이 짝을 결정하지 않습니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 2,
+      "title": "짝 찾기 필기",
+      "intro": "짝 찾기에 필요한 여섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "등위접속사 — and·or·but",
+          "body": "이 세 접속사는 앞뒤 두 항을 대등하게 잇습니다. '대등하게'가 핵심입니다 — 잇는 두 항의 문법 자격이 서로 같아야 합니다."
+        },
+        {
+          "head": "짝은 거리가 아니라 형태가 정한다",
+          "body": "짝은 접속사에 가까운 단어가 아닙니다. 문장 안에서 같은 역할·같은 형태를 가진 항이 짝이며, 그 짝은 접속사에서 멀리 떨어져 있을 수 있습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "찾는 순서 — 뒤 항부터 앞으로",
+          "body": "먼저 접속사 뒤 항의 형태를 확정하고(동사·-ing·to부정사·명사·형용사), 같은 형태를 접속사 앞에서 거슬러 찾습니다.",
+          "example": {
+            "en": "A skilled writer values **choosing** precise words and **cutting** empty phrases.",
+            "ko": "노련한 필자는 정확한 단어를 고르는 것과 빈 표현을 잘라내는 것을 중시합니다.",
+            "note": "뒤 항은 동명사 cutting 입니다. 앞에서 같은 형태를 찾으면 values 의 목적어인 choosing 이 짝입니다."
+          },
+          "pin": "팁"
+        },
+        {
+          "head": "수식어는 괄호로 걷어낸다",
+          "body": "부사·전치사구·콤마 사이 삽입어구는 짝 후보가 아닙니다. 접속사 바로 옆에 붙어 있어도 괄호로 묶어 건너뜁니다.",
+          "example": {
+            "en": "The council approved the plan quickly and **announced** it the next day.",
+            "ko": "시의회는 그 계획을 신속히 승인했고 이튿날 그것을 발표했습니다.",
+            "note": "짝은 부사 quickly 가 아니라 본동사 approved 입니다. 부사는 괄호로 걷어냅니다."
+          }
+        },
+        {
+          "head": "관계절 속 동사는 층위가 다르다",
+          "body": "주어와 접속사 사이에 관계절이 끼면 그 안의 동사가 가장 가까워 보입니다. 그러나 층위가 달라 짝이 되지 못합니다.",
+          "example": {
+            "en": "The scholar who catalogued the manuscripts **preserved** the pages and **published** an index.",
+            "ko": "그 필사본들을 목록화한 그 학자는 낱장들을 보존했고 색인을 출간했습니다.",
+            "note": "catalogued 는 관계절의 동사라 짝이 아닙니다. published 의 짝은 주절 본동사 preserved 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "세 항 나열 — 마지막이 첫 항으로",
+          "body": "A, B, and C 나열에서는 마지막 항 C 도 첫 항 A 의 형태로 돌아가야 합니다. 나열이 길수록 마지막 항에서 형태가 무너집니다.",
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "등위접속사 and·or·but 은 문법적으로 같은 형태·같은 역할을 하는 항끼리만 연결합니다.",
+      "examples": [
+        {
+          "en": "The volunteers **cleaned** the beach and **sorted** the plastic waste.",
+          "ko": "자원봉사자들은 해변을 청소했고 플라스틱 쓰레기를 분류했습니다.",
+          "note": "과거형 본동사 cleaned 와 sorted 가 짝입니다. 동사끼리 연결되었습니다."
+        },
+        {
+          "en": "The exhibition presents **paintings** and **sculptures** from the same period.",
+          "ko": "그 전시는 같은 시기의 회화와 조각을 선보입니다.",
+          "note": "presents 의 목적어인 명사 paintings 와 sculptures 가 짝입니다. 명사끼리 연결되었습니다."
+        },
+        {
+          "en": "The article is **short** but **persuasive**.",
+          "ko": "그 글은 짧지만 설득력이 있습니다.",
+          "note": "be동사의 보어인 형용사 short 와 persuasive 가 짝입니다. but 도 같은 형태끼리 잇습니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "A, B, and C 처럼 세 항이 나열되면 마지막 항도 첫 항의 형태로 돌아가 맞춥니다. 나열이 길수록 마지막 항에서 형태가 무너집니다.",
+      "examples": [
+        {
+          "en": "Early farmers **planted** seeds, **watered** the fields, and **stored** the harvest.",
+          "ko": "초기 농부들은 씨앗을 심고, 밭에 물을 대고, 수확물을 저장했습니다.",
+          "note": "세 항이 모두 과거형 본동사입니다. 마지막 항 stored 의 짝은 바로 앞의 fields 가 아니라 첫 항 planted 입니다."
+        },
+        {
+          "en": "A good summary is **accurate**, **concise**, and **easy** to remember.",
+          "ko": "좋은 요약은 정확하고 간결하며 기억하기 쉽습니다.",
+          "note": "보어 자리의 형용사 셋이 나열되었습니다. 세 항의 품사가 모두 형용사로 일치합니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "삽입어구가 낀 병렬의 해부",
+      "tokens": [
+        { "t": "The curator", "role": "S" },
+        { "t": "examined", "role": "V" },
+        { "t": "the ancient vase", "role": "O" },
+        { "t": "carefully", "role": "M" },
+        { "t": "and,", "role": "CONJ" },
+        { "t": "after much hesitation,", "role": "M" },
+        { "t": "revealed", "role": "V" },
+        { "t": "its true origin.", "role": "O" }
+      ],
+      "ko": "그 큐레이터는 고대 화병을 주의 깊게 살펴보았고, 오랜 망설임 끝에 그것의 진짜 출처를 밝혔습니다.",
+      "layers": [
+        {
+          "label": "① 등위접속사를 먼저 표시합니다",
+          "roles": ["CONJ"],
+          "note": "판단은 밑줄이 아니라 접속사에서 시작합니다. and 가 두 항을 잇고 있다는 사실부터 확정합니다."
+        },
+        {
+          "label": "② 수식어와 삽입어구를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "carefully 와 after much hesitation 은 짝 후보가 아닙니다. 접속사 바로 앞뒤에 붙어 있어도 부사·부사구는 병렬 항이 되지 못합니다."
+        },
+        {
+          "label": "③ 접속사 뒤 항과 같은 형태를 앞에서 찾습니다",
+          "roles": ["V"],
+          "note": "뒤 항은 과거형 동사 revealed 입니다. 앞에서 같은 자격을 가진 항은 본동사 examined 이므로 이 둘이 짝입니다."
+        },
+        {
+          "label": "④ 두 동사가 공유하는 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "The curator 하나가 examined 와 revealed 두 동사의 주어입니다. 주어를 공유한다는 것이 두 항이 같은 층위에 있다는 증거입니다."
+        }
+      ],
+      "conclusion": "짝은 examined 와 revealed 입니다. 접속사 바로 앞 단어인 carefully 는 짝이 아닙니다."
+    },
+    {
+      "id": "b8",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "짝이 되는 동사 사냥",
+      "instruction": "이 문장에서 and 가 잇는 짝, 곧 병렬을 이루는 두 동사를 전부 탭하십시오. 접속사에 가까운 단어에 속지 마십시오.",
+      "hitLabel": "짝이 되는 동사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "committee", "hit": false },
+        { "t": "reviewed", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "proposal", "hit": false },
+        { "t": "carefully", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "approved", "hit": true },
+        { "t": "it", "hit": false },
+        { "t": "without", "hit": false },
+        { "t": "delay.", "hit": false }
+      ],
+      "ko": "그 위원회는 제안서를 꼼꼼히 검토했고 지체 없이 그것을 승인했습니다.",
+      "explain": "짝은 과거형 본동사 reviewed 와 approved 입니다. and 바로 앞의 carefully 는 부사라 짝이 아니고, 뒤의 it 은 목적어라 짝이 아닙니다. 두 동사가 주어 The committee 를 공유합니다."
+    },
+    {
+      "id": "b9",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "짝을 찾는 4단계",
+      "steps": [
+        {
+          "text": "and·or·but 을 발견하면 밑줄이 아니라 접속사부터 표시합니다.",
+          "applyNote": "A skilled negotiator values listening … and offering … 에서 접속사는 and 하나입니다."
+        },
+        {
+          "text": "접속사 뒤 항의 형태를 확정합니다(동사원형·시제 동사·-ing·to부정사·명사·형용사 중 무엇인가).",
+          "applyNote": "뒤 항은 offering 이므로 동명사입니다."
+        },
+        {
+          "text": "그 형태와 같은 항을 접속사 앞에서 거슬러 찾습니다. 부사·전치사구·삽입어구는 괄호로 묶어 건너뜁니다.",
+          "applyNote": "patiently 와 to objections 는 수식어이므로 건너뜁니다. 앞에서 찾은 동명사는 values 의 목적어인 listening 입니다."
+        },
+        {
+          "text": "찾은 짝과 형태가 같은지 대조합니다. 다르면 밑줄이 짝의 형태를 따라가야 합니다.",
+          "applyNote": "listening 과 offering 은 둘 다 동명사이므로 병렬이 성립합니다. to offer 였다면 짝의 형태를 따라 offering 으로 고쳐야 합니다."
+        }
+      ],
+      "example": {
+        "en": "A skilled negotiator values **listening** patiently to objections and **offering** small concessions early.",
+        "ko": "노련한 협상가는 반대 의견을 참을성 있게 듣는 것과 작은 양보를 일찍 제안하는 것을 중시합니다.",
+        "note": "짝은 values 의 목적어인 동명사 listening 과 offering 입니다. 시제 동사 values 는 짝 후보가 아닙니다."
+      }
+    },
+    {
+      "id": "b10",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Researchers who studied the ancient trade routes mapped the coastal ports and ( traced / tracing ) the inland roads.",
+      "steps": [
+        {
+          "title": "① 접속사를 표시합니다",
+          "body": "and 가 하나 있습니다. 괄호는 이 접속사 뒤 항의 자리이므로 짝 찾기로 판단합니다."
+        },
+        {
+          "title": "② 뒤 항의 후보 형태를 확인합니다",
+          "body": "traced 는 시제를 가진 과거형 동사이고, tracing 은 시제가 없는 분사입니다. 두 형태는 문장 안에서 지위가 다릅니다."
+        },
+        {
+          "title": "③ 앞에서 짝을 거슬러 찾습니다",
+          "body": "studied 는 관계사 who 가 연 관계절의 동사이므로 주절의 항이 아닙니다. 주절의 본동사는 mapped 이며, 이것이 괄호의 짝입니다."
+        },
+        {
+          "title": "④ 형태를 대조해 답을 확정합니다",
+          "body": "짝인 mapped 가 과거형 본동사이므로 괄호도 과거형 traced 여야 합니다. tracing 을 넣으면 본동사와 분사가 and 로 묶여 병렬이 깨집니다."
+        }
+      ],
+      "answer": "traced",
+      "ko": "고대 교역로를 연구한 연구자들은 해안의 항구들을 지도로 그렸고 내륙의 도로들을 추적했습니다."
+    },
+    {
+      "id": "b11",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u05-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The museum restored the old paintings and {{blank}} them in a new gallery.",
+          "options": ["displayed", "displaying"],
+          "answer": 0,
+          "translation": "그 박물관은 오래된 그림들을 복원했고 그것들을 새 전시실에 전시했습니다.",
+          "explanation": "and 의 짝은 주어 The museum 의 본동사 restored 입니다. 짝이 과거형 본동사이므로 빈칸도 과거형 displayed 여야 합니다. displaying 을 넣으면 본동사와 분사가 묶여 병렬이 깨집니다.",
+          "trapTags": ["coord-pair"]
+        },
+        {
+          "id": "u05-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The report describes the causes of the drought and [[u:suggesting]] several practical remedies.",
+          "isCorrect": false,
+          "correction": "suggests",
+          "translation": "그 보고서는 가뭄의 원인을 기술하고 여러 실질적인 해결책을 제안합니다.",
+          "explanation": "and 바로 앞 단어는 명사 drought 이지만 짝이 아닙니다. 짝은 주어 The report 의 본동사 describes 이므로, 밑줄도 같은 현재형 동사 suggests 가 되어야 합니다.",
+          "trapTags": ["coord-pair", "distant-parallel"]
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "짝이 되는 것과 되지 못하는 것",
+      "columns": ["짝(병렬 항)", "짝이 아닌 것(수식어·삽입어구)"],
+      "rows": [
+        {
+          "criterion": "무엇으로 정해지는가",
+          "a": "문장 안의 역할과 문법 형태가 같은가",
+          "b": "접속사에 가까이 붙어 있는가"
+        },
+        {
+          "criterion": "대표 형태",
+          "a": "동사↔동사, 동명사↔동명사, to부정사↔to부정사, 명사↔명사, 형용사↔형용사",
+          "b": "부사, 전치사구, 콤마 사이의 삽입어구"
+        },
+        {
+          "criterion": "거리",
+          "a": "접속사에서 멀리 떨어져 있을 수 있습니다",
+          "b": "바로 옆에 있어도 후보가 되지 못합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The town council approved the plan quickly and **announced** it the next day.",
+          "ko": "시의회는 그 계획을 신속히 승인했고 이튿날 그것을 발표했습니다.",
+          "note": "짝은 부사 quickly 가 아니라 본동사 approved 입니다. 그래서 announced 가 과거형 동사입니다."
+        },
+        {
+          "en": "The town council approved the plan quickly and **announcing** it the next day.",
+          "ko": "시의회는 그 계획을 신속히 승인했고 이튿날 그것을 발표하는 (…무엇?)",
+          "note": "announcing 은 시제가 없어 본동사 approved 와 짝이 되지 못합니다. 병렬이 깨진 비문입니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 연결이 병렬로 성립하는지 분류하십시오.",
+      "buckets": [
+        { "id": "ok", "label": "병렬이 성립합니다" },
+        { "id": "no", "label": "병렬이 깨집니다" }
+      ],
+      "chips": [
+        {
+          "text": "examined … and revealed",
+          "bucketId": "ok",
+          "why": "과거형 본동사끼리 연결되었습니다."
+        },
+        {
+          "text": "writing reports … and presenting data",
+          "bucketId": "ok",
+          "why": "동명사끼리 연결되었습니다."
+        },
+        {
+          "text": "to reduce waste … and to reuse materials",
+          "bucketId": "ok",
+          "why": "to부정사끼리 연결되었습니다."
+        },
+        {
+          "text": "short … but persuasive",
+          "bucketId": "ok",
+          "why": "보어 자리의 형용사끼리 연결되었습니다."
+        },
+        {
+          "text": "monitors … and detecting",
+          "bucketId": "no",
+          "why": "시제를 가진 본동사와 시제가 없는 분사는 짝이 되지 못합니다."
+        },
+        {
+          "text": "listening … and to offer",
+          "bucketId": "no",
+          "why": "동명사와 to부정사는 형태가 달라 병렬을 이루지 못합니다."
+        },
+        {
+          "text": "careful … and precisely",
+          "bucketId": "no",
+          "why": "형용사와 부사는 역할이 달라 짝이 되지 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "병렬 저울 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 짝 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "등위접속사 and·or·but 은 형태·역할이 같은 항끼리만 잇습니다.",
+          "isTrue": true,
+          "why": "병렬의 정의 그 자체입니다. 같은 자격의 항이라야 저울이 수평을 이룹니다."
+        },
+        {
+          "statement": "짝은 언제나 접속사 바로 앞 단어입니다.",
+          "isTrue": false,
+          "why": "짝을 정하는 것은 거리가 아니라 역할입니다. 짝은 접속사에서 멀리 떨어져 있을 수 있습니다."
+        },
+        {
+          "statement": "동명사(-ing)와 to부정사는 서로 병렬을 이룰 수 있습니다.",
+          "isTrue": false,
+          "why": "두 형태는 서로 다릅니다. 동명사는 동명사끼리, to부정사는 to부정사끼리 이어야 병렬입니다."
+        },
+        {
+          "statement": "A, B, and C 나열에서 마지막 항은 첫 항과 형태를 맞춰야 합니다.",
+          "isTrue": true,
+          "why": "세 항 나열도 병렬이므로 마지막 항 C 가 첫 항 A 의 형태로 돌아가야 합니다."
+        },
+        {
+          "statement": "관계절 안의 동사도 접속사 뒤 항의 짝이 될 수 있습니다.",
+          "isTrue": false,
+          "why": "관계절 안의 동사는 층위가 다릅니다. 짝은 접속사 뒤 항과 같은 층위의 항이어야 합니다."
+        },
+        {
+          "statement": "부사·전치사구·삽입어구는 병렬 항이 되지 못합니다.",
+          "isTrue": true,
+          "why": "이들은 수식어이므로 괄호로 걷어냅니다. 접속사 바로 옆에 있어도 짝 후보가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The new law protects local wildlife and ( restricting / restricts / to restrict ) construction near the wetlands.",
+      "givenSteps": [
+        "① 접속사를 표시합니다 — and 하나입니다. 괄호는 그 뒤 항의 자리입니다.",
+        "② 앞에서 짝을 찾습니다 — 주어 The new law 의 본동사 protects 가 같은 층위의 항입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 어떤 형태가 들어가야 합니까?",
+      "options": [
+        "restricting — 두 번째 동작이므로 분사로 이어 주는 것이 자연스럽습니다",
+        "restricts — 짝인 본동사 protects 와 같은 현재형 동사여야 합니다",
+        "to restrict — 법의 목적을 나타내므로 to부정사가 옳습니다"
+      ],
+      "answer": 1,
+      "explain": "짝인 protects 가 시제를 가진 현재형 본동사이므로 괄호도 같은 형태인 restricts 여야 합니다. restricting 은 시제가 없어 본동사와 묶이지 못하고, to restrict 는 and 뒤 항의 자리에 놓였지만 짝인 protects(현재형 본동사)와 형태가 달라 병렬이 성립하지 않습니다. 병렬 판단의 근거는 의미의 자연스러움이 아니라 짝의 형태입니다."
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 관계절 안의 동사를 짝으로 착각하는 경우",
+      "body": "주어와 접속사 사이에 관계절이 끼면 그 안의 동사가 가장 가까운 동사로 보입니다. 그러나 관계절 안의 동사는 층위가 다르므로 짝이 될 수 없습니다. 짝 후보는 접속사 뒤 항과 같은 층위에 있는 항입니다. 뒤 항이 주절의 본동사라면 그 짝도 같은 주어를 공유하는 주절 본동사여야 하며, 관계절 안의 동사는 층위가 달라 후보가 되지 못합니다.",
+      "example": {
+        "en": "The scholar who first catalogued the manuscripts **preserved** the fragile pages and **published** a complete index.",
+        "ko": "그 필사본들을 처음 목록화한 그 학자는 손상되기 쉬운 낱장들을 보존했고 완전한 색인을 출간했습니다.",
+        "note": "catalogued 는 관계절 who … 의 동사이므로 짝이 아닙니다. published 의 짝은 주절의 본동사 preserved 이며, 둘 다 주어 The scholar 를 공유합니다."
+      }
+    },
+    {
+      "id": "b17",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 짝 찾기",
+      "instruction": "각 줄에서 병렬이 성립하지 않는, 곧 결이 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["cleaned and sorted", "measured and warned", "mapped and traced", "monitors and detecting"],
+          "odd": 3,
+          "why": "앞 세 짝은 과거형 동사끼리 이어져 병렬이 성립합니다. monitors and detecting 만 시제 동사와 분사가 섞여 짝이 되지 못합니다."
+        },
+        {
+          "words": ["writing reports and presenting data", "to reduce waste and to reuse materials", "short but persuasive", "listening and to offer"],
+          "odd": 3,
+          "why": "앞 셋은 같은 형태끼리(동명사·to부정사·형용사) 이어졌지만, listening and to offer 는 동명사와 to부정사가 섞여 형태가 어긋납니다."
+        },
+        {
+          "words": ["paintings and sculptures", "accurate and concise", "careful and precisely", "planted and stored"],
+          "odd": 2,
+          "why": "명사·형용사·동사끼리 이어진 앞뒤 짝과 달리, careful and precisely 는 형용사와 부사가 섞여 병렬이 깨집니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u05-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The engineer who designed the tunnel supervised the drilling for two years and {{blank}} the final safety report herself.",
+          "options": ["wrote", "writing", "to write"],
+          "answer": 0,
+          "translation": "그 터널을 설계한 그 기술자는 2년간 굴착을 감독했고 최종 안전 보고서를 직접 작성했습니다.",
+          "explanation": "and 뒤 항의 짝은 주절의 본동사 supervised 입니다. designed 는 관계절 who … 의 동사이므로 층위가 달라 짝이 되지 못합니다. 짝이 과거형 본동사이므로 빈칸도 과거형 wrote 여야 합니다.",
+          "trapTags": ["coord-pair", "distant-parallel", "relative-clause-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 wrote 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "문장이 과거의 일을 말하고 있어서 과거형이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제의 자연스러움만으로는 형태를 정할 수 없습니다. writing 이나 to write 도 과거 맥락의 문장 안에 놓일 수 있습니다. 판단 근거는 짝의 형태입니다."
+        },
+        {
+          "text": "관계사 who 앞의 The engineer 가 단수이므로 동사도 단수여야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "수일치는 별개의 판단축입니다. 수일치만으로는 writing·to write 를 배제하지 못합니다. 여기서 필요한 것은 병렬 축 찾기입니다."
+        },
+        {
+          "text": "and 뒤 항의 짝이 주절 본동사 supervised 이므로, 빈칸도 같은 자격의 과거형 본동사여야 했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 접속사 뒤 항의 형태를 확정하고 앞에서 같은 층위의 짝을 찾는 것이 판단의 근거입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The city council [[1:approved]] a plan that [[2:encourages]] residents to sort their waste, to compost food scraps, and [[3:reducing]] their use of plastic bags, and the plan [[4:takes]] effect next spring.",
+      "answer": 3,
+      "correction": "to reduce",
+      "rationales": [
+        "주절의 본동사입니다. 문장에 시제를 가진 본동사가 필요하므로 과거형 approved 가 맞습니다. (과거형은 주어의 수에 따라 형태가 바뀌지 않으므로 수일치는 판단 근거가 아닙니다.)",
+        "관계대명사 that 이 연 절의 동사입니다. 선행사 a plan 이 단수이므로 encourages 가 맞습니다.",
+        "세 항 나열의 마지막 항입니다. 앞의 두 항이 to sort 와 to compost 이므로 마지막 항도 to reduce 여야 합니다. -ing 형은 to부정사와 짝이 되지 못합니다.",
+        "등위접속사 and 가 연 두 번째 절의 본동사입니다. 절이 하나 늘었으므로 시제 동사도 하나 더 필요합니다."
+      ],
+      "ko": "시의회는 주민들에게 쓰레기를 분리하고, 음식물 찌꺼기를 퇴비로 만들고, 비닐봉지 사용을 줄이도록 권장하는 계획을 승인했으며, 그 계획은 내년 봄에 시행됩니다."
+    },
+    {
+      "id": "b21",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 병렬이 깨진 문장을 주고 '어법에 맞게 고쳐 쓰시오'로 물어봅니다. 어느 항이 짝인지 지목하고 그 형태로 고쳐야 만점입니다.",
+          "sample": {
+            "en": "The library expanded its reading room and adding a quiet study zone.",
+            "ask": "이 문장을 어법에 맞게 고쳐 쓰십시오.",
+            "answer": "The library expanded its reading room and added a quiet study zone."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 짝이 되는 항을 멀리 떨어뜨리거나 사이에 관계절·부사구를 끼워 넣고, 밑줄 자리에 형태가 다른 준동사를 놓습니다. 밑줄 앞에서 짝을 찾아 형태를 대조하면 판정됩니다.",
+          "sample": {
+            "en": "Marine biologists tracked the whales for a decade and, despite frequent storms, [[u:recording]] their songs with underwater microphones.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "recorded — and 의 짝은 본동사 tracked 이므로, 삽입어구 despite frequent storms 를 걷어내면 밑줄도 과거형 본동사 recorded 여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Urban planners have learned that green corridors do more than beautify a city. [[u:A well-designed corridor connects fragmented habitats and allows small animals to move safely between them.]] When such corridors disappear, populations become isolated and decline within a few generations.",
+      "instruction": "밑줄 친 문장에서 and 가 잇는 두 항의 짝을 찾으십시오.",
+      "found": "접속사 뒤 항은 allows 입니다. 앞에서 같은 층위의 항을 찾으면 주어 A well-designed corridor 의 본동사 connects 이며, 두 동사는 같은 주어를 공유합니다. 접속사 바로 앞의 habitats 는 명사이므로 짝이 아닙니다.",
+      "gist": "잘 설계된 녹지 회랑이 단절된 서식지를 잇고 작은 동물들의 안전한 이동을 가능하게 한다는 내용입니다."
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "병렬 저울의 문지기",
+      "intro": "이 저울은 양쪽 접시의 무게가 같아야만 문을 엽니다. 한쪽에 동사를 올렸는데 다른 쪽에 분사를 올리면 저울은 기울고 문은 닫힙니다. 네 번의 저울질로 균형 잡는 눈을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The volunteers cleaned the shoreline and {{blank}} the plastic waste into bins.",
+          "options": ["sorting", "sorted"],
+          "answer": 1,
+          "why": "짝은 주어 The volunteers 의 본동사 cleaned 입니다. 짝이 과거형 본동사이므로 빈칸도 과거형 sorted 여야 합니다. sorting 은 시제가 없어 병렬이 깨집니다."
+        },
+        {
+          "prompt": "The exhibition features rare manuscripts and {{blank}} from the medieval period.",
+          "options": ["engraved", "engravings"],
+          "answer": 1,
+          "why": "features 의 목적어인 명사 manuscripts 가 짝입니다. 짝이 명사이므로 빈칸도 명사 engravings 여야 합니다. engraved 는 명사가 아니어서 짝을 이루지 못합니다."
+        },
+        {
+          "prompt": "The workshop teaches students to draft an outline, to gather sources, and {{blank}} their arguments clearly.",
+          "options": ["presenting", "presented", "to present"],
+          "answer": 2,
+          "why": "세 항 나열의 마지막 자리입니다. 앞 두 항이 to draft 와 to gather 이므로 마지막 항도 to부정사 to present 여야 합니다. presenting·presented 는 형태가 달라 병렬이 깨집니다."
+        },
+        {
+          "prompt": "The historian who examined the archives catalogued the letters and {{blank}} a detailed index.",
+          "options": ["compiled", "compiling"],
+          "answer": 0,
+          "why": "and 뒤 항의 짝은 주절 본동사 catalogued 입니다. examined 는 관계절 who … 의 동사라 층위가 달라 짝이 아닙니다. 짝이 과거형 본동사이므로 빈칸도 과거형 compiled 여야 합니다."
+        }
+      ],
+      "winText": "저울에 균형 도장이 찍혔습니다. and·or·but 을 보면 무게부터 다는 눈 — 병렬 축을 짚는 그 감각이 방금 당신 손에 들어왔습니다. 수능 29번의 밑줄이 이제 저울 위에 놓입니다.",
+      "loseText": "저울이 기운 채 문이 닫힙니다. 네 번 모두 물은 것은 하나였습니다 — '접속사 뒤 항의 짝은 어떤 형태인가.' 짝 찾는 순서, 곧 뒤 항 형태 확정 다음 앞에서 같은 형태 찾기를 다시 짚고 오면 저울은 준비되어 있습니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "and·or·but 을 보면 먼저 ___ 의 형태를 확정하고, 앞에서 ___ 가 같은 항을 찾아 형태를 대조합니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "등위접속사 and·or·but 은 문법 형태와 역할이 같은 항끼리만 연결합니다.",
+        "짝은 접속사 바로 앞 단어가 아닙니다. 접속사 뒤 항의 형태를 먼저 확정하고, 같은 형태를 앞에서 거슬러 찾습니다.",
+        "부사·전치사구·삽입어구는 괄호로 묶어 건너뜁니다. 관계절 안의 동사도 층위가 달라 짝이 되지 못합니다.",
+        "세 항 나열에서는 마지막 항이 첫 항의 형태로 돌아가야 합니다.",
+        "짝이 시제를 가진 본동사이면 밑줄도 본동사여야 하고, 짝이 동명사·to부정사이면 밑줄도 같은 준동사여야 합니다."
+      ],
+      "keySentence": {
+        "en": "The curator **examined** the ancient vase carefully and, after much hesitation, **revealed** its true origin.",
+        "ko": "그 큐레이터는 고대 화병을 주의 깊게 살펴보았고, 오랜 망설임 끝에 그것의 진짜 출처를 밝혔습니다.",
+        "note": "삽입어구를 걷어내면 짝은 examined 와 revealed 입니다. 짝이 과거형 본동사이므로 뒤 항도 과거형 본동사입니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u05-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The chef selects local ingredients each morning and {{blank}} the menu around them.",
+          "options": ["builds", "building"],
+          "answer": 0,
+          "translation": "그 요리사는 매일 아침 지역 식재료를 고르고 그것들을 중심으로 메뉴를 구성합니다.",
+          "explanation": "and 의 짝은 주어 The chef 의 본동사 selects 입니다. 짝이 현재형 본동사이므로 빈칸도 단수 주어에 맞춘 현재형 builds 여야 합니다. building 은 시제가 없어 본동사와 병렬을 이루지 못합니다.",
+          "trapTags": ["coord-pair"]
+        },
+        {
+          "id": "u05-c1-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Effective note-taking means capturing the main claim and [[u:recording]] the evidence that supports it.",
+          "isCorrect": true,
+          "translation": "효과적인 필기란 핵심 주장을 포착하는 것과 그것을 뒷받침하는 근거를 기록하는 것을 뜻합니다.",
+          "explanation": "and 뒤 항은 동명사 recording 이고, 짝은 means 의 목적어인 동명사 capturing 입니다. 두 항이 같은 형태이므로 병렬이 성립합니다. 시제 동사 means 를 짝으로 착각하면 안 됩니다.",
+          "trapTags": ["coord-pair"]
+        },
+        {
+          "id": "u05-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The survey asked citizens to rank the proposals, to explain their choices, and {{blank}} additional ideas.",
+          "options": ["to suggest", "suggesting", "suggested"],
+          "answer": 0,
+          "translation": "그 설문은 시민들에게 제안들의 순위를 매기고, 자신의 선택을 설명하고, 추가 아이디어를 제시해 달라고 요청했습니다.",
+          "explanation": "세 항 나열의 마지막 자리입니다. 앞의 두 항이 asked 의 목적격보어인 to부정사 to rank 와 to explain 이므로, 마지막 항도 to suggest 여야 합니다. suggesting 이나 suggested 를 넣으면 형태가 달라 병렬이 깨집니다.",
+          "trapTags": ["coord-pair", "three-item-list"]
+        }
+      ]
+    }
+  ]
+}

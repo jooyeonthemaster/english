@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "reviewer-calibration-production-binding-v2-hostile-1",
+  "fixtures": [
+    {
+      "fixtureId": "R01_SIZE2_PAIR_COLLISION",
+      "familySize": 2,
+      "mutation": "HOLDOUT_OFFSET_ZERO",
+      "expectedReasonCode": "MAIN_HOLDOUT_COLLISION"
+    },
+    {
+      "fixtureId": "R02_SIZE3_MATERIALIZED_ROW_DRIFT",
+      "familySize": 3,
+      "mutation": "CHANGE_EPOCH2_HOLDOUT_TO_MAIN",
+      "expectedReasonCode": "FORMULA_ROW_DIVERGENCE"
+    },
+    {
+      "fixtureId": "R03_SIZE4_OLD_TWO_STEP_MAIN",
+      "familySize": 4,
+      "mutation": "USE_V1_MAIN_FORMULA_FOR_MAIN_ONLY",
+      "expectedReasonCode": "MAIN_ONLY_COVERAGE_FALSE"
+    },
+    {
+      "fixtureId": "R04_SKIP_OUTCOME_TYPE",
+      "familySize": 4,
+      "mutation": "REPLACE_EPOCH1_MAIN_WITH_EPOCH3_TYPE",
+      "expectedReasonCode": "ROTATION_CHERRY_PICK"
+    },
+    {
+      "fixtureId": "R05_OMIT_SCHEDULE_ROW",
+      "familySize": 3,
+      "mutation": "DELETE_ONE_MATERIALIZED_ROW",
+      "expectedReasonCode": "SCHEDULE_ROW_COUNT"
+    },
+    {
+      "fixtureId": "R06_DUPLICATE_CANONICAL_TYPE",
+      "familySize": 3,
+      "mutation": "DUPLICATE_TYPE_ACROSS_FAMILIES",
+      "expectedReasonCode": "CANONICAL_MAPPING_DUPLICATE"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "pid": "P030",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-EXPLANATION-CODEMIX",
+      "severity": "minor",
+      "evidence": "해설 첫 문장에 한국어 설명 중 영어구가 혼입됨: '주격 관계대명사 that이 이끄는 절 inside the sentence(that also appearing to be like this)에는 정동사가 필요합니다.' — 'inside the sentence'는 생성 아티팩트로, 사실 오류는 아니나 학생 노출 텍스트의 품질을 해침(치명 아님, C6에서 감점)."
+    },
+    {
+      "code": "V4-TERM-LOOSENESS",
+      "severity": "minor",
+      "evidence": "해설에서 선행사 'another, much longer scale clock'(명사구)을 '단수 명사'로 지칭. 오개념 수준은 아니고 용어 느슨함."
+    },
+    {
+      "code": "V5-POINTCODE-OVERLAP",
+      "severity": "minor",
+      "evidence": "(D)와 (E)의 pointCode가 동일('a'). keyPoints는 (E)를 '정·준동사 — 대동사 구문'으로 분류했으나 (E)의 실질 포인트는 대동사/동사구 생략이라 내부 분류 정합성이 다소 흐림. 학생 노출 필드 간 모순은 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사의 태 판단 — 명사 후치수식 과거분사(embodied) vs 현재분사(embodying)",
+      "temptingBecause": "명사 a process 바로 뒤의 -ed형이 정동사인지 분사인지, 능동 -ing으로 바꿔야 하는지 판단을 요구함",
+      "decisiveFlaw": "정답 불가 — process는 '구현되는' 대상이므로 수동 의미의 과거분사가 정확함. 'a process (which is) embodied in a machine'의 축약 구조로 어법상 옳음"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계절 내 수일치 — 선행사의 수에 맞춘 동사 굴절",
+      "temptingBecause": "지문 전반에 clocks/processes 등 복수 명사가 산재해 선행사를 잘못 잡으면 repeat로 고치고 싶어짐",
+      "decisiveFlaw": "정답 불가 — 선행사는 단수 'almost any process'이므로 단수형 repeats가 정확함"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계사 적합성 — 주격 관계대명사 that의 적법성",
+      "temptingBecause": "think of의 목적어 뒤라 what이나 전치사+관계사류로 헷갈릴 여지를 노림",
+      "decisiveFlaw": "정답 불가 — 선행사 a clock이 명시돼 있고 관계절 내 주어 자리가 비어 있으므로 주격 관계대명사 that이 정확함. 다만 소거가 쉬운 약한 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "정·준동사 구분 — 주격 관계절의 정동사 자리 (선언된 정답)",
+      "temptingBecause": "'that also appearing'에서 appearing을 후치수식 분사로 착각하거나, 긴 전치 수식('another, much longer scale clock')에 묻혀 절 구조를 놓치기 쉬움",
+      "decisiveFlaw": "실제 오류 — 주격 관계대명사 that이 이끄는 절에 정동사가 없음. 분사 해석을 시도해도 that절의 서술어가 사라져 어떤 파스로도 성립 불가. appears로 교정하면 원지문과 정확히 일치(최소대립쌍)"
+    },
+    {
+      "label": "(E)",
+      "intent": "대동사 선택 — 생략된 동사구를 받는 do-support",
+      "temptingBecause": "'seems to ...'를 받으므로 be동사 is not으로 받아야 한다고 착각하거나 do의 수 형태를 의심하게 함",
+      "decisiveFlaw": "정답 불가 — 생략된 것은 일반동사구 'yield a smooth time scale'이므로 단수 주어 It에 일치한 대동사 does가 정확함"
+    }
+  ],
+  "explanationIssues": [
+    "해설 첫 문장 '절 inside the sentence(...)' — 한국어 해설 내 영어구 혼입 아티팩트. 'appears가 있어야 할 관계절(that also appearing to be like this)' 등으로 재작성 필요",
+    "'선행사인 단수 명사 another, much longer scale clock' — 명사구를 '명사'로 지칭한 용어 느슨함",
+    "keyPoints에서 (E)를 '정·준동사'로 분류 — 실질은 대동사/동사구 생략 포인트여서 분류 라벨이 부정확(내부 필드, 학생 비노출)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 의도된 변형(appears→appearing, (D))만 포함하며 문장 접합·구두점·라벨 모두 온전함. V2: 5개 밑줄 독립 검증 결과 (D)만 비문 — 주격 관계절의 정동사 부재는 대안 분석이 불가능한 명확한 문법 판단이고, (A)(B)(C)(E)는 각각 수동분사·수일치·주격 관계사·대동사로 모두 적법하여 단일 정답 성립. V3: 교정문(appears)이 원지문과 정확히 일치. V4: 통사 분석 자체는 전부 사실과 부합하나 해설에 code-mix 아티팩트 1건(minor). V5: 정답 라벨·markedExpressions·오답 해설·keyPoints 동기화됨. 공예: 디코이 4개가 서로 다른 오개념을 겨냥해 의도 밀도가 좋고 난이도는 INTERMEDIATE에 정합하나, (C)가 약한 디코이이고 해설 아티팩트로 C6=2. 합계 17, 전 V 통과 → B(해설 문구만 손보면 출제 가능). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

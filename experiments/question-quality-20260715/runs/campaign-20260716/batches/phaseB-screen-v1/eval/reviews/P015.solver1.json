@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸 직전 문장 'A scientific truth has little standing until it becomes a collective product' 및 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'와 정확히 호응. 실험실에서 일어나는 일은 집단적 검증(collective validation)을 얻기 위한 예비 단계(preliminary step)라는 결론이 지문 전체 논지(개인주의적 수사 기각 → 집단적 승인 필수)를 완결함. 문법 결합(What happens ... is a preliminary step toward gaining ...)도 자연스러움."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'speak for themselves'가 지문 2~3문장에 그대로 등장해 표면 어휘로 유혹하는 매력 오답. 그러나 그것은 필자가 기각하는 개인주의적 수사(individualist rhetoric)의 주장이며, 'nature does not speak unambiguously'와 정면 모순. 결론부에 넣으면 논지 붕괴."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'complete process'는 'little standing until it becomes a collective product'와 모순되고, 'immediate public support'는 전문가 검토 없이 기자회견으로 발표하는 과학자가 비난받는다는 서술과 정반대."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'silence'와 'prejudiced'를 지문 앞부분('too insistently for prejudiced humans to silence them')에서 재활용한 미끼. 이 역시 기각된 개인주의적 관점의 재진술이며, 'ultimate evidence'는 실험실 결과가 집단 승인 전까지 지위가 거의 없다는 결론과 모순."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "동료의 엄격한 비판(peer review)을 우회하는 행위는 지문에서 'automatically castigated'라고 명시적으로 비난받는 대상이므로 지문 논지와 정반대."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: ②와 ④는 지문 어휘를 그대로 재활용해 순간적으로 눈이 가지만, 둘 다 필자가 반박하는 개인주의적 수사의 내용이라 논지 방향(개인→집단 승인)만 잡으면 즉시 배제됨. 정답 ①은 마지막 두 문장과의 국소 응집(collective product → collective validation)으로 확정. 대안 해석·문법 seam 문제 없음. 단일 정답으로 수렴하는 깔끔한 문항."
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "blindId": "Q001",
+    "packetSha256": "55b8d0d12e0269d8554821f7dc8c98b6f45b0390d9bd913a959d1c20c6d444db",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q002",
+    "packetSha256": "61a6c862e40fb392a5f13d5b5ebf95842123d8941018e7aa88b7d0befcab9f31",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q003",
+    "packetSha256": "d7e7344564dd20d410b5c71ba5911c07c19c340143adec1f76e955ce1588215e",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q004",
+    "packetSha256": "4c54a0e50f3ef90762b415eef357544260306160d4486c586d2a53a29d0dbd51",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q005",
+    "packetSha256": "fa86e4d1683cacca77a47ce5b4c3a193382c6710c2139dbda7a93f11dab40b20",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q006",
+    "packetSha256": "0311d9166f89c59d1fcd98d5e41d20bba4c3ecad2384aeb07295f68ab481e312",
+    "type": "IMPLIED_MEANING",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q007",
+    "packetSha256": "472e58d72b5188579db059418e4c87ca75b8e632b5a7cd04e70062f0a9ba0fb9",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q008",
+    "packetSha256": "dc7579b396e65ed74543a6104f587e90bf106535e68e74bb02fede92aad6d47a",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q009",
+    "packetSha256": "53eb3288d976df4c68b93903ca6861d24426216b8abad9592781262ec5758aa8",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q010",
+    "packetSha256": "9cec0976ba13ad6137d724d306b0a2b7b27a34b84ac12c1520ddcba74b5bb581",
+    "type": "VOCAB_CHOICE",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q011",
+    "packetSha256": "1fd23ef49a90ebd02e2150ed49c32f85100512e203900fb77ea22aa44c711dcc",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q012",
+    "packetSha256": "90564d6dd58255681563d6fdf67c103d8a633d63f4c7c13b983036c40f548a39",
+    "type": "GRAMMAR_CHOICE_COMBO",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q013",
+    "packetSha256": "c6803c15f466613dbcd38e86c430299128419f88c448fc3431c6a4f74de73c04",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q014",
+    "packetSha256": "5335e1014d0dbc4ca8ab236ea12b8b53a9b993760f462d7afba2db02e643a6cd",
+    "type": "GRAMMAR_CHOICE_COMBO",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q015",
+    "packetSha256": "443393427b90ba7c7edee3542060b1876301b4a601b47e852c10b79718d0faeb",
+    "type": "VOCAB_CHOICE",
+    "requestedDifficulty": "KILLER"
+  }
+]

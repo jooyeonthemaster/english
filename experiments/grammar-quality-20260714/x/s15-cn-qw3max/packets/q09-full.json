@@ -1,0 +1,176 @@
+{
+  "passageId": "ebsi_go1_20191120-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 155
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-point-monotony",
+    "grammar-killer-generic-answer-point",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [
+    "grammar-decoy-point-diversity",
+    "grammar-explanation-too-long"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=d  (C):dec=d  (D):ANS=a  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 0,
+        "relPos": 0,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 172,
+        "relPos": 0.201,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 308,
+        "relPos": 0.36,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 556,
+        "relPos": 0.65,
+        "sentenceIndex": 8,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 747,
+        "relPos": 0.874,
+        "sentenceIndex": 11,
+        "found": true
+      }
+    ],
+    "sentenceCount": 13,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.874,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a meal. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중 어법상 가장 부적절한 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice.",
+        "isError": false,
+        "surroundingText": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "They are often found strolling in large groups toward the edge of the water in search of food.",
+        "isError": false,
+        "surroundingText": "Take the case of the Adélie penguins. They are often found strolling in large groups toward the edge of the water in search of food.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "There is the leopard seal, for one, which likes to have penguins for a meal.",
+        "isError": false,
+        "surroundingText": "Yet danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a meal.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "The moment that occurs, the rest of the penguins watch with anticipation to see what happens next.",
+        "isError": true,
+        "errorExpression": "The moment that occur, the rest of the penguins watch with anticipation to see what happens next.",
+        "surroundingText": "They wait and wait and wait by the edge of the water until one of them gives up and jumps in. The moment that occur, the rest of the penguins watch with anticipation to see what happens next.",
+        "pointCode": "a",
+        "correction": "The moment that occurs, the rest of the penguins watch with anticipation to see what happens next."
+      },
+      {
+        "label": "(E)",
+        "expression": "One penguin's destiny alters the fate of all the others.",
+        "isError": false,
+        "surroundingText": "If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice."
+      },
+      {
+        "label": "(B)",
+        "text": "They are often found strolling in large groups toward the edge of the water in search of food."
+      },
+      {
+        "label": "(C)",
+        "text": "There is the leopard seal, for one, which likes to have penguins for a meal."
+      },
+      {
+        "label": "(D)",
+        "text": "The moment that occur, the rest of the penguins watch with anticipation to see what happens next."
+      },
+      {
+        "label": "(E)",
+        "text": "One penguin's destiny alters the fate of all the others."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "‘that of others’는 ‘others’가 가진 ‘choice’를 가리키는 관용적 표현으로, 비교 구문에서 매우 흔하게 쓰입니다. 여기서 that은 대명사로 ‘the choice’를 받고 있으므로 어법상 전혀 문제가 없습니다. 오히려 이 표현을 생략하거나 바꾸면 의미가 모호해질 수 있어, 수능에서는 정답이 아닌 오답으로 자주 출제됩니다.",
+      "(B)": "‘be found + -ing’ 구문은 ‘~하는 모습으로 발견되다’라는 뜻으로, 자연스러운 수동태 표현입니다. ‘stroll’이라는 동사가 의인화처럼 보일 수 있지만, 동물에게도 비유적으로 사용되며 어법상 전혀 문제가 없습니다. 오히려 문맥상 생동감 있는 묘사를 위해 의도된 표현입니다.",
+      "(C)": "‘for one’는 ‘하나의 예로’라는 뜻으로, 열거할 때 사용하는 관용 표현입니다. 뒤에 오는 ‘which’는 ‘the leopard seal’을 수식하며, 비제한적 관계사절로 자연스럽습니다. 이 표현은 고난도 지문에서 자주 등장하며, 문법적으로 완전히 적절합니다.",
+      "(E)": "이 문장은 주어 ‘destiny’(단수)와 동사 ‘alters’(단수)의 일치가 완벽하며, 소유격 ‘penguin's’, 대명사 ‘others’의 사용도 자연스럽습니다. 문장 구조가 간결해 보이지만, 문맥 속에서 ‘학습을 통한 생존’이라는 핵심 아이디어를 압축적으로 전달해 주는 중요한 문장입니다. 고난도 문항에서는 이런 간결한 문장이 오히려 함정처럼 느껴지지만, 어법상은 전혀 문제가 없습니다."
+    },
+    "explanation": "(D) \"The moment that occur, the rest of the penguins watch with anticipation to see what happens next.\"는 어법상 틀린 표현이며 \"The moment that occurs, the rest of the penguins watch with anticipation to see what happens next.\"로 고쳐야 한다. 정답은 (D)입니다. ‘The moment that occur...’에서 ‘that’은 선행사 ‘the moment’을 받는 관계대명사입니다. ‘the moment’는 단수 명사이므로, 동사도 단수형인 ‘occurs’가 되어야 합니다. 그러나 밑줄 친 부분에서는 ‘occur’라는 복수형 동사를 사용해 주어-동사 일치가 깨졌습니다. ‘The moment that occurs...’라고 해야 문법적으로 맞습니다. 이 오류는 선행사와 관계사절 내 동사의 수 일치를 묻는 전형적인 수능 어법 포인트이며, 긴 문맥 속에서 ‘that’이 대명사인지 관계대명사인지 혼동하기 쉬워 고난도로 출제되었습니다. 나머지 선택지는 모두 원문 그대로이며, 각각 수능에서 자주 출제되는 고난도 표현이지만, 어법상 옳습니다.",
+    "keyPoints": [
+      "주어-동사 일치 (Subject-Verb Agreement)",
+      "관계대명사 that의 선행사 수 일치",
+      "의인화 표현의 어법 적절성",
+      "that of + 복수명사 구문",
+      "for one 관용 표현"
+    ],
+    "tags": [
+      "주어-동사 일치",
+      "관계대명사",
+      "의인화 표현",
+      "수능 킬러 문항",
+      "비제한적 관계사절",
+      "be found + -ing",
+      "that of ~",
+      "for one",
+      "고난도 어법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "__(A) There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice.__ Take the case of the Adélie penguins. __(B) They are often found strolling in large groups toward the edge of the water in search of food.__ Yet danger awaits in the icy-cold water. __(C) There is the leopard seal, for one, which likes to have penguins for a meal.__ What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and jumps in. __(D) The moment that occur, the rest of the penguins watch with anticipation to see what happens next.__ If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. __(E) One penguin's destiny alters the fate of all the others.__ Their strategy, you could say, is \"learn and live.\""
+  }
+}

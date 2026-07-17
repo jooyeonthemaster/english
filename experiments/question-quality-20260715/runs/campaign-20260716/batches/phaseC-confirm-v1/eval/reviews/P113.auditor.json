@@ -1,0 +1,80 @@
+{
+  "pid": "P113",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SEAM-SUBJECTLESS-FRAGMENT",
+      "severity": "critical",
+      "evidence": "원문 발췌 구간은 주어를 포함한 완전한 절이다('Now when there is a shipwreck ALL OF US ALWAYS put in the cat.'). 그러나 다섯 선지 모두 주어 없는 동사구(focus.../seek.../write.../advocate.../emphasize...)여서, 정답 ③을 넣은 완성문 'Now when there is a shipwreck write stories with the same fabricated element to avoid blame.'는 평서문으로는 주어가 없는 비문이며, 유일한 문법적 해석은 명령문인데 이는 기자의 1인칭 고백 담화와 양립 불가능하다. 빈칸 seam 문법성 위반."
+    },
+    {
+      "code": "V4-MINOR-TERM-AND-TYPO",
+      "severity": "minor",
+      "evidence": "keyPoints의 '매커니즘'은 '메커니즘'의 오기이고, 'beaten, take a chance 등의 ... 관형적 표현'은 '관용적 표현'(idiomatic)을 의도한 용어 오용이다('관형적'=adnominal은 해당 표현과 무관). 해설 본문의 구조·인과 분석 자체는 정확하여 V4 실패로는 판정하지 않고 경미 이슈로 기록."
+    },
+    {
+      "code": "C4-POLARITY-LEAK",
+      "severity": "major",
+      "evidence": "①②④⑤는 모두 긍정적·규범적 행위(사실적 묘사, 검증 강화, 동물복지 옹호, 유대 강조)이고 ③만 부정적·자조적 고백('fabricated', 'avoid blame')이다. 지문이 명백한 악습 고백이므로 내용 독해 없이 극성 하나로 정답 선택이 가능하다. RUBRIC §D KILLER 조건('극성 하나로 정답을 찍을 수 없다') 직접 위반. 유효성 실패는 아니나 KILLER 부적합의 핵심 근거."
+    },
+    {
+      "code": "C6-MINOR-INCONSISTENT-RATIONALE",
+      "severity": "minor",
+      "evidence": "해설 말미 '①, ②, ⑤ 등은 본문의 어휘를 무작위로 활용했으나'는 각 오답을 설계된 함정으로 설명하는 오답 해설과 서술이 어긋나고 ④를 누락 언급한다(오답 해설 자체에는 ④ 존재). 사실 오류는 아니며 서술 품질 문제."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전 함정 — 실제로는 허구 삽입인데 '사실적 구조 과정 묘사'라는 미덕적 행위 제시",
+      "temptingBecause": "'rescue process'가 지문의 'the crew went back to save it' 구조 장면 어휘와 겹친다",
+      "decisiveFlaw": "결말의 핵심은 존재하지 않는 고양이를 지어 넣는 것이므로 'realistic details'와 정면 상충"
+    },
+    {
+      "label": "②",
+      "intent": "교정 행위 함정 — 일어나야 할 일(검증 강화)을 일어나는 일로 바꿔치기",
+      "temptingBecause": "editors가 지문에 등장하고 언론 검증이라는 주제 연상 어휘를 사용",
+      "decisiveFlaw": "편집자들은 오히려 질책으로 왜곡을 유발한 주체이며 검증 강화 정황은 전무 — 극성 정반대"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 'all of us always put in the cat'을 '동일한 허구 요소를 넣어 비난을 피한다'로 추상화한 재진술",
+      "temptingBecause": "해당 없음(정답). 다만 'fabricated'와 'avoid blame'이 원문 논리를 거의 직역해 투명도가 높고, 유일한 부정 극성 선지라 소거가 쉽다",
+      "decisiveFlaw": "없음(내용상 정답). 단 삽입 시 주어 부재로 완성문이 비문이 되는 seam 결함은 문항 전체 결함(V3)"
+    },
+    {
+      "label": "④",
+      "intent": "주제 과확장 함정 — 반복 소재(고양이)에서 현대적 동물복지 규범으로 비약 유도",
+      "temptingBecause": "모든 기사에 고양이가 등장한다는 표면 패턴이 동물 친화 보도 연상을 자극",
+      "decisiveFlaw": "기자들의 동기는 편집자 질책 회피이지 옹호 활동이 아니며 advocacy 정황이 지문에 없음"
+    },
+    {
+      "label": "⑤",
+      "intent": "지엽 세부 확장 함정 — 첫 기사 속 구조 장면을 전체 결론으로 승격",
+      "temptingBecause": "'a cat that had survived', 구조 장면 등 감성적 세부와 표면 어휘가 겹침",
+      "decisiveFlaw": "허구 삽입·질책 회피라는 인과 기제를 전혀 담지 못하고, survivors와 cats의 정서적 유대는 지문에 언급 자체가 없음"
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints '매커니즘' 오기(표준: 메커니즘)",
+    "keyPoints '관형적 표현'은 '관용적 표현'의 용어 오용(관형적=adnominal은 beaten/take a chance와 무관)",
+    "해설 말미 '①, ②, ⑤ 등 무작위 활용' 서술이 오답 해설의 설계 의도 서술과 불일치하며 ④ 언급 누락"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "내용 설계는 준수하다: 빈칸이 지문의 인과적 결론(경쟁 압박→집단적 허구 동조)을 정확히 겨냥하고(C1=4), 오답들이 서로 다른 함정 유형을 분담한다(C2=3). 그러나 두 가지 치명·중대 결함이 있다. (1) V3 실패: 원문 발췌 구간의 주어 'all of us'가 선지에 승계되지 않아 정답 삽입 완성문이 주어 없는 비문(명령문 오독 유발)이 된다 — 선지를 'we all write stories...' 류의 완전한 절로 재작성하거나 빈칸 앞에 주어를 남겨야 한다. (2) KILLER 부적합: ③만 유일한 부정 극성 선지인 데다 'fabricated/avoid blame'이 원문을 직역 수준으로 노출해 극성 단서 하나로 풀린다(§D 위반, C4=1, C5=1). killerConditionsMet=false. V 실패는 공예 점수로 상쇄되지 않으므로 등급 F."
+}

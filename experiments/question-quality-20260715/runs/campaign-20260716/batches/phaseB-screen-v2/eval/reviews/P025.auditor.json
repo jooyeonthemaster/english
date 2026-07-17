@@ -1,0 +1,90 @@
+{
+  "pid": "P025",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문과 단어 단위로 동일하며, 유일한 변형은 의도된 것(말미 'don't overextend yourself' → '_____')뿐이다. 문장 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 라벨 ①~⑤가 선지와 일치하고 선언 정답 ②가 선지 집합에 존재한다.",
+    "V2": "각 선지를 'make sure you ___'에 독립 대입 검증: ①은 절제 요지의 극성 반전으로 탈락, ③은 지문에 없는 '성적' 기준 도입('most meaningful to you'와 불일치)으로 탈락, ④는 예시(school newspaper)를 결론 층위로 승격한 과협소 진술로 탈락, ⑤는 'zero free time'이라는 지문 어디에도 근거 없는 극단 기준으로 탈락. ②만이 'exercise some moderation'과 원문 span 'don't overextend yourself'의 의미를 보존한다. 정답 집합 = {②}, 단일정답 일치.",
+    "V3": "완성문 'So get involved in the activities that are most meaningful to you, and make sure you avoid taking on more commitments than you can manage.'는 문법적·자연스럽다. 5개 선지 모두 동사원형 VP로 동일 통사 슬롯에 들어가므로 seam 문법만으로 소거되는 오답이 없다(§D 슬롯 조건 충족). 비단어·오탈자 없음.",
+    "V4": "해설 인용문 2건('Joining too many clubs can reduce a large amount of your free time.', 'If you don't exercise some moderation... you can become awfully stressed out')이 지문에 축자적으로 존재. ①을 극성 반전으로 규정한 것은 사실과 일치. 오답 해설 ①③④⑤가 각각 실제 해당 선지 내용과 대응하며 오분석·환각·비단어 없음.",
+    "V5": "선언 정답 ②가 해설·오답 해설(정확히 ①③④⑤ 커버)·keyPoints('taking on more commitments than can manage'를 overextend의 동의어로 명시)와 모순 없이 동기화됨."
+  },
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftNotes": {
+    "C1": "빈칸이 글의 결론적 요지(절제·과잉확장 금지)에 놓여 핵심을 묻는다. 다만 요지가 'Pacing is important', 'exercise some moderation', 'The point is this'로 세 차례 명시 반복되어 추론 가치가 낮아진다.",
+    "C2": "오답 4개가 서로 다른 함정 유형을 겨냥한다: ① 극성 반전, ③ scope shift(의미→성적, exclusively 절대화), ④ 예시 과일반화(과협소 anchor), ⑤ 극단 왜곡(free time 단서 오용). 필러는 없으나 ⑤의 유혹력이 약하다.",
+    "C3": "①(정반대)과 ⑤(비상식적 기준)는 즉시 소거되고 ③도 '성적' 무근거로 빠르게 탈락한다. 실제 판단을 요구하는 경쟁 선지는 ④ 하나뿐이며, ②는 명시 반복된 moderation 요지의 거의 직접적 재진술이라 변별 압력이 낮다.",
+    "C4": "메타 누출·꼬리 소거 없음, 정답은 본문 근거로 필연적. 다만 ②만이 유일하게 온건·절제 톤의 선지여서 시험 요령('중용적 선지 고르기')으로 근접 가능한 약한 tell이 있다.",
+    "C5": "요청 난이도 INTERMEDIATE 대비 실제 체감은 하위 경계~EASY. 지문 자체가 매우 평이한 조언문이고, 빈칸은 명시적으로 3회 신호된 요지의 1단계 패러프레이즈여서 요구 사고 단계·함정 깊이가 라벨에 못 미친다.",
+    "C6": "근거 인용이 정확하고 핵심 함정(①)을 분리 언급하나 다소 장황하며, 최강 경쟁 선지인 ④가 아닌 ①을 대표 함정으로 지목한 점이 아쉽다."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "polarity reversal — 절제 요지를 확장 권고로 정반전",
+      "temptingBecause": "서두 'Participating in extracurricular activities is a very good thing'의 긍정 톤과 표면적으로 공명하며, 'clubs' 등 지문 어휘를 재사용한다.",
+      "decisiveFlaw": "'Joining too many clubs can reduce... free time' 및 'exercise some moderation' 경고와 정면 충돌. 극성이 반대라 즉시 소거된다."
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'don't overextend yourself'의 의미 보존 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 'moderation'·'overextend'를 'more commitments than you can manage'로 적정 수준 추상화.",
+      "decisiveFlaw": "없음. 완성문이 문법적이고 결론 문장의 요지와 정확히 정합한다."
+    },
+    {
+      "label": "③",
+      "intent": "scope shift / half-truth — '의미 있는 활동 선택' 조언을 '성적 향상 활동 전념'으로 치환",
+      "temptingBecause": "'선별적으로 활동하라'는 지문의 축소 지향 방향성과 부분적으로 겹치고, 학업 문맥(school)과 어울려 보인다.",
+      "decisiveFlaw": "지문은 선택 기준을 'most meaningful to you'로 제시할 뿐 성적은 언급조차 없다. 'exclusively'의 절대화도 무근거."
+    },
+    {
+      "label": "④",
+      "intent": "example overgeneralization — 예시(신문 마감)를 결론 층위 조언으로 승격",
+      "temptingBecause": "지문에서 가장 생생하게 서술된 school newspaper 마감 장면과 직접 anchor되어 표면 어휘 겹침이 크다. 실질적으로 유일한 경쟁 선지.",
+      "decisiveFlaw": "신문은 crunch time의 예시일 뿐이며, 마지막 문장은 활동 전반에 대한 일반 권고다. 특정 과업 완수 지시는 결론 슬롯의 담화 기능과 불일치."
+    },
+    {
+      "label": "⑤",
+      "intent": "extreme distortion / condition loss — free time 단서를 'zero free time' 기준으로 왜곡",
+      "temptingBecause": "'free time'과 'tasks you absolutely need to complete' 등 지문 어휘를 재사용해 표면 친숙성이 있다.",
+      "decisiveFlaw": "'자유 시간이 전혀 들지 않는 과업만 우선시'는 지문 어디에도 근거 없는 비상식적 기준이며 논리적으로도 성립하지 않아 빠르게 소거된다."
+    }
+  ],
+  "explanationIssues": [],
+  "issues": [
+    {
+      "code": "C3-WEAK-DISTRACTORS",
+      "severity": "minor",
+      "evidence": "①(극성 정반대)과 ⑤(zero free time 극단 기준)는 국소 단서만으로 즉시 소거되고 ③도 무근거('성적')로 빠르게 탈락해, 실제 판단을 요구하는 선지가 ④ 하나뿐이다.",
+      "recommendation": "①이나 ⑤를 '절제'와 방향은 같되 조건·범위가 미묘하게 어긋나는 half-truth형(예: 'drop every activity that takes up your evenings')으로 교체해 경쟁 밀도를 높일 것."
+    },
+    {
+      "code": "C5-DIFFICULTY-UNDERSHOOT",
+      "severity": "minor",
+      "evidence": "요지가 'Pacing is important', 'exercise some moderation', 'The point is this'로 3회 명시 신호되고 정답이 그 1단계 패러프레이즈여서 INTERMEDIATE 라벨 대비 체감 난이도가 낮다.",
+      "recommendation": "정답 선지의 추상화 수준을 한 단계 올리거나(어휘 겹침 축소), 빈칸을 요지 반복 신호가 덜한 위치로 이동."
+    },
+    {
+      "code": "C4-MODERATE-TONE-TELL",
+      "severity": "minor",
+      "evidence": "②만이 유일하게 온건·절제 톤('avoid ... more than you can manage')의 선지여서 지문을 얕게 읽어도 시험 요령으로 근접 가능하다.",
+      "recommendation": "오답 중 하나에도 온건한 표면 톤을 부여해 톤 단서만으로 정답이 특정되지 않게 할 것."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 무결성·정답 유일성·문법성·해설 사실성·필드 동기화에 결함 없음. 그러나 공예 합계 16(C3=2, C5=2)으로 B 기준(합계 17 이상)에 미달한다. 오답 4개가 유형상 구분되는 함정을 갖추었으나 ①③⑤의 유혹력이 얕아 실질 경쟁은 ④뿐이고, 요지가 지문에 3회 명시 반복되어 INTERMEDIATE 요청 난이도보다 쉽게 풀린다. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false. 출하하려면 변별력·난이도 정합을 위한 선지 재설계가 필요하다."
+}

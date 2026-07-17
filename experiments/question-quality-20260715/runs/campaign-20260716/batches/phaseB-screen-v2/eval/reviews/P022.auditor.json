@@ -1,0 +1,71 @@
+{
+  "pid": "P022",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal): 감정의 '정확한 표현'을 '억제'로 뒤집고 갈등 해결을 갈등 회피로 치환",
+      "temptingBecause": "'conflicts' 키워드가 지문과 겹치고, '갈등을 피하려면 부정적 감정을 참아야 한다'는 상식 스키마에 부합",
+      "decisiveFlaw": "지문은 skilled individuals가 'express emotions, feelings and moods accurately'라고 명시하며, 갈등을 예방(prevent)하는 것이 아니라 건설적으로 해결(constructive conflict resolution)한다고 진술 — suppress는 정반대"
+    },
+    {
+      "label": "②",
+      "intent": "획일화 왜곡(uniformity distortion): 다양성 존중을 어휘 통일 강제로 뒤집음",
+      "temptingBecause": "'emotional vocabulary'가 첫 문장의 'diverse emotion vocabulary'를 그대로 재사용해 표면 어휘 겹침이 큼",
+      "decisiveFlaw": "'diverse emotion vocabulary'와 정면 모순이며 주어 'Appreciation of differences' 자체와도 배치. 'forces every member... exact same'의 절대어가 소거 단서로 노출됨"
+    },
+    {
+      "label": "③",
+      "intent": "정답: source span의 추상화 paraphrase",
+      "temptingBecause": "해당 없음(정답). 'collaborative climate' ≈ 'an arena for open communication', 'turns disagreements into productive team outcomes' ≈ 'constructive conflict resolution and improved group functioning'",
+      "decisiveFlaw": "없음 — 원문 의미를 보존하면서 난이도에 맞게 추상화한 유일 정답"
+    },
+    {
+      "label": "④",
+      "intent": "half-truth/조건 소실(condition loss): '자신+타인 요구 모두 수용'에서 자신 쪽 절반을 삭제하고 타인 우선으로 왜곡",
+      "temptingBecause": "지문 후반부가 타인 관점 취하기(take the perspective of the other group members)를 강조하므로 타인 우선처럼 읽힐 수 있음",
+      "decisiveFlaw": "지문은 'accommodate their own needs as well as the needs of others'로 양쪽 균형을 명시 — 'strictly over'라는 절대어 왜곡이 결정적 결함이자 소거 단서"
+    },
+    {
+      "label": "⑤",
+      "intent": "도메인 전환(scope shift): 집단 맥락 능력을 개인 독립 과업용 능력으로 치환",
+      "temptingBecause": "'skills'가 'skilled in this domain'과 표면적으로 겹침",
+      "decisiveFlaw": "첫 문장이 이 능력을 'particularly relevant in group settings'로 규정 — 'exclusively... independent tasks'는 범위 정면 이탈. 'analytical skills'는 지문에 없는 개념이라 앵커가 약하고 'their'의 선행사도 느슨함"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "KEYPOINT_TERM_DRIFT",
+      "severity": "minor",
+      "evidence": "keyPoints 2번 '자신의 권리와 타인의 권리를 조화시키는' — 지문은 needs(요구)이지 rights(권리)가 아님. 본 해설은 '요구'로 정확히 표기하므로 필드 간 용어 드리프트에 그침"
+    },
+    {
+      "code": "OVERSTATED_CIRCULAR_FRAMING",
+      "severity": "minor",
+      "evidence": "해설의 '후반부에서는... 열린 의사소통과 건설적인 갈등 해결을 이끌어 낸다고 증명하고 있습니다' — 가시 텍스트 후반부는 예시 제시일 뿐이고 해당 인과 결론은 빈칸 처리된 문장 자체의 내용이므로 '증명'은 과장이며 약한 순환 서술"
+    },
+    {
+      "code": "AWKWARD_KOREAN",
+      "severity": "minor",
+      "evidence": "④ 오답 해설의 '요구를 모두 부합(accommodate...)시키는' — '충족시키는'이 자연스러움. 의미 전달에는 지장 없음"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트 통과. 빈칸은 결론 문장 술부 전체로 핵심 논지를 겨냥하며(C1=3) 오답 4개가 극성 반전·획일화·half-truth·도메인 전환으로 서로 다른 함정을 사용한다(C2=3). 그러나 ②'forces every... exact same', ④'strictly over', ⑤'exclusively'의 절대어 패턴으로 3개 선지가 즉시 소거되고 실질 경쟁 선지는 ①뿐이며(C3=2), 정답 ③만 유일하게 긍정 극성·최장 선지라는 메타 단서가 겹쳐 단서 경제성이 약하다(C4=2). INTERMEDIATE 라벨에는 대체로 부합(C5=3), 해설은 정확하나 경미한 과장·용어 드리프트가 있다(C6=3). 공예 합계 16으로 B 기준(17) 미달 — 출하하려면 ②④⑤의 절대어를 제거하고 텍스트 앵커 기반의 더 정교한 왜곡(예: 인과 역전, actor swap)으로 재설계 필요. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

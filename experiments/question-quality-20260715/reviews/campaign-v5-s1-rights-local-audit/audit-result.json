@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "artifactId": "campaign-v5-s1-rights-local-audit-v1",
+  "auditedAt": "2026-07-15T16:08:52+09:00",
+  "status": "LOCAL_RIGHTS_EVIDENCE_AUDITED_EXECUTION_BLOCKED",
+  "verdict": "BLOCKED_NO_DOCUMENTED_SELECTED_ROW_PROVIDER_PROCESSING_RIGHTS",
+  "scope": {
+    "campaign": "S1-v5",
+    "localOnly": true,
+    "sealedSnapshotsPreferred": true,
+    "databaseReadPerformed": false,
+    "databaseCalls": 0,
+    "networkCalls": 0,
+    "modelApiCalls": 0,
+    "apiCandidateCount": 0,
+    "databaseWrites": 0,
+    "passageTextPublished": false,
+    "rowIdentifiersPublished": false,
+    "academyDataPublished": false,
+    "secretsAccessed": false
+  },
+  "aggregates": {
+    "selectedPassages": 12,
+    "assignments": 180,
+    "passagesByQuestionTypeAndProvenance": {
+      "BLANK_INFERENCE|db-global|HANDOUT": 1,
+      "BLANK_INFERENCE|repo-official|EXAM": 5,
+      "GRAMMAR_ERROR|db-global|HANDOUT": 2,
+      "GRAMMAR_ERROR|repo-official|EXAM": 4
+    },
+    "assignmentsByQuestionTypeAndProvenance": {
+      "BLANK_INFERENCE|db-global|HANDOUT": 14,
+      "BLANK_INFERENCE|repo-official|EXAM": 70,
+      "GRAMMAR_ERROR|db-global|HANDOUT": 32,
+      "GRAMMAR_ERROR|repo-official|EXAM": 64
+    },
+    "passagesByProvenance": {
+      "db-global|HANDOUT": 3,
+      "repo-official|EXAM": 9
+    },
+    "assignmentsByProvenance": {
+      "db-global|HANDOUT": 46,
+      "repo-official|EXAM": 134
+    },
+    "selectedRightsRecordAbsent": 12,
+    "selectedCampaignEligiblePassages": 0,
+    "assignmentsBlockedByRightsHold": 180,
+    "campaignEligibleAssignments": 0,
+    "grammarFrameRows": 186,
+    "grammarFrameRightsRecordAbsent": 186,
+    "blankFrameRows": 157,
+    "blankFrameRightsRecordAbsent": 157,
+    "frozenSnapshotCandidates": 4882,
+    "currentRepoCorpusRows": 4537
+  },
+  "provenanceVerdicts": {
+    "db-global|HANDOUT": {
+      "passages": 3,
+      "assignments": 46,
+      "verdict": "BLOCKED_NO_ROW_BOUND_UPLOADER_OR_OWNER_RIGHTS_ATTESTATION"
+    },
+    "repo-official|EXAM": {
+      "passages": 9,
+      "assignments": 134,
+      "verdict": "BLOCKED_OFFICIAL_PROVENANCE_IS_NOT_A_PROVIDER_PROCESSING_LICENSE"
+    }
+  },
+  "schemaEvidence": {
+    "passageFieldCount": 45,
+    "sourceMaterialFieldCount": 30,
+    "selectedSnapshotRightsLikeFields": 0,
+    "passageRightsLikeFields": 0,
+    "sourceMaterialRightsLikeFields": 0,
+    "finding": "Passage and SourceMaterial retain source lineage metadata, but expose no field that records copyright ownership, licence scope, provider-processing permission, or a row-bound rights attestation."
+  },
+  "termsEvidence": {
+    "termsUpdatedAtLabel": "2026년 7월 2일",
+    "memberNoninfringementDutyPresent": true,
+    "companyInputProcessingClausePresent": true,
+    "privacyInputProcessingNoticePresent": true,
+    "namedModelProviderRightsGrantPresent": false,
+    "contentLicenceOrSublicenceGrantPresent": false,
+    "selectedRowRightsBindingPresent": false,
+    "requiredAgreementCheckboxPresent": true,
+    "requiredAgreementApiValidationPresent": true,
+    "durableRequiredAgreementVersionOrTimestampPresent": false,
+    "verdict": "SUPPORTING_GENERIC_SERVICE_CLAUSES_ONLY_NOT_SELECTED_ROW_AUTHORITY"
+  },
+  "uploadFlowEvidence": {
+    "scannedSourceFiles": 157,
+    "sourceProjectionSha256": "9ef98177b2dc15e650531275889335e0dac1ef1c963192f88e2484c00ac1ca3a",
+    "contentRightsAttestationMatches": 0,
+    "verdict": "NO_UPLOAD_TIME_CONTENT_RIGHTS_ATTESTATION_CONTROL_FOUND_IN_SCOPED_LOCAL_FLOW"
+  },
+  "gitHistory": {
+    "repoCorpusRevisions": [
+      {
+        "commit": "3fac48f2e87244045f4bd1db73ad71f885076f28",
+        "rows": 1634,
+        "unionKeysSha256": "bc561dd4af6079a3a5d0f0b9a7567793e05273095670fd07ac61bde015819539",
+        "rightsLikeFields": 0
+      },
+      {
+        "commit": "36b78baff2db453a426553141bbe23a942c168da",
+        "rows": 4546,
+        "unionKeysSha256": "bfd2c93c1ef9974378695e5c7e1ed0fa02dccacbf273be6ddba3f91547b49e74",
+        "rightsLikeFields": 0
+      },
+      {
+        "commit": "530f19ac4952dfd2de8295acb6befdbe4298ce48",
+        "rows": 4537,
+        "unionKeysSha256": "85c42f49ef0e71daaf68cbb2c8c16e52c6eeb63472d04eee5dfdfc7cd0ecc45d",
+        "rightsLikeFields": 0
+      }
+    ],
+    "sourceMaterialModelIntroductionCommit": "a789e8c4584c54eba24841d9881fa56d4c17d3a3",
+    "genericTermsContentClauseIntroductionCommit": "ac592dcf0df603eba00760ea8ac681a0acdc7727",
+    "worktreePaths": [
+      "experiments/question-quality-20260715/corpus/cross-type-blank-source-frame-v2/",
+      "experiments/question-quality-20260715/corpus/cross-type-grammar-source-frame-v2/",
+      "experiments/question-quality-20260715/corpus/v3/",
+      "experiments/question-quality-20260715/corpus/v4-supply/",
+      "experiments/question-quality-20260715/design/campaign-v5-s1/",
+      "prisma/schema.prisma"
+    ],
+    "worktreeStatus": [
+      " M prisma/schema.prisma",
+      "?? experiments/question-quality-20260715/corpus/cross-type-blank-source-frame-v2/",
+      "?? experiments/question-quality-20260715/corpus/cross-type-grammar-source-frame-v2/",
+      "?? experiments/question-quality-20260715/corpus/v3/",
+      "?? experiments/question-quality-20260715/corpus/v4-supply/",
+      "?? experiments/question-quality-20260715/design/campaign-v5-s1/"
+    ],
+    "finding": "The three tracked repo-corpus revisions preserve source/exam metadata but no rights-like field. The S1 and reconciliation evidence is currently a local untracked research worktree, so Git history supplies no separate rights grant for it."
+  },
+  "authorization": {
+    "generationAuthorized": false,
+    "sourceRightsHoldClosed": false,
+    "campaignEligibleAssignments": 0,
+    "requiredAuthority": [
+      "For each repo-official EXAM selection, a locally retained licence or rightsholder permission record that is explicitly bound to the source/corpus row and covers full-text reproduction and transmission to the approved external model-processing chain for this research and question-generation purpose.",
+      "For each db-global HANDOUT selection, a row-bound uploader, academy, owner, or licensor attestation with identity, timestamp, terms/version, source binding, and authority scope covering the same external model processing.",
+      "A deterministic binding from every one of the 12 frozen selections to an unexpired approved rights record; provenance labels and generic service terms alone must not satisfy the gate."
+    ],
+    "separateHoldsNotEvaluatedHere": [
+      "endpoint/provider privacy, retention, and allow-list attestation",
+      "limited credential and provider-side hard spend ceiling",
+      "fresh endpoint price capture",
+      "exact-wire registry and preflight"
+    ]
+  },
+  "evidenceFiles": [
+    {
+      "path": "experiments/question-quality-20260715/design/campaign-v5-s1/private/s1-queue-v5.json",
+      "bytes": 422141,
+      "sha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/campaign-v5-s1/campaign-v5-s1.json",
+      "bytes": 14475,
+      "sha256": "bfe0dff9d5ebfed1eea4f1622d4c7bbecbca2db7172f925a1fc07640d46f8747"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/campaign-v5-s1/build.mts",
+      "bytes": 34401,
+      "sha256": "c3392c7cc8509e069aaf73c611d123ebbec24a024f05cf87ac54407997f6c86f"
+    },
+    {
+      "path": "experiments/question-quality-20260715/corpus/cross-type-grammar-source-frame-v2/source-frame-public.json",
+      "bytes": 159397,
+      "sha256": "95aee407c00ee294d7e6acecd1a2720b355c46df844af1745eabed5908a68304"
+    },
+    {
+      "path": "experiments/question-quality-20260715/corpus/cross-type-grammar-source-frame-v2/reviewer-reconciliation-summary.json",
+      "bytes": 8993,
+      "sha256": "d4dd65eaab8c7da465a3cd9b32ed40f2d87e4a774454832c83d3ac9716b186fe"
+    },
+    {
+      "path": "experiments/question-quality-20260715/corpus/cross-type-blank-source-frame-v2/source-frame-public.json",
+      "bytes": 138209,
+      "sha256": "7a2d73fccbc7322e0e6a3d634f2402f1f99c1c6d3ac6be9360eaabfb78248f79"
+    },
+    {
+      "path": "experiments/question-quality-20260715/corpus/cross-type-blank-source-frame-v2/reviewer-reconciliation-summary.json",
+      "bytes": 4008,
+      "sha256": "404b58f8a992e96853aa3489eb581ee4f4e301aa0f69e4f2bdcb8331140a4e3d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/corpus/v3/private/input-snapshot.json",
+      "bytes": 18115430,
+      "sha256": "53bf493d6392c462824dcddd2ecfdc5dfdc0810a4ab2829db5b9993b1799e92a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/corpus/v3/types-v3.ts",
+      "bytes": 2968,
+      "sha256": "14a22d8f1edfb9681c78f187c2a7fd4bc1018ec85852fb75c257266fc4f86767"
+    },
+    {
+      "path": "experiments/question-quality-20260715/corpus/v3/snapshot-v3.ts",
+      "bytes": 25671,
+      "sha256": "4d3e37ed3a9fd4227801c39dc9670e9a291dc16682924464da94076c120441a9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/corpus/v4-supply/build-inventory-v4.ts",
+      "bytes": 26740,
+      "sha256": "59e1877a7e86b2dfae8d46e0a02d34ec6e9aad04e185e894649f4145c786205c"
+    },
+    {
+      "path": "src/data/exam-passages/passages.json",
+      "bytes": 5260170,
+      "sha256": "4337bc34ba2f98cf9af708cdf27d27219fe7599bf30f03fb5fd4698e84347a6f"
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "bytes": 212011,
+      "sha256": "1c008d23badbb993d1e225e2f1416d1624a1e379d56542d7b27e28d04c649785"
+    },
+    {
+      "path": "src/app/terms/page.tsx",
+      "bytes": 21916,
+      "sha256": "c957c053a412a40a5d7e6d3054359ff2c8d9173493c00c020454f800c7f4472e"
+    },
+    {
+      "path": "src/app/privacy/page.tsx",
+      "bytes": 16929,
+      "sha256": "5abde4771c096140825bab987238dcc10c41ff84fb930c1f566f25023818836d"
+    },
+    {
+      "path": "src/app/auth/onboarding/page.tsx",
+      "bytes": 21342,
+      "sha256": "8dd57fb6919e45795f0a62331e7cc1a9b4ff4cb735b9fb48b4c5eee5d403f0a3"
+    },
+    {
+      "path": "src/app/api/auth/onboarding/route.ts",
+      "bytes": 9050,
+      "sha256": "96e37e538ae915128584a5953f53e08e2a9d63f9ad18b1e8b32f9f1f3ebdfbab"
+    }
+  ]
+}

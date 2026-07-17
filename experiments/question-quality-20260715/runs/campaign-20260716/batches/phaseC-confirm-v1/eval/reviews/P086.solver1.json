@@ -1,0 +1,35 @@
+{
+  "pid": "P086",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong-attractive",
+      "reason": "매력적 오답. 'remaining detached'를 '해결 책임에서의 거리두기'로 오독하면 끌린다. 그러나 지문의 위험 요인은 일관되게 타인의 부정적 정서가 나에게 전염되는 것(spread like a virus, adopting negative attitudes, overcome by the misfortune)이지 '상황을 고쳐줄 책임/부담'이라는 화제는 지문에 등장하지 않는다. 근거 부재로 옹호 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "'Don't damage yourself by adopting negative attitudes', 'be careful not to be overcome by the misfortune', 'remaining detached'의 직접 재진술. 'Still, show them kindness ...; just don't ___'의 양보-제한 구조에서 공감의 한계선(정서 전염 차단)을 긋는 유일한 선지. 문법 결합도 자연스럽다(let + O + 원형 consume)."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'don't avoid engaging' = 교류하라. 바로 앞 절(show kindness, give a sympathetic ear)과 내용 중복이라 세미콜론+just가 만드는 대조·제한 기능이 성립하지 않는다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "오해받거나 비판받는 것에 대한 걱정이라는 화제가 지문에 전혀 없다. 완전 무관."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'don't suppress empathy' = 공감을 표현하라. 앞 절의 반복이며, 빈칸이 요구하는 것은 공감에 대한 제한(detachment 경고)이므로 방향이 반대다."
+    }
+  ],
+  "note": "정서 전염 경계(에픽테토스류 스토아 조언) 지문. 마지막 문장의 양보-제한 구조(Still ... ; just don't ___)가 결정적 단서로, 빈칸에는 공감을 허용하되 그 한계를 긋는 경고가 필요하다. ②만이 지문 전체 논지(virus, don't damage yourself, not overcome, detached)와 정확히 결합한다. ①이 유일하게 표면적 매력이 있는 오답이나 '문제 해결 책임' 화제 자체가 지문에 없어 옹호 불가. 대안 해석(반어적 강화 독법 등)으로 ③·⑤를 정문화하는 시도도 세미콜론+just의 담화 기능상 성립하지 않음. 단일 정답."
+}

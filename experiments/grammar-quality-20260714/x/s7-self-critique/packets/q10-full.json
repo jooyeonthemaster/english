@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-correction-not-source-backed"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):ANS=b  (C):dec=e  (D):dec=d  (E):dec=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 130,
+        "relPos": 0.165,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 356,
+        "relPos": 0.452,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 509,
+        "relPos": 0.646,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 709,
+        "relPos": 0.9,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.9,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has formed",
+        "isError": false,
+        "correction": "has formed",
+        "errorExpression": "has formed",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "whom we haven't spoken to",
+        "isError": true,
+        "correction": "whom we haven't spoken to",
+        "errorExpression": "whom we haven't spoken",
+        "surroundingText": "We call people whom we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "kept up",
+        "isError": false,
+        "correction": "kept up",
+        "errorExpression": "kept up",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "goes",
+        "isError": false,
+        "correction": "goes",
+        "errorExpression": "goes",
+        "surroundingText": "In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "fall",
+        "isError": false,
+        "correction": "fall",
+        "errorExpression": "fall",
+        "surroundingText": "This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place.",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has formed"
+      },
+      {
+        "label": "(B)",
+        "text": "whom we haven't spoken"
+      },
+      {
+        "label": "(C)",
+        "text": "kept up"
+      },
+      {
+        "label": "(D)",
+        "text": "goes"
+      },
+      {
+        "label": "(E)",
+        "text": "fall"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주격 관계대명사 that절 내의 동사 has formed는 선행사인 단수 명사 the distance에 수일치하는 단수형 동사(has)이므로 어법상 맞습니다.",
+      "(C)": "주어인 relationships(관계)는 인위적으로 유지되는 대상이므로 수동태를 구성하는 과거분사 kept up이 어법상 합당합니다.",
+      "(D)": "that절 안에서 세어질 수 없는 추상명사 time이 주어 핵이므로 단수 형태인 goes를 쓴 것은 수일치 원칙에 비추어 올바릅니다.",
+      "(E)": "사역동사인 let의 목적격 보어로 원형부정사가 오는 것은 적절하므로, 목적어인 yourself 다음의 fall은 어법상 올바른 쓰임입니다."
+    },
+    "explanation": "정답인 (B)가 속한 관계사절의 동사 speak는 '누구에게 말을 걸다'라고 할 때 'speak to [someone]'의 형태로 전치사와 결합하여 쓰이는 자동사입니다. 선행사인 people이 관계대명사절에서 speak의 간접적인 목적어로 쓰이려면 반드시 전치사 to가 남아 있어야 하므로, whom we haven't spoken은 성립할 수 없는 구조입니다. 따라서 이 표현은 whom we haven't spoken to 또는 to whom we haven't spoken으로 고쳐 써야 문법적으로 타당합니다.",
+    "keyPoints": [
+      "(B) 관계대명사의 쓰임 — 자동사와 결합하는 전치사의 유무 확인 필요",
+      "(A) 주어와 동사의 수일치 — 주격 관계대명사절 내 동사의 선행사 일치",
+      "(E) 목적격보어의 형태 — 사역동사 let 뒤에서 목적어와 목적격보어의 수동·원형 관계 검토"
+    ],
+    "tags": [
+      "통합수일치",
+      "관계사",
+      "전치사+관계대명사",
+      "목적격보어",
+      "수동태"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that __(A) has formed__ and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't __(C) kept up__ with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time __(D) goes__ by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself __(E) fall__ out of touch in the first place. Consistency always brings better results."
+  }
+}

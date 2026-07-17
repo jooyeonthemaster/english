@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=k  (C):dec=f  (D):dec=e  (E):ANS=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 123,
+        "relPos": 0.158,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 214,
+        "relPos": 0.274,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 285,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 447,
+        "relPos": 0.573,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 484,
+        "relPos": 0.621,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.621,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "shows",
+        "isError": false,
+        "errorExpression": "shows",
+        "surroundingText": "All of a sudden your best friend shows up with your favorite sandwich.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "to help",
+        "isError": false,
+        "errorExpression": "to help",
+        "surroundingText": "He tells you that he knows you are busy and he wants to help you out",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "likely",
+        "isError": false,
+        "errorExpression": "likely",
+        "surroundingText": "In this case, you are very likely to appreciate your friend's help.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "be confused",
+        "isError": false,
+        "errorExpression": "be confused",
+        "surroundingText": "offers it to you, you won't appreciate it. Instead, you would be confused.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "Who",
+        "isError": true,
+        "correction": "Who",
+        "errorExpression": "Where",
+        "surroundingText": "You would likely think \"Who are you, and how do you know what",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "shows"
+      },
+      {
+        "label": "(B)",
+        "text": "to help"
+      },
+      {
+        "label": "(C)",
+        "text": "likely"
+      },
+      {
+        "label": "(D)",
+        "text": "be confused"
+      },
+      {
+        "label": "(E)",
+        "text": "Where"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "단수 주어 'your best friend'에 호응하는 단수 동사이므로 'shows'는 어법상 옳습니다.",
+      "(B)": "동사 'wants'는 목적어로 to부정사를 취하므로 'to help'는 어법상 옳습니다.",
+      "(C)": "be likely to-v 구문에서 보어 역할을 하는 형용사 'likely'는 옳게 사용되었습니다.",
+      "(D)": "주어인 'you'가 당혹감을 느끼는 대상(감정의 수동)이므로 수동태인 'be confused'는 옳습니다."
+    },
+    "explanation": "문장의 직접화법 내부 구조를 해부하면, \"Where are you\"에서 be동사 'are'의 주격 보어 혹은 정체를 묻는 성분이 빠진 채 상대방의 정체를 묻고 뒤의 'how do you know'와 호응해야 합니다. 하지만 완전한 구조를 주도하는 장소 부사 의문사인 Where는 보어가 결손된 이 자리에 결합할 수 없으며, 맥락상 상대의 정체를 묻는 불완전문의 의문대명사 보어가 필요합니다. 따라서 'Where'를 'Who'로 고쳐야 합니다. 동사 are 뒤에 주어가 직접 위치하는 의문문 구조에서 주격보어로 기능하는 명사 성분의 의문대명사가 와야 함을 파악하는 것이 핵심입니다.",
+    "keyPoints": [
+      "(E) 관계사 — 의문대명사와 의문부사의 품사 및 격 판별",
+      "(A) 수일치 — 단수 주어와 동사의 일치 관계 확인",
+      "(D) 능동태 vs 수동태 — 감정 유발 동사의 주어 수동 관계 판단"
+    ],
+    "tags": [
+      "의문대명사",
+      "수일치",
+      "수동태",
+      "to부정사",
+      "대명사 일치"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend __(A) shows__ up with your favorite sandwich. He tells you that he knows you are busy and he wants __(B) to help__ you out by buying you the sandwich. In this case, you are very __(C) likely__ to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would __(D) be confused__. You would likely think \"__(E) Where__ are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

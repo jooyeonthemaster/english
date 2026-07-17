@@ -1,0 +1,76 @@
+{
+  "pid": "P053",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-NONWORD-TERM",
+      "severity": "critical",
+      "evidence": "오답 해설 (D): \"이 자리는 제귀제시 대상인 'Being in social media'라는 동명사구를 지칭하며\" — '제귀제시'는 존재하지 않는 손상 용어(비단어)다. '재귀 지시(대상)' 또는 '재귀대명사가 지시하는 대상'이어야 한다. 학생 노출 해설의 용어 손상으로 V4 실패."
+    },
+    {
+      "code": "V4-IMPRECISE-ANALYSIS",
+      "severity": "minor",
+      "evidence": "정답 해설 (C): \"명사 역할을 하는 동명사 혹은 명사 형태인 'understanding'\" — 'a thorough ___ of' 구조에서 관사와 형용사의 수식을 받는 자리는 동명사가 아니라 명사(파생명사)로 확정된다(동명사는 관사·형용사 수식 불가). '동명사 혹은'이라는 hedging은 오분석 소지가 있는 부정확한 기술."
+    },
+    {
+      "code": "V4-STYLE-TYPO",
+      "severity": "minor",
+      "evidence": "정답 해설 (C): 첫 문장은 한다체(\"고쳐야 한다\"), 이후 합니다체(\"자리입니다\") 혼용. 또한 \"'understanding'로 고쳐야\"는 조사 오류('으로'가 맞음)."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 1,
+    "C4": 3,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 when vs 관계사(관계부사/관계대명사) 구분 — 명사구 뒤에 이어지는 절의 성격 판단",
+      "temptingBecause": "'organizations' 직후에 위치해 선행사를 받는 관계사 자리로 오독할 수 있고, 주어와 동사(is) 사이 삽입절이라 구조 파악 부담이 있다",
+      "decisiveFlaw": "'when they first consider experimenting...'은 시간 부사절을 바르게 이끄는 접속사 용법으로 어법상 옳다 — 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "긴 수식어구가 개입된 주어-동사 수일치 — 'One of + 복수명사' 후 단수 동사 판단",
+      "temptingBecause": "주어 핵과 동사 사이에 'made by organizations when they... social media'가 길게 개입하고, 인접 명사들(mistakes, organizations)이 복수라 are로 착각 유도",
+      "decisiveFlaw": "주어 핵은 단수 'One'이므로 단수 동사 is가 정확하다 — 오답 아님. 다만 'One of + 복수명사 + 단수동사'는 매우 관습적인 포인트라 상위권에게는 즉시 소거된다"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답. 관사 + 형용사 뒤 명사 핵 자리의 품사(파생형태) 판단 — understanding(명사) vs understood(과거분사)",
+      "temptingBecause": "understand의 파생형들이 모두 익숙하고, 동사 형태(understood)가 문맥 의미상 자연스럽게 읽힐 수 있다",
+      "decisiveFlaw": "'with a thorough ___ of'는 관사 a와 형용사 thorough의 수식을 받는 명사 핵이 필수인 자리로 과거분사 understood는 불가하다. understanding으로 교정하면 정확히 원문이 복원된다(최소대립쌍 성립). 단, 'a thorough understood'는 국소 3어 연쇄만 보고도 즉시 표면에서 드러나는 오류라 구조 독해가 전혀 필요 없다 — KILLER 정답 자격 미달"
+    },
+    {
+      "label": "(D)",
+      "intent": "재귀대명사 vs 인칭대명사 — 관용구 'in and of itself'에서 지시 대상과 재귀 용법 판단",
+      "temptingBecause": "'in and of itself'가 낯선 관용 표현이고 지시 대상이 동명사구('Being in social media')라 단수/재귀 판단에 잠깐의 확인이 필요하다",
+      "decisiveFlaw": "전치사의 목적어가 주어(동명사구)와 동일 지시이므로 재귀대명사 itself가 옳다 — 오답 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "상관접속사 either A or B의 병렬 구조와 위치 판단",
+      "temptingBecause": "must 조동사 뒤에 either가 오는 어순이 낯설 수 있고, or가 멀리 떨어져 있어 짝 확인이 필요하다",
+      "decisiveFlaw": "'must either solve... or result in...'으로 동사원형 병렬이 정확히 성립한다 — 오답 아님"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 (D)의 '제귀제시'는 비단어/손상 용어 — V4 실패의 직접 근거",
+    "정답 해설 (C)의 '동명사 혹은 명사' hedging — 해당 자리는 관사·형용사 수식 구조상 명사로 확정해야 정확",
+    "정답 해설 (C) 문체 혼용(한다체/합니다체) 및 조사 오류(\"'understanding'로\" → '으로')",
+    "keyPoints가 5개 밑줄 중 3개(C, B, D)만 다루나 오답 해설이 4개 오답을 모두 커버하므로 동기화 모순은 아님(V5 통과)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 (C) understanding→understood 의도 변형 외에 원지문과 완전 일치하고, 5개 밑줄을 독립 검증한 결과 정답 집합은 정확히 {(C)} 하나다((A) 시간 부사절 접속사, (B) One 단수 수일치, (D) 재귀 관용구, (E) either~or 병렬 모두 옳음). 교정 시 원문이 정확히 복원되는 최소대립쌍도 성립한다. 그러나 V4가 실패한다: 오답 해설 (D)의 '제귀제시'는 학생 노출 해설의 비단어·손상 용어다. 공예 측면에서도 요청 난이도 KILLER와 심각하게 불일치한다 — 'a thorough understood'는 관사+형용사+과거분사라는 표면 비문으로 국소 단서만으로 즉시 드러나, RUBRIC §C의 '구조를 읽어야 하며 즉시 드러나지 않는다' 조건을 위반한다(killerConditionsMet=false, C5=0, C3=1). 디코이 4개는 서로 다른 포인트를 겨냥해 의도 밀도는 양호(C2=3)하나 (B) 'One of' 수일치 등은 관습적이라 변별력이 낮다. 출하하려면 (1) '제귀제시' 등 해설 용어·문체 정비, (2) KILLER 라벨에 맞는 구조 의존적 정답 포인트로 재설계가 필요하다."
+}

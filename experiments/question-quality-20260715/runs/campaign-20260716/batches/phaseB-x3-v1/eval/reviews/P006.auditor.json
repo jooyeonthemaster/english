@@ -1,0 +1,81 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-note",
+      "severity": "minor",
+      "evidence": "완성문 'mentally accommodate the certainty of plan disruptions'에서 accommodate+certainty 결합이 다소 뻣뻣하나 수능 추상 register 내에서 허용 범위. 'when it happens'의 it은 빈칸화 후에도 직전 문장 'a certain percentage of plans will change'가 선행 맥락을 제공하므로 지시 성립."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "scope shift — 계획 변경을 '예측 불가능한 응급 상황'이라는 예외적 사건으로 축소",
+      "temptingBecause": "'prepare backup options'가 변화에 대비하라는 지문 논지(expect that plans will change)와 표면적으로 공명",
+      "decisiveFlaw": "'exclusively ... unpredictable emergencies'가 필연성(inevitability) 프레임과 정면 충돌 — 지문에서 계획 변화는 예외가 아니라 예상되는 일상이며, allowances는 물리적 대비가 아닌 심적 수용"
+    },
+    {
+      "label": "②",
+      "intent": "polarity reversal — 필자가 배격하는 rigidity를 옹호",
+      "temptingBecause": "지문 표현 'keeping my plans', 'stick to'를 그대로 재활용해 표면 어휘 겹침 생성",
+      "decisiveFlaw": "'prioritize flexibility over rigidity'라는 명시적 주제문과 정반대; 'absolute determination'이라는 절대어가 오답임을 추가로 노출"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'make allowances in your mind for this inevitability'의 충실한 추상화 paraphrase",
+      "temptingBecause": "해당 없음(정답). mentally=in your mind, accommodate=make allowances, certainty of plan disruptions=this inevitability로 1:1 대응",
+      "decisiveFlaw": "없음. 빈칸 문장의 조건-결과 논리('그것이 일어나면 불가피한 일 중 하나라고 말할 수 있다')와 유일하게 정합"
+    },
+    {
+      "label": "④",
+      "intent": "polarity reversal(변형) — 지문의 'rigid work schedule' 앵커에 결박된 경직성 옹호",
+      "temptingBecause": "'work duties'가 지문의 work schedule 소재와 직접 겹쳐 국소 단서로 매력적",
+      "decisiveFlaw": "지문은 rigid work schedule 고수보다 아이에게 시간을 내는 유연성을 우선하라는 입장 — 'without compromise'는 필자가 명시적으로 기각한 태도"
+    },
+    {
+      "label": "⑤",
+      "intent": "mechanism swap — 인지적 예상·수용을 정서적 억압으로 치환",
+      "temptingBecause": "지문 도입부의 frustration과 목표어 peaceful을 모두 건드려 주제 어휘 겹침이 가장 큼",
+      "decisiveFlaw": "지문의 기제는 변화를 미리 예상해 자연스럽게 받아들이는 것이지 감정을 억누르는 것이 아님; 'superficial peace'는 지문이 지향하는 진정한 평화와 자기모순적 표지"
+    }
+  ],
+  "explanationIssues": [],
+  "issues": [
+    {
+      "code": "C5-difficulty-mismatch",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER이나 정답 ③은 빈칸 직전 문장('expect that a certain percentage of plans will change') 및 source span의 거의 직역 수준 paraphrase여서 단일 인접 문장 매칭만으로 도달 가능. RUBRIC §D의 '최소 두 문장/두 논리 단서 연결' 요건 미충족.",
+      "recommendation": "정답을 지문 전반의 flexibility 논지와 결말의 인지 전략을 결합해야만 특정되는 더 높은 추상 층위로 재설계하고, 인접 문장과의 표면 어휘 겹침(certainty↔inevitability, mentally↔in your mind)을 줄일 것"
+    },
+    {
+      "code": "C4-polarity-leak",
+      "severity": "major",
+      "evidence": "오답 4개 전부에 절대어·부정 표지가 박혀 있음(① exclusively, ② absolute determination, ④ without compromise, ⑤ any/superficial). ②④는 노골적 rigidity 옹호로 극성 하나로 즉시 소거되고, 유일하게 중립·수용 극성인 ③이 시험 요령만으로 찍힘. RUBRIC §D '극성·절대어 하나로 정답을 찍을 수 없다' 위반.",
+      "recommendation": "오답 중 최소 2개는 유연성 극성을 공유하되 scope/actor/condition에서만 어긋나는 근접 오답으로 교체"
+    },
+    {
+      "code": "C2-trap-overlap",
+      "severity": "minor",
+      "evidence": "②(원래 계획 고수)와 ④(업무 타협 없이 완수)가 모두 동일한 rigidity polarity reversal 함정으로 기능이 중복 — 서로 다른 오개념을 겨냥해야 한다는 C2 기준에서 감점.",
+      "recommendation": "④를 half-truth(예: 유연성을 인정하되 조건을 잘못 붙인 진술)나 condition loss형으로 차별화"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과: 렌더 지문은 의도된 빈칸 외 원지문과 완전 일치(V1), 5개 선지 독립 검증에서 ③만 논리 정합(V2), 완성문 문법 자연(V3), 해설의 근거 문장 귀속과 오답 대응이 정확(V4), 정답 라벨·해설·keyPoints 동기화(V5). 그러나 공예 측면에서 KILLER 요청과의 격차가 크다: 정답이 인접 한 문장의 직역적 paraphrase이고(두 논리 단서 연결 불필요), 오답 전부가 절대어·역극성 표지를 달고 있어 요령 소거가 가능하다(C5=1, C3=C4=2). ②④ 함정 중복(C2=2). C1(핵심 결론 지점 출제)=3, C6(해설 정확·근거/함정 분리)=3. 합계 13, C 최저 1 → B 기준(최저 2, 합계 17) 미달, 등급 C. KILLER 추가 조건(§D) 미충족으로 killerConditionsMet=false."
+}

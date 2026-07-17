@@ -1,0 +1,35 @@
+{
+  "pid": "P068",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'Recent evidence'는 불가산·단수로 취급되므로 3인칭 단수 현재형 'suggests'가 옳다. 삽입구 'living about 400,000 years ago'는 ancestor를 수식하는 분사구로 주어-동사 일치에 영향을 주지 않는다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "의문문 'why did the Neanderthal toolkit show ...?'에서 조동사 did 뒤에는 반드시 동사원형이 오므로 'show'가 옳다. 매력적 오답으로 3인칭 단수 'shows'를 떠올릴 수 있으나 did가 시제·수를 이미 담당한다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'genes would undoubtedly have changed'에서 부사 'undoubtedly'가 조동사 would와 완료 조동사 have 사이에 위치해 동사구 전체를 수식한다. 위치·품사 모두 정상. 형용사 undoubted를 넣으면 틀리겠지만 표기는 부사로 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'mutations for retaining lactose digestion'에서 전치사 for의 목적어로 동명사 'retaining'이 옳다. 'retaining lactose digestion'은 동명사구로 앞의 mutations의 용도를 설명한다. to부정사 유혹(mutations to retain)이 있으나 for+동명사 결합이 정문이다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'The appeal to a genetic change ___ evolution gets ... backwards'에서 문장의 정동사는 'gets'이고, 주어 핵은 'The appeal'이며 'to a genetic change'는 전치사구다. 밑줄 자리는 목적어 'a genetic change'를 능동적으로 후치수식하며 'evolution'을 목적어로 취하는 현재분사 'driving'(진화를 추동하는 유전적 변화)이 되어야 한다. 과거분사 'driven'은 수동으로 목적어(evolution)를 취할 수 없어 'a genetic change driven evolution'이 파싱되지 않는다. 유일한 구제책은 하이픈이 필요한 복합형용사 'genetic-change-driven evolution'(유전적 변화에 의해 추동된 진화) 해석뿐인데, 원문에 하이픈이 없고 의미가 정반대로(gene→culture 인과가 사라짐) 뒤집혀 문맥('cultural horse before the genetic cart', top-down 비판)과 충돌한다. 따라서 어법상 틀린 것은 (E)이며 driving으로 고쳐야 한다."
+    }
+  ],
+  "note": "정동사 gets를 기준으로 밑줄 자리는 후치수식 분사여야 함이 핵심. 능동분사 driving은 목적어 evolution을 취해 'a genetic change'를 수식하며 정문. 과거분사 driven은 목적어를 못 받아 비문이 되고, 하이픈 없는 복합형용사 대안 해석은 하이픈 부재+의미 역전으로 성립이 어려워 옹호 불가. 나머지 (A)-(D)는 모두 명백히 정문. 정답 (E) 단일 확정."
+}

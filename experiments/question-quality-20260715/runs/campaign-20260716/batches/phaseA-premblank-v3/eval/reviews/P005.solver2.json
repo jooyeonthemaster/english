@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'encourages them to be freely expressed' — 문법 결함: 대명사 them의 복수 선행사가 빈칸 시점에 부재. 직전 절의 유일한 후보는 'man's affective life'(단수)이므로 결속 실패이며, 빈칸 뒤에야 등장하는 'affects/desires and drives'를 후방조응으로 받는 해석은 이 위치에서 비정상적. 논리 결함: 결문 'The law obsessively tries to suppress affects'와 정면 모순 — 법이 자유로운 표현을 장려한다는 명제는 cinema(expresses/introduces) vs. law(suppresses)의 지문 전체 대조 구조를 붕괴시킨다. 이중 결격으로 성립 불가."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "'attempts to control and restrain it' — 문법: 주어 the law(3인칭 단수)와 attempts 수일치 정상, attempt to-V 결합 정상, control과 restrain은 to 뒤 원형 병렬로 공통 목적어 it을 취하는 정문. it은 직전 절 목적어 'man's affective life'(단수)에 완벽히 결속. 논리: (a) while-대조 슬롯에서 [cinema expresses ↔ law controls/restrains]가 성립하고, (b) 직후 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'가 이를 부연하며, (c) 결문 'The law obsessively tries to suppress affects, whereas cinema introduces us to our affects'가 동일 대조를 재진술한다. 앞부분 'a regime of commands and prohibitions'와도 정합. 형식·논리 모두 성립하는 유일한 선지."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'punishes every specific human action physically' — 문법상 결합은 정문이나 논리 부적합: 지문은 법의 억압 대상을 affects(정서)로 규정했지 '모든 구체적 인간 행위'가 아니며, every(전칭)와 physically(물리적 처벌)는 지문 어디에도 근거 없는 과잉 일반화. 빈칸의 대조축(정서적 삶에 대한 태도)에서 이탈하고 직후 부연 문장과의 결속도 성립하지 않는다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'destroys all the relationships among humans completely' — 문법은 정문이나 논리 모순: 지문은 법이 'the messiness of human relations'를 다룬다(deals with)고 했고, 법의 기능은 우리가 욕망에 의해 destroyed되지 않도록 보장하는 것. 파괴를 막는 주체를 파괴의 주체로 뒤집는 진술이며 all/completely의 극단 표현도 무근거. 성립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'separates the audience from the subjects perfectly' — 문법은 정문이나 논리 부적합: subjects와 audience는 첫 문장에서 영화와 법이 '공유한다(share the same subjects and audience)'고 명시된 요소로, 이를 법이 분리한다는 진술은 지문 전제와 충돌한다. 빈칸이 요구하는 대조축(정서적 삶에 대한 법의 태도)과 무관한 소재 재활용 미끼이며 후행 문장 어느 것도 지지하지 않는다."
+    }
+  ],
+  "note": "빈칸은 while-대조 구문의 법 쪽 술어 슬롯이며, 직후 문장(욕망·충동으로부터의 보호 보증)과 결문(suppress vs. introduce 대조)이 정답을 이중으로 고정한다. 정답 2는 대명사 결속(it→man's affective life)·병렬·논리 정합이 모두 성립하는 유일한 선지. 오답 1은 them의 결속 실패 + 명제 모순의 이중 결격이라 문법적 완성도가 낮고, 3·4·5는 every/all/perfectly류 극단 표현으로 기각이 비교적 쉬우나 5의 소재 재활용 미끼 설계는 양호. 대안 해석(도치·축약관계절 등)으로 다른 선지를 구제할 여지 없음 — 결함이 대명사 결속 실패 또는 명제적 모순이라 해석 전환으로 복구되지 않는다. 단일 정답 수렴, 건전한 문항."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('one about lacking...', gerund parallel to 'treating'), but logically it is a welfare-side remedy: stricter penalties for inflicting pain presuppose that the problem is inhumane treatment. The sentence frame 'not one about treating animals inhumanely, but instead one about ____' explicitly excludes pain-based framings, and the passage says the rights-view problem is 'more fundamental than this'. Contradiction with the contrastive frame."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Logical inversion: 'the problem is one about advocating their fundamental rights' would make rights advocacy itself the problem, whereas advocacy is the rights camp's own position, not the defect they diagnose. Additionally the NP 'rights to suffer no harm' is semantically defective (intended meaning is a right NOT to suffer harm; as written the infinitive complement 'to suffer' attaches wrongly). Fails on both logic and internal grammar."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Improving living standards (food, space) is precisely the welfare framing the passage attributes to the welfare camp and which the rights camp says 'does not go far enough'. Inserting it makes the rights view collapse back into welfarism, contradicting 'more fundamental than this'. Seam grammatical, logic fails."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "No textual basis: intelligence-based selective permission appears nowhere in the passage. The rights view as presented objects to any human use of animals, not to the criteria by which permission is granted. Seam grammatical, content unsupported and off-thesis."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "Exact grammatical parallel: 'not one about treating animals inhumanely, but instead one about viewing them merely as instruments...' (gerund-for-gerund); pronoun 'them' unambiguously resolves to 'animals'. Logically it restates the immediately preceding thesis 'animals are not the kinds of thing that humans should use in this way at all' — the deontological use-as-means objection. Only option satisfying the contrastive 'not X but Y' frame requiring Y to be more fundamental than inhumane treatment."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. All five options are grammatically insertable gerund phrases (option 2 has an internally defective NP), so discrimination is purely logical: the 'not X but instead Y' frame plus 'more fundamental than this' forces Y = objection to instrumental use per se. Options 1 and 3 are welfare-framing distractors, 4 is textually ungrounded, 2 inverts the argumentative role. Single clean answer: 5."
+}

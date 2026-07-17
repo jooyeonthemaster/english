@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20220324-q23",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2022,
+    "exam": "3월",
+    "origType": "주제",
+    "words": 152
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-answer-point-not-core",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=d  (C):ANS=l  (D):dec=e  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 162,
+        "relPos": 0.183,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 213,
+        "relPos": 0.241,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 302,
+        "relPos": 0.342,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 575,
+        "relPos": 0.65,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 695,
+        "relPos": 0.786,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.786,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The whole of human society operates on knowing the future weather. For example, farmers in India know when the monsoon rains will come next year and so they know when to plant the crops. Farmers in Indonesia know there are two monsoon rains each year, so next year they can have two harvests. This is based on their knowledge of the past, as the monsoons have always come at about the same time each year in living memory. But the need to predict goes deeper than this; it influences every part of our lives. Our houses, roads, railways, airports, offices, and so on are all designed for the local climate. For example, in England all the houses have central heating, as the outside temperature is usually below 20°C, but no air-conditioning, as temperatures rarely go beyond 26°C, while in Australia the opposite is true: most houses have air-conditioning but rarely central heating.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "when to plant",
+        "isError": false,
+        "errorExpression": "when to plant",
+        "surroundingText": "farmers in India know when the monsoon rains will come next year and so they know when to plant the crops.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "there are",
+        "isError": false,
+        "errorExpression": "there are",
+        "surroundingText": "Farmers in Indonesia know there are two monsoon rains each year, so next year they can have two harvests.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "as",
+        "isError": true,
+        "correction": "as",
+        "errorExpression": "because of",
+        "surroundingText": "This is based on their knowledge of the past, as the monsoons have always come at about the same time each year in living memory.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(D)",
+        "expression": "designed",
+        "isError": false,
+        "errorExpression": "designed",
+        "surroundingText": "Our houses, roads, railways, airports, offices, and so on are all designed for the local climate.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "in England all the houses have central heating, as the outside temperature is usually below 20°C",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "when to plant"
+      },
+      {
+        "label": "(B)",
+        "text": "there are"
+      },
+      {
+        "label": "(C)",
+        "text": "because of"
+      },
+      {
+        "label": "(D)",
+        "text": "designed"
+      },
+      {
+        "label": "(E)",
+        "text": "is"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "know의 목적어 역할을 하는 명사구로 「의문사 + to부정사」 형태인 when to plant는 어법상 적절합니다.",
+      "(B)": "there be 동사 구문에서 뒤에 오는 복수 명사 'two monsoon rains'가 실질적인 주어이므로 복수 동사 there are는 수일치에 어긋나지 않고 적절합니다.",
+      "(D)": "문장의 주어 'Our houses, roads, railways, airports, offices, and so on'과 설계하다(design)의 관계가 수동이므로, 수동태 'are all designed'로 쓴 과거분사형은 어법상 옳습니다.",
+      "(E)": "as절 속의 단수 주어 'the outside temperature'에 수치되어 단수 동사인 is를 쓴 것은 수일치 원칙에 맞습니다."
+    },
+    "explanation": "(C) \"because of\"는 어법상 틀린 표현이며 \"as\"로 고쳐야 한다. as 뒤에는 'the monsoons'라는 주어와 'have always come'이라는 동사를 갖춘 완전한 절이 이어지고 있습니다. 따라서 접속사 역할을 하는 표현이 필요하며, ‘~ 때문에’라는 뜻의 부사절을 이끄는 접속사 as는 적절합니다. 하지만 전치사구인 because of는 동사가 포함된 절을 이끌고 올 수 없으므로, because of를 접속사 as로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(C) 전치사 vs 접속사 — 뒤에 절(S+V)이 이어지는지 명사(구)가 이어지는지 확인하여 판정",
+      "(B) 수일치 — 유도부사 there 구문에서 뒤에 위치한 진짜 주어의 단·복수 여부 파정",
+      "(D) 능동태 vs 수동태 — 주어와 동사의 관계가 능동인지 수동인지 목적어 유무와 의미로 판정"
+    ],
+    "tags": [
+      "수능 어법",
+      "전치사 접속사",
+      "수일치",
+      "수동태"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The whole of human society operates on knowing the future weather. For example, farmers in India know when the monsoon rains will come next year and so they know __(A) when to plant__ the crops. Farmers in Indonesia know __(B) there are__ two monsoon rains each year, so next year they can have two harvests. This is based on their knowledge of the past, __(C) because of__ the monsoons have always come at about the same time each year in living memory. But the need to predict goes deeper than this; it influences every part of our lives. Our houses, roads, railways, airports, offices, and so on are all __(D) designed__ for the local climate. For example, in England all the houses have central heating, as the outside temperature __(E) is__ usually below 20°C, but no air-conditioning, as temperatures rarely go beyond 26°C, while in Australia the opposite is true: most houses have air-conditioning but rarely central heating."
+  }
+}

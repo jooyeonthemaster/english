@@ -1,0 +1,35 @@
+{
+  "pid": "P034",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "seam: 'unless it is derived from a single scientist's exceptional genius' — 문법 결합은 정상. 논리: '단일 과학자의 천재성에서 나와야 지식이다'는 지문이 첫 문장부터 소개하고 곧바로 기각하는 개인주의적(individualist) 수사 그 자체다. 빈칸 뒤 'A scientific truth has little standing until it becomes a collective product'와 정면 충돌. 개인주의 수사를 아직 머리에 담고 있는 수험생을 노린 극성 반전 오답이며, 실전에서 끌림은 거의 없었다."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "seam: 'unless it is tested under flawlessly controlled laboratory structures' — 문법 결합 정상. 논리: 실험실은 'only one stage in its construction'이라고 명시적으로 격하되며, 지문의 핵심은 실험실 내부 통제가 아니라 실험실 밖의 집단적 승인이다. 'flawlessly controlled'라는 과장 표현도 지문 어디에도 근거가 없다. '과학=실험실 통제'라는 배경 상식에 기대는 수험생용 미끼이나, 마지막 두 문장을 읽으면 즉시 배제된다."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "seam: 'unless it is immediately broadcasted to the public for social action' — 문법 결합 정상(broadcasted는 broadcast의 허용 과거분사형). 논리: 가장 매력적인 오답. 'basis for action in public contexts'라는 구절이 눈에 남아 '공적 행동을 위해 공표되어야 한다'로 오독하도록 설계됐고, 실전 스캔 단계에서 실제로 잠깐 끌렸다. 그러나 바로 앞 문장이 '전문가 검토 없이 기자회견에서 발표하면 publicity seeker로 비난받는다'고 하므로 '즉시 대중에 공표'는 지문이 명시적으로 규탄하는 행위다. 빈칸 문장과 직전 문장의 인접성이 유혹을 확실히 차단한다."
+    },
+    {
+      "label": "④",
+      "verdict": "정답",
+      "reason": "seam: 'unless it gains formal validation within a collective peer network' — 3인칭 단수 gains, 문법 결합 정상. 논리: 직전 문장의 'expert reviewers to examine his or her claims'(동료 검토), 직후 문장의 'becomes a collective product'(집단적 산물), 'only one stage in its construction'(구성의 한 단계)과 삼중으로 정합. '지식은 집단적 동료 네트워크 안에서 공식 승인을 얻어야 지식이다'가 빈칸 전후 논지를 정확히 관통한다. 유일하게 옹호 가능한 답."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "seam: 'unless it demonstrates its practical utility in resolving public issues' — 문법 결합 정상. 논리: 'public contexts'에서 '공적 문제 해결의 실용성'으로 비약하도록 유도하는 미끼. 그러나 지문은 지식의 실용적 효용을 단 한 번도 논하지 않는다. 논지는 '진리의 지위(standing)는 집단적 승인에서 온다'는 인식론적 주장이지 실용주의적 주장이 아니다. ③과 같은 계열('public' 어휘 재활용)의 오답이지만 끌림은 ③보다 약했다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 빈칸 문장의 'The norms of scientific communication presuppose that nature does not speak unambiguously'가 앞부분의 개인주의 수사('they speak for themselves')를 뒤집는 전환점임을 잡으면, 빈칸에는 '집단적 검증' 계열만 들어갈 수 있다. 매력적 오답은 ③(직전 문장의 press conference 소재를 긍정 방향으로 뒤집어 재활용)이며 ⑤도 'public' 어휘 반복으로 2차 유혹을 시도하나 둘 다 지문 명시 근거로 기각된다. 참고: 이 지문은 실제 기출(2015학년도 수능 빈칸, 원문 'has been authorized by disciplinary specialists')과 동일한 원전 텍스트로 보이며, ④는 원문 표현의 패러프레이즈다. 복수정답 소지 없음."
+}

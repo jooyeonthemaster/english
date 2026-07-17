@@ -1,0 +1,77 @@
+{
+  "pid": "P059",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V5-KEYPOINTS-CONTRADICTS-EXPLANATION",
+      "severity": "critical",
+      "evidence": "keyPoints 3번 항목이 \"(C) 준동사 — 명사를 수식하는 형용사적 용법의 to부정사 파악\"이라고 기술하나, 실제 문장 'It is often more efficient to develop the technique ... of selective note-taking.'에서 to develop은 형식주어 It에 대응하는 진주어(명사적 용법, 외치 구문)다. 문항 자체의 오답 해설 (C)도 \"형식상의 주어 'It'에 대응하는 진주어 역할\"이라고 정확히 분석하고 있어 keyPoints와 해설이 직접 모순되며, keyPoints 쪽이 구조 오분석이다."
+    },
+    {
+      "code": "V5-KEYPOINTS-PARTIAL-COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E)·(A)·(C) 3개 밑줄만 다루고 (B)·(D)는 누락. 하이라이트 목적이라면 허용 가능하나 5개 밑줄 point 매핑(markedExpressions pointCode: A/B 모두 'a', C/D 모두 'k')과의 대응이 성기다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 1,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "조동사 뒤 동사원형 + 'is easier ... and can be' 병렬 구조 판정",
+      "temptingBecause": "앞의 정형동사 is와의 병렬을 의식해 be 자리에 굴절형(is)을 기대하거나, 비교급 병렬(easier / more thorough / less unnerving) 속에서 동사 형태를 혼동할 수 있다",
+      "decisiveFlaw": "can 뒤 원형 be는 논쟁의 여지 없이 정문이므로 오답 선지로서 즉시 소거된다"
+    },
+    {
+      "label": "(B)",
+      "intent": "문두 동명사 주어(using a recorder + 단수동사 has) 판정",
+      "temptingBecause": "But 뒤 문두 -ing형을 분사구문으로 오독하면 주어 부재로 보일 수 있다",
+      "decisiveFlaw": "동명사구 주어 + has 수일치까지 정확하여 정문이 확실하다"
+    },
+    {
+      "label": "(C)",
+      "intent": "형식주어 It — 진주어 to부정사 외치 구문 판정",
+      "temptingBecause": "삽입 괄호구(using a recorder as backup if you wish)와 후행 of selective note-taking이 구조 파악을 지연시키고, It을 지시대명사로 오독하면 to develop의 기능이 불투명해진다",
+      "decisiveFlaw": "'It is + 형용사 + to-V' 전형 패턴으로 정문. 단, keyPoints는 이를 '명사 수식 형용사적 용법'으로 오분석(치명 이슈 참조)"
+    },
+    {
+      "label": "(D)",
+      "intent": "involve의 동명사 목적어 선택 판정",
+      "temptingBecause": "to write를 기대하는 부정사/동명사 목적어 선택 혼동을 노린다",
+      "decisiveFlaw": "involve + V-ing는 확립된 정문 패턴이라 소거가 쉽다"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답. 단수 대명사 주어 It과 동사의 수일치 (makes → make 최소대립쌍, 교정 시 원문 복원)",
+      "temptingBecause": "It이 앞 절 내용을 받는 추상 지시라 지시 대상 파악을 요구한다는 설계 의도",
+      "decisiveFlaw": "그러나 It은 지시 대상과 무관하게 항상 단수이고 오류 동사가 주어 바로 옆에 인접해 'It make'가 즉시 비문으로 드러난다. 구조 독해 없이 표면 스캔만으로 정답이 확정되어 변별력이 붕괴한다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "KEYPOINTS-MISANALYSIS-C",
+      "severity": "critical",
+      "evidence": "keyPoints의 \"(C) 명사를 수식하는 형용사적 용법의 to부정사\"는 실제 구조(외치 진주어, 명사적 용법)와 불일치하며 오답 해설 (C)와도 모순된다."
+    },
+    {
+      "code": "TERM-LOOSE-A",
+      "severity": "minor",
+      "evidence": "오답 해설 (A)에서 '원형 동사 be가 ... 쓰인 정형 동사구'라는 표현은 원형(비정형) 요소를 정형 동사구로 묶어 부르는 다소 느슨한 용어 사용이나, can be 전체를 정형 VP로 본다면 허용 범위이며 사실 왜곡은 아니다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1~V4는 모두 통과: 렌더 지문은 원지문과 단일 의도 변형(makes→make)만 다르고, 정답 (E)는 유일하며(각 밑줄 독립 검증 완료), 교정 시 정확히 원문이 복원되고, 해설 본문·오답 해설의 구조 분석은 전부 사실과 일치한다. 그러나 keyPoints의 (C) 구조 오분석이 해설과 직접 모순되어 V5 실패 → 등급 F (치명은 공예로 상쇄 불가). 공예 측면에서도 'It make'는 대명사 주어와 오류 동사가 인접한 단순 수일치라 표면 스캔으로 즉시 노출되어 C3=1, 요청 난이도 INTERMEDIATE 대비 현저히 쉬워 C5=1. 수정 방향: (1) keyPoints (C)를 '형식주어-진주어 구문'으로 교정, (2) 정답 오류를 주어-동사 사이에 수식어가 개재된 자리(예: 'the habit of editing out ... proceeds' 류) 또는 다른 문법 포인트로 옮겨 난이도를 라벨에 정합시킬 것. killerConditionsMet=false (요청 난이도가 KILLER 아님; 설령 KILLER였어도 '인접 단순 수일치 금지' 조건 위반)."
+}

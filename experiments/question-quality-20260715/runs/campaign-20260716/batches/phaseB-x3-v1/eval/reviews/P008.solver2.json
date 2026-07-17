@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합(don't + 동사원형)은 정상이나 논리 불성립. 지문은 학업 성적이 아니라 과외활동 과다를 다루며, 완벽주의('as perfect as you want it to be')는 오히려 시간 잠식의 원인으로 제시된다. '학업 완벽을 추구하지 않으면 스트레스를 받는다'는 조건문은 지문 논지와 역방향."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합 정상. '방과후 활동에 합리적 경계를 설정하지 않으면 → 반드시 완수해야 할 과제에 극심한 스트레스'라는 조건문이 'draw the line', 'Pacing is important', 'don't overextend yourself'와 삼중 정합. 조건문의 대우가 결론 문장(가장 의미 있는 활동에만 참여하라)과 정확히 일치하는 유일한 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 정상. 그러나 신문부 마감은 crunch time의 '예시'일 뿐이며, 지문에 신문부를 타 활동보다 우선하라는 규범적 주장이 없다. 예시를 일반 원리로 승격시키는 오류로 과도하게 협소하여 빈칸의 일반 명제 자리에 부적합."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 정상. '다양한 클럽으로 사회적 네트워크를 확장하지 않으면 스트레스'는 '너무 많은 클럽 가입이 자유 시간을 잠식한다'는 지문 핵심 논지와 정면 모순. 역방향 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 정상. '전면 탈퇴하지 않으면 스트레스'는 전면 탈퇴 권고가 되어 첫 문장('very good thing')과 결론('get involved in the activities that are most meaningful to you')에 모두 모순. 극단화 미끼."
+    }
+  ],
+  "note": "다섯 선지 모두 don't 뒤 동사원형 VP로 문법 seam은 무결하므로 판별은 순수 논리로 결정된다. 대안 해석(축약 관계절·분사구문·도치 등)이 개입할 여지가 없는 빈칸 유형이며, 조건문 'If you don't X, you become stressed'의 대우(X하면 스트레스 회피)가 지문 결론과 정합하는 선지는 ②뿐. 단일 정답으로 수렴, 복수 옹호 가능성 없음."
+}

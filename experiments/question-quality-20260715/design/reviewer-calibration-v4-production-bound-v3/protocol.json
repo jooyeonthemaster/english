@@ -1,0 +1,526 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-protocol-3",
+  "artifactId": "reviewer-calibration-v4-production-bound-v3",
+  "status": "DESIGN_ONLY_UNISSUED_EXECUTION_BLOCKED_PENDING_FRESH_AUDIT",
+  "authorEvidenceDisposition": "AUTHOR_EVIDENCE_COMPLETE_FRESH_INDEPENDENT_AUDIT_REQUIRED_NO_PASS_CLAIM",
+  "purpose": "Immutable public-only successor contract that materially closes predecessor blockers B1-B8 while containing no actor, item, answer, gold, access event, certificate, activation candidate, audit report, or activation grant.",
+  "permanentDesignBoundary": {
+    "thisArtifactTransitions": false,
+    "issued": false,
+    "executionAuthorized": false,
+    "evaluatorAuthorityGranted": false,
+    "scoringAuthorityGranted": false,
+    "resultAccessAuthorized": false,
+    "generationAuthorized": false,
+    "reviewerCertificatesIssued": 0,
+    "authorizedReviewers": 0,
+    "authorizedAdjudicators": 0,
+    "activationCandidates": 0,
+    "activationAuditReports": 0,
+    "activationGrants": 0,
+    "freshIndependentAuditRequired": true,
+    "separateImmutableExecutionPackageRequired": true
+  },
+  "publicOnlyBoundary": {
+    "allowed": "EXACT_PUBLIC_UPSTREAM_BYTES_AND_SAFE_PUBLIC_MANIFEST_ROWS_ONLY",
+    "forbidden": [
+      "PRIVATE_PATH_COMPONENT",
+      "ITEM_ANSWER_GOLD_OR_REVEAL_PAYLOAD",
+      "ACTOR_IDENTITY",
+      "ENVIRONMENT_OR_SECRET",
+      "DATABASE",
+      "NETWORK_MODEL_OR_API",
+      "BUDGET_OR_OPERATIONAL_LEDGER",
+      "QUESTION_GENERATION"
+    ],
+    "activity": {
+      "privateReads": 0,
+      "itemAnswerGoldRevealReadsOrWrites": 0,
+      "actorReadsOrWrites": 0,
+      "envReads": 0,
+      "databaseCalls": 0,
+      "networkCalls": 0,
+      "modelCalls": 0,
+      "apiCandidatesConsumed": 0,
+      "ledgerReadsOrWrites": 0,
+      "questionGeneration": 0
+    }
+  },
+  "upstreams": [
+    {
+      "id": "predecessor-v2-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v4-production-bound-v2/MANIFEST.sha256",
+      "sha256": "10801e127bb612e2bb6909acf857ff6fa2ef0cac667a0fd7e4e39f774e656413",
+      "use": "IMMUTABLE_PREDECESSOR_PROVENANCE_ONLY",
+      "grantsAuthority": false
+    },
+    {
+      "id": "predecessor-v2-independent-fail-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v4-production-bound-v2-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "f78ba69b164f737b6531c2e7415bd26cf147afc6012265a13a8434882b891bc5",
+      "auditJsonSha256": "48550f4b9cffc72fd2e30e5ede45a6f70fa1f794f087e7fd2bc4453e8102feba",
+      "requiredVerdict": "FAIL_BLOCKERS",
+      "requiredBlockerCodes": [
+        "B1_TRUSTED_GOLD_SELF_AUDIT_NOT_EXCLUDED",
+        "B2_ACTIVATION_AUDITOR_SELF_REVIEW_NOT_EXCLUDED",
+        "B3_EXACT_TYPE_COVERAGE_NOT_BOUND_TO_CERTIFICATE_OR_ACTIVATION",
+        "B4_ACTIVATION_AUDIT_DEPENDENCY_IS_CIRCULAR",
+        "B5_SLOT_MATERIALIZATION_CANNOT_BIND_REQUIRED_HIDDEN_AND_TYPE_EVIDENCE",
+        "B6_FRESH_DISJOINT_NO_REPLAY_SEQUENCE_HAS_NO_MATERIAL_PROOF",
+        "B7_ACCESS_AUTHORIZATION_DOES_NOT_BIND_RESOURCE_CLASS_OR_CURRENT_STATE",
+        "B8_PREOPEN_AND_SINGLE_USE_CAPABILITY_CLAIMS_LACK_CHAIN_EVIDENCE"
+      ],
+      "use": "NEGATIVE_REQUIREMENTS_AND_FAILURE_PROVENANCE_ONLY",
+      "grantsAuthority": false
+    },
+    {
+      "id": "evaluation-authority-v2-public-manifest",
+      "path": "experiments/question-quality-20260715/design/evaluation-authority-v2/public-manifest.json",
+      "sha256": "c62fb02e27b0342ce31fe8fc38ec32034738bfe2ddadec9fe2861a1ae8e614bd",
+      "use": "FAIL_CLOSED_SEQUENCE_ACCESS_AND_ZERO_AUTHORITY_SEMANTICS",
+      "grantsAuthority": false
+    },
+    {
+      "id": "evaluation-authority-v2-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/evaluation-authority-v2/MANIFEST.sha256",
+      "sha256": "ac4ed7ee8bd5eb21bd45837f2a7396219142e6ccd3a1fe933916238e447f0180",
+      "use": "PUBLIC_SUBJECT_CLOSURE",
+      "grantsAuthority": false
+    },
+    {
+      "id": "evaluation-authority-v2-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/evaluation-authority-v2-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "0cdf9d676bdec820e728a3b3890237b3b80d201caa2c20afc7af46ed6482adf5",
+      "requiredVerdict": "PASS_NO_BLOCKERS",
+      "use": "ACCEPTED_DESIGN_AUDIT_ONLY",
+      "grantsAuthority": false
+    },
+    {
+      "id": "production-type-binding-v4-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4/MANIFEST.sha256",
+      "sha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04",
+      "snapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+      "bindingJsonSha256": "47df395f54179538d27a714ac0df4dc9e82f04b767bc82f45b8473c38d04cc3d",
+      "use": "SOLE_CURRENT_TYPE_FAMILY_ROTATION_AUTHORITY",
+      "grantsAuthority": false
+    },
+    {
+      "id": "production-type-binding-v4-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d",
+      "requiredVerdict": "PASS_NO_BLOCKERS",
+      "use": "ACCEPTED_CURRENT_BINDING_AUDIT",
+      "grantsAuthority": false
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-protocol",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+      "sha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+      "use": "METHODOLOGY_ONLY",
+      "nonAuthoritativeFor": ["TYPE_IDS", "FAMILIES", "ROTATION", "EXECUTION", "CERTIFICATE", "AUTHORITY", "ACTORS", "ITEMS", "GOLD"]
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/MANIFEST.sha256",
+      "sha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64",
+      "use": "PUBLIC_METHODOLOGY_CLOSURE_ONLY",
+      "grantsAuthority": false
+    }
+  ],
+  "predecessorDisposition": {
+    "v2Accepted": false,
+    "v2AuditVerdict": "FAIL_BLOCKERS",
+    "v2MayExecute": false,
+    "v2MayIssueCertificates": false,
+    "v2MayProduceActivationCandidateOrGrant": false,
+    "v3CurrentlyAcceptedAsAuditedSuccessor": false,
+    "freshIndependentAuditRequiredBeforeAnyV3Acceptance": true,
+    "currentV3AuthorityBeforeFreshAudit": "NONE"
+  },
+  "blockerClosureMap": {
+    "B1": "EXPLICIT_PACKET_ITEM_GOLD_AUTHOR_ROLES_PLUS_AUDITOR_ROLE_AND_ARTIFACT_AUTHORSHIP_EXCLUSION_PROOFS",
+    "B2": "ACTIVATION_AUDITOR_INCOMPATIBLE_WITH_EVERY_AUTHOR_REVIEWER_AUDITOR_ADJUDICATOR_CUSTODIAN_RESULT_VIEWER_AND_OWN_ARTIFACTS",
+    "B3": "CERTIFICATES_AND_CANDIDATE_BIND_SCOPE_ENUM_EXACT_CANONICAL_IDS_COUNTS_AND_PER_TYPE_PASSED_COVERAGE_EVENT_HASHES",
+    "B4": "AUTHORITY_FALSE_CANDIDATE_THEN_EXACT_CANDIDATE_AUDIT_THEN_FINAL_GRANT_BOUND_TO_PASS_AUDIT",
+    "B5": "SLOT_SCHEMA_REQUIRES_ALL_HIDDEN_COMMITMENTS_RIGHTS_PII_EXACT_TYPE_FAMILY_ROTATION_EPOCH_AND_PROOF",
+    "B6": "MATERIAL_FINGERPRINT_RESERVATION_TOMBSTONE_DISJOINTNESS_AND_NO_REPLAY_PROOF_EVENTS",
+    "B7": "AUTHORIZATION_AND_DENIAL_BIND_CURRENT_STATE_RESOURCE_CLASS_POLICY_ALLOWLIST_DENY_DIGESTS_AND_PROOF",
+    "B8": "APPEND_ONLY_AUTHORIZATION_OPEN_CONSUME_CLOSE_CHAIN_PLUS_UNIQUE_SINGLE_USE_CAPABILITY_REGISTRY"
+  },
+  "typeUniverse": {
+    "uiTypeCount": 25,
+    "uiTypeIdsInOrder": [
+      "BLANK_INFERENCE", "GRAMMAR_ERROR", "GRAMMAR_CHOICE_COMBO", "VOCAB_CHOICE", "SENTENCE_ORDER",
+      "SENTENCE_INSERT", "TOPIC", "MAIN_IDEA", "TITLE", "IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC", "IRRELEVANT", "CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE", "SUMMARY_WRITING", "WORD_ORDER", "TOPIC_SENTENCE_WRITING", "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING", "SYNONYM", "ANTONYM"
+    ],
+    "focusTypeIds": ["BLANK_INFERENCE", "GRAMMAR_ERROR"],
+    "nonfocusTypeCount": 23,
+    "nonfocusTypeIds": [
+      "GRAMMAR_CHOICE_COMBO", "VOCAB_CHOICE", "SENTENCE_ORDER", "SENTENCE_INSERT", "TOPIC", "MAIN_IDEA", "TITLE",
+      "IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH", "SUMMARY_COMPLETE_MC", "IRRELEVANT", "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM", "FILL_BLANK_KEY", "SUMMARY_COMPLETE", "SUMMARY_WRITING", "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING", "GRAMMAR_CORRECTION", "CONTEXT_MEANING", "SYNONYM", "ANTONYM"
+    ],
+    "families": [
+      { "familyId": "NF-F1-GLOBAL_MEANING_SELECTION", "rotationOrder": ["TOPIC", "MAIN_IDEA", "TITLE"] },
+      { "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "rotationOrder": ["IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH"] },
+      { "familyId": "NF-F3-DISCOURSE_STRUCTURE", "rotationOrder": ["SENTENCE_ORDER", "SENTENCE_INSERT", "IRRELEVANT"] },
+      { "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "rotationOrder": ["GRAMMAR_CHOICE_COMBO", "GRAMMAR_CORRECTION"] },
+      { "familyId": "NF-F5-LEXICAL_SEMANTICS", "rotationOrder": ["VOCAB_CHOICE", "CONTEXT_MEANING", "SYNONYM", "ANTONYM"] },
+      { "familyId": "NF-F6-SUMMARY_AND_COMPRESSION", "rotationOrder": ["SUMMARY_COMPLETE_MC", "SUMMARY_COMPLETE", "SUMMARY_WRITING"] },
+      { "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER", "rotationOrder": ["CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "WORD_ORDER"] },
+      { "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION", "rotationOrder": ["FILL_BLANK_KEY", "TOPIC_SENTENCE_WRITING"] }
+    ],
+    "rotation": {
+      "epochIsOneBased": true,
+      "mainIndexFormula": "(epoch - 1) mod familySize",
+      "holdoutIndexFormula": "(epoch - 1 + ceil(familySize / 2)) mod familySize",
+      "bindingV4CanonicalDigest": "433d72598f123a19950b57e4684d0ba004031d3beb0860fc5d5d226ddcf8022b",
+      "contactIsCertification": false,
+      "pilotContactCountsAsCoverage": false,
+      "epoch1MainHoldoutDistinctNonfocusContacts": 16,
+      "epoch1All25ClaimAllowed": false,
+      "all25RequiresExactPassedCoverageEvents": 25,
+      "failureOrRejectionNeverAdvancesOrSubstitutes": true
+    }
+  },
+  "roles": {
+    "roleEnum": [
+      "PACKET_AUTHOR", "ITEM_AUTHOR", "GOLD_AUTHOR", "TAXONOMY_PILOT_RATER", "MAIN_CERTIFICATION_RATER",
+      "ACTIVATION_HOLDOUT_RATER", "CERTIFICATION_REVIEWER", "TRUSTED_GOLD_AUDITOR", "CALIBRATION_ADJUDICATOR",
+      "S1_REVIEWER", "S1_ADJUDICATOR", "S1_RESULT_CUSTODIAN", "S1_RESULT_VIEWER",
+      "ACTIVATION_CANDIDATE_AUTHOR", "INDEPENDENT_ACTIVATION_AUDITOR", "ACTIVATION_GRANT_AUTHOR"
+    ],
+    "requiredForActivationCandidate": {
+      "distinctCertificationReviewers": 2,
+      "freshAdjudicators": 1,
+      "trustedGoldAuditors": 1
+    },
+    "requiredAfterCandidate": {
+      "independentActivationAuditors": 1,
+      "activationGrantAuthors": 1
+    },
+    "trustedGoldAuditorIncompatibleWith": [
+      "PACKET_AUTHOR", "ITEM_AUTHOR", "GOLD_AUTHOR", "TAXONOMY_PILOT_RATER", "MAIN_CERTIFICATION_RATER",
+      "ACTIVATION_HOLDOUT_RATER", "CERTIFICATION_REVIEWER", "CALIBRATION_ADJUDICATOR", "S1_REVIEWER",
+      "S1_ADJUDICATOR", "S1_RESULT_CUSTODIAN", "S1_RESULT_VIEWER", "ACTIVATION_CANDIDATE_AUTHOR",
+      "INDEPENDENT_ACTIVATION_AUDITOR", "ACTIVATION_GRANT_AUTHOR"
+    ],
+    "activationAuditorIncompatibleWith": [
+      "PACKET_AUTHOR", "ITEM_AUTHOR", "GOLD_AUTHOR", "TAXONOMY_PILOT_RATER", "MAIN_CERTIFICATION_RATER",
+      "ACTIVATION_HOLDOUT_RATER", "CERTIFICATION_REVIEWER", "TRUSTED_GOLD_AUDITOR", "CALIBRATION_ADJUDICATOR",
+      "S1_REVIEWER", "S1_ADJUDICATOR", "S1_RESULT_CUSTODIAN", "S1_RESULT_VIEWER",
+      "ACTIVATION_CANDIDATE_AUTHOR", "ACTIVATION_GRANT_AUTHOR"
+    ],
+    "freshAdjudicatorIncompatibleWith": [
+      "PACKET_AUTHOR", "ITEM_AUTHOR", "GOLD_AUTHOR", "CERTIFICATION_REVIEWER", "TRUSTED_GOLD_AUDITOR",
+      "S1_RESULT_CUSTODIAN", "S1_RESULT_VIEWER", "INDEPENDENT_ACTIVATION_AUDITOR"
+    ],
+    "artifactAuthorshipExclusionRequired": {
+      "trustedGoldAudit": ["ITEM_AUTHOR", "GOLD_AUTHOR", "PACKET_AUTHOR"],
+      "activationCandidateAudit": [
+        "PACKET_AUTHOR", "ITEM_AUTHOR", "GOLD_AUTHOR", "CERTIFICATION_REVIEWER", "TRUSTED_GOLD_AUDITOR",
+        "CALIBRATION_ADJUDICATOR", "S1_RESULT_CUSTODIAN", "S1_RESULT_VIEWER", "ACTIVATION_CANDIDATE_AUTHOR",
+        "ACTIVATION_GRANT_AUTHOR"
+      ]
+    },
+    "sameActorAcrossAnyIncompatiblePairAllowed": false,
+    "currentActorAssignments": 0
+  },
+  "calibrationSequence": {
+    "exactOrder": [
+      { "phase": "TAXONOMY_PILOT", "freshItems": 12, "blocks": { "GRAMMAR": 4, "BLANK": 4, "NONFOCUS": 4 }, "coverageCredit": false },
+      { "phase": "MAIN_CERTIFICATION", "freshItems": 24, "blocks": { "GRAMMAR": 8, "BLANK": 8, "NONFOCUS": 8 }, "coverageCredit": true },
+      { "phase": "INDEPENDENT_TRUSTED_GOLD_AUDIT", "freshItems": 0, "independent": true, "authorityGranted": false },
+      { "phase": "ACTIVATION_HOLDOUT", "freshItems": 24, "blocks": { "GRAMMAR": 8, "BLANK": 8, "NONFOCUS": 8 }, "coverageCredit": true, "oneTime": true },
+      { "phase": "ACTIVATION_CANDIDATE", "freshItems": 0, "authorityGranted": false },
+      { "phase": "INDEPENDENT_ACTIVATION_CANDIDATE_AUDIT", "freshItems": 0, "authorityGranted": false },
+      { "phase": "FINAL_ACTIVATION_GRANT", "freshItems": 0, "containedInThisDesign": false }
+    ],
+    "futureItemSlots": 60,
+    "filledItemSlots": 0,
+    "phaseOverlapAllowed": false,
+    "skipOrReorderAllowed": false,
+    "retroactiveAuthorizationPassOrThresholdChangeAllowed": false,
+    "replayFailedRejectedOrPreviouslyIssuedFingerprintAllowed": false,
+    "resultAccessBeforeFinalGrantAllowed": false
+  },
+  "stateMachine": {
+    "currentState": "PRE_ACCESS_UNAUTHORIZED",
+    "states": [
+      "PRE_ACCESS_UNAUTHORIZED",
+      "TAXONOMY_PILOT_12_ISSUED",
+      "TAXONOMY_PILOT_12_PASSED_SEALED",
+      "MAIN_CERTIFICATION_24_ISSUED",
+      "MAIN_CERTIFICATION_24_PASSED_SEALED",
+      "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED",
+      "ACTIVATION_HOLDOUT_24_ISSUED",
+      "ACTIVATION_HOLDOUT_24_PASSED_SEALED",
+      "CERTIFICATION_EVIDENCE_SEALED_AUTHORITY_FALSE",
+      "ACTIVATION_CANDIDATE_RECORDED_AUTHORITY_FALSE",
+      "ACTIVATION_CANDIDATE_AUDIT_PASSED_AUTHORITY_FALSE",
+      "ACTIVATION_GRANTED"
+    ],
+    "transitions": [
+      { "from": "PRE_ACCESS_UNAUTHORIZED", "to": "TAXONOMY_PILOT_12_ISSUED", "eventKind": "PHASE_TRANSITION", "requiredSeals": ["ROLE_REGISTRY", "PILOT_PACKET", "PILOT_DISJOINTNESS_PROOF"] },
+      { "from": "TAXONOMY_PILOT_12_ISSUED", "to": "TAXONOMY_PILOT_12_PASSED_SEALED", "eventKind": "PHASE_TRANSITION", "requiredSeals": ["PILOT_RESPONSES", "PILOT_DECISION"] },
+      { "from": "TAXONOMY_PILOT_12_PASSED_SEALED", "to": "MAIN_CERTIFICATION_24_ISSUED", "eventKind": "PHASE_TRANSITION", "requiredSeals": ["MAIN_PACKET", "CROSS_PHASE_DISJOINTNESS_PROOF"] },
+      { "from": "MAIN_CERTIFICATION_24_ISSUED", "to": "MAIN_CERTIFICATION_24_PASSED_SEALED", "eventKind": "PHASE_TRANSITION", "requiredSeals": ["MAIN_PHASE1", "MAIN_REVEAL", "MAIN_PHASE2", "MAIN_DECISION"] },
+      { "from": "MAIN_CERTIFICATION_24_PASSED_SEALED", "to": "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED", "eventKind": "TRUSTED_GOLD_AUDIT_REPORT", "requiredSeals": ["AUDITOR_ROLE_EXCLUSION", "AUDITOR_AUTHORSHIP_EXCLUSION", "AUDITED_GOLD_ROOT", "AUDIT_PASS_REPORT"] },
+      { "from": "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED", "to": "ACTIVATION_HOLDOUT_24_ISSUED", "eventKind": "PHASE_TRANSITION", "requiredSeals": ["HOLDOUT_PACKET", "FULL_60_DISJOINTNESS_AND_NO_REPLAY_PROOF"] },
+      { "from": "ACTIVATION_HOLDOUT_24_ISSUED", "to": "ACTIVATION_HOLDOUT_24_PASSED_SEALED", "eventKind": "PHASE_TRANSITION", "requiredSeals": ["HOLDOUT_RESPONSES", "HOLDOUT_DECISION"] },
+      { "from": "ACTIVATION_HOLDOUT_24_PASSED_SEALED", "to": "CERTIFICATION_EVIDENCE_SEALED_AUTHORITY_FALSE", "eventKind": "CERTIFICATION_EVIDENCE_SEAL", "requiredSeals": ["TWO_REVIEWER_CERTIFICATES", "FRESH_ADJUDICATOR", "EXACT_SCOPE_COVERAGE_ROOT"] },
+      { "from": "CERTIFICATION_EVIDENCE_SEALED_AUTHORITY_FALSE", "to": "ACTIVATION_CANDIDATE_RECORDED_AUTHORITY_FALSE", "eventKind": "ACTIVATION_CANDIDATE", "requiredSeals": ["CANDIDATE_EXACT_BYTES"], "authorityAfter": false, "resultAccessAfter": false },
+      { "from": "ACTIVATION_CANDIDATE_RECORDED_AUTHORITY_FALSE", "to": "ACTIVATION_CANDIDATE_AUDIT_PASSED_AUTHORITY_FALSE", "eventKind": "ACTIVATION_CANDIDATE_AUDIT_REPORT", "requiredSeals": ["EXACT_CANDIDATE_HASH", "AUDITOR_ROLE_EXCLUSION", "AUDITOR_AUTHORSHIP_EXCLUSION", "PASS_AUDIT_REPORT"], "authorityAfter": false, "resultAccessAfter": false },
+      { "from": "ACTIVATION_CANDIDATE_AUDIT_PASSED_AUTHORITY_FALSE", "to": "ACTIVATION_GRANTED", "eventKind": "ACTIVATION_GRANT", "requiredSeals": ["CANDIDATE_HASH", "PASS_AUDIT_REPORT_HASH", "PASS_AUDIT_MANIFEST_HASH", "DETERMINISTIC_GRANT_PROOF"], "authorityAfter": true, "resultAccessAfter": "SCOPE_BOUND_ONLY" }
+    ],
+    "activationCandidateContainsFutureAuditHash": false,
+    "candidateAuditCoversExactCandidateBytes": true,
+    "finalGrantBindsPreexistingPassAudit": true,
+    "authorityFalseUntilFinalGrant": true,
+    "resultAccessFalseUntilFinalGrant": true,
+    "currentCompletedTransitions": 0
+  },
+  "coverageAndCertificatePolicy": {
+    "scopeEnum": ["FOCUS_ONLY", "ALL_25"],
+    "focusOnlyCanonicalTypeIdsExact": ["GRAMMAR_ERROR", "BLANK_INFERENCE"],
+    "all25CanonicalTypeIdsExact": [
+      "BLANK_INFERENCE", "GRAMMAR_ERROR", "GRAMMAR_CHOICE_COMBO", "VOCAB_CHOICE", "SENTENCE_ORDER",
+      "SENTENCE_INSERT", "TOPIC", "MAIN_IDEA", "TITLE", "IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC", "IRRELEVANT", "CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE", "SUMMARY_WRITING", "WORD_ORDER", "TOPIC_SENTENCE_WRITING", "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING", "SYNONYM", "ANTONYM"
+    ],
+    "passedCoverageEventRequiredPerCanonicalType": true,
+    "passedCoverageEventHashMustResolveToExactEventBytes": true,
+    "passedCoverageEventCanonicalTypeMustEqualMapKey": true,
+    "passedCoverageEventHashesUniqueWithinCoverageMap": true,
+    "sameCoverageEventMayCreditMoreThanOneCanonicalType": false,
+    "certificateCoverageMapRootMustRecomputeFromOrderedExactMap": true,
+    "candidateRequestedScopeMustBeSubsetOfBothReviewerCertificateScopes": true,
+    "candidatePassedCoverageHashForEachRequestedTypeMustEqualBothCertificates": true,
+    "passedCoverageEventEligiblePhases": ["MAIN_CERTIFICATION", "ACTIVATION_HOLDOUT"],
+    "pilotOrContactEventAcceptedAsPassedCoverage": false,
+    "focusOnlyGate": {
+      "requiredCount": 2,
+      "requiredExactTypeIds": ["GRAMMAR_ERROR", "BLANK_INFERENCE"],
+      "bothReviewersMustBindBothExactPassedCoverageEventHashes": true,
+      "uniqueAnswerAndFatalChecksRequiredForBoth": true
+    },
+    "all25Gate": {
+      "requiredCount": 25,
+      "requiredExactTypeIds": [
+        "BLANK_INFERENCE", "GRAMMAR_ERROR", "GRAMMAR_CHOICE_COMBO", "VOCAB_CHOICE", "SENTENCE_ORDER",
+        "SENTENCE_INSERT", "TOPIC", "MAIN_IDEA", "TITLE", "IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH",
+        "SUMMARY_COMPLETE_MC", "IRRELEVANT", "CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "FILL_BLANK_KEY",
+        "SUMMARY_COMPLETE", "SUMMARY_WRITING", "WORD_ORDER", "TOPIC_SENTENCE_WRITING", "GRAMMAR_CORRECTION",
+        "CONTEXT_MEANING", "SYNONYM", "ANTONYM"
+      ],
+      "bothReviewersMustBindAll25ExactPassedCoverageEventHashes": true,
+      "epoch1Contact16CannotSatisfy": true
+    },
+    "reviewerCertificateMustBind": [
+      "REVIEWER_PSEUDONYM", "SCOPE_ENUM", "CANONICAL_TYPE_IDS_EXACT", "COVERAGE_COUNT",
+      "PASSED_COVERAGE_EVENT_SHA256_BY_CANONICAL_TYPE", "COVERAGE_MAP_ROOT_SHA256", "PILOT_MAIN_AUDIT_HOLDOUT_DECISION_SHA256S"
+    ],
+    "activationCandidateMustBind": [
+      "REQUESTED_SCOPE_ENUM", "CANONICAL_TYPE_IDS_EXACT", "COVERAGE_COUNT", "PASSED_COVERAGE_EVENT_SHA256_BY_CANONICAL_TYPE",
+      "BOTH_REVIEWER_CERTIFICATES_AND_SCOPES", "FRESH_ADJUDICATOR_BINDING", "ZERO_PREAUTHORITY_RESULT_ACCESS_PROOF"
+    ],
+    "mixedOrWiderScopeThanEitherCertificateAllowed": false
+  },
+  "slotMaterializationPolicy": {
+    "requiredCommitments": [
+      "ITEM_IDENTITY_AND_SOURCE_SHA256", "VISIBLE_SURFACE_SHA256", "ANSWER_KEY_SHA256", "TRUSTED_GOLD_SHA256",
+      "EXPLANATION_FATAL_CRAFT_EVIDENCE_SHA256", "AUTHOR_HYPOTHESIS_TARGET_SHA256", "REJECTION_HISTORY_ROOT_SHA256",
+      "SURPLUS_HISTORY_ROOT_SHA256", "PACKET_ORDER_RELABEL_SHA256", "RIGHTS_PII_EVIDENCE_SHA256",
+      "NORMALIZED_FINGERPRINT_BUNDLE_SHA256", "TYPE_FAMILY_ROTATION_PROOF_SHA256"
+    ],
+    "requiredFields": ["SLOT_ID", "PHASE", "BLOCK", "ORDINAL", "CANONICAL_TYPE_ID", "CANONICAL_FAMILY_ID_OR_NULL", "ROTATION_EPOCH"],
+    "canonicalTypeIdEnumExact": true,
+    "canonicalFamilyIdEnumExact": true,
+    "typeFamilyPairMustMatchBindingV4": true,
+    "mainHoldoutTypeMustEqualBindingV4SelectedAtForEpoch": true,
+    "focusPair": { "GRAMMAR": "GRAMMAR_ERROR", "BLANK": "BLANK_INFERENCE", "familyId": null },
+    "slotMaterializationBeforeAllCommitmentsAllowed": false,
+    "postMaterializationCommitmentAdditionOrRewriteAllowed": false,
+    "currentMaterializedSlots": 0
+  },
+  "fingerprintAndReplayPolicy": {
+    "requiredFingerprintComponents": [
+      "NORMALIZED_FULL_TEXT_SHA256", "HASHED_EIGHT_WORD_WINDOW_SET_SHA256", "TOPIC_TAG_SET_SHA256",
+      "SCENARIO_ENTITY_TUPLE_SHA256", "ITEM_AUTHOR_PSEUDONYM_SHA256", "SURFACE_TEMPLATE_FINGERPRINT_SHA256",
+      "COMPOSITE_FINGERPRINT_SHA256"
+    ],
+    "reservationMustPrecedeSlotMaterialization": true,
+    "pairwiseDisjointPhases": ["TAXONOMY_PILOT", "MAIN_CERTIFICATION", "ACTIVATION_HOLDOUT"],
+    "requiredCounts": { "TAXONOMY_PILOT": 12, "MAIN_CERTIFICATION": 24, "ACTIVATION_HOLDOUT": 24 },
+    "fullProofPairCount": 1770,
+    "proofMustBind": [
+      "ALL_60_COMPOSITE_FINGERPRINTS", "ALL_COMPONENT_ROOTS_BY_PHASE", "ALL_1770_PAIRWISE_COMPARISONS_ROOT",
+      "FAILED_REJECTED_TOMBSTONE_ROOT", "PRIOR_ISSUED_FINGERPRINT_ROOT", "NO_COLLISION_VERDICT"
+    ],
+    "failedRejectedOrPreviouslyIssuedFingerprintMayBeReservedOrIssuedAgain": false,
+    "terminalFailureOrRejectionCreatesPermanentTombstone": true,
+    "surfaceRevisionRequiresNewFingerprintAndStillCannotCollide": true,
+    "currentFingerprintReservations": 0,
+    "currentTombstones": 0,
+    "currentDisjointnessProofs": 0
+  },
+  "resourceAccessPolicy": {
+    "resourceClassEnum": [
+      "BLIND_STUDENT_VISIBLE_SURFACE", "FROZEN_PUBLIC_CODEBOOK", "OWN_PHASE1_RESPONSE",
+      "BOUND_ANSWER_EXPLANATION_REVEAL", "TRUSTED_GOLD_AUDIT_BUNDLE", "ADJUDICATION_BUNDLE",
+      "ACTIVATION_CANDIDATE_BYTES", "ACTIVATION_AUDIT_REPORT_BYTES", "S1_RESULT_SCOPE_BOUND",
+      "OUT_OF_SCOPE_S1_RESULT", "OTHER_RATER_IDENTITY", "RAW_HIDDEN_COMMITMENT", "REJECTION_SURPLUS_HISTORY",
+      "RAW_PRIVATE_TRUSTED_GOLD"
+    ],
+    "policyMatrix": [
+      { "phase": "TAXONOMY_PILOT_PHASE1", "states": ["TAXONOMY_PILOT_12_ISSUED"], "allow": ["BLIND_STUDENT_VISIBLE_SURFACE", "FROZEN_PUBLIC_CODEBOOK"], "deny": ["OWN_PHASE1_RESPONSE", "BOUND_ANSWER_EXPLANATION_REVEAL", "TRUSTED_GOLD_AUDIT_BUNDLE", "ADJUDICATION_BUNDLE", "S1_RESULT_SCOPE_BOUND"] },
+      { "phase": "MAIN_CERTIFICATION_PHASE1", "states": ["MAIN_CERTIFICATION_24_ISSUED"], "allow": ["BLIND_STUDENT_VISIBLE_SURFACE", "FROZEN_PUBLIC_CODEBOOK"], "deny": ["OWN_PHASE1_RESPONSE", "BOUND_ANSWER_EXPLANATION_REVEAL", "TRUSTED_GOLD_AUDIT_BUNDLE", "ADJUDICATION_BUNDLE", "S1_RESULT_SCOPE_BOUND"] },
+      { "phase": "MAIN_CERTIFICATION_PHASE2", "states": ["MAIN_CERTIFICATION_24_ISSUED"], "precondition": "OWN_PHASE1_RESPONSE_SEALED", "allow": ["OWN_PHASE1_RESPONSE", "BOUND_ANSWER_EXPLANATION_REVEAL", "FROZEN_PUBLIC_CODEBOOK"], "deny": ["TRUSTED_GOLD_AUDIT_BUNDLE", "ADJUDICATION_BUNDLE", "S1_RESULT_SCOPE_BOUND"] },
+      { "phase": "INDEPENDENT_TRUSTED_GOLD_AUDIT", "states": ["MAIN_CERTIFICATION_24_PASSED_SEALED"], "precondition": "AUDITOR_ROLE_AND_AUTHORSHIP_EXCLUSION_PROOFS_SEALED", "allow": ["TRUSTED_GOLD_AUDIT_BUNDLE", "FROZEN_PUBLIC_CODEBOOK"], "deny": ["S1_RESULT_SCOPE_BOUND"] },
+      { "phase": "ACTIVATION_HOLDOUT_PHASE1", "states": ["ACTIVATION_HOLDOUT_24_ISSUED"], "allow": ["BLIND_STUDENT_VISIBLE_SURFACE", "FROZEN_PUBLIC_CODEBOOK"], "deny": ["BOUND_ANSWER_EXPLANATION_REVEAL", "TRUSTED_GOLD_AUDIT_BUNDLE", "ADJUDICATION_BUNDLE", "S1_RESULT_SCOPE_BOUND"] },
+      { "phase": "ACTIVATION_CANDIDATE_AUDIT", "states": ["ACTIVATION_CANDIDATE_RECORDED_AUTHORITY_FALSE"], "precondition": "AUDITOR_ROLE_AND_AUTHORSHIP_EXCLUSION_PROOFS_SEALED", "allow": ["ACTIVATION_CANDIDATE_BYTES", "FROZEN_PUBLIC_CODEBOOK"], "deny": ["S1_RESULT_SCOPE_BOUND"] },
+      { "phase": "POST_ACTIVATION_RESULT", "states": ["ACTIVATION_GRANTED"], "precondition": "FINAL_GRANT_SCOPE_AND_CAPABILITY_MATCH", "allow": ["S1_RESULT_SCOPE_BOUND", "FROZEN_PUBLIC_CODEBOOK"], "deny": ["OUT_OF_SCOPE_S1_RESULT", "OTHER_RATER_IDENTITY", "RAW_HIDDEN_COMMITMENT", "REJECTION_SURPLUS_HISTORY", "RAW_PRIVATE_TRUSTED_GOLD"] }
+    ],
+    "stateDenySets": {
+      "PRE_ACCESS_UNAUTHORIZED": ["BLIND_STUDENT_VISIBLE_SURFACE", "BOUND_ANSWER_EXPLANATION_REVEAL", "TRUSTED_GOLD_AUDIT_BUNDLE", "S1_RESULT_SCOPE_BOUND", "RAW_HIDDEN_COMMITMENT"],
+      "TAXONOMY_PILOT_12_ISSUED": ["BOUND_ANSWER_EXPLANATION_REVEAL", "TRUSTED_GOLD_AUDIT_BUNDLE", "ADJUDICATION_BUNDLE", "S1_RESULT_SCOPE_BOUND", "REJECTION_SURPLUS_HISTORY"],
+      "TAXONOMY_PILOT_12_PASSED_SEALED": ["TRUSTED_GOLD_AUDIT_BUNDLE", "ACTIVATION_CANDIDATE_BYTES", "S1_RESULT_SCOPE_BOUND", "OTHER_RATER_IDENTITY"],
+      "MAIN_CERTIFICATION_24_ISSUED": ["TRUSTED_GOLD_AUDIT_BUNDLE", "S1_RESULT_SCOPE_BOUND", "OTHER_RATER_IDENTITY", "REJECTION_SURPLUS_HISTORY"],
+      "MAIN_CERTIFICATION_24_PASSED_SEALED": ["S1_RESULT_SCOPE_BOUND", "ACTIVATION_CANDIDATE_BYTES", "OTHER_RATER_IDENTITY", "RAW_PRIVATE_TRUSTED_GOLD"],
+      "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED": ["BOUND_ANSWER_EXPLANATION_REVEAL", "S1_RESULT_SCOPE_BOUND", "OTHER_RATER_IDENTITY", "REJECTION_SURPLUS_HISTORY"],
+      "ACTIVATION_HOLDOUT_24_ISSUED": ["BOUND_ANSWER_EXPLANATION_REVEAL", "TRUSTED_GOLD_AUDIT_BUNDLE", "S1_RESULT_SCOPE_BOUND", "OTHER_RATER_IDENTITY"],
+      "ACTIVATION_HOLDOUT_24_PASSED_SEALED": ["S1_RESULT_SCOPE_BOUND", "ACTIVATION_AUDIT_REPORT_BYTES", "OUT_OF_SCOPE_S1_RESULT", "RAW_HIDDEN_COMMITMENT"],
+      "CERTIFICATION_EVIDENCE_SEALED_AUTHORITY_FALSE": ["S1_RESULT_SCOPE_BOUND", "ACTIVATION_AUDIT_REPORT_BYTES", "OUT_OF_SCOPE_S1_RESULT", "RAW_PRIVATE_TRUSTED_GOLD"],
+      "ACTIVATION_CANDIDATE_RECORDED_AUTHORITY_FALSE": ["S1_RESULT_SCOPE_BOUND", "OUT_OF_SCOPE_S1_RESULT", "RAW_HIDDEN_COMMITMENT", "REJECTION_SURPLUS_HISTORY"],
+      "ACTIVATION_CANDIDATE_AUDIT_PASSED_AUTHORITY_FALSE": ["S1_RESULT_SCOPE_BOUND", "OUT_OF_SCOPE_S1_RESULT", "OTHER_RATER_IDENTITY", "RAW_PRIVATE_TRUSTED_GOLD"],
+      "ACTIVATION_GRANTED": ["OUT_OF_SCOPE_S1_RESULT", "OTHER_RATER_IDENTITY", "RAW_HIDDEN_COMMITMENT", "REJECTION_SURPLUS_HISTORY", "RAW_PRIVATE_TRUSTED_GOLD"]
+    },
+    "authorizationMustBind": [
+      "CURRENT_STATE", "PHASE", "RESOURCE_CLASS", "RESOURCE_SHA256", "VISIBLE_SURFACE_SHA256", "ACTOR_PSEUDONYM",
+      "ACTOR_ROLE", "CAPABILITY_TOKEN_SHA256", "POLICY_MATRIX_SHA256", "ALLOWLIST_SHA256", "DENY_SET_SHA256",
+      "RESOURCE_CLASS_POLICY_PROOF_SHA256", "STATE_TRANSITION_EVIDENCE_SHA256"
+    ],
+    "denialMustBind": [
+      "CURRENT_STATE", "PHASE", "RESOURCE_CLASS", "RESOURCE_SHA256", "ACTOR_PSEUDONYM", "ACTOR_ROLE",
+      "POLICY_MATRIX_SHA256", "ALLOWLIST_SHA256", "DENY_SET_SHA256", "POLICY_DECISION_PROOF_SHA256"
+    ],
+    "phase1AnswerOrGoldAuthorizationPossible": false,
+    "opaqueResourceHashWithoutClassAndPolicyProofAllowed": false,
+    "currentPolicyDigestSha256": null,
+    "currentAuthorizationEvents": 0,
+    "currentDenialEvents": 0
+  },
+  "accessTransactionPolicy": {
+    "eventSequence": ["AUTHORIZATION", "OPEN", "CAPABILITY_CONSUME", "CLOSE"],
+    "canonicalEventBytesRule": "RFC8785_EQUIVALENT_CANONICAL_JSON_EXCLUDING_EVENT_SHA256",
+    "eventSha256Rule": "SHA256_CANONICAL_EVENT_BYTES",
+    "immediateConsecutiveOrdinalsRequired": true,
+    "eachEventBindsImmediatelyPriorEventSha256": true,
+    "authorizationOccurredAtEqualsAuthorizedAt": true,
+    "openOccurredAtEqualsOpenedAt": true,
+    "consumeOccurredAtEqualsConsumedAt": true,
+    "closeOccurredAtEqualsClosedAt": true,
+    "timeOrder": "authorizedAtRfc3339 < openedAtRfc3339 <= consumedAtRfc3339 <= closedAtRfc3339",
+    "openEventSealedBeforeAnyContentBytes": true,
+    "consumeEventSealedBeforeContentRelease": true,
+    "closeRequiredForCompletedAccess": true,
+    "capabilityUniqueAcrossRegistry": true,
+    "capabilitySingleUse": true,
+    "consumeUseOrdinal": 1,
+    "secondAuthorizationOpenConsumeOrCloseForCapabilityAllowed": false,
+    "backdatedOrRetroactivelyInsertedEventAllowed": false,
+    "eventRewriteOrDeletionAllowed": false,
+    "currentAuthorizations": 0,
+    "currentOpens": 0,
+    "currentConsumes": 0,
+    "currentCloses": 0,
+    "currentCapabilitiesIssued": 0,
+    "currentCapabilitiesConsumed": 0
+  },
+  "activationEvidenceGraph": {
+    "candidate": {
+      "eventKind": "ACTIVATION_CANDIDATE",
+      "authorityGranted": false,
+      "resultAccessAuthorized": false,
+      "containsFutureAuditReportOrManifestHash": false,
+      "bindsExactCanonicalBytesSha256": true
+    },
+    "candidateAudit": {
+      "eventKind": "ACTIVATION_CANDIDATE_AUDIT_REPORT",
+      "authorityGranted": false,
+      "resultAccessAuthorized": false,
+      "containsOwnFutureAuditManifestHash": false,
+      "bindsExactCandidateEventSha256": true,
+      "bindsCandidateCanonicalBytesSha256": true,
+      "requiresAuditorRoleExclusionProof": true,
+      "requiresAuditorArtifactAuthorshipExclusionProof": true,
+      "requiredVerdict": "PASS_NO_BLOCKERS"
+    },
+    "grant": {
+      "eventKind": "ACTIVATION_GRANT",
+      "containedInThisDesign": false,
+      "bindsCandidateEventSha256": true,
+      "bindsPreexistingAuditReportSha256": true,
+      "bindsPreexistingAuditManifestSha256": true,
+      "requiredAuditVerdict": "PASS_NO_BLOCKERS",
+      "scopeCannotExceedCandidateOrEitherCertificate": true
+    },
+    "currentCandidates": 0,
+    "currentCandidateAuditReports": 0,
+    "currentGrants": 0
+  },
+  "emptyOperationalState": {
+    "actors": 0,
+    "items": 0,
+    "answers": 0,
+    "goldRecords": 0,
+    "slotMaterializations": 0,
+    "fingerprintReservations": 0,
+    "fingerprintTombstones": 0,
+    "disjointnessProofs": 0,
+    "authorizationEvents": 0,
+    "openEvents": 0,
+    "consumeEvents": 0,
+    "closeEvents": 0,
+    "denyEvents": 0,
+    "phaseSeals": 0,
+    "passedCoverageEvents": 0,
+    "reviewerCertificates": 0,
+    "adjudicatorBindings": 0,
+    "activationCandidates": 0,
+    "activationAuditReports": 0,
+    "activationGrants": 0,
+    "resultAccesses": 0,
+    "eligibleSlots": 0
+  },
+  "claims": {
+    "authorDesignPass": "NOT_CLAIMED_PENDING_FRESH_AUDIT",
+    "reviewerCertification": "NONE",
+    "evaluatorAuthority": "NONE",
+    "scoringAuthority": "NONE",
+    "resultAccess": "NONE",
+    "activationCandidate": "NONE",
+    "activationGrant": "NONE",
+    "all25Coverage": "NONE",
+    "focusOnlyCoverage": "NONE",
+    "profileSelection": "NONE",
+    "release": "NONE"
+  },
+  "activity": {
+    "privateReads": 0,
+    "networkCalls": 0,
+    "apiCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0,
+    "actualReviewerCertifications": 0
+  }
+}

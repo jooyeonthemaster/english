@@ -1,0 +1,203 @@
+{
+  "passageId": "ebsi_go1_20200312-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "함축의미",
+    "words": 141
+  },
+  "attempts": 6,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-killer-answer-point-repeated",
+    "grammar-killer-overdrilled-answer",
+    "grammar-decoy-filler-span",
+    "grammar-pointcode-span-mismatch",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-overdrilled-answerx4",
+    "grammar-explanation-lintx2",
+    "grammar-marker-too-densex1",
+    "grammar-shallow-participle-adjective-answerx1",
+    "grammar-keypoint-choice-mismatchx1"
+  ],
+  "layout": "(A):dec=k  (B):dec=c  (C):dec=g  (D):dec=d  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 105,
+        "relPos": 0.142,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 291,
+        "relPos": 0.394,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 314,
+        "relPos": 0.425,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 389,
+        "relPos": 0.526,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 400,
+        "relPos": 0.541,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.541,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "keep",
+        "isError": false,
+        "errorExpression": "keep",
+        "surroundingText": "It's easy to say one should keep cool, but how do you do it?",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "designed",
+        "isError": false,
+        "errorExpression": "designed",
+        "surroundingText": "They may be saying things that are intentionally designed to annoy you.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "They",
+        "isError": false,
+        "errorExpression": "They",
+        "surroundingText": "They know that if they get you to lose your cool you'll say",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "sounds",
+        "isError": false,
+        "errorExpression": "sounds",
+        "surroundingText": "lose your cool you'll say something that sounds foolish; you'll",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": true,
+        "correction": "is",
+        "errorExpression": "are",
+        "surroundingText": "but responding with a cool answer that focuses on the issue raised is likely to be most effective.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "keep"
+      },
+      {
+        "label": "(B)",
+        "text": "designed"
+      },
+      {
+        "label": "(C)",
+        "text": "They"
+      },
+      {
+        "label": "(D)",
+        "text": "sounds"
+      },
+      {
+        "label": "(E)",
+        "text": "are"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "조동사 should 뒤에서 동사원형의 형태를 취하고 있으므로 'keep'은 어법상 옳습니다.",
+      "(B)": "things가 고안되는 대상이므로 수동의 의미를 나타내는 과거분사 'designed'는 어법상 옳습니다.",
+      "(C)": "앞 문장의 복수 주어인 the other person(복수 대명사 they로 지칭 가능) 혹은 앞서 언급된 행위자들을 지칭하므로 복수 대명사 'They'는 어법상 옳습니다.",
+      "(D)": "-thing으로 끝나는 부정대명사는 단수 취급하므로 주격 관계대명사 절의 동사로 단수형인 'sounds'를 쓴 것은 어법상 옳습니다."
+    },
+    "explanation": "(E) \"are\"는 어법상 틀린 표현이며 \"is\"로 고쳐야 한다. but 절의 실질적인 주어 핵은 동명사구인 'responding with a cool answer that focuses on the issue raised'에서 맨 앞에 위치한 'responding'입니다. 동명사구 주어는 단수 취급해야 하므로, 복수 정동사인 'are'는 이 자리에 올 수 없습니다. 따라서 단수형인 'is'로 고쳐야 합니다. 주어 뒤에 긴 관계사절(that focuses on the issue raised)과 전치사구 등이 덧붙어 주어 핵과의 거리가 멀어졌으므로, 수식어구를 걷어내고 주어의 핵을 명확히 찾는 것이 핵심입니다.",
+    "keyPoints": [
+      "(E) 주어-동사 수일치 — 동명사구 주어와 수식어구 구별",
+      "(B) 분사 능동 vs 수동 — 사물이 수동적으로 설계됨을 수식",
+      "(D) 관계사절 내부의 수일치 — 단수 부정대명사 선행사에 따른 동사 수 변화"
+    ],
+    "tags": [
+      "동명사구 주어",
+      "수일치",
+      "분사",
+      "형용사 보어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should __(A) keep__ cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally __(B) designed__ to annoy you. __(C) They__ know that if they get you to lose your cool you'll say something that __(D) sounds__ foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised __(E) are__ likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-decoy-filler-span",
+        "message": "Decoy underline (A) is a decorative filler span — a bare verb (\"keep\") directly after \"should\" leaves no alternative form to weigh — only the base form is possible there. Replace only this decoy with a structural grammar judgment site (a different pointCode from the answer) where students genuinely weigh whether the form is correct."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-pointcode-span-mismatch",
+        "message": "Underline (A) is tagged pointCode (k) but its surface \"keep\" has no token matching that grammar point — the label looks fabricated. Move the underline onto the real k-token or fix the code."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-explanation-lint",
+        "message": "explanation: 어투 혼용 — 첫 문장이 해라체(\"(E) \"are\"는 어법상 틀린 표현이며 \"is\"로 고쳐야 한다.\")로 끝나는데 같은 필드에 합니다체 문장이 섞여 있습니다. 전체를 합니다체로 통일하세요."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-killer-answer-point-repeated",
+        "message": "KILLER GRAMMAR_ERROR repeats the answer pointCode (d) in non-answer decoys; use different grammar frames for distractors."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-killer-overdrilled-answer",
+        "message": "KILLER GRAMMAR_ERROR rejected: the answer is a shallow subject-verb number flip (\"is\" ↔ \"are\") with the true subject sitting right next to the verb (no genuine attractor noun in between). At KILLER the agreement must span a real long-distance modifier with a misleading attractor noun so the subject head is non-obvious. Move the error to such a site, or pick another deep structure already in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break."
+      }
+    ],
+    "_qualityMode": "relaxed",
+    "_reviewRecommended": true,
+    "_generationNotice": "여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — 요청 난이도 대비 깊이가 얕을 수 있음. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P033",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'meet [a challenge] as part of an ongoing present timeframe' is grammatically well-formed after 'a challenge that you have to meet'. Logic: it formalizes the passage's remedy — reframe the deadline so it lies within the same continuous, current period ('this winter' rather than 'next year'), which counteracts perceived remoteness and prompts earlier action. It is also consistent with the consequence clause 'the stress is more manageable... starting - and therefore finishing - in good time.' Uniquely satisfies all constraints."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Seam is parsable ('meet as something far removed from today'), but logically it asserts the exact failure mode the passage warns against: seeing a deadline as remote ('on the other side of a break... more likely to see it as remote... less ready to jump into action'). Direct contradiction; not defensible."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Grammatically fine, but logically inconsistent: the following sentence says 'the stress is MORE MANAGEABLE', which presupposes residual time pressure rather than its absence. Moreover, feeling no time pressure at all would undermine the goal of 'jumping into action' and starting in good time. Not defensible."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Grammatically fine ('meet by dividing goals into...'), and superficially attractive because the passage mentions seasons ('this winter'). But dividing into SEPARATE, DISTINCT units recreates the very 'break' problem the passage identifies as the cause of procrastination; the winter example is used to UNIFY the present moment and the deadline into one continuous period, not to segment goals. Trap option; logically contrary to the passage's thesis."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Grammatically fine ('meet so that you can avoid stress altogether'), but 'avoid stress altogether' is contradicted verbatim by 'That way the stress is more manageable' — mitigation, not elimination. Also, stress avoidance is a consequence framing, not the timeframe-reframing strategy the blank must express. Not defensible."
+    }
+  ],
+  "note": "Cloze item. The blank must encode the passage's prescribed reframing: place the deadline inside the ongoing current time period to defeat the categorical-break-induced perception of remoteness. Option 1 is the only choice consistent with (a) the India-farmers/NA-students finding, (b) the 'this winter vs next year' example, and (c) the 'stress more manageable... starting in good time' outcome. All distractor seams are grammatical, so discrimination rests purely on logic; options 2 and 5 contradict explicit text, 3 contradicts the presupposition of residual pressure, 4 inverts the thesis while echoing surface vocabulary (seasons). No alternative construal (reduced relative, absolute construction, etc.) rescues any distractor. Single defensible answer."
+}

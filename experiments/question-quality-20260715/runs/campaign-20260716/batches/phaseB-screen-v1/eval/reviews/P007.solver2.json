@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) that",
+      "verdict": "correct",
+      "reason": "지시한정사 that + 단수 가산명사 process: 'the nature of that process is repetitive'. 직전 문장의 'a process embodied in a machine'을 조응적으로 재지시하는 표준 용법이며, 주어 head 'the nature'(단수)와 is의 일치도 성립. 규칙 위반 없음 — 정문."
+    },
+    {
+      "label": "(B) itself",
+      "verdict": "correct",
+      "reason": "관계절 'that repeats itself'에서 관계대명사 that(선행사 any process, 3인칭 단수)이 repeats의 국부 주어이고, 목적어가 그 주어와 동일 지시체이므로 재귀대명사 itself가 결속조건 A를 충족하며 의무적. 'repeat itself'는 반복 주기를 나타내는 표준 연어 — 정문."
+    },
+    {
+      "label": "(C) does not depend",
+      "verdict": "correct",
+      "reason": "관계절 'a clock that does not depend on a repetitive cycle of events': 선행사 'a clock'이 단수이므로 3인칭 단수 does가 옳고, do-지원 부정과 depend on 보충어 구조 모두 규범적. 개입 명사가 없어 장거리 일치 함정도 없음 — 정문."
+    },
+    {
+      "label": "(D) are",
+      "verdict": "incorrect",
+      "reason": "진짜 주어는 'The only example [that comes to mind readily]'로 head 명사 example이 엄격한 단수 가산명사이며, 관계절은 수식어라 복수성을 전달할 수 없다. 보어 'a candle marked in hours'도 단수라 근접 일치(attraction)로도 are가 정당화되지 않고, 어순이 정규 S-V-C라 보어 전치 도치 분석도 불가. 관계절 내부의 comes(단수 일치)가 방증. is여야 하므로 어법상 틀림."
+    },
+    {
+      "label": "(E) although",
+      "verdict": "correct",
+      "reason": "'although at first masked'는 'although (it is/was) at first masked'의 주어+be 생략 축약 양보절. although/though + (부사어) + 과거분사는 표준적으로 허용되는 축약이며, 생략된 주어가 주절 주어 'this (iterative process)'와 동일 지시여서 생략 조건 충족. 뒤 문장의 'although on a large scale it gives...'와 평행 — 정문."
+    }
+  ],
+  "note": "대안 해석 적극 탐색 결과: (D)를 구제할 경로(집합명사적 통념 복수, 근접 일치, copular 도치, 열거에 의한 복수 개념)를 전부 검토했으나 주어·보어 모두 단수 NP여서 어떤 분석으로도 are가 성립하지 않음. 과잉 표기 위험이 가장 큰 (E)의 축약 양보절도 형식적으로 완전한 정문임을 확인. 정답 후보는 (D) 단일."
+}

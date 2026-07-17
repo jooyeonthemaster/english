@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "관계대명사 that: 선행사 'a lasting mark'(단수)를 받아 관계절 내 주어로 기능하며 동사 shows와 수일치. 'mark [that shows the evolution of society]'는 완전한 정문. 형식적으로 흠결 없음."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect",
+      "reason": "조동사 must의 보충어 자리 + either A or B 병렬 규칙 위반. 'it must either ___ or (indeed) reinforce this balance'에서 or 뒤가 원형 reinforce이므로 either 뒤도 원형 'adapt to'여야 한다. 'must ... adapting'은 (i) 진행형이라면 be 필요(must be adapting), (ii) 동명사 해석은 must 뒤라 불가, (iii) 분사구문 해석은 or reinforce와의 병렬 붕괴 — 어떤 대안 파스로도 정문화 불가능. 유일한 어법 오류."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "등위 독립절 'it is subordinate ..., or it makes a strong statement'. 주어 it(단수) + 일반 사실 현재시제 3인칭 단수 makes. 앞 절 is와 시제·상 일관. 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "재귀대명사 관용구 'in itself'(그 자체로). 지시 대상은 관계절 that의 선행사 'a bridge'(단수 사물)로 인칭·수 일치. 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "관계절 내 병렬: 'that [is spectacular in itself] but [spoils its local environment]'. 병렬 시작점은 관계절의 정형동사 자리이고 주어 that(= a bridge, 단수)이므로 3인칭 단수 spoils가 정확. spoil(원형)이나 spoiling이었다면 오히려 오류."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (B)를 구제할 대안 해석(축약 관계절·분사구문·도치 등)을 적극 탐색했으나 전무 — must 직후 자리라는 장거리 단서와 or reinforce(원형)라는 병렬 짝이 모두 원형 adapt를 강제한다. 나머지 4개 밑줄은 표준 규칙으로 정문임이 증명되어 정답이 B로 유일하게 수렴. 단일 정답 문항으로 성립."
+}

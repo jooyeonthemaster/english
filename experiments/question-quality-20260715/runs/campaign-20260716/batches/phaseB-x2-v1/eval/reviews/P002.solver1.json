@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "가장 강한 매력적 오답. 'I generally wake up energized'와 energy 어휘 반복에 실제로 끌린다. 그러나 대입하면 인과가 뒤집힌다 — 필자는 이미 아침에 에너지가 높은 사람이고, 습관은 에너지를 '만들어내는' 루틴이 아니라 높은 에너지를 어려운 과업에 '배분'하는 것이다. 지문이 아끼려는 것도 physical energy가 아니라 미루기로 낭비되는 emotional energy다. 또한 마지막 문장(아침형이 아니면 difficult work를 늦게 배치하라)이 전제하는 '빈칸 = 어려운 일을 아침에 처리'와 연결이 끊긴다."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "'So for me, it'll always be the most demanding problem that needs prompt resolution' — it은 은유 'eating my problems for breakfast'의 목적어, 즉 하루의 첫 과업(내 아침식사)으로 해소된다. 걱정·회피에 쓰는 시간이 실제 처리 시간보다 길다는 논증에서 prompt resolution이 도출되고, 마지막 문장의 대비(필자=아침형이므로 어려운 일을 즉시 처리 vs 비아침형은 늦게)와 완전히 정합. it'll always be + NP 서술 명사구로 문법 결합도 깨끗하다."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'unhappy client' 어휘에서 유인되는 미끼. 필자는 갈등을 회피하는 것이 아니라 아침에 정면으로 처리한다. 협상 기술은 지문 어디에도 논의되지 않고 'to avoid conflicts'는 confront-early 메시지와 정반대."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "극성 반전 함정. 'delaying'이 'procrastinate'를 표면적으로 반향하고, 마지막 문장 'schedule difficult work later'만 발췌독하면 순간적으로 끌린다. 그러나 그 조언은 '아침형이 아닌 사람'용이며, 필자 자신에 대해서는 미루기가 감정 에너지 낭비라고 명시적으로 규탄하므로 필자의 습관과 정확히 반대다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'unpleasant email', 'scheduling' 어휘 재활용 미끼. 그러나 'a simple task'가 요구 극성(demanding/difficult)을 뒤집는다. 습관의 핵심은 어려운 문제를 먼저 처리하는 것이지 단순 메시지 정리가 아니다."
+    }
+  ],
+  "note": "단일 정답으로 수렴. 빈칸 문장의 it 지시 대상을 두고 대안 해석(허사 it, 다른 선행 지시체)을 적극 탐색했으나, 다섯 선지 모두 NP 서술어라 문법 seam은 전부 성립하고 담화 정합은 ②만 성립 — 제2의 옹호 가능 독해 없음. 실전 유혹 기록: 1순위 유혹은 ①(energy 어휘 포화 + breakfast→routine 프라이밍), 2순위는 ④(procrastinate/delay 반향의 극성 반전). 둘 다 논리 검증 단계에서 탈락. 미끼는 어휘적으로 매력적이되 논리적으로 깔끔히 배제되는 양질의 빈칸 문항."
+}

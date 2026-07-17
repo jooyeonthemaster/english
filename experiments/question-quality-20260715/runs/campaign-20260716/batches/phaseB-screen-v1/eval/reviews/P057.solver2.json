@@ -1,0 +1,35 @@
+{
+  "pid": "P057",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'If the interview lasts a while': 'a while' is a noun phrase of duration serving as the duration complement/adjunct of 'last' (cf. 'lasted an hour'). Fully standard; no conflict with the adverb 'awhile' reading either, since after 'lasts' the NP 'a while' is the canonical form."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop the technique...': expletive-it extraposition with the to-infinitive as true subject; comparative adjective 'more efficient' as subject complement. The comparison standard (than re-listening to a recording) is recoverable from the prior sentence, so the bare comparative is licit."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'so that they can ... afterwards' is the canonical purpose clause: 'so that' + subject + modal 'can'. Governing structure (writing down X so that X can be processed later) is logically and syntactically well-formed."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'they' can only refer to 'the key answers' (sole plural antecedent; the interviewer is 'you'). 'Transcribe' is a transitive agentive verb and the answers are its theme, so passive voice is required: 'can be transcribed easily afterwards'. Rescue parses fail: (i) no plural human antecedent for an active reading; (ii) a middle-voice reading ('the answers transcribe easily') is blocked because middles are generic property statements that resist the modal 'can' (*'the book can read easily'), 'transcribe' is not an established middle verb, and 'afterwards' forces an eventive reading. Ungrammatical as written."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle': 'much' is a licensed intensifier of comparatives; 'easier and quicker' are parallel comparatives in a tough-construction where 'the material' is the understood object of 'handle'. Well-formed."
+    }
+  ],
+  "note": "Clean single-answer item. The error at (D) is a classic voice error with a long-distance cue (antecedent resolution of 'they' back to 'the key answers'). Actively searched for alternative parses that would legitimize the active form (human plural antecedent, middle construction) and formally ruled them out; the modal 'can' plus eventive 'afterwards' makes the middle-voice defense untenable. (A)/(B)/(C)/(E) each pass under their governing rules with no plausible challenge."
+}

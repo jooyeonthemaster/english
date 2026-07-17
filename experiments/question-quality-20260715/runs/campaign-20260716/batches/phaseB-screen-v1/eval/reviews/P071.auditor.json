@@ -1,0 +1,80 @@
+{
+  "pid": "P071",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-corrected-form-reference",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설이 'be동사 is 뒤에서'라고 서술하지만 학생이 보는 렌더 지문에는 (C) 자리가 'are'로 표기되어 있다. 교정 후 형태 기준의 서술이며 구조 분석(명사절 보어 + 완전한 절) 자체는 정확하므로 V4 실패로는 보지 않는다."
+    },
+    {
+      "code": "V4-minor-loose-terminology",
+      "severity": "minor",
+      "evidence": "주 해설의 \"복수 명사구의 수식을 받는 'One'\" — 실제 수식어는 전치사구 'of the most common mistakes made by ...'(내부에 복수 명사 포함)이지 복수 명사구 자체가 아니다. 의도는 전달되나 용어가 부정확하다."
+    },
+    {
+      "code": "V5-minor-internal-field-source-form",
+      "severity": "minor",
+      "evidence": "markedExpressions의 (B)·(D) surroundingText가 원지문 형태('...social media is...')를 사용해 렌더 지문('...social media are...')과 표기가 다르다. 내부 구조 필드로 학생 노출 필드 간 모순은 아니므로 V5 실패로는 보지 않는다."
+    },
+    {
+      "code": "V5-minor-keypoints-subset",
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)·(A)·(E)만 수록하고 (B) consider+동명사, (D) 접속사 that 포인트를 누락했다. 모순은 없으나 5개 밑줄 대비 포인트 문서화가 3/5로 불완전하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 후치수식 분사의 능동/수동 판정 (mistakes ← made by organizations)",
+      "temptingBecause": "mistakes 뒤 made를 본동사로 오인하거나 능동형 making이 맞다고 착각할 수 있다",
+      "decisiveFlaw": "mistakes는 '만들어지는' 대상이며 by organizations 행위자구와 결합한 수동 분사 수식이 정확하다 — 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "consider의 목적어 형태 판정 (동명사 vs to부정사)",
+      "temptingBecause": "consider to experiment 형이 자연스럽다고 오인하는 전형적 오개념",
+      "decisiveFlaw": "consider는 동명사 목적어를 취하는 타동사이므로 experimenting이 정확하다 — 오답 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "장거리 주어-동사 수일치: 분사구·when부사절·전치사구를 건너 진짜 주어 One(단수)을 찾는 판정 — 선언된 정답",
+      "temptingBecause": "동사 직전의 복수 명사들(organizations, social media 앞의 mistakes 등)과 12단어가량의 수식어에 현혹되어 are가 맞다고 느낄 수 있다",
+      "decisiveFlaw": "주어부 핵은 단수 'One'이므로 are는 비문이고 is로 교정해야 하며, 교정 시 정확히 원문이 된다 — 유일 정답"
+    },
+    {
+      "label": "(D)",
+      "intent": "be동사 보어 자리의 접속사 that vs 관계대명사 what / 완전·불완전절 판정",
+      "temptingBecause": "보어 자리에는 what이 와야 한다고 외운 학생이 that을 의심할 수 있다",
+      "decisiveFlaw": "뒤따르는 절(they focus too much ... objectives)이 완전하므로 명사절 접속사 that이 정확하다 — 오답 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "상관접속사 either A or B가 조동사 must에 걸리는 동사원형 병렬 판정",
+      "temptingBecause": "주어 a social media presence(3인칭 단수)만 보고 results로 고쳐야 한다고 오인하거나, or 뒤 병렬의 기준점(must)을 놓칠 수 있다",
+      "decisiveFlaw": "must either solve ... or result로 조동사 뒤 원형 병렬이 성립하므로 result가 정확하다 — 오답 아님"
+    }
+  ],
+  "explanationIssues": [
+    "(D) 해설이 렌더 지문의 표기(are)가 아닌 교정 후 형태(is)를 기준으로 'be동사 is 뒤에서'라고 서술 — 구조 분석은 정확하나 표기 불일치(minor)",
+    "주 해설 '복수 명사구의 수식을 받는 One' — 수식어의 품사 명명이 부정확(전치사구+분사구+부사절)(minor)",
+    "디코이별 명시적 'why tempting' 서술 부재 — 오답 해설이 '왜 옳은가'만 설명하고 '왜 매력적인가'를 담지 않아 KILLER §C 3번 조건의 문서화 요구에 미달"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한다: 렌더는 의도된 is→are 단일 변형 외 손상이 없고(V1), 5개 밑줄 독립 검증 결과 (C)만 비문으로 정답이 유일하며(V2), 교정 시 정확히 원문이 복원되고(V3), 해설의 구조 분석이 실제 문장과 일치한다(V4·V5는 minor 이슈만). 그러나 요청 난이도 KILLER 대비 정답 포인트가 'One of + 복수명사 → 단수동사'라는 한국 수능 영어에서 가장 고빈도로 훈련되는 수일치 패턴이라, 선형 거리(12단어 수식어)에도 불구하고 문두 'One of the most common mistakes'를 본 순간 패턴 매칭으로 사실상 즉시 노출된다. RUBRIC §C의 'KILLER 정답은 구조를 읽어야 하며 단순 수일치로 즉시 드러나지 않는다' 취지에 미달하고, 디코이별 why-tempting 문서화도 없어 killerConditionsMet=false. 디코이들(분사 태·consider+동명사·that 완전절·상관접속사 병렬)은 서로 다른 오개념을 겨냥해 밀도는 양호하나 모두 숙련 학생이 빠르게 소거 가능해 변별 심도가 낮다(C3=2). 난이도 정합 C5=1로 B 등급 하한(C 최저 2)에 미달 → 등급 C. 재설계 방향: 정답 포인트를 패턴 암기로 뚫리지 않는 구조 판정(예: 동명사구 주어 수일치, do 대동사, 분사 vs 정동사 선택)으로 교체하거나 요청 난이도를 MEDIUM으로 하향."
+}

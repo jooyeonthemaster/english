@@ -1,0 +1,74 @@
+{
+  "pid": "P071",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-tense-shorthand",
+      "severity": "minor",
+      "evidence": "(B) 해설이 '일이 진행되지 않는 시점보다 계획 시점이 앞서므로 과거완료'라고 설명하지만 주절 'things do not go'는 현재시제다. 현재 기준의 선행은 원칙상 현재완료로 설명되므로 시제 기준점 서술이 느슨하다. 다만 had planned 자체는 원문 그대로의 관용적 용법이고 (B)는 정답이 아니므로 오분석 수준은 아님."
+    },
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(A) 해설의 '목적어절을 이끄는 관계 자리'라는 표현이 명사절/관계사 프레임을 뒤섞어 다소 모호하다. 실질 분석(what = do의 목적어이자 know의 목적어절 유도)은 정확하다."
+    },
+    {
+      "code": "C3-conspicuous-error",
+      "severity": "minor",
+      "evidence": "정답 오류 'keeping us to awake'는 표면상 즉시 어색하게 읽혀 구조 독해 없이도 눈에 띄기 쉽다. INTERMEDIATE 라벨 내에서는 허용되나 난이도 하단에 위치한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사절(선행사 포함 관계대명사) what의 자리 판단 — that/which와의 구별",
+      "temptingBecause": "and로 병렬된 두 번째 wh-절이라 학생이 that이나 which가 와야 한다고 의심할 수 있다",
+      "decisiveFlaw": "what은 do의 목적어 역할을 하면서 'where we are headed'와 병렬로 know의 목적어절을 이끌므로 어법상 올바르다 — 오답 근거 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "과거완료(대과거)의 시제 선후 판단",
+      "temptingBecause": "주절이 현재시제(do not go)인데 종속절이 had planned여서 시제 불일치로 보이기 쉽다 — 디코이 중 가장 실질적 판단을 요구",
+      "decisiveFlaw": "계획 시점이 결과(어긋남)보다 앞서는 선행 사건이며 원문 그대로의 관용적·용인 가능한 용법 — 오답 근거 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "be동사 주격 보어 자리의 형용사 vs 부사 판단",
+      "temptingBecause": "unpredictably 같은 부사형을 떠올릴 수 있다",
+      "decisiveFlaw": "is의 주격 보어 자리이므로 형용사 unpredictable이 정확하다 — 오답 근거 없음"
+    },
+    {
+      "label": "(D)",
+      "intent": "end up + 동명사 관용 패턴 판단 (to부정사 오도)",
+      "temptingBecause": "'~하게 되다' 의미에서 to spend를 연상할 수 있다",
+      "decisiveFlaw": "end up은 -ing를 취하는 패턴이므로 spending이 정확하다 — 오답 근거 없음"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — keep의 5형식 목적격 보어 형태(형용사) 판단, source-correct(awake) → displayed-wrong(to awake) 최소대립쌍",
+      "temptingBecause": "want/allow/cause us to-V처럼 목적어 뒤 to부정사가 오는 동사 패턴에 익숙하면 to awake를 자연스럽다고 착각할 수 있다",
+      "decisiveFlaw": "keep은 목적격 보어로 to부정사를 허용하지 않으며(형용사/분사/전치사구만 허용) 대안 해석도 성립하지 않는다. awake(형용사)로 고치면 정확히 원문이 된다"
+    }
+  ],
+  "explanationIssues": [
+    "(B) 해설: 현재시제 주절에 대한 과거완료를 단순 선행 논리로 설명 — 교과서식 축약으로 엄밀성이 다소 떨어지나 오개념 유발 수준은 아님",
+    "(A) 해설: '관계 자리'라는 용어 사용이 모호함(명사절/관계사 혼용) — 실질 구조 분석은 정확"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 유일 오류 (E) to awake는 원문과의 깨끗한 최소대립쌍이고 교정 시 정확히 원문 복원, 문맥 선호가 아닌 명확한 문법 판단(keep의 보어 결합가). 디코이 4개가 각기 다른 포인트(관계사/시제/보어 품사/동명사 관용)를 겨냥해 의도 밀도 양호. 다만 정답 오류가 표면적으로 매우 눈에 띄어 INTERMEDIATE 하단 난이도이고, C 합계 18로 A 기준(21) 미달 — 작은 수정(더 은닉된 오류 배치 또는 디코이 함정 심화)으로 출제 가능한 B."
+}

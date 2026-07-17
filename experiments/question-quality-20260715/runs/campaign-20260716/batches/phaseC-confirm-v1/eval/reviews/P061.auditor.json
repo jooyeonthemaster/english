@@ -1,0 +1,70 @@
+{
+  "pid": "P061",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-phrasing",
+      "severity": "minor",
+      "evidence": "(A) 해설 '앞선 had conceptualized와 접속사 and를 통해 내용상 병렬로 이어지지만 형태적으로는 was attempting 구조를 이루므로'는 표현이 다소 모호하다. 실제 병렬은 정동사구 'had conceptualized'와 'was attempting' 간의 VP 병렬이며 해설의 결론(어법상 맞음)과 구조 분석 자체는 사실과 일치하므로 V4 실패는 아니다. 'was'를 '조동사'로 부른 것은 진행형 조동사(auxiliary be)로서 용어상 허용 범위."
+    },
+    {
+      "code": "V5-schema-note",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (D)만 expression='began'(원문형), errorExpression='beginning'(렌더형)으로 비오류 항목(expression=errorExpression=렌더형)과 필드 의미가 다르게 보이나, 'expression=원천형/errorExpression=표시형' 규약으로 읽으면 전 항목 일관 — 모순 아님(정보성 기록)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "be 진행형 뒤 현재분사 형태 및 정동사구 병렬(had conceptualized ... and was attempting) 판정",
+      "temptingBecause": "and 앞의 had conceptualized에 이끌려 had 뒤 과거분사(attempted)와의 병렬로 오독하면 attempting이 틀려 보인다.",
+      "decisiveFlaw": "병렬 단위는 정동사구 전체이며 was attempting은 적법한 과거진행 — 어법상 옳으므로 정답 불가."
+    },
+    {
+      "label": "(B)",
+      "intent": "수여동사 issue의 수혜자 수동태(was issued + 잔여 목적어) 판정",
+      "temptingBecause": "수동태 뒤에 목적어(nine U.S. patents)가 남아 있어 '수동태는 목적어를 못 가진다'는 오개념을 자극한다.",
+      "decisiveFlaw": "issue sb sth의 간접목적어 주어 수동태로 직접목적어 잔류는 표준 어법 — 옳으므로 정답 불가."
+    },
+    {
+      "label": "(C)",
+      "intent": "형용사 vs 부사 — 동사 sold 수식 자리의 품사 판정",
+      "temptingBecause": "관계절 내부 주어와 동사 사이 위치가 낯설게 보일 수 있다.",
+      "decisiveFlaw": "동사 sold를 수식하므로 부사가 정확 — 즉시 소거 가능한 약한 디코이(변별 기여 낮음)."
+    },
+    {
+      "label": "(D)",
+      "intent": "정동사 vs 준동사 — 주절 서술어 부재 탐지 (선언된 정답)",
+      "temptingBecause": "전치 부사구 'In the 1920s,' 뒤의 -ing를 분사구문류로 흘려 읽으면 지나치기 쉽다.",
+      "decisiveFlaw": "문장에 정동사가 전혀 없어 어떤 대안 해석으로도 구제 불가 — began으로 교정하면 정확히 원문 복원. 유일 오류로 확정."
+    },
+    {
+      "label": "(E)",
+      "intent": "with 분사구문(독립분사)에서 명사-분사 간 능동/수동 관계 판정",
+      "temptingBecause": "issued/issuing/being issued 중 형태 선택을 요구하며 being의 존재가 과잉으로 보일 수 있다.",
+      "decisiveFlaw": "patents가 발행'되는' 수동 관계로 being issued 적법(issued 단독도 가능하나 표시형 그대로 어법상 옳음) — 정답 불가."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 '정동사가 필요한 자리 / 동사가 와야 한다 / 정동사가 필수'로 동일 논지를 3회 반복 — 사실 오류는 없으나 장황.",
+    "(A) 해설의 병렬 서술('내용상 병렬이지만 형태적으로는')이 모호하게 압축되어 학생이 병렬 단위를 오해할 여지가 있음(오분석은 아님).",
+    "오답 해설이 (B) 외에는 '왜 매력적인가'를 명시하지 않고 '왜 옳은가'만 서술 — INTERMEDIATE 기준 감점 사유는 아니나 개선 여지."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 (D) began→beginning 의도 변형 외 원지문과 전 문장 일치, 라벨 (A)~(E)와 선지 일치. V2: 5개 밑줄 독립 검증 결과 (A) 과거진행+VP병렬, (B) 수여동사 수혜자 수동, (C) 동사 수식 부사, (E) with 구문 수동 분사 모두 적법하고 (D)만 주절 정동사 부재로 비문 — 단일 정답 확정. V3: 오류는 (D) 한 곳뿐이며 교정문 자연스러움. V4: 구조 분석·교정형(began)·정답 라벨 모두 사실과 일치, 환각·오개념 없음(경미한 표현 문제만). V5: 정답 라벨·선지·해설·keyPoints·markedExpressions 동기화. 공예: 정/준동사라는 정전 포인트(C1=3), 디코이별 상이한 오개념 겨냥이나 (C)가 약하고 (B)/(E)가 동일 동사 issue의 수동성으로 부분 중복(C2=3), (A)(B)(E)는 실제 판단을 요구하나 (D) 오류 자체가 짧은 단문에서 비교적 쉽게 노출(C3=3), 메타 누출 없고 교정 시 원문 정확 복원으로 정답 필연(C4=3), INTERMEDIATE 요구 사고 단계와 부합(C5=3), 해설 정확하나 반복·모호 표현으로 우아함 감점(C6=3). 합계 18 — 모든 V 통과, 최저 C=3, 합계 17 이상 21 미만이므로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

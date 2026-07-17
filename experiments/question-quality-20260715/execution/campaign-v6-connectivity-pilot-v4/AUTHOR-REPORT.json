@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-v4-author-report",
+  "verdict": "READY_FOR_INDEPENDENT_OFFLINE_AUDIT_LIVE_EXECUTION_BLOCKED",
+  "protocolSha256": "18d7eb7c60fdfc1d4b49fb868ef887d64e62db6d217abf8eaec0fbbeab8ffec9",
+  "exactWirePrivateSha256": "b81e59a209e3166bc74cd18181669d5fb87a883480dcbd33d061ddcdac5df712",
+  "exactWirePublicSha256": "6a0d9ef8775a528b2e90c9c96069753aa26b67d4f34a3a2409d2e34ae4a2362a",
+  "compilerClosureSha256": "673effc7574891a32d1ddad79531ef5573ecfb5be61e9df8ad4b74e1d8a5ebbd",
+  "compilerClosureSemanticSha256": "4ff97962aa65651d4bd913ef9d1a05e2f149de60a69d6d6b90cca804165eecbb",
+  "exactCompilerSourceFiles": 192,
+  "exactCompilerDeclaredDataInputs": 4,
+  "exactCompilerClosureFiles": 196,
+  "liveClosureSha256": "775156d6b74c5651fc0eedba3ed3b07b2733acfefe3f74a89f96236d6f46c92a",
+  "liveClosureSemanticSha256": "02610b438f06b6a7d8acec06ae95b7877d47fd91fc4fcef90c82c86d9ecf1d7d",
+  "liveEntrypoints": [
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-child.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/operator-wrapper.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts"
+  ],
+  "exactLiveClosureFiles": 11,
+  "closureSeparation": {
+    "compilerClosureAuthority": "compiler-closure-v4.json exact 192 source + 4 declared data rows",
+    "liveRuntimeClosureAuthority": "live-closure-v4.json exact 8 source + 3 runtime data rows",
+    "inheritedV3ThirtyTwoRowSubsetAuthority": false,
+    "minimumCountAcceptanceUsed": false
+  },
+  "parserContract": {
+    "allowedFinishReasons": [
+      "stop"
+    ],
+    "exactWireResponseSchemaRequired": true,
+    "nonnegativeSafeIntegerUsageRequired": true,
+    "exactTokenTotalConsistencyRequired": true,
+    "negativeRegressions": [
+      "finish_reason_length",
+      "schema_invalid_single_object",
+      "fractional_usage"
+    ]
+  },
+  "preservedPackages": {
+    "v2Unmodified": true,
+    "v3Unmodified": true
+  },
+  "bounds": {
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "candidates": 2,
+    "physicalFetches": 2,
+    "completions": 2,
+    "retries": 0,
+    "repairs": 0,
+    "fallbacks": 0,
+    "replacements": 0,
+    "topUps": 0,
+    "frozenWorstCaseCostUsd": 0.614455382
+  },
+  "globalLedger": {
+    "cap": 1000,
+    "observedUsedAtAuthorFreeze": 0,
+    "observedReservedAtAuthorFreeze": 0,
+    "futureLiveReservation": 2,
+    "authorFreezeReservationMutation": 0
+  },
+  "activity": {
+    "locallyInterceptedProductionCompilerFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "productionDatabaseCalls": 0,
+    "realCredentialValuesRead": 0
+  },
+  "authorization": {
+    "liveExecutionAuthorized": false,
+    "hostileAuditPassed": false,
+    "dispatchCommandPresent": false
+  },
+  "scientificScope": "Two connectivity rows cannot establish quality, reliability, or comparative performance."
+}

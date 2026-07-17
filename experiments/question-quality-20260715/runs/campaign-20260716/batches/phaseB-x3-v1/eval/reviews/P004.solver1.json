@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'a program that, when triggered, directs...' — 부사절 축약(when it is triggered)으로 주절 주어(that=program)와 일치하는 수동 생략 구문. program은 trigger되는 대상이므로 과거분사가 적법. 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'will cause us either to face a situation or avoid it' — 매력적 오답으로 실제 끌림: either 뒤가 to face이므로 or 뒤도 to avoid여야 엄격 병렬이라는 유혹. 그러나 to 공유 생략(cause us to face or avoid)은 표준 허용 범위이며 cause의 to부정사 보문 패턴 자체는 충족됨. 문체적 느슨함일 뿐 어법 오류로 확정 불가. 정문."
+    },
+    {
+      "label": "C",
+      "verdict": "incorrect",
+      "reason": "'may cause us remembering an experience' — cause는 5형식에서 반드시 cause + O + to-V (cause us to remember)를 취하며 동명사 보어 불가. 같은 문장의 'will cause us either to face...'가 올바른 패턴을 보여주는 장거리 단서. 대안 해석(us remembering을 동명사 의미상 주어 구조로 읽기)도 표준 영어에서 성립하지 않음. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'the specific ways in which they activate our systems' — 선행사 ways + 뒤따르는 절이 완전(주어 they, 동사 activate, 목적어 our systems)하므로 전치사+관계대명사 in which 적법. 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'have helped us (as a species) survive challenges' — help + O + (to) 원형부정사 둘 다 허용되므로 원형 survive 적법. 삽입구 (as a species)는 구조에 영향 없음. 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 1차 스캔에서 (C)의 cause us remembering이 즉시 포착됨(cause의 고정 보문 패턴 위반). 가장 강한 유혹은 (B) — either...or 병렬에서 두 번째 to 생략이 엄격 병렬 위반처럼 보이나, to 공유 생략은 수용 가능한 표준 용법이라 어법 오류로 볼 수 없음. (A)는 분사 태 판단 유혹이 있으나 축약 부사절로 명백히 정문. 단일 정답 C로 수렴, 복수 정답 소지 없음."
+}

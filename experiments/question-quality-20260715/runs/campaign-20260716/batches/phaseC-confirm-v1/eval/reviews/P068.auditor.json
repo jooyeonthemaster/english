@@ -1,0 +1,58 @@
+{
+  "pid": "P068",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주어-동사 수일치 점검: 불가산·단수 주어 'Recent evidence'에 대한 단수 동사.",
+      "temptingBecause": "evidence를 복수로 오인하거나 that절 내부 명사(ancestor/people)와 혼동하면 원형·복수형을 기대하게 됨.",
+      "decisiveFlaw": "정답 아님(적절). evidence는 불가산 단수이므로 단수 동사 suggests가 옳다. 원문과 동일."
+    },
+    {
+      "label": "(B)",
+      "intent": "의문문 조동사 did 뒤 동사원형.",
+      "temptingBecause": "주어 the Neanderthal toolkit이 단수라 shows로 수일치시키려는 전형적 함정.",
+      "decisiveFlaw": "정답 아님(적절). 'did ... show' 구조에서 조동사 did 뒤에는 원형 show가 와야 하며 수일치는 did가 담당한다."
+    },
+    {
+      "label": "(C)",
+      "intent": "조동사+완료 사이 부사 위치/품사.",
+      "temptingBecause": "부사 위치를 낯설게 느끼거나 형용사형을 기대하면 오류로 오인할 수 있음.",
+      "decisiveFlaw": "정답 아님(적절). 동사구 would have changed를 수식하는 부사 undoubtedly는 옳고 위치도 자연스럽다."
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사 for의 목적어로서의 동명사.",
+      "temptingBecause": "목적을 나타내는 to부정사 'to retain'으로 바꾸고 싶은 유혹, 또는 앞의 for와 중복돼 보이는 착시.",
+      "decisiveFlaw": "정답 아님(적절). 전치사 for의 목적어 자리이므로 동명사 retaining이 옳다(mutations for retaining ...)."
+    },
+    {
+      "label": "(E)",
+      "intent": "현재분사 vs 과거분사 — 뒤따르는 목적어 유무로 능동/수동을 판정하는 분사 후치수식.",
+      "temptingBecause": "'a genetic change driven evolution'을 마치 'genetic-change-driven evolution'(복합 수식어) 처럼 읽으면 과거분사가 자연스러워 보여 오류가 위장된다. 긴 주어 명사구 안에 묻혀 있어 본동사 gets를 찾기 전에는 잘 안 보임.",
+      "decisiveFlaw": "정답(오류). 분사가 목적어 evolution을 직접 취하므로 능동의 현재분사 driving이어야 한다. 관사 'a'가 'genetic change'에 붙고 하이픈도 없어 복합 수식 해석이 성립하지 않으므로 displayed 'driven'은 비문 → driving으로 교정하면 정확히 원문이 된다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": true,
+  "grade": "B",
+  "notes": "모든 V 통과. V1: driving→driven 단일 최소대립쌍 외 손상 없음, 라벨/마커 일치. V2: (A) evidence 불가산 단수 단수동사 적절, (B) did+원형 적절, (C) 부사 적절, (D) 전치사+동명사 적절, (E)만 유일 오류. (E)의 복합수식('genetic-change-driven') 오독 가능성을 검토했으나 무관사·무하이픈 상태에서는 문법적으로 성립하지 않아 (E)는 진짜 비문이며 정답 유일성 유지. V4: 정답·오답 4개 해설 모두 통사 분석이 실제 문장과 정확히 일치(수오분석·환각 없음). V5: 정답 라벨(E)·markedExpressions(isError/correction=driving/errorExpression=driven)·keyPoints 동기화. §C KILLER 조건: (1) source-correct→displayed-wrong 최소대립쌍 ✓ (2) 목적어 유무에 의한 명확한 문법 판단으로 valency/가정법류 대안분석 아님 ✓ (3) 5개 밑줄 모두 point/tempting/correct-incorrect 존재 ✓ (4) 철자·비단어·단순수일치가 아닌 구조 판독 필요, 복합수식 위장으로 즉시 드러나지 않음 ✓ (5) 같은 point의 분사 디코이 없음 ✓ → killerConditionsMet=true. 다만 현재분사/과거분사(목적어 판정)는 수능 최빈출 드릴 포인트라 강한 학생은 표준 휴리스틱으로 비교적 빨리 소거 가능 → C5=2로 난이도 정합을 보수적으로 판정. 합계 17, 최저 C 2, 전 V 통과이므로 등급 B(작은 난이도 보강으로 출제 가능)."
+}

@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20220324-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 134
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-marker-too-densex1",
+    "grammar-shallow-nearby-passive-decoyx1"
+  ],
+  "layout": "(A):dec=b  (B):ANS=f  (C):dec=e  (D):dec=h  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 0,
+        "relPos": 0,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 233,
+        "relPos": 0.34,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 291,
+        "relPos": 0.425,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 486,
+        "relPos": 0.709,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 541,
+        "relPos": 0.79,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.79,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been proven to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you to do another task and another. By the end of the day, that one task completed will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "When",
+        "isError": false,
+        "errorExpression": "When",
+        "surroundingText": "When I was in the army, my instructors would show up in my barracks room",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "ridiculous",
+        "isError": true,
+        "correction": "ridiculous",
+        "errorExpression": "ridiculously",
+        "surroundingText": "It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "has been proven",
+        "isError": false,
+        "errorExpression": "has been proven",
+        "surroundingText": "but the wisdom of this simple act has been proven to me many times over. If you make",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "to do",
+        "isError": false,
+        "errorExpression": "to do",
+        "surroundingText": "It will give you a small sense of pride and it will encourage you to do another task and another.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(E)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "do another task and another. By the end of the day, that one task completed will have",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "When"
+      },
+      {
+        "label": "(B)",
+        "text": "ridiculously"
+      },
+      {
+        "label": "(C)",
+        "text": "has been proven"
+      },
+      {
+        "label": "(D)",
+        "text": "to do"
+      },
+      {
+        "label": "(E)",
+        "text": "that"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "시간의 부사절을 이끄는 접속사 'When'이 이끄는 절이 주절 앞에 완전하게 잘 연결되어 있으므로 어법상 옳습니다.",
+      "(C)": "주어인 'the wisdom of this simple act'는 증명하는 주체가 아니라 증명되는 행동의 대상이므로 현재완료 수동태 'has been proven'은 어법상 옳습니다.",
+      "(D)": "동사 'encourage'는 목적격보어로 to부정사를 취하므로 'encourage you to do'에서 목적격보어 자리에 쓰인 'to do'는 어법상 옳습니다.",
+      "(E)": "뒤에 오는 단수 명사구 'one task completed'를 수식하는 지시형용사 'that'은 단수 명사를 올바르게 한정하므로 어법상 옳습니다."
+    },
+    "explanation": "It seemed a little ridiculously at the time 문장에서 seem은 주어 'It'의 상태를 설명하는 보어를 요구하는 연결동사(2형식 동사)입니다. 우리말로는 '우스꽝스럽게 보였다'라고 해석되어 부사처럼 느껴지기 쉽지만, 주어의 성질을 설명하는 주격보어 자리에는 부사가 올 수 없고 형용사가 와야 합니다. 따라서 부사 형태인 ridiculously는 틀렸으며 형용사인 ridiculous로 고쳐야 합니다. 우리말 해석의 어색함에 이끌려 부사를 선택하지 않도록 유의해야 합니다.",
+    "keyPoints": [
+      "(B) 형용사 자리 vs 부사 자리 — 2형식 동사 seem 뒤의 주격보어 판단",
+      "(C) 능동태 vs 수동태 — 주어와 동사의 수동 관계 판정",
+      "(D) 목적격보어 형태 — encourage가 취하는 목적격보어 to-V 형태의 적합성 판단"
+    ],
+    "tags": [
+      "어법",
+      "보어의 품사",
+      "수동태",
+      "5형식 동사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "__(A) When__ I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little __(B) ridiculously__ at the time, but the wisdom of this simple act __(C) has been proven__ to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you __(D) to do__ another task and another. By the end of the day, __(E) that__ one task completed will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

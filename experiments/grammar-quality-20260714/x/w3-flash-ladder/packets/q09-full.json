@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20191120-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 155
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-obvious-adjacent-sv-agreement",
+    "grammar-killer-thin-answer"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=g  (B):dec=b  (C):dec=a  (D):dec=k  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 27,
+        "relPos": 0.032,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 344,
+        "relPos": 0.402,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 390,
+        "relPos": 0.456,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 629,
+        "relPos": 0.736,
+        "sentenceIndex": 8,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 769,
+        "relPos": 0.899,
+        "sentenceIndex": 11,
+        "found": true
+      }
+    ],
+    "sentenceCount": 13,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.899,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a meal. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(B)",
+        "expression": "which",
+        "isError": false,
+        "errorExpression": "which",
+        "surroundingText": "There is the leopard seal, for one, which likes to have penguins for a meal.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "What is an Adélie to do? The penguins' solution is to play the waiting game.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "to see",
+        "isError": false,
+        "errorExpression": "to see",
+        "surroundingText": "The moment that occurs, the rest of the penguins watch with anticipation to see what happens next.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "alters",
+        "isError": true,
+        "correction": "alters",
+        "errorExpression": "alter",
+        "surroundingText": "One penguin's destiny alters the fate of all the others.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "which"
+      },
+      {
+        "label": "(C)",
+        "text": "is"
+      },
+      {
+        "label": "(D)",
+        "text": "to see"
+      },
+      {
+        "label": "(E)",
+        "text": "alter"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "앞에 나온 단수 명사인 your choice를 대신하여 지시하는 대명사로서 단수형인 that을 사용한 것은 적절합니다.",
+      "(B)": "선행사인 the leopard seal을 부연 설명하는 주격 관계대명사의 계속적 용법으로 쓰인 which는 어법상 맞습니다.",
+      "(C)": "문장의 주어인 The penguins' solution에 호응하는 정동사(본동사) 자리로, 단수 수일치가 이루어진 현재형 동사 is의 사용은 적절합니다.",
+      "(D)": "주절의 동사구인 watch with anticipation 뒤에서 목적(~하기 위하여)을 타내는 부사적 용법의 to부정사구이므로 준동사 형태로 올바르게 쓰였습니다."
+    },
+    "explanation": "주어와 동사의 수일치를 묻는 문항입니다. 해당 문장의 주어 핵은 3인칭 단수 명사인 'One penguin's destiny'이므로, 이에 대치되는 현재 시제의 술어 동사는 단수 동사 형태인 'alters'가 되어야 합니다. 복수형태인 'alter'는 주어의 수와 일치하지 않는 비문이므로, 'alters'로 고쳐야 올바릅니다.",
+    "keyPoints": [
+      "(E) 주어와 동사의 수일치 — 3인칭 단수 주어 뒤에는 단수형 현재 동사 사용",
+      "(A) 대명사의 일치 — 앞의 명사가 단수(choice)이므로 지시대명사 that 선택",
+      "(B) 관계대명사의 계속적 용법 — 선행사를 선별하여 수식하는 주격 관계사 확인"
+    ],
+    "tags": [
+      "수능 어법",
+      "주어 동사 수일치",
+      "대명사의 일치",
+      "관계대명사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "There is a critical factor __(A) that__ determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, __(B) which__ likes to have penguins for a meal. What __(C) is__ an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation __(D) to see__ what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny __(E) alter__ the fate of all the others. Their strategy, you could say, is \"learn and live.\""
+  }
+}

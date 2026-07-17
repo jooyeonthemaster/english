@@ -1,0 +1,66 @@
+{
+  "pid": "P021",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-META-EXPRESSION-MISMATCH",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression 필드가 렌더 표시형 'find'가 아닌 교정형 'finding'을 담고 있고, surroundingText도 원문 형태('to finding more')를 인용해 다른 4개 항목의 관례(표시형 인용)와 불일치. errorExpression='find'/correction='finding'으로 의미는 복원 가능하고 학생 노출 필드(선택지·해설·keyPoints)는 모두 동기화되어 있어 V5 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V3-SOURCE-IDIOM",
+      "severity": "minor",
+      "evidence": "'find more about their origins'는 관용상 'find out more about'가 더 자연스러우나 원지문 유래 표현이므로 렌더 손상·비문으로 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "능동태 vs 수동태 — 주어(people who have been adopted)와 allow의 의미 관계 판단",
+      "temptingBecause": "be allowed to V 구조에서 to부정사가 이어져 능동/수동 판단을 한 번 거쳐야 하고, allow의 목적어 위치가 비어 보임",
+      "decisiveFlaw": "주어가 '허용을 받는' 대상이므로 수동태 are not allowed가 정확 — 오류로 볼 여지가 없어 상위권에게는 즉시 소거됨"
+    },
+    {
+      "label": "(B)",
+      "intent": "대명사 — 인칭대명사 them vs 재귀대명사 themselves (지시 대상 확인)",
+      "temptingBecause": "tell의 목적어 자리에서 주어와의 동일 지시 여부를 확인해야 함",
+      "decisiveFlaw": "주어 adoption officials와 지시 대상(입양아들)이 다르므로 재귀대명사 불가, them이 정확 — 판단이 단순해 필러에 가까운 약한 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "시제 — in the past decade와 현재완료의 공기 판단",
+      "temptingBecause": "'past'라는 단어 때문에 단순과거가 어울린다고 오인하기 쉬움",
+      "decisiveFlaw": "in the past decade는 과거~현재 기간을 나타내므로 현재완료가 정확"
+    },
+    {
+      "label": "(D)",
+      "intent": "관계대명사 what vs 접속사 that — 선행사 유무·절의 완전성 판단",
+      "temptingBecause": "find 뒤에 절이 이어져 명사절 접속사 that을 연상하기 쉽고, they want to know의 완전성 판단이 필요 — 5개 중 가장 강한 디코이",
+      "decisiveFlaw": "know의 목적어가 비어 있는 불완전한 절이고 선행사가 없으므로 what이 정확"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 전치사 to vs to부정사: devote A to B에서 to는 전치사이므로 동명사 요구",
+      "temptingBecause": "to 뒤 동사원형이 to부정사(목적)처럼 보이고, devote와 to 사이에 all their time and energy가 끼어 있어 구문 인식이 한 박자 늦어짐",
+      "decisiveFlaw": "devote의 to는 전치사여서 find는 비문 → finding으로 교정하면 정확히 원문이 복원됨(최소대립쌍). 다만 devote A to -ing는 고빈도 암기 포인트라 구조 독해 없이도 패턴 매칭으로 즉시 식별 가능"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더는 (E) finding→find 단일 의도 변형 외 손상 없음, 정답 유일성은 5개 밑줄 독립 검증으로 확인, 해설의 통사 분석(devote A to B 전치사 to, what의 불완전절, 현재완료·수동태·대명사)이 모두 사실과 일치. 그러나 KILLER 요청 대비 실제 난이도가 중간 수준: 정답 포인트 devote A to -ing는 정형화된 암기 콜로케이션으로 구조를 읽지 않아도 즉시 드러나며(§C 'KILLER 정답은 즉시 드러나지 않는다' 위배), (A)·(B)는 즉시 소거형 약한 디코이이고, 밑줄별 why-tempting 명시 필드도 부재. killerConditionsMet=false, C5=1로 B 등급 요건(최저 2) 미달 → 재설계 필요한 C 등급. 합계 15/24. 수정 방향: 정답 포인트를 구조 독해형(예: 도치·분사구문 주어 판단·병렬 심층형)으로 교체하거나 (A)/(B)를 실질 판단이 필요한 디코이로 강화."
+}

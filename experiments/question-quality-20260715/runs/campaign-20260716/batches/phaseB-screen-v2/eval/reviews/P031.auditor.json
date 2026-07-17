@@ -1,0 +1,79 @@
+{
+  "pid": "P031",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-location-misattribution",
+      "severity": "minor",
+      "evidence": "해설의 ③ 오답 설명이 'Carol이 인도에서 서성거렸던 본문의 구체적 맥락'이라고 하지만 지문은 'started walking back and forth on the street'로 '거리(street)'라고 명시한다. 선지 ③의 'sidewalk'를 지문 내용으로 되돌려 설명한 소소한 귀속 오류이며 정답 논리에는 영향이 없다."
+    },
+    {
+      "code": "V3-minor-option5-deixis",
+      "severity": "minor",
+      "evidence": "⑤를 빈칸에 넣으면 친구 자신의 발화 안에서 'her friend's car'(= 화자 자신의 차)를 3인칭으로 지칭하게 되어 화시(deixis)가 어색하다. 비문은 아니지만 의미 판단 없이 형식만으로 소거 가능한 이음새 결함이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 3,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(허용→금지) 함정",
+      "temptingBecause": "표지판·차량·금지라는 지문의 규제 프레임과 어휘장이 겹치고, 'get into her car' 장면과 vehicle 출입 소재가 연결된다.",
+      "decisiveFlaw": "'but we can ___'은 허용 내용을 요구하는 자리인데 ①은 금지 행위(forbid)를 넣어 담화 극성이 정반대가 되며, 승객(우리)이 하차를 금지한다는 명제 자체가 표지판 의미 설명으로 성립하지 않는다."
+    },
+    {
+      "label": "②",
+      "intent": "문자적 오독(standing = 가만히 서 있기) 되풀이 + 과확장 함정",
+      "temptingBecause": "'No Standing'의 표면 의미와 'stationary'가 직접 호응하여 Carol의 오해를 그대로 따라간 학생을 낚는다.",
+      "decisiveFlaw": "완전 정지 상태 유지는 곧 주정차이므로 바로 앞의 'we cannot park cars there'와 자기모순이다. 'designated areas'도 지문에 근거가 없다."
+    },
+    {
+      "label": "③",
+      "intent": "소재 연상(Carol의 서성거림) 함정",
+      "temptingBecause": "'walking back and forth'라는 지문 표면 어구와 겹친다.",
+      "decisiveFlaw": "친구의 발화는 차량 규칙('That means we cannot park cars')을 설명하는 문장이므로 보행 운동은 주어 'we(차량 이용자)'와 담화 목적 모두에 부적합하다."
+    },
+    {
+      "label": "④",
+      "intent": "정답 — source span 'stop to pick up passengers'의 의미 보존 paraphrase",
+      "temptingBecause": "(정답) 'cannot park ... but we can' 대조 구조와 이야기 전체의 오해 해소 논리를 정확히 완결한다.",
+      "decisiveFlaw": "없음. 'briefly halt' = stop(일시 정차), 'let someone get in' = pick up passengers로 원문 의미와 정확히 동치."
+    },
+    {
+      "label": "⑤",
+      "intent": "소재 연상(친구 차 기다리기/찾기) 함정",
+      "temptingBecause": "'happy to see her friend arrive and couldn't wait to get into her car'라는 앞 장면과 소재가 겹친다.",
+      "decisiveFlaw": "표지판의 의미를 설명하는 자리에 Carol의 개인 행동 제안을 넣어 담화 기능이 어긋나고, 친구 자신의 발화 속 'her friend's car'라는 3인칭 지칭이 화용적으로 성립하지 않는다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "content-misattribution",
+      "severity": "minor",
+      "evidence": "해설 ③ 설명의 '인도에서 서성거렸던'은 지문의 'on the street'와 불일치(선지의 sidewalk를 지문 내용으로 역투영). 정답 논리에는 무해."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "distractorAnchorOverlapFlaw": "대체로 충족하나 ①의 source anchor가 얇다",
+    "multiCueRequirement": "실패 — 빈칸 직전의 국소 대조('cannot park ... but we can')만으로 풀리며 두 문장/두 논리 단서 통합이 강제되지 않는다. 심지어 지문 없이도 대조 극성만으로 ④가 유일하게 허용 의미를 갖는 후보로 좁혀진다.",
+    "diverseTrapTypes": "실패 — ③과 ⑤가 동일한 소재 연상형 함정으로 중복된다(해설 스스로 인정)."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과(V1~V5 true, 이슈는 minor 2건). 그러나 요청 난이도 KILLER와의 정합이 완전히 붕괴했다: 지문 자체가 초급 일화문이고, 빈칸은 마지막 문장의 국소 'cannot park ... but we can' 대조 하나로 즉시 해소되며, ①(극성 모순)·②(자기모순)·③(담화 기능 부적합)·⑤(담화 기능 부적합+화시 오류)가 모두 표면 판단만으로 소거된다(C3=1, C5=0). §D KILLER 조건 중 다중 단서 통합 요구와 함정 다양성 요건을 충족하지 못해 killerConditionsMet=false. 문항 자체는 쉬운 난이도 대역에서는 출하 가능한 건전한 빈칸이지만, KILLER 슬롯용으로는 지문 교체 수준의 재설계가 필요하므로 등급 C."
+}

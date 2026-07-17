@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=l  (B):dec=c  (C):dec=l  (D):ANS=k  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 96,
+        "relPos": 0.139,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 245,
+        "relPos": 0.356,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 360,
+        "relPos": 0.522,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 493,
+        "relPos": 0.716,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 655,
+        "relPos": 0.951,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.951,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "such as",
+        "isError": false,
+        "correction": "such as",
+        "errorExpression": "such as",
+        "surroundingText": "a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased",
+        "pointCode": "l"
+      },
+      {
+        "label": "(B)",
+        "expression": "predicting",
+        "isError": false,
+        "correction": "predicting",
+        "errorExpression": "predicting",
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "By ceasing",
+        "isError": false,
+        "correction": "By ceasing",
+        "errorExpression": "By ceasing",
+        "surroundingText": "By ceasing, it violated your prediction and attracted your attention.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(D)",
+        "expression": "running",
+        "isError": true,
+        "correction": "running",
+        "errorExpression": "to run",
+        "surroundingText": "Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "used to run",
+        "isError": false,
+        "correction": "used to run",
+        "errorExpression": "used to run",
+        "surroundingText": "They tended to call around the time the trains used to run past their apartments.",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "such as"
+      },
+      {
+        "label": "(B)",
+        "text": "predicting"
+      },
+      {
+        "label": "(C)",
+        "text": "By ceasing"
+      },
+      {
+        "label": "(D)",
+        "text": "to run"
+      },
+      {
+        "label": "(E)",
+        "text": "used to run"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "such as는 앞의 명사(background noise)의 예시를 나열할 때 쓰는 전치사구로, 뒤에 명사구가 이어지는 구조가 자연스럽게 연결되었습니다.",
+      "(B)": "be + predicting(진행형)으로 쓰여 과거 진행 중이었던 동작인 '예측하고 있었다'는 의미를 올바르게 나타내고 있습니다.",
+      "(C)": "전치사 By 뒤에 동명사 ceasing이 쓰여 '~함으로써'라는 수단, 방법의 부사구를 올바르게 형성하고 있습니다.",
+      "(E)": "'과거에 ~하곤 했다'라는 의미의 조동사 used to가 사용되었으며, 시점상 과거의 습관을 나타내기에 적절합니다."
+    },
+    "explanation": "1. 정답 문장 분석 및 교정 : Right after New York City stopped running elevated trains, 에서 밑줄 (D) 'to run'은 'running'으로 고쳐야 합니다. 2. 비문 이유 : 동사 stop 뒤에 to 부정사가 오면 '~하기 위해 멈추다'라는 목적 의미로 해석되는데, 문맥상 뉴욕시가 기차를 운행하는 '행위 자체를 중단했다'는 내용이므로, 중단의 의미를 갖는 동명사 running이 와야 합니다. 3. 교정 : 따라서 문맥과 문장 구조상 오류인 'to run'을 'running'으로 고쳐야 합니다. 4. 함정 : 'stopped' 뒤에 to 부정사가 오는 구문 자체가 문법적으로 불가능한 것은 아니기 때문에, 문맥적 의미 파악 없이 구조만 보고 고르려다 실수하기 쉽습니다.",
+    "keyPoints": [
+      "(D) to-v vs v-ing — 타동사 stop의 목적어 적합성 판정",
+      "(B) 분사(진행형) — 능동태와 수동태의 문맥적 활용",
+      "(E) used to-v — 과거 습관을 나타내는 조동사 표현"
+    ],
+    "tags": [
+      "동명사",
+      "부정사",
+      "어휘 문맥",
+      "타동사 목적어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing that a source of constant background noise, __(A) such as__ a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were __(B) predicting__ its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. __(C) By ceasing__, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped __(D) to run__ elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains __(E) used to run__ past their apartments."
+  }
+}

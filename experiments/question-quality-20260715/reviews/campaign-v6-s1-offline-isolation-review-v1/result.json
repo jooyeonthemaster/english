@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "campaign-v6-s1-offline-isolation-review-v1",
+  "verdict": "PASS_OFFLINE_ISOLATION_REPRODUCED_EXECUTION_BLOCKED",
+  "reviewDate": "2026-07-15",
+  "scope": {
+    "s1Controller": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1",
+    "exactWirePreflight": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1",
+    "mode": "OFFLINE_READ_ONLY_TARGET_REVIEW"
+  },
+  "seals": {
+    "s1ManifestSha256": "3ed71284aaf28c6c0f78f89d75c13bc30f86d894f17ccecf88f24d4cd5c1614b",
+    "s1ManifestMismatches": 0,
+    "preflightManifestSha256": "b92c3772879e974c16b3a87527cb27d11c2a6cd90ac5018ac485f6989135c95e",
+    "preflightManifestMismatches": 0,
+    "privatePreflightArtifactSha256": "96318916c4ef714ae55febab3a63b992e93d6e2911f03235698487f40601ca7a",
+    "privateHashMatchesPublicCommitment": true,
+    "privateArtifactGitIgnored": true,
+    "privateArtifactTracked": false,
+    "targetFilesChangedByReview": 0
+  },
+  "productionImportClosure": {
+    "root": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.ts",
+    "fileCount": 9,
+    "containsOfflineTestSupport": false,
+    "containsTestOnlyRuntimeExport": false
+  },
+  "offlineTestSupport": {
+    "bookkeepingOnly": true,
+    "transportImplementationPresent": false,
+    "transportDelegatePresent": false,
+    "nativeFetchInvocationsInHostileTest": 0,
+    "acceptedStorePolicy": "PRIVATE_SYMBOL_AND_WEAKSET_BRAND_PLUS_OS_TEMP_PATH",
+    "rejectsUnbrandedTempStore": true,
+    "rejectsNonTempStore": true,
+    "controllerTransportMode": "OFFLINE_FAKE_ONLY_NO_DELEGATE",
+    "retainsCredentialSecret": false,
+    "emitsCredentialEnvironmentOrHeader": false
+  },
+  "productionAuthorization": {
+    "documentedPlaceholderPublicKeyPinned": true,
+    "soleProductionTrustRootUsesPlaceholder": true,
+    "testTrustRootExportedByProductionRuntime": false,
+    "productionCredentialCapabilityMintPathPresent": false,
+    "persistedS1Status": "DRY_RUN_ONLY_EXECUTION_BLOCKED",
+    "persistedPreflightStatus": "OFFLINE_PRODUCTION_CORE_REPLAY_EXECUTION_BLOCKED",
+    "liveExecutionAuthorized": false
+  },
+  "normalizeScope": {
+    "requestEnvelopeHashOptionalHashValidationPresent": true,
+    "promptProfileArtifactHashOptionalHashValidationPresent": true,
+    "completeProvenancePreservedByProbe": true,
+    "invalidRequestEnvelopeHashRejected": true,
+    "invalidPromptProfileArtifactHashRejected": true,
+    "nativeFetchCalls": 0,
+    "localInMemoryDelegateCalls": 1,
+    "otherScopeSemanticsChanged": false
+  },
+  "materialization": {
+    "assignments": 180,
+    "registries": 180,
+    "candidateOpportunityCap": 180,
+    "physicalFetchCap": 180,
+    "maxCostUsd": 39.332779274,
+    "campaignSemanticSha256": "2fa28a072e52170b8f00e94ddd5878d050c05b77ac0369dc63533f2bdef3fb2a",
+    "durableBatchIdentitySha256": "a7aa4f930dcf59ec60a1e863d85d697cb7a900be7391512db7416dc436b2eadd"
+  },
+  "offlineReplay": {
+    "assignments": 180,
+    "locallyInterceptedFetches": 180,
+    "uniqueWireBodies": 180,
+    "uniqueRequestEnvelopes": 180,
+    "unexpectedFetchAttempts": 0,
+    "blockedNonFetchTransportAttempts": 0,
+    "totalBodyUtf8Bytes": 7562124,
+    "preflightSemanticSha256": "3f8ae187dfe8015e76b9ff4ae2abc588fa4e3d1fbbd0ef65dbf723e95a7b6549"
+  },
+  "verification": {
+    "s1MaterializerUnitTests": { "passed": 28, "failed": 0 },
+    "sharedControllerBoundaryAndCallsiteTests": { "passed": 52, "failed": 0 },
+    "sharedLedgerTests": { "passed": 25, "failed": 0 },
+    "s1NonWritingBuilderReplayPassed": true,
+    "s1OfficialVerifierPassed": true,
+    "s1ScopedTypeScriptPassed": true,
+    "preflightGuardedReplayPassed": true,
+    "preflightOfficialVerifierPassed": true,
+    "preflightScopedTypeScriptPassed": true,
+    "normalizeScopeProbePassed": true,
+    "reviewBundleFullVerifierPassed": true
+  },
+  "sideEffects": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCalls": 0,
+    "applicationDatabaseCalls": 0,
+    "browserCalls": 0,
+    "credentialReads": 0,
+    "realSecretReads": 0,
+    "apiCandidatesConsumed": 0,
+    "liveExecutionAuthorized": false
+  }
+}

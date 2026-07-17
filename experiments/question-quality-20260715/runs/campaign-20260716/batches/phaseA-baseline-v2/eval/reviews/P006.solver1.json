@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "빈칸에 넣으면 'many of the features of literature follow from readers' preexisting knowledge about the historical backgrounds of texts'. seam(문법 결합)은 자연스러우나 지문 어디에도 역사적 배경지식 언급이 없다. 지문의 핵심은 제도적 선별(published, reviewed, reprinted)이 주는 '신뢰'이지 배경지식이 아니다. 학술적으로 그럴듯한 어휘(preexisting knowledge, historical backgrounds)로 포장된 무관 선지 — 실전에서 끌림이 거의 없었다."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "'the preference of readers for gaining clear and immediate information'은 지문 논지와 정반대. 지문은 독자가 obscurities와 apparent irrelevancies를 참아내며(put up with) 즉각적 명료성을 요구하지 않는다고 말한다. 명백한 역방향 오답."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "'readers' voluntary commitment to enduring ambiguity and searching for deeper intent'를 넣으면 문법 결합도 완전하고(follow from + 명사구, commitment to V-ing 정문), 지문 전체의 재진술이 된다: 'We can put up with many obscurities'(= enduring ambiguity), 'they struggle to interpret elements that flout principles of efficient communication in the interests of some further communicative goal'(= searching for deeper intent), 그리고 hyper-protected cooperative principle 하에서 독자가 자발적으로 해석 노력을 투자한다는 논지(= voluntary commitment). 원전(Culler, Literary Theory)의 결말 'follow from the willingness of readers to pay attention...'과도 정확히 대응한다."
+    },
+    {
+      "label": "④",
+      "verdict": "오답(매력적 오답)",
+      "reason": "'highly systematic and efficient ways of delivering communicative contents'는 지문에 등장하는 어휘(communicative, efficient communication)를 재활용해 표면적 끌림이 있다. 그러나 지문은 문학이 'flout principles of efficient communication'(효율적 소통 원리를 위반)한다고 명시하므로 방향이 정반대. 'efficient communication'이라는 표현을 훑어 읽은 수험생을 노린 어휘 재활용 미끼 — 잠깐 눈이 갔으나 flout 한 단어로 즉시 배제된다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'writers' continuous efforts to adjust their works based on reader feedback'는 지문 첫 문장의 선별 과정(published, reviewed, reprinted)에서 'reviewed'를 확대 해석하도록 유도한다. 그러나 review는 출판 후 제도적 검증이지 작가가 피드백으로 작품을 수정한다는 얘기가 아니며, 빈칸 문장의 주제는 '독자의 태도'이지 작가의 노력이 아니다. 마지막 문장 직전까지의 논의(readers assume, they struggle to interpret)가 모두 독자 중심이므로 주어 전환 자체가 부자연스럽다."
+    }
+  ],
+  "note": "단일 정답 ③이 명확한 문항. 지문은 Culler의 hyper-protected cooperative principle 논의로, 빈칸은 '독자의 자발적 해석 투자'라는 결론 재진술 자리. ④가 어휘 재활용(communicative/efficient) 미끼로 설계됐으나 flout이라는 명시적 역방향 단서 때문에 최상위권에게는 유혹 강도가 낮다. ②는 명백한 역방향, ①⑤는 무관/범위이탈. 대안 해석으로 정답이 흔들릴 여지 없음."
+}

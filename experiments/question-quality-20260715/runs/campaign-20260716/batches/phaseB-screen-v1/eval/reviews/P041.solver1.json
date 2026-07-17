@@ -1,0 +1,35 @@
+{
+  "pid": "P041",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "선행사 'almost any process'(단수)를 받는 주격 관계대명사 that의 동사이므로 단수 repeats가 맞음. 재귀대명사 itself와도 정합."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (정답)",
+      "reason": "'a clock __ does not depend on...'에서 뒤 절의 주어가 비어 있어 주격 관계대명사 that/which가 필요. 관계부사 where는 절 내 주어 역할을 할 수 없고 선행사 a clock도 장소 개념이 아님. 삽입·도치 등 어떤 대안 해석으로도 정문이 되지 않음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a candle (that is) marked in hours' — 양초가 눈금이 '새겨지는' 대상이므로 수동 의미 과거분사 후치 수식이 맞음. marking으로 끌릴 수 있으나 능동 주체가 아니므로 오답 유혹에 불과."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'although (it is) at first masked' — 주절 주어 this와 동일 주어 + be 생략의 표준 접속사+분사 생략구문. 접속사 뒤 절이 없어 보여 가장 강한 매력 오답이지만 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "전치사 of 뒤 동명사 being continuous. 'the appearance of being ~'은 표준 결합."
+    }
+  ],
+  "note": "정답은 (B) 단일로 확정. 주어 공백이라는 장거리 단서(does not depend의 주어 부재)로 관계부사 where가 성립 불가. 최상위권 렌즈에서 (D)의 생략구문이 가장 강한 미끼로 작동하나 표준 용법이라 옹호 불가. 복수 정답 소지 없음."
+}

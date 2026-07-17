@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "incorrect",
+      "reason": "'waking up early to boost your mental focus'를 넣으면 지문의 핵심 원리(과제를 에너지 수준에 맞추라)와 정면 충돌한다. 아침형 인간이 아니라면 일찍 일어나는 것 자체가 집중력을 올려주지 않으며, 지문 어디에도 기상 시각을 바꾸라는 처방이 없다. 첫 문장 'analytical tasks... energy is high... able to focus'의 표면 어휘(focus)만 재활용한 어휘 반사 미끼. seam은 문법적으로 성립하나 논리 부적합."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "'avoiding emotional encounters with unhappy clients'는 지문 주장과 정반대. 필자는 불편한 클라이언트 대화를 미루면(procrastinate/avoid) 감정 에너지를 낭비하게 되므로 아침에 가장 먼저 처리한다('eating my problems for breakfast')고 했다. avoid를 처방으로 격상시킨 역방향 미끼이며, unhappy client라는 지문 어휘를 그대로 노출해 표면 매칭을 유도한다. 논리 부적합."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect-but-attractive",
+      "reason": "실전에서 가장 끌리는 오답. '피곤할 때는 쉬운 과제를 하라'는 것은 과제-에너지 매칭 원리의 대우(contrapositive)적 응용이라 원리 자체와는 양립한다. 실제로 넣어 읽으면 seam도 자연스럽다. 그러나 (a) 조건절 'If you know you are not a morning person'과의 결합이 헐겁다 — 피곤할 때 쉬운 일을 하라는 조언은 아침형 인간 여부와 무관하게 누구에게나 적용되므로 조건절이 공전한다. (b) 지문의 초점은 '어려운/골치 아픈 과제(problems, unpleasant email)를 언제 처리하느냐'이지 쉬운 과제 배치가 아니다. easy and simple tasks는 지문에 등장하지 않는 새 개념. (c) 필자 사례의 병렬 구조(나는 아침이 피크라 아침에 문제를 처리한다 → 너는 아침이 피크가 아니라면 네 피크에 맞춰라)를 완성하지 못한다. 유혹 기록: 1차 독해에서 '에너지 낮을 때 전략' 프레임으로 읽으면 정답처럼 보였으나, 조건절 공전과 초점 이탈로 배제."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "'doing all your important assignments in the morning'은 조건절과 직접 모순. 아침형 인간이 아닌 사람에게 중요 과제를 전부 아침에 하라는 것은 반전략적이며, 필자 개인 습관(아침 처리)을 일반 처방으로 오인한 독자를 노린 미끼. 필자의 습관은 그가 'wake up energized'하기 때문에 성립하는 것으로, 지문 첫 문장이 명시한 매칭 원리의 한 사례일 뿐이다. 논리 부적합."
+    },
+    {
+      "label": "5",
+      "verdict": "correct",
+      "reason": "'aligning your tough assignments with your energy peaks'는 첫 문장의 일반 원리(different tasks should ideally be matched to our energy level)를 정확히 재진술하면서, 조건절과 완벽히 결합한다 — 아침형이 아니라면 네 에너지 피크는 아침이 아니므로, 어려운 과제를 '너의' 피크에 정렬하라. 필자 사례(아침 피크 → 아침에 문제 처리)와 완전한 병렬 구조를 이룬다. tough assignments는 지문의 problems/unpleasant email/analytical tasks를 자연스럽게 포괄. be strategic about + 동명사 seam도 문법적으로 완전."
+    }
+  ],
+  "note": "일반 원리 제시 → 필자 개인 사례 → 독자 조건 반전(non-morning person)으로 마무리하는 전형적 빈칸 구조. 정답 5는 원리의 일반화 재진술로 유일하게 조건절-사례-원리 삼각을 닫는다. 3번이 매력적 오답으로 기능하나(에너지 매칭 원리와 양립), 조건절이 공전하고 지문 초점(어려운 과제의 배치)에서 벗어나 '가장 적절한' 답이 되지 못한다. 대안 해석·문법 결함 탐색 결과 특이사항 없음. 단일 정답으로 수렴."
+}

@@ -1,0 +1,72 @@
+{
+  "pid": "P046",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERMINOLOGY",
+      "severity": "major",
+      "evidence": "오답 해설 (D): \"문장의 주어 핵인 관계절의 수식을 받는 대명사 'Those students'에 대응하는 문장 전체의 본동사 자리\" — 'Those students'는 지시형용사(those) + 보통명사(students)로 이루어진 명사구이며 대명사가 아니다. 루브릭 V4가 명시적으로 금지하는 용어 오분석(명사절 that을 관계대명사로 부르는 류)에 해당한다. 구조적 논지(긴 주어 뒤 정동사)는 맞으나 품사 명칭이 사실과 불일치."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "조동사 뒤 수동태(can be influenced) — 주어(perception and behavior)와 동사의 태 관계 판단",
+      "temptingBecause": "showing이 이끄는 목적절 내부라 주절 동사와 혼동되고, 조동사+be+p.p. 연쇄가 길어 능/수동 판단을 유도한다",
+      "decisiveFlaw": "인지·행동은 외부 요인에 의해 영향을 '받는' 대상이므로 수동태가 정확히 옳다 — 오답 근거 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "ask + 목적어 + to부정사 목적격보어 구문 지식",
+      "temptingBecause": "presented ... and asked 병렬 뒤에 위치해 원형부정사나 동명사(creating)를 기대하게 만들 수 있다",
+      "decisiveFlaw": "ask는 5형식에서 to부정사 보어를 취하므로 to create가 정확히 옳다 — 오답 근거 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "인용문(문두 부사 도치 어순 포함) 내부의 정동사 자리 인식",
+      "temptingBecause": "인용문 전체가 바깥 문장의 주어이고 바깥에 본동사 is가 따로 있어, 인용절 내부 동사를 준동사 자리로 착각할 수 있다",
+      "decisiveFlaw": "인용된 절 자체의 주어(the lonely old man)에 대응하는 본동사이므로 과거 정동사 sat down이 옳다 — 오답 근거 없음. 다만 실제 오인 확률이 낮아 매력도는 다섯 중 가장 약하다"
+    },
+    {
+      "label": "(D)",
+      "intent": "긴 관계절(who had been exposed ...)이 낀 주어 뒤 정동사 vs 준동사·수일치 판단",
+      "temptingBecause": "관계절 안의 had been exposed와 병치되어 시제·태가 복잡해 보이고, taking 같은 준동사를 기대하게 만드는 정답 (E)와 같은 '동사 형태' 계열의 최유력 경쟁 디코이다",
+      "decisiveFlaw": "Those students의 문장 전체 본동사가 반드시 필요하므로 과거 정동사 took이 옳다 — 오답 근거 없음"
+    },
+    {
+      "label": "(E)",
+      "intent": "[정답] 분사구문 능·수동 — 의미상 주어(Some students)와 drag의 능동 관계 + 잔류 목적어(their feet) 판단",
+      "temptingBecause": "바로 앞 with their shoulders bent forwards의 과거분사 bent와 표면적으로 평행해 보여 -ed형이 자연스럽다고 착각하기 쉽다",
+      "decisiveFlaw": "접속사 없이 walked와 정동사 dragged를 병렬할 수 없고, 타동사 drag 뒤에 목적어 their feet이 남아 있어 수동 분사도 불가 — 능동 분사 dragging만 가능하며 교정 시 정확히 원문이 된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TERMINOLOGY-MISLABEL",
+      "severity": "major",
+      "evidence": "(D) 해설이 명사구 'Those students'를 '대명사'로 지칭 — 품사 용어 오류 (V4 실패 근거와 동일)"
+    },
+    {
+      "code": "TEMPTING-RATIONALE-THIN",
+      "severity": "minor",
+      "evidence": "오답 해설이 각 선지가 '왜 옳은지'는 설명하지만 '왜 매력적인지(why tempting)'를 명시하지 않아 §C의 5개 밑줄 point/why-tempting 요건을 온전히 충족하지 못한다. pointCode만 존재"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더는 dragging→dragged 단일 최소대립 변형만 존재하고, 독립 검증 결과 (E)가 유일한 어법 오류이며(접속사 부재 + 잔류 목적어), 교정하면 정확히 원문이 된다. 그러나 V4 실패: (D) 오답 해설이 명사구 'Those students'를 '대명사'로 오분류 — 루브릭이 예시로 든 용어 오분석 류에 해당하므로 보수적으로 치명 판정, 등급 F. 공예 자체는 견실(C1=4, 합계 17)하나 치명은 상쇄 불가. KILLER 정합 미달: dragged/dragging+목적어 패턴은 훈련량이 많은 중상 난이도의 국소 판별 포인트로, '구조를 읽어야만 드러나는' KILLER 깊이(§C 4번째 조건)에 못 미치고 A등급 전제도 불충족 → killerConditionsMet=false. 수정 처방: (D) 해설에서 '대명사'를 '명사구(핵명사 students)'로 교체하면 V4 해소, 그 경우 B 수준(합계 17, 최저 2) 회복 가능. KILLER로 출하하려면 정답 포인트 자체를 더 깊은 구조 판단으로 재설계 필요."
+}

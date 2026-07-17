@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'If the interview lasts a while'에서 last는 지속기간 명사구를 취하는 동사(last two hours / last a while). 'a while'은 명사구가 부사적 대격으로 기능하는 표준 용법으로 정문. (awhile로도 쓸 수 있으나 a while 역시 완전히 적법.)"
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop the technique ... of selective note-taking'은 가주어 It + 외치된 진주어 to부정사 구문. 단수 일치·현재시제 모두 적합. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'so what they can be transcribed easily afterwards'에서 후속절 'they can be transcribed easily afterwards'는 주어·수동태 서술이 완결된 완전한 절로 명사 공백(gap)이 없다. what은 자유관계사/의문사로서 절 내부 공백을 요구하므로 어떤 대안 해석(자유관계절·간접의문문·유사분열문)으로도 성립 불가. 문맥은 목적의 부사절을 요구하므로 so that이어야 한다. 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "they(= the key answers)는 transcribe의 피동작주이므로 수동태 be transcribed가 논리적으로 필연이며, 조동사 can 뒤 원형 be로 형태도 적법. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle'은 make + 목적어 + 형용사 보어 구문. easy to handle(tough-구문)의 비교급이며 much는 비교급 강화사로 적법, easier and quicker 병렬도 동일 범주(비교급 형용사)로 정합. 정문."
+    }
+  ],
+  "note": "완전절 앞의 what은 공백 부재로 형식적으로 배제 가능해 (C)가 유일한 정답 후보. 나머지 네 밑줄은 모두 명백한 정문으로 복수정답 소지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P050",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "had conceptualized(14세 시점까지의 완료)와 was attempting(그 시점의 진행)의 등위접속. 병렬 구조가 동일한 시제·상을 강제하지 않으며, 'By the age of fourteen' 기준시점에 두 술어 모두 정합. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "과거의 습관적·반복적 행위를 나타내는 would + 동사원형. 'Over the course of his inventing career'라는 기간 부사구와 결합해 반복 실험을 기술. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "선행사 the first invention을 받는 목적격 관계대명사 that. 관계절 내 sold의 목적어 공백이 존재하고, 서수(the first) 수식 선행사에는 that이 표준적으로 선호됨. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "with + NP + 분사 구문에서 의미상 주어 six of his nine U.S. patents는 발부되는 대상(피동)이므로 과거분사 issued(= being issued)가 요구됨. 지문 자체가 'He was issued nine U.S. patents', 'His first patent was issued'로 일관되게 수동을 사용하는 장거리 단서도 이를 뒷받침. 능동 현재분사 issuing은 어법상 틀림. (대안 탐색: 미국 특허법 전문 레지스터에는 'a patent issues'라는 자동사 용법이 실재하므로 극단적 전문 어법 기준으로는 옹호 시도가 가능하나, 지문 내부의 일관된 수동 표기와 일반 규범 영어 기준에서 유일하게 결함 있는 항목이며 출제 정답으로 성립.)"
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "주어의 핵은 단수 One이고 of these patents는 후치 수식이므로 단수 동사 was가 정확한 수 일치. 정문."
+    }
+  ],
+  "note": "정답은 (D). 나머지 네 항목은 대안 해석 없이 그 자체로 정문. 유일한 품질 각주: 'issue'는 특허법 전문 용법에서 자동사('a patent issues in 1935')로 실재하므로 법률 전문가 관점의 이의신청 여지가 이론상 존재하나, 지문이 수동('was issued')을 두 차례 명시적으로 사용해 일반 영어 규범 문맥임을 확정하므로 (D)의 정답 지위는 흔들리지 않는다고 판단."
+}

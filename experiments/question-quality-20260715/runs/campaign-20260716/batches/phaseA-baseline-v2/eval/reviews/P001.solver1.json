@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct-as-printed-in-passage (but option text mismatches passage)",
+      "reason": "지문 1문장은 'because they have contributed to our survival'로 되어 있어 복수 주어 they에 have가 정확히 호응한다. 그러나 선택지 목록에는 '(A) has contributed'(단수형)로 표기되어 지문 문자열과 불일치하며, 지문 안에 (A) 밑줄 마커 자체가 없다. 만약 실제 시험지에서 they 뒤에 'has contributed'가 밑줄로 인쇄된다면 주어-동사 수일치 오류로 (A)도 정답이 되어 복수정답 사고가 난다. 지문 인쇄본(have contributed)을 기준으로 하면 어법상 옳음. 매력도: 최상위권은 has/have를 즉시 대조하므로, 표기가 have라면 0.5초 컷이지만 표기 불일치 자체가 검수 결함이다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a kind of program that, when triggered, directs...'에서 when triggered는 when (it is) triggered의 축약 부사절. 주절 주어(program/emotion)가 trigger의 대상(수동)이므로 과거분사 triggered가 정확하다. 매력적 오답 유혹: '주어가 없는데 triggered?'라고 순간 멈칫하게 만들지만, 축약 분사구문의 전형이라 최상위권은 통과. 능동 triggering이었다면 틀렸을 자리."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'may cause us to remember' — cause + 목적어 + to부정사 구조로 정확. 유혹 포인트: 바로 앞 (D) avoiding과 나란히 보이면서 '-ing로 통일해야 하나?'라는 착시를 유발하지만, cause의 목적격보어는 to부정사만 허용되므로 to remember가 정문이고 오히려 (D)를 잡아내는 결정적 대조 단서가 된다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong",
+      "reason": "'will cause us either to face a situation (fight) or avoiding it (flight)' — either A or B 병렬에서 A가 to face(부정사)이므로 B도 (to) avoid여야 한다. 또한 지배동사 cause는 목적격보어로 to부정사를 요구하므로 avoiding은 이중으로 비문. 대안 해석 탐색: avoiding을 분사구문으로 읽으려 해도 either...or 상관접속사가 병렬형을 강제하므로 성립 불가. 정답 확정. 실전에서 or 뒤만 보고 지나치기 쉬우나 either가 병렬 시작점을 to face로 못박는다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the specific ways in which they activate our systems' — 선행사 ways + 전치사+관계대명사 in which, 뒤 절(they activate our systems)이 완전한 문장이므로 정확. 유혹 포인트: 'ways in which'가 낯설면 which/that과 헷갈리게 하는 전형적 미끼이나, ways (that / in which / ∅) 모두 허용되고 in which는 가장 격식 있는 정문."
+    }
+  ],
+  "note": "정답 (D) avoiding — either to face ... or (to) avoid 병렬 위반 + cause 목적격보어 규칙 위반으로 유일하게 확정적 비문. 다만 형식 결함 2건: (1) 지문에 (A) 밑줄 마커가 아예 없음, (2) 선택지 (A)가 'has contributed'로 표기되었으나 지문 본문은 'have contributed'(they 호응, 정문)로 불일치. 실제 인쇄본이 선택지 표기(has)를 따른다면 (A)도 수일치 오류로 정답이 되어 복수정답 위험 — 출제/조판 단계에서 반드시 정정 필요. 지문 인쇄 기준으로는 단일 정답 (D), confidence high."
+}

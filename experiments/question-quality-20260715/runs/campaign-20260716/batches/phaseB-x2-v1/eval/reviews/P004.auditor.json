@@ -1,0 +1,80 @@
+{
+  "pid": "P004",
+  "blindAnswer": "③",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-LEXICAL-TYPO",
+      "severity": "minor",
+      "evidence": "해설 '지문의 기술적 수단이나 공유 소재에만 침착한 과협소 함정' — '침착한'은 '천착한'(또는 '집착한')의 오용으로 해당 절이 문맥상 비문이 된다. '과협소'도 비표준 임시 조어. 다만 통사·논리 분석 자체의 사실 오류(오분석·환각·문장 귀속 오류)는 아니어서 V4는 통과로 판정하고 C6에서 감점한다."
+    },
+    {
+      "code": "V4-AWKWARD-PHRASING",
+      "severity": "minor",
+      "evidence": "본해설 '세계에 대한 인식을 도전하고'(도전하다는 '~에 도전하다'), 오답해설 ⑤ '인식을 직면하고 도전하게 만들어야 한다는' — 조사·논항 구조가 어긋난 어색한 한국어. 의미 전달은 되며 사실 왜곡은 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "지문이 명시적으로 배격한 입장(technology for its own sake)의 목적화 — half-truth 함정",
+      "temptingBecause": "1문장 'new technology for editing digital material'과 어휘가 직결(digital formatting, technical skills)되어 소재 일치감을 주고, 기술 숙련이 창작에 유익하다는 통념과 부합한다",
+      "decisiveFlaw": "빈칸 직전 문장 'the goal... should not be simply to utilize technology for its own sake'와 'Rather' 대조 구조가 기술 중심 목표를 명시적으로 배제하며, 실용적 효율은 위대한 예술의 정의(인식 도전·감정 변화)와 무관하다"
+    },
+    {
+      "label": "②",
+      "intent": "도입부 표면 앵커(인터넷·공유)로의 scope shift 함정",
+      "temptingBecause": "1문장 'the advent of the internet', 'share them with the world'와 어휘가 직접 겹쳐 자연 연상된다",
+      "decisiveFlaw": "유통 확산은 이미 벌어진 현상이지 예술가가 도달해야 할 목적이 아니고, 역시 기술-수단 범주라 'Rather' 대조에 걸려 탈락한다. 'collaborative works'는 지문에 근거가 없다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'produce unique creations that will allow the public to have new, eye-opening experiences'를 3문장 'challenges our perceptions of the world'와 연결해 추상화한 paraphrase",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'craft original works'=unique creations, 'prompt audiences to reconstruct their perspectives on reality'=challenges our perceptions/eye-opening experiences로 의미 보존이 정확하고, 빈칸에 넣은 완성문이 문법적·자연스럽다"
+    },
+    {
+      "label": "④",
+      "intent": "극성 역전(polarity reversal) — 신기술 배제·전통 미학 보존이라는 보수 회귀 함정",
+      "temptingBecause": "2문장 비판론('lose our sense of what makes truly great art')의 어조를 과확대하면 반기술·전통 수호 결론으로 오독할 수 있다",
+      "decisiveFlaw": "지문은 신기술을 '창작 과정에 쓸 수 있는 도구'로 인정하며 영향 최소화를 주장하지 않고, 위대한 예술은 기존 인식을 보존이 아니라 도전해야 한다"
+    },
+    {
+      "label": "⑤",
+      "intent": "대중 기대 영합 + 뉴미디어 제한의 이중 역전(complacency + condition loss) 함정",
+      "temptingBecause": "source span의 'the public'이 그대로 등장해 앵커 일치감을 주고, ④와 같은 보수적 방향으로 짝 매력을 형성한다",
+      "decisiveFlaw": "대중의 일반적 기대 충족은 'new, eye-opening experiences' 제공·인식 도전과 정면 모순이고, 새 매체의 엄격한 제한은 지문 어디에도 근거가 없다"
+    }
+  ],
+  "explanationIssues": [
+    "'침착한'은 '천착한/집착한'의 오용(malapropism)으로 해당 절이 비문에 가깝다 — 정정 필요",
+    "'과협소 함정'은 비표준 조어 — '지나치게 협소한 함정' 등으로 풀어쓰는 것이 바람직",
+    "'인식을 도전하고'는 조사 오류('인식에 도전하고'), 오답해설 ⑤의 '인식을 직면하고 도전하게 만들어야'는 논항 구조가 어긋난 어색한 문장",
+    "본해설 말미가 오답 4개를 재차 요약하여 오답 해설과 중복 — 장황함으로 C6 감점 요인"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "eachDistractorAnchoredWithSingleFlaw": "대체로 충족 — ①②⑤는 명확한 source anchor 보유, ④의 anchor(비판론 어조)는 상대적으로 약함",
+    "requiresTwoCluesNotPolarityPickable": "실패 — ③이 유일한 '인식 변화/긍정' 극성 선지이고 나머지 넷은 모두 기술-수단 또는 보수-제한 계열이라 극성 단서 하나로 정답 선별이 가능하다. perception/reality 계열 추상 어휘도 ③에만 존재하여 3문장 하나만 읽어도 도달한다(두 논리 단서 연결 불요)",
+    "distinctTrapMechanisms": "부분 실패 — ④와 ⑤가 '뉴미디어 제한/보수 회귀' 함정 축을 공유한다"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 의도된 빈칸화(마지막 문장 술부 'produce unique creations... eye-opening experiences' 제거) 외 원문과 완전 일치하고, 각 선지 독립 검증 결과 정답 ③ 유일, 5개 선지 모두 'to + 동사원형구'로 동일 통사 슬롯 적합(문장 말미 빈칸이라 tail 비대칭 없음), 해설의 논리 분석 정확, 필드 동기화 이상 없음. 그러나 요청 난이도 KILLER 대비 실난이도는 중위권이다. (1) 정답 ③이 source span과 3문장의 근접 paraphrase여서 추상화 거리가 짧고, (2) 빈칸 직전 'should not... Rather' 대조가 기술 계열 ①②를 국소 단서만으로 소거시키며, (3) ④⑤는 극성 역전으로 즉시 탈락하여 ③이 유일한 긍정-추상 선지로 남는다 — §D KILLER 조건('극성 하나로 정답을 찍을 수 없다', '최소 두 논리 단서 연결') 정면 위반으로 killerConditionsMet=false. 극성 단독 소거 가능성은 단서 경제성 누출이기도 하여 C4=2, C5=1(라벨-실난이도 불일치), ④⑤ 함정 축 중복으로 C2=3, 해설 어휘 손상('침착한' 등)·중복 장황으로 C6=2. 합계 14. 재설계 방향: 정답의 추상화 수위를 높여 표면 어휘 겹침을 줄이고, '인식 변화' 극성을 공유하되 scope·인과가 어긋나는 경쟁 오답을 최소 1개 투입해 극성 단독 소거를 차단할 것 — 등급 C."
+}

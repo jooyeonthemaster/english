@@ -1,0 +1,35 @@
+{
+  "pid": "P051",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "틀림 (정답)",
+      "reason": "'Its presence makes a lasting mark that show ...'에서 관계대명사 that의 선행사는 단수 명사 'a lasting mark'이므로 동사는 shows여야 한다. 주변에 복수 선행사로 해석할 만한 명사(marks, environments 등)가 전혀 없고, that을 접속사로 읽어 별도 주어를 상정할 수도 없다(show 앞에 주어 공백). 대안 해석(가정법 원형, 명령문, 도치 등)도 성립하지 않는다. 유일하게 수 일치가 깨진 밑줄."
+    },
+    {
+      "label": "(B)",
+      "verdict": "옳음",
+      "reason": "'one of the first qualities [that] a bridge must exhibit concerns how ...' 구조. 주어의 핵은 단수 'one'이고 'a bridge must exhibit'은 목적격 관계대명사가 생략된 축약 관계절로 qualities를 수식한다. 따라서 단수 동사 concerns가 맞다. 매력적 오답 포인트: exhibit 바로 뒤에 동사가 이어져 'exhibit concerns(명사)'로 잘못 묶거나, 가까운 복수 명사 qualities에 끌려 concern으로 고치고 싶어지는 유혹이 강하지만, 진짜 주어(one)를 확인하면 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "옳음",
+      "reason": "'Depending on the type of bridge and the site, it is ...'의 Depending on은 관용화된 전치사구(무인칭 분사구문)로, 주절 주어와의 의미상 주어 일치를 따지지 않는 표준 표현. 'Depended on'이나 'Depend on'이 아닌 현재분사형이 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "옳음",
+      "reason": "'it is subordinate to the surroundings'에서 subordinate는 'be subordinate to ~(~에 종속적이다)' 형태의 형용사로 쓰였고 보어 자리에 정확히 들어맞는다. 수동태 'is subordinated to'로 바꿔야 할 것 같은 유혹이 있으나 형용사 용법이 표준이며, 뒤의 'or it makes a strong statement'와의 대비도 자연스럽다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "옳음",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment'에서 but은 관계절 내부의 두 술어 'is spectacular'와 'spoils'를 병렬 연결한다. 주어는 관계대명사 that(선행사 a bridge, 단수)이므로 3인칭 단수 spoils가 맞다. 형용사 spectacular와의 표면적 비병렬(spoiling으로 바꾸고 싶은 유혹)이 미끼지만, 병렬 층위는 형용사가 아니라 동사구(is spectacular / spoils)이므로 정문."
+    }
+  ],
+  "note": "실전 풀이: (B)에서 exhibit 직후의 concerns를 명사로 오독하는 함정과 (E)의 spectacular-spoils 표면 비병렬 함정에 실제로 잠깐 끌렸으나, (B)는 one이 진짜 주어, (E)는 관계절 내 동사구 병렬로 각각 정문임이 확정된다. (A)는 선행사 a lasting mark(단수)와 show의 수 불일치가 명백하고 이를 정문으로 만드는 대안 해석이 존재하지 않아 유일 정답. 복수 정답 소지 없음."
+}

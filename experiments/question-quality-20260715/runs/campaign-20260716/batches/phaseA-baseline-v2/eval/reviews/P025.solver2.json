@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to be",
+      "verdict": "correct",
+      "reason": "consider + O + to be + C 구문. 'consider the virtual...nature of cyberspace to be its unique characteristic'에서 목적어 'the virtual, or imaginative, nature of cyberspace'와 보어 'its unique characteristic'을 잇는 to be는 표준 용법(consider O (to be) C 모두 정문). 목적어가 삽입구('or imaginative,')로 길어졌을 뿐 지배 구조는 온전하다. 어법상 옳음."
+    },
+    {
+      "label": "(B) seen",
+      "verdict": "correct",
+      "reason": "'events of a kind and magnitude not seen before'에서 seen은 명사구 'a kind and magnitude'(넓게는 characters and events)를 후치 수식하는 과거분사. 피수식 명사가 '보여지는' 대상이므로 수동 분사 seen이 맞고, 축약 관계절 'which has/have not been seen before'로 복원 가능. 능동 seeing이면 비문. 어법상 옳음."
+    },
+    {
+      "label": "(C) made",
+      "verdict": "correct",
+      "reason": "'cave drawings made by our Stone Age ancestors'의 made는 drawings를 수식하는 과거분사(= which were made by...). by 행위자구가 수동 해석을 확정한다. 어법상 옳음."
+    },
+    {
+      "label": "(D) That",
+      "verdict": "incorrect",
+      "reason": "문장 'That is new about cyberspace is its interactive nature'를 형식적으로 분석하면: (i) That을 지시대명사 주어로 보면 'That is new about cyberspace'가 완결절이 되어 뒤의 두 번째 정형동사 'is its interactive nature'가 주어 없이 남는다 — 비문. (ii) That을 접속사로 보면 that절 내부 'is new about cyberspace'에 주어가 없어 절이 불완전 — 비문. (iii) that은 선행사 없는 자유관계절을 이끌 수 없다. 주어 자리에 불완전절(is의 주어 결여)을 포함한 명사절이 필요하므로 선행사를 포함한 관계대명사 What으로 바꿔 'What is new about cyberspace is its interactive nature'(의사분열문)가 되어야 한다. 어법상 틀림."
+    },
+    {
+      "label": "(E) their",
+      "verdict": "correct",
+      "reason": "'while being able to shape...their own and other people's personalities'에서 분사구문의 의미상 주어는 주절의 'real people'(복수)이므로 복수 소유격 their가 일치한다. 'their own ... personalities'의 own 용법도 정상. 어법상 옳음."
+    }
+  ],
+  "note": "정답 (D) 단독. That→What 교체 필요(자유관계절 주어의 의사분열문). 나머지 밑줄은 대안 해석까지 검토해도 모두 정문이며 복수정답 소지 없음."
+}

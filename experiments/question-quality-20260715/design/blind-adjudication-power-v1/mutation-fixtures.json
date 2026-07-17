@@ -1,0 +1,255 @@
+{
+  "schemaVersion": "blind-review-mutation-fixtures-v2",
+  "classificationRule": "Schema/record contradictions are RECORD_INVALID; a coherent record that accurately reports a bad item is ITEM_FINDING.",
+  "cases": [
+    { "id": "VALID_GRAMMAR_A", "base": "VALID_GRAMMAR_A", "mutations": [], "expectedClassification": "CLEAN_RECORD", "expectedRecordInvalidCodes": [], "expectedItemFindingCodes": [] },
+    { "id": "VALID_BLANK_A", "base": "VALID_BLANK_A", "mutations": [], "expectedClassification": "CLEAN_RECORD", "expectedRecordInvalidCodes": [], "expectedItemFindingCodes": [] },
+    { "id": "VALID_NONFOCUS_B", "base": "VALID_NONFOCUS_B", "mutations": [], "expectedClassification": "CLEAN_RECORD", "expectedRecordInvalidCodes": [], "expectedItemFindingCodes": [] },
+    {
+      "id": "VALID_PRIVATE_CONSTRUCTED_ANSWER_CAPACITY",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [
+        { "op": "replace", "path": "/type", "value": "SUMMARY_WRITING" },
+        { "op": "replace", "path": "/evidenceFamily", "value": "open_constructed" },
+        { "op": "replace", "path": "/blindSolve/answerLabels", "value": [] },
+        { "op": "replace", "path": "/blindSolve/answerText", "value": { "mode": "PRIVATE_REF", "inlineTexts": [], "privateTextRef": "PRIVATE:ANSWER_TEXT_001", "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" } }
+      ],
+      "expectedClassification": "CLEAN_RECORD",
+      "expectedRecordInvalidCodes": [],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SCHEMA_ROOT_REQUIRED_MISSING",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "remove", "path": "/relabelMapSha256" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SCHEMA_ROOT_EXTRA_PROPERTY",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "add", "path": "/generatorIdentity", "value": "LEAK" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "CALIBRATION_PLAN_MUST_BE_NA",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/plan", "value": "STANDARD" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "CALIBRATION_CANNOT_PRECERTIFY_REVIEWER",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/calibrationStatus", "value": { "status": "CERTIFIED", "certificateId": "CERT_FORBIDDEN", "certificateScopeSha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "rowsSinceCheckpoint": 0 } }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SCHEMA_HASH_PATTERN",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/surfaceSha256", "value": "not-a-hash" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SCHEMA_PRIVATE_ANSWER_REQUIRES_HASH",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/blindSolve/answerText", "value": { "mode": "PRIVATE_REF", "inlineTexts": [], "privateTextRef": "PRIVATE:ANSWER_TEXT_001", "sha256": null } }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SCHEMA_GRAMMAR_SITE_REQUIRED_FIELD",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [{ "op": "remove", "path": "/grammarAudit/markedSites/0/governingRule" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SCHEMA_BLANK_REQUIRES_SEVEN_AXES",
+      "base": "VALID_BLANK_A",
+      "mutations": [{ "op": "remove", "path": "/blankAudit/axisOracle/6" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SCHEMA_NONFOCUS_CANNOT_CARRY_GRAMMAR_AUDIT",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/grammarAudit", "value": {} }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "EXPERIMENT_REQUIRES_FAMILY_CERTIFICATE",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [
+        { "op": "replace", "path": "/stage", "value": "S1_SCREEN" },
+        { "op": "replace", "path": "/plan", "value": "STANDARD" }
+      ],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["JSON_SCHEMA_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SEMANTIC_PHASE_ORDER_INVALID",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/revealAudit/revealedAt", "value": "2026-07-15T02:59:59+09:00" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["PHASE_ORDER_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SEMANTIC_BLIND_SOLVE_TIMESTAMP_INVALID_CALENDAR_DATE",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/blindSolve/sealedAt", "value": "2026-02-30T03:00:00+09:00" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["BLIND_SOLVE_TIMESTAMP_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SEMANTIC_REVEAL_TIMESTAMP_INVALID_MONTH",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/revealAudit/revealedAt", "value": "2026-13-15T03:05:00+09:00" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["REVEAL_TIMESTAMP_INVALID"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SEMANTIC_ANSWER_LIST_COUNT_INVALID",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/validity/independentlyDefensibleAnswerCardinality", "value": 2 }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["ANSWER_LIST_CARDINALITY_MISMATCH", "FATAL_ITEM_FINDING_NOT_ACKNOWLEDGED"],
+      "expectedItemFindingCodes": ["ITEM_ANSWER_CARDINALITY_MISMATCH"]
+    },
+    {
+      "id": "SEMANTIC_EXPLANATION_AGGREGATE_INVALID",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/explanationAudit/allClaimsAccurate", "value": false }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["EXPLANATION_DOMAIN_AGGREGATE_MISMATCH"],
+      "expectedItemFindingCodes": ["ITEM_EXPLANATION_FALSE"]
+    },
+    {
+      "id": "SEMANTIC_GRAMMAR_FAMILY_AGGREGATE_INVALID",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [{ "op": "replace", "path": "/grammarAudit/distinctPointFamilies", "value": 4 }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["GRAMMAR_POINT_FAMILY_AGGREGATE_MISMATCH"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SEMANTIC_BLANK_DUPLICATE_AXIS_ORACLE_INVALID",
+      "base": "VALID_BLANK_A",
+      "mutations": [{ "op": "replace", "path": "/blankAudit/axisOracle/6/axis", "value": "stance" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["BLANK_AXIS_ORACLE_NOT_EXACT_SEVEN"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "SEMANTIC_GRADE_A_THRESHOLD_INVALID",
+      "base": "VALID_BLANK_A",
+      "mutations": [
+        { "op": "replace", "path": "/craft/scores/competitivePlausibility", "value": 2 },
+        { "op": "replace", "path": "/craft/intentCoverageFraction", "value": 0.75 }
+      ],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["GRADE_A_CRAFT_THRESHOLD_MISMATCH", "GRADE_A_INTENT_COVERAGE_MISMATCH"],
+      "expectedItemFindingCodes": []
+    },
+    {
+      "id": "UNACKNOWLEDGED_GRAMMAR_FATAL_IS_RECORD_INVALID",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [{ "op": "replace", "path": "/grammarAudit/markedSites/2/displayedGrammaticality", "value": "GRAMMATICAL" }],
+      "expectedClassification": "RECORD_INVALID",
+      "expectedRecordInvalidCodes": ["FATAL_ITEM_FINDING_NOT_ACKNOWLEDGED"],
+      "expectedItemFindingCodes": ["ITEM_GRAMMAR_KEY_DEFENSIBLE"]
+    },
+    {
+      "id": "GOLD_FATAL_GRAMMAR_ITEM_IS_VALID_RECORD",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [
+        { "op": "replace", "path": "/grammarAudit/markedSites/2/displayedGrammaticality", "value": "GRAMMATICAL" },
+        { "op": "replace", "path": "/validity/domains/answerSpace", "value": false },
+        { "op": "replace", "path": "/validity/anyFatal", "value": true },
+        { "op": "replace", "path": "/validity/fatalCodes", "value": ["key-defensible"] },
+        { "op": "replace", "path": "/grade", "value": "F" },
+        { "op": "replace", "path": "/craft", "value": null }
+      ],
+      "expectedClassification": "ITEM_FINDING",
+      "expectedRecordInvalidCodes": [],
+      "expectedItemFindingCodes": ["ITEM_FATAL_DOMAIN_ANSWERSPACE", "ITEM_GRAMMAR_KEY_DEFENSIBLE"]
+    },
+    {
+      "id": "GOLD_FATAL_BLANK_SEAM_IS_VALID_RECORD",
+      "base": "VALID_BLANK_A",
+      "mutations": [
+        { "op": "replace", "path": "/blankAudit/options/0/slotGrammarCompatible", "value": false },
+        { "op": "replace", "path": "/blankAudit/allFiveSlotGrammarCompatible", "value": false },
+        { "op": "replace", "path": "/validity/domains/surfaceLanguage", "value": false },
+        { "op": "replace", "path": "/validity/anyFatal", "value": true },
+        { "op": "replace", "path": "/validity/fatalCodes", "value": ["slot-incompatible"] },
+        { "op": "replace", "path": "/grade", "value": "F" },
+        { "op": "replace", "path": "/craft", "value": null }
+      ],
+      "expectedClassification": "ITEM_FINDING",
+      "expectedRecordInvalidCodes": [],
+      "expectedItemFindingCodes": ["ITEM_BLANK_SLOT_INCOMPATIBLE", "ITEM_FATAL_DOMAIN_SURFACELANGUAGE"]
+    },
+    {
+      "id": "GOLD_FATAL_TEMPORAL_AXIS_LOSS_IS_VALID_RECORD",
+      "base": "VALID_BLANK_A",
+      "mutations": [
+        { "op": "replace", "path": "/blankAudit/axisOracle/6/answerPreserved", "value": false },
+        { "op": "replace", "path": "/blankAudit/answerPreservesAllAxes", "value": false },
+        { "op": "replace", "path": "/validity/domains/answerSpace", "value": false },
+        { "op": "replace", "path": "/validity/anyFatal", "value": true },
+        { "op": "replace", "path": "/validity/fatalCodes", "value": ["temporal-axis-loss"] },
+        { "op": "replace", "path": "/grade", "value": "F" },
+        { "op": "replace", "path": "/craft", "value": null }
+      ],
+      "expectedClassification": "ITEM_FINDING",
+      "expectedRecordInvalidCodes": [],
+      "expectedItemFindingCodes": ["ITEM_BLANK_AXIS_LOSS_TEMPORALRELATION", "ITEM_FATAL_DOMAIN_ANSWERSPACE"]
+    },
+    {
+      "id": "C_GRADE_IS_ITEM_FINDING_NOT_INVALID_RECORD",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/grade", "value": "C" }],
+      "expectedClassification": "ITEM_FINDING",
+      "expectedRecordInvalidCodes": [],
+      "expectedItemFindingCodes": ["ITEM_CRAFT_NOT_SHIP_READY"]
+    },
+    {
+      "id": "BLANK_DISTRACTOR_DUPLICATION_IS_ITEM_FINDING",
+      "base": "VALID_BLANK_A",
+      "mutations": [
+        { "op": "replace", "path": "/blankAudit/options/4/primaryIntentAxis", "value": "scope_shift" },
+        { "op": "replace", "path": "/blankAudit/wrongOptionPrimaryAxisDistinctness", "value": 0.75 },
+        { "op": "replace", "path": "/grade", "value": "B" }
+      ],
+      "expectedClassification": "ITEM_FINDING",
+      "expectedRecordInvalidCodes": [],
+      "expectedItemFindingCodes": ["ITEM_BLANK_DISTRACTOR_AXIS_DUPLICATE"]
+    },
+    {
+      "id": "FAILED_TYPE_CHECK_IS_ITEM_FINDING",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [{ "op": "replace", "path": "/typeSpecificEvidence/0/pass", "value": false }],
+      "expectedClassification": "ITEM_FINDING",
+      "expectedRecordInvalidCodes": [],
+      "expectedItemFindingCodes": ["ITEM_TYPE_CHECK_FAILED_TITLE_WHOLE_PASSAGE_COVERAGE"]
+    }
+  ]
+}

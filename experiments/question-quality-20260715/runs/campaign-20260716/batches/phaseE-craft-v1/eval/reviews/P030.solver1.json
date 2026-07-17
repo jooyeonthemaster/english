@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "매력 요인: 'heroic crew'가 1차 사건(선원이 고양이를 구하러 되돌아감)을 그대로 반향하고 'indiscriminately'가 '이제는 모두가 매번'과 어울려 순간적으로 끌림. 그러나 'the ACTUAL narrative'가 치명적 — 지문의 결론은 존재하지 않는 고양이를 지어내는 것이므로 '실제 사실에 매달린다'는 정반대다. 실제 사실대로 쓴 기자가 혼난 것이 2차 사건의 요지."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "경쟁사 기자들과의 '협업(collaborate)'은 지문 어디에도 없음. 각 기자가 독립적으로 처벌 회피 행동에 수렴하는 구조이며, 'more plausible(그럴듯하게 만들기)'도 목적이 아님 — 목적은 편집자 질책 회피."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "편집자는 사후에 질책만 할 뿐 사전 지시를 내린 적이 없음. 학습된 행동은 '지시를 기다리는 것'이 아니라 선제적으로 고양이를 집어넣는 것이므로 지문 인과와 불일치."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "최강 오답. 'prioritize dramatic rescue narratives'는 표면 행동을 정확히 묘사해 실제로 끌렸음. 그러나 꼬리절 'regardless of what the editors want'가 지문의 인과 엔진을 뒤집음 — 기자들이 고양이를 넣는 이유는 바로 편집자의 기대(낙종 시 질책) 때문이므로 '편집자 뜻과 무관하게'는 성립 불가. 장거리 논리 단서로 배제."
+    },
+    {
+      "label": "5",
+      "verdict": "correct",
+      "reason": "'fabricate'(없는 고양이를 지어냄) + 'the anticipated detail'(이제 기대되는 고양이 디테일) + 'just to escape being reprimanded'('called down'/'severely scolded for being beaten'의 정확한 환언). 두 사건의 교훈(고양이를 빼면 혼난다 → 모두가 지어 넣는다)과 완벽히 일치. 'all of us' 뒤 복수 술어 결합(seam)도 자연스러움."
+    }
+  ],
+  "note": "고전적 저널리즘 일화('shipwreck cat' — 집단적 관행이 낳는 날조)의 결말 추론 빈칸. 정답 5는 어휘 반복 없이 환언(fabricate/anticipated/reprimanded)으로 구성되어 표면 매칭으로는 안 잡히고 인과 이해를 요구함. 오답 1·4는 지문 어휘('heroic crew', 극적 구조 서사)를 재활용하되 각각 'actual'과 'regardless of what the editors want'라는 한 어구로 뒤집히는 잘 설계된 미끼. 모든 선지가 문법적으로 빈칸에 결합 가능해 순수 논리 변별 문항. 단일 정답으로 수렴, 이의신청 여지 낮음."
+}

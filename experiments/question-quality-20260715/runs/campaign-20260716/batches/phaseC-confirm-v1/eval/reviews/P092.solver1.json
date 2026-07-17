@@ -1,0 +1,35 @@
+{
+  "pid": "P092",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'최소 공간을 넘어 법적 보호를 확대'는 복지론(welfare)의 어젠다다. 권리론자는 그런 보호 확대 프레임 자체가 'does not go far enough'라고 비판하므로, 권리론의 근본 문제 규정 자리에 넣으면 논리가 역행한다. 또한 'insufficient food and space'는 복지론 예시로 제시된 표면 어휘 재활용."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 'entirely'가 권리론의 급진성을 흉내 내 순간 끌린다. 그러나 'inhuman(비인도적) 도축·실험의 금지'는 여전히 '비인도적 대우' 프레임인데, 빈칸 직전에 'not one about treating animals inhumanely'로 그 프레임이 명시적으로 부정되었다. 게다가 'The problem is one about banning...'은 문제가 아니라 해결책 서술이어서 대조 병렬(treating ~ inhumanely ↔ 빈칸)이 깨진다. 권리론은 인도적 이용조차 반대하므로 '비인도적 방식만 전면 금지'는 핵심을 빗나간다."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "삽입 시 'not one about treating animals inhumanely, but instead one about perceiving them as mere instruments for human use'로 동명사 병렬이 매끄럽고, 핵심 문장 'animals are not the kinds of thing that humans should use in this way at all'(식용·실험 대상으로의 이용 자체가 문제)의 직접 패러프레이즈다. 'mere instruments'가 welfare legislation이 수용하는 'used by humans for food and as experimental subjects'를 정확히 포착한다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "매력적 오답. '동물권 = 법적 주체로 인정'이라는 배경지식 스키마가 유혹한다. 그러나 (a) 지문에 '동등한 법적 주체(equal legal subjects)' 개념은 등장하지 않아 과잉 추론이고, (b) '문제는 ~을 인정하는 것에 관한 것'은 해결 방안이지 문제의 본질 서술이 아니어서 'not one about X(잘못된 행위), but one about Y' 대조 구문과 어긋난다. 지문이 규정한 근본 문제는 '이용 그 자체'다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'불필요한 고통 부과'는 복지론이 다루는 human-inflicted pain의 하위 사례로, 직전 문장에서 부정된 '비인도적 대우' 프레임에 그대로 속한다. 권리론의 '더 근본적인' 문제 규정과 정반대 방향."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: ④에 가장 오래 끌렸다(동물권=권리 부여 스키마). 그러나 빈칸은 'the problem is one about ___'로 문제의 본질을 채우는 자리이지 처방을 채우는 자리가 아니며, 지문의 근본 문제 규정('humans should not use them in this way at all')의 패러프레이즈는 ③뿐이다. ②는 'entirely'로 급진성을 위장하지만 'inhuman'이 남아 있어 부정된 프레임에 잔류. 병렬 seam·논리 적합성 모두 ③만 통과. 단일 정답으로 옹호 가능."
+}

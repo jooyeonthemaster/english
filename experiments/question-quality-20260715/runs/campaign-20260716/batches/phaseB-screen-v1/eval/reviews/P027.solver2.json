@@ -1,0 +1,35 @@
+{
+  "pid": "P027",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'did an experiment showing (that) human perception and behavior can be influenced...'에서 showing은 명사 an experiment를 후치 수식하는 현재분사. 실험이 내용을 '보여주는' 능동 관계이므로 현재분사가 적법하고, showing 뒤 that 생략도 정문. 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'present A with B' 구문에서 them은 앞 문장의 healthy undergraduates를 받는 복수 목적격 대명사로 수·격 일치. 주어 He와 동일 지시가 아니므로 재귀대명사가 요구되지 않음. 어법상 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'What he found was extraordinary'에서 what은 선행사를 포함한 자유 관계대명사로, 명사절(문장의 진주어)을 형성하면서 found의 목적어 공백을 채움. 선행사가 없으므로 which/that은 불가하고 what이 유일한 정문 선택. 문두 소문자 표기는 어법 판정 대상이 아닌 표기 문제. 어법상 옳음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "주어 'Those students'가 관계절 'who had been exposed to an elderly mix of words'의 수식을 받은 뒤 정형 본동사가 와야 하는 자리인데 준동사 taking이 와서 문장 전체에 본동사가 없는 파편(fragment)이 됨. 분사구문으로 보려 해도 별도 주절이 없고, 축약 관계절로 보아도 여전히 본동사 부재로 어떤 대안 파스로도 정문이 성립하지 않음. took으로 고쳐야 함. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'with their shoulders bent forwards'는 with+명사+분사 부대상황 구문. shoulders는 구부러지는 피동 대상이므로 과거분사 bent가 적법(= their shoulders were bent forwards). 어법상 옳음."
+    }
+  ],
+  "note": "정답이 (D) 하나로 깔끔하게 좁혀지는 문항. (D)는 본동사 부재라는 문장 성립 차원의 결정적 오류로, 대안 해석(분사구문·축약 관계절 등)을 적극 탐색해도 정문화 불가. 나머지 네 밑줄은 각각 분사 후치수식, present A with B, 자유 관계대명사 what, with+O+p.p. 구문으로 모두 형식적으로 정당화됨. 유일한 사소한 흠은 (C) 문두의 소문자 'what' 표기(원문 그대로라면 대문자 What이어야 함)이나 이는 어법 문제의 판정에 영향을 주지 않음."
+}

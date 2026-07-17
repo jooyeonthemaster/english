@@ -1,0 +1,72 @@
+{
+  "pid": "P062",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-keypoints-garbled",
+      "severity": "minor",
+      "evidence": "keyPoints 3번 항목 '동사의 목적어 및 보어 병렬 구조 내에서 문맥상 의미적 동의어(tolerating/exploring vs. ambiguities) 추론' — 빈칸 구간에는 보어가 존재하지 않고(invest+목적어, tolerate+목적어의 병렬 VP), 괄호 안 동의어 대응도 동사(tolerating/exploring)와 명사(ambiguities)를 뒤섞어 손상된 표기. 학생 노출 핵심 해설(본해설·오답해설)은 정확하므로 V4 자체는 통과로 판정하되 수정 권고."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "논지 극성 반전 (독자가 단순함·명료함을 요구한다는 반명제)",
+      "temptingBecause": "'structures', 'clear messages' 등 소통 관련 어휘가 지문의 efficient communication 논의와 표면적으로 겹침",
+      "decisiveFlaw": "지문은 독자가 obscurities/complications를 견딘다(put up with)고 명시 — 정반대 진술"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'pay attention, to explore uncertainties'(및 'put up with many obscurities')의 적절한 추상화 패러프레이즈",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 빈칸에 넣으면 통사·논리 모두 원문과 정합"
+    },
+    {
+      "label": "③",
+      "intent": "노력 부정 (수동적·직관적 독서로 뒤집기) — 사실상 극성 반전의 변형",
+      "temptingBecause": "'intuitive understanding'이 독자 친화적 태도처럼 들리고 문학 감상 통념과 연상됨",
+      "decisiveFlaw": "지문의 'struggle to interpret'가 명시하는 능동적·성찰적 노력과 직접 모순"
+    },
+    {
+      "label": "④",
+      "intent": "소재 연상 오답 (문학 연구에서 있을 법한 활동으로 논지 이탈)",
+      "temptingBecause": "실제 문학 독서/연구에서 그럴듯한 활동이라 배경지식으로 끌림",
+      "decisiveFlaw": "지문 어디에도 역사적 맥락·작가 전기 언급이 없음 — source anchor 부재"
+    },
+    {
+      "label": "⑤",
+      "intent": "협동 원칙 집행자 반전 (위반을 지적하는 태도로 극성 반전)",
+      "temptingBecause": "'inefficiencies'가 지문의 'principles of efficient communication'을 그대로 반향",
+      "decisiveFlaw": "지문은 독자가 flouting을 지적하지 않고 소통 목적을 상정하며 수용한다고 명시 — hyper-protected 원칙에 위배"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoints 3번: '동사의 목적어 및 보어 병렬 구조'는 실제 구조(willingness의 to부정사 보충어 내 VP 병렬, 보어 없음)와 불일치하고 '(tolerating/exploring vs. ambiguities)' 표기는 품사가 뒤섞여 손상됨",
+      "recommendation": "keyPoints 3번을 'explore uncertainties → tolerate ambiguities 의 동사·명사 각각의 문맥적 동의어 대응 추론'으로 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "완성문의 'invest their cognitive efforts'는 'invest cognitive effort'(불가산) 대비 다소 비관용적 복수형",
+      "recommendation": "선지를 'invest cognitive effort and tolerate ambiguities'로 다듬으면 자연스러움 향상"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 통과, 정답 ② 유일성 확실. 그러나 공예 결함으로 재설계 권고: (1) C2=2 — ①③⑤가 모두 동일한 '논지 극성 반전' 함정이라 오답 기제가 다양하지 않음(scope shift, half-truth, causal reversal 등 부재), ④만 소재 연상형. (2) C3=2 — 지문 대의(독자의 관용적 해석 태도)만 파악하면 극성 점검 한 번으로 ①③⑤가 일괄 소거되고 ④는 anchor 부재로 즉시 탈락. (3) C4=2 — 원문 3항 병렬 중 3번째 항('and not immediately ask what do you mean by that?')을 빈칸 옆에 남겨 두어 인접 동의어 단서가 강하게 누출됨. 정답이 유일 긍정 극성 선지라는 메타 단서도 존재. C5는 INTERMEDIATE 라벨에 대체로 부합(학술 어휘 부담은 있으나 추론 자체는 쉬운 편). 합계 15 < 17 → C. KILLER 아님."
+}

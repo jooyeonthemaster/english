@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) how long",
+      "verdict": "correct",
+      "reason": "Embedded interrogative clause as object of 'learn': 'learn [how long the shortest war in recorded history lasted]'. 'lasted' is intransitive and takes the fronted duration adverbial 'how long'; wh-fronting is obligatory in indirect questions. Fully grammatical."
+    },
+    {
+      "label": "(B) called",
+      "verdict": "correct",
+      "reason": "Reduced relative clause modifying 'a small African island nation' (= which was called Zanzibar). The head noun is the patient of 'call' (naming verb), so the passive past participle is required. Grammatical."
+    },
+    {
+      "label": "(C) chosen",
+      "verdict": "incorrect",
+      "reason": "In 'the United Kingdom had a great deal of influence over Zanzibar, even chosen who the nation's leader would be', the comma-adjoined phrase must be a participial adjunct whose implicit subject is the UK. The UK is the agent of choosing (the participle even carries its own object clause 'who the nation's leader would be'), so the active present participle 'choosing' is required; passive 'chosen' would absurdly mean the UK was chosen. Rescue parses fail formally: (i) ellipsis of perfect auxiliary '(had) even chosen' is unlicensed because the preceding 'had' is the lexical possession verb in 'had a great deal of influence', not auxiliary 'had', and there is no coordinator to license gapping of a finite VP across a bare comma; (ii) no absolute construction or reduced relative reading is available since 'chosen' would still need a passive-compatible subject. No grammatical parse exists. Should be 'choosing'."
+    },
+    {
+      "label": "(D) step",
+      "verdict": "correct",
+      "reason": "'ordered Zanzibar's new leader to step down' instantiates order + NP + to-infinitive; the bare verb stem after 'to' is exactly what the infinitive requires. Grammatical."
+    },
+    {
+      "label": "(E) surrender",
+      "verdict": "correct",
+      "reason": "'Rather than surrender, he gathered 3,000 soldiers': 'rather than' licenses either a bare infinitive or a gerund as its complement; the bare infinitive 'surrender' is standard (cf. 'rather than fight, he fled'), and a nominal reading of 'surrender' is also available. Grammatical."
+    }
+  ],
+  "note": "Clean single-answer item. The long-distance cue for (C) is the implicit-subject test on the participial adjunct: the UK is the chooser, and the participle governs an object clause, forcing active 'choosing'. The tempting auxiliary-ellipsis defense ('had ... even chosen') is formally blocked because lexical 'had' (possession) cannot serve as the perfect auxiliary for gapping, and no conjunction is present. All other underlines are unambiguously well-formed."
+}

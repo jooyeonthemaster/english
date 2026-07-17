@@ -1,0 +1,106 @@
+{
+  "pid": "P019",
+  "requestedDifficulty": "KILLER",
+  "type": "GRAMMAR_ERROR",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문을 원지문과 전문 대조: 의도된 단일 변형(What→That, (C) 자리)만 존재. 문장 접합 파손·중복·누락·고아 문장부호 없음. (A)~(E) 마커가 지문 등장 순서·선택지 텍스트와 정확히 일치(문두 대문자 That도 선택지 'That'과 일치).",
+    "V2": "각 밑줄 독립 검증 — (A) 'of a kind and magnitude not seen before': 축약 수동 관계절의 과거분사 후치수식으로 정문. (B) 'virtual realities have always been integral parts': 복수 수일치+현재완료+주격보어 구조로 정문. (C) 'That is new about cyberspace is its interactive nature': 지시대명사로 읽으면 두 번째 정동사 is가 무주어로 남고, 명사절 접속사로 읽으면 절 내부 주어가 결여 — 어떤 해석으로도 비문. What으로 교정 시 정문. (D) 'while being able to shape': 접속사 while+(they are) 생략 분사구문으로 정문. (E) 'from passive imaginary reality to the interactive virtual reality': from A to B 상관구조로 정문. 정답 집합 = {(C)} 유일.",
+    "V3": "원지문·발문·교정 완성문 모두 문법적. 유일한 비문은 (C)의 의도된 오류로 유형 의도와 정확히 일치. 비단어·오탈자 없음(렌더 기준).",
+    "V4": "본해설의 구조 분석(명사절 접속사 That=완전한 절 요구 / 관계대명사 What=선행사 포함+불완전한 절)이 실제 통사 구조와 일치. 교정형 What도 원문과 정확히 일치. 단, (A) 오답해설이 수식 대상 명사구를 'imaginary characters and events of a kind and magnitude' 전체로 지목 — 최근접 수식 대상은 'a kind and magnitude'로 범위가 부정확하나 과거분사 후치수식·수동 관계 판단 자체는 정확(치명 아님, minor로 기록).",
+    "V5": "학생 노출 필드 전부 동기화: 정답 라벨 (C) = markedExpressions isError=true 라벨 = 본해설(That→What) = keyPoints 첫 항목. 오답해설 키 {(A),(B),(D),(E)}가 비정답 선지 집합과 정확히 일치. expression/errorExpression/surroundingText는 스키마 규약(expression=원문형, errorExpression=표시형, surroundingText=원문 구간)대로 작성됨(src/lib/question-ai-schemas-mc.ts 확인). 내부 메타데이터 결함 2건은 학생 비노출이라 V5 통과, minor 이슈로 기록."
+  },
+  "validityIssues": [
+    {
+      "code": "SURROUNDING_TEXT_TYPO",
+      "severity": "minor",
+      "evidence": "markedExpressions (A).surroundingText가 'Althought cyberspace involves...'로 시작 — 원지문 'Although'의 오탈자. 스키마상 surroundingText는 '원문 그대로의 구간'이어야 하며 위치 식별용 매칭에 쓰이는 필드. 렌더 지문 자체는 'Although'로 정상이라 학생 노출 없음.",
+      "recommendation": "surroundingText를 원문 그대로 'Although cyberspace involves...'로 교정."
+    },
+    {
+      "code": "POINTCODE_MISMATCH",
+      "severity": "minor",
+      "evidence": "(B) 'been'의 pointCode가 'h'(목적격보어)이나 실제 구조는 have been + 주격보어(연결동사)·현재완료·수일치 — (B) 자체 오답해설도 '명사 보어(주격보어)'로 설명해 pointCode와 모순. 목적격보어 구조는 이 자리에 존재하지 않음.",
+      "recommendation": "pointCode를 (a) 정·준동사 또는 (d) 수일치로 교정."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "글의 주제문(What is new about cyberspace is its interactive nature)의 주어절 구조를 묻는 정전 포인트 — 의미 있는 지점이나, 가장 교과서적인 표준 포인트라 '정교함'까지는 아님.",
+    "C2": "5개 밑줄이 서로 다른 pointCode(b/c/h/l/i)로 상이한 오개념을 겨냥. 다만 (B)의 point가 실제 구조와 불일치(오분류)하고 (E) 'to'는 매력도가 낮은 필러에 가까움.",
+    "C3": "디코이 (B) been·(E) to·(D) while·(A) not seen 모두 즉시 검증 가능한 투명한 자리이고, 정답 패턴('___ is ... is ...' What/That 전환)이 초고빈출 기출 정석이라 실제 판단 경쟁이 거의 발생하지 않음.",
+    "C4": "메타 누출·꼬리 소거 없음, 교정형 유일, 근거 충분. 다만 문두 대문자 That + 유명 프레임 자체가 강한 표면 단서로 작동.",
+    "C5": "요청 난이도 KILLER 대비 실측 난이도는 중하. 명사절 What vs That의 문두 주어절 전환은 한국 어법 교육에서 가장 먼저·가장 많이 훈련되는 변형이며, 이 지문 자체가 기출 지문이라 해당 변형이 사실상 정석 문제화되어 있음. 훈련된 상위권 학생은 즉시 인지 — 라벨과 불일치.",
+    "C6": "본해설은 짧고 정확하며 정답 근거(불완전한 절)와 함정(지시대명사 착시)을 분리. (A) 오답해설의 수식 대상 범위 부정확이 흠."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사 능/수동 후치수식 판단 (pointCode c)",
+      "temptingBecause": "부정어 not + 과거분사의 축약 관계절 형태가 생소하고, 'events ... not seen'의 능동(seeing/having seen) 대안을 떠올리게 함",
+      "decisiveFlaw": "오류 아님 — 'a kind and magnitude'가 '목격되는' 대상(수동 관계)이므로 과거분사 후치수식이 정확. (that has) not (been) seen의 축약으로 정문"
+    },
+    {
+      "label": "(B)",
+      "intent": "현재완료 + 연결동사 be의 보어 구조/수일치 (표기상 pointCode h '목적격보어'로 오분류 — 실제는 주격보어/완료시제)",
+      "temptingBecause": "have와 been 사이에 always가 삽입되고 주어 'less developed virtual realities'가 길어 수일치·시제 착시를 유도",
+      "decisiveFlaw": "오류 아님 — 복수 주어 + have + p.p. 완료, been 뒤 명사구 주격보어로 완전히 정문. 검증이 매우 쉬워 매력도 낮음"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 명사절 접속사 That vs 선행사 포함 관계대명사 What (pointCode b). 원문 What → 표시 That의 최소대립쌍",
+      "temptingBecause": "문두 대문자 That이 지시대명사 주어로 읽혀 'That is new about cyberspace'까지는 일견 완전한 절로 보임",
+      "decisiveFlaw": "뒤따르는 두 번째 정동사 is('is its interactive nature')가 주어 없이 남아 어떤 해석으로도 비문 — 주어절을 이끌며 절 내부 주어 공백을 채우는 What만 가능"
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사 while + 분사구문(주어+be 생략) 판단 (pointCode l 전치사 vs 접속사)",
+      "temptingBecause": "접속사 뒤에 절이 아닌 -ing가 바로 이어져 전치사(during류) 오판이나 접속사+분사 공존 불가 오개념을 자극",
+      "decisiveFlaw": "오류 아님 — while (they are) being able to...의 표준 분사구문으로 정문"
+    },
+    {
+      "label": "(E)",
+      "intent": "상관표현 from A to B의 병렬 짝 맞추기 (pointCode i)",
+      "temptingBecause": "from의 짝인 to까지 긴 명사구('passive imaginary reality')를 건너 추적해야 함",
+      "decisiveFlaw": "오류 아님 — from A to B 병렬이 명백해 즉시 소거됨. 단독 전치사 'to' 밑줄은 매력도가 낮은 자리"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(A) 오답해설: \"수식받는 명사구인 'imaginary characters and events of a kind and magnitude'가 목격되는 대상\" — 'not seen before'의 최근접 수식 대상은 전치사구 내부의 'a kind and magnitude'이며, 명사구 전체를 수식 대상으로 지목한 것은 범위 부정확. 과거분사·수동 판단 자체는 정확해 치명 아님.",
+      "recommendation": "수식 대상을 'a kind and magnitude'로 좁혀 기술."
+    },
+    {
+      "severity": "minor",
+      "evidence": "(B) 오답해설은 '연결동사로서 뒤에 명사 보어를 취하는 구조'(주격보어)로 정확히 설명하나, 같은 라벨의 pointCode 'h'(목적격보어)와 서로 모순.",
+      "recommendation": "pointCode 교정으로 해설-메타데이터 정합 확보."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — What→That 최소대립쌍이며 교정 시 정확히 원문 복원",
+    "clearGrammarJudgment": "충족 — 대안 분석 불가(지시대명사 해석도 비문), valency/가정법류 아님",
+    "perUnderlineDocumentation": "미충족 — 각 밑줄의 point는 있으나 'why tempting'이 디코이별로 존재하지 않고, (B)의 pointCode가 실제 구조와 불일치해 '설명이 안 되는 디코이는 필러' 조항에 저촉",
+    "structuralNotSurface": "형식상 충족(철자·비단어·인접 수일치 아님, 두 번째 is 확인 필요)이나, '___ is ... is ...' What/That 전환은 최다 훈련 패턴이라 사실상 즉시 노출 — KILLER 깊이 미달",
+    "noSamePointEasyDecoy": "충족 — 정답 pointCode b와 겹치는 디코이 없음(c/h/l/i)"
+  },
+  "grade": "C",
+  "notes": "모든 V 게이트 통과(유일 정답·무결 렌더·정확한 본해설). 그러나 요청 난이도 KILLER 대비 정답 포인트(문두 주어절 What vs That)가 한국 어법 교육 최고 빈출 정석 변형이고 디코이 4개가 모두 즉시 검증되는 투명한 자리라 C5=1, C3=2 — 난이도 정합 실패로 재설계 필요. killerConditionsMet=false(디코이별 why-tempting 부재, (B) pointCode 오분류, KILLER 깊이 미달). 내부 메타데이터 오탈자('Althought')와 pointCode 오분류는 출하 전 교정 권장. 합계 15/24, 등급 C."
+}

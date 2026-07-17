@@ -1,0 +1,38 @@
+{
+  "pid": "P019",
+  "finalV2": true,
+  "winningAnswer": "(D)",
+  "reason": "독립 재검증 결과 (D)만이 어법상 틀렸고 나머지 네 선지는 어떤 타당한 대안 해석으로도 오류가 되지 않는다. (D) 문장의 유일한 정동사(had been exposed)는 주어 내부 관계사절 소속이며, 주어 뒤 유일한 동사 요소인 taking은 준동사이고 문장이 'random words'에서 끝나 주절 서술어가 부재한다. 축약 관계절 독법(students를 수식)도 주절 동사 부재를 해소하지 못하고, 독립분사구문 독법은 뒤따르는 주절이 없어 성립 불가하며, 어떤 생략/도치도 무동사 평서문을 허가하지 않는다. 정동사 took으로 교정 시 원문이 정확히 복원되는 최소대립쌍. 솔버 1·2 모두 과잉 판정 없이 동일 결론에 도달했고, 감사자 V2=true와도 일치. 감사자의 V4=false는 keyPoints 해설 사실성 결함으로 정답 유일성(V2)과 무관. 선언된 정답 (D)는 유일 정답으로 확정.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "명사절 접속사 that이 관계사 오용 아니냐는 오독 여지",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "tell + 간접목적어(a bunch of healthy undergraduates) + that절(직접목적어) 4형식 구조. that 뒤 절 'he was testing their language abilities'는 완전한 절로, 접속사 that이 정확하다. 관계사로 볼 선행사-공백 구조가 없다."
+    },
+    {
+      "label": "(B)",
+      "claim": "ask의 목적격보어 형태(to-v vs 원형/동명사) 오류 가능성",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "ask + O + to부정사(목적어 통제 구문)는 고정 구조. 'asked them to create a coherent sentence from it'은 표준 용법이며 대체형(creating/create 원형)이 오히려 비문."
+    },
+    {
+      "label": "(C)",
+      "claim": "exposed의 태(수동 과거분사 vs 능동 현재분사) 오류 가능성",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "'after they were exposed to the words'에서 주어 they는 단어에 노출되는 대상이므로 be exposed to 수동태가 필수이며 그대로 쓰였다. expose가 타동사이므로 능동 exposing이면 목적어가 필요해 비문."
+    },
+    {
+      "label": "(D)",
+      "claim": "선언된 정답 — 본동사 자리의 준동사 taking이 비문인지, 구제 독법이 존재하는지",
+      "verdict": "비문 확정 — 유일 정답",
+      "evidence": "문장 'Those students who had been exposed to an elderly mix of words taking almost 40 percent longer to walk down the hall than those who had been exposed to random words.'에서 유일한 정동사 had been exposed는 주어 수식 관계사절 내부에 있고, 주절 서술어 자리에는 준동사 taking뿐이며 문장이 그대로 종결된다. 구제 독법 전수 검토: (i) taking을 students 수식 분사(축약 관계절)로 읽어도 주절 동사 부재 미해소, (ii) 독립분사구문(absolute)으로 읽으려면 뒤에 주절이 있어야 하나 없음, (iii) 무동사 주절을 허가하는 생략/도치 구문 아님. 정동사 took으로 교정하면 원지문과 정확히 일치하는 최소대립쌍으로, 서사 과거시제 및 비교구문(than those who had been exposed)과도 정합."
+    },
+    {
+      "label": "(E)",
+      "claim": "비교구문 대명사 those의 수일치(that vs those) 오류 가능성",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "'than those who had been exposed to random words'의 those는 복수 선행사 students를 대신하는 비교 대용 대명사로 수일치가 정확하고, 관계사절 수식도 표준적이다. 단수 that이면 오히려 비문."
+    }
+  ]
+}

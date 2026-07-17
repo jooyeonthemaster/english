@@ -1,0 +1,35 @@
+{
+  "pid": "P055",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a kind and magnitude not seen before'는 '(that has/have) not (been) seen before'의 축약 관계절로, 과거분사 후치수식 표준 정문. 'not having been seen'이 필요하다는 유혹이 있으나 명사 후치수식 과거분사로 완전히 성립한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'What ___ new about cyberspace is its interactive nature'에서 what-절은 단수 취급이 원칙이고, 주절 보어(its interactive nature)가 단수이며 주절 동사도 is로 받는다. 'What are needed are new ideas'류의 복수 호응은 보어가 복수일 때만 주변적으로 허용되므로 여기서는 are → is가 되어야 한다. 어법상 틀림."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "선행사 'a space' + 관계부사 where 뒤에 완전절(real people have actual interactions...)이 이어지므로 적법. in which로 치환 가능."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'while being able to shape...'는 접속사를 유지한 분사구문으로 'while they are able to...'의 축약. 의미상 주어가 real people로 주절 주어와 일치하므로 정문. being이 군더더기 아닌가 하는 유혹이 있으나 형용사구(able to...)를 이끌기 위해 being이 필요하다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'their own and other people's personalities'의 their는 real people(복수)을 지시. 수·인칭 일치로 정문."
+    }
+  ],
+  "note": "정답 후보는 (B) 단일. 장거리 단서 2개(주절 동사 is, 단수 보어 its interactive nature)가 what-절 내부 동사의 단수형을 강제한다. 매력적 오답 유혹은 (A)의 축약 관계절 의심과 (D)의 being 잉여 의심이었으나 둘 다 표준 정문으로 배제. 복수 정답 시비 여지 없음."
+}

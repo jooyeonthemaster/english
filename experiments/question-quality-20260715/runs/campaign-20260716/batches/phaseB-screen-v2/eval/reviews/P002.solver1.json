@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "attracts wide attention from the public media — 지문과 정면 충돌. 전문가 검토 없이 기자회견으로 발표하는 과학자는 'publicity seeker'로 비난받는다고 명시했으므로, 대중 매체의 주목은 과학적 진리의 지위(standing)를 주는 요인이 아니라 오히려 비난 사유다. 'press conference' 표면 어휘로만 유혹하는 오답."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "undergoes validation by the scientific community — 'permitting expert reviewers to examine his or her claims'과 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'의 직접 패러프레이즈. 다음 문장 'What happens in somebody's laboratory is only one stage in its construction'과도 완벽 호응(진리는 공동체적 구성물). 'until it undergoes validation...' 문법 결합도 자연스러움."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "secures funding from disciplinary specialists — 'disciplinary specialists'라는 지문 어휘를 그대로 재활용한 어휘 반사 미끼. 그러나 지문 어디에도 연구비/자금 이야기가 없고, 전문가의 역할은 '승인(authorization)'이지 '자금 지원'이 아님. 잠깐 어휘 일치에 끌리지만 논리로 즉시 배제."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "is replicated in another private laboratory — 과학 상식(재현성=검증)을 아는 상위권일수록 끌리는 최강 미끼. 실제로 재현은 검증의 한 형태이므로 유혹이 컸다. 그러나 마지막 문장이 '누군가의 실험실에서 일어나는 일은 구성의 한 단계일 뿐'이라고 못박으므로, '또 다른 사적(private) 실험실'에서의 재현은 여전히 실험실 단계에 머무는 것이지 지문이 요구하는 학계의 공적 승인(disciplinary authorization)이 아님. 'private'가 의도된 독(poison word)."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "proves its practical utility in public contexts — 'action in public contexts' 표면 어휘 반사 미끼. 해당 문장은 개인주의적 신념이 공적 맥락에서 행동의 근거가 '되지 못한다'는 내용이며, 지문의 쟁점은 실용적 유용성이 아니라 인식론적 승인(누가 지식을 지식으로 공인하는가)임."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 빈칸 뒤 문장('only one stage in its construction')이 강력한 장거리 단서로 ②를 유일 정답으로 고정. ④가 가장 매력적인 오답이었으나 'another private laboratory'의 'private'가 지문의 '공동체적 승인' 논지와 충돌하여 방어 불가. 복수정답 소지 없음. 문항 품질 양호 — 미끼 ①③⑤는 표면 어휘 재활용형, ④는 배경지식 유인형으로 위계가 잘 설계됨."
+}

@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "studyId": "retry-cost-pareto-v1-20260715",
+  "scope": {
+    "routeCount": 1,
+    "language": "EN",
+    "mode": "static_offline_arithmetic",
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCalls": 0,
+    "databaseCalls": 0,
+    "secretOrEnvironmentValueReads": 0,
+    "candidateQuestionsCreated": 0
+  },
+  "countingDefinitions": {
+    "candidateCapableLogicalResponse": "One explicit AI-SDK generateObject/generateText invocation capable of returning or reconstructing a complete student-facing question. AI-SDK physical retries do not add logical responses.",
+    "designLogicalResponse": "One Premium grammar answer-only invocation; it does not yet contain a complete question.",
+    "evaluationLogicalResponse": "One grammar-solver invocation; it judges a candidate and does not create a student-facing question.",
+    "physicalProviderFetch": "One fetch at the Atlas provider boundary, including every AI-SDK retry.",
+    "engineExecution": "One runQuestionGenerationWithEmptyRetry invocation for one subtype and route count=1.",
+    "triggerExecutionChain": "One engine execution, optionally repeated once after a process crash/kill or terminal-write failure under Trigger maxAttempts=2."
+  },
+  "axes": {
+    "sdkRetries": [0, 1, 2],
+    "wrapperApplicationAttempts": [1, 2, 3],
+    "triggerExecutions": [1, 2],
+    "premiumGrammarLadderCycles": [1, 2, 3],
+    "premiumGrammarSoftRepairPerCycle": [0, 1],
+    "premiumGrammarParseAttemptsPerStage": [1, 2],
+    "outerPolicy": "For each cell, enumerate strict=1/current and every on/off subset of source-applicable relaxed, scarce, and salvage generation lanes. These lower-pass rows are hypothetical arithmetic, not current-source reachability claims."
+  },
+  "atomicFormulas": {
+    "sdkPhysicalMultiplier": "S = sdkRetries + 1",
+    "wrapperApplicationAttempts": "A is 1, 2, or 3; current source has A=3 because applicationMaxRetries=2.",
+    "ordinaryWrapperLogicalResponses": "L_wrapper(A) = 3*A on the compatible maximum route: structured call + prompt-JSON call + continuation JSON-repair call.",
+    "ordinaryWrapperPhysicalFetches": "F_wrapper(A,S) = 3*A*S.",
+    "ordinaryWrapperOutputTokenReservation": "W(m,A,S) = A*S*(m + 32000 + min(32000,max(m,24000))). All studied m are <=24000, so W=A*S*(m+56000).",
+    "premiumGrammarLadderLogical": "For C cycles, R soft-repair stages per cycle (0/1), and P parse attempts per stage: design=C*P; candidate=C*(1+R)*P.",
+    "premiumGrammarLadderPhysical": "F_ladder(C,R,P,S) = C*(2+R)*P*S.",
+    "premiumGrammarLadderOutputTokenReservation": "O_ladder = F_ladder*12000.",
+    "triggerReplay": "Every logical count, physical fetch count, and output-token reservation for the engine ceiling is multiplied by T=triggerExecutions.",
+    "outputOnlyUsd": "USD_output = flashOutputTokens*0.0000162 + proOutputTokens*0.0000324, using the stale all-active emergency completion rates in the local snapshot.",
+    "totalUsd": "null unless every physical request has a source-enforced input-token/byte ceiling, a fresh applicable price snapshot, effective-model attestation, and an enforcing durable budget."
+  },
+  "models": {
+    "flash": {
+      "sourceDefaultId": "google/gemini-3.5-flash",
+      "staleEmergencyInputUsdPerToken": 0.0000027,
+      "staleEmergencyOutputUsdPerToken": 0.0000162
+    },
+    "pro": {
+      "sourceDefaultId": "google/gemini-3.1-pro-preview",
+      "staleEmergencyInputUsdPerToken": 0.0000072,
+      "staleEmergencyOutputUsdPerToken": 0.0000324
+    }
+  },
+  "cellDefinitions": {
+    "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+      "plan": "STANDARD",
+      "type": "BLANK_INFERENCE",
+      "currentOuter": { "strict": 10, "relaxed": 1, "scarce": 0, "salvage": 1 },
+      "candidateGenerationMaxOutputTokens": 4096,
+      "candidateRepairMaxOutputTokens": 4096,
+      "candidateModel": "flash",
+      "solver": false,
+      "ladder": false
+    },
+    "PREMIUM_BLANK_INFERENCE": {
+      "plan": "PREMIUM",
+      "type": "BLANK_INFERENCE",
+      "currentOuter": { "strict": 2, "relaxed": 0, "scarce": 0, "salvage": 1 },
+      "candidateGenerationMaxOutputTokens": 4096,
+      "candidateRepairMaxOutputTokens": 12288,
+      "candidateModel": "pro",
+      "solver": false,
+      "ladder": false
+    },
+    "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+      "plan": "STANDARD",
+      "type": "GRAMMAR_ERROR",
+      "currentOuter": { "strict": 6, "relaxed": 1, "scarce": 1, "salvage": 1 },
+      "candidateGenerationMaxOutputTokens": 8192,
+      "candidateRepairMaxOutputTokens": 20000,
+      "candidateModel": "flash",
+      "solver": true,
+      "solverModel": "flash",
+      "solverMaxOutputTokens": 2048,
+      "solverLanes": ["strict", "relaxed"],
+      "ladder": false,
+      "tokenNote": "The six-strict extended-settings cell is non-KILLER; STANDARD KILLER grammar is separately capped at four strict passes. Its initial generation cap is therefore 8192, while candidate repair receives the GRAMMAR_ERROR floor and can request 20000."
+    },
+    "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+      "plan": "STANDARD",
+      "type": "GRAMMAR_ERROR",
+      "currentOuter": { "strict": 4, "relaxed": 1, "scarce": 1, "salvage": 1 },
+      "candidateGenerationMaxOutputTokens": 8192,
+      "candidateRepairMaxOutputTokens": 20000,
+      "candidateModel": "flash",
+      "solver": true,
+      "solverModel": "flash",
+      "solverMaxOutputTokens": 2048,
+      "solverLanes": ["strict", "relaxed"],
+      "ladder": false,
+      "tokenNote": "This is the non-KILLER five-marker source shape corresponding to the sealed audit's four-strict/seven-candidate-pass/solver-five envelope. STANDARD KILLER can use a rescue branch with the same sealed physical count but a different semantic lane name and a 12000 initial-generation cap; do not transfer this output-token split to that KILLER rescue shape."
+    },
+    "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+      "plan": "STANDARD",
+      "type": "GRAMMAR_ERROR",
+      "currentOuter": { "strict": 4, "relaxed": 1, "scarce": 1, "salvage": 1 },
+      "laneAliases": { "relaxed": "INTERMEDIATE_RESCUE_STRICT_QUALITY" },
+      "candidateGenerationMaxOutputTokens": 12000,
+      "candidateGenerationMaxOutputTokensByLane": { "strict": 12000, "relaxed": 8192, "scarce": 12000, "salvage": 12000 },
+      "candidateRepairMaxOutputTokens": 20000,
+      "candidateModel": "flash",
+      "solver": true,
+      "solverModel": "flash",
+      "solverMaxOutputTokens": 2048,
+      "solverLanes": ["strict", "relaxed"],
+      "ladder": false,
+      "tokenNote": "The field named relaxed is an arithmetic slot for the one INTERMEDIATE rescue pass, which actually runs strict quality. Strict/scarce/salvage keep the KILLER 12000 generation cap; rescue uses the INTERMEDIATE 8192 cap. The solver runs on strict and rescue but not scarce/salvage."
+    },
+    "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+      "plan": "PREMIUM",
+      "type": "GRAMMAR_ERROR",
+      "currentOuter": { "strict": 2, "relaxed": 0, "scarce": 1, "salvage": 1 },
+      "candidateGenerationMaxOutputTokens": 12000,
+      "candidateRepairMaxOutputTokens": 20000,
+      "candidateModel": "pro",
+      "solver": true,
+      "solverModel": "flash",
+      "solverMaxOutputTokens": 2048,
+      "solverLanes": ["strict"],
+      "ladder": true,
+      "currentLadder": { "cycles": 3, "softRepairPerCycle": 1, "parseAttemptsPerStage": 2 },
+      "ladderMaxOutputTokensPerFire": 12000,
+      "ladderNote": "Each strict pass can run the ladder, give up, then enter legacy generation + candidate repair + STANDARD solver. Scarce and salvage lanes use legacy generation + repair and omit the solver."
+    },
+    "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+      "plan": "PREMIUM",
+      "type": "GRAMMAR_ERROR",
+      "currentOuter": { "strict": 2, "relaxed": 0, "scarce": 1, "salvage": 1 },
+      "candidateGenerationMaxOutputTokens": 12000,
+      "candidateRepairMaxOutputTokens": 20000,
+      "candidateModel": "pro",
+      "solver": true,
+      "solverModel": "flash",
+      "solverMaxOutputTokens": 2048,
+      "solverLanes": ["strict"],
+      "ladder": false,
+      "ladderNote": "Teacher/custom/research/non-five-marker or other excluded shapes skip the Premium craft ladder but retain legacy generation, candidate repair, and strict-lane STANDARD solver."
+    }
+  },
+  "failureTaxonomy": [
+    {
+      "class": "transient_transport",
+      "examples": ["connection reset", "retryable 429/5xx", "short provider outage"],
+      "appropriateLayerToTest": "one SDK retry layer",
+      "antiDuplicationRule": "Do not simultaneously grant a generic application replay for the same transport event unless telemetry proves the SDK classifier missed a material retryable class."
+    },
+    {
+      "class": "parse_or_schema_after_response",
+      "examples": ["invalid JSON", "schema mismatch", "truncated JSON"],
+      "appropriateLayerToTest": "existing structured repair / prompt-JSON / continuation repair, with at most one separately classified parse-only replay if prospective evidence supports it",
+      "antiDuplicationRule": "Do not label a successful-but-invalid response as a transport retry."
+    },
+    {
+      "class": "deterministic_provider_schema_rejection",
+      "examples": ["compiled grammar too large", "repeatable masked provider 400"],
+      "appropriateLayerToTest": "route directly to the compatible prompt-JSON branch",
+      "antiDuplicationRule": "Never rerun the known-incompatible structured call merely because an application retry remains."
+    },
+    {
+      "class": "deterministic_quality_failure",
+      "examples": ["ambiguous answer", "weak decoys", "grammar-solver mismatch", "quality-gate rejection"],
+      "appropriateLayerToTest": "outer corrective pass, targeted candidate repair, or ladder stage",
+      "antiDuplicationRule": "Transport retries cannot fix a deterministic accepted-response quality defect; retain or reduce quality passes only from blinded held-out evidence."
+    },
+    {
+      "class": "process_crash_replay",
+      "examples": ["worker killed after provider work", "terminal DB write fails after provider work"],
+      "appropriateLayerToTest": "durable idempotency and a job-wide enforcing budget across Trigger attempts",
+      "antiDuplicationRule": "Trigger replay is availability recovery, not another generation-quality retry layer."
+    }
+  ],
+  "limitations": {
+    "pricingSnapshotFreshForAdmission": false,
+    "effectiveDeploymentModelsAttested": false,
+    "sourceEnforcedInputByteOrTokenCap": false,
+    "shipReadyTotalUsdCeiling": null,
+    "ordinaryQuestionsArrayMaxItems": null,
+    "warning": "A candidate-capable logical response is not proof of exactly one provider-visible question object. The current ordinary questions array has no structural max; post-parse slicing to count=1 is downstream only."
+  }
+}

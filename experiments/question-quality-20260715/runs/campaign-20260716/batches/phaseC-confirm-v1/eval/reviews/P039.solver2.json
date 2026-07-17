@@ -1,0 +1,35 @@
+{
+  "pid": "P039",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "문법 결합은 정상('an ability to memorize...')이나 논리 실패. '단계별로 의도적으로 암기'는 지문 첫 문장이 정의한 technical/book knowledge('deliberately learned')의 정의 그 자체로, 빈칸이 정의해야 할 practical knowledge의 'touch'와 정면 대립. 또한 'musical notes'는 'doing some activity'라는 일반화 진술과 범위 불일치."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "seam 무결: 'an ability to perform the task with perfect physical intuition'에서 'the task'가 'doing some activity'를 대용 지시. 장거리 단서와 전부 정합 — 'bodily metaphors'→physical, 직후 병렬문 'a feel for the game, an intuition'→intuition, 'thinking less... without conscious awareness'→직관적 수행. 'perfect'가 다소 절대적이나 전문가의 touch를 부연하는 동격어구로 허용 범위."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "문법은 정상이나 지문과 직접 모순. practical knowledge는 'exists only in practice', 'built up a repertoire of skills through habit', 'built up through experience' — 연습·경험을 통해서만 축적된다고 명시하므로 'without any prior practice'는 성립 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "문법은 정상이나 논리 비약. 지문은 두 지식 유형을 대조할 뿐 전문가가 규칙을 '완전히 무시'한다고 주장하지 않으며, 'completely'라는 절대 표현은 지문에 근거 없음. 'touch'의 정의로서 규칙 무시는 범주 오류."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "문법은 정상이나 마지막 문장 'passed along through shared experience'를 차용한 미끼. 공유는 지식의 '전수 방식'이지 개인이 지닌 'touch'(수행 능력)의 정의가 아님. 동격 구조상 빈칸은 touch 자체를 정의해야 하므로 부적합. 'musical'도 일반화 진술과 범위 불일치."
+    }
+  ],
+  "note": "빈칸은 'a touch'를 정의하는 동격 부정사구. 신체 은유(bodily metaphors)·직관(feel/intuition)·무의식적 수행(thinking less, without conscious awareness)이라는 세 갈래 장거리 단서가 모두 2번만 지지. 1·3·4·5는 각각 대조 개념 차용, 지문 직접 모순, 절대 표현 비약, 전수 방식/능력 정의 혼동으로 배제되어 단일 정답으로 수렴. 다섯 선지 모두 'an ability to' 뒤 원형부정사 결합은 문법적으로 무결하여 변별은 순수 논리 층위에서 이루어짐."
+}

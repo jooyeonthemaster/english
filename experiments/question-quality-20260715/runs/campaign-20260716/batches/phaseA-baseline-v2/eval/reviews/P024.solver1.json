@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "'가입한 모든 클럽에 전력을 다하라'는 지문의 핵심 처방인 moderation(절제)·'draw the line'과 정면 충돌하는 역방향 진술. 문법 결합(명령문 병렬)은 정상이므로 논리로 배제."
+    },
+    {
+      "label": "②",
+      "verdict": "오답(매력적)",
+      "reason": "신문 마감 예시가 지문 중반을 차지해 실전에서 순간 끌리는 예시 재활용형 미끼. 그러나 마감 사례는 '과다 참여가 시간을 잠식한다'는 삽화일 뿐이고, 필자의 결론은 '마감 관리 기술을 익혀라'가 아니라 '애초에 덜 벌려라'이므로 결론 위계에서 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "오답(매력적)",
+      "reason": "'stressed out' 어휘 재활용로 유혹하지만, 지문의 해법은 스트레스 해소법 탐색이 아니라 스트레스 원인(과다 참여) 자체의 제거. 'joint activities'는 오히려 활동을 추가하라는 함의로 moderation에 역행."
+    },
+    {
+      "label": "④",
+      "verdict": "정답",
+      "reason": "'draw the line', 'moderation', 'Pacing is important'와 완벽 정합. 'get involved in the most meaningful ones, and avoid committing to more than you can handle'로 '선택과 절제'라는 결론 구조를 정확히 완성. 명령문 병렬 결합도 자연스러움."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'only'로 선택적 참여 뉘앙스를 흉내내지만 선택 기준을 'meaningful'에서 'personal success 보장'으로 왜곡. 지문에 성공 담론이 전혀 없어 무근거."
+    }
+  ],
+  "note": "모든 선지가 동사원형 명령문으로 병렬 seam에 문제없어 순수 논리 판정 문항. ②(예시 재활용)·③(어휘 재활용)이 설계된 매력 오답이나 지문의 결론(moderation/과다 참여 회피)과 어긋나 명확히 배제됨. 옹호 가능한 정답은 ④ 단일."
+}

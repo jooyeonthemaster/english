@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):dec=b  (C):ANS=c  (D):dec=f  (E):dec=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 29,
+        "relPos": 0.036,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 323,
+        "relPos": 0.401,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 540,
+        "relPos": 0.671,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 564,
+        "relPos": 0.701,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 641,
+        "relPos": 0.796,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.796,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "being left",
+        "isError": false,
+        "correction": "being left",
+        "errorExpression": "being left",
+        "surroundingText": "We all enjoy the pleasure of being left alone with a good book.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "who",
+        "isError": false,
+        "correction": "who",
+        "errorExpression": "who",
+        "surroundingText": "The solution is to read in the company of other people who are reading",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "immersed",
+        "isError": true,
+        "correction": "immersed",
+        "errorExpression": "immersing",
+        "surroundingText": "Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "feel alone at all",
+        "isError": false,
+        "correction": "feel alone at all",
+        "errorExpression": "feel alone at all",
+        "surroundingText": "Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "in which",
+        "isError": false,
+        "correction": "in which",
+        "errorExpression": "in which",
+        "surroundingText": "Consider joining a reading group in which everybody takes turns reading aloud from a novel.",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "being left"
+      },
+      {
+        "label": "(B)",
+        "text": "who"
+      },
+      {
+        "label": "(C)",
+        "text": "immersing"
+      },
+      {
+        "label": "(D)",
+        "text": "feel alone at all"
+      },
+      {
+        "label": "(E)",
+        "text": "in which"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어가 남겨지는 수동의 의미이므로 being left 형태가 적절합니다.",
+      "(B)": "선행사 people을 수식하는 주격 관계대명사 who는 적절합니다.",
+      "(D)": "동사 feel의 주격 보어 자리이므로 형용사 alone이 사용된 것은 적절합니다.",
+      "(E)": "완전한 문장이 이어지며 장소를 나타내므로 in which는 관계부사 대용으로 적절합니다."
+    },
+    "explanation": "지각동사 see의 목적어 someone else와 목적격 보어 분사의 관계를 확인해야 합니다. 누군가 책에 몰입된 상태를 나타내므로 수동의 의미인 과거분사가 필요합니다. 틀린 표면인 (C) immersing은 능동을 뜻하므로, immersed로 교체해야 옳습니다.",
+    "keyPoints": [
+      "(C) 분사 능수동 — 목적어와의 능수동 관계 확인",
+      "(B) 관계사 — 주격 관계대명사",
+      "(E) 관계사 — 전치사+관계대명사"
+    ],
+    "tags": [
+      "분사",
+      "지각동사",
+      "관계대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We all enjoy the pleasure of __(A) being left__ alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people __(B) who__ are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly __(C) immersing__, and you won't __(D) feel alone at all__. Reading can be sociable. Consider joining a reading group __(E) in which__ everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience."
+  }
+}

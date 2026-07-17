@@ -1,0 +1,83 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V4_DISTRACTOR_EXPLANATION_LABEL_MISMATCH",
+      "severity": "critical",
+      "evidence": "오답 해설 키 '③'의 내용('자연이 스스로 모호하지 않게 말한다는 생각은 과학 의사소통 규범에 정면으로 위배...')은 실제로는 선지 ④('it allows nature to speak powerfully and unambiguously')에 대한 해설이다. 선지 ③('it receives validation from the scientific community')과는 무관하며, 실제 오답 ④에 대한 해설 항목은 존재하지 않는다."
+    },
+    {
+      "code": "V5_ANSWER_LABEL_CONTRADICTION",
+      "severity": "critical",
+      "evidence": "선언된 정답은 ③인데 오답 해설 블록에 키 '③'이 포함되어 있고 그 항목이 '...이므로 오답입니다'로 끝난다. 학생 노출 필드 기준으로 정답 라벨과 해설이 직접 모순되며, 오답 해설 키 집합은 {①,②,④,⑤}여야 하나 실제는 {①,②,③,⑤}다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 0
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "지문 서두의 개인주의 수사(half-truth)를 진리 성립 조건으로 승격시키는 오독 유도",
+      "temptingBecause": "'an inquiring but unbiased mind'가 2문장에서 축자적으로 등장해 어휘 중첩이 강함",
+      "decisiveFlaw": "지문은 해당 개인주의적 신념을 '공적 맥락에서 행동의 기초가 될 수 없다'(yet almost nobody thinks...)고 양보-반박 구조로 기각함"
+    },
+    {
+      "label": "②",
+      "intent": "지문이 부정적 반례로 든 행위(검증 전 기자회견 발표)를 성립 조건으로 뒤집는 condition inversion",
+      "temptingBecause": "press conference가 지문에서 가장 구체적이고 현저한 사건으로 등장함",
+      "decisiveFlaw": "지문에서 전문가 검토 없는 기자회견 발표는 'castigated as a publicity seeker'로 비난받는 대상이지 지위 확보 수단이 아님"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 'authorized by disciplinary specialists'와 'becomes a collective product'의 통합 paraphrase",
+      "temptingBecause": "해당 없음(정답). 직전 문장의 unless절과 직후 문장의 'only one stage in its construction' 두 단서가 지지",
+      "decisiveFlaw": "없음 — 다만 직전 문장의 근접 동의어 치환이라 KILLER 요구 추상화 깊이에는 미달"
+    },
+    {
+      "label": "④",
+      "intent": "규범 진술('nature does not speak unambiguously')의 극성 반전(polarity reversal)",
+      "temptingBecause": "'speak powerfully'와 'unambiguously'라는 지문 어휘를 그대로 재활용함",
+      "decisiveFlaw": "지문이 명시적으로 자연은 모호하지 않게 말하지 않는다고 단언하므로 직접 모순"
+    },
+    {
+      "label": "⑤",
+      "intent": "집단적 인가를 개인적 덕목(inspired patience)으로 대체하는 actor/mechanism swap",
+      "temptingBecause": "'authorization by disciplinary specialists'와 'inspired patience' 두 지문 구절을 결합해 표면적 근거가 있어 보임",
+      "decisiveFlaw": "지문의 위계를 정반대로 뒤집음 — 개인적 덕목은 불충분하고 집단적 인가가 필수라는 것이 요지. 가장 길고 작위적인 구문이라 소거도 쉬움"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MISSING_DISTRACTOR_ENTRY",
+      "severity": "critical",
+      "evidence": "실제 오답 ④에 대한 오답 해설 항목이 존재하지 않음(④의 해설 내용이 키 ③에 잘못 귀속됨)"
+    },
+    {
+      "code": "CORRECT_ANSWER_CALLED_WRONG",
+      "severity": "critical",
+      "evidence": "오답 해설 키 ③ 항목이 '...반작용적 진술이므로 오답입니다'로 끝나, 선언된 정답 ③을 오답으로 명시함"
+    },
+    {
+      "code": "REDUNDANCY_MINOR",
+      "severity": "minor",
+      "evidence": "본해설 말미의 ①·② 논평이 오답 해설 블록의 ①·② 항목과 실질적으로 중복됨"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "정답 ③은 빈칸 직전 문장 'unless it has been authorized by disciplinary specialists'의 근접 paraphrase이며, 네 오답 전부가 지문이 명시적으로 기각한 내용이라 지문 극성 판단 하나만으로 정답을 특정할 수 있다. '최소 두 문장/두 논리 단서 연결 필수, 극성 하나로 찍기 불가' 조건 미충족. 오답 함정 다양성(half-truth/inversion/polarity/actor-swap)은 양호하나 ②④⑤가 모두 '지문이 반대함' 계열로 수렴하는 점도 감점 요인.",
+  "grade": "F",
+  "notes": "지문 무결성(V1), 정답 유일성(V2), 문법성(V3)은 모두 통과하는 견실한 골격의 빈칸 문항이다. 빈칸 위치(주제문의 'collective product' span)는 출제 가치가 높고(C1=4) 오답 앵커도 각기 다르다(C2=3). 그러나 (1) 오답 해설의 키 ③이 실제로는 ④의 해설이고 ④ 항목이 누락되었으며 선언 정답 ③을 '오답입니다'로 명시하는 치명적 필드 비동기(V4·V5 실패), (2) KILLER 요청 대비 정답이 인접 문장의 직역 수준 paraphrase여서 극성만으로 풀리는 난이도 미달(C5=1, killerConditionsMet=false)이 결정적 결함이다. V 실패는 공예 점수로 상쇄되지 않으므로 등급 F. 수리 방향: 오답 해설 키를 {①,②,④,⑤}로 재매핑하고, KILLER 유지 시 정답 선지의 추상화 수준을 높이거나 극성 양성 오답(예: half-truth 계열의 긍정 극성 미끼)을 추가해 극성 단독 소거를 차단해야 한다."
+}

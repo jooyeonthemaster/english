@@ -1,0 +1,62 @@
+{
+  "pid": "P022",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-pointcode-overlap",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (C)와 (E)가 동일 pointCode 'k'(to-v/v-ing 계열)를 공유한다. keyPoints는 각각 'stop의 목적어 형태'와 '명사 수식 형용사적 용법'으로 하위 포인트를 구분하고 있어 모순은 아니며 필드 동기화 위반도 아님. 기록용 참고.",
+      "recommendation": "디코이 포인트 계열을 완전히 분산시키면 C2가 더 단단해진다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사구문에서 과거분사(수동) vs 현재분사(능동) 판별",
+      "temptingBecause": "문두 분사구문이라 (being) born의 생략 구조를 복원해 주절 주어 Brunel과의 태 관계를 스스로 판단해야 한다.",
+      "decisiveFlaw": "정답 아님 — Brunel이 '태어나지는' 수동 관계이므로 과거분사 born이 정확하다. 어법상 하자 없음."
+    },
+    {
+      "label": "(B)",
+      "intent": "정동사 vs 준동사 — 문장 내 본동사 유무 판정 (정답)",
+      "temptingBecause": "factory 바로 뒤의 supplying이 명사를 수식하는 분사처럼 보여, 국소적으로는 자연스럽게 읽힌다('군수품을 공급하던 공장'류 오독).",
+      "decisiveFlaw": "문장이 마침표까지 정동사 없이 끝나 비문(fragment)이 된다. 축약 관계절 해석을 취해도 본동사가 없어 대안 분석이 성립하지 않는다. supplied로 교정하면 정확히 원문이 된다."
+    },
+    {
+      "label": "(C)",
+      "intent": "동사 stop의 보충어 형태 — 동명사 목적어 vs to부정사(부사적) 혼동",
+      "temptingBecause": "stop to-v('~하기 위해 멈추다')와의 고전적 혼동 지점이라 형태만 보고 의심하게 된다.",
+      "decisiveFlaw": "정답 아님 — 문맥상 '사는 것을 멈췄다'이므로 동명사 목적어 buying이 정확하다."
+    },
+    {
+      "label": "(D)",
+      "intent": "because(접속사) vs because of(전치사) 구분",
+      "temptingBecause": "because 계열은 반사적으로 점검하게 되는 빈출 포인트다.",
+      "decisiveFlaw": "정답 아님 — 뒤가 명사구 his debt이므로 전치사 because of가 정확하다. 국소 단서만으로 즉시 소거 가능해 매력도는 낮은 편."
+    },
+    {
+      "label": "(E)",
+      "intent": "명사(ways)를 수식하는 형용사적 to부정사 + for 의미상 주어 구조 인식",
+      "temptingBecause": "ways for people and goods to move의 for구가 끼어 있어 moving/to move 사이에서 구조 파악이 필요하다.",
+      "decisiveFlaw": "정답 아님 — ways for X to-v는 표준 구조로 to move가 정확하다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더는 원지문 대비 (B) supplied→supplying 단일 의도 변형만 있고 나머지 밑줄·본문은 원문과 일치, 라벨-선지 동기화 정상. V2: 5개 밑줄 독립 검증 결과 (B)만 비문(정동사 부재 fragment)이고 나머지 4개는 어법상 정확 — 단일 정답 성립, 교정 시 정확히 원문 복원. V3: 교정 완성문=원문으로 문법적, 발문 표준. V4: 주해설의 구조 분석(부사구+주어+본동사 부재)과 4개 오답 해설 모두 실제 문장 구조·용어와 일치, 오분석·환각 없음. V5: 정답 라벨·선지·해설·keyPoints·markedExpressions 상호 모순 없음. 공예: 본동사 유무 판정은 정전 포인트(C1=3), 디코이 4개가 각기 다른 오개념을 겨냥하나 (C)/(E)가 같은 계열(C2=3), 정답은 문장 전체 구조를 읽어야 하지만 (D)는 즉시 소거 가능(C3=3), 메타 누출 없고 정답 필연적(C4=4), INTERMEDIATE 라벨에 사고 단계·함정 깊이 정합(C5=3), 해설은 짧고 정확하며 핵심 함정('명사 수식 분사 오인')을 선명히 분리(C6=4). 합계 20 — 모든 C가 3 이상이나 21 미만이라 A 기준 미달, B. 참고: 지문은 기출(브루넬 전기) 재활용 계열의 평이한 서사문. KILLER 아님 → killerConditionsMet=false."
+}

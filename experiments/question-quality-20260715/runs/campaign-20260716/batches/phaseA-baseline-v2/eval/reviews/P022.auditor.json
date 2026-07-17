@@ -1,0 +1,69 @@
+{
+  "pid": "P022",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "해설이 made by organizations 가 수식하는 명사 mistakes 를 '선행사'로 지칭. 축약 관계사절(mistakes [which are] made by ...) 분석 하에서는 정당화 가능하고, 표시 위치·교정형·능수동 판정 자체는 전부 정확하므로 V4 실패로 보지 않음."
+    },
+    {
+      "code": "V4-minor-phrasing",
+      "severity": "minor",
+      "evidence": "해설 첫 문장 \"문장의 주어 'One of the most common mistakes'를 수식하는 분사 자리\" — 엄밀히는 주어 NP 전체가 아니라 그 안의 핵명사 mistakes 를 수식. 학습상 오해를 일으키지 않는 관용적 축약 수준."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사 능수동 — 명사 수식 축약 관계사절에서 과거분사(made)와 현재분사(making)의 구별 (정답)",
+      "temptingBecause": "명사 뒤 -ing 수식이 워낙 흔해 기계적으로 넘어가기 쉽고, 문장이 길어 주어부 구조를 끝까지 안 읽으면 지나칠 수 있음",
+      "decisiveFlaw": "mistakes 는 organizations 에 의해 '저질러지는' 대상이므로 수동 관계 — making 은 목적어도 없고 by-행위자와 충돌하여 비문. made 로 교정하면 정확히 원문 복원. 유일 정답."
+    },
+    {
+      "label": "(B)",
+      "intent": "정·준동사 구별 — that 명사절 내부에서 동명사 주어(creating)와 정동사(begins)의 역할 분담",
+      "temptingBecause": "is that 직후에 -ing 가 나와 'that 절에는 주어+동사가 와야 하는데?' 라는 표층 기대와 충돌하고, begins 까지 거리가 있어 구조 파악이 필요",
+      "decisiveFlaw": "creating a social media program 이 명사절의 주어이고 begins 가 정동사이므로 동명사가 정확히 적법 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "to부정사의 형용사적 용법 — 명사 need 수식",
+      "temptingBecause": "fulfillment of a vague need 뒤라서 of managing 같은 전치사+동명사를 기대하거나, need 를 동사로 착각할 수 있음",
+      "decisiveFlaw": "need to V 는 표준 결합(형용사적 용법)이며 완전히 적법 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "병렬 구조 — 조동사 must 아래 either A or B 상관접속 병렬(동사원형 일치)",
+      "temptingBecause": "must 와 solve 사이에 either 가 끼고 or result 까지 거리가 있어 solves/to solve 로 오판할 여지가 있음",
+      "decisiveFlaw": "must 뒤 동사원형이 필수이고 뒤의 원형 result 와 정확히 병렬 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "형용사 vs 부사 — 대명사 one(=improvement) 수식",
+      "temptingBecause": "바로 앞의 부사 preferably 와 나란히 있어 measurably 로 써야 하는지 잠깐 흔들 수 있음",
+      "decisiveFlaw": "명사 대용 one 을 수식하므로 형용사 measurable 이 적법 — 오류 아님. 다만 실전 유인력이 낮은 준필러 성격"
+    }
+  ],
+  "explanationIssues": [
+    "'선행사' 용어를 분사 수식 명사에 사용 — 축약 관계사절 분석으로 정당화 가능한 관용 표현이나 '수식받는 명사'가 더 정확 (minor)",
+    "keyPoints 가 (A)(B)(D) 3개만 수록 — (C)(E)의 point 는 markedExpressions 의 pointCode 로만 존재. 필드 간 모순은 없으므로 V5 통과 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문 대비 (A) made→making 단일 치환 외 완전 동일(접합 파손·중복·누락·고아 부호 없음), 5개 마커가 선지 라벨과 정확히 일치. V2: 5개 밑줄 독립 검증 결과 (A)만 비문이고 (B)~(E)는 대안 해석으로도 오류가 성립하지 않아 단일 정답 확정. V3: 교정형(made) 삽입 시 원문과 동일한 완전 문법문, 오답 밑줄은 전부 적법 — 유형 의도와 정확히 일치. V4: 능수동 판정·by-행위자 근거·교정형 모두 사실과 일치, 오답 해설 4건 모두 실제 구조와 대응(용어 느슨함 2건은 minor). V5: 정답 라벨·선지·해설·markedExpressions(isError/correction/errorExpression)·keyPoints 상호 모순 없음. 공예: 분사 능수동은 정전 포인트이나 오류가 첫 문장에 있고 by organizations 가 바로 인접해 정답 인지가 거의 즉각적 — 'One of the ~s made by' 는 교재 최빈출 패턴이라 변별력(C3=2)이 약함. 오답 4개는 서로 다른 문법 계열을 겨냥해 의도 밀도는 양호하나 (E)는 유인력이 낮음. INTERMEDIATE 요청 대비 쉬운 쪽 경계로 대체로 정합(C5=3). 해설은 간결·정확(C6=3). 합계 17, 전 V 통과, C 최저 2 → B. 개선 제안: 오류 위치를 후반부의 병렬((D) 계열)이나 (B) 계열로 옮기고 (A)를 온전한 디코이로 돌리면 변별력 상승 여지."
+}

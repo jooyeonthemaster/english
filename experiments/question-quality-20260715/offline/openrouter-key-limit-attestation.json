@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-15T04:50:08.8099319+09:00",
+  "endpoint": "GET https://openrouter.ai/api/v1/key",
+  "readOnly": true,
+  "rawResponseRetained": false,
+  "keyValueRetained": false,
+  "keyLabelRetained": false,
+  "usageValuesRetained": false,
+  "currentKey": {
+    "creditLimitUsd": null,
+    "limitRemainingUsd": null,
+    "limitReset": null,
+    "includeByokInLimit": false,
+    "isManagementKey": false,
+    "isProvisioningKey": false,
+    "expiresAt": null
+  },
+  "executionDecision": "BLOCK_PROVIDER_SIDE_SPEND_CAP_ABSENT",
+  "qualification": "The installed completion key is unlimited and is not a management/provisioning key, so it cannot create or update a separate bounded campaign key through the management API. Do not mutate this shared key because doing so could affect production traffic. Recapture immediately before any campaign and require a separate limited key or an independently approved equivalent external hard cap.",
+  "officialDocumentation": [
+    "https://openrouter.ai/docs/api/reference/limits",
+    "https://openrouter.ai/docs/api/api-reference/api-keys/get-current-key",
+    "https://openrouter.ai/docs/api/api-reference/api-keys/create-keys",
+    "https://openrouter.ai/docs/api/api-reference/api-keys/update-keys"
+  ],
+  "modelApiCalls": 0,
+  "fullQuestionCandidatesUsed": 0,
+  "fullQuestionCandidateCap": 1000
+}

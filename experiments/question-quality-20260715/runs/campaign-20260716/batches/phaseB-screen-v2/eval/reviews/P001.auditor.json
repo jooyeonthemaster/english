@@ -1,0 +1,83 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-NONWORD",
+      "severity": "major",
+      "evidence": "해설에 비단어 '견기기'(→'견디기')가 포함됨: '우리가 차마 스스로 견기기 힘들어하는 내면의 고통스러운 감정들'. 학생 노출 필드의 손상 텍스트."
+    },
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "해설이 정답 ④를 인용·번역하는 대목에서 '직면하게'가 '직하게'로 손상됨: \"④ '우리가 차라리 피하고 싶어 할 바로 그 내면의 충동들을 직하게 만든다'\". 정답 선지의 의미 전달 자체가 깨진 손상 용어."
+    },
+    {
+      "code": "V4-MISATTRIBUTION",
+      "severity": "minor",
+      "evidence": "② 오답해설이 \"지문에 등장하는 법의 감정 억제 기능('keeps it in check', 'imposes limits')\"이라 하나 'imposes limits'는 지문에 없는 표현(선지 ②의 'the limits that the law imposes'에서 온 것). 지문 인용 귀속 오류."
+    },
+    {
+      "code": "V4-TERMINOLOGY",
+      "severity": "minor",
+      "evidence": "keyPoints 3번이 'identify the most unbearable ones → confronting us with...' 환언을 '도치·추상화'라고 기술. 해당 환언에 통사적 도치(inversion)는 존재하지 않음 — 용어 오사용."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal) — 영화의 '감정 대면 강제' 기능을 '감정 삭제 조력'으로 뒤집음",
+      "temptingBecause": "지문 핵심 어휘 'unbearable', 'affects'를 그대로 재사용하여 표면 일치도가 높음",
+      "decisiveFlaw": "지문은 cinema introduces us to our affects / forcing us to identify라 하므로 영화는 감정을 드러내는 주체이지 지우는 주체가 아님. 'erase'는 오히려 법의 suppress 방향"
+    },
+    {
+      "label": "②",
+      "intent": "과확장(scope shift) — 영화가 법의 제한 체계 '자체를 해체'한다는 지문에 없는 구조적 대립으로 비약",
+      "temptingBecause": "대조 구도(영화=표현 vs 법=억제)를 파악한 학생에게 '법의 한계를 허문다'가 그 대조의 자연스러운 귀결처럼 읽힘. 극성 소거를 통과하는 유일한 오답",
+      "decisiveFlaw": "지문에서 영화와 법은 병렬 대조될 뿐 영화가 법의 제약에 작용한다는 진술이 전혀 없음. 빈칸 자리의 원문 의미(견디기 힘든 감정의 식별 강제)와 무관"
+    },
+    {
+      "label": "③",
+      "intent": "주체 전도(actor swap) — 법의 억제 기능을 영화가 '강화'한다고 귀속",
+      "temptingBecause": "'suppress', 'desires and drives', 'legal' 등 고밀도 지문 어휘 중첩",
+      "decisiveFlaw": "whereas 대조 구조상 영화는 법의 반대 방향(감정 소개·대면)이므로 법적 억제 장치를 강화한다는 진술은 대조와 정면 모순"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 원문 'forcing us to identify the most unbearable ones in ourselves'의 의미 보존 추상화",
+      "temptingBecause": "해당 없음(정답). unbearable ones → the very inner impulses we would prefer to avoid, forcing to identify → confronting us with 로 어휘 재사용 없이 환언",
+      "decisiveFlaw": "없음 — 유일 정답. 다만 지문 키워드 재사용이 가장 적은 선지라는 점이 상위권 학생에게 약한 메타 단서가 될 수 있음"
+    },
+    {
+      "label": "⑤",
+      "intent": "주체 전도(actor swap) — 법의 예방·통제 기능(fearing the horror of their consequences)을 영화에 귀속",
+      "temptingBecause": "'horror', 'consequences'를 지문에서 직접 차용",
+      "decisiveFlaw": "통제되지 않은 결과의 공포를 '막는' 것은 법의 역할. 영화는 오히려 그런 감정을 드러내 마주하게 하므로 극성·주체가 모두 반대. ③과 함정 유형이 사실상 중복"
+    }
+  ],
+  "explanationIssues": [
+    "비단어 '견기기'(→견디기) — 학생 노출 해설의 손상",
+    "정답 선지 번역 내 '직하게'(→직면하게) — 정답 근거 문장의 의미가 깨지는 손상",
+    "'imposes limits'를 지문 인용처럼 제시(실제로는 선지 ②의 표현) — 귀속 오류",
+    "keyPoints의 '도치·추상화' — 도치가 아닌 환언·추상화이므로 용어 오사용",
+    "본해설이 다소 장황하며 ①③⑤를 묶어 처리한 뒤 오답해설에서 반복 — 경제성 부족"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "동일 통사 슬롯(모두 -ing구) 충족, 정답의 의미 보존·추상화 충족, 각 오답의 anchor/overlap/flaw 존재. 그러나 (1) ③과 ⑤가 동일 함정 유형(법의 기능을 영화에 귀속하는 actor swap)으로 중복되어 '서로 다른 함정' 조건 위반, (2) ①③⑤가 단일 극성/주체 점검으로 일괄 탈락하여 실질 변별이 ②vs④ 한 판단으로 수렴 — '두 문장/두 논리 단서 연결' 요건이 경계선상. 보수적으로 미충족 판정.",
+  "grade": "F",
+  "notes": "문항 설계 자체는 견실함: 빈칸이 지문의 핵심 대조(법=억제 vs 영화=대면)의 결말부를 정확히 겨냥하고(V1·V2·V3·V5 통과, C1=4), ②가 실제 판단을 요구하는 강한 오답. 그러나 학생 노출 해설에 비단어 '견기기'와 정답 인용부 손상 '직하게'(직면하게)가 존재하고 'imposes limits' 지문 귀속 오류가 겹쳐 V4 실패 → 등급 F. 해설 텍스트 교정(3곳)과 keyPoints '도치' 용어 수정만으로 V4가 회복되며, 그 경우 C 합계 17+α로 B 이상 재판정 여지가 큼. KILLER 정합을 위해서는 ⑤를 actor swap이 아닌 다른 함정 유형(예: half-truth, condition loss)으로 교체 권장."
+}

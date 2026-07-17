@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'One of the most common mistakes made by organizations...'에서 made는 mistakes를 수식하는 과거분사(축약 관계절 that are made). 바로 뒤 by organizations가 수동 단서를 명시하므로 정문. 유혹 강도 낮음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 문두의 One(단수). 'of the most common mistakes ... when they first consider experimenting with social media'가 전부 수식·삽입부라 직전 복수 명사(mistakes, organizations, social media 인접부)에 끌려 are로 고치고 싶은 전형적 장거리 수일치 미끼. 실제로 잠깐 끌렸으나 One ... is that절로 정문. 이 문항에서 가장 매력적인 오답."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "that절 내부 주어는 동명사구 'creating a social media program'으로 단수 취급 → begins 정문. 앞의 businesses(복수)와 보어절 환경이 begin으로의 유혹을 만들지만 동명사 주어 단수 일치 규칙이 지배. 'begins not with A but with B' 상관구조도 문제없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a vague need to manage a presence'에서 need를 수식하는 to부정사 관용 결합(need to-V). 완전 정문이며 대안 표기(of managing)가 있어도 to manage가 틀리지 않음. 유혹 강도 낮음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "상관접속사 'must either solve A or ___ in B'의 병렬 시작점은 조동사 must 뒤 동사원형 solve. 따라서 or 뒤도 원형 result여야 하는데 resulting이 옴. resulting을 분사구문/동명사로 정당화할 대안 해석을 적극 탐색했으나 either의 위치(solve 직전)가 병렬 범위를 동사원형으로 고정하므로 성립 불가. 명백한 비문."
+    }
+  ],
+  "note": "정답 (E) 유일. 병렬(either A or B) 원형 불일치로 논쟁 여지 없음. (B)의 장거리 수일치가 가장 매력적인 오답으로 설계 의도가 잘 살아 있고, (C)의 동명사 주어 일치가 2차 미끼. (A)·(D)는 유혹 강도가 낮아 변별은 (B)/(C)/(E) 삼자 구도에서 발생. 전체적으로 정답 유일성과 미끼 배치가 양호한 문항."
+}

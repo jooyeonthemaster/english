@@ -1,0 +1,45 @@
+{
+  "strategy": "s2-fewshot-a",
+  "describe": "검증 A등급 실물 2문항(round-6/round-4, ebsi_go3_20151013-q19)을 모범 예시로 프롬프트에 포함한 few-shot 출제",
+  "callPlan": "flash x1",
+  "total": 30,
+  "ok": 30,
+  "failed": 0,
+  "avgMs": 12612,
+  "avgAttempts": 1.03,
+  "avgCalls": 1,
+  "totalCostUsd": 0.61547,
+  "avgCostUsd": 0.02052,
+  "costRecordedCalls": 30,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 1.5,
+  "zeroErrorItems": 6,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.836,
+  "avgAnswerRelPos": 0.513,
+  "answerRelPosInBand": 24,
+  "models": {
+    "google/gemini-3.5-flash": 30
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 3
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 2
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 1
+    }
+  ]
+}

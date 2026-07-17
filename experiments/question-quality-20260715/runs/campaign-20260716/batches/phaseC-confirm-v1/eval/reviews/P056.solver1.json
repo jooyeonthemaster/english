@@ -1,0 +1,35 @@
+{
+  "pid": "P056",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) where",
+      "verdict": "correct",
+      "reason": "콜론 뒤에서 'the vivid images that we retain'의 내용을 열거하는 간접의문문(자유관계절) 병렬 구조의 첫 항. 'where we were when we got the news'는 뒤따르는 'how we learned it, how we felt, what we did'와 완벽히 병렬을 이루며, 장소 의문사 where가 be동사의 보어 자리를 채우는 완전한 간접의문문으로 정문이다. 실전에서 첫 밑줄이라 잠깐 멈추게 되지만 병렬 시작점을 확인하면 즉시 소거된다."
+    },
+    {
+      "label": "(B) is",
+      "verdict": "incorrect",
+      "reason": "진짜 주어는 복수 명사 'the broad outlines'이다. 'of such catastrophes'(전치사구)와 'thoroughly reported in the media'(삽입 분사구)가 주어와 동사 사이를 길게 벌려 놓아 단수 'catastrophes... media'에 이끌려 is를 정문으로 착각하게 만드는 전형적 수일치 함정. 'the broad outlines ... are well remembered'가 되어야 한다. 삽입구를 걷어내면 outlines is의 불일치가 명백하다. 어법상 틀린 것."
+    },
+    {
+      "label": "(C) surrounding",
+      "verdict": "correct",
+      "reason": "'your personal circumstances surrounding the events'에서 현재분사 surrounding이 circumstances를 후치 수식하며 목적어 the events를 취하는 능동 관계(circumstances surround the events)가 성립한다. surrounded로 바꾸면 오히려 비문. 정문이다."
+    },
+    {
+      "label": "(D) surveyed",
+      "verdict": "correct",
+      "reason": "'the respondents' memories were surveyed'는 수동태로 문법적으로 완전하다. '기억이 조사되었다'는 표현이 의미상 사람을 조사하는 것 아닌가 하는 미세한 어색함으로 유혹하지만, 이는 어법이 아닌 문체 차원의 문제이고 memories를 조사 대상으로 보는 수동 구문은 정상적 용법이다. surveying(능동)이면 비문이 되므로 수동 표기가 옳다."
+    },
+    {
+      "label": "(E) of which",
+      "verdict": "correct",
+      "reason": "'those of which they are most confident'는 'they are most confident OF those (memories)'에서 전치사+관계대명사가 전치된 구조. be confident of는 표준 연어(confident of success 등)이므로 of which는 정문. 실전에서 가장 끌리는 매력 오답 — confident about/in이 더 익숙해 of가 틀렸다고 느끼기 쉽고, 문장 말미의 복잡한 구조(paradoxically 삽입, relative to 비교) 속에 있어 검증 부담이 크다. 그러나 잔여 성분 없이 완전한 절(they are most confident)이 뒤따르므로 어법상 흠이 없다."
+    }
+  ],
+  "note": "정답은 (B) 하나로 명확히 수렴한다. 최상위권 실전 풀이 시나리오: (A)는 병렬 확인으로 빠르게 소거, (B)에서 삽입구(of such catastrophes, thoroughly reported in the media)를 걷어내면 outlines-is 수일치 오류가 확정된다. 매력적 오답 유혹 순위는 (E) > (D). (E)는 confident of 연어에 대한 확신 부족을 노린 미끼, (D)는 'memories were surveyed'의 의미적 어색함을 노린 미끼지만 둘 다 어법상 정문이다. 대안 해석 탐색: (B)를 살릴 방법(단수 취급 가능한 집합 해석 등)을 찾아봤으나 outlines는 명백한 가산 복수이고 the broad outline(단수)로 쓰지 않은 이상 is는 옹호 불가. 복수 정답 시비 소지 없음."
+}

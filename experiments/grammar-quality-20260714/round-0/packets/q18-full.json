@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20231219-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "함축의미",
+    "words": 158
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-noun-clause-pronoun-mislabelx1",
+    "grammar-keypoint-choice-mismatchx1"
+  ],
+  "layout": "(A):dec=b  (B):dec=g  (C):dec=h  (D):ANS=i  (E):dec=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 38,
+        "relPos": 0.046,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 118,
+        "relPos": 0.142,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 428,
+        "relPos": 0.516,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 447,
+        "relPos": 0.539,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 566,
+        "relPos": 0.683,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.683,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Many people take the commonsense view that color is an objective property of things, or of the light that bounces off them. They say a tree's leaves are green because they reflect green light - a greenness that is just as real as the leaves. Others argue that color doesn't inhabit the physical world at all but exists only in the eye or mind of the viewer. They maintain that if a tree fell in a forest and no one was there to see it, its leaves would be colorless - and so would everything else. They say there is no such thing as color; there are only the people who see it. Both positions are, in a way, correct. Color is objective and subjective - \"the place,\" as Paul Cézanne put it, \"where our brain and the universe meet.\" Color is created when light from the world is registered by the eyes and interpreted by the brain.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "Many people take the commonsense view that color is an objective property of things",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "them",
+        "isError": false,
+        "errorExpression": "them",
+        "surroundingText": "color is an objective property of things, or of the light that bounces off them. They say",
+        "pointCode": "g"
+      },
+      {
+        "label": "(C)",
+        "expression": "see",
+        "isError": false,
+        "errorExpression": "see",
+        "surroundingText": "if a tree fell in a forest and no one was there to see it, its leaves",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "would",
+        "isError": true,
+        "correction": "would",
+        "errorExpression": "did",
+        "surroundingText": "to see it, its leaves would be colorless - and so would everything else. They say",
+        "pointCode": "i"
+      },
+      {
+        "label": "(E)",
+        "expression": "who",
+        "isError": false,
+        "errorExpression": "who",
+        "surroundingText": "there is no such thing as color; there are only the people who see it. Both",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "them"
+      },
+      {
+        "label": "(C)",
+        "text": "see"
+      },
+      {
+        "label": "(D)",
+        "text": "did"
+      },
+      {
+        "label": "(E)",
+        "text": "who"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "the commonsense view라는 명사 뒤에서 뒤이어 완전한 절을 이끄는 동격의 접속사 'that'이므로 어법상 옳습니다.",
+      "(B)": "앞에 나온 복수 명사 things를 가리키는 대명사 'them'이므로 대명사의 일치로서 어법상 옳습니다.",
+      "(C)": "was there 뒤에 부사적 용법으로 쓰여 to부정사구 내에서 타동사 역할을 하는 'see'는 뒤에 목적어 'it'을 취하고 있어 어법상 옳습니다.",
+      "(E)": "선행사 the people를 수식하는 주격 관계대명사 'who'로, 뒤에 주어가 없는 불완전한 절을 이끌고 있으므로 어법상 옳습니다."
+    },
+    "explanation": "주절의 'its leaves would be colorless'에 이어지는 'and so + 조동사/be동사 + 주어' 구조는 '~도 역시 그러하다'라는 뜻의 도치 구문입니다. 앞서 언급된 술어부의 조동사(would)를 대신하여 도치절을 이끌어야 하므로, 'did'는 올 수 없으며 대동사 'would'가 와야 합니다. 따라서 (D)의 did를 'would'로 고쳐야 합니다. 조동사와 대동사의 일치 관계를 묻는 유용한 어법 포인트입니다.",
+    "keyPoints": [
+      "(D) 병렬 및 도치 구문 — 대동사 would의 일치",
+      "(A) 동격 접속사 — 동격의 접속사 that의 역할",
+      "(B) 대명사 — 복수 대명사 them의 참조 대상 일치"
+    ],
+    "tags": [
+      "어법",
+      "동격 that",
+      "대명사 일치",
+      "대동사 도치",
+      "관계대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Many people take the commonsense view __(A) that__ color is an objective property of things, or of the light that bounces off __(B) them__. They say a tree's leaves are green because they reflect green light - a greenness that is just as real as the leaves. Others argue that color doesn't inhabit the physical world at all but exists only in the eye or mind of the viewer. They maintain that if a tree fell in a forest and no one was there to __(C) see__ it, its leaves __(D) did__ be colorless - and so would everything else. They say there is no such thing as color; there are only the people __(E) who__ see it. Both positions are, in a way, correct. Color is objective and subjective - \"the place,\" as Paul Cézanne put it, \"where our brain and the universe meet.\" Color is created when light from the world is registered by the eyes and interpreted by the brain.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

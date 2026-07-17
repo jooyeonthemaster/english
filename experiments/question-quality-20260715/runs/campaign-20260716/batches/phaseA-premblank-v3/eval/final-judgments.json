@@ -1,0 +1,511 @@
+[
+ {
+  "pid": "P001",
+  "itemId": "A3-b-int-prem-03",
+  "armId": "B-A0-PREMIUM-INTERMEDIATE",
+  "frameId": "blank-supply-v2-080",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "5",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-weak-rationale",
+    "severity": "minor",
+    "evidence": "오답 해설 ②는 '화난 고객과의 대화는 예시일 뿐'이라고만 설명하는데, 실제 결정적 결함은 지문이 회피(avoiding/procrastinating)를 명시적으로 비판한다는 점('I waste too much emotional energy', 'avoiding it')이다. 사실 오류는 아니나 근거가 약하고 핵심 함정을 놓친다."
+   },
+   {
+    "code": "C4-keyword-echo",
+    "severity": "minor",
+    "evidence": "정답 ⑤만 지문의 주제어 'energy'('energy level', 'energy is high')를 그대로 포함해, 키워드 매칭만으로 정답에 근접할 수 있는 약한 단서 누출이 있다. 다만 모든 오답도 지문 앵커(morning, unhappy clients, tired)를 갖고 있어 치명적이지는 않다."
+   }
+  ]
+ },
+ {
+  "pid": "P002",
+  "itemId": "A3-b-kil-prem-02",
+  "armId": "B-A0-PREMIUM-KILLER",
+  "frameId": "blank-supply-v2-052",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 1,
+   "C3": 1,
+   "C4": 1,
+   "C5": 0,
+   "C6": 3
+  },
+  "craftSum": 9,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V1-OK",
+    "severity": "info",
+    "evidence": "렌더 지문은 원지문에서 'promotes constructive conflict resolution' 구간만 빈칸으로 치환했고 나머지는 문자 단위로 동일함(em-dash, 'i.e. cooperate' 등 보존). 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 1~5와 정답 라벨 3 일치."
+   },
+   {
+    "code": "V2-OK",
+    "severity": "info",
+    "evidence": "각 선지 독립 검증: ①은 'solely...individual needs'가 'their own needs as well as the needs of others (i.e. cooperate)'와 모순, ②는 갈등 완화라는 본문 논지와 인과 반전, ④는 'express emotions...accurately'와 정면 모순, ⑤는 같은 문장의 주어 'Appreciation of differences'와 자기모순. 정답 집합은 정확히 {3} 하나."
+   },
+   {
+    "code": "V3-MINOR-TAIL",
+    "severity": "minor",
+    "evidence": "정답 완성문 'creates an arena for open communication and leads to productive settlements of disagreements and improved group functioning'은 문법적·자연스러움(원문도 동일한 이중 and 구조). 다만 잔여 tail 'and improved group functioning' 때문에 ②('escalates...and improved group functioning')·④('forces members to hide...and improved group functioning')는 통사 슬롯에는 들어가나 의미적으로 파탄난 접합을 만든다. V3 게이트(정답 완성문 기준)는 통과하나 D조건 위반의 근거가 됨."
+   }
+  ]
+ },
+ {
+  "pid": "P003",
+  "itemId": "A3-b-kil-prem-01",
+  "armId": "B-A0-PREMIUM-KILLER",
+  "frameId": "blank-supply-v2-049",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 1,
+   "C4": 1,
+   "C5": 0,
+   "C6": 1
+  },
+  "craftSum": 9,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-TRAP-LABEL-CONTRADICTION",
+    "severity": "major",
+    "evidence": "메인 해설은 오답 ②를 '자유 시간 포기라는 인과 역전'으로 명명하지만, 오답 해설(키 \"2\")은 같은 선지를 '극성 반전'으로 명명한다. 동일 선지에 대한 함정 유형 분석이 두 필드에서 상호 모순된다. 실제 구조를 보면 ②(relinquish your free time completely)는 원인-결과의 전도가 아니라 필자의 절제 주장과 정면 배치되는 극성 모순이므로, 메인 해설의 '인과 역전' 명명이 오류다."
+   },
+   {
+    "code": "V4-CAUSAL-MISLABEL-OPT5",
+    "severity": "major",
+    "evidence": "오답 해설 ⑤는 \"'한도 없이 늘리라(without limits)'는 것은 본문의 '선을 긋다(draw the line)'라는 중심 논지와 완벽하게 반대되는 인과 역전입니다\"라고 쓴다. 스스로 '중심 논지와 반대'라고 서술하면서(=극성 모순) 이를 '인과 역전'으로 명명한다. ⑤에는 전도될 인과 구조 자체가 없다. 함정 유형 용어(인과 역전)의 반복적 오용으로, RUBRIC V4의 '용어 오류·인과 오설명 없음' 기준 위반."
+   },
+   {
+    "code": "V4-SENTENCE-ATTRIBUTION",
+    "severity": "minor",
+    "evidence": "해설은 'exercise some moderation'이 '여섯 번째 문장'에 있다고 하나, 'The result?'를 문장으로 세는 표준 계수에서는 해당 경고가 7번째 문장이다(1 Participating…, 2 The result?, 3 Joining…, 4 This is…, 5 For example…, 6 Pacing is important., 7 The point is this: If you don't exercise…). 단편문 제외 계수에서만 6번째가 되므로 귀속이 모호하거나 오류."
+   }
+  ]
+ },
+ {
+  "pid": "P004",
+  "itemId": "A3-b-kil-prem-05",
+  "armId": "B-A0-PREMIUM-KILLER",
+  "frameId": "blank-supply-v2-124",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 13,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-TRAP-TYPE-MISLABEL",
+    "severity": "major",
+    "evidence": "오답해설 ⑤: \"법이 '추상적 진실(abstract truth)'을 추구한다는 것은 지문 초반부(Rather than an abstract desire~)에서 명시적으로 부인된 내용이므로 인과가 역전된 오답입니다.\" — 선지 ⑤(both audiences and the law persistently pursue an abstract truth)에는 인과 주장이 전혀 없고, 지문에도 역전될 인과 관계가 존재하지 않는다. 실제 결함은 '본문이 명시적으로 부정한 내용을 긍정으로 진술한 극성/모순 함정'이며, 메인 해설 자신도 \"⑤는 본문이 부정한 내용을 긍정으로 속인 함정\"이라고 올바르게 기술해 두 해설이 서로 모순된다. 함정 유형에 대한 논리 구조 오설명(인과 오설명)으로 V4 위반."
+   },
+   {
+    "code": "V4-PARAPHRASE-DRIFT-MINOR",
+    "severity": "minor",
+    "evidence": "오답해설 ④가 선지의 'isolates humans'(인간을 고립시킨다)를 '인간사회를 단절시킨다'로 다소 확장 환언. 실질 판정(지문에 없는 인과 관계)은 정확하므로 단독으로는 치명 아님."
+   },
+   {
+    "code": "CRAFT-LEXICAL-LEAK",
+    "severity": "major",
+    "evidence": "정답 ① 'the law regulates and suppresses such emotional impulses'의 핵심 동사 suppress가 빈칸 두 문장 뒤 'The law obsessively tries to suppress affects'에 원형 그대로 재출현. 단일 인접 문장의 축자 매칭만으로 정답 도달이 가능해 KILLER 요건(두 문장/두 논리 단서 연결 필수, 단일 단서 해결 금지)을 무너뜨린다. V 게이트가 아닌 공예(C3/C4/C5) 및 KILLER 조건 실패 근거."
+   }
+  ]
+ },
+ {
+  "pid": "P005",
+  "itemId": "A3-b-int-prem-05",
+  "armId": "B-A0-PREMIUM-INTERMEDIATE",
+  "frameId": "blank-supply-v2-124",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V3-minor-pronoun-tell",
+    "severity": "minor",
+    "evidence": "선지 ① 'encourages them to be freely expressed'의 'them'은 빈칸 절의 단수 선행사 'man's affective life'(원문 정답 span은 'keeps it in check'의 it)와 수가 불일치한다. 비문 수준은 아니어서 V3 통과로 판정하나, 의미 처리 없이 대명사 수 일치만으로 ①을 소거할 수 있는 느슨한 문법적 텔이다."
+   }
+  ]
+ },
+ {
+  "pid": "P006",
+  "itemId": "A3-b-int-prem-01",
+  "armId": "B-A0-PREMIUM-INTERMEDIATE",
+  "frameId": "blank-supply-v2-049",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 2,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-sentence-attribution",
+    "severity": "minor",
+    "evidence": "해설이 '본문 두 번째 문장에서 너무 많은 동아리에 가입하면 자유 시간이 줄어들 수 있다고 경고'라고 하나, 엄밀히는 두 번째 문장이 수사적 단편 'The result?'이고 해당 경고는 세 번째 문장(Joining too many clubs...)이다. 'The result? Joining...'을 한 수사 단위로 보면 허용 가능한 수준의 부정확성이며 내용 자체는 지문과 일치하므로 V4 실패로 보지 않음."
+   },
+   {
+    "code": "V4-minor-option5-characterization",
+    "severity": "minor",
+    "evidence": "오답 해설 ⑤ '이는 논지와 무관한 소재 연상입니다' — 주말 근무는 지문에서 과잉 활동의 부정적 결과로 제시된 소재이므로 '무관'이라기보다 '논지의 처방과 상반되는 세부 결과의 오용'이 정확하다. 함정 성격 규명에 큰 지장은 없어 minor."
+   }
+  ]
+ },
+ {
+  "pid": "P007",
+  "itemId": "A3-b-int-prem-02",
+  "armId": "B-A0-PREMIUM-INTERMEDIATE",
+  "frameId": "blank-supply-v2-052",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V3-collocation-minor",
+    "severity": "minor",
+    "evidence": "완성문 'creates an arena for open communication and encourages effective handling of disputes and overall team performance'에서 'encourages ... overall team performance'는 연어로 다소 느슨하다(enhances/improves가 더 자연). 비문은 아니므로 V3 통과이나 기록한다."
+   }
+  ]
+ },
+ {
+  "pid": "P008",
+  "itemId": "A3-b-int-prem-06",
+  "armId": "B-A0-PREMIUM-INTERMEDIATE",
+  "frameId": "blank-supply-v2-150",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-target-too-wide",
+    "message": "PARAPHRASE blank originalExpression is too broad; choose a compact semantic unit (the head predicate of the sentence) instead of a long clause."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-target-list-like",
+    "message": "BLANK_INFERENCE should not target a long, punctuated, or list-like span."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V3-minor-article",
+    "severity": "minor",
+    "evidence": "Option 4 'replicate the everyday reality' uses a slightly marked definite article ('everyday reality' is more idiomatic without 'the'). Still grammatical and does not enable seam-based elimination, so V3 is not failed."
+   },
+   {
+    "code": "V4-minor-gloss",
+    "severity": "minor",
+    "evidence": "오답 해설 1 glosses the passage's 'editing digital material' as '기술(조작/편집)'; '조작' is a loose rendering not literally in the passage. Substance of the explanation is accurate, so V4 is not failed."
+   }
+  ]
+ }
+]

@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'If the interview lasts a while' — last는 지속 기간 명사구 부사어(last an hour / last a while)를 취할 수 있고, 관사 a 뒤이므로 명사 while이 필수. 'a while'(명사구) vs 'awhile'(부사) 구분에서 관사가 있으니 명사형이 정확. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop the technique ... of selective note-taking' — 가주어 It + be + 형용사 + to부정사 진주어 구조. 단수 is 문제없음. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'writing down the key answers ... so what they can be transcribed easily afterwards' — 목적의 접속사 'so that + S + can'이 요구되는 자리. what은 뒤에 불완전한 절(명사 공백)을 요구하는데 'they can be transcribed easily afterwards'는 완전한 절이므로 what이 설 자리가 없다. 간접의문·축약 관계절 등 어떤 대안 해석으로도 'so what + 완전절'은 정문이 되지 않는다. what → that로 고쳐야 함."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'they can be transcribed easily' — they = the key answers로, 옮겨 적히는 대상이므로 수동태가 의미상 정확. 조동사 can 뒤 원형 be도 옳다. 능동/수동 판단을 유도하는 매력적 오답 자리였으나 수동이 명백. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle' — make + 목적어 + 형용사 목적보어(5형식) + tough-구문(easy to handle). 'handle을 수식하니 more easily 아닌가'라는 1차 직관을 노린 최대 미끼지만, 목적보어 자리이므로 형용사 비교급이 맞고 much의 비교급 강조도 정상. quicker와의 병렬도 일관. 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: (E)가 가장 강한 미끼(형용사 vs 부사)였고 (D)가 2차 미끼(능동 vs 수동)였으나 둘 다 구조 확인으로 해소. (C) 'so what + 완전절'은 대안 해석 탐색으로도 구제 불가한 명백한 오류로 정답이 (C) 하나로 깨끗하게 수렴. 복수 정답 소지 없음."
+}

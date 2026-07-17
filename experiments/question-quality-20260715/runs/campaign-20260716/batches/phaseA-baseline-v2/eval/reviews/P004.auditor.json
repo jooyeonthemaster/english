@@ -1,0 +1,74 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-DISTRACTOR-RATIONALE-MISEXPLANATION",
+      "severity": "major",
+      "evidence": "오답해설 ③: '에너지가 완전히 재충전된다는 진술은 본문의 인과적 현실과 모순됩니다' — 선지 ③을 빈칸에 넣은 완성문 'I'll spend more time worrying about it ... than recharging my emotional energy to its full capacity'는 '재충전에 쓰는 시간이 걱정에 쓰는 시간보다 적다'는 비교 대상일 뿐, 에너지가 완전히 재충전된다고 진술하지 않는다. 오히려 그 in-situ 의미는 본문의 에너지 낭비 서사와 모순되지 않고 정합적이다. ③의 실제 결정적 결함은 '모순'이 아니라 비교 대상이 담화적 역할(뒤따르는 So-결론: 실제 처리 비용 < 걱정 비용이므로 가장 먼저 해치운다)을 지지하지 못하는 비교대상 부적합이다. 해설이 존재하지 않는 모순을 지목한 인과/논리 오설명."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "전략 반전(actor/strategy swap): 직접 해결 대신 위임이라는 대안 행위를 비교 대상으로 제시",
+      "temptingBecause": "본문의 'the task'와 시간 비교 프레임을 차용하고, 시간관리 담론에서 위임은 그럴듯한 대안으로 들린다",
+      "decisiveFlaw": "본문은 'eating my problems for breakfast' 즉 본인이 직접 가장 먼저 처리하는 습관을 옹호하며 위임은 어디에도 없다. 비교 대상은 '그 일을 그냥 처리하는 실제 비용'이어야 하는데 방향이 정반대다"
+    },
+    {
+      "label": "②",
+      "intent": "과협소 half-truth: 본문 예시 하나(unpleasant email)에서 연상된 지엽적 행위로 축소",
+      "temptingBecause": "'email'이라는 본문 어휘 앵커가 있고, 이메일 대응 노력이라는 소재가 표면상 관련 있어 보인다",
+      "decisiveFlaw": "'long apologetic email 초안 작성'은 본문에 근거 없는 세부이며, 고객 대화·이메일을 포괄하는 일반적 문제 해결 비용을 담지 못해 뒤의 So-결론을 지지하지 못한다"
+    },
+    {
+      "label": "③",
+      "intent": "극성/흐름 불일치: 에너지 '소모' 서사에 '재충전' 개념을 끼워 넣은 흐름 교란",
+      "temptingBecause": "본문의 'emotional energy'를 그대로 재사용하여 어휘 중첩이 크다",
+      "decisiveFlaw": "재충전 시간과의 비교는 '실제 처리 비용보다 걱정 비용이 크므로 가장 먼저 해치운다'는 담화 논리를 성립시키지 못한다. 비교 대상 부적합(주의: 공식 오답해설이 말하는 '본문과의 모순'은 in-situ 의미상 성립하지 않음 — V4 이슈)"
+    },
+    {
+      "label": "④",
+      "intent": "정답: 원문 'it would actually take to just take care of it'의 의미 보존 재진술",
+      "temptingBecause": "정답 — 걱정·회피에 쓰는 시간과 '실제 해결에 드는 시간·노력'의 대조를 일반화 수준에 맞게 표현",
+      "decisiveFlaw": "없음(유일 정답). 삽입 시 문법적·자연스럽고 후속 So-결론을 정확히 뒷받침한다"
+    },
+    {
+      "label": "⑤",
+      "intent": "어휘 앵커 함정 + 무근거 세부(condition/scope 왜곡): 'unhappy client' 재사용에 'prolonged'라는 반대 방향 수식을 추가",
+      "temptingBecause": "'unhappy client'가 본문 그대로이고, 고객과 대화하는 것 자체가 '그 일을 처리하는 것'의 한 형태라서 표면상 정답과 가장 근접해 보인다",
+      "decisiveFlaw": "'prolonged(장시간의)'는 실제 처리가 걱정보다 짧다는 요지와 어긋나는 무근거 세부이며, 이메일 사례를 배제한 과협소 비교라 일반화된 원문 의미('그 일을 그냥 처리하는 데 드는 실제 비용')를 보존하지 못한다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "major",
+      "target": "오답해설 ③",
+      "evidence": "선지 ③을 '에너지가 완전히 재충전된다는 진술'로 오독하고 존재하지 않는 '본문과의 모순'을 결함 근거로 제시. in-situ 의미(걱정 시간 > 재충전 시간)는 본문과 정합적이며 실제 결함은 담화 역할 부적합이다",
+      "recommendation": "③ 해설을 '빈칸의 비교 대상은 뒤 문장(So for me...)이 요구하는 대로 그 일을 실제로 처리하는 데 드는 비용이어야 하는데, 재충전 시간과의 비교는 이 결론을 지지하지 못한다'로 교체"
+    },
+    {
+      "severity": "minor",
+      "target": "본해설 ①⑤ 일괄 처리",
+      "evidence": "'①, ⑤는 본문의 특정 어휘를 단순 차용한 무관한 내용' — ⑤는 'unhappy client'를 차용하나 ①은 일반어 'task' 외에 차용 어휘가 없어(delegate는 본문에 없음) 서술이 부정확하다. ①의 개별 오답해설('정반대 방향')이 더 정확하며 둘 사이 결이 다르다",
+      "recommendation": "본해설에서 ①은 '본문에 없는 위임 전략을 도입한 방향 반전'으로 분리 기술"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 모두 통과: 렌더 지문은 의도된 빈칸 외 손상이 없고, 다섯 선지 전부 동일한 than-슬롯에 문법적으로 들어가며(문법만으로 탈락하는 선지 없음), ④가 유일한 최적 정답으로 독립 검증됨(②⑤가 실질 경쟁 오답, ①③은 빠른 소거). 완성문도 자연스럽다. 그러나 오답해설 ③이 선지의 in-situ 의미를 오독하여 존재하지 않는 '모순'을 결함 근거로 제시하는 논리 오설명(V4 실패)이 있어 규정상 F. 공예 합계 17(C1~C6: 3,3,3,3,3,2)로 문항 설계 자체는 INTERMEDIATE에 정합적이며, ③ 해설 한 줄과 본해설의 ①⑤ 일괄 서술만 수정하면 B 이상 출하 가능. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

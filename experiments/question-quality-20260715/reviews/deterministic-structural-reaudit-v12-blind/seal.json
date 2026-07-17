@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "study": "deterministic-structural-reaudit-v12-blind",
+  "caseCount": 384,
+  "familyCount": 64,
+  "corpusSha256": "8695bc1b7c0539594ec08e57c6b107e52a943c85c13b460879c845e22f90ca52",
+  "oracleSha256": "8096ca7e386b7fc146eb4837e2d6d06b284e36efcde15481d983a1900ecf7573",
+  "buildScriptSha256": "fb3506703407642d31cbd5c57a36207c4e60c9cf352425951e3b7314f474b72c"
+}

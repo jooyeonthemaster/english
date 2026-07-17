@@ -1,0 +1,35 @@
+{
+  "pid": "P038",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 'national character'라는 지문 핵심 어휘를 그대로 재활용해 눈길을 끌지만, 지문 서두가 명시적으로 'no fixed conclusions about a so-called national character should be drawn'이라며 국민성 결론을 금지했으므로 'reinforce the superiority of their national character'는 지문 논지와 정면 충돌한다. seam도 붕괴: 'superiority ... towards getting up early'는 의미 결합이 성립하지 않는다. 실전에서 어휘 매칭만으로 고르면 걸려드는 함정."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "정답. 지문 논리 구조가 '국민성 단정은 금물(양보) → Nevertheless, 다른 사회·문화 지표와 함께 쓰면 일부 공통 개념 형성 가능(제한적 긍정) → Thus, 독일인의 속담 고빈도 사용 사례'로 흐르므로, 빈칸에는 제한적·완화된(hedged) 긍정 진술이 와야 한다. 'reflect specific behavioral tendencies to a certain extent'는 'to a certain extent'라는 완화 표현이 앞 문장의 'could ... to form some common concepts'와 정확히 호응한다. seam 검증: 'reflect ... behavioral tendencies (to a certain extent) towards getting up early' — 'tendencies towards getting up early(일찍 일어나는 성향)'로 자연스럽게 결합된다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "지문에서 classical/medieval은 '여러 문화에 공통으로 퍼진 속담이 많으니 국민성 지표로 삼기 어렵다'는 반박 근거로만 등장하며, 속담의 기원 문제는 빈칸 문장의 논점(고빈도 사용이 무엇을 시사하는가)이 아니다. seam도 실패: 'stem directly from classical and medieval literature towards getting up early'는 문법·의미상 결합 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "지문은 속담 사용 빈도를 '다른 사회·문화 지표와 함께(together with other indicators)' 활용한다고 했지, 속담이 다른 지표의 기원을 '결정'한다고 하지 않았다. 관계를 뒤집고 과장한 진술. seam 실패: 'determine the origin of other cultural indicators towards getting up early'는 무의미한 결합."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'개인적 관찰의 필요를 대체한다'는 내용은 지문 어디에도 근거가 없고, 오히려 지문은 속담을 단독 증거가 아닌 보조 지표로 쓰라는 신중론이므로 '대체(replace)'는 논지에 역행한다. seam 실패: 'replace the need for personal observations towards getting up early'는 결합이 어색하다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 시점: 빈칸 뒤 'towards getting up early'가 강력한 장거리 seam 단서로, 빈칸 마지막 명사가 towards와 결합 가능한 '성향/태도'류여야 한다는 제약을 준다. 이 제약을 통과하는 것은 ②(tendencies towards)뿐이다. ①은 'national character' 어휘 반복으로 순간적으로 끌리지만 지문 서두의 명시적 부정과 seam 붕괴로 탈락 — 유혹은 있으나 옹호 불가. 논리 흐름(양보→Nevertheless 제한적 긍정→Thus 사례)과 hedge 호응('to a certain extent' ↔ 'could ... some common concepts')까지 삼중으로 ②를 지지한다. 원전(Mieder류 속담학 텍스트)의 'mirror at least to some degree a certain attitude towards getting up early'와도 구조가 일치한다. 복수 정답 여지 없음."
+}

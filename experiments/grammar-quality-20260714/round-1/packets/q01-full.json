@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=b  (C):dec=c  (D):dec=b  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 29,
+        "relPos": 0.036,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 323,
+        "relPos": 0.401,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 331,
+        "relPos": 0.411,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 641,
+        "relPos": 0.796,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 731,
+        "relPos": 0.908,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.908,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "being left",
+        "isError": false,
+        "errorExpression": "being left",
+        "surroundingText": "We all enjoy the pleasure of being left alone with a good book.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "who",
+        "isError": false,
+        "errorExpression": "who",
+        "surroundingText": "read in the company of other people who are reading - whether in",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "reading",
+        "isError": false,
+        "errorExpression": "reading",
+        "surroundingText": "or in your own home, with your reading friend or partner at",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "in which",
+        "isError": false,
+        "errorExpression": "in which",
+        "surroundingText": "joining a reading group in which everybody takes turns reading",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": true,
+        "correction": "is",
+        "errorExpression": "are",
+        "surroundingText": "Reading a book collaboratively is a wonderful way to",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "being left"
+      },
+      {
+        "label": "(B)",
+        "text": "who"
+      },
+      {
+        "label": "(C)",
+        "text": "reading"
+      },
+      {
+        "label": "(D)",
+        "text": "in which"
+      },
+      {
+        "label": "(E)",
+        "text": "are"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 전치사 of의 목적어 자리에 온 동명사 수동형 'being left'를 묻는 주동사 및 준동사의 판별 지점이며, 주체인 we가 혼자 남겨지는 대상이므로 수동형 동명사가 어법상 옳습니다.",
+      "(B)": "이 자리는 주격 관계대명사를 묻고 있으며, 선행사 other people을 수식하고 뒤에 주어가 빠진 불완전한 절을 이끌고 있으므로 'who'가 어법상 옳습니다.",
+      "(C)": "이 자리는 명사(friend or partner)를 앞에서 수식하는 현재분사의 역할을 묻고 있으며, 능동의 의미로 독서하고 있는 친구를 나타내므로 현재분사 'reading'이 어법상 옳습니다.",
+      "(D)": "이 자리는 '전치사 + 관계대명사' 구조를 묻고 있으며, 선행사 a reading group을 수식하고 뒤에 주어(everybody), 동사(takes turns), 목적어(reading)를 모두 갖춘 완전한 절이 이어지므로 'in which'가 어법상 옳습니다."
+    },
+    "explanation": "해당 문장의 주어는 동명사구인 'Reading a book collaboratively'입니다. 동명사구가 문장의 주어로 쓰일 경우에는 구조상 항상 단수 취급을 해야 합니다. 따라서 동명사구의 핵인 Reading에 수일치하여 복수 동사인 are는 이 자리에 올 수 없으며, 단수 동사 'is'로 고쳐야 합니다. 주어와 동사 사이에 부사(collaboratively)가 길게 개입하여 거리가 벌어져 있어 수일치 판단을 흐리게 하는 함정이 있습니다.",
+    "keyPoints": [
+      "(E) 주어-동사 수일치 — 동명사구 주어는 단수 취급한다.",
+      "(D) 관계사절 — 전치사 + 관계대명사 뒤에는 완전한 절이 온다.",
+      "(A) 분사와 준동사의 태 — 의미상 주어와의 수동 관계를 따진다."
+    ],
+    "tags": [
+      "어법",
+      "동명사구주어",
+      "수일치",
+      "관계부사대용"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "We all enjoy the pleasure of __(A) being left__ alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people __(B) who__ are reading - whether in a public space such as a café or a library, or in your own home, with your __(C) reading__ friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group __(D) in which__ everybody takes turns reading aloud from a novel. Reading a book collaboratively __(E) are__ a wonderful way to share an otherwise internal and solitary experience.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

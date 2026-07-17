@@ -1,0 +1,145 @@
+{
+  "schemaVersion": "linux-ext4-execution-boundary-v1-independent-audit-v1",
+  "verdict": "PASS_DESIGN_BLOCKERS_CORRECT",
+  "verdictScope": "The design correctly remains fail-closed. This is not execution authorization, ext4 crash-durability proof, deployment parity proof, source materialization, ledger migration, or restart evidence.",
+  "subject": "experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1",
+  "method": {
+    "subjectVerifierExecuted": false,
+    "subjectHostileSuiteExecuted": false,
+    "subjectVerifierTrusted": false,
+    "independentReadOnlyWslProbe": true,
+    "independentClosureRehash": true,
+    "independentStaticExecutableSurfaceScan": true,
+    "networkOrApiUsed": false,
+    "providerOrModelUsed": false,
+    "databaseUsed": false,
+    "secretOrPrivateArtifactRead": false,
+    "budgetLedgerReadOrMutated": false,
+    "filesystemProbeWrites": 0,
+    "packageInstallBuildCopyMigrationDispatch": 0
+  },
+  "subjectHashes": {
+    "current-worktree-public-source-closure-v1.json": "69170f3f00b99c13e59ff796a672cd9658b92dbdba15435ca03af196014e51bb",
+    "hostile-mutations.mjs": "a61f3b25e22cacdb10d9ab0cff585cd728d9b0cc98568d85f327ccb792f6babb",
+    "MANIFEST.sha256": "16cd00dee9bfa4827aed9a3409405c991882a7c0c4c7c4cb7b294e9633827444",
+    "observed-host-v1.json": "2028c357ad7320a418a7895810b6b92653e83a782a1e3ba00506b20a89adbb8a",
+    "protocol-v1.json": "7a53f465ebce28500e7bcb675be79e5025c482d8ff028fe2e76aaa882c4980ed",
+    "README.md": "2604e6019c489f2becff841e6b5ad1c537539f14347e2314496e57e354dc6c74",
+    "THREAT-MODEL.md": "4fb7040f1d2f8cc050234763bb8437199e3ca4277e123cbe06f9b0ea3c90c2b7",
+    "verify.mjs": "920a63998e1e7e37a8ddf0f36329e2ba6e2235daca1c5ce5ca6aee5eb7e0d584"
+  },
+  "publicClosure": {
+    "manifestRows": 7,
+    "closureRows": 44,
+    "closureBytes": 1489112,
+    "closureSetSha256": "4373bd4dd737c2e729170ed2ff57d9a4f5b862c4827a10d5a3225534a02cd85e",
+    "rowHashOrByteMismatches": 0,
+    "forbiddenClosurePaths": 0,
+    "symlinkOrJunctionRows": 0,
+    "sourceRootIsTransferDestination": false,
+    "executionComplete": false
+  },
+  "productionParity": {
+    "packageJsonNodeEnginePinned": false,
+    "vercelJsonNodeRuntimePinned": false,
+    "deployedCommitParityProven": false,
+    "runtimeMismatchConfirmed": true,
+    "status": "UNKNOWN_BLOCKED"
+  },
+  "hostProbe": {
+    "distro": "Ubuntu-24.04",
+    "wslVersion": 2,
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "machine": "x86_64",
+    "home": {
+      "findmntTarget": "/",
+      "source": "/dev/sdd",
+      "filesystemType": "ext4",
+      "statfsType": "ext2/ext3",
+      "magicHex": "0xef53",
+      "canonicalPath": "/home"
+    },
+    "windowsD": {
+      "findmntTarget": "/mnt/d",
+      "source": "D:\\",
+      "filesystemType": "9p",
+      "statfsType": "v9fs",
+      "canonicalPath": "/mnt/d",
+      "fsyncAttempted": false,
+      "durabilityProven": false
+    },
+    "wslNode": {
+      "executable": "/usr/bin/node",
+      "version": "v22.22.0",
+      "platform": "linux",
+      "arch": "x64",
+      "modules": "127",
+      "napi": "10",
+      "v8": "12.4.254.21-node.33"
+    },
+    "wslNpm": {
+      "executable": "/usr/lib/node_modules/npm/bin/npm-cli.js",
+      "version": "10.9.4"
+    },
+    "windowsNode": {
+      "executable": "C:\\Program Files\\nodejs\\node.exe",
+      "version": "v24.7.0",
+      "platform": "win32",
+      "arch": "x64",
+      "modules": "137",
+      "napi": "10",
+      "v8": "13.6.233.10-node.26"
+    },
+    "readOnlyProbeCommands": 20,
+    "filesystemProbeWrites": 0
+  },
+  "hostile": {
+    "totalMutationCases": 380,
+    "allRejected": 380,
+    "escaped": 0,
+    "targetedAttackCases": 50,
+    "requiredMinimum": 100,
+    "evidence": "hostile-evidence.json"
+  },
+  "blockerDisposition": {
+    "blockersPresent": [
+      "B1_V6_FINAL_FREEZE_AND_INDEPENDENT_AUDIT_NOT_BOUND",
+      "B2_EXECUTION_SOURCE_CLOSURE_AND_PRIVATE_INPUT_INGRESS_INCOMPLETE",
+      "B3_LINUX_NATIVE_TOOLCHAIN_AND_BUNDLES_NOT_MATERIALIZED",
+      "B4_NODE_AND_PRODUCTION_DEPLOYMENT_PARITY_UNKNOWN",
+      "B5_SINGLE_EXT4_LEDGER_AUTHORITY_NOT_MIGRATED_OR_AUDITED",
+      "B6_WSL_RESTART_RECOVERY_NOT_EXECUTED",
+      "B7_LINUX_EXECUTION_AUTHORIZATION_AND_INDEPENDENT_AUDIT_ABSENT"
+    ],
+    "blockersRemoved": [],
+    "executionAuthorized": false,
+    "materializationAuthorized": false,
+    "installOrBuildAuthorized": false,
+    "ledgerMigrationOrReservationAuthorized": false,
+    "restartTestAuthorized": false,
+    "networkOrDispatchAuthorized": false
+  },
+  "subjectExecutableSurface": {
+    "dispatchCommandPresent": false,
+    "installCommandPresent": false,
+    "copyOrMigrationCommandPresent": false,
+    "buildCommandPresent": false,
+    "subjectScriptsImportChildProcessOrNetworkModules": false
+  },
+  "activity": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "privateArtifactReads": 0,
+    "budgetLedgerReads": 0,
+    "budgetLedgerMutations": 0,
+    "filesystemProbeWrites": 0,
+    "packageInstalls": 0,
+    "buildOrFreezeWrites": 0,
+    "sourceFilesCopiedOrStaged": 0,
+    "wslRestartTests": 0
+  }
+}

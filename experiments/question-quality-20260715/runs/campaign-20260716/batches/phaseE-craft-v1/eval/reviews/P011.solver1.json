@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'physical redesign of the shopping carts' never happened in the passage — the cart's design stayed the same throughout; only the persuasion tactic changed. The word 'promised' echoes 'an excellent device that would make it easy...', which gives it mild surface pull, but the premise (a redesign) is fabricated."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Seam is awkward ('accomplished expanding...') and the logic fails: advertising was the explicitly failed method ('in spite of his repeated advertisements... he could not persuade'). Shills are not an expansion of advertising, and the sentence would claim advertising expansion succeeded, contradicting the passage."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Perfect fit. 'Repeated advertisements and explanations' = rational persuasion and marketing campaigns, which explicitly 'could not persuade' shoppers. The shills' staged social proof was the turning point that achieved acceptance within weeks. Seam is clean: 'accomplished + what-free-relative'."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "The most attractive distractor — 'group conformity' names the story's actual mechanism, so it tugs strongly on a fast read. But it inverts the causal structure: group conformity (fake social proof) is what SUCCEEDED, not what previously failed. Goldman never relied on conformity and failed; he relied on ads/explanations and failed. Filling the blank with 4 would say conformity accomplished what conformity failed to guarantee — self-contradictory."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "The baby-carriage association was a deterrent women themselves perceived; no one in the passage 'highlighted' or 'intended' that similarity as a strategy. The premise is fabricated from a detail used for the opposite effect."
+    }
+  ],
+  "note": "Solved blind as a top-tier test taker. Real-time temptation log: option 4 exerted the strongest pull because 'group conformity' matches the passage's core mechanism keyword-for-keyword; resolving it required checking polarity (failed vs. succeeded), where it collapses into self-contradiction. Option 1's 'promised' briefly echoed the device's stated benefits but 'physical redesign' has no textual basis. Answer 3 is uniquely defensible: it restates the failed method (ads + explanations) as 'rational persuasion and marketing campaigns' and correctly contrasts it with the social-proof success. No alternative reading makes any other option viable."
+}

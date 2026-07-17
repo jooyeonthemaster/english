@@ -1,0 +1,89 @@
+{
+  "pid": "P035",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-keypoint-taxonomy",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E)를 '분사능수동'(분사의 능동/수동)으로 분류하지만, 선언된 교정은 developed→to develop(분사→to부정사, 목적)이며 developing(능동 분사)이 아니다. '목적어 유무로 판정'이라는 판별법 자체는 해설과 일치하므로 구조 오분석은 아니나 포인트 분류가 해설의 교정형과 어긋난다. 또한 '분사능수동'은 비표준 축약 용어다."
+    },
+    {
+      "code": "V4-minor-keypoint-overstated-trap",
+      "severity": "minor",
+      "evidence": "keyPoints의 '(A) 수일치 — 진짜 주어 파악'은 함정을 과장한다. 실제 문장은 'Inefficient teachers overlook ...'으로 주어와 동사 사이에 개입 명사구가 전혀 없어 '진짜 주어 파악'이라는 사고 과정이 요구되지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주어-동사 수일치 판단",
+      "temptingBecause": "수일치는 학생이 습관적으로 점검하는 포인트라는 것 외에 실질적 유인 요소가 없다. 주어 'Inefficient teachers'가 동사 바로 앞에 인접해 있고 개입 명사구가 없어 혼동 여지가 거의 없다.",
+      "decisiveFlaw": "복수 주어에 복수 동사 overlook — 즉시 확인되는 정문. 함정 깊이가 없는 필러에 가까운 디코이."
+    },
+    {
+      "label": "(B)",
+      "intent": "'use + 시간명사 + to-V' 구문에서 준동사 형태 선택 (spend/waste + time + V-ing 구문과의 혼동 유도)",
+      "temptingBecause": "spend/waste ten minutes V-ing 패턴을 외운 학생이 'use the first ten minutes' 뒤에도 동명사가 와야 한다고 착각할 수 있다 — 실제로 같은 문장 뒤에 'waste this time'이 등장해 혼동을 부추긴다.",
+      "decisiveFlaw": "'use X to V'는 목적의 to부정사를 취하는 표준 구문으로 정문. spend/waste와 달리 use는 to부정사와 결합한다."
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사 If가 완전한 절을 이끄는지 판단",
+      "temptingBecause": "실질적 유인 요소가 희박하다. If 뒤에 완전한 절(you are prepared ...)과 주절이 명백히 이어져 상위권은 물론 중위권 학생도 거의 고려하지 않는 자리다.",
+      "decisiveFlaw": "조건 부사절 접속사 If + 완전한 절 + 콤마 + 주절 — 전형적 정문. 필러 디코이."
+    },
+    {
+      "label": "(D)",
+      "intent": "등위접속사 and로 연결된 서로 다른 동사 형태(are prepared vs have taught)의 병렬 허용 판단",
+      "temptingBecause": "be동사 수동/형용사 구문(are prepared)과 현재완료(have taught)가 표면상 형태가 달라 병렬 위반으로 보일 수 있다. 5개 중 유일하게 실제 구조 판단을 요구하는 디코이.",
+      "decisiveFlaw": "등위 접속되는 정형 술어는 시제·상이 일치할 필요가 없다. 주어 you를 공유하는 두 정형 동사구의 접속으로 완전한 정문이며, have taught는 선행 완료된 행위(루틴을 가르쳐 둠)를 나타내 문맥에도 부합한다."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 완전한 절 뒤 수식어 자리에서 과거분사 vs to부정사 판별 (목적어 유무 단서)",
+      "temptingBecause": "routine 뒤 분사 후치수식(an opening routine developed ...)이 표면상 자연스러워 보여 'routine이 개발되는 대상'이라는 수동 해석으로 넘어갈 수 있다.",
+      "decisiveFlaw": "'you should establish an opening routine'이 완전한 절이므로 developed는 수식어여야 하는데, 과거분사(수동)가 목적어 'your class'를 직접 취해 비문이다. 목적의 의미를 살려 to develop으로 고치면 정확히 원문이 복원된다(최소대립쌍 성립). 다만 p.p.+목적어는 훈련된 학생에게 즉시 노출되는 국소 단서다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoint '(E) 분사능수동 — 목적어 유무로 판정'이 해설의 교정형(to develop, 목적의 to부정사)과 분류상 불일치. 분사 태 문제라면 교정형이 developing이어야 하나 선언·해설·markedExpressions 모두 to develop이다. '분사능수동'은 비표준 용어 표기.",
+      "recommendation": "keyPoint를 '(E) 준동사 자리 — 완전한 절 뒤 수식어 자리에서 분사 vs to부정사(목적어 유무로 판정)'로 교체."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoint '(A) 수일치 — 진짜 주어 파악'은 실제 문장 구조와 불일치. 주어가 동사에 바로 인접해 '진짜 주어 파악' 과제가 존재하지 않는다.",
+      "recommendation": "(A)의 keyPoint를 삭제하거나 '인접 복수 주어 수일치 확인' 수준으로 정직하게 기술."
+    },
+    {
+      "severity": "minor",
+      "evidence": "(D) 오답 해설 '등위접속사 and로 인해 are prepared와 병렬 구조를 이루며'는 두 정형 술어의 접속이라는 점에서 사실이나, '병렬이므로 적절'이라는 논증은 다소 둔하다. 핵심 근거는 정형 술어 접속에서 시제·상 불일치가 허용된다는 점이다.",
+      "recommendation": "'접속되는 정형 동사는 시제·상이 같을 필요가 없다'는 근거를 명시."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allUnderlinesExplained": "각 밑줄에 why correct 해설은 있으나 (A)·(C)는 why tempting이 성립하지 않는 필러 디코이 — §C '설명이 안 되는 디코이는 필러다' 위반",
+    "notInstantlyVisible": "불충족 — 정답 (E)는 마지막 문장에서 p.p. 바로 뒤 목적어(developed your class)라는 국소 패턴만으로 즉시 판별 가능. '구조를 읽어야 하며 즉시 드러나지 않는다' 조건 미달",
+    "noMaskingDecoy": true
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 무결(의도된 to develop→developed 단일 변형), 정답 (E) 유일성 독립 검증 완료, 최소대립쌍 성립, 해설의 구조 분석 정확, 필드 동기화 일치. 그러나 요청 난이도 KILLER 대비 실제 체감은 중(中) 수준: 정답이 p.p.+목적어라는 즉발성 국소 단서로 드러나고, (A)·(C)가 유인력 없는 필러이며 실질 경쟁 디코이는 (D) 하나뿐이다. C5(난이도 정합)=1, C2·C3=2로 합계 14 — 킬러급 재설계(정답 포인트를 구조 독해형으로 교체하거나 디코이에 실제 함정 부여) 없이는 KILLER로 출하 불가. keyPoints의 '분사능수동' 분류 불일치 및 (A) 함정 과장은 경미한 수정 사항."
+}

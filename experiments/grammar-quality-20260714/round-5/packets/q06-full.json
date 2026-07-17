@@ -1,0 +1,177 @@
+{
+  "passageId": "ebsi_go3_20191015-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "요지",
+    "words": 172
+  },
+  "attempts": 5,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-decoy-filler-span"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-filler-spanx2",
+    "grammar-explanation-lintx2",
+    "grammar-killer-overdrilled-answerx1",
+    "grammar-killer-generic-answer-pointx1",
+    "grammar-killer-answer-point-repeatedx1"
+  ],
+  "layout": "(A):dec=a  (B):ANS=i  (C):dec=d  (D):dec=c  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 102,
+        "relPos": 0.098,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 514,
+        "relPos": 0.492,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 550,
+        "relPos": 0.527,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 689,
+        "relPos": 0.66,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 1009,
+        "relPos": 0.966,
+        "sentenceIndex": 9,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.966,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to think of technology as shiny tools and gadgets. Even if we acknowledge that technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie. The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "exist",
+        "isError": false,
+        "errorExpression": "exist",
+        "surroundingText": "Even if we acknowledge that technology can exist in disembodied form, such as software",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "enable",
+        "isError": true,
+        "correction": "enable",
+        "errorExpression": "enabling",
+        "surroundingText": "They both can change our behavior, alter the course of events, or enable future inventions",
+        "pointCode": "i"
+      },
+      {
+        "label": "(C)",
+        "expression": "are",
+        "isError": false,
+        "errorExpression": "are",
+        "surroundingText": "A Shakespeare sonnet and a Schubert symphony, then, are in the same category as",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "produced",
+        "isError": false,
+        "errorExpression": "produced",
+        "surroundingText": "smartphone: They are something useful produced by a mind.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "powerfully",
+        "isError": false,
+        "errorExpression": "powerfully",
+        "surroundingText": "Both influence audiences powerfully. Both are technological.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "exist"
+      },
+      {
+        "label": "(B)",
+        "text": "enabling"
+      },
+      {
+        "label": "(C)",
+        "text": "are"
+      },
+      {
+        "label": "(D)",
+        "text": "produced"
+      },
+      {
+        "label": "(E)",
+        "text": "powerfully"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "조동사 can 뒤에 동사원형 'exist'가 오는 구조로 어법상 적절합니다.",
+      "(C)": "주어가 'A Shakespeare sonnet and a Schubert symphony'라는 두 개의 명사가 and로 연결된 복수 형태이므로 복수 정동사 'are'는 어법상 옳습니다.",
+      "(D)": "대명사 'something useful'을 뒤에서 수식하는 구조에서, 유용한 무언가가 정신에 의해 '생성되는' 수동 관계이므로 과거분사 'produced'는 올바른 형태입니다.",
+      "(E)": "동사인 'influence'를 수식하는 수식 관계이므로 부사인 'powerfully'의 쓰임은 정확합니다."
+    },
+    "explanation": "주절의 술어부에서 조동사 can에 걸리는 세 개의 동사원형이 병렬 구조로 연결되어 있습니다. change, alter, 그리고 세 번째 항목인 'enabling'이 등위접속사 or를 통해 병렬을 이루어야 하므로, 'enabling'은 문맥과 구조에 맞지 않으며 동사원형인 'enable'로 고쳐야 합니다. 앞의 콤마 뒤에 있는 동사들의 연쇄적 동형성에 유의하면 or 뒤에 올 정확한 품사를 판정할 수 있습니다.",
+    "keyPoints": [
+      "(B) 병렬 구조 — 조동사 can에 걸리는 동사원형의 등위 병렬 일치",
+      "(C) 주어-동사 수일치 — and로 연결된 복수 명사구 주어에 따른 복수 동사 판정",
+      "(D) 분사의 태 — 수식을 받는 명사구와의 수동 관계를 나타내는 과거분사 수식"
+    ],
+    "tags": [
+      "병렬구조",
+      "수일치",
+      "과거분사",
+      "동사원형"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We tend to think of technology as shiny tools and gadgets. Even if we acknowledge that technology can __(A) exist__ in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or __(B) enabling__ future inventions. A Shakespeare sonnet and a Schubert symphony, then, __(C) are__ in the same category as Google's search engine and the smartphone: They are something useful __(D) produced__ by a mind. We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie. The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences __(E) powerfully__. Both are technological.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-decoy-filler-span",
+        "message": "Decoy underline (A) is a decorative filler span — a bare verb (\"exist\") directly after \"can\" leaves no alternative form to weigh — only the base form is possible there. Replace only this decoy with a structural grammar judgment site (a different pointCode from the answer) where students genuinely weigh whether the form is correct."
+      }
+    ],
+    "_qualityMode": "relaxed"
+  }
+}

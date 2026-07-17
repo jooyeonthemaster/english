@@ -1,0 +1,762 @@
+{
+  "id": "b06-c2",
+  "unitId": "b06",
+  "order": 2,
+  "title": "원급·비교급·최상급",
+  "oneLiner": "표지가 형태를 정합니다 — as ~ as 사이에는 원급, than 앞에는 비교급, 셋 이상에는 the + 최상급을 씁니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 교육과정 [별책14] 별표4 언어형식 — 비교 구문(원급·비교급·최상급) 항목(중 ●)",
+      "천일문 중등 GRAMMAR LEVEL 2 — 비교 표현 단원",
+      "어법끝 5.0 — 형용사와 부사의 판별(비교 구문 안쪽의 품사 판단)"
+    ]
+  },
+  "lenses": ["L4"],
+  "confusableWith": ["b06-c1", "b06-c3", "b06-c4"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The second experiment was much more accurate than the first one.",
+        "The second experiment was much more accurate as the first one."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 단어 하나입니다. 이 레슨을 마치면 어떤 표지가 어떤 형태를 부르는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "원급·비교급·최상급",
+      "question": "그런데 원급·비교급·최상급이 대체 무엇입니까?",
+      "plain": "형용사·부사가 정도를 견줄 때 갈아입는 세 가지 형태입니다. 기본형이 원급, \"더 ~하다\"가 비교급, \"가장 ~하다\"가 최상급이며, 어느 형태를 쓸지는 문장의 표지가 정합니다.",
+      "analogy": "같은 학생이 평상시에는 교복, 시합 날에는 유니폼, 시상식 날에는 정장을 입듯, 단어 하나가 자리에 따라 tall, taller, the tallest 로 옷을 갈아입습니다. 무엇을 입을지는 기분이 아니라 그날의 일정표, 곧 문장의 표지가 정합니다.",
+      "whyItMatters": "내신·수능은 \"as ~ as 사이에 무엇이 오는가\", \"than 앞이 어떤 형태인가\"를 반복해서 묻습니다. 표지를 읽고 형태를 고르는 눈이 생기면 이 유형은 몇 초 안에 끝나고, 그 눈이 없으면 매번 어감으로 찍게 됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "비교의 세 형태, 하나씩 정면으로",
+      "intro": "세 형태를 한 항목씩 만납니다. 각 항목의 예문에서 굵은 부분이 그 형태입니다.",
+      "entries": [
+        {
+          "head": "원급 — 기본형 그대로",
+          "body": "두 대상의 정도가 같음을 말합니다. 표지 as ~ as 사이에 형태를 바꾸지 않은 기본형이 들어갑니다.",
+          "example": {
+            "en": "The new bridge is **as strong as** steel.",
+            "ko": "그 새 다리는 강철만큼 튼튼합니다.",
+            "note": "as 와 as 사이에 원급 strong 이 그대로 들어갑니다."
+          }
+        },
+        {
+          "head": "비교급 — \"더 ~하다\"",
+          "body": "두 대상 중 한쪽의 정도가 더함을 말합니다. 표지 than 이 비교 대상을 이끕니다.",
+          "example": {
+            "en": "This street is **wider than** that alley.",
+            "ko": "이 거리는 저 골목보다 넓습니다.",
+            "note": "than 이 보이는 순간 그 앞은 비교급 wider 로 확정됩니다."
+          }
+        },
+        {
+          "head": "최상급 — \"가장 ~하다\"",
+          "body": "셋 이상 가운데 정도가 가장 높음을 말합니다. 앞에 the 를 두고, 범위는 in 이나 of 로 덧붙입니다.",
+          "example": {
+            "en": "January is **the coldest** month of the year.",
+            "ko": "1월은 일 년 중 가장 추운 달입니다.",
+            "note": "최상급 coldest 앞에 the 를 두고, 뒤에 범위 of the year 를 붙였습니다."
+          }
+        },
+        {
+          "head": "형태를 정하는 것은 표지입니다",
+          "body": "느낌이 아니라 표지가 형태를 정합니다. as ~ as 사이에는 원급, than 앞에는 비교급, 셋 이상의 범위에는 the + 최상급입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "-er 과 more 는 겹치지 않습니다",
+          "body": "한 단어에는 한 방식만 씁니다. more longer 처럼 두 방식을 겹쳐 쓰면 그 자체로 오류입니다.",
+          "example": {
+            "en": "The bridge is **more longer** than the tunnel.",
+            "ko": "그 다리는 터널보다 더 깁니다.",
+            "note": "more 와 -er 을 겹쳐 쓴 오류 형태입니다. longer 하나면 충분합니다.",
+            "wrong": true
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "very 는 비교급 앞에 서지 못합니다",
+          "body": "비교급을 강조하는 부사는 much·far·even·still·a lot 입니다. very 는 원급만 강조합니다.",
+          "example": {
+            "en": "The sequel is **far better** than the original film.",
+            "ko": "그 속편은 원작 영화보다 훨씬 낫습니다.",
+            "note": "비교급 better 를 far 가 강조합니다. very 는 이 자리에 서지 못합니다."
+          },
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "비교급·최상급 만들기 한 장 정리",
+      "columns": ["단어 유형", "비교급", "최상급"],
+      "rows": [
+        {
+          "cells": [
+            "1음절 (short, cheap)",
+            "-er → shorter, cheaper",
+            "-est → the shortest, the cheapest"
+          ],
+          "example": {
+            "en": "Winter days are **shorter** than summer days.",
+            "ko": "겨울 낮은 여름 낮보다 짧습니다.",
+            "note": "1음절 short 에는 -er 만 붙입니다. more short 는 쓰지 않습니다."
+          }
+        },
+        {
+          "cells": [
+            "-y 로 끝나는 2음절 (busy, early)",
+            "y → i + -er → busier, earlier",
+            "y → i + -est → the busiest, the earliest"
+          ]
+        },
+        {
+          "cells": [
+            "그 밖의 2음절·3음절 이상 (careful, expensive)",
+            "more + 원급 → more careful",
+            "most + 원급 → the most careful"
+          ],
+          "example": {
+            "en": "This method is **more practical** than the old one.",
+            "ko": "이 방법은 예전 방법보다 더 실용적입니다.",
+            "note": "3음절 practical 은 more 를 앞에 둡니다. practicaler 는 없습니다."
+          }
+        },
+        {
+          "cells": [
+            "불규칙 (good, bad)",
+            "better · worse",
+            "the best · the worst"
+          ],
+          "example": {
+            "en": "Her second attempt was **better** than the first.",
+            "ko": "그녀의 두 번째 시도는 첫 번째 시도보다 나았습니다.",
+            "note": "good 의 비교급은 불규칙형 better 입니다. gooder·more good 은 존재하지 않습니다."
+          }
+        },
+        {
+          "cells": [
+            "불규칙 (many/much, little)",
+            "more · less",
+            "the most · the least"
+          ]
+        }
+      ],
+      "takeaway": "이 표에서 가장 자주 틀리는 칸은 불규칙형과 \"겹쳐 쓰기\"입니다. more 를 붙였다면 -er 은 내려놓아야 합니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "불규칙 비교변화 네 가족과 강조 부사 5인방",
+      "why": "규칙이 통하지 않는 단어는 외우는 수밖에 없습니다. good 에 -er 을 붙이는 순간 오답이고, very 를 비교급 앞에 두는 순간 또 오답입니다. 이 두 목록이 구구단처럼 즉시 나와야 표지를 읽는 눈이 도구가 됩니다.",
+      "device": "불규칙은 \"굿 베터 베스트, 배드 워스 워스트, 매니 모어 모스트, 리틀 레스 리스트\" — 네 가족을 두 박자 리듬으로 세 번 소리 내어 읽습니다. 강조 부사는 \"머치·파·이븐·스틸·어랏\" 5인방으로 묶고, very 는 이 부대 명단에 없다고 기억하십시오.",
+      "items": [
+        { "cue": "good – ? – ?", "answer": "better – best" },
+        { "cue": "bad – ? – ?", "answer": "worse – worst" },
+        { "cue": "many / much – ? – ?", "answer": "more – most" },
+        { "cue": "little – ? – ?", "answer": "less – least" },
+        {
+          "cue": "비교급 강조 부사 5인방",
+          "answer": "much · far · even · still · a lot"
+        },
+        {
+          "cue": "very 가 강조할 수 있는 형태",
+          "answer": "원급뿐입니다 — very tall (O), very taller (X)"
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "강조 부대 선별 관문",
+      "mission": "비교급을 강조할 수 있는 부사만 전부 고르십시오. 원급 전담 침입자가 넷 섞여 있습니다.",
+      "mode": "SET",
+      "pool": ["much", "far", "even", "still", "a lot", "very", "so", "too", "quite"],
+      "answers": ["much", "far", "even", "still", "a lot"],
+      "passText": "다섯 부대원을 정확히 가려냈습니다. 이제 very better 같은 함정이 나와도 명단에 없는 이름이라는 것을 즉시 알아봅니다.",
+      "retryText": "아깝습니다. 힌트 하나 — very·so·too·quite 는 원급 전담이라 비교급 앞에는 서지 못합니다. 암기 카드의 5인방을 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "원급 — as ~ as",
+      "rule": "두 대상의 정도가 같음을 말할 때는 as + 원급 + as 를 씁니다. 두 as 사이의 단어는 형태를 바꾸지 않으며, 부정은 not as[so] ~ as 로 씁니다.",
+      "examples": [
+        {
+          "en": "The new method is **as reliable as** the traditional one.",
+          "ko": "그 새 방법은 전통적인 방법만큼 신뢰할 만합니다.",
+          "note": "두 as 사이에 원급 reliable 이 그대로 들어갑니다. 비교급 more reliable 은 이 자리에 오지 못합니다."
+        },
+        {
+          "en": "The library does not open **as early as** the laboratory.",
+          "ko": "그 도서관은 실험실만큼 일찍 문을 열지는 않습니다.",
+          "note": "not as ~ as 는 정도가 못 미침을 나타냅니다. 동사 open 을 꾸미는 자리이므로 부사 early 가 원급으로 들어갑니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "title": "비교급 — 비교급 + than",
+      "rule": "두 대상 중 한쪽의 정도가 더함을 말할 때는 비교급 + than 을 씁니다. -er 형과 more 형 가운데 한 가지만 쓰며, 두 방식을 겹쳐 쓰지 않습니다.",
+      "examples": [
+        {
+          "en": "The southern route is **shorter than** the coastal road.",
+          "ko": "그 남쪽 경로는 해안 도로보다 짧습니다.",
+          "note": "short 는 1음절이므로 -er 을 붙여 shorter 가 됩니다. more short 로 쓰지 않습니다."
+        },
+        {
+          "en": "The imported machine is **more expensive than** the domestic one.",
+          "ko": "그 수입 기계는 국내산 기계보다 비쌉니다.",
+          "note": "expensive 는 3음절이므로 more 를 앞에 둡니다. more expensiver 처럼 두 방식을 겹쳐 쓰면 오류입니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "비교급 사냥",
+      "instruction": "이 문장에서 비교급 형태를 전부 찾아 탭하십시오. as ~ as 사이에 서 있는 원급에 속으면 안 됩니다.",
+      "hitLabel": "비교급",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "winter", "hit": false },
+        { "t": "was", "hit": false },
+        { "t": "colder", "hit": true },
+        { "t": "than", "hit": false },
+        { "t": "usual", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "nights", "hit": false },
+        { "t": "felt", "hit": false },
+        { "t": "longer", "hit": true },
+        { "t": "but", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "buses", "hit": false },
+        { "t": "ran", "hit": false },
+        { "t": "as", "hit": false },
+        { "t": "often", "hit": false },
+        { "t": "as", "hit": false },
+        { "t": "before", "hit": false }
+      ],
+      "ko": "그 겨울은 평소보다 더 추웠고 밤은 더 길게 느껴졌지만, 버스는 전과 다름없이 자주 다녔습니다.",
+      "explain": "colder 는 than 이 부른 비교급이고, longer 는 문맥이 \"더 길다\"를 말하는 비교급입니다. 반면 often 은 as ~ as 사이에 있으므로 원급 그대로 서 있습니다. 표지가 형태를 정한다는 것을 눈으로 확인하는 문장입니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "최상급 — the + 최상급",
+      "rule": "셋 이상 가운데 정도가 가장 높음을 말할 때는 the + 최상급을 씁니다. 비교의 범위는 in + 장소·집단이나 of + 복수명사로 덧붙입니다.",
+      "examples": [
+        {
+          "en": "This is **the longest** tunnel in the country.",
+          "ko": "이것은 그 나라에서 가장 긴 터널입니다.",
+          "note": "long 은 1음절이므로 -est 를 붙이고, 범위는 in the country 로 나타냅니다."
+        },
+        {
+          "en": "Of the three proposals, the last one was **the most practical**.",
+          "ko": "세 제안 가운데 마지막 것이 가장 실용적이었습니다.",
+          "note": "practical 은 3음절이므로 most 를 앞에 둡니다. 범위가 복수명사이면 of 를 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "원급과 비교급의 대조",
+      "columns": ["원급 — as ~ as", "비교급 — 비교급 + than"],
+      "rows": [
+        {
+          "criterion": "표지",
+          "a": "as … as",
+          "b": "than"
+        },
+        {
+          "criterion": "표지가 부르는 형태",
+          "a": "원급 그대로 (clear, quickly)",
+          "b": "-er 또는 more + 원급 (clearer, more quickly)"
+        },
+        {
+          "criterion": "나타내는 뜻",
+          "a": "두 대상의 정도가 같습니다",
+          "b": "한쪽의 정도가 더합니다"
+        },
+        {
+          "criterion": "정도를 강조하는 부사",
+          "a": "just, almost, nearly + as ~ as",
+          "b": "much, far, even, still, a lot + 비교급 (very 는 쓰지 못합니다)"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The copy is **as clear as** the original.",
+          "ko": "그 사본은 원본만큼 선명합니다.",
+          "note": "표지가 as ~ as 이므로 그 사이에는 원급 clear 가 옵니다."
+        },
+        {
+          "en": "The copy is **much clearer than** the original.",
+          "ko": "그 사본은 원본보다 훨씬 더 선명합니다.",
+          "note": "표지가 than 이므로 앞은 비교급 clearer 이고, 그 비교급을 much 가 강조합니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 형태가 어느 표지와 짝을 이루는지 분류하십시오.",
+      "buckets": [
+        { "id": "pos", "label": "as ~ as 사이에 온다" },
+        { "id": "cmp", "label": "than 앞에 온다" }
+      ],
+      "chips": [
+        {
+          "text": "difficult",
+          "bucketId": "pos",
+          "why": "형태를 바꾸지 않은 원급이므로 as ~ as 사이에 옵니다."
+        },
+        {
+          "text": "more difficult",
+          "bucketId": "cmp",
+          "why": "3음절 이상의 단어에 more 를 붙인 비교급이므로 than 과 짝을 이룹니다."
+        },
+        {
+          "text": "big",
+          "bucketId": "pos",
+          "why": "원급이므로 as ~ as 사이에 옵니다."
+        },
+        {
+          "text": "bigger",
+          "bucketId": "cmp",
+          "why": "1음절 단어에 -er 을 붙인 비교급이므로 than 과 짝을 이룹니다."
+        },
+        {
+          "text": "carefully",
+          "bucketId": "pos",
+          "why": "부사의 원급이므로 as ~ as 사이에 옵니다."
+        },
+        {
+          "text": "more carefully",
+          "bucketId": "cmp",
+          "why": "부사의 비교급이므로 than 과 짝을 이룹니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "비교 문장의 해부",
+      "tokens": [
+        { "t": "The second survey", "role": "S" },
+        { "t": "covered", "role": "V" },
+        { "t": "a wider area", "role": "O" },
+        { "t": "than the first one", "role": "M" }
+      ],
+      "ko": "두 번째 조사는 첫 번째 조사보다 더 넓은 지역을 다루었습니다.",
+      "layers": [
+        {
+          "label": "① 문장의 뼈대를 먼저 세웁니다",
+          "roles": ["S", "V", "O"],
+          "note": "주어는 The second survey, 본동사는 covered, 목적어는 a wider area 입니다. 비교 표현은 이 뼈대 위에 얹히는 것입니다."
+        },
+        {
+          "label": "② 비교의 표지를 찾습니다",
+          "roles": ["M"],
+          "note": "than 이 비교 대상을 이끕니다. than 이 보이면 그 앞에는 반드시 비교급이 있어야 합니다."
+        },
+        {
+          "label": "③ 비교급의 형태를 확인합니다",
+          "roles": ["O"],
+          "note": "wide 의 비교급은 wider 입니다. 표지가 as ~ as 가 아니라 than 이므로 원급 wide 는 이 자리에 올 수 없습니다."
+        },
+        {
+          "label": "④ 견주는 두 대상을 맞춥니다",
+          "roles": ["S", "M"],
+          "note": "견주는 것은 the second survey 와 the first one, 즉 두 조사입니다. 조사와 지역처럼 짝이 맞지 않는 것을 견주면 비교가 성립하지 않습니다."
+        }
+      ],
+      "conclusion": "표지(as ~ as / than / the 최상급)가 형태를 정하고, 그다음 견주는 두 대상이 서로 대응하는지 확인합니다. 판단에는 이 순서가 있습니다."
+    },
+    {
+      "id": "b14",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "비교 표현을 판단하는 4단계",
+      "steps": [
+        {
+          "text": "문장에서 비교의 표지(as … as / than / the … -est·most)를 먼저 찾습니다.",
+          "applyNote": "이 문장에는 than 이 있습니다. 원급 표지도 최상급 표지도 없습니다."
+        },
+        {
+          "text": "표지가 부르는 형태를 확정합니다. as ~ as 사이에는 원급, than 앞에는 비교급, 셋 이상의 범위에는 the + 최상급입니다.",
+          "applyNote": "than 이 있으므로 그 앞의 형용사는 비교급이어야 합니다."
+        },
+        {
+          "text": "비교급·최상급을 -er·-est 로 만들지 more·most 로 만들지 음절 수로 정하고, 두 방식을 겹쳐 쓰지 않습니다.",
+          "applyNote": "expensive 는 3음절이므로 more expensive 입니다. more expensiver 처럼 겹쳐 쓰면 오류입니다."
+        },
+        {
+          "text": "견주는 두 대상이 서로 대응하는지 확인합니다.",
+          "applyNote": "The imported machine 과 the domestic one 은 둘 다 기계이므로 대응합니다."
+        }
+      ],
+      "example": {
+        "en": "The imported machine is **more expensive than** the domestic one.",
+        "ko": "그 수입 기계는 국내산 기계보다 비쌉니다.",
+        "note": "표지 than 이 비교급을 부르고, 3음절 단어이므로 more expensive 로 확정됩니다."
+      }
+    },
+    {
+      "id": "b15",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The southern route is ( more short / shorter ) than the coastal road.",
+      "steps": [
+        {
+          "title": "① 비교의 표지를 찾습니다",
+          "body": "괄호 뒤에 than 이 있습니다. than 은 비교 대상을 이끄는 표지입니다."
+        },
+        {
+          "title": "② 표지가 부르는 형태를 확정합니다",
+          "body": "than 이 있으므로 괄호 자리는 비교급입니다. 원급 short 는 표지 than 앞에 올 수 없습니다."
+        },
+        {
+          "title": "③ -er 로 만들지 more 로 만들지 정합니다",
+          "body": "short 는 1음절 단어이므로 -er 을 붙여 shorter 로 만듭니다. 1음절 단어 앞에 more 를 두지 않습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "more short 는 비교급을 만드는 두 방식을 잘못 고른 형태입니다. shorter 가 옳습니다."
+        }
+      ],
+      "answer": "shorter",
+      "ko": "그 남쪽 경로는 해안 도로보다 짧습니다."
+    },
+    {
+      "id": "b16",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b06-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The new library is {{blank}} than the old one.",
+          "options": ["larger", "large"],
+          "answer": 0,
+          "translation": "그 새 도서관은 예전 도서관보다 더 큽니다.",
+          "explanation": "than 이 있으므로 그 앞은 비교급 자리입니다. 원급 large 는 비교의 표지 than 과 짝을 이루지 못하므로 비교급 larger 가 옳습니다.",
+          "trapTags": ["comparative-form"]
+        },
+        {
+          "id": "b06-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The digital archive is as [[u:useful]] as the printed catalogue.",
+          "isCorrect": true,
+          "translation": "그 디지털 기록보관소는 인쇄된 목록만큼 유용합니다.",
+          "explanation": "표지가 as ~ as 이므로 그 사이에는 원급이 옵니다. be동사의 보어 자리이므로 형용사 원급 useful 이 옳습니다.",
+          "trapTags": ["as-as-positive"]
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "이번 겨울은 지난겨울보다 훨씬 더 추웠습니다.",
+      "answer": ["This winter", "was", "much colder", "than", "last winter"],
+      "tiles": [
+        "This winter",
+        "was",
+        "much colder",
+        "than",
+        "last winter",
+        "much more colder"
+      ],
+      "explanation": "cold 는 1음절이므로 비교급은 colder 입니다. much more colder 처럼 more 와 -er 을 겹쳐 쓴 형태는 쓰지 않습니다. 비교급을 강조하는 부사 much 는 비교급 바로 앞에 둡니다."
+    },
+    {
+      "id": "b18",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The mountain path was ( very steeper / much steeper ) than we had expected.",
+      "givenSteps": [
+        "① 비교의 표지를 찾습니다 — 뒤에 than 이 있으므로 괄호 자리는 비교급입니다.",
+        "② 형태를 확정합니다 — steep 은 1음절이므로 비교급은 steeper 입니다. 남은 판단은 그 앞에 붙은 강조 부사입니다."
+      ],
+      "prompt": "③ 그렇다면 비교급을 강조하는 부사로 옳은 것은 무엇입니까?",
+      "options": [
+        "much steeper — 비교급은 much·far·even·still·a lot 이 강조합니다",
+        "very steeper — very 는 정도가 강한 부사이므로 비교급도 강조할 수 있습니다",
+        "very steep — 강조 부사 very 를 쓰려면 원급으로 되돌립니다"
+      ],
+      "answer": 0,
+      "explain": "very 는 원급만 강조합니다(very steep). 비교급 앞에는 much, far, even, still, a lot 을 씁니다. 또한 뒤에 than 이 있으므로 원급 steep 으로 되돌릴 수도 없습니다."
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b06-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Among the five candidates, she gave {{blank}} presentation.",
+          "options": ["the most convincing", "the convincingest", "more convincing"],
+          "answer": 0,
+          "translation": "다섯 명의 후보 가운데 그녀가 가장 설득력 있는 발표를 했습니다.",
+          "explanation": "다섯 가운데 정도가 가장 높음을 말하므로 최상급 자리입니다. convincing 은 3음절이므로 -est 를 붙이지 않고 most 를 앞에 둡니다. 비교급 more convincing 은 '셋 이상 중 최고'라는 뜻을 낼 수 없고, 가산 단수명사 presentation 앞에 관사도 없어 형태 자체가 성립하지 않습니다.",
+          "trapTags": ["superlative-form"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. 표지와 형태의 짝을 떠올리면 보입니다.",
+      "rounds": [
+        {
+          "words": ["much", "far", "even", "very"],
+          "odd": 3,
+          "why": "much·far·even 은 비교급을 강조하는 부사이고, very 는 원급만 강조합니다. very taller 는 성립하지 않습니다."
+        },
+        {
+          "words": ["better", "worse", "less", "most"],
+          "odd": 3,
+          "why": "better·worse·less 는 비교급이고 most 는 최상급입니다. than 과 짝을 이룰 수 있는 것은 앞의 셋뿐입니다."
+        },
+        {
+          "words": ["busier", "earlier", "wider", "more busier"],
+          "odd": 3,
+          "why": "more busier 는 more 와 -er 을 겹쳐 쓴 오류 형태입니다. 나머지 셋은 규칙대로 만든 올바른 비교급입니다."
+        },
+        {
+          "words": ["the highest", "the worst", "the most useful", "the most cheapest"],
+          "odd": 3,
+          "why": "the most cheapest 는 most 와 -est 를 겹쳐 쓴 오류입니다. cheap 은 1음절이므로 the cheapest 로 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "함정 — as ~ as 사이에 비교급을 넣는 경우",
+      "body": "두 대상을 견준다는 느낌만으로 비교급을 고르면 표지를 놓칩니다. 형태를 정하는 것은 느낌이 아니라 표지입니다. than 이 없고 as ~ as 만 있다면 그 사이는 언제나 원급 자리입니다.",
+      "example": {
+        "en": "The new tablet is as **lighter** as the previous model.",
+        "ko": "그 새 태블릿은 이전 모델만큼 가볍습니다.",
+        "note": "as ~ as 사이에는 원급 light 가 와야 합니다. 비교급 lighter 는 than 과 짝을 이루는 형태이므로 이 자리에 올 수 없습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 비교 표현 안쪽이 형용사 자리인가 부사 자리인가",
+      "body": "수능 어법은 비교급 형태보다 그 안쪽의 품사를 묻습니다. as ~ as 와 than 을 걷어내고 남은 자리를 봅니다. 보어 자리이면 형용사, 동사를 꾸미는 자리이면 부사입니다.",
+      "example": {
+        "en": "The second team completed the task **as quickly as** the first team.",
+        "ko": "두 번째 팀은 첫 번째 팀만큼 빠르게 그 과제를 마쳤습니다.",
+        "note": "비교 표현을 걷어내면 completed the task quickly 입니다. 동사를 꾸미는 자리이므로 부사 quickly 가 옳습니다. as quick as 로 쓰면 형용사가 갈 보어 자리가 없어 어긋납니다."
+      }
+    },
+    {
+      "id": "b23",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The revised timetable is [[1:far more efficient]] than the previous one, and the express train now runs [[2:as frequent as]] the local service. Passengers say that the morning route is [[3:the busiest]] of the three routes, but the fares are [[4:cheaper]] than they were last year.",
+      "answer": 2,
+      "correction": "as frequently as",
+      "rationales": [
+        "than 앞이므로 비교급 자리입니다. efficient 는 3음절이므로 more 를 앞에 두고, 그 비교급을 far 가 강조합니다.",
+        "as ~ as 를 걷어내면 동사 runs 를 꾸미는 자리입니다. 보어가 될 자리가 없으므로 형용사 frequent 는 올 수 없고 부사 frequently 를 써야 합니다.",
+        "세 노선 가운데 정도가 가장 높음을 말하므로 최상급입니다. busy 는 -y 로 끝나므로 y 를 i 로 바꾸어 busiest 가 되고, 앞에 the 를 둡니다.",
+        "than 앞이므로 비교급 자리이며, cheap 은 1음절이므로 -er 을 붙여 cheaper 가 옳습니다."
+      ],
+      "ko": "개정된 시간표는 이전 것보다 훨씬 더 효율적이며, 급행열차는 이제 완행 열차만큼 자주 운행합니다. 승객들은 아침 노선이 세 노선 가운데 가장 붐빈다고 말하지만, 요금은 작년보다 저렴합니다."
+    },
+    {
+      "id": "b24",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 ② as frequent as 를 오류로 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "as ~ as 를 걷어내면 동사 runs 를 꾸미는 자리가 남으므로, 그 자리에는 형용사가 아니라 부사가 와야 하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 비교 표현을 걷어내고 남은 자리가 보어인지 수식어인지가 품사를 정합니다."
+        },
+        {
+          "text": "as ~ as 사이에는 언제나 부사만 오기 때문입니다.",
+          "correct": false,
+          "feedback": "as ~ as 사이에 형용사가 오는 경우도 많습니다. The copy is as clear as the original 에서는 보어 자리이므로 형용사가 옳습니다. 품사를 정하는 것은 표지가 아니라 남은 자리입니다."
+        },
+        {
+          "text": "frequent 는 비교급을 만들 수 없는 형용사이기 때문입니다.",
+          "correct": false,
+          "feedback": "frequent 도 more frequent 로 비교급을 만듭니다. 이 문항의 쟁점은 비교급 여부가 아니라 그 자리가 부사 자리라는 점입니다."
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 괄호 안의 단어를 비교 표지에 맞는 형태로 바꿔 쓰게 합니다. 표지를 근거로 원급·비교급·최상급을 정하고 불규칙형까지 맞추어야 만점입니다.",
+          "sample": {
+            "en": "The second draft was (good) than the first one.",
+            "ask": "괄호 안의 단어를 어법에 맞는 형태로 바꿔 쓰십시오.",
+            "answer": "better — than 이 있으므로 비교급이며, good 의 비교급은 불규칙형 better 입니다. gooder·more good 은 쓰지 않습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서는 as ~ as 사이나 than 앞에 밑줄을 그어, 그 자리가 형용사 자리인지 부사 자리인지를 묻습니다. 비교 표현을 걷어내고 남은 자리로 판단합니다.",
+          "sample": {
+            "en": "The coastal cities adapted to the rising sea level [[u:more slowly]] than the inland towns did.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — than 앞이므로 비교급이고, 동사 adapted 를 꾸미는 자리이므로 부사 slowly 의 비교급 more slowly 가 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "비교 저울탑의 감정관",
+      "intro": "이 저울탑에서는 느낌으로 고른 형태를 전부 압수합니다. 표지를 읽고 형태를 다는 저울질 네 번, 흔들림 없이 통과해 보십시오.",
+      "questions": [
+        {
+          "prompt": "This suitcase is {{blank}} than that one.",
+          "options": ["heavier", "more heavy", "heavy"],
+          "answer": 0,
+          "why": "than 이 있으므로 비교급 자리입니다. heavy 는 -y 로 끝나는 2음절이므로 y 를 i 로 바꾸어 heavier 로 씁니다."
+        },
+        {
+          "prompt": "Today's quiz was as {{blank}} as yesterday's.",
+          "options": ["easy", "easier", "easiest"],
+          "answer": 0,
+          "why": "표지가 as ~ as 이므로 그 사이에는 원급이 옵니다. 비교급·최상급은 이 자리에 서지 못합니다."
+        },
+        {
+          "prompt": "The results were {{blank}} clearer than before.",
+          "options": ["far", "very"],
+          "answer": 0,
+          "why": "비교급 clearer 를 강조할 수 있는 것은 much·far·even·still·a lot 입니다. very 는 원급 전담입니다."
+        },
+        {
+          "prompt": "His second essay was {{blank}} than the first one.",
+          "options": ["better", "more good", "gooder"],
+          "answer": 0,
+          "why": "good 의 비교급은 불규칙형 better 입니다. more good 도 gooder 도 존재하지 않는 형태입니다."
+        }
+      ],
+      "winText": "감정관이 저울을 내려놓고 통행증에 도장을 찍습니다. 표지를 읽고 형태를 다는 저울질이 네 번 모두 정확했습니다. 이제 as 와 than 앞에서 망설일 이유가 없습니다.",
+      "loseText": "감정관이 저울을 다시 세웁니다. 오답은 전부 한 가지 물음으로 돌아갑니다 — \"이 문장의 표지가 무엇인가\". 정리표와 암기 카드를 다시 보고 오면 저울은 언제든 다시 기울일 수 있습니다."
+    },
+    {
+      "id": "b27",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "as ~ as 사이에는 ___ 이 오고, than 앞에는 ___ 이 오며, 셋 이상 중 정도가 가장 높으면 ___ 을 씁니다."
+    },
+    {
+      "id": "b28",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "형태를 정하는 것은 표지입니다. as ~ as 사이에는 원급, than 앞에는 비교급, 셋 이상의 범위에는 the + 최상급이 옵니다.",
+        "1음절은 -er·-est, -y 로 끝나는 2음절은 -ier·-iest, 그 밖의 2음절과 3음절 이상은 more·most 를 씁니다. 두 방식을 겹쳐 쓰면 그 자체로 오류입니다.",
+        "good–better–best, bad–worse–worst, many/much–more–most, little–less–least 는 불규칙형으로 외웁니다.",
+        "비교급은 much·far·even·still·a lot 이 강조합니다. very 는 원급만 강조합니다.",
+        "비교 표현을 걷어내고 남은 자리가 보어이면 형용사, 동사를 꾸미면 부사입니다. 견주는 두 대상도 서로 대응해야 합니다."
+      ],
+      "keySentence": {
+        "en": "This route is **as safe as** the old one, but it is **much shorter than** the coastal road.",
+        "ko": "이 경로는 예전 경로만큼 안전하지만, 해안 도로보다 훨씬 짧습니다.",
+        "note": "한 문장 안에서도 표지가 다르면 형태가 달라집니다. as ~ as 사이는 원급 safe, than 앞은 비교급 shorter 입니다."
+      }
+    },
+    {
+      "id": "b29",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b06-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The new stadium holds {{blank}} spectators than the old one.",
+          "options": ["more", "most", "many"],
+          "answer": 0,
+          "translation": "그 새 경기장은 예전 경기장보다 더 많은 관중을 수용합니다.",
+          "explanation": "than 이 있으므로 비교급 자리입니다. many 의 비교급은 불규칙형 more 이며, most 는 최상급이므로 than 과 짝을 이루지 못합니다.",
+          "trapTags": ["comparative-form", "irregular-comparative"]
+        },
+        {
+          "id": "b06-c2-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The morning session was not as [[u:long]] as the afternoon one, but it covered more topics.",
+          "isCorrect": true,
+          "translation": "오전 회기는 오후 회기만큼 길지는 않았지만, 더 많은 주제를 다루었습니다.",
+          "explanation": "부정문에서도 as ~ as 사이에는 원급이 옵니다. be동사의 보어 자리이므로 형용사 원급 long 이 옳습니다.",
+          "trapTags": ["as-as-positive"]
+        },
+        {
+          "id": "b06-c2-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The revised model performs [[u:very better]] than the earlier version in cold weather.",
+          "isCorrect": false,
+          "correction": "much better",
+          "translation": "개정된 모델은 추운 날씨에서 이전 버전보다 훨씬 더 잘 작동합니다.",
+          "explanation": "very 는 원급만 강조하므로 비교급 better 앞에 올 수 없습니다. 비교급을 강조할 때는 much, far, even, still, a lot 을 씁니다.",
+          "trapTags": ["comparative-intensifier"]
+        }
+      ]
+    }
+  ]
+}

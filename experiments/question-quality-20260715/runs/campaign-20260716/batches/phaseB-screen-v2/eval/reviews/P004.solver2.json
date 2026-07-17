@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Garcia stood outside Frontcountry Mall, waiting for his brother' — present-participle adjunct whose implied subject is the matrix subject Garcia, the agent of 'wait' (active, simultaneous). Standard participial construction; grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'I think they're a bit too colorful' — antecedent is the coordinated plural NP 'a patterned red shirt and yellow pants' (and 'pants' is itself morphologically plural). Plural pronoun 'they' agrees; grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'he struggled with the rhythm, making several mistakes' — participial adjunct parallel to (A); implied subject 'he' is the agent of 'make'. Result/accompanying-circumstance participle; grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'Garcia's trumpet playing was flawlessly.' Subject head is the nominal 'playing' (gerundial noun in 'Garcia's trumpet playing'); copular 'be' requires an adjectival/nominal subject complement, not a manner adverb. Must be 'was flawless'. Rescue parses fail: 'playing' cannot be re-analyzed as a progressive verb because it precedes 'was' as subject head, and no ellipsis or inversion licenses a bare adverb as copular complement. Ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'When the band was finished' — 'finished' is a participial adjective meaning 'done / having completed' (cf. 'I'm finished'), standard with agent subjects; not a defective passive. Grammatical."
+    }
+  ],
+  "note": "Lens: grammarian/logician. Only (D) violates a formal rule (copula + manner adverb as complement). All other items pass under their governing rules (participial adjuncts A/C with correct implied subjects, plural pronoun agreement B, adjectival 'finished' E). Actively searched for alternative parses that would make (D) licit (progressive split, ellipsis, inversion) — none exists, so the answer set is a singleton: (D)."
+}

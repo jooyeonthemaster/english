@@ -1,0 +1,35 @@
+{
+  "pid": "P069",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'cave drawings made by our Stone Age ancestors' is a reduced passive relative clause (= drawings that were made by...). The head 'cave drawings' is the passive patient of 'make' and the by-phrase confirms the passive participial reading. A finite-verb parse is excluded because the matrix verb 'involve' already serves 'All forms of art'. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'cyberspace does NOT offer a totally new dimension' — do-support with 3sg subject 'cyberspace' plus base form 'offer' is formally well-formed. Logically the negation is required: since less-developed virtual realities have always been integral to human life, 'in this sense' cyberspace is NOT totally new. Both grammar and discourse logic hold."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'What is new about cyberspace is its interactive nature' — free relative 'what' heads the subject clause of a pseudo-cleft with correct singular agreement. 'That' would be ungrammatical here (no antecedent, and 'that'-clause subject would leave 'is new about cyberspace' incomplete). 'What' is exactly right."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'while being able to shape...' — 'while + V-ing' participial adjunct whose implied subject is the matrix subject 'real people' inside the where-relative clause, so no dangling participle. The ellipsis reading 'while (they are) being able to' also yields a grammatical result. Acceptable."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'The move from passive imaginary reality to the interactive virtual reality of cyberspace are much more radical' — the head of the subject NP is singular 'The move'; the 'from A to B' prepositional modifiers (with attractor nouns like 'cyberspace/movies') do not change head agreement. Must be 'is'. No rescue parse exists: there is no coordinated plural subject ('from...to...' denotes a single path NP), no inversion, no existential construction. This is the grammatical error."
+    }
+  ],
+  "note": "Uniquely determined answer. Subject-verb agreement error at (E): singular head 'The move' with plural 'are'. All other underlines survive adversarial search for hidden violations and alternative parses. (B)'s do-support and (D)'s while-participle are the likely distractor traps but both are formally sound. Clean item from a grammarian/logician standpoint."
+}

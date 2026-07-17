@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "정답 성립",
+      "reason": "과거완료 'had already devoured'가 선행절 'had already started to eat'과 시제 정합. 담화 표지 'in fact'는 직전 진술의 상향 강화(started to eat → devoured, 즉 먹기 시작한 정도가 아니라 이미 다 먹어치움) 기능을 정확히 수행. 'without any toppings'는 'without the cream and jam'의 일반화 재진술로 의미 결합 완전. 'it'의 지시체는 'hers(= her scone)'로 회복 가능. 문법(seam)·논리 모두 무결."
+    },
+    {
+      "label": "②",
+      "verdict": "탈락",
+      "reason": "'she was waiting for her grandmother's permission'은 'had already started to eat'과 직접 모순 — 이미 먹기 시작한 주체가 동시에 허락을 기다리는 중일 수 없음. 'in fact'는 강화 표지이지 모순·반전 도입 표지가 아니므로 담화 결합 실패. 또한 서사 전체가 미러링 이탈(boldly chose before her grandmother) 국면임."
+    },
+    {
+      "label": "③",
+      "verdict": "탈락",
+      "reason": "사실 모순: Chloe는 스콘을 할머니보다 '먼저(before her grandmother)' 골랐고, 할머니가 크림·잼을 바르는 동안 크림·잼 '없이' 먹고 있었으므로 'carefully copied how her grandmother ate it'은 성립 불가. 'it'이 scone을 지시하는 문맥에서 샌드위치 국면 회상으로의 재해석도 불가. 앞부분 미러링 서술을 재활용한 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "탈락",
+      "reason": "'asked for more cream and jam'은 직전 절 'without the cream and jam'과 직접 모순. 'more'는 이전에 크림·잼을 이미 사용했음을 전제하는데 그 전제 자체가 지문에서 부정됨(전제 실패). 'in fact' 강화 기능과도 결합 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "탈락",
+      "reason": "'would not touch it without her grandmother's approval'은 'had already started to eat hers'와 직접 모순 — 이미 손을 대어 먹고 있음. 조동사 would의 가정/의지 해석으로도 세미콜론 뒤 'in fact' 강화 구조에서 직전 사실 진술과 양립하는 독법이 존재하지 않음."
+    }
+  ],
+  "note": "빈칸 결합(seam) 검사: 세미콜론 + 'in fact'는 직전 절을 상향 강화하는 명제를 요구하며, 과거완료 시제 정합까지 요구. 이 두 형식 조건과 '크림·잼 없이 먹었다'는 사실 조건을 동시에 만족하는 선지는 ①뿐. ②·⑤는 동일 방향(허락 대기)의 중복 오답으로 상호 배제 논거도 동일. 복수 정답 여지 없음."
+}

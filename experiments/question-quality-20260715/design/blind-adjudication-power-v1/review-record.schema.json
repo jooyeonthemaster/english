@@ -1,0 +1,735 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:smoat:question-quality:blind-review-record:v2",
+  "title": "Blind question-quality review record v2",
+  "description": "Strict shape contract. A schema-valid record may describe a fatally defective item; item findings are not record-shape errors.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "reviewId",
+    "reviewerPseudonym",
+    "itemPseudonym",
+    "surfaceSha256",
+    "relabelMapSha256",
+    "type",
+    "block",
+    "evidenceFamily",
+    "plan",
+    "difficulty",
+    "stage",
+    "blindSolve",
+    "revealAudit",
+    "validity",
+    "explanationAudit",
+    "craft",
+    "grammarAudit",
+    "blankAudit",
+    "typeSpecificEvidence",
+    "grade",
+    "calibrationStatus"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "blind-review-record-v2" },
+    "reviewId": { "type": "string", "pattern": "^[A-Z0-9_-]{6,80}$" },
+    "reviewerPseudonym": { "type": "string", "pattern": "^[A-Z0-9_-]{3,40}$" },
+    "itemPseudonym": { "type": "string", "pattern": "^[A-Z0-9_-]{3,80}$" },
+    "surfaceSha256": { "$ref": "#/$defs/sha256" },
+    "relabelMapSha256": { "$ref": "#/$defs/sha256" },
+    "type": {
+      "enum": [
+        "BLANK_INFERENCE",
+        "GRAMMAR_ERROR",
+        "GRAMMAR_CHOICE_COMBO",
+        "VOCAB_CHOICE",
+        "SENTENCE_ORDER",
+        "SENTENCE_INSERT",
+        "TOPIC",
+        "MAIN_IDEA",
+        "TITLE",
+        "IMPLIED_MEANING",
+        "REFERENCE",
+        "CONTENT_MATCH",
+        "SUMMARY_COMPLETE_MC",
+        "IRRELEVANT",
+        "CONDITIONAL_WRITING",
+        "SENTENCE_TRANSFORM",
+        "FILL_BLANK_KEY",
+        "SUMMARY_COMPLETE",
+        "SUMMARY_WRITING",
+        "WORD_ORDER",
+        "TOPIC_SENTENCE_WRITING",
+        "GRAMMAR_CORRECTION",
+        "CONTEXT_MEANING",
+        "SYNONYM",
+        "ANTONYM"
+      ]
+    },
+    "block": { "enum": ["GRAMMAR", "BLANK", "NONFOCUS"] },
+    "evidenceFamily": {
+      "enum": [
+        "marked_selection",
+        "option_selection",
+        "ordering_or_insertion",
+        "closed_constructed",
+        "open_constructed",
+        "correction",
+        "lexical"
+      ]
+    },
+    "plan": { "enum": ["CALIBRATION_NOT_APPLICABLE", "STANDARD", "PREMIUM"] },
+    "difficulty": { "enum": ["BASIC", "INTERMEDIATE", "KILLER"] },
+    "stage": {
+      "enum": [
+        "CALIBRATION",
+        "S1_SCREEN",
+        "S2_FIRST_LOOK",
+        "S3_SENTINEL",
+        "S4_EXTENSION"
+      ]
+    },
+    "blindSolve": { "$ref": "#/$defs/blindSolve" },
+    "revealAudit": { "$ref": "#/$defs/revealAudit" },
+    "validity": { "$ref": "#/$defs/validity" },
+    "explanationAudit": { "$ref": "#/$defs/explanationAudit" },
+    "craft": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/craft" }
+      ]
+    },
+    "grammarAudit": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/grammarAudit" }
+      ]
+    },
+    "blankAudit": {
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/$defs/blankAudit" }
+      ]
+    },
+    "typeSpecificEvidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": { "$ref": "#/$defs/typeSpecificEvidence" }
+    },
+    "grade": { "enum": ["F", "C", "B", "A"] },
+    "calibrationStatus": {
+      "oneOf": [
+        { "$ref": "#/$defs/calibrationUnassessed" },
+        { "$ref": "#/$defs/calibrationCertified" }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "validity": {
+            "properties": { "anyFatal": { "const": true } },
+            "required": ["anyFatal"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "grade": { "const": "F" },
+          "craft": { "type": "null" },
+          "validity": {
+            "properties": { "fatalCodes": { "minItems": 1 } }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "grade": { "enum": ["C", "B", "A"] },
+          "craft": { "$ref": "#/$defs/craft" },
+          "validity": {
+            "properties": { "fatalCodes": { "maxItems": 0 } }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "GRAMMAR_ERROR" } } },
+      "then": {
+        "properties": {
+          "block": { "const": "GRAMMAR" },
+          "evidenceFamily": { "const": "marked_selection" },
+          "grammarAudit": { "$ref": "#/$defs/grammarAudit" },
+          "blankAudit": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "BLANK_INFERENCE" } } },
+      "then": {
+        "properties": {
+          "block": { "const": "BLANK" },
+          "evidenceFamily": { "const": "option_selection" },
+          "grammarAudit": { "type": "null" },
+          "blankAudit": { "$ref": "#/$defs/blankAudit" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "not": { "enum": ["GRAMMAR_ERROR", "BLANK_INFERENCE"] } }
+        }
+      },
+      "then": {
+        "properties": {
+          "block": { "const": "NONFOCUS" },
+          "grammarAudit": { "type": "null" },
+          "blankAudit": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "stage": { "const": "CALIBRATION" } } },
+      "then": {
+        "properties": {
+          "plan": { "const": "CALIBRATION_NOT_APPLICABLE" },
+          "calibrationStatus": { "$ref": "#/$defs/calibrationUnassessed" }
+        }
+      },
+      "else": {
+        "properties": {
+          "plan": { "enum": ["STANDARD", "PREMIUM"] },
+          "calibrationStatus": { "$ref": "#/$defs/calibrationCertified" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": { "const": "CALIBRATION" },
+          "type": { "const": "GRAMMAR_ERROR" }
+        }
+      },
+      "then": {
+        "properties": {
+          "grammarAudit": {
+            "properties": {
+              "surfaceContract": { "const": "EXACT_5_MARKERS_1_INVALID" },
+              "declaredMarkerCount": { "const": 5 },
+              "declaredAnswerCount": { "const": 1 },
+              "markedSites": { "minItems": 5, "maxItems": 5 }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^20[0-9]{2}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "score04": { "type": "integer", "minimum": 0, "maximum": 4 },
+    "evidenceRef": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_-]{1,30}:[A-Za-z0-9_./-]{1,240}$"
+    },
+    "answerText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "inlineTexts", "privateTextRef", "sha256"],
+      "properties": {
+        "mode": { "enum": ["NONE", "INLINE", "PRIVATE_REF"] },
+        "inlineTexts": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 4000 }
+        },
+        "privateTextRef": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/evidenceRef" }
+          ]
+        },
+        "sha256": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/sha256" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "NONE" } } },
+          "then": {
+            "properties": {
+              "inlineTexts": { "maxItems": 0 },
+              "privateTextRef": { "type": "null" },
+              "sha256": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "INLINE" } } },
+          "then": {
+            "properties": {
+              "inlineTexts": { "minItems": 1 },
+              "privateTextRef": { "type": "null" },
+              "sha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "PRIVATE_REF" } } },
+          "then": {
+            "properties": {
+              "inlineTexts": { "maxItems": 0 },
+              "privateTextRef": { "$ref": "#/$defs/evidenceRef" },
+              "sha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      ]
+    },
+    "shortcutAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal", "predicts", "material"],
+      "properties": {
+        "signal": {
+          "enum": ["length", "polarity", "grammar", "morphology", "label", "copy", "hint", "format", "other"]
+        },
+        "predicts": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "material": { "type": "boolean" }
+      }
+    },
+    "blindSolve": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "completedBeforeReveal",
+        "sealedAt",
+        "sealedRecordSha256",
+        "disposition",
+        "answerLabels",
+        "alternativeAnswerLabels",
+        "answerText",
+        "confidence",
+        "shortcutAudits"
+      ],
+      "properties": {
+        "completedBeforeReveal": { "const": true },
+        "sealedAt": { "$ref": "#/$defs/timestamp" },
+        "sealedRecordSha256": { "$ref": "#/$defs/sha256" },
+        "disposition": { "enum": ["ANSWER", "NO_ANSWER", "MULTIPLE", "UNEVALUABLE"] },
+        "answerLabels": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 80 }
+        },
+        "alternativeAnswerLabels": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 80 }
+        },
+        "answerText": { "$ref": "#/$defs/answerText" },
+        "confidence": { "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "shortcutAudits": {
+          "type": "array",
+          "maxItems": 100,
+          "items": { "$ref": "#/$defs/shortcutAudit" }
+        }
+      }
+    },
+    "revealAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revealedAfterBlindSolve",
+        "revealedAt",
+        "revealSha256",
+        "sourceBindingChecked",
+        "storedKeyChecked",
+        "scoringContractChecked",
+        "explanationChecked",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "revealedAfterBlindSolve": { "const": true },
+        "revealedAt": { "$ref": "#/$defs/timestamp" },
+        "revealSha256": { "$ref": "#/$defs/sha256" },
+        "sourceBindingChecked": { "type": "boolean" },
+        "storedKeyChecked": { "type": "boolean" },
+        "scoringContractChecked": { "type": "boolean" },
+        "explanationChecked": { "type": "boolean" },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceRef" }
+        }
+      }
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domains",
+        "anyFatal",
+        "fatalCodes",
+        "declaredAnswerCardinality",
+        "independentlyDefensibleAnswerCardinality",
+        "independentlyDefensibleAnswers",
+        "unresolved"
+      ],
+      "properties": {
+        "domains": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "taskAndRender",
+            "sourceLineage",
+            "answerSpace",
+            "surfaceLanguage",
+            "alternativeReading",
+            "explanationTruth",
+            "synchronization",
+            "leakage"
+          ],
+          "properties": {
+            "taskAndRender": { "type": "boolean" },
+            "sourceLineage": { "type": "boolean" },
+            "answerSpace": { "type": "boolean" },
+            "surfaceLanguage": { "type": "boolean" },
+            "alternativeReading": { "type": "boolean" },
+            "explanationTruth": { "type": "boolean" },
+            "synchronization": { "type": "boolean" },
+            "leakage": { "type": "boolean" }
+          }
+        },
+        "anyFatal": { "type": "boolean" },
+        "fatalCodes": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,79}$" }
+        },
+        "declaredAnswerCardinality": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "independentlyDefensibleAnswerCardinality": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "independentlyDefensibleAnswers": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 4000 }
+        },
+        "unresolved": { "type": "boolean" }
+      }
+    },
+    "explanationAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allClaimsAccurate",
+        "surfaceBound",
+        "keyReasonPresent",
+        "wrongElementReasonsComplete",
+        "redundantRestatementCount",
+        "unsupportedClaimCount",
+        "economyScore"
+      ],
+      "properties": {
+        "allClaimsAccurate": { "type": "boolean" },
+        "surfaceBound": { "type": "boolean" },
+        "keyReasonPresent": { "type": "boolean" },
+        "wrongElementReasonsComplete": { "type": "boolean" },
+        "redundantRestatementCount": { "type": "integer", "minimum": 0, "maximum": 500 },
+        "unsupportedClaimCount": { "type": "integer", "minimum": 0, "maximum": 500 },
+        "economyScore": { "$ref": "#/$defs/score04" }
+      }
+    },
+    "craft": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scores", "intentCoverageFraction", "materialShortcut", "holisticMaterialDefect", "holisticReasonCode"],
+      "properties": {
+        "scores": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "pedagogicalPointWorthiness",
+            "evidencePathEconomy",
+            "visibleIntentCoverage",
+            "competitivePlausibility",
+            "shortcutResistance",
+            "difficultyCalibration",
+            "surfaceNaturalness",
+            "explanationEconomy"
+          ],
+          "properties": {
+            "pedagogicalPointWorthiness": { "$ref": "#/$defs/score04" },
+            "evidencePathEconomy": { "$ref": "#/$defs/score04" },
+            "visibleIntentCoverage": { "$ref": "#/$defs/score04" },
+            "competitivePlausibility": { "$ref": "#/$defs/score04" },
+            "shortcutResistance": { "$ref": "#/$defs/score04" },
+            "difficultyCalibration": { "$ref": "#/$defs/score04" },
+            "surfaceNaturalness": { "$ref": "#/$defs/score04" },
+            "explanationEconomy": { "$ref": "#/$defs/score04" }
+          }
+        },
+        "intentCoverageFraction": { "type": "number", "minimum": 0, "maximum": 1 },
+        "materialShortcut": { "type": "boolean" },
+        "holisticMaterialDefect": { "type": "boolean" },
+        "holisticReasonCode": { "type": "string", "pattern": "^[A-Z0-9_-]{3,80}$" }
+      }
+    },
+    "markedSite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "isKey",
+        "sourceCorrect",
+        "displayedGrammaticality",
+        "correctionRestoresSource",
+        "pointCode",
+        "pointFamily",
+        "governingRule",
+        "governorEvidenceRefs",
+        "dependencySpanTokens",
+        "minimalMutation",
+        "alternativeParseConsidered",
+        "diagnosis",
+        "pointWorthiness",
+        "explanationAccurate"
+      ],
+      "properties": {
+        "label": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "isKey": { "type": "boolean" },
+        "sourceCorrect": { "type": "boolean" },
+        "displayedGrammaticality": { "enum": ["GRAMMATICAL", "UNGRAMMATICAL", "CONTESTED"] },
+        "correctionRestoresSource": { "type": "boolean" },
+        "pointCode": { "type": "string", "pattern": "^[A-Z0-9_-]{2,80}$" },
+        "pointFamily": { "type": "string", "pattern": "^[A-Z0-9_-]{2,80}$" },
+        "governingRule": { "type": "string", "minLength": 8, "maxLength": 1000 },
+        "governorEvidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceRef" }
+        },
+        "dependencySpanTokens": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "minimalMutation": { "type": "boolean" },
+        "alternativeParseConsidered": { "type": "boolean" },
+        "diagnosis": { "enum": ["ANSWER_ERROR", "VALID_DECOY", "INVALID_SITE"] },
+        "pointWorthiness": { "$ref": "#/$defs/score04" },
+        "explanationAccurate": { "type": "boolean" }
+      }
+    },
+    "grammarAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "surfaceContract",
+        "declaredMarkerCount",
+        "declaredAnswerCount",
+        "markedSites",
+        "distinctPointFamilies",
+        "allCorrectionsRoundTrip",
+        "allExplanationsAccurate"
+      ],
+      "properties": {
+        "surfaceContract": { "enum": ["EXACT_5_MARKERS_1_INVALID", "OTHER_REGISTERED_SURFACE"] },
+        "declaredMarkerCount": { "type": "integer", "minimum": 2, "maximum": 20 },
+        "declaredAnswerCount": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "markedSites": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 20,
+          "items": { "$ref": "#/$defs/markedSite" }
+        },
+        "distinctPointFamilies": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "allCorrectionsRoundTrip": { "type": "boolean" },
+        "allExplanationsAccurate": { "type": "boolean" }
+      }
+    },
+    "propositionAxis": {
+      "enum": [
+        "actorOrTarget",
+        "polarity",
+        "conditionOrModality",
+        "causalRelationAndDirection",
+        "scopeOrQuantifier",
+        "stance",
+        "temporalRelation"
+      ]
+    },
+    "distractorAxis": {
+      "enum": [
+        "scope_shift",
+        "causal_reversal",
+        "half_truth",
+        "actor_swap",
+        "condition_loss",
+        "polarity_shift",
+        "temporal_shift",
+        "stance_shift",
+        "unsupported_addition",
+        "category_error"
+      ]
+    },
+    "blankOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "label",
+        "isKey",
+        "slotGrammarCompatible",
+        "completedSentenceNaturalness",
+        "passageGrounded",
+        "evidenceRefs",
+        "overlappingAxes",
+        "divergentAxes",
+        "primaryIntentAxis",
+        "nearMissStrength",
+        "singleDecisiveFlaw",
+        "cheapGiveaway"
+      ],
+      "properties": {
+        "label": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "isKey": { "type": "boolean" },
+        "slotGrammarCompatible": { "type": "boolean" },
+        "completedSentenceNaturalness": { "$ref": "#/$defs/score04" },
+        "passageGrounded": { "type": "boolean" },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceRef" }
+        },
+        "overlappingAxes": {
+          "type": "array",
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/propositionAxis" }
+        },
+        "divergentAxes": {
+          "type": "array",
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/propositionAxis" }
+        },
+        "primaryIntentAxis": {
+          "oneOf": [
+            { "const": "CORRECT" },
+            { "$ref": "#/$defs/distractorAxis" }
+          ]
+        },
+        "nearMissStrength": { "$ref": "#/$defs/score04" },
+        "singleDecisiveFlaw": { "type": "boolean" },
+        "cheapGiveaway": { "type": "boolean" }
+      }
+    },
+    "axisOracle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["axis", "supportedValueEvidenceRefs", "answerPreserved"],
+      "properties": {
+        "axis": { "$ref": "#/$defs/propositionAxis" },
+        "supportedValueEvidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceRef" }
+        },
+        "answerPreserved": { "type": "boolean" }
+      }
+    },
+    "blankAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slotContractEvidenceRefs",
+        "options",
+        "axisOracle",
+        "allFiveSlotGrammarCompatible",
+        "uniqueAnswer",
+        "requiredEvidenceLinkCount",
+        "wrongOptionPrimaryAxisDistinctness",
+        "answerPreservesAllAxes"
+      ],
+      "properties": {
+        "slotContractEvidenceRefs": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceRef" }
+        },
+        "options": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/blankOption" }
+        },
+        "axisOracle": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": { "$ref": "#/$defs/axisOracle" }
+        },
+        "allFiveSlotGrammarCompatible": { "type": "boolean" },
+        "uniqueAnswer": { "type": "boolean" },
+        "requiredEvidenceLinkCount": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "wrongOptionPrimaryAxisDistinctness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "answerPreservesAllAxes": { "type": "boolean" }
+      }
+    },
+    "typeSpecificEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checkId", "pass", "evidenceRefs"],
+      "properties": {
+        "checkId": { "type": "string", "pattern": "^[A-Z0-9_-]{3,80}$" },
+        "pass": { "type": "boolean" },
+        "evidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidenceRef" }
+        }
+      }
+    },
+    "calibrationUnassessed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "certificateId", "certificateScopeSha256", "rowsSinceCheckpoint"],
+      "properties": {
+        "status": { "const": "UNASSESSED" },
+        "certificateId": { "type": "null" },
+        "certificateScopeSha256": { "type": "null" },
+        "rowsSinceCheckpoint": { "const": 0 }
+      }
+    },
+    "calibrationCertified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "certificateId", "certificateScopeSha256", "rowsSinceCheckpoint"],
+      "properties": {
+        "status": { "const": "CERTIFIED" },
+        "certificateId": { "type": "string", "pattern": "^[A-Z0-9_-]{3,80}$" },
+        "certificateScopeSha256": { "$ref": "#/$defs/sha256" },
+        "rowsSinceCheckpoint": { "type": "integer", "minimum": 0, "maximum": 50 }
+      }
+    }
+  }
+}

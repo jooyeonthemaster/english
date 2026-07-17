@@ -1,0 +1,76 @@
+{
+  "pid": "P060",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-EXPL-INCOHERENT-METALEAK",
+      "severity": "critical",
+      "evidence": "해설 마지막 문장: '가장 결함이 강하면서 매력적인 함정인 ③은 체력 훈련 자체보다 정신력 기술을 무조건 더 우위에 놓는 우선순위 오류(causal reversal)를 부각하여 오답을 방지하도록 돕습니다.' — 오답을 유도하는 장치(함정)가 '오답을 방지하도록 돕는다'는 자기모순 진술로, 문장 자체가 손상되어 있다. 또한 '함정', '매력적' 등 문항 설계 메타 언어가 학생 노출 해설로 누출되었다."
+    },
+    {
+      "code": "V4-TERM-MISMATCH",
+      "severity": "major",
+      "evidence": "'우선순위 오류(causal reversal)' — 우선순위 역전(priority inversion)을 인과 역전(causal reversal)으로 명명한 용어 불일치. ③ 오답 해설의 '인과관계가 역전되었으므로'도 동일하게, ③의 실제 결함(정신 기술을 신체 단련보다 우위에 두는 우선순위 전도)을 인과 역전이라는 부정확한 용어로 규정한다. 진짜 인과 역전이라면 '정신적 승리가 신체 단련을 낳는다'는 방향 전환이어야 한다."
+    },
+    {
+      "code": "V4-OVERSTATEMENT",
+      "severity": "minor",
+      "evidence": "해설 첫 문장 '…절체절명의 정신적 싸움에서도 승리를 담보한다는 사실을 입증합니다' — 원문은 'often wins'라는 개연성 진술인데 해설은 '담보(보장)·입증'으로 강도를 과장했다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "관계 단절 왜곡 — 본문이 결합으로 제시한 신체·정신을 '분리'로 재구성한 함정",
+      "temptingBecause": "psychological pressure가 본문의 'the mental game'과 앵커를 공유하고, '압박에서 경기력을 분리한다'는 스포츠 심리 통념과 부합해 그럴듯하다. 실질적 2순위 경쟁 선지.",
+      "decisiveFlaw": "본문은 신체 단련이 physical game과 mental game '둘 다의 승리'로 이어진다는 결합 논리다. 압박으로부터의 절연(separate)은 두 영역 동반 제패라는 원문 스팬의 의미를 보존하지 못한다."
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 스팬 'win not just the physical game but the mental game'의 추상화 패러프레이즈(not just A but B → both A and B)",
+      "temptingBecause": "해당 없음(정답). 'in order to close out their opponents'라는 목적절과 지문 전체의 체력→정신 승리 인과에 정확히 부합한다.",
+      "decisiveFlaw": "없음."
+    },
+    {
+      "label": "③",
+      "intent": "우선순위 역전 — 본문의 '신체 단련이 정신 승리의 기반' 위계를 '정신 기술 우위'로 전도한 함정",
+      "temptingBecause": "본문 후반의 mental game 강조를 과잉 해석한 학생이 '결국 정신이 더 중요하다'로 비약하기 쉽고, 선지가 지문의 mental/physical 축을 그대로 재사용한다.",
+      "decisiveFlaw": "본문은 웨이트룸 훈련(신체)이 정신 게임 승리의 전제라고 말할 뿐, 정신 기술을 신체 단련보다 우선하라는 진술이 없다. 위계가 반대다."
+    },
+    {
+      "label": "④",
+      "intent": "무근거 조건 첨가 — '타고난 능력 결핍의 보완'이라는 지문에 없는 서사 삽입",
+      "temptingBecause": "'natural athletic abilities'가 골퍼·재능 스키마와 공명하여 표면적 관련성이 있어 보인다.",
+      "decisiveFlaw": "지문의 골퍼들은 world-class로 결핍 서사가 전혀 없고, 체력·지구력 근거에서 이탈한 무관 진술이다. 앵커가 얇아 소거가 쉬운 편(준필러)."
+    },
+    {
+      "label": "⑤",
+      "intent": "대전제 모순 — 초반부 어휘(nutrition, practice)를 재활용한 극성 반전 함정",
+      "temptingBecause": "'proper nutrition', 'practicing(practice range)' 등 지문 표층 어휘를 거의 그대로 재사용해 훑어 읽는 학생을 노린다.",
+      "decisiveFlaw": "영양 소홀을 'missing the mark(sin)'로 규정한 글의 대전제와 정면 충돌해 즉시 소거된다. 사실상 random opposite에 가까워 KILLER 미끼로는 약하다."
+    }
+  ],
+  "explanationIssues": [
+    "해설 말미의 설계 메타 문장('가장 결함이 강하면서 매력적인 함정인 ③은 … 오답을 방지하도록 돕습니다')이 자기모순적 손상 문장이며 학생 노출 텍스트로 부적합 (V4 실패 트리거).",
+    "'우선순위 오류(causal reversal)' 및 ③ 오답 해설의 '인과관계가 역전' — 우선순위 전도를 인과 역전으로 부르는 용어 오류. 영어 설계 분류어(causal reversal)가 한국어 학생 해설에 그대로 노출됨.",
+    "'승리를 담보한다는 사실을 입증합니다' — 원문 'often wins'의 개연 진술을 보장·입증으로 과장.",
+    "'절체절명의', '단단히 밀어줍니다' 등 과장·구어체 수사가 해설의 간결성·정확성을 해침 (C6 감점 요인)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 무결, 정답 ② 유일(①이 유의미한 차점 선지), 다섯 선지 모두 동일 to부정사 슬롯에 문법적으로 삽입 가능(D1 충족), 필드 동기화 정상. 그러나 V4 실패 — 해설에 자기모순적 설계 메타 누출 문장과 용어 오류(우선순위 역전≠causal reversal)가 있어 치명 등급 F. KILLER 조건도 미충족: (D4) 잔존 목적절 'in order to close out their opponents'가 '승리' 의미를 요구하는데 5개 중 승리 의미 선지는 ②뿐이라 다문장 통합 없이 국소 단서 하나로 정답 선택이 가능하고, (D3/D5) ⑤는 대전제 정면 모순의 준 random opposite, ④는 앵커가 얇은 준필러다. C5=2(중상 난이도 빈칸 수준, KILLER 라벨과 불일치), C6=1(손상 문장·과장·용어 오류). 수리 방향: 해설 말미 메타 문장 삭제 및 용어 교정(간단), ⑤·④를 지문 후반 논리를 무는 매력 선지로 교체하고 승리 어감을 가진 경쟁 선지를 1개 이상 추가해야 KILLER 성립."
+}

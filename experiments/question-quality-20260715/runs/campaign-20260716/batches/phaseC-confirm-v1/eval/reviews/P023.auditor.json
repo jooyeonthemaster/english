@@ -1,0 +1,82 @@
+{
+  "pid": "P023",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERMINOLOGY-MISANALYSIS-A",
+      "severity": "major",
+      "evidence": "(A) 오답 해설: '의문부사 how가 의문형용사 역할을 하며 뒤에 형용사 long과 함께 올바르게 쓰였습니다.' — how는 정도를 묻는 의문부사로서 long을 수식할 뿐, 의문형용사(what/which/whose+명사) 역할을 하지 않는다. 또한 'how long the shortest war lasted'에서 long은 동사 lasted를 수식하는 부사로 보는 것이 표준 분석이므로 '형용사 long' 진술도 부정확하다. 명사절 that을 관계대명사로 부르는 류의 용어 오분석에 해당한다."
+    },
+    {
+      "code": "V4-TERMINOLOGY-MISANALYSIS-E",
+      "severity": "major",
+      "evidence": "(E) 오답 해설: '동명사(또는 분사) destroying을 수식하기 위해 부사 quickly가 올바르게 쓰였습니다.' — 'They soon began to attack the palace, quickly destroying...'의 destroying은 분사구문의 현재분사이며 동명사가 아니다. '동명사(또는 분사)' 병기는 학생에게 오개념을 심는 용어 오류다."
+    },
+    {
+      "code": "V4-AWKWARD-PHRASING-ANSWER",
+      "severity": "minor",
+      "evidence": "정답 해설 ②: '영국의 주도로 잔지바르의 지도자가 정해졌다는 능동의 의미가 되어야 하므로' — '지도자가 정해졌다'는 피동 서술과 '능동의 의미'가 충돌하는 어색한 문장. 사실 오류는 아니나('영국이 지도자를 정했다는 능동의 의미'가 정확) 해설 명료성을 해친다."
+    },
+    {
+      "code": "LABEL-FORMAT-NOTE",
+      "severity": "minor",
+      "evidence": "선지 라벨이 수능 규격 ①~⑤가 아닌 (A)~(E)다. 지문 마커와 선지 라벨은 서로 일치하므로 V1 실패는 아니며 포맷 관찰 사항으로만 기록한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "간접의문문(명사절)을 이끄는 의문사 how + 정도 표현의 적격성 판단",
+      "temptingBecause": "learn 뒤 명사절 도입부여서 what/that 등 다른 접속 요소를 기대하거나 how long의 어순을 의심할 수 있다",
+      "decisiveFlaw": "정답 불가 — 'how long + S + V'는 learn의 목적어인 간접의문문으로 완전한 정문이다. 다만 실제로는 소거가 즉각적이어서 KILLER 디코이로는 필러에 가깝다"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사절 주어 + and + 명사구 주어의 병렬 수일치",
+      "temptingBecause": "명사절 주어는 단수 취급이라는 학습 관성('Why ... took place is ...')과 동사 직전 근접 명사 duration(단수)의 간섭으로 is를 기대하기 쉽다",
+      "decisiveFlaw": "정답 불가 — and로 연결된 두 개의 주어(명사절+명사구)이므로 복수 동사 are가 정문이며 원문도 are다. 본 세트에서 유일하게 실질적 판단을 요구하는 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "분사구문의 능동(현재분사) vs 수동(과거분사) — 목적어 존재 여부로 판정 (선언된 정답)",
+      "temptingBecause": "'even + p.p.' 표면 패턴이 수동 분사구문처럼 보이고, 의미상 주어(the United Kingdom)가 콤마 앞 절에 있어 즉시 연결되지 않을 수 있다",
+      "decisiveFlaw": "실제 오류 — 뒤에 명사절 목적어(who the nation's leader would be)가 있고 의미상 주어 UK가 행위 주체이므로 수동 chosen은 불가, choosing으로 교정하면 정확히 원문이 된다. 정답 유일성 확인. 단, 목적어가 바로 인접해 있어 상위권에게는 즉시 드러나는 표준 포인트"
+    },
+    {
+      "label": "(D)",
+      "intent": "5형식 동사 order의 목적격 보어 형태(to부정사)",
+      "temptingBecause": "make/let/have 등 사역동사와 혼동해 원형부정사(step)를 기대할 수 있다",
+      "decisiveFlaw": "정답 불가 — order는 목적격 보어로 to부정사를 취하므로 to step은 정문. 매우 기초적인 포인트로 소거가 즉각적"
+    },
+    {
+      "label": "(E)",
+      "intent": "형용사 vs 부사 — 분사(동사적 성질) 수식은 부사",
+      "temptingBecause": "destroying 앞자리를 명사 수식 자리로 착각하면 형용사 quick을 기대할 수 있다",
+      "decisiveFlaw": "정답 불가 — 분사구문의 현재분사 destroying을 수식하므로 부사 quickly가 정문. 즉각 소거되는 필러성 디코이"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설: how를 '의문형용사 역할'로 기술 — how는 정도 의문부사이며 의문형용사 기능이 없다 (용어 오분석, major)",
+    "(A) 해설: 'how long the shortest war lasted'의 long을 '형용사'로 단정 — lasted를 수식하는 부사로 보는 것이 표준 분석 (부정확, minor~major)",
+    "(E) 해설: 분사구문의 현재분사 destroying을 '동명사(또는 분사)'로 병기 — 동명사가 아님 (용어 오류, major)",
+    "정답 해설 ②: '지도자가 정해졌다는 능동의 의미' — 피동 서술과 능동 판정이 충돌하는 어색한 문장 (명료성, minor)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "충족: 최소대립쌍(chosen→choosing 교정 시 정확히 원문 복원), 명확한 문법 판단(문맥 선호 아님), 정답과 같은 포인트의 쉬운 디코이 없음. 불충족: (1) KILLER 정답은 즉시 드러나지 않아야 하나, 능동/수동 분사 판정이 바로 인접한 명사절 목적어로 즉각 노출되는 교과서 수준 표준 포인트다. (2) (A)/(D)/(E) 디코이는 즉시 소거되는 필러 수준이고 각 밑줄의 명시적 'why tempting' 근거가 자료에 없다.",
+  "grade": "F",
+  "notes": "지문 무결성·정답 유일성·필드 동기화는 모두 통과했고 정답 (C)의 핵심 해설(분사구문 의미상 주어, 목적어 존재, choosing 교정)도 정확하다. 그러나 학생 노출 오답 해설 두 곳의 문법 용어 오분석((A) '의문형용사', (E) '동명사')이 V4를 실패시킨다 — 치명 실패는 공예 점수로 상쇄되지 않으므로 F. 공예 측면에서도 요청 난이도 KILLER 대비 실제 난이도가 중하 수준(C5=1): 정답 포인트가 표준적이고 디코이 3개가 사실상 필러라 변별 긴장이 (B) 하나에 의존한다(C3=2). 해설 용어를 교정하고((A) 의문부사+부사 long, (E) 현재분사), KILLER 유지 시 정답 포인트를 구조 독해가 필요한 자리로 재설계하거나 난이도 라벨을 중(HIGH 이하)으로 낮추는 재작업이 필요하다."
+}

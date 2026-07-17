@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Grammatical seam is fine (plural bare VP after 'all of us'), but logically unsupported: the passage never concerns survivor identity, and the induced lesson is that truth-checking loses to fabrication. Verification behavior was exactly what got the narrator scolded."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Grammatical, but a direct polarity inversion of the passage's conclusion: excluding the unverified cat ('leaving out the cat') was punished twice. The equilibrium behavior is inclusion, not cautious exclusion."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Grammatically sound: plural agreement with 'all of us'; definite NP 'the fabricated detail' has a recoverable antecedent (the cat, inserted regardless of existence). Logically entailed by both episodes: omission of the cat is punished as 'being beaten', insertion is safe, so all reporters now uniformly insert the (invented) cat. Present habitual 'Now when there is a shipwreck' matches 'unanimously incorporate'."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammatical, but the narrative arc is capitulation to editorial pressure, not defiance. Reporters conform precisely because editors punish being scooped; 'deliberately challenge' contradicts the demonstrated incentive structure."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Grammatical ('all of us shift our reports', possessive agrees), but 'actual heroism' contradicts the fabrication dynamic: the crew rescue occurred only in the first wreck, and the generalized behavior is inserting a cat that may not exist, not reporting real heroism."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Minor stylistic strain in option 3: 'the fabricated detail' is definite even though in wreck 1 the cat was real; resolved by the present-habitual frame where the cat is generically an unverified insertion. No alternative parse (reduced relative, participial, inversion, retained object) rescues any distractor. Single answer defensible: 3."
+}

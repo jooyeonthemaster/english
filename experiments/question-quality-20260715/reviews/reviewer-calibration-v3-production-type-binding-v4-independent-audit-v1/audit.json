@@ -1,0 +1,222 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-independent-audit-1",
+  "artifactId": "reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1",
+  "subject": {
+    "artifactId": "reviewer-calibration-v3-production-type-binding-v4",
+    "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4",
+    "snapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+    "manifestSha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04",
+    "manifestEntries": {
+      "REPORT.md": "41ea33bcf94c38e165ec83697730886a5049eb94084430eb540172dc30aa973e",
+      "binding.json": "47df395f54179538d27a714ac0df4dc9e82f04b767bc82f45b8473c38d04cc3d",
+      "hostile-fixtures.json": "8bd091c2e2dab5be01b64c5551826f0f236a5c4684a46f2bd0814f7d0596d6b4",
+      "verify.mjs": "76b4ebdcd55f0f227c9b50ca32cf19372ab7f0d9e9068ea5b5274058e9614f5e"
+    },
+    "untrustedUnsealedBuilder": "build-binding.mjs",
+    "builderUsedAsAuditEvidence": false
+  },
+  "verdict": "PASS_NO_BLOCKERS",
+  "blockers": [],
+  "scope": {
+    "route": "/director/workbench/questions/generate",
+    "state": "MANUAL_AND_NON_KOREAN_ONLY",
+    "reachableAuthority": "PRIMARY_WORKSPACE_FAST_ONLY",
+    "deployedCommitParity": false,
+    "secondaryBatchAuthority": false,
+    "legacyTriggerAuthority": false
+  },
+  "independence": {
+    "subjectVerifierExecuted": false,
+    "subjectBuilderExecuted": false,
+    "subjectReportTrustedAsEvidence": false,
+    "subjectFixtureRunnerReused": false,
+    "independentVerifier": "independent-verify.mjs",
+    "independentVerifierSha256": "c8562e2d1d45065a2a77d637179663a94396bc0f64ade98491a53d489fdcde2e"
+  },
+  "reproducibilityRuns": [
+    {
+      "runId": "frozen-pass-1",
+      "startedAt": "2026-07-15T14:23:15.078Z",
+      "completedAt": "2026-07-15T14:24:38.310Z",
+      "exitCode": 0,
+      "verdict": "PASS_NO_BLOCKERS",
+      "checksPassed": 20,
+      "checksTotal": 20,
+      "hostilePassed": 20,
+      "hostileTotal": 20,
+      "subjectSnapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+      "sourceEvidenceDigestSha256": "c46ffa2532dc8b22c11a0e8edf2565d5f4361104c7cc1d18d18a8ae4edc28cc6",
+      "closureDigestSha256": "e574130750851774ab8fb876dcb7e0a7a291380bb6dda773e711adfebbacb1f1"
+    },
+    {
+      "runId": "frozen-pass-2",
+      "startedAt": "2026-07-15T14:24:51.929Z",
+      "completedAt": "2026-07-15T14:26:11.630Z",
+      "exitCode": 0,
+      "verdict": "PASS_NO_BLOCKERS",
+      "checksPassed": 20,
+      "checksTotal": 20,
+      "hostilePassed": 20,
+      "hostileTotal": 20,
+      "subjectSnapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+      "sourceEvidenceDigestSha256": "c46ffa2532dc8b22c11a0e8edf2565d5f4361104c7cc1d18d18a8ae4edc28cc6",
+      "closureDigestSha256": "e574130750851774ab8fb876dcb7e0a7a291380bb6dda773e711adfebbacb1f1"
+    }
+  ],
+  "checks": [
+    { "code": "SUBJECT_MANIFEST_EXACT_SET_AND_HASHES", "status": "PASS" },
+    { "code": "SUBJECT_CANDIDATE_NOT_SELF_AUTHORIZED", "status": "PASS" },
+    { "code": "SUBJECT_ZERO_PROHIBITED_ACTIVITY_CLAIM", "status": "PASS" },
+    { "code": "GIT_HEAD_TREE_REF", "status": "PASS" },
+    { "code": "SOURCE_256_UNIQUE_SAFE_PATHS", "status": "PASS" },
+    { "code": "SOURCE_ALL_GIT_FIELDS_EXACT", "status": "PASS" },
+    { "code": "SOURCE_WORKTREE_ONLY_9_EXACT", "status": "PASS" },
+    { "code": "CLOSURE_NO_PARSE_DIAGNOSTICS", "status": "PASS" },
+    { "code": "CLOSURE_NO_UNRESOLVED_LOCAL", "status": "PASS" },
+    { "code": "CLOSURE_NO_NONLITERAL_LOAD", "status": "PASS" },
+    { "code": "CLOSURE_241_EXACT_FILES", "status": "PASS" },
+    { "code": "CLOSURE_709_EXACT_EDGES", "status": "PASS" },
+    { "code": "CLOSURE_BINDING_EDGE_CANONICAL_ORDER", "status": "PASS" },
+    { "code": "SOURCE_256_EQUALS_AUTHORITY_UNION", "status": "PASS" },
+    { "code": "AST_PRODUCTION_DATAFLOW_ALL", "status": "PASS" },
+    { "code": "CANONICAL_FAMILY_ROTATION_MATH_ALL", "status": "PASS" },
+    { "code": "INDEPENDENT_HOSTILE_20_OF_20", "status": "PASS" },
+    { "code": "TOCTOU_TARGET_STABLE", "status": "PASS" },
+    { "code": "TOCTOU_SOURCES_STABLE", "status": "PASS" },
+    { "code": "TOCTOU_GIT_FREEZE_STABLE", "status": "PASS" }
+  ],
+  "gitEvidence": {
+    "repoHeadCommit": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "repoHeadTree": "e74361c0cfae22a1092bb4738ae21b14f1aa9cb7",
+    "headRef": "refs/heads/20260714jooyeon",
+    "productionSources": 256,
+    "trackedSources": 247,
+    "worktreeOnlyUntrackedSources": 9,
+    "trackedDirtySources": 25,
+    "trackedWorktreeMatchesHead": 222,
+    "lastPathCommitDefinition": "git log -1 --format=%H -- <path>",
+    "lastPathCommitExecutionCount": 256,
+    "fieldsRecomputedPerSource": [
+      "worktreeSha256",
+      "worktreeRawGitBlobSha1",
+      "worktreeFilteredGitBlobSha1",
+      "indexStage",
+      "indexBlobSha1",
+      "derivedGitDirty",
+      "headBlobSha1",
+      "lastPathCommit",
+      "statusPorcelainV2",
+      "lsFilesVerbose",
+      "worktreeMatchesHead"
+    ],
+    "mismatches": []
+  },
+  "closureEvidence": {
+    "roots": 6,
+    "files": 241,
+    "edges": 709,
+    "parseDiagnostics": 0,
+    "unresolvedLocalImports": 0,
+    "nonLiteralModuleLoads": 0,
+    "includedKinds": [
+      "static import",
+      "export-from",
+      "type-only import/export",
+      "literal dynamic import",
+      "literal require"
+    ],
+    "edgeAuthority": "EXACT_CANONICALIZED_SET",
+    "edgeSerializationOrder": [
+      "from",
+      "resolved target",
+      "specifier",
+      "edge kind",
+      "source position"
+    ],
+    "discoveryOrderIsAuthority": false,
+    "digestSha256": "e574130750851774ab8fb876dcb7e0a7a291380bb6dda773e711adfebbacb1f1"
+  },
+  "astEvidence": {
+    "requestedRouteManualDefaultNoKoreanScope": true,
+    "desktopRowToModalToHandleWorkspaceGenerateActiveRow": true,
+    "mobileConfigOnlyModalDoesNotDispatch": true,
+    "mobileStepNavCallsHandleWorkspaceGenerate": true,
+    "questionTypeAndSettingsFlowThroughFastUnit": true,
+    "schedulerToLiteralFastEndpoint": true,
+    "fastPostManualCountMaxOne": true,
+    "manualPlanSubTypeFromQuestionType": true,
+    "assignmentBudgetWrapsRuntimeCallback": true,
+    "runtimeUsesAiSchemaAndExplicitFallback": true,
+    "allPickerTypesHaveAiAndFallbackSchemas": true,
+    "secondaryBatchUnreachable": true,
+    "legacyTriggerExcluded": true,
+    "uiTypeCount": 25,
+    "legacyTopicMainIdeaInPicker": false
+  },
+  "mathEvidence": {
+    "uiTypes": 25,
+    "focusTypes": 2,
+    "nonfocusTypes": 23,
+    "families": 8,
+    "scheduleRows": 32,
+    "epoch1CombinedDistinct": 16,
+    "epoch2CombinedContact": 23,
+    "epoch4MainOnlyContact": 23,
+    "mainHoldoutDistinctEveryRow": true,
+    "contactEqualsCertification": false,
+    "singleEpochAllTypeClaimAllowed": false
+  },
+  "hostileEvidenceFile": "hostile-evidence.json",
+  "auditorDevelopmentFindings": [
+    {
+      "code": "AUDITOR_D1_MERGE_PATH_HISTORY",
+      "disposition": "AUDITOR_FIXED_NOT_SUBJECT_BLOCKER",
+      "observation": "A global git log --name-only traversal did not reproduce per-path merge-history simplification for four paths.",
+      "correction": "Recomputed all 256 fields with git log -1 --format=%H -- <path>; this is the exact claimed field definition and every value matched."
+    },
+    {
+      "code": "AUDITOR_D2_EDGE_ORDER",
+      "disposition": "AUDITOR_FIXED_NOT_SUBJECT_BLOCKER",
+      "observation": "The first draft compared AST discovery-position order with canonical evidence serialization.",
+      "correction": "Compared the exact 709-edge set after independent canonicalization and separated set authority from discovery order."
+    },
+    {
+      "code": "AUDITOR_D3_MOBILE_IIFE",
+      "disposition": "AUDITOR_FIXED_NOT_SUBJECT_BLOCKER",
+      "observation": "The first AST helper did not unwrap the mobileNext parenthesized IIFE.",
+      "correction": "Added wrapper/IIFE unwrapping; the mobile dispatch predicate and its hostile removal both pass."
+    },
+    {
+      "code": "AUDITOR_D4_HOSTILE_PRECONDITION",
+      "disposition": "AUDITOR_FIXED_NOT_SUBJECT_BLOCKER",
+      "observation": "The first helper-body mutation used a non-unique body and the wrong mode token.",
+      "correction": "Anchored after createFastQuestionGenerationJob and removed questionType only from that JSON body."
+    },
+    {
+      "code": "AUDITOR_D5_EDGE_COMPARATOR_REFINEMENT",
+      "disposition": "AUDITOR_FIXED_NOT_SUBJECT_BLOCKER",
+      "observation": "A later draft guessed source/specifier ordering for the separate serialization-order assertion.",
+      "correction": "Proved the stored canonical order as source, resolved target, specifier, kind, and source position."
+    }
+  ],
+  "issuanceBoundary": {
+    "auditPassesCurrentWorktreeBinding": true,
+    "auditClaimsDeployedParity": false,
+    "auditClaimsQuestionQuality": false,
+    "auditAuthorizesSecondaryOrLegacyPath": false,
+    "anySubjectSourceGitOrVerifierDriftRequiresFreshAudit": true
+  },
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0,
+    "budgetLedgerReads": 0,
+    "budgetLedgerWrites": 0,
+    "subjectWrites": 0
+  }
+}

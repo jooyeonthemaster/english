@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사. 선행사 'a kind of \"program\"'을 받아 관계절 동사 directs의 주어 gap을 채운다. 삽입구 'when triggered'를 제거하면 'a program that directs many of our activities'로 완전한 정문이며, 단수 선행사 program과 directs의 수일치도 성립한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "부사절 축약 'when (it is) triggered'. 생략된 주어가 관계절의 의미상 주어(the program)와 일치하고, trigger는 타동사이므로 프로그램이 '촉발되는' 수동 의미의 과거분사 triggered가 옳다. 축약 조건(주어 동일 + be 생략)을 충족한다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "cause는 5형식 'cause + O + to-V'를 취하므로 'will cause us either to face...'의 to부정사는 필수. 병렬 짝 'or (to) avoid it'에서 두 번째 to 생략은 관용적으로 허용되는 축약이며(either to X or (to) Y), 밑줄 부위 to face 자체의 어법성은 흔들리지 않는다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "동사 remember를 수식하므로 부사가 필요하고, acutely의 비교급 more acutely가 옳다. 'remember an experience more acutely'에서 수식 대상이 목적어 명사가 아니라 동사 행위의 정도이므로 형용사(more acute)로는 성립하지 않는다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'the specific ways which they activate our systems'에서 후행절 'they activate our systems'는 주어·타동사·목적어가 모두 충족된 완전절로, 관계대명사 which가 채울 명사구 gap이 없다. 선행사 ways는 방식 부사어로 연결되어야 하므로 'in which' 또는 관계부사 상당의 that(혹은 zero)이 필요하다. 대안 구제 독법 검토: activate를 자동사로 읽어 which를 목적어로 회수하는 독법은 our systems가 이미 목적어라 불가, 전치사 좌초(stranding) 독법은 절 말미에 잔류 전치사가 없어 불가. 따라서 어법상 틀린 유일한 밑줄."
+    }
+  ],
+  "note": "정답 (E) 단일 수렴. which 뒤 완전절(gap 없음) → in which/that 필요. 나머지 4개 밑줄은 대안 해석까지 탐색해도 모두 정문. (C)의 'either to face ... or avoid'는 to 생략 병렬로 허용 범위."
+}

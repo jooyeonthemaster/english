@@ -1,0 +1,177 @@
+{
+  "passageId": "ebsi_go1_20200312-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "함축의미",
+    "words": 141
+  },
+  "attempts": 5,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-debatable-infinitive"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-overdrilled-answerx3",
+    "grammar-decoy-filler-spanx2",
+    "grammar-noun-clause-pronoun-mislabelx1",
+    "grammar-explanation-lintx1",
+    "grammar-shallow-participle-adjective-answerx1"
+  ],
+  "layout": "(A):dec=k  (B):dec=c  (C):ANS=h  (D):dec=a  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 148,
+        "relPos": 0.2,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 291,
+        "relPos": 0.394,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 345,
+        "relPos": 0.467,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 419,
+        "relPos": 0.567,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 607,
+        "relPos": 0.821,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.821,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "to remember",
+        "isError": false,
+        "errorExpression": "to remember",
+        "surroundingText": "The point to remember is that sometimes in arguments",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "designed",
+        "isError": false,
+        "errorExpression": "designed",
+        "surroundingText": "They may be saying things that are intentionally designed to annoy you.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "to lose",
+        "isError": true,
+        "correction": "to lose",
+        "errorExpression": "lose",
+        "surroundingText": "They know that if they get you to lose your cool you'll say something",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "get",
+        "isError": false,
+        "errorExpression": "get",
+        "surroundingText": "you'll simply get angry and then it will be impossible",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "responding with a cool answer that focuses on the issue raised is likely",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "to remember"
+      },
+      {
+        "label": "(B)",
+        "text": "designed"
+      },
+      {
+        "label": "(C)",
+        "text": "lose"
+      },
+      {
+        "label": "(D)",
+        "text": "get"
+      },
+      {
+        "label": "(E)",
+        "text": "is"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 명사인 The point를 뒤에서 수식하는 형용사적 용법의 to부정사구로 'to remember'는 어법상 옳습니다.",
+      "(B)": "관계절의 주어인 things가 스스로 디자인하는 행위자가 아니라 타인에 의해 '의도되는' 대상이므로 수동의 의미를 나타내는 과거분사 'designed'가 어법상 옳습니다.",
+      "(D)": "귀결절(you'll simply get)에서 조동사 will 뒤에 정동사 원형으로 연결되어 형용사 보어(angry)를 취하는 'get'은 어법상 옳습니다.",
+      "(E)": "동명사구인 'responding with a cool answer'가 문장의 진짜 주어이므로, 단수 주어에 수일치한 단수 동사 'is'는 어법상 옳습니다."
+    },
+    "explanation": "조건절 내부의 동사 구조를 파악해야 하는 문장입니다. 준사역동사 get은 'get + 목적어(you) + 목적격보어' 구조를 취할 때 목적어와 목적격보어의 관계가 능동이면 목적격보어 자리에 to부정사를 요구합니다. 따라서 동사원형 형태인 lose는 이 자리에 올 수 없으며, 'to lose'로 고쳐야 합니다. 사역동사 make, have, let과 달리 get은 원형부사를 보어로 취하지 못한다는 특징에 유의해야 합니다.",
+    "keyPoints": [
+      "(C) 목적격보어의 준동사 형태 — 준사역동사 get의 보어로 to-부정사 선택",
+      "(E) 주어-동사 수일치 — 동명사구 주어의 단수 취급",
+      "(B) 분사의 태 — things와 수식하는 분사의 관계를 통한 수동(p.p.) 판정"
+    ],
+    "tags": [
+      "목적격보어",
+      "준사역동사",
+      "수일치",
+      "과거분사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point __(A) to remember__ is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally __(B) designed__ to annoy you. They know that if they get you __(C) lose__ your cool you'll say something that sounds foolish; you'll simply __(D) get__ angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised __(E) is__ likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-debatable-infinitive",
+        "message": "Do not use active/passive infinitive preference as the grammar-error target."
+      }
+    ],
+    "_qualityMode": "relaxed"
+  }
+}

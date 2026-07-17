@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam: 'be strategic about waking up early to boost your mental focus' — gerund complement of 'about' is grammatical. Logic: fails. The paragraph's governing premise is 'tasks should be matched to our energy level', and the conditional antecedent is 'you are NOT a morning person', i.e., your energy is low in the morning. Advising such a person to wake up early to boost focus contradicts the matching principle (waking early does not relocate the energy peak) and contradicts the author's framing, where morning works only BECAUSE the author wakes energized. Formally: premise P (match task to energy) plus antecedent ¬M (morning ≠ your high-energy time) cannot entail 'exploit the morning'."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Seam: 'be strategic about avoiding emotional encounters with unhappy clients' is grammatical. Logic: fails, and in fact inverts the author's stance. The unhappy-client example is cited as something the author deliberately does NOT avoid — procrastinating on it 'wastes too much emotional energy'. The passage argues for prompt scheduling of unpleasant tasks, not avoidance; moreover the clause has no logical connection to the 'not a morning person' antecedent. It is a surface-lexical trap recycling 'unhappy client'/'emotional'."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Seam: 'be strategic about tackling easy and simple tasks when you are tired' is grammatical. Logic: partially consistent (the contrapositive of 'analytical tasks need high energy' permits easy tasks at low energy), so it is the strongest distractor. But it fails as the MOST appropriate completion on two formal grounds: (a) the paragraph's topic proposition and the entire anecdote concern where to place DEMANDING tasks ('eating my problems for breakfast'), never easy ones — the completion should generalize the illustrated principle, and (b) the conditional 'if you are not a morning person' varies the location of the energy PEAK, so the consequent must be advice indexed to the peak, not to the trough. Option 3 answers a question the paragraph did not raise."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Seam: 'be strategic about doing all your important assignments in the morning' is grammatical. Logic: fails by direct contradiction. The antecedent stipulates the reader is NOT a morning person; prescribing the morning for all important assignments violates the matching premise for exactly that reader. This option merely copies the author's personal habit while ignoring that the habit was justified by 'I generally wake up energized' — the conditional exists precisely to block this transfer."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "Seam: 'be strategic about aligning your tough assignments with your energy peaks' — gerund after 'about', and 'align X with Y' is the correct valency; grammatical. Logic: this is the unique completion that (i) restates the topic proposition ('different tasks should ideally be matched to our energy level') at the right level of generality, (ii) subsumes the author's anecdote as the special case where the peak is the morning, and (iii) makes the conditional informative — if your peak is not the morning, strategy consists in finding where it is and placing tough tasks there. Entailed by the passage; no contradiction found."
+    }
+  ],
+  "note": "Clean item under the grammarian/logician lens. All five options are syntactically well-formed gerund complements of 'about', so discrimination is purely logical, which is appropriate for a blank item. Option 4 is a well-built trap (author's habit minus its justification); option 3 is the only semi-plausible alternative but addresses the energy trough rather than the peak that the conditional and the anecdote both index, so it is not defensible as 'most appropriate'. Single defensible answer: 5."
+}

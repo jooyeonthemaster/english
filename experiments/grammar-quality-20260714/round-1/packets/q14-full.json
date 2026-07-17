@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20221123-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "option-countx1",
+    "grammar-marker-countx1",
+    "grammar-render-marker-countx1",
+    "grammar-keypoint-choice-mismatchx1"
+  ],
+  "layout": "(A):dec=c  (B):dec=a  (C):dec=d  (D):ANS=k  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 227,
+        "relPos": 0.295,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 261,
+        "relPos": 0.339,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 311,
+        "relPos": 0.404,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 540,
+        "relPos": 0.701,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 572,
+        "relPos": 0.743,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.743,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "promoting",
+        "isError": false,
+        "errorExpression": "promoting",
+        "surroundingText": "to have a successful business blog promoting a product, they have",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "stay",
+        "isError": false,
+        "errorExpression": "stay",
+        "surroundingText": "promoting a product, they have to stay strictly 'on the topic.'",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "If all you're doing is shamelessly promoting your product,",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "coming",
+        "isError": true,
+        "correction": "coming",
+        "errorExpression": "to come",
+        "surroundingText": "so that people have a reason to keep coming back. Only by",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "can you",
+        "isError": false,
+        "errorExpression": "can you",
+        "surroundingText": "Only by doing this can you create an interested audience that you",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "promoting"
+      },
+      {
+        "label": "(B)",
+        "text": "stay"
+      },
+      {
+        "label": "(C)",
+        "text": "is"
+      },
+      {
+        "label": "(D)",
+        "text": "to come"
+      },
+      {
+        "label": "(E)",
+        "text": "can you"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "조동사 표현 'have to' 뒤에 연결되어 동사원형 'stay'가 쓰인 구조로 어법상 올바릅니다.",
+      "(A)": "앞의 명사구인 'a successful business blog'를 뒤에서 수식하며 능동의 의미를 전하는 현재분사 'promoting'은 어법상 올바릅니다.",
+      "(C)": "'If'절 내에서 'all'이 이끄는 수식어 관계절을 포함한 단수 개념 주어 주부를 받아, 단수 동사 'is'로 수일치한 구조는 어법상 옳습니다.",
+      "(E)": "문두에 한정 및 준부정의 의미를 담은 부사구 'Only by doing this'가 오면서 주어와 조동사가 도치된 'can you'는 정상적인 도치 구조로 어법상 올바릅니다."
+    },
+    "explanation": "동사 'keep'은 대상을 나타내는 목적으로 동명사만을 취하는 성질을 가지고 있습니다. 따라서 사람들이 계속해서 다시 방문하게 만든다는 행동의 반복을 의미하는 문맥에서, 'keep'의 목적어 역할을 하려면 to부정사 형태인 'to come'이 올 수 없으며, 동명사 형태인 'coming'으로 고쳐야 어법상 완전히 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(D) to-v/v-ing — 동사 keep 뒤에 오는 준동사 목적어의 형태 판정",
+      "(C) 수일치 — 관계절의 수식을 받는 all 주어부에 구하는 단수 동사 판정",
+      "(E) 수일치 — 부사구 Only by doing this가 문두로 올 때의 도치 어순 판정"
+    ],
+    "tags": [
+      "어법",
+      "동명사 목적어",
+      "수일치",
+      "도치문"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog __(A) promoting__ a product, they have to __(B) stay__ strictly 'on the topic.' If all you're doing __(C) is__ shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep __(D) to come__ back. Only by doing this __(E) can you__ create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

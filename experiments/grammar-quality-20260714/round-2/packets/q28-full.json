@@ -1,0 +1,165 @@
+{
+  "passageId": "2015_06_3026346-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "6월",
+    "origType": "주장",
+    "words": 142
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-shallow-participle-adjective-answerx1",
+    "grammar-obvious-to-gerund-after-verbx1",
+    "grammar-noun-clause-pronoun-mislabelx1"
+  ],
+  "layout": "(A):dec=b  (B):dec=h  (C):dec=d  (D):dec=d  (E):ANS=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 183,
+        "relPos": 0.228,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 266,
+        "relPos": 0.331,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 300,
+        "relPos": 0.374,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 491,
+        "relPos": 0.611,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 648,
+        "relPos": 0.807,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.807,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Obviously, one of the judgments the public has of us is whether or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get what they want. That, however, is not all they want. They want to have the service rendered to them in a manner that pleases them; they want not only efficiency but courtesy and consideration; and they are in a position to get what they want. They are in the driver's seat; they are paying the bills; and an understanding of that fact is a real and fundamental basis of public relations. In order, therefore, for a great company to satisfactorily serve the public, it must have a philosophy and a method of doing business which will allow and insure that its people serve the public efficiently and in a pleasing manner.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "efficiently and promptly, they get what they want. That, however, is not",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "rendered",
+        "isError": false,
+        "errorExpression": "rendered",
+        "surroundingText": "They want to have the service rendered to them in a manner that pleases them;",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "pleases",
+        "isError": false,
+        "errorExpression": "pleases",
+        "surroundingText": "rendered to them in a manner that pleases them; they want not only",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "understanding",
+        "isError": false,
+        "errorExpression": "understanding",
+        "surroundingText": "the bills; and an understanding of that fact is a real and",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": true,
+        "correction": "it",
+        "errorExpression": "they",
+        "surroundingText": "for a great company to satisfactorily serve the public, it must have a philosophy",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "what"
+      },
+      {
+        "label": "(B)",
+        "text": "rendered"
+      },
+      {
+        "label": "(C)",
+        "text": "pleases"
+      },
+      {
+        "label": "(D)",
+        "text": "understanding"
+      },
+      {
+        "label": "(E)",
+        "text": "they"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 선행사가 없고 목적어 역할을 하는 명사절을 이끄는 자리이므로 관계대명사 'what'은 문법적으로 옳습니다.",
+      "(B)": "사역동사 have의 목적어인 the service와 목적격보어인 render의 관계가 '서비스가 제공되는' 수동 관계이므로 과거분사 'rendered'는 올바른 표현입니다.",
+      "(C)": "주격 관계대명사 뒤의 동사 'pleases'의 수일치 문제로, 선행사인 단수 명사 'a manner'에 일치하는 단수 동사는 적절합니다.",
+      "(D)": "and 뒤에 이어지는 절의 주어인 동명사구 명사 'an understanding'은 단수 취급하므로 뒤의 단수 동사 is와 올바르게 호응합니다."
+    },
+    "explanation": "문장의 주절 주어가 지칭하는 대상을 확인해야 하는 구조입니다. 의미상 주어인 'for a great company'가 단수 명사이므로, 주절의 주어 자리에 쓰인 복수 대명사 'they'는 어법상 맞지 않습니다. 따라서 단수 대명사인 'it'으로 고쳐야 합니다. 앞선 문장들의 주어인 they(공중/고객들)와 혼동하기 쉽지만, 이 부사구 내의 행위 주체는 대기업(a great company)이므로 대명사의 수 일치에 유의해야 합니다.",
+    "keyPoints": [
+      "(E) 대명사 일치 — 가리키는 선행사의 단/복수 판단",
+      "(B) 목적격보어 형태 — 사역동사 have의 목적어와 보어의 능수동 관계",
+      "(D) 주어-동사 수일치 — 전치사구의 수식을 받는 동명사 주어의 일치"
+    ],
+    "tags": [
+      "대명사 일치",
+      "목적격보어",
+      "수일치",
+      "관계사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Obviously, one of the judgments the public has of us is whether or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get __(A) what__ they want. That, however, is not all they want. They want to have the service __(B) rendered__ to them in a manner that __(C) pleases__ them; they want not only efficiency but courtesy and consideration; and they are in a position to get what they want. They are in the driver's seat; they are paying the bills; and an __(D) understanding__ of that fact is a real and fundamental basis of public relations. In order, therefore, for a great company to satisfactorily serve the public, __(E) they__ must have a philosophy and a method of doing business which will allow and insure that its people serve the public efficiently and in a pleasing manner.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

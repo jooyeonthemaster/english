@@ -1,0 +1,87 @@
+{
+  "pid": "P037",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-semantic-gloss",
+      "severity": "minor",
+      "evidence": "해설이 'would have p.p.'를 '과거의 추측'으로 규정하나, 본문 'by the end of the hour the child would have forgotten his clothes'는 가상 예측 프레임(we would predict) 안에서 특정 시점까지의 완료(미래완료 상당)를 나타낸다. 과거 사실에 대한 추측이 아니므로 의미 기능 라벨이 부정확하다. 단, 형태 판정(have 뒤 p.p. 필수)과 교정형(forgotten)은 정확하여 V4 실패로는 보지 않는다."
+    },
+    {
+      "code": "V4-minor-circular-wording",
+      "severity": "minor",
+      "evidence": "해설 첫 문장 '조동사 뒤에 완료형인 would have p.p.가 와야'는 순환적 표현이다(would 자체가 조동사). '조동사 would 뒤에 have p.p.가 와야'로 써야 정확하다. 구조 오분석은 아니고 표현상 결함."
+    },
+    {
+      "code": "V5-minor-keypoint-category",
+      "severity": "minor",
+      "evidence": "keyPoints '(B) 관계사 — 접속사 that의 쓰임'에서 범주명(관계사)과 실제 포인트(명사절 접속사 that)가 표면상 충돌한다. 오답 해설 본문은 '진주어절을 이끄는 접속사 that'으로 정확히 기술하므로 학생 오도 위험은 낮다고 판단해 V5 통과로 처리하되 기록한다. 유사하게 '(D) 정동사/준동사' 범주도 실제 포인트(완료조동사 뒤 분사 형태)와 어긋나는 느슨한 버킷명이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "완료수동태(have been p.p.)에서 태 판별 — 주어와 동사의 의미 관계 확인",
+      "temptingBecause": "have been made의 3중 조동사 구조가 복잡해 보이고, 문두 Sweeping statements와의 능동/수동 관계를 스스로 확인해야 한다",
+      "decisiveFlaw": "정답이 될 수 없는 이유: statements는 make의 대상(만들어지는 것)이므로 수동 have been made가 정확히 적법하다"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사절 접속사 that vs 관계대명사/what 구분",
+      "temptingBecause": "It has been said 뒤의 절에서 what이나 관계사가 와야 한다고 혼동할 수 있다",
+      "decisiveFlaw": "정답이 될 수 없는 이유: 뒤에 결핍 없는 완전한 절이 이어지는 진주어(외치된 주어절) 접속사 that으로 적법하다"
+    },
+    {
+      "label": "(C)",
+      "intent": "소유격 관계대명사 whose의 적합성 — 병렬 관계절에서 선행사 식별",
+      "temptingBecause": "and 뒤에 이어지는 두 번째 관계절이라 선행사(a child)가 다소 멀어 보이고, who/whom과의 구분을 요구한다",
+      "decisiveFlaw": "정답이 될 수 없는 이유: a child ... whose mother로 소유 관계가 성립하고 뒤에 명사(mother)+완전한 절이 이어져 적법하다"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 조동사 would + 완료형 have p.p.의 분사 형태 판별",
+      "temptingBecause": "forget의 진행 의미로 착각하거나 would have 뒤 형태 규칙을 모르면 지나칠 수 있다",
+      "decisiveFlaw": "완료조동사 have 뒤에는 과거분사만 가능하므로 forgetting은 비문이다. forgotten으로 교정하면 정확히 원문이 복원된다(최소대립쌍)"
+    },
+    {
+      "label": "(E)",
+      "intent": "접속사가 유지된 분사구문(while + V-ing)의 능동/수동 판별",
+      "temptingBecause": "while 바로 뒤 분사 형태라 played(수동)가 되어야 하는지 판단해야 한다",
+      "decisiveFlaw": "정답이 될 수 없는 이유: 생략된 주어 the child가 play cowboys의 행위 주체이므로 능동 현재분사 playing이 적법하다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'과거의 추측' — 해당 문장의 would have forgotten은 가상 예측 속 특정 시점까지의 완료를 나타내며 과거 사실 추측이 아님. 형태·교정 설명은 정확.",
+      "recommendation": "'조동사 would 뒤에 완료형 have p.p.가 와서 (그 시점까지의) 완료를 나타낸다' 정도로 의미 라벨을 교체"
+    },
+    {
+      "severity": "minor",
+      "evidence": "첫 문장 '조동사 뒤에 완료형인 would have p.p.가 와야'가 순환적(would가 곧 그 조동사).",
+      "recommendation": "'조동사 would 뒤에는 have p.p.가 와야'로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints (B) 범주명 '관계사'가 실제 포인트(접속사 that)와 표면상 충돌, (D) 범주명 '정동사/준동사'도 실제 포인트(완료형 분사 형태)와 어긋남. 설명부 텍스트 자체는 정확.",
+      "recommendation": "(B)는 '접속사/관계사 구분', (D)는 '동사 형태(완료형)'로 범주명 정비"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문과 단어 단위로 일치하며 유일한 변형은 (D) forgotten→forgetting(의도된 오류 주입). 라벨·마커·선지 완전 일치. V2: 5개 밑줄 독립 검증 결과 (A) 완료수동 적법, (B) 진주어 접속사 that 적법, (C) 소유격 관계사 적법, (E) 능동 분사 적법, (D)만 비문 — 단일 정답 확정, 대안 해석 없음. V3: 지문·발문·교정 완성문 모두 문법적(교정 시 원문 복원). V4: 교정형·정답 라벨·결정 규칙은 정확하나 의미 기능 라벨('과거의 추측')과 첫 문장 표현이 부정확/순환적 — minor로 판정. V5: 정답 라벨·선지·오답해설 키·markedExpressions·keyPoints 참조가 모두 동기화됨(keyPoints 범주명 느슨함은 minor). 공예: 정답 포인트가 have+p.p. 형태라는 정전 포인트이나 'have forgetting'이 국소 단서만으로 비교적 쉽게 드러나 INTERMEDIATE에 부합(C5=3). 디코이 4개가 태/접속사/관계사/분사 등 서로 다른 오개념을 겨냥(C2=3)하고 일부 실제 판단을 요구(C3=3). 메타 누출 없음, 최소대립쌍 교정으로 정답 필연적(C4=4). 해설은 정확하지만 표현 결함으로 C6=2. 합계 18, 최저 2 → B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

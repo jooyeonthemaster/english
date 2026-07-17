@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-v3-independent-hostile-evidence-1",
+  "artifactId": "reviewer-calibration-v4-production-bound-v3-independent-audit-v1",
+  "subjectManifestSha256": "39f9d4729e9a09c7c4dc9644477bcdbd81c2f09b15b31f6837ea80ee73c59cd6",
+  "independence": {
+    "subjectVerifierExecutedOrImported": false,
+    "subjectHostileFixtureOpenedOrParsed": false,
+    "subjectVerifierAndFixtureHashedAsOpaquePackageBytesOnly": true,
+    "mutationGeneratorReused": false,
+    "schemaCompiler": "python-jsonschema Draft202012Validator",
+    "schemaFormatChecker": "independent strict RFC3339 date-time checker"
+  },
+  "summary": {
+    "jsonSchemaImplementation": "python-jsonschema Draft202012Validator",
+    "schemaDraft": "https://json-schema.org/draft/2020-12/schema",
+    "compiledRootOneOfBranches": 20,
+    "validIndependentBaselines": 20,
+    "structuralAttacks": 1522,
+    "structuralAttacksRejected": 1522,
+    "semanticStatefulAttacks": 657,
+    "semanticStatefulDeclaredRejections": 344,
+    "unrejectedDesignBypasses": 313,
+    "totalIndependentAttacks": 2179,
+    "caseDigestSha256": "59051053e13cad2d2db17c964d1f33f6d54a4d90b6e5afc9dbf9c95a31c0a7a1",
+    "bypassDigestSha256": "014f0f37d408b36680014064afddfc270bacf980b80826143fae24a8942a1488"
+  },
+  "declaredRejectionGroups": {
+    "illegalStateMachineEdges": 133,
+    "resourceClassNotInExactPhaseStateAllowlist": 83,
+    "appendOnlyAccessChainGapReorderReplayOrTimeAttack": 128
+  },
+  "bypassGroups": {
+    "access-wrong-role": 100,
+    "audit-undefined-canonical-domain": 32,
+    "candidate-undefined-canonical-domain": 32,
+    "coverage-reuse-one-slot-as": 25,
+    "fingerprint-identical-surface-unique-bundle": 60,
+    "grant-with-empty-policy-registry": 32,
+    "same-person-case-alias-role-collision": 32
+  },
+  "representativeBypasses": [
+    {
+      "name": "coverage-reuse-one-slot-as:ANTONYM",
+      "acceptedStructure": "PASSED_COVERAGE_EVENT on MC-N-01 with canonicalTypeId ANTONYM",
+      "missingRejection": "no materialized-slot event hash, no event-to-slot type equality rule, and no distinct-slot rule"
+    },
+    {
+      "name": "fingerprint-identical-surface-unique-bundle:00",
+      "acceptedStructure": "identical visibleSurfaceSha256 paired with arbitrary fresh seven-hash bundle",
+      "missingRejection": "no normalization version, component derivation algorithms, composite formula, or recomputation proof"
+    },
+    {
+      "name": "access-wrong-role:INDEPENDENT_TRUSTED_GOLD_AUDIT:PACKET_AUTHOR",
+      "acceptedStructure": "PACKET_AUTHOR authorization for allowlisted TRUSTED_GOLD_AUDIT_BUNDLE",
+      "missingRejection": "policy row carries no allowed-role dimension"
+    },
+    {
+      "name": "grant-with-empty-policy-registry:00",
+      "acceptedStructure": "ACTIVATION_GRANT with resultAccessAuthorized true while policyRegistry.ready is false",
+      "missingRejection": "grant has no policy, allowlist, deny-set, resource-policy, state-proof, or policy-ready binding"
+    },
+    {
+      "name": "candidate-undefined-canonical-domain:00",
+      "acceptedStructure": "candidateCanonicalBytesSha256 is any syntactically valid SHA-256",
+      "missingRejection": "only canonical rule excludes eventSha256; the candidate field's own hash domain and exclusions are undefined"
+    },
+    {
+      "name": "same-person-case-alias-role-collision:00",
+      "acceptedStructure": "Actor-Pseudonym-0000 as PACKET_AUTHOR and actor-pseudonym-0000 as TRUSTED_GOLD_AUDITOR",
+      "missingRejection": "no one-person/one-pseudonym commitment or pseudonym normalization proof"
+    }
+  ],
+  "boundary": {
+    "privateRowsOpened": 0,
+    "forbiddenNestedRowsRefusedBeforeResolution": 1,
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0,
+    "subjectWrites": 0
+  }
+}

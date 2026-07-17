@@ -1,0 +1,84 @@
+{
+  "pid": "P025",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERM-GARBLE",
+      "severity": "major",
+      "evidence": "정답 해설 2문장째: \"문장 전체의 주어 역할을 하는 영문 절이 필요합니다.\" — '영문 절'은 존재하지 않는 문법 용어다(의도는 '명사절'로 추정). 정답 근거의 핵심 범주명이 놓일 자리에 비단어 용어가 들어가 학생에게 그대로 노출된다. RUBRIC V4의 '용어 오류가 없다' 조건 위반."
+    },
+    {
+      "code": "V4-MUDDLED-ANALYSIS",
+      "severity": "minor",
+      "evidence": "\"불완전한 절을 이끌면서 대명사 지시 관계을 구성하려면\" — (1) '관계을'은 조사 오탈자('관계를'), (2) 자유관계사 What의 기능은 '대명사 지시(조응) 관계' 구성이 아니라 선행사 포함 명사절 형성이다. 핵심 분석(주어 없는 불완전절 + What이 문장 주어절을 이끈다)은 맞으나 표현이 개념적으로 흐리다."
+    },
+    {
+      "code": "V4-HEAD-MISATTRIBUTION",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설: \"가상 공간의 사건들이 이전에 '보여진' 적 없다는 수동의 의미\" — 실제로 'not seen before'가 수식하는 핵 명사구는 'a kind and magnitude'다(events of a kind and magnitude [that has not been] seen before). 의미상 근사하지만 수식 대상 지목이 부정확하다."
+    },
+    {
+      "code": "STRUCT-FIELD-CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression=\"What\"·surroundingText가 교정된 원문형을 담는 반면, 비오류 항목들은 표시형을 담는다. 학생 노출 필드(선지 (D) That·해설·정답 라벨)는 모두 동기화되어 있어 V5 실패는 아니나 내부 컨벤션이 비일관적이다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "consider + 목적어 + to be 보어 — 5형식 동사의 목적격 보어 형태 판정",
+      "temptingBecause": "consider O (as) C / consider O C 등 여러 보어 패턴이 있어 to부정사 보어가 허용되는지 헷갈릴 수 있다",
+      "decisiveFlaw": "consider X to be Y는 표준 어법이며 원문 그대로다 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "과거분사 후치 수식 — 수식받는 명사와의 수동 관계 판정",
+      "temptingBecause": "관계대명사·be동사 없이 'not seen before'가 명사 뒤에 바로 붙어 seeing/having seen과의 태 판단을 요구하는 것처럼 보인다",
+      "decisiveFlaw": "핵 명사 'a kind and magnitude'는 '보이는' 대상이므로 수동 과거분사 seen이 정확하다 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "과거분사 후치 수식 — (B)와 동일 포인트(pointCode 동일 'c'), 능동/수동 판정",
+      "temptingBecause": "making/made 태 선택처럼 보이지만 drawings가 만들어진 대상임이 by our Stone Age ancestors로 즉시 드러나 유혹이 약하다",
+      "decisiveFlaw": "cave drawings는 만들어진 대상이므로 made가 정확하다 — 오류 아님. (B)와 포인트 중복으로 디코이 밀도를 깎는다"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 선행사를 포함하는 관계대명사 What vs That: 뒤따르는 절의 불완전성 판정",
+      "temptingBecause": "문두의 That is new...만 보면 지시대명사 주어 문장으로 자연스럽게 읽혀, 뒤의 두 번째 동사 is까지 읽어야 파탄이 드러난다",
+      "decisiveFlaw": "'That is new about cyberspace'를 지시대명사 문장으로 읽으면 뒤의 'is its interactive nature'가 주어를 잃고, 접속사 that으로 읽으면 절 내부 주어가 없다 — 어느 분석으로도 비문. 주어 없는 불완전절을 이끌며 문장 주어 명사절을 만드는 What만 가능하고, 교정하면 정확히 원문이 된다(최소대립쌍 성립)"
+    },
+    {
+      "label": "(E)",
+      "intent": "소유격 대명사 수 일치 — 선행 명사(real people, 복수)와의 일치 판정",
+      "temptingBecause": "선행사와의 거리, 그리고 문장 주어 It(공간)을 선행사로 오인하면 its가 맞아 보일 수 있다",
+      "decisiveFlaw": "shape/create의 의미상 주어는 real people(복수)이므로 their가 정확하다 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설에 비실재 용어 '영문 절' 사용(명사절의 오기로 추정) — 정답 근거의 핵심 문장에 위치",
+    "'대명사 지시 관계을 구성하려면' — 조사 오탈자 + 자유관계사 기능에 대한 흐린 규정",
+    "1문장째('What로 고쳐야 한다')와 마지막 문장('What으로 고쳐야 합니다')이 동일 내용 반복, 한다체/합니다체 혼용",
+    "(B) 오답 해설이 분사 수식의 핵 명사를 'a kind and magnitude'가 아닌 '사건들'로 지목",
+    "keyPoints는 (D)(C)(E) 3개만 수록 — (A)(B) 포인트 누락(치명은 아님)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "정답 유일성·지문 무결성은 견고하다: 렌더 지문은 원지문 대비 (D) What→That 단일 의도 변형만 존재하고, 4개 비오류 밑줄은 전부 원문 그대로 문법적이며, (D)는 지시대명사·접속사 어느 해석으로도 비문이 되어 단일 정답이 확정된다(V1·V2·V3·V5 통과). 출제 포인트 자체(문장 주어 자유관계사절의 불완전성)는 정전급이며 지문의 주제문 위에 놓여 C1=4. 그러나 정답 해설이 비실재 용어 '영문 절'을 정답 근거의 핵심 문장에 노출하고, '대명사 지시 관계을' 등 오탈자·흐린 규정, (B) 해설의 수식 핵 오지목이 겹쳐 V4(용어 오류 없음) 실패 — 규정상 F. 공예 측면에서도 (B)(C)가 동일 포인트(pointCode c) 중복으로 디코이 밀도가 낮고(C2=2), 숙련 학생에게 디코이들이 빠르게 소거되어 변별 축이 (D) 단독에 실린다(C3=2). 요청 난이도 INTERMEDIATE에는 대체로 정합(C5=3). 해설 문면만 재작성하면(용어 교정·반복 제거·(C)를 다른 포인트로 교체) B 이상 회복 가능한 문항이다."
+}

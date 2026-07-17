@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam is grammatical (imperative VP), but logically fails: caffeine/coffee appears only as an illustrative rationalization for an unscheduled break, not as the cause of procrastination. Moreover 'avoid relying on caffeine ... instead' breaks the contrast presupposition of 'instead' — the discourse antecedent of the contrast is 'taking unscheduled breaks', not 'drinking coffee'. A surface-word-match distractor."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Grammatical seam: 'vow to VP' is a licit imperative; 'So to prevent procrastination, vow to stick strictly to your planned intervals instead.' parses cleanly. Logic: 'planned intervals' denotes the scheduled breaks established in sentence 2; 'instead' contrasts correctly with the condemned unscheduled breaks; the prescription is directly entailed by the passage's thesis (scheduled breaks keep you on track, unscheduled ones derail you)."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Grammatically fine as an imperative, but a non sequitur: no premise in the passage concerns the length of working hours; the argument is about the timing/planning of breaks within work hours, not reducing total work time."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammatically fine, but the anti-answer: 'spontaneous moments of rest' is extensionally equivalent to 'unscheduled breaks', which the passage explicitly labels unwarranted and a sure-fire route into the procrastination trap. Direct contradiction of the thesis."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Grammatically fine, but unsupported: constant in-the-moment monitoring of energy levels would license improvised, feeling-based (i.e., unscheduled) breaks — precisely what the passage argues against. The passage prescribes pre-committed scheduling, not real-time self-evaluation."
+    }
+  ],
+  "note": "Blank is the concluding prescription with 'instead' contrasting against unscheduled breaks; only option 2 satisfies both the contrast presupposition of 'instead' and the passage's entailed prescription. All five options are imperative VPs so the grammatical seam does not discriminate; the logic does, uniquely. Option 1 is a coffee-word-overlap trap; option 4 is the polar opposite. Single defensible answer."
+}

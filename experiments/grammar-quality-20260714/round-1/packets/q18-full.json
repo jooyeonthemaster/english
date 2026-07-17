@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20220324-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 134
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-marker-too-densex1",
+    "grammar-shallow-nearby-passive-decoyx1"
+  ],
+  "layout": "(A):dec=b  (B):dec=d  (C):dec=e  (D):ANS=h  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 0,
+        "relPos": 0,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 7,
+        "relPos": 0.01,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 300,
+        "relPos": 0.438,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 486,
+        "relPos": 0.709,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 555,
+        "relPos": 0.81,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.81,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been proven to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you to do another task and another. By the end of the day, that one task completed will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "When",
+        "isError": false,
+        "errorExpression": "When",
+        "surroundingText": "When I was in the army, my instructors would show up in my barracks room",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "was",
+        "isError": false,
+        "errorExpression": "was",
+        "surroundingText": "barracks room, and the first thing they would inspect was our bed.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "proven",
+        "isError": false,
+        "errorExpression": "proven",
+        "surroundingText": "at the time, but the wisdom of this simple act has been proven to me many",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "to do",
+        "isError": true,
+        "correction": "to do",
+        "errorExpression": "doing",
+        "surroundingText": "give you a small sense of pride and it will encourage you to do another task",
+        "pointCode": "h"
+      },
+      {
+        "label": "(E)",
+        "expression": "completed",
+        "isError": false,
+        "errorExpression": "completed",
+        "surroundingText": "the end of the day, that one task completed will have turned",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "When"
+      },
+      {
+        "label": "(B)",
+        "text": "was"
+      },
+      {
+        "label": "(C)",
+        "text": "proven"
+      },
+      {
+        "label": "(D)",
+        "text": "doing"
+      },
+      {
+        "label": "(E)",
+        "text": "completed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "시간의 부사절을 이끄는 접속사 'When'은 뒤에 완전한 절을 동반하여 문맥상 올바르게 사용되었습니다.",
+      "(B)": "관계사절인 they would inspect의 수식을 받는 주어의 핵이 단수 명사인 'the first thing'이므로 단수 동사 'was'는 수일치상 옳습니다.",
+      "(C)": "주어 'the wisdom of this simple act'는 증명되는 대상이므로 수동태를 만드는 과거분사 'proven'은 올바른 형태입니다.",
+      "(E)": "명사 'that one task'가 끝마쳐지는 수동의 관계를 나타내므로, 명사를 후치 수식하는 과거분사 'completed'는 어법상 자연스럽습니다."
+    },
+    "explanation": "이 문장에서는 동사encouraged가 목적어(you) 뒤에 목적격을 보충 설명하는 목적격보어를 취하는 구조를 이룹니다. 허용, 요구, 권장 등을 나타내는 타동사 encourage는 목적격보어로 to부정사만을 취하는 대표적인 동사입니다. 따라서 현재분사 혹은 동명사인 'doing'은 이 자리에 올 수 없으며, to부정사 형태인 'to do'로 고쳐야 올바른 문장이 됩니다. 동사 encourage와 목적격보어의 문형 관계를 파악하는 것이 중요합니다.",
+    "keyPoints": [
+      "(D) 목적격보어의 준동사 형태 — encourage가 취하는 목적격보어 구조 파악하기",
+      "(B) 주어-동사의 수일치 — 관계사절의 수식을 받는 명사구의 핵 파악하기",
+      "(E) 분사의 능수동태 — 수식을 받는 대상과 분사의 수동 관계 판별하기"
+    ],
+    "tags": [
+      "목적격보어",
+      "to부정사",
+      "수일치",
+      "과거분사",
+      "어법"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "__(A) When__ I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect __(B) was__ our bed. It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been __(C) proven__ to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you __(D) doing__ another task and another. By the end of the day, that one task __(E) completed__ will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

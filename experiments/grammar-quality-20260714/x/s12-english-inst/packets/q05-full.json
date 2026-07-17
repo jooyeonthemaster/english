@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=i  (C):dec=c  (D):dec=f  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 150,
+        "relPos": 0.149,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 420,
+        "relPos": 0.417,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 834,
+        "relPos": 0.828,
+        "sentenceIndex": 8,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 918,
+        "relPos": 0.912,
+        "sentenceIndex": 8,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 929,
+        "relPos": 0.923,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.923,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "We recode what we see through the lens of everything we know.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "storing",
+        "isError": false,
+        "correction": "storing",
+        "errorExpression": "storing",
+        "surroundingText": "a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(C)",
+        "expression": "reconstructed",
+        "isError": false,
+        "correction": "reconstructed",
+        "errorExpression": "reconstructed",
+        "surroundingText": "The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermining the legal primacy of eyewitness testimony.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "completely",
+        "isError": false,
+        "correction": "completely",
+        "errorExpression": "completely",
+        "surroundingText": "The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermining the legal primacy of eyewitness testimony.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "undermined",
+        "isError": true,
+        "correction": "undermined",
+        "errorExpression": "undermining",
+        "surroundingText": "The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermining the legal primacy of eyewitness testimony.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "what"
+      },
+      {
+        "label": "(B)",
+        "text": "storing"
+      },
+      {
+        "label": "(C)",
+        "text": "reconstructed"
+      },
+      {
+        "label": "(D)",
+        "text": "completely"
+      },
+      {
+        "label": "(E)",
+        "text": "undermining"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "타동사 'see'의 목적어가 없는 불완전한 절을 이끌며, 선행사를 포함하는 관계대명사 'what'은 어법상 적절합니다.",
+      "(B)": "전치사구 'such as JPG'와 비교되는 'rather than' 뒤에 동명사 'storing'을 써서 앞선 'storing' 혹은 'store' 행동의 대조적 대상을 병렬로 나타내는 표현으로 적절합니다.",
+      "(C)": "'be'동사 'are' 뒤에서 주어 'our memories'가 '재구성되는' 수동의 관계를 나타내므로 과거분사 'reconstructed'는 적절합니다.",
+      "(D)": "뒤에 오는 동사 구문을 수식하기 위해 부사 'completely'를 사용한 것은 어법상 적절합니다."
+    },
+    "explanation": "주어 문장의 중심 뼈대는 'The discovery(주어) + [that our memories are reconstructed...](동격절) + completely(부사) + undermining(동사 자리)'의 구조를 가집니다. 주어인 'The discovery'를 수식하는 동격의 'that'절이 'movie'까지 이어지므로, 본문장의 서술어 역할을 할 정동사가 필요합니다. 앞서 제시된 'undermining'은 준동사(현재분사)이므로 주어의 서술어가 될 수 없어 비문입니다. 따라서 과거시제 정동사인 'undermined'로 고쳐야 문장 전체가 완전해집니다.",
+    "keyPoints": [
+      "(E) 정·준동사 — 수식어가 긴 구조에서 문장의 본동사 자리 판정하기",
+      "(A) 관계대명사 — 명사절을 이끄는 관계대명사 what의 역할 확인",
+      "(C) 분사의 태 — 주어(memories)와의 수동 관계에 따른 과거분사 판정"
+    ],
+    "tags": [
+      "정동사",
+      "준동사",
+      "동격절",
+      "관계대명사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode __(A) what__ we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than __(B) storing__ a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are __(C) reconstructed__ through abstract representations rather than played back like a movie __(D) completely__ __(E) undermining__ the legal primacy of eyewitness testimony. Seeing is not believing."
+  }
+}

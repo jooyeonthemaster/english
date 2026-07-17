@@ -1,0 +1,9 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "incremental": false,
+    "noEmit": true
+  },
+  "include": ["build.mts", "verify.mts"]
+}

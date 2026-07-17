@@ -1,0 +1,45 @@
+{
+  "strategy": "s12-english-inst",
+  "describe": "S3와 동일 내용의 지시를 전부 영어로 (해설 등 한국어 필드만 한국어 합니다체 요구)",
+  "callPlan": "flash x1",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 10774,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.17894,
+  "avgCostUsd": 0.01789,
+  "costRecordedCalls": 10,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 1,
+  "zeroErrorItems": 2,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.89,
+  "avgAnswerRelPos": 0.552,
+  "answerRelPosInBand": 6,
+  "models": {
+    "google/gemini-3.5-flash": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

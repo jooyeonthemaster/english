@@ -1,0 +1,39 @@
+{
+  "shots": [
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/01-generate-page.png",
+      "state": "generate 페이지 — 내 지문함, 지문 카드 로드됨"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/02-modal.png",
+      "state": "지문별 문제 생성 모달 열림"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/03-entry-row.png",
+      "state": "어법 판단 세부설정 — 포인트 짚어주기 진입 행 표시"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/04-picker-open.png",
+      "state": "픽커 열림 — 2컬럼(지문 무대 + 설정 콘솔)"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/05-word-selected.png",
+      "state": "단어 1개 클릭('system') — pill+칩 상태"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/06-phrase-selected.png",
+      "state": "드래그 구 선택 후 상태"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/07-ai-suggest.png",
+      "state": "AI 제안 결과 — done(제안 0건일 수 있음)"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/08-esc-once.png",
+      "state": "Esc 1회 후 — 픽커 닫힘(정상), 모달 유지(정상)"
+    }
+  ],
+  "findings": [],
+  "blockers": [],
+  "consoleErrors": []
+}

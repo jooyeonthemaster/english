@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'He was issued nine U.S. patents and held patents in Great Britain, Australia and Canada.' 두 VP의 등위접속: [was issued nine U.S. patents](수여동사 issue의 수동태 — 잔류 목적어 nine U.S. patents 적법) and [held patents ...]. 공통 주어 He에 대해 과거시제 능동 'held'가 병렬 시작점 'was issued'와 시제 일치하며 성립한다. 'was held'로 바꾸면 오히려 목적어 patents를 받을 수 없어 비문이 되므로 능동 과거형 held가 유일하게 옳은 형태다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'the first invention that he successfully sold to Sheaffer Pen Company' — 선행사 the first invention을 목적격 관계대명사 that이 받아 관계절 내 sold의 목적어 공백을 채운다. 선행사에 서수 first가 붙은 경우 that이 표준적으로 선호되는 환경이기도 하다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'Despite he was working as a real estate agent ...' — despite는 전치사로서 명사구(NP)만을 보충어로 취한다. 여기서는 정형절(he was working ...)이 뒤따르므로 범주 위반. 절을 이끌려면 종속접속사 Although/Though/While이 필요하거나, Despite를 유지하려면 'Despite working as ...' 또는 'Despite the fact that ...'으로 명사화해야 한다. 절이 NP로 재분석될 대안 해석(자유관계절 등)도 존재하지 않는다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the 1930s proved to be his most productive patenting period' — prove는 연결동사 용법에서 'prove (to be) + 보어' 구문을 취하며 to부정사 보어가 표준. 주어 the 1930s(하나의 시기로 취급)와 보어 period의 연결도 논리적으로 성립. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'with six of his nine U.S. patents being issued then' — with + NP + 분사 부대상황 구문. 의미상 주어 six of his nine U.S. patents는 issue의 대상이므로 수동 현재분사 being issued가 요구되며 표기와 일치. 능동 issuing이라면 특허가 무언가를 발행하는 꼴이 되어 비문. 정문."
+    }
+  ],
+  "note": "형식 판정: despite의 보충어 범주 위반(절 불가)이라는 단일하고 명백한 오류. (A)는 수여동사 수동태의 잔류 목적어 + 능동 병렬이라는 장거리 단서를 요구하는 매력 오답 후보지만 정문임이 증명 가능. 나머지 선지도 모두 대안 해석 없이 정문으로 확정되어 정답이 (C) 하나로 유일하게 좁혀진다."
+}

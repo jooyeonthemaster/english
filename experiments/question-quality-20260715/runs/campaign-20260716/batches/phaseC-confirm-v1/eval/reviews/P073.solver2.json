@@ -1,0 +1,35 @@
+{
+  "pid": "P073",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'no matter how well you believe you are disguising yourself'에서 disguising은 believe의 목적절 내부 진행형 술어(you are disguising)의 일부. 주어 you + be동사 are가 명시되어 있고, 재귀목적어 yourself와 결합한 타동사 진행형으로 완전한 정문. 양보 부사절 'no matter how well'이 절 내부 부사 well을 전치한 구조도 규범에 부합한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'would make them appear weak'는 사역동사 make + 목적어 them + 원형부정사 appear 구문. make는 목적격 보어로 원형부정사를 취하므로 appear(원형)가 규칙적으로 옳다. appear + 형용사 보어(weak)도 연결동사 용법으로 정문. to appear였다면 오히려 비문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "해당 문장 'In every case, however, the leader's subordinates perceiving the removal of the mask as an act of strength and courage.'에는 정형(finite) 동사가 없다. perceiving을 축약 관계절('subordinates [who were] perceiving...')로 읽어도 뒤따르는 본동사가 전무하여 주절이 성립하지 않고, 분사구문/독립분사구문으로 읽어도 걸릴 주절이 문장 내에 존재하지 않아 어느 대안 해석으로도 완전한 문장이 되지 않는다(문장 단편, fragment). 다음 문장의 'This'가 앞 문장 전체(부하들이 그것을 강함의 행위로 인식했다는 사실)를 지시하므로 담화상으로도 이 문장은 독립 주절이어야 한다. 정형 과거동사 perceived로 고쳐야 한다. 형식적 증명: 문장 S에 시제 보유 동사 T가 0개 → S는 비문. 유일하게 옹호 불가능한 밑줄."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a culture where those subordinates did the same'에서 선행사 culture는 추상적 장소/환경으로 관계부사 where의 선행사가 될 수 있다(= a culture in which). 관계절 내부는 주어(those subordinates)+동사(did)+목적어(the same)로 완전하여 관계대명사가 아닌 관계부사가 요구되는 환경과 일치한다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'we helped the CEOs remove their masks'는 help + 목적어 + (to) 부정사 구문으로, 미국식/현대 영어에서 원형부정사 remove가 표준적으로 허용된다(to remove도 가능하나 원형이 비문인 것은 아니다). 이 절 전체는 the ways를 수식하는 접촉 관계절('the ways [that] we helped...')이며, 주절 본동사는 were로 별도 존재하므로 구조상 문제 없다. 보어 'to actually name..., explore..., and ask...'의 병렬도 to 이하 원형 3개(name/explore/ask)로 정연하다."
+    }
+  ],
+  "note": "정답은 (C)가 유일하게 옹호 가능. 해당 문장은 정형 동사가 전혀 없는 문장 단편으로, 축약 관계절·분사구문 등 어떤 대안 해석으로도 정문화되지 않는다 — perceiving 뒤에 본동사가 이어지지 않고 문장이 종결되기 때문. perceive A as B 연어 자체는 올바르게 쓰였으므로 오류는 어휘가 아니라 정형성(finiteness) 결여. 나머지 (A)(B)(D)(E)는 각각 진행형, make+원형부정사, 추상 선행사+관계부사 where, help+원형부정사로 모두 표준 규칙에 부합한다. 장거리 함정 점검: (E)의 remove가 주절 동사 were와 혼동되도록 배치되어 있으나 접촉 관계절로 해소됨."
+}

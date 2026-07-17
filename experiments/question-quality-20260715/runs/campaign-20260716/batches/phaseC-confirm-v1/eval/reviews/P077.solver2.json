@@ -1,0 +1,35 @@
+{
+  "pid": "P077",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Participial adjunct 'copying exactly what her grandmother did' is grammatical at the seam, but doubly contradicted by the text: Chloe 'boldly chose the biscuit-looking thing BEFORE her grandmother' (explicit break from mirroring), and while grandmother is only now spreading cream and jam, Chloe's scone is 'mostly all in her mouth already' — she cannot be copying exactly. This is the trap option recycling the earlier 'mirrored her grandmother's actions' motif, which the narrative has just reversed."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Finite temporal clause 'before she added any extra toppings' attaches grammatically to 'had already started to eat hers'. Logically it encodes the intended contrast: grandmother spreads cream and jam on her scone, whereas Chloe began eating hers plain. The 'in fact' elaboration is a proper intensification: not merely started before topping it — it was mostly all in her mouth already. No contradiction with any stated fact; sole surviving candidate."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'started to eat hers taking a sip of her sweet tea first' is a temporally incoherent participial adjunct (simultaneous participle vs. 'first' sequencing clash), and the sip-of-tea motif belongs to the earlier waiting scene. Nothing in 'mostly all in her mouth already' supports a tea-sipping manner reading."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammatical as a participial adjunct, but factually contradicted: 'all the sandwiches were eaten up' before the scone episode, so there is no 'another delicate sandwich' to reach for."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Grammatical as a participial adjunct, but logically incompatible with the 'in fact' clause: if the scone is 'mostly all in her mouth already', there is no meaningful 'rest' to offer; moreover the grandmother has her own scone she is actively preparing. The elaboration would refute rather than intensify the blank."
+    }
+  ],
+  "note": "Clean single-answer item. The seam grammar admits several options superficially, but long-range discourse constraints (sandwiches exhausted, mirroring explicitly broken, grandmother's cream-and-jam action as foil, 'in fact' intensification licensing) eliminate all but option 2. Option 1 is a well-built distractor exploiting the earlier mirroring motif."
+}

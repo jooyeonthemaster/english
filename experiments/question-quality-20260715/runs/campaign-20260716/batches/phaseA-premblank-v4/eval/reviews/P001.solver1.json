@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "incorrect",
+      "reason": "'demand transparent and immediate clarity'는 바로 뒤의 'and not immediately ask what do you mean by that?'과 정면 모순. 지문 전체가 독자는 즉각적 명료성을 요구하지 않고 모호함을 견딘다는 논지이므로 방향이 정반대. 유혹 강도 낮음."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "'tolerate ambiguity'는 'put up with many obscurities and apparent irrelevancies'의 재진술, 'in search of underlying communicative goals'는 'complications of language ultimately have a communicative purpose' 및 'in the interests of some further communicative goal'의 재진술. to부정사 병렬(seam) 결합도 완벽. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "'reprinted'는 첫 문장의 선별 과정(published, reviewed, reprinted) 어휘를 재활용한 표면 미끼. 재판 횟수는 제도적 선별의 배경이지 독서 중 독자의 태도가 아니며, 삽입 시 뒤 절('즉각 묻지 않는다')과 논리 연결이 성립하지 않음. 유혹 강도 낮음."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "지문은 독자가 효율적 소통 원리의 위반(flout principles of efficient communication)을 수용하고 해석하려 애쓴다고 하므로, 저자가 표준 서사 규칙을 정확히 따르길 기대한다는 진술은 정반대. 유혹 강도 낮음."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "'linguistic complications'가 지문의 'complications of language'를 그대로 가져와 순간적으로 끌리는 최강 미끼이나, 지문은 'instead of imagining that the speaker or writer is being uncooperative'라고 명시 — 독자는 복잡성을 협력 실패로 치부(dismiss)하지 않는다. 동사 방향이 정반대. 부수적으로 'failed cooperations'의 가산 복수형도 부자연. 유혹 강도 중간(어휘 중복 미끼)."
+    }
+  ],
+  "note": "Culler의 hyper-protected cooperative principle 논의 기반 빈칸 문항. 다섯 선지 모두 동사원형으로 시작해 to부정사 병렬 구조에 문법적으로 결합되므로 seam 변별은 없고 순수 논리 변별 문항. 정답 2는 지문 핵심 문장 두 곳의 정확한 이중 재진술이며, 오답 4개는 모두 방향 반전(1,4,5) 또는 초점 이탈(3)로 명확히 배제됨. 최상위권 기준 실질적 유혹은 5의 어휘 중복뿐이나 동사 확인 즉시 붕괴 — 변별도는 다소 낮을 수 있으나 문항 성립성은 견고. 복수 정답 소지 없음."
+}

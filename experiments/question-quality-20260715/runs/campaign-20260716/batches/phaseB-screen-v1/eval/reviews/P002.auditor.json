@@ -1,0 +1,61 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor",
+      "severity": "minor",
+      "evidence": "옵션 ④의 'co-establishes'는 비문은 아니나 어색한 저빈도 조어로, 원어민 감각에서 부자연스럽다. 오답이므로 유효성 실패는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(법의 억제 기능을 영화에 전가)",
+      "temptingBecause": "'emotional impulses로부터의 거리두기'가 지문의 desires/drives 통제 담론과 어휘적으로 겹치고, 'objective observation'이 학술적 톤과 어울린다",
+      "decisiveFlaw": "whereas 대조는 영화가 감정을 노출·대면시키는 쪽이어야 하는데 ①은 법의 억제 극성 그대로다. 앞문장 'cinema expresses man's affective life'와 정면 모순"
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전 + 행위자 전도(법의 규범 내면화 기능을 영화에 부여)",
+      "temptingBecause": "'social commands', 'civilized norms'가 지문의 'regime of commands and prohibitions'를 직접 반향한다",
+      "decisiveFlaw": "명령 내면화·규범 준수는 법의 역할이며, 영화=감정 표출이라는 명시된 대조를 파괴한다. ①과 동일한 함정 유형"
+    },
+    {
+      "label": "③",
+      "intent": "어휘 짜깁기(2문장의 법 서술을 영화에 오귀속)",
+      "temptingBecause": "'abstract desire for truth'가 지문 2문장에서 그대로 발췌되어 표면 정합성이 높다",
+      "decisiveFlaw": "해당 서술은 법에 대한 것이고, 빈칸이 요구하는 감정 대조(suppress vs expose)와 논리적으로 무관하다. 'resolving human conflicts'는 지문에 근거 없음"
+    },
+    {
+      "label": "④",
+      "intent": "극성 반전 + 행위자 전도(금지 체계 수립을 영화에 부여)",
+      "temptingBecause": "'regime of prohibitions', 'dark drives'가 지문 4문장 어휘를 강하게 반향하고 'co-establishes'가 앞부분의 공통점 서술과 이어지는 듯 보인다",
+      "decisiveFlaw": "충동 분출을 막는 것은 법의 기능이며 whereas 대조를 파괴한다. ①②와 동일한 극성 반전 함정. 'co-establishes'는 부자연스러운 조어"
+    },
+    {
+      "label": "⑤",
+      "intent": "정답 — 원문 span('introduces us to our affects, often forcing us to identify the most unbearable ones in ourselves')의 충실한 패러프레이즈",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'brings us face-to-face with our feelings'=introduces us to our affects, 'compelling us to confront our most painful inner passions'=forcing us to identify the most unbearable ones. 유일 정답 확인"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트 통과: 렌더 지문은 빈칸 외 원지문과 완전 일치(V1), ⑤가 유일 정답(V2), 완성문·선지 모두 문법적(V3, ④ 'co-establishes'만 경미한 어색함), 해설의 구조 분석·오답 대응 정확(V4), 필드 동기화 정상(V5). 그러나 KILLER 요청 대비 공예 결함이 크다. (1) 빈칸 앞에 'while cinema expresses man's affective life, the law keeps it in check'로 대조가 이미 명시돼 있어 정답이 사실상 한 문장 재진술 회수 문제가 된다 — 두 문장/두 논리 단서 연결 요구(§D KILLER) 불충족. (2) 오답 ①②④가 전부 동일한 극성 반전 함정이라 극성 스캔 한 번으로 3개가 동시 소거된다 — scope shift/half-truth/condition loss 등 함정 다양성 요구(§D) 불충족, C2=2. (3) ⑤가 가장 길고 유일하게 '감정 노출' 극성을 가져 극성+길이 단서만으로 정답 지목 가능 — '극성·길이 하나로 정답을 찍을 수 없다'(§D) 위반, C4=1. (4) 실제 난이도는 중하 수준으로 KILLER 라벨과 불일치, C5=1. killerConditionsMet=false. 재설계 방향: 빈칸을 명시적 대조문 이전 정보와 결합해야 풀리는 위치로 옮기거나, 오답에 반(半)진실·범위 이동형(예: 영화가 감정을 노출하되 '치유/해소한다'는 과잉 추론형)을 섞어 극성 스캔 단독 소거를 차단해야 한다. 등급 C: V 전부 통과하나 C4·C5가 2 미만으로 B 기준(C 최저 2) 미달."
+}

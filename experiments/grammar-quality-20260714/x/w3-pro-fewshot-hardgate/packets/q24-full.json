@@ -1,0 +1,159 @@
+{
+  "passageId": "ebsi_go1_20200312-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "함축의미",
+    "words": 141
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-generic-answer-point"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=f  (C):dec=d  (D):dec=k  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 53,
+        "relPos": 0.072,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 277,
+        "relPos": 0.375,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 389,
+        "relPos": 0.526,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 468,
+        "relPos": 0.633,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 613,
+        "relPos": 0.829,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.829,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "lost",
+        "isError": false,
+        "errorExpression": "lost",
+        "surroundingText": "We all know that tempers are one of the first things lost in many arguments.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "intentionally",
+        "isError": false,
+        "errorExpression": "intentionally",
+        "surroundingText": "They may be saying things that are intentionally designed to annoy you.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "sounds",
+        "isError": false,
+        "errorExpression": "sounds",
+        "surroundingText": "you'll say something that sounds foolish;",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "to win",
+        "isError": false,
+        "errorExpression": "to win",
+        "surroundingText": "it will be impossible for you to win the argument.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "raised",
+        "isError": true,
+        "correction": "raised",
+        "errorExpression": "are raised",
+        "surroundingText": "responding with a cool answer that focuses on the issue raised is likely to be most effective.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "lost"
+      },
+      {
+        "label": "(B)",
+        "text": "intentionally"
+      },
+      {
+        "label": "(C)",
+        "text": "sounds"
+      },
+      {
+        "label": "(D)",
+        "text": "to win"
+      },
+      {
+        "label": "(E)",
+        "text": "are raised"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "the first things를 수식하는 과거분사로, 수동의 의미를 나타내므로 어법상 옳습니다.",
+      "(B)": "수동태 과거분사 designed를 수식하는 부사이므로 어법상 적절합니다.",
+      "(C)": "주격 관계대명사 that의 선행사가 단수대명사 something이므로 단수 동사로 수일치한 것은 어법상 맞습니다.",
+      "(D)": "가주어 it에 대한 진주어로 쓰인 to부정사이므로 어법상 적절합니다."
+    },
+    "explanation": "정답 문장의 골격은 주어인 동명사구(responding with a cool answer that focuses on the issue raised)와 정동사(is)로 이루어져 있습니다. (E)의 'are raised'는 관계사 that 절 내에서 수식받는 명사 the issue 뒤에 위치하며, 문맥상 '제기된 문제'라는 의미로 명사를 후치 수식해야 합니다. 하지만 동사 형태인 'are raised'가 오면 관계사절 내에 focuses라는 정동사가 이미 존재하므로 접속사 없이 동사가 두 개 쓰인 비문이 됩니다. 따라서 명사를 수식하는 과거분사 형태인 'raised'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 정유/준동사 — 문장 구조상 동사 자리 판단",
+      "(A) 분사 능수동 — 수식받는 명사와의 관계",
+      "(C) 주어-동사 수일치 — 관계사절의 선행사에 맞춘 동사 형태"
+    ],
+    "tags": [
+      "어법",
+      "준동사",
+      "분사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all know that tempers are one of the first things __(A) lost__ in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are __(B) intentionally__ designed to annoy you. They know that if they get you to lose your cool you'll say something that __(C) sounds__ foolish; you'll simply get angry and then it will be impossible for you __(D) to win__ the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue __(E) are raised__ is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\""
+  }
+}

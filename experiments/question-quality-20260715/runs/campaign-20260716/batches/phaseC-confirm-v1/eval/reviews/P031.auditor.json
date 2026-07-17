@@ -1,0 +1,76 @@
+{
+  "pid": "P031",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-keypoint-function-label",
+      "severity": "minor",
+      "evidence": "keyPoints (A)가 wh절을 '타동사 명사절 목적어 역할을 하는 의문사절'로 기술했으나, 'They have no idea who their real parents are'에서 wh절은 타동사의 직접목적어가 아니라 명사 idea의 보문(동격적 내용절)이다. 오답 해설 본문('간접의문문 명사절에서 주어 뒤에 동사 are가 오는 평서문 어순')은 정확하므로 시험 포인트(어순) 자체의 오분석은 아님 — 기능 명칭의 교육적 축약 수준의 부정확성."
+    },
+    {
+      "code": "V4-minor-formatting",
+      "severity": "minor",
+      "evidence": "해설에 '복수형 동사인`make`로' — 백틱 잔재와 공백 누락. 또한 ''against opening adoption files'는 restrictions를 수반하는 수식어구'에서 '수반하는'은 '수식하는'의 오용에 가까운 어색한 표현(구조 판단 자체는 정확)."
+    },
+    {
+      "code": "V5-note-expression-field",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 expression 필드는 교정형 'make'(원문형)를, errorExpression은 표시형 'makes'를 담고 있어 나머지 4개 항목(expression=errorExpression=표시형)과 필드 의미가 비대칭이나, source-correct→displayed-wrong 스킴 내에서 내적으로 일관되고 렌더 지문과 모순 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "간접의문문(내포 wh절)의 평서문 어순 + 복수 주어(their real parents)와 are의 수일치 판단",
+      "temptingBecause": "직접의문문 어순('who are their real parents')에 익숙한 학생이 '의문사+주어+동사' 어순을 도치 누락으로 오인할 수 있음",
+      "decisiveFlaw": "내포 의문절은 평서문 어순이 규범이고 are는 복수 주어와 일치 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "수동태 'be met with' 판단 — attempts가 저항을 '받는' 대상임을 파악",
+      "temptingBecause": "meet의 수동 관용('be met with resistance')이 낯설어 능동 meet이 맞다고 오인할 수 있음",
+      "decisiveFlaw": "attempts는 resistance의 피동작주이므로 수동태가 유일하게 적법 — 오류 아님. 다만 유혹도는 5개 중 가장 낮은 편"
+    },
+    {
+      "label": "(C)",
+      "intent": "[정답] 전치사구 수식을 사이에 둔 주어-동사 수일치: 복수 핵명사 restrictions vs 단수 동사 makes",
+      "temptingBecause": "동명사구 'opening adoption files'를 절의 주어로 오분석하면 단수 makes가 옳아 보임 — 해설이 이 함정을 정확히 지목",
+      "decisiveFlaw": "절의 주어 핵은 복수 restrictions이므로 make가 필수. 교정 시 정확히 원문 복원(최소대립쌍). 단, 최근접 명사 files도 복수여서 근접일치 직관조차 정답 방향을 가리키므로 오류 노출이 빠름 — KILLER 은폐성 부족"
+    },
+    {
+      "label": "(D)",
+      "intent": "선행사 포함 관계대명사 what vs 접속사/관계대명사 that 구분 — know의 목적어 공백 인지",
+      "temptingBecause": "'they want to know'가 언뜻 완전해 보여 what 대신 that이 맞다고 오인할 수 있음",
+      "decisiveFlaw": "know의 목적어가 비어 있는 불완전절이고 선행사가 없으므로 what이 유일하게 적법 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "'devote A to B'의 to가 전치사임을 판단 — to+동명사 vs to부정사",
+      "temptingBecause": "to 뒤 동사원형 반사(to find)로 finding이 틀려 보이는 고전적 함정",
+      "decisiveFlaw": "이 to는 전치사이므로 동명사 finding이 필수 — 오류 아님. 디코이 중 유혹도 최상"
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints (A): wh절의 기능을 '타동사 명사절 목적어'로 표기 — 실제로는 명사 idea의 보문. 시험 포인트(어순) 설명 자체는 정확하므로 minor.",
+    "정답 해설의 '문장의 주어'는 엄밀히 Although 종속절의 주어 — '절의 주어'가 정확하나 통용 범위 내 축약.",
+    "형식 잔재: '복수형 동사인`make`로'(백틱·공백), '수반하는 수식어구'(어색한 표현).",
+    "keyPoints가 (C)(A)(E)만 다루고 (B)(D)는 미포함 — 모순은 아니나 완결성 낮음."
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 무결(유일 변형 make→makes), 5개 밑줄 독립 검증 결과 정답 집합 정확히 {(C)}, 지문·완성문 문법적, 해설 구조 분석 사실과 부합(minor 2건), 필드 동기화 일치. 그러나 KILLER 요청 대비 실제 난이도가 중위권 표준 수준: (C)는 핵명사 restrictions(복수)와 최근접 명사 files(복수)가 모두 정답 방향을 가리켜 근접일치 직관으로도 오류가 즉시 드러나며, 후행 절의 they가 복수성을 추가로 확인해 줌. §C 조건 중 '구조를 읽어야 하며 단순 수일치로 즉시 드러나지 않는다'를 불충족(조건 1·2는 충족), 밑줄별 명시적 why-tempting 필드도 부재 → killerConditionsMet=false. C5=1(난이도 라벨 불일치), 합계 15로 B 기준(최저 2, 합계 17) 미달 → 등급 C. 디코이 설계 자체는 5개 포인트가 전부 상이하고 (E)(D)의 유혹도가 실재해 문항 골격은 건전 — KILLER로 쓰려면 정답 포인트를 구조 독해형(예: 병렬 속 동사 자리, 분사/정동사 구분)으로 교체하는 재설계 필요."
+}

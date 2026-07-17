@@ -1,0 +1,35 @@
+{
+  "pid": "P038",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam failure: 'superiority ... towards getting up early' is not a licensed collocation (superiority selects over/to, not towards + gerund). Logic failure: directly contradicts the passage's explicit warning that 'no fixed conclusions about a so-called national character should be drawn', and 'superiority' is an evaluative claim nowhere supported."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Seam success: 'behavioral tendencies ... towards getting up early' is a well-formed collocation (tendency towards V-ing); 'to a certain extent' is an interposed degree adverbial on 'reflect', grammatical and matching the hedged register of the passage. Logic success: exactly instantiates the 'Nevertheless' concession — high-frequency proverb use, combined with other indicators, can reflect common behavioral concepts, and the hedge preserves the anti-national-character caution. This is the only option that makes the 'Thus' sentence a valid instantiation of the preceding generalization."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Seam failure: 'stem directly from classical and medieval literature towards getting up early' leaves the towards-PP unlicensed and uninterpretable. Logic failure: the classical/Biblical/medieval point was invoked as an argument AGAINST national-character readings (proverbs are shared across cultures), not as a genealogical claim about this German proverb."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Seam failure: 'the origin of other cultural indicators towards getting up early' has no valid complement structure for the towards-PP. Logic failure: relation reversal — the passage says proverb frequency is used TOGETHER WITH other social and cultural indicators; it never claims proverbs determine those indicators' origin."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam failure: 'personal observations towards getting up early' — observation selects of/about, not towards + gerund. Logic failure: nothing in the passage suggests proverbs can substitute for observation; the concession explicitly requires combining proverb frequency with other indicators, the opposite of replacement."
+    }
+  ],
+  "note": "Lens: grammarian/logician. Two-stage test applied to every option: (1) grammatical seam with the stranded PP 'towards getting up early', (2) discourse-logical fit as the instantiation demanded by 'Thus' of the 'Nevertheless' concession. Only ② passes both; each distractor fails on both counts, several with an unlicensed towards-PP. The item is clean: single defensible answer, distractors are formally excludable rather than merely less attractive. The blank sentence appears adapted from a proverb-scholarship source whose original phrasing ('mirror at least to some degree their proclivity towards getting up early') matches ②'s structure."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "'복잡한 소프트웨어 알고리즘을 보여주는 첨단 디지털 모델'은 곧바로 직전 문장이 부정한 'to utilize technology for its own sake(기술 그 자체를 위한 기술 사용)'의 전형이다. 빈칸은 'Rather(그게 아니라)'로 시작하므로 기술 과시와 대비되는 내용이 와야 한다. 실전에서 '디지털/기술' 어휘 반복 때문에 지문 표면 어휘와 겹쳐 순간적으로 눈이 가는 매력적 오답이지만, Rather의 역접 방향을 확인하는 순간 탈락한다. 문법 결합(produce advanced digital models...)은 정상."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "지문의 핵심 정의 문장 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'를 재진술한 선지. '관객에게 신선한 통찰을 주는 독창적 작품'은 '인식에 도전하고 사고와 감정을 바꾸는 위대한 예술'과 정확히 대응한다. 'not simply to utilize technology for its own sake. Rather, it should be to produce ___' 구조에서 기술 사용 자체가 아닌 예술적 본질(위대한 예술의 산출)이 목적이어야 한다는 논지와 완벽히 일치. 문법 결합(produce distinctive artworks that offer...)도 정상."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'전 세계 소비자에게 쉽게 어필하는 고도로 마케팅된 제품'은 상업적 성공을 목표로 제시하는데, 지문 어디에도 시장성·소비자 언급이 없다. 오히려 '더 많은 사람이 예술을 만들고 공유한다'는 도입부의 대중화 서술에서 '글로벌'이라는 표면 연상을 노린 함정이나, 위대한 예술의 정의(인식 도전)와 무관하므로 탈락. 문법 결합은 정상."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "'현대 도구 사용을 전면 거부하는 전통 회화'는 지문이 명시적으로 부정하는 방향. 지문은 'new technologies are nothing more than tools that can be used in the creative process'라며 기술을 창작 과정에서 사용 가능한 도구로 인정한다. 즉 기술 자체가 목적이 되어서는 안 된다는 것이지 기술을 거부하라는 것이 아니다. '기술 숭배 비판' 논조를 극단으로 오독한 수험생을 노리는 매력적 오답 — 'critics have expressed concern' 부분만 읽고 반기술 결론으로 비약하면 걸린다. 'entirely reject'의 극단성 자체가 지문의 'tools that can be used'와 정면 충돌하므로 탈락. 문법 결합은 정상."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'다른 사람의 작품을 편집할 수 있는 협업 플랫폼'은 도입부의 'editing digital material', 'share them with the world' 어휘를 재활용한 표면 어휘 함정. 그러나 빈칸의 주어는 'the goal of the modern artist'이고 요구되는 산출물은 위대한 예술 작품이지 플랫폼 구축이 아니다. 협업·편집은 지문의 논지(위대한 예술의 본질)와 무관. 문법 결합(produce collaborative platforms where...)은 가능하나 의미상 탈락."
+    }
+  ],
+  "note": "빈칸 직전 'not simply to utilize technology for its own sake. Rather' 구조가 정답 방향을 강하게 고정한다. 'Great art challenges our perceptions... changes our thoughts and feelings'의 재진술인 ②가 유일한 정답. 매력적 오답은 ④(반기술 극단 오독)와 ①(기술 어휘 표면 반복)이지만 둘 다 지문 명시 문장과 정면 충돌해 옹호 불가. 복수정답 소지 없음. 난이도는 수능 기준 평이(3점보다는 2점급)."
+}

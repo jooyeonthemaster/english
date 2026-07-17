@@ -1,0 +1,84 @@
+{
+  "pid": "P038",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-TAIL-SEAM-DISTRACTOR-UNGRAMMATICAL",
+      "severity": "critical",
+      "evidence": "빈칸이 'mirror at least to some degree the German attitude'만 도려내고 꼬리 'towards getting up early'를 남겼다. 완성문 기준으로 ③ 'stem directly from classical and medieval literature towards getting up early', ④ '...other cultural indicators towards getting up early', ⑤ '...personal observations towards getting up early'는 꼬리 PP가 어디에도 부착되지 못해 비문/의미 불성립이며, ① 'national character towards getting up early'도 'character + towards V-ing' 연어가 성립하지 않는다. BLANK_INFERENCE의 유형 의도는 다섯 선지가 모두 문법적으로 삽입 가능하고 의미로만 갈리는 것인데, 오답의 비문 여부가 유형 의도와 불일치한다(RUBRIC V3 둘째 문장, §D 첫째 조건 위반)."
+    },
+    {
+      "code": "V3-ANSWER-SEAM-AWKWARD",
+      "severity": "major",
+      "evidence": "정답 ②를 넣은 완성문 'it does reflect specific behavioral tendencies to a certain extent towards getting up early'는 부사구 'to a certain extent'가 명사 'tendencies'와 그 보충어 PP 'towards getting up early' 사이에 끼어들어 부자연스럽다. 원문은 'mirror at least to some degree the German attitude towards...'처럼 부사구가 목적어 앞에 위치해 자연스러웠으나, 선지 어순은 seam에서 어색한 분리 구조를 만든다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 0,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "지문 전반부의 핵심 어휘 'national character'를 재활용한 전제 모순(half-truth escalation) 함정",
+      "temptingBecause": "'national character'가 지문에서 두 번 등장하는 가장 눈에 띄는 표현이고, 마지막 문장이 독일인의 특성을 말하는 듯 보인다",
+      "decisiveFlaw": "지문은 국민성에 대한 고정된 결론 도출을 명시적으로 부정하며 'superiority'는 어디에도 없다. 게다가 완성문 'character towards getting up early'는 통사적으로도 성립하지 않아 문법 단서만으로 소거된다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 스팬 'mirror at least to some degree the German attitude'의 재진술",
+      "temptingBecause": "정답이므로 해당 없음. mirror→reflect, at least to some degree→to a certain extent, attitude→behavioral tendencies의 거의 축자적 치환이라 추상화 깊이가 얕다",
+      "decisiveFlaw": "없음(정답). 단, 'to a certain extent'가 'tendencies'와 'towards getting up early' 사이에 끼어 seam이 어색하고, 'towards'를 취할 수 있는 유일한 명사(tendencies)를 포함해 꼬리 문법 단서로 즉시 특정된다"
+    },
+    {
+      "label": "③",
+      "intent": "'classical, Biblical, and medieval times' 언급을 오용한 기원 오귀속(causal misattribution) 함정",
+      "temptingBecause": "고전·중세 시대가 지문에 실제로 언급되어 표면 앵커가 있다",
+      "decisiveFlaw": "지문은 그 시대 속담들이 여러 문화에 통용된다는 사실을 국민성 추론 반박 근거로 썼을 뿐, 독일 속담 사용 빈도의 기원 주장은 없다. 완성문에서 꼬리 'towards getting up early'가 부착 불가하여 비문이 된다"
+    },
+    {
+      "label": "④",
+      "intent": "'used together with other social and cultural indicators'의 인과 역전(causal reversal) 함정",
+      "temptingBecause": "'cultural indicators'가 지문 표현 그대로라 표면 중첩이 크다",
+      "decisiveFlaw": "지문은 속담 빈도가 다른 지표들과 '함께 결합'되어 쓰인다고 했지 다른 지표의 기원을 '결정'한다고 하지 않았다. 완성문에서 꼬리가 'indicators'에 부착되지 못해 비문이 된다"
+    },
+    {
+      "label": "⑤",
+      "intent": "무관 내용 첨가(irrelevant substitution) 함정",
+      "temptingBecause": "'개인적 관찰'이 사회문화적 지표와 막연히 대비되는 그럴듯한 학술 어휘로 들린다",
+      "decisiveFlaw": "'personal observations'는 지문에 앵커가 전혀 없는 무근거 선지로 §D의 source anchor 요건을 충족하지 못한다. 완성문에서 꼬리가 부착되지 못해 비문이 된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "KEYPOINT-LOOSE-EQUATION",
+      "severity": "minor",
+      "evidence": "keyPoints 셋째 항목이 'attitude(=behavioral tendencies)'로 두 개념을 등치하는데, attitude(태도·성향)와 behavioral tendencies(행동적 경향)는 근사 재진술이지 동치가 아니다. 오개념 수준은 아니나 등호 표기는 과도하다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "sameSyntacticSlot": false,
+    "sameSyntacticSlotEvidence": "꼬리 'towards getting up early' 때문에 ①③④⑤가 문법만으로 탈락 — §D 첫째 조건 정면 위반",
+    "meaningPreservingAbstraction": false,
+    "meaningPreservingAbstractionEvidence": "정답이 원문 스팬의 축자적 동의어 치환(mirror→reflect, to some degree→to a certain extent)이라 KILLER 난이도에 맞는 추상화가 없다",
+    "distractorAnchors": false,
+    "distractorAnchorsEvidence": "①③④는 source anchor·tempting overlap·decisive flaw를 갖추었으나 ⑤는 source anchor가 없다",
+    "multiClueRequired": false,
+    "multiClueRequiredEvidence": "빈칸 문장 하나의 직해 + 꼬리 문법 단서만으로 정답 도달 가능 — 두 문장/두 논리 단서 연결 요구 없음",
+    "trapDiversity": true,
+    "trapDiversityEvidence": "전제 모순(①)·기원 오귀속(③)·인과 역전(④)·무관 첨가(⑤)로 함정 유형 자체는 다양"
+  },
+  "grade": "F",
+  "notes": "V1(무결성): 렌더 지문은 원지문과 빈칸 치환 외 완전 일치, 고아 문장부호·중복·누락 없음, 라벨 ①~⑤와 선지 5개 일치 — 통과. V2(유일성): 의미 기준으로 ②만 성립(①은 전제 모순, ③은 무근거 기원 주장, ④는 인과 역전, ⑤는 무관), 정답 집합 {②} = 선언 정답 — 통과. V3(문법성): 실패. 빈칸 절단점이 'towards getting up early' 꼬리를 남겨 오답 4개가 통사적으로 불성립하고(유형 의도 불일치), 정답 완성문도 부사구 개재로 seam이 어색하다. V4(해설 사실성): 본해설의 양보 구조 설명(국민성 단정 경계 vs 지표 결합 시 제한적 반영)과 오답 해설 4건 모두 지문 사실과 부합, 용어 오류·환각 없음 — 통과(keyPoints의 attitude=behavioral tendencies 등치는 minor). V5(동기화): 정답 라벨 ②가 해설·오답해설(①③④⑤ 전부 커버)·keyPoints와 모순 없음 — 통과. 공예: 절단 지점 선택 자체는 지문의 핵심 귀결부(C1=3)이나, 꼬리 문법 누출이 결정적(C4=0), 축자적 재진술 + 단일 문장 직해로 풀려 KILLER 라벨과 괴리(C3=1, C5=1), ⑤ 무앵커로 의도 밀도 감점(C2=2), 해설은 정확하고 구조적(C6=3). 수리 방향: 빈칸 경계를 'towards getting up early'까지 포함하도록 확장해 다섯 선지가 완전한 술부로 동일 슬롯에 들어가게 하고, 정답 재진술의 추상화 수준을 올려야 KILLER 성립."
+}

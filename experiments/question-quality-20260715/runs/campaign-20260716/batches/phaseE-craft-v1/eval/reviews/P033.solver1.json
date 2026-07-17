@@ -1,0 +1,35 @@
+{
+  "pid": "P033",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "지문의 핵심 논지: 마감이 시간 단위의 '경계(break)' 너머에 있으면 멀게 느껴져 행동이 늦어지므로, 'next year'가 아니라 'this winter'처럼 마감을 지금 진행 중인 동일 시간 틀 안에 있는 것으로 재구성하라는 것. 빈칸 문장 'view deadlines as a challenge that you have to meet as part of an ongoing present timeframe'는 이 재구성 전략의 일반화로 정확히 맞물린다. 뒤 문장 'stress is more manageable... starting in good time'과도 인과가 성립(가깝게 느끼면 착수가 빨라짐). 문법 결합(seam)도 자연스러움: meet [a challenge] as part of ~ (부사구)."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'오늘로부터 멀리 떨어진 것으로' 보라는 것은 지문이 경계 효과의 문제점으로 지적한 바로 그 인식(remote → less ready to act)이다. 논지와 정반대. 유혹도 낮음 — remote라는 단어가 지문에 나오지만 부정적 맥락임이 명백."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 빈칸 직후 'That way the stress is more manageable'만 보고 역추론하면 '시간 압박을 느끼지 않고'가 그럴듯해 보인다. 실제로 잠깐 끌렸다. 그러나 (a) 지문은 스트레스가 '더 관리 가능해진다(more manageable)'고 했지 압박이 전혀 없다고 하지 않았고, (b) 지문의 처방은 마감을 현재 틀 안으로 끌어와 오히려 가깝게 느끼게 하는 것 — 압박을 제거하는 게 아니라 착수를 촉진하는 적당한 근접감을 만드는 전략이다. 시간 압박을 아예 느끼지 않으면 'jump into action'의 동기 자체가 사라져 지문 논리와 충돌."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "두 번째 매력 오답. 지문에 weeks/months/seasons, 'this winter' 등 계절 어휘가 나와 표면 어휘가 겹친다. 그러나 지문의 문제 원인이 바로 시간을 '별개 단위로 쪼개는' 인식(break up time into units)이고, 처방은 경계를 지우고 하나의 연속된 틀('this winter')로 보는 것이다. '목표를 별개의 뚜렷한 계절들로 나누라'는 것은 원인을 처방으로 뒤집은 반대 진술. 어휘 재활용형 미끼로 잘 설계됨."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'스트레스를 완전히 피하도록'은 3번과 같은 계열의 과잉 진술. 지문은 'more manageable'(완화)이지 'avoid altogether'(전면 회피)가 아니다. 또한 so that 절은 '도전으로 보라'는 재구성 전략의 내용(시간 틀 인식)을 전혀 담지 못해 앞 문맥('this winter' 예시)과의 연결이 끊긴다."
+    }
+  ],
+  "note": "실전 풀이 순서: 첫 문장에서 경계 효과(마감이 break 너머 → remote → 행동 지연) 파악 → 'this winter vs next year' 예시로 처방 확정(현재 진행 중인 시간 틀로 재구성) → 빈칸은 처방의 일반화 자리. 1번이 유일하게 예시-일반화 관계를 완성. 매력 오답 체감: 3번(직후 문장 stress 역추론 유혹, 순간 끌림)과 4번(계절 어휘 표면 겹침) 모두 실제로 검토했으나 각각 정도 과잉/인과 반전으로 배제. 대안 해석으로 정문이 되는 다른 선지는 없음. 단일 정답으로 수렴."
+}

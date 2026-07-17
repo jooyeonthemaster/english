@@ -1,0 +1,45 @@
+{
+  "strategy": "s15-cn-mmx3",
+  "describe": "minimal 동일 프롬프트, 모델만 minimax/minimax-m3 — MiniMax M3",
+  "callPlan": "minimax/minimax-m3 x1",
+  "total": 10,
+  "ok": 9,
+  "failed": 1,
+  "avgMs": 56456,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.02073,
+  "avgCostUsd": 0.0023,
+  "costRecordedCalls": 9,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 1,
+  "avgErrorCount": 9.56,
+  "zeroErrorItems": 0,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.847,
+  "avgAnswerRelPos": 0.65,
+  "answerRelPosInBand": 5,
+  "models": {
+    "minimax/minimax-m3": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

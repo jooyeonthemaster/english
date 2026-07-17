@@ -1,0 +1,82 @@
+{
+  "pid": "P018",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-NOTE",
+      "severity": "minor",
+      "evidence": "렌더 지문을 원지문과 문장 단위 전수 대조: 유일한 변형은 (B) 'either adapt to or' -> 'either adapting to or'로 의도된 변형뿐. 문장 누락·중복·접합 파손·고아 문장부호 없음. 라벨 (A)~(E)가 선택지 목록과 정확히 일치. 다만 markedExpressions의 (B) expression 필드가 렌더된 표기('either adapting to or')가 아닌 원문형('either adapt to or')을 담고 있음 — errorExpression/correction과의 내부 정합은 유지되므로 스키마 의미론상 문제 없음으로 판단하되 필드 의미 표준화 필요."
+    },
+    {
+      "code": "V2-VERIFIED",
+      "severity": "minor",
+      "evidence": "5개 밑줄 독립 검증 결과 정답 집합 = {(B)} 유일. (A) 주격 관계대명사 that: 'a lasting mark that shows...' — 관계절 내 주어 결손, shows 단수 일치, 대안 분석(동격 that절 등) 불가하므로 옳음. (B) 'it must either adapting to or indeed reinforce': 조동사 must 뒤 원형 필요, adapting은 어떤 해석으로도 성립 불가 — 유일 오류. 교정 시 원문과 정확히 일치. (C) 'it makes': 단수 주어 it + makes, 옳음. (D) 'spectacular in itself': 관용적 재귀 표현, 옳음. (E) 'that is ... but spoils': 관계절 내 is와 병렬, 선행사 a bridge 단수 일치로 옳음. 'but spoil'로 create와 병렬 착각 가능하나 표시형 spoils 자체는 문법적으로 성립하므로 복수정답 위험 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사 that vs 접속사/what 혼동 유도",
+      "temptingBecause": "선행사 a lasting mark 뒤 that절이 완전/불완전 판단을 요구하는 전형적 자리",
+      "decisiveFlaw": "관계절 내 주어가 결손되어 있고 shows가 단수 선행사와 일치하므로 명백히 옳음 — 대부분의 학생이 즉시 소거 가능한 약한 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — 조동사 must 뒤 either A or B 상관 병렬에서 원형 요구",
+      "temptingBecause": "either...or 병렬 범위와 조동사 지배 범위를 함께 읽어야 한다는 설계 의도",
+      "decisiveFlaw": "must 바로 뒤(either 한 단어 개재)에 adapting이 붙어 있어 'must + -ing'라는 표층 단서만으로 즉시 발각됨 — or 뒤 reinforce까지 읽지 않아도 풀리므로 구조 독해를 강제하지 못함(KILLER 요건 미달)"
+    },
+    {
+      "label": "(C)",
+      "intent": "분사구문 삽입 후 주어-동사 수일치 판단",
+      "temptingBecause": "Depending on... 삽입구가 주어와 동사 사이 거리를 만드는 듯 보임",
+      "decisiveFlaw": "실제 주어 it이 동사 바로 앞에 붙어 있어 거리 효과가 없음 — 즉시 소거되는 필러성 디코이. (E)와 pointCode 'd'(수일치) 중복"
+    },
+    {
+      "label": "(D)",
+      "intent": "재귀대명사 itself vs 인칭대명사 it 판별",
+      "temptingBecause": "in itself 관용구를 모르면 it과의 선택을 고민하게 됨",
+      "decisiveFlaw": "in itself는 고빈도 관용 표현으로 상위권 학생에게 변별력이 낮음"
+    },
+    {
+      "label": "(E)",
+      "intent": "병렬 범위 판단 — but spoils가 관계절 내 is와 병렬인지, to create와 병렬(spoil 원형)인지",
+      "temptingBecause": "to create ... but spoil(s)로 오분석하면 원형 spoil이 맞다고 착각할 수 있는 유일하게 실질적인 디코이",
+      "decisiveFlaw": "that is spectacular ... but spoils로 관계절 내부 병렬이 자연스럽고 선행사 단수 일치도 성립하므로 옳음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "E-TERM-LOOSE",
+      "severity": "minor",
+      "evidence": "본해설 \"'adapt to'와 'indeed reinforce' 두 동사원형\" — indeed는 부사이므로 'indeed reinforce'를 통째로 동사원형이라 부른 것은 용어상 부정확(병렬 성분은 adapt (to)와 reinforce)."
+    },
+    {
+      "code": "E-KEYPOINT-AMBIG",
+      "severity": "minor",
+      "evidence": "keyPoints의 \"(E) ... 관계사 절 내부의 복수 동사 병렬 범위 파악\" — '복수 동사'가 '복수형 동사(plural verb)'로 오독될 수 있음. 실제 병렬 동사 is/spoils는 모두 단수형이므로 '여러 개의 동사'라는 의도라면 표현 교정 필요."
+    },
+    {
+      "code": "E-STYLE",
+      "severity": "minor",
+      "evidence": "본해설 '버젓이 살아있는' 등 구어체 표현이 해설 톤과 어긋남. 오답 해설 (A)(C)(D)(E)는 각 선지의 실제 구조와 정확히 대응하며 오분석 없음."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 무결성·정답 유일성·문법성·해설 사실성·필드 동기화에 치명 결함 없음. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다. §C KILLER 조건 판정: (1) source-correct → displayed-wrong 최소대립쌍이며 교정 시 정확히 원문 복원 — 충족. (2) 문맥 선호가 아닌 명확한 문법 판단(조동사+원형) — 충족. (3) 5개 밑줄 모두 point/tempting/correct 설명 존재 — 대체로 충족(단 (C)는 실질 필러). (4) '정답이 구조를 읽어야 하며 즉시 드러나지 않는다' — 불충족: must 직후의 adapting이라는 표층 인접 단서만으로 정답이 즉시 노출되며, either...or 병렬 구조 독해가 사실상 불필요. (5) 동일 point 쉬운 디코이의 정답 은폐 없음 — 충족. 4번 불충족으로 killerConditionsMet=false. 공예: 디코이 중 (E)만 실질 경쟁력이 있고 (A)(C)(D)는 즉시 소거 가능해 C3=2, 난이도 정합 C5=1. 합계 15로 C 등급(재설계 필요: 정답 포인트를 원거리 병렬·구조 의존형으로 교체하고 (C)/(E)의 수일치 중복 해소 권장). 부가 위험: 본 지문은 실제 기출(2015학년도 수능 어법 지문)과 동일 텍스트로 보이므로 상용 출제 시 기출 재사용 노출 위험을 별도 확인할 것."
+}

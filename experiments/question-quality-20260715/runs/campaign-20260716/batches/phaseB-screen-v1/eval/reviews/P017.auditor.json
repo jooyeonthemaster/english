@@ -1,0 +1,81 @@
+{
+  "pid": "P017",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-RENDER-DUPLICATED-AUX",
+      "severity": "critical",
+      "evidence": "렌더 지문 (D) 문장: 'His confidence was, however, quickly __(D) was changed__ to nervousness' — 원지문 'His confidence was, however, quickly changed to nervousness'의 changed 자리에 errorExpression 'was changed'를 삽입하면서 밑줄 앞의 기존 was를 제거하지 않아 'was, however, quickly was changed'로 조동사 was가 중복된 접합 파손. markedExpressions의 surroundingText('...was, however, quickly changed...')와도 렌더가 불일치."
+    },
+    {
+      "code": "V3-CORRECTED-SENTENCE-STILL-PASSIVE",
+      "severity": "critical",
+      "evidence": "선언된 교정형(changed)을 밑줄 자리에 넣은 완성문은 'His confidence was, however, quickly changed to nervousness'로, 밑줄 밖의 was가 잔존하여 여전히 was + p.p. 수동 구조다. 해설이 주장하는 '자동사 change의 능동태 완성문'은 밑줄 범위 밖의 was까지 삭제해야만 성립하므로, 밑줄 교정만으로는 해설이 정답이라 선언한 구조에 도달할 수 없다. 또한 렌더된 오류문 자체가 의도된 태 오류가 아니라 'was...was' 이중 조동사 비문(손상 수준)이다."
+    },
+    {
+      "code": "V4-EXPLANATION-STRUCTURE-MISMATCH",
+      "severity": "critical",
+      "evidence": "해설: '수동태인 was changed는 비문... 능동태인 changed로 고쳐야... 자동사 change가 쓰인 능동태 구조가 자연스럽습니다' — 그러나 교정 후 실제 문장은 'His confidence was, however, quickly changed'로 was가 남아 수동(was+p.p.) 구조 그대로이며, 해설이 기술하는 능동 자동사 문장과 일치하지 않는다. 해설은 학생에게 실제로 보이는 이중 was 손상도 전혀 언급하지 않아 실제 렌더 문장에 대한 분석이 아니다."
+    },
+    {
+      "code": "V2-POINT-CONTEXT-PREFERENCE",
+      "severity": "major",
+      "evidence": "설계 의도인 change의 태 판정(was changed to vs changed to)은 labile verb의 자·타 교체 자리로 'The plan was changed to X'류 수동이 실재하는, 문맥 선호성 여지가 있는 포인트(RUBRIC §C가 명시적으로 제외하는 valency 대안분석 가능 자리). 단, 실제 렌더에서는 이중 was 손상 때문에 (D)가 기계적으로 유일 오류가 되어 정답 집합 {(D)} 자체는 선언과 일치하므로 V2는 true로 두되 포인트 타당성 결함으로 기록."
+    }
+  ],
+  "craft": {
+    "C1": 1,
+    "C2": 1,
+    "C3": 0,
+    "C4": 0,
+    "C5": 1,
+    "C6": 0
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "의미상 주어(Garcia)와 능동 관계인 현재분사 분사구문(waiting) 적법성 판정",
+      "temptingBecause": "문두 주절 뒤 콤마+분사 구조라 태(waiting/waited) 판단을 요구하는 것처럼 보임",
+      "decisiveFlaw": "Garcia가 능동적으로 기다리는 관계이므로 waiting은 명백히 적법 — 오류가 될 수 없음. (B)(C)와 동일 개념(능동 현재분사 분사구문)의 반복이라 디코이로서 변별 기여가 낮음"
+    },
+    {
+      "label": "(B)",
+      "intent": "의미상 주어(Garcia)와 능동 관계인 현재분사 분사구문(pointing) 판정",
+      "temptingBecause": "인용문 뒤 부대상황 분사라 pointed와의 태 혼동을 노림",
+      "decisiveFlaw": "Garcia가 직접 가리키는 능동 관계로 pointing 적법 — (A)(C)와 사실상 동일 포인트의 중복"
+    },
+    {
+      "label": "(C)",
+      "intent": "연속 동작을 나타내는 능동 현재분사 분사구문(agreeing) 판정",
+      "temptingBecause": "부사 quickly가 앞에 붙어 agreed(과거형 병렬)로의 오분석을 노림",
+      "decisiveFlaw": "the clerk가 동의하는 능동 관계로 agreeing 적법 — 역시 (A)(B)와 같은 개념 반복"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. labile verb change의 태(자동사 능동 changed vs 수동 was changed) 판정 의도",
+      "temptingBecause": "설계상으로는 confidence가 무생물 주어라 수동 was changed가 그럴듯해 보이게 하려는 의도",
+      "decisiveFlaw": "렌더 손상으로 'was, however, quickly was changed'라는 이중 조동사 비문이 되어 문법 지식 없이도 즉시 식별됨. 또한 밑줄 교정(changed)만으로는 밑줄 밖 was가 남아 해설이 선언한 능동문이 되지 않음"
+    },
+    {
+      "label": "(E)",
+      "intent": "의미상 주어(everyone)와 수동 관계인 과거분사 분사구문(fascinated) 판정",
+      "temptingBecause": "fascinating/fascinated 감정분사 대립으로 혼동 유도",
+      "decisiveFlaw": "everyone이 매료'당하는' 수동 관계이므로 fascinated 적법 — 유일하게 (A)(B)(C)와 결이 다른 디코이지만 정형화된 쉬운 포인트"
+    }
+  ],
+  "explanationIssues": [
+    "해설이 교정 후 문장을 '자동사 change의 능동태 구조'로 기술하나, 밑줄 밖에 잔존하는 was 때문에 실제 교정 완성문은 여전히 was+p.p. 수동 구조 — 구조 분석이 실제 문장과 불일치",
+    "학생에게 실제로 보이는 이중 was('was, however, quickly was changed') 손상을 해설이 전혀 다루지 않음 — 렌더 문장이 아닌 가상의 문장을 해설함",
+    "'수동태 was changed는 비문'이라는 단정은 과도함 — 'X was changed to Y'는 실재하는 문형으로, 여기서의 부적절성은 문법성보다 문맥·의미 선호에 가까움(어법 정답 포인트로서 결함)",
+    "오답 해설 (A)(B)(C)(E)는 각 선지 내용과 대응하며 사실 오류 없음"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "요청 난이도 INTERMEDIATE(KILLER 아님 → killerConditionsMet=false). 치명 결함: (D) 렌더 시 원문의 was를 제거하지 않고 errorExpression 'was changed'를 삽입해 'His confidence was, however, quickly was changed to nervousness'라는 이중 조동사 손상문이 노출됨(V1). 이로 인해 의도된 태 오류 문항이 아니라 깨진 문자열 찾기가 되었고(C3=0, C4=0), 밑줄만 교정해도 해설이 주장하는 능동 완성문이 되지 않아 해설-실문장 불일치(V3, V4). 부가 결함: 저장된 원지문 자체가 was를 포함하고 있어(실제 출전으로 추정되는 2025 수능 43-45 지문은 'His confidence, however, quickly changed...'로 was 없음) 소스 저장 단계 오염 가능성이 있음. 디코이 (A)(B)(C)가 동일 개념(능동 현재분사 분사구문) 3중 반복이라 의도 밀도도 낮음. V2는 렌더 손상 덕에 정답 집합이 {(D)}로 유일해 기계적으로 통과시켰으나, 설계 포인트(labile verb 태)는 RUBRIC §C가 제외하는 대안분석 가능 자리임. 등급 F(V1·V3·V4 실패, 공예 점수로 상쇄 불가). 재생성 시 원지문의 was 존재 여부부터 소스 대조 필요."
+}

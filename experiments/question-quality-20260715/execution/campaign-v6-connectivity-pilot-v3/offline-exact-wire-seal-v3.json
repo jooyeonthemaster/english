@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "question-quality-v6-connectivity-pilot-exact-wire-public-v3",
+  "status": "OFFLINE_PRODUCTION_CORE_EXACT_WIRE_LIVE_BLOCKED",
+  "privateArtifactSha256": "754144b8ea8cd4c5f4cda1c4aab591cec9caae44db6f39c7bf9f870b136f7dcb",
+  "originalProtocolV1Sha256": "b6eba782e92a16c8bba3b6b3b4c5a633449fba117fcf0b5e51a3dbf3f1e8b1f2",
+  "originalPublicCorpusSha256": "465e3d6d17bd6c2748fb69d05f3947f96ecc42d0abf71bd56f4e3dbb969933f6",
+  "productionSourceClosureSha256": "26725e6f8b90368fdd168a491117414f56689f964506a430e2b405fd12d3796b",
+  "counts": {
+    "assignments": 2,
+    "locallyInterceptedProductionCompilerFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "productionDatabaseCalls": 0,
+    "apiCandidatesConsumed": 0
+  },
+  "wire": {
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "bodyUtf8BytesByPlan": {
+      "STANDARD": 53354,
+      "PREMIUM": 24943
+    },
+    "bodySha256ByPlan": {
+      "STANDARD": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003",
+      "PREMIUM": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643"
+    },
+    "maxOutputTokensEach": 4000,
+    "completionCountEach": 1,
+    "semanticCandidateCapEach": 1,
+    "exactEndpointTag": "google-vertex/global",
+    "reasoningDisabledRows": 2,
+    "strictJsonSchemaRows": 2
+  },
+  "privacy": {
+    "promptExposed": false,
+    "passageExposed": false,
+    "questionExposed": false,
+    "credentialValueExposedOrHashed": false
+  },
+  "publicSemanticSha256": "34e6745efb0fe4cb3a91dd070aa6bc404ddc48651c9d1184beef12af9e3db8f0"
+}

@@ -1,0 +1,43 @@
+{
+  "pid": "P107",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "독립 재검증 결과 (B)가 유일한 어법 오류로 확정된다. 명시적 보문소 that이 이끄는 명사절은 정형동사를 요구하는데, 'that soon after the appearance of towns, agriculture, and surpluses, some burials starting to look different from others'에는 정형동사가 전무하다. 구제 해석 3종을 전수 검토했으나 모두 실패: (i) 'some burials starting...'을 축약 관계절 포함 NP로 보아도 that절에 술어가 남지 않음, (ii) 지각동사류 'shows + NP + V-ing' 구문은 overt that 앞에서 성립 불가, (iii) that을 지시사로 재분석하는 것도 'that soon after...'가 NP를 이루지 못해 불가. 교정형 start는 원문을 정확히 복원하며 지문의 현재시제 서술(shows, are buried, start to show)과 정합한다. 나머지 4개 밑줄 (A)(C)(D)(E)는 각각 with-절대구문의 AdjP 보어, 수동태, by oneself 관용구+수 일치, start의 to부정사 보충어로 모두 정문이며, 어느 것도 오류로 방어 가능한 대안 해석이 존재하지 않는다. 솔버 1·2 모두 (B) 단독 수렴이고 구제 해석 기각 논증도 정확하여 놓친 대안 해석이나 과잉 판정이 없다. 감사자의 minor 지적 2건(해설의 '문장 전체' 범위 오기술, (D)의 '행위자' 용어)은 해설 품질 문제일 뿐 정답 유일성에 영향 없다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "with + NP 뒤 형용사구 'more dangerous'가 어법상 성립하는가 (병렬 상대 'having'과의 비대칭으로 being/dangerously를 요구한다는 잠재 이의)",
+      "verdict": "성립(정문) — 정답 아님",
+      "evidence": "'with some roles more dangerous and some having more plentiful access'는 with-절대구문(with + NP + 서술 보어)이며 AdjP 보어는 표준('with some roles [being] more dangerous'). 보어가 NP 'some roles'를 서술하므로 부사 dangerously는 오히려 비문. with-절대구문 내 AdjP와 -ing 분사의 혼합 병렬은 완전히 문법적이므로 병렬성 이의는 기각."
+    },
+    {
+      "label": "(B)",
+      "claim": "that 명사절 내 'some burials starting to look...'이 정형동사 부재로 비문인가, 아니면 구제 가능한 대안 해석이 존재하는가",
+      "verdict": "비문 확정 — 유일 정답",
+      "evidence": "overt 보문소 that은 정형절을 요구하나 절 내부에 정형동사가 없다. 구제 해석 전수 기각: (1) 'some burials starting to look different'를 축약 관계절 수반 NP로 읽어도 that절에 본동사가 남지 않음, (2) 'shows + NP + V-ing' 지각류 구문은 that이 명시된 이상 불가, (3) that의 지시사 재분석은 'that soon after the appearance...'가 명사구를 형성하지 못해 불가. start로 교정 시 원문과 일치하고 지문 전체의 현재시제 고고학 서술과 정합. 솔버 1·2의 기각 논증 모두 타당."
+    },
+    {
+      "label": "(C)",
+      "claim": "'are buried'의 수동태가 성립하는가 (능동 burying 대안 이의)",
+      "verdict": "성립(정문) — 정답 아님",
+      "evidence": "주어 Some individuals는 매장의 대상이므로 be + 과거분사 수동태가 필수. 'with more precious goods'는 동반 부가어이지 행위자구가 아니므로 태 충돌 없음. 능동 대안은 의미상 불가."
+    },
+    {
+      "label": "(D)",
+      "claim": "'some by themselves'의 재귀대명사가 지칭·수 일치상 성립하는가 (by them 대안 이의)",
+      "verdict": "성립(정문) — 정답 아님",
+      "evidence": "'some are in group graves and some [are] by themselves'로 be동사 생략 병렬이 성립하며, 'by themselves'는 '홀로/제각각'의 관용 표현. 선행사는 생략된 복수 주어 'some (individuals)'로 수·인칭 일치. 'by them'은 외부 행위자를 함의해 오히려 부적절. 감사자가 지적한 해설의 '행위자' 용어 부정확은 minor 표현 문제로 정답 유일성과 무관."
+    },
+    {
+      "label": "(E)",
+      "claim": "'start to show'의 to부정사 보충어가 성립하는가 (start+동명사 전용 이의, bones 수 일치 이의)",
+      "verdict": "성립(정문) — 정답 아님",
+      "evidence": "start는 to부정사·동명사 보충어를 모두 허용하며, 'show + us + differences' 4형식 결합도 표준. 주어 핵 bones(복수)와 start의 수 일치도 정상('from the burials'는 전치사 수식어). 부수적으로 이 문장이 (B)의 교정형과 동일 구조('start to look' vs 'start to show')를 지문 내에 노출해 정답 단서를 누출하는 공예상 결함(감사자 C4 지적)이 있으나, 이는 난이도 문제이지 유일성 훼손이 아님."
+    }
+  ],
+  "solverAssessment": {
+    "solver1": "과잉 판정 없음. NP-목적어 구제 해석을 명시적으로 검증·기각한 논증 정확.",
+    "solver2": "과잉 판정 없음. 지각동사 구문 구제 해석 기각 및 축약 관계절 검토 정확.",
+    "auditor": "V2=true 판정 타당. minor 2건(해설 범위 오기술, '행위자' 용어)은 정답 유일성에 영향 없음."
+  }
+}

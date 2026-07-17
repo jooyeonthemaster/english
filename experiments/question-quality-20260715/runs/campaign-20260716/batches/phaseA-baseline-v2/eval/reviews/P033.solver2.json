@@ -1,0 +1,35 @@
+{
+  "pid": "P033",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to be",
+      "verdict": "correct",
+      "reason": "consider + O + to be + C 구문. 'consider [the virtual, or imaginative, nature of cyberspace] to be [its unique characteristic]'로 5형식 목적격 보어 구조가 형식적으로 성립한다. consider는 to be를 취하는 대표 동사이며(생략도 가능하지만 표기도 정문), 목적어가 길어도 지배 관계는 동일하다. 어법상 옳다."
+    },
+    {
+      "label": "(B) seen",
+      "verdict": "correct",
+      "reason": "'imaginary characters and events of a kind and magnitude not seen before'에서 seen은 축약 관계절(= of a kind and magnitude that has/have not been seen before)의 과거분사. 수식 대상 kind and magnitude는 '보여지는' 대상이므로 수동 분사 seen이 맞다. seeing으로 쓰면 능동 의미가 되어 비문. 어법상 옳다."
+    },
+    {
+      "label": "(C) involve",
+      "verdict": "correct",
+      "reason": "진짜 주어는 복수 명사구 'All forms of art'. 삽입구 'including cave drawings made by our Stone Age ancestors'는 수 일치에 관여하지 않는다(전형적 장거리 함정: 단수처럼 보이는 삽입어구). 복수 주어 + involve(복수 동사)로 일치가 성립한다. 어법상 옳다."
+    },
+    {
+      "label": "(D) which",
+      "verdict": "incorrect",
+      "reason": "관계대명사 which가 성립하려면 후행절 내부에 명사 공백(gap)이 있어야 한다. 그러나 'real people(주어) have(동사) actual interactions(목적어) with other real people(전치사구)'은 주어·목적어·전치사 목적어가 모두 채워진 완전한 절로, which가 차지할 통사적 자리가 없다. 대안 해석 탐색: (i) which를 have의 목적어로 보는 독법은 have actual interactions가 이미 목적어를 가지므로 불가, (ii) with의 목적어로 보는 독법은 with other real people이 채워져 있어 불가, (iii) 접촉절/삽입 해석도 성립 불가. 선행사 a space는 장소이므로 관계부사 where 또는 in which가 요구된다. 어법상 틀렸다 — 정답."
+    },
+    {
+      "label": "(E) radical",
+      "verdict": "correct",
+      "reason": "be동사 is의 주격 보어 자리이므로 형용사 radical이 맞다(부사 radically면 비문). 'much more radical than ~'에서 much는 비교급 강화 부사로 적법하고, than 비교 대상(the move from photographs to movies)과의 병렬도 'The move from A to B ... than the move from C to D'로 정확히 성립한다. 어법상 옳다."
+    }
+  ],
+  "note": "정답 (D) 단일 확정. which 뒤 절이 완전절(gap 없음)이라는 형식적 판정이 명확하고, 선행사 a space가 장소여서 where/in which가 요구된다. 나머지 4개 밑줄은 각각 5형식 to be, 수동 축약관계절, 삽입구 무시 수 일치, 보어 형용사+비교급 강화로 모두 정문. 복수정답 여지 없음."
+}

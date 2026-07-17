@@ -1,0 +1,1301 @@
+{
+  "reviewerId": "rater-1",
+  "rubricVersion": "frozen-corpus-manual-v1.0",
+  "reviewedCount": 120,
+  "aggregation": {
+    "status": {
+      "PASS": 74,
+      "EXCLUDE": 17,
+      "DOMAIN_REVIEW": 29
+    },
+    "grammarSuitabilityHuman": {
+      "rich": 102,
+      "normal": 18,
+      "scarce": 0
+    },
+    "blankSuitabilityHuman": {
+      "central": 98,
+      "local": 9,
+      "unsuitable": 13
+    },
+    "bySplit": {
+      "dev": {
+        "reviewed": 60,
+        "PASS": 36,
+        "EXCLUDE": 8,
+        "DOMAIN_REVIEW": 16
+      },
+      "holdout": {
+        "reviewed": 60,
+        "PASS": 38,
+        "EXCLUDE": 9,
+        "DOMAIN_REVIEW": 13
+      }
+    },
+    "issueCodes": {
+      "ANSWER_TABLE_REMAINS": 2,
+      "BLANK_JOIN_RISK": 1,
+      "CAUSAL_OVERCLAIM": 7,
+      "CONTRADICTORY_OPTIONS": 1,
+      "DISPUTED_SENTENCE_FRAGMENT": 1,
+      "DISPUTED_USAGE": 3,
+      "DOMAIN_CLAIM_RISK": 1,
+      "DOMAIN_GENERALIZATION": 4,
+      "DOMAIN_OVERGENERALIZATION": 1,
+      "DUPLICATED_TEXT": 1,
+      "DUPLICATED_WORD": 2,
+      "EVIDENCE_SCOPE_RISK": 2,
+      "FACTUAL_CONCERN": 6,
+      "FACTUAL_ERROR_RISK": 1,
+      "FACTUAL_MISCHARACTERIZATION": 1,
+      "FACTUAL_OVERSIMPLIFICATION": 4,
+      "FACTUAL_OVERSTATEMENT": 1,
+      "FACTUAL_SCOPE_ERROR": 4,
+      "FRAGMENTED_OPTIONS": 2,
+      "GRAMMAR_ERROR_ADVERB": 1,
+      "GRAMMAR_ERROR_ARTICLE": 2,
+      "GRAMMAR_ERROR_IDIOM": 1,
+      "GRAMMAR_ERROR_REFERENT": 1,
+      "GRAMMAR_NUMBER_ERROR": 1,
+      "GRAMMAR_NUMBER_USAGE": 4,
+      "GRAMMAR_REDUNDANCY": 1,
+      "GRAMMAR_SUBJECT_VERB": 2,
+      "GRAMMAR_USAGE": 6,
+      "GRAMMAR_WORD_ORDER": 1,
+      "INTERNAL_FACT_CONTRADICTION": 1,
+      "INTERNAL_LOGIC_ERROR": 1,
+      "LEXICAL_ERROR": 1,
+      "LEXICAL_USAGE": 4,
+      "LOGIC_CONTRADICTION": 1,
+      "LOGIC_INCONSISTENCY": 1,
+      "LOGICAL_PIVOT_UNMARKED": 1,
+      "LOGICAL_SUPPORT_WEAK": 1,
+      "MALFORMED_OPTIONS": 1,
+      "MEDICAL_CLAIM_RISK": 3,
+      "METHODOLOGY_CONFLATION": 1,
+      "MISSING_NUMERIC_CONTEXT": 1,
+      "OCR_CORRUPTION": 2,
+      "OUTDATED_STATISTIC_RISK": 1,
+      "PASSAGE_CONCATENATION": 2,
+      "POLICY_CLAIM_RISK": 2,
+      "PUNCTUATION_COMMA_SPLICE": 1,
+      "PUNCTUATION_ERROR": 4,
+      "PUNCTUATION_MINOR": 2,
+      "PUNCTUATION_MISSING": 4,
+      "PUNCTUATION_PARALLELISM": 1,
+      "SENTENCE_FRAGMENT": 1,
+      "SOURCE_ANNOTATION_ARTIFACT": 3,
+      "SOURCE_CONTAMINATION": 10,
+      "SOURCE_NUMBERING": 1,
+      "STATISTICAL_CLAIM_RISK": 1,
+      "TERMINOLOGY_CONCERN": 2,
+      "TERMINOLOGY_ERROR": 3,
+      "TOPIC_DISCONTINUITY": 1,
+      "TRUNCATED_START": 1,
+      "TYPO": 1,
+      "TYPO_PUNCTUATION": 1
+    }
+  },
+  "records": [
+    {
+      "id": "repo:2006_SN_3000977-q44",
+      "contentHash": "718fe7ae7e688dd19bd3ef3e35dfceebaadde33755d573dff56cd77d189d7c92",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["DISPUTED_SENTENCE_FRAGMENT", "GRAMMAR_USAGE"],
+      "rationale": "‘The great loneliness — like ...’는 독립 절이 없는 수사적 단편이고 ‘transformation to butterfly’도 ‘into a butterfly’가 더 자연스러워 문법 정답 시비가 크다. 우화는 완결되고 중심 공란은 가능하나 문체적 파편 허용 여부 검토가 필요하다."
+    },
+    {
+      "id": "repo:2027_06_5095396-q24",
+      "contentHash": "dc41e90fb8ede2075f701df74b16e0bac497d5552977e5a219dc5246e584b0ff",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "1950년대 관광업의 분절에서 통합으로의 변화를 일관되게 설명하고 ‘growth of tour operators’가 중심 전환축이다. 시제·분사·비교 구조가 다양하며 중심문장 공란의 문법 접합도 안정적이다."
+    },
+    {
+      "id": "repo:ebsi_go3_20221012-q40",
+      "contentHash": "175d4de2810df43d6cf417011da4e7c41c83f494a3d140a9bd577aa775592d30",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "햄스터와 소음 내는 아이 일화가 외적 보상이 내적 동기를 소거한다는 동일 논지를 뒷받침한다. 복합문과 인용문이 풍부하고 ‘original motivation ... extinguished’ 주변의 중심 공란 접합이 명료하다."
+    },
+    {
+      "id": "repo:2012_SN_3001002-q34",
+      "contentHash": "0d5ec269b3f33bda901c607388b1763c813ab3dcc7cd817ee0b1b98ac4169030",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_OVERSIMPLIFICATION", "DOMAIN_GENERALIZATION"],
+      "rationale": "‘Our blood stays the same temperature’와 생리적 항상성을 습관·사고·삶의 질까지 그대로 확장하는 결론은 과학적으로 지나치게 단정적이다. 글 자체는 완결되고 구조도 풍부하며 중심 공란은 가능하나 전문가 확인이 필요하다."
+    },
+    {
+      "id": "repo:2011_SN_3000996-q45",
+      "contentHash": "02821003dcfab2c22b79f729e54d2f5c39a57c320d7ef7a0096f7ce8c6171229",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["DOMAIN_GENERALIZATION", "DISPUTED_USAGE"],
+      "rationale": "‘the primitive society’와 ‘has no need’는 다양한 사회를 하나로 묶는 인류학적 일반화이고 관사 사용도 부자연스럽다. 현대/비현대 교육의 대비 논리는 완결되며 중심 공란은 가능하지만 용어와 주장 범위 검토가 필요하다."
+    },
+    {
+      "id": "repo:ebsi_go2_20131114-q30",
+      "contentHash": "6524c852cfcfc5598216afd9446ef87bee8c0eb55e4e1338592a380351c33358",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": ["GRAMMAR_USAGE", "PUNCTUATION_MINOR"],
+      "rationale": "‘the first African-American woman who entered’는 ‘to enter’가 더 자연스럽고 ‘retired in 1996 remaining’에는 쉼표가 바람직하다. 전기는 연대상 완결되지만 사건 나열형이라 공란 추론은 개별 경력 문장 수준이며 분사 접합을 피해야 한다."
+    },
+    {
+      "id": "repo:ebsi_go2_20251014-q23",
+      "contentHash": "9ec41d9c336bc3a91297fb8e8aeda74dfbcffe2ec9df7b6d8f94ef1522320271",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "뉴턴 이론의 성공을 보존하면서 아인슈타인이 더 넓은 설명을 제공했다는 논리가 처음부터 끝까지 연결된다. 조건절·관계절이 풍부하고 새 이론의 수용 조건을 담은 중심 공란도 자연스럽게 접합된다."
+    },
+    {
+      "id": "repo:ebsi_go2_20240904-q23",
+      "contentHash": "344f925217cd0d3a6692455f1ca2ca676270c632f40d953e081abfaedb54dd3d",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "예술의 문화 의존성과 과학의 객관성/역사성 논쟁을 명확히 대비해 독립 지문으로 완결된다. 삽입·분사·관계 구조가 풍부하며 ‘Others, however’ 축의 중심 공란 접합도 안전하다."
+    },
+    {
+      "id": "repo:2025_09_5087695-q20",
+      "contentHash": "e0953f8aae52b7e41e9e9f8b3eb4b1b567009b5120306ab5da112a4669af4072",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "소셜 미디어의 허위정보가 지식 축적을 위협하므로 이용자가 검증 책임을 져야 한다는 흐름이 완결된다. 문법 신호는 보통 수준이고 책임을 제시하는 결론 문장을 중심 공란으로 삼기 쉽다."
+    },
+    {
+      "id": "repo:2014_SN_3022251_B-q26",
+      "contentHash": "09a21271a58ffdc862a2862954c6508596c7d3c2bb019162d003c045b3de93d9",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "좌석이 없는 어머니에게 화자가 표를 양보하는 문제-해결 서사가 인과적으로 완결된다. 인용·분사·조건절이 다양하고 해결 행동을 잇는 중심 공란에도 지시어 단절 위험이 낮다."
+    },
+    {
+      "id": "repo:ebsi_go1_20260324-q26",
+      "contentHash": "f450c0385502047f479fde899cc24a7fa9f7be42e70f8c3c8de7b61f4c640f24",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": [],
+      "rationale": "Graffman의 유년기·수상·오른손 장애·교육 활동이 시간순으로 완결된다. 분사와 관계절은 풍부하지만 전기 나열형이라 공란은 ‘focused on works for the left hand’ 같은 국소 사건 추론이 적합하다."
+    },
+    {
+      "id": "repo:ebsi_go3_20140710_A-q20",
+      "contentHash": "c35a6bdd76af1ca4954f682c56ecd3f0fc7442c2bc1273a76084a54473b84164",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "구체적 합의 요약이 이해 확인을 넘어 책임 약속을 만든다는 실용 논지가 예시와 결론으로 닫힌다. 인용·간접의문·조건 구조가 풍부하며 ‘checking for commitment’ 중심 공란도 안정적이다."
+    },
+    {
+      "id": "repo:2013_09_3011547-q40",
+      "contentHash": "aa84aab3d1eb6c1eef1df34235cdadb5985d781e49223d260e6536341e426083",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "문화가 연애·졸업·출산의 암묵적 시간표를 만들고 또래 대비 자기평가를 압박한다는 ‘social clock’ 설명이 완결된다. 조건·양보 구조가 충분하고 중심 정의문 공란의 문법 접합도 안정적이다."
+    },
+    {
+      "id": "repo:ebsi_go3_20241015-q40",
+      "contentHash": "5e2109ca40e6f284ed84add0f86befe7d09b7d1bfd4957b1eabb1e06b6bae330",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "시가 철학적 탐구가 되려면 명제적 의미와 의역 가능성이 필요하다는 반대 논증이 단계적으로 전개된다. 조건절·동격·수동 구조가 풍부하고 ‘Poetry resists paraphrase’로 수렴하는 중심 공란이 명료하다."
+    },
+    {
+      "id": "repo:ebsi_go2_20091117-q37",
+      "contentHash": "ee195b26d4185349bad5e777ad6b47ed455afd09c405674052cc4c1ce2937538",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_SCOPE_ERROR", "DOMAIN_GENERALIZATION"],
+      "rationale": "여러 tarsier 종을 소개한 뒤 ‘the species ... soon ... extinct’라고 전 종의 임박한 멸종을 단정하고 눈/뇌 크기 비교도 확인이 필요하다. 글은 생태-위협 구조로 완결되며 보전 결론의 중심 공란은 가능하다."
+    },
+    {
+      "id": "repo:ebsi_go3_20201027-q21",
+      "contentHash": "9cfb3a8de41605d76a83ed142da5b0a81e094bdbcc50cf516fc6246d3e6981d5",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "수면 부족이 생산성을 낮춰 더 늦게 일하고 다시 덜 자는 악순환을 비유와 인과로 설명한다. 비교·관계·분사 구조가 풍부하고 ‘negative feedback loop’ 중심 공란 접합이 안전하다."
+    },
+    {
+      "id": "repo:2021_06_5049916-q40",
+      "contentHash": "5ebbe160063f9cf00d0aab4cf2fe13a7d5e68abfcfe79ef5d8693315fff0109d",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["PUNCTUATION_MINOR"],
+      "rationale": "화석의 보존·발견 편향 때문에 출현/절멸 시점을 보수적으로 해석해야 한다는 논리가 일관된다. 마지막 ‘first appearance datum, and’의 쉼표는 불필요하지만 의미 훼손은 없고 중심 공란도 안정적이다."
+    },
+    {
+      "id": "repo:ebsi_go2_20180308-q30",
+      "contentHash": "6fef09a662f475563fe8b32701f93a95eb51c5559c4033707d7e3544b93188fa",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "아버지가 일부러 체스에서 이기기 시작하자 아이가 패배를 받아들이게 된 변화가 마지막 농담으로 확인된다. 문법 복잡도는 보통이며 완벽주의 완화의 전환문을 중심 공란으로 복원할 수 있다."
+    },
+    {
+      "id": "repo:ebsi_go2_20190604-q24",
+      "contentHash": "7de0d274124be149a26f8bf62c29e24dca4138dfe4953b9125cb74907d0bab6b",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "수프 선택에서 과도한 자료를 신체 반응이 가치 요약으로 바꾼다는 예시가 결론 ‘feel the data’로 수렴한다. 조건·분사·병렬 구조가 풍부하며 중심 설명문 공란 접합이 자연스럽다."
+    },
+    {
+      "id": "repo:ebsi_go3_20171017-q21",
+      "contentHash": "413dc3acd3894ce9f84dc4188a727bff4cd43544e69fe015ed980231b9407bdb",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "개발 말기에만 의견을 묻는 갈등과 초기 공공 참여의 이점을 대비해 결론까지 완결한다. 영국식 집합명사 ‘the public become’은 허용 범위이며 중심 전환 공란도 문법적으로 안전하다."
+    },
+    {
+      "id": "repo:2024_SN_5086091-q24",
+      "contentHash": "cdab92872c70905307c3a667afec8593e0bb14183f58c07beb9857c91f88f5b0",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "장소를 경계가 고정된 용기로 보는 전제가 도시·국가 수준의 overtourism에는 부족하다는 비판이 일관된다. 의문문·분사·비교 구조가 풍부하고 물리적 수용력에서 복합 요인으로 전환하는 중심 공란이 좋다."
+    },
+    {
+      "id": "repo:ebsi_go2_20140612-q19",
+      "contentHash": "8feb42f9014fde247685a0735270ade7fcbd433f01b0d3951f85b55a55acf43f",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "고통 속에서도 그림을 그린 Renoir의 답과 말년 작품이 ‘beauty remains’라는 주제를 완결한다. 인용 중심의 보통 문법 난도이며 핵심 응답 또는 지속 행동을 중심 공란으로 복원할 수 있다."
+    },
+    {
+      "id": "repo:2024_09_5085155-q40",
+      "contentHash": "30452628bb82d4e4fb937bec78f2b66e6a951fa8fc4b2ff1e7c6cb8ba70d3041",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_ERROR_IDIOM", "PUNCTUATION_COMMA_SPLICE"],
+      "rationale": "‘had strongly held the strict academic standards’는 ‘held to’가 필요한 명백한 결합 오류이고 ‘invention is not ... films, it is their strength’도 comma splice다. 역사소설의 기능 논지는 완결되고 구조가 풍부해 오류 문항과 중심 공란 모두 가능하다."
+    },
+    {
+      "id": "repo:ebsi_go2_20230906-q24",
+      "contentHash": "d3846b8cf6e42ab792ef4dbcfc2622c4fc1f0fc53760ea7a0b50d32e21e4da80",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "기업의 환경·공정거래 기록을 조사하고 지갑으로 투표하라는 주장이 화장지 사례와 결론으로 뒷받침된다. 의문·관계·분사 구조가 풍부하고 소비자 권한 문장을 중심 공란으로 두기 쉽다."
+    },
+    {
+      "id": "repo:ebsi_go2_20190307-q25",
+      "contentHash": "84eae23dd627c2d87d3439b44519c463e0a51d9b5fc2cd603758f90740928039",
+      "split": "dev",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["INTERNAL_FACT_CONTRADICTION"],
+      "rationale": "1882년 출생·1974년 사망이면 91~92세인데 ‘at the age of eighty-two’라고 해 지문 내부 계산이 명백히 모순된다. 전기 흐름과 문법은 풍부하고 완결되지만 독립 문항의 사실 기반을 훼손한다."
+    },
+    {
+      "id": "repo:ebsi_go2_20230906-q23",
+      "contentHash": "90b4b7bd041bc4c2c3fae2ad7d4090311931cb74040edca2cc1b0dd1dfdebdef",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "조리 외주화의 부정적 함의를 묻고 여성의 부담·가정 갈등·시간·식단 다양화라는 이점을 답해 논지가 닫힌다. 복합·분사 구조가 풍부하고 장단점 전환의 중심 공란 접합이 안정적이다."
+    },
+    {
+      "id": "repo:2021_SN_5061633-q22",
+      "contentHash": "f112a111b5b9fb4c5cc567943aa11bb42a1cd766ef80364c7b935e28d7e573c0",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["LEXICAL_ERROR"],
+      "rationale": "‘advanced releases’는 발매 전 음원을 뜻하는 문맥에서 ‘advance releases’가 자연스러운 어휘 오류다. 온라인 접근이 평론을 대중 의견의 선도자에서 반영자로 바꿨다는 논지는 완결되고 문법 구조와 중심 공란이 풍부하다."
+    },
+    {
+      "id": "repo:2021_SN_5061633-q40",
+      "contentHash": "46d8adcad5bb3e2872f46bb5de5252e70f45311c5e44318fe84309e12dd5821b",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "Amazonia 사례로 정치 리더십=강제적 지배라는 서구적 등식을 비판하는 논증이 일관된다. 질문·조건·삽입 구조가 풍부하고 문화적 편향을 요약하는 중심 공란이 자연스럽다."
+    },
+    {
+      "id": "repo:ebsi_go2_20200916-q24",
+      "contentHash": "0f1d60825696e14177dc1ac930373e64e7f950800698e95758666f827c96da9e",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "Black Friday의 환경 비용과 Green Friday의 대안적 소비를 대비해 행동 촉구로 끝난다. 문법 난도는 보통이고 운동의 목적을 설명하는 중심문장 공란 접합이 명료하다."
+    },
+    {
+      "id": "repo:2018_06_5013302-q21",
+      "contentHash": "4ecad99feb9a97ed0719bba5b17cf5cc48537ed6dce95d70101d1e7107b65772",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "앉기·뻗기·이동의 운동 발달이 환경 통제와 인지 이해를 넓힌다는 설명이 예시와 결론으로 완결된다. 관계·분사·비교 구조가 풍부하며 중심 일반화 공란에 지시어 위험이 낮다."
+    },
+    {
+      "id": "cmq5hc1u3000fmmsgd1dr5yp5",
+      "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+      "split": "dev",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_CONTAMINATION", "DUPLICATED_WORD", "FRAGMENTED_OPTIONS"],
+      "rationale": "완결된 회상/재인 설명 뒤에 ‘convert abstract ideas ... concrete concrete ... a restore’라는 선택지 잔재가 문장 경계 없이 붙었다. 본문 문법은 풍부하지만 오염으로 전체 완결성이 사라져 공란 문항에는 부적합하다."
+    },
+    {
+      "id": "cmqanec030005ic04e2e7rryn",
+      "contentHash": "bac707d4a6906eed222f287cdc522a73b5b4509702d523a9da53fa9e89f33c13",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_CONCERN", "TERMINOLOGY_ERROR"],
+      "rationale": "미신의 근거를 ‘science and nature’라고 하고 Valhalla 이야기를 ‘Norwegian mythology’라 부르며 13을 거의 보편적 불운 수로 단정한다. 담화는 완결되고 구조도 풍부하나 문화사 사실을 검토해야 한다."
+    },
+    {
+      "id": "cmpbepm5s006bmmagu1g6yb7a",
+      "contentHash": "691198660ab2be3e0a41a50aa9dc04ea566bb80d872b20e0d9d534dc138cd3ea",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["LOGIC_INCONSISTENCY", "GRAMMAR_USAGE", "POLICY_CLAIM_RISK"],
+      "rationale": "‘insuring that’는 문맥상 ‘ensuring’이 자연스럽고, 수입 안정화를 강조하면서 ‘reduce excessive dependence on foreign sources’라고 끝내 정책 논리가 긴장된다. 완결된 글이나 한국 식량정책 결론은 전문가 검토가 필요하다."
+    },
+    {
+      "id": "cmpnwuz3l00bnmmyk39jucvka",
+      "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+      "split": "dev",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["TYPO", "PUNCTUATION_MISSING", "FACTUAL_CONCERN"],
+      "rationale": "‘yoursideas’가 붙었고 ‘seven ages Every’ 사이 마침표가 누락되었다. 숫자 미신 글은 전체적으로 완결되고 중심 공란은 가능하지만 명백한 원문 오염과 ‘Norwegian mythology’ 등의 사실 우려가 겹친다."
+    },
+    {
+      "id": "cmpwuhv4u001nmm1ch5ypzx9f",
+      "contentHash": "3356e61661c5492499cd351a7433d8348e6c0265fa07ea3432ef8e5482b15930",
+      "split": "dev",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["PASSAGE_CONCATENATION", "TOPIC_DISCONTINUITY"],
+      "rationale": "조류 vagrancy의 생태적 중요성 설명이 끝나자 예고 없이 ‘Winning often brings’라는 성공 심리 글이 붙는다. 두 글 각각 구조는 풍부하지만 주제·지시 관계가 완전히 단절돼 단일 지문 완결성과 공란 추론이 성립하지 않는다."
+    },
+    {
+      "id": "cmpyx7b260001jp04vjeholew",
+      "contentHash": "920b245f8ea7801f57bef019592a35233e0ef2e812718d7c6508ab58b9801a2b",
+      "split": "dev",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_ANNOTATION_ARTIFACT", "OCR_CORRUPTION"],
+      "rationale": "‘@hypothetical’, ‘Dentry-level’, ‘Coutpaces’, ‘@maintenance’처럼 정답 표식/OCR 문자가 단어에 섞였다. gig 노동의 비용 논리는 완결되지만 표식이 문법 정답을 누설하고 공란 접합을 오염시킨다."
+    },
+    {
+      "id": "cmqkuogfd0001jd0b65526r18",
+      "contentHash": "0af5c2b9eda3d6693c84074336147a991f3e3539c79afe2a1a25343ff7c83632",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_ERROR_ARTICLE", "FACTUAL_CONCERN", "TERMINOLOGY_ERROR"],
+      "rationale": "‘have basis in science’에는 관사 ‘a’가 필요하며 astrology를 science의 근거처럼 제시하고 ‘Norwegian mythology’라 부르는 점도 검토 대상이다. 글은 완결되고 중앙 추론은 가능하나 사실·문법을 분리 판정해야 한다."
+    },
+    {
+      "id": "cmpnzxhf000ebmmykkcjht729",
+      "contentHash": "c6a3cd3a1b254542f979f299598fc2165c1fa66ad089280940d1aa9da7a15727",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": [],
+      "rationale": "경사로·자동문·점자블록의 접근성 이점을 세 예로 설명해 짧지만 완결된다. 문법 신호는 보통이고 목록형이라 특정 예의 기능을 복원하는 국소 공란이 가장 안전하다."
+    },
+    {
+      "id": "cmqespvyu001cmm1wqpn5spu6",
+      "contentHash": "33e8b1f6b7a4458d08a25083a4e23d98bce293817d8d60df812800a82566e8a1",
+      "split": "dev",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["PASSAGE_CONCATENATION", "SOURCE_CONTAMINATION", "SENTENCE_FRAGMENT"],
+      "rationale": "몸짓-발화 글 뒤에 표본 크기 문장과 ‘The significant contribution ...’ 제목형 단편이 붙어 주제가 단절된다. 본래 단락은 풍부하지만 오염된 전체는 독립 완결성이 없고 공란 정답 범위를 정할 수 없다."
+    },
+    {
+      "id": "cmpx1dv0o0001l404hw03gfmr",
+      "contentHash": "73ae3025adc80fe8400230bded63df05c68651e67e756c9ea5d345b7431e989c",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_SCOPE_ERROR", "CAUSAL_OVERCLAIM"],
+      "rationale": "‘only species’, ‘almost every bacterium tested’와 기후별 향신료 사용의 상관을 생존 적응의 기원으로 단정하는 범위는 확인이 필요하다. 문장과 담화는 완결되고 구조도 풍부해 중심 공란은 가능하지만 진화·미생물학 검토가 필요하다."
+    },
+    {
+      "id": "cmq272ubl001ummcsjq36tqew",
+      "contentHash": "e91ad1d1962172285ca6ef575c53559ce95fad60f89ed4a3381f9941c9ed0293",
+      "split": "dev",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["LOGIC_CONTRADICTION", "PUNCTUATION_MISSING", "GRAMMAR_USAGE"],
+      "rationale": "‘your policy never covers theft’라면서 곧 회사가 해외로 돈을 보낼 때까지 기다린다고 해 보상 여부가 내부 모순이다. 쉼표도 빠진 핵심 조건문이므로 보험 조언의 완결성이 무너지고 공란 접합도 위험하다."
+    },
+    {
+      "id": "cmpcjkklg0007mmekwcm6abax",
+      "contentHash": "b8970b1638bdd257490bd4a98c189c9034cdeb2ef7c845537e236678dccb81e4",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "몸짓이 단어 인출·유창성·설명을 선행 지원한다는 연구 설명이 결론 ‘leading edge of our thought’로 수렴한다. 시간절·분사·병렬 구조가 풍부하고 중심 공란의 지시어 접합도 명확하다."
+    },
+    {
+      "id": "cmq272tkj001qmmcsvh7zb296",
+      "contentHash": "396213f817b8ef47f5d5d0fb4b229bfbc33c2d0dd2783cdb4404e5bb812610a2",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_ERROR_RISK"],
+      "rationale": "Eric이 Norway에서 살인으로 추방됐다는 서술은 그의 부친 Thorvald의 추방 이력과 혼동했을 가능성이 있고 Greenland의 Black Death 방문도 확인이 필요하다. 정착 서사는 완결되고 구조도 풍부하지만 역사 검토가 필요하다."
+    },
+    {
+      "id": "cmpaqf9e5000zl2049ba7eosv",
+      "contentHash": "cbe130e246644385a900620f1e0f2f97a6c6a741edea89c69950c1f47acc5c99",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["LOGICAL_SUPPORT_WEAK"],
+      "rationale": "공유된 맛이 사회 평화를 만든다고 한 뒤 ‘differences in taste ... arguments’라는 반대 방향 문장을 넣고도 곧바로 ‘thus ... civilizing’이라 결론내 근거 연결이 약하다. 문법은 풍부하고 완결형이나 논리 검토가 필요하다."
+    },
+    {
+      "id": "cmq2410r40001jo04k2iz5yp1",
+      "contentHash": "59f433c2c42987b38e239cbeb8315a24c817f6472d94483de2027de67ba067e6",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "변화 감지는 인간이, 안정적 과거 패턴은 통계모형이 보완해 합성 예측이 더 정확해진다는 실험 논리가 완결된다. 삽입·분사·비교 구조가 풍부하고 합성의 이점을 담은 중심 공란도 안정적이다."
+    },
+    {
+      "id": "cmpr52qe10003k40442ys37jt",
+      "contentHash": "8f21c16ccda142960c5a7b1abcc4403d666d9b0eb89a11a16e029a8deefddc5d",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_ERROR_ARTICLE", "FACTUAL_SCOPE_ERROR", "CAUSAL_OVERCLAIM"],
+      "rationale": "‘has evolutionary root’에는 관사 ‘an’이 빠졌고, 항균성·기후 상관을 인간 향신료 취향의 생존 기원으로 단정하는 범위는 전문 확인이 필요하다. 글은 완결되고 구조가 풍부해 문법 오류 후보와 중심 공란은 충분하다."
+    },
+    {
+      "id": "cmpcjkl72000bmmekh9qerp2m",
+      "contentHash": "ad68cb28ba66384d3f393d305eaaab93d67926717bf4f5db295bdf586d7fe1a8",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "미국 시트콤이 편견 있는 인물을 웃음거리로 만들어 진보적 가치를 수용시켰다는 설명과 요약이 일치한다. 수동·분사·관계 구조가 풍부하고 핵심 메커니즘 공란도 안정적이다."
+    },
+    {
+      "id": "cmpaqf9ey0013l204nnoouqbe",
+      "contentHash": "9f38946debe0e2593ddbc83fe8c349fb8876aa1854b81542bf5c33452d9ded01",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["INTERNAL_LOGIC_ERROR", "FACTUAL_CONCERN"],
+      "rationale": "‘selection favors some cells and preserves others’는 뒤의 ‘survivors’ 및 ‘those that don’t are eliminated’와 달리 양쪽을 모두 보존한다고 읽혀 선택 논리를 깨뜨린다. 과학 설명은 완결형이나 해당 문구의 원문/전문 검토가 필요하다."
+    },
+    {
+      "id": "cmqjjnqp6000wkz04f6gbsna2",
+      "contentHash": "872b9fa8c3ddbc45b7d4cabcb92f92eec991517a0e1a34740dbb0b3e10303863",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["DOMAIN_OVERGENERALIZATION"],
+      "rationale": "무의식적 위험 감지 설명에서 ‘most human decisions are made emotionally’로 모든 의사결정에 가깝게 확장하는 주장은 검증 범위가 지나치게 넓다. 글과 문법은 완결·풍부하며 중심 공란은 가능하나 심리학 검토가 필요하다."
+    },
+    {
+      "id": "cmpnzw5sd00d9mmykdtoiyyb9",
+      "contentHash": "ea52a3eab92aae53efcb71cc2d14a6ea1eb3931afc61863fcf123161505761ae",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": [],
+      "rationale": "저상버스·다양한 손잡이·색각 보조 노선도·픽토그램을 교통의 universal design 사례로 일관되게 제시한다. 목록형의 보통 난도라 각 장치 기능을 묻는 국소 공란이 적합하다."
+    },
+    {
+      "id": "cmpczyrsu000emmfkzbyivz87",
+      "contentHash": "c1bbf1e33510cf6251a9475497dbdf359d299effa7dead0c48f92a89f0a674c1",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "완벽한 법안이 아니어도 깨끗한 물 접근을 조금 개선하는 것이 낫다는 사례가 첫 원칙과 결론을 지지한다. 조건·양보·비교 구조가 풍부하고 ‘move the needle’ 중심 공란도 접합이 좋다."
+    },
+    {
+      "id": "cmpr6wbbt0002mm3coikj9suy",
+      "contentHash": "a03260ea9005fb3aab697c27f29c3c6b5e763d05519144c49480bd6866f04339",
+      "split": "dev",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["SOURCE_NUMBERING"],
+      "rationale": "모든 문장 앞에 1~11의 문항용 번호가 남아 독립 passage 원문이 아니라는 출처 오염이 분명하다. 회상/재인 논지는 완결되고 중심 공란도 가능하지만 번호가 정답 위치를 누설하거나 생성 형식을 방해한다."
+    },
+    {
+      "id": "cmpnzx9ra00e5mmykfthbdaj9",
+      "contentHash": "bf5243f8c4a6ef65eb963e25daee7a6cf0f94153c773ea2b88b83e5eab7401ef",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "가상세계의 지속적 사회 가치가 충분한 참여자 규모에 의존한다는 논지를 소규모 게임과 대비해 완결한다. 비교·조건 구조가 풍부하고 사회 임계치 문장을 중심 공란으로 두기 쉽다."
+    },
+    {
+      "id": "cmpr7xftn0013mm3cad44usfx",
+      "contentHash": "ae482a9441221088112528fc5450dff45e632465566b2dced08add9ecf86138a",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "회상은 단서 없이 재구성하고 재인은 제시된 단서와 기억을 대조한다는 차이를 두 디지털 비유로 완결한다. 비교·조건·삽입 구조가 풍부하고 단서 유무를 요약하는 중심 공란도 자연스럽다."
+    },
+    {
+      "id": "cmpaqf9dr000xl204fygq66tv",
+      "contentHash": "a0b45651b3a93c205f42d4801d1db9f03de15bc19fa5183055f7e01a6b2458bc",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_OVERSIMPLIFICATION", "TERMINOLOGY_CONCERN"],
+      "rationale": "Bayesian updating을 ‘accepted theory ... increasingly accurate’하게 만드는 반복적 경쟁 변형 검사로 정의한 것은 확률 갱신 개념을 과도하게 단순화한다. 논지는 완결되고 문법도 풍부하나 과학철학·통계 용어 확인이 필요하다."
+    },
+    {
+      "id": "cmpqvdzht0001mmu80piqom02",
+      "contentHash": "8c6f7a971cb2b29afddf3e5b02a6b25521fb6298dddd50c1d8159660808ebb64",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "발생 과정의 무작위 변이와 위치 선택이 세포를 보존/제거해 구조를 만든다는 설명이 조각 비유와 변이 결론으로 이어진다. 복합 구조가 풍부하고 선택 메커니즘 중심 공란도 안정적이다."
+    },
+    {
+      "id": "cmpnzwb3o00ddmmyk13z8u5d0",
+      "contentHash": "b62b4b588fe50791fda9d7e89b93e87537bc3a4e2ff57bdf87861e8c8becb521",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "유아기 직접 진정은 유익하지만 청소년기에는 자율성을 침해할 수 있어 수용적·간접 지원이 적절하다는 발달 논리가 완결된다. 대조·분사·관계 구조가 풍부하고 연령별 전환의 중심 공란도 안정적이다."
+    },
+    {
+      "id": "cmq5hc0l8000dmmsgr6tozs5b",
+      "contentHash": "a40a5bfa656122e27c1726d1d95c0e089653a4c5ad8f8c8395ced7a42435162b",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_OVERSIMPLIFICATION", "TERMINOLOGY_CONCERN"],
+      "rationale": "Bayesian updating이 반복 시험만으로 모델을 계속 더 정확하게 만든다는 서술은 사전확률·증거 갱신의 조건을 생략한다. 문장부호와 담화는 완결되고 중심 공란도 좋지만 통계 개념의 전문 검토가 필요하다."
+    },
+    {
+      "id": "cmpnwv10r00brmmykiusnyi5u",
+      "contentHash": "337a3c3bec9daca7f528979b929289f02454151687a52ec026f5abe170c088da",
+      "split": "dev",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["MEDICAL_CLAIM_RISK", "CAUSAL_OVERCLAIM"],
+      "rationale": "hippocampus가 교감·부교감 신경계를 ‘duties of regulating’하고 만성 스트레스가 cortisol 신호를 단순히 on으로 돌린다는 설명은 신경내분비 인과를 과장할 수 있다. 완결·풍부하지만 의학 검토가 필요하다."
+    },
+    {
+      "id": "cmpvm7wwx0010mmbcwneeym36",
+      "contentHash": "b501039c33ded5331fb86951cb43f2c49c92cf084c89853606ca7e1e22d0d02e",
+      "split": "dev",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_NUMBER_USAGE"],
+      "rationale": "‘expert system and knowledge-based technologies’는 병렬상 ‘expert systems’ 또는 복합형 표기가 자연스럽다. 방대한 data tomb를 지식으로 바꿀 도구가 필요하다는 논지는 완결되고 구조가 풍부해 오류 문항과 중심 공란 모두 가능하다."
+    },
+    {
+      "id": "repo:2022_06_5063572-q26",
+      "contentHash": "d231e0f932d27130cbc66c0f45c8c6e20d2a75077663a8934777e532c2943113",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": ["LEXICAL_USAGE"],
+      "rationale": "‘won second place’는 ‘finished/came in second’가 더 관용적이지만 의미는 명료하다. Zátopek의 올림픽 3관왕과 Clarke에게 메달을 준 일화가 완결되며 전기형이므로 공란은 국소 사건 수준이 적합하다."
+    },
+    {
+      "id": "repo:ebsi_go3_20141007-q29",
+      "contentHash": "907d3c22ae3b25cb96a8caf3e59c8e5cc4d0da786179a5d806c2684123e6d8a4",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "Benny가 크리스마스 새벽까지 club feet가 있는 아이의 특수 신발을 만들어 주고 기쁨을 얻는 서사가 완결된다. 대화·분사·시간절이 풍부하고 희생 행동을 잇는 중심 공란도 자연스럽다."
+    },
+    {
+      "id": "repo:2021_09_5050886-q22",
+      "contentHash": "7db8ce2037b98d296cf62e8e7508062bbea59e14a36307c84c18e863832a655d",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "노래·악기 경험이 어린이를 다양한 문화의 언어·관습·가치와 연결한다는 논지가 편견 형성 전 노출의 이점으로 완결된다. 분사·관계·시간 구조가 풍부하고 중심 공란의 접합도 안정적이다."
+    },
+    {
+      "id": "repo:2005_YB_5006647-q48-49-50",
+      "contentHash": "2bfa5b6713508071fff9d961f711c17d7c5b8afb77fa30e58bf9dc84e3649a95",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_USAGE"],
+      "rationale": "‘Regaining my strength, I could finish’는 ‘was able to finish’가 더 자연스럽지만 주어 연결은 성립한다. 두 친구가 서로 포기를 막고 삶의 유혹으로 일반화하는 서사는 완결되며 문법 구조와 중심 공란이 풍부하다."
+    },
+    {
+      "id": "repo:ebsi_go2_20181121-q25",
+      "contentHash": "6846806b9d02886d74e287872da01ced42b068c3fedcbb6e05c369cbc7e657b7",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": [],
+      "rationale": "Beebe의 조류 연구에서 bathysphere 심해 잠수와 Trinidad 연구소까지 연대기가 완결된다. 첫 문장은 길지만 문법적으로 성립하고, 전기 나열형이므로 기록 잠수 같은 국소 사건 공란이 적합하다."
+    },
+    {
+      "id": "repo:2018_SN_5019793-q40",
+      "contentHash": "51e891581c5ef3a6a403873eda3859c51e978b75e377b6af3d40580029d9cd19",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "동질적인 온라인 과학 네트워크가 정보 과잉은 줄이지만 지식 다양성과 우연한 발견도 줄인다는 도서관 대비가 완결된다. 조건·분사·비교 구조가 풍부하고 overfiltering의 중심 공란도 안정적이다."
+    },
+    {
+      "id": "repo:2027_06_5095396-q20",
+      "contentHash": "6bddb198a4061b29a40e6fa586b6455fe4fbacb1c50113b0edb3333f881a6901",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_ERROR_REFERENT", "GRAMMAR_NUMBER_USAGE"],
+      "rationale": "‘If participants understand ... it enables them’의 it은 선행사가 불명확하고 ‘improves their performances’는 보통 단수 performance가 자연스럽다. 그러나 원리 이해가 자기주도성을 높인다는 글은 완결되며 명백한 오류 후보와 중심 공란이 있다."
+    },
+    {
+      "id": "repo:ebsi_go3_20251014-q23",
+      "contentHash": "1dc9422616e30f84e83283a30e69e2f3caf3492ded1df6185f5659150444c1c9",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["PUNCTUATION_MISSING"],
+      "rationale": "‘various kinds of redevelopment towns’는 redevelopment 뒤 쉼표가 빠져 towns가 앞 명사를 수식하는 듯 보인다. 그 외 장소가 읽기 쉬운 문화 정체성을 전시해야 방문 가능해진다는 논지는 완결되고 중심 공란도 충분하다."
+    },
+    {
+      "id": "repo:2005_09_3001156-q48-49-50",
+      "contentHash": "89b3ce21b702f51b6619144530b97e8182f709f2d940505530d81c0de235fd0b",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["LEXICAL_USAGE"],
+      "rationale": "‘train your brain to log in details’는 타동사 문맥에서 ‘log details’가 자연스럽다. 주의 깊은 관찰이 기억을 돕는다는 설명과 운전 예시는 완결되며 인용·조건·비교 구조 및 중심 공란이 충분하다."
+    },
+    {
+      "id": "repo:ebsi_go2_20191120-q22",
+      "contentHash": "17e01cadebf532d311f3b17b05260946bfbc1057925e9dfd28fd18f04de6a822",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "외부 압력보다 태도가 기분과 행동의 통제권을 좌우한다는 동기 글이 정의·효과·결론으로 닫힌다. 양보·관계·병렬 구조가 다양하고 태도 정의문을 중심 공란으로 복원하기 쉽다."
+    },
+    {
+      "id": "repo:ebsi_go1_20170601-q25",
+      "contentHash": "697c79ba3fd6193f2c19fc65fc5822d25a84501cf30562268e1c9870ab978988",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": [],
+      "rationale": "Nauru의 위치·수도·인구·부족·언어를 짧게 소개해 독립 정보문으로 완결된다. 문법 구조는 보통이고 항목 나열형이어서 정부 소재지나 언어 같은 국소 사실 공란이 알맞다."
+    },
+    {
+      "id": "repo:2007_SN_3000983-q49-50",
+      "contentHash": "33bd5e650e5b0e5956421a1ba261c61851a07176bedf52b4fa3ba60831137624",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "과일 껍질의 섬유질·폐기물 감소 이점과 농약·식감·소화 우려를 Person A/B가 대조해 독립적으로 완결한다. 양보·인과·관계 구조가 풍부하고 두 관점의 핵심 공란도 접합이 자연스럽다."
+    },
+    {
+      "id": "repo:ebsi_go2_20201118-q21",
+      "contentHash": "d7bc08b3c5fc80d6b93d0bb42fb2020cecf186807be5c5d75ceddb5e75eb6474",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_MISCHARACTERIZATION"],
+      "rationale": "Newton의 연금술을 ‘laws that Newton failed to establish’ 및 납을 금으로 바꾸려 한 실험으로 단순 규정한 것은 역사적 연구 성격을 왜곡할 수 있다. 교과서가 실패 경로를 지운다는 논지는 완결되며 구조도 풍부하다."
+    },
+    {
+      "id": "repo:ebsi_go1_20150902-q20",
+      "contentHash": "d39709eeeb00c7c257aa3cce5ee4d47c8bebcdac42a3c1178a64bde0d639cb17",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "상투어는 말에서는 생생하고 경제적일 수 있지만 글에서는 익숙함 때문에 독자에게 튕겨 나가 효과를 약화한다는 논지가 완결된다. 예시·대조·조건 구조가 충분하고 중심 공란도 명료하다."
+    },
+    {
+      "id": "repo:2005_06_3001149-q48-49-50",
+      "contentHash": "707496c4845dd233a250c8c1bfb783f97515ee363872caad44d876b56f40e505",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "샘 관리인을 해고하자 물과 마을 경제가 망가지고 재고용 후 회복되는 인과 서사가 완결된다. 시간·분사·관계 구조가 풍부하고 해고라는 전환 또는 결과 문장을 중심 공란으로 두기 좋다."
+    },
+    {
+      "id": "repo:ebsi_go2_20210831-q24",
+      "contentHash": "20abadcb12fcaa65c7dfc2b77ad0f049d46901f847e324007b0a84c46569e658",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_CONCERN", "GRAMMAR_REDUNDANCY"],
+      "rationale": "Wheatfield를 ‘four acres’, ‘thousands of pounds’, 뉴욕 food banks 기부로 기술한 수치·처분 경로는 알려진 기록과 다를 가능성이 있고 ‘return ... back’도 중복이다. 서사는 완결되지만 미술사 확인이 필요하다."
+    },
+    {
+      "id": "repo:2011_09_3001251-q19",
+      "contentHash": "0865a2a429656eff7bd43aad610acce3153bd22eef97a2e99e035c8452498605",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "통행료가 2.50달러인데 50센트만 있던 소녀가 장미를 2달러에 팔아 부족분을 해결하는 계산과 대화가 일관된다. 분사·인용 구조가 풍부하고 해결 행동의 중심 공란도 명료하다."
+    },
+    {
+      "id": "repo:2025_06_5086961-q22",
+      "contentHash": "45c4303f65dd4011e2dfba8afe86d1300d3a9e685ec2b44b53a637a5a5f63d27",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["DOMAIN_GENERALIZATION", "DISPUTED_USAGE"],
+      "rationale": "말하기 접근이 고대의 평등·공유재산 윤리를 만들었다는 인과가 매우 넓고 ‘act controllingly’는 비표준적으로 들린다. 논증은 끝까지 이어지고 중심 공란도 가능하지만 인류학적 근거와 용례 확인이 필요하다."
+    },
+    {
+      "id": "repo:ebsi_go3_20210707-q26",
+      "contentHash": "039ee2f59b38f2e4c6f1aa9e7b1d79e09aa4f72d01abfd7ee21a6bd7b33e372c",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": [],
+      "rationale": "Haffkine의 학업·콜레라 백신 자가시험·인도 활동·은퇴를 시간순으로 제시해 완결된다. 문법은 다양하지만 전기 나열형이므로 자가시험이나 임명 같은 국소 공란이 더 적합하다."
+    },
+    {
+      "id": "repo:ebsi_go1_20190604-q20",
+      "contentHash": "088549edc120cc86ea621932df5b3ceeb4c0340fbb292afad4e5b2c6997edff7",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "테니스와 서예 도구는 살 수 있어도 숙련의 기쁨은 연습해야 얻듯 행복도 길러야 한다는 비유가 선명하다. 반복 중심의 보통 난도이며 최종 일반화 공란이 자연스럽게 접합된다."
+    },
+    {
+      "id": "repo:2010_06_3001224-q49-50",
+      "contentHash": "ab513657d0fc03843e10ef93c58222eb6b8f309298eff94cf3bcc2715ba3bcef",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "장난으로 손목을 부러뜨린 아이들에게 교장이 결과를 설명하고 정학·사과까지 이어지는 책임 교육 서사가 완결된다. 양보·분사·간접화법이 풍부하며 결과 인식의 중심 공란이 안정적이다."
+    },
+    {
+      "id": "repo:ebsi_go2_20191120-q26",
+      "contentHash": "1d675848d384976f3148331c5868a55b9d4134babb6eab7a5d622c3740d525a2",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "local",
+      "issueCodes": ["GRAMMAR_USAGE"],
+      "rationale": "‘completed her master studies as one of the first women in the school’은 표현이 다소 어색하지만 의미는 복구된다. Laserstein의 교육·망명·모델이 시간순으로 완결되며 전기형이라 국소 사건 공란이 적합하다."
+    },
+    {
+      "id": "repo:2021_SN_5061633-q24",
+      "contentHash": "72227044f103d8e3bea3f3a8fd2a32b509b2ab8e6fd3dee5c46f0ae23a2aa274",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "손바닥의 정지 물체는 식별하기 어렵지만 손가락을 움직이면 즉시 알아보는 실험으로 촉각의 시간성을 설명한다. 명령·조건·관계 구조가 풍부하고 움직임이 시간을 더한다는 중심 공란도 안정적이다."
+    },
+    {
+      "id": "repo:ebsi_go3_20241015-q20",
+      "contentHash": "3761807cb1852e6a7222de9aecb17cb2228678fa9db78c0de5f554f084a528a8",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["CAUSAL_OVERCLAIM", "EVIDENCE_SCOPE_RISK"],
+      "rationale": "유아 음악 연습이 curiosity부터 resilience까지 ‘all of the above’ 발달시킨다고 하고 한 가지 최우선 개입처럼 권고해 연구 인과 범위를 넘을 수 있다. 글은 완결·풍부하며 중심 공란은 가능하나 교육 연구 검토가 필요하다."
+    },
+    {
+      "id": "repo:ebsi_go1_20130903-q40",
+      "contentHash": "2c3ffd187ff4f9d654a546f4718a52e1b3958eab7eefd16d08094c3a8e3e12a2",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["MISSING_NUMERIC_CONTEXT", "DOMAIN_CLAIM_RISK"],
+      "rationale": "월 100달러·8% 예시의 525,454/229,388달러는 은퇴 연령과 복리 주기가 명시돼야 검산 가능하다. 지연 보상의 감정적 약점을 설명하는 논지는 완결되고 문법도 풍부하나 숫자 문항에는 맥락이 부족하다."
+    },
+    {
+      "id": "repo:2019_SN_5031122-q23",
+      "contentHash": "a540069c0eb98af59db454cba3432a3b9796697d8971a3a6de398fe3279131b7",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_NUMBER_ERROR", "OUTDATED_STATISTIC_RISK", "POLICY_CLAIM_RISK"],
+      "rationale": "‘several hundred billions of dollars’는 ‘several hundred billion dollars’가 맞고, 산림파괴가 배출의 20%라는 수치와 OECD 보조금 규모는 시점 의존적이다. 기후정의 논지는 완결·풍부하지만 정책 통계 검토가 필요하다."
+    },
+    {
+      "id": "repo:ebsi_go2_20160901-q21",
+      "contentHash": "f0c4e69a0301c2056c6ea22d11b17626f4ad6d5cd33c400ecd8bf6b1ca1bd1f6",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["LEXICAL_USAGE"],
+      "rationale": "‘do volunteer activity’는 ‘volunteer activities/work’가 자연스럽지만 의미는 명료하다. 기업 봉사가 조직 몰입을 약화하기보다 높인다는 반론 구조가 완결되고 중심 공란도 복원 가능하다."
+    },
+    {
+      "id": "repo:2005_YB_5006647-q46-47",
+      "contentHash": "7b3df089a04ee06a8910d06b0c1d5c77f4b9b16403653f2061553e1483103f07",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "맞벌이가 된 부부가 가사를 나누고 Frank가 요리를 배운 변화가 첫 실패와 현재의 즐거움으로 완결된다. 대화·시간절·관계 구조가 풍부하며 역할 변화의 중심 공란도 자연스럽다."
+    },
+    {
+      "id": "repo:ebsi_go2_20260324-q21",
+      "contentHash": "993b5cf8a0c61b9e9cc0414d6fa194e73db8211adcd103719269018f91f284e3",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "오답을 안전하게 드러내야 오개념을 교정하고 학생이 해법을 방어한다는 수업 공동체 논리가 일관된다. 조건·관계·분사 구조가 풍부하고 교사의 ‘blank face’ 역할을 잇는 중심 공란도 안정적이다."
+    },
+    {
+      "id": "repo:ebsi_go1_20230601-q22",
+      "contentHash": "5fcc6ce9a539c909c5cc504b2234c7f33f6d5acc2093b6fe4a94148148fba0b3",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "컴퓨터가 잡무를 없앨 것이라는 약속과 달리 예약·체크인·계산 노동이 소비자에게 이전됐다는 예시가 명료하다. 문법 난도는 보통이고 약속/현실 대비의 중심 공란이 적합하다."
+    },
+    {
+      "id": "cmq2capq3000ammm8iftgy9tp",
+      "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_CONCERN", "TERMINOLOGY_ERROR"],
+      "rationale": "미신을 ‘science and nature’에 근거한다고 하며 Norse 전승을 ‘Norwegian mythology’, 13을 거의 보편적 불운 수로 기술한다. 구조·완결성·중심 공란은 충분하지만 문화사 사실 검토가 필요하다."
+    },
+    {
+      "id": "cmq50ifrc003ummm8xv9ppk4g",
+      "contentHash": "e200693ad0fe69c61a74bcc7d04dd669580cbfd0bb7f2d73006f6774e797c113",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_CONTAMINATION", "DUPLICATED_TEXT", "MALFORMED_OPTIONS"],
+      "rationale": "본문 뒤에 서로 모순되는 선택지들이 붙고 ‘after /after’, ‘should Emotional’처럼 편집 표식과 중복이 남았다. 이성/감정 논의의 원래 단락은 완결됐지만 오염된 전체는 문법·공란 문항 모두 부적합하다."
+    },
+    {
+      "id": "cmq23oovd0015mmcsd9fjq8gf",
+      "contentHash": "d6605167a600feaf35c926331b11d9398a4ae678695ea060e0eb0a00c4f9272e",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_CONTAMINATION", "SOURCE_ANNOTATION_ARTIFACT", "ANSWER_TABLE_REMAINS"],
+      "rationale": "‘16. Which one...’ 문항 지시, ‘@hypothetical’, ‘Dentry-level’ 표식과 Word/Phrase/Meaning 선택지 표가 모두 남았다. 본문 논리는 복구 가능하지만 독립 passage가 아니며 정답 누설과 접합 오염이 심하다."
+    },
+    {
+      "id": "cmq20um9t000mmmcs8wc3qpj3",
+      "contentHash": "220f8817d0a321e58a5d3bb5b81b0a08f5bc2eeb4dc7583502a20888a9b508e3",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_CONTAMINATION", "SOURCE_ANNOTATION_ARTIFACT", "ANSWER_TABLE_REMAINS", "OCR_CORRUPTION"],
+      "rationale": "문항 지시와 뜻풀이 표가 붙고 ‘Coutpaces’, ‘@maintenance’, 고립된 ‘6’까지 단어에 섞였다. gig 노동 본문은 완결 가능하나 현재 텍스트는 문항 원문 오염으로 어떤 독립 생성에도 부적합하다."
+    },
+    {
+      "id": "cmq5c5cip001lmmrwty0eg9zg",
+      "contentHash": "7631a174c99bcee7f202e6252b31f845ff1f502ca3ac17c65232d5a8ccc1e75b",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["TRUNCATED_START", "SOURCE_CONTAMINATION", "GRAMMAR_WORD_ORDER"],
+      "rationale": "‘sweet fruit could there possibly be’로 시작해 질문 앞부분이 누락됐고 (A), ‘direct 2 unexpected inverse’ 답 잔재가 남았다. ‘saw similar a relationship’도 어순 비문이어서 내용·문법·공란 모두 독립 사용 불가다."
+    },
+    {
+      "id": "cmq23op900017mmcsgdlfr18c",
+      "contentHash": "8654ea86fbd9b865e93bf72f3d274fe9af723bd6de3271f1415edb3d6eab5591",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_CONTAMINATION", "PUNCTUATION_ERROR", "GRAMMAR_SUBJECT_VERB"],
+      "rationale": "[13-14] 지시·삽입 위치·문항 질문이 붙고 ‘(©)’, ‘@’, 밑줄 표식 및 ‘players ... is’가 남았다. 첫 인용의 닫는 따옴표도 없어 passage 자체가 아니며 공란 접합을 판정할 수 없다."
+    },
+    {
+      "id": "cmpbeploy0069mmag6t6caoiu",
+      "contentHash": "fe1637edcf53eff326b04a337c96552b296ee310fc50b563a4b665dbcaf63572",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "측정하기 쉬운 proxy를 목표로 최적화하면 본래 목적을 잃는 Goodhart 법칙을 예시적 범주와 결론으로 설명한다. 관계·조건·분사 구조가 풍부하고 법칙 정의의 중심 공란도 안정적이다."
+    },
+    {
+      "id": "cmq20ulw9000kmmcsd6rn4vv1",
+      "contentHash": "8eb195031ee874946ec49b406a42698d1f2d3d7724d73ea067e1daee1b643aba",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_CONTAMINATION", "PUNCTUATION_ERROR", "GRAMMAR_SUBJECT_VERB"],
+      "rationale": "[13-14] 안내, (A)/(B)/(©)/@ 표식과 ‘grammatically INCORRECT?’ 질문이 본문에 합쳐졌고 ‘sharing_economy is’ 오류도 노출된다. 생성용 독립 지문이 아니므로 제외한다."
+    },
+    {
+      "id": "cmpaqf99o000dl204pyve3pdv",
+      "contentHash": "b42cf83a0841f5043369e09c7ad5d77612acc3f969c2fdd537755338f46f68f2",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_SCOPE_ERROR", "CAUSAL_OVERCLAIM"],
+      "rationale": "향신료의 항균성·기후별 사용 상관을 인간 취향이 생존 때문에 진화한 결론으로 연결하고 ‘almost every bacterium’이라 넓게 말해 전문 확인이 필요하다. 문장과 담화는 완결되고 구조도 풍부해 중심 공란은 가능하다."
+    },
+    {
+      "id": "cmq272sfm001kmmcsay23lmyc",
+      "contentHash": "f81792bff8e500e39764302d7de1e3b4c987a2b8e9c6712a112194064d35c2a0",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_ERROR_ADVERB"],
+      "rationale": "‘doing it all perfect’는 동사구를 수식할 부사 ‘perfectly’가 필요한 명백한 오류다. 성공과 가족 역할을 모두 완벽히 해낼 수 없다는 연설은 완결되고 구조가 풍부하며 중심 공란도 가능해 오류 문항 재료로 적합하다."
+    },
+    {
+      "id": "cmpaqf9ay000jl204pew667f2",
+      "contentHash": "5f6141ba762adbca9ec45c71fa929b443fdf66132b7775797042add3768682e3",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["PUNCTUATION_ERROR", "BLANK_JOIN_RISK"],
+      "rationale": "‘respect-as’는 대시 띄어쓰기가 잘못됐고 ‘rather than yourself you’ 앞에서 닫는 대시/쉼표가 빠졌다. 성공 후 타인의 시선에 맞추다 자아 성장을 멈춘다는 논지는 완결되지만 해당 삽입구를 가로지르는 공란은 피해야 한다."
+    },
+    {
+      "id": "cmpaqf96q0001l204lnt7f5y9",
+      "contentHash": "5e46fb6e5a5d2a3086b3ababd4f4498cb6ea31dfa5a0e4f2a900cf4db31ff702",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "음식 경험은 개인 감각이지만 공유와 내적 주의를 함께 요구해 사회적 연결을 만든다는 철학적 논지가 일관된다. 양보·분사·병렬 구조가 풍부하고 공유 경험의 중심 공란이 자연스럽다."
+    },
+    {
+      "id": "cmq56mbbc0001mm6cabjbecw8",
+      "contentHash": "7224cb1ea6a626fa46bbffdd3fdd8042944a49c4b60e43e693b58fd70c71c05d",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["GRAMMAR_NUMBER_USAGE"],
+      "rationale": "‘expert system and knowledge-based technologies’는 병렬상 복수 ‘expert systems’ 또는 복합수식 표기가 더 자연스럽다. data tomb를 지식으로 바꿀 도구가 필요하다는 논지는 완결되고 문법·중심 공란 재료가 풍부하다."
+    },
+    {
+      "id": "cmpaqf97g0003l204jhi59d8z",
+      "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["PUNCTUATION_ERROR"],
+      "rationale": "‘multiple-choice questions are easier-you’는 하이픈 대신 대시와 적절한 띄어쓰기가 필요하다. 회상과 재인의 단서 차이는 완결되고 복합 구조도 풍부하며, 훼손된 경계만 피하면 중심 공란은 안정적이다."
+    },
+    {
+      "id": "cmpaqf9a4000fl2042odbrdj0",
+      "contentHash": "12976b2165fc710a77f8f0450a15bb32c195f5cef78e8f7720023a5c65b69c75",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "발생 과정의 무작위 변이와 위치 선택이 세포를 제거·보존하고 큰 구조를 만든다는 설명이 조각 비유로 완결된다. 복합·수동·관계 구조가 풍부하고 핵심 선택 문장 공란도 명확하다."
+    },
+    {
+      "id": "cmq272t6z001ommcsbneh6fby",
+      "contentHash": "d0261be75d49a681b21f4573e964d449cb2c099f98ffeb09c037559706d29c23",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "normal",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["FACTUAL_OVERSTATEMENT"],
+      "rationale": "1875년 reed의 ping을 ‘the first time sound had been transmitted by electricity’라고 한 것은 기존 전기 전신의 음향 전송까지 배제하는 과도한 표현일 수 있다. Bell의 실험 서사는 완결되고 중심 공란도 가능하나 역사 검토가 필요하다."
+    },
+    {
+      "id": "cmpaqf97v0005l204xjjvssdr",
+      "contentHash": "6e695417470285daf06a97318e349b86edf9fa6cb56c68db79c59073ddd736a6",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["TYPO_PUNCTUATION"],
+      "rationale": "‘a clean water. act’에서 명사구 한가운데 잘못된 마침표가 들어가 문장이 인위적으로 절단됐다. 불완전한 정책도 진전이라는 논지는 완결되고 문법도 풍부하지만 명백한 원문 오염을 보존한 채 쓰면 안 된다."
+    },
+    {
+      "id": "cmpaqf9aj000hl20466bzeiga",
+      "contentHash": "c73936758b2a6baafa87a6a44b9e4601a4162d2bbbe14c1753674a5158593614",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["MEDICAL_CLAIM_RISK", "CAUSAL_OVERCLAIM"],
+      "rationale": "관찰상 과일 섭취와 뇌 부피의 역상관을 소개한 뒤 고당 과일이 가공 탄수화물만큼 인지 문제를 ‘cause’할 수 있다고 확장한다. 의학·영양 인과로 쓰기에는 교란요인 검토가 필요하며 글 자체는 완결·풍부하다."
+    },
+    {
+      "id": "cmpaqf9fr0017l204rcz69oyr",
+      "contentHash": "ea5b502237e5c7a5414210eae274792ade3580f6ca835cfdd5e9346e0d7453ec",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["PUNCTUATION_MISSING", "GRAMMAR_NUMBER_USAGE"],
+      "rationale": "‘data tombs’와 ‘data archives’ 사이에 대시/쉼표가 빠졌고 ‘expert system and knowledge-based technologies’는 수 일치가 어색하다. 다만 데이터에서 지식을 추출할 도구의 필요성은 완결되고 중심 공란도 충분하다."
+    },
+    {
+      "id": "cmpaqf997000bl204g2nptcrl",
+      "contentHash": "568154d8bc4d522eef680080676fc047611f66f7742f0300633af91ebd37c088",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["MEDICAL_CLAIM_RISK", "FACTUAL_OVERSIMPLIFICATION"],
+      "rationale": "hippocampus가 교감·부교감계를 직접 조절하고 스트레스가 이를 ‘confuse’해 cortisol 스위치를 on으로 둔다는 설명은 신경내분비 기전을 지나치게 단순화한다. 완결된 글이나 의학 검토가 필요하다."
+    },
+    {
+      "id": "cmqb48s000001l70497mch8x0",
+      "contentHash": "dd13c3b0479f50ac7de6e2f6584225d684446d2467b1dc6b9f06b0e1c67cf33c",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["LOGICAL_PIVOT_UNMARKED"],
+      "rationale": "공유경제의 사회적 이점을 길게 제시한 뒤 ‘Most of the major players ... for-profit’로 전환하면서 however가 생략돼 피벗이 다소 급하다. 그래도 상업화 비판까지 논지는 완결되고 중심 공란 복원이 가능하다."
+    },
+    {
+      "id": "cmq742ju90015mm1gk4pzfggd",
+      "contentHash": "c9aa67aba49a7e63b1064e1f772fb19e371717736dd98612d3f73e5577079aeb",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_CONTAMINATION", "DUPLICATED_WORD", "FRAGMENTED_OPTIONS"],
+      "rationale": "완결된 회상/재인 설명 뒤에 ‘concrete concrete’, ‘a restore’ 등이 포함된 선택지 묶음이 문장 경계 없이 붙었다. 본문은 풍부하지만 전체는 독립 완결성이 없고 공란 정답 범위를 정할 수 없다."
+    },
+    {
+      "id": "cmpchv9xq0003ky0484e1e7y4",
+      "contentHash": "b020c669017ca57a360621b65c2b92baf721c27164633ffebfda2cc33a41033b",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["DISPUTED_USAGE"],
+      "rationale": "왼손잡이의 불편에서 Ronald Mace와 universal design 정의로 전개돼 완결된다. ‘the disabled’는 문법적으로 가능하나 사람 우선 표현 측면에서 논쟁적일 수 있으며, 그 외 구조는 풍부하고 중심 공란은 안정적이다."
+    },
+    {
+      "id": "cmq5gpplq0001mmsg2fi1puqg",
+      "contentHash": "edb3d4a283cfe08b1d54a74b8afe0171a7866c17536d0a65215d9e0b2ffa3f4f",
+      "split": "holdout",
+      "status": "EXCLUDE",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "unsuitable",
+      "issueCodes": ["SOURCE_CONTAMINATION", "CONTRADICTORY_OPTIONS"],
+      "rationale": "이성과 감정의 상호의존을 설명한 본문 뒤에 ‘Emotional responses should be eliminated’, ‘reasoning is sufficient’ 등 상충하는 선택지들이 구분 없이 붙었다. 독립 지문 완결성이 없어 두 문항 유형 모두 부적합하다."
+    },
+    {
+      "id": "cmpnzw9ay00dbmmykw8e1lclh",
+      "contentHash": "977d6bc2d6945fa183236f67ab485199953020bba284841017df14d48e962adf",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["LEXICAL_USAGE"],
+      "rationale": "universal design 의복의 소재·여밈·조절 기능과 수혜 대상을 제시하고 확대를 촉구해 완결된다. ‘incorporates traits’는 features가 더 자연스럽지만 문법 구조는 풍부하고 중심 공란도 충분하다."
+    },
+    {
+      "id": "cmpnzxg1100e7mmykv46al2g6",
+      "contentHash": "b50f599d06dde2703b827c0c08959f252d74d2033814465e63ac501498abd063",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "dot-com 회사의 광고 공간 맞교환이 현금이나 순이익 없이 양쪽 매출·비용만 기록해 매출을 부풀린다는 설명이 완결된다. 조건·수동·삽입 구조가 풍부하고 회계 원칙 결론의 중심 공란도 안정적이다."
+    },
+    {
+      "id": "cmqg66544000emm60nvhh17iu",
+      "contentHash": "c60a3a1a0020f9afce966b355a41339ec7dc557c26134ffe57487ed84c4d800f",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["CAUSAL_OVERCLAIM", "EVIDENCE_SCOPE_RISK"],
+      "rationale": "손필기가 타이핑보다 ‘unique’한 회로를 활성화하고 디지털 전환이 사고 조직 능력을 해친다고 일반화해 연구 조건을 넘어설 수 있다. 글은 완결되고 구조도 풍부하지만 교육·신경과학 근거 검토가 필요하다."
+    },
+    {
+      "id": "cmpv7gfl00001mmbc0u8d49ep",
+      "contentHash": "1e369ebc778684fbe2f6bbae552dfe062e001f573ac6a280c0d14aa8d6dc4765",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": [],
+      "rationale": "몸짓이 발화 전에 멈추고 단어 인출·기억·설명을 돕는다는 여러 관찰이 ‘leading edge of thought’ 결론을 지지한다. 시간절·병렬·분사 구조가 풍부하고 중심 공란도 자연스럽다."
+    },
+    {
+      "id": "cmpwtrzov0001jd0b5z38rzdv",
+      "contentHash": "5c86912f2c0d4c08137b6c1d756844cfc6e13d29478079900b80c0290cec851c",
+      "split": "holdout",
+      "status": "PASS",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["PUNCTUATION_PARALLELISM"],
+      "rationale": "‘reacting to the immediate environment, the brightest colors or loudest sounds’는 병렬상 to가 반복되거나 콜론이 있으면 더 명료하다. 비판적 사고가 자극·감정 반응에서 해방한다는 논지는 완결되고 중심 공란도 충분하다."
+    },
+    {
+      "id": "cmqfkcut40032mmzcjq5riqxl",
+      "contentHash": "e047f728febca8b85e829c7de7fbb5f84d1674a8ea0d13a12ff5ce7860673b99",
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW",
+      "grammarSuitabilityHuman": "rich",
+      "blankSuitabilityHuman": "central",
+      "issueCodes": ["METHODOLOGY_CONFLATION", "STATISTICAL_CLAIM_RISK"],
+      "rationale": "측정오차를 한 지점의 대표성·공간 표본오차와 섞고 단순 평균이 국소 조건을 ‘neutralize’한다고 단정한다. 호수 예시는 완결되고 문법도 풍부하나 복제·다양화·평균의 통계적 역할을 전문가가 확인해야 한다."
+    }
+  ]
+}

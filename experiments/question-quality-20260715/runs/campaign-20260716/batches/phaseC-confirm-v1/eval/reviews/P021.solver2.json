@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "ask는 5형식에서 'ask + O + to-V'를 취하는 요청 동사. 'asks the wise Mr. Miyagi to teach him karate'는 이 패턴에 정확히 부합하며, teach의 이중목적어(him karate)도 정상. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'in precisely opposed circular motions'의 opposed는 과거분사형 형용사(서로 반대 방향으로 놓인)로 circular motions를 수식. 'diametrically opposed'처럼 표준적인 형용사 용법이며 부사 precisely의 수식도 자연스럽다. opposing으로도 쓸 수 있으나 opposed 역시 완전한 정문이므로 오답 함정으로만 기능."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "사역동사 make는 능동태에서 'make + O + 원형부정사'를 지배한다. 'makes Daniel to hammer nails'는 to부정사를 취해 규칙 위반 — 'makes Daniel hammer'가 옳다. 수동태(be made to-V)에서만 to가 복원되는데 본문은 능동. to hammer를 목적 부사구로 읽는 대안 해석은 'Daniel을 만들다'라는 비문적 의미가 되어 성립하지 않는다. 유일하게 어법상 틀린 항목."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'he is limited to household chores'는 'limit A to B'의 수동태로, 잔류 전치사구 to household chores가 정확히 대응한다. 문맥(호신술 대신 집안일에 국한됨)과도 논리적으로 정합. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "계속적 용법 관계절 ', who without thought or hesitation defends himself'에서 who는 관계절 동사 defends의 주어이므로 주격이 옳다. 부사구 'without thought or hesitation'이 주어와 동사 사이에 삽입되어 있을 뿐이며, 선행사 Daniel(사람)과의 일치도 성립. whom으로 착각하도록 유도하는 삽입구 함정이나 who가 정문."
+    }
+  ],
+  "note": "정답은 (C) 하나로 명확히 수렴. 능동태 make + O + to-V는 현대 표준 영어에서 허용되지 않아 형식적으로 비문임을 증명 가능. (B) opposed가 opposing과의 대비로 헷갈릴 수 있으나 opposed는 표준 형용사 용법이라 옹호 가능한 복수 정답은 없음. 문항 자체는 어법 문항으로 깔끔하게 성립."
+}

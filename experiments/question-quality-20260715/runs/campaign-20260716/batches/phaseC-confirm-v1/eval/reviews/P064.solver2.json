@@ -1,0 +1,35 @@
+{
+  "pid": "P064",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (this is the ungrammatical one)",
+      "reason": "In 'skills and behaviors that is necessary for future survival', the relative pronoun 'that' must take the plural coordinate NP 'skills and behaviors' as antecedent, so the verb must be 'are', not 'is'. Alternative rescues fail formally: (i) taking 'a way' as antecedent requires the relative clause to skip the intervening of-PP and yields the semantically incoherent reading 'a way that is necessary for future survival' while the parallel later sentence ('skills ... that are necessary for everyday living') confirms the intended antecedent is the skills; (ii) a sentential/non-restrictive reading is impossible because 'that' cannot introduce a non-restrictive relative clause and no comma is present. Hence 'is' is an agreement error."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a way in which children learn about the world and their place in it' — the relative clause is complete ('children learn about the world ... in that way'), so preposition + which ('in which') is the licensed strategy. 'way in which' is a standard, fully grammatical collocation."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a training ground for developing physical abilities' — the preposition 'for' requires a nominal complement; the gerund 'developing' fills it and licitly takes 'physical abilities' as its object. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'skills like walking, running, and jumping that are necessary for everyday living' — restrictive relative 'that' with antecedent 'skills' (the like-PP is an appositive exemplification); plural agreement 'are' holds. Even under the alternative parse where the antecedent is the coordinated gerunds 'walking, running, and jumping', the plural verb still agrees. No violation under any parse."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'learn how to compete and cooperate with others, how to lead and follow, how to make decisions' — wh-word + to-infinitive as object of 'learn'; the parallel series 'how to X, how to Y, how to Z' has consistent onset points, and 'compete and cooperate (with others)' is a licit intransitive coordination. Grammatical."
+    }
+  ],
+  "note": "Clean single-answer item. (A) is a long-distance subject-verb agreement error across a relative clause boundary (antecedent 'skills and behaviors' is plural, so 'is' must be 'are'). All four distractors are formally verifiable as grammatical, and (D) even reinforces the correct pattern with 'that are necessary', giving the passage internal evidence. No alternative parse rescues (A), and no other option admits a defensible 'incorrect' reading."
+}

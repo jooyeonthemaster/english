@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어의 진짜 핵은 'One' ('One of the most common mistakes [made by organizations...]'). 'made by...'는 mistakes를 수식하는 축약 관계절(과거분사구)이며, 'one of + 복수명사'는 항상 단수 동사를 취한다. 따라서 단수 'is'는 정문. 복수 'mistakes'에 일치시키는 대안 해석은 규범 문법상 성립하지 않는다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'with a thorough ___ of the organization's own goals' 구조에서 관사 a + 형용사 thorough 뒤, of-보충어 앞 슬롯은 명사여야 한다. 'understood'는 과거분사/형용사로 명사 슬롯을 채울 수 없어 '*a thorough understood of X'는 비문. 요구형은 'understanding'. 구제 해석 탐색: (i) understood가 수식할 생략 명사가 없음, (ii) 분사는 'a thorough ~ of NP' 틀을 취할 수 없음, (iii) 상관구문 'not with insight into... but with a thorough ___ of...'가 insight와 평행한 명사를 요구함. 모든 대안 해석 실패 — 유일한 비문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'everyone else is doing it'에서 it은 앞의 행위(인기 소셜 네트워크에서 presence를 관리하는 것/소셜 미디어를 하는 것)를 받는 대용 대명사. doing의 목적어로 단수 중성 대명사 it은 완전히 문법적이며 'everyone else is doing it'은 관용적 표현이기도 하다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'in and of itself'는 '그 자체로'를 뜻하는 고정 관용구이며, 재귀대명사 itself는 단수 동명사구 주어 '\"Being in social media\"'와 일치한다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "병렬 시작점 검증: 'must either solve ... or result in ...'에서 either가 조동사 must 뒤에 위치하므로 두 등위항은 모두 원형부정사여야 한다. solve와 result가 원형으로 평행하므로 정문. (solves/solving 등이었다면 비문이 되었을 자리.)"
+    }
+  ],
+  "note": "형식 문법 판정상 (B)만이 비문이며 나머지 네 밑줄은 장거리 단서(진짜 주어 'One', 상관구문 not A but B 병렬, either~or 병렬 시작점, 관용구 in and of oneself)까지 확인해도 모두 정문. 정답이 (B)로 유일하게 수렴하는 깨끗한 문항. 지문 출처는 Olivier Blanchard의 Social Media ROI 계열 텍스트로 보이며 기출(평가원) 지문과 유사."
+}

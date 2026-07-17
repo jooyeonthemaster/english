@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20191120-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 155
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):ANS=b  (C):dec=h  (D):dec=g  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 181,
+        "relPos": 0.212,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 344,
+        "relPos": 0.402,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 359,
+        "relPos": 0.42,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 528,
+        "relPos": 0.618,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 612,
+        "relPos": 0.716,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 13,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.716,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a meal. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "often found",
+        "isError": false,
+        "errorExpression": "often found",
+        "surroundingText": "Take the case of the Adélie penguins. They are often found strolling in large groups",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "which",
+        "isError": true,
+        "correction": "which",
+        "errorExpression": "where",
+        "surroundingText": "There is the leopard seal, for one, which likes to have penguins for a meal.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "have penguins for a meal",
+        "isError": false,
+        "errorExpression": "have penguins for a meal",
+        "surroundingText": "There is the leopard seal, for one, which likes to have penguins for a meal.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "them",
+        "isError": false,
+        "errorExpression": "them",
+        "surroundingText": "They wait and wait and wait by the edge of the water until one of them gives up",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": false,
+        "errorExpression": "it",
+        "surroundingText": "If the pioneer survives, everyone else will follow suit. If it perishes,",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "often found"
+      },
+      {
+        "label": "(B)",
+        "text": "where"
+      },
+      {
+        "label": "(C)",
+        "text": "have penguins for a meal"
+      },
+      {
+        "label": "(D)",
+        "text": "them"
+      },
+      {
+        "label": "(E)",
+        "text": "it"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어인 They(아델리 펭귄들)가 발견되는 대상이므로 수동의 의미를 나타내는 과거분사 'often found'는 어법상 옳습니다.",
+      "(C)": "likes의 목적어로 사용된 to부정사 구조로, to 뒤에 동사원형 'have'가 이끄는 원형 명사구가 와서 표범표범이 펭귄을 식사로 삼기를 좋아한다는 의미를 명백히 완성하므로 옳습니다.",
+      "(D)": "앞 문장의 복수 명사인 'The penguins'를 지칭하므로 복수 대명사인 'them'은 어법상 옳습니다.",
+      "(E)": "앞 문장의 단수 명사인 'the pioneer'를 지칭하므로 단수 대명사인 'it'은 어법상 옳습니다."
+    },
+    "explanation": "문장의 선행사는 단수 명사인 'the leopard seal'이며, 관계사절 내부에 주어가 빠진 채 동사 likes가 바로 이어지는 불완전한 절이 오고 있습니다. 따라서 주어가 결손된 불완전한 절을 이끌며 선행사를 수식할 수 있는 격은 주격 관계대명사이므로 (B)의 'where'는 올 수 없으며, 관계대명사 'which'로 고쳐야 합니다. 관계부사 'where'는 뒤에 완전한 절이 와야 하므로 이 자리에는 문장 구조상 성립하지 않습니다.",
+    "keyPoints": [
+      "(B) 관계사절 — 격과 문장의 완전성 판단",
+      "(A) 분사의 태 — 주어와의 수동/능동 관계 분석",
+      "(D) 대명사의 수식 관계와 지시대상 탐색"
+    ],
+    "tags": [
+      "관계대명사",
+      "관계부사",
+      "분사",
+      "대명사 일치"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are __(A) often found__ strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, __(B) where__ likes to __(C) have penguins for a meal__. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of __(D) them__ gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If __(E) it__ perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\"",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

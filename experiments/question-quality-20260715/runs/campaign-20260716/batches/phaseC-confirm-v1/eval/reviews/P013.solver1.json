@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'only through music are we able to...' — 'only + 부사구'가 절 앞으로 나오면 주어-조동사 도치가 의무적이다. that절 내부라도 only-도치 규칙은 동일하게 적용되므로 'are we able'은 정문. 도치를 모르는 수험생에게는 'we are'가 자연스러워 보여 유혹적이지만, 규칙상 흔들림 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'Musical meaning cannot be separated from the act of presentation.' — 'meaning'이 분리되는 대상이므로 수동태 be separated from이 정확하다. 논쟁 여지 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'making it present here and now, without which it will not be music at all' — 'without which' 뒤에 완전한 절(it will not be music)이 이어지므로 전치사+관계대명사가 필요하며, 선행사는 'making it present here and now'(현재화하는 행위) 내지 'the necessity of presenting music' 복합체로 성립한다. 대시 삽입구 안에 있어 선행사 파악이 어려운 최상위 매력 오답 후보 — 'without it'으로 바꾸고 싶은 유혹이 들지만 그러면 접속사 없이 두 절이 연결되어 비문이 된다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'uses the past to make sense of the present' — '과거를 사용하여 현재를 이해한다'는 목적 부정사로 정확하다. 'that rests... and which... uses'의 관계절 병렬도 성립하므로 병렬 함정도 없음. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong (answer)",
+      "reason": "'the emphasis is still on pupils to absorb factual information' — 전치사 on의 목적어는 '학생들이 사실 정보를 흡수하는 것'이라는 사건이어야 하므로 의미상 주어를 동반한 동명사 'pupils absorbing factual information'이 요구된다. 'emphasis is on X to-V'는 허가되지 않는 구문('pressure is on X to-V'와 달리 관용화되어 있지 않음). 구제 독해 탐색: 'pupils to absorb'를 축약 관계절(pupils who are to absorb)로 읽으면 강조 대상이 '학생들 자체'가 되는데, 앞 문장의 'activities that will involve all pupils working directly with music'(직접 음악을 하는 활동)과의 대비 — 행위 vs 사실 흡수 — 가 무너지므로 문맥상 성립하지 않는다. 어법상 틀림 — 정답."
+    }
+  ],
+  "note": "정답이 (E)로 유일하게 좁혀진다. 최상위권 실전 관점에서 가장 매력적인 오답은 (C) 'without which'(대시 삽입구 속 장거리 선행사)와 (A) only-도치였으나, 둘 다 지배 규칙 확인으로 명확히 정문 판정된다. 원문 계열 텍스트(음악 교육론)에서도 'pupils absorbing'이 표준 표기로 추정되며, (E)는 gerund→to부정사 치환형 전형 오류다. 복수 정답 위험 없음."
+}

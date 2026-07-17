@@ -1,0 +1,38 @@
+{
+  "pid": "P031",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "독립 재검증 결과 5개 밑줄 중 어법상 틀린 것은 (C) chosen 하나뿐이다. 해당 분사구의 의미상 주어(the United Kingdom)는 선택 행위의 능동 주체이고 분사가 명사절 목적어(who the nation's leader would be)를 직접 지배하므로 수동 과거분사 chosen은 어떤 통사 분석으로도 성립하지 않는다. 구제 해석 3종 — (i) had...chosen 과거완료(had는 'influence를 소유한' 본동사라 조동사 공유 불가, 등위접속사 부재), (ii) 수동 부가어 '(being) chosen'(UK가 선택받았다는 의미 불성립 + 목적어절 허가 불가), (iii) having chosen의 축약(과거분사 단독 부가어는 수동 해석만 가능) — 이 모두 형식적으로 차단된다. choosing으로 교정하면 원지문이 정확히 복원되는 최소대립쌍. (A)(B)(D)(E)는 각각 간접의문문 평서 어순, 축약 관계절 수동 분사, order+O+to부정사, rather than+동사원형(표준 용법)으로 전부 정문이며 제2정답 시비 여지가 없다. 솔버 1·2의 판정과 근거에 과잉·누락 없음, 감사자 V2=true 유지. 선언된 정답 (C)는 유일 정답이다.",
+  "perDispute": [
+    {
+      "label": "(A) how long",
+      "claim": "간접의문문 어순이 틀렸다(도치/do-support 필요)는 잠재적 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "learn의 목적어인 간접의문문은 평서 어순(how long + S + V)이 규범이며 'how long did the shortest war last'식 도치가 오히려 비문. last는 자동사로 기간 부사구(how long)를 취함: cf. 'it lasted only 38 minutes'. 원지문과 동일."
+    },
+    {
+      "label": "(B) called",
+      "claim": "현재분사 calling이어야 한다는 잠재적 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "'a small African island nation called Zanzibar'는 축약 관계절(= which was called Zanzibar). 수식 대상 nation이 명명 동사 call의 피동작주이므로 수동 과거분사가 필수. 'a nation called X'는 극히 관용적인 패턴."
+    },
+    {
+      "label": "(C) chosen",
+      "claim": "선언된 정답 — 능동 현재분사 choosing이어야 하는데 chosen으로 변형됨. 구제 해석(had...chosen 과거완료 등)이 성립하면 정답 유일성 붕괴",
+      "verdict": "확정 — 유일한 오류",
+      "evidence": "세 가지 구제 해석 전부 차단: (1) 과거완료 'had ... even chosen' 불가 — 선행 had는 'had a great deal of influence'의 소유 본동사이지 완료 조동사가 아니며, 접속사 없는 콤마만으로 정형 VP의 조동사 공유(gapping)가 허가되지 않음. (2) 수동 분사 부가어 불가 — 의미상 주어 UK가 '선택받은' 것이 아니라 선택의 주체이며, 수동 분사는 뒤의 명사절 목적어 'who the nation's leader would be'를 지배할 수 없음. (3) 'having chosen'의 축약으로도 불가 — 단독 과거분사 부가어는 수동 해석만 가능. 따라서 chosen에는 문법적 파스가 존재하지 않으며, choosing으로 교정 시 원지문과 정확히 일치(최소대립쌍 성립)."
+    },
+    {
+      "label": "(D) step",
+      "claim": "to 뒤 형태 오류(stepping 등이어야 한다)는 잠재적 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "order는 'order + 목적어 + to부정사' 구문을 취하는 대표 동사. 'ordered Zanzibar's new leader to step down'에서 to 뒤 동사원형 step은 부정사의 정확한 형태."
+    },
+    {
+      "label": "(E) surrender",
+      "claim": "than을 전치사로 보아 동명사 surrendering만 가능하다는 이의 — 성립 시 복수정답",
+      "verdict": "기각 — 정문(제2정답 불성립)",
+      "evidence": "rather than은 동사원형과 동명사를 모두 보어로 허가하며, 특히 문두에서 후행 정형동사(gathered)와 대조될 때 원형이 가장 관용적(cf. 'Rather than fight, he fled'). 또한 surrender는 명사 독법도 독립적으로 가능. 매력적 디코이일 뿐 오류가 아님."
+    }
+  ]
+}

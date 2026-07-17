@@ -1,0 +1,160 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):ANS=f  (C):dec=d  (D):dec=a  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 100,
+        "relPos": 0.099,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 308,
+        "relPos": 0.306,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 524,
+        "relPos": 0.52,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 612,
+        "relPos": 0.608,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 929,
+        "relPos": 0.923,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.923,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "efficient",
+        "isError": true,
+        "correction": "efficient",
+        "errorExpression": "efficiently",
+        "surroundingText": "It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "struggle",
+        "isError": false,
+        "errorExpression": "struggle",
+        "surroundingText": "People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "representing",
+        "isError": false,
+        "errorExpression": "representing",
+        "surroundingText": "But representing the world as abstract ideas and features comes at a cost of seeing the world as it is.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "undermined",
+        "isError": false,
+        "errorExpression": "undermined",
+        "surroundingText": "The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "efficiently"
+      },
+      {
+        "label": "(C)",
+        "text": "struggle"
+      },
+      {
+        "label": "(D)",
+        "text": "representing"
+      },
+      {
+        "label": "(E)",
+        "text": "undermined"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "선행사 shapes, colors, and concepts를 수식하는 목적격 관계대명사 that은 어법상 올바른 쓰임입니다.",
+      "(C)": "문장의 주어는 관계절의 수식을 받는 복수 명사의 핵심인 People이므로, 복수 동사 struggle로 수일치한 것은 어법상 적절합니다.",
+      "(D)": "문장의 주어 자리에 쓰인 동명사구 representing은 주어 역할을 하는 준동사로 어법상 올바릅니다.",
+      "(E)": "문장의 주어인 The discovery에 대응하는 본동사 자리이므로, 과거동사 undermined는 어법상 적절합니다."
+    },
+    "explanation": "문장의 주어부인 It's a more efficiently way to store information에서 관사(a)와 복합 수식어구의 핵이 되는 명사(way) 사이에 놓인 표현은 뒤에 오는 명사 way를 직접 수식하는 역할을 해야 합니다. 부사인 efficiently는 명사를 앞에서 직접 수식할 수 없으므로, 명사를 수식할 수 있는 형형사 형태인 efficient로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(B) 형용사 vs 부사 — 명사를 수식하는 자리에는 부사가 아닌 형용사가 위치해야 함",
+      "(C) 주어-동사 수일치 — 수식어구에 가려진 진짜 주어의 핵(People)을 찾아 동사 수일치 판단",
+      "(E) 정동사 vs 준동사 — 구조가 복잡한 문장에서 수식을 제외한 문장 전체의 진짜 본동사 자리인지 판별"
+    ],
+    "tags": [
+      "형용사부사",
+      "수일치",
+      "동명사주어",
+      "관계대명사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts __(A) that__ we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more __(B) efficiently__ way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail __(C) struggle__ to generalize, learn, and make connections between what they have learned. But __(D) representing__ the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely __(E) undermined__ the legal primacy of eyewitness testimony. Seeing is not believing."
+  }
+}

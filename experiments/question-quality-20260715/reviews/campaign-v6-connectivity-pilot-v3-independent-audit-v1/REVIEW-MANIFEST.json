@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "question-quality-independent-audit-manifest-v1",
+  "reviewId": "campaign-v6-connectivity-pilot-v3-independent-audit-v1",
+  "selfExcluded": true,
+  "artifacts": [
+    {
+      "path": "REPORT.md",
+      "bytes": 6557,
+      "sha256": "f499d73b42ed353ab9210f90b2a16c014aad6d8747d227b4c6b6916378df92f2"
+    },
+    {
+      "path": "SOURCE-HASHES.sha256",
+      "bytes": 28871,
+      "sha256": "4cbec02e647360213e71d7b9ae23bf32049485112f9df96e5a6c8524796ff33f"
+    },
+    {
+      "path": "result.json",
+      "bytes": 6266,
+      "sha256": "3ca63e6beedd850ded02a71c5ff0c545e52578c43aeccad7d63625b7ef733d48"
+    },
+    {
+      "path": "verify.mts",
+      "bytes": 30057,
+      "sha256": "2675fc9c1122214aa045e1b96302f3582dfd4285310165e79aa4f88b88d62bb3"
+    }
+  ]
+}

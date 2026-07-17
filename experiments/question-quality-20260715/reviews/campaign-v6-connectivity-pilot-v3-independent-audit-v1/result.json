@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "question-quality-independent-audit-result-v1",
+  "reviewId": "campaign-v6-connectivity-pilot-v3-independent-audit-v1",
+  "reviewedTarget": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3",
+  "verdict": "FAIL",
+  "releaseReady": false,
+  "disposition": "DO_NOT_AUTHORIZE_OR_DISPATCH; REBUILD_AND_REAUDIT_AS_A_NEW_VERSION",
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "CRITICAL",
+      "title": "The inherited production-compiler source commitment is still incomplete",
+      "evidence": {
+        "independentCompilerGraphFiles": 191,
+        "claimedProductionSourceClosureRows": 32,
+        "compilerGraphClaimIntersection": 27,
+        "compilerGraphRowsOmittedFromClaim": 164,
+        "claimedRowsOutsideCompilerGraph": 5,
+        "unresolvedLocalImports": 0,
+        "nonliteralDynamicLoads": 0,
+        "inheritedClaimSha256": "26725e6f8b90368fdd168a491117414f56689f964506a430e2b405fd12d3796b",
+        "representativeOmissions": [
+          "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+          "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/compile-exact-wire.mts",
+          "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/protocol-core.ts",
+          "161 additional production compiler dependencies"
+        ]
+      },
+      "consequence": "Fresh bodies reproduce today, but the sealed productionSourceClosure does not commit the complete code graph that produces them; the known v2 provenance defect remains.",
+      "requiredCorrection": "Commit the exact sorted 191-file local compiler graph, all literal dynamic imports and runtime data inputs with exact bytes/SHA-256, then rebuild and audit a new immutable version."
+    },
+    {
+      "id": "F-002",
+      "severity": "HIGH",
+      "title": "The response parser accepts non-terminal, schema-invalid candidate evidence and fractional token usage",
+      "evidence": {
+        "acceptedFinishReason": "length",
+        "acceptedQuestionObject": {
+          "unexpected": true
+        },
+        "acceptedPromptTokens": 1.5,
+        "acceptedCompletionTokens": 0.5,
+        "acceptedTotalTokens": 2,
+        "acceptedCostUsd": 0
+      },
+      "consequence": "The runner can count a truncated or structurally invalid response as a successful settled assignment, so strict response and usage evidence is not established.",
+      "requiredCorrection": "Require an allowed terminal finish reason, validate the complete question against the committed response schema, and require safe-integer token counters before success."
+    }
+  ],
+  "passes": [
+    "All 15 v2 package files match the prior independent-review baseline exactly.",
+    "The independently resolved v3 live repository closure is exactly 8 source files plus 3 runtime-data rows; its 11 exact byte/hash rows reproduce the stored live closure.",
+    "Test support is network-incapable and outside the live closure.",
+    "Runner, live child, and operator wrapper expose no test mode, injected transport, arbitrary delegate factory, mutable test environment, retry, repair, fallback, replacement, or top-up path.",
+    "The sole model-dispatch call site is production-runner.ts; current protocol authorization flags are false and the operator CLI is unconditionally dormant.",
+    "Both stored wire bodies freshly reproduce from the current production compiler and bind Standard Gemini 3.5 Flash then Premium Gemini 3.1 Pro Preview, google-vertex/global only, reasoning off, one completion/candidate/fetch each.",
+    "Failure, timeout, and unknown-after-send stop the serial loop without replay.",
+    "The public result key set equals the protocol allowlist and excludes raw/private evidence.",
+    "The global ledger remains 0 used / 0 reserved of 1000; source implements an exclusive-lock atomic +2 global reservation and a private +2 reservation.",
+    "The price schema requires freshness, canonical slugs, exact endpoint/cardinality, all returned active endpoints and overrides, charge dimensions, and a self content hash; the collector was not executed.",
+    "The dormant operator wrapper retains only an OPENROUTER_API_KEY assignment and contains no logging or persistence of its value.",
+    "Author manifest, scoped typecheck, offline tests, and write/no-write parity reproduce without target or ledger mutation."
+  ],
+  "metrics": {
+    "v2BaselineFiles": 15,
+    "independentLiveSourceFiles": 8,
+    "independentLiveClosureFiles": 11,
+    "independentLiveClosureRowsSha256": "f06e4a429b5102d166f66f6b8708741b263c39d7219be007aab28f386f9aad4f",
+    "independentCompilerGraphFiles": 191,
+    "claimedProductionSourceClosureRows": 32,
+    "compilerGraphClaimIntersection": 27,
+    "compilerGraphRowsOmittedFromClaim": 164,
+    "claimedRowsOutsideCompilerGraph": 5,
+    "compilerUnresolvedLocalImports": 0,
+    "compilerNonliteralDynamicLoads": 0,
+    "authorManifestRows": 22,
+    "authorOfflineTestsPassed": 22,
+    "authorScopedTypeScriptPassed": true,
+    "authorWriteNoWriteParityPassed": true
+  },
+  "hashes": {
+    "protocolV3Sha256": "9502c1801584084dd026365aaacca46b30c63a1c0aea392f8de3cb32d2f55e15",
+    "privateExactWireV3Sha256": "754144b8ea8cd4c5f4cda1c4aab591cec9caae44db6f39c7bf9f870b136f7dcb",
+    "publicExactWireV3Sha256": "cf20076d6f023a200f65366eff2627016fed127fe4060f0a8f85dcf6dd3f433b",
+    "liveClosureV3ArtifactSha256": "86609d2f688f854ed63bbdf35b84f586252becb1f0787e4f2c1ec29e13e79d10",
+    "authorManifestSha256": "f5baacde25a267e6a6413a5f21380f1ed735308b39213099393eab1d4c78b192",
+    "globalLedgerSha256": "9a05a64ed97c4746b7fe56933374d2179178885bd3e1db93f830f938bafdea1e",
+    "standardWireBodySha256": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003",
+    "premiumWireBodySha256": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643"
+  },
+  "safetyCounters": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "productionDatabaseCalls": 0,
+    "priceCollectorExecutions": 0,
+    "credentialOrSecretValueReads": 0,
+    "globalLedgerMutations": 0,
+    "targetMutations": 0,
+    "browserCalls": 0
+  }
+}

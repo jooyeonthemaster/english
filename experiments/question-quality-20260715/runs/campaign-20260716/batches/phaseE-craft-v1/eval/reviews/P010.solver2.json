@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'many situations are falsely evaluated as life-threatening emergencies by our primitive minds'는 문법상 주어(many situations)와 완벽히 결합되는 수동태이며(seam OK), 지문 논리와 정확히 일치한다. 지문은 '석기시대 뇌(Stone Age brain / primitive minds)'가 교통체증·배우자와의 불쾌한 대화 같은 무해한 상황을 실제로는 없는 죽음의 위험(mortal danger)으로 오판한다고 반복 서술한다. 'falsely evaluated'는 'our brain rates it as such', 'The danger is an illusion', 'sees a mortal danger that is not there'와 대응하고, 'although they are harmless to our survival'와도 모순 없이 이어진다."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "문법 결합(are provoking ...)은 성립하나 논리 실패. 상황이 '실제 당뇨병 같은 신체 질병을 유발한다'는 것은 지문의 핵심(위험은 환상이며 실제 위험은 없다)과 정면 충돌하고, 뒤따르는 'although they are harmless to our survival'와도 모순된다. 당뇨/고혈압은 상황이 유발하는 것이 아니라 현대의 위험 예시로만 언급됐다."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "문법상 성립(are mistakenly attributed to ...)하나 논리 실패. 지문 요지는 뇌가 상황을 위험으로 오판한다는 것이지, 상황이 '현대적 생물학적 적응의 결여 탓으로 잘못 귀속된다'는 것이 아니다. 이런 인과 귀속 논의는 지문에 없다."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "문법상 성립(are successfully managed by ...)하나 논리 정반대. 지문은 이 상황들이 flee-or-fight 반응으로 '성공적으로 관리된다'가 아니라, 필요 없는데도 위험으로 오판되어 부적절하게 반응을 촉발한다고 말한다. 'although they are harmless'와도 논리적으로 어긋난다."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "문법상 성립(are treated as triggers that ...)하나 논리 실패. 지문에서 석기시대 생존 본능(flee/fight)은 억제(suppress)되는 것이 아니라 오히려 잘못 발동된다. 'suppress our outdated survival instincts'는 지문과 반대 방향이다."
+    }
+  ],
+  "note": "빈칸 유형. 다섯 선지 모두 'many situations are + 과거분사/현재분사' 형태로 문법 결합은 성립하므로 어법으로는 변별되지 않고 순수 논리로 결정된다. 지문의 반복 핵심('brain considers this a danger', 'rates it as such', 'The danger is an illusion', 'sees a mortal danger that is not there')은 오직 1번(무해한 상황을 원시적 뇌가 생명 위협 응급으로 잘못 평가)과 대응한다. 2·4·5는 지문 요지와 정반대이고 3은 지문에 없는 인과. 정답 1로 명확히 좁혀지며 다중 정답 여지 없음."
+}

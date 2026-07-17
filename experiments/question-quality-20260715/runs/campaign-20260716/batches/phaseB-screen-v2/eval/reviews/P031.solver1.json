@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'we can forbid anyone from exiting the vehicle' is semantically incoherent as the permitted counterpart of 'we cannot park.' A No Standing zone has nothing to do with forbidding exit; no contextual support and no lure."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong (main lure)",
+      "reason": "Superficially attractive because 'stationary' echoes 'standing,' but it inverts the rule: remaining completely stationary (waiting) is exactly what a No Standing zone prohibits for vehicles. The contrast 'cannot park, but we can X' requires X to be a weaker action than parking; 'remain completely stationary inside designated areas' is not weaker and contradicts the sign. Felt the pull for a moment on the word-level echo, rejected on rule logic."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong (surface lure)",
+      "reason": "Recycles Carol's 'walking back and forth' behavior, but the friend's corrective clause explains what the sign means for cars, not pedestrians — she already said 'Of course you can stand there' about people. 'for exercise' is absurd in context."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "US 'No Standing' signs prohibit parking/waiting but permit a brief stop to load or unload passengers. 'we cannot park cars there, but we can briefly halt to let someone get in' is both factually accurate and narratively grounded — the friend did exactly that when picking Carol up at the corner. Grammatical seam after 'we can' is clean (bare infinitive phrase)."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Referential breakdown: the subject 'we' includes the friend herself, so 'search for her friend's car' fails. Also irrelevant to the meaning of the sign, which is what the blank must explain."
+    }
+  ],
+  "note": "Single clean answer. The humor hinges on the vehicle-vs-pedestrian ambiguity of 'standing'; only ④ completes the friend's explanation of the sign's actual meaning (brief passenger pickup allowed, parking not). ② is the intended attractive distractor via the 'stationary/standing' echo but reverses the regulation. No alternative parsing (ellipsis, idiom) makes any other option defensible."
+}

@@ -1,0 +1,39 @@
+{
+  "passageId": "ebsi_go3_20191015-q22",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "요지",
+    "words": 172
+  },
+  "difficulty": "KILLER",
+  "strategy": "s15-cn-qw3max",
+  "ok": false,
+  "ms": 15486,
+  "attempts": 1,
+  "calls": 1,
+  "callLog": [
+    {
+      "purpose": "generate#failed",
+      "modelId": "qwen/qwen3-max",
+      "ms": 15485,
+      "attempts": 1,
+      "inputTokens": null,
+      "outputTokens": null,
+      "costUsd": null,
+      "costSource": "unknown"
+    }
+  ],
+  "models": [
+    "qwen/qwen3-max"
+  ],
+  "costUsd": null,
+  "costSource": "unknown",
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "error": "No object generated: could not parse the response.",
+  "question": null,
+  "passageText": "We tend to think of technology as shiny tools and gadgets. Even if we acknowledge that technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie. The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological."
+}

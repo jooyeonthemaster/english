@@ -1,0 +1,35 @@
+{
+  "pid": "P064",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'imaginary characters and events of a kind and magnitude not seen before' — reduced passive relative clause ('that have not been seen before'). The modified nouns are the logical object of 'see', so the past participle 'seen' is right. Felt a brief pull toward wanting 'having been seen', but bare participle reduction is fully standard."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "True subject is the plural head 'All forms (of art)'; the intervening singular nouns 'art' and the parenthetical '...ancestors' create proximity attraction toward a singular verb. Long-distance agreement requires 'involve', not 'involves'. No alternative parse (e.g., notional/collective agreement) rescues it — 'forms' is unambiguously plural."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'What is new about cyberspace is its interactive nature' — free relative 'What' heads the subject clause with no antecedent available, so 'What' (not 'That/Which') is required and correct. The What-vs-That trap fails because there is no preceding noun to serve as antecedent."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a space where real people have actual interactions...' — the clause after 'where' is complete (subject + verb + object, no gap), so the relative adverb 'where' with place antecedent 'space' is correct; 'which' would require a gap and fails."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'while being able to shape...' — elliptical while + present participle; the implied subject is 'real people', the main-clause subject, so the participle attaches correctly and the active/copular -ing is grammatical. Strongest distractor: 'while being able' reads slightly awkwardly and tempts a wrong flag, but it is a standard reduction of 'while they are able'."
+    }
+  ],
+  "note": "Classic subject-verb agreement item with an interrupting participial/parenthetical phrase. Solving order: scanned agreement anchors first, caught the plural head 'forms' vs 'involves' immediately, then verified the remaining underlines had no defensible flaw under alternative parses (reduced relatives, free relative, relative adverb, elliptical participle). Answer converges uniquely on (B)."
+}

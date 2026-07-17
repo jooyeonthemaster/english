@@ -1,0 +1,75 @@
+{
+  "pid": "P018",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V4-GARBLED-TERMINOLOGY",
+      "severity": "critical",
+      "evidence": "정답 해설 첫 문장: \"'do not depend'가 포함된 관계대대명사 지시 관계은 주격 관계대명사 that의 선행사인 단수 명사 'a clock'을 수식하고 있습니다.\" — '관계대대명사'는 비단어(관계대명사의 손상형)이고 '지시 관계은'은 조사·어휘가 파손된 비문이다. 의도는 '관계절은 ... a clock을 수식'으로 추정되나 학생 노출 해설에 손상 용어가 그대로 실려 있어 V4(비단어·손상 용어 금지) 실패."
+    },
+    {
+      "code": "V4-ORPHAN-EXPLANATION",
+      "severity": "critical",
+      "evidence": "오답 해설에 \"(E)\" 키가 존재하며 'the decay of atoms of carbon-14 is'의 수일치를 설명하지만, 렌더 지문에 (E) 밑줄이 없고 선택지 목록에도 (E)가 없다. 실제 선지와 대응하지 않는 해설 항목이다."
+    },
+    {
+      "code": "V5-KEY-DESYNC",
+      "severity": "critical",
+      "evidence": "선택지는 (A)~(D) 4개인데 오답 해설 키는 {(A),(C),(D),(E)}로 어긋난다. markedExpressions도 4개 항목뿐이다. 원래 5밑줄 설계에서 5번째 밑줄('the decay ... is')이 렌더·선지·markedExpressions에서 탈락하고 해설 JSON에만 잔존한 필드 비동기화."
+    },
+    {
+      "code": "V5-NONSTANDARD-OPTION-COUNT",
+      "severity": "major",
+      "evidence": "GRAMMAR_ERROR(수능 어법) 유형의 표준은 5개 밑줄(①~⑤)인데 본 문항은 밑줄이 4개뿐이다. (E) 해설의 잔존이 5지 설계 의도를 증명하므로 학생 노출 필드가 불완전하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "재귀대명사 vs 일반 목적격 대명사 판별 — 관계절 내부에서 주어(that = any process)와 목적어의 동일 지시 인식",
+      "temptingBecause": "관계대명사 that이 주어 자리를 차지해 표면상 주어가 보이지 않으므로, repeats의 목적어가 무엇과 동일 지시인지 즉시 파악하기 어렵고 'it'이어야 한다고 오판할 수 있다",
+      "decisiveFlaw": "정답 아님 — repeats의 주어는 that(= any process)이고 목적어가 그것과 동일 지시이므로 재귀대명사 itself가 정확히 옳다"
+    },
+    {
+      "label": "(B)",
+      "intent": "주격 관계대명사절 내부 동사와 선행사의 수일치 (정답 오류)",
+      "temptingBecause": "'it is almost impossible to think of'라는 긴 도입부와 부정문 형태가 시선을 분산시켜 do를 조동사 관용으로 넘길 수 있다",
+      "decisiveFlaw": "선행사 'a clock'이 단수이므로 관계절 동사는 does not depend여야 한다. 표시형 do not depend는 비문이며 교정 시 정확히 원문이 복원된다 — 유일 정답. 단, 선행사가 밑줄 직전에 인접해('a clock that do') 오류가 국소적으로 즉시 드러나는 편이다"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계절이 개입된 주어의 핵 명사 수일치 — 근접 명사(mind)에 이끌린 오판 유도",
+      "temptingBecause": "주어와 동사 사이에 'that comes to mind readily'가 끼어 있어 동사 직전 요소에 이끌리면 is의 적부를 의심하게 된다",
+      "decisiveFlaw": "정답 아님 — 진짜 주어 핵은 단수 'The only example'이므로 is가 옳다. 다만 pointCode가 정답 (B)와 같은 'd'(수일치)로 겹쳐 함정 다양성이 감소한다"
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사 although + 절 생략(주어+be 생략) 분사 구문의 적법성 판단",
+      "temptingBecause": "although 뒤에 완전한 절이 아닌 'at first masked'만 이어져 despite 등 전치사가 와야 한다고 오판할 수 있다",
+      "decisiveFlaw": "정답 아님 — although (it is) at first masked의 주어+be 생략 구조로 적법하다"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 '관계대대명사 지시 관계은'은 비단어·파손 문장 — '관계절은'의 손상형으로 추정 (V4 치명)",
+    "오답 해설 (E) 항목이 존재하지 않는 선지를 설명 — 5번째 밑줄 탈락의 잔재 (V4/V5 치명)",
+    "keyPoints는 (B)(A)(C)만 다루고 (D)는 누락 — 경미한 비대칭",
+    "정답 해설 마지막의 일반화 문장('관계사절 내부의 수일치 문제는 ...')은 사실상 반복으로 다소 장황"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "요청 난이도 INTERMEDIATE, 유형 GRAMMAR_ERROR. 문항의 언어적 골격 자체는 건전하다: V1(렌더 무결·마커-선지 일치), V2(4개 밑줄 독립 검증 결과 (B)만 비문, 교정 시 원문 복원되는 최소대립쌍), V3(교정 완성문 = 원문, 문법적) 모두 통과. 그러나 두 개의 치명 결함으로 출하 불가: (1) 정답 해설에 '관계대대명사 지시 관계은'이라는 손상 용어/비문이 학생 노출 텍스트로 실려 V4 실패, (2) 오답 해설의 고아 키 (E)와 선지 4개 체제(표준 5지에서 5번째 밑줄이 렌더·선지·markedExpressions에서만 탈락)로 V5 실패. 공예 측면에서는 관계절 수일치라는 정전 포인트(C1=3)와 깨끗한 최소대립쌍(C4=3)은 좋으나, 오류가 선행사 직후에 인접해 변별 저항이 약하고(C3=2), 밑줄 1개 결손과 (B)/(C) 포인트 중복으로 의도 밀도가 감소하며(C2=2), 해설 파손으로 C6=1. KILLER 아님 → killerConditionsMet=false. 수리 방향: 5번째 밑줄('the decay ... is')을 렌더·선지·markedExpressions에 복원하고 해설 첫 문장의 손상 용어를 '관계절은'으로 교정하면 B급 재평가 여지가 있다."
+}

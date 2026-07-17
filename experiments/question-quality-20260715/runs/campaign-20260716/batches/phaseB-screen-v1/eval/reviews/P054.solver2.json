@@ -1,0 +1,35 @@
+{
+  "pid": "P054",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'expressing positive emotions helps us bond with others'에서 동명사구 'expressing positive emotions'가 주어이고 단수 취급되어 'helps'와 수 일치가 성립한다. 병렬 구조도 절 단위 병렬('Fear has helped..., expressing anger helps..., and expressing positive emotions helps...')로, 두 번째 절 'expressing anger helps us scare off threats'와 형태가 정확히 대응한다. 명사구 주어가 필요한 자리에 동명사는 정문이며, 대안으로 'to express'도 가능하지만 'expressing'이 틀릴 근거는 없다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a kind of \"program\" that, when triggered, directs many of our activities'에서 'that'은 선행사 'program'을 받는 주격 관계대명사로, 관계절 내 동사 'directs'의 주어 역할을 한다. 3인칭 단수 'directs'와 수 일치도 성립. 삽입된 축약 분사구문 'when triggered'(= when it is triggered)는 관계대명사와 동사 사이에 끼어든 정상적 삽입구로, 'that' 뒤에 콤마가 오는 것도 삽입구 때문이므로 문제없다. 사물 선행사 + 주격이므로 'that' 사용은 형식적으로 완전한 정문이다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'fear makes us very attentive'는 make + 목적어 + 목적격 보어(형용사) 구문(SVOC)이다. 목적어 'us'의 상태를 서술하는 보어 자리이므로 형용사 'attentive'가 옳고, 부사 'attentively'였다면 오히려 틀렸을 것이다. 이어지는 'narrows..., will cause..., and may cause...'는 주어 fear를 공유하는 동사 병렬로 (C)의 판정과 무관하게 성립한다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the specific ways in which they activate our systems'에서 관계절 'they activate our systems'는 주어·동사·목적어가 모두 갖춰진 완전한 절이므로 '전치사 + 관계대명사'(in which)가 요구되는 자리이며, 'the way(s) in which'는 표준 관용 표현이다(= the ways that / the ways ∅). 형식적으로 완전한 정문이다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'they have helped us (as a species) surviving challenges'에서 help는 'help + 목적어 + (to) 부정사' 구문만 허용한다(helped us survive / helped us to survive). 동명사·현재분사 'surviving'은 이 자리에 올 수 없다. 대안 해석 검토: (i) 'surviving challenges'를 'us'를 수식하는 현재분사구('도전을 견뎌내고 있던 우리를 도왔다')로 읽는 해석은 삽입구 '(as a species)'가 목적어와 분사 사이를 끊는 데다, 문맥상 '감정이 우리가 생존하도록 도왔기에 존재한다'는 인과 논리(다음 문장 'If they had not helped us adapt and survive'가 bare infinitive 병렬로 이를 확증)와 충돌하므로 성립하지 않는다. (ii) 'surviving'을 challenges를 수식하는 형용사로 보는 해석도 어순상 불가. 같은 지문 첫 단락의 'helped us avoid dangers'와 마지막 문장의 'helped us adapt and survive'가 모두 bare infinitive를 쓰고 있어 지문 내적 증거로도 (E)만이 규칙 위반이다."
+    }
+  ],
+  "note": "명백한 단일 정답 문항. help + O + 원형부정사 규칙 위반이 유일한 오류이며, 지문 내에 동일 구문의 올바른 용례(helped us avoid, helped us adapt and survive)가 두 번 등장해 장거리 단서로 오류를 확증한다. 나머지 네 밑줄은 각각 동명사 주어 수일치, 주격 관계대명사 + 삽입 분사구문, SVOC 형용사 보어, 전치사+관계대명사로 모두 형식적으로 완전한 정문. 복수 정답 시비 여지 없음."
+}

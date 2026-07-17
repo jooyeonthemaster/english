@@ -1,0 +1,392 @@
+{
+  "schemaVersion": 1,
+  "auditId": "current-callgraph-envelope-audit-20260715",
+  "snapshot": {
+    "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "worktreeState": "dirty_preexisting",
+    "method": "static current-worktree audit plus zero-network verification",
+    "networkOrApiCalls": 0,
+    "databaseCalls": 0,
+    "secretsOrEnvironmentValuesRead": false
+  },
+  "unit": {
+    "assignment": "one English subtype, count=1, no auto-planner call",
+    "logicalCandidateResponse": "one explicit AI-SDK generateObject/generateText invocation whose wire can emit a complete student-facing question object; AI-SDK internal retries are excluded",
+    "logicalEvaluationResponse": "one explicit AI-SDK invocation used only by the grammar solver/evaluator",
+    "logicalDesignResponse": "one explicit AI-SDK invocation used only for the premium grammar answer-only design stage",
+    "physicalProviderFetch": "one client-side fetch at the Atlas custom-fetch boundary; every AI-SDK retry is a separate fetch",
+    "parser": "local parsing/validation only; zero provider calls"
+  },
+  "verdict": {
+    "ordinaryProductionAbsolutePerAssignment": "UNKNOWN_UNBOUNDED_FROM_SOURCE",
+    "ordinaryProductionReason": [
+      "GEMINI_QUESTION_MAX_RETRIES accepts any positive integer and has no source hard cap.",
+      "GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS accepts any positive integer; STANDARD non-KILLER strict passes inherit it without a hard cap.",
+      "No deployment-environment value was read or inferred in this audit.",
+      "Deadlines are time stops, not physical-fetch caps."
+    ],
+    "researchExactOperationalFourCellEnvelope": "BLOCK",
+    "researchExactReason": [
+      "The repository has a mechanistic Phase-C registry only for one STANDARD BLANK_INFERENCE masked-400 fixture.",
+      "There is no sealed operational registry covering STANDARD/PREMIUM by BLANK_INFERENCE/GRAMMAR_ERROR and all repeat, ladder, repair, salvage, and solver children.",
+      "The reduced single-shot campaign is design-only, authorizes zero calls, and says SDK retries are zero although the actual Phase-C runner does not set AI-SDK maxRetries=0 and the production wrapper still uses the dynamic application retry default.",
+      "Prompt-JSON and json_object repair wires have no structurally fixed semantic question cardinality and therefore cannot be admitted as candidate entries by the exact controller."
+    ]
+  },
+  "sourceDefaultsForDiagnosticOnly": {
+    "applicationMaxRetriesR": 2,
+    "applicationOuterAttemptsA": 3,
+    "emptyResultInputE": 2,
+    "aiSdkHiddenRetries": 2,
+    "aiSdkPhysicalAttemptsH": 3,
+    "deadlineAssumption": "none",
+    "warning": "These are repository fallback defaults, not an attestation of deployed configuration."
+  },
+  "symbols": {
+    "R": "configured GEMINI_QUESTION_MAX_RETRIES",
+    "A": "R + 1 application attempts per generateQuestionObject wrapper",
+    "E": "configured GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS",
+    "H": "3 physical fetches per explicit SDK invocation under the installed AI SDK default maxRetries=2",
+    "O": "3A ordinary logical candidate/evaluation responses per full-schema wrapper: structured + prompt-JSON fallback + JSON repair in each application attempt",
+    "X": "A exact-structured logical responses per full-schema wrapper; prompt-JSON and json_object repair cannot dispatch as exact candidate stages"
+  },
+  "atomicDefaultDiagnostic": {
+    "ordinaryFullSchemaWrapper": {
+      "applicationAttempts": 3,
+      "logicalCandidateOrEvaluationResponses": 9,
+      "physicalProviderFetches": 27,
+      "perApplicationAttempt": {
+        "structuredLogicalResponses": 1,
+        "promptJsonFallbackLogicalResponses": 1,
+        "jsonRepairLogicalResponses": 1,
+        "physicalProviderFetches": 9
+      },
+      "note": "The PREMIUM experimental repair route and masked-400 prompt fallback are mutually exclusive within one structured attempt; the masked-400/fallback/repair route is the larger 9-fetch path."
+    },
+    "researchExactFullSchemaWrapper": {
+      "applicationAttempts": 3,
+      "logicalCandidateOrEvaluationResponses": 3,
+      "physicalProviderFetches": 9,
+      "promptJsonFallback": "BLOCKED",
+      "jsonObjectRepair": "BLOCKED_AS_CANDIDATE_WIRE_NOT_STRUCTURALLY_FIXED",
+      "note": "A parse failure may attempt the repair stage, but a valid exact controller cannot lease its json_object wire as a candidate entry."
+    },
+    "premiumGrammarLadder": {
+      "cycles": 3,
+      "answerOnlyDesignStages": 3,
+      "fullCandidateStages": 6,
+      "explicitSdkInvocationsPerStage": 2,
+      "logicalDesignResponses": 6,
+      "logicalCandidateResponses": 12,
+      "physicalProviderFetches": 54,
+      "derivation": "initial split plus two hard regenerations; one soft repair in each cycle; each stage has at most one application-level parse retry; each explicit SDK invocation has at most H=3 physical fetches",
+      "staleNumberRejected": "81 is not current; the reasoning fallback call was removed"
+    }
+  },
+  "ordinaryProductionRepositoryDefaultDiagnostic": {
+    "STANDARD_BLANK_INFERENCE": {
+      "settingsBasis": "single-blank KILLER, the largest repository-default strict-pass class",
+      "strictPasses": 10,
+      "relaxedPasses": 1,
+      "universalSalvagePasses": 1,
+      "maximizingRejectedCandidateChain": {
+        "logicalCandidateResponses": 216,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 0,
+        "physicalProviderFetches": 648,
+        "topLevelGenerationWrapperInvocations": 12,
+        "candidateRepairWrapperInvocations": 12,
+        "structuredLogicalResponses": 72,
+        "promptJsonFallbackLogicalResponses": 72,
+        "jsonRepairLogicalResponses": 72
+      },
+      "minimalFirstSuccess": {
+        "logicalCandidateResponses": 1,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 0,
+        "physicalProviderFetches": 1
+      },
+      "acceptedEmptyQuestionsArray": {
+        "logicalCandidateResponses": 12,
+        "physicalProviderFetches": 12,
+        "note": "Ordinary schema accepts questions:[]; one successful empty response advances each top-level pass."
+      },
+      "masked400AllPassesNoCandidate": {
+        "logicalCandidateResponses": 108,
+        "physicalProviderFetches": 324,
+        "note": "Each top-level wrapper exhausts structured -> prompt JSON -> JSON repair across A=3 application attempts; no candidate means no candidate-repair wrapper."
+      }
+    },
+    "PREMIUM_BLANK_INFERENCE": {
+      "settingsBasis": "premium strict cap with default E=2",
+      "strictPasses": 2,
+      "universalSalvagePasses": 1,
+      "maximizingRejectedCandidateChain": {
+        "logicalCandidateResponses": 54,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 0,
+        "physicalProviderFetches": 162,
+        "topLevelGenerationWrapperInvocations": 3,
+        "candidateRepairWrapperInvocations": 3,
+        "structuredLogicalResponses": 18,
+        "promptJsonFallbackLogicalResponses": 18,
+        "jsonRepairLogicalResponses": 18
+      },
+      "minimalFirstSuccess": {
+        "logicalCandidateResponses": 1,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 0,
+        "physicalProviderFetches": 1
+      },
+      "acceptedEmptyQuestionsArray": {
+        "logicalCandidateResponses": 3,
+        "physicalProviderFetches": 3
+      },
+      "masked400AllPassesNoCandidate": {
+        "logicalCandidateResponses": 27,
+        "physicalProviderFetches": 81
+      }
+    },
+    "STANDARD_GRAMMAR_ERROR": {
+      "settingsBasis": "non-KILLER with markerCount>5 or answerCount>1, the largest valid default-E strict-pass class",
+      "strictPasses": 6,
+      "relaxedPasses": 1,
+      "grammarScarcePasses": 1,
+      "universalSalvagePasses": 1,
+      "solverEligiblePasses": 7,
+      "maximizingRejectedCandidateChain": {
+        "logicalCandidateResponses": 162,
+        "logicalEvaluationResponses": 63,
+        "logicalDesignResponses": 0,
+        "physicalProviderFetches": 675,
+        "topLevelGenerationWrapperInvocations": 9,
+        "candidateRepairWrapperInvocations": 9,
+        "solverWrapperInvocations": 7
+      },
+      "ordinaryFiveMarkerDefaultVariant": {
+        "strictPasses": 4,
+        "logicalCandidateResponses": 126,
+        "logicalEvaluationResponses": 45,
+        "physicalProviderFetches": 513
+      },
+      "minimalFirstSuccess": {
+        "logicalCandidateResponses": 1,
+        "logicalEvaluationResponses": 1,
+        "logicalDesignResponses": 0,
+        "physicalProviderFetches": 2
+      },
+      "acceptedEmptyQuestionsArray": {
+        "logicalCandidateResponses": 9,
+        "logicalEvaluationResponses": 0,
+        "physicalProviderFetches": 9
+      },
+      "masked400AllPassesNoCandidate": {
+        "logicalCandidateResponses": 81,
+        "logicalEvaluationResponses": 0,
+        "physicalProviderFetches": 243
+      }
+    },
+    "PREMIUM_GRAMMAR_ERROR": {
+      "settingsBasis": "ladder-eligible count=1, markerCount=5, answerCount=1, no teacher/custom intent; default E=2",
+      "strictPasses": 2,
+      "grammarScarcePasses": 1,
+      "universalSalvagePasses": 1,
+      "maximizingRejectedCandidateChain": {
+        "logicalCandidateResponses": 96,
+        "logicalEvaluationResponses": 18,
+        "logicalDesignResponses": 12,
+        "physicalProviderFetches": 378,
+        "ladderPhysicalProviderFetches": 108,
+        "legacyStrictPhysicalProviderFetches": 162,
+        "scarceAndSalvagePhysicalProviderFetches": 108
+      },
+      "ladderIneligibleLegacyVariant": {
+        "logicalCandidateResponses": 72,
+        "logicalEvaluationResponses": 18,
+        "logicalDesignResponses": 0,
+        "physicalProviderFetches": 270
+      },
+      "minimalFirstSuccess": {
+        "logicalCandidateResponses": 1,
+        "logicalEvaluationResponses": 1,
+        "logicalDesignResponses": 1,
+        "physicalProviderFetches": 3,
+        "note": "Accepted ladder answer-only + add-decoys, followed by the grammar solver."
+      },
+      "acceptedEmptyResponseLadderEligible": {
+        "logicalCandidateResponses": 4,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 4,
+        "physicalProviderFetches": 8,
+        "note": "Each strict ladder answer-only stage consumes two parse attempts before legacy questions:[]; scarce and salvage add two legacy empty responses."
+      },
+      "masked400AllPassesNoCandidateLadderEligible": {
+        "logicalCandidateResponses": 36,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 2,
+        "physicalProviderFetches": 114
+      }
+    }
+  },
+  "researchExactStructuredSourcePolicyDiagnostic": {
+    "status": "HYPOTHETICAL_FULL_REGISTRY_NOT_PRESENT",
+    "assumptions": [
+      "The controller preregisters every exact structured root/repeat/candidate-repair/ladder/solver stage and enough physical uses.",
+      "Prompt-JSON fallback and json_object JSON repair are denied before provider dispatch.",
+      "Repository defaults R=2 and E=2 are used only for arithmetic.",
+      "One subtype and one expected question are sealed."
+    ],
+    "STANDARD_BLANK_INFERENCE": {
+      "strictPasses": 10,
+      "relaxedPasses": 1,
+      "universalSalvagePasses": 1,
+      "maximizingRejectedCandidateChain": {
+        "logicalCandidateResponses": 72,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 0,
+        "candidateCapablePhysicalFetches": 216,
+        "physicalProviderFetches": 216
+      },
+      "exactEmptyQuestionsArray": {
+        "disposition": "SCHEMA_FAILURE_NOT_ACCEPTED_EMPTY",
+        "logicalCandidateResponses": 36,
+        "physicalProviderFetches": 36
+      },
+      "masked400AllPassesNoCandidate": {
+        "logicalCandidateResponses": 36,
+        "physicalProviderFetches": 108,
+        "promptJsonDispatches": 0
+      }
+    },
+    "PREMIUM_BLANK_INFERENCE": {
+      "strictPasses": 2,
+      "universalSalvagePasses": 1,
+      "maximizingRejectedCandidateChain": {
+        "logicalCandidateResponses": 18,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 0,
+        "candidateCapablePhysicalFetches": 54,
+        "physicalProviderFetches": 54
+      },
+      "exactEmptyQuestionsArray": {
+        "disposition": "SCHEMA_FAILURE_NOT_ACCEPTED_EMPTY",
+        "logicalCandidateResponses": 9,
+        "physicalProviderFetches": 9,
+        "jsonObjectRepairDispatches": 0
+      },
+      "masked400AllPassesNoCandidate": {
+        "logicalCandidateResponses": 9,
+        "physicalProviderFetches": 27,
+        "promptJsonDispatches": 0
+      }
+    },
+    "STANDARD_GRAMMAR_ERROR": {
+      "strictPasses": 6,
+      "relaxedPasses": 1,
+      "grammarScarcePasses": 1,
+      "universalSalvagePasses": 1,
+      "solverEligiblePasses": 7,
+      "maximizingRejectedCandidateChain": {
+        "logicalCandidateResponses": 54,
+        "logicalEvaluationResponses": 21,
+        "logicalDesignResponses": 0,
+        "candidateCapablePhysicalFetches": 162,
+        "evaluationPhysicalFetches": 63,
+        "physicalProviderFetches": 225
+      },
+      "exactEmptyQuestionsArray": {
+        "disposition": "SCHEMA_FAILURE_NOT_ACCEPTED_EMPTY",
+        "logicalCandidateResponses": 27,
+        "physicalProviderFetches": 27
+      },
+      "masked400AllPassesNoCandidate": {
+        "logicalCandidateResponses": 27,
+        "logicalEvaluationResponses": 0,
+        "physicalProviderFetches": 81,
+        "promptJsonDispatches": 0
+      }
+    },
+    "PREMIUM_GRAMMAR_ERROR": {
+      "strictPasses": 2,
+      "grammarScarcePasses": 1,
+      "universalSalvagePasses": 1,
+      "maximizingRejectedCandidateChain": {
+        "logicalCandidateResponses": 48,
+        "logicalEvaluationResponses": 6,
+        "logicalDesignResponses": 12,
+        "candidateCapablePhysicalFetches": 144,
+        "evaluationPhysicalFetches": 18,
+        "designPhysicalFetches": 36,
+        "physicalProviderFetches": 198
+      },
+      "exactEmptyQuestionsArrayLadderEligible": {
+        "disposition": "SCHEMA_FAILURE_NOT_ACCEPTED_EMPTY",
+        "logicalCandidateResponses": 12,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 4,
+        "physicalProviderFetches": 16,
+        "jsonObjectRepairDispatches": 0
+      },
+      "masked400AllPassesNoCandidateLadderEligible": {
+        "logicalCandidateResponses": 12,
+        "logicalEvaluationResponses": 0,
+        "logicalDesignResponses": 2,
+        "physicalProviderFetches": 42,
+        "promptJsonDispatches": 0
+      }
+    }
+  },
+  "researchPhaseCCurrentFixture": {
+    "status": "MECHANISTIC_ONLY",
+    "coveredCell": "STANDARD_BLANK_INFERENCE",
+    "scenario": "masked provider 400, maxAttempts=1, already-expired deadline, test-local application maxRetries=1",
+    "logicalCandidateResponses": 1,
+    "logicalEvaluationResponses": 0,
+    "logicalDesignResponses": 0,
+    "physicalProviderFetches": 1,
+    "promptJsonDispatches": 0,
+    "candidateSlots": 1,
+    "outcome": "no_candidate",
+    "otherThreeCells": "BLOCK_NOT_REGISTERED_OR_PROVED"
+  },
+  "dynamicFormulas": {
+    "ordinary": {
+      "O": "3 * (R + 1)",
+      "STANDARD_BLANK_INFERENCE": "S=max(10,E); C=2*O*(S+2); V=0; D=0; physical=3*C",
+      "PREMIUM_BLANK_INFERENCE": "S=min(E,5); C=2*O*(S+1); V=0; D=0; physical=3*C",
+      "STANDARD_GRAMMAR_ERROR": "valid-settings worst S=max(6,E); C=2*O*(S+3); V=O*(S+1); D=0; physical=3*(C+V)",
+      "PREMIUM_GRAMMAR_ERROR": "ladder-eligible S=min(E,5); D=6*S; C=S*(12+2*O)+4*O; V=S*O; physical=3*(D+C+V)"
+    },
+    "researchExactStructuredHypothetical": {
+      "X": "R + 1",
+      "STANDARD_BLANK_INFERENCE": "S=max(10,E); C=2*X*(S+2); V=0; D=0; physical=3*C",
+      "PREMIUM_BLANK_INFERENCE": "S=min(E,5); C=2*X*(S+1); V=0; D=0; physical=3*C",
+      "STANDARD_GRAMMAR_ERROR": "valid-settings worst S=max(6,E); C=2*X*(S+3); V=X*(S+1); D=0; physical=3*(C+V)",
+      "PREMIUM_GRAMMAR_ERROR": "ladder-eligible S=min(E,5); D=6*S; C=S*(12+2*X)+4*X; V=S*X; physical=3*(D+C+V)"
+    }
+  },
+  "branchFacts": {
+    "parser": "AI-SDK object parse/schema validation happens after the SDK retry wrapper. Client fallback parseJsonLoose and Zod validation add no provider fetch by themselves.",
+    "ordinaryMasked400": "After a masked/compiled structured failure, ordinary runtime may call prompt-JSON fallback and then one JSON repair continuation; if still invalid, the application loop retries.",
+    "researchMasked400": "At question-generation-llm.ts lines 411-417, an active research runtime continues/throws within the strict structured path and never calls prompt-JSON fallback.",
+    "candidateRepair": "At most one full-schema repair wrapper is attempted per returned candidate in each pass, subject to blocking-code and deadline predicates.",
+    "grammarSolver": "Strict and relaxed GRAMMAR_ERROR candidates that pass deterministic gates receive one STANDARD-plan solver wrapper; scarce/salvage mode omits it.",
+    "premiumLadder": "Eligible PREMIUM GRAMMAR_ERROR strict passes can exhaust the nine-stage ladder and then fall through to legacy generation, candidate repair, and solver in the same pass.",
+    "salvage": "STANDARD can add relaxed plus grammar-scarce/universal salvage passes; PREMIUM skips relaxed and can add grammar-scarce/universal salvage. Pool admission itself is zero-provider, but a conservative empty/non-relaxable pool permits the generation passes.",
+    "masked400SdkRetry": "HTTP/masked 400 itself is non-retryable in the installed SDK, but a conservative SDK operation can have earlier retryable failures before its final masked-400 result."
+  },
+  "typeCounts": {
+    "activeEnglishUi": 25,
+    "registeredEnglishIncludingLegacy": 26,
+    "legacyEnglishExcludedFromActiveUi": [
+      "TOPIC_MAIN_IDEA"
+    ],
+    "registeredKorean": 38,
+    "combinedRegisteredRuntime": 64,
+    "warning": "Do not describe 26 or 64 as the active English UI count."
+  },
+  "sharedRouteCallsExcluded": {
+    "autoPlanner": "The legacy generate-questions-auto route performs one additional planning generateQuestionObject call per route request before question assignments. It is shared request overhead, not one of the four per-assignment cells.",
+    "fastUi": "The active workbench fast route validates count exactly 1; the client emits count=1 units."
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "passageId": "2015_06_3026346-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2015,
+    "exam": "6월",
+    "origType": "제목",
+    "words": 150
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):dec=c  (C):dec=h  (D):ANS=b  (E):dec=l",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 271,
+        "relPos": 0.288,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 325,
+        "relPos": 0.346,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 487,
+        "relPos": 0.518,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 656,
+        "relPos": 0.698,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 711,
+        "relPos": 0.756,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.756,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "For many years now, mediated entertainment such as TV and film has been able to stimulate our optical and auditory senses with sights and sounds. Some forms of new media, however, even engage our senses of touch and smell. The view the wearer of some special device sees is projected on the screen behind him. Wearers become immersed in the computerized scene and use the gloves to pick up and move simulated objects. Many virtual reality games and rides now allow audiences and players to feel sensations of motion and touch. New media may also include aromas, such as Disney's \"Soaring Over California\" attraction at the California Adventure theme park, where audiences smell orange orchards and pine forests while enjoying a simulated hang-gliding experience across the countryside. Makers of emerging forms of entertainment will likely continue to experiment with ways they can simulate and manipulate reality by stimulating our senses.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is projected",
+        "isError": false,
+        "errorExpression": "is projected",
+        "surroundingText": "The view the wearer of some special device sees is projected on the screen behind him.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "immersed",
+        "isError": false,
+        "errorExpression": "immersed",
+        "surroundingText": "Wearers become immersed in the computerized scene and use the gloves",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "to feel",
+        "isError": false,
+        "errorExpression": "to feel",
+        "surroundingText": "Many virtual reality games and rides now allow audiences and players to feel sensations of motion",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "where",
+        "isError": true,
+        "correction": "where",
+        "errorExpression": "which",
+        "surroundingText": "at the California Adventure theme park, where audiences smell orange orchards and pine forests",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "while",
+        "isError": false,
+        "errorExpression": "while",
+        "surroundingText": "audiences smell orange orchards and pine forests while enjoying a simulated hang-gliding",
+        "pointCode": "l"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is projected"
+      },
+      {
+        "label": "(B)",
+        "text": "immersed"
+      },
+      {
+        "label": "(C)",
+        "text": "to feel"
+      },
+      {
+        "label": "(D)",
+        "text": "which"
+      },
+      {
+        "label": "(E)",
+        "text": "while"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "the view(주어)가 project(투사하다)의 대상이므로 수동태 'is projected'는 어법상 옳습니다.",
+      "(B)": "주어인 Wearers가 컴퓨터 화면에 몰입하게 되는 대상이므로 become 뒤에서 보어 역할을 하는 과거분사 'immersed'는 어법상 옳습니다.",
+      "(C)": "allow 동사는 목적격보어로 to부정사를 취하므로 'to feel'을 쓰는 것은 어법상 옳습니다.",
+      "(E)": "주어와 be동사(they are)가 생략되어 분사구문(enjoying)을 이끄는 시간의 접속사 'while'은 어법상 옳습니다."
+    },
+    "explanation": "문장의 선행사는 the California Adventure theme park이며, 밑줄 친 부분 뒤에는 주어(audiences), 동사(smell), 목적어(orange orchards and pine forests)를 완벽히 갖춘 완전한 절이 이어지고 있습니다. 따라서 불완전한 절을 이끄는 관계대명사 which는 이 자리에 올 수 없으며, 완전한 절을 이끌고 장소의 선행사를 수식하는 관계부사 where로 고쳐야 합니다. 선행사의 의미만 보고 단순히 관계대명사를 선택하지 않도록 뒤따르는 절의 구조적 완전성을 면밀히 파악해야 합니다.",
+    "keyPoints": [
+      "(D) 관계사절 — 완전한 절을 이끄는 관계부사 자리에 관계대명사 사용 불가",
+      "(A) 능동태 vs 수동태 — 주어와의 행위/대상 관계에 따른 수동태 판단",
+      "(C) 목적격보어 형태 — allow 동사의 문형이 요구하는 to부정사 형태 보어"
+    ],
+    "tags": [
+      "관계사",
+      "수동태",
+      "목적격보어",
+      "고난도구문"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For many years now, mediated entertainment such as TV and film has been able to stimulate our optical and auditory senses with sights and sounds. Some forms of new media, however, even engage our senses of touch and smell. The view the wearer of some special device sees __(A) is projected__ on the screen behind him. Wearers become __(B) immersed__ in the computerized scene and use the gloves to pick up and move simulated objects. Many virtual reality games and rides now allow audiences and players __(C) to feel__ sensations of motion and touch. New media may also include aromas, such as Disney's \"Soaring Over California\" attraction at the California Adventure theme park, __(D) which__ audiences smell orange orchards and pine forests __(E) while__ enjoying a simulated hang-gliding experience across the countryside. Makers of emerging forms of entertainment will likely continue to experiment with ways they can simulate and manipulate reality by stimulating our senses.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

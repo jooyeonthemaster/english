@@ -1,0 +1,49 @@
+{
+  "pid": "P028",
+  "finalV2": true,
+  "winningAnswer": "②",
+  "reason": "분쟁 요약에 기재된 '선언된 정답=③'은 메타데이터 전사 오류다. 권위 소스인 eval/full/P028.md 25-26행은 선언된 정답을 ②로 명시하며, 솔버1·솔버2의 답(②), 감사자 블라인드 답(②)과 모두 일치한다. 즉 실제 분쟁(문항 대 솔버 불일치)은 존재하지 않는다. 독립 재검증 결과: 빈칸은 'should not be simply to utilize technology for its own sake. Rather, it should be to produce ___'의 not-X-Rather-Y 대조 구조 결론부로, 지문이 정의한 위대한 예술('challenges our perceptions... forever changes our thoughts and feelings')의 환언을 요구한다. 원문 span 'unique creations that will allow the public to have new, eye-opening experiences'의 충실한 paraphrase는 ②뿐이며(unique→distinctive, creations→artworks, new eye-opening experiences→fresh insights, the public→audiences), ①·⑤는 부정된 '기술 자체의 활용' 방향, ③은 무근거 상업 확장, ④는 'tools that can be used'와 정면 모순되는 극성 과격화로 각각 결정적으로 배제된다. 5개 선지 모두 produce+NP 통사 슬롯에서 문법적으로 성립하므로 문법 소거는 불가능하고 판별은 순수 논리로 이루어지며, 그 논리 판별이 ②를 유일 정답으로 고정한다. 솔버들의 과잉 판정(성립하지 않는 대안을 성립한다고 주장한 경우)도, 누락된 대안 해석도 발견되지 않았다. 정답 유일성 성립: finalV2=true.",
+  "perDispute": [
+    {
+      "label": "메타데이터 불일치(선언 정답 ③ vs ②)",
+      "claim": "분쟁 요약은 선언된 정답이 ③이라고 주장",
+      "verdict": "기각(전사 오류)",
+      "evidence": "eval/full/P028.md의 '## 선언된 정답' 섹션은 ②를 명시하고, 해설 전체가 ②(distinctive artworks that offer fresh insights to audiences)를 정답으로 논증하며 ③은 오답 해설에서 '상업적 성공으로의 과확장'으로 명시적으로 배제된다. 파일 기준 선언 정답은 ②이고 솔버·감사자와 완전 일치한다."
+    },
+    {
+      "label": "①",
+      "claim": "advanced digital models that demonstrate complex software algorithms가 빈칸에 성립하는가",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "문법 결합은 정상(produce+복수 NP, that demonstrate 수일치 정상). 그러나 '알고리즘을 과시하는 첨단 디지털 모델'은 직전 문장이 명시적으로 부정한 'to utilize technology for its own sake'의 전형이며, Rather가 요구하는 대조 방향과 정반대. 지문 명시 문장과의 정면 충돌로 논리적으로 배제된다. 두 솔버의 기각 논거는 정확하며 과잉 판정 아님."
+    },
+    {
+      "label": "②",
+      "claim": "distinctive artworks that offer fresh insights to audiences가 유일 정답인가",
+      "verdict": "성립(유일 정답)",
+      "evidence": "문법: produce distinctive artworks(타동사+목적어), that offer는 복수 선행사 artworks와 수일치 정상, offer fresh insights to audiences는 수여동사 to-변이형 정문. 논리: 원문 span 'unique creations that will allow the public to have new, eye-opening experiences'의 의미 보존 환언이자, 'Great art challenges our perceptions and forever changes our thoughts and feelings'라는 지문 핵심 정의와 정확히 대응. Rather 이하 결론 슬롯의 요구(기술 수단화를 넘어선 예술적 본질의 산출)를 유일하게 충족한다."
+    },
+    {
+      "label": "③",
+      "claim": "highly marketed products that easily appeal to global consumers가 대안 정답으로 성립하는가",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "문법 결합은 정상. 그러나 지문 어디에도 마케팅·시장성·소비자·상업적 성공에 대한 언급이 없어 전제로부터 도출 불가능한 무근거 확장이다. 'share them with the world'/'the public'을 '글로벌 소비자 어필'로 읽는 대안 해석을 검토했으나, 해당 구절은 창작물 공유의 대중화라는 배경 서술일 뿐 상업적 목표와 무관하고, 위대한 예술의 정의(인식 도전·사고/감정 변화)와도 연결되지 않아 성립하지 않는다. 선언 정답이 실제로 ③이었다면 V2는 false였을 것이나, 파일상 선언 정답은 ②다."
+    },
+    {
+      "label": "④",
+      "claim": "traditional paintings that entirely reject the use of modern tools가 대안 정답으로 성립하는가",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "문법 결합은 정상. 그러나 지문은 'new technologies are nothing more than tools that can be used in the creative process'로 기술의 도구적 사용을 명시적으로 인정한다. 주장은 '기술의 수단화'이지 '기술 배격'이 아니므로 'entirely reject'는 지문 전제와 양립 불가한 극성 과격화. 반기술 결론으로의 대안 해석은 지문 명시 문장과 모순되어 옹호 불가."
+    },
+    {
+      "label": "⑤",
+      "claim": "collaborative platforms where users can edit other people's works가 대안 정답으로 성립하는가",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "문법 결합은 정상(where 관계부사절, platforms 선행사 정문). 그러나 첫 문장의 배경 서술('editing digital material', 'share them with the world')의 소재 재활용일 뿐이며, 빈칸 슬롯이 요구하는 것은 'the goal of the modern artist'로서의 위대한 예술 산출이지 플랫폼 구축이 아니다. 플랫폼 산출은 그 자체가 기술 활용에 해당하여 Rather의 대조 방향과 어긋난다. 솔버2의 지적대로 형식적으로 배제된다."
+    }
+  ],
+  "solverAssessment": {
+    "solver1": "5개 선지 전부에 대한 문법·논리 판정이 독립 재검증과 일치. 과잉 판정 없음.",
+    "solver2": "문법 분석(수일치, 수여 구문 to-변이형, where 관계부사절)이 정밀하고 논리 판정도 전부 타당. 과잉 판정 없음.",
+    "auditor": "V1~V5 통과 판정 타당. V4 minor 지적('밀하였고' 오탈자, '인과적 결론' 오명명)도 재확인됨 — 해설 품질 이슈일 뿐 정답 유일성에는 영향 없음."
+  }
+}

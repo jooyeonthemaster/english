@@ -1,0 +1,35 @@
+{
+  "pid": "P041",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) headed",
+      "verdict": "correct",
+      "reason": "'be headed (somewhere)'는 표준 관용 표현(미국식)으로, 'where we are headed'는 간접의문/관계부사절 내에서 '우리가 어디로 향하고 있는지'를 뜻하는 정문이다. 'we are heading'과 교체 가능한 정상 형태이며, 수동 형태처럼 보이지만 자동사적 용법으로 확립된 어법이다. 지배 규칙: be + headed (방향 표현) 관용 결합. 틀린 곳 없음."
+    },
+    {
+      "label": "(B) what",
+      "verdict": "correct",
+      "reason": "'This is what happens when ...'에서 what은 선행사를 포함한 융합 관계대명사(= the thing that)로, 뒤따르는 절 'happens ...'의 주어 역할과 be동사의 보어절 도입을 동시에 수행한다. happens 앞에 별도 주어가 없으므로 주어 공백을 채우는 what이 정확히 요구되는 자리다. that/which로 바꾸면 선행사 부재로 비문. 정문."
+    },
+    {
+      "label": "(C) unpredictable",
+      "verdict": "correct",
+      "reason": "'life is unpredictable'에서 be동사의 주격 보어 자리이므로 형용사가 요구되며 unpredictable은 형용사로 적격. 부사(unpredictably)였다면 틀렸겠지만 형용사 그대로이므로 정문. 의미상으로도 뒤의 curveball 예시(차 고장)와 논리적으로 부합한다."
+    },
+    {
+      "label": "(D) spending",
+      "verdict": "correct",
+      "reason": "'end up + V-ing'는 확립된 결합(end up doing something)으로, 'you end up spending a few relaxing hours'는 정문. to부정사(end up to spend)는 비문이므로 동명사/현재분사형 spending이 정확히 요구되는 형태다. 지배 규칙: end up의 보충어는 -ing형."
+    },
+    {
+      "label": "(E) kept",
+      "verdict": "incorrect",
+      "reason": "'the universe's way of ___ us awake'에서 전치사 of의 목적어 자리이므로 동명사 keeping이 요구된다. 과거분사 kept는 전치사의 목적어가 될 수 없어 비문. 대안 해석 탐색: (i) 축약 관계절로 보려 해도 'way of kept'는 명사구 내 전치사+과거분사 구조라 성립 불가, (ii) kept를 명사로 볼 여지도 없고, (iii) 'way of + 과거분사' 관용 표현도 존재하지 않는다. 또한 kept가 정문이 되려면 keep의 수동 의미('us awake'가 잔류 목적어)로 읽어야 하는데 전치사 뒤 수동 동명사라면 'being kept'가 필요하며 의미상으로도 '우주가 우리를 깨어 있게 하는 방식'이라는 능동 의미가 요구된다. 명백한 어법 오류로 정답."
+    }
+  ],
+  "note": "정답이 (E) 하나로 명확히 수렴한다. (A)의 'be headed'는 수동태 오류로 오인하기 쉬운 좋은 미끼이며, (B) what은 융합 관계대명사, (D)는 end up V-ing 결합으로 모두 정문임이 형식적으로 증명된다. (E)는 전치사 of 뒤 동명사(keeping) 자리에 과거분사(kept)를 둔 전형적 오류로, 어떤 대안 해석으로도 구제되지 않는다. 복수 정답 가능성 없음."
+}

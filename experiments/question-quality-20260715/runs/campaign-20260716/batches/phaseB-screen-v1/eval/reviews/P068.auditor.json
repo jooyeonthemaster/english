@@ -1,0 +1,77 @@
+{
+  "pid": "P068",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-label-convention",
+      "severity": "minor",
+      "evidence": "keyPoints가 원형 숫자 라벨(⑤ 가정법, ④ 관계사, ③ 분사)을 쓰는 반면 선지는 (A)~(E) 문자 라벨이다. 위치상 매핑(⑤=E, ④=D, ③=C)은 일관되고 내용 모순은 없으나 라벨 표기 체계가 어긋나 있다."
+    },
+    {
+      "code": "V2-minor-alternative-analysis",
+      "severity": "minor",
+      "evidence": "(E) 'did not help'는 이론상 혼합가정법(현재 반사실 조건 + 과거 반사실 귀결: 'If they did not help us [now/generally]..., they would not have evolved') 독해가 존재한다. 다만 직전 문장의 'survive challenges within our environment long ago'와 'would not have evolved'가 조건을 과거 시점에 강하게 고정하므로 시험 문법 관점에서 had not helped가 유일 정답으로 성립한다. RUBRIC §C는 가정법을 대안 분석 가능 지점으로 KILLER에서 배제하지만 본 문항은 INTERMEDIATE라 게이트 실패로 보지 않는다."
+    },
+    {
+      "code": "V1-minor-field-convention",
+      "severity": "minor",
+      "evidence": "markedExpressions의 (E) 항목은 expression='had not helped'(원문형)·errorExpression='did not help'(렌더형)·surroundingText가 교정된 원문 문장인데, 비오류 항목들은 expression=errorExpression=렌더형·surroundingText=렌더 텍스트다. 내부 필드 규약 불일치이나 학생 노출 렌더는 정상이고 correction은 원문을 정확히 복원한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "단수 주어 수일치 + 병렬 절 간 시제 차이(현재완료 vs 단순현재) 판단",
+      "temptingBecause": "뒤따르는 병렬 절들이 단순현재 'helps'를 쓰므로 시제 불일치로 의심하기 쉽다",
+      "decisiveFlaw": "결함 없음 — Fear는 단수이고 has helped는 수일치·시제 모두 적법하다. 등위 접속이 동일 시제를 강제하지 않으며 현재완료는 과거부터 현재까지의 기여를 자연스럽게 표현한다"
+    },
+    {
+      "label": "(B)",
+      "intent": "동명사구 주어 vs 정동사/원형 판단(준동사 자리)",
+      "temptingBecause": "첫 절 주어가 명사 Fear라서 병렬상 명사형(expression of anger 류)이나 원형 express를 기대할 수 있다",
+      "decisiveFlaw": "결함 없음 — expressing anger가 helps의 주어인 동명사구로 적법하며, 뒤의 expressing positive emotions와 정확히 병렬된다"
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사 유지 분사구문의 태 판단(triggered vs triggering)",
+      "temptingBecause": "주어·be동사가 생략된 축약 구조라 능동 triggering이 맞는지 헷갈리기 쉽다",
+      "decisiveFlaw": "결함 없음 — 생략된 주어(the program)는 '촉발되는' 대상이므로 수동 과거분사 triggered가 옳다"
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사+관계대명사 뒤 완전절 판단",
+      "temptingBecause": "which/where/that과의 구별, 완전·불완전 절 판별을 요구하는 단골 자리다",
+      "decisiveFlaw": "결함 없음 — 뒤 절 they activate our systems가 완전하고 선행사 the specific ways와 결합하는 in which는 관용적으로 적법하다"
+    },
+    {
+      "label": "(E)",
+      "intent": "가정법 과거완료 조건절 시제 판정(정답 오류 지점)",
+      "temptingBecause": "문맥이 과거(long ago)라 단순 과거 did not help가 표면적으로 시간대와 어울려 보인다",
+      "decisiveFlaw": "주절 'would not have evolved'(조동사 과거형+have p.p.)와 과거 사실 반대 가정이므로 조건절은 had not helped(had+p.p.)여야 한다. did not help는 시제 호응이 깨진 비문 — 선언된 정답과 일치"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "keypoints-label-format",
+      "severity": "minor",
+      "evidence": "keyPoints의 ⑤④③ 라벨이 선지 라벨 체계 (A)~(E)와 다른 표기를 사용한다(내용·위치 매핑은 정확)."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문과 대조 시 의도된 (E) 변형(had not helped → did not help) 외 손상·누락·중복이 없고 5개 밑줄 라벨이 선지 목록과 정확히 일치한다. V2: (A)~(D)를 독립 검증한 결과 모두 적법하여 정답 집합은 {E} 하나다. (E)는 혼합가정법이라는 이론적 대안 독해가 있으나 'long ago' 앵커와 주절 형태가 과거 반사실 독해를 강하게 고정해 시험 문법상 유일 오류로 성립한다. V3: 지문·발문·교정 완성문 모두 문법적이며 비문은 정답 지점 하나뿐(유형 의도와 일치). V4: 해설의 구조 분석(가정법 과거완료, 동명사 주어, when (it is) triggered 생략 분사구문, 선행사 ways + in which + 완전절)이 실제 문장과 전부 일치하고 오분석·환각 용어가 없다. 오답 해설 4건 모두 해당 선지 내용과 대응한다. V5: 정답 라벨·선지·해설·markedExpressions(isError=E)·keyPoints가 내용상 모순 없다(라벨 표기 체계만 minor 불일치). 공예: 정전급 가정법 포인트에 서로 다른 오개념을 겨냥한 디코이 5종(C1=3, C2=3), (B)(C)(E)가 실제 판단을 요구해 즉시 소거가 어렵다(C3=3), 메타 누출 없이 주절 형태+long ago로 정답이 필연적(C4=3), '과거 문맥이라 단순과거가 그럴듯해 보이는' 함정 깊이가 INTERMEDIATE에 정확히 부합(C5=4), 해설은 정확하고 역추론 포인트를 짚으나 다소 딱딱하고 keyPoints 라벨 흠결(C6=3). 합계 19 — 모든 V 통과, C 최저 3, 합계 21 미만이므로 A 불가, B(작은 수정으로 출하 가능: keyPoints 라벨 통일, markedExpressions 필드 규약 정리). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to teach",
+      "verdict": "correct",
+      "reason": "지배 구문은 'ask + O + to-V' (asks ... Mr. Miyagi to teach him karate). ask는 목적격 보어로 to부정사를 취하는 동사이므로 to teach가 정확히 요구되는 형태다. teach는 him(간접목적어)+karate(직접목적어)의 수여동사 구조로도 문제없다. 대안 해석 불필요 — 표기 그대로 정문."
+    },
+    {
+      "label": "(B) opposed",
+      "verdict": "correct",
+      "reason": "'in precisely opposed circular motions'에서 opposed는 과거분사의 형용사적 용법으로 circular motions를 수식하며, '(서로) 반대 방향으로 맞선 원운동'이라는 의미가 성립한다(wax on / wax off의 좌우 반대 원운동). 'diametrically opposed'류의 관용적 형용사 용법과 동일 패턴이고, precisely(부사)가 opposed(형용사화 분사)를 수식하는 구조도 정상. opposing으로 바꿔도 되지만 opposed 역시 완전한 정문이므로 오류로 볼 근거가 없다."
+    },
+    {
+      "label": "(C) to hammer",
+      "verdict": "incorrect",
+      "reason": "지배 규칙은 사역동사 make의 5형식 구문: 'make + O + 원형부정사'. 'he makes Daniel to hammer nails'는 make가 능동태이므로 목적격 보어에 to부정사가 올 수 없고 bare infinitive 'hammer'여야 한다. 수동태(Daniel is made to hammer...)라면 to가 복원되지만 여기는 능동태다. 'makes Daniel'을 다른 구문으로 재해석할 여지(예: make가 '만들다' 본동사이고 to hammer가 목적 부사구라는 해석)는 'Daniel을 만들다'가 의미상 성립하지 않으므로 배제된다. 형식적으로 유일하게 비문."
+    },
+    {
+      "label": "(D) limited",
+      "verdict": "correct",
+      "reason": "'he is limited to household chores'는 'be limited to + 명사'의 수동태(또는 형용사적 분사 서술) 구문으로 완전한 정문. limit A to B의 수동화로 잔류 전치사구 to household chores가 정확히 유지된다. 문맥상 '집안일에 국한되다'라는 의미도 앞뒤 논리(무술을 배우고 싶은데 허드렛일만 함)와 정합."
+    },
+    {
+      "label": "(E) who",
+      "verdict": "correct",
+      "reason": "'attacks Daniel, who without thought or hesitation defends himself'에서 who는 계속적 용법 관계절의 주어로, 선행사 Daniel(사람)을 받아 defends의 주어 역할을 한다. 관계대명사와 동사 사이에 부사구 'without thought or hesitation'이 삽입된 것은 어순상 허용되는 정상 구조이며, 주격이므로 whom 문제도 없다. 정문."
+    }
+  ],
+  "note": "형식 판정: 유일한 비문은 (C). 사역 make 능동태의 목적격 보어는 원형부정사라는 규칙 위반이 명백하고, 다른 네 밑줄은 각각 ask+O+to-V, 분사의 형용사적 용법, be limited to 수동, 주격 관계대명사 삽입구문으로 모두 정문임을 개별 확인했다. 대안 해석 탐색에서도 (C)를 구제할 독해가 존재하지 않아 단일 정답으로 좁혀진다."
+}

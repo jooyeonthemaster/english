@@ -1,0 +1,72 @@
+{
+  "pid": "P051",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-characterization",
+      "severity": "minor",
+      "evidence": "오답해설 ④가 할머니의 발화 \"Aren't the scones lovely, dear?\"를 '혼잣말 같은 질문'이라고 서술하나, 호칭 'dear'가 있어 클로이에게 직접 건넨 질문이다. 다만 '클로이가 이름을 직접 물어보지 않았다'는 핵심 배제 근거 자체는 사실과 일치하므로 V4 실패로 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "half-truth / schema association — '티타임 매너'라는 장면 연상 어휘로 능동적 회상 전략을 제시",
+      "temptingBecause": "애프터눈 티 상황과 '매너'가 자연스럽게 연결되고, 클로이가 예법을 몰라 머뭇거리는 장면(Where to start?)과 표면적으로 어울린다",
+      "decisiveFlaw": "지문에 회상 시도의 근거가 전혀 없다. 'waited for her grandmother to make the first move'와 이후 'boldly chose ... before her grandmother'(따라 하던 패턴에서의 이탈을 bold로 표시)는 스스로 기억해내는 전략이 아니라 전적으로 모방에 의존했음을 보여준다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'carefully mirrored her grandmother's actions'의 유의어 치환(mirror→imitate)",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 직전 문장(waited for ... first move)과 직후 행동(started with a small, delicate sandwich), 후반부의 'before her grandmother' 단서가 모두 일치하는 유일한 선지"
+    },
+    {
+      "label": "③",
+      "intent": "polarity reversal — 관계 신호의 정반대 진술",
+      "temptingBecause": "표면적으로 낮음. 절대어 'completely'까지 붙어 있어 즉시 소거된다",
+      "decisiveFlaw": "클로이는 할머니와 윙크를 주고받고 할머니의 첫 움직임을 기다렸으므로 존재 무시는 정면 모순"
+    },
+    {
+      "label": "④",
+      "intent": "detail anchor 오용 — 후반부 scones 명칭 에피소드를 앞당겨 붙인 행위 날조",
+      "temptingBecause": "'Scones, was that what they were called?'라는 명칭 관련 대목이 실제로 존재해 기억 잔상을 남긴다",
+      "decisiveFlaw": "바로 그 대목이 클로이가 명칭을 몰랐고 묻지도 않았음을 증명한다. 물어봤다면 명칭 의문 장면이 성립하지 않는다"
+    },
+    {
+      "label": "⑤",
+      "intent": "actor/action swap — 먹는 행위를 대접 행위로 뒤집기",
+      "temptingBecause": "'delicate sandwiches'라는 지문 어휘를 그대로 재사용해 표면 겹침이 있다",
+      "decisiveFlaw": "클로이는 샌드위치를 자신이 집어 먹었을 뿐(She ate it up and selected another) 할머니에게 대접한 사실이 없다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답해설 ④의 '혼잣말 같은 질문' — 'dear' 호칭이 있는, 클로이에게 직접 건넨 질문을 혼잣말성으로 오기술",
+      "recommendation": "'할머니가 클로이에게 건넨 질문을 듣고서야'로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "본해설이 다소 장황하고(빈칸 자리 설명 반복) 매력 오답 ①의 함정 분리는 잘 되어 있으나 ③⑤가 왜 약한 디코이인지는 다루지 않음",
+      "recommendation": "본해설 첫 문장 압축"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 'carefully mirrored her grandmother's actions' 한 span만 빈칸화했고 나머지는 완전 일치. V2: ②만 유일 정답 — ①은 회상 시도의 텍스트 근거 부재로 배제, ③④⑤는 지문 진술과 정면 모순/무근거. V3: 다섯 선지 모두 'She ___ and started...' 슬롯에 과거시제 VP로 문법적으로 삽입 가능해 suffix 탈락 문제 없음. V4/V5: 해설·keyPoints·라벨 동기화 정상(④ 해설의 '혼잣말' 표현은 경미한 성격 오기술). 공예: 결정 단서(waited for ... first move)가 빈칸 바로 앞 문장에 인접해 있고 정답이 삭제 span의 유의어 복원에 가까워 변별은 사실상 ①-② 이지선다로 좁혀진다(C3=2). ③은 절대어가 붙은 blunt opposite로 즉시 소거. INTERMEDIATE 요청 난이도에는 부합(C5=3). 합계 17, 전 V 통과, 최저 C 2 → B. KILLER 아님(killerConditionsMet=false)."
+}

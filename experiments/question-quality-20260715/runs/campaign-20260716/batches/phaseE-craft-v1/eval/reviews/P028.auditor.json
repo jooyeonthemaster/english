@@ -1,0 +1,77 @@
+{
+  "pid": "P028",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SEAM-REDUNDANT-ADVERB",
+      "severity": "major",
+      "evidence": "정답 ③을 넣은 완성문이 'When that filter mistakenly inappropriately dismisses crucial elements, then even seasoned masters can make mistakes.'가 된다. 원문은 'mistakenly + screens out(중립 동사)' 구조라 부사가 자연스럽지만, ③은 오류 의미를 이미 'inappropriately'에 내장하고 있어 stem의 'mistakenly'와 겹치는 이중 부사 잉여(mistakenly inappropriately)가 발생한다. 문법적으로 성립은 하나 편집된 시험 영어로서 명백히 부자연스러운 seam 결함이며, RUBRIC V3의 '정답을 넣은 완성문이 문법적·자연스럽다' 요건을 충족하지 못한다(보수적 판정)."
+    },
+    {
+      "code": "C4-LEXICAL-METACUE",
+      "severity": "minor",
+      "evidence": "오답 4개(①beginner's mind, ②absorb every...detail, ④prior skills, ⑤familiar...tools)는 모두 지문 표층 어휘를 복사한 반면 정답 ③만 지문 어휘와 겹치지 않는 추상 재진술이다. '지문 단어를 그대로 베낀 선지는 함정'이라는 표준 소거 휴리스틱만으로 정답 후보가 좁혀지는 메타 단서 누출."
+    },
+    {
+      "code": "C5-DIFFICULTY-MISMATCH",
+      "severity": "major",
+      "evidence": "요청 난이도는 KILLER이나, 빈칸은 바로 앞 문장('use their experience as a filter to separate the essential from the irrelevant') 한 문장에서 '필터의 오작동 = 필수 요소를 걸러냄'이 즉시 도출되는 1단계 국소 추론이다. RUBRIC §D의 '최소 두 문장/두 논리 단서 연결' 요건 미충족."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "half-truth / 개념 접합(경험 필터가 '초보자의 마음'을 억압한다는 그럴듯한 서사)",
+      "temptingBecause": "'beginner's mind'는 지문의 핵심 개념이고, '경험이 신선한 시각을 밀어낸다'는 해석이 글의 전반부 교훈과 공명하는 것처럼 보인다.",
+      "decisiveFlaw": "마지막 문장의 주체인 숙련자는 beginner's mind를 보유한 상태로 기술되지 않아 '압도당할' 대상이 없고, 지문이 명시한 실수 기제는 필터가 '필수적인 것을 걸러내는 것'이지 마음가짐 억압이 아니다. 'mistakenly overwhelms'도 필터 기능의 오작동 서술로 비정합."
+    },
+    {
+      "label": "2",
+      "intent": "actor swap(초보자의 행동 특성을 숙련자의 필터에 전가)",
+      "temptingBecause": "'absorb every ... detail'이 지문 문장('they try to absorb every detail')을 표층 복사하여 근거가 있어 보인다.",
+      "decisiveFlaw": "모든 세부를 흡수하는 것은 초보자의 특성이고, 필터의 기능은 걸러내는 것이므로 '필터가 흡수하려 한다'는 것은 기능 자체와 모순된다. 흡수는 지문에서 권장되는 태도이지 숙련자 실수의 원인이 아니다."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span 'screens out something essential'의 추상적 재진술",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 단, stem의 'mistakenly'와 선지 내 'inappropriately'가 겹쳐 완성문에 이중 부사 잉여가 생기는 seam 결함이 있다(V3 이슈)."
+    },
+    {
+      "label": "4",
+      "intent": "condition loss / 극단 과확장('assume nothing' 권고를 '기존 기술 전면 포기 강요'로 왜곡)",
+      "temptingBecause": "'prior skills'가 첫 문장의 'tools and skills that are most familiar'를 연상시키고, 'them'이 seasoned masters를 가리키는 듯 읽힌다.",
+      "decisiveFlaw": "기존 전제를 내려놓는 것은 지문이 새로운 문제 앞에서 권장하는 태도이지 숙련자 실수의 원인이 아니며, 필터가 기술 포기를 '강요'한다는 인과는 지문 어디에도 없다."
+    },
+    {
+      "label": "5",
+      "intent": "topic anchor 오답(도입부의 일반적 문제 해결 습관을 결론 자리에 이식) + 도메인 접합 왜곡",
+      "temptingBecause": "'relies ... on familiar ... tools'가 첫 문장을 표층 복사하고, 글 전체의 비판 대상(익숙한 도구 의존)과 극성이 일치한다.",
+      "decisiveFlaw": "익숙한 도구 의존은 '사람들'의 일반 습관이지 '필터'의 오작동 기제가 아니어서 주어와 서술이 비정합이고, 'familiar martial arts tools'는 문제 해결 도메인과 무술 도메인을 뒤섞은 비정합 연어라 정독 시 즉시 탈락한다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "V4-MINOR-IMPRECISION",
+      "severity": "minor",
+      "evidence": "오답 ② 해설이 '무관한 모든 세부사항을 흡수하려 한다는 것은 초보자의 특성'이라 하나, 지문은 초보자가 'every detail'(중요/무관 구분 없이 모든 세부)을 흡수한다고 서술한다. 논지 훼손 없는 경미한 부정확이며 오분석·환각 수준은 아니다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V4/V5 통과. 정답 유일성은 견고하다: ③만이 source span 'screens out something essential'을 보존하고, ①②④⑤는 각각 개념접합·행위자전도·과확장·주제앵커라는 상이한 함정으로 배제된다. 그러나 (1) 완성문 seam에서 'mistakenly inappropriately dismisses'라는 이중 부사 잉여가 발생하여 V3(자연스러움) 실패 — 치명 결함으로 등급은 F. 선지를 'screens out crucial elements' 류의 중립 동사 기반으로 바꾸면 해소 가능. (2) 요청 난이도 KILLER 대비 실제 추론은 직전 한 문장에서 끝나는 1단계 국소 재진술이라 C5=1, §D의 두 단서 연결 요건 미충족(killerConditionsMet=false). (3) 정답만 지문 어휘와 무겹침이라는 메타 단서 누출로 C4=2. 공예 합계 16."
+}

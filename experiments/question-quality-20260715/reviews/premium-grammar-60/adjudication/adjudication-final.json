@@ -1,0 +1,4771 @@
+{
+  "schemaVersion": "premium-grammar-60-third-adjudication-v1",
+  "generatedAt": "2026-07-14T17:34:41.572Z",
+  "method": {
+    "independence": "Disagreements were located mechanically, then adjudicated against blind-items.json and sealed-manifest.json. research-note.md was not consulted before judgments were frozen.",
+    "unitWarning": "60 items are two generations over 30 passage clusters; item-level rates are not 60 independent passage observations.",
+    "apiCallsMade": 0
+  },
+  "summary": {
+    "itemCount": 60,
+    "independentPassageClusterCount": 30,
+    "allValidityPassCount": 38,
+    "fatalCount": 22,
+    "fatalRate": 0.36666666666666664,
+    "grades": {
+      "A": 0,
+      "B": 0,
+      "C": 38,
+      "F": 22
+    },
+    "allVPassAndGradeCCount": 38,
+    "storedKeyAgreementCount": 57,
+    "storedKeyMismatchCount": 3,
+    "storedKeyMismatchIds": [
+      "PG023",
+      "PG040",
+      "PG048"
+    ],
+    "disagreementItemCount": 43,
+    "agreementSpotCheckCount": 12,
+    "totalCalls": 242,
+    "totalCostUsd": 5.1441479999999995,
+    "meanCostUsdPerItem": 0.08573579999999999
+  },
+  "byRun": {
+    "R1": {
+      "itemCount": 30,
+      "grades": {
+        "C": 16,
+        "F": 14
+      },
+      "fatalCount": 14,
+      "allValidityPassCount": 16,
+      "storedKeyMismatchCount": 2,
+      "calls": 96,
+      "costUsd": 2.1099360000000003,
+      "fatalCostUsd": 1.120054,
+      "latencyMs": 1471764
+    },
+    "R2": {
+      "itemCount": 30,
+      "grades": {
+        "C": 22,
+        "F": 8
+      },
+      "fatalCount": 8,
+      "allValidityPassCount": 22,
+      "storedKeyMismatchCount": 1,
+      "calls": 146,
+      "costUsd": 3.034212,
+      "fatalCostUsd": 0.7663199999999999,
+      "latencyMs": 2626692
+    }
+  },
+  "byRequestedDifficulty": {
+    "INTERMEDIATE": {
+      "itemCount": 20,
+      "grades": {
+        "C": 15,
+        "F": 5
+      },
+      "fatalCount": 5,
+      "allValidityPassCount": 15
+    },
+    "ADVANCED": {
+      "itemCount": 20,
+      "grades": {
+        "C": 8,
+        "F": 12
+      },
+      "fatalCount": 12,
+      "allValidityPassCount": 8
+    },
+    "KILLER": {
+      "itemCount": 20,
+      "grades": {
+        "C": 15,
+        "F": 5
+      },
+      "fatalCount": 5,
+      "allValidityPassCount": 15
+    }
+  },
+  "clusterSummary": {
+    "clustersWithAnyFatal": 18,
+    "clustersWithBothFatal": 4,
+    "clustersWithOneFatal": 14,
+    "clustersWithNoFatal": 12,
+    "repeatRunOutcomeAgreement": 0.5333333333333333,
+    "clustersWithStoredKeyMismatch": 2,
+    "clusters": [
+      {
+        "passageId": "ebsi_go1_20221123-q20",
+        "itemIds": [
+          "PG001",
+          "PG041"
+        ],
+        "fatalItemIds": [
+          "PG001"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20191120-q20",
+        "itemIds": [
+          "PG002",
+          "PG017"
+        ],
+        "fatalItemIds": [
+          "PG002"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go3_20260507-q31",
+        "itemIds": [
+          "PG003",
+          "PG006"
+        ],
+        "fatalItemIds": [
+          "PG006"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go3_20151013-q26",
+        "itemIds": [
+          "PG004",
+          "PG013"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20191120-q21",
+        "itemIds": [
+          "PG005",
+          "PG009"
+        ],
+        "fatalItemIds": [
+          "PG005"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "2015_06_3026346-q19",
+        "itemIds": [
+          "PG007",
+          "PG060"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20241015-q21",
+        "itemIds": [
+          "PG008",
+          "PG047"
+        ],
+        "fatalItemIds": [
+          "PG008"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20200312-q36",
+        "itemIds": [
+          "PG010",
+          "PG035"
+        ],
+        "fatalItemIds": [
+          "PG010",
+          "PG035"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "BOTH_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20220324-q20",
+        "itemIds": [
+          "PG011",
+          "PG051"
+        ],
+        "fatalItemIds": [
+          "PG011"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20200312-q21",
+        "itemIds": [
+          "PG012",
+          "PG034"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go3_20150409_A-q19",
+        "itemIds": [
+          "PG014",
+          "PG058"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20151117-q20",
+        "itemIds": [
+          "PG015",
+          "PG029"
+        ],
+        "fatalItemIds": [
+          "PG029"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go3_20260507-q20",
+        "itemIds": [
+          "PG016",
+          "PG037"
+        ],
+        "fatalItemIds": [
+          "PG016",
+          "PG037"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "BOTH_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20190307-q22",
+        "itemIds": [
+          "PG018",
+          "PG045"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go3_20150409_A-q22",
+        "itemIds": [
+          "PG019",
+          "PG050"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "2019_06_5023285-q20",
+        "itemIds": [
+          "PG020",
+          "PG028"
+        ],
+        "fatalItemIds": [
+          "PG020"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "2015_06_3026346-q21",
+        "itemIds": [
+          "PG021",
+          "PG031"
+        ],
+        "fatalItemIds": [
+          "PG021"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20150311-q19",
+        "itemIds": [
+          "PG022",
+          "PG026"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "2019_06_5023285-q29",
+        "itemIds": [
+          "PG023",
+          "PG040"
+        ],
+        "fatalItemIds": [
+          "PG023",
+          "PG040"
+        ],
+        "storedKeyMismatchItemIds": [
+          "PG023",
+          "PG040"
+        ],
+        "outcome": "BOTH_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20231219-q20",
+        "itemIds": [
+          "PG024",
+          "PG043"
+        ],
+        "fatalItemIds": [
+          "PG024"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20231219-q21",
+        "itemIds": [
+          "PG025",
+          "PG036"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20190307-q33",
+        "itemIds": [
+          "PG027",
+          "PG033"
+        ],
+        "fatalItemIds": [
+          "PG027",
+          "PG033"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "BOTH_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20221123-q21",
+        "itemIds": [
+          "PG030",
+          "PG039"
+        ],
+        "fatalItemIds": [
+          "PG030"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go3_20151013-q19",
+        "itemIds": [
+          "PG032",
+          "PG059"
+        ],
+        "fatalItemIds": [
+          "PG059"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20180308-q35",
+        "itemIds": [
+          "PG038",
+          "PG053"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go3_20191015-q20",
+        "itemIds": [
+          "PG042",
+          "PG055"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20241015-q20",
+        "itemIds": [
+          "PG044",
+          "PG056"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20220324-q23",
+        "itemIds": [
+          "PG046",
+          "PG054"
+        ],
+        "fatalItemIds": [
+          "PG046"
+        ],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go1_20151117-q21",
+        "itemIds": [
+          "PG048",
+          "PG049"
+        ],
+        "fatalItemIds": [
+          "PG048"
+        ],
+        "storedKeyMismatchItemIds": [
+          "PG048"
+        ],
+        "outcome": "ONE_FATAL"
+      },
+      {
+        "passageId": "ebsi_go3_20191015-q22",
+        "itemIds": [
+          "PG052",
+          "PG057"
+        ],
+        "fatalItemIds": [],
+        "storedKeyMismatchItemIds": [],
+        "outcome": "NONE_FATAL"
+      }
+    ]
+  },
+  "gateImplications": {
+    "historicalAcceptedCount": 60,
+    "fatalFalseAcceptanceCount": 22,
+    "fatalFalseAcceptanceRateOfAllItems": 0.36666666666666664,
+    "matchingFatalSignalButAcceptedCount": 10,
+    "matchingFatalSignalButAcceptedIds": [
+      "PG006",
+      "PG008",
+      "PG011",
+      "PG020",
+      "PG024",
+      "PG029",
+      "PG030",
+      "PG033",
+      "PG035",
+      "PG059"
+    ],
+    "fatalWithoutMatchingSignalCount": 12,
+    "fatalWithoutMatchingSignalIds": [
+      "PG001",
+      "PG002",
+      "PG005",
+      "PG010",
+      "PG016",
+      "PG021",
+      "PG023",
+      "PG027",
+      "PG037",
+      "PG040",
+      "PG046",
+      "PG048"
+    ],
+    "allVPassItemsWithAnyFinalSignalCount": 25,
+    "allVPassItemsWithFinalErrorCount": 17,
+    "allVPassItemsWithFinalWarningCount": 8,
+    "specificityCaveat": "These are not all classical false positives: many finalErrors correctly describe craft weakness even when V1-V5 pass. A code-to-rubric mapping is required before computing gate precision/specificity."
+  },
+  "interRaterAgreement": {
+    "blindAnswer": {
+      "agreed": 57,
+      "total": 60,
+      "percent": 0.95,
+      "cohenKappa": 0.9331103678929765
+    },
+    "V1": {
+      "agreed": 60,
+      "total": 60,
+      "percent": 1,
+      "cohenKappa": 1
+    },
+    "V2": {
+      "agreed": 57,
+      "total": 60,
+      "percent": 0.95,
+      "cohenKappa": 0.3749999999999991
+    },
+    "V3": {
+      "agreed": 53,
+      "total": 60,
+      "percent": 0.8833333333333333,
+      "cohenKappa": 0.16000000000000017
+    },
+    "V4": {
+      "agreed": 49,
+      "total": 60,
+      "percent": 0.8166666666666667,
+      "cohenKappa": 0.2666666666666663
+    },
+    "V5": {
+      "agreed": 60,
+      "total": 60,
+      "percent": 1,
+      "cohenKappa": 1
+    },
+    "C1": {
+      "agreed": 45,
+      "total": 60,
+      "percent": 0.75,
+      "cohenKappa": 0.14285714285714307
+    },
+    "C2": {
+      "agreed": 47,
+      "total": 60,
+      "percent": 0.7833333333333333,
+      "cohenKappa": -0.03999999999999985
+    },
+    "C3": {
+      "agreed": 37,
+      "total": 60,
+      "percent": 0.6166666666666667,
+      "cohenKappa": 0.09862834748530398
+    },
+    "C4": {
+      "agreed": 40,
+      "total": 60,
+      "percent": 0.6666666666666666,
+      "cohenKappa": 0.20529801324503294
+    },
+    "C5": {
+      "agreed": 41,
+      "total": 60,
+      "percent": 0.6833333333333333,
+      "cohenKappa": 0.5633856759862123
+    },
+    "grade": {
+      "agreed": 48,
+      "total": 60,
+      "percent": 0.8,
+      "cohenKappa": 0.5922989807474519
+    },
+    "allValidity": {
+      "agreed": 50,
+      "total": 60,
+      "percent": 0.8333333333333334,
+      "cohenKappa": 0.6291718170580964
+    }
+  },
+  "disagreementAdjudications": [
+    {
+      "itemId": "PG003",
+      "dimensions": [
+        {
+          "dimension": "C4",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        }
+      ],
+      "evidence": "allowed가 콤마 직후 -ed 형태로 노출되고 목적어까지 바로 이어져 약한 형태 누출이 있으므로 C4=2다."
+    },
+    {
+      "itemId": "PG005",
+      "dimensions": [
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": false
+        },
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 2
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "grade",
+          "rater1": "F",
+          "rater2": "C",
+          "final": "F"
+        }
+      ],
+      "evidence": "gives up and jumping은 즉시 소거되어 C3=0이다. 더 중요하게는 해설이 the rest를 the penguins의 수식어로 뒤집어 설명한다. 실제 핵은 the rest이고 of the penguins는 partitive 보충어이므로 V4 실패다."
+    },
+    {
+      "itemId": "PG006",
+      "dimensions": [
+        {
+          "dimension": "C4",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        }
+      ],
+      "evidence": "PG003과 같은 allowed→allowing 국소 형태 누출이 있어 C4=2다."
+    },
+    {
+      "itemId": "PG007",
+      "dimensions": [
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C5",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        }
+      ],
+      "evidence": "다섯 표지는 서로 다른 유효 문법점을 의도하지만, that절 끝의 serving은 정동사 결손을 쉽게 드러낸다. 따라서 C2=3, INTERMEDIATE 정합은 C5=2다."
+    },
+    {
+      "itemId": "PG009",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        }
+      ],
+      "evidence": "독립절의 본동사 자리에 watching이 놓여 즉시 드러나는 기초 결손이므로 출제 가치 C1=1이다."
+    },
+    {
+      "itemId": "PG010",
+      "dimensions": [
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": false
+        },
+        {
+          "dimension": "grade",
+          "rater1": "F",
+          "rater2": "C",
+          "final": "F"
+        }
+      ],
+      "evidence": "what the matter was에서 what은 be의 보어인 의문대명사이지 명사를 수식하는 의문형용사가 아니다. 해설의 '의문형용사(또는 의문대명사)'와 keyPoints의 관계대명사 병기는 실제 분석을 흐리므로 V4 실패다."
+    },
+    {
+      "itemId": "PG011",
+      "dimensions": [
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "C4",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        },
+        {
+          "dimension": "C5",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        }
+      ],
+      "evidence": "분사·태 등 다섯 표지의 의도는 분명해 C2=3이지만, task 바로 뒤 completing과 목적어 부재가 국소 단서가 되어 C3=1·C4=2·C5=1이다."
+    },
+    {
+      "itemId": "PG012",
+      "dimensions": [
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "C5",
+          "rater1": 0,
+          "rater2": 1,
+          "final": 0
+        }
+      ],
+      "evidence": "긴 동명사구 주어를 추적해야 해 표지 의도 C2=3은 인정하지만, 결론은 단순 수일치라 C3=1이고 KILLER 정합은 C5=0이다."
+    },
+    {
+      "itemId": "PG014",
+      "dimensions": [
+        {
+          "dimension": "C5",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        }
+      ],
+      "evidence": "명령문과 동명사 단편 구별은 INTERMEDIATE에 맞지만 대문자·마침표가 강한 단서라 C5=2다."
+    },
+    {
+      "itemId": "PG015",
+      "dimensions": [
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "문두 Focusing과 뒤의 comma-and 결과 구문이 정답을 표면적으로 노출하므로 C4=2다."
+    },
+    {
+      "itemId": "PG016",
+      "dimensions": [
+        {
+          "dimension": "V3",
+          "rater1": true,
+          "rater2": false,
+          "final": false
+        },
+        {
+          "dimension": "C3",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C5",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "tending으로 고쳐도 wounds 뒤 종속절 닫는 쉼표 누락과 'fine -but'가 남는다. 따라서 V3 실패이며 편집 노이즈를 반영해 C3=1·C4=1·C5=2다."
+    },
+    {
+      "itemId": "PG018",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "people과 tends가 가까워 기본 수일치로 즉시 끝난다. C1=1·C3=0이며 이 인접 단서 때문에 C4=2다."
+    },
+    {
+      "itemId": "PG019",
+      "dimensions": [
+        {
+          "dimension": "C3",
+          "rater1": 0,
+          "rater2": 1,
+          "final": 0
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "문두 What + 고유명사 + 동사 배열이 즉시 비문을 드러내므로 C3=0·C4=2다."
+    },
+    {
+      "itemId": "PG020",
+      "dimensions": [
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        },
+        {
+          "dimension": "C5",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "Sailors와 has 사이의 관계절이 유인어를 제공해 C3=2이며 ADVANCED 하단 정도의 C5=2다."
+    },
+    {
+      "itemId": "PG021",
+      "dimensions": [
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": false
+        },
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C5",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "grade",
+          "rater1": "F",
+          "rater2": "B",
+          "final": "F"
+        }
+      ],
+      "evidence": "be able to stimulate의 to부정사를 '명사적 용법'이라 한 해설은 adjective able의 infinitival complement를 잘못 분류한다. V4 실패이며, 표지 의도는 C2=3이나 KILLER 정합은 C5=1이다."
+    },
+    {
+      "itemId": "PG022",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "C5",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "might 바로 뒤 wanting은 초급 modal+원형 규칙으로 즉시 소거되어 C1=1·C3=0, INTERMEDIATE 하단 C5=2다."
+    },
+    {
+      "itemId": "PG023",
+      "dimensions": [
+        {
+          "dimension": "blindAnswer",
+          "rater1": "(A)",
+          "rater2": "NO_ANSWER",
+          "final": "NO_ANSWER"
+        },
+        {
+          "dimension": "alternativeAnswers",
+          "rater1": [],
+          "rater2": [
+            "(A)"
+          ],
+          "final": [
+            "(A)"
+          ]
+        },
+        {
+          "dimension": "V2",
+          "rater1": true,
+          "rater2": false,
+          "final": false
+        },
+        {
+          "dimension": "V3",
+          "rater1": true,
+          "rater2": false,
+          "final": false
+        },
+        {
+          "dimension": "V4",
+          "rater1": true,
+          "rater2": false,
+          "final": false
+        },
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 3,
+          "final": 1
+        },
+        {
+          "dimension": "C4",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "C5",
+          "rater1": 0,
+          "rater2": 1,
+          "final": 0
+        },
+        {
+          "dimension": "grade",
+          "rater1": "C",
+          "rater2": "F",
+          "final": "F"
+        }
+      ],
+      "evidence": "dash 안의 수원 목록을 header로, none of them을 재개 주어로 읽는 left-dislocation 분석이 가능하다. 따라서 (A)는 필연적 비문이 아니며 NO_ANSWER, V2-V4 실패다. 시비성 함정이라 C4=0·C5=0이다."
+    },
+    {
+      "itemId": "PG024",
+      "dimensions": [
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": false
+        }
+      ],
+      "evidence": "enough to keep advancing은 정도·결과 보충 구조다. 해설이 목적 용법도 가능하다고 병기해 실제 기능을 흐리므로 V4 실패다(V5 난이도 불일치는 양 평가자가 이미 확인)."
+    },
+    {
+      "itemId": "PG026",
+      "dimensions": [
+        {
+          "dimension": "C2",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        },
+        {
+          "dimension": "C3",
+          "rater1": 0,
+          "rater2": 1,
+          "final": 0
+        },
+        {
+          "dimension": "C5",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        }
+      ],
+      "evidence": "friends and family donates는 tell A to V 결손과 표면 수일치가 동시에 답을 노출해 C3=0, C5=2다."
+    },
+    {
+      "itemId": "PG027",
+      "dimensions": [
+        {
+          "dimension": "V3",
+          "rater1": false,
+          "rater2": true,
+          "final": false
+        },
+        {
+          "dimension": "grade",
+          "rater1": "F",
+          "rater2": "C",
+          "final": "F"
+        }
+      ],
+      "evidence": "own 뒤 첫 쉼표는 coordinate-adjective 경계이고 story 뒤 쉼표는 주어와 is를 부당하게 가른다. 제거 가능한 삽입구 쌍이 아니므로 to think 교정 후에도 V3 실패다."
+    },
+    {
+      "itemId": "PG029",
+      "dimensions": [
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "Giving으로 끝나는 독립 단편 자체가 메타 단서이므로 C4=2다."
+    },
+    {
+      "itemId": "PG030",
+      "dimensions": [
+        {
+          "dimension": "C4",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        }
+      ],
+      "evidence": "thing...are의 국소 수일치와 비표적 조건문 시제 흔들림이 있어 C4=2다."
+    },
+    {
+      "itemId": "PG031",
+      "dimensions": [
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": true
+        },
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        },
+        {
+          "dimension": "C5",
+          "rater1": 0,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "grade",
+          "rater1": "F",
+          "rater2": "B",
+          "final": "C"
+        }
+      ],
+      "evidence": "실제 저장 해설은 be able to를 '조동사 상당어구'라고 했지 명사적 용법이라 하지 않았다. 따라서 V4는 통과한다. zero-relative를 건너 주절 주어를 찾고 project의 타동성·태를 판단해야 해 C1=3·C2=3·C3=2이나 KILLER에는 못 미쳐 C5=1이다."
+    },
+    {
+      "itemId": "PG032",
+      "dimensions": [
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "C5",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        }
+      ],
+      "evidence": "다섯 표지 의도는 분명해 C2=3이지만 someone else similarly immersing은 태와 타동성으로 국소 소거되어 C3=1·C5=1이다."
+    },
+    {
+      "itemId": "PG033",
+      "dimensions": [
+        {
+          "dimension": "V3",
+          "rater1": false,
+          "rater2": true,
+          "final": false
+        }
+      ],
+      "evidence": "PG027과 같은 'their own, unique story, is'의 불필요한 주어–동사 쉼표가 using→used 교정 뒤에도 남으므로 V3 실패다."
+    },
+    {
+      "itemId": "PG034",
+      "dimensions": [
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        },
+        {
+          "dimension": "C5",
+          "rater1": 0,
+          "rater2": 1,
+          "final": 1
+        }
+      ],
+      "evidence": "get A to V와 make/let A V의 혼동은 실제 함정이라 C2=3·C3=2이나 단일 국소 보문형이라 KILLER 정합 C5=1이다."
+    },
+    {
+      "itemId": "PG035",
+      "dimensions": [
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": false
+        }
+      ],
+      "evidence": "keyPoints가 계속적 which와 선행사의 수일치를 묻는다고 하지만 which는 수에 따라 변하지 않고 meant도 과거형이라 그 점검항목이 성립하지 않는다. V4 실패다."
+    },
+    {
+      "itemId": "PG037",
+      "dimensions": [
+        {
+          "dimension": "V3",
+          "rater1": true,
+          "rater2": false,
+          "final": false
+        },
+        {
+          "dimension": "C3",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C5",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "appropriately로 고쳐도 wounds 뒤 쉼표 누락과 'fine -but' 표면 결함이 남아 V3 실패다. 국소 품사 단서와 노이즈로 C3=1·C4=1·C5=2다."
+    },
+    {
+      "itemId": "PG038",
+      "dimensions": [
+        {
+          "dimension": "blindAnswer",
+          "rater1": "NO_ANSWER",
+          "rater2": "(C)",
+          "final": "(C)"
+        },
+        {
+          "dimension": "alternativeAnswers",
+          "rater1": [
+            "(C) (출제 의도 추정: shows up)"
+          ],
+          "rater2": [],
+          "final": []
+        },
+        {
+          "dimension": "V2",
+          "rater1": false,
+          "rater2": true,
+          "final": true
+        },
+        {
+          "dimension": "V3",
+          "rater1": false,
+          "rater2": true,
+          "final": true
+        },
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": true
+        },
+        {
+          "dimension": "C1",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        },
+        {
+          "dimension": "C2",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        },
+        {
+          "dimension": "C3",
+          "rater1": 0,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C4",
+          "rater1": 0,
+          "rater2": 2,
+          "final": 2
+        },
+        {
+          "dimension": "grade",
+          "rater1": "F",
+          "rater2": "C",
+          "final": "C"
+        }
+      ],
+      "evidence": "a stranger showing up을 축약 관계절로 잡으면 뒤의 and offers를 결속할 좌측 유한 술어가 없어 혼합 병렬이 된다. 따라서 showing→shows인 저장 정답 (C)가 유일하다. what kind 절은 embedded interrogative와 fused-relative 기술이 모두 가능한 전통적 분석 범위여서 V4 실패로 보지 않는다."
+    },
+    {
+      "itemId": "PG039",
+      "dimensions": [
+        {
+          "dimension": "C4",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        }
+      ],
+      "evidence": "kept 바로 뒤 목적어가 분사 태를 배제하긴 하지만 별도 메타·꼬리 단서는 없어 C4=3이다."
+    },
+    {
+      "itemId": "PG040",
+      "dimensions": [
+        {
+          "dimension": "blindAnswer",
+          "rater1": "(A)",
+          "rater2": "NO_ANSWER",
+          "final": "NO_ANSWER"
+        },
+        {
+          "dimension": "alternativeAnswers",
+          "rater1": [],
+          "rater2": [
+            "(A)"
+          ],
+          "final": [
+            "(A)"
+          ]
+        },
+        {
+          "dimension": "V2",
+          "rater1": true,
+          "rater2": false,
+          "final": false
+        },
+        {
+          "dimension": "V3",
+          "rater1": true,
+          "rater2": false,
+          "final": false
+        },
+        {
+          "dimension": "V4",
+          "rater1": true,
+          "rater2": false,
+          "final": false
+        },
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 3,
+          "final": 1
+        },
+        {
+          "dimension": "C4",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "C5",
+          "rater1": 0,
+          "rater2": 1,
+          "final": 0
+        },
+        {
+          "dimension": "grade",
+          "rater1": "C",
+          "rater2": "F",
+          "final": "F"
+        }
+      ],
+      "evidence": "PG023과 동일하게 수원 목록을 header, none of that을 집합적 재개 주어로 읽을 수 있다. (A)가 필연적 비문이 아니므로 NO_ANSWER, V2-V4 실패이며 C4=0·C5=0이다."
+    },
+    {
+      "itemId": "PG041",
+      "dimensions": [
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C5",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "grade",
+          "rater1": "C",
+          "rater2": "B",
+          "final": "C"
+        }
+      ],
+      "evidence": "Only-by 도치는 구조 포인트이고 다섯 표지 의도는 분명해 C2=3이지만 Only가 규칙을 직접 신호하므로 KILLER 정합은 C5=1이다."
+    },
+    {
+      "itemId": "PG044",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "beauty와 come 사이에는 짧은 of구만 있어 기본 수일치로 즉시 끝난다. C1=1·C3=0·C4=2다."
+    },
+    {
+      "itemId": "PG045",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "PG018과 같은 people...tends 오류를 같은 passage cluster에서 반복했고 인접 수일치로 즉시 끝난다. C1=1·C3=0·C4=2다."
+    },
+    {
+      "itemId": "PG046",
+      "dimensions": [
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": false
+        },
+        {
+          "dimension": "grade",
+          "rater1": "F",
+          "rater2": "C",
+          "final": "F"
+        }
+      ],
+      "evidence": "단순 명사 열거를 '등위 상관접속어구'라고 부른 것은 correlative conjunction의 정의와 다르다. 결론 are는 맞아도 학생용 문법 용어가 사실과 달라 V4 실패다."
+    },
+    {
+      "itemId": "PG048",
+      "dimensions": [
+        {
+          "dimension": "alternativeAnswers",
+          "rater1": [
+            "(D) (출제 의도 추정: running)"
+          ],
+          "rater2": [
+            "(D)"
+          ],
+          "final": [
+            "(D)"
+          ]
+        },
+        {
+          "dimension": "C1",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "C2",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "C3",
+          "rater1": 0,
+          "rater2": 3,
+          "final": 0
+        },
+        {
+          "dimension": "C5",
+          "rater1": 0,
+          "rater2": 1,
+          "final": 0
+        }
+      ],
+      "evidence": "stop to V는 '다른 행동을 멈추고 V하려고 하다'라는 정상 구조다. 문맥상 running이 의도 의미지만 to run은 문법적이므로 NO_ANSWER이고 해설도 문법과 의미를 혼동해 V2-V4 실패다."
+    },
+    {
+      "itemId": "PG050",
+      "dimensions": [
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "When + NP + bringing에서 종속절 정동사 결손이 표면에 드러나 C4=2다."
+    },
+    {
+      "itemId": "PG051",
+      "dimensions": [
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        },
+        {
+          "dimension": "C5",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "encourage A to V와 수동 후치분사 디코이가 실제 경쟁을 만들어 C2=3·C3=2이나 ADVANCED 하단이라 C5=2다."
+    },
+    {
+      "itemId": "PG052",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "Both influencing으로 끝나는 전체 문장 단편이 즉시 보여 C1=1·C4=2다."
+    },
+    {
+      "itemId": "PG053",
+      "dimensions": [
+        {
+          "dimension": "V4",
+          "rater1": false,
+          "rater2": true,
+          "final": true
+        },
+        {
+          "dimension": "grade",
+          "rater1": "F",
+          "rater2": "C",
+          "final": "C"
+        }
+      ],
+      "evidence": "what kind of sandwich I like는 embedded interrogative로 가장 자연스럽지만 'the kind that I like'인 fused-relative 기술도 가능하다. keyPoints의 넓은 범주 병기를 치명적 사실 오류로 보지 않아 V4 통과·최종 C다."
+    },
+    {
+      "itemId": "PG056",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "문두 Incorporate와 뒤 can improve의 두 정동사 충돌이 즉시 보여 C1=1·C3=0·C4=2다."
+    },
+    {
+      "itemId": "PG057",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 1,
+          "final": 1
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 0,
+          "final": 0
+        },
+        {
+          "dimension": "C4",
+          "rater1": 3,
+          "rater2": 2,
+          "final": 2
+        }
+      ],
+      "evidence": "If NP qualifying ... then에서 종속절 정동사 결손이 즉시 보여 C1=1·C3=0·C4=2다."
+    },
+    {
+      "itemId": "PG060",
+      "dimensions": [
+        {
+          "dimension": "C1",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        },
+        {
+          "dimension": "C2",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 3
+        },
+        {
+          "dimension": "C3",
+          "rater1": 1,
+          "rater2": 2,
+          "final": 1
+        },
+        {
+          "dimension": "C5",
+          "rater1": 2,
+          "rater2": 3,
+          "final": 2
+        },
+        {
+          "dimension": "grade",
+          "rater1": "C",
+          "rater2": "B",
+          "final": "C"
+        }
+      ],
+      "evidence": "in order for NP to V는 유효한 INTERMEDIATE 포인트이고 표지 의도도 분명해 C2=3이지만 긴 구 전체가 밑줄이라 C3=1, 난도 정합 C5=2다."
+    }
+  ],
+  "agreementSpotChecks": [
+    {
+      "itemId": "PG001",
+      "dimensions": [
+        "V4"
+      ],
+      "finding": "두 평가자가 함께 실패로 본 것을 재확인했다. (D) 밑줄은 be able의 to인데 해설은 문말 sell to의 목적어 관계를 설명해 표적 결속이 깨졌다."
+    },
+    {
+      "itemId": "PG002",
+      "dimensions": [
+        "V4"
+      ],
+      "finding": "hoped가 that절을 목적어로 못 취한다는 설명은 거짓이다. 문제는 접속사 없는 두 번째 유한동사이며 두 평가자의 공동 실패 판정이 맞다."
+    },
+    {
+      "itemId": "PG006",
+      "dimensions": [
+        "V5"
+      ],
+      "finding": "fullCandidate.difficulty=ADVANCED와 question.difficulty=KILLER가 실제로 달라 공동 실패 판정이 맞다."
+    },
+    {
+      "itemId": "PG007",
+      "dimensions": [
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5"
+      ],
+      "finding": "get what they want의 what은 fused relative로 방어되며 저장키 (E) 외 다른 오류가 없다. all-V 공동 통과를 유지했다."
+    },
+    {
+      "itemId": "PG013",
+      "dimensions": [
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5"
+      ],
+      "finding": "게이트의 grammar-explanation-lint 신호와 별개로 학생용 해설은 appreciate→be appreciated의 태를 정확히 설명한다. all-V 통과다."
+    },
+    {
+      "itemId": "PG014",
+      "dimensions": [
+        "V4"
+      ],
+      "finding": "what you thought of a movie는 embedded interrogative가 우세하지만 'your opinion/what you thought'인 nominal 기술도 가능하다. keyPoints의 넓은 학교문법 태그만으로 V4를 뒤집지 않았다."
+    },
+    {
+      "itemId": "PG028",
+      "dimensions": [
+        "V4"
+      ],
+      "finding": "know what I am fitted to do는 embedded interrogative/fused relative 양쪽 기술이 가능한 전형적 경계다. 공동 V4 통과를 유지했다."
+    },
+    {
+      "itemId": "PG041",
+      "dimensions": [
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5"
+      ],
+      "finding": "Only by 문두 도치, can you create 교정, 네 디코이 해설이 모두 정확하다. 다만 KILLER 공예는 C5=1로 별도 감점했다."
+    },
+    {
+      "itemId": "PG048",
+      "dimensions": [
+        "V2",
+        "V3",
+        "V4"
+      ],
+      "finding": "stop to run의 문맥은 기괴해도 문법 구조는 정상이다. 두 평가자의 NO_ANSWER 및 V2-V4 실패에 동의한다."
+    },
+    {
+      "itemId": "PG052",
+      "dimensions": [
+        "V2",
+        "V3"
+      ],
+      "finding": "a thousand lines ... qualifies는 그 양을 하나의 단위/작품으로 읽는 단수 일치가 가능하다. (E)의 fragment만 유일한 오류다."
+    },
+    {
+      "itemId": "PG055",
+      "dimensions": [
+        "V2",
+        "V3",
+        "V4"
+      ],
+      "finding": "Where the mind goes는 자유 관계/장소 종속절로 자연스럽고 keep you focused도 결과 상태 보어로 적법하다. 공동 all-V 통과를 유지했다."
+    },
+    {
+      "itemId": "PG060",
+      "dimensions": [
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5"
+      ],
+      "finding": "in order for a great company to serve 교정은 유일하고 해설도 정확하다. all-V는 통과하지만 광범위 밑줄 때문에 B가 아닌 C다."
+    }
+  ],
+  "items": [
+    {
+      "itemId": "PG001",
+      "passageId": "ebsi_go1_20221123-q20",
+      "run": "R2",
+      "sourceKey": "R2:12",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(B)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(B)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 0,
+        "C6": 0
+      },
+      "craftTotal": 7,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-decoy-filler-span"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-decoy-filler-span"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-decoy-filler-span",
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 8,
+        "attempts": 8,
+        "latencyMs": 153334,
+        "costUsd": 0.13312
+      }
+    },
+    {
+      "itemId": "PG002",
+      "passageId": "ebsi_go1_20191120-q20",
+      "run": "R2",
+      "sourceKey": "R2:10",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 0
+      },
+      "craftTotal": 11,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 56289,
+        "costUsd": 0.057338
+      }
+    },
+    {
+      "itemId": "PG003",
+      "passageId": "ebsi_go3_20260507-q31",
+      "run": "R2",
+      "sourceKey": "R2:26",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 11,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 2,
+        "attempts": 2,
+        "latencyMs": 55711,
+        "costUsd": 0.05095
+      }
+    },
+    {
+      "itemId": "PG004",
+      "passageId": "ebsi_go3_20151013-q26",
+      "run": "R2",
+      "sourceKey": "R2:01",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 51354,
+        "costUsd": 0.071776
+      }
+    },
+    {
+      "itemId": "PG005",
+      "passageId": "ebsi_go1_20191120-q21",
+      "run": "R1",
+      "sourceKey": "R1:09",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 0,
+        "C4": 2,
+        "C5": 0,
+        "C6": 0
+      },
+      "craftTotal": 6,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 81328,
+        "costUsd": 0.086128
+      }
+    },
+    {
+      "itemId": "PG006",
+      "passageId": "ebsi_go3_20260507-q31",
+      "run": "R1",
+      "sourceKey": "R1:26",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 11,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 70299,
+        "costUsd": 0.088052
+      }
+    },
+    {
+      "itemId": "PG007",
+      "passageId": "2015_06_3026346-q19",
+      "run": "R1",
+      "sourceKey": "R1:28",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 3,
+        "C3": 1,
+        "C4": 3,
+        "C5": 2,
+        "C6": 2
+      },
+      "craftTotal": 13,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-noun-clause-pronoun-mislabel"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-noun-clause-pronoun-mislabel"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-noun-clause-pronoun-mislabel"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 45038,
+        "costUsd": 0.064238
+      }
+    },
+    {
+      "itemId": "PG008",
+      "passageId": "ebsi_go1_20241015-q21",
+      "run": "R1",
+      "sourceKey": "R1:05",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-decoy-filler-span",
+          "grammar-pointcode-span-mismatch"
+        ],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [
+          "grammar-decoy-filler-span",
+          "grammar-pointcode-span-mismatch"
+        ],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": [
+          "grammar-decoy-filler-span",
+          "grammar-pointcode-span-mismatch"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 79098,
+        "costUsd": 0.106266
+      }
+    },
+    {
+      "itemId": "PG009",
+      "passageId": "ebsi_go1_20191120-q21",
+      "run": "R2",
+      "sourceKey": "R2:09",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 1,
+        "C2": 2,
+        "C3": 0,
+        "C4": 2,
+        "C5": 0,
+        "C6": 3
+      },
+      "craftTotal": 8,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-killer-generic-answer-point"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-killer-generic-answer-point"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-killer-generic-answer-point"
+        ]
+      },
+      "production": {
+        "calls": 9,
+        "attempts": 9,
+        "latencyMs": 191498,
+        "costUsd": 0.239718
+      }
+    },
+    {
+      "itemId": "PG010",
+      "passageId": "ebsi_go1_20200312-q36",
+      "run": "R2",
+      "sourceKey": "R2:23",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 0
+      },
+      "craftTotal": 9,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 56845,
+        "costUsd": 0.076792
+      }
+    },
+    {
+      "itemId": "PG011",
+      "passageId": "ebsi_go1_20220324-q20",
+      "run": "R1",
+      "sourceKey": "R1:20",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 3,
+        "C3": 1,
+        "C4": 2,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-shallow-participle-adjective-answer",
+          "grammar-shallow-nearby-passive-decoy",
+          "grammar-keypoint-choice-mismatch"
+        ],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [
+          "grammar-shallow-participle-adjective-answer",
+          "grammar-shallow-nearby-passive-decoy",
+          "grammar-keypoint-choice-mismatch"
+        ],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": [
+          "grammar-shallow-participle-adjective-answer",
+          "grammar-shallow-nearby-passive-decoy",
+          "grammar-keypoint-choice-mismatch"
+        ]
+      },
+      "production": {
+        "calls": 6,
+        "attempts": 6,
+        "latencyMs": 64656,
+        "costUsd": 0.123528
+      }
+    },
+    {
+      "itemId": "PG012",
+      "passageId": "ebsi_go1_20200312-q21",
+      "run": "R2",
+      "sourceKey": "R2:24",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 3,
+        "C3": 1,
+        "C4": 3,
+        "C5": 0,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-marker-too-dense",
+          "grammar-killer-overdrilled-answer"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-marker-too-dense",
+          "grammar-killer-overdrilled-answer"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-marker-too-dense",
+          "grammar-killer-overdrilled-answer",
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 9,
+        "attempts": 9,
+        "latencyMs": 156492,
+        "costUsd": 0.19323
+      }
+    },
+    {
+      "itemId": "PG013",
+      "passageId": "ebsi_go3_20151013-q26",
+      "run": "R1",
+      "sourceKey": "R1:01",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 2
+      },
+      "craftTotal": 13,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-explanation-lint"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-explanation-lint"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-explanation-lint"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 50657,
+        "costUsd": 0.058318
+      }
+    },
+    {
+      "itemId": "PG014",
+      "passageId": "ebsi_go3_20150409_A-q19",
+      "run": "R1",
+      "sourceKey": "R1:22",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 2,
+        "C6": 3
+      },
+      "craftTotal": 13,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-obvious-to-gerund-after-verb"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-obvious-to-gerund-after-verb"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-obvious-to-gerund-after-verb"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 26164,
+        "costUsd": 0.053414
+      }
+    },
+    {
+      "itemId": "PG015",
+      "passageId": "ebsi_go1_20151117-q20",
+      "run": "R2",
+      "sourceKey": "R2:08",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 11,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 2,
+        "attempts": 2,
+        "latencyMs": 26339,
+        "costUsd": 0.023318
+      }
+    },
+    {
+      "itemId": "PG016",
+      "passageId": "ebsi_go3_20260507-q20",
+      "run": "R2",
+      "sourceKey": "R2:25",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": false,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 1,
+        "C5": 2,
+        "C6": 2
+      },
+      "craftTotal": 10,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 41092,
+        "costUsd": 0.05316
+      }
+    },
+    {
+      "itemId": "PG017",
+      "passageId": "ebsi_go1_20191120-q20",
+      "run": "R1",
+      "sourceKey": "R1:10",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-obvious-adjacent-sv-agreement",
+          "grammar-error-explanation-surface-order"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-obvious-adjacent-sv-agreement",
+          "grammar-error-explanation-surface-order"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-obvious-adjacent-sv-agreement",
+          "grammar-error-explanation-surface-order"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 28937,
+        "costUsd": 0.05247
+      }
+    },
+    {
+      "itemId": "PG018",
+      "passageId": "ebsi_go1_20190307-q22",
+      "run": "R1",
+      "sourceKey": "R1:18",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 1,
+        "C2": 2,
+        "C3": 0,
+        "C4": 2,
+        "C5": 0,
+        "C6": 3
+      },
+      "craftTotal": 8,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-killer-thin-answer"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-killer-thin-answer"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-killer-thin-answer"
+        ]
+      },
+      "production": {
+        "calls": 5,
+        "attempts": 5,
+        "latencyMs": 43771,
+        "costUsd": 0.084914
+      }
+    },
+    {
+      "itemId": "PG019",
+      "passageId": "ebsi_go3_20150409_A-q22",
+      "run": "R2",
+      "sourceKey": "R2:21",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(B)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(B)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 0,
+        "C4": 2,
+        "C5": 0,
+        "C6": 2
+      },
+      "craftTotal": 8,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 6,
+        "attempts": 6,
+        "latencyMs": 146706,
+        "costUsd": 0.15508
+      }
+    },
+    {
+      "itemId": "PG020",
+      "passageId": "2019_06_5023285-q20",
+      "run": "R1",
+      "sourceKey": "R1:29",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 2,
+        "C4": 3,
+        "C5": 2,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 2,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-agreement-explanation-too-thin"
+        ],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [
+          "grammar-agreement-explanation-too-thin"
+        ],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": [
+          "grammar-agreement-explanation-too-thin"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 42057,
+        "costUsd": 0.050062
+      }
+    },
+    {
+      "itemId": "PG021",
+      "passageId": "2015_06_3026346-q21",
+      "run": "R2",
+      "sourceKey": "R2:27",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 3,
+        "C2": 3,
+        "C3": 2,
+        "C4": 3,
+        "C5": 1,
+        "C6": 0
+      },
+      "craftTotal": 12,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 55445,
+        "costUsd": 0.04877
+      }
+    },
+    {
+      "itemId": "PG022",
+      "passageId": "ebsi_go1_20150311-q19",
+      "run": "R1",
+      "sourceKey": "R1:16",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 1,
+        "C2": 2,
+        "C3": 0,
+        "C4": 3,
+        "C5": 2,
+        "C6": 3
+      },
+      "craftTotal": 11,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-obvious-to-gerund-after-verb"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-obvious-to-gerund-after-verb"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-obvious-to-gerund-after-verb"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 45305,
+        "costUsd": 0.065104
+      }
+    },
+    {
+      "itemId": "PG023",
+      "passageId": "2019_06_5023285-q29",
+      "run": "R2",
+      "sourceKey": "R2:30",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "NO_ANSWER",
+      "alternativeAnswers": [
+        "(A)"
+      ],
+      "storedCorrectAnswer": "(A)",
+      "storedKeyAgreement": false,
+      "validity": {
+        "V1": true,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 0
+      },
+      "craftTotal": 5,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 6,
+        "attempts": 6,
+        "latencyMs": 100311,
+        "costUsd": 0.129536
+      }
+    },
+    {
+      "itemId": "PG024",
+      "passageId": "ebsi_go1_20231219-q20",
+      "run": "R1",
+      "sourceKey": "R1:14",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 0
+      },
+      "craftTotal": 9,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 2,
+        "attempts": 2,
+        "latencyMs": 17050,
+        "costUsd": 0.030624
+      }
+    },
+    {
+      "itemId": "PG025",
+      "passageId": "ebsi_go1_20231219-q21",
+      "run": "R2",
+      "sourceKey": "R2:13",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 2,
+        "attempts": 2,
+        "latencyMs": 23669,
+        "costUsd": 0.03034
+      }
+    },
+    {
+      "itemId": "PG026",
+      "passageId": "ebsi_go1_20150311-q19",
+      "run": "R2",
+      "sourceKey": "R2:16",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 0,
+        "C4": 3,
+        "C5": 2,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 6,
+        "attempts": 6,
+        "latencyMs": 110942,
+        "costUsd": 0.130728
+      }
+    },
+    {
+      "itemId": "PG027",
+      "passageId": "ebsi_go1_20190307-q33",
+      "run": "R2",
+      "sourceKey": "R2:17",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": false,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 5,
+        "attempts": 5,
+        "latencyMs": 81082,
+        "costUsd": 0.073414
+      }
+    },
+    {
+      "itemId": "PG028",
+      "passageId": "2019_06_5023285-q20",
+      "run": "R2",
+      "sourceKey": "R2:29",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 2,
+        "attempts": 2,
+        "latencyMs": 16388,
+        "costUsd": 0.03015
+      }
+    },
+    {
+      "itemId": "PG029",
+      "passageId": "ebsi_go1_20151117-q20",
+      "run": "R1",
+      "sourceKey": "R1:08",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 1,
+        "C6": 2
+      },
+      "craftTotal": 10,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-marker-too-dense",
+          "grammar-keypoint-choice-mismatch",
+          "grammar-explanation-lint"
+        ],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [
+          "grammar-marker-too-dense",
+          "grammar-keypoint-choice-mismatch",
+          "grammar-explanation-lint"
+        ],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": [
+          "grammar-marker-too-dense",
+          "grammar-keypoint-choice-mismatch",
+          "grammar-explanation-lint"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 28942,
+        "costUsd": 0.054722
+      }
+    },
+    {
+      "itemId": "PG030",
+      "passageId": "ebsi_go1_20221123-q21",
+      "run": "R1",
+      "sourceKey": "R1:11",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 11,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-obvious-local-agreement",
+          "grammar-obvious-pronoun-agreement"
+        ],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [
+          "grammar-obvious-local-agreement",
+          "grammar-obvious-pronoun-agreement"
+        ],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": [
+          "grammar-obvious-local-agreement",
+          "grammar-obvious-pronoun-agreement"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 78469,
+        "costUsd": 0.104326
+      }
+    },
+    {
+      "itemId": "PG031",
+      "passageId": "2015_06_3026346-q21",
+      "run": "R1",
+      "sourceKey": "R1:27",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(B)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(B)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 3,
+        "C2": 3,
+        "C3": 2,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 15,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 43108,
+        "costUsd": 0.053786
+      }
+    },
+    {
+      "itemId": "PG032",
+      "passageId": "ebsi_go3_20151013-q19",
+      "run": "R2",
+      "sourceKey": "R2:02",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 3,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 13,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 52056,
+        "costUsd": 0.041098
+      }
+    },
+    {
+      "itemId": "PG033",
+      "passageId": "ebsi_go1_20190307-q33",
+      "run": "R1",
+      "sourceKey": "R1:17",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": false,
+        "V4": true,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 82645,
+        "costUsd": 0.118376
+      }
+    },
+    {
+      "itemId": "PG034",
+      "passageId": "ebsi_go1_20200312-q21",
+      "run": "R1",
+      "sourceKey": "R1:24",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 3,
+        "C3": 2,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-debatable-infinitive"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-debatable-infinitive"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-debatable-infinitive"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 31363,
+        "costUsd": 0.054606
+      }
+    },
+    {
+      "itemId": "PG035",
+      "passageId": "ebsi_go1_20200312-q36",
+      "run": "R1",
+      "sourceKey": "R1:23",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 0
+      },
+      "craftTotal": 9,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 55526,
+        "costUsd": 0.076972
+      }
+    },
+    {
+      "itemId": "PG036",
+      "passageId": "ebsi_go1_20231219-q21",
+      "run": "R1",
+      "sourceKey": "R1:13",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 2
+      },
+      "craftTotal": 13,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 2,
+        "attempts": 2,
+        "latencyMs": 15157,
+        "costUsd": 0.029322
+      }
+    },
+    {
+      "itemId": "PG037",
+      "passageId": "ebsi_go3_20260507-q20",
+      "run": "R1",
+      "sourceKey": "R1:25",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(B)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(B)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": false,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 1,
+        "C5": 2,
+        "C6": 3
+      },
+      "craftTotal": 11,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-decoy-filler-span",
+          "grammar-pointcode-span-mismatch"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-decoy-filler-span",
+          "grammar-pointcode-span-mismatch"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-decoy-filler-span",
+          "grammar-pointcode-span-mismatch",
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 4,
+        "attempts": 4,
+        "latencyMs": 31166,
+        "costUsd": 0.053928
+      }
+    },
+    {
+      "itemId": "PG038",
+      "passageId": "ebsi_go1_20180308-q35",
+      "run": "R2",
+      "sourceKey": "R2:15",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 0,
+        "C6": 3
+      },
+      "craftTotal": 10,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-killer-generic-answer-point",
+          "grammar-keypoint-choice-mismatch"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-killer-generic-answer-point",
+          "grammar-keypoint-choice-mismatch"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-killer-generic-answer-point",
+          "grammar-keypoint-choice-mismatch"
+        ]
+      },
+      "production": {
+        "calls": 8,
+        "attempts": 8,
+        "latencyMs": 116964,
+        "costUsd": 0.117096
+      }
+    },
+    {
+      "itemId": "PG039",
+      "passageId": "ebsi_go1_20221123-q21",
+      "run": "R2",
+      "sourceKey": "R2:11",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": [
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 6,
+        "attempts": 6,
+        "latencyMs": 126440,
+        "costUsd": 0.149974
+      }
+    },
+    {
+      "itemId": "PG040",
+      "passageId": "2019_06_5023285-q29",
+      "run": "R1",
+      "sourceKey": "R1:30",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "NO_ANSWER",
+      "alternativeAnswers": [
+        "(A)"
+      ],
+      "storedCorrectAnswer": "(A)",
+      "storedKeyAgreement": false,
+      "validity": {
+        "V1": true,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 0,
+        "C5": 0,
+        "C6": 0
+      },
+      "craftTotal": 5,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-decoy-filler-span"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-decoy-filler-span"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-decoy-filler-span",
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 71053,
+        "costUsd": 0.098068
+      }
+    },
+    {
+      "itemId": "PG041",
+      "passageId": "ebsi_go1_20221123-q20",
+      "run": "R1",
+      "sourceKey": "R1:12",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 3,
+        "C2": 3,
+        "C3": 2,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 15,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-killer-generic-answer-point"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-killer-generic-answer-point"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-killer-generic-answer-point",
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 5,
+        "attempts": 5,
+        "latencyMs": 85043,
+        "costUsd": 0.097646
+      }
+    },
+    {
+      "itemId": "PG042",
+      "passageId": "ebsi_go3_20191015-q20",
+      "run": "R1",
+      "sourceKey": "R1:04",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 2,
+        "attempts": 2,
+        "latencyMs": 18435,
+        "costUsd": 0.030094
+      }
+    },
+    {
+      "itemId": "PG043",
+      "passageId": "ebsi_go1_20231219-q20",
+      "run": "R2",
+      "sourceKey": "R2:14",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 37589,
+        "costUsd": 0.069348
+      }
+    },
+    {
+      "itemId": "PG044",
+      "passageId": "ebsi_go1_20241015-q20",
+      "run": "R2",
+      "sourceKey": "R2:06",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 1,
+        "C2": 2,
+        "C3": 0,
+        "C4": 2,
+        "C5": 0,
+        "C6": 3
+      },
+      "craftTotal": 8,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-obvious-adjacent-sv-agreement"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-obvious-adjacent-sv-agreement"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-obvious-adjacent-sv-agreement"
+        ]
+      },
+      "production": {
+        "calls": 8,
+        "attempts": 8,
+        "latencyMs": 137552,
+        "costUsd": 0.159902
+      }
+    },
+    {
+      "itemId": "PG045",
+      "passageId": "ebsi_go1_20190307-q22",
+      "run": "R2",
+      "sourceKey": "R2:18",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 1,
+        "C2": 2,
+        "C3": 0,
+        "C4": 2,
+        "C5": 0,
+        "C6": 3
+      },
+      "craftTotal": 8,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-killer-thin-answer",
+          "grammar-noun-clause-pronoun-mislabel"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-killer-thin-answer",
+          "grammar-noun-clause-pronoun-mislabel"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-killer-thin-answer",
+          "grammar-noun-clause-pronoun-mislabel",
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 8,
+        "attempts": 8,
+        "latencyMs": 137579,
+        "costUsd": 0.135028
+      }
+    },
+    {
+      "itemId": "PG046",
+      "passageId": "ebsi_go1_20220324-q23",
+      "run": "R2",
+      "sourceKey": "R2:19",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 0
+      },
+      "craftTotal": 11,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 6,
+        "attempts": 6,
+        "latencyMs": 141630,
+        "costUsd": 0.19419
+      }
+    },
+    {
+      "itemId": "PG047",
+      "passageId": "ebsi_go1_20241015-q21",
+      "run": "R2",
+      "sourceKey": "R2:05",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 8,
+        "attempts": 8,
+        "latencyMs": 122142,
+        "costUsd": 0.148722
+      }
+    },
+    {
+      "itemId": "PG048",
+      "passageId": "ebsi_go1_20151117-q21",
+      "run": "R1",
+      "sourceKey": "R1:07",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "NO_ANSWER",
+      "alternativeAnswers": [
+        "(D)"
+      ],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": false,
+      "validity": {
+        "V1": true,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 0,
+        "C4": 0,
+        "C5": 0,
+        "C6": 0
+      },
+      "craftTotal": 2,
+      "craftMin": 0,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 63728,
+        "costUsd": 0.067264
+      }
+    },
+    {
+      "itemId": "PG049",
+      "passageId": "ebsi_go1_20151117-q21",
+      "run": "R2",
+      "sourceKey": "R2:07",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 28967,
+        "costUsd": 0.055184
+      }
+    },
+    {
+      "itemId": "PG050",
+      "passageId": "ebsi_go3_20150409_A-q22",
+      "run": "R1",
+      "sourceKey": "R1:21",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(B)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(B)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 0,
+        "C6": 3
+      },
+      "craftTotal": 10,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-killer-generic-answer-point",
+          "grammar-pointcode-span-mismatch"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-killer-generic-answer-point",
+          "grammar-pointcode-span-mismatch"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-killer-generic-answer-point",
+          "grammar-pointcode-span-mismatch",
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 30986,
+        "costUsd": 0.059938
+      }
+    },
+    {
+      "itemId": "PG051",
+      "passageId": "ebsi_go1_20220324-q20",
+      "run": "R2",
+      "sourceKey": "R2:20",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "ADVANCED",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 3,
+        "C3": 2,
+        "C4": 3,
+        "C5": 2,
+        "C6": 3
+      },
+      "craftTotal": 15,
+      "craftMin": 2,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 2,
+        "attempts": 2,
+        "latencyMs": 29294,
+        "costUsd": 0.022682
+      }
+    },
+    {
+      "itemId": "PG052",
+      "passageId": "ebsi_go3_20191015-q22",
+      "run": "R1",
+      "sourceKey": "R1:03",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 1,
+        "C2": 2,
+        "C3": 1,
+        "C4": 2,
+        "C5": 0,
+        "C6": 2
+      },
+      "craftTotal": 8,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-error-pos-change",
+          "grammar-killer-generic-answer-point"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-error-pos-change",
+          "grammar-killer-generic-answer-point"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-error-pos-change",
+          "grammar-killer-generic-answer-point"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 30096,
+        "costUsd": 0.055576
+      }
+    },
+    {
+      "itemId": "PG053",
+      "passageId": "ebsi_go1_20180308-q35",
+      "run": "R1",
+      "sourceKey": "R1:15",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 0,
+        "C6": 2
+      },
+      "craftTotal": 10,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 45393,
+        "costUsd": 0.102776
+      }
+    },
+    {
+      "itemId": "PG054",
+      "passageId": "ebsi_go1_20220324-q23",
+      "run": "R1",
+      "sourceKey": "R1:19",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 75013,
+        "costUsd": 0.058838
+      }
+    },
+    {
+      "itemId": "PG055",
+      "passageId": "ebsi_go3_20191015-q20",
+      "run": "R2",
+      "sourceKey": "R2:04",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(C)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(C)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 64940,
+        "costUsd": 0.084292
+      }
+    },
+    {
+      "itemId": "PG056",
+      "passageId": "ebsi_go1_20241015-q20",
+      "run": "R1",
+      "sourceKey": "R1:06",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 1,
+        "C2": 2,
+        "C3": 0,
+        "C4": 2,
+        "C5": 0,
+        "C6": 2
+      },
+      "craftTotal": 7,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-killer-generic-answer-point"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-killer-generic-answer-point"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-killer-generic-answer-point"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 37548,
+        "costUsd": 0.068842
+      }
+    },
+    {
+      "itemId": "PG057",
+      "passageId": "ebsi_go3_20191015-q22",
+      "run": "R2",
+      "sourceKey": "R2:03",
+      "requestedDifficulty": "KILLER",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": "KILLER",
+      "blindAnswer": "(B)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(B)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 1,
+        "C2": 2,
+        "C3": 0,
+        "C4": 2,
+        "C5": 0,
+        "C6": 3
+      },
+      "craftTotal": 8,
+      "craftMin": 0,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-killer-generic-answer-point"
+        ],
+        "exposedWarnings": [],
+        "finalErrors": [
+          "grammar-killer-generic-answer-point"
+        ],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "grammar-killer-generic-answer-point"
+        ]
+      },
+      "production": {
+        "calls": 7,
+        "attempts": 7,
+        "latencyMs": 162338,
+        "costUsd": 0.12573
+      }
+    },
+    {
+      "itemId": "PG058",
+      "passageId": "ebsi_go3_20150409_A-q19",
+      "run": "R2",
+      "sourceKey": "R2:22",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(D)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(D)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 3,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": [
+          "placement-same-sentence-multi-underline"
+        ]
+      },
+      "production": {
+        "calls": 3,
+        "attempts": 3,
+        "latencyMs": 58322,
+        "costUsd": 0.07851
+      }
+    },
+    {
+      "itemId": "PG059",
+      "passageId": "ebsi_go3_20151013-q19",
+      "run": "R1",
+      "sourceKey": "R1:02",
+      "requestedDifficulty": "ADVANCED",
+      "studentDifficulty": "KILLER",
+      "internalModelDifficulty": null,
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": false
+      },
+      "allValidityPass": false,
+      "craft": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 1,
+        "C4": 3,
+        "C5": 1,
+        "C6": 3
+      },
+      "craftTotal": 12,
+      "craftMin": 1,
+      "grade": "F",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [
+          "grammar-pointcode-span-mismatch"
+        ],
+        "exposedWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalErrors": [
+          "grammar-pointcode-span-mismatch"
+        ],
+        "finalWarnings": [
+          "difficulty-mismatch"
+        ],
+        "finalSoftDefects": [
+          "grammar-pointcode-span-mismatch"
+        ]
+      },
+      "production": {
+        "calls": 4,
+        "attempts": 4,
+        "latencyMs": 53733,
+        "costUsd": 0.061738
+      }
+    },
+    {
+      "itemId": "PG060",
+      "passageId": "2015_06_3026346-q19",
+      "run": "R2",
+      "sourceKey": "R2:28",
+      "requestedDifficulty": "INTERMEDIATE",
+      "studentDifficulty": "INTERMEDIATE",
+      "internalModelDifficulty": "INTERMEDIATE",
+      "blindAnswer": "(E)",
+      "alternativeAnswers": [],
+      "storedCorrectAnswer": "(E)",
+      "storedKeyAgreement": true,
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "allValidityPass": true,
+      "craft": {
+        "C1": 2,
+        "C2": 3,
+        "C3": 1,
+        "C4": 3,
+        "C5": 2,
+        "C6": 3
+      },
+      "craftTotal": 14,
+      "craftMin": 1,
+      "grade": "C",
+      "historicalGate": {
+        "accepted": true,
+        "exposedErrors": [],
+        "exposedWarnings": [],
+        "finalErrors": [],
+        "finalWarnings": [],
+        "finalSoftDefects": []
+      },
+      "production": {
+        "calls": 6,
+        "attempts": 6,
+        "latencyMs": 87382,
+        "costUsd": 0.155036
+      }
+    }
+  ]
+}

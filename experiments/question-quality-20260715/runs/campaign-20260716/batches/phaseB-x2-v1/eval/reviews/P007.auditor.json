@@ -1,0 +1,75 @@
+{
+  "pid": "P007",
+  "type": "BLANK_INFERENCE",
+  "requestedDifficulty": "KILLER",
+  "blindAnswer": "①",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문에서 정확히 'this need not be interpreted as the decisive capacity involved in musical response' 구절만 빈칸으로 치환했고 나머지 7개 문장은 원문과 어절 단위로 일치. seam은 'a particularly human skill, but _____. My dogs in fact responded...' 로 구두점·문장 접합 손상 없음. 라벨 ①~⑤ 와 선지 대응, 마커 ① 일치. 손상/중복/누락/고아 부호 없음.",
+    "V2": "각 선지를 빈칸에 대입 독립 검증: ① 'but this does not exclude other species from showing genuine sensitivity to musical elements' — 앞의 양보(발구르기=인간 고유) + 뒤의 사례(사이렌·색소폰·아코디언에 대한 하울링/낑낑)와 정합, 원 구절의 의미('결정적 능력 아님')를 정확히 추상화 → 참. ② 'confirms that physical coordination is a prerequisite' — 양보의 but 뒤에서 강한 확증으로 전환하나 뒤 사례(개는 발을 구르지 않고도 반응)와 논지('동물이 리듬에 반응 못한다는 주장은 틀렸다')에 정면 모순 → 극성 반전, 탈락. ③ 'proves animals only react to noise rather than structured musical rhythms' — 장신구의 regular rhythm 반응 및 전체 논지와 배치, 'only' 절대어로 과단정 → 탈락. ④ 'human drumming patterns are evolutionary byproducts of fear' — fear/진화적 부산물/드러밍은 지문 무근거, 무관 → 탈락. ⑤ 'guarantees that non-human species can replicate complex melodies perfectly' — 반응(howling/whining)을 '완벽 복제'로 과확장 → 탈락. 정답 집합은 정확히 {①} 단일, answerCount=1 일치.",
+    "V3": "지문은 실존 학술 산문으로 문법적·자연스러움. stem은 표준 빈칸 발문. ① 대입 완성문 'does seem to be a particularly human skill, but this does not exclude other species from showing genuine sensitivity to musical elements.' 는 'exclude X from doing Y' 구문으로 문법적이고 자연스러움. seam 비문 없음. 오답 5개 모두 문법적으로 완결된 절이며(빈칸형 의도대로 실패가 논리적이지 통사적이 아님) 동일 통사 슬롯('this + 정동사...')에 삽입됨.",
+    "V4": "해설의 구조 분석 정확: 빈칸 문장을 양보·대조 전환 핵심 문장으로 규정한 것 타당. 앞부분(장신구 리듬에 열정적 반응, '동물이 리듬에 반응 못한다는 주장은 틀렸다')·뒷부분(사이렌·색소폰·조율 안 된 아코디언, 아리스토텔레스·다윈 관찰) 요약 모두 지문과 일치, 지문에 없는 내용 첨가 없음. ②③=극성 반전, ④=무관 정서 연결(fear), ⑤=과확장으로 규정한 오답 해설이 각 선지 실제 내용과 정확히 대응. 오분석·환각·비단어·문장 귀속 오류 없음.",
+    "V5": "정답 라벨 ①, 선지 ① 텍스트, 본해설의 정답 지목, keyPoints('동물도 음악적 리듬에 반응', '양보 구문 이해', '세부 단서 종합 패러프레이징') 상호 정합. 오답 해설 키 ②③④⑤ 가 선지 내용과 동기화. 번호/옵션/해설 키 불일치 없음."
+  },
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftEvidence": {
+    "C1": "빈칸이 지문의 양보-대조 논지 전환점(발구르기 없음 ≠ 음악적 감수성 없음)에 위치해 전체 논지 수렴을 묻는 의미 있는 지점. 장식적이지 않음.",
+    "C2": "오답이 극성 반전(②③), 무관 연결(④), 과확장(⑤)으로 서로 다른 오독을 겨냥해 의도 밀도가 있음. 다만 ④의 source anchor(fear/드러밍/진화)가 지문에 전혀 없어 매력도가 낮은 필러성.",
+    "C3": "변별력 취약. 오답 ②③④⑤ 가 모두 confirms/proves/shows/guarantees + only/perfectly 같은 강한 정동사·절대어로 과단정하는 반면 정답 ①만 유일하게 hedged negative('does not exclude'). 어조/절대어 휴리스틱만으로 정답 소거 가능. ⑤(perfectly 복제)·③(only noise)·④(fear)은 즉시 탈락, 실질 경쟁 선지는 ② 정도로 국소 단서 매력이 약함.",
+    "C4": "약한 메타 누출: 4개 오답이 일률적으로 과강한 주장이고 정답만 완곡·부정형이라 내용 분석 없이 어조로 꼬리 소거 가능. 근거 자체는 지문에 충분하고 정답은 필연적이나 단서 경제성이 손상됨.",
+    "C5": "요청 난이도 KILLER 대비 하향. 어조 지름길과 명백히 과장된 디코이 때문에 실제 체감 난이도는 중상급 수준으로, KILLER가 요구하는 함정 깊이·소거 저항성에 미달.",
+    "C6": "해설이 정확하고 정답 근거와 각 함정 유형을 유형별로 선명히 분리. 다소 장황하나 오류 없음."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원 구절('발구르기는 음악적 반응의 결정적 능력이 아니다')을 난이도에 맞게 추상화, 인간 고유 기술이라도 다른 종의 음악적 감수성을 배제하지 않는다는 양보-대조 결론.",
+      "temptingBecause": "앞 양보(human skill)와 뒤 사례(동물의 다양한 음악적 반응)를 모두 정합적으로 잇는 유일한 선지.",
+      "decisiveFlaw": "없음(정답). 다만 5개 중 유일한 완곡·부정형이라 어조만으로도 지목 가능한 점이 변별력을 약화."
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전 함정 — 신체적 협응(발구르기)을 소리 경험의 필수 조건으로 확증.",
+      "temptingBecause": "발구르기·신체 협응이라는 지문 소재를 직접 인용해 표면적 연관성이 있음.",
+      "decisiveFlaw": "지문은 개가 발을 구르지 않고도 음악적 특징에 반응한다는 반례를 제시하고 '동물이 리듬에 반응 못한다는 주장은 틀렸다'고 명시하므로 '필수 조건 확증'은 논지 정면 모순."
+    },
+    {
+      "label": "③",
+      "intent": "논지 반전/범위 축소 함정 — 동물은 구조화된 리듬이 아닌 단순 소음에만 반응.",
+      "temptingBecause": "'noise/rhythm' 어휘가 지문 소재와 겹침.",
+      "decisiveFlaw": "장신구의 regular rhythm에 반응한 사례 및 전체 논지와 배치되고 'only' 절대어로 과단정 — 즉시 탈락."
+    },
+    {
+      "label": "④",
+      "intent": "무관 추론 함정 — 인간 드러밍 패턴을 공포의 진화적 부산물로 연결.",
+      "temptingBecause": "'human skill' → 'human drumming'의 어휘적 표면 연쇄.",
+      "decisiveFlaw": "fear·진화적 부산물·드러밍은 지문에 근거가 전혀 없는 무관 진술. source anchor가 약해 매력도 낮은 필러성 디코이."
+    },
+    {
+      "label": "⑤",
+      "intent": "과확장 함정 — 비인간 종이 복잡한 멜로디를 완벽 복제함을 보장.",
+      "temptingBecause": "동물이 음악적 특징에 반응한다는 참 명제에서 출발.",
+      "decisiveFlaw": "howling/whining 수준의 반응을 'replicate complex melodies perfectly'로 과확장, 'guarantees/perfectly' 절대어 — 즉시 탈락."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "killerAssessment": "§D 조건 부분 미충족. 동일 통사 슬롯 삽입(✓), 정답의 의미 보존 추상화(✓), 서로 다른 함정 유형 사용(✓, 극성반전/범위축소/무관/과확장). 그러나 '극성·길이·고유어·절대어 하나로 정답을 찍을 수 없다' 조건 미충족: 4개 오답이 confirms/proves/shows/guarantees·only·perfectly로 일률 과단정하고 정답만 완곡·부정형이라 어조/절대어 지름길로 소거 가능. ④는 source anchor가 부재해 KILLER 디코이 기준에 미달. 따라서 killerConditionsMet=false.",
+  "grade": "C",
+  "notes": "모든 V(V1~V5) 통과 — 무결성·정답 유일성(①)·문법성·해설 사실성·필드 동기화 모두 이상 없음. 등급은 공예 결함으로 C: 합계 15(C3/C4/C5=2)로 B 기준(합계 17) 미달, A 기준(모든 C≥3) 미달. 핵심 결함은 오답 어조 동질성(정답만 hedged, 오답 전부 과강한 정동사·절대어)으로 인한 변별력·단서경제성 저하이며, 이는 KILLER 요청 난이도와 불일치. 출제 재사용 시 오답 어조를 정답과 균질화하고 ④의 지문 앵커를 강화하는 디코이 재설계 필요."
+}

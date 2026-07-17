@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "극성 역전. 'undermines the collective cohesion'은 지문 전체의 긍정적 흐름(명확한 소통→협력→갈등에서의 관점 수용)과 정면 충돌. 'Appreciation of differences creates an arena for open communication'과 and로 병렬되는 순간 자기모순이 된다. 문법적으로는 creates와 병렬인 3인칭 단수 동사라 seam은 성립하지만 논리로 즉시 배제."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong (매력적 오답)",
+      "reason": "가장 강한 미끼. '직접 대립을 회피하도록 장려한다'는 표면적으로 조화·협력처럼 들려 실제로 끌린다. 그러나 지문은 갈등 상황에서 감정이해 능력이 뛰어난 구성원이 'express how he feels about the problem and why' 한다고 명시 — 즉 갈등을 회피하는 게 아니라 개방적으로 직접 다룬다. 빈칸 직전의 'open communication'과도 회피(avoid)는 방향이 반대. 지문 근거로 명확히 배제 가능."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "갈등 예시(group conflict situation)의 귀결로 '생산적인 분쟁 해결 방식 조성 + 집단 성과 향상'이 정확히 들어맞는다. 첫 문장의 'particularly relevant in group settings'와 co-worker 소통·협력 흐름을 모두 회수. seam: 주어 'Appreciation of differences'에 대해 creates와 fosters가 자연스러운 동사 병렬. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "첫 문장의 'a diverse emotion vocabulary'를 표면 재활용한 어휘 미끼. 지문에서 어휘는 감정이해 능력의 구성요소일 뿐, '어휘 습득의 개인적 한계 극복'은 논의된 결과가 아니다. 갈등 예시와도 무관. 훑어읽기 수험생용 함정이지만 정독하면 쉽게 배제."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'자기 의견을 희생하고 집단 규범에 순응하도록 강제'는 'accommodate their own needs as well as the needs of others'(자기 필요도 충족)와 자기 감정을 표현한다는 서술에 정면 위배. forces의 강제 뉘앙스도 open communication과 상충. 배제."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 5개 선지가 모두 3인칭 단수 동사로 시작해 'Appreciation of differences creates ... and ___' 병렬 seam이 전부 성립하므로 문법 단서로는 아무것도 걸러지지 않는 순수 논리 문항. 실제 풀이에서 ②에 순간 끌림이 있었으나(회피=조화라는 착시), 'express how he feels ... and why'라는 명시적 텍스트 근거가 회피 해석을 차단해 미끼로서의 완성도가 높고 이의신청 여지는 없다. 정답 ③ 단독, 복수정답 소지 없음."
+}

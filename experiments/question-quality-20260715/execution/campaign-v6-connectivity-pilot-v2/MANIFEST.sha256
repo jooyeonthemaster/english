@@ -1,0 +1,13 @@
+f363f44138a540afb1f993963118aab88933b96a50aaa90917f701fc3a643490  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/README.md
+7597c4d101c9f5bd5d85298475fbb7e8cc20f8448f9cfa0cbf8f84021de9f484  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts
+39e00daab43024737198aa09a6197d7612ac5182ff79d90e6fe9e338f01199f2  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/live-child.mts
+f582eba079839e789104e4893e6d7541e0d9d9a0a91f3582d6f2794c50024419  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/live-launcher.ts
+8f801052a4eed1c3ec908f7105ec58b0ed1d7a96e197c45033dc2fbd79c2c181  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/offline-exact-wire-seal-v2.json
+03da00a5b730895f489d90e620d3063d1e6d8f7b93812547657960c7f4b18fd8  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/offline.test.ts
+9f82b1d2934beafac2f32d4daa1d7328870b8928a11ab2a502f4a8f26f8fae49  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/private/exact-wire-v2.private.json
+2daf5f982e25ccffdcd83411c56026e6ea209bbf8f9d64eedf358ebe080b0a46  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/protocol-schema.ts
+df1247adced33f22e9993ef335202ff23b17587f7eaa4349b01fafdc88364ede  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/protocol-v2.json
+9490d1ed02af7aaa0e7a6b0ebbbe9aa99172c2d50ba79185669956fa23dbe0bd  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/runner.ts
+6ed2b814b71ff6646da655fd94b9febde2f03cc0d6b1843672aacf3fc1584dda  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/seal-offline.mts
+0cfc3405b54ee01f6823cd963ece035ad755ccad5690096c6ac1e46f25d1ccfd  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/tsconfig.json
+860da554d88cb7faae4d83f0c04715f42d837f5917e2184aab607cddbadacff3  experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/verify.mts

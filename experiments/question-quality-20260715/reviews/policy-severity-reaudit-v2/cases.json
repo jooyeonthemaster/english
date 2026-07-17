@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "mode": "offline-zero-call-balanced-semantic-controls",
+  "constraints": {
+    "apiCandidatesCreated": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretsRead": 0,
+    "productionFilesEdited": 0,
+    "semanticTruthSource": "human-authored proposition-preservation labels; lexical token counts are controls only and never treated as a semantic oracle"
+  },
+  "semanticRolePairs": [
+    {
+      "id": "blank-semantic-actor",
+      "dimension": "actor",
+      "originalExpression": "local communities retain authority over implementation",
+      "faithful": "implementation authority remains with local communities",
+      "defect": "implementation authority shifts to central regulators",
+      "distractors": [
+        "local communities retain only advisory authority",
+        "implementation authority remains entirely undefined",
+        "central regulators abandon implementation authority"
+      ],
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: the governing actor changes from local communities to central regulators"
+      }
+    },
+    {
+      "id": "blank-semantic-polarity",
+      "dimension": "polarity",
+      "originalExpression": "the procedure does not eliminate the need for human judgment",
+      "faithful": "human judgment remains firmly necessary",
+      "defect": "human judgment becomes largely unnecessary",
+      "distractors": [
+        "human judgment remains necessary only temporarily",
+        "the procedure removes formal judgment from machines",
+        "human judgment supports procedural consistency"
+      ],
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: necessity is reversed into non-necessity"
+      }
+    },
+    {
+      "id": "blank-semantic-condition",
+      "dimension": "condition",
+      "originalExpression": "the method works only when participants share reliable information",
+      "faithful": "the method succeeds only when participants exchange dependable information",
+      "defect": "the method succeeds even when participants lack dependable information",
+      "distractors": [
+        "the method cannot succeed without reliable information",
+        "participants fail to exchange dependable information",
+        "the method succeeds when reliable information arrives late"
+      ],
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: an only-when condition is changed into an even-when concession"
+      }
+    },
+    {
+      "id": "blank-semantic-cause",
+      "dimension": "cause",
+      "originalExpression": "institutional trust grows because decisions remain transparent",
+      "faithful": "transparent decision making steadily builds institutional trust",
+      "defect": "institutional trust steadily makes decision making transparent",
+      "distractors": [
+        "transparent decisions merely preserve existing trust",
+        "institutional trust follows opaque decision making",
+        "decision making and trust change independently"
+      ],
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: the causal direction is reversed"
+      }
+    },
+    {
+      "id": "blank-semantic-scope",
+      "dimension": "scope",
+      "originalExpression": "the intervention can improve some choices in limited settings",
+      "faithful": "the measure may aid few choices under narrow circumstances",
+      "defect": "the measure may aid many choices across broad circumstances",
+      "distractors": [
+        "the measure cannot aid choices outside narrow circumstances",
+        "the measure fails to improve choices under limited conditions",
+        "the measure may affect choices only indirectly"
+      ],
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: limited scope is broadened across quantity and setting"
+      }
+    }
+  ],
+  "narrowPolarityPositiveControl": {
+    "originalExpression": "writers resist the temptation to reduce complex evidence to simple rules",
+    "faithful": "writers avoid simplifying complex evidence into simple rules",
+    "defect": "writers reduce complex evidence to simple rules",
+    "expectedDefectCode": "blank-paraphrase-polarity-loss"
+  },
+  "tokenProxyCollision": {
+    "originalExpression": "resist reducing complex evidence to simple rules",
+    "faithfulCompression": "avoid oversimplification",
+    "genericMeaningLoss": "sound judgment",
+    "difficulty": "KILLER",
+    "expectedSharedCode": "blank-paraphrase-correct-too-thin"
+  },
+  "priorAuditFindings": {
+    "immediateRemoval": [
+      "blank-paraphrase-subject-slot-mismatch",
+      "topic-option-language",
+      "implied-meaning-option-language"
+    ],
+    "splitRequired": [
+      "blank-explanation-step-numbering",
+      "blank-paraphrase-answer-not-transformed",
+      "blank-paraphrase-correct-too-thin",
+      "grammar-keypoint-choice-mismatch",
+      "grammar-nonstandard-terminology",
+      "sentence-order-given-too-long",
+      "sentence-order-paragraph-too-short",
+      "sentence-order-paragraph-too-thin",
+      "summary-mc-awkward-collocation",
+      "summary-mc-direction-frame"
+    ],
+    "staleNoEmitter": [
+      "blank-paraphrase-killer-giveaway-distractors",
+      "grammar-obvious-living-lived"
+    ]
+  }
+}

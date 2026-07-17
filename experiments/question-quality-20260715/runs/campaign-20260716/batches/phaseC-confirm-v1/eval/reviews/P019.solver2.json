@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Subject of the that-clause is 'a child' (with relative clause 'who is better dressed'); 'is better behaved' is its finite predicate with adjectival participle 'behaved' (cf. 'well-behaved'). Agreement and structure are sound."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'than he is when (he is) dressed in ordinary clothes' — standard subject+be ellipsis in an adverbial when-clause; elided subject corefers with matrix subject 'he'. Well-formed."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Two coordinated relative clauses share the antecedent 'a child': 'who was dressed in his best clothes' and 'whose mother stressed that they were best'. Possessive relative 'whose mother' is exactly the required form."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "Aspect error. 'By the end of the hour the child would have forgotten his clothes' is correct (punctual event completed by the reference point), but 'act as he would in old clothes' denotes the resulting, ongoing behavior beginning at/continuing past that point — fixed by the elliptical comparison 'as he would [act]' (simple conditional) and the parallel sentence 'might soon change... and be no more noisy than usual' (simple form). Perfect 'would have acted' wrongly bounds the behavior as completed before the end of the hour; it must be 'would act' or 'would be acting'. An existential-perfect rescue reading ('some acting would have occurred within the hour') fails against the comparison clause and discourse parallelism."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'while (he is) playing cowboys' — subject+be ellipsis in the while-clause with elided subject = matrix subject 'the child'; 'play cowboys' is the idiomatic game-name object (cf. 'play house'). Well-formed."
+    }
+  ],
+  "note": "Single clean error at (D): tense/aspect mismatch between completed 'would have forgotten' and the resulting ongoing state, which requires simple conditional 'would act' (or progressive 'would be acting'), as corroborated by the elliptical 'as he would [act]' and the simple-form parallel in the final sentence. All other underlines survive adversarial alternative-parse checks (ellipsis in B/E, coordinated relatives in C)."
+}

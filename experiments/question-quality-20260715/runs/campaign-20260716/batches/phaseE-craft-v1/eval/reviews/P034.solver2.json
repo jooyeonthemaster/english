@@ -1,0 +1,35 @@
+{
+  "pid": "P034",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Recent evidence suggests that the common ancestor ... may have already been using ...' — 'that'은 타동사 suggest의 목적어인 명사절(that-clause)을 이끄는 접속사로, 뒤에 완전한 절(the common ancestor ... may have been using ...)이 이어진다. 어법상 옳다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'why did the Neanderthal toolkit show so little cultural change?' — 의문문에서 조동사 did가 앞으로 나왔으므로 본동사는 원형 show가 와야 한다. did + 원형 결합이 정확하다. 어법상 옳다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'mutations for retaining lactose digestion into adulthood' — 전치사 for의 목적어로 동명사 retaining이 왔다. 전치사 뒤 동명사는 정문. 어법상 옳다."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect",
+      "reason": "'The appeal to a genetic change driven evolution gets ... backwards' — 저자의 논지는 유전적 변화가 진화를 '주도한다(gene-first, top-down)'는 견해에 대한 호소이다. 명사 'a genetic change'는 evolution을 '이끄는' 능동 행위자이므로 현재분사 driving이 와야 한다('a genetic change driving evolution' = 진화를 주도하는 유전적 변화). 과거분사 driven은 수동('~에 의해 주도된')을 의미하여 어순·의미가 성립하지 않는다. 무하이픈 상태의 'genetic change driven evolution'은 복합형용사로도 표준 정문이 아니며, 문맥상 능동 driving이 지배 규칙상 요구된다. 어법상 틀렸다."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'gets gene-culture co-evolution backwards' — 'get something backwards'는 '~을 거꾸로/잘못 이해하다'라는 관용 표현으로 backwards는 부사. backward/backwards 모두 허용되며 여기서 어법상 옳다."
+    }
+  ],
+  "note": "어법 오류 유형: 능동/수동 분사 선택. 명사(a genetic change)가 evolution을 주도하는 능동 행위자이므로 현재분사 driving이 정답 표기이며, 제시된 driven(과거분사)이 어법상 틀린 부분. 나머지 4개(that/show/retaining/backwards)는 모두 각 지배 규칙상 정문. 정답은 단일하게 (D)로 좁혀진다."
+}

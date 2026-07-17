@@ -1,0 +1,35 @@
+{
+  "pid": "P037",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "\"Sweeping statements have been made about ...\" — 능동 'make statements'의 현재완료 수동태(have been + p.p.). 주어 statements가 make의 피동 대상이므로 수동 구성이 요구되고 made(과거분사)가 정확히 충족한다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "\"It has been said that ...\" — 가주어 it + 수동 said의 진주어 명사절을 이끄는 접속사 that. 뒤의 'and that a child who is dressed like a cowboy ...' 절과 병렬이 완결되어 접속사 that이 필수적이다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "\"a child who was dressed ... and whose mother stressed ...\" — 선행사 a child에 걸리는 두 관계절(who-절, whose-절)의 등위 접속. 선행사와 mother의 소유 관계(child's mother)를 표시해야 하므로 소유격 관계사 whose가 정확하며, who/whose 혼합 병렬은 허용된다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "\"the child would have forgetting his clothes\" — 조동사 완료형은 would have + 과거분사(forgotten)를 요구한다. 대안 해석 검토: (1) 사역 'have + O + V-ing'은 어순이 have 직후 V-ing이라 성립 불가, (2) 소유동사 have + 축약 관계절 해석도 의미·구조상 불성립, (3) 병렬 단서로 뒤의 'and would be acting'이 would-계열 술어 병렬임을 확인. 어떤 정문 해석도 없음. would have forgotten이어야 하므로 어법상 틀렸다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "\"might be very noisy while playing cowboys\" — 접속사 while 뒤 '주어 + be' 생략 구문(while (he is) playing). 의미상 주어가 주절 주어 the child와 일치하므로 생략 조건 충족. 정문."
+    }
+  ],
+  "note": "블라인드 풀이(문법가/논리학자 렌즈). (D)만이 유일하게 비문이며 나머지 4개는 대안 해석 탐색 후에도 모두 정문으로 판정. 복수 정답 여지 없음. 문항은 형식적으로 깨끗하게 성립한다."
+}

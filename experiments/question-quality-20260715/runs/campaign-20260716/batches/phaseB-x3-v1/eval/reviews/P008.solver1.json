@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "지문의 'as perfect as you want it to be'(신문 완성도 표현)를 학업 완벽주의로 비틀어 재활용한 어휘 미끼. 빈칸에 넣으면 '모든 수업에서 완벽한 성적을 추구하지 않으면 스트레스를 받는다'가 되어 지문의 인과(과다 참여 → 스트레스)와 정반대 논리가 된다. 지문은 학업 성적이 아니라 과외활동 과다를 다룬다."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "'don't know where to draw the line'(도입)과 'make sure you don't overextend yourself'(결론)의 정확한 패러프레이즈. 'If you don't set reasonable boundaries on your after-school commitments, you can become awfully stressed out...'은 문법 결합(don't + 동사원형)도 자연스럽고, 경계를 정하지 않으면 꼭 완수해야 할 일들에 심하게 스트레스를 받는다는 인과가 지문 전체 논지와 완벽히 일치한다."
+    },
+    {
+      "label": "③",
+      "verdict": "오답(매력 오답)",
+      "reason": "실전에서 실제로 끌렸던 선지. 신문 마감 예시와 'tasks you absolutely need to complete'가 '우선순위 정하기'를 강하게 연상시킨다. 그러나 신문은 crunch time의 한 예시일 뿐이며, 지문의 처방은 특정 활동(신문)을 다른 활동보다 우선하라가 아니라 참여 총량 자체를 제한하라는 것이다. 빈칸 직후 결론 문장이 '가장 의미 있는 활동에 참여하되 과도하게 벌이지 마라'이므로, 신문 마감을 최우선하라는 ③은 예시를 일반 원리로 승격시킨 전형적 함정으로 옹호 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "다양한 클럽으로 사회적 네트워크를 적극 확장하라는 것은 '너무 많은 클럽 가입이 자유 시간을 잠식한다'는 지문 메시지와 정반대. 넣으면 '네트워크를 확장하지 않으면 스트레스를 받는다'가 되어 논지 붕괴. 즉시 소거."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'completely / all'의 극단성이 문제. 지문은 과외활동 자체를 'a very good thing'이라 하고 결론에서도 의미 있는 활동에는 참여하라고 권한다. 전면 철수를 요구하는 ⑤는 지문의 균형 잡힌 처방(적절히 하되 과하지 않게)과 충돌한다."
+    }
+  ],
+  "note": "문법 결합(seam)은 다섯 선지 모두 'don't + 동사원형'으로 문제없어 순수 논리 변별 문항. 도입부 'draw the line'과 결론 'don't overextend yourself'가 빈칸을 양쪽에서 고정하므로 정답이 ②로 유일하게 수렴한다. 매력 오답 ③(예시의 일반화)과 어휘 미끼 ①('perfect' 재활용)의 설계가 좋고, ④는 반대 방향, ⑤는 극단성으로 소거되는 깔끔한 구조. 복수 정답 소지 없음."
+}

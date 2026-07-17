@@ -1,0 +1,72 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-garbled-korean",
+      "severity": "minor",
+      "evidence": "오답 해설 ②의 '이미 할머니가 스콘에 크림과 잼을 바르는 설명하기도 전에'는 목적어/조사가 누락된 비문('바르는 법을 설명하기도 전에' 의도로 추정). 사실 관계 자체는 지문과 일치하므로 V4 실패로는 판정하지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 'in fact' 뒤 강화절로서 직전 절(had already started to eat hers without the cream and jam)을 심화하고 원문 'it was mostly all in her mouth already'를 'had already devoured it'으로 환언",
+      "temptingBecause": "정답이므로 해당 없음. 다만 'without any toppings'가 직전 절 'without the cream and jam'을 어휘적으로 거의 재진술하여 표면 매칭만으로도 선택 가능(공예 결함).",
+      "decisiveFlaw": "없음(유일 정답). 완성문 문법·담화 기능(in fact 강화) 모두 성립."
+    },
+    {
+      "label": "②",
+      "intent": "행동 순서 반전 함정 — 예의 바른 대기(permission) 프레임을 마지막 장면에 오적용",
+      "temptingBecause": "앞부분의 'waited for her grandmother to make the first move'와 격식 있는 티타임 맥락이 앵커로 작동",
+      "decisiveFlaw": "직전 절 'Chloe had already started to eat hers'와 정면 모순 — 이미 먹기 시작했으므로 허락을 기다리는 중일 수 없음. 'in fact' 강화 기능과도 불일치."
+    },
+    {
+      "label": "③",
+      "intent": "half-truth 함정 — 지문 중반의 'carefully mirrored her grandmother's actions'를 스콘 장면으로 오전이",
+      "temptingBecause": "'carefully mirrored/copied' 어휘가 본문에 실재하여 표면 일치가 강함. 다섯 선지 중 가장 매력적인 오답.",
+      "decisiveFlaw": "할머니는 크림과 잼을 발라 먹었으나 클로이는 'without the cream and jam'으로 먹었으므로 모방이 성립하지 않음. 'before her grandmother'(할머니보다 먼저 집음)와도 모순."
+    },
+    {
+      "label": "④",
+      "intent": "어휘 앵커 재활용 함정 — 'cream and jam' 표면 겹침",
+      "temptingBecause": "빈칸 직전 절과 핵심 어휘(cream and jam)가 겹침",
+      "decisiveFlaw": "'without the cream and jam'과 모순이며 'more'는 이미 크림·잼을 받았다는 전제를 깔아 이중으로 붕괴. 정중히 요청하는 행동도 이미 입에 다 넣은 정황과 배치."
+    },
+    {
+      "label": "⑤",
+      "intent": "부정 극성 + 승인 대기 함정 — ②와 같은 계열(permission/approval)의 조건절 반전",
+      "temptingBecause": "격식 있는 티타임·순종적 손녀 프레임과 'would not ... without' 구조의 그럴듯함",
+      "decisiveFlaw": "'boldly chose the biscuit-looking thing before her grandmother' 및 직전 절과 정면 모순. 또한 ②와 함정 유형이 사실상 중복되어 쌍으로 동시 소거됨(둘 다 참일 수 없음)."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "garbled-korean",
+      "severity": "minor",
+      "evidence": "오답 해설 ②: '크림과 잼을 바르는 설명하기도 전에' — 비문(목적어 누락). '바르는 법을 설명하기도 전에'로 교정 필요."
+    },
+    {
+      "code": "verbose-repetition",
+      "severity": "minor",
+      "evidence": "본해설과 오답 해설 ②③④⑤가 '이미 ~하기도 전에 먹었다'는 동일 논거를 4회 반복하여 장황함. 정답 근거와 함정 분리는 되어 있으나 압축이 부족."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 마지막 절만 빈칸으로 치환된 무손상 상태, 정답 ①은 유일하며 완성문이 문법적·자연스럽고('in fact' 강화 기능 충족), 해설은 사소한 한국어 비문 1건 외 사실 정확, 필드 동기화 완전. 그러나 공예 결함으로 재설계 권고: (1) 정답 ①의 'without any toppings'가 빈칸 직전 절 'without the cream and jam'을 어휘적으로 재진술하여 표면 매칭만으로 정답 도달 가능(C3·C4 하락) — 원문 'mostly all in her mouth already'의 환언(devoured) 부분만이 실제 추론 요소. (2) ②와 ⑤가 동일한 permission/approval 함정의 변주로 중복되어 쌍 소거가 가능(C2·C4 하락). (3) 네 오답 전부가 빈칸 직전 한 절의 동일 국소 단서로 소거되어 다문장 단서 연결이 불필요 — INTERMEDIATE 라벨 대비 실제 난이도는 EASY 쪽으로 치우침(C5=2). (4) 해설은 정확하나 동일 논거 반복과 비문 1건(C6=2). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false. 공예 합계 13/24, 최저 2 — 모든 V 통과이나 합계 17 미만이므로 등급 C."
+}

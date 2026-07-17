@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "study": "deterministic-structural-v12-remediation-independent-v1",
+  "finalizedDate": "2026-07-15",
+  "files": {
+    "audit.json": {
+      "sha256": "bac4a83cec974cba27c656e3e5d9e86c08bb82b32931106d319cb42948db2ce6",
+      "bytes": 27131
+    },
+    "finalize-manifest.mjs": {
+      "sha256": "b9a4730449d6d5e607a9896e94360e04270aa96f958c6e26627bc5e5215f9a47",
+      "bytes": 1224
+    },
+    "README.md": {
+      "sha256": "8903e85781d7a36f4a3b26373f1b066f6b66ad9bd2ab8c409cfc7248ea72b004",
+      "bytes": 3591
+    },
+    "run-audit.mts": {
+      "sha256": "70e2ee8d7efa20e9be44493846865895810776d40d0cd89d233d6fae28d0b78a",
+      "bytes": 32255
+    },
+    "tsconfig.json": {
+      "sha256": "c1c1536ed60d33a563499b38eab46990ae0ea765fd500a903d3d621bb4b45195",
+      "bytes": 164
+    },
+    "verify.mjs": {
+      "sha256": "91c84dc3548c209f556f189f14b6056d15eb65e2c08c7502c95d1687caa3b3d8",
+      "bytes": 8402
+    }
+  },
+  "aggregateSha256": "cdb9fb8574a236eaf528740f4d3a10a97939acc5ff907f1cd7fe7349d401dd61"
+}

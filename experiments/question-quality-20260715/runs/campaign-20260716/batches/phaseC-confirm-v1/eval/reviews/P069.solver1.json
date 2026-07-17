@@ -1,0 +1,35 @@
+{
+  "pid": "P069",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "필터의 정의(경험으로 essential/irrelevant를 분리)와 정확히 대응한다. 지문 전반부의 '익숙한 도구·기술 의존이 novel 문제에서 실패한다'는 논지가 'past habits에 근거해 crucial elements를 맹목적으로 버린다'로 구체화되며, 그 결과 'seasoned masters도 실수한다'는 귀결과 인과가 완결된다. 문법 결합(3인칭 단수 discards)도 자연스럽다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "매력적 오답 — 핵심어 'beginner's mind'를 재활용해 끌리지만, 빈칸 주어는 'that filter'(경험 기반 필터)다. 필터는 beginner's mind의 대립 개념이지 그것을 '적용'하는 행위 주체가 아니어서 주어-술어 의미 결합이 성립하지 않는다. 실수의 기제는 필터 자체의 오작동(중요 요소 폐기)이지 필터가 beginner's mind를 일관되게 적용하지 못함이 아니다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "방향 반전 미끼. 지문의 문제 상황은 익숙한 도구를 irrelevant로 취급하는 것이 아니라, 반대로 익숙한 습관에 의존하다 새 상황의 중요 요소를 놓치는 것이다. 논지와 정반대 방향."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "인과 역전. '모든 세부를 흡수'는 beginner's mind의 특징으로, 지문에서 novel 문제에 오히려 권장되는 태도다. 필터가 이를 유도한다면 실수를 막는 방향이 되어 '그러면 고수도 실수한다'는 귀결과 모순된다. 대명사 them(masters)의 결합은 문법상 가능하나 논리가 파탄."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "가장 오래 끌린 미끼 — 'unfamiliar'가 'novel problem'과 공명한다. 그러나 필터가 처리하는 대상은 상황 전체가 아니라 세부 요소(details/elements)이고, 'blocks out situations altogether'는 지문이 기술한 필터 기제(요소 단위 분류·폐기)와 층위가 어긋나는 과잉 진술이다. ①이 지문 어휘와 기제에 더 정밀하게 대응하므로 상대 비교에서 탈락."
+    }
+  ],
+  "note": "빈칸 추론 문항. 다섯 선지 모두 3인칭 단수 동사구로 문법 seam은 전부 성립하므로 순수 논리 변별 문항이다. ②(핵심어 재활용)와 ⑤(novel-unfamiliar 공명)가 설계된 매력 오답으로 보이나, 주어 'that filter'와의 의미 결합 및 필터 기제의 층위(요소 vs 상황)를 확인하면 ①로 유일하게 수렴한다. 복수 정답 소지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Reduced relative clause: 'a process [which is] embodied in a machine'. The head noun 'process' bears a passive relation to 'embody' (the process is embodied in the machine), so the past participle is the required form; 'embodying' would wrongly assign agenthood to the process. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "In the relative clause 'that repeats itself', the subject 'that' (antecedent 'process') and the object are coreferential, so the reflexive is obligatory under Binding Principle A; a plain pronoun 'it' would force disjoint reference. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Elliptical concessive clause 'although [it is] at first masked': subject+be ellipsis in an adverbial clause is licensed because the elided subject is recoverable as the main-clause subject 'this' (the iterative process), which stands in a passive relation to 'mask' (the process is hidden at first). Past participle is correct; 'masking' would fail the passive relation. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'that' is a restrictive relative pronoun (no comma) with antecedent 'clock', serving as subject of 'appears'; singular agreement is consistent. 'that' as subject relativizer of a non-human antecedent is fully licit. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "Ellipsis after 'but in fact __ not' must be licensed by an antecedent VP. The antecedent is the lexical VP 'yield(s) a smooth time scale' (via 'seems to yield'), which requires do-support: 'but in fact does not [yield a smooth time scale]'. 'is not' would need an antecedent copular predicate (e.g., 'seems to be smooth'), but 'smooth' is only attributive inside the object NP, not predicative, so be-ellipsis has no licensed antecedent. Rescue readings fail: 'is not [yielding]' needs a progressive antecedent (absent); 'is not [a smooth time scale]' misassigns the referent of 'It' and still lacks a be-antecedent. Should be 'does'. Ungrammatical."
+    }
+  ],
+  "note": "Uniquely determined answer: (E). All other underlines survive formal tests (participle voice, reflexive binding, adverbial-clause ellipsis, relativizer choice). The (E) error is a classic auxiliary-substitution/ellipsis mismatch: 'seems to yield ... but in fact does not' is required; 'is not' has no copular antecedent."
+}

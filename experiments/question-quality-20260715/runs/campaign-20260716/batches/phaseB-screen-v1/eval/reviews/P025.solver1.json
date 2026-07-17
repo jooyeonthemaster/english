@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "aligning specific duties with personal vitality patterns — 지문 전체를 유일하게 포섭하는 일반화. (a) 'analytical tasks are best accomplished when our energy is high'(과제-에너지 매칭 원리), (b) 필자는 아침에 energized 하므로 어려운 문제를 가장 먼저 처리, (c) 마지막 문장 'If you know you are not a morning person, be strategic about scheduling your difficult work later in the day' — 개인의 활력 패턴에 따라 배치가 달라진다는 조건문까지 설명하는 것은 이 선지뿐."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "suppressing emotional fluctuations in professional relationships — 지문의 'emotional energy', 'unhappy client' 어휘를 회수한 미끼. 감정 기복 억제가 아니라 과제 스케줄링이 논지이며, 필자는 감정 억제가 아니라 과제를 빨리 처리해 감정 소모를 줄인다고 말함. 논지 불일치."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "tackling all critical problems as early as humanly possible — 최강 매력 오답. 'eating my problems for breakfast', 'it'll always be the first thing I get done'만 읽으면 실제로 강하게 끌린다(풀이 중 순간 유혹됨). 그러나 이는 아침형 인간인 필자 개인의 사례일 뿐이고, 마지막 문장이 '아침형이 아니면 어려운 일을 하루 늦은 시간대에 배치하라'고 명시해 'as early as possible'이라는 보편 명제를 정면으로 반박. 'all ... as early as humanly possible'의 절대성 때문에 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "prioritizing analytical assignments over emotional duties — 'analytical tasks'와 'emotional energy'를 짜깁기한 미끼. 지문은 분석적 과제와 감정적 업무 사이의 우선순위 비교를 전혀 하지 않음. 필자가 아침에 처리하는 것은 오히려 감정 소모형 과제(불만 고객 대화, 불쾌한 이메일)라서 방향도 맞지 않음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "maintaining high social stamina for cooperative communication — 사회적 지구력·협력적 소통은 지문에 등장하지 않는 무관 소재. 쉽게 배제."
+    }
+  ],
+  "note": "정답 변별 자체는 깨끗함(①만 마지막 조건문까지 포섭). 다만 stem 결함 하나 기록: 빈칸이 'points to the fact that _____.'의 that절 자리인데 5개 선지가 모두 동명사구여서 'the fact that aligning ... patterns.'처럼 술어 없는 비문이 됨. that절에는 주어+동사를 갖춘 완전한 절이 와야 하므로 엄밀히는 어떤 선지를 넣어도 비문 — 'points to the importance of ___' 또는 선지에 술어 추가(예: '... patterns matters')로 수정 필요. 이 결함은 5개 선지에 동일하게 작용하는 stem 하자라 변별에는 영향 없으나 실전 문항으로는 감점 요소. ③은 중반부만 읽은 수험생을 노린 잘 설계된 매력 오답으로, 마지막 문장이 유일한 반박 근거라는 점에서 변별력 있음."
+}

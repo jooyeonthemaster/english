@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) when",
+      "verdict": "correct",
+      "reason": "mistakes made by organizations when they first consider... — 'made by organizations'는 mistakes를 수식하는 축약 관계절이고, when절은 그 실수가 발생하는 시점을 나타내는 부사절로 자연스럽게 붙는다. 접속사 when + 완전한 절(they first consider...) 구조로 어법상 문제 없음. 최상위권 실전 감각으로도 첫 스캔에서 바로 통과."
+    },
+    {
+      "label": "(B) thoroughly understood",
+      "verdict": "incorrect (정답)",
+      "reason": "begins not with insight ... but with a thoroughly understood of the organization's own goals — 부정관사 a 뒤, 그리고 of 전치사구 앞이라는 이중 장거리 단서가 모두 명사 자리를 요구한다. 'understood'는 과거분사이지 명사가 아니므로 'a + 부사 + 과거분사 + of'는 성립 불가. 'a thorough understanding of'가 되어야 한다. not with A but with B 병렬에서 A가 명사(insight into...)인 점도 B가 명사구여야 함을 확인해 준다. 대안 해석(분사 후치수식, 명사화된 분사 등)을 적극 탐색해도 관사 a와 of 보충어를 동시에 만족시키는 정문 해석은 존재하지 않는다."
+    },
+    {
+      "label": "(C) managing",
+      "verdict": "unjudgeable — 지문에 (C) 밑줄 자체가 없음 (형식 결함)",
+      "reason": "지문에는 (A),(B),(D),(E) 네 개의 밑줄만 존재하고 (C) 밑줄이 누락되어 있다. 지문 해당 위치는 'a vague need to manage a presence'로 인쇄되어 있어 선지의 'managing'과 표기도 일치하지 않는다. 의도는 아마 'to manage'를 'managing'으로 바꿔 밑줄 치려던 것으로 추정되나(그 경우 need는 to부정사 보충어를 취하므로 managing은 오답 후보가 되어 복수정답 위험), 인쇄된 지문만으로는 판정 대상이 성립하지 않는다. 매력적 오답으로서의 기능도 0 — 시험지에서 이 선지는 고를 수가 없다."
+    },
+    {
+      "label": "(D) itself",
+      "verdict": "correct",
+      "reason": "'Being in social media' serves no purpose in and of itself — 주어인 동명사구(그 행위 자체)를 되받는 재귀대명사 관용구 'in and of itself'로 정확하다. 동명사구는 단수 취급이므로 itself가 맞고 themselves 유혹은 근거가 없다."
+    },
+    {
+      "label": "(E) solve",
+      "verdict": "correct",
+      "reason": "must either solve a problem ... or result in an improvement — 병렬 시작점은 조동사 must 뒤이며 either A or B의 A(solve)와 B(result in)가 모두 동사원형으로 정확히 병렬된다. 매력적 오답 관점에서 'result가 명사인가?' 하고 잠깐 끌리지만 result in은 자동사구로 solve와 완벽 병렬이므로 유혹이 금방 해소된다."
+    }
+  ],
+  "note": "정답은 (B) — 'a thoroughly understood of'는 관사+of 보충어가 요구하는 명사 자리에 과거분사를 넣은 명백한 오류로, 하나로 좁혀진다. 다만 치명적 형식 결함: 선지 (C) managing에 대응하는 밑줄이 지문에 존재하지 않는다(지문은 'to manage'로 인쇄). 5지선다 어법 문항으로서 출제 형식이 붕괴되어 있어, 실전 시험지라면 이의신청감. 문항 자체의 변별 구조(B가 유일 오류)는 건재하나 (C) 누락은 반드시 수리 필요."
+}

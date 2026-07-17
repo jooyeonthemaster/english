@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "orders Daniel first to wax: order는 5형식에서 목적격 보어로 to부정사를 취한다(order + O + to-V). 부사 first가 목적어와 to부정사 사이에 삽입되어도 구조는 유효. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "precisely opposed circular motions: 최상위권도 'opposing이어야 하나?' 하고 끌리는 매력적 오답. 그러나 opposed는 'diametrically opposed views'처럼 상호적 의미의 과거분사형 형용사로 명사 앞 한정 수식이 표준 용례다. 영화의 wax on/wax off처럼 서로 반대 방향의 원운동이라는 의미로 자연스럽다. opposing도 가능하지만 opposed가 틀린 것은 아님. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "makes Daniel hammer nails: 사역동사 make + 목적어 + 원형부정사. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "so he can defend himself: 절의 주어 he와 목적어가 동일 지시 대상이므로 재귀대명사 himself가 맞다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "Daniel, who without thought or hesitation defending himself: 주격 관계대명사 who가 이끄는 관계절에 정동사가 없다. 삽입 전치사구 'without thought or hesitation'을 걷어내면 'who defending himself'로 비문. defends여야 한다. who가 명시된 이상 분사 축약 관계절 해석도 불가능해 대안 해석으로 구제되지 않는다. 어법상 틀림."
+    }
+  ],
+  "note": "실전 풀이 시 유혹 기록: (B) opposed가 유일하게 눈길을 끄는 미끼였다. opposing으로 고치고 싶은 충동이 있으나 상호동사의 과거분사 한정 용법(opposed/combined/related 류)이 확립된 표준이라 오답 확정. (E)는 삽입구가 정동사 부재를 은폐하는 전형적 장거리 단서형 출제로, 삽입구 제거 시 즉시 드러난다. 정답 후보는 (E) 하나로 유일하게 좁혀지며 복수 정답 소지 없음."
+}

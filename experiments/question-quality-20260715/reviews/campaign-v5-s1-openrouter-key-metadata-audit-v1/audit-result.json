@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "campaign-v5-s1-openrouter-key-metadata-audit-v1",
+  "capturedAtUtc": "2026-07-15T07:19:49.292Z",
+  "endpoint": "https://openrouter.ai/api/v1/key",
+  "verdict": "BLOCK_NOT_A_DEDICATED_ZERO_USAGE_HARD_CAPPED_S1_CREDENTIAL",
+  "authorization": {
+    "generationAuthorized": false,
+    "apiCandidateCount": 0,
+    "globalCandidateLimit": 1000
+  },
+  "credentialAttestation": {
+    "plaintextCredentialPersisted": false,
+    "credentialHashPersisted": false,
+    "credentialLabelPersisted": false,
+    "metadataHttpStatus": 200,
+    "dedicatedCampaignLabelPatternMatched": false,
+    "finitePositiveLimitAtOrBelowReservation": false,
+    "limitResetNever": true,
+    "remainingEqualsLimit": false,
+    "zeroPriorUsage": false,
+    "includeByokInLimit": false,
+    "providerNoOverrunSemanticsPubliclyDocumented": false,
+    "reservationUsd": 44.16
+  },
+  "safety": {
+    "metadataRequests": 1,
+    "modelRequests": 0,
+    "generationRequests": 0,
+    "accountMutations": 0,
+    "databaseCalls": 0,
+    "credentialValuesPrinted": 0,
+    "credentialValuesPersisted": 0
+  },
+  "artifactSemanticSha256": "6355eb46ff8b96119a8f53a4e1a0410abf341966bd46d0583fc91f7ab2767db0"
+}

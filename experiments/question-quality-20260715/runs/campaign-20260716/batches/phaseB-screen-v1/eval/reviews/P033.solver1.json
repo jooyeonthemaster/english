@@ -1,0 +1,35 @@
+{
+  "pid": "P033",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (this is the answer)",
+      "reason": "'The nature of an ethical issue ... is what there is no clear right or wrong response.' The clause 'there is no clear right or wrong response' is a complete existential clause with no gap, so the free relative 'what' cannot be licensed. A rescue reading was actively sought: 'what' would only work with a stranded preposition ('...no clear right or wrong response TO'), which is absent; no appositive or reduced-relative reading salvages it. The predicate requires a noun-complement that-clause: 'is THAT there is no clear right or wrong response.' Ungrammatical as written."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Subject is the gerund phrase 'being ethical' (singular), inside the concessive clause 'although being ethical is defined as...'. Singular agreement and passive of 'define A as B' are both correct."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Completes the 'define A as B' frame in the passive: 'is defined as acting in accordance with...'. Gerund after 'as' is the required form; 'acting' correctly parallels the gerund subject 'being ethical'."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Relative clause 'that are considered correct' modifies the plural head noun 'principles' (of 'the principles of conduct'), not the nearer singular 'conduct' — semantically it is the principles that are considered correct ('consider X correct' passive). Plural 'are' is right. This is the strongest distractor: proximity agreement with 'conduct' tempts a singular reading, but the head-noun check resolves it."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'vary both between and within individuals' is a textbook shared-object correlative: 'both' coordinates the two prepositions 'between' and 'within', each taking 'individuals'. Parallelism begins correctly at the preposition, and the passage's logic (variation across people AND within the same person over contexts) supports both readings. Momentary parallelism suspicion dissolves on inspection."
+    }
+  ],
+  "note": "Lens: top-tier examinee, real-order solve with distractor-attraction logging. Solved cleanly in one pass: (A) is decisively broken (complete clause after 'what', no gap, no stranded preposition), while (B)-(E) each survive long-distance checks (true gerund subject, define-as frame, head-noun agreement over an of-phrase, shared-object correlative). Main felt temptation was (D) via proximity agreement with singular 'conduct'; rejected after identifying 'principles' as the head. Single defensible answer; clean item."
+}

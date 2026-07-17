@@ -1,0 +1,108 @@
+{
+  "pid": "P016",
+  "requestedDifficulty": "KILLER",
+  "type": "BLANK_INFERENCE",
+  "blindAnswer": "⑤",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-VERIFIED-CLEAN",
+      "severity": "info",
+      "evidence": "프로그램 diff로 원지문과 렌더 지문을 비교한 결과 접두 648자·접미 291자가 바이트 단위로 동일하고, 유일한 차이는 의도된 span('while cinema expresses man's affective life, the law keeps it in check')의 '_____' 치환뿐이다. 문장 접합 파손·중복·누락·고아 문장부호 없음. 콜론+빈칸+마침표 구조 정상, 라벨 ①~⑤와 선언 정답 ⑤ 정합."
+    },
+    {
+      "code": "V3-SEAM-PRONOUN-MISMATCH",
+      "severity": "major",
+      "evidence": "정답 ⑤ 'whereas film manifests human emotional experience, legal systems control it'을 삽입하면 후행 문장 'It tries to ensure that we are not overwhelmed...'의 단수 대명사 It의 선행사 사슬이 파손된다. 원문에서는 직전 절 주어가 단수 'the law'여서 It가 완벽하게 해소됐으나, ⑤는 복수 'legal systems'로 치환해 수 불일치를 일으킨다. 가장 가까운 단수 명사구 'human emotional experience'는 의미상 불가('감정 경험이 우리가 압도되지 않도록 애쓴다'가 됨). 'between cinema and law'의 law로 우회 해소를 시도할 수 있으나 전치사구 내부의 총칭적 언급이라 담화상 강하게 부자연스럽다. 역설적으로 단수 주어 'law'를 쓴 오답 ③이 대명사 정합상 더 매끄러워, tail이 정답에만 불리하게 작용하는 비대칭 seam 결함이다(§D '동일 통사 슬롯' 조건과도 긴장). 확신이 서지 않는 자연성은 보수 원칙에 따라 실패로 판정."
+    },
+    {
+      "code": "V4-PHANTOM-EVIDENCE-CITATION",
+      "severity": "major",
+      "evidence": "해설이 \"근거 문장 1('...while cinema expresses man's affective life, the law keeps it in check.')\"을 지문 내 근거로 인용하지만, 이 문장은 빈칸으로 제거된 원문 span 그 자체로 학생에게 보이는 렌더 지문에 존재하지 않는다. 존재하지 않는 문장을 근거로 지목하는 문장 귀속 오류이며, 정답 내용을 정답의 근거로 드는 순환 논증이다. 렌더 지문 기준 유효한 근거는 빈칸 후행 문장 'It tries to ensure...'와 마지막 문장(해설의 '근거 문장 2')뿐이다."
+    },
+    {
+      "code": "V4-FALSE-BORROW-CLAIM",
+      "severity": "minor",
+      "evidence": "오답 해설 ①·②·④의 '...을(를) 빌렸지만' 프레임이 부정확하다. 'human rationality'(①), 'psychological impulses'(②), 'instinctive desires'(④)는 지문에 등장하지 않는 표현이므로(지문 어휘는 affective life, desires and drives, affects) '지문에서 빌렸다'는 전제가 성립하지 않는다. ③의 'human nature'만 실제 지문 어휘다. 각 선지의 결함 분석 자체는 정확하나 차용 주장은 사실과 다르다."
+    },
+    {
+      "code": "C4-TAIL-RESTATEMENT-CUE",
+      "severity": "minor",
+      "evidence": "빈칸 뒤 마지막 문장 'The law obsessively tries to suppress affects..., whereas cinema introduces us to our affects...'가 빈칸 내용의 대조 전체를 동일 접속사(whereas)까지 써서 거의 그대로 재진술한다. 이 한 문장의 직독 패러프레이즈만으로 ⑤에 도달 가능하다. 유효성 실패는 아니나 KILLER 난이도 주장과 정면 충돌하는 과잉 단서다."
+    },
+    {
+      "code": "STEM-TOPIC-PREANNOUNCE",
+      "severity": "minor",
+      "evidence": "발문 '...영화와 법의 본질적인 차이 및 상호작용에 관한 빈칸에...'가 수능 표준 발문('빈칸에 들어갈 말로 가장 적절한 것은?')이 아니며 빈칸의 주제(본질적 차이)를 미리 알려준다. 지문 자체가 'an important difference'를 명시하므로 추가 누출량은 작지만 불필요한 힌트다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "개념 치환(topic substitution): 영화의 영역을 affect→rationality로 바꿔치기 + 법의 역할을 물리적 폭력 통제로 축소한 half-truth",
+      "temptingBecause": "'judicial bodies govern physical violence'가 4번째 문장 'too violent to exist in a state of nature without a regime of commands and prohibitions'와 표면적으로 호응하고, 대조 구문(although) 형식을 갖췄다",
+      "decisiveFlaw": "영화가 다루는 것은 rationality가 아니라 affective life(정서적 삶)이며, 지문의 대조축은 '감정의 표출 vs 억제'이지 '이성 조명 vs 폭력 통치'가 아니다"
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전(causal/polarity reversal): 법의 역할을 억제에서 해방으로 역전",
+      "temptingBecause": "앞 절 'cinema releases our psychological impulses'가 'cinema introduces us to our affects'의 그럴듯한 패러프레이즈이고 impulses가 desires and drives와 개념 중첩된다",
+      "decisiveFlaw": "'legal institutions actively unleash them'은 'keeps it in check'·'obsessively tries to suppress affects'와 정반대다. 또한 두 절이 같은 방향이 되어 빈칸 앞의 'an important difference' 프레임 자체와 모순되는 자기소거적 선지다"
+    },
+    {
+      "label": "③",
+      "intent": "half-truth + 절대어 과잉(absolute overreach): 참인 전반절에 거짓 절대 진술 접합",
+      "temptingBecause": "전반절 'cinema explores our emotional depths'는 오답 중 유일하게 온전히 정확한 패러프레이즈이고 'human nature'는 지문에 실제 등장하는 어휘 앵커라 성급한 선택을 유도한다",
+      "decisiveFlaw": "'law completely ignores human nature'는 'foundational to law is its anxiety about human nature'(법의 기초가 곧 인간 본성에 대한 불안)와 정면 모순이며, 법이 정서를 강박적으로 억제한다는 후속 서술(무시가 아니라 적극 개입)과도 충돌한다"
+    },
+    {
+      "label": "④",
+      "intent": "행위자 교환(actor swap): 금지·통제 역할을 법에서 영화로 전도 + 술어 왜곡(codifies desires)",
+      "temptingBecause": "desires·forbid가 'desires and drives'·'commands and prohibitions'와 개념 중첩하고 두 주체가 모두 등장하는 대조 구문 형식을 갖췄다",
+      "decisiveFlaw": "욕망을 금지·통제하는 것은 법의 역할('the law keeps it in check')이지 영화가 아니다(주객 전도). '법이 본능적 욕망을 성문화한다'도 왜곡 — 법이 성문화하는 것은 명령·금지 체계다"
+    },
+    {
+      "label": "⑤",
+      "intent": "정답: 제거 span 'while cinema expresses man's affective life, the law keeps it in check'의 근접 패러프레이즈",
+      "temptingBecause": "(정답) expresses→manifests, man's affective life→human emotional experience, keeps it in check→control it의 의미 보존 대응",
+      "decisiveFlaw": "정답이지만 결함 보유: 'legal systems'(복수)가 원문 'the law'(단수)를 대체해 후행 문장 단수 대명사 'It'의 선행사 사슬을 파손(V3 seam). 또한 마지막 문장이 동일 대조를 whereas로 재진술해 추상화 거리가 KILLER에 못 미친다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "major",
+      "evidence": "해설의 '근거 문장 1'이 빈칸으로 제거된 원문 span 자체 — 렌더 지문에 존재하지 않는 문장을 근거로 인용하는 문장 귀속 오류이자 순환 논증",
+      "recommendation": "근거를 실제 지문 내 문장('It tries to ensure...' + 마지막 문장의 suppress/introduce 대조)으로 교체하고, 원문 span을 공개할 경우 '빈칸의 원문'임을 명시할 것"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ①·②·④의 '...을(를) 빌렸지만' 주장 — 해당 영어 표현들은 지문에 실제로 등장하지 않아 어휘 차용이 아니라 개념 연상에 불과",
+      "recommendation": "'지문의 X 개념을 연상시키지만' 등 사실에 맞는 프레임으로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "'human rationality을(를)' 등 조사 자동선택 템플릿 잔재가 학생 노출 텍스트에 그대로 노출",
+      "recommendation": "영어 어구 뒤 조사를 확정 표기로 후처리"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "§D 위반 3건: (1) 마지막 문장 하나의 직독 패러프레이즈만으로 정답 도달 가능 — '최소 두 문장/두 논리 단서 연결' 요건 불충족. (2) ②는 극성('actively unleash'), ③은 절대어('completely ignores') 하나로 소거 가능. (3) tail 대명사 'It' 때문에 정답 ⑤만 seam 불협을 일으키는 통사 슬롯 비대칭 존재('남은 suffix/tail 때문에' 조건의 역방향 위반). 오답 함정축 다양성(§D 마지막 조건)은 충족.",
+  "grade": "F",
+  "notes": "V1(무결성)은 프로그램 diff로 검증 통과, V2(정답 유일성)는 5개 선지 독립 검증 결과 ⑤ 단독 정답으로 견고(① rationality 치환, ② 극성 반전, ③ 절대어 모순, ④ 행위자 교환 — 대안 정답 해석 불가), V5(필드 동기화)도 정합(해설 결론='영화는 감정 경험을 드러내고 법 제도는 통제'=⑤, 오답 해설 4건이 각 선지 실제 내용과 대응, keyPoints 모순 없음). 그러나 치명 결함 2건: (1) V3 — 정답 삽입 시 후행 'It tries to ensure...'의 단수 선행사가 파손되는 seam 결함(원문 'the law'→⑤ 'legal systems' 복수화), 오답 ③이 오히려 대명사 정합이 더 매끄러운 비대칭까지 발생. (2) V4 — 해설이 빈칸으로 제거된 원문을 '근거 문장 1'로 인용하는 팬텀 근거(순환 논증). 난이도도 KILLER 요청과 달리 마지막 문장의 전면 재진술 때문에 중(中) 수준에 그침(C5=1). 함정축 설계(C2=3)와 출제 지점의 핵심성(C1=3)은 준수하나 경쟁력·단서 경제성은 국소 단서 소거와 사실상의 베껴쓰기 경로로 하락(C3=2, C4=2), 해설은 귀속 오류로 신뢰성 훼손(C6=1). 치명은 공예로 상쇄되지 않으므로 grade F. 수리 방향: ⑤ 주어를 'the legal system'(단수)으로 교체하거나 후행 'It'을 'The law'로 명시, 해설 근거를 실제 지문 문장으로 재작성, '빌렸지만' 프레임 수정, KILLER 유지하려면 재진술 문장의 단서 밀도를 낮추거나 빈칸 위치 재설계 필요."
+}

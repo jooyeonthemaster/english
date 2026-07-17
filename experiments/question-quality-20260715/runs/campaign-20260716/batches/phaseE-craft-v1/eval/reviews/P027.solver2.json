@@ -1,0 +1,35 @@
+{
+  "pid": "P027",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "seam: 'make sure that in the long term, sacrificing your well-being does not become a habitual pattern' — 동명사구 주어(sacrificing your well-being) + 단수 동사 does로 문법 결합 완전. 논리: 지문의 핵심 대조는 [단기: 마감을 놓치는 손해 > 자기관리 한 번 놓치는 손해, 즉 가끔의 희생은 용인] vs [장기: 자기관리를 미루는 것의 '누적 효과(cumulative impact)'를 인식해야 함]. 누적 효과가 문제되는 조건은 일회성 희생이 '반복적 패턴(habitual pattern)'으로 굳어지는 경우이므로, 장기적으로 보장해야 할 것은 정확히 '희생이 습관이 되지 않게 하는 것'. cumulative ↔ habitual pattern 이 형식적으로 정합. 유일하게 성립."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'short-term obligations are constantly suspended for long-term health' — 문법은 성립하나 논리 모순. 지문은 '단기적으로는 grant deadline을 놓치는 충격이 woodworking class를 놓치는 충격보다 클 수 있다'고 단기 의무의 우선성을 명시적으로 인정한다. 단기 의무를 '끊임없이(constantly) 유예하라'는 처방은 이 전제와 정면 충돌하며, 지문이 요구하는 것은 의무 유예가 아니라 자기관리 희생의 상습화 방지다. constantly라는 전칭 부사가 과잉 일반화를 확정하므로 옹호 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'the consequence of failing deadlines is offset by continuous hobbies' — 문법은 성립하나(단수 주어 consequence + is) 논리 무관. 지문 어디에도 취미가 마감 실패의 손해를 '상쇄한다(offset)'는 보상 논리가 없다. 지문의 논점은 자기관리 결핍의 누적 손해 방지이지, 취미로 업무 실패를 벌충하는 교환 관계가 아니다. 지문 어휘(deadline, hobbies)를 재조합한 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'the lack of self-care immediately results in failing urgent tasks' — 문법은 성립하나 이중 모순. (a) 빈칸 앞의 'in the long term'이라는 부사구와 'immediately'가 시간 축에서 직접 충돌. (b) 지문은 자기관리 결핍의 해악을 '누적적(cumulative)'이라고 규정했는데 이는 즉각적 결과의 부정이다. 또한 자기관리 결핍이 긴급 업무 실패를 낳는다는 인과는 지문의 인과 방향(업무 압박 → 자기관리 포기)과 반대."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'reprioritizing daily schedules strictly guarantees meeting all deadlines' — 문법은 성립하나(동명사 주어 + guarantees 단수 일치) 지문 명제와 형식적으로 모순. 지문은 'No matter how much we plan, we all occasionally have days when that happens'로 계획·재우선순위화가 실패하는 날이 반드시 있음을 인정한다. 따라서 'strictly guarantees meeting all deadlines'라는 전칭 보장 명제는 지문에 의해 직접 반증된다."
+    }
+  ],
+  "note": "빈칸 유형. 결정 구조: 단기(가끔의 자기관리 희생 용인) vs 장기(누적 손해 방지)의 대조에서, 빈칸은 'cumulative impact 인식'의 귀결로서 '희생의 상습화 방지'를 요구. ①만이 이 논리를 충족하며 문법 결합도 완전. ②⑤는 전칭 부사(constantly/strictly...all)로 지문 전제와 모순, ④는 immediately가 long term/cumulative와 충돌, ③은 무관한 보상 논리. 대안 정답 성립 여지 없음 — 단일 정답 문항."
+}

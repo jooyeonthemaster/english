@@ -1,0 +1,345 @@
+{
+  "apiCalls": 0,
+  "auditPacketWritten": false,
+  "databaseWrites": 0,
+  "diagnostics": {
+    "allAcademyPriorUseRequired": true,
+    "apiCalls": 0,
+    "databaseWrites": 0,
+    "exclusions": {
+      "hardGate": 2933,
+      "historicalExactOrNear": 592,
+      "selectedExactOrNear": 325
+    },
+    "failedStrata": [
+      "general-dev-db",
+      "general-dev-repo",
+      "general-holdout-repo"
+    ],
+    "input": {
+      "candidates": 4882,
+      "forbiddenReferences": 3914,
+      "historicalPassageIds": 815,
+      "retained": 57
+    },
+    "nearDuplicateCodes": {
+      "EXACT_NORMALIZED_HASH": 773,
+      "FIVE_GRAM_SIMILARITY": 110,
+      "LONG_CONTIGUOUS_OVERLAP": 3,
+      "MARKUP_STRIPPED_EXACT": 31
+    },
+    "pinnedSnapshot": {
+      "asOf": "2026-07-14T18:03:00.000Z",
+      "codeHash": "3a26b63e6ac823bf3780607510f464083e1c46d48844ac5f133bcc534256c30a",
+      "databaseExtractHash": "4d089b4bf0f295acfb46266268c621e92d6adf947046e7ca8e691105f9d47e39",
+      "gitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+      "historicalExtractHash": "e689cd64ffd405feb223c884db7890631dc633eb08bbe96d7b73ae619ee6dfcc",
+      "historicalFilesHash": "a2453b5365ca091085a5e46271b47497c83424adb26d527a69c2081bd6c8a2cc",
+      "repoPassagesFileHash": "4337bc34ba2f98cf9af708cdf27d27219fe7599bf30f03fb5fd4698e84347a6f",
+      "snapshotHash": "c21777c8dcab7f6b46ed15e429fcb7840607e90bcbdd7c02ec607a8db02beb13"
+    },
+    "poolSizes": {
+      "focus-blank-killer": 59,
+      "focus-grammar-killer": 599,
+      "general-dev-db": 154,
+      "general-dev-repo": 801,
+      "general-holdout-db": 154,
+      "general-holdout-repo": 801
+    },
+    "queuePlans": [
+      {
+        "achievedReachProbability": 0.9518051045012428,
+        "conservativePassRate": 0.2541665012621336,
+        "id": "focus-grammar-killer",
+        "previousSizeReachProbability": 0.9485279200338969,
+        "rateBasis": {
+          "audited": 52,
+          "confidence": 0.95,
+          "kind": "one-sided-clopper-pearson",
+          "passed": 19
+        },
+        "requiredCandidates": 307,
+        "requiredReachProbability": 0.95,
+        "reserveCandidates": 241,
+        "sensitivity": [],
+        "targetPasses": 66
+      },
+      {
+        "achievedReachProbability": 0.9536749870460991,
+        "conservativePassRate": 0.2969581120673508,
+        "id": "focus-blank-killer",
+        "previousSizeReachProbability": 0.9498391924228783,
+        "rateBasis": {
+          "audited": 45,
+          "confidence": 0.95,
+          "kind": "one-sided-clopper-pearson",
+          "passed": 19
+        },
+        "requiredCandidates": 262,
+        "requiredReachProbability": 0.95,
+        "reserveCandidates": 196,
+        "sensitivity": [],
+        "targetPasses": 66
+      },
+      {
+        "achievedReachProbability": 0.951525416372934,
+        "conservativePassRate": 0.19330842112059338,
+        "id": "general-dev-db",
+        "previousSizeReachProbability": 0.9477412492564987,
+        "rateBasis": {
+          "audited": 30,
+          "confidence": 0.95,
+          "kind": "one-sided-clopper-pearson",
+          "passed": 10
+        },
+        "requiredCandidates": 158,
+        "requiredReachProbability": 0.95,
+        "reserveCandidates": 135,
+        "sensitivity": [],
+        "targetPasses": 23
+      },
+      {
+        "achievedReachProbability": 0.9558773519216557,
+        "conservativePassRate": 0.5700660661937071,
+        "id": "general-dev-repo",
+        "previousSizeReachProbability": 0.9344688641772605,
+        "rateBasis": {
+          "audited": 30,
+          "confidence": 0.95,
+          "kind": "one-sided-clopper-pearson",
+          "passed": 22
+        },
+        "requiredCandidates": 26,
+        "requiredReachProbability": 0.95,
+        "reserveCandidates": 15,
+        "sensitivity": [],
+        "targetPasses": 11
+      },
+      {
+        "achievedReachProbability": 0.9507073869792234,
+        "conservativePassRate": 0.04685482691460076,
+        "id": "general-holdout-db",
+        "previousSizeReachProbability": 0.949948374754627,
+        "rateBasis": {
+          "audited": 30,
+          "confidence": 0.95,
+          "kind": "one-sided-clopper-pearson",
+          "passed": 4
+        },
+        "requiredCandidates": 815,
+        "requiredReachProbability": 0.95,
+        "reserveCandidates": 786,
+        "sensitivity": [],
+        "targetPasses": 29
+      },
+      {
+        "achievedReachProbability": 0.9520657035501564,
+        "conservativePassRate": 0.5349272934296914,
+        "id": "general-holdout-repo",
+        "previousSizeReachProbability": 0.9323889010944675,
+        "rateBasis": {
+          "audited": 30,
+          "confidence": 0.95,
+          "kind": "one-sided-clopper-pearson",
+          "passed": 21
+        },
+        "requiredCandidates": 30,
+        "requiredReachProbability": 0.95,
+        "reserveCandidates": 18,
+        "sensitivity": [],
+        "targetPasses": 12
+      }
+    ],
+    "retainedBaseline": {
+      "actual": {
+        "dev|db-global": 10,
+        "dev|repo-official": 22,
+        "holdout|db-global": 4,
+        "holdout|repo-official": 21
+      },
+      "passed": true
+    },
+    "reviewedAtEligibilityRule": "metadata-only",
+    "selectedCounts": {
+      "focus-blank-killer": 59,
+      "focus-grammar-killer": 307,
+      "general-dev-db": 85,
+      "general-dev-repo": 26,
+      "general-holdout-db": 0,
+      "general-holdout-repo": 30
+    },
+    "shortagePanels": [
+      "focus-blank-killer",
+      "general-dev-db",
+      "general-holdout-db"
+    ],
+    "shortfalls": {
+      "focus-blank-killer": {
+        "poolBeforeCrossPanelDeduplication": 59,
+        "requiredCandidates": 262,
+        "selectedCandidates": 59,
+        "shortfall": 203
+      },
+      "focus-grammar-killer": {
+        "poolBeforeCrossPanelDeduplication": 599,
+        "requiredCandidates": 307,
+        "selectedCandidates": 307,
+        "shortfall": 0
+      },
+      "general-dev-db": {
+        "poolBeforeCrossPanelDeduplication": 154,
+        "requiredCandidates": 158,
+        "selectedCandidates": 85,
+        "shortfall": 73
+      },
+      "general-dev-repo": {
+        "poolBeforeCrossPanelDeduplication": 801,
+        "requiredCandidates": 26,
+        "selectedCandidates": 26,
+        "shortfall": 0
+      },
+      "general-holdout-db": {
+        "poolBeforeCrossPanelDeduplication": 154,
+        "requiredCandidates": 815,
+        "selectedCandidates": 0,
+        "shortfall": 815
+      },
+      "general-holdout-repo": {
+        "poolBeforeCrossPanelDeduplication": 801,
+        "requiredCandidates": 30,
+        "selectedCandidates": 30,
+        "shortfall": 0
+      }
+    },
+    "strata": {
+      "focus-blank-killer": {
+        "applies": true,
+        "discourse": {
+          "argumentative": 2,
+          "expository": 47,
+          "narrative": 9,
+          "practical": 1
+        },
+        "maximumDiscourseShare": 0.79661,
+        "maximumWordBandShare": 0.728814,
+        "passed": true,
+        "populatedDiscourses": 4,
+        "populatedWordBands": 3,
+        "wordBand": {
+          "120-169": 43,
+          "170-229": 15,
+          "230-360": 1
+        }
+      },
+      "focus-grammar-killer": {
+        "applies": true,
+        "discourse": {
+          "argumentative": 92,
+          "expository": 135,
+          "narrative": 71,
+          "practical": 9
+        },
+        "maximumDiscourseShare": 0.439739,
+        "maximumWordBandShare": 0.752443,
+        "passed": true,
+        "populatedDiscourses": 4,
+        "populatedWordBands": 3,
+        "wordBand": {
+          "120-169": 231,
+          "170-229": 69,
+          "230-360": 7
+        }
+      },
+      "general-dev-db": {
+        "applies": true,
+        "discourse": {
+          "argumentative": 6,
+          "expository": 74,
+          "narrative": 3,
+          "practical": 2
+        },
+        "maximumDiscourseShare": 0.870588,
+        "maximumWordBandShare": 0.976471,
+        "passed": false,
+        "populatedDiscourses": 4,
+        "populatedWordBands": 2,
+        "wordBand": {
+          "120-169": 83,
+          "170-229": 2
+        }
+      },
+      "general-dev-repo": {
+        "applies": true,
+        "discourse": {
+          "argumentative": 8,
+          "expository": 11,
+          "narrative": 7
+        },
+        "maximumDiscourseShare": 0.423077,
+        "maximumWordBandShare": 1,
+        "passed": false,
+        "populatedDiscourses": 3,
+        "populatedWordBands": 1,
+        "wordBand": {
+          "120-169": 26
+        }
+      },
+      "general-holdout-db": {
+        "applies": false,
+        "discourse": {},
+        "maximumDiscourseShare": 0,
+        "maximumWordBandShare": 0,
+        "passed": true,
+        "populatedDiscourses": 0,
+        "populatedWordBands": 0,
+        "wordBand": {}
+      },
+      "general-holdout-repo": {
+        "applies": true,
+        "discourse": {
+          "argumentative": 11,
+          "expository": 11,
+          "narrative": 8
+        },
+        "maximumDiscourseShare": 0.366667,
+        "maximumWordBandShare": 1,
+        "passed": false,
+        "populatedDiscourses": 3,
+        "populatedWordBands": 1,
+        "wordBand": {
+          "120-169": 30
+        }
+      }
+    },
+    "strataPolicy": {
+      "dimensions": [
+        "wordBand",
+        "discourse"
+      ],
+      "discourses": [
+        "argumentative",
+        "expository",
+        "narrative",
+        "practical"
+      ],
+      "queueConstraint": {
+        "appliesAtQueueSize": 20,
+        "maximumSingleDiscourseShare": 0.8,
+        "maximumSingleWordBandShare": 0.8,
+        "minimumPopulatedDiscourses": 2,
+        "minimumPopulatedWordBands": 2
+      },
+      "wordBands": [
+        "120-169",
+        "170-229",
+        "230-360"
+      ]
+    }
+  },
+  "operationalManifestWritten": false,
+  "reason": "Pinned eligible supply cannot fill every preregistered 95%/95% queue and stratum constraint. Targets were not weakened.",
+  "schemaVersion": 3,
+  "selectionVersion": "2026-07-15-v3-pinned-stratified",
+  "snapshotHash": "c21777c8dcab7f6b46ed15e429fcb7840607e90bcbdd7c02ec607a8db02beb13",
+  "status": "HARD_FAIL_SUPPLY_SHORTAGE"
+}

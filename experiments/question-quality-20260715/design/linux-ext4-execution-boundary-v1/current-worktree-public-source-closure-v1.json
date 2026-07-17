@@ -1,0 +1,321 @@
+{
+    "schemaVersion":  "question-quality-current-worktree-public-source-closure-v1",
+    "status":  "EXACT_PUBLIC_BOOTSTRAP_CLOSURE_ATTESTED_TRANSFER_NOT_MATERIALIZED",
+    "executionComplete":  false,
+    "sourceRepoGitHead":  "467c6d107137a91088d3eba1620ba4036a63d709",
+    "sourceRoot":  "D:/Desktop/2026project/nara",
+    "sourceRootIsTransferDestination":  false,
+    "closureDefinition":  "Exact explicit allowlist of public bootstrap files observed in the current worktree; not the complete future Linux execution/compiler/private-input closure.",
+    "setHashAlgorithm":  "SHA256_OF_UTF8_ROWS_SHA256_SPACE_BYTES_SPACE_KIND_SPACE_PATH_LF_IN_PATH_ORDER",
+    "setSha256":  "4373bd4dd737c2e729170ed2ff57d9a4f5b862c4827a10d5a3225534a02cd85e",
+    "exactRows":  44,
+    "exactTotalBytes":  1489112,
+    "kindCounts":  {
+                       "public_registry_binding":  3,
+                       "v6_public_source_or_design":  38,
+                       "toolchain_declaration":  1,
+                       "toolchain_lock":  1,
+                       "deployment_descriptor":  1
+                   },
+    "files":  [
+                  {
+                      "path":  "experiments/question-quality-20260715/design/global-candidate-registry-v2/MANIFEST.sha256",
+                      "bytes":  302,
+                      "sha256":  "13f5fdb997c616694b297c6e3c22c22a2f60b97668bbe549589807a3acdd3f1e",
+                      "kind":  "public_registry_binding"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/design/global-candidate-registry-v2/PLAN.md",
+                      "bytes":  5521,
+                      "sha256":  "2dc638d60e6ec3bff34bb2f93ebbc5495bb136dbdf236813e4f79ba26cd94aeb",
+                      "kind":  "public_registry_binding"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/design/global-candidate-registry-v2/registry.json",
+                      "bytes":  2113,
+                      "sha256":  "1e2fc90252de8790ebd7df86e81602825c3fd8b50f5fa96de237ec3cc8fdbab1",
+                      "kind":  "public_registry_binding"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/author-baseline-ledger.ts",
+                      "bytes":  3469,
+                      "sha256":  "7ac67bca4b212af2cb61f983d71a1787592e9d4e91cc5f1c71424edcf57a74e1",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/author-environment.ts",
+                      "bytes":  3021,
+                      "sha256":  "668add8f3098e068160050d8e04f5600aac7b4890547989b3ca423a4cb9bfd0f",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/author-freeze-gate.ts",
+                      "bytes":  609,
+                      "sha256":  "3d5a243de5e1b31799812a8a103bb72f88a21db8fa22970d4ec96e77baea6ee8",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/bounded-response-body.ts",
+                      "bytes":  5762,
+                      "sha256":  "904be15f5f42c2d5f320d19f770a9962a522c824d5f584a4ac0f100c8209cf1d",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/build-frozen-runtime.mts",
+                      "bytes":  8917,
+                      "sha256":  "a94275b6243432c43974a392caae0fdbd7d0275339581d2a6ddb00d7228161ff",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/build-offline.mts",
+                      "bytes":  28868,
+                      "sha256":  "5819ccc7c09b1a6a9f188b9089e1f3a69ca7a62333a0505343870ecbddcd275f",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/bundler-toolchain-provenance.ts",
+                      "bytes":  14605,
+                      "sha256":  "f3d4a2d245223a736d86a2103c6d491db950dd98301d3610765abeac6e6ec141",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/capture-output-boundary.ts",
+                      "bytes":  1990,
+                      "sha256":  "09f0a752a113ee1ebc5937b606c1e7d6c6e2bfb7bea023958388720cb8a891fb",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/capture-price-snapshot.mts",
+                      "bytes":  5923,
+                      "sha256":  "b8a424d62fbf0d0e60955cd106e77a045f205ffe6c513c69a793c70222d2964e",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/compile-exact-wire.mts",
+                      "bytes":  9718,
+                      "sha256":  "7f6e1fee17c762f73ae60194fab16059c2151bc43cff6fd2b7f1ddd866eb6520",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/compiler-child.mts",
+                      "bytes":  2254,
+                      "sha256":  "df0243ed742536611083622d8a98313c0993cd080565f02717df33f10217f0e5",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/compiler-client.mts",
+                      "bytes":  2974,
+                      "sha256":  "f8a89cd7d9d04f2e59182beaf502c7f6304f8f102688e207606ba88af97ddaf3",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/compiler-closure.mts",
+                      "bytes":  14837,
+                      "sha256":  "2e0cfa06e173bab5f81db19075aa79726bf5805fe092e4a66c405933ac34a694",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/compiler-environment.mts",
+                      "bytes":  3903,
+                      "sha256":  "aa4bf85aa2fcea5d966874fb818b203626e90a8201c893c583aeb16f672a607b",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/credential-file-boundary.ts",
+                      "bytes":  5055,
+                      "sha256":  "86a51e8ba49ceb4902378697eef9fae8bf70981f3a4f14ca8dd1e618b749f74d",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/durable-private-marker.ts",
+                      "bytes":  11789,
+                      "sha256":  "412e93706493ca6bbeb3db3755a5b428e032b19b9819d0f298f0adffca07d7ce",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/filesystem-durability.ts",
+                      "bytes":  5619,
+                      "sha256":  "558f40b381b392041c9baa75b3cb4bf16da7c87e49d8fcc6b486dc267f4435ed",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/frozen-runtime-core.ts",
+                      "bytes":  26500,
+                      "sha256":  "4cd7a06040fa1c732e5e81202a89b592fb6abdc58c4ff533dedd494fa7a4214b",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/live-child.mts",
+                      "bytes":  4201,
+                      "sha256":  "1f88d2c9a23f2407df1886bf975af36cf0492f131a260d41a08d291d377bc9a6",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/live-closure.mts",
+                      "bytes":  14028,
+                      "sha256":  "03dc429f9c6a2c49a200de81523ec47f6af499beb34ea1fd01c3a5c294191017",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/live-environment.ts",
+                      "bytes":  3754,
+                      "sha256":  "62cb3b6975388b2584eb2518a6f072644acd975c2322edc632390a49e16afbf9",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/live-io.ts",
+                      "bytes":  27611,
+                      "sha256":  "afcc1f840b7f8fc04380b107eafa815578b6c4810468e6d348f1ce98584c5d22",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/offline.test.ts",
+                      "bytes":  132562,
+                      "sha256":  "e06274726e50281e30015067910d20de50127a75798ada87ff320882acba880c",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/operator-wrapper.mts",
+                      "bytes":  8228,
+                      "sha256":  "ddf3c9f603218cd332d4597678e023cea6c71d7e7d5e1a6b69f9fee2617e339f",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/predecessor-binding.ts",
+                      "bytes":  8708,
+                      "sha256":  "543fa5e5a0ceb3831c57d55d0379a3c9f46f6234f0d83ba822547b7d456e8183",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/predecessor-binding-v6.json",
+                      "bytes":  2935,
+                      "sha256":  "48afaedd82a7f0404fc46623844302f14e91d4aa3842218411001ff93a142895",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/price-snapshot-core.ts",
+                      "bytes":  23944,
+                      "sha256":  "e49856985a28dc615c78468a60a47010444fd279eb5cf348e33cec32fde0df89",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/production-runner.ts",
+                      "bytes":  52636,
+                      "sha256":  "cbe7b22c15e6d4f46b15b8c47b57803152edde9b454cc543f119d166b28e2804",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/protocol-core.ts",
+                      "bytes":  50886,
+                      "sha256":  "6b8936b88ffb9cdfd0950a0a94d5bbc26d00f7c62ddcda2dcff9c973dea467bd",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/protocol-v6.json",
+                      "bytes":  15741,
+                      "sha256":  "068024e2594cadd24daacb2b6e015a401704836774f5222b0c44e6b8d6b96d58",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/README.md",
+                      "bytes":  9324,
+                      "sha256":  "cf93be80bd5e92e38fbb5b23c401ea5be0717151695efda2b079e23182781655",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/response-parser.ts",
+                      "bytes":  21856,
+                      "sha256":  "ff3fa831796e1c9ba6a3212ea48b64cf32440f16a27042b41f0432ec4435902e",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/strict-json-observer.ts",
+                      "bytes":  34584,
+                      "sha256":  "41969f7b9c7cad9c2e1da8568be86f646d103de4297038b9085c955a73002187",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/system-boundary.test.ts",
+                      "bytes":  24118,
+                      "sha256":  "fcd621e0a62a7501ffa33a4c5b418453a913425f22e686094864d3d0ed328288",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/terminal-reconciliation-core.ts",
+                      "bytes":  21200,
+                      "sha256":  "e258a5f1d8e8cb134302d1ada170b7225178b2411b2229d3b73c4a6f8230db75",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/test-support.ts",
+                      "bytes":  2740,
+                      "sha256":  "b17e33f351ade8654ef86b8c6b2c34e06f13024921e97987dd9f0ecf6fcbbb17",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/tsconfig.json",
+                      "bytes":  1117,
+                      "sha256":  "5961001371dd5ca90c21700feba8c3dc0f8e7419ee621d9b35b58f2ca781c66e",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/verify.mts",
+                      "bytes":  60959,
+                      "sha256":  "1c37b8465075a4ff0f94aa154abdf6d24b9e474cc15cb465e36c8808bb4d72e0",
+                      "kind":  "v6_public_source_or_design"
+                  },
+                  {
+                      "path":  "package.json",
+                      "bytes":  4573,
+                      "sha256":  "573952d551177c84b976148b9a58e9ea81d4951be3031b77c6f671d34090426b",
+                      "kind":  "toolchain_declaration"
+                  },
+                  {
+                      "path":  "package-lock.json",
+                      "bytes":  799539,
+                      "sha256":  "69df7075b9a70cb1740531a24cc787d396d735ac2977a359b7700fd0701253be",
+                      "kind":  "toolchain_lock"
+                  },
+                  {
+                      "path":  "vercel.json",
+                      "bytes":  119,
+                      "sha256":  "b3fb19b0df4a06c31bf64a9dbfa9c23ea0675b83257e3d50f399e1581223cc67",
+                      "kind":  "deployment_descriptor"
+                  }
+              ],
+    "exclusions":  {
+                       "gitDirectoriesIncluded":  0,
+                       "environmentFilesIncluded":  0,
+                       "secretFilesIncluded":  0,
+                       "privatePathsIncluded":  0,
+                       "nodeModulesIncluded":  0,
+                       "windowsFrozenBundlesIncluded":  0,
+                       "rawRequestOrResponseFilesIncluded":  0
+                   },
+    "missingBeforeExecution":  {
+                                   "completeProductionCompilerClosure":  true,
+                                   "separatelyAuthorizedPrivateInputIngress":  true,
+                                   "linuxNativeNodeModulesAndToolchainProvenance":  true,
+                                   "linuxNativeFrozenRuntime":  true,
+                                   "finalAuthorizationAndIndependentAudit":  true
+                               },
+    "materialization":  {
+                            "attempted":  false,
+                            "destination":  null,
+                            "filesCopiedOrStaged":  0,
+                            "transferAuthorized":  false
+                        },
+    "activity":  {
+                     "networkCalls":  0,
+                     "providerCalls":  0,
+                     "modelCalls":  0,
+                     "apiCandidatesConsumed":  0,
+                     "databaseCalls":  0,
+                     "secretReads":  0,
+                     "privateArtifactReads":  0,
+                     "budgetLedgerReads":  0,
+                     "budgetLedgerMutations":  0,
+                     "packageInstalls":  0,
+                     "buildOrFreezeWrites":  0
+                 }
+}

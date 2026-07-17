@@ -1,0 +1,35 @@
+{
+  "pid": "P051",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "ungrammatical",
+      "reason": "Relative clause 'that show the evolution of society' — the antecedent of subject-relative 'that' is 'a lasting mark' (singular). Agreement requires 'shows'. Alternative parses fail formally: no plural antecedent exists in the matrix clause ('Its presence' is also singular); an object-relative reading ('mark that [S] show') is impossible because no subject follows 'that'; no mandative/subjunctive trigger licenses bare 'show'. Hence 'show' violates subject-verb agreement."
+    },
+    {
+      "label": "(B)",
+      "verdict": "grammatical",
+      "reason": "Subject NP = 'one of the first qualities [a bridge must exhibit]'. Head noun is 'one' (singular); 'of the first qualities' is a PP modifier and 'a bridge must exhibit' is a contact (zero) object relative on 'qualities'. The finite verb of the main clause must agree with 'one', so singular 'concerns' is correct. The long NP with plural 'qualities' and the embedded clause are proximity distractors only."
+    },
+    {
+      "label": "(C)",
+      "verdict": "grammatical",
+      "reason": "'Depending on the type of bridge and the site, ...' is the lexicalized quasi-prepositional participle 'depending on', standard in sentence-initial adverbial use; it is conventionally exempt from dangling-participle objections (like 'according to', 'regarding'). The following clause 'it is subordinate... or it makes...' attaches coherently. No error."
+    },
+    {
+      "label": "(D)",
+      "verdict": "grammatical",
+      "reason": "'it is subordinate to the surroundings' — 'subordinate' is a predicative adjective after copula 'is', with its licensed complement 'to NP' (subordinate to X). Semantically apt (bridge deferring to surroundings vs. making a strong statement). A verb reading ('is subordinated to') would also be possible English, but the adjectival form as printed is fully well-formed, so no error."
+    },
+    {
+      "label": "(E)",
+      "verdict": "grammatical",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment' — 'but' coordinates two finite VPs ('is spectacular in itself' and 'spoils its local environment') under the shared subject-relative 'that', whose antecedent 'a bridge' is singular. 3rd-person singular 'spoils' satisfies agreement and preserves finite-VP parallelism; 'spoiling' would break the coordination. No error."
+    }
+  ],
+  "note": "Clean single-error item. (A) is a textbook long-distance agreement trap (relative-clause verb vs. singular antecedent 'a lasting mark'). All other underlines survive adversarial alternative-parse testing: (B) 'one of + plural + contact relative' agreement, (C) lexicalized 'depending on', (D) predicative adjective 'subordinate to', (E) finite-VP coordination inside a relative clause. No second defensible answer found."
+}

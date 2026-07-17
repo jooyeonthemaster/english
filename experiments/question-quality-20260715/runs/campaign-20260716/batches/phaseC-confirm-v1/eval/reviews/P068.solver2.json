@@ -1,0 +1,35 @@
+{
+  "pid": "P068",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Recent evidence suggests that...' — 주어 'evidence'는 불가산/단수이므로 3인칭 단수 현재형 'suggests'가 수 일치상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'why did the Neanderthal toolkit show...' — 조동사 'did'가 앞에 있는 의문문이므로 본동사는 원형 'show'가 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'genes would undoubtedly have changed' — 부사 'undoubtedly'가 조동사 would와 완료형 have changed 사이에서 동사구를 수식하는 정상 위치. 형용사가 아닌 부사가 필요한 자리이므로 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'mutations for retaining lactose digestion' — 전치사 for의 목적어로 동명사 'retaining'이 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'The appeal to a genetic change driven evolution gets ... backwards' — 의도된 의미는 '진화를 추동하는 유전적 변화(a genetic change that drives evolution)'로, 능동의 현재분사 'driving'이 'a genetic change'를 후치 수식해야 한다. 과거분사 'driven'은 여기서 성립하지 않는다: (i) 의미가 능동('change'가 evolution을 driven하지, evolution에 의해 driven되는 것이 아님)이므로 수동 후치 수식 불가, (ii) 'evolution'의 전치 수식으로 보려면 하이픈 복합어 'genetic-change-driven'로 재구성해야 하나 표기상 그렇지 않다. 따라서 seam이 깨져 어법상 틀림. 교정: driven → driving."
+    }
+  ],
+  "note": "Matt Ridley 계열 원문의 'a genetic change driving evolution'을 'driven'으로 바꿔 오류를 심은 전형적 능동 현재분사 vs 과거분사 판별 문항. 나머지 4개 밑줄은 모두 명확히 정문(수 일치·의문문 원형·부사 위치·전치사+동명사)이라 (E)로 단일 수렴. 대안 해석(하이픈 복합 형용사)은 표기·논리상 성립하지 않아 (E)만 옹호 가능."
+}

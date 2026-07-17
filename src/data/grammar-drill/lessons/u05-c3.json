@@ -1,0 +1,730 @@
+{
+  "id": "u05-c3",
+  "unitId": "u05",
+  "order": 3,
+  "title": "조동사·to의 공유 병렬",
+  "oneLiner": "can pay or visit처럼 조동사·have·be·to가 뒤 항까지 공유되어 그 형태를 결정하는 병렬입니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "커리큘럼 백본 u05-c3(조동사·to의 공유 병렬) — src/lib/grammar-drill/curriculum.ts",
+      "기존 드릴 뱅크 u05-choice(u05-c3-ch-001~012) — trapTag: shared-aux, coord-pair",
+      "어법끝 5.0 — 병렬구조(등위접속사 앞뒤 형태 일치)",
+      "천일문 고등 GRAMMAR — 등위접속사와 병렬구조",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L4 병렬 축 찾기"
+    ]
+  },
+  "lenses": ["L4", "L2"],
+  "confusableWith": ["u05-c1", "u05-c2", "u05-c4", "u01-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The nurse will check the patient's temperature and record the results in the chart.",
+        "The nurse will check the patient's temperature and recording the results in the chart."
+      ],
+      "answer": 0,
+      "afterText": "차이는 and 뒤 한 단어뿐입니다. 이 레슨을 마치면 조동사 will 이 어디까지 힘을 미치는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "공유 병렬",
+      "question": "'공유 병렬'이 대체 무엇입니까?",
+      "plain": "and·or·but 앞뒤를 같은 자격으로 잇는 것이 병렬입니다. 그중 뒤 항이 앞의 조동사·have·be·to 를 새로 두지 않고 그대로 빌려 쓰는 것이 공유 병렬입니다.",
+      "analogy": "한 우산을 둘이 나눠 쓰는 것과 같습니다. 앞 동사가 can·will 이라는 우산을 펴면, 뒤 동사는 우산을 새로 펴지 않고 그 밑으로 들어옵니다. 그래서 뒤 동사도 우산이 정한 모양(원형)을 따릅니다.",
+      "whyItMatters": "수능 어법은 등위접속사 뒤 항의 형태를 즐겨 묻습니다. 무엇이 공유되는지만 짚으면 그 자리의 형태는 저절로 결정됩니다. 판별 도구 '병렬 축 찾기'의 핵심이 여기에 있습니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "and 뒤에는 바로 앞에 붙어 있는 단어와 어울리는 형태를 넣으면 됩니다.",
+      "truth": "병렬은 옆 단어가 아니라 같은 층위의 짝과 맞춥니다. 앞 항이 조동사·have·be·to 에 걸린 형태라면, 뒤 항도 그 공유되는 요소 바로 뒤에 올 수 있는 형태여야 합니다.",
+      "counterExample": {
+        "en": "The library will digitize its rare maps and **making** them available to researchers.",
+        "ko": "그 도서관은 희귀 지도를 디지털화하고 연구자들이 이용할 수 있게 할 것입니다.",
+        "note": "바로 앞의 명사 maps 때문에 -ing 형이 자연스러워 보이지만, and 의 짝은 조동사 will 뒤의 원형 digitize 입니다. 따라서 make 가 되어야 하며 이 문장은 어법상 틀립니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "공유 병렬 판별 필기",
+      "intro": "and·or·but 을 만나면 세 가지를 차례로 확인합니다.",
+      "entries": [
+        {
+          "head": "등위접속사 — 짝을 만드는 저울",
+          "body": "and·or·but 은 양쪽에 같은 자격의 항을 올립니다. 이 저울의 뒤 칸에 어떤 형태가 오는지가 바로 판단의 대상입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "짝은 옆 단어가 아니라 같은 층위",
+          "body": "뒤 항의 짝은 바로 앞 단어가 아닙니다. 같은 자격의 덩어리를 찾아야 하며, 사이에 낀 수식어·관계절은 괄호로 걷어냅니다.",
+          "example": {
+            "en": "The nurse will check the temperature and **record** the results.",
+            "ko": "그 간호사는 체온을 확인하고 결과를 기록할 것입니다.",
+            "note": "record 의 짝은 옆의 temperature 가 아니라 check 이며, 조동사 will 이 둘에 걸립니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "공유 요소 — 조동사·have·be·to",
+          "body": "두 항 앞에 놓여 양쪽에 걸리는 것을 찾습니다. 조동사·완료의 have·수동과 진행의 be·to부정사의 to 가 공유의 주인공입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "뒤 항의 형태는 공유 요소가 정한다",
+          "body": "짝의 형태를 그대로 베끼는 것이 아닙니다. 공유되는 것이 조동사·to 면 원형, 완료·수동이면 과거분사, 진행이면 -ing형이 옵니다."
+        },
+        {
+          "head": "비공유 — 뒤 항이 자기 조동사를 가짐",
+          "body": "뒤 항 앞에 새 조동사가 있으면 공유가 아닙니다. 이때는 조동사구 두 개의 병렬이므로 각 항을 따로 읽습니다.",
+          "example": {
+            "en": "Researchers can collect the data quickly but **must analyze** it slowly.",
+            "ko": "연구자들은 자료를 빠르게 수집할 수 있지만 그것을 천천히 분석해야 합니다.",
+            "note": "뒤 항이 자기 조동사 must 를 가지므로 공유가 아니라 조동사구 두 개의 병렬입니다."
+          },
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "조동사(can·will·must·may·should)가 등위접속사 뒤 항까지 공유되면, 뒤 항도 동사원형이어야 합니다.",
+      "examples": [
+        {
+          "en": "Students can borrow three books at a time and **renew** them online.",
+          "ko": "학생들은 한 번에 세 권을 대출하고 온라인으로 연장할 수 있습니다.",
+          "note": "can 이 and 뒤 항까지 공유됩니다. borrow 와 나란한 원형 renew 가 옳습니다."
+        },
+        {
+          "en": "The device will detect a leak and **shut** off the water supply automatically.",
+          "ko": "그 장치는 누수를 감지하고 자동으로 급수를 차단할 것입니다.",
+          "note": "will 뒤의 원형 detect 와 shut 이 짝입니다. shutting 을 쓰면 조동사 뒤에 올 수 없는 형태가 되어 병렬이 깨집니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "무엇이 공유되면 뒤 항은 무슨 형태인가",
+      "columns": ["공유되는 요소", "뒤 항의 형태"],
+      "rows": [
+        {
+          "cells": ["조동사 can·will·must·may·should", "동사원형"],
+          "example": {
+            "en": "Visitors can photograph the exhibits freely and **share** the images online.",
+            "ko": "관람객은 전시물을 자유롭게 촬영하고 그 이미지를 온라인에 공유할 수 있습니다.",
+            "note": "조동사 can 이 공유되므로 photograph 와 나란한 원형 share 입니다."
+          }
+        },
+        {
+          "cells": ["to부정사의 to", "동사원형"],
+          "example": {
+            "en": "The charity aims to build wells in remote villages and **train** local crews.",
+            "ko": "그 자선단체는 외딴 마을에 우물을 짓고 현지 인력을 훈련하는 것을 목표로 합니다.",
+            "note": "to 가 공유되므로 build 와 나란한 원형 train 입니다. to train 이라고 to 를 반복해도 같은 구조입니다."
+          }
+        },
+        {
+          "cells": ["완료의 have·has·had", "과거분사"],
+          "example": {
+            "en": "The glacier has thinned rapidly and **retreated** nearly a mile since 1990.",
+            "ko": "그 빙하는 1990년 이래 빠르게 얇아졌고 거의 1마일이나 후퇴했습니다.",
+            "note": "완료의 has 가 공유되므로 thinned 와 나란한 과거분사 retreated 입니다."
+          }
+        },
+        {
+          "cells": ["수동의 be", "과거분사"],
+          "example": {
+            "en": "The samples were frozen overnight and **examined** the next morning.",
+            "ko": "그 표본들은 밤새 냉동되었고 이튿날 아침에 검사되었습니다.",
+            "note": "수동의 were 가 공유되므로 뒤 항도 과거분사이며, 두 항 모두 표본이 당하는 쪽입니다."
+          }
+        },
+        {
+          "cells": ["진행의 be", "-ing형"],
+          "example": {
+            "en": "Sea levels are rising steadily and **threatening** low-lying coastal cities.",
+            "ko": "해수면은 꾸준히 상승하며 저지대 해안 도시를 위협하고 있습니다.",
+            "note": "진행의 are 가 공유되므로 rising 과 나란한 -ing 형 threatening 입니다."
+          }
+        }
+      ],
+      "takeaway": "뒤 항의 형태는 짝을 베낀 결과가 아니라 공유되는 요소가 정한 결과입니다."
+    },
+    {
+      "id": "b7",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나를 찾습니다",
+      "instruction": "각 줄에서 나머지와 결이 다른 하나를 고르십시오. 방금 본 '공유 요소 → 형태'의 대응을 씁니다.",
+      "rounds": [
+        {
+          "words": ["build", "train", "follow", "following"],
+          "odd": 3,
+          "why": "build·train·follow 는 조동사나 to 뒤에 오는 원형입니다. following 만 -ing 형이라 조동사·to 뒤에 올 수 없어 결이 다릅니다."
+        },
+        {
+          "words": ["thinned", "retreated", "examined", "threatening"],
+          "odd": 3,
+          "why": "thinned·retreated·examined 는 완료·수동 뒤에 오는 과거분사입니다. threatening 만 진행 뒤에 오는 -ing 형입니다."
+        },
+        {
+          "words": ["can pay or visit", "will detect and shut", "may reduce or offer", "can collect but must analyze"],
+          "odd": 3,
+          "why": "앞 셋은 하나의 조동사가 뒤 항까지 공유되는 공유 병렬입니다. 마지막만 뒤 항이 자기 조동사 must 를 가지므로 공유가 아니라 조동사구 두 개의 병렬입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "to부정사의 to 도 등위접속사 뒤 항에 공유되며, 이때 뒤 항은 반드시 원형입니다. to 를 반복해도 생략해도 같은 구조입니다.",
+      "examples": [
+        {
+          "en": "It is important to read the instructions carefully and **follow** them exactly.",
+          "ko": "설명서를 주의 깊게 읽고 그대로 따르는 것이 중요합니다.",
+          "note": "진주어 to read 의 to 가 공유되므로 following 이 아니라 원형 follow 가 옳습니다."
+        },
+        {
+          "en": "The plan is to restore the wetlands and **protect** the migrating birds.",
+          "ko": "그 계획은 습지를 복원하고 이동하는 새들을 보호하는 것입니다.",
+          "note": "to restore 의 to 가 and 뒤 항까지 공유되므로 원형 protect 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "조동사가 공유되는 문장의 해부",
+      "tokens": [
+        { "t": "Volunteers", "role": "S" },
+        { "t": "can", "role": "V" },
+        { "t": "record", "role": "V" },
+        { "t": "the birds' calls", "role": "O" },
+        { "t": "and", "role": "CONJ" },
+        { "t": "upload", "role": "V" },
+        { "t": "the files", "role": "O" },
+        { "t": "to a shared database", "role": "M" }
+      ],
+      "ko": "자원봉사자들은 새들의 울음소리를 녹음하고 그 파일을 공유 데이터베이스에 올릴 수 있습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "to a shared database 는 upload 를 꾸미는 전치사구입니다. 병렬 축과 무관하므로 묶어서 치웁니다."
+        },
+        {
+          "label": "② 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "주어는 Volunteers 하나이며, 두 동작 모두 이 주어가 합니다. 주어를 다시 쓰지 않았다는 것이 공유의 신호입니다."
+        },
+        {
+          "label": "③ 등위접속사가 잇는 두 항을 찾습니다",
+          "roles": ["CONJ"],
+          "note": "and 의 짝은 바로 앞의 calls 가 아닙니다. 앞 항은 record the birds' calls, 뒤 항은 upload the files 라는 덩어리입니다."
+        },
+        {
+          "label": "④ 공유되는 조동사에 형태를 맞춥니다",
+          "roles": ["V"],
+          "note": "can 은 두 항 모두에 걸립니다. 조동사 뒤에는 원형이 오므로 record 와 upload 가 나란히 원형입니다."
+        }
+      ],
+      "conclusion": "and 뒤의 upload 는 새 문장의 동사가 아니라 can 을 함께 쓰는 두 번째 항입니다. 그래서 시제도 -ing 도 붙지 않습니다."
+    },
+    {
+      "id": "b10",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "공유된 동사원형 사냥",
+      "instruction": "이 문장에서 조동사 will 이 함께 거느리는 동사원형을 전부 탭하십시오. 명사를 꾸미는 분사는 사냥감이 아닙니다.",
+      "hitLabel": "공유된 동사원형",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "app", "hit": false },
+        { "t": "will", "hit": false },
+        { "t": "track", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "sleep", "hit": false },
+        { "t": "recorded", "hit": false },
+        { "t": "overnight", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "display", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "results", "hit": false },
+        { "t": "each", "hit": false },
+        { "t": "morning.", "hit": false }
+      ],
+      "ko": "그 앱은 밤새 기록된 수면을 추적하고 매일 아침 결과를 보여 줄 것입니다.",
+      "explain": "track 과 display 가 조동사 will 을 공유하는 두 원형입니다. recorded 는 sleep 을 꾸미는 과거분사라 병렬 축 밖에 있어 사냥감이 아닙니다."
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "공유 병렬을 판정하는 4단계",
+      "steps": [
+        {
+          "text": "and·or·but 을 찾아 표시하고, 판단해야 할 뒤 항이 어디인지 먼저 확인합니다.",
+          "applyNote": "or 뒤 항은 괄호 안의 offer 자리입니다."
+        },
+        {
+          "text": "뒤 항과 같은 층위의 앞 항을 찾습니다. 바로 옆 단어가 아니라 같은 자격의 덩어리를 찾습니다.",
+          "applyNote": "앞 항은 reduce the tax on small firms 입니다. on small firms 는 tax 를 꾸미는 수식어이므로 짝이 아닙니다."
+        },
+        {
+          "text": "두 항 앞에서 공유되는 요소가 조동사인지, have·be 인지, to 인지 확정합니다.",
+          "applyNote": "두 항 앞에 놓인 것은 조동사 may 하나뿐입니다. 따라서 may 가 공유됩니다."
+        },
+        {
+          "text": "뒤 항을 그 공유 요소 바로 뒤에 올 수 있는 형태로 맞춥니다.",
+          "applyNote": "may 뒤에는 원형이 옵니다. 그러므로 offering 이 아니라 offer 가 옳습니다."
+        }
+      ],
+      "example": {
+        "en": "The council may reduce the tax on small firms or ( offer / offering ) them free training.",
+        "ko": "시의회는 소규모 기업에 대한 세금을 낮추거나 무료 교육을 제공할 수 있습니다.",
+        "note": "or 이 잇는 두 항은 reduce … 와 괄호 자리이며, 조동사 may 가 두 항에 공유되므로 원형 offer 가 옳습니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Researchers must record every measurement in the field and ( enter / entering ) it into the database each night.",
+      "steps": [
+        {
+          "title": "① 등위접속사를 표시합니다",
+          "body": "and 가 하나 있습니다. 판단할 자리는 and 바로 뒤의 괄호입니다."
+        },
+        {
+          "title": "② 같은 층위의 앞 항을 찾습니다",
+          "body": "바로 앞의 in the field 는 전치사구 수식어입니다. 같은 층위의 앞 항은 record every measurement 라는 덩어리입니다."
+        },
+        {
+          "title": "③ 공유되는 요소를 확정합니다",
+          "body": "두 항 앞에 놓인 것은 조동사 must 입니다. 주어 Researchers 를 다시 쓰지 않았으므로 must 가 뒤 항까지 공유됩니다."
+        },
+        {
+          "title": "④ 형태를 맞춥니다",
+          "body": "조동사 뒤에는 원형이 옵니다. entering 은 must 에 걸릴 수 없으므로 원형 enter 가 옳습니다."
+        }
+      ],
+      "answer": "enter",
+      "ko": "연구자들은 현장에서 모든 측정값을 기록하고 매일 밤 그것을 데이터베이스에 입력해야 합니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u05-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Guests may leave their luggage at the desk and {{blank}} it after checkout.",
+          "options": ["collecting", "collect"],
+          "answer": 1,
+          "translation": "투숙객은 짐을 데스크에 맡기고 퇴실 후에 찾아갈 수 있습니다.",
+          "explanation": "조동사 may 가 and 뒤 항까지 공유되므로, leave 와 나란한 원형 collect 가 옳습니다. collecting 은 조동사 뒤에 올 수 없어 병렬이 깨집니다.",
+          "trapTags": ["shared-aux", "coord-pair"]
+        },
+        {
+          "id": "u05-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The volunteers have cleaned the riverbank and [[u:planting]] young trees along the path.",
+          "isCorrect": false,
+          "correction": "planted",
+          "translation": "그 자원봉사자들은 강둑을 청소했고 길을 따라 어린나무를 심었습니다.",
+          "explanation": "완료의 have 가 and 뒤 항까지 공유됩니다. 앞 항이 과거분사 cleaned 이므로 뒤 항도 과거분사 planted 여야 합니다.",
+          "trapTags": ["shared-aux", "coord-pair"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "공유하는 병렬과 각자 갖는 병렬",
+      "columns": ["앞 조동사를 공유하는 병렬", "각 항이 조동사를 따로 갖는 병렬"],
+      "rows": [
+        {
+          "criterion": "겉모습",
+          "a": "can pay or visit (뒤 항 앞에 조동사가 없음)",
+          "b": "can collect but must analyze (뒤 항 앞에 새 조동사가 있음)"
+        },
+        {
+          "criterion": "뒤 항의 형태",
+          "a": "공유되는 요소 바로 뒤에 올 수 있는 형태(원형·과거분사·-ing형)",
+          "b": "새 조동사가 요구하는 형태(대개 원형)"
+        },
+        {
+          "criterion": "판단 방법",
+          "a": "앞에서 공유되는 요소를 찾아 그 뒤 형태로 맞춥니다",
+          "b": "각 항을 독립된 동사구로 읽고 각자 확인합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "Applicants can pay the fee online or **visit** the office in person.",
+          "ko": "지원자는 수수료를 온라인으로 납부하거나 사무실을 직접 방문할 수 있습니다.",
+          "note": "or 뒤에 조동사가 없습니다. can 이 공유되므로 visit 은 원형입니다."
+        },
+        {
+          "en": "Researchers can collect the data quickly but **must analyze** it slowly.",
+          "ko": "연구자들은 자료를 빠르게 수집할 수 있지만 그것을 천천히 분석해야 합니다.",
+          "note": "but 이 잇는 것은 조동사구 두 개입니다. 뒤 항이 자기 조동사 must 를 가지므로 공유가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 병렬에서 빈칸에 들어갈 뒤 항의 형태를 분류하십시오.",
+      "buckets": [
+        { "id": "base", "label": "동사원형" },
+        { "id": "pp", "label": "과거분사" },
+        { "id": "ing", "label": "-ing형" }
+      ],
+      "chips": [
+        {
+          "text": "may borrow books and ___ them online",
+          "bucketId": "base",
+          "why": "조동사 may 가 공유되므로 뒤 항은 원형입니다."
+        },
+        {
+          "text": "must check the gear and ___ near a partner",
+          "bucketId": "base",
+          "why": "조동사 must 가 공유되므로 뒤 항은 원형입니다."
+        },
+        {
+          "text": "aims to build wells and ___ local crews",
+          "bucketId": "base",
+          "why": "to부정사의 to 가 공유되므로 뒤 항은 원형입니다."
+        },
+        {
+          "text": "has thinned rapidly and ___ nearly a mile",
+          "bucketId": "pp",
+          "why": "완료의 has 가 공유되므로 뒤 항은 과거분사입니다."
+        },
+        {
+          "text": "were frozen overnight and ___ the next morning",
+          "bucketId": "pp",
+          "why": "수동의 were 가 공유되므로 뒤 항은 과거분사입니다."
+        },
+        {
+          "text": "is melting fast and ___ nearby villages",
+          "bucketId": "ing",
+          "why": "진행의 is 가 공유되므로 뒤 항은 -ing형입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "공유 판정 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 무엇이 공유되는지를 순간에 짚어야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "조동사가 등위접속사 뒤 항까지 공유되면 뒤 항은 동사원형이 됩니다.",
+          "isTrue": true,
+          "why": "조동사 뒤에는 원형이 옵니다. 공유되면 뒤 항도 그 원형을 따릅니다."
+        },
+        {
+          "statement": "and 뒤 항은 언제나 바로 앞 단어와 같은 형태여야 합니다.",
+          "isTrue": false,
+          "why": "짝은 옆 단어가 아니라 같은 층위의 항입니다. 형태는 공유 요소가 정합니다."
+        },
+        {
+          "statement": "완료의 have 가 공유되면 뒤 항은 과거분사가 됩니다.",
+          "isTrue": true,
+          "why": "has cleaned and planted 처럼 완료의 have 뒤에는 과거분사가 옵니다."
+        },
+        {
+          "statement": "진행의 be 가 공유되면 뒤 항도 동사원형입니다.",
+          "isTrue": false,
+          "why": "진행의 be 뒤에는 -ing 형이 옵니다. are rising and threatening 이 그 예입니다."
+        },
+        {
+          "statement": "to부정사의 to 가 공유되면 뒤 항은 원형입니다.",
+          "isTrue": true,
+          "why": "to build and train 처럼 to 뒤에는 원형이 오며, to 를 반복해도 같습니다."
+        },
+        {
+          "statement": "뒤 항이 자기 조동사를 따로 가지면 앞 조동사가 공유된 것입니다.",
+          "isTrue": false,
+          "why": "뒤 항이 새 조동사를 가지면 공유가 아니라 조동사구 두 개의 병렬입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The new sensors will monitor the air quality in the tunnel and ( report / reporting ) any sudden change to the control room.",
+      "givenSteps": [
+        "① 등위접속사 and 를 표시했습니다. 판단할 자리는 괄호입니다.",
+        "② 같은 층위의 앞 항은 monitor the air quality 이며, in the tunnel 은 수식어입니다.",
+        "③ 두 항 앞에 놓인 것은 조동사 will 이고, 뒤 항 앞에는 새 조동사가 없습니다."
+      ],
+      "prompt": "④ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "reporting — 센서가 스스로 보고하는 능동이므로 -ing형입니다",
+        "reports — 뒤 항은 새로운 시제 동사이므로 현재형이어야 합니다",
+        "report — will 이 공유되므로 앞 항 monitor 와 나란한 원형입니다"
+      ],
+      "answer": 2,
+      "explain": "will 이 and 뒤 항까지 공유되므로 괄호는 조동사 뒤 원형 자리입니다. 능·수동은 이 판단의 축이 아니며, reports 는 주어 The new sensors 와 수도 맞지 않고 will 과도 겹칩니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 두 항 사이에 절이 끼어 짝이 멀어지는 경우",
+      "body": "앞 항과 뒤 항 사이에 관계절이나 삽입구가 들어오면, 학생의 눈은 바로 앞에 보이는 동사와 짝을 맞추려 합니다. 끼어든 절을 통째로 괄호에 넣고, 그 밖에서 공유되는 조동사를 다시 찾아야 합니다.",
+      "example": {
+        "en": "The city will fund a new library, which residents have long requested, and **hire** additional staff next year.",
+        "ko": "그 시는 주민들이 오랫동안 요청해 온 새 도서관에 예산을 대고 내년에 추가 인력을 채용할 것입니다.",
+        "note": "끼어든 관계절(which residents have long requested)을 걷어내면 and 의 짝은 fund 와 hire 입니다. 공유되는 것은 have 가 아니라 조동사 will 이므로 원형 hire 가 옳습니다."
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u05-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The committee will review the proposals submitted last month and {{blank}} its decision at the next meeting.",
+          "options": ["announcing", "announce", "to announce"],
+          "answer": 1,
+          "translation": "그 위원회는 지난달 제출된 제안서들을 검토하고 다음 회의에서 결정을 발표할 것입니다.",
+          "explanation": "and 의 짝은 조동사 will 뒤의 원형 review 이고, will 이 뒤 항까지 공유됩니다. submitted 는 the proposals 를 꾸미는 분사이므로 병렬 축 밖에 있습니다. 조동사 뒤에는 원형이 오므로 announce 가 옳습니다.",
+          "trapTags": ["shared-aux", "coord-pair", "long-gap"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 announce 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "and 앞뒤의 동사는 언제나 똑같은 형태여야 하므로, 앞의 review 를 그대로 따라 원형을 썼습니다.",
+          "correct": false,
+          "feedback": "and 앞뒤가 늘 같은 형태인 것은 아닙니다. 무엇이 공유되는지(여기서는 조동사 will)를 먼저 확정해야 뒤 항의 형태가 정해집니다."
+        },
+        {
+          "text": "조동사 will 이 and 뒤 항까지 공유되므로, 앞 항 review 와 나란한 원형이 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 공유되는 요소가 무엇인지 확정하는 것이 형태를 결정합니다."
+        },
+        {
+          "text": "review 와 announce 모두 위원회가 하는 동작이므로 형태를 같게 맞추었습니다.",
+          "correct": false,
+          "feedback": "의미가 비슷하다고 형태가 같아지는 것은 아닙니다. 공유되는 요소가 조동사 will 임을 확인했기에 원형이 된 것입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "자원봉사자들은 새들의 울음소리를 녹음하고 그 파일을 공유 데이터베이스에 올릴 수 있습니다.",
+      "answer": [
+        "Volunteers",
+        "can record",
+        "the birds' calls",
+        "and",
+        "upload",
+        "the files to a shared database"
+      ],
+      "tiles": [
+        "Volunteers",
+        "can record",
+        "the birds' calls",
+        "and",
+        "upload",
+        "the files to a shared database",
+        "uploading"
+      ],
+      "explanation": "조동사 can 이 and 뒤 항까지 공유되므로 뒤 항은 원형 upload 입니다. uploading 은 조동사 뒤에 올 수 없어 쓰이지 않습니다.",
+      "title": "직접 만들어 봅니다"
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The research team [[1:has gathered]] weather data from remote islands for a decade and [[2:published]] its findings every spring, but this year it will [[3:release]] the raw files online and [[4:allowing]] anyone to download them.",
+      "answer": 4,
+      "correction": "allow",
+      "rationales": [
+        "주절의 완료형 본동사입니다. 핵 주어 The research team 이 단수이므로 has 가 옳습니다.",
+        "첫 번째 and 가 잇는 앞 항은 gathered 이고 완료의 has 가 공유되므로, 뒤 항도 과거분사 published 여야 합니다.",
+        "but 뒤 절의 조동사 will 바로 뒤이므로 원형 release 가 옳습니다.",
+        "두 번째 and 가 잇는 앞 항은 release 이고 조동사 will 이 공유됩니다. -ing형은 조동사 뒤에 올 수 없으므로 원형 allow 로 고칩니다."
+      ],
+      "ko": "그 연구팀은 10년간 외딴섬에서 기상 자료를 수집해 왔고 매년 봄 결과를 발표해 왔지만, 올해는 원자료를 온라인에 공개하고 누구나 내려받을 수 있게 할 것입니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 병렬이 깨진 문장을 주고 틀린 한 곳을 찾아 고쳐 쓰게 합니다. 공유되는 요소가 무엇인지 밝히고 그 뒤에 올 형태로 바꿔야 만점입니다.",
+          "sample": {
+            "en": "The city plans to widen the road and building a new bridge over the river.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "building → build (또는 to build). to widen 의 to 가 and 뒤 항까지 공유되므로 원형이 옳으며, to 를 반복해 to build 로 써도 같은 구조입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 등위접속사 뒤 항에 밑줄을 긋고 형태를 묻습니다. 밑줄 앞에 새 조동사가 없다면 앞에서 공유되는 요소를 찾아 그 뒤 형태와 대조해야 합니다.",
+          "sample": {
+            "en": "Coastal cities can build higher walls against storm surges or [[u:relocating]] critical facilities inland.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "relocate — 조동사 can 이 or 뒤 항까지 공유되므로 build 와 나란한 원형이어야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Cities have begun to rethink how they handle heavy rain. [[u:Engineers can widen the old drainage tunnels or replace them with wider pipes, but neither option is cheap.]] Some planners therefore turn to green roofs, which absorb rainwater before it ever reaches the street. The cheapest measure is often the one that prevents a flood rather than the one that repairs the damage.",
+      "instruction": "밑줄 친 문장에서 or 가 잇는 두 항과, 그 앞에서 공유되는 요소를 찾으십시오.",
+      "found": "or 가 잇는 두 항은 widen the old drainage tunnels 와 replace them with wider pipes 이며, 그 앞의 조동사 can 이 두 항에 공유됩니다. 그래서 두 동사가 모두 원형입니다. 뒤의 but 이하는 주어와 동사를 새로 갖춘 별개의 절이므로 병렬 축이 아닙니다.",
+      "gist": "도시가 폭우에 대응하는 여러 방법과 그 비용을 다룬 글입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "병렬 저울의 심판관",
+      "intro": "이 저울은 좌우가 어긋난 문장을 절대 통과시키지 않습니다. 뒤 항이 무엇을 빌려 쓰는지 짚지 못하면 저울은 매번 기웁니다. 네 번의 판정으로 저울을 수평으로 맞추십시오.",
+      "questions": [
+        {
+          "prompt": "Drivers must slow down near schools and ( yield / yielding ) to pedestrians.",
+          "options": ["yield", "yielding"],
+          "answer": 0,
+          "why": "조동사 must 가 and 뒤 항까지 공유되므로 slow 와 나란한 원형 yield 가 옳습니다."
+        },
+        {
+          "prompt": "The old bridge has been repainted and ( reopened / reopening ) to traffic this month.",
+          "options": ["reopened", "reopening"],
+          "answer": 0,
+          "why": "완료·수동의 has been 이 공유됩니다. repainted 와 나란한 과거분사 reopened 가 옳습니다."
+        },
+        {
+          "prompt": "The startup plans to cut its costs and ( expanding / expand ) into new markets.",
+          "options": ["expanding", "expand"],
+          "answer": 1,
+          "why": "to cut 의 to 가 and 뒤 항까지 공유되므로 원형 expand 가 옳습니다. -ing형은 to 뒤에 올 수 없습니다."
+        },
+        {
+          "prompt": "Doctors can prescribe the drug freely but ( monitoring / must monitor ) its effects closely.",
+          "options": ["monitoring", "must monitor"],
+          "answer": 1,
+          "why": "but 뒤 항이 자기 조동사 must 를 가지므로 공유가 아니라 조동사구 두 개의 병렬입니다. monitoring 은 어느 조동사에도 걸리지 못합니다."
+        }
+      ],
+      "winText": "저울이 수평으로 멈췄습니다. 무엇이 공유되는지 먼저 짚는 눈 — 그것이 등위접속사 뒤 항의 형태를 결정하는 유일한 저울추이고, 방금 당신 손에 들어왔습니다.",
+      "loseText": "저울이 다시 기울었습니다. 네 문항이 물은 것은 하나였습니다 — \"뒤 항 앞에 새 조동사가 있는가, 없는가.\" 공유 요소를 먼저 확정하는 4단계를 다시 확인하고 오면 저울은 그대로 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "and·or·but 을 보면 먼저 같은 층위의 ___ 을 찾고, 두 항 앞에서 공유되는 ___ 를 확정한 뒤, 그 요소 바로 뒤에 올 수 있는 ___ 로 맞춥니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "조동사·완료의 have·수동과 진행의 be·to부정사의 to 는 등위접속사 뒤 항까지 공유될 수 있습니다.",
+        "공유되는 요소가 뒤 항의 형태를 결정합니다. 조동사와 to 뒤에는 원형, 완료·수동의 뒤에는 과거분사, 진행의 뒤에는 -ing형이 옵니다.",
+        "짝은 옆 단어가 아니라 같은 층위의 덩어리입니다. 사이에 낀 수식어·관계절은 괄호로 걷어냅니다.",
+        "뒤 항이 자기 조동사를 따로 가지면 공유가 아니라 동사구 두 개의 병렬입니다."
+      ],
+      "keySentence": {
+        "en": "Volunteers can record the birds' calls and **upload** the files to a shared database.",
+        "ko": "자원봉사자들은 새들의 울음소리를 녹음하고 그 파일을 공유 데이터베이스에 올릴 수 있습니다.",
+        "note": "and 뒤의 upload 는 조동사 can 을 공유하는 두 번째 항이므로 원형입니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u05-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The app allows users to track their sleep and {{blank}} their daily activity.",
+          "options": ["record", "recording"],
+          "answer": 0,
+          "translation": "그 앱은 사용자가 수면을 추적하고 일상 활동을 기록할 수 있게 해 줍니다.",
+          "explanation": "to track 의 to 가 and 뒤 항까지 공유되므로, track 과 나란한 원형 record 가 옳습니다. recording 은 to 뒤에 올 수 없어 병렬이 깨집니다.",
+          "trapTags": ["shared-to", "coord-pair"]
+        },
+        {
+          "id": "u05-c3-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Applicants must submit the form by Friday and [[u:attach]] two letters of recommendation.",
+          "isCorrect": true,
+          "translation": "지원자는 금요일까지 서류를 제출하고 추천서 두 통을 첨부해야 합니다.",
+          "explanation": "조동사 must 가 and 뒤 항까지 공유됩니다. 뒤 항 앞에 새 조동사가 없으므로 submit 과 나란한 원형 attach 가 옳으며, 이 문장은 병렬을 지키고 있습니다.",
+          "trapTags": ["shared-aux", "coord-pair"]
+        },
+        {
+          "id": "u05-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The government may raise the tax on fuel or, as several economists suggest, {{blank}} subsidies for public transport.",
+          "options": ["to expand", "expanding", "expand"],
+          "answer": 2,
+          "translation": "정부는 연료세를 인상하거나, 여러 경제학자가 제안하듯이, 대중교통 보조금을 확대할 수 있습니다.",
+          "explanation": "삽입절(as several economists suggest)을 걷어내면 or 의 짝은 raise 와 빈칸입니다. 조동사 may 가 뒤 항까지 공유되므로 원형 expand 가 옳습니다. to expand 는 조동사 뒤에 올 수 없습니다.",
+          "trapTags": ["shared-aux", "coord-pair", "long-gap"]
+        }
+      ]
+    }
+  ]
+}

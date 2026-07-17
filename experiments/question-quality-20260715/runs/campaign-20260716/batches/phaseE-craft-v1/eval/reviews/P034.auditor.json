@@ -1,0 +1,55 @@
+{
+  "pid": "P034",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사절을 이끄는 접속사 that의 적절성 판정(관계대명사/what/의문사와의 구분).",
+      "temptingBecause": "뒤 절의 완전성 판단을 못 하는 학생은 what/which 등으로 고쳐야 한다고 오인할 수 있다. 또 that절 안에 삽입구 'living about 400,000 years ago'가 끼어 주어-동사 거리가 멀어 완전한 절 여부 판정이 흐려진다.",
+      "decisiveFlaw": "'the common ancestor... may have already been using...'는 결여 성분 없는 완전한 절이고 동사 suggests의 목적어 역할을 하므로 접속사 that이 정확하다. 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "의문문에서 조동사 did 뒤의 본동사 형태(동사원형).",
+      "temptingBecause": "주어 the Neanderthal toolkit이 3인칭 단수여서 shows/showed 등 활용형이 필요하다고 착각할 수 있다.",
+      "decisiveFlaw": "조동사 did가 이미 시제·수를 담당하므로 본동사는 동사원형 show가 정확하다. 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "전치사 for의 목적어로 쓰인 동명사 형태.",
+      "temptingBecause": "'mutations for retaining'의 for를 목적 부사로 오인해 to retain 또는 retain으로 고쳐야 한다고 볼 수 있다.",
+      "decisiveFlaw": "전치사 for의 목적어 자리이므로 동명사 retaining이 정확하다(retaining lactose digestion이 목적어구를 취함). 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "명사(a genetic change)를 뒤에서 수식하는 분사의 태 결정 — 뒤따르는 목적어(evolution) 유무로 능동(현재분사) vs 수동(과거분사)을 판정.",
+      "temptingBecause": "주어부 'The appeal to a genetic change driving evolution'가 길고 주동사 gets가 멀리 있어, driven/driving을 문장의 정동사로 오인하거나 수식 관계를 놓치기 쉽다. 과거분사 driven이 명사 앞뒤 어디서든 흔히 수식어로 쓰이는 것처럼 보인다.",
+      "decisiveFlaw": "분사 뒤에 목적어 evolution을 직접 취하므로 능동 의미의 현재분사 driving이어야 한다. 과거분사 driven(수동)은 목적어를 직접 취할 수 없어(‘by evolution’ 등 행위자 표지도 없음) 비문이다. 따라서 이것이 어법상 틀린 곳이며 선언된 정답(D)과 일치한다."
+    },
+    {
+      "label": "(E)",
+      "intent": "부사와 형용사의 구분 — 동사 수식 자리의 품사 판정.",
+      "temptingBecause": "형용사 backward로 고쳐야 한다고 오인할 수 있다(형/부 혼동).",
+      "decisiveFlaw": "‘get something backwards’(거꾸로 이해하다) 구문에서 동사 gets를 수식하는 부사 backwards가 정확하다. 오류 아님."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": true,
+  "grade": "A",
+  "notes": "V1: 렌더 지문은 원지문과 대비해 (D) 지점만 의도적으로 driving→driven 으로 변형(source-correct→displayed-wrong 최소대립쌍)했고 나머지 어절·문장부호·라벨(A~E)이 선지·markedExpressions와 정확히 일치. 접합 파손·중복·누락·오탈자 없음. V2: 각 밑줄 독립 검증 결과 (A)완전한 명사절 접속사, (B)did 뒤 원형, (C)전치사 for 뒤 동명사, (E)동사 수식 부사로 모두 적법하고, (D)만 목적어 evolution을 직접 취하는 자리에 과거분사가 와 비문 → 유일 정답 확정. V3: 정답 교정문(driving evolution)과 지문·발문 모두 자연스럽고, 오류 선지 driven은 유형 의도대로 명확히 비문. V4: (D)해설이 to의 목적어 'a genetic change' 수식 분사, 목적어 유무에 따른 능동 현재분사 필요를 정확히 기술하고, (A)(B)(C)(E) 오답 해설도 실제 통사 구조와 정확히 대응(오분석·환각·용어오류 없음). V5: 정답 라벨(D)·선지·해설·markedExpressions(isError/errorExpression driven/correction driving)·keyPoints 모두 동기화. 공예: 목적어 유무로 분사 태를 가르는 정전 포인트(C1 4), 5개 밑줄이 명사절 that/의문문 원형/전치사+동명사/분사 태/부사 vs 형용사로 각기 다른 오개념을 겨냥(C2 4), 긴 주어부·정동사 gets 원거리로 구조 독해를 요구하나 driven+목적어 패턴이 숙련 학생에겐 비교적 빨리 드러남(C3 3, C5 3), 메타 누출·불필요 힌트 없음(C4 4), 해설이 짧고 정확하며 핵심 함정(목적어→능동분사)을 명료히 분리(C6 4). 합계 22, 모든 V 통과, 모든 C≥3 → A. KILLER §C 조건: 최소대립쌍·교정 시 원문 복원(driving)·명확한 문법 판단(대안분석 가능한 valency/가정법 아님)·5밑줄 전부 설명 가능·구조 독해 요구(철자/비단어/단순 수일치 아님)·동일 point의 쉬운 디코이 없음 → 모두 충족(killerConditionsMet=true)."
+}

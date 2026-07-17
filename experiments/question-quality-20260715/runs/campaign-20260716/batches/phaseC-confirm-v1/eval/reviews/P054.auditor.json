@@ -1,0 +1,55 @@
+{
+  "pid": "P054",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사절 접속사 that (관계대명사와의 구분). 'suggests'의 목적어절을 이끄는 접속사.",
+      "temptingBecause": "학생이 that을 관계대명사로 오인하거나 which/생략 가능 여부를 고민할 수 있다.",
+      "decisiveFlaw": "정답 아님. suggests는 that 명사절을 목적어로 취하고, 뒤에 S(the common ancestor)+V(may have been using)+O(language)의 완전한 절이 이어지므로 접속사 that이 올바르다."
+    },
+    {
+      "label": "(B)",
+      "intent": "분사 형태 판정 — 주어를 부가 설명하는 능동 현재분사(축약 관계절).",
+      "temptingBecause": "'lived'(정동사)나 'which lived'가 맞지 않나 하는 의심을 유발한다.",
+      "decisiveFlaw": "정답 아님. the common ancestor가 능동적으로 '생존했던' 관계이므로 현재분사 living이 맞다. 콤마로 삽입된 분사구는 정동사가 아니어야 한다."
+    },
+    {
+      "label": "(C)",
+      "intent": "조동사 do-support 후 동사원형 — 직접의문문에서 did 도치 뒤 원형.",
+      "temptingBecause": "'the Neanderthal toolkit show'만 보면 단수주어 수일치로 'shows/showed'가 필요해 보일 수 있다.",
+      "decisiveFlaw": "정답 아님. did가 이미 시제·수를 담당하므로 뒤에는 원형 show가 어법상 옳다."
+    },
+    {
+      "label": "(D)",
+      "intent": "대명사 지칭·재귀대명사 구분 — 주어와 다른 대상을 가리키는 일반 대명사.",
+      "temptingBecause": "성급한 독해로 them이 주어 genes를 지칭한다고 보면 themselves가 필요해 보이는 함정.",
+      "decisiveFlaw": "정답 아님. them은 복수 명사 'new habits'를 지칭하며 주어 genes와 다른 대상이므로 재귀대명사가 아닌 일반 대명사 them이 맞다."
+    },
+    {
+      "label": "(E)",
+      "intent": "정·준동사 판정 — 수식구(to a genetic change driving evolution)를 사이에 둔 진짜 주어(The appeal, 단수)의 술어 동사 필요성.",
+      "temptingBecause": "긴 주어 뒤에 도치되듯 놓인 getting, 수식구 내부의 또 다른 분사 driving, 그리고 'get X backwards' 관용어가 겹쳐 의도된 구조처럼 보인다. 콜론 앞을 명사구 표제로 착각할 여지도 있다.",
+      "decisiveFlaw": "정답(오류). 콜론 앞 절 'The appeal ... getting ... backwards'에 정동사가 없다. 현재분사 getting은 본동사가 될 수 없어 문장이 파편이 된다. 단수 주어 The appeal에 일치하는 정동사 gets로 고쳐야 하며, 교정하면 정확히 원문이 된다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": true,
+  "grade": "A",
+  "notes": "GRAMMAR_ERROR, 요청 난이도 KILLER. 렌더 지문은 원지문에서 (E) gets→getting 최소대립쌍 변형 하나만 가하며 나머지 4개 밑줄은 원문 그대로다. 정답 (E)는 유일: 콜론 앞 주절이 정동사를 잃어 파편이 되는 것을 수식구를 관통해 읽어야 하는 구조적 판단이다. (A)(B)(C)(D)는 각각 명사절 접속사/능동 분사/do-support 원형/대명사 지칭이라는 서로 다른 오개념을 겨냥하고 모두 어법상 옳다. 5개 밑줄 모두 point·why tempting·why correct/incorrect 해설을 갖추며 해설의 통사 분석은 실제 문장과 정확히 일치한다(V4 통과). KILLER §C 조건 전부 충족(최소대립쌍·명확한 문법판단·5밑줄 설명·구조 판독 요구·동일 point 쉬운 디코이 없음). 등급 A(모든 V 통과, 모든 C≥3, 합 23), beautiful KILLER 해당. 미세: markedExpressions에서 (C)와 (E)가 pointCode 'a'를 공유하나 실제로 do-support vs 정동사 필요성이라는 다른 하위판단이라 학생 노출 모순 아님(비게이팅 minor). C3은 '본동사 스캔'이라는 신뢰성 높은 발견 휴리스틱과 (D) 외 강한 오답 함정이 다소 약한 점을 반영해 3으로 보수 채점."
+}

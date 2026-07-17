@@ -1,0 +1,35 @@
+{
+  "pid": "P061",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'had conceptualized ..., and was attempting to market ...' — and가 과거완료절과 과거진행절을 병렬 연결. 14세 시점에 진행 중이던 행위를 과거진행으로 표현한 것으로 시제·상·병렬 모두 성립. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'He was issued nine U.S. patents' — 수여동사 issue의 간접목적어 수동태(dative passive)로 직접목적어 'nine U.S. patents'가 잔류 목적어로 남는 표준 구문. 능동 'The USPTO issued him nine patents'의 정상적 수동 변형. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the first invention that he successfully sold to ...' — 관계절 내 동사 sold를 수식하는 부사 자리로 부사형 successfully가 정확. 어순(주어와 동사 사이 위치)도 자연스러움. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'In the 1920s, Friedman beginning his education in real estate.' — 문장에 정형동사가 없어 fragment. 분사구문·독립분사구문 해석은 주절이 존재해야 성립하는데 이 문장은 마침표로 끝나 주절이 없음. 축약 관계절로 볼 구조도 없음. began이어야 함. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'with six of his nine U.S. patents being issued then' — with + NP + 분사 부대상황 구문. patents는 issue의 대상이므로 수동 분사 being issued가 정확하며 then과의 시점 정합도 성립. 정문."
+    }
+  ],
+  "note": "정형동사 부재(fragment)를 묻는 전형적 어법 문항. (D) 외 선지는 모두 형식적으로 증명 가능한 정문 — 특히 (B)는 수여동사 수동태의 잔류 목적어, (E)는 with 분사구문으로 대안 해석 검토 결과 정문 확정. 복수 정답 여지 없음."
+}

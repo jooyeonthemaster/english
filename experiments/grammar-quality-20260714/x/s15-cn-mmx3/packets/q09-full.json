@@ -1,0 +1,175 @@
+{
+  "passageId": "ebsi_go1_20191120-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 155
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-too-long-hard"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=c  (C):dec=g  (D):ANS=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 172,
+        "relPos": 0.201,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 410,
+        "relPos": 0.48,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 515,
+        "relPos": 0.602,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 556,
+        "relPos": 0.65,
+        "sentenceIndex": 8,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 655,
+        "relPos": 0.766,
+        "sentenceIndex": 9,
+        "found": true
+      }
+    ],
+    "sentenceCount": 13,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.766,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a meal. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\"",
+  "question": {
+    "direction": "밑줄 친 부분 중, 어법상 옳지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "They are often found strolling in large groups toward the edge of the water in search of food.",
+        "isError": false,
+        "errorExpression": "They are often found to stroll in large groups toward the edge of the water in search of food.",
+        "surroundingText": "They are often found strolling in large groups toward the edge of the water in search of food.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "The penguins' solution is to play the waiting game.",
+        "isError": false,
+        "errorExpression": "The penguins' solution is playing the waiting game.",
+        "surroundingText": "The penguins' solution is to play the waiting game.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "until one of them gives up and jumps in.",
+        "isError": false,
+        "errorExpression": "until one of them gives up and jumps on.",
+        "surroundingText": "until one of them gives up and jumps in.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "The moment that occurs, the rest of the penguins watch with anticipation to see what happens next.",
+        "isError": true,
+        "errorExpression": "The moment occurs, the rest of the penguins watch with anticipation to see what happens next.",
+        "surroundingText": "The moment occurs, the rest of the penguins watch with anticipation to see what happens next.",
+        "pointCode": "d",
+        "correction": "The moment that occurs, the rest of the penguins watch with anticipation to see what happens next."
+      },
+      {
+        "label": "(E)",
+        "expression": "If the pioneer survives, everyone else will follow suit.",
+        "isError": false,
+        "errorExpression": "If the pioneer survives, everyone else will follow the suit.",
+        "surroundingText": "If the pioneer survives, everyone else will follow suit.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "They are often found strolling in large groups toward the edge of the water in search of food."
+      },
+      {
+        "label": "(B)",
+        "text": "The penguins' solution is to play the waiting game."
+      },
+      {
+        "label": "(C)",
+        "text": "until one of them gives up and jumps in."
+      },
+      {
+        "label": "(D)",
+        "text": "The moment occurs, the rest of the penguins watch with anticipation to see what happens next."
+      },
+      {
+        "label": "(E)",
+        "text": "If the pioneer survives, everyone else will follow suit."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "‘be found + 현재분사’ 구문(being-passive 또는 능동 분사 구문)은 ‘~하는 것으로 알려져 있다/발견된다’는 의미로 쓰이는 완전한 관용 표현입니다. ‘to부정사’나 다른 형태로 바꿀 수 없습니다. 동사 stroll은 자동사이지만 ‘~하는 것이 발견되다/관찰되다’란 의미상 분사 구문이 적절합니다. 따라서 어법상 옳습니다.",
+      "(B)": "‘주어 + be + to부정사’는 ‘~할 예정이다/하는 것이 …이다(명사적 용법)’로 쓰이는 표준 구문입니다. ‘The solution is to play …’에서 to부정사구 ‘to play the waiting game’이 보어 역할을 하므로 어법상 완벽히 옳습니다.",
+      "(C)": "‘jumps in’은 맥락상 물(icy-cold water) 속으로 뛰어들어다는 의미로 쓰인 완전한 구문 표현입니다. ‘in’ 전치사는 ‘~ 속으로/안으로’의 방향 부사적 의미를 가지며 관용적으로 쓰이는 표현이므로 따로 바꿀 수 없습니다. 어법상 옳은 표현입니다.",
+      "(E)": "‘follow suit’는 ‘(앞선 것을) 따라하다/뒤따르다’란 의미의 완전한 숙어(idiomatic phrase)로 ‘suit’ 앞에 관사 the를 넣지 않습니다. 관사를 붙이면 ‘양복을 따라 입다’처럼 어색한 의미가 되므로 비문이 됩니다. 따라서 원문의 ‘follow suit’ 형태가 어법상 옳습니다."
+    },
+    "explanation": "(D) \"The moment occurs, the rest of the penguins watch with anticipation to see what happens next.\"는 어법상 틀린 표현이며 \"The moment that occurs, the rest of the penguins watch with anticipation to see what happens next.\"로 고쳐야 한다. 정답은 (D)입니다. 해설은 다음과 같습니다. ‘The moment (that) …’ 구문에서 ‘the moment’은 ‘~하자마자/~하는 순간’이라는 의미의 시간 부사절을引导하는 접속사적 용법으로 쓰입니다. 이때 뒤에 오는 절은 완전한 절이어야 하므로 ‘the moment (that) 주어 + 동사’ 형태가 와야 합니다. 따라서 원문처럼 ‘The moment that occurs’(that절이 완전한 절을 구성)인 것이 올바른 표현이며, ‘that’ 없이 ‘The moment occurs’처럼 쓰면 ‘그 순간이 발생한다’(선행사가 절이 아닌 명사 ‘moment’)라는 어색한 의미로 변질되어 어법상 비문이 됩니다. ‘The moment + that + 주어 + 동사’ 구문은 ‘the instant, the minute, the moment’ 등 시간 명사가 접속사적으로 쓰일 때 관형사 대신 that/whichever/as 등을 두어 대명사 지시 관계을 만든 구문이며, 대명사 지시 관계에서에는 주어와 동사가 모두 와야 하는 완전한 절이 들어가야 합니다. 원문에서 ‘The moment that occurs, the rest …’처럼 ‘that절(the pioneer가 점프하는 순간) +, + 주절’ 형태가 자연스러운 영어 구문입니다. 따라서 (D)가 정답입니다.",
+    "keyPoints": [
+      "‘The moment (that) 주어 + 동사, …’ 구문에서 that절은 완전한 절이어야 함",
+      "the moment, the instant, the minute 등은 접속사적 용법으로 시간 부사절을 만들며, 뒤에 완전한 절이 와야 함",
+      "‘be found + 현재분사’ 구문은 ‘~하는 것으로 발견되다/알려지다’란 의미의 관용적 분사 구문",
+      "‘주어 + be + to부정사’ 구문에서 to부정사는 명사적 보어 역할",
+      "‘follow suit’, ‘jump in’ 등은 전치사/관사를 바꿀 수 없는 관용적 숙어 표현"
+    ],
+    "tags": [
+      "수능",
+      "어법",
+      "킬러",
+      "the moment 구문",
+      "분사 구문",
+      "to부정사",
+      "관용 표현",
+      "킬러"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. __(A) They are often found strolling in large groups toward the edge of the water in search of food.__ Yet danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a meal. What is an Adélie to do? __(B) The penguins' solution is to play the waiting game.__ They wait and wait and wait by the edge of the water __(C) until one of them gives up and jumps in.__ __(D) The moment occurs, the rest of the penguins watch with anticipation to see what happens next.__ __(E) If the pioneer survives, everyone else will follow suit.__ If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\""
+  }
+}

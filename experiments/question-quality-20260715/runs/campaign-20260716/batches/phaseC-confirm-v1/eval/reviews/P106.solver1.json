@@ -1,0 +1,35 @@
+{
+  "pid": "P106",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'formulated rules'는 첫 문장에서 technical/book knowledge의 정의로 제시된 어휘. 빈칸 문장은 practical knowledge(습관으로 축적된 기술 레퍼토리)에 관한 것이므로 '전적으로 명시적 규칙에 의존하며'는 지문의 이분법(technical vs. practical)을 정면으로 위반한다. 첫 문장 어휘를 그대로 재활용한 표면 매칭 미끼로, 훑어 읽은 수험생에게 가장 강한 유혹이지만 'on the other hand' 대조 구조를 잡으면 즉시 배제된다."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "직전 문장 'she isn't thinking more; she is thinking less'의 직접 환언. 습관으로 기술을 축적하면 의도적(deliberate) 인지 개입 없이(=자동으로) 수행 가능한 과제 수가 늘어난다는 논리로 완벽 정합. 'deliberately learned'(기술 지식)와의 어휘 대비도 성립. 문법 결합도 'perform, bypassing ~' 분사구문(방식 수식)으로 자연스럽다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'고조된 정신적 노력을 유발하며'는 'thinking less'와 정반대. 전문가는 생각을 덜 하는 것이지 더 하는 것이 아니므로 논리 역전으로 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "시간 순서 미끼. 'built up a repertoire of skills through habit and has THEREBY extended'는 습관을 통해 touch/feel(신체적 직관)이 이미 형성된 결과로 과제 수가 확장되었음을 뜻한다. '신체적 직관을 발달시키기 전에'는 인과·시간 관계를 역전시킨다. 문법 결합('perform before -ing')은 성립하나 의미가 지문과 모순."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "신체 은유(touch, feel)는 실천적 지식을 서술하기 위한 언어적 수단으로 언급될 뿐, '은유를 현실에서 분리한다'는 내용이나 그 필요성은 지문에 전혀 없다. 지문 소재를 왜곡 재조합한 무관 선지."
+    }
+  ],
+  "note": "정답이 ②로 유일하게 좁혀지는 깨끗한 빈칸 문항. 빈칸 직전 문장(thinking less)과 지문 전체의 이분법(technical=deliberate rules vs. practical=habit/intuition)이 이중으로 ②를 지지한다. ①은 첫 문장 어휘 재활용 표면 미끼, ④는 인과 역전 미끼로 오답 매력도가 적절히 설계되어 있다. 문법 결합상 모든 선지가 빈칸에 삽입 가능하므로(분사구문/전치사구/부사절) 순수하게 의미 판별 문항으로 기능한다."
+}

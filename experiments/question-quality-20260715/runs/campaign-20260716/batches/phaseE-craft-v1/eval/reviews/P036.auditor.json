@@ -1,0 +1,75 @@
+{
+  "pid": "P036",
+  "blindAnswer": "(B)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-keypoint-taxonomy",
+      "severity": "minor",
+      "evidence": "keyPoints[0]은 (B)를 '정·준동사' 범주로 태깅했으나 실제 포인트는 only 부사구 문두 이동에 따른 주어-정동사 도치(어순) 판단이다. 설명 본문('주어와 정동사 도치 어순')은 정확하므로 범주 라벨만 어긋난 사소한 문제."
+    },
+    {
+      "code": "V4-minor-terminology-inconsistency",
+      "severity": "minor",
+      "evidence": "keyPoints[2]는 (E)를 '분사능수동'으로 태깅했으나 오답 해설은 같은 표현을 '동명사(전치사 on의 목적어, pupils는 의미상 주어)'로 분석한다. 두 분석 모두 성립 가능하고 능동 판단 근거(목적어 factual information 존재)는 동일하므로 사실 오류는 아니나 용어가 상호 불일치."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "be동사 뒤 주격 보어 자리의 형용사 vs 부사 판단",
+      "temptingBecause": "동사 뒤 위치라 부사형 identically를 기대하는 학생이 형용사를 오류로 의심할 수 있다",
+      "decisiveFlaw": "are의 주격 보어 자리이므로 형용사 identical이 정확하다. 오류가 아니다. 다만 매력도가 낮은 약한 디코이."
+    },
+    {
+      "label": "(B)",
+      "intent": "only+부사구 문두 강조 시 의무적 주어-(조)동사 도치 — 정답 오류",
+      "temptingBecause": "pointed out that 목적어절 내부라 평서문 어순 we are가 표면적으로 자연스러워 보이고, only가 부정어가 아니어서 도치 규칙 적용을 놓치기 쉽다",
+      "decisiveFlaw": "only through music이 절 앞으로 나간 only 부사류이므로 도치가 의무적이다. 'we are'는 비문이고 'are we'로 교정하면 정확히 원지문이 된다(source-correct → displayed-wrong 최소대립쌍 성립)."
+    },
+    {
+      "label": "(C)",
+      "intent": "전치사+관계대명사 뒤 완전한 절 판단 및 구(행위) 선행사 수용",
+      "temptingBecause": "선행사가 명사가 아닌 동명사구(making it present here and now)라 관계사 성립을 의심하기 쉽고, without which 자체가 낯선 형태",
+      "decisiveFlaw": "뒤따르는 절 it will not be music at all이 완전하므로 전치사+관계대명사가 맞고, 행위 선행사를 받는 비제한 관계절로 문법적이다. 오류가 아니다."
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 관계대명사 that의 적격성(선행사 유무, what/that 혼동)",
+      "temptingBecause": "that vs what, that vs 접속사 혼동을 노린다",
+      "decisiveFlaw": "선행사 activities가 존재하고 that이 will involve의 주어이므로 정확하다. 오류가 아니다. 즉시 소거 가능한 비교적 약한 디코이."
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사 목적어 자리 동명사(의미상 주어 pupils)의 능동/수동 판단",
+      "temptingBecause": "pupils 뒤의 -ing이라 pupils를 수식하는 분사로 읽고 absorbed(수동)를 기대하거나, on의 목적어를 pupils로 오인할 수 있다",
+      "decisiveFlaw": "목적어 factual information을 직접 취하므로 능동 absorbing이 정확하다(분사로 분석해도 동일 결론). 오류가 아니다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "keypoint-category-mismatch",
+      "severity": "minor",
+      "evidence": "keyPoints의 (B) 범주 태그 '정·준동사'는 도치(어순) 포인트와 어긋나고, (E) 태그 '분사능수동'은 해설의 동명사 분석과 용어가 불일치한다. 해설 본문 자체의 통사 분석(목적어 that절, only 부사구 도치, are we 교정형, (C) 완전절 판단, (E) 능동 근거)은 모두 실제 문장과 일치한다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문 대비 (B) 'are we'→'we are' 의도 변형 외 손상·누락·중복·고아 문장부호 없음, (A)~(E) 라벨-선지 일치. V2: 5개 밑줄 독립 검증 결과 오류는 (B) 유일 — only 부사구 문두 이동 후 도치 누락은 명확한 문법 판단이며 대안 분석으로 정당화 불가; (A)(C)(D)(E)는 모두 적법. V3: 지문·발문 문법적, 오답 선지는 모두 적법하고 정답 선지만 비문(유형 의도와 정확히 일치). V4: 해설의 구조 분석(pointed out의 목적어 that절, only+부사구 도치 의무, be동사 도치, 교정형 are we) 정확, 4개 오답 해설 모두 실제 선지 내용과 대응. keyPoints 범주 태그 2건의 사소한 용어 불일치만 존재. V5: 정답 라벨·선지·해설·markedExpressions(isError는 (B)만 true, correction 'are we')·keyPoints 상호 모순 없음. 공예: 정전급 도치 포인트를 실제 기출계 지문에서 최소대립쌍으로 구현(C1=3). 디코이가 형용사 보어/관계사 2종/동명사 능동으로 상이한 오개념을 겨냥하나 (A)(D)는 매력도가 낮은 준필러이고 (C)(D)가 같은 관계사 대범주 공유(C2=3). (C)(E)는 실제 판단을 요구하지만 정답이 단일 규칙 적용으로 갈림(C3=3). 메타 누출 없고 근거 충분·정답 필연적이나 두 단어 밑줄 'we are'가 어순 포인트임을 다소 예고(C4=3). INTERMEDIATE 요청에 정확히 부합 — 비단어·인접 수일치류 즉발 단서 없이 정전 규칙 1단계 적용(C5=4). 해설은 짧고 정확하며 규칙-교정형 분리가 선명하나 keyPoint 태그 불일치로 감점(C6=3). 합계 19: 모든 V 통과, 최저 C=3, 21 미만이므로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20221123-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-filler-spanx1",
+    "grammar-pointcode-span-mismatchx1",
+    "grammar-keypoint-choice-mismatchx1"
+  ],
+  "layout": "(A):dec=c  (B):dec=b  (C):dec=k  (D):ANS=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 227,
+        "relPos": 0.295,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 355,
+        "relPos": 0.461,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 532,
+        "relPos": 0.691,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 572,
+        "relPos": 0.743,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 753,
+        "relPos": 0.978,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.978,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "promoting",
+        "isError": false,
+        "errorExpression": "promoting",
+        "surroundingText": "to have a successful business blog promoting a product, they have to stay",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "who",
+        "isError": false,
+        "errorExpression": "who",
+        "surroundingText": "promoting your product, then who is going to want to read",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "to keep",
+        "isError": false,
+        "errorExpression": "to keep",
+        "surroundingText": "people have a reason to keep coming back. Only by",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "can you",
+        "isError": true,
+        "correction": "can you",
+        "errorExpression": "you can",
+        "surroundingText": "Only by doing this can you create an interested audience that you",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "be interested",
+        "isError": false,
+        "errorExpression": "be interested",
+        "surroundingText": "write about things that your audience will be interested in.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "promoting"
+      },
+      {
+        "label": "(B)",
+        "text": "who"
+      },
+      {
+        "label": "(C)",
+        "text": "to keep"
+      },
+      {
+        "label": "(D)",
+        "text": "you can"
+      },
+      {
+        "label": "(E)",
+        "text": "be interested"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 명사구 'a successful business blog'를 뒤에서 수식하며 'a product'라는 목적어를 직접 수반하므로, 능동의 의미를 나타내는 현재분사 'promoting'은 어법상 옳습니다.",
+      "(C)": "이 자리는 앞의 명사 'a reason'을 수식하여 '계속해서 ~할 이유'라는 뜻을 나타내는 to부정사의 형용사적 용법 'to keep'이므로 어법상 옳습니다.",
+      "(B)": "이 자리는 이어지는 의문문의 주어 역할을 수행하며 사람을 가리키는 의문대명사 'who'가 쓰여 어법상 옳습니다.",
+      "(E)": "이 자리는 수식받는 선행사 'things'에 대해 독자층(your audience)이 흥미 등을 느끼게 되는 수동의 감정 상태를 표현하므로, 수동태형 'be interested'가 어법상 옳습니다."
+    },
+    "explanation": "문장의 앞부분에 제한의 의미를 가진 부사구 'Only by doing this'가 강조를 위해 문법적으로 문두로 이동한 구조입니다. 영어에서 'Only + 부사구'가 문장 맨 앞으로 나갈 때는 주절의 주어와 조동사가 도치되어 '조동사 + 주어 + 동사의 형태'를 취해야 합니다. 따라서 평서문의 어순처럼 쓰인 'you can'은 문장 구조상 틀린 표현이며, 도치된 형태인 'can you'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 수일치 및 도치 — 제한적 부사구 Only의 문두 이동에 따른 조동사 도치 어순 판정",
+      "(A) 분사능수동 — 목적어를 수반하여 명사를 수식하는 현재분사의 형태 판정",
+      "(E) 능수동태 — 주어의 감정 반응을 나타내는 수동의 형태 판정"
+    ],
+    "tags": [
+      "어법",
+      "도치구문",
+      "현재분사",
+      "수동태",
+      "to부정사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog __(A) promoting__ a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then __(B) who__ is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason __(C) to keep__ coming back. Only by doing this __(D) you can__ create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will __(E) be interested__ in.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

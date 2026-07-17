@@ -1,0 +1,35 @@
+{
+  "pid": "P104",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법적으로는 명령문 VP로 seam에 결합 가능하나 논리 부적합. 지문에서 'free time'은 미루기를 유발하는 착각(feel as if you've got \"free time\")으로만 등장하며, 자유 시간을 잔업 처리에 활용하라는 주장은 어디에도 없다. 또한 첫 문장(휴식은 에너지 회복에 필요)과 충돌 — 모든 자유 시간을 과업으로 채우라는 처방은 지문의 '전략적 휴식 옹호' 논지와 어긋난다. 'instead'의 대조 대상(무계획 휴식)과도 정합적 연결이 약하다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "형식적 모순. 지문 1문장 'Breaks are necessary...'와 3문장에서 scheduled breaks를 'strategic, re-energizing methods'로 명시적으로 옹호하므로, 계획된 휴식까지 제거하라는 처방은 전제와 직접 모순된다. 논리적으로 반박 완료."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'spontaneous(즉흥적)' 휴식 = unscheduled breaks, 즉 지문이 명시적으로 규탄한 행위 자체다. 'instead'가 기각된 선행 행위를 그대로 재진술하게 되어 담화적으로 비정합. 논지 전체와 정면 모순."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "명령문 VP로 seam 완전 결합. 'premeditated downtime schedule'은 2문장의 'scheduled breaks at appropriate times'의 정확한 환언이고, 'instead'는 직전에 규탄된 '무계획 휴식(unscheduled breaks)' 대신이라는 대조를 정확히 실현한다. scheduled(궤도 유지) vs unscheduled(탈선·미루기) 이분법에서 유일하게 도출되는 결론. 채택."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법적으로는 성립하나 논리 변수 불일치. 지문의 논증 변수는 휴식의 '계획성/시점'이지 '지속 시간(duration)'이 아니며, 휴식 길이는 지문 어디에서도 다뤄지지 않는다. 'instead'의 대조 대상과도 연결 불가(무계획 휴식 대신 '충분히 긴 휴식'은 비논리적 대립)."
+    }
+  ],
+  "note": "다섯 선지 모두 명령문 VP로 문법 seam은 통과하므로 판별은 순수 논리 검증으로 수행됨. 지문은 scheduled vs unscheduled 휴식의 명확한 이분 대조 구조이고 마지막 문장의 'instead'가 무계획 휴식과의 대조를 강제하므로 ④가 유일 정답. ②③은 전제와 직접 모순, ①⑤는 지문에 근거 없는 변수(자유시간 활용, 휴식 길이) 도입. 복수정답 소지 없음."
+}

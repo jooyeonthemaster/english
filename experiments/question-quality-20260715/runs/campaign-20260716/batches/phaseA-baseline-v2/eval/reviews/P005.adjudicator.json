@@ -1,0 +1,38 @@
+{
+  "pid": "P005",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "독립 재검증 결과 (B)만이 어법상 틀렸고 나머지 네 밑줄은 모두 정문이므로 정답 유일성(V2) 성립. 주의: 분쟁 요약에 전달된 '선언된 정답=③'은 오케스트레이터의 라벨 매핑 아티팩트로 보이며, 권위 소스인 full/P005.md 는 선언 정답을 (B)로 명시하고 markedExpressions 도 (B)만 isError=true 로 표기한다. 즉 파일 기준으로 선언 정답=(B), 솔버1=(B), 솔버2=(B)로 실제 불일치는 존재하지 않는다. (B) 'listen'은 후행 술어 'can be time-consuming'의 주어 자리를 채워야 하는데 동사원형은 주어가 될 수 없고, 명령문 대안 해석은 'can be time-consuming'이 주어 없는 고아 술어가 되어 붕괴하며, 명사 용법('a listen')도 한정사 부재와 후행 술어 연결 불가로 배제된다. 'listening'으로 교정하면 원지문이 정확히 복원된다. 감사자가 지적한 V4 실패(오답 해설 (C)의 러시아어 토큰 'настоящее' 혼입)는 학생 노출 텍스트 손상으로 출하 차단 사유가 맞으나, 정답 유일성(V2)과는 무관한 별개 결함이다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "unnerving 이 unnerved 여야 한다는(또는 어법상 결함이 있다는) 잠재적 대안 판정",
+      "verdict": "불성립 — 정문",
+      "evidence": "주어는 'Recording an interview'(불안을 유발하는 행위)이고 경험자는 'to an interviewee'로 별도 표시된다. 감정 유발 주체를 서술하므로 현재분사형 형용사 unnerving 이 필수이며, unnerved 로 바꾸면 행위 자체가 불안을 느낀다는 비문이 된다. 비교 대상 'than seeing someone scribbling...'과의 동명사구 병렬도 정합."
+    },
+    {
+      "label": "(B)",
+      "claim": "선언된 정답 — 주어 자리의 동사원형 listen 이 어법상 틀렸다는 판정 (명령문 등 대안 해석으로 구제 가능한지가 쟁점)",
+      "verdict": "성립 — 유일한 어법 오류로 확정",
+      "evidence": "'If the interview lasts a while, listen to it again to select the quotes you wish to use can be time-consuming'에서 'listen ... use' 전체가 술어 'can be time-consuming'의 주어여야 하나 동사원형은 주어 명사구의 핵이 될 수 없다. 대안 해석 전수 검토: (i) 명령문 독해 시 'can be time-consuming'이 주어를 잃어 문장 붕괴, (ii) 명사 listen('give it a listen')은 한정사 필요 + 후행 to-부정사 수식 구조와 불합치로 배제, (iii) 도치·생략 구문으로도 구제 불가. 동명사 listening 교정 시 원지문과 완전 일치. 두 솔버의 판정은 과잉이 아니라 정확."
+    },
+    {
+      "label": "(C)",
+      "claim": "'work to a deadline' 연어의 생소함 또는 진행형 working 에 대한 잠재적 의심",
+      "verdict": "불성립 — 정문",
+      "evidence": "'if you are working to a tight deadline'은 주어 you + be동사 + 현재분사의 표준 현재진행형이며, 'work to a (tight) deadline'은 특히 영국 영어에서 확립된 표준 연어다. 어법 결함 없음. (감사자가 지적한 오답 해설의 러시아어 토큰 'настоящее' 혼입은 해설 텍스트 손상 문제이지 이 선지의 문법성 판정과는 무관.)"
+    },
+    {
+      "label": "(D)",
+      "claim": "수동태 transcribed 가 의미상 어색하다(이미 받아 적은 것을 또 전사?)는 잠재적 대안 판정",
+      "verdict": "불성립 — 정문",
+      "evidence": "'so that they can be transcribed easily afterwards'에서 they = the key answers(복수 일치 성립)이며, 타동사 transcribe 의 대상이므로 조동사 수동태 can be transcribed 가 옳다. 능동 transcribe 로 쓰면 목적어 결여로 비문이 되어 수동이 오히려 필수. 의미상으로도 현장 메모를 나중에 정서한다는 독해로 자연스러워 어법·논리 결함 없음."
+    },
+    {
+      "label": "(E)",
+      "claim": "비교급 강조 부사 much 의 적법성에 대한 잠재적 의심",
+      "verdict": "불성립 — 정문",
+      "evidence": "'makes the material much easier and quicker to handle afterwards'에서 much 는 병렬 비교급 easier and quicker 를 모두 강조하는 표준 비교급 강화사(very 는 불가). tough-구문에서 the material 이 handle 의 목적어 공백을 채우는 구조도 성립. 어법 결함 없음."
+    }
+  ]
+}

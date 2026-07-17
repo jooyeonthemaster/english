@@ -1,0 +1,81 @@
+{
+  "pid": "P080",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-OPTION2-TIME-ADDED",
+      "severity": "minor",
+      "evidence": "오답 해설 2번이 '오후에 집중력을 잃는다는 것은'이라고 서술하나 선지 ②(lose their focus and energy entirely)에는 시간 표현이 없음. 빈칸 문맥상 '아침 이후'라는 추론은 가능하므로 치명적 오귀속은 아니지만, 선지에 없는 시간 한정어를 선지 내용처럼 서술함."
+    },
+    {
+      "code": "V4-MINOR-OPTION3-FLAW-MISLABEL",
+      "severity": "minor",
+      "evidence": "오답 해설 3번이 ③의 결함을 '과협소'로 규정하나 실제 결함은 대조의 축(생산성 고점 시간대)에서 휴식 빈도로의 화제 이탈(topic shift)임. 판정 결과(오답)는 맞으나 결함 명명이 부정확."
+    },
+    {
+      "code": "V4-MINOR-OPTION4-MUDDLED",
+      "severity": "minor",
+      "evidence": "오답 해설 4번 '일정 조정에 대한 언급은 과도한 확장이므로, 오후에 높은 성과를 낸다는 본래 의미를 왜곡한 논리적 비약'은 문장이 뒤엉켜 있음. ④가 scheduling 어휘를 재활용한 왜곡이라는 취지는 맞으나 인과 연결('~이므로')이 논리적으로 성립하지 않아 학생에게 혼란 여지."
+    },
+    {
+      "code": "V2-NOTE-ABSTRACTION-NARROWING",
+      "severity": "minor",
+      "evidence": "정답 ⑤ 'in the evening'은 원문 'later in the day'보다 좁은 표현(원문은 오후도 포함 가능). 빈칸 추론 유형의 통상 허용 범위 내 패러프레이즈로 판단해 V2 실패로는 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(다수파 아침형 패턴을 그대로 재진술)",
+      "temptingBecause": "morning/routine 어휘가 지문 전반의 '아침 에너지' 논의와 표면적으로 겹침",
+      "decisiveFlaw": "'differ'는 '대다수가 아침에 생산적'이라는 앞 절과의 대조를 요구하는데 ①은 그 다수파 특성을 반복하므로 대조가 성립하지 않음"
+    },
+    {
+      "label": "2",
+      "intent": "부정적 소재 연상(energy 어휘 재활용)",
+      "temptingBecause": "'energy level ebbs and flows'의 energy 어휘 반향으로 그럴듯해 보임",
+      "decisiveFlaw": "지문은 '다른 사람들'도 늦은 시간대에 생산성 고점에 도달한다고 하지, 집중력·에너지를 완전히 잃는다고 하지 않음. 생산성 프레임과 정면 충돌"
+    },
+    {
+      "label": "3",
+      "intent": "본문 어휘(breaks) 재활용형 화제 이탈",
+      "temptingBecause": "'Schedule intervals of productive time and breaks' 문장의 breaks를 그대로 되살려 표면 근거가 있어 보임",
+      "decisiveFlaw": "빈칸의 대조 축은 '생산성 고점 시간대'인데 ③은 휴식 빈도라는 다른 차원으로 이탈하여 'differ' 대조를 완성하지 못함"
+    },
+    {
+      "label": "4",
+      "intent": "scheduling 주제 과확장/왜곡",
+      "temptingBecause": "schedule 어휘가 지문에 반복 등장하여 표면적 연결이 있음",
+      "decisiveFlaw": "중요 과제 일정을 '거부'한다는 내용은 지문 어디에도 근거가 없고 조언적 어조와도 불일치. 즉시 소거 가능한 약한 디코이"
+    },
+    {
+      "label": "5",
+      "intent": "정답 — 원문 span 패러프레이즈",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 'hit their stride later in the day'를 'reach their peak performance in the evening'으로 의미 보존 패러프레이즈. 단 later in the day→evening으로 다소 협소화됨"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 2번: 선지에 없는 '오후에'라는 시간 한정어를 선지 내용처럼 첨가",
+    "오답 해설 3번: 결함 명칭 '과협소'가 실제 결함(화제 이탈)과 불일치",
+    "오답 해설 4번: 인과 접속('~이므로')이 성립하지 않는 뒤엉킨 문장",
+    "본 해설은 대조 전환·패러프레이즈 근거를 정확히 짚었으나 다소 장황"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과. 빈칸은 원문 span('hit their stride later in the day')을 깨끗하게 절제했고 정답 ⑤가 유일 정답임을 5개 선지 독립 검증으로 확인. 다만 공예 측면에서 ②·④가 즉시 소거되는 약한 디코이라 실질 경쟁 선지는 ①·③뿐이고(C3=2), 정답이 마지막 문장의 국소 대조('differ') 하나로 거의 결정되어 변별 깊이가 얕음. 해설도 핵심은 정확하나 오답 해설 2·3·4번에 명명 오류·첨가·비문형 문장이 있어 C6=2. 합계 16으로 B 기준(17 이상) 미달 → C 등급. 요청 난이도 INTERMEDIATE와의 정합 자체는 무난(C5=3). KILLER 아님이므로 killerConditionsMet=false. 재설계 권고: ②·④를 scope shift/half-truth형의 실질 매력 디코이로 교체하고 오답 해설 3문장을 재작성하면 B 이상 가능."
+}

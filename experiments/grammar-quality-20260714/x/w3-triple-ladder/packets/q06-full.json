@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20241015-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 135
+  },
+  "attempts": 8,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-obvious-adjacent-sv-agreement"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=c  (C):dec=b  (D):ANS=d  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 16,
+        "relPos": 0.019,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 160,
+        "relPos": 0.192,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 206,
+        "relPos": 0.247,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 357,
+        "relPos": 0.428,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 535,
+        "relPos": 0.641,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.641,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "making",
+        "isError": false,
+        "correction": "making",
+        "errorExpression": "making",
+        "surroundingText": "For many of us, making time for exercise is a continuing challenge.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "packed",
+        "isError": false,
+        "correction": "packed",
+        "errorExpression": "packed",
+        "surroundingText": "it often feels like there's no room in our packed schedules for a dedicated workout.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "But what if the workout came to you, right in the midst of your daily routine?",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "comes",
+        "isError": true,
+        "correction": "comes",
+        "errorExpression": "come",
+        "surroundingText": "That's where the beauty of integrating mini-exercises into household chores comes into play.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "viewing",
+        "isError": false,
+        "correction": "viewing",
+        "errorExpression": "viewing",
+        "surroundingText": "But rather than viewing chores as purely obligatory activities, why not seize these moments",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "making"
+      },
+      {
+        "label": "(B)",
+        "text": "packed"
+      },
+      {
+        "label": "(C)",
+        "text": "what"
+      },
+      {
+        "label": "(D)",
+        "text": "come"
+      },
+      {
+        "label": "(E)",
+        "text": "viewing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "문장의 주어 역할을 하는 동명사 'making'은 문법적으로 올바릅니다.",
+      "(B)": "명사 'schedules'를 수식하는 과거분사 'packed'는 수동의 의미를 지니며 적절하게 쓰였습니다.",
+      "(C)": "'what if ~' 구문에서 의문대명사 'what'은 자연스러운 표현으로 올바릅니다.",
+      "(E)": "전치사구 'rather than' 뒤에 이어지는 동명사 'viewing'은 올바른 형태입니다."
+    },
+    "explanation": "정답은 (D)입니다. 문장의 주어는 전치사구 'of integrating mini-exercises into household chores'의 수식을 받는 단수 명사 'the beauty'입니다. 따라서 정동사로는 복수 형태인 'come'이 아니라 단수 형태인 'comes'를 사용해야 합니다. (D) come을 comes로 고쳐야 합니다. 밑줄 바로 앞의 명사 'chores'에 맞추어 복수 동사를 쓰지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      "(D) 수일치 — 주어와 동사의 수일치 확인",
+      "(A) 동명사 주어 — 형태와 역할 파악",
+      "(B) 분사의 능수동 — 수식받는 명사와의 관계"
+    ],
+    "tags": [
+      "수일치",
+      "단수주어",
+      "어어법",
+      "영어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For many of us, __(A) making__ time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our __(B) packed__ schedules for a dedicated workout. But __(C) what__ if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores __(D) come__ into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than __(E) viewing__ chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health."
+  }
+}

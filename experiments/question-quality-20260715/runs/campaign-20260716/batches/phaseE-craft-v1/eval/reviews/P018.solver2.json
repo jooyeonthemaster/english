@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "The blank is an appositive defining the bodily metaphor 'a touch for doing some activity'. 'Perform a learned physical action with finely tuned bodily control' matches the metaphor exactly and coheres with every long-range cue: 'thinking less', 'repertoire of skills through habit', 'perform without conscious awareness'. The word 'learned' modifies the physical action (e.g., a practiced pitch), not the practical knowledge itself, so it does not clash with 'cannot be taught or learned' — that predicate targets the knowledge, not the action. Seam: 'an ability to perform...' is grammatical."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'Analyze the theoretical mechanics behind physical movements' is the definition of technical/book knowledge (explicit contrast class) and entails 'thinking more', directly contradicting 'she isn't thinking more; she is thinking less'. Grammatical at the seam but logically inverted."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'Memorize step-by-step formulated rules' lexically copies the passage's definition of technical knowledge ('formulated rules which are... deliberately learned'), the category explicitly opposed to practical knowledge. Contradiction by definition."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Decoy built from the final sentence ('passed along through shared experience'). Formally, the appositive must define 'a touch FOR DOING some activity' — an ability of performance, not of transmission. Additionally the passage states practical knowledge 'cannot be taught', so 'communicate intuitive feelings to others' as the content of 'touch' is incoherent with the passage's own axioms."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'Consciously observe one's own habits' contradicts the antithesis structure: the expert performs tasks 'without conscious awareness' and is 'thinking less'. Conscious self-monitoring is the negation of the described ability."
+    }
+  ],
+  "note": "All five options are grammatically well-formed infinitive complements of 'an ability to ___', so the item is decided purely on logical fit. Only option 1 satisfies the appositive constraint (defining 'touch' as skilled bodily performance) and the passage's antithesis (practical vs. technical, unconscious vs. conscious). The only arguable blemish is 'learned' in option 1 superficially echoing 'cannot be learned', but scope analysis (action vs. knowledge) dissolves the tension; no alternative label is defensible."
+}

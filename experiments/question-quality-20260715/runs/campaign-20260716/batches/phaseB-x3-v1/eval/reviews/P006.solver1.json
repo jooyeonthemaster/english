@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "매력적 오답 1순위. 'backup options'가 '변화에 대비'라는 인상을 주어 순간적으로 끌리지만, 지문은 대비책(contingency) 마련이 아니라 '변화의 확실성에 대한 심리적 기대'를 말한다. 결정적으로 'exclusively for unpredictable emergencies'는 직전 문장 'expect that a certain percentage of plans will change'(변화는 예측 가능한 필연)와 정면 충돌한다 — 지문의 요지는 변화가 '예측 불가한 비상사태'가 아니라 '예정된 필연'이라는 것. 또한 이 선지를 넣으면 'when it happens'의 it이 가리킬 선행 대상이 불명확해진다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'stick to some rigid work schedule'를 거부하고 flexibility over rigidity를 택하라는 지문 주제의 직접 반대. 즉시 소거 가능."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "직전 문장 'expect that a certain percentage of plans will change'의 재진술. 빈칸에 넣으면 'when it happens'의 it = plan disruption으로 지시가 깔끔하고, 'Here is one of those inevitabilities'의 inevitabilities가 'the certainty of plan disruptions'와 정확히 호응한다. 문법 결합(seam)도 조건절 동사구로 자연스럽다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "지문이 명시적으로 기각한 'rigid work schedule' 고수를 되풀이하는 반(反)주제 선지. 소거 용이."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "매력적 오답 2순위. 지문 도입의 'frustrated'와 목표인 'a more peaceful person'을 표면적으로 재활용해 훑어 읽은 수험생을 유인한다. 그러나 저자의 처방은 좌절의 '억압(suppress)'이 아니라 변화에 대한 '기대·수용'이며, 'superficial peace'라는 자기부정적 표현이 지문의 진정한 평화 추구와 모순된다. 또한 suppression은 'when it happens'로 받을 수 있는 사건이 아니어서 빈칸 뒤 문장과 논리 연결이 끊긴다."
+    }
+  ],
+  "note": "출처 성격상 Richard Carlson류 자기계발 지문. 빈칸 문장이 직전 문장의 패러프레이즈를 요구하는 전형적 구조로, ③이 유일 정답. ①·⑤가 의도된 매력 오답으로 기능하나 각각 'exclusively/unpredictable', 'suppress/superficial'이라는 결정적 결격 표지를 담고 있어 정밀 독해 시 방어 불가. 복수정답 시비 소지 없음."
+}

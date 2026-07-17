@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'master cutting-edge digital editing tools completely'는 seam(should be to + 동사원형) 결합은 정상이나, 직전 문장 'the goal ... should not be simply to utilize technology for its own sake'와 정면 충돌. 'not A. Rather B' 구조에서 B 자리에 A의 강화판(도구 숙달 그 자체)이 오게 되어 논리 붕괴. 첫 문장의 'editing digital material'을 되울리는 어휘 미끼로 첫 스캔에서 잠깐 눈이 가지만 대조 표지를 확인하는 순간 배제된다."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "지문의 핵심 정의문 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'의 패러프레이즈. 인식에 도전(→ originality)하고 사고·감정을 영구히 바꾸는 것(→ fresh inspiration and insight). 'not simply ... technology for its own sake. Rather, it should be to ~' 대조에서 기술 자체의 반대항인 '위대한 예술의 본질'을 채우는 유일한 선지. seam(to offer + 목적어 + 관계절)도 자연스럽다. 'originality'라는 단어 자체는 지문에 명시어가 없어 근거가 한 단계 느슨하지만, 'challenges our perceptions'가 새로움/독창을 함의하므로 옹호에 무리 없음."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "실전에서 가장 끌리는 매력적 오답 — 'Many critics ... lose our sense of what makes truly great art'만 읽으면 '전통 회귀' 결론으로 비약하기 쉽고 실제로 잠시 끌렸다. 그러나 'new technologies are nothing more than tools that can be used in the creative process'가 기술 사용 자체를 승인하므로, '현대적 표현보다 전통 방식을 보존'(preserve traditional methods over modern artistic expression)은 지문 입장(기술 배척이 아니라 기술의 도구화)과 어긋난다. 'over modern artistic expression'이 결정적 배제 근거."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'replicate the everyday reality without challenging normal views'는 위대한 예술의 정의 'challenges our perceptions'와 정반대(반의어 함정). 'challenging'이라는 어휘를 재사용해 표면 친숙함을 주지만 'without'이 의미를 뒤집는다. 유혹 강도 낮음, 즉시 배제."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "첫 문장 'share them with the world'와 'digital material'을 되울리는 어휘 미끼. 배포 효율 극대화는 '기술을 기술 자체를 위해 쓰는 것'의 다른 형태일 뿐이어서 'not A. Rather B' 구조상 B 자리에 올 수 없고, 위대한 예술의 본질(인식 도전·사고 변화)과도 무관. ①과 같은 계열의 표면어휘 미끼."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 빈칸 직전의 대조 담화 표지 'not simply A. Rather, B'가 명확하고, B의 내용은 세 번째 문장의 위대한 예술 정의에서 직접 도출되어 ②로 일의적 수렴. 매력적 오답은 ③(비판자 우려의 과잉 해석→전통 회귀 비약, 실제로 잠시 끌림)과 ①·⑤(어휘 되울림 미끼), ④는 정의의 정반대라 변별력 낮음. 모든 선지가 'to + 동사원형'으로 seam 결합에 문제가 없어 문법 단서로는 배제 불가한 순수 논리 문항. 복수 정답 소지 없음. 난이도 중상."
+}

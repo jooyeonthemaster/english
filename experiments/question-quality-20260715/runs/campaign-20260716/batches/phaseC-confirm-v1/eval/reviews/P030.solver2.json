@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "정답",
+      "reason": "doubt = 'doubt your ability to succeed'이므로 모든 경험(긍정·중립·부정)을 '자신의 능력 부족을 확증하는 증거'로 해석한다는 확증 편향 구조가 지문과 완전 정합. 'perceived'(주관적 지각)가 마지막 문장의 'objectively'와 정확한 대조축을 형성. see...as+NP 문법 결합도 자연스러움."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "'immense external pressure'는 지문의 'internal pressure'와 정면 모순이며, 'It's not the pressure to perform that creates your stress'가 압박 원인론 자체를 명시적으로 부정. 형식적 모순으로 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'objective measurement'는 doubt가 유발하는 주관적 왜곡(긍정 경험조차 부정적으로 봄)과 모순이고, 'actual irreversible failure'는 경험 자체가 실패가 아니라 해석이 왜곡되는 것이라는 지문 논지와 불일치. 마지막 문장이 objectivity를 doubt의 해독제로 놓아 대조 파괴."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "'normal and useful'은 internal pressure에 붙은 술어를 오배치한 표면 회수 미끼. 빈칸은 'more negatively and as ___' 병렬 안에 있어 부정적 극성이 요구되는데 긍정 평가라 극성 모순."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "self-doubt는 내부 판단인데 'judgment from others'는 외부 귀인. 지문에 타인의 평가에 대한 언급이 전혀 없음. 'do well socially/social worth'의 어휘만 표면적으로 회수한 미끼."
+    }
+  ],
+  "note": "빈칸은 see A as B 구문의 B(명사구) 자리로 다섯 선지 모두 문법 결합은 성립 — 판정은 순수 논리 적합성. 내적 압박(normal/useful) vs 자기 의심(스트레스 원인)의 대립과 perceived↔objectively 대조가 ①을 유일 정답으로 확정. 대안 해석 탐색 결과 ②~⑤는 각각 지문 명제와 직접 모순 또는 무근거 외부 귀인으로 옹호 불가. 단일 정답, 신뢰도 높음."
+}

@@ -1,0 +1,1101 @@
+{
+  "id": "b05-c2",
+  "unitId": "b05",
+  "order": 2,
+  "title": "인칭대명사와 지시대명사",
+  "oneLiner": "대명사의 형태는 자리(격)가 정하고, 수는 수식어를 걷어낸 핵 명사가 정합니다.",
+  "gradeStamp": {
+    "introduced": "초5",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 대명사(초·중 도입)",
+      "천일문 중등 GRAMMAR — 대명사의 격과 수 일치",
+      "천일문 고등 GRAMMAR — 비교 구문의 대용 대명사 that·those"
+    ]
+  },
+  "lenses": [
+    "L5",
+    "L1"
+  ],
+  "confusableWith": [
+    "b05-c1",
+    "b05-c3",
+    "b05-c4"
+  ],
+  "estimatedMinutes": 24,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The scientists compared the temperature of the ocean with that of the atmosphere.",
+        "The scientists compared the temperature of the ocean with those of the atmosphere."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 대명사 하나입니다. 이 레슨을 마치면 왜 that 이어야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "대명사의 격",
+      "question": "격이 대체 무엇입니까? 같은 '나'인데 왜 I·my·me 로 모양이 셋입니까?",
+      "plain": "격은 대명사가 문장에서 앉는 자리에 따라 갈아입는 형태입니다. 같은 '나'라도 주어 자리에서는 I, 목적어 자리에서는 me, 명사 앞에서는 my 가 됩니다.",
+      "analogy": "같은 학생이 교실에서는 교복을, 체육 시간에는 체육복을 입듯, 같은 사람을 가리키는 대명사도 앉는 자리가 바뀌면 옷을 갈아입습니다. 그 옷의 이름이 격입니다.",
+      "whyItMatters": "어법 문제는 'Daniel and I 인가 me 인가', 'that 인가 those 인가'처럼 자리와 수를 묻습니다. 격을 아는 학생은 밑줄을 본 순간 자리부터 확인하고, 모르는 학생은 어감으로 찍습니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "격 세 벌, 하나씩 정면으로",
+      "intro": "대명사가 갈아입는 세 벌의 옷을 한 항목씩 만납니다. 예문의 굵은 단어가 그 격입니다.",
+      "entries": [
+        {
+          "head": "주격 — 주어 자리의 옷",
+          "body": "문장의 주어 자리에 설 때의 형태입니다. I·you·he·she·it·we·they 가 주격입니다.",
+          "example": {
+            "en": "**They** rebuilt the old bridge after the flood.",
+            "ko": "그들은 홍수가 지난 뒤 그 낡은 다리를 다시 지었습니다.",
+            "note": "주어 자리이므로 주격 They 입니다."
+          }
+        },
+        {
+          "head": "목적격 — 목적어 자리의 옷",
+          "body": "동사나 전치사의 목적어 자리에 설 때의 형태입니다. me·you·him·her·it·us·them 이 목적격입니다.",
+          "example": {
+            "en": "The guide led **us** through the old castle.",
+            "ko": "안내인은 우리를 그 오래된 성 구석구석으로 안내했습니다.",
+            "note": "동사 led 의 목적어 자리이므로 목적격 us 입니다."
+          }
+        },
+        {
+          "head": "소유격 — 명사 앞에 붙는 옷",
+          "body": "'누구의 ~'라고 뒤의 명사를 한정하는 형태입니다. my·your·his·her·its·our·their 는 반드시 명사 앞에 섭니다.",
+          "example": {
+            "en": "The players folded **their** uniforms neatly.",
+            "ko": "선수들은 자기 유니폼을 가지런히 개켰습니다.",
+            "note": "뒤의 명사 uniforms 를 한정하므로 소유격 their 입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "'~에게' 자리도 목적격입니다",
+          "body": "수여동사 뒤 '~에게' 자리(간접목적어)는 뒤에 명사가 따라와도 목적격입니다. 소유격으로 착각하기 가장 쉬운 자리입니다.",
+          "example": {
+            "en": "The mentor offered **them** a second chance.",
+            "ko": "그 지도 교사는 그들에게 한 번 더 기회를 주었습니다.",
+            "note": "뒤에 a second chance 가 있어도 offered 의 '~에게' 자리이므로 목적격 them 입니다."
+          },
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "인칭대명사 격 변화표",
+      "columns": [
+        "뜻",
+        "주격",
+        "소유격",
+        "목적격"
+      ],
+      "rows": [
+        {
+          "cells": [
+            "나",
+            "I",
+            "my",
+            "me"
+          ]
+        },
+        {
+          "cells": [
+            "너·너희",
+            "you",
+            "your",
+            "you"
+          ]
+        },
+        {
+          "cells": [
+            "그",
+            "he",
+            "his",
+            "him"
+          ],
+          "example": {
+            "en": "The judges praised **him** for **his** honesty.",
+            "ko": "심사위원들은 그의 정직함에 대해 그를 칭찬했습니다.",
+            "note": "him 은 동사 praised 의 목적어 자리, his 는 명사 honesty 앞의 소유격입니다."
+          }
+        },
+        {
+          "cells": [
+            "그녀",
+            "she",
+            "her",
+            "her"
+          ],
+          "example": {
+            "en": "**She** thanked the nurse who helped **her**.",
+            "ko": "그녀는 자신을 도와준 간호사에게 감사했습니다.",
+            "note": "she 는 주격이고, 뒤의 her 는 helped 의 목적어 자리에 선 목적격입니다. 소유격도 her 이므로 자리로 구분합니다."
+          }
+        },
+        {
+          "cells": [
+            "그것",
+            "it",
+            "its",
+            "it"
+          ],
+          "example": {
+            "en": "The city is proud of **its** old harbor.",
+            "ko": "그 도시는 자신의 오래된 항구를 자랑스러워합니다.",
+            "note": "its 가 명사 harbor 를 한정하는 소유격입니다. 아포스트로피가 없습니다."
+          }
+        },
+        {
+          "cells": [
+            "우리",
+            "we",
+            "our",
+            "us"
+          ]
+        },
+        {
+          "cells": [
+            "그들",
+            "they",
+            "their",
+            "them"
+          ],
+          "example": {
+            "en": "The teacher handed **them** **their** essays.",
+            "ko": "선생님은 그들에게 그들의 소논문을 건네주었습니다.",
+            "note": "them 은 '~에게' 자리의 목적격이고, their 는 명사 essays 앞의 소유격입니다."
+          }
+        }
+      ],
+      "takeaway": "가장 헷갈리는 칸은 두 곳입니다. she 는 소유격과 목적격이 둘 다 her 이고, it 의 소유격 its 에는 아포스트로피가 없습니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "인칭대명사 격 변화표(주격–소유격–목적격)",
+      "why": "이 표가 입에 붙어 있지 않으면 문제를 풀 때마다 표를 새로 그리다 정작 문장 판단을 놓칩니다. I–my–me 처럼 세 박자로 즉시 나와야 격이 도구가 됩니다.",
+      "device": "'아이–마이–미, 유–유어–유'. 초등학교 때 가락처럼 흘려 외운 그 3박자가 사실 가장 빠른 무기였습니다. 주–소–목 순서로 손가락 세 개를 접으며 일곱 줄을 두 바퀴 소리 내어 돌리십시오.",
+      "items": [
+        {
+          "cue": "I (나)",
+          "answer": "I – my – me"
+        },
+        {
+          "cue": "you (너·너희)",
+          "answer": "you – your – you"
+        },
+        {
+          "cue": "he (그)",
+          "answer": "he – his – him"
+        },
+        {
+          "cue": "she (그녀)",
+          "answer": "she – her – her"
+        },
+        {
+          "cue": "it (그것)",
+          "answer": "it – its – it"
+        },
+        {
+          "cue": "we (우리)",
+          "answer": "we – our – us"
+        },
+        {
+          "cue": "they (그들)",
+          "answer": "they – their – them"
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "소유격 관문",
+      "mission": "소유격만 전부 고르십시오. 목적격과 가짜 소유격이 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "my",
+        "me",
+        "his",
+        "him",
+        "its",
+        "it's",
+        "our",
+        "us",
+        "their",
+        "them"
+      ],
+      "answers": [
+        "my",
+        "his",
+        "its",
+        "our",
+        "their"
+      ],
+      "passText": "다섯 벌의 소유격을 전부 가려냈습니다. 아포스트로피가 붙은 it's 를 걸러냈다면, 이 레슨 후반의 함정 하나를 미리 밟아 부순 셈입니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 소유격은 뒤에 명사를 데리고 다니는 옷입니다. 그리고 아포스트로피가 붙은 it's 는 소유격이 아니라 it is 의 축약형입니다."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "형태는 자리가 정합니다",
+      "rule": "인칭대명사의 형태는 뜻이 아니라 문장 속 자리가 정합니다. 주어 자리면 주격, 동사·전치사의 목적어 자리면 목적격, 뒤의 명사를 한정하면 소유격입니다.",
+      "examples": [
+        {
+          "en": "**She** studies medieval history, and the professor often praises **her** essays.",
+          "ko": "그녀는 중세사를 공부하며, 교수는 그녀의 소논문을 자주 칭찬합니다.",
+          "note": "She 는 주어 자리이므로 주격이고, her 는 뒤의 명사 essays 를 한정하므로 소유격입니다."
+        },
+        {
+          "en": "The lab hired two analysts, and the director thanked **them** for **their** data.",
+          "ko": "그 연구소는 분석가 두 명을 채용했고, 책임자는 자료에 대해 그들에게 감사했습니다.",
+          "note": "them 은 동사 thanked 의 목적어이므로 목적격이고, their 는 뒤의 명사 data 를 한정하므로 소유격입니다. 둘 다 앞 절의 two analysts 를 가리킵니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "대명사와 자리 연결하기",
+      "instruction": "왼쪽 대명사가 예문 속에서 서 있는 자리를 오른쪽에서 찾아 연결하십시오.",
+      "pairs": [
+        {
+          "a": "They rebuilt it",
+          "b": "주어 자리 — 주격",
+          "why": "문장의 주어 자리에 서므로 주격 They 를 씁니다."
+        },
+        {
+          "a": "led us inside",
+          "b": "동사의 목적어 자리 — 목적격",
+          "why": "동사 led 의 목적어 자리이므로 목적격 us 를 씁니다."
+        },
+        {
+          "a": "his honesty",
+          "b": "명사를 한정하는 자리 — 소유격",
+          "why": "뒤의 명사 honesty 를 한정하므로 소유격 his 입니다."
+        },
+        {
+          "a": "offered them a chance",
+          "b": "'~에게' 자리 — 목적격",
+          "why": "수여동사의 간접목적어 자리이므로 뒤에 명사가 와도 목적격 them 을 씁니다."
+        },
+        {
+          "a": "its harbor",
+          "b": "it 의 소유격 — it's(=it is)와 구별",
+          "why": "명사 harbor 를 한정하는 소유격이며, it's(=it is)와 구별해야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 대명사가 어느 자리에 들어가는 형태인지 분류하십시오.",
+      "buckets": [
+        {
+          "id": "sub",
+          "label": "주격 — 주어 자리"
+        },
+        {
+          "id": "obj",
+          "label": "목적격 — 목적어 자리"
+        },
+        {
+          "id": "poss",
+          "label": "소유격 — 명사를 한정하는 자리"
+        }
+      ],
+      "chips": [
+        {
+          "text": "he",
+          "bucketId": "sub",
+          "why": "주어 자리에 쓰는 주격입니다."
+        },
+        {
+          "text": "him",
+          "bucketId": "obj",
+          "why": "동사·전치사의 목적어 자리에 쓰는 목적격입니다."
+        },
+        {
+          "text": "we",
+          "bucketId": "sub",
+          "why": "주어 자리에 쓰는 주격입니다."
+        },
+        {
+          "text": "us",
+          "bucketId": "obj",
+          "why": "동사·전치사의 목적어 자리에 쓰는 목적격입니다."
+        },
+        {
+          "text": "they",
+          "bucketId": "sub",
+          "why": "주어 자리에 쓰는 주격입니다."
+        },
+        {
+          "text": "them",
+          "bucketId": "obj",
+          "why": "동사·전치사의 목적어 자리에 쓰는 목적격입니다."
+        },
+        {
+          "text": "their",
+          "bucketId": "poss",
+          "why": "뒤의 명사를 한정하는 소유격입니다."
+        },
+        {
+          "text": "its",
+          "bucketId": "poss",
+          "why": "뒤의 명사를 한정하는 소유격이며 아포스트로피를 쓰지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b05-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "My sister and I share a room, and our parents often help {{blank}} with the housework.",
+          "options": [
+            "us",
+            "we"
+          ],
+          "answer": 0,
+          "translation": "언니와 저는 방을 함께 쓰고, 부모님은 집안일에서 저희를 자주 도와주십니다.",
+          "explanation": "빈칸은 동사 help 의 목적어 자리입니다. 목적어 자리에는 목적격 us 를 씁니다.",
+          "trapTags": [
+            "pronoun-case"
+          ]
+        },
+        {
+          "id": "b05-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The professor invited Daniel and [[u:I]] to the research seminar.",
+          "isCorrect": false,
+          "correction": "me",
+          "translation": "그 교수는 대니얼과 저를 연구 세미나에 초대했습니다.",
+          "explanation": "밑줄은 동사 invited 의 목적어 자리입니다. 다른 명사와 and 로 이어져 있어도 자리는 그대로 목적어이므로 목적격 me 가 옳습니다.",
+          "trapTags": [
+            "pronoun-case",
+            "coordination"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "title": "수는 핵 명사가 정합니다",
+      "rule": "대명사는 자기가 가리키는 명사와 수(단수·복수)가 같아야 합니다. 가리키는 명사는 수식어 안이 아니라 수식어를 걷어낸 자리에 있습니다.",
+      "examples": [
+        {
+          "en": "The **students** in the front row raised **their** hands at the same time.",
+          "ko": "앞줄에 앉은 그 학생들은 동시에 손을 들었습니다.",
+          "note": "their 가 가리키는 명사는 students 입니다. 복수이므로 소유격도 복수형 their 입니다."
+        },
+        {
+          "en": "The **report** on the two accidents finally lost **its** credibility.",
+          "ko": "두 건의 사고를 다룬 그 보고서는 결국 신뢰를 잃었습니다.",
+          "note": "its 가 가리키는 명사는 report(단수)입니다. 가까이 있는 accidents 는 전치사구 안의 명사이므로 후보가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "대명사가 가리키는 명사 찾기",
+      "tokens": [
+        {
+          "t": "The report",
+          "role": "S"
+        },
+        {
+          "t": "on the two accidents",
+          "role": "M"
+        },
+        {
+          "t": "finally",
+          "role": "M"
+        },
+        {
+          "t": "lost",
+          "role": "V"
+        },
+        {
+          "t": "its credibility",
+          "role": "O"
+        }
+      ],
+      "ko": "두 건의 사고를 다룬 그 보고서는 결국 신뢰를 잃었습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": [
+            "M"
+          ],
+          "note": "on the two accidents 는 앞의 명사를 꾸미는 전치사구이고 finally 는 부사입니다. 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 명사를 확인합니다",
+          "roles": [
+            "S"
+          ],
+          "note": "수식어를 걷어내면 남는 핵 명사는 The report 입니다. 이 핵 명사는 앞 레슨에서 '핵 주어'라 부른 것과 같은, 수식어를 걷어낸 뒤 남는 핵심 명사이며, 다만 대명사가 가리키는 명사는 늘 주어인 것은 아니므로 여기서는 핵 명사라 부릅니다. accidents 는 괄호 안에 있었으므로 대명사가 가리킬 후보가 아닙니다."
+        },
+        {
+          "label": "③ 본동사를 확인합니다",
+          "roles": [
+            "V"
+          ],
+          "note": "시제를 가진 동사는 lost 하나이며, 그 뒤가 목적어 자리입니다."
+        },
+        {
+          "label": "④ 대명사를 핵 명사에 맞춥니다",
+          "roles": [
+            "O"
+          ],
+          "note": "목적어 its credibility 의 its 는 The report 를 가리킵니다. 단수이므로 its 가 옳고, their 를 쓰면 accidents 에 이끌린 오류입니다."
+        }
+      ],
+      "conclusion": "대명사의 수는 가까운 명사가 아니라 수식어를 걷어낸 뒤 남는 핵 명사가 결정합니다."
+    },
+    {
+      "id": "b13",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "소유격 사냥",
+      "instruction": "이 문장에서 소유격 대명사를 전부 찾아 탭하십시오. 바로 뒤에 명사를 데리고 다니는 형태가 소유격입니다.",
+      "hitLabel": "소유격 대명사",
+      "tokens": [
+        {
+          "t": "The",
+          "hit": false
+        },
+        {
+          "t": "players",
+          "hit": false
+        },
+        {
+          "t": "wore",
+          "hit": false
+        },
+        {
+          "t": "their",
+          "hit": true
+        },
+        {
+          "t": "jerseys",
+          "hit": false
+        },
+        {
+          "t": "and",
+          "hit": false
+        },
+        {
+          "t": "the",
+          "hit": false
+        },
+        {
+          "t": "coach",
+          "hit": false
+        },
+        {
+          "t": "raised",
+          "hit": false
+        },
+        {
+          "t": "his",
+          "hit": true
+        },
+        {
+          "t": "voice",
+          "hit": false
+        },
+        {
+          "t": "while",
+          "hit": false
+        },
+        {
+          "t": "its",
+          "hit": true
+        },
+        {
+          "t": "echo",
+          "hit": false
+        },
+        {
+          "t": "filled",
+          "hit": false
+        },
+        {
+          "t": "our",
+          "hit": true
+        },
+        {
+          "t": "stadium",
+          "hit": false
+        }
+      ],
+      "ko": "선수들은 자기 유니폼을 입었고 코치는 목소리를 높였으며 그 메아리가 우리 경기장을 가득 채웠습니다.",
+      "explain": "their(→jerseys)·his(→voice)·its(→echo)·our(→stadium)는 모두 바로 뒤의 명사를 한정하므로 소유격입니다. players·coach·voice·echo·stadium 은 명사이지만 대명사가 아니고, wore·raised·filled 는 동사입니다."
+    },
+    {
+      "id": "b14",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The manager praised the interns and offered ( they / them / their ) full-time positions.",
+      "givenSteps": [
+        "① 대명사의 자리를 봅니다 — 괄호는 동사 offered 바로 뒤에 있습니다.",
+        "② 그 자리가 무엇인지 확인합니다 — offered 는 '~에게 …을 주다'로 목적어를 두 개 부르는 동사이고, 괄호는 그 첫 번째 목적어 자리입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 어떤 형태가 들어가야 합니까?",
+      "options": [
+        "them — 동사의 목적어 자리이므로 목적격입니다",
+        "they — 앞의 the interns 가 주어처럼 느껴지므로 주격입니다",
+        "their — 뒤에 명사 positions 가 있으므로 소유격입니다"
+      ],
+      "answer": 0,
+      "explain": "괄호는 offered 의 간접목적어('~에게') 자리이므로 목적격 them 이 옳습니다. the interns 는 앞 절의 목적어일 뿐 주어가 아니므로 they 는 근거가 없습니다. 간접목적어는 뒤에 직접목적어 명사가 오더라도 소유격이 되지 않습니다. their 를 넣으면 their full-time positions 가 하나의 명사 덩어리가 되어 '누구에게' 제안했는지가 사라집니다."
+    },
+    {
+      "id": "b15",
+      "type": "RULE",
+      "tier": 2,
+      "title": "되풀이는 that·those 가 맡습니다",
+      "rule": "앞에 나온 명사를 되풀이하되 대상만 바꿔 가리킬 때는 that(단수)·those(복수)를 쓰고, 그 뒤에는 of구 같은 수식어가 붙습니다.",
+      "examples": [
+        {
+          "en": "The **population** of Seoul is far larger than **that** of Busan.",
+          "ko": "서울의 인구는 부산의 인구보다 훨씬 많습니다.",
+          "note": "that 은 the population 을 되풀이합니다. 되풀이되는 명사가 단수이므로 that 입니다."
+        },
+        {
+          "en": "The **wings** of an eagle are longer than **those** of a hawk.",
+          "ko": "독수리의 날개는 매의 날개보다 더 깁니다.",
+          "note": "되풀이되는 명사가 the wings(복수)이므로 those 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "NOTEBOOK",
+      "tier": 2,
+      "title": "가리킴 노트 — that·those 사용 설명서",
+      "intro": "비교 구문의 대용 표현을 항목별로 정리합니다. 항목 하나가 판단 기준 하나입니다.",
+      "entries": [
+        {
+          "head": "that of ~ — 단수 명사의 되풀이",
+          "body": "앞의 단수 명사를 같은 말 그대로 되풀이하면서 대상만 바꿉니다. 수는 of 뒤의 명사가 아니라 되풀이되는 명사가 정합니다.",
+          "example": {
+            "en": "The soil of the valley is richer than **that** of the hills.",
+            "ko": "골짜기의 토양은 언덕의 토양보다 비옥합니다.",
+            "note": "that 은 the soil(단수)을 되풀이합니다. the hills 에 이끌려 those 를 쓰면 오류입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "those of ~ — 복수 명사의 되풀이",
+          "body": "되풀이되는 명사가 복수이면 those 를 씁니다. 판단 순서는 언제나 '되풀이되는 핵 명사부터'입니다.",
+          "example": {
+            "en": "The habits of city birds differ from **those** of forest birds.",
+            "ko": "도시 새들의 습성은 숲 새들의 습성과 다릅니다.",
+            "note": "되풀이되는 명사가 the habits(복수)이므로 those 입니다."
+          }
+        },
+        {
+          "head": "those who — '~하는 사람들'",
+          "body": "앞에 되풀이할 명사 없이 '~하는 사람들'을 뜻하는 독립 용법입니다. 항상 those 이며, that who 라는 형태는 없습니다.",
+          "example": {
+            "en": "**Those** who ask questions learn faster.",
+            "ko": "질문하는 사람들이 더 빨리 배웁니다.",
+            "note": "되풀이 용법이 아니라 사람들을 가리키는 독립 용법입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "it·they 는 이 자리에 서지 못합니다",
+          "body": "it·they 는 앞에 나온 바로 그 대상을 가리킬 뿐, of구 같은 수식어를 달지 못합니다. 수식어가 붙는 되풀이 자리는 that·those 의 몫입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "격과 수가 다른 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. 형태가 아니라 격과 수를 보십시오.",
+      "rounds": [
+        {
+          "words": [
+            "them",
+            "my",
+            "his",
+            "their"
+          ],
+          "odd": 0,
+          "why": "them 만 목적어 자리에 서는 목적격입니다. my·his·their 는 뒤의 명사를 한정하는 소유격입니다."
+        },
+        {
+          "words": [
+            "that",
+            "those",
+            "it",
+            "this"
+          ],
+          "odd": 1,
+          "why": "those 만 복수를 가리킵니다. that·it·this 는 단수를 가리킵니다."
+        },
+        {
+          "words": [
+            "I",
+            "us",
+            "we",
+            "he"
+          ],
+          "odd": 1,
+          "why": "us 만 목적격입니다. I·we·he 는 주어 자리에 서는 주격입니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "it·they 와 that·those",
+      "columns": [
+        "it / they",
+        "that / those"
+      ],
+      "rows": [
+        {
+          "criterion": "가리키는 대상",
+          "a": "앞에 나온 바로 그 대상(동일물)",
+          "b": "앞에 나온 명사와 같은 종류의 다른 대상"
+        },
+        {
+          "criterion": "뒤에 of구 같은 수식어를 달 수 있는가",
+          "a": "달 수 없습니다",
+          "b": "달 수 있습니다"
+        },
+        {
+          "criterion": "수 구분",
+          "a": "it(단수) / they(복수)",
+          "b": "that(단수) / those(복수)"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The museum bought a Roman coin and displayed **it** in the main hall.",
+          "ko": "그 박물관은 로마 시대의 동전을 사서 그것을 중앙 홀에 전시했습니다.",
+          "note": "it 은 앞에 나온 바로 그 동전을 가리킵니다. 다른 동전이 아닙니다."
+        },
+        {
+          "en": "The coins of ancient Rome are heavier than **those** of ancient Greece.",
+          "ko": "고대 로마의 동전은 고대 그리스의 동전보다 더 무겁습니다.",
+          "note": "those 는 the coins 라는 말을 되풀이하되 대상은 그리스의 동전입니다. 이 자리에 they 는 쓸 수 없습니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "대명사를 판단하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 친 대명사가 어떤 자리에 있는지 봅니다. 주어 자리면 주격, 목적어 자리면 목적격, 뒤의 명사를 한정하면 소유격입니다. 단 수여동사의 '~에게' 자리(간접목적어)는 뒤에 명사가 와도 목적격입니다.",
+          "applyNote": "than 다음의 대명사는 뒤에 of the crew 가 붙어 있고 비교되는 명사 덩어리의 자리에 있습니다."
+        },
+        {
+          "text": "그 대명사가 가리키는 명사를 앞에서 찾습니다. 전치사구·관계절 안에 있는 명사는 후보에서 지웁니다.",
+          "applyNote": "of the astronauts 는 전치사구이므로 지웁니다. 남는 핵 명사는 The daily routine 입니다."
+        },
+        {
+          "text": "찾은 핵 명사의 수에 대명사를 맞춥니다. 단수면 that·it·its, 복수면 those·they·their 입니다.",
+          "applyNote": "The daily routine 은 단수이므로 단수형이 필요합니다."
+        },
+        {
+          "text": "앞의 명사를 대상만 바꿔 되풀이하는 자리인지 확인합니다. 그렇다면 it·they 가 아니라 that·those 를 씁니다.",
+          "applyNote": "비교 대상은 지상 근무자들의 일과이므로 같은 명사를 다른 대상에 대해 되풀이하는 자리입니다. 따라서 that 이 옳습니다."
+        }
+      ],
+      "example": {
+        "en": "The daily routine of the astronauts is stricter than **that** of the crew on the ground.",
+        "ko": "우주 비행사들의 일과는 지상 근무자들의 일과보다 더 엄격합니다.",
+        "note": "that 은 The daily routine 을 되풀이합니다. 단수이므로 those 가 아니라 that 입니다."
+      }
+    },
+    {
+      "id": "b20",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The eggs of a sea turtle are far smaller than ( that / those ) of an ostrich.",
+      "steps": [
+        {
+          "title": "① 괄호의 성격을 봅니다",
+          "body": "괄호 뒤에 of an ostrich 가 붙어 있습니다. of구의 수식을 받는 대명사는 앞 명사를 되풀이하는 that·those 입니다."
+        },
+        {
+          "title": "② 되풀이되는 명사를 찾습니다",
+          "body": "비교되고 있는 것은 The eggs of a sea turtle 입니다. of a sea turtle 을 걷어내면 핵 명사는 The eggs 입니다."
+        },
+        {
+          "title": "③ 수를 맞춥니다",
+          "body": "The eggs 는 복수입니다. 따라서 되풀이하는 대명사도 복수형이어야 합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "that 은 단수 명사를 되풀이할 때 쓰므로 여기서는 쓸 수 없습니다. those 가 옳습니다."
+        }
+      ],
+      "answer": "those",
+      "ko": "바다거북의 알은 타조의 알보다 훨씬 작습니다."
+    },
+    {
+      "id": "b21",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b05-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The climate of Portugal is much milder than {{blank}} of Norway.",
+          "options": [
+            "that",
+            "those",
+            "it"
+          ],
+          "answer": 0,
+          "translation": "포르투갈의 기후는 노르웨이의 기후보다 훨씬 온화합니다.",
+          "explanation": "되풀이되는 명사는 The climate(단수)이므로 that 이 옳습니다. those 는 복수 명사를 되풀이할 때 쓰고, it 은 앞에 나온 바로 그 대상을 가리킬 뿐 of구의 수식을 받아 다른 대상을 가리키지 못합니다.",
+          "trapTags": [
+            "that-those-substitute",
+            "number-agreement"
+          ]
+        },
+        {
+          "id": "b05-c2-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The bones of a bird are lighter than [[u:that]] of a mammal.",
+          "isCorrect": false,
+          "correction": "those",
+          "translation": "새의 뼈는 포유류의 뼈보다 더 가볍습니다.",
+          "explanation": "비교되는 명사는 The bones(복수)입니다. 바로 앞의 a bird 에 이끌려 단수 that 을 쓰기 쉽지만, 되풀이되는 핵 명사가 복수이므로 those 가 옳습니다.",
+          "trapTags": [
+            "that-those-substitute",
+            "number-agreement"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 that 을 those 로 고쳐야 했던 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "되풀이되는 핵 명사가 The bones 로 복수이고, of구의 수식을 받는 대용 대명사이므로 복수형 those 가 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 대용 대명사의 수는 바로 앞 명사가 아니라 되풀이되는 핵 명사가 결정합니다."
+        },
+        {
+          "text": "a mammal 이 뒤에 나오는데 포유류는 여러 마리이므로 복수형을 썼습니다.",
+          "correct": false,
+          "feedback": "of 뒤의 명사는 판단 근거가 아닙니다. a mammal 은 단수이며, 수를 결정하는 것은 되풀이되는 명사 The bones 입니다."
+        },
+        {
+          "text": "비교급 문장에서는 than 뒤에 항상 복수형 those 를 씁니다.",
+          "correct": false,
+          "feedback": "그런 규칙은 없습니다. 되풀이되는 명사가 단수이면 than 뒤에도 that 을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "대명사 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 자리부터 보는 눈이 손보다 빨라야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "소유격 뒤에는 반드시 명사가 옵니다.",
+          "isTrue": true,
+          "why": "my·their 같은 소유격은 뒤의 명사를 한정하는 옷입니다. 명사 없이 홀로 서지 못합니다."
+        },
+        {
+          "statement": "it's 는 '그것의'라는 뜻의 소유격입니다.",
+          "isTrue": false,
+          "why": "it's 는 it is 또는 it has 의 축약형입니다. 소유격은 아포스트로피가 없는 its 입니다."
+        },
+        {
+          "statement": "되풀이되는 명사가 복수이면 than 뒤에는 those 를 씁니다.",
+          "isTrue": true,
+          "why": "수를 정하는 것은 되풀이되는 핵 명사입니다. The wings ... those of a hawk 처럼 씁니다."
+        },
+        {
+          "statement": "Daniel and I 는 목적어 자리에서도 그대로 씁니다.",
+          "isTrue": false,
+          "why": "and 로 이어져도 자리는 그대로 목적어입니다. invited Daniel and me 처럼 목적격을 씁니다."
+        },
+        {
+          "statement": "대명사의 수는 바로 앞에 있는 명사에 맞춥니다.",
+          "isTrue": false,
+          "why": "바로 앞 명사는 대개 전치사구 안의 명사입니다. 수식어를 걷어낸 뒤 남는 핵 명사에 맞춥니다."
+        },
+        {
+          "statement": "offered them positions 처럼 '~에게' 자리는 뒤에 명사가 와도 목적격입니다.",
+          "isTrue": true,
+          "why": "간접목적어 자리는 목적격입니다. 뒤의 명사에 이끌려 소유격을 쓰면 오류입니다."
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 가까운 명사에 이끌려 수를 잘못 맞추는 경우",
+      "body": "비교 구문에서 대용 대명사 바로 앞에는 대개 of구 안의 명사가 놓입니다. 그 명사에 수를 맞추는 것은 근거가 없습니다. 우연히 답이 맞을 수는 있어도 판단 근거로 삼으면 안 됩니다. 반드시 수식어를 걷어내고 되풀이되는 핵 명사를 먼저 확정해야 합니다.",
+      "example": {
+        "en": "The salaries of engineers in this city are higher than **that** of teachers.",
+        "ko": "이 도시 기술자들의 급여는 교사들의 급여보다 더 높습니다.",
+        "note": "되풀이되는 명사는 The salaries(복수)이므로 those 가 옳습니다. 바로 앞의 단수 표현에 이끌린 오류입니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b25",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "함정 — its 와 it's 는 다른 말입니다",
+      "body": "its 는 '그것의'라는 뜻의 소유격이고, it's 는 it is 또는 it has 의 축약형입니다. 소리가 같아 표기가 뒤바뀌지만, 소유격 대명사에는 아포스트로피를 쓰지 않습니다. 소유격 자리인지 아닌지는 바로 뒤에 명사가 오는지로 확인합니다.",
+      "example": {
+        "en": "The theory lost **it's** appeal after the new data appeared.",
+        "ko": "그 이론은 새로운 자료가 나온 뒤 매력을 잃었습니다.",
+        "note": "뒤에 명사 appeal 이 오므로 소유격 자리입니다. 아포스트로피가 없는 its 로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b26",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "이 도시의 인구는 이웃 도시의 인구보다 더 많습니다.",
+      "answer": [
+        "The population",
+        "of this city",
+        "is larger than",
+        "that",
+        "of its neighbor"
+      ],
+      "tiles": [
+        "The population",
+        "of this city",
+        "is larger than",
+        "that",
+        "of its neighbor",
+        "those"
+      ],
+      "explanation": "되풀이되는 명사는 The population 으로 단수이므로 대용 대명사는 that 입니다. 복수형 those 는 쓰이지 않습니다."
+    },
+    {
+      "id": "b27",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The researchers who collected [[1:their]] samples in the Arctic reported that the ice near the coast is thinner than [[2:that]] near the pole, and [[3:it's]] surface melts earlier every year, which worries [[4:them]].",
+      "answer": 3,
+      "correction": "its",
+      "rationales": [
+        "가리키는 명사는 The researchers(복수)이고 뒤에 명사 samples 가 오므로 복수 소유격 their 가 옳습니다.",
+        "되풀이되는 명사는 the ice 이며 뒤에 수식어 near the pole 이 붙습니다. the ice 는 단수 취급하므로 that 이 옳습니다.",
+        "뒤에 명사 surface 가 오므로 소유격 자리입니다. it's 는 it is 의 축약형이므로 소유격 its 로 고쳐야 합니다.",
+        "동사 worries 의 목적어 자리이고 가리키는 명사는 The researchers(복수)이므로 목적격 them 이 옳습니다."
+      ],
+      "ko": "북극에서 표본을 수집한 그 연구자들은 해안 부근의 얼음이 극지 부근의 얼음보다 더 얇으며 그 표면이 해마다 더 일찍 녹는다고 보고했는데, 이것이 그들을 우려하게 합니다."
+    },
+    {
+      "id": "b28",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 대명사 하나를 어긋나게 심어 두고 '어법상 틀린 부분을 찾아 고쳐 쓰시오'로 물어봅니다. 틀린 이유(되풀이되는 명사의 수)를 함께 적어야 만점인 경우가 많습니다.",
+          "sample": {
+            "en": "The paintings of this artist are brighter than that of her teacher.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "that → those (되풀이되는 명사가 The paintings 로 복수이기 때문입니다)"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 주어와 대명사 사이를 길게 벌려 놓고 밑줄을 겁니다. 밑줄이 that·those 이거나 its·their 이면 수식어를 걷어내고 핵 명사의 수를 먼저 확정해야 합니다.",
+          "sample": {
+            "en": "The memory capacity of modern devices far exceeds [[u:those]] of the machines used fifty years ago.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "that — 되풀이되는 명사가 The memory capacity 로 단수이므로 that 이 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b29",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "그림자 서고의 사서",
+      "intro": "이 서고의 책은 전부 원본 대신 그림자로 꽂혀 있습니다. 그림자가 어느 명사를 가리키는지, 어떤 옷을 입어야 하는지 읽어내지 못하면 서고의 문은 열리지 않습니다. 네 개의 그림자를 원본에 되돌려 놓으십시오.",
+      "questions": [
+        {
+          "prompt": "The density of ice is lower than {{blank}} of liquid water.",
+          "options": [
+            "that",
+            "those"
+          ],
+          "answer": 0,
+          "why": "되풀이되는 핵 명사가 The density(단수)입니다. of 뒤의 water 는 판단 근거가 아닙니다."
+        },
+        {
+          "prompt": "The coach praised Mina and {{blank}} after the final match.",
+          "options": [
+            "I",
+            "me"
+          ],
+          "answer": 1,
+          "why": "동사 praised 의 목적어 자리입니다. and 로 이어져도 자리는 그대로이므로 목적격 me 가 옳습니다."
+        },
+        {
+          "prompt": "Every ship in the harbor has {{blank}} own story.",
+          "options": [
+            "its",
+            "it's"
+          ],
+          "answer": 0,
+          "why": "뒤에 명사 own story 가 오는 소유격 자리입니다. it's 는 it is 의 축약형이므로 이 자리에 설 수 없습니다."
+        },
+        {
+          "prompt": "The antlers of a moose grow faster than {{blank}} of a deer.",
+          "options": [
+            "those",
+            "that"
+          ],
+          "answer": 0,
+          "why": "되풀이되는 핵 명사가 The antlers(복수)입니다. 바로 앞의 a moose 에 속으면 안 됩니다."
+        }
+      ],
+      "winText": "사서가 서가에서 물러납니다. 네 개의 그림자가 전부 제 원본을 찾았습니다. 자리를 먼저 보고, 수식어를 걷어 핵 명사를 확인하는 눈 — 그것이 이 서고의 열쇠였습니다.",
+      "loseText": "사서는 아직 서고를 내주지 않습니다. 틀린 그림자를 보십시오 — 전부 '바로 앞 명사'에 속았거나 '자리' 확인을 건너뛰었습니다. 격 변화표와 4단계 절차를 다시 보고 오면 문은 열립니다."
+    },
+    {
+      "id": "b30",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "대명사의 형태는 문장 속 ___가 정하고, 대명사의 수는 ___를 걷어낸 뒤 남는 ___가 정합니다."
+    },
+    {
+      "id": "b31",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "인칭대명사의 형태는 자리가 정합니다. 주어 자리는 주격, 동사·전치사의 목적어 자리는 목적격, 뒤의 명사를 한정하는 자리는 소유격입니다. 단 수여동사의 '~에게' 자리(간접목적어)는 뒤에 명사가 와도 목적격입니다.",
+        "대명사의 수는 가까운 명사가 아니라 수식어를 걷어낸 뒤 남는 핵 명사가 정합니다.",
+        "앞의 명사를 대상만 바꿔 되풀이할 때는 that(단수)·those(복수)를 쓰며, 그 뒤에는 of구 같은 수식어가 붙습니다. it·they 는 이 자리에 쓰지 못합니다.",
+        "its 는 소유격이고 it's 는 it is 의 축약형입니다. 뒤에 명사가 오면 소유격 its 자리입니다."
+      ],
+      "keySentence": {
+        "en": "The wings of an eagle are longer than **those** of a hawk.",
+        "ko": "독수리의 날개는 매의 날개보다 더 깁니다.",
+        "note": "되풀이되는 핵 명사가 the wings(복수)이므로 those 입니다. 바로 앞의 an eagle 은 판단 근거가 아닙니다."
+      }
+    },
+    {
+      "id": "b32",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b05-c2-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Several students left {{blank}} umbrellas in the hallway after the storm.",
+          "options": [
+            "their",
+            "theirs",
+            "them"
+          ],
+          "answer": 0,
+          "translation": "몇몇 학생들이 폭풍이 지난 뒤 복도에 자기 우산을 두고 갔습니다.",
+          "explanation": "빈칸 뒤에 명사 umbrellas 가 오므로 소유격 자리입니다. 가리키는 명사가 Several students(복수)이므로 their 가 옳습니다. theirs 는 뒤에 명사를 두지 않는 소유대명사이고, them 은 목적격입니다.",
+          "trapTags": [
+            "pronoun-case",
+            "number-agreement"
+          ]
+        },
+        {
+          "id": "b05-c2-ls-006",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The new library opened last month, and [[u:it's]] reading room is already crowded.",
+          "isCorrect": false,
+          "correction": "its",
+          "translation": "그 새 도서관은 지난달 문을 열었고, 열람실은 벌써 붐빕니다.",
+          "explanation": "뒤에 명사 reading room 이 오므로 소유격 자리입니다. it's 는 it is 의 축약형이므로 소유격 its 로 고쳐야 합니다.",
+          "trapTags": [
+            "possessive-vs-contraction",
+            "pronoun-case"
+          ]
+        },
+        {
+          "id": "b05-c2-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "{{blank}} who study a second language often notice patterns in their first one.",
+          "options": [
+            "Those",
+            "That",
+            "These"
+          ],
+          "answer": 0,
+          "translation": "제2언어를 공부하는 사람들은 모국어에서도 자주 규칙을 알아차립니다.",
+          "explanation": "'~하는 사람들'은 those who 로 씁니다. 뒤의 동사 study 와 소유격 their 가 복수를 요구하므로 단수 That 은 쓸 수 없고, these who 라는 형태는 쓰지 않습니다.",
+          "trapTags": [
+            "those-who",
+            "number-agreement"
+          ]
+        }
+      ]
+    }
+  ]
+}

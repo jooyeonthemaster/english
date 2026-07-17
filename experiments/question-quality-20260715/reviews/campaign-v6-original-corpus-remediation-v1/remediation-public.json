@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "campaign-v6-original-corpus-remediation-public-v1",
+  "verdict": "PASS_REMEDIATED_CORPUS_QUALITY_AND_STRUCTURE_GATES_NOT_EXTERNAL_DISPATCH_AUTHORIZATION",
+  "remediatedAtKst": "2026-07-15T17:05:00+09:00",
+  "scope": {
+    "sourceArtifact": "experiments/question-quality-20260715/corpus/original-s1-v6",
+    "priorAuditPreserved": true,
+    "candidateApiCalls": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0
+  },
+  "sourceBindings": {
+    "priorPrivateArtifactSha256": "bcb5d7683e9ee6bd110add462da6956dea6468e29dd2222d00067e80ddcabb68",
+    "remediatedPrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+    "remediatedPublicArtifactSha256": "108380e8ba86dd358fed4543f329433e6c1d87e2c8455667dc3e9bf412659ddf",
+    "remediatedSourceManifestSha256": "2621b69dde74ee014ec4367fd03aba72f5d56e4d8f8eae4c90d432824d7e8eb7",
+    "localHashedReferenceFixtureSha256": "a928c576b3dd86a0caae4f67444c112e218b0c80c7bcaaeb4298c457dbcf7b07",
+    "priorAuditPublicArtifactSha256": "de1872c1d008b1f90eeab00787c50eafebed041748eb80925d2e465f0a64053e",
+    "priorAuditManifestSha256": "351cc8d49fdee8e4458078c88ad732102f86f7bb6df2a0cf149e6f7f74637698"
+  },
+  "rowRemediation": {
+    "rowCount": 12,
+    "passageChangedCount": 7,
+    "passageChangedRowIds": [
+      "OS1V6-B01",
+      "OS1V6-B02",
+      "OS1V6-B04",
+      "OS1V6-B05",
+      "OS1V6-B06",
+      "OS1V6-G02",
+      "OS1V6-G03"
+    ],
+    "fullPrivateRowChangedCount": 12,
+    "wordingRemediationCount": 4,
+    "wordingRemediationRowIds": [
+      "OS1V6-B05",
+      "OS1V6-B06",
+      "OS1V6-G02",
+      "OS1V6-G03"
+    ],
+    "correctedGrammarMetadataCount": 3,
+    "correctedGrammarMetadataRowIds": [
+      "OS1V6-G03",
+      "OS1V6-G04",
+      "OS1V6-G05"
+    ],
+    "grammarAffordanceBindingCount": 30,
+    "grammaticalityPassRows": 12,
+    "naturalnessPassRows": 12,
+    "contentCoherencePassRows": 12,
+    "examSuitabilityPassRows": 12
+  },
+  "blankStructure": {
+    "before": {
+      "terminal": 4,
+      "lateNonterminal": 1,
+      "middle": 1,
+      "finalOrPenultimate": 5,
+      "cleanUnrestrictedInternal": 0
+    },
+    "after": {
+      "positionCounts": {
+        "INTERNAL": 5,
+        "TERMINAL": 1
+      },
+      "internal": 5,
+      "finalOrPenultimate": 1,
+      "internalContrastOrCounterexample": 3,
+      "internalAnaphoricOrCausalBridge": 1,
+      "dualDifficultyCoverage": 6,
+      "maximumPostBlankContentJaccard": 0.05555555555555555
+    },
+    "targetPass": true
+  },
+  "rightsPrivacyAndLeakage": {
+    "unchangedRightsProvenanceCommitments": 12,
+    "originalCompositionRows": 12,
+    "copiedOrAdaptedRows": 0,
+    "thirdPartyPermissionClaimedRows": 0,
+    "manualPiiObservedRows": 0,
+    "machinePiiPatternHits": 0,
+    "sourceAndReviewPublicTwelveTokenLeakWindows": 0,
+    "sourcePrivateGitIgnored": true,
+    "sourcePrivateGitTracked": false,
+    "repositoryOverlapCapture": {
+      "capturedAtKst": "2026-07-15T17:05:00+09:00",
+      "ngramSize": 8,
+      "scannedFileCount": 9053,
+      "scannedUtf8ByteCount": 451455929,
+      "skippedOversizeFileCount": 0,
+      "skippedUnreadableFileCount": 0,
+      "skippedSymlinkCount": 0,
+      "inventoryCommitmentSha256": "67b577cbdf768df88623e3a354289526f8789fbfcee5fd5762a38fade805796c",
+      "hitFileRowPairCount": 0
+    }
+  },
+  "hermeticityClosure": {
+    "normalBuildExternalHistoricalInputReads": 0,
+    "packageLocalHashedReferenceFixture": true,
+    "fixtureContainsExactReferencePassageText": false,
+    "fixtureContainsExactReferenceNgramText": false,
+    "fixtureGitIgnored": true,
+    "fixtureGitTracked": false,
+    "generationOnlyRefresherSeparated": true,
+    "status": "PASS"
+  },
+  "admission": {
+    "corpusQualityAndStructureGatesPass": true,
+    "externalDispatchAuthorized": false,
+    "reason": "The corpus remediation does not satisfy provider privacy, allow-list, dedicated credential, live pricing, spend, physical-call, exact-controller, or generated-question quality gates."
+  },
+  "residualLimits": [
+    "Naturalness, coherence, and semantic non-restatement are adjudicative judgments; the lexical post-blank metric is supporting evidence, not a semantic proof.",
+    "Repository-wide eight-token non-overlap cannot establish global originality, copyright ownership, or non-infringement.",
+    "PII scanning and manual observation cannot prove the absence of every possible identifier.",
+    "The private hashed-reference fixture is reproducible only when deliberately refreshed from the separately held historical inputs; normal build/verify is package-local and does not refresh it.",
+    "This package validates source-corpus design, not the quality of questions that an external model will generate from it."
+  ]
+}

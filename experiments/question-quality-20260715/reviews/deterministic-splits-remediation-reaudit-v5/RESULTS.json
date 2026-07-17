@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "auditDateKst": "2026-07-15",
+  "auditKind": "deterministic-splits-remediation-reaudit-v5",
+  "verdict": "BLOCK",
+  "summary": {
+    "total": 712,
+    "pass": 711,
+    "fail": 1,
+    "v4SemanticReplay": {
+      "total": 520,
+      "pass": 520,
+      "fail": 0,
+      "verdict": "PASS",
+      "failedCaseIds": []
+    },
+    "newHoldout": {
+      "total": 192,
+      "pass": 191,
+      "fail": 1,
+      "minimumRequired": 160,
+      "categories": {
+        "summary-mixed-task-v5": {
+          "total": 32,
+          "pass": 31,
+          "fail": 1,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 15,
+          "observedNegative": 17
+        },
+        "blank-circled-role-v5": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        },
+        "grammar-ghost-decoration-v5": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        },
+        "grammar-terminology-v5": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        },
+        "blank-residual-punctuation-v5": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        },
+        "sentence-order-cf-v5": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        }
+      },
+      "controlBalance": {
+        "positive": 96,
+        "negative": 96
+      },
+      "generatedPostV4CfCount": 16,
+      "postV4CfPoolCount": 105,
+      "ambiguityExclusionCount": 12
+    },
+    "failedCaseIds": [
+      "v5-summary-mixed-13"
+    ]
+  },
+  "oraclePolicy": {
+    "mismatchRule": "Any expected/observed mismatch is blocking; no warning credit, majority vote, or tolerated miss is allowed.",
+    "positiveDefinition": "A positive control unambiguously requires the named deterministic detector/fatal.",
+    "negativeDefinition": "A negative control is an explicit boundary neighbor for which that detector/fatal must abstain.",
+    "balance": "Exactly 16 positive and 16 negative controls per family; 96/96 overall.",
+    "ambiguityExclusions": [
+      {
+        "id": "exclude-summary-implied-response",
+        "family": "summary-mixed-task-v5",
+        "candidate": "Read the passage carefully and complete summary slots (A) and (B).",
+        "reason": "Reading is preparatory, not a separately scored response object, so treating it as a mixed task would be an oracle error."
+      },
+      {
+        "id": "exclude-summary-vague-review",
+        "family": "summary-mixed-task-v5",
+        "candidate": "Complete (A) and (B), checking the passage as needed.",
+        "reason": "Checking the passage is an underspecified method rather than an independent task with its own answer."
+      },
+      {
+        "id": "exclude-circled-bare-judgment",
+        "family": "blank-circled-role-v5",
+        "candidate": "① 판단을 검토한다. ② 근거를 검토한다.",
+        "reason": "Without a discourse cue or option object, the markers' syntactic role is genuinely underdetermined."
+      },
+      {
+        "id": "exclude-circled-quoted-option-fragment",
+        "family": "blank-circled-role-v5",
+        "candidate": "① ‘durable constraints…’를 살핀다.",
+        "reason": "A truncated quotation could be either an option citation or a procedural note and does not reach the two-marker fatal threshold."
+      },
+      {
+        "id": "exclude-ghost-single-letter-prose",
+        "family": "grammar-ghost-decoration-v5",
+        "candidate": "A (H) 분사 형태를 확인한다.",
+        "reason": "A can be either a Markdown list marker or English prose; the prefix role is ambiguous."
+      },
+      {
+        "id": "exclude-ghost-parenthetical-discussion",
+        "family": "grammar-ghost-decoration-v5",
+        "candidate": "(H)는 왜 없는가?",
+        "reason": "The sentence could be a keyPoint anchor or a meta-level question about labels, so it is not a clean holdout oracle."
+      },
+      {
+        "id": "exclude-term-relative",
+        "family": "grammar-terminology-v5",
+        "candidate": "관계사 설명을 고친다.",
+        "reason": "관계사 is itself a school-grammar term while also containing the character sequence 계사; it tests target policy scope, not the 계사 specialist boundary."
+      },
+      {
+        "id": "exclude-term-proper-name",
+        "family": "grammar-terminology-v5",
+        "candidate": "계사 연구회가 모였다.",
+        "reason": "계사 may be a proper name or the linguistic term; context does not disambiguate the sense."
+      },
+      {
+        "id": "exclude-residual-dash-equivalence",
+        "family": "blank-residual-punctuation-v5",
+        "candidate": "evidence-based vs evidence based",
+        "reason": "Whitespace and dash variants are intentionally normalization-equivalent, so they are not valid negative punctuation controls."
+      },
+      {
+        "id": "exclude-residual-case-only",
+        "family": "blank-residual-punctuation-v5",
+        "candidate": "Public Trust vs public trust",
+        "reason": "Case folding is an explicit comparator invariant; using case-only change as a negative would weaken the established oracle."
+      },
+      {
+        "id": "exclude-cf-emoji-only",
+        "family": "sentence-order-cf-v5",
+        "candidate": "emoji + variation selector only",
+        "reason": "A visible emoji is not normal paragraph prose, so nonempty code-point presence does not establish substantive sentence-order content."
+      },
+      {
+        "id": "exclude-cf-combining-only",
+        "family": "sentence-order-cf-v5",
+        "candidate": "combining mark plus Cf with no base character",
+        "reason": "A dangling combining mark has uncertain rendered visibility and belongs to a grapheme-validity policy not this Cf-empty invariant."
+      }
+    ]
+  },
+  "novelty": {
+    "frozenV4CaseCount": 520,
+    "newCaseCount": 192,
+    "allIdsUseV5Namespace": true,
+    "uniqueIdCount": 192,
+    "uniqueInputCount": 192,
+    "newCaseIdsSha256": "5b30c35e6074456b94632a470b12e22ee519c4212b1de9877570867dac0df229",
+    "newInputsSha256": "b5db2ed170a00f0bb49ab156503008faae8f941e5c42ede2d93d613f708264ca",
+    "passedCaseIdsSha256": "3ec584b0f2397d296c0fdfbf7098a7757f6fb7955f619933833de49520b16cc1"
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "browserCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "productionEdits": 0,
+    "existingTestEdits": 0
+  },
+  "provenance": {
+    "auditScriptSha256": "282fa28f6d6c152eb62a01700589f3cf8c2befb51f14c0ac63c23a7b925fc435",
+    "v4ReplayHarnessSha256": "3e4cddb00bf6ffb868b9512aa6588d55b2eb42dbcd455a5c6d61027f96f98320",
+    "v4ReplayHarnessReportedSha256": "3e4cddb00bf6ffb868b9512aa6588d55b2eb42dbcd455a5c6d61027f96f98320",
+    "frozenV4ArtifactSha256": {
+      "AUDIT.md": "246b1f4be6e77fc7650c12bf82cee6fe1792cf218477d50795bb29d826a83a99",
+      "RESULTS.json": "116f11c3ca17dc91258ac2087561ffd7c52d74c66542601a5b4b0bd6ce543439",
+      "audit.mts": "3e4cddb00bf6ffb868b9512aa6588d55b2eb42dbcd455a5c6d61027f96f98320",
+      "verify.mjs": "749213c1b7508ca85465fbab0fdbb7b56cc79f59ed68cc6937b50823f5a7da82",
+      "MANIFEST.sha256": "fe3125b22d192dd5420b5cea9a1ba5223faad1dd2fd0f0d834436f9d621ef1a0"
+    },
+    "auditedSourceAndTestSha256": {
+      "src/lib/question-quality/index.ts": "2db502873ac6fbb295afdd8315fb166d5a6a408fdc213f3def1be1a300a4137f",
+      "src/lib/question-quality/core.ts": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+      "src/lib/question-quality/dispatcher.ts": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "src/lib/question-quality/validators/summary/mc.ts": "bb51ab368871348a42c1a178084903be53dd5bfcca99cbcf1ef605e094490364",
+      "src/lib/question-quality/validators/blank/inference.ts": "383a8b557097184e62ae6a924e47e682cb0224893db314a1c11d542a6e77dc99",
+      "src/lib/question-quality/validators/grammar/shared.ts": "f1eb1dc3b1e8d9596bf9dd8f9dcc1766753538be0e1c4462d16d93cb38c842c5",
+      "src/lib/question-quality/validators/sentence-order.ts": "14963483d7a66e8cd3f376aed2701616c963ff1c778a6165a671becfa25b0de3",
+      "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts": "a672875d20315667b7a662737930f63c76328136656bbb635c014d5f1ed24bff",
+      "tests/unit/sentence-order-quality.test.mjs": "9501144bcc8dde4a4258136dc260d3ffe5a652f99121a5b0c8a22c76935197d0",
+      "tests/unit/summary-mc-direction-split.test.mjs": "12df55450ca5e9b4433afe00eab02081f13d00affdb477bbd3c6db737af350b6",
+      "tests/unit/blank-explanation-step-numbering.test.mjs": "6b79576842650b2abcf129b4aed4d7e9d35d8fccf26409eceacc5a06a811c324",
+      "tests/unit/question-validity-invariants.test.mjs": "73c74c3274c48fafe9712b198e61077b662e79fc14caa2b09f813015cd167aed",
+      "tests/unit/grammar-keypoint-core10.test.mjs": "894458f6bc9a467f14125fd9e9459e73e77541e6dd096192b16e1f76751fa2bc",
+      "tests/unit/grammar-killer-overdrilled.test.mjs": "aff501d56a409a64874898c1c35b50a81f9161fc64091c503a77df2e583ccdca",
+      "tests/unit/summary-mc-collocation-severity-split.test.mjs": "1644b66882c16927f396dad73afa2f155db0ee94d77b2ac49f48fea768dee2db"
+    }
+  },
+  "failures": [
+    {
+      "source": "v5-holdout",
+      "id": "v5-summary-mixed-13",
+      "category": "summary-mixed-task-v5",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 두 자리 (A), (B)를 채우시오. 그와 별개로, 글의 내용에 근거하지 않은 주장을 고르시오.",
+      "displayInput": "요약문의 두 자리 (A), (B)를 채우시오. 그와 별개로, 글의 내용에 근거하지 않은 주장을 고르시오.",
+      "oracle": "The direction explicitly assigns a second response object outside summary slots (A)/(B); the mismatch fatal is mandatory."
+    }
+  ]
+}

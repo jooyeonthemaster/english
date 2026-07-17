@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'maximize the technical efficiency of digital creation tools'는 바로 앞 문장 'the goal should not be simply to utilize technology for its own sake'와 정면 모순. 지문 도입부의 technology/digital 어휘를 재활용한 표면 어휘 미끼이나, Rather 이후의 대조 구조를 확인하면 즉시 배제됨."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "지문의 핵심 정의 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'의 정확한 패러프레이즈. transformative = forever changes, fresh perspectives = challenges our perceptions. 문법 결합도 자연스러움: 'unique creations that will provide people with transformative and fresh perspectives'."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'easily replicate existing styles'는 빈칸 직전의 'unique creations'와 직접 모순(복제 vs 고유성). 지문 어디에도 기존 양식 재현을 긍정하는 단서 없음."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'emotions'가 지문의 'feelings'를 표면적으로 반향해 순간적으로 끌리지만, 'familiar emotions that average audiences readily accept'는 'challenges our perceptions'(인식에 도전)의 반의 방향. 위대한 예술은 익숙함을 재확인하는 것이 아니라 인식을 뒤흔드는 것이므로 배제. 장거리 단서(3번째 문장 정의)를 대조하면 유혹이 해소됨."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "온라인 유통 가속은 도입부의 'share them with the world'(전제 상황)를 목표로 둔갑시킨 미끼. 지문의 결론은 유통이 아니라 창작물의 질(위대한 예술의 조건)에 관한 것. 또한 'creations that will focus on accelerating...'은 무생물 주어가 focus하는 어색한 결합(seam)도 발생."
+    }
+  ],
+  "note": "빈칸은 'Rather, it should be to produce unique creations that will ___' 구조로, 3번째 문장의 great art 정의를 되받는 전형적 재진술형. ②만이 유일하게 옹호 가능. ④가 'emotions↔feelings' 표면 반향으로 설계된 최대 매력 오답이나 방향성(familiar/accept vs challenge/change)이 반대라 논리적으로 방어 불가. 대안 해석·문법 결합 문제 없음. 단일 정답으로 수렴하는 건전한 문항."
+}

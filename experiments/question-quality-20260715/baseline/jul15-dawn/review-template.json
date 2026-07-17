@@ -1,0 +1,362 @@
+[
+  {
+    "itemId": "Q001",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q002",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q003",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q004",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q005",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q006",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q007",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q008",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q009",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q010",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q011",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q012",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q013",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q014",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  },
+  {
+    "itemId": "Q015",
+    "blindAnswer": null,
+    "confidence": null,
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": null,
+      "V2": null,
+      "V3": null,
+      "V4": null,
+      "V5": null
+    },
+    "craft": {
+      "C1": null,
+      "C2": null,
+      "C3": null,
+      "C4": null,
+      "C5": null,
+      "C6": null
+    },
+    "optionAudit": [],
+    "issues": [],
+    "grade": null
+  }
+]

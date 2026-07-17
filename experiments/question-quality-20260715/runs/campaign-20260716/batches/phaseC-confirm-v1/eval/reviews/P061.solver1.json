@@ -1,0 +1,35 @@
+{
+  "pid": "P061",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'had conceptualized ... and was attempting to market' — 과거완료(구상 완료)와 과거진행(시도 중)의 자연스러운 병렬. was attempting은 정동사로서 완전한 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'He was issued nine U.S. patents' — issue는 수여동사(issue someone something)이므로 간접목적어가 주어로 승격된 수동태에서 직접목적어 nine U.S. patents가 잔류 목적어로 남는 구조. 첫인상에 '사람이 issued 되나?'라는 위화감을 주는 최대 매력 오답이지만 표준 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'that he successfully sold to Sheaffer' — 부사 successfully가 동사 sold를 수식하는 표준 위치. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'In the 1920s, Friedman beginning his education in real estate.' — 문장에 정동사(finite verb)가 없다. 분사구문으로 구제하려 해도 부착할 주절이 존재하지 않고(다음 문장은 Although로 시작하는 별개의 완결문), 축약 관계절 해석도 독립문을 만들지 못한다. began이어야 함. 어법상 틀린 유일한 밑줄."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'with six of his nine U.S. patents being issued then' — with + NP + 분사의 부대상황 구문. patents는 발급되는 대상이므로 수동 being issued 적절. issued 단독도 가능하지만 being issued 역시 완전한 정문이라 (B)와 짝을 이루는 유혹 지점일 뿐 흠이 없다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: (B) was issued가 의도된 최대 미끼로, 수여동사 수동태의 잔류 목적어 지식이 없으면 (B)로 끌린다. (E) being issued도 (B)와 연쇄로 의심을 유발하지만 둘 다 정문. (D)는 정동사 부재라는 명백한 결함으로 유일 정답이 깔끔하게 성립. 대안 해석(분사구문·축약 관계절·도치)으로 (D)를 정문화할 경로는 없음 — 주절 자체가 없기 때문. 단일 정답으로 옹호 가능성 논란 없음."
+}

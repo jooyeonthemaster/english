@@ -1,0 +1,833 @@
+{
+  "id": "b03-c1",
+  "unitId": "b03",
+  "order": 1,
+  "title": "be동사와 일반동사",
+  "oneLiner": "한 절에 시제 동사는 하나뿐이므로 be동사와 일반동사를 나란히 세울 수 없습니다.",
+  "gradeStamp": {
+    "introduced": "초3",
+    "judged": null,
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — be동사·일반동사의 현재·과거 시제(초등 도입)",
+      "docs/study-os-spec.md §2.3 b03 동사와 시제의 기본",
+      "어법끝 5.0 TP01(동사 vs 준동사)의 선행 개념 — 본동사 자리 판별의 토대"
+    ]
+  },
+  "lenses": ["L2"],
+  "confusableWith": ["b03-c3", "b02-c1", "u01-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 1,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The train to the coast leaves the station at seven every morning.",
+        "The train to the coast is leave the station at seven every morning."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 is 하나입니다. 이 레슨을 마치면 be동사와 일반동사를 왜 나란히 세울 수 없는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "be동사와 일반동사",
+      "question": "동사면 다 같은 동사이지, be동사와 일반동사는 왜 갈라놓는 것입니까?",
+      "plain": "영어의 동사는 크게 be동사와 일반동사로 나뉩니다. am·is·are·was·were 다섯 형태가 be동사이고, 이 다섯 형태가 아닌 동사가 일반동사입니다(can·will 같은 도우미 동사는 뒤에서 따로 다룹니다).",
+      "analogy": "수학의 등호와 연산 기호를 떠올리면 됩니다. be동사는 \"주어 = 뒤의 말\"을 이어 주는 등호이고, 일반동사는 주어가 벌이는 동작을 직접 말하는 연산 기호입니다. 한 수식에 등호와 연산 기호를 아무렇게나 겹쳐 쓰지 않듯, 두 부류도 한 자리에 겹쳐 세울 수 없습니다.",
+      "whyItMatters": "어법 문제는 is leave 처럼 두 부류를 한 자리에 겹쳐 놓고 학생이 알아채는지를 봅니다. 이 경계가 서야 뒤에서 배울 수일치·진행형·수동태가 전부 제자리를 찾습니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "동사의 두 부류, 하나씩 정면으로",
+      "intro": "두 부류와 그 둘레의 규칙을 한 항목씩 만납니다. 각 항목의 예문에서 굵은 부분이 그 주인공입니다.",
+      "entries": [
+        {
+          "head": "be동사 — 다섯 형태가 전부",
+          "body": "현재는 am·is·are, 과거는 was·were 입니다. 이 다섯 형태의 목록에 들면 be동사이고, 목록에 없으면 be동사가 아닙니다.",
+          "example": {
+            "en": "The lecture hall on the third floor **is** empty at this hour.",
+            "ko": "3층의 그 강의실은 이 시간에 비어 있습니다.",
+            "note": "is 는 다섯 형태의 하나이므로 be동사이며, 이 절의 본동사입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "be동사가 데려오는 말 — 보어",
+          "body": "be동사 뒤에는 명사·형용사·장소 표현이 와서 주어가 무엇인지·어떠한지·어디에 있는지를 말합니다. 목적어가 아니라 보어입니다.",
+          "example": {
+            "en": "The two researchers **were** colleagues at the same institute.",
+            "ko": "그 두 연구자는 같은 연구소의 동료였습니다.",
+            "note": "명사 보어 colleagues 가 주어의 정체를 밝힙니다."
+          }
+        },
+        {
+          "head": "일반동사 — be동사 밖의 모든 동사",
+          "body": "be동사와 조동사를 제외한 모든 동사가 일반동사입니다. 주어의 동작이나 사건을 스스로 서술합니다.",
+          "example": {
+            "en": "Modern telescopes **detect** light that left distant stars long ago.",
+            "ko": "현대의 망원경은 먼 별에서 오래전에 떠난 빛을 감지합니다.",
+            "note": "detect 는 다섯 형태 밖의 동사이므로 일반동사입니다. 복수 주어여서 -s 를 붙이지 않았습니다."
+          }
+        },
+        {
+          "head": "3인칭 단수 현재의 -s",
+          "body": "주어가 3인칭 단수이고 현재시제이면 일반동사에 -s(-es)를 붙입니다. 과거시제는 인칭·수와 무관하게 형태가 하나입니다.",
+          "example": {
+            "en": "The river **flows** through three states before it reaches the sea.",
+            "ko": "그 강은 바다에 이르기 전에 세 개의 주를 지나 흐릅니다.",
+            "note": "The river 가 3인칭 단수이므로 flows 입니다. 뒤 절의 reaches 도 같은 원리입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "조동사 — 제3의 부류",
+          "body": "can·will·may·must 는 뒤에 동사원형을 데려오는 도우미이며 -s 를 붙이지 않습니다. be동사도 일반동사도 아닌 별개 부류로 기억해 두면 됩니다.",
+          "example": {
+            "en": "Even a young child **can learn** two languages at once.",
+            "ko": "어린아이도 두 언어를 동시에 배울 수 있습니다.",
+            "note": "can 뒤의 learn 이 동사원형입니다. can learns 는 성립하지 않습니다."
+          },
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "be동사 다섯 형태 한 장 정리",
+      "columns": ["주어", "현재", "과거"],
+      "rows": [
+        {
+          "cells": ["I", "am", "was"],
+          "example": {
+            "en": "I **am** ready for the presentation.",
+            "ko": "저는 발표할 준비가 되어 있습니다.",
+            "note": "1인칭 단수 주어에는 현재 am, 과거 was 를 씁니다."
+          }
+        },
+        {
+          "cells": ["He · She · It (3인칭 단수)", "is", "was"],
+          "example": {
+            "en": "The museum **is** free on Sundays.",
+            "ko": "그 박물관은 일요일에 무료입니다.",
+            "note": "The museum 은 it 으로 받는 단수 주어이므로 is 입니다."
+          }
+        },
+        {
+          "cells": ["We · You · They (복수)", "are", "were"],
+          "example": {
+            "en": "The two theories **are** alike in one respect.",
+            "ko": "그 두 이론은 한 가지 점에서 비슷합니다.",
+            "note": "복수 주어이므로 are 입니다. 과거라면 were 가 됩니다."
+          }
+        }
+      ],
+      "takeaway": "형태는 다섯이지만 고르는 기준은 둘뿐입니다 — 주어의 인칭·수, 그리고 시제입니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "be동사 다섯 형태 (am·is·are·was·were)",
+      "why": "앞으로 모든 어법 설명이 \"be동사 뒤에는…\", \"일반동사라면…\"으로 시작합니다. 다섯 형태가 즉시 떠오르지 않으면 어떤 동사가 be동사인지부터 막혀서 설명 자체를 놓칩니다. 목록이 짧은 지금 구구단처럼 박아 두어야 합니다.",
+      "device": "현재 셋, 과거 둘 — \"암·이즈·아, 워즈·워\"를 두 박자로 끊어 세 번 소리 내어 읽으십시오. 다섯 형태 밖의 동사는 조동사가 아닌 한 전부 일반동사라는 판정 규칙까지 한 묶음입니다.",
+      "items": [
+        { "cue": "현재의 be동사 셋", "answer": "am · is · are" },
+        { "cue": "과거의 be동사 둘", "answer": "was · were" },
+        { "cue": "다섯 형태 밖의 동사(조동사 제외)", "answer": "전부 일반동사입니다" },
+        { "cue": "3인칭 단수 현재의 일반동사", "answer": "-s(-es)를 붙입니다 (flows, reaches)" },
+        { "cue": "be동사 뒤에 올 수 없는 형태", "answer": "동사원형 (is leave 는 성립 불가)" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "첫 번째 관문",
+      "mission": "be동사를 전부 골라내십시오. be동사인 척하는 침입자가 다섯 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "am",
+        "do",
+        "is",
+        "are",
+        "does",
+        "was",
+        "can",
+        "were",
+        "did",
+        "seems"
+      ],
+      "answers": ["am", "is", "are", "was", "were"],
+      "passText": "다섯 형태를 전부 가려냈습니다. seems 의 뜻이 be동사를 닮았어도 목록에 없으면 일반동사라는 것까지 보였다면, 이 관문은 완승입니다.",
+      "retryText": "아깝습니다. 힌트 하나 — be동사는 뜻이 아니라 형태의 목록입니다. 현재 셋(am·is·are), 과거 둘(was·were)만 세면 됩니다."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "be동사는 그 자체가 본동사입니다",
+      "rule": "be동사(am·is·are·was·were)는 그 자체로 문장의 본동사이며, 뒤에 명사·형용사·장소 표현(보어)을 데려와 주어가 무엇인지·어떠한지·어디에 있는지를 말합니다.",
+      "examples": [
+        {
+          "en": "The lecture hall on the third floor **is** empty at this hour.",
+          "ko": "3층의 그 강의실은 이 시간에 비어 있습니다.",
+          "note": "is 뒤의 empty 는 형용사 보어입니다. 주어의 상태를 설명합니다."
+        },
+        {
+          "en": "The two researchers **were** colleagues at the same institute.",
+          "ko": "그 두 연구자는 같은 연구소의 동료였습니다.",
+          "note": "were 뒤의 colleagues 는 명사 보어입니다. 주어의 정체를 밝힙니다."
+        },
+        {
+          "en": "The original manuscript **is** in the national archive.",
+          "ko": "그 원본 원고는 국립 기록관에 있습니다.",
+          "note": "be동사 뒤에 장소를 나타내는 전치사구가 오면 '있다'로 해석합니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "title": "일반동사는 스스로 시제를 집니다",
+      "rule": "일반동사는 be동사와 조동사를 제외한 모든 동사이며, 스스로 시제를 지고 주어가 3인칭 단수인 현재시제에서는 -s(-es)를 붙입니다.",
+      "examples": [
+        {
+          "en": "The river **flows** through three states before it reaches the sea.",
+          "ko": "그 강은 바다에 이르기 전에 세 개의 주를 지나 흐릅니다.",
+          "note": "주어 The river 가 3인칭 단수 현재이므로 flows 에 -s 가 붙습니다. 뒤 절의 주어 it 도 마찬가지입니다."
+        },
+        {
+          "en": "Modern telescopes **detect** light that left distant stars long ago.",
+          "ko": "현대의 망원경은 먼 별에서 오래전에 떠난 빛을 감지합니다.",
+          "note": "주어 Modern telescopes 가 복수이므로 동사에 -s 를 붙이지 않습니다."
+        },
+        {
+          "en": "The committee **rejected** the proposal without a formal vote.",
+          "ko": "그 위원회는 정식 표결 없이 그 제안을 부결했습니다.",
+          "note": "과거시제에서는 인칭·수에 관계없이 형태가 하나입니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "ODD_ONE_OUT",
+      "tier": 1,
+      "title": "부류가 다른 하나",
+      "instruction": "각 묶음에서 부류가 다른 하나를 찾아 탭하십시오. 뜻이 아니라 다섯 형태의 목록으로 판정하십시오.",
+      "rounds": [
+        {
+          "words": ["am", "were", "is", "seems"],
+          "odd": 3,
+          "why": "seems 는 뜻이 be동사를 닮았지만 다섯 형태의 목록에 없으므로 일반동사입니다. 나머지 셋은 be동사입니다."
+        },
+        {
+          "words": ["flows", "detects", "was", "arrives"],
+          "odd": 2,
+          "why": "was 만 be동사입니다. 나머지 셋은 스스로 시제를 지는 일반동사입니다."
+        },
+        {
+          "words": ["can", "must", "will", "rejects"],
+          "odd": 3,
+          "why": "rejects 만 일반동사입니다. can·must·will 은 뒤에 동사원형을 데려오는 조동사로, be동사도 일반동사도 아닌 별개 부류입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "두 동사는 다르게 움직입니다",
+      "columns": ["be동사 (am·is·are·was·were)", "일반동사 (그 밖의 모든 동사)"],
+      "rows": [
+        {
+          "criterion": "뒤에 오는 말",
+          "a": "명사·형용사·장소 표현 (보어)",
+          "b": "목적어가 오거나, 아무것도 오지 않거나, become·seem·look·stay 처럼 보어가 오기도 합니다 (He looks tired)"
+        },
+        {
+          "criterion": "부정문",
+          "a": "be동사 + not (is not / were not)",
+          "b": "do·does·did + not + 동사원형"
+        },
+        {
+          "criterion": "의문문",
+          "a": "be동사를 주어 앞으로 (Is the room ready?)",
+          "b": "do·does·did 를 문두에 (Does the room open early?)"
+        },
+        {
+          "criterion": "뒤에 -ing·과거분사(p.p.) 가 올 때",
+          "a": "be + -ing(진행) / be + 과거분사(p.p., 수동) — 두 단어가 합쳐 하나의 본동사",
+          "b": "일반동사는 뒤 동사와 합쳐 하나의 시제 동사구를 이루지 않습니다 — 진행·수동을 만드는 것은 be동사뿐입니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The archive **is not** open to the public.",
+          "ko": "그 기록관은 일반에 공개되어 있지 않습니다.",
+          "note": "be동사의 부정은 not 을 바로 뒤에 붙입니다. 다른 도움 동사가 필요 없습니다."
+        },
+        {
+          "en": "The archive **does not open** on national holidays.",
+          "ko": "그 기록관은 국경일에 문을 열지 않습니다.",
+          "note": "일반동사의 부정에는 does 가 필요하고, 그 뒤 동사는 원형 open 입니다. 여기서 시제는 does 가 지고 있습니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "title": "핵심 — 한 절에 시제 동사는 하나뿐입니다",
+      "rule": "한 절에는 시제를 가진 동사가 하나뿐입니다. 그러므로 be동사와 일반동사를 한 절 안에 나란히 세울 수 없습니다.",
+      "examples": [
+        {
+          "en": "The factory **is producing** solar panels for the new plant.",
+          "ko": "그 공장은 새 발전소에 쓸 태양광 패널을 생산하고 있습니다.",
+          "note": "be + -ing 는 두 단어가 합쳐 하나의 본동사입니다. 동사 자리를 둘 차지하지 않습니다."
+        },
+        {
+          "en": "The factory **is produce** solar panels for the new plant.",
+          "ko": "그 공장이 태양광 패널을 생산한다는 뜻을 노린 문장이지만, 어법상 성립하지 않습니다.",
+          "note": "be동사 is 와 동사원형 produce 가 나란히 섰습니다. produces 로 고치거나 is producing 으로 고쳐야 합니다.",
+          "wrong": true
+        },
+        {
+          "en": "The factory **produces** solar panels for the new plant.",
+          "ko": "그 공장은 새 발전소에 쓸 태양광 패널을 생산합니다.",
+          "note": "일반동사 produces 하나가 시제를 지고 있습니다. 이 자리에 is 를 더할 수 없습니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "NOTEBOOK",
+      "tier": 2,
+      "title": "be동사 뒤 자리의 규칙",
+      "intro": "be동사 뒤에 무엇이 올 수 있고 무엇이 올 수 없는지를 항목으로 새깁니다.",
+      "entries": [
+        {
+          "head": "동사원형 — 올 수 없습니다",
+          "body": "is leave 처럼 be동사 뒤에 동사원형을 세우면 be동사와 동사원형이 하나뿐인 본동사 자리를 두고 겹칩니다. 동사원형 leave 는 스스로 시제를 지지 못한 채 be동사 뒤에 얹혀 있을 뿐입니다. 일반동사가 스스로 시제를 지게 하거나 be동사를 지워야 합니다.",
+          "example": {
+            "en": "The gallery **is display** new works this month.",
+            "ko": "그 화랑이 이번 달 새 작품들을 전시한다는 뜻을 노렸지만, 성립하지 않습니다.",
+            "note": "displays 로 고치거나 is displaying 으로 고쳐야 합니다.",
+            "wrong": true
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "-s 시제형 — 역시 올 수 없습니다",
+          "body": "is displays 처럼 시제를 가진 형태를 겹쳐 세워도 똑같이 무너집니다. 시제는 한 절에서 딱 한 번만 표시됩니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "-ing — 진행형 동사구가 됩니다",
+          "body": "be + -ing 는 두 단어가 합쳐 하나의 본동사입니다. 동사 자리를 둘 차지하는 것이 아니라 하나를 나눠 지는 것입니다.",
+          "example": {
+            "en": "The interns **are reviewing** the old case files.",
+            "ko": "인턴들이 그 오래된 사건 기록을 검토하고 있습니다.",
+            "note": "are reviewing 전체가 이 절의 본동사입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "과거분사(p.p.) — 수동태 동사구가 됩니다",
+          "body": "과거분사(past participle, p.p.)는 write–wrote–written 처럼 동사 변화표의 셋째 칸 형태입니다. 홀로는 시제가 없어 be + 과거분사(p.p.) 로 합쳐져야 본동사가 되고, 주어가 동작을 받는 쪽임을 나타냅니다.",
+          "example": {
+            "en": "The letters **were written** by hand a century ago.",
+            "ko": "그 편지들은 백 년 전에 손으로 쓰였습니다.",
+            "note": "were written 전체가 본동사이고, 주어는 동작을 받는 쪽입니다."
+          }
+        },
+        {
+          "head": "be + to부정사 — 뒤 유닛의 몫",
+          "body": "be 뒤에 to부정사가 오는 구문은 별개의 문법이므로 여기서는 다루지 않습니다. 지금은 동사원형과 -s 시제형이 올 수 없다는 것만 새기면 됩니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 동사 형태가 그대로 본동사가 될 수 있는지 분류하십시오.",
+      "buckets": [
+        { "id": "ok", "label": "그대로 본동사가 됩니다" },
+        { "id": "bad", "label": "고쳐야 합니다" }
+      ],
+      "chips": [
+        {
+          "text": "is quiet",
+          "bucketId": "ok",
+          "why": "be동사 뒤에 형용사 보어가 왔습니다. be동사가 본동사입니다."
+        },
+        {
+          "text": "is waiting",
+          "bucketId": "ok",
+          "why": "be + -ing 는 두 단어가 합쳐 하나의 진행형 동사구입니다."
+        },
+        {
+          "text": "was written",
+          "bucketId": "ok",
+          "why": "be + 과거분사(p.p.) 는 두 단어가 합쳐 하나의 수동태 동사구입니다."
+        },
+        {
+          "text": "arrives",
+          "bucketId": "ok",
+          "why": "일반동사 단독으로 시제를 가진 본동사입니다."
+        },
+        {
+          "text": "is wait",
+          "bucketId": "bad",
+          "why": "be동사 뒤에 동사원형이 올 수 없습니다. waits 또는 is waiting 으로 고쳐야 합니다."
+        },
+        {
+          "text": "is arrives",
+          "bucketId": "bad",
+          "why": "시제 동사 둘을 한 절에 나란히 세운 형태입니다. arrives 또는 is arriving 으로 고쳐야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "be동사 문장의 해부",
+      "tokens": [
+        { "t": "The museum", "role": "S" },
+        { "t": "near the old station", "role": "M" },
+        { "t": "is", "role": "V" },
+        { "t": "free", "role": "C" },
+        { "t": "on Sundays.", "role": "M" }
+      ],
+      "ko": "그 오래된 역 근처의 박물관은 일요일에 무료입니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "near the old station 은 주어를 뒤에서 꾸미는 전치사구이고, on Sundays 는 시간을 더하는 수식어입니다. 둘 다 뼈대가 아닙니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The museum 입니다. 단수이므로 be동사는 is 입니다."
+        },
+        {
+          "label": "③ 시제를 가진 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "시제를 가진 동사는 is 하나뿐입니다. be동사는 그 자체가 본동사이므로 다른 동사를 더 세울 자리가 없습니다."
+        },
+        {
+          "label": "④ be동사가 부르는 보어를 확인합니다",
+          "roles": ["C"],
+          "note": "free 는 주어의 상태를 설명하는 형용사 보어입니다. be동사는 목적어가 아니라 보어를 데려옵니다."
+        }
+      ],
+      "conclusion": "be동사 is 가 이 절의 유일한 본동사입니다. 여기에 opens 같은 일반동사를 덧붙이면 시제 동사가 둘이 되어 문장이 무너집니다."
+    },
+    {
+      "id": "b15",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "be동사와 일반동사를 가리는 4단계",
+      "steps": [
+        {
+          "text": "먼저 절을 나눕니다. 절과 절을 잇는 접속사·관계사만 셉니다(단어·구를 잇는 and 는 세지 않습니다). 접속사·관계사는 생략될 수도 있으므로, 시제를 가진 동사의 개수로 절의 수를 다시 대조하십시오.",
+          "applyNote": "접속사 and 가 하나이므로 이 문장은 두 개의 절로 이루어져 있습니다."
+        },
+        {
+          "text": "각 절에서 시제를 가진 동사를 하나씩 찾습니다.",
+          "applyNote": "앞 절의 시제 동사는 opens, 뒤 절의 시제 동사는 is 입니다. 절마다 하나씩 있습니다."
+        },
+        {
+          "text": "그 동사가 be동사인지 일반동사인지 판정합니다. 한 절 안에 be동사와 일반동사가 동시에 서 있으면 오류입니다.",
+          "applyNote": "앞 절은 일반동사 opens 하나, 뒤 절은 be동사 is 하나입니다. 한 절 안에서 둘이 겹치지 않았으므로 옳습니다."
+        },
+        {
+          "text": "be동사 뒤에 -ing 나 p.p. 가 오는 경우만 예외입니다. 그때는 be + -ing, be + p.p. 가 합쳐 하나의 동사구입니다.",
+          "applyNote": "이 문장에는 be동사 뒤에 오는 -ing·p.p. 가 없으므로 예외 규칙을 적용할 자리가 없습니다."
+        }
+      ],
+      "example": {
+        "en": "The new library **opens** at nine, and the reading room **is** quiet all day.",
+        "ko": "그 새 도서관은 아홉 시에 문을 열고, 열람실은 하루 종일 조용합니다.",
+        "note": "접속사 and 가 절을 둘로 나눕니다. 앞 절의 본동사는 일반동사 opens, 뒤 절의 본동사는 be동사 is 입니다."
+      }
+    },
+    {
+      "id": "b16",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "시제 동사 세기 반사신경",
+      "instruction": "제한시간 안에 문장이 어법에 맞으면 ○, 틀리면 ×를 누르십시오. 시제 동사를 세는 눈이 자동으로 움직여야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "The museum is open on Sundays.",
+          "isTrue": true,
+          "why": "is 가 본동사이고 open 은 형용사 보어입니다. 시제 동사는 하나뿐입니다."
+        },
+        {
+          "statement": "The museum is opens on Sundays.",
+          "isTrue": false,
+          "why": "시제를 가진 is 와 opens 가 한 절에 겹쳤습니다. is open 또는 opens 로 써야 합니다."
+        },
+        {
+          "statement": "The last train leaves at eleven.",
+          "isTrue": true,
+          "why": "일반동사 leaves 하나가 시제를 집니다. 다른 동사가 필요 없습니다."
+        },
+        {
+          "statement": "The last train is leave at eleven.",
+          "isTrue": false,
+          "why": "be동사 뒤에 동사원형은 올 수 없습니다. leaves 또는 is leaving 으로 고쳐야 합니다."
+        },
+        {
+          "statement": "The report was written in a single night.",
+          "isTrue": true,
+          "why": "be + p.p. 는 하나의 수동태 동사구입니다. 시제 동사가 둘이 아닙니다."
+        },
+        {
+          "statement": "The manager is check the schedule now.",
+          "isTrue": false,
+          "why": "is 와 동사원형 check 를 겹쳐 세웠습니다. 지금 진행 중인 일이므로 is checking 이 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The shuttle bus to the airport ( leaves / is leave ) the terminal every twenty minutes.",
+      "steps": [
+        {
+          "title": "① 시제 동사 후보를 찾습니다",
+          "body": "괄호 밖에는 시제를 가진 동사가 하나도 없습니다. 따라서 괄호가 이 절의 본동사 자리입니다."
+        },
+        {
+          "title": "② 접속사·관계사를 셉니다",
+          "body": "접속사도 관계사도 없습니다. 절이 하나이므로 시제 동사도 하나여야 합니다."
+        },
+        {
+          "title": "③ be동사와 일반동사가 겹치는지 봅니다",
+          "body": "is leave 는 be동사 is 와 동사원형 leave 를 나란히 세운 형태입니다. 한 절에 시제 동사를 둘 두려는 시도이므로 성립하지 않습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "주어 The shuttle bus 는 3인칭 단수이고 반복되는 현재의 일을 말하므로 leaves 가 옳습니다. 진행의 뜻이 필요하다면 is leaving 으로 써야 합니다."
+        }
+      ],
+      "answer": "leaves",
+      "ko": "공항으로 가는 그 셔틀버스는 20분마다 터미널을 출발합니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b03-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The old clock in the hall {{blank}} every hour.",
+          "options": ["rings", "is ring"],
+          "answer": 0,
+          "translation": "현관에 있는 그 오래된 시계는 매시간 종을 울립니다.",
+          "explanation": "이 절에는 시제 동사가 하나도 없으므로 빈칸이 본동사 자리입니다. is ring 은 be동사와 동사원형을 나란히 세운 형태여서 성립하지 않습니다. 일반동사 rings 하나가 옳습니다.",
+          "trapTags": ["be-plus-base-verb"]
+        },
+        {
+          "id": "b03-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "At this moment, several researchers [[u:are examine]] the ancient map in the archive.",
+          "isCorrect": false,
+          "correction": "are examining",
+          "translation": "지금 이 순간 여러 연구자가 기록관에서 그 고대 지도를 살펴보고 있습니다.",
+          "explanation": "be동사 are 뒤에는 동사원형이 올 수 없습니다. -ing 가 오면 진행, p.p. 가 오면 수동으로 be동사와 합쳐 하나의 본동사구가 되며, 여기서는 지금 진행 중인 일을 말하므로 are examining 이 되어야 합니다.",
+          "trapTags": ["be-plus-base-verb", "progressive"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "형태와 판정 연결하기",
+      "instruction": "왼쪽의 동사 형태에 맞는 판정을 오른쪽에서 찾아 연결하십시오.",
+      "pairs": [
+        {
+          "a": "were",
+          "b": "be동사 — 그 자체가 본동사입니다",
+          "why": "was·were 는 be동사의 과거 형태입니다. 뒤에 보어를 데려옵니다."
+        },
+        {
+          "a": "flows",
+          "b": "일반동사 — 3인칭 단수 현재의 -s",
+          "why": "다섯 형태 밖의 동사이므로 일반동사이고, 스스로 시제를 집니다."
+        },
+        {
+          "a": "is waiting",
+          "b": "be + -ing — 하나의 진행형 동사구",
+          "why": "두 단어가 합쳐 이 절의 본동사 하나가 됩니다."
+        },
+        {
+          "a": "was built",
+          "b": "be + 과거분사(p.p.) — 하나의 수동태 동사구",
+          "why": "주어가 동작을 받는 쪽일 때 쓰는 형태입니다."
+        },
+        {
+          "a": "is wait",
+          "b": "성립 불가 — be동사 뒤의 동사원형",
+          "why": "waits 로 고치거나 is waiting 으로 고쳐야 합니다."
+        },
+        {
+          "a": "can wait",
+          "b": "조동사 + 동사원형 — 옳은 형태",
+          "why": "조동사는 원래 뒤에 동사원형을 데려옵니다. be동사와는 규칙이 다릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "be동사 뒤의 like — 전치사인가 동사인가",
+      "body": "like 는 두 신분을 가집니다. '좋아하다'라는 뜻일 때는 일반동사이므로 be동사와 함께 설 수 없습니다. 반면 be동사 뒤에 오는 like 는 '~와 같은'이라는 뜻의 전치사이며, 이때 본동사는 be동사입니다. 형태가 같다고 같은 품사로 단정해서는 안 됩니다.",
+      "example": {
+        "en": "His early paintings **are like** the sketches of his teacher.",
+        "ko": "그의 초기 그림들은 스승의 스케치와 비슷합니다.",
+        "note": "여기서 like 는 전치사이고 like the sketches of his teacher 전체가 보어 노릇을 합니다. '좋아한다'는 뜻이라면 He likes the sketches 처럼 like 가 본동사가 되고 be동사는 사라집니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The engineers ( are testing / are test ) the new engine at the moment.",
+      "givenSteps": [
+        "① 접속사도 관계사도 없으므로 절은 하나이고, 시제 동사도 하나여야 합니다.",
+        "② 두 후보 모두 be동사 are 를 포함합니다. 따라서 시제는 are 가 지고 있습니다."
+      ],
+      "prompt": "③ 그렇다면 be동사 are 뒤에는 어떤 동사 형태가 와야 합니까?",
+      "options": [
+        "are testing — be동사 뒤의 -ing 는 진행형 동사구를 이룹니다",
+        "are test — 주어가 복수이므로 뒤 동사는 원형으로 씁니다",
+        "are tests — 주어가 복수이므로 뒤 동사에 -s 를 붙입니다"
+      ],
+      "answer": 0,
+      "explain": "be동사 뒤에는 동사원형도, -s 가 붙은 시제 동사도 올 수 없습니다. -ing 가 오면 진행, p.p. 가 오면 수동으로 be동사와 합쳐 하나의 본동사구가 되므로 are testing 이 옳습니다. 주어의 수는 be동사 are 가 이미 반영했으므로 뒤 동사가 다시 수를 표시할 필요가 없습니다."
+    },
+    {
+      "id": "b22",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 쓰이지 않는 타일이 섞여 있습니다.",
+      "ko": "역 근처의 그 서점은 일요일에 문을 닫습니다.",
+      "answer": ["The bookstore", "near the station", "closes", "on Sundays."],
+      "tiles": [
+        "The bookstore",
+        "near the station",
+        "closes",
+        "on Sundays.",
+        "is close",
+        "close"
+      ],
+      "explanation": "be동사와 일반동사는 한 절에 함께 설 수 없으므로 is close 는 쓰이지 않습니다. 또 주어 The bookstore 가 3인칭 단수 현재이므로 close 가 아니라 closes 여야 합니다."
+    },
+    {
+      "id": "b23",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b03-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The tunnel {{blank}} by engineers from three countries in the 1990s.",
+          "options": ["was built", "was build", "building"],
+          "answer": 0,
+          "translation": "그 터널은 1990년대에 세 나라의 기술자들에 의해 건설되었습니다.",
+          "explanation": "be동사 뒤에는 동사원형이 올 수 없고, -ing 가 오면 진행, p.p. 가 오면 수동이 됩니다. 터널은 건설되는 쪽이므로 p.p. 를 써서 was built 가 되어야 합니다. was build 는 be동사와 동사원형을 겹쳐 세운 형태이고, building 만 남기면 시제 동사가 없어 문장이 성립하지 않습니다.",
+          "trapTags": ["be-plus-base-verb", "passive"]
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞의 확인 문항에서 is ring 이 아니라 rings 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "한 절에는 시제를 가진 동사가 하나만 설 수 있는데, is 와 ring 을 함께 쓰면 동사 자리를 둘 차지하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 판단의 근거는 '한 절 = 시제 동사 하나'라는 동사 자리 카운팅입니다."
+        },
+        {
+          "text": "주어 The old clock 이 단수여서 be동사 is 를 쓸 수 없기 때문입니다.",
+          "correct": false,
+          "feedback": "is 는 오히려 단수 주어와 어울리는 형태입니다. 문제는 수일치가 아니라 시제 동사가 둘이 된다는 점입니다."
+        },
+        {
+          "text": "ring 이 동작을 나타내는 동사라서 상태를 나타내는 be동사와 뜻이 어울리지 않기 때문입니다.",
+          "correct": false,
+          "feedback": "판단 근거는 의미가 아니라 구조입니다. is ringing 처럼 be동사가 동작의 뜻을 담는 경우도 얼마든지 있습니다."
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "title": "수능 어법의 형태로 판별해 봅니다",
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The city library [[1:is]] one of the oldest buildings in the region, and it [[2:is stay]] open until ten on weekdays, [[3:which]] many students [[4:appreciate]].",
+      "answer": 2,
+      "correction": "stays",
+      "rationales": [
+        "보어 one of the oldest buildings 를 이끄는 be동사이며, 앞 절의 유일한 시제 동사입니다.",
+        "be동사 is 뒤에는 동사원형이 올 수 없습니다. 주어 it 에 맞추어 일반동사 stays 가 스스로 시제를 지도록 고칩니다. stay 는 뒤에 보어 open 을 데려오는 일반동사입니다.",
+        "앞 절의 내용 전체를 받는 관계대명사입니다. 뒤 절에 목적어 자리가 비어 있으므로 which 가 옳습니다.",
+        "관계절의 본동사입니다. 주어 many students 가 복수이므로 현재형 appreciate 가 옳습니다."
+      ],
+      "ko": "그 시립 도서관은 그 지역에서 가장 오래된 건물 중 하나이며, 평일에는 열 시까지 문을 열어 두는데, 많은 학생이 이 점을 고맙게 여깁니다."
+    },
+    {
+      "id": "b26",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 be동사와 일반동사를 겹쳐 쓴 문장을 주고 틀린 곳을 찾아 고쳐 쓰게 합니다. be동사를 지우고 일반동사에 시제를 실어 주면 됩니다.",
+          "sample": {
+            "en": "The museum is offer free tours to visitors on weekends.",
+            "ask": "어법상 틀린 곳을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "offers — is 를 지우고 일반동사 offer 에 3인칭 단수 현재의 -s 를 붙입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 밑줄에서는 be동사가 있느냐 없느냐가 -ing·p.p. 를 본동사로 볼지 준동사로 볼지를 가릅니다. be동사(또는 조동사)가 앞에 없는 -ing 는 그 절의 본동사가 될 수 없습니다. 그 -ing 가 명사를 꾸미는 분사인지, 동명사인지, 분사구문인지는 자리로 판별합니다.",
+          "sample": {
+            "en": "The paintings [[u:hanging]] in the west corridor were donated by a local collector.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — 앞에 be동사가 없으므로 hanging 은 본동사가 아니라 The paintings 를 꾸미는 분사이고, 이 절의 본동사는 were donated 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b27",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "외나무다리의 시제 문지기",
+      "intro": "이 다리는 한 절에 시제 동사 하나만 건너보냅니다. be동사와 일반동사를 나란히 세워 온 문장은 지금까지 전부 되돌려보냈습니다. 네 번의 판단으로 통행 자격을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The night bus {{blank}} the terminal at eleven.",
+          "options": ["is leave", "leaves"],
+          "answer": 1,
+          "why": "절이 하나이므로 시제 동사도 하나여야 합니다. is leave 는 be동사와 동사원형을 겹쳐 세운 형태이므로 다리를 건널 수 없습니다."
+        },
+        {
+          "prompt": "Right now, the chef {{blank}} the sauce for the dinner.",
+          "options": ["is tasting", "is taste"],
+          "answer": 0,
+          "why": "be동사 뒤에 동사원형은 올 수 없습니다. -ing 가 오면 be동사와 합쳐 하나의 진행형 동사구가 됩니다."
+        },
+        {
+          "prompt": "The stone bridge {{blank}} more than a century ago.",
+          "options": ["was build", "was built"],
+          "answer": 1,
+          "why": "다리는 지어지는 쪽이므로 be + p.p. 의 수동태가 필요합니다. was build 는 be동사와 동사원형을 겹쳐 세운 형태입니다."
+        },
+        {
+          "prompt": "The corridor {{blank}} empty during the lecture.",
+          "options": ["stays", "is stay"],
+          "answer": 0,
+          "why": "stay 는 보어 empty 를 데려오는 일반동사이며 스스로 시제를 집니다. is stay 는 be동사 뒤에 동사원형을 겹쳐 세운 형태입니다."
+        }
+      ],
+      "winText": "문지기가 다리를 내어 줍니다. 네 문장 모두에서 시제 동사를 정확히 하나만 세웠습니다. 이 셈법이 앞으로 수동태·진행형·준동사 판별의 출발점이 됩니다.",
+      "loseText": "문지기는 아직 비켜서지 않습니다. 오답을 되돌아보면 수법은 전부 같았습니다 — be동사 뒤에 동사원형을 몰래 세우는 것입니다. \"한 절 = 시제 동사 하나\"를 다시 세고 오면 다리는 열립니다."
+    },
+    {
+      "id": "b28",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "한 절에는 시제 동사가 ___개만 설 수 있으므로 be동사와 일반동사를 나란히 쓸 수 없고, be동사 뒤에는 동사원형이 올 수 없어 ___ 가 오면 진행, ___ 가 오면 수동이 됩니다."
+    },
+    {
+      "id": "b29",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "be동사(am·is·are·was·were)는 그 자체가 본동사이며 뒤에 명사·형용사·장소 표현을 데려옵니다.",
+        "일반동사는 be동사와 조동사를 제외한 모든 동사이며, 3인칭 단수 현재이면 -s(-es)를 붙입니다.",
+        "한 절에는 시제 동사가 하나뿐이므로 be동사와 일반동사를 나란히 세울 수 없습니다.",
+        "be동사 뒤에는 동사원형이나 -s 가 붙은 시제형이 올 수 없고, -ing(진행)·p.p.(수동)가 오면 두 단어가 합쳐 하나의 본동사입니다.",
+        "부정·의문에서 be동사는 스스로 처리하지만, 일반동사는 do·does·did 의 도움을 받습니다."
+      ],
+      "keySentence": {
+        "en": "The factory **is producing** solar panels, but it **produces** no batteries.",
+        "ko": "그 공장은 태양광 패널을 생산하고 있지만, 배터리는 생산하지 않습니다.",
+        "note": "접속사 but 이 절을 둘로 나눕니다. 앞 절의 본동사는 동사구 is producing, 뒤 절의 본동사는 일반동사 produces 이며, 한 절 안에서 둘이 겹치지는 않았습니다."
+      }
+    },
+    {
+      "id": "b30",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b03-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The research center {{blank}} data from over forty weather stations.",
+          "options": ["collects", "is collect"],
+          "answer": 0,
+          "translation": "그 연구소는 40곳이 넘는 기상 관측소에서 자료를 수집합니다.",
+          "explanation": "절이 하나이므로 시제 동사도 하나여야 합니다. is collect 는 be동사와 동사원형을 겹쳐 세운 형태이므로 성립하지 않으며, 일반동사 collects 가 옳습니다.",
+          "trapTags": ["be-plus-base-verb"]
+        },
+        {
+          "id": "b03-c1-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The exhibition hall [[u:is quiet]] in the early afternoon.",
+          "isCorrect": true,
+          "translation": "그 전시관은 이른 오후에 조용합니다.",
+          "explanation": "be동사 is 가 본동사이고 형용사 quiet 가 보어입니다. 일반동사가 함께 서 있지 않으므로 시제 동사는 하나이며, 이 문장은 옳습니다.",
+          "trapTags": ["be-complement"]
+        },
+        {
+          "id": "b03-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The stadium {{blank}} by a famous architect, and it opened to the public last year.",
+          "options": ["was designed", "was design", "designing"],
+          "answer": 0,
+          "translation": "그 경기장은 유명한 건축가에 의해 설계되었고, 작년에 일반에 공개되었습니다.",
+          "explanation": "등위접속사 and 가 절을 둘로 나누므로 각 절에 시제 동사가 하나씩 필요합니다. 경기장은 설계되는 쪽이므로 앞 절의 본동사는 be + p.p. 인 was designed 입니다. was design 은 be동사와 동사원형을 겹쳐 세운 형태이고, designing 만으로는 앞 절에 시제 동사가 없어집니다.",
+          "trapTags": ["be-plus-base-verb", "passive", "coordination"]
+        }
+      ]
+    }
+  ]
+}

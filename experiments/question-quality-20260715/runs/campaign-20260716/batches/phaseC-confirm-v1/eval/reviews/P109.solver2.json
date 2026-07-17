@@ -1,0 +1,35 @@
+{
+  "pid": "P109",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'you believe you are disguising yourself': progressive 'are disguising' with reflexive direct object 'yourself' is fully well-formed; transitive 'disguise' licenses the reflexive, and the matrix verb 'believe' imposes no constraint forcing a passive/participial form. No alternative parse renders it ungrammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'all of the CEOs were concerned that + clause' is the standard adjectival-participle construction 'be concerned that S'. Subject-verb agreement ('all of the CEOs were') holds and the that-complement is licensed."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Relative adverb 'where' with abstract locative antecedent 'culture' (= 'in which') is standard. The relative clause 'those subordinates did the same' is gapless, so a relative adverb (not 'which/that') is exactly what is required."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Free adjunct participle 'creating a snowball effect' takes the preceding proposition (subordinates doing the same) as its logical subject — a standard resultative participial construction equivalent to 'which created a snowball effect'. Not a dangling participle in any disqualifying sense."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (the answer)",
+      "reason": "The copular predicate coordinates to-infinitives with 'to' carried over: 'were to actually name..., (to) explore..., and (to) ask...'. Finite past 'asked' breaks the parallel series; it must be '(to) ask'. Rescue parses fail: (1) coordination with 'helped' inside the relative clause '(that) we helped the CEOs remove their masks' is impossible because the copula 'were' and the first two list items intervene, closing that clause; (2) coordination with 'were' would make 'Some of the ways ... asked the CEOs' the reading, which is semantically incoherent and leaves the two infinitives as an unconjoined asyndetic list. No grammatical parse of 'asked' exists here."
+    }
+  ],
+  "note": "Clean single-answer item. The error is a classic parallelism break at (E) with a long-distance cue: the series starts at 'were to actually name', so the third conjunct must continue the (bare) infinitive series. All four distractors survive adversarial alternative-parse checks (progressive+reflexive at A, 'be concerned that' at B, gapless relative clause licensing 'where' at C, sentential-subject resultative participle at D)."
+}

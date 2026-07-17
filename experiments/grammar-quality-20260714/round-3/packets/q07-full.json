@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20191120-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 155
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):ANS=b  (C):dec=h  (D):dec=g  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 181,
+        "relPos": 0.212,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 344,
+        "relPos": 0.402,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 359,
+        "relPos": 0.42,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 528,
+        "relPos": 0.618,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 612,
+        "relPos": 0.716,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 13,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.716,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a meal. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "often found",
+        "isError": false,
+        "errorExpression": "often found",
+        "surroundingText": "Take the case of the Adélie penguins. They are often found strolling in large groups toward the",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "which",
+        "isError": true,
+        "correction": "which",
+        "errorExpression": "where",
+        "surroundingText": "danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "have penguins for a meal",
+        "isError": false,
+        "errorExpression": "have penguins for a meal",
+        "surroundingText": "the leopard seal, for one, which likes to have penguins for a meal. What is an Adélie to",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "them",
+        "isError": false,
+        "errorExpression": "them",
+        "surroundingText": "wait by the edge of the water until one of them gives up and jumps in. The moment that",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": false,
+        "errorExpression": "it",
+        "surroundingText": "survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "often found"
+      },
+      {
+        "label": "(B)",
+        "text": "where"
+      },
+      {
+        "label": "(C)",
+        "text": "have penguins for a meal"
+      },
+      {
+        "label": "(D)",
+        "text": "them"
+      },
+      {
+        "label": "(E)",
+        "text": "it"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 'They'가 발견되는 대상이므로, 수동의 의미를 나타내는 과거분사 'often found'는 어법상 옳습니다.",
+      "(C)": "to부정사구 내에서 'have'는 '먹다'라는 의미의 일반 타동사 원형으로 쓰여 'have penguins for a meal' 구조가 성립하므로 어법상 옳습니다.",
+      "(D)": "앞서 언급된 복수 명사 'The penguins'를 지칭하는 대명사의 목적격 'them'이므로 어법상 옳습니다.",
+      "(E)": "앞 문장의 단수 주어 'the pioneer'를 지칭하는 단수 대명사 'it'이므로 어법상 옳습니다."
+    },
+    "explanation": "선행사 수식과 절의 완전성을 확인해야 하는 문장입니다. 해당 문장은 선행사 'the leopard seal'을 수식하는 관계사절이 이어지는 구조인데, 밑줄 뒤의 절 'likes to have penguins for a meal'은 주어가 빠진 불완전한 절이므로 관계부사가 아닌 주격 관계대명사가 필요합니다. 따라서 장소를 나타내는 의미상의 선행사로 혼동하기 쉬운 'where'는 이 자리에 올 수 없으며, 주격 관계대명사인 'which'로 고쳐야 합니다. 선행사의 해석상 위치(icy-cold water 뒤에 삽입된 명사)에 현혹되어 관계부사 'where'를 맞는 구조로 판단하지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      "(B) 관계사 — 뒤가 불완전한 절에는 관계부사 대신 관계대명사 필요",
+      "(A) 분사 능수동 — 의미상 주어와의 수동 관계 판정",
+      "(D) 대명사 일치 — 복수 명사를 받는 대명사의 수 일치"
+    ],
+    "tags": [
+      "관계사",
+      "과거분사",
+      "대명사 수일치",
+      "고2 어법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are __(A) often found__ strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, __(B) where__ likes to __(C) have penguins for a meal__. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of __(D) them__ gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If __(E) it__ perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\"",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

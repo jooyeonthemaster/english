@@ -1,0 +1,72 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-STRUCTURE-MISANALYSIS",
+      "severity": "critical",
+      "evidence": "해설은 \"'was changed'는 불필요한 수동태 표현\"이며 \"능동태 동사 'changed'가 적절\"하다고 주장하지만, 교정 후 문장은 'His confidence was, however, quickly changed to nervousness'로 원문의 첫 번째 'was'가 그대로 남아 있는 수동태(was ... changed)다. 능동태가 되는 것이 아니다. 실제 렌더 오류의 결정적 근거 — 'was, however, quickly was changed'의 정동사(조동사 was) 중복 — 는 해설 어디에도 언급되지 않는다. 해설이 실제 통사 구조와 교정형을 오설명하므로 V4 실패."
+    },
+    {
+      "code": "V4-POINT-MISATTRIBUTION",
+      "severity": "critical",
+      "evidence": "해설 말미 '주어가 감정이나 태도일 때 change는 능동형(changed)으로 흔히 쓰임'과 keyPoints의 '(C) 태의 일치 — 능동태 change'는 이 문항에 적용되지 않는 오개념이다. 원문 자체가 수동 구문(was ... changed to nervousness)이므로 '태(능동 vs 수동)'는 이 문항의 실제 판별 포인트가 아니다. 생성기가 원문의 'changed'를 능동 본동사로 오분석하여 수동화 변형을 시도했고, 그 결과 태 오류가 아닌 조동사 중복 오류가 만들어졌다. 또한 해설의 'dynamic한 서사적 흐름' 운운은 문법 판단이 아닌 문맥 선호 논거다."
+    }
+  ],
+  "craft": {
+    "C1": 1,
+    "C2": 3,
+    "C3": 1,
+    "C4": 1,
+    "C5": 1,
+    "C6": 0
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "-ly로 끝나는 형용사(lively)를 부사로 오인하게 하는 고전적 함정 — 형용사의 명사 전위 수식 판단",
+      "temptingBecause": "-ly 어미 때문에 부사가 명사를 수식하는 비문으로 착각할 수 있다",
+      "decisiveFlaw": "없음(옳은 표현). lively는 형용사로 shopping center를 적법하게 수식한다. 원문과 동일."
+    },
+    {
+      "label": "(B)",
+      "intent": "등위접속사 and 병렬 — stopped and looked의 과거시제 병렬 판단",
+      "temptingBecause": "뒤따르는 분사 agreeing과 혼동하여 looking으로 써야 한다고 오판할 수 있다",
+      "decisiveFlaw": "없음(옳은 표현). stopped와 병렬인 과거동사 looked가 정확하다. 원문과 동일."
+    },
+    {
+      "label": "(C)",
+      "intent": "선언된 정답. 의도는 '태'(pointCode e)였으나 실제 실현된 오류는 조동사 중복이다",
+      "temptingBecause": "설계 의도상으로는 수동태가 자연스러워 보이게 하려 했으나, 실제로는 함정으로 기능하지 못한다",
+      "decisiveFlaw": "렌더 문장 'His confidence was, however, quickly was changed to nervousness'는 정동사 was가 두 번 등장하는 명백한 비문. 'was changed'를 'changed'로 고치면 정확히 원문(여전히 수동 구문 was ... changed)이 복원된다. 정답 유일성은 성립하나, 오류의 본질은 해설이 주장하는 '불필요한 수동태'가 아니라 'was 중복'이며, 표면 단서(was ... was)만으로 즉시 발견된다."
+    },
+    {
+      "label": "(D)",
+      "intent": "관용적 수동 'be finished'(끝나다)의 적법성 판단 — 정답과 동일한 pointCode e(태)",
+      "temptingBecause": "band가 finish의 행위 주체이므로 능동 had finished여야 한다고 오판할 수 있다",
+      "decisiveFlaw": "없음(옳은 표현). 'be finished'는 '끝나다'라는 확립된 관용 표현이며 원문 그대로다. 단, 정답 (C)와 pointCode가 같아(e) 같은 포인트의 디코이가 정답 옆에 배치된 구성이다."
+    },
+    {
+      "label": "(E)",
+      "intent": "현재완료(have + p.p.)와 목적격 관계대명사 생략절 내 과거분사 판단",
+      "temptingBecause": "I've 뒤의 seen을 saw로 써야 한다고 혼동하거나 관계절 구조를 놓칠 수 있다",
+      "decisiveFlaw": "없음(옳은 표현). the best performance (that) I've ever seen — 현재완료 경험 용법으로 정확하다. 원문과 동일."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 교정 후 문장을 능동태라고 주장하나 실제로는 첫 번째 was가 남아 있는 수동 구문이다 — 통사 구조 오분석 (critical)",
+    "실제 결정적 오류 근거인 조동사 was 중복('was, however, quickly was changed')이 해설에 전혀 언급되지 않는다 (critical)",
+    "'dynamic한 서사적 흐름을 이끄는 능동태 동사'라는 논거는 문법 판단이 아닌 문맥 선호 서술이며, 그마저도 사실과 다르다 (major)",
+    "keyPoints (C) '태의 일치 — 주어가 스스로 상태 변화를 나타낼 때의 능동태 change'가 동일한 오개념을 반복한다 (major)",
+    "오답 해설 (A), (B), (D), (E)는 각 선지의 실제 구조와 대응하며 사실 오류가 없다"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "요청 난이도 INTERMEDIATE, 유형 GRAMMAR_ERROR. 정답 유일성(V2)과 렌더 무결성(V1)은 성립한다: 원지문 대비 유일한 변형이 선언된 편집 지점 (C)의 'changed'→'was changed'이고, 그 결과 (C)만 비문이며 교정 시 정확히 원문이 복원된다. 그러나 문항 설계 자체가 원문 오분석에서 출발했다 — 원문 'His confidence was, however, quickly changed to nervousness'는 이미 수동 구문인데, 생성기는 'changed'를 능동 본동사로 오인하고 '능동→수동' 태 변형을 시도해 결과적으로 조동사 중복이라는 저품질 표면 오류를 만들었다. 해설(V4)은 이 오분석을 그대로 서술하여 교정형의 실제 구조(여전히 수동)와 오류의 실제 본질(was 중복)을 모두 오설명하므로 치명 실패다. 공예 측면에서도 'was ... was' 표면 단서로 문법 지식 없이 즉답 가능하여(C3=1, C4=1) INTERMEDIATE 라벨과 불일치(C5=1)하고, 해설은 사실 오류로 C6=0. 오답 4개의 디코이 의도는 비교적 충실하나(C2=3) 이는 V4 실패를 상쇄하지 못한다. 등급 F — 출하 불가. 수리 방향: (C)의 오류를 다른 지점의 진짜 최소대립쌍 문법 오류로 재설계하거나, 최소한 해설을 'was 중복(정동사 이중 출현)' 근거로 전면 재작성해야 한다."
+}

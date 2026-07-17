@@ -1,0 +1,35 @@
+{
+  "pid": "P037",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Sweeping statements have been made about...' — present perfect passive (have been + p.p.); subject 'statements' is the receiver of 'make'. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It has been said that ... , and that ...' — extraposed-it with passive reporting verb; underlined 'that' introduces the first noun clause and is paralleled by the second 'and that'. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a child who was dressed in his best clothes and whose mother stressed...' — two coordinated relative clauses share the antecedent 'a child'; possessive relative 'whose' is required before 'mother'. The parallel start point ('who was...' and 'whose mother...') is a tempting checkpoint but both clauses attach to the same antecedent, so it is correct."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'by the end of the hour the child would have forgetting his clothes' — modal perfect requires 'would have + past participle' → 'would have forgotten'. No alternative parse rescues it: not a causative 'have + O + -ing' (word order is 'have forgetting his clothes'), and a progressive would need 'would have been forgetting'. The coordinated 'and would be acting' confirms the modal-perfect frame. Ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'might be very noisy while playing cowboys' — elliptical adverbial clause 'while (he is) playing'; implicit subject matches the main-clause subject 'the child'. Grammatical."
+    }
+  ],
+  "note": "Solver lens: top-tier examinee, real-time distractor pull. Brief pull toward (C) 'whose' due to the coordination check ('who was dressed ... and whose mother ...'), resolved by confirming both relatives share antecedent 'a child'. (D) is unambiguously wrong (perfect aspect after modal requires p.p.), and 'by the end of the hour' is a long-distance cue forcing the future-perfect-in-the-past reading. Single defensible answer."
+}

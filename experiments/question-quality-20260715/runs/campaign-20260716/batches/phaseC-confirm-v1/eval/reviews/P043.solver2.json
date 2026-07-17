@@ -1,0 +1,35 @@
+{
+  "pid": "P043",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'who is credited with discovering America'에서 credit A with B의 수동태 'A is credited with B'가 성립한다. 선행사 'the Italian explorer'(단수)에 대해 is credited가 수 일치하며, 전치사 with 뒤 동명사 discovering도 정상. 관계절 내부 구조(주어 자리 who + be + 과거분사)가 형식적으로 완결된 정문이다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'honoring the explorer does not make any sense'에서 honoring은 주절의 진짜 주어(동명사구 주어)이며, 동명사구 주어는 단수 취급이므로 does와 수 일치가 성립한다. 문두의 'considering his mistreatment...'는 관용적 전치사/분사구문(considering = ~을 고려하면)으로 비인칭 용법이 허용되어 현수분사 문제도 없다. to honor로 바꿔도 되지만 honoring 자체가 어법상 결함이 없다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Columbus killed and enslaved thousands of Native Americans'에서 병렬 시작점은 killed이며, and 뒤 enslaved는 동일 주어 Columbus를 공유하는 과거시제 정형동사로 killed와 완전 병렬을 이룬다. 지문 전체의 서사 시제(과거)와도 일치. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "문장 'Additionally, the diseases that Columbus and other Europeans brought with them severely reducing the population of Native Americans.'에서 주어는 the diseases이고, 'that Columbus and other Europeans brought with them'은 diseases를 수식하는 목적격 관계절(brought의 목적어 공백)이다. 관계절 내부의 정형동사 brought를 제외하면 이 문장에는 주절 정형동사가 하나도 없다. reducing을 분사로 보면 주절이 무동사 단편(fragment)이 되고, 독립분사구문(absolute)으로 보려 해도 의존할 주절 자체가 존재하지 않아 성립 불가. 도치·생략 등 어떤 대안 해석으로도 정문이 되지 않는다. reduced(과거 정형동사)로 고쳐야 한다. 명백한 오답 밑줄."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a new holiday that honors Native Americans and remembers their suffering'에서 that은 주격 관계대명사로 선행사 a new holiday(단수)를 받아 honors/remembers와 수 일치한다. 설령 선행사를 the creation으로 보더라도 단수이므로 일치에 문제가 없다. honors와 remembers의 병렬도 정상. 정문."
+    }
+  ],
+  "note": "형식 문법 검증 결과 (D)만이 유일하게 옹호 불가능한 밑줄이다. (D) 문장은 주절 정형동사 부재로 어떤 대안 통사 분석(축약 관계절, 독립분사구문, 도치)으로도 구제되지 않는다. 나머지 네 밑줄은 각각 수동태 관용구, 동명사 주어, 과거시제 병렬, 주격 관계대명사로 모두 정문. 단일 정답이 명확한 문항."
+}

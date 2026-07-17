@@ -1,0 +1,291 @@
+{
+  "auditId": "production-callgraph-bound-audit-20260715",
+  "createdAt": "2026-07-15T00:00:00+09:00",
+  "verdict": "FAIL_BLOCKED",
+  "scope": {
+    "primarySurface": "/director/workbench/questions/generate",
+    "primaryServerPath": "/api/workbench/ai-jobs/question-generation/fast",
+    "method": "static analysis only; zero API, database, browser, or provider calls",
+    "physicalCallDefinition": "one client-side Atlas/OpenRouter fetch; provider-internal routing retries are outside the observable boundary",
+    "configurationBasis": "repository defaults, not a production-environment attestation",
+    "questionCountPerPrimaryRequest": 1,
+    "englishTypeCount": 26
+  },
+  "defaultConstants": {
+    "wrapperOuterRetries": 2,
+    "wrapperOuterAttempts": 3,
+    "sdkHiddenRetries": 2,
+    "sdkHiddenAttempts": 3,
+    "emptyResultMaxAttemptsInput": 2,
+    "premiumStrictAttemptCap": 5,
+    "standardGrammarKillerStrictAttemptCap": 4,
+    "grammarPremiumMaxRegenerations": 2
+  },
+  "atomicBounds": {
+    "sdkOperationPhysicalCalls": 3,
+    "normalWrapperOuterAttemptPhysicalCalls": 9,
+    "forcedJsonWrapperOuterAttemptPhysicalCalls": 6,
+    "normalGenerateQuestionObjectPhysicalCalls": 27,
+    "forcedJsonGenerateQuestionObjectPhysicalCalls": 18,
+    "ladderCallModelPhysicalCalls": 9,
+    "ladderCallModelStages": 9,
+    "grammarPremiumLadderPhysicalCalls": 81,
+    "derivation": {
+      "normalWrapperOuterAttempt": "structured SDK operation (3) + prompt-JSON fallback SDK operation (3) + malformed-fallback JSON repair SDK operation (3)",
+      "forcedJsonWrapperOuterAttempt": "prompt-JSON fallback SDK operation (3) + malformed-fallback JSON repair SDK operation (3)",
+      "normalGenerateQuestionObject": "3 wrapper outer attempts * 9",
+      "ladderCallModel": "parse failure on fireOnce #1, non-parse 400/reasoning failure on fireOnce #2, reasoning fallback fireOnce #3; each fireOnce has 3 SDK attempts",
+      "grammarPremiumLadder": "three split cycles * (answer-only + add-decoys) + one repair in each cycle = 9 callLadderModel stages; 9 * 9"
+    }
+  },
+  "singlePassBounds": {
+    "englishNonGrammar": {
+      "formula": "G * (1 + n)",
+      "meaning": "one batched full-generation call plus at most one full-schema candidate-repair call per returned question"
+    },
+    "englishGrammarStrictOrRelaxedLegacy": {
+      "formula": "G * (1 + 2n)",
+      "meaning": "one full-generation call, at most n full-schema candidate repairs, and at most n independent STANDARD grammar-solver calls"
+    },
+    "englishGrammarScarce": {
+      "formula": "G * (1 + n)",
+      "meaning": "scarce mode omits the grammar solver but can still run candidate repair"
+    },
+    "eligiblePremiumGrammarStrict": {
+      "formula": "L + 3G for n=1",
+      "meaning": "ladder can exhaust and give up, then legacy generation, candidate repair, and grammar solver all run"
+    },
+    "koStrictNeedsSolver": {
+      "formula": "G * (1 + n)",
+      "meaning": "KO skips candidate repair; strict mode can run one solver per returned question"
+    },
+    "koOtherModeOrNoSolver": {
+      "formula": "G",
+      "meaning": "one batched generation call"
+    }
+  },
+  "runBounds": {
+    "symbols": {
+      "R": "configured GEMINI_QUESTION_MAX_RETRIES; default 2",
+      "E": "configured GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS; default 2",
+      "H": "AI SDK physical attempts per generateObject/generateText; current locked SDK default 3",
+      "G": "normal generateQuestionObject bound = 3H(R+1); default 27",
+      "F": "forced-JSON generateQuestionObject bound = 2H(R+1); default 18",
+      "L": "premium grammar ladder bound = 27H; default 81",
+      "n": "requested questions in one plan item"
+    },
+    "strictAttemptRules": {
+      "standardDefault": "max(4,E)",
+      "standardSummaryWriting": "max(5,E)",
+      "standardExtended": "max(6,E)",
+      "standardKillerSingleBlank": "max(10,E)",
+      "standardGrammarKiller": "4",
+      "premium": "min(5,E), with a floor of 1"
+    },
+    "standardNonGrammarSingleType": "(A + 2) * G * (1 + n): A strict passes, one relaxed pass, and at most one universal scarce/salvage pass",
+    "standardGrammarSingleType": "(A + 1) * G * (1 + 2n) + 2 * G * (1 + n): A strict passes, one rescue-or-relaxed solver pass, then at most grammar-scarce and universal-salvage passes",
+    "premiumNonGrammarSingleType": "(A + 1) * G * (1 + n): A strict passes plus at most one universal salvage pass",
+    "premiumGrammarLegacySingleType": "A * G * (1 + 2n) + 2 * G * (1 + n)",
+    "premiumGrammarLadderSingleType": "A * (L + 3G) + 2 * G * (1 + n), only when n=1 and all ladder eligibility predicates hold",
+    "multiTypePlan": "attempt class is selected by the strongest trigger anywhere in the plan; every strict/relaxed/salvage pass maps all plan items concurrently, so the physical cap is the sum of per-item pass caps, not the maximum",
+    "autoPlanner": "the legacy auto route adds one more G for planning before the engine"
+  },
+  "primaryFastPathDefaultConfigPerItem": [
+    {
+      "type": "BLANK_INFERENCE",
+      "standardDefaultPhysicalMax": 324,
+      "standardValidSettingsPhysicalMax": 648,
+      "standardMaxCase": "single-blank KILLER: A=10",
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "GRAMMAR_ERROR",
+      "standardDefaultPhysicalMax": 513,
+      "standardValidSettingsPhysicalMax": 675,
+      "standardMaxCase": "non-KILLER markerCount>5 or answerCount>1: A=6",
+      "premiumDefaultPhysicalMax": 432,
+      "premiumMaxCase": "eligible triple ladder exhausts before legacy generation/repair/solver; A=2",
+      "premiumLegacyIneligiblePhysicalMax": 270
+    },
+    {
+      "type": "GRAMMAR_CHOICE_COMBO",
+      "standardDefaultPhysicalMax": 432,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "VOCAB_CHOICE",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "SENTENCE_ORDER",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "SENTENCE_INSERT",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "TOPIC",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "MAIN_IDEA",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "TOPIC_MAIN_IDEA",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "TITLE",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "IMPLIED_MEANING",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "REFERENCE",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "CONTENT_MATCH",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "SUMMARY_COMPLETE_MC",
+      "standardDefaultPhysicalMax": 432,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "IRRELEVANT",
+      "standardDefaultPhysicalMax": 324,
+      "standardValidSettingsPhysicalMax": 432,
+      "standardMaxCase": "slotCount>5: A=6",
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "CONDITIONAL_WRITING",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "SENTENCE_TRANSFORM",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "FILL_BLANK_KEY",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "SUMMARY_COMPLETE",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "SUMMARY_WRITING",
+      "standardDefaultPhysicalMax": 378,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "WORD_ORDER",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "TOPIC_SENTENCE_WRITING",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "GRAMMAR_CORRECTION",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "CONTEXT_MEANING",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "SYNONYM",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    },
+    {
+      "type": "ANTONYM",
+      "standardDefaultPhysicalMax": 324,
+      "premiumDefaultPhysicalMax": 162
+    }
+  ],
+  "globalFiniteCap": {
+    "exists": false,
+    "reasons": [
+      "GEMINI_QUESTION_MAX_RETRIES and GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS accept any positive integer and have no hard maximum.",
+      "The legacy direct single route normalizes count with no server-side upper bound; the legacy auto planner schema bounds neither plan length nor per-item count.",
+      "The primary UI emits one fast request per configured item and the server has no aggregate batch/campaign physical-call cap.",
+      "The production no-research-scope provider transport is an exact native-fetch passthrough and performs no lease or cap check.",
+      "Deadlines are time stops, not physical-call stops; immediately failing requests can consume many calls before a deadline.",
+      "A Trigger process crash after provider calls but before terminal job persistence can replay a run; normal caught failures mark FAILED and later task attempts skip, but the crash window remains."
+    ]
+  },
+  "observabilityGaps": [
+    "usageEvents and result.attempts are logical-operation telemetry, not physical-call telemetry.",
+    "AI SDK retry failures are not aggregated into the successful result usage.",
+    "prompt-JSON fallback returns only the first generateText result usage; the JSON repair continuation usage is discarded.",
+    "experimental_repairText continuation usage is discarded.",
+    "failed ladder fireOnce calls emit undefined usage, and successful fireOnce usage does not expose preceding SDK retry usage.",
+    "therefore current cost records cannot prove a physical-call or USD cap."
+  ],
+  "requiredBudgetControllerInvariants": [
+    "Reject execution unless endpoint, model, plan, schema, parser, prompt, retry policy, and price snapshot match a frozen allowlist.",
+    "Atomically reserve one physical-call slot and a conservative token/USD lease immediately before every provider fetch, including SDK retries.",
+    "Attribute every physical call to operation, candidate, type, plan, quality mode, stage, logical attempt, and monotonically increasing physical ordinal.",
+    "Count failed, timed-out, aborted, parse-invalid, and unknown-usage calls; unknown billing must settle to the reserved worst case, never zero.",
+    "Give JSON repair, prompt-JSON fallback, grammar answer-only, add-decoys, ladder repair, legacy candidate repair, and solver calls explicit child scopes.",
+    "Persist reservations and settlements durably so process crashes and Trigger retries share one job/campaign envelope.",
+    "Require all three caps before launch: candidate cap, physical-call cap, and USD cap; a deadline is only an additional stop condition.",
+    "Validate bounded request count, plan length, unique type entries, retry environment values, and max-output-token values before any call.",
+    "Reserve the full remaining worst-case envelope before starting an assignment, or stop before the assignment; never truncate a production policy mid-assignment and label it parity.",
+    "Use atomic campaign-wide accounting under Promise.all and client fast-request concurrency.",
+    "Fail closed on missing research scope/controller, ledger write failure, price ambiguity, endpoint/model drift, or incomplete response-clone settlement.",
+    "Reconcile final ledger physical ordinals against boundary observations and reject the entire phase on gaps or duplicates."
+  ],
+  "sourceSnapshot": {
+    "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "files": {
+      "package.json": "bfc9c68a6d0df116f969b5349131fc6bc0e2f9edfe9f9c105d5b2abb8f2be7d8",
+      "package-lock.json": "69df7075b9a70cb1740531a24cc787d396d735ac2977a359b7700fd0701253be",
+      "src/app/(director)/director/workbench/generate/use-generation-handlers.ts": "77ef54a97aac885bf6b45a88395e019f0dd0c2d43d5530ad64a1c0e59082b5f7",
+      "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts": "3837ad82bd443686da11bbd2717687b90500a43c3720164e8731e8fd70e1663d",
+      "src/app/api/workbench/ai-jobs/question-generation/route.ts": "49a407b71ad40957cff009953153ccd368705c1afad6d4e1ba01657272097f76",
+      "src/trigger/workbench-question-generation.ts": "2884e251818bede925d85aba1c91f805c1fa1b7524f29deeeeff488adaaa53ad",
+      "src/app/api/ai/generate-question/route.ts": "afadfaf79d51657e546233c78ed9d092dfba9060cd89240ff9d2be3f0e03c1fa",
+      "src/app/api/ai/generate-questions-auto/route.ts": "50e5d715ac2a59d77e2e4a150e3bcb5afc5d874c32fe04e3eb6599571bd98813",
+      "src/app/api/ai/generate-questions-auto/_lib/schemas.ts": "bd14cadf02bd6aa2859ded1c1544bbdaa426968d1d4c32ee4f9da933807ca5cb",
+      "src/app/api/ai/generate-questions-auto/_lib/constants.ts": "a58a825d8d768b8df81efdca7eccace5631bbd71ac2d61e817a73ef3028bcc7b",
+      "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts": "f9cbd3fd290295023b5e69b693556ba64c4e0ace16f5e0936278ca1d26404ff4",
+      "src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts": "2716f854e0fb34c874171ddac4393a5910290aa01a2bd9c501bbed0db0e83b1c",
+      "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts": "4cafdb312a4b868c139e04a760006db4db806dec87129ffeb7760490d49bd17c",
+      "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts": "a35282d075d5df751cccb7bf5f608cf8ff874dd11cae0b462c94f33df174ccaa",
+      "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts": "b0aacce026dfcbcb122d50d6e7e4fb4648509f02ffec97975123084cd38fbcdd",
+      "src/lib/korean/quality/solver-gate.ts": "9748d05267ee7ff44d57f402eca149e82ab7e0cca25713a3c142ce5c035ec368",
+      "src/lib/concurrency-config.ts": "df0edfb5e84cafd6716251fc3fdebbf0473052ce870bc15a411ce5f20325b9d1",
+      "src/lib/question-generation-llm.ts": "5e445177b3745e6f106ddf6e174f78a8e40fab7d26f343ce16ab4812c0baa338",
+      "src/lib/atlas-ai.ts": "68a1664cd2fcdcddcd320f3e4f75cbcf655777a5774c480ac4991855d8ef1f5c",
+      "src/lib/atlas-research-fetch-boundary.ts": "307c6e48b06f5532f094cfd4d41d8fb23ad43f640add8bc067cc001a24674b51"
+    }
+  }
+}

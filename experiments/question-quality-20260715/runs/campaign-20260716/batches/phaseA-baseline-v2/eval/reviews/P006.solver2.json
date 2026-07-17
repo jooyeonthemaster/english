@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'follow from + NP' 구조에 명사구로 들어가므로 seam은 정문. 논리: 지문 어디에도 '역사적 배경 지식(historical backgrounds)'이라는 개념이 등장하지 않는다. 지문의 인과 사슬은 '선별 과정(출판·서평·재판) → 협력 원리의 hyper-protection → 독자가 모호성을 감내하고 더 깊은 소통 목적을 찾으려 노력함'이며, 텍스트 외적 역사 지식은 이 사슬의 어떤 마디와도 연결되지 않는다. 전제 불일치로 기각."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합: 명사구로 정문. 논리: 지문은 독자가 'clear and immediate information'을 선호하기는커녕, 'put up with many obscurities and apparent irrelevancies'하며 'flout principles of efficient communication'하는 요소들과 씨름한다고 명시한다. 빈칸 문장 'many of the features of literature follow from ②'를 대입하면 문학의 특징이 명료·즉각적 정보 선호에서 나온다는 명제가 되어 지문 전체 논지와 정면 모순. 반대 방향 오답으로 기각."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 결합: 'commitment to + 동명사(enduring / searching)' — to는 전치사이며 두 동명사가 and로 병렬, 병렬 시작점(enduring)과 대구가 정확하다. 'follow from + NP' seam 정문. 논리: (i) 'We can put up with many obscurities' = enduring ambiguity, (ii) 'they struggle to interpret elements... in the interests of some further communicative goal' + 'complications of language ultimately have a communicative purpose' = searching for deeper intent, (iii) 독자가 이렇게 하는 것은 제도적 라벨이 준 확신에 기반한 독자 측의 자발적 해석 태도이므로 voluntary commitment가 성립. 빈칸 문장이 '문학의 많은 특징은 이 독자적 태도로부터 따라 나온다'가 되어 지문의 결론 요약으로 완전 정합. 유일한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 명사구로 정문. 논리: 지문은 문학이 'principles of efficient communication'을 flout(위반)하는 요소를 포함한다고 명시하므로, 문학의 특징이 '고도로 체계적이고 효율적인 전달 방식'에서 나온다는 명제는 지문 명제의 직접 부정이다. 핵심 어휘(efficient communication)를 재활용해 만든 반대 방향 미끼로 기각."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 명사구로 정문. 논리: 지문에서 작가 측 행위로 언급되는 것은 없고, 선별(출판·서평·재판)은 작가의 '피드백 기반 수정'이 아니라 제도적 필터링이다. 'reviewed'라는 단어에서 피드백-수정 서사를 연상시키는 표면 어휘 미끼이나, 지문은 독자의 해석 태도를 논하지 작가의 개작 과정을 논하지 않는다. 주체 전환(독자→작가) 오류로 기각."
+    }
+  ],
+  "note": "빈칸은 'many of the features of literature follow from ___'의 원인 자리. 지문의 인과: 제도적 선별 → 협력 원리 hyper-protected → 독자가 모호성을 감내(put up with obscurities)하고 효율적 소통 원리를 어기는 요소에서 더 깊은 소통 목적을 찾으려 노력(struggle to interpret... for some further communicative goal). ③이 이 두 요소(enduring ambiguity / searching for deeper intent)를 정확히 요약하며 유일 정답. ②·④는 논지 정반대, ①·⑤는 지문에 근거 없는 외부 개념. 다섯 선지 모두 명사구로 문법 seam은 성립하므로 변별은 순수 논리로 이루어지며, 복수 정답 여지 없음. (원전은 Jonathan Culler의 hyper-protected cooperative principle 논의로 보이며, 원문 결론과도 방향 일치.)"
+}

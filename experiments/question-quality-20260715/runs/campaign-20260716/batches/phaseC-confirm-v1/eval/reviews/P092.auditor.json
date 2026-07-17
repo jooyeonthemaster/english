@@ -1,0 +1,89 @@
+{
+  "pid": "P092",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "오답 해설 ④가 'equal legal subjects in legislation'을 '동등한 입법 주체'로 지칭한다. 'legal subjects'는 '법적 주체'이지 입법 행위의 주체가 아니다. 핵심 논거(본문에서 도출 불가, 맥락 불일치)는 정확하므로 게이트 실패는 아니지만 용어가 부정확하다."
+    },
+    {
+      "code": "V3-minor-style",
+      "severity": "minor",
+      "evidence": "선지 ②의 'inhuman slaughtering'은 'inhumane'이 표준적이며, ⑤의 'without scientific purposes'는 'without scientific purpose'가 더 자연스럽다. 둘 다 문법 오류는 아니고 어색함 수준."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "복지론자의 처방(법적 보호 확대)을 권리론의 근본 진단 자리에 배치한 입장 스왑(actor/position swap)",
+      "temptingBecause": "'insufficient food and space'와 'increased legal protection'이라는 본문 표현을 직접 재활용해 표면 어휘 겹침이 크다",
+      "decisiveFlaw": "빈칸은 '문제(the problem)'의 내용을 요구하는데 ①은 개선책이며, 권리론자가 '미봉책'이라 비판하는 복지론의 목표다. 극성(문제 vs 처방)만으로도 탈락한다"
+    },
+    {
+      "label": "②",
+      "intent": "권리론자가 지지할 법한 강경 조치(전면 금지)를 진단 자리에 놓은 half-truth + 수단/진단 혼동",
+      "temptingBecause": "권리론자는 실제로 동물 이용 자체를 거부하므로 '전면 금지'가 권리론의 어조와 겹쳐 보인다",
+      "decisiveFlaw": "'banning'은 입법적 수단이지 문제의 진단이 아니며, 'inhuman(e)'이라는 잔혹성 프레임은 'not one about treating animals inhumanely'로 문장 안에서 명시적으로 부정된 A항을 다시 끌어온다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'understanding them as human resources'의 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 'human resources' → 'mere instruments for human use'로 도구화 개념을 보존",
+      "decisiveFlaw": "없음. 다만 패러프레이즈 거리가 짧아(자원→도구, 거의 직역) KILLER 요구 수준의 추상화로는 부족하다"
+    },
+    {
+      "label": "④",
+      "intent": "권리론에 인접해 보이는 개념(법적 주체 지위)으로의 무근거 확장(unsupported extension/overreach)",
+      "temptingBecause": "'animal rights', 'legal context' 등 본문 키워드와 결이 비슷해 권리론의 목표처럼 보인다",
+      "decisiveFlaw": "'equal legal subjects'는 본문 어디에도 근거가 없고(권리론의 주장은 '이용 대상이 아니다'까지), 빈칸은 부정적 진단을 요구하는데 ④는 긍정적 처방이다. source anchor가 약해 §D의 오답 요건을 온전히 충족하지 못한다"
+    },
+    {
+      "label": "⑤",
+      "intent": "부정된 A항('treating animals inhumanely')의 재진술 — 대조 함정(contrast trap)",
+      "temptingBecause": "'human-inflicted pain', 'experimentation' 등 본문 어휘와 겹치고 유일하게 ③과 같은 부정 극성이라 최종 2파전 후보가 된다",
+      "decisiveFlaw": "'inflicting unnecessary pain'은 같은 문장에서 'not one about treating animals inhumanely'로 이미 명시적으로 배제된 A항의 동어반복이다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ④: 'equal legal subjects'를 '동등한 입법 주체'로 번역 — '법적 주체'가 정확하다.",
+      "recommendation": "'동등한 법적 주체'로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤가 '학대 방지 규제 프레임의 지엽적 사안'이라고만 설명하고, 가장 결정적인 근거인 '빈칸 문장이 이미 not A로 명시 배제한 A항의 재진술'이라는 점을 언급하지 않는다.",
+      "recommendation": "not A 재진술임을 명시해 함정 구조를 정확히 드러낼 것"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설 마지막 문장('동물 권리론자는 동물을 도구적으로 취급하는 인식 자체가 문제라고 봅니다')이 직전 내용의 반복이다.",
+      "recommendation": "중복 문장 삭제로 간결화"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "sameSyntacticSlot": true,
+    "sourceMeaningPreservedWithAbstraction": "부분 충족 — 의미는 보존되나 'human resources'→'mere instruments for human use'는 거의 직역 수준의 짧은 패러프레이즈로, KILLER에 요구되는 추상화 거리가 부족하다",
+    "distractorAnchorsAndFlaws": "①②⑤는 anchor/overlap/flaw를 갖추었으나 ④는 source anchor가 부재(해설 스스로 '본문에서 직접 도출할 수 없다'고 인정)",
+    "twoSentenceCueRequirement": "실패 — 마지막 문장 하나의 'not A, but B' 국소 대조만으로 풀린다. 빈칸은 부정적 '문제'를 요구하는데 부정 극성 선지가 ③⑤뿐이라 극성 단서 하나로 ①②④가 즉시 소거되고, ⑤는 같은 문장의 not A 재진술이라 문장 내부에서 탈락한다",
+    "noSingleCueSolve": "실패 — 극성 단일 단서로 5지선다가 사실상 2지선다로 축소된다"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 무결, ③ 유일정답 확인(각 선지 독립 대입 검증), 완성문 문법적, 해설 사실성 양호(경미한 용어 슬립 1건), 필드 동기화 일치. 그러나 요청 난이도 KILLER 대비 실제 변별 구조가 얕다. 빈칸이 '문제의 진단'이라는 부정 극성을 강제하는데 오답 ①②④가 모두 긍정적 처방 극성이어서 단일 단서로 소거되고, 유일한 경쟁자 ⑤마저 같은 문장에서 명시 부정된 A항의 재진술이라 지문 전체 통합 없이 마지막 문장만으로 풀린다. 정답 패러프레이즈도 추상화 거리가 짧다. C5(난이도 정합)=1, C3=2, C4=2로 합계 15 — B 기준(최저 2, 합계 17) 미달. 오답 극성 재설계(부정 극성 진단형 오답 최소 2개 추가)와 정답 추상화 강화 없이는 KILLER로 출하 불가. 등급 C(V 통과, 재설계 필요)."
+}

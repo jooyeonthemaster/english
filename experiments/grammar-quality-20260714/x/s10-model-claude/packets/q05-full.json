@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=k  (C):ANS=i  (D):dec=e  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 140,
+        "relPos": 0.139,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 226,
+        "relPos": 0.224,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 486,
+        "relPos": 0.483,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 929,
+        "relPos": 0.923,
+        "sentenceIndex": 8,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 990,
+        "relPos": 0.983,
+        "sentenceIndex": 9,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.983,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중, 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "We recode",
+        "isError": false,
+        "errorExpression": "We recode",
+        "surroundingText": "We naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "rather than retrieving",
+        "isError": false,
+        "errorExpression": "rather than retrieving",
+        "surroundingText": "We reconstruct memories rather than retrieving the video from memory.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "remember",
+        "isError": true,
+        "correction": "remember",
+        "errorExpression": "remembering",
+        "surroundingText": "People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(D)",
+        "expression": "undermined",
+        "isError": false,
+        "errorExpression": "undermined",
+        "surroundingText": "The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "Seeing is not believing.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "We recode"
+      },
+      {
+        "label": "(B)",
+        "text": "rather than retrieving"
+      },
+      {
+        "label": "(C)",
+        "text": "remembering"
+      },
+      {
+        "label": "(D)",
+        "text": "undermined"
+      },
+      {
+        "label": "(E)",
+        "text": "is"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 We에 대한 본동사 자리로, 앞 문장의 break와 같은 흐름을 이어받는 능동 형태의 정동사이므로 We recode는 어법상 올바르다.",
+      "(B)": "rather than은 앞의 We reconstruct라는 동사와 대비되는 대상을 이끄는데, than 뒤에 동명사 retrieving을 써서 reconstruct(동사원형에 상응)와 병렬적으로 대비시키는 관용 표현이므로 적절하다.",
+      "(D)": "주어 The discovery ~ testimony 다음에 목적어 the legal primacy of eyewitness testimony가 이어지므로 undermined는 목적어를 취하는 능동태 동사로 올바르게 쓰였다.",
+      "(E)": "주어가 동명사 Seeing으로 단수로 취급되므로 단수동사 is가 수일치상 올바르다."
+    },
+    "explanation": "(C) \"remembering\"는 어법상 틀린 표현이며 \"remember\"로 고쳐야 한다. 문장의 골격은 'People who lack A and remember B struggle to ~'로, 관계대명사 who의 선행사 People에 대한 두 개의 정동사 lack과 remember가 and로 병렬 연결된다. 따라서 remembering을 remember로 고쳐 lack ~ and remember ~의 병렬 정동사 구조를 회복해야 한다. lack 뒤에 나온 것을 보고 remember도 당연히 정동사라 여기기 쉽지만, 형태 변형만으로도 병렬 구조가 무너질 수 있음에 주의해야 한다.",
+    "keyPoints": [
+      "(C) 병렬구조 — 관계대명사 who의 선행사 People에 대해 and로 연결된 두 정동사 lack과 remember는 형태가 일치해야 한다",
+      "(B) to-v/v-ing — rather than 뒤에는 앞 동사와 대비되는 동명사 retrieving이 관용적으로 쓰일 수 있다",
+      "(D) 능수동태 — undermined 뒤에 목적어 the legal primacy가 있으므로 능동태가 맞다"
+    ],
+    "tags": [
+      "병렬구조",
+      "관계대명사",
+      "동사와 준동사",
+      "수능 어법",
+      "고난도"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. __(A) We recode__ what we see through the lens of everything we know. We reconstruct memories __(B) rather than retrieving__ the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and __(C) remembering__ everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely __(D) undermined__ the legal primacy of eyewitness testimony. Seeing __(E) is__ not believing."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P041",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "관계대명사 that의 선행사는 'almost any process'(단수). 관계절 내 동사가 주어 역할 that과 수 일치해야 하므로 3인칭 단수 repeats가 형식적으로 성립한다. 'repeats itself'의 재귀대명사도 선행사 process와 일치. 병렬·도치 등 대안 해석을 검토해도 단수 동사 이외의 요구가 없다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'a clock where does not depend on a repetitive cycle of events'에서 관계절 'does not depend...'는 주어가 결여되어 있다. where는 관계부사로서 절 내에서 부사어 자리만 채울 수 있고 주어 자리를 채울 수 없으므로, 주격 관계대명사 that/which가 필요하다. 대안 해석 탐색: (i) where 뒤 주어 생략 구문은 영어에 존재하지 않음, (ii) 의문사절 해석('think of a clock, where does...')도 어순·문맥상 불성립, (iii) 선행사 clock을 장소로 보는 해석을 허용해도 절 내부 주어 공백은 해소되지 않음. 따라서 형식적으로 비문임이 증명된다. 어법상 틀린 밑줄."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a candle marked in hours'는 과거분사 marked가 candle을 후치 수식하는 축약 관계절(= a candle that is marked in hours). candle은 mark의 대상(피동)이므로 과거분사가 요구되고, 문장의 본동사는 is(is a candle)로 별도 존재하므로 정형동사 충돌도 없다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'although at first masked'는 접속사 뒤 '주어+be' 생략(elliptical concessive clause) 구조: although (it is) at first masked. 생략된 주어는 주절 주어 this(=iterative process)와 동일 지시이므로 생략 조건을 충족하고, masked(과거분사)는 this가 mask의 대상이라는 피동 의미와 부합한다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "전치사 of의 목적어 자리이므로 동명사가 요구되며, 'the appearance of being continuous'에서 being continuous(동명사+보어)는 형식적으로 완전하다. 의미상 주어는 문맥상 the decay(또는 the time scale)로 자연스럽게 회수된다. 정문."
+    }
+  ],
+  "note": "5개 밑줄 중 (B)만이 형식 문법상 비문(관계절 내 주어 공백을 관계부사 where가 채울 수 없음)이며, 나머지 4개는 대안 해석 탐색(축약 관계절, 생략 구문, 동명사)에서 모두 정문으로 증명된다. 정답 후보가 (B) 하나로 유일하게 좁혀지는 깨끗한 문항. 지문 논리도 '시계=반복 과정' 논지에 일관되게 부합."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Just as today some jobs are better than others' — 복수 주어 some jobs에 현재시제 are. 'today'가 명시된 현재 일반 진술이므로 시제 정당하며, 주절 'so would they have been'(과거 추정)과의 시제 대비도 정상적인 just-as/so 상관 구문이다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "지배 구조는 with-절대구문 'with [some roles more dangerous] and [some ___ more plentiful access]'. with-절대구문의 술어 자리에는 정형동사가 올 수 없고 형용사구/분사만 허용되므로 현재분사 having이어야 한다. 대안 파스 검증: (i) 'and some have...'를 주절과 병렬된 독립 정형절로 읽으면 국지 병렬('some roles more dangerous and some...')을 부자연스럽게 건너뛰어야 하고, 과거 초기 사회 서술에 현재시제 have가 붙어 시제 파탄. (ii) 원형부정사를 지배할 사역/지각동사 부재. 어떤 정문 파스도 성립하지 않음 — 어법상 틀림."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'shows that soon after..., some burials start to look different' — 타동사 shows의 완전한 정형 보문절(주어 some burials + 동사 start)을 이끄는 보문소 that. 절 내부 성분 결여 없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'some are in group graves and some [are] by themselves' — 관용 표현 by oneself(홀로). 재귀사 themselves의 선행사는 동일 절(생략된 are의) 주어 some (individuals, 복수)로 국지 결속 조건 충족."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'reveal that some members of groups were getting more protein' — 과거진행형 were getting. 과거 집단 구성원들의 지속적 섭취를 기술하는 정상적 시상이며, 현재시제 reveal(분석이 지금 밝혀줌) + 과거 were(과거 사실)의 조합도 성립."
+    }
+  ],
+  "note": "밑줄 (B) have는 with-절대구문 둘째 접속항의 술어로서 having이어야 하며, 정문이 되는 대안 해석이 존재하지 않는다. 나머지 네 밑줄은 모두 명백한 정문으로 유일 정답 문항이다."
+}

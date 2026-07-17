@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합은 정문이나 논리 불성립. 지문은 'accommodate their own needs as well as the needs of others'라 하여 자기 욕구와 타인 욕구의 동시 조율을 말하는데, 이 선지는 집단 욕구를 자기 욕구보다 우선(prioritize ... over ...)한다고 하여 정면 모순. 또한 욕구 우선순위 조정이 'thus → clear communication'의 원인이 되는 인과 고리도 지문에 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "정문이나 논리 붕괴. 예시 문장 'will be able to express how he feels about the problem and why he feels this way'와 정면 모순(은폐 vs 표현). 감정 은폐는 'clear communication'을 촉진할 수 없으므로 'thus' 인과가 성립하지 않음. 지문은 갈등 회피가 아닌 'open communication'과 'constructive conflict resolution'을 옹호."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "문법 성립: 'are able to clearly articulate their own psychological states'는 to부정사 내 부사 삽입(분리부정사)으로 어법상 정문이며 seam 결합 무결. 논리 성립: 뒤따르는 예시 'express how he feels about the problem and why he feels this way'가 빈칸의 정확한 재진술이고, 자기 감정 상태의 명료한 표명 → 'thus, may facilitate clear communication between co-workers' 인과가 완벽히 정합. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "정문이나 논리 불성립. 지문은 갈등 상황에서의 표현·관점 취하기를 통한 'constructive conflict resolution'을 주장하며, 해결이 어려운 갈등의 회피(stay away from conflicts)는 지문 어디에도 근거가 없고 결론부와 정면 모순. 갈등 회피가 clear communication을 촉진한다는 인과도 성립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "정문이며 가장 매력적인 오답이나 옹호 불가. 지문의 타인 관련 요소는 'take the perspective of the other group members and understand why they are reacting'(관점 취하기·이해)이지 타인의 집합적 기분을 '대변(represent)'하는 것이 아님. 결정적으로 빈칸의 직접 재진술은 첫 예시(자기 감정 표현)이고 타인 이해는 'He also should...'로 별도 추가되는 두 번째 능력이므로, 빈칸 위치에 타인 기분 대변을 넣으면 예시 구조와의 대응이 어긋남. represent가 clear communication의 직접 원인이 된다는 근거도 없음."
+    }
+  ],
+  "note": "예시 문장(express how he feels ... why he feels this way)이 빈칸의 재진술로 기능하는 전형적 빈칸 문항. 3번이 유일 정답이며 5번은 타인-관점 요소를 오용한 매력 오답. 복수정답 소지 없음."
+}

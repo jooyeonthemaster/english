@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-v2-independent-hostile-evidence-1",
+  "artifactId": "reviewer-calibration-v4-production-bound-v2-independent-audit-v1",
+  "subjectManifestSha256": "10801e127bb612e2bb6909acf857ff6fa2ef0cac667a0fd7e4e39f774e656413",
+  "construction": "Independent constants, validator, mutations, and access counterexamples. Subject verifier/fixture source was inspected only as hostile untrusted material; neither was executed or imported, and no subject mutation case or generator was reused as evidence.",
+  "mutationFamilies": [
+    { "family": "permanent false and zero authority", "cases": 12 },
+    { "family": "direct upstream pins", "cases": 7 },
+    { "family": "25 exact UI types", "cases": 25 },
+    { "family": "23 exact family rotation members", "cases": 23 },
+    { "family": "rotation booleans and claims", "cases": 9 },
+    { "family": "five-phase sequence and fail-closed controls", "cases": 12 },
+    { "family": "nine missing and nine empty deny sets", "cases": 18 },
+    { "family": "19 required phase seals", "cases": 19 },
+    { "family": "11 hidden per-slot bindings", "cases": 11 },
+    { "family": "10 hidden phase-1 classes", "cases": 10 },
+    { "family": "seven declared trusted-auditor incompatibilities", "cases": 7 },
+    { "family": "capability and no-backfill flags", "cases": 7 },
+    { "family": "16 operational zero counters", "cases": 16 },
+    { "family": "13 protocol activity counters", "cases": 13 },
+    { "family": "12 public-only boundary counters", "cases": 12 },
+    { "family": "11 NONE claims", "cases": 11 },
+    { "family": "24 empty operational registry arrays", "cases": 24 },
+    { "family": "nine schema instance counters", "cases": 9 },
+    { "family": "11 public-manifest activity counters", "cases": 11 }
+  ],
+  "independentMutations": 256,
+  "detectedMutations": 256,
+  "accessScenarios": {
+    "total": 21,
+    "ordinaryValidPair": 1,
+    "bindingMismatchRejections": 7,
+    "hashOrderTimeAndDecisionRejections": 7,
+    "structuralBypasses": 6
+  },
+  "bypassScenarios": [
+    {
+      "id": "bypass-phase1-answer-as-opaque-resource",
+      "result": "NOT_BLOCKED",
+      "reason": "Authorization has no resourceClass, currentState, or allowlist proof."
+    },
+    {
+      "id": "bypass-arbitrary-deny-set-hash",
+      "result": "NOT_BLOCKED",
+      "reason": "denySetSha256 accepts any digest and is not tied to a canonical state-policy digest."
+    },
+    {
+      "id": "bypass-backdated-actual-open-no-open-event",
+      "result": "NOT_BLOCKED",
+      "reason": "No independently sealed OPEN event exists between authorization and close receipt."
+    },
+    {
+      "id": "bypass-capability-second-receipt",
+      "result": "NOT_BLOCKED",
+      "reason": "No capability consumption ordinal or uniqueness proof exists."
+    },
+    {
+      "id": "bypass-capability-second-authorization",
+      "result": "NOT_BLOCKED",
+      "reason": "A second authorization can reuse the same capability hash."
+    },
+    {
+      "id": "bypass-denial-without-state-deny-set-binding",
+      "result": "NOT_BLOCKED",
+      "reason": "DENIAL binds neither current state nor denySetSha256."
+    }
+  ],
+  "totalCases": 277,
+  "caseDigestSha256": "e5044394edcf5e24867b7dea527ba3f4e566312019009215b1ffed9bd62b91a7",
+  "blockerCodes": [
+    "B1_TRUSTED_GOLD_SELF_AUDIT_NOT_EXCLUDED",
+    "B2_ACTIVATION_AUDITOR_SELF_REVIEW_NOT_EXCLUDED",
+    "B3_EXACT_TYPE_COVERAGE_NOT_BOUND_TO_CERTIFICATE_OR_ACTIVATION",
+    "B4_ACTIVATION_AUDIT_DEPENDENCY_IS_CIRCULAR",
+    "B5_SLOT_MATERIALIZATION_CANNOT_BIND_REQUIRED_HIDDEN_AND_TYPE_EVIDENCE",
+    "B6_FRESH_DISJOINT_NO_REPLAY_SEQUENCE_HAS_NO_MATERIAL_PROOF",
+    "B7_ACCESS_AUTHORIZATION_DOES_NOT_BIND_RESOURCE_CLASS_OR_CURRENT_STATE",
+    "B8_PREOPEN_AND_SINGLE_USE_CAPABILITY_CLAIMS_LACK_CHAIN_EVIDENCE"
+  ],
+  "activity": {
+    "privateReads": 0,
+    "networkCalls": 0,
+    "apiCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0,
+    "subjectWrites": 0
+  }
+}

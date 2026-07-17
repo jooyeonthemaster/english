@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong-attractive",
+      "reason": "Coffee appears in the sentence right before the blank, so this option exerts real pull. But the coffee was cited as a rationalization for avoiding work (an example of an unscheduled break), not as a claim about caffeine dependence. 'Instead' must contrast with taking unscheduled breaks; avoiding caffeine does not fill that contrast, and the passage never criticizes caffeine itself."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "The passage's thesis: scheduled breaks (planned at appropriate times) keep you on track; unscheduled breaks are unwarranted and cause procrastination. 'So to prevent procrastination, vow to stick strictly to your planned intervals instead' — 'planned intervals' maps to the scheduled breaks, and 'instead' correctly contrasts with taking unscheduled breaks. Grammatical seam is a clean imperative; logic matches perfectly."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Working-hour length is never discussed. The passage is about when to take breaks within work hours, not about reducing total hours. No textual support; 'instead' contrast fails."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong-attractive",
+      "reason": "Polar-opposite trap: 'spontaneous moments of rest' is precisely an unscheduled break, which the passage condemns as a sure-fire route to procrastination. Attractive only to a reader who anchors on the opening clause 'breaks are necessary to revive your energy' and misses the scheduled-vs-unscheduled contrast."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Echoes 'revive your energy levels' from the first sentence, but the passage's prescription is structural adherence to a pre-made schedule, not continuous self-monitoring of energy. Constant evaluation would arguably invite more mid-work interruptions; the 'instead' contrast with unscheduled breaks does not hold."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. Distractor pull was strongest on option 1 (coffee proximity effect) and option 4 (surface positivity about rest), but the discourse marker 'instead' plus the scheduled/unscheduled dichotomy uniquely selects option 2. No alternative reading makes any other option defensible."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "attempts to regulate and restrain it: 대명사 it이 while절의 단수 선행사 'man's affective life'에 문법적으로 정확히 결속된다. 후행 근거 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'와 'The law obsessively tries to suppress affects'가 regulate/restrain을 강도·범위 모두 그대로 재진술한다. 도입부의 'regime of commands and prohibitions'와도 정합. 문법 결합(seam)과 논리 모두 성립."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "encourages people to express it freely: 'express'는 대조 구문에서 영화 쪽에 배정된 술어다. 법이 정서의 자유로운 표현을 장려한다는 명제는 'obsessively tries to suppress affects'와 정면 모순. 대조(while)의 논리를 파괴한다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "aims to permanently eradicate all human desires: 극단화 미끼. 지문의 법은 affects를 'suppress(억제)'하고 욕망의 파괴적 '귀결(consequences)'을 두려워할 뿐이며, 'man desires freedom'을 법의 전제로 인정한다. 억제≠절멸이고 'permanently/all'은 지문 명제에서 형식적으로 도출 불가. 옹호 불가능."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "focuses exclusively on depicting violent crimes: 'depict'는 재현 매체(영화)의 술어로 법에 적용하면 범주 오류이며, 'exclusively'는 무근거 한정. 지문 어디에도 법이 폭력 범죄 묘사에 전념한다는 근거가 없다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "provides a medium for releasing hidden emotions: 영화의 기능('introduces us to our affects, forcing us to identify the most unbearable ones')을 법에 전치한 역할 역전 미끼. while 대조의 방향성을 역전시켜 후행 'suppress affects'와 모순된다."
+    }
+  ],
+  "note": "빈칸 직후 재진술 문장(suppress affects / not overwhelmed by desires and drives)이 ①을 유일하게 지지. 대명사 it의 선행사 결속도 문법적으로 깨끗하며 복수 정답 여지 없음."
+}

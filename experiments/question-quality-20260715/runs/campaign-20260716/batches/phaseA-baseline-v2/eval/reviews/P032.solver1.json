@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사 that. 선행사 a kind of 'program'을 받아 관계절 동사 directs의 주어 역할. 삽입구 when triggered가 that과 directs 사이를 끊어 장거리 일치를 흐리지만, 단수 동사 directs가 단수 선행사 program과 일치하므로 정문. that 앞에 콤마도 없어 계속적 용법 문제도 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "when (it is) triggered의 축약 부사절(분사구문). 의미상 주어는 관계절 주어 that(= the program)이며, 프로그램은 촉발'되는' 대상이므로 수동 과거분사 triggered가 옳다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "cause + 목적어(us) + to부정사 구조의 보어로 to face는 필수적 정문. 매력적 오답 유혹: 'either to face ... or avoid'의 병렬이 비대칭(to face vs. avoid)으로 보여 순간 끌렸으나, either가 to 앞에 위치할 때 둘째 항이 to를 공유·생략하는 패턴은 허용 범위이고 밑줄 자체(to face)는 명백히 옳다. 유혹 기각."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "remember를 수식하는 부사 비교급 more acutely. '더 선명하게 기억하다'라는 양태 수식으로 형용사 more acute가 아니라 부사가 맞다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "the specific ways which they activate our systems에서 관계절 내부 they(S) activate(V) our systems(O)가 완결문이라 which가 차지할 문법적 공백이 없다. in which, 관계부사적 that, 또는 무표지(the ways they activate)여야 한다. 대안 해석 탐색: 전치사 생략형 'ways [in] which'는 that/무표지에서만 성립하고 which와는 결합 불가하므로 구제 불가. 어법상 틀림 — 정답."
+    }
+  ],
+  "note": "실전 순서로 풀 때 (C)의 either/or 병렬 비대칭이 유일하게 실제 끌리는 미끼였으나 밑줄 부위(to face)는 cause+O+to-V로 방어 불가한 정문. (E)는 완결절 앞 which로 명확히 비문이라 정답이 하나로 수렴. 복수정답 여지 없음."
+}

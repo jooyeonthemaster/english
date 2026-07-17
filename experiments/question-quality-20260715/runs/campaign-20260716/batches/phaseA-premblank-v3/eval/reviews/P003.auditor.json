@@ -1,0 +1,76 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TRAP-LABEL-CONTRADICTION",
+      "severity": "major",
+      "evidence": "메인 해설은 오답 ②를 '자유 시간 포기라는 인과 역전'으로 명명하지만, 오답 해설(키 \"2\")은 같은 선지를 '극성 반전'으로 명명한다. 동일 선지에 대한 함정 유형 분석이 두 필드에서 상호 모순된다. 실제 구조를 보면 ②(relinquish your free time completely)는 원인-결과의 전도가 아니라 필자의 절제 주장과 정면 배치되는 극성 모순이므로, 메인 해설의 '인과 역전' 명명이 오류다."
+    },
+    {
+      "code": "V4-CAUSAL-MISLABEL-OPT5",
+      "severity": "major",
+      "evidence": "오답 해설 ⑤는 \"'한도 없이 늘리라(without limits)'는 것은 본문의 '선을 긋다(draw the line)'라는 중심 논지와 완벽하게 반대되는 인과 역전입니다\"라고 쓴다. 스스로 '중심 논지와 반대'라고 서술하면서(=극성 모순) 이를 '인과 역전'으로 명명한다. ⑤에는 전도될 인과 구조 자체가 없다. 함정 유형 용어(인과 역전)의 반복적 오용으로, RUBRIC V4의 '용어 오류·인과 오설명 없음' 기준 위반."
+    },
+    {
+      "code": "V4-SENTENCE-ATTRIBUTION",
+      "severity": "minor",
+      "evidence": "해설은 'exercise some moderation'이 '여섯 번째 문장'에 있다고 하나, 'The result?'를 문장으로 세는 표준 계수에서는 해당 경고가 7번째 문장이다(1 Participating…, 2 The result?, 3 Joining…, 4 This is…, 5 For example…, 6 Pacing is important., 7 The point is this: If you don't exercise…). 단편문 제외 계수에서만 6번째가 되므로 귀속이 모호하거나 오류."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 삭제 스팬 'don't overextend yourself'의 의미 보존 패러프레이즈(overextend → taking on excessive commitments beyond your capacity)",
+      "temptingBecause": "해당 없음(정답). 다만 'draw the line', 'exercise some moderation'이라는 명시적 논지가 지문에 두 번 반복되어 근거가 충분하다.",
+      "decisiveFlaw": "없음. 다만 추상화 깊이가 얕아 인접 문장의 근접 동의어 치환 수준이며, 다른 네 선지가 모두 절대어를 포함해 소거법만으로도 도달 가능하다."
+    },
+    {
+      "label": "2",
+      "intent": "극성 모순(과잉 방향): 절제 주장에 반해 자유 시간 전면 포기를 권고",
+      "temptingBecause": "본문 소재 'free time' 재사용 + 'genuine growth'의 긍정 프레이밍이 노력 권장처럼 읽힐 수 있음",
+      "decisiveFlaw": "절대어 'completely'가 즉시 소거 단서. 자유 시간 감소는 본문에서 부정적 결과로 제시되므로 필자 주장과 정면 배치. (해설의 '인과 역전' 명명은 오류 — 전도될 인과 구조가 없음)"
+    },
+    {
+      "label": "3",
+      "intent": "논지 왜곡(이완 방향): 마감 무시·느슨한 생활 권고",
+      "temptingBecause": "본문 소재 'deadline'과 스트레스 감소 필요성 재사용",
+      "decisiveFlaw": "본문 예시는 신문 마감을 지키기 위해 저녁·주말까지 일하는 책임 있는 참여를 전제하므로 'ignore strict deadlines'는 정면 모순. 'ignore'가 즉시 소거 단서."
+    },
+    {
+      "label": "4",
+      "intent": "과협소(조건 왜곡): 선택 기준을 '의미'에서 '업무량'으로 치환",
+      "temptingBecause": "부담을 줄이라는 방향성 자체는 본문 논지와 일치해 네 오답 중 상대적으로 가장 그럴듯함",
+      "decisiveFlaw": "절대어 'solely' + 같은 문장 앞부분 'activities that are most meaningful to you'와 직접 충돌(기준이 workload가 아니라 의미)."
+    },
+    {
+      "label": "5",
+      "intent": "직접 모순(과잉 방향): 무제한 가입 권고 — ②와 함정 계열 중복",
+      "temptingBecause": "본문 소재 'clubs'/'joining' 재사용, 'gradually'가 온건한 인상을 줌",
+      "decisiveFlaw": "'without limits'는 'draw the line'과 축자적 정반대 — 절대어로 즉시 소거. (해설의 '인과 역전' 명명은 오류 — 극성 모순임)"
+    }
+  ],
+  "explanationIssues": [
+    "함정 유형 용어 오용 2건: ②(메인 해설)와 ⑤(오답 해설)를 '인과 역전'으로 명명했으나 둘 다 인과 전도가 아닌 극성 모순임",
+    "동일 선지 ②에 대해 메인 해설('인과 역전')과 오답 해설('극성 반전')의 함정 유형 명명이 상호 모순",
+    "'여섯 번째 문장' 귀속이 표준 문장 계수('The result?' 포함)에서는 7번째로, 귀속 모호/오류",
+    "오답 해설 ③의 '과확장'이라는 유형 명명이 모호함(내용 서술 자체는 타당)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1~V3, V5는 통과: 렌더 지문은 원지문에서 'don't overextend yourself'만 빈칸화한 것 외 손상 없음(전 문장 대조 완료), 정답 ①은 유일 정답이며 ②~⑤는 각각 독립 검증 결과 논지 모순/왜곡으로 탈락, 다섯 선지 모두 'make sure you + 동사원형' 슬롯에 문법적으로 들어가 seam 비문 없음, 정답 라벨·선지·오답해설 키·keyPoints 동기화 정상. 그러나 V4 실패(함정 유형 용어 오용·내부 모순, 문장 귀속 모호)로 등급은 F. 공예 측면의 최대 결함은 C5=0: 요청 난이도 KILLER인데 실제로는 (i) 빈칸이 명시적 논지('draw the line', 'exercise some moderation')의 인접 패러프레이즈라 두 문장 이상 논리 결합이 불필요하고, (ii) 네 오답 전부가 절대어('completely', 'ignore', 'solely', 'without limits')를 포함해 극성·절대어 단서만으로 정답 도출이 가능하므로 RUBRIC §D KILLER 조건('극성·절대어 하나로 정답을 찍을 수 없어야 함', '최소 두 논리 단서 결합')을 정면 위반. ②와 ⑤는 함정 계열(과잉 방향 극성 모순)이 중복되어 §D의 '서로 다른 함정' 조건도 미충족. killerConditionsMet=false. 지문 자체도 중학 수준의 평이한 조언문이라 KILLER 소재 적합성이 낮음. 재설계 시 절대어 제거, 다중 문장 단서 결합형 추상화, ②/⑤ 함정 분화, 해설 용어 교정이 필요."
+}

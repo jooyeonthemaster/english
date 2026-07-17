@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'you must refine your schedule...' — must 뒤 원형부정사로 정문. 논리: 지문의 논지는 '경직된 일정 고수(stick to some rigid work schedule)'와 'go with the flow' 중 후자를 택해야 평화로워진다는 것. 일정을 더 정교화(refine)하여 타협을 회피하라는 것은 '계획 고수' 쪽을 강화하는 방향으로, 뒤 문장(계획의 일정 비율은 반드시 바뀐다고 기대하라)과 정면 충돌. 논리적으로 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합: 'you must be willing to adjust your expectations when life disrupts your agenda' — be willing to + V, when 부사절 모두 정문. 논리: (i) 앞 문장의 이분법에서 'learning to go with the flow'를 선택하는 것과 동치이고, (ii) 뒤 문장 'expect that a certain percentage of plans will change' 및 'make allowances in your mind for this inevitability'가 정확히 '기대(expectations) 조정'의 구체화로 이어짐. 전후 양방향 결속이 형식적으로 성립하는 유일한 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합: 'eliminate any potential source of changes before they occur' — they의 선행사가 changes로 해석 가능하여 정문. 논리: 지문은 변화를 'inevitability(불가피성)'로 규정하고 그것을 예상·수용하라고 말한다. 변화의 원천을 사전에 제거하라는 것은 불가피성 전제와 형식적 모순(변화가 제거 가능하면 불가피하지 않음). 성립 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 'let other people dictate how you should manage your daily routine' — 사역 let + 원형부정사 + 간접의문절 목적어로 정문. 논리: 지문 어디에도 '타인의 통제 수용'이라는 개념이 없음. 유연성(go with the flow)은 상황 변화에 대한 태도이지 타인에게 일과 관리 권한을 넘기는 것이 아님. 범주 오류로 성립 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 'lower your personal standards to make allowances for emotional distress' — 정문. 논리: 지문의 'make allowances ... for this inevitability'를 표면 어휘만 복사한 미끼. 지문에서 allowances의 대상은 '계획 변경의 불가피성'이지 '정서적 고통'이 아니며, 논지는 기준(standards)을 낮추라는 것이 아니라 기대를 현실(변화 가능성)에 맞추라는 것. 대상 치환으로 성립 불가."
+    }
+  ],
+  "note": "출전 추정: Richard Carlson, Don't Sweat the Small Stuff 계열 지문. 다섯 선지 모두 must 뒤 원형부정사로 문법적 결합은 정문이므로 판별은 순수 논리 적합성으로 이루어짐. 빈칸 앞의 이분법(계획 고수 vs go with the flow)과 빈칸 뒤의 구체화(계획 변경 비율 기대·불가피성 수용)가 ②만을 양방향으로 지지. ⑤가 지문 어휘(make allowances)를 재활용한 근접 미끼이나 대상이 달라 옹호 불가. 복수정답 여지 없음."
+}

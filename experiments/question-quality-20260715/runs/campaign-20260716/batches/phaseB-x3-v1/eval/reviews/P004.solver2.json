@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'when triggered' is an elliptical adverbial clause ('when (it is) triggered'). The elided subject corefers with the relative-clause subject 'that' = 'a kind of program', which is the patient of 'trigger', so the passive participle is licensed. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'cause us either to face a situation or (to) avoid it' — coordination of to-infinitives under 'either...or' with ellipsis of the second 'to'. Shared-to ellipsis in infinitive coordination is standard, well-formed English (strict style guides may prefer repeating 'to', but it is not an error). Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (answer)",
+      "reason": "'may cause us remembering an experience' — 'cause' obligatorily takes O + to-infinitive ('cause us to remember'); it does not license a gerund after its object. Alternative parses fail: ditransitive 'cause us [gerund NP]' is unidiomatic (ditransitive cause takes nouns like 'trouble/pain'), and a participial reading of 'remembering' modifying 'us' leaves 'cause' without a complement. The parallel 'will cause us either to face... or avoid' earlier in the same sentence confirms the to-infinitive frame. Must be 'to remember'. Ungrammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the specific ways in which they activate our systems' — preposition + relative pronoun with antecedent 'ways' ('they activate our systems in ways'). Fully grammatical; equivalent to 'ways that/how'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'have helped us survive challenges' — 'help + O + (to) infinitive' licenses the bare infinitive 'survive'. Grammatical."
+    }
+  ],
+  "note": "Clean single-answer item. Only (C) fails: 'cause + O + V-ing' is categorically unlicensed, and no rescue parse (ditransitive gerund object, participial modifier) is viable. (B) involves 'either to V or V' ellipsis, which is standard usage and never marked wrong under KSAT convention; all other underlines are unambiguously well-formed. No competing defensible label."
+}

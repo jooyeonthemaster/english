@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "campaign-v5-s1-independent-audit-v2",
+  "verdict": "PASS_DESIGN_INTEGRITY_EXECUTION_REMAINS_BLOCKED",
+  "scope": "Offline independent reconstruction of the rebuilt S1 queue and current call/wire source closure; no efficacy or production-topology claim",
+  "passages": 12,
+  "historyBinding": {
+    "selectedRows": 76,
+    "historyCleanRows": 76,
+    "exposedRows": 0,
+    "exactDevelopmentRowsJoined": 12,
+    "grammarDevelopmentRows": 6,
+    "blankDevelopmentRows": 6
+  },
+  "assignments": 180,
+  "allocation": {
+    "grammar": 96,
+    "blank": 84,
+    "standard": 96,
+    "premium": 84,
+    "intermediate": 90,
+    "killer": 90,
+    "b1Premium": 0
+  },
+  "wire": {
+    "staticSourceContractPassed": true,
+    "exactWireRegistryMaterialized": false,
+    "standardModel": "google/gemini-3.5-flash",
+    "premiumModel": "google/gemini-3.1-pro-preview",
+    "reasoningEnabled": false,
+    "reasoningEffort": "none",
+    "reasoningExcluded": true,
+    "providerRequireParameters": true,
+    "questionsPerAssignment": 1,
+    "grammarMaxOutputTokens": 6000,
+    "blankMaxOutputTokens": 4000,
+    "candidateOpportunities": 180,
+    "physicalFetchCap": 180,
+    "sdkRetriesPerAssignment": 0,
+    "outerAttemptsPerAssignment": 1
+  },
+  "reservation": {
+    "grammarStandard": {
+      "calls": 48,
+      "capUsd": 0.2,
+      "reservedUsd": 9.6
+    },
+    "grammarPremium": {
+      "calls": 48,
+      "capUsd": 0.43,
+      "reservedUsd": 20.64
+    },
+    "blankStandard": {
+      "calls": 48,
+      "capUsd": 0.14,
+      "reservedUsd": 6.72
+    },
+    "blankPremium": {
+      "calls": 36,
+      "capUsd": 0.2,
+      "reservedUsd": 7.2
+    },
+    "totalHardReservationUsd": 44.16
+  },
+  "semanticDrift": {
+    "predecessorPrivateQueueFileSha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+    "currentPrivateQueueFileSha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+    "fileBytesUnchanged": true,
+    "predecessorSemanticSha256": "c120ebcc5aea5f83c1c9e97447c2913b0ebf76932e2a0cf91d2e10887a86225e",
+    "currentSemanticSha256": "c120ebcc5aea5f83c1c9e97447c2913b0ebf76932e2a0cf91d2e10887a86225e",
+    "semanticQueueUnchanged": true,
+    "semanticQueueUnaffectedBySourceClosureRepair": true
+  },
+  "hashes": {
+    "publicArtifactSha256": "bfe0dff9d5ebfed1eea4f1622d4c7bbecbca2db7172f925a1fc07640d46f8747",
+    "designManifestSha256": "5187e43d2bd4f7ea42bbf1cf165d39aae2909ce10e861296f96045e9406f71dd",
+    "sourceClosureSha256": "35e898808d67705c33ae5bf4a40392cd2d6bea723463993d03aaa41ec6af8b9c",
+    "currentSourceHashes": {
+      "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts": "b8c8181691f897bfc7cc782d50efe194c2bbda91aded20a81c3ba4ed548a7b4e",
+      "src/trigger/workbench-question-generation.ts": "cfc44b01c039c095759ffa1204f8e77b9cf5d62e6b1386ba9ff8d2a6beaa66be",
+      "src/app/api/ai/generate-questions-auto/_lib/constants.ts": "a58a825d8d768b8df81efdca7eccace5631bbd71ac2d61e817a73ef3028bcc7b",
+      "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2",
+      "src/lib/atlas-ai.ts": "bcab10a3d05bf5271f956e6c1004fdf832957dd53ec4c4d1d9a248a37f4d3f57",
+      "src/lib/atlas-fetch-scope-coordinator.ts": "fd58c3e226279045f9f53ee56d320cfb2a0739387ebe1abfbc1d8afa750ca874",
+      "src/lib/atlas-production-assignment-fetch-boundary.ts": "aa042ea9181f6b5eb256bd4361738cc948c1bc41f27866b75bb9f2728a6b36d8",
+      "src/lib/atlas-research-fetch-boundary.ts": "7e20acd2bd45a7e8141b66c1a58c347e6bf2e24cfe0b69710bd2327db7d84a7d",
+      "src/lib/question-generation-assignment-budget-policy.ts": "2d0674e224fa182b0d16bfa8b8443b65987763c3022340bb9e27db56934dda85",
+      "src/lib/question-generation-assignment-budget.ts": "7effc7b7fc954f5b84936a32fa28302eec08927e9a255cee9f6d5fec20ef4f48",
+      "src/lib/question-generation-llm.ts": "90776f0304ef9fddcbb60a92563904f8ce3213b26036d8357b3eeedb7ccf5c46",
+      "src/lib/question-generation-research-profiles.ts": "6fe9d5b81e0e18e4cc18f6483d340cc738eda424f580132ad980aa37520e8c6f",
+      "src/lib/question-generation-research-runtime.ts": "727905b19ba7003a0f7983310c65492a13f28257720c921be6fa60319009d10b",
+      "src/lib/question-generation-research-schema.ts": "a507b40880ad83940c754687a9bb04db00490bdf8b7ad554f7f34d9cdad1d7e5",
+      "experiments/question-quality-20260715/harness/question-generation-phase-c-runner.ts": "584016b73215427ac3ebf2d30bb1ad3d3d3a179b81f783e201da36f9d67f56cb",
+      "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts": "658a08f5d0d61fb217e9da2d6d76f523e6c0c332c37e81b340c241f4d92d75f6"
+    }
+  },
+  "privacy": {
+    "privateQueueGitIgnored": true,
+    "privateQueueGitTracked": false,
+    "publicPrivateValueLeaks": 0,
+    "credentialLeaks": 0
+  },
+  "authorization": {
+    "campaignEligibleAssignments": 0,
+    "generationAuthorized": false,
+    "apiCandidateCount": 0,
+    "globalCandidateLimit": 1000,
+    "independentAuditHoldSatisfiedByThisArtifact": true,
+    "remainingExternalHolds": 5
+  },
+  "remainingExternalHolds": [
+    "documented source-processing rights",
+    "current provider privacy/retention and allow-list attestation",
+    "separate limited credential with provider-side hard ceiling <= 44.16 USD",
+    "exact endpoint price snapshot no older than 15 minutes at admission",
+    "materialized 180-row exact-wire controller registry and preflight"
+  ],
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretAccesses": 0,
+    "fullQuestionCandidatesGenerated": 0,
+    "apiCandidateCount": 0,
+    "productionFilesEdited": 0,
+    "privateQueueSemanticEdits": 0
+  }
+}

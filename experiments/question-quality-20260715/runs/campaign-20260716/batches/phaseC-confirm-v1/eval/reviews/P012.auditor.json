@@ -1,0 +1,77 @@
+{
+  "pid": "P012",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "오답 해설 ②가 함정 유형을 '인과적 왜곡'이라 명명했으나 실제로는 인과 전도가 아니라 필자 조언(미루기 방지)에 대한 직접 모순이다. 선지 내용 자체의 대응은 정확하므로 V4 실패로 보지 않는다."
+    },
+    {
+      "code": "V4-minor-typography",
+      "severity": "minor",
+      "evidence": "오답 해설 ①에서 '에너지 충전과 Stamina 회복'처럼 한국어 문장 중간에 영단어가 대문자 S로 표기됨. 사실 오류는 아니며 표기 결함."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "half-truth / over-extension — 지문의 반(反)무계획 휴식 논조를 '휴식 전면 배제·작업시간 극대화'로 과잉 확장",
+      "temptingBecause": "지문 전반의 톤이 근무 중 휴식을 비판하므로 '일에만 집중하라'는 결론처럼 들린다",
+      "decisiveFlaw": "첫 문장 'Breaks are necessary to revive your energy levels and recharge your mental stamina'와 정면 충돌 — 필자는 휴식 자체를 부정하지 않고 무계획적 휴식만 배제한다"
+    },
+    {
+      "label": "②",
+      "intent": "advice reversal — 에너지 관리 어휘로 포장된 미루기 그 자체를 처방으로 제시",
+      "temptingBecause": "첫 문장의 'revive your energy levels' 어휘 앵커를 재활용해 에너지 회복이 우선처럼 보이게 한다",
+      "decisiveFlaw": "'에너지가 회복될 때까지 과업을 미룬다'는 것은 지문이 예방하라고 명령하는 procrastination의 정의 그 자체다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'commit to having no random breaks'를 '미리 정해진 휴식 방침을 엄격히 고수하라'로 의미 보존 추상화",
+      "temptingBecause": "해당 없음(정답). scheduled breaks만 허용하고 random breaks를 배제하라는 결론과 정확히 부합",
+      "decisiveFlaw": "없음 — 유일 정답. 'So to prevent procrastination ... instead' 슬롯에 문법적·논리적으로 완전히 안착"
+    },
+    {
+      "label": "④",
+      "intent": "detail lure + role reversal — 지문의 커피 세부 묘사를 가져와 그 담화 역할(합리화의 예시)을 보상 수단으로 전도",
+      "temptingBecause": "'getting a cup of coffee'라는 표층 어휘 일치가 강해 훑어 읽은 학생에게 근거 있는 선지처럼 보인다",
+      "decisiveFlaw": "지문에서 커피 휴식은 일을 회피하기 위한 자기 합리화의 부정적 예시이지 권장되는 보상이 아니다"
+    },
+    {
+      "label": "⑤",
+      "intent": "polar opposite — 지문이 규탄하는 unscheduled breaks를 '유연한 일정 속 자발적 휴식'으로 긍정 재포장",
+      "temptingBecause": "'flexible', 'spontaneous rest'가 상식적으로 건강한 습관처럼 들린다",
+      "decisiveFlaw": "자발적 휴식 허용 = 지문이 'derail you from your goal', 'procrastination trap'이라 규정한 무계획 휴식의 장려로, 결론과 정반대"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ②의 함정 유형 명명('인과적 왜곡')이 실제 함정 구조(조언 직접 모순)와 어긋남",
+      "recommendation": "'필자의 조언에 정면으로 반대되는 선지' 정도로 명명 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "본해설의 '커피 한 잔을 핑계로 일하러 가는 것을 미루는 합리화' 구문이 다소 꼬여 있어 즉독성이 떨어짐; 오답 해설 ①의 'Stamina' 대문자 표기",
+      "recommendation": "'커피를 핑계로 책상 앞 과업을 회피하는 합리화'로 평이화, 'stamina' 소문자 통일"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 target span 'commit to having no random breaks'만 빈칸으로 치환되고 tail 'instead.'가 보존됨 — 접합 파손·중복·누락 없음, 라벨 5개 일치. V2: 독립 blind solve 결과 ③ 유일 정답 — ①은 첫 문장(휴식 필요성)과 모순, ②는 미루기 그 자체, ④는 커피의 담화 역할 전도, ⑤는 무계획 휴식 장려로 결론과 정반대. 다섯 선지 모두 동일 통사 슬롯(명령형 VP + instead)에 문법적으로 들어가므로 문법 소거 불가 — D조건의 슬롯 균질성 충족. V3: 완성문 'So to prevent procrastination, strictly stick to a predetermined break policy instead.' 문법적·자연스러움, seam 비문 없음. V4: 담화 분석·오답 대응 정확(minor 2건은 상쇄 가능 수준). V5: 정답 라벨·선지·해설·keyPoints 동기화 완전. 공예: 결론 명제를 묻는 정전적 빈칸(C1=3), 4개 오답이 서로 다른 함정 의도(C2=3), ④·①은 실질 변별력 있으나 ②·⑤는 신중한 독자에게 조기 소거됨(C3=3), 길이 균형·tail 소거 없음·메타 누출 없음(C4=3), INTERMEDIATE 요구에 부합하되 다소 쉬운 편(C5=3), 해설 정확하나 장황+minor 표기 결함(C6=3). 합계 18 → 모든 V 통과, 최저 C≥2, 합계≥17로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

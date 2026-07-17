@@ -1,0 +1,70 @@
+{
+  "pid": "P036",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5",
+      "severity": "minor",
+      "evidence": "markedExpressions의 (E) 필드에서 'expression':'Should'로 기재되어(다른 비오류 항목은 expression에 표시형을 담는 관례) 표시형(Would)이 아닌 교정형이 들어가 있음. errorExpression='Would', correction='Should'로 의미는 일관되나 필드 규약이 항목마다 다름. 학생 노출 필드(정답 라벨 (E)·선지·해설·keyPoints)는 모두 동기화되어 있어 실질 오류는 아님."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "keyPoints의 (E) 항목이 '정·준동사'로 라벨링되어 있으나 실제 포인트는 조건절 if 생략에 따른 주어-조동사 도치(inversion). 다만 라벨 뒤 서술('조건절 if 생략에 따른 주어-조동사 도치 규칙')이 정확히 구조를 기술하므로 오분석은 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사의 능·수동 판단 — 'Such species'를 후치 수식하는 과거분사 called(수동: 종들이 ~라고 불리는)를 능동형 calling으로 오인하는지 겨냥.",
+      "temptingBecause": "삽입 콤마 뒤 분사 자리라 -ing/-ed 선택이 헷갈릴 수 있음.",
+      "decisiveFlaw": "종은 명명의 대상이므로 수동 과거분사 called가 정문. 어법상 옳음(비오류)."
+    },
+    {
+      "label": "(B)",
+      "intent": "동격 접속사 that 대 관계대명사 구분 — 뒤에 완전한 절이 오는 'The fact that ...' 동격절.",
+      "temptingBecause": "that을 관계대명사로 착각해 뒤 절의 결여 성분을 찾다가 완전절임을 보고 오류로 오판할 수 있음.",
+      "decisiveFlaw": "'The fact' 뒤 완전한 절을 이끄는 동격의 접속사 that으로 정문. 어법상 옳음(비오류)."
+    },
+    {
+      "label": "(C)",
+      "intent": "수일치 — 동격 that절(복수 명사 other species/the keystone species) 거품을 넘어 문장 핵 단수주어 'The fact'에 맞춘 is revealed.",
+      "temptingBecause": "정동사 직전에 복수 명사 the keystone species가 놓여 are revealed를 유도하는 강한 근접 오류 함정.",
+      "decisiveFlaw": "matrix 주어는 단수 'The fact'이고 복수 명사들은 that절 내부에 갇혀 있으므로 단수 is revealed가 정문. 어법상 옳음(비오류)."
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사 뒤 동명사 — important in 다음 동명사 sustaining(뒤에 목적어 취함).",
+      "temptingBecause": "in을 부정사 to로 이어지는 자리로 착각하거나 sustain 원형/부정사를 떠올릴 수 있음.",
+      "decisiveFlaw": "전치사 in의 목적어 자리이므로 동명사 sustaining이 정문이고 목적어(fruit-eating vertebrates)도 정상 취함. 어법상 옳음(비오류)."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — if 생략 조건절 도치. 원문 'If the fig trees should disappear' → 'Should the fig trees disappear'. 도치 조동사는 Were/Had/Should만 가능.",
+      "temptingBecause": "뒤 주절이 'would be eliminated'라 형태상 would가 호응하는 것처럼 보이고, 문두 조동사+주어 도치 자체는 익숙해 정문처럼 느껴짐.",
+      "decisiveFlaw": "조건절 if 대용 도치는 Would로 이끌 수 없음. 'Would the fig trees disappear'는 조건절을 형성하지 못하는 비문으로 Should가 유일 교정형(→ 원문 복원). 선언 정답 (E)와 일치."
+    }
+  ],
+  "explanationIssues": [
+    "(E) 해설은 if 생략 가정법 도치와 Should 문두 규칙을 정확히 설명함(정확·타당). 다만 다소 장황하고 마지막 문장이 앞 내용을 반복함(C6 우아함 감점 요인).",
+    "(B) 해설의 '명사의 성분을 명사절로 채우는 동격의 접속사'는 표현이 어색하나 동격 접속사(관계대명사 아님)로 정확히 분류함 — 오분석 아님.",
+    "(A)(C)(D) 오답 해설은 각 선지의 실제 구조(과거분사 수동 수식 / 단수주어 수일치 / 전치사+동명사)와 정확히 대응함."
+  ],
+  "killerConditionsMet": true,
+  "grade": "B",
+  "notes": "GRAMMAR_ERROR / 요청 난이도 KILLER. V1~V5 모두 통과. 렌더 지문은 원지문 대비 Should→Would 단일 최소대립 변형 외 손상 없음(문장 접합·중복·누락·고아 부호 없음). 5개 밑줄 라벨·마커가 선지와 정확히 일치. V2: (A)(B)(C)(D) 각각 독립 검증 결과 정문이며 오직 (E)만 비문 → 단일 정답, 선언 정답 (E)와 일치. §C 어법 KILLER 조건: (1) source-correct(Should)→displayed-wrong(Would) 최소대립쌍이고 교정=원문 복원 O, (2) 정답 포인트는 도치 조동사(Were/Had/Should)라는 명확한 문법 규칙 — 'Would 조건절 도치'는 대안 분석이 없는 명백한 비문 O, (3) 5개 밑줄 각각 point/why-tempting/correct-incorrect 존재 O, (4) 정답은 도치 구문 구조 독해를 요하며 철자·비단어·단순 인접 수일치로 즉시 드러나지 않음 O, (5) 동일 point 쉬운 디코이 없음 O → killerConditionsMet=true. 다만 문두 'Would+주어'는 다소 눈에 띄어 최상급 매복성은 아님(C5=3). (C) 인접 복수명사 수일치 함정이 변별의 핵심 축. 공예 합계 19로 A(≥21) 미달, C 최저 3 → B. 소수 필드 규약 불일치(마킹 (E) expression=교정형)와 keyPoints 라벨 어긋남은 학생 비노출/실질 무해한 minor."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "주어 'Inefficient teachers'(복수) + 현재시제 일반 진술 동사 'overlook' — 수 일치 정상. 타동사로 목적어 'the potential power...'를 직접 취하는 구조도 자연스럽다. 유혹 포인트: 'overlook'을 자동사/전치사 필요 동사로 착각하게 하려는 미끼일 수 있으나 overlook은 표준 타동사이므로 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'many pressing demands' — 현재분사형 형용사 pressing(긴급한)이 demands를 수식. 'demands가 press를 당한다'로 읽어 pressed를 요구하고 싶은 유혹이 있으나, pressing은 '긴급한'이라는 굳어진 형용사(pressing needs/demands)로 완전한 정문. 실전에서 가장 끌리는 매력적 오답이지만 근거가 성립하지 않는다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'It's no wonder that S+V' — it은 비인칭/가주어적 관용 구문이며 that은 동격/보문 접속사로 완전한 절(students are late for class)을 이끈다. 뒤가 완전한 절이므로 what으로 바꿀 이유가 없음. 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "wrong",
+      "reason": "'they have few reason to be on time' — few는 복수 가산명사만 수식한다(few reasons). 단수 무관사 reason 앞에는 불가산 취급의 little(little reason to ...)을 써야 하며, 'have little reason to do'가 표준 관용 표현. 'few reason'은 어떤 대안 해석(축약 관계절·도치 등)으로도 구제되지 않는 명백한 수량형용사-명사 수 불일치. 어법상 틀린 것 = (D)."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'prepare to focus on learning' — prepare는 to부정사를 목적어로 취하는 동사(prepare to do)로 정문. 'prepare for -ing'와 헷갈리게 하는 미끼이나 두 형태 모두 성립하며 여기서는 to focus가 자연스럽다. focus on -ing 결합도 정상."
+    }
+  ],
+  "note": "실전 풀이 순서: (D)에서 즉시 확정. few+단수명사는 장거리 단서 없이도 판별되는 국지적 오류라 최상위권에게는 30초 문항. 매력적 오답 체감: (B) pressing이 '수동 관계면 pressed 아닌가'로 잠깐 끌리지만 pressing demands는 관용적 분사형용사라 기각; (E) prepare to/for 선택도 순간 점검을 유발하나 prepare to-V가 표준이라 기각. 정답 후보는 (D) 하나로 유일하며 대안 해석으로 정문화될 여지 없음."
+}

@@ -1,0 +1,713 @@
+{
+  "id": "b04-c2",
+  "unitId": "b04",
+  "order": 2,
+  "title": "조동사 + have p.p. — 과거에 대한 추측·후회",
+  "oneLiner": "조동사는 그대로 두고 뒤를 have + 과거분사로 바꾸면 과거를 향한 추측(must)·유감(should)이 됩니다.",
+  "gradeStamp": {
+    "introduced": "고1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 조동사",
+      "천일문 고등 GRAMMAR — 조동사 + have p.p.(과거에 대한 추측·후회)",
+      "어법끝 5.0 — 동사의 형태: 조동사 뒤에는 동사원형"
+    ]
+  },
+  "lenses": ["L2"],
+  "confusableWith": ["b04-c1", "b03-c4", "b04-c3"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The ground is still wet, so it must have rained during the night.",
+        "The ground is still wet, so it must has rained during the night."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 have 와 has 하나입니다. 이 레슨을 마치면 왜 주어가 무엇이든 have 여야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "조동사 + have p.p.",
+      "question": "그런데 조동사 뒤의 have p.p. 는 대체 무엇입니까?",
+      "plain": "조동사 자체에는 과거의 일을 가리키는 형태가 따로 없습니다. 그래서 조동사는 그대로 두고 그 뒤를 have + 과거분사로 바꿔, 이미 지나간 일에 대한 추측과 후회를 나타냅니다.",
+      "analogy": "탐정이 지금 남아 있는 발자국을 보고 \"어젯밤 누군가 지나갔음이 틀림없다\"라고 말하는 장면과 같습니다. 몸은 현재에 서 있지만, 판단이 향하는 곳은 이미 지나간 시간입니다.",
+      "whyItMatters": "시험은 must has·have went 처럼 형태를 한 글자만 비틀어 밑줄을 칩니다. 조동사-have-과거분사의 3박자를 알면 밑줄을 보는 순간 오류가 눈에 걸립니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "형태 노트 — 세 자리부터 박아 둡니다",
+      "intro": "이 개념의 필기는 형태 절반, 뜻 절반입니다. 먼저 형태의 세 자리부터 노트에 적습니다.",
+      "entries": [
+        {
+          "head": "3박자 골격 — 조동사 + have + 과거분사",
+          "body": "과거를 향한 추측·후회는 세 자리로 이루어집니다. 조동사, 동사원형 have, 과거분사가 이 순서대로 서며, 셋이 합쳐 하나의 동사구가 됩니다.",
+          "example": {
+            "en": "She **may have missed** the earlier train.",
+            "ko": "그녀는 더 이른 기차를 놓쳤을지도 모릅니다.",
+            "note": "may(조동사) + have(동사원형) + missed(과거분사)의 3박자입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "have 는 얼어 있는 자리",
+          "body": "조동사 뒤는 주어와 무관한 동사원형 자리입니다. 주어가 3인칭 단수여도 have 는 has 로 바뀌지 않습니다.",
+          "example": {
+            "en": "The manager **must have approved** the plan already.",
+            "ko": "그 관리자는 이미 그 계획을 승인했음이 틀림없습니다.",
+            "note": "주어 The manager 가 단수여도 must 뒤는 have 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "have 뒤는 과거분사",
+          "body": "have 뒤에는 과거형이 아니라 과거분사가 옵니다. go-went-gone 처럼 두 형태가 다른 불규칙 동사에서 오류가 자주 납니다.",
+          "example": {
+            "en": "The guests **must have gone** home before midnight.",
+            "ko": "손님들은 자정 전에 집에 갔음이 틀림없습니다.",
+            "note": "go 의 과거분사는 went 가 아니라 gone 이므로 must have went 는 오류입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "방향은 have p.p., 속마음은 조동사",
+          "body": "have + 과거분사는 판단이 과거를 향한다는 방향 표지일 뿐입니다. 확신·가능·부정·유감 중 무엇인지는 앞의 조동사가 정합니다."
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "조동사 + have p.p. 4형제의 뜻",
+      "why": "형태는 넷 모두 조동사 + have + 과거분사로 똑같고 조동사 한 단어만 다릅니다. 조동사별 뜻이 즉시 나오지 않으면 문맥 문제 앞에서 매번 멈추게 됩니다. 구구단처럼 나와야 도구가 됩니다.",
+      "device": "must 는 \"틀림없다\"고 단정하고, cannot 은 \"리가 없다\"며 고개를 젓고, may·might 는 \"일지도\"라며 말을 아끼고, should 는 \"했어야 했는데\"라며 한숨을 쉽니다. 단정-부정-유보-한숨, 네 박자로 세 번 소리 내어 읽으십시오.",
+      "items": [
+        { "cue": "must have p.p.", "answer": "~했음이 틀림없습니다 — 강한 추측" },
+        { "cue": "cannot have p.p.", "answer": "~했을 리가 없습니다 — 강한 부정 추측" },
+        { "cue": "may·might have p.p.", "answer": "~했을지도 모릅니다 — 약한 추측" },
+        { "cue": "should have p.p.", "answer": "~했어야 했습니다 — 하지 않은 일에 대한 유감" },
+        { "cue": "have 의 모습", "answer": "주어와 무관하게 언제나 동사원형 have" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "첫 번째 관문",
+      "mission": "과거에 대한 \"추측\"을 나타내는 표현만 전부 고르십시오. 유감·의무의 표현이 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "must have p.p.",
+        "should have p.p.",
+        "may have p.p.",
+        "had to + 동사원형",
+        "cannot have p.p.",
+        "ought to have p.p.",
+        "might have p.p."
+      ],
+      "answers": [
+        "must have p.p.",
+        "may have p.p.",
+        "cannot have p.p.",
+        "might have p.p."
+      ],
+      "passText": "추측 계열 넷을 정확히 가려냈습니다. should 와 ought to 를 추측에 넣지 않았다면, 문맥 문제의 절반은 이미 이긴 것입니다.",
+      "retryText": "아깝습니다. 힌트 하나 — should 와 ought to 는 \"했어야 했는데\"라는 유감이고, had to 는 그때 실제로 있었던 의무입니다. 암기 카드의 네 박자를 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "title": "형태 규칙",
+      "rule": "조동사 뒤는 언제나 동사원형 자리입니다. 과거의 일을 말할 때에도 조동사는 그대로 두고 그 뒤를 have + 과거분사로 바꿉니다.",
+      "examples": [
+        {
+          "en": "The train **must have left** before we reached the platform.",
+          "ko": "우리가 승강장에 닿기 전에 그 기차는 떠났음이 틀림없습니다.",
+          "note": "조동사 must 뒤는 동사원형 자리이므로 has 나 had 가 아니라 have 를 씁니다."
+        },
+        {
+          "en": "The train **must has left** before we reached the platform.",
+          "ko": "같은 뜻을 노렸지만 조동사 뒤에 has 를 써서 형태가 무너진 문장입니다.",
+          "note": "주어가 단수여도 조동사 뒤에서는 have 가 형태를 바꾸지 않습니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "title": "두 가지 뜻 — 추측과 유감",
+      "rule": "must have p.p. 는 지금의 근거로 과거의 일을 강하게 추측하고, should have p.p. 는 하지 않은 과거의 일에 대한 유감을 나타냅니다.",
+      "examples": [
+        {
+          "en": "The lecture hall is already empty, so the seminar **must have ended** early.",
+          "ko": "강의실이 벌써 비어 있으니 그 세미나는 일찍 끝났음이 틀림없습니다.",
+          "note": "지금 눈앞의 증거를 근거로 과거의 일을 추측합니다."
+        },
+        {
+          "en": "We **should have booked** the tickets earlier; every seat is taken now.",
+          "ko": "우리는 표를 더 일찍 예매했어야 했습니다. 지금은 모든 좌석이 찼습니다.",
+          "note": "예매하지 않은 과거의 일에 대한 유감입니다. 실제로는 하지 않았다는 뜻이 함께 담깁니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "조동사 4형제의 속마음",
+      "columns": ["표현", "뜻", "속마음"],
+      "rows": [
+        {
+          "cells": ["must have p.p.", "~했음이 틀림없습니다", "지금의 증거로 확신합니다"],
+          "example": {
+            "en": "The ground is white this morning; it **must have snowed** overnight.",
+            "ko": "오늘 아침 땅이 하얗게 덮여 있으니 밤사이 눈이 왔음이 틀림없습니다.",
+            "note": "지금의 증거로 과거를 확신하는 추측입니다."
+          }
+        },
+        {
+          "cells": ["may·might have p.p.", "~했을지도 모릅니다", "가능성만 열어 둡니다"],
+          "example": {
+            "en": "The author **may have revised** the manuscript several times before publication.",
+            "ko": "그 저자는 출판 전에 원고를 여러 차례 수정했을지도 모릅니다.",
+            "note": "확신이 낮은 추측입니다."
+          }
+        },
+        {
+          "cells": ["cannot have p.p.", "~했을 리가 없습니다", "증거와 어긋나 불가능하다고 봅니다"],
+          "example": {
+            "en": "He **cannot have written** this letter; he was abroad for that entire month.",
+            "ko": "그가 이 편지를 썼을 리가 없습니다. 그는 그달 내내 외국에 있었습니다.",
+            "note": "과거의 일을 강하게 부정하는 추측입니다."
+          }
+        },
+        {
+          "cells": ["should have p.p.", "~했어야 했습니다", "하지 않은 일이 아쉽습니다"],
+          "example": {
+            "en": "I **should have backed up** the files before the update.",
+            "ko": "업데이트 전에 파일을 백업했어야 했습니다.",
+            "note": "백업하지 않은 과거의 일에 대한 유감입니다."
+          }
+        }
+      ],
+      "takeaway": "형태는 넷 다 같고 조동사만 다릅니다. 시험은 형태를 비틀거나(must has·have went), 문맥에 맞는 조동사를 고르게 합니다."
+    },
+    {
+      "id": "b9",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "3박자 반사신경 단련",
+      "instruction": "제한시간 안에 명제나 문장이 옳으면 ○, 틀리면 ×를 누르십시오. 조동사 뒤 have, have 뒤 과거분사 — 눈이 먼저 형태를 훑어야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "조동사 뒤에서는 주어가 3인칭 단수이면 has 를 씁니다.",
+          "isTrue": false,
+          "why": "조동사 뒤는 주어와 무관한 동사원형 자리이므로 언제나 have 입니다."
+        },
+        {
+          "statement": "must have p.p. 는 과거의 일에 대한 강한 추측입니다.",
+          "isTrue": true,
+          "why": "지금의 근거로 과거의 일을 틀림없다고 추측하는 표현입니다."
+        },
+        {
+          "statement": "The parcel must have arrived yesterday.",
+          "isTrue": true,
+          "why": "must + have + 과거분사의 3박자가 갖추어졌고, yesterday 가 가리키는 과거의 일을 추측합니다."
+        },
+        {
+          "statement": "He must have went home early.",
+          "isTrue": false,
+          "why": "have 뒤에는 과거분사가 와야 합니다. went 가 아니라 gone 이 옳습니다."
+        },
+        {
+          "statement": "should have p.p. 는 그 일을 실제로 했다는 뜻입니다.",
+          "isTrue": false,
+          "why": "하지 않은 과거의 일에 대한 유감입니다. 실제로는 하지 않았다는 뜻이 함께 담깁니다."
+        },
+        {
+          "statement": "과거의 의무는 must have p.p. 가 아니라 had to 로 씁니다.",
+          "isTrue": true,
+          "why": "have p.p. 를 붙일 수 있는 것은 추측의 must 뿐이고, 과거의 의무는 had to 로 나타냅니다."
+        },
+        {
+          "statement": "She cannot have forgotten the meeting.",
+          "isTrue": true,
+          "why": "cannot + have + 과거분사 — 과거의 일을 강하게 부정하는 추측으로 형태가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "조동사 동사구를 가진 문장의 해부",
+      "tokens": [
+        { "t": "The committee members", "role": "S" },
+        { "t": "must have reviewed", "role": "V" },
+        { "t": "the proposal", "role": "O" },
+        { "t": "before the final vote", "role": "M" }
+      ],
+      "ko": "위원회 위원들은 최종 표결 전에 그 제안서를 검토했음이 틀림없습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "before the final vote 는 때를 나타내는 전치사구입니다. 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The committee members 입니다."
+        },
+        {
+          "label": "③ 본동사구를 확인합니다",
+          "roles": ["V"],
+          "note": "must have reviewed 는 세 단어이지만 하나의 본동사구입니다. 조동사 must 뒤에 동사원형 have 가 오고, 그 뒤에 과거분사 reviewed 가 이어집니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "review 는 목적어를 부르는 동사이고, the proposal 이 그 목적어입니다."
+        }
+      ],
+      "conclusion": "have 와 reviewed 를 별개의 동사로 세면 안 됩니다. must have reviewed 전체가 본동사 자리를 차지하는 하나의 동사구입니다."
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "조동사 + have p.p. 를 판단하는 4단계",
+      "steps": [
+        {
+          "text": "조동사가 보이면 바로 뒤가 동사원형인지부터 확인합니다.",
+          "applyNote": "must 뒤에 has 나 had 가 오면 그 순간 오류입니다. 동사원형 have 만 올 수 있습니다."
+        },
+        {
+          "text": "말하는 내용이 가리키는 때가 과거인지 확인합니다. 과거이면 조동사 + have + 과거분사로 씁니다.",
+          "applyNote": "an hour ago 가 과거를 가리키므로 must leave 가 아니라 must have left 입니다."
+        },
+        {
+          "text": "have 뒤의 형태가 과거분사인지 확인합니다. 불규칙 동사는 과거형과 과거분사형이 다를 수 있습니다.",
+          "applyNote": "go 의 과거형은 went, 과거분사형은 gone 입니다. must have went 는 오류이고 must have gone 이 옳습니다."
+        },
+        {
+          "text": "문맥이 추측인지 유감인지 가려 조동사를 고릅니다. 확신은 must, 강한 부정은 cannot, 가능성은 may·might, 하지 않은 일에 대한 유감은 should 입니다.",
+          "applyNote": "불이 꺼져 있다는 증거로 과거를 확신하므로 must 를 골라 must have left 로 확정합니다."
+        }
+      ],
+      "example": {
+        "en": "The office lights are off, so the staff **must have left** an hour ago.",
+        "ko": "사무실 불이 꺼져 있으니 직원들은 한 시간 전에 퇴근했음이 틀림없습니다.",
+        "note": "an hour ago 가 과거를 가리키고, 지금의 증거로 그것을 추측하므로 must have left 가 옳습니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The museum was closed all week, so the visitors ( cannot have seen / cannot have saw ) the new exhibit.",
+      "steps": [
+        {
+          "title": "① 조동사 뒤를 봅니다",
+          "body": "cannot 뒤에는 동사원형만 올 수 있습니다. 두 후보 모두 have 로 시작하므로 이 단계는 둘 다 통과입니다."
+        },
+        {
+          "title": "② 가리키는 때를 봅니다",
+          "body": "박물관이 한 주 내내 닫혀 있었다는 과거의 사실을 근거로 추측하고 있습니다. 따라서 have + 과거분사 형태가 필요합니다."
+        },
+        {
+          "title": "③ have 뒤의 형태를 봅니다",
+          "body": "see 의 과거형은 saw 이고 과거분사형은 seen 입니다. have 뒤에는 과거분사만 올 수 있으므로 saw 는 들어갈 수 없습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "cannot have saw 는 과거형을 쓴 오류입니다. cannot have seen 이 옳으며, 새 전시를 보았을 리가 없다는 강한 부정의 추측이 됩니다."
+        }
+      ],
+      "answer": "cannot have seen",
+      "ko": "그 박물관은 한 주 내내 닫혀 있었으므로 방문객들이 새 전시를 보았을 리가 없습니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b04-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The streets are still wet, so it {{blank}} heavily during the night.",
+          "options": ["must have rained", "must has rained"],
+          "answer": 0,
+          "translation": "거리가 아직 젖어 있으니 밤사이에 비가 심하게 왔음이 틀림없습니다.",
+          "explanation": "조동사 must 뒤는 동사원형 자리이므로 has 가 아니라 have 를 씁니다. 과거의 일을 지금의 증거로 추측하므로 must have rained 가 옳습니다.",
+          "trapTags": ["modal-plus-base", "modal-perfect"]
+        },
+        {
+          "id": "b04-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "We had no map with us, so we [[u:should have asked]] for directions at the station.",
+          "isCorrect": true,
+          "translation": "우리에게 지도가 없었으니 역에서 길을 물었어야 했습니다.",
+          "explanation": "길을 묻지 않은 과거의 일에 대한 유감이므로 should have + 과거분사가 옳습니다. 조동사 뒤에 동사원형 have 가 왔고 그 뒤에 과거분사 asked 가 이어졌습니다.",
+          "trapTags": ["modal-perfect"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "must have p.p. 와 had to 의 차이",
+      "columns": ["must have p.p. — 과거에 대한 추측", "had to + 동사원형 — 과거의 의무"],
+      "rows": [
+        {
+          "criterion": "의미",
+          "a": "~했음이 틀림없습니다(지금의 근거로 과거를 추론)",
+          "b": "~해야만 했습니다(그때 실제로 의무가 있었음)"
+        },
+        {
+          "criterion": "말하는 사람의 태도",
+          "a": "확신에 찬 추론입니다",
+          "b": "일어난 사실의 진술입니다"
+        },
+        {
+          "criterion": "must 의 과거 표현",
+          "a": "추측의 must 는 have p.p. 를 붙여 과거를 나타냅니다",
+          "b": "의무의 must 는 과거형이 없어 had to 로 바꿔 씁니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The door was unlocked, so someone **must have entered** the building at night.",
+          "ko": "문이 잠겨 있지 않았으니 누군가 밤에 그 건물에 들어왔음이 틀림없습니다.",
+          "note": "지금의 증거로 과거의 일을 추측하는 문장입니다."
+        },
+        {
+          "en": "The power failed, so we **had to finish** the experiment by candlelight.",
+          "ko": "전기가 나가서 우리는 촛불에 의지해 실험을 끝내야 했습니다.",
+          "note": "과거의 의무는 must 로 나타낼 수 없으므로 had to 를 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현이 과거에 대한 추측인지, 과거의 일에 대한 후회·유감인지 분류하십시오.",
+      "buckets": [
+        { "id": "guess", "label": "과거에 대한 추측" },
+        { "id": "regret", "label": "과거의 일에 대한 후회·유감" }
+      ],
+      "chips": [
+        { "text": "must have finished", "bucketId": "guess", "why": "지금의 근거로 과거의 일을 강하게 확신하는 추측입니다." },
+        { "text": "may have missed", "bucketId": "guess", "why": "확신은 없지만 그랬을 가능성이 있다는 추측입니다." },
+        { "text": "cannot have seen", "bucketId": "guess", "why": "과거의 일을 강하게 부정하는 추측입니다." },
+        { "text": "should have called", "bucketId": "regret", "why": "전화하지 않은 과거의 일에 대한 유감입니다." },
+        { "text": "should not have shouted", "bucketId": "regret", "why": "소리친 과거의 일에 대한 후회입니다." },
+        { "text": "ought to have apologized", "bucketId": "regret", "why": "사과하지 않은 과거의 일에 대한 유감입니다. ought to 는 앞 레슨에서 본 대로 to 를 품지만 뒤에 동사원형이 오는 준조동사이므로, 여기서도 have 가 원형으로 옵니다." }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "속마음 연결하기",
+      "instruction": "왼쪽의 표현이 어떤 속마음을 담는지 오른쪽에서 찾아 연결하십시오. 동사는 전부 leave 로 같습니다.",
+      "pairs": [
+        {
+          "a": "must have left",
+          "b": "가방이 사라진 것을 보니 떠난 것이 확실합니다",
+          "why": "지금의 증거로 과거를 강하게 추측하는 must have p.p. 입니다."
+        },
+        {
+          "a": "cannot have left",
+          "b": "방금까지 함께 있었으니 떠났을 리가 없습니다",
+          "why": "과거의 일을 강하게 부정하는 추측입니다."
+        },
+        {
+          "a": "might have left",
+          "b": "확실하지는 않지만 떠났을 가능성도 있습니다",
+          "why": "확신이 낮은 추측의 might have p.p. 입니다."
+        },
+        {
+          "a": "should have left",
+          "b": "더 일찍 떠났어야 했는데 그러지 못해 아쉽습니다",
+          "why": "하지 않은 과거의 일에 대한 유감입니다."
+        },
+        {
+          "a": "had to leave",
+          "b": "그때는 실제로 떠나야만 하는 사정이 있었습니다",
+          "why": "과거의 의무는 must have p.p. 가 아니라 had to 로 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "I missed the last bus and walked home in the rain; I ( should have checked / must have checked / should check ) the timetable.",
+      "givenSteps": [
+        "① 형태를 봅니다 — should have checked 와 must have checked 는 모두 조동사 뒤에 동사원형 have 가 왔고 그 뒤에 과거분사 checked 가 이어졌으므로 형태만으로는 가릴 수 없습니다. should check 는 have + 과거분사가 없어 과거를 가리키지 못합니다.",
+        "② 문맥을 봅니다 — 말하는 사람은 막차를 놓치고 빗속을 걸어 집에 갔습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "should have checked — 시간표를 확인하지 않은 과거의 일에 대한 유감입니다",
+        "must have checked — 시간표를 확인했음이 틀림없다는 추측입니다",
+        "should check — 시간표를 확인해야 한다는 뜻으로, 지금·앞으로의 충고일 뿐 이미 지나간 과거를 가리키지 못합니다"
+      ],
+      "answer": 0,
+      "explain": "막차를 놓쳤다는 결과는 시간표를 확인하지 않았음을 뜻합니다. 하지 않은 과거의 일에 대한 유감이므로 should have checked 가 옳습니다. must have checked 는 확인했다는 추측이 되어 문맥과 어긋나고, should check 는 과거를 가리키지 못합니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "조동사 뒤에 has·had 를 쓰는 오류",
+      "body": "have 를 완료의 표지로만 기억하면 주어가 3인칭 단수일 때 반사적으로 has 를 쓰게 됩니다. 그러나 조동사 뒤는 주어와 무관한 동사원형 자리입니다. 주어가 무엇이든 have 는 형태를 바꾸지 않습니다.",
+      "example": {
+        "en": "The witness **must has seen** the accident from the window.",
+        "ko": "목격자가 창문에서 사고를 보았음이 틀림없다는 뜻을 노렸지만 형태가 틀린 문장입니다.",
+        "note": "주어 The witness 가 단수여도 조동사 must 뒤는 동사원형 자리이므로 must have seen 이라고 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "must have p.p. 를 과거의 의무로 읽는 오류",
+      "body": "must 에는 의무와 추측이라는 두 얼굴이 있습니다. 그런데 have p.p. 를 붙일 수 있는 것은 추측의 must 뿐입니다. 과거의 의무는 must have p.p. 가 아니라 had to 로 씁니다.",
+      "example": {
+        "en": "Because the road was blocked, the driver **had to take** a longer route.",
+        "ko": "도로가 막혀 있었기 때문에 그 운전자는 더 먼 길로 가야 했습니다.",
+        "note": "과거의 의무이므로 had to take 를 씁니다. must have taken 이라고 쓰면 더 먼 길로 갔음이 틀림없다는 추측이 되어 뜻이 달라집니다."
+      }
+    },
+    {
+      "id": "b20",
+      "type": "GENERATE",
+      "tier": 1,
+      "title": "직접 만들어 봅니다",
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 기술자가 어제 그 기계를 수리했음이 틀림없습니다.",
+      "answer": ["The engineer", "must have repaired", "the machine", "yesterday"],
+      "tiles": [
+        "The engineer",
+        "must have repaired",
+        "the machine",
+        "yesterday",
+        "must has repaired"
+      ],
+      "explanation": "조동사 must 뒤는 동사원형 자리이므로 has 가 아니라 have 를 씁니다. yesterday 가 가리키는 과거의 일을 지금 추측하므로 must have repaired 가 옳습니다."
+    },
+    {
+      "id": "b21",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b04-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The letters in the archive show that the two scientists {{blank}} their results long before the paper appeared.",
+          "options": ["must have exchanged", "must exchange", "must have exchange"],
+          "answer": 0,
+          "translation": "기록보관소의 편지들은 그 두 과학자가 논문이 나오기 훨씬 전에 결과를 주고받았음이 틀림없다는 것을 보여 줍니다.",
+          "explanation": "논문 발표 이전이라는 과거의 일을 지금 남아 있는 편지를 근거로 추측하므로 have + 과거분사가 필요합니다. must exchange 는 현재의 추측이 되어 때가 맞지 않고, must have exchange 는 have 뒤에 과거분사가 아닌 동사원형을 쓴 오류입니다.",
+          "trapTags": ["modal-perfect"]
+        },
+        {
+          "id": "b04-c2-ls-004",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Judging from the empty shelves, the store [[u:must has sold]] most of its stock before noon.",
+          "isCorrect": false,
+          "correction": "must have sold",
+          "translation": "텅 빈 진열대로 보아 그 상점은 정오 전에 재고 대부분을 팔았음이 틀림없습니다.",
+          "explanation": "조동사 must 뒤는 동사원형 자리이므로 has 를 쓸 수 없습니다. 주어 the store 가 단수라는 점에 이끌려 has 를 쓰면 안 되며, must have sold 로 고쳐야 합니다.",
+          "trapTags": ["modal-plus-base", "subject-verb-agreement"]
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 must have exchanged 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "지금 남아 있는 편지를 근거로 논문 발표 이전이라는 과거의 일을 추측하므로, 조동사 뒤가 have + 과거분사여야 했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 추측이 가리키는 때가 과거이면 조동사는 그대로 두고 그 뒤를 have + 과거분사로 바꿉니다."
+        },
+        {
+          "text": "must 가 강한 확신을 뜻하기 때문에 반드시 have 가 뒤따라야 합니다.",
+          "correct": false,
+          "feedback": "확신의 강도와 have p.p. 는 별개입니다. must 는 현재의 추측에도 쓰이며, 그때는 뒤에 동사원형만 옵니다. have p.p. 를 쓰는 근거는 추측 대상이 과거의 일이라는 사실입니다."
+        },
+        {
+          "text": "문장에 long before 라는 표현이 있어서 완료형을 써야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "특정 표현이 자동으로 완료형을 부르는 것이 아닙니다. 판단의 근거는 추측 대상이 과거의 일이라는 점이지 어휘의 존재가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The gate [[1:was found]] open this morning, and the alarm system, which [[2:records]] every entry, shows no signal, so the last visitor [[3:must has forgotten]] to lock it before he [[4:left]] the building.",
+      "answer": 3,
+      "correction": "must have forgotten",
+      "rationales": [
+        "수동태의 본동사입니다. 문은 발견되는 쪽이므로 was found 가 옳습니다.",
+        "관계대명사 which 가 연 절의 동사입니다. 선행사 the alarm system 이 단수이므로 records 가 옳습니다.",
+        "조동사 must 뒤는 동사원형 자리이므로 has 를 쓸 수 없습니다. 지금의 증거로 과거의 일을 추측하는 문장이므로 must have forgotten 으로 고칩니다.",
+        "접속사 before 가 연 절의 동사입니다. 과거의 일이므로 과거형 left 가 옳습니다."
+      ],
+      "ko": "오늘 아침 그 문이 열린 채로 발견되었고 모든 출입을 기록하는 경보 장치에도 신호가 없으므로, 마지막 방문자가 건물을 나서기 전에 문을 잠그는 것을 잊었음이 틀림없습니다."
+    },
+    {
+      "id": "b24",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 지시문을 주고 조동사 + have + 과거분사로 영작하게 합니다. 조동사 뒤에 has 나 had 를 쓰거나 have 뒤에 과거형을 쓰면 감점됩니다.",
+          "sample": {
+            "en": "The window was left open, so the cat ( escape ) through it during the night.",
+            "ask": "괄호 안의 동사를 must have 를 이용한 형태로 바꿔 쓰십시오.",
+            "answer": "must have escaped"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서 밑줄이 조동사 다음에 걸리면 먼저 동사원형인지 확인하고, 그다음 have 뒤가 과거분사인지 확인합니다. 형태가 옳으면 그때 문맥의 때를 봅니다.",
+          "sample": {
+            "en": "The unusual marks on the pottery suggest that the vessels [[u:must have been fired]] at a very high temperature.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — 조동사 must 뒤에 동사원형 have 가 왔고, 그릇은 구워지는 쪽이므로 수동형 have been fired 가 알맞습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "지나간 밤의 검시관",
+      "intro": "저는 지금 남은 증거만으로 이미 지나간 시간을 재구성하는 검시관입니다. 조동사와 have 의 3박자가 한 번이라도 흐트러지면 당신의 추리는 기각됩니다. 네 건의 사건으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The bridge is covered with frost, so the temperature {{blank}} sharply overnight.",
+          "options": ["must have dropped", "must has dropped", "must have drop"],
+          "answer": 0,
+          "why": "조동사 must 뒤는 동사원형 have 자리이고, have 뒤에는 과거분사 dropped 가 와야 합니다. 서리라는 지금의 증거로 밤사이의 일을 추측합니다."
+        },
+        {
+          "prompt": "The keys are not on the hook; someone {{blank}} them this morning.",
+          "options": ["must have taken", "must have took"],
+          "answer": 0,
+          "why": "have 뒤에는 과거형이 아니라 과거분사가 옵니다. take 의 과거분사는 taken 입니다."
+        },
+        {
+          "prompt": "The deadline passed while I kept postponing the report. I {{blank}} it last week.",
+          "options": ["should have finished", "must have finished"],
+          "answer": 0,
+          "why": "계속 미루다 마감을 넘겼다는 문맥이므로, 하지 않은 과거의 일에 대한 유감인 should have finished 가 옳습니다. must have finished 는 끝냈음이 틀림없다는 추측이 되어 문맥과 어긋납니다."
+        },
+        {
+          "prompt": "Nora was in Seoul all weekend, so she {{blank}} your bicycle in Busan on Saturday.",
+          "options": ["cannot have used", "must have used"],
+          "answer": 0,
+          "why": "주말 내내 서울에 있었다는 사실과 어긋나므로 부산에서 탔을 리가 없습니다. 과거의 일을 강하게 부정하는 cannot have p.p. 가 옳습니다."
+        }
+      ],
+      "winText": "네 건의 판정이 모두 정확했습니다. 검시관이 수첩을 덮고 길을 내어 줍니다. 형태의 3박자와 조동사의 속마음을 함께 읽는 눈 — 이제 지나간 시간은 당신의 관할입니다.",
+      "loseText": "검시관은 아직 물러서지 않습니다. 틀린 판정의 공통점을 보십시오 — 형태의 3박자이거나 조동사의 속마음이거나, 둘 중 하나가 흔들렸습니다. 정리표와 암기 카드를 다시 보고 오면 법정은 언제든 다시 열립니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "조동사 뒤에는 언제나 ___ 이 오므로 has·had 를 쓸 수 없고, 추측이나 유감이 가리키는 때가 ___ 이면 have + ___ 로 씁니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "조동사 뒤는 주어와 무관한 동사원형 자리입니다. 따라서 has·had 가 아니라 언제나 have 입니다.",
+        "추측이나 유감이 가리키는 때가 과거이면 조동사 + have + 과거분사로 씁니다. have 뒤는 과거형이 아니라 과거분사입니다.",
+        "must have p.p. 는 강한 확신, may·might have p.p. 는 가능성, cannot have p.p. 는 강한 부정의 추측입니다.",
+        "should have p.p. 는 하지 않은 과거의 일에 대한 유감이고, 과거의 의무는 must have p.p. 가 아니라 had to 로 씁니다."
+      ],
+      "keySentence": {
+        "en": "The committee members **must have reviewed** the proposal before the final vote.",
+        "ko": "위원회 위원들은 최종 표결 전에 그 제안서를 검토했음이 틀림없습니다.",
+        "note": "must have reviewed 는 하나의 본동사구입니다. 조동사 뒤 동사원형 have, 그 뒤 과거분사가 이 형태의 뼈대입니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b04-c2-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The path was covered with fresh footprints, so a group of hikers {{blank}} this way at dawn.",
+          "options": ["must have passed", "must has passed"],
+          "answer": 0,
+          "translation": "그 길이 새로 난 발자국으로 덮여 있었으므로 한 무리의 등산객이 새벽에 이 길로 지나갔음이 틀림없습니다.",
+          "explanation": "조동사 must 뒤는 동사원형 자리이므로 have 를 씁니다. 새벽이라는 과거의 일을 발자국이라는 증거로 추측하므로 must have passed 가 옳습니다.",
+          "trapTags": ["modal-plus-base", "modal-perfect"]
+        },
+        {
+          "id": "b04-c2-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The lecture had already begun when we arrived, so we [[u:should have left]] home earlier.",
+          "isCorrect": true,
+          "translation": "우리가 도착했을 때 강의는 이미 시작되어 있었으므로 우리는 집에서 더 일찍 나섰어야 했습니다.",
+          "explanation": "더 일찍 나서지 않은 과거의 일에 대한 유감이므로 should have + 과거분사가 옳습니다. 조동사 뒤에 동사원형 have 가 왔고 그 뒤에 과거분사 left 가 이어졌습니다.",
+          "trapTags": ["modal-perfect"]
+        },
+        {
+          "id": "b04-c2-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Since the laboratory was sealed for a month, the samples {{blank}} contaminated by anyone during that period.",
+          "options": ["cannot have been", "cannot have being", "cannot has been"],
+          "answer": 0,
+          "translation": "그 실험실은 한 달 동안 봉인되어 있었으므로 그 기간에 시료가 누군가에 의해 오염되었을 리가 없습니다.",
+          "explanation": "과거의 일을 강하게 부정하는 추측이므로 cannot have + 과거분사를 씁니다. 조동사 뒤는 동사원형 자리이므로 has 를 쓸 수 없고, have 뒤에는 과거분사가 와야 하므로 being 도 올 수 없습니다. 시료는 오염되는 쪽이므로 수동형을 이루는 cannot have been 이 옳습니다.",
+          "trapTags": ["modal-perfect", "passive-voice"]
+        }
+      ]
+    }
+  ]
+}

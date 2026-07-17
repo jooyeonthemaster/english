@@ -1,0 +1,82 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V5-LABEL-KEY-MISMATCH",
+      "severity": "major",
+      "evidence": "학생 노출 라벨 체계는 (A)~(E)인데(렌더 지문 '__(D) flawlessly__', 선택지 '(D) flawlessly', 선언된 정답 '(D)'), 해설은 '따라서 정답은 ④입니다'로 원문자 번호를 쓰고 keyPoints도 '④ 형용사 vs 부사', '② 대명사 일치', '③ 분사구문'으로 ①~⑤ 체계를 사용한다. 순서 대응((D)=4번째)으로 추론은 가능하나 학생 노출 필드 간 키가 문자 그대로 동기화되어 있지 않아, 학생은 ④가 어느 밑줄인지 표시된 라벨만으로 확정할 수 없다. RUBRIC V5 '번호·옵션·해설 키가 동기화' 위반."
+    },
+    {
+      "code": "V4-MINOR-E-GLOSS",
+      "severity": "minor",
+      "evidence": "(E) 오답 해설이 'finished'를 '끝마쳐진, 완료된'이라는 수동태 형식이라고 설명하나, 'When the band was finished'의 the band는 연주를 끝낸 행위 주체이지 '끝마쳐진' 대상이 아니다. 'be finished'는 'be done(다 마친 상태)'의 관용적 형용사 용법으로 보는 것이 정확하며, '끝마쳐진'이라는 피동 글로스는 구조를 오도할 수 있다. 또한 해설은 '밴드 공연이 끝난 시점'이라 했으나 실제 주어는 the band(밴드)다. 정오 판정 자체(어법상 적절)는 옳아 V4 실패로까지는 보지 않았다(minor)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사구문의 능동 현재분사 판정 — 주절 주어 Garcia가 waiting의 의미상 주어로 능동 관계",
+      "temptingBecause": "콤마 뒤 분사구문이라 waited/being waited 등 태·형태 대안을 떠올리게 함",
+      "decisiveFlaw": "오답(정답 아님)이 확정되는 근거: Garcia stood ..., waiting for his brother에서 Garcia가 기다리는 주체이므로 능동 현재분사가 정확히 맞음. 어법 오류 없음."
+    },
+    {
+      "label": "(B)",
+      "intent": "대명사 수 일치 — 병렬 복수 선행사(a patterned red shirt and yellow pants)를 받는 they",
+      "temptingBecause": "선행사가 'a patterned red shirt'로 시작하는 단수형 명사구처럼 보여 it으로 착각하도록 유도",
+      "decisiveFlaw": "shirt and pants의 등위 병렬 복수 선행사이므로 they가 정확함. 어법 오류 없음. 다만 판단이 매우 가벼워 매력도는 낮음."
+    },
+    {
+      "label": "(C)",
+      "intent": "분사구문 능동 vs 수동 — he가 several mistakes를 만드는 능동 관계",
+      "temptingBecause": "made(과거분사)로의 대체 가능성을 검토하게 함",
+      "decisiveFlaw": "주어 he가 목적어 several mistakes를 취하는 능동 관계이므로 making이 맞음. 어법 오류 없음. 단, (A)와 동일 포인트(pointCode 'c' 능동 분사구문) 중복으로 의도 밀도가 떨어짐."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 연결동사 was의 주격 보어 자리에 부사 불가, 형용사 flawless 필요",
+      "temptingBecause": "playing was flawlessly에서 '연주하다'라는 동작성 명사를 수식하는 느낌 때문에 부사가 자연스러워 보일 수 있음",
+      "decisiveFlaw": "copula was 뒤 서술 보어 슬롯에 부사 flawlessly는 비문. flawless로 교정하면 정확히 원지문과 일치하는 최소대립쌍. 대안 통사 분석(생략 동사 수식 등) 불가 — 유일 정답 확정. 단 was 바로 뒤 부사라 국소 단서만으로 즉시 드러나는 편."
+    },
+    {
+      "label": "(E)",
+      "intent": "관용적 형용사화 과거분사 'be finished(다 마치다)' 판정",
+      "temptingBecause": "band가 finish의 행위 주체인데 수동 형태처럼 보여 had finished/finished(능동)로 고쳐야 한다고 착각하기 쉬움 — 다섯 선지 중 가장 실질적인 디코이",
+      "decisiveFlaw": "'be finished' = 'be done'의 표준 관용 용법으로 어법상 적절. 오류 없음."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "ANSWER-LABEL-FORMAT",
+      "severity": "major",
+      "evidence": "본해설 말미 '따라서 정답은 ④입니다' — 선지 라벨 체계 (A)~(E)와 불일치(위 V5 이슈와 동일 근원)."
+    },
+    {
+      "code": "E-PASSIVE-GLOSS",
+      "severity": "minor",
+      "evidence": "(E) 해설의 '끝마쳐진…수동태 형식' 글로스는 the band(행위 주체)를 피동 대상처럼 기술하고, 주어를 '밴드 공연'으로 바꿔 말함 — 판정 결론은 옳으나 구조 기술이 부정확."
+    },
+    {
+      "code": "KEYPOINTS-COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints가 ②③④만 다루고 ①(A)·⑤(E)는 누락 — (E)가 가장 매력적인 디코이인데 keyPoint에 없음. 라벨 체계도 ①~⑤로 불일치."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1 통과: 렌더 지문은 원지문과 전문 대조 결과 의도된 (D) flawless→flawlessly 변형 외 손상·누락·중복 없음, 밑줄 라벨 5개가 선지와 일치. V2 통과: 5개 밑줄 독립 검증 결과 (A)(B)(C)(E)는 모두 어법상 적절하고 (D)만 비문 — 단일 정답 확정, 교정 시 원문 복원. V3 통과: 지문·발문·교정 완성문 모두 문법적('His confidence was, however, quickly changed'는 원지문 그대로). V4 통과(경미한 흠 있음): 정답 해설의 통사 분석(연결동사 보어 자리 형용사)은 정확하나 (E) 해설의 수동 글로스가 부정확(minor). V5 실패: 해설·keyPoints가 ①~⑤ 원문자 키를 사용해 학생 노출 라벨 (A)~(E)와 비동기 — 치명 게이트 위반으로 등급 F. 공예 측면: 포인트 자체(보어 자리 형/부사)는 정전적이나 (A)·(C) 디코이 포인트 중복(C2=2), 정답이 was 직후 부사라 국소 단서로 비교적 즉시 노출되고 (B)가 사실상 필러라 변별 압력이 낮음(C3=2). 요청 난이도 INTERMEDIATE에는 대체로 부합(C5=3). 라벨 키만 동기화하면 B급(수정 후 출하 가능) 수준. KILLER 아님 → killerConditionsMet=false."
+}

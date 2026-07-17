@@ -1,0 +1,35 @@
+{
+  "pid": "P059",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "조동사 can 뒤 동사원형 be. 주어 'Recording an interview'(동명사구)에 'is easier ... and can be less unnerving'이 병렬로 걸리고, 비교 대상 'than seeing someone scribbling'도 동명사끼리 대응. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "동명사 주어 'using a recorder' + 단수 동사 has. 주어-동사 수일치 및 동명사 주어 용법 모두 정상. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가주어 It + 'is more efficient' + 진주어 to부정사(외치 구문). 표준 'It is + 형용사 + to-V' 구조. 삽입 괄호구가 technique와 of-구를 분리해 낯설어 보이나 구조상 문제 없음. 잠시 developing으로의 유혹이 있었으나 기각. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "involve는 동명사 목적어를 취하는 동사. 'involves writing down ...' 정상. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "'It make the material much easier ...' — 3인칭 단수 주어 It(앞 문장의 편집 습관 지칭) + 현재시제이므로 makes여야 함. 수일치 위반. 선행 조동사·사역·제안동사가 없어 원형이 정당화될 대안 해석 불가. 명백한 비문."
+    }
+  ],
+  "note": "정답은 (E) 하나로 명확히 좁혀짐. 다만 (E)는 장거리 단서(진짜 주어·선행사·병렬 시작점 등)가 전혀 필요 없는 즉물적 3인칭 단수 수일치 오류라 최상위권 기준 변별력이 매우 낮음. (A)~(D)는 모두 교과서적 정문으로 매력적 오답 강도도 약한 편 — 특히 (C)의 extraposition이 유일하게 잠깐 고민을 유발하는 수준. 문항 성립에는 문제 없으나 난이도는 하."
+}

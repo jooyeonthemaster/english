@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸 문장은 doubt가 긍정·중립·부정 경험 모두를 '더 부정적으로, 그리고 ~로' 보게 만든다는 내용. 지문 전체 논리(자기 능력에 대한 의심 → 자존감 손상 → 경험의 부정적 재해석)와 정확히 맞물리며, 'perceived lack of competence'는 마지막 문장의 'see your strengths more objectively'와 완벽한 대조축을 이룬다. 의심이 모든 경험을 자기 무능의 확증 증거로 왜곡한다는 자기강화 순환이 성립. 문법 결합(as evidence confirming...)도 자연스러움."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "매력적 오답 — 'pressure' 어휘 반복으로 순간 끌림. 그러나 지문의 압박은 external이 아니라 internal이며('The internal pressure you place on yourself'), 심지어 'normal and useful'이라 평가됨. 결정적으로 'It's not the pressure to perform that creates your stress'로 압박 기원설을 명시적으로 부정하므로 이중 모순."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'objective measurement'가 마지막 문장 'When you see situations and your strengths more objectively...'와 정면충돌 — doubt는 객관이 아니라 왜곡의 원천. 또한 빈칸 대상에 긍정적·중립적 경험이 포함되므로 'actual irreversible failure'라는 실제 실패 규정은 성립 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'normal and useful'은 지문에서 internal pressure에 붙은 서술이지 doubt의 산물이 아님. 빈칸 문장은 'more negatively and as ~'라는 부정적 극성의 병렬이므로 긍정적 평가어와 극성 자체가 반대. 어휘 표면 매칭만 노린 오답."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "매력적 오답 — 'socially', 'self-worth' 어휘에 끌림. 그러나 지문의 doubt는 self-doubt, 즉 자기 자신이 스스로에게 가하는 의심이며 타인의 판단(judgment from others)이 아님. 주체(self vs others)가 어긋나 지문 논리와 불일치."
+    }
+  ],
+  "note": "최상위권 실전 렌즈로 풀이. 빈칸 문장 내 병렬('more negatively and as ~')과 마지막 문장의 'objectively' 대조가 결정적 단서. ②(pressure 반복)와 ⑤(social/worth 반복)가 표면 어휘로 유혹하지만 각각 명시적 부정문과 주체 전환에서 탈락. ①만 유일하게 옹호 가능하며 복수정답 소지 없음."
+}

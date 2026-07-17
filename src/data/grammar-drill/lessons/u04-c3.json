@@ -1,0 +1,640 @@
+{
+  "id": "u04-c3",
+  "unitId": "u04",
+  "order": 3,
+  "title": "보어 자리의 분사",
+  "oneLiner": "remain·find·keep 뒤 보어 자리의 분사도 짝 명사와의 능·수동으로 형태가 정해집니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 목적어와 목적격보어를 갖는 문장 구조",
+      "천일문 고등 GRAMMAR — 분사(주격보어·목적격보어로 쓰이는 분사)",
+      "SMOAT 어법 드릴 뱅크 u04-c3 문항 35개(trapTag: object-complement, subject-complement, adjacent-noun-decoy)"
+    ]
+  },
+  "lenses": ["L3", "L5"],
+  "confusableWith": ["u04-c1", "u04-c2", "u04-c4", "u09-c2"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The librarian found the rare atlas damaged by damp air.",
+        "The librarian found the rare atlas damaging by damp air."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 분사의 형태 하나입니다. 이 레슨을 마치면 왜 damaged 여야 하는지 짝이 되는 명사를 짚어 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "보어",
+      "question": "앞 레슨에서 감정동사 분사가 앉던 보어 자리를, 이번에는 정면으로 다룹니다. 보어가 대체 무엇이고, 왜 분사가 그 자리에 옵니까?",
+      "plain": "보어는 주어나 목적어가 어떤 상태인지를 채워 설명하는 말입니다. 동사만으로는 뜻이 비는 자리를 메워 문장을 완성합니다.",
+      "analogy": "'문을 잠긴 상태로 두다'처럼, 보어는 대상 옆에 붙는 상태 꼬리표입니다. '잠긴'이 문의 상태를 밝히는 꼬리표이고, 바로 이 자리에 분사가 자주 들어섭니다.",
+      "whyItMatters": "이 꼬리표가 분사일 때 -ing 와 p.p. 중 무엇을 쓸지가 수능 어법의 단골 물음입니다. 보어인 줄 알아야 짝 명사를 찾아 능·수동을 따질 수 있습니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "목적어 뒤에 나오는 분사는 목적어가 이미 나왔으니 수동, 즉 과거분사입니다.",
+      "truth": "위치는 근거가 되지 못합니다. 목적격 보어의 형태는 목적어가 그 동작을 '하는' 쪽인지 '당하는' 쪽인지로만 결정됩니다. 목적어가 하는 쪽이면 목적어 뒤라도 현재분사가 옳습니다.",
+      "counterExample": {
+        "en": "The night watchman kept the corridor lights **burning** until dawn.",
+        "ko": "야간 경비원은 새벽까지 복도 조명이 켜져 있게 두었습니다.",
+        "note": "목적어 the corridor lights 가 스스로 타오르는 쪽이므로 목적어 뒤인데도 현재분사 burning 이 옳습니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "보어 자리 분사 판별 필기",
+      "intro": "보어 자리의 분사를 판정하는 데 필요한 다섯 가지를 필기 한 장에 모읍니다.",
+      "entries": [
+        {
+          "head": "주격 보어 — 짝은 주어",
+          "body": "remain·stay·seem·appear 뒤의 분사는 주어의 상태를 설명합니다. 이때 분사의 짝은 문장의 주어입니다.",
+          "example": {
+            "en": "The east wing **remained closed** during the inspection.",
+            "ko": "동쪽 병동은 점검 기간 내내 폐쇄된 상태로 있었습니다.",
+            "note": "remain 뒤 주격 보어입니다. 병동은 닫히는 쪽이므로 과거분사입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "목적격 보어 — 짝은 목적어",
+          "body": "find·keep·leave·지각동사 뒤의 분사는 목적어의 상태를 설명합니다. 이때 분사의 짝은 목적어입니다.",
+          "example": {
+            "en": "The staff kept the lanterns **burning** through the night.",
+            "ko": "직원들은 밤새 등불이 계속 타오르게 두었습니다.",
+            "note": "keep 뒤 목적격 보어입니다. 등불은 스스로 타오르는 주체이므로 현재분사입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "능·수동이 형태를 정한다",
+          "body": "짝 명사(그 분사의 의미상 주어)가 그 동작을 하는 쪽이면 현재분사(-ing), 당하는 쪽이면 과거분사(p.p.)입니다. 자리가 아니라 관계가 형태를 정합니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "핵 명사만 짝이 된다",
+          "body": "짝 명사에 붙은 전치사구·관계절·분사구는 걷어냅니다. 분사 바로 앞의 명사가 아니라 걷어낸 뒤에 남는 핵이 짝입니다.",
+          "example": {
+            "en": "The board found the accounts of the failed branch **frozen** by the court.",
+            "ko": "이사회는 파산한 지점의 계좌가 법원에 의해 동결된 것을 발견했습니다.",
+            "note": "짝은 바로 앞의 the failed branch 가 아니라 핵 명사 the accounts 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "보어 분사는 시제가 없다",
+          "body": "보어 자리의 분사는 시제를 지지 않습니다. 시제는 본동사가 지고, 분사는 능·수동만 나타냅니다."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 동사가 뒤에 어떤 보어를 부르는지 분류하십시오. 분사의 짝이 주어인지 목적어인지가 여기서 갈립니다.",
+      "buckets": [
+        { "id": "sc", "label": "주격 보어를 부른다" },
+        { "id": "oc", "label": "목적격 보어를 부른다" }
+      ],
+      "chips": [
+        { "text": "remain", "bucketId": "sc", "why": "remain 뒤의 분사는 주어의 상태를 설명합니다." },
+        { "text": "seem", "bucketId": "sc", "why": "seem 뒤의 분사는 주어가 어떠해 보이는지를 설명합니다." },
+        { "text": "stay", "bucketId": "sc", "why": "stay 뒤의 분사는 주어가 유지하는 상태를 설명합니다." },
+        { "text": "find", "bucketId": "oc", "why": "find 는 목적어 뒤에 그 목적어를 설명하는 보어를 부릅니다." },
+        { "text": "leave", "bucketId": "oc", "why": "leave 는 목적어를 어떤 상태로 두는지를 보어로 밝힙니다." },
+        { "text": "watch", "bucketId": "oc", "why": "지각동사 watch 는 목적어가 하는 일 또는 당하는 일을 보어로 밝힙니다." }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "보어 동사 무리 외우기",
+      "target": "보어 종류를 부르는 동사 무리",
+      "why": "동사를 보는 순간 주격 보어인지 목적격 보어인지 갈라야, 짝 명사를 주어에서 찾을지 목적어에서 찾을지가 정해집니다. 이 분기가 흔들리면 능·수동 판단 전체가 어긋납니다.",
+      "device": "'남고(remain)·머물고(stay)·보이고(seem)·나타나는(appear)' 무리는 주어 곁에 남으니 짝도 주어입니다. '찾고(find)·두는(keep·leave)·지켜보는(see·hear·watch)' 무리는 목적어를 손에 쥐니 짝도 목적어입니다.",
+      "items": [
+        { "cue": "remain·stay·seem·appear", "answer": "주격 보어 — 짝은 주어" },
+        { "cue": "find·keep·leave", "answer": "목적격 보어 — 짝은 목적어" },
+        { "cue": "see·hear·watch (지각동사)", "answer": "목적격 보어 — 짝은 목적어" },
+        { "cue": "짝이 하는 쪽이면", "answer": "현재분사 -ing" },
+        { "cue": "짝이 당하는 쪽이면", "answer": "과거분사 p.p." }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "주격 보어 동사 관문",
+      "mission": "다음 중 주격 보어를 부르는 동사, 즉 분사의 짝이 주어가 되는 동사를 전부 고르십시오.",
+      "mode": "SET",
+      "pool": ["remain", "stay", "seem", "appear", "find", "keep", "leave", "watch"],
+      "answers": ["remain", "stay", "seem", "appear"],
+      "passText": "주어 곁에 남는 네 동사를 정확히 가려냈습니다. 관문이 열립니다.",
+      "retryText": "find·keep·leave·watch 는 목적어를 손에 쥐는 무리입니다. 주어 곁에 남는 넷만 다시 골라 보십시오."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "주격 보어 자리(remain·stay·seem·appear 뒤)의 분사는 주어가 하는 쪽이면 현재분사, 당하는 쪽이면 과거분사입니다.",
+      "examples": [
+        {
+          "en": "The east wing of the hospital **remained closed** during the inspection.",
+          "ko": "병원의 동쪽 병동은 점검 기간 내내 폐쇄된 상태로 있었습니다.",
+          "note": "remain 뒤는 주격 보어 자리입니다. 병동은 닫는 쪽이 아니라 닫히는 쪽이므로 과거분사 closed 가 옳습니다."
+        },
+        {
+          "en": "The old machine **stayed running** all through the night.",
+          "ko": "그 낡은 기계는 밤새 계속 돌아갔습니다.",
+          "note": "stay 뒤는 주격 보어 자리입니다. 주어 The old machine 은 무언가에 의해 돌려지는 것이 아니라 스스로 돌아가는 주체이므로 현재분사 running 이 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "목적격 보어 자리(find·keep·leave·지각동사 뒤)의 분사는 목적어가 하는 쪽이면 현재분사, 당하는 쪽이면 과거분사입니다.",
+      "examples": [
+        {
+          "en": "The inspectors found the emergency exit **blocked** by stacked chairs.",
+          "ko": "점검관들은 비상구가 쌓아 둔 의자들로 막혀 있는 것을 발견했습니다.",
+          "note": "목적어 the emergency exit 는 막히는 대상이므로 과거분사 blocked 가 목적격 보어로 옵니다."
+        },
+        {
+          "en": "We watched the ferry **approaching** the pier through the thick fog.",
+          "ko": "우리는 짙은 안개를 뚫고 여객선이 부두로 다가오는 것을 지켜보았습니다.",
+          "note": "목적어 the ferry 가 다가오는 주체이고 뒤에 목적어 the pier 까지 거느리므로 현재분사 approaching 이 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "목적어가 길어진 5형식 문장의 해부",
+      "tokens": [
+        { "t": "The committee", "role": "S" },
+        { "t": "found", "role": "V" },
+        { "t": "the archived documents", "role": "O" },
+        { "t": "stored in the basement", "role": "M" },
+        { "t": "damaged by moisture", "role": "C" }
+      ],
+      "ko": "위원회는 지하실에 보관된 그 기록물들이 습기로 손상된 것을 발견했습니다.",
+      "layers": [
+        {
+          "label": "① 목적어에 붙은 수식어를 걷어냅니다",
+          "roles": ["M"],
+          "note": "stored in the basement 는 앞의 명사 documents 를 뒤에서 꾸미는 분사구입니다. 보어 판단에 끼어들지 않도록 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 본동사가 부르는 구조를 확인합니다",
+          "roles": ["V"],
+          "note": "본동사는 found 입니다. find 는 목적어와 목적격 보어를 함께 부르는 동사이므로, 목적어 뒤에 남은 분사는 수식어가 아니라 보어입니다."
+        },
+        {
+          "label": "③ 분사의 짝이 되는 명사를 확정합니다",
+          "roles": ["O"],
+          "note": "목적격 보어의 짝은 목적어의 핵인 the archived documents 입니다. 바로 앞의 the basement 가 아닙니다."
+        },
+        {
+          "label": "④ 능·수동을 판정합니다",
+          "roles": ["C"],
+          "note": "기록물은 습기를 손상시키는 쪽이 아니라 손상을 입는 쪽입니다. 따라서 과거분사 damaged 가 옳습니다."
+        }
+      ],
+      "conclusion": "같은 문장에 분사가 둘(stored, damaged) 있지만 역할이 다릅니다. stored 는 목적어를 꾸미는 수식어이고, damaged 만이 목적격 보어입니다."
+    },
+    {
+      "id": "b11",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "능·수동 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 보어 분사는 결국 순간 판단입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "remain 뒤 분사의 짝은 문장의 주어입니다.",
+          "isTrue": true,
+          "why": "remain·stay·seem·appear 는 주격 보어를 부르므로 짝은 주어입니다."
+        },
+        {
+          "statement": "목적어 뒤에 나오는 분사는 언제나 과거분사입니다.",
+          "isTrue": false,
+          "why": "위치가 아니라 능·수동이 형태를 정합니다. 목적어가 하는 쪽이면 현재분사가 옵니다."
+        },
+        {
+          "statement": "The staff kept the fountain flowing. 에서 flowing 은 옳습니다.",
+          "isTrue": true,
+          "why": "목적어 the fountain 이 스스로 흐르는 주체이므로 현재분사가 옳습니다."
+        },
+        {
+          "statement": "짝 명사가 동작을 당하는 쪽이면 현재분사를 씁니다.",
+          "isTrue": false,
+          "why": "당하는 쪽이면 과거분사입니다. 하는 쪽일 때 현재분사를 씁니다."
+        },
+        {
+          "statement": "분사의 짝은 수식어를 걷어낸 뒤의 핵 명사입니다.",
+          "isTrue": true,
+          "why": "분사 바로 앞의 명사가 아니라, 전치사구·관계절을 걷어낸 핵이 짝입니다."
+        },
+        {
+          "statement": "seem 은 목적격 보어를 부르는 동사입니다.",
+          "isTrue": false,
+          "why": "seem 은 주격 보어를 부릅니다. 짝은 목적어가 아니라 주어입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "보어 자리 분사를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "본동사를 확인해 분사가 어느 보어 자리인지 정합니다. remain·stay·seem·appear 뒤면 주격 보어, find·keep·leave·지각동사 뒤면 목적격 보어입니다.",
+          "applyNote": "본동사는 found 입니다. find 는 목적어와 목적격 보어를 부르는 동사이므로 뒤의 분사는 목적격 보어입니다."
+        },
+        {
+          "text": "분사의 짝이 되는 명사를 정합니다. 주격 보어면 주어, 목적격 보어면 목적어입니다.",
+          "applyNote": "목적격 보어이므로 짝은 목적어 the emergency exit 입니다."
+        },
+        {
+          "text": "짝 명사에 붙은 전치사구·관계절·분사구를 걷어내고 핵 명사만 남깁니다.",
+          "applyNote": "of the west corridor 는 목적어를 꾸미는 전치사구입니다. 걷어내면 핵은 the emergency exit 입니다."
+        },
+        {
+          "text": "핵 명사를 주어로 삼아 능동인지 수동인지 되돌려 봅니다. 하는 쪽이면 -ing, 당하는 쪽이면 p.p.입니다.",
+          "applyNote": "'비상구가 막히다'라는 수동 관계이므로 과거분사 blocked 가 옳습니다. blocking 을 쓰면 비상구가 무언가를 막는 주체가 됩니다."
+        }
+      ],
+      "example": {
+        "en": "The inspectors found the emergency exit of the west corridor **blocked** by stacked chairs.",
+        "ko": "점검관들은 서쪽 복도의 비상구가 쌓아 둔 의자들로 막혀 있는 것을 발견했습니다.",
+        "note": "수식어 of the west corridor 를 걷어내면 짝 명사는 the emergency exit 입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The auditors found the safety records of the three regional plants ( altering / altered ) after the accident.",
+      "steps": [
+        {
+          "title": "① 어느 보어 자리인지 정합니다",
+          "body": "본동사는 found 입니다. find 는 목적어와 목적격 보어를 부르는 동사이므로, 괄호는 목적격 보어 자리입니다."
+        },
+        {
+          "title": "② 짝이 되는 명사를 찾습니다",
+          "body": "목적격 보어의 짝은 목적어입니다. 목적어는 the safety records of the three regional plants 입니다."
+        },
+        {
+          "title": "③ 수식어를 걷어내고 핵을 남깁니다",
+          "body": "of the three regional plants 는 목적어를 꾸미는 전치사구입니다. 걷어내면 핵 명사는 the safety records 입니다. 가까이 있는 plants 에 시선을 빼앗기지 않아야 합니다."
+        },
+        {
+          "title": "④ 능·수동을 판정합니다",
+          "body": "기록은 스스로 무언가를 변조하는 주체가 아니라 변조되는 대상입니다. 따라서 과거분사 altered 가 옳습니다."
+        }
+      ],
+      "answer": "altered",
+      "ko": "감사관들은 사고 이후 세 지역 공장의 안전 기록이 변조된 것을 발견했습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u04-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The museum entrance remained {{blank}} throughout the renovation.",
+          "options": ["closed", "closing"],
+          "answer": 0,
+          "translation": "박물관 입구는 보수 공사 내내 폐쇄된 상태로 있었습니다.",
+          "explanation": "remain 뒤는 주격 보어 자리이므로 주어 The museum entrance 와의 관계로 판단합니다. 입구는 닫는 쪽이 아니라 닫히는 쪽이므로 과거분사 closed 가 옳습니다. closing 을 고르면 입구가 무언가를 닫는 주체가 되어 성립하지 않습니다.",
+          "trapTags": ["subject-complement", "linking-verb"]
+        },
+        {
+          "id": "u04-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Throughout the ceremony, the staff kept the fountain [[u:flowing]] for the guests to admire.",
+          "isCorrect": true,
+          "translation": "행사 내내 직원들은 손님들이 감상할 수 있도록 분수가 계속 흐르게 두었습니다.",
+          "explanation": "keep 뒤의 밑줄은 목적어 the fountain 을 설명하는 목적격 보어입니다. 분수는 흐르게 되는 대상이 아니라 스스로 흐르는 주체이므로 현재분사 flowing 이 옳습니다. 목적어 뒤라는 위치만으로 과거분사가 되는 것이 아니라, 목적어가 하는 쪽이면 현재분사가 옵니다.",
+          "trapTags": ["object-complement"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "주격 보어와 목적격 보어",
+      "columns": ["주격 보어 — 짝은 주어", "목적격 보어 — 짝은 목적어"],
+      "rows": [
+        {
+          "criterion": "대표 동사",
+          "a": "remain / stay / seem / appear",
+          "b": "find / keep / leave / see / hear / watch"
+        },
+        {
+          "criterion": "분사의 짝이 되는 명사",
+          "a": "문장의 주어(수식어를 걷어낸 핵)",
+          "b": "목적어(수식어를 걷어낸 핵)"
+        },
+        {
+          "criterion": "판단 문장",
+          "a": "주어가 그 동작을 하는가, 당하는가",
+          "b": "목적어가 그 동작을 하는가, 당하는가"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The letters **remained unopened** on his desk for a month.",
+          "ko": "그 편지들은 한 달 동안 그의 책상 위에 뜯기지 않은 채로 있었습니다.",
+          "note": "주격 보어입니다. 주어 The letters 는 뜯기는 대상이므로 과거분사입니다."
+        },
+        {
+          "en": "The engineer left the backup generator **running** through the storm.",
+          "ko": "그 기술자는 폭풍이 지나가는 동안 예비 발전기를 계속 가동되게 두었습니다.",
+          "note": "목적격 보어입니다. 목적어 the backup generator 가 돌아가는 주체이므로 현재분사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "분사의 짝은 분사 바로 앞의 명사가 아니라, 수식어를 걷어낸 뒤에 남는 핵 명사입니다.",
+      "examples": [
+        {
+          "en": "The auditors found the receipts from the overseas branch **stored** in an unlocked drawer.",
+          "ko": "감사관들은 해외 지점에서 온 영수증이 잠기지 않은 서랍에 보관되어 있는 것을 발견했습니다.",
+          "note": "from the overseas branch 는 목적어를 꾸미는 전치사구입니다. 짝은 the receipts 이고, 영수증은 보관되는 대상이므로 과거분사입니다."
+        },
+        {
+          "en": "The regulations that the ministry announced last year seem **designed** to protect small suppliers.",
+          "ko": "그 부처가 작년에 발표한 규정들은 소규모 공급업체를 보호하도록 설계된 것으로 보입니다.",
+          "note": "관계절 that the ministry announced last year 를 걷어내면 주어의 핵은 The regulations 입니다. 규정은 설계되는 대상이므로 과거분사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The sudden blackout left the entire subway line ( suspending / suspended ) for nearly two hours.",
+      "givenSteps": [
+        "① 본동사는 left 입니다. leave 는 목적어와 목적격 보어를 부르는 동사이므로 괄호는 목적격 보어 자리입니다.",
+        "② 목적격 보어의 짝은 목적어의 핵인 the entire subway line 입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "suspending — 지하철 노선이 스스로 무언가를 중단시키고 있기 때문입니다",
+        "suspended — 지하철 노선은 중단시키는 주체가 아니라 중단되는 대상이기 때문입니다",
+        "suspend — 보어 자리에는 동사원형을 쓰기 때문입니다"
+      ],
+      "answer": 1,
+      "explain": "짝 명사 the entire subway line 을 주어로 되돌리면 '노선이 중단되다'라는 수동 관계입니다. 따라서 과거분사 suspended 가 옳습니다. leave 는 목적격 보어로 동사원형을 취하지 않으므로 suspend 도 성립하지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 분사 바로 앞의 명사에 낚이는 경우",
+      "body": "목적어에 전치사구나 관계절이 붙으면 분사 바로 앞에는 짝이 아닌 명사가 놓입니다. 그 명사의 수·의미에 이끌려 판단하면 능·수동이 뒤집힙니다. 목적어를 괄호로 정리해 핵 명사를 먼저 확정한 뒤에 분사를 봅니다.",
+      "example": {
+        "en": "The board found the accounts of the failed subsidiary **frozen** by the court.",
+        "ko": "이사회는 파산한 자회사의 계좌가 법원에 의해 동결된 것을 알게 되었습니다.",
+        "note": "분사 바로 앞의 the failed subsidiary 는 수식어 안의 명사입니다. 짝은 목적어의 핵 the accounts 이고, 계좌는 동결되는 대상이므로 과거분사입니다."
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u04-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The committee found the proposals submitted by the two smaller firms {{blank}} in a folder that no one had opened.",
+          "options": ["misfiling", "misfiled"],
+          "answer": 1,
+          "translation": "위원회는 두 소규모 업체가 제출한 제안서들이 아무도 열어 보지 않은 서류철에 잘못 철해져 있는 것을 발견했습니다.",
+          "explanation": "found 의 목적어는 the proposals 이고 submitted by the two smaller firms 는 그 목적어를 꾸미는 분사구입니다. 목적격 보어의 짝은 핵 명사 the proposals 이며, 제안서는 잘못 철해지는 대상이므로 과거분사 misfiled 가 옳습니다.",
+          "trapTags": ["object-complement", "adjacent-noun-decoy"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 misfiled 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "목적격 보어의 짝은 목적어의 핵 the proposals 이고, 제안서는 철해지는 대상이므로 수동 관계이기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 짝 명사를 확정한 뒤 능·수동을 되물은 것이 판단의 근거입니다."
+        },
+        {
+          "text": "분사 앞에 목적어가 이미 나왔으므로 그 뒤에는 과거분사가 오기 때문입니다.",
+          "correct": false,
+          "feedback": "위치는 근거가 되지 못합니다. 목적어가 하는 쪽이면 목적어 뒤라도 현재분사가 옵니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어 과거형인 misfiled 가 시제상 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "보어 자리의 분사는 시제를 지지 않습니다. 시제는 본동사 found 가 지고 있으며, 분사의 형태는 능·수동으로만 결정됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "위원회는 유리 진열장을 밤새 잠긴 상태로 두었습니다.",
+      "answer": ["The committee", "left", "the glass case", "locked", "overnight"],
+      "tiles": [
+        "The committee",
+        "left",
+        "the glass case",
+        "locked",
+        "overnight",
+        "locking"
+      ],
+      "explanation": "leave 는 목적어와 목적격 보어를 부르는 동사입니다. 목적어 the glass case 는 잠기는 대상이므로 보어는 과거분사 locked 이며, locking 은 쓰이지 않습니다."
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The inspectors, who [[1:arrived]] before dawn, found the emergency doors [[2:chained]] shut and left the entire east wing [[3:sealing]] until the owner [[4:replaced]] the locks.",
+      "answer": 3,
+      "correction": "sealed",
+      "rationales": [
+        "관계대명사 who 가 연 절의 본동사입니다. 시제를 가진 동사가 필요하므로 arrived 가 옳습니다.",
+        "found 의 목적격 보어입니다. 짝 명사 the emergency doors 는 사슬로 묶이는 대상이므로 과거분사가 옳습니다.",
+        "left 의 목적격 보어입니다. 짝 명사 the entire east wing 은 봉쇄하는 주체가 아니라 봉쇄되는 대상이므로 sealed 로 고쳐야 합니다.",
+        "접속사 until 이 연 절의 본동사입니다. 소유주가 자물쇠를 교체하는 주체이므로 능동의 replaced 가 옳습니다."
+      ],
+      "ko": "새벽 전에 도착한 점검관들은 비상문이 사슬로 잠겨 있는 것을 발견했고, 소유주가 자물쇠를 교체할 때까지 동쪽 구역 전체를 봉쇄된 상태로 두었습니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 괄호 안의 동사를 알맞은 분사로 바꿔 쓰게 합니다. 어느 보어 자리인지 밝히고 짝 명사와의 능·수동을 근거로 적어야 감점이 없습니다.",
+          "sample": {
+            "en": "The heavy snow left the mountain pass (block) for three days.",
+            "ask": "괄호 안의 동사를 어법에 맞는 분사 형태로 바꿔 쓰십시오.",
+            "answer": "blocked — leave 의 목적격 보어이며 짝 명사 the mountain pass 가 막히는 대상이므로 과거분사입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 목적어에 긴 수식어를 붙여 분사 바로 앞에 다른 명사를 놓습니다. 밑줄이 분사라면 먼저 보어 자리인지 확인하고, 수식어를 걷어낸 핵 명사와의 관계로 판정합니다.",
+          "sample": {
+            "en": "The research team found the samples collected from the deep sea [[u:contaminating]] by microplastics.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "contaminated — 목적격 보어의 짝은 목적어의 핵 the samples 이고, 표본은 오염되는 대상이므로 과거분사여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Urban planners have begun to study how empty buildings change a neighborhood. [[u:A survey of one southern city found hundreds of old houses boarded up for more than a decade.]] Residents said that the streets around them stayed poorly lit at night. After the city repaired the worst of these houses, the number of reported crimes fell.",
+      "instruction": "밑줄 친 문장에서 분사의 짝이 되는 명사를 찾고 능·수동을 판정하십시오.",
+      "found": "본동사 found 는 목적어와 목적격 보어를 부릅니다. 목적격 보어 boarded up 의 짝은 목적어의 핵인 hundreds of old houses 이고, 집은 판자로 막히는 대상이므로 과거분사가 옳습니다. 주어에 붙은 of one southern city 는 수식어이므로 짝이 될 수 없습니다.",
+      "gist": "빈집이 늘면 주변 환경이 나빠지며, 그 집들을 수리하자 신고된 범죄가 줄었다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "능·수동 저울의 문지기",
+      "intro": "이 저울은 분사를 하나씩 올려 능동인지 수동인지를 답니다. 짝이 되는 명사를 엉뚱한 곳에서 집으면 저울은 반대로 기웁니다. 네 번의 계량으로 눈이 정확함을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The curator kept the display cabinet {{blank}} so that the gems would not fade.",
+          "options": ["locking", "locked"],
+          "answer": 1,
+          "why": "keep 뒤 목적격 보어입니다. 짝 명사 the display cabinet 은 잠기는 대상이므로 과거분사 locked 가 옳습니다."
+        },
+        {
+          "prompt": "The auditors found the ledgers of the bankrupt firm {{blank}} in a sealed vault.",
+          "options": ["hidden", "hiding"],
+          "answer": 0,
+          "why": "find 의 목적격 보어이고 짝은 핵 명사 the ledgers 입니다. 원장은 숨겨지는 대상이므로 과거분사 hidden 입니다. 바로 앞의 the bankrupt firm 에 낚이면 안 됩니다."
+        },
+        {
+          "prompt": "During the outage, the backup servers remained {{blank}} without a single interruption.",
+          "options": ["operated", "operating"],
+          "answer": 1,
+          "why": "remain 뒤 주격 보어입니다. 짝 명사 the backup servers 가 스스로 작동하는 주체이므로 현재분사 operating 이 옳습니다."
+        },
+        {
+          "prompt": "We watched the ferry {{blank}} the narrow harbor at full speed.",
+          "options": ["entering", "entered"],
+          "answer": 0,
+          "why": "지각동사 watch 의 목적격 보어입니다. 목적어 the ferry 가 항구로 들어가는 주체이고 뒤에 목적어까지 거느리므로 현재분사 entering 입니다."
+        }
+      ],
+      "winText": "저울이 네 번 모두 정확히 기울었습니다. 분사를 보면 먼저 짝 명사를 찾고, 그 명사가 하는지 당하는지를 되묻는 눈 — 그것이 보어 자리 문제의 열쇠이며 이제 당신 손에 있습니다.",
+      "loseText": "문지기가 저울을 내려놓습니다. 네 문항이 물은 것은 하나였습니다 — '짝 명사가 이 동작을 하는가, 당하는가.' 짝을 핵 명사에서 찾는 절차부터 다시 밟고 오면 저울은 그대로 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "주격 보어의 분사는 ___와, 목적격 보어의 분사는 ___와 짝을 이루며, 짝이 동작을 하면 ___, 당하면 ___를 씁니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "보어 자리의 분사도 판단 원리는 명사 수식 분사와 같습니다. 짝 명사가 하는 쪽이면 -ing, 당하는 쪽이면 p.p.입니다.",
+        "짝 명사는 자리로 정합니다. remain·stay·seem·appear 뒤면 주어, find·keep·leave·지각동사 뒤면 목적어입니다.",
+        "짝 명사는 수식어를 걷어낸 핵입니다. 분사 바로 앞의 명사가 아닙니다.",
+        "목적어 뒤라는 위치는 과거분사의 근거가 되지 못합니다. 목적어가 하는 쪽이면 현재분사가 옵니다."
+      ],
+      "keySentence": {
+        "en": "The committee found the archived documents stored in the basement **damaged** by moisture.",
+        "ko": "위원회는 지하실에 보관된 기록물들이 습기로 손상된 것을 발견했습니다.",
+        "note": "stored 는 목적어를 꾸미는 수식어이고, damaged 만이 목적격 보어입니다. 짝은 핵 명사 the archived documents 입니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u04-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The teacher found several students still {{blank}} in the library after closing time.",
+          "options": ["worked", "working"],
+          "answer": 1,
+          "translation": "선생님은 폐관 시간이 지난 뒤에도 몇몇 학생들이 도서관에서 여전히 공부하고 있는 것을 발견했습니다.",
+          "explanation": "find 뒤의 빈칸은 목적어 several students 를 설명하는 목적격 보어입니다. 학생들은 어떤 처리를 당하는 대상이 아니라 스스로 공부하는 주체이므로 현재분사 working 이 옳습니다. 목적어 뒤라는 위치만으로 과거분사가 되는 것이 아닙니다.",
+          "trapTags": ["object-complement"]
+        },
+        {
+          "id": "u04-c3-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The engineers found the pipes running beneath the old factory [[u:corroding]] by acidic water.",
+          "isCorrect": false,
+          "correction": "corroded",
+          "translation": "기술자들은 그 낡은 공장 아래로 지나가는 배관이 산성 물에 부식된 것을 발견했습니다.",
+          "explanation": "running beneath the old factory 는 목적어를 꾸미는 분사구이고, 밑줄은 목적격 보어입니다. 짝 명사 the pipes 는 부식되는 대상이며 뒤의 by acidic water 가 행위자를 밝히므로 과거분사 corroded 가 되어야 합니다.",
+          "trapTags": ["object-complement", "adjacent-noun-decoy"]
+        },
+        {
+          "id": "u04-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Passengers waiting at the gate heard their flight number {{blank}} over the intercom just before departure.",
+          "options": ["announcing", "announced"],
+          "answer": 1,
+          "translation": "탑승구에서 기다리던 승객들은 출발 직전 자신들의 항공편 번호가 방송으로 안내되는 것을 들었습니다.",
+          "explanation": "지각동사 heard 의 목적격 보어 자리이므로 목적어 their flight number 와의 관계로 판단합니다. 편명은 안내하는 주체가 아니라 안내되는 대상이므로 과거분사 announced 가 옳습니다.",
+          "trapTags": ["perception-complement"]
+        }
+      ]
+    }
+  ]
+}

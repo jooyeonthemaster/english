@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20200312-q36",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):ANS=b  (C):dec=b  (D):dec=d  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 6,
+        "relPos": 0.007,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 320,
+        "relPos": 0.393,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 414,
+        "relPos": 0.509,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 639,
+        "relPos": 0.785,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 709,
+        "relPos": 0.871,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.871,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A god called Moinee was defeated by a rival god called Dromerdeener in a terrible battle up in the stars. Moinee fell out of the stars down to Tasmania to die. Before he died, he wanted to give a last blessing to his final resting place, so he decided to create humans. But he was in such a hurry, knowing he was dying, that he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, which meant they couldn't sit down. Then he died. The people hated having kangaroo tails and no knees, and they cried out to the heavens for help. Dromerdeener heard their cry and came down to Tasmania to see what the matter was. He took pity on the people, gave them bendable knees and cut off their inconvenient kangaroo tails so they could all sit down at last. Then they lived happily ever after.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "called",
+        "isError": false,
+        "errorExpression": "called",
+        "surroundingText": "A god called Moinee was defeated by a rival god called Dromerdeener in a terrible",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": true,
+        "correction": "that",
+        "errorExpression": "what",
+        "surroundingText": "But he was in such a hurry, knowing he was dying, that he forgot to give them knees",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "which",
+        "isError": false,
+        "errorExpression": "which",
+        "surroundingText": "gave them big tails like kangaroos, which meant they couldn't sit down.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "was",
+        "isError": false,
+        "errorExpression": "was",
+        "surroundingText": "came down to Tasmania to see what the matter was. He took pity",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "their",
+        "isError": false,
+        "errorExpression": "their",
+        "surroundingText": "bendable knees and cut off their inconvenient kangaroo tails so they",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "called"
+      },
+      {
+        "label": "(B)",
+        "text": "what"
+      },
+      {
+        "label": "(C)",
+        "text": "which"
+      },
+      {
+        "label": "(D)",
+        "text": "was"
+      },
+      {
+        "label": "(E)",
+        "text": "their"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 명사 A god을 뒤에서 수식하는 과거분사 'called'의 쓰임을 묻는 곳으로, 신(god)이 Moinee라고 불리는 대상이므로 수동의 의미를 나타내는 과거분사가 어법상 옳습니다.",
+      "(C)": "이 자리는 앞 문장의 내용을 선행사로 삼아 수식하는 계속적 용법의 관계대명사 'which'가 쓰여 뒤에 주어가 없는 불완전한 절을 연결하고 있으므로 어법상 옳습니다.",
+      "(D)": "이 자리는 명사절 접속사 what이 이끄는 간접의문문 'what the matter was'에서 주어 역할을 하는 3인칭 단수 명사구 'the matter'에 상응하는 동사의 단수형 동사 'was'를 쓴 것으로 수일치에 어긋나지 않아 옳습니다.",
+      "(E)": "이 자리는 앞에 나온 복수 명사 'the people'을 지칭하는 적절한 소유격 대명사 'their'를 사용한 자리이므로 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 원인과 결과를 유기적으로 나타내는 'such + 명사 + that...'(너무 ~해서...하다) 구문을 취하고 있습니다. 밑줄 친 (B) 뒤에는 주어(he), 동사(forgot), 목적어(to give them knees)를 모두 갖춘 완전한 절이 이어지고 있으므로, 선행사를 수식하거나 대명사 지시 관계로 쓰이면서 불완전한 절을 이끄는 관계대명사 'what'은 이 자리에 올 수 없습니다. 따라서 원인과 결과를 연결하며 완전한 절을 이끄는 부사절 접속사인 'that'으로 고쳐야 어법상 올바른 구조가 됩니다.",
+    "keyPoints": [
+      "(B) 관계사 — such ~ that 구문에서 완전한 결과를 나타내는 부사절 접속사 that의 쓰임 판정",
+      "(A) 분사능수동 — 명사를 후치 수식하며 피동의 관계를 지니는 과거분사의 쓰임 파악",
+      "(E) 대명사 — 복수 명사인 'the people'을 지칭하는 소유격 인칭대명사의 수 일치 판정"
+    ],
+    "tags": [
+      "수능어법",
+      "such-that",
+      "관계대명사",
+      "부사절 접속사",
+      "대명사",
+      "과거분사"
+    ],
+    "difficulty": "ADVANCED",
+    "correctAnswers": [
+      "(B)"
+    ],
+    "passageWithMarkers": "A god __(A) called__ Moinee was defeated by a rival god called Dromerdeener in a terrible battle up in the stars. Moinee fell out of the stars down to Tasmania to die. Before he died, he wanted to give a last blessing to his final resting place, so he decided to create humans. But he was in such a hurry, knowing he was dying, __(B) what__ he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, __(C) which__ meant they couldn't sit down. Then he died. The people hated having kangaroo tails and no knees, and they cried out to the heavens for help. Dromerdeener heard their cry and came down to Tasmania to see what the matter __(D) was__. He took pity on the people, gave them bendable knees and cut off __(E) their__ inconvenient kangaroo tails so they could all sit down at last. Then they lived happily ever after.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

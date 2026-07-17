@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'Construct tighter systems to prevent any external disruptions' is the rigidity the passage explicitly tells us to deprioritize ('prioritize flexibility over rigidity'). It also breaks the following clause: if disruptions were prevented, 'when it happens' would have no referent and 'Here is one of those inevitabilities' would be incoherent."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Designed trap that echoes the 'available to my four-year-old' sentence — genuinely tempting on a fast read. But that sentence illustrates flexibility of priorities, not time-blocking; dedicating strict blocks of time is itself a rigid plan. Under this option 'when it happens ... one of those inevitabilities' has no antecedent (allocating time is not an inevitability that 'happens' to you)."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Direct paraphrase of the preceding sentence 'expect that a certain percentage of plans will change': mentally preparing to embrace unpredictable shifts makes 'when it happens' = a shift occurs, and 'Here is one of those inevitabilities' follows naturally. Also matches the passage-wide theme (go with the flow, flexibility over rigidity). Minor seam flaw: 'If you ... prepare ourselves' is a person mismatch (should be 'yourself'), though the passage itself drifts between our/my/I/you, so this reads as stylistic looseness, not a disqualifier — no other option is even semantically viable."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'Eliminate all unexpected variables beforehand' is the control/rigidity mindset the passage rejects, and it directly contradicts the continuation: if all unexpected variables were eliminated, nothing would 'happen' to be labeled an inevitability."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'Measure the vocational value of sticking to predefined workplace routines' is off-topic evaluation language; the passage devalues sticking to rigid schedules rather than asking us to appraise them, and the 'inevitabilities' clause does not follow from any measuring activity."
+    }
+  ],
+  "note": "Solved as a top-tier examinee in exam order. The only real pull was ② (family time-blocking, baited by the four-year-old sentence), but the 'when it happens / inevitabilities' tail kills it. ③ is uniquely correct and tightly anchored to the immediately preceding sentence. Quality flag for item writers: option ③ contains a pronoun-person seam mismatch ('If you ... mentally prepare ourselves'); recommend changing 'ourselves' to 'yourself' (and optionally 'our schedule' to 'your schedule') for a clean seam. Does not create a second defensible answer."
+}

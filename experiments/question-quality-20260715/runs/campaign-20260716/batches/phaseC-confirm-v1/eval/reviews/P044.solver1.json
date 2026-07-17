@@ -1,0 +1,35 @@
+{
+  "pid": "P044",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' 축약 관계절/동격 삽입구. 'species (which are) called keystone species'로 복원되며, called는 주어 species를 수동으로 수식하는 과거분사. species를 능동으로 부르는 것이 아니라 'X라고 불리는'이므로 과거분사 called가 정문. 옳음."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on or are greatly affected by the keystone species...' — 추상명사 fact 뒤의 동격절을 이끄는 접속사 that. that절 내부가 'other species(주어) depend on...are affected(완전절)'로 성분 결손이 없으므로 관계대명사가 아니라 동격 접속사 that이 맞다. 옳음."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "주절의 진짜 주어는 단수 'The fact'(that절은 동격 수식)이고, is revealed는 단수 수동태로 수 일치·태 모두 적절. '그 사실이 드러난다'는 수동 의미에 부합. when절(when the keystone species is removed)도 정상. 옳음."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect",
+      "reason": "'fig trees become important in sustains fruit-eating vertebrates.' 전치사 in의 목적어 자리이므로 동명사가 와야 한다(in sustaining). sustains는 3인칭 단수 정동사로, 전치사 뒤에 정동사가 올 수 없고 절을 이끄는 접속사도 없어 결합(seam)이 파탄난다. 도치·분사구문 등 어떤 대안 해석으로도 정문이 되지 않는다. 어법상 틀린 부분 — 정답."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'Protecting fig trees ... is an important conservation goal' — 문장 첫머리 동명사 주어(주어부 전체가 단수 취급)로, 단수 동사 is와 정확히 일치. Protecting을 명령문 동사로 오독할 수 있으나 뒤에 정동사 is가 있어 주어 역할의 동명사가 유일한 정합 해석. 옳음."
+    }
+  ],
+  "note": "전형적 어법(밑줄) 문제. 오답 유혹: (A) 능동 calling으로 착각, (B) 관계대명사 vs 접속사 that 혼동, (C) 수 일치/태 흔들림을 노림. 그러나 셋 다 지배규칙상 정문. (D)만 '전치사 in + 정동사 sustains'라는 명백한 결합 오류로 in sustaining이 되어야 한다. 정답은 (D)로 단일하게 확정."
+}

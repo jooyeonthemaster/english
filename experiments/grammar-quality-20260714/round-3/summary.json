@@ -1,0 +1,30 @@
+{
+  "round": "round-3",
+  "total": 30,
+  "ok": 30,
+  "failed": 0,
+  "relaxed": 7,
+  "avgAttempts": 2.5,
+  "avgMs": 38239,
+  "avgLastMarkerRelPos": 0.844,
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 10,
+      "ok": 10,
+      "relaxed": 2
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 10,
+      "ok": 10,
+      "relaxed": 1
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 10,
+      "ok": 10,
+      "relaxed": 4
+    }
+  ]
+}

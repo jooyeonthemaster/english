@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "campaign-v6-observer-independent-reaudit-manifest-v1",
+  "reviewId": "campaign-v6-connectivity-pilot-v6-observer-independent-reaudit-v1",
+  "verdict": "FAIL_BLOCKERS",
+  "authority": "NONE",
+  "subject": {
+    "strictObserverPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/strict-json-observer.ts",
+    "strictObserverSha256": "a7900fd2026eac7d63a2aca53ec77402bd18b9274b12699470f7bc3df89ee47d",
+    "coordinatedOfflineTestPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/offline.test.ts",
+    "coordinatedOfflineTestObservedSha256": "d87f24ec74d64395c5478f56f12abff2af30e6c071a2e6d71f9b62e66765550d"
+  },
+  "matrix": {
+    "totalCases": 461,
+    "passingCases": 367,
+    "failingCases": 94,
+    "matrixFingerprintSha256": "a2136f586fdaaca7d0cd46fb30e135db47c8ef8666e4994c8f5c9bca3c3eb432",
+    "failureFingerprintSha256": "1568d5165c73aff6081672f16429e8f94eb6f05bb350f43a206860616f7ee371",
+    "failureCategories": {
+      "root-sequence": 26,
+      "root-sequence-decoded-content": 26,
+      "invalid-prefix-recovery": 42
+    }
+  },
+  "blockers": [
+    {
+      "id": "B1_ROOT_SEQUENCE_EVIDENCE_DISCARDED",
+      "severity": "BLOCKER",
+      "summary": "roots.length and ParsedSequence.failed do not make one observed model lineage ambiguous when another neutral root or failed tail coexists"
+    },
+    {
+      "id": "B2_INVALID_PREFIX_RECOVERY_BLIND_SPOT",
+      "severity": "BLOCKER",
+      "summary": "non-JSON prefixes can hide later one/two-question or one/two-choice evidence and collapse physical multiplicity"
+    }
+  ],
+  "activity": {
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "networkCalls": 0,
+    "ledgerReads": 0,
+    "ledgerWrites": 0,
+    "privateArtifactReads": 0,
+    "liveOrFreezeCommands": 0,
+    "subjectFilesEdited": 0
+  },
+  "reviewFiles": [
+    "AUDIT-REPORT.md",
+    "audit.ts",
+    "manifest.json",
+    "verify.mts"
+  ]
+}

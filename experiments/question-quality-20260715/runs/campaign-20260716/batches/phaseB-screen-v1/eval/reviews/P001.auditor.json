@@ -1,0 +1,67 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-source-span-quote",
+      "severity": "minor",
+      "evidence": "해설이 'don't overextend yourself'를 인용하지만 이 구는 렌더된 지문에서 빈칸으로 제거된 원문 span이다. 학생 입장에서는 자기 지문에 없는 문구가 출처 표시 없이 인용되어 혼동 가능. 다만 구조·논리 오분석은 아니므로 V4 실패로는 판정하지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 span 'don't overextend yourself'의 의미 보존 재진술",
+      "temptingBecause": "해당 없음(정답). 'draw the line', 'moderation', 'pacing' 등 지문 전반의 절제 단서와 정합.",
+      "decisiveFlaw": "없음. 'make sure you avoid taking on more than you can handle'은 문법·의미 모두 성립하며 결론 문장의 권고와 정확히 일치."
+    },
+    {
+      "label": "②",
+      "intent": "half-truth / scope shift — 'Joining too many clubs can reduce a large amount of your free time' 세부 사실을 결론으로 승격",
+      "temptingBecause": "자유 시간 감소가 지문에 명시된 실제 결과이므로 표면적 근거가 있음. 유일하게 실질적 판단을 요구하는 경쟁 선지.",
+      "decisiveFlaw": "지문의 스트레스 원인은 'tasks you absolutely need to complete'(의무 과업)이며 결론은 과잉 참여 자제이지 여가 시간 배정이 아님. 결론 문장의 논지 범위를 벗어남."
+    },
+    {
+      "label": "③",
+      "intent": "예시의 태도를 권고로 오독 — 신문 마감 완벽주의 장면을 글쓴이의 조언으로 착각하게 유도",
+      "temptingBecause": "'as perfect as you want it to be'라는 표현이 지문에 실제로 등장.",
+      "decisiveFlaw": "완벽 추구는 스트레스를 유발하는 상황 묘사(경고 대상)이지 권장 태도가 아님. 결론과 인과 방향이 반대."
+    },
+    {
+      "label": "④",
+      "intent": "소재 연상 디코이 — club이라는 표면 어휘에서 협력 개념 파생",
+      "temptingBecause": "동아리 활동이라는 소재와 표면적으로 연결됨.",
+      "decisiveFlaw": "협력은 지문 어디에도 논의되지 않으며 '절제·한계 설정'이라는 논지와 무관. 즉시 소거 가능해 매력도가 낮음(필러에 가까움)."
+    },
+    {
+      "label": "⑤",
+      "intent": "polarity reversal — 결론의 권고를 정반대로 뒤집음",
+      "temptingBecause": "'도전하라'는 일반적 자기계발 클리셰로 상식 편향을 노림.",
+      "decisiveFlaw": "'don't know where to draw the line'을 문제로 규정한 지문의 흐름과 정반대. 극성만으로 즉시 소거됨."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "해설 마지막 문장이 빈칸으로 제거된 원문 구 'don't overextend yourself'를 렌더 지문에 존재하는 것처럼 인용함. '원문에서는 ~였다'는 명시가 없어 학생이 자기 지문과 대조 시 혼동 가능.",
+      "recommendation": "'원문의 결론 표현인 don't overextend yourself에 해당하는 의미로' 또는 '빈칸에는 ~라는 의미가 들어가야 하므로' 식으로 출처를 명시."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 의도된 빈칸화('don't overextend yourself' 제거) 외 원지문과 완전 일치, 라벨·마커 정상. V2: 5개 선지를 각각 'make sure you ___'에 대입해 독립 검증 — ①만 성립, ②는 유일한 실질 경쟁지이나 논지 범위 이탈로 배제 가능, ③⑤ 극성 모순, ④ 무관. 단일 정답 유일성 확보. V3: 모든 선지가 동일 통사 슬롯(base VP)에 문법적으로 들어가며 정답 완성문 자연스러움 — suffix/tail로 문법 탈락하는 선지 없음. V4: 인용문 'If you don't exercise some moderation...' 원문과 일치, 오답 해설 4건 모두 실제 선지 내용과 대응, 용어 오류 없음(minor 이슈 1건은 위 참조). V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음. 공예: 결론부 핵심 논지를 묻는 정당한 빈칸(C1=3)이나, 'draw the line/moderation/pacing' 등 중복 단서가 많고 ③④⑤가 빠르게 소거되어 실질 변별은 ②와의 2지선다로 수렴(C3=2). 함정 유형은 half-truth/오독/연상/극성반전으로 분화되어 있으나 ④의 매력도가 낮음(C2=3). 메타 누출·길이 편향 없음(C4=3). INTERMEDIATE 요청 대비 1단계 추론으로 다소 평이하지만 허용 범위(C5=3). 해설은 정확·간결(C6=3). 합계 17, 전 V 통과, 최저 C=2 → B(소폭 수정으로 출하 가능: ④ 매력도 보강 또는 ② 수준의 경쟁 선지 1개 추가 권장). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

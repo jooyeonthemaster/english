@@ -1,0 +1,35 @@
+{
+  "pid": "P100",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "valid",
+      "reason": "'pledge to eliminate any unscheduled pauses' is a well-formed imperative after 'So to prevent procrastination,'. Logically it is the exact prescription entailed by the passage: scheduled breaks are endorsed as strategic self-reinforcement, unscheduled breaks are condemned as the procrastination trap (coffee rationalization example). 'instead' contrasts with the just-described behavior of taking an unscheduled coffee break; slightly redundant but fully coherent. Sole survivor."
+    },
+    {
+      "label": "2",
+      "verdict": "invalid",
+      "reason": "Grammatical seam fine, but 'take breaks indiscriminately without a plan' directly contradicts 'they shouldn't be taken carelessly' and the entire argument against unscheduled breaks. Logical reversal."
+    },
+    {
+      "label": "3",
+      "verdict": "invalid",
+      "reason": "Grammatical, but the passage explicitly unmasks the coffee excuse ('you may rationalize... but in reality you're just trying to avoid work'). Prescribing reliance on coffee endorses the very rationalization the passage debunks. Logical reversal."
+    },
+    {
+      "label": "4",
+      "verdict": "invalid",
+      "reason": "Grammatical, but scheduled rest periods are praised as 'strategic, re-energizing methods of self-reinforcement' and 'Breaks are necessary'. Cancelling all scheduled breaks contradicts both premises."
+    },
+    {
+      "label": "5",
+      "verdict": "invalid",
+      "reason": "Grammatical, but 'stay seated constantly' entails taking no breaks at all, contradicting the opening claim that breaks are necessary and the endorsement of scheduled breaks. The desk is framed as the site of avoided work, not the remedy; the passage's remedy targets unscheduled breaks specifically, not all movement."
+    }
+  ],
+  "note": "Clean item under the grammarian/logician lens: all five options are grammatically insertable, so discrimination is purely logical. Options 2-5 each flatly contradict an explicit premise (careless breaks bad; coffee excuse debunked; scheduled breaks good; breaks necessary). Only minor quibble: 'instead' after option 1 is mildly pleonastic since eliminating unscheduled pauses is the negation of, rather than an alternative to, taking them, but it reads naturally as contrasting with the preceding coffee-break scenario and does not create a second defensible answer."
+}

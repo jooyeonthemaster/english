@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'when they first consider experimenting with social media' is a temporal adverbial clause modifying the participial phrase 'made by organizations'. The clause is complete (no gap), so the subordinating conjunction 'when' is grammatical. No relative-pronoun requirement exists here."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Long-distance agreement: the head of the subject NP is singular 'One' ('One of the most common mistakes made by organizations when...'), so 'is' agrees correctly. Attractive distractor — plural nouns 'mistakes'/'organizations' sit between the head and the verb, luring an 'are' judgment, but tracing the true subject resolves it."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'a thorough understood of the organization's own goals' requires a noun after article+adjective and before the of-phrase: 'understanding'. 'understood' is a past participle/adjective and cannot head this NP. No alternative parse (reduced relative, absolute, etc.) licenses it. Clear noun-vs-participle error, structurally cued by the parallel 'not with insight ... but with a thorough ___ of'."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'serves no purpose in and of itself' is the fixed idiom; reflexive 'itself' correctly refers to the singular gerund subject '\"Being in social media\"'. No plural or personal antecedent competes."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "After modal 'must' with correlative 'either ... or', bare infinitives 'solve' and 'result in' are properly parallel. Mild lure toward passive 'be solved' if one misassigns the agent, but 'a social media presence' is the agent that solves the problem, so active base form is right."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. Real-time distractor pulls: (B) plural-attraction ('organizations ... is') was the strongest lure and is a classic KSAT trap, but the singular head 'One' settles it; (E) briefly invited a passive-voice doubt that dissolves on agent analysis. (C) is unambiguous — a derivational-morphology error (participle where a noun is required) with a long-distance cue from the 'not with insight ... but with a thorough ___ of' parallelism. Single defensible answer; item is clean."
+}

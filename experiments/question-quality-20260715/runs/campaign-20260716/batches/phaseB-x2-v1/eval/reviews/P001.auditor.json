@@ -1,0 +1,83 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-EXPL-MISPARSE-A",
+      "severity": "major",
+      "evidence": "(A) 오답 해설: \"이 자리는 앞의 명사구 'about a person's intelligence or work ethic'를 후치 수식하는 분사의 자리이며, 지능과 직업윤리가 인종에 '기반하게 되는' 수동 관계\" — (1) 'about ...'은 전치사구이지 명사구가 아니다(용어 오류). (2) 자연스러운 통사 분석은 'based on their race or ethnicity'가 assumptions를 수식하는 것(인종에 근거해 내려지는 추정)이며, '지능·직업윤리가 인종에 기반한다'는 부착 해석을 확정적 분석으로 제시한 것은 오분석(잘못된 피수식 핵 지목) 계열이다. 문법 판정(과거분사 옳음) 자체는 어느 해석에서도 유지되지만 V4는 구조 설명의 정확성을 요구한다."
+    },
+    {
+      "code": "V4-EXPL-HEAD-TERM",
+      "severity": "minor",
+      "evidence": "정답 해설: \"주절 진짜 주어는 복수형 명사구의 핵인 'Racial microaggressions'\" — 명사구의 핵(head)은 microaggressions이고 'Racial microaggressions'는 명사구 전체다. 판정 결론(are 수일치)에는 영향 없음."
+    },
+    {
+      "code": "V4-EXPL-TERM-E",
+      "severity": "minor",
+      "evidence": "(E) 오답 해설: \"as 뒤에 비교급 형용사 lesser를 사용한 수식 표현\" — 'defined as lesser'의 lesser는 수식어가 아니라 as 뒤 서술 보어(complement)다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 후치 수식 분사의 능·수동 태 판정 (based vs basing)",
+      "temptingBecause": "긴 명사구 연쇄 끝에 붙은 분사라 피수식 핵을 찾고 태를 판정해야 하는 것처럼 보인다.",
+      "decisiveFlaw": "어느 부착 해석(assumptions 수식 / intelligence·work ethic 수식)에서도 '~에 기반되는' 수동 관계이므로 과거분사 based가 옳다. 오답 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "주어-동사 사이 긴 such-as 삽입구를 건너뛴 수일치 판정 (정답)",
+      "temptingBecause": "동사 직전의 단수 명사 ethnicity가 단수 동사 is를 자연스러워 보이게 하는 최근접 명사 함정.",
+      "decisiveFlaw": "주절 주어의 핵은 복수 microaggressions이므로 is는 비문 — are로 교정하면 정확히 원문이 복원된다. 유일 정답."
+    },
+    {
+      "label": "(C)",
+      "intent": "조동사 can 뒤 수동태 원형 판정 (be seen vs see)",
+      "temptingBecause": "can 뒤 원형 자리라 능동 see와의 태 선택을 요구하는 것처럼 보인다.",
+      "decisiveFlaw": "주어 experiential microaggressions는 관찰되는 대상이므로 수동 be seen이 옳다. 오답 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사(when)가 유지된 분사구문의 능·수동 판정 (giving vs given)",
+      "temptingBecause": "when + 과거분사 패턴(when given directions)이 익숙해 given으로 착각하기 쉽다.",
+      "decisiveFlaw": "의미상 주어인 간호사가 복약 지시를 '주는' 능동 관계이고 간접목적어 him이 뒤따르므로 giving이 옳다. 오답 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "define A as B 수동태에서 as 뒤 형용사 보어의 적법성 판정",
+      "temptingBecause": "than 없이 단독으로 쓰인 비교급 lesser가 생소해 비문처럼 보일 수 있다.",
+      "decisiveFlaw": "is defined as + 형용사 보어는 적법하며 lesser는 형용사로 단독 사용 가능하다. 오답 아님."
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설이 전치사구 'about a person's intelligence or work ethic'를 명사구로 지칭하고, based의 피수식 핵을 assumptions가 아닌 intelligence/work ethic으로 확정 제시하는 부착 오분석을 포함한다 (V4-EXPL-MISPARSE-A).",
+    "정답 해설이 명사구 전체 'Racial microaggressions'를 '핵'으로 지칭한다 — 핵은 microaggressions (V4-EXPL-HEAD-TERM).",
+    "(E) 해설이 서술 보어 lesser를 '수식 표현'으로 지칭한다 (V4-EXPL-TERM-E).",
+    "각 밑줄에 대한 명시적 'why tempting' 설명이 없다 — pointCode와 why-correct만 존재해 §C(어법 KILLER) 3번 조건 미충족."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": "충족 — are(원문)→is(표시) 최소대립쌍이고 교정 시 정확히 원문이 복원됨.",
+    "clearGrammarJudgment": "충족 — 수일치는 문맥 선호가 아닌 명확한 문법 판단이며 valency/수여/singular they/가정법 배제 대상 아님.",
+    "perUnderlineTriple": "미충족 — 각 밑줄에 point(pointCode)와 why-correct는 있으나 명시적 why-tempting 필드가 없음.",
+    "structuralDepth": "미충족 — 밑줄 중 유일하게 수 표지가 드러난 정형 be동사가 정답이라 '밑줄 친 be동사 → 주어 찾기' 루틴으로 즉시 수렴한다. 삽입구가 있어 '붙어 있는' 수일치는 아니지만, 최근접 명사 함정은 이 장르에서 가장 관습화된 패턴이며 KILLER가 요구하는 구조 독해 깊이에 못 미친다.",
+    "noShadowingDecoy": "충족 — 정답과 같은 point(수일치)의 다른 디코이가 없음."
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 프로그램 diff로 원지문과 의도 변형(are→is) 외 완전 일치 확인, (B)가 유일 정답, 필드 동기화 정상. V4 실패로 F — (A) 오답 해설의 부착 오분석 및 전치사구를 명사구로 부르는 용어 오류(major) + 경미한 용어 슬립 2건. 공예 측면: 5개 밑줄이 서로 다른 5개 포인트(분사 태·수일치·조동사 수동·접속사 유지 분사구문·as 보어)를 겨냥해 의도 밀도는 양호하나, 요청 난이도 KILLER 대비 정답이 표준 중간 난이도의 삽입구 수일치라 C5=1, 해설 오류로 C6=1. 수리 방향: (A) 해설의 피수식 핵·품사 기술 교정, why-tempting 보강, KILLER 유지 시 정답 포인트를 구조 독해형(예: 병렬·관계사 심층부)으로 교체하거나 난이도 라벨 하향."
+}

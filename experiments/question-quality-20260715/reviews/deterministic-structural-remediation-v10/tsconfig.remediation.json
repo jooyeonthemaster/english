@@ -1,0 +1,16 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "skipLibCheck": true
+  },
+  "files": [
+    "replay.mts",
+    "novel-regressions.mts",
+    "../../../../src/lib/question-quality/validators/summary/mc.ts",
+    "../../../../src/lib/question-quality/validators/sentence-order.ts"
+  ],
+  "include": [],
+  "exclude": []
+}

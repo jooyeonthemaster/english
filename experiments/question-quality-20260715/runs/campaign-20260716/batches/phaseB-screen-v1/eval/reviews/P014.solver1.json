@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'of a kind and magnitude not seen before'는 축약 관계절(= that has not been seen before). kind/magnitude는 '보여지는' 대상이므로 수동 과거분사 seen이 옳다. seeing으로 착각할 유인도 약하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "error",
+      "reason": "'What ___ new about cyberspace is its interactive nature'에서 관계대명사 what이 절 내 주어이며 단수 취급이 원칙. 게다가 주절 동사가 단수 is이고 보어 'its interactive nature'도 단수라 'What are new ... is ...'는 어떤 해석으로도 성립 불가. are → is 로 고쳐야 한다. 복수 견인 해석('What are needed are reforms'류)으로 구제하려 해도 보어와 주절 동사가 모두 단수여서 실패한다. 어법상 틀린 부분."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "단수 주어 'this interactivity' + 현재완료 has made(결과가 현재까지 유효). 주변 문장이 현재시제라 단순현재를 요구하고 싶은 유혹이 있으나 현재완료는 문법적으로도 문맥상으로도 정당하다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a space where real people have actual interactions ...'에서 관계부사 where 뒤 절은 주어·동사·목적어가 완전(무결절). 선행사가 장소 space이므로 where(= in which)가 옳고, which였다면 오히려 틀렸을 자리."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'while being able to shape ...'는 접속사 while + 분사구문으로, 의미상 주어가 앞 절 주어 'real people'과 일치해 현수분사 문제 없음. 'being은 일단 의심'이라는 고정관념 때문에 가장 끌리는 매력 오답이었으나, while (they are) being able의 생략 구조로 정문이다. while able로도 쓸 수 있으나 being을 남긴 것도 문법적으로 허용된다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 즉시 (B)의 수일치 위반이 눈에 들어옴(what절 내부 are vs 주절 is의 이중 불일치 — 장거리 단서까지 일관). 매력 오답으로는 (E) while being(being 알레르기 유발)과 (C) has made(시제 일관성 착각)가 설계된 것으로 보이나 둘 다 정문임이 명확히 검증됨. 대안 해석 탐색에서도 (B)를 정문으로 만드는 독법은 존재하지 않아 단일 정답으로 수렴. 문항 성립에 결함 없음."
+}

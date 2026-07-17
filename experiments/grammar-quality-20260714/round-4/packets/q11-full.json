@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20231219-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "함축의미",
+    "words": 158
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=m  (C):dec=d  (D):ANS=b  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 149,
+        "relPos": 0.18,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.264,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 415,
+        "relPos": 0.501,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 691,
+        "relPos": 0.834,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 737,
+        "relPos": 0.889,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.889,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Many people take the commonsense view that color is an objective property of things, or of the light that bounces off them. They say a tree's leaves are green because they reflect green light - a greenness that is just as real as the leaves. Others argue that color doesn't inhabit the physical world at all but exists only in the eye or mind of the viewer. They maintain that if a tree fell in a forest and no one was there to see it, its leaves would be colorless - and so would everything else. They say there is no such thing as color; there are only the people who see it. Both positions are, in a way, correct. Color is objective and subjective - \"the place,\" as Paul Cézanne put it, \"where our brain and the universe meet.\" Color is created when light from the world is registered by the eyes and interpreted by the brain.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "are",
+        "isError": false,
+        "errorExpression": "are",
+        "surroundingText": "They say a tree's leaves are green because they reflect green light -",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "as real as",
+        "isError": false,
+        "errorExpression": "as real as",
+        "surroundingText": "a greenness that is just as real as the leaves.",
+        "pointCode": "m"
+      },
+      {
+        "label": "(C)",
+        "expression": "was",
+        "isError": false,
+        "errorExpression": "was",
+        "surroundingText": "if a tree fell in a forest and no one was there to see it,",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "where",
+        "isError": true,
+        "correction": "where",
+        "errorExpression": "which",
+        "surroundingText": "as Paul Cézanne put it, \"where our brain and the universe meet.\"",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "is created",
+        "isError": false,
+        "errorExpression": "is created",
+        "surroundingText": "Color is created when light from the world is registered by the eyes",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "are"
+      },
+      {
+        "label": "(B)",
+        "text": "as real as"
+      },
+      {
+        "label": "(C)",
+        "text": "was"
+      },
+      {
+        "label": "(D)",
+        "text": "which"
+      },
+      {
+        "label": "(E)",
+        "text": "is created"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 수일치를 묻고 있으며, 복수 명사인 'leaves'가 주어 핵이므로 복수 동사인 'are'가 오는 것이 어법상 옳습니다.",
+      "(B)": "이 자리는 원급 비교 구문을 묻고 있으며, 주격 보어 자리에 형용사 real을 사용해 'as real as'로 연결한 구조는 어법상 옳습니다.",
+      "(C)": "이 자리는 단수 주어 'no one'에 호응하는 단수 동사 'was'를 쓴 수일치 판단 지점으로 어법상 옳습니다.",
+      "(E)": "이 자리는 주어인 'Color'가 생성되는 대상이므로 수동태인 'is created'가 어법상 옳습니다."
+    },
+    "explanation": "선행사인 'the place'를 수식하는 관계사절에서, 뒤에 이어지는 'our brain and the universe meet'는 주어와 자동사 meet로 구성된 완전한 절입니다. 관계대명사인 'which'는 뒤에 주어나 목적어가 결손된 불완전한 절을 이끌어야 하므로 이 자리에 올 수 없습니다. 따라서 장소의 부사 역할을 하며 완전한 절을 이끄는 관계부사인 'where'로 고쳐야 합니다. 'meet'가 동사이며 주어 뒤에 완전한 구조를 형성하고 있음을 파악하는 것이 중요합니다.",
+    "keyPoints": [
+      "(D) 관계사 — 완전한 절을 이끄는 관계부사 vs 불완전한 절을 이끄는 관계대명사",
+      "(A) 주어-동사의 수일치 — 복수 주어 leaves에 호응하는 복수 동사 판단",
+      "(C) 단수 대명사 주어 — 부정대명사 no one에 호응하는 단수 동사의 수일치"
+    ],
+    "tags": [
+      "관계사",
+      "수일치",
+      "수동태",
+      "원급 비교"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Many people take the commonsense view that color is an objective property of things, or of the light that bounces off them. They say a tree's leaves __(A) are__ green because they reflect green light - a greenness that is just __(B) as real as__ the leaves. Others argue that color doesn't inhabit the physical world at all but exists only in the eye or mind of the viewer. They maintain that if a tree fell in a forest and no one __(C) was__ there to see it, its leaves would be colorless - and so would everything else. They say there is no such thing as color; there are only the people who see it. Both positions are, in a way, correct. Color is objective and subjective - \"the place,\" as Paul Cézanne put it, \"__(D) which__ our brain and the universe meet.\" Color __(E) is created__ when light from the world is registered by the eyes and interpreted by the brain.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

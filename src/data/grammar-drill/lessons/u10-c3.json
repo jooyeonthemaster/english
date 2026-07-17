@@ -1,0 +1,697 @@
+{
+  "id": "u10-c3",
+  "unitId": "u10",
+  "order": 3,
+  "title": "대명사 수일치",
+  "oneLiner": "대명사의 수는 근접 명사가 아니라 가리키는 핵 명사에서 나옵니다. 단수·불가산은 it·that, 복수는 them·those 입니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 대명사 파트(대명사가 가리키는 명사의 수 일치, 비교 구문의 that/those)",
+      "천일문 고등 GRAMMAR — 대명사의 수 일치와 반복을 피하는 that/those",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 대명사(중 ●, 고 ●)",
+      "SMOAT 어법 드릴 뱅크 u10-c3 문항 6개(trapTag: it-they·that-those·intervening-pp·intervening-clause·uncountable-noun)",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L5 핵 주어 추출"
+    ]
+  },
+  "lenses": ["L5"],
+  "confusableWith": ["u10-c4", "u10-c1", "u02-c1", "u02-c3"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The leaves of the maple are broader than those of the pine.",
+        "The leaves of the maple are broader than that of the pine."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 대명사 하나입니다. 이 레슨을 마치면 그 대명사의 수를 무엇이 결정하는지 한 문장으로 말할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "title": "대명사 수 일치가 무엇입니까",
+      "term": "대명사 수 일치",
+      "question": "대명사도 수를 맞춘다는 말이 무슨 뜻입니까?",
+      "plain": "대명사는 앞에 나온 명사를 대신하는 말입니다. 그 명사가 하나면 단수 대명사(it)로, 여럿이면 복수 대명사(them)로 받는 것이 수 일치입니다.",
+      "analogy": "대명사는 배우 대신 무대에 서는 대역입니다. 한 사람을 대신하러 나온 대역은 한 명, 여러 사람을 대신하러 나온 대역은 여럿이어야 합니다. 대신할 대상의 머릿수가 대역의 수를 정합니다.",
+      "whyItMatters": "수능 어법은 밑줄을 대명사에 걸고 '이 대명사가 대신하는 명사가 단수인가 복수인가'를 묻습니다. 수식어를 걷어내고 핵을 짚는 조작(핵 추출)은 주어의 수를 가릴 때 주어의 핵을 짚던 것과 같으며, 여기서는 대명사가 대신하는 선행사의 핵, 곧 핵 명사를 짚습니다. 이 핵 명사를 찾는 순간 답이 갈립니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "than 뒤에 오는 that/those 는 바로 뒤에 나오는 명사의 수를 따릅니다.",
+      "truth": "that/those 는 뒤의 명사가 아니라 앞에서 이미 나온 명사를 대신합니다. 수는 대신되는 그 명사에서 옵니다. 뒤의 of구는 그 대명사를 꾸미는 수식어일 뿐입니다.",
+      "counterExample": {
+        "en": "The rainfall of this valley is heavier than **those** of the neighboring hills.",
+        "ko": "이 계곡의 강수량은 인접한 구릉지의 강수량보다 많습니다.",
+        "note": "대신되는 명사는 The rainfall(단수)입니다. 바로 뒤의 hills 가 복수라는 이유로 those 를 쓰면 틀립니다. that 이 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "대명사 수 일치 노트",
+      "intro": "대명사의 수를 정하는 세 가지 원칙을 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "수 일치 — 대명사는 대신하는 명사의 수를 따른다",
+          "body": "가리키는 명사가 단수이면 it·its, 복수이면 they·them·their 로 받습니다. 대명사의 수는 스스로 정해지지 않고 대신하는 명사에서 옵니다.",
+          "example": {
+            "en": "The council reviewed the proposal and adopted **it** without amendment.",
+            "ko": "의회는 그 제안서를 검토하고 수정 없이 채택했습니다.",
+            "note": "대신하는 명사가 단수 the proposal 이므로 it 입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "불가산 명사 — 뜻이 여럿 같아도 단수",
+          "body": "equipment·evidence·information·research 같은 불가산 명사는 여럿처럼 느껴져도 단수로 취급합니다. them 이 아니라 it 으로 받습니다.",
+          "example": {
+            "en": "The laboratory acquired new equipment and installed **it** in the basement.",
+            "ko": "그 연구실은 새 장비를 들여와 지하실에 설치했습니다.",
+            "note": "equipment 는 불가산 단수 명사이므로 them 이 아니라 it 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "핵 명사 추출 — 근접 명사에 낚이지 않는다",
+          "body": "대명사 주변의 가까운 명사가 아니라, 수식어를 걷어내고 남은 핵 명사가 수를 정합니다. of구·관계절 속 명사는 수를 결정할 자격이 없습니다.",
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "대명사는 가리키는 명사의 수와 일치합니다. 단수·불가산 명사는 it, 복수 명사는 them 으로 받습니다.",
+      "examples": [
+        {
+          "en": "The researchers collected the soil samples and stored **them** in a cold chamber.",
+          "ko": "연구자들은 토양 표본을 채집해 저온 보관실에 보관했습니다.",
+          "note": "보관된 대상이 복수 명사 the soil samples 이므로 them 입니다."
+        },
+        {
+          "en": "The committee examined the evidence carefully and found **it** inconclusive.",
+          "ko": "위원회는 그 증거를 면밀히 검토했고 결정적이지 않다고 판단했습니다.",
+          "note": "evidence 는 불가산 단수 명사이므로 them 이 아니라 it 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "다음 명사를 대명사로 받을 때 단수형으로 받는지 복수형으로 받는지 분류하십시오.",
+      "buckets": [
+        { "id": "sg", "label": "it / that 으로 받는다" },
+        { "id": "pl", "label": "them / those 로 받는다" }
+      ],
+      "chips": [
+        { "text": "the evidence", "bucketId": "sg", "why": "evidence 는 불가산 명사이므로 단수로 받습니다." },
+        { "text": "the equipment", "bucketId": "sg", "why": "equipment 는 여러 기기를 뜻해도 불가산 단수 명사입니다." },
+        { "text": "the research", "bucketId": "sg", "why": "research 는 불가산 명사입니다. 연구 여러 건은 studies 로 씁니다." },
+        { "text": "the findings", "bucketId": "pl", "why": "findings 는 복수 명사이므로 복수로 받습니다." },
+        { "text": "the regulations", "bucketId": "pl", "why": "regulations 는 복수 명사입니다." },
+        { "text": "the statistics", "bucketId": "pl", "why": "여기서 statistics 는 통계 수치들을 뜻하는 복수 명사입니다." }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "불가산 명사 다섯을 손에 붙입니다",
+      "target": "it 으로 받는 불가산 명사",
+      "why": "이 명사들은 뜻이 여럿처럼 느껴져 them 으로 받고 싶어지는 함정 단어입니다. 목록을 손에 익혀 두면 시험에서 근접 명사에 낚이지 않고 곧바로 단수로 판정할 수 있습니다.",
+      "device": "머릿속에 '증·정·장·연·가' 다섯 글자를 세워 둡니다 — 증거(evidence)·정보(information)·장비(equipment)·연구(research)·가구(furniture). 다섯 모두 -s 를 거부하는 단수 부대입니다.",
+      "items": [
+        { "cue": "evidence", "answer": "불가산 단수 → it" },
+        { "cue": "information", "answer": "불가산 단수 → it" },
+        { "cue": "equipment", "answer": "불가산 단수 → it" },
+        { "cue": "research", "answer": "불가산 단수 → it" },
+        { "cue": "furniture", "answer": "불가산 단수 → it" }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "불가산 명사 관문",
+      "mission": "it 으로 받아야 하는 불가산 명사를 전부 골라 관문을 통과하십시오. 복수 명사가 미끼로 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "evidence",
+        "information",
+        "equipment",
+        "research",
+        "furniture",
+        "findings",
+        "regulations",
+        "samples"
+      ],
+      "answers": ["evidence", "information", "equipment", "research", "furniture"],
+      "passText": "불가산 부대를 정확히 가려냈습니다. 이제 여럿처럼 보이는 단수에 더는 속지 않습니다. 관문이 열립니다.",
+      "retryText": "findings·regulations·samples 는 -s 가 붙는 복수 명사입니다. 뜻이 아니라 형태가 단수인지부터 확인하고 다시 도전하십시오."
+    },
+    {
+      "id": "b9",
+      "type": "NOTEBOOK",
+      "tier": 2,
+      "title": "반복을 피하는 that과 those",
+      "intro": "같은 명사를 되풀이하지 않고 대신하는 that·those·one·ones 를 정리합니다.",
+      "entries": [
+        {
+          "head": "that / those — 비교·대조의 대역",
+          "body": "앞에 나온 명사를 되풀이하지 않고 대신할 때 씁니다. 단수·불가산이면 that, 복수이면 those 이며, 뒤에 of구 같은 수식어가 따라옵니다.",
+          "example": {
+            "en": "The climate of the highlands is drier than **that** of the coastal plain.",
+            "ko": "고지대의 기후는 해안 평야의 기후보다 건조합니다.",
+            "note": "that 은 앞의 The climate(단수)를 대신하고, 뒤의 of구가 그것을 꾸밉니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "it / them 과의 차이 — 바로 그것 vs 같은 종류의 다른 것",
+          "body": "it·them 은 앞에 나온 바로 그 대상을 가리키고, that·those 는 같은 종류의 다른 대상을 가리킵니다. it·them 은 뒤에서 of구의 수식을 받지 못합니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "one / ones — 같은 종류의 불특정한 다른 하나",
+          "body": "one 은 같은 종류의 불특정한 다른 하나를, ones 는 그 복수를 가리킵니다. ones 는 반드시 형용사·한정어와 함께 씁니다.",
+          "example": {
+            "en": "The old telescope cracked, so the observatory ordered a new **one**.",
+            "ko": "낡은 망원경이 금이 가서 천문대는 새것을 하나 주문했습니다.",
+            "note": "새로 주문한 것은 바로 그 망원경이 아니라 같은 종류의 다른 것이므로 one 입니다."
+          },
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "비교·대조에서 앞 명사를 대신할 때, 대신되는 명사가 단수·불가산이면 that, 복수이면 those 를 씁니다.",
+      "examples": [
+        {
+          "en": "The migration routes of seabirds differ sharply from **those** of land birds.",
+          "ko": "바닷새의 이동 경로는 육지 새의 이동 경로와 뚜렷이 다릅니다.",
+          "note": "those 는 앞의 The migration routes(복수)를 대신합니다. it/them 은 뒤에서 of구의 수식을 받을 수 없어 이 자리에 오지 못합니다."
+        },
+        {
+          "en": "The rainfall of the eastern slope is heavier than **that** of the western side.",
+          "ko": "동쪽 사면의 강수량은 서쪽 편의 강수량보다 많습니다.",
+          "note": "대신되는 명사가 불가산 단수 The rainfall 이므로 that 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 3,
+      "title": "비교 구문에서 대신되는 명사 찾기",
+      "tokens": [
+        { "t": "The vocabulary", "role": "S" },
+        { "t": "of academic articles", "role": "M" },
+        { "t": "is", "role": "V" },
+        { "t": "far denser", "role": "X" },
+        { "t": "than that of newspaper columns", "role": "C" }
+      ],
+      "ko": "학술 논문의 어휘는 신문 칼럼의 어휘보다 훨씬 조밀합니다.",
+      "layers": [
+        {
+          "label": "① 주어에 붙은 수식어를 걷어냅니다",
+          "roles": ["M"],
+          "note": "of academic articles 는 앞의 명사를 꾸미는 전치사구입니다. 대명사가 대신할 명사를 찾을 때는 이 수식어를 먼저 괄호로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 명사를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 남는 핵 명사는 The vocabulary 이고, 이것은 단수입니다. 대명사의 수는 여기서 결정됩니다."
+        },
+        {
+          "label": "③ 본동사로 핵 명사의 수를 검산합니다",
+          "roles": ["V"],
+          "note": "본동사가 is 라는 사실이 핵 명사가 단수임을 다시 확인해 줍니다. articles 가 주어였다면 are 가 왔을 것입니다."
+        },
+        {
+          "label": "④ 비교 대상 자리의 대명사를 판정합니다",
+          "roles": ["C"],
+          "note": "than 뒤의 that 은 The vocabulary 를 대신합니다. 대신되는 명사가 단수이므로 that 이며, 뒤의 newspaper columns 는 that 을 꾸미는 수식어일 뿐입니다."
+        }
+      ],
+      "conclusion": "대명사의 수를 정하는 것은 뒤의 newspaper columns 가 아니라 앞의 핵 명사 The vocabulary 입니다. 그래서 that 이 옳습니다."
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "대명사의 수를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 친 대명사가 대신하는 명사를 문장에서 찾습니다. 바로 앞의 명사가 아니라 의미상 대신되는 명사를 찾습니다.",
+          "applyNote": "The eating habits … differ … from those of their grandparents → 비교되는 것은 dwellers 가 아니라 The eating habits 입니다."
+        },
+        {
+          "text": "그 명사에 붙은 전치사구·관계절·분사구를 괄호로 묶어 걷어내고, 괄호 밖에 남은 핵 명사를 확인합니다.",
+          "applyNote": "of modern city dwellers 를 걷어내면 핵 명사는 The eating habits 입니다."
+        },
+        {
+          "text": "핵 명사가 단수·불가산이면 it·that 을, 복수이면 them·those 를 씁니다.",
+          "applyNote": "habits 는 복수 명사이므로 복수형 대명사를 씁니다."
+        },
+        {
+          "text": "앞에 나온 바로 그 대상이면 it/them, 같은 종류의 다른 대상을 비교하는 자리이면 that/those 를 씁니다.",
+          "applyNote": "여기서 비교되는 것은 조부모 세대의 다른 식습관이므로 them 이 아니라 those 입니다."
+        }
+      ],
+      "example": {
+        "en": "The eating habits of modern city dwellers differ sharply from **those** of their grandparents.",
+        "ko": "현대 도시 거주자의 식습관은 그들의 조부모 세대의 식습관과 뚜렷이 다릅니다.",
+        "note": "판단 기준은 근접한 dwellers 가 아니라 대신되는 핵 명사 The eating habits(복수)입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The soil of the river delta holds more moisture than ( that / those ) of the surrounding plains.",
+      "steps": [
+        {
+          "title": "① 대신되는 명사를 찾습니다",
+          "body": "than 뒤의 괄호는 앞에서 이미 나온 명사를 되풀이하지 않기 위한 자리입니다. 비교되고 있는 것은 강 삼각주의 흙과 주변 평야의 흙이므로 대신되는 명사는 The soil 입니다."
+        },
+        {
+          "title": "② 수식어를 걷어내고 핵 명사를 확인합니다",
+          "body": "of the river delta 는 The soil 을 꾸미는 전치사구입니다. 이를 걷어내면 핵 명사는 The soil 이며 단수·불가산입니다."
+        },
+        {
+          "title": "③ 근접 명사에 낚이지 않았는지 점검합니다",
+          "body": "괄호 바로 뒤의 the surrounding plains 는 복수이지만 이것은 괄호의 대명사를 꾸미는 수식어 안의 명사일 뿐입니다. 수를 결정하는 자격이 없습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "대신되는 핵 명사 The soil 이 단수이므로 단수형 that 이 옳습니다. those 를 넣으면 복수 명사를 대신하는 것이 되어 앞의 명사와 어긋납니다."
+        }
+      ],
+      "answer": "that",
+      "ko": "강 삼각주의 흙은 주변 평야의 흙보다 더 많은 수분을 머금습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u10-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The librarian repaired the damaged volumes and returned {{blank}} to the shelf.",
+          "options": ["it", "them"],
+          "answer": 1,
+          "translation": "그 사서는 훼손된 책들을 수선해 서가에 되돌려 놓았습니다.",
+          "explanation": "returned 의 목적어가 가리키는 것은 복수 명사 the damaged volumes 입니다. 대명사는 가리키는 명사의 수와 일치해야 하므로 복수 them 이 옳습니다.",
+          "trapTags": ["it-they"]
+        },
+        {
+          "id": "u10-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The temperature of the deep ocean changes far more slowly than [[u:those]] of the surface waters.",
+          "isCorrect": false,
+          "correction": "that",
+          "translation": "심해의 수온은 표층수의 수온보다 훨씬 더 느리게 변합니다.",
+          "explanation": "밑줄이 대신하는 명사는 앞에 나온 The temperature(단수)입니다. 따라서 단수형 that 이어야 합니다. 밑줄 뒤의 surface waters 가 복수여도 그것은 밑줄을 꾸미는 수식어일 뿐이며, 밑줄이 대신하는 명사는 여전히 단수 The temperature 입니다.",
+          "trapTags": ["that-those", "intervening-pp"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "that/those 와 it/them 은 무엇이 다릅니까",
+      "columns": ["that / those", "it / them"],
+      "rows": [
+        {
+          "criterion": "무엇을 가리키는가",
+          "a": "앞에 나온 명사와 같은 종류의 다른 대상",
+          "b": "앞에 나온 바로 그 대상 자체"
+        },
+        {
+          "criterion": "뒤에 수식어를 붙일 수 있는가",
+          "a": "of구·분사구·관계절의 수식을 받습니다 (that of ~, those used in ~)",
+          "b": "뒤에서 수식어를 달지 못합니다"
+        },
+        {
+          "criterion": "수 표시",
+          "a": "단수·불가산 = that / 복수 = those",
+          "b": "단수 = it / 복수 = them"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The population of Seoul is larger than **that** of Busan.",
+          "ko": "서울의 인구는 부산의 인구보다 많습니다.",
+          "note": "비교 대상은 부산의 인구이지 서울의 인구 자체가 아닙니다. 같은 종류의 다른 대상이므로 that 을 씁니다."
+        },
+        {
+          "en": "The population of Seoul has grown steadily, and demographers monitor **it** every year.",
+          "ko": "서울의 인구는 꾸준히 증가해 왔고 인구통계학자들은 매년 그것을 관찰합니다.",
+          "note": "관찰 대상은 앞에 나온 바로 그 서울의 인구입니다. 동일한 대상이므로 it 을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "상황과 대명사 짝 맞추기",
+      "instruction": "각 상황에 알맞은 대명사를 짝지으십시오. 대신되는 명사의 수와 '바로 그것인가 다른 것인가'를 함께 따집니다.",
+      "pairs": [
+        {
+          "a": "단수 명사를 앞에 나온 바로 그것으로 되받는 자리",
+          "b": "it",
+          "why": "동일한 단수 대상을 되받으므로 it 입니다."
+        },
+        {
+          "a": "복수 명사를 앞에 나온 바로 그것으로 되받는 자리",
+          "b": "them",
+          "why": "앞에 나온 그 복수 대상 자체를 받으므로 them 입니다."
+        },
+        {
+          "a": "단수·불가산 명사를 같은 종류의 다른 대상과 비교하는 자리",
+          "b": "that",
+          "why": "비교되는 다른 단수·불가산 대상이므로 that 입니다."
+        },
+        {
+          "a": "복수 명사를 같은 종류의 다른 대상과 비교하는 자리",
+          "b": "those",
+          "why": "비교되는 다른 복수 대상이므로 those 입니다."
+        },
+        {
+          "a": "같은 종류의 불특정한 다른 하나를 새로 가리키는 자리",
+          "b": "one",
+          "why": "특정한 그것이 아니라 같은 종류의 다른 하나이므로 one 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "대명사 수 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 판단은 결국 속도로 굳습니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "불가산 명사 evidence 는 뜻이 여럿 같아도 it 으로 받습니다.",
+          "isTrue": true,
+          "why": "evidence 는 불가산 단수 명사이므로 them 이 아니라 it 입니다."
+        },
+        {
+          "statement": "비교 구문에서 that·those 의 수는 바로 뒤 of구의 명사가 정합니다.",
+          "isTrue": false,
+          "why": "수를 정하는 것은 뒤의 근접 명사가 아니라 앞에서 대신되는 핵 명사입니다."
+        },
+        {
+          "statement": "복수 명사를 같은 종류의 다른 대상과 비교할 때는 those 를 씁니다.",
+          "isTrue": true,
+          "why": "복수를 대신하며 of구의 수식을 받으므로 those 입니다."
+        },
+        {
+          "statement": "it 은 뒤에 of구를 붙여 'it of ~' 형태로 비교에 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "it·them 은 뒤에서 of구의 수식을 받지 못합니다. 그 자리에는 that·those 를 씁니다."
+        },
+        {
+          "statement": "research 는 연구가 여러 건이면 them 으로 받아야 합니다.",
+          "isTrue": false,
+          "why": "research 는 불가산 단수 명사입니다. 여러 건이어도 it 이며, 셀 때는 studies 를 씁니다."
+        },
+        {
+          "statement": "앞에 나온 바로 그 복수 대상을 되받을 때는 them 을 씁니다.",
+          "isTrue": true,
+          "why": "동일한 복수 대상 자체를 가리키므로 them 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Over the past decade the wages of factory workers rose faster than ( that / those ) of office clerks.",
+      "givenSteps": [
+        "① 대신되는 명사를 찾습니다 — 비교되고 있는 것은 the wages 입니다.",
+        "② 그 명사의 수를 확인합니다 — wages 는 복수 명사입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "those — 대신되는 명사 the wages 가 복수이기 때문입니다",
+        "that — 괄호 뒤의 office 가 단수이기 때문입니다",
+        "them — 앞에 나온 명사를 그대로 되받는 자리이기 때문입니다"
+      ],
+      "answer": 0,
+      "explain": "비교 구문의 대명사는 대신되는 명사의 수를 따릅니다. the wages 가 복수이므로 those 입니다. 괄호 뒤의 office clerks 는 대명사를 꾸미는 수식어 안의 명사이므로 수를 결정하지 못하며, them 은 뒤에서 of구의 수식을 받지 못해 이 자리에 올 수 없습니다."
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u10-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The instruments installed on the research vessel were far more sensitive than {{blank}} used at the coastal station.",
+          "options": ["that", "those", "them"],
+          "answer": 1,
+          "translation": "그 연구선에 설치된 관측 기기들은 해안 관측소에서 쓰이는 기기들보다 훨씬 더 정밀했습니다.",
+          "explanation": "빈칸이 대신하는 명사는 앞의 복수 명사 The instruments 이므로 those 가 옳습니다. that 은 단수·불가산 명사를 대신할 때만 쓰며, them 은 뒤에서 분사구 used at the coastal station 의 수식을 받을 수 없습니다.",
+          "trapTags": ["that-those", "intervening-clause"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 those 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "대신되는 명사가 앞에 나온 복수 명사 The instruments 이고, 대명사는 대신되는 명사의 수를 따르기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 수식어를 걷어내고 대신되는 핵 명사를 찾는 것이 판단의 출발점입니다."
+        },
+        {
+          "text": "빈칸 뒤의 station 이 아니라 vessel 을 가리키기 때문입니다.",
+          "correct": false,
+          "feedback": "빈칸이 가리키는 것은 장소가 아니라 비교 대상인 기기들입니다. 장소를 나타내는 명사는 대명사의 수와 무관합니다."
+        },
+        {
+          "text": "those 가 문장을 더 자연스럽게 들리도록 만들기 때문입니다.",
+          "correct": false,
+          "feedback": "어감은 근거가 되지 못합니다. 대명사의 수는 대신되는 명사가 단수인지 복수인지에서만 나옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나 찾기",
+      "instruction": "네 낱말 중 대명사로 받는 방식이 나머지와 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["evidence", "equipment", "research", "regulations"],
+          "odd": 3,
+          "why": "evidence·equipment·research 는 it 으로 받는 불가산 단수 명사이지만, regulations 는 them 으로 받는 복수 명사입니다."
+        },
+        {
+          "words": ["the climate", "the vocabulary", "the soil", "the wages"],
+          "odd": 3,
+          "why": "the climate·the vocabulary·the soil 은 단수·불가산이라 that 으로 대신하고, the wages 는 복수라 those 로 대신합니다."
+        },
+        {
+          "words": ["the findings", "the statistics", "the samples", "the information"],
+          "odd": 3,
+          "why": "the findings·the statistics·the samples 는 복수라 them·those 로 받지만, the information 은 불가산 단수라 it·that 으로 받습니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 대신되는 명사와 근접 명사의 수가 어긋날 때",
+      "body": "비교 구문의 that/those 바로 뒤에는 of구가 붙고, 그 안의 명사는 흔히 복수입니다. 이 근접 명사에 눈이 먼저 가면 대명사의 수를 그것에 맞추게 됩니다. 판단 기준은 언제나 비교 표지(than·from·as 등) 앞에서 이미 나온 핵 명사입니다.",
+      "example": {
+        "en": "The average lifespan of desert plants is far longer than **that** of tropical vines.",
+        "ko": "사막 식물의 평균 수명은 열대 덩굴 식물의 평균 수명보다 훨씬 깁니다.",
+        "note": "뒤의 tropical vines(복수)가 아니라 앞의 The average lifespan(단수)이 기준입니다. 그래서 that 입니다."
+      }
+    },
+    {
+      "id": "b23",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The diet of urban foxes, [[1:which]] has been studied for decades, differs from [[2:those]] of rural foxes. City animals rely on food discarded by people, and [[3:they]] rarely hunt small mammals, although [[4:their]] ancestors did.",
+      "answer": 2,
+      "correction": "that",
+      "rationales": [
+        "관계대명사 which 의 선행사는 단수 명사 The diet 이므로 관계절의 동사도 단수형 has 입니다. 옳습니다.",
+        "밑줄이 대신하는 명사는 앞의 The diet(단수)입니다. 뒤의 rural foxes 가 복수라는 이유로 those 를 쓰면 안 되며 that 으로 고쳐야 합니다.",
+        "they 는 앞 절의 복수 명사 City animals 를 받는 주격 대명사입니다. 옳습니다.",
+        "their 는 같은 City animals 를 받는 소유격 대명사입니다. 복수 명사를 받으므로 옳습니다."
+      ],
+      "ko": "수십 년간 연구되어 온 도시 여우의 먹이는 시골 여우의 먹이와 다릅니다. 도시의 동물들은 사람들이 버린 음식에 의존하며, 조상들은 그러했지만 그들은 작은 포유류를 거의 사냥하지 않습니다."
+    },
+    {
+      "id": "b24",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 대명사가 틀린 문장을 주고 '어법상 틀린 부분을 찾아 고쳐 쓰시오'로 물어봅니다. 고친 형태만 쓰는 것이 아니라 대신되는 명사가 무엇인지 함께 밝혀야 만점입니다.",
+          "sample": {
+            "en": "The soil of the volcanic island is far richer than those of the mainland.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "those → that — 대신되는 명사가 단수 The soil 이기 때문입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 밑줄을 that/those 에 걸고, 밑줄 앞뒤에 수가 다른 명사를 깔아 근접 명사에 낚이도록 설계합니다. 밑줄 앞에서 대신되는 핵 명사를 찾아 수를 확인하면 됩니다.",
+          "sample": {
+            "en": "The energy demands of a rapidly growing city far exceed [[u:those]] of a rural county of the same area.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — 대신되는 명사가 복수 The energy demands 이므로 those 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Ecologists have long compared the carbon stored in different kinds of forest. [[u:The amount of carbon held in a mature tropical forest is several times greater than that of a young plantation.]] Soil accounts for much of the difference, and it keeps storing carbon long after the trees stop growing.",
+      "instruction": "밑줄 친 문장에서 that 이 대신하는 명사를 찾고, 왜 those 가 될 수 없는지 설명하십시오.",
+      "found": "that 이 대신하는 명사는 앞의 The amount(단수)입니다. of carbon held in a mature tropical forest 는 그 명사를 꾸미는 수식어이므로 걷어냅니다. 뒤의 of a young plantation 역시 that 을 꾸미는 수식어일 뿐이며, 주변의 carbon(불가산)이나 plantation 은 비교 대상이 아닙니다. 대신되는 핵 명사가 단수이므로 those 는 올 수 없습니다.",
+      "gist": "성숙한 열대림이 어린 조림지보다 훨씬 많은 탄소를 저장하며, 그 차이의 상당 부분이 토양에서 온다는 내용입니다."
+    },
+    {
+      "id": "b26",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "비교급 골짜기의 대역술사",
+      "intro": "이 골짜기에서는 명사가 자기 대신 대역을 내세워 문장을 건넵니다. 어설픈 눈은 대역 뒤에 세워 둔 엉뚱한 명사의 수에 홀려 넘어집니다. 네 번의 판정으로 진짜 주인을 짚어 보이십시오.",
+      "questions": [
+        {
+          "prompt": "The museum restored the ancient manuscripts and displayed {{blank}} in the main hall.",
+          "options": ["it", "them"],
+          "answer": 1,
+          "why": "전시된 대상은 복수 명사 the ancient manuscripts 이므로 them 입니다. 단수 it 은 이 복수 명사를 받지 못합니다."
+        },
+        {
+          "prompt": "The agency gathered new information from many sources and published {{blank}} online.",
+          "options": ["it", "them"],
+          "answer": 0,
+          "why": "information 은 출처가 여럿이어도 불가산 단수 명사이므로 it 입니다. 여럿처럼 느껴진다고 them 을 쓰면 틀립니다."
+        },
+        {
+          "prompt": "The rainfall of the mountain region is heavier than {{blank}} of the coastal belt.",
+          "options": ["that", "those"],
+          "answer": 0,
+          "why": "대신되는 명사가 불가산 단수 The rainfall 이므로 that 입니다. 뒤의 the coastal belt 는 수를 정하지 못합니다."
+        },
+        {
+          "prompt": "The wingspans of eagles are much greater than {{blank}} of hawks.",
+          "options": ["those", "that", "them"],
+          "answer": 0,
+          "why": "대신되는 명사가 복수 The wingspans 이므로 those 입니다. that 은 단수를 대신하고, them 은 뒤에서 of구의 수식을 받지 못해 이 자리에 올 수 없습니다."
+        }
+      ],
+      "winText": "대역술사의 속임수가 걷혔습니다. 대역의 수를 정하는 것은 언제나 대역이 대신하는 진짜 주인이라는 것 — 그 눈을 이제 당신이 가졌습니다.",
+      "loseText": "대역술사가 다시 안개를 두릅니다. 네 문항이 물은 것은 하나였습니다 — '이 대명사가 대신하는 핵 명사는 단수인가 복수인가.' 수식어를 걷어내는 절차를 다시 짚고 오면 골짜기는 그대로 열려 있습니다."
+    },
+    {
+      "id": "b27",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "대명사의 수는 ___ 명사에서 결정되고, 비교 구문에서 앞 명사를 대신할 때는 단수·불가산이면 ___, 복수이면 ___ 를 씁니다."
+    },
+    {
+      "id": "b28",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "대명사는 가리키는 명사의 수와 일치합니다. 단수는 it, 복수는 they/them 입니다.",
+        "equipment·evidence·information·research 같은 불가산 명사는 뜻이 여럿처럼 느껴져도 단수 it 으로 받습니다.",
+        "비교·대조에서 앞의 명사를 대신할 때는 단수·불가산이면 that, 복수이면 those 를 쓰고 뒤에 of구 등의 수식어가 붙습니다.",
+        "판단 기준은 대명사 뒤의 근접 명사가 아니라, 수식어를 걷어내고 남은 앞쪽의 핵 명사입니다.",
+        "앞에 나온 바로 그 대상이면 it/them, 같은 종류의 다른 대상이면 that/those 또는 one/ones 입니다."
+      ],
+      "keySentence": {
+        "en": "The migration routes of seabirds differ sharply from **those** of land birds.",
+        "ko": "바닷새의 이동 경로는 육지 새의 이동 경로와 뚜렷이 다릅니다.",
+        "note": "대신되는 핵 명사가 The migration routes(복수)이므로 those 입니다. 뒤의 land birds 는 수를 결정하지 못합니다."
+      }
+    },
+    {
+      "id": "b29",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u10-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The ministry published the new safety guidelines and asked every school to adopt {{blank}} by September.",
+          "options": ["it", "them"],
+          "answer": 1,
+          "translation": "그 부처는 새 안전 지침을 발표하고 모든 학교에 9월까지 그것들을 채택하라고 요청했습니다.",
+          "explanation": "adopt 의 목적어가 가리키는 것은 복수 명사 the new safety guidelines 입니다. 따라서 복수 them 이 옳습니다. 단수 it 은 이 복수 명사를 받을 수 없습니다.",
+          "trapTags": ["it-they"]
+        },
+        {
+          "id": "u10-c3-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The reading habits of teenagers today differ greatly from [[u:those]] of their parents at the same age.",
+          "isCorrect": true,
+          "translation": "오늘날 청소년의 독서 습관은 같은 나이였을 때의 부모 세대의 독서 습관과 크게 다릅니다.",
+          "explanation": "밑줄이 대신하는 명사는 앞의 복수 명사 The reading habits 이므로 those 가 옳습니다. 비교되는 것은 부모라는 사람이 아니라 부모 세대의 독서 습관입니다.",
+          "trapTags": ["that-those", "intervening-pp"]
+        },
+        {
+          "id": "u10-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The information gathered by the two survey teams was incomplete, so the ministry released {{blank}} only after further checks.",
+          "options": ["it", "them", "those"],
+          "answer": 0,
+          "translation": "두 조사팀이 수집한 정보는 불완전했기 때문에 그 부처는 추가 확인을 거친 뒤에야 그것을 공개했습니다.",
+          "explanation": "released 의 목적어가 대신하는 명사는 불가산 단수 The information 이므로 복수형 those 는 수부터 맞지 않습니다. 또 공개된 대상은 앞에 나온 바로 그 정보 자체이므로 같은 종류의 다른 대상을 가리키는 that/those 가 아니라 it 이 옳습니다. 앞의 복수 명사 teams 는 공개된 대상이 아닙니다.",
+          "trapTags": ["uncountable-noun", "it-they"]
+        }
+      ]
+    }
+  ]
+}

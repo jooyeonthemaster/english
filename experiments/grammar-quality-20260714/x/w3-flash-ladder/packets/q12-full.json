@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20221123-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-generic-answer-point"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=d  (C):dec=k  (D):ANS=a  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 227,
+        "relPos": 0.295,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 311,
+        "relPos": 0.404,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 540,
+        "relPos": 0.701,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 572,
+        "relPos": 0.743,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 590,
+        "relPos": 0.766,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.766,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "promoting",
+        "isError": false,
+        "errorExpression": "promoting",
+        "surroundingText": "Most people believe that to have a successful business blog promoting a product, they have to stay strictly",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "If all you're doing is shamelessly promoting your product, then who is going to want to read",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "coming",
+        "isError": false,
+        "errorExpression": "coming",
+        "surroundingText": "Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "can you",
+        "isError": true,
+        "correction": "can you",
+        "errorExpression": "you can",
+        "surroundingText": "Only by doing this can you create an interested audience that you will then be able to sell to.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "interested",
+        "isError": false,
+        "errorExpression": "interested",
+        "surroundingText": "the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "promoting"
+      },
+      {
+        "label": "(B)",
+        "text": "is"
+      },
+      {
+        "label": "(C)",
+        "text": "coming"
+      },
+      {
+        "label": "(D)",
+        "text": "you can"
+      },
+      {
+        "label": "(E)",
+        "text": "interested"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "명사구 'a successful business blog'를 뒤에서 수식하는 현재분사 'promoting'은 '홍보하는 비즈니스 블로그'라는 능동의 의미 관계를 형성하므로 적절합니다.",
+      "(B)": "'If'절 내에서 관계대명사가 생략된 'all [you're doing]'이 주어이며, 'all'이 단일한 행위를 나타내므로 단수 동사인 'is'는 어법상 적절합니다.",
+      "(C)": "동사 'keep'의 목적어 역할을 하는 동사원형의 -ing 형태인 동명사로서 'coming'이 오는 구조이므로 어법상 적절합니다.",
+      "(E)": "관중(audience)이 '흥미를 느끼게 되는' 수동적 감정의 상태를 나타내므로 과거분사 형용사인 'interested'는 올바른 표현입니다."
+    },
+    "explanation": "only가 이끄는 부사구(Only by doing this)가 문장의 맨 앞으로 나가 강조될 때는 주절의 주어와 조동사가 도치되어야 합니다. 따라서 평서문의 어순인 'you can'을 조동사가 주어 앞으로 나간 도치 어순인 'can you'로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(D) 정동사 vs 준동사 — 부사구 강조에 따른 주어-조동사 도치 판단",
+      "(A) 능동 분사 vs 수동 분사 — 수식받는 명사와의 능동적 의미 관계 확인",
+      "(B) 주어-동사 수일치 — all이 이끄는 관계사절 주어의 단수 취급 판단"
+    ],
+    "tags": [
+      "도치구문",
+      "부사구강조",
+      "수일치",
+      "분사구문",
+      "동명사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog __(A) promoting__ a product, they have to stay strictly 'on the topic.' If all you're doing __(B) is__ shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep __(C) coming__ back. Only by doing this __(D) you can__ create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be __(E) interested__ in."
+  }
+}

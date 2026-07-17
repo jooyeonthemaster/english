@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "E",
+  "multipleDefensible": false,
+  "defensibleLabels": ["E"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'I'm late because traffic was terrible' — the complement of the connective is a finite clause (subject 'traffic' + predicate 'was terrible'), so the subordinating conjunction 'because' is required and correct; 'because of' would demand an NP. Grammatical."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'Garcia asked, pointing at a patterned red shirt...' — free participial adjunct whose understood subject is the matrix subject 'Garcia', the one doing the pointing. No dangling participle, active voice appropriate. Grammatical."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'The clerk stopped her work and looked at the clothes, quickly agreeing with Jeff's choice.' — participial adjunct controlled by 'the clerk'; she is the agent of agreeing, so active -ing is correct. Coordination 'stopped ... and looked' is parallel and closed before the adjunct. Grammatical."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'he arrived at the concert hall for the rehearsal wearing his new clothes' — depictive participial adjunct predicated of 'he' (arrive + V-ing is a standard pattern); active 'wearing' with object 'his new clothes' is well-formed. Grammatical."
+    },
+    {
+      "label": "E",
+      "verdict": "wrong",
+      "reason": "'His confidence was, however, quickly changing to nervousness when he thought of how many people would be there.' — Tense/aspect error. The when-clause is the punctual triggering event and the following narrative ('As the rehearsal began...') shows the change is a completed, bounded achievement; simple past 'however, quickly changed to nervousness' is required. Past progressive asserts the change was already in progress at the moment of thinking, inverting the cause-effect/sequence relation. Rescue readings fail: a habitual 'whenever' reading is blocked by the single-episode narrative, and an interrupted-process reading contradicts the causal logic (the thought causes, not interrupts, the change). Ungrammatical in context."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Options A-D are each provably well-formed under their governing rules (conjunction + finite clause; three subject-controlled participial adjuncts with correct active voice and no dangling control). E is the sole defensible answer; its defect is aspectual (past progressive vs. required simple past for a punctual, when-clause-triggered completed change) rather than purely morphosyntactic, but no alternative parse renders it acceptable, so the item resolves uniquely to E."
+}

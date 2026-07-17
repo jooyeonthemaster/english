@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-shallow-participle-adjective-answerx1",
+    "grammar-obvious-adjacent-sv-agreementx1",
+    "grammar-keypoint-choice-mismatchx1"
+  ],
+  "layout": "(A):ANS=b  (B):dec=l  (C):dec=b  (D):dec=c  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 150,
+        "relPos": 0.149,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 395,
+        "relPos": 0.392,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 460,
+        "relPos": 0.457,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 612,
+        "relPos": 0.608,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 830,
+        "relPos": 0.824,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.824,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "what",
+        "isError": true,
+        "correction": "what",
+        "errorExpression": "that",
+        "surroundingText": "concepts that we have learned through education. We recode what we see through the lens of",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "such as",
+        "isError": false,
+        "errorExpression": "such as",
+        "surroundingText": "image compression algorithm such as JPG, rather than storing a raw bitmap",
+        "pointCode": "l"
+      },
+      {
+        "label": "(C)",
+        "expression": "who",
+        "isError": false,
+        "errorExpression": "who",
+        "surroundingText": "a raw bitmap image file. People who lack this ability and remember",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "representing",
+        "isError": false,
+        "errorExpression": "representing",
+        "surroundingText": "seeing the world as it is. But representing the world as abstract ideas and",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "are reconstructed",
+        "isError": false,
+        "errorExpression": "are reconstructed",
+        "surroundingText": "The discovery that our memories are reconstructed through abstract representations rather than",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "such as"
+      },
+      {
+        "label": "(C)",
+        "text": "who"
+      },
+      {
+        "label": "(D)",
+        "text": "representing"
+      },
+      {
+        "label": "(E)",
+        "text": "are reconstructed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "이 자리는 구체적인 예시를 도입하는 전치사 'such as'가 이끄는 명사구 자리이므로 어법상 옳습니다.",
+      "(C)": "복수 명사 선행사 People을 수식하며 뒤에 주어가 없는 불완전한 절을 이끄는 주격 관계대명사 'who'는 어법상 옳습니다.",
+      "(D)": "But 이하 문장에서 문장 전체의 주어 핵 역할을 하는 동명사 'representing'은 어법상 옳습니다.",
+      "(E)": "동격의 접속사 that절 내부의 주어인 our memories가 '재구성되는' 수동의 관계이므로 수동태 'are reconstructed'는 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 타동사 recode의 목적어 역할을 하는 명사절 자리를 포함하고 있습니다. 대명사 지시 관계에서부를 살펴보면 타동사 see의 목적어가 생략된 불완전한 구조이므로, 선행사가 없으면서 자체 목적어를 포함해 불완전한 절을 이끄는 관계대명사가 필요합니다. 따라서 (A) 자리의 'that'은 이 자리에 올 수 없으며, 대명사 지시 관계을 이끄는 관계대명사인 'what'으로 고쳐야 합니다. 명사절 접속사 that은 뒤에 빠진 구성 요소가 없는 완전한 절을 이끌어야 하므로, see의 목적어가 비어 있는 이 문장에서는 적절하지 않습니다.",
+    "keyPoints": [
+      "(A) 명사절 접속사 vs 관계대명사 — 명사절 내부의 성분 결손 여부로 판정",
+      "(C) 관계대명사의 격 — 뒤에 동사 lack이 뒤따르므로 주격 관계대명사 선택",
+      "(E) 능동태 vs 수동태 — 주어 memories와 동사의 수동적 행위 관계"
+    ],
+    "tags": [
+      "어법",
+      "명사절 접속사",
+      "관계대명사",
+      "수동태",
+      "동명사 주어"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode __(A) that__ we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm __(B) such as__ JPG, rather than storing a raw bitmap image file. People __(C) who__ lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But __(D) representing__ the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories __(E) are reconstructed__ through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

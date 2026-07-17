@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the nature of that process is repetitive' — 지시한정사 that이 앞 절의 선행 NP 'a process embodied in a machine'을 조응 지시하며 단수 가산명사 process를 수식. 한정사+단수명사 결합 적법, 지시 해소 명확. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself' — 재귀대명사 itself의 결속자는 같은 절 내 관계절 주어 that(= any process)으로 국부적 c-command 조건(결속원리 A) 충족. 'repeat itself'는 표준 연어. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'The only example that comes to mind readily are a candle...' — 주어의 핵은 단수 NP 'example'이고 관계절 'that comes to mind readily'는 수식어일 뿐 일치 지배자가 아님(관계절 내부 동사도 단수 comes). 보어 'a candle'도 단수여서 도치·존재구문 등 어떤 대안 해석으로도 복수 일치가 성립하지 않음. are → is 여야 함. 주어-동사 수일치 위반으로 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'an iterative process, although at first masked' — 'although (it is) at first masked'의 주어+be 생략 축약 양보절. 생략된 주어가 주절 주어 this와 동일 지시라는 축약 조건 충족(though/although + 분사·형용사구 축약은 표준 용법). 부사구 'at first'의 분사 앞 위치도 적법. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the decay of atoms of carbon-14 is repetitive' — 주어 핵은 단수 decay이며 'of atoms of carbon-14'는 전치사구 수식어(복수 견인 요소일 뿐 일치 지배자 아님). 단수 is가 올바름. 정문."
+    }
+  ],
+  "note": "(C)만 유일하게 어법 오류(단수 주어 example + are). 나머지 4개 밑줄은 대안 해석 탐색(도치, 집합명사 통보적 복수, 축약절 성립 여부)에서도 모두 정문으로 확인됨. 복수정답 소지 없음."
+}

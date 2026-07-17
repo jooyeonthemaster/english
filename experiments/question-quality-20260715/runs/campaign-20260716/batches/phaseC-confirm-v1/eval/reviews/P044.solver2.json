@@ -1,0 +1,35 @@
+{
+  "pid": "P044",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' — 'called'는 주어 'Such species'를 수식하는 과거분사(축약 관계절 'which are called'). 종은 '~라고 불리는' 대상이므로 수동 의미의 과거분사가 문맥·어법상 옳다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on... is revealed' — 여기서 that은 추상명사 'fact'와 동격을 이루는 동격절(appositive clause)을 이끈다. that절 내부(other species depend on or are greatly affected by...)는 성분이 완결되어 관계대명사가 아닌 접속사 that이 맞다. 어법상 옳다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "주어는 'The fact that...'(단수)이고 술어는 'is revealed'. 사실이 '드러나는' 것이므로 수동태가 적절하고, 단수 주어에 단수 be동사 일치도 정확하다. 어법상 옳다."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect",
+      "reason": "'fig trees become important in sustains fruit-eating vertebrates' — 전치사 in 뒤에는 목적어로 동명사(sustaining)나 명사가 와야 하는데 정동사 'sustains'가 쓰였다. 전치사의 목적어 자리에 정동사는 올 수 없으므로 어법상 틀리다. 'in sustaining'이 되어야 한다. 다른 축약/도치/분사구문 해석으로도 정문이 되지 않는다."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'Protecting fig trees... is an important conservation goal' — 동명사구 주어로서 단수 취급되어 단수 동사 'is'와 일치한다. 어법상 옳다."
+    }
+  ],
+  "note": "전형적 어법(밑줄) 문항. 명확한 오류는 (D)로, 전치사 in 뒤에 정동사 sustains가 온 것이 유일한 어법 오류다. 나머지 밑줄(과거분사 called, 동격 that, 수동 is revealed, 동명사 주어 Protecting)은 모두 지배 규칙상 정문. 정답은 단일하게 (D)로 좁혀진다."
+}

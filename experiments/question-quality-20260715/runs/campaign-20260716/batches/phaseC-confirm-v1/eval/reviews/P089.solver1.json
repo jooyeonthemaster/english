@@ -1,0 +1,35 @@
+{
+  "pid": "P089",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'매장 배치(store layouts)'는 지문에 등장하지 않는 무관 소재이며, '논리적 설명을 요구하게 만들었다'는 것은 오히려 실패했던 설득 방식(advertisements and explanations)의 방향이라 성공 전환점과 정반대. 빈칸 뒤 '몇 주 만에 카트를 기꺼이 수용했다'와 인과가 성립하지 않음."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "지문 서두의 'without getting tired'를 그대로 되울리는 표면 어휘 미끼. 그러나 빈칸 주어는 shills(바람잡이들)이지 카트가 아니므로 '직접 육체적 피로를 덜어주었다'는 주어-술어 결합이 성립하지 않고, 애초에 문제는 피로가 아니라 심리적 인식(약해 보임·유모차 연상)이었음. 실전에서 첫 스캔 시 가장 먼저 눈이 가는 오답이지만 주어 확인으로 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "주어 shills와 결합이 자연스럽고('바람잡이들이 그들(=regular shoppers)로 하여금 남들의 행동을 따라 하도록 이끌었다'), 'rather than relying on reasoning'이 앞서 실패한 'repeated advertisements and explanations'와 정확히 대비됨. 'Look, everyone is using the carts'라는 사회적 증거(social proof) 장치와도 일치. 뒤 문장 'Within a few weeks shoppers readily accepted those carts'와 인과 완결. 대명사 them의 선행사는 직전 문장의 the regular shoppers로 자연스럽게 해소됨."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "쇼핑 예산(budgets)은 지문 어디에도 근거가 없는 완전 무관 선지. 지문의 문제는 비용이 아니라 카트 사용에 대한 심리적 저항이었음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'psychological discomfort'가 남성의 체면·여성의 유모차 연상을 되울려 매력적으로 보이는 미끼. 그러나 이중으로 오류 — (i) shills는 광고를 수정한 주체가 아니고, (ii) 바람잡이 전략은 오히려 심리적 불편을 '해소'한 조치였으므로 'without addressing'은 사실 관계가 반대. 또한 성공 서술로 이어지는 다음 문장과 논리 충돌."
+    }
+  ],
+  "note": "정답 ③으로 단일 수렴. 미끼 강도: ⑤(심리적 불편 어휘 재활용, 방향만 반전) > ②(서두 피로 어휘 재활용, 주어 불일치) > ①·④(무관 소재). 최상위권 실전 관점에서 ⑤에 잠깐 끌리지만 'modified the advertisements'가 shills의 행위로 성립하지 않아 즉시 배제됨. 대안 해석(축약 관계절 등)으로 다른 선지가 정문이 되는 경로 없음. 빈칸 문장이 앞 내용(모델 고용+직원 멘트)의 요약 재진술 역할을 하는 구조로, 빈칸 추론 문항으로서 결함 없음."
+}

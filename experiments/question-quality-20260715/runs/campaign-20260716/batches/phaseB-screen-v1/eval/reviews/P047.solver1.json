@@ -1,0 +1,35 @@
+{
+  "pid": "P047",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'maximum efforts in multiple domains'를 넣으면 '여러 영역에서 최대 노력을 하지 않으면 스트레스를 받는다'가 되어, 과잉 참여를 경계하라는 지문 논지(draw the line, don't overextend)와 정반대. 'multiple domains'가 'too many clubs'를 표면적으로 메아리쳐 스키밍 독자를 유혹하지만 논리 검증에서 즉시 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "'reasonable limits on your level of involvement'는 'draw the line', 'Pacing is important', 'don't overextend yourself' 세 개의 앵커를 정확히 재진술. 결합(seam)도 문제없음 — 'exercise + 추상명사'(exercise restraint/caution/limits)는 자연스러운 연어. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "경쟁·또래 집단은 지문에 전혀 등장하지 않음. 유혹 요소 자체가 없는 무관 선지."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'time'이 지문의 free time·deadline과 어휘적으로 공명해 시간관리 프레임으로 순간적 유혹이 있으나, 지문의 처방은 참여 자체를 제한하라는 것이지 절약 시간을 계산하라는 것이 아님. 'exact time savings'는 지문의 어떤 내용과도 대응하지 않음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "체감상 가장 강한 미끼 — 스트레스 회피 프레임이 주제와 인접해 보임. 그러나 대입하면 '부담스러운 책무를 전면 회피하지 않으면 스트레스를 받는다'가 되어 'get involved in the most meaningful activities' 및 'tasks you absolutely need to complete'(회피 불가능한 과업)와 정면 충돌. 극단 한정어 'total'이 결정적 탈락 신호."
+    }
+  ],
+  "note": "빈칸이 담화 앵커 3개(draw the line / Pacing is important / don't overextend yourself)로 삼중 고정되어 정답이 하나로 수렴. 매력적 오답 위계는 ⑤ > ④ > ① > ③ 순. 문법 seam 트릭이나 대안 해석으로 타 선지가 정문·정답이 되는 경로 없음. 난도는 수능 기준 평이~중."
+}

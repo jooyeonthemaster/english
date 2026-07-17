@@ -1,0 +1,175 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-marker-too-dense",
+    "grammar-surrounding-missing-marker",
+    "grammar-error-not-mutated",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-answer-point-not-core"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=k  (C):dec=b  (D):dec=c  (E):ANS=m",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 35,
+        "relPos": 0.054,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 185,
+        "relPos": 0.284,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 485,
+        "relPos": 0.744,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 500,
+        "relPos": 0.767,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.767,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중, 어법상 **틀린 것**은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has us piling",
+        "isError": false,
+        "errorExpression": "has us piling",
+        "surroundingText": "The fast pace of today's lifestyle ____(A)____.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "contrary to popular belief",
+        "isError": false,
+        "errorExpression": "contrary to popular belief",
+        "surroundingText": "Very often, multitasking only slows you down, ____(B)____.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "when done",
+        "isError": false,
+        "errorExpression": "when done",
+        "surroundingText": "than it would ____(C)____ with your phone pressed to your ear.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "your phone pressed",
+        "isError": false,
+        "errorExpression": "your phone pressed",
+        "surroundingText": "than it would when done with ____(D)____ to your ear.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "probable faster",
+        "isError": true,
+        "errorExpression": "probable faster",
+        "surroundingText": "and you'll accomplish each task better, and ____(E)____.",
+        "pointCode": "m"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has us piling"
+      },
+      {
+        "label": "(B)",
+        "text": "contrary to popular belief"
+      },
+      {
+        "label": "(C)",
+        "text": "when done"
+      },
+      {
+        "label": "(D)",
+        "text": "your phone pressed"
+      },
+      {
+        "label": "(E)",
+        "text": "probable faster"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "have 목적어 현재분사(piling): 사역동사 have + 목적어(us) + 현재분사(piling) 구조로 'us가 ~하도록 하다'라는 의미로 자연스럽습니다. 사역동사 뒤에서 목적격 보어로 현재분사가 쓰이는 올바른 어법입니다.",
+      "(B)": "형용사구 contrary to 명사: '~와 반대로'라는 의미의 형용사구입니다. 콤마(,) 뒤에서 부사적 용법으로 문장 전체(applies)를 수식하며, 대비의 의미를 만들어 내는 올바른 구조입니다.",
+      "(C)": "시간 부사절의 주어·be동사 생략: 종속접속사 when 뒤에서 주어(it)와 be동사(is)가 생략된 구조입니다. 과거분사(done)가 생략된 주어(it)의 보어 역할을 수행하여 올바른 어법입니다.",
+      "(D)": "with + 목적어 + 과거분사: 전치사 with 뒤에서 목적어(your phone)와 목적격 보어(pressed)가 온 구조입니다. 과거분사(pressed)가 수동의 의미를 담아 '네 전화기가 (귀에) 대어진 채'라는 올바른 부대상황을 표현합니다."
+    },
+    "explanation": "### 오답 미끼 분석\n- **(A) has us piling**: 사역동사 have + 목적어 + 현재분사 구조입니다. 이는 \"우리로 하여금 ~하도록 하다\"라는 올바른 형태입니다. - **(B) contrary to popular belief**: \"~와 반대로\"라는 의미의 올바른 전치사구입니다. - **(C) when done**: 접속사 + 과거분사 구조로, 시간을 나타내는 부사절에서 주어와 be동사가 생략된 올바른 형태입니다. - **(D) your phone pressed**: \"with + 목적어 + 과거분사\" 구조로, 부대상황을 나타내는 올바른 표현입니다. ### 정답인 이유\n- **(E) probable faster**: **probable**은 형용사로, 동사나 형용사를 수식해야 하는 부사 **faster**를 직접 수식할 수 없습니다. 부사 **probably**가 와야 올바른 어법입니다.",
+    "keyPoints": [
+      "사역동사 have + 목적어 + 현재분사/과거분사/원형부정사",
+      "contrary to + 명사: ~와 반대로 (부사적 수식)",
+      "시간 부사절의 주어 + be동사 생략 (when + p.p)",
+      "with + 목적어 + 과거분사 (부대상황)",
+      "부사와 형용사의 구분: probable(형용사) vs probably(부사)"
+    ],
+    "tags": [
+      "수능",
+      "영어",
+      "어법",
+      "사역동사",
+      "전치사구",
+      "시간부사절",
+      "부대상황",
+      "부사와형용사",
+      "ADVANCED"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "The fast pace of today's lifestyle __(A) has us piling__ one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, __(B) contrary to popular belief__. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would __(C) when done__ with __(D) your phone pressed__ to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster."
+  }
+}

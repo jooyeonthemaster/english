@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'express man's affective life' is a verbatim lift describing CINEMA's role ('cinema expresses man's affective life'), the exact opposite of the law's. Inserting it destroys the 'whereas cinema...' contrast the sentence is built on. Surface-match trap for skimmers."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "'subdue emotional impulses' directly paraphrases 'the law keeps it [man's affective life] in check' and 'ensure that we are not overwhelmed and destroyed by our desires and drives.' Grammar seam is clean: 'their consequences' = consequences of the emotional impulses. Contrast with cinema ('introduces us to our affects') holds perfectly."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Passage says man is 'too violent to exist in a state of nature without a regime of commands and prohibitions' — law exists to prevent/replace the state of nature, not maintain it. Direct contradiction; 'their' also lacks a sensible plural antecedent."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Garbled recombination of 'the messiness of human relations' with 'cinema.' The law investigates neither cinema nor its messiness; no textual support and no contrast with the whereas-clause."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "The designed second-choice lure — grammatically smooth ('their' = fears and desires) and echoes 'desires and drives.' I felt the pull, but it fails twice: (1) 'keeps it in check' means restrain/control, and 'eliminate' overshoots into eradication the passage never claims; (2) 'fears' is misplaced — fearing is the LAW's stance ('fearing the horror,' 'anxiety about human nature'), not an affect the law seeks to remove. Cinema's 'introducing us to our affects' also presupposes the affects persist rather than being eliminated."
+    }
+  ],
+  "note": "Blank sentence is a restatement of the explicit contrast 'cinema expresses man's affective life / the law keeps it in check.' ② is the only paraphrase-faithful option; ⑤ is a strong intensity-overshoot distractor (eliminate vs. keep in check) that a top-tier solver must consciously resist. Single defensible answer; clean item."
+}

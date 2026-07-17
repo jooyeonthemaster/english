@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-overdrilled-answerx1",
+    "grammar-obvious-noun-what-relativex1"
+  ],
+  "layout": "(A):dec=h  (B):ANS=i  (C):dec=b  (D):dec=d  (E):dec=l",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 79,
+        "relPos": 0.101,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 208,
+        "relPos": 0.267,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 517,
+        "relPos": 0.663,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 598,
+        "relPos": 0.767,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 699,
+        "relPos": 0.896,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.896,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "buy",
+        "isError": false,
+        "errorExpression": "buy",
+        "surroundingText": "Suppose that you are busy working on a project one day and you have no time to buy lunch.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "wants",
+        "isError": true,
+        "correction": "wants",
+        "errorExpression": "wanting",
+        "surroundingText": "He tells you that he knows you are busy and he wants to help you out by buying you the sandwich.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(C)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "You would likely think 'Who are you, and how do you know what kind of sandwich I like to eat?'",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "The key difference between these two cases is the level of trust.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "to",
+        "isError": false,
+        "errorExpression": "to",
+        "surroundingText": "the same level of trust to a stranger.",
+        "pointCode": "l"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "buy"
+      },
+      {
+        "label": "(B)",
+        "text": "wanting"
+      },
+      {
+        "label": "(C)",
+        "text": "what"
+      },
+      {
+        "label": "(D)",
+        "text": "is"
+      },
+      {
+        "label": "(E)",
+        "text": "to"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "명사 time을 뒤에서 수식하는 형용사적 용법의 to부정사구 내 동사원형 'buy'는 어법상 옳습니다.",
+      "(C)": "know의 목적어인 명사절 내에서 명사를 수식하는 의문형용사 'what'은 불완전한 목적어 자리를 이끌어 어법상 적절합니다.",
+      "(D)": "전치사구(between these two cases)의 수식을 받는 단수 명사 주어 핵심(The key difference)에 맞추어 단수 동사 'is'를 쓴 수일치는 옳습니다.",
+      "(E)": "A에게 B를 주다(give A to B)의 방향성을 나타내는 적절한 전치사 'to'가 올바르게 사용되었습니다."
+    },
+    "explanation": "(B) \"wanting\"는 어법상 틀린 표현이며 \"wants\"로 고쳐야 한다. 주절의 주어인 He에 두 개의 절이 병렬로 이어지는 문장으로, He tells you that [he knows... ] and [he wants... ]의 구조를 이루고 있습니다. 등위접속사 and 뒤에서 주어 he에 맞추어 서술어 역할을 하는 정동사가 필요한 자리이므로, 준동사 형태인 'wanting'은 어법상 불가능하며 정동사 'wants'로 고쳐야 합니다. 접속사 and로 대등하게 연결되는 주어와 동사의 짝을 식별하는 문형 구조 판단이 필요합니다.",
+    "keyPoints": [
+      "(B) 병렬구조와 정동사 — 등위접속사 뒤의 술어 동사 병렬 일치",
+      "(D) 주어-동사 수일치 — 개입 수식어구를 걷어낸 문장 핵 주어 찾기",
+      "(C) 의문명사절 what — 타동사 know 뒤 목적어 역할을 하는 이끄는 말"
+    ],
+    "tags": [
+      "어법",
+      "병렬구조",
+      "정동사",
+      "수일치",
+      "명사절"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy working on a project one day and you have no time to __(A) buy__ lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he __(B) wanting__ to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know __(C) what__ kind of sandwich I like to eat?\" The key difference between these two cases __(D) is__ the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust __(E) to__ a stranger.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

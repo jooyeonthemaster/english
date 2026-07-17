@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go1_20231219-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "주장",
+    "words": 146
+  },
+  "attempts": 5,
+  "relaxedFallback": true,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "option-countx1",
+    "grammar-marker-countx1",
+    "grammar-render-marker-countx1",
+    "grammar-answer-in-wrong-explanationsx1",
+    "grammar-explanation-lintx1"
+  ],
+  "layout": "(A):dec=a  (B):dec=c  (C):dec=d  (D):dec=k  (E):ANS=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 105,
+        "relPos": 0.129,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 118,
+        "relPos": 0.145,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 300,
+        "relPos": 0.369,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 440,
+        "relPos": 0.541,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 606,
+        "relPos": 0.744,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.744,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race laid out for them. They do well enough in school to keep advancing. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey ends with college. They have checked all the boxes in the life that was laid out for them and now lack a road map describing the right ways to move forward and continue to grow. In truth, that's when the journey really begins. When school is finished, your growth becomes voluntary. Like healthy eating habits or a regular exercise program, you need to commit to it and devote thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "run",
+        "isError": false,
+        "errorExpression": "run",
+        "surroundingText": "Instead, they simply run the race laid out for them.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "laid out",
+        "isError": false,
+        "errorExpression": "laid out",
+        "surroundingText": "Instead, they simply run the race laid out for them.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "ends",
+        "isError": false,
+        "errorExpression": "ends",
+        "surroundingText": "But so many think and act as if their learning journey ends with college.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "to move",
+        "isError": false,
+        "errorExpression": "to move",
+        "surroundingText": "lack a road map describing the right ways to move forward and continue to grow.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": true,
+        "correction": "it",
+        "errorExpression": "them",
+        "surroundingText": "Like healthy eating habits or a regular exercise program, you need to commit to it and devote thought, time, and energy to it.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "run"
+      },
+      {
+        "label": "(B)",
+        "text": "laid out"
+      },
+      {
+        "label": "(C)",
+        "text": "ends"
+      },
+      {
+        "label": "(D)",
+        "text": "to move"
+      },
+      {
+        "label": "(E)",
+        "text": "them"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 'they'에 연결되는 정동사 자리로, 현재시제 복수동사 원형인 'run'은 어법상 옳습니다.",
+      "(B)": "명사 'the race'가 제시되는(lay out) 대상이므로 과거분사 'laid out'의 후치 수식은 어법상 옳습니다.",
+      "(C)": "as if 절 내의 주어인 단수 명사구 'their learning journey'에 부합하는 단수 동사 'ends'는 수일치상 옳습니다.",
+      "(D)": "명사구 'the right ways'를 후치 수식하여 '~하는 방법'을 나타내는 to부정사의 형용사적 용법 'to move'는 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 건강한 식습관이나 운동 프로그램처럼 개인의 성장을 위해 시간과 에너지를 쏟아야 한다는 당위성을 설명하고 있습니다. (E)가 속한 절에서 'devote thought, time, and energy to'의 목적어로 쓰인 대명사는 문맥상 앞 문장의 단수 명사인 'your growth'를 지칭해야 하므로, 복수 대명사인 'them'은 올 수 없고 단수 대명사 'it'으로 고쳐야 합니다. 문장 앞부분의 'eating habits'나 'exercise program'과 같은 비유적 표현의 명사들에 현혹되어 복수형인 'them'이 맞는 것으로 착각하지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      " (E) 대명사 일치 — 문맥상 지칭하는 대상의 단·복수를 성분 분석을 통해 판정",
+      " (B) 분사의 태 — 수식받는 명사와의 능동·수동 관계 파악",
+      " (C) 주어-동사 수일치 — 주어 핵 수식어구를 제외한 진짜 주어의 수 확인"
+    ],
+    "tags": [
+      "대명사 일치",
+      "분사 수식",
+      "수일치",
+      "to부정사 형용사적 용법",
+      "정동사 준동사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply __(A) run__ the race __(B) laid out__ for them. They do well enough in school to keep advancing. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey __(C) ends__ with college. They have checked all the boxes in the life that was laid out for them and now lack a road map describing the right ways __(D) to move__ forward and continue to grow. In truth, that's when the journey really begins. When school is finished, your growth becomes voluntary. Like healthy eating habits or a regular exercise program, you need to commit to __(E) them__ and devote thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-surrounding-missing-marker",
+    "grammar-error-not-mutated",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-underline-wide",
+    "grammar-underline-wide",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-noun-clause-pronoun-mislabel"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=a  (B):dec=b  (C):dec=g  (D):dec=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 114,
+        "relPos": 0.158,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 298,
+        "relPos": 0.413,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 433,
+        "relPos": 0.601,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.752,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "what kept us alive",
+        "isError": true,
+        "errorExpression": "what kept us alive",
+        "surroundingText": "The human brain is wired to look for threats - a trait ___ when we were living on the savannas but that can prevent happiness in our modern lives.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "that can prevent happiness",
+        "isError": false,
+        "errorExpression": "that can prevent happiness",
+        "surroundingText": "a trait that kept us alive when we were living on the savannas but ___ in our modern lives.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "To break out of this neural rut",
+        "isError": false,
+        "errorExpression": "To break out of this neural rut",
+        "surroundingText": "___ , train yourself to acknowledge when things go right.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "to write down what went well",
+        "isError": false,
+        "errorExpression": "to write down what went well",
+        "surroundingText": "If you keep a calendar or a journal, make a point ___ .",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "sharing a recent win",
+        "isError": false,
+        "errorExpression": "sharing a recent win",
+        "surroundingText": "start your conversations with friends by ___ (anything that gives you that yesssss feeling).",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "what kept us alive"
+      },
+      {
+        "label": "(B)",
+        "text": "that can prevent happiness"
+      },
+      {
+        "label": "(C)",
+        "text": "To break out of this neural rut"
+      },
+      {
+        "label": "(D)",
+        "text": "to write down what went well"
+      },
+      {
+        "label": "(E)",
+        "text": "sharing a recent win"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "that은 앞에 명시된 선행사 a trait를 수식하는 관계대명사로 올바르게 사용되었습니다. 병렬 구조(but that can prevent...) 안에서도 자연스럽게 연결됩니다.",
+      "(C)": "To 부정사가 문두에서 '~하기 위해서'라는 목적의 의미를 나타내는 부사적 용법으로 쓰였으며, 뒤에 오는 명령문(train yourself)과 함께 자연스러운 구조를 이룹니다.",
+      "(D)": "what went well은 '잘된 일'이라는 의미의 명사절로, 전치사 down의 목적어 역할을 하고 있습니다. what은 선행사를 포함한 관계대명사로 이 절 안에서 주어 역할을 하므로 어법에 맞습니다.",
+      "(E)": "전치사 by의 목적어로 동명사 sharing이 쓰였습니다. 전치사 뒤에는 명사 또는 동명사가 와야 하므로 sharing은 어법상 적절합니다."
+    },
+    "explanation": "밑줄 (A)의 what은 선행사를 포함한 관계대명사로, '~하는 것'이라는 의미의 대명사 지시 관계을 이끕니다. 하지만 이 문장에서는 앞에 명사구 a trait가 선행사로 명시되어 있으므로, 선행사를 수식하는 관계대명사 that(또는 which)을 써야 합니다. 따라서 what을 that으로 고쳐야 어법상 올바른 문장이 됩니다. 나머지 선택지는 모두 원문 그대로 어법에 맞는 표현입니다.",
+    "keyPoints": [
+      "관계대명사 that과 what의 용법 차이: that은 선행사를 수식하는 형용사절을 이끌고, what은 선행사를 포함한 명사절을 이끔",
+      "대시(dash) 뒤에 동격으로 쓰인 a trait를 수식하는 관계절이므로, 선행사를 포함하지 않는 관계대명사가 필요함",
+      "병렬 구조(but that can prevent...) 안에서도 동일한 관계대명사 that이 사용되어야 함"
+    ],
+    "tags": [
+      "수능영어",
+      "어법",
+      "관계대명사",
+      "what vs that",
+      "중급"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but __(B) that can prevent happiness__ in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). __(C) To break out of this neural rut__, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point __(D) to write down what went well__. If you're more of a verbal processor, start your conversations with friends by __(E) sharing a recent win__ (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it."
+  }
+}

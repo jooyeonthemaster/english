@@ -1,0 +1,160 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):ANS=b  (C):dec=k  (D):dec=c  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 16,
+        "relPos": 0.022,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 239,
+        "relPos": 0.331,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 433,
+        "relPos": 0.601,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 636,
+        "relPos": 0.882,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.882,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is wired",
+        "isError": false,
+        "errorExpression": "is wired",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "which",
+        "isError": true,
+        "correction": "which",
+        "errorExpression": "where",
+        "surroundingText": "focused on what's going wrong (which explains why complaining is such a popular",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "to write",
+        "isError": false,
+        "errorExpression": "to write",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "sharing",
+        "isError": false,
+        "errorExpression": "sharing",
+        "surroundingText": "start your conversations with friends by sharing a recent win (anything that",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": false,
+        "errorExpression": "it",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is wired"
+      },
+      {
+        "label": "(B)",
+        "text": "where"
+      },
+      {
+        "label": "(C)",
+        "text": "to write"
+      },
+      {
+        "label": "(D)",
+        "text": "sharing"
+      },
+      {
+        "label": "(E)",
+        "text": "it"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "인간의 뇌(The human brain)가 본능적으로 위협을 찾도록 '타고났다'는 수동 의미 관계를 나타내므로 수동태인 'is wired'는 어법상 옳습니다.",
+      "(C)": "'make a point of -ing'와 병행하여 쓸 수 있는 'make a point to-v(반드시 ~하다)' 구조이므로 'to write'는 어법상 옳습니다.",
+      "(D)": "전치사 by 뒤에서 명사구를 이끄는 동명사이자, 친구들과 '공유함으로써'라는 능동의 행위를 나타내므로 'sharing'은 어법상 옳습니다.",
+      "(E)": "앞 문맥에 제시된 'life(삶)'를 단수로 받아 가리키는 대명사이므로 단수 대명사 'it'은 어법상 옳습니다."
+    },
+    "explanation": "괄호 내부의 관계사절은 앞선 내용(focused on what's going wrong) 전체를 선행사로 삼아 선행 부연 설명을 이어가는 계속적 용법의 관계사 자리입니다. 이 관계사가 이끄는 절 내부를 보면 주어가 빠진 채 동사형인 explains가 바로 나오는 불완전한 구조로 이루어져 있습니다. 따라서 관계부사이자 뒤에 완전한 문장 구조를 요구하는 'where'는 이 자리에 올 수 없으며, 주격 관계대명사 역할을 할 수 있는 'which'로 고쳐야 합니다. 장소의 의미가 느껴진다고 해서 무조건 관계부사를 고르면 틀리기 쉽고, 관계사 뒤의 구조적 완전성을 반드시 점검해야 합니다.",
+    "keyPoints": [
+      "(B) 관계대명사 vs 관계부사 — 뒤 절의 불완전성으로 격 판단",
+      "(A) 능동태 vs 수동태 — 주어와 동사의 태 관계 판정",
+      "(E) 대명사 일치 — 담화 맥락에서 명확한 단수 선행 명사 추적"
+    ],
+    "tags": [
+      "관계 대명사",
+      "수동태",
+      "대명사 수일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain __(A) is wired__ to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (__(B) where__ explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point __(C) to write__ down what went well. If you're more of a verbal processor, start your conversations with friends by __(D) sharing__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate __(E) it__.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

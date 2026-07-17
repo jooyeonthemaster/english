@@ -1,0 +1,38 @@
+{
+  "pid": "P037",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "정답 유일성 성립. 분쟁 요약에 기재된 '선언된 정답=(C)'는 오케스트레이션 요약의 데이터 오류로 판단된다 — 실제 full 파일(eval/full/P037.md)의 '선언된 정답'은 (E)이며, markedExpressions에서도 (E)만 isError=true(proceeding→proceeds)로 표기되어 있고, 해설 전체가 (E)를 정답으로 설명한다. 즉 실제 산출물 기준으로는 선언 정답 (E) = 솔버1 (E) = 솔버2 (E) = 감사자 판정이 완전히 일치하며 분쟁 자체가 존재하지 않는다. 독립 재검증 결과: (A) 지각동사 see+O+V-ing 정문, (B) 가주어 구문 be동사 보어 형용사 정문, (C) involve+동명사 정문(어떤 해석으로도 오류가 될 수 없어 요약의 (C) 정답 주장은 성립 불가), (D) they=the key answers로 수동태 정문, (E) 접속사 as 절에 정동사 결여로 유일한 비문. 대안 해석(전치사 as+동명사구, 독립분사구문, be 축약) 전수 검토 결과 어느 것도 (E)를 정문화하지 못하며, 지문 내 미표시 잠재 오류도 없다. 솔버들의 과잉 판정 없음.",
+  "perDispute": [
+    {
+      "label": "(C)",
+      "claim": "분쟁 요약이 선언된 정답을 (C) writing이라고 기재 — (C)가 어법상 틀렸다는 주장에 해당",
+      "verdict": "기각 (요약 데이터 오류)",
+      "evidence": "실제 full 파일의 '선언된 정답' 필드는 (E)이고 markedExpressions에서 (C)는 isError=false다. 문법적으로도 'This involves writing down the key answers'는 involve가 동명사를 목적어로 취하는 표준 결합이며(*involves to write가 오히려 비문), writing을 오류로 볼 수 있는 해석은 존재하지 않는다. 요약의 (C)는 파일 내용과 모순되는 전사 오류다."
+    },
+    {
+      "label": "(E)",
+      "claim": "솔버1·솔버2 공통: proceeding이 유일한 어법 오류(→proceeds)",
+      "verdict": "인용 (확정)",
+      "evidence": "'editing out the material you are not going to need as the interview proceeding'에서 as는 시간·비례 접속사이고 종속절 주어 the interview 뒤에 정동사가 필요하다. 대안 해석 전수 검토: (1) as를 전치사로 보고 the interview('s) proceeding을 동명사구로 읽으면 '인터뷰 진행으로서 자료를 편집한다'는 자격 해석만 남아 의미 불성립. (2) 독립분사구문 the interview proceeding은 접속사 as와 결합할 수 없음(단독 또는 with 구조여야 함). (3) as (it is) proceeding 축약은 주어까지 함께 생략해야 성립하는데 명시적 주어 the interview가 남아 있어 축약 구문이 아니며, 주절 주어(you)와도 불일치. 어떤 경로로도 정문화 불가 → 유일한 오류. proceeds로 교정 시 원지문과 정확히 일치한다."
+    },
+    {
+      "label": "(A)",
+      "claim": "지각동사 목적격보어 -ing의 적법성",
+      "verdict": "정문 확정",
+      "evidence": "seeing someone scribbling: see+O+V-ing에서 someone이 scribble의 능동 주체이므로 현재분사 보어 적법. 원형 scribble도 가능하나 -ing 역시 표준이므로 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "claim": "보어 자리 형용사 efficient의 적법성",
+      "verdict": "정문 확정",
+      "evidence": "It is often more efficient to develop ...: 가주어 it + be + 형용사 보어 + 진주어 to부정사. 보어 자리이므로 형용사가 요구되며 efficiently는 불가. 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "claim": "수동태 can be transcribed의 적법성",
+      "verdict": "정문 확정",
+      "evidence": "so that they can be transcribed easily afterwards에서 they의 선행사는 the key answers. 답변은 전사되는 대상(피동작주)이므로 수동태가 옳고, 능동 can transcribe는 목적어 결여로 비문. 조동사 뒤 be+p.p. 형태도 정확. 오류 아님."
+    }
+  ]
+}

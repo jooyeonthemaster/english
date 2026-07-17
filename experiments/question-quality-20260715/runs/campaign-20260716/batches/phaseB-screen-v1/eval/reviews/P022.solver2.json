@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('cannot let any car stop to pick up passengers'), but the proposition contradicts the narrative: the friend herself just stopped her car at that very corner to pick Carol up, and she is laughing AT Carol's worry. If cars could not stop there to pick up passengers, Carol's claim that meeting there was 'a bad idea' would be correct, making the friend's dismissive laughter and 'What are you talking about?' incoherent. Also legally false: 'No Standing' permits a momentary stop while actively receiving passengers."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Seam degrades: '...even when someone is waiting to pick up passengers' forces the stem infinitive onto 'waiting', producing a garbled proposition. Semantically absurd — no traffic sign mandates driving 'without any deceleration' — and it contradicts the friend's own act of stopping at the corner."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Full sentence: 'That means we are forbidden to park our vehicles but are allowed a momentary halt to pick up passengers.' Grammar: retained-object passive of ditransitive allow (allow us a halt -> we are allowed a halt) plus purpose infinitive modifying 'halt' — fully well-formed. Logic: exactly the legal meaning of a 'No Standing' sign (no parking/waiting by vehicles; brief stop to actively pick up or discharge passengers permitted). Coheres with the narrative: it explains why the sign concerns cars, not pedestrians ('Of course you can stand there'), and why the friend legitimately chose that corner for a quick pick-up."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Asserts the opposite of the sign: a vehicle stopped with the driver inside waiting IS 'standing', which is precisely what 'No Standing' forbids ('remaining inside while waiting' distinguishes standing from parking and is allowed only under a mere No Parking sign). Seam also twists: 'remain inside to wait for someone to pick up passengers' yields a confused double-purpose reading."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam collapses: option ends in 'to load passengers', stem appends 'to pick up passengers', producing the redundant double infinitive 'to load passengers to pick up passengers' — ungrammatical/incoherent as one clause. Meaning-wise it describes 'No Stopping', not 'No Standing', and contradicts the fact that the friend did stop the vehicle to pick Carol up moments earlier."
+    }
+  ],
+  "note": "Single defensible answer. Key long-range constraints: (a) the friend's own pick-up at the corner must remain legal under the sign's true meaning, (b) the friend's laughter/dismissal requires the blank to refute, not vindicate, Carol's worry, (c) the appended stem infinitive 'to pick up passengers' must attach grammatically. Only ③ satisfies all three; ③ additionally matches the real US legal definition of 'No Standing'. ⑤ fails at the seam (double infinitive); ①/④/⑤ fail narrative consistency; ④ inverts the sign's meaning (No Parking vs No Standing)."
+}

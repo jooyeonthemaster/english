@@ -1,0 +1,478 @@
+{
+  "schemaVersion": 4,
+  "artifactId": "question-quality-phase-c-campaign-v4",
+  "createdAt": "2026-07-15T04:27:15.6672380+09:00",
+  "status": "DESIGN_COMPLETE_EXECUTION_BLOCKED",
+  "verdict": "FULL_COVERAGE_PRODUCTION_PARITY_NOT_GUARANTEED_SEQUENTIAL_PARITY_POSSIBLE_ONLY_AFTER_AUDIT_REDUCED_REGISTRY_SEPARATE",
+  "authorization": {
+    "modelApiCalls": 0,
+    "databaseCalls": 0,
+    "databaseWrites": 0,
+    "productionMutations": 0,
+    "operationalCandidateSlots": 0,
+    "apiUsageAtDesign": 0,
+    "userHardCap": 1000
+  },
+  "units": {
+    "assignment": "One frozen passage x type x plan x difficulty x policy/profile run. An assignment may contain multiple logical operations and must be admitted as a whole before its first physical call.",
+    "logicalOperation": "One semantically named design, candidate, repair, or evaluation operation. SDK retries are not new logical operations.",
+    "physicalHttpCall": "One client-side OpenRouter HTTP fetch observed at the trusted custom-fetch boundary. Every SDK retry is a distinct physical call.",
+    "candidateAttemptSlot": "A pre-network lease for one physical opportunity capable of emitting a semantic full-question object. It is consumed permanently on send, timeout, HTTP failure, malformed output, parser failure, deterministic rejection, or human rejection.",
+    "parsedFullQuestionCandidate": "A full student-facing question object found by the frozen response-byte-bound parser. It is an observed result, not the budget unit. Zero parsed candidates does not refund a candidate attempt slot; more than one quarantines the assignment and campaign.",
+    "acceptedQuestion": "A parsed candidate that passes deterministic gates and the frozen human audit contract. It is never used to backfill or redefine the attempt denominator."
+  },
+  "productionParityRegistry": {
+    "status": "BLOCKED_NO_AUTHORIZATION",
+    "estimand": "The current production fast-route policy, including all configured outer retries, SDK retries, JSON fallback/repair, strict/relaxed/scarce/salvage branches, premium grammar ladder, solver, persistence, render, and scoring behavior.",
+    "reason": "The latest independently audited callgraph is source-stale and does not provide a separately verified candidate-capable bound. Full-queue upfront admission cannot be justified. A fixed sequential one-assignment-per-batch regime may be cap-safe because the ledger releases unused batch capacity only after terminal close/finalization, but it cannot guarantee 25-type coverage and is not operational until fresh envelopes and provider integration pass.",
+    "lastIndependentlyAuditedCallgraph": {
+      "artifact": "experiments/question-quality-20260715/reviews/production-callgraph-bound-audit/callgraph-bound.json",
+      "sha256": "6d4bc14eed634574b77bd27e33fd668d0450714a5535eed6ab2600ed2cd15066",
+      "verdict": "FAIL_BLOCKED",
+      "sourceStale": true,
+      "activeTypePlanSentinelAssignments": 50,
+      "conservativePhysicalEnvelope": {
+        "standard25": 8559,
+        "premium25": 4320,
+        "total": 12879
+      },
+      "threeDifficultyEnvelopeIfSimplyRepeated": 38637,
+      "knownDrift": [
+        "question-repair source changed after the pinned audit",
+        "the premium grammar reasoning-on fallback was removed after the pinned audit, so the historical L=81 and premium-grammar=432 values must not be called current"
+      ]
+    },
+    "admissionRegimes": {
+      "UPFRONT_ALL_ASSIGNMENTS": {
+        "status": "INFEASIBLE_OR_UNPROVEN",
+        "rule": "Reserve every preregistered assignment worst-case envelope before the first call.",
+        "finding": "The stale physical envelope is 12,879 for only 25 types x 2 plans and 38,637 when naively repeated across three difficulties. Candidate-capable envelopes are not independently split, so full-queue admission under 1,000 cannot be proved."
+      },
+      "SEQUENTIAL_ONE_ASSIGNMENT_PER_BATCH": {
+        "status": "CONDITIONALLY_POSSIBLE_BUT_CURRENTLY_BLOCKED",
+        "fixedIttAssignments": 150,
+        "design": "Three frozen waves. Each wave contains all 25 types x 2 plans once; a rotation gives every type-plan BASIC, INTERMEDIATE, and KILLER exactly once across the three waves.",
+        "globalCandidateCap": 1000,
+        "ledgerSemantics": [
+          "Within an open batch, assignment close does not recycle maxCandidateOutputs; the candidate envelope remains committed.",
+          "After all calls, parser/gate decisions, clone evidence, and billing are terminal, finalizeBatch sets released_slots = allocated_slots - actually used candidate slots.",
+          "Phase and campaign committed-slot queries subtract finalized released_slots, so the next preregistered assignment batch may reserve its whole envelope.",
+          "Finalized physical-call and USD capacity also collapses from worst case to actual use."
+        ],
+        "strictAdmissionRule": "Process the frozen queue in exact order. Before a row, reserve its entire fresh-audited candidate/physical/USD envelope. If it does not fit remaining global/phase capacity, do not skip it: mark that row and every later row budget_not_admitted ITT failures and stop permanently.",
+        "inference": "For all 150 preregistered rows, budget_not_admitted is ship-ready=0. Admitted-only quality is selection-biased by earlier realized consumption and must not be reported as the production rate. Full-route fidelity applies only to admitted assignments; 25-type or difficulty coverage is not guaranteed.",
+        "sourceAllocationProposal": {
+          "pairing": "STANDARD and PREMIUM rows for the same type-difficulty share one passage cluster and remain adjacent in the frozen queue.",
+          "strictBlankUnique": 3,
+          "focusGrammarUnique": 3,
+          "committedDatabaseNonFocusUnique": 69,
+          "totalUniquePassageClusters": 75,
+          "supplyArithmetic": "3 <= 59 strict blank; 3 <= 599 focus grammar; 69 <= 154 committed DB. Numerical availability does not replace type-suitability, rights, privacy, or source-binding audit."
+        },
+        "symbolicAssignmentQueueRows": 150,
+        "symbolicAssignmentQueueSha256": "c8666fd6d745774aedc8976e4ebc2e9ae9e7a9587824f1f2608498f9e98e868e",
+        "sourceBindingSha256": null,
+        "operationalAuthorization": 0
+      }
+    },
+    "mutualExclusivity": "The sequential production-parity registry and the 960-slot reduced registry are alternative uses of the same user cap. Opening either irrevocably disables the other; observed unused capacity from one may not fund the other.",
+    "unblockRule": "A fresh independent audit must freeze the exact deployed/research source closure and prove each assignment's candidate, physical-call, token, and USD envelope is <= the remaining cap at admission. Provider callsite integration, parser binding, batch closure, queue/source hashes, and pricing must pass. No retry truncation may be relabelled as parity."
+  },
+  "reducedRegistry": {
+    "id": "phase-c-v4-bounded-single-shot-core",
+    "status": "CONDITIONALLY_EXECUTABLE_AFTER_ALL_HOLDS_PASS",
+    "operationalAuthorization": 0,
+    "estimand": "Quality, cost, and reliability of a frozen bounded single-shot core policy: exactly one candidate-capable physical request per assignment, SDK maxRetries=0, no full-candidate fallback/repair/top-up, with only predeclared design and grammar-solver operations.",
+    "explicitlyNotEstimating": [
+      "current production ship-ready rate",
+      "current production retry/repair/salvage yield",
+      "production route parity",
+      "population-wide quality rate for any of the 23 non-focus types",
+      "the original v3 central-blank 66-pass certification target",
+      "the original v3 disjoint committed-DB dev/holdout population"
+    ],
+    "candidateBudget": {
+      "hardCap": 1000,
+      "allocatedExecutableSlots": 960,
+      "permanentlyLockedSlots": 40,
+      "lockedSlotIds": "LOCKED-0961..LOCKED-1000",
+      "lockedSlotsExecutable": false,
+      "lockedSlotsReallocatable": false,
+      "topUpAllowed": false,
+      "replacementAllowedAfterAnyOutcome": false,
+      "candidateCardinalityPerCandidatePhysicalCall": 1,
+      "candidatePhysicalRetries": 0,
+      "candidateFallbacks": 0,
+      "candidateRepairs": 0,
+      "overflowRule": "If the frozen parser observes more than one semantic full question in a response, consume the one leased slot, quarantine the assignment, close the phase as breached, and permit no new call."
+    },
+    "models": {
+      "STANDARD": {
+        "requestedModel": "google/gemini-3.5-flash",
+        "thinking": "off",
+        "reasoningEffort": "none",
+        "candidateSlots": 480
+      },
+      "PREMIUM": {
+        "requestedModel": "google/gemini-3.1-pro-preview",
+        "thinking": "off",
+        "reasoningEffort": "none",
+        "candidateSlots": 480
+      },
+      "driftRule": "requested, effective, served model, canonical slug, provider, reasoning fields, and endpoint allow-list must match the sealed registry. Any mismatch stops the entire phase; remaining slots are not moved or replayed."
+    },
+    "profiles": [
+      {
+        "id": "CURRENT_BOUNDED",
+        "description": "Current prompt/schema/gates at the frozen source snapshot, but under the reduced one-candidate/no-retry policy."
+      },
+      {
+        "id": "COMPACT_CERTIFICATE",
+        "description": "A compact positive design certificate; no separate model design call."
+      },
+      {
+        "id": "SITE_INTENT_LEDGER",
+        "description": "Explicit site/slot contract and option-intent ledger embedded in the candidate request; no separate model design call."
+      },
+      {
+        "id": "ROLE_SPLIT_SELECTION",
+        "description": "One non-candidate design call followed by one candidate call; grammar also receives one non-candidate solver call."
+      }
+    ],
+    "winnerSelection": {
+      "unit": "one conceptual profile per focus type, shared across STANDARD and PREMIUM",
+      "eligibleProfiles": [
+        "COMPACT_CERTIFICATE",
+        "SITE_INTENT_LEDGER",
+        "ROLE_SPLIT_SELECTION"
+      ],
+      "screeningSamplePerProfilePerType": 20,
+      "rule": [
+        "All four implementations and hashes must be frozen before D1. No post-result prompt synthesis is permitted.",
+        "A challenger is ineligible if it has more adjudicated fatal items than CURRENT_BOUNDED, any repeated identical fatal mechanism, a plan-specific ship-ready drop greater than 10 percentage points, mean actual USD ratio above 1.25, or p95 latency ratio above 1.35.",
+        "Among eligible challengers require at least +2 beautiful-ITT successes and +2 ship-ready-ITT successes versus CURRENT_BOUNDED over the same 20 passage-plan blocks.",
+        "Choose lexicographically by more beautiful-ITT successes, more ship-ready-ITT successes, fewer fatal false acceptances, lower mean actual USD, lower p95 latency, then fixed simplicity order COMPACT_CERTIFICATE < SITE_INTENT_LEDGER < ROLE_SPLIT_SELECTION.",
+        "If neither focus type has a qualifying challenger, or if CURRENT_BOUNDED would win, STOP. All confirmatory slots remain permanently unused. A different profile may win for grammar and blank, but no plan-specific cherry-picking is allowed."
+      ],
+      "adaptiveSafety": "The rule is outcome-adaptive but completely pre-specified and cap-safe. The selected pre-frozen profile hashes are sealed into a child registry before any confirmatory call."
+    },
+    "phaseOrder": [
+      "D1_ALL_TYPE_CURRENT_SENTINEL",
+      "D2_FOCUS_PROFILE_SCREEN",
+      "FREEZE_SELECTED_OR_STOP",
+      "C0_FROZEN_ROBUSTNESS_GATE",
+      "C1_FOCUS_HOLDOUT_CONFIRMATORY",
+      "C2_ALL_TYPE_RELEASE_SENTINEL",
+      "C3_STOCHASTIC_REPRODUCIBILITY"
+    ],
+    "phases": [
+      {
+        "id": "D1_ALL_TYPE_CURRENT_SENTINEL",
+        "analysisClass": "development_sentinel",
+        "candidateSlots": 150,
+        "assignments": 150,
+        "designLogicalOperations": 3,
+        "evaluationLogicalOperations": 6,
+        "physicalCallCap": 159,
+        "physicalCallsByModelAndPurpose": {
+          "STANDARD": {"candidate": 75, "design": 0, "solver": 3},
+          "PREMIUM": {"candidate": 75, "design": 3, "solver": 3}
+        },
+        "planSlots": {"STANDARD": 75, "PREMIUM": 75},
+        "difficultySlots": {"BASIC": 50, "INTERMEDIATE": 50, "KILLER": 50},
+        "design": "25 types x 2 plans x 3 difficulties x CURRENT_BOUNDED; defect discovery only."
+      },
+      {
+        "id": "D2_FOCUS_PROFILE_SCREEN",
+        "analysisClass": "development_complete_block_screen",
+        "candidateSlots": 160,
+        "assignments": 160,
+        "designLogicalOperations": 50,
+        "evaluationLogicalOperations": 80,
+        "physicalCallCap": 290,
+        "physicalCallsByModelAndPurpose": {
+          "STANDARD": {"candidate": 80, "design": 20, "solver": 40},
+          "PREMIUM": {"candidate": 80, "design": 30, "solver": 40}
+        },
+        "planSlots": {"STANDARD": 80, "PREMIUM": 80},
+        "difficultySlots": {"BASIC": 32, "INTERMEDIATE": 48, "KILLER": 80},
+        "design": "2 focus types x 10 dev passages x 2 plans x 4 pre-frozen profiles. Every passage-plan is a complete profile block."
+      },
+      {
+        "id": "C0_FROZEN_ROBUSTNESS_GATE",
+        "analysisClass": "confirmatory_secondary_prespecified_safety_gate",
+        "candidateSlots": 120,
+        "assignments": 120,
+        "designLogicalOperations": 75,
+        "evaluationLogicalOperations": 60,
+        "physicalCallCap": 255,
+        "physicalCallsByModelAndPurpose": {
+          "STANDARD": {"candidate": 60, "design": 30, "solver": 30},
+          "PREMIUM": {"candidate": 60, "design": 45, "solver": 30}
+        },
+        "planSlots": {"STANDARD": 60, "PREMIUM": 60},
+        "difficultySlots": {"BASIC": 24, "INTERMEDIATE": 40, "KILLER": 56},
+        "design": "CURRENT vs SELECTED on 3 strict edge passages per focus type, plus 12 separately named alternative blank passages and 12 additional grammar stress passages.",
+        "stopRule": "Any adjudicated V1-V5 fatal in a SELECTED candidate that deterministic gates would ship stops all later phases. The policy is not edited under this registry."
+      },
+      {
+        "id": "C1_FOCUS_HOLDOUT_CONFIRMATORY",
+        "analysisClass": "confirmatory_primary",
+        "candidateSlots": 368,
+        "assignments": 368,
+        "designLogicalOperations": 230,
+        "evaluationLogicalOperations": 184,
+        "physicalCallCap": 782,
+        "physicalCallsByModelAndPurpose": {
+          "STANDARD": {"candidate": 184, "design": 92, "solver": 92},
+          "PREMIUM": {"candidate": 184, "design": 138, "solver": 92}
+        },
+        "planSlots": {"STANDARD": 184, "PREMIUM": 184},
+        "difficultySlots": {"BASIC": 80, "INTERMEDIATE": 96, "KILLER": 192},
+        "design": "2 focus types x 46 disjoint holdout passages x 2 plans x CURRENT/SELECTED. Policy order is 23/23 AB/BA within each type-plan. Passage is the independent cluster."
+      },
+      {
+        "id": "C2_ALL_TYPE_RELEASE_SENTINEL",
+        "analysisClass": "confirmatory_secondary_route_shaped_sentinel",
+        "candidateSlots": 150,
+        "assignments": 150,
+        "designLogicalOperations": 12,
+        "evaluationLogicalOperations": 6,
+        "physicalCallCap": 168,
+        "physicalCallsByModelAndPurpose": {
+          "STANDARD": {"candidate": 75, "design": 6, "solver": 3},
+          "PREMIUM": {"candidate": 75, "design": 6, "solver": 3}
+        },
+        "planSlots": {"STANDARD": 75, "PREMIUM": 75},
+        "difficultySlots": {"BASIC": 50, "INTERMEDIATE": 50, "KILLER": 50},
+        "design": "25 types x 2 plans x 3 difficulties using the frozen release candidate. Non-focus types retain the frozen current implementation.",
+        "claimLimit": "Surface/persistence/render/scoring defect sentinel only; it is neither a type-level quality estimate nor production-policy parity."
+      },
+      {
+        "id": "C3_STOCHASTIC_REPRODUCIBILITY",
+        "analysisClass": "confirmatory_secondary_repeatability",
+        "candidateSlots": 12,
+        "assignments": 12,
+        "designLogicalOperations": 12,
+        "evaluationLogicalOperations": 6,
+        "physicalCallCap": 30,
+        "physicalCallsByModelAndPurpose": {
+          "STANDARD": {"candidate": 6, "design": 6, "solver": 3},
+          "PREMIUM": {"candidate": 6, "design": 6, "solver": 3}
+        },
+        "planSlots": {"STANDARD": 6, "PREMIUM": 6},
+        "difficultySlots": {"BASIC": 4, "INTERMEDIATE": 4, "KILLER": 4},
+        "design": "Three already-development-exposed passages per focus type, one per difficulty, regenerated once under SELECTED in both plans. Never counted as an independent passage."
+      }
+    ],
+    "typeAllocation": [
+      {"type": "BLANK_INFERENCE", "candidateSlots": 342, "focus": true},
+      {"type": "GRAMMAR_ERROR", "candidateSlots": 342, "focus": true},
+      {"type": "GRAMMAR_CHOICE_COMBO", "candidateSlots": 12, "focus": false},
+      {"type": "VOCAB_CHOICE", "candidateSlots": 12, "focus": false},
+      {"type": "SENTENCE_ORDER", "candidateSlots": 12, "focus": false},
+      {"type": "SENTENCE_INSERT", "candidateSlots": 12, "focus": false},
+      {"type": "TOPIC", "candidateSlots": 12, "focus": false},
+      {"type": "MAIN_IDEA", "candidateSlots": 12, "focus": false},
+      {"type": "TITLE", "candidateSlots": 12, "focus": false},
+      {"type": "IMPLIED_MEANING", "candidateSlots": 12, "focus": false},
+      {"type": "REFERENCE", "candidateSlots": 12, "focus": false},
+      {"type": "CONTENT_MATCH", "candidateSlots": 12, "focus": false},
+      {"type": "SUMMARY_COMPLETE_MC", "candidateSlots": 12, "focus": false},
+      {"type": "IRRELEVANT", "candidateSlots": 12, "focus": false},
+      {"type": "CONDITIONAL_WRITING", "candidateSlots": 12, "focus": false},
+      {"type": "SENTENCE_TRANSFORM", "candidateSlots": 12, "focus": false},
+      {"type": "FILL_BLANK_KEY", "candidateSlots": 12, "focus": false},
+      {"type": "SUMMARY_COMPLETE", "candidateSlots": 12, "focus": false},
+      {"type": "SUMMARY_WRITING", "candidateSlots": 12, "focus": false},
+      {"type": "WORD_ORDER", "candidateSlots": 12, "focus": false},
+      {"type": "TOPIC_SENTENCE_WRITING", "candidateSlots": 12, "focus": false},
+      {"type": "GRAMMAR_CORRECTION", "candidateSlots": 12, "focus": false},
+      {"type": "CONTEXT_MEANING", "candidateSlots": 12, "focus": false},
+      {"type": "SYNONYM", "candidateSlots": 12, "focus": false},
+      {"type": "ANTONYM", "candidateSlots": 12, "focus": false}
+    ],
+    "aggregateAllocation": {
+      "types": 25,
+      "focusCandidateSlots": 684,
+      "nonFocusCandidateSlots": 276,
+      "planSlots": {"STANDARD": 480, "PREMIUM": 480},
+      "difficultySlots": {"BASIC": 240, "INTERMEDIATE": 288, "KILLER": 432}
+    },
+    "sourceAllocation": {
+      "strictBlankCentralLong": {
+        "available": 59,
+        "selectedUnique": 59,
+        "development": 10,
+        "confirmatoryHoldout": 46,
+        "robustness": 3,
+        "reserve": 0,
+        "warning": "All 59 are used. A single pre-seal human exclusion blocks this reduced registry; no post-outcome substitute exists."
+      },
+      "focusGrammarKiller": {
+        "availableInPinnedV3Pool": 599,
+        "selectedUnique": 71,
+        "development": 10,
+        "confirmatoryHoldout": 46,
+        "strictRobustness": 3,
+        "additionalRobustness": 12
+      },
+      "committedDatabaseGeneralSentinel": {
+        "availableAfterAutomaticAndHistoryGates": 154,
+        "selectedUnique": 23,
+        "purpose": "one dedicated development passage for each non-focus type, reused across plan/difficulty and D1/C2 only",
+        "populationClaim": "none; this does not restore the original 973-row disjoint DB estimand"
+      },
+      "blankAlternativeStrata": {
+        "long150PlusLocalOrNoPivotAvailable": 43,
+        "longSelected": 6,
+        "short120To149Available": 300,
+        "shortSelected": 6,
+        "poolingWithStrictBlankForbidden": true
+      },
+      "provenance": {
+        "v3SnapshotSha256": "c21777c8dcab7f6b46ed15e429fcb7840607e90bcbdd7c02ec607a8db02beb13",
+        "v4SemanticSnapshotSha256": "5346734a689d67aaa425daff3b17c3a7b910b741f25e7f8a2e1c79cfac0d01f6",
+        "v4DatabaseExtractSha256": "aa692b32fa8aa381d682b7980e5530bb5ec2962e88dac1e50b3d88fc9dc0b86b",
+        "v4DatabaseRecordSetSha256": "32649133ce7cf2f850bed598175922c527cb5f7eaebde97175eabba236a459d1",
+        "v4DependencyManifestSha256": "ddb235f236839f95bd8cd09fbfe624216ebb348ecdcc83a4d061ab68b507e0a8",
+        "temporalSemantics": "CURRENT_STATE_READ_ONLY_CAPTURE_NOT_HISTORICAL_AS_OF"
+      }
+    },
+    "queue": {
+      "symbolicQueueSeed": "question-quality-phase-c-v4-bounded-single-shot-20260715",
+      "symbolicQueueRows": 960,
+      "symbolicQueueSha256": "dd8f951b93f3687ed27980bc28433d52775064b1cda1986a24b53891e689787d",
+      "sourceBindingSha256": null,
+      "sourceBindingStatus": "BLOCKED_NOT_YET_MATERIALIZED_OR_INDEPENDENTLY_AUDITED",
+      "ordering": "Hash-sort passage blocks by phase seed; preserve complete blocks. In C1 alternate CURRENT-first/SELECTED-first by holdout ordinal, exactly 23/23 within each type-plan. Blind review order is independently shuffled and never adjacent by passage/policy pair.",
+      "noTopUp": "Every symbolic row is fixed. Missing source binding, scope drift, timeout, no candidate, parser failure, model drift, or phase stop leaves that row missing/failed; no row is replaced."
+    }
+  },
+  "gradingAndEndpoints": {
+    "rubricArtifacts": [
+      "experiments/question-quality-20260715/RUBRIC.md",
+      "experiments/question-quality-20260715/TYPE-AUDIT-MATRIX.md"
+    ],
+    "outcomeDefinitions": {
+      "shipReadyItt": "1 only when exactly one parsed candidate exists and all V1-V5 pass after adjudication; otherwise 0, including no-candidate and parser/gate failure.",
+      "beautifulItt": "1 only when shipReadyItt=1, grade=A, and every applicable type-specific beautiful condition passes; otherwise 0.",
+      "fatalFalseAcceptance": "1 when deterministic production-facing gates would have allowed the candidate but blinded adjudication finds any V1-V5 failure.",
+      "costPerAttempt": "All candidate, design, solver, failed, timeout, and unknown-billing cost divided by preregistered attempted assignments, never by accepted outputs.",
+      "costPerShipReady": "All phase cost divided by ship-ready outputs; reported with no-output included in the numerator/denominator consequence."
+    },
+    "primaryConfirmatoryFamily": {
+      "unit": "passage cluster; each C1 passage contains both plans and both policies",
+      "clusterCountsPerFocusType": 46,
+      "policyPairsPerFocusType": 92,
+      "primarySafety": "SELECTED shipReadyItt risk-difference noninferiority to CURRENT with margin -0.05, separately for grammar and blank.",
+      "primaryCraft": "SELECTED beautifulItt superiority to CURRENT, separately for grammar and blank; promotion additionally requires point improvement >=0.10.",
+      "costGate": "Mean actual USD-per-attempt ratio SELECTED/CURRENT upper one-sided 95% cluster-bootstrap bound <=1.25 and p95 latency ratio <=1.35.",
+      "fatalGate": "Zero SELECTED fatalFalseAcceptance in C0+C1. Report the exact one-sided 95% upper bound; zero observations never means zero population risk.",
+      "estimator": "Passage-cluster bootstrap with 100000 resamples and seed phase-c-v4-cluster-bootstrap; resample passages and retain their four policy-plan observations. Report paired risk differences, cost ratios, plan interaction, and percentile plus BCa intervals.",
+      "multiplicity": "Hierarchical gatekeeping. First test the two safety noninferiority hypotheses with Holm one-sided family alpha 0.025. Only if both pass, test the two beautiful superiority hypotheses with Holm one-sided family alpha 0.025. Cost gates use Holm one-sided alpha 0.025 across two types. No secondary endpoint can rescue a failed gate.",
+      "decision": "Promote only if both focus types pass fatal, safety, craft, and cost gates. Otherwise CURRENT remains; inconclusive is not success."
+    },
+    "secondaryEndpoints": [
+      "A/B/C/F distribution",
+      "each V1-V5 failure rate",
+      "C1-C6 craft axes and total",
+      "option-intent coverage and shortcut prevalence",
+      "explanation factual error and verbosity",
+      "candidate/no-candidate yield",
+      "physical calls, input/output tokens, latency, actual USD, and USD per ship-ready",
+      "STANDARD/PREMIUM interaction",
+      "BASIC/INTERMEDIATE/KILLER interaction",
+      "alternative blank strata reported separately"
+    ],
+    "secondaryMultiplicity": "Within each focus type, exploratory p-values use Benjamini-Hochberg FDR 0.10; effect sizes and intervals remain primary reporting. All-type sentinels receive no p-values.",
+    "powerQualification": "Forty-six independent passage clusters per focus type is powered only for large effects. The design must report its achieved interval width and cannot relabel a non-significant result as equivalence."
+  },
+  "blindedReview": {
+    "raters": 2,
+    "independence": "Two English-exam experts who did not generate or implement the candidate policies; no discussion before forms are sealed.",
+    "stage1": "Solve without stored key, policy, plan, model, phase, cost, validator output, or paired-item identity; record all independently valid answers and V1-V3 evidence.",
+    "stage2": "After stage1 sealing, inspect stored key and explanation to score V4-V5, C1-C6, type-specific intent/shortcut evidence, and final A/B/C/F.",
+    "adjudication": "A third expert adjudicates every grade/answer/V disagreement, every fatalFalseAcceptance, and a seed-fixed 20% stratified sample of concordant items. Adjudication reasons are immutable and item-specific.",
+    "reliability": {
+      "binaryFatal": "Gwet AC1, Cohen kappa, raw agreement, positive/negative agreement",
+      "ordinalGrade": "Krippendorff alpha with ordinal distance plus weighted kappa",
+      "craftAxes": "two-way random absolute-agreement ICC with bootstrap interval",
+      "minimumForUnqualifiedConfirmatoryLabel": "fatal AC1 >=0.70 and ordinal alpha >=0.67",
+      "failureRule": "If either threshold fails, third-rate all C1 items; report the reliability failure and treat non-adjudicated analyses as invalid."
+    },
+    "blindPacketRule": "Hash a public blind packet and a separately access-controlled sealed map. Same-passage and policy pairs must be separated in review order. Raters cannot see generator logs until all judgments are sealed."
+  },
+  "resourceCaps": {
+    "status": "PROVISIONAL_NOT_AUTHORIZATION_PRICE_RECAPTURE_AND_PROVIDER_AUDIT_REQUIRED",
+    "pricingSnapshot": {
+      "artifact": "experiments/question-quality-20260715/pricing/openrouter-pricing-snapshot.json",
+      "artifactSha256": "4b8c0cf36d3bca226e6ce824fa566ef96e496c384cb37256a987247332cc73e3",
+      "embeddedSnapshotSha256": "9e5557f0fa0c69105ade2668a1c84468b1ab8644b8adab167a8507cdb2a17869",
+      "fetchedAt": "2026-07-14T16:57:52.373Z",
+      "mustRecaptureWithinMinutesBeforeRegistrySeal": 15,
+      "policy": "Use the maximum active endpoint rate across the exact allowed provider list. If fingerprint, canonical model slug, tier threshold, fee, discount, or BYOK treatment changes, rebuild and independently verify the unopened registry; never amend a running phase."
+    },
+    "tokenCeilingsPerPhysicalCall": {
+      "inputTokens": 64000,
+      "candidateOutputTokens": 12000,
+      "designOutputTokens": 4000,
+      "solverOutputTokens": 2048,
+      "inputQualification": "64k is a proposed hard controller cap informed by the zero-call prompt census (observed lower-bound max 61,784 characters), not yet a tokenizer proof. Preflight must tokenize every sealed request and reject any request above cap before network."
+    },
+    "physicalCallCaps": {
+      "candidate": 960,
+      "design": 382,
+      "solver": 342,
+      "campaign": 1684,
+      "byModel": {"google/gemini-3.5-flash": 805, "google/gemini-3.1-pro-preview": 879}
+    },
+    "tokenCaps": {
+      "campaignInput": 107776000,
+      "campaignOutput": 13748416
+    },
+    "provisionalUsdCapsUsingStaleSnapshot": {
+      "ratePolicy": "maximum listed active endpoint rate below 200k prompt tokens",
+      "rawTokenPriceEnvelopeUsd": 602.2698624,
+      "provisionalTenPercentFeeAndOverheadEnvelopeUsd": 662.5,
+      "provisionalCampaignCapAfterPerPhaseCentRoundingUsd": 662.52,
+      "tenPercentIsProvenSufficient": false,
+      "phaseCapsUsd": {
+        "D1_ALL_TYPE_CURRENT_SENTINEL": 73.32,
+        "D2_FOCUS_PROFILE_SCREEN": 112.23,
+        "C0_FROZEN_ROBUSTNESS_GATE": 95.94,
+        "C1_FOCUS_HOLDOUT_CONFIRMATORY": 294.19,
+        "C2_ALL_TYPE_RELEASE_SENTINEL": 75.94,
+        "C3_STOCHASTIC_REPRODUCIBILITY": 10.9
+      },
+      "warning": "These are hard worst-case reservation envelopes, not forecasts or acceptable product cost. The envelope is too large to approve casually. A provider-side hard spend limit and exact overhead proof are mandatory."
+    },
+    "economicSequentialGate": "After D1 and again after D2, continue only if phase billing is fully reconciled, projected mean actual USD per attempt stays <=0.10 STANDARD and <=0.25 PREMIUM, and every challenger considered for selection meets its 1.25 cost-ratio gate. Failure burns all later allocation; no reduced sample or arm substitution is allowed.",
+    "providerSideSpendCeiling": "Required and must be <= the recaptured, recomputed campaign USD cap; local SQLite reservation alone is insufficient."
+  },
+  "killSwitches": [
+    "Any candidate slot, physical-call, input-token, output-token, phase-USD, or campaign-USD lease would exceed its sealed cap.",
+    "Any provider call occurs outside the trusted controller/custom-fetch boundary or without a whole-assignment envelope.",
+    "Any candidate response yields more than one semantic full question, lacks response-byte/parser binding, or cannot be terminally classified.",
+    "Any requested/effective/served model, canonical slug, provider, endpoint, reasoning-off field, source, prompt, schema, gate, ladder, parser, rubric, queue, or deployment hash drifts.",
+    "Any unresolved call, unknown billing, clone, parser decision, or gate decision remains at phase close.",
+    "Any SELECTED fatal false acceptance appears in C0 or C1.",
+    "Inter-rater reliability falls below the declared threshold and full third-rating cannot be completed.",
+    "The price snapshot is older than 15 minutes at seal, a provider-side spend ceiling is absent, or actual charge exceeds reservation.",
+    "A fixed source row is missing, rights/provenance fails, or actual source binding differs from the audited hash.",
+    "A user or operator requests top-up, replacement, retry replay, policy repair, or selective continuation after outcomes are visible."
+  ],
+  "executionHolds": [
+    "Fresh independent PASS for provider controller, parser binding, recovery, pricing evidence, bypass audit, and controller-owned close.",
+    "Fresh source-closed callgraph audit and exact candidate-capable stage envelopes; required even though reduced registry intentionally changes the retry estimand.",
+    "Materialize and independently audit the private source binding for all symbolic passage tokens; publish only privacy-safe hashes.",
+    "Freeze all four profile implementations plus prompt/schema/gate/solver/parser/rubric hashes before D1.",
+    "Recapture OpenRouter endpoints/prices within 15 minutes, prove overhead, recompute caps, and install a provider-side hard spend ceiling.",
+    "Create a canonical operational registry only after every above hash is final. This design file itself authorizes zero calls."
+  ],
+  "feasibilityConclusion": {
+    "originalV3Estimand": "INFEASIBLE: strict blank 59 < required queue 262; committed DB 154 < disjoint required 973.",
+    "productionParityUnder1000": "FULL-COVERAGE GUARANTEE INFEASIBLE OR UNPROVEN. A fixed sequential one-assignment-per-finalized-batch diagnostic may execute admitted rows under the full production policy if every fresh envelope fits, but coverage depends on earlier realized candidate use; unadmitted rows remain ITT failures and no production-rate claim is allowed.",
+    "reducedSingleShotEstimand": "SUPPLY_FEASIBLE_BUT_NOT_OPERATIONALLY_READY: it exactly consumes all 59 strict blanks, uses 71 of 599 focus-grammar candidates, 23 of 154 committed DB groups, and 12 explicitly separate blank-alternative passages. Provider/source/profile/pricing holds still keep API usage at 0/1,000."
+  }
+}

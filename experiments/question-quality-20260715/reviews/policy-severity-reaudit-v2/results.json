@@ -1,0 +1,611 @@
+{
+  "schemaVersion": 2,
+  "mode": "offline-zero-call-fresh-policy-severity-reaudit",
+  "repoHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "sourceSnapshotHash": "33d3650048fbb73d63925c4d718c9d0697dc1980ca763ee98d9af3b3b07ddb3a",
+  "constraints": {
+    "apiCandidatesCreated": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretsRead": 0,
+    "productionFilesEdited": 0,
+    "semanticTruthSource": "human-authored proposition-preservation labels; lexical token counts are controls only and never treated as a semantic oracle"
+  },
+  "counts": {
+    "apiCandidatesCreated": 0,
+    "activeEnglishTypes": 25,
+    "semanticRolePairs": 5,
+    "tokenBalancedPairs": 5,
+    "semanticDefectsBlocked": 0,
+    "priorSafetyFindings": 13,
+    "priorSafetyFindingsRemediated": 12,
+    "priorSafetyFindingsUnresolved": 1,
+    "stalePolicyEntriesStillWithoutEnglishEmitter": 2
+  },
+  "verdict": {
+    "overall": "BLOCK",
+    "priorImmediateRemovalAndSplitRemediation": "12/13 remediated",
+    "blockingReasons": [
+      "blank-paraphrase-correct-too-thin: prior split-required safety finding remains unresolved",
+      "BLANK_INFERENCE semantic-role preservation is not certified: actor, polarity, condition, cause, scope defect controls evade the semantic-integrity gate"
+    ],
+    "nonBlockingDebt": [
+      "blank-paraphrase-killer-giveaway-distractors: stale policy membership remains",
+      "grammar-obvious-living-lived: stale policy membership remains"
+    ]
+  },
+  "semanticIntegrityCodeDiscovery": {
+    "matchedCodes": [
+      "blank-killer-polarity-shortcut",
+      "blank-paraphrase-polarity-loss"
+    ],
+    "limit": "Name-based discovery is not itself a semantic oracle; paired proposition controls below are the behavioral evidence."
+  },
+  "semanticRoleResults": [
+    {
+      "id": "blank-semantic-actor",
+      "dimension": "actor",
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: the governing actor changes from local communities to central regulators"
+      },
+      "lexicalControl": {
+        "faithfulTokenCount": 6,
+        "defectTokenCount": 6,
+        "equal": true,
+        "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+      },
+      "faithfulIssues": [
+        {
+          "severity": "warning",
+          "code": "blank-paraphrase-too-similar",
+          "message": "PARAPHRASE blank correct option reuses most of the source span's content words; restate it more abstractly."
+        }
+      ],
+      "defectIssues": [],
+      "faithfulSemanticErrors": [],
+      "defectSemanticErrors": [],
+      "defectBlockedForSemanticIntegrity": false
+    },
+    {
+      "id": "blank-semantic-polarity",
+      "dimension": "polarity",
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: necessity is reversed into non-necessity"
+      },
+      "lexicalControl": {
+        "faithfulTokenCount": 5,
+        "defectTokenCount": 5,
+        "equal": true,
+        "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+      },
+      "faithfulIssues": [],
+      "defectIssues": [],
+      "faithfulSemanticErrors": [],
+      "defectSemanticErrors": [],
+      "defectBlockedForSemanticIntegrity": false
+    },
+    {
+      "id": "blank-semantic-condition",
+      "dimension": "condition",
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: an only-when condition is changed into an even-when concession"
+      },
+      "lexicalControl": {
+        "faithfulTokenCount": 9,
+        "defectTokenCount": 9,
+        "equal": true,
+        "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+      },
+      "faithfulIssues": [],
+      "defectIssues": [],
+      "faithfulSemanticErrors": [],
+      "defectSemanticErrors": [],
+      "defectBlockedForSemanticIntegrity": false
+    },
+    {
+      "id": "blank-semantic-cause",
+      "dimension": "cause",
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: the causal direction is reversed"
+      },
+      "lexicalControl": {
+        "faithfulTokenCount": 7,
+        "defectTokenCount": 7,
+        "equal": true,
+        "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+      },
+      "faithfulIssues": [],
+      "defectIssues": [],
+      "faithfulSemanticErrors": [],
+      "defectSemanticErrors": [],
+      "defectBlockedForSemanticIntegrity": false
+    },
+    {
+      "id": "blank-semantic-scope",
+      "dimension": "scope",
+      "referenceJudgment": {
+        "faithful": "accept",
+        "defect": "block: limited scope is broadened across quantity and setting"
+      },
+      "lexicalControl": {
+        "faithfulTokenCount": 9,
+        "defectTokenCount": 9,
+        "equal": true,
+        "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+      },
+      "faithfulIssues": [],
+      "defectIssues": [],
+      "faithfulSemanticErrors": [],
+      "defectSemanticErrors": [],
+      "defectBlockedForSemanticIntegrity": false
+    }
+  ],
+  "narrowPolarityPositiveControl": {
+    "faithful": null,
+    "defect": {
+      "code": "blank-paraphrase-polarity-loss",
+      "message": "PARAPHRASE blank loses the source resistance/negation relation; it turns resisting reduction into performing reduction."
+    },
+    "expectedDefectCode": "blank-paraphrase-polarity-loss",
+    "interpretation": "positive control proves the existing polarity gate is alive, but only for its narrow resist-the-temptation-to-reduce template"
+  },
+  "tokenProxyCollision": {
+    "faithfulCompression": {
+      "code": "blank-paraphrase-correct-too-thin",
+      "message": "KILLER PARAPHRASE blank should preserve a multi-part source idea, not collapse it into a thin generic phrase."
+    },
+    "genericMeaningLoss": {
+      "code": "blank-paraphrase-correct-too-thin",
+      "message": "KILLER PARAPHRASE blank should preserve a multi-part source idea, not collapse it into a thin generic phrase."
+    },
+    "policy": {
+      "shipFirstWarning": true,
+      "relaxedBlocking": false,
+      "salvageRelaxable": true
+    },
+    "conclusion": "the same token-thinness code fires for a plausible faithful compression and a generic meaning-loss phrase; it cannot certify semantic roles"
+  },
+  "priorAuditComparison": [
+    {
+      "priorCode": "blank-paraphrase-subject-slot-mismatch",
+      "priorClass": "IMMEDIATE_REMOVAL",
+      "replacementCode": "blank-paraphrase-subject-slot-mismatch",
+      "evidence": [
+        {
+          "severity": "error",
+          "code": "blank-paraphrase-subject-slot-mismatch",
+          "message": "PARAPHRASE blank uses a process-like gerund phrase in a task/challenge subject slot; use a compact noun phrase such as the central challenge/task."
+        }
+      ],
+      "remediated": true
+    },
+    {
+      "priorCode": "topic-option-language",
+      "priorClass": "IMMEDIATE_REMOVAL",
+      "replacementCode": "topic-option-language",
+      "evidence": [
+        {
+          "severity": "error",
+          "code": "topic-option-language",
+          "message": "TOPIC options should be English phrases for this language setting."
+        }
+      ],
+      "remediated": true
+    },
+    {
+      "priorCode": "implied-meaning-option-language",
+      "priorClass": "IMMEDIATE_REMOVAL",
+      "replacementCode": "implied-meaning-option-language",
+      "evidence": {
+        "englishContract": [
+          {
+            "severity": "error",
+            "code": "implied-meaning-option-language",
+            "message": "IMPLIED_MEANING options must be English-only; Korean text was found in an option."
+          }
+        ],
+        "koreanSettingControl": [
+          {
+            "severity": "warning",
+            "code": "implied-meaning-option-language",
+            "message": "IMPLIED_MEANING options should be Korean statements for this language setting."
+          }
+        ]
+      },
+      "remediated": true
+    },
+    {
+      "priorCode": "blank-explanation-step-numbering",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "blank-explanation-narrative-circled-numbering",
+      "evidence": {
+        "defect": [
+          {
+            "severity": "warning",
+            "code": "blank-explanation-step-numbering",
+            "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+          },
+          {
+            "severity": "error",
+            "code": "blank-explanation-narrative-circled-numbering",
+            "message": "Explanation uses two or more circled option digits as narrative/discourse step numbers. Replace those step labels with 먼저/이어서/따라서 and reserve ①~⑤ strictly for option references."
+          }
+        ],
+        "legitimateControl": []
+      },
+      "remediated": true
+    },
+    {
+      "priorCode": "blank-paraphrase-answer-not-transformed",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "blank-paraphrase-correct-residual-visible",
+      "evidence": {
+        "defect": [
+          {
+            "severity": "error",
+            "code": "blank-paraphrase-correct-residual-visible",
+            "message": "The paraphrased correct option \"shared trust\" remains verbatim in passageWithBlank (answer leak). Rewrite the correct option or choose a carrier where the answer wording is not visible."
+          }
+        ],
+        "legitimateControl": []
+      },
+      "remediated": true
+    },
+    {
+      "priorCode": "blank-paraphrase-correct-too-thin",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": null,
+      "evidence": {
+        "semanticRoleResults": [
+          {
+            "id": "blank-semantic-actor",
+            "dimension": "actor",
+            "referenceJudgment": {
+              "faithful": "accept",
+              "defect": "block: the governing actor changes from local communities to central regulators"
+            },
+            "lexicalControl": {
+              "faithfulTokenCount": 6,
+              "defectTokenCount": 6,
+              "equal": true,
+              "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+            },
+            "faithfulIssues": [
+              {
+                "severity": "warning",
+                "code": "blank-paraphrase-too-similar",
+                "message": "PARAPHRASE blank correct option reuses most of the source span's content words; restate it more abstractly."
+              }
+            ],
+            "defectIssues": [],
+            "faithfulSemanticErrors": [],
+            "defectSemanticErrors": [],
+            "defectBlockedForSemanticIntegrity": false
+          },
+          {
+            "id": "blank-semantic-polarity",
+            "dimension": "polarity",
+            "referenceJudgment": {
+              "faithful": "accept",
+              "defect": "block: necessity is reversed into non-necessity"
+            },
+            "lexicalControl": {
+              "faithfulTokenCount": 5,
+              "defectTokenCount": 5,
+              "equal": true,
+              "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+            },
+            "faithfulIssues": [],
+            "defectIssues": [],
+            "faithfulSemanticErrors": [],
+            "defectSemanticErrors": [],
+            "defectBlockedForSemanticIntegrity": false
+          },
+          {
+            "id": "blank-semantic-condition",
+            "dimension": "condition",
+            "referenceJudgment": {
+              "faithful": "accept",
+              "defect": "block: an only-when condition is changed into an even-when concession"
+            },
+            "lexicalControl": {
+              "faithfulTokenCount": 9,
+              "defectTokenCount": 9,
+              "equal": true,
+              "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+            },
+            "faithfulIssues": [],
+            "defectIssues": [],
+            "faithfulSemanticErrors": [],
+            "defectSemanticErrors": [],
+            "defectBlockedForSemanticIntegrity": false
+          },
+          {
+            "id": "blank-semantic-cause",
+            "dimension": "cause",
+            "referenceJudgment": {
+              "faithful": "accept",
+              "defect": "block: the causal direction is reversed"
+            },
+            "lexicalControl": {
+              "faithfulTokenCount": 7,
+              "defectTokenCount": 7,
+              "equal": true,
+              "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+            },
+            "faithfulIssues": [],
+            "defectIssues": [],
+            "faithfulSemanticErrors": [],
+            "defectSemanticErrors": [],
+            "defectBlockedForSemanticIntegrity": false
+          },
+          {
+            "id": "blank-semantic-scope",
+            "dimension": "scope",
+            "referenceJudgment": {
+              "faithful": "accept",
+              "defect": "block: limited scope is broadened across quantity and setting"
+            },
+            "lexicalControl": {
+              "faithfulTokenCount": 9,
+              "defectTokenCount": 9,
+              "equal": true,
+              "certificationLimit": "equal token counts control surface length only; they do not certify proposition preservation"
+            },
+            "faithfulIssues": [],
+            "defectIssues": [],
+            "faithfulSemanticErrors": [],
+            "defectSemanticErrors": [],
+            "defectBlockedForSemanticIntegrity": false
+          }
+        ],
+        "tokenProxyResult": {
+          "faithfulCompression": {
+            "code": "blank-paraphrase-correct-too-thin",
+            "message": "KILLER PARAPHRASE blank should preserve a multi-part source idea, not collapse it into a thin generic phrase."
+          },
+          "genericMeaningLoss": {
+            "code": "blank-paraphrase-correct-too-thin",
+            "message": "KILLER PARAPHRASE blank should preserve a multi-part source idea, not collapse it into a thin generic phrase."
+          },
+          "policy": {
+            "shipFirstWarning": true,
+            "relaxedBlocking": false,
+            "salvageRelaxable": true
+          },
+          "conclusion": "the same token-thinness code fires for a plausible faithful compression and a generic meaning-loss phrase; it cannot certify semantic roles"
+        },
+        "semanticIntegrityCodes": [
+          "blank-killer-polarity-shortcut",
+          "blank-paraphrase-polarity-loss"
+        ]
+      },
+      "remediated": false
+    },
+    {
+      "priorCode": "grammar-keypoint-choice-mismatch",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "grammar-keypoint-nonexistent-label",
+      "evidence": {
+        "ghostKeypoint": "Grammar keyPoint 2 references (F), but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice.",
+        "metadataDriftKeypoint": "Grammar keyPoints are not grounded in this item's actual choices: keyPoint 1 (b, pointCode e) does not describe that choice's grammar topic — generic filler points are forbidden. Rewrite exactly 3 key points, each starting with a real underline label, the first covering the answer."
+      },
+      "remediated": true
+    },
+    {
+      "priorCode": "grammar-nonstandard-terminology",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "grammar-terminology-error / grammar-terminology-register",
+      "evidence": {
+        "terminologyError": "Grammar explanation/keyPoints uses an incorrect grammar term ('전사구'); replace it with the correct school-grammar term: '전사구'→'전치사구(전치사+명사)'.",
+        "terminologyRegister": "Grammar explanation/keyPoints uses specialist register ('통사적으로'); prefer student-facing school-grammar wording: '통사적으로'→'문장 구조상'."
+      },
+      "remediated": true
+    },
+    {
+      "priorCode": "sentence-order-given-too-long",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "sentence-order-given-contains-paragraph-label",
+      "evidence": [
+        {
+          "severity": "error",
+          "code": "sentence-order-given-contains-paragraph-label",
+          "message": "SENTENCE_ORDER givenSentence appears to contain paragraph labels; split given and (A)/(B)/(C) separately."
+        }
+      ],
+      "remediated": true
+    },
+    {
+      "priorCode": "sentence-order-paragraph-too-short",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "sentence-order-empty-paragraph",
+      "evidence": {
+        "empty": [
+          {
+            "severity": "error",
+            "code": "sentence-order-empty-paragraph",
+            "message": "SENTENCE_ORDER paragraph (B) is empty. Provide the complete paragraph text."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-short",
+            "message": "SENTENCE_ORDER paragraph (B) must contain at least 2 sentences, got 0."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-thin",
+            "message": "SENTENCE_ORDER paragraph (B) is too short (0 words)."
+          }
+        ],
+        "formatOnly": [
+          {
+            "severity": "error",
+            "code": "sentence-order-empty-paragraph",
+            "message": "SENTENCE_ORDER paragraph (B) is empty. Provide the complete paragraph text."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-short",
+            "message": "SENTENCE_ORDER paragraph (B) must contain at least 2 sentences, got 0."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-thin",
+            "message": "SENTENCE_ORDER paragraph (B) is too short (0 words)."
+          }
+        ],
+        "shortControl": [
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-short",
+            "message": "SENTENCE_ORDER paragraph (B) must contain at least 2 sentences, got 1."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-thin",
+            "message": "SENTENCE_ORDER paragraph (B) is too short (7 words)."
+          }
+        ]
+      },
+      "remediated": true
+    },
+    {
+      "priorCode": "sentence-order-paragraph-too-thin",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "sentence-order-empty-paragraph",
+      "evidence": {
+        "empty": [
+          {
+            "severity": "error",
+            "code": "sentence-order-empty-paragraph",
+            "message": "SENTENCE_ORDER paragraph (B) is empty. Provide the complete paragraph text."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-short",
+            "message": "SENTENCE_ORDER paragraph (B) must contain at least 2 sentences, got 0."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-thin",
+            "message": "SENTENCE_ORDER paragraph (B) is too short (0 words)."
+          }
+        ],
+        "formatOnly": [
+          {
+            "severity": "error",
+            "code": "sentence-order-empty-paragraph",
+            "message": "SENTENCE_ORDER paragraph (B) is empty. Provide the complete paragraph text."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-short",
+            "message": "SENTENCE_ORDER paragraph (B) must contain at least 2 sentences, got 0."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-thin",
+            "message": "SENTENCE_ORDER paragraph (B) is too short (0 words)."
+          }
+        ],
+        "shortControl": [
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-short",
+            "message": "SENTENCE_ORDER paragraph (B) must contain at least 2 sentences, got 1."
+          },
+          {
+            "severity": "error",
+            "code": "sentence-order-paragraph-too-thin",
+            "message": "SENTENCE_ORDER paragraph (B) is too short (7 words)."
+          }
+        ]
+      },
+      "remediated": true
+    },
+    {
+      "priorCode": "summary-mc-awkward-collocation",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "summary-mc-correct-completion-ungrammatical",
+      "evidence": {
+        "defect": [
+          {
+            "severity": "error",
+            "code": "summary-mc-correct-completion-ungrammatical",
+            "message": "SUMMARY_COMPLETE_MC correct pair produces a high-confidence ungrammatical completion: equity to learning."
+          },
+          {
+            "severity": "warning",
+            "code": "summary-mc-awkward-collocation",
+            "message": "SUMMARY_COMPLETE_MC filled summary has an awkward English collocation: equity to learning."
+          }
+        ],
+        "grammaticalControl": [
+          {
+            "severity": "warning",
+            "code": "summary-mc-awkward-collocation",
+            "message": "SUMMARY_COMPLETE_MC filled summary has an awkward English collocation: question of access to learning."
+          }
+        ]
+      },
+      "remediated": true
+    },
+    {
+      "priorCode": "summary-mc-direction-frame",
+      "priorClass": "SPLIT_REQUIRED",
+      "replacementCode": "summary-mc-missing-direction / summary-mc-direction-task-mismatch",
+      "evidence": {
+        "missing": [
+          {
+            "severity": "error",
+            "code": "summary-mc-missing-direction",
+            "message": "SUMMARY_COMPLETE_MC is missing a student-facing task direction."
+          }
+        ],
+        "competingTask": [
+          {
+            "severity": "error",
+            "code": "summary-mc-direction-task-mismatch",
+            "message": "SUMMARY_COMPLETE_MC direction asks students to solve a grammar task instead of completing a summary."
+          }
+        ],
+        "validWithoutLabels": [
+          {
+            "severity": "warning",
+            "code": "summary-mc-direction-frame",
+            "message": "SUMMARY_COMPLETE_MC direction must ask for the best words for summary blanks (A), (B)."
+          }
+        ]
+      },
+      "remediated": true
+    }
+  ],
+  "stalePolicyComparison": [
+    {
+      "code": "blank-paraphrase-killer-giveaway-distractors",
+      "stillNoEnglishQualityEmitter": true,
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true
+      }
+    },
+    {
+      "code": "grammar-obvious-living-lived",
+      "stillNoEnglishQualityEmitter": true,
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true
+      }
+    }
+  ],
+  "priorArtifact": {
+    "inventoryHash": "89baf2d3ea4fd6804d9d2e822fb24e03987df467f2e4584a6e2f3a08940e8b8a",
+    "auditHash": "e3d0731723eedf43847d08c2e6e93e7502646eb8a9481a8df7050ebed863d6c4"
+  }
+}

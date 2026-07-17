@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) are",
+      "verdict": "correct",
+      "reason": "진짜 주어는 복수명사 'all their attempts'이다. 'to discover this information'은 attempts를 수식하는 to부정사구이며, 동사 직전의 단수명사 'this information'은 근접 유인물(attractor)일 뿐 주어가 아니다. 따라서 복수 수일치 'are met'(수동태)은 정문. attempts(복수) → are: 형식적으로 성립."
+    },
+    {
+      "label": "(B) them",
+      "verdict": "correct",
+      "reason": "'tell + 간접목적어 + 직접목적어' 4형식 구조에서 them은 간접목적어 자리의 목적격 대명사. 지시 대상은 앞 문장들의 복수 선행사 'people who have been adopted / adoptees'로 수·격 모두 일치. 재귀형(themselves)이 요구될 환경(주어=adoption officials와 동일 지시)도 아니므로 정문."
+    },
+    {
+      "label": "(C) desperate",
+      "verdict": "correct",
+      "reason": "관계절 'who are __ to find...'에서 be동사의 보어 자리이므로 형용사가 요구된다. desperate(형용사) + to부정사('be desperate to do' = ~하기를 간절히 원하다)는 표준 결합. 부사 desperately였다면 보어 자리에 부사가 와서 비문이 되었을 것. 정문."
+    },
+    {
+      "label": "(D) what",
+      "verdict": "correct",
+      "reason": "자유(융합) 관계대명사 what이 이끄는 명사절 'what they want to know'가 find의 목적어로 기능한다. 절 내부적으로 what은 know의 목적어 공백을 채운다(they want to know x). 선행사가 없으므로 that/which로는 대체 불가하고, 두 자리(find의 목적어 + know의 목적어)를 동시에 만족시키는 what이 유일하게 적법하다. 정문."
+    },
+    {
+      "label": "(E) find",
+      "verdict": "incorrect",
+      "reason": "'devote A to B' 구문에서 to는 전치사이므로 B 자리에는 명사/동명사가 와야 한다: devote all their time and energy to finding.... 원형 find를 쓰면 to가 부정사 표지로 재해석되어야 하는데, devote는 [devote NP to NP] 논항 구조를 요구하는 타동사여서 to구가 목적 부사구(in order to find)로 빠져나가면 devote의 필수 to-논항이 결핍되어 비문이 된다. 대안 해석(목적의 to부정사) 성립 여부를 적극 검토했으나, 'be willing to devote all their time and energy' 단독으로는 devote의 하위범주화(subcategorization)가 충족되지 않아 구제 불가. 따라서 find → finding이 요구되며 이 밑줄이 어법상 틀렸다."
+    }
+  ],
+  "note": "지문 논리·문법 모두에서 (E)만 유일하게 비문. (A)는 수일치 함정(근접 단수명사 this information), (D)는 관계사 함정(what vs that)이지만 둘 다 형식적으로 정문임을 증명 가능. 복수 정답 소지 없음. 부차적 관찰: 'find more about their origins'는 관용상 'find out more'가 더 자연스럽지만 이는 어법 오류가 아닌 스타일 문제이며, 출제 포인트(전치사 to + 동명사)와 별개."
+}

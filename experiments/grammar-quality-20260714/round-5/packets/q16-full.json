@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20150311-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 112
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=g  (B):ANS=h  (C):dec=k  (D):dec=b  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 75,
+        "relPos": 0.121,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 236,
+        "relPos": 0.38,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 276,
+        "relPos": 0.444,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 303,
+        "relPos": 0.488,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 448,
+        "relPos": 0.721,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.721,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Some people need money more than we do. For example, some people have lost their homes due to natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family to donate money to a charity instead of buying us presents. I know that some kids might not want to give up their birthday presents, and I understand. However, remember that we can live without new toys or games more easily than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "their",
+        "isError": false,
+        "errorExpression": "their",
+        "surroundingText": "some people have lost their homes due to natural disasters",
+        "pointCode": "g"
+      },
+      {
+        "label": "(B)",
+        "expression": "to donate",
+        "isError": true,
+        "correction": "to donate",
+        "errorExpression": "donate",
+        "surroundingText": "let's tell our friends and family to donate money to a charity instead of",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "buying",
+        "isError": false,
+        "errorExpression": "buying",
+        "surroundingText": "to a charity instead of buying us presents.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "I know that some kids might not want to give up",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "more easily",
+        "isError": false,
+        "errorExpression": "more easily",
+        "surroundingText": "we can live without new toys or games more easily than someone",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "their"
+      },
+      {
+        "label": "(B)",
+        "text": "donate"
+      },
+      {
+        "label": "(C)",
+        "text": "buying"
+      },
+      {
+        "label": "(D)",
+        "text": "that"
+      },
+      {
+        "label": "(E)",
+        "text": "more easily"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "앞서 언급된 복수 명사인 some people을 지칭하므로, 소유격 대명사 'their'는 어법상 옳습니다.",
+      "(C)": "전치사 instead of의 목적어로 준동사가 올 때 동명사 형태를 취해야 하므로 'buying'은 어법상 옳습니다.",
+      "(D)": "타동사 know의 목적어로 쓰이는 명사절을 이끌고 뒤에 완전한 절이 이어지므로, 접속사 'that'은 어법상 옳습니다.",
+      "(E)": "조동사를 수반한 일반동사구 can live를 수식하므로, 부사의 비교급인 'more easily'는 어법상 옳습니다."
+    },
+    "explanation": "제안문 let's tell 뒤에 목적어(our friends and family)가 오고, 그 뒤에 목적격보어가 이어지는 5형식 문장 골격입니다. 동사 tell은 목적격보어로 to부정사를 취하는 대표적인 동사입니다. 따라서 동사원형의 형태인 donate는 이 자리에 올 수 없으며, 'to donate'로 고쳐야 합니다. 사역동사이거나 지각동사가 아닌 일반적인 5형식 동사가 쓰였을 때의 목적격보어 형태를 명증하게 가려내야 하는 함정입니다.",
+    "keyPoints": [
+      "(B) 목적격보어 형태 — 5형식 동사 tell 뒤의 목적격보어로 to부정사 요구",
+      "(D) 명사절 접속사 — 타동사의 목적어 자리에 불완전한 뼈대 없는 완전한 절을 이끄는 접속사 that",
+      "(E) 형용사 vs. 부사 — 문맥 속 일반동사 live의 수식어로 쓰인 부사의 적합성"
+    ],
+    "tags": [
+      "어법",
+      "5형식 문장구조",
+      "목적격 보어",
+      "동명사",
+      "명사절 접속사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Some people need money more than we do. For example, some people have lost __(A) their__ homes due to natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family __(B) donate__ money to a charity instead of __(C) buying__ us presents. I know __(D) that__ some kids might not want to give up their birthday presents, and I understand. However, remember that we can live without new toys or games __(E) more easily__ than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

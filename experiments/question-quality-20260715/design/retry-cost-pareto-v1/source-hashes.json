@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "sha256",
+  "gitHeadAtStudy": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "sealedTopologyAuditId": "current-callgraph-topology-audit-v2-20260715",
+  "files": [
+    { "path": "experiments/question-quality-20260715/reviews/current-callgraph-topology-audit-v2/README.md", "sha256": "c2fd49c95c117bb3f43b5e6cc046901e517c2f7efb40a898628c2426b412a60d" },
+    { "path": "experiments/question-quality-20260715/reviews/current-callgraph-topology-audit-v2/envelope.json", "sha256": "26eab28ca3b13d01a5a8c39d1ad3378d9a22eb0110f0bab79666bb698f62a3f8" },
+    { "path": "experiments/question-quality-20260715/reviews/current-callgraph-topology-audit-v2/source-files.json", "sha256": "daabfd2f5674d2e8f8189b3f80c8cec22ca7c9bc54dd3637cc24098632ffb460" },
+    { "path": "experiments/question-quality-20260715/reviews/current-callgraph-topology-audit-v2/verify.mjs", "sha256": "c998567c70a4f60fe60e76f356a6c654831211c0fb8e06abb0307aa5ebb850fc" },
+    { "path": "experiments/question-quality-20260715/reviews/current-callgraph-topology-audit-v2/MANIFEST.sha256", "sha256": "adcb8d26ead9b90c1239a01996afaebad3bb36634dc789f1e7e760a7437b6c79" },
+    { "path": "experiments/question-quality-20260715/pricing/openrouter-pricing-snapshot.json", "sha256": "4b8c0cf36d3bca226e6ce824fa566ef96e496c384cb37256a987247332cc73e3" },
+    { "path": "src/lib/concurrency-config.ts", "sha256": "8ccc1df4149d1a0bb4ddfcff63d1f4c78663827c56481d8a942341d91dc25d15" },
+    { "path": "src/lib/question-generation-llm.ts", "sha256": "90776f0304ef9fddcbb60a92563904f8ce3213b26036d8357b3eeedb7ccf5c46" },
+    { "path": "src/lib/question-type-generation-settings/dispatchers.ts", "sha256": "b52950f573546de0a144f2e9c89a6def29511f726a182f224371666fa14e4a8e" },
+    { "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts", "sha256": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2" },
+    { "path": "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts", "sha256": "648692ad0708d941d024b67d15c6d510db0f61f2fc9674f0f98316b4f63a16b9" },
+    { "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts", "sha256": "c1eda5cc888700c432296bfd71d11e4d7ba090e906f89b0cedaf001ad19f96df" },
+    { "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts", "sha256": "97fb3a3d929f834267089bedaa84567a7496175e963ed31888b0e1f4170e81d6" },
+    { "path": "src/trigger/workbench-question-generation.ts", "sha256": "cfc44b01c039c095759ffa1204f8e77b9cf5d62e6b1386ba9ff8d2a6beaa66be" },
+    { "path": "src/lib/question-generation-assignment-budget-policy.ts", "sha256": "2d0674e224fa182b0d16bfa8b8443b65987763c3022340bb9e27db56934dda85" },
+    { "path": "src/lib/question-generation-assignment-budget.ts", "sha256": "7effc7b7fc954f5b84936a32fa28302eec08927e9a255cee9f6d5fec20ef4f48" },
+    { "path": "src/lib/atlas-production-assignment-fetch-boundary.ts", "sha256": "aa042ea9181f6b5eb256bd4361738cc948c1bc41f27866b75bb9f2728a6b36d8" },
+    { "path": "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts", "sha256": "b8c8181691f897bfc7cc782d50efe194c2bbda91aded20a81c3ba4ed548a7b4e" },
+    { "path": "src/app/api/workbench/ai-jobs/question-generation/route.ts", "sha256": "49a407b71ad40957cff009953153ccd368705c1afad6d4e1ba01657272097f76" }
+  ]
+}

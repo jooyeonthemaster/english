@@ -1,0 +1,38 @@
+{
+  "pid": "P019",
+  "finalV2": false,
+  "winningAnswer": "NONE — 선언 정답 (D) 불성립 (다섯 밑줄 모두 어법상 성립하여 '어법상 틀린 것'이 존재하지 않음)",
+  "reason": "감사자의 V2=false 판정을 지지한다. 쟁점 밑줄 (D) 'would have acted'는 형태상 완전한 조건법 완료(would + have + p.p.)이며, 시간 부사구 'by the end of the hour'(by + 시점)는 완료상을 표준적으로 허용·유도하므로 직전의 'would have forgotten'과의 완료 병렬은 오히려 자연스럽다. 두 블라인드 솔버가 (D)를 오류로 판정한 근거('행동이 그 시점에 시작·지속되므로 완료상 불가')는 완료상 의미론을 과도하게 좁힌 것이다: 존재적/기동적 완료 독해('한 시간이 끝날 무렵이면 이미 평소대로 행동했을 것 = 평소 행동으로의 복귀가 이미 일어났을 것') 하에서 활동동사 act의 완료는 사건 종결을 요구하지 않고, 방식 비교절 'as he would [act] in old clothes'와도 충돌하지 않으며(cf. 'By midnight he had behaved as he always does'), 역접 but 대조도 온전히 유지된다. 즉 원문 'would be acting'(기준 시점의 진행 상태)과 변형형 'would have acted'(기준 시점까지의 발생)의 차이는 상(aspect) 뉘앙스 선호이지 명확한 어법 오류가 아니다. 수능 어법 문항의 판정 기준(문맥이 한 형태만을 강제하는 결정적 문법 판단)에 미달한다. 나머지 밑줄 (A)(B)(C)(E)는 전수 재파싱 결과 모두 정문으로 솔버 누락도 없다. 따라서 '어법상 틀린 것'이 지문에 존재하지 않아 정답 유일성(V2)이 붕괴한다. 두 솔버의 (D) 수렴은 강제된 문법 오류 판정이 아니라 변형 흔적 탐지 + 담화 선호에 기반한 수렴으로 본다(감사자도 동일 진단). 부수 증거로, full 해설 자체가 '(D)는 어법상 완벽한 문장 구조'라고 자인하고 markedExpressions의 (D) expression/surroundingText가 렌더형(would have acted)이 아닌 원문형(would be acting)으로 남아 있어 오류 지정 자체가 내부적으로도 깨져 있다.",
+  "perDispute": [
+    {
+      "label": "(D)",
+      "claim": "감사자: 표시형 'would have acted'는 문맥상 문법적으로 성립하므로 어법 오류가 아니다 (vs 솔버 2인: 상 논리상 비문이며 'would act/would be acting'만 가능)",
+      "verdict": "감사자 판정 지지 — 'would have acted'는 해당 문맥에서 문법적으로 성립",
+      "evidence": "① 형태: would + have + p.p.는 완전한 정문 형태. ② 부사구 정합: 'by + 시점'(by the end of the hour)은 완료상의 표준 유도 환경이므로 'would have forgotten ... and would have acted'의 완료 병렬은 자연스럽다 (cf. 'He promised to change, but by the end of the month he would have forgotten his promise and would have acted just as he always did' — 자연스러운 영어). ③ 솔버 논거 반박: 완료상은 존재적/기동적 독해에서 사건의 종결을 요구하지 않는다. '한 시간이 끝날 무렵이면 이미 평소 행동으로 복귀해 있었을 것'이라는 독해가 성립하며, 행동이 그 이후 지속되는 것과 모순되지 않는다. ④ 비교절 'as he would [act] in old clothes'는 방식 비교로서 주절의 완료상과 충돌하지 않는다 (cf. 'By midnight he had behaved as he always does at parties'). ⑤ but 대조('잠깐은 얌전 → 한 시간 뒤엔 이미 평소대로')도 완료 독해에서 온전히 유지된다. ⑥ 마지막 문장의 simple form 병렬('might soon change ... and be no more noisy')은 담화 스타일 선호의 근거일 뿐 (D)를 비문으로 만드는 강제 요인이 아니다. 결론: 원문형과의 차이는 aspect 선호이지 어법 오류가 아니므로 (D)는 정답으로 불성립."
+    },
+    {
+      "label": "(A)",
+      "claim": "디코이 — 'a child who is better dressed is better behaved'의 수일치·형용사적 분사가 정문인가",
+      "verdict": "정문 확인 (솔버·감사자 일치, 재검증 동일)",
+      "evidence": "주어 head 'a child'(단수) + 관계절 'who is better dressed' 후 정형동사 'is'; 'behaved'는 well-behaved류 형용사적 분사 보어. 수일치·구조 모두 성립."
+    },
+    {
+      "label": "(B)",
+      "claim": "디코이 — 'than he is when dressed in ordinary clothes'의 when + p.p. 축약이 정문인가",
+      "verdict": "정문 확인 (솔버·감사자 일치, 재검증 동일)",
+      "evidence": "'when (he is) dressed'의 표준적 주어+be 생략. 생략된 주어가 주절 주어 'he'와 공지시하므로 축약 조건 충족. 수동 분사 dressed(옷이 입혀진 상태)가 태 측면에서도 정확."
+    },
+    {
+      "label": "(C)",
+      "claim": "디코이 — 'who was dressed ... and whose mother stressed ...'의 소유격 관계대명사 병렬이 정문인가",
+      "verdict": "정문 확인 (솔버·감사자 일치, 재검증 동일)",
+      "evidence": "선행사 'a child'를 공유하는 관계절 병렬(who-절 and whose-절). 'whose mother'는 아이-어머니의 소유 관계를 정확히 연결하고 뒤에 완전절(mother stressed that ...)을 취하므로 소유격 관계대명사가 정확."
+    },
+    {
+      "label": "(E)",
+      "claim": "디코이 — 'while playing cowboys'의 while + 현재분사가 정문인가",
+      "verdict": "정문 확인 (솔버·감사자 일치, 재검증 동일)",
+      "evidence": "'while (he is) playing cowboys'의 주어+be 생략, 생략 주어 = 주절 주어 'the child'. 아이가 능동적으로 노는 동작이므로 현재분사가 정확하고 'play cowboys'(cf. play house)는 관용적 역할놀이 표현."
+    }
+  ]
+}

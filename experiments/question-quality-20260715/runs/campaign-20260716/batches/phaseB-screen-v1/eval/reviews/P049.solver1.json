@@ -1,0 +1,35 @@
+{
+  "pid": "P049",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "빈칸에 넣으면 'delay difficult work to avoid early morning stress'가 되는데, 필자는 'I generally wake up energized'라며 아침형 인간임을 밝히고 'eating my problems for breakfast'(문제를 아침에 먼저 처리) 습관을 수년간 유지했다고 했다. 미루기(procrastinate)가 오히려 하루 종일 감정 에너지를 낭비하게 만든다는 것이 지문의 핵심 논지이므로 정면 모순. 매력도는 가장 높다 — 마지막 문장 'be strategic about scheduling your difficult work later in the day'만 떼어 읽으면 '어려운 일은 나중에'로 오독할 수 있으나, 그 문장은 'If you know you are NOT a morning person'이라는 조건절로 필자와 반대 유형의 독자에게 주는 대조적 조언이다. 'So for me'의 for me가 필자 본인 사례로 한정함을 놓치면 걸려든다."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "'it is essential to tackle those stressful tasks right after waking up'는 (a) 분석적/어려운 과제는 에너지가 높을 때 하라는 도입 원리, (b) 'I generally wake up energized'(필자의 에너지 피크 = 아침), (c) 'eating my problems for breakfast' 은유, (d) 미루면 걱정으로 더 많은 에너지를 낭비한다는 경험담, (e) 마지막 문장의 대조('아침형이 아니라면 늦게 배치하라')와 모두 정합. 'those stressful tasks'의 지시어도 앞의 unhappy client, unpleasant email을 자연스럽게 받는다. 문법 결합(seam)도 'So for me, it is essential to ...'로 매끄럽다."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "동료의 도움(seek help from colleagues)이나 위임은 지문 어디에도 근거가 없다. 지문은 '언제(타이밍)' 과제를 처리하느냐의 문제이지 '누구와/누구에게' 처리하느냐의 문제가 아니다. 소재어(unpleasant client issues)만 재활용한 표면 어휘 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "'ignore minor tasks'는 필자가 비판하는 회피(avoiding it) 행동 그 자체다. 필자는 과제를 무시할수록 그것이 머리 위에 매달려(hangs over my head) 실제 처리 시간보다 더 많은 걱정 에너지를 소모한다고 했으므로 지문 논지와 정반대. 또한 문제의 과제들은 'minor'로 규정된 적도 없다. 'drain my emotional energy'라는 지문 어휘를 재활용한 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'reflect deeply on unexpected scenarios before taking action'은 필자가 스스로 결점으로 지목한 'overthink different scenarios and conversations that haven't happened yet'을 미덕으로 뒤집은 것. 지문의 처방은 숙고가 아니라 'just take care of it'(즉시 처리)이므로 정반대 방향. 지문 어휘(scenarios)를 재활용해 훑어읽기 독자를 노린 미끼."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 실제로 끌린 선지는 ①이었다. 마지막 문장이 'schedule your difficult work later in the day'로 끝나서, 결론 문장만으로 빈칸을 역산하는 습관이 있으면 ①을 고르게 된다. 그러나 그 문장은 'If you know you are not a morning person'이라는 조건 + 'So for me'와의 대조 구조(필자=아침형 → 아침에 처리 / 독자가 저녁형이면 → 늦게 처리)로, 오히려 ②를 강하게 확정해 주는 장치다. 미끼 설계(①=마지막 문장 오독, ④·⑤=지문 어휘 재활용+논지 반전)가 수능 문법에 충실하고, 정답은 ② 하나로 유일하게 수렴한다. 빈칸 seam(가주어 it + to부정사)도 5개 선지 모두 문법적으로 성립해 순수 논리 변별 문항이다."
+}

@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 7,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=d  (C):dec=f  (D):dec=b  (E):ANS=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 26,
+        "relPos": 0.033,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 123,
+        "relPos": 0.158,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 450,
+        "relPos": 0.577,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 517,
+        "relPos": 0.663,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 683,
+        "relPos": 0.876,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.876,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "working",
+        "isError": false,
+        "correction": "working",
+        "errorExpression": "working",
+        "surroundingText": "Suppose that you are busy working on a project one day and you have no time to buy lunch.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "shows",
+        "isError": false,
+        "correction": "shows",
+        "errorExpression": "shows",
+        "surroundingText": "However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "confused",
+        "isError": false,
+        "correction": "confused",
+        "errorExpression": "confused",
+        "surroundingText": "However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\"",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "him knowing",
+        "isError": true,
+        "correction": "him knowing",
+        "errorExpression": "he knowing",
+        "surroundingText": "The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about he knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "working"
+      },
+      {
+        "label": "(B)",
+        "text": "shows"
+      },
+      {
+        "label": "(C)",
+        "text": "confused"
+      },
+      {
+        "label": "(D)",
+        "text": "what"
+      },
+      {
+        "label": "(E)",
+        "text": "he knowing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'be busy -ing' 관용 표현에서 현재분사 working이 적절하게 쓰였으며, busy의 목적어 역할을 하는 분사구문 성격으로 옳습니다.",
+      "(D)": "의문형용사 what이 sandwich를 수식하며 know의 목적어절을 이끄는 구조로, '어떤 종류의 샌드위치'라는 의미를 나타내는 what은 어법상 옳습니다.",
+      "(B)": "조건의 부사절(if절)에서는 미래의 일이라도 현재 시제를 사용하므로, 단수 주어 a stranger에 맞춘 shows는 수일치와 시제 모두 적절합니다.",
+      "(C)": "주어인 'you'가 당혹스러움을 느끼는 감정의 대상이므로 과거분사 형태의 형용사 confused가 보어로 쓰이는 것이 옳습니다."
+    },
+    "explanation": "전치사 about의 목적어로 knowing you too well이라는 동명사구가 사용된 구조입니다. 동명사의 동작을 수행하는 주체인 ‘의미상 주어’를 나타낼 때는 목적격(him) 또는 소유격(his) 대명사를 사용하는 것이 원칙입니다. 따라서 주격 대명사인 he knowing에서 he를 him 또는 his로 고쳐야 합니다. he는 뒤에 정동사가 오는 절의 주어로는 쓰일 수 있으나 준동사인 동명사의 주체 자리에 올 수 없습니다.",
+    "keyPoints": [
+      "(E) 동명사의 의미상 주어 — 준동사의 주체는 주격이 아닌 목적격/소유격으로 표시",
+      "(D) 의문형용사의 쓰임 — what/which가 명사를 수식하며 절을 이끄는 구조 판별",
+      "(B) 시제와 수일치 — 시간/조건 부사절 내의 현재 시제 대용 및 단수 일치 확인"
+    ],
+    "tags": [
+      "동명사",
+      "의미상 주어",
+      "수능 어법",
+      "준동사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy __(A) working__ on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger __(B) shows__ up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be __(C) confused__. You would likely think \"Who are you, and how do you know __(D) what__ kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about __(E) he knowing__ you too well, but you certainly would not give the same level of trust to a stranger."
+  }
+}

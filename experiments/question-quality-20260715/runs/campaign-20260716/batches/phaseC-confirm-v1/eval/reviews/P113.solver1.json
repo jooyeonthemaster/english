@@ -1,0 +1,35 @@
+{
+  "pid": "P113",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'focus on capturing realistic details of the rescue process' is anti-thematic: the narrator was scolded precisely for reporting realistically (leaving out the nonexistent cat). The anecdote's arc punishes accuracy, so a resolution toward realism contradicts the causal chain. Mild surface pull from the journalism setting only."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'seek strict editorial verification' has surface pull because editors appear in the passage, but the editors are the agents punishing truthful omission of the cat ('called down/scolded for being beaten'). Verification is the opposite of the lesson the reporters internalized. Grammatical seam is fine (bare VP like all options) but logic fails."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "The cat is the fabricated element: the second shipwreck 'had no cat but the other reporters... put the cat in,' and the truthful narrator was 'severely scolded for being beaten.' The only consistent conclusion is that now everyone writes the same fabricated detail (the cat) to avoid blame — this matches the classic journalism anecdote's punchline ('now we always put in a cat'). 'to avoid blame' directly mirrors the scolding motif."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'advocate for animal-friendly practices' is a pure cat-surface trap. The passage contains no animal-welfare theme; the cat is a narrative device about journalistic conformity, not advocacy. Easy reject."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Strongest distractor for skimmers: the first cat rescue was heartwarming and 'featured.' But the second wreck explicitly had no cat — the cats in later stories are inventions, so there is no real 'emotional bond between the survivors and the cats' to emphasize. The passage is about fabrication under editorial pressure, not sentiment. Rejected on re-check."
+    }
+  ],
+  "note": "Seam issue shared by all options: every option is a bare verb phrase, so 'Now when there is a shipwreck write stories...' lacks an overt subject (intended implied 'we/I'). This is a stem-formatting weakness but affects all five options identically and does not differentiate them. Logically only ③ completes the anecdote; distractor ⑤ exerts real pull on a fast read but collapses once the 'no cat' detail is recalled. Single defensible answer, high confidence."
+}

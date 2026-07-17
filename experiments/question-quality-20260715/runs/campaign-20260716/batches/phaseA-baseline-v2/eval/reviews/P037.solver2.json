@@ -1,0 +1,35 @@
+{
+  "pid": "P037",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) scribbling",
+      "verdict": "correct",
+      "reason": "지각동사 구문 'see + O + V-ing': 'seeing someone scribbling in a notebook'. someone이 scribble의 의미상 주어이고 진행 중인 동작을 나타내는 현재분사 목적보어로 정문. 원형 scribble도 가능하지만 -ing 역시 완전히 허용되는 표준 구문이므로 어법상 하자 없음."
+    },
+    {
+      "label": "(B) efficient",
+      "verdict": "correct",
+      "reason": "가주어-진주어 구문 'It is often more efficient to develop ...'. be동사의 보어 자리이므로 형용사 efficient가 옳고 부사 efficiently는 불가. 비교급 more efficient 형태도 정상. 정문."
+    },
+    {
+      "label": "(C) writing",
+      "verdict": "correct",
+      "reason": "involve는 동명사를 목적어로 취하는 동사(involve + V-ing). 'This involves writing down the key answers'는 표준 결합이며 to부정사(*involves to write)는 오히려 비문. 정문."
+    },
+    {
+      "label": "(D) be transcribed",
+      "verdict": "correct",
+      "reason": "'so that they can be transcribed easily afterwards'에서 they = the key answers(적어둔 핵심 답변). 답변은 옮겨 적는 행위의 대상이므로 수동태 can be transcribed가 옳다. 능동 can transcribe라면 목적어가 없어 비문이 된다. 조동사 can 뒤 원형 be + 과거분사 형태도 정확. 정문."
+    },
+    {
+      "label": "(E) proceeding",
+      "verdict": "incorrect",
+      "reason": "'as the interview proceeding'에서 as는 '~함에 따라/~하는 동안'의 시간·비례 접속사로, 접속사절에는 정형동사가 필요하다: as the interview proceeds. 대안 해석 검토 — (i) as를 전치사로 보고 'the interview proceeding'을 동명사구(의미상 주어 + V-ing)로 읽으면 as가 '~로서(자격)'가 되어 'edit out material as(=in the capacity of) the interview proceeding'이라는 무의미한 해석만 남는다. (ii) 독립분사구문 'the interview proceeding'은 as 없이야 성립하며, 접속사 as 뒤에는 주어+정형동사가 와야 하므로 구제 불가. (iii) 'as + 분사' 축약(as (it is) proceeding)은 주절 주어(you)와 interview가 불일치해 성립하지 않고, 여기서는 명시적 주어 the interview가 이미 있으므로 축약 구문 자체가 아니다. 따라서 형식적으로 비문이며 proceeds로 고쳐야 한다."
+    }
+  ],
+  "note": "정답은 (E) 단일. 접속사 as 뒤 정형동사 요구(proceeding → proceeds)라는 장거리 아닌 국지 규칙이지만, 절 구조 판별이 필요해 어법 포인트로 유효. 나머지 네 밑줄은 지각동사 보어, 보어 형용사, involve+동명사, 조동사 수동태로 각각 명백한 정문이어서 복수정답 여지 없음."
+}

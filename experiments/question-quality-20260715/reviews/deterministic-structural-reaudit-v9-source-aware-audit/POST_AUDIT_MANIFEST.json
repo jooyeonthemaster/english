@@ -1,0 +1,180 @@
+{
+  "manifest_version": "1.0.0",
+  "audit_id": "deterministic-structural-reaudit-v9-source-aware-audit",
+  "created_at": "2026-07-15T06:39:55.028448+09:00",
+  "hash_algorithm": "SHA-256",
+  "post_audit_stage": "source_aware_execution_complete",
+  "relocated_sealed_bundle": {
+    "relative_path": "../deterministic-structural-reaudit-v9",
+    "files": {
+      "IMMUTABILITY.md": {
+        "sha256": "fe5cf12047ca815e8c486a2dcbfb3052981a2c34688f27074a1c5b442f12e258",
+        "bytes": 1450
+      },
+      "PRE_INSPECTION_MANIFEST.json": {
+        "sha256": "2f8e98078388d74b1e3f2d84e6bab25ff337e63898cb4802e265049146aae1dc",
+        "bytes": 1819
+      },
+      "PRE_INSPECTION_SEAL.sha256": {
+        "sha256": "f2ab695a99cbeee3e9e99fa52751cf4e5e5bf30fba0c9bd0d5efea2f7fa7487c",
+        "bytes": 95
+      },
+      "PROTOCOL.md": {
+        "sha256": "6323f8d10846fd51592fa1c2ac9d8f15e1e86c9f12b2ef2d842ac6d75c40dccc",
+        "bytes": 4144
+      },
+      "author_v9_corpus.py": {
+        "sha256": "7349c929f289ae8438545dee4335ed31c98823eab8e544bef119ee04764c1b4e",
+        "bytes": 77824
+      },
+      "cases.json": {
+        "sha256": "64c8f3bdf16eafef1c8c6f11ad2a54799f2f9bcb1c1bd095800a7cebb6cd01ea",
+        "bytes": 238983
+      }
+    },
+    "aggregate_case_digest": "ffb88b27b00e632805bba8d0963d1074b7f0a65321a8c10eec2c7ceaff36fff8"
+  },
+  "production_snapshot": {
+    "repository_root": "D:/Desktop/2026project/nara",
+    "git_head": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "source_files": {
+      "src/lib/question-quality/validators/summary/mc.ts": {
+        "sha256": "ac7a906785ec43294a9f834fecb57578a284f96d1afd26e99c00c0f3abb5e271",
+        "git_status": "M src/lib/question-quality/validators/summary/mc.ts"
+      },
+      "src/lib/question-quality/validators/summary/killer-trap.ts": {
+        "sha256": "1705ad8aca1e5b6f7428d924e9f2ed94139a02a5bdca6a81be5d4fae23d09174",
+        "git_status": "clean"
+      },
+      "src/lib/question-quality/validators/grammar/shared.ts": {
+        "sha256": "f0a1727dc1786b51e3a1970cdd55de4b4ccb53b39f8a003c42829d6c151f86e6",
+        "git_status": "M src/lib/question-quality/validators/grammar/shared.ts"
+      },
+      "src/lib/question-quality/validators/sentence-order.ts": {
+        "sha256": "dad7e13cdd6f7de9b26309b016cfb82ff68d40502d23aaf1eee7d2f8099a36e8",
+        "git_status": "M src/lib/question-quality/validators/sentence-order.ts"
+      },
+      "src/lib/question-quality/core.ts": {
+        "sha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+        "git_status": "M src/lib/question-quality/core.ts"
+      },
+      "src/lib/question-quality/dispatcher.ts": {
+        "sha256": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+        "git_status": "M src/lib/question-quality/dispatcher.ts"
+      }
+    }
+  },
+  "artifacts": {
+    "AUDIT_SUMMARY.md": {
+      "sha256": "e65fc8d654fcb3427c3b7a3f3f0ff5d61d62e074bd1b303fab08b16420c9ddce",
+      "bytes": 6708,
+      "role": "public audit summary"
+    },
+    "PRE_SOURCE_INSPECTION_ACCEPTANCE.json": {
+      "sha256": "70892e29520352f2f226b8a639d7dcf0d61fefccdecb8741b38c37d90bce434d",
+      "bytes": 2608,
+      "role": "pre-source chronology and seal acceptance"
+    },
+    "results.json": {
+      "sha256": "917156746a6f4434452c29bc79284c41051a70cbf3b394ec3a43b021d724b707",
+      "bytes": 236234,
+      "role": "machine-readable per-case results"
+    },
+    "run_source_aware_audit.ts": {
+      "sha256": "3dba450da7cd09268dd791a0790e5c8c3222598705758b03172885f35aa54c04",
+      "bytes": 18793,
+      "role": "source-aware production runner"
+    },
+    "verify_source_aware_audit.py": {
+      "sha256": "a54e81b32a11fffcdd3b755837da2ea6e929dbdd40bdc4c8dddfca692ce0629c",
+      "bytes": 21191,
+      "role": "independent artifact and reexecution verifier"
+    }
+  },
+  "result_totals": {
+    "F1_SUMMARY_KEY_OPTION_COHESION": {
+      "total": 40,
+      "oracle_normal": 20,
+      "oracle_defect": 20,
+      "executed": 40,
+      "blocked": 0,
+      "confusion_matrix": {
+        "tp": 6,
+        "fn": 14,
+        "fp": 0,
+        "tn": 20
+      },
+      "accuracy_excluding_blocks": 0.65,
+      "defect_recall_excluding_blocks": 0.3,
+      "normal_specificity_excluding_blocks": 1
+    },
+    "F2_GRAMMAR_RENDERED_LABEL_REFERENCE": {
+      "total": 40,
+      "oracle_normal": 20,
+      "oracle_defect": 20,
+      "executed": 40,
+      "blocked": 0,
+      "confusion_matrix": {
+        "tp": 2,
+        "fn": 18,
+        "fp": 0,
+        "tn": 20
+      },
+      "accuracy_excluding_blocks": 0.55,
+      "defect_recall_excluding_blocks": 0.1,
+      "normal_specificity_excluding_blocks": 1
+    },
+    "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION": {
+      "total": 40,
+      "oracle_normal": 20,
+      "oracle_defect": 20,
+      "executed": 40,
+      "blocked": 0,
+      "confusion_matrix": {
+        "tp": 20,
+        "fn": 0,
+        "fp": 13,
+        "tn": 7
+      },
+      "accuracy_excluding_blocks": 0.675,
+      "defect_recall_excluding_blocks": 1,
+      "normal_specificity_excluding_blocks": 0.35
+    },
+    "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY": {
+      "total": 40,
+      "oracle_normal": 20,
+      "oracle_defect": 20,
+      "executed": 40,
+      "blocked": 0,
+      "confusion_matrix": {
+        "tp": 5,
+        "fn": 15,
+        "fp": 0,
+        "tn": 20
+      },
+      "accuracy_excluding_blocks": 0.625,
+      "defect_recall_excluding_blocks": 0.25,
+      "normal_specificity_excluding_blocks": 1
+    },
+    "OVERALL": {
+      "total": 160,
+      "oracle_normal": 80,
+      "oracle_defect": 80,
+      "executed": 160,
+      "blocked": 0,
+      "confusion_matrix": {
+        "tp": 33,
+        "fn": 47,
+        "fp": 13,
+        "tn": 67
+      },
+      "accuracy_excluding_blocks": 0.625,
+      "defect_recall_excluding_blocks": 0.4125,
+      "normal_specificity_excluding_blocks": 0.8375
+    }
+  },
+  "verification": {
+    "default": "python verify_source_aware_audit.py",
+    "with_fresh_production_reexecution": "python verify_source_aware_audit.py --rerun"
+  }
+}

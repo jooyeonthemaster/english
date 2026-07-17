@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'distance ourselves from emotional impulses through objective observation' assigns cinema the law's affect-restraining role. The passage explicitly states 'cinema expresses man's affective life' while 'the law keeps it in check'; putting distancing on the cinema side of a contrastive 'whereas' clause yields a contradiction with the stated premise. Grammatically well-formed, logically inadmissible."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'internalize social commands and adhere to civilized norms' echoes 'a regime of commands and prohibitions', which the passage attributes to the LAW. Placing it after 'whereas' (which requires the cinema pole of the law-vs-cinema contrast) collapses the contrast. Inadmissible."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'dismisses the abstract desire for truth to focus on resolving human conflicts' recycles sentence 2, but that predicate was asserted of the law, and it operates on the truth/messiness axis, not the affect-suppression axis fixed by the immediately preceding clause. A 'whereas' clause must contrast on the same axis as its main clause (law suppresses affects); this option is a non-sequitur in the slot. Inadmissible."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'co-establishes a regime of prohibitions that prevents our hidden dark drives from erupting' makes cinema a co-suppressor, i.e., the SAME function as the law. This formally voids the contrastive force of 'whereas' and contradicts the passage's explicit 'important difference'. Inadmissible."
+    },
+    {
+      "label": "⑤",
+      "verdict": "accept",
+      "reason": "'brings us face-to-face with our feelings, frequently compelling us to confront our most painful inner passions' is a direct paraphrase of 'cinema expresses man's affective life' and a true antithesis of 'the law obsessively tries to suppress affects'. It is the unique option under which the contrastive 'whereas' is logically licensed. Finite clause, clean grammatical seam. Valid."
+    }
+  ],
+  "note": "All five options are grammatically well-formed finite clauses after 'whereas', so the discrimination is purely logical. The contrast axis is fixed by the prior sentence pair ('cinema expresses man's affective life / the law keeps it in check'); only ⑤ occupies the cinema pole of that axis. Options ①②④ assign law-functions to cinema (contradiction), ③ shifts to the wrong axis (truth vs. messiness) and recycles a law-predicate (non-sequitur). No alternative construal (concessive 'whereas', ellipsis, scope ambiguity) rescues the distractors. Single defensible answer; clean item."
+}

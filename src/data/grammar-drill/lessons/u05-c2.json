@@ -1,0 +1,744 @@
+{
+  "id": "u05-c2",
+  "unitId": "u05",
+  "order": 2,
+  "title": "상관접속사 병렬",
+  "oneLiner": "both A and B, not only A but also B — 짝 신호어를 찾고 A와 B의 형태를 일치시킵니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 병렬구조(등위·상관접속사가 연결하는 항의 형태 일치)",
+      "천일문 고등 GRAMMAR — 상관접속사와 병렬구조",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 접속사(중 ●)",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L4 병렬 축 찾기",
+      "SMOAT 어법 드릴 뱅크 u05-choice(u05-c2-ch-001~012) — trapTag: correlative, prep-gerund, distant-parallel"
+    ]
+  },
+  "lenses": ["L4", "L2"],
+  "confusableWith": ["u05-c1", "u05-c3", "u05-c4"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The device not only measures air quality but also records the data automatically.",
+        "The device not only measures air quality but also recording the data automatically."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 but also 뒤의 한 단어입니다. 이 레슨을 마치면 그 자리에 어떤 형태가 와야 하는지 절차로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "상관접속사",
+      "question": "both A and B 같은 짝 표현이 대체 무엇이고, 왜 자꾸 어법 문제에 나옵니까?",
+      "plain": "두 신호어가 짝을 이루어 그 뒤의 두 항(A와 B)을 하나로 묶는 접속사입니다. both A and B, either A or B처럼 언제나 둘이 함께 움직입니다.",
+      "analogy": "젓가락은 한 짝이 둘이어야 제구실을 합니다. 상관접속사도 신호어 하나만으로는 쓰지 못하고, 반드시 정해진 짝과 함께 나와 두 항을 집어 올립니다.",
+      "whyItMatters": "짝의 뒤쪽 신호어(but also·or·nor)가 보이면, 어법 문항은 그 뒤 B의 형태를 A와 맞췄는지를 묻습니다. 판별 도구 \"병렬 축 찾기\"가 바로 여기서 작동합니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "상관접속사는 뜻만 자연스럽게 이어지면 A와 B의 형태가 달라도 됩니다.",
+      "truth": "상관접속사는 두 신호어 바로 뒤의 두 항을 같은 문법 형태로 묶는 장치입니다. 뜻이 통하더라도 A와 B의 형태가 다르면 그 자체가 어법 오류입니다. 어법 판단은 의미가 아니라 형태의 대조에서 나옵니다.",
+      "counterExample": {
+        "en": "The program not only **teaches** basic coding but also **helping** students build their own websites.",
+        "ko": "그 프로그램은 기초 코딩을 가르칠 뿐만 아니라 학생들이 자기 웹사이트를 만들도록 돕습니다.",
+        "note": "not only 뒤의 A는 시제를 가진 teaches인데 but also 뒤의 B는 helping입니다. 뜻은 통하지만 형태가 어긋나므로 helps로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "상관접속사 판별 필기",
+      "intro": "판별에 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "신호어 짝 — 둘이 함께 다닙니다",
+          "body": "both–and, either–or처럼 두 신호어가 한 짝입니다. 한쪽만 보여도 나머지 짝을 떠올려 A와 B의 경계를 잡습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "A와 B — 두 항의 형태를 맞춥니다",
+          "body": "A는 첫 신호어 바로 뒤, B는 둘째 신호어 바로 뒤에서 시작합니다. 두 항은 같은 문법 형태(품사·구조)여야 합니다.",
+          "example": {
+            "en": "The plan is **both** ambitious **and** realistic.",
+            "ko": "그 계획은 야심차면서도 현실적입니다.",
+            "note": "both 뒤의 ambitious와 and 뒤의 realistic이 모두 형용사이므로 형태가 일치합니다."
+          }
+        },
+        {
+          "head": "공유 요소 — 신호어 앞은 나눠 씁니다",
+          "body": "신호어 앞의 주어·조동사·be동사는 A와 B가 함께 쓰는 부분입니다. B 자리에 다시 넣지 않습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "from A to B — 여기서 to는 전치사입니다",
+          "body": "from–to는 접속사가 아니라 전치사 짝입니다. 전치사는 뒤에 목적어로 명사를 부르므로, 그 자리에 동사가 오면 원형이 아니라 명사 구실을 하는 동명사(-ing)입니다. 이 원리는 u05-c4에서 자세히 다룹니다.",
+          "example": {
+            "en": "Her duties range **from** training staff **to** reviewing reports.",
+            "ko": "그녀의 업무는 직원을 교육하는 일부터 보고서를 검토하는 일까지 이릅니다.",
+            "note": "전치사 to 뒤이므로 review가 아니라 동명사 reviewing입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "주어일 때 — 수일치를 마지막에 확인합니다",
+          "body": "상관접속사구가 주어이면 both A and B는 복수, either·neither·not only ... but also는 동사에 더 가까운 B에 수를 맞춥니다.",
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "병렬을 만드는 짝 신호어 여섯",
+      "columns": ["짝 신호어", "뜻", "A·B의 관계"],
+      "rows": [
+        {
+          "cells": ["both A and B", "A와 B 둘 다", "두 항을 더한 복수 개념"],
+          "example": {
+            "en": "The museum is **both** free **and** open to all.",
+            "ko": "그 박물관은 무료이면서 모두에게 개방됩니다.",
+            "note": "형용사 free와 형용사구 open to all이 병렬을 이룹니다."
+          }
+        },
+        {
+          "cells": ["not only A but also B", "A뿐만 아니라 B도", "강조되는 항은 뒤의 B"],
+          "example": {
+            "en": "It **not only** saves time **but also** cuts costs.",
+            "ko": "그것은 시간을 절약할 뿐만 아니라 비용도 줄입니다.",
+            "note": "현재형 동사 saves와 cuts가 병렬을 이룹니다."
+          }
+        },
+        {
+          "cells": ["either A or B", "A 또는 B 중 하나", "둘 중 하나를 선택"],
+          "example": {
+            "en": "You may **either** call **or** email the office.",
+            "ko": "사무실에 전화하거나 이메일을 보내면 됩니다.",
+            "note": "원형 call과 email이 조동사 may를 공유하며 병렬을 이룹니다."
+          }
+        },
+        {
+          "cells": ["neither A nor B", "A도 B도 아닌", "둘 다 부정"],
+          "example": {
+            "en": "**Neither** the map **nor** the sign helps here.",
+            "ko": "이곳에서는 그 지도도 표지판도 도움이 되지 않습니다.",
+            "note": "명사 the map과 the sign이 병렬을 이룹니다."
+          }
+        },
+        {
+          "cells": ["not A but B", "A가 아니라 B", "A를 부정하고 B를 긍정"],
+          "example": {
+            "en": "The goal is **not** to punish **but** to prevent.",
+            "ko": "목표는 처벌하는 것이 아니라 예방하는 것입니다.",
+            "note": "to부정사 to punish와 to prevent가 병렬을 이룹니다."
+          }
+        },
+        {
+          "cells": ["from A to B", "A부터 B까지", "전치사 짝 — B는 동명사"],
+          "example": {
+            "en": "Tasks range **from** filing **to** answering calls.",
+            "ko": "업무는 서류 정리부터 전화 응대까지 이릅니다.",
+            "note": "전치사 to 뒤이므로 동명사 filing과 answering이 병렬을 이룹니다."
+          }
+        }
+      ],
+      "takeaway": "짝 신호어를 외워 두면, 한쪽만 보여도 나머지 짝과 두 항의 경계가 즉시 보입니다."
+    },
+    {
+      "id": "b6",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "짝 신호어 맞추기",
+      "instruction": "왼쪽의 앞 신호어와 짝을 이루는 오른쪽의 뒤 신호어를 연결하십시오.",
+      "pairs": [
+        { "a": "both", "b": "and", "why": "both A and B — 'A와 B 둘 다'를 뜻합니다." },
+        { "a": "not only", "b": "but also", "why": "not only A but also B — 'A뿐만 아니라 B도'를 뜻합니다." },
+        { "a": "either", "b": "or", "why": "either A or B — 'A 또는 B 중 하나'를 뜻합니다." },
+        { "a": "neither", "b": "nor", "why": "neither A nor B — 'A도 B도 아닌'을 뜻합니다." },
+        { "a": "not", "b": "but", "why": "not A but B — 'A가 아니라 B'를 뜻합니다." },
+        { "a": "from", "b": "to", "why": "from A to B — 전치사 짝이며, B는 동명사로 씁니다." }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "여섯 짝 암기 카드",
+      "target": "병렬을 만드는 짝 신호어 여섯",
+      "why": "짝의 한쪽만 보고도 나머지 짝을 즉시 떠올려야 긴 문장에서 A와 B의 경계를 놓치지 않습니다. 외워 두지 않으면 문항마다 문장을 되짚느라 시간을 흘리게 됩니다.",
+      "device": "여섯 짝을 셋씩 나눠 외웁니다. ① 더하기 짝 both–and, not only–but also ② 고르기·부정 짝 either–or, neither–nor ③ 대조·전치사 짝 not–but, from–to. 앞 신호어만 외우면 뒤 짝은 딸려 옵니다.",
+      "items": [
+        { "cue": "both 의 짝 신호어는?", "answer": "and — both A and B" },
+        { "cue": "not only 의 짝 신호어는?", "answer": "but also — not only A but also B" },
+        { "cue": "either 의 짝 신호어는?", "answer": "or — either A or B" },
+        { "cue": "neither 의 짝 신호어는?", "answer": "nor — neither A nor B" },
+        { "cue": "not 의 짝 신호어는?", "answer": "but — not A but B" },
+        { "cue": "from 의 짝 신호어는?", "answer": "to — from A to B (전치사 짝)" }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "짝 신호어 관문",
+      "mission": "다음 중 짝 표현의 '뒤쪽' 신호어를 전부 고르십시오. 앞 신호어(both·either 등)의 진짜 짝만 관문을 엽니다.",
+      "mode": "SET",
+      "pool": ["and", "but also", "or", "nor", "but", "to", "also", "so", "than", "yet"],
+      "answers": ["and", "but also", "or", "nor", "but", "to"],
+      "passText": "여섯 짝이 손에 붙었습니다. 이제 한쪽만 봐도 나머지가 따라옵니다. 관문이 열립니다.",
+      "retryText": "짝이 아직 헐겁습니다. 신호어를 '둘·둘·둘'로 나눠 떠올린 뒤 다시 통과하십시오."
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "상관접속사는 정해진 짝으로 움직이며, 두 신호어 바로 뒤의 A와 B는 반드시 같은 문법 형태여야 합니다.",
+      "examples": [
+        {
+          "en": "Visitors may **either** borrow a guidebook **or** download the audio tour.",
+          "ko": "방문객들은 안내 책자를 빌리거나 오디오 안내를 내려받을 수 있습니다.",
+          "note": "either 뒤의 A는 원형 borrow이고 or 뒤의 B는 원형 download입니다. 조동사 may가 두 항에 함께 걸립니다."
+        },
+        {
+          "en": "The museum is **both** free **and** open to everyone on the first Sunday of the month.",
+          "ko": "그 박물관은 매달 첫째 일요일에 무료이면서 모두에게 개방됩니다.",
+          "note": "both 뒤의 A는 형용사 free이고 and 뒤의 B는 형용사구 open to everyone입니다. 둘 다 보어 자리의 형용사 계열이므로 형태가 일치합니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "병렬의 경계는 신호어 바로 뒤에서 시작합니다. 신호어 앞에 있는 요소(주어·조동사·be동사 등)는 A와 B가 함께 쓰는 공유 부분이므로 B 자리에 다시 넣지 않습니다.",
+      "examples": [
+        {
+          "en": "The report **not only** identifies the problem **but also** proposes a concrete solution.",
+          "ko": "그 보고서는 문제를 짚어낼 뿐만 아니라 구체적인 해법도 제시합니다.",
+          "note": "주어 The report는 신호어 앞의 공유 요소입니다. A는 identifies로 시작하는 동사구, B는 proposes로 시작하는 동사구이며 둘 다 현재형입니다."
+        },
+        {
+          "en": "Students can **either** submit the essay online **or** hand it in at the department office.",
+          "ko": "학생들은 과제를 온라인으로 제출하거나 학과 사무실에 직접 낼 수 있습니다.",
+          "note": "조동사 can이 신호어 앞에 있으므로 A와 B가 공유합니다. 따라서 두 항은 원형 submit과 hand로 시작합니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "상관접속사 문장의 해부",
+      "tokens": [
+        { "t": "The exhibition", "role": "S" },
+        { "t": "not only", "role": "CONJ" },
+        { "t": "displays", "role": "V" },
+        { "t": "rare manuscripts", "role": "O" },
+        { "t": "but also", "role": "CONJ" },
+        { "t": "explains", "role": "V" },
+        { "t": "how they were made", "role": "O" }
+      ],
+      "ko": "그 전시는 희귀 필사본을 전시할 뿐만 아니라 그것들이 어떻게 만들어졌는지도 설명합니다.",
+      "layers": [
+        {
+          "label": "① 짝 신호어를 표시합니다",
+          "roles": ["CONJ"],
+          "note": "not only와 but also가 한 짝입니다. 이 둘이 A와 B의 시작점을 알려 줍니다."
+        },
+        {
+          "label": "② 두 신호어 바로 뒤의 핵을 대조합니다",
+          "roles": ["V"],
+          "note": "A의 핵은 displays, B의 핵은 explains입니다. 둘 다 시제를 가진 현재형 동사이므로 형태가 일치합니다."
+        },
+        {
+          "label": "③ 각 항의 나머지 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "A는 rare manuscripts를, B는 how they were made를 목적어로 받습니다. 두 항은 각각 동사구 전체로 병렬을 이룹니다."
+        },
+        {
+          "label": "④ 신호어 앞의 공유 요소를 확인합니다",
+          "roles": ["S"],
+          "note": "주어 The exhibition은 A와 B가 함께 쓰는 부분입니다. 공유 요소는 B 자리에 다시 쓰지 않습니다."
+        }
+      ],
+      "conclusion": "not only 뒤와 but also 뒤가 모두 시제를 가진 동사구이므로 병렬이 성립합니다. explaining이었다면 A와 형태가 어긋나 오류입니다."
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "상관접속사 병렬을 판단하는 절차",
+      "steps": [
+        {
+          "text": "짝 신호어를 확정합니다(both–and, not only–but also, either–or, neither–nor, not–but, 그리고 짝 전치사 from–to). from–to는 접속사가 아니라 전치사 짝이므로, B에 동사가 오면 동명사입니다.",
+          "applyNote": "not only와 but also가 짝입니다. 두 신호어의 위치를 먼저 표시합니다."
+        },
+        {
+          "text": "두 번째 신호어 바로 뒤에서 B의 핵 형태를 확인합니다(시제 동사·동사원형·-ing·to부정사·명사·형용사·전치사구).",
+          "applyNote": "but also 뒤의 B는 시제를 가진 동사 saves로 시작하는 동사구입니다."
+        },
+        {
+          "text": "첫 번째 신호어 바로 뒤로 돌아가 A의 핵 형태를 같은 기준으로 확인합니다.",
+          "applyNote": "not only 뒤의 A는 시제를 가진 동사 reduces로 시작하는 동사구입니다."
+        },
+        {
+          "text": "A와 B의 형태를 대조합니다. 다르면 밑줄 친 쪽을 A의 형태에 맞춰 고칩니다.",
+          "applyNote": "reduces와 saves는 둘 다 현재형 동사입니다. 형태가 일치하므로 이 문장은 옳습니다."
+        },
+        {
+          "text": "상관접속사구가 주어 자리에 있으면 마지막으로 동사의 수를 확인합니다.",
+          "applyNote": "이 문장의 주어는 The new policy이므로 수일치는 쟁점이 되지 않습니다."
+        }
+      ],
+      "example": {
+        "en": "The new policy **not only** reduces waste in every office **but also** saves a large amount of money each year.",
+        "ko": "그 새 정책은 모든 사무실의 낭비를 줄일 뿐만 아니라 해마다 많은 돈을 절약해 줍니다.",
+        "note": "신호어 앞의 The new policy가 A와 B가 공유하는 주어이고, 두 신호어 뒤에 현재형 동사구가 각각 하나씩 놓여 병렬을 이룹니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 절차대로 이유를 확인하십시오.",
+      "stem": "The training course teaches employees not only how to read a contract but also ( negotiating / how to negotiate ) better terms.",
+      "steps": [
+        {
+          "title": "① 짝 신호어를 확정합니다",
+          "body": "not only와 but also가 짝입니다. 괄호는 but also 바로 뒤, 즉 B의 시작 자리입니다."
+        },
+        {
+          "title": "② A의 핵 형태를 확인합니다",
+          "body": "not only 바로 뒤는 how to read a contract입니다. 의문사와 to부정사가 결합한 명사구이며, 동사 teaches의 직접목적어 노릇을 합니다."
+        },
+        {
+          "title": "③ 두 후보를 A와 대조합니다",
+          "body": "negotiating better terms는 동명사구이고, how to negotiate better terms는 A와 같은 「의문사+to부정사」 명사구입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "A가 「의문사+to부정사」이므로 B도 같은 형태여야 합니다. 따라서 how to negotiate가 옳습니다."
+        }
+      ],
+      "answer": "how to negotiate",
+      "ko": "그 연수 과정은 직원들에게 계약서를 읽는 법뿐만 아니라 더 나은 조건을 협상하는 법도 가르칩니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u05-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The reading room is both quiet and {{blank}} for long hours of study.",
+          "options": ["comfortable", "comfortably"],
+          "answer": 0,
+          "translation": "그 열람실은 조용하면서도 오랜 시간 공부하기에 편안합니다.",
+          "explanation": "both A and B 병렬에서 A는 보어 자리의 형용사 quiet입니다. 따라서 B도 형용사 comfortable이어야 합니다. 부사 comfortably를 고르면 형용사와 부사가 묶여 병렬이 깨지고 보어 자리에 부사가 오게 됩니다.",
+          "trapTags": ["correlative"]
+        },
+        {
+          "id": "u05-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Volunteers can either deliver meals to the elderly or [[u:helping]] at the community kitchen.",
+          "isCorrect": false,
+          "correction": "help",
+          "translation": "자원봉사자들은 노인들에게 식사를 배달하거나 지역 급식소에서 도울 수 있습니다.",
+          "explanation": "either A or B 병렬에서 A는 조동사 can 뒤의 원형 deliver입니다. 조동사는 신호어 앞의 공통 요소이므로 B도 원형 help여야 합니다. helping은 A와 형태가 어긋납니다.",
+          "trapTags": ["correlative", "shared-aux"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현에서 A와 B의 형태가 일치하는지 분류하십시오.",
+      "buckets": [
+        { "id": "ok", "label": "형태가 일치합니다" },
+        { "id": "no", "label": "형태가 어긋납니다" }
+      ],
+      "chips": [
+        {
+          "text": "both cheap and reliable",
+          "bucketId": "ok",
+          "why": "both 뒤의 cheap과 and 뒤의 reliable이 모두 형용사입니다."
+        },
+        {
+          "text": "either by bus or on foot",
+          "bucketId": "ok",
+          "why": "either 뒤와 or 뒤가 모두 전치사구입니다."
+        },
+        {
+          "text": "neither the manager nor the workers",
+          "bucketId": "ok",
+          "why": "neither 뒤와 nor 뒤가 모두 명사구입니다."
+        },
+        {
+          "text": "not only to reduce costs but also improving safety",
+          "bucketId": "no",
+          "why": "A는 to부정사구인데 B는 동명사구입니다. to improve로 맞춰야 합니다."
+        },
+        {
+          "text": "either apply online or visiting the office",
+          "bucketId": "no",
+          "why": "A는 원형 apply인데 B는 동명사 visiting입니다. visit으로 맞춰야 합니다."
+        },
+        {
+          "text": "both to design the bridge and building it",
+          "bucketId": "no",
+          "why": "A는 to부정사구인데 B는 동명사구입니다. to build로 맞춰야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 두 신호어 사이가 길어 A를 놓치는 경우",
+      "body": "not only와 but also 사이에 수식어가 길게 끼면, but also 바로 앞의 명사를 A로 착각하기 쉽습니다. A는 언제나 첫 신호어 바로 뒤에서 시작하는 항입니다. 길이에 속지 말고 신호어 바로 뒤의 첫 핵을 봅니다.",
+      "example": {
+        "en": "The new bridge **not only** shortens the journey between the two islands by nearly an hour **but also** withstands the strongest winter storms.",
+        "ko": "그 새 다리는 두 섬 사이의 이동 시간을 거의 한 시간이나 줄일 뿐만 아니라 가장 강한 겨울 폭풍도 견뎌 냅니다.",
+        "note": "but also 바로 앞의 an hour를 A로 착각하면 B를 명사로 고르게 됩니다. A는 not only 바로 뒤의 시제 동사 shortens이므로 B도 시제 동사 withstands입니다."
+      }
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The robot is designed not to replace human inspectors but ( to assist / assisting ) them in dangerous areas.",
+      "givenSteps": [
+        "① 짝 신호어를 확정합니다 — not과 but이 짝이며, 괄호는 but 바로 뒤의 B 자리입니다.",
+        "② A의 형태를 확인합니다 — not 바로 뒤의 A는 to replace human inspectors, 즉 to부정사구입니다."
+      ],
+      "prompt": "③ 그렇다면 but 뒤의 B는 어떤 형태여야 합니까?",
+      "options": [
+        "to assist — A가 to부정사구이므로 B도 to부정사구여야 합니다",
+        "assisting — 앞에 be동사가 있으므로 진행형에 맞춥니다",
+        "assist — but 뒤에는 언제나 동사원형이 옵니다"
+      ],
+      "answer": 0,
+      "explain": "not A but B 병렬에서 A는 to replace human inspectors이므로 B도 to부정사구 to assist them in dangerous areas여야 합니다. is designed는 신호어 앞의 공유 요소이므로 B의 형태를 결정하지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "짝과 형태 반사신경",
+      "instruction": "명제가 옳으면 ○, 틀리면 ×를 제한시간 안에 누르십시오. 판별은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "either의 짝 신호어는 or입니다.",
+          "isTrue": true,
+          "why": "either A or B가 한 짝입니다. 뒤 신호어는 or입니다."
+        },
+        {
+          "statement": "neither의 짝 신호어는 or입니다.",
+          "isTrue": false,
+          "why": "neither의 짝 신호어는 nor입니다. neither A nor B로 씁니다."
+        },
+        {
+          "statement": "from A to B에서 to 뒤에는 동사원형이 옵니다.",
+          "isTrue": false,
+          "why": "여기서 to는 전치사이므로 동사가 오면 원형이 아니라 동명사(-ing)입니다."
+        },
+        {
+          "statement": "not only A but also B에서 A와 B는 같은 형태여야 합니다.",
+          "isTrue": true,
+          "why": "상관접속사는 두 신호어 뒤의 두 항을 같은 형태로 묶습니다."
+        },
+        {
+          "statement": "신호어 앞의 조동사는 B 자리에 다시 써야 합니다.",
+          "isTrue": false,
+          "why": "조동사는 A와 B가 공유하는 요소이므로 B 자리에 다시 쓰지 않습니다."
+        },
+        {
+          "statement": "both A and B가 주어이면 동사는 복수형입니다.",
+          "isTrue": true,
+          "why": "both A and B는 두 항을 더한 복수로 보므로 동사도 복수형입니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — from A to B 의 to 를 부정사 표지로 오인하는 경우",
+      "body": "from A to B 짝에서 to는 전치사입니다. 전치사는 목적어로 명사를 부르므로 뒤에 동사원형이 올 수 없고, B 자리에 동사가 오면 동명사로 씁니다(B가 명사구면 그대로 명사구입니다). 짝 신호어를 확인하지 않고 to만 보면 원형을 고르게 됩니다.",
+      "example": {
+        "en": "Her duties range **from** training new staff **to** reviewing the monthly reports.",
+        "ko": "그녀의 업무는 신입 직원을 교육하는 일부터 월간 보고서를 검토하는 일까지 걸쳐 있습니다.",
+        "note": "from 뒤의 A가 동명사 training이므로, 전치사 to 뒤의 B도 동명사 reviewing이어야 합니다. review로 쓰면 전치사 뒤에 원형이 오는 오류가 됩니다."
+      }
+    },
+    {
+      "id": "b20",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "상관접속사구가 주어이면 동사의 수는 both A and B일 때 복수, either A or B·neither A nor B·not only A but also B일 때 동사에 더 가까운 B에 맞춥니다.",
+      "examples": [
+        {
+          "en": "**Both** the coach **and** the players **were** satisfied with the result.",
+          "ko": "그 감독과 선수들 모두 결과에 만족했습니다.",
+          "note": "both A and B가 주어이면 두 항을 합친 복수로 봅니다. 그래서 동사는 were입니다."
+        },
+        {
+          "en": "**Neither** the diagrams **nor** the text **explains** how the machine actually works.",
+          "ko": "그 도표들도 본문도 그 기계가 실제로 어떻게 작동하는지 설명하지 못합니다.",
+          "note": "neither A nor B가 주어이면 동사에 가까운 the text에 수를 맞춥니다. 단수이므로 explains입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u05-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The festival ranges from showcasing local crafts to {{blank}} traditional music every evening.",
+          "options": ["perform", "performing"],
+          "answer": 1,
+          "translation": "그 축제는 지역 공예품을 선보이는 것부터 저녁마다 전통 음악을 연주하는 것까지 아우릅니다.",
+          "explanation": "from A to B는 접속사가 아닌 전치사 짝이고, 여기서 to는 전치사입니다. A가 동명사구 showcasing local crafts이므로 B도 동명사 performing이어야 합니다. to를 부정사 표지로 착각해 원형 perform을 고르면 전치사 뒤에 원형이 오게 되어 틀립니다.",
+          "trapTags": ["correlative", "prep-gerund"]
+        },
+        {
+          "id": "u05-c2-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Neither the illustrations nor the caption [[u:explain]] why the experiment failed.",
+          "isCorrect": false,
+          "correction": "explains",
+          "translation": "그 삽화들도 설명문도 그 실험이 왜 실패했는지 알려 주지 않습니다.",
+          "explanation": "neither A nor B가 주어이면 동사는 더 가까운 항인 the caption에 맞춥니다. the caption은 단수이므로 explains가 옳습니다. 앞의 복수 명사 the illustrations에 맞추면 틀립니다.",
+          "trapTags": ["correlative", "agreement"]
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 performing 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "from A to B 짝에서 to는 전치사이고, A가 동명사 showcasing이므로 B도 동명사여야 하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 짝 신호어를 먼저 확정한 뒤 A의 형태를 확인하는 절차가 판단의 근거입니다."
+        },
+        {
+          "text": "문장에 이미 시제 동사 ranges가 있으므로 뒤에는 -ing형만 올 수 있기 때문입니다.",
+          "correct": false,
+          "feedback": "동사가 이미 있다는 사실만으로는 -ing이 결정되지 않습니다. to부정사도 본동사 뒤에 얼마든지 옵니다. 결정한 것은 from–to 짝과 A의 형태입니다."
+        },
+        {
+          "text": "traditional music을 목적어로 받으려면 동명사여야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "목적어를 받는 것은 원형도 to부정사도 할 수 있습니다. 형태를 결정한 것은 목적어가 아니라 전치사 to와 A의 동명사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 도시는 자전거 도로를 넓혔을 뿐만 아니라 새 다리도 지었습니다.",
+      "answer": [
+        "The city",
+        "not only",
+        "widened",
+        "the bike lanes",
+        "but also",
+        "built",
+        "a new bridge"
+      ],
+      "tiles": [
+        "The city",
+        "not only",
+        "widened",
+        "the bike lanes",
+        "but also",
+        "built",
+        "a new bridge",
+        "building"
+      ],
+      "explanation": "not only 뒤의 A가 과거형 동사 widened이므로 but also 뒤의 B도 시제를 가진 built여야 합니다. building은 형태가 어긋나 쓰이지 않습니다."
+    },
+    {
+      "id": "b24",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The workshop [[1:aims]] to show that good design is not only a matter of appearance but also [[2:a question]] of how people actually use a space, and it invites participants either [[3:to sketch]] their own ideas or [[4:sharing]] photographs of buildings they admire.",
+      "answer": 4,
+      "correction": "to share",
+      "rationales": [
+        "주절의 본동사입니다. 핵 주어 The workshop이 단수이므로 aims가 옳습니다.",
+        "not only A but also B 병렬입니다. A가 명사구 a matter of appearance이므로 B도 명사구 a question of ...가 옳습니다.",
+        "either A or B 병렬의 A입니다. invite A to do 구문의 to부정사구이며, 뒤의 B가 맞춰야 할 기준이 됩니다.",
+        "either 뒤의 A가 to부정사구 to sketch their own ideas이므로 or 뒤의 B도 to부정사구여야 합니다. 동명사 sharing은 형태가 어긋나므로 to share로 고칩니다."
+      ],
+      "ko": "그 워크숍은 좋은 디자인이 외관의 문제일 뿐만 아니라 사람들이 공간을 실제로 어떻게 쓰는가의 문제이기도 하다는 점을 보여 주는 것을 목표로 하며, 참가자들에게 자기 아이디어를 스케치하거나 자신이 좋아하는 건물의 사진을 공유하도록 권합니다."
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 두 문장을 상관접속사로 합쳐 쓰라고 요구합니다. 신호어를 맞게 쓰더라도 A와 B의 형태를 같게 맞추지 않으면 감점입니다.",
+          "sample": {
+            "en": "The plan saves money. The plan also protects the forest.",
+            "ask": "not only A but also B 를 이용해 한 문장으로 고쳐 쓰십시오.",
+            "answer": "The plan not only saves money but also protects the forest."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 상관접속사의 B 자리에 밑줄을 긋고, A와 형태가 다른 것을 정답으로 만듭니다. 밑줄이 보이면 짝 신호어를 먼저 찾고 첫 신호어 바로 뒤의 A와 대조합니다.",
+          "sample": {
+            "en": "Reading widely helps students not only to build vocabulary but also [[u:developing]] a sense of style.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "to develop — not only 뒤의 A가 to부정사구이므로 B도 to부정사구여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coastal cities are rethinking how they defend themselves against rising seas. [[u:Engineers now argue that a good barrier must not only hold back the water during a storm but also allow the marsh behind it to breathe.]] Concrete walls do the first job well, but they fail the second one. Living shorelines, planted with grasses and shellfish beds, appear to do both.",
+      "instruction": "밑줄 친 문장에서 상관접속사의 짝을 찾고, A와 B가 어떤 형태로 묶여 있는지 확인하십시오.",
+      "found": "not only와 but also가 짝입니다. A는 조동사 must 뒤의 원형 동사구 hold back the water during a storm이고, B는 같은 조동사를 공유하는 원형 동사구 allow the marsh behind it to breathe입니다. must는 신호어 앞의 공유 요소이므로 B 자리에 다시 쓰지 않습니다.",
+      "gist": "좋은 방벽은 폭풍 때 물을 막으면서 동시에 배후의 습지가 숨 쉬게 해야 한다는 내용입니다."
+    },
+    {
+      "id": "b27",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "병렬 저울의 심판관",
+      "intro": "이 저울은 A와 B의 형태가 완벽히 균형을 이룰 때에만 수평이 됩니다. 한쪽이 동명사인데 다른 쪽이 to부정사면 저울은 곧바로 기웁니다. 네 번의 저울질로 균형을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "빈칸에 알맞은 것은? 'The new library is not only spacious but also ___.'",
+          "options": ["bright", "brightly"],
+          "answer": 0,
+          "why": "not only 뒤의 A가 형용사 spacious이므로 but also 뒤의 B도 형용사 bright여야 합니다. 부사 brightly는 형태가 어긋납니다."
+        },
+        {
+          "prompt": "빈칸에 알맞은 것은? 'Applicants must either upload the file or ___ it by post.'",
+          "options": ["send", "sending"],
+          "answer": 0,
+          "why": "either 뒤의 A가 조동사 must를 공유한 원형 upload이므로 B도 원형 send여야 합니다. must는 신호어 앞의 공유 요소입니다."
+        },
+        {
+          "prompt": "빈칸에 알맞은 것은? 'The course covers everything from designing a survey to ___ the results.'",
+          "options": ["analyzing", "analyze"],
+          "answer": 0,
+          "why": "from A to B의 to는 전치사입니다. A가 동명사 designing이므로 전치사 뒤의 B도 동명사 analyzing이어야 합니다."
+        },
+        {
+          "prompt": "수일치가 옳은 문장은 무엇입니까?",
+          "options": [
+            "Neither the twins nor their mother was late.",
+            "Neither the twins nor their mother were late."
+          ],
+          "answer": 0,
+          "why": "neither A nor B가 주어이면 동사에 더 가까운 B(their mother, 단수)에 맞춥니다. 따라서 was가 옳습니다."
+        }
+      ],
+      "winText": "저울이 완벽한 수평에서 멈췄습니다. A와 B를 같은 무게로 맞추는 눈 — 그것이 병렬 문항을 여는 열쇠이고, 방금 당신 손에 들어왔습니다.",
+      "loseText": "저울이 기울어 심판관이 고개를 젓습니다. 네 번 모두 물은 것은 하나였습니다 — \"A와 B가 같은 형태인가.\" 짝 신호어부터 다시 확정하고 오면 저울은 그대로 있습니다."
+    },
+    {
+      "id": "b28",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "상관접속사를 보면 먼저 ___ 을 확정하고, 두 신호어 바로 뒤의 ___ 와 ___ 의 형태가 같은지 대조합니다."
+    },
+    {
+      "id": "b29",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "상관접속사는 both–and, not only–but also, either–or, neither–nor, not–but 처럼 짝으로 움직입니다.",
+        "A와 B는 각각 신호어 바로 뒤에서 시작하며, 같은 문법 형태여야 합니다.",
+        "신호어 앞의 요소(주어·조동사·be동사)는 A와 B가 공유하므로 B 자리에 다시 쓰지 않습니다.",
+        "from A to B의 to는 전치사입니다. 따라서 B 자리에 동사가 오면 원형이 아니라 동명사여야 합니다.",
+        "주어일 때 both A and B는 복수, either·neither·not only ... but also는 동사에 가까운 B에 수를 맞춥니다."
+      ],
+      "keySentence": {
+        "en": "The exhibition **not only** displays rare manuscripts **but also** explains how they were made.",
+        "ko": "그 전시는 희귀 필사본을 전시할 뿐만 아니라 그것들이 어떻게 만들어졌는지도 설명합니다.",
+        "note": "not only 뒤와 but also 뒤가 모두 시제를 가진 동사구여서 병렬이 성립합니다."
+      }
+    },
+    {
+      "id": "b30",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u05-c2-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The app allows users not only to track their spending but also {{blank}} monthly budgets.",
+          "options": ["to set", "setting"],
+          "answer": 0,
+          "translation": "그 앱은 사용자가 지출을 추적할 뿐만 아니라 월별 예산을 설정할 수도 있게 해 줍니다.",
+          "explanation": "not only A but also B 병렬에서 A는 allow A to do 구문의 to부정사구 to track their spending입니다. 따라서 B도 to부정사구 to set이어야 합니다. 동명사 setting을 고르면 A와 형태가 어긋납니다.",
+          "trapTags": ["correlative"]
+        },
+        {
+          "id": "u05-c2-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Both the architect and the engineer [[u:was]] present at the final inspection.",
+          "isCorrect": false,
+          "correction": "were",
+          "translation": "그 건축가와 그 기술자 모두 최종 점검에 참석했습니다.",
+          "explanation": "both A and B가 주어이면 두 항을 합친 복수로 봅니다. 따라서 동사는 were여야 합니다. 바로 앞의 단수 명사 the engineer에 맞춰 was를 쓰면 틀립니다.",
+          "trapTags": ["correlative", "agreement"]
+        },
+        {
+          "id": "u05-c2-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The report argues that recycling alone will neither reduce plastic waste significantly nor {{blank}} the oceans clean.",
+          "options": ["keep", "keeping", "kept"],
+          "answer": 0,
+          "translation": "그 보고서는 재활용만으로는 플라스틱 폐기물을 크게 줄이지도, 바다를 깨끗하게 유지하지도 못한다고 주장합니다.",
+          "explanation": "neither A nor B 병렬에서 A는 조동사 will 뒤의 원형 reduce입니다. will은 신호어 앞의 공통 요소이므로 B도 원형 keep이어야 합니다. keeping이나 kept를 고르면 A와 형태가 어긋납니다.",
+          "trapTags": ["correlative", "shared-aux"]
+        }
+      ]
+    }
+  ]
+}

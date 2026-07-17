@@ -1,0 +1,35 @@
+{
+  "pid": "P052",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed after 'aren't allowed to', but logically incoherent: no notion of official permission or restricted access appears in the passage, and the friend's rebuttal 'Of course you can stand there' would not answer a claim about permits. The 'No Standing' sign cannot plausibly be misread as an access-permit requirement."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Grammatical, but the proposition is inverted relative to any reading of the sign: 'aren't allowed to keep a safe distance' would mean distancing is forbidden, which matches nothing in the story. Strangers/distance are never at issue; Carol's behavior (pacing to avoid standing) does not instantiate this."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Correct. 'People aren't allowed to remain bodily stationary at that specific spot' is the precise propositional content of Carol's literal misreading of 'No Standing' as a pedestrian rule. It is entailed by her behavior (she moved away from the sign and walked back and forth instead of standing) and is the exact proposition the friend negates with 'Of course you can stand there.' The base-verb phrase attaches grammatically to 'allowed to' with no seam defects."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatical but unsupported: Carol never crosses the street nor obstructs traffic; her worry is about standing on the corner. The friend's reply about being able to 'stand there' would be a non sequitur if the blank concerned street-crossing."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatical, and superficially attractive because it touches the vehicular domain, but it fails on speaker perspective: the blank expresses Carol's mistaken pedestrian-oriented reading, whereas the whole joke is that she did NOT realize the sign was a vehicle rule. It also misstates the sign's true meaning (no parking/waiting, not no decelerating — the friend explicitly says cars may stop to pick up passengers), so it matches neither Carol's belief nor the correct interpretation."
+    }
+  ],
+  "note": "Clean single-answer item. All five options are syntactically valid complements of 'allowed to', so discrimination is purely semantic/logical. The friend's direct rebuttal ('Of course you can stand there') uniquely selects ③ as the negated proposition; ③'s wording is a deliberate stilted paraphrase of 'stand' to avoid lexical echo, which is acceptable. ⑤ is the strongest distractor but is ruled out because it swaps Carol's mistaken belief for (an inaccurate version of) the sign's real meaning. No alternative parse or construal renders any other option defensible."
+}

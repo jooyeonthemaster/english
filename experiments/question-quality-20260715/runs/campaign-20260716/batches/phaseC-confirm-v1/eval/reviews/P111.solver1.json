@@ -1,0 +1,35 @@
+{
+  "pid": "P111",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "지문이 명시적으로 부정하는 내용. 빈칸 바로 뒤 'It's not the pressure to perform that creates your stress'가 압력(pressure)이 스트레스의 원인이 아니라고 못박는다. 게다가 지문의 압력은 'internal pressure you place on yourself'인데 선지는 external pressure로 방향까지 반대. 'pressure'라는 표면 어휘 재활용 미끼 — 지문을 대충 읽으면 첫 두 문장의 pressure 논의에 끌려 선택할 수 있으나 역접 구조를 읽으면 즉시 배제된다."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "빈칸 문장은 '상황이 사람마다 고유하게 스트레스가 되는 근거'를 묻는다. 직후 문장 쌍(It's not the pressure... Rather, it's the self-doubt that bothers you)이 그 근거를 self-doubt로 특정한다. 'inner uncertainty'는 self-doubt의 패러프레이즈, 'they'는 situations를 받는 대명사로 문법 결합(seam)도 자연스럽다. 'trigger'는 상황이 개인의 내적 의심을 활성화한다는 인과를 정확히 표현. 지문 전체 논지(의심이 경험을 부정적으로 왜곡, 객관적으로 보면 의심이 줄어 고통 감소)와 완전 정합."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "마지막 문장(When you see situations and your strengths more objectively, you are less likely to have doubt as the source of your distress)의 어휘를 재활용한 미끼. 객관적 평가는 스트레스를 '줄이는' 해법이지 상황이 스트레스가 되는 '근거'가 아니다. 이걸 빈칸에 넣으면 '객관적 평가에 근거해 상황이 스트레스가 된다'가 되어 지문 논리가 뒤집힌다. 마지막 문장에 앵커링하는 수험생이 실제로 끌릴 수 있는 가장 그럴듯한 오답이지만, 원인-해법 방향 검증에서 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "첫 문장(If you care deeply about something / socially)의 표면 어휘 재조합. 깊이 신경 쓰는 것은 의심이 작동하기 위한 전제 조건일 뿐, 지문은 스트레스의 개인차 원인을 '영역의 다양성/개수'가 아니라 self-doubt 활성화 여부에 둔다. 빈칸에 넣으면 뒤따르는 'Rather, it's the self-doubt' 문장과 논리적으로 연결되지 않는다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "지문은 오히려 반대 방향을 진술한다: doubt가 있으면 positive, neutral 경험조차 부정적으로 지각한다(Doubt causes you to see positive, neutral, and even genuinely negative experiences more negatively). 즉 스트레스는 부정적 경험의 '빈도'라는 객관적 사실이 아니라 그것을 해석하는 내적 의심에서 온다. 'genuinely negative experiences' 어휘 재활용 미끼."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 빈칸 직후의 not A / Rather B 대조 구조가 결정적 장거리 단서로, B(self-doubt)의 패러프레이즈인 ②로 즉시 수렴한다. 실제 유혹 기록 — ③은 마지막 문장과 어휘가 겹쳐 잠깐 끌리지만 '객관성=스트레스 완화 수단'이라는 방향성을 확인하면 배제되고, ①은 pressure 표면 매칭 미끼이나 not-절이 명시적으로 부정한다. 대명사 they(=situations) 결합도 모든 선지에서 문법 문제 없음(②만 they 포함, 자연스러움). 복수 정답 여지 없음, 깔끔한 단일 정답 문항."
+}

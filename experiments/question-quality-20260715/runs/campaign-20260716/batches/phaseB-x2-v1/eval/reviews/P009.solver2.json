@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "형식 논리 검증: 지문의 결론은 'prioritize flexibility over rigidity'(유연성 > 경직성)이며, 빈칸 문장은 'expect that a certain percentage of plans will change'의 부연이다. ①(더 촘촘한 시스템을 구축해 외부 교란을 차단)은 경직성 강화이므로 전제와 모순. 또한 귀결절 'then when it happens you can say, Here is one of those inevitabilities'는 계획 변경이 실제로 일어남(it happens)과 그것을 필연(inevitability)으로 수용함을 요구하는데, ①을 대입하면 교란을 '차단'했다는 조건과 'it happens'가 양립 불가. 문법 결합(you construct...)은 정상이나 논리 부적합."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "②(개인·가족을 위한 전용 시간 블록을 엄격히 배정)는 지문 중반의 'four-year-old' 예시를 미끼로 쓴 주변부 소재. 시간 블록 배정은 오히려 'rigid work schedule'식 계획 고정이며, 'it happens'(계획 변경 발생)와 'one of those inevitabilities'(변경은 필연) 발화를 정당화하는 조건이 되지 못한다. 조건-귀결의 논리 연결 실패. 문법 결합은 정상."
+    },
+    {
+      "label": "③",
+      "verdict": "accept-with-flaw",
+      "reason": "논리: 직전 문장 'expect that a certain percentage of plans will change'의 재진술로서, '예측 불가능한 일정 변화를 받아들일 마음의 준비를 한다'는 조건이 성립하면 귀결 'when it happens → Here is one of those inevitabilities'가 완전하게 도출된다(예상해 두었기에 발생 시 필연으로 명명 가능). 유일하게 조건문 논리가 성립하는 선지. 단 문법 결함 존재: 주어가 'you'인데 재귀대명사가 'ourselves', 소유격이 'our schedule'로 인칭 불일치 — 규범 문법상 'prepare yourself ... your schedule'이어야 한다. 재귀사는 절 내 주어와 인칭·수 일치가 강제되므로 'you ... prepare ourselves'는 형식적으로 비문. 다만 이 결함은 정답 판별을 흐리지는 않음(다른 선지가 모두 논리 모순이므로)."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "④(모든 예상 밖 변수를 사전에 제거하는 궁극의 전략 개발)는 'eliminate all unexpected variables'가 참이면 'it happens'(변경 발생)가 거짓이 되어 조건-귀결이 자기모순. 또한 지문 주제(변경을 필연으로 수용, go with the flow)와 정면 배치되는 반대 방향 미끼. 문법 결합은 정상이나 논리적으로 성립 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "⑤(미리 정한 직장 루틴 고수의 직업적 가치를 측정)는 지문 어디에도 근거 없는 무관 소재이며, 루틴 '고수'의 가치 평가는 rigidity 옹호로 주제와 배치. 귀결절과의 논리 연결도 부재 — 가치를 측정한다고 해서 변경 발생 시 그것을 필연으로 수용할 근거가 생기지 않는다. 부수적으로 'our predefined ... routines'도 주어 'you'와 인칭 불일치(③과 동일 유형)."
+    }
+  ],
+  "note": "정답은 ③으로 유일하게 옹호 가능. 조건문 구조 분석: 빈칸은 P(마음의 준비/예상) → Q(발생 시 '필연' 발화 가능)의 P 자리이며, 직전 문장 'expect that a certain percentage of plans will change'가 P의 내용을 사전 명시한다. ③만이 P와 동치. 품질 결함 1건: ③(및 ⑤)의 인칭 불일치 — 조건절 주어 'you'에 대해 'ourselves/our'가 사용되어 재귀대명사 일치 규칙 위반. 정답 선지 자체가 대입 시 비문이 되는 것은 빈칸 문항으로서 감점 요인이나, 논리 변별에는 영향 없어 단일 정답 유지."
+}

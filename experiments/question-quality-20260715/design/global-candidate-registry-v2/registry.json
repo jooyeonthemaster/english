@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "question-quality-global-candidate-registry-v2",
+  "status": "DESIGN_ONLY_EXECUTION_BLOCKED",
+  "capFullQuestionCandidates": 1000,
+  "currentUsed": 0,
+  "reallocationAfterObservedOutcomeAllowed": false,
+  "stages": [
+    {
+      "stage": "C0_CONNECTIVITY",
+      "cap": 2,
+      "formula": "STANDARD_1_THEN_PREMIUM_1",
+      "topology": "SINGLE_SHOT_SERIAL",
+      "qualityClaimAllowed": false
+    },
+    {
+      "stage": "S1_FOCUS_PROFILE_SCREEN",
+      "cap": 180,
+      "formula": "GRAMMAR_96_PLUS_BLANK_84",
+      "topology": "DIRECT_CORE_SINGLE_SHOT",
+      "qualityClaimAllowed": "SAFETY_AND_MECHANISM_SCREEN_ONLY"
+    },
+    {
+      "stage": "S2_FOCUS_HELDOUT",
+      "cap": 480,
+      "formula": "2_TYPES_X_2_PROFILES_X_2_PLANS_X_3_DIFFICULTIES_X_20_PASSAGES",
+      "topology": "DIRECT_CORE_SINGLE_SHOT",
+      "qualityClaimAllowed": "PROMPT_SCHEMA_MECHANISM_ONLY"
+    },
+    {
+      "stage": "S3_NONFOCUS_SENTINELS",
+      "cap": 92,
+      "formula": "23_TYPES_X_4_PLAN_DIFFICULTY_CELLS",
+      "topology": "SINGLE_SHOT",
+      "qualityClaimAllowed": "DEFECT_EXISTENCE_ONLY"
+    },
+    {
+      "stage": "S4_ROUTE_PARITY",
+      "cap": 144,
+      "formula": "36_PAIRED_CELLS_X_DIRECT_1_PLUS_PRODUCTION_MAX_3",
+      "topology": "DIRECT_VS_BOUNDED_PRODUCTION",
+      "qualityClaimAllowed": "ROUTE_INTEGRATION_SENTINEL_ONLY",
+      "requiresUniversalAssignmentCandidateCap": 3
+    },
+    {
+      "stage": "S5_FOCUS_RISK_GRID",
+      "cap": 102,
+      "formula": "GRAMMAR_CORE10_X_2_X_3_PLUS_BLANK_AXES7_X_2_X_3",
+      "topology": "SINGLE_SHOT_DISTINCT_ORIGINAL_FRAMES",
+      "qualityClaimAllowed": "RARE_DEFECT_DISCOVERY_ONLY"
+    }
+  ],
+  "sum": 1000,
+  "candidateDefinition": "one provider opportunity to emit one complete question object",
+  "separateLedgersRequired": [
+    "physicalModelCalls",
+    "inputTokens",
+    "outputTokens",
+    "actualKnownUsd",
+    "effectiveConservativeUsd",
+    "latency",
+    "failedOrUnknownCalls"
+  ],
+  "activity": {
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0
+  }
+}

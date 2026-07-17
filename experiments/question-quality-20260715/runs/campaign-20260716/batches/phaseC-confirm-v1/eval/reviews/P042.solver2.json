@@ -1,0 +1,35 @@
+{
+  "pid": "P042",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "논리 불성립. 지문은 'internal pressure you place on yourself'만 다루며 external pressure는 등장하지 않는다. 또한 압박(pressure)은 'normal and useful'로 명시적으로 면책되었고, 객관적 인식이 압박의 강도를 낮춘다는 인과는 지문 어디에도 없다. seam(are less likely to intensify...)은 문법적으로는 정문이나 명제적으로 지지 근거 전무."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "형식적 도출 가능. 핵심 대조문 'It's not the pressure... Rather, it's the self-doubt that bothers you'가 고통의 원인 = self-doubt임을 확정하고, 'Doubt causes you to see... more negatively and as a reflection of your own shortcomings'가 그 기제(왜곡 지각)를 제시한다. 빈칸 문장의 조건 'see situations and your strengths more objectively'는 이 왜곡 지각의 정확한 부정이므로, 귀결은 'doubt이 고통의 뿌리가 되도록 허용할 가능성 감소'. ②는 이 함의를 그대로 언어화한 유일한 선지. seam도 정문(less likely to allow X to become Y)."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "어휘 반향(shortcomings) 미끼. 지문의 주장은 doubt이 경험을 '자기 결점의 반영으로 오독하게' 만든다는 것이지, 결점 제거에 몰두하는 행위를 다루지 않는다. 객관적 인식 → '결점 제거에 전적으로 집중할 가능성 감소'라는 인과는 도출 불가. 'entirely'의 배타성도 지문에 근거 없음."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "방향 역전. doubt의 효과는 부정적 편향(경험을 더 부정적으로, 강점을 과소평가하게 지각)이므로, 객관성이 낮추는 것은 과소평가이지 과대평가(overestimate)가 아니다. 'less likely to overestimate your strengths'가 성립하려면 지문이 자기 팽창 편향을 전제해야 하나 그런 전제 없음. 논리적 모순 방향의 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "최강 미끼. 'It's not the pressure to perform that creates your stress'를 어휘적으로 반향하지만 행위 주체를 도치시킨다: 압박을 원인으로 오귀인하는 것은 필자가 교정하는 독자의 소박한 통념이지, 지문이 'doubt에 빠진 사람이 압박을 탓한다'고 주장한 바 없다. 지문의 인과 사슬은 객관성 → doubt 감소 → 고통 감소이지, 객관성 → 고통의 원인 귀속 정확화가 아니다. 객관적으로 보면 고통 자체가 줄어드는데 '고통을 압박 탓으로 돌릴 가능성'을 논하는 것은 잉여적이며, 엄밀한 함의 검사(entailment test)에서 탈락. seam은 정문(blame A on B)."
+    }
+  ],
+  "note": "빈칸 문장은 P4(원인 확정: self-doubt)와 P5(기제: 왜곡 지각)의 직접 부정 조건('more objectively')에서 귀결을 묻는 구조. ②만이 전제들로부터 형식적으로 도출된다. ⑤는 어휘 반향으로 표면 적합도가 높으나 오귀인의 주체가 지문에 존재하지 않아 함의가 성립하지 않는다. 모든 선지의 문법 결합(seam)은 정문이므로 판별은 순수 논리 적합성으로 결정. 복수 정답 소지 없음."
+}

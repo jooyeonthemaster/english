@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'as they entered the lively shopping center' — 접속사 as가 이끄는 부사절의 본동사로 과거시제 entered. 서사 전체가 과거시제로 일관되며 주어 they와의 결합도 문제 없음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'these would look great on my brother' — 조동사 would 뒤 동사원형 look, look은 연결동사이므로 보어 자리에 형용사 great가 옳다. 부사 greatly로 고쳐야 한다는 유혹이 있으나 연결동사+형용사 보어 규칙상 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'The clerk stopped her work and looked at the clothes, quickly agreeing with Jeff's choice.' — 콤마 뒤 부대상황 분사구문. 의미상 주어 The clerk가 agree의 능동 주체이므로 현재분사 agreeing이 옳다. 'stopped and looked'와의 병렬로 and agreed여야 한다는 착각이 가장 매력적인 미끼지만, 병렬 시작점은 콤마에서 끊기고 분사구문으로 전환된 구조라 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'His confidence was, however, quickly was changed to nervousness' — 문장 앞에 이미 본동사 be(was)가 있는데 밑줄에서 was가 중복되어 'was ... was changed'라는 이중 조동사 구조가 됨. 도치·축약 관계절 등 어떤 대안 해석으로도 두 번째 was를 구제할 수 없음. changed(수동: was quickly changed) 또는 자동사 구문(His confidence, however, quickly changed to nervousness)이어야 한다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'when he thought of how many people would be there' — 시간 접속사 when + 완전한 절(주어 he, 동사 thought). 간접의문문 'how many people would be there'의 어순도 옳다. 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: (D)는 앞의 was와 밑줄 내 was의 중복이 장거리 단서(문장 서두의 His confidence was)로 즉시 확정되는 명백한 오류. 매력적 오답으로는 (C) agreeing(병렬 착각 유도)과 (B) look great(형용사/부사 함정)이 있으나 둘 다 규칙 확인으로 배제 가능. 다만 (D)의 오류가 '읽는 즉시 눈에 걸리는' 이중 동사 유형이라 변별력은 낮은 편 — 상위권에게는 너무 쉬운 오류 형태라는 점을 품질 관찰로 남긴다. 정답 후보는 (D) 단일."
+}

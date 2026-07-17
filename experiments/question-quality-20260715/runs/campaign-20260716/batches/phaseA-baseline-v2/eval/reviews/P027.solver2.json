@@ -1,0 +1,35 @@
+{
+  "pid": "P027",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법: 동명사구 주어 + 단수동사 creates 결합은 정문. 논리: '획일적 행동 기준의 강제'는 타인의 상이한 반응을 이해하는 관점수용(perspective-taking) 서사와 정면 충돌하며, 지문 어디에도 행동 기준·규범 강제 개념이 없다. 개방적 소통의 원인으로 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법: 단수 명사구 주어로 creates와 정문 결합. 논리: 지문의 'diverse emotion vocabulary'를 표면적으로 반향하는 미끼. 그러나 어휘는 감정 이해 능력의 한 구성요소일 뿐이고, 'simple increase in size'는 지문이 기술한 인과 이해·관점수용 메커니즘보다 명시적으로 약한 개념이므로 개방적 소통과 건설적 갈등 해결의 원인으로 논리적 비약."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법: 정문. 논리: 지문은 갈등이 발생한 상황(In a group conflict situation)에서의 '건설적 갈등 해결(constructive conflict resolution)'을 결과로 제시한다. 갈등 자체를 회피하면 해결할 대상이 없어 후행절과 형식적으로 모순. 직접 반박됨."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "문법: 등위 동명사구 주어 + 단수 creates 정문. 논리: 직전 문장 'take the perspective of the other group members and understand why they are reacting in a certain manner'의 대용적 요약 = 다양한 견해의 인정(recognizing), 그것을 소통의 정당한 입력으로 취급 = 존중(valuing). 이것만이 개방적 소통의 장 형성 → 건설적 갈등 해결 → 집단 기능 향상이라는 인과 사슬을 성립시킨다. 유일하게 옹호 가능."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법: 정문. 논리: 'accommodate their own needs as well as the needs of others (i.e. cooperate)' 및 'improved group functioning'과 정면 모순. 개인 목표 우선시는 협력 서사의 부정이므로 성립 불가."
+    }
+  ],
+  "note": "다섯 선지 모두 단수 주어로서 creates와 문법적으로 결합 가능하므로 변별은 전적으로 담화 논리에서 발생하며, ①②③⑤는 각각 모순 또는 논리적 비약으로 결정적으로 배제된다. 유일한 유보점: ④가 빈칸 직전의 두 요소(자기 감정 표현 + 관점수용) 중 관점수용 쪽만 주로 포착하나, 다른 어떤 선지도 어느 한쪽조차 포착하지 못하므로 단일 정답성은 훼손되지 않음. ②는 어휘 반향 미끼로 기능이 양호."
+}

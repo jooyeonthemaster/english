@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "strict-blank-reviewer-reconciliation-summary-v1",
+  "reviewDate": "2026-07-15",
+  "sourceBindingHash": "6be6c1f29d0c6e6e2f0d0152fcbb175bf081dd281d1dde15f9beba1b8045a212",
+  "inputs": {
+    "reviewerAManifestFileSha256": "5401fbff24faddca0aaab8d70ab026020b5304a889444066b591610ef72a1729",
+    "reviewerBManifestFileSha256": "a4cd1d9d7670125bfeaedeb5a9decff648f4abab1a1f1bc1c6589cb9625d7230",
+    "reviewerAPrivateRowsSha256": "505e75e766ade8eecdf9ff0d8b36855d31f1157fc9673343c31a451779d9acd3",
+    "reviewerBPrivateRowsSha256": "24782c8938694300ee37224906947b2379302423cc90ab306c91f731816cd25b"
+  },
+  "policy": {
+    "exclusionPrecedence": true,
+    "bothIndependentLensesRequiredForFramePass": true,
+    "domainReviewNeverCountsAsPass": true,
+    "rightsReviewSeparate": true,
+    "noSilentTopUpOrReplacement": true
+  },
+  "pairMatrix": {
+    "A_PASS__B_DOMAIN_REVIEW": 3,
+    "A_EXCLUDE__B_EXCLUDE": 1,
+    "A_DOMAIN_REVIEW__B_EXCLUDE": 4,
+    "A_PASS__B_EXCLUDE": 2,
+    "A_PASS__B_PASS": 24,
+    "A_DOMAIN_REVIEW__B_PASS": 23,
+    "A_EXCLUDE__B_PASS": 2
+  },
+  "dispositions": {
+    "FRAME_PASS_BOTH_LENSES": 24,
+    "EXCLUDE": 9,
+    "DOMAIN_REVIEW": 26
+  },
+  "framePassDistribution": {
+    "discourse": {
+      "argumentative": 2,
+      "narrative": 2,
+      "expository": 20
+    },
+    "topic": {
+      "science": 6,
+      "narrative-practical": 2,
+      "humanities": 11,
+      "art-culture": 3,
+      "social": 2
+    }
+  },
+  "supplyConsequence": {
+    "sourceAndDesignFramePassRows": 24,
+    "frozenPromptDesignUniqueClustersRequired": 26,
+    "minimumShortfallBeforeRightsReview": 2,
+    "expositoryShare": 0.8333333333333334,
+    "queueRedesignRequired": true
+  },
+  "authorization": {
+    "campaignEligibleRows": 0,
+    "reason": [
+      "The frozen 26-cluster focus design cannot be filled from the 24 dual-lens frame passes.",
+      "The dual-lens frame passes are discourse-skewed.",
+      "The source snapshot contains no reviewed rights record."
+    ]
+  },
+  "privateReconciliationSha256": "df180430fc8a2b6d2684e73d3e017595307d20c7d6afd905871bafca3e538385",
+  "privacy": {
+    "containsFrameIds": false,
+    "containsContentHashes": false,
+    "containsPassageText": false,
+    "containsRowLevelDecisions": false
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "fullQuestionCandidatesGenerated": 0
+  }
+}

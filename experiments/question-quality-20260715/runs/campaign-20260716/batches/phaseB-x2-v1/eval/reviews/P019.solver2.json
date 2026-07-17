@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a kind and magnitude not seen before'에서 not seen은 명사구 'a kind and magnitude'를 후치 수식하는 축약 수동 관계절(= that has not been seen before)이다. see의 대상(kind/magnitude)은 '보여지는' 피동 관계이므로 과거분사 seen이 정확하다. seeing으로 쓸 이유가 없고, 부정어 not이 분사 앞에 오는 어순도 정상. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'less developed virtual realities have always been integral parts of human life'는 과거부터 현재까지 지속되는 상태를 나타내는 현재완료로, always와 결합한 have been은 표준적 용법. 주어 realities(복수)와 have의 수 일치도 성립하며, be의 보어로 명사구 integral parts가 오는 구조도 완전하다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "문장 전체 구조는 [__ is new about cyberspace] is its interactive nature로, 주어 자리에 '~한 것'을 뜻하는 자유(융합) 관계절이 필요하다. 후행절 'is new about cyberspace'는 주어가 빈 불완전한 절이므로 선행사를 자체 포함하는 What이 와야 한다(What is new about cyberspace = the thing that is new...). 대안 해석 검증: (i) That을 지시대명사 주어로 보면 'That is new about cyberspace'까지는 완결되지만 뒤따르는 'is its interactive nature'가 주어 없는 잉여 술어가 되어 비문. (ii) That을 접속사(명사절 표지)로 보면 that절 내부가 완전한 절이어야 하는데 주어가 결여되어 비문. 어떤 파스로도 정문이 성립하지 않는다. What으로 고쳐야 함. 어법상 틀린 부분."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'..., while being able to shape ...'는 접속사 while을 남긴 분사구문(=while they are able to shape)으로, 의미상 주어는 주절 관계절의 주어 real people과 일치한다. '실제 상호작용을 하면서, 동시에 인격을 형성할 수 있는' 동시성 의미로 while+V-ing는 표준 용법. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'The move from passive imaginary reality to the interactive virtual reality'는 from A to B 상관 전치사구로, 뒤 문장의 'the move from photographs to movies'와 정확히 평행하다. 이동의 도착점을 나타내는 to가 필수적이며 다른 전치사로 대체 불가. 정문."
+    }
+  ],
+  "note": "정답은 (C) 하나로 유일하게 수렴한다. 지문은 사이버스페이스의 가상성 논의(Ben-Ze'ev 계열 텍스트)로 알려진 유형이며, 원문 표현은 'What is new about cyberspace...'이다. (C)의 That은 자유 관계절 자리에서 어떤 대안 파스(지시대명사, 접속사 that)로도 정문이 되지 않음을 형식적으로 확인했다. 나머지 네 밑줄은 각각 축약 수동 관계절, 현재완료, while 분사구문, from~to 상관구로 모두 규칙에 부합. 복수 정답 소지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P084",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "예방(beforehand prevention)은 지문에 전혀 없음. 지문은 불운이 이미 닥친 '이후'의 대응('After their initial shock, they gather their resources')만 다룬다. 사전 예방과 사후 전환은 정반대 방향."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "지문 핵심의 직접 재진술. 'look for some positive aspect in their misfortunes' + 'focus on what they can gain from their circumstance rather than on what they have lost' + silver lining 클리셰(구름 속 은빛 = 불행 속 이득)를 그대로 요약. 'and they + VP' 이음매도 문법적으로 자연스러움. intentionally가 능동적 태도('go one step further')와 호응."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "가장 강한 매력 오답. 도입 일화의 웃음/유머 때문에 'cheerful attitude'로 끌린다. 실제로 잠시 끌렸으나, 판매원은 실패를 '숨긴' 것이 아니라 공개적으로 활용해 이점으로 전환했다. 지문 주제는 은폐가 아닌 전환(disadvantage→advantage)이므로 hide는 논지 왜곡."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "타인의 보상 기대는 지문 어디에도 근거 없음. 오히려 'they gather their resources, overcome their problem'으로 스스로 해결하는 자립적 태도를 강조. 완전 무관 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "무저항 수용은 'overcome their problem', 'achieve remarkable feats', 'go one step further'와 정면 충돌. 수동적 체념은 지문이 그리는 능동적 전환의 정반대."
+    }
+  ],
+  "note": "빈칸 문장은 silver lining 클리셰를 믿고 '그래서 그들은 ___한다'로 이어지는 결론부. 클리셰의 내용(모든 불행에는 이득이 숨어 있다)을 행동으로 옮기는 ②가 유일 정답. 매력 오답은 ③(유머 일화에서 연상되는 cheerful attitude)이지만 '숨긴다(hide)'가 지문의 '공개적 전환'과 모순되어 탈락. 이음매(seam) 문법 결함 없음. 사소한 지적: ②가 앞문장 'look for some positive aspect in their misfortunes'의 거의 동어반복이라 빈칸 추론 난도는 낮은 편이나, 정답 유일성과 논리 정합성은 확실함."
+}

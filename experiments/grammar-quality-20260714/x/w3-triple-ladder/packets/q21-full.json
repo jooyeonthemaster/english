@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go3_20150409_A-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2015,
+    "exam": "4월",
+    "origType": "제목",
+    "words": 150
+  },
+  "attempts": 6,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=l  (B):ANS=b  (C):dec=c  (D):dec=i  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 148,
+        "relPos": 0.175,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 185,
+        "relPos": 0.219,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 545,
+        "relPos": 0.644,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 686,
+        "relPos": 0.811,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 721,
+        "relPos": 0.852,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 5,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.852,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers; the latest evidence suggests that while it isn't ideal, it might help. When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability of insulin to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation causes, which is encouraging given how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and making up for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "while",
+        "isError": false,
+        "correction": "while",
+        "errorExpression": "while",
+        "surroundingText": "the latest evidence suggests that while it isn't ideal, it might help.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(B)",
+        "expression": "When",
+        "isError": true,
+        "correction": "When",
+        "errorExpression": "What",
+        "surroundingText": "When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "encouraging given",
+        "isError": false,
+        "correction": "encouraging given",
+        "errorExpression": "encouraging given",
+        "surroundingText": "catch-up sleep may undo some of the damage... which is encouraging given how many adults don't get the hours they need",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "making",
+        "isError": false,
+        "correction": "making",
+        "errorExpression": "making",
+        "surroundingText": "Still, Liu isn't ready to endorse the habit of sleeping less and making up for it later.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(E)",
+        "expression": "telling",
+        "isError": false,
+        "correction": "telling",
+        "errorExpression": "telling",
+        "surroundingText": "It's like telling people you only need to eat healthy during the weekends,",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "while"
+      },
+      {
+        "label": "(B)",
+        "text": "What"
+      },
+      {
+        "label": "(C)",
+        "text": "encouraging given"
+      },
+      {
+        "label": "(D)",
+        "text": "making"
+      },
+      {
+        "label": "(E)",
+        "text": "telling"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "뒤에 주어(it)와 동사(isn't)를 갖춘 완전한 절이 이어지고 있으므로, 양보의 부사절을 이끄는 접속사 'while'의 사용은 올바릅니다.",
+      "(C)": "앞 문장의 내용(추가 수면이 손상을 회복할 수 있음)이 고무시키는(능동) 주체이므로 현재분사 'encouraging'이 쓰였으며, 그 뒤의 'given'은 '~을 고려할 때'라는 독립적인 분사구문/전치사로서 적절합니다.",
+      "(D)": "전치사 of 뒤에서 'sleeping less'와 등위 접속사 and로 연결되어 병렬구조를 이루고 있으므로 동명사 형태 'making'은 올바릅니다.",
+      "(E)": "전치사 like의 목적어 역할을 해야 하므로 동명사 형태인 'telling'을 사용한 것은 어법상 적절합니다."
+    },
+    "explanation": "정답은 (B)입니다.\n\n뒤에 이어지는 주절 'they showed improvements' 밖에서 부사절을 연결해야 하는 구조입니다. (B) 뒤에 'Peter Liu, a UCLA sleep researcher(주어)'와 'brought(정동사)', 'people(목적어)'이 있는 완전한 절이 이어지기 때문에, 불완전한 명사절을 이끄는 What은 올 수 없습니다.\n\n따라서 What을 시간의 부사절 접속사인 When으로 고쳐야 합니다. 명사절 접속사 자리가 아님을 전체 문장 구조를 통해 확인해야 합니다.",
+    "keyPoints": [
+      "(B) 관계부사/접속사 — 뒤에 완전한 절이 오는 부사절 접속사 판단",
+      "(C) 분사 구문 — 수식 대상(앞 문장)과의 능동/수동 관계",
+      "(D) 병렬 구조 — 전치사 of 뒤 등위 접속사 and 연결"
+    ],
+    "tags": [
+      "접속사",
+      "관계사",
+      "명사절",
+      "부사절",
+      "수능어법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers; the latest evidence suggests that __(A) while__ it isn't ideal, it might help. __(B) What__ Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability of insulin to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation causes, which is __(C) encouraging given__ how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and __(D) making__ up for it later. \"It's like __(E) telling__ people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says."
+  }
+}

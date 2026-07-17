@@ -1,0 +1,78 @@
+{
+  "pid": "P004",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-SUBJECT-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설 ①: \"주절의 주어 'he'가 분사구문의 의미상 주어 역할을 합니다.\" 실제로 'while playing cowboys'가 부가된 절은 'the child who is dressed in a cowboy outfit might be very noisy ...'이며 그 주어는 'the child'다. 'he'는 'but' 뒤 두 번째 등위절('but he might soon change ...')의 주어로, 분사구문이 붙은 절의 주어가 아니다. 지시 대상(그 아이)은 동일해 문법 판정 자체는 무너지지 않으나, 구조 기술이 실제 문장과 불일치하는 문장 귀속 오류다."
+    },
+    {
+      "code": "V4-LOOSE-TERMINOLOGY-C",
+      "severity": "minor",
+      "evidence": "(C) 오답 해설의 \"뒤이어 완전한 명사구가 연결되므로\" — whose 뒤에는 명사 'mother'가 오고 그 뒤로 술어('stressed that ...')가 이어지는 절 구조다. whose+명사가 관계절의 주어 명사구를 이루고 절이 완결된다는 취지로 보이나, '완전한 명사구가 연결된다'는 기술은 부정확하다."
+    },
+    {
+      "code": "FIELD-CONVENTION-D-EXPRESSION",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression 필드가 'playing'(원문형)인 반면 렌더/선지 토큰은 'played'다. errorExpression='played', correction='playing'으로 최소대립쌍은 복원 가능하므로 V5 실패로는 보지 않으나, expression 필드의 의미(원문형 vs 표시형)가 배치 내에서 일관되는지 확인이 필요하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "현재완료 수동태(have been + p.p.)에서 과거분사 판정 — 주어와 동사의 태 관계 인식",
+      "temptingBecause": "문두의 긴 주어 'Sweeping statements'와 been 뒤 분사형을 능동 make와 혼동하거나 making으로 바꾸고 싶어질 수 있다",
+      "decisiveFlaw": "진술(statements)은 만들어지는 대상이므로 수동태가 정확하다. 어법상 적절하여 정답이 될 수 없다"
+    },
+    {
+      "label": "(B)",
+      "intent": "동사 predict의 목적어인 명사절 접속사 that vs 관계대명사 what/which 구별",
+      "temptingBecause": "that절 내부가 관계절 두 개(who ..., whose ...)를 안은 길고 복잡한 구조라 불완전해 보일 수 있다",
+      "decisiveFlaw": "that 뒤는 주어(a child ...)와 동사(would be)가 갖춰진 완전한 절이므로 접속사 that이 정확하다. 정답 불가"
+    },
+    {
+      "label": "(C)",
+      "intent": "소유격 관계대명사 whose — 선행사와의 소유 관계 및 병렬 관계절 구조 판정",
+      "temptingBecause": "who was dressed와 and로 병렬된 두 번째 관계절이라 구조 파악 부담이 있고, who/whom/of which와의 혼동을 노린다",
+      "decisiveFlaw": "선행사 a child와 mother의 소유 관계가 성립하고 whose mother가 관계절의 주어로 기능하는 완결 구조이므로 whose가 정확하다. 정답 불가"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 접속사가 남은 분사구문(while ~ing)에서 능동/수동 분사 선택: 목적어 유무로 능동 판정",
+      "temptingBecause": "while 뒤의 played가 과거시제 동사처럼 보여 'while (he) played'로 오독하면 자연스럽게 느껴진다",
+      "decisiveFlaw": "주어가 생략된 축약 구조에서 의미상 주어(the child)가 cowboys라는 목적어를 취해 노는 능동 관계이므로 현재분사 playing이어야 한다. played는 통사적 해석이 불가능한 비문 — 유일 정답"
+    },
+    {
+      "label": "(E)",
+      "intent": "be동사 보어 자리 형용사 vs 부사(noisily), 그리고 no more ~ than 구문에서의 비교 형태 판단",
+      "temptingBecause": "'no more noisy'가 규칙 비교급 noisier여야 한다고 느끼거나, 동사 수식으로 착각해 부사 noisily를 기대할 수 있다",
+      "decisiveFlaw": "might ... be의 주격 보어 자리이므로 형용사가 정확하고, no more ~ than 구문에서는 more noisy 형태가 허용된다(원문 표현 그대로). 정답 불가"
+    }
+  ],
+  "explanationIssues": [
+    "주 해설 ①이 분사구문의 의미상 주어를 '주절의 주어 he'로 지목했으나, while playing이 부가된 절의 실제 주어는 'the child who is dressed in a cowboy outfit'이고 he는 but 뒤 등위절의 주어다(문장 귀속 오류, major)",
+    "(C) 해설의 '뒤이어 완전한 명사구가 연결되므로'는 whose 뒤에 이어지는 것이 명사+술어의 절 구조라는 점에서 용어가 부정확하다(minor)",
+    "(E) 해설이 no more ~ than 비교 구문(noisier 유혹)이라는 실제 매력 포인트를 다루지 않고 보어 자리 판정만 설명한다(minor, 사실 오류는 아님)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "지문 무결성·정답 유일성·문법성·필드 동기화는 모두 통과한다. 블라인드 풀이에서도 (D)가 유일 오류로 확정된다(while + 목적어 취하는 능동 분사 자리에 과거분사). 문항 본체는 INTERMEDIATE 어법으로 견실한 공예 수준(C1~C5 각 3)이다. 그러나 주 해설이 분사구문 호스트 절의 주어를 'he'로 오귀속하는 구조 분석 오류를 포함해 V4가 실패하며, 규칙상 공예 점수로 상쇄되지 않아 F다. 해설 ①의 주어 지목을 'the child(= he)'로 교정하고 (C) 해설의 용어를 다듬으면 B~A 재판정이 가능한 문항이다. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

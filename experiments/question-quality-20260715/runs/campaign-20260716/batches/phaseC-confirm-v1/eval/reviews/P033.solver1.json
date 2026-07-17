@@ -1,0 +1,35 @@
+{
+  "pid": "P033",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'if students are quiet enough' — 복수 주어 students와 복수 동사 are의 수 일치. 도치나 장거리 함정 없음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It's no wonder that students are late' — 가주어 It + 'no wonder that S+V' 고정 패턴의 명사절 접속사 that. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'little reason to be on time' — 명사 reason을 수식하는 to부정사 (reason to-V 표준 결합). 'for being'으로 바꿔야 한다는 유혹은 근거 없음. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'you ... have been taught your students an opening routine' — 주어 you는 가르치는 행위자(교사)이므로 능동 'have taught your students an opening routine'이어야 한다. 대안 해석으로 수여동사 수동태의 잔류 목적어(be taught + retained object)를 적극 검토했으나, 그 구문은 목적어 하나가 주어로 승격되고 잔류 목적어는 하나만 남는다('You have been taught an opening routine'은 성립). 여기서는 수동태 뒤에 명사구가 두 개(your students / an opening routine) 연속되어 구조적으로 불가능하고, 의미상으로도 you가 수혜자가 아닌 행위자라 수동태가 성립하지 않는다. 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'use this brief time to make mental and emotional transitions ... and prepare to focus' — 병렬 시작점이 멀리 있어 가장 끌리는 매력적 오답. 그러나 and prepare는 공유된 to 뒤의 원형 make와 병렬('to make ... and (to) prepare')로 정문이며, 설령 'can use ... and prepare'로 조동사 can에 병렬시키는 대안 해석을 취해도 원형이 옳다. 어느 해석으로도 표기가 정당화되므로 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이 시점: (E)가 장거리 병렬 때문에 가장 강한 유혹이었으나 두 가지 가능한 해석(to 공유 병렬 / 조동사 병렬) 모두에서 원형 prepare가 정당화되어 탈락. (D)는 잔류 목적어 수동태라는 구제 경로를 적극 탐색했으나 이중 명사구 잔류가 구조적으로 불가하고 의미상 행위자-수혜자 관계가 역전되어 있어 유일하게 옹호 불가능. 정답 후보는 (D) 하나로 수렴하며 복수정답 소지 없음."
+}

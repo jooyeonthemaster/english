@@ -1,0 +1,77 @@
+{
+  "pid": "P066",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-DIFF-CLEAN",
+      "severity": "info",
+      "evidence": "원지문과 렌더 지문을 마커 제거 후 기계적 diff한 결과 유일한 차이는 201번째 토큰 'implied' -> 'implying' (의도된 (D) 변형)뿐. 접합 파손·중복·누락·고아 문장부호 없음. 밑줄 라벨 (A)~(E)와 선택지 목록 완전 일치."
+    },
+    {
+      "code": "V4-MINOR-STRUCTURE-NUANCE",
+      "severity": "minor",
+      "evidence": "주해설이 '전체 주어는 People이며 이를 수식하는 현재분사구와 부사절 축약형이 수식어로 동반'이라고 기술. 'while speaking to him'은 People을 직접 수식하는 병렬 수식어라기보다 분사구 'raising their voices' 내부에 포함된 축약 부사절이다. 또한 의미상 주어를 동명사절 'People raising their voices'(사람들이 목소리를 높이는 것)로 보는 대안 분석도 가능하나, 어느 분석이든 정동사 부재 판단과 교정형 'implied'는 동일하므로 정답 판정에는 영향 없음. 오분석이라기보다 경미한 구조 기술 단순화."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "삽입어구(such as ... ethnicity)를 사이에 둔 주어-동사 수일치 판단",
+      "temptingBecause": "동사 직전 명사가 단수 'ethnicity'라서 근접 명사에 이끌린 학생은 단수 동사를 기대하고 'are'를 오류로 의심함",
+      "decisiveFlaw": "진짜 주어는 복수 'Racial microaggressions'이므로 'are'가 정확히 옳음 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "사역동사 make + 목적어 + 원형부정사 보어 구조 판단",
+      "temptingBecause": "'make target groups to feel/feeling'을 기대하거나 원형 'feel'이 어색해 보이는 학생을 유인",
+      "decisiveFlaw": "사역 make의 목적격 보어는 동사원형이 표준이며 목적어와 능동 관계이므로 'feel'이 옳음 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "부사가 부사를 수식하는 이중 부사 연쇄(perfectly well)의 적법성 판단",
+      "temptingBecause": "'perfectly well'처럼 부사 두 개가 연속되는 표면형이 어색해 보이고 'perfect'로의 교체를 유도",
+      "decisiveFlaw": "부사 perfectly가 부사 well을 강조 수식하는 관용적·문법적 구성이므로 옳음 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "긴 분사 수식어(raising their voices while speaking to him)에 가려진 정동사 자리 판별 — 정동사 vs 준동사 (정답)",
+      "temptingBecause": "주어 People 뒤에 -ing 형이 두 개(raising, speaking) 연속되어 'implying'도 같은 분사 흐름으로 자연스럽게 읽힘",
+      "decisiveFlaw": "문장 전체에 정동사가 하나도 없어 단편(fragment)이 됨. 준동사 'implying'을 정동사 'implied'로 고쳐야 하며 교정 시 정확히 원문과 일치. 대안 분석(절대구문·선행 정동사) 불가 — 유일 정답"
+    },
+    {
+      "label": "(E)",
+      "intent": "be동사 뒤 -ing 형(damaging)의 형용사 보어 판별",
+      "temptingBecause": "'are damaging'이 진행형처럼 보이거나, 정답 (D)와 같은 -ing 표면형이라 오류 후보로 함께 의심됨",
+      "decisiveFlaw": "damaging은 'harmful' 의미의 형용사로 주격 보어 자리에 적법 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "주해설의 수식 구조 기술이 단순화됨('while speaking to him'을 People의 병렬 수식어처럼 기술). 판정·교정형은 정확.",
+      "recommendation": "'raising their voices while speaking to him' 전체를 하나의 분사구로 기술하거나 축약 부사절이 분사구 내부에 있음을 명시"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설이 각 선지의 '옳은 이유'만 제시하고 '왜 매력적인지(why tempting)'를 명시하지 않음. keyPoints도 (D)(A)(B)만 다루고 (C)(E)는 누락. (C)와 (E)의 pointCode가 'f'로 중복.",
+      "recommendation": "KILLER 요건 충족을 위해 5개 밑줄 각각에 point/why tempting/why correct를 완비하고 (C)(E)의 pointCode를 분리"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 기계적 diff로 렌더 무결성 확인(유일 변형 implied->implying), (D)는 정동사 부재로 유일 오류이며 최소대립쌍·원문 복원 조건 충족, 대안 분석 불가한 명확한 문법 판단. 필드 동기화(정답 라벨·markedExpressions·해설·keyPoints) 모순 없음. 공예: 정동사 vs 준동사는 정전 포인트(C1=4)이고 네 디코이가 각기 다른 오개념(근접 수일치 함정·사역 원형·이중 부사·형용사 보어)을 겨냥하나(C2=3), (D)의 '-ing 정동사 자리' 패턴은 최상위권에게 가장 훈련된 유형이라 함정 깊이가 KILLER 최대치에는 못 미침(C5=3). KILLER 추가 조건은 최소대립쌍·명확 판단·동일 point 디코이 부재는 충족하지만, 5개 밑줄 각각의 'why tempting'이 해설에 부재하고 (C)/(E) pointCode 중복으로 디코이 설계 문서화가 미비하여 killerConditionsMet=false. 합계 19점(<21)으로 A 미달, 전 축 3 이상·V 전부 통과로 B — 해설의 tempting 사유 보강과 함정 심화(예: (D) 문장 내 유사 정동사 후보 배치) 정도의 수정으로 출제 가능."
+}

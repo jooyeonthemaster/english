@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사 that. 선행사 'a lasting mark'(단수)를 받아 뒤의 단수 동사 shows와 수 일치. 'makes a lasting mark that shows ...' 구조에 아무 문제 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (정답)",
+      "reason": "조동사 must 뒤는 동사원형 자리이고, 'either A or B' 상관 병렬에서 B가 원형 '(indeed) reinforce'이므로 A도 원형 'adapt to'여야 한다. 'must either adapting to or indeed reinforce'는 must+동명사라는 불가능한 결합이자 병렬 붕괴. 진행형(be adapting)으로 구제할 be동사도 없고, 분사구문·축약 관계절 등 어떤 대안 해석으로도 정문이 될 수 없음. 'must either adapt to or indeed reinforce this balance'가 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'it is subordinate to the surroundings, or it makes a strong statement' — or로 연결된 두 독립절이며 각각 자기 주어(it, 단수)를 가지므로 3인칭 단수 현재 makes가 정확. 앞 절의 is와 형태를 맞출 필요 없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'spectacular in itself'(그 자체로 장관인)는 관용적 재귀 표현. 지시 대상은 관계절 선행사 a bridge(단수 사물)로 itself가 정확. it으로 바꾸면 오히려 관용성이 깨짐."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "매력적 오답. 'spectacular'(형용사)와의 병렬로 착각하면 spoiling/spoil을 기대하게 되지만, 병렬 시작점은 관계절의 정동사 층위: 'a bridge that [is spectacular in itself] but [spoils its local environment]'. 주격 관계대명사 that이 두 정동사 is/spoils를 공유하며, 선행사 a bridge(단수)와 spoils의 수 일치도 정확. 완전한 정문."
+    }
+  ],
+  "note": "정답 (B) 단일 수렴. 오류 유형이 이중(must+원형 위반, either~or 병렬 붕괴)으로 명확해 이의신청 여지 없음. 실전에서 가장 끌리는 오답은 (E)로, 형용사 spectacular와의 표면 병렬을 노린 미끼이나 관계절 동사 병렬로 해소된다. (C)도 앞 절 is와의 형태 일치를 고민하게 하지만 독립절이라 즉시 해소. 문항 자체는 어법상 흠결 없이 성립."
+}

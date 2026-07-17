@@ -1,0 +1,69 @@
+{
+  "pid": "P093",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "문두 분사구문(Originally born in France) 뒤 주절 본동사의 정·준동사 판별 및 과거 시제 확인",
+      "temptingBecause": "문두에 born 분사구문이 있어 주절 동사를 escaping 등 준동사로 착각하거나 시제를 의심할 수 있음",
+      "decisiveFlaw": "오류 아님 — Brunel이 주어인 주절의 유일한 정동사 자리이므로 역사적 사실을 서술하는 과거형 escaped가 적법"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사 for 뒤 동명사(전치사 목적어) 판별",
+      "temptingBecause": "'~하기 위한 기계'라는 목적 의미 때문에 to make(to부정사)로 바꿔야 한다고 혼동할 수 있음",
+      "decisiveFlaw": "오류 아님 — 전치사 for의 목적어 자리이므로 동명사 making이 유일하게 적법"
+    },
+    {
+      "label": "(C)",
+      "intent": "stop + 동명사 vs stop + to부정사의 의미 구별",
+      "temptingBecause": "stop 뒤 준동사 형태 선택은 빈출 함정으로, stopped to buy와의 의미 차이를 판단해야 함",
+      "decisiveFlaw": "오류 아님 — 문맥상 정부가 '구매하던 행위를 중단'한 것이므로 목적어 동명사 buying이 적법"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 'ways for [의미상 주어] to-V' 구조에서 명사를 후치 수식하는 형용사적 to부정사 판별(정·준동사)",
+      "temptingBecause": "국소적으로 'people and goods moved'가 과거분사 후치 수식(축약 관계절)처럼 자연스럽게 읽혀 오류로 인지하기 어려움",
+      "decisiveFlaw": "실제 오류 — moved를 축약 관계절로 보면 'needed more ways for people and goods'가 보충어 없이 고립되어 비문이 되고, 정동사 재해석도 주어 슬롯이 없어 불가. ways를 수식하는 to move로 교정해야 하며 교정 시 정확히 원문이 복원됨"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사 despite vs 접속사 although 판별",
+      "temptingBecause": "뒤에 being이 이어져 절처럼 보이므로 although로 바꿔야 한다고 착각할 수 있음",
+      "decisiveFlaw": "오류 아님 — despite는 전치사이고 뒤에 명사 상당어구인 동명사구 being in ill health가 왔으므로 적법"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": {
+    "V1": "원지문 대비 렌더 지문의 변형은 (D) 'to move'→'moved' 최소대립쌍 하나뿐. 문장 접합 파손·중복·누락·고아 문장부호 없음. 라벨 (A)~(E)와 선택지 5개 완전 일치. em-dash(1769—1849)도 양쪽 동일.",
+    "V2": "5개 밑줄 독립 검증: (A) 분사구문 뒤 주절 정동사 과거형 적법, (B) 전치사+동명사 적법, (C) stop+동명사(구매 중단 의미) 적법, (E) despite+동명사구 적법. (D) moved는 축약 관계절·정동사 어느 대안 해석으로도 문장이 성립하지 않아 유일 오류. 교정형 to move는 원문과 정확히 일치. 정답 집합 {(D)} = 선언 정답.",
+    "V3": "지문·발문·교정 완성문(needed more ways for people and goods to move across it) 모두 문법적. 비문은 (D) 한 곳으로 유형 의도와 정확히 일치.",
+    "V4": "해설의 통사 분석(정동사 needed + 목적어 more ways, for 의미상 주어와 상응하는 형용사적 to부정사의 ways 후치 수식, moved의 과거동사/수동분사 해석 불가)이 실제 구조와 일치. 오답 해설 4건 모두 해당 선지의 실제 문장 내용과 대응하며 용어 오류·환각·귀속 오류 없음.",
+    "V5": "선언 정답 (D) = markedExpressions isError:true 항목 = 해설 교정형 'to move' = errorExpression 'moved'(렌더와 일치). 오답 해설이 (A)(B)(C)(E) 전부 커버. keyPoints의 pointCode 귀속((D)(A) 정·준동사, (E) 전치사vs.접속사)도 markedExpressions와 모순 없음.",
+    "craft": "C1=3: 'ways for 의미상주어 to-V' 형용사적 부정사는 정전급 어법 포인트이나 최상급 정교함까지는 아님. C2=3: 5개 밑줄 모두 식별 가능한 오개념을 겨냥하나 (B)(C)가 pointCode 'k'(동명사 계열)를 공유해 의도 다양성이 약간 중복. C3=3: (D)는 국소적으로 자연스러워 구조 독해가 필요하고 (C)는 실제 의미 판단을 요구하지만, (B)(E)는 훈련된 학생에게 비교적 즉시 소거됨. C4=3: 메타 누출 없고 교정 시 원문 복원되는 깨끗한 최소대립쌍. C5=3: INTERMEDIATE 요청과 사고 단계·함정 깊이가 대체로 정합(정답 포인트는 적정, 디코이 일부가 다소 평이). C6=3: 해설이 정확하고 근거·함정을 분리하나 '3형식의 골격' 등 다소 장황.",
+    "grade": "모든 V 통과, 전 C≥3, 합계 18 → 21 미만이므로 A 불가, B (작은 수정 — 디코이 (B)/(E) 매력도 보강, keyPoints 5개 전 라벨 커버 — 으로 출하 가능).",
+    "killer": "요청 난이도 INTERMEDIATE이므로 §C KILLER 추가 조건 판정 대상 아님 → false.",
+    "minorIssues": [
+      "keyPoints가 (A)(D)(E) 3개 라벨만 다루고 (B)(C)는 누락 — 동기화 위반은 아니나 완전성 측면에서 보강 권장",
+      "(B)(C)가 동일 pointCode 'k'를 공유해 오개념 커버리지가 4종으로 축소",
+      "해설 문체가 다소 만연체('3형식의 골격을 지닙니다' 등) — 정확성에는 문제 없음"
+    ]
+  }
+}

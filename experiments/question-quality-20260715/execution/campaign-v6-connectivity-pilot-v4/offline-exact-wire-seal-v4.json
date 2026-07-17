@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "question-quality-v6-connectivity-pilot-exact-wire-public-v4",
+  "status": "OFFLINE_PRODUCTION_CORE_EXACT_WIRE_LIVE_BLOCKED",
+  "privateArtifactSha256": "b81e59a209e3166bc74cd18181669d5fb87a883480dcbd33d061ddcdac5df712",
+  "originalProtocolV1Sha256": "b6eba782e92a16c8bba3b6b3b4c5a633449fba117fcf0b5e51a3dbf3f1e8b1f2",
+  "originalPublicCorpusSha256": "465e3d6d17bd6c2748fb69d05f3947f96ecc42d0abf71bd56f4e3dbb969933f6",
+  "productionCompilerClosureSha256": "392d53c829803775987a6585976a8011ff0659feaf65f70e539ddf6f7f34c19f",
+  "productionCompilerClosureSemanticSha256": "4ff97962aa65651d4bd913ef9d1a05e2f149de60a69d6d6b90cca804165eecbb",
+  "productionCompilerClosureArtifactSha256": "673effc7574891a32d1ddad79531ef5573ecfb5be61e9df8ad4b74e1d8a5ebbd",
+  "productionCompilerSourceFiles": 192,
+  "productionCompilerDeclaredDataInputs": 4,
+  "counts": {
+    "assignments": 2,
+    "locallyInterceptedProductionCompilerFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "productionDatabaseCalls": 0,
+    "apiCandidatesConsumed": 0
+  },
+  "wire": {
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "bodyUtf8BytesByPlan": {
+      "STANDARD": 53354,
+      "PREMIUM": 24943
+    },
+    "bodySha256ByPlan": {
+      "STANDARD": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003",
+      "PREMIUM": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643"
+    },
+    "maxOutputTokensEach": 4000,
+    "completionCountEach": 1,
+    "semanticCandidateCapEach": 1,
+    "exactEndpointTag": "google-vertex/global",
+    "reasoningDisabledRows": 2,
+    "strictJsonSchemaRows": 2
+  },
+  "privacy": {
+    "promptExposed": false,
+    "passageExposed": false,
+    "questionExposed": false,
+    "credentialValueExposedOrHashed": false
+  },
+  "publicSemanticSha256": "6d3c1a04b7afd09c2c69e5f5a04000b2ea15b9e6e033d227121340263e87fa0b"
+}

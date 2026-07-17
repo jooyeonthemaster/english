@@ -1,0 +1,39 @@
+{
+  "passageId": "2015_06_3026346-q19",
+  "meta": {
+    "year": 2015,
+    "exam": "6월",
+    "origType": "주장",
+    "words": 142
+  },
+  "difficulty": "INTERMEDIATE",
+  "strategy": "s9-model-pro",
+  "ok": false,
+  "ms": 9928,
+  "attempts": 1,
+  "calls": 1,
+  "callLog": [
+    {
+      "purpose": "generate#failed",
+      "modelId": "google/gemini-3.1-pro-preview",
+      "ms": 9928,
+      "attempts": 1,
+      "inputTokens": null,
+      "outputTokens": null,
+      "costUsd": null,
+      "costSource": "unknown"
+    }
+  ],
+  "models": [
+    "google/gemini-3.1-pro-preview"
+  ],
+  "costUsd": null,
+  "costSource": "unknown",
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "error": "No object generated: could not parse the response.",
+  "question": null,
+  "passageText": "Obviously, one of the judgments the public has of us is whether or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get what they want. That, however, is not all they want. They want to have the service rendered to them in a manner that pleases them; they want not only efficiency but courtesy and consideration; and they are in a position to get what they want. They are in the driver's seat; they are paying the bills; and an understanding of that fact is a real and fundamental basis of public relations. In order, therefore, for a great company to satisfactorily serve the public, it must have a philosophy and a method of doing business which will allow and insure that its people serve the public efficiently and in a pleasing manner."
+}

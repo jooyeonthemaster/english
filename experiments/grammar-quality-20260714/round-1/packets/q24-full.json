@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20200312-q36",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-noun-clause-pronoun-mislabelx1"
+  ],
+  "layout": "(A):dec=e  (B):dec=k  (C):dec=c  (D):dec=a  (E):ANS=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 20,
+        "relPos": 0.025,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 252,
+        "relPos": 0.31,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 298,
+        "relPos": 0.366,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 458,
+        "relPos": 0.563,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 580,
+        "relPos": 0.713,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.713,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A god called Moinee was defeated by a rival god called Dromerdeener in a terrible battle up in the stars. Moinee fell out of the stars down to Tasmania to die. Before he died, he wanted to give a last blessing to his final resting place, so he decided to create humans. But he was in such a hurry, knowing he was dying, that he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, which meant they couldn't sit down. Then he died. The people hated having kangaroo tails and no knees, and they cried out to the heavens for help. Dromerdeener heard their cry and came down to Tasmania to see what the matter was. He took pity on the people, gave them bendable knees and cut off their inconvenient kangaroo tails so they could all sit down at last. Then they lived happily ever after.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "was defeated",
+        "isError": false,
+        "errorExpression": "was defeated",
+        "surroundingText": "A god called Moinee was defeated by a rival god",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "to create",
+        "isError": false,
+        "errorExpression": "to create",
+        "surroundingText": "place, so he decided to create humans. But he was",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "knowing",
+        "isError": false,
+        "errorExpression": "knowing",
+        "surroundingText": "in such a hurry, knowing he was dying, that",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "died",
+        "isError": false,
+        "errorExpression": "died",
+        "surroundingText": "couldn't sit down. Then he died. The people",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "their",
+        "isError": true,
+        "correction": "their",
+        "errorExpression": "its",
+        "surroundingText": "bendable knees and cut off their inconvenient kangaroo tails so",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "was defeated"
+      },
+      {
+        "label": "(B)",
+        "text": "to create"
+      },
+      {
+        "label": "(C)",
+        "text": "knowing"
+      },
+      {
+        "label": "(D)",
+        "text": "died"
+      },
+      {
+        "label": "(E)",
+        "text": "its"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어인 Moinee가 라이벌 신인 Dromerdeener에 의해 패배를 당한 대상이므로 수동태 'was defeated'가 어법상 옳습니다.",
+      "(B)": "decide는 목적어로 to부정사를 취하는 동사이므로 'to create'는 어법상 옳습니다.",
+      "(C)": "주절의 주어인 'he'가 그가 죽어가고 있음을 '알고 있는(knowing)' 능동 관계이므로 현재분사 'knowing'으로 이끄는 분사구문은 어법상 옳습니다.",
+      "(D)": "문맥상 과거의 문장들을 연결하는 시간의 선후 관계 속에서 과거 시점의 단발적 동작을 나타내는 정동사 과거형 'died'가 어법상 옳습니다."
+    },
+    "explanation": "이 문장에서 문맥상 잘라낸 꼬리는 앞에 나온 '사람들(the people)'의 불편한 캥거루 꼬리를 의미합니다. 따라서 복수 명사 'the people'을 지칭하는 대명사는 복수 소유격이어야 하므로, 학생들에게 제시되는 단수 소유격 'its'는 비문이며 'their'로 고쳐야 합니다. 문장의 주어가 단수 신인 Dromerdeener이기에 대명사 지시 대상을 단수로 착각하기 쉽지만, 소유의 대상이 사람들의 꼬리임을 맥락을 통해 파악해야 합니다.",
+    "keyPoints": [
+      "(E) 대명사 일치 — 지명하는 대상의 단복수에 따라 인칭대명사 수일치 판단",
+      "(A) 능동태 vs 수동태 — 주어가 행위의 주체인지 대상인지 수동태 판정",
+      "(C) 분사의 태 — 분사의 생략된 의미상 주어와 분사 동작의 능동·진행 관계 확인"
+    ],
+    "tags": [
+      "대명사",
+      "수일치",
+      "수동태",
+      "분사구문",
+      "정동사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "A god called Moinee __(A) was defeated__ by a rival god called Dromerdeener in a terrible battle up in the stars. Moinee fell out of the stars down to Tasmania to die. Before he died, he wanted to give a last blessing to his final resting place, so he decided __(B) to create__ humans. But he was in such a hurry, __(C) knowing__ he was dying, that he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, which meant they couldn't sit down. Then he __(D) died__. The people hated having kangaroo tails and no knees, and they cried out to the heavens for help. Dromerdeener heard their cry and came down to Tasmania to see what the matter was. He took pity on the people, gave them bendable knees and cut off __(E) its__ inconvenient kangaroo tails so they could all sit down at last. Then they lived happily ever after.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

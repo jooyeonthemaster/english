@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'This is because + 절' 구문은 결과(사회적 연결이 창의적 문제 해결 능력에 영향)를 먼저 제시하고 원인을 절로 잇는 표준 정문. 뒤에 이어지는 'and when you are happy ...' 병렬절과도 충돌 없음. 'This is why'와의 혼동을 유도하지만 뒤 내용이 원인이므로 because가 맞음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'are greatly enhanced'에서 부사 greatly가 수동 분사 enhanced를 수식 — 형용사/부사 구분 함정이지만 동사(분사) 수식이므로 부사형이 올바름."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'feel lonely or rejected' — feel의 주격보어 자리에서 형용사 lonely와 과거분사 rejected(거절당한 상태, 수동 의미)가 자연스럽게 병렬. 주어 you가 거절'당하는' 쪽이므로 rejecting은 불가하고 rejected가 정확. 실전에서 분사 태 판단으로 잠깐 끌리는 지점이나 명백한 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (정답)",
+      "reason": "'you may struggle to adapt to new information or finding creative solutions to problems' — 병렬 시작점은 struggle to 뒤의 부정사이므로 'adapt ... or (to) find ...'가 되어야 함. 매력적 대안 해석으로 adapt to의 to를 전치사로 보아 'adapt to [new information or finding creative solutions]'(cf. adapt to living alone)로 읽는 정문화를 적극 검토했고 통사적으로는 성립하나, '창의적 해결책을 찾는 것에 적응하는 데 어려움을 겪는다'는 의미가 되어 문맥(비판적 사고력 저하 → 새 정보 적응과 창의적 해결책 발견이라는 두 인지 활동이 모두 어려워짐)의 논리와 어긋남. 따라서 finding은 어법상 틀리며 find로 고쳐야 함."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'use alcohol or drugs to cope with the stress' — 목적을 나타내는 부사적 용법 to부정사('use X to V' 구조)로 정문. coping으로 바꾸려는 유인은 성립하지 않음."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 가장 강한 유혹은 (D)의 대안 파스(전치사 to가 명사 new information과 동명사 finding을 함께 지배하는 병렬)로, 문법 결합만 보면 정문화가 가능해 보여 실제로 끌렸으나 의미 결합에서 붕괴해 배제. 나머지 밑줄 (A)(B)(C)(E)는 모두 명백한 정문이라 복수 정답 여지 없음. 단일 정답 (D), 신뢰도 높음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P035",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "\"who is credited with discovering America\": fixed passive construction 'be credited with + gerund'. Relative pronoun 'who' has singular antecedent 'the Italian explorer', so 'is' agrees. Fully grammatical."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect (the answer)",
+      "reason": "\"considered his mistreatment... and the devastating effect...\" — the phrase governs a direct object NP, so it must be the active form 'considering' (grammaticalized preposition meaning 'in view of'). Past participle 'considered' is passive and cannot take a following object. Rescue attempts fail: an absolute construction requires noun-first order ('his mistreatment considered'); a dangling passive participle would force the implicit subject to be 'honoring the explorer', yielding the incoherent 'honoring the explorer being considered his mistreatment'. No grammatical parse exists; 'considered' is wrong, should be 'considering' (or 'given')."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "\"the diseases that Columbus and other Europeans brought with them\": inside the relative clause the subject is the plural coordinate NP 'Columbus and other Europeans'; 'them' correctly co-refers with that plural subject in the idiom 'bring X with oneself'. The relativized gap after 'brought' is the object 'that (= diseases)'. Grammatical."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "\"should support\": modal auxiliary 'should' followed by bare infinitive 'support'. Correct verb form."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "\"a new holiday that honors Native Americans and remembers their suffering\": antecedent of 'that' is singular 'a new holiday', so 3rd-person singular 'honors' is correct, with 'remembers' as a properly parallel singular verb. Grammatical."
+    }
+  ],
+  "note": "Clean single-answer item. (B) is the classic 'considering vs considered' dangling-participle point; the long-distance cue is the object NP immediately following the participle plus the main-clause subject 'honoring the explorer', which cannot serve as the passive participle's subject. All other underlines are unambiguously well-formed; no alternative parse (absolute construction, reduced relative, inversion) rescues (B)."
+}

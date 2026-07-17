@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'events of a kind and magnitude not seen before' — 축약 관계절(= which have not been seen before)이 'a kind and magnitude'를 후치 수식. kind/magnitude는 '목격되는' 대상이므로 수동 과거분사 seen이 옳다. 수식 대상이 멀어 잠깐 끌리는 미끼지만 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'less developed virtual realities have always been integral parts' — 복수 주어 + have + always + been 현재완료 구조와 부사 위치 모두 정상. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'That is new about cyberspace is its interactive nature' — 문장 주어 자리에 명사절이 필요한데 접속사 that은 완전한 절을 요구하나 'is new about cyberspace'는 주어가 결여되어 있고, 지시대명사 That으로 읽으면 뒤의 'is its interactive nature'가 주어 없이 남는다. 어떤 대안 해석으로도 구제 불가. 선행사 포함 관계대명사 What이어야 한다. 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'..., while being able to shape ...' — while + 현재분사 구문. 분사의 의미상 주어가 주절 주어 'real people'과 일치하므로 표준 용법. 낯선 표면형 때문에 최상위권도 검토하게 되는 매력 오답이나 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'The move from passive imaginary reality to the interactive virtual reality' — from A to B 상관 전치사 구조가 완결. 정문."
+    }
+  ],
+  "note": "정답은 (C) 단독. What(선행사 포함 관계사) 자리에 That을 놓은 전형적 오류로, 지시대명사/접속사 어느 해석으로도 정문이 되지 않음. (A)와 (D)가 표면형이 낯설어 유혹적이지만 둘 다 명백한 정문이라 복수정답 여지 없음."
+}

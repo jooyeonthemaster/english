@@ -1,0 +1,87 @@
+{
+  "pid": "P065",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-pronoun",
+      "severity": "minor",
+      "evidence": "선지 ①③의 'their'가 빈칸 문장 내 선행사가 없고 두 문장 앞의 'a student'(단수)를 일반화 지시함. 완성문 'The approach ... is to validate their existing linguistic habits ...'에서 지시가 다소 느슨하나 관행상 허용 범위로 판단, V3 통과 유지."
+    },
+    {
+      "code": "V-none-critical",
+      "severity": "minor",
+      "evidence": "렌더 지문은 원지문에서 'to first accept the dialect and then build on it' 스팬만 정확히 빈칸 처리했고 나머지는 문자 단위 동일(인용부호, em-dash, 'rejection and correction' 작은따옴표 보존). 정답 ③ 유일성 각 선지 독립 검증 통과."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "actor/scope shift — 수용적 접근을 '결과 기반 평가'로 치환",
+      "temptingBecause": "지문 말미의 'results won't be apparent immediately'와 'long-range benefits'에서 '결과' 어휘를 앵커로 차용, 학업 성과 지향 어조가 첫 문장의 교육적 기회와 공명",
+      "decisiveFlaw": "빈칸 직후 'For example' 예시(교사의 수용적 recast)가 '평가' 행위를 전혀 예증하지 못함. 지문 어디에도 방언 사용을 평가하라는 논지 없음"
+    },
+    {
+      "label": "2",
+      "intent": "condition loss — 수용 단계를 생략한 한쪽 극단('rejection and correction') 채택",
+      "temptingBecause": "첫 문장의 'economic opportunities'를 직접 차용해 표준어 교정의 실용적 정당성이 강해 보임",
+      "decisiveFlaw": "'rejection and correction'은 지문이 나열한 의견 스펙트럼의 한 극단일 뿐이며, CRT 접근은 그와 구별되는 것으로 제시됨. 예시의 부드러운 recast('Oh, you don't have a pencil')와 'firmly rectify'가 모순"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 'first accept the dialect and then build on it'의 의미 보존 추상화",
+      "temptingBecause": "해당 없음(정답). 'validate ... as a stepping stone toward standard usage'가 수용+발판 2단계 구조와 표준어라는 최종 목표(첫 문장)를 동시에 보존",
+      "decisiveFlaw": "없음. 예시 문장(수용 후 표준형 모델링)과 첫 문장(표준어 교육의 목적), 마지막 문장(장기적 언어 발달)이 모두 수렴 지지"
+    },
+    {
+      "label": "4",
+      "intent": "overextension/half-truth — '수용'을 '영구적 대체'로 과확장 (스펙트럼의 반대 극단 'complete acceptance')",
+      "temptingBecause": "'complete acceptance'가 지문에 실제로 등장하는 입장이며, 방언 존중이라는 CRT의 표면적 인상과 부합",
+      "decisiveFlaw": "'enduring replacement for formal language'는 첫 문장(표준어를 가르치는 primary reason)과 정면 모순. 교사가 표준형을 모델링하는 예시와도 불일치"
+    },
+    {
+      "label": "5",
+      "intent": "causal/priority reversal — 문화적 태도와 교정의 우선순위를 뒤집음",
+      "temptingBecause": "'culturally responsive'와 'modification(≈correction)' 등 지문 핵심 어휘를 모두 포함해 표면 겹침이 큼",
+      "decisiveFlaw": "발문 문장 자체와 자기모순: 'CRT와 가장 일치하는 접근 = CRT적 태도보다 교정을 우선하는 것'이 되어 내용 판단 없이 소거 가능. 이 자기소거성은 설계 결함이기도 함(메타 누출)"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤의 '방언의 즉각적 변형' — 선지 원문에는 'immediate'에 해당하는 표현이 없음(경미한 첨언, 논지 왜곡은 아님)"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints의 '동사의 재진술(build on it)' — 'build on it'은 동사구이며 '재진술'이라는 용어 사용이 부정확·어색함(원문 스팬을 지칭하는 의도는 명확하여 V4 실패로는 보지 않음)"
+    },
+    {
+      "severity": "minor",
+      "evidence": "본 해설이 ②⑤를 '표면적 교정'으로 묶어 처리 — 오답 해설에서는 각각 구분되나 본 해설 내 함정 분리가 다소 뭉툭함"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "sameSyntacticSlot": true,
+    "answerPreservesSourceSpan": true,
+    "eachDistractorHasAnchorOverlapFlaw": true,
+    "requiresTwoClues": false,
+    "noSingleCueElimination": false,
+    "evidence": "빈칸 직후 'For example' 한 문장(수용적 recast로 표준형 모델링)이 단독으로 '수용+표준어로의 발판'을 거의 결정함 — 두 문장/두 논리 단서 연결 필수 조건 미달. 또한 ⑤는 발문 어휘('culturally responsive') 반복으로 자기소거되고, ②'firmly'·④'enduring replacement'는 극단 표지로 훈련된 학생이 극성 휴리스틱만으로 소거 가능"
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 빈칸이 글의 주제문(핵심 처방)을 겨냥해 출제 가치는 높고(C1=4), 오답 4개가 서로 다른 함정 유형(scope shift, condition loss, overextension, priority reversal)을 사용함(C2=3). 그러나 KILLER 요청 대비 실제 난이도가 미달: (a) 빈칸 바로 뒤 예시가 강력한 국소 단서로 정답을 거의 결정, (b) ⑤ 자기모순 소거, (c) ②④의 극단 표지 소거로 실효 경쟁 선지가 ①③ 수준으로 축소됨 → C5=2, killerConditionsMet=false. 합계 18, 최저 2 → B (KILLER 미달이므로 상위 난이도 배치는 부적합, 중상 난이도 문항으로는 소폭 수정 후 출제 가능: ⑤의 발문 어휘 반복 제거, ②④의 극단 표지 완화 권장)."
+}

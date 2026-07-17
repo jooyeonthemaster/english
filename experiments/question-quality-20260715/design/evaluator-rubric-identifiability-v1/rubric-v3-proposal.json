@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "question-quality-evaluator-rubric-v3-proposal-1",
+  "status": "DESIGN_ONLY_NOT_GOLD",
+  "evidence": {
+    "sourceReport": "experiments/question-quality-20260715/reviews/calibration-v2-rater-interagreement-v1/report.json",
+    "blindAnswerAgreement": [21, 24],
+    "fatalFlagAgreement": [23, 24],
+    "gradeAgreement": [20, 24],
+    "gradeQwk": 0.8803418803418803
+  },
+  "grammarSite": {
+    "nonCompensableFields": [
+      "displayedGrammaticality",
+      "diagnosis",
+      "correctionRestoresSource",
+      "explanationClaimsAccurate"
+    ],
+    "setValuedFields": [
+      "acceptedPointFamilies",
+      "acceptedCorrectionEquivalenceSets"
+    ],
+    "singletonPointFamilyRequired": false,
+    "exactCorrectionStringRequired": false
+  },
+  "blankOption": {
+    "propositionAxes": [
+      "actorOrTarget",
+      "polarity",
+      "conditionOrModality",
+      "causalRelationAndDirection",
+      "scopeOrQuantifier",
+      "stance",
+      "temporalRelation"
+    ],
+    "axisRelationEnum": [
+      "PRESERVED",
+      "REVERSED",
+      "NARROWED",
+      "BROADENED",
+      "OMITTED",
+      "UNSUPPORTED_ADDITION",
+      "SHIFTED",
+      "NOT_APPLICABLE"
+    ],
+    "setValuedFields": [
+      "decisiveAxes",
+      "mechanismTags"
+    ],
+    "singletonPrimaryIntentRequired": false,
+    "nonCompensableFields": [
+      "slotGrammarCompatible",
+      "uniqueAnswer",
+      "answerPreservesAllMandatoryAxes"
+    ]
+  },
+  "calibration": {
+    "anchorPilotItems": 12,
+    "independentRaters": 3,
+    "codebookRevisionBeforeMainPacket": true,
+    "mainPacketItems": 24,
+    "supplementalHeldOutRequired": true,
+    "truthMayNotBeRebalancedToTargetComposition": true
+  },
+  "activity": {
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0
+  }
+}

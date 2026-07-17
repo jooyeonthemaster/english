@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' 에서 called 는 species 를 수식하는 과거분사(축약 관계절 = which are called)이다. species 가 '~라고 불리는' 수동 관계이므로 과거분사가 옳다. 삽입 콤마 구조도 정상."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on or are greatly affected by the keystone species' 에서 that 은 The fact 의 내용을 설명하는 동격(appositive) 접속사다. 뒤에 완전한 절(주어 other species + 동사 depend/are affected)이 이어지므로 관계대명사 which/that 가 아니라 동격 that 이 정확하다."
+    },
+    {
+      "label": "C",
+      "verdict": "incorrect",
+      "reason": "주어 'The fact (that ... keystone species)' 에 대응하는 정동사(finite verb)가 없다. revealing 은 현재분사여서 술어가 될 수 없어 문장이 미완성이 된다. 의미상 '그 사실은 keystone species 가 제거될 때 드러난다' 이므로 is revealed / becomes revealed / reveals itself 같은 정동사가 와야 한다. 도치·분사구문·축약관계절 등 어떤 대안 해석으로도 정문이 되지 않는다. 어법상 틀린 부분."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'During the time of year when other fruits are less plentiful' 에서 are less plentiful 은 be동사 + 비교급 형용사구로 서술어. less plentiful(덜 풍부한) 이 문맥(다른 과일이 적은 시기)에 정확히 맞는다."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'Should the fig trees disappear, most of the fruit-eating vertebrates would be eliminated.' 는 if 생략 도치 가정법(= If the fig trees should disappear). Should + 주어 뒤에는 동사원형이 오므로 disappear 가 옳다. 귀결절 would be eliminated 와도 호응."
+    }
+  ],
+  "note": "전형적인 '정동사 vs 분사' 함정 문항. 매력적 오답으로 (B) that 을 관계대명사로 오인해 which 를 떠올릴 수 있으나, 동격 that 이 정문이라 제외된다. (A) called 를 능동 calling 으로 착각하는 유혹도 있으나 수동이 맞다. 결정적 오류는 주절 정동사 부재인 (C) revealing 하나로 명확히 좁혀진다."
+}

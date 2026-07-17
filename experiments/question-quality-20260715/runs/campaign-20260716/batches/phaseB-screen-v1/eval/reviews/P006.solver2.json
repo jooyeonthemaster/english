@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) expressing",
+      "verdict": "correct",
+      "reason": "동명사구 주어. 문장은 세 독립절의 등위 나열 'Fear has helped..., [expressing anger] helps..., and [expressing positive emotions] helps...'(A, B, and C 절 접속)이며, 'expressing anger'는 단수 취급 동명사 주어로 정동사 'helps'와 수일치가 성립한다. 셋째 절 'expressing positive emotions helps'와 형태적 평행도 완전하다. 대안 파스 탐색: 정동사 helps가 뒤따르므로 분사구문 독법은 애초에 불가능하고, 동명사 주어 독법이 유일한 파스이며 그것이 정문이다. 어법상 옳음."
+    },
+    {
+      "label": "(B) narrows",
+      "verdict": "correct",
+      "reason": "단일 주어에 걸린 병렬 정동사. 지배 구조는 'fear makes us very attentive, narrows..., will cause..., and may cause...'로 병렬 시작점은 'makes'이고 공유 주어는 3인칭 단수 'fear'. 'narrows'는 makes와 동일한 현재시제 3단수형으로 병렬이 성립한다. 뒤 항이 will/may 조동사구여서 형태가 섞이지만, 각 동사구가 주어 fear와 독립적으로 결합 가능(fear narrows / fear will cause / fear may cause)하므로 시제·법이 혼재된 VP 등위는 정문이다. 어법상 옳음."
+    },
+    {
+      "label": "(C) avoiding",
+      "verdict": "wrong",
+      "reason": "상관접속 병렬 위반 — 정답. 지배 규칙: 'cause + 목적어 + to부정사' 구문에서 상관어 'either X or Y'는 X·Y의 형태 일치를 요구하며, either의 위치가 등위 접속 지점을 'cause us' 직후로 고정한다. 원문 'will cause us either to face a situation (fight) or avoiding it (flight)'에서 첫 항이 to부정사 'to face'이므로 둘째 항은 '(to) avoid it'이어야 하는데 동명사 'avoiding'이 와서 병렬이 깨진다. 정문화 대안 파스 전수 탐색: (i) 'avoiding it'을 분사구문으로 읽으면 either...or 상관구조가 첫 항만으로 미완결되어 비문, (ii) 'avoiding'을 동명사 목적어로 읽을 지배 동사·전치사가 없음, (iii) 'us'를 수식하는 분사로 읽는 것은 either...or 프레임과 의미 양쪽에서 차단됨, (iv) 독립분사구문(absolute) 독법도 의미상 주어 부재로 불성립. 어떤 분석으로도 정문이 되지 않으므로 어법상 틀림이 형식적으로 유일하게 증명된다."
+    },
+    {
+      "label": "(D) acutely",
+      "verdict": "correct",
+      "reason": "부사의 동사 수식. 'remember an experience more acutely'에서 acutely는 동사 remember(기억의 선명한 방식)를 수식하므로 부사형이 옳고, 비교급 'more acutely' 결합도 정상이다. 형용사 acute가 요구될 자리인지 검토: remember는 이 문맥에서 SVO 구조로 'an experience'는 단순 목적어이며 목적격보어를 취하는 구문이 아니므로 형용사 자리가 아니다. 어법상 옳음."
+    },
+    {
+      "label": "(E) had not helped",
+      "verdict": "correct",
+      "reason": "가정법 과거완료(3형 조건문). 'If they had not helped us adapt and survive, they would not have evolved with us.' — 조건절 과거완료(had not helped) + 주절 'would not have evolved'로 과거 반사실 조건문의 시제 호응이 정확하다. 직전 문장의 'long ago'가 과거 시점을 명시하므로 의미적으로도 과거완료가 요구된다. 'help + 목적어 + 원형부정사(adapt and survive)' 결합도 정문. 어법상 옳음."
+    }
+  ],
+  "note": "블라인드 풀이, 문법가/논리학자 렌즈. 정답 후보는 (C) 단일로 수렴한다. 'either to face ... or avoiding'의 상관 병렬 파괴는 either의 위치가 접속 지점을 고정하기 때문에 형식적으로 증명 가능하며, 정문이 되는 대안 통사 분석이 존재하지 않는다. 나머지 (A)(B)(D)(E)는 각각 동명사 주어, 단수 주어 병렬 정동사, 비교급 부사 수식, 가정법 과거완료로 규칙 적용이 일의적으로 성립하고, 비문으로 만드는 어떤 대안 파스도 발견되지 않았다. 오답 시비 여지가 낮은 깨끗한 어법 문항."
+}

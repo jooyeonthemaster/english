@@ -1,0 +1,622 @@
+{
+  "id": "u01-c1",
+  "unitId": "u01",
+  "order": 1,
+  "title": "본동사 하나 원칙",
+  "oneLiner": "한 문장(절)에는 시제를 가진 본동사가 반드시 하나 있어야 합니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": ["TP01"],
+    "sourceRefs": [
+      "어법끝 5.0 TP01 동사 vs 준동사",
+      "천일문 고등 GRAMMAR U55(동사 vs 준동사)",
+      "별표4 #10 문장의 형식(중 ●)"
+    ]
+  },
+  "lenses": ["L2", "L5"],
+  "confusableWith": ["u01-c2", "u01-c3", "u02-c1"],
+  "estimatedMinutes": 18,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The bridge across the river connects the two old towns.",
+        "The bridge across the river connecting the two old towns."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 단어 하나입니다. 이 레슨을 마치면 왜 두 번째가 문장이 아닌지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "본동사",
+      "question": "본동사가 무엇이고, 왜 굳이 '본'을 붙입니까?",
+      "plain": "본동사는 시제(현재·과거)를 짊어지고 문장을 실제로 서술하는 동사입니다. 동사처럼 생긴 단어가 여럿이어도, 한 절을 세우는 것은 시제를 가진 이 하나뿐입니다.",
+      "analogy": "버스에 사람이 아무리 많아도 운전대를 잡은 사람은 한 명입니다. -ing·to부정사·p.p.는 동사 출신 승객일 뿐이고, 시제라는 운전대를 잡은 본동사만 문장을 몰 수 있습니다.",
+      "whyItMatters": "밑줄이 동사 자리인지 준동사 자리인지 묻는 문항은 수능 어법의 단골이며, 전부 이 개념 하나에서 갈립니다. 판별 도구 \"동사 자리 카운팅\"의 출발점이 여기입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "동사처럼 생긴 단어가 있으면 문장은 완성된 것입니다.",
+      "truth": "동사처럼 생긴 것과 실제로 동사 노릇을 하는 것은 다릅니다. 시제를 가진 형태만 본동사입니다. -ing·to부정사·p.p.는 동사에서 나왔지만 시제가 없어 문장을 세우지 못합니다.",
+      "counterExample": {
+        "en": "The bridge across the river **connecting** the two old towns.",
+        "ko": "강을 가로지르는 그 다리가 두 오래된 마을을 연결하는 (…무엇?)",
+        "note": "connecting 은 시제가 없습니다. 시제 동사가 하나도 없으므로 이것은 문장이 아니라 명사 덩어리입니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "본동사 판별 필기",
+      "intro": "판별에 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "시제 — 동사에 찍힌 시간 도장",
+          "body": "동사가 현재의 일인지 과거의 일인지 표시하는 형태입니다. melts·melted 에는 도장이 있고, melting·to melt 에는 없습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "본동사 — 시간 도장을 가진 동사",
+          "body": "시제를 가진 동사만 절을 세울 수 있습니다. 도장이 없는 단어는 아무리 동사처럼 생겨도 문장을 서술하지 못합니다.",
+          "example": {
+            "en": "The bridge across the river **connects** the two towns.",
+            "ko": "강을 가로지르는 그 다리는 두 마을을 연결합니다.",
+            "note": "connects 가 시제(현재)를 지고 있는 본동사입니다."
+          }
+        },
+        {
+          "head": "준동사 — 동사 출신, 시제 없음",
+          "body": "-ing·to부정사·p.p.는 동사에서 나왔지만 시제가 없습니다. 명사를 꾸미거나 명사 노릇을 할 뿐, 절을 세우지 못합니다.",
+          "example": {
+            "en": "the roads **connecting** the two towns",
+            "ko": "두 마을을 연결하는 도로들",
+            "note": "connecting 은 앞의 명사를 꾸미는 수식어이지 본동사가 아닙니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "동사구 — be·have 가 시제를 대신 짊어집니다",
+          "body": "is melting·has melted 처럼 be·have 와 결합하면 덩어리 전체가 본동사입니다. 이때 시제는 is·has 가 지고 있습니다.",
+          "example": {
+            "en": "The snow **has melted** on the roof.",
+            "ko": "지붕 위의 눈은 이미 녹았습니다.",
+            "note": "has 가 시제를 지므로 has melted 전체가 본동사입니다."
+          }
+        },
+        {
+          "head": "한 절 = 본동사 하나",
+          "body": "접속사·관계사가 절을 하나 열 때마다 시제 동사도 하나 늘어납니다. 이렇게 늘어난 개수를 세어 맞추는 정식 셈법은 이 유닛 뒤 레슨에서 등식으로 정리하므로, 여기서는 '절이 하나 열리면 시제 동사가 하나 는다'만 붙잡아 두면 됩니다.",
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "완전한 문장(절)에는 시제를 가진 본동사가 정확히 하나 있어야 합니다.",
+      "examples": [
+        {
+          "en": "The bridge across the river **connects** the two old towns.",
+          "ko": "강을 가로지르는 그 다리는 두 오래된 마을을 연결합니다.",
+          "note": "시제 동사는 connects 하나입니다. 그래서 완전한 문장입니다."
+        },
+        {
+          "en": "Ice on the mountain roads **melts** slowly in early spring.",
+          "ko": "산악 도로 위의 얼음은 이른 봄에 천천히 녹습니다.",
+          "note": "전치사구 on the mountain roads 는 뼈대가 아닙니다. 주어 Ice + 본동사 melts 가 뼈대입니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "주어 뒤에 수식어가 아무리 길게 붙어도 본동사 자리는 반드시 따로 남아 있어야 합니다.",
+      "examples": [
+        {
+          "en": "The letters **kept** in the museum for decades **reveal** the writer's daily life.",
+          "ko": "수십 년간 박물관에 보관된 그 편지들은 작가의 일상을 드러냅니다.",
+          "note": "kept 는 수식하는 분사이고, reveal 이 본동사입니다. 동사처럼 보이는 것이 둘이어도 시제를 가진 것은 하나뿐입니다."
+        },
+        {
+          "en": "The results of the survey **conducted** across five schools **show** a clear pattern.",
+          "ko": "다섯 개 학교에서 실시된 그 설문의 결과는 뚜렷한 경향을 보여 줍니다.",
+          "note": "conducted 를 본동사로 착각하면 show 가 갈 곳이 없어집니다. show 가 본동사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "긴 주어를 가진 문장의 해부",
+      "tokens": [
+        { "t": "The letters", "role": "S" },
+        { "t": "kept in the museum for decades", "role": "M" },
+        { "t": "reveal", "role": "V" },
+        { "t": "the writer's daily life", "role": "O" }
+      ],
+      "ko": "수십 년간 박물관에 보관된 그 편지들은 작가의 일상을 드러냅니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "kept in the museum for decades 는 앞의 명사를 뒤에서 꾸미는 분사구입니다. 문장의 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The letters 입니다. 복수이므로 동사도 복수형이어야 합니다."
+        },
+        {
+          "label": "③ 시제를 가진 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "reveal 만이 시제를 가진 동사입니다. kept 는 시제가 없는 분사이므로 후보가 아닙니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "reveal 은 목적어를 부르는 동사이고, the writer's daily life 가 그 목적어입니다."
+        }
+      ],
+      "conclusion": "동사처럼 보이는 단어가 둘(kept, reveal)이지만 시제를 가진 것은 reveal 하나뿐입니다. 그래서 이 문장은 옳습니다."
+    },
+    {
+      "id": "b8",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "시제 동사 사냥",
+      "instruction": "이 문장에서 시제를 가진 동사를 전부 탭하십시오. 동사처럼 보여도 시제가 없으면 사냥감이 아닙니다.",
+      "hitLabel": "시제 동사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "letters", "hit": false },
+        { "t": "kept", "hit": false },
+        { "t": "in", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "museum", "hit": false },
+        { "t": "reveal", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "writer's", "hit": false },
+        { "t": "life,", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "visitors", "hit": false },
+        { "t": "read", "hit": true },
+        { "t": "them", "hit": false },
+        { "t": "slowly.", "hit": false }
+      ],
+      "ko": "박물관에 보관된 그 편지들은 작가의 삶을 드러내고, 방문객들은 그것들을 천천히 읽습니다.",
+      "explain": "시제를 가진 동사는 reveal 과 read 둘입니다. kept 는 명사를 꾸미는 과거분사라 시제가 없습니다. 접속사 and 가 절을 하나 더 열었으므로 시제 동사도 둘인 것이 맞습니다."
+    },
+    {
+      "id": "b9",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "본동사를 찾는 3단계",
+      "steps": [
+        {
+          "text": "문장에서 동사처럼 보이는 것(현재형·과거형·조동사+원형·-ing·to부정사·p.p.)을 모두 찾은 뒤, 그중 -ing·to부정사·p.p.처럼 시제가 없는 형태는 동사 후보에서 지웁니다.",
+          "applyNote": "The medicine … tested … lasting … received → 동사처럼 보이는 후보는 tested, lasting, received 셋인데, 그중 lasting 은 -ing 형이므로 지웁니다. 남은 후보는 tested 와 received 입니다."
+        },
+        {
+          "text": "접속사·관계사가 절을 하나 열 때마다 시제 동사가 하나 더 필요하므로, 눈에 보이는 접속사·관계사를 세어 남은 동사가 그만큼 있는지 확인합니다.",
+          "applyNote": "관계사 that 이 하나 있으므로 시제 동사는 둘이어야 합니다. tested 는 관계절의 동사, received 가 주절의 본동사입니다."
+        },
+        {
+          "text": "주절에 시제 동사가 하나도 남지 않으면, 밑줄 친 준동사가 본동사로 바뀌어야 하는 자리입니다.",
+          "applyNote": "만약 received 가 receiving 이었다면 주절에 본동사가 없어져 문장이 무너집니다."
+        }
+      ],
+      "example": {
+        "en": "The medicine that doctors tested in trials **lasting** five years finally **received** approval.",
+        "ko": "의사들이 5년에 걸친 시험에서 검증한 그 약은 마침내 승인을 받았습니다.",
+        "note": "관계절(that doctors tested in trials lasting five years — 그 안에 분사구 lasting five years 가 다시 들어 있습니다)을 통째로 걷어내면 주절의 뼈대는 The medicine … received approval 입니다."
+      }
+    },
+    {
+      "id": "b10",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The old factory building standing beside the station ( remains / remaining ) empty.",
+      "steps": [
+        {
+          "title": "① 시제 동사 후보를 찾습니다",
+          "body": "standing 은 -ing 형이라 시제가 없습니다. 후보에서 지웁니다. 괄호 앞뒤에 다른 시제 동사는 보이지 않습니다."
+        },
+        {
+          "title": "② 접속사·관계사를 셉니다",
+          "body": "접속사도 관계사도 없습니다. 따라서 이 문장에는 시제 동사가 정확히 하나 있어야 합니다."
+        },
+        {
+          "title": "③ 남은 자리를 판정합니다",
+          "body": "지금 이 문장에는 시제 동사가 하나도 없습니다. 그러므로 괄호는 본동사 자리이며, 시제를 가진 형태가 들어가야 합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "remaining 을 넣으면 시제 동사가 없는 조각문이 됩니다. remains 를 넣어야 문장이 완성됩니다."
+        }
+      ],
+      "answer": "remains",
+      "ko": "역 옆에 서 있는 그 낡은 공장 건물은 비어 있습니다."
+    },
+    {
+      "id": "b11",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u01-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The photographs on the wall {{blank}} the history of this town.",
+          "options": ["show", "showing"],
+          "answer": 0,
+          "translation": "벽에 걸린 그 사진들은 이 마을의 역사를 보여 줍니다.",
+          "explanation": "on the wall 은 전치사구 수식어입니다. 이 문장에는 시제 동사가 하나도 없으므로 빈칸이 본동사 자리이며, 시제를 가진 show 가 옳습니다.",
+          "trapTags": ["missing-main-verb"]
+        },
+        {
+          "id": "u01-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The boxes stored in the basement [[u:containing]] old school records.",
+          "isCorrect": false,
+          "correction": "contain",
+          "translation": "지하실에 보관된 그 상자들에는 오래된 학교 기록이 들어 있습니다.",
+          "explanation": "stored 도 containing 도 시제가 없습니다. 시제 동사가 하나도 없어 문장이 성립하지 않으므로, 밑줄이 본동사 contain 이 되어야 합니다.",
+          "trapTags": ["missing-main-verb", "long-subject"]
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "본동사가 될 수 있는 것과 없는 것",
+      "columns": ["본동사(시제 있음)", "준동사(시제 없음)"],
+      "rows": [
+        {
+          "criterion": "형태",
+          "a": "melts / melted / will melt / has melted / is melting",
+          "b": "melting / to melt / melted (수식하는 p.p.)"
+        },
+        {
+          "criterion": "혼자서 문장을 세울 수 있는가",
+          "a": "세울 수 있습니다",
+          "b": "세울 수 없습니다"
+        },
+        {
+          "criterion": "be·have와의 결합",
+          "a": "be + -ing, have + p.p. 는 동사구 전체가 본동사입니다",
+          "b": "be·have 없이 홀로 쓰이면 본동사가 되지 못하고 수식어 또는 명사(주어·목적어) 역할만 합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The snow **is melting** on the roof.",
+          "ko": "지붕 위의 눈이 녹고 있습니다.",
+          "note": "be + -ing 는 동사구입니다. is 가 시제를 지고 있으므로 본동사가 있습니다."
+        },
+        {
+          "en": "The snow **melting** on the roof.",
+          "ko": "지붕 위에서 녹고 있는 그 눈 (…무엇?)",
+          "note": "be동사가 없으면 melting 은 수식어일 뿐이어서 문장이 완성되지 않습니다.",
+          "wrong": true
+        },
+        {
+          "en": "**Swimming** is fun.",
+          "ko": "수영은 재미있습니다.",
+          "note": "홀로 쓰인 -ing 가 언제나 수식어인 것은 아닙니다. 여기서 Swimming 은 수식어가 아니라 동명사 주어이고, 시제를 가진 본동사는 is 입니다. 어느 쪽이든 준동사가 본동사가 되지 못한다는 점은 같습니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 형태가 혼자서 본동사가 될 수 있는지 분류하십시오.",
+      "buckets": [
+        { "id": "v", "label": "본동사가 된다" },
+        { "id": "nv", "label": "본동사가 못 된다" }
+      ],
+      "chips": [
+        { "text": "melts", "bucketId": "v", "why": "현재 시제를 가진 동사 형태입니다." },
+        { "text": "has melted", "bucketId": "v", "why": "have + p.p. 는 동사구 전체가 본동사입니다." },
+        { "text": "is melting", "bucketId": "v", "why": "be + -ing 는 동사구이므로 본동사입니다." },
+        { "text": "melting", "bucketId": "nv", "why": "be동사 없이 -ing 혼자서는 시제가 없어 본동사가 되지 못합니다." },
+        { "text": "to melt", "bucketId": "nv", "why": "to부정사는 시제가 없습니다." },
+        { "text": "written by the poet", "bucketId": "nv", "why": "be동사가 없는 p.p. 는 앞 명사를 꾸미는 수식어입니다." }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "시제 도장 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 판별은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "한 절에는 시제를 가진 본동사가 정확히 하나 있어야 합니다.",
+          "isTrue": true,
+          "why": "본동사 하나 원칙 그 자체입니다. 절이 늘면 접속사·관계사와 함께 시제 동사도 늘어납니다."
+        },
+        {
+          "statement": "-ing 형도 혼자서 본동사가 될 수 있습니다.",
+          "isTrue": false,
+          "why": "-ing 는 시제가 없습니다. be 와 결합해 is melting 이 되어야 본동사입니다."
+        },
+        {
+          "statement": "has melted 는 동사구 전체가 본동사입니다.",
+          "isTrue": true,
+          "why": "시제는 has 가 지고 있고, has melted 덩어리가 절을 세웁니다."
+        },
+        {
+          "statement": "접속사가 하나 있으면 시제 동사는 하나로 충분합니다.",
+          "isTrue": false,
+          "why": "접속사가 절을 하나 더 열므로 시제 동사도 둘이어야 합니다."
+        },
+        {
+          "statement": "to부정사에는 시제가 없습니다.",
+          "isTrue": true,
+          "why": "to melt 는 시간 도장이 없는 준동사이므로 절을 세우지 못합니다."
+        },
+        {
+          "statement": "be동사 없이 홀로 선 p.p.도 본동사입니다.",
+          "isTrue": false,
+          "why": "written by the poet 처럼 홀로 선 p.p.는 명사를 꾸미는 수식어일 뿐입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The report ( published / publishing / publishes ) by the committee last spring changed the city's plan.",
+      "givenSteps": [
+        "① 시제 동사를 찾습니다 — changed 가 시제를 가진 동사입니다.",
+        "② 접속사·관계사를 셉니다 — 하나도 없습니다. 따라서 시제 동사는 changed 하나로 충분합니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "published — 본동사가 이미 있으므로 괄호는 수식하는 준동사 자리입니다",
+        "publishing — 보고서가 스스로 발행하므로 능동입니다",
+        "publishes — 동사가 둘이어야 문장이 자연스럽습니다"
+      ],
+      "answer": 0,
+      "explain": "본동사 changed 가 이미 있으므로 괄호는 준동사 자리입니다. 보고서는 '발행되는' 쪽이므로 과거분사 published 가 옳습니다. publishes 를 넣으면 접속사 없이 시제 동사가 둘이 되어 문장이 깨집니다."
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 관계절과 분사구가 2겹으로 낀 경우",
+      "body": "주어와 본동사 사이에 관계절과 분사구가 겹쳐 들어오면, 그 안의 동사들 때문에 본동사가 이미 나온 것처럼 느껴집니다. 수식어를 전부 괄호로 묶은 뒤 괄호 밖에 시제 동사가 남아 있는지 확인해야 합니다.",
+      "example": {
+        "en": "The medicine that doctors tested in trials lasting five years finally **received** approval.",
+        "ko": "의사들이 5년에 걸친 시험에서 검증한 그 약은 마침내 승인을 받았습니다.",
+        "note": "관계절(that doctors tested in trials lasting five years — 그 안에 분사구 lasting five years 가 다시 들어 있습니다)을 통째로 걷어내면 received 만 남습니다. tested 는 관계절의 동사이지 주절의 본동사가 아닙니다."
+      }
+    },
+    {
+      "id": "b17",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 낡은 다리를 덮고 있는 눈이 매년 봄에 녹습니다.",
+      "answer": ["The snow", "covering", "the old bridge", "melts", "every spring"],
+      "tiles": [
+        "The snow",
+        "covering",
+        "the old bridge",
+        "melts",
+        "every spring",
+        "melting"
+      ],
+      "explanation": "covering the old bridge 는 앞의 명사를 꾸미는 분사구입니다. 본동사 자리에는 시제를 가진 melts 가 와야 하므로 melting 은 쓰이지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u01-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The scientist who first described the disease {{blank}} a small laboratory in Vienna.",
+          "options": ["ran", "running", "to run"],
+          "answer": 0,
+          "translation": "그 질병을 처음 기술한 그 과학자는 빈에 있는 작은 실험실을 운영했습니다.",
+          "explanation": "관계사 who 가 하나 있으므로 시제 동사는 둘이어야 합니다. described 는 관계절의 동사이므로 주절의 본동사가 아직 없습니다. 따라서 빈칸은 시제를 가진 ran 입니다.",
+          "trapTags": ["relative-clause-verb", "missing-main-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 ran 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "관계사 who 가 절을 하나 열었으므로 동사가 둘 필요한데, described 하나뿐이라 주절 본동사가 비어 있었습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 관계사 who 가 절을 하나 열었으니 시제 동사가 둘 필요한데 그중 하나가 비어 있었다는 것 — 그 셈이 판단의 근거입니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어서 과거형이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제의 자연스러움은 형태 선택의 근거가 되지 못합니다. running·to run 도 과거 맥락에서 쓰일 수 있습니다. 판단 근거는 '본동사 자리가 비었는가'입니다."
+        },
+        {
+          "text": "ran 이 문맥상 의미가 가장 잘 통하기 때문입니다.",
+          "correct": false,
+          "feedback": "의미가 통하는지는 세 후보 모두 비슷합니다. 어법 판단은 의미가 아니라 구조에서 나옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The report [[1:published]] last month [[2:claims]] that the new policy, which [[3:reducing]] waste in every city office, [[4:has saved]] a large amount of money.",
+      "answer": 3,
+      "correction": "reduces",
+      "rationales": [
+        "명사 The report 를 뒤에서 꾸미는 과거분사입니다. 보고서는 발행되는 쪽이므로 p.p. 가 옳습니다.",
+        "주절의 본동사입니다. 핵 주어 The report 가 단수이므로 claims 가 맞습니다.",
+        "관계대명사 which 가 절을 열었으므로 그 절에는 시제를 가진 동사가 있어야 합니다. -ing 형은 본동사가 될 수 없으므로 reduces 로 고칩니다.",
+        "접속사 that 이 연 명사절의 본동사입니다. 절이 하나 늘었으므로 동사도 하나 더 필요합니다."
+      ],
+      "ko": "지난달 발행된 그 보고서는 새 정책이 많은 돈을 절약했다고 주장하는데, 그 정책은 모든 시청 사무실의 낭비를 줄입니다."
+    },
+    {
+      "id": "b21",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 조각문을 주고 '문법적으로 옳은 문장이 되도록 고쳐 쓰시오'로 물어봅니다. 본동사가 없다는 것을 지적하고 시제 동사로 바꿔 써야 만점입니다.",
+          "sample": {
+            "en": "The trees planted along the road giving shade to the whole street.",
+            "ask": "밑줄 없이 주어진 이 문장을 어법에 맞게 고쳐 쓰십시오.",
+            "answer": "The trees planted along the road give shade to the whole street."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 긴 주어 뒤에 준동사를 놓아 본동사가 사라진 문장을 선지로 만듭니다. 밑줄이 -ing·p.p. 인데 그 절에 시제 동사가 없다면 그것이 정답입니다.",
+          "sample": {
+            "en": "A tradition of storytelling passed down through many generations [[u:shaping]] how the community remembers its past.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "shapes — 주절에 시제 동사가 하나도 없으므로 밑줄이 본동사여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Researchers have long studied how cities cool themselves. [[u:A network of small parks planted along the river lowers the summer temperature by several degrees.]] The effect grows stronger when the trees are older, and it spreads to the streets nearby.",
+      "instruction": "밑줄 친 문장에서 수식어를 걷어내고 핵 주어와 본동사를 찾으십시오.",
+      "found": "planted along the river 는 명사를 꾸미는 분사구입니다. 이를 걷어내면 핵 주어는 A network 이고 본동사는 lowers 입니다. planted 를 본동사로 착각하면 lowers 가 설 자리가 없어집니다.",
+      "gist": "강을 따라 조성된 작은 공원들이 도시의 여름 기온을 낮춘다는 내용입니다."
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "조각문 감별소의 문지기",
+      "intro": "이 감별소에는 문장인 척하는 조각문이 매일 수십 건 접수됩니다. 시제 도장을 짚어내는 눈이 없으면 아무도 이 문을 지나지 못합니다. 네 건의 서류로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The bridge across the river {{blank}} the two old towns.",
+          "options": ["connects", "connecting"],
+          "answer": 0,
+          "why": "이 문장에는 시제 동사가 하나도 없으므로 빈칸이 본동사 자리입니다. 시제를 가진 connects 가 옳습니다."
+        },
+        {
+          "prompt": "The photographs taken at dawn {{blank}} a completely different mood.",
+          "options": ["create", "creating"],
+          "answer": 0,
+          "why": "taken at dawn 은 수식하는 분사구입니다. 시제 동사가 없으므로 빈칸은 본동사 create 의 자리입니다."
+        },
+        {
+          "prompt": "The novel that critics praised {{blank}} a major prize last year.",
+          "options": ["won", "winning"],
+          "answer": 0,
+          "why": "관계사 that 이 절을 하나 열었으므로 시제 동사는 둘이어야 합니다. praised 는 관계절의 동사이고, 주절의 본동사 won 이 필요합니다."
+        },
+        {
+          "prompt": "The snow {{blank}} on the roof since last night.",
+          "options": ["has been piling up", "piling up"],
+          "answer": 0,
+          "why": "piling up 홀로는 시제가 없어 절을 세우지 못합니다. has 가 시제를 진 has been piling up 전체가 본동사입니다."
+        }
+      ],
+      "winText": "감별 완료 도장이 찍혔습니다. 동사처럼 생긴 것과 시제를 가진 것을 가르는 눈 — 그것이 이 유닛 전체를 여는 열쇠이고, 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 서류를 돌려줍니다. 네 건 모두 물은 것은 단 하나였습니다 — \"이 절에 시제 동사가 몇 개 남는가.\" 판별 절차 3단계를 다시 확인하고 오면 도장은 준비되어 있습니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "한 절에 시제 동사가 ___개 있어야 하고, -ing·to부정사·p.p.는 ___ 때문에 본동사가 될 수 없습니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "완전한 절에는 시제를 가진 본동사가 정확히 하나 있습니다.",
+        "-ing·to부정사·p.p.는 시제가 없어 혼자서 본동사가 되지 못합니다. 단, be·have와 결합하면 동사구 전체가 본동사입니다.",
+        "주어와 본동사 사이의 전치사구·관계절·분사구는 괄호로 묶어 치우고, 괄호 밖에 시제 동사가 남았는지 확인합니다.",
+        "시제 동사가 하나도 남지 않으면 밑줄 친 준동사가 본동사로 바뀌어야 하는 자리입니다."
+      ],
+      "keySentence": {
+        "en": "The letters **kept** in the museum for decades **reveal** the writer's daily life.",
+        "ko": "수십 년간 박물관에 보관된 그 편지들은 작가의 일상을 드러냅니다.",
+        "note": "동사처럼 보이는 것이 둘이어도 시제를 가진 것은 reveal 하나뿐입니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u01-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The car parked in front of the gate {{blank}} to my uncle.",
+          "options": ["belongs", "belonging"],
+          "answer": 0,
+          "translation": "정문 앞에 주차된 그 차는 제 삼촌의 것입니다.",
+          "explanation": "parked in front of the gate 는 수식하는 분사구입니다. 시제 동사가 하나도 없으므로 빈칸이 본동사 자리이며 belongs 가 옳습니다.",
+          "trapTags": ["missing-main-verb", "long-subject"]
+        },
+        {
+          "id": "u01-c1-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The students preparing for the exam [[u:meet]] every evening in the library.",
+          "isCorrect": true,
+          "translation": "시험을 준비하는 그 학생들은 매일 저녁 도서관에서 만납니다.",
+          "explanation": "preparing for the exam 은 앞의 명사를 꾸미는 분사구이고, 시제 동사는 meet 하나뿐입니다. 접속사가 없으므로 동사는 하나여야 하며, 이 문장은 그 조건을 지킵니다.",
+          "trapTags": ["long-subject"]
+        },
+        {
+          "id": "u01-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Many books about the artist {{blank}} in the museum shop, and visitors buy them quickly.",
+          "options": ["are sold", "selling", "being sold"],
+          "answer": 0,
+          "translation": "그 예술가에 관한 많은 책이 박물관 매장에서 판매되고, 방문객들은 그것들을 빠르게 사 갑니다.",
+          "explanation": "등위접속사 and 가 절을 하나 더 열었으므로 시제 동사는 둘이어야 합니다. buy 가 뒤 절의 동사이므로 앞 절에도 시제 동사가 필요합니다. be동사를 포함한 are sold 만이 본동사가 될 수 있습니다.",
+          "trapTags": ["coordination", "missing-main-verb"]
+        }
+      ]
+    }
+  ]
+}

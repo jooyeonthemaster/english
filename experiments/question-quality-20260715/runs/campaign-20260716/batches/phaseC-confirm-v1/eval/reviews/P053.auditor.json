@@ -1,0 +1,79 @@
+{
+  "pid": "P053",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-typo",
+      "severity": "minor",
+      "evidence": "해설 본문에 띄어쓰기 오탈자 '우리의 뇌는싸우거나' — 학생 노출 텍스트의 사소한 표기 오류이나 사실성 훼손은 아님."
+    },
+    {
+      "code": "V4-minor-trap-label",
+      "severity": "minor",
+      "evidence": "오답 해설 4번이 함정 기제를 '인과를 뒤집은 오답'으로 명명했으나 실제 기제는 '실재하지 않는 필요(need)를 전제하는 극성/전제 오류'다. 다만 왜 틀렸는지에 대한 실질 분석('무해한 상황에서 싸우거나 도망칠 필요가 전혀 없음에도 뇌가 생존 본능을 발동')은 지문과 정확히 일치하므로 V4 실패로 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "object swap / half-truth — 지문의 '현대의 진짜 위험(고혈압·당뇨)'과 '호랑이(고대 포식자)' 어휘를 그대로 차용하되 뇌가 착각하는 대상을 바꿔치기",
+      "temptingBecause": "genuine modern hazards, ancient physical predators 모두 지문 앞부분(high blood pressure or diabetes / tiger)과 직접 대응하는 강한 어휘 앵커가 있어 표면 매칭으로 고르기 쉬움",
+      "decisiveFlaw": "뇌가 오인하는 대상은 '진짜 현대 위험'이 아니라 '무해한 상황(교통체증·불쾌한 대화)'이다. 지문은 뇌가 고혈압·당뇨에 반응한다고 말한 적이 없음"
+    },
+    {
+      "label": "2",
+      "intent": "polarity reversal — 뇌의 반응 방향을 정반대로 뒤집음",
+      "temptingBecause": "minor daily annoyances(교통체증·불쾌한 대화)와 sudden attack(호랑이)이 지문 소재와 겹침",
+      "decisiveFlaw": "뇌는 사소한 짜증을 '무시(ignores)'하는 것이 아니라 치명적 위협으로 '과대평가'한다 — However, our brain considers this a danger 와 정면 충돌"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span 'sees a mortal danger that is not there'의 의미 보존 추상화(mortal danger→fatal crisis, not there→out of a harmless reality)",
+      "temptingBecause": "N/A (정답)",
+      "decisiveFlaw": "없음. 'There is no danger, but our brain rates it as such', 'The danger is an illusion'과 정확히 수렴"
+    },
+    {
+      "label": "4",
+      "intent": "false presupposition / 극성 전제 오류 — 실재하는 위협 필요를 뇌가 놓친다고 전제",
+      "temptingBecause": "flee or fight가 지문 표현을 그대로 차용하고, '뇌의 판단 실패'라는 프레임이 글의 '뇌의 오류' 논지와 표면적으로 유사",
+      "decisiveFlaw": "지문에서는 도망·투쟁의 '실제 필요'가 존재하지 않는다(we do not have to flee or fight). 뇌의 문제는 필요를 못 알아보는 것이 아니라 없는 필요를 만들어내는 것"
+    },
+    {
+      "label": "5",
+      "intent": "premise contradiction — 글의 대전제(석기 시대 뇌는 현대 환경에 적응하지 못함)를 부정",
+      "temptingBecause": "survival responses, safer environment 등 지문 핵심 어휘와 겹치고 '점진적 적응'이 상식적으로 그럴듯함",
+      "decisiveFlaw": "'Stone Age brain that lives in a modern world'라는 전제 자체가 비적응을 의미하며, 뇌가 적응했다면 글에 열거된 모든 오작동 사례가 성립하지 않음"
+    }
+  ],
+  "explanationIssues": [
+    "띄어쓰기 오탈자: '우리의 뇌는싸우거나' (해설 본문)",
+    "오답 4 해설의 함정 기제 명명 '인과를 뒤집은'은 부정확 — 실제로는 존재하지 않는 필요를 전제하는 극성/전제 오류(false presupposition)에 가까움. 실질 분석 내용 자체는 지문과 일치",
+    "주 해설이 ①·⑤만 함정으로 언급하고 ②·④는 오답 해설에만 존재 — 오류는 아니나 주 해설의 함정 커버리지가 부분적"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "distractorAnchorOverlapFlaw": true,
+    "requiresTwoCues": false,
+    "notSingleCueSolvable": false,
+    "variedTrapMechanisms": true,
+    "detail": "빈칸 직전 두 문장('There is no danger, but our brain rates it as such.', 'The danger is an illusion.')이 정답 ③의 거의 축자적 패러프레이즈를 제공한다. 인접한 단일 국소 단서 하나만으로 유일한 실질 경쟁 선지 ①과의 변별이 완료되며, ②·④·⑤는 극성 점검만으로 즉시 소거된다. §D의 '최소 두 문장/두 논리 단서 연결' 및 '극성 하나로 찍을 수 없음' 조건 미충족. 지문 자체도 논지를 3회 이상 명시 반복하는 평이한 텍스트로 KILLER 깊이에 못 미침"
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한 건전한 문항이다. 정답 유일성이 견고하고(각 오답이 서로 다른 앵커·결함 보유), 렌더 무결성·필드 동기화도 깨끗하다. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 빈칸 문장이 직전 문장 'The danger is an illusion'의 사실상 재진술이어서 국소 매칭만으로 풀리고, 오답 ②④⑤가 극성 점검으로 즉시 소거되어 실질 경쟁은 ①-③ 이파전에 그친다(C3=2, C5=1). C5 난이도 정합 1점으로 B 기준(C 최저 2) 미달 → 등급 C. KILLER로 출하하려면 빈칸 위치를 옮기거나(예: 'That is the point' 전후의 추론 요구 지점) 인접 재진술 문장을 제거/변형하고, 극성만으로 죽지 않는 오답을 최소 2개 보강하는 재설계가 필요하다. 해설의 띄어쓰기 오탈자와 ④ 함정 기제 명명('인과 반전')의 부정확성은 출하 전 경미 수정 대상."
+}

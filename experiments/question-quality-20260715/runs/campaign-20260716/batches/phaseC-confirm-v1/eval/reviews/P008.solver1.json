@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'living about 400,000 years ago'는 주어 'the common ancestor'를 수식하는 현재분사구(관계절 축약: who lived about 400,000 years ago). 조상이 능동적으로 '살았던' 것이므로 현재분사 living이 맞다. 문장의 정동사는 뒤의 'may have already been using'이며 콤마로 삽입된 분사구로 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'language is based on genes'는 'be based on(~에 기반하다)' 수동 관용 표현. language가 genes에 '기반되는' 대상이므로 과거분사 based가 정확. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'genes ... changed more in response to new habits than as causes of them'에서 them은 앞의 복수명사 'new habits'를 지시하는 목적격 대명사('of'의 목적어). 유전자가 습관을 유발한(cause) 것이 아니라 습관에 반응해 변한 것 → 지시대상(new habits)이 genes와 다르므로 재귀대명사가 아닌 them이 옳다. 수·격 모두 일치. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'cooking selected mutations for smaller guts and mouths'에서 주어는 동명사 cooking(단수), selected는 과거시제 타동사. 요리가 능동적으로 돌연변이를 '선택했다'는 의미로 정동사가 맞다('rather than vice versa'와 병치). 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'The appeal to a genetic change ___ evolution gets ... backwards'에서 의도된 구조는 'a genetic change driving evolution'(진화를 추동하는 유전적 변화 = 능동, 현재분사 driving). genetic change가 evolution을 능동적으로 driving하는 관계이므로 과거분사 driven은 어법상 틀림. driven을 살리려면 'genetic-change-driven evolution'(유전적 변화에 의해 추동된 진화)이라는 복합형용사 해석을 억지로 도입해야 하는데, 하이픈 없는 3어 복합수식은 비표준이고 필자 논지(유전적 변화가 진화를 이끈다는 top-down 관점을 지칭)와도 driving이 자연스럽다. A~D가 모두 명백히 정문이므로 유일한 오류는 (E). driving으로 고쳐야 함."
+    }
+  ],
+  "note": "Matt Ridley류 gene-culture 공진화 논지 지문. 정오답 판별의 핵심은 (E)의 능동 현재분사(driving) vs 과거분사(driven). 'genetic-change-driven evolution'이라는 복합형용사 대안 해석을 적극 탐색했으나, 하이픈 없는 비표준 3어 복합이고 나머지 4개가 전부 확정 정문이므로 오류는 (E)로 일의적으로 좁혀진다. multipleDefensible=false."
+}

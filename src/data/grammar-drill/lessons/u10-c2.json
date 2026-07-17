@@ -1,0 +1,703 @@
+{
+  "id": "u10-c2",
+  "unitId": "u10",
+  "order": 2,
+  "title": "혼동 부사",
+  "oneLiner": "hard/hardly, late/lately처럼 -ly 하나로 뜻이 갈리는 부사 짝은, 자리가 아니라 문맥의 뜻으로 고릅니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": ["TP17"],
+    "sourceRefs": [
+      "어법끝 5.0 TP-17 혼동하기 쉬운 형용사·부사(late/lately류)",
+      "docs/grammar-test-points.md VI. 형용사·부사·비교(TP-16~TP-19) — 15위 혼동 형용사·부사",
+      "천일문 고등 GRAMMAR — 형태가 다른 두 부사(hard/hardly, late/lately, high/highly, near/nearly)",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 부사(중 ●)",
+      "SMOAT 어법 드릴 뱅크 u10-choice·u10-support(conceptId=u10-c2, trapTag: confusable-adverb)"
+    ]
+  },
+  "lenses": ["L5"],
+  "confusableWith": ["u10-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Because the flight was delayed, the delegates arrived two hours late.",
+        "Because the flight was delayed, the delegates arrived two hours lately."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 -ly 두 글자뿐입니다. 이 레슨을 마치면 -ly 가 붙은 형태가 왜 다른 뜻의 부사인지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "혼동 부사",
+      "question": "hard 와 hardly 는 -ly 하나 차이인데, 왜 뜻이 정반대입니까?",
+      "plain": "혼동 부사는 hard 와 hardly 처럼 어근은 같지만 -ly 가 붙고 안 붙고에 따라 뜻이 완전히 갈리는 부사 짝입니다. 둘 다 부사여서 자리로는 구별되지 않습니다.",
+      "analogy": "같은 뿌리에서 자란 두 나무 같습니다. hard 와 hardly 는 어근이 같아 닮아 보이지만, 하나는 '세게·열심히', 다른 하나는 '거의 ~않다'라는 정반대의 열매를 맺습니다.",
+      "whyItMatters": "시험은 문맥에 맞지 않는 짝을 슬쩍 끼워 두고 '이 부사가 옳은가'를 묻습니다. -ly 를 '부사 표지'로 착각하면 반드시 걸려듭니다. 이 짝들의 뜻을 갈라 두는 것이 판별의 전부입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "부사 자리에는 -ly 가 붙은 형태를 쓰는 것이 안전합니다.",
+      "truth": "hard·late·high·near·close 는 -ly 없이 그대로 부사로 쓰입니다. 여기에 -ly 를 붙인다고 해서 '더 부사다운 형태'가 되는 것이 아니라, 뜻이 전혀 다른 별개의 부사가 됩니다. 두 형태는 자리가 아니라 뜻으로 갈립니다.",
+      "counterExample": {
+        "en": "The delegates arrived two hours **lately** because the flight was delayed.",
+        "ko": "그 대표들은 항공편이 지연되어 두 시간 늦게 도착했습니다.",
+        "note": "lately 는 '최근에'라는 뜻이어서 two hours 와 결합할 수 없습니다. '늦게'를 뜻하는 late 가 와야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "혼동 부사 판정 원칙 필기",
+      "intro": "짝을 외우기 전에, 판정에 필요한 원칙만 필기 한 장에 모읍니다.",
+      "entries": [
+        {
+          "head": "-ly 없이 그대로 부사 — 다섯 형태",
+          "body": "hard·late·high·near·close 는 -ly 없이 그 자체로 부사입니다. 형용사와 형태가 같아서, -ly 가 없다고 부사가 아닌 것은 아닙니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "-ly 는 강조가 아니라 다른 뜻",
+          "body": "hard 에 -ly 를 붙인 hardly 는 '더 강한 hard' 가 아닙니다. 뜻이 전혀 다른 별개의 부사입니다.",
+          "example": {
+            "en": "The exhausted witness could **hardly** remember the details.",
+            "ko": "지친 목격자는 세부 사항을 거의 기억하지 못했습니다.",
+            "note": "hardly 는 '거의 ~않다'이지 '열심히'가 아닙니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "hardly 는 부정을 담은 준부정어",
+          "body": "hardly·scarcely·barely 는 그 안에 부정을 품고 있습니다. not·no 와 겹쳐 쓰면 이중부정이 되어 틀립니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "자리가 아니라 뜻으로 고른다",
+          "body": "두 형태가 모두 부사이므로 '부사 자리인가'로는 갈리지 않습니다. 문맥이 어느 뜻을 요구하는지로 결정합니다.",
+          "pin": "팁"
+        },
+        {
+          "head": "정도·수량 앞은 -ly 쪽",
+          "body": "형용사의 정도(highly)나 수량·비율(nearly) 앞에서는 -ly 형이 옵니다. 물리적 높이·거리를 뜻할 때만 high·near 입니다.",
+          "example": {
+            "en": "**Nearly** half of the samples showed the same mineral.",
+            "ko": "표본의 거의 절반이 동일한 광물을 보였습니다.",
+            "note": "수량 half 앞에서 '거의'는 nearly 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "-ly 형과 그 뜻 짝짓기",
+      "instruction": "왼쪽의 -ly 부사를 오른쪽의 뜻과 짝지으십시오. 이 다섯 뜻이 시험장에서 문맥에 대입할 재료입니다.",
+      "pairs": [
+        {
+          "a": "hardly",
+          "b": "거의 ~않다 (준부정)",
+          "why": "hard(열심히)와 뜻이 정반대인 준부정어입니다."
+        },
+        {
+          "a": "lately",
+          "b": "최근에",
+          "why": "late(늦게)와 달리 현재완료와 자주 어울립니다."
+        },
+        {
+          "a": "highly",
+          "b": "매우·대단히 (정도)",
+          "why": "high(높이)와 달리 형용사의 정도를 꾸밉니다."
+        },
+        {
+          "a": "nearly",
+          "b": "거의 (수량·비율 앞)",
+          "why": "near(가까이)와 달리 수량 앞에서 '거의'를 뜻합니다."
+        },
+        {
+          "a": "closely",
+          "b": "면밀히·긴밀히 (방식)",
+          "why": "close(가까이)와 달리 방식이나 관련성을 뜻합니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "title": "-ly 없이 그대로 부사가 되는 형태",
+      "rule": "hard·late·high·near·close 는 -ly 를 붙이지 않고 그대로 부사로 쓰이며, 형용사와 형태가 같습니다.",
+      "examples": [
+        {
+          "en": "The research assistants worked **hard** to meet the strict deadline.",
+          "ko": "연구 보조원들은 엄격한 마감을 지키기 위해 열심히 일했습니다.",
+          "note": "hard 는 동사 worked 를 꾸미는 부사이며 '열심히·세게'를 뜻합니다."
+        },
+        {
+          "en": "The migrating cranes flew **high** above the frozen river valley.",
+          "ko": "이동 중인 두루미들은 얼어붙은 강 계곡 위로 높이 날았습니다.",
+          "note": "high 는 물리적 높이를 나타내는 부사입니다. 여기에는 -ly 를 붙이지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "title": "-ly 를 붙이면 뜻이 바뀝니다",
+      "rule": "-ly 를 붙인 형태는 같은 뜻을 강조한 부사가 아니라, 뜻이 전혀 다른 별개의 부사입니다.",
+      "examples": [
+        {
+          "en": "Air quality in the basin has improved **lately**, according to the monitoring stations.",
+          "ko": "관측소들에 따르면 그 분지의 대기질은 최근에 개선되었습니다.",
+          "note": "lately 는 '최근에'라는 뜻이며 현재완료(has improved)와 자주 어울립니다."
+        },
+        {
+          "en": "The method described in the journal is **highly** effective at removing microplastics.",
+          "ko": "그 학술지에 소개된 방법은 미세플라스틱을 제거하는 데 매우 효과적입니다.",
+          "note": "highly 는 형용사 effective 의 정도를 꾸며 '매우'를 뜻합니다. 물리적 높이가 아닙니다."
+        },
+        {
+          "en": "**Nearly** two thirds of the samples showed the same mineral composition.",
+          "ko": "표본의 거의 3분의 2가 동일한 광물 조성을 보였습니다.",
+          "note": "수량·비율 앞에서 '거의'를 뜻하는 것은 near 가 아니라 nearly 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "짝을 이루는 두 부사",
+      "columns": ["-ly 없는 형태", "-ly 붙은 형태"],
+      "rows": [
+        {
+          "criterion": "hard / hardly",
+          "a": "열심히·세게 — 동작을 힘껏 함을 뜻합니다",
+          "b": "거의 ~않다 — 부정을 담은 준부정어입니다"
+        },
+        {
+          "criterion": "late / lately",
+          "a": "늦게 — 정해진 때보다 뒤늦음을 뜻합니다",
+          "b": "최근에 — 현재완료와 자주 어울립니다"
+        },
+        {
+          "criterion": "high / highly",
+          "a": "높이 — 물리적 높이를 뜻합니다",
+          "b": "매우·대단히 — 정도를 뜻합니다"
+        },
+        {
+          "criterion": "near / nearly",
+          "a": "가까이 — 거리를 뜻합니다",
+          "b": "거의 — 수량·비율 앞에 옵니다"
+        },
+        {
+          "criterion": "close / closely",
+          "a": "가까이 — 물리적 거리를 뜻합니다",
+          "b": "면밀히·긴밀히 — 방식이나 관련성을 뜻합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "Although the laboratory stands **close** to the reservoir, few scientists have examined the water **closely**.",
+          "ko": "그 실험실은 저수지 가까이에 있지만, 그 물을 면밀히 조사한 과학자는 거의 없습니다.",
+          "note": "앞의 close 는 거리를, 뒤의 closely 는 조사의 방식을 나타냅니다."
+        },
+        {
+          "en": "**Nearly** every delegate arrived **late**, and the opening session began after dark.",
+          "ko": "거의 모든 대표가 늦게 도착했고, 개회 세션은 어두워진 뒤에 시작되었습니다.",
+          "note": "every 앞의 '거의'는 nearly 이고, 도착이 늦었다는 뜻은 late 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 빈칸에 어떤 형태가 들어가야 하는지 분류하십시오.",
+      "buckets": [
+        { "id": "plain", "label": "-ly 없는 형태" },
+        { "id": "ly", "label": "-ly 붙은 형태" }
+      ],
+      "chips": [
+        {
+          "text": "worked ___ to meet the deadline",
+          "bucketId": "plain",
+          "why": "'열심히 일했다'는 뜻이므로 hard 입니다."
+        },
+        {
+          "text": "could ___ hear the announcement",
+          "bucketId": "ly",
+          "why": "'거의 듣지 못했다'는 준부정의 뜻이므로 hardly 입니다."
+        },
+        {
+          "text": "The satellite orbits ___ above the atmosphere",
+          "bucketId": "plain",
+          "why": "물리적 높이를 나타내므로 high 입니다."
+        },
+        {
+          "text": "a ___ respected scholar",
+          "bucketId": "ly",
+          "why": "'대단히 존경받는'이라는 정도의 뜻이므로 highly 입니다."
+        },
+        {
+          "text": "The train left ten minutes ___",
+          "bucketId": "plain",
+          "why": "'십 분 늦게'라는 시간의 뜻이므로 late 입니다."
+        },
+        {
+          "text": "___ two thirds of the votes",
+          "bucketId": "ly",
+          "why": "비율 앞에서 '거의'를 뜻하는 것은 nearly 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "-ly 다섯 형태의 뜻 암기",
+      "target": "-ly 형 다섯 부사의 뜻",
+      "why": "다섯 짝의 -ly 쪽 뜻이 입에 붙어 있어야 시험장에서 문맥에 대입하는 속도가 납니다. 뜻을 더듬으면 판단이 늦어지고, 늦어지면 형태에 홀립니다.",
+      "device": "'거의-최근에-매우-거의-면밀히' — hardly·lately·highly·nearly·closely 순서로 리듬을 붙여 외웁니다. -ly 는 '뜻이 바뀐다'는 경고등이라고 새겨 두십시오.",
+      "items": [
+        { "cue": "hardly", "answer": "거의 ~않다 (준부정)" },
+        { "cue": "lately", "answer": "최근에 (현재완료와 어울림)" },
+        { "cue": "highly", "answer": "매우·대단히 (정도)" },
+        { "cue": "nearly", "answer": "거의 (수량·비율 앞)" },
+        { "cue": "closely", "answer": "면밀히·긴밀히 (방식·관련성)" }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "준부정어 관문",
+      "mission": "그 자체로 부정을 담고 있어 not 과 함께 쓰면 안 되는 준부정어를 전부 고르십시오.",
+      "mode": "SET",
+      "pool": ["hardly", "scarcely", "barely", "lately", "highly", "nearly", "closely"],
+      "answers": ["hardly", "scarcely", "barely"],
+      "passText": "준부정어 세 형태가 손에 붙었습니다. 이제 not 과 겹치는 이중부정 함정에 걸리지 않습니다.",
+      "retryText": "lately·highly·nearly 는 부정과 무관합니다. 부정을 품은 것은 hardly·scarcely·barely 셋뿐입니다. 다시 골라 보십시오."
+    },
+    {
+      "id": "b12",
+      "type": "RULE",
+      "tier": 3,
+      "title": "hardly 는 부정어입니다",
+      "rule": "hardly·scarcely·barely 는 그 자체가 부정을 담은 준부정어입니다. 같은 절에 not·no 를 함께 쓰지 않으며, 뒤에는 any·ever 같은 표현이 옵니다.",
+      "examples": [
+        {
+          "en": "The exhausted witness could **hardly** recall any details of the accident.",
+          "ko": "지친 목격자는 그 사고의 세부 사항을 거의 기억하지 못했습니다.",
+          "note": "hardly 가 부정을 담당하므로 뒤에 any 가 자연스럽게 옵니다."
+        },
+        {
+          "en": "The exhausted witness could not **hardly** recall the details of the accident.",
+          "ko": "지친 목격자는 그 사고의 세부 사항을 거의 기억하지 못했습니다.",
+          "note": "not 과 hardly 가 겹쳐 이중부정이 되므로 틀립니다. 둘 중 하나만 써야 합니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "highly 는 무엇을 꾸미는가",
+      "tokens": [
+        { "t": "The method", "role": "S" },
+        { "t": "described in the journal", "role": "M" },
+        { "t": "is", "role": "V" },
+        { "t": "highly", "role": "M" },
+        { "t": "effective", "role": "C" },
+        { "t": "at removing microplastics", "role": "M" }
+      ],
+      "ko": "그 학술지에 소개된 방법은 미세플라스틱을 제거하는 데 매우 효과적입니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 걷어냅니다",
+          "roles": ["M"],
+          "note": "described in the journal 은 주어를 꾸미는 분사구이고, at removing microplastics 는 보어를 보충하는 전치사구입니다. highly 도 수식어이지만, 무엇을 꾸미는지는 뒤에서 확인합니다."
+        },
+        {
+          "label": "② 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The method 입니다. 단수이므로 동사도 단수형입니다."
+        },
+        {
+          "label": "③ 본동사를 확인합니다",
+          "roles": ["V"],
+          "note": "시제를 가진 동사는 is 하나입니다. 주어 + be동사 + 보어 구조입니다."
+        },
+        {
+          "label": "④ 부사가 꾸미는 대상을 확인합니다",
+          "roles": ["C"],
+          "note": "highly 가 꾸미는 것은 보어 자리의 형용사 effective 입니다. 형용사의 정도를 나타내는 자리입니다."
+        }
+      ],
+      "conclusion": "highly 는 '매우'라는 정도를 뜻합니다. high 는 물리적 높이를 뜻하므로, 형용사의 정도를 꾸미는 이 자리에는 올 수 없습니다."
+    },
+    {
+      "id": "b14",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "혼동 부사를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 친 부사가 -ly 짝을 가진 형태인지 확인합니다(hard/hardly, late/lately, high/highly, near/nearly, close/closely).",
+          "applyNote": "이 문장에는 hard 와 hardly 가 한 번씩 등장하며, 둘 다 -ly 짝을 가진 형태입니다."
+        },
+        {
+          "text": "두 형태의 뜻을 각각 문장에 대입해 문맥이 성립하는지 봅니다. 둘 다 부사이므로 자리만으로는 갈리지 않습니다.",
+          "applyNote": "앞 절은 '몇 달간 열심히 일했다'는 뜻이므로 hard 이고, 뒤 절은 '거의 견디지 못했다'는 뜻이므로 hardly 입니다."
+        },
+        {
+          "text": "-ly 형이 준부정어(hardly·scarcely·barely)라면 같은 절에 not·no 가 이미 있는지 확인합니다. 있으면 이중부정이므로 틀립니다.",
+          "applyNote": "뒤 절에는 not 이 없습니다. 부정은 hardly 하나가 담당하므로 could not hardly 로 쓰면 틀립니다."
+        },
+        {
+          "text": "문맥이 요구하는 뜻 — 열심히·세게 / 준부정 '거의 ~않다' / 시간 '늦게·최근에' / 정도 '매우·거의' / 방식·관련 — 을 대입해, 문장 전체에서 모순 없이 맞물리는 유일한 조합으로 최종 확정합니다.",
+          "applyNote": "앞 절은 '열심히'(hard), 뒤 절은 준부정 '거의 ~못하다'(hardly)를 대입해야 yet 의 대조와 맞물립니다. 두 자리를 바꿔 넣으면 '거의 일하지 않았는데도 잘 견뎠다'가 되어 대조가 깨지므로, 이 조합만이 유일하게 성립합니다."
+        }
+      ],
+      "example": {
+        "en": "The engineers worked **hard** for months, yet the prototype could **hardly** survive a single test flight.",
+        "ko": "그 기술자들은 몇 달간 열심히 일했지만, 그 시제품은 시험 비행 한 번도 거의 견디지 못했습니다.",
+        "note": "같은 어근에서 나온 두 부사가 한 문장 안에서 정반대의 역할을 합니다. 형태가 아니라 뜻으로 갈립니다."
+      }
+    },
+    {
+      "id": "b15",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 각각 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The negotiators, who had ( hard / hardly ) slept for two days, still argued ( hard / hardly ) for a compromise.",
+      "steps": [
+        {
+          "title": "① 두 괄호가 모두 혼동 부사 짝임을 확인합니다",
+          "body": "hard 와 hardly 는 둘 다 부사입니다. 어느 쪽이 부사냐를 묻는 문제가 아니라, 어느 뜻이 문맥에 맞느냐를 묻는 문제입니다."
+        },
+        {
+          "title": "② 첫 괄호에 두 뜻을 대입합니다",
+          "body": "관계절은 협상가들의 상태를 설명합니다. '이틀 동안 열심히 잤다'는 부자연스럽고, '이틀 동안 거의 자지 못했다'가 성립합니다. 따라서 hardly 입니다."
+        },
+        {
+          "title": "③ 둘째 괄호에 두 뜻을 대입합니다",
+          "body": "still(그런데도)이 앞의 악조건과 대조를 만듭니다. '그런데도 타협을 위해 강하게 주장했다'가 성립하므로 hard 입니다. hardly 를 넣으면 '거의 주장하지 않았다'가 되어 still 의 대조가 무너집니다."
+        },
+        {
+          "title": "④ 부정어 중복을 점검합니다",
+          "body": "had hardly slept 에는 not 이 없습니다. 부정은 hardly 하나가 담당하므로 had not hardly slept 로 쓰면 이중부정이 되어 틀립니다."
+        }
+      ],
+      "answer": "hardly, hard",
+      "ko": "이틀 동안 거의 잠을 자지 못한 그 협상가들은 그런데도 타협을 위해 강하게 주장했습니다."
+    },
+    {
+      "id": "b16",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u10-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Because the road was flooded, the supply trucks arrived two hours {{blank}}.",
+          "options": ["late", "lately"],
+          "answer": 0,
+          "translation": "도로가 침수되어 보급 트럭들은 두 시간 늦게 도착했습니다.",
+          "explanation": "two hours 와 결합해 '두 시간 늦게'라는 시간의 뜻을 만들어야 하므로 late 가 옳습니다. late 는 -ly 없이 그대로 '늦게'를 뜻하는 부사입니다. lately 는 '최근에'라는 뜻이어서 구체적인 지연 시간과 함께 쓸 수 없습니다.",
+          "trapTags": ["confusable-adverb"]
+        },
+        {
+          "id": "u10-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The candidate spoke [[u:high]] of her former colleagues throughout the interview.",
+          "isCorrect": false,
+          "correction": "highly",
+          "translation": "그 지원자는 면접 내내 이전 동료들을 매우 좋게 평가했습니다.",
+          "explanation": "speak highly of 는 '~을 높이 평가하다·칭찬하다'라는 뜻으로, 여기서 필요한 것은 정도의 뜻입니다. high 는 물리적 높이를 나타내는 부사이므로 이 자리에 올 수 없습니다. high 를 highly 로 고칩니다.",
+          "trapTags": ["confusable-adverb"]
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "혼동 부사 반사신경",
+      "instruction": "제한시간 안에 각 문장의 부사 사용이 옳으면 ○, 틀리면 ×를 누르십시오. 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "The marathon runners trained **hard** all through the winter.",
+          "isTrue": true,
+          "why": "'열심히 훈련했다'는 뜻이므로 hard 가 옳습니다."
+        },
+        {
+          "statement": "The audience could **hard** hear the speaker over the noise.",
+          "isTrue": false,
+          "why": "'거의 듣지 못했다'는 준부정의 뜻이므로 hardly 여야 합니다."
+        },
+        {
+          "statement": "The research team has worked **closely** with the city council.",
+          "isTrue": true,
+          "why": "'긴밀히 협력했다'는 방식의 뜻이므로 closely 가 옳습니다."
+        },
+        {
+          "statement": "**Nearly** every seat was taken before the lecture began.",
+          "isTrue": true,
+          "why": "수량 every 앞에서 '거의'는 nearly 가 옳습니다."
+        },
+        {
+          "statement": "The reviewer spoke **high** of the young author's debut novel.",
+          "isTrue": false,
+          "why": "'높이 평가하다'는 정도의 뜻이므로 speak highly of 로 highly 여야 합니다."
+        },
+        {
+          "statement": "Housing prices have risen **lately**, according to the latest report.",
+          "isTrue": true,
+          "why": "'최근에 올랐다'는 뜻이므로 현재완료와 어울리는 lately 가 옳습니다. lately 는 오직 '최근에'만을 뜻해 뜻이 갈리지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — '부사이니 -ly 를 붙여야 한다'는 반사 반응",
+      "body": "밑줄이 동사 바로 뒤의 hard 에 그어지면, 학생들은 '부사 자리이니 hardly 로 고쳐야 한다'고 반사적으로 판단합니다. 그러나 hard 는 이미 부사이며, hardly 는 뜻이 정반대인 별개의 부사입니다. 형태의 모양이 아니라 문맥의 뜻으로 판단해야 합니다.",
+      "example": {
+        "en": "Volunteers who cleared the debris worked **hardly** for three weeks after the flood.",
+        "ko": "잔해를 치운 자원봉사자들은 홍수 후 3주 동안 열심히 일했습니다.",
+        "note": "문맥은 '열심히 일했다'이므로 hard 여야 합니다. hardly 를 쓰면 '거의 일하지 않았다'가 되어 뜻이 정반대가 됩니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u10-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Since the storm destroyed the antenna, the station has {{blank}} broadcast any live reports.",
+          "options": ["hard", "hardly", "not hardly"],
+          "answer": 1,
+          "translation": "폭풍이 안테나를 파괴한 이후로 그 방송국은 생방송 보도를 거의 내보내지 못했습니다.",
+          "explanation": "뒤에 부정의 문맥에서 쓰이는 any 가 있고 문장에 다른 부정어가 없으므로, 부정은 준부정어 hardly 가 담당해야 합니다. hard(열심히)는 뜻이 맞지 않고, not hardly 는 부정어가 겹치는 이중부정이므로 쓸 수 없습니다.",
+          "trapTags": ["confusable-adverb", "double-negative"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 hardly 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "뒤에 any 가 있고 절에 다른 부정어가 없으므로, 부정의 뜻은 준부정어 hardly 가 담당해야 하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 부정을 누가 담당하는지를 세는 것이 이 판단의 근거입니다. 그래서 not hardly 는 이중부정으로 배제됩니다."
+        },
+        {
+          "text": "부사 자리이므로 -ly 가 붙은 형태를 써야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "hard 도 -ly 없이 이미 부사입니다. 두 형태 모두 부사이므로 자리만으로는 갈리지 않습니다."
+        },
+        {
+          "text": "현재완료(has broadcast) 뒤에는 -ly 가 붙은 부사만 올 수 있기 때문입니다.",
+          "correct": false,
+          "feedback": "그런 규칙은 없습니다. 시제는 형태 선택의 근거가 되지 못하며, 판단 근거는 문맥의 뜻입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "문장 속 혼동 부사 사냥",
+      "instruction": "이 문장에서 -ly 짝을 가진 혼동 부사를 전부 탭하십시오. hard 처럼 -ly 가 없어도 짝이 있으면 사냥감입니다.",
+      "hitLabel": "혼동 부사",
+      "tokens": [
+        { "t": "Since", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "storm,", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "crews", "hit": false },
+        { "t": "have", "hit": false },
+        { "t": "worked", "hit": false },
+        { "t": "hard,", "hit": true },
+        { "t": "cleared", "hit": false },
+        { "t": "nearly", "hit": true },
+        { "t": "all", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "roads,", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "lately", "hit": true },
+        { "t": "inspected", "hit": false },
+        { "t": "every", "hit": false },
+        { "t": "bridge", "hit": false },
+        { "t": "closely.", "hit": true }
+      ],
+      "ko": "폭풍 이후로 그 작업반은 열심히 일했고, 거의 모든 도로를 치웠으며, 최근에는 모든 다리를 면밀히 점검했습니다.",
+      "explain": "hard(열심히)·nearly(거의)·lately(최근에)·closely(면밀히) 넷이 모두 짝을 가진 혼동 부사입니다. hard 는 -ly 가 없지만 hardly 라는 짝이 있고, 나머지 셋은 -ly 형으로 쓰여 각자 다른 뜻을 냅니다."
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The survey team, which had [[1:hardly]] begun mapping the valley in October, worked [[2:hard]] through the winter, and [[3:lately]] the district office has published a revised chart in which [[4:near]] every trail appears in a new position.",
+      "answer": 4,
+      "correction": "nearly",
+      "rationales": [
+        "'10월에는 지도 제작을 거의 시작하지도 못했다'는 뜻이므로 준부정어 hardly 가 옳습니다. 절에 다른 부정어가 없으므로 이중부정도 아닙니다.",
+        "'겨울 내내 열심히 일했다'는 뜻이므로 hard 가 옳습니다. hardly 로 바꾸면 뜻이 정반대가 됩니다.",
+        "'최근에'라는 뜻이므로 lately 가 옳습니다. 현재완료 has published 와 어울립니다.",
+        "every trail 이라는 수량 표현 앞에서 '거의'라는 뜻이 필요하므로 nearly 로 고칩니다. near 는 거리의 '가까이'를 뜻합니다."
+      ],
+      "ko": "10월에는 계곡 지도 제작을 거의 시작하지도 못했던 그 측량팀은 겨울 내내 열심히 일했고, 최근에 구청은 거의 모든 등산로가 새 위치에 표시된 수정 도면을 발간했습니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 혼동 부사 짝을 문맥과 어긋나게 넣어 두고 '틀린 부사를 찾아 바르게 고쳐 쓰시오'로 물어봅니다. 뜻이 어긋나는 지점을 지적하고 짝 형태로 바꿔 써야 만점입니다.",
+          "sample": {
+            "en": "Volunteers have complained late about the new safety guidelines more and more often this month.",
+            "ask": "어법상 틀린 부사를 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "late → lately — 이번 달 들어 불만이 반복적으로 늘어난 상황이므로, 현재완료 have complained 와 함께 '최근에'라는 뜻의 lately 여야 합니다. late 는 '뒤늦게'라는 별개의 뜻이어서 반복·지속 문맥과 맞지 않습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 밑줄 어법에서는 뜻이 갈리는 두 부사 중 문맥에 맞지 않는 쪽을 밑줄로 제시합니다. 밑줄이 hard·late·high·near·close 라면 -ly 형의 뜻을 대입해 보고, 어느 쪽이 문맥과 맞는지로 판정합니다.",
+          "sample": {
+            "en": "The archived letters, which researchers have examined [[u:close]] over the past decade, reveal a different account of the expedition.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "closely — '면밀히 조사해 왔다'는 방식의 뜻이 필요합니다. close 는 물리적 거리의 '가까이'이므로 이 자리에 올 수 없습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "뜻 바꿔치기 사기꾼",
+      "intro": "저는 -ly 하나로 부사의 뜻을 감쪽같이 바꿔치기합니다. 형태만 보고 부사를 고르는 사람은 제 손바닥 안입니다. 네 문장으로 당신의 눈을 시험하겠습니다.",
+      "questions": [
+        {
+          "prompt": "The climbers had ____ reached the ridge when the sudden blizzard forced them back down.",
+          "options": ["hardly", "hard"],
+          "answer": 0,
+          "why": "폭풍이 곧바로 되돌아가게 했으므로 '거의 도달하지도 못했을 때'라는 준부정의 뜻이 필요합니다. hardly 가 옳습니다. hard 를 넣으면 '세게 도달했다'가 되어 뜻이 통하지 않습니다."
+        },
+        {
+          "prompt": "Critics across the country have spoken ____ of the museum's bold new design.",
+          "options": ["highly", "high"],
+          "answer": 0,
+          "why": "speak highly of 는 '높이 평가하다'로 정도의 뜻입니다. high 는 물리적 높이를 뜻하므로 이 자리에 올 수 없습니다."
+        },
+        {
+          "prompt": "The drought has lasted ____ three years across the entire southern region.",
+          "options": ["nearly", "near"],
+          "answer": 0,
+          "why": "three years 라는 수량 앞에서 '거의'를 뜻하므로 nearly 가 옳습니다. near 는 거리의 '가까이'입니다."
+        },
+        {
+          "prompt": "Since the power outage, the sensors have ____ recorded any readings at all.",
+          "options": ["hardly", "not hardly"],
+          "answer": 0,
+          "why": "뒤의 any 가 부정 문맥을 요구하고 절에 다른 부정어가 없으므로 hardly 가 부정을 담당합니다. not hardly 는 이중부정이라 틀립니다."
+        }
+      ],
+      "winText": "바꿔치기가 전부 들통났습니다. 형태가 아니라 뜻으로 부사를 저울질하는 눈 — 그것이 혼동 부사 문항을 여는 열쇠이고, 방금 당신 손에 들어왔습니다.",
+      "loseText": "사기꾼이 문장을 거둬 갑니다. 네 문장이 물은 것은 하나였습니다 — '이 자리는 어느 뜻을 요구하는가.' 형태가 아니라 뜻으로 다시 저울질하고 오면 승부는 준비되어 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "hard 와 hardly 는 둘 다 ___이지만 뜻이 ___입니다. 그래서 이 짝은 자리가 아니라 ___으로 골라야 합니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "hard·late·high·near·close 는 -ly 없이 그대로 부사로 쓰입니다.",
+        "-ly 를 붙인 hardly·lately·highly·nearly·closely 는 같은 뜻의 부사가 아니라 뜻이 다른 부사입니다.",
+        "두 형태 모두 부사이므로 자리로는 갈리지 않습니다. 반드시 문맥의 뜻으로 고릅니다.",
+        "hardly·scarcely·barely 는 부정을 담은 준부정어입니다. not·no 와 함께 쓰면 이중부정이 되어 틀립니다."
+      ],
+      "keySentence": {
+        "en": "The engineers worked **hard** for months, yet the prototype could **hardly** survive a single test flight.",
+        "ko": "그 기술자들은 몇 달간 열심히 일했지만, 그 시제품은 시험 비행 한 번도 거의 견디지 못했습니다.",
+        "note": "같은 어근의 두 부사가 한 문장에서 정반대의 뜻을 냅니다. -ly 는 부사 표지가 아니라 뜻의 표지입니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u10-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The archive has been closed for repairs, so few researchers have visited it {{blank}}.",
+          "options": ["late", "lately"],
+          "answer": 1,
+          "translation": "그 기록보관소는 보수를 위해 문을 닫아서, 최근에 그곳을 방문한 연구자는 거의 없습니다.",
+          "explanation": "현재완료 have visited 와 함께 '최근에'라는 뜻이 필요하므로 lately 가 옳습니다. late 는 '늦게'라는 시간의 뜻이어서 이 문장의 의미와 맞지 않습니다.",
+          "trapTags": ["confusable-adverb"]
+        },
+        {
+          "id": "u10-c2-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The restoration project has consumed [[u:near]] a decade of continuous public funding.",
+          "isCorrect": false,
+          "correction": "nearly",
+          "translation": "그 복원 사업은 거의 10년에 걸친 지속적인 공적 자금을 소모했습니다.",
+          "explanation": "a decade 라는 기간·수량 표현 앞에서 '거의'라는 뜻이 필요하므로 nearly 가 옳습니다. near 는 거리의 '가까이'를 뜻하므로 수량 앞에 쓸 수 없습니다. near 를 nearly 로 고칩니다.",
+          "trapTags": ["confusable-adverb"]
+        },
+        {
+          "id": "u10-c2-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The two epidemics were {{blank}} related, though they broke out on different continents.",
+          "options": ["close", "closely", "near"],
+          "answer": 1,
+          "translation": "그 두 유행병은 서로 다른 대륙에서 발생했지만 긴밀히 관련되어 있었습니다.",
+          "explanation": "be closely related 는 '긴밀히 관련되어 있다'는 뜻으로, 관련성의 정도를 나타내는 자리이므로 closely 가 옳습니다. close 와 near 는 물리적 거리의 '가까이'를 뜻하므로 이 자리에 올 수 없습니다.",
+          "trapTags": ["confusable-adverb"]
+        }
+      ]
+    }
+  ]
+}

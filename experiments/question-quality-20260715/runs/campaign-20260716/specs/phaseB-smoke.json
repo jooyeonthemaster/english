@@ -1,0 +1,100 @@
+{
+ "batchId": "phaseB-smoke-v1",
+ "phase": "B-SMOKE",
+ "note": "커스텀 arm + 연구 프로필 스모크 (KILLER 1건씩)",
+ "concurrency": 2,
+ "geminiReasoningEffort": "low",
+ "providerRouting": "none",
+ "assignments": [
+  {
+   "itemId": "SMK-G-V1",
+   "frameId": "grammar-frame-v2-006",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "G-V1"
+  },
+  {
+   "itemId": "SMK-G-D1",
+   "frameId": "grammar-frame-v2-006",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-D1"
+  },
+  {
+   "itemId": "SMK-G-X1",
+   "frameId": "grammar-frame-v2-006",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "G-X1"
+  },
+  {
+   "itemId": "SMK-B-V1",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "SMK-B-D1",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "SMK-B-T1",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "SMK-G2",
+   "frameId": "grammar-frame-v2-006",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "G2_POSITIVE_COMPACT",
+   "armId": "G-G2"
+  },
+  {
+   "itemId": "SMK-G3",
+   "frameId": "grammar-frame-v2-006",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3"
+  },
+  {
+   "itemId": "SMK-B2",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "B2_POSITIVE_COMPACT",
+   "armId": "B-B2"
+  },
+  {
+   "itemId": "SMK-B3",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3"
+  }
+ ]
+}

@@ -1,0 +1,339 @@
+{
+  "schemaVersion": "question-quality-s1-v6-corpus-independent-v2-audit-public-v1",
+  "verdict": "PASS_INDEPENDENT_V2_CORPUS_AUDIT_NOT_EXTERNAL_DISPATCH_AUTHORIZATION",
+  "auditorIndependence": {
+    "corpusOrRemediationAuthor": false,
+    "exactPrivateRowsRead": true,
+    "sentenceBySentenceReview": true,
+    "priorVerifierAcceptedWithoutIndependentChecks": false
+  },
+  "sourceClosure": {
+    "privateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+    "publicArtifactSha256": "108380e8ba86dd358fed4543f329433e6c1d87e2c8455667dc3e9bf412659ddf",
+    "manifestSha256": "2621b69dde74ee014ec4367fd03aba72f5d56e4d8f8eae4c90d432824d7e8eb7",
+    "localReferenceFixtureSha256": "a928c576b3dd86a0caae4f67444c112e218b0c80c7bcaaeb4298c457dbcf7b07",
+    "remediationPublicSha256": "0722719ceac3da97e0f49a01555804c4204fd91f0ba28c9c80b1faee28c80a6f",
+    "remediationManifestSha256": "e8cc7bef121e5910b3160c98b3d2f4ce3ba9ef0016cc696aa999b3a5e417f69d",
+    "manualAdjudicationSha256": "307617a30cba4886e0565e8f7f535bd7226d9c46219b4170e7754eb91963e3ae",
+    "repoOverlapCaptureSha256": "47c920a9338133aed7a48776bbc99d18001f213d7568f04281c779a6b14ca08c"
+  },
+  "manualReview": {
+    "exactPassages": 12,
+    "sentences": 127,
+    "grammaticalityNaturalnessCoherenceExamSuitabilityPassRows": 12,
+    "descriptorAccuracyPassRows": 12,
+    "rightsRecordConsistencyPassRows": 12,
+    "manualPiiFindings": 0,
+    "grammarBindingsReviewed": 30,
+    "grammarBindingsPassed": 30,
+    "blankRowsReviewed": 6,
+    "blankIntermediateViabilityPass": 6,
+    "blankKillerViabilityPass": 6,
+    "blankAnswerUniquenessPass": 6,
+    "blankPostTargetSemanticRestatementFailures": 0,
+    "blankPositionCounts": {
+      "INTERNAL": 5,
+      "TERMINAL": 1
+    },
+    "internalContrastOrCounterexample": 3,
+    "internalAnaphoricOrCausalBridge": 1
+  },
+  "originalityAndLeakage": {
+    "crossRowSharedFiveGrams": 0,
+    "localFixtureExactNormalizedDuplicates": 0,
+    "localFixtureSharedEightTokenHashes": 0,
+    "independentRepositoryScanMethod": {
+      "inventory": "recursive repository filesystem walk over declared text extensions",
+      "normalization": "lowercase ASCII word tokens; punctuation and whitespace removed",
+      "ngramSize": 8,
+      "exactNgramTextPersisted": false,
+      "targetNgramHashesPersisted": false,
+      "excludedRelativeRoots": [
+        "experiments/question-quality-20260715/corpus/original-s1-v6",
+        "experiments/question-quality-20260715/reviews/campaign-v6-original-corpus-independent-audit-v1",
+        "experiments/question-quality-20260715/reviews/campaign-v6-original-corpus-remediation-v1",
+        "experiments/question-quality-20260715/reviews/campaign-v6-s1-corpus-independent-v2-audit-v1"
+      ],
+      "authorizedDerivedExactFileExclusions": [
+        {
+          "relativePath": "experiments/question-quality-20260715/design/campaign-v6-s1/private/s1-queue-v6.json",
+          "reason": "Exact-text private queue is an authorized deterministic descendant of the sealed source corpus; scanning it would measure self-copy, not external or antecedent overlap.",
+          "authorizationBasis": {
+            "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+            "campaignScopeId": "question-quality-20260715-s1-v6",
+            "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+          },
+          "exclusionRuleSha256": "e5215c724b1a7e289ba06f994732a52491e7d32b2fca37203dba9a700e0b5817"
+        },
+        {
+          "relativePath": "experiments/question-quality-20260715/design/campaign-v6-s1/campaign-v6-s1.json",
+          "reason": "Generated public campaign commitment binds this audit, so excluding it prevents a circular audit-to-design inventory dependency; it contains no exact passage text.",
+          "authorizationBasis": {
+            "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+            "campaignScopeId": "question-quality-20260715-s1-v6",
+            "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+          },
+          "exclusionRuleSha256": "0691478d07ca9e3f451b3519818211f5c19f5ea53469daf9c0fe31a373102562"
+        },
+        {
+          "relativePath": "experiments/question-quality-20260715/design/campaign-v6-s1/MANIFEST.sha256",
+          "reason": "Generated campaign manifest transitively binds this audit and is excluded only to prevent a circular inventory seal.",
+          "authorizationBasis": {
+            "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+            "campaignScopeId": "question-quality-20260715-s1-v6",
+            "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+          },
+          "exclusionRuleSha256": "77903e7241463a5b44d5b6157292b1ca1308335acd872931fa2002db9f2c3228"
+        },
+        {
+          "relativePath": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/private/exact-wire-preflight-v1.json",
+          "reason": "Private exact-wire commitments are authorized descendants of the sealed queue; scanning them would test downstream self-derivation, not antecedent overlap.",
+          "authorizationBasis": {
+            "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+            "campaignScopeId": "question-quality-20260715-s1-v6",
+            "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+          },
+          "exclusionRuleSha256": "ffa8ab3540fd0693fc18a27d4e22e7516e78f9bfe5a10d2eb8b2f2ce6ef5e537"
+        },
+        {
+          "relativePath": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/exact-wire-preflight-v1.json",
+          "reason": "Generated public preflight commitment transitively binds this audit and is excluded only to prevent a circular inventory seal; it contains aggregate commitments only.",
+          "authorizationBasis": {
+            "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+            "campaignScopeId": "question-quality-20260715-s1-v6",
+            "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+          },
+          "exclusionRuleSha256": "d46842466679748876d0db06dfc30540b3c23348188591ef09b235c83298fd49"
+        },
+        {
+          "relativePath": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/MANIFEST.sha256",
+          "reason": "Generated preflight manifest transitively binds this audit and is excluded only to prevent a circular inventory seal.",
+          "authorizationBasis": {
+            "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+            "campaignScopeId": "question-quality-20260715-s1-v6",
+            "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+          },
+          "exclusionRuleSha256": "4b8a1c8435c3976cf98608255c7250640fd26508375cb8f12e18098b40782b68"
+        }
+      ],
+      "excludedDirectoryNames": [
+        ".cache",
+        ".git",
+        ".next",
+        ".turbo",
+        "coverage",
+        "dist",
+        "node_modules"
+      ],
+      "includedExtensions": [
+        ".csv",
+        ".html",
+        ".js",
+        ".json",
+        ".jsonl",
+        ".jsx",
+        ".md",
+        ".mjs",
+        ".mts",
+        ".py",
+        ".sql",
+        ".ts",
+        ".tsv",
+        ".tsx",
+        ".txt",
+        ".yaml",
+        ".yml"
+      ],
+      "maxFileBytes": 20000000
+    },
+    "authorizedDerivedExactFileExclusions": [
+      {
+        "relativePath": "experiments/question-quality-20260715/design/campaign-v6-s1/private/s1-queue-v6.json",
+        "reason": "Exact-text private queue is an authorized deterministic descendant of the sealed source corpus; scanning it would measure self-copy, not external or antecedent overlap.",
+        "authorizationBasis": {
+          "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+          "campaignScopeId": "question-quality-20260715-s1-v6",
+          "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+        },
+        "exclusionRuleSha256": "e5215c724b1a7e289ba06f994732a52491e7d32b2fca37203dba9a700e0b5817"
+      },
+      {
+        "relativePath": "experiments/question-quality-20260715/design/campaign-v6-s1/campaign-v6-s1.json",
+        "reason": "Generated public campaign commitment binds this audit, so excluding it prevents a circular audit-to-design inventory dependency; it contains no exact passage text.",
+        "authorizationBasis": {
+          "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+          "campaignScopeId": "question-quality-20260715-s1-v6",
+          "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+        },
+        "exclusionRuleSha256": "0691478d07ca9e3f451b3519818211f5c19f5ea53469daf9c0fe31a373102562"
+      },
+      {
+        "relativePath": "experiments/question-quality-20260715/design/campaign-v6-s1/MANIFEST.sha256",
+        "reason": "Generated campaign manifest transitively binds this audit and is excluded only to prevent a circular inventory seal.",
+        "authorizationBasis": {
+          "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+          "campaignScopeId": "question-quality-20260715-s1-v6",
+          "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+        },
+        "exclusionRuleSha256": "77903e7241463a5b44d5b6157292b1ca1308335acd872931fa2002db9f2c3228"
+      },
+      {
+        "relativePath": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/private/exact-wire-preflight-v1.json",
+        "reason": "Private exact-wire commitments are authorized descendants of the sealed queue; scanning them would test downstream self-derivation, not antecedent overlap.",
+        "authorizationBasis": {
+          "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+          "campaignScopeId": "question-quality-20260715-s1-v6",
+          "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+        },
+        "exclusionRuleSha256": "ffa8ab3540fd0693fc18a27d4e22e7516e78f9bfe5a10d2eb8b2f2ce6ef5e537"
+      },
+      {
+        "relativePath": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/exact-wire-preflight-v1.json",
+        "reason": "Generated public preflight commitment transitively binds this audit and is excluded only to prevent a circular inventory seal; it contains aggregate commitments only.",
+        "authorizationBasis": {
+          "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+          "campaignScopeId": "question-quality-20260715-s1-v6",
+          "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+        },
+        "exclusionRuleSha256": "d46842466679748876d0db06dfc30540b3c23348188591ef09b235c83298fd49"
+      },
+      {
+        "relativePath": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/MANIFEST.sha256",
+        "reason": "Generated preflight manifest transitively binds this audit and is excluded only to prevent a circular inventory seal.",
+        "authorizationBasis": {
+          "sourcePrivateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+          "campaignScopeId": "question-quality-20260715-s1-v6",
+          "relationship": "DETERMINISTIC_DOWNSTREAM_CAMPAIGN_DERIVATIVE"
+        },
+        "exclusionRuleSha256": "4b8a1c8435c3976cf98608255c7250640fd26508375cb8f12e18098b40782b68"
+      }
+    ],
+    "independentRepositoryScannedTextFiles": 9076,
+    "independentRepositoryScannedUtf8Bytes": 452238287,
+    "independentRepositoryHitFiles": 0,
+    "independentRepositoryHitFileRowPairs": 0,
+    "independentRepositoryInventoryCommitmentSha256": "99b877be4461043b8fba7e8f2fec07e128fd09eb787cdd6ca6ffeb215e23de5a",
+    "sourceAndRemediationPublicTwelveTokenLeakWindows": 0,
+    "auditPublicExactTextOrRowMembershipExposed": false
+  },
+  "hermeticity": {
+    "normalBuildExternalHistoricalInputReads": 0,
+    "packageLocalHashOnlyFixture": true,
+    "fixtureContainsExactReferencePassageText": false,
+    "fixtureContainsExactReferenceNgramText": false,
+    "generationOnlyRefresherInvoked": false,
+    "upstreamReproduction": [
+      {
+        "label": "source-build",
+        "command": "npx tsx experiments/question-quality-20260715/corpus/original-s1-v6/build.mts",
+        "exitCode": 0,
+        "stdoutObserved": true,
+        "stderrEmpty": true
+      },
+      {
+        "label": "source-verify",
+        "command": "npx tsx experiments/question-quality-20260715/corpus/original-s1-v6/verify.mts",
+        "exitCode": 0,
+        "stdoutObserved": true,
+        "stderrEmpty": true
+      },
+      {
+        "label": "source-tsc",
+        "command": "npx tsc -p experiments/question-quality-20260715/corpus/original-s1-v6/tsconfig.json --noEmit",
+        "exitCode": 0,
+        "stdoutObserved": false,
+        "stderrEmpty": true
+      },
+      {
+        "label": "remediation-build",
+        "command": "npx tsx experiments/question-quality-20260715/reviews/campaign-v6-original-corpus-remediation-v1/build.mts",
+        "exitCode": 0,
+        "stdoutObserved": true,
+        "stderrEmpty": true
+      },
+      {
+        "label": "remediation-legacy-overlap-verifier",
+        "command": "NOT_INVOKED_AFTER_AUTHORIZED_DOWNSTREAM_DERIVATION",
+        "exitCode": null,
+        "stdoutObserved": false,
+        "stderrEmpty": true,
+        "status": "SUPERSEDED_FOR_POST_DERIVATION_REPRODUCTION",
+        "reason": "The sealed legacy verifier treats the campaign's own generated private queue as antecedent overlap. Independent-v2 replaces only that stale repository-scope assertion with exact path+rule-hash exclusions; all remediation build, manifest, semantic, leakage, rights, PII, and type checks remain active.",
+        "replacementEvidence": [
+          "independent-v2 exact 8-token repository rescan",
+          "12 exact passages and 127 sentences re-adjudicated",
+          "30 grammar bindings and 6 blank sites revalidated",
+          "source/remediation manifests and hard seals verified"
+        ]
+      },
+      {
+        "label": "remediation-tsc",
+        "command": "npx tsc -p experiments/question-quality-20260715/reviews/campaign-v6-original-corpus-remediation-v1/tsconfig.json --noEmit",
+        "exitCode": 0,
+        "stdoutObserved": false,
+        "stderrEmpty": true
+      }
+    ]
+  },
+  "tamperTests": {
+    "attempted": 10,
+    "rejected": 10,
+    "cases": [
+      {
+        "name": "passage-byte-mutation",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "pii-injection",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "rights-scope-revocation",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "public-row-commitment-mutation",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "manual-row-deletion",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "grammar-anchor-sentence-mutation",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "blank-position-mutation",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "fixture-plaintext-shape-mutation",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "repository-overlap-hit-mutation",
+        "verdict": "PASS_REJECTED"
+      },
+      {
+        "name": "corpus-revision-mutation",
+        "verdict": "PASS_REJECTED"
+      }
+    ]
+  },
+  "safety": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "apiCandidatesConsumed": 0,
+    "externalDispatchAuthorized": false
+  },
+  "residualLimits": [
+    "The review independently establishes linguistic and metadata consistency, not global copyright ownership or legal non-infringement.",
+    "Manual and pattern-based PII review reduce risk but cannot prove absence of every possible identifier.",
+    "Blank difficulty and semantic non-restatement are human adjudications; generated options still require separate blind quality review."
+  ],
+  "publicArtifactSemanticSha256": "602c7cae38411d570cc6cc5a0237970853bb03c04232f97c9566961d3869c461"
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P082",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'Although they controlled by Denmark' has an overt subject 'they' requiring a finite verb. An active parse fails: 'control' is transitive and has no direct object here ('by Denmark' is an agent phrase, not an object). The intended meaning is passive — the islands ARE controlled by Denmark — so it must read 'they are controlled by Denmark'. Alternative rescues fail: elliptical concessive 'Although controlled by Denmark' would be fine only WITHOUT the overt subject 'they'; no reduced-relative or other parse yields a well-formed clause. Formally ungrammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'They have done this for centuries' — present perfect 'have done' licensed by durative 'for centuries'; 'this' (= hunting pilot whales) serves as the object of 'do'. Well-formed."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'There is a law that says...' — 'that' is a subject relative pronoun with antecedent 'a law'; the relative clause 'that says each killing must take place...' is complete and agreement (says, 3sg) holds. Well-formed."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'as quickly and efficiently as possible' — two adverbs coordinated in parallel, both modifying the intransitive verb phrase 'take place', inside the equative 'as ... as possible' frame. An adjective ('efficient') would break parallelism with 'quickly' and could not modify a verb. Well-formed."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'whether this practice should be allowed to continue' — 'allow' takes O + to-infinitive (allow X to continue); under passivization the to-infinitive is retained: 'X be allowed to continue'. Well-formed."
+    }
+  ],
+  "note": "Clean single-answer item. (A) is decisively ungrammatical: overt subject 'they' + bare past participle 'controlled' + agent 'by Denmark' admits no grammatical parse (active reading lacks an object; passive reading lacks 'are'). All other underlines are straightforwardly correct with no plausible alternative-parse traps. Blind solve, grammarian/logician lens."
+}

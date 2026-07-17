@@ -1,0 +1,35 @@
+{
+  "pid": "P026",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Although they are controlled by Denmark' — subject 'they' (= the Faroe Islands) + passive of transitive 'control' with by-agent. Passive construction fully licensed; no adjectival/participial ambiguity that would make it wrong."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'the killing of whales is not done for profit' — pro-verb 'do' in passive ('be done for profit') is standard idiom; singular subject 'the killing' agrees with 'is'. 'done' is the required past participle."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong",
+      "reason": "Partitive 'Most of + NP' agrees with the NP after 'of'. NP = 'the whale meat and blubber': two non-count mass nouns under a single determiner 'the', jointly quantified by 'most of' as one food mass. The long-distance clincher is in the same sentence: 'although some IS sold in supermarkets' treats the identical referent as singular mass, fixing the joint construal. Hence 'is distributed' is required; 'are distributed' is ungrammatical in this context. Rescue attempt considered and rejected: coordinated NPs can take plural agreement on a distributive reading (cf. the passage's earlier unmarked 'whale meat and blubber are important parts'), but 'most of ... some is' forces the joint mass reading here, so the plural cannot be salvaged."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a law that says each killing must take place...' — relative pronoun 'that' with singular antecedent 'a law' takes 3sg 'says'; 'the law says (that)...' with omitted complementizer is standard. Agreement and construction both sound."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'question whether this practice should be allowed to continue' — transitive 'question' (= doubt) selects an interrogative complement clause; 'whether' correctly heads it. 'whether ... should be allowed to continue' is a well-formed embedded question."
+    }
+  ],
+  "note": "Only (C) is a defensible answer. Mild design tension: the unmarked earlier sentence 'whale meat and blubber are important parts' uses plural (distributive) agreement with the same coordination, which a contrarian could cite to defend plural in (C); however the intra-sentential 'some is sold' unambiguously establishes the singular mass construal for (C), so the plural-agreement defense fails. Item resolves to a single answer."
+}

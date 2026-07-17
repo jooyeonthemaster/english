@@ -1,0 +1,76 @@
+{
+  "study": "production-assignment-budget-v1-postgres-integration",
+  "database": {
+    "hostClass": "loopback",
+    "namePrefix": "qgen_budget_ephemeral_"
+  },
+  "tests": {
+    "sameJob100Way": {
+      "verdict": "PASS",
+      "attempted": 100,
+      "delegated": 7,
+      "rejected": 93,
+      "durableLeases": 7,
+      "ordinalRange": [
+        1,
+        7
+      ]
+    },
+    "mixedReservedCost100Way": {
+      "verdict": "PASS",
+      "attempted": 100,
+      "concurrentPhase": 98,
+      "delegated": 6,
+      "rejected": 94,
+      "physicalCap": 100,
+      "reservedCostMicros": 7700,
+      "maxReservedCostMicros": 8000,
+      "distinctReservationSizes": 5
+    },
+    "ordinalContinuation": {
+      "verdict": "PASS",
+      "controllerScopes": 3,
+      "durableOrdinals": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "delegated": 5
+    },
+    "terminalWins": {
+      "verdict": "PASS",
+      "blockedWhileLockHeld": true,
+      "delegated": 0
+    },
+    "leaseWinsThenTerminal": {
+      "verdict": "PASS",
+      "delegatedBeforeTerminal": 1,
+      "durableLeases": 1,
+      "delegatedAfterTerminal": 0
+    },
+    "enforceToShadowDrift": {
+      "verdict": "PASS",
+      "unscopedCallbacks": 0
+    },
+    "migrationStateConstraints": {
+      "verdict": "PASS",
+      "illegalBudgetStateRejected": true,
+      "illegalLeaseStateRejected": true
+    }
+  },
+  "sourceHashes": {
+    "migration": "bf094af461377adc1bc64d9490fa6bf02df1efd46466a1783ea18e26d7c189bb",
+    "boundary": "aa042ea9181f6b5eb256bd4361738cc948c1bc41f27866b75bb9f2728a6b36d8",
+    "policy": "2d0674e224fa182b0d16bfa8b8443b65987763c3022340bb9e27db56934dda85",
+    "runtime": "7effc7b7fc954f5b84936a32fa28302eec08927e9a255cee9f6d5fec20ef4f48",
+    "trigger": "cfc44b01c039c095759ffa1204f8e77b9cf5d62e6b1386ba9ff8d2a6beaa66be"
+  },
+  "postgresVersion": "PostgreSQL 16.14 (Ubuntu 16.14-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit",
+  "verdict": "PASS",
+  "apiCalls": 0,
+  "externalNetworkCalls": 0,
+  "localPostgresOnly": true,
+  "productionDatabaseWrites": 0
+}

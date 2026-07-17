@@ -1,0 +1,35 @@
+{
+  "pid": "P047",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합(they + VP 병렬)은 정문이나, '불운을 삶의 불가피한 일부로 조용히 수용'은 수동적 체념. 지문은 'not only look for some positive aspect ... but actually go one step further', 'overcome their problem', 'see opportunities'로 수동적 수용을 명시적으로 넘어서는 능동성을 요구하므로 논리 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 정문. 그러나 '상황이 저절로 나아지길 참을성 있게 기다림'은 'gather their resources, overcome their problem'의 능동적 극복 서사와 정면 모순. on their own(저절로)이 특히 지문의 주체적 행위성과 충돌."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 정문. 'extract positive potential from their setbacks'는 (a) 'every cloud has a silver lining' 클리셰의 행동적 번역으로 and 병렬(believe the cliché AND act on it)이 자연스럽고, (b) 'Laughter can turn any disadvantage into an advantage', (c) 'focus on what they can gain from their circumstance rather than on what they have lost'와 삼중 정합. 유일하게 성립하는 결론."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 정문. 지문의 'remarkable feats' 어휘를 재활용한 미끼이나, 지문은 상실을 겪은 당사자가 자신의 역경에서 스스로 위업을 이룬다는 내용이지 타인의 위업을 완벽히 복제한다는 내용이 아님. replicate/others 모두 지문에 근거 없음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 정문. 'laughter' 어휘 재활용 미끼. 지문의 웃음은 자신의 불리함(부러진 펜, 자신의 불운)을 유리함으로 전환하는 도구이지, 주변 타인의 실수를 관대하게 웃어넘기는 태도가 아님. 행위 대상(자기 불운 → 타인 실수) 전환 오류."
+    }
+  ],
+  "note": "다섯 선지 모두 'they' 뒤 동사구로 문법적으로 결합 가능하므로 순수 논리 판별 문항. 빈칸은 실버라이닝 믿음과 and로 병렬되어 그 믿음의 실천(능동적으로 역경에서 긍정을 추출)을 요구하며, ③만이 지문의 핵심 명제 세 개(웃음의 전환력·한 걸음 더 나아감·얻을 것에 집중)와 모두 정합. ①②는 수동성으로, ④⑤는 어휘 재활용 미끼로 배제. 단일 정답으로 수렴, 신뢰도 높음."
+}

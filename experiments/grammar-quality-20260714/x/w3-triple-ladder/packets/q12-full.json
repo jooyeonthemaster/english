@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20221123-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 8,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-filler-span"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):ANS=c  (C):dec=d  (D):dec=l  (E):dec=l",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 123,
+        "relPos": 0.16,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 227,
+        "relPos": 0.295,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 311,
+        "relPos": 0.404,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 368,
+        "relPos": 0.478,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 397,
+        "relPos": 0.516,
+        "sentenceIndex": 3,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.516,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "where",
+        "isError": false,
+        "correction": "where",
+        "errorExpression": "where",
+        "surroundingText": "Unfortunately, here is where a 'business mind' can be a bad thing.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "promoting",
+        "isError": true,
+        "correction": "promoting",
+        "errorExpression": "promoted",
+        "surroundingText": "Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.'",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is",
+        "errorExpression": "is",
+        "surroundingText": "If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "to",
+        "isError": false,
+        "correction": "to",
+        "errorExpression": "to",
+        "surroundingText": "Only by doing this can you create an interested audience that you will then be able to sell to.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(E)",
+        "expression": "in",
+        "isError": false,
+        "correction": "in",
+        "errorExpression": "in",
+        "surroundingText": "So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+        "pointCode": "l"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "where"
+      },
+      {
+        "label": "(B)",
+        "text": "promoted"
+      },
+      {
+        "label": "(C)",
+        "text": "is"
+      },
+      {
+        "label": "(D)",
+        "text": "to"
+      },
+      {
+        "label": "(E)",
+        "text": "in"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "보어절을 이끄는 관계부사 where로, 뒤에 완전한 절이 오므로 어법상 적절합니다.",
+      "(C)": "주어인 'all you're doing'이 단수 취급되므로 단수 동사 is가 오는 것이 맞습니다.",
+      "(D)": "전치사 to의 목적어가 관계대명사 that(목적격)으로 선행사 an interested audience를 가리키며 문장이 성립하므로 적절합니다.",
+      "(E)": "be interested in의 구조에서 전치사 in의 목적어가 관계대명사 that(목적격)을 통해 선행사 things를 가리키므로 적절하게 쓰인 전치사입니다."
+    },
+    "explanation": "이 문장에서 밑줄 친 부분은 명사구 'a successful business blog'를 능동적으로 수식하는 분사 자리입니다. 뒤에 'a product'라는 목적어가 있으므로 수동의 의미를 지닌 과거분사 promoted는 어법상 틀립니다. 따라서 능동의 의미를 나타내는 현재분사 promoting으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(B) 현재분사 vs 과거분사 — 목적어 유무와 수식받는 명사와의 능수동 관계 파악",
+      "(A) 관계부사 — 보어절을 이끄는 선행사 포함 관계부사 구조",
+      "(C) 주어-동사 수일치 — all 수식절 주어의 단수 취급"
+    ],
+    "tags": [
+      "어법",
+      "분사추론",
+      "능동수동"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is __(A) where__ a 'business mind' can be a bad thing. Most people believe that to have a successful business blog __(B) promoted__ a product, they have to stay strictly 'on the topic.' If all you're doing __(C) is__ shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able __(D) to__ sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested __(E) in__."
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-C-postmodification-misanalysis",
+      "severity": "critical",
+      "evidence": "(C) 오답해설이 '과거분사 wrinkled가 명사를 후치 수식하는 구조'라고 기술했으나, 실제 문장은 'the wrinkled face'로 wrinkled가 face를 전치(prenominal) 수식한다. 실제 통사 구조와 불일치하는 오분석이며 학생에게 잘못된 구조 지식을 가르친다."
+    },
+    {
+      "code": "V4-E-relative-clause-subject-misattribution",
+      "severity": "major",
+      "evidence": "(E) 오답해설이 'Those students'를 '관계사절의 주어'라고 기술했으나, 관계사절 'who had been exposed...'의 주어는 관계대명사 who이고 Those students는 주절 주어이자 선행사다. 구조 귀속 오류."
+    },
+    {
+      "code": "V4-main-garbled-terminology",
+      "severity": "minor",
+      "evidence": "정답 해설의 \"'그가 발견한 것'이라는 대명사 지시 관계을 이끌며\"는 조사 오탈자('관계을'→'관계를')에 더해 '대명사 지시 관계를 이끈다'는 손상된 용어 표현이다. 핵심 분석(what=선행사 포함 관계대명사, that=완전한 명사절 접속사, found의 목적어 결손)은 정확하나 표현이 훼손되어 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "대명사의 수·격 일치 (pointCode g) — them이 복수 선행 명사를 옳게 지시하는지 판정",
+      "temptingBecause": "앞에 'a bunch of healthy undergraduates'(형태상 단수 head + 복수 명사)와 'a list' 등 단·복수 후보가 섞여 있어 지시 대상 확인을 요구한다는 명목이나, 실제로는 오독 유발 요소가 거의 없다",
+      "decisiveFlaw": "them은 undergraduates를 가리키는 복수 목적격으로 명백히 옳아 즉시 소거된다. 'why tempting'이 성립하지 않는 필러성 디코이."
+    },
+    {
+      "label": "(B)",
+      "intent": "등위접속 병렬 구조 — and 뒤 동사가 presented와 같은 과거형으로 병렬되는지 판정",
+      "temptingBecause": "and 뒤에서 asking(분사)과의 혼동, 또는 asked them to create의 5형식 구조 판단을 유도한다",
+      "decisiveFlaw": "주어 He에 걸리는 presented와 asked의 과거동사 병렬이 명확하여 옳다. 실제 판단 부담은 낮은 편."
+    },
+    {
+      "label": "(C)",
+      "intent": "분사의 태 — 수식받는 명사와의 능동/수동 관계로 현재분사 vs 과거분사 판정",
+      "temptingBecause": "wrinkling/wrinkled 선택 자리로, 자동사적 어감(주름지다)과 타동사 수동(주름지게 되다) 사이에서 잠시 고민하게 한다",
+      "decisiveFlaw": "face는 주름이 잡힌 대상이므로 과거분사가 옳다. 단, 해설이 이 전치 수식을 '후치 수식'으로 오기술(V4 실패 원인)."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 명사절 접속사 that vs 선행사 포함 관계대명사 what: 절 내부 완전/불완전 판정",
+      "temptingBecause": "문두 That절이 주어 자리에 자연스러워 보이고, 'He told ... that he was testing...'의 옳은 that과 표면형이 같아 유비 오류를 유도한다",
+      "decisiveFlaw": "타동사 found 뒤 목적어가 결손된 불완전절이므로 완전절을 요구하는 접속사 That은 불가, What으로 교정해야 하며 교정 시 정확히 원문이 된다. 다만 절이 'That he found was extraordinary' 단 5어로 짧아 결손이 즉시 노출되는, 고도로 훈련된 정형 패턴이라 KILLER 깊이에는 못 미친다."
+    },
+    {
+      "label": "(E)",
+      "intent": "동사의 태 — 주어가 동작의 대상인지로 능동/수동 판정 (had been p.p.)",
+      "temptingBecause": "expose의 능동(had exposed)과 수동(had been exposed) 사이 판단, 완료수동의 형태 복잡성으로 시선을 끈다",
+      "decisiveFlaw": "학생들이 단어 조합에 노출되는 대상이므로 수동이 옳다. 해설은 관계사절 주어를 who가 아닌 Those students로 오귀속(경미한 V4 이슈)."
+    }
+  ],
+  "explanationIssues": [
+    "(C) 해설: 'the wrinkled face'의 전치 수식을 '후치 수식'으로 오기술 — 실제 문장 구조와 불일치하는 치명적 오분석",
+    "(E) 해설: 관계사절의 주어는 who인데 'Those students'를 관계사절의 주어로 지목 — 구조 귀속 오류",
+    "정답 해설: '대명사 지시 관계을 이끌며' — 조사 오탈자 및 손상된 용어 표현(핵심 분석 자체는 정확)",
+    "정답 해설의 핵심 논거(found의 목적어 결손 → 불완전절 → What 필요, that은 완전절용 접속사)는 실제 구조와 일치함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 통과: 렌더 지문은 의도된 What→That 최소대립쌍 변형 외 원지문과 완전 일치하고, 5개 밑줄 독립 검증 결과 (D)만이 유일한 오류이며((A) 복수 목적격, (B) presented와 과거동사 병렬, (C) 수동 의미 과거분사, (E) 완료수동 모두 적법), 교정 시 정확히 원문이 복원되고, 정답 라벨·선지·해설 키·keyPoints·markedExpressions가 모두 동기화되어 있다. 그러나 V4 실패: (C) 해설의 '후치 수식' 오분석이 실제 문장(전치 수식)과 모순되고, (E) 해설의 관계사절 주어 오귀속, 정답 해설의 손상된 용어·오탈자가 겹친다. 치명 실패는 공예 점수로 상쇄되지 않으므로 F. 난이도 측면에서도 요청 난이도 KILLER 대비 what/that 목적어 결손은 가장 정형화된 훈련 패턴이고 해당 절이 5어로 짧아 결손이 즉시 드러나므로 C5=1이며, §C의 '즉시 드러나지 않는 구조 판독' 조건과 5개 밑줄별 why-tempting 성립 조건((A)는 필러)을 충족하지 못해 killerConditionsMet=false. 수리 방향: (C)/(E) 해설의 구조 기술 교정, 정답 해설 표현 정비, KILLER 유지 시 결손 지점을 더 깊은 내포 구조로 재설계하거나 난이도 라벨을 하향."
+}

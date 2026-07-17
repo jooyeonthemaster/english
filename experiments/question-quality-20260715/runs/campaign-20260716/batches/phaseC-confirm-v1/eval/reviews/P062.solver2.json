@@ -1,0 +1,35 @@
+{
+  "pid": "P062",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "demand strict adherence ... immediately는 지문이 제시한 스펙트럼의 'rejection and correction' 극단과 동치. 예시 교사는 즉각적 교정을 요구하지 않고 recast로 대화를 이어가며, 'results won't be apparent immediately'가 immediately와 정면 모순. 논리 불성립."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "eliminate dialect use는 거부 극단의 변형으로, 학생의 방언 발화를 수용한 채 표준형을 모델링하는 예시 행동과 모순. 'economic opportunities'는 지문 첫 문장 어휘를 재활용한 미끼. 불성립."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "예시와 정확히 동형: 교사는 'I ain't got no pencil'을 거부·질책 없이 수용(accept)한 뒤 표준형 'you don't have a pencil'을 자연스럽게 얹어 확장(build on it). 양극단(rejection↔complete acceptance) 사이의 중도로 지문의 대조 구조와 정합. seam 검사: 'is to first accept ... and then build on it'에서 분리부정사 to first accept는 정문, accept/build 병렬 성립, it의 지시 대상(the dialect) 명확. 문법·논리 모두 성립."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "fully embrace ... as the ultimate learning goal은 'complete acceptance' 극단. 첫 문장이 표준영어 교육의 목적(기회 접근)을 명시하고 예시 교사가 표준형을 모델링하며 'language development' 이득을 말하므로 비표준형이 궁극적 학습 목표일 수 없음. 형식적 모순으로 불성립."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "동료(peer) 교정은 지문에 전혀 근거가 없음. 예시의 행위 주체는 the teacher이며 peers는 등장하지 않는다. 무근거 선지로 불성립."
+    }
+  ],
+  "note": "빈칸 문항. 스펙트럼(rejection and correction ↔ complete acceptance)의 양극단을 ①②(거부측)·④(수용측)로 배치하고 ⑤는 무근거 주체 전환. 결정적 단서는 recast 예시('Oh, you don't have a pencil.')로, 수용 후 표준형 확장이라는 ③만이 예시·장기 이득 문장과 모두 정합. 대안 해석으로 ④의 '문화 존중' 옹호 가능성을 검토했으나 'ultimate learning goal' 한정어가 첫 문장과 모순되어 배제. 유일 정답 ③, 신뢰도 높음."
+}

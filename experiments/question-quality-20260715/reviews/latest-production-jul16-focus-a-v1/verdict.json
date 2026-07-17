@@ -1,0 +1,608 @@
+{
+  "schemaVersion": "latest-production-jul16-focus-a-verdict-v1",
+  "artifactId": "latest-production-jul16-focus-a-v1",
+  "verdict": "FAIL_BLOCKERS",
+  "disposition": "PRODUCTION_FOCUS_ITEMS_NOT_ACCEPTED",
+  "reviewer": {
+    "role": "independent-content-auditor-A",
+    "priorItemJudgmentsUsed": false,
+    "storedAnswerUsedAsAuthority": false,
+    "adjudicationMethod": "independent full-sentence completion, option-by-option grammaticality and semantic plausibility, alternate-parse search, then stored-field comparison"
+  },
+  "scope": {
+    "databaseAccess": "READ_ONLY",
+    "apiCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "databaseWrites": 0,
+    "fullQuestionCandidatesConsumed": 0,
+    "types": {
+      "BLANK_INFERENCE": 3,
+      "GRAMMAR_ERROR": 1,
+      "GRAMMAR_CHOICE_COMBO": 2
+    }
+  },
+  "sourceSnapshot": {
+    "script": "scripts/_audit-jul16-latest-content.ts",
+    "scriptSha256": "1920ccf6065222158b1526fdd3acda1c24fb7b6f2b4d399ad167c3a0258fa1f6",
+    "windowUtc": {
+      "from": "2026-07-16T06:36:00.000Z",
+      "to": "2026-07-16T06:42:00.000Z"
+    },
+    "rowCount": 12,
+    "contentSha256": "1f63bd340521da8a76ce13529834c8523fc3a0e79a4763aa3b68c16c0acd9f7b"
+  },
+  "lineage": {
+    "generationQualityCommit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+    "deploymentCommit": "8151305c490732e39f9cb3d243788045cbc2e670",
+    "generationQualityIsAncestorOfDeployment": true,
+    "deploymentParent": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "localHeadAtAudit": "467c6d107137a91088d3eba1620ba4036a63d709"
+  },
+  "axisDefinitions": {
+    "V1": "actual answer-set uniqueness and grammaticality of student-visible completions",
+    "V2": "passage and blank/marker/original-restoration integrity",
+    "V3": "option craft, declared difficulty, intentional and competitive traps",
+    "V4": "syntactic, grammatical, factual, and option-specific explanation accuracy",
+    "V5": "options/answer/marker/explanation/structured/top-level field synchronization"
+  },
+  "aggregate": {
+    "audited": 6,
+    "grades": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "F": 6
+    },
+    "axisPassCounts": {
+      "V1": 2,
+      "V2": 1,
+      "V3": 0,
+      "V4": 0,
+      "V5": 4
+    },
+    "storedKeyMatchedIndependentUniqueAnswer": 4,
+    "noUniqueAnswerOrError": 2,
+    "beautifulOrKiller": 0
+  },
+  "items": [
+    {
+      "idSuffix": "vy6wtk",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "itemContentSha256": "5a77a4b0b37aff7253b0aa064e940c1129b5de9f176bc213ac123867b81e3261",
+      "independentAnswer": "⑤",
+      "storedAnswerMatchAfterAdjudication": true,
+      "alternativeAnswers": [],
+      "validity": {
+        "V1": false,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": false
+      },
+      "craft": {
+        "C1": 2,
+        "C2": 0,
+        "C3": 0,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1,
+        "total": 5
+      },
+      "optionAudit": [
+        {
+          "label": "①",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "emotion polarity reversal",
+          "decisiveFlaw": "contradicts the immediately following evokes emotions"
+        },
+        {
+          "label": "②",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "listener keyword plus negative consequence",
+          "decisiveFlaw": "reverses the passage's positive flow and listener-reaching effect"
+        },
+        {
+          "label": "③",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "musical-context polarity reversal",
+          "decisiveFlaw": "contradicts the stated musical purpose of rhyme"
+        },
+        {
+          "label": "④",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "performer-delivery polarity reversal",
+          "decisiveFlaw": "contradicts make your voice stronger"
+        },
+        {
+          "label": "⑤",
+          "grammatical": true,
+          "semanticPlausibility": "high",
+          "intent": "abstract paraphrase of rhythmic pattern or flow",
+          "decisiveFlaw": null
+        }
+      ],
+      "findings": [
+        "duplicate and fused passage text, including missing initial T in Try",
+        "orphan closing quotation mark remains after blank replacement",
+        "four distractors share obvious negative polarity while the answer alone is positive",
+        "surroundingText and visible blank punctuation are not synchronized",
+        "explanation overstates an awkward abstraction as an academic paraphrase"
+      ],
+      "grade": "F"
+    },
+    {
+      "idSuffix": "mjxpe6",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "itemContentSha256": "0ee86675bd2df9be0f08491d6a37129812cc2265ad73409f2a6e039158049f92",
+      "independentAnswer": "②",
+      "storedAnswerMatchAfterAdjudication": true,
+      "alternativeAnswers": [],
+      "validity": {
+        "V1": false,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "craft": {
+        "C1": 2,
+        "C2": 0,
+        "C3": 0,
+        "C4": 1,
+        "C5": 1,
+        "C6": 1,
+        "total": 5
+      },
+      "optionAudit": [
+        {
+          "label": "①",
+          "grammatical": false,
+          "semanticPlausibility": "none",
+          "intent": "host and LP keyword collage",
+          "decisiveFlaw": "to spent is ungrammatical and the instead-of comparison is incoherent"
+        },
+        {
+          "label": "②",
+          "grammatical": true,
+          "semanticPlausibility": "high but overbroad",
+          "intent": "nominalized negative paraphrase of uninterrupted dancing",
+          "decisiveFlaw": null
+        },
+        {
+          "label": "③",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "fabricated stage-help event",
+          "decisiveFlaw": "no dancer assistance or stage requirement exists in the passage"
+        },
+        {
+          "label": "④",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "fabricated scheduling consequence",
+          "decisiveFlaw": "party-host schedule cancellation is unrelated to the DJ mechanism"
+        },
+        {
+          "label": "⑤",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "direct polarity reversal",
+          "decisiveFlaw": "states forced interruption where the source states continuity"
+        }
+      ],
+      "findings": [
+        "unintended grammatical error in a semantic-inference distractor",
+        "shared passage defect culture.DJs",
+        "answer loses the DJ-change condition and overgeneralizes to when the song ended",
+        "explanation falsely calls the paraphrase perfect and does not identify option ①'s grammar error"
+      ],
+      "grade": "F"
+    },
+    {
+      "idSuffix": "uelp2h",
+      "subType": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "itemContentSha256": "8ad9b01d1141679678c632d69a828527fc722bec78d5ceabb8dc41eed40100d2",
+      "independentAnswer": "④",
+      "storedAnswerMatchAfterAdjudication": true,
+      "alternativeAnswers": [],
+      "validity": {
+        "V1": true,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "craft": {
+        "C1": 2,
+        "C2": 1,
+        "C3": 1,
+        "C4": 2,
+        "C5": 1,
+        "C6": 1,
+        "total": 8
+      },
+      "optionAudit": [
+        {
+          "label": "①",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "double-negative crowd-state reversal",
+          "decisiveFlaw": "entails keeping the crowd quiet and calm, contrary to the described excitement and dancing"
+        },
+        {
+          "label": "②",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "break and dancer keyword lure",
+          "decisiveFlaw": "formation control is not the causal DJ innovation"
+        },
+        {
+          "label": "③",
+          "grammatical": true,
+          "semanticPlausibility": "low",
+          "intent": "vocal-element lure from later MC content",
+          "decisiveFlaw": "vocal inclusion does not explain the extended break technique"
+        },
+        {
+          "label": "④",
+          "grammatical": true,
+          "semanticPlausibility": "medium-high",
+          "intent": "negative abstraction of using two copies and switching playback",
+          "decisiveFlaw": null
+        },
+        {
+          "label": "⑤",
+          "grammatical": true,
+          "semanticPlausibility": "medium",
+          "intent": "simultaneity scope trap",
+          "decisiveFlaw": "even a literal non-simultaneous switching reading does not supply the causal reason the party became the birthplace"
+        }
+      ],
+      "findings": [
+        "shared passage defect culture.DJs",
+        "three distractors are remote fabricated facts rather than close causal alternatives",
+        "answer is a loose abstraction rather than a precise replacement of because of his new DJ technique",
+        "explanation treats merely unmentioned claims as logical opposites"
+      ],
+      "grade": "F"
+    },
+    {
+      "idSuffix": "j9i10h",
+      "subType": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "itemContentSha256": "bf829b0513ee2ba140f88561f417706e3f28a8329abb3bd606869fed00a501a0",
+      "independentAnswer": "NO_UNIQUE_ERROR",
+      "storedAnswerMatchAfterAdjudication": false,
+      "alternativeAnswers": [
+        "(E) can be parsed as a grammatical reduced relative modifying a friend"
+      ],
+      "validity": {
+        "V1": false,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": false
+      },
+      "craft": {
+        "C1": 2,
+        "C2": 1,
+        "C3": 0,
+        "C4": 1,
+        "C5": 1,
+        "C6": 0,
+        "total": 5
+      },
+      "siteAudit": [
+        {
+          "label": "(A)",
+          "expression": "who",
+          "grammatical": true,
+          "analysis": "nonrestrictive subject relative pronoun for DJ Kool Herc"
+        },
+        {
+          "label": "(B)",
+          "expression": "known",
+          "grammatical": true,
+          "analysis": "reduced passive relative modifying the drum section"
+        },
+        {
+          "label": "(C)",
+          "expression": "dancing",
+          "grammatical": true,
+          "analysis": "gerund complement of stop meaning cease dancing"
+        },
+        {
+          "label": "(D)",
+          "expression": "their",
+          "grammatical": true,
+          "analysis": "possessive determiner agreeing with plural People"
+        },
+        {
+          "label": "(E)",
+          "expression": "taking",
+          "grammatical": true,
+          "analysis": "available reduced-relative parse: a friend who was taking the role; intended source meaning instead uses asked a friend to take"
+        }
+      ],
+      "findings": [
+        "intended error is not morphosyntactically unique because of a live reduced-relative parse",
+        "explanation assumes ask plus object plus complement without excluding the modifier parse",
+        "ask is inaccurately grouped as a requirement/permission verb",
+        "markedExpressions E stores correction in expression while other sites store the displayed expression",
+        "shared passage defect culture.DJs"
+      ],
+      "grade": "F"
+    },
+    {
+      "idSuffix": "1l55a0",
+      "subType": "GRAMMAR_CHOICE_COMBO",
+      "difficulty": "INTERMEDIATE",
+      "itemContentSha256": "8fc355849910a85d4616327211d809006e917f60c2c77664af2a515c03a8fa61",
+      "independentAnswer": "5",
+      "storedAnswerMatchAfterAdjudication": true,
+      "alternativeAnswers": [],
+      "validity": {
+        "V1": true,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "craft": {
+        "C1": 2,
+        "C2": 1,
+        "C3": 1,
+        "C4": 1,
+        "C5": 1,
+        "C6": 2,
+        "total": 8
+      },
+      "siteAudit": [
+        {
+          "label": "(A)",
+          "correct": "that",
+          "incorrect": "what",
+          "unique": true,
+          "analysis": "explicit antecedent the gangs requires a relative pronoun"
+        },
+        {
+          "label": "(B)",
+          "correct": "is",
+          "incorrect": "are",
+          "unique": true,
+          "analysis": "singular head party controls agreement"
+        },
+        {
+          "label": "(C)",
+          "correct": "to take",
+          "incorrect": "take",
+          "unique": true,
+          "analysis": "ask plus object selects a to-infinitive for the intended request complement"
+        }
+      ],
+      "optionAudit": [
+        {
+          "label": "1",
+          "grammatical": false,
+          "semanticPlausibility": "none",
+          "intent": "all three sites wrong",
+          "decisiveFlaw": "what, are, and bare take all fail"
+        },
+        {
+          "label": "2",
+          "grammatical": false,
+          "semanticPlausibility": "low",
+          "intent": "A-only error",
+          "decisiveFlaw": "what cannot follow the explicit antecedent"
+        },
+        {
+          "label": "3",
+          "grammatical": false,
+          "semanticPlausibility": "low",
+          "intent": "C-only error",
+          "decisiveFlaw": "bare take is not the selected request complement"
+        },
+        {
+          "label": "4",
+          "grammatical": false,
+          "semanticPlausibility": "low",
+          "intent": "B-only error",
+          "decisiveFlaw": "are does not agree with singular party"
+        },
+        {
+          "label": "5",
+          "grammatical": true,
+          "semanticPlausibility": "high",
+          "intent": "all sites correct",
+          "decisiveFlaw": null
+        }
+      ],
+      "findings": [
+        "unique answer but low-interaction textbook sites and a mechanical combination matrix",
+        "same ask a friend to take point is immediately reused from j9i10h",
+        "ask is inaccurately described as quasi-causative",
+        "shared passage defect culture.DJs"
+      ],
+      "grade": "F"
+    },
+    {
+      "idSuffix": "aiqijc",
+      "subType": "GRAMMAR_CHOICE_COMBO",
+      "difficulty": "INTERMEDIATE",
+      "itemContentSha256": "4884babb9bfa5d6c92bf5ed67a2f1ec7aad80d9602f188366d0f56403fb42193",
+      "independentAnswer": "MULTIPLE: 1 and 2",
+      "storedAnswerMatchAfterAdjudication": false,
+      "alternativeAnswers": [
+        "1",
+        "2",
+        "5 is also morphosyntactically formable under a contextually inferior calling parse"
+      ],
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "craft": {
+        "C1": 2,
+        "C2": 0,
+        "C3": 0,
+        "C4": 1,
+        "C5": 1,
+        "C6": 0,
+        "total": 4
+      },
+      "siteAudit": [
+        {
+          "label": "(A)",
+          "preferred": "called",
+          "other": "calling",
+          "preferredUniqueByGrammar": false,
+          "analysis": "called preserves the intended naming relation, but calling can head a grammatical active participial clause with a changed meaning"
+        },
+        {
+          "label": "(B)",
+          "preferred": "which",
+          "other": "what",
+          "preferredUniqueByGrammar": true,
+          "analysis": "which is subject of is respected and refers to the gang/Ghetto Brothers; what cannot follow the explicit antecedent"
+        },
+        {
+          "label": "(C)",
+          "preferred": "will",
+          "other": "do",
+          "preferredUniqueByGrammar": false,
+          "analysis": "both Never again will they use and Never again do they use are grammatical negative inversion patterns; surrounding historical present keeps do contextually available"
+        }
+      ],
+      "optionAudit": [
+        {
+          "label": "1",
+          "grammatical": true,
+          "semanticPlausibility": "high",
+          "intent": "C tense lure",
+          "decisiveFlaw": null
+        },
+        {
+          "label": "2",
+          "grammatical": true,
+          "semanticPlausibility": "high",
+          "intent": "source-restoring combination",
+          "decisiveFlaw": null
+        },
+        {
+          "label": "3",
+          "grammatical": false,
+          "semanticPlausibility": "none",
+          "intent": "what lure",
+          "decisiveFlaw": "what cannot introduce this nonrestrictive relative after an antecedent"
+        },
+        {
+          "label": "4",
+          "grammatical": false,
+          "semanticPlausibility": "low",
+          "intent": "multiple surface lures",
+          "decisiveFlaw": "what is invalid even though calling and do have possible parses"
+        },
+        {
+          "label": "5",
+          "grammatical": true,
+          "semanticPlausibility": "low under passage context",
+          "intent": "active-participle lure",
+          "decisiveFlaw": "changes the intended identity relation rather than creating a necessary grammar violation"
+        }
+      ],
+      "findings": [
+        "options 1 and 2 are both grammatical, so single-answer cardinality fails",
+        "calling is a semantic change but not an inherently ungrammatical form",
+        "explanation identifies a later because-of object as the antecedent of which",
+        "wrong-option explanation elsewhere identifies gang as antecedent, creating an internal contradiction",
+        "explanation falsely labels grammatical simple-present negative inversion with do as an error"
+      ],
+      "grade": "F"
+    }
+  ],
+  "blockerTaxonomy": [
+    {
+      "code": "LPJ16-A-B01_NONUNIQUE_GRAMMAR_SITE",
+      "affected": [
+        "j9i10h",
+        "aiqijc"
+      ],
+      "severity": "critical"
+    },
+    {
+      "code": "LPJ16-A-B02_PASSAGE_OR_BLANK_SURFACE_CORRUPTION",
+      "affected": [
+        "vy6wtk",
+        "mjxpe6",
+        "uelp2h",
+        "j9i10h",
+        "1l55a0"
+      ],
+      "severity": "critical"
+    },
+    {
+      "code": "LPJ16-A-B03_UNINTENDED_UNGRAMMATICAL_DISTRACTOR",
+      "affected": [
+        "mjxpe6"
+      ],
+      "severity": "critical"
+    },
+    {
+      "code": "LPJ16-A-B04_EXPLANATION_SYNTACTIC_FALSEHOOD",
+      "affected": [
+        "j9i10h",
+        "1l55a0",
+        "aiqijc"
+      ],
+      "severity": "critical"
+    },
+    {
+      "code": "LPJ16-A-B05_FIELD_ROLE_DRIFT",
+      "affected": [
+        "vy6wtk",
+        "j9i10h"
+      ],
+      "severity": "major"
+    },
+    {
+      "code": "LPJ16-A-B06_NONCOMPETITIVE_DISTRACTOR_SET",
+      "affected": [
+        "vy6wtk",
+        "mjxpe6",
+        "uelp2h",
+        "j9i10h",
+        "1l55a0",
+        "aiqijc"
+      ],
+      "severity": "major"
+    },
+    {
+      "code": "LPJ16-A-B07_WITHIN_PASSAGE_TARGET_REUSE",
+      "affected": [
+        "mjxpe6",
+        "uelp2h",
+        "j9i10h",
+        "1l55a0"
+      ],
+      "severity": "major"
+    }
+  ],
+  "acceptance": {
+    "focusItemsAccepted": false,
+    "qualityImprovementProven": false,
+    "newApiGenerationRecommendedBeforeRegressionFixes": false,
+    "successorRegressionGateRequired": true
+  },
+  "auditedAtUtc": "2026-07-16T08:14:00.7546466+00:00"
+}

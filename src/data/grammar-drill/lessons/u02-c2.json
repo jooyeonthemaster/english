@@ -1,0 +1,649 @@
+{
+  "id": "u02-c2",
+  "unitId": "u02",
+  "order": 2,
+  "title": "단수 취급어",
+  "oneLiner": "each·every, -thing/-one/-body 부정대명사, 동명사구·to부정사구·명사절 주어는 모두 단수로 취급합니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 주어와 동사의 수 일치(중 ●, 고 ●)",
+      "천일문 고등 GRAMMAR — 주어-동사의 수일치(단수 취급 주어)",
+      "docs/study-os-spec.md §2.2 PART 1 골격기 — u02 주어-동사 수일치",
+      "src/lib/grammar-drill/curriculum.ts — u02 frequencyNote(수식어 삽입 패턴과 결합 출제)"
+    ]
+  },
+  "lenses": ["L5"],
+  "confusableWith": ["u02-c1", "u02-c3", "u02-c4"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Each of the two climate reports contains a detailed summary.",
+        "Each of the two climate reports contain a detailed summary."
+      ],
+      "answer": 0,
+      "afterText": "동사 바로 앞에 복수 명사 reports 가 있는데도 단수 동사가 옳습니다. 이 레슨을 마치면 그 이유를 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "단수 취급어 (핵 주어에서 출발)",
+      "question": "단수 취급어란 무엇이고, 왜 동사 바로 앞의 명사에 수를 맞추면 안 됩니까?",
+      "plain": "단수 취급어는 수식어를 걷어내고 남은 핵이 each·every·부정대명사이거나 동명사구·to부정사구·명사절 덩어리여서 동사를 무조건 단수로 부르는 주어입니다. 동사 바로 앞의 명사에는 수를 맞추지 않습니다.",
+      "analogy": "기차가 아무리 길어도 방향을 정하는 것은 맨 앞의 기관차 하나입니다. 주어 덩어리에 명사가 여럿 매달려 있어도, 동사의 수를 정하는 것은 맨 앞 핵 하나뿐입니다.",
+      "whyItMatters": "밑줄 친 동사가 단수인지 복수인지 묻는 수 일치 문항은 수능·내신의 단골이며, 전부 핵 주어를 정확히 짚고 그 핵이 단수 취급어인지 가려내느냐에서 갈립니다. 이 레슨은 어떤 핵이 단수로 취급되는지를 다루며, 판별 도구 \"핵 주어 추출\"이 그 출발점입니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "단수 취급 주어 필기",
+      "intro": "동사를 무조건 단수로 부르는 주어들을 필기 한 장에 모읍니다.",
+      "entries": [
+        {
+          "head": "each · every — 하나씩 세는 말",
+          "body": "each·every 가 이끄는 주어는 언제나 단수입니다. every 뒤에는 단수 명사가 오고, each of 뒤에는 복수 명사가 와도 수를 정하는 핵은 each 입니다.",
+          "example": {
+            "en": "Each of the volunteers **receives** a name badge.",
+            "ko": "자원봉사자들 각각은 이름표를 받습니다.",
+            "note": "핵은 each 이므로 of 뒤의 복수 volunteers 와 무관하게 단수입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "-thing · -one · -body — 부정대명사",
+          "body": "everything·someone·nobody 처럼 이 어미로 끝나는 부정대명사가 주어이면, 의미가 여럿을 포괄해도 문법상 언제나 단수입니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "동명사구 — -ing 로 만든 덩어리 주어",
+          "body": "동사에 -ing 를 붙여 만든 명사 덩어리가 주어이면, 그 안에 복수 명사가 몇 개든 덩어리 전체를 하나로 세어 단수입니다.",
+          "example": {
+            "en": "Growing vegetables without fertilizers **requires** patience.",
+            "ko": "비료 없이 채소를 기르는 것은 인내를 요구합니다.",
+            "note": "주어는 동명사구 전체이고 vegetables 는 덩어리 내부의 명사일 뿐입니다."
+          }
+        },
+        {
+          "head": "to부정사구 · 명사절 — 통째로 한 덩어리",
+          "body": "to부정사구나 that·whether 가 이끄는 명사절이 주어이면, 절 전체가 하나의 덩어리이므로 단수 동사를 씁니다.",
+          "example": {
+            "en": "That dolphins recognize themselves **suggests** complex minds.",
+            "ko": "돌고래가 자신을 알아본다는 것은 복잡한 정신을 시사합니다.",
+            "note": "that절 전체가 한 덩어리 주어이고 절 안의 dolphins 는 미끼입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "동사 바로 앞의 명사 — 미끼",
+          "body": "단수 핵과 동사 사이에 낀 of 구·전치사구·분사구 속 복수 명사는 수 판단의 근거가 아닙니다. 괄호로 묶어 치웁니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "단수 취급어 암기 카드",
+      "target": "단수 취급 주어 다섯 갈래",
+      "why": "이 다섯 갈래를 즉시 떠올려야 동사 바로 앞의 복수 명사에 속지 않습니다. 하나씩 따져 볼 시간이 시험장에는 없습니다.",
+      "device": "\"하나씩\"과 \"덩어리\"만 기억하십시오. each·every·부정대명사는 하나씩 세니 단수, 동명사구·to부정사구·명사절은 덩어리 하나이니 단수 — 결국 전부 '하나'입니다.",
+      "items": [
+        { "cue": "each / every", "answer": "언제나 단수 — of 뒤가 복수여도 핵은 each" },
+        { "cue": "-thing / -one / -body", "answer": "부정대명사, 뜻이 여럿이어도 단수" },
+        { "cue": "-ing 로 시작하는 주어", "answer": "동명사구 덩어리 → 단수" },
+        { "cue": "to + 동사원형 주어", "answer": "to부정사구 덩어리 → 단수" },
+        { "cue": "that / whether 로 시작하는 주어", "answer": "명사절 덩어리 → 단수" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "단수 취급어 관문",
+      "mission": "단수 동사를 부르는 핵을 전부 골라 관문을 여십시오. 복수 주어가 미끼로 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "Each of the reports",
+        "Everything on the shelves",
+        "Reading old letters",
+        "To finish on time",
+        "Whether it rains",
+        "Both of the reports",
+        "All of the students",
+        "The reports on the desk"
+      ],
+      "answers": [
+        "Each of the reports",
+        "Everything on the shelves",
+        "Reading old letters",
+        "To finish on time",
+        "Whether it rains"
+      ],
+      "passText": "단수 취급어가 손에 붙었습니다. 관문이 열립니다.",
+      "retryText": "미끼에 걸렸습니다. \"하나씩\"과 \"덩어리\"만 남기고 복수 주어는 걸러 내십시오."
+    },
+    {
+      "id": "b6",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "everyone·everything 은 여러 사람이나 여러 사물을 가리키므로 복수 동사와 씁니다.",
+      "truth": "의미가 여럿을 포괄하는 것과 문법상의 수는 다릅니다. -thing·-one·-body 로 끝나는 부정대명사는 의미와 무관하게 언제나 단수 취급하며, 뒤에 어떤 복수 명사가 붙어도 동사는 단수형입니다.",
+      "counterExample": {
+        "en": "Everyone in the two classes **were** given a survey form.",
+        "ko": "두 학급의 모든 학생이 설문지를 받았습니다.",
+        "note": "Everyone 은 -one 형 부정대명사이므로 단수입니다. in the two classes 는 전치사구 수식어일 뿐이며, were 가 아니라 was 가 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "each 와 every 가 이끄는 주어는 언제나 단수로 취급합니다.",
+      "examples": [
+        {
+          "en": "Every seat in the lecture hall **was** occupied before the talk began.",
+          "ko": "강연이 시작되기 전에 강의실의 모든 좌석이 채워져 있었습니다.",
+          "note": "every 뒤에는 단수 명사가 옵니다. in the lecture hall 은 수식어이므로 괄호로 묶고 무시합니다."
+        },
+        {
+          "en": "Each of the volunteers **receives** a name badge at the entrance.",
+          "ko": "자원봉사자들 각각은 입구에서 이름표를 받습니다.",
+          "note": "each of 뒤에는 복수 명사(또는 복수 대명사 us·them)가 오지만, 수를 결정하는 핵은 of 앞의 each 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "동명사구·to부정사구·명사절처럼 덩어리가 통째로 주어이면 그 덩어리를 하나로 세어 단수 동사를 씁니다.",
+      "examples": [
+        {
+          "en": "Growing vegetables without chemical fertilizers **requires** more attention than beginners expect.",
+          "ko": "화학 비료 없이 채소를 기르는 것은 초보자가 예상하는 것보다 더 많은 주의를 필요로 합니다.",
+          "note": "주어는 동명사구 전체입니다. vegetables 와 fertilizers 는 덩어리 내부의 명사일 뿐입니다."
+        },
+        {
+          "en": "To master two foreign languages at once **demands** an unusual amount of discipline.",
+          "ko": "두 외국어를 동시에 숙달하는 것은 보기 드물 만큼 많은 자제력을 요구합니다.",
+          "note": "to부정사구 주어도 하나의 덩어리이므로 단수 동사 demands 를 씁니다."
+        },
+        {
+          "en": "That dolphins recognize themselves in mirrors **suggests** how complex their minds are.",
+          "ko": "돌고래가 거울 속 자신을 알아본다는 것은 그들의 정신이 얼마나 복잡한지를 시사합니다.",
+          "note": "that절이 주어이면 절 전체가 한 덩어리입니다. 절 안의 복수 명사 dolphins·mirrors 는 미끼입니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "주어와 판정 짝짓기",
+      "instruction": "왼쪽 주어를 오른쪽 판정과 근거에 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "Each of the boxes",
+          "b": "단수 — 핵은 each, of 뒤 복수는 미끼",
+          "why": "each 가 핵이므로 뒤의 복수 boxes 와 무관하게 단수입니다."
+        },
+        {
+          "a": "Nobody in the classes",
+          "b": "단수 — -body 형 부정대명사",
+          "why": "Nobody 는 부정대명사이므로 의미와 무관하게 단수입니다."
+        },
+        {
+          "a": "Solving these puzzles",
+          "b": "단수 — 동명사구 덩어리 하나",
+          "why": "동명사구 전체가 한 덩어리이므로 단수입니다."
+        },
+        {
+          "a": "Both of the boxes",
+          "b": "복수 — both 는 둘을 함께 셈",
+          "why": "both 는 언제나 복수로 취급합니다."
+        },
+        {
+          "a": "The keys on the table",
+          "b": "복수 — 핵이 복수 명사 keys",
+          "why": "핵 주어 keys 가 복수이므로 복수입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "each of 뒤에 수식어가 겹친 문장의 해부",
+      "tokens": [
+        { "t": "Each", "role": "S" },
+        { "t": "of the essays submitted by the exchange students", "role": "M" },
+        { "t": "shows", "role": "V" },
+        { "t": "a distinct style", "role": "O" }
+      ],
+      "ko": "교환 학생들이 제출한 에세이들 각각은 뚜렷이 구별되는 문체를 보여 줍니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "of the essays 는 범위를 밝히는 전치사구이고, submitted by the exchange students 는 essays 를 뒤에서 꾸미는 분사구입니다. 둘 다 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "괄호 밖에 남은 것은 Each 하나뿐입니다. each 는 하나씩 세는 말이므로 단수로 확정됩니다."
+        },
+        {
+          "label": "③ 핵 주어에 동사의 수를 맞춥니다",
+          "roles": ["V"],
+          "note": "핵이 단수이므로 동사는 shows 입니다. 동사 바로 앞의 복수 명사 students 는 수 판단의 근거가 되지 못합니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "shows 는 목적어를 부르는 동사이고, a distinct style 이 그 목적어입니다."
+        }
+      ],
+      "conclusion": "복수 명사가 두 번(essays, students) 나오지만 핵 주어는 Each 하나입니다. 그래서 단수 동사 shows 가 옳습니다."
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "단수 취급어를 판별하는 4단계",
+      "steps": [
+        {
+          "text": "동사 바로 앞의 명사를 보지 말고, 주어 덩어리의 맨 앞(핵)으로 눈을 되돌립니다.",
+          "applyNote": "Whether the new bus lanes … remains → 절 안의 복수 명사 lanes 에 눈을 두지 말고 문장 맨 앞의 Whether 로 돌아갑니다."
+        },
+        {
+          "text": "핵이 each·every 이거나 -thing·-one·-body 형 부정대명사이면 그 자리에서 단수로 확정합니다.",
+          "applyNote": "이 문장의 핵은 each 도 부정대명사도 아니므로 다음 단계로 넘어갑니다."
+        },
+        {
+          "text": "주어가 동명사구·to부정사구·명사절 덩어리이면 덩어리 전체를 하나로 세어 단수로 확정합니다.",
+          "applyNote": "Whether … reduce congestion 은 whether 가 이끄는 명사절입니다. 절 전체가 주어이므로 단수입니다."
+        },
+        {
+          "text": "수식어·덩어리 안의 복수 명사를 전부 무시하고 동사를 단수형으로 맞춥니다.",
+          "applyNote": "절 안의 복수 명사 lanes 는 미끼입니다. 동사는 remain 이 아니라 remains 입니다."
+        }
+      ],
+      "example": {
+        "en": "Whether the new bus lanes actually reduce congestion **remains** uncertain.",
+        "ko": "새 버스 전용 차로가 실제로 혼잡을 줄이는지는 불확실한 채로 남아 있습니다.",
+        "note": "whether 가 이끄는 명사절이 주어입니다. 절 안의 동사 reduce 는 절 내부의 동사일 뿐이고, 주절의 본동사는 단수 remains 입니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "That the two research teams reached the same conclusion ( suggest / suggests ) that the effect is real.",
+      "steps": [
+        {
+          "title": "① 주어 덩어리의 경계를 긋습니다",
+          "body": "문장 맨 앞의 That 부터 conclusion 까지가 하나의 명사절입니다. 괄호 앞까지가 전부 주어입니다."
+        },
+        {
+          "title": "② 핵을 확인합니다",
+          "body": "핵은 teams 가 아니라 That 이 이끄는 절 전체입니다. 절 안의 teams 는 절 내부의 주어일 뿐입니다."
+        },
+        {
+          "title": "③ 덩어리 주어의 수를 확정합니다",
+          "body": "명사절 주어는 한 덩어리로 보아 단수 취급합니다. 따라서 동사는 단수형이어야 합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "복수 명사 teams 에 끌려 suggest 를 고르면 안 됩니다. 단수 동사 suggests 가 옳습니다."
+        }
+      ],
+      "answer": "suggests",
+      "ko": "두 연구팀이 같은 결론에 이르렀다는 것은 그 효과가 실재한다는 점을 시사합니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u02-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Every room in these old buildings {{blank}} a high ceiling.",
+          "options": ["has", "have"],
+          "answer": 0,
+          "translation": "이 오래된 건물들의 모든 방은 천장이 높습니다.",
+          "explanation": "핵 주어는 every 가 이끄는 Every room 입니다. in these old buildings 는 전치사구 수식어이므로 괄호에 넣습니다. every 는 언제나 단수 취급하므로 단수 동사 has 가 옳습니다.",
+          "trapTags": ["each-every", "intervening-pp"]
+        },
+        {
+          "id": "u02-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Learning the names of local plants [[u:take]] far more patience than most visitors imagine.",
+          "isCorrect": false,
+          "correction": "takes",
+          "translation": "지역 식물들의 이름을 익히는 것은 대부분의 방문객이 상상하는 것보다 훨씬 더 많은 인내를 요구합니다.",
+          "explanation": "주어는 동명사구 Learning the names of local plants 전체입니다. 덩어리 주어는 단수 취급하므로 takes 로 고쳐야 합니다. 동명사구 안의 복수 명사 names 와 plants 는 수 판단의 근거가 되지 못합니다.",
+          "trapTags": ["gerund-subject", "intervening-pp"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "언제나 단수인 주어와, of 뒤를 봐야 하는 주어",
+      "columns": ["each · every · -thing/-one/-body · 덩어리 주어", "all · most · half of + 명사 (부분 표현) / both of"],
+      "rows": [
+        {
+          "criterion": "수를 결정하는 자리",
+          "a": "핵 자체가 단수이므로 언제나 단수",
+          "b": "all·most·half 는 of 뒤 명사의 수가 동사를 결정합니다(불가산 단수면 단수 — u02-c3에서 다룹니다). 단, both of 는 of 뒤와 무관하게 언제나 복수입니다."
+        },
+        {
+          "criterion": "of 뒤의 복수 명사",
+          "a": "괄호 안의 미끼입니다",
+          "b": "all·most·half 에서는 수 판단의 근거입니다(both 는 근거로 삼을 필요 없이 늘 복수)"
+        },
+        {
+          "criterion": "예문",
+          "a": "Each of the reports contains a summary.",
+          "b": "All of the reports contain a summary."
+        }
+      ],
+      "examples": [
+        {
+          "en": "Each of the reports **contains** a one-page summary.",
+          "ko": "그 보고서들 각각은 한 쪽짜리 요약을 담고 있습니다.",
+          "note": "핵은 Each 이므로 of 뒤의 복수 reports 와 무관하게 단수입니다."
+        },
+        {
+          "en": "Both of the reports **contain** a one-page summary.",
+          "ko": "그 보고서 둘 다 한 쪽짜리 요약을 담고 있습니다.",
+          "note": "both 는 둘을 함께 세는 말이므로 복수입니다. 같은 of 구조라도 앞의 한정어에 따라 수가 갈립니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "수가 다른 하나 찾기",
+      "instruction": "넷 중 동사의 수가 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["Each of the plans", "Everything here", "Reading maps", "Both of the plans"],
+          "odd": 3,
+          "why": "Both of the plans 만 복수입니다. 나머지 셋은 each·부정대명사·동명사구로 모두 단수 취급합니다."
+        },
+        {
+          "words": ["The swimmers here", "To swim daily", "That she left", "Whether they agree"],
+          "odd": 0,
+          "why": "The swimmers here 만 복수입니다. 나머지 셋은 to부정사구·that절·whether절 덩어리 주어로 단수입니다."
+        },
+        {
+          "words": ["Nobody among them", "A few of them", "Someone in the seats", "Everyone at the desks"],
+          "odd": 1,
+          "why": "A few of them 만 복수입니다. 나머지 셋은 -body·-one 형 부정대명사로 모두 단수입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 단수 핵과 동사 사이에 복수 명사가 연달아 끼는 경우",
+      "body": "단수 취급어 뒤에 of 구와 분사구가 겹쳐 들어오면 동사 바로 앞에 복수 명사가 놓입니다. 귀로 읽으면 복수 동사가 자연스럽게 들리지만, 수를 결정하는 것은 소리가 아니라 괄호 밖에 남은 핵입니다. 수식어를 전부 묶어 치운 뒤 남은 한 단어만 보고 판단해야 합니다.",
+      "example": {
+        "en": "Every one of the machines installed in the new factories **needs** a monthly inspection.",
+        "ko": "새 공장들에 설치된 기계들 각각은 월 1회 점검이 필요합니다.",
+        "note": "핵은 Every one 이고, of the machines 와 installed in the new factories 는 모두 수식어입니다. 복수 machines·factories 는 미끼이므로 동사는 needs 입니다."
+      }
+    },
+    {
+      "id": "b17",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "수 일치 반사신경",
+      "instruction": "명제가 옳으면 ○, 틀리면 ×를 제한시간 안에 누르십시오. 수 일치는 결국 반사 속도입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "each of 뒤에 복수 명사가 오면 동사도 복수입니다.",
+          "isTrue": false,
+          "why": "핵은 each 이므로 of 뒤가 복수여도 동사는 단수입니다."
+        },
+        {
+          "statement": "everything 은 뜻이 여럿을 포괄해도 단수 동사를 씁니다.",
+          "isTrue": true,
+          "why": "-thing 형 부정대명사는 문법상 언제나 단수입니다."
+        },
+        {
+          "statement": "동명사구가 주어이면 그 안의 복수 명사에 동사를 맞춥니다.",
+          "isTrue": false,
+          "why": "동명사구는 덩어리 전체가 하나이므로 단수입니다. 내부 명사는 미끼입니다."
+        },
+        {
+          "statement": "that절이 주어이면 절 전체를 하나로 세어 단수 동사를 씁니다.",
+          "isTrue": true,
+          "why": "명사절 주어는 한 덩어리이므로 단수입니다."
+        },
+        {
+          "statement": "both of the reports 는 단수 동사를 씁니다.",
+          "isTrue": false,
+          "why": "both 는 둘을 함께 세는 말이므로 복수입니다."
+        },
+        {
+          "statement": "every 는 and 로 두 명사를 이어도 주어 전체가 단수입니다.",
+          "isTrue": true,
+          "why": "every 가 하나씩 세므로 and 로 이어진 두 명사도 단수 취급합니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u02-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Whether the ancient farmers planted these seeds deliberately {{blank}} a question that archaeologists still debate.",
+          "options": ["remains", "remain", "remaining"],
+          "answer": 0,
+          "translation": "고대 농부들이 이 씨앗을 의도적으로 심었는지는 고고학자들이 여전히 논쟁하는 문제로 남아 있습니다.",
+          "explanation": "주어는 Whether 가 이끄는 명사절 전체이며, 절 주어는 한 덩어리로 보아 단수 취급합니다. 따라서 단수 동사 remains 가 옳습니다. 절 안의 복수 명사 farmers·seeds 는 미끼이고, remaining 은 시제가 없어 본동사가 되지 못합니다.",
+          "trapTags": ["clause-subject", "intervening-clause"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 remains 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "Whether 가 이끄는 명사절 전체가 주어이고, 절 주어는 한 덩어리로 세어 단수 취급하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 수식어와 절 내부의 명사를 걷어내고 남은 덩어리 하나가 핵 주어라는 것이 판단의 근거입니다."
+        },
+        {
+          "text": "동사 바로 앞의 부사 deliberately 가 단수·복수를 구분하지 않기 때문입니다.",
+          "correct": false,
+          "feedback": "부사는 수 판단과 무관합니다. 부사가 있든 없든 수를 결정하는 것은 핵 주어입니다."
+        },
+        {
+          "text": "문장이 현재의 상태를 말하고 있어 단수 현재형이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제의 자연스러움은 수 판단의 근거가 되지 못합니다. 복수 주어였다면 같은 현재 시제에서도 remain 이 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "Every student and teacher [[1:takes]] part in the recycling campaign. Everything collected in the classrooms [[2:are]] weighed at the end of the month, and reducing the total amount of waste [[3:has]] become the school's main goal, which is why each of the classes [[4:keeps]] its own record.",
+      "answer": 2,
+      "correction": "is",
+      "rationales": [
+        "every 가 and 로 이어진 두 명사 앞에 붙어 있습니다. every 는 하나씩 세는 말이므로 주어 전체가 단수이고 takes 가 옳습니다.",
+        "핵 주어는 -thing 형 부정대명사 Everything 입니다. collected in the classrooms 는 분사구 수식어이므로 괄호에 넣습니다. 부정대명사 주어는 단수이므로 are 를 is 로 고쳐야 합니다.",
+        "주어는 동명사구 reducing the total amount of waste 전체입니다. 덩어리 주어는 단수 취급하므로 has 가 옳습니다.",
+        "핵 주어는 each 이고 of the classes 는 범위를 밝히는 전치사구입니다. each 는 언제나 단수이므로 keeps 가 옳습니다."
+      ],
+      "ko": "모든 학생과 교사가 재활용 캠페인에 참여합니다. 교실에서 수거된 모든 것이 월말에 무게를 측정받으며, 폐기물 총량을 줄이는 것이 학교의 주요 목표가 되었는데, 그래서 각 학급이 자체 기록을 관리합니다."
+    },
+    {
+      "id": "b21",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Urban planners have argued for decades about how to reduce traffic in dense city centers. [[u:Whether congestion charges actually change the habits of daily commuters remains a matter of serious debate.]] Some cities report a lasting decline in car use, while others see traffic return within a single year.",
+      "instruction": "밑줄 친 문장에서 주어 덩어리의 경계를 긋고 핵 주어와 본동사를 찾으십시오.",
+      "found": "밑줄 문장의 주어는 Whether 부터 commuters 까지의 명사절 전체입니다. 절 주어는 한 덩어리로 세어 단수 취급하므로 본동사는 remains 입니다. 절 안의 복수 명사 charges·habits·commuters 는 모두 수 판단에서 배제합니다.",
+      "gist": "혼잡 통행료가 실제로 통근자의 습관을 바꾸는지에 대해 도시마다 결과가 엇갈린다는 내용입니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 수 일치가 어긋난 문장을 주고 '틀린 부분을 찾아 바르게 고쳐 쓰시오'로 물어봅니다. 핵 주어가 무엇인지 밝히고 동사를 단수형으로 바꿔 써야 만점입니다.",
+          "sample": {
+            "en": "Understanding the motives of other people are essential to any negotiation.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "are → is (주어는 동명사구 Understanding the motives of other people 전체이므로 단수입니다)"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 단수 취급어 뒤에 of 구와 분사구를 겹쳐 넣어 동사 바로 앞에 복수 명사를 두는 선지를 만듭니다. 밑줄이 동사라면 수식어를 전부 걷어내고 핵 주어의 수부터 확인해야 합니다.",
+          "sample": {
+            "en": "Every one of the artifacts recovered from the ancient burial site [[u:reveal]] something about daily life.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "reveals — 핵 주어는 Every one 이고 of 구와 분사구는 수식어이므로 동사는 단수여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "복수 미끼 감별소의 문지기",
+      "intro": "이 감별소에는 복수 명사를 동사 앞에 슬쩍 세워 눈을 속이려는 문장이 매일 들어옵니다. 핵 주어 하나만 짚어내는 눈이 없으면 아무도 이 문을 지나지 못합니다. 네 건의 판정으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "Each of the museums in these cities {{blank}} a rare manuscript.",
+          "options": ["owns", "own"],
+          "answer": 0,
+          "why": "핵 주어는 Each 이므로 of 뒤의 복수 museums 와 무관하게 단수 owns 가 옳습니다."
+        },
+        {
+          "prompt": "Everyone seated in the front rows {{blank}} a clear view of the stage.",
+          "options": ["has", "have"],
+          "answer": 0,
+          "why": "Everyone 은 -one 형 부정대명사이므로 단수입니다. seated in the front rows 는 수식어일 뿐입니다."
+        },
+        {
+          "prompt": "Collecting rare stamps from distant countries {{blank}} both money and patience.",
+          "options": ["demands", "demand"],
+          "answer": 0,
+          "why": "주어는 동명사구 전체이므로 단수 demands 입니다. countries·stamps 는 덩어리 내부의 명사입니다."
+        },
+        {
+          "prompt": "Whether the two witnesses told the truth {{blank}} the whole case.",
+          "options": ["decides", "decide"],
+          "answer": 0,
+          "why": "Whether 가 이끄는 명사절 전체가 주어이므로 단수 decides 입니다. 절 안의 witnesses 는 미끼입니다."
+        }
+      ],
+      "winText": "감별 도장이 찍혔습니다. 동사 바로 앞의 복수 명사는 미끼일 뿐 — 괄호 밖에 남은 핵 하나로 수를 정하는 눈이 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 서류를 돌려줍니다. 네 건 모두 물은 것은 하나였습니다 — \"수식어를 걷어내면 핵은 단수인가 복수인가.\" 판별 4단계를 다시 확인하고 오면 도장은 준비되어 있습니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "each·every·-thing/-one/-body 가 핵이거나 주어가 ___ 덩어리이면 동사는 ___형이고, 동사 바로 앞의 복수 명사는 ___입니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "each·every 가 이끄는 주어는 뒤에 복수 명사가 와도 언제나 단수입니다. every 는 and 로 두 명사를 이어도 단수입니다.",
+        "-thing·-one·-body 로 끝나는 부정대명사 주어는 의미가 다수를 포괄해도 문법상 단수입니다.",
+        "동명사구·to부정사구·명사절이 통째로 주어이면 덩어리 전체를 하나로 세어 단수 동사를 씁니다.",
+        "동사 바로 앞의 복수 명사는 대개 수식어 안의 미끼입니다. 수식어를 괄호로 묶고 남은 핵의 수로만 판단합니다.",
+        "all·most·half of 는 of 뒤 명사의 수를 따르고(u02-c3), both of 는 언제나 복수입니다."
+      ],
+      "keySentence": {
+        "en": "Each of the essays submitted by the exchange students **shows** a distinct style.",
+        "ko": "교환 학생들이 제출한 에세이들 각각은 뚜렷이 구별되는 문체를 보여 줍니다.",
+        "note": "복수 명사가 둘이나 끼어 있어도 괄호 밖에 남은 핵은 Each 하나뿐이므로 동사는 단수 shows 입니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u02-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Every one of the interviews recorded last summer {{blank}} at least one unexpected detail.",
+          "options": ["reveals", "reveal"],
+          "answer": 0,
+          "translation": "지난여름에 녹음된 인터뷰들 각각은 적어도 하나의 예상치 못한 세부 사실을 드러냅니다.",
+          "explanation": "핵 주어는 Every one 이고, of the interviews 와 recorded last summer 는 모두 수식어입니다. every 가 이끄는 주어는 언제나 단수이므로 reveals 가 옳습니다. 복수 명사 interviews 는 미끼입니다.",
+          "trapTags": ["each-every", "intervening-pp"]
+        },
+        {
+          "id": "u02-c2-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Whether the volunteers received adequate training before the rescue mission [[u:remain]] unclear to the investigators.",
+          "isCorrect": false,
+          "correction": "remains",
+          "translation": "그 자원봉사자들이 구조 임무 전에 충분한 훈련을 받았는지는 조사관들에게 불분명한 채로 남아 있습니다.",
+          "explanation": "주어는 Whether 가 이끄는 명사절 전체입니다. 절 주어는 한 덩어리로 보아 단수 취급하므로 remains 로 고쳐야 합니다. 절 안의 복수 명사 volunteers 는 절 내부의 주어일 뿐 주절의 핵 주어가 아닙니다.",
+          "trapTags": ["clause-subject"]
+        },
+        {
+          "id": "u02-c2-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Nothing about the two proposals submitted last week {{blank}} the committee's basic concerns.",
+          "options": ["addresses", "address", "addressing"],
+          "answer": 0,
+          "translation": "지난주에 제출된 그 두 제안서에 관한 어떤 것도 위원회의 기본적인 우려를 다루지 못합니다.",
+          "explanation": "핵 주어는 -thing 형 부정대명사 Nothing 이므로 단수입니다. about the two proposals 와 submitted last week 는 수식어이므로 괄호에 넣습니다. 따라서 addresses 가 옳고, addressing 은 시제가 없어 본동사가 되지 못합니다.",
+          "trapTags": ["indefinite-pronoun", "intervening-pp"]
+        }
+      ]
+    }
+  ]
+}

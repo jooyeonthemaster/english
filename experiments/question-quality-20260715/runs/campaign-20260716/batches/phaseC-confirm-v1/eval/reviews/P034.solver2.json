@@ -1,0 +1,35 @@
+{
+  "pid": "P034",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Originally born in France, Brunel escaped...' — 과거분사 분사구문. 의미상 주어는 주절 주어 Brunel이고, bear의 수동 관계(Brunel was born in France)가 성립하므로 과거분사 born이 정확하다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'machines for making boots' — 전치사 for의 목적어 자리에 동명사 making. 형식·의미 모두 성립('부츠 제조용 기계'). 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Brunel was imprisoned for several months' — 타동사 imprison의 수동태(be + p.p.). Brunel이 수감의 대상이므로 수동이 옳다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (정답)",
+      "reason": "'London was divided by the River Thames and needed more ways for people and goods to move across them.' 대명사 them의 선행사 후보를 전수 검토하면: the River Thames(단수, 의미상 유일하게 적합 — 강을 건너다), people and goods(복수이나 'move across people and goods'는 의미 불성립 — 이동의 주체이지 건너지는 대상이 아님), more ways(불성립). 유일한 적격 선행사가 단수 고유명사 the River Thames이므로(주절 동사 'was divided'로 단수성 재확인) 대명사는 it이어야 한다. them은 수 일치 위반으로 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'despite being in ill health' — 전치사 despite + 동명사 being. 의미상 주어는 주절 주어 Brunel과 일치. 정문."
+    }
+  ],
+  "note": "대안 해석 적극 탐색 결과, (D)의 them을 정문으로 만들 복수 선행사는 존재하지 않는다(people and goods, ways 모두 'move across'의 목적어로 의미 불성립). 나머지 네 밑줄은 모두 표준 규칙으로 정문임이 증명되어 정답은 (D) 단독으로 수렴한다. 전형적 대명사 수 일치 유형으로 논쟁 여지 없음."
+}

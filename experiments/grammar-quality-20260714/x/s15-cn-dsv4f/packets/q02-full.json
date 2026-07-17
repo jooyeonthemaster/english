@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-pointcode-span-mismatch",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-answer-in-wrong-explanations",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch",
+    "wrong-option-explanation-count"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=b  (C):dec=k  (D):ANS=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 29,
+        "relPos": 0.036,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 146,
+        "relPos": 0.181,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 284,
+        "relPos": 0.353,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 660,
+        "relPos": 0.82,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 762,
+        "relPos": 0.947,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.947,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "being left alone",
+        "isError": false,
+        "surroundingText": "We all enjoy the pleasure of (A)being left alone with a good book.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "suddenly struck",
+        "isError": false,
+        "surroundingText": "But sometimes after several hours of immersion we lift our heads and look around, (B)suddenly struck by the quiet, the absence of others.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "to read",
+        "isError": false,
+        "surroundingText": "In this situation, we are suffering from reading-induced loneliness. The solution is (C)to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "takes turns reading",
+        "isError": true,
+        "correction": "takes turns reading",
+        "errorExpression": "take turns reading",
+        "surroundingText": "Consider joining a reading group in which everybody (D)take turns reading aloud from a novel.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "otherwise internal and solitary",
+        "isError": false,
+        "surroundingText": "Reading a book collaboratively is a wonderful way to share an (E)otherwise internal and solitary experience.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "being left alone"
+      },
+      {
+        "label": "(B)",
+        "text": "suddenly struck"
+      },
+      {
+        "label": "(C)",
+        "text": "to read"
+      },
+      {
+        "label": "(D)",
+        "text": "take turns reading"
+      },
+      {
+        "label": "(E)",
+        "text": "otherwise internal and solitary"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "‘being left alone’은 동명사 수동태 구문으로, ‘혼자 남겨지는 것’이라는 의미를 자연스럽게 전달합니다. 전치사 of 뒤에서 명사 역할을 하며 어법상 적절합니다.",
+      "(B)": "‘suddenly struck’은 과거분사구로, 주절의 주어 ‘we’를 수식하며 ‘갑자기 충격을 받은’의 의미입니다. 분사구문의 일부로 쓰였으며 문법상 문제가 없습니다.",
+      "(C)": "‘The solution is to read’에서 ‘to read’는 to부정사(명사적 용법)로 주격보어 역할을 합니다. ‘해결책은 읽는 것이다’라는 의미를 완벽하게 전달하며 올바른 표현입니다.",
+      "(D)": "‘everybody’는 단수 취급하는 부정대명사이므로 동사는 ‘takes’가 되어야 합니다. ‘take turns reading’은 복수 동사 형태이므로 주어-동사 수 일치가 이루어지지 않아 어법상 틀린 표현입니다. 올바르게는 ‘takes turns reading’입니다."
+    },
+    "explanation": "(D) \"take turns reading\"는 어법상 틀린 표현이며 \"takes turns reading\"로 고쳐야 한다. (D)가 ‘take’로 바뀌어 있으며, 이는 주어 ‘everybody’가 단수이므로 ‘takes’로 써야 합니다. ‘everybody’는 단수 취급하는 부정대명사이므로 복수 동사 ‘take’는 어법에 맞지 않습니다. (A)→동명사 수동태, (B)→과거분사구, (C)→to부정사 보어, (E)→부사 ‘otherwise’가 형용사 수식한 구조로 모두 적절합니다. 따라서 정답은 (D)입니다.",
+    "keyPoints": [
+      "everybody는 단수 취급 부정대명사",
+      "take turns + 동명사 구문에서 동사 수 일치",
+      "past participle phrase 수식",
+      "to-infinitive as complement"
+    ],
+    "tags": [
+      "subject-verb agreement",
+      "indefinite pronoun",
+      "participle phrase",
+      "infinitive"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all enjoy the pleasure of __(A) being left alone__ with a good book. But sometimes after several hours of immersion we lift our heads and look around, __(B) suddenly struck__ by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is __(C) to read__ in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody __(D) take turns reading__ aloud from a novel. Reading a book collaboratively is a wonderful way to share an __(E) otherwise internal and solitary__ experience."
+  }
+}

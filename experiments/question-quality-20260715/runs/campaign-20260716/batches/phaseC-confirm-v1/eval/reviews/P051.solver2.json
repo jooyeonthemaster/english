@@ -1,0 +1,35 @@
+{
+  "pid": "P051",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Grammatical seam is fine (past-tense VP coordinated with 'and started'), but logically unmotivated: the immediately preceding clause 'waited for her grandmother to make the first move' presupposes she is taking her cue from grandmother, not from her own recalled knowledge. The text further establishes she has no tea-time knowledge (does not know the word 'scones', eats hers without cream and jam), so 'recalling basic manners' has no textual support and clashes with the waiting premise."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Grammatically clean: free relative 'what her grandmother did' as object, tense concord imitated/did/started intact. Logically it uniquely discharges the premise 'waited for her grandmother to make the first move' — waiting is only rational if she intends to copy. It also licenses the later contrastive sentence 'Chloe boldly chose the biscuit-looking thing before her grandmother': 'boldly' and 'before' carry contrastive force only if her earlier behavior was following/imitating."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Direct contradiction: she exchanges winks with her grandmother and explicitly waits for her to make the first move — the opposite of ignoring her presence completely."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Refuted by the later internal monologue 'Scones, was that what they were called?', which presupposes she never asked and did not know the names. If she had asked for correct names at the blank, that sentence would be incoherent."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Ditransitive 'served X to Y' is grammatical, but there is no serving event anywhere in the passage; she waited for grandmother to act first and then ate the sandwich herself ('It was good. She ate it up'). Serving grandmother first also conflicts with waiting for grandmother's first move."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. The blank sits in the chain [waited for grandmother's first move] -> [blank] -> [started with a sandwich]; only imitation discharges the waiting premise. The later 'boldly ... before her grandmother' functions as a minimal-pair contrast confirming that the earlier default was following her grandmother's lead. All five options are syntactically well-formed in the seam, so discrimination is purely logical/textual; distractors ③④⑤ are each contradicted by explicit text, ① by presupposition failure. Single defensible answer; clean item."
+}

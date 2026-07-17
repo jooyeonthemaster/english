@@ -1,0 +1,35 @@
+{
+  "pid": "P064",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) is",
+      "verdict": "틀림 (정답)",
+      "reason": "관계대명사 that의 선행사는 'skills and behaviors'로 명백한 복수. 'skills and behaviors that is necessary for future survival'에서 관계절 동사는 are여야 한다. 대안 해석 탐색: 선행사를 동명사구 'learning and practicing skills and behaviors' 전체(단수 취급)로 보는 억지 해석을 시도해도, 관계절이 명사 바로 뒤에 붙은 제한적 관계절이고 의미상 '미래 생존에 필요한 것'은 기술과 행동 자체이므로 성립하지 않는다. is를 정문으로 만드는 어떤 대안 구조(축약 관계절, 도치 등)도 없다. 명백한 수일치 오류."
+    },
+    {
+      "label": "(B) in which",
+      "verdict": "옳음",
+      "reason": "'play is a way in which children learn about the world'에서 관계절 'children learn about the world in the way'가 완전한 절이므로 전치사+관계대명사 in which가 정확하다. a way in which(= a way that/in that 아님)는 표준 표현. 유혹 포인트: 'a way'는 관용적으로 that이나 관계사 생략도 허용되어 in which가 어색하게 느껴질 수 있으나, in which 자체는 완벽한 정문이므로 끌릴 이유가 없다."
+    },
+    {
+      "label": "(C) developing",
+      "verdict": "옳음",
+      "reason": "전치사 for 뒤이므로 동명사 developing이 정확하다. 'a training ground for developing physical abilities'는 자연스러운 구조. to develop으로 바꿔야 한다는 유혹은 전치사 뒤 to부정사 불가 규칙에 의해 즉시 배제된다."
+    },
+    {
+      "label": "(D) that",
+      "verdict": "옳음",
+      "reason": "'skills like walking, running, and jumping that are necessary for everyday living'에서 that은 주격 관계대명사로 선행사 skills(또는 나열된 세 동명사)를 받으며 어느 쪽이든 복수라 are와 일치한다. 유혹 포인트: 대시(-) 뒤 삽입구 안이라 선행사 파악이 순간 헷갈리고, (A)의 오류와 대칭 구조여서 '여기도 수일치?'라고 의심하게 만드는 미끼지만 여기는 are로 올바르게 일치되어 있다. that을 what으로 바꿔야 한다는 유혹도 선행사가 존재하므로 성립하지 않는다."
+    },
+    {
+      "label": "(E) how to compete",
+      "verdict": "옳음",
+      "reason": "learn의 목적어로 '의문사+to부정사'(how to compete and cooperate with others)가 오는 표준 구조이며, 뒤따르는 how to lead and follow, how to make decisions와 병렬도 정확하다. 유혹 포인트: compete and cooperate 병렬에서 to가 한 번만 쓰인 것이 눈에 걸릴 수 있으나 'how to A and B'는 완전한 정문이다."
+    }
+  ],
+  "note": "최상위권 실전 풀이: (A)에서 즉시 수일치 오류(skills and behaviors → are)를 포착. 가장 매력적인 오답은 (D)로, (A)와 동일한 '관계사+be동사 수일치' 프레임을 대시 삽입구 안에 재현해 놓아 선행사 추적이 흔들리는 학생을 끌어들이지만, (D)는 are로 올바르다. (B)의 in which도 'the way that' 관용에 익숙한 학생에게 어색함을 유발할 수 있으나 정문. 정답은 (A) 하나로 유일하게 좁혀지며 대안 해석으로 (A)를 정문화할 방법이 없다. 문항 성립에 문제 없음."
+}

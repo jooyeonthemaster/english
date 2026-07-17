@@ -1,0 +1,35 @@
+{
+  "pid": "P045",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'they were careful and precise when typing'에서 when typing은 접속사가 남은 분사구문(= when they were typing)으로, 생략된 의미상 주어 they가 주절 주어와 일치한다. typing의 능동 관계(they type)도 성립하므로 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'This means that those brain activities don't get ...'에서 that은 means의 목적어인 완전한 절(주어 those brain activities + 동사 don't get + 목적어 the workout)을 이끄는 명사절 접속사. 뒤 절에 성분 결손이 없으므로 what이 아닌 that이 옳다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong",
+      "reason": "'don't get the workout today that they did for previous generations'가 되어야 한다. 관계절 내 선행 동사구는 일반동사 'get (the workout)'이므로 대동사는 do-계열(did)이어야 하며 be동사 were는 대응 불가. 대안 해석 검증: (i) VP 생략 해석 'that they were [getting]'은 선행절이 진행형이 아니어서(단순현재 don't get) 조동사 be가 요구하는 진행형 선행 VP가 없으므로 성립 불가. (ii) 서술 보어 해석 'the workout that they were'(그 활동들이 워크아웃'이었다')는 형식상 관계절로는 조립되나, 주절에서는 같은 활동들이 workout을 '받는'(get) 대상이어서 동일 명사가 자기 자신에 대한 운동이자 학생들에게 준 운동이라는 자기지시적 의미 충돌이 나며, today vs for previous generations의 명시적 시점 대조가 요구하는 '과거에 받았던 만큼의 단련' 비교 의미와도 불합치. 두 대안 모두 기각되므로 were는 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'focused on scanning and processing mountains of information'에서 전치사 on의 목적어로 동명사 scanning과 processing이 병렬. 병렬 시작점이 on 바로 뒤의 scanning이므로 processing(동명사)이 형태 일치. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "주어 'Their saturation in and early use of technology'는 한정사 Their를 공유하고 보충어 technology를 우절점인상(right-node raising)으로 공유하는 긴밀 결합 등위 명사구로, 젊은 세대의 기술 몰입이라는 단일 현상을 지칭한다. 이런 개념적 단일체 등위 주어는 통보적 일치(notional agreement)로 단수 동사가 표준 용법에서 허용되므로 makes는 옹호 가능한 정문. 엄격 형식주의로 복수 make를 선호할 수는 있으나 makes를 '틀렸다'고 단정할 수 없어 정답 후보로 성립하지 않음. (수험생 함정: 등위 주어 → 복수 유도)"
+    }
+  ],
+  "note": "정답은 (C) were → did (대동사 오류). 장거리 단서: 관계절의 선행 VP가 일반동사 get이고, today vs for previous generations 대조가 '과거에 받았던 단련'의 비교를 요구한다. (C)를 정문으로 만들 수 있는 두 가지 대안 해석(진행형 VP 생략, 서술 보어 관계절)을 적극 탐색했으나 각각 형식적·의미적 이유로 기각됨. (E)의 수일치는 형식 일치(복수) vs 통보 일치(단수)가 갈리는 지점이나 단일 개념 등위 주어의 단수 일치는 표준적으로 수용되므로 복수 정답 소지는 낮다고 판정. 나머지 (A)(B)(D)는 명백한 정문."
+}

@@ -1,0 +1,169 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 4,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-too-basic-decoys",
+    "grammar-pointcode-span-mismatch",
+    "grammar-answer-point-not-core"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=c  (C):ANS=l  (D):dec=f  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 29,
+        "relPos": 0.036,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 155,
+        "relPos": 0.193,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 341,
+        "relPos": 0.424,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 530,
+        "relPos": 0.658,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.658,
+    "firstHalfShare": 0.75,
+    "notFoundCount": 1
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "being",
+        "isError": false,
+        "correction": "being",
+        "errorExpression": "being",
+        "surroundingText": "We all enjoy the pleasure of being left alone with a good book.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "struck",
+        "isError": false,
+        "correction": "struck",
+        "errorExpression": "struck",
+        "surroundingText": "But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "whether",
+        "isError": true,
+        "correction": "whether",
+        "errorExpression": "if",
+        "surroundingText": "The solution is to read in the company of other people who are reading - whether in a public space such as a café",
+        "pointCode": "l"
+      },
+      {
+        "label": "(D)",
+        "expression": "similarly",
+        "isError": false,
+        "correction": "similarly",
+        "errorExpression": "similarly",
+        "surroundingText": "Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "does",
+        "isError": false,
+        "correction": "does",
+        "errorExpression": "does",
+        "surroundingText": "Consider joining a reading group in which everybody takes turns reading aloud from a novel. Doing so does provide a wonderful way",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "being"
+      },
+      {
+        "label": "(B)",
+        "text": "struck"
+      },
+      {
+        "label": "(C)",
+        "text": "if"
+      },
+      {
+        "label": "(D)",
+        "text": "similarly"
+      },
+      {
+        "label": "(E)",
+        "text": "does"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 of의 목적어 자리에 동명사 수동태 형태인 being left가 온 구조로, '혼자 남겨지는 것'이라는 수동의 의미가 동명사 목적어로 올바르게 쓰였습니다.",
+      "(B)": "주절의 주어인 we가 조용함과 타인의 부재에 의해 '갑자기 사로잡히는(충격을 받는)' 대상이므로, 과거분사 struck을 활용한 분사구문 표현은 어법상 적절합니다.",
+      "(D)": "과거분사(형용사 역할)인 immersed를 앞에서 수식하므로 부사 형태인 similarly가 쓰인 것은 적절합니다.",
+      "(E)": "동명사구 주어 Doing so를 받는 3인칭 단수 일반동사 앞의 일반동사 강조 조동사로, 단수형인 does는 주어와의 수 일치와 문법적 기능 모두 올바릅니다."
+    },
+    "explanation": "문장의 구조를 분석해 보면 'whether in a public space... or in your own home'은 'whether they are in...'에서 '주어 + be동사'가 생략된 형태로 양보 부사절을 유도하는 구조입니다. 'A이든 B이든 상관없이'라는 의미의 부사절 축약 구조에서는 오직 whether만 사용할 수 있으며, if는 생략을 동반하여 'if in A or in B'와 같은 양보의 부사절을 이끌 수 없습니다. 따라서 양보의 부사절을 이끄는 접속사 whether 자리인 (C)의 if는 어법상 틀린 표현이므로 whether로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 전치사 vs 접속사 — 생략 구문에서 양보의 부사절을 유도하는 접속사의 구분",
+      "(B) 분사구문의 능수동 — 주절의 주어 we와의 수동 관계를 통한 과거분사 판정",
+      "(D) 형용사·부사의 구별 — 과거분사 수식어로서 부사의 격식적 쓰임"
+    ],
+    "tags": [
+      "어법",
+      "접속사 whether",
+      "분사구문",
+      "강조의 does"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all enjoy the pleasure of __(A) being__ left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly __(B) struck__ by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - __(C) if__ in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else __(D) similarly__ immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience."
+  }
+}

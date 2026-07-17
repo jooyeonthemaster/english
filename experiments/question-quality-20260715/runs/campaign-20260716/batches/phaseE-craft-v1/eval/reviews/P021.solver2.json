@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) are not allowed",
+      "verdict": "correct",
+      "reason": "주어는 'people who have been adopted'로 복수이며, 'allow + O + to-inf'의 수동태 'be allowed to have access'가 정확히 성립한다. 복수 일치(are)와 수동태 형태 모두 정문. 대안 해석 불필요."
+    },
+    {
+      "label": "(B) them",
+      "verdict": "correct",
+      "reason": "'tell + IO + DO' 4형식 구조에서 간접목적어 목적격 대명사. 선행 지시 대상은 복수 명사구 'people who have been adopted'(= adoptees)로 수·격 모두 일치. 'nothing'이 직접목적어. 정문."
+    },
+    {
+      "label": "(C) have publicly protested",
+      "verdict": "correct",
+      "reason": "'in the past decade'라는 현재까지 이어지는 기간 부사구와 현재완료의 결합은 규범적으로 정확하다. 조동사 have와 과거분사 사이 부사(publicly) 삽입도 표준 어순. 미국 영어에서 protest는 타동사로 'protest this situation'이 성립하므로 전치사 누락 시비도 성립하지 않는다."
+    },
+    {
+      "label": "(D) what",
+      "verdict": "correct",
+      "reason": "융합(자유) 관계대명사 what: 'find __'의 목적어 자리를 채우는 명사절을 이끌며, 절 내부에서 'they want to know __'의 know의 목적어 공백을 채운다. 선행사가 없으므로 that/which로 대체 불가하고 what이 유일한 정문 선택. 완전한 절이 아니므로 what이 옳다."
+    },
+    {
+      "label": "(E) find",
+      "verdict": "incorrect",
+      "reason": "'devote A to B'에서 to는 전치사이므로 B 자리에는 명사/동명사가 와야 한다: 'devote all their time and energy to finding ...'. 대안 해석 검토: to find를 목적 부정사(in order to)로 읽으려면 devote가 to-보어 없이 'devote their time and energy'만으로 완결되어야 하는데, devote는 'devote X to Y' 틀을 의무적으로 요구하는 동사라 전치사구 보어가 빠진 채로는 비문이 된다. 따라서 부정사 재해석은 성립하지 않고 find는 finding이어야 한다. (부수적으로 'find out more about'이 더 자연스러우나 채점 포인트는 devote to + 동명사이다.)"
+    }
+  ],
+  "note": "정답 후보는 (E) 단일. 전형적 함정 배치: (C)는 현재완료+기간부사·부사삽입으로, (D)는 what/that 구별로 흔들기를 시도하지만 모두 정문임이 형식적으로 증명된다. (E)는 전치사 to 뒤 원형부정사 오류로, 목적 부정사 대안 해석도 devote의 필수 논항 구조 때문에 차단된다. 블라인드 풀이 기준 문항 성립."
+}

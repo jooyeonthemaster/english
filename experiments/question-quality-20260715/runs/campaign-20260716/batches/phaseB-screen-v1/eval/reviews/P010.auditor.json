@@ -1,0 +1,110 @@
+{
+  "pid": "P010",
+  "blindAnswer": "①",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OK",
+      "severity": "info",
+      "evidence": "렌더 지문은 원지문 마지막 문장의 술부(to produce unique creations ... eye-opening experiences)만 '_____'로 치환했고, 그 외 문장 접합·중복·누락·오탈자 없음. 빈칸이 문장 말미(마침표 앞)에 위치해 고아 문장부호 없음. 선지 라벨 ①~⑤와 선언 정답 ① 일치."
+    },
+    {
+      "code": "V2-OK",
+      "severity": "info",
+      "evidence": "블라인드 풀이 결과 ① 유일 정답. ② 참여 극대화는 목표가 아닌 배경 서술이며 기술 중심 목표라 'not simply to utilize technology for its own sake'와 충돌, ③ 기술 숙련 과시는 동일 문장과 정면 모순, ④ 디지털 기기 배제는 'tools that can be used'와 모순, ⑤ 비평가 요구 충족·보수 회귀는 지문에 근거 없고 unique creations 지향과 반대. 대안 정답 없음."
+    },
+    {
+      "code": "V3-OK",
+      "severity": "info",
+      "evidence": "다섯 선지 모두 to부정사로 'it should be ___' 슬롯에 균일하게 결합, 정답 완성문 'Rather, it should be to provide audiences with profound insights that challenge their conventional worldviews.'는 문법적·자연스러움. seam 비문·비단어·오탈자 없음."
+    },
+    {
+      "code": "V4-CIRCULAR-FRAMING",
+      "severity": "major",
+      "evidence": "해설이 \"대중에게 '새롭고 눈을 뜨게 하는 경험(new, eye-opening experiences)'을 제공해야 한다고 역설합니다\"라며 빈칸으로 제거된 span 자체를 보이는 지문 근거처럼 인용하고, keyPoint 2도 'new, eye-opening experiences가 지문 내에서 어떻게 일치하는지'라 표현하나 렌더 지문에는 이 구절이 없다. 원지문 기준 사실 오류·환각은 아니고 남은 단서(Rather 대조, challenges our perceptions, not ... for its own sake)로도 근거가 성립하므로 V4 통과, 단 순환 프레이밍으로 수정 필요."
+    },
+    {
+      "code": "V4-LOOSE-TERM",
+      "severity": "minor",
+      "evidence": "③ 오답 해설의 '빈칸 직전 문장의 인과 관계 및 경고' — 직전 문장(In other words, the goal ... should not be ...)은 재진술+당위 처방이지 인과 구조가 아님. 모순 지적 자체는 정확."
+    },
+    {
+      "code": "V5-OK",
+      "severity": "info",
+      "evidence": "정답 라벨 ①, 오답 해설 키 ②~⑤, 본해설, keyPoints가 모두 동일 정답·동일 논지로 동기화. 각 오답 해설이 실제 그 선지의 내용(②소프트웨어 접근성/③기술 숙련/④전통 미학·기기 배제/⑤비평가·보수 기준)과 정확히 대응."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 제거된 span(to produce unique creations ... new, eye-opening experiences)과 3문장(Great art challenges our perceptions ... changes our thoughts and feelings)을 결합한 추상화 재진술.",
+      "temptingBecause": "N/A (정답). 'profound insights'가 'eye-opening experiences'를, 'challenge their conventional worldviews'가 'challenges our perceptions of the world'를 보존.",
+      "decisiveFlaw": "없음 — 유일 정답. 단, 지문 핵심 동사 'challenge'가 선지에 그대로 반복되어 어휘 반향(verbatim echo)만으로 도달 가능한 단서 누출이 공예상 약점."
+    },
+    {
+      "label": "②",
+      "intent": "scope shift / 수단-목적 전도: 도입부의 '더 많은 사람이 창작·공유' 환경 서술을 예술가의 목표로 승격.",
+      "temptingBecause": "internet, digital editing, more people than ever 등 도입부 소재·어휘와 표면적으로 겹침.",
+      "decisiveFlaw": "참여 극대화·소프트웨어 접근성은 여전히 기술 중심 목표로 'not simply to utilize technology for its own sake'와 충돌하며, 지문 어디에도 예술가의 목표로 제시되지 않음."
+    },
+    {
+      "label": "③",
+      "intent": "극성/인과 역전: 빈칸 직전 문장의 부정 처방(기술 자체를 목적으로 삼지 말라)을 긍정 처방으로 뒤집음.",
+      "temptingBecause": "지문 전체가 신기술을 소재로 하므로 부주의한 독자가 기술 숙련을 긍정 목표로 오독 가능.",
+      "decisiveFlaw": "'the goal ... should not be simply to utilize technology for its own sake'와 정면 모순 — 한 문장 대조만으로 즉시 소거됨."
+    },
+    {
+      "label": "④",
+      "intent": "condition loss / 과잉 후퇴: '기술은 도구로 쓸 수 있다'는 중용을 '기술 배제·전통 고수'로 극단화.",
+      "temptingBecause": "기술 만능주의를 경계하는 지문의 결이 반기술 입장처럼 읽힐 수 있음.",
+      "decisiveFlaw": "지문은 'new technologies are nothing more than tools that can be used in the creative process'로 기술 사용을 긍정하므로 'avoiding any interference from digital devices'는 명시 서술과 모순. 전통 미학 고수도 근거 없음."
+    },
+    {
+      "label": "⑤",
+      "intent": "actor swap / half-truth: 비평가의 '우려'(문제 제기)를 예술가가 충족해야 할 '요구'로 격상.",
+      "temptingBecause": "'Many critics ... expressed concern'이 2문장에 실제 등장하는 source anchor 보유.",
+      "decisiveFlaw": "지문은 비평가 충족을 목표로 제시한 적이 없고, 'reverting to conservative standards of beauty'는 unique creations·new, eye-opening experiences 지향과 정반대 극성. 지문에 없는 내용 첨가."
+    }
+  ],
+  "explanationIssues": [
+    "CIRCULAR_EVIDENCE(major): 본해설과 keyPoint 2가 빈칸으로 제거된 원문 구절 'new, eye-opening experiences'를 렌더 지문에 보이는 근거처럼 인용 — 학생 관점에서 순환 논증 프레이밍.",
+    "LOOSE_TERMINOLOGY(minor): ③ 해설이 직전 문장(당위적 재진술)을 '인과 관계'라 지칭.",
+    "GENERIC_FILLER(minor): 본해설 말미 '무관한 인과나 왜곡된 범위로 과장한 오답 기제' — 구체성 없는 총평 문장으로 정답 근거/함정 분리가 둔화됨."
+  ],
+  "issues": [
+    {
+      "severity": "major",
+      "evidence": "난이도 정합 실패: 요청 난이도 KILLER 대비 실난이도 중위. 정답 ①의 'challenge ... conventional worldviews'가 3문장 'challenges our perceptions of the world'와 동사까지 반향되어 단일 어휘 단서만으로 정답 선택 가능 — §D KILLER 조건('최소 두 문장/두 논리 단서 연결 필수', '단일 단서로 찍기 불가') 미충족.",
+      "recommendation": "정답 표현에서 challenge 계열 어휘를 제거(예: reshape entrenched ways of seeing and feeling)하고, 3문장+마지막 문장 결합 없이는 도달 불가능한 추상화 수준으로 재작성."
+    },
+    {
+      "severity": "major",
+      "evidence": "경합 부족: ③④⑤가 모두 명시 서술과의 정면 모순으로 즉시 소거되고, ④(전통 미학 고수)와 ⑤(보수적 미 기준 회귀)는 '과거 회귀'라는 같은 함정 방향을 공유해 상호 중복 — KILLER급 다중 매력 선지가 없음.",
+      "recommendation": "④ 또는 ⑤를 half-truth형(예: 새로운 경험 제공은 유지하되 기술 중심·상업 확산 등으로 조건을 왜곡)으로 교체해 최종 판단이 전체 논지 구조에서 갈리게 설계."
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설·keyPoints의 순환 프레이밍 및 느슨한 용어(위 explanationIssues 참조).",
+      "recommendation": "'빈칸에 해당하는 원문은 ~였다'로 귀속을 명시하거나, 렌더 지문에 남아 있는 단서만으로 근거를 구성."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 무결(V1), 블라인드 풀이 ① 유일 정답(V2), 다섯 선지 모두 동일 to부정사 슬롯에 결합해 seam 비문 없음(V3·§D 조건 1 충족), 해설의 구조 설명이 실제 문장과 일치하고 오답 해설이 각 선지와 정확히 대응(V4, 순환 프레이밍은 비치명), 필드 동기화(V5). 그러나 공예 측면에서 KILLER 요청과 실난이도가 크게 어긋난다: 정답의 verbatim 'challenge' 반향(C4=2), ③④⑤ 즉시 소거+④⑤ 함정 방향 중복으로 실질 경합 낮음(C3=2), 난이도 라벨 불일치(C5=1), 해설의 순환 프레이밍·필러(C6=2). 오답 4개가 각기 다른 함정 기제(scope shift/극성 역전/과잉 후퇴/actor swap)를 갖고 결론 주제문이라는 정전 위치를 겨냥한 점은 양호(C1=3, C2=3). 합계 13, §D KILLER 추가 조건 미충족(killerConditionsMet=false) → 등급 C(재설계 필요)."
+}

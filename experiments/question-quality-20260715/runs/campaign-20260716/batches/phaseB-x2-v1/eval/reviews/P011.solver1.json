@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'He presented them with a list of words' — the pattern 'present A with B' takes an object pronoun; 'them' correctly refers to the healthy undergraduates. No grammatical issue."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'presented them with a list of words and asked them to create...' — 'and' coordinates two past-tense finite verbs ('presented' / 'asked') sharing the subject 'He'. Parallel structure is sound. Brief distractor pull toward 'asking' (participle), but the finite parallel verb is fully grammatical, arguably the more natural choice."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'the lonely old man with the wrinkled face' — past-participial adjective describing a face in a wrinkled state. Distractor pull is the -ed/-ing participle choice, but 'wrinkled face' is the established, correct form; 'wrinkling' would be wrong."
+    },
+    {
+      "label": "D",
+      "verdict": "wrong (answer)",
+      "reason": "'That he found was extraordinary.' Two parses were tested and both fail: (1) conjunction 'that' heading a noun-clause subject requires a complete clause, but 'he found' lacks the object required by transitive 'found'; (2) demonstrative 'that' + zero relative ('That [which] he found') is not licensed in standard English — a bare contact clause cannot modify demonstrative 'that'. The sentence needs the free relative 'What he found was extraordinary' (what = the thing which, supplying the missing object of 'found'). Ungrammatical as written."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'Those students who had been exposed to an elderly mix of words took almost 40 percent longer...' — classic long-subject trap: the true subject is plural 'Those students', and 'took' (simple past) fits the narrative past and pairs with the past-perfect 'had been exposed' (exposure precedes walking). Comparison 'than those who had been exposed' is well-formed."
+    }
+  ],
+  "note": "Clean single-answer item. The tested point in (D) is the classic that-vs-what noun-clause subject with a missing transitive object, a long-distance cue requiring the solver to check completeness of 'he found'. Distractors (B) parallelism, (C) -ed/-ing participle, and (E) agreement-across-relative-clause each exert realistic but resolvable pull. Actively searched for rescue parses of (D) (demonstrative + contact clause, intransitive 'found') — none are grammatical, so no second defensible label."
+}

@@ -1,0 +1,85 @@
+{
+  "pid": "P042",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-OPTION-TYPO",
+      "severity": "critical",
+      "evidence": "선지 ① 'help people adapt faster to the rapid paste of technological changes' — 'paste'는 'pace'(속도)의 명백한 오탈자. 오답 해설 자체가 '기술 변화의 빠른 속도'라고 풀이해 의도가 pace였음을 확인해 준다. 학생 노출 선지에 어휘 오류가 있어 ①이 내용 판단 이전에 표면 결함으로 소거 가능하며, RUBRIC V3의 '오답의 비문 여부가 유형 의도와 정확히 일치한다' 및 §D '일부 오답만 (의도치 않은) 형식 결함으로 탈락하지 않는다' 조건을 위반한다."
+    },
+    {
+      "code": "V4-SENTENCE-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설이 앞부분에서는 '지문의 세 번째 문장에서 위대한 예술은 …라고 정의했습니다'라고 올바르게 귀속해 놓고, 뒷부분에서 같은 내용을 '두 번째 문장의 인식적 도전과 인지적 변화의 서술 방향'이라고 지칭한다. 실제 두 번째 문장(Many critics, though, have expressed concern…)은 비평가의 우려 문장으로 '인식적 도전' 내용이 없다. 해설 내부에서 동일 근거의 문장 번호가 상충하는 문장 귀속 오류."
+    },
+    {
+      "code": "V4-TRAP-LABEL-MISMATCH",
+      "severity": "minor",
+      "evidence": "① 오답 해설이 이를 '극성 반전의 함정'이라 분류하나, ①은 극성(찬/반)을 뒤집은 것이 아니라 예술의 목표를 기술 적응이라는 실용 프레임으로 바꾼 scope shift/무관 진술에 가깝다. 함정 유형 명명이 실제 선지 성격과 어긋난다."
+    },
+    {
+      "code": "V4-EMBELLISHMENT",
+      "severity": "minor",
+      "evidence": "④ 오답 해설의 '정신적·감정적 영토를 영원히 바꾸는 가치'는 지문의 'forever changes our thoughts and feelings'를 윤색한 표현으로, '영토'라는 은유는 지문에 없다. 의미 왜곡 수준은 아니나 지문에 없는 표현의 첨가."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "예술의 목표를 '기술 변화에 대한 대중의 적응 지원'이라는 실용적 프레임으로 치환하는 scope shift 함정",
+      "temptingBecause": "첫 문장의 인터넷·신기술 확산 맥락과 표면적으로 연결되고, '사람들을 돕는다'는 친사회적 어조가 그럴듯하다",
+      "decisiveFlaw": "지문의 결론은 예술가의 목표가 인식을 바꾸는 고유한 창작이라는 것이지 기술 적응 지원이 아님. 게다가 'paste'(pace의 오탈자)라는 표면 결함으로 내용 판단 전에 소거됨"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 3번째 문장(challenges our perceptions / forever changes our thoughts and feelings)과 원문 span(new, eye-opening experiences)을 'cognitive boundaries / profound perspective shifts'로 수직 추상화한 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 다만 다섯 선지 중 유일하게 인지·관점 계열의 고급 추상 어휘를 사용해 오히려 정답임이 register로 드러난다",
+      "decisiveFlaw": "없음. 빈칸에 넣은 완성문이 문법적이고 원문 의미를 보존한다"
+    },
+    {
+      "label": "③",
+      "intent": "'기술 그 자체의 추구'를 목표로 제시해 지문이 명시적으로 부정한 내용을 되풀이하는 단어 연상(word-association) 함정",
+      "temptingBecause": "digital·software·visual 등 지문의 기술 어휘와 중복되어 표면 일치가 높다",
+      "decisiveFlaw": "'the goal should not be simply to utilize technology for its own sake' 및 '기술은 단지 도구'라는 직전 문장과 정면 모순 — 한 문장만 읽어도 즉시 소거됨"
+    },
+    {
+      "label": "④",
+      "intent": "인터넷의 공유·연결 특성에서 연상되는 실시간 상호작용을 목표로 제시하는 half-truth 함정",
+      "temptingBecause": "첫 문장 'share them with the world'와 자연스럽게 연결되고 현대적·긍정적으로 들린다",
+      "decisiveFlaw": "지문이 말하는 목표는 인식의 도전과 영속적 변화(eye-opening experiences)이지 상호작용·피드백이 아님 — 지문 어디에도 상호작용 근거가 없다"
+    },
+    {
+      "label": "⑤",
+      "intent": "첫 문장의 현상(누구나 창작 가능)을 예술가의 목표로 바꿔치기하는 phenomenon-goal confusion (actor/goal swap)",
+      "temptingBecause": "첫 문장의 내용을 거의 그대로 반복해 지문 근거가 있는 것처럼 보인다",
+      "decisiveFlaw": "창작의 대중화는 비평가들이 우려하는 배경 현상이지 결론부가 제시하는 예술가의 지향점이 아님 — 논지 방향과 역행"
+    }
+  ],
+  "explanationIssues": [
+    "문장 귀속 오류: '세 번째 문장' 인용 후 동일 내용을 '두 번째 문장'으로 재지칭 (해설 내부 상충)",
+    "① 함정 유형을 '극성 반전'으로 오분류 (실제로는 scope shift/무관 진술)",
+    "④ 해설의 '정신적·감정적 영토' — 지문에 없는 은유 첨가",
+    "정답 근거 자체(3문장 정의 + eye-opening experiences의 추상화)는 정확함"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "§D 위반: (1) 정답이 3번째 문장 하나 + 원문 span만으로 도달 가능해 '최소 두 문장/두 논리 단서 연결' 요건 미충족, (2) ②만 유일하게 고급 인지 추상 어휘 register를 사용해 사실상 단일 표면 단서로 찍기 가능, (3) ①의 오탈자로 일부 오답이 형식 결함으로 탈락 — '동일 통사 슬롯에서 형식으로 갈리지 않는다' 요건 위반. 통사 슬롯 자체(will + 동사원형구)는 다섯 선지 모두 충족.",
+  "grade": "F",
+  "notes": "정답 유일성(V2)과 필드 동기화(V5)는 건전하고 오답 설계 의도도 서로 다른 함정을 겨냥해 골격은 좋으나, 학생 노출 선지 ①의 'paste' 오탈자(V3)와 해설의 문장 귀속 오류(V4)로 출하 불가. 난이도 측면에서도 KILLER 요청 대비 실제 난도는 중위권 수준(정답이 3번째 문장의 거의 직접적 패러프레이즈이며 추상 register로 식별 가능)이라 C5=1. 수정 방향: ① 'paste'→'pace' 교정, 해설의 '두 번째 문장'→'세 번째 문장' 교정, ① 함정 명명 수정. 단 KILLER 등급을 원하면 ②의 register를 낮추고 오답 중 하나를 다문장 단서 없이는 소거 불가능한 근사-정답으로 재설계해야 한다."
+}

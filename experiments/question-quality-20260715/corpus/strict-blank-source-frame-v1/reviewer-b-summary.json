@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "strict-blank-reviewer-b-summary-v1",
+  "reviewDate": "2026-07-15",
+  "reviewer": "independent-reviewer-b",
+  "lens": "experimental-and-item-design-suitability",
+  "sourceBindingHash": "6be6c1f29d0c6e6e2f0d0152fcbb175bf081dd281d1dde15f9beba1b8045a212",
+  "coverage": {
+    "frameRows": 59,
+    "manuallyReviewedRows": 59,
+    "sampledRows": 0,
+    "unreviewedRows": 0,
+    "reviewerARead": false
+  },
+  "decisions": {
+    "PASS": 49,
+    "EXCLUDE": 7,
+    "DOMAIN_REVIEW": 3
+  },
+  "primaryReasonCounts": {
+    "PASS_CAUSAL_SYNTHESIS": 8,
+    "PASS_CONTRAST_SYNTHESIS": 9,
+    "PASS_ANALOGY_SYNTHESIS": 4,
+    "PASS_CONDITIONAL_SYNTHESIS": 4,
+    "PASS_DEFINITION_APPLICATION": 3,
+    "PASS_EXPERIMENT_INFERENCE": 7,
+    "PASS_MULTI_EXAMPLE_GENERALIZATION": 7,
+    "PASS_PARADOX_REVERSAL": 7,
+    "EXCLUDE_MULTI_SPEAKER_NO_SINGLE_THESIS": 1,
+    "EXCLUDE_LOCAL_CUE_REDUNDANCY": 4,
+    "EXCLUDE_ANECDOTAL_SCOPE": 2,
+    "DOMAIN_CHECK_CAUSAL_SCIENCE": 1,
+    "DOMAIN_CHECK_EVOLUTIONARY_GENERALIZATION": 1,
+    "DOMAIN_CHECK_EMPIRICAL_BEE_CLAIM": 1
+  },
+  "dimensionCounts": {
+    "centralSpan": {"HIGH": 52, "MEDIUM": 6, "LOW": 1},
+    "synthesis": {"HIGH": 52, "MEDIUM": 0, "LOW": 7},
+    "optionHeadroom": {"HIGH": 40, "MEDIUM": 13, "LOW": 6},
+    "answerDeterminacy": {"HIGH": 58, "MEDIUM": 1, "LOW": 0},
+    "pairedArms": {"HIGH": 49, "MEDIUM": 3, "LOW": 7},
+    "localCueRisk": {"HIGH": 6, "MEDIUM": 23, "LOW": 30},
+    "sourceIntegrity": {"CLEAR": 55, "STRUCTURAL_LIMIT": 1, "DOMAIN_CHECK": 3}
+  },
+  "decisionByDiscourse": {
+    "argumentative": {"PASS": 2, "EXCLUDE": 0, "DOMAIN_REVIEW": 0},
+    "expository": {"PASS": 42, "EXCLUDE": 2, "DOMAIN_REVIEW": 3},
+    "narrative": {"PASS": 5, "EXCLUDE": 4, "DOMAIN_REVIEW": 0},
+    "practical": {"PASS": 0, "EXCLUDE": 1, "DOMAIN_REVIEW": 0}
+  },
+  "decisionByTopic": {
+    "art-culture": {"PASS": 4, "EXCLUDE": 0, "DOMAIN_REVIEW": 0},
+    "humanities": {"PASS": 25, "EXCLUDE": 1, "DOMAIN_REVIEW": 1},
+    "narrative-practical": {"PASS": 5, "EXCLUDE": 5, "DOMAIN_REVIEW": 0},
+    "science": {"PASS": 11, "EXCLUDE": 1, "DOMAIN_REVIEW": 2},
+    "social": {"PASS": 4, "EXCLUDE": 0, "DOMAIN_REVIEW": 0}
+  },
+  "findings": [
+    "The frame is not a 59-row executable blank corpus under Lens B: 7 rows are excluded and 3 require domain review.",
+    "Local-cue redundancy or anecdotal scope accounts for 6 of 7 exclusions; these passages can support an easy inference but not a source-faithful paired killer arm.",
+    "The retained set remains discourse-skewed: 42 of 49 PASS rows are expository, while the sole practical row is excluded.",
+    "A PASS is limited to item-design suitability. It does not clear source rights, provider parity, prompt profiles, or campaign execution."
+  ],
+  "authorization": {
+    "campaignEligibleRows": 0,
+    "silentReplacementAllowed": false,
+    "queueRedesignRequired": true,
+    "domainReviewCountsAsPass": false,
+    "rightsRecordStillSeparate": true
+  },
+  "privacy": {
+    "containsPassageText": false,
+    "containsPrivateIds": false,
+    "containsRowLevelNotes": false,
+    "containsRowLevelDecisions": false
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "fullQuestionCandidatesGenerated": 0
+  }
+}

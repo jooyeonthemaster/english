@@ -1,0 +1,2346 @@
+{
+  "aggregate": {
+    "blankSuitability": {
+      "central": 95,
+      "local": 9,
+      "unsuitable": 16
+    },
+    "bySplit": {
+      "dev": {
+        "blankSuitability": {
+          "central": 50,
+          "local": 3,
+          "unsuitable": 7
+        },
+        "grammarRichness": {
+          "normal": 9,
+          "rich": 51
+        },
+        "status": {
+          "DOMAIN_REVIEW": 3,
+          "EXCLUDE": 14,
+          "PASS": 43
+        },
+        "total": 60
+      },
+      "holdout": {
+        "blankSuitability": {
+          "central": 45,
+          "local": 6,
+          "unsuitable": 9
+        },
+        "grammarRichness": {
+          "normal": 6,
+          "rich": 53,
+          "scarce": 1
+        },
+        "status": {
+          "DOMAIN_REVIEW": 3,
+          "EXCLUDE": 18,
+          "PASS": 39
+        },
+        "total": 60
+      }
+    },
+    "grammarRichness": {
+      "normal": 15,
+      "rich": 104,
+      "scarce": 1
+    },
+    "status": {
+      "DOMAIN_REVIEW": 6,
+      "EXCLUDE": 32,
+      "PASS": 82
+    },
+    "total": 120
+  },
+  "duplicateSignals": [
+    {
+      "left": {
+        "contentHash": "c1bbf1e33510cf6251a9475497dbdf359d299effa7dead0c48f92a89f0a674c1",
+        "id": "cmpczyrsu000emmfkzbyivz87",
+        "sequence": 51,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "6e695417470285daf06a97318e349b86edf9fa6cb56c68db79c59073ddd736a6",
+        "id": "cmpaqf97v0005l204xjjvssdr",
+        "sequence": 47,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 1
+    },
+    {
+      "left": {
+        "contentHash": "a03260ea9005fb3aab697c27f29c3c6b5e763d05519144c49480bd6866f04339",
+        "id": "cmpr6wbbt0002mm3coikj9suy",
+        "sequence": 52,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "ae482a9441221088112528fc5450dff45e632465566b2dced08add9ecf86138a",
+        "id": "cmpr7xftn0013mm3cad44usfx",
+        "sequence": 54,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 1
+    },
+    {
+      "left": {
+        "contentHash": "a03260ea9005fb3aab697c27f29c3c6b5e763d05519144c49480bd6866f04339",
+        "id": "cmpr6wbbt0002mm3coikj9suy",
+        "sequence": 52,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+        "id": "cmpaqf97g0003l204jhi59d8z",
+        "sequence": 44,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 1
+    },
+    {
+      "left": {
+        "contentHash": "ae482a9441221088112528fc5450dff45e632465566b2dced08add9ecf86138a",
+        "id": "cmpr7xftn0013mm3cad44usfx",
+        "sequence": 54,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+        "id": "cmpaqf97g0003l204jhi59d8z",
+        "sequence": 44,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 1
+    },
+    {
+      "left": {
+        "contentHash": "a0b45651b3a93c205f42d4801d1db9f03de15bc19fa5183055f7e01a6b2458bc",
+        "id": "cmpaqf9dr000xl204fygq66tv",
+        "sequence": 55,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "a40a5bfa656122e27c1726d1d95c0e089653a4c5ad8f8c8395ced7a42435162b",
+        "id": "cmq5hc0l8000dmmsgr6tozs5b",
+        "sequence": 58,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 1
+    },
+    {
+      "left": {
+        "contentHash": "8654ea86fbd9b865e93bf72f3d274fe9af723bd6de3271f1415edb3d6eab5591",
+        "id": "cmq23op900017mmcsgdlfr18c",
+        "sequence": 36,
+        "split": "holdout"
+      },
+      "right": {
+        "contentHash": "8eb195031ee874946ec49b406a42698d1f2d3d7724d73ea067e1daee1b643aba",
+        "id": "cmq20ulw9000kmmcsd6rn4vv1",
+        "sequence": 38,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 1
+    },
+    {
+      "left": {
+        "contentHash": "7224cb1ea6a626fa46bbffdd3fdd8042944a49c4b60e43e693b58fd70c71c05d",
+        "id": "cmq56mbbc0001mm6cabjbecw8",
+        "sequence": 43,
+        "split": "holdout"
+      },
+      "right": {
+        "contentHash": "ea5b502237e5c7a5414210eae274792ade3580f6ca835cfdd5e9346e0d7453ec",
+        "id": "cmpaqf9fr0017l204rcz69oyr",
+        "sequence": 49,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 1
+    },
+    {
+      "left": {
+        "contentHash": "0af5c2b9eda3d6693c84074336147a991f3e3539c79afe2a1a25343ff7c83632",
+        "id": "cmqkuogfd0001jd0b65526r18",
+        "sequence": 37,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+        "id": "cmq2capq3000ammm8iftgy9tp",
+        "sequence": 31,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.974
+    },
+    {
+      "left": {
+        "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+        "id": "cmpnwuz3l00bnmmyk39jucvka",
+        "sequence": 34,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+        "id": "cmq2capq3000ammm8iftgy9tp",
+        "sequence": 31,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.968
+    },
+    {
+      "left": {
+        "contentHash": "d6605167a600feaf35c926331b11d9398a4ae678695ea060e0eb0a00c4f9272e",
+        "id": "cmq23oovd0015mmcsd9fjq8gf",
+        "sequence": 33,
+        "split": "holdout"
+      },
+      "right": {
+        "contentHash": "220f8817d0a321e58a5d3bb5b81b0a08f5bc2eeb4dc7583502a20888a9b508e3",
+        "id": "cmq20um9t000mmmcs8wc3qpj3",
+        "sequence": 34,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.96
+    },
+    {
+      "left": {
+        "contentHash": "bac707d4a6906eed222f287cdc522a73b5b4509702d523a9da53fa9e89f33c13",
+        "id": "cmqanec030005ic04e2e7rryn",
+        "sequence": 32,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+        "id": "cmq2capq3000ammm8iftgy9tp",
+        "sequence": 31,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.956
+    },
+    {
+      "left": {
+        "contentHash": "8c6f7a971cb2b29afddf3e5b02a6b25521fb6298dddd50c1d8159660808ebb64",
+        "id": "cmpqvdzht0001mmu80piqom02",
+        "sequence": 56,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "12976b2165fc710a77f8f0450a15bb32c195f5cef78e8f7720023a5c65b69c75",
+        "id": "cmpaqf9a4000fl2042odbrdj0",
+        "sequence": 45,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.944
+    },
+    {
+      "left": {
+        "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+        "id": "cmpnwuz3l00bnmmyk39jucvka",
+        "sequence": 34,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "0af5c2b9eda3d6693c84074336147a991f3e3539c79afe2a1a25343ff7c83632",
+        "id": "cmqkuogfd0001jd0b65526r18",
+        "sequence": 37,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 0.942
+    },
+    {
+      "left": {
+        "contentHash": "8f21c16ccda142960c5a7b1abcc4403d666d9b0eb89a11a16e029a8deefddc5d",
+        "id": "cmpr52qe10003k40442ys37jt",
+        "sequence": 46,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "b42cf83a0841f5043369e09c7ad5d77612acc3f969c2fdd537755338f46f68f2",
+        "id": "cmpaqf99o000dl204pyve3pdv",
+        "sequence": 39,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.938
+    },
+    {
+      "left": {
+        "contentHash": "e200693ad0fe69c61a74bcc7d04dd669580cbfd0bb7f2d73006f6774e797c113",
+        "id": "cmq50ifrc003ummm8xv9ppk4g",
+        "sequence": 32,
+        "split": "holdout"
+      },
+      "right": {
+        "contentHash": "edb3d4a283cfe08b1d54a74b8afe0171a7866c17536d0a65215d9e0b2ffa3f4f",
+        "id": "cmq5gpplq0001mmsg2fi1puqg",
+        "sequence": 54,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.934
+    },
+    {
+      "left": {
+        "contentHash": "bac707d4a6906eed222f287cdc522a73b5b4509702d523a9da53fa9e89f33c13",
+        "id": "cmqanec030005ic04e2e7rryn",
+        "sequence": 32,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "0af5c2b9eda3d6693c84074336147a991f3e3539c79afe2a1a25343ff7c83632",
+        "id": "cmqkuogfd0001jd0b65526r18",
+        "sequence": 37,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 0.931
+    },
+    {
+      "left": {
+        "contentHash": "bac707d4a6906eed222f287cdc522a73b5b4509702d523a9da53fa9e89f33c13",
+        "id": "cmqanec030005ic04e2e7rryn",
+        "sequence": 32,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+        "id": "cmpnwuz3l00bnmmyk39jucvka",
+        "sequence": 34,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 0.926
+    },
+    {
+      "left": {
+        "contentHash": "73ae3025adc80fe8400230bded63df05c68651e67e756c9ea5d345b7431e989c",
+        "id": "cmpx1dv0o0001l404hw03gfmr",
+        "sequence": 40,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "b42cf83a0841f5043369e09c7ad5d77612acc3f969c2fdd537755338f46f68f2",
+        "id": "cmpaqf99o000dl204pyve3pdv",
+        "sequence": 39,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.924
+    },
+    {
+      "left": {
+        "contentHash": "9f38946debe0e2593ddbc83fe8c349fb8876aa1854b81542bf5c33452d9ded01",
+        "id": "cmpaqf9ey0013l204nnoouqbe",
+        "sequence": 48,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "8c6f7a971cb2b29afddf3e5b02a6b25521fb6298dddd50c1d8159660808ebb64",
+        "id": "cmpqvdzht0001mmu80piqom02",
+        "sequence": 56,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 0.89
+    },
+    {
+      "left": {
+        "contentHash": "337a3c3bec9daca7f528979b929289f02454151687a52ec026f5abe170c088da",
+        "id": "cmpnwv10r00brmmykiusnyi5u",
+        "sequence": 59,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "568154d8bc4d522eef680080676fc047611f66f7742f0300633af91ebd37c088",
+        "id": "cmpaqf997000bl204g2nptcrl",
+        "sequence": 50,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.882
+    },
+    {
+      "left": {
+        "contentHash": "b8970b1638bdd257490bd4a98c189c9034cdeb2ef7c845537e236678dccb81e4",
+        "id": "cmpcjkklg0007mmekwcm6abax",
+        "sequence": 42,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "1e369ebc778684fbe2f6bbae552dfe062e001f573ac6a280c0d14aa8d6dc4765",
+        "id": "cmpv7gfl00001mmbc0u8d49ep",
+        "sequence": 58,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.872
+    },
+    {
+      "left": {
+        "contentHash": "73ae3025adc80fe8400230bded63df05c68651e67e756c9ea5d345b7431e989c",
+        "id": "cmpx1dv0o0001l404hw03gfmr",
+        "sequence": 40,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "8f21c16ccda142960c5a7b1abcc4403d666d9b0eb89a11a16e029a8deefddc5d",
+        "id": "cmpr52qe10003k40442ys37jt",
+        "sequence": 46,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 0.866
+    },
+    {
+      "left": {
+        "contentHash": "9f38946debe0e2593ddbc83fe8c349fb8876aa1854b81542bf5c33452d9ded01",
+        "id": "cmpaqf9ey0013l204nnoouqbe",
+        "sequence": 48,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "12976b2165fc710a77f8f0450a15bb32c195f5cef78e8f7720023a5c65b69c75",
+        "id": "cmpaqf9a4000fl2042odbrdj0",
+        "sequence": 45,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.84
+    },
+    {
+      "left": {
+        "contentHash": "8654ea86fbd9b865e93bf72f3d274fe9af723bd6de3271f1415edb3d6eab5591",
+        "id": "cmq23op900017mmcsgdlfr18c",
+        "sequence": 36,
+        "split": "holdout"
+      },
+      "right": {
+        "contentHash": "dd13c3b0479f50ac7de6e2f6584225d684446d2467b1dc6b9f06b0e1c67cf33c",
+        "id": "cmqb48s000001l70497mch8x0",
+        "sequence": 51,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.766
+    },
+    {
+      "left": {
+        "contentHash": "8eb195031ee874946ec49b406a42698d1f2d3d7724d73ea067e1daee1b643aba",
+        "id": "cmq20ulw9000kmmcsd6rn4vv1",
+        "sequence": 38,
+        "split": "holdout"
+      },
+      "right": {
+        "contentHash": "dd13c3b0479f50ac7de6e2f6584225d684446d2467b1dc6b9f06b0e1c67cf33c",
+        "id": "cmqb48s000001l70497mch8x0",
+        "sequence": 51,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.766
+    },
+    {
+      "left": {
+        "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+        "id": "cmq5hc1u3000fmmsgd1dr5yp5",
+        "sequence": 31,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "a03260ea9005fb3aab697c27f29c3c6b5e763d05519144c49480bd6866f04339",
+        "id": "cmpr6wbbt0002mm3coikj9suy",
+        "sequence": 52,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 0.758
+    },
+    {
+      "left": {
+        "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+        "id": "cmq5hc1u3000fmmsgd1dr5yp5",
+        "sequence": 31,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "ae482a9441221088112528fc5450dff45e632465566b2dced08add9ecf86138a",
+        "id": "cmpr7xftn0013mm3cad44usfx",
+        "sequence": 54,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 0.758
+    },
+    {
+      "left": {
+        "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+        "id": "cmq5hc1u3000fmmsgd1dr5yp5",
+        "sequence": 31,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+        "id": "cmpaqf97g0003l204jhi59d8z",
+        "sequence": 44,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.758
+    },
+    {
+      "left": {
+        "contentHash": "7631a174c99bcee7f202e6252b31f845ff1f502ca3ac17c65232d5a8ccc1e75b",
+        "id": "cmq5c5cip001lmmrwty0eg9zg",
+        "sequence": 35,
+        "split": "holdout"
+      },
+      "right": {
+        "contentHash": "c73936758b2a6baafa87a6a44b9e4601a4162d2bbbe14c1753674a5158593614",
+        "id": "cmpaqf9aj000hl20466bzeiga",
+        "sequence": 48,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.732
+    },
+    {
+      "left": {
+        "contentHash": "33e8b1f6b7a4458d08a25083a4e23d98bce293817d8d60df812800a82566e8a1",
+        "id": "cmqespvyu001cmm1wqpn5spu6",
+        "sequence": 39,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "b8970b1638bdd257490bd4a98c189c9034cdeb2ef7c845537e236678dccb81e4",
+        "id": "cmpcjkklg0007mmekwcm6abax",
+        "sequence": 42,
+        "split": "dev"
+      },
+      "tokenFiveGramJaccard": 0.713
+    },
+    {
+      "left": {
+        "contentHash": "920b245f8ea7801f57bef019592a35233e0ef2e812718d7c6508ab58b9801a2b",
+        "id": "cmpyx7b260001jp04vjeholew",
+        "sequence": 36,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "220f8817d0a321e58a5d3bb5b81b0a08f5bc2eeb4dc7583502a20888a9b508e3",
+        "id": "cmq20um9t000mmmcs8wc3qpj3",
+        "sequence": 34,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.703
+    },
+    {
+      "left": {
+        "contentHash": "cbe130e246644385a900620f1e0f2f97a6c6a741edea89c69950c1f47acc5c99",
+        "id": "cmpaqf9e5000zl2049ba7eosv",
+        "sequence": 44,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "5e46fb6e5a5d2a3086b3ababd4f4498cb6ea31dfa5a0e4f2a900cf4db31ff702",
+        "id": "cmpaqf96q0001l204lnt7f5y9",
+        "sequence": 42,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.673
+    },
+    {
+      "left": {
+        "contentHash": "920b245f8ea7801f57bef019592a35233e0ef2e812718d7c6508ab58b9801a2b",
+        "id": "cmpyx7b260001jp04vjeholew",
+        "sequence": 36,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "d6605167a600feaf35c926331b11d9398a4ae678695ea060e0eb0a00c4f9272e",
+        "id": "cmq23oovd0015mmcsd9fjq8gf",
+        "sequence": 33,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.669
+    },
+    {
+      "left": {
+        "contentHash": "33e8b1f6b7a4458d08a25083a4e23d98bce293817d8d60df812800a82566e8a1",
+        "id": "cmqespvyu001cmm1wqpn5spu6",
+        "sequence": 39,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "1e369ebc778684fbe2f6bbae552dfe062e001f573ac6a280c0d14aa8d6dc4765",
+        "id": "cmpv7gfl00001mmbc0u8d49ep",
+        "sequence": 58,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.623
+    },
+    {
+      "left": {
+        "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+        "id": "cmq5hc1u3000fmmsgd1dr5yp5",
+        "sequence": 31,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "c9aa67aba49a7e63b1064e1f772fb19e371717736dd98612d3f73e5577079aeb",
+        "id": "cmq742ju90015mm1gk4pzfggd",
+        "sequence": 52,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.614
+    },
+    {
+      "left": {
+        "contentHash": "b501039c33ded5331fb86951cb43f2c49c92cf084c89853606ca7e1e22d0d02e",
+        "id": "cmpvm7wwx0010mmbcwneeym36",
+        "sequence": 60,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "7224cb1ea6a626fa46bbffdd3fdd8042944a49c4b60e43e693b58fd70c71c05d",
+        "id": "cmq56mbbc0001mm6cabjbecw8",
+        "sequence": 43,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.529
+    },
+    {
+      "left": {
+        "contentHash": "b501039c33ded5331fb86951cb43f2c49c92cf084c89853606ca7e1e22d0d02e",
+        "id": "cmpvm7wwx0010mmbcwneeym36",
+        "sequence": 60,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "ea5b502237e5c7a5414210eae274792ade3580f6ca835cfdd5e9346e0d7453ec",
+        "id": "cmpaqf9fr0017l204rcz69oyr",
+        "sequence": 49,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.529
+    },
+    {
+      "left": {
+        "contentHash": "3356e61661c5492499cd351a7433d8348e6c0265fa07ea3432ef8e5482b15930",
+        "id": "cmpwuhv4u001nmm1ch5ypzx9f",
+        "sequence": 35,
+        "split": "dev"
+      },
+      "right": {
+        "contentHash": "5f6141ba762adbca9ec45c71fa929b443fdf66132b7775797042add3768682e3",
+        "id": "cmpaqf9ay000jl204pew667f2",
+        "sequence": 41,
+        "split": "holdout"
+      },
+      "tokenFiveGramJaccard": 0.503
+    }
+  ],
+  "independenceStatement": "이 판정은 private/public corpus manifest와 원천 레코드만 사용했다. rater-1.json, research-note.md, 기존 평가 결과는 열람하지 않았다.",
+  "integrity": {
+    "caveat": "SHA-256는 120개 모두 고유하지만, 구두점·OCR·문장순서만 다른 준중복이 다수 존재한다. 따라서 hash 고유성만으로 split 독립성을 보장할 수 없다.",
+    "dbSourceReadOnlyCheck": {
+      "contentHashDrift": 0,
+      "found": 60,
+      "missing": 0,
+      "operation": "Prisma passage.findMany SELECT; no mutation-capable operation used",
+      "requested": 60,
+      "sourceMetadataMissing": 0,
+      "subjectMismatch": 0
+    },
+    "duplicateSignalCount": 38,
+    "privateContentHashesRecomputed": 120,
+    "privateContentHashMismatches": 0,
+    "privateManifest": "experiments/question-quality-20260715/corpus/private/manifest-private.json",
+    "publicManifest": "experiments/question-quality-20260715/corpus/manifest-public.json",
+    "publicManifestHashMatches": true,
+    "publicManifestSha256Recomputed": "04f62969e292febc184ecd7c08f9b943acc63f17ea9d2c8fb4cce69c3a886e41",
+    "publicManifestSha256Stored": "04f62969e292febc184ecd7c08f9b943acc63f17ea9d2c8fb4cce69c3a886e41",
+    "publicPrivateRecordMatches": 120,
+    "publicPrivateRecordMismatches": 0,
+    "repoSource": {
+      "contentHashDrift": 0,
+      "found": 60,
+      "path": "src/data/exam-passages/passages.json",
+      "requested": 60
+    },
+    "uniqueContentHashes": 120,
+    "uniqueIds": 120
+  },
+  "methodology": {
+    "blankSuitabilityDefinitions": {
+      "central": "지문 전체의 중심 논리로 정답을 확정할 빈칸을 설계할 수 있다.",
+      "local": "국소 문맥·사실 빈칸은 가능하지만 중심 추론형 빈칸에는 덜 적합하다.",
+      "unsuitable": "오염·파편·논리 손상 때문에 빈칸 생성에 사용하면 안 된다."
+    },
+    "duplicateSignal": "영문 소문자 토큰 5-gram 집합의 Jaccard가 0.45 이상인 모든 쌍을 보조 신호로 산출했다. 이는 판정기가 아니라 수동 검수용 신호다.",
+    "grammarRichnessDefinitions": {
+      "normal": "유효한 문법 구조는 있으나 다양성 또는 안전한 표적 수가 보통이다.",
+      "rich": "복수의 안전한 종속·관계·분사·태·일치 구조를 제공한다.",
+      "scarce": "오염을 제외하면 안전하게 표적화할 문법 구조가 매우 제한된다."
+    },
+    "statusDefinitions": {
+      "DOMAIN_REVIEW": "표면과 논리는 사용 가능하지만 전문 사실·문화·정책 검토 전에는 투입하지 않는다.",
+      "EXCLUDE": "오염·오류·중복 때문에 현재 실험에서 제외해야 한다.",
+      "PASS": "표면·논리·출처가 현재 실험 후보로 사용 가능하다."
+    }
+  },
+  "records": [
+    {
+      "blankSuitability": "central",
+      "contentHash": "718fe7ae7e688dd19bd3ef3e35dfceebaadde33755d573dff56cd77d189d7c92",
+      "grammarRichness": "normal",
+      "id": "repo:2006_SN_3000977-q44",
+      "issueCodes": [
+        "SOURCE_FRAGMENT",
+        "SENSITIVE_OR_OUTDATED_TERM"
+      ],
+      "origin": "repo-official",
+      "reason": "완전한 문장이 아닌 대시 파편이 있고 구식 집단명 인용도 문맥 검토가 필요하다.",
+      "reviewer": "rater-2",
+      "sequence": 1,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "dc41e90fb8ede2075f701df74b16e0bac497d5552977e5a219dc5246e584b0ff",
+      "grammarRichness": "rich",
+      "id": "repo:2027_06_5095396-q24",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "관광 산업의 분절에서 통합으로의 변화가 선명하고 복합구문도 충분하다.",
+      "reviewer": "rater-2",
+      "sequence": 2,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "175d4de2810df43d6cf417011da4e7c41c83f494a3d140a9bd577aa775592d30",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20221012-q40",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "외적 보상이 내적 동기를 소거한다는 논지가 사례와 정확히 맞물린다.",
+      "reviewer": "rater-2",
+      "sequence": 3,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "0d5ec269b3f33bda901c607388b1763c813ab3dcc7cd817ee0b1b98ac4169030",
+      "grammarRichness": "normal",
+      "id": "repo:2012_SN_3001002-q34",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "항상성에서 습관의 균형으로 확장되는 중심 논지가 명료하다.",
+      "reviewer": "rater-2",
+      "sequence": 4,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "02821003dcfab2c22b79f729e54d2f5c39a57c320d7ef7a0096f7ce8c6171229",
+      "grammarRichness": "rich",
+      "id": "repo:2011_SN_3000996-q45",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "원시·현대 사회의 교육과 세대 소외를 비교하는 논리와 구문이 충분하다.",
+      "reviewer": "rater-2",
+      "sequence": 5,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "6524c852cfcfc5598216afd9446ef87bee8c0eb55e4e1338592a380351c33358",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20131114-q30",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "전기적 사실의 시간 순서가 명확하나 빈칸은 주로 특정 업적 문장에 적합하다.",
+      "reviewer": "rater-2",
+      "sequence": 6,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "9ec41d9c336bc3a91297fb8e8aeda74dfbcffe2ec9df7b6d8f94ef1522320271",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20251014-q23",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "이론 교체가 기존 성공까지 설명해야 한다는 핵심 조건이 일관된다.",
+      "reviewer": "rater-2",
+      "sequence": 7,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "344f925217cd0d3a6692455f1ca2ca676270c632f40d953e081abfaedb54dd3d",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20240904-q23",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "과학의 문화 의존성에 대한 두 관점을 대비해 중심 빈칸 설계가 가능하다.",
+      "reviewer": "rater-2",
+      "sequence": 8,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "e0953f8aae52b7e41e9e9f8b3eb4b1b567009b5120306ab5da112a4669af4072",
+      "grammarRichness": "normal",
+      "id": "repo:2025_09_5087695-q20",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "소셜미디어의 허위정보 위험과 사실검증 책임이라는 주장이 명확하다.",
+      "reviewer": "rater-2",
+      "sequence": 9,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "09a21271a58ffdc862a2862954c6508596c7d3c2bb019162d003c045b3de93d9",
+      "grammarRichness": "rich",
+      "id": "repo:2014_SN_3022251_B-q26",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "갈등-연민-양보의 서사가 완결되고 중심 행동을 근거로 추론할 수 있다.",
+      "reviewer": "rater-2",
+      "sequence": 10,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "f450c0385502047f479fde899cc24a7fa9f7be42e70f8c3c8de7b61f4c640f24",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go1_20260324-q26",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "생애와 업적이 안정적으로 연결되지만 전기문이라 빈칸은 국소 사실에 더 적합하다.",
+      "reviewer": "rater-2",
+      "sequence": 11,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c35a6bdd76af1ca4954f682c56ecd3f0fc7442c2bc1273a76084a54473b84164",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20140710_A-q20",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "구체적 합의 확인이 약속 이행을 높인다는 실무 논리가 분명하다.",
+      "reviewer": "rater-2",
+      "sequence": 12,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "aa84aab3d1eb6c1eef1df34235cdadb5985d781e49223d260e6536341e426083",
+      "grammarRichness": "rich",
+      "id": "repo:2013_09_3011547-q40",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "사회적 시계의 정의·효과·문화적 변화가 하나의 논지로 수렴한다.",
+      "reviewer": "rater-2",
+      "sequence": 13,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5e2109ca40e6f284ed84add0f86befe7d09b7d1bfd4957b1eabb1e06b6bae330",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20241015-q40",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "시의 비의역성과 철학적 진리평가의 긴장이 정교하게 전개된다.",
+      "reviewer": "rater-2",
+      "sequence": 14,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ee195b26d4185349bad5e777ad6b47ed455afd09c405674052cc4c1ce2937538",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go2_20091117-q37",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "안경원숭이의 특징에서 서식지 파괴 위험으로 이어지는 구조가 명료하다.",
+      "reviewer": "rater-2",
+      "sequence": 15,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "9cfb3a8de41605d76a83ed142da5b0a81e094bdbcc50cf516fc6246d3e6981d5",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20201027-q21",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "수면 부족과 생산성 저하의 악순환이 비유와 인과로 충분히 뒷받침된다.",
+      "reviewer": "rater-2",
+      "sequence": 16,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5ebbe160063f9cf00d0aab4cf2fe13a7d5e68abfcfe79ef5d8693315fff0109d",
+      "grammarRichness": "rich",
+      "id": "repo:2021_06_5049916-q40",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "화석 기록의 존재·부재를 비대칭적으로 해석해야 한다는 논지가 치밀하다.",
+      "reviewer": "rater-2",
+      "sequence": 17,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "6fef09a662f475563fe8b32701f93a95eb51c5559c4033707d7e3544b93188fa",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20180308-q30",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "패배 경험을 허용해 완벽주의를 완화한 변화가 사례로 명확히 드러난다.",
+      "reviewer": "rater-2",
+      "sequence": 18,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "7de0d274124be149a26f8bf62c29e24dca4138dfe4953b9125cb74907d0bab6b",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20190604-q24",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "신체 신호가 다차원 선택을 요약한다는 중심 개념과 예시가 잘 결합된다.",
+      "reviewer": "rater-2",
+      "sequence": 19,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "413dc3acd3894ce9f84dc4188a727bff4cd43544e69fe015ed980231b9407bdb",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20171017-q21",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "초기 공론 참여가 대립을 참여로 바꾼다는 주장과 근거가 일관된다.",
+      "reviewer": "rater-2",
+      "sequence": 20,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "cdab92872c70905307c3a667afec8593e0bb14183f58c07beb9857c91f88f5b0",
+      "grammarRichness": "rich",
+      "id": "repo:2024_SN_5086091-q24",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "관광 수용력의 물리적 한계를 사회·정치적 상대성으로 확장하는 논리가 선명하다.",
+      "reviewer": "rater-2",
+      "sequence": 21,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "8feb42f9014fde247685a0735270ade7fcbd433f01b0d3951f85b55a55acf43f",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20140612-q19",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "르누아르의 답과 행동이 고통보다 지속되는 아름다움이라는 메시지를 완결한다.",
+      "reviewer": "rater-2",
+      "sequence": 22,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "30452628bb82d4e4fb937bec78f2b66e6a951fa8fc4b2ff1e7c6cb8ba70d3041",
+      "grammarRichness": "rich",
+      "id": "repo:2024_09_5085155-q40",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "사료의 공백을 역사소설의 발명으로 보완한다는 논지가 일관된다.",
+      "reviewer": "rater-2",
+      "sequence": 23,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "d3846b8cf6e42ab792ef4dbcfc2622c4fc1f0fc53760ea7a0b50d32e21e4da80",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20230906-q24",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "소비 선택을 기업 관행 변화와 연결하는 중심 주장이 사례로 지지된다.",
+      "reviewer": "rater-2",
+      "sequence": 24,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "84eae23dd627c2d87d3439b44519c463e0a51d9b5fc2cd603758f90740928039",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20190307-q25",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "전기적 서사는 깨끗하지만 핵심 빈칸보다 생애의 특정 전환점 문항에 더 적합하다.",
+      "reviewer": "rater-2",
+      "sequence": 25,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "90b4b7bd041bc4c2c3fae2ad7d4090311931cb74040edca2cc1b0dd1dfdebdef",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20230906-q23",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "조리 외주화의 이익을 여러 차원에서 열거하는 구조가 안정적이다.",
+      "reviewer": "rater-2",
+      "sequence": 26,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "f112a111b5b9fb4c5cc567943aa11bb42a1cd766ef80364c7b935e28d7e573c0",
+      "grammarRichness": "rich",
+      "id": "repo:2021_SN_5061633-q22",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "음악 비평이 여론을 이끌던 구조에서 반영하는 구조로 바뀐 인과가 명료하다.",
+      "reviewer": "rater-2",
+      "sequence": 27,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "46d8adcad5bb3e2872f46bb5de5252e70f45311c5e44318fe84309e12dd5821b",
+      "grammarRichness": "rich",
+      "id": "repo:2021_SN_5061633-q40",
+      "issueCodes": [
+        "CULTURAL_DOMAIN_REVIEW"
+      ],
+      "origin": "repo-official",
+      "reason": "논리 구조는 좋지만 아마존 원주민 정치성과 여성 지배에 관한 광범위한 문화 일반화는 전문가 검토가 필요하다.",
+      "reviewer": "rater-2",
+      "sequence": 28,
+      "split": "dev",
+      "status": "DOMAIN_REVIEW"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "0f1d60825696e14177dc1ac930373e64e7f950800698e95758666f827c96da9e",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go2_20200916-q24",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "블랙 프라이데이의 환경비용과 대안 행동이라는 주장이 분명하다.",
+      "reviewer": "rater-2",
+      "sequence": 29,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "4ecad99feb9a97ed0719bba5b17cf5cc48537ed6dce95d70101d1e7107b65772",
+      "grammarRichness": "rich",
+      "id": "repo:2018_06_5013302-q21",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "운동기술 발달이 탐색·인지·숙달감으로 확장되는 인과가 촘촘하다.",
+      "reviewer": "rater-2",
+      "sequence": 30,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+      "grammarRichness": "normal",
+      "id": "cmq5hc1u3000fmmsgd1dr5yp5",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "정상 지문 뒤에 선지로 보이는 동사구 조각들이 연속으로 붙어 있다.",
+      "reviewer": "rater-2",
+      "sequence": 31,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "bac707d4a6906eed222f287cdc522a73b5b4509702d523a9da53fa9e89f33c13",
+      "grammarRichness": "rich",
+      "id": "cmqanec030005ic04e2e7rryn",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "숫자 미신의 문화별 차이를 하나의 주제로 조직하며 문장 표면도 온전하다.",
+      "reviewer": "rater-2",
+      "sequence": 32,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "691198660ab2be3e0a41a50aa9dc04ea566bb80d872b20e0d9d534dc138cd3ea",
+      "grammarRichness": "rich",
+      "id": "cmpbepm5s006bmmagu1g6yb7a",
+      "issueCodes": [
+        "POLICY_DOMAIN_REVIEW"
+      ],
+      "origin": "db-real",
+      "reason": "식량안보 설명은 일관되지만 한국의 작물별 정책 처방과 대외 의존도 판단은 최신 농정 검토가 필요하다.",
+      "reviewer": "rater-2",
+      "sequence": 33,
+      "split": "dev",
+      "status": "DOMAIN_REVIEW"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+      "grammarRichness": "rich",
+      "id": "cmpnwuz3l00bnmmyk39jucvka",
+      "issueCodes": [
+        "OCR_CORRUPTION",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "철자 결합 오류와 문장부호 누락이 있고 같은 숫자 미신 지문의 준중복이다.",
+      "reviewer": "rater-2",
+      "sequence": 34,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "3356e61661c5492499cd351a7433d8348e6c0265fa07ea3432ef8e5482b15930",
+      "grammarRichness": "rich",
+      "id": "cmpwuhv4u001nmm1ch5ypzx9f",
+      "issueCodes": [
+        "MERGED_UNRELATED_PASSAGES"
+      ],
+      "origin": "db-real",
+      "reason": "조류의 방랑과 성공 압박이라는 무관한 두 지문이 한 레코드로 결합됐다.",
+      "reviewer": "rater-2",
+      "sequence": 35,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "920b245f8ea7801f57bef019592a35233e0ef2e812718d7c6508ab58b9801a2b",
+      "grammarRichness": "rich",
+      "id": "cmpyx7b260001jp04vjeholew",
+      "issueCodes": [
+        "QUESTION_MARKUP_REMAINS",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "@·대문자 표식 등 문제용 주석이 본문에 남아 있어 원문 표면이 오염됐다.",
+      "reviewer": "rater-2",
+      "sequence": 36,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "0af5c2b9eda3d6693c84074336147a991f3e3539c79afe2a1a25343ff7c83632",
+      "grammarRichness": "rich",
+      "id": "cmqkuogfd0001jd0b65526r18",
+      "issueCodes": [
+        "NEAR_DUPLICATE",
+        "GRAMMAR_ERROR_IN_SOURCE"
+      ],
+      "origin": "db-real",
+      "reason": "같은 숫자 미신 지문의 준중복이며 관사 누락(have basis)까지 있다.",
+      "reviewer": "rater-2",
+      "sequence": 37,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c6a3cd3a1b254542f979f299598fc2165c1fa66ad089280940d1aa9da7a15727",
+      "grammarRichness": "normal",
+      "id": "cmpnzxhf000ebmmykkcjht729",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "보편적 설계의 세 사례가 접근성이라는 중심 개념을 안정적으로 뒷받침한다.",
+      "reviewer": "rater-2",
+      "sequence": 38,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "33e8b1f6b7a4458d08a25083a4e23d98bce293817d8d60df812800a82566e8a1",
+      "grammarRichness": "rich",
+      "id": "cmqespvyu001cmm1wqpn5spu6",
+      "issueCodes": [
+        "UNRELATED_SENTENCE_APPENDED",
+        "ANSWER_LIKE_SUMMARY_APPENDED"
+      ],
+      "origin": "db-real",
+      "reason": "몸짓 지문 뒤에 무관한 표본편향 문장과 정답 요약처럼 보이는 문장이 덧붙었다.",
+      "reviewer": "rater-2",
+      "sequence": 39,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "73ae3025adc80fe8400230bded63df05c68651e67e756c9ea5d345b7431e989c",
+      "grammarRichness": "rich",
+      "id": "cmpx1dv0o0001l404hw03gfmr",
+      "issueCodes": [
+        "GRAMMAR_ERROR_IN_SOURCE",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "관사 누락(has evolutionary root)이 있고 동일 향신료 지문의 준중복 군집에 속한다.",
+      "reviewer": "rater-2",
+      "sequence": 40,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "e91ad1d1962172285ca6ef575c53559ce95fad60f89ed4a3381f9941c9ed0293",
+      "grammarRichness": "normal",
+      "id": "cmq272ubl001ummcsjq36tqew",
+      "issueCodes": [
+        "LOGIC_CORRUPTION",
+        "MALFORMED_SENTENCE"
+      ],
+      "origin": "db-real",
+      "reason": "도난 보장을 전혀 하지 않는데 보험사가 돈을 보낼 때까지 기다린다는 문장이 의미·구문상 모순된다.",
+      "reviewer": "rater-2",
+      "sequence": 41,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b8970b1638bdd257490bd4a98c189c9034cdeb2ef7c845537e236678dccb81e4",
+      "grammarRichness": "rich",
+      "id": "cmpcjkklg0007mmekwcm6abax",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "몸짓이 발화와 사고를 선행·지원한다는 근거들이 한 결론으로 수렴한다.",
+      "reviewer": "rater-2",
+      "sequence": 42,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "396213f817b8ef47f5d5d0fb4b229bfbc33c2d0dd2783cdb4404e5bb812610a2",
+      "grammarRichness": "normal",
+      "id": "cmq272tkj001qmmcsvh7zb296",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "에리크의 명명 전략과 식민지 쇠퇴가 시간 순서로 자연스럽게 연결된다.",
+      "reviewer": "rater-2",
+      "sequence": 43,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "cbe130e246644385a900620f1e0f2f97a6c6a741edea89c69950c1f47acc5c99",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9e5000zl2049ba7eosv",
+      "issueCodes": [
+        "INSERTED_DISTRACTOR_SENTENCE",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "공유 미각의 문맥에 통합되지 않은 반대 문장이 끼어들어 결론과의 연결이 깨진다.",
+      "reviewer": "rater-2",
+      "sequence": 44,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "59f433c2c42987b38e239cbeb8315a24c817f6472d94483de2027de67ba067e6",
+      "grammarRichness": "rich",
+      "id": "cmq2410r40001jo04k2iz5yp1",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "변화 환경에서 인간 판단과 통계모형의 결합이 더 정확하다는 실험 논리가 완결된다.",
+      "reviewer": "rater-2",
+      "sequence": 45,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "8f21c16ccda142960c5a7b1abcc4403d666d9b0eb89a11a16e029a8deefddc5d",
+      "grammarRichness": "rich",
+      "id": "cmpr52qe10003k40442ys37jt",
+      "issueCodes": [
+        "GRAMMAR_ERROR_IN_SOURCE",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "관사 누락이 남은 향신료 지문이며 dev·holdout 준중복 군집에 속한다.",
+      "reviewer": "rater-2",
+      "sequence": 46,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ad68cb28ba66384d3f393d305eaaab93d67926717bf4f5db295bdf586d7fe1a8",
+      "grammarRichness": "rich",
+      "id": "cmpcjkl72000bmmekh9qerp2m",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "시트콤의 풍자가 사회적 관용을 촉진했다는 인과가 일관된다.",
+      "reviewer": "rater-2",
+      "sequence": 47,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "9f38946debe0e2593ddbc83fe8c349fb8876aa1854b81542bf5c33452d9ded01",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9ey0013l204nnoouqbe",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "무작위 변이와 비무작위 선택으로 신체 구조가 형성된다는 논리가 충분히 전개된다.",
+      "reviewer": "rater-2",
+      "sequence": 48,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "872b9fa8c3ddbc45b7d4cabcb92f92eec991517a0e1a34740dbb0b3e10303863",
+      "grammarRichness": "rich",
+      "id": "cmqjjnqp6000wkz04f6gbsna2",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "무의식적 위험 탐지 뒤 합리화가 일어난다는 심리 기제가 선명하다.",
+      "reviewer": "rater-2",
+      "sequence": 49,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ea52a3eab92aae53efcb71cc2d14a6ea1eb3931afc61863fcf123161505761ae",
+      "grammarRichness": "rich",
+      "id": "cmpnzw5sd00d9mmykdtoiyyb9",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "교통 분야의 보편적 설계 사례들이 다양한 이용자의 접근성으로 수렴한다.",
+      "reviewer": "rater-2",
+      "sequence": 50,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c1bbf1e33510cf6251a9475497dbdf359d299effa7dead0c48f92a89f0a674c1",
+      "grammarRichness": "rich",
+      "id": "cmpczyrsu000emmfkzbyivz87",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "완벽한 결과보다 부분적 정책 진전을 택해야 한다는 주장이 구체적 사례로 지지된다.",
+      "reviewer": "rater-2",
+      "sequence": 51,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "a03260ea9005fb3aab697c27f29c3c6b5e763d05519144c49480bd6866f04339",
+      "grammarRichness": "rich",
+      "id": "cmpr6wbbt0002mm3coikj9suy",
+      "issueCodes": [
+        "SENTENCE_NUMBERING_REMAINS",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "문장 앞 번호가 원문에 박혀 있고 동일 기억 지문이 여러 레코드·split에 중복된다.",
+      "reviewer": "rater-2",
+      "sequence": 52,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "bf5243f8c4a6ef65eb963e25daee7a6cf0f94153c773ea2b88b83e5eab7401ef",
+      "grammarRichness": "rich",
+      "id": "cmpnzx9ra00e5mmykfthbdaj9",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "가상세계의 지속적 사회가치가 충분한 참여자 규모에 달렸다는 논지가 명료하다.",
+      "reviewer": "rater-2",
+      "sequence": 53,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ae482a9441221088112528fc5450dff45e632465566b2dced08add9ecf86138a",
+      "grammarRichness": "rich",
+      "id": "cmpr7xftn0013mm3cad44usfx",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "회상과 재인의 차이를 단서 유무로 설명하는 깨끗한 대표본이다.",
+      "reviewer": "rater-2",
+      "sequence": 54,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "a0b45651b3a93c205f42d4801d1db9f03de15bc19fa5183055f7e01a6b2458bc",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9dr000xl204fygq66tv",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "가설 검증과 베이지안 갱신을 지식 형성의 반복 과정으로 연결한다.",
+      "reviewer": "rater-2",
+      "sequence": 55,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "8c6f7a971cb2b29afddf3e5b02a6b25521fb6298dddd50c1d8159660808ebb64",
+      "grammarRichness": "rich",
+      "id": "cmpqvdzht0001mmu80piqom02",
+      "issueCodes": [
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "신체 발달 지문이 다른 dev 레코드와 거의 동일해 독립 표본이 아니다.",
+      "reviewer": "rater-2",
+      "sequence": 56,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b62b4b588fe50791fda9d7e89b93e87537bc3a4e2ff57bdf87861e8c8becb521",
+      "grammarRichness": "rich",
+      "id": "cmpnzwb3o00ddmmyk13z8u5d0",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "연령에 따라 달라져야 하는 부모의 정서사회화 지원을 세밀하게 대비한다.",
+      "reviewer": "rater-2",
+      "sequence": 57,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "a40a5bfa656122e27c1726d1d95c0e089653a4c5ad8f8c8395ced7a42435162b",
+      "grammarRichness": "rich",
+      "id": "cmq5hc0l8000dmmsgr6tozs5b",
+      "issueCodes": [
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "과학·베이지안 갱신 지문이 다른 dev 레코드와 토큰 수준에서 사실상 동일하다.",
+      "reviewer": "rater-2",
+      "sequence": 58,
+      "split": "dev",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "337a3c3bec9daca7f528979b929289f02454151687a52ec026f5abe170c088da",
+      "grammarRichness": "rich",
+      "id": "cmpnwv10r00brmmykiusnyi5u",
+      "issueCodes": [
+        "MEDICAL_DOMAIN_REVIEW"
+      ],
+      "origin": "db-real",
+      "reason": "만성 스트레스·해마·코르티솔의 인과 설명이 강해 의학·신경과학적 정확성 검토가 필요하다.",
+      "reviewer": "rater-2",
+      "sequence": 59,
+      "split": "dev",
+      "status": "DOMAIN_REVIEW"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b501039c33ded5331fb86951cb43f2c49c92cf084c89853606ca7e1e22d0d02e",
+      "grammarRichness": "rich",
+      "id": "cmpvm7wwx0010mmbcwneeym36",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "데이터 무덤을 지식으로 바꾸는 도구 필요성이 문제-기존 한계-대안 순서로 전개된다.",
+      "reviewer": "rater-2",
+      "sequence": 60,
+      "split": "dev",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "d231e0f932d27130cbc66c0f45c8c6e20d2a75077663a8934777e532c2943113",
+      "grammarRichness": "normal",
+      "id": "repo:2022_06_5063572-q26",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "선수의 생애와 선행이 명료하지만 빈칸은 업적·사실 단위가 더 적합하다.",
+      "reviewer": "rater-2",
+      "sequence": 1,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "907d3c22ae3b25cb96a8caf3e59c8e5cc4d0da786179a5d806c2684123e6d8a4",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20141007-q29",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "어려운 신발을 완성한 헌신이 결말의 기쁨과 자연스럽게 연결된다.",
+      "reviewer": "rater-2",
+      "sequence": 2,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "7db8ce2037b98d296cf62e8e7508062bbea59e14a36307c84c18e863832a655d",
+      "grammarRichness": "rich",
+      "id": "repo:2021_09_5050886-q22",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "유아기의 음악 경험이 문화 이해와 편견 예방으로 확장되는 논지가 일관된다.",
+      "reviewer": "rater-2",
+      "sequence": 3,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "2bfa5b6713508071fff9d961f711c17d7c5b8afb77fa30e58bf9dc84e3649a95",
+      "grammarRichness": "rich",
+      "id": "repo:2005_YB_5006647-q48-49-50",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "마라톤 서사와 포기 유혹을 이기는 보편적 메시지가 유기적으로 결합된다.",
+      "reviewer": "rater-2",
+      "sequence": 4,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "6846806b9d02886d74e287872da01ced42b068c3fedcbb6e05c369cbc7e657b7",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20181121-q25",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "해양생물학자의 생애가 정확한 시간 순서로 구성되어 국소 빈칸에 적합하다.",
+      "reviewer": "rater-2",
+      "sequence": 5,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "51e891581c5ef3a6a403873eda3859c51e978b75e377b6af3d40580029d9cd19",
+      "grammarRichness": "rich",
+      "id": "repo:2018_SN_5019793-q40",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "동질적 온라인 네트워크의 정보 필터링 이득과 과잉필터 위험을 정교하게 대비한다.",
+      "reviewer": "rater-2",
+      "sequence": 6,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "6bddb198a4061b29a40e6fa586b6455fe4fbacb1c50113b0edb3333f881a6901",
+      "grammarRichness": "rich",
+      "id": "repo:2027_06_5095396-q20",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "신체활동의 원리를 이해시켜 학습자 주도성을 높여야 한다는 논지가 명료하다.",
+      "reviewer": "rater-2",
+      "sequence": 7,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "1dc9422616e30f84e83283a30e69e2f3caf3492ded1df6185f5659150444c1c9",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20251014-q23",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "장소 정체성의 가독성과 방문가능성을 연결하는 개념적 전개가 촘촘하다.",
+      "reviewer": "rater-2",
+      "sequence": 8,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "89b3ce21b702f51b6619144530b97e8182f709f2d940505530d81c0de235fd0b",
+      "grammarRichness": "rich",
+      "id": "repo:2005_09_3001156-q48-49-50",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "주의 깊은 관찰이 기억을 강화한다는 주장과 일상 사례가 잘 결합된다.",
+      "reviewer": "rater-2",
+      "sequence": 9,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "17e01cadebf532d311f3b17b05260946bfbc1057925e9dfd28fd18f04de6a822",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20191120-q22",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "압박 자체보다 태도가 삶의 반응을 결정한다는 중심 메시지가 반복적으로 지지된다.",
+      "reviewer": "rater-2",
+      "sequence": 10,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "697c79ba3fd6193f2c19fc65fc5822d25a84501cf30562268e1c9870ab978988",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go1_20170601-q25",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "국가 지리·인구·언어의 사실 나열이 깨끗하지만 중심 추론형 빈칸은 제한적이다.",
+      "reviewer": "rater-2",
+      "sequence": 11,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "33bd5e650e5b0e5956421a1ba261c61851a07176bedf52b4fa3ba60831137624",
+      "grammarRichness": "rich",
+      "id": "repo:2007_SN_3000983-q49-50",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "과일 껍질에 대한 상반된 두 화자가 명확해 국소 근거 빈칸에는 적합하나 단일 중심명제는 없다.",
+      "reviewer": "rater-2",
+      "sequence": 12,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "d7bc08b3c5fc80d6b93d0bb42fb2020cecf186807be5c5d75ceddb5e75eb6474",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20201118-q21",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "과학 교과서가 실패 경로를 지워 단선적 서사를 만든다는 비판이 선명하다.",
+      "reviewer": "rater-2",
+      "sequence": 13,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "d39709eeeb00c7c257aa3cce5ee4d47c8bebcdac42a3c1178a64bde0d639cb17",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go1_20150902-q20",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "말에서는 유용한 상투어가 글에서는 진부해진다는 대비가 명료하다.",
+      "reviewer": "rater-2",
+      "sequence": 14,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "707496c4845dd233a250c8c1bfb783f97515ee363872caad44d876b56f40e505",
+      "grammarRichness": "rich",
+      "id": "repo:2005_06_3001149-q48-49-50",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "보이지 않는 관리의 가치를 해고 전후의 결과로 설득력 있게 보여준다.",
+      "reviewer": "rater-2",
+      "sequence": 15,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "20abadcb12fcaa65c7dfc2b77ad0f049d46901f847e324007b0a84c46569e658",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20210831-q24",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "폐기물 매립지를 밀밭 예술로 바꾼 과정과 공공적 효과가 자연스럽게 이어진다.",
+      "reviewer": "rater-2",
+      "sequence": 16,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "0865a2a429656eff7bd43aad610acce3153bd22eef97a2e99e035c8452498605",
+      "grammarRichness": "rich",
+      "id": "repo:2011_09_3001251-q19",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "통행료 위기와 꽃 거래의 재치 있는 해결이 완결된 서사를 이룬다.",
+      "reviewer": "rater-2",
+      "sequence": 17,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "45c4303f65dd4011e2dfba8afe86d1300d3a9e685ec2b44b53a637a5a5f63d27",
+      "grammarRichness": "rich",
+      "id": "repo:2025_06_5086961-q22",
+      "issueCodes": [
+        "CULTURAL_DOMAIN_REVIEW"
+      ],
+      "origin": "repo-official",
+      "reason": "소통의 평등에서 공동재산 윤리까지 도출하는 선사사회 일반화는 인류학적 검토가 필요하다.",
+      "reviewer": "rater-2",
+      "sequence": 18,
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "039ee2f59b38f2e4c6f1aa9e7b1d79e09aa4f72d01abfd7ee21a6bd7b33e372c",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20210707-q26",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "백신 개발자의 생애와 업적이 안정적이나 빈칸은 특정 연대·행동에 더 적합하다.",
+      "reviewer": "rater-2",
+      "sequence": 19,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "088549edc120cc86ea621932df5b3ceeb4c0340fbb292afad4e5b2c6997edff7",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go1_20190604-q20",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "행복은 구매가 아니라 연습으로 길러야 한다는 비유 구조가 명료하다.",
+      "reviewer": "rater-2",
+      "sequence": 20,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ab513657d0fc03843e10ef93c58222eb6b8f309298eff94cf3bcc2715ba3bcef",
+      "grammarRichness": "rich",
+      "id": "repo:2010_06_3001224-q49-50",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "장난의 실제 피해를 이해시키고 책임을 묻는 교장의 대응이 일관된다.",
+      "reviewer": "rater-2",
+      "sequence": 21,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "1d675848d384976f3148331c5868a55b9d4134babb6eab7a5d622c3740d525a2",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20191120-q26",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "화가의 교육·망명·작품 활동을 잇는 전기문으로 국소 빈칸에 적합하다.",
+      "reviewer": "rater-2",
+      "sequence": 22,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "72227044f103d8e3bea3f3a8fd2a32b509b2ab8e6fd3dee5c46f0ae23a2aa274",
+      "grammarRichness": "rich",
+      "id": "repo:2021_SN_5061633-q24",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "촉각에 시간적 움직임이 필요하다는 실험과 시각 유비가 정확히 연결된다.",
+      "reviewer": "rater-2",
+      "sequence": 23,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "3761807cb1852e6a7222de9aecb17cb2228678fa9db78c0de5f554f084a528a8",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20241015-q20",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "유아기 음악 활동의 정서·사회·인지적 효과가 중심 권고를 지지한다.",
+      "reviewer": "rater-2",
+      "sequence": 24,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "2c3ffd187ff4f9d654a546f4718a52e1b3958eab7eefd16d08094c3a8e3e12a2",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go1_20130903-q40",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "즉시 보상 편향이 장기 저축 예시의 설득력을 약화한다는 논지가 선명하다.",
+      "reviewer": "rater-2",
+      "sequence": 25,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "a540069c0eb98af59db454cba3432a3b9796697d8971a3a6de398fe3279131b7",
+      "grammarRichness": "rich",
+      "id": "repo:2019_SN_5031122-q23",
+      "issueCodes": [
+        "CLIMATE_POLICY_DOMAIN_REVIEW"
+      ],
+      "origin": "repo-official",
+      "reason": "기후정의 논리는 일관되지만 보조금 규모·산림배출 비중·정책 비용효율은 최신 전문 검토가 필요하다.",
+      "reviewer": "rater-2",
+      "sequence": 26,
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "f0c4e69a0301c2056c6ea22d11b17626f4ad6d5cd33c400ecd8bf6b1ca1bd1f6",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20160901-q21",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "기업 봉사가 조직몰입을 약화하지 않고 강화한다는 반전 논지가 명료하다.",
+      "reviewer": "rater-2",
+      "sequence": 27,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "7b3df089a04ee06a8910d06b0c1d5c77f4b9b16403653f2061553e1483103f07",
+      "grammarRichness": "normal",
+      "id": "repo:2005_YB_5006647-q46-47",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "맞벌이와 가사분담 변화가 구체적 생활 사례로 자연스럽게 전개된다.",
+      "reviewer": "rater-2",
+      "sequence": 28,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "993b5cf8a0c61b9e9cc0414d6fa194e73db8211adcd103719269018f91f284e3",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20260324-q21",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "오답을 허용해야 수학적 오개념이 드러난다는 교육 논리가 치밀하다.",
+      "reviewer": "rater-2",
+      "sequence": 29,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5fcc6ce9a539c909c5cc504b2234c7f33f6d5acc2093b6fe4a94148148fba0b3",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go1_20230601-q22",
+      "issueCodes": [],
+      "origin": "repo-official",
+      "reason": "자동화가 여가를 늘리지 않고 소비자에게 노동을 전가했다는 대비가 분명하다.",
+      "reviewer": "rater-2",
+      "sequence": 30,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+      "grammarRichness": "rich",
+      "id": "cmq2capq3000ammm8iftgy9tp",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "dev의 숫자 미신 지문과 거의 동일해 holdout 독립성이 깨진다.",
+      "reviewer": "rater-2",
+      "sequence": 31,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "e200693ad0fe69c61a74bcc7d04dd669580cbfd0bb7f2d73006f6774e797c113",
+      "grammarRichness": "rich",
+      "id": "cmq50ifrc003ummm8xv9ppk4g",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "정상 문단 뒤에 정답 요약과 복수의 오답 문장이 선지처럼 붙어 있다.",
+      "reviewer": "rater-2",
+      "sequence": 32,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "d6605167a600feaf35c926331b11d9398a4ae678695ea060e0eb0a00c4f9272e",
+      "grammarRichness": "rich",
+      "id": "cmq23oovd0015mmcsd9fjq8gf",
+      "issueCodes": [
+        "FULL_QUESTION_SCAFFOLD",
+        "OCR_CORRUPTION",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "문항 지시문·기호·단어표·정의 선지가 본문에 통째로 포함됐다.",
+      "reviewer": "rater-2",
+      "sequence": 33,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "220f8817d0a321e58a5d3bb5b81b0a08f5bc2eeb4dc7583502a20888a9b508e3",
+      "grammarRichness": "rich",
+      "id": "cmq20um9t000mmmcs8wc3qpj3",
+      "issueCodes": [
+        "FULL_QUESTION_SCAFFOLD",
+        "OCR_CORRUPTION",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "동일 문항 스캐폴드의 중복본이며 추가 OCR 표식까지 남아 있다.",
+      "reviewer": "rater-2",
+      "sequence": 34,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "7631a174c99bcee7f202e6252b31f845ff1f502ca3ac17c65232d5a8ccc1e75b",
+      "grammarRichness": "scarce",
+      "id": "cmq5c5cip001lmmrwty0eg9zg",
+      "issueCodes": [
+        "TRUNCATED_SOURCE",
+        "BLANK_MARKUP_REMAINS",
+        "ANSWER_OPTIONS_APPENDED"
+      ],
+      "origin": "db-real",
+      "reason": "첫 문장이 중간에서 잘렸고 빈칸 표식·정답어 조각이 남아 있다.",
+      "reviewer": "rater-2",
+      "sequence": 35,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "8654ea86fbd9b865e93bf72f3d274fe9af723bd6de3271f1415edb3d6eab5591",
+      "grammarRichness": "rich",
+      "id": "cmq23op900017mmcsgdlfr18c",
+      "issueCodes": [
+        "FULL_QUESTION_SCAFFOLD",
+        "DELIBERATE_ERROR_REMAINS",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "문항 번호·삽입 위치·밑줄 기호·의도적으로 틀린 문법과 질문 문장이 모두 남아 있다.",
+      "reviewer": "rater-2",
+      "sequence": 36,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "fe1637edcf53eff326b04a337c96552b296ee310fc50b563a4b665dbcaf63572",
+      "grammarRichness": "rich",
+      "id": "cmpbeploy0069mmag6t6caoiu",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "측정 가능한 대리변수가 실제 목표를 대체하는 굿하트 법칙을 간결하게 설명한다.",
+      "reviewer": "rater-2",
+      "sequence": 37,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "8eb195031ee874946ec49b406a42698d1f2d3d7724d73ea067e1daee1b643aba",
+      "grammarRichness": "rich",
+      "id": "cmq20ulw9000kmmcsd6rn4vv1",
+      "issueCodes": [
+        "FULL_QUESTION_SCAFFOLD",
+        "DELIBERATE_ERROR_REMAINS",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "같은 공유경제 문항 스캐폴드의 중복본으로 문제 표식과 인위적 오류가 남아 있다.",
+      "reviewer": "rater-2",
+      "sequence": 38,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b42cf83a0841f5043369e09c7ad5d77612acc3f969c2fdd537755338f46f68f2",
+      "grammarRichness": "rich",
+      "id": "cmpaqf99o000dl204pyve3pdv",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "향신료 지문이 dev의 두 레코드와 사실상 동일해 cross-split 누출을 만든다.",
+      "reviewer": "rater-2",
+      "sequence": 39,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "f81792bff8e500e39764302d7de1e3b4c987a2b8e9c6712a112194064d35c2a0",
+      "grammarRichness": "rich",
+      "id": "cmq272sfm001kmmcsay23lmyc",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "모든 것을 동시에 성취할 수 없다는 졸업연설의 중심 교훈과 사례가 일관된다.",
+      "reviewer": "rater-2",
+      "sequence": 40,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "5f6141ba762adbca9ec45c71fa929b443fdf66132b7775797042add3768682e3",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9ay000jl204pew667f2",
+      "issueCodes": [
+        "PUNCTUATION_CORRUPTION",
+        "CROSS_SPLIT_TEXT_LEAK"
+      ],
+      "origin": "db-real",
+      "reason": "대시가 사라져 두 곳의 문장 경계가 깨졌고, dev의 병합 오염 레코드에도 같은 본문이 포함돼 있다.",
+      "reviewer": "rater-2",
+      "sequence": 41,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5e46fb6e5a5d2a3086b3ababd4f4498cb6ea31dfa5a0e4f2a900cf4db31ff702",
+      "grammarRichness": "rich",
+      "id": "cmpaqf96q0001l204lnt7f5y9",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "미각의 개인성과 공동 경험을 조화시키는 논지가 매끄럽고 표면도 온전하다.",
+      "reviewer": "rater-2",
+      "sequence": 42,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "7224cb1ea6a626fa46bbffdd3fdd8042944a49c4b60e43e693b58fd70c71c05d",
+      "grammarRichness": "rich",
+      "id": "cmq56mbbc0001mm6cabjbecw8",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "dev 데이터 마이닝 지문의 강한 의역 준중복으로 holdout 독립 표본이 아니다.",
+      "reviewer": "rater-2",
+      "sequence": 43,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+      "grammarRichness": "rich",
+      "id": "cmpaqf97g0003l204jhi59d8z",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "dev의 회상·재인 지문과 토큰 수준에서 동일하다.",
+      "reviewer": "rater-2",
+      "sequence": 44,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "12976b2165fc710a77f8f0450a15bb32c195f5cef78e8f7720023a5c65b69c75",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9a4000fl2042odbrdj0",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "dev의 신체발달 지문과 거의 동일해 독립 표본으로 사용할 수 없다.",
+      "reviewer": "rater-2",
+      "sequence": 45,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "d0261be75d49a681b21f4573e964d449cb2c099f98ffeb09c037559706d29c23",
+      "grammarRichness": "normal",
+      "id": "cmq272t6z001ommcsbneh6fby",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "벨의 관찰에서 최초 전기 음향 전송까지 인과와 시간 순서가 명확하다.",
+      "reviewer": "rater-2",
+      "sequence": 46,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "6e695417470285daf06a97318e349b86edf9fa6cb56c68db79c59073ddd736a6",
+      "grammarRichness": "rich",
+      "id": "cmpaqf97v0005l204xjjvssdr",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "PUNCTUATION_CORRUPTION"
+      ],
+      "origin": "db-real",
+      "reason": "dev 지문과 단어열이 동일하고 clean water. act라는 문장부호 오염도 있다.",
+      "reviewer": "rater-2",
+      "sequence": 47,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c73936758b2a6baafa87a6a44b9e4601a4162d2bbbe14c1753674a5158593614",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9aj000hl20466bzeiga",
+      "issueCodes": [
+        "MEDICAL_DOMAIN_REVIEW"
+      ],
+      "origin": "db-real",
+      "reason": "표면과 논리 구조는 깨끗하지만 과일 섭취와 해마·피질 부피를 잇는 건강 주장은 전문 검증이 필요하다.",
+      "reviewer": "rater-2",
+      "sequence": 48,
+      "split": "holdout",
+      "status": "DOMAIN_REVIEW"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ea5b502237e5c7a5414210eae274792ade3580f6ca835cfdd5e9346e0d7453ec",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9fr0017l204rcz69oyr",
+      "issueCodes": [
+        "NEAR_DUPLICATE",
+        "PUNCTUATION_CORRUPTION"
+      ],
+      "origin": "db-real",
+      "reason": "다른 holdout 데이터 지문과 단어열이 동일하고 인용부호 뒤 문장부호도 유실됐다.",
+      "reviewer": "rater-2",
+      "sequence": 49,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "568154d8bc4d522eef680080676fc047611f66f7742f0300633af91ebd37c088",
+      "grammarRichness": "rich",
+      "id": "cmpaqf997000bl204g2nptcrl",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "dev의 스트레스·해마 지문과 거의 동일해 holdout 오염을 만든다.",
+      "reviewer": "rater-2",
+      "sequence": 50,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "dd13c3b0479f50ac7de6e2f6584225d684446d2467b1dc6b9f06b0e1c67cf33c",
+      "grammarRichness": "rich",
+      "id": "cmqb48s000001l70497mch8x0",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "공유경제의 이상과 영리 플랫폼 현실을 대조하며 결론까지 일관된다.",
+      "reviewer": "rater-2",
+      "sequence": 51,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "c9aa67aba49a7e63b1064e1f772fb19e371717736dd98612d3f73e5577079aeb",
+      "grammarRichness": "rich",
+      "id": "cmq742ju90015mm1gk4pzfggd",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "회상·재인 지문을 늘린 뒤 선지 동사구 조각들을 그대로 덧붙였다.",
+      "reviewer": "rater-2",
+      "sequence": 52,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b020c669017ca57a360621b65c2b92baf721c27164633ffebfda2cc33a41033b",
+      "grammarRichness": "rich",
+      "id": "cmpchv9xq0003ky0484e1e7y4",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "왼손잡이의 불편에서 보편적 설계의 기원과 정의로 자연스럽게 확장된다.",
+      "reviewer": "rater-2",
+      "sequence": 53,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "edb3d4a283cfe08b1d54a74b8afe0171a7866c17536d0a65215d9e0b2ffa3f4f",
+      "grammarRichness": "rich",
+      "id": "cmq5gpplq0001mmsg2fi1puqg",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "논지와 모순되는 문장들이 정답·오답 선지처럼 본문 끝에 연속 부착됐다.",
+      "reviewer": "rater-2",
+      "sequence": 54,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "977d6bc2d6945fa183236f67ab485199953020bba284841017df14d48e962adf",
+      "grammarRichness": "rich",
+      "id": "cmpnzw9ay00dbmmykw8e1lclh",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "패션 분야의 보편적 설계 사례와 사회적 확대 필요성이 일관되게 연결된다.",
+      "reviewer": "rater-2",
+      "sequence": 55,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b50f599d06dde2703b827c0c08959f252d74d2033814465e63ac501498abd063",
+      "grammarRichness": "rich",
+      "id": "cmpnzxg1100e7mmykv46al2g6",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "닷컴 기업의 광고 교환이 매출만 부풀린 회계 문제를 구체적으로 설명한다.",
+      "reviewer": "rater-2",
+      "sequence": 56,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c60a3a1a0020f9afce966b355a41339ec7dc557c26134ffe57487ed84c4d800f",
+      "grammarRichness": "rich",
+      "id": "cmqg66544000emm60nvhh17iu",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "손글씨의 감각운동 과정과 깊은 학습을 연결하는 중심 논지가 충분히 전개된다.",
+      "reviewer": "rater-2",
+      "sequence": 57,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "1e369ebc778684fbe2f6bbae552dfe062e001f573ac6a280c0d14aa8d6dc4765",
+      "grammarRichness": "rich",
+      "id": "cmpv7gfl00001mmbc0u8d49ep",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE"
+      ],
+      "origin": "db-real",
+      "reason": "dev 몸짓 지문과 거의 동일하고 문장 순서만 일부 바뀌어 cross-split 독립성이 없다.",
+      "reviewer": "rater-2",
+      "sequence": 58,
+      "split": "holdout",
+      "status": "EXCLUDE"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5c86912f2c0d4c08137b6c1d756844cfc6e13d29478079900b80c0290cec851c",
+      "grammarRichness": "rich",
+      "id": "cmpwtrzov0001jd0b5z38rzdv",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "비판적 사고를 즉각적 정서 반응에서 벗어나는 정신적 해방으로 설명한다.",
+      "reviewer": "rater-2",
+      "sequence": 59,
+      "split": "holdout",
+      "status": "PASS"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "e047f728febca8b85e829c7de7fbb5f84d1674a8ea0d13a12ff5ce7860673b99",
+      "grammarRichness": "rich",
+      "id": "cmqfkcut40032mmzcjq5riqxl",
+      "issueCodes": [],
+      "origin": "db-real",
+      "reason": "단일 관측의 변동성을 다지점 반복 측정으로 줄인다는 통계 원리가 사례와 잘 맞는다.",
+      "reviewer": "rater-2",
+      "sequence": 60,
+      "split": "holdout",
+      "status": "PASS"
+    }
+  ],
+  "reviewedAt": "2026-07-15T01:47:19+09:00",
+  "reviewer": "rater-2",
+  "schemaVersion": 1
+}

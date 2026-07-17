@@ -1,0 +1,76 @@
+{
+  "pid": "P024",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-MINOR-TERMINAL-PUNCT",
+      "severity": "minor",
+      "evidence": "프로그램적 diff 결과 렌더 지문은 원지문과 1039자까지 완전 동일하며, 빈칸이 원지문 말미 span \"explore uncertainties, and not immediately ask 'what do you mean by that?'\"를 정확히 통째로 대체한다. 다만 원문 종결부호(?')가 span 안에 포함되어 제거되면서 렌더 지문이 'to _____'로 끝나고 빈칸 뒤 마침표가 없다. 선지에도 종결부호가 없어 완성문에 종결부호가 부재하는 표기 관례상의 사소한 흠이다. 내용 손상·중복·누락·라벨 불일치는 없어 V1 실패로 보지 않는다."
+    },
+    {
+      "code": "V3-MINOR-COORDINATION-SEAM",
+      "severity": "minor",
+      "evidence": "정답 삽입 완성문 'the willingness of readers to pay attention, to tolerate apparent obscurities and seek underlying communicative intents'는 문법적이나, 원문의 3항 병렬(to pay attention, to explore uncertainties, and not immediately ask)이 2항 콤마 병렬(to A, to B and C)로 바뀌어 접속사 없는 콤마 연결이 다소 어색하다. 비문은 아니므로 V3 통과."
+    },
+    {
+      "code": "V4-MINOR-AWKWARD-KOREAN",
+      "severity": "minor",
+      "evidence": "오답 해설 ④의 '오역된 선지입니다'는 용어 선택이 부적절하고(왜곡/오독이 정확), ③의 첫 절 '문학 작가가 협조적이지 않다고 여기는 다른 맥락과 달리'는 문장이 꼬여 있다. 그러나 지문 구조·인용('reading efforts', flout principles 등)은 모두 실제 지문과 일치하며 오분석·환각은 없어 V4 통과."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "polarity reversal — 독자가 효율적 소통 원칙의 '엄수'를 작가에게 요구한다는 방향 전도",
+      "temptingBecause": "'principles of efficient communication'이 지문에 축자적으로 등장해 키워드 매칭 독자를 유인한다",
+      "decisiveFlaw": "지문은 독자가 그 원칙을 'flout'하는 요소까지 해석하려 애쓴다고 명시하므로 엄수 요구는 정반대. 삽입 시 완성문은 문법적이나 의미가 지문 전체 논지와 상충"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'explore uncertainties, and not immediately ask what do you mean'의 의미 보존 재진술",
+      "temptingBecause": "해당 없음(정답). 'put up with many obscurities', 'struggle to interpret', 'communicative purpose' 등 지문 전반의 논지와 정확히 합치",
+      "decisiveFlaw": "없음. 유일 정답. 단 'apparent obscurities'가 앞 문장 'many obscurities and apparent irrelevancies'의 축자 재조합이어서 추상화 수준이 낮고 어휘 누출이 있다(C4 감점 사유, 유효성 문제는 아님)"
+    },
+    {
+      "label": "③",
+      "intent": "causal reversal — 언어적 복잡성이 협조 의도의 결여를 나타낸다는 인과 전도",
+      "temptingBecause": "'complications', 'uncooperative' 등 지문 어휘를 앵커로 사용하며, 일반 담화 맥락에서는 참인 진술이라 절반의 진실처럼 보인다",
+      "decisiveFlaw": "지문은 'instead of imagining that the speaker or writer is being uncooperative'라고 명시적으로 부정하며, 복잡성은 궁극적으로 소통 목적을 갖는다고 가정된다"
+    },
+    {
+      "label": "④",
+      "intent": "half-truth / mechanism distortion — 제도적 라벨 의존은 참이나 '해석 노력의 우회'라는 기능 왜곡",
+      "temptingBecause": "'institutional label'이 지문에 실재하는 앵커이고, 라벨에 기대는 것 자체는 지문이 인정하는 사실이어서 가장 변별력 있는 매력 오답이다",
+      "decisiveFlaw": "라벨은 'reading efforts will be worth it'이라는 기대를 정당화해 노력을 유도하는 장치이지 노력을 우회(bypass)하게 하는 장치가 아니다. willingness to pay attention과도 내적 모순"
+    },
+    {
+      "label": "⑤",
+      "intent": "actor/scope swap — 재인쇄(문학 작품 선별 과정의 속성)를 '내러티브 디스플레이 텍스트 평가 기준'으로 전위",
+      "temptingBecause": "'reprinted', 'narrative display texts'가 모두 지문 축자 어휘라 표면 겹침이 크다",
+      "decisiveFlaw": "재인쇄는 문학 작품이 거친 선별 과정의 일부이지 독자가 display texts를 평가하는 기준이 아니며, 빈칸 자리는 독자의 해석적 태도를 요구하는 슬롯이므로 주제 이탈"
+    }
+  ],
+  "explanationIssues": [
+    "본 해설 말미의 ① 설명이 오답 해설 ①과 중복되어 장황하다",
+    "오답 해설 ④ '오역된 선지입니다' — 용어 부적절(번역 문제가 아니라 기능 왜곡)",
+    "오답 해설 ③ 첫 절 '문학 작가가 협조적이지 않다고 여기는 다른 맥락과 달리'가 비문에 가깝게 꼬여 있음(사실관계는 정확)",
+    "오답 해설 ⑤ '많은 문학적 특징이 기인하는 독자의 직접적인 참여적 태도의 본질적 내용을 구성하지 못합니다' — 통사적으로 난삽해 학생 가독성이 낮음"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트 전부 통과. 빈칸이 원문 말미 span을 정확히 대체하고(diff로 확인), 5개 선지가 모두 동일한 bare-infinitive 슬롯에 들어가며(D 조건 1 충족), 정답 ②가 유일 정답임을 각 선지 독립 검증으로 확인했다. 오답들은 polarity reversal(①③), half-truth(④), actor/scope swap(⑤)으로 함정 유형이 분화되어 있으나 ①③이 같은 극성 전도 계열이라 지문의 반복 강조된 논지를 파악하면 동시에 소거된다. 최대 결함은 C4: 정답 선지가 앞 문장의 'obscurities'/'apparent'를 축자 재사용해 키워드 매칭만으로도 도달 가능한 어휘 누출이 있다(요구 수준인 '난이도에 맞는 추상화' 미달). C6도 중복·난삽한 한국어로 감점. 합계 16(C1=3,C2=3,C3=3,C4=2,C5=3,C6=2)으로 B 기준(합계 17)에 1점 미달 — 정답 선지의 어휘 추상화와 해설 문장 정돈이라는 국소 수정으로 B 이상 회복 가능. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false). 출처는 Culler 계열 문학이론 논의로 추정되는 정전급 지문이라 출제 가치는 견고하다."
+}

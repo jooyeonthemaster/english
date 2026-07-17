@@ -1,0 +1,61 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-BORDERLINE-OPTION-FORM",
+      "severity": "minor",
+      "evidence": "Option 2 'expanding the promotional advertising to wider audiences' is a gerund phrase while options 1/3/4/5 are what-clauses. Inserted, 'accomplished expanding ...' is awkward though parseable; it does not make the item invalid but breaks the same-syntactic-slot ideal and gives a weak form-based elimination cue. Judged a craft defect (C3/C4), not a V3 failure, since the passage, stem, and the completed sentence with the declared answer are fully grammatical."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "Unsupported fabrication / half-truth: attributes success to a nonexistent physical redesign while echoing the cart's unrealized 'promise'.",
+      "temptingBecause": "The passage calls the cart 'an excellent device' whose benefits shoppers initially refused, so 'what the carts had promised' resonates with the ending where shoppers finally accept them.",
+      "decisiveFlaw": "No physical redesign of the carts occurs or is mentioned anywhere; adoption was won by social proof with the carts unchanged, so the noun phrase 'the physical redesign' has no referent in the text."
+    },
+    {
+      "label": "2",
+      "intent": "Direct contradiction / half-truth reusing a salient passage word (advertising).",
+      "temptingBecause": "Advertising is prominent in the passage ('repeated advertisements'), and expanding reach sounds like a plausible marketing fix.",
+      "decisiveFlaw": "The passage explicitly states advertisements and explanations failed to persuade shoppers, so expanded advertising cannot be what the shills accomplished; additionally it is the only gerund among four what-clauses, allowing partial elimination by form."
+    },
+    {
+      "label": "3",
+      "intent": "Correct answer: faithful abstraction of the removed span 'what logic, explanations, and advertisements failed to do' into 'what rational persuasion and marketing campaigns could not achieve'.",
+      "temptingBecause": "N/A (correct).",
+      "decisiveFlaw": "None. Preserves meaning exactly: logic/explanations -> rational persuasion; advertisements -> marketing campaigns; failed to do -> could not achieve."
+    },
+    {
+      "label": "4",
+      "intent": "Causal reversal / polarity flip on the passage's key concept (group conformity).",
+      "temptingBecause": "'Group conformity' names the actual winning mechanism ('Look, everyone is using the carts'), so students who spotted the core concept may grab it without checking polarity.",
+      "decisiveFlaw": "Conformity was the successful strategy, not a failed one; the shills' act WAS reliance on group conformity, so the completed sentence ('shills accomplished what relying on conformity failed to guarantee') is self-contradictory."
+    },
+    {
+      "label": "5",
+      "intent": "Polarity reversal of a stated rejection reason, anchored on a verbatim lexical item.",
+      "temptingBecause": "'Baby carriages' appears verbatim in the passage, giving strong surface overlap.",
+      "decisiveFlaw": "The resemblance to baby carriages is the reason women refused the carts; nobody 'highlighted' it as a strategy, and doing so would have deepened rejection, not adoption."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "All validity gates pass. V1: rendered passage is byte-identical to the source except the intended blank replacing 'what logic, explanations, and advertisements failed to do'; sentence-final punctuation intact; labels match. V2: independent insertion test confirms 3 is the unique answer (1 fabricated redesign, 2 contradicts explicit failure of ads, 4 causal/polarity reversal and self-contradictory, 5 reverses a rejection reason). V3: passage, stem, and completed sentence with 3 are grammatical; option 2's gerund is awkward-but-parseable when inserted, flagged as minor. V4: explanation's structural and causal claims all match the text; each wrong-option note corresponds to that option's actual content and correctly names the trap (e.g., 4 as causal reversal). V5: answer label, options, main/wrong-option explanations (keys 1,2,4,5), and keyPoints are synchronized. Craft: blank sits on the passage's concluding punchline (C1=4); four distinct trap mechanisms (C2=3); real discrimination mainly from option 4's polarity trap, but option 2 is near-instantly eliminable and the correct paraphrase is fairly transparent since the failure of ads/explanations is stated verbatim earlier (C3=3); one weak form leak from option 2's gerund, otherwise clean clue economy (C4=3); difficulty sits on the easier side of INTERMEDIATE but within band (C5=3); explanation is accurate and cleanly separates rationale from traps (C6=4). Sum=20, min=3 -> Grade B (A requires sum>=21). Requested difficulty is INTERMEDIATE, so KILLER conditions are not applicable (killerConditionsMet=false). Suggested small fixes for A: recast option 2 as a what-clause (e.g., 'what broader promotional advertising was expected to deliver') and slightly deepen the correct option's abstraction."
+}

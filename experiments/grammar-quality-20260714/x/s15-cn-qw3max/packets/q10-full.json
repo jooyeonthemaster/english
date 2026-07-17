@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):ANS=g  (C):dec=c  (D):dec=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 11,
+        "relPos": 0.014,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 145,
+        "relPos": 0.184,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 389,
+        "relPos": 0.494,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 673,
+        "relPos": 0.854,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.854,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중 어법상 옳지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "go long periods of time without reaching out to the people we know",
+        "isError": false,
+        "surroundingText": "We tend to",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "we scramble to make repairs",
+        "isError": true,
+        "errorExpression": "we scrambles to make repairs",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and",
+        "pointCode": "g",
+        "correction": "we scramble to make repairs"
+      },
+      {
+        "label": "(C)",
+        "expression": "hoping that one small effort will erase the months and years of distance we've created",
+        "isError": false,
+        "surroundingText": "We call people we haven't spoken to in ages,",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "They're kept up with regular maintenance, like a car",
+        "isError": false,
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "it's more ideal not to let yourself fall out of touch in the first place",
+        "isError": false,
+        "surroundingText": "just that",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "go long periods of time without reaching out to the people we know"
+      },
+      {
+        "label": "(B)",
+        "text": "we scrambles to make repairs"
+      },
+      {
+        "label": "(C)",
+        "text": "hoping that one small effort will erase the months and years of distance we've created"
+      },
+      {
+        "label": "(D)",
+        "text": "They're kept up with regular maintenance, like a car"
+      },
+      {
+        "label": "(E)",
+        "text": "it's more ideal not to let yourself fall out of touch in the first place"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 ‘we’와 동사 ‘go’가 일치하고, ‘go + 시간 표현’은 ‘~동안 지내다’라는 관용적 표현으로 적절합니다. ‘without + -ing’도 올바른 전치사 구문입니다.",
+      "(C)": "‘hoping’은 현재분사로 ‘We call people...’이라는 주절을 수식하며, 뒤의 that절도 시제 일치와 의미상 자연스럽습니다. ‘will erase’는 미래의 결과를 나타내는 데 적절합니다.",
+      "(D)": "‘keep up (a relationship) with ~’은 ‘~을 통해 관계를 유지하다’라는 표현으로 문맥에 잘 맞습니다. ‘like a car’는 명사(relationships)와 비교하는 유사비교이며, 비격식적 맥락에서는 허용됩니다.",
+      "(E)": "‘it’s ideal (not) to ~’는 고정 표현이며, ‘more ideal’은 비교급으로도 자연스럽게 사용됩니다. ‘fall out of touch’는 ‘연락이 끊기다’라는 관용구입니다."
+    },
+    "explanation": "(B) \"we scrambles to make repairs\"는 어법상 틀린 표현이며 \"we scramble to make repairs\"로 고쳐야 한다. 정답은 (B)입니다. 주어 ‘we’는 복수이므로 동사도 복수형인 ‘scramble’을 사용해야 합니다. 하지만 선택지에서는 ‘scrambles’라는 3인칭 단수형인 오류를 범하고 있습니다. 이는 주어-동사 일치(s-v agreement) 원칙에 어긋나는 명백한 어법 오류입니다.",
+    "keyPoints": [
+      "주어-동사 일치(s-v agreement)",
+      "현재분사 수식어",
+      "관용적 표현: go + 시간, fall out of touch",
+      "비교 구문: like a car"
+    ],
+    "tags": [
+      "수능영어",
+      "어법오류",
+      "중급",
+      "모의고사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to __(A) go long periods of time without reaching out to the people we know__. Then, we suddenly take notice of the distance that has formed and __(B) we scrambles to make repairs__. We call people we haven't spoken to in ages, __(C) hoping that one small effort will erase the months and years of distance we've created__. However, this rarely works: relationships aren't kept up with big one-time fixes. __(D) They're kept up with regular maintenance, like a car__. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that __(E) it's more ideal not to let yourself fall out of touch in the first place__. Consistency always brings better results."
+  }
+}

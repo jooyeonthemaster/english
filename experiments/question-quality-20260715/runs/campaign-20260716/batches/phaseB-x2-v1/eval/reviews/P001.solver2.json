@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) based",
+      "verdict": "correct",
+      "reason": "Past participle heading a reduced relative clause modifying 'assumptions': 'assumptions [that are] based on their race or ethnicity'. The underlying relation 'base assumptions on X' licenses the passive participle. Well-formed."
+    },
+    {
+      "label": "(B) is",
+      "verdict": "incorrect",
+      "reason": "Subject-verb agreement violation. The matrix subject is plural 'Racial microaggressions'; the comma-set-off 'such as assumptions ... ethnicity,' is an exemplifying parenthetical and cannot control agreement. The plural predicate nominative 'commonplace ... indignities' independently confirms plural agreement. No alternative parse rescues 'is': the nearest noun 'assumptions' is itself plural, and a notional-singular mass reading of 'microaggressions' is blocked by the plural predicate NP. Must be 'are'."
+    },
+    {
+      "label": "(C) be seen",
+      "verdict": "correct",
+      "reason": "Modal + passive infinitive: 'experiential microaggressions ... can be seen in statements that ...'. 'Microaggressions' is the patient of 'see', so passive voice is required and correctly formed."
+    },
+    {
+      "label": "(D) giving",
+      "verdict": "correct",
+      "reason": "Elliptical adverbial clause 'when [she was] giving him directions'. The understood subject of the participle corefers with the matrix subject 'a well-meaning nurse' — no dangling participle. Ditransitive 'give him directions' is standard. Well-formed."
+    },
+    {
+      "label": "(E) as lesser",
+      "verdict": "correct",
+      "reason": "Passive of 'define X as Y' where Y is an adjectival predicate: 'is defined as lesser in all aspects of functioning'. Predicative comparative 'lesser' after 'as' (cf. 'seen/treated as lesser') is attested and grammatical."
+    }
+  ],
+  "note": "Clean single-answer item. The agreement error at (B) is protected by two independent long-distance cues (plural subject head 'microaggressions' across a parenthetical 'such as' phrase, and plural predicate nominative 'indignities'), so no defensible alternative parse makes 'is' grammatical. Active search for rescuing readings (reduced relatives, participial adjuncts, notional agreement) found none for (B) and no spurious errors among (A)/(C)/(D)/(E). Lens: grammarian/logician, blind solve."
+}

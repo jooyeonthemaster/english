@@ -1,0 +1,35 @@
+{
+  "pid": "P046",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "구조: an experiment showing (that) human perception and behavior can be influenced by external factors. showing 뒤 that 생략 명사절의 정동사이며, 주어 perception and behavior는 외부 요인에 의해 영향을 '받는' 대상이므로 수동태 can be influenced가 태·수 모두 적법하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "ask + 목적어(them) + to부정사 보어의 표준 5형식 구문. asked them to create a coherent sentence는 완전한 정문이다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "인용문 내부에서 단수 주어 the lonely old man with the wrinkled face의 과거 정동사. sit down은 자동사이고 과거형 sat이 적법하다. 인용문 전체가 문장 주어이고 본동사는 is이므로 층위 충돌 없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "관계절 who had been exposed to ... 를 건너뛴 진짜 주어 Those students의 본동사. take + 시간(almost 40 percent longer) + to부정사 구문과 비교급 than절 모두 적법하다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "본동사 walked 뒤에 접속사 없이 콤마로 dragged(정동사)를 이으면 무접속 등위(comma splice)로 비문. 분사구문으로 해석하려면 의미상 주어 Some students가 발을 끄는 능동 주체이므로 현재분사 dragging이어야 한다. 과거분사 dragged는 수동 의미라 목적어 their feet를 취하는 능동 부가어로 성립 불가. 앞의 with their shoulders bent forwards의 bent(with-절대구문 내 수동분사, 적법)와의 표면 병렬로 혼동을 유도하는 장치다. dragged → dragging."
+    }
+  ],
+  "note": "대안 해석(축약 관계절, 등위 병렬, 도치 등)을 전수 탐색했으나 (E)를 정문으로 구제할 해석은 없다. and dragged라면 정문이지만 원문에는 접속사가 없다. 나머지 네 선지는 오류 시비가 성립하지 않아 정답은 (E)로 유일하게 좁혀진다. 원전은 Bargh의 노인 점화(elderly priming) 실험 서술로 내용상 결함도 없음."
+}

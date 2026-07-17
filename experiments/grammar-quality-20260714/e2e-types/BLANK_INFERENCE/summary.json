@@ -1,0 +1,13 @@
+{
+  "type": "BLANK_INFERENCE",
+  "plan": "PREMIUM",
+  "difficulty": "INTERMEDIATE",
+  "total": 5,
+  "ok": 5,
+  "failed": 0,
+  "relaxed": 0,
+  "avgAttempts": 1,
+  "avgMs": 56813,
+  "withErrors": 0,
+  "withWarnings": 2
+}

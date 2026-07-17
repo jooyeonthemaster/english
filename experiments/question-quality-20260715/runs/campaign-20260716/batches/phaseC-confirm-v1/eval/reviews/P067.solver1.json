@@ -1,0 +1,35 @@
+{
+  "pid": "P067",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "관객이 '대본의 감정 구조를 분석'한다는 내용은 지문에 없다. 대본의 감정은 배우가 진짜로 느끼려는 대상일 뿐이다. 또한 스템 꼬리부 'not just fictional characters in a movie'와 의미 대비가 성립하지 않는다."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "메소드 배우가 감정을 faking하지 않고 truly feeling하며 캐릭터 그 자체가 된다는 지문 논리의 귀결로, 관객은 허구적 연기가 아닌 진짜(authentic) 인간을 목격하게 된다. 꼬리부 'not just fictional characters'와의 대비도 성립. 유일한 정답. 단, seam 결함 있음: 선지 내부의 'rather than merely observing fictional portrayals'가 스템 꼬리부 'not just fictional characters in a movie'와 동일한 대비를 중복 표현하여 완성문이 어색해진다(같은 부정 대비를 두 번 말함). 정답성은 유지되나 문장 품질 결함으로 기록."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "지문과 정반대. 메소드 연기는 관객이 캐릭터를 진짜처럼 느끼게 만드는 기법인데, '인위적 설정을 쉽게 알아차린다'는 몰입 효과를 부정하는 역방향 진술이다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "관객이 배우를 대체해 직접 연기하고 싶어 한다는 내용은 지문 어디에도 근거가 없다. 완전한 무근거 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 지문의 'change their sleeping patterns or their appearance'를 표면 재활용해 순간적으로 끌리게 만들었으나, 수면·외모 변화는 몰입을 위한 수단이지 관객이 스크린에서 지각하는 결과가 아니다. 결정적으로 꼬리부 'not just fictional characters in a movie'와 대비 구조가 성립하지 않는다(신체적 고생 vs 허구 캐릭터는 대비 쌍이 아님). 꼬리부 결합 검사에서 탈락."
+    }
+  ],
+  "note": "정답 ②는 의미상 유일하게 옹호 가능하나, 선지에 포함된 'rather than merely observing fictional portrayals'가 스템 고정부 'not just fictional characters in a movie'와 대비 내용을 중복해 완성 문장이 'X rather than Y, not just Y2' 형태의 이중 대비가 되는 seam 품질 결함이 있다. 출제 시 선지를 'witness authentic individuals'까지로 줄이거나 스템 꼬리부를 제거하는 것이 바람직. 최상위권 수험생 렌즈에서 ⑤가 지문 어휘 재활용으로 가장 유혹적이었으나 꼬리부 대비 검사로 배제 가능."
+}

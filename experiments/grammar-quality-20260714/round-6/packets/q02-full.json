@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-semantic-who-what-answerx1",
+    "grammar-decoy-filler-spanx1"
+  ],
+  "layout": "(A):dec=c  (B):dec=b  (C):dec=c  (D):ANS=a  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 225,
+        "relPos": 0.28,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 323,
+        "relPos": 0.401,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 540,
+        "relPos": 0.671,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 608,
+        "relPos": 0.755,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 731,
+        "relPos": 0.908,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.908,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "suffering",
+        "isError": false,
+        "correction": "suffering",
+        "errorExpression": "suffering",
+        "surroundingText": "In this situation, we are suffering from reading-induced loneliness.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "who",
+        "isError": false,
+        "correction": "who",
+        "errorExpression": "who",
+        "surroundingText": "the company of other people who are reading - whether in a public space",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "immersed",
+        "isError": false,
+        "correction": "immersed",
+        "errorExpression": "immersed",
+        "surroundingText": "you'll see someone else similarly immersed, and you won't feel alone",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "Consider",
+        "isError": true,
+        "correction": "Consider",
+        "errorExpression": "Considering",
+        "surroundingText": "Consider joining a reading group in which everybody takes turns reading aloud",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is",
+        "errorExpression": "is",
+        "surroundingText": "Reading a book collaboratively is a wonderful way to share an otherwise",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "suffering"
+      },
+      {
+        "label": "(B)",
+        "text": "who"
+      },
+      {
+        "label": "(C)",
+        "text": "immersed"
+      },
+      {
+        "label": "(D)",
+        "text": "Considering"
+      },
+      {
+        "label": "(E)",
+        "text": "is"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 주어가 suffering의 행위자이며 'suffering from'이 능동 진행형을 구성하므로 현재분사 'suffering'은 어법상 옳습니다.",
+      "(B)": "선행사인 'other people'을 수식하며, 뒤이어 주어가 빠진 불완전한 절('are reading')이 오므로 주격 관계대명사 'who'는 어법상 옳습니다.",
+      "(C)": "지각동사 'see'의 목적격 보어 자리에서 'someone else'가 '그 몰입된 상태'를 당하는 대상이므로 수동의 과거분사 'immersed'가 오는 것이 어법상 옳습니다.",
+      "(E)": "동명사구 주어 'Reading a book collaboratively'는 단수 취급하므로 단수 동사 'is'는 수일치상 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 전체적으로 독자들에게 행동을 권유하는 명령문의 골격을 가지고 있습니다. 수식어구인 'in which'절을 걷어내면 본동사가 와야 할 자리에 준동사인 '(D) Considering'이 위치해 문장의 주절을 이끌 정동사가 없으므로 비문이 됩니다. 따라서 이를 동사원형 형태의 명령문인 'Consider'로 고쳐야 합니다. 뒤따라 나오는 동사인 'takes'는 관계사절의 동사이므로 주절의 본동사 역할을 할 수 없음을 명심해야 합니다.",
+    "keyPoints": [
+      "(D) 정동사 vs 준동사 — 주절을 완결할 정동사의 필요성 판단",
+      "(C) 분사의 능수동 — 지각동사 목적격 보어 뒤 대상의 관계 분석",
+      "(E) 주어-동사 수일치 — 동명사구 주어의 단수 취급 원칙"
+    ],
+    "tags": [
+      "정준동사",
+      "분사",
+      "수일치",
+      "어법"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are __(A) suffering__ from reading-induced loneliness. The solution is to read in the company of other people __(B) who__ are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly __(C) immersed__, and you won't feel alone at all. Reading can be sociable. __(D) Considering__ joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively __(E) is__ a wonderful way to share an otherwise internal and solitary experience.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

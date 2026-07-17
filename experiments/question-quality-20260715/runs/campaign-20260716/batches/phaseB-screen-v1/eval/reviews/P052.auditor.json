@@ -1,0 +1,81 @@
+{
+  "pid": "P052",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-NONWORD",
+      "severity": "major",
+      "evidence": "오답 해설 ④에 '길뚱거리며 서성거린'이라는 표현이 있으나 '길뚱거리다'는 한국어에 존재하지 않는 비단어(손상 어휘)다. 학생 노출 해설에 생성 손상 어휘가 그대로 남아 있다."
+    },
+    {
+      "code": "V4-WRONG-TERM",
+      "severity": "minor",
+      "evidence": "keyPoints 첫 항목의 '실제 교통 규격(차량 주정차 금지)'에서 '규격'은 '규제'의 오용이다. 규격(specification)은 문맥상 성립하지 않는 손상 용어다."
+    },
+    {
+      "code": "V4-MUDDLED-LOGIC",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤는 '차량의 속도를 줄여 정차하는 것은 … 표지판의 실제 의미(Stop to pick up)에 해당'이라고 서술하나, 본문의 실제 의미는 '주차 금지, 승객 픽업 정차는 허용'이므로 선지 ⑤(감속 금지)가 실제 의미에 '해당'한다는 프레이밍은 반사실적이다. 또한 '주체가 차량이 아닌 보행자여야 하므로 주체적 논리에 어긋납니다'는 '~하므로'가 중복된 비문에 가까운 어색한 문장이다."
+    },
+    {
+      "code": "C4-CLUE-LEAK",
+      "severity": "major",
+      "evidence": "(공예 결함, V 아님) 빈칸 처리된 원문 span 'stand there'가 바로 다음 대사 'Of course you can stand there'와 'the sign says No Standing'에 축자적으로 재진술된다. 정답이 인접 문장 한 개의 축자 단서로 즉시 복원되어 KILLER 요구 사고 단계가 성립하지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "scope shift — '허용되지 않는다(aren't allowed)'를 법적/행정적 허가 절차로 확장",
+      "temptingBecause": "빈칸 직전의 'aren't allowed to'가 허가(permission) 프레임을 연상시킴",
+      "decisiveFlaw": "본문에 허가 취득 절차가 전혀 없고, 캐롤의 오해는 '서 있기'라는 신체 행위에 대한 것임. 후속 대화 'you can stand there'와 정합하지 않음"
+    },
+    {
+      "label": "②",
+      "intent": "무관 사회 규범(안전 거리) 미끼 — 사실상 source anchor 없는 필러",
+      "temptingBecause": "공공장소 행동 규제라는 표면적 분위기 유사성뿐",
+      "decisiveFlaw": "낯선 사람·거리 개념이 본문에 전무하며, 캐롤이 표지판에서 물러나 서성인 행동을 전혀 설명하지 못함"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'stand there'의 추상화(remain bodily stationary at that specific spot)",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 직후 대화의 'stand there'/'No Standing' 재진술로 유일 정답이 확정됨"
+    },
+    {
+      "label": "④",
+      "intent": "actor/action swap — 'walking back and forth on the street'를 무단횡단·교통 방해로 치환",
+      "temptingBecause": "street·traffic 심상이 본문 표현과 어휘적으로 겹침",
+      "decisiveFlaw": "캐롤이 설명한 것은 표지판의 '서 있기 금지' 오해이지 횡단·교통 방해가 아님. 후속 대화가 'stand'로 즉시 반증"
+    },
+    {
+      "label": "⑤",
+      "intent": "half-truth/actor swap — 표지판의 실제(차량) 의미 영역에서 끌어온 미끼",
+      "temptingBecause": "친구의 결말 대사가 차량 주정차를 언급하므로 차량 프레임이 그럴듯함",
+      "decisiveFlaw": "빈칸 문장은 캐롤의 (보행자) 오해 내용을 서술하는 자리이며, 본문상 승객 픽업 정차는 오히려 허용되므로 감속 금지는 실제 의미와도 모순"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ④의 '길뚱거리며'는 비단어(존재하지 않는 어휘)",
+    "keyPoints의 '교통 규격'은 '교통 규제'의 손상 표기",
+    "오답 해설 ⑤의 실제 의미 '해당' 프레이밍이 본문(픽업 정차 허용)과 어긋나고 '~하므로' 중복으로 문장이 비문에 가까움",
+    "정답 해설이 장황하며(한 문장 3행 이상) 근거와 함정 분리가 둔함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 통과: 렌더 무결, 정답 ③ 유일(5개 선지 모두 동일 통사 슬롯의 VP로 문법 탈락 없음), 완성문 문법적(단 서사체 일화에 'remain bodily stationary at that specific spot'는 극단적 register 상승), 필드 동기화 정상. V4 실패: 학생 노출 해설의 비단어 '길뚱거리며', keyPoints의 손상 용어 '교통 규격', ⑤ 해설의 반사실적 프레이밍. 공예적으로는 KILLER 요청과의 괴리가 치명적: 빈칸 span 'stand there'가 바로 다음 대사에 축자 재진술되어(C4=1) 단일 단서 1단계 매칭으로 풀리며(C3=1, C5=0), §D KILLER 조건(두 문장/두 논리 단서 연결 필수, 단일 단서 지목 불가) 명백 위반. ② 선지는 source anchor 부재 필러로 §D 오답 3요소 조건도 미충족. killerConditionsMet=false. 등급 F(V4 실패; 공예로 상쇄 불가). 출하하려면 (1) 해설 어휘 손상 교정, (2) 빈칸 위치를 대사 재진술이 없는 지점으로 재설계하거나 후속 대화를 우회 표현으로 바꾸는 근본 재설계가 필요."
+}

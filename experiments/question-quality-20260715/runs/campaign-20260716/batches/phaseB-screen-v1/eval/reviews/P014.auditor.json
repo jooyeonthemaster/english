@@ -1,0 +1,82 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-COMPLEMENT-MISPARSE",
+      "severity": "critical",
+      "evidence": "해설: \"보어 자리에 복수 요소인 'its interactive nature and this interactivity'가 병렬되어 오더라도 주어절 자체의 단수 처리는 변하지 않습니다.\" 실제 문장 'What is new about cyberspace is its interactive nature and this interactivity has made it a psychological reality...'에서 and는 두 개의 독립절을 접속하며 'this interactivity'는 두 번째 절의 주어다('this interactivity has made...'). 보어 병렬로 읽으면 has made가 주어를 잃어 비문이 되므로 이 병렬 구조는 존재하지 않는다. 학생 대상 해설에 실제 문장에 없는 통사 구조를 지목한 오분석."
+    },
+    {
+      "code": "V4-RULE-POSITION-MISMATCH",
+      "severity": "major",
+      "evidence": "해설: \"문장의 주어는 명사절인 'What is new about cyberspace'입니다. ... 명사절이 주어로 쓰일 때는 원칙적으로 단수 취급합니다. 따라서 복수형 동사 'are'는 이 자리에 올 수 없으며\". 밑줄 친 are는 명사절 내부의 동사(what절 내 주어 what에 일치)이고, '명사절 주어의 단수 취급' 규칙이 지배하는 것은 주절 동사(두 번째 is)다. 교정(are→is)과 정답 라벨은 옳지만 인용된 규칙이 오류 위치와 어긋나는 근거 오적용. keyPoints의 '(B) 명사절 주어의 단수 취급 일치'도 같은 프레이밍을 반복한다."
+    },
+    {
+      "code": "V5-MARKED-EXPR-SOURCE-FORM",
+      "severity": "minor",
+      "evidence": "markedExpressions (B)의 surroundingText가 렌더형('What are new...')이 아닌 원문형('What is new...')이고, expression='is'(교정형)·errorExpression='are'(표시형)로 비오류 항목들(expression==errorExpression==표시형)과 필드 규약이 비대칭. 렌더 지문 자체는 정상이고 정답 라벨·해설·keyPoints 간 모순은 없어 V5 실패로는 판정하지 않음."
+    },
+    {
+      "code": "C5-DIFFICULTY-MISMATCH",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER 대비 실제 정답 포인트는 'what절 동사의 단수 취급'이라는 최다 훈련 정형 포인트로, 통제어 what이 밑줄에 인접하고 3어절 뒤 주절 is와의 대비('What are ... is ...')로 즉시 노출된다. 유효성 실패는 아니나 난이도 계약 위반."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 후치수식 분사의 태 판단(수동 과거분사 vs 능동 현재분사)",
+      "temptingBecause": "'a kind and magnitude not seen before'에서 부정어+분사가 선행 명사구와 떨어져 보여 seeing/seen 태 판단을 유도한다.",
+      "decisiveFlaw": "events는 목격되는 대상이므로 수동 과거분사 not seen이 적법 — 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "자유관계절(what절) 내부 동사의 수일치 — what은 절 내 주어로 단수 취급",
+      "temptingBecause": "뒤따르는 'its interactive nature and this interactivity'가 표면상 복수 병렬처럼 보여 복수 일치 are를 정당화하는 듯한 착시를 준다.",
+      "decisiveFlaw": "절 내 주어 what은 단수 취급이며 주절 보어도 단수('its interactive nature')이므로 복수 일치를 지지할 대안 분석이 없다. are→is 교정 시 정확히 원문 복원 — 유일한 정답."
+    },
+    {
+      "label": "(C)",
+      "intent": "단수 주어 this interactivity에 대한 수일치·현재완료 시제 판단",
+      "temptingBecause": "앞 절과 and로 이어져 주어 경계가 흐려 보이고, interactivity 앞의 복수 명사들(characters, events 등)이 시야에 남아 복수 일치 착각을 유도한다.",
+      "decisiveFlaw": "주어는 단수 this interactivity이므로 has made가 적법 — 오류 아님. 정답 (B)와 같은 수일치 계열의 쉬운 디코이."
+    },
+    {
+      "label": "(D)",
+      "intent": "관계부사 where vs 관계대명사 which — 후속절 완전성 판정",
+      "temptingBecause": "선행사 a space 뒤 where/which 선택은 고빈도 함정 자리로, 절 완전성을 실제로 세어야 한다.",
+      "decisiveFlaw": "후속절이 주어(real people)·동사(have)·목적어(actual interactions)를 갖춘 완전절이므로 관계부사 where가 적법 — 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "접속사를 유지한 분사구문의 의미상 주어·태 판단",
+      "temptingBecause": "'while being able to'가 축약 가능해 보이거나 being의 잉여성 시비를 유도한다.",
+      "decisiveFlaw": "의미상 주어 real people이 능동 상태이므로 while being이 적법 — 오류 아님."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 'its interactive nature and this interactivity'를 보어 자리의 복수 병렬로 오분석 — 실제로는 절 접속이며 this interactivity는 has made의 주어(critical).",
+    "'명사절 주어 단수 취급' 규칙을 명사절 내부 동사 자리에 오적용 — 밑줄 are의 올바른 근거는 절 내 주어 what에 대한 단수 일치(major).",
+    "keyPoints (B) '명사절 주어의 단수 취급 일치'가 동일한 오프레이밍을 반복(minor).",
+    "(C) 오답 해설의 '주어 head' 등 용어 혼용과 정답 해설의 경어체/평서체 혼재(minor).",
+    "오답 해설 (A)(C)(D)(E)는 각 선지의 실제 내용과 대응하며 사실 오류 없음."
+    ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 의도된 is→are 변형 외 무손상이고, 5개 밑줄 독립 검증 결과 정답 집합은 정확히 {(B)}이며 교정 시 원문이 정확히 복원되는 최소대립쌍이다. 그러나 V4 실패: 정답 해설이 존재하지 않는 보어 병렬 구조를 지목하고(critical), 수일치 규칙을 오류 위치와 다른 자리에 적용한다. KILLER 조건 미충족: 정답이 통제어 인접·정형화된 'what 단수 취급' 포인트로 즉시 드러나 '구조를 읽어야 하며 단순 수일치로 즉시 드러나지 않는다' 조건 위반이고, 밑줄별 명시적 why-tempting 문서화도 부재하며, C5=1로 난이도 계약도 미달. 처방: (1) 해설의 보어 병렬 주장 삭제 및 '절 내 주어 what 단수 일치'로 근거 재작성, (2) KILLER 등급 유지하려면 정답 포인트를 구조 독해형(예: 도치·원거리 일치·병렬 축)으로 재설계 필요. V4 해설 오류는 공예 점수로 상쇄되지 않으므로 F."
+}

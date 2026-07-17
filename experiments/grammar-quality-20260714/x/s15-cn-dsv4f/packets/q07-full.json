@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-error-not-mutated",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=a  (C):ANS=d  (D):dec=k  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 43,
+        "relPos": 0.062,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 240,
+        "relPos": 0.348,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 620,
+        "relPos": 0.9,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 655,
+        "relPos": 0.951,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.951,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "noticing",
+        "isError": false,
+        "errorExpression": "noticing",
+        "surroundingText": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "were predicting",
+        "isError": false,
+        "errorExpression": "were predicting",
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "hadn't changed",
+        "isError": true,
+        "errorExpression": "hadn't changed",
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment, and as long as the noise hadn't changed you paid it no attention.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "to call",
+        "isError": false,
+        "errorExpression": "to call",
+        "surroundingText": "They tended to call the police in the middle of the night claiming that something woke them up.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "used",
+        "isError": false,
+        "errorExpression": "used",
+        "surroundingText": "They tended to call around the time the trains used to run past their apartments.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "noticing"
+      },
+      {
+        "label": "(B)",
+        "text": "were predicting"
+      },
+      {
+        "label": "(C)",
+        "text": "hadn't changed"
+      },
+      {
+        "label": "(D)",
+        "text": "to call"
+      },
+      {
+        "label": "(E)",
+        "text": "used"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'the experience of ~ing'에서 of는 전치사이므로 뒤에 동명사 noticing이 와야 한다. 'noticing'은 동명사로 올바르게 사용되었다.",
+      "(B)": "'Your auditory areas'는 복수 주어이므로 were predicting이 쓰였으며, 과거 시점에서 진행 중이던 동작을 나타내기에 과거진행 시제가 적절하다.",
+      "(D)": "'tend to + 동사원형'은 '~하는 경향이 있다'는 관용 표현으로, to call은 올바른 형태이다. 주어 They(사람)가 경찰에 전화하는 행위를 나타낸다.",
+      "(E)": "'the trains used to run'에서 used to는 '과거에 ~하곤 했다'는 조동사로, 뒤에 동사원형 run이 와야 한다. 전체적으로 문법에 맞다."
+    },
+    "explanation": "정답은 (C)이다. (C) 'hadn't changed'가 속한 문장은 'as long as the noise didn't change you paid it no attention'이어야 한다. 'as long as'는 조건의 부사절을 이끌며, 과거 사실을 조건으로 할 때는 과거 시제(didn't change)가 쓰여야 한다. 과거완료(hadn't changed)는 이 문맥에서 불필요하며 시제 일치를 깨뜨려 비문이 된다. 따라서 'hadn't changed'를 'didn't change'로 고쳐야 한다. (A)는 동명사, (B)는 과거진행 시제와 수일치, (D)는 'tend to + 동사원형' 구문, (E)는 'used to + 동사원형' 구문으로 모두 올바르다.",
+    "keyPoints": [
+      "(C) 조건 부사절에서 과거 시제와 과거완료의 구분 — as long as 뒤에 과거 사실 조건은 과거 시제 사용",
+      "(A) 전치사 of 뒤에 오는 동명사와 to부정사의 구분 — of는 동명사만 허용",
+      "(E) 조동사 used to와 동사원형의 결합 — used to 다음에는 항상 동사원형"
+    ],
+    "tags": [
+      "시제 일치",
+      "조건 부사절",
+      "동명사 vs to부정사",
+      "used to",
+      "과거진행"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly __(A) noticing__ that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas __(B) were predicting__ its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended __(D) to call__ around the time the trains __(E) used__ to run past their apartments."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P027",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "Enforcing uniform standards of behavior — 지문은 감정 표현의 다양성과 타인 관점 이해를 통한 '열린 소통'을 말하는데, 획일적 행동 기준의 강제는 오히려 그 반대 방향이다. 'creates an arena for open communication'과 의미 충돌. 문법 결합(동명사구 주어 + creates)은 성립하나 논리적으로 배제."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "A simple increase in vocabulary size — 지문 첫 문장의 'a diverse emotion vocabulary'를 낚싯바늘로 쓴 매력적 오답. 실제로 잠깐 끌렸음: 어휘가 언급되긴 하나, 지문에서 어휘는 '감정 이해 능력'의 한 구성요소일 뿐이고, 빈칸 직전 두 문장은 (a) 자기 감정을 이유와 함께 표현하기, (b) 타인의 관점 취하기를 요약해야 한다. 'simple increase in vocabulary size'는 이 요약을 담지 못하며 'simple'이라는 축소 표현이 지문의 다면적 능력과 어긋난다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "Avoiding any potential group conflicts — 글의 소재가 'group conflict situation'이라 순간 끌리지만, 빈칸 뒤가 'promotes constructive conflict resolution'이다. 갈등을 회피(avoid)하는 것이 아니라 갈등을 건설적으로 '해결'하는 것이 핵심이므로 정면 모순. 회피했다면 resolution 자체가 필요 없다."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "Recognizing and valuing diverse views — 빈칸 직전 두 문장(자기 감정·이유의 표현 + 'take the perspective of the other group members and understand why they are reacting in a certain manner')을 요약하는 지시적 주어 역할. 자신과 타인의 서로 다른 관점을 인식·존중하는 것이 열린 소통의 장을 만들고 건설적 갈등 해결로 이어진다는 결론 문장과 논리적으로 정합. 동명사구 주어 + 단수동사 creates 결합도 자연스러움."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Prioritizing individual over group goals — 지문은 'accommodate their own needs as well as the needs of others (i.e. cooperate)'로 자기+타인 요구의 동시 수용(협력)을 강조한다. 개인 목표를 집단 목표보다 우선시하는 것은 협력·집단 기능 향상과 정면 배치."
+    }
+  ],
+  "note": "실전 풀이 순서: 빈칸 문장이 결론 요약문(This/…creates an arena…) 구조임을 파악 → 직전 두 문장의 (자기 감정 표현 + 타인 관점 이해)를 포괄하는 선지 탐색. ②(어휘 언급 낚시)와 ③(갈등 소재 낚시)이 매력적 오답으로 기능하나 각각 축소 왜곡·정면 모순으로 배제 가능. 유일 정답 ④, 복수 정답 소지 없음."
+}

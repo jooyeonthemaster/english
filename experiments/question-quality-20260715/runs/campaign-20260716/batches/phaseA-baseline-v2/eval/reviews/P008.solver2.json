@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'expressing anger'는 동명사구 주어(단수 취급)로 'helps'와 수 일치가 성립한다. 문장은 'Fear has helped..., expressing anger helps..., and expressing positive emotions helps...'의 3개 절 병렬 목록이며, 세 번째 절의 'expressing positive emotions'와 형태 병렬도 완벽하다. 뒤에 정형동사 helps가 있으므로 분사구문 오독 여지도 없고 동명사 주어 해석에서 정문이다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'helps us bond with others'는 help + 목적어 + 원형부정사 구조로 표준 용법이다(help us (to) bond 모두 허용). 어법상 문제 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "관계대명사 that의 선행사는 단수 명사구 'a kind of \"program\"'(핵 program/kind 모두 단수)이고, 관계절 내에서 that이 주어, 'many of our activities'가 목적어이므로 정형동사는 3인칭 단수 'directs'여야 한다. 구제 해석 전수 탐색: direct를 형용사로 읽으면 관계절에 동사가 없어 비문; 선행사를 activities로 볼 수 없음(activities는 direct의 목적어); 원형을 허가할 사역/조동사 부재; 가정법·명령문 해석 불가. 어떤 대안 해석으로도 정문이 되지 않는 주어-동사 수 일치 위반."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the specific ways in which they activate our systems'에서 관계절 내부가 완전한 절(주어 they + 타동사 activate + 목적어 our systems)이므로 전치사+관계대명사 'in which'(= they activate our systems in ways)가 정확히 요구되는 형태다. 표준 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'have helped us (as a species) survive challenges'는 (B)와 동일한 help + 목적어 + 원형부정사 구조. 삽입구 '(as a species)'는 통사 구조에 영향을 주지 않는다. 정문."
+    }
+  ],
+  "note": "정답은 (C) 유일. 단수 선행사 'a kind of program'을 받는 관계절 동사 direct의 수 일치 오류로, 삽입구 'when triggered'가 주어-동사 거리를 벌리는 전형적 장거리 단서형 문항. 나머지 4개 밑줄은 모든 대안 해석에서 정문으로 확인되어 복수 정답 여지 없음."
+}

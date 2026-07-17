@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "auditDateKst": "2026-07-15",
+  "safety": {
+    "modelApiCalls": 0,
+    "browserCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "productionEdits": 0
+  },
+  "provenance": {
+    "auditScriptSha256": "ce783efe30a9246f3a21cae532a871bf36f5cf3398c368c87a8c50f8873f2380",
+    "sourceSha256": {
+      "src/lib/question-quality/core.ts": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+      "src/lib/question-quality/dispatcher.ts": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "src/lib/question-quality/validators/sentence-order.ts": "a1f1d5fe1473468b93c3f83242f2dfd3feca8a8e1bec561060e5dbec4d806624",
+      "src/lib/question-quality/validators/summary/mc.ts": "edd4d215754fdcd5bca6a47faa4c7222ef4b0692c7a547170eb2b53001e7fa72",
+      "src/lib/question-quality/validators/blank/inference.ts": "ab2295cc927d814a27bf90fa1144ddc9ea9775a39e717e8d1e14fd5dde8bb5d1",
+      "src/lib/question-quality/validators/grammar/shared.ts": "862b91fc3a54e9b735ee21785127de7efc6a27ec4296e3ab094f58c916cf1c26",
+      "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts": "a672875d20315667b7a662737930f63c76328136656bbb635c014d5f1ed24bff",
+      "tests/unit/sentence-order-quality.test.mjs": "bc8ac1a6336dcf95ec55d9ea5a98b32d2e7b18a440ab596e3513b360c0fab8a5",
+      "tests/unit/summary-mc-direction-split.test.mjs": "cff74fe2cd77572f4f78a9bef200e3ccd590e46c9d1511b6368fd395b7846cf6",
+      "tests/unit/blank-explanation-step-numbering.test.mjs": "7d13290ba04b4a7e2187b84f0b4a61b67bea1ea0f9b86778aebdae469379c503",
+      "tests/unit/question-validity-invariants.test.mjs": "93a145aa8e087a89f025aff43004c3418c10beb192091a9b3716c64c81dfde65",
+      "tests/unit/grammar-keypoint-core10.test.mjs": "9de8f8d066043e62cca9025d61a6f3c3ca33ae1869b79a165a176444a07d8383",
+      "tests/unit/summary-mc-collocation-severity-split.test.mjs": "ab31728cff85f05c7e8b55951699abbf387f1d39e9716c8cd3d3acc5d9c3c20a"
+    }
+  },
+  "policy": {
+    "fatalCodes": [
+      "sentence-order-empty-paragraph",
+      "sentence-order-given-contains-paragraph-label",
+      "summary-mc-missing-direction",
+      "summary-mc-direction-task-mismatch",
+      "blank-explanation-narrative-circled-numbering",
+      "blank-paraphrase-correct-residual-visible",
+      "grammar-keypoint-nonexistent-label",
+      "grammar-terminology-error",
+      "summary-mc-correct-completion-ungrammatical"
+    ],
+    "craftCodes": [
+      "sentence-order-given-too-long",
+      "sentence-order-paragraph-too-short",
+      "sentence-order-paragraph-too-thin",
+      "summary-mc-direction-frame",
+      "blank-explanation-step-numbering",
+      "grammar-keypoint-choice-mismatch",
+      "grammar-terminology-register",
+      "summary-mc-awkward-collocation"
+    ],
+    "map": {
+      "sentence-order-empty-paragraph": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "sentence-order-given-contains-paragraph-label": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "summary-mc-missing-direction": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "summary-mc-direction-task-mismatch": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "blank-explanation-narrative-circled-numbering": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "blank-paraphrase-correct-residual-visible": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "grammar-keypoint-nonexistent-label": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "grammar-terminology-error": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "summary-mc-correct-completion-ungrammatical": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": false,
+        "shipFirstWarning": false
+      },
+      "sentence-order-given-too-long": {
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "shipFirstWarning": true
+      },
+      "sentence-order-paragraph-too-short": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "shipFirstWarning": false
+      },
+      "sentence-order-paragraph-too-thin": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "shipFirstWarning": false
+      },
+      "summary-mc-direction-frame": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "shipFirstWarning": false
+      },
+      "blank-explanation-step-numbering": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "shipFirstWarning": false
+      },
+      "grammar-keypoint-choice-mismatch": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "shipFirstWarning": false
+      },
+      "grammar-terminology-register": {
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "shipFirstWarning": false
+      },
+      "summary-mc-awkward-collocation": {
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "shipFirstWarning": true
+      }
+    },
+    "fatalPolicyViolations": [],
+    "legacyTerminologyCodePresentInAnyPolicy": false
+  },
+  "observations": {
+    "sentenceOrder": {
+      "whitespaceEmpty": [
+        {
+          "code": "sentence-order-empty-paragraph",
+          "severity": "error"
+        },
+        {
+          "code": "sentence-order-paragraph-too-short",
+          "severity": "error"
+        },
+        {
+          "code": "sentence-order-paragraph-too-thin",
+          "severity": "error"
+        }
+      ],
+      "zeroWidthEmpty": [
+        {
+          "code": "sentence-order-paragraph-too-short",
+          "severity": "error"
+        },
+        {
+          "code": "sentence-order-paragraph-too-thin",
+          "severity": "error"
+        }
+      ],
+      "uppercaseGivenLabel": [
+        {
+          "code": "sentence-order-given-contains-paragraph-label",
+          "severity": "error"
+        }
+      ],
+      "lowercaseGivenLabel": []
+    },
+    "summaryDirection": {
+      "missing": [
+        {
+          "code": "summary-mc-missing-direction",
+          "severity": "error"
+        }
+      ],
+      "competingGrammarTask": [
+        {
+          "code": "summary-mc-direction-task-mismatch",
+          "severity": "error"
+        }
+      ],
+      "canonical": [],
+      "validGrammarConstraint": [
+        {
+          "code": "summary-mc-direction-task-mismatch",
+          "severity": "error"
+        }
+      ],
+      "competingBlankInferenceTask": [
+        {
+          "code": "summary-mc-direction-frame",
+          "severity": "warning"
+        }
+      ]
+    },
+    "blankExplanationNumbering": {
+      "intendedNarrativePositive": [
+        {
+          "code": "blank-explanation-step-numbering",
+          "severity": "warning"
+        },
+        {
+          "code": "blank-explanation-narrative-circled-numbering",
+          "severity": "error"
+        }
+      ],
+      "legitimateOptionReview": [
+        {
+          "code": "blank-explanation-step-numbering",
+          "severity": "warning"
+        },
+        {
+          "code": "blank-explanation-narrative-circled-numbering",
+          "severity": "error"
+        }
+      ],
+      "fragmentNarrativeWithoutBoundaries": [],
+      "terseOptionVerdicts": []
+    },
+    "blankParaphraseResidual": {
+      "exactVisible": [
+        {
+          "code": "blank-paraphrase-correct-residual-visible",
+          "severity": "error"
+        }
+      ],
+      "substringOnlyPublicArticle": [
+        {
+          "code": "blank-paraphrase-correct-residual-visible",
+          "severity": "error"
+        }
+      ],
+      "punctuationVariantVisible": []
+    },
+    "grammarGhostLabel": {
+      "plainGhost": "Grammar keyPoint 1 references f, but that label is not an underlined choice in the rendered item. Remove the ghost reference or anchor it to a real choice.",
+      "bulletPrefixedGhost": null,
+      "numberedPrefixedGhost": null,
+      "bulletPrefixedCraftFallback": "Grammar keyPoints are not grounded in this item's actual choices: keyPoint 1 does not start with an underline label — every key point must be anchored to an actual choice like \"(D) ...\". Rewrite exactly 3 key points, each starting with a real underline label, the first covering the answer."
+    },
+    "grammarTerminology": {
+      "incorrectTerm": "Grammar explanation/keyPoints uses an incorrect grammar term ('전사구'); replace it with the correct school-grammar term: '전사구'→'전치사구(전치사+명사)'.",
+      "specialistRegister": "Grammar explanation/keyPoints uses specialist register ('계사'); prefer student-facing school-grammar wording: '계사'→'be동사/연결동사'.",
+      "relationshipNearNegative": null,
+      "accountantLexicalFalsePositive": "Grammar explanation/keyPoints uses specialist register ('계사'); prefer student-facing school-grammar wording: '계사'→'be동사/연결동사'."
+    },
+    "summaryCompletionGrammar": {
+      "malformedGerund": "equity to learning",
+      "validInfinitiveLearn": null,
+      "validInfinitiveSpring": "opportunity to spring",
+      "validInfinitiveBring": "responsibility to bring",
+      "broadCraftNestedNounPhrase": "question of access to learning"
+    }
+  }
+}
+

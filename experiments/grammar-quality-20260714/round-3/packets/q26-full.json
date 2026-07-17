@@ -1,0 +1,186 @@
+{
+  "passageId": "ebsi_go3_20260507-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2026,
+    "exam": "5월",
+    "origType": "주장",
+    "words": 158
+  },
+  "attempts": 6,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-obvious-noun-what-relative",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-obvious-noun-what-relativex2",
+    "grammar-answer-nonword-forcedx1",
+    "grammar-explanation-lintx1",
+    "grammar-obvious-modal-gerundx1",
+    "grammar-obvious-double-ingx1"
+  ],
+  "layout": "(A):dec=k  (B):dec=c  (C):ANS=b  (D):dec=f  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 71,
+        "relPos": 0.08,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 257,
+        "relPos": 0.288,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 301,
+        "relPos": 0.338,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 581,
+        "relPos": 0.652,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 661,
+        "relPos": 0.742,
+        "sentenceIndex": 3,
+        "found": true
+      }
+    ],
+    "sentenceCount": 5,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.742,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Giving kids an edible treat that you know they love after a tricky day to cheer them up or soothe them can be tempting but I advise you not to. When we try to comfort a child with food rather than attend to their physical and emotional needs, we leave them feeling not understood. Instead of learning that they'll receive appropriate comfort and attention, they receive the message that their needs can't or won't be met appropriately. Consequently, they understand one of the following: that their needs are not valid; that they are too much for their parent; that they are being silly; that next time they should keep quiet; or that they need to shout louder to be heard. If, after tending to your child's emotional and physical wounds you want to offer some chocolate, ice cream or a trip to a fast-food restaurant, that is, of course completely fine -but it must not replace the nurture.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "to cheer",
+        "isError": false,
+        "errorExpression": "to cheer",
+        "surroundingText": "edible treat that you know they love after a tricky day to cheer them up or soothe them can",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "feeling",
+        "isError": false,
+        "errorExpression": "feeling",
+        "surroundingText": "attend to their physical and emotional needs, we leave them feeling not understood. Instead of",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "that",
+        "isError": true,
+        "correction": "that",
+        "errorExpression": "what",
+        "surroundingText": "comfort and attention, they receive the message that their needs can't or won't be met appropriately.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "silly",
+        "isError": false,
+        "errorExpression": "silly",
+        "surroundingText": "that they are too much for their parent; that they are being silly; that next time they",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "to be heard",
+        "isError": false,
+        "errorExpression": "to be heard",
+        "surroundingText": "keep quiet; or that they need to shout louder to be heard. If, after tending to your",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "to cheer"
+      },
+      {
+        "label": "(B)",
+        "text": "feeling"
+      },
+      {
+        "label": "(C)",
+        "text": "what"
+      },
+      {
+        "label": "(D)",
+        "text": "silly"
+      },
+      {
+        "label": "(E)",
+        "text": "to be heard"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 아이들을 달래기 위한 목적을 나타내는 부사적 용법의 to부정사 자리이므로 준동사 'to cheer'는 어법상 옳습니다.",
+      "(B)": "5형식 동사 leave 뒤에서 목적어(them)의 상태를 능동·진행으로 서설하는 목적격보어 역할을 하므로 현재분사 'feeling'은 어법상 옳습니다.",
+      "(D)": "진행형 be동사인 are being 뒤에서 주격보어 역할을 하는 형용사로 쓰였으므로 'silly'는 어법상 옳습니다.",
+      "(E)": "의미상 주어인 they가 다른 사람들에 의해 '들리는' 수동의 대상이므로 수동태 부정사 'to be heard'는 어법상 옳습니다."
+    },
+    "explanation": "(C) \"what\"는 어법상 틀린 표현이며 \"that\"로 고쳐야 한다. 문장의 뼈대는 그들이 메시지(the message)를 받는다는 구조이며, 뒤의 절은 완전한 구조를 갖추고 메시지의 구체적 내용을 보충하는 동격절입니다. 따라서 (C) 자리에는 수동태 절(their needs can't or won't be met appropriately)로 완전히 성분 복구가 끝난 문장을 이끌고 명사 message를 꾸미는 동격의 접속사 'that'이 와야 합니다. 관계대명사이자 명사절을 이끄는 'what'은 뒤에 필수 성분이 빠진 불완전한 절이 와야 하므로 이 자리에 올 수 없습니다. 문맥상 message라는 명사 선행사가 바로 존재하므로 관계대명사/명사절 what은 명백히 오답입니다.",
+    "keyPoints": [
+      "(C) 관계사 — 완전한 동격절을 이끄는 접속사 that vs 불완전한 절의 what",
+      "(B) 분사 능수동 — 5형식 leave 목적어 OC 구조에서 수식을 받는 목적어의 주체적 감정 상태",
+      "(E) 능소동태 — '목소리가 들리다'라는 의미상의 수동 관계를 나타내는 수동형 to부정사"
+    ],
+    "tags": [
+      "명사절",
+      "동격",
+      "부정사",
+      "분사",
+      "수동태"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Giving kids an edible treat that you know they love after a tricky day __(A) to cheer__ them up or soothe them can be tempting but I advise you not to. When we try to comfort a child with food rather than attend to their physical and emotional needs, we leave them __(B) feeling__ not understood. Instead of learning that they'll receive appropriate comfort and attention, they receive the message __(C) what__ their needs can't or won't be met appropriately. Consequently, they understand one of the following: that their needs are not valid; that they are too much for their parent; that they are being __(D) silly__; that next time they should keep quiet; or that they need to shout louder __(E) to be heard__. If, after tending to your child's emotional and physical wounds you want to offer some chocolate, ice cream or a trip to a fast-food restaurant, that is, of course completely fine -but it must not replace the nurture.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-explanation-lint",
+        "message": "explanation: 어투 혼용 — 첫 문장이 해라체(\"(C) \"what\"는 어법상 틀린 표현이며 \"that\"로 고쳐야 한다.\")로 끝나는데 같은 필드에 합니다체 문장이 섞여 있습니다. 전체를 합니다체로 통일하세요."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-obvious-noun-what-relative",
+        "message": "INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+      }
+    ],
+    "_qualityMode": "relaxed",
+    "_reviewRecommended": true,
+    "_generationNotice": "여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — 일부 포인트가 평이할 수 있음. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "pid": "P027",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-META-MINOR",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression 필드와 surroundingText('...heads telling us about the insight.')가 렌더된 형태(to tell)가 아닌 원문/교정형(telling)을 담고 있다. 학생 노출 필드(지문·선택지·정답·해설·keyPoints)는 모두 동기화되어 있어 V5 실패는 아니지만, 구조 메타데이터 규약이 (A)-(D)(표시형=expression)와 (E)(원문형=expression)에서 비일관적이다."
+    },
+    {
+      "code": "V4-HEAD-ATTACH-MINOR",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 분사 coming의 피수식어를 'remote associations'로 지목하나 통사적으로는 'the stream (of remote associations)'이 머리명사일 가능성이 더 높다. 두 해석 모두 능동 현재분사 판정에는 영향이 없어 사실성 실패는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사구 후치수식 분사의 능동/수동(coming vs (having been) come/-ed) 판별",
+      "temptingBecause": "긴 명사구 'the stream of remote associations' 뒤라 피수식어 파악에 한 단계 필요하고, 'which comes' 관계절 축약 여부를 따지게 만든다",
+      "decisiveFlaw": "associations/stream이 '오는' 능동·자동사 관계이므로 현재분사 coming이 정확히 옳다 — 오답이 될 여지가 없다"
+    },
+    {
+      "label": "(B)",
+      "intent": "tend to be + 분사 자리의 태(directed vs directing) 판별",
+      "temptingBecause": "주어 attention과 direct의 관계를 의미적으로 따져야 하고, 문두 'we are diligently focused'의 능동 프레임이 능동 착시를 유발할 수 있다",
+      "decisiveFlaw": "attention은 향하게 '지시되는' 대상(수동)이므로 be directed가 정확히 옳다"
+    },
+    {
+      "label": "(C)",
+      "intent": "종속절 뒤 주절 주어-동사 수일치(it ... prevents)",
+      "temptingBecause": "앞선 While절에 'problems' 등 복수 명사가 있어 성급한 학생이 주어를 혼동할 수 있다",
+      "decisiveFlaw": "실제 주어 it이 동사 바로 앞에 인접해 있어(붙어 있는 단순 수일치) 즉시 검증된다 — 디코이로서 저항력이 약하다"
+    },
+    {
+      "label": "(D)",
+      "intent": "That's why + 완전절 vs 관계대명사/because 혼동 판별",
+      "temptingBecause": "why/because/which 치환 가능성을 잠깐 검토하게 한다",
+      "decisiveFlaw": "뒤따르는 절이 완전하고 'That's why'는 극히 관용적인 정형 패턴이라 대부분의 학생이 수 초 내 소거한다 — 변별 기여가 낮은 준필러"
+    },
+    {
+      "label": "(E)",
+      "intent": "지각동사 hear + 목적어 + 목적격보어 형태(to부정사 불가, -ing/원형만 허용) — 선언된 정답",
+      "temptingBecause": "hear와 보어 사이에 'in the backs of our heads' 전치사구가 개입해 거리가 있고, 직전의 'able to hear'가 to부정사 프레임 잔상을 남긴다",
+      "decisiveFlaw": "지각동사 hear의 목적격보어 자리에 to부정사는 올 수 없다. telling(원문) 또는 원형 tell로 교정해야 하며, 목적 부정사 해석('우리에게 말해주기 위해 듣는다')은 의미상 성립하지 않는다 — 유일 정답"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설 첫 문장 '목적격 보어/분사 수식어 골격'이 두 분석(hear의 목적격보어 vs voices의 후치수식 분사)을 병기해 다소 흐리다. 두 분석 모두 telling을 요구하므로 오류는 아니나 초점이 덜 선명하다.",
+      "recommendation": "지각동사 목적격보어 분석 하나로 확정해 서술하면 더 우아하다."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (E),(A),(B) 3개만 다루고 (C),(D)는 누락 — 필드 모순은 아니나 커버리지가 불완전하다.",
+      "recommendation": "5개 밑줄 전부의 point를 keyPoints에 명시하라."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트 통과: 렌더 지문은 의도된 (E) telling→to tell 단일 변형 외 원지문과 완전 일치(V1), 5개 밑줄 독립 검증 결과 (E)만 비문으로 단일정답 성립(V2), 교정 완성문=원문으로 문법적(V3), 해설의 통사 분석 전부 사실과 일치(V4), 학생 노출 필드 동기화(V5). 그러나 요청 난이도 KILLER에 대해 §C 4항 '정답이 즉시 드러나지 않아야 한다'를 충족하지 못한다: 지각동사 hear + to부정사는 가장 널리 훈련된 정형 포인트로 첫 스캔에서 포착되고, 디코이 (C)는 주어 인접 단순 수일치, (D)는 'That's why' 관용 패턴이라 소거가 즉각적이다. 최소대립쌍·명확한 문법 판단·동일 포인트 디코이 부재 조건은 충족하나 구조 독해 요구 조건 실패로 killerConditionsMet=false. C5(난이도 정합)=1이 치명적 공예 결함: 실제 체감 난이도는 중하위(고2 모의 수준)로 KILLER 라벨과 불일치. C3=2: (A),(B)는 실제 판단을 요구하나 (C),(D)가 사실상 즉시 소거된다. 합계 15, 최저 1로 B 기준(최저 2, 합계 17) 미달 → C. 출하하려면 난이도 라벨을 중(MEDIUM) 수준으로 재지정하거나, KILLER 유지 시 정답 포인트를 구조 독해형(예: 도치·삽입 속 병렬, 원거리 수일치+관계사 중첩)으로 재설계해야 한다."
+}

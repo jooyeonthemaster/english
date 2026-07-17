@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "cross-type-blank-v2-reconciliation-summary-v1",
+  "reviewDate": "2026-07-15",
+  "sourceBindingHash": "52da32f52ef03e2af9c834be2ac26d66d761c64a845dd5714b4a2791ce73ec25",
+  "inputs": {
+    "reviewerAManifestFileSha256": "eeb445b1dbbda4fb21d950c96b3613b962b82aedfc08befc6f841e95f2836419",
+    "reviewerBManifestFileSha256": "2e944e35bbd6ce13f896869b40cd5b1c5c2d2332ed4ab242ce967ed9de329dcf",
+    "reviewerAPrivateRowsSha256": "e844bf6c318a0e21f31f892d048ca4fd07b875cadc8f1c6446a4560b5b06b894",
+    "reviewerBPrivateRowsSha256": "f214c0216b462d683d81034dfb0598d1dd70769929fc30d3c520a047db9dae5a"
+  },
+  "reconciliationPolicy": {
+    "exclusionPrecedence": true,
+    "bothIndependentLensesRequiredForFramePass": true,
+    "domainReviewNeverCountsAsPass": true
+  },
+  "pairMatrix": {
+    "A_PASS__B_PASS": 133,
+    "A_EXCLUDE__B_PASS": 18,
+    "A_EXCLUDE__B_EXCLUDE": 2,
+    "A_EXCLUDE__B_DOMAIN_REVIEW": 3,
+    "A_PASS__B_DOMAIN_REVIEW": 1
+  },
+  "dispositions": {
+    "FRAME_PASS_BOTH_LENSES": 133,
+    "EXCLUDE": 23,
+    "DOMAIN_REVIEW": 1
+  },
+  "dualPassDistribution": {
+    "discourse": {
+      "expository": 54,
+      "practical": 9,
+      "narrative": 36,
+      "argumentative": 34
+    },
+    "topic": {
+      "humanities": 33,
+      "narrative-practical": 45,
+      "science": 27,
+      "social": 18,
+      "art-culture": 10
+    },
+    "wordBand": {
+      "230-360": 4,
+      "120-169": 88,
+      "170-229": 41
+    }
+  },
+  "frozenBalancedSplit": {
+    "targetRows": 38,
+    "selectedRows": 38,
+    "developmentRows": 6,
+    "confirmatoryRows": 20,
+    "reserveRows": 12,
+    "selectionMethod": "fixed discourse/topic cell quotas, then seeded SHA-256 order of content hashes; no passage text, notes, or item outcome used",
+    "splitSummary": {
+      "development": {
+        "rows": 6,
+        "discourse": {
+          "argumentative": 2,
+          "expository": 2,
+          "narrative": 1,
+          "practical": 1
+        },
+        "topic": {
+          "humanities": 1,
+          "science": 1,
+          "art-culture": 1,
+          "social": 1,
+          "narrative-practical": 2
+        },
+        "wordBand": {
+          "120-169": 4,
+          "170-229": 2
+        }
+      },
+      "confirmatory": {
+        "rows": 20,
+        "discourse": {
+          "argumentative": 5,
+          "expository": 5,
+          "narrative": 5,
+          "practical": 5
+        },
+        "topic": {
+          "art-culture": 3,
+          "humanities": 3,
+          "science": 2,
+          "social": 2,
+          "narrative-practical": 10
+        },
+        "wordBand": {
+          "120-169": 16,
+          "170-229": 4
+        }
+      },
+      "reserve": {
+        "rows": 12,
+        "discourse": {
+          "argumentative": 3,
+          "expository": 3,
+          "narrative": 4,
+          "practical": 2
+        },
+        "topic": {
+          "art-culture": 1,
+          "humanities": 1,
+          "social": 2,
+          "science": 2,
+          "narrative-practical": 6
+        },
+        "wordBand": {
+          "120-169": 8,
+          "170-229": 4
+        }
+      }
+    },
+    "noPostOutcomeTopUp": true
+  },
+  "remainingHolds": {
+    "rightsReview": "SEPARATE_NOT_PERFORMED",
+    "refreshedGenerationHistory": "REQUIRED_IMMEDIATELY_BEFORE_QUEUE_SEAL",
+    "providerAndRetryEnvelope": "REQUIRED",
+    "operationalQueueBinding": "NOT_YET_SEALED"
+  },
+  "authorization": {
+    "campaignEligibleRows": 0,
+    "reason": "The 38-row source/design frame is sufficient and frozen, but rights, refreshed history, provider controls, and the operational queue remain open."
+  },
+  "privateReconciliationSha256": "44ba936fde0ab807202a4cd22799b1fa2cfe632ac8e3509f49d0bacebf4a499e",
+  "privacy": {
+    "containsFrameIds": false,
+    "containsContentHashes": false,
+    "containsPassageText": false,
+    "containsRowLevelDecisions": false
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretAccesses": 0,
+    "fullQuestionCandidatesGenerated": 0
+  }
+}

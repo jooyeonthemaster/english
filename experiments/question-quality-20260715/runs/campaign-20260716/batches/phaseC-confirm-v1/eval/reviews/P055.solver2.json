@@ -1,0 +1,35 @@
+{
+  "pid": "P055",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical (gerund subject 'adopting...attitude causes them to ignore...'; cataphoric them/their in a preposed when-clause is licensed). Logically inverted: it attributes masters' mistakes to adopting beginner's mind, but the passage prescribes beginner's mind as the remedy for novel problems. Contradicts the argument's conclusion."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Grammatical, but the failure mode asserted (abandoning the essential/irrelevant separation too early) is never introduced. The passage's stated failure mode is over-reliance on the experience filter when a problem is particularly novel, not premature abandonment of filtering. Unsupported premise."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Grammatically seamless: 'When their established cognitive framework fails to accommodate a highly unique demand, then even seasoned masters can make mistakes' — cataphoric 'their' resolving to 'seasoned masters' is standard. Logically it restates sentence 2's condition ('fails miserably when a new problem is particularly novel') with 'established cognitive framework' = familiar tools/experience filter and 'highly unique demand' = particularly novel problem, completing the argument: novelty defeats the filter, so even masters err."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatical, but 'refusing to apply their experienced filter' just describes adopting beginner's mind, which the passage endorses for novel problems. Making that refusal the cause of masters' mistakes contradicts the passage's prescription. Also 'newly absorbed details' presupposes a beginner-style absorption phase for masters that the passage does not assert."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatical, but 'reconstructing the filter itself' under detail-processing pressure is a mechanism found nowhere in the passage. The text discusses the filter misfiring under novelty, never filter reconstruction; the causal chain is fabricated."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Argument structure: familiar-tools reliance fails under high novelty → beginner's mind recommended → experience acts as a filter → blank must state the condition under which the filter itself misleads. Only ③ restates that condition; ① and ④ blame the passage's own remedy (beginner's mind / dropping the filter), ② and ⑤ invoke mechanisms absent from the text. All five options are grammatically well-formed in the seam, so discrimination is purely logical — clean single-key item. Cataphoric 'their/them' in options ①③④ is fully licensed, no grammatical ambiguity exploited."
+}

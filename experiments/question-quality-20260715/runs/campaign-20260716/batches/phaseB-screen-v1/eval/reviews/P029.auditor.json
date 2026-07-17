@@ -1,0 +1,112 @@
+{
+  "pid": "P029",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-HALLUCINATED-CONTENT",
+      "severity": "critical",
+      "evidence": "메인 해설의 문장 \"many와 any 같은 단순 선택으로 잘못 오독하여 or를 지나치기 쉬우나\" — 'many'와 'any'는 지문 어디에도 없고 검사 대상 구조(both...and 상관접속사)와도 무관하다. 학생 노출 해설에 지문에 없는 내용이 첨가된 환각/손상 문장으로, 한국어 문장 자체도 의미가 성립하지 않는다. V4(오개념·환각·용어 오류 없음) 실패."
+    },
+    {
+      "code": "V4-KEYPOINT-TERM-MISMATCH",
+      "severity": "major",
+      "evidence": "keyPoints의 \"(A) 관계사 — 뒤에 완전한 문장이 수반되는 동격의 명사절 that\" — 동격 명사절을 이끄는 that은 접속사이며, (A) 오답 해설 본문도 '접속사'로 옳게 기술하고 있어 keyPoints의 '관계사' 범주 태그와 상호 모순된다(명사절 that을 관계사로 부르는 유형의 용어 오류). 범주 헤더 뒤 서술 자체는 정확하나 학생 노출 필드의 내적 모순이다."
+    },
+    {
+      "code": "V4-LOOSE-TERM",
+      "severity": "minor",
+      "evidence": "메인 해설 \"두 전치사구(between, within)\" — between과 within은 목적어 individuals를 공유하는 두 개의 전치사이지 각각 완결된 전치사구가 아니다. 용어 부정확(치명 아님)."
+    },
+    {
+      "code": "V1-V2-V5-VERIFIED",
+      "severity": "minor",
+      "evidence": "[기록용] V1: 원지문-렌더 지문 전문 대조 결과 의도된 (D) 변형(both between and → both between or)과 5개 밑줄 마커 외 손상·중복·누락·오탈자 없음, 라벨-선지 일치. V2: 5개 밑줄 독립 검증에서 (D)만 비문(both...or 상관짝 파괴), (A)동격 that+완전절, (B)전치사 as+동명사, (C)복수 선행사 principles+수동, (E)형용사 different 모두 어법상 옳음 — 단일 정답 확정. V5: 정답 라벨·선지·해설·markedExpressions(expression=원문형, errorExpression=표시형, correction=원문 복원) 동기화 확인."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "recognition 뒤 동격 명사절 접속사 that 판별 (관계대명사 vs 접속사 — 완전절 수반 여부)",
+      "temptingBecause": "that 직후 콤마와 긴 although 양보절이 삽입되어 주절(these principles vary)이 멀리 떨어져 있어 불완전절/관계대명사 자리로 오독할 수 있다",
+      "decisiveFlaw": "삽입절을 걷어내면 that 뒤에 주어(these principles)+동사(vary)를 갖춘 완전한 절이 이어지는 recognition의 동격 명사절 — 어법상 옳아 정답이 될 수 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사 as의 목적어 자리 동명사 acting 판별",
+      "temptingBecause": "is defined as 뒤라서 to부정사(to act)나 과거분사를 기대하며 흔들릴 수 있다",
+      "decisiveFlaw": "as는 전치사이므로 목적어로 동명사 acting이 표준 용법이며 원문과 동일 — 정답이 될 수 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계절 내 수동태(consider O C의 수동) + 선행사 수일치 (principles[복수] vs 최근접 명사 conduct[단수])",
+      "temptingBecause": "최근접 명사 conduct(단수)에 이끌려 is considered로 고쳐야 한다고 오판하거나 considered correct의 5형식 수동 구조를 낯설어할 수 있다",
+      "decisiveFlaw": "선행사는 복수 핵 명사 the principles (of conduct)이고(뒤 문장 these principles가 복수 지시 확정) 수동 의미도 옳다 — 정답이 될 수 없음"
+    },
+    {
+      "label": "(D)",
+      "intent": "선언된 정답 — 상관접속사 both A and B의 필수 짝 파괴(and→or 최소대립쌍, 교정 시 원문 정확 복원)",
+      "temptingBecause": "or도 등위접속사이므로 between or within을 자연스러운 대안 나열로 읽으면 지나칠 수 있다",
+      "decisiveFlaw": "both는 and와만 상관 짝을 이루므로 both between or는 범주적 비문 — 유일 정답. 단, 트리거 both와 오류 or가 3단어 밑줄 안에 함께 노출되어 밑줄 국소만 봐도 즉시 발각된다(KILLER 은폐성 부재)"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사 choices를 수식하는 형용사 different 판별 (형용사 vs 부사 자리)",
+      "temptingBecause": "differently와의 혼동을 노린 것으로 보이나 밑줄이 VP 전체(make different choices)라 오독 유도 지점이 흐릿하다",
+      "decisiveFlaw": "명사구 내부 형용사 수식으로 명백히 옳아 즉시 소거된다 — 초점이 분산된 약한 디코이(사실상 필러에 가까움)"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "HALLUCINATION",
+      "severity": "critical",
+      "evidence": "\"many와 any 같은 단순 선택으로 잘못 오독하여 or를 지나치기 쉬우나\" — 지문·구조 어디에도 없는 many/any 지목, 의미 불성립 손상 문장 (V4 실패 근거)"
+    },
+    {
+      "code": "KEYPOINT-CATEGORY-MISMATCH",
+      "severity": "major",
+      "evidence": "keyPoints (A) '관계사' 태그 vs 실제 동격 명사절 접속사 that — (A) 오답 해설 본문('접속사')과 모순"
+    },
+    {
+      "code": "LOOSE-TERMINOLOGY",
+      "severity": "minor",
+      "evidence": "'두 전치사구(between, within)' — 목적어를 공유하는 전치사 2개를 전치사구 2개로 오기술"
+    },
+    {
+      "code": "MISSING-WHY-TEMPTING",
+      "severity": "minor",
+      "evidence": "오답 해설 (A)(B)(C)(E)는 '왜 옳은가'만 있고 밑줄별 명시적 'why tempting'이 없음 — §C 어법 조건(5개 밑줄 각각 point·why tempting·why correct) 미충족 요소"
+    },
+    {
+      "code": "AWKWARD-KOREAN",
+      "severity": "minor",
+      "evidence": "\"'both between and'로 삼아야 문장 구조상 바릅니다\", (E)의 \"형용사 다른('different')이\" — 어색한 표현이며 (E)는 밑줄 범위(VP 전체)와 해설 초점(different 한 단어)이 불일치"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — and→or 단일 교체, 교정하면 정확히 원문 복원",
+    "clearGrammarJudgment": "충족 — both...and는 문맥 선호가 아닌 범주적 문법 규칙(대안 분석 자리 아님)",
+    "allFivePointsDocumented": "부분 미충족 — 5개 모두 pointCode·why-correct는 있으나 명시적 why-tempting 부재, (E)는 초점이 흐린 약한 디코이",
+    "structuralConcealment": "미충족 — 상관짝 both와 오류 or가 같은 밑줄(both between or)에 인접 노출되어 문장 구조를 읽지 않아도 밑줄 국소 검사만으로 즉시 드러난다",
+    "noShadowingDecoy": "충족 — 동일 포인트(병렬)의 더 쉬운 디코이 없음"
+  },
+  "grade": "F",
+  "notes": "V1·V2·V5는 견고하다: 렌더 지문은 의도된 and→or 교체 외 원문과 완전 일치하고, 5개 밑줄 독립 검증에서 (D)만 비문이며 필드 동기화도 정확하다. 그러나 학생 노출 해설에 환각 문장('many와 any 같은 단순 선택...')이 포함되고 keyPoints가 동격 명사절 that을 '관계사'로 태그해 본문 해설과 모순되어 V4 실패 — 치명이므로 공예 점수와 무관하게 F. 또한 V4를 수리해도 KILLER 요청 대비 실제 난이도가 크게 미달한다: both...or 오류가 밑줄 내부에서 자체 완결적으로 드러나는 국소 암기 판정이라(C3=1, C5=1) killerConditionsMet=false. 수리 방향: (1) 해설의 환각 문장 삭제·재작성, keyPoints (A) 범주를 '접속사(동격 명사절)'로 교정, (2) KILLER를 유지하려면 상관짝이 밑줄 밖에 있는 원거리 병렬이나 구조 독해가 필요한 다른 포인트로 오류 지점 재설계, (3) (E) 밑줄을 different 단독 등 초점이 선명한 지점으로 축소."
+}

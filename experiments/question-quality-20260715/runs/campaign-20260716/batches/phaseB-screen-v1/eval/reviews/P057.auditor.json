@@ -1,0 +1,95 @@
+{
+  "pid": "P057",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERM-SMALLCLAUSE",
+      "severity": "major",
+      "evidence": "정답 해설이 \"소절의 주어인 'they'\"라고 기술. 'they'는 'so that they can ...'이라는 정형(finite) 부사절의 주어이며, '소절(small clause)'은 'I consider [him smart]'류의 비정형 술어 구조를 가리키는 별개 용어다. 실제 통사 구조와 일치하지 않는 용어 오적용."
+    },
+    {
+      "code": "V4-TERM-DAEJUEO",
+      "severity": "major",
+      "evidence": "정답 해설 말미의 \"대주어 'They'가 지칭하는 대상을...\" — '대주어'는 이중주어 구문(예: 코끼리가 코가 길다)의 외곽 주어를 가리키는 용어로 이 문장의 종속절 주어 they에 적용될 수 없다. 또한 지문에는 대문자 'They'가 존재하지 않고 문중 소문자 'they'뿐이므로 인용 귀속도 부정확하다."
+    },
+    {
+      "code": "V4-TERM-CORRUPTED",
+      "severity": "major",
+      "evidence": "오답 해설 (C): \"'so that' (~하기 위해서) 목적 접사의 일부를 구성\" — '접사(affix)'는 형태론 용어로, 문맥상 '접속사'의 손상 표기다. 학생 노출 해설의 손상 용어로 V4(용어 오류 없음) 기준 위반."
+    },
+    {
+      "code": "V4-WORDING-A",
+      "severity": "minor",
+      "evidence": "오답 해설 (A): \"'a while'(한동안)이 부사적으로 결합한 형태이거나 명사구 결합이므로\" — 두 분석을 '이거나'로 병기해 실제 구조(동사 lasts의 기간 보충어인 명사구 a while)를 하나로 확정하지 못하는 모호한 기술. 사실 오류까지는 아니나 분석이 흐릿하다."
+    },
+    {
+      "code": "V4-WORDING-B",
+      "severity": "minor",
+      "evidence": "오답 해설 (B): \"진주어 'to develop...'의 수식 및 주격보어 자리\" — more efficient는 진주어를 '수식'하는 것이 아니라 be동사의 주격보어다. '수식 및 보어'라는 병기가 구조를 흐린다."
+    },
+    {
+      "code": "V5-FIELD-CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (C)·(D)의 surroundingText가 렌더본('can transcribe')이 아닌 교정본('can be transcribed') 문장을 담고 있고, (D)의 expression 필드는 교정형 'be transcribed'다. 원지문 기준 관례로 읽으면 내부 모순은 아니어서 V5는 통과로 판정하되, 필드 관례 문서화가 필요하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 while('a while' 기간 명사구) vs 접속사/전치사 while의 품사 혼동 유도",
+      "temptingBecause": "while을 습관적으로 접속사로 인식하는 학생은 뒤에 절이 없는 것을 이상하게 느낄 수 있다",
+      "decisiveFlaw": "관사 a가 붙은 'lasts a while'은 표준 관용 표현(기간 명사구)으로 즉시 적법 판정 가능 — 미끼로서는 관사 노출 때문에 소거가 매우 빠르다"
+    },
+    {
+      "label": "(B)",
+      "intent": "가주어 It — 진주어 to부정사 구문에서 보어 자리 형용사 vs 부사(efficiently) 판별",
+      "temptingBecause": "동사 develop이 가까이 있어 동사 수식 부사가 필요하다고 오독할 수 있다",
+      "decisiveFlaw": "be동사 is의 주격보어 자리이므로 형용사 비교급 more efficient가 옳다"
+    },
+    {
+      "label": "(C)",
+      "intent": "so that 부사절 접속사 vs 관계대명사/명사절 that 판별(완전절 여부 확인)",
+      "temptingBecause": "직전의 the key answers를 선행사로 삼는 관계대명사로 오독하면 틀렸다고 판단할 수 있다",
+      "decisiveFlaw": "so that 뒤에 주어(they)+동사를 갖춘 완전한 목적 부사절이 이어지므로 어법상 옳다"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 능동/수동 판별: 대명사 they의 지시 대상(the key answers) 파악 + 타동사 transcribe의 목적어 결손 확인",
+      "temptingBecause": "조동사 can 뒤 동사원형이 표면상 자연스럽고, they를 사람(면접자/기자)으로 오독하면 능동이 그럴듯해 보인다",
+      "decisiveFlaw": "they = the key answers(받아적어지는 대상)이고 transcribe의 목적어가 비어 있으므로 수동 be transcribed여야 한다. 교정 시 정확히 원문과 일치하는 최소대립쌍"
+    },
+    {
+      "label": "(E)",
+      "intent": "비교급 강조 부사 much vs very 판별",
+      "temptingBecause": "형용사 앞에는 very가 온다는 표층 규칙으로 much를 어색하게 느낄 수 있다",
+      "decisiveFlaw": "much는 비교급(easier and quicker)을 수식하는 표준 강조 부사로 옳다"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 '소절의 주어' — so that 정형 부사절을 소절(small clause)로 오칭",
+    "정답 해설의 '대주어 They' — 용어 오적용 및 지문에 없는 대문자 They 인용",
+    "오답 해설 (C)의 '목적 접사' — '접속사'의 손상 용어(접사=affix)",
+    "오답 해설 (A)의 '부사적으로 결합한 형태이거나 명사구 결합' — 이중 분석 병기로 구조 확정 실패",
+    "오답 해설 (B)의 '진주어의 수식 및 주격보어 자리' — 수식/보어 혼기",
+    "keyPoints (E)의 '품사 판단 및 한계 극복' — 의미가 불명확한 표현"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "지문 무결성은 완전하다: 렌더본은 원지문에서 (D) 'be transcribed'→'transcribe' 단일 의도 변형만 가하며, 교정 시 정확히 원문으로 복원되는 최소대립쌍이다. 다섯 밑줄 독립 검증 결과 (A) lasts a while(기간 명사구), (B) 보어 자리 형용사 비교급, (C) so that+완전절, (E) much+비교급은 모두 적법하고 (D)만 유일하게 비문 — 정답 유일성(V2) 충족. they can transcribe를 중간태(middle voice)로 읽는 대안 해석은 조동사 can + 목적어 결손 + 무생물 주어 조합에서 성립하지 않아 배제된다. 난이도 정합도 양호: 대명사 지시 대상 해석을 요구하는 능동/수동 판별은 INTERMEDIATE에 적절하다. 그러나 해설에 학생 노출 용어 오류가 3건(소절 오칭, 대주어 오적용, '목적 접사' 손상 용어) 존재하여 V4 실패 — 공예 점수로 상쇄 불가, 등급 F. 해설 용어 3건만 교정하면 B~A급으로 회복 가능한 문항이다. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

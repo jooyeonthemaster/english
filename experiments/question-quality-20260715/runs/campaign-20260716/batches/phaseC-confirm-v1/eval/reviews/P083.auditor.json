@@ -1,0 +1,75 @@
+{
+  "pid": "P083",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V4-HEAD-MISANALYSIS",
+      "severity": "major",
+      "evidence": "오답 해설 (B): \"checking이라는 동명사를 핵심어로 가지는 'the process of checking'이 단수 주어이므로\" — 주어 NP 'the process of checking'의 핵심어(head)는 'process'이고 'of checking'은 전치사구 수식어다. 동명사 'checking'을 핵심어로 지목한 것은 구조 오분석이며, (B)가 겨냥하는 함정(전치사구 간섭 수일치)의 올바른 분석과 정반대다. 결론(was 단수)은 우연히 일치하지만 근거 분석이 틀렸다. 문항 자체의 keyPoints ②(\"전치사구의 수식을 받는 명사구 'the process'의 수에 맞추어\")와도 정면 모순."
+    },
+    {
+      "code": "V5-KEYPOINT-LABEL-MISMATCH",
+      "severity": "major",
+      "evidence": "keyPoints가 원문자 라벨 ⑤/②/③을 사용하나 문항의 선지 라벨 체계는 (A)~(E)다. 학생 노출 필드 기준으로 keyPoints가 존재하지 않는 라벨을 참조한다(⑤→(E), ②→(B), ③→(C)로 내용상 추정 가능하나 라벨 동기화 실패). 또한 keyPoint ②와 오답 해설 (B)가 수일치 지배 명사(핵심어)에 대해 서로 모순된 분석을 제시한다."
+    },
+    {
+      "code": "V4-AGREEMENT-OVERCLAIM",
+      "severity": "minor",
+      "evidence": "정답 해설: \"주어를 3인칭 단수 형태로 받아 ... 'makes'로 고쳐야\" — 주어 'Their saturation in and early use of technology'는 등위 명사구여서 표준 분석으로는 복수 'make'도 가능하다(원문이 단일 개념 취급으로 makes를 썼으므로 원문 복원 교정 자체는 유효하고, 출제 포인트인 정동사 부재 판단에는 영향 없음). 다만 '3인칭 단수여야 한다'는 단정은 논쟁 여지가 있는 수일치 주장이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "의문사 how가 이끄는 명사절(완전절) 판단 — demonstrate의 목적어 자리 (pointCode b)",
+      "temptingBecause": "문두의 to부정사구 안에 위치해 절 경계 파악이 필요하고, what/how 선택(불완전/완전절) 검토를 유도한다",
+      "decisiveFlaw": "뒤따르는 'our minds have adapted'가 완전한 절이므로 방식을 나타내는 how 명사절로 적법 — 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사구 수식을 받는 주어의 수일치 (pointCode d)",
+      "temptingBecause": "앞 절의 복수 주어 'reference materials weren't'와 병렬로 이어져 were를 기대하게 만들 수 있다",
+      "decisiveFlaw": "두 번째 절의 주어 핵은 단수 'the process'이므로 was가 적법 — 오답 아님. 단, 인접 명사 'checking'도 단수여서 전형적 근접명사 함정의 긴장은 약한 편"
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사가 남은 축약 부사절(when + -ing)의 태 판단 (pointCode c)",
+      "temptingBecause": "when 뒤에 주어·be동사가 생략된 형태라 typed(과거분사)와의 태 선택을 검토하게 한다",
+      "decisiveFlaw": "생략된 주어 they가 타이핑을 직접 수행하는 능동 관계이므로 현재분사 typing이 적법 — 오답 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "it-cleft(강조 구문)에서 관계사 선택과 수일치 (pointCode b)",
+      "temptingBecause": "단수 it's 뒤에 who are(복수 동사)가 이어져 수일치가 어긋나 보이고, 'the + 형용사'의 복수 사람 지시를 알아야 한다",
+      "decisiveFlaw": "강조 대상 'the young'이 복수 사람 명사구이므로 who are가 적법 — 오답 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "정동사 부재(정동사 vs 준동사) — 긴 등위 주어 뒤 본동사 자리 (pointCode a, 정답)",
+      "temptingBecause": "'Their saturation in and early use of technology making them ...'에서 -ing가 명사구를 수식하는 분사처럼 국소적으로 자연스러워 보이고, 대시 뒤 'are changing'이 본동사인 듯한 착시를 준다",
+      "decisiveFlaw": "해당 절에 정동사가 없어 '— but' 등위가 성립하지 않는 비문이 된다. makes로 교정하면 정확히 원문이 복원된다 (source-correct → displayed-wrong 최소대립쌍 성립)"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 (B): 'the process of checking'의 핵심어를 동명사 'checking'으로 오지목 — 실제 핵은 'process'이며 keyPoints ②와 모순 (구조 오분석, major)",
+    "정답 해설: 등위 주어 'saturation ... and ... use'에 대해 '3인칭 단수'를 단정 — 표준 분석상 복수 일치도 가능하므로 단정적 서술은 부정확 위험 (minor)",
+    "keyPoints 라벨(⑤②③)이 문항 선지 라벨((A)~(E))과 다른 체계를 사용 (동기화 결함)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "지문 무결성(V1), 정답 유일성(V2: (E)만 정동사 부재로 비문, 나머지 4개 독립 검증 모두 적법), 문법성(V3)은 통과. 교정 makes는 원문을 정확히 복원하는 최소대립쌍이고 INTERMEDIATE 난이도에 잘 맞는 설계(C1~C5 모두 3). 그러나 오답 해설 (B)의 핵심어 오분석이 V4를 실패시키고, 그 오분석이 keyPoints ②와 정면 모순되는 데다 keyPoints가 존재하지 않는 원문자 라벨(⑤②③)을 참조해 V5도 실패. 치명 결함은 공예 점수로 상쇄되지 않으므로 F. 수정 방향: (B) 해설의 핵심어를 'process'로 교정, 정답 해설의 '3인칭 단수' 단정을 '원문 기준 makes(단일 개념 취급)' 서술로 완화, keyPoints 라벨을 (A)~(E) 체계로 통일하면 B~A 재판정 가능. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

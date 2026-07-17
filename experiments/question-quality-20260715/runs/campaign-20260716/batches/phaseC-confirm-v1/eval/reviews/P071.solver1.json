@@ -1,0 +1,35 @@
+{
+  "pid": "P071",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "know의 목적어로 간접의문문 두 개가 병렬: [where we are headed] and [what we want to do]. 뒤 절에서 do의 목적어 자리가 비어 있으므로 선행사를 포함한 what이 필수. that이었다면 오히려 틀림. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "매력적 오답으로 실제로 끌렸던 지점. 주절이 현재 습관(things do not go)인데 as절이 과거완료 had planned라 시제 불일치처럼 보인다. 그러나 '계획'이 (좌절된) 결과보다 앞선 사건임을 표시하는 관용적 대과거 용법으로 성립하며(things don't go as we had planned는 실제 영어에서 흔한 표현), 명확한 규칙 위반으로 단정할 수 없다. 허용 가능한 정문 — 정답 후보로 옹호할 수준은 아님."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "life is unpredictable: be동사 뒤 서술 형용사 자리에 형용사가 왔으므로 정문. 부사(unpredictably)였다면 오류였을 자리."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "end up + V-ing 고정 결합(you end up spending). to spend였다면 오류. 뒤따르는 people (whom) you would never have met otherwise의 목적격 관계대명사 생략도 정상. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "keeping us to awake: keep + 목적어 + 보어 구문은 형용사/분사 보어(keeping us awake)를 요구하며 to부정사 보어를 허용하지 않는다. 대안 해석 탐색 — '깨어나기 위해 우리를 붙잡아둔다'는 목적 부정사 독법은 의미상 성립 불가, awake를 동사 원형으로 보는 사역 독법도 keep이 to부정사 목적보어를 취하지 않아 불가. keeping us awake로 고쳐야 함. 명백한 어법 오류 → 정답."
+    }
+  ],
+  "note": "정답 (E) to awake. 유일하게 실질적으로 유혹적이었던 오답은 (B) had planned로, 현재시제 주절과의 결합 때문에 최상위권도 한 번 멈칫할 만하지만 관용적 대과거로 정당화 가능해 복수정답 시비 소지는 낮다. (E)는 keep+O+형용사 보어라는 국지 규칙만으로 확정되는 명백한 오류라 변별 난도는 낮은 편."
+}

@@ -1,0 +1,2105 @@
+{
+  "schemaVersion": 1,
+  "mode": "offline-zero-call-policy-severity-audit",
+  "repoHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "policySourceHash": "2809867fc9ca1aafe412ac452146a91e785bfd4a3fb8c9f6ccd8dc73a6060c29",
+  "counts": {
+    "activeEnglishTypes": 25,
+    "shipFirst": 31,
+    "salvageRelaxable": 99,
+    "noticeEligibleUnion": 102,
+    "removeRelaxation": 3,
+    "splitRequired": 10,
+    "staleNoEmitter": 2,
+    "keepCraft": 87,
+    "exposedTypes": 9,
+    "unexposedTypes": 16
+  },
+  "scenarios": {
+    "subjectSlotCorrectCompletion": [
+      {
+        "severity": "warning",
+        "code": "blank-paraphrase-subject-slot-mismatch",
+        "message": "PARAPHRASE blank uses a process-like gerund phrase in a task/challenge subject slot; use a compact noun phrase such as the central challenge/task."
+      }
+    ],
+    "paraphraseExactAnswerWithResidualSource": [
+      {
+        "severity": "error",
+        "code": "blank-paraphrase-answer-not-transformed",
+        "message": "PARAPHRASE blank correct option must not copy originalExpression verbatim."
+      },
+      {
+        "severity": "error",
+        "code": "blank-paraphrase-answer-not-transformed",
+        "message": "PARAPHRASE blank must use an abstract restatement as the correct option, not the verbatim originalExpression."
+      }
+    ],
+    "summaryMalformedCorrectCompletion": [
+      {
+        "severity": "warning",
+        "code": "summary-mc-awkward-collocation",
+        "message": "SUMMARY_COMPLETE_MC filled summary has an awkward English collocation: equity to learning."
+      }
+    ],
+    "englishTopicWithKoreanOption": [
+      {
+        "severity": "error",
+        "code": "topic-option-language",
+        "message": "TOPIC options should be English phrases for this language setting."
+      }
+    ],
+    "englishImpliedMeaningWithKoreanOption": [
+      {
+        "severity": "error",
+        "code": "implied-meaning-option-language",
+        "message": "IMPLIED_MEANING options must be English-only; Korean text was found in an option."
+      }
+    ],
+    "sentenceOrderGivenContainsParagraphLabel": [
+      {
+        "severity": "warning",
+        "code": "sentence-order-given-too-long",
+        "message": "SENTENCE_ORDER givenSentence appears to contain paragraph labels; split given and (A)/(B)/(C) separately."
+      }
+    ],
+    "sentenceOrderEmptyParagraph": [
+      {
+        "severity": "error",
+        "code": "sentence-order-paragraph-too-short",
+        "message": "SENTENCE_ORDER paragraph (A) must contain at least 2 sentences, got 0."
+      },
+      {
+        "severity": "error",
+        "code": "sentence-order-paragraph-too-thin",
+        "message": "SENTENCE_ORDER paragraph (A) is too short (0 words)."
+      }
+    ],
+    "summaryValidDirectionWithoutLiteralLabels": [
+      {
+        "severity": "error",
+        "code": "summary-mc-direction-frame",
+        "message": "SUMMARY_COMPLETE_MC direction must ask for the best words for summary blanks (A), (B)."
+      }
+    ],
+    "summaryCompetingWrongTaskDirection": [
+      {
+        "severity": "error",
+        "code": "summary-mc-direction-frame",
+        "message": "SUMMARY_COMPLETE_MC direction must ask for the best words for summary blanks (A), (B)."
+      }
+    ],
+    "blankNarrativeCircledNumbering": [
+      {
+        "severity": "error",
+        "code": "blank-explanation-step-numbering",
+        "message": "Explanation prose uses circled digits (①②③…) as narrative step numbers instead of option references — students misread them as option numbers. Remove step numbering (use 먼저/이어서/따라서) and reserve ①~⑤ strictly for citing options."
+      }
+    ],
+    "blankTerseLegitimateOptionReferences": [
+      {
+        "severity": "error",
+        "code": "blank-explanation-step-numbering",
+        "message": "Explanation prose uses circled digits (①②③…) as narrative step numbers instead of option references — students misread them as option numbers. Remove step numbering (use 먼저/이어서/따라서) and reserve ①~⑤ strictly for citing options."
+      }
+    ],
+    "grammarKeypointNonexistentLabel": "Grammar keyPoints are not grounded in this item's actual choices: keyPoint 1 references f, which is not an underlined choice in this item. Rewrite exactly 3 key points, each starting with a real underline label, the first covering the answer.",
+    "grammarKeypointCorrectTextWrongMetadata": "Grammar keyPoints are not grounded in this item's actual choices: keyPoint 1 (b, pointCode e) does not describe that choice's grammar topic — generic filler points are forbidden. Rewrite exactly 3 key points, each starting with a real underline label, the first covering the answer.",
+    "terminologyActualError": "Grammar explanation/keyPoints uses nonstandard/linguistics terminology ('전사구'); rewrite with standard school-grammar terms: '전사구'→'전치사구(전치사+명사)'.",
+    "terminologyRegisterOnly": "Grammar explanation/keyPoints uses nonstandard/linguistics terminology ('통사적으로'); rewrite with standard school-grammar terms: '통사적으로'→'문장 구조상'.",
+    "summaryRegexGrammaticalFalsePositive": "question of access to learning",
+    "summaryRegexTrueMalformed": "equity to learning",
+    "blankFaithfulCompressionCountProxy": {
+      "code": "blank-paraphrase-correct-too-thin",
+      "message": "KILLER PARAPHRASE blank should preserve a multi-part source idea, not collapse it into a thin generic phrase."
+    },
+    "blankGenericMeaningLossCountProxy": {
+      "code": "blank-paraphrase-correct-too-thin",
+      "message": "KILLER PARAPHRASE blank should preserve a multi-part source idea, not collapse it into a thin generic phrase."
+    }
+  },
+  "typeCoverage": [
+    {
+      "typeId": "BLANK_INFERENCE",
+      "policyCodes": [
+        "blank-explanation-step-numbering",
+        "blank-killer-target-too-easy",
+        "blank-paraphrase-answer-not-transformed",
+        "blank-paraphrase-answer-too-verbatim",
+        "blank-paraphrase-correct-too-thin",
+        "blank-paraphrase-difficulty-mismatch",
+        "blank-paraphrase-killer-giveaway-distractors",
+        "blank-paraphrase-killer-too-easy",
+        "blank-paraphrase-missing-answer-logic",
+        "blank-paraphrase-option-imbalance",
+        "blank-paraphrase-option-source-copy",
+        "blank-paraphrase-subject-slot-mismatch",
+        "blank-paraphrase-target-too-wide",
+        "blank-paraphrase-target-trailing-function",
+        "blank-target-list-like",
+        "blank-target-too-small",
+        "multi-blank-paraphrase-correct-source-exact"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "GRAMMAR_ERROR",
+      "policyCodes": [
+        "grammar-agreement-explanation-too-thin",
+        "grammar-answer-point-not-core",
+        "grammar-basic-overloaded-design",
+        "grammar-decoy-filler-span",
+        "grammar-decoy-point-diversity",
+        "grammar-decoy-point-monotony",
+        "grammar-demonstrative-that-way-decoy",
+        "grammar-error-explanation-surface-order",
+        "grammar-explanation-too-long-hard",
+        "grammar-fixed-that-is-idiom",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-killer-answer-point-repeated",
+        "grammar-killer-generic-answer-point",
+        "grammar-killer-overdrilled-answer",
+        "grammar-killer-thin-answer",
+        "grammar-killer-thin-concessive-as",
+        "grammar-killer-thin-connector",
+        "grammar-killer-thin-missing-aux",
+        "grammar-killer-thin-relative-animacy",
+        "grammar-marker-too-dense",
+        "grammar-mixed-as-it-span",
+        "grammar-nonstandard-terminology",
+        "grammar-obvious-adjacent-sv-agreement",
+        "grammar-obvious-adverb-adjective",
+        "grammar-obvious-before-after-to-infinitive",
+        "grammar-obvious-connector-to-what",
+        "grammar-obvious-despite-being-to-be",
+        "grammar-obvious-double-ing",
+        "grammar-obvious-endure-passive-object",
+        "grammar-obvious-finite-to-ing-colon",
+        "grammar-obvious-intransitive-passive",
+        "grammar-obvious-living-finite",
+        "grammar-obvious-living-lived",
+        "grammar-obvious-local-agreement",
+        "grammar-obvious-local-pronoun-agreement",
+        "grammar-obvious-modal-gerund",
+        "grammar-obvious-modal-to-infinitive",
+        "grammar-obvious-noun-what-relative",
+        "grammar-obvious-object-pronoun-subject",
+        "grammar-obvious-passive-to-gap-ing",
+        "grammar-obvious-pronoun-agreement",
+        "grammar-obvious-seem-gerund",
+        "grammar-obvious-seem-to-gerund",
+        "grammar-obvious-to-gerund-after-verb",
+        "grammar-obvious-what-noun-prefix",
+        "grammar-shallow-because-despite-clause",
+        "grammar-shallow-checklist-decoys",
+        "grammar-shallow-depends-decoy",
+        "grammar-shallow-despite-although-gerund",
+        "grammar-shallow-local-participle-parallel",
+        "grammar-shallow-nearby-passive-decoy",
+        "grammar-shallow-participle-adjective-answer",
+        "grammar-shallow-than-decoy",
+        "grammar-too-basic-decoys",
+        "grammar-underline-punctuated-fragment",
+        "grammar-underline-too-long",
+        "grammar-vague-metadata-tag",
+        "grammar-weak-filler-decoys"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "GRAMMAR_CHOICE_COMBO",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "VOCAB_CHOICE",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "SENTENCE_ORDER",
+      "policyCodes": [
+        "sentence-order-given-too-long",
+        "sentence-order-given-too-long-relative",
+        "sentence-order-paragraph-imbalance",
+        "sentence-order-paragraph-too-short",
+        "sentence-order-paragraph-too-thin",
+        "sentence-order-unscrambled-answer"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "SENTENCE_INSERT",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "TOPIC",
+      "policyCodes": [
+        "topic-option-language"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "MAIN_IDEA",
+      "policyCodes": [
+        "topic-option-language"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "TITLE",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "IMPLIED_MEANING",
+      "policyCodes": [
+        "implied-meaning-absolute-giveaway-option",
+        "implied-meaning-missing-surface-meaning",
+        "implied-meaning-noncentral-target",
+        "implied-meaning-option-language",
+        "implied-meaning-rhetorical-question-target",
+        "implied-meaning-single-word-target",
+        "implied-meaning-target-too-short",
+        "implied-meaning-thin-evidence-chain",
+        "implied-meaning-thin-reasoning-gap"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "REFERENCE",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "CONTENT_MATCH",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "SUMMARY_COMPLETE_MC",
+      "policyCodes": [
+        "summary-mc-awkward-collocation",
+        "summary-mc-direction-frame",
+        "summary-mc-missing-half-correct-traps"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "IRRELEVANT",
+      "policyCodes": [
+        "irrelevant-obvious-counterclaim-cue",
+        "irrelevant-prescriptive-giveaway",
+        "irrelevant-source-first-sentence",
+        "irrelevant-too-many-new-terms",
+        "irrelevant-too-unrelated"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "CONDITIONAL_WRITING",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "SENTENCE_TRANSFORM",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "FILL_BLANK_KEY",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "SUMMARY_COMPLETE",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "SUMMARY_WRITING",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "WORD_ORDER",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "TOPIC_SENTENCE_WRITING",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "GRAMMAR_CORRECTION",
+      "policyCodes": [
+        "grammar-correction-killer-thin-segment",
+        "grammar-correction-underline-too-narrow",
+        "grammar-correction-underlined-segment-short"
+      ],
+      "downgradeExposure": true
+    },
+    {
+      "typeId": "CONTEXT_MEANING",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "SYNONYM",
+      "policyCodes": [],
+      "downgradeExposure": false
+    },
+    {
+      "typeId": "ANTONYM",
+      "policyCodes": [],
+      "downgradeExposure": false
+    }
+  ],
+  "inventory": [
+    {
+      "code": "blank-explanation-step-numbering",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Split narrative circled-step numbering (V5) from legitimate terse option references that do not quote the option head; block only the former with a higher-precision code.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/inference.ts"
+      ]
+    },
+    {
+      "code": "blank-killer-target-too-easy",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/inference-distractor.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-answer-not-transformed",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Keep the general verbatim-paraphrase code as craft, but add a blocking residual-visible code for PARAPHRASE mode when the same source span remains elsewhere in passageWithBlank (V5/C4 answer leak).",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/inference.ts",
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-answer-too-verbatim",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/multi.ts",
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-correct-too-thin",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Keep token-count thinness as craft; add a separate blocking semantic-role loss code/judgment for lost actor, polarity, condition, cause, or scope. The current count proxy catches both faithful compression and invalid genericization.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-difficulty-mismatch",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-killer-giveaway-distractors",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "STALE_NO_EMITTER",
+      "recommendation": "Remove stale policy membership after compatibility review. No current validator emits this string; the active emitter is blank-killer-giveaway-distractors.",
+      "emitterFiles": []
+    },
+    {
+      "code": "blank-paraphrase-killer-too-easy",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-missing-answer-logic",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-option-imbalance",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-option-source-copy",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-subject-slot-mismatch",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "REMOVE_RELAXATION",
+      "recommendation": "Remove from SHIP_FIRST and SALVAGE. The trigger describes the visible correct completion itself becoming a semantically malformed subject/copular frame (V3).",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-target-too-wide",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-paraphrase-target-trailing-function",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/paraphrase.ts"
+      ]
+    },
+    {
+      "code": "blank-target-list-like",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/inference.ts"
+      ]
+    },
+    {
+      "code": "blank-target-too-small",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/inference.ts"
+      ]
+    },
+    {
+      "code": "grammar-agreement-explanation-too-thin",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-answer-point-not-core",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-basic-overloaded-design",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-correction-killer-thin-segment",
+      "typeScopes": [
+        "GRAMMAR_CORRECTION"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/grammar/correction.ts"
+      ]
+    },
+    {
+      "code": "grammar-correction-underline-too-narrow",
+      "typeScopes": [
+        "GRAMMAR_CORRECTION"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/grammar/correction.ts"
+      ]
+    },
+    {
+      "code": "grammar-correction-underlined-segment-short",
+      "typeScopes": [
+        "GRAMMAR_CORRECTION"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": false,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/grammar/correction.ts"
+      ]
+    },
+    {
+      "code": "grammar-decoy-filler-span",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "already nonblocking in relaxed; SALVAGE entry is behaviorally redundant"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts",
+        "src/lib/question-quality/validators/grammar/nonword-filler.ts"
+      ]
+    },
+    {
+      "code": "grammar-decoy-point-diversity",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-decoy-point-monotony",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "already nonblocking in relaxed; SALVAGE entry is behaviorally redundant"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-demonstrative-that-way-decoy",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-error-explanation-surface-order",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-explanation-too-long-hard",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-fixed-that-is-idiom",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-keypoint-choice-mismatch",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Split nonexistent-label references (blocking V4/V5) from first-item ordering and pointCode/topic disagreement. The latter often reflects wrong metadata while the student-facing keyPoint is correct.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-killer-answer-point-repeated",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-killer-generic-answer-point",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-killer-overdrilled-answer",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-killer-thin-answer",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-killer-thin-concessive-as",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-killer-thin-connector",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "already nonblocking in relaxed; SALVAGE entry is behaviorally redundant"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-killer-thin-missing-aux",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-killer-thin-relative-animacy",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-marker-too-dense",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-mixed-as-it-span",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-nonstandard-terminology",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Split actual term errors such as '전사구' (blocking V4) from accurate but advanced/register-heavy terms such as '통사적으로' (craft warning).",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-adjacent-sv-agreement",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-adverb-adjective",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-before-after-to-infinitive",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-connector-to-what",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-despite-being-to-be",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-double-ing",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-endure-passive-object",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-finite-to-ing-colon",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-intransitive-passive",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-living-finite",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-living-lived",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "STALE_NO_EMITTER",
+      "recommendation": "Remove stale policy membership after compatibility review. No current validator emits this string; it survives only in policy/repair-feedback tables.",
+      "emitterFiles": []
+    },
+    {
+      "code": "grammar-obvious-local-agreement",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-local-pronoun-agreement",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-modal-gerund",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-modal-to-infinitive",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-noun-what-relative",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-object-pronoun-subject",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-passive-to-gap-ing",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-pronoun-agreement",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-seem-gerund",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-seem-to-gerund",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-to-gerund-after-verb",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-obvious-what-noun-prefix",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-shallow-because-despite-clause",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-shallow-checklist-decoys",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-shallow-depends-decoy",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-shallow-despite-although-gerund",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-shallow-local-participle-parallel",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-shallow-nearby-passive-decoy",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-shallow-participle-adjective-answer",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-shallow-than-decoy",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-too-basic-decoys",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-underline-punctuated-fragment",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-underline-too-long",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-vague-metadata-tag",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "grammar-weak-filler-decoys",
+      "typeScopes": [
+        "GRAMMAR_ERROR"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-absolute-giveaway-option",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-missing-surface-meaning",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning globally except KILLER strict; relaxed fallback is nonblocking"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts",
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-noncentral-target",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning globally except KILLER strict; relaxed fallback is nonblocking"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts",
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-option-language",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "REMOVE_RELAXATION",
+      "recommendation": "Remove from SALVAGE. The error-emitting branch is an explicit optionLanguage=en contract violation (V5); the Korean-setting branch is already emitted as warning and remains nonblocking without SALVAGE.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-rhetorical-question-target",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning globally except KILLER strict; relaxed fallback is nonblocking"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts",
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-single-word-target",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning globally except KILLER strict; relaxed fallback is nonblocking"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts",
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-target-too-short",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning globally except KILLER strict; relaxed fallback is nonblocking"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts",
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-thin-evidence-chain",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning globally except KILLER strict; relaxed fallback is nonblocking"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts",
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "implied-meaning-thin-reasoning-gap",
+      "typeScopes": [
+        "IMPLIED_MEANING"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning globally except KILLER strict; relaxed fallback is nonblocking"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/dispatcher.ts",
+        "src/lib/question-quality/validators/implied.ts"
+      ]
+    },
+    {
+      "code": "irrelevant-obvious-counterclaim-cue",
+      "typeScopes": [
+        "IRRELEVANT"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/irrelevant.ts"
+      ]
+    },
+    {
+      "code": "irrelevant-prescriptive-giveaway",
+      "typeScopes": [
+        "IRRELEVANT"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/irrelevant.ts"
+      ]
+    },
+    {
+      "code": "irrelevant-source-first-sentence",
+      "typeScopes": [
+        "IRRELEVANT"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/irrelevant.ts"
+      ]
+    },
+    {
+      "code": "irrelevant-too-many-new-terms",
+      "typeScopes": [
+        "IRRELEVANT"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/irrelevant.ts"
+      ]
+    },
+    {
+      "code": "irrelevant-too-unrelated",
+      "typeScopes": [
+        "IRRELEVANT"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/irrelevant.ts"
+      ]
+    },
+    {
+      "code": "multi-blank-paraphrase-correct-source-exact",
+      "typeScopes": [
+        "BLANK_INFERENCE"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/blank/multi.ts"
+      ]
+    },
+    {
+      "code": "sentence-order-given-too-long",
+      "typeScopes": [
+        "SENTENCE_ORDER"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Split the label-contamination branch into a blocking sentence-order-given-contains-paragraph-label code (V1/V5); keep word/sentence length branches as craft.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/sentence-order.ts"
+      ]
+    },
+    {
+      "code": "sentence-order-given-too-long-relative",
+      "typeScopes": [
+        "SENTENCE_ORDER"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/sentence-order.ts"
+      ]
+    },
+    {
+      "code": "sentence-order-paragraph-imbalance",
+      "typeScopes": [
+        "SENTENCE_ORDER"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/sentence-order.ts"
+      ]
+    },
+    {
+      "code": "sentence-order-paragraph-too-short",
+      "typeScopes": [
+        "SENTENCE_ORDER"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Add a blocking sentence-order-empty-paragraph code before the minimum-sentence craft check. Empty text currently returns early from source reconstruction and can be salvaged (V1/V5).",
+      "emitterFiles": [
+        "src/lib/question-quality/feasibility.ts",
+        "src/lib/question-quality/validators/sentence-order.ts"
+      ]
+    },
+    {
+      "code": "sentence-order-paragraph-too-thin",
+      "typeScopes": [
+        "SENTENCE_ORDER"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Share the blocking empty/fragment guard with paragraph-too-short; retain ordinary sub-24-word but grammatical blocks as craft.",
+      "emitterFiles": [
+        "src/lib/question-quality/feasibility.ts",
+        "src/lib/question-quality/validators/sentence-order.ts"
+      ]
+    },
+    {
+      "code": "sentence-order-unscrambled-answer",
+      "typeScopes": [
+        "SENTENCE_ORDER"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/sentence-order.ts"
+      ]
+    },
+    {
+      "code": "summary-mc-awkward-collocation",
+      "typeScopes": [
+        "SUMMARY_COMPLETE_MC"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Split high-confidence malformed heads (e.g. 'equity to learning') into blocking V3 and retain ambiguous noun-chain regexes as warning; the current regex also matches grammatical 'question of access to learning'.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/summary/mc.ts"
+      ]
+    },
+    {
+      "code": "summary-mc-direction-frame",
+      "typeScopes": [
+        "SUMMARY_COMPLETE_MC"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "SPLIT_REQUIRED",
+      "recommendation": "Split empty/competing-task directions (blocking V5) from an otherwise valid summary-completion stem that merely omits literal (A)/(B) labels (craft).",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/summary/mc.ts"
+      ]
+    },
+    {
+      "code": "summary-mc-missing-half-correct-traps",
+      "typeScopes": [
+        "SUMMARY_COMPLETE_MC"
+      ],
+      "policy": {
+        "shipFirstWarning": true,
+        "relaxedBlocking": false,
+        "salvageRelaxable": true,
+        "effect": "warning before strict/relaxed evaluation"
+      },
+      "verdict": "KEEP_CRAFT",
+      "recommendation": "Keep notice-eligible: the emitter establishes difficulty, distractor attractiveness, span aesthetics, metadata depth, or formatting craft, but not a V1-V5 failure by itself.",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/summary/mc.ts"
+      ]
+    },
+    {
+      "code": "topic-option-language",
+      "typeScopes": [
+        "TOPIC",
+        "MAIN_IDEA"
+      ],
+      "policy": {
+        "shipFirstWarning": false,
+        "relaxedBlocking": true,
+        "salvageRelaxable": true,
+        "effect": "blocks strict/relaxed, but final salvage may ship with notice"
+      },
+      "verdict": "REMOVE_RELAXATION",
+      "recommendation": "Remove from SALVAGE. It is emitted as error only when the requested option language is English and a non-English option is present (V5).",
+      "emitterFiles": [
+        "src/lib/question-quality/validators/topic.ts"
+      ]
+    }
+  ]
+}

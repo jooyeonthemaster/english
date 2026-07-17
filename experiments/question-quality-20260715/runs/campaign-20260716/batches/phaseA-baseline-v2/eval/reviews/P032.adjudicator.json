@@ -1,0 +1,44 @@
+{
+  "pid": "P032",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "분쟁 요약의 '선언된 정답=②'는 오케스트레이터 전사 오류로 판단된다. 근거 원본인 eval/full/P032.md는 선언된 정답을 (E)로 명시하고 markedExpressions에서도 (E)만 isError=true다. 독립 재검증 결과 (A)~(D)는 모두 정문이고 (E)만 비문이므로, 솔버1·솔버2·감사자·본 조정자 전원이 (E) 단일 정답으로 수렴한다. 실질적 분쟁은 존재하지 않으며 정답 유일성이 성립한다(finalV2=true).",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "주격 관계대명사 that이 어법상 옳은가",
+      "verdict": "정문 — 정답 아님",
+      "evidence": "삽입구 ', when triggered,'를 걷어내면 \"a kind of 'program' that ... directs many of our activities\"로 관계절에 주어 결손이 있어 주격 that이 필수이고, 단수 선행사 program과 directs의 수일치도 성립한다. 콤마 쌍은 삽입구를 감싸는 것이지 제한적 관계절 앞 콤마가 아니므로 that의 제한적 용법과 충돌하지 않는다."
+    },
+    {
+      "label": "(B)",
+      "claim": "접속사 유지 분사구문 when triggered의 태가 옳은가",
+      "verdict": "정문 — 정답 아님",
+      "evidence": "when (it is) triggered의 축약으로, 통제자는 관계절 주어인 관계대명사 that(= the program)이며 프로그램은 촉발되는 수동의 대상이므로 과거분사 triggered가 적법하다. 전체 해설이 의미상 주어를 '주절의 주어 an emotion'으로 기술한 것은 구조적으로 부정확하나(통제자는 that), 'an emotion is a kind of program'이라 지시 대상이 동일해 정오 판정에는 영향 없는 minor 결함이다."
+    },
+    {
+      "label": "(C)",
+      "claim": "either to face ... or avoid 병렬 비대칭이 to face를 비문으로 만드는가 (핵심 미끼)",
+      "verdict": "정문 — 정답 아님",
+      "evidence": "cause + 목적어(us) + to부정사 구조에서 to face는 필수적 목적격보어다. 'either to X or (to) Y'에서 둘째 항의 to 공유 생략은 허용되는 축약 패턴이며, 설령 병렬 대칭성을 문제 삼더라도 그 경우 의심 대상은 or 뒤의 avoid이지 밑줄인 to face가 아니다. 어떤 독법에서도 밑줄 부위는 비문이 되지 않는다. 두 솔버 모두 이 미끼를 올바르게 기각했고 과잉 판정 없음."
+    },
+    {
+      "label": "(D)",
+      "claim": "부사 비교급 more acutely가 어법상 옳은가",
+      "verdict": "정문 — 정답 아님",
+      "evidence": "remember라는 동사 행위의 양태·정도를 수식하는 자리이므로 부사 acutely의 비교급 more acutely가 옳다. 목적어 명사 an experience를 수식하는 형용사(more acute)로는 성립하지 않는다. 감사자 지적대로 변별력 낮은 필러 수준이나 어법성 자체는 명백하다."
+    },
+    {
+      "label": "(E)",
+      "claim": "the specific ways which they activate our systems의 which가 비문인가 (선언된 정답)",
+      "verdict": "비문 확정 — 유일 정답",
+      "evidence": "후행절 they(S) activate(V) our systems(O)가 gap 없는 완전절이라 관계대명사 which가 채울 문법적 공백이 없다. 구제 독법 전수 검토: (1) activate를 자동사·이중목적어로 읽어 which를 목적어로 회수 — activate는 단일 타동사라 불가, (2) 전치사 좌초 독법 — 절 말미에 잔류 전치사가 없어 불가, (3) which의 한정사 용법 — 통사적으로 불가, (4) the way(s) 뒤 관계사 생략/that 대체 패턴 — zero·that에서만 성립하고 which와는 결합 불가. 'in which'로 교정하면 원지문이 정확히 복원되는 단일 최소대립쌍으로, 학교문법·수능 관행상 명백한 비문이다."
+    },
+    {
+      "label": "(메타) 선언 정답 표기 불일치",
+      "claim": "분쟁 요약의 '선언된 정답=②'와 솔버 답 (E)의 충돌",
+      "verdict": "실질 분쟁 아님 — 전사 오류",
+      "evidence": "eval/full/P032.md의 '## 선언된 정답' 섹션은 (E)를 명시하고, markedExpressions에서 isError=true인 항목도 (E) 하나뿐이다. (E)는 다섯 번째 선지이므로 원문자 표기라면 ⑤에 대응하며 ②(=(B))로 볼 근거가 없다. 솔버1·솔버2 모두 (E) 단일 후보(multipleDefensible=false), 감사자 V2=true로 전원 일치. 따라서 '②'는 오케스트레이터 요약 단계의 라벨 매핑 오류이고, 정답 유일성 판정에는 영향이 없다."
+    }
+  ]
+}

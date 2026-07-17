@@ -1,0 +1,2182 @@
+[
+  {
+    "blindId": "Q001",
+    "originalId": "cmrkseb86000ul9043qotqxeh",
+    "createdAt": "2026-07-14T15:09:13.686Z",
+    "plan": "PREMIUM",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "(C)",
+    "qualityMode": null,
+    "qualityWarnings": [],
+    "reviewRecommended": false,
+    "stableKey": "006fb8b0bff7a5081ef4301bbacba0bb5f66bfb7f481f3d3d597226c73f1af95",
+    "sourceArtifactSha256": "ed8351f2606df0f875be194725fc43a74bec1210d80b379c836afbfbcdad407e",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrkseb86000ul9043qotqxeh",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr3blkb9002ummf06jqvcn1u",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "GRAMMAR_ERROR",
+      "questionText": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?\n\nPlants have evolved defenses almost as diverse as the number of genera. Some load their tissues with harsh compounds that either are unpleasant to insects or intoxicate them, __(A) encouraging__ the insects to go bother another plant or at least slowing down their eating. Structural defenses like thick coats of wax on leaves may prevent some insect species from __(B) damaging__ the plant tissues altogether. Nor are individual plants entirely on their own while under attack. Plants can release chemical compounds that let their same-species neighbors __(C) known__ that an attack is likely coming, pushing those nearby plants to start building up defensive compounds in their tissues. Some of these cues even attract insect predators, a call for an assist that benefits both the plant and its bug-eating collaborators. The back-and-forth is not a matter of natural balance, but more like a drawn-out evolutionary conversation. New plant defenses unintentionally select for insects with ways to get around them, __(D) which__ in turn help bring about more resilient and resistant plant species. New variations, shading into entire new forms and adaptations, __(E) maintain__ the stalemate.",
+      "structuredData": {
+        "tags": [
+          "프리미엄 생성",
+          "목적격보어",
+          "사역동사",
+          "수일치",
+          "분사구문",
+          "수능킬러"
+        ],
+        "_typeId": "GRAMMAR_ERROR",
+        "options": [
+          {
+            "text": "encouraging",
+            "label": "(A)"
+          },
+          {
+            "text": "damaging",
+            "label": "(B)"
+          },
+          {
+            "text": "known",
+            "label": "(C)"
+          },
+          {
+            "text": "which",
+            "label": "(D)"
+          },
+          {
+            "text": "maintain",
+            "label": "(E)"
+          }
+        ],
+        "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+        "keyPoints": [
+          "(C) 목적격 보어 — 사역동사 let의 능동 보어 판단",
+          "(E) 수일치 — 주어와 동사 사이의 수식어구 파악",
+          "(D) 관계사 — 계속적 용법의 관계대명사 판별"
+        ],
+        "_typeLabel": "어법 판단",
+        "difficulty": "KILLER",
+        "explanation": "사역동사 let의 목적어인 their same-species neighbors(같은 종의 이웃 식물들)가 뒤에 이어지는 대절(that an attack is likely coming)의 내용을 '아는' 주체이므로, 목적어와 목적격 보어의 관계는 능동입니다. 사역동사 let은 목적격 보어로 원형 부정사를 취합니다. 따라서 목적격 보어 자리에는 과거분사 known이 아니라 동사원형 형태의 know를 써야 어법에 맞습니다.",
+        "correctAnswer": "(C)",
+        "correctAnswers": [
+          "(C)"
+        ],
+        "_generationPlan": "PREMIUM",
+        "markedExpressions": [
+          {
+            "label": "(A)",
+            "isError": false,
+            "pointCode": "c",
+            "correction": "encouraging",
+            "expression": "encouraging",
+            "errorExpression": "encouraging",
+            "surroundingText": "harsh compounds that either are unpleasant to insects or intoxicate them, encouraging the insects to go bother another plant"
+          },
+          {
+            "label": "(B)",
+            "isError": false,
+            "pointCode": "c",
+            "expression": "damaging",
+            "errorExpression": "damaging",
+            "surroundingText": "Structural defenses like thick coats of wax on leaves may prevent some insect species from damaging the plant tissues altogether."
+          },
+          {
+            "label": "(C)",
+            "isError": true,
+            "pointCode": "h",
+            "correction": "know",
+            "expression": "know",
+            "errorExpression": "known",
+            "surroundingText": "Plants can release chemical compounds that let their same-species neighbors know that an attack is likely coming"
+          },
+          {
+            "label": "(D)",
+            "isError": false,
+            "pointCode": "b",
+            "correction": "which",
+            "expression": "which",
+            "errorExpression": "which",
+            "surroundingText": "select for insects with ways to get around them, which in turn help bring about more resilient and resistant plant species."
+          },
+          {
+            "label": "(E)",
+            "isError": false,
+            "pointCode": "d",
+            "correction": "maintain",
+            "expression": "maintain",
+            "errorExpression": "maintain",
+            "surroundingText": "New variations, shading into entire new forms and adaptations, maintain the stalemate."
+          }
+        ],
+        "passageWithMarkers": "Plants have evolved defenses almost as diverse as the number of genera. Some load their tissues with harsh compounds that either are unpleasant to insects or intoxicate them, __(A) encouraging__ the insects to go bother another plant or at least slowing down their eating. Structural defenses like thick coats of wax on leaves may prevent some insect species from __(B) damaging__ the plant tissues altogether. Nor are individual plants entirely on their own while under attack. Plants can release chemical compounds that let their same-species neighbors __(C) known__ that an attack is likely coming, pushing those nearby plants to start building up defensive compounds in their tissues. Some of these cues even attract insect predators, a call for an assist that benefits both the plant and its bug-eating collaborators. The back-and-forth is not a matter of natural balance, but more like a drawn-out evolutionary conversation. New plant defenses unintentionally select for insects with ways to get around them, __(D) which__ in turn help bring about more resilient and resistant plant species. New variations, shading into entire new forms and adaptations, __(E) maintain__ the stalemate.",
+        "wrongOptionExplanations": {
+          "(A)": "주절의 내용(화학 물질이 곤충을 불쾌하게 하거나 중독시키는 것)의 결과로 곤충이 다른 식물을 괴롭히러 가도록 '부추기는' 능동의 의미를 나타내므로 현재분사 encouraging이 어법상 적절합니다.",
+          "(B)": "전치사 from 뒤에 이어지는 목적어로 동명사 구문이 필요하며, 타동사 역할을 유지해 뒤에 the plant tissues를 목적어로 취하므로 동명사 damaging이 맞습니다.",
+          "(D)": "앞 절의 내용이나 앞의 곤충들(insects with ways to get around them)을 선행사로 받아 계속적 용법으로 쓰이는 주격 관계대명사이므로 which의 사용이 올바릅니다.",
+          "(E)": "문장의 주어는 복수 명사 New variations이며 중간의 분사구는 수식어이므로, 복수 동사 maintain이 쓰이는 것이 수일치상 올바릅니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"(A)\",\"text\":\"encouraging\"},{\"label\":\"(B)\",\"text\":\"damaging\"},{\"label\":\"(C)\",\"text\":\"known\"},{\"label\":\"(D)\",\"text\":\"which\"},{\"label\":\"(E)\",\"text\":\"maintain\"}]",
+      "correctAnswer": "(C)",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"프리미엄 생성\",\"목적격보어\",\"사역동사\",\"수일치\",\"분사구문\",\"수능킬러\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T15:09:13.686Z",
+      "updatedAt": "2026-07-14T15:09:13.686Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrkseb86000vl904bnd8q3x6",
+        "questionId": "cmrkseb86000ul9043qotqxeh",
+        "content": "사역동사 let의 목적어인 their same-species neighbors(같은 종의 이웃 식물들)가 뒤에 이어지는 대절(that an attack is likely coming)의 내용을 '아는' 주체이므로, 목적어와 목적격 보어의 관계는 능동입니다. 사역동사 let은 목적격 보어로 원형 부정사를 취합니다. 따라서 목적격 보어 자리에는 과거분사 known이 아니라 동사원형 형태의 know를 써야 어법에 맞습니다.",
+        "keyPoints": "[\"(C) 목적격 보어 — 사역동사 let의 능동 보어 판단\",\"(E) 수일치 — 주어와 동사 사이의 수식어구 파악\",\"(D) 관계사 — 계속적 용법의 관계대명사 판별\"]",
+        "wrongOptionExplanations": "{\"(A)\":\"주절의 내용(화학 물질이 곤충을 불쾌하게 하거나 중독시키는 것)의 결과로 곤충이 다른 식물을 괴롭히러 가도록 '부추기는' 능동의 의미를 나타내므로 현재분사 encouraging이 어법상 적절합니다.\",\"(B)\":\"전치사 from 뒤에 이어지는 목적어로 동명사 구문이 필요하며, 타동사 역할을 유지해 뒤에 the plant tissues를 목적어로 취하므로 동명사 damaging이 맞습니다.\",\"(D)\":\"앞 절의 내용이나 앞의 곤충들(insects with ways to get around them)을 선행사로 받아 계속적 용법으로 쓰이는 주격 관계대명사이므로 which의 사용이 올바릅니다.\",\"(E)\":\"문장의 주어는 복수 명사 New variations이며 중간의 분사구는 수식어이므로, 복수 동사 maintain이 쓰이는 것이 수일치상 올바릅니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T15:09:13.686Z",
+        "updatedAt": "2026-07-14T15:09:13.686Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q002",
+    "originalId": "cmrkpnwl7001wmm2ww6t585oq",
+    "createdAt": "2026-07-14T13:52:42.427Z",
+    "plan": "STANDARD",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "③",
+    "qualityMode": null,
+    "qualityWarnings": [
+      {
+        "code": "blank-paraphrase-killer-too-easy",
+        "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+        "severity": "warning"
+      },
+      {
+        "code": "blank-weak-distractors",
+        "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
+        "severity": "warning"
+      }
+    ],
+    "reviewRecommended": false,
+    "stableKey": "2d4f97a894c0a630016e4d786b184310625c9da3c83e90e9ebaa8fd31da57ed5",
+    "sourceArtifactSha256": "c8006caec6ea1caf5978ad9f175491e8aefcffb71918446d158c3f7cc47f0508",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrkpnwl7001wmm2ww6t585oq",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmrknyvof0010mm2wmidkbdn9",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "BLANK_INFERENCE",
+      "questionText": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?\n\nKant staunchly advocated for the rule of law as the fundamental assurance, providing not just for security and peace, but for liberty as well.. He believed that human societies were moving towards more rational forms regulated by effective and binding legal frameworks because only such frameworks enabled people to live in harmony, to prosper and to co-operate. However, his belief in inevitable progress was not based on an optimistic or high-minded view of human nature. On the contrary, it comes close to Hobbes's outlook: man's violent and conflict-prone nature makes it necessary to establish and maintain an effective legal framework in order to secure peace. We cannot count on people's benevolence or goodwill, but even 'a nation of devils' can live in harmony in a legal system that binds every citizen equally. Ideally, the law is the embodiment of those political principles that all rational beings would freely choose. If such laws forbid them to do something that they would not rationally choose to do anyway, then the law _____.",
+      "structuredData": {
+        "tags": [
+          "일반 생성",
+          "빈칸 추론",
+          "칸트 법철학",
+          "자유와 법의 관계",
+          "종합적 추론"
+        ],
+        "_typeId": "BLANK_INFERENCE",
+        "options": [
+          {
+            "text": "serves to strip away the basic conditions for co-operative living",
+            "label": "①"
+          },
+          {
+            "text": "is far from being a genuine reflection of their rational choices",
+            "label": "②"
+          },
+          {
+            "text": "does not actually function as a limitation on their liberty",
+            "label": "③"
+          },
+          {
+            "text": "should be seen as a necessary evil to keep their desires in check",
+            "label": "④"
+          },
+          {
+            "text": "inevitably fails to protect them from external physical threats",
+            "label": "⑤"
+          }
+        ],
+        "direction": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+        "keyPoints": [
+          "칸트의 법치주의 관점에서 법의 지배와 개인의 자유가 상충하지 않고 공존하는 인과적 기제를 파악합니다.",
+          "이성적 주체가 동의할 수 있는 규범으로서의 법이 왜 제한(restraint)이 될 수 없는지 담화 맥락을 연결합니다.",
+          "liberty와 freedom, restraint와 limitation 등의 유의어 쌍을 활용한 고급 추상 재진술을 읽어냅니다."
+        ],
+        "_typeLabel": "빈칸 추론",
+        "difficulty": "KILLER",
+        "answerLogic": "합리적인 사회적 구성원이 스스로 선택했을 도덕적·정치적 원칙이 곧 법으로 재현된 것이라면, 그러한 법적 금지는 개인의 순수한 자유의지를 침해하는 억압이 아니라 자율적 합의의 확장이라는 논리적 상관관계를 완성하는 추론입니다.",
+        "explanation": "빈칸 문장은 이성적 존재가 자유롭게 선택했을 정치적 원칙의 구현체로서의 '법'이 가진 성격과 그것이 개인의 자유와 맺는 인과적 귀결을 맺어 주는 결론적 지점입니다. 지문 초반부에서 칸트는 법의 지배가 안전과 평화뿐만 아니라 '자유(liberty)' 역시 보장한다고 천명하였으며, 지문 끝에서 이성적인 법이 애초에 우리가 자발적으로 하지 않을 행동을 금지할 뿐이라면 그것은 간섭이 아니라고 설명합니다. 따라서 그러한 법적 규제는 실질적으로 우리의 자유를 제한하는 장치로 기능하지 않는다는 추론이 성립하므로, 원문의 'cannot be understood as a restraint on their freedom'을 'does not actually function as a limitation on their liberty'로 자율적이고 추상화하여 패러프레이즈한 ③이 정답입니다. ④과 ①는 법을 온전히 억압적이고 파괴적인 기제로 파악하는 극성 반전의 함정을 파고들며, ②는 이성적 선택과의 연결을 부정하는 역관계의 오류입니다.",
+        "correctAnswer": "③",
+        "_teacherPoints": [
+          {
+            "text": "Kant staunchly advocated for the rule of law as the fundamental assurance, providing not just for security and peace, but for liberty as well",
+            "unit": "phrase"
+          }
+        ],
+        "_generationPlan": "STANDARD",
+        "blankAnswerMode": "PARAPHRASE",
+        "surroundingText": "If such laws forbid them to do something that they would not rationally choose to do anyway, then the law cannot be understood as a restraint on their freedom.",
+        "_qualityWarnings": [
+          {
+            "code": "blank-paraphrase-killer-too-easy",
+            "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+            "severity": "warning"
+          },
+          {
+            "code": "blank-weak-distractors",
+            "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
+            "severity": "warning"
+          }
+        ],
+        "passageWithBlank": "Kant staunchly advocated for the rule of law as the fundamental assurance, providing not just for security and peace, but for liberty as well.. He believed that human societies were moving towards more rational forms regulated by effective and binding legal frameworks because only such frameworks enabled people to live in harmony, to prosper and to co-operate. However, his belief in inevitable progress was not based on an optimistic or high-minded view of human nature. On the contrary, it comes close to Hobbes's outlook: man's violent and conflict-prone nature makes it necessary to establish and maintain an effective legal framework in order to secure peace. We cannot count on people's benevolence or goodwill, but even 'a nation of devils' can live in harmony in a legal system that binds every citizen equally. Ideally, the law is the embodiment of those political principles that all rational beings would freely choose. If such laws forbid them to do something that they would not rationally choose to do anyway, then the law _____.",
+        "originalExpression": "cannot be understood as a restraint on their freedom",
+        "wrongOptionExplanations": {
+          "①": "협력적 삶을 위한 기본 조건을 박탈한다는 극단적인 부정 극성의 진술로, 법이 조화와 번영, 협력을 가능하게 한다는 지문의 핵심 기제에 정면으로 위배됩니다.",
+          "②": "해당 법들이 '이성적인 선택을 반영하지 못한다'고 진술하여, 이성적인 존재들이 자발적으로 선택하는 원칙의 구현체로 법을 묘사한 본문의 전제와 정반대의 논리를 전개합니다.",
+          "④": "홉스의 견해를 연상시켜 법을 욕망 억제를 위한 '필요악'으로 규정하지만, 빈칸 문장은 이성적인 법이 자유의 제한이 아니라는 최종 긍정적 기제를 담고 있으므로 결론의 방향성과 맞지 않습니다.",
+          "⑤": "물리적 위협으로부터 보호하는 데 실패한다는 지엽적이고 부정적인 서술로, 이성적 합의에 따른 법의 긍정적인 자유 보장 성격을 설명하는 결론부 빈칸에 합당하지 않습니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"①\",\"text\":\"serves to strip away the basic conditions for co-operative living\"},{\"label\":\"②\",\"text\":\"is far from being a genuine reflection of their rational choices\"},{\"label\":\"③\",\"text\":\"does not actually function as a limitation on their liberty\"},{\"label\":\"④\",\"text\":\"should be seen as a necessary evil to keep their desires in check\"},{\"label\":\"⑤\",\"text\":\"inevitably fails to protect them from external physical threats\"}]",
+      "correctAnswer": "③",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"일반 생성\",\"빈칸 추론\",\"칸트 법철학\",\"자유와 법의 관계\",\"종합적 추론\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T13:52:42.427Z",
+      "updatedAt": "2026-07-14T13:52:42.427Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrkpnwl7001xmm2wy517r5bi",
+        "questionId": "cmrkpnwl7001wmm2ww6t585oq",
+        "content": "빈칸 문장은 이성적 존재가 자유롭게 선택했을 정치적 원칙의 구현체로서의 '법'이 가진 성격과 그것이 개인의 자유와 맺는 인과적 귀결을 맺어 주는 결론적 지점입니다. 지문 초반부에서 칸트는 법의 지배가 안전과 평화뿐만 아니라 '자유(liberty)' 역시 보장한다고 천명하였으며, 지문 끝에서 이성적인 법이 애초에 우리가 자발적으로 하지 않을 행동을 금지할 뿐이라면 그것은 간섭이 아니라고 설명합니다. 따라서 그러한 법적 규제는 실질적으로 우리의 자유를 제한하는 장치로 기능하지 않는다는 추론이 성립하므로, 원문의 'cannot be understood as a restraint on their freedom'을 'does not actually function as a limitation on their liberty'로 자율적이고 추상화하여 패러프레이즈한 ③이 정답입니다. ④과 ①는 법을 온전히 억압적이고 파괴적인 기제로 파악하는 극성 반전의 함정을 파고들며, ②는 이성적 선택과의 연결을 부정하는 역관계의 오류입니다.",
+        "keyPoints": "[\"칸트의 법치주의 관점에서 법의 지배와 개인의 자유가 상충하지 않고 공존하는 인과적 기제를 파악합니다.\",\"이성적 주체가 동의할 수 있는 규범으로서의 법이 왜 제한(restraint)이 될 수 없는지 담화 맥락을 연결합니다.\",\"liberty와 freedom, restraint와 limitation 등의 유의어 쌍을 활용한 고급 추상 재진술을 읽어냅니다.\"]",
+        "wrongOptionExplanations": "{\"④\":\"홉스의 견해를 연상시켜 법을 욕망 억제를 위한 '필요악'으로 규정하지만, 빈칸 문장은 이성적인 법이 자유의 제한이 아니라는 최종 긍정적 기제를 담고 있으므로 결론의 방향성과 맞지 않습니다.\",\"②\":\"해당 법들이 '이성적인 선택을 반영하지 못한다'고 진술하여, 이성적인 존재들이 자발적으로 선택하는 원칙의 구현체로 법을 묘사한 본문의 전제와 정반대의 논리를 전개합니다.\",\"①\":\"협력적 삶을 위한 기본 조건을 박탈한다는 극단적인 부정 극성의 진술로, 법이 조화와 번영, 협력을 가능하게 한다는 지문의 핵심 기제에 정면으로 위배됩니다.\",\"⑤\":\"물리적 위협으로부터 보호하는 데 실패한다는 지엽적이고 부정적인 서술로, 이성적 합의에 따른 법의 긍정적인 자유 보장 성격을 설명하는 결론부 빈칸에 합당하지 않습니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T13:52:42.427Z",
+        "updatedAt": "2026-07-14T13:52:42.427Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q003",
+    "originalId": "cmrkqgzuw002bmm2w8os0tlwg",
+    "createdAt": "2026-07-14T14:15:19.688Z",
+    "plan": "STANDARD",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "(B)",
+    "qualityMode": null,
+    "qualityWarnings": [],
+    "reviewRecommended": false,
+    "stableKey": "2fe90df0978d746644205974063963d361f85908985f956033e2fde19016fdd2",
+    "sourceArtifactSha256": "25c57618c5018f1246ab6b7dc41484201abd474ef7cb0c16be02015662251e3a",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrkqgzuw002bmm2w8os0tlwg",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr8z7a4v006smm0sgrzrvxt6",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "GRAMMAR_ERROR",
+      "questionText": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?\n\nThe basic guidelines for good style __(A) are__ not mysterious; in fact, you use them every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a polished practical style makes cooperation easier. Writers develop such a style by acknowledging __(B) those__ readers expect the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone __(C) who__ is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information appropriately. In fact, this attention to audience and appropriateness may be even __(D) more important__ in writing than in conversation because writing does not permit the nonverbal communication and immediate feedback __(E) that__ are part of conversation. As writers, we have to anticipate the absent reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+      "structuredData": {
+        "tags": [
+          "일반 생성",
+          "어법",
+          "관계대명사",
+          "대명사 일치",
+          "수일치"
+        ],
+        "_typeId": "GRAMMAR_ERROR",
+        "options": [
+          {
+            "text": "are",
+            "label": "(A)"
+          },
+          {
+            "text": "those",
+            "label": "(B)"
+          },
+          {
+            "text": "who",
+            "label": "(C)"
+          },
+          {
+            "text": "more important",
+            "label": "(D)"
+          },
+          {
+            "text": "that",
+            "label": "(E)"
+          }
+        ],
+        "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+        "keyPoints": [
+          "(B) 대명사 vs 관계대명사 — 절을 이끄는 접속 기능 유무로 판정",
+          "(A) 주어-동사 수일치 — 전치사구 수식을 받는 복수 주어의 핵과 동사 일치",
+          "(E) 관계사 — 선행사와 뒤따르는 불완전한 절의 연결 구조 확인"
+        ],
+        "_typeLabel": "어법 판단",
+        "difficulty": "KILLER",
+        "explanation": "Writers develop such a style 문장에서 타동사 expect 뒤에는 목적어가 비어 있어, 선행사 'the same things'를 수식해야 하는 온전한 관계절 구조가 성립해야 합니다. 따라서 지시대명사인 'those'는 이 자리에서 불완전절을 이끄는 연결 기능을 할 수 없으므로 비문입니다. 목적어가 결손된 형용사절을 이끌면서 수식 명사와 연결해주는 목적격 관계대명사 'that'으로 고쳐야 합니다. 앞선 복수 명사 things의 존재 때문에 복수 지시대명사 those를 써도 자연스럽다고 오해하기 쉬우나, 뒤따르는 절과의 통사적 연결 관계를 보아야 합니다.",
+        "correctAnswer": "(B)",
+        "_teacherPoints": [
+          {
+            "tag": "수일치",
+            "text": "are",
+            "unit": "word"
+          },
+          {
+            "tag": "관계사/접속사",
+            "text": "that",
+            "unit": "word"
+          },
+          {
+            "tag": "관계대명사",
+            "text": "who",
+            "unit": "word"
+          }
+        ],
+        "correctAnswers": [
+          "(B)"
+        ],
+        "_generationPlan": "STANDARD",
+        "markedExpressions": [
+          {
+            "label": "(A)",
+            "isError": false,
+            "pointCode": "d",
+            "expression": "are",
+            "errorExpression": "are",
+            "surroundingText": "The basic guidelines for good style are not mysterious; in fact, you use them"
+          },
+          {
+            "label": "(B)",
+            "isError": true,
+            "pointCode": "g",
+            "correction": "that",
+            "expression": "that",
+            "errorExpression": "those",
+            "surroundingText": "Writers develop such a style by acknowledging that readers expect the same things that listeners expect in conversation: clarity,"
+          },
+          {
+            "label": "(C)",
+            "isError": false,
+            "pointCode": "b",
+            "expression": "who",
+            "errorExpression": "who",
+            "surroundingText": "If you listen to someone who is not clear, who cannot stay on the topic, or"
+          },
+          {
+            "label": "(D)",
+            "isError": false,
+            "pointCode": "m",
+            "expression": "more important",
+            "errorExpression": "more important",
+            "surroundingText": "In fact, this attention to audience and appropriateness may be even more important in writing than in conversation"
+          },
+          {
+            "label": "(E)",
+            "isError": false,
+            "pointCode": "b",
+            "expression": "that",
+            "errorExpression": "that",
+            "surroundingText": "does not permit the nonverbal communication and immediate feedback that are part of conversation."
+          }
+        ],
+        "passageWithMarkers": "The basic guidelines for good style __(A) are__ not mysterious; in fact, you use them every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a polished practical style makes cooperation easier. Writers develop such a style by acknowledging __(B) those__ readers expect the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone __(C) who__ is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information appropriately. In fact, this attention to audience and appropriateness may be even __(D) more important__ in writing than in conversation because writing does not permit the nonverbal communication and immediate feedback __(E) that__ are part of conversation. As writers, we have to anticipate the absent reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+        "wrongOptionExplanations": {
+          "(A)": "이 주어-동사 수일치 판단에서 수식어구인 'for good style'을 제외하면 진짜 주어 핵은 복수 명사인 'guidelines'이므로 복수 동사인 'are'는 어법상 옳습니다.",
+          "(C)": "선행사 'someone'을 수식하며, 뒤에 주어가 없는 불완전한 절('is not clear')이 이어지므로 주격 관계대명사 'who'는 어법상 옳습니다.",
+          "(D)": "접속사보다 뒤에 있는 비교 대상인 'in conversation'에 대응하여, 형용사 'important'의 비교급인 'more important'는 어법상 올바른 표현입니다.",
+          "(E)": "복수 복합 명사인 'the nonverbal communication and immediate feedback'을 선행사로 하고 뒤에 복수 정동사인 'are'로 시작하는 불완전한 형용사절을 이끄는 주격 관계대명사 'that'은 어법상 옳습니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"(A)\",\"text\":\"are\"},{\"label\":\"(B)\",\"text\":\"those\"},{\"label\":\"(C)\",\"text\":\"who\"},{\"label\":\"(D)\",\"text\":\"more important\"},{\"label\":\"(E)\",\"text\":\"that\"}]",
+      "correctAnswer": "(B)",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"일반 생성\",\"어법\",\"관계대명사\",\"대명사 일치\",\"수일치\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T14:15:19.688Z",
+      "updatedAt": "2026-07-14T14:15:19.688Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrkqgzuw002cmm2w7ldych7z",
+        "questionId": "cmrkqgzuw002bmm2w8os0tlwg",
+        "content": "Writers develop such a style 문장에서 타동사 expect 뒤에는 목적어가 비어 있어, 선행사 'the same things'를 수식해야 하는 온전한 관계절 구조가 성립해야 합니다. 따라서 지시대명사인 'those'는 이 자리에서 불완전절을 이끄는 연결 기능을 할 수 없으므로 비문입니다. 목적어가 결손된 형용사절을 이끌면서 수식 명사와 연결해주는 목적격 관계대명사 'that'으로 고쳐야 합니다. 앞선 복수 명사 things의 존재 때문에 복수 지시대명사 those를 써도 자연스럽다고 오해하기 쉬우나, 뒤따르는 절과의 통사적 연결 관계를 보아야 합니다.",
+        "keyPoints": "[\"(B) 대명사 vs 관계대명사 — 절을 이끄는 접속 기능 유무로 판정\",\"(A) 주어-동사 수일치 — 전치사구 수식을 받는 복수 주어의 핵과 동사 일치\",\"(E) 관계사 — 선행사와 뒤따르는 불완전한 절의 연결 구조 확인\"]",
+        "wrongOptionExplanations": "{\"(A)\":\"이 주어-동사 수일치 판단에서 수식어구인 'for good style'을 제외하면 진짜 주어 핵은 복수 명사인 'guidelines'이므로 복수 동사인 'are'는 어법상 옳습니다.\",\"(C)\":\"선행사 'someone'을 수식하며, 뒤에 주어가 없는 불완전한 절('is not clear')이 이어지므로 주격 관계대명사 'who'는 어법상 옳습니다.\",\"(D)\":\"접속사보다 뒤에 있는 비교 대상인 'in conversation'에 대응하여, 형용사 'important'의 비교급인 'more important'는 어법상 올바른 표현입니다.\",\"(E)\":\"복수 복합 명사인 'the nonverbal communication and immediate feedback'을 선행사로 하고 뒤에 복수 정동사인 'are'로 시작하는 불완전한 형용사절을 이끄는 주격 관계대명사 'that'은 어법상 옳습니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T14:15:19.688Z",
+        "updatedAt": "2026-07-14T14:15:19.688Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q004",
+    "originalId": "cmrksbswx000gld04asx3pb7u",
+    "createdAt": "2026-07-14T15:07:16.641Z",
+    "plan": "PREMIUM",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "3",
+    "qualityMode": null,
+    "qualityWarnings": [
+      {
+        "code": "blank-paraphrase-killer-too-easy",
+        "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+        "severity": "warning"
+      }
+    ],
+    "reviewRecommended": false,
+    "stableKey": "31648bae5f5752b0d0ff26a5e9d6a9c8df2838bdc92d14f18324801fbad37c0d",
+    "sourceArtifactSha256": "39484cc89f73616f4eac2c94f36386e509d5644e430d8e46bb1c45f22e15a18b",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrksbswx000gld04asx3pb7u",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr3blkb9002ummf06jqvcn1u",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "BLANK_INFERENCE",
+      "questionText": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?\n\nPlants have evolved defenses almost as diverse as the number of genera. Some load their tissues with harsh compounds that either are unpleasant to insects or intoxicate them, encouraging the insects to go bother another plant or at least slowing down their eating. Structural defenses like thick coats of wax on leaves may prevent some insect species from damaging the plant tissues altogether. Nor are individual plants entirely on their own while under attack. Plants can release chemical compounds that let their same-species neighbors know that an attack is likely coming, pushing those nearby plants to start building up defensive compounds in their tissues. Some of these cues even attract insect predators, a call for an assist that benefits both the plant and its bug-eating collaborators. The back-and-forth is not a matter of natural balance, but _____. New plant defenses unintentionally select for insects with ways to get around them, which in turn help bring about more resilient and resistant plant species. New variations, shading into entire new forms and adaptations, maintain the stalemate.",
+      "structuredData": {
+        "tags": [
+          "프리미엄 생성",
+          "빈칸 추론",
+          "핵심어 파악",
+          "글의 요지",
+          "진화/생물학"
+        ],
+        "_typeId": "BLANK_INFERENCE",
+        "options": [
+          {
+            "text": "a one-sided mechanism benefiting only the insects",
+            "label": "1"
+          },
+          {
+            "text": "a stable ecosystem free from biological conflicts",
+            "label": "2"
+          },
+          {
+            "text": "an ongoing process of reciprocal adaptation",
+            "label": "3"
+          },
+          {
+            "text": "a slow decline in plants' defensive capabilities",
+            "label": "4"
+          },
+          {
+            "text": "a restricted chemical signaling among neighbors",
+            "label": "5"
+          }
+        ],
+        "direction": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+        "keyPoints": [
+          "not A but B 구문을 통한 대조적 핵심 개념 파악",
+          "구체적 사례(방어와 우회의 반복)를 포괄하는 상위 개념(공진화/상호 적응) 추론",
+          "paraphrasing을 통한 정답 찾기 연습"
+        ],
+        "_typeLabel": "빈칸 추론",
+        "difficulty": "KILLER",
+        "answerLogic": "빈칸은 'not a matter of natural balance(자연적 균형의 문제가 아니다)'에 대조되는 개념을 요구함. 뒤이은 문장에서 식물의 방어와 곤충의 우회, 다시 식물의 내성 강화가 꼬리를 물고 일어남(which in turn help bring about...)을 서술하므로, 원문의 'drawn-out evolutionary conversation'은 변화 없는 평형이 아닌 상호 진화(reciprocal adaptation)의 지속적 과정으로 재진술됨.",
+        "explanation": "빈칸 문장은 식물과 곤충의 상호작용을 단정하는 글의 핵심 결론부입니다. 글 중간에서 식물은 곤충을 막기 위해 다양한 화학적, 구조적 방어 기제를 진화시켰음을 설명합니다. 빈칸 바로 뒤 문장들에서 식물의 새로운 방어 기제가 이를 우회하는 곤충을 선택하게 만들고, 이것이 다시 더 강한 식물 종을 만들어내는 과정이 반복된다고 설명합니다. 결국 식물과 곤충의 관계는 정지된 균형이 아니라 서로 맞대응하며 진화하는 과정이므로, 원문을 추상화하여 '상호 적응의 지속적인 과정'으로 재진술한 선지가 정답입니다. 갈등이 없는 안정된 상태나 식물의 방어력 감소를 뜻하는 오답은 본문의 논리와 정반대 극성을 지닙니다.",
+        "correctAnswer": "3",
+        "_generationPlan": "PREMIUM",
+        "blankAnswerMode": "PARAPHRASE",
+        "surroundingText": "The back-and-forth is not a matter of natural balance, but more like a drawn-out evolutionary conversation. New plant defenses",
+        "_qualityWarnings": [
+          {
+            "code": "blank-paraphrase-killer-too-easy",
+            "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+            "severity": "warning"
+          }
+        ],
+        "passageWithBlank": "Plants have evolved defenses almost as diverse as the number of genera. Some load their tissues with harsh compounds that either are unpleasant to insects or intoxicate them, encouraging the insects to go bother another plant or at least slowing down their eating. Structural defenses like thick coats of wax on leaves may prevent some insect species from damaging the plant tissues altogether. Nor are individual plants entirely on their own while under attack. Plants can release chemical compounds that let their same-species neighbors know that an attack is likely coming, pushing those nearby plants to start building up defensive compounds in their tissues. Some of these cues even attract insect predators, a call for an assist that benefits both the plant and its bug-eating collaborators. The back-and-forth is not a matter of natural balance, but _____. New plant defenses unintentionally select for insects with ways to get around them, which in turn help bring about more resilient and resistant plant species. New variations, shading into entire new forms and adaptations, maintain the stalemate.",
+        "originalExpression": "more like a drawn-out evolutionary conversation",
+        "wrongOptionExplanations": {
+          "1": "식물과 곤충 모두 서로의 진화를 이끌어낸다고 했으므로, 곤충에게만 유리한 일방적인 과정이라는 설명은 주객 전도이자 절반의 진실입니다.",
+          "2": "갈등이 없는 안정된 생태계라는 표현은 본문이 명시적으로 부정한 '정적인 자연의 균형(matter of natural balance)'과 일치하여 글의 논지와 정반대입니다.",
+          "4": "식물의 새로운 방어가 계속 출현한다고 했으므로 방어 능력이 감소한다는 것은 본문의 인과 논리에 위배되는 극성 반전 오답입니다.",
+          "5": "이웃 식물 간의 화학적 신호는 식물의 여러 방어 전략 중 하나(지엽적 예시)일 뿐, 곤충과 식물 간의 거시적 진화 과정을 포괄하지 못하는 과협소 오답입니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"1\",\"text\":\"a one-sided mechanism benefiting only the insects\"},{\"label\":\"2\",\"text\":\"a stable ecosystem free from biological conflicts\"},{\"label\":\"3\",\"text\":\"an ongoing process of reciprocal adaptation\"},{\"label\":\"4\",\"text\":\"a slow decline in plants' defensive capabilities\"},{\"label\":\"5\",\"text\":\"a restricted chemical signaling among neighbors\"}]",
+      "correctAnswer": "3",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"프리미엄 생성\",\"빈칸 추론\",\"핵심어 파악\",\"글의 요지\",\"진화/생물학\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T15:07:16.641Z",
+      "updatedAt": "2026-07-14T15:07:16.641Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrksbswx000hld042ih007wn",
+        "questionId": "cmrksbswx000gld04asx3pb7u",
+        "content": "빈칸 문장은 식물과 곤충의 상호작용을 단정하는 글의 핵심 결론부입니다. 글 중간에서 식물은 곤충을 막기 위해 다양한 화학적, 구조적 방어 기제를 진화시켰음을 설명합니다. 빈칸 바로 뒤 문장들에서 식물의 새로운 방어 기제가 이를 우회하는 곤충을 선택하게 만들고, 이것이 다시 더 강한 식물 종을 만들어내는 과정이 반복된다고 설명합니다. 결국 식물과 곤충의 관계는 정지된 균형이 아니라 서로 맞대응하며 진화하는 과정이므로, 원문을 추상화하여 '상호 적응의 지속적인 과정'으로 재진술한 선지가 정답입니다. 갈등이 없는 안정된 상태나 식물의 방어력 감소를 뜻하는 오답은 본문의 논리와 정반대 극성을 지닙니다.",
+        "keyPoints": "[\"not A but B 구문을 통한 대조적 핵심 개념 파악\",\"구체적 사례(방어와 우회의 반복)를 포괄하는 상위 개념(공진화/상호 적응) 추론\",\"paraphrasing을 통한 정답 찾기 연습\"]",
+        "wrongOptionExplanations": "{\"1\":\"식물과 곤충 모두 서로의 진화를 이끌어낸다고 했으므로, 곤충에게만 유리한 일방적인 과정이라는 설명은 주객 전도이자 절반의 진실입니다.\",\"2\":\"갈등이 없는 안정된 생태계라는 표현은 본문이 명시적으로 부정한 '정적인 자연의 균형(matter of natural balance)'과 일치하여 글의 논지와 정반대입니다.\",\"4\":\"식물의 새로운 방어가 계속 출현한다고 했으므로 방어 능력이 감소한다는 것은 본문의 인과 논리에 위배되는 극성 반전 오답입니다.\",\"5\":\"이웃 식물 간의 화학적 신호는 식물의 여러 방어 전략 중 하나(지엽적 예시)일 뿐, 곤충과 식물 간의 거시적 진화 과정을 포괄하지 못하는 과협소 오답입니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T15:07:16.641Z",
+        "updatedAt": "2026-07-14T15:07:16.641Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q005",
+    "originalId": "cmrknzbjr001amm2wz5gkj4m3",
+    "createdAt": "2026-07-14T13:05:35.786Z",
+    "plan": "STANDARD",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "INTERMEDIATE",
+    "storedAnswer": "⑤",
+    "qualityMode": null,
+    "qualityWarnings": [],
+    "reviewRecommended": false,
+    "stableKey": "348692d8792733202f377d66b7f88a05ad4e0802fcd341849895352749237994",
+    "sourceArtifactSha256": "f369f84c1218de4870e2469c4478759a863529613b3e6f637c03e6e4fc1730f0",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrknzbjr001amm2wz5gkj4m3",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmrknyvof0010mm2wmidkbdn9",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "BLANK_INFERENCE",
+      "questionText": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?\n\nKant staunchly advocated for the rule of law as the fundamental assurance, providing not just for security and peace, but for liberty as well.. He believed that human societies were moving towards more rational forms regulated by effective and binding legal frameworks because only such frameworks enabled people to live in harmony, to prosper and to co-operate. However, his belief in inevitable progress was not based on an optimistic or high-minded view of human nature. On the contrary, it comes close to Hobbes's outlook: man's violent and conflict-prone nature makes it necessary to establish and _____. We cannot count on people's benevolence or goodwill, but even 'a nation of devils' can live in harmony in a legal system that binds every citizen equally. Ideally, the law is the embodiment of those political principles that all rational beings would freely choose. If such laws forbid them to do something that they would not rationally choose to do anyway, then the law cannot be understood as a restraint on their freedom.",
+      "structuredData": {
+        "tags": [
+          "일반 생성",
+          "빈칸 추론",
+          "칸트",
+          "법치주의",
+          "학술 지문"
+        ],
+        "_typeId": "BLANK_INFERENCE",
+        "options": [
+          {
+            "text": "cultivate natural sympathy and moral benevolence prior to institutional rule",
+            "label": "①"
+          },
+          {
+            "text": "curtail personal liberty to expose the fundamental limits of shared codependence",
+            "label": "②"
+          },
+          {
+            "text": "transform even the most wicked citizens into genuinely altruistic individuals",
+            "label": "③"
+          },
+          {
+            "text": "completely erase individual self-interest and aggressive desires from human minds",
+            "label": "④"
+          },
+          {
+            "text": "uphold binding regulatory systems to preserve a state of order and harmony",
+            "label": "⑤"
+          }
+        ],
+        "direction": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+        "keyPoints": [
+          "칸트가 본 법치주의의 기능: 평화와 조화뿐 아니라 자유를 보장하는 합리적인 틀제공",
+          "홉스의 관점과의 수렴: 인간의 투쟁적 본성 때문에 규제적 법적 프레임워크가 필수적이라는 인과 기제",
+          "악마의 비유 이해: 개인의 선의가 전무할지라도 동등하게 귀속되는 사법적 규칙만 있다면 조화와 공존이 가능함"
+        ],
+        "_typeLabel": "빈칸 추론",
+        "difficulty": "INTERMEDIATE",
+        "answerLogic": "마치 홉스처럼 인간의 싸우기 쉽고 폭력적인 성향을 통제하기 위해 구속력 있는 거버넌스 프레임워크가 필요하다는 명백한 서술적 대응과 사법 질서 확보라는 수단을 대응시키는 패러프레이징 추론 형식입니다.",
+        "explanation": "빈칸이 속한 문장은 칸트의 역사적 낙관주의가 인간 본성에 대한 낙관이 아니라, 오히려 홉스적인 비관론 즉 인간의 폭력성이 평화를 방해한다는 전제에서 출발하고 있음을 밝히는 '대조적 인과 기제'의 문장입니다. 지문 중반부에서 인간의 자비심 대신 '악마의 나라조차 동일하게 구속하는 사법 체계 속에서는 조화를 이룰 수 있다'고 강조한 점과 마지막 문장에서 법이 합리적 주체의 자유로운 선택의 구현이라는 점을 연결해야 합니다. 따라서 인간의 갈등 성향 때문에 평화를 확보할 수 있도록 강제력 있는 규범 장치를 세워 유지해야 한다는 논리가 들어가야 하므로, 이를 학술적으로 패러프레이징한 ⑤가 정답입니다. ①, ④, ③은 법의 작용 범위를 인간 본성의 내면적 도덕 개조로 오인한 오류이고, ②는 법과 자유의 관계를 억압으로 왜곡한 논리적 극성 반전 오류입니다.",
+        "correctAnswer": "⑤",
+        "_generationPlan": "STANDARD",
+        "blankAnswerMode": "PARAPHRASE",
+        "surroundingText": "outlook: man's violent and conflict-prone nature makes it necessary to establish and",
+        "passageWithBlank": "Kant staunchly advocated for the rule of law as the fundamental assurance, providing not just for security and peace, but for liberty as well.. He believed that human societies were moving towards more rational forms regulated by effective and binding legal frameworks because only such frameworks enabled people to live in harmony, to prosper and to co-operate. However, his belief in inevitable progress was not based on an optimistic or high-minded view of human nature. On the contrary, it comes close to Hobbes's outlook: man's violent and conflict-prone nature makes it necessary to establish and _____. We cannot count on people's benevolence or goodwill, but even 'a nation of devils' can live in harmony in a legal system that binds every citizen equally. Ideally, the law is the embodiment of those political principles that all rational beings would freely choose. If such laws forbid them to do something that they would not rationally choose to do anyway, then the law cannot be understood as a restraint on their freedom.",
+        "originalExpression": "maintain an effective legal framework in order to secure peace",
+        "wrongOptionExplanations": {
+          "①": "본문에서 인간의 자비심(benevolence)이나 선의(goodwill)에 기댈 수 없다고 언급했으므로, 제도적 지배에 앞서 천성적인 자비심을 기른다는 선지는 오히려 본문의 가정과 반대되는 인과 전도에 해당합니다.",
+          "②": "마지막 문장에서 합리적인 법은 자유에 대한 억압이 아니라고 명시했으므로, 개인의 자유를 줄여 한계를 규명한다는 표현은 칸트의 자유 보장적 법치주의 관점과 극성이 정반대로 배치됩니다.",
+          "③": "악마의 나라(nation of devils) 비유를 잘못 연결하여 사람들의 내면을 이타적으로 개조시킨다는 주장을 펴고 있으나, 본문은 법이 이들을 묶어 조화롭게 살게 할 뿐 내면을 성화시킨다고 하지 않았으므로 오답입니다.",
+          "④": "인간의 본성에서 이기심과 공격적 욕구를 완전히 지워버린다는 극단적인 해결책은 본문에서 악마조차 조화롭게 살게 만든다는 현실적 규범 질서의 도입 목적과 맞지 않는 과확장 형태의 오류입니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"①\",\"text\":\"cultivate natural sympathy and moral benevolence prior to institutional rule\"},{\"label\":\"②\",\"text\":\"curtail personal liberty to expose the fundamental limits of shared codependence\"},{\"label\":\"③\",\"text\":\"transform even the most wicked citizens into genuinely altruistic individuals\"},{\"label\":\"④\",\"text\":\"completely erase individual self-interest and aggressive desires from human minds\"},{\"label\":\"⑤\",\"text\":\"uphold binding regulatory systems to preserve a state of order and harmony\"}]",
+      "correctAnswer": "⑤",
+      "points": 1,
+      "difficulty": "INTERMEDIATE",
+      "tags": "[\"일반 생성\",\"빈칸 추론\",\"칸트\",\"법치주의\",\"학술 지문\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T13:05:35.786Z",
+      "updatedAt": "2026-07-14T13:05:35.786Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrknzbjr001bmm2wkndkgnle",
+        "questionId": "cmrknzbjr001amm2wz5gkj4m3",
+        "content": "빈칸이 속한 문장은 칸트의 역사적 낙관주의가 인간 본성에 대한 낙관이 아니라, 오히려 홉스적인 비관론 즉 인간의 폭력성이 평화를 방해한다는 전제에서 출발하고 있음을 밝히는 '대조적 인과 기제'의 문장입니다. 지문 중반부에서 인간의 자비심 대신 '악마의 나라조차 동일하게 구속하는 사법 체계 속에서는 조화를 이룰 수 있다'고 강조한 점과 마지막 문장에서 법이 합리적 주체의 자유로운 선택의 구현이라는 점을 연결해야 합니다. 따라서 인간의 갈등 성향 때문에 평화를 확보할 수 있도록 강제력 있는 규범 장치를 세워 유지해야 한다는 논리가 들어가야 하므로, 이를 학술적으로 패러프레이징한 ⑤가 정답입니다. ①, ④, ③은 법의 작용 범위를 인간 본성의 내면적 도덕 개조로 오인한 오류이고, ②는 법과 자유의 관계를 억압으로 왜곡한 논리적 극성 반전 오류입니다.",
+        "keyPoints": "[\"칸트가 본 법치주의의 기능: 평화와 조화뿐 아니라 자유를 보장하는 합리적인 틀제공\",\"홉스의 관점과의 수렴: 인간의 투쟁적 본성 때문에 규제적 법적 프레임워크가 필수적이라는 인과 기제\",\"악마의 비유 이해: 개인의 선의가 전무할지라도 동등하게 귀속되는 사법적 규칙만 있다면 조화와 공존이 가능함\"]",
+        "wrongOptionExplanations": "{\"①\":\"본문에서 인간의 자비심(benevolence)이나 선의(goodwill)에 기댈 수 없다고 언급했으므로, 제도적 지배에 앞서 천성적인 자비심을 기른다는 선지는 오히려 본문의 가정과 반대되는 인과 전도에 해당합니다.\",\"④\":\"인간의 본성에서 이기심과 공격적 욕구를 완전히 지워버린다는 극단적인 해결책은 본문에서 악마조차 조화롭게 살게 만든다는 현실적 규범 질서의 도입 목적과 맞지 않는 과확장 형태의 오류입니다.\",\"③\":\"악마의 나라(nation of devils) 비유를 잘못 연결하여 사람들의 내면을 이타적으로 개조시킨다는 주장을 펴고 있으나, 본문은 법이 이들을 묶어 조화롭게 살게 할 뿐 내면을 성화시킨다고 하지 않았으므로 오답입니다.\",\"②\":\"마지막 문장에서 합리적인 법은 자유에 대한 억압이 아니라고 명시했으므로, 개인의 자유를 줄여 한계를 규명한다는 표현은 칸트의 자유 보장적 법치주의 관점과 극성이 정반대로 배치됩니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T13:05:35.786Z",
+        "updatedAt": "2026-07-14T13:05:35.786Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q006",
+    "originalId": "cmrkqxecz003hmm2w2zdbe59t",
+    "createdAt": "2026-07-14T14:28:04.980Z",
+    "plan": "PREMIUM",
+    "type": "IMPLIED_MEANING",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "①",
+    "qualityMode": null,
+    "qualityWarnings": [],
+    "reviewRecommended": false,
+    "stableKey": "4e1c826e48cab262a6070ccce5a8768b96ca842c183e37315273523243fe55ef",
+    "sourceArtifactSha256": "a9a527d1516750c4866a70a0a9101889cb2595c00495f59aa7640e2cb0c87dbb",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrkqxecz003hmm2w2zdbe59t",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmrknegao000nmm2wka3fiox0",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "IMPLIED_MEANING",
+      "questionText": "다음 글에서 밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?\n\nWe are now at a point of unprecedented genetic, cultural, and environmental power as a species, and we are linked to nearly every other person on Earth. We are embodied individuals trapped within limited time, but we are also networked data streams, memories, and influencers, and part of a grander humanity. Our decisions today have far-reaching impacts that place a responsibility on us to become good ancestors, to take the long view and time travel forward to imagine the well-being of billions of people whose lives will be lived in the world we are currently making. Centuries ago, leaders of the native North American Iroquois people created \"seven generation stewardship,\" instructing people to consider the impact of every decision on their children, seven generations into the future. In the precious few decades that Earth is ours, while we enjoy the gardens planted by our ancestors, we must not __steal the shade from our descendants__.",
+      "structuredData": {
+        "tags": [
+          "프리미엄 생성",
+          "함축의미추론",
+          "비유적표현",
+          "주제파악"
+        ],
+        "_typeId": "IMPLIED_MEANING",
+        "options": [
+          {
+            "text": "sacrifice the long-term well-being of future generations for present gains",
+            "label": "①"
+          },
+          {
+            "text": "ignore the immediate consequences of technological and genetic power",
+            "label": "②"
+          },
+          {
+            "text": "deplete the environmental resilience past generations relied upon",
+            "label": "③"
+          },
+          {
+            "text": "fail to adapt our limited resources to the networked data streams",
+            "label": "④"
+          },
+          {
+            "text": "overlook the cultural heritage preserved by the indigenous peoples",
+            "label": "⑤"
+          }
+        ],
+        "direction": "다음 글에서 밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?",
+        "keyPoints": [
+          "지문 핵심어 파악: 'good ancestors', 'long view', 'seven generation stewardship'",
+          "비유적 표현의 함축 의미 추론: 'garden'과 'shade'가 의미하는 바 이해",
+          "문맥상 대조적 요소 분별: 조상의 혜택 향유 vs 후손의 기반 박탈 금지"
+        ],
+        "_typeLabel": "함축 의미 추론",
+        "difficulty": "KILLER",
+        "explanation": "필자는 우리가 현재의 유전적, 문화적 환경적 힘을 가지고 있으며, 이로 인해 미래에 살 사람들의 웰빙을 상상하며 '좋은 조상'이 되어야 할 책임이 있다고 주장합니다. Iroquois 사람들의 7세대 후까지 영향을 고려하라는 예시 역시 미래 세대를 위한 배려를 강조합니다. 따라서 밑줄 친 부분은 우리가 누리는 번영(정원)처럼 후손이 누려야 할 안락함이나 자원(그늘)을 빼앗아서는 안 된다는, 즉 현재의 이익을 위해 미래 세대의 삶의 기반을 희생시켜서는 안 된다는 의미입니다. 이를 가장 잘 표현한 것은 ①입니다.",
+        "reasoningGap": "'shade'는 조상이 남긴 'garden'과 대구를 이루며 혜택과 번영을 상징한다. 따라서 후손으로부터 그늘을 훔친다는 것은 단기적인 이익을 위해 미래 세대의 자원과 환경을 훼손한다는 의미가 된다.",
+        "correctAnswer": "①",
+        "evidenceChain": [
+          "우리의 결정은 광범위한 영향을 미쳐 우리에게 '좋은 조상'이 될 책임, 즉 장기적인 관점을 가질 것을 요구한다.",
+          "과거 북미 원주민들은 7세대 후의 자손들에게 미칠 영향을 고려하라고 가르쳤다.",
+          "조상들이 심은 정원을 누리고 있듯이, 우리 후손들에게서 '그늘을 훔치지' 말아야 한다는 것은 미래 세대의 생존과 웰빙 기반을 앗아가서는 안 된다는 뜻이다."
+        ],
+        "impliedMeaning": "미래 세대가 누려야 할 안락함과 생존의 기반을 파괴하여 그들에게 피해를 준다.",
+        "surfaceMeaning": "우리의 후손들에게 갈 그늘을 훔친다.",
+        "_generationPlan": "PREMIUM",
+        "surroundingText": "while we enjoy the gardens planted by our ancestors, we must not steal the shade from our descendants.",
+        "passageWithUnderline": "We are now at a point of unprecedented genetic, cultural, and environmental power as a species, and we are linked to nearly every other person on Earth. We are embodied individuals trapped within limited time, but we are also networked data streams, memories, and influencers, and part of a grander humanity. Our decisions today have far-reaching impacts that place a responsibility on us to become good ancestors, to take the long view and time travel forward to imagine the well-being of billions of people whose lives will be lived in the world we are currently making. Centuries ago, leaders of the native North American Iroquois people created \"seven generation stewardship,\" instructing people to consider the impact of every decision on their children, seven generations into the future. In the precious few decades that Earth is ours, while we enjoy the gardens planted by our ancestors, we must not __steal the shade from our descendants__.",
+        "underlinedExpression": "steal the shade from our descendants",
+        "wrongOptionExplanations": {
+          "②": "기술적, 유전적 힘에 관한 내용이 서두에 있으나, 이는 즉각적 결과를 무시한다는 뜻이 아니라 오히려 미래에 미칠 장기적 영향을 고려해야 한다는 뜻입니다.",
+          "③": "과거 세대가 의존했던 환경적 회복력을 고갈시킨다는 내용으로, 글의 초점인 미래 세대 보호와는 방향이 다릅니다.",
+          "④": "네트워크 데이터 스트림은 지문에 등장하는 개념이지만, 미래 세대의 이익을 지켜야 한다는 문맥적 흐름과는 무관한 오답입니다.",
+          "⑤": "원주민의 7세대 원칙은 비유적 예시일 뿐이며, 문화 유산 보존 자체가 글의 궁극적 핵심이 아닙니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"①\",\"text\":\"sacrifice the long-term well-being of future generations for present gains\"},{\"label\":\"②\",\"text\":\"ignore the immediate consequences of technological and genetic power\"},{\"label\":\"③\",\"text\":\"deplete the environmental resilience past generations relied upon\"},{\"label\":\"④\",\"text\":\"fail to adapt our limited resources to the networked data streams\"},{\"label\":\"⑤\",\"text\":\"overlook the cultural heritage preserved by the indigenous peoples\"}]",
+      "correctAnswer": "①",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"프리미엄 생성\",\"함축의미추론\",\"비유적표현\",\"주제파악\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T14:28:04.980Z",
+      "updatedAt": "2026-07-14T14:28:04.980Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrkqxecz003imm2wbere53yw",
+        "questionId": "cmrkqxecz003hmm2w2zdbe59t",
+        "content": "필자는 우리가 현재의 유전적, 문화적 환경적 힘을 가지고 있으며, 이로 인해 미래에 살 사람들의 웰빙을 상상하며 '좋은 조상'이 되어야 할 책임이 있다고 주장합니다. Iroquois 사람들의 7세대 후까지 영향을 고려하라는 예시 역시 미래 세대를 위한 배려를 강조합니다. 따라서 밑줄 친 부분은 우리가 누리는 번영(정원)처럼 후손이 누려야 할 안락함이나 자원(그늘)을 빼앗아서는 안 된다는, 즉 현재의 이익을 위해 미래 세대의 삶의 기반을 희생시켜서는 안 된다는 의미입니다. 이를 가장 잘 표현한 것은 ①입니다.",
+        "keyPoints": "[\"지문 핵심어 파악: 'good ancestors', 'long view', 'seven generation stewardship'\",\"비유적 표현의 함축 의미 추론: 'garden'과 'shade'가 의미하는 바 이해\",\"문맥상 대조적 요소 분별: 조상의 혜택 향유 vs 후손의 기반 박탈 금지\"]",
+        "wrongOptionExplanations": "{\"③\":\"과거 세대가 의존했던 환경적 회복력을 고갈시킨다는 내용으로, 글의 초점인 미래 세대 보호와는 방향이 다릅니다.\",\"⑤\":\"원주민의 7세대 원칙은 비유적 예시일 뿐이며, 문화 유산 보존 자체가 글의 궁극적 핵심이 아닙니다.\",\"④\":\"네트워크 데이터 스트림은 지문에 등장하는 개념이지만, 미래 세대의 이익을 지켜야 한다는 문맥적 흐름과는 무관한 오답입니다.\",\"②\":\"기술적, 유전적 힘에 관한 내용이 서두에 있으나, 이는 즉각적 결과를 무시한다는 뜻이 아니라 오히려 미래에 미칠 장기적 영향을 고려해야 한다는 뜻입니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T14:28:04.980Z",
+        "updatedAt": "2026-07-14T14:28:04.980Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q007",
+    "originalId": "cmrkquelj0033mm2wnpjleceg",
+    "createdAt": "2026-07-14T14:25:45.319Z",
+    "plan": "PREMIUM",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "(C)",
+    "qualityMode": null,
+    "qualityWarnings": [],
+    "reviewRecommended": false,
+    "stableKey": "4f04dfb73a0e75693d3f5aa65c99028592961c28539ae4ab5824a4906dcac50d",
+    "sourceArtifactSha256": "2d1ff91a0827c8b50d06732786dedd4d95059501d5fc895be2062807f03f9fca",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrkquelj0033mm2wnpjleceg",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmrknegao000nmm2wka3fiox0",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "GRAMMAR_ERROR",
+      "questionText": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?\n\nWe are now at a point of unprecedented genetic, cultural, and environmental power as a species, and we are linked to nearly every other person on Earth. We are embodied individuals __(A) trapped__ within limited time, but we are also networked data streams, memories, and influencers, and part of a grander humanity. Our decisions today have __(B) far-reaching__ impacts that place a responsibility on us to become good ancestors, to take the long view and time travel forward to imagine the well-being of billions of people __(C) which__ lives will be lived in the world we are currently making. Centuries ago, leaders of the native North American Iroquois people created \"seven generation stewardship,\" __(D) instructing__ people to consider the impact of every decision on their children, seven generations into the future. In the precious few decades that Earth __(E) is__ ours, while we enjoy the gardens planted by our ancestors, we must not steal the shade from our descendants.",
+      "structuredData": {
+        "tags": [
+          "프리미엄 생성",
+          "어법",
+          "관계대명사",
+          "영어"
+        ],
+        "_typeId": "GRAMMAR_ERROR",
+        "options": [
+          {
+            "text": "trapped",
+            "label": "(A)"
+          },
+          {
+            "text": "far-reaching",
+            "label": "(B)"
+          },
+          {
+            "text": "which",
+            "label": "(C)"
+          },
+          {
+            "text": "instructing",
+            "label": "(D)"
+          },
+          {
+            "text": "is",
+            "label": "(E)"
+          }
+        ],
+        "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+        "keyPoints": [
+          "(C) 소유격 관계대명사 vs 주격/목적격 관계대명사 — 이어지는 절의 완전성 판정",
+          "(A) 정동사 vs 과거분사 — 문장의 본동사 유무와 수식 구조 판정",
+          "(D) 현재분사 vs 과거분사 — 분사구문의 능동 수동 판정"
+        ],
+        "_typeLabel": "어법 판단",
+        "difficulty": "KILLER",
+        "explanation": "문장의 선행사 'billions of people' 뒤에 관계대명사 'which'가 쓰여 밑줄 쳐져 있습니다. 관계대명사 뒤에는 'lives will be lived in the world we are currently making'이라는 필수 성분이 모두 갖춰진 완전한 형태의 절이 이어지고 있으므로, 주격이나 목적격 관계대명사인 which는 쓸 수 없습니다. 선행사인 'billions of people'의 소유격을 나타내어 질의 관계를 연결하는 '그 사람들의 삶'이라는 의미를 형성해야 하므로 소유격 관계대명사 whose로 고쳐야 합니다. 따라서 which를 whose로 교정해야 합니다.",
+        "correctAnswer": "(C)",
+        "correctAnswers": [
+          "(C)"
+        ],
+        "_generationPlan": "PREMIUM",
+        "markedExpressions": [
+          {
+            "label": "(A)",
+            "isError": false,
+            "pointCode": "a",
+            "correction": "trapped",
+            "expression": "trapped",
+            "errorExpression": "trapped",
+            "surroundingText": "We are embodied individuals trapped within limited time,"
+          },
+          {
+            "label": "(B)",
+            "isError": false,
+            "pointCode": "f",
+            "correction": "far-reaching",
+            "expression": "far-reaching",
+            "errorExpression": "far-reaching",
+            "surroundingText": "Our decisions today have far-reaching impacts"
+          },
+          {
+            "label": "(C)",
+            "isError": true,
+            "pointCode": "b",
+            "correction": "whose",
+            "expression": "whose",
+            "errorExpression": "which",
+            "surroundingText": "billions of people whose lives will be lived in the world we are currently making."
+          },
+          {
+            "label": "(D)",
+            "isError": false,
+            "pointCode": "c",
+            "correction": "instructing",
+            "expression": "instructing",
+            "errorExpression": "instructing",
+            "surroundingText": "created \"seven generation stewardship,\" instructing people to consider the impact of every decision"
+          },
+          {
+            "label": "(E)",
+            "isError": false,
+            "pointCode": "d",
+            "correction": "is",
+            "expression": "is",
+            "errorExpression": "is",
+            "surroundingText": "In the precious few decades that Earth is ours"
+          }
+        ],
+        "passageWithMarkers": "We are now at a point of unprecedented genetic, cultural, and environmental power as a species, and we are linked to nearly every other person on Earth. We are embodied individuals __(A) trapped__ within limited time, but we are also networked data streams, memories, and influencers, and part of a grander humanity. Our decisions today have __(B) far-reaching__ impacts that place a responsibility on us to become good ancestors, to take the long view and time travel forward to imagine the well-being of billions of people __(C) which__ lives will be lived in the world we are currently making. Centuries ago, leaders of the native North American Iroquois people created \"seven generation stewardship,\" __(D) instructing__ people to consider the impact of every decision on their children, seven generations into the future. In the precious few decades that Earth __(E) is__ ours, while we enjoy the gardens planted by our ancestors, we must not steal the shade from our descendants.",
+        "wrongOptionExplanations": {
+          "(A)": "명사 individuals를 뒤에서 수식하는 과거분사로 갇혀진 의미를 지니며 올바릅니다.",
+          "(B)": "명사 impacts를 수식하는 복합 형용사로 올바르게 사용되었습니다.",
+          "(D)": "주절의 주어인 leaders의 능동적 동작을 나타내는 현재분사 구문으로 적절합니다.",
+          "(E)": "단수 명사 Earth를 주어로 받는 단수형 동사 is로 수일치가 올바릅니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"(A)\",\"text\":\"trapped\"},{\"label\":\"(B)\",\"text\":\"far-reaching\"},{\"label\":\"(C)\",\"text\":\"which\"},{\"label\":\"(D)\",\"text\":\"instructing\"},{\"label\":\"(E)\",\"text\":\"is\"}]",
+      "correctAnswer": "(C)",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"프리미엄 생성\",\"어법\",\"관계대명사\",\"영어\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T14:25:45.319Z",
+      "updatedAt": "2026-07-14T14:25:45.319Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrkquelj0034mm2wf8q2yj4v",
+        "questionId": "cmrkquelj0033mm2wnpjleceg",
+        "content": "문장의 선행사 'billions of people' 뒤에 관계대명사 'which'가 쓰여 밑줄 쳐져 있습니다. 관계대명사 뒤에는 'lives will be lived in the world we are currently making'이라는 필수 성분이 모두 갖춰진 완전한 형태의 절이 이어지고 있으므로, 주격이나 목적격 관계대명사인 which는 쓸 수 없습니다. 선행사인 'billions of people'의 소유격을 나타내어 질의 관계를 연결하는 '그 사람들의 삶'이라는 의미를 형성해야 하므로 소유격 관계대명사 whose로 고쳐야 합니다. 따라서 which를 whose로 교정해야 합니다.",
+        "keyPoints": "[\"(C) 소유격 관계대명사 vs 주격/목적격 관계대명사 — 이어지는 절의 완전성 판정\",\"(A) 정동사 vs 과거분사 — 문장의 본동사 유무와 수식 구조 판정\",\"(D) 현재분사 vs 과거분사 — 분사구문의 능동 수동 판정\"]",
+        "wrongOptionExplanations": "{\"(A)\":\"명사 individuals를 뒤에서 수식하는 과거분사로 갇혀진 의미를 지니며 올바릅니다.\",\"(B)\":\"명사 impacts를 수식하는 복합 형용사로 올바르게 사용되었습니다.\",\"(D)\":\"주절의 주어인 leaders의 능동적 동작을 나타내는 현재분사 구문으로 적절합니다.\",\"(E)\":\"단수 명사 Earth를 주어로 받는 단수형 동사 is로 수일치가 올바릅니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T14:25:45.319Z",
+        "updatedAt": "2026-07-14T14:25:45.319Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q008",
+    "originalId": "cmrksbcea0007ld04go06vmjz",
+    "createdAt": "2026-07-14T15:06:55.234Z",
+    "plan": "STANDARD",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "①",
+    "qualityMode": null,
+    "qualityWarnings": [
+      {
+        "code": "blank-paraphrase-missing-answer-logic",
+        "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option.",
+        "severity": "warning"
+      },
+      {
+        "code": "blank-weak-distractors",
+        "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
+        "severity": "warning"
+      },
+      {
+        "code": "blank-killer-polarity-shortcut",
+        "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+        "severity": "warning"
+      }
+    ],
+    "reviewRecommended": false,
+    "stableKey": "69cacb861c1d79b6d2c6d456081ca6d0b4112aef515114403581acbfff4cdfe8",
+    "sourceArtifactSha256": "fec69238b799dfa3a4ff8bb258f36b96c28aa1c78dd46924de5cde2841fa625c",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrksbcea0007ld04go06vmjz",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr8z7a4v006smm0sgrzrvxt6",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "BLANK_INFERENCE",
+      "questionText": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?\n\nThe basic guidelines for good style are not mysterious; in fact, you use them every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a polished practical style makes cooperation easier. Writers develop such a style by acknowledging that readers expect the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone who is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information appropriately. In fact, this attention to audience and appropriateness may be even more important in writing than in conversation because writing _____ that are part of conversation. As writers, we have to anticipate the absent reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+      "structuredData": {
+        "tags": [
+          "일반 생성",
+          "빈칸 추론",
+          "킬러 문항",
+          "글쓰기와 대화의 차이",
+          "비언어적 소통",
+          "패러프레이징"
+        ],
+        "_typeId": "BLANK_INFERENCE",
+        "options": [
+          {
+            "text": "lacks the resource of physical cues and instant responses from the recipient",
+            "label": "①"
+          },
+          {
+            "text": "allows the passive audience to dominate and control the flow of exchange",
+            "label": "②"
+          },
+          {
+            "text": "requires a much higher level of formal grammar rules and syntactic structure",
+            "label": "③"
+          },
+          {
+            "text": "restricts the amount of information sent to prevent readers from losing interest",
+            "label": "④"
+          },
+          {
+            "text": "actively encourages interactive bodily gestures and real-time adjustments",
+            "label": "⑤"
+          }
+        ],
+        "direction": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+        "keyPoints": [
+          "글쓰기와 대화의 공통적 기반으로서의 '협력(cooperation)'과 청자/독자에 대한 배려 파악하기",
+          "비언어적 단서(nonverbal communication)와 피드백(feedback)의 부재가 글쓰기에 부여하는 제약 이해하기",
+          "lacks, cues, recipient 등 학술적 어휘를 통해 원문의 의미를 추상적으로 재진술(paraphrase)하는 능력 기르기"
+        ],
+        "_typeLabel": "빈칸 추론",
+        "difficulty": "KILLER",
+        "answerLogic": "인과·기제 채우기",
+        "explanation": "빈칸 문장은 글쓰기에서 독자에 대한 주의와 적절성이 대화에서보다 훨씬 더 중요해지는 인과적 이유를 제시하는 역할을 합니다. 지문의 마지막 문장에서 필자는 '존재하지 않는 독자의 반응을 예측해야 하고, 사실상 가상 대화의 양방향을 모두 상상해야 한다'고 설명합니다. 또한 바로 앞 문장들에서 대화는 화자와 청자 사이의 즉각적인 상호 작용이 가능함을 전제하고 있습니다. 따라서 글쓰기가 대화와 달리 지니는 본질적인 제약은 독자로부터의 물리적 신호나 즉각적인 반응이 결여되어 있다는 점입니다. 이를 종합하면 원문의 'does not permit the nonverbal communication and immediate feedback(비언어적 의사소통과 즉각적 피드백을 허용하지 않는다)'은 ① 'lacks the resource of physical cues and instant responses from the recipient(수신자로부터의 물리적 단서와 즉각적인 반응이라는 자원이 부족하다)'로 가장 적절하게 패러프레이즈됩니다. ⑤은 극성이 반전되었고, ③은 본문에서 다루지 않는 격식성을 언급한 과확장이며, ④는 지엽적 소재를 활용한 함정이고, ②는 주체와 객체의 관계를 왜곡한 오답입니다.",
+        "correctAnswer": "①",
+        "_generationPlan": "STANDARD",
+        "blankAnswerMode": "PARAPHRASE",
+        "surroundingText": "In fact, this attention to audience and appropriateness may be even more important in writing than in conversation because writing does not permit the nonverbal communication and immediate feedback that are part of conversation.",
+        "_qualityWarnings": [
+          {
+            "code": "blank-paraphrase-missing-answer-logic",
+            "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option.",
+            "severity": "warning"
+          },
+          {
+            "code": "blank-weak-distractors",
+            "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
+            "severity": "warning"
+          },
+          {
+            "code": "blank-killer-polarity-shortcut",
+            "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+            "severity": "warning"
+          }
+        ],
+        "passageWithBlank": "The basic guidelines for good style are not mysterious; in fact, you use them every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a polished practical style makes cooperation easier. Writers develop such a style by acknowledging that readers expect the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone who is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information appropriately. In fact, this attention to audience and appropriateness may be even more important in writing than in conversation because writing _____ that are part of conversation. As writers, we have to anticipate the absent reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+        "originalExpression": "does not permit the nonverbal communication and immediate feedback",
+        "wrongOptionExplanations": {
+          "②": "독자가 대화의 흐름을 지배하거나 통제한다는 내용은 본문에서 유추할 수 없으며, 오히려 필자가 가상의 대화를 상상하며 주도적으로 독자의 반응을 예측해야 한다는 본문 논지와 상충됩니다.",
+          "③": "글쓰기에서 격식이나 공식적 문법 규칙이 필요하다는 진술은 일반적인 상식에는 부합할 수 있으나, 본문에서 강조하는 '대화와의 차이점(비언어적 단서 및 즉각적 피드백의 부재)'이라는 인과적 단서와는 무관한 내용입니다.",
+          "④": "본문에서 정보 양의 조절(too much or too little)을 언급하긴 했으나, 이는 대화에서 흥미를 잃지 않게 하기 위한 조건 중 하나로 나열된 지엽적 정보일 뿐, 글쓰기 자체의 본질적 제약 요인을 설명하지 못하므로 과협소한 오답입니다.",
+          "⑤": "글쓰기가 비언어적 몸짓과 실시간 조정을 '적극적으로 장려한다'고 하여 본문이 지적한 글쓰기의 한계(부재하는 독자, 비언어적 소통 불가능)와 인과적 극성이 정반대로 표현된 오답입니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"①\",\"text\":\"lacks the resource of physical cues and instant responses from the recipient\"},{\"label\":\"②\",\"text\":\"allows the passive audience to dominate and control the flow of exchange\"},{\"label\":\"③\",\"text\":\"requires a much higher level of formal grammar rules and syntactic structure\"},{\"label\":\"④\",\"text\":\"restricts the amount of information sent to prevent readers from losing interest\"},{\"label\":\"⑤\",\"text\":\"actively encourages interactive bodily gestures and real-time adjustments\"}]",
+      "correctAnswer": "①",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"일반 생성\",\"빈칸 추론\",\"킬러 문항\",\"글쓰기와 대화의 차이\",\"비언어적 소통\",\"패러프레이징\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T15:06:55.234Z",
+      "updatedAt": "2026-07-14T15:06:55.234Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrksbcea0008ld04ox0tzfmp",
+        "questionId": "cmrksbcea0007ld04go06vmjz",
+        "content": "빈칸 문장은 글쓰기에서 독자에 대한 주의와 적절성이 대화에서보다 훨씬 더 중요해지는 인과적 이유를 제시하는 역할을 합니다. 지문의 마지막 문장에서 필자는 '존재하지 않는 독자의 반응을 예측해야 하고, 사실상 가상 대화의 양방향을 모두 상상해야 한다'고 설명합니다. 또한 바로 앞 문장들에서 대화는 화자와 청자 사이의 즉각적인 상호 작용이 가능함을 전제하고 있습니다. 따라서 글쓰기가 대화와 달리 지니는 본질적인 제약은 독자로부터의 물리적 신호나 즉각적인 반응이 결여되어 있다는 점입니다. 이를 종합하면 원문의 'does not permit the nonverbal communication and immediate feedback(비언어적 의사소통과 즉각적 피드백을 허용하지 않는다)'은 ① 'lacks the resource of physical cues and instant responses from the recipient(수신자로부터의 물리적 단서와 즉각적인 반응이라는 자원이 부족하다)'로 가장 적절하게 패러프레이즈됩니다. ⑤은 극성이 반전되었고, ③은 본문에서 다루지 않는 격식성을 언급한 과확장이며, ④는 지엽적 소재를 활용한 함정이고, ②는 주체와 객체의 관계를 왜곡한 오답입니다.",
+        "keyPoints": "[\"글쓰기와 대화의 공통적 기반으로서의 '협력(cooperation)'과 청자/독자에 대한 배려 파악하기\",\"비언어적 단서(nonverbal communication)와 피드백(feedback)의 부재가 글쓰기에 부여하는 제약 이해하기\",\"lacks, cues, recipient 등 학술적 어휘를 통해 원문의 의미를 추상적으로 재진술(paraphrase)하는 능력 기르기\"]",
+        "wrongOptionExplanations": "{\"⑤\":\"글쓰기가 비언어적 몸짓과 실시간 조정을 '적극적으로 장려한다'고 하여 본문이 지적한 글쓰기의 한계(부재하는 독자, 비언어적 소통 불가능)와 인과적 극성이 정반대로 표현된 오답입니다.\",\"③\":\"글쓰기에서 격식이나 공식적 문법 규칙이 필요하다는 진술은 일반적인 상식에는 부합할 수 있으나, 본문에서 강조하는 '대화와의 차이점(비언어적 단서 및 즉각적 피드백의 부재)'이라는 인과적 단서와는 무관한 내용입니다.\",\"④\":\"본문에서 정보 양의 조절(too much or too little)을 언급하긴 했으나, 이는 대화에서 흥미를 잃지 않게 하기 위한 조건 중 하나로 나열된 지엽적 정보일 뿐, 글쓰기 자체의 본질적 제약 요인을 설명하지 못하므로 과협소한 오답입니다.\",\"②\":\"독자가 대화의 흐름을 지배하거나 통제한다는 내용은 본문에서 유추할 수 없으며, 오히려 필자가 가상의 대화를 상상하며 주도적으로 독자의 반응을 예측해야 한다는 본문 논지와 상충됩니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T15:06:55.234Z",
+        "updatedAt": "2026-07-14T15:06:55.234Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q009",
+    "originalId": "cmrkqvl6a003cmm2w1rxoaed3",
+    "createdAt": "2026-07-14T14:26:40.498Z",
+    "plan": "PREMIUM",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "3",
+    "qualityMode": null,
+    "qualityWarnings": [
+      {
+        "code": "blank-paraphrase-killer-too-easy",
+        "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+        "severity": "warning"
+      },
+      {
+        "code": "blank-killer-polarity-shortcut",
+        "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+        "severity": "warning"
+      }
+    ],
+    "reviewRecommended": false,
+    "stableKey": "6b90ad883eaad8534dfc732184a387e76a2b9acae8c9fe244e33acb5f47f2939",
+    "sourceArtifactSha256": "c4bebaef1542562b566ec4c51b1a28cd11521552e52d3b213de815bbe31a5599",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrkqvl6a003cmm2w1rxoaed3",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmrknegao000nmm2wka3fiox0",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "BLANK_INFERENCE",
+      "questionText": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?\n\nWe are now at a point of unprecedented genetic, cultural, and environmental power as a species, and we are linked to nearly every other person on Earth. We are embodied individuals trapped within limited time, but we are also networked data streams, memories, and influencers, and part of a grander humanity. Our decisions today have far-reaching impacts that place a responsibility on us to become good ancestors, to take the long view and time travel forward to imagine the well-being of billions of people whose lives will be lived in the world we are currently making. Centuries ago, leaders of the native North American Iroquois people created \"seven generation stewardship,\" instructing people to consider the impact of every decision on their children, seven generations into the future. In the precious few decades that Earth is ours, while we enjoy the gardens planted by our ancestors, we must not _____.",
+      "structuredData": {
+        "tags": [
+          "프리미엄 생성",
+          "빈칸 추론",
+          "함축 의미 파악",
+          "패러프레이즈"
+        ],
+        "_typeId": "BLANK_INFERENCE",
+        "options": [
+          {
+            "text": "sacrifice our present innovations to honor ancestral traditions",
+            "label": "1"
+          },
+          {
+            "text": "restrict the genetic adaptations necessary for human survival",
+            "label": "2"
+          },
+          {
+            "text": "compromise the rightful prospects of those who will come after us",
+            "label": "3"
+          },
+          {
+            "text": "overlook the cultural achievements woven into our data streams",
+            "label": "4"
+          },
+          {
+            "text": "isolate ourselves from the grander humanity of the Iroquois",
+            "label": "5"
+          }
+        ],
+        "direction": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+        "keyPoints": [
+          "빈칸 문장이 글 전체의 비유적 결론이며, 현재 세대의 장기적 책임과 후손 보호라는 핵심 논지로 수렴됨을 파악하기",
+          "비유적 표현(steal the shade from our descendants)이 지니는 함축적 의미를 본문의 'good ancestors', 'future' 관점에서 논리적으로 추상화하기",
+          "오답들이 본문의 단어(네트워크, Iroquois 등)를 어떻게 활용하여 논리적 매력도를 높였는지 분석하고 소거하기"
+        ],
+        "_typeLabel": "빈칸 추론",
+        "difficulty": "KILLER",
+        "answerLogic": "원문의 'steal the shade from our descendants(후손들로부터 그늘을 훔치다)'는 후손들이 누려야 할 자원이나 안녕을 현재 세대의 결정으로 훼방하거나 박탈한다는 뜻이므로, 이를 'deprive future generations of their rightful well-being' 계열로 추상화하여 패러프레이즈함.",
+        "explanation": "이 글은 현재 세대가 지닌 막대한 영향력을 바탕으로 미래 세대를 위해 '좋은 조상'이 되어야 한다는 책임을 강조하고 있습니다. 지문 중간의 Iroquois 사람들의 '7세대 청지기 정신'은 모든 결정이 미래에 미칠 영향을 고려하라는 구체적 사례입니다. 따라서 마지막 문장은 조상들이 심은 정원(유산)을 누리는 동안, 우리는 결코 후손들의 몫(그늘)을 빼앗아서는 안 된다는 결론을 내립니다. 빈칸 위치는 '훔치지 말아야 할 대상' 즉 '미래 세대의 안녕이나 권리를 훼손하는 일'에 해당하므로, '우리 뒤에 올 사람들의 정당한 장래를 위태롭게 하는 것'으로 재진술한 선지가 가장 적절합니다. 오답들은 데이터, Iroquois, 유전 등 본문 어휘를 재활용했으나, 장기적인 책임이라는 글의 핵심에서 벗어나거나 논리적 방향이 잘못되었습니다.",
+        "correctAnswer": "3",
+        "_generationPlan": "PREMIUM",
+        "blankAnswerMode": "PARAPHRASE",
+        "surroundingText": "while we enjoy the gardens planted by our ancestors, we must not steal the shade from our descendants.",
+        "_qualityWarnings": [
+          {
+            "code": "blank-paraphrase-killer-too-easy",
+            "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+            "severity": "warning"
+          },
+          {
+            "code": "blank-killer-polarity-shortcut",
+            "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+            "severity": "warning"
+          }
+        ],
+        "passageWithBlank": "We are now at a point of unprecedented genetic, cultural, and environmental power as a species, and we are linked to nearly every other person on Earth. We are embodied individuals trapped within limited time, but we are also networked data streams, memories, and influencers, and part of a grander humanity. Our decisions today have far-reaching impacts that place a responsibility on us to become good ancestors, to take the long view and time travel forward to imagine the well-being of billions of people whose lives will be lived in the world we are currently making. Centuries ago, leaders of the native North American Iroquois people created \"seven generation stewardship,\" instructing people to consider the impact of every decision on their children, seven generations into the future. In the precious few decades that Earth is ours, while we enjoy the gardens planted by our ancestors, we must not _____.",
+        "originalExpression": "steal the shade from our descendants",
+        "wrongOptionExplanations": {
+          "1": "조상의 전통을 존중하기 위해 현재의 혁신을 희생한다는 내용으로, 조상의 유산을 즐기면서 미래의 안녕을 지켜야 한다는 본문의 초점(후손에 대한 책임)에서 벗어납니다.",
+          "2": "유전적 적응 같은 부분적 소재를 언급하여 인류 생존을 말하지만, 후손을 위해 장기적인 영향을 고려하자는 핵심인 '결정의 여파'를 다루지 못했습니다.",
+          "4": "데이터 스트림, 문화적 성취 등 본문에 등장한 소재를 나열했으나, 미래 세대를 위한 장기적 안목과 책임감이라는 글의 핵심 논지와 전혀 무관합니다.",
+          "5": "Iroquois 사람들과 더 위대한 인류라는 표현을 빌려왔지만, 그들의 지혜(미래 세대 고려)를 실천하자는 본문과 달리 고립을 말하므로 방향이 틀렸습니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"1\",\"text\":\"sacrifice our present innovations to honor ancestral traditions\"},{\"label\":\"2\",\"text\":\"restrict the genetic adaptations necessary for human survival\"},{\"label\":\"3\",\"text\":\"compromise the rightful prospects of those who will come after us\"},{\"label\":\"4\",\"text\":\"overlook the cultural achievements woven into our data streams\"},{\"label\":\"5\",\"text\":\"isolate ourselves from the grander humanity of the Iroquois\"}]",
+      "correctAnswer": "3",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"프리미엄 생성\",\"빈칸 추론\",\"함축 의미 파악\",\"패러프레이즈\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T14:26:40.498Z",
+      "updatedAt": "2026-07-14T14:26:40.498Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrkqvl6a003dmm2w9smdlea2",
+        "questionId": "cmrkqvl6a003cmm2w1rxoaed3",
+        "content": "이 글은 현재 세대가 지닌 막대한 영향력을 바탕으로 미래 세대를 위해 '좋은 조상'이 되어야 한다는 책임을 강조하고 있습니다. 지문 중간의 Iroquois 사람들의 '7세대 청지기 정신'은 모든 결정이 미래에 미칠 영향을 고려하라는 구체적 사례입니다. 따라서 마지막 문장은 조상들이 심은 정원(유산)을 누리는 동안, 우리는 결코 후손들의 몫(그늘)을 빼앗아서는 안 된다는 결론을 내립니다. 빈칸 위치는 '훔치지 말아야 할 대상' 즉 '미래 세대의 안녕이나 권리를 훼손하는 일'에 해당하므로, '우리 뒤에 올 사람들의 정당한 장래를 위태롭게 하는 것'으로 재진술한 선지가 가장 적절합니다. 오답들은 데이터, Iroquois, 유전 등 본문 어휘를 재활용했으나, 장기적인 책임이라는 글의 핵심에서 벗어나거나 논리적 방향이 잘못되었습니다.",
+        "keyPoints": "[\"빈칸 문장이 글 전체의 비유적 결론이며, 현재 세대의 장기적 책임과 후손 보호라는 핵심 논지로 수렴됨을 파악하기\",\"비유적 표현(steal the shade from our descendants)이 지니는 함축적 의미를 본문의 'good ancestors', 'future' 관점에서 논리적으로 추상화하기\",\"오답들이 본문의 단어(네트워크, Iroquois 등)를 어떻게 활용하여 논리적 매력도를 높였는지 분석하고 소거하기\"]",
+        "wrongOptionExplanations": "{\"1\":\"조상의 전통을 존중하기 위해 현재의 혁신을 희생한다는 내용으로, 조상의 유산을 즐기면서 미래의 안녕을 지켜야 한다는 본문의 초점(후손에 대한 책임)에서 벗어납니다.\",\"2\":\"유전적 적응 같은 부분적 소재를 언급하여 인류 생존을 말하지만, 후손을 위해 장기적인 영향을 고려하자는 핵심인 '결정의 여파'를 다루지 못했습니다.\",\"4\":\"데이터 스트림, 문화적 성취 등 본문에 등장한 소재를 나열했으나, 미래 세대를 위한 장기적 안목과 책임감이라는 글의 핵심 논지와 전혀 무관합니다.\",\"5\":\"Iroquois 사람들과 더 위대한 인류라는 표현을 빌려왔지만, 그들의 지혜(미래 세대 고려)를 실천하자는 본문과 달리 고립을 말하므로 방향이 틀렸습니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T14:26:40.498Z",
+        "updatedAt": "2026-07-14T14:26:40.498Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q010",
+    "originalId": "cmrkscdsf000ml804ly1515m4",
+    "createdAt": "2026-07-14T15:07:43.695Z",
+    "plan": "PREMIUM",
+    "type": "VOCAB_CHOICE",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "4",
+    "qualityMode": "relaxed",
+    "qualityWarnings": [],
+    "reviewRecommended": true,
+    "stableKey": "83b41b0df538172a9f9023f551c0184b4a5b688a501a8a571c2ce3b3e8dad43f",
+    "sourceArtifactSha256": "8339a5b5ec5dc759102087cc4b69ce4df4d78641dff17aca8b9dc1134bb00100",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrkscdsf000ml804ly1515m4",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr3blkb9002ummf06jqvcn1u",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "VOCAB_CHOICE",
+      "questionText": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?\n\nPlants have evolved defenses almost as __(e) diverse__ as the number of genera. Some load their tissues with __(a) harsh__ compounds that either are unpleasant to insects or intoxicate them, encouraging the insects to go bother another plant or at least slowing down their eating. Structural defenses like thick coats of wax on leaves may __(b) prevent__ some insect species from damaging the plant tissues altogether. Nor are individual plants entirely on their own while under attack. Plants can release chemical compounds that let their same-species neighbors know that an attack is likely coming, pushing those nearby plants to start building up defensive compounds in their tissues. Some of these cues even attract insect predators, a call for an assist that __(c) benefits__ both the plant and its bug-eating collaborators. The back-and-forth is not a matter of natural balance, but more like a drawn-out evolutionary conversation. New plant defenses unintentionally select for insects with ways to get around them, which in turn help bring about more resilient and resistant plant species. New variations, shading into entire new forms and adaptations, maintain the __(d) imbalance__.",
+      "structuredData": {
+        "tags": [
+          "프리미엄 생성",
+          "어휘추론",
+          "공진화",
+          "생태학"
+        ],
+        "_typeId": "VOCAB_CHOICE",
+        "options": [
+          {
+            "text": "harsh",
+            "label": "1"
+          },
+          {
+            "text": "prevent",
+            "label": "2"
+          },
+          {
+            "text": "benefits",
+            "label": "3"
+          },
+          {
+            "text": "imbalance",
+            "label": "4"
+          },
+          {
+            "text": "diverse",
+            "label": "5"
+          }
+        ],
+        "direction": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+        "keyPoints": [
+          "진화 생물학에서 공진화(coevolution) 개념 이해",
+          "문맥상 원인이 되는 행위와 결과의 연쇄 작용(back-and-forth) 파악",
+          "긍정/부정의 맥락을 고려한 어휘 추론"
+        ],
+        "_typeLabel": "어휘 적절성",
+        "difficulty": "KILLER",
+        "explanation": "식물의 새로운 방어 기제가 곤충의 회피 수단 진화를 이끌고, 이는 다시 더 저항력 있는 식물을 만들어내는 과정은 서로 물고 물리는 팽팽한 대치 상태(stalemate)를 설명하고 있습니다. 따라서 이를 imbalance(불균형)로 바꾸면 곤충과 식물 간의 진화적 경쟁 과정이 계속해서 유지된다는 문맥의 논리와 맞지 않습니다. 원래의 stalemate가 자연스럽습니다.",
+        "markedWords": [
+          {
+            "word": "harsh",
+            "label": "(a)",
+            "originalWord": "harsh",
+            "substituteWord": "harsh",
+            "isInappropriate": false
+          },
+          {
+            "word": "prevent",
+            "label": "(b)",
+            "originalWord": "prevent",
+            "substituteWord": "prevent",
+            "isInappropriate": false
+          },
+          {
+            "word": "benefits",
+            "label": "(c)",
+            "originalWord": "benefits",
+            "substituteWord": "benefits",
+            "isInappropriate": false
+          },
+          {
+            "word": "imbalance",
+            "label": "(d)",
+            "betterWord": "stalemate",
+            "originalWord": "stalemate",
+            "substituteWord": "imbalance",
+            "isInappropriate": true
+          },
+          {
+            "word": "diverse",
+            "label": "(e)",
+            "originalWord": "diverse",
+            "substituteWord": "diverse",
+            "isInappropriate": false
+          }
+        ],
+        "_qualityMode": "relaxed",
+        "correctAnswer": "4",
+        "_generationPlan": "PREMIUM",
+        "vocabDisplayMode": "SOURCE_EXACT",
+        "_generationNotice": "여러 번 재시도한 끝에 생성된 문항입니다. 검수 후 사용을 권장합니다.",
+        "_reviewRecommended": true,
+        "passageWithMarkers": "Plants have evolved defenses almost as __(e) diverse__ as the number of genera. Some load their tissues with __(a) harsh__ compounds that either are unpleasant to insects or intoxicate them, encouraging the insects to go bother another plant or at least slowing down their eating. Structural defenses like thick coats of wax on leaves may __(b) prevent__ some insect species from damaging the plant tissues altogether. Nor are individual plants entirely on their own while under attack. Plants can release chemical compounds that let their same-species neighbors know that an attack is likely coming, pushing those nearby plants to start building up defensive compounds in their tissues. Some of these cues even attract insect predators, a call for an assist that __(c) benefits__ both the plant and its bug-eating collaborators. The back-and-forth is not a matter of natural balance, but more like a drawn-out evolutionary conversation. New plant defenses unintentionally select for insects with ways to get around them, which in turn help bring about more resilient and resistant plant species. New variations, shading into entire new forms and adaptations, maintain the __(d) imbalance__.",
+        "wrongOptionExplanations": {
+          "(a)": "해당 화학 물질이 곤충에게 불쾌감을 주거나 독성을 띠게 하므로 harsh(가혹한, 거친)는 문맥상 적절합니다.",
+          "(b)": "두꺼운 왁스층이 곤충의 피해를 막는 역할을 하므로 prevent(막다, 예방하다)는 적절한 어휘입니다.",
+          "(c)": "포식자 곤충을 부르는 것이 식물과 포식자 모두에게 이익이 된다고 하였으므로 benefits(이익을 주다)는 자연스럽습니다.",
+          "(e)": "식물이 속의 수만큼이나 다양한 방어 기제를 진화시켜왔다는 의미이므로 diverse(다양한)는 적절합니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"1\",\"text\":\"harsh\"},{\"label\":\"2\",\"text\":\"prevent\"},{\"label\":\"3\",\"text\":\"benefits\"},{\"label\":\"4\",\"text\":\"imbalance\"},{\"label\":\"5\",\"text\":\"diverse\"}]",
+      "correctAnswer": "4",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"프리미엄 생성\",\"어휘추론\",\"공진화\",\"생태학\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T15:07:43.695Z",
+      "updatedAt": "2026-07-14T15:07:43.695Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrkscdsf000nl804jrakmnv8",
+        "questionId": "cmrkscdsf000ml804ly1515m4",
+        "content": "식물의 새로운 방어 기제가 곤충의 회피 수단 진화를 이끌고, 이는 다시 더 저항력 있는 식물을 만들어내는 과정은 서로 물고 물리는 팽팽한 대치 상태(stalemate)를 설명하고 있습니다. 따라서 이를 imbalance(불균형)로 바꾸면 곤충과 식물 간의 진화적 경쟁 과정이 계속해서 유지된다는 문맥의 논리와 맞지 않습니다. 원래의 stalemate가 자연스럽습니다.",
+        "keyPoints": "[\"진화 생물학에서 공진화(coevolution) 개념 이해\",\"문맥상 원인이 되는 행위와 결과의 연쇄 작용(back-and-forth) 파악\",\"긍정/부정의 맥락을 고려한 어휘 추론\"]",
+        "wrongOptionExplanations": "{\"(a)\":\"해당 화학 물질이 곤충에게 불쾌감을 주거나 독성을 띠게 하므로 harsh(가혹한, 거친)는 문맥상 적절합니다.\",\"(b)\":\"두꺼운 왁스층이 곤충의 피해를 막는 역할을 하므로 prevent(막다, 예방하다)는 적절한 어휘입니다.\",\"(c)\":\"포식자 곤충을 부르는 것이 식물과 포식자 모두에게 이익이 된다고 하였으므로 benefits(이익을 주다)는 자연스럽습니다.\",\"(e)\":\"식물이 속의 수만큼이나 다양한 방어 기제를 진화시켜왔다는 의미이므로 diverse(다양한)는 적절합니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T15:07:43.695Z",
+        "updatedAt": "2026-07-14T15:07:43.695Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q011",
+    "originalId": "cmrksbg880009l804mlekt5eo",
+    "createdAt": "2026-07-14T15:07:00.200Z",
+    "plan": "STANDARD",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "(E)",
+    "qualityMode": null,
+    "qualityWarnings": [],
+    "reviewRecommended": false,
+    "stableKey": "8583555281c7f3f4245d8665d4894b4e2776e4b802d857868b104c97d67db02c",
+    "sourceArtifactSha256": "20f0ef596f8dcfb484874f40840410e16f852133dec5cbe7c81a9be849388f40",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrksbg880009l804mlekt5eo",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr8z7a4v006smm0sgrzrvxt6",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "GRAMMAR_ERROR",
+      "questionText": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?\n\nThe basic guidelines for good style are not mysterious; in fact, you use __(A) them__ every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a polished practical style makes cooperation easier. Writers develop such a style by acknowledging __(B) that__ readers expect the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone __(C) who__ is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information appropriately. In fact, this attention to audience and appropriateness may be even __(D) more important__ in writing than in conversation because writing __(E) is not permitted__ the nonverbal communication and immediate feedback that are part of conversation. As writers, we have to anticipate the absent reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+      "structuredData": {
+        "tags": [
+          "일반 생성",
+          "능동태",
+          "수동태",
+          "목적어",
+          "명사절 접속사",
+          "관계대명사"
+        ],
+        "_typeId": "GRAMMAR_ERROR",
+        "options": [
+          {
+            "text": "them",
+            "label": "(A)"
+          },
+          {
+            "text": "that",
+            "label": "(B)"
+          },
+          {
+            "text": "who",
+            "label": "(C)"
+          },
+          {
+            "text": "more important",
+            "label": "(D)"
+          },
+          {
+            "text": "is not permitted",
+            "label": "(E)"
+          }
+        ],
+        "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+        "keyPoints": [
+          "(E) 능동태 vs 수동태 — 후속 목적어 유무에 따른 동사의 태 판정",
+          "(B) 명사절 접속사 — 완전한 절을 이끄는 명사절 that의 적절성",
+          "(C) 관계대명사의 격 — 선행사 인칭과 격에 부합하는 주격 관계사 선택"
+        ],
+        "_typeLabel": "어법 판단",
+        "difficulty": "KILLER",
+        "explanation": "종속접속사 because가 이끄는 부사절의 주어는 'writing'이며, 비인칭 동사구 뒤에 목적어인 명사구 'the nonverbal communication and immediate feedback'가 바로 이어지고 있습니다. 타동사인 permit이 목적어를 뒤에 직접 거느리기 위해서는 수동 문형이 아닌 능동 문형이 필수적입니다. 따라서 수동 형태인 'is not permitted'는 비문이며, 목적어를 취할 수 있는 능동 정동사구형태인 'does not permit'으로 고쳐야 합니다. 동사 뒤에 목적어 절이나 명사구가 살아있을 때는 수동태의 기계적인 모양에 현혹되어서는 안 됩니다.",
+        "correctAnswer": "(E)",
+        "correctAnswers": [
+          "(E)"
+        ],
+        "_generationPlan": "STANDARD",
+        "markedExpressions": [
+          {
+            "label": "(A)",
+            "isError": false,
+            "pointCode": "g",
+            "expression": "them",
+            "errorExpression": "them",
+            "surroundingText": "The basic guidelines for good style are not mysterious; in fact, you use them every day in conversation."
+          },
+          {
+            "label": "(B)",
+            "isError": false,
+            "pointCode": "b",
+            "expression": "that",
+            "errorExpression": "that",
+            "surroundingText": "Writers develop such a style by acknowledging that readers expect the same things"
+          },
+          {
+            "label": "(C)",
+            "isError": false,
+            "pointCode": "b",
+            "expression": "who",
+            "errorExpression": "who",
+            "surroundingText": "If you listen to someone who is not clear, who cannot stay on the topic,"
+          },
+          {
+            "label": "(D)",
+            "isError": false,
+            "pointCode": "f",
+            "expression": "more important",
+            "errorExpression": "more important",
+            "surroundingText": "In fact, this attention to audience and appropriateness may be even more important in writing than in conversation"
+          },
+          {
+            "label": "(E)",
+            "isError": true,
+            "pointCode": "e",
+            "correction": "does not permit",
+            "expression": "does not permit",
+            "errorExpression": "is not permitted",
+            "surroundingText": "because writing does not permit the nonverbal communication and immediate feedback that are part of conversation."
+          }
+        ],
+        "passageWithMarkers": "The basic guidelines for good style are not mysterious; in fact, you use __(A) them__ every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a polished practical style makes cooperation easier. Writers develop such a style by acknowledging __(B) that__ readers expect the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone __(C) who__ is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information appropriately. In fact, this attention to audience and appropriateness may be even __(D) more important__ in writing than in conversation because writing __(E) is not permitted__ the nonverbal communication and immediate feedback that are part of conversation. As writers, we have to anticipate the absent reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+        "wrongOptionExplanations": {
+          "(A)": "이 자리는 대명사의 지시 대상을 확인하는 곳으로, 앞선 복수 명사 'The basic guidelines for good style'를 지칭하므로 복수 대명사 'them'은 어법상 옳습니다.",
+          "(B)": "이 자리는 동사 acknowledging의 목적어 역할을 하는 명사절 자리에 위치하며, 뒤에 완전한 절(readers expect ~)을 이끌고 있으므로 명사절 접속사 'that'은 어법상 옳습니다.",
+          "(C)": "이 자리는 부정대명사 선행사 'someone'을 수식하는 주격 관계대명사 자리로, 뒤에 주어가 빠진 불완전한 절이 이어지므로 'who'는 어법상 옳습니다.",
+          "(D)": "이 자리는 연결동사 may be 뒤의 주격 보어 자리이므로, 형용사 비교급 형태인 'more important'는 어법상 옳습니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"(A)\",\"text\":\"them\"},{\"label\":\"(B)\",\"text\":\"that\"},{\"label\":\"(C)\",\"text\":\"who\"},{\"label\":\"(D)\",\"text\":\"more important\"},{\"label\":\"(E)\",\"text\":\"is not permitted\"}]",
+      "correctAnswer": "(E)",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"일반 생성\",\"능동태\",\"수동태\",\"목적어\",\"명사절 접속사\",\"관계대명사\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T15:07:00.200Z",
+      "updatedAt": "2026-07-14T15:07:00.200Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrksbg88000al804uwnze7se",
+        "questionId": "cmrksbg880009l804mlekt5eo",
+        "content": "종속접속사 because가 이끄는 부사절의 주어는 'writing'이며, 비인칭 동사구 뒤에 목적어인 명사구 'the nonverbal communication and immediate feedback'가 바로 이어지고 있습니다. 타동사인 permit이 목적어를 뒤에 직접 거느리기 위해서는 수동 문형이 아닌 능동 문형이 필수적입니다. 따라서 수동 형태인 'is not permitted'는 비문이며, 목적어를 취할 수 있는 능동 정동사구형태인 'does not permit'으로 고쳐야 합니다. 동사 뒤에 목적어 절이나 명사구가 살아있을 때는 수동태의 기계적인 모양에 현혹되어서는 안 됩니다.",
+        "keyPoints": "[\"(E) 능동태 vs 수동태 — 후속 목적어 유무에 따른 동사의 태 판정\",\"(B) 명사절 접속사 — 완전한 절을 이끄는 명사절 that의 적절성\",\"(C) 관계대명사의 격 — 선행사 인칭과 격에 부합하는 주격 관계사 선택\"]",
+        "wrongOptionExplanations": "{\"(A)\":\"이 자리는 대명사의 지시 대상을 확인하는 곳으로, 앞선 복수 명사 'The basic guidelines for good style'를 지칭하므로 복수 대명사 'them'은 어법상 옳습니다.\",\"(B)\":\"이 자리는 동사 acknowledging의 목적어 역할을 하는 명사절 자리에 위치하며, 뒤에 완전한 절(readers expect ~)을 이끌고 있으므로 명사절 접속사 'that'은 어법상 옳습니다.\",\"(C)\":\"이 자리는 부정대명사 선행사 'someone'을 수식하는 주격 관계대명사 자리로, 뒤에 주어가 빠진 불완전한 절이 이어지므로 'who'는 어법상 옳습니다.\",\"(D)\":\"이 자리는 연결동사 may be 뒤의 주격 보어 자리이므로, 형용사 비교급 형태인 'more important'는 어법상 옳습니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T15:07:00.200Z",
+        "updatedAt": "2026-07-14T15:07:00.200Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q012",
+    "originalId": "cmrksb9mb0007l904byj7kkes",
+    "createdAt": "2026-07-14T15:06:51.635Z",
+    "plan": "STANDARD",
+    "type": "GRAMMAR_CHOICE_COMBO",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "3",
+    "qualityMode": null,
+    "qualityWarnings": [
+      {
+        "code": "combo-killer-trap-mix",
+        "message": "KILLER combo should include at least 2 options wrong in two or more slots, got 1.",
+        "severity": "warning"
+      },
+      {
+        "code": "combo-killer-point-mix",
+        "message": "KILLER combo should test hard points (b/c/i) on at least 2 slots, got 1.",
+        "severity": "warning"
+      }
+    ],
+    "reviewRecommended": false,
+    "stableKey": "97994c2b7e3746a830d0fb67eaecc809e3d2c770906b37b7c0ab666928980df5",
+    "sourceArtifactSha256": "d8d82dacdd17955e1317d1724d482230440145d2f9766268a80bbbc3e27e05ff",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrksb9mb0007l904byj7kkes",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr8z7a4v006smm0sgrzrvxt6",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "GRAMMAR_CHOICE_COMBO",
+      "questionText": "(A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?\n\nThe basic guidelines for good style are not mysterious; in fact, you use them every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a polished practical style makes cooperation easier. Writers develop such a style by acknowledging (A) [what / that] readers expect the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone who is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information appropriately. In fact, this attention to audience and appropriateness may be (B) [very / even] more important in writing than in conversation because writing does not permit the nonverbal communication and immediate feedback that are part of conversation. As writers, we have to anticipate the (C) [absent / absently] reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+      "structuredData": {
+        "tags": [
+          "일반 생성",
+          "어법",
+          "관계대명사",
+          "비교급 강조",
+          "형용사와 부사"
+        ],
+        "slots": [
+          {
+            "label": "(A)",
+            "pointCode": "b",
+            "wrongExpression": "what",
+            "correctExpression": "that"
+          },
+          {
+            "label": "(B)",
+            "pointCode": "m",
+            "wrongExpression": "very",
+            "correctExpression": "even"
+          },
+          {
+            "label": "(C)",
+            "pointCode": "f",
+            "wrongExpression": "absently",
+            "correctExpression": "absent"
+          }
+        ],
+        "_typeId": "GRAMMAR_CHOICE_COMBO",
+        "options": [
+          {
+            "text": "what - even - absent",
+            "label": "1",
+            "slotValues": [
+              "what",
+              "even",
+              "absent"
+            ]
+          },
+          {
+            "text": "what - very - absently",
+            "label": "2",
+            "slotValues": [
+              "what",
+              "very",
+              "absently"
+            ]
+          },
+          {
+            "text": "that - even - absent",
+            "label": "3",
+            "slotValues": [
+              "that",
+              "even",
+              "absent"
+            ]
+          },
+          {
+            "text": "that - very - absent",
+            "label": "4",
+            "slotValues": [
+              "that",
+              "very",
+              "absent"
+            ]
+          },
+          {
+            "text": "that - even - absently",
+            "label": "5",
+            "slotValues": [
+              "that",
+              "even",
+              "absently"
+            ]
+          }
+        ],
+        "direction": "(A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+        "keyPoints": [
+          "관계대명사 that과 what의 구분 (선행사의 유무 판단)",
+          "비교급 강조 부사(even)와 원급 수식 부사(very)의 쓰임새 차이 구별",
+          "명사를 수식하는 형용사 자리와 동사/형용사/부사를 수식하는 부사 자리의 구별"
+        ],
+        "_typeLabel": "네모 어법",
+        "difficulty": "KILLER",
+        "explanation": "(A) 뒤따르는 절(readers expect the same things) 속에 있는 타동사 expect의 목적어가 빠져 있으며, 선행사인 the same things를 수식하고 있으므로 목적격 관계대명사 that이 오는 것이 올바릅니다. what은 선행사를 자체적으로 포함하는 관계대명사이므로 앞에 명사 선행사가 올 수 없습니다.\n(B) 비교급 표현인 more important를 수식하며 '훨씬'이라는 의미로 비교급을 강조하는 부사 자리입니다. even은 비교급을 강조할 수 있는 부사인 반면, very는 원급 형용사나 부사만을 수식하므로 비교급 important 앞에는 올 수 없습니다.\n(C) '보이지 않는 독자의 반응을 예상해야 한다'는 의미의 문맥에서, 명사인 response를 앞에서 수식하는 형용사(분사) 자리입니다. 독자(reader)는 글을 쓸 때 그 자리에 존재하지 않는 상태이므로 '존재하지 않는, 결석한'이라는 의미의 형용사 absent가 명사를 수식하는 것이 자연스럽고 올바릅니다. 형용사 absent를 부사인 absently로 쓰면 명사 response를 수식할 수 없어 어법상 틀립니다.",
+        "correctAnswer": "3",
+        "_generationPlan": "STANDARD",
+        "_qualityWarnings": [
+          {
+            "code": "combo-killer-trap-mix",
+            "message": "KILLER combo should include at least 2 options wrong in two or more slots, got 1.",
+            "severity": "warning"
+          },
+          {
+            "code": "combo-killer-point-mix",
+            "message": "KILLER combo should test hard points (b/c/i) on at least 2 slots, got 1.",
+            "severity": "warning"
+          }
+        ],
+        "passageWithMarkers": "The basic guidelines for good style are not mysterious; in fact, you use them every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a polished practical style makes cooperation easier. Writers develop such a style by acknowledging (A) [what / that] readers expect the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone who is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information appropriately. In fact, this attention to audience and appropriateness may be (B) [very / even] more important in writing than in conversation because writing does not permit the nonverbal communication and immediate feedback that are part of conversation. As writers, we have to anticipate the (C) [absent / absently] reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+        "wrongOptionExplanations": {
+          "1": "①는 (A)에서 선행사인 the same things가 뻔히 존재함에도 불구하고 선행사를 포함하는 관계대명사인 what을 사용하여 비문을 만듭니다.",
+          "2": "②는 (A)에서 선행사 수식에 불가능한 what을 썼고, (B)에서 비교급 수식이 불가능한 very를 썼으며, (C)에서 명사 수식 자리에 부사인 absently를 사용하여 세 군데 모두 오류가 있습니다.",
+          "4": "④은 (B)에서 비교급 more important를 수식할 수 없는 부사인 very를 사용하여 틀렸습니다.",
+          "5": "⑤은 (C)에서 뒤의 명사구(reader's response)를 수식하는 자리에 부사인 absently를 배치하여 어법상 결함이 생깁니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"1\",\"text\":\"what - even - absent\",\"slotValues\":[\"what\",\"even\",\"absent\"]},{\"label\":\"2\",\"text\":\"what - very - absently\",\"slotValues\":[\"what\",\"very\",\"absently\"]},{\"label\":\"3\",\"text\":\"that - even - absent\",\"slotValues\":[\"that\",\"even\",\"absent\"]},{\"label\":\"4\",\"text\":\"that - very - absent\",\"slotValues\":[\"that\",\"very\",\"absent\"]},{\"label\":\"5\",\"text\":\"that - even - absently\",\"slotValues\":[\"that\",\"even\",\"absently\"]}]",
+      "correctAnswer": "3",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"일반 생성\",\"어법\",\"관계대명사\",\"비교급 강조\",\"형용사와 부사\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T15:06:51.635Z",
+      "updatedAt": "2026-07-14T15:06:51.635Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrksb9mb0008l904dgs3msca",
+        "questionId": "cmrksb9mb0007l904byj7kkes",
+        "content": "(A) 뒤따르는 절(readers expect the same things) 속에 있는 타동사 expect의 목적어가 빠져 있으며, 선행사인 the same things를 수식하고 있으므로 목적격 관계대명사 that이 오는 것이 올바릅니다. what은 선행사를 자체적으로 포함하는 관계대명사이므로 앞에 명사 선행사가 올 수 없습니다.\n(B) 비교급 표현인 more important를 수식하며 '훨씬'이라는 의미로 비교급을 강조하는 부사 자리입니다. even은 비교급을 강조할 수 있는 부사인 반면, very는 원급 형용사나 부사만을 수식하므로 비교급 important 앞에는 올 수 없습니다.\n(C) '보이지 않는 독자의 반응을 예상해야 한다'는 의미의 문맥에서, 명사인 response를 앞에서 수식하는 형용사(분사) 자리입니다. 독자(reader)는 글을 쓸 때 그 자리에 존재하지 않는 상태이므로 '존재하지 않는, 결석한'이라는 의미의 형용사 absent가 명사를 수식하는 것이 자연스럽고 올바릅니다. 형용사 absent를 부사인 absently로 쓰면 명사 response를 수식할 수 없어 어법상 틀립니다.",
+        "keyPoints": "[\"관계대명사 that과 what의 구분 (선행사의 유무 판단)\",\"비교급 강조 부사(even)와 원급 수식 부사(very)의 쓰임새 차이 구별\",\"명사를 수식하는 형용사 자리와 동사/형용사/부사를 수식하는 부사 자리의 구별\"]",
+        "wrongOptionExplanations": "{\"1\":\"①는 (A)에서 선행사인 the same things가 뻔히 존재함에도 불구하고 선행사를 포함하는 관계대명사인 what을 사용하여 비문을 만듭니다.\",\"2\":\"②는 (A)에서 선행사 수식에 불가능한 what을 썼고, (B)에서 비교급 수식이 불가능한 very를 썼으며, (C)에서 명사 수식 자리에 부사인 absently를 사용하여 세 군데 모두 오류가 있습니다.\",\"4\":\"④은 (B)에서 비교급 more important를 수식할 수 없는 부사인 very를 사용하여 틀렸습니다.\",\"5\":\"⑤은 (C)에서 뒤의 명사구(reader's response)를 수식하는 자리에 부사인 absently를 배치하여 어법상 결함이 생깁니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T15:06:51.635Z",
+        "updatedAt": "2026-07-14T15:06:51.635Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q013",
+    "originalId": "cmrkoknma001mmm2whj7dobdn",
+    "createdAt": "2026-07-14T13:22:11.218Z",
+    "plan": "STANDARD",
+    "type": "BLANK_INFERENCE",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "③",
+    "qualityMode": null,
+    "qualityWarnings": [
+      {
+        "code": "blank-killer-polarity-shortcut",
+        "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+        "severity": "warning"
+      }
+    ],
+    "reviewRecommended": false,
+    "stableKey": "dc46d48fe3f90d4941827e54059432363ec82a9f347493c45524586b5199ae10",
+    "sourceArtifactSha256": "13a3110a73d3d618e9ac5698afe96dddcdf95f3763f75761f04b97994d75328a",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrkoknma001mmm2whj7dobdn",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr8z7c3h007smm0s9gfw34jf",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "BLANK_INFERENCE",
+      "questionText": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?\n\nThere is an obvious problem with the history of dress in all of its displays and that is, although textiles survive from early periods and cultures of recorded history, actual garments do not provide an uninterrupted flow of evidence across the same long time-span. Therefore, to give the study of dress equal significance to other areas such as architecture, painting, prints, drawings and sculpture, it was inevitable that _____. The history of surviving dress really only starts in the 17th century, and like all artefacts described as fine or decorative art, is a highly visual subject. However, unlike most of the categories of collection and study that make up those areas, it is fluid rather than static. Garments should be seen in movement on a human body, not frozen on a display figure. This is one of the many difficulties when curating collections of costume and also why some modern writers find costume collections physically and intellectually lifeless. Fortunately, in the period after 1660, when more items of dress survive to enrich our understanding of the history of the subject, there are also many painted, printed, photographed and filmed sources of evidence of people in clothing, caught in movement. Often a variety of different types of illustrative examples will provide evidence about how a garment was worn within the period in which it was made. Without the information contained in art in all of its forms, from drawing to sculpture, it is unlikely that displays of historic dress would be awkward imitations of the intentions of their original makers and owners.",
+      "structuredData": {
+        "tags": [
+          "일반 생성",
+          "빈칸 추론",
+          "인과 관계",
+          "킬러 문항",
+          "의복 역사",
+          "예술적 재구성"
+        ],
+        "_typeId": "BLANK_INFERENCE",
+        "options": [
+          {
+            "text": "physical components of ancient architecture and sculpture had to be restored first",
+            "label": "①"
+          },
+          {
+            "text": "the academic credibility of fashion studies was severely undermined by other disciplines",
+            "label": "②"
+          },
+          {
+            "text": "the reconstruction of dress history had to lean heavily on non-textile artistic representations",
+            "label": "③"
+          },
+          {
+            "text": "scholars were advised to completely avoid non-textile representations to maintain academic purity",
+            "label": "④"
+          },
+          {
+            "text": "dress research served as the primary reference point for understanding other artistic genres",
+            "label": "⑤"
+          }
+        ],
+        "direction": "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?",
+        "keyPoints": [
+          "실제 의복 유물의 불연속성이 유발한 한계와 그에 따른 다른 예술 영역 활용이라는 필연적 결과 파악하기",
+          "보존적 한계를 해결하기 위한 대체재로서의 예술 자료(architecture, painting 등)의 가치를 추상적으로 일반화하기",
+          "부정 접사(non-)를 활용한 오답의 함정을 피해 정확한 인과 구조의 정답 선택하기"
+        ],
+        "_typeLabel": "빈칸 추론",
+        "difficulty": "KILLER",
+        "answerLogic": "the reconstruction of dress history had to lean heavily on non-textile artistic representations",
+        "explanation": "빈칸이 속한 문장은 실제 의복 유물이 연속적으로 남아 있지 않은 한계를 극복하기 위해 의복 연구가 취할 수밖에 없었던 필연적 대안을 설명하는 인과의 귀결 조건에 해당합니다. 지문 전반부에서 실제 의복은 오랜 기간에 걸쳐 끊기지 않는 증거의 흐름을 제공하지 못하므로, 의복 연구의 위상을 건축, 회화, 조각 등 다른 분야만큼 높이기 위해서는 이들 다른 예술 영역이 원천 자료를 제공하는 것이 불가피했다고 설명합니다. 따라서 빈칸에 들어갈 말은 이러한 인과적 상황을 추상적으로 잘 가리키는 ③ '의복 역사의 재구성이 직물이 아닌 예술적 표현물에 크게 의존해야 했다'가 가장 적절합니다. ④는 정답 선지와 동일하게 'non-textile'이라는 부정 극성 접사를 지녔으나 학문 연구 순수성을 위해 이를 피하라고 했다는 어긋난 주장을 펴므로 오답입니다.",
+        "correctAnswer": "③",
+        "_generationPlan": "STANDARD",
+        "blankAnswerMode": "PARAPHRASE",
+        "surroundingText": "Therefore, to give the study of dress equal significance to other areas such as architecture, painting, prints, drawings and sculpture, it was inevitable that these other areas would provide much of the source material.",
+        "_qualityWarnings": [
+          {
+            "code": "blank-killer-polarity-shortcut",
+            "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+            "severity": "warning"
+          }
+        ],
+        "passageWithBlank": "There is an obvious problem with the history of dress in all of its displays and that is, although textiles survive from early periods and cultures of recorded history, actual garments do not provide an uninterrupted flow of evidence across the same long time-span. Therefore, to give the study of dress equal significance to other areas such as architecture, painting, prints, drawings and sculpture, it was inevitable that _____. The history of surviving dress really only starts in the 17th century, and like all artefacts described as fine or decorative art, is a highly visual subject. However, unlike most of the categories of collection and study that make up those areas, it is fluid rather than static. Garments should be seen in movement on a human body, not frozen on a display figure. This is one of the many difficulties when curating collections of costume and also why some modern writers find costume collections physically and intellectually lifeless. Fortunately, in the period after 1660, when more items of dress survive to enrich our understanding of the history of the subject, there are also many painted, printed, photographed and filmed sources of evidence of people in clothing, caught in movement. Often a variety of different types of illustrative examples will provide evidence about how a garment was worn within the period in which it was made. Without the information contained in art in all of its forms, from drawing to sculpture, it is unlikely that displays of historic dress would be awkward imitations of the intentions of their original makers and owners.",
+        "originalExpression": "these other areas would provide much of the source material",
+        "wrongOptionExplanations": {
+          "①": "본문에 언급된 architecture와 sculpture 같은 단어를 조합하여 그 물질적 구성 요소가 먼저 복원되어야 했다고 설명하지만, 이는 의복 연구의 대체 자료로서 타 예술 분야를 활용했다는 핵심 논지와 무관한 단순 소재 연상용 선지입니다.",
+          "②": "타 분야의 예술 자료를 의복 연구의 원천으로 삼았다고 해서 의복 연구의 학술적 신뢰성이 다른 학문에 의해 훼손되었다는 부정적인 평가는 지문의 논조와 상반되는 왜곡입니다.",
+          "④": "정답의 'non-textile'이라는 부정 형식을 포함하여 매력도를 높였으나, 학술적 순수성을 지키기 위해 직물이 아닌(non-textile) 표현물의 활용을 완전히 피해야 했다는 서술은 다른 예술 분야를 필수적으로 활용했다는 본문 내용과 정반대의 주장입니다.",
+          "⑤": "의복 연구를 위해 타 예술 분야를 소스로 활용했다는 본문 내용과 달리, 의복 연구가 오히려 다른 예술 장르를 이해하는 핵심 기준이 되었다고 연구의 주체와 대상을 전도시킨 설명입니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"①\",\"text\":\"physical components of ancient architecture and sculpture had to be restored first\"},{\"label\":\"②\",\"text\":\"the academic credibility of fashion studies was severely undermined by other disciplines\"},{\"label\":\"③\",\"text\":\"the reconstruction of dress history had to lean heavily on non-textile artistic representations\"},{\"label\":\"④\",\"text\":\"scholars were advised to completely avoid non-textile representations to maintain academic purity\"},{\"label\":\"⑤\",\"text\":\"dress research served as the primary reference point for understanding other artistic genres\"}]",
+      "correctAnswer": "③",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"일반 생성\",\"빈칸 추론\",\"인과 관계\",\"킬러 문항\",\"의복 역사\",\"예술적 재구성\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T13:22:11.218Z",
+      "updatedAt": "2026-07-14T13:22:11.218Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrkoknma001nmm2w8i9klbpk",
+        "questionId": "cmrkoknma001mmm2whj7dobdn",
+        "content": "빈칸이 속한 문장은 실제 의복 유물이 연속적으로 남아 있지 않은 한계를 극복하기 위해 의복 연구가 취할 수밖에 없었던 필연적 대안을 설명하는 인과의 귀결 조건에 해당합니다. 지문 전반부에서 실제 의복은 오랜 기간에 걸쳐 끊기지 않는 증거의 흐름을 제공하지 못하므로, 의복 연구의 위상을 건축, 회화, 조각 등 다른 분야만큼 높이기 위해서는 이들 다른 예술 영역이 원천 자료를 제공하는 것이 불가피했다고 설명합니다. 따라서 빈칸에 들어갈 말은 이러한 인과적 상황을 추상적으로 잘 가리키는 ③ '의복 역사의 재구성이 직물이 아닌 예술적 표현물에 크게 의존해야 했다'가 가장 적절합니다. ④는 정답 선지와 동일하게 'non-textile'이라는 부정 극성 접사를 지녔으나 학문 연구 순수성을 위해 이를 피하라고 했다는 어긋난 주장을 펴므로 오답입니다.",
+        "keyPoints": "[\"실제 의복 유물의 불연속성이 유발한 한계와 그에 따른 다른 예술 영역 활용이라는 필연적 결과 파악하기\",\"보존적 한계를 해결하기 위한 대체재로서의 예술 자료(architecture, painting 등)의 가치를 추상적으로 일반화하기\",\"부정 접사(non-)를 활용한 오답의 함정을 피해 정확한 인과 구조의 정답 선택하기\"]",
+        "wrongOptionExplanations": "{\"①\":\"본문에 언급된 architecture와 sculpture 같은 단어를 조합하여 그 물질적 구성 요소가 먼저 복원되어야 했다고 설명하지만, 이는 의복 연구의 대체 자료로서 타 예술 분야를 활용했다는 핵심 논지와 무관한 단순 소재 연상용 선지입니다.\",\"②\":\"타 분야의 예술 자료를 의복 연구의 원천으로 삼았다고 해서 의복 연구의 학술적 신뢰성이 다른 학문에 의해 훼손되었다는 부정적인 평가는 지문의 논조와 상반되는 왜곡입니다.\",\"④\":\"정답의 'non-textile'이라는 부정 형식을 포함하여 매력도를 높였으나, 학술적 순수성을 지키기 위해 직물이 아닌(non-textile) 표현물의 활용을 완전히 피해야 했다는 서술은 다른 예술 분야를 필수적으로 활용했다는 본문 내용과 정반대의 주장입니다.\",\"⑤\":\"의복 연구를 위해 타 예술 분야를 소스로 활용했다는 본문 내용과 달리, 의복 연구가 오히려 다른 예술 장르를 이해하는 핵심 기준이 되었다고 연구의 주체와 대상을 전도시킨 설명입니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T13:22:11.218Z",
+        "updatedAt": "2026-07-14T13:22:11.218Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q014",
+    "originalId": "cmrksc6de000jl404fo9pi6r0",
+    "createdAt": "2026-07-14T15:07:34.082Z",
+    "plan": "PREMIUM",
+    "type": "GRAMMAR_CHOICE_COMBO",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "2",
+    "qualityMode": null,
+    "qualityWarnings": [
+      {
+        "code": "combo-killer-trap-mix",
+        "message": "KILLER combo should include at least 2 options wrong in two or more slots, got 1.",
+        "severity": "warning"
+      }
+    ],
+    "reviewRecommended": false,
+    "stableKey": "f114ad8f2890534fee2c58f741be1d4a78abb675f280cfc1a67530890d88ac5d",
+    "sourceArtifactSha256": "ab774640e2bed91450538a67819d7e0d498d59ed760cc8b296bc54467a5d5055",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrksc6de000jl404fo9pi6r0",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr3blkb9002ummf06jqvcn1u",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "GRAMMAR_CHOICE_COMBO",
+      "questionText": "(A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?\n\nPlants have evolved defenses almost as diverse as the number of genera. Some load their tissues with harsh compounds that either are unpleasant to insects or intoxicate them, encouraging the insects to go bother another plant or at least slowing down their eating. Structural defenses like thick coats of wax on leaves may prevent some insect species from damaging the plant tissues altogether. Nor are individual plants entirely on their own while under attack. Plants can release chemical compounds that let their same-species neighbors know that an attack is likely coming, pushing those nearby plants to start building up defensive compounds in their tissues. Some of these cues even attract insect predators, a call for an assist that benefits both the plant and its bug-eating collaborators. The back-and-forth is not a matter of natural balance, but more like a drawn-out evolutionary conversation. New plant defenses (A) [unintentionally / unintentional] select for insects with ways to get around them, (B) [which / what] in turn help bring about more resilient and resistant plant species. New variations, (C) [shading / shaded] into entire new forms and adaptations, maintain the stalemate.",
+      "structuredData": {
+        "tags": [
+          "프리미엄 생성",
+          "어법",
+          "관계사",
+          "분사",
+          "부사"
+        ],
+        "slots": [
+          {
+            "label": "(A)",
+            "pointCode": "f",
+            "wrongExpression": "unintentional",
+            "correctExpression": "unintentionally"
+          },
+          {
+            "label": "(B)",
+            "pointCode": "b",
+            "wrongExpression": "what",
+            "correctExpression": "which"
+          },
+          {
+            "label": "(C)",
+            "pointCode": "c",
+            "wrongExpression": "shaded",
+            "correctExpression": "shading"
+          }
+        ],
+        "_typeId": "GRAMMAR_CHOICE_COMBO",
+        "options": [
+          {
+            "text": "unintentional - which - shading",
+            "label": "1",
+            "slotValues": [
+              "unintentional",
+              "which",
+              "shading"
+            ]
+          },
+          {
+            "text": "unintentionally - which - shading",
+            "label": "2",
+            "slotValues": [
+              "unintentionally",
+              "which",
+              "shading"
+            ]
+          },
+          {
+            "text": "unintentional - what - shaded",
+            "label": "3",
+            "slotValues": [
+              "unintentional",
+              "what",
+              "shaded"
+            ]
+          },
+          {
+            "text": "unintentionally - which - shaded",
+            "label": "4",
+            "slotValues": [
+              "unintentionally",
+              "which",
+              "shaded"
+            ]
+          },
+          {
+            "text": "unintentionally - what - shading",
+            "label": "5",
+            "slotValues": [
+              "unintentionally",
+              "what",
+              "shading"
+            ]
+          }
+        ],
+        "direction": "(A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?",
+        "keyPoints": [
+          "계속적 용법의 관계대명사 which의 역할과 what과의 차이점 이해",
+          "동사를 수식하는 부사의 쓰임새 파악",
+          "분사구문에서 능동과 진행 의미를 갖는 현재분사 형태의 판단"
+        ],
+        "_typeLabel": "네모 어법",
+        "difficulty": "KILLER",
+        "explanation": "(B) [관계사] 컴마 뒤에서 계속적 용법으로 선행사를 부연 설명하며, 접속사와 주어 역할을 동시에 수행하는 관계대명사 which가 적절합니다. what은 선행사를 포함하는 관계대명사이므로 계속적 용법이나 명시적인 선행사가 있는 자리에는 쓸 수 없습니다.\n(A) [형/부 자리] 명사 'plant defenses'를 수식하는 것이 아니라 동사 'select for'를 꾸며주는 역할을 하므로 부사 unintentionally가 적절합니다.\n(C) [분사 능수동] 컴마 뒤에서 부대상황/분사구문을 이끌며, 뒤에 전치사구 'into entire new forms and adaptations'를 동반하여 '새로운 형태와 적응으로 점차 변해가는'이라는 능동의 진행적 의미(자동사 음영을 띠며 스며들다/변하다)를 나타내므로 현재분사 shading이 적절합니다.",
+        "correctAnswer": "2",
+        "_generationPlan": "PREMIUM",
+        "_qualityWarnings": [
+          {
+            "code": "combo-killer-trap-mix",
+            "message": "KILLER combo should include at least 2 options wrong in two or more slots, got 1.",
+            "severity": "warning"
+          }
+        ],
+        "passageWithMarkers": "Plants have evolved defenses almost as diverse as the number of genera. Some load their tissues with harsh compounds that either are unpleasant to insects or intoxicate them, encouraging the insects to go bother another plant or at least slowing down their eating. Structural defenses like thick coats of wax on leaves may prevent some insect species from damaging the plant tissues altogether. Nor are individual plants entirely on their own while under attack. Plants can release chemical compounds that let their same-species neighbors know that an attack is likely coming, pushing those nearby plants to start building up defensive compounds in their tissues. Some of these cues even attract insect predators, a call for an assist that benefits both the plant and its bug-eating collaborators. The back-and-forth is not a matter of natural balance, but more like a drawn-out evolutionary conversation. New plant defenses (A) [unintentionally / unintentional] select for insects with ways to get around them, (B) [which / what] in turn help bring about more resilient and resistant plant species. New variations, (C) [shading / shaded] into entire new forms and adaptations, maintain the stalemate.",
+        "wrongOptionExplanations": {
+          "1": "(A) unintentional은 형용사이므로 명사를 직접 수식하거나 보어로 쓰여야 하는데, 본문에서는 동사구 select for를 수식하므로 부사가 적절합니다.",
+          "3": "(B) 계속적 용법 자리에는 what을 쓸 수 없으며, (A)는 동사구 select for를 수식해야 하므로 부사가 적절하고, (C)는 자동사 부대상황 구문이므로 현재분사가 와야 합니다.",
+          "4": "(C) shaded는 수동이나 완료를 의미하게 되나, 여기서는 'shading into'로 이어지는 능동의 진행적 의미가 필요하므로 현재분사가 적절합니다.",
+          "5": "(B) 선행사가 앞 문장 내용 혹은 특정 명사구로 존재하므로 선행사를 포함하는 관계대명사 what은 적절하지 않습니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"1\",\"text\":\"unintentional - which - shading\",\"slotValues\":[\"unintentional\",\"which\",\"shading\"]},{\"label\":\"2\",\"text\":\"unintentionally - which - shading\",\"slotValues\":[\"unintentionally\",\"which\",\"shading\"]},{\"label\":\"3\",\"text\":\"unintentional - what - shaded\",\"slotValues\":[\"unintentional\",\"what\",\"shaded\"]},{\"label\":\"4\",\"text\":\"unintentionally - which - shaded\",\"slotValues\":[\"unintentionally\",\"which\",\"shaded\"]},{\"label\":\"5\",\"text\":\"unintentionally - what - shading\",\"slotValues\":[\"unintentionally\",\"what\",\"shading\"]}]",
+      "correctAnswer": "2",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"프리미엄 생성\",\"어법\",\"관계사\",\"분사\",\"부사\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T15:07:34.082Z",
+      "updatedAt": "2026-07-14T15:07:34.082Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrksc6de000kl4040cdrcua9",
+        "questionId": "cmrksc6de000jl404fo9pi6r0",
+        "content": "(B) [관계사] 컴마 뒤에서 계속적 용법으로 선행사를 부연 설명하며, 접속사와 주어 역할을 동시에 수행하는 관계대명사 which가 적절합니다. what은 선행사를 포함하는 관계대명사이므로 계속적 용법이나 명시적인 선행사가 있는 자리에는 쓸 수 없습니다.\n(A) [형/부 자리] 명사 'plant defenses'를 수식하는 것이 아니라 동사 'select for'를 꾸며주는 역할을 하므로 부사 unintentionally가 적절합니다.\n(C) [분사 능수동] 컴마 뒤에서 부대상황/분사구문을 이끌며, 뒤에 전치사구 'into entire new forms and adaptations'를 동반하여 '새로운 형태와 적응으로 점차 변해가는'이라는 능동의 진행적 의미(자동사 음영을 띠며 스며들다/변하다)를 나타내므로 현재분사 shading이 적절합니다.",
+        "keyPoints": "[\"계속적 용법의 관계대명사 which의 역할과 what과의 차이점 이해\",\"동사를 수식하는 부사의 쓰임새 파악\",\"분사구문에서 능동과 진행 의미를 갖는 현재분사 형태의 판단\"]",
+        "wrongOptionExplanations": "{\"1\":\"(A) unintentional은 형용사이므로 명사를 직접 수식하거나 보어로 쓰여야 하는데, 본문에서는 동사구 select for를 수식하므로 부사가 적절합니다.\",\"3\":\"(B) 계속적 용법 자리에는 what을 쓸 수 없으며, (A)는 동사구 select for를 수식해야 하므로 부사가 적절하고, (C)는 자동사 부대상황 구문이므로 현재분사가 와야 합니다.\",\"4\":\"(C) shaded는 수동이나 완료를 의미하게 되나, 여기서는 'shading into'로 이어지는 능동의 진행적 의미가 필요하므로 현재분사가 적절합니다.\",\"5\":\"(B) 선행사가 앞 문장 내용 혹은 특정 명사구로 존재하므로 선행사를 포함하는 관계대명사 what은 적절하지 않습니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T15:07:34.082Z",
+        "updatedAt": "2026-07-14T15:07:34.082Z"
+      }
+    }
+  },
+  {
+    "blindId": "Q015",
+    "originalId": "cmrksb97j0008l404d695i4zz",
+    "createdAt": "2026-07-14T15:06:51.103Z",
+    "plan": "STANDARD",
+    "type": "VOCAB_CHOICE",
+    "requestedDifficulty": "KILLER",
+    "storedAnswer": "3",
+    "qualityMode": null,
+    "qualityWarnings": [],
+    "reviewRecommended": false,
+    "stableKey": "ff4c6c12bb23bce7c10a4a15adfc519ee36f10b9f14975d09baa0fcdceb68784",
+    "sourceArtifactSha256": "748efed384fc093b6321a76676525af34ca56ee6cd74b1d4c5e7a0e5798a9965",
+    "artifactEnvelope": null,
+    "question": {
+      "id": "cmrksb97j0008l404d695i4zz",
+      "academyId": "cmommhl7a0000mmekxmbqfefe",
+      "passageId": "cmr8z7a4v006smm0sgrzrvxt6",
+      "type": "MULTIPLE_CHOICE",
+      "subType": "VOCAB_CHOICE",
+      "questionText": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?\n\nThe basic guidelines for good style are not mysterious; in fact, you use them every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a __(a) polished__ practical style makes cooperation easier. Writers develop such a style by acknowledging that readers __(b) expect__ the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone who is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information __(c) excessively__. In fact, this attention to audience and appropriateness may be even more important in writing than in conversation because writing does not __(d) permit__ the nonverbal communication and immediate feedback that are part of conversation. As writers, we have to __(e) anticipate__ the absent reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+      "structuredData": {
+        "tags": [
+          "일반 생성",
+          "어휘 적절성",
+          "독자와의 가상 대화",
+          "글쓰기 스타일",
+          "수능 29번 유형"
+        ],
+        "_typeId": "VOCAB_CHOICE",
+        "options": [
+          {
+            "text": "polished",
+            "label": "1"
+          },
+          {
+            "text": "expect",
+            "label": "2"
+          },
+          {
+            "text": "excessively",
+            "label": "3"
+          },
+          {
+            "text": "permit",
+            "label": "4"
+          },
+          {
+            "text": "anticipate",
+            "label": "5"
+          }
+        ],
+        "direction": "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?",
+        "keyPoints": [
+          "대화와 글쓰기 소통에서 공통적으로 요구되는 협력 원칙(명확성, 관련성, 비례성) 이해하기",
+          "정보 과다 및 과소 제공이 소통 효율성을 해친다는 맥락을 통해 부적절성을 도출하기",
+          "독자의 피드백 부재라는 글쓰기의 한계를 가상 대화 상정(anticipate)으로 극복하는 흐름 읽기"
+        ],
+        "_typeLabel": "어휘 적절성",
+        "difficulty": "KILLER",
+        "explanation": "글쓴이는 글쓰기에서 독자에게 명확성, 관련성, 그리고 적절한 분량을 제공해야 한다고 말하며, 앞 문장에서 너무 많거나 너무 적은 정보를 제공할 경우 독자가 흥미를 잃는다(not clear, who offers too much or too little information)고 경고했습니다. 따라서 글쓴이는 정보를 지나치게(excessively) 많이 주기보다는, 적절하게, 혹은 알맞은 수준으로(appropriately) 제공해야 독자의 관심을 유지할 수 있습니다. 문맥상 과도한 정보 전도를 뜻하는 'excessively'는 어긋나며, 'appropriately'로 고쳐야 올바른 문맥이 됩니다.",
+        "markedWords": [
+          {
+            "word": "polished",
+            "label": "(a)",
+            "originalWord": "polished",
+            "substituteWord": "polished",
+            "isInappropriate": false
+          },
+          {
+            "word": "expect",
+            "label": "(b)",
+            "originalWord": "expect",
+            "substituteWord": "expect",
+            "isInappropriate": false
+          },
+          {
+            "word": "excessively",
+            "label": "(c)",
+            "betterWord": "appropriately",
+            "originalWord": "appropriately",
+            "substituteWord": "excessively",
+            "isInappropriate": true
+          },
+          {
+            "word": "permit",
+            "label": "(d)",
+            "originalWord": "permit",
+            "substituteWord": "permit",
+            "isInappropriate": false
+          },
+          {
+            "word": "anticipate",
+            "label": "(e)",
+            "originalWord": "anticipate",
+            "substituteWord": "anticipate",
+            "isInappropriate": false
+          }
+        ],
+        "correctAnswer": "3",
+        "_generationPlan": "STANDARD",
+        "vocabDisplayMode": "SOURCE_EXACT",
+        "passageWithMarkers": "The basic guidelines for good style are not mysterious; in fact, you use them every day in conversation. In conversation and in writing, we all rely heavily on cooperation to make sense of exchanges, and a __(a) polished__ practical style makes cooperation easier. Writers develop such a style by acknowledging that readers __(b) expect__ the same things that listeners expect in conversation: clarity, relevance, and proportion. If you listen to someone who is not clear, who cannot stay on the topic, or who offers too much or too little information, you will quickly lose interest in the conversation. Writers, too, need to be clear, stay on the topic, and give information __(c) excessively__. In fact, this attention to audience and appropriateness may be even more important in writing than in conversation because writing does not __(d) permit__ the nonverbal communication and immediate feedback that are part of conversation. As writers, we have to __(e) anticipate__ the absent reader's response; in effect, we have to imagine both halves of a virtual conversation.",
+        "wrongOptionExplanations": {
+          "(a)": "polished(다듬어진, 세련된)는 글을 쓸 때 협력을 원만하게 만들어 주는 실용적 스타일의 긍정적 속성을 나타내므로 문맥상 매우 자연스럽습니다.",
+          "(b)": "expect(기대하다)는 독자와 청자가 소통 방식(명확성, 관련성 등)에서 동등한 기준을 바라고 있음을 뜻하므로 흐름 상 적절합니다.",
+          "(d)": "permit(허용하다)는 글쓰기 매체가 비언어적 단서와 즉각적인 피드백을 직접적으로 허용하지 않는다는 속성을 기술하므로 문맥상 맞습니다.",
+          "(e)": "anticipate(예상하다, 예측하다)는 부재 중인 독자의 반응을 미리 그려봐야 하는 필자의 상황을 묘사하므로 논리적으로 정확합니다."
+        }
+      },
+      "questionImage": null,
+      "options": "[{\"label\":\"1\",\"text\":\"polished\"},{\"label\":\"2\",\"text\":\"expect\"},{\"label\":\"3\",\"text\":\"excessively\"},{\"label\":\"4\",\"text\":\"permit\"},{\"label\":\"5\",\"text\":\"anticipate\"}]",
+      "correctAnswer": "3",
+      "points": 1,
+      "difficulty": "KILLER",
+      "tags": "[\"일반 생성\",\"어휘 적절성\",\"독자와의 가상 대화\",\"글쓰기 스타일\",\"수능 29번 유형\"]",
+      "learningCategory": null,
+      "aiGenerated": true,
+      "approved": false,
+      "starred": false,
+      "sourceMaterialId": null,
+      "bundleId": null,
+      "sourceExtractionItemId": null,
+      "questionNumber": null,
+      "setId": null,
+      "inSet": false,
+      "similarQuestionGenJobId": null,
+      "customTypeId": null,
+      "createdAt": "2026-07-14T15:06:51.103Z",
+      "updatedAt": "2026-07-14T15:06:51.103Z",
+      "deletedAt": null,
+      "deletedById": null,
+      "explanation": {
+        "id": "cmrksb97j0009l404fc6uq8pk",
+        "questionId": "cmrksb97j0008l404d695i4zz",
+        "content": "글쓴이는 글쓰기에서 독자에게 명확성, 관련성, 그리고 적절한 분량을 제공해야 한다고 말하며, 앞 문장에서 너무 많거나 너무 적은 정보를 제공할 경우 독자가 흥미를 잃는다(not clear, who offers too much or too little information)고 경고했습니다. 따라서 글쓴이는 정보를 지나치게(excessively) 많이 주기보다는, 적절하게, 혹은 알맞은 수준으로(appropriately) 제공해야 독자의 관심을 유지할 수 있습니다. 문맥상 과도한 정보 전도를 뜻하는 'excessively'는 어긋나며, 'appropriately'로 고쳐야 올바른 문맥이 됩니다.",
+        "keyPoints": "[\"대화와 글쓰기 소통에서 공통적으로 요구되는 협력 원칙(명확성, 관련성, 비례성) 이해하기\",\"정보 과다 및 과소 제공이 소통 효율성을 해친다는 맥락을 통해 부적절성을 도출하기\",\"독자의 피드백 부재라는 글쓰기의 한계를 가상 대화 상정(anticipate)으로 극복하는 흐름 읽기\"]",
+        "wrongOptionExplanations": "{\"(a)\":\"polished(다듬어진, 세련된)는 글을 쓸 때 협력을 원만하게 만들어 주는 실용적 스타일의 긍정적 속성을 나타내므로 문맥상 매우 자연스럽습니다.\",\"(b)\":\"expect(기대하다)는 독자와 청자가 소통 방식(명확성, 관련성 등)에서 동등한 기준을 바라고 있음을 뜻하므로 흐름 상 적절합니다.\",\"(d)\":\"permit(허용하다)는 글쓰기 매체가 비언어적 단서와 즉각적인 피드백을 직접적으로 허용하지 않는다는 속성을 기술하므로 문맥상 맞습니다.\",\"(e)\":\"anticipate(예상하다, 예측하다)는 부재 중인 독자의 반응을 미리 그려봐야 하는 필자의 상황을 묘사하므로 논리적으로 정확합니다.\"}",
+        "relatedGrammar": null,
+        "difficulty": null,
+        "aiGenerated": true,
+        "approved": false,
+        "createdAt": "2026-07-14T15:06:51.103Z",
+        "updatedAt": "2026-07-14T15:06:51.103Z"
+      }
+    }
+  }
+]

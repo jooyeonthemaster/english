@@ -1,0 +1,45 @@
+{
+  "strategy": "w3-pro-fewshot-hardgate",
+  "describe": "경량 대조: pro(s9 폴백) × few-shot(s2) 원콜(미끼분리 없음) + 하드블록 재생성만(표적수리 없음) — 사다리 효과 분리 측정용",
+  "callPlan": "gemini-3.1-pro x1 (+하드블록 재생성 최대 2회)",
+  "total": 30,
+  "ok": 29,
+  "failed": 1,
+  "avgMs": 22882,
+  "avgAttempts": 1.17,
+  "avgCalls": 1.17,
+  "totalCostUsd": 0.64589,
+  "avgCostUsd": 0.02227,
+  "costRecordedCalls": 31,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 4,
+  "avgErrorCount": 1.34,
+  "zeroErrorItems": 8,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.868,
+  "avgAnswerRelPos": 0.625,
+  "answerRelPosInBand": 23,
+  "models": {
+    "google/gemini-3.1-pro-preview": 35
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 4
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 10,
+      "ok": 9,
+      "zeroError": 4
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 0
+    }
+  ]
+}

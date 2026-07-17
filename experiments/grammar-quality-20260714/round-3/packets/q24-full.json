@@ -1,0 +1,192 @@
+{
+  "passageId": "ebsi_go1_20200312-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "함축의미",
+    "words": 141
+  },
+  "attempts": 6,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-shallow-participle-adjective-answer",
+    "grammar-decoy-filler-span",
+    "grammar-noun-clause-pronoun-mislabel"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-explanation-lintx4",
+    "grammar-killer-overdrilled-answerx2",
+    "grammar-noun-clause-pronoun-mislabelx2",
+    "grammar-obvious-object-pronoun-subjectx1",
+    "grammar-decoy-filler-spanx1"
+  ],
+  "layout": "(A):dec=c  (B):dec=a  (C):dec=d  (D):ANS=e  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 53,
+        "relPos": 0.072,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 90,
+        "relPos": 0.122,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 389,
+        "relPos": 0.526,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 613,
+        "relPos": 0.829,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 630,
+        "relPos": 0.853,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.853,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "lost",
+        "isError": false,
+        "errorExpression": "lost",
+        "surroundingText": "tempers are one of the first things lost in many arguments. It's easy",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "say",
+        "isError": false,
+        "errorExpression": "say",
+        "surroundingText": "It's easy to say one should keep cool, but how do",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "sounds",
+        "isError": false,
+        "errorExpression": "sounds",
+        "surroundingText": "cool you'll say something that sounds foolish; you'll simply get angry",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "raised",
+        "isError": true,
+        "correction": "raised",
+        "errorExpression": "raising",
+        "surroundingText": "with a cool answer that focuses on the issue raised is likely to be most effective. Indeed",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "to be",
+        "isError": false,
+        "errorExpression": "to be",
+        "surroundingText": "on the issue raised is likely to be most effective. Indeed, any attentive",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "lost"
+      },
+      {
+        "label": "(B)",
+        "text": "say"
+      },
+      {
+        "label": "(C)",
+        "text": "sounds"
+      },
+      {
+        "label": "(D)",
+        "text": "raising"
+      },
+      {
+        "label": "(E)",
+        "text": "to be"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 things를 후치 수식하는 분사의 능/수동을 묻고 있으며, tempers(성미)가 상실되는 대상이므로 과거분사 'lost'가 어법상 옳습니다.",
+      "(B)": "이 자리는 가주어 It의 진주어 역할을 하는 chunk 내의 to부정사 형태를 묻고 있으며, 'to say'의 형태로 정동사 및 준동사 문맥에 완벽히 부합하므로 어법상 옳습니다.",
+      "(C)": "선행사인 단수 명사 'something'을 만족시키는 주격 관계대명사 that절 안의 동사이므로, 단수형 정동사인 'sounds'가 어법상 옳습니다.",
+      "(E)": "주격보어로 쓰인 형용사 likely 뒤에 연결되어 '~할 가능성이 있다'라는 의미를 완성하는 to부정사 'to be'이므로 어법상 옳습니다."
+    },
+    "explanation": "'but responding with a cool answer that focuses on the issue raised is likely to be most effective' 문장에서 제기된 화두(이슈)와 분사의 행위 주체 관계를 파악해야 합니다. 명사 'the issue'를 뒤에서 수식하는 분사 자리인데, 제기하는 행위의 대상이 'issue'이므로 능동의 분사 (D) 'raising'은 목적어 없이 형용사 역할을 수행하기에 적합지 않으며 비문입니다. 따라서 수동의 의미를 갖는 과거분사 'raised'로 고쳐야 합니다. 동명사 주어인 'responding'과 연결되는 동사 'is'에 주의하면서 수식 범위를 확인하면 구조를 쉽게 이해할 수 있습니다.",
+    "keyPoints": [
+      "(D) 능동태 vs 수동태 — 후치 수식어가 행위를 당하는 대상인 경우 수동 관계인 p.p. 형태가 필요함",
+      "(A) 분사 능동 v-ing vs 수동 p.p. — 생략된 관계사절 내에서 사물이 잃게 되는 대상이므로 과거분사가 맞음",
+      "(C) 수일치 — 주격 관계대명사절 내의 동사는 선행사의 수(something: 단수)에 일치시켜야 함"
+    ],
+    "tags": [
+      "수능어법구조",
+      "태판단",
+      "과거분사수식",
+      "수일치",
+      "고난도구문분석"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all know that tempers are one of the first things __(A) lost__ in many arguments. It's easy to __(B) say__ one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that __(C) sounds__ foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue __(D) raising__ is likely __(E) to be__ most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-decoy-filler-span",
+        "message": "Decoy underline (B) is a decorative filler span — a bare verb (\"say\") directly after \"to\" leaves no alternative form to weigh — only the base form is possible there. Replace only this decoy with a structural grammar judgment site (a different pointCode from the answer) where students genuinely weigh whether the form is correct."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-shallow-participle-adjective-answer",
+        "message": "INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"raised\" -> \"raising\" before a noun; require deeper structure."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-noun-clause-pronoun-mislabel",
+        "message": "Grammar keyPoints/explanation labels a pronoun-reference check as a noun-clause issue; use accurate school grammar terminology for the actual structure."
+      }
+    ],
+    "_qualityMode": "relaxed",
+    "_reviewRecommended": true,
+    "_generationNotice": "여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — 해설 표현이 다듬어지지 않았을 수 있음 · 일부 포인트가 평이할 수 있음. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다."
+  }
+}

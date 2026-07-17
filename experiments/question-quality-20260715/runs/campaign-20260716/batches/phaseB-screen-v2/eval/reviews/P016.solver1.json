@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'movies illuminate human rationality'가 지문과 정면 충돌 — 이 지문에서 영화의 영역은 affect(정서·충동)이지 rationality가 아니다. 또한 법이 통제하는 대상은 'physical violence'로 한정되지 않고 desires/drives/affects 전반이다. 어휘 치환이 이중으로 어긋나 유혹 강도 낮음."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "전반절 'cinema releases our psychological impulses'는 'cinema introduces us to our affects'와 방향이 정확히 겹쳐 빠른 풀이에서 실제로 끌린다. 함정은 'unleash' — 법이 충동을 풀어놓는다는 뜻이 되어 앵커 문장 'The law obsessively tries to suppress affects' 및 빈칸 직후 'It tries to ensure that we are not overwhelmed...by our desires and drives'와 정반대. unleash를 '억제하다'로 오독하게 설계된 미끼이며, 이 선지대로면 두 절이 같은 말이 되어 콜론이 예고한 'important difference'가 소멸한다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "전반절(cinema explores our emotional depths)은 부합하지만 'law completely ignores human nature'가 'foundational to law is its anxiety about human nature'와 직접 모순 — 법은 인간 본성을 무시하는 게 아니라 그에 대한 불안을 토대로 강박적으로 대응한다. 극단 표지 'completely'가 결정적 탈락 근거. 전반절만 읽는 수험생에게만 유혹적."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "역할 전도 — 금지(forbid)는 'regime of commands and prohibitions'를 가진 법의 몫이며 영화는 아무것도 금지하지 않는다. 'law codifies our instinctive desires'도 욕망의 성문화라는 뜻이 되어 suppress 논지와 어긋남. 빈칸 직후 'It tries to ensure...'의 억제 주체 조응도 성립하지 않는다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "correct",
+      "reason": "마지막 문장의 대조를 정확히 압축: 'film manifests human emotional experience' ↔ 'cinema introduces us to our affects, often forcing us to identify the most unbearable ones', 'legal systems control it' ↔ 'the law obsessively tries to suppress affects' / 'ensure that we are not overwhelmed and destroyed by our desires and drives'. seam 점검: 빈칸 직후 단수 'It'과 'legal systems'(복수) 사이 수 일치가 미세하게 어긋나지만, 담화 주제가 'the law'로 확립되어 있고 다음 문장이 'The law obsessively...'로 명시 재지칭하므로 조응 해소에 실질적 지장 없음."
+    }
+  ],
+  "note": "빈칸 유형. 정답 근거가 빈칸 뒤 두 문장(억제 기능 앵커 + suppress/introduce 대조 앵커)에 이중으로 고정되어 논쟁 여지 없음. 대안 해석 탐색 결과 ②의 unleash를 '통제된 방출'로 읽을 사전적 근거 없음, ③의 ignores를 완화할 구문적 여지 없음 — 어느 오답도 정문으로 구제 불가. ②가 가장 잘 설계된 매력적 오답(전반절 정확 + unleash 오독 유도), ③이 차순위(반쪽 독해 함정). 유일한 흠은 ⑤와 후속문 'It' 사이의 단복수 seam이지만 정답성을 흔들 수준은 아님. 유일 정답 ⑤."
+}

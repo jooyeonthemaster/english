@@ -1,0 +1,35 @@
+{
+  "pid": "P063",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('witnessing X, not just Y' is a valid NP-parallel), but the content is formally contradicted by the passage: method actors aim at 'truly feeling the emotions... rather than faking them.' Asserting audiences witness actors 'skillfully faking their emotions' negates the passage's central premise, so the causal connector 'As a result' cannot license it."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Seam test passes perfectly: 'observing [genuine individuals engaged in authentic situations], not just [fictional characters in a movie]' yields a clean NP-vs-NP contrast under the single verb 'observing.' Logic test passes: because actors genuinely become the characters and feel real emotions, the entailed audience perception is of real people in real situations rather than fiction. This is the unique option satisfying both the grammatical parallel and the discourse-level causal claim."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Seam fails: with 'stepping out of their own comfort zones' in the blank, the tail 'not just fictional characters in a movie' has no parallel object to contrast with; the only available parse is 'audiences... are not just fictional characters,' a vacuous assertion that viewers are not fictional. Also a lifted-phrase distractor: 'step out of their own comfort zone' is predicated of actors in the passage, not audiences. No alternative parse (ellipsis, gapping) rescues it."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Seam fails: 'experiencing [the emotional trauma], not just [fictional characters]' requires the collocation 'experiencing fictional characters,' which is not licensed, so the parallel collapses. Logic also fails: emotional trauma in the passage is a psychological cost borne by the method actor, not the audience's perceptual takeaway; 'As a result' does not entail audience trauma."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam fails: 'exploring [a whole new identity], not just [fictional characters in a movie]' has no coherent contrast — 'exploring fictional characters' does not oppose 'exploring an identity' in any parallel structure. Logic fails too: the passage states 'Each role becomes a journey for the actor to explore a whole new identity' — the exploration is the actor's, so predicating it of audiences misattributes the subject. Classic lifted-phrase distractor."
+    }
+  ],
+  "note": "The item's discriminating device is the appositive tail 'not just fictional characters in a movie,' which forces the blank to supply a perception verb + NP object parallel to 'fictional characters.' Only ② satisfies this formal constraint while remaining consistent with the passage; ① satisfies the form but inverts the thesis; ③④⑤ fail the grammatical seam outright. One caveat checked: 'they' in 'audiences feel like they are' is unambiguous only under options with perception verbs; under ③/⑤ the pronoun reading becomes incoherent, confirming rejection rather than creating ambiguity. Single defensible answer."
+}

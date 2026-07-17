@@ -1,0 +1,901 @@
+{
+  "candidates": [
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "48c9a42ac291d643ae9d7371cc62c1f0a6cf44ddd7ef87b3b9f36483a20f217c",
+      "features": {
+        "grammarSignalCount": 13,
+        "grammarSignalKinds": 5,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 17
+      },
+      "id": "repo:2009_06_3001198-q46-47-48",
+      "integrityFlags": [
+        {
+          "code": "RECONSTRUCTED_SOURCE",
+          "note": "Repository metadata says the source was reconstructed.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "narrative",
+        "grammarSuitability": "rich",
+        "source": "official-exam",
+        "topic": "narrative-practical",
+        "wordBand": "230-360"
+      },
+      "wordCount": 239
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "25dc16cce0e685f97a2b07428097306ede388af0803aa9f15995df97ca49c5d5",
+      "features": {
+        "grammarSignalCount": 0,
+        "grammarSignalKinds": 0,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 6
+      },
+      "id": "cmomp7qwb0009mmekniqpmi3j",
+      "integrityFlags": [
+        {
+          "code": "WORD_COUNT_OUTSIDE_CORE",
+          "note": "Core benchmark requires 120-360 English words; observed 92.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "scarce",
+        "source": "manual-other",
+        "topic": "science",
+        "wordBand": "outside"
+      },
+      "wordCount": 92
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "fbc1a854530da652d256d7ccabad0260123395076946e752d45ab7721a3a62cf",
+      "features": {
+        "grammarSignalCount": 11,
+        "grammarSignalKinds": 4,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 11
+      },
+      "id": "repo:2023_SN_5080827-q30",
+      "integrityFlags": [
+        {
+          "code": "DELIBERATE_SOURCE_ERROR",
+          "note": "Repository metadata marks a deliberate error in the source.",
+          "severity": "blocking"
+        },
+        {
+          "code": "RECONSTRUCTED_SOURCE",
+          "note": "Repository metadata says the source was reconstructed.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "narrative",
+        "grammarSuitability": "rich",
+        "source": "official-exam",
+        "topic": "narrative-practical",
+        "wordBand": "170-229"
+      },
+      "wordCount": 186
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "9d618234c830abad8234f10e164898f3059ec0b0a677db635112d7539334a1f1",
+      "features": {
+        "grammarSignalCount": 18,
+        "grammarSignalKinds": 5,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 33
+      },
+      "id": "cmq272std001mmmcsjwi72ekt",
+      "integrityFlags": [
+        {
+          "code": "NON_ENGLISH_INTRUSION",
+          "note": "English-language heuristic failed or found Korean instruction text.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "expository",
+        "grammarSuitability": "rich",
+        "source": "official-exam",
+        "topic": "social",
+        "wordBand": "230-360"
+      },
+      "wordCount": 354
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "7dc6b4335041b9fb25d60ac56bd421d887beee6a6ef7fe062496f3d87e4be392",
+      "features": {
+        "grammarSignalCount": 3,
+        "grammarSignalKinds": 2,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 10
+      },
+      "id": "repo:ebsi_go2_20081119-q33",
+      "integrityFlags": [
+        {
+          "code": "NON_HIGH_SOURCE_CONFIDENCE",
+          "note": "Repository reconstruction confidence is not high.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "normal",
+        "source": "official-exam",
+        "topic": "science",
+        "wordBand": "120-169"
+      },
+      "wordCount": 134
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "9b5519632f8b60af76c78bd5489f0ee146fe87ecdcb1fe9c2ded633f03d85635",
+      "features": {
+        "grammarSignalCount": 16,
+        "grammarSignalKinds": 5,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 14
+      },
+      "id": "cmq5cteu8001tmmrwj3oow9jj",
+      "integrityFlags": [
+        {
+          "code": "QUESTION_SCAFFOLD_CONTAMINATION",
+          "note": "Contains likely question, answer, or annotation scaffolding.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "narrative",
+        "grammarSuitability": "rich",
+        "source": "official-exam",
+        "topic": "narrative-practical",
+        "wordBand": "230-360"
+      },
+      "wordCount": 262
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "105d410804db2a6f15afb667b9706af88c9df70cb4754ef38ee7e6657ecc2380",
+      "features": {
+        "grammarSignalCount": 14,
+        "grammarSignalKinds": 4,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 27
+      },
+      "id": "repo:2016_09_5000516-q43-44-45",
+      "integrityFlags": [
+        {
+          "code": "PUNCTUATION_CORRUPTION",
+          "note": "Contains doubled or visibly displaced punctuation.",
+          "severity": "blocking"
+        },
+        {
+          "code": "RECONSTRUCTED_SOURCE",
+          "note": "Repository metadata says the source was reconstructed.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "practical",
+        "grammarSuitability": "rich",
+        "source": "official-exam",
+        "topic": "narrative-practical",
+        "wordBand": "230-360"
+      },
+      "wordCount": 313
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "66f08fb506e36bc2c61bd8cb46e909daa5dec6de98dc06888196f675952fb43b",
+      "features": {
+        "grammarSignalCount": 7,
+        "grammarSignalKinds": 3,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 7
+      },
+      "id": "cmq20ulie000immcs4vnjzfu9",
+      "integrityFlags": [
+        {
+          "code": "UNBALANCED_DELIMITER",
+          "note": "Parenthesis or square-bracket counts are unbalanced.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "expository",
+        "grammarSuitability": "rich",
+        "source": "manual-other",
+        "topic": "social",
+        "wordBand": "170-229"
+      },
+      "wordCount": 193
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "ace4712f84ab9cedcce610686fb5835c82cc2c688b137827112bf5f30eef16ac",
+      "features": {
+        "grammarSignalCount": 4,
+        "grammarSignalKinds": 3,
+        "hasDiscoursePivot": false,
+        "hasReferents": true,
+        "sentenceCount": 10
+      },
+      "id": "repo:2017_09_5007019-q41-42",
+      "integrityFlags": [
+        {
+          "code": "SOURCE_FOOTER_OR_OCR",
+          "note": "Contains a likely page footer, URL, or copyright/OCR remnant.",
+          "severity": "blocking"
+        },
+        {
+          "code": "RECONSTRUCTED_SOURCE",
+          "note": "Repository metadata says the source was reconstructed.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "normal",
+        "source": "official-exam",
+        "topic": "art-culture",
+        "wordBand": "230-360"
+      },
+      "wordCount": 246
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "f1286249065e3441ecfc38a99172ae21e989d7d64ba0fa4b5c4de52823221564",
+      "features": {
+        "grammarSignalCount": 23,
+        "grammarSignalKinds": 5,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 20
+      },
+      "id": "cmp83fqut000bmm8c7wp8n85m",
+      "integrityFlags": [
+        {
+          "code": "WORD_COUNT_OUTSIDE_CORE",
+          "note": "Core benchmark requires 120-360 English words; observed 448.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 4,
+        "priorWorkbenchJobs": 4,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "narrative",
+        "grammarSuitability": "rich",
+        "source": "manual-other",
+        "topic": "narrative-practical",
+        "wordBand": "outside"
+      },
+      "wordCount": 448
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "3d05fd6f09f6466f878ded4e0e905d1854b1d22845344206e346187f8c421363",
+      "features": {
+        "grammarSignalCount": 4,
+        "grammarSignalKinds": 2,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 8
+      },
+      "id": "repo:ebsi_go2_20090312-q33",
+      "integrityFlags": [
+        {
+          "code": "WORD_COUNT_OUTSIDE_CORE",
+          "note": "Core benchmark requires 120-360 English words; observed 95.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": true
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "normal",
+        "source": "official-exam",
+        "topic": "science",
+        "wordBand": "outside"
+      },
+      "wordCount": 95
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "b6365906cab4977b8a087bdee4d372cf8dfcfbcf948dda96d7f9c90ebc78309c",
+      "features": {
+        "grammarSignalCount": 12,
+        "grammarSignalKinds": 4,
+        "hasDiscoursePivot": false,
+        "hasReferents": true,
+        "sentenceCount": 8
+      },
+      "id": "cmqespvkv001amm1wcgicelfw",
+      "integrityFlags": [
+        {
+          "code": "QUESTION_SCAFFOLD_CONTAMINATION",
+          "note": "Contains likely question, answer, or annotation scaffolding.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "rich",
+        "source": "manual-other",
+        "topic": "humanities",
+        "wordBand": "120-169"
+      },
+      "wordCount": 160
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "8608bc714fe3056830c0dd583b9a48413a84950f6ebe214030405671a720a3fe",
+      "features": {
+        "grammarSignalCount": 8,
+        "grammarSignalKinds": 3,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 7
+      },
+      "id": "repo:2026_06_5090182-q39",
+      "integrityFlags": [
+        {
+          "code": "RECONSTRUCTED_SOURCE",
+          "note": "Repository metadata says the source was reconstructed.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "expository",
+        "grammarSuitability": "rich",
+        "source": "official-exam",
+        "topic": "humanities",
+        "wordBand": "170-229"
+      },
+      "wordCount": 173
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "d289716541fad9a2d79d7a131c4cec8fbeb187310e3a2363eb86a0884b3891f5",
+      "features": {
+        "grammarSignalCount": 7,
+        "grammarSignalKinds": 3,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 7
+      },
+      "id": "cmq23opn60019mmcss43eqa22",
+      "integrityFlags": [
+        {
+          "code": "UNBALANCED_DELIMITER",
+          "note": "Parenthesis or square-bracket counts are unbalanced.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "expository",
+        "grammarSuitability": "rich",
+        "source": "manual-other",
+        "topic": "social",
+        "wordBand": "170-229"
+      },
+      "wordCount": 193
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "2f83aa4515cdb3e5da7dbc5c4ac234ca5d89775259e356b8a47b5ab47e51c6d8",
+      "features": {
+        "grammarSignalCount": 3,
+        "grammarSignalKinds": 2,
+        "hasDiscoursePivot": false,
+        "hasReferents": true,
+        "sentenceCount": 6
+      },
+      "id": "repo:2008_SN_3000991-q21",
+      "integrityFlags": [
+        {
+          "code": "WORD_COUNT_OUTSIDE_CORE",
+          "note": "Core benchmark requires 120-360 English words; observed 103.",
+          "severity": "blocking"
+        },
+        {
+          "code": "DELIBERATE_SOURCE_ERROR",
+          "note": "Repository metadata marks a deliberate error in the source.",
+          "severity": "blocking"
+        },
+        {
+          "code": "RECONSTRUCTED_SOURCE",
+          "note": "Repository metadata says the source was reconstructed.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "narrative",
+        "grammarSuitability": "normal",
+        "source": "official-exam",
+        "topic": "narrative-practical",
+        "wordBand": "outside"
+      },
+      "wordCount": 103
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "af68a42ed42e553a7504703829b0b5ab0533f55c57cd45fff239367ac2c4d392",
+      "features": {
+        "grammarSignalCount": 2,
+        "grammarSignalKinds": 2,
+        "hasDiscoursePivot": false,
+        "hasReferents": true,
+        "sentenceCount": 8
+      },
+      "id": "cmq272ty1001smmcs17wmqeu9",
+      "integrityFlags": [
+        {
+          "code": "WORD_COUNT_OUTSIDE_CORE",
+          "note": "Core benchmark requires 120-360 English words; observed 71.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 3,
+        "priorWorkbenchJobs": 3,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "normal",
+        "source": "official-exam",
+        "topic": "humanities",
+        "wordBand": "outside"
+      },
+      "wordCount": 71
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "b0d0f2c4f8a4add4e3aff1b4458206facf7c381f07e5e63167d9fabca153853b",
+      "features": {
+        "grammarSignalCount": 7,
+        "grammarSignalKinds": 3,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 5
+      },
+      "id": "repo:2010_06_3001224-q24",
+      "integrityFlags": [
+        {
+          "code": "WORD_COUNT_OUTSIDE_CORE",
+          "note": "Core benchmark requires 120-360 English words; observed 113.",
+          "severity": "blocking"
+        },
+        {
+          "code": "RECONSTRUCTED_SOURCE",
+          "note": "Repository metadata says the source was reconstructed.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "rich",
+        "source": "official-exam",
+        "topic": "humanities",
+        "wordBand": "outside"
+      },
+      "wordCount": 113
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "274eb163aa3aac913beb9a5b92a86d72e227070dec69f6c227d2f03574d5a7fe",
+      "features": {
+        "grammarSignalCount": 21,
+        "grammarSignalKinds": 3,
+        "hasDiscoursePivot": true,
+        "hasReferents": true,
+        "sentenceCount": 22
+      },
+      "id": "cmq592dfy0012mmrwbpclkslx",
+      "integrityFlags": [
+        {
+          "code": "NON_ENGLISH_INTRUSION",
+          "note": "English-language heuristic failed or found Korean instruction text.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "central-span",
+        "discourse": "expository",
+        "grammarSuitability": "rich",
+        "source": "textbook-workbook",
+        "topic": "science",
+        "wordBand": "230-360"
+      },
+      "wordCount": 347
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "e421f6e4396ade2b50d88b34630e5af9cc674f1411ec2a6b9314ee9f0b57328b",
+      "features": {
+        "grammarSignalCount": 2,
+        "grammarSignalKinds": 2,
+        "hasDiscoursePivot": false,
+        "hasReferents": true,
+        "sentenceCount": 3
+      },
+      "id": "repo:2005_SN_3000969-q26",
+      "integrityFlags": [
+        {
+          "code": "WORD_COUNT_OUTSIDE_CORE",
+          "note": "Core benchmark requires 120-360 English words; observed 72.",
+          "severity": "blocking"
+        },
+        {
+          "code": "RECONSTRUCTED_SOURCE",
+          "note": "Repository metadata says the source was reconstructed.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "repo-official",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 0,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "normal",
+        "source": "official-exam",
+        "topic": "science",
+        "wordBand": "outside"
+      },
+      "wordCount": 72
+    },
+    {
+      "automaticStatus": "ROBUSTNESS_CANDIDATE",
+      "candidateOnly": true,
+      "contentHash": "c0d19287e627cf173d59689dcf3db41662cf2c68e8d1119e58f0d4d3d2ae03d1",
+      "features": {
+        "grammarSignalCount": 5,
+        "grammarSignalKinds": 2,
+        "hasDiscoursePivot": false,
+        "hasReferents": true,
+        "sentenceCount": 4
+      },
+      "id": "cmpr8d3lu001xmm3cxmn3vlbm",
+      "integrityFlags": [
+        {
+          "code": "WORD_COUNT_OUTSIDE_CORE",
+          "note": "Core benchmark requires 120-360 English words; observed 78.",
+          "severity": "blocking"
+        }
+      ],
+      "manualAudit": {
+        "logicalIntegrityProven": false,
+        "requiredIndependentReviews": 2,
+        "status": "PENDING"
+      },
+      "origin": "db-real",
+      "provenance": {
+        "holdoutRelaxations": [],
+        "priorGeneratedQuestions": 0,
+        "priorWorkbenchJobs": 1,
+        "reviewed": false
+      },
+      "strata": {
+        "blankSuitability": "local-only",
+        "discourse": "expository",
+        "grammarSuitability": "normal",
+        "source": "manual-other",
+        "topic": "humanities",
+        "wordBand": "outside"
+      },
+      "wordCount": 78
+    }
+  ],
+  "policy": "Robustness candidates are intentionally outside the clean benchmark and must never be silently promoted.",
+  "schemaVersion": 1,
+  "seed": "question-quality-20260715-corpus-v1",
+  "summary": {
+    "blankSuitability": {
+      "central-span": 10,
+      "local-only": 10
+    },
+    "discourse": {
+      "expository": 14,
+      "narrative": 5,
+      "practical": 1
+    },
+    "grammarSuitability": {
+      "normal": 7,
+      "rich": 12,
+      "scarce": 1
+    },
+    "origin": {
+      "db-real": 10,
+      "repo-official": 10
+    },
+    "source": {
+      "manual-other": 6,
+      "official-exam": 13,
+      "textbook-workbook": 1
+    },
+    "topic": {
+      "art-culture": 1,
+      "humanities": 5,
+      "narrative-practical": 6,
+      "science": 5,
+      "social": 3
+    },
+    "total": 20,
+    "wordBand": {
+      "120-169": 2,
+      "170-229": 4,
+      "230-360": 6,
+      "outside": 8
+    }
+  }
+}

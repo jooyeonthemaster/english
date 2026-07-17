@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'demand instant clarity and efficiency' is the direct antonym of the passage's thesis: readers 'put up with many obscurities and apparent irrelevancies' and interpret elements that FLOUT 'principles of efficient communication'. Inserting it makes the final sentence contradict every preceding claim. Grammatically the bare infinitive attaches fine to the ellipted parallel ('to pay attention, to explore uncertainties, and [to] demand...'), so rejection is purely logical."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "The passage never frames literary obscurity as grammatical ERROR needing correction or restoration of standard rules; readers are said to interpret deviations as purposeful, not to repair them. 'correct grammatical errors' introduces a concept absent from the text and inverts the tolerance stance. Seam is grammatical; logic fails."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'suspend the urge for immediate resolution of interpretive ambiguity' is entailed by the passage: readers tolerate obscurities 'without assuming that this makes no sense', assume complications 'ultimately have a communicative purpose', and 'struggle to interpret' for 'some further communicative goal' — i.e., they defer resolution while expecting eventual payoff ('worth it'). It also coheres with the coordinate items 'pay attention' and 'explore uncertainties'. Parallelism: 'to pay attention, to explore uncertainties, and suspend...' — third-conjunct bare form with ellipted 'to' after repeated to-infinitives is acceptable and identical in form to all other options, so no seam penalty. Uniquely defensible."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'dismiss the author's hidden intent in favor of subjective impressions' contradicts the explicit claim that 'readers assume that in literature complications of language ultimately have a communicative purpose' and struggle to interpret the writer's further communicative goal — the opposite of dismissing intent. Logically inadmissible."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'rely solely on the verified quality assured by the selection process' recycles sentence-1 vocabulary (selection, assurance) as surface bait, but the sentence containing the blank enumerates active reader EFFORTS ('pay attention', 'explore uncertainties'); 'rely solely' (passivity, exclusivity) is incompatible with the coordinated items and with 'struggle to interpret'. The selection process is the reason readers invest effort, not a substitute for it. Rejected on logical/cohesive grounds; grammar is fine."
+    }
+  ],
+  "note": "Culler-style 'hyper-protected cooperative principle' passage. All five options share identical bare-verb form, so the parallel-infinitive seam does not discriminate; discrimination is purely logical and ③ alone survives. ① is an antonym trap, ⑤ a surface-vocabulary trap. Single clean answer, no ambiguity."
+}

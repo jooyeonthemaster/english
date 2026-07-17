@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):ANS=c  (C):dec=e  (D):dec=l  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 125,
+        "relPos": 0.159,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 349,
+        "relPos": 0.443,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 611,
+        "relPos": 0.775,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 747,
+        "relPos": 0.948,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.948,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "hoping",
+        "isError": true,
+        "correction": "hoping",
+        "errorExpression": "hoped",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "aren't kept",
+        "isError": false,
+        "correction": "aren't kept",
+        "errorExpression": "aren't kept",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "just because",
+        "isError": false,
+        "correction": "just because",
+        "errorExpression": "just because",
+        "surroundingText": "This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken",
+        "pointCode": "l"
+      },
+      {
+        "label": "(E)",
+        "expression": "Consistency",
+        "isError": false,
+        "correction": "Consistency",
+        "errorExpression": "Consistency",
+        "surroundingText": "Consistency always brings better results.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "hoped"
+      },
+      {
+        "label": "(C)",
+        "text": "aren't kept"
+      },
+      {
+        "label": "(D)",
+        "text": "just because"
+      },
+      {
+        "label": "(E)",
+        "text": "Consistency"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "the distance를 선행사로 하며 뒤에 주어가 없는 불완전한 문장(has formed)이 이어지므로, 주격 관계대명사로서 that은 어법상 올바릅니다.",
+      "(C)": "주어인 relationships가 유지하는 행동의 대상(수동)이므로 수동태인 aren't kept는 어법상 자연스럽습니다.",
+      "(D)": "부사절을 이끄는 접속사로서 뒤에 주어+동사의 완전한 절(it's been a while~)이 이어지므로 어법상 적절합니다.",
+      "(E)": "단수 명사(Consistency)가 주어로 쓰여 단수 동사 brings와 수일치를 올바르게 이루고 있습니다."
+    },
+    "explanation": "(B) \"hoped\"는 어법상 틀린 표현이며 \"hoping\"로 고쳐야 한다. 문장의 주어와 동사(We call)를 포함한 완전한 절 뒤에서 부수적인 상황을 나타내는 분사구문 자리입니다. 우리가 소망하는(hope) 능동의 주체이며 뒤에 목적어절(that 이하)을 취하므로 능동을 의미하는 현재분사 hoping이 오는 것이 문장 구조상 올바릅니다. 따라서 수동 형태인 hoped는 비문이며 hoping으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(B) 현재분사 vs 과거분사 — 뒤에 목적어가 오고 의미상의 주어가 능동으로 행하므로 현재분사가 적절함",
+      "(A) 관계대명사의 역할 — 선행사가 존재하고 격에 맞는 관계대명사가 쓰였는지 확인",
+      "(C) 능동태 vs 수동태 — 주어가 동작의 주체인지 대상인지 파악하여 태 결정"
+    ],
+    "tags": [
+      "분사구문",
+      "관계대명사",
+      "수동태",
+      "수일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance __(A) that__ has formed and we scramble to make repairs. We call people we haven't spoken to in ages, __(B) hoped__ that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships __(C) aren't kept__ up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone __(D) just because__ it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. __(E) Consistency__ always brings better results."
+  }
+}

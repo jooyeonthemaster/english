@@ -1,0 +1,91 @@
+{
+  "pid": "P031",
+  "validity": {
+    "V1": false,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V1-MISSING-MARKER",
+      "severity": "critical",
+      "evidence": "렌더된 지문에 밑줄 마커가 (A), (B), (D), (E) 4개뿐이다. 선택지에는 '(C) managing'이 존재하지만 지문에는 (C) 마커가 전혀 없고, 해당 위치는 원지문 그대로 'a vague need to manage a “presence”'로 남아 있다. 학생은 선지 (C)를 지문에서 판정할 수 없다. 라벨·마커·선지 불일치."
+    },
+    {
+      "code": "V2-UNVERIFIABLE-SECOND-ERROR",
+      "severity": "critical",
+      "evidence": "markedExpressions의 (C)는 expression/correction='managing'(isError:false)으로 선언되어 있으나, 의도대로 'managing'이 렌더되었다면 'a vague need managing a presence'가 되어 그 자체가 어법 오류(need는 to부정사 보어를 취함)로 제2의 정답이 된다. 렌더 상태에서는 (C)가 아예 판정 불가. 어느 해석으로도 단일정답성이 확증되지 않아 보수적으로 V2 실패."
+    },
+    {
+      "code": "V4-MISANALYSIS-A",
+      "severity": "major",
+      "evidence": "(A) 오답 해설이 \"'when'이 이끄는 절이 주어인 organizations를 수식하는 구조\"라고 설명한다. 실제 문장 주어는 'One'이고 organizations는 전치사 by의 목적어이며, when절은 명사를 수식하는 것이 아니라 분사구 'made by organizations'(내지 술부)를 수식하는 시간 부사절이다. 이중 오분석."
+    },
+    {
+      "code": "V4-INCOHERENT-C",
+      "severity": "major",
+      "evidence": "(C) 오답 해설 \"형용사적 용법으로 쓰인 to부정사의 동사적 성격을 공유하는 'manage'가 동명사적 지위를 자연스럽게 취하고 있어\"는 자기모순이다. 지문의 실제 형태는 to부정사 'to manage'인데 해설은 동명사 지위를 말하고, 선지는 'managing'이다. 해설이 선지 내용과도 지문 실물과도 대응하지 않는다."
+    },
+    {
+      "code": "V4-KEYPOINT-MISLABEL",
+      "severity": "minor",
+      "evidence": "keyPoints의 (B) 항목이 '분사구문과 분사의 태'로 라벨링되어 있으나, 실제 출제 포인트는 전치사 with 뒤 명사 슬롯의 품사 판정(명사 vs 부사+과거분사)이며 분사구문도 태(voice)도 관련이 없다."
+    },
+    {
+      "code": "V5-FIELD-DESYNC",
+      "severity": "critical",
+      "evidence": "markedExpressions (C)의 expression/errorExpression/correction은 모두 'managing'이지만 자신의 surroundingText는 'a vague need to manage a “presence”'로 'managing'이 등장하지 않는다. 선택지(managing)·렌더 지문(to manage, 마커 없음)·구조 필드가 3자 불일치. keyPoints도 5개 밑줄 중 (B),(D),(E) 3개만 커버한다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 1,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 when 뒤 완전절 판정 — 관계사(which/where)나 분사와의 혼동 유도",
+      "temptingBecause": "선행 명사 organizations 직후에 위치해 관계대명사 자리로 착각할 여지가 있음",
+      "decisiveFlaw": "when + 완전절(they first consider...)은 표준적인 시간 부사절로 완전히 문법적 — 오답(정상) 확정. 다만 유혹 강도가 낮은 약한 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — 전치사 with의 목적어 자리에 명사구(thorough understanding) 대신 부사+과거분사(thoroughly understood)를 배치",
+      "temptingBecause": "understand의 파생형이라 의미상 자연스럽게 읽힐 수 있고, not A but B 병렬 속에 묻혀 있음",
+      "decisiveFlaw": "관사 'a'와 후행 'of' 사이에는 명사가 필수인데 'thoroughly understood'는 명사 기능 불가 — 다만 'a ___ of' 프레임 때문에 표층만 봐도 즉시 드러나 KILLER 깊이가 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "(의도 추정) need 뒤 to부정사 vs 동명사 판정 디코이",
+      "temptingBecause": "판정 불가 — 렌더 지문에 (C) 마커 자체가 없어 학생이 대상 표현을 특정할 수 없음",
+      "decisiveFlaw": "문항 파손: 지문은 'to manage'인데 선지는 'managing'. 'managing'이 실제 렌더되었다면 'a vague need managing'은 그 자체가 비문으로 제2 정답이 됨. isError:false 선언과 모순"
+    },
+    {
+      "label": "(D)",
+      "intent": "재귀대명사 itself vs it 판정 — 관용구 'in and of itself' 내 대명사 일치",
+      "temptingBecause": "동명사구 주어('Being in social media')를 받는 대명사라 단·복수 및 재귀 여부를 따져야 함",
+      "decisiveFlaw": "주어 자신을 되가리키는 전치사 목적어이므로 재귀형이 정확 — 문법적, 오답(정상) 확정"
+    },
+    {
+      "label": "(E)",
+      "intent": "must either A or B 상관 병렬에서 동사원형 판정",
+      "temptingBecause": "either 뒤 동사 형태를 solves/solving으로 착각하도록 유도",
+      "decisiveFlaw": "must에 걸리는 원형 solve가 or 뒤 result와 정확히 병렬 — 문법적, 오답(정상) 확정"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설: organizations를 '주어'로 오지목(실제 주어는 One, organizations는 by의 목적어), when 부사절이 명사를 '수식'한다는 오분석",
+    "(C) 해설: 지문 실물(to manage)·선지(managing) 어느 쪽과도 대응하지 않는 비정합 설명 — 'to부정사가 동명사적 지위를 취한다'는 문법적으로 무의미한 진술",
+    "keyPoints (B): '분사구문과 분사의 태'는 실제 포인트(전치사 목적어 자리의 품사 요건)와 무관한 용어 오라벨",
+    "keyPoints가 5개 밑줄 중 3개만 커버 — §C의 '5개 밑줄 각각 point/why tempting/why correct' 요건 미충족"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "치명 파손 문항. (1) 렌더 지문에 (C) 밑줄이 통째로 누락되어 5지선다가 성립하지 않음(V1). (2) 구조 필드의 (C)='managing'이 실제 렌더되었다면 제2 정답이 되는 자기모순 설계(V2). (3) (A)·(C) 오답 해설에 명백한 통사 오분석/비정합(V4). (4) 선지·지문·markedExpressions·keyPoints 4자 비동기(V5). 정답 (B) 자체는 source-correct→displayed-wrong 최소대립쌍('thorough understanding'→'thoroughly understood')으로 성립하고 교정 시 원문과 정확히 일치하지만, 'a ___ of' 프레임 탓에 구조 독해 없이 표층에서 즉시 소거되어 KILLER 요건(구조를 읽어야 드러나는 정답, 5개 밑줄 전부의 point 설명)을 충족하지 못한다. 요청 난이도 KILLER 대비 실제 난이도는 하급(C5=0). 재사용하려면 (C) 밑줄 복구 및 디코이 재설계, (A)/(C) 해설 전면 재작성, 정답 포인트의 구조화(예: 병렬 not with A but with B 속 더 깊은 자리)가 필요하다."
+}

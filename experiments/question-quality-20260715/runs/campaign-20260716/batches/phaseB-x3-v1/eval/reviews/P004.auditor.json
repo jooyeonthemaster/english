@@ -1,0 +1,72 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-B-WORDING",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설의 \"'cause us' 뒤에서 조동사 'will'에 걸리는 목적격보어 구조로 연결되어\"는 부정확한 표현이다. 목적격보어 'to face'/'avoid'는 본동사 'cause'가 취하는 것이지 조동사 'will'에 걸리는 것이 아니다. 핵심 주장(either A or B 병렬, to 공유 생략, cause us의 목적격보어)은 실제 구조와 일치하므로 사실 오류라기보다 서술 모호성이다."
+    },
+    {
+      "code": "V5-INFO-EXPRESSION-FIELD",
+      "severity": "minor",
+      "evidence": "markedExpressions의 (C) 항목에서 expression 필드가 표시형 'remembering'이 아니라 교정형 'to remember'를 담고 있다(errorExpression='remembering', correction='to remember'). 비오류 항목들은 expression==errorExpression이므로 스키마 관례상 내부 모순은 아니나, expression 필드 의미가 오류/비오류 간 비대칭이라 소비 측 코드가 혼동할 수 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사구문(접속사 유지형)의 능·수동 판단 — when (it is) triggered",
+      "temptingBecause": "접속사 when 바로 뒤에 주어 없이 과거분사가 와서, 생략 구조를 못 읽으면 능동 'triggering'으로 고쳐야 한다고 착각하기 쉽다.",
+      "decisiveFlaw": "생략된 주어는 an emotion(program)이고 감정은 '유발되는' 대상이므로 수동 과거분사 triggered가 어법상 옳다. 정답이 될 수 없다."
+    },
+    {
+      "label": "(B)",
+      "intent": "either A or B 상관접속 병렬에서 to부정사의 to 공유 생략 허용 여부",
+      "temptingBecause": "'either to face ... or avoid'에서 두 번째 요소에 to가 없어 표면 형태가 비대칭으로 보여, 'to avoid'가 아니면 병렬 위반이라고 판단하기 쉽다. 다섯 밑줄 중 가장 강한 디코이.",
+      "decisiveFlaw": "공유된 to의 생략(either to V1 or V2)은 표준 용법이며 원문도 동일한 형태다. 어법상 틀렸다고 볼 수 없다."
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — cause + O + to부정사 목적격보어 판단 (5형식 동사의 보어 형태)",
+      "temptingBecause": "makes/narrows/will cause/may cause의 긴 병렬과 (fight)/(flight) 삽입구가 시야를 흐려, -ing형이 지각동사·keep류 보어처럼 자연스러워 보일 수 있다.",
+      "decisiveFlaw": "cause는 목적격보어로 to부정사만 취하므로 'cause us remembering'은 비문이다. 'to remember'로 교정하면 정확히 원문이 복원되는 최소대립쌍이다. 유일 정답."
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사+관계대명사(in which) 뒤 완전한 절 판단",
+      "temptingBecause": "ways 뒤에 which/that/how 등 대체 형태와의 선택을 고민하게 하며, in의 필요성을 놓치면 틀렸다고 볼 수 있다.",
+      "decisiveFlaw": "뒤따르는 'they activate our systems'가 완전한 절이므로 전치사+관계대명사 in which가 정확히 옳다. 정답이 될 수 없다."
+    },
+    {
+      "label": "(E)",
+      "intent": "준사역동사 help + O + 원형부정사/to부정사 허용 판단",
+      "temptingBecause": "'have helped us (as a species) survive'에서 삽입구 뒤 동사원형이 시제 일치 오류나 to 누락처럼 보일 수 있다.",
+      "decisiveFlaw": "help는 목적격보어로 원형부정사와 to부정사를 모두 허용하므로 survive는 어법상 옳다. 정답이 될 수 없다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "target": "(B) 오답 해설",
+      "severity": "minor",
+      "detail": "목적격보어 구조가 '조동사 will에 걸린다'는 서술은 통사적으로 부정확하다(보어는 cause가 취함). 의미는 복원 가능하나 문장이 장황하고 모호해 학생에게 혼란을 줄 수 있다. C6 감점 요인."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문 대비 렌더 지문의 차이는 (C) 'to remember'→'remembering' 단일 의도 변형뿐이며 라벨·마커·선지 완전 일치. V2: 5개 밑줄 독립 검증 결과 (A) 수동 분사구문 옳음, (B) to 공유 생략 병렬 옳음(원문 동일), (C) cause+O+-ing 비문으로 유일 오류, (D) 전치사+관계사+완전절 옳음, (E) help+원형 옳음 — 정답 집합 {(C)} 유일. V3: 발문 표준, 교정 완성문 문법적, 의도된 비문 위치 일치. V4: 주해설·(A)(D)(E) 해설 정확, (B) 해설에 minor 서술 모호성. V5: 정답 라벨·isError·correction·keyPoints 동기화. 공예: 다섯 밑줄이 서로 다른 오개념(분사 능수동/병렬 to 생략/동사 보어형/관계사/준사역 원형)을 겨냥해 의도 밀도 양호, (B)가 실질 변별을 만든다. 같은 문장 앞부분의 'cause us either to face'가 정답 단서를 제공하지만 INTERMEDIATE 난이도에는 적정한 구조적 단서다. C6은 (B) 해설의 어색한 통사 서술로 2점. 합계 17, 모든 V 통과, 최저 C=2 → B(작은 수정: (B) 해설 문장 재작성으로 출제 가능). 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false)."
+}

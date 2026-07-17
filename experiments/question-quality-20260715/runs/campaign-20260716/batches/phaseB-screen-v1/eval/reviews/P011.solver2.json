@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "정답 성립",
+      "reason": "문법 결합: 'may help resolve differences by understanding others' viewpoints' — help + 원형부정사(resolve)는 정문이고, by + 동명사(understanding)의 의미상 주어는 문장 주어(individuals skilled in this domain)와 일치하므로 dangling 문제 없음. 논리 적합성: 지문 후반부가 이 명제의 전개다 — (a) 'take the perspective of the other group members and understand why they are reacting in a certain manner'는 'understanding others' viewpoints'의 직접 환언이고, (b) 'Appreciation of differences ... promotes constructive conflict resolution'은 'help resolve differences'의 직접 환언이다. 갈등 상황 예시(express how he feels + 상대 관점 취하기 → 건설적 갈등 해결)가 빈칸 명제를 그대로 예증한다. 유일한 미세 결함: 'thus'가 직접 잇는 선행 근거는 '감정을 정확히 표현할 수 있다'인데 ①의 수단절은 '타인 관점 이해'여서 인과의 초점이 한 단계 넓어진다(표현 능력→이해 능력). 그러나 단락 주제어가 'the ability to understand emotions' 전체이고 예시 문장이 표현과 관점 취하기를 하나의 능력으로 묶어 제시하므로, 요지 차원에서 결합은 옹호 가능하다."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "문법 결합은 정문('may enforce strict adherence to collective rules')이나 논리 부적합. 지문 어디에도 규칙(rules)·강제(enforcement) 개념이 없다. 지문의 기제는 'open communication', 'cooperate', 'constructive conflict resolution' — 자발적 협력·소통이지 규율 강제가 아니다. 또한 'express emotions accurately and thus may enforce rules'는 인과 연결이 형식적으로도 성립하지 않는다(감정 표현 능력이 규칙 강제력의 근거가 될 수 없음)."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "직접 모순. 빈칸 바로 앞 절이 'are able to express emotions, feelings and moods accurately'인데 ③은 'suppress their emotional expressions'로, 'and thus'(순접 인과)로 연결하면 '정확히 표현할 수 있고 따라서 표현을 억압한다'는 자기모순 명제가 된다. 뒤의 예시('will be able to express how he feels about the problem')와도 정면 충돌. 형식적으로 기각."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "직접 모순. 지문은 'take the perspective of the other group members and understand why they are reacting'을 명시적으로 요구한다 — 이는 타인의 감정에 적극 개입·공감하는 것이지 'professional distance from other members' private feelings'를 유지하는 것이 아니다. 'Appreciation of differences creates an arena for open communication'과도 배치된다. 기각."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "직접 모순. 'dominate team discussions by asserting their own ideas'는 지문의 'accommodate their own needs as well as the needs of others (i.e. cooperate)' 및 상호 관점 존중(perspective-taking) 논지와 정면 배치된다. 'express ... accurately'만 보고 '명확한 자기주장'으로 오독하도록 설계된 미끼이나, 'dominate'는 협력·개방적 소통이라는 단락 결론과 양립 불가. 기각."
+    }
+  ],
+  "note": "빈칸 뒤 문장들(관점 취하기, 차이의 인정, 건설적 갈등 해결)이 ①을 거의 축자적으로 지지하며 ②~⑤는 모두 지문 명시 내용과 모순되거나 무근거여서 정답은 ①로 유일하게 수렴한다. 다만 결함 지적 하나: 'thus'의 직접 선행 근거는 '정확한 감정 표현 능력'인데 ①의 수단(by understanding others' viewpoints)은 표현이 아닌 이해 능력이어서, 문장 단위의 엄밀한 인과 결합(seam)은 원문 추정 표현(예: 'may be better understood by others')보다 느슨하다. 요지 차원에서는 옹호 가능하므로 정답성 훼손까지는 아니지만, 미세한 seam 이완으로 기록한다."
+}

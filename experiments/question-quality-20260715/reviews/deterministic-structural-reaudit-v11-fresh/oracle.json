@@ -1,0 +1,2609 @@
+{
+  "schemaVersion": 1,
+  "auditId": "deterministic-structural-reaudit-v11-fresh",
+  "caseCount": 288,
+  "classBalance": {
+    "expectedValid": 144,
+    "expectedInvalid": 144
+  },
+  "entries": [
+    {
+      "caseId": "GEN-OPTION-COUNT-v1-a",
+      "pairId": "GEN-OPTION-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "option-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-OPTION-COUNT-v1-b",
+      "pairId": "GEN-OPTION-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "option-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-LABEL-v1-a",
+      "pairId": "GEN-DUPLICATE-LABEL-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "duplicate-option-label"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-LABEL-v1-b",
+      "pairId": "GEN-DUPLICATE-LABEL-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "duplicate-option-label"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-TEXT-v1-a",
+      "pairId": "GEN-DUPLICATE-TEXT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "duplicate-option-text"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-TEXT-v1-b",
+      "pairId": "GEN-DUPLICATE-TEXT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "duplicate-option-text"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-EMPTY-OPTION-v1-a",
+      "pairId": "GEN-EMPTY-OPTION-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "empty-option-text"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-EMPTY-OPTION-v1-b",
+      "pairId": "GEN-EMPTY-OPTION-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "empty-option-text"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-ANSWER-MEMBERSHIP-v1-a",
+      "pairId": "GEN-ANSWER-MEMBERSHIP-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "correct-answer-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-ANSWER-MEMBERSHIP-v1-b",
+      "pairId": "GEN-ANSWER-MEMBERSHIP-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "correct-answer-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-TYPE-SIGNATURE-v1-a",
+      "pairId": "GEN-TYPE-SIGNATURE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-TYPE-SIGNATURE-v1-b",
+      "pairId": "GEN-TYPE-SIGNATURE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-COUNT-v1-a",
+      "pairId": "GEN-MULTI-ANSWER-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "generic-answer-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-COUNT-v1-b",
+      "pairId": "GEN-MULTI-ANSWER-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "generic-answer-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-DIRECTION-v1-a",
+      "pairId": "GEN-MULTI-ANSWER-DIRECTION-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "generic-multi-answer-direction"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-DIRECTION-v1-b",
+      "pairId": "GEN-MULTI-ANSWER-DIRECTION-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "generic-multi-answer-direction"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MARKER-BOUNDARY-v1-a",
+      "pairId": "GEN-MARKER-BOUNDARY-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "mid-word-marker"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MARKER-BOUNDARY-v1-b",
+      "pairId": "GEN-MARKER-BOUNDARY-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "mid-word-marker"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-TARGET-STANDALONE-v1-a",
+      "pairId": "EN-TARGET-STANDALONE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "target-not-standalone"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-TARGET-STANDALONE-v1-b",
+      "pairId": "EN-TARGET-STANDALONE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "target-not-standalone"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v1-a",
+      "pairId": "EN-WORD-ORDER-RECONSTRUCT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "word-order-unreconstructable"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v1-b",
+      "pairId": "EN-WORD-ORDER-RECONSTRUCT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "word-order-unreconstructable"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v1-a",
+      "pairId": "EN-WORD-ORDER-UNSOLVED-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "scrambled-already-solved"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v1-b",
+      "pairId": "EN-WORD-ORDER-UNSOLVED-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "scrambled-already-solved"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-TRANSFORM-ACTUAL-CHANGE-v1-a",
+      "pairId": "EN-TRANSFORM-ACTUAL-CHANGE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "transform-answer-not-transformed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-TRANSFORM-ACTUAL-CHANGE-v1-b",
+      "pairId": "EN-TRANSFORM-ACTUAL-CHANGE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "transform-answer-not-transformed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-INSERT-GAP-MARKERS-v1-a",
+      "pairId": "EN-INSERT-GAP-MARKERS-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-insert-gap-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-INSERT-GAP-MARKERS-v1-b",
+      "pairId": "EN-INSERT-GAP-MARKERS-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-insert-gap-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-INSERT-ANSWER-SYNC-v1-a",
+      "pairId": "EN-INSERT-ANSWER-SYNC-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-insert-answer-desync"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-INSERT-ANSWER-SYNC-v1-b",
+      "pairId": "EN-INSERT-ANSWER-SYNC-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-insert-answer-desync"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v1-a",
+      "pairId": "EN-ORDER-PARAGRAPH-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v1-b",
+      "pairId": "EN-ORDER-PARAGRAPH-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v1-a",
+      "pairId": "EN-ORDER-SOURCE-BACKING-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-not-source-backed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v1-b",
+      "pairId": "EN-ORDER-SOURCE-BACKING-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-not-source-backed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-CONTENT-POLARITY-v1-a",
+      "pairId": "EN-CONTENT-POLARITY-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "content-match-direction-polarity"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-CONTENT-POLARITY-v1-b",
+      "pairId": "EN-CONTENT-POLARITY-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "content-match-direction-polarity"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-REFERENCE-MARKER-SHAPE-v1-a",
+      "pairId": "EN-REFERENCE-MARKER-SHAPE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "reference-marker-shape"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-REFERENCE-MARKER-SHAPE-v1-b",
+      "pairId": "EN-REFERENCE-MARKER-SHAPE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "reference-marker-shape"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WRITING-NONVERBATIM-v1-a",
+      "pairId": "EN-WRITING-NONVERBATIM-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "writing-answer-verbatim-copy"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WRITING-NONVERBATIM-v1-b",
+      "pairId": "EN-WRITING-NONVERBATIM-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "writing-answer-verbatim-copy"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-IRRELEVANT-SENTENCE-COUNT-v1-a",
+      "pairId": "EN-IRRELEVANT-SENTENCE-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "irrelevant-sentence-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-IRRELEVANT-SENTENCE-COUNT-v1-b",
+      "pairId": "EN-IRRELEVANT-SENTENCE-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "irrelevant-sentence-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-CORRECT-OPTION-v1-a",
+      "pairId": "BLANK-CORRECT-OPTION-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-missing-answer"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-CORRECT-OPTION-v1-b",
+      "pairId": "BLANK-CORRECT-OPTION-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-missing-answer"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-NO-RESIDUAL-ANSWER-v1-a",
+      "pairId": "BLANK-NO-RESIDUAL-ANSWER-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-NO-RESIDUAL-ANSWER-v1-b",
+      "pairId": "BLANK-NO-RESIDUAL-ANSWER-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-PARAPHRASE-TRANSFORMED-v1-a",
+      "pairId": "BLANK-PARAPHRASE-TRANSFORMED-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-paraphrase-answer-not-transformed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-PARAPHRASE-TRANSFORMED-v1-b",
+      "pairId": "BLANK-PARAPHRASE-TRANSFORMED-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-paraphrase-answer-not-transformed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-COUNT-v1-a",
+      "pairId": "BLANK-MULTI-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-COUNT-v1-b",
+      "pairId": "BLANK-MULTI-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-OPTION-ARITY-v1-a",
+      "pairId": "BLANK-MULTI-OPTION-ARITY-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-option-values"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-OPTION-ARITY-v1-b",
+      "pairId": "BLANK-MULTI-OPTION-ARITY-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-option-values"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-CORRECT-PAIR-v1-a",
+      "pairId": "BLANK-MULTI-CORRECT-PAIR-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-correct-option-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-CORRECT-PAIR-v1-b",
+      "pairId": "BLANK-MULTI-CORRECT-PAIR-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-correct-option-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-FILL-KEY-SINGLE-v1-a",
+      "pairId": "BLANK-FILL-KEY-SINGLE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "fbk-multiple-blanks"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-FILL-KEY-SINGLE-v1-b",
+      "pairId": "BLANK-FILL-KEY-SINGLE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "fbk-multiple-blanks"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-MARKER-COUNT-v1-a",
+      "pairId": "GRAMMAR-MARKER-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-MARKER-COUNT-v1-b",
+      "pairId": "GRAMMAR-MARKER-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-ERROR-COUNT-v1-a",
+      "pairId": "GRAMMAR-ERROR-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-error-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-ERROR-COUNT-v1-b",
+      "pairId": "GRAMMAR-ERROR-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-error-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-ANSWER-LABELS-v1-a",
+      "pairId": "GRAMMAR-ANSWER-LABELS-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correct-answer-labels"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-ANSWER-LABELS-v1-b",
+      "pairId": "GRAMMAR-ANSWER-LABELS-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correct-answer-labels"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-SLOT-COUNT-v1-a",
+      "pairId": "GRAMMAR-COMBO-SLOT-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "combo-slot-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-SLOT-COUNT-v1-b",
+      "pairId": "GRAMMAR-COMBO-SLOT-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "combo-slot-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-MUTATION-v1-a",
+      "pairId": "GRAMMAR-COMBO-MUTATION-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "combo-slot-not-mutated"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-MUTATION-v1-b",
+      "pairId": "GRAMMAR-COMBO-MUTATION-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "combo-slot-not-mutated"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-MUTATION-v1-a",
+      "pairId": "GRAMMAR-CORRECTION-MUTATION-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correction-not-mutated",
+        "grammar-correction-displayed-not-mutated"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-MUTATION-v1-b",
+      "pairId": "GRAMMAR-CORRECTION-MUTATION-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correction-not-mutated",
+        "grammar-correction-displayed-not-mutated"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-ANSWER-v1-a",
+      "pairId": "GRAMMAR-CORRECTION-ANSWER-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correction-answer-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-ANSWER-v1-b",
+      "pairId": "GRAMMAR-CORRECTION-ANSWER-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correction-answer-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "VOCAB-MARKER-COUNT-v1-a",
+      "pairId": "VOCAB-MARKER-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "vocab-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "VOCAB-MARKER-COUNT-v1-b",
+      "pairId": "VOCAB-MARKER-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "vocab-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "ANTONYM-MARKER-COUNT-v1-a",
+      "pairId": "ANTONYM-MARKER-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "antonym-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "ANTONYM-MARKER-COUNT-v1-b",
+      "pairId": "ANTONYM-MARKER-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "antonym-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "IMPLIED-UNDERLINE-PRESENCE-v1-a",
+      "pairId": "IMPLIED-UNDERLINE-PRESENCE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "implied-meaning-missing-underline"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "IMPLIED-UNDERLINE-PRESENCE-v1-b",
+      "pairId": "IMPLIED-UNDERLINE-PRESENCE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "implied-meaning-missing-underline"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SUMMARY-MC-MARKERS-v1-a",
+      "pairId": "SUMMARY-MC-MARKERS-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "summary-mc-blank-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SUMMARY-MC-MARKERS-v1-b",
+      "pairId": "SUMMARY-MC-MARKERS-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "summary-mc-blank-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SUMMARY-SHORT-MARKERS-v1-a",
+      "pairId": "SUMMARY-SHORT-MARKERS-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "summary-complete-blank-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SUMMARY-SHORT-MARKERS-v1-b",
+      "pairId": "SUMMARY-SHORT-MARKERS-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "summary-complete-blank-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "TOPIC-OPTION-LANGUAGE-v1-a",
+      "pairId": "TOPIC-OPTION-LANGUAGE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "topic-option-language"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "TOPIC-OPTION-LANGUAGE-v1-b",
+      "pairId": "TOPIC-OPTION-LANGUAGE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "topic-option-language"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-OPTION-COUNT-v1-a",
+      "pairId": "KO-OPTION-COUNT-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-option-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-OPTION-COUNT-v1-b",
+      "pairId": "KO-OPTION-COUNT-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-option-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-EVIDENCE-COVERAGE-v1-a",
+      "pairId": "KO-EVIDENCE-COVERAGE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-EVIDENCE-COVERAGE-v1-b",
+      "pairId": "KO-EVIDENCE-COVERAGE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-EVIDENCE-SURFACE-v1-a",
+      "pairId": "KO-EVIDENCE-SURFACE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-not-in-passage"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-EVIDENCE-SURFACE-v1-b",
+      "pairId": "KO-EVIDENCE-SURFACE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-not-in-passage"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-ANSWER-LABEL-v1-a",
+      "pairId": "KO-ANSWER-LABEL-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-correct-answer-invalid"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-ANSWER-LABEL-v1-b",
+      "pairId": "KO-ANSWER-LABEL-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-correct-answer-invalid"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-QUOTE-VERBATIM-v1-a",
+      "pairId": "KO-QUOTE-VERBATIM-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-quote-not-verbatim"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-QUOTE-VERBATIM-v1-b",
+      "pairId": "KO-QUOTE-VERBATIM-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-quote-not-verbatim"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SCOPE-EN-SKIPS-KO-v1-a",
+      "pairId": "SCOPE-EN-SKIPS-KO-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SCOPE-EN-SKIPS-KO-v1-b",
+      "pairId": "SCOPE-EN-SKIPS-KO-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v1-a",
+      "pairId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v1",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v1-b",
+      "pairId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v1",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-OPTION-COUNT-v2-a",
+      "pairId": "GEN-OPTION-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "option-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-OPTION-COUNT-v2-b",
+      "pairId": "GEN-OPTION-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "option-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-LABEL-v2-a",
+      "pairId": "GEN-DUPLICATE-LABEL-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "duplicate-option-label"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-LABEL-v2-b",
+      "pairId": "GEN-DUPLICATE-LABEL-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "duplicate-option-label"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-TEXT-v2-a",
+      "pairId": "GEN-DUPLICATE-TEXT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "duplicate-option-text"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-TEXT-v2-b",
+      "pairId": "GEN-DUPLICATE-TEXT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "duplicate-option-text"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-EMPTY-OPTION-v2-a",
+      "pairId": "GEN-EMPTY-OPTION-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "empty-option-text"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-EMPTY-OPTION-v2-b",
+      "pairId": "GEN-EMPTY-OPTION-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "empty-option-text"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-ANSWER-MEMBERSHIP-v2-a",
+      "pairId": "GEN-ANSWER-MEMBERSHIP-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "correct-answer-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-ANSWER-MEMBERSHIP-v2-b",
+      "pairId": "GEN-ANSWER-MEMBERSHIP-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "correct-answer-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-TYPE-SIGNATURE-v2-a",
+      "pairId": "GEN-TYPE-SIGNATURE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-TYPE-SIGNATURE-v2-b",
+      "pairId": "GEN-TYPE-SIGNATURE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-COUNT-v2-a",
+      "pairId": "GEN-MULTI-ANSWER-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "generic-answer-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-COUNT-v2-b",
+      "pairId": "GEN-MULTI-ANSWER-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "generic-answer-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-DIRECTION-v2-a",
+      "pairId": "GEN-MULTI-ANSWER-DIRECTION-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "generic-multi-answer-direction"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-DIRECTION-v2-b",
+      "pairId": "GEN-MULTI-ANSWER-DIRECTION-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "generic-multi-answer-direction"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MARKER-BOUNDARY-v2-a",
+      "pairId": "GEN-MARKER-BOUNDARY-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "mid-word-marker"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MARKER-BOUNDARY-v2-b",
+      "pairId": "GEN-MARKER-BOUNDARY-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "mid-word-marker"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-TARGET-STANDALONE-v2-a",
+      "pairId": "EN-TARGET-STANDALONE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "target-not-standalone"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-TARGET-STANDALONE-v2-b",
+      "pairId": "EN-TARGET-STANDALONE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "target-not-standalone"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v2-a",
+      "pairId": "EN-WORD-ORDER-RECONSTRUCT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "word-order-unreconstructable"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v2-b",
+      "pairId": "EN-WORD-ORDER-RECONSTRUCT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "word-order-unreconstructable"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v2-a",
+      "pairId": "EN-WORD-ORDER-UNSOLVED-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "scrambled-already-solved"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v2-b",
+      "pairId": "EN-WORD-ORDER-UNSOLVED-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "scrambled-already-solved"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-TRANSFORM-ACTUAL-CHANGE-v2-a",
+      "pairId": "EN-TRANSFORM-ACTUAL-CHANGE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "transform-answer-not-transformed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-TRANSFORM-ACTUAL-CHANGE-v2-b",
+      "pairId": "EN-TRANSFORM-ACTUAL-CHANGE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "transform-answer-not-transformed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-INSERT-GAP-MARKERS-v2-a",
+      "pairId": "EN-INSERT-GAP-MARKERS-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-insert-gap-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-INSERT-GAP-MARKERS-v2-b",
+      "pairId": "EN-INSERT-GAP-MARKERS-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-insert-gap-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-INSERT-ANSWER-SYNC-v2-a",
+      "pairId": "EN-INSERT-ANSWER-SYNC-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-insert-answer-desync"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-INSERT-ANSWER-SYNC-v2-b",
+      "pairId": "EN-INSERT-ANSWER-SYNC-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-insert-answer-desync"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v2-a",
+      "pairId": "EN-ORDER-PARAGRAPH-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v2-b",
+      "pairId": "EN-ORDER-PARAGRAPH-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v2-a",
+      "pairId": "EN-ORDER-SOURCE-BACKING-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-not-source-backed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v2-b",
+      "pairId": "EN-ORDER-SOURCE-BACKING-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-not-source-backed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-CONTENT-POLARITY-v2-a",
+      "pairId": "EN-CONTENT-POLARITY-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "content-match-direction-polarity"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-CONTENT-POLARITY-v2-b",
+      "pairId": "EN-CONTENT-POLARITY-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "content-match-direction-polarity"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-REFERENCE-MARKER-SHAPE-v2-a",
+      "pairId": "EN-REFERENCE-MARKER-SHAPE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "reference-marker-shape"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-REFERENCE-MARKER-SHAPE-v2-b",
+      "pairId": "EN-REFERENCE-MARKER-SHAPE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "reference-marker-shape"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WRITING-NONVERBATIM-v2-a",
+      "pairId": "EN-WRITING-NONVERBATIM-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "writing-answer-verbatim-copy"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WRITING-NONVERBATIM-v2-b",
+      "pairId": "EN-WRITING-NONVERBATIM-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "writing-answer-verbatim-copy"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-IRRELEVANT-SENTENCE-COUNT-v2-a",
+      "pairId": "EN-IRRELEVANT-SENTENCE-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "irrelevant-sentence-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-IRRELEVANT-SENTENCE-COUNT-v2-b",
+      "pairId": "EN-IRRELEVANT-SENTENCE-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "irrelevant-sentence-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-CORRECT-OPTION-v2-a",
+      "pairId": "BLANK-CORRECT-OPTION-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-missing-answer"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-CORRECT-OPTION-v2-b",
+      "pairId": "BLANK-CORRECT-OPTION-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-missing-answer"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-NO-RESIDUAL-ANSWER-v2-a",
+      "pairId": "BLANK-NO-RESIDUAL-ANSWER-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-NO-RESIDUAL-ANSWER-v2-b",
+      "pairId": "BLANK-NO-RESIDUAL-ANSWER-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-PARAPHRASE-TRANSFORMED-v2-a",
+      "pairId": "BLANK-PARAPHRASE-TRANSFORMED-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-paraphrase-answer-not-transformed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-PARAPHRASE-TRANSFORMED-v2-b",
+      "pairId": "BLANK-PARAPHRASE-TRANSFORMED-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-paraphrase-answer-not-transformed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-COUNT-v2-a",
+      "pairId": "BLANK-MULTI-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-COUNT-v2-b",
+      "pairId": "BLANK-MULTI-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-OPTION-ARITY-v2-a",
+      "pairId": "BLANK-MULTI-OPTION-ARITY-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-option-values"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-OPTION-ARITY-v2-b",
+      "pairId": "BLANK-MULTI-OPTION-ARITY-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-option-values"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-CORRECT-PAIR-v2-a",
+      "pairId": "BLANK-MULTI-CORRECT-PAIR-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-correct-option-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-CORRECT-PAIR-v2-b",
+      "pairId": "BLANK-MULTI-CORRECT-PAIR-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-correct-option-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-FILL-KEY-SINGLE-v2-a",
+      "pairId": "BLANK-FILL-KEY-SINGLE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "fbk-multiple-blanks"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-FILL-KEY-SINGLE-v2-b",
+      "pairId": "BLANK-FILL-KEY-SINGLE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "fbk-multiple-blanks"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-MARKER-COUNT-v2-a",
+      "pairId": "GRAMMAR-MARKER-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-MARKER-COUNT-v2-b",
+      "pairId": "GRAMMAR-MARKER-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-ERROR-COUNT-v2-a",
+      "pairId": "GRAMMAR-ERROR-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-error-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-ERROR-COUNT-v2-b",
+      "pairId": "GRAMMAR-ERROR-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-error-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-ANSWER-LABELS-v2-a",
+      "pairId": "GRAMMAR-ANSWER-LABELS-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correct-answer-labels"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-ANSWER-LABELS-v2-b",
+      "pairId": "GRAMMAR-ANSWER-LABELS-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correct-answer-labels"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-SLOT-COUNT-v2-a",
+      "pairId": "GRAMMAR-COMBO-SLOT-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "combo-slot-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-SLOT-COUNT-v2-b",
+      "pairId": "GRAMMAR-COMBO-SLOT-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "combo-slot-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-MUTATION-v2-a",
+      "pairId": "GRAMMAR-COMBO-MUTATION-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "combo-slot-not-mutated"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-MUTATION-v2-b",
+      "pairId": "GRAMMAR-COMBO-MUTATION-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "combo-slot-not-mutated"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-MUTATION-v2-a",
+      "pairId": "GRAMMAR-CORRECTION-MUTATION-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correction-not-mutated",
+        "grammar-correction-displayed-not-mutated"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-MUTATION-v2-b",
+      "pairId": "GRAMMAR-CORRECTION-MUTATION-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correction-not-mutated",
+        "grammar-correction-displayed-not-mutated"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-ANSWER-v2-a",
+      "pairId": "GRAMMAR-CORRECTION-ANSWER-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correction-answer-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-ANSWER-v2-b",
+      "pairId": "GRAMMAR-CORRECTION-ANSWER-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correction-answer-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "VOCAB-MARKER-COUNT-v2-a",
+      "pairId": "VOCAB-MARKER-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "vocab-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "VOCAB-MARKER-COUNT-v2-b",
+      "pairId": "VOCAB-MARKER-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "vocab-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "ANTONYM-MARKER-COUNT-v2-a",
+      "pairId": "ANTONYM-MARKER-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "antonym-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "ANTONYM-MARKER-COUNT-v2-b",
+      "pairId": "ANTONYM-MARKER-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "antonym-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "IMPLIED-UNDERLINE-PRESENCE-v2-a",
+      "pairId": "IMPLIED-UNDERLINE-PRESENCE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "implied-meaning-missing-underline"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "IMPLIED-UNDERLINE-PRESENCE-v2-b",
+      "pairId": "IMPLIED-UNDERLINE-PRESENCE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "implied-meaning-missing-underline"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SUMMARY-MC-MARKERS-v2-a",
+      "pairId": "SUMMARY-MC-MARKERS-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "summary-mc-blank-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SUMMARY-MC-MARKERS-v2-b",
+      "pairId": "SUMMARY-MC-MARKERS-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "summary-mc-blank-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SUMMARY-SHORT-MARKERS-v2-a",
+      "pairId": "SUMMARY-SHORT-MARKERS-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "summary-complete-blank-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SUMMARY-SHORT-MARKERS-v2-b",
+      "pairId": "SUMMARY-SHORT-MARKERS-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "summary-complete-blank-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "TOPIC-OPTION-LANGUAGE-v2-a",
+      "pairId": "TOPIC-OPTION-LANGUAGE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "topic-option-language"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "TOPIC-OPTION-LANGUAGE-v2-b",
+      "pairId": "TOPIC-OPTION-LANGUAGE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "topic-option-language"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-OPTION-COUNT-v2-a",
+      "pairId": "KO-OPTION-COUNT-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-option-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-OPTION-COUNT-v2-b",
+      "pairId": "KO-OPTION-COUNT-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-option-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-EVIDENCE-COVERAGE-v2-a",
+      "pairId": "KO-EVIDENCE-COVERAGE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-EVIDENCE-COVERAGE-v2-b",
+      "pairId": "KO-EVIDENCE-COVERAGE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-EVIDENCE-SURFACE-v2-a",
+      "pairId": "KO-EVIDENCE-SURFACE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-not-in-passage"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-EVIDENCE-SURFACE-v2-b",
+      "pairId": "KO-EVIDENCE-SURFACE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-not-in-passage"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-ANSWER-LABEL-v2-a",
+      "pairId": "KO-ANSWER-LABEL-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-correct-answer-invalid"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-ANSWER-LABEL-v2-b",
+      "pairId": "KO-ANSWER-LABEL-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-correct-answer-invalid"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-QUOTE-VERBATIM-v2-a",
+      "pairId": "KO-QUOTE-VERBATIM-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-quote-not-verbatim"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-QUOTE-VERBATIM-v2-b",
+      "pairId": "KO-QUOTE-VERBATIM-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-quote-not-verbatim"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SCOPE-EN-SKIPS-KO-v2-a",
+      "pairId": "SCOPE-EN-SKIPS-KO-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SCOPE-EN-SKIPS-KO-v2-b",
+      "pairId": "SCOPE-EN-SKIPS-KO-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v2-a",
+      "pairId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v2",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v2-b",
+      "pairId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v2",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-OPTION-COUNT-v3-a",
+      "pairId": "GEN-OPTION-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "option-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-OPTION-COUNT-v3-b",
+      "pairId": "GEN-OPTION-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "option-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-LABEL-v3-a",
+      "pairId": "GEN-DUPLICATE-LABEL-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "duplicate-option-label"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-LABEL-v3-b",
+      "pairId": "GEN-DUPLICATE-LABEL-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "duplicate-option-label"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-TEXT-v3-a",
+      "pairId": "GEN-DUPLICATE-TEXT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "duplicate-option-text"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-DUPLICATE-TEXT-v3-b",
+      "pairId": "GEN-DUPLICATE-TEXT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "duplicate-option-text"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-EMPTY-OPTION-v3-a",
+      "pairId": "GEN-EMPTY-OPTION-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "empty-option-text"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-EMPTY-OPTION-v3-b",
+      "pairId": "GEN-EMPTY-OPTION-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "empty-option-text"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-ANSWER-MEMBERSHIP-v3-a",
+      "pairId": "GEN-ANSWER-MEMBERSHIP-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "correct-answer-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-ANSWER-MEMBERSHIP-v3-b",
+      "pairId": "GEN-ANSWER-MEMBERSHIP-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "correct-answer-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-TYPE-SIGNATURE-v3-a",
+      "pairId": "GEN-TYPE-SIGNATURE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-TYPE-SIGNATURE-v3-b",
+      "pairId": "GEN-TYPE-SIGNATURE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-COUNT-v3-a",
+      "pairId": "GEN-MULTI-ANSWER-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "generic-answer-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-COUNT-v3-b",
+      "pairId": "GEN-MULTI-ANSWER-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "generic-answer-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-DIRECTION-v3-a",
+      "pairId": "GEN-MULTI-ANSWER-DIRECTION-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "generic-multi-answer-direction"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MULTI-ANSWER-DIRECTION-v3-b",
+      "pairId": "GEN-MULTI-ANSWER-DIRECTION-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "generic-multi-answer-direction"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GEN-MARKER-BOUNDARY-v3-a",
+      "pairId": "GEN-MARKER-BOUNDARY-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "mid-word-marker"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GEN-MARKER-BOUNDARY-v3-b",
+      "pairId": "GEN-MARKER-BOUNDARY-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "mid-word-marker"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-TARGET-STANDALONE-v3-a",
+      "pairId": "EN-TARGET-STANDALONE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "target-not-standalone"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-TARGET-STANDALONE-v3-b",
+      "pairId": "EN-TARGET-STANDALONE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "target-not-standalone"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v3-a",
+      "pairId": "EN-WORD-ORDER-RECONSTRUCT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "word-order-unreconstructable"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v3-b",
+      "pairId": "EN-WORD-ORDER-RECONSTRUCT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "word-order-unreconstructable"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v3-a",
+      "pairId": "EN-WORD-ORDER-UNSOLVED-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "scrambled-already-solved"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v3-b",
+      "pairId": "EN-WORD-ORDER-UNSOLVED-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "scrambled-already-solved"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-TRANSFORM-ACTUAL-CHANGE-v3-a",
+      "pairId": "EN-TRANSFORM-ACTUAL-CHANGE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "transform-answer-not-transformed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-TRANSFORM-ACTUAL-CHANGE-v3-b",
+      "pairId": "EN-TRANSFORM-ACTUAL-CHANGE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "transform-answer-not-transformed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-INSERT-GAP-MARKERS-v3-a",
+      "pairId": "EN-INSERT-GAP-MARKERS-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-insert-gap-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-INSERT-GAP-MARKERS-v3-b",
+      "pairId": "EN-INSERT-GAP-MARKERS-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-insert-gap-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-INSERT-ANSWER-SYNC-v3-a",
+      "pairId": "EN-INSERT-ANSWER-SYNC-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-insert-answer-desync"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-INSERT-ANSWER-SYNC-v3-b",
+      "pairId": "EN-INSERT-ANSWER-SYNC-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-insert-answer-desync"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v3-a",
+      "pairId": "EN-ORDER-PARAGRAPH-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v3-b",
+      "pairId": "EN-ORDER-PARAGRAPH-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v3-a",
+      "pairId": "EN-ORDER-SOURCE-BACKING-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-not-source-backed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v3-b",
+      "pairId": "EN-ORDER-SOURCE-BACKING-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "sentence-order-paragraph-not-source-backed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-CONTENT-POLARITY-v3-a",
+      "pairId": "EN-CONTENT-POLARITY-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "content-match-direction-polarity"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-CONTENT-POLARITY-v3-b",
+      "pairId": "EN-CONTENT-POLARITY-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "content-match-direction-polarity"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-REFERENCE-MARKER-SHAPE-v3-a",
+      "pairId": "EN-REFERENCE-MARKER-SHAPE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "reference-marker-shape"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-REFERENCE-MARKER-SHAPE-v3-b",
+      "pairId": "EN-REFERENCE-MARKER-SHAPE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "reference-marker-shape"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-WRITING-NONVERBATIM-v3-a",
+      "pairId": "EN-WRITING-NONVERBATIM-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "writing-answer-verbatim-copy"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-WRITING-NONVERBATIM-v3-b",
+      "pairId": "EN-WRITING-NONVERBATIM-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "writing-answer-verbatim-copy"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "EN-IRRELEVANT-SENTENCE-COUNT-v3-a",
+      "pairId": "EN-IRRELEVANT-SENTENCE-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "irrelevant-sentence-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "EN-IRRELEVANT-SENTENCE-COUNT-v3-b",
+      "pairId": "EN-IRRELEVANT-SENTENCE-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "irrelevant-sentence-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-CORRECT-OPTION-v3-a",
+      "pairId": "BLANK-CORRECT-OPTION-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-missing-answer"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-CORRECT-OPTION-v3-b",
+      "pairId": "BLANK-CORRECT-OPTION-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-missing-answer"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-NO-RESIDUAL-ANSWER-v3-a",
+      "pairId": "BLANK-NO-RESIDUAL-ANSWER-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-NO-RESIDUAL-ANSWER-v3-b",
+      "pairId": "BLANK-NO-RESIDUAL-ANSWER-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-PARAPHRASE-TRANSFORMED-v3-a",
+      "pairId": "BLANK-PARAPHRASE-TRANSFORMED-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "blank-paraphrase-answer-not-transformed"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-PARAPHRASE-TRANSFORMED-v3-b",
+      "pairId": "BLANK-PARAPHRASE-TRANSFORMED-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "blank-paraphrase-answer-not-transformed"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-COUNT-v3-a",
+      "pairId": "BLANK-MULTI-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-COUNT-v3-b",
+      "pairId": "BLANK-MULTI-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-OPTION-ARITY-v3-a",
+      "pairId": "BLANK-MULTI-OPTION-ARITY-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-option-values"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-OPTION-ARITY-v3-b",
+      "pairId": "BLANK-MULTI-OPTION-ARITY-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-option-values"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-MULTI-CORRECT-PAIR-v3-a",
+      "pairId": "BLANK-MULTI-CORRECT-PAIR-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "multi-blank-correct-option-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-MULTI-CORRECT-PAIR-v3-b",
+      "pairId": "BLANK-MULTI-CORRECT-PAIR-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "multi-blank-correct-option-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "BLANK-FILL-KEY-SINGLE-v3-a",
+      "pairId": "BLANK-FILL-KEY-SINGLE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "fbk-multiple-blanks"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "BLANK-FILL-KEY-SINGLE-v3-b",
+      "pairId": "BLANK-FILL-KEY-SINGLE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "fbk-multiple-blanks"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-MARKER-COUNT-v3-a",
+      "pairId": "GRAMMAR-MARKER-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-MARKER-COUNT-v3-b",
+      "pairId": "GRAMMAR-MARKER-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-ERROR-COUNT-v3-a",
+      "pairId": "GRAMMAR-ERROR-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-error-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-ERROR-COUNT-v3-b",
+      "pairId": "GRAMMAR-ERROR-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-error-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-ANSWER-LABELS-v3-a",
+      "pairId": "GRAMMAR-ANSWER-LABELS-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correct-answer-labels"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-ANSWER-LABELS-v3-b",
+      "pairId": "GRAMMAR-ANSWER-LABELS-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correct-answer-labels"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-SLOT-COUNT-v3-a",
+      "pairId": "GRAMMAR-COMBO-SLOT-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "combo-slot-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-SLOT-COUNT-v3-b",
+      "pairId": "GRAMMAR-COMBO-SLOT-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "combo-slot-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-MUTATION-v3-a",
+      "pairId": "GRAMMAR-COMBO-MUTATION-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "combo-slot-not-mutated"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-COMBO-MUTATION-v3-b",
+      "pairId": "GRAMMAR-COMBO-MUTATION-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "combo-slot-not-mutated"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-MUTATION-v3-a",
+      "pairId": "GRAMMAR-CORRECTION-MUTATION-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correction-not-mutated",
+        "grammar-correction-displayed-not-mutated"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-MUTATION-v3-b",
+      "pairId": "GRAMMAR-CORRECTION-MUTATION-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correction-not-mutated",
+        "grammar-correction-displayed-not-mutated"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-ANSWER-v3-a",
+      "pairId": "GRAMMAR-CORRECTION-ANSWER-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "grammar-correction-answer-mismatch"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "GRAMMAR-CORRECTION-ANSWER-v3-b",
+      "pairId": "GRAMMAR-CORRECTION-ANSWER-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "grammar-correction-answer-mismatch"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "VOCAB-MARKER-COUNT-v3-a",
+      "pairId": "VOCAB-MARKER-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "vocab-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "VOCAB-MARKER-COUNT-v3-b",
+      "pairId": "VOCAB-MARKER-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "vocab-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "ANTONYM-MARKER-COUNT-v3-a",
+      "pairId": "ANTONYM-MARKER-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "antonym-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "ANTONYM-MARKER-COUNT-v3-b",
+      "pairId": "ANTONYM-MARKER-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "antonym-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "IMPLIED-UNDERLINE-PRESENCE-v3-a",
+      "pairId": "IMPLIED-UNDERLINE-PRESENCE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "implied-meaning-missing-underline"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "IMPLIED-UNDERLINE-PRESENCE-v3-b",
+      "pairId": "IMPLIED-UNDERLINE-PRESENCE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "implied-meaning-missing-underline"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SUMMARY-MC-MARKERS-v3-a",
+      "pairId": "SUMMARY-MC-MARKERS-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "summary-mc-blank-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SUMMARY-MC-MARKERS-v3-b",
+      "pairId": "SUMMARY-MC-MARKERS-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "summary-mc-blank-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SUMMARY-SHORT-MARKERS-v3-a",
+      "pairId": "SUMMARY-SHORT-MARKERS-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "summary-complete-blank-marker-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SUMMARY-SHORT-MARKERS-v3-b",
+      "pairId": "SUMMARY-SHORT-MARKERS-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "summary-complete-blank-marker-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "TOPIC-OPTION-LANGUAGE-v3-a",
+      "pairId": "TOPIC-OPTION-LANGUAGE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "topic-option-language"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "TOPIC-OPTION-LANGUAGE-v3-b",
+      "pairId": "TOPIC-OPTION-LANGUAGE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "topic-option-language"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-OPTION-COUNT-v3-a",
+      "pairId": "KO-OPTION-COUNT-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-option-count"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-OPTION-COUNT-v3-b",
+      "pairId": "KO-OPTION-COUNT-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-option-count"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-EVIDENCE-COVERAGE-v3-a",
+      "pairId": "KO-EVIDENCE-COVERAGE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-EVIDENCE-COVERAGE-v3-b",
+      "pairId": "KO-EVIDENCE-COVERAGE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-EVIDENCE-SURFACE-v3-a",
+      "pairId": "KO-EVIDENCE-SURFACE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-not-in-passage"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-EVIDENCE-SURFACE-v3-b",
+      "pairId": "KO-EVIDENCE-SURFACE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-not-in-passage"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-ANSWER-LABEL-v3-a",
+      "pairId": "KO-ANSWER-LABEL-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-correct-answer-invalid"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-ANSWER-LABEL-v3-b",
+      "pairId": "KO-ANSWER-LABEL-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-correct-answer-invalid"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "KO-QUOTE-VERBATIM-v3-a",
+      "pairId": "KO-QUOTE-VERBATIM-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-quote-not-verbatim"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "KO-QUOTE-VERBATIM-v3-b",
+      "pairId": "KO-QUOTE-VERBATIM-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-quote-not-verbatim"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SCOPE-EN-SKIPS-KO-v3-a",
+      "pairId": "SCOPE-EN-SKIPS-KO-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SCOPE-EN-SKIPS-KO-v3-b",
+      "pairId": "SCOPE-EN-SKIPS-KO-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "ko-evidence-missing"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    },
+    {
+      "caseId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v3-a",
+      "pairId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v3",
+      "expectedValid": true,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Source-aware control satisfies the named structural contract; the paired mutation is absent."
+    },
+    {
+      "caseId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v3-b",
+      "pairId": "SCOPE-KO-SKIPS-EN-SIGNATURE-v3",
+      "expectedValid": false,
+      "targetIssueCodes": [
+        "type-foreign-field"
+      ],
+      "rationale": "Exactly one named structural dimension is intentionally broken relative to its paired control."
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "pid": "P034",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-note",
+      "severity": "info",
+      "evidence": "원지문 대비 렌더 지문의 유일한 차이는 (D) 위치 it→them(의도된 오류 주입). 접합 파손·중복·누락·고아 문장부호 없음. 라벨 (A)~(E)와 선지 목록 일치. em-dash(1769—1849) 등 표기도 원문 그대로 보존."
+    },
+    {
+      "code": "V2-note",
+      "severity": "info",
+      "evidence": "5개 밑줄 독립 검증 결과 (D)만 오류. (A) 수동 분사구문 옳음, (B) for+동명사 옳음, (C) was imprisoned 수동 옳음, (E) despite+동명사 옳음. (D) them의 선행사 후보 중 의미상 성립하는 것은 the River Thames(단수)뿐 — people and goods는 이동 주체, ways는 건너는 대상이 될 수 없음. 대안 분석으로 복수 해석이 성립할 여지 없어 단일 정답 확정."
+    },
+    {
+      "code": "V5-note",
+      "severity": "info",
+      "evidence": "markedExpressions의 (D) expression 필드가 표시형(them)이 아닌 원문형(it)을 담고 있으나, errorExpression=them/correction=it 이며 비오류 항목들도 동일 관례(expression=원문형)를 따르므로 스키마 내 일관 — 동기화 모순 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사구문의 의미상 주어와 능동/수동 판정 (born vs bearing/being born)",
+      "temptingBecause": "문두 분사구문에서 being/having been의 생략 구조를 떠올리며 형태를 의심할 수 있음",
+      "decisiveFlaw": "오답 아님 — 주어 Brunel이 태어나는 대상이므로 과거분사 born이 정확히 옳다"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사 for의 목적어 자리 동명사",
+      "temptingBecause": "machines to make boots 같은 to부정사 수식과 혼동할 수 있음",
+      "decisiveFlaw": "오답 아님 — 전치사 뒤 동명사는 표준 구조로 즉시 옳음이 확인됨(변별 기여 낮음)"
+    },
+    {
+      "label": "(C)",
+      "intent": "수동태 판정 (was imprisoned vs was imprisoning)",
+      "temptingBecause": "be동사 뒤 분사 형태 선택에서 능동/수동을 실제로 판단해야 함",
+      "decisiveFlaw": "오답 아님 — 주어 Brunel이 투옥되는 대상이므로 수동 옳음"
+    },
+    {
+      "label": "(D)",
+      "intent": "대명사 수일치 — 문맥에서 선행사(the River Thames, 단수)를 추적",
+      "temptingBecause": "직전에 복수 명사구 people and goods, more ways가 나와 근접 복수 명사에 이끌려 them을 옳다고 수용하기 쉬움",
+      "decisiveFlaw": "정답 — 건너는 대상은 단수 the River Thames이므로 it이어야 하며, 교정 시 정확히 원문으로 복원됨(최소대립쌍)"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사 despite의 목적어 자리 동명사",
+      "temptingBecause": "despite 뒤에 절이나 과거분사를 기대하는 오개념을 겨냥",
+      "decisiveFlaw": "오답 아님 — despite+동명사는 표준 구조. 다만 (B)와 동일 포인트(pointCode k 중복)로 의도 밀도를 낮춤"
+    }
+  ],
+  "explanationIssues": [],
+  "issues": [
+    {
+      "severity": "minor",
+      "evidence": "(B)와 (E)가 동일 pointCode 'k'(전치사+동명사)로 같은 개념을 중복 검사 — 5개 밑줄이 서로 다른 오개념을 겨냥한다는 이상에 미달 (C2 감점 요인)",
+      "recommendation": "(B) 또는 (E)를 관계사·시제·병렬 등 다른 포인트로 교체"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(B)·(E)는 상위권은 물론 중위권 학생도 즉시 소거 가능한 수준이라 실질 경쟁 선지가 (A)·(C)·(D) 셋으로 좁혀짐 (C3=2 요인)",
+      "recommendation": "디코이 한 곳을 실제 판단이 필요한 자리(예: 관계대명사 vs 접속사, 병렬 동사형)로 강화"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 5개 밑줄 중 (D)(A)(E) 3개만 다루고 (B)(C)는 누락 — 필드 간 모순은 아니므로 V5 실패는 아님",
+      "recommendation": "keyPoints에 (B)(C) 포인트를 추가해 전 밑줄 커버"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "요청 난이도 INTERMEDIATE의 GRAMMAR_ERROR. 모든 V 게이트 통과: 렌더 무결(유일 변형 it→them), 단일 정답 (D) 확정(선행사 the River Thames 단수), 해설의 통사 분석 전부 사실과 일치, 필드 동기화 무결. 정답 포인트는 source-correct→displayed-wrong 최소대립쌍이며 교정 시 원문 복원. 대명사 수일치는 문맥 선행사 추적을 요구해 INTERMEDIATE에 정합(C5=3). 약점은 디코이 설계: (B)/(E) 동일 포인트 중복과 즉시 소거 가능한 난도로 C3=2. 합계 17, 최저 2 → B. KILLER 요청이 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20231219-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "함축의미",
+    "words": 158
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-obvious-intransitive-passivex1"
+  ],
+  "layout": "(A):dec=f  (B):dec=b  (C):dec=g  (D):ANS=i  (E):dec=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 153,
+        "relPos": 0.185,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 206,
+        "relPos": 0.248,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 279,
+        "relPos": 0.337,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 447,
+        "relPos": 0.539,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 691,
+        "relPos": 0.834,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.834,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Many people take the commonsense view that color is an objective property of things, or of the light that bounces off them. They say a tree's leaves are green because they reflect green light - a greenness that is just as real as the leaves. Others argue that color doesn't inhabit the physical world at all but exists only in the eye or mind of the viewer. They maintain that if a tree fell in a forest and no one was there to see it, its leaves would be colorless - and so would everything else. They say there is no such thing as color; there are only the people who see it. Both positions are, in a way, correct. Color is objective and subjective - \"the place,\" as Paul Cézanne put it, \"where our brain and the universe meet.\" Color is created when light from the world is registered by the eyes and interpreted by the brain.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "green",
+        "isError": false,
+        "errorExpression": "green",
+        "surroundingText": "They say a tree's leaves are green because they reflect green light",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "reflect green light - a greenness that is just as real as the leaves.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "it",
+        "isError": false,
+        "errorExpression": "it",
+        "surroundingText": "if a tree fell in a forest and no one was there to see it, its leaves",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "would",
+        "isError": true,
+        "correction": "would",
+        "errorExpression": "did",
+        "surroundingText": "was there to see it, its leaves would be colorless - and so would everything else.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(E)",
+        "expression": "where",
+        "isError": false,
+        "errorExpression": "where",
+        "surroundingText": "put it, \"where our brain and the universe meet.\" Color is created",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "green"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "it"
+      },
+      {
+        "label": "(D)",
+        "text": "did"
+      },
+      {
+        "label": "(E)",
+        "text": "where"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 연결동사 be(are) 뒤에서 주어를 설명하는 주격보어 자리이므로, 형용사 'green'이 오는 것이 어법상 옳습니다.",
+      "(B)": "선행사 'a greenness'를 수식하며 뒤에 주어가 빠진 불완전한 절을 이끌고 있으므로, 관계대명사 'that'은 어법상 옳습니다.",
+      "(C)": "문맥상 숲속에서 쓰러지는 나무를 가리키는 지시대명사 자리이므로, 단수 대명사 'it'은 어법상 옳습니다.",
+      "(E)": "선행사 'the place'를 수식하며 완전한 구조의 절(our brain and the universe meet)을 이끌고 있으므로, 관계부사 'where'는 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 'its leaves would be colorless'라는 조동사 would가 쓰인 주절 뒤에, 'so + 동사 + 주어'를 결합하여 '~도 또한 그러하다'라는 뜻의 병렬/대동사 도치 구문을 형성하고 있습니다. 앞 절의 술어부가 'would be colorless'이므로 이를 대신하는 대동사는 일반동사를 받는 did가 아닌 조동사를 그대로 받는 would여야 합니다. 따라서 (D)의 'did'는 어법상 틀린 표현이며 'would'로 고쳐야 합니다. 과거 조건에 이끌려 일반동사 대동사인 did가 자연스럽다고 착각하기 쉽지만, 조동사 would와의 병렬 일치를 확인해야 하는 함정이 있습니다.",
+    "keyPoints": [
+      "(D) 병렬 구조 — 앞 절의 조동사 would와 대동사 형태적 일치 판단",
+      "(A) 형용사 자리 vs 부사 자리 — 2형식 연결동사의 보어 구조 확인",
+      "(E) 관계사 — 관계부사 뒤의 완전한 절 구조 판정"
+    ],
+    "tags": [
+      "대동사",
+      "도치구문",
+      "조동사 병렬",
+      "관계부사수식"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Many people take the commonsense view that color is an objective property of things, or of the light that bounces off them. They say a tree's leaves are __(A) green__ because they reflect green light - a greenness __(B) that__ is just as real as the leaves. Others argue that color doesn't inhabit the physical world at all but exists only in the eye or mind of the viewer. They maintain that if a tree fell in a forest and no one was there to see __(C) it__, its leaves __(D) did__ be colorless - and so would everything else. They say there is no such thing as color; there are only the people who see it. Both positions are, in a way, correct. Color is objective and subjective - \"the place,\" as Paul Cézanne put it, \"__(E) where__ our brain and the universe meet.\" Color is created when light from the world is registered by the eyes and interpreted by the brain.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

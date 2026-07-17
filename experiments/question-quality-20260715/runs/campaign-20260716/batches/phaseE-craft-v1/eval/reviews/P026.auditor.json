@@ -1,0 +1,87 @@
+{
+  "pid": "P026",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2",
+      "severity": "critical",
+      "evidence": "선언된 정답 (C) 'are distributed'가 결정적 비문이 아니다. 'Most of + [the whale meat and blubber]'에서 of 뒤 명사구는 등위 접속된 두 불가산 명사('meat and blubber')로, 등위 명사구는 하나의 개념 단위로 굳어진 경우가 아닌 한 복수 일치가 문법적으로 허용된다. 더구나 같은 지문이 두 문장 앞에서 동일한 등위 주어에 대해 'whale meat and blubber ARE important parts of the local diet'로 복수 일치를 사용하고 있어, 'are distributed'를 복수 일치로 읽는 해석이 지문 내부 증거로 지지된다. 따라서 이 자리는 '명확한 문법 판단'이 아니라 문맥·문체 선호(단일 식량 개념 vs 등위 복수)의 대안 분석 가능 자리이며, 엄밀한 문법성 기준으로는 다섯 밑줄 모두 정문일 수 있다. 단일 정답의 유일성·필연성이 성립하지 않는다."
+    },
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "해설이 '불가산 명사인 meat과 blubber가 결합하여 추상적인 하나의 식량 자원 개념으로 단수 취급되었습니다. 따라서 복수 동사 are distributed는 어법상 틀렸으며'라고 범주적 규칙처럼 단정한다. 그러나 등위 불가산 명사구의 단수 취급은 필수 규칙이 아닌 선택적 해석이고, 같은 지문의 'whale meat and blubber are important parts'(복수 일치)와 정면으로 모순된다. 논쟁 가능한 선호를 확정적 어법 오류로 설명한 오개념이다."
+    },
+    {
+      "code": "V5-minor",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 expression('is distributed')과 surroundingText('... blubber is distributed ...')가 학생에게 렌더된 형태('are distributed')가 아닌 원문(교정) 형태를 담고 있다. 나머지 4개 항목은 변형이 없어 원문=렌더이므로 'expression=정문형, errorExpression=표시형' 관례로 읽으면 내적 일관성은 유지되나, 렌더 스니펫으로 소비하는 다운스트림에서는 불일치 소지가 있다. 선택지 목록·렌더 지문·해설 간 정답 라벨 (C) 동기화 자체는 정상이므로 V5는 통과로 판정."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 2,
+    "C4": 1,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "수동태 — 과거분사 controlled의 태 판단 (pointCode c)",
+      "temptingBecause": "접속사절 안의 'are controlled'에서 능동 control과의 태 혼동을 유도",
+      "decisiveFlaw": "주어 they(제도)가 덴마크에 의해 통제되는 명백한 수동 관계라 즉시 정문으로 판별됨 — 매력도 낮음. 또한 (B)와 동일한 수동태 포인트를 중복 겨냥"
+    },
+    {
+      "label": "(B)",
+      "intent": "능·수동태 — insists 목적어절 내 'is not done'의 태 판단 (pointCode e)",
+      "temptingBecause": "insist 뒤 절에서 가정법 현재(원형) 요구로 착각하거나 do의 태를 혼동할 여지",
+      "decisiveFlaw": "insist가 '주장하다(assert)' 의미라 직설법이 정상이고 'the killing ... is done'은 명백한 수동 — 정문. (A)와 포인트 중복"
+    },
+    {
+      "label": "(C)",
+      "intent": "선언된 정답 — 부분 표현(Most of) 수일치: of 뒤 명사의 수에 일치 (pointCode d)",
+      "temptingBecause": "'meat and blubber'가 등위 접속이라 복수로 보이고, 직후의 'some is sold'(단수)와 대조되어 흔들리게 설계",
+      "decisiveFlaw": "결정적 결함이 결여됨 — 등위 불가산 명사구는 복수 일치도 허용되며 지문 스스로 'whale meat and blubber are important parts'로 복수 일치를 사용. 'are distributed'는 명백한 비문이 아니어서 정답 필연성이 성립하지 않음(문항 자체의 치명 결함)"
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 관계대명사절 내 동사 수일치 — 선행사 a law와 says (pointCode a)",
+      "temptingBecause": "that절 내부의 'each killing'이나 복수 명사와의 거리로 수일치 혼동을 유도",
+      "decisiveFlaw": "선행사가 단수 a law임이 인접해 있어 says가 정문임이 즉시 확인됨 — 매력도 낮음"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사절 접속사 whether — question의 목적어절 판단 (pointCode b)",
+      "temptingBecause": "if/that과의 대체 가능성, 의문사절 판단으로 헷갈릴 여지",
+      "decisiveFlaw": "'question whether ~'는 표준 결합으로 정문임이 즉시 확인됨 — 매력도 낮음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "E1",
+      "severity": "critical",
+      "evidence": "정답 해설이 등위 불가산 명사구의 단수 취급을 확정 규칙으로 단정('따라서 복수 동사 are distributed는 어법상 틀렸으며') — 실제로는 선택적 해석이며 지문 내 'whale meat and blubber are important parts'와 모순 (V4 사유와 동일)"
+    },
+    {
+      "code": "E2",
+      "severity": "minor",
+      "evidence": "keyPoints의 (E) 태그 '전치사 vs 접속사'가 실제 포인트(명사절을 이끄는 접속사 whether vs that/if 판단)와 불일치 — 이 문항에 전치사 대조 요소는 존재하지 않음. 오답 해설 본문 자체는 정확함"
+    },
+    {
+      "code": "E3",
+      "severity": "minor",
+      "evidence": "오답 해설 (A)(B)(D)(E)의 통사 분석 자체는 모두 실제 문장 구조와 일치함(예: (D)의 '주격 관계대명사 that, 선행사 a law' 분석 정확). 결함은 정답 해설에 집중되어 있음"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 렌더 지문은 원지문 대비 (C) is→are 의도 변형 외 손상 없음, 라벨·마커·선지 일치. V3: 지문·발문·교정 완성문(is distributed 복원 시 원문) 모두 정문. 치명 결함은 정답 포인트 선정 자체 — 등위 불가산 주어 'the whale meat and blubber'의 수일치는 단수/복수 모두 방어 가능한 대안 분석 자리이고, 지문 내부의 복수 일치 선례('are important parts')가 선언된 정답을 반증하는 증거로 작동한다(C4=1의 사유). 디코이 4개는 모두 투명하게 정문이라 변별은 (C) 단독 의존인데 그 (C)가 비결정적이므로 V2·V4 실패, 등급 F. 요청 난이도 INTERMEDIATE(KILLER 아님)이므로 killerConditionsMet=false. 재설계 제안: 등위 주어를 피하고 'Most of the meat is/are distributed'처럼 단일 불가산 명사로 부분사 수일치를 묻거나, 지문 내 모순 문장을 제거해야 함."
+}

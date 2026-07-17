@@ -1,0 +1,40 @@
+{
+  "batchId": "phaseA-premblank-v3",
+  "phase": "A",
+  "atKst": "2026-07-16T19:41:54.912+09:00",
+  "assignments": 12,
+  "slotsConsumed": 12,
+  "accepted": 8,
+  "modelCalls": 12,
+  "inputTokens": 51613,
+  "outputTokens": 8682,
+  "costUsd": 0.20741,
+  "ledgerAfter": {
+    "used": 80,
+    "cap": 1000,
+    "costUsd": 1.826602
+  },
+  "byArm": {
+    "B-A0-PREMIUM-INTERMEDIATE": {
+      "n": 6,
+      "accepted": 5,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 6,
+      "costUsd": 0.118838
+    },
+    "B-A0-PREMIUM-KILLER": {
+      "n": 6,
+      "accepted": 3,
+      "gateRejected": 0,
+      "noCandidate": 3,
+      "slots": 6,
+      "costUsd": 0.088572
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 212218
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "question-quality-v6-connectivity-pilot-exact-wire-public-v5",
+  "status": "OFFLINE_PRODUCTION_CORE_EXACT_WIRE_LIVE_BLOCKED",
+  "privateArtifactSha256": "f27e851c6dcf4072bc3fd17b33115e422edfd9e7f19861dc96bf721083d659da",
+  "originalProtocolV1Sha256": "b6eba782e92a16c8bba3b6b3b4c5a633449fba117fcf0b5e51a3dbf3f1e8b1f2",
+  "originalPublicCorpusSha256": "465e3d6d17bd6c2748fb69d05f3947f96ecc42d0abf71bd56f4e3dbb969933f6",
+  "productionCompilerClosureSha256": "6c83d946b04eb1ce71c0465ee311517cc8af13dc83ac760a7e5eb0d537c23d9e",
+  "productionCompilerClosureSemanticSha256": "c1938124a83b21f147bb3d81b9c24d1b3258a3fe5c7f47c086437917371e6e2c",
+  "productionCompilerClosureArtifactSha256": "eeed64b31af88947ba853bc7b8f8a6ca9995224c3b216ab584b07177f4cd127f",
+  "productionCompilerSourceFiles": 195,
+  "productionCompilerDynamicSourceInputs": 3,
+  "productionCompilerDeclaredDataInputs": 4,
+  "counts": {
+    "assignments": 2,
+    "locallyInterceptedProductionCompilerFetches": 2,
+    "externalNetworkCalls": 0,
+    "metadataNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "productionDatabaseCalls": 0,
+    "apiCandidatesConsumed": 0
+  },
+  "wire": {
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "bodyUtf8BytesByPlan": {
+      "STANDARD": 53354,
+      "PREMIUM": 24943
+    },
+    "bodySha256ByPlan": {
+      "STANDARD": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003",
+      "PREMIUM": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643"
+    },
+    "maxOutputTokensEach": 4000,
+    "completionCountEach": 1,
+    "semanticCandidateCapEach": 1,
+    "exactEndpointTag": "google-vertex/global",
+    "reasoningDisabledRows": 2,
+    "strictJsonSchemaRows": 2
+  },
+  "privacy": {
+    "promptExposed": false,
+    "passageExposed": false,
+    "questionExposed": false,
+    "credentialValueExposedOrHashed": false
+  },
+  "publicSemanticSha256": "ec778186665200a4c80428010514b9d67ab61a8eaa38d45896bf11c90047cff1"
+}

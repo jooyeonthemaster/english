@@ -1,0 +1,35 @@
+{
+  "pid": "P034",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'knowledge isn't knowledge unless it is derived from a single scientist's exceptional genius' — 수동태 결합은 정문. 논리: 지문은 개인주의적 수사(발견은 실험실에서, 영감받은 개인의 산물)를 소개한 뒤 이를 기각하는 구조다('almost nobody thinks they can provide a basis for action', 'A scientific truth has little standing until it becomes a collective product'). 빈칸 문장은 기각 이후의 규범(norms of scientific communication)을 서술하므로 개인 천재로의 환원은 지문의 결론과 정면 모순. 형식적으로: 빈칸절은 '지식이 지식이기 위한 필요조건 X'를 요구하고, 지문이 제시한 X = 집단적 검증이다. ①은 X를 개인 귀속으로 치환하므로 모순 도출(¬X ∧ X 형태). 부정."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합: 'unless it is tested under flawlessly controlled laboratory structures' — 정문. 논리: 지문 말미 'What happens in somebody's laboratory is only one stage in its construction'이 실험실 내부 과정만으로는 지식의 지위가 완성되지 않음을 명시한다. 실험실 통제의 완벽성은 개인주의적 수사('discoveries are made in laboratories')의 연장선이며, 빈칸이 속한 문장은 그 수사를 부정하는 규범을 진술한다. 또한 'flawlessly controlled'라는 강한 한정은 지문 어디에도 근거가 없다. 필요조건의 내용이 지문이 기각한 명제이므로 부정."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합: 'unless it is immediately broadcasted to the public' — broadcast의 과거분사로 broadcasted는 비표준이지만 사전 등재 허용형이라 치명적 결함은 아님. 논리: 지문은 전문가 검토 없이 기자회견으로 발견을 공표하는 과학자가 'automatically castigated as a publicity seeker'라고 명시한다. 즉 즉각적 대중 공표는 규범 위반의 전형 사례로 제시된 것. ③을 빈칸에 넣으면 직전 문장과 정확히 반대되는 규범을 진술하게 되어 모순. 명백한 역방향 미끼. 부정."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "문법 결합: 'knowledge isn't knowledge unless it gains formal validation within a collective peer network' — it(=knowledge)와 gains의 수 일치 정문, unless절 내 현재시제 적법. 논리: (i) 직전 문맥 — 전문가 검토(expert reviewers) 없이 공표하면 비난받는다 → 검토가 규범. (ii) 직후 문맥 — 'A scientific truth has little standing until it becomes a collective product' → 집단적 산물이 되어야 지위 획득. 빈칸의 필요조건 X에 '집단적 동료 네트워크 내 공식 검증'을 대입하면 전후 문장과 삼단 정합: 검증 규범(전건) → 빈칸(일반 원리) → 집단적 산물(재진술). 'formal validation' ↔ expert reviewers/norms, 'collective peer network' ↔ collective product 로 어휘 대응도 성립. 유일하게 무모순인 후보. 채택."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 'unless it demonstrates its practical utility in resolving public issues' — 정문. 논리: 'basis for action in public contexts'라는 구절을 표면적으로 재활용한 미끼. 그러나 지문에서 해당 구절은 '개인주의적 믿음이 공적 맥락의 행동 근거가 될 수 없다'는 취지이지, 지식의 자격 조건이 '공적 문제 해결의 실용성 입증'이라는 주장이 아니다. 지문 전체의 조건은 인식론적·사회적 검증(집단적 승인)이지 실용적 효용이 아니므로, ⑤를 대입하면 뒤 문장 'collective product'와의 연결 고리가 끊긴다. 근거 불충분으로 부정."
+    }
+  ],
+  "note": "빈칸 문장 구조: norms presuppose [nature does not speak unambiguously] AND [knowledge isn't knowledge unless ____]. unless절은 지식 성립의 필요조건을 요구하며, 지문은 그 조건을 '집단적 검증'으로 일관되게 지시한다(expert reviewers → collective product → only one stage in its construction). ④만이 전후 문장과 무모순으로 결합하고, ①②는 지문이 기각한 개인주의 수사, ③은 직전 문장과 정면 모순, ⑤는 표면 어휘 재활용 미끼. 대안 해석으로 정답이 흔들릴 여지 없음. 단일 정답 ④."
+}

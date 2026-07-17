@@ -1,0 +1,30 @@
+{
+  "pid": "P018",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself': 관계절 주어 that(= any process, 단수)의 목적어가 주어 자신이므로 재귀대명사 itself가 옳다. 'repeat itself'는 관용적으로도 표준 결합. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (정답)",
+      "reason": "'a clock that do not depend on a repetitive cycle of events': 관계대명사 that의 선행사는 단수 명사 a clock이므로 does not depend여야 한다. 대안 해석 탐색 — 'events'는 관계절 밖 전치사구 내부라 선행사가 될 수 없고, 가정법 현재나 요구·주장 동사의 that절(원형 사용)도 아니다. 명백한 수일치 오류로 어법상 틀림."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'The only example that comes to mind readily is a candle': 진짜 주어는 단수 The only example이고, 사이에 낀 관계절 'that comes to mind readily'가 거리를 벌려 유혹하는 미끼일 뿐 is가 정확하다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'although at first masked': although 뒤 주어+be동사 생략 축약구문(although (it is) at first masked). 주절 주어(this)와 생략된 주어가 일치하므로 표준적으로 허용. '접속사 뒤엔 완전한 절'이라는 직관이 유혹하는 매력적 오답 후보였으나 정문."
+    }
+  ],
+  "note": "최상위권 렌즈 실전 풀이. 가장 강한 미끼는 (D)의 although+과거분사 축약(완전한 절이 아니라는 유혹), 두 번째 미끼는 (C)의 주어-관계절-동사 원거리 수일치. 그러나 (B)의 선행사 a clock(단수) vs do의 수일치 오류가 장거리 단서로 확정되어 정답이 (B) 하나로 명확히 좁혀진다. 복수 정답 소지 없음."
+}

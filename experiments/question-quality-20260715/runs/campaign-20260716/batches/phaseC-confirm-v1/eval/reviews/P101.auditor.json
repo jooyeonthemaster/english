@@ -1,0 +1,82 @@
+{
+  "pid": "P101",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-wording",
+      "severity": "minor",
+      "evidence": "해설의 \"학생들은 'be willing to' 구조에 익숙하여 'to find'를 동사원형으로 착각하기 쉽지만\"에서 'to find'는 to부정사이지 동사원형이 아니다. 의도(부정사 to로 착각)는 전달되지만 용어가 부정확하다. 구조 오분석은 아니므로 V4 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V5-internal-field",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression 필드가 원문형 'to finding'이고 errorExpression이 표시형 'to find'다. 다른 4개 항목은 expression=표시형과 일치(비오류라 동형)하므로 'expression=원문형' 컨벤션으로 해석하면 자기일관적이며, 렌더 지문·선지·정답·해설 등 학생 노출 필드는 모두 'to find'로 동기화되어 있어 V5 통과. 단, 렌더러가 expression 필드를 표시용으로 쓰는 구현이라면 잠재적 불일치이므로 스키마 컨벤션 확인 권장."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사 판단 — 선행사 people + 관계절 내 주어 공백에서 who의 적격성",
+      "temptingBecause": "관계절이 수동태 완료형(have been adopted)이라 whom/which 대안을 잠깐 고민하게 할 수 있으나 유인력이 매우 낮다",
+      "decisiveFlaw": "관계절 내 주어 자리가 비어 있고 선행사가 사람이므로 who가 명백히 정확 — 상위권은 즉시 소거"
+    },
+    {
+      "label": "(B)",
+      "intent": "수식어구 개입 후 주어-동사 수일치 — 'all their attempts to discover this information'의 핵명사 식별",
+      "temptingBecause": "동사 직전의 단수명사 information이 근접 유인(attraction)으로 is를 기대하게 만든다",
+      "decisiveFlaw": "주어 핵은 복수 attempts이므로 are가 정확 — 5개 중 가장 실질적인 디코이이나 정형화된 패턴이라 중상위권은 빠르게 처리"
+    },
+    {
+      "label": "(C)",
+      "intent": "tell의 이중목적어 구문에서 직접목적어 부정대명사 nothing의 적격성",
+      "temptingBecause": "사실상 없음 — 부정문 맥락의 anything 대비 정도인데 이 문장은 긍정문 구조(will tell them nothing)라 오류로 의심할 단서 자체가 없다",
+      "decisiveFlaw": "tell them nothing은 완전한 정문. 그럴듯한 오답 가설이 성립하지 않는 필러 디코이 — RUBRIC §C '설명이 안 되는 디코이는 필러' 저촉"
+    },
+    {
+      "label": "(D)",
+      "intent": "do-support 뒤 동사원형 — 'they do not necessarily discourage'",
+      "temptingBecause": "주어 they(=restrictions)와 거리가 있고 부사 necessarily가 개입해 discourages/discouraging 대안을 떠올리게 할 수 있다",
+      "decisiveFlaw": "조동사 do 뒤에는 원형이 규범이므로 discourage가 정확 — 확인이 빠른 저난도 디코이"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답. devote A to B에서 to가 전치사임을 파악해 to+동명사(to finding)를 요구하는 포인트",
+      "temptingBecause": "같은 문장 앞의 be willing to(부정사 to)가 프라이밍하고, to find가 목적 부정사처럼 자연스럽게 읽혀 정문으로 넘기기 쉽다",
+      "decisiveFlaw": "devote는 to-전치사구 보어를 요구하므로 to find는 비문 — to finding으로 교정하면 정확히 원문이 복원되는 최소대립쌍(minimal pair) 성립"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "terminology-imprecision",
+      "severity": "minor",
+      "evidence": "\"'to find'를 동사원형으로 착각하기 쉽지만\" — to find는 to부정사. '동사원형' 대신 'to부정사(부정사의 to)로 착각'이 정확한 표현."
+    },
+    {
+      "code": "distractor-explanation-shallow",
+      "severity": "minor",
+      "evidence": "(D) 해설 \"앞에 부정어 'do not'이 있으므로 동사원형\"은 원형을 요구하는 것이 부정어가 아니라 조동사 do라는 점에서 표현이 느슨하다. 오개념 수준은 아님."
+    },
+    {
+      "code": "keypoints-partial-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E)(B)(A)만 다루고 (C)(D)는 누락. 모순은 아니나 5개 밑줄 전수 포인트 문서화 관점에서 불완전."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문 대비 의도된 (E) to finding→to find 단일 변형만 있고 손상 없음; blind solve 결과 (A)(B)(C)(D) 모두 독립적으로 정문, (E)만 비문으로 정답 유일성 성립; 교정 시 정확히 원문 복원(최소대립쌍). 그러나 KILLER 요청 대비 실난이도가 크게 미달한다. (1) 정답 포인트 devote A to -ing는 한국 고교에서 가장 반복 훈련되는 '전치사 to+동명사' 관용 포인트(be used to/look forward to/devote to)로, 구조 독해 없이 암기 즉시 판별된다 — RUBRIC §C 'KILLER 정답은 구조를 읽어야 하며 즉시 드러나지 않는다' 위반. (2) (C) nothing은 유인 가설이 성립하지 않는 필러 디코이, (A)도 즉시 소거급이라 실질 경쟁 선지는 (B) 하나뿐 — C2/C3 저하. (3) 경미한 해설 용어 부정확('동사원형' 표기)과 keyPoints 부분 커버리지. 종합: 유효성은 건전하나 KILLER 라벨과의 난이도 정합 실패(C5=1)로 재설계 필요 — 등급 C, killerConditionsMet=false. 재설계 방향: 정답 포인트를 구조 판독형(예: 원거리 수일치, 병렬구조, 분사 vs 정동사)으로 교체하거나 난이도 라벨을 중(中)으로 조정하고, (C) 자리를 실질 유인력 있는 포인트로 대체할 것."
+}

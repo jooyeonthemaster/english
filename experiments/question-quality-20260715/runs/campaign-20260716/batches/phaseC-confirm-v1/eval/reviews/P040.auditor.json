@@ -1,0 +1,81 @@
+{
+  "pid": "P040",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "오답 해설 ④: \"새로운 문제가 이전 결공식과 유사한지 분석하라는 내용은...\" — '결공식'은 한국어에 존재하지 않는 비단어(손상 용어)다. 선지 ④의 실제 내용은 'analyze whether the new problem is similar to a previously solved one'(이전에 해결된 문제와 유사한지 분석)이므로 해설이 선지 내용을 손상된 형태로 잘못 옮겼다. 학생 노출 해설의 비단어·손상 용어는 V4 실패 사유다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "기존 실패 전략의 긍정 재진술(polarity reversal) — 1문장의 익숙한 도구·기술 의존 방식을 처방으로 둔갑",
+      "temptingBecause": "'tools and skills'가 1문장과 어휘 그대로 겹치고, 'proven effective'가 상식적으로 그럴듯하다",
+      "decisiveFlaw": "지문이 명시적으로 이 접근은 문제가 특히 참신할 때 'fails miserably'라고 단정하므로 'In this circumstance'의 처방과 정면 모순"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'assume nothing and treat the problem as if you have never seen anything like it before'의 추상화 패러프레이즈",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음 — 후속 문장의 대용어 'this sense of looking freshly at something'과 'beginner's mind' 개념이 이 선지만 지시할 수 있다"
+    },
+    {
+      "label": "③",
+      "intent": "actor swap + 필터 개념 오적용 — 자기 태도에 대한 처방을 타인(고수)에게 의존하는 것으로 치환",
+      "temptingBecause": "'filter out irrelevant details'가 6문장(Experienced martial artists use their experience as a filter...)과 직접 겹친다",
+      "decisiveFlaw": "지문은 바로 그 경험 필터가 본질을 잘못 걸러내 seasoned masters도 실수한다고 경고하며, 처방은 타인 의존이 아니라 자신의 백지 태도다"
+    },
+    {
+      "label": "④",
+      "intent": "condition loss — 'In this circumstance'가 이미 '문제가 특히 참신함'으로 확정된 조건을 무시하고 2문장의 유사성 판별 단계를 재도입",
+      "temptingBecause": "'similar to a previously solved one'이 2문장 'similar to those previously solved'와 어휘 그대로 겹친다",
+      "decisiveFlaw": "'assume nothing' 처방과 모순되고, 후속 대용어 'this sense of looking freshly at something'이 유사성 분석을 지시할 수 없다"
+    },
+    {
+      "label": "⑤",
+      "intent": "half-truth — 지문이 위험 요인으로 서술한 고수들의 필터링 방식을 처방으로 격상",
+      "temptingBecause": "'separating the essential from the irrelevant'가 6문장과 verbatim으로 겹친다",
+      "decisiveFlaw": "필터링은 경험(선입견)에 기반해 본질을 놓칠 수 있다고 경고된 방식이며, 초심자의 마음은 반대로 'absorb every detail'이므로 'focus only'는 처방과 정반대"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "NONWORD",
+      "severity": "major",
+      "evidence": "오답 해설 ④의 '이전 결공식' — 비단어. '이전에 해결된 문제' 등의 손상으로 추정되며 선지 ④의 실제 내용(a previously solved one)과 대응이 깨진다."
+    },
+    {
+      "code": "VERBOSITY",
+      "severity": "minor",
+      "evidence": "본 해설이 정답 근거를 정확히 제시하나 문장이 길고 근거-함정 분리가 다소 둔하다(오류 자체는 ④ 건 외에 없음)."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "distractorAnchorsAndFlaws": true,
+    "requiresTwoCues": false,
+    "notSolvableBySinglePolarityCue": false,
+    "distinctTrapTypes": true,
+    "evidence": "오답 ①③④⑤가 전부 '기존 경험/도구/필터에 의존하라' 극성이고 ②만 유일하게 '선입견 없이 새로 보라' 극성이어서 극성 단서 하나로 정답 선택이 가능하다. 게다가 빈칸 직후 문장의 대용어 'this sense of looking freshly at something'이 단일 인접 단서로 정답을 사실상 지목한다. §D의 '최소 두 문장/두 논리 단서 연결' 및 '극성 하나로 찍을 수 없음' 조건 모두 미충족."
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 통과. 빈칸 절단은 깨끗하고(원문 span만 제거), 5개 선지 모두 동일 통사 슬롯의 부정사구이며 ②가 유일 정답으로 독립 검증됨. 그러나 오답 해설 ④의 비단어 '결공식'(선지 내용 손상 전사)으로 V4 실패 → 등급 F. 공예 측면에서도 요청 난이도 KILLER 대비 실제 난이도가 크게 미달: 오답 4개가 단일 극성으로 정렬되어 odd-one-out 소거가 가능하고, 빈칸 직후 대용어가 강력한 국소 단서로 작동한다(C4=2, C5=1). 수정 방향: (1) 해설 ④의 '이전 결공식'을 '이전에 해결된 문제'로 교정, (2) KILLER 유지 시 fresh-perspective 극성의 매력적 오답(예: scope shift된 'discard all prior knowledge permanently' 류)을 최소 1개 투입해 극성 소거를 차단하고 다문장 통합을 강제해야 한다. 합계 C=13."
+}

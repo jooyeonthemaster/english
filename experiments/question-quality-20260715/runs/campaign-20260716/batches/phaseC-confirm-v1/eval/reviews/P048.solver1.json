@@ -1,0 +1,35 @@
+{
+  "pid": "P048",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "ability + to부정사 구조는 정상. 'to creatively solve'는 분리 부정사(split infinitive)로, 문체상 논쟁은 있으나 현대 영문법에서 어법 오류로 간주되지 않으며 수능 어법 판정 기준에서도 정문이다. 부사 creatively가 solve를 수식하는 위치도 의미상 자연스럽다. [유혹 기록] '부정사는 분리하면 안 된다'고 배운 학생이 순간적으로 끌릴 수 있는 미끼지만, 규범상 오류가 아니므로 배제."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주어 'your critical thinking skills'(복수)에 수동태 'are enhanced'가 수 일치하고, 부사 greatly가 과거분사 enhanced를 수식하는 어순도 정상. 문맥상 '행복하면 비판적 사고력이 크게 향상된다'는 능동 주체 없는 수동 표현으로 자연스럽다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'lead to' 뒤에 명사구 'substance abuse'(물질 남용)가 오는 구조로 전치사 to의 목적어로 명사구가 정상 결합. 복합명사 substance abuse 자체가 관용적으로 굳은 표현이라 관사 없이 무관사 불가산 명사구로 쓰는 것도 정상."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "전치사 of 뒤 동명사 being + 형용사 lonely 구조. 'the stress of being lonely'(외로운 상태에서 오는 스트레스)로 의미·형태 모두 정상. [유혹 기록] 'of loneliness로 써야 하는 것 아닌가' 하는 생각이 스치지만 동명사구도 완전한 정문이므로 배제."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "'other risk factors alike obesity, smoking, and heart disease'에서 alike는 서술 형용사(predicative adjective)/부사로만 쓰이며(예: They are alike / think alike), 명사 앞에 전치사처럼 목적어를 취할 수 없다. '비만·흡연·심장질환 같은 위험 요인들'이라는 예시 열거 의미이므로 전치사 like(또는 such as)가 와야 한다. 대안 해석(alike를 후치 수식 부사로 보고 'other risk factors alike'로 끊는 독법)을 시도해도 뒤의 명사 나열 obesity, smoking, and heart disease가 통사적으로 고아가 되어 성립 불가. 명백한 어법 오류."
+    }
+  ],
+  "note": "최상위권 실전 풀이: 밑줄을 순서대로 스캔하면 (A)의 분리 부정사가 첫 번째 유혹 포인트이나 규범상 정문. (D)의 being도 'of loneliness' 대체 가능성 때문에 잠깐 멈추게 하지만 정문. (E)의 alike는 like(전치사)와의 형태 혼동을 노린 전형적 출제 포인트로, 목적어(obesity...)를 취하는 순간 즉시 오류로 확정된다. 대안 해석(도치·축약 관계절 등)으로 (E)를 정문으로 만들 방법이 없어 단일 정답. 다른 밑줄을 정문으로 옹호 불가능한 경우도 없음. 난이도는 중하 — (E)가 비교적 투명하게 틀려 변별력은 (A) 미끼에 의존."
+}

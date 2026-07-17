@@ -1,0 +1,1226 @@
+{
+  "deployment": {
+    "actor": "claude-code_2-1-207_agent",
+    "createdAt": 1784040904535,
+    "gitDirty": "1",
+    "githubCommitMessage": "[ADD]: 릴리즈 노트 — 포인트 짚어주기·시험 분석 업데이트 (배포 시 스모트 소식 자동 발행)",
+    "githubCommitRef": "20260714jooyeon",
+    "githubCommitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "id": "dpl_CKkd1eiFq2DeEidwSxQpFSgDm4ZD",
+    "readyState": "READY",
+    "source": "cli",
+    "target": "production",
+    "url": "nara-qn6rcsvkh-jooyoens-projects-59877186.vercel.app"
+  },
+  "files": [
+    {
+      "currentCrlfSha1": "21d86bebf57e2482136b32d0699c29a9d64e2686",
+      "currentLfSha1": "d6ac03171b91082fe62ce1575914ea2f028e3630",
+      "currentRawSha1": "21d86bebf57e2482136b32d0699c29a9d64e2686",
+      "deployedUid": "21d86bebf57e2482136b32d0699c29a9d64e2686",
+      "deploymentPath": "src/package-lock.json",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-11T18:41:53+09:00",
+          "commit": "434d6d61c89ed0402da0e014e8fbc84e23b1cd88",
+          "eolVariant": "crlf",
+          "subject": "[MERGE]: 동주 20260711 통합 — 랜딩 대개편·공개 세미나·오프라인 홍보물·사용 매뉴얼 185p·시험지 드래그선택 근본수정"
+        }
+      ],
+      "localPath": "package-lock.json",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "aec434ea2c2c26bf179e0a1556a703b92eb6316e",
+      "currentLfSha1": "f34e14b7ebd0c098d93c7c804ef709aa8209286e",
+      "currentRawSha1": "aec434ea2c2c26bf179e0a1556a703b92eb6316e",
+      "deployedUid": "aec434ea2c2c26bf179e0a1556a703b92eb6316e",
+      "deploymentPath": "src/package.json",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-11T18:41:53+09:00",
+          "commit": "434d6d61c89ed0402da0e014e8fbc84e23b1cd88",
+          "eolVariant": "crlf",
+          "subject": "[MERGE]: 동주 20260711 통합 — 랜딩 대개편·공개 세미나·오프라인 홍보물·사용 매뉴얼 185p·시험지 드래그선택 근본수정"
+        }
+      ],
+      "localPath": "package.json",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "7ad1d29a86af6ed049d5268057ef30140d9238b3",
+      "currentLfSha1": "0d45d9c0007b5516cc59a7bdfdc787801fde37a9",
+      "currentRawSha1": "7ad1d29a86af6ed049d5268057ef30140d9238b3",
+      "deployedUid": "7ad1d29a86af6ed049d5268057ef30140d9238b3",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/build-analysis-context.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-05-18T20:59:19+09:00",
+          "commit": "744ade9f2c50b824de291bb97bdbc107eb1bc675",
+          "eolVariant": "crlf",
+          "subject": "refactor(structure): split 44 files per CODE-STRUCTURE-GUIDE §1.1"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/build-analysis-context.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "6c6c4f06e969feaf4c743d69f93975ee5fb6a1ae",
+      "currentLfSha1": "c9c9cb6d8cab781381508c608efd5e1d3cd63093",
+      "currentRawSha1": "9539d420a498a234452a8c1a8f55356786f0931c",
+      "deployedUid": "da29405af7739707af5598efec0f413f619ae286",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/constants.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/constants.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "631f50736e83ca4b55ec6aad9d9f920d9ecf2ca9",
+      "currentLfSha1": "7e3fb41fe2c0cf7bba5a716e25256308c40344b1",
+      "currentRawSha1": "631f50736e83ca4b55ec6aad9d9f920d9ecf2ca9",
+      "deployedUid": "631f50736e83ca4b55ec6aad9d9f920d9ecf2ca9",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "f8a92fbf65bf3f244507bcd03d9111ee4fa08016",
+      "currentLfSha1": "fdb47555047b83eb5fb8d6ce817e123a81f4b5d2",
+      "currentRawSha1": "fdb47555047b83eb5fb8d6ce817e123a81f4b5d2",
+      "deployedUid": "fdb47555047b83eb5fb8d6ce817e123a81f4b5d2",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "67290d45df515feb2898c1c2789670673b36a0e5",
+      "currentLfSha1": "10f8af4e4ace66b84d9fcaabc661e2da8ae60d18",
+      "currentRawSha1": "10f8af4e4ace66b84d9fcaabc661e2da8ae60d18",
+      "deployedUid": "10f8af4e4ace66b84d9fcaabc661e2da8ae60d18",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "b924da0b73e28fecd5a572cf2ad4fe663b2a9708",
+      "currentLfSha1": "72adb6abefef7c845c6d22a9d45066e28fb9bf9e",
+      "currentRawSha1": "5ff73dd94c0406e8ff28d914a14d0b72adaac2ab",
+      "deployedUid": "2044e358fa51a991219b99028f7c733859982565",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/prompts.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/prompts.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "c05eaebb0d24d94f70f59045302f10138a65df84",
+      "currentLfSha1": "f9564b910386bb95de592f281ae4fbd333dae959",
+      "currentRawSha1": "b35db5e11c884a0d63560854fdd27af8bd16a84b",
+      "deployedUid": "0839bea55cec9ec3c44c1b52d0fa492624a1b817",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "14074bef0a176e2452a4859780de68f53dc329f8",
+      "currentLfSha1": "976d6c6dc20bb7a6143f394216bc34a5b6022840",
+      "currentRawSha1": "976d6c6dc20bb7a6143f394216bc34a5b6022840",
+      "deployedUid": "6bf6c7c53137deb89d8377f1eb813f996d6021e1",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "1b40e66dd21c094af4902d4b7644c03817548bfc",
+      "currentLfSha1": "4c7db1ca884d54e68618a5a44a6ebe85dc91029e",
+      "currentRawSha1": "745be1479ba240e80cbd96422c0890fd490f0841",
+      "deployedUid": "745be1479ba240e80cbd96422c0890fd490f0841",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/run-question-generation-helpers.ts",
+      "historyMatches": [],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-helpers.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "bb077b93fe58ff0150adc419f8e1dc70db9a3033",
+      "currentLfSha1": "8eacf69572adc48d58dce076069e5edc7f1ad79e",
+      "currentRawSha1": "8eacf69572adc48d58dce076069e5edc7f1ad79e",
+      "deployedUid": "8eacf69572adc48d58dce076069e5edc7f1ad79e",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/run-question-generation-types.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-types.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "cceb70bfcef5586a940619ff3f5f4787bc0b8beb",
+      "currentLfSha1": "09e006e4837f1eade6c2c6cab79a451e4b4d84f5",
+      "currentRawSha1": "09e006e4837f1eade6c2c6cab79a451e4b4d84f5",
+      "deployedUid": "7a5a7422e2d681e6136ba1d3647b3116229dcec3",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "69dece0c3f440e77553290135be701225f30f82b",
+      "currentLfSha1": "196b8226fbec3db5e8b91799379947e27bb2f8f1",
+      "currentRawSha1": "69dece0c3f440e77553290135be701225f30f82b",
+      "deployedUid": "69dece0c3f440e77553290135be701225f30f82b",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/schemas.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-05-18T20:59:19+09:00",
+          "commit": "744ade9f2c50b824de291bb97bdbc107eb1bc675",
+          "eolVariant": "crlf",
+          "subject": "refactor(structure): split 44 files per CODE-STRUCTURE-GUIDE §1.1"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/schemas.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "f91411896ffaf9f097b45ee1f29cf586760f8637",
+      "currentLfSha1": "ef78b4a6e8323ef90d76037b30b3554932b8feb2",
+      "currentRawSha1": "f91411896ffaf9f097b45ee1f29cf586760f8637",
+      "deployedUid": "f91411896ffaf9f097b45ee1f29cf586760f8637",
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/route.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-03T18:05:31+09:00",
+          "commit": "b93ed8578758dd7200a325ed10027715aff6deba",
+          "eolVariant": "crlf",
+          "subject": "[MERGE]: codex 질문세트 렌더 정합 + 무통장입금/어드민/dongju 통합 (로컬 국어·Atlas 위에)"
+        }
+      ],
+      "localPath": "src/app/api/ai/generate-questions-auto/route.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "90cb0acdeeb7fd97e07ce81e35fbb0602d55a5ad",
+      "currentLfSha1": "b65646350b360d673167cc0e4656bec944cdd16c",
+      "currentRawSha1": "90cb0acdeeb7fd97e07ce81e35fbb0602d55a5ad",
+      "deployedUid": "90cb0acdeeb7fd97e07ce81e35fbb0602d55a5ad",
+      "deploymentPath": "src/src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "497d2d1a95f9662f83477c7400ea90f467ad0407",
+      "currentLfSha1": "fcf489b98d3903a1c651cf9765025b42d74d8456",
+      "currentRawSha1": "497d2d1a95f9662f83477c7400ea90f467ad0407",
+      "deployedUid": "497d2d1a95f9662f83477c7400ea90f467ad0407",
+      "deploymentPath": "src/src/app/api/workbench/ai-jobs/question-generation/route.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-18T22:53:01+09:00",
+          "commit": "591cdb413c8b4b9323eb3141d144df7566875cc6",
+          "eolVariant": "crlf",
+          "subject": "[FEAT]: 문제생성 ship-first 게이트 재분류 + 부분-repair + C 사전게이트 (2026-06-18)"
+        }
+      ],
+      "localPath": "src/app/api/workbench/ai-jobs/question-generation/route.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "017864880f3cd874831c462cf81964f1687b97b1",
+      "currentLfSha1": "4de2a699e2fc049b8123289e711691824c410b26",
+      "currentRawSha1": "21aaa8e4906368c2a53b64d72a943d51a9718154",
+      "deployedUid": "8d84cd8da7b804f0463a92e0606bb34e46305ff3",
+      "deploymentPath": "src/src/lib/atlas-ai.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/atlas-ai.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "e88f8911760e1d475de2462407a442edc868a71b",
+      "currentLfSha1": "a14af57c7dc9af9f4ff69f03f9da1f0d269342d2",
+      "currentRawSha1": "e88f8911760e1d475de2462407a442edc868a71b",
+      "deployedUid": "e88f8911760e1d475de2462407a442edc868a71b",
+      "deploymentPath": "src/src/lib/atlas-chat-rest.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:46:28+09:00",
+          "commit": "3b9457ca770b5769b29c7c97c34225bface86292",
+          "eolVariant": "crlf",
+          "subject": "[MERGE]: 260707(2)dongju 통합 — 스모트 소식(플랫폼 공지)·실물 쿠폰·모바일 최적화 ver.01 (로컬 시험리포트 대개편 위에)"
+        }
+      ],
+      "localPath": "src/lib/atlas-chat-rest.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "e964e016422e614431c2ff1b8440634cd6f30f25",
+      "currentLfSha1": "e46f7bf0b909dc5981835d3c77203af507ff4022",
+      "currentRawSha1": "e46f7bf0b909dc5981835d3c77203af507ff4022",
+      "deployedUid": null,
+      "deploymentPath": null,
+      "historyMatches": [],
+      "localPath": "src/lib/atlas-research-fetch-boundary.ts",
+      "status": "LOCAL_ONLY_POST_DEPLOYMENT"
+    },
+    {
+      "currentCrlfSha1": "5ea6a91fb1047eee970847036f2bb2eb51dfca38",
+      "currentLfSha1": "18714673400e6c8a756c132138830ad3976d89d9",
+      "currentRawSha1": "5ea6a91fb1047eee970847036f2bb2eb51dfca38",
+      "deployedUid": "5ea6a91fb1047eee970847036f2bb2eb51dfca38",
+      "deploymentPath": "src/src/lib/atlas.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-02T01:30:06+09:00",
+          "commit": "c3720bfb7cc2944f8722a2394078e2196baffe28",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 웹툰 2등급 모델 + 화풍·언어·추가지시 프롬프트 반영 (트리거 워커 stale 해소)"
+        }
+      ],
+      "localPath": "src/lib/atlas.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "ec278b8d64342204290926eea120c38c523032d4",
+      "currentLfSha1": "db439c5427e541ab65bd68a3205c29bb64d6079b",
+      "currentRawSha1": "ec278b8d64342204290926eea120c38c523032d4",
+      "deployedUid": "ec278b8d64342204290926eea120c38c523032d4",
+      "deploymentPath": "src/src/lib/question-generation-llm.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/question-generation-llm.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "bfcd808c3f53c19e440a37b754167ff00b082b54",
+      "currentLfSha1": "925c57248f6c669130b960bd73327714431d3f4b",
+      "currentRawSha1": "bfcd808c3f53c19e440a37b754167ff00b082b54",
+      "deployedUid": "bfcd808c3f53c19e440a37b754167ff00b082b54",
+      "deploymentPath": "src/src/lib/question-generation-persistence.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-03T17:09:01+09:00",
+          "commit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 국어 버티컬 신규 + Atlas 공급자 전환 + 영어 품질개선 로컬 전체 스냅샷"
+        }
+      ],
+      "localPath": "src/lib/question-generation-persistence.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "b35fcdf10733f13e904a02e90f566176bb2c8a5b",
+      "currentLfSha1": "aa47c26c02a62d2523dd5f7626d5266c18c3dd96",
+      "currentRawSha1": "b35fcdf10733f13e904a02e90f566176bb2c8a5b",
+      "deployedUid": "b35fcdf10733f13e904a02e90f566176bb2c8a5b",
+      "deploymentPath": "src/src/lib/question-generation-plans.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/question-generation-plans.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "49968a30b999ed5787dfca0dbf90b5a00b66a69f",
+      "currentLfSha1": "3889ddca9f6b6d5c3c0e251a58017de153980b6f",
+      "currentRawSha1": "f216b030ac73a939103350de0b3ad24710958239",
+      "deployedUid": "75cf601d985dc615b6fe2bc87d195333ab2238ba",
+      "deploymentPath": "src/src/lib/question-generation-prompt-contract.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/question-generation-prompt-contract.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "07e172093e444b5ddd189e5383c5c93fa1f5353f",
+      "currentLfSha1": "518d61ce81d1e37c9796195c0061d29eb47c8eb4",
+      "currentRawSha1": "07e172093e444b5ddd189e5383c5c93fa1f5353f",
+      "deployedUid": "07e172093e444b5ddd189e5383c5c93fa1f5353f",
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/antonym.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/candidate-blocks/antonym.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "7ca24e2101ae17147ddf356e0d6293c803ecd1a1",
+      "currentLfSha1": "2ceb32e0509be3107f959dc38f8dab848f0bb29e",
+      "currentRawSha1": "7ca24e2101ae17147ddf356e0d6293c803ecd1a1",
+      "deployedUid": "7ca24e2101ae17147ddf356e0d6293c803ecd1a1",
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/blank.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/candidate-blocks/blank.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "3f1a101f50a41cfd0d30ac49d1fe4d517c555537",
+      "currentLfSha1": "2d354e9d6c672a6f16f6a0a0d1884caf65ee6f01",
+      "currentRawSha1": "3f1a101f50a41cfd0d30ac49d1fe4d517c555537",
+      "deployedUid": "3f1a101f50a41cfd0d30ac49d1fe4d517c555537",
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/grammar.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/question-quality/candidate-blocks/grammar.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "dee4ba57dba515ee16c2712352327132e0f7f38f",
+      "currentLfSha1": "7195ba418b34e28cb6a7f99d367ef616949e5550",
+      "currentRawSha1": "dee4ba57dba515ee16c2712352327132e0f7f38f",
+      "deployedUid": "dee4ba57dba515ee16c2712352327132e0f7f38f",
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/implied.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/candidate-blocks/implied.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "9a6f8cc0c7b7b751c05c993c6965ee5503a524ca",
+      "currentLfSha1": "d42cb0631833af61f7e62351efb090bc7ca554c9",
+      "currentRawSha1": "9a6f8cc0c7b7b751c05c993c6965ee5503a524ca",
+      "deployedUid": "9a6f8cc0c7b7b751c05c993c6965ee5503a524ca",
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/index.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/candidate-blocks/index.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "25e59d318ab9c8b57e9f99a562ddd043f2dc054d",
+      "currentLfSha1": "5e8b29a78479985a6aa0891a8905c605c6457ee6",
+      "currentRawSha1": "25e59d318ab9c8b57e9f99a562ddd043f2dc054d",
+      "deployedUid": "25e59d318ab9c8b57e9f99a562ddd043f2dc054d",
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/irrelevant.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/candidate-blocks/irrelevant.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "91ec70dd39e3db641c8b3728f41bd1a87e627f65",
+      "currentLfSha1": "1a39ab306e13aa9a5f73d490549eea2fdf400397",
+      "currentRawSha1": "91ec70dd39e3db641c8b3728f41bd1a87e627f65",
+      "deployedUid": "91ec70dd39e3db641c8b3728f41bd1a87e627f65",
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/reference.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/candidate-blocks/reference.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "04091232cd4d9968666b3404d877060e3389a796",
+      "currentLfSha1": "f314f00463741b172b4f8a8380d449ceebbb7399",
+      "currentRawSha1": "04091232cd4d9968666b3404d877060e3389a796",
+      "deployedUid": "04091232cd4d9968666b3404d877060e3389a796",
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/shared.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/candidate-blocks/shared.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "d6543fc3507be8f4d94bae907aa1c07d99f190fd",
+      "currentLfSha1": "03fbd427146de3bf63afb9cf057d7970275eb60e",
+      "currentRawSha1": "dea919c9e362e9bdae6d51f02bea9266b34b06e0",
+      "deployedUid": "deebd250ce98cd46d39102539ca5fd0333b9130a",
+      "deploymentPath": "src/src/lib/question-quality/core.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-03T17:09:01+09:00",
+          "commit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 국어 버티컬 신규 + Atlas 공급자 전환 + 영어 품질개선 로컬 전체 스냅샷"
+        }
+      ],
+      "localPath": "src/lib/question-quality/core.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "e46e54d937edb6a4b2a0827fd4eb66d53d0d3323",
+      "currentLfSha1": "068e3efb7c5421e7c5cb8f2cb3de1a6ba8b51dc4",
+      "currentRawSha1": "9c350b3ae5a61740f33de8dacd0d6f8ce13fec32",
+      "deployedUid": "fb297a318e7cc8e56c12db8f9482a2b272f4684b",
+      "deploymentPath": "src/src/lib/question-quality/dispatcher.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/question-quality/dispatcher.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "6d4b850bc9c702e995e2a9d8bb6bdef1c2d25100",
+      "currentLfSha1": "08c4ca49cf9c8d0e150f4aa73f106994a7f61fad",
+      "currentRawSha1": "6d4b850bc9c702e995e2a9d8bb6bdef1c2d25100",
+      "deployedUid": "6d4b850bc9c702e995e2a9d8bb6bdef1c2d25100",
+      "deploymentPath": "src/src/lib/question-quality/feasibility.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/feasibility.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "f69094b33d28c2f9da80c27b9aed3975618ff4d4",
+      "currentLfSha1": "3284302fdf4b0d8f4688a1e6cde36b0d85ea73fc",
+      "currentRawSha1": "f69094b33d28c2f9da80c27b9aed3975618ff4d4",
+      "deployedUid": "f69094b33d28c2f9da80c27b9aed3975618ff4d4",
+      "deploymentPath": "src/src/lib/question-quality/index.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/index.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "ffd76a0b9e576aad61bd433285698e7d88f00c70",
+      "currentLfSha1": "3b6e966284f183c278f21f1a2669e1b68e6f8f9f",
+      "currentRawSha1": "ffd76a0b9e576aad61bd433285698e7d88f00c70",
+      "deployedUid": "ffd76a0b9e576aad61bd433285698e7d88f00c70",
+      "deploymentPath": "src/src/lib/question-quality/rubric.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/rubric.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "ab9cb70ff6e9e7de61720a6ff5a4c19885f70d66",
+      "currentLfSha1": "3948999b99704b1bb3c98fd1f8194f10ffc9860b",
+      "currentRawSha1": "ab9cb70ff6e9e7de61720a6ff5a4c19885f70d66",
+      "deployedUid": "ab9cb70ff6e9e7de61720a6ff5a4c19885f70d66",
+      "deploymentPath": "src/src/lib/question-quality/validators/antonym.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/antonym.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "1760feb3ec926706309efbd033616c190fd8ffe7",
+      "currentLfSha1": "d270b3e6122c26a31f339c1c93bf8e9d423a217b",
+      "currentRawSha1": "1760feb3ec926706309efbd033616c190fd8ffe7",
+      "deployedUid": "1760feb3ec926706309efbd033616c190fd8ffe7",
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/fill-key.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/blank/fill-key.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "736272d63b466b928c0c3816a062fe35095f360a",
+      "currentLfSha1": "9df3608849e7fe2b5ddb0746e5e5b79052a8f427",
+      "currentRawSha1": "736272d63b466b928c0c3816a062fe35095f360a",
+      "deployedUid": "736272d63b466b928c0c3816a062fe35095f360a",
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/inference-distractor.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/blank/inference-distractor.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "7d947863dc280aa73e656967ef8250c78aa74b85",
+      "currentLfSha1": "0211716354a3213bb27e51c8f7c2dbd952c26f5e",
+      "currentRawSha1": "30cf4f7f593935d3eabef617f89bbe85d8920505",
+      "deployedUid": "ed77dc14b0570a54e1ecf83469b3197858cf1d3f",
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/inference.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/blank/inference.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "c3b07c19de1d19e3f159f26af8c0779782faeaf6",
+      "currentLfSha1": "020dc10ed68f5953366b93410218127e2bef7bae",
+      "currentRawSha1": "c3b07c19de1d19e3f159f26af8c0779782faeaf6",
+      "deployedUid": "c3b07c19de1d19e3f159f26af8c0779782faeaf6",
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/multi.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/blank/multi.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "96351302f7ae0bce8c0dd595209835c06cb0b6de",
+      "currentLfSha1": "197e6d85ebd931009d4b74b3a24dcf1c2e8ef63c",
+      "currentRawSha1": "96351302f7ae0bce8c0dd595209835c06cb0b6de",
+      "deployedUid": "96351302f7ae0bce8c0dd595209835c06cb0b6de",
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/paraphrase.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/blank/paraphrase.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "4e25ad9e2a9d7bee3629cd0be3c75724dd1f327c",
+      "currentLfSha1": "65bbc83b334ce6dbd27ce196570f26b7f0182a38",
+      "currentRawSha1": "65bbc83b334ce6dbd27ce196570f26b7f0182a38",
+      "deployedUid": null,
+      "deploymentPath": null,
+      "historyMatches": [],
+      "localPath": "src/lib/question-quality/validators/blank/seam.ts",
+      "status": "LOCAL_ONLY_POST_DEPLOYMENT"
+    },
+    {
+      "currentCrlfSha1": "e192a678231d87be62ba016e4df59b094cb9a1cf",
+      "currentLfSha1": "34b4c8d7b7aafdc580bd6eb88f19c2f3939c68b5",
+      "currentRawSha1": "e192a678231d87be62ba016e4df59b094cb9a1cf",
+      "deployedUid": "e192a678231d87be62ba016e4df59b094cb9a1cf",
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/shared.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/blank/shared.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "4e18fb4535e650e7a1e1303aa04802ce0e1bc018",
+      "currentLfSha1": "4b9ff6e5941d125fa2d4a89e9bc4251fca39a441",
+      "currentRawSha1": "4b9ff6e5941d125fa2d4a89e9bc4251fca39a441",
+      "deployedUid": "4b9ff6e5941d125fa2d4a89e9bc4251fca39a441",
+      "deploymentPath": "src/src/lib/question-quality/validators/conditional-writing.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/conditional-writing.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "f42c65d2dda0c554c19998abae73dc8a829c4a12",
+      "currentLfSha1": "eb5f321309766087f95c3c3251904af9a8083654",
+      "currentRawSha1": "f42c65d2dda0c554c19998abae73dc8a829c4a12",
+      "deployedUid": "f42c65d2dda0c554c19998abae73dc8a829c4a12",
+      "deploymentPath": "src/src/lib/question-quality/validators/content-match.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/content-match.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "1f61574954e703705046bf50992aac959664f1fd",
+      "currentLfSha1": "46f4bb0b97d3d721ffa9cb7316214ca010100513",
+      "currentRawSha1": "bc6987c6f224d174ab438aa0b5037827f067a821",
+      "deployedUid": "e840f42a5b744a62f8b5ae76f3423ece66e3f149",
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/combo.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/grammar/combo.ts",
+      "status": "HISTORY_RECONSTRUCTABLE_DRIFT"
+    },
+    {
+      "currentCrlfSha1": "3bb87fe6e0d16f6c9a11aa792bd9f1532525cd49",
+      "currentLfSha1": "ce09242ebdbef5fa10b525db254641b62653ec63",
+      "currentRawSha1": "3bb87fe6e0d16f6c9a11aa792bd9f1532525cd49",
+      "deployedUid": "3bb87fe6e0d16f6c9a11aa792bd9f1532525cd49",
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/correction.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/grammar/correction.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "d850f8a21cd2cdc30e8a34f0523a18b98a63a7c4",
+      "currentLfSha1": "b589d7b05526014f95808a56f84457509705a09a",
+      "currentRawSha1": "b589d7b05526014f95808a56f84457509705a09a",
+      "deployedUid": "b589d7b05526014f95808a56f84457509705a09a",
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/explanation-lint.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/grammar/explanation-lint.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "0326cf31642523ca60f607dbad843cf691d82019",
+      "currentLfSha1": "5f6241a2f27cd130b2917153b5a04cf332323d9e",
+      "currentRawSha1": "0326cf31642523ca60f607dbad843cf691d82019",
+      "deployedUid": "0326cf31642523ca60f607dbad843cf691d82019",
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/marked.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/grammar/marked.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "c21b099b1c88f4f6d8376dadce00d5129d8ef89f",
+      "currentLfSha1": "a67efbf88ddad96506e8587ac1d1011ce471ebae",
+      "currentRawSha1": "a67efbf88ddad96506e8587ac1d1011ce471ebae",
+      "deployedUid": "a67efbf88ddad96506e8587ac1d1011ce471ebae",
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/nonword-filler.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/grammar/nonword-filler.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "cc75a29d5d1f7fdae3fad40c7d5d4047c12b721b",
+      "currentLfSha1": "e6b360d01350f8a5454ce8e16c42f42b0f36ed2f",
+      "currentRawSha1": "cc75a29d5d1f7fdae3fad40c7d5d4047c12b721b",
+      "deployedUid": "cc75a29d5d1f7fdae3fad40c7d5d4047c12b721b",
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/shared.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-14T23:33:00+09:00",
+          "commit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 어법 품질 대공사 + 프리미엄 생성 gemini-3.1-pro 전면 전환"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/grammar/shared.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "e9c2cc0c64d67da7bf8df0bf6ba7fb278306230f",
+      "currentLfSha1": "e27af0609afcd7df89dc9d57315438107f93b3db",
+      "currentRawSha1": "e9c2cc0c64d67da7bf8df0bf6ba7fb278306230f",
+      "deployedUid": "e9c2cc0c64d67da7bf8df0bf6ba7fb278306230f",
+      "deploymentPath": "src/src/lib/question-quality/validators/implied-distractor.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/implied-distractor.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "a87947e244bdc3664ab99c4e16034d4e7a1e2239",
+      "currentLfSha1": "dfec87c9a22dc0584ef4940d573dbde667169c2d",
+      "currentRawSha1": "a87947e244bdc3664ab99c4e16034d4e7a1e2239",
+      "deployedUid": "a87947e244bdc3664ab99c4e16034d4e7a1e2239",
+      "deploymentPath": "src/src/lib/question-quality/validators/implied.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/implied.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "be48f3610f05c8d5764d2e463b1ee8187defd1ce",
+      "currentLfSha1": "bd2e1715090b80f6bbb235986f9c346753f78589",
+      "currentRawSha1": "be48f3610f05c8d5764d2e463b1ee8187defd1ce",
+      "deployedUid": "be48f3610f05c8d5764d2e463b1ee8187defd1ce",
+      "deploymentPath": "src/src/lib/question-quality/validators/irrelevant.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/irrelevant.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "26349c6fe646457874cd3003989d2209a602da95",
+      "currentLfSha1": "56aecbf861974b204ca8ff13ee8fafa95aedc59f",
+      "currentRawSha1": "26349c6fe646457874cd3003989d2209a602da95",
+      "deployedUid": "26349c6fe646457874cd3003989d2209a602da95",
+      "deploymentPath": "src/src/lib/question-quality/validators/misc.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/misc.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "01b8a0674151f5a03e1fea566bdcf32528e5586d",
+      "currentLfSha1": "5e7ef2d0ef632e2ea0470d1badeda48f0335d68a",
+      "currentRawSha1": "01b8a0674151f5a03e1fea566bdcf32528e5586d",
+      "deployedUid": "01b8a0674151f5a03e1fea566bdcf32528e5586d",
+      "deploymentPath": "src/src/lib/question-quality/validators/options.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-03T17:09:01+09:00",
+          "commit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 국어 버티컬 신규 + Atlas 공급자 전환 + 영어 품질개선 로컬 전체 스냅샷"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/options.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "334c20bb422c1f1992af2997b7fc478541b435ac",
+      "currentLfSha1": "81eb82f8aaa2058952348dc7b38a7e08e741e11c",
+      "currentRawSha1": "81eb82f8aaa2058952348dc7b38a7e08e741e11c",
+      "deployedUid": "81eb82f8aaa2058952348dc7b38a7e08e741e11c",
+      "deploymentPath": "src/src/lib/question-quality/validators/reference.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/reference.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "99760c0a111301c22a0368a185eedc0fb0f9ea52",
+      "currentLfSha1": "8ef9ba1db6c4e676b2c073ab75e2d50f6982c437",
+      "currentRawSha1": "f277c154e33104c2c462ae885c3864f22c2e7266",
+      "deployedUid": "f277c154e33104c2c462ae885c3864f22c2e7266",
+      "deploymentPath": "src/src/lib/question-quality/validators/sentence-insert.ts",
+      "historyMatches": [],
+      "localPath": "src/lib/question-quality/validators/sentence-insert.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "a7b446bf008ec1c723322b43d4dcdac204db27ab",
+      "currentLfSha1": "2dbcbf23990dcb2ceb98032134d5b377b2817cee",
+      "currentRawSha1": "a7b446bf008ec1c723322b43d4dcdac204db27ab",
+      "deployedUid": "a7b446bf008ec1c723322b43d4dcdac204db27ab",
+      "deploymentPath": "src/src/lib/question-quality/validators/sentence-order.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/sentence-order.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "7b72b1d86077f1442f9a75a37bf26a792ceb9cc6",
+      "currentLfSha1": "01d696657461b7a62315fa284e59945350540af1",
+      "currentRawSha1": "01d696657461b7a62315fa284e59945350540af1",
+      "deployedUid": "01d696657461b7a62315fa284e59945350540af1",
+      "deploymentPath": "src/src/lib/question-quality/validators/summary/complete.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-03T17:09:01+09:00",
+          "commit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 국어 버티컬 신규 + Atlas 공급자 전환 + 영어 품질개선 로컬 전체 스냅샷"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/summary/complete.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "ff4712749f187ec91092f07885f5a18c71a2bdeb",
+      "currentLfSha1": "fa704aae28e9efb5ae53b7b895fe88d5a3c8752b",
+      "currentRawSha1": "ff4712749f187ec91092f07885f5a18c71a2bdeb",
+      "deployedUid": "ff4712749f187ec91092f07885f5a18c71a2bdeb",
+      "deploymentPath": "src/src/lib/question-quality/validators/summary/killer-trap.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/summary/killer-trap.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "a508fa6b9c2aac78350615694de12a9b5a0e8758",
+      "currentLfSha1": "c24e6a65620af3f90008d64ca2b26a8d38be4dd2",
+      "currentRawSha1": "a508fa6b9c2aac78350615694de12a9b5a0e8758",
+      "deployedUid": "a508fa6b9c2aac78350615694de12a9b5a0e8758",
+      "deploymentPath": "src/src/lib/question-quality/validators/summary/mc.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/summary/mc.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "61981b745cd0a44bce9eab6779827697d378d7f1",
+      "currentLfSha1": "1aaa5702158a5025b488e2eee8752fcc7561ef2e",
+      "currentRawSha1": "61981b745cd0a44bce9eab6779827697d378d7f1",
+      "deployedUid": "61981b745cd0a44bce9eab6779827697d378d7f1",
+      "deploymentPath": "src/src/lib/question-quality/validators/summary/writing.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/summary/writing.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "8b95e246c985999d38fa58a65776385a25d60442",
+      "currentLfSha1": "4f6af4658a66175e4738b336fdc5902a494925c4",
+      "currentRawSha1": "8b95e246c985999d38fa58a65776385a25d60442",
+      "deployedUid": "8b95e246c985999d38fa58a65776385a25d60442",
+      "deploymentPath": "src/src/lib/question-quality/validators/topic-sentence/writing.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "crlf",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/topic-sentence/writing.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "560f9c0f2dc99d30bde331f4773640f049afe6e5",
+      "currentLfSha1": "d2be6ec0b0d294cc8ff2d5d19c626ba0f730adf8",
+      "currentRawSha1": "560f9c0f2dc99d30bde331f4773640f049afe6e5",
+      "deployedUid": "560f9c0f2dc99d30bde331f4773640f049afe6e5",
+      "deploymentPath": "src/src/lib/question-quality/validators/topic.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/topic.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "33ad4fa2032a250ac5f4b6d888e323fdfdb3cf72",
+      "currentLfSha1": "bf891c438bd08a59d6888a7637ace8e95e2e9ecc",
+      "currentRawSha1": "33ad4fa2032a250ac5f4b6d888e323fdfdb3cf72",
+      "deployedUid": "33ad4fa2032a250ac5f4b6d888e323fdfdb3cf72",
+      "deploymentPath": "src/src/lib/question-quality/validators/vocab.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-06-26T18:46:32+09:00",
+          "commit": "5701cfc89cb4b4497cd8feafde7ce800c4a27bec",
+          "eolVariant": "crlf",
+          "subject": "refactor: question-quality.ts 9235줄 → question-quality/ 36모듈 분리 (2026-06-26)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/vocab.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "4d97445b8df44daa9a558b801fdb63ad8c39935a",
+      "currentLfSha1": "6a3f5f0c56e965bef1a8c6bc9f9d4bfd2755c42f",
+      "currentRawSha1": "6a3f5f0c56e965bef1a8c6bc9f9d4bfd2755c42f",
+      "deployedUid": "6a3f5f0c56e965bef1a8c6bc9f9d4bfd2755c42f",
+      "deploymentPath": "src/src/lib/question-quality/validators/word-order.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T23:42:21+09:00",
+          "commit": "3f155ca682baec204559d07d1516c847e13ba347",
+          "eolVariant": "git-object-bytes",
+          "subject": "[ADD]: 시험리포트 대개편 통합 — 자가연쇄·답안링크·수동채점·리포트 문서 전면 재설계(6테마/폰트/모션/인쇄포털)·섹션 컨테이너쿼리·합니다체·워크스페이스 헤더 고정 (26-07-07)"
+        }
+      ],
+      "localPath": "src/lib/question-quality/validators/word-order.ts",
+      "status": "CURRENT_EXACT"
+    },
+    {
+      "currentCrlfSha1": "d99e6fb2a6f24eb5bf332ccf7ad746edf0135e30",
+      "currentLfSha1": "11a4ba98ca78e14ade49a5a2c94a6b1c64da5bfe",
+      "currentRawSha1": "d99e6fb2a6f24eb5bf332ccf7ad746edf0135e30",
+      "deployedUid": "d99e6fb2a6f24eb5bf332ccf7ad746edf0135e30",
+      "deploymentPath": "src/src/trigger/workbench-question-generation.ts",
+      "historyMatches": [
+        {
+          "authoredAt": "2026-07-07T15:33:54+09:00",
+          "commit": "d98da5a58a6e1e9aa131e1c0f5f16823938f83f3",
+          "eolVariant": "crlf",
+          "subject": "feat: 크레딧 프로모션 링크 모니터링 + AI 원가 실측(RECORDED) + 모바일화 (20260707 WIP)"
+        }
+      ],
+      "localPath": "src/trigger/workbench-question-generation.ts",
+      "status": "CURRENT_EXACT"
+    }
+  ],
+  "local": {
+    "branch": "20260714jooyeon",
+    "head": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "isDirty": true
+  },
+  "pinnedIndexSha256": "aae88590de597fb6d19c2884493337d4a97dcac43da654e956d9926142fa3fa1",
+  "schemaVersion": 1,
+  "summary": {
+    "newestHistoryMatchCountByCommit": {
+      "27372abb9742fcdffbdb3003dd9d9e61dd083dd3": 4,
+      "3b9457ca770b5769b29c7c97c34225bface86292": 1,
+      "3f155ca682baec204559d07d1516c847e13ba347": 21,
+      "434d6d61c89ed0402da0e014e8fbc84e23b1cd88": 2,
+      "448488cae9abe95e0895f10a35d86fed297ddcbb": 16,
+      "5701cfc89cb4b4497cd8feafde7ce800c4a27bec": 17,
+      "591cdb413c8b4b9323eb3141d144df7566875cc6": 1,
+      "744ade9f2c50b824de291bb97bdbc107eb1bc675": 2,
+      "b93ed8578758dd7200a325ed10027715aff6deba": 1,
+      "c3720bfb7cc2944f8722a2394078e2196baffe28": 1,
+      "d98da5a58a6e1e9aa131e1c0f5f16823938f83f3": 1
+    },
+    "relevantDeployedFiles": 69,
+    "relevantUnionFiles": 71,
+    "sourceClaim": "The deployment metadata pins a Git SHA but gitDirty=1. Per-file UIDs are treated as raw SHA-1 evidence; only exact current/history byte or EOL-normalized matches are reconstructable.",
+    "statusCounts": {
+      "CURRENT_EXACT": 58,
+      "HISTORY_RECONSTRUCTABLE_DRIFT": 11,
+      "LOCAL_ONLY_POST_DEPLOYMENT": 2
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P039",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "비교구문 'Recording an interview ... can be less unnerving than seeing someone scribbling'에서 동명사 주어 'Recording'과 동명사 'seeing'의 병렬이 성립. 의미상 인터뷰이가 '누군가 수첩에 갈겨쓰는 것을 보는 것'과 '녹음되는 것'을 비교하므로 능동 seeing이 맞고, scribbling은 지각동사 see의 목적격보어(현재분사)로 정상. 수동(being seen)을 의심해볼 유혹이 있으나 근거 없음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (정답)",
+      "reason": "주어가 동명사구 'using a recorder'로 단수이므로 have가 아니라 has여야 한다. 장거리 단서: 동일 주어에 걸리는 후행 병렬 동사가 'and is not always the best solution'으로 단수 is여서 단수 일치가 이중으로 확인된다. 원형부정사·가정법 등 have를 정당화할 대안 해석 경로 없음. 명백한 수일치 오류."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the quotes [which/that] you wish to use' — 목적격 관계대명사가 생략된 관계절 내 정형동사. wish + to부정사 결합 정상, 일반적 사실이므로 현재시제 적절. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'so that they can be transcribed easily afterwards' — 수동태 동사 transcribed를 수식하는 부사 자리. 보어 자리가 아니므로 형용사 easy를 요구할 근거 없음. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "가장 매력적인 오답. 'It is sensible to take down ..., but try to get ...'에서 to take down과의 병렬로 '(to) try'를 기대하게 만들어 명령문 try가 틀린 것처럼 보이지만, 조언·지침 문체에서 평서절 + but + 명령문의 등위접속은 완전히 성립하는 정문이다(예: It's fine to X, but try to Y). try to get into the habit of -ing 결합도 자연스러움. 실전에서 15초가량 끌렸으나 오류 아님."
+    }
+  ],
+  "note": "렌즈: 최상위권 수험생 실전 풀이. 첫 통독에서 (B)의 수일치 오류가 즉시 포착되며, 후행 병렬 'and is'가 결정적 확증 단서. 매력적 오답은 (E)(평서문+명령문 등위를 병렬 오류로 오인 유도)와 (A)(수동 being seen 유혹)이지만 둘 다 정문임이 확인된다. 정답 (B) 단독, 복수 정답 소지 없음. 난이도는 수능 어법 기준 중하 — 수일치 단서가 이중으로 주어져 상위권에게는 평이."
+}

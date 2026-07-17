@@ -1,0 +1,178 @@
+{
+  "passageId": "ebsi_go3_20150409_A-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2015,
+    "exam": "4월",
+    "origType": "제목",
+    "words": 150
+  },
+  "attempts": 5,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-filler-spanx3",
+    "grammar-explanation-lintx1",
+    "grammar-render-marker-countx1",
+    "grammar-marker-too-densex1",
+    "grammar-underline-too-longx1"
+  ],
+  "layout": "(A):dec=a  (B):dec=f  (C):dec=h  (D):ANS=c  (E):dec=i",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 18,
+        "relPos": 0.021,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 118,
+        "relPos": 0.139,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 407,
+        "relPos": 0.481,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 545,
+        "relPos": 0.644,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 686,
+        "relPos": 0.811,
+        "sentenceIndex": 3,
+        "found": true
+      }
+    ],
+    "sentenceCount": 5,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.811,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers; the latest evidence suggests that while it isn't ideal, it might help. When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability of insulin to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation causes, which is encouraging given how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and making up for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "can catch",
+        "isError": false,
+        "errorExpression": "can catch",
+        "surroundingText": "Whether or not we can catch up on sleep - on the weekend,",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "latest",
+        "isError": false,
+        "errorExpression": "latest",
+        "surroundingText": "among sleep researchers; the latest evidence suggests that while",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "to process",
+        "isError": false,
+        "errorExpression": "to process",
+        "surroundingText": "the ability of insulin to process blood sugar.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "encouraging",
+        "isError": true,
+        "correction": "encouraging",
+        "errorExpression": "encouraged",
+        "surroundingText": "sleep deprivation causes, which is encouraging given how many",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "making",
+        "isError": false,
+        "errorExpression": "making",
+        "surroundingText": "habit of sleeping less and making up for it later.",
+        "pointCode": "i"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "can catch"
+      },
+      {
+        "label": "(B)",
+        "text": "latest"
+      },
+      {
+        "label": "(C)",
+        "text": "to process"
+      },
+      {
+        "label": "(D)",
+        "text": "encouraged"
+      },
+      {
+        "label": "(E)",
+        "text": "making"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 we 뒤에서 조동사 can과 함께 쓰여 '만회하다'라는 의미를 나타내는 적법한 정동사 'can catch' 구조이므로 옳습니다.",
+      "(B)": "명사 evidence를 앞에서 수식하여 '최신의 증거'를 나타내는 최상급 형용사 'latest' 자리이므로 명백히 옳습니다.",
+      "(C)": "앞의 명사 phrase인 'the ability of insulin' 뒤에서 명사를 수식하여 '~하는 능력'을 나타내는 to부정사의 형용사적 용법 'to process'가 쓰였으므로 옳습니다.",
+      "(E)": "등위접속사 and를 기준으로 전치사 of에 동일하게 걸리는 두 동명사 구조인 sleeping과 'making'이 대등하게 병렬을 이루고 있으므로 옳습니다."
+    },
+    "explanation": "(D) \"encouraged\"는 어법상 틀린 표현이며 \"encouraging\"로 고쳐야 한다. 해당 문장은 계속적 용법의 관계대명사 which가 앞선 절 전체(주말 보충 수면이 수면 부족으로 인한 손상 중 일부를 회복할 수 있다는 사실)를 선행사로 삼고 있습니다. 선행사인 사물/사실 정보가 다른 이들로 하여금 '격려(용기)를 얻게 일깨우는' 능동적 속성을 가지므로, 주격 보어 자리에는 감정을 느끼는 주체에 쓰이는 과거분사 대신 감정을 일으키는 주체에 쓰는 현재분사 'encouraging'이 와야 합니다. 따라서 수동 의미의 'encouraged'는 비문이며 능동 형용사인 'encouraging'으로 고쳐야 합니다. 감정형용사의 분사형은 수식을 받거나 지칭하는 주체가 사물인 경우 능동 자극의 성격을 띠어야 함에 유의해야 합니다.",
+    "keyPoints": [
+      "(D) 분사의 능동 vs 수동 — 감정을 일으키는 사물 선행사와의 관계 파악",
+      "(C) 목적격보어/준동사 — 형용사적 용법의 to부정사의 명사 수식 구조",
+      "(E) 병렬 구조 — 등위접속사 and를 통한 두 전치사 목적어 동명사의 대등 연결"
+    ],
+    "tags": [
+      "분사태",
+      "to부정사",
+      "병렬구조",
+      "준동사",
+      "수능어법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Whether or not we __(A) can catch__ up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers; the __(B) latest__ evidence suggests that while it isn't ideal, it might help. When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability of insulin __(C) to process__ blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation causes, which is __(D) encouraged__ given how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and __(E) making__ up for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-explanation-lint",
+        "message": "explanation: 어투 혼용 — 첫 문장이 해라체(\"(D) \"encouraged\"는 어법상 틀린 표현이며 \"encouraging\"로 고쳐야 한다.\")로 끝나는데 같은 필드에 합니다체 문장이 섞여 있습니다. 전체를 합니다체로 통일하세요."
+      }
+    ],
+    "_qualityMode": "relaxed"
+  }
+}

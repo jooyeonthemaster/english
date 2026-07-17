@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) how long",
+      "verdict": "correct",
+      "reason": "learn의 목적어인 간접의문문 'how long the shortest war in recorded history lasted'. 의문사구 how long이 절 앞으로 이동하고 뒤는 평서 어순(주어+동사 lasted)을 유지하므로 정문. lasted는 자동사로 how long(기간 부사구)과 자연스럽게 결합한다."
+    },
+    {
+      "label": "(B) who",
+      "verdict": "correct",
+      "reason": "choosing의 목적어인 간접의문문 'who the nation's leader would be'. who는 be동사의 보어(서술 명사) 자리이므로 주격 who가 규범적으로도 옳다(whom을 요구하는 자리가 아님). 어순도 간접의문문 평서 어순으로 정확하다. '관계사 자리 아닌가' 하는 유혹이 있으나 choose 뒤 의문사절로 완결적이다."
+    },
+    {
+      "label": "(C) to step down",
+      "verdict": "correct",
+      "reason": "order는 5형식 'order + 목적어 + to부정사' 구문을 취한다. 'ordered Zanzibar's new leader to step down'은 표준 구문. 바로 뒤 문장의 'ordered them to protect his palace'와도 일관된다."
+    },
+    {
+      "label": "(D) forced",
+      "verdict": "incorrect (정답)",
+      "reason": "본동사로 읽으면 'it killed hundreds of Zanzibaris, forced ...'가 되는데, 두 술어 killed와 forced를 잇는 등위접속사가 없다. 문장 내 유일한 and는 forced의 두 목적어+보어 '[the new leader to flee] and [the country to immediately surrender]'를 묶고 있어 killed와 forced의 병렬에 쓸 수 없다. 따라서 접속사 없는 술어 나열(comma splice형 오류)이 되고, 결과를 나타내는 분사구문 forcing으로 고쳐야 정문: '..., forcing the new leader to flee and the country to (immediately) surrender.' 대안 해석 검토: (i) 3항 열거 'killed, forced, and the country...'는 세 번째 항이 동사구가 아니어서 불성립. (ii) forced를 Zanzibaris를 수식하는 축약 수동 분사로 읽는 것은 forced가 자체 목적어 the new leader를 취하고 있어 불가능. 어느 대안으로도 정문이 되지 않는다."
+    },
+    {
+      "label": "(E) to immediately surrender",
+      "verdict": "correct",
+      "reason": "force + 목적어 + to부정사 구문에서 and로 병렬된 두 번째 목적어 the country의 보어. 앞의 to flee와 병렬로 to부정사 형태가 정확하다. to immediately surrender는 분리부정사(split infinitive)로, 최상위권이 '분리부정사 금지' 규범에 끌릴 수 있는 매력적 오답이지만 현대 영문법과 수능 기준 모두에서 오류로 취급되지 않는다."
+    }
+  ],
+  "note": "실전 풀이 순서: (A)(B)(C)는 간접의문문 어순·5형식 구문으로 빠르게 소거. 마지막 문장에서 (D)와 (E)가 경합 — (E)의 분리부정사가 시각적으로 눈에 띄어 유혹이 크지만 이는 규범 논쟁거리일 뿐 어법 오류가 아니다. 결정적 단서는 장거리 병렬 구조: and가 forced의 두 목적어를 묶고 있으므로 killed와 forced를 이어줄 접속사가 부재 → forced는 forcing(결과 분사구문)이어야 한다. 정답은 (D) 단일로 옹호 가능."
+}

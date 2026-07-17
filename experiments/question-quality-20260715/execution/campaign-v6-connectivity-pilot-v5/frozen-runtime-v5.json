@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-frozen-runtime-v5",
+  "bundler": {
+    "name": "esbuild",
+    "version": "0.27.3",
+    "configuration": "BUNDLE_PLATFORM_NODE_FORMAT_ESM_TARGET_NODE24_NO_SOURCEMAP_NO_RUNTIME_PACKAGES"
+  },
+  "bundles": [
+    {
+      "role": "CAPTURE_PRICE_METADATA",
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/capture-price-snapshot-v5.bundle.mjs",
+      "bytes": 97279,
+      "sha256": "82443b490e1158add2b3f41dd6e4e43231418dcf240fb46d3f4331b993a74709",
+      "externalRuntimeSpecifiers": [
+        "node:crypto",
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "networkContract": {
+        "fetchCallSites": 1,
+        "directNetworkFetchCallSites": 0,
+        "maximumRequestsPerInvocation": 3,
+        "authorizedUrlTemplates": [
+          "https://openrouter.ai/api/v1/models",
+          "https://openrouter.ai/api/v1/models/${modelId}/endpoints"
+        ],
+        "observedHttpsLiterals": [
+          "https://openrouter.ai/api/v1/chat/completions",
+          "https://openrouter.ai/api/v1/models",
+          "https://openrouter.ai/api/v1/models/${modelId}/endpoints"
+        ]
+      },
+      "forbiddenSyntaxCounts": {
+        "dynamicImport": 0,
+        "requireCall": 0,
+        "evalCall": 0,
+        "functionConstructor": 0,
+        "webSocket": 0,
+        "eventSource": 0
+      }
+    },
+    {
+      "role": "LIVE_CHILD",
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/live-child-v5.bundle.mjs",
+      "bytes": 192695,
+      "sha256": "baa8fbb4872d9ada9371f4460613b60ce67854b056a01eaf0eefa988dbf5158a",
+      "externalRuntimeSpecifiers": [
+        "node:crypto",
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "networkContract": {
+        "fetchCallSites": 0,
+        "directNetworkFetchCallSites": 1,
+        "maximumRequestsPerInvocation": 2,
+        "authorizedUrlTemplates": [
+          "https://openrouter.ai/api/v1/chat/completions"
+        ],
+        "observedHttpsLiterals": [
+          "https://openrouter.ai/api/v1/chat/completions",
+          "https://openrouter.ai/api/v1/models",
+          "https://openrouter.ai/api/v1/models/${modelId}/endpoints"
+        ]
+      },
+      "forbiddenSyntaxCounts": {
+        "dynamicImport": 0,
+        "requireCall": 0,
+        "evalCall": 0,
+        "functionConstructor": 0,
+        "webSocket": 0,
+        "eventSource": 0
+      }
+    },
+    {
+      "role": "OPERATOR",
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/operator-wrapper-v5.bundle.mjs",
+      "bytes": 115027,
+      "sha256": "3d1d253870392d7ff7713e8d45ac7b40e1ebc22bc11e65cd7bf2d36c6a34909a",
+      "externalRuntimeSpecifiers": [
+        "node:child_process",
+        "node:crypto",
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "networkContract": {
+        "fetchCallSites": 0,
+        "directNetworkFetchCallSites": 0,
+        "maximumRequestsPerInvocation": 0,
+        "authorizedUrlTemplates": [],
+        "observedHttpsLiterals": [
+          "https://openrouter.ai/api/v1/chat/completions",
+          "https://openrouter.ai/api/v1/models",
+          "https://openrouter.ai/api/v1/models/${modelId}/endpoints"
+        ]
+      },
+      "forbiddenSyntaxCounts": {
+        "dynamicImport": 0,
+        "requireCall": 0,
+        "evalCall": 0,
+        "functionConstructor": 0,
+        "webSocket": 0,
+        "eventSource": 0
+      }
+    }
+  ],
+  "externalRuntimeSpecifiers": [
+    "node:child_process",
+    "node:crypto",
+    "node:fs",
+    "node:path",
+    "node:url"
+  ],
+  "nodeRuntime": {
+    "executableRealPath": "C:\\Program Files\\nodejs\\node.exe",
+    "executableBytes": 89578992,
+    "executableSha256": "c1b274a8d0a23e060fc42ce71c3cdfa1569b83d91ba82cc59fa907da97a425e9",
+    "nodeVersion": "v24.7.0",
+    "modulesAbi": "137",
+    "v8Version": "13.6.233.10-node.26",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "bundleSetSha256": "2a905ad6efe9b84368da7c0bf3f6debf046864e44f8ad7994201c7ceafe6e812",
+  "contentSha256": "1c46dc1b46f8f6248744af5e9563de8deed154e3b2b6c3bcddc75f3f7df6812a"
+}

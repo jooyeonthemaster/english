@@ -1,0 +1,87 @@
+{
+  "pid": "P020",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-FABRICATED-STRUCTURE",
+      "severity": "critical",
+      "evidence": "해설: \"관계대명사 바로 앞의 복수 명사 'events' 등에 수일치 견인을 당하여 혼동하지 않는 것이 중요합니다.\" 실제 문장은 'to think of a clock that do not depend on a repetitive cycle of events'로, 관계대명사 that 바로 앞의 명사는 단수 'a clock'이며 'events'는 밑줄 동사 뒤(문미)에 위치한다. 존재하지 않는 수일치 견인(attraction) 구조를 지목한 통사 오설명 — 학생이 관계대명사 앞에서 'events'를 찾으려 하면 지문과 해설이 모순된다."
+    },
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "minor",
+      "evidence": "keyPoints (B): \"재귀대명사 forms 사용\" — 학생 노출 필드에 영단어 'forms'가 혼입된 손상 표현('재귀대명사 형태 사용' 의도로 추정)."
+    },
+    {
+      "code": "FIELD-CONTEXT-NOTE",
+      "severity": "minor",
+      "evidence": "markedExpressions (C).surroundingText가 렌더형('do not depend')이 아닌 원문형('does not depend') 문장을 담고 있다. 다른 항목들도 원문 기반이므로 스키마상 정합으로 판단해 V5 실패로는 처리하지 않았으나, 렌더 문맥 대조 시 혼동 소지가 있어 기록한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "that의 다기능성(지시형용사 vs 관계대명사/접속사) 판별",
+      "temptingBecause": "that 뒤에 절이 아닌 명사가 와서 관계대명사 용법에 익숙한 학생이 절 결핍으로 오인할 수 있음",
+      "decisiveFlaw": "없음(정문) — 'that process'에서 that은 명사 process를 수식하는 지시형용사(한정사)로 완결된 명사구를 이룸"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계사절 내 재귀대명사 vs 인칭대명사 선택",
+      "temptingBecause": "관계사절 주어가 표면에 없어(주격 that) 주어-목적어 동일지시 판단이 한 단계 필요, 'it'이 자연스러워 보일 수 있음",
+      "decisiveFlaw": "없음(정문) — 주격 관계대명사 that(=any process)과 목적어가 동일지시이므로 재귀대명사 itself가 필수"
+    },
+    {
+      "label": "(C)",
+      "intent": "선언된 정답 — 주격 관계대명사절 동사의 선행사 수일치",
+      "temptingBecause": "부정문 do-support 형태가 익숙해 보이고, 가산 판단 없이 지나치기 쉬움",
+      "decisiveFlaw": "선행사 'a clock'이 단수이므로 'does not depend'여야 함. 교정 시 원문과 정확히 일치하는 최소대립쌍. 단, 선행사와 동사가 인접해 있어(개입 명사 없음) 판별 난도가 낮음"
+    },
+    {
+      "label": "(D)",
+      "intent": "후치수식 관계사절을 건너뛴 주어 핵 찾기 수일치",
+      "temptingBecause": "'The only example that comes to mind readily'의 수식부와 부사 readily가 주어-동사 거리를 벌림",
+      "decisiveFlaw": "없음(정문) — 주어 핵 'example'(단수)이므로 is 적절. 정답 (C)와 동일 포인트(pointCode d)의 쉬운 디코이라는 점은 설계상 아쉬움"
+    },
+    {
+      "label": "(E)",
+      "intent": "although + 축약절(주어+be 생략) 허용 여부, despite와의 품사 구분",
+      "temptingBecause": "뒤에 정형절이 없고 'at first masked'만 이어져 단편으로 보이거나 despite를 기대할 수 있음",
+      "decisiveFlaw": "없음(정문) — 'although (it is) at first masked'의 표준적 축약 구문"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "critical",
+      "evidence": "정답 해설이 '관계대명사 바로 앞의 복수 명사 events'에 의한 수일치 견인을 경고하나, 실제 문장에서 events는 밑줄 동사 뒤에 있고 관계대명사 바로 앞은 단수 a clock이다. 실재하지 않는 견인 구조를 만들어낸 환각성 구조 분석.",
+      "recommendation": "해당 문장을 삭제하거나 '동사 뒤의 a repetitive cycle of events 같은 복수 표현에 흔들리지 말고 선행사 a clock에 일치시킨다'로 실제 구조에 맞게 재기술"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints (B) '재귀대명사 forms 사용' — 한영 혼입 손상 토큰.",
+      "recommendation": "'재귀대명사 형태 사용'으로 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 '지시 단위를 그대로 일치', '수식 구조상 비문' 등 표현이 모호하고 관습적 문법 용어에서 벗어남.",
+      "recommendation": "'선행사의 수에 일치', '수일치 위반으로 비문' 등 표준 용어로 정리"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더는 의도된 최소대립쌍((C) does→do) 외 무손상이고, 5개 밑줄 독립 검증 결과 (C)만 비문으로 정답 유일성이 성립하며, 교정 시 원문이 정확히 복원된다. 그러나 V4 실패: 정답 해설이 실제 문장에 존재하지 않는 '관계대명사 바로 앞의 복수 명사 events' 견인 구조를 지목하는 환각성 통사 오설명을 포함한다(events는 동사 뒤 문미 위치, that 바로 앞은 단수 a clock). 공예 측면에서는 오류 지점이 선행사와 인접해 개입 간섭이 전무하므로 INTERMEDIATE 라벨 대비 다소 쉽고(C3=2, C5=2), (C)/(D)가 동일 pointCode(d)를 공유하는 점도 아쉽다. 치명(V4) 실패는 공예 점수로 상쇄되지 않으므로 등급 F. 해설 1문장 교정 + keyPoints 토큰 수정만으로 B권 진입이 가능한 문항."
+}

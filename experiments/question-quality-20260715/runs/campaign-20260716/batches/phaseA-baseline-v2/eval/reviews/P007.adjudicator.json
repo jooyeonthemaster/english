@@ -1,0 +1,38 @@
+{
+  "pid": "P007",
+  "finalV2": true,
+  "winningAnswer": "3",
+  "reason": "선언 정답 (C)=3 이 유일 정답으로 성립한다. 다섯 선지 모두 'are able to ___' 슬롯에 동일한 원형 VP로 결합되어 문법 소거가 없고, 판별은 순수 논리로 이루어진다. 정답 3은 (a) 삭제된 원문 span 'express emotions, feelings and moods accurately'의 충실한 패러프레이즈이고, (b) 'and thus, may facilitate clear communication between co-workers'의 인과 귀결이 자기 상태의 명확한 표명에서만 자연스럽게 도출되며, (c) 갈등 예시의 1차 서술 'will be able to express how he feels about the problem and why he feels this way'가 빈칸 내용을 그대로 재진술한다. 최강 미끼 5는 'take the perspective ... and understand why they are reacting'이 근거하는 능력이 타인 감정의 '이해'까지이지 집단 기분의 '대변(represent)'이 아니며, 'He also should be able to...'의 also가 관점 취하기를 빈칸 능력과 별개의 추가 능력으로 명시적으로 구분하므로 옹호 불가. 1·2·4는 각각 both/and 왜곡, 극성 반전, 결론부(constructive conflict resolution) 모순으로 즉시 탈락. 두 솔버의 판정에 과잉 판정이나 누락된 대안 해석은 발견되지 않았고, 감사자 V2=true 판정도 타당하다.",
+  "perDispute": [
+    {
+      "label": "1",
+      "claim": "prioritize their group's needs over their own desires 가 빈칸에 성립하는가",
+      "verdict": "reject",
+      "evidence": "바로 다음 문장 'accommodate their own needs as well as the needs of others (i.e. cooperate)'는 자기 필요와 타인 필요의 동시 수용(both/and)을 명시한다. '집단 우선(prioritize ... over their own desires)'은 이를 일방 우선순위로 왜곡한 것이며, 욕구 우선순위화가 'thus → clear communication between co-workers'의 원인이 된다는 인과 고리도 지문에 없다."
+    },
+    {
+      "label": "2",
+      "claim": "conceal their true feelings to avoid interpersonal tension 이 빈칸에 성립하는가",
+      "verdict": "reject",
+      "evidence": "극성 반전. 갈등 예시 'will be able to express how he feels about the problem and why he feels this way'와 정면 모순(은폐 vs 표현)이고, 감정 은폐는 'facilitate clear communication' 및 결론부 'open communication'과 논리적으로 충돌한다. thus 인과가 붕괴하므로 성립 불가."
+    },
+    {
+      "label": "3",
+      "claim": "clearly articulate their own psychological states 가 유일 정답으로 성립하는가",
+      "verdict": "accept",
+      "evidence": "삼중 근거로 성립. (a) 원문 삭제 span 'express emotions, feelings and moods accurately'의 의미 보존 패러프레이즈('psychological states' ≒ emotions/feelings/moods, 'clearly articulate' ≒ express accurately). (b) 'and thus, may facilitate clear communication between co-workers' — 자기 상태의 명확한 언어화가 명확한 소통의 직접 원인이 되는 유일한 선지. (c) 예시 1차 서술 'express how he feels ... and why he feels this way'가 빈칸의 재진술. 문법도 'are able to clearly articulate'(부사 삽입 to부정사)로 정문이며 seam 무결."
+    },
+    {
+      "label": "4",
+      "claim": "stay away from conflicts that cannot be quickly resolved 가 빈칸에 성립하는가",
+      "verdict": "reject",
+      "evidence": "소재 연상 오답. 지문은 갈등 회피가 아니라 표현과 관점 취하기를 통한 'constructive conflict resolution'(건설적 갈등 해결)을 옹호하며, '빨리 해결 안 되는 갈등 회피'는 지문 어디에도 근거가 없고 결론 문장과 정면 모순. 회피가 clear communication을 촉진한다는 인과도 성립하지 않는다."
+    },
+    {
+      "label": "5",
+      "claim": "represent the collective moods of other group members 가 대안 정답으로 성립하는가 (최강 미끼 — 복수정답 위험 핵심 쟁점)",
+      "verdict": "reject",
+      "evidence": "지문의 타인 관련 서술은 'take the perspective of the other group members and understand why they are reacting in a certain manner' — 지지 범위가 타인 반응의 '이해(understand)'까지이고 집단 기분의 '대변/표상(represent)'은 무근거 과확장이다. 결정적으로 예시 구조에서 'He also should be able to...'의 also가 관점 취하기를 빈칸 능력(1차 서술 'express how HE feels')과 구별되는 두 번째 추가 능력으로 표시하므로, 빈칸 자리에 타인 기분 대변을 넣으면 예시-빈칸 대응이 어긋난다. 또한 앞 문장의 'diverse emotion vocabulary'는 자기 상태의 언어화 자원이라는 점에서도 3을 지지한다. 부분 매력은 있으나 동급 정답으로 옹호 불가 — 유일성 훼손 없음."
+    }
+  ]
+}

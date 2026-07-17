@@ -1,0 +1,75 @@
+{
+  "pid": "P019",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-STRUCT-MISLABEL",
+      "severity": "major",
+      "evidence": "해설 ④가 주어 내부의 수식절('we helped the CEOs remove their masks')을 '관계대명사절'이라고 부른다. 이 절은 주어(we)·목적어(the CEOs)·보어(remove their masks)가 모두 채워져 있어 명사구 공백이 없고, 관계화된 성분은 방법 부사어다('the ways in which/that we helped...'; *'the ways which we helped...'는 비문). 즉 관계부사(대용 that 생략)절이지 관계대명사절이 아니다. RUBRIC V4가 명시적으로 금지하는 구조 오분석 유형에 해당한다."
+    },
+    {
+      "code": "V4-TEMPTATION-CAUSAL-ERROR",
+      "severity": "major",
+      "evidence": "해설 ④는 학생이 \"'masks' 바로 뒤의 자리라는 점\"에 현혹된다고 설명하나, 인접 명사 'masks'는 복수이므로 근접 일치(attraction)는 오히려 'were'를 가리켜 표시형 'was'의 오류를 즉시 드러낸다. 함정 기제 설명이 실제와 반대(인과 오설명)."
+    },
+    {
+      "code": "V5-FIELD-CONVENTION-MINOR",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 surroundingText가 렌더형('was')이 아닌 교정형('were')을 인용한다. (A)(B)(C)(E)는 렌더 텍스트와 동일해 관례 판별이 불가하나, errorExpression/correction 필드와는 정합적이므로 모순으로 보지 않고 minor로 기록."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "부사/형용사 구분 — 'no matter how + 부사' 구성에서 동사구('are disguising')를 수식하는 정도 부사 판단",
+      "temptingBecause": "how 뒤 위치와 believe/disguise 이중 동사 구조 때문에 수식 대상이 헷갈릴 수 있음",
+      "decisiveFlaw": "동사 행위의 정도 수식이므로 부사 'well'이 정확히 맞음 — 오답 아님 (독립 검증: 정문)"
+    },
+    {
+      "label": "(B)",
+      "intent": "사역동사 make의 목적격 보어 형태(동사원형 vs to부정사/분사)",
+      "temptingBecause": "would make them appear에서 'to appear'가 필요해 보이는 착각 유발",
+      "decisiveFlaw": "make + O + 원형부정사가 표준이므로 'appear' 정문 — 오답 아님 (독립 검증: 정문)"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계부사 where + 완전한 절 vs 관계대명사 which + 불완전한 절 구분, 추상 선행사(culture) 허용 여부",
+      "temptingBecause": "'culture'가 장소 명사가 아니어서 where가 틀려 보일 수 있음",
+      "decisiveFlaw": "뒤 절이 완전(S: those subordinates / V: did / O: the same)하고 추상적 장소성 선행사는 where 허용 — 정문 (독립 검증: 정문)"
+    },
+    {
+      "label": "(D)",
+      "intent": "부분사 주어('Some of the ways')의 핵 명사 수일치 — 선언된 정답",
+      "temptingBecause": "주어와 동사 사이에 접촉 관계절('we helped the CEOs remove their masks')이 개입해 핵 명사 식별을 방해하려는 설계",
+      "decisiveFlaw": "핵 'ways'가 복수이므로 'was'는 비문, 'were'로 교정하면 정확히 원문 복원. 단, 인접 명사 'masks'도 복수라 근접 일치만으로도 'was'가 즉시 이상하게 들려 은폐 실패 — KILLER급 은폐가 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "대명사 수일치 — 복수 선행사 'the masks' 지칭",
+      "temptingBecause": "단수 'it'(mask 개념 총칭)로 받아야 할 것 같은 착각, 또는 지시 대상(masks vs CEOs) 모호성",
+      "decisiveFlaw": "'upholding them'의 지시 대상은 복수 'the masks'이므로 'them' 정문 — 오답 아님 (독립 검증: 정문)"
+    }
+  ],
+  "explanationIssues": [
+    "해설 ④: 주어 내 수식절을 '관계대명사절'로 오분류 (실제는 부사적 공백을 갖는 관계절/관계부사절 — 'in which' 삽입 가능, 'which' 단독 불가)",
+    "해설 ④: 'masks 바로 뒤의 자리'가 현혹 요인이라는 설명은 인과가 반대 — 인접 복수 명사는 오히려 'was'의 오류를 노출함",
+    "오답 해설 (A): 'no matter how'의 how를 '의문사'로 지칭 — 복합/양보 구문의 관계부사적 how를 의문사로 부르는 것은 느슨한 용어 사용 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1·V2·V3·V5는 통과. 정답 (D)는 유일 오류이며 교정 시 원문과 정확히 일치하는 최소대립쌍(§C.1 충족). 그러나 V4 실패: 해설이 실제 문장 구조를 '관계대명사절'로 오분류하고, 함정 기제('masks 바로 뒤')를 반대로 설명. KILLER 조건도 미충족 — §C.4 위반: 인접 명사 'masks'(복수)와 표시형 'was'의 불일치가 붙어 있는 단순 수일치 점검만으로 즉시 드러나므로 구조 독해 없이 풀린다(전형적 KILLER 설계는 단수 유인 명사를 인접시킴). 또한 밑줄별 why-tempting 메타가 pointCode 외에 체계적으로 제공되지 않음(§C.3 부분 미충족). 공예 합계 12/24. 요청 난이도 KILLER 대비 실제 체감 난이도는 중하 수준(C5=1). V 실패는 공예로 상쇄 불가 — 등급 F. 수정 방향: (1) 해설 ④의 용어를 '관계부사절(that/in which 생략)'로 교정하고 현혹 기제 서술을 재작성, (2) KILLER 유지 시 정답 자리를 단수 유인 명사가 인접한 구조로 재설계하거나 표시 오류를 구조 독해가 필수인 지점(예: 병렬 정형동사, 도치 수일치)으로 이동."
+}

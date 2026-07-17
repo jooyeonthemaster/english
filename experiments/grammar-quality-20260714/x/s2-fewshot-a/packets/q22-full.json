@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go3_20150409_A-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "4월",
+    "origType": "주장",
+    "words": 122
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-obvious-noun-what-relative",
+    "grammar-too-basic-decoys",
+    "grammar-pointcode-span-mismatch",
+    "grammar-weak-filler-decoys",
+    "grammar-noun-clause-pronoun-mislabel",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=a  (C):dec=e  (D):ANS=b  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 21,
+        "relPos": 0.03,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 72,
+        "relPos": 0.102,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 290,
+        "relPos": 0.409,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 366,
+        "relPos": 0.516,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 674,
+        "relPos": 0.951,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.951,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Some of the words we use most frequently are not expressive. If someone asked you what you thought of a movie or your dinner, you might respond: \"It was fine.\" Do you mean, 'fine' as in 'fine wine,' or 'fine art?' Or do you mean, 'fine' as in 'excellent, good, fine or poor?' 'Fine' can be used to express satisfaction or disappointment. There are hundreds of words that, like 'fine,' express very little meaning. They are fillers. Choose words that are more expressive, like 'great' or 'terrific' or 'wonderful' if you want to express pleasure, and words like 'adequate' or 'satisfactory' if your intent is to communicate that the movie or meal was okay, but nothing more. These words won't be misunderstood.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "use",
+        "isError": false,
+        "errorExpression": "use",
+        "surroundingText": "Some of the words we use most frequently are not expressive.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "asked",
+        "isError": false,
+        "errorExpression": "asked",
+        "surroundingText": "If someone asked you what you thought of a movie or your dinner, you might respond",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "used",
+        "isError": false,
+        "errorExpression": "used",
+        "surroundingText": "'Fine' can be used to express satisfaction or disappointment.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "that",
+        "isError": true,
+        "correction": "that",
+        "errorExpression": "what",
+        "surroundingText": "if your intent is to communicate that the movie or meal was okay, but nothing more",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "These",
+        "isError": false,
+        "errorExpression": "These",
+        "surroundingText": "These words won't be misunderstood.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "use"
+      },
+      {
+        "label": "(B)",
+        "text": "asked"
+      },
+      {
+        "label": "(C)",
+        "text": "used"
+      },
+      {
+        "label": "(D)",
+        "text": "what"
+      },
+      {
+        "label": "(E)",
+        "text": "These"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "the words 뒤에 목적격 관계대명사(which 또는 that)가 생략되어 we use가 앞의 선행사를 수식하는 구조이므로, 타동사use가 목적어가 없는 불완전한 절을 이끄는 것은 올바릅니다.",
+      "(B)": "If절에서 주어 someone 뒤에 과거시제 동사 asked를 써서, 주절의 'might respond'와 호응하는 가정법 과거 구문을 만드는 형태는 올바릅니다.",
+      "(C)": "주어인 'Fine'은 사용되는 대상이므로, 조동사 뒤에 수동태 형태인 'be used'로 쓰여 '사용될 수 있다'로 쓰인 것은 올바릅니다.",
+      "(E)": "앞 문장에 등장한 복수 명사 'words'를 가리키고 한정하므로, 복수 지시형용사 'These'는 올바릅니다."
+    },
+    "explanation": "타동사 communicate의 목적어 역할을 하는 명사절에서, 뒤이어 주어(the movie or meal)와 보어(okay)를 모두 갖춘 완전한 문장 구조가 오고 있습니다. 따라서 이 대명사 지시 관계을 이끄는 접속사로는 뒤에 불완전한 절을 요구하는 관계대명사 'what'이 아니라, 완전한 절을 이끄는 접속사 'that'이 적절합니다. 따라서 'what'을 'that'으로 고쳐야 어법상 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(D) 접속사 vs 관계대명사 — 완전한 절을 이끄는 명사절 접속사 that의 자리 판정",
+      "(A) 관계대명사 — 목적격 관계대명사의 생략과 불완전한 절 판정",
+      "(C) 능동태 vs 수동태 — 주어와 동사의 관계를 통한 수동태(be used)의 타당성 판정"
+    ],
+    "tags": [
+      "어법",
+      "명사절 접속사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Some of the words we __(A) use__ most frequently are not expressive. If someone __(B) asked__ you what you thought of a movie or your dinner, you might respond: \"It was fine.\" Do you mean, 'fine' as in 'fine wine,' or 'fine art?' Or do you mean, 'fine' as in 'excellent, good, fine or poor?' 'Fine' can be __(C) used__ to express satisfaction or disappointment. There are hundreds of words that, like 'fine,' express very little meaning. They are fillers. Choose words that are more expressive, like 'great' or 'terrific' or 'wonderful' if you want to express pleasure, and words like 'adequate' or 'satisfactory' if your intent is to communicate __(D) what__ the movie or meal was okay, but nothing more. __(E) These__ words won't be misunderstood."
+  }
+}

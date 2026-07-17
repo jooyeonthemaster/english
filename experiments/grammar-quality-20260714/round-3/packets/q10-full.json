@@ -1,0 +1,185 @@
+{
+  "passageId": "ebsi_go1_20241015-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 135
+  },
+  "attempts": 6,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-overdrilled-answerx3",
+    "grammar-explanation-lintx2",
+    "grammar-keypoint-choice-mismatchx2",
+    "grammar-error-not-mutatedx1",
+    "grammar-source-expression-not-backedx1"
+  ],
+  "layout": "(A):dec=d  (B):dec=k  (C):dec=f  (D):dec=m  (E):ANS=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 37,
+        "relPos": 0.044,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 308,
+        "relPos": 0.369,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 550,
+        "relPos": 0.659,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 611,
+        "relPos": 0.732,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 749,
+        "relPos": 0.897,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.897,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "For many of us, making time for exercise is a continuing challenge.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "integrating",
+        "isError": false,
+        "errorExpression": "integrating",
+        "surroundingText": "That's where the beauty of integrating mini-exercises into household chores comes",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "as purely",
+        "isError": false,
+        "errorExpression": "as purely",
+        "surroundingText": "But rather than viewing chores as purely obligatory activities, why not seize",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "as opportunities",
+        "isError": false,
+        "errorExpression": "as opportunities",
+        "surroundingText": "why not seize these moments as opportunities for physical activity?",
+        "pointCode": "m"
+      },
+      {
+        "label": "(E)",
+        "expression": "to boil",
+        "isError": true,
+        "correction": "to boil",
+        "errorExpression": "boiling",
+        "surroundingText": "engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "integrating"
+      },
+      {
+        "label": "(C)",
+        "text": "as purely"
+      },
+      {
+        "label": "(D)",
+        "text": "as opportunities"
+      },
+      {
+        "label": "(E)",
+        "text": "boiling"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "동명사구 주어인 'making time for exercise'는 단수 취급하므로 단수 동사 'is'는 어법상 옳습니다.",
+      "(B)": "전치사 'of'의 목적어로 쓰여 명사구를 이끄는 동명사 'integrating'은 어법상 옳습니다.",
+      "(C)": "뒤에 오는 형용사 'obligatory'를 수식하여 '순수하게 의무적인'이라는 의미를 만드는 부사 'purely'는 어법상 옳습니다.",
+      "(D)": "'~로서'의 뜻을 지닌 전치사 'as' 뒤에 명사 'opportunities'가 자연스럽게 이어져 '기회로서'를 나타내므로 옳습니다."
+    },
+    "explanation": "(E) \"boiling\"는 어법상 틀린 표현이며 \"to boil\"로 고쳐야 한다. 부사절 'as you wait for your morning kettle to boil'에서 'wait for + 목적어 + to부정사'는 '목적어가 ~하기를 기다리다'라는 의미를 나타내는 구조입니다. 따라서 의미상 주어인 'your morning kettle' 뒤에는 준동사 보어로 to부정사인 'to boil'이 와야 하므로, 이를 분사형인 'boiling'으로 표현하는 것은 문장 구조상 틀린 형태가 됩니다. 'boiling'을 'to boil'로 고쳐야 합니다. 동사 wait가 취하는 보어의 형태적 특징을 이해하는 것이 중요합니다.",
+    "keyPoints": [
+      "(E) 준동사의 형태 — wait for + 목적어 + to-V 구조의 판정",
+      "(A) 주어-동격 수일치 — 동명사구 주어의 단수 취급",
+      "(C) 형용사 vs 부사 — 형용사를 수식하는 부사 자리 판정"
+    ],
+    "tags": [
+      "목적격보어",
+      "준동사",
+      "수일치",
+      "부사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For many of us, making time for exercise __(A) is__ a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of __(B) integrating__ mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores __(C) as purely__ obligatory activities, why not seize these moments __(D) as opportunities__ for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle __(E) boiling__. Incorporating quick exercises into your daily chores can improve your health.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-keypoint-choice-mismatch",
+        "message": "Grammar keyPoints are not grounded in this item's actual choices: keyPoint 1 (e, pointCode h) does not describe that choice's grammar topic — generic filler points are forbidden. Rewrite exactly 3 key points, each starting with a real underline label, the first covering the answer."
+      },
+      {
+        "severity": "warning",
+        "code": "grammar-explanation-lint",
+        "message": "explanation: 어투 혼용 — 첫 문장이 해라체(\"(E) \"boiling\"는 어법상 틀린 표현이며 \"to boil\"로 고쳐야 한다.\")로 끝나는데 같은 필드에 합니다체 문장이 섞여 있습니다. 전체를 합니다체로 통일하세요."
+      }
+    ],
+    "_qualityMode": "relaxed",
+    "_reviewRecommended": true,
+    "_generationNotice": "여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — 해설 표현이 다듬어지지 않았을 수 있음. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a process embodied in a machine' = 'a process (which is) embodied in a machine'. 축약 수동 관계절로, process는 기계에 '구현되는' 대상이므로 과거분사 embodied가 옳다. embodying으로 바꿀 이유가 없다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself': repeats의 주어는 관계대명사 that(=process)이고 목적어가 같은 대상을 가리키므로 재귀대명사 itself가 정확하다. 'repeat itself'는 관용적으로도 표준 표현."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'although at first masked' = 'although (it is) at first masked'. 양보 부사절에서 주절 주어(this [process])와 일치하는 주어+be 생략 구문. 과정이 처음에는 '가려져 있는' 수동 의미이므로 과거분사 masked가 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "선행사 clock을 받는 제한적 관계대명사 that. 매력적 오답 — 'another, much longer scale clock'의 콤마가 마치 콤마 뒤 that(비제한절에 that 불가)처럼 보이지만, 이 콤마는 명사구 내부(another와 much-longer-scale 사이)의 것이지 관계절 앞 콤마가 아니다. 실제로 순간 끌렸으나 구문 분석으로 해소됨."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'It seems to yield a smooth time scale but in fact is not.' 생략된 술부는 'yield a smooth time scale'로 일반동사이므로 대동사는 does not이어야 한다('but in fact does not [yield one]'). is not이 성립하려면 첫 절이 계사 구문('seems to be smooth')이어야 하는데 그렇지 않다. it(방사성탄소연대측정이라는 시계)은 time scale을 '산출'하는 것이지 그것'인' 것이 아니므로 'is not [a smooth time scale]' 해석도 불가. 진행형 생략('is not yielding')의 선행사도 없음. 어법상 틀림."
+    }
+  ],
+  "note": "정답 (E) 단일 확정. 대동사(VP-ellipsis) 선택 오류: seems to yield(일반동사 술부)를 받으려면 does not이어야 하는데 is not을 씀. 최대 매력 오답은 (D) — 명사구 내부 콤마가 '콤마+that 금지' 규칙을 연상시키지만 관계절 앞 콤마가 아니어서 정문. (C)의 분사 생략 구문도 잠깐 의심을 유발하나 표준 축약."
+}

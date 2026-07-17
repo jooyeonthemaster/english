@@ -1,0 +1,5952 @@
+{
+  "schemaVersion": "deterministic-structural-holdout-v10.1",
+  "setId": "deterministic-structural-reaudit-v10",
+  "authoredOn": "2026-07-15",
+  "classificationLabels": [
+    "DEFECT",
+    "NORMAL"
+  ],
+  "blindSourceContract": [
+    "SUMMARY_COMPLETE_MC authoritative whole-option quote versus stored key",
+    "GRAMMAR_ERROR literal leading rendered-label reference",
+    "SENTENCE_ORDER complete independent sentence units",
+    "SENTENCE_ORDER exact standalone (A)/(B)/(C) structural labels"
+  ],
+  "cases": [
+    {
+      "id": "SC-01-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P01",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "A brass bell rang at sunrise."
+          },
+          {
+            "key": "B",
+            "text": "The brass bell stayed silent until noon."
+          },
+          {
+            "key": "C",
+            "text": "No bell was installed in the tower."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "Final summary: “The brass bell stayed silent until noon.”",
+          "quotedText": "The brass bell stayed silent until noon."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "id": "SC-01-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P01",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "A brass bell rang at sunrise."
+          },
+          {
+            "key": "B",
+            "text": "The brass bell stayed silent until noon."
+          },
+          {
+            "key": "C",
+            "text": "No bell was installed in the tower."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "Final summary: “The brass bell stayed silent until noon.”",
+          "quotedText": "The brass bell stayed silent until noon."
+        }
+      },
+      "oracleReason": "Authoritative final carrier and storedKey both select option B."
+    },
+    {
+      "id": "SC-02-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P02",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "민서는 창문을 닫았다."
+          },
+          {
+            "key": "B",
+            "text": "민서는 창문을 열어 두었다."
+          },
+          {
+            "key": "C",
+            "text": "민서는 창가에 화분을 놓았다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "최종 요약 — ‘민서는 창가에 화분을 놓았다.’",
+          "quotedText": "민서는 창가에 화분을 놓았다."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option C, but storedKey is A."
+    },
+    {
+      "id": "SC-02-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P02",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "민서는 창문을 닫았다."
+          },
+          {
+            "key": "B",
+            "text": "민서는 창문을 열어 두었다."
+          },
+          {
+            "key": "C",
+            "text": "민서는 창가에 화분을 놓았다."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "최종 요약 — ‘민서는 창가에 화분을 놓았다.’",
+          "quotedText": "민서는 창가에 화분을 놓았다."
+        }
+      },
+      "oracleReason": "Authoritative final carrier and storedKey both select option C."
+    },
+    {
+      "id": "SC-03-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P03",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The blue vial was warmed slowly."
+          },
+          {
+            "key": "B",
+            "text": "The blue vial cracked in cold water."
+          },
+          {
+            "key": "C",
+            "text": "The blue vial was never opened."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "Required conclusion / \"The blue vial was warmed slowly.\"",
+          "quotedText": "The blue vial was warmed slowly."
+        }
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "id": "SC-03-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P03",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The blue vial was warmed slowly."
+          },
+          {
+            "key": "B",
+            "text": "The blue vial cracked in cold water."
+          },
+          {
+            "key": "C",
+            "text": "The blue vial was never opened."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "Required conclusion / \"The blue vial was warmed slowly.\"",
+          "quotedText": "The blue vial was warmed slowly."
+        }
+      },
+      "oracleReason": "Authoritative required carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-04-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P04",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "기차는 북쪽 역에 먼저 섰다."
+          },
+          {
+            "key": "B",
+            "text": "기차는 남쪽 역을 지나쳤다."
+          },
+          {
+            "key": "C",
+            "text": "기차는 두 역 모두에 정차했다."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "완료된 요약은 「기차는 두 역 모두에 정차했다.」입니다.",
+          "quotedText": "기차는 두 역 모두에 정차했다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option C, but storedKey is B."
+    },
+    {
+      "id": "SC-04-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P04",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "기차는 북쪽 역에 먼저 섰다."
+          },
+          {
+            "key": "B",
+            "text": "기차는 남쪽 역을 지나쳤다."
+          },
+          {
+            "key": "C",
+            "text": "기차는 두 역 모두에 정차했다."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "완료된 요약은 「기차는 두 역 모두에 정차했다.」입니다.",
+          "quotedText": "기차는 두 역 모두에 정차했다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier and storedKey both select option C."
+    },
+    {
+      "id": "SC-05-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P05",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "Ravi mailed the sketch on Monday."
+          },
+          {
+            "key": "B",
+            "text": "Ravi revised the sketch on Tuesday."
+          },
+          {
+            "key": "C",
+            "text": "Ravi burned the sketch on Wednesday."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "Use this final recap: «Ravi revised the sketch on Tuesday.».",
+          "quotedText": "Ravi revised the sketch on Tuesday."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "id": "SC-05-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P05",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "Ravi mailed the sketch on Monday."
+          },
+          {
+            "key": "B",
+            "text": "Ravi revised the sketch on Tuesday."
+          },
+          {
+            "key": "C",
+            "text": "Ravi burned the sketch on Wednesday."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "Use this final recap: «Ravi revised the sketch on Tuesday.».",
+          "quotedText": "Ravi revised the sketch on Tuesday."
+        }
+      },
+      "oracleReason": "Authoritative final carrier and storedKey both select option B."
+    },
+    {
+      "id": "SC-06-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P06",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "강아지가 파란 공을 찾았다."
+          },
+          {
+            "key": "B",
+            "text": "강아지가 파란 공을 숨겼다."
+          },
+          {
+            "key": "C",
+            "text": "강아지가 파란 공을 잃어버렸다."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "필수 요약 → 『강아지가 파란 공을 찾았다.』",
+          "quotedText": "강아지가 파란 공을 찾았다."
+        }
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "id": "SC-06-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P06",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "강아지가 파란 공을 찾았다."
+          },
+          {
+            "key": "B",
+            "text": "강아지가 파란 공을 숨겼다."
+          },
+          {
+            "key": "C",
+            "text": "강아지가 파란 공을 잃어버렸다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "필수 요약 → 『강아지가 파란 공을 찾았다.』",
+          "quotedText": "강아지가 파란 공을 찾았다."
+        }
+      },
+      "oracleReason": "Authoritative required carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-07-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P07",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The orchard received light rain."
+          },
+          {
+            "key": "B",
+            "text": "The orchard endured a week of frost."
+          },
+          {
+            "key": "C",
+            "text": "The orchard was covered with canvas."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "Completed summary—“The orchard endured a week of frost.”",
+          "quotedText": "The orchard endured a week of frost."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option B, but storedKey is C."
+    },
+    {
+      "id": "SC-07-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P07",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The orchard received light rain."
+          },
+          {
+            "key": "B",
+            "text": "The orchard endured a week of frost."
+          },
+          {
+            "key": "C",
+            "text": "The orchard was covered with canvas."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "Completed summary—“The orchard endured a week of frost.”",
+          "quotedText": "The orchard endured a week of frost."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier and storedKey both select option B."
+    },
+    {
+      "id": "SC-08-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P08",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "서윤은 첫 장만 읽었다."
+          },
+          {
+            "key": "B",
+            "text": "서윤은 책 전체를 두 번 읽었다."
+          },
+          {
+            "key": "C",
+            "text": "서윤은 책을 도서관에 반납하지 않았다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "최종 제출 요약: \"서윤은 책 전체를 두 번 읽었다.\".",
+          "quotedText": "서윤은 책 전체를 두 번 읽었다."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "id": "SC-08-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P08",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "서윤은 첫 장만 읽었다."
+          },
+          {
+            "key": "B",
+            "text": "서윤은 책 전체를 두 번 읽었다."
+          },
+          {
+            "key": "C",
+            "text": "서윤은 책을 도서관에 반납하지 않았다."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "최종 제출 요약: \"서윤은 책 전체를 두 번 읽었다.\".",
+          "quotedText": "서윤은 책 전체를 두 번 읽었다."
+        }
+      },
+      "oracleReason": "Authoritative final carrier and storedKey both select option B."
+    },
+    {
+      "id": "SC-09-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P09",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The compass pointed east inside the cave."
+          },
+          {
+            "key": "B",
+            "text": "The compass needle did not move."
+          },
+          {
+            "key": "C",
+            "text": "The compass was left outside the cave."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "The required one-line summary is ‘The compass pointed east inside the cave.’.",
+          "quotedText": "The compass pointed east inside the cave."
+        }
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "id": "SC-09-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P09",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The compass pointed east inside the cave."
+          },
+          {
+            "key": "B",
+            "text": "The compass needle did not move."
+          },
+          {
+            "key": "C",
+            "text": "The compass was left outside the cave."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "The required one-line summary is ‘The compass pointed east inside the cave.’.",
+          "quotedText": "The compass pointed east inside the cave."
+        }
+      },
+      "oracleReason": "Authoritative required carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-10-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P10",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "연못의 물이 밤새 얼었다."
+          },
+          {
+            "key": "B",
+            "text": "연못의 물이 밤새 줄어들었다."
+          },
+          {
+            "key": "C",
+            "text": "연못에 새 물고기가 나타났다."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "완료 요약 | “연못의 물이 밤새 얼었다.”",
+          "quotedText": "연못의 물이 밤새 얼었다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "id": "SC-10-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P10",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "연못의 물이 밤새 얼었다."
+          },
+          {
+            "key": "B",
+            "text": "연못의 물이 밤새 줄어들었다."
+          },
+          {
+            "key": "C",
+            "text": "연못에 새 물고기가 나타났다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "완료 요약 | “연못의 물이 밤새 얼었다.”",
+          "quotedText": "연못의 물이 밤새 얼었다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-11-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P11",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "Only the green switch opened the hatch."
+          },
+          {
+            "key": "B",
+            "text": "Both switches opened the hatch."
+          },
+          {
+            "key": "C",
+            "text": "Neither switch affected the hatch."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "FINAL :: [“Only the green switch opened the hatch.”]",
+          "quotedText": "Only the green switch opened the hatch."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "id": "SC-11-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P11",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "Only the green switch opened the hatch."
+          },
+          {
+            "key": "B",
+            "text": "Both switches opened the hatch."
+          },
+          {
+            "key": "C",
+            "text": "Neither switch affected the hatch."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "FINAL :: [“Only the green switch opened the hatch.”]",
+          "quotedText": "Only the green switch opened the hatch."
+        }
+      },
+      "oracleReason": "Authoritative final carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-12-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P12",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "지우는 우산을 교실에 두었다."
+          },
+          {
+            "key": "B",
+            "text": "지우는 우산을 버스에서 찾았다."
+          },
+          {
+            "key": "C",
+            "text": "지우는 우산을 친구에게 빌려주었다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "반드시 남길 요약—‘지우는 우산을 버스에서 찾았다.’",
+          "quotedText": "지우는 우산을 버스에서 찾았다."
+        }
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "id": "SC-12-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P12",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "지우는 우산을 교실에 두었다."
+          },
+          {
+            "key": "B",
+            "text": "지우는 우산을 버스에서 찾았다."
+          },
+          {
+            "key": "C",
+            "text": "지우는 우산을 친구에게 빌려주었다."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "반드시 남길 요약—‘지우는 우산을 버스에서 찾았다.’",
+          "quotedText": "지우는 우산을 버스에서 찾았다."
+        }
+      },
+      "oracleReason": "Authoritative required carrier and storedKey both select option B."
+    },
+    {
+      "id": "SC-13-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P13",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The courier arrived before the museum opened."
+          },
+          {
+            "key": "B",
+            "text": "The courier arrived during lunch."
+          },
+          {
+            "key": "C",
+            "text": "The courier never reached the museum."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "Completed recap: \"The courier arrived before the museum opened.\"; end.",
+          "quotedText": "The courier arrived before the museum opened."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "id": "SC-13-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P13",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The courier arrived before the museum opened."
+          },
+          {
+            "key": "B",
+            "text": "The courier arrived during lunch."
+          },
+          {
+            "key": "C",
+            "text": "The courier never reached the museum."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "Completed recap: \"The courier arrived before the museum opened.\"; end.",
+          "quotedText": "The courier arrived before the museum opened."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-14-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P14",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "작은 북은 세 번 울렸다."
+          },
+          {
+            "key": "B",
+            "text": "큰 북은 한 번 울렸다."
+          },
+          {
+            "key": "C",
+            "text": "두 북은 동시에 울렸다."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "최종 요약(확정): 「작은 북은 세 번 울렸다.」",
+          "quotedText": "작은 북은 세 번 울렸다."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "id": "SC-14-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P14",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "작은 북은 세 번 울렸다."
+          },
+          {
+            "key": "B",
+            "text": "큰 북은 한 번 울렸다."
+          },
+          {
+            "key": "C",
+            "text": "두 북은 동시에 울렸다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "최종 요약(확정): 「작은 북은 세 번 울렸다.」",
+          "quotedText": "작은 북은 세 번 울렸다."
+        }
+      },
+      "oracleReason": "Authoritative final carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-15-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P15",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "Nora planted beans beside the fence."
+          },
+          {
+            "key": "B",
+            "text": "Nora planted corn beside the fence."
+          },
+          {
+            "key": "C",
+            "text": "Nora removed every plant beside the fence."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "Required summary ⇒ “Nora planted corn beside the fence.”.",
+          "quotedText": "Nora planted corn beside the fence."
+        }
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "id": "SC-15-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P15",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "Nora planted beans beside the fence."
+          },
+          {
+            "key": "B",
+            "text": "Nora planted corn beside the fence."
+          },
+          {
+            "key": "C",
+            "text": "Nora removed every plant beside the fence."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "Required summary ⇒ “Nora planted corn beside the fence.”.",
+          "quotedText": "Nora planted corn beside the fence."
+        }
+      },
+      "oracleReason": "Authoritative required carrier and storedKey both select option B."
+    },
+    {
+      "id": "SC-16-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P16",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "해가 뜨기 전에 배가 출항했다."
+          },
+          {
+            "key": "B",
+            "text": "정오에 배가 항구로 돌아왔다."
+          },
+          {
+            "key": "C",
+            "text": "배는 하루 종일 항구에 머물렀다."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "완료본 요약 / 『해가 뜨기 전에 배가 출항했다.』",
+          "quotedText": "해가 뜨기 전에 배가 출항했다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "id": "SC-16-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P16",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "해가 뜨기 전에 배가 출항했다."
+          },
+          {
+            "key": "B",
+            "text": "정오에 배가 항구로 돌아왔다."
+          },
+          {
+            "key": "C",
+            "text": "배는 하루 종일 항구에 머물렀다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "완료본 요약 / 『해가 뜨기 전에 배가 출항했다.』",
+          "quotedText": "해가 뜨기 전에 배가 출항했다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-17-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P17",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The mural used four shades of red."
+          },
+          {
+            "key": "B",
+            "text": "The mural used only black ink."
+          },
+          {
+            "key": "C",
+            "text": "The mural was erased before display."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "Final answer summary: 'The mural used four shades of red.'.",
+          "quotedText": "The mural used four shades of red."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "id": "SC-17-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P17",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The mural used four shades of red."
+          },
+          {
+            "key": "B",
+            "text": "The mural used only black ink."
+          },
+          {
+            "key": "C",
+            "text": "The mural was erased before display."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "Final answer summary: 'The mural used four shades of red.'.",
+          "quotedText": "The mural used four shades of red."
+        }
+      },
+      "oracleReason": "Authoritative final carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-18-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P18",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "현우는 암호를 종이에 적었다."
+          },
+          {
+            "key": "B",
+            "text": "현우는 암호를 외운 뒤 종이를 찢었다."
+          },
+          {
+            "key": "C",
+            "text": "현우는 암호를 누구에게나 말했다."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "필수 결론: «현우는 암호를 외운 뒤 종이를 찢었다.»",
+          "quotedText": "현우는 암호를 외운 뒤 종이를 찢었다."
+        }
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option B, but storedKey is C."
+    },
+    {
+      "id": "SC-18-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P18",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "현우는 암호를 종이에 적었다."
+          },
+          {
+            "key": "B",
+            "text": "현우는 암호를 외운 뒤 종이를 찢었다."
+          },
+          {
+            "key": "C",
+            "text": "현우는 암호를 누구에게나 말했다."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "필수 결론: «현우는 암호를 외운 뒤 종이를 찢었다.»",
+          "quotedText": "현우는 암호를 외운 뒤 종이를 찢었다."
+        }
+      },
+      "oracleReason": "Authoritative required carrier and storedKey both select option B."
+    },
+    {
+      "id": "SC-19-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P19",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The seedlings were moved into shade."
+          },
+          {
+            "key": "B",
+            "text": "The seedlings remained under the lamp."
+          },
+          {
+            "key": "C",
+            "text": "The seedlings were given no water."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "Completed one-line recap — \"The seedlings were moved into shade.\".",
+          "quotedText": "The seedlings were moved into shade."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "id": "SC-19-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P19",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The seedlings were moved into shade."
+          },
+          {
+            "key": "B",
+            "text": "The seedlings remained under the lamp."
+          },
+          {
+            "key": "C",
+            "text": "The seedlings were given no water."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "Completed one-line recap — \"The seedlings were moved into shade.\".",
+          "quotedText": "The seedlings were moved into shade."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier and storedKey both select option A."
+    },
+    {
+      "id": "SC-20-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P20",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "종이배가 다리 아래를 통과했다."
+          },
+          {
+            "key": "B",
+            "text": "종이배가 돌에 걸려 멈췄다."
+          },
+          {
+            "key": "C",
+            "text": "종이배가 물 밖으로 떠올랐다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "최종 완료 요약은 ‘종이배가 돌에 걸려 멈췄다.’입니다.",
+          "quotedText": "종이배가 돌에 걸려 멈췄다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "id": "SC-20-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P20",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "종이배가 다리 아래를 통과했다."
+          },
+          {
+            "key": "B",
+            "text": "종이배가 돌에 걸려 멈췄다."
+          },
+          {
+            "key": "C",
+            "text": "종이배가 물 밖으로 떠올랐다."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "최종 완료 요약은 ‘종이배가 돌에 걸려 멈췄다.’입니다.",
+          "quotedText": "종이배가 돌에 걸려 멈췄다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier and storedKey both select option B."
+    },
+    {
+      "id": "SC-21-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P21",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The red folder contains the signed form."
+          },
+          {
+            "key": "B",
+            "text": "The red folder is empty."
+          },
+          {
+            "key": "C",
+            "text": "The red folder belongs to the visitor."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "Final summary: “The red folder contains the signed form.”",
+          "quotedText": "The red folder contains the signed form."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is C."
+    },
+    {
+      "id": "SC-21-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P21",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The red folder contains the signed form."
+          },
+          {
+            "key": "B",
+            "text": "The red folder is empty."
+          },
+          {
+            "key": "C",
+            "text": "The red folder belongs to the visitor."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "NON_AUTHORITATIVE",
+          "kind": "comparison",
+          "text": "Comparison note only: “The red folder contains the signed form.” resembles an earlier draft; it is not the final summary.",
+          "quotedText": "The red folder contains the signed form."
+        }
+      },
+      "oracleReason": "The mismatching quotation is explicitly comparison context, not an authoritative summary carrier."
+    },
+    {
+      "id": "SC-22-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P22",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "유나는 오전에 표를 완성했다."
+          },
+          {
+            "key": "B",
+            "text": "유나는 표를 다음 날로 미뤘다."
+          },
+          {
+            "key": "C",
+            "text": "유나는 표 대신 지도를 그렸다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "완료 요약: ‘유나는 표를 다음 날로 미뤘다.’",
+          "quotedText": "유나는 표를 다음 날로 미뤘다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "id": "SC-22-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P22",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "유나는 오전에 표를 완성했다."
+          },
+          {
+            "key": "B",
+            "text": "유나는 표를 다음 날로 미뤘다."
+          },
+          {
+            "key": "C",
+            "text": "유나는 표 대신 지도를 그렸다."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "NON_AUTHORITATIVE",
+          "kind": "comparison",
+          "text": "비교용 메모: ‘유나는 표를 다음 날로 미뤘다.’는 검토 문구일 뿐 완료 요약이 아닙니다.",
+          "quotedText": "유나는 표를 다음 날로 미뤘다."
+        }
+      },
+      "oracleReason": "The mismatching quotation is explicitly comparison context, not an authoritative summary carrier."
+    },
+    {
+      "id": "SC-23-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P23",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The archive closes at six."
+          },
+          {
+            "key": "B",
+            "text": "The archive opens at six."
+          },
+          {
+            "key": "C",
+            "text": "The archive has no public entrance."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "required",
+          "text": "Required summary — “The archive opens at six.”",
+          "quotedText": "The archive opens at six."
+        }
+      },
+      "oracleReason": "Authoritative required carrier uniquely quotes option B, but storedKey is A."
+    },
+    {
+      "id": "SC-23-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P23",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The archive closes at six."
+          },
+          {
+            "key": "B",
+            "text": "The archive opens at six."
+          },
+          {
+            "key": "C",
+            "text": "The archive has no public entrance."
+          }
+        ],
+        "storedKey": "A",
+        "carrier": {
+          "authority": "NON_AUTHORITATIVE",
+          "kind": "negation",
+          "text": "Do not use “The archive opens at six.” as the required summary; it appears only in the rejection note.",
+          "quotedText": "The archive opens at six."
+        }
+      },
+      "oracleReason": "The mismatching quotation is explicitly negation context, not an authoritative summary carrier."
+    },
+    {
+      "id": "SC-24-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P24",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "수조의 온도가 서서히 올랐다."
+          },
+          {
+            "key": "B",
+            "text": "수조의 온도가 갑자기 떨어졌다."
+          },
+          {
+            "key": "C",
+            "text": "수조의 온도는 변하지 않았다."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "completed",
+          "text": "완료 결론: “수조의 온도가 갑자기 떨어졌다.”",
+          "quotedText": "수조의 온도가 갑자기 떨어졌다."
+        }
+      },
+      "oracleReason": "Authoritative completed carrier uniquely quotes option B, but storedKey is C."
+    },
+    {
+      "id": "SC-24-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P24",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "수조의 온도가 서서히 올랐다."
+          },
+          {
+            "key": "B",
+            "text": "수조의 온도가 갑자기 떨어졌다."
+          },
+          {
+            "key": "C",
+            "text": "수조의 온도는 변하지 않았다."
+          }
+        ],
+        "storedKey": "C",
+        "carrier": {
+          "authority": "NON_AUTHORITATIVE",
+          "kind": "negation",
+          "text": "검토 중 제외한 문구—“수조의 온도가 갑자기 떨어졌다.”; 완료 결론으로 채택하지 않았습니다.",
+          "quotedText": "수조의 온도가 갑자기 떨어졌다."
+        }
+      },
+      "oracleReason": "The mismatching quotation is explicitly negation context, not an authoritative summary carrier."
+    },
+    {
+      "id": "SC-25-D",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P25",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The paper bridge held all five coins."
+          },
+          {
+            "key": "B",
+            "text": "The paper bridge bent under one coin."
+          },
+          {
+            "key": "C",
+            "text": "The paper bridge was not tested."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "AUTHORITATIVE",
+          "kind": "final",
+          "text": "Final recap: «The paper bridge held all five coins.»",
+          "quotedText": "The paper bridge held all five coins."
+        }
+      },
+      "oracleReason": "Authoritative final carrier uniquely quotes option A, but storedKey is B."
+    },
+    {
+      "id": "SC-25-N",
+      "family": "SUMMARY_COMPLETE_MC",
+      "pairId": "SC-P25",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SUMMARY_COMPLETE_MC",
+        "options": [
+          {
+            "key": "A",
+            "text": "The paper bridge held all five coins."
+          },
+          {
+            "key": "B",
+            "text": "The paper bridge bent under one coin."
+          },
+          {
+            "key": "C",
+            "text": "The paper bridge was not tested."
+          }
+        ],
+        "storedKey": "B",
+        "carrier": {
+          "authority": "NON_AUTHORITATIVE",
+          "kind": "comparison",
+          "text": "For contrast, the draft mentioned «The paper bridge held all five coins.», not the completed answer.",
+          "quotedText": "The paper bridge held all five coins."
+        }
+      },
+      "oracleReason": "The mismatching quotation is explicitly comparison context, not an authoritative summary carrier."
+    },
+    {
+      "id": "GL-01-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P01",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "absent",
+          "labels": []
+        },
+        "keyPoint": "Tip: Compare both verb forms before choosing.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Tip"
+        }
+      },
+      "oracleReason": "The key point explicitly starts with a label token, but the rendered label inventory supplies no literal labels."
+    },
+    {
+      "id": "GL-01-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P01",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "absent",
+          "labels": []
+        },
+        "keyPoint": "Compare both verb forms; the word Tip appears later in the teacher note.",
+        "leadingReference": {
+          "explicit": false,
+          "atStart": false,
+          "token": "Tip"
+        }
+      },
+      "oracleReason": "The label-like word occurs only later in prose and is not a leading reference."
+    },
+    {
+      "id": "GL-02-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P02",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "empty",
+          "labels": []
+        },
+        "keyPoint": "도움말: 두 조사의 쓰임을 먼저 비교하세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "도움말"
+        }
+      },
+      "oracleReason": "The key point explicitly starts with a label token, but the rendered label inventory supplies no literal labels."
+    },
+    {
+      "id": "GL-02-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P02",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "empty",
+          "labels": []
+        },
+        "keyPoint": "두 조사의 쓰임을 비교한 뒤 도움말이라는 표현을 본문에서 확인하세요.",
+        "leadingReference": {
+          "explicit": false,
+          "atStart": false,
+          "token": "도움말"
+        }
+      },
+      "oracleReason": "The label-like word occurs only later in prose and is not a leading reference."
+    },
+    {
+      "id": "GL-03-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P03",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "absent",
+          "labels": []
+        },
+        "keyPoint": "Caution: Do not treat the participle as a finite verb.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Caution"
+        }
+      },
+      "oracleReason": "The key point explicitly starts with a label token, but the rendered label inventory supplies no literal labels."
+    },
+    {
+      "id": "GL-03-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P03",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "absent",
+          "labels": []
+        },
+        "keyPoint": "Do not treat the participle as a finite verb; Caution is merely a word mentioned later.",
+        "leadingReference": {
+          "explicit": false,
+          "atStart": false,
+          "token": "Caution"
+        }
+      },
+      "oracleReason": "The label-like word occurs only later in prose and is not a leading reference."
+    },
+    {
+      "id": "GL-04-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P04",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "empty",
+          "labels": []
+        },
+        "keyPoint": "안내: 밑줄 친 서술어의 시제를 확인하세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "안내"
+        }
+      },
+      "oracleReason": "The key point explicitly starts with a label token, but the rendered label inventory supplies no literal labels."
+    },
+    {
+      "id": "GL-04-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P04",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "empty",
+          "labels": []
+        },
+        "keyPoint": "밑줄 친 서술어의 시제를 확인하고 안내라는 낱말은 뒤 문장에서 읽으세요.",
+        "leadingReference": {
+          "explicit": false,
+          "atStart": false,
+          "token": "안내"
+        }
+      },
+      "oracleReason": "The label-like word occurs only later in prose and is not a leading reference."
+    },
+    {
+      "id": "GL-05-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P05",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Hint"
+          ]
+        },
+        "keyPoint": "HINT: Test the singular subject first.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "HINT"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-05-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P05",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Hint"
+          ]
+        },
+        "keyPoint": "Hint: Test the singular subject first.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Hint"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-06-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P06",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "[Clue]"
+          ]
+        },
+        "keyPoint": "(Clue) — The auxiliary carries the tense.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "(Clue)"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-06-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P06",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "[Clue]"
+          ]
+        },
+        "keyPoint": "[Clue] — The auxiliary carries the tense.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "[Clue]"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-07-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P07",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "(Tip)"
+          ]
+        },
+        "keyPoint": "[Tip]: Read the subordinate clause aloud.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "[Tip]"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-07-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P07",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "(Tip)"
+          ]
+        },
+        "keyPoint": "(Tip): Read the subordinate clause aloud.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "(Tip)"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-08-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P08",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Note"
+          ]
+        },
+        "keyPoint": "Ｎote: The comma does not end the clause.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Ｎote"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-08-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P08",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Note"
+          ]
+        },
+        "keyPoint": "Note: The comma does not end the clause.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Note"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-09-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P09",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Caution"
+          ]
+        },
+        "keyPoint": "Cаution: The second letter is not Latin a.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Cаution"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-09-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P09",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Caution"
+          ]
+        },
+        "keyPoint": "Caution: The second letter is Latin a.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Caution"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-10-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P10",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Focus"
+          ]
+        },
+        "keyPoint": "Fοcus: Check agreement after the relative pronoun.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Fοcus"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-10-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P10",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Focus"
+          ]
+        },
+        "keyPoint": "Focus: Check agreement after the relative pronoun.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Focus"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-11-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P11",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Rule"
+          ]
+        },
+        "keyPoint": "Ruⅼe: A modal takes the base form here.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Ruⅼe"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-11-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P11",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Rule"
+          ]
+        },
+        "keyPoint": "Rule: A modal takes the base form here.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Rule"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-12-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P12",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "참고"
+          ]
+        },
+        "keyPoint": "참　고: 앞 절과 뒤 절의 주어를 구분하세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "참　고"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-12-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P12",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "참고"
+          ]
+        },
+        "keyPoint": "참고: 앞 절과 뒤 절의 주어를 구분하세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "참고"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-13-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P13",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Café"
+          ]
+        },
+        "keyPoint": "Café: Preserve the displayed accent form exactly.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Café"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-13-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P13",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Café"
+          ]
+        },
+        "keyPoint": "Café: Preserve the displayed accent form exactly.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Café"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-14-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P14",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "[도움]"
+          ]
+        },
+        "keyPoint": "［도움］ 어미의 연결 기능을 확인하세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "［도움］"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-14-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P14",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "[도움]"
+          ]
+        },
+        "keyPoint": "[도움] 어미의 연결 기능을 확인하세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "[도움]"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-15-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P15",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "문법"
+          ]
+        },
+        "keyPoint": "문 법: 관형절의 수식을 받는 명사를 찾으세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "문 법"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-15-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P15",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "문법"
+          ]
+        },
+        "keyPoint": "문법: 관형절의 수식을 받는 명사를 찾으세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "문법"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-16-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P16",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Key"
+          ]
+        },
+        "keyPoint": "&#75;ey: Locate the finite verb before judging the error.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "&#75;ey"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-16-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P16",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Key"
+          ]
+        },
+        "keyPoint": "Key: Locate the finite verb before judging the error.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Key"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-17-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P17",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "[Note]"
+          ]
+        },
+        "keyPoint": "&lbrack;Note&rbrack;: The entity text is shown literally.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "&lbrack;Note&rbrack;"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-17-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P17",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "[Note]"
+          ]
+        },
+        "keyPoint": "[Note]: The bracketed label is shown literally.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "[Note]"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-18-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P18",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "A&B"
+          ]
+        },
+        "keyPoint": "A&amp;B — Compare the two coordinated predicates.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "A&amp;B"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-18-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P18",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "A&B"
+          ]
+        },
+        "keyPoint": "A&B — Compare the two coordinated predicates.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "A&B"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-19-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P19",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "(A)"
+          ]
+        },
+        "keyPoint": "（A）: Inspect the first underlined phrase.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "（A）"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-19-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P19",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "(A)"
+          ]
+        },
+        "keyPoint": "(A): Inspect the first underlined phrase.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "(A)"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-20-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P20",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "{Check}"
+          ]
+        },
+        "keyPoint": "[Check] Verify the antecedent of they.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "[Check]"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-20-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P20",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "{Check}"
+          ]
+        },
+        "keyPoint": "{Check} Verify the antecedent of they.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "{Check}"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-21-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P21",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "<Tip>"
+          ]
+        },
+        "keyPoint": "〈Tip〉: Read the sentence without the adverb.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "〈Tip〉"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-21-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P21",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "<Tip>"
+          ]
+        },
+        "keyPoint": "<Tip>: Read the sentence without the adverb.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "<Tip>"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-22-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P22",
+      "expected": "DEFECT",
+      "language": "el",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Σημείωση"
+          ]
+        },
+        "keyPoint": "Σημειωση: Ελέγξτε τον τονισμό της ετικέτας.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Σημειωση"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-22-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P22",
+      "expected": "NORMAL",
+      "language": "el",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Σημείωση"
+          ]
+        },
+        "keyPoint": "Σημείωση: Ελέγξτε τον τονισμό της ετικέτας.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Σημείωση"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-23-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P23",
+      "expected": "DEFECT",
+      "language": "fr",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Résumé"
+          ]
+        },
+        "keyPoint": "Resume: Repérez le verbe conjugué.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Resume"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-23-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P23",
+      "expected": "NORMAL",
+      "language": "fr",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Résumé"
+          ]
+        },
+        "keyPoint": "Résumé: Repérez le verbe conjugué.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Résumé"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-24-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P24",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "검토①"
+          ]
+        },
+        "keyPoint": "검토1: 높임 표현의 대상을 확인하세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "검토1"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-24-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P24",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "검토①"
+          ]
+        },
+        "keyPoint": "검토①: 높임 표현의 대상을 확인하세요.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "검토①"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "GL-25-D",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P25",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Safe"
+          ]
+        },
+        "keyPoint": "Sa​fe: The invisible separator changes the literal token.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Sa​fe"
+        }
+      },
+      "oracleReason": "The leading token is not code-point-for-code-point identical to any rendered label."
+    },
+    {
+      "id": "GL-25-N",
+      "family": "GRAMMAR_ERROR_LEADING_LABEL",
+      "pairId": "GL-P25",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "GRAMMAR_ERROR",
+        "renderedLabelInventory": {
+          "state": "present",
+          "labels": [
+            "Safe"
+          ]
+        },
+        "keyPoint": "Safe: The literal label has no invisible separator.",
+        "leadingReference": {
+          "explicit": true,
+          "atStart": true,
+          "token": "Safe"
+        }
+      },
+      "oracleReason": "The explicit leading token is a literal rendered label."
+    },
+    {
+      "id": "SU-01-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P01",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The harbor master checked the flags.",
+          "Because the tide turned before noon.",
+          "The crew secured every rope."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The harbor master checked the flags.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Because the tide turned before noon.",
+            "independentFiniteUnit": false,
+            "basis": "dependent because-clause without a matrix clause"
+          },
+          {
+            "text": "The crew secured every rope.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a dependent because-clause without a matrix clause; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-01-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P01",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The harbor master checked the flags.",
+          "The boat returned because the tide turned before noon.",
+          "The crew secured every rope."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The harbor master checked the flags.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The boat returned because the tide turned before noon.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The crew secured every rope.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-02-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P02",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "A clean tray waited on the bench.",
+          "While the glass tube was cooling.",
+          "The technician stored the tray in a cabinet."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "A clean tray waited on the bench.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "While the glass tube was cooling.",
+            "independentFiniteUnit": false,
+            "basis": "dependent while-clause without a matrix clause"
+          },
+          {
+            "text": "The technician stored the tray in a cabinet.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a dependent while-clause without a matrix clause; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-02-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P02",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "A clean tray waited on the bench.",
+          "While the glass tube was cooling, the technician labeled the samples.",
+          "The technician stored the tray in a cabinet."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "A clean tray waited on the bench.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "While the glass tube was cooling, the technician labeled the samples.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The technician stored the tray in a cabinet.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-03-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P03",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The chalk diagram was still visible.",
+          "To preserve the chalk marks overnight.",
+          "Morning visitors saw the intact diagram."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The chalk diagram was still visible.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "To preserve the chalk marks overnight.",
+            "independentFiniteUnit": false,
+            "basis": "purpose infinitive without an independent clause"
+          },
+          {
+            "text": "Morning visitors saw the intact diagram.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a purpose infinitive without an independent clause; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-03-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P03",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The chalk diagram was still visible.",
+          "The curator covered the chalk marks to preserve them overnight.",
+          "Morning visitors saw the intact diagram."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The chalk diagram was still visible.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The curator covered the chalk marks to preserve them overnight.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Morning visitors saw the intact diagram.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-04-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P04",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "Inez sorted the tiles by color.",
+          "Having counted every blue tile.",
+          "She returned the tiles to their boxes."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "Inez sorted the tiles by color.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Having counted every blue tile.",
+            "independentFiniteUnit": false,
+            "basis": "supplementary participial phrase without a matrix clause"
+          },
+          {
+            "text": "She returned the tiles to their boxes.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a supplementary participial phrase without a matrix clause; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-04-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P04",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "Inez sorted the tiles by color.",
+          "Having counted every blue tile, Inez updated the inventory.",
+          "She returned the tiles to their boxes."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "Inez sorted the tiles by color.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Having counted every blue tile, Inez updated the inventory.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "She returned the tiles to their boxes.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-05-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P05",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The caretaker unlocked the lower door.",
+          "The faint smell of cedar near the stairs.",
+          "He opened a window at the landing."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The caretaker unlocked the lower door.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The faint smell of cedar near the stairs.",
+            "independentFiniteUnit": false,
+            "basis": "nominal phrase without a finite predicate"
+          },
+          {
+            "text": "He opened a window at the landing.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a nominal phrase without a finite predicate; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-05-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P05",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The caretaker unlocked the lower door.",
+          "A faint smell of cedar lingered near the stairs.",
+          "He opened a window at the landing."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The caretaker unlocked the lower door.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "A faint smell of cedar lingered near the stairs.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "He opened a window at the landing.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-06-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P06",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "Mara inspected the sealed envelope.",
+          "Whether the spare key was inside the envelope?",
+          "She recorded the answer in her log."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "Mara inspected the sealed envelope.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Whether the spare key was inside the envelope?",
+            "independentFiniteUnit": false,
+            "basis": "subordinate whether-interrogative fragment"
+          },
+          {
+            "text": "She recorded the answer in her log.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a subordinate whether-interrogative fragment; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-06-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P06",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "Mara inspected the sealed envelope.",
+          "Was the spare key inside the envelope?",
+          "She recorded the answer in her log."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "Mara inspected the sealed envelope.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Was the spare key inside the envelope?",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "She recorded the answer in her log.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-07-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P07",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The night guard finished his first round.",
+          "“Although the west gate remained unlocked.”",
+          "He locked the gate before midnight."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The night guard finished his first round.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "“Although the west gate remained unlocked.”",
+            "independentFiniteUnit": false,
+            "basis": "quoted dependent although-clause without a matrix clause"
+          },
+          {
+            "text": "He locked the gate before midnight.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a quoted dependent although-clause without a matrix clause; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-07-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P07",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The night guard finished his first round.",
+          "“Although the west gate remained unlocked, no one entered.”",
+          "He locked the gate before midnight."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The night guard finished his first round.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "“Although the west gate remained unlocked, no one entered.”",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "He locked the gate before midnight.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-08-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P08",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The guide unfolded the route sheet.",
+          "The final instruction: to fold the map along the red line.",
+          "Everyone placed the folded map in a sleeve."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The guide unfolded the route sheet.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The final instruction: to fold the map along the red line.",
+            "independentFiniteUnit": false,
+            "basis": "nominal head plus nonfinite complement without a finite predicate"
+          },
+          {
+            "text": "Everyone placed the folded map in a sleeve.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a nominal head plus nonfinite complement without a finite predicate; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-08-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P08",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The guide unfolded the route sheet.",
+          "The final instruction was to fold the map along the red line.",
+          "Everyone placed the folded map in a sleeve."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The guide unfolded the route sheet.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The final instruction was to fold the map along the red line.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Everyone placed the folded map in a sleeve.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-09-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P09",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The volunteers returned from the orchard.",
+          "The outcome—three empty baskets by the door.",
+          "The coordinator counted the remaining fruit."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The volunteers returned from the orchard.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The outcome—three empty baskets by the door.",
+            "independentFiniteUnit": false,
+            "basis": "dash-linked nominal fragment without a finite predicate"
+          },
+          {
+            "text": "The coordinator counted the remaining fruit.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a dash-linked nominal fragment without a finite predicate; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-09-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P09",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The volunteers returned from the orchard.",
+          "The outcome was three empty baskets by the door.",
+          "The coordinator counted the remaining fruit."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The volunteers returned from the orchard.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The outcome was three empty baskets by the door.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The coordinator counted the remaining fruit.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-10-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P10",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "Students packed their instruments.",
+          "After the last bell; an otherwise silent corridor.",
+          "The custodian turned off the lights."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "Students packed their instruments.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "After the last bell; an otherwise silent corridor.",
+            "independentFiniteUnit": false,
+            "basis": "dependent phrase and nominal phrase joined by a semicolon"
+          },
+          {
+            "text": "The custodian turned off the lights.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a dependent phrase and nominal phrase joined by a semicolon; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-10-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P10",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "Students packed their instruments.",
+          "The last bell rang; the corridor then fell silent.",
+          "The custodian turned off the lights."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "Students packed their instruments.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The last bell rang; the corridor then fell silent.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The custodian turned off the lights.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-11-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P11",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The museum lobby opened at nine.",
+          "Asked to wait beneath the clock.",
+          "A docent met them ten minutes later."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The museum lobby opened at nine.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Asked to wait beneath the clock.",
+            "independentFiniteUnit": false,
+            "basis": "passive participial remnant without a finite auxiliary"
+          },
+          {
+            "text": "A docent met them ten minutes later.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a passive participial remnant without a finite auxiliary; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-11-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P11",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The museum lobby opened at nine.",
+          "The visitors were asked to wait beneath the clock.",
+          "A docent met them ten minutes later."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The museum lobby opened at nine.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The visitors were asked to wait beneath the clock.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "A docent met them ten minutes later.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-12-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P12",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The trail curved around the marsh.",
+          "Without disturbing the nesting birds.",
+          "They reached the lookout before dusk."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The trail curved around the marsh.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Without disturbing the nesting birds.",
+            "independentFiniteUnit": false,
+            "basis": "prepositional gerund phrase without an independent clause"
+          },
+          {
+            "text": "They reached the lookout before dusk.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a prepositional gerund phrase without an independent clause; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-12-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P12",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The trail curved around the marsh.",
+          "The hikers passed the marsh without disturbing the nesting birds.",
+          "They reached the lookout before dusk."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The trail curved around the marsh.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The hikers passed the marsh without disturbing the nesting birds.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "They reached the lookout before dusk.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-13-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P13",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "A diagram showed two brass levers.",
+          "What the blue lever controls?",
+          "The manual answered the question on the next page."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "A diagram showed two brass levers.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "What the blue lever controls?",
+            "independentFiniteUnit": false,
+            "basis": "embedded wh-clause used as an interrogative fragment"
+          },
+          {
+            "text": "The manual answered the question on the next page.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a embedded wh-clause used as an interrogative fragment; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-13-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P13",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "A diagram showed two brass levers.",
+          "What does the blue lever control?",
+          "The manual answered the question on the next page."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "A diagram showed two brass levers.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "What does the blue lever control?",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The manual answered the question on the next page.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-14-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P14",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "Rain tapped against the studio window.",
+          "A notebook with rain-spotted pages.",
+          "Its owner dried the cover with a cloth."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "Rain tapped against the studio window.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "A notebook with rain-spotted pages.",
+            "independentFiniteUnit": false,
+            "basis": "noun phrase without a finite predicate"
+          },
+          {
+            "text": "Its owner dried the cover with a cloth.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a noun phrase without a finite predicate; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-14-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P14",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "Rain tapped against the studio window.",
+          "A notebook with rain-spotted pages lay on the desk.",
+          "Its owner dried the cover with a cloth."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "Rain tapped against the studio window.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "A notebook with rain-spotted pages lay on the desk.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "Its owner dried the cover with a cloth.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-15-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P15",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The operator watched the panel.",
+          "“When the signal changes?”",
+          "The instructor pointed to the timer."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The operator watched the panel.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "“When the signal changes?”",
+            "independentFiniteUnit": false,
+            "basis": "quoted subordinate when-clause posed as a fragment"
+          },
+          {
+            "text": "The instructor pointed to the timer.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a quoted subordinate when-clause posed as a fragment; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-15-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P15",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "The operator watched the panel.",
+          "“When does the signal change?”",
+          "The instructor pointed to the timer."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "The operator watched the panel.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "“When does the signal change?”",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "The instructor pointed to the timer.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-16-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P16",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "운동장에는 아직 물웅덩이가 남아 있었다.",
+          "비가 그친 뒤에.",
+          "아이들은 마른 곳에 가방을 놓았다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "운동장에는 아직 물웅덩이가 남아 있었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "비가 그친 뒤에.",
+            "independentFiniteUnit": false,
+            "basis": "matrix clause 없는 의존적 시간 부사절"
+          },
+          {
+            "text": "아이들은 마른 곳에 가방을 놓았다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a matrix clause 없는 의존적 시간 부사절; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-16-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P16",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "운동장에는 아직 물웅덩이가 남아 있었다.",
+          "비가 그친 뒤에 아이들이 운동장으로 나왔다.",
+          "아이들은 마른 곳에 가방을 놓았다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "운동장에는 아직 물웅덩이가 남아 있었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "비가 그친 뒤에 아이들이 운동장으로 나왔다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "아이들은 마른 곳에 가방을 놓았다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-17-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P17",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "연구팀은 계산 결과를 모았다.",
+          "자료를 다시 확인하기 위해.",
+          "회의 뒤에 수정된 표를 저장했다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "연구팀은 계산 결과를 모았다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "자료를 다시 확인하기 위해.",
+            "independentFiniteUnit": false,
+            "basis": "독립절 없는 목적 표현"
+          },
+          {
+            "text": "회의 뒤에 수정된 표를 저장했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 독립절 없는 목적 표현; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-17-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P17",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "연구팀은 계산 결과를 모았다.",
+          "연구팀은 자료를 다시 확인하기 위해 회의를 열었다.",
+          "회의 뒤에 수정된 표를 저장했다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "연구팀은 계산 결과를 모았다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "연구팀은 자료를 다시 확인하기 위해 회의를 열었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "회의 뒤에 수정된 표를 저장했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-18-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P18",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "교실의 커튼이 천천히 흔들렸다.",
+          "창문 옆의 작은 화분.",
+          "선생님은 화분에 물을 주었다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "교실의 커튼이 천천히 흔들렸다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "창문 옆의 작은 화분.",
+            "independentFiniteUnit": false,
+            "basis": "서술어가 없는 명사구"
+          },
+          {
+            "text": "선생님은 화분에 물을 주었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 서술어가 없는 명사구; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-18-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P18",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "교실의 커튼이 천천히 흔들렸다.",
+          "작은 화분이 창문 옆에 놓여 있었다.",
+          "선생님은 화분에 물을 주었다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "교실의 커튼이 천천히 흔들렸다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "작은 화분이 창문 옆에 놓여 있었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "선생님은 화분에 물을 주었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-19-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P19",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "복도에 갑자기 소리가 퍼졌다.",
+          "왜 종이 울렸는지?",
+          "학생들은 방송을 기다렸다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "복도에 갑자기 소리가 퍼졌다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "왜 종이 울렸는지?",
+            "independentFiniteUnit": false,
+            "basis": "의존 명사절 형태의 의문 단편"
+          },
+          {
+            "text": "학생들은 방송을 기다렸다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 의존 명사절 형태의 의문 단편; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-19-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P19",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "복도에 갑자기 소리가 퍼졌다.",
+          "왜 종이 울렸을까?",
+          "학생들은 방송을 기다렸다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "복도에 갑자기 소리가 퍼졌다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "왜 종이 울렸을까?",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "학생들은 방송을 기다렸다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-20-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P20",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "바깥바람이 더 거세졌다.",
+          "문을 닫았지만.",
+          "민호는 커튼도 단단히 묶었다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "바깥바람이 더 거세졌다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "문을 닫았지만.",
+            "independentFiniteUnit": false,
+            "basis": "뒤 절이 빠진 양보 연결절"
+          },
+          {
+            "text": "민호는 커튼도 단단히 묶었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 뒤 절이 빠진 양보 연결절; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-20-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P20",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "바깥바람이 더 거세졌다.",
+          "문을 닫았지만 바람 소리는 계속 들렸다.",
+          "민호는 커튼도 단단히 묶었다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "바깥바람이 더 거세졌다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "문을 닫았지만 바람 소리는 계속 들렸다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "민호는 커튼도 단단히 묶었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-21-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P21",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "사회자는 질문을 모두 받았다.",
+          "“회의가 끝난 뒤에.”",
+          "사회자는 마지막으로 불을 껐다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "사회자는 질문을 모두 받았다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "“회의가 끝난 뒤에.”",
+            "independentFiniteUnit": false,
+            "basis": "따옴표 안에 있어도 주절이 없는 시간 부사절"
+          },
+          {
+            "text": "사회자는 마지막으로 불을 껐다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 따옴표 안에 있어도 주절이 없는 시간 부사절; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-21-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P21",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "사회자는 질문을 모두 받았다.",
+          "“회의가 끝난 뒤에 참가자들이 자료를 정리했다.”",
+          "사회자는 마지막으로 불을 껐다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "사회자는 질문을 모두 받았다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "“회의가 끝난 뒤에 참가자들이 자료를 정리했다.”",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "사회자는 마지막으로 불을 껐다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-22-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P22",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "담당자는 작업 목록을 읽었다.",
+          "마지막 요청: 표를 다시 세는 것.",
+          "두 사람이 함께 수치를 확인했다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "담당자는 작업 목록을 읽었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "마지막 요청: 표를 다시 세는 것.",
+            "independentFiniteUnit": false,
+            "basis": "콜론 뒤 명사화 표현만 있는 비정형 단편"
+          },
+          {
+            "text": "두 사람이 함께 수치를 확인했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 콜론 뒤 명사화 표현만 있는 비정형 단편; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-22-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P22",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "담당자는 작업 목록을 읽었다.",
+          "마지막 요청은 표를 다시 세는 것이었다.",
+          "두 사람이 함께 수치를 확인했다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "담당자는 작업 목록을 읽었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "마지막 요청은 표를 다시 세는 것이었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "두 사람이 함께 수치를 확인했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-23-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P23",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "심사위원들이 객석을 둘러보았다.",
+          "결과—비어 있는 두 자리.",
+          "안내원이 좌석 번호를 기록했다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "심사위원들이 객석을 둘러보았다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "결과—비어 있는 두 자리.",
+            "independentFiniteUnit": false,
+            "basis": "대시로 이어진 명사구에 유한 서술어가 없음"
+          },
+          {
+            "text": "안내원이 좌석 번호를 기록했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 대시로 이어진 명사구에 유한 서술어가 없음; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-23-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P23",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "심사위원들이 객석을 둘러보았다.",
+          "결과는 비어 있는 두 자리였다.",
+          "안내원이 좌석 번호를 기록했다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "심사위원들이 객석을 둘러보았다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "결과는 비어 있는 두 자리였다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "안내원이 좌석 번호를 기록했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-24-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P24",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "학생들은 출발 전에 설명을 들었다.",
+          "안내를 듣고도.",
+          "인솔자는 갈림길에 표지를 세웠다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "학생들은 출발 전에 설명을 들었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "안내를 듣고도.",
+            "independentFiniteUnit": false,
+            "basis": "주절이 빠진 연결 어미 구문"
+          },
+          {
+            "text": "인솔자는 갈림길에 표지를 세웠다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 주절이 빠진 연결 어미 구문; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-24-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P24",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "학생들은 출발 전에 설명을 들었다.",
+          "안내를 듣고도 학생들은 같은 길을 잘못 선택했다.",
+          "인솔자는 갈림길에 표지를 세웠다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "학생들은 출발 전에 설명을 들었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "안내를 듣고도 학생들은 같은 길을 잘못 선택했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "인솔자는 갈림길에 표지를 세웠다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SU-25-D",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P25",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "지도에는 세 갈래 길이 표시되어 있었다.",
+          "어느 길이 강으로 이어지는지?",
+          "탐사대는 나침반으로 방향을 확인했다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "지도에는 세 갈래 길이 표시되어 있었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "어느 길이 강으로 이어지는지?",
+            "independentFiniteUnit": false,
+            "basis": "의존적인 간접의문 명사절 단편"
+          },
+          {
+            "text": "탐사대는 나침반으로 방향을 확인했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "The middle paragraph is a 의존적인 간접의문 명사절 단편; punctuation does not make it independent."
+    },
+    {
+      "id": "SU-25-N",
+      "family": "SENTENCE_ORDER_COMPLETE_UNITS",
+      "pairId": "SU-P25",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "paragraphs": [
+          "지도에는 세 갈래 길이 표시되어 있었다.",
+          "어느 길이 강으로 이어질까?",
+          "탐사대는 나침반으로 방향을 확인했다."
+        ],
+        "unitAnalysis": [
+          {
+            "text": "지도에는 세 갈래 길이 표시되어 있었다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "어느 길이 강으로 이어질까?",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          },
+          {
+            "text": "탐사대는 나침반으로 방향을 확인했다.",
+            "independentFiniteUnit": true,
+            "basis": "independent finite clause"
+          }
+        ]
+      },
+      "oracleReason": "Every paragraph contains an independent finite clause."
+    },
+    {
+      "id": "SL-01-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P01",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "A.",
+            "placement": "standalone",
+            "paragraph": "The pilot marked the inlet on a paper chart."
+          },
+          {
+            "labelNode": "B.",
+            "placement": "standalone",
+            "paragraph": "The crew compared the mark with the lighthouse."
+          },
+          {
+            "labelNode": "C.",
+            "placement": "standalone",
+            "paragraph": "They adjusted the course before dusk."
+          }
+        ],
+        "incidentalMentions": [
+          "A paragraph later quotes “(B)” as part of a witness statement."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-01-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P01",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The pilot marked the inlet on a paper chart."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "The crew compared the mark with the lighthouse."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "They adjusted the course before dusk."
+          }
+        ],
+        "incidentalMentions": [
+          "A paragraph later quotes “(B)” as part of a witness statement."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-02-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P02",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "[A]",
+            "placement": "standalone",
+            "paragraph": "하린은 씨앗의 무게를 먼저 쟀다."
+          },
+          {
+            "labelNode": "[B]",
+            "placement": "standalone",
+            "paragraph": "그다음 같은 크기의 화분을 골랐다."
+          },
+          {
+            "labelNode": "[C]",
+            "placement": "standalone",
+            "paragraph": "마지막으로 화분을 햇빛 아래에 놓았다."
+          }
+        ],
+        "incidentalMentions": [
+          "본문에는 비교 문구로 ‘(가)’가 등장하지만 구조 표지는 아니다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-02-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P02",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "하린은 씨앗의 무게를 먼저 쟀다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "그다음 같은 크기의 화분을 골랐다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "마지막으로 화분을 햇빛 아래에 놓았다."
+          }
+        ],
+        "incidentalMentions": [
+          "본문에는 비교 문구로 ‘(가)’가 등장하지만 구조 표지는 아니다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-03-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P03",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "A)",
+            "placement": "standalone",
+            "paragraph": "A narrow crack appeared in the ice."
+          },
+          {
+            "labelNode": "B)",
+            "placement": "standalone",
+            "paragraph": "Meltwater widened the crack during the afternoon."
+          },
+          {
+            "labelNode": "C)",
+            "placement": "standalone",
+            "paragraph": "The ranger closed the path before sunset."
+          }
+        ],
+        "incidentalMentions": [
+          "The phrase “choice (C)” is quoted in a margin note."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-03-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P03",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "A narrow crack appeared in the ice."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "Meltwater widened the crack during the afternoon."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The ranger closed the path before sunset."
+          }
+        ],
+        "incidentalMentions": [
+          "The phrase “choice (C)” is quoted in a margin note."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-04-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P04",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(1)",
+            "placement": "standalone",
+            "paragraph": "도서관은 오래된 상자를 기증받았다."
+          },
+          {
+            "labelNode": "(2)",
+            "placement": "standalone",
+            "paragraph": "직원은 상자 안의 편지를 연도별로 나눴다."
+          },
+          {
+            "labelNode": "(3)",
+            "placement": "standalone",
+            "paragraph": "분류된 편지는 보존실로 옮겨졌다."
+          }
+        ],
+        "incidentalMentions": [
+          "설명 문장은 “A)”라는 문자열을 예로 든다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-04-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P04",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "도서관은 오래된 상자를 기증받았다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "직원은 상자 안의 편지를 연도별로 나눴다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "분류된 편지는 보존실로 옮겨졌다."
+          }
+        ],
+        "incidentalMentions": [
+          "설명 문장은 “A)”라는 문자열을 예로 든다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-05-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P05",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(가)",
+            "placement": "standalone",
+            "paragraph": "Milo tested the copper wire with a meter."
+          },
+          {
+            "labelNode": "(나)",
+            "placement": "standalone",
+            "paragraph": "He replaced one loose connector."
+          },
+          {
+            "labelNode": "(다)",
+            "placement": "standalone",
+            "paragraph": "The indicator then glowed steadily."
+          }
+        ],
+        "incidentalMentions": [
+          "A speaker says “section (B)” inside the second paragraph."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-05-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P05",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "Milo tested the copper wire with a meter."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "He replaced one loose connector."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The indicator then glowed steadily."
+          }
+        ],
+        "incidentalMentions": [
+          "A speaker says “section (B)” inside the second paragraph."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-06-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P06",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "①",
+            "placement": "standalone",
+            "paragraph": "소라는 종이의 길이를 세 번 측정했다."
+          },
+          {
+            "labelNode": "②",
+            "placement": "standalone",
+            "paragraph": "세 측정값의 평균을 계산했다."
+          },
+          {
+            "labelNode": "③",
+            "placement": "standalone",
+            "paragraph": "그 값을 실험 기록지에 적었다."
+          }
+        ],
+        "incidentalMentions": [
+          "인용문 속 ‘(C)’는 문단 표지가 아니다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-06-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P06",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "소라는 종이의 길이를 세 번 측정했다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "세 측정값의 평균을 계산했다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "그 값을 실험 기록지에 적었다."
+          }
+        ],
+        "incidentalMentions": [
+          "인용문 속 ‘(C)’는 문단 표지가 아니다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-07-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P07",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(a)",
+            "placement": "standalone",
+            "paragraph": "The baker cooled the loaves on a rack."
+          },
+          {
+            "labelNode": "(b)",
+            "placement": "standalone",
+            "paragraph": "Steam escaped through the scored crusts."
+          },
+          {
+            "labelNode": "(c)",
+            "placement": "standalone",
+            "paragraph": "Customers received the loaves after noon."
+          }
+        ],
+        "incidentalMentions": [
+          "The text mentions the code “[A]” incidentally."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-07-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P07",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The baker cooled the loaves on a rack."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "Steam escaped through the scored crusts."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "Customers received the loaves after noon."
+          }
+        ],
+        "incidentalMentions": [
+          "The text mentions the code “[A]” incidentally."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-08-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P08",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "（A）",
+            "placement": "standalone",
+            "paragraph": "비구름이 산등성이를 넘어왔다."
+          },
+          {
+            "labelNode": "（B）",
+            "placement": "standalone",
+            "paragraph": "짧은 소나기가 마른 계곡을 적셨다."
+          },
+          {
+            "labelNode": "（C）",
+            "placement": "standalone",
+            "paragraph": "저녁에는 하늘이 다시 맑아졌다."
+          }
+        ],
+        "incidentalMentions": [
+          "본문의 “(B)”는 실험 상자에 적힌 글자를 가리킨다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-08-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P08",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "비구름이 산등성이를 넘어왔다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "짧은 소나기가 마른 계곡을 적셨다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "저녁에는 하늘이 다시 맑아졌다."
+          }
+        ],
+        "incidentalMentions": [
+          "본문의 “(B)”는 실험 상자에 적힌 글자를 가리킨다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-09-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P09",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "【A】",
+            "placement": "standalone",
+            "paragraph": "The archivist photographed each wax seal."
+          },
+          {
+            "labelNode": "【B】",
+            "placement": "standalone",
+            "paragraph": "A cataloger matched the images to the letters."
+          },
+          {
+            "labelNode": "【C】",
+            "placement": "standalone",
+            "paragraph": "The digital records were backed up twice."
+          }
+        ],
+        "incidentalMentions": [
+          "A quoted instruction contains “(A), then wait.”"
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-09-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P09",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The archivist photographed each wax seal."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "A cataloger matched the images to the letters."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The digital records were backed up twice."
+          }
+        ],
+        "incidentalMentions": [
+          "A quoted instruction contains “(A), then wait.”"
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-10-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P10",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "A",
+            "placement": "standalone",
+            "paragraph": "준호는 낡은 자전거의 체인을 닦았다."
+          },
+          {
+            "labelNode": "B",
+            "placement": "standalone",
+            "paragraph": "새 기름을 체인 전체에 발랐다."
+          },
+          {
+            "labelNode": "C",
+            "placement": "standalone",
+            "paragraph": "자전거는 언덕길에서도 부드럽게 움직였다."
+          }
+        ],
+        "incidentalMentions": [
+          "대화 속에서 학생이 “(C)라고 썼어요”라고 말한다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-10-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P10",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "준호는 낡은 자전거의 체인을 닦았다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "새 기름을 체인 전체에 발랐다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "자전거는 언덕길에서도 부드럽게 움직였다."
+          }
+        ],
+        "incidentalMentions": [
+          "대화 속에서 학생이 “(C)라고 썼어요”라고 말한다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-11-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P11",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "Section A",
+            "placement": "standalone",
+            "paragraph": "A sensor detected smoke near the kiln."
+          },
+          {
+            "labelNode": "Section B",
+            "placement": "standalone",
+            "paragraph": "The supervisor stopped the firing cycle."
+          },
+          {
+            "labelNode": "Section C",
+            "placement": "standalone",
+            "paragraph": "Fresh air cleared the room within minutes."
+          }
+        ],
+        "incidentalMentions": [
+          "The literal string “(D)” appears only in a quotation."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-11-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P11",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "A sensor detected smoke near the kiln."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "The supervisor stopped the firing cycle."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "Fresh air cleared the room within minutes."
+          }
+        ],
+        "incidentalMentions": [
+          "The literal string “(D)” appears only in a quotation."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-12-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P12",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "Ⓐ",
+            "placement": "standalone",
+            "paragraph": "연주자들은 첫 마디를 느리게 맞췄다."
+          },
+          {
+            "labelNode": "Ⓑ",
+            "placement": "standalone",
+            "paragraph": "지휘자는 박자를 조금 빠르게 바꿨다."
+          },
+          {
+            "labelNode": "Ⓒ",
+            "placement": "standalone",
+            "paragraph": "두 번째 연주는 일정한 속도로 끝났다."
+          }
+        ],
+        "incidentalMentions": [
+          "부연 설명에 ‘보기 (A)’가 한 번 언급된다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-12-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P12",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "연주자들은 첫 마디를 느리게 맞췄다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "지휘자는 박자를 조금 빠르게 바꿨다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "두 번째 연주는 일정한 속도로 끝났다."
+          }
+        ],
+        "incidentalMentions": [
+          "부연 설명에 ‘보기 (A)’가 한 번 언급된다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-13-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P13",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A):",
+            "placement": "standalone",
+            "paragraph": "The gardener tied the young tree to a stake."
+          },
+          {
+            "labelNode": "(B):",
+            "placement": "standalone",
+            "paragraph": "A cloth loop protected the bark from rubbing."
+          },
+          {
+            "labelNode": "(C):",
+            "placement": "standalone",
+            "paragraph": "The tree remained upright in the wind."
+          }
+        ],
+        "incidentalMentions": [
+          "A note quotes “B.” without assigning it structural status."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-13-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P13",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The gardener tied the young tree to a stake."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "A cloth loop protected the bark from rubbing."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The tree remained upright in the wind."
+          }
+        ],
+        "incidentalMentions": [
+          "A note quotes “B.” without assigning it structural status."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-14-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P14",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A).",
+            "placement": "standalone",
+            "paragraph": "기록관은 지도의 찢어진 가장자리를 펼쳤다."
+          },
+          {
+            "labelNode": "(B).",
+            "placement": "standalone",
+            "paragraph": "얇은 보강지를 뒷면에 붙였다."
+          },
+          {
+            "labelNode": "(C).",
+            "placement": "standalone",
+            "paragraph": "수리된 지도는 평평한 서랍에 보관됐다."
+          }
+        ],
+        "incidentalMentions": [
+          "문장 안의 ‘[C]’는 자료 파일 이름이다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-14-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P14",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "기록관은 지도의 찢어진 가장자리를 펼쳤다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "얇은 보강지를 뒷면에 붙였다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "수리된 지도는 평평한 서랍에 보관됐다."
+          }
+        ],
+        "incidentalMentions": [
+          "문장 안의 ‘[C]’는 자료 파일 이름이다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-15-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P15",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "<<A>>",
+            "placement": "standalone",
+            "paragraph": "The class weighed three pieces of limestone."
+          },
+          {
+            "labelNode": "<<B>>",
+            "placement": "standalone",
+            "paragraph": "They placed each piece in dilute acid."
+          },
+          {
+            "labelNode": "<<C>>",
+            "placement": "standalone",
+            "paragraph": "The smallest piece dissolved first."
+          }
+        ],
+        "incidentalMentions": [
+          "The paragraph reports that a box was stamped “(A)”."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-15-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P15",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The class weighed three pieces of limestone."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "They placed each piece in dilute acid."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The smallest piece dissolved first."
+          }
+        ],
+        "incidentalMentions": [
+          "The paragraph reports that a box was stamped “(A)”."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-16-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P16",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "㈎",
+            "placement": "standalone",
+            "paragraph": "연못 가장자리의 얼음이 먼저 녹았다."
+          },
+          {
+            "labelNode": "㈏",
+            "placement": "standalone",
+            "paragraph": "얕은 물에서 작은 물결이 생겼다."
+          },
+          {
+            "labelNode": "㈐",
+            "placement": "standalone",
+            "paragraph": "오후에는 연못 중앙도 녹기 시작했다."
+          }
+        ],
+        "incidentalMentions": [
+          "인용된 안내문에는 “(B)”가 포함되어 있다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-16-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P16",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "연못 가장자리의 얼음이 먼저 녹았다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "얕은 물에서 작은 물결이 생겼다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "오후에는 연못 중앙도 녹기 시작했다."
+          }
+        ],
+        "incidentalMentions": [
+          "인용된 안내문에는 “(B)”가 포함되어 있다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-17-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P17",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(甲)",
+            "placement": "standalone",
+            "paragraph": "The mechanic listened for a repeated click."
+          },
+          {
+            "labelNode": "(乙)",
+            "placement": "standalone",
+            "paragraph": "She tightened the loose fan guard."
+          },
+          {
+            "labelNode": "(丙)",
+            "placement": "standalone",
+            "paragraph": "The clicking sound disappeared."
+          }
+        ],
+        "incidentalMentions": [
+          "The term “part (C)” is ordinary prose here."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-17-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P17",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The mechanic listened for a repeated click."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "She tightened the loose fan guard."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The clicking sound disappeared."
+          }
+        ],
+        "incidentalMentions": [
+          "The term “part (C)” is ordinary prose here."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-18-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P18",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(I)",
+            "placement": "standalone",
+            "paragraph": "채윤은 두 사진의 그림자 길이를 비교했다."
+          },
+          {
+            "labelNode": "(II)",
+            "placement": "standalone",
+            "paragraph": "긴 그림자가 있는 사진을 아침으로 분류했다."
+          },
+          {
+            "labelNode": "(III)",
+            "placement": "standalone",
+            "paragraph": "짧은 그림자의 사진은 정오 무렵으로 분류했다."
+          }
+        ],
+        "incidentalMentions": [
+          "한 학생의 답안에서 ‘A)’라는 글자가 인용된다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-18-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P18",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "채윤은 두 사진의 그림자 길이를 비교했다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "긴 그림자가 있는 사진을 아침으로 분류했다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "짧은 그림자의 사진은 정오 무렵으로 분류했다."
+          }
+        ],
+        "incidentalMentions": [
+          "한 학생의 답안에서 ‘A)’라는 글자가 인용된다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-19-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P19",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "A paper strip changed from yellow to green."
+          },
+          {
+            "labelNode": "[B]",
+            "placement": "standalone",
+            "paragraph": "The observer logged the color transition."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "A second strip produced the same result."
+          }
+        ],
+        "incidentalMentions": [
+          "The quoted caption reads “(B) sample,” but it is not a label node."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-19-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P19",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "A paper strip changed from yellow to green."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "The observer logged the color transition."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "A second strip produced the same result."
+          }
+        ],
+        "incidentalMentions": [
+          "The quoted caption reads “(B) sample,” but it is not a label node."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-20-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P20",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "안내판은 방문객을 동쪽 길로 이끌었다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "동쪽 길은 작은 다리를 지나갔다."
+          },
+          {
+            "labelNode": null,
+            "placement": "inline-prefix",
+            "paragraph": "(C) 다리 건너편에 전망대가 있었다."
+          }
+        ],
+        "incidentalMentions": [
+          "본문 말미에 “(D)”라는 문자열이 비교용으로 나온다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-20-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P20",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "안내판은 방문객을 동쪽 길로 이끌었다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "동쪽 길은 작은 다리를 지나갔다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "다리 건너편에 전망대가 있었다."
+          }
+        ],
+        "incidentalMentions": [
+          "본문 말미에 “(D)”라는 문자열이 비교용으로 나온다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-21-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P21",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": null,
+            "placement": "inline-prefix",
+            "paragraph": "(A) The team placed a microphone beside the engine."
+          },
+          {
+            "labelNode": null,
+            "placement": "inline-prefix",
+            "paragraph": "(B) They recorded thirty seconds of idle noise."
+          },
+          {
+            "labelNode": null,
+            "placement": "inline-prefix",
+            "paragraph": "(C) A technician compared the recording with the baseline."
+          }
+        ],
+        "incidentalMentions": [
+          "A witness calls the rows “(A), (B), and (C)” in quoted speech."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-21-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P21",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The team placed a microphone beside the engine."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "They recorded thirty seconds of idle noise."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "A technician compared the recording with the baseline."
+          }
+        ],
+        "incidentalMentions": [
+          "A witness calls the rows “(A), (B), and (C)” in quoted speech."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-22-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P22",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "은지는 서로 다른 천 조각을 물에 담갔다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "면 조각이 가장 많은 물을 흡수했다."
+          },
+          {
+            "labelNode": "(D)",
+            "placement": "standalone",
+            "paragraph": "결과는 표의 마지막 열에 기록됐다."
+          }
+        ],
+        "incidentalMentions": [
+          "설명 문장에는 ‘(C)’라는 선택지가 우연히 언급된다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-22-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P22",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "은지는 서로 다른 천 조각을 물에 담갔다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "면 조각이 가장 많은 물을 흡수했다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "결과는 표의 마지막 열에 기록됐다."
+          }
+        ],
+        "incidentalMentions": [
+          "설명 문장에는 ‘(C)’라는 선택지가 우연히 언급된다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-23-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P23",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The moon rose behind a bank of clouds."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "A brief gap revealed the northern ridge."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The clouds covered the ridge again."
+          },
+          {
+            "labelNode": "(D)",
+            "placement": "standalone",
+            "paragraph": "A fourth complete paragraph explains the backup measurement."
+          }
+        ],
+        "incidentalMentions": [
+          "The phrase “A/B test” remains ordinary prose."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-23-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P23",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The moon rose behind a bank of clouds."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "A brief gap revealed the northern ridge."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The clouds covered the ridge again."
+          }
+        ],
+        "incidentalMentions": [
+          "The phrase “A/B test” remains ordinary prose."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-24-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P24",
+      "expected": "DEFECT",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "민재는 세 개의 봉투에 같은 수의 구슬을 넣었다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "한 봉투에서 구슬 두 개를 꺼냈다."
+          }
+        ],
+        "incidentalMentions": [
+          "인용문 “(C)는 나중에 보자”는 구조 표지가 아니다."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-24-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P24",
+      "expected": "NORMAL",
+      "language": "ko",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "민재는 세 개의 봉투에 같은 수의 구슬을 넣었다."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "한 봉투에서 구슬 두 개를 꺼냈다."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "남은 수를 새로운 식으로 나타냈다."
+          }
+        ],
+        "incidentalMentions": [
+          "인용문 “(C)는 나중에 보자”는 구조 표지가 아니다."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    },
+    {
+      "id": "SL-25-D",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P25",
+      "expected": "DEFECT",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The curator checked the frame for dust."
+          },
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "She cleaned the glass with a soft brush."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The painting returned to the gallery wall."
+          }
+        ],
+        "incidentalMentions": [
+          "A note mentions “label (B)” only as a quoted phrase."
+        ]
+      },
+      "oracleReason": "The structural label nodes are not exactly three standalone nodes in the sequence (A), (B), (C)."
+    },
+    {
+      "id": "SL-25-N",
+      "family": "SENTENCE_ORDER_STANDALONE_LABELS",
+      "pairId": "SL-P25",
+      "expected": "NORMAL",
+      "language": "en",
+      "fixture": {
+        "type": "SENTENCE_ORDER",
+        "entries": [
+          {
+            "labelNode": "(A)",
+            "placement": "standalone",
+            "paragraph": "The curator checked the frame for dust."
+          },
+          {
+            "labelNode": "(B)",
+            "placement": "standalone",
+            "paragraph": "She cleaned the glass with a soft brush."
+          },
+          {
+            "labelNode": "(C)",
+            "placement": "standalone",
+            "paragraph": "The painting returned to the gallery wall."
+          }
+        ],
+        "incidentalMentions": [
+          "A note mentions “label (B)” only as a quoted phrase."
+        ]
+      },
+      "oracleReason": "The three structural label nodes are exactly standalone (A), (B), (C); incidental label-like prose is ignored."
+    }
+  ]
+}
+

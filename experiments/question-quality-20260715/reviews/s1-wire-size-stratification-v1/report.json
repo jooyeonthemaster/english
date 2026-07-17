@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "question-quality-s1-wire-size-stratification-v1",
+  "status": "OFFLINE_MEDIATOR_DIAGNOSTIC_NOT_QUALITY_EVIDENCE",
+  "source": {
+    "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-exact-wire-preflight-v1/private/exact-wire-preflight-v1.json",
+    "sha256": "96318916c4ef714ae55febab3a63b992e93d6e2911f03235698487f40601ca7a",
+    "assignments": 180
+  },
+  "profileBodyBytes": {
+    "B0_CURRENT_CONTROL": {
+      "n": 24,
+      "sumBodyUtf8Bytes": 990492,
+      "meanBodyUtf8Bytes": 41270.5,
+      "minimumBodyUtf8Bytes": 23892,
+      "maximumBodyUtf8Bytes": 57421
+    },
+    "B1_TYPE_SCOPED_TAIL": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 455520,
+      "meanBodyUtf8Bytes": 37960,
+      "minimumBodyUtf8Bytes": 35304,
+      "maximumBodyUtf8Bytes": 40422
+    },
+    "B2_POSITIVE_COMPACT": {
+      "n": 24,
+      "sumBodyUtf8Bytes": 431048,
+      "meanBodyUtf8Bytes": 17960.3,
+      "minimumBodyUtf8Bytes": 11557,
+      "maximumBodyUtf8Bytes": 23387
+    },
+    "B3_OPTION_INTENT_LEDGER": {
+      "n": 24,
+      "sumBodyUtf8Bytes": 562640,
+      "meanBodyUtf8Bytes": 23443.3,
+      "minimumBodyUtf8Bytes": 17040,
+      "maximumBodyUtf8Bytes": 28870
+    },
+    "G0_CURRENT_CONTROL": {
+      "n": 24,
+      "sumBodyUtf8Bytes": 2073542,
+      "meanBodyUtf8Bytes": 86397.6,
+      "minimumBodyUtf8Bytes": 77696,
+      "maximumBodyUtf8Bytes": 94239
+    },
+    "G1_FINAL_CHECKLIST_ABLATION": {
+      "n": 24,
+      "sumBodyUtf8Bytes": 2049686,
+      "meanBodyUtf8Bytes": 85403.6,
+      "minimumBodyUtf8Bytes": 76702,
+      "maximumBodyUtf8Bytes": 93245
+    },
+    "G2_POSITIVE_COMPACT": {
+      "n": 24,
+      "sumBodyUtf8Bytes": 470684,
+      "meanBodyUtf8Bytes": 19611.8,
+      "minimumBodyUtf8Bytes": 15527,
+      "maximumBodyUtf8Bytes": 22701
+    },
+    "G3_SITE_CERTIFICATE": {
+      "n": 24,
+      "sumBodyUtf8Bytes": 528512,
+      "meanBodyUtf8Bytes": 22021.3,
+      "minimumBodyUtf8Bytes": 18023,
+      "maximumBodyUtf8Bytes": 25024
+    }
+  },
+  "profilePlanBodyBytes": {
+    "B0_CURRENT_CONTROL|PREMIUM": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 330984,
+      "meanBodyUtf8Bytes": 27582,
+      "minimumBodyUtf8Bytes": 23892,
+      "maximumBodyUtf8Bytes": 31078
+    },
+    "B0_CURRENT_CONTROL|STANDARD": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 659508,
+      "meanBodyUtf8Bytes": 54959,
+      "minimumBodyUtf8Bytes": 52303,
+      "maximumBodyUtf8Bytes": 57421
+    },
+    "B1_TYPE_SCOPED_TAIL|STANDARD": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 455520,
+      "meanBodyUtf8Bytes": 37960,
+      "minimumBodyUtf8Bytes": 35304,
+      "maximumBodyUtf8Bytes": 40422
+    },
+    "B2_POSITIVE_COMPACT|PREMIUM": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 153244,
+      "meanBodyUtf8Bytes": 12770.3,
+      "minimumBodyUtf8Bytes": 11557,
+      "maximumBodyUtf8Bytes": 14041
+    },
+    "B2_POSITIVE_COMPACT|STANDARD": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 277804,
+      "meanBodyUtf8Bytes": 23150.3,
+      "minimumBodyUtf8Bytes": 22971,
+      "maximumBodyUtf8Bytes": 23387
+    },
+    "B3_OPTION_INTENT_LEDGER|PREMIUM": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 219040,
+      "meanBodyUtf8Bytes": 18253.3,
+      "minimumBodyUtf8Bytes": 17040,
+      "maximumBodyUtf8Bytes": 19524
+    },
+    "B3_OPTION_INTENT_LEDGER|STANDARD": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 343600,
+      "meanBodyUtf8Bytes": 28633.3,
+      "minimumBodyUtf8Bytes": 28454,
+      "maximumBodyUtf8Bytes": 28870
+    },
+    "G0_CURRENT_CONTROL|PREMIUM": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 1002877,
+      "meanBodyUtf8Bytes": 83573.1,
+      "minimumBodyUtf8Bytes": 77696,
+      "maximumBodyUtf8Bytes": 89625
+    },
+    "G0_CURRENT_CONTROL|STANDARD": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 1070665,
+      "meanBodyUtf8Bytes": 89222.1,
+      "minimumBodyUtf8Bytes": 84380,
+      "maximumBodyUtf8Bytes": 94239
+    },
+    "G1_FINAL_CHECKLIST_ABLATION|PREMIUM": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 990949,
+      "meanBodyUtf8Bytes": 82579.1,
+      "minimumBodyUtf8Bytes": 76702,
+      "maximumBodyUtf8Bytes": 88631
+    },
+    "G1_FINAL_CHECKLIST_ABLATION|STANDARD": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 1058737,
+      "meanBodyUtf8Bytes": 88228.1,
+      "minimumBodyUtf8Bytes": 83386,
+      "maximumBodyUtf8Bytes": 93245
+    },
+    "G2_POSITIVE_COMPACT|PREMIUM": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 201430,
+      "meanBodyUtf8Bytes": 16785.8,
+      "minimumBodyUtf8Bytes": 15527,
+      "maximumBodyUtf8Bytes": 18083
+    },
+    "G2_POSITIVE_COMPACT|STANDARD": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 269254,
+      "meanBodyUtf8Bytes": 22437.8,
+      "minimumBodyUtf8Bytes": 22213,
+      "maximumBodyUtf8Bytes": 22701
+    },
+    "G3_SITE_CERTIFICATE|PREMIUM": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 230344,
+      "meanBodyUtf8Bytes": 19195.3,
+      "minimumBodyUtf8Bytes": 18023,
+      "maximumBodyUtf8Bytes": 20406
+    },
+    "G3_SITE_CERTIFICATE|STANDARD": {
+      "n": 12,
+      "sumBodyUtf8Bytes": 298168,
+      "meanBodyUtf8Bytes": 24847.3,
+      "minimumBodyUtf8Bytes": 24709,
+      "maximumBodyUtf8Bytes": 25024
+    }
+  },
+  "exactMatchedTreatmentVsControl": {
+    "B1_TYPE_SCOPED_TAIL": {
+      "controlProfileId": "B0_CURRENT_CONTROL",
+      "exactMatchedPairs": 12,
+      "treatmentBodyUtf8Bytes": 455520,
+      "matchedControlBodyUtf8Bytes": 659508,
+      "deltaBodyUtf8Bytes": -203988,
+      "ratioToMatchedControl": 0.690697,
+      "reductionPercent": 30.93
+    },
+    "B2_POSITIVE_COMPACT": {
+      "controlProfileId": "B0_CURRENT_CONTROL",
+      "exactMatchedPairs": 24,
+      "treatmentBodyUtf8Bytes": 431048,
+      "matchedControlBodyUtf8Bytes": 990492,
+      "deltaBodyUtf8Bytes": -559444,
+      "ratioToMatchedControl": 0.435186,
+      "reductionPercent": 56.48
+    },
+    "B3_OPTION_INTENT_LEDGER": {
+      "controlProfileId": "B0_CURRENT_CONTROL",
+      "exactMatchedPairs": 24,
+      "treatmentBodyUtf8Bytes": 562640,
+      "matchedControlBodyUtf8Bytes": 990492,
+      "deltaBodyUtf8Bytes": -427852,
+      "ratioToMatchedControl": 0.568041,
+      "reductionPercent": 43.2
+    },
+    "G1_FINAL_CHECKLIST_ABLATION": {
+      "controlProfileId": "G0_CURRENT_CONTROL",
+      "exactMatchedPairs": 24,
+      "treatmentBodyUtf8Bytes": 2049686,
+      "matchedControlBodyUtf8Bytes": 2073542,
+      "deltaBodyUtf8Bytes": -23856,
+      "ratioToMatchedControl": 0.988495,
+      "reductionPercent": 1.15
+    },
+    "G2_POSITIVE_COMPACT": {
+      "controlProfileId": "G0_CURRENT_CONTROL",
+      "exactMatchedPairs": 24,
+      "treatmentBodyUtf8Bytes": 470684,
+      "matchedControlBodyUtf8Bytes": 2073542,
+      "deltaBodyUtf8Bytes": -1602858,
+      "ratioToMatchedControl": 0.226995,
+      "reductionPercent": 77.3
+    },
+    "G3_SITE_CERTIFICATE": {
+      "controlProfileId": "G0_CURRENT_CONTROL",
+      "exactMatchedPairs": 24,
+      "treatmentBodyUtf8Bytes": 528512,
+      "matchedControlBodyUtf8Bytes": 2073542,
+      "deltaBodyUtf8Bytes": -1545030,
+      "ratioToMatchedControl": 0.254884,
+      "reductionPercent": 74.51
+    }
+  },
+  "illustrativeEmergencyCostCeilingByProfileAndPlan": {
+    "B0_CURRENT_CONTROL": {
+      "STANDARD": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 2.9600802
+      },
+      "PREMIUM": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 4.721397121
+      }
+    },
+    "B1_TYPE_SCOPED_TAIL": {
+      "STANDARD": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 2.354235841
+      },
+      "PREMIUM": {
+        "assignments": 0,
+        "illustrativeEmergencyCeilingUsd": 0
+      }
+    },
+    "B2_POSITIVE_COMPACT": {
+      "STANDARD": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 1.826419321
+      },
+      "PREMIUM": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 3.313696321
+      }
+    },
+    "B3_OPTION_INTENT_LEDGER": {
+      "STANDARD": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 2.021833441
+      },
+      "PREMIUM": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 3.834800641
+      }
+    },
+    "G0_CURRENT_CONTROL": {
+      "STANDARD": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 4.608896491
+      },
+      "PREMIUM": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 10.898149681
+      }
+    },
+    "G1_FINAL_CHECKLIST_ABLATION": {
+      "STANDARD": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 4.573470331
+      },
+      "PREMIUM": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 10.80367992
+      }
+    },
+    "G2_POSITIVE_COMPACT": {
+      "STANDARD": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 2.228705821
+      },
+      "PREMIUM": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 4.55068944
+      }
+    },
+    "G3_SITE_CERTIFICATE": {
+      "STANDARD": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 2.314580401
+      },
+      "PREMIUM": {
+        "assignments": 12,
+        "illustrativeEmergencyCeilingUsd": 4.77968832
+      }
+    }
+  },
+  "interpretationGuardrails": [
+    "Prompt byte reduction is a mediator and cost diagnostic, not evidence of quality gain.",
+    "The profiles change representation and sometimes schema, not length alone.",
+    "The ceilings use bytes as a deliberately conservative token upper bound plus 4,096 overhead tokens and fixed maximum output tokens.",
+    "Only preregistered blind item outcomes may select a profile."
+  ],
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0
+  },
+  "semanticSha256": "6b06b0bac5d8701a5bab3f47d1ab8a1f1d14097137bdb16b4bb46cf5f26eeadf"
+}

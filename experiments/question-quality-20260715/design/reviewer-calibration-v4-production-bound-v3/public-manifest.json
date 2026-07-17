@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-v3-public-manifest-1",
+  "artifactId": "reviewer-calibration-v4-production-bound-v3",
+  "status": "AUTHOR_EVIDENCE_COMPLETE_PENDING_FRESH_INDEPENDENT_AUDIT_NO_PASS_OR_AUTHORITY",
+  "subjectOnlyAuthorEvidence": true,
+  "independentAuditCompletedInThisArtifact": false,
+  "immutableSuccessor": {
+    "predecessorArtifactId": "reviewer-calibration-v4-production-bound-v2",
+    "predecessorSubjectManifestSha256": "10801e127bb612e2bb6909acf857ff6fa2ef0cac667a0fd7e4e39f774e656413",
+    "predecessorIndependentAuditManifestSha256": "f78ba69b164f737b6531c2e7415bd26cf147afc6012265a13a8434882b891bc5",
+    "predecessorAuditVerdict": "FAIL_BLOCKERS",
+    "predecessorBlockerCount": 8,
+    "predecessorOrAuditModifiedByThisArtifact": false
+  },
+  "upstreams": [
+    {
+      "id": "predecessor-v2-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v4-production-bound-v2/MANIFEST.sha256",
+      "sha256": "10801e127bb612e2bb6909acf857ff6fa2ef0cac667a0fd7e4e39f774e656413"
+    },
+    {
+      "id": "predecessor-v2-independent-fail-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v4-production-bound-v2-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "f78ba69b164f737b6531c2e7415bd26cf147afc6012265a13a8434882b891bc5"
+    },
+    {
+      "id": "evaluation-authority-v2-public-manifest",
+      "path": "experiments/question-quality-20260715/design/evaluation-authority-v2/public-manifest.json",
+      "sha256": "c62fb02e27b0342ce31fe8fc38ec32034738bfe2ddadec9fe2861a1ae8e614bd"
+    },
+    {
+      "id": "evaluation-authority-v2-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/evaluation-authority-v2/MANIFEST.sha256",
+      "sha256": "ac4ed7ee8bd5eb21bd45837f2a7396219142e6ccd3a1fe933916238e447f0180"
+    },
+    {
+      "id": "evaluation-authority-v2-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/evaluation-authority-v2-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "0cdf9d676bdec820e728a3b3890237b3b80d201caa2c20afc7af46ed6482adf5"
+    },
+    {
+      "id": "production-type-binding-v4-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4/MANIFEST.sha256",
+      "sha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04"
+    },
+    {
+      "id": "production-type-binding-v4-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-protocol",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+      "sha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/MANIFEST.sha256",
+      "sha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64"
+    }
+  ],
+  "acceptedPublicLineage": {
+    "directUpstreamBytesRehashed": 9,
+    "directManifestRowsRehashed": 38,
+    "evaluationNestedUpstreamBytesRehashed": 10,
+    "evaluationNestedManifestRows": 24,
+    "evaluationNestedSafeRowsRehashed": 23,
+    "forbiddenPrivateRowsRefusedUnopened": 1,
+    "productionTypeBindingSnapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+    "productionTypeBindingJsonSha256": "47df395f54179538d27a714ac0df4dc9e82f04b767bc82f45b8473c38d04cc3d",
+    "methodologyProtocolSha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+    "methodologyManifestSha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64"
+  },
+  "blockerClosureEvidence": {
+    "B1": "EXPLICIT_AUTHORS_AND_TRUSTED_AUDITOR_ROLE_PLUS_AUTHORSHIP_EXCLUSIONS",
+    "B2": "ACTIVATION_AUDITOR_FULL_INCOMPATIBILITY_AND_NO_SELF_AUDIT",
+    "B3": "EXACT_SCOPE_TYPE_COUNT_AND_PER_TYPE_PASSED_EVENT_HASH_BINDING",
+    "B4": "AUTHORITY_FALSE_CANDIDATE_THEN_EXACT_AUDIT_THEN_PREEXISTING_AUDIT_BOUND_GRANT",
+    "B5": "ALL_HIDDEN_TYPE_FAMILY_ROTATION_EPOCH_RIGHTS_PII_COMMITMENTS_REQUIRED",
+    "B6": "SEVEN_COMPONENT_FINGERPRINTS_60_DISJOINT_1770_PAIRS_AND_TOMBSTONES",
+    "B7": "STATE_RESOURCE_POLICY_ALLOW_DENY_AND_PROOF_BINDING_WITH_PHASE1_DENIAL",
+    "B8": "APPEND_ONLY_AUTH_OPEN_CONSUME_CLOSE_UNIQUE_SINGLE_USE_CHAIN"
+  },
+  "hostileEvidence": {
+    "structuralMutations": 490,
+    "detectedStructuralMutations": 490,
+    "structuralDigestSha256": "a823e4741a72798a6024c053065ac03fea5b98e1462c779bb45e473ad1eb3563",
+    "semanticBypasses": 321,
+    "rejectedSemanticBypasses": 321,
+    "semanticDigestSha256": "bbd0eb50264f39f7db8588e32adfa96c43870221fa4c9145717274eb9500acba",
+    "caseDigestSha256": "87ad86391e45880c9203ddbd8b1c8d5e51785834574908c753b20539c208bede",
+    "policyRegistryEmptyAcceptedOnlyAsUnissuedDesign": true,
+    "emptyPolicyAllowDenyOrProofRejectedForAuthorizationOrGrant": true
+  },
+  "packageFiles": [
+    { "path": "PROTOCOL.md", "bytes": 7036, "sha256": "aa61c4564c9c93333b711d3b8cedf72f71a9c55fd96bd6c27f0fa61ce7bbc126" },
+    { "path": "README.md", "bytes": 2662, "sha256": "e37565012e1a973d735222fd7d2e7a7ffb25f06e167bdb4e8bb9b9f0d10e2538" },
+    { "path": "event-schemas.json", "bytes": 38751, "sha256": "e59df5fa3dec61115bb11494944606068897dbbd7ccd891ec03105229dff89f4" },
+    { "path": "hostile-fixtures.json", "bytes": 4509, "sha256": "57cf44e4b357911441736b76c3b7ead4183c5c7edf4eca942f5b6b4ad6db5793" },
+    { "path": "protocol.json", "bytes": 31459, "sha256": "4581a0affddec38c8c8d041e885decb49212fdc3ee42f5e14ce0910db0e05988" },
+    { "path": "registries.json", "bytes": 12175, "sha256": "753c876c509787d981f586784b6bca598ad00ea8b9f95a5dc662de85a8d37bb4" },
+    { "path": "verify.mjs", "bytes": 119957, "sha256": "3fd610d0b5ee10726011492477940a71a7f8faf96be402232c561f294b82ebde" }
+  ],
+  "authority": {
+    "executionAuthorized": false,
+    "evaluatorAuthorityGranted": false,
+    "scoringAuthorityGranted": false,
+    "resultAccessAuthorized": false,
+    "reviewerCertificatesIssued": 0,
+    "activationCandidates": 0,
+    "activationAuditReports": 0,
+    "activationGrants": 0
+  },
+  "activity": {
+    "privateReads": 0,
+    "itemAnswerGoldRevealReadsOrWrites": 0,
+    "actorReadsOrWrites": 0,
+    "environmentOrSecretReads": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0
+  }
+}

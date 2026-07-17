@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' 에서 called 는 주어 Such species 를 수식하는 과거분사(축약 관계절 'which are called')로, 삽입 동격 구조에서 어법상 옳다. 주어가 '불리는' 대상이므로 수동 의미의 과거분사가 정확하다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on or are greatly affected by the keystone species' 에서 that 은 명사 fact 의 내용을 이끄는 동격의 접속사(that절). 뒤에 완전한 절이 오므로 관계대명사가 아닌 동격 that 으로 옳다."
+    },
+    {
+      "label": "C",
+      "verdict": "incorrect",
+      "reason": "핵심 오류. 주어 'The fact that ...(동격절)...' 에는 정형(finite) 본동사가 필요한데, revealing 은 현재분사일 뿐 조동사(be)가 없어 문장에 본동사가 존재하지 않는다. 의미상 '키스톤종이 제거될 때 그 사실이 드러난다'이므로 수동의 'is revealed' (또는 becomes apparent/reveals itself) 가 되어야 한다. 축약관계절·분사구문 등 어떤 대안 해석으로도 이 절을 완결시킬 정형동사를 공급할 수 없으므로 명백한 비문이다."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'when other fruits are less plentiful' 에서 less plentiful 은 be동사의 보어로 쓰인 비교급 형용사구로 어법상 옳다."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'Should the fig trees disappear, most of the fruit-eating vertebrates would be eliminated.' 는 if 생략 도치 가정법(If the fig trees should disappear)이다. 조동사 should 도치 뒤에는 동사원형 disappear 가 와야 하므로 옳다."
+    }
+  ],
+  "note": "어법 문항. 유일하게 성립하는 오류는 (C) revealing 으로, 'The fact that ...' 주어절 전체에 정형 본동사가 결여된 비문이다. 정답은 is revealed 로 수정되어야 한다. 나머지 (A) 동격 과거분사, (B) 동격 that, (D) 비교급 보어, (E) if생략 도치 가정법의 동사원형 모두 어법상 옳다. 단일 정답 (C)."
+}

@@ -1,0 +1,89 @@
+{
+  "pid": "P020",
+  "blindAnswer": "2",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-PUNCT-MINOR",
+      "severity": "minor",
+      "evidence": "렌더 지문이 'follow from _____' 로 끝나며 빈칸 뒤 종결 부호가 없다. 제거된 span 이 문장 종결 부호('what do you mean by that?')를 포함했고 선지에도 마침표가 없어, 정답을 넣은 완성문이 마침표 없이 끝난다. 무결성 파손은 아니며 표기 관례 수준의 결함."
+    },
+    {
+      "code": "V4-TYPO-MINOR",
+      "severity": "minor",
+      "evidence": "해설 본문 '이러한 논 근거들을 종합할 때' — '논거들을'의 오탈자로 보이는 한국어 표기 오류. 개념·구조 오분석은 아님."
+    },
+    {
+      "code": "V4-LABEL-INCOHERENT-MINOR",
+      "severity": "minor",
+      "evidence": "오답 ⑤ 해설 '지엽적 세부사항을 지나치게 확대한(과협소) 오답' — '확대'와 '과협소'가 상충하는 라벨. 취지(지엽적 세부에 대한 과잉 초점)는 선지 내용과 일치하므로 사실성 실패는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(polarity reversal): 독자가 모호성을 '견딘다'를 '거부한다'로 뒤집음",
+      "temptingBecause": "'instantaneous clarity' 가 지문의 'principles of efficient communication' 을 표면적으로 반향하여 효율적 소통 논의와 연결되어 보임",
+      "decisiveFlaw": "지문은 'We can put up with many obscurities' — 독자가 모호성을 견딘다고 명시하므로 거부 방향은 정반대 극성. 극성 하나로 즉시 소거됨"
+    },
+    {
+      "label": "2",
+      "intent": "정답: 제거된 span 'the willingness of readers to pay attention, to explore uncertainties...' 의 추상 재진술",
+      "temptingBecause": "readiness~willingness, endure ambiguity~explore uncertainties/put up with obscurities, deeper significance~further communicative goal/'worth it' 로 의미 보존이 정확함",
+      "decisiveFlaw": "없음(정답). 다만 유일한 긍정 극성·절대어 없는 선지라는 메타 단서가 정답을 노출함"
+    },
+    {
+      "label": "3",
+      "intent": "행위자·행위 전환(actor swap) + 극성 반전: 독자가 해석 노력을 하는 대신 작가에게 요구한다로 왜곡",
+      "temptingBecause": "지문의 'uncooperative' 를 직접 재사용하여 어휘 겹침이 큼",
+      "decisiveFlaw": "지문은 독자가 작가를 비협조적이라 '상상하지 않고' 스스로 해석하려 애쓴다(struggle to interpret)고 하므로, 작가에게 회피를 요구한다는 방향은 모순. ①과 동일한 반(反)모호성 극성이라 함정이 중복됨"
+    },
+    {
+      "label": "4",
+      "intent": "half-truth + 조건 과장: 리뷰가 주는 확신(사실)을 '자기 해석 대신 절대적 의존'으로 과장",
+      "temptingBecause": "지문 초반 'published, reviewed, and reprinted... assurance that others have found them worth it' 과 실제로 겹치는 근거가 있어 가장 매력적",
+      "decisiveFlaw": "'absolute reliance ... rather than their own interpretation' 이 'they struggle to interpret' 과 정면 충돌. 절대어 'absolute' 가 소거 단서로 노출됨"
+    },
+    {
+      "label": "5",
+      "intent": "scope shift: 제도적 선별 과정(배경 정보)을 독자의 능동적 검증 습관으로 전위",
+      "temptingBecause": "'institutional label', 'published' 등 제도 관련 어휘가 지문에 실재함",
+      "decisiveFlaw": "독자는 제도적 선별을 신뢰의 근거로 받아들일 뿐 검증한다는 진술이 없음. 'strictly verify' 의 절대어 역시 소거 단서"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'이러한 논 근거들을 종합할 때' — 오탈자('논거들을' 추정)",
+      "recommendation": "'이러한 논거들을 종합할 때' 로 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 ⑤ 해설의 '지나치게 확대한(과협소)' — 확대/과협소 라벨 상충",
+      "recommendation": "'지엽적 절차 정보를 독자의 핵심 태도로 오인한 scope shift 오답' 등으로 일관되게 기술"
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설이 ①③을 '반대 극성', ④⑤를 '외적 제도 초점'으로 묶어 처리 — 선지별 함정이 2개 유형으로 수렴함을 스스로 드러내며, 이는 오답 설계의 중복(C2/C3 감점 근거)을 방증",
+      "recommendation": "오답 5개가 서로 다른 함정 유형을 갖도록 재설계 후 해설도 개별화"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트 통과: 렌더는 원지문에서 의도된 마지막 span 절제 외 손상이 없고(V1, 빈칸 뒤 마침표 부재는 minor), 5개 선지가 모두 동일 NP 슬롯에 통사적으로 적합한 가운데 ②만이 원문 span('willingness to pay attention, to explore uncertainties')의 의미를 보존하는 유일 정답(V2), 완성문·지문·발문 모두 문법적(V3), 해설의 논리 분석이 실제 지문 구조와 일치하고 오답 해설이 각 선지 내용과 대응(V4), 정답 라벨·해설·keyPoints 동기화(V5). 그러나 KILLER 요청 대비 공예가 미달: ①③이 동일한 극성 반전 함정으로 중복되어 극성 스크리닝만으로 동반 탈락하고, ④⑤는 'absolute'·'strictly' 절대어가 소거 단서로 노출되어, 유일한 긍정 극성·비절대어 선지인 ②를 메타 단서만으로 특정할 수 있다(§D KILLER 조건 '극성·절대어 하나로 정답을 찍을 수 없다' 위반). 빈칸 내용도 단일 문장('We can put up with many obscurities...')의 1단계 패러프레이즈로 회수 가능해 두 논리 단서 연결 요건도 실질적으로 미충족. killerConditionsMet=false, C5=1 (KILLER 라벨 대비 중상 난이도), C 최저점이 2 미만이므로 등급 C — 정답 유일성은 견고하나 오답 세트 재설계(함정 유형 분산, 절대어 제거, 극성 균형) 없이는 KILLER 로 출하 불가."
+}

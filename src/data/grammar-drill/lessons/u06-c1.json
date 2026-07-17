@@ -1,0 +1,686 @@
+{
+  "id": "u06-c1",
+  "unitId": "u06",
+  "order": 1,
+  "title": "선행사 유무 판단",
+  "oneLiner": "관계사 앞에 선행사(꾸밈을 받는 명사)가 있으면 that·which, 없으면 what입니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "커리큘럼 백본 u06 관계사 ① — what vs that/which (src/lib/grammar-drill/curriculum.ts)",
+      "2015 개정 [별책14] 별표4 언어형식 — 관계대명사",
+      "어법 드릴 문항 뱅크 u06-choice.json (conceptId=u06-c1)"
+    ]
+  },
+  "lenses": ["L1"],
+  "confusableWith": ["u06-c2", "u06-c3", "u06-c4"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The device which the students built won the national contest.",
+        "The device what the students built won the national contest."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 관계사 하나입니다. 이 레슨을 마치면 what 이 왜 이 자리에 설 수 없는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "선행사",
+      "question": "선행사가 대체 무엇입니까?",
+      "plain": "선행사는 관계사(that·which·who 등) 바로 앞에 놓여 그 관계사절의 꾸밈을 받는 명사입니다. 뒤 절이 '어떤 명사인지'를 설명해 주는 그 대상이 선행사입니다.",
+      "analogy": "선행사는 손가락이 가리키는 대상입니다. 관계사절은 그 명사 뒤에서 '저기 저것 말입니다' 하고 설명을 붙이는 손짓이고, 가리킬 대상이 없으면 that·which 라는 손가락은 허공을 짚습니다.",
+      "whyItMatters": "선행사가 있느냐 없느냐 하나로 what 과 that·which 가 갈립니다. 수능·내신 관계사 문항의 첫 판단이 바로 이 선행사 찾기입니다. 이 레슨에도 '뒤 절이 불완전하다'(동사가 요구하는 주어·목적어가 한 자리 비어 있다는 뜻)는 말이 판별 보조로 나오지만, 이 완전성 개념의 정식 정의는 다음 레슨에서 세웁니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "'~것'으로 해석되면 what 을 씁니다.",
+      "truth": "판단 기준은 해석이 아니라 앞에 선행사(수식을 받을 명사)가 있는지입니다. everything·all·the thing 처럼 '~것'으로 옮겨지는 명사가 앞에 있으면 그것이 선행사이므로 that 을 씁니다. what 은 선행사를 자기 안에 이미 포함한 관계대명사여서 명사 뒤에 겹쳐 쓸 수 없습니다.",
+      "counterExample": {
+        "en": "Everything **what** the volunteers collected reached the shelter safely.",
+        "ko": "자원봉사자들이 모은 모든 것이 무사히 보호소에 도착했습니다.",
+        "note": "'모은 것'으로 해석되지만 앞에 Everything 이라는 선행사가 실재합니다. 선행사를 포함한 what 이 겹쳐 비문이 되므로 that 으로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "what 인가 that·which 인가 — 필기 한 장",
+      "intro": "판별에 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "선행사 — 관계사가 꾸미는 앞 명사",
+          "body": "관계사(that·which) 바로 앞에서 그 관계사절의 꾸밈을 받는 명사입니다. 이 명사를 뒤 절의 빈자리에 넣어 읽으면 뜻이 통합니다.",
+          "example": {
+            "en": "The bridge **that** the engineers built collapsed.",
+            "ko": "그 공학자들이 놓은 그 다리가 무너졌습니다.",
+            "note": "The bridge 가 선행사이고, built 의 목적어 자리에 그것이 들어가 읽힙니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "that · which — 선행사를 꾸미는 관계대명사",
+          "body": "앞의 선행사를 뒤에서 꾸미는 형용사절을 이끕니다. 그래서 반드시 앞에 꾸밈을 받을 명사가 하나 있어야 합니다."
+        },
+        {
+          "head": "what — 선행사를 자기 안에 품은 말",
+          "body": "what 은 the thing(s) which 와 같아서 선행사를 이미 포함합니다. 그래서 앞에 명사가 있으면 선행사가 겹쳐 비문이 됩니다.",
+          "example": {
+            "en": "**What** the engineers built collapsed.",
+            "ko": "그 공학자들이 지은 것이 무너졌습니다.",
+            "note": "앞에 선행사가 없고, What 절 전체가 문장의 주어 자리를 채웁니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "절의 노릇 — 명사절인가 형용사절인가",
+          "body": "what 절은 명사절이라 주어·목적어·보어 자리를 통째로 채웁니다. that·which 절은 형용사절이라 앞 명사를 꾸밀 뿐 성분 자리를 차지하지 않습니다."
+        },
+        {
+          "head": "판별 열쇠 — 빈자리에 넣어 읽기",
+          "body": "앞에 명사가 보이면 그 명사를 뒤 절의 빈자리에 넣어 봅니다. 뜻이 통하면 선행사라 that·which 이고, 넣어도 통하지 않으면 선행사가 아니라 what 입니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 조각의 빈칸에 무엇이 들어가는지, 선행사 유무를 기준으로 분류하십시오.",
+      "buckets": [
+        { "id": "ante", "label": "선행사가 있다 — that·which" },
+        { "id": "noante", "label": "선행사가 없다 — what" }
+      ],
+      "chips": [
+        {
+          "text": "the results ___ we obtained",
+          "bucketId": "ante",
+          "why": "명사 the results 가 선행사이므로 that·which 를 씁니다."
+        },
+        {
+          "text": "Everything ___ we know",
+          "bucketId": "ante",
+          "why": "'~것'으로 해석되지만 대명사 Everything 이 선행사로 실재합니다. 따라서 what 은 쓸 수 없습니다."
+        },
+        {
+          "text": "the village ___ the flood destroyed",
+          "bucketId": "ante",
+          "why": "명사 the village 가 선행사이고, destroyed 의 목적어 자리가 그 빈자리입니다."
+        },
+        {
+          "text": "___ the survey revealed",
+          "bucketId": "noante",
+          "why": "앞에 수식을 받을 명사가 없고 revealed 의 목적어 자리가 비어 있으므로, 선행사를 포함해 명사절을 만드는 what 입니다."
+        },
+        {
+          "text": "She showed us ___ she had made",
+          "bucketId": "noante",
+          "why": "showed 의 직접목적어 자리가 비어 있고 수식을 받을 명사가 없으므로 what 절이 그 자리를 채웁니다."
+        },
+        {
+          "text": "The gallery sold ___ the sculptor left behind",
+          "bucketId": "noante",
+          "why": "sold 뒤에 명사가 없고 left behind 의 목적어도 비어 있으므로 what 이 목적어 자리를 통째로 채웁니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "관계사 앞에 수식을 받을 명사(선행사)가 있으면 that·which 이고, 그런 명사가 없으면 what 입니다.",
+      "examples": [
+        {
+          "en": "The report **which** the committee published last week drew wide attention.",
+          "ko": "그 위원회가 지난주에 발표한 그 보고서는 널리 주목을 받았습니다.",
+          "note": "관계사 앞에 선행사 The report 가 있습니다. published 의 목적어 자리가 비어 있고 그 빈자리를 선행사가 채워 읽힙니다."
+        },
+        {
+          "en": "**What** the committee published last week drew wide attention.",
+          "ko": "그 위원회가 지난주에 발표한 것은 널리 주목을 받았습니다.",
+          "note": "앞에 선행사가 없습니다. What 이 이끄는 절 전체가 문장의 주어 자리를 통째로 채웁니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "what 절은 명사절이라 주어·목적어·보어 자리를 통째로 채우고, 관계대명사 that·which 절은 형용사절이라 앞의 명사를 꾸밉니다.",
+      "examples": [
+        {
+          "en": "Scientists rarely publish **what** they cannot replicate.",
+          "ko": "과학자들은 자신들이 재현할 수 없는 것을 좀처럼 발표하지 않습니다.",
+          "note": "publish 는 목적어를 요구하고, what 절이 그 목적어 자리를 통째로 채웁니다. 관계사 앞에는 명사가 없습니다."
+        },
+        {
+          "en": "Scientists rarely publish results **that** they cannot replicate.",
+          "ko": "과학자들은 자신들이 재현할 수 없는 결과를 좀처럼 발표하지 않습니다.",
+          "note": "publish 의 목적어는 results 이고, that 절은 그 명사를 뒤에서 꾸미는 형용사절입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "선행사가 있는 문장의 해부",
+      "tokens": [
+        { "t": "The evidence", "role": "S" },
+        { "t": "that", "role": "REL" },
+        { "t": "the researchers gathered", "role": "M" },
+        { "t": "contradicts", "role": "V" },
+        { "t": "the earlier claim", "role": "O" }
+      ],
+      "ko": "그 연구자들이 수집한 증거는 앞선 주장과 모순됩니다.",
+      "layers": [
+        {
+          "label": "① 관계사 앞을 봅니다",
+          "roles": ["S"],
+          "note": "관계사 that 바로 앞에 명사 The evidence 가 있습니다. 수식을 받을 명사가 실재하므로 이것이 선행사 후보입니다."
+        },
+        {
+          "label": "② 관계사절을 괄호로 묶습니다",
+          "roles": ["REL", "M"],
+          "note": "that the researchers gathered 는 앞의 명사를 뒤에서 꾸미는 관계사절입니다. gathered 의 목적어 자리가 비어 있고, 그 빈자리에 The evidence 를 넣으면 뜻이 통합니다. 선행사가 확정됩니다."
+        },
+        {
+          "label": "③ 남은 뼈대를 확인합니다",
+          "roles": ["V", "O"],
+          "note": "관계사절을 걷어내면 The evidence contradicts the earlier claim 이 남습니다. 선행사가 이미 문장 안에서 주어 노릇을 하고 있으므로, 선행사를 포함하는 what 은 들어설 수 없습니다."
+        }
+      ],
+      "conclusion": "선행사 The evidence 가 실재하고 관계사절이 그것을 꾸미므로 that·which 가 옳습니다. what 을 넣으면 The evidence 가 문장 안에서 자리를 잃습니다."
+    },
+    {
+      "id": "b9",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "선행사 사냥",
+      "instruction": "이 문장에서 관계사절의 꾸밈을 받는 선행사(명사)를 전부 탭하십시오. 관계사 앞에 명사가 없으면 사냥감이 아닙니다.",
+      "hitLabel": "선행사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "letters", "hit": true },
+        { "t": "that", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "poet", "hit": false },
+        { "t": "burned", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "diaries", "hit": true },
+        { "t": "that", "hit": false },
+        { "t": "she", "hit": false },
+        { "t": "kept", "hit": false },
+        { "t": "survived", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "fire.", "hit": false }
+      ],
+      "ko": "그 시인이 태운 편지들과 그녀가 간직한 일기들은 화재에서 살아남았습니다.",
+      "explain": "letters 와 diaries 는 각각 뒤따르는 that 절의 꾸밈을 받는 선행사입니다. 두 관계사 앞에 꾸밈을 받을 명사가 실재하므로 이 자리에는 what 이 아니라 that·which 가 옵니다. 관계사절을 걷어내면 The letters and the diaries survived the fire 라는 뼈대가 남습니다."
+    },
+    {
+      "id": "b10",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "what 인가 that·which 인가 — 4단계",
+      "steps": [
+        {
+          "text": "관계사 자리 바로 앞을 보고, 수식을 받을 명사가 있는지 확인합니다.",
+          "applyNote": "관계사 앞에 있는 것은 타동사 displays 뿐이고, 수식을 받을 명사는 없습니다."
+        },
+        {
+          "text": "명사가 있으면 그것을 뒤 절의 빈자리에 넣어 봅니다. 뜻이 통하면 선행사이고, 이때는 that·which 를 씁니다.",
+          "applyNote": "넣어 볼 명사 자체가 없으므로 that·which 는 후보에서 지웁니다."
+        },
+        {
+          "text": "선행사가 없고 관계사절 전체가 주어·목적어·보어 자리를 채워야 한다면 what 입니다.",
+          "applyNote": "displays 는 목적어를 요구하고, 그 자리를 관계사절이 통째로 채워야 합니다. 따라서 what 이 옳습니다."
+        },
+        {
+          "text": "마지막으로 뒤 절이 불완전한지 확인합니다. 다만 불완전함은 관계대명사로 쓰인 what·that·which 가 모두 공유하는 성질이므로 셋을 가르는 기준은 되지 못합니다.",
+          "applyNote": "brought back 의 목적어가 비어 있습니다. 관계대명사가 들어갈 자리라는 것만 확인될 뿐, 셋 중 무엇인지는 선행사 유무가 결정합니다."
+        }
+      ],
+      "example": {
+        "en": "The museum displays **what** the expedition brought back from the desert.",
+        "ko": "그 박물관은 탐사대가 사막에서 가져온 것을 전시합니다.",
+        "note": "관계사 앞에 명사가 없고, 관계사절이 displays 의 목적어 자리를 통째로 채웁니다."
+      }
+    },
+    {
+      "id": "b11",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The technology ( what / that ) the engineers developed in the 1990s still powers most search engines.",
+      "steps": [
+        {
+          "title": "① 괄호 앞을 봅니다",
+          "body": "괄호 앞에 명사 The technology 가 있습니다. 수식을 받을 수 있는 명사이므로 선행사 후보입니다."
+        },
+        {
+          "title": "② 뒤 절의 빈자리를 찾습니다",
+          "body": "the engineers developed 에는 developed 의 목적어가 비어 있습니다. 그 빈자리에 The technology 를 넣으면 뜻이 통합니다. 선행사가 확정됩니다."
+        },
+        {
+          "title": "③ 선행사 유무로 판정합니다",
+          "body": "선행사가 실재하므로 what 은 쓸 수 없습니다. what 은 선행사를 이미 포함한 말이라 명사 뒤에 겹쳐 놓으면 The technology 가 문장 안에서 자리를 잃습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "that 을 넣으면 관계사절이 The technology 를 꾸미고, 주절은 The technology … powers most search engines 로 완성됩니다."
+        }
+      ],
+      "answer": "that",
+      "ko": "1990년대에 그 공학자들이 개발한 그 기술은 지금도 대부분의 검색 엔진을 구동합니다."
+    },
+    {
+      "id": "b12",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u06-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The letters {{blank}} the novelist wrote to her editor reveal her private doubts.",
+          "options": ["that", "what"],
+          "answer": 0,
+          "translation": "그 소설가가 자신의 편집자에게 쓴 그 편지들은 그녀의 사적인 의구심을 드러냅니다.",
+          "explanation": "빈칸 앞의 The letters 가 선행사이고, wrote 의 목적어 자리가 비어 그 빈자리를 선행사가 채웁니다. 선행사가 실재하므로 that 이 옳습니다. what 은 선행사를 이미 포함한 말이라 명사 뒤에 겹쳐 쓸 수 없습니다.",
+          "trapTags": ["that-vs-what"]
+        },
+        {
+          "id": "u06-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The city council finally approved [[u:what]] the residents had proposed at the public hearing.",
+          "isCorrect": true,
+          "translation": "시의회는 주민들이 공청회에서 제안한 것을 마침내 승인했습니다.",
+          "explanation": "approved 와 what 사이에 수식을 받을 명사가 없고, proposed 의 목적어 자리가 비어 있습니다. (The city council 은 주어로 이미 자리를 잡았으므로 선행사 후보가 아닙니다.) 선행사를 포함한 what 이 이끄는 명사절이 approved 의 목적어 자리를 통째로 채우므로 옳은 문장입니다.",
+          "trapTags": ["that-vs-what", "no-antecedent"]
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "what 과 that·which 의 갈림길",
+      "columns": ["what", "that·which (관계대명사)"],
+      "rows": [
+        {
+          "criterion": "앞의 선행사",
+          "a": "없다 — 선행사를 자기 안에 포함한다",
+          "b": "반드시 앞에 있다"
+        },
+        {
+          "criterion": "절 전체의 노릇",
+          "a": "명사절 — 주어·목적어·보어 자리를 채운다",
+          "b": "형용사절 — 앞의 명사를 꾸민다"
+        },
+        {
+          "criterion": "풀어 쓰기",
+          "a": "the thing(s) which 로 풀린다",
+          "b": "이미 선행사 + which 의 모양이다"
+        },
+        {
+          "criterion": "뒤 절의 형태 (관계대명사로 쓰였을 때)",
+          "a": "불완전하다",
+          "b": "불완전하다 — 여기서는 갈리지 않는다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The professor rejected the proposal **that** the team submitted.",
+          "ko": "그 교수는 그 팀이 제출한 그 제안서를 반려했습니다.",
+          "note": "rejected 의 목적어는 the proposal 이고, that 절은 그 명사를 꾸밉니다."
+        },
+        {
+          "en": "The professor rejected **what** the team submitted.",
+          "ko": "그 교수는 그 팀이 제출한 것을 반려했습니다.",
+          "note": "rejected 의 목적어 자리를 what 절이 통째로 채웁니다. 선행사가 없습니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The strategies ( what / that ) the coach introduced last season transformed the team.",
+      "givenSteps": [
+        "① 괄호 앞을 봅니다 — 명사 The strategies 가 있습니다.",
+        "② 뒤 절을 읽습니다 — introduced 의 목적어가 비어 있고, 그 빈자리에 The strategies 를 넣으면 뜻이 통합니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "that — The strategies 가 선행사이므로 선행사를 포함하지 않는 관계대명사를 씁니다",
+        "what — '전략이라는 것'으로 해석되므로 what 이 자연스럽습니다",
+        "what — 뒤 절이 불완전하므로 what 이어야 합니다"
+      ],
+      "answer": 0,
+      "explain": "뒤 절이 불완전한 것은 관계대명사로 쓰인 what·that·which 가 모두 공유하는 성질이므로 판단 근거가 되지 못합니다. 갈림길은 선행사의 유무이고, 여기서는 The strategies 가 선행사이므로 that 이 옳습니다. what 을 넣으면 선행사가 겹쳐 The strategies 가 문장 안에서 자리를 잃습니다."
+    },
+    {
+      "id": "b15",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "선행사와 관계사 사이에 전치사구가 끼어들어도, 앞에 수식을 받는 명사가 남아 있으면 그 자리는 that·which 입니다.",
+      "examples": [
+        {
+          "en": "The letters from the front line **that** the museum now displays were never delivered.",
+          "ko": "전선에서 온 그 편지들 중 그 박물관이 지금 전시하는 것들은 끝내 전달되지 못했습니다.",
+          "note": "전치사구 from the front line 을 걷어내면 선행사 The letters 가 남습니다. displays 의 목적어 자리가 비어 있고 그 빈자리에 The letters 를 넣으면 뜻이 통하므로 관계대명사 that 이 옳습니다."
+        },
+        {
+          "en": "The paintings on the second floor **which** visitors admire most were restored last year.",
+          "ko": "2층에 있는 그 그림들 중 방문객들이 가장 좋아하는 것들은 작년에 복원되었습니다.",
+          "note": "전치사구 on the second floor 를 걷어내면 선행사 The paintings 가 남습니다. admire 의 목적어 자리가 비어 있으므로 관계대명사 which 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 앞에 명사가 보이지만 선행사가 아닌 경우",
+      "body": "관계사 앞에 명사가 있다고 무조건 that·which 인 것은 아닙니다. 그 명사가 이미 다른 자리(동사의 목적어 등)를 차지했고, 뒤 절의 빈자리에 그 명사를 넣어 읽어도 뜻이 통하지 않으면 선행사가 아닙니다. 이때 전치사 뒤에 남은 자리는 명사절이 통째로 채우므로 what 입니다. (전치사 뒤라고 늘 what 인 것은 아닙니다 — 선행사가 실재하면 on which 처럼 전치사+관계대명사가 옵니다.) 판단 기준은 언제나 앞 명사가 뒤 절의 빈자리로 들어가 읽히는가입니다.",
+      "example": {
+        "en": "Scientists have no explanation for **what** the fossils suggest.",
+        "ko": "과학자들은 그 화석들이 시사하는 바에 대해 아무런 설명도 갖고 있지 않습니다.",
+        "note": "explanation 은 이미 have 의 목적어이고, 비어 있는 곳은 전치사 for 의 목적어 자리입니다. suggest 의 빈 목적어 자리에 explanation 을 넣어 읽으면 뜻이 통하지 않으므로 선행사가 아닙니다. 따라서 명사절을 만드는 what 이 옳습니다."
+      }
+    },
+    {
+      "id": "b17",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u06-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The archive keeps no record of {{blank}} the villagers experienced during the famine.",
+          "options": ["what", "that"],
+          "answer": 0,
+          "translation": "그 기록보관소는 기근 동안 마을 사람들이 겪은 일에 대한 기록을 전혀 보관하고 있지 않습니다.",
+          "explanation": "record 는 이미 keeps 의 목적어이고, 비어 있는 곳은 전치사 of 의 목적어 자리입니다. experienced 의 목적어도 비어 있으므로, 선행사를 포함해 명사절을 만드는 what 이 그 자리를 통째로 채웁니다. record 를 선행사로 보고 that 을 넣으면 of 의 목적어가 사라집니다.",
+          "trapTags": ["that-vs-what", "preposition-object"]
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 what 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "record 는 이미 keeps 의 목적어로 자리를 잡았고, 비어 있는 곳은 전치사 of 의 목적어 자리였기 때문에 명사절을 만드는 what 이 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 앞에 명사가 보이더라도 그 명사가 뒤 절의 빈자리로 들어가 읽히지 않으면 선행사가 아닙니다."
+        },
+        {
+          "text": "'겪은 것'처럼 '~것'으로 해석되기 때문입니다.",
+          "correct": false,
+          "feedback": "해석은 근거가 되지 못합니다. Everything that we know 처럼 '~것'으로 읽혀도 선행사가 실재하면 that 을 씁니다."
+        },
+        {
+          "text": "뒤 절에 experienced 의 목적어가 비어 있기 때문입니다.",
+          "correct": false,
+          "feedback": "뒤 절이 불완전한 것은 관계대명사로 쓰인 what·that·which 가 모두 공유하는 성질입니다. 그것만으로는 셋을 가를 수 없습니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "선행사 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 관계사 판별은 결국 선행사를 짚는 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "관계사 앞에 수식을 받을 명사가 있으면 what 이 아니라 that·which 를 씁니다.",
+          "isTrue": true,
+          "why": "선행사가 실재하면 그것을 꾸미는 형용사절이 필요하므로 that·which 자리입니다."
+        },
+        {
+          "statement": "what 은 선행사를 자기 안에 포함하므로 명사 뒤에 겹쳐 쓸 수 없습니다.",
+          "isTrue": true,
+          "why": "what 은 the thing(s) which 와 같습니다. 앞에 명사가 있으면 선행사가 겹쳐 비문이 됩니다."
+        },
+        {
+          "statement": "'~것'으로 해석되기만 하면 언제나 what 을 씁니다.",
+          "isTrue": false,
+          "why": "Everything that we know 처럼 '~것'으로 읽혀도 앞에 선행사가 있으면 that 입니다. 기준은 해석이 아니라 선행사 유무입니다."
+        },
+        {
+          "statement": "what 절은 문장에서 주어·목적어·보어 자리를 통째로 채웁니다.",
+          "isTrue": true,
+          "why": "what 절은 명사절이므로 명사가 앉는 성분 자리를 통째로 차지합니다."
+        },
+        {
+          "statement": "뒤 절이 불완전하기만 하면 what 인지 that 인지 곧바로 결정됩니다.",
+          "isTrue": false,
+          "why": "관계대명사로 쓰인 what·that·which 는 모두 뒤 절이 불완전합니다. 셋을 가르는 것은 선행사 유무입니다."
+        },
+        {
+          "statement": "선행사와 관계사 사이에 전치사구가 끼면 선행사는 사라져 what 을 써야 합니다.",
+          "isTrue": false,
+          "why": "전치사구는 수식어일 뿐입니다. 걷어내면 선행사가 그대로 남으므로 that·which 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "instruction": "네 조각 중 빈칸에 들어갈 관계사의 결이 다른 하나를 고르십시오.",
+      "rounds": [
+        {
+          "words": [
+            "the book ___ she wrote",
+            "the city ___ they visited",
+            "the plan ___ the board approved",
+            "___ the survey revealed"
+          ],
+          "odd": 3,
+          "why": "앞의 셋은 book·city·plan 이라는 선행사가 있어 that·which 자리이지만, 넷째는 앞에 명사가 없어 명사절을 만드는 what 자리입니다."
+        },
+        {
+          "words": [
+            "___ the child feared",
+            "the fear ___ the child felt",
+            "___ nobody expected",
+            "___ the poll suggested"
+          ],
+          "odd": 1,
+          "why": "둘째는 앞에 선행사 the fear 가 있어 that·which 자리이지만, 나머지 셋은 선행사가 없어 what 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 재단이 기부한 것이 그 학교의 도서관을 살렸습니다.",
+      "answer": ["What", "the foundation", "donated", "saved", "the school library"],
+      "tiles": [
+        "What",
+        "That",
+        "the foundation",
+        "donated",
+        "saved",
+        "the school library"
+      ],
+      "explanation": "관계사 앞에 선행사가 없고 donated 의 목적어 자리가 비어 있으며, 관계사절 전체가 주절의 주어 자리를 채워야 합니다. 따라서 선행사를 포함한 What 으로 문장을 시작합니다. That 은 선행사가 있어야 쓰는 관계대명사이므로(또는 명사절 접속사라면 뒤 절이 완전해야 하므로) 이 자리에는 들어갈 수 없어 남습니다."
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The committee released a summary of [[1:what]] the investigation had found, but the report [[2:that]] the ministry published later omitted several details [[3:what]] the witnesses considered essential.",
+      "answer": 3,
+      "correction": "that",
+      "rationales": [
+        "summary 는 이미 released 의 목적어이고, 비어 있는 곳은 전치사 of 의 목적어 자리입니다. found 의 목적어도 결손이므로 명사절을 만드는 what 이 옳습니다.",
+        "선행사 the report 가 실재하고 published 의 목적어 자리가 비어 있습니다. 선행사가 있으므로 관계대명사 that 이 옳습니다.",
+        "앞에 선행사 several details 가 있습니다. 선행사가 실재하는 자리에는 선행사를 포함한 what 을 쓸 수 없으므로 that(또는 which)으로 고칩니다."
+      ],
+      "ko": "그 위원회는 조사가 밝혀낸 것의 요약본을 공개했지만, 그 부처가 나중에 발표한 보고서는 증인들이 핵심적이라고 여긴 몇몇 세부 사항을 누락했습니다."
+    },
+    {
+      "id": "b23",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Every excavation begins with a guess. [[u:What the soil preserves, however, is seldom what the archaeologists predicted.]] The objects that survive are usually the ones nobody valued enough to protect. As a result, our picture of the past is shaped by accident as much as by choice.",
+      "instruction": "밑줄 친 문장에서 두 개의 what 절이 각각 어떤 자리를 채우고 있는지 확인하고, 왜 that 이 들어갈 수 없는지 설명하십시오.",
+      "found": "첫 번째 what 절은 문장의 주어 자리를, 두 번째 what 절은 보어 자리를 통째로 채웁니다. 두 what 앞에는 수식을 받을 명사가 없고 preserves 와 predicted 의 목적어가 각각 비어 있으므로, 선행사를 포함한 what 만 들어갈 수 있습니다. 반면 다음 문장의 The objects that survive 에는 선행사 The objects 가 있어 that 이 옳습니다.",
+      "gist": "발굴에서 실제로 남는 것은 고고학자가 예상한 것과 다르며, 살아남는 유물은 대개 아무도 지키려 하지 않은 것들이라는 내용입니다."
+    },
+    {
+      "id": "b24",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 선행사가 있는 자리에 what 을 놓고 '어법상 틀린 곳을 찾아 고쳐 쓰시오'로 묻습니다. 선행사를 지목하고 that 또는 which 로 바꿔 써야 만점입니다.",
+          "sample": {
+            "en": "The advice what the counselor gave the students changed their study habits.",
+            "ask": "어법상 틀린 한 곳을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "what → that(또는 which). 앞에 선행사 The advice 가 있으므로 선행사를 포함한 what 은 쓸 수 없습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 밑줄에 that 을 놓고 그 앞에 선행사가 없는 구조를 만듭니다. 밑줄 앞에 수식을 받을 명사가 있는지부터 확인하는 것이 판단의 출발점입니다.",
+          "sample": {
+            "en": "The digital archive stores [[u:that]] millions of readers have contributed over the past decade.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "what — stores 앞에 수식을 받을 명사가 없고 contributed 의 목적어도 비어 있으므로, 선행사를 포함해 목적어 자리를 채우는 what 이어야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "선행사 감별소의 문지기",
+      "intro": "이 감별소에는 what 과 that 의 자리를 슬쩍 바꿔 낀 위조 문장이 매일 밀려듭니다. 관계사 앞에 선행사가 실재하는지 짚어내는 눈이 없으면 아무도 이 문을 지나지 못합니다. 네 건의 서류로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The instrument {{blank}} the astronomers designed detected the faint signal.",
+          "options": ["that", "what"],
+          "answer": 0,
+          "why": "관계사 앞에 선행사 The instrument 가 있고 designed 의 목적어 자리가 비어 있습니다. 선행사가 실재하므로 that 이 옳습니다."
+        },
+        {
+          "prompt": "The gallery finally exhibited {{blank}} the sculptor had hidden for years.",
+          "options": ["that", "what"],
+          "answer": 1,
+          "why": "exhibited 뒤에 수식을 받을 명사가 없고 hidden 의 목적어 자리가 비어 있습니다. 선행사가 없으므로 명사절을 만드는 what 이 그 자리를 채웁니다."
+        },
+        {
+          "prompt": "The scientists offered no account of {{blank}} the readings implied.",
+          "options": ["that", "what"],
+          "answer": 1,
+          "why": "account 는 이미 offered 의 목적어이고, 비어 있는 곳은 전치사 of 의 목적어 자리입니다. implied 의 빈자리에 account 를 넣어 읽으면 뜻이 통하지 않으므로 선행사가 아니며, 명사절을 이끄는 what 이 옳습니다."
+        },
+        {
+          "prompt": "Everything {{blank}} the archive preserves comes from a single donor.",
+          "options": ["that", "what"],
+          "answer": 0,
+          "why": "'보존한 것'으로 해석되지만 앞에 대명사 Everything 이 선행사로 실재합니다. 선행사를 포함한 what 은 명사 뒤에 겹쳐 쓸 수 없으므로 that 이 옳습니다."
+        }
+      ],
+      "winText": "감별 완료 도장이 찍혔습니다. 관계사 앞에 꾸밈을 받는 명사가 있는지 — 그 한 가지만 짚으면 what 과 that·which 는 스스로 갈립니다. 이 눈이 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 서류를 돌려줍니다. 네 건 모두 물은 것은 단 하나였습니다 — '관계사 앞에, 뒤 절의 빈자리로 들어가 읽히는 명사가 있는가.' 판별 절차 4단계를 다시 확인하고 오면 도장은 준비되어 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "관계사 앞에 수식을 받을 명사(선행사)가 있으면 that·which 이고, 없으면 what 입니다.",
+        "what 은 선행사를 자기 안에 포함한 관계대명사(the thing(s) which)이므로 명사 뒤에 겹쳐 쓸 수 없습니다.",
+        "what 절은 명사절로 주어·목적어·보어 자리를 통째로 채우고, that·which 절은 형용사절로 앞의 명사를 꾸밉니다.",
+        "뒤 절이 불완전한 것은 관계대명사로 쓰인 what·that·which 의 공통 성질이므로 셋을 가르는 기준이 아닙니다. 기준은 선행사의 유무입니다.",
+        "앞에 명사가 보여도 그것이 뒤 절의 빈자리로 들어가 읽히지 않으면 선행사가 아닙니다. 그 빈자리가 전치사의 목적어 자리이고, 그 자리를 채울 선행사가 앞에 없다면 what 입니다."
+      ],
+      "keySentence": {
+        "en": "The professor rejected **what** the team submitted, but she accepted the revision **that** they sent later.",
+        "ko": "그 교수는 그 팀이 제출한 것을 반려했지만, 그들이 나중에 보낸 수정본은 받아들였습니다.",
+        "note": "앞에 선행사가 없는 자리에는 what 이 오고, 선행사 the revision 이 있는 자리에는 that 이 옵니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "관계사 앞에 ___ 가 있으면 ___ 를 쓰고, 없으면 ___ 를 씁니다. what 은 ___ 를 이미 포함한 말이기 때문입니다."
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u06-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The museum returned {{blank}} the expedition had taken from the region a century ago.",
+          "options": ["what", "that"],
+          "answer": 0,
+          "translation": "그 박물관은 한 세기 전에 탐사대가 그 지역에서 가져간 것을 반환했습니다.",
+          "explanation": "returned 뒤에 수식을 받을 명사가 없고 taken 의 목적어 자리가 비어 있습니다. 선행사가 없으므로 선행사를 포함한 what 이 returned 의 목적어 자리를 통째로 채웁니다.",
+          "trapTags": ["that-vs-what", "no-antecedent"]
+        },
+        {
+          "id": "u06-c1-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The regulations [[u:what]] the government introduced in 2020 reduced factory emissions sharply.",
+          "isCorrect": false,
+          "correction": "that",
+          "translation": "정부가 2020년에 도입한 그 규제들은 공장 배출량을 급격히 줄였습니다.",
+          "explanation": "밑줄 앞의 The regulations 가 선행사이고, introduced 의 목적어 자리가 비어 그 빈자리를 선행사가 채웁니다. 선행사가 실재하므로 선행사를 포함한 what 은 쓸 수 없고 that(또는 which)이 옳습니다.",
+          "trapTags": ["that-vs-what"]
+        },
+        {
+          "id": "u06-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The exhibition draws attention to {{blank}} the photographer left out of the frame.",
+          "options": ["what", "that", "which"],
+          "answer": 0,
+          "translation": "그 전시는 그 사진가가 화면 밖에 남겨 둔 것에 주목하게 합니다.",
+          "explanation": "attention 은 이미 draws 의 목적어이고, 비어 있는 곳은 전치사 to 의 목적어 자리입니다. left out 의 목적어도 비어 있으므로 선행사를 포함해 명사절을 만드는 what 이 옳습니다. attention 을 선행사로 보면 to 의 목적어가 사라집니다.",
+          "trapTags": ["that-vs-what", "preposition-object"]
+        }
+      ]
+    }
+  ]
+}

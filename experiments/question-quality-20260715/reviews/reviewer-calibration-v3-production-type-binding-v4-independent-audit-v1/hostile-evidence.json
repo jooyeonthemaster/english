@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-independent-hostile-evidence-1",
+  "subjectSnapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+  "independentVerifierSha256": "c8562e2d1d45065a2a77d637179663a94396bc0f64ade98491a53d489fdcde2e",
+  "execution": {
+    "runs": 2,
+    "testsPerRun": 20,
+    "passedPerRun": 20,
+    "failedPerRun": 0,
+    "mutationsAppliedToFilesystem": 0,
+    "subjectFixtureRunnerCalled": false,
+    "allMutations": "IN_MEMORY_ONLY"
+  },
+  "tests": [
+    { "id": "H01_MANIFEST_BOUND_BYTE_FLIP", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "manifest/byte seal" },
+    { "id": "H02_DUPLICATE_JSON_KEY", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "strict JSON" },
+    { "id": "H03_ROUTE_SUBJECT_SCOPE_INJECTION", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "requested route state" },
+    { "id": "H04_DESKTOP_GENERATE_REMOVED", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "desktop event" },
+    { "id": "H05_DESKTOP_EARLY_RETURN", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "desktop reachability" },
+    { "id": "H06_MOBILE_GENERATE_REMOVED", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "mobile event" },
+    { "id": "H07_FAST_ENDPOINT_REDIRECT", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "literal fast endpoint" },
+    { "id": "H08_FAST_HELPER_QUESTION_TYPE_REMOVED", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "helper request body" },
+    { "id": "H09_BUDGET_WRAPPER_REMOVED", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "assignment budget callback" },
+    { "id": "H10_RUNTIME_AI_SCHEMA_INDEX_REMOVED", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "runtime schema selection" },
+    { "id": "H11_PICKER_TYPE_REMOVED", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "25-type universe" },
+    { "id": "H12_LEGACY_TYPE_ADDED_TO_PICKER", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "legacy exclusion" },
+    { "id": "H13_UNRESOLVED_LOCAL_IMPORT", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "closure fail-closed" },
+    { "id": "H14_NONLITERAL_DYNAMIC_IMPORT", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "dynamic import fail-closed" },
+    { "id": "H15_SECOND_HOP_EDGE_REMOVAL", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "recursive second-hop closure" },
+    { "id": "H16_ROTATION_OFF_BY_ONE", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "rotation formula" },
+    { "id": "H17_FAMILY_PARTITION_COLLAPSE", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "23-type family partition" },
+    { "id": "H18_TARGET_TOCTOU_SIMULATION", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "subject moving target" },
+    { "id": "H19_SOURCE_TOCTOU_SIMULATION", "expected": "REJECT", "actual": "REJECT", "status": "PASS", "surface": "production source moving target" },
+    { "id": "H20_BASELINE_CONTROL", "expected": "ACCEPT", "actual": "ACCEPT", "status": "PASS", "surface": "false-positive control" }
+  ],
+  "conclusion": "PASS_20_OF_20_ON_TWO_IDENTICAL_FROZEN_RUNS"
+}

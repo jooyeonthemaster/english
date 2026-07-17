@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'He was issued nine U.S. patents and held patents in Great Britain, Australia and Canada.' Coordination of two predicates sharing the subject 'He': passive 'was issued' + active past 'held'. Active 'held' (= he possessed patents abroad) is grammatical and semantically right; mixed voice across coordinated VPs is allowed. Attractor note: the passive 'was issued' tempts you to expect '(was) held', but that reading would be wrong — he held (owned) the foreign patents."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'the first invention that he successfully sold to Sheaffer Pen Company' — 'that' is the object relative pronoun of 'sold' (gap after 'sold ___ to ...'). With antecedents modified by 'first', 'that' is the standard choice. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (answer)",
+      "reason": "'Despite he was working as a real estate agent ...' — 'Despite' is a preposition and must be followed by an NP or gerund ('Despite working as ...' / 'Despite his work as ...'). Here it heads a finite clause with subject + verb, which requires the subordinating conjunction 'Although/Though/While'. No alternative parse (ellipsis, absolute construction) makes 'Despite + S + V' grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the 1930s proved to be his most productive patenting period' — linking verb 'prove' + to-infinitive complement is standard usage. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'with six of his nine U.S. patents being issued then' — with-absolute construction; 'patents' undergo issuing, so passive 'being issued' is correct. Bare 'issued' would also be acceptable in the absolute, but 'being issued' as written is fully grammatical, so the underline is not an error."
+    }
+  ],
+  "note": "Clean single-answer item. Main distractor pull: (A) via the passive/active parallel trap ('was issued ... and held'), and mild second-guessing on (E) over whether 'being' is redundant — neither survives scrutiny. (C) is an unambiguous preposition-vs-conjunction violation, a classic KSAT grammar point."
+}

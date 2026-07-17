@@ -1,0 +1,50 @@
+{
+  "pid": "P013",
+  "finalV2": false,
+  "winningAnswer": "NONE — 선언 정답 (E) 불성립 (어법상 명백히 틀린 선지가 존재하지 않음)",
+  "reason": "독립 재검증 결과 감사자 판정을 인용한다. (E)의 표시형 'His confidence was, however, quickly changing to nervousness when he thought of how many people would be there.'는 어법상 틀린 문장이 아니다. change는 사역/기동 교체(causative/inchoative alternation) 동사로서 자동사 'change to X'(~로 변하다)가 표준 용법이며('His shock changed to anger', 'The light changed to green'), 목적어가 없는 이 자리에서 'was quickly changing to nervousness'는 기동 자동사의 과거진행형으로 유일하게 파싱되고 완전히 문법적이다. 출제 해설이 능동 changing을 '자신감이 무언가를 변화시키는 타동 의미'로 규정한 것은 자동사 용법을 무시한 오분석이다. 솔버 1·2가 출제 근거(태 오류)를 암묵적으로 폐기하고 대체 수립한 시제·상 오류 논리(점적 when절 계기와 진행형의 인과 순서 모순)도 과잉 판정이다: 주절 과거진행 + when절은 표준 구문이고, 'thought of how many people would be there'를 지속 구성으로 읽는 when≈as/while 독법에서 진행형이 관용적으로 성립하며, 점적 독법을 취해도 결과는 비문이 아니라 다른 시간 배열의 서술일 뿐이다. 단순과거 vs 과거진행의 선택은 담화·상 선호이지 규칙으로 결정되는 어법 오류가 아니어서 '어법상 틀린 것' 기준을 충족하지 못한다. 나아가 의도된 정답형 'was, however, quickly changed to nervousness'(무행위자 수동)는 기동 자동사형보다 오히려 덜 관용적이라 GRAMMAR_ERROR 유형이 요구하는 정문/비문 최소대립쌍 자체가 성립하지 않는다(두 형태 모두 문법적). (A)~(D)는 전원 일치대로 흠 없는 정문임을 재확인했다. 따라서 이 문항은 밑줄 5개 중 어법상 틀린 선지가 0개인 결함 문항이며, 선언 정답 (E)의 유일 정답성(V2)은 불성립한다. 재설계 시 (E)를 valency 대안 분석이 불가능한 자리(수일치·병렬·관계사 격 등)로 교체해야 한다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "because 뒤에 완전한 절이 오므로 접속사 because는 정문 (솔버1·2·감사자 일치)",
+      "verdict": "성립(정문 확정)",
+      "evidence": "'I'm late because traffic was terrible' — because의 보충어가 정형절(주어 traffic + 술어 was terrible)이므로 접속사가 필수적이고 정확하다. because of는 명사구를 요구하므로 불가. 쟁점 없음."
+    },
+    {
+      "label": "(B)",
+      "claim": "pointing은 주절 주어 Garcia가 통제하는 능동 분사구문으로 정문 (전원 일치)",
+      "verdict": "성립(정문 확정)",
+      "evidence": "'Garcia asked, pointing at a patterned red shirt ...' — 부대상황 분사구문의 의미상 주어가 주절 주어 Garcia와 일치하고 point의 행위주이므로 현재분사가 정확하다. 현수분사 아님. 쟁점 없음."
+    },
+    {
+      "label": "(C)",
+      "claim": "agreeing은 The clerk가 통제하는 연속동작 분사구문으로 정문이며 'and agreed' 병렬을 강제하지 않음 (전원 일치)",
+      "verdict": "성립(정문 확정)",
+      "evidence": "'The clerk stopped her work and looked at the clothes, quickly agreeing with Jeff's choice.' — stopped/looked의 등위는 콤마 앞에서 닫히고, 콤마 뒤는 the clerk를 의미상 주어로 하는 결과·연속동작 분사구문으로 완전하다. agree의 행위주가 the clerk이므로 능동 -ing이 정확하다. 병렬 강제 주장은 성립하지 않음."
+    },
+    {
+      "label": "(D)",
+      "claim": "wearing은 목적어를 취하는 능동 묘사(depictive) 분사로 정문 (전원 일치)",
+      "verdict": "성립(정문 확정)",
+      "evidence": "'he arrived at the concert hall for the rehearsal wearing his new clothes' — 주어 he를 서술하는 묘사 분사(arrive + V-ing 표준 패턴)이며 목적어 his new clothes를 취하는 능동형이 정확하다. 쟁점 없음."
+    },
+    {
+      "label": "(E)",
+      "claim": "출제 해설: 주어 His confidence는 변화'되는' 대상이므로 수동 'was changed to'가 필수이고, 능동 진행 'was changing to'는 자신감이 무언가를 변화시킨다는 타동 의미가 되어 비문이다",
+      "verdict": "기각(오분석)",
+      "evidence": "change는 사역/기동 교체 동사다. 목적어 없는 'change to X'는 타동 능동으로 해석될 여지 자체가 없고 자동사 기동 용법(스스로 X로 변하다)으로 유일하게 파싱된다: 'His shock changed to anger', 'Her joy changed to sorrow', 'The light changed to green'. 따라서 'His confidence was quickly changing to nervousness'는 통사적으로 완전한 정문이며, '수동태만 가능하다'는 해설의 일반화는 사실 오류다. source-correct(수동)/displayed-wrong(능동 진행)의 최소대립쌍이 성립하지 않는다 — 둘 다 문법적이고, 무행위자 수동 쪽이 오히려 덜 관용적이다."
+    },
+    {
+      "label": "(E)",
+      "claim": "솔버1·2의 구제 논리: when절(he thought ...)이 점적 계기이므로 과거진행은 인과 순서를 뒤집어 문맥상 비문이며 대안 해석으로도 구제 불가(솔버2: 'no alternative parse renders it acceptable')",
+      "verdict": "기각(과잉 판정)",
+      "evidence": "두 가지 독립적 결함. (1) 대안 해석이 실제로 존재한다: 'thought of how many people would be there'는 지속 구성(생각을 곱씹음)으로 자연스럽게 읽히고, 그 경우 when≈as/while 독법에서 '그 생각을 하는 동안 자신감이 빠르게 긴장으로 변해 가고 있었다'는 진행형이 관용적으로 성립한다('My excitement was quickly turning to dread when I realized ...' 유형은 실제 영어 서사에서 통용). (2) 설령 점적 독법('진행 중 사건 발생', 'She was crying when I saw her' 패턴)을 취해도 결과 문장은 비문이 아니라 약간 다른 시간 배열의 서술일 뿐이며 서사와 강한 모순을 일으키지 않는다. 단순과거 vs 과거진행은 두 형태 모두 문법적인 담화·상 선호의 문제로, '어법상 틀린 것' 판정이 요구하는 규칙 결정 가능 오류가 아니다. 아울러 두 솔버 모두 출제측의 태 오류 논리를 검증 없이 폐기하고 자체 논리로 정답을 구제했다는 사실 자체가, 문항이 설계된 포인트로는 성립하지 않음을 방증한다."
+    },
+    {
+      "label": "(E)",
+      "claim": "감사자: 표시형이 문법적이므로 어법상 틀린 선지가 0개이며 V2 불성립, 정답 포인트가 valency 대안 분석 가능 자리라 RUBRIC §C 위반",
+      "verdict": "인용(감사자 판정 유지)",
+      "evidence": "독립 재검증 결과 감사자 분석이 정확하다. (A)~(D)가 전원 일치 정문이고 (E) 표시형도 기동 자동사 과거진행으로 문법적이므로, 성실한 blind solve의 정직한 결론은 '틀린 선지 없음'이다. 솔버 2인의 (E) 수렴은 문맥 선호를 어법 오류로 격상시킨 과잉 판정이며, 문항은 GRAMMAR_ERROR 유형으로서 무효다. finalV2=false."
+    }
+  ]
+}

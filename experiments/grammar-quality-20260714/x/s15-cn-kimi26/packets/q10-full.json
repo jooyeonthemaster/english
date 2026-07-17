@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-decoy-point-monotony",
+    "grammar-error-not-mutated",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-answer-point-not-core"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=f  (B):dec=a  (C):dec=a  (D):ANS=l  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 97,
+        "relPos": 0.123,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 148,
+        "relPos": 0.188,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 192,
+        "relPos": 0.244,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 578,
+        "relPos": 0.734,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.734,
+    "firstHalfShare": 0.75,
+    "notFoundCount": 1
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것이 있는 곳을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "take notice",
+        "isError": false,
+        "errorExpression": "take notice",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "scramble",
+        "isError": false,
+        "errorExpression": "scramble",
+        "surroundingText": "we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "haven't spoken",
+        "isError": false,
+        "errorExpression": "haven't spoken",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "gone by",
+        "isError": true,
+        "errorExpression": "gone by",
+        "surroundingText": "In our relationships, we have to make sure that not too much time gone by between oil changes, so to speak.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(E)",
+        "expression": "shouldn't bother",
+        "isError": false,
+        "errorExpression": "shouldn't bother",
+        "surroundingText": "This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken;",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "take notice"
+      },
+      {
+        "label": "(B)",
+        "text": "scramble"
+      },
+      {
+        "label": "(C)",
+        "text": "haven't spoken"
+      },
+      {
+        "label": "(D)",
+        "text": "gone by"
+      },
+      {
+        "label": "(E)",
+        "text": "shouldn't bother"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'take notice of'는 'of'와 함께 쓰이는 형용사적 구동사로, 명사구 'the distance'를 목적어로 취해 문법적으로 완전하다.",
+      "(B)": "'scramble'은 '서두르다'는 뜻의 자동사로, 'to make repairs'라는 부정사구가 도착지·방향의 의미로 쓰여 문법적으로 올바르다.",
+      "(C)": "'haven't spoken'은 현재완료로, 시간부사 'in ages'와 호응하여 과거부터 현재까지 이어지는 상태를 나타내 적절하다.",
+      "(E)": "'shouldn't bother calling'에서 'bother'은 '~하는 것을 귀찮아하다'는 뜻으로 동명사 'calling'을 목적어로 취하는 타동사 용법이 정확하다."
+    },
+    "explanation": "① 정답 (D)는 'make sure' 뒤에 오는 명사절 안의 형태이다. 접속사 'that'이 생략된 이 명사절의 진짜 주어는 'not too much time'이고, 서술어로는 현재시제 동사가 필요하다. ② 그러나 'gone by'로 바뀌면 과거분사 'gone'이 되어, 주어 뒤에 서술어 없이 분사만 남게 된다. 분사는 동사의 서술 기능을 할 수 없으므로 이 명사절은 비문이 된다. ③ 따라서 'gone by'를 'goes by'로 고쳐야 정확한 3인칭 단수 현재시제 서술어가 된다. ④ 학생들은 'has gone by'나 'went by' 등을 떠올릴 수 있으나, 'make sure'의 현재시제 뉘앙스와 일치하는 것은 'goes by'이다.",
+    "keyPoints": [
+      "(D) 관계사/접속사 생략 후 명사절 완전성 — 'that' 생략된 명사절에서 동사형 확인",
+      "(A) 형용사 부자리 — 'take notice of'의 목적어 취합",
+      "(C) 현재완료 시제 호응 — 'in ages'와의 시간적 일치"
+    ],
+    "tags": [
+      "수능 영어",
+      "어법",
+      "접속사 생략",
+      "분사 vs 동사",
+      "현재시제"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly __(A) take notice__ of the distance that has formed and we __(B) scramble__ to make repairs. We call people we __(C) haven't spoken__ to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you __(E) shouldn't bother__ calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P043",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "made는 mistakes를 수식하는 축약 관계절(mistakes [that are] made by organizations)의 과거분사. mistakes가 '만들어지는' 수동 관계이므로 made가 정확하다. 문장의 본동사는 뒤의 is이므로 made를 본동사로 오인해 끌릴 여지는 있으나, 'One of the most common mistakes made by ~ is that ...' 구조를 확인하면 정문임이 분명하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주어는 동명사구 'creating a social media program'으로 단수 취급 → begins 일치가 옳다. 매력 포인트: 직전 명사 program(단수)과 멀리 있는 businesses/tools(복수) 사이에서 수일치 혼동을 유도하지만, 진짜 주어인 동명사구 기준으로 단수가 맞다. 'begins not with A but with B' 상관 병렬도 with 전치사구끼리 정확히 병렬된다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong (정답)",
+      "reason": "because of는 전치사(구)로 명사(구)만 목적어로 취하는데, 뒤에 완전한 절 'everyone else is doing it'(주어+동사+목적어)이 왔다. 절을 이끌려면 접속사 because여야 한다. 대안 해석 검토: 인용부호로 묶인 절을 '인용 명사화'로 보아 because of의 목적어라고 옹호하는 시도가 가능하나, 표준 문법에서는 'the ~ mentality/excuse' 같은 핵명사 없이 인용절 단독을 전치사 목적어로 삼는 것은 비문으로 판정되며, 원전류 텍스트도 because를 쓰는 구조다. 어법 문항 기준으로 명백한 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "주어는 동명사구 '\"Being in social media\"'로 단수 취급 → serves가 옳다. (B)와 동일한 동명사 주어 수일치 포인트의 반복 출제. media를 복수 주어로 착각해 serve로 고치고 싶은 유혹이 설계되어 있으나, 인용부호로 묶인 동명사구 전체가 주어이므로 단수가 맞다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "purpose(단수 불가산 취급) + drives 수일치 정확. 'In all things'는 부사구일 뿐 주어가 아니며(all things에 이끌려 drive로 고치려는 유혹 가능), 도치도 아니므로 purpose drives success가 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: (A) made를 본동사로 착각하는 함정, (B)/(D) 동명사 주어 수일치, (E) 전치사구 선행 유혹을 차례로 배제하면 (C)만 남는다. because of + 완전절은 KSAT 어법의 전형적 판별 포인트로, 인용부호가 시각적 노이즈를 주지만 절 구조 자체는 변하지 않는다. 단일 정답 (C)로 수렴, 복수 정답 소지 없음. 참고로 이 지문은 기출/EBS 계열에서 널리 알려진 소셜미디어 전략 지문과 동일 계통으로 보이며, 원문도 접속사 because 구조다."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P074",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'in precisely opposed circular motions' — 부사 precisely가 과거분사형 형용사 opposed를 수식하는 적법한 구조(부사+분사형용사+명사, cf. 'a highly respected scholar'). 뒤의 'precise up and down motions'는 형용사가 명사를 직접 수식하는 자리라 precise가 맞고, 여기서는 opposed를 수식하므로 precisely가 맞다. 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (정답)",
+      "reason": "'tells Daniel paint his wooden fence' — tell은 명령 의미에서 tell + O + to부정사 보문 구조만 허용한다(→ to paint). make/have/let과 달리 원형부정사를 허가하는 사역동사가 아니다. paint를 명사로 보는 이중목적어 해석('tells Daniel paint')도 뒤의 목적어 'his wooden fence'와 결합이 불가능해 성립하지 않는다. 대안 해석 부재 — 어법상 틀림."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'makes Daniel hammer nails' — 사역동사 make + 목적어 + 원형부정사의 정확한 인가 패턴. 어법상 옳음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'is finished restoring' — 'be finished + V-ing'는 finish + 동명사와 평행한 표준 용법(특히 미국 영어, 'be done doing X'와 동일 패턴). finished가 형용사적 분사로 동명사 보충어를 취한다. 어법상 옳음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'attacks Daniel, who without thought or hesitation defends himself' — 선행사 Daniel(사람)을 받는 계속적 용법의 관계대명사. 부사구 'without thought or hesitation'가 관계대명사와 동사 사이에 삽입되었을 뿐 who는 defends의 주어로 주격이 맞다(whom 불가). 어법상 옳음."
+    }
+  ],
+  "note": "5개 밑줄 중 (B)만이 어떤 대안 파스로도 구제되지 않는 유일한 비문. tell의 보문 선택 제약(to부정사 필수)이 지배 규칙. 나머지 네 항목은 각각 부사-분사 수식, 사역 make의 원형부정사, be finished V-ing 관용 패턴, 삽입 부사구를 둔 주격 관계대명사로 모두 정문. 단일 정답으로 수렴하는 깔끔한 문항."
+}

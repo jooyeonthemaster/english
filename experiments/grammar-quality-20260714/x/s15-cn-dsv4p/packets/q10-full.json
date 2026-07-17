@@ -1,0 +1,160 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-correction-not-source-backed",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=h  (B):dec=i  (C):dec=j  (D):ANS=a  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 97,
+        "relPos": 0.123,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 292,
+        "relPos": 0.371,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 431,
+        "relPos": 0.547,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 689,
+        "relPos": 0.874,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.874,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "The user is a Korean SAT English grammar item writer. They provided a passage and want me to create a test item with 5 underlined parts (A)-(E) in order of appearance. One must be a clear grammatical error (the correct answer), the other four must be grammatically correct but plausible distractors. I must write the explanation in Korean in the 합니다체 style. Difficulty is INTERMEDIATE. I must not change a single character when quoting the original passage, but for the incorrect option I need to alter the original expression to be ungrammatical.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "take notice of",
+        "isError": false,
+        "errorExpression": "have",
+        "surroundingText": "the distance that",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "we've created",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "i"
+      },
+      {
+        "label": "(C)",
+        "expression": "like a car",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "j"
+      },
+      {
+        "label": "(D)",
+        "expression": "the distance that have formed",
+        "isError": true,
+        "errorExpression": "have",
+        "surroundingText": "the distance that",
+        "pointCode": "a",
+        "correction": "the distance that have formed"
+      },
+      {
+        "label": "(E)",
+        "expression": "not to let yourself fall out of touch",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "take notice of"
+      },
+      {
+        "label": "(B)",
+        "text": "we've created"
+      },
+      {
+        "label": "(C)",
+        "text": "like a car"
+      },
+      {
+        "label": "(D)",
+        "text": "have"
+      },
+      {
+        "label": "(E)",
+        "text": "not to let yourself fall out of touch"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "숙어 take notice of는 '~을 알아차리다'의 뜻으로 어법상 적절합니다.",
+      "(B)": "앞서 'the distance'를 선행사로 받아 현재완료 시제를 사용한 것으로, 거리가 생겨난 결과가 현재까지 이어짐을 나타내므로 적절합니다.",
+      "(C)": "전치사 like는 '~처럼'이라는 의미로, 관계 유지에 드는 정기적인 점검을 자동차에 빗댄 비유로서 적절합니다.",
+      "(E)": "let + 목적어 + 동사원형 구문에 재귀대명사 yourself가 목적어로 쓰였으며, to부정사의 부정은 not to let 형태로 어법상 적절합니다."
+    },
+    "explanation": "합니다체. (D) have → has로 고쳐야 합니다. 관계절의 동사는 선행사 the distance에 수를 일치시켜야 하므로 단수형 has가 적절합니다. 이를 have로 쓴 것은 주어-동사 수 일치 오류입니다.",
+    "keyPoints": [
+      "관계절 내 동사는 선행사의 수와 인칭에 일치시켜야 한다.",
+      "the distance는 단수 명사이므로 관계절 동사도 단수형 has가 되어야 한다."
+    ],
+    "tags": [
+      "수능영어",
+      "어법",
+      "관계절",
+      "수일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly __(A) take notice of__ the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance __(B) we've created__. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, __(C) like a car__. In our relationships, we __(D) have__ to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal __(E) not to let yourself fall out of touch__ in the first place. Consistency always brings better results."
+  }
+}

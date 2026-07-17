@@ -1,0 +1,671 @@
+{
+  "id": "u01-c2",
+  "unitId": "u01",
+  "order": 2,
+  "title": "준동사는 본동사가 될 수 없다",
+  "oneLiner": "-ing·to부정사·p.p.는 시제를 표시하지 못하므로 혼자서 문장의 동사 노릇을 하지 못합니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": ["TP01"],
+    "sourceRefs": [
+      "어법끝 5.0 TP01 동사 vs 준동사",
+      "천일문 고등 GRAMMAR U55(동사 자리 vs 준동사 자리)",
+      "별표4 #12 준동사(부정사·동명사·분사)(중 ●)"
+    ]
+  },
+  "lenses": ["L2", "L5"],
+  "confusableWith": ["u01-c1", "u01-c3", "u01-c4", "u09-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The tourists standing near the fountain took photographs of the old cathedral.",
+        "The tourists standing near the fountain taking photographs of the old cathedral."
+      ],
+      "answer": 0,
+      "afterText": "두 문장 모두 동사처럼 보이는 단어가 둘입니다. 그런데 한쪽만 문장입니다. 이 레슨을 마치면 그 차이를 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "준동사",
+      "question": "준동사가 대체 무엇이고, '동사'인데 왜 굳이 '준'을 붙입니까?",
+      "plain": "준동사는 동사에서 나왔지만 시제를 짊어지지 못하는 형태입니다. -ing·to부정사·p.p. 세 가지가 여기에 속하며, 절의 본동사 자리에는 앉지 못합니다.",
+      "analogy": "정직원이 아니라 준회원 같은 신분입니다. 준회원 자격으로 시설을 이용은 하지만 이사회에서 의결은 못 하듯, 준동사는 문장 안에서 자리는 얻어도 시제로 절을 서술하지는 못합니다.",
+      "whyItMatters": "수능 어법에서 밑줄이 -ing·p.p. 인데 그 절에 시제 동사가 따로 없다면, 준동사가 본동사 자리를 잘못 차지한 것입니다. 앞 레슨이 본동사를 짚는 눈으로 판별 도구 \"동사 자리 카운팅\"을 열었다면, 준동사를 후보에서 걷어내는 이 눈은 그 도구의 두 번째 축입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "-ing 나 p.p. 도 동사에서 나온 형태이므로 동사 자리에 그대로 쓸 수 있습니다.",
+      "truth": "동사에서 나온 것과 동사 노릇을 하는 것은 다릅니다. -ing·to부정사·p.p.는 시제와 수를 표시하지 못하는 준동사이며, be·have 같은 조동사와 결합할 때에만 동사구의 일부로 본동사가 됩니다.",
+      "counterExample": {
+        "en": "The committee **discussing** the proposal for three hours.",
+        "ko": "세 시간 동안 그 제안을 논의하는 그 위원회 (…무엇?)",
+        "note": "discussing 은 시제를 표시하지 못합니다. 시제 동사가 하나도 없으므로 이것은 문장이 아니라 명사 덩어리입니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "준동사 판별 필기",
+      "intro": "준동사가 끝내 본동사가 되지 못하는 경우와, 조동사를 만나 본동사가 되는 경우를 한 장으로 갈라 둡니다.",
+      "entries": [
+        {
+          "head": "준동사 3형태 — -ing · to부정사 · p.p.",
+          "body": "동사에서 나왔지만 시제와 수를 표시하지 못하는 세 형태입니다. 셋 다 혼자서는 절의 본동사가 되지 못합니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "be + -ing / be + p.p. — 진행·수동의 동사구",
+          "body": "시제를 가진 be동사와 결합하면 동사구 전체가 본동사입니다. 시제는 앞의 be가 짊어집니다.",
+          "example": {
+            "en": "The museum **is displaying** rare instruments from the colonial era.",
+            "ko": "그 박물관은 식민지 시대의 희귀 악기들을 전시하고 있습니다.",
+            "note": "be + -ing 는 동사구이고, 시제는 is 가 표시합니다."
+          }
+        },
+        {
+          "head": "have + p.p. — 완료의 동사구",
+          "body": "시제를 가진 have동사와 결합하면 동사구 전체가 본동사입니다. 시제는 앞의 have가 짊어집니다.",
+          "example": {
+            "en": "The museum **has displayed** these instruments since March.",
+            "ko": "그 박물관은 3월부터 이 악기들을 전시해 왔습니다.",
+            "note": "have + p.p. 도 동사구 전체가 본동사입니다."
+          }
+        },
+        {
+          "head": "being · having p.p. — 여전히 준동사",
+          "body": "be·have 자체가 준동사 형태로 바뀐 것이라 시제가 없습니다. 아무리 길어 보여도 본동사 자리는 채우지 못합니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "홀로 선 준동사 — 명사·형용사·부사",
+          "body": "조동사 없이 홀로 쓰인 준동사는 명사·형용사·부사 역할만 맡습니다. 본동사는 그 옆에 따로 있어야 합니다.",
+          "example": {
+            "en": "The instruments **displayed** in the main hall **attract** many visitors.",
+            "ko": "중앙 홀에 전시된 그 악기들은 많은 방문객을 끌어들입니다.",
+            "note": "displayed 는 명사를 꾸미는 수식어이고, 본동사는 attract 하나뿐입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 형태가 혼자서 절의 본동사가 될 수 있는지 분류하십시오.",
+      "buckets": [
+        { "id": "v", "label": "본동사가 된다" },
+        { "id": "nv", "label": "본동사가 못 된다" }
+      ],
+      "chips": [
+        { "text": "writes", "bucketId": "v", "why": "현재 시제와 수를 표시하는 동사 형태입니다." },
+        { "text": "is writing", "bucketId": "v", "why": "be + -ing 는 동사구 전체가 본동사이며 시제는 is 가 집니다." },
+        { "text": "has written", "bucketId": "v", "why": "have + p.p. 는 동사구 전체가 본동사입니다." },
+        { "text": "writing", "bucketId": "nv", "why": "조동사 없이 쓰인 -ing 는 시제를 표시하지 못합니다." },
+        { "text": "to write", "bucketId": "nv", "why": "to부정사는 시제를 표시하지 못하며 명사·형용사·부사 역할만 합니다." },
+        { "text": "written by the panel", "bucketId": "nv", "why": "be·have 같은 조동사가 없는 p.p.는 앞의 명사를 꾸미는 수식어입니다." }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "본동사가 되는 세 결합",
+      "target": "준동사를 본동사로 만드는 세 결합",
+      "why": "준동사가 홀로일 때와 조동사를 만났을 때를 순간적으로 갈라야 판별에 속도가 붙습니다. 본동사가 되는 결합은 딱 세 가지뿐이고, 나머지는 전부 준동사입니다.",
+      "device": "머리글자 '비-해-비'로 붙잡습니다. be가 -ing를 업으면 진행, have가 p.p.를 업으면 완료, be가 p.p.를 업으면 수동입니다. 조동사가 시제를 대신 업어 줄 때에만 준동사가 본동사석에 앉습니다.",
+      "items": [
+        { "cue": "be + -ing", "answer": "진행형 동사구 — 본동사 (is writing)" },
+        { "cue": "have + p.p.", "answer": "완료형 동사구 — 본동사 (has written)" },
+        { "cue": "be + p.p.", "answer": "수동태 동사구 — 본동사 (is written)" },
+        { "cue": "being + p.p.", "answer": "여전히 준동사 — being에 시제가 없음" },
+        { "cue": "홀로 선 -ing · to-V · p.p.", "answer": "준동사 — 명사·형용사·부사 역할" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "본동사 감별 관문",
+      "mission": "지금까지 본 것을 시험합니다. 아래 형태 중 그 자체로 시제를 표시하여 절의 본동사가 될 수 있는 것을 모두 고르십시오.",
+      "mode": "SET",
+      "pool": [
+        "writes",
+        "is writing",
+        "has written",
+        "is written",
+        "writing",
+        "to write",
+        "written",
+        "being written"
+      ],
+      "answers": ["writes", "is writing", "has written", "is written"],
+      "passText": "본동사와 준동사의 경계가 손에 잡혔습니다. 조동사가 시제를 업은 형태만 이 관문을 통과합니다.",
+      "retryText": "홀로 선 -ing·to부정사·p.p.가 슬쩍 섞여 들어왔습니다. 시제를 표시하는 형태만 다시 골라 보십시오."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "준동사(-ing·to부정사·p.p.)는 시제를 표시하지 못하므로 혼자서 절의 본동사가 되지 못합니다.",
+      "examples": [
+        {
+          "en": "The engineer **checks** the machine every morning.",
+          "ko": "그 기술자는 매일 아침 그 기계를 점검합니다.",
+          "note": "checks 는 현재 시제와 3인칭 단수를 표시합니다. 그래서 본동사이고, 이 문장은 완전합니다."
+        },
+        {
+          "en": "The engineer **checking** the machine every morning.",
+          "ko": "매일 아침 그 기계를 점검하는 그 기술자 (…무엇?)",
+          "note": "checking 은 시제를 표시하지 못합니다. 본동사가 없으므로 문장이 아니라 조각문입니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "준동사는 동사 자리를 차지하는 대신 문장 안에서 명사·형용사·부사 역할을 맡습니다.",
+      "examples": [
+        {
+          "en": "**Recording** the interviews carefully **saved** the team weeks of work.",
+          "ko": "인터뷰를 꼼꼼히 녹음한 것이 그 팀의 여러 주에 걸친 작업을 덜어 주었습니다.",
+          "note": "동명사구가 주어 자리를 채우는 명사 역할이고, 본동사는 saved 입니다."
+        },
+        {
+          "en": "The letters **written** in the 1890s **reveal** the writer's daily routine.",
+          "ko": "1890년대에 쓰인 그 편지들은 작가의 일상을 드러냅니다.",
+          "note": "p.p.가 앞의 명사를 꾸미는 형용사 역할이고, 본동사는 reveal 입니다."
+        },
+        {
+          "en": "The research team **worked** through the night **to meet** the deadline.",
+          "ko": "그 연구팀은 마감을 맞추기 위해 밤새 작업했습니다.",
+          "note": "to부정사가 목적을 나타내는 부사 역할이고, 본동사는 worked 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "준동사와 본동사가 함께 있는 문장의 해부",
+      "tokens": [
+        { "t": "The scientists", "role": "S" },
+        { "t": "working on the vaccine", "role": "VERBAL" },
+        { "t": "published", "role": "V" },
+        { "t": "their findings", "role": "O" },
+        { "t": "last month", "role": "M" }
+      ],
+      "ko": "그 백신을 연구하던 과학자들이 지난달에 연구 결과를 발표했습니다.",
+      "layers": [
+        {
+          "label": "① 준동사를 먼저 표시합니다",
+          "roles": ["VERBAL"],
+          "note": "working 은 -ing 형이어서 시제를 표시하지 못합니다. 앞의 명사를 꾸미는 분사구이므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "분사구를 걷어내면 주어는 The scientists 입니다."
+        },
+        {
+          "label": "③ 시제를 가진 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "published 만이 과거 시제를 표시합니다. working 은 조동사가 없으므로 후보가 되지 못합니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O", "M"],
+          "note": "published 는 목적어를 부르는 동사이고, their findings 가 그 목적어입니다. last month 는 시간을 나타내는 수식어이며 문장 성립에는 영향을 주지 않습니다."
+        }
+      ],
+      "conclusion": "동사처럼 보이는 형태가 둘(working, published)이지만 시제를 표시하는 것은 published 하나뿐입니다. 그래서 이 문장은 옳습니다."
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "준동사인지 본동사인지 가리는 4단계",
+      "steps": [
+        {
+          "text": "동사처럼 보이는 형태를 문장에서 모두 찾아 표시합니다.",
+          "applyNote": "reviewing, has, decided, to extend 네 가지가 동사처럼 보입니다."
+        },
+        {
+          "text": "각 형태가 시제·수를 표시하는지 확인합니다. -ing·to부정사·p.p.는 표시하지 못합니다.",
+          "applyNote": "reviewing 과 to extend 는 시제를 표시하지 못합니다. has 는 현재 시제와 3인칭 단수를 표시합니다."
+        },
+        {
+          "text": "be·have·조동사와 결합한 형태는 동사구 전체를 본동사 하나로 셉니다.",
+          "applyNote": "has decided 는 have + p.p. 이므로 동사구 전체가 본동사 하나입니다."
+        },
+        {
+          "text": "절마다 시제를 가진 동사가 하나씩 남는지 확인합니다. 남지 않으면 밑줄 친 준동사가 본동사로 바뀌어야 하는 자리입니다.",
+          "applyNote": "접속사·관계사가 없으므로 시제 동사는 하나여야 하고, has decided 가 그 하나입니다."
+        }
+      ],
+      "example": {
+        "en": "The committee **reviewing** the applications **has decided** to extend the deadline.",
+        "ko": "지원서를 검토하고 있는 그 위원회는 마감을 연장하기로 결정했습니다.",
+        "note": "reviewing 은 명사를 꾸미는 분사구이고, to extend 는 목적어 역할의 to부정사입니다. 시제를 지는 것은 동사구 has decided 뿐입니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The passengers waiting for the delayed train ( complained / complaining ) to the station staff.",
+      "steps": [
+        {
+          "title": "① 동사처럼 보이는 형태를 찾습니다",
+          "body": "waiting 과 괄호 안의 두 후보가 동사처럼 보입니다. 다른 후보는 없습니다."
+        },
+        {
+          "title": "② 시제 표시 여부를 확인합니다",
+          "body": "waiting 은 -ing 형이고 앞에 be동사가 없습니다. 따라서 시제를 표시하지 못하는 준동사이며, 앞의 명사 The passengers 를 꾸미는 분사구입니다."
+        },
+        {
+          "title": "③ 남은 자리를 판정합니다",
+          "body": "접속사도 관계사도 없으므로 이 문장에는 시제 동사가 정확히 하나 있어야 합니다. 그런데 지금은 하나도 없습니다. 그러므로 괄호가 본동사 자리입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "complaining 을 넣으면 시제 동사가 없는 조각문이 됩니다. 시제를 표시하는 complained 를 넣어야 문장이 완성됩니다."
+        }
+      ],
+      "answer": "complained",
+      "ko": "연착된 기차를 기다리던 승객들이 역무원에게 항의했습니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u01-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The librarian {{blank}} new books on the shelf every Monday.",
+          "options": ["arranges", "arranging"],
+          "answer": 0,
+          "translation": "그 사서는 매주 월요일에 새 책들을 서가에 정리합니다.",
+          "explanation": "이 문장에는 빈칸 말고 시제를 가진 동사가 없습니다. arranging 은 be동사 없이 홀로 쓰인 -ing 형이라 시제를 표시하지 못하므로, 시제를 가진 arranges 가 옳습니다.",
+          "trapTags": ["missing-main-verb", "bare-ing"]
+        },
+        {
+          "id": "u01-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The engineers hired last spring [[u:testing]] the new bridge design every month.",
+          "isCorrect": false,
+          "correction": "test",
+          "translation": "지난봄에 채용된 그 기술자들이 매달 새 교량 설계를 시험합니다.",
+          "explanation": "hired 는 앞의 명사를 꾸미는 과거분사이고, testing 도 조동사가 없어 시제를 표시하지 못합니다. 절에 시제 동사가 하나도 없으므로 밑줄이 본동사 자리이며 test 가 되어야 합니다.",
+          "trapTags": ["missing-main-verb", "bare-ing"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "본동사(구)와 준동사의 경계",
+      "columns": ["본동사(구)", "준동사"],
+      "rows": [
+        {
+          "criterion": "시제·수 표시",
+          "a": "writes / wrote / is writing / has written / is written",
+          "b": "writing / to write / written (조동사 없이)"
+        },
+        {
+          "criterion": "문장에서 맡는 일",
+          "a": "절의 서술어",
+          "b": "명사 · 형용사 · 부사"
+        },
+        {
+          "criterion": "혼자서 절을 세울 수 있는가",
+          "a": "세울 수 있습니다",
+          "b": "세울 수 없습니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The report **is written** by an independent panel every year.",
+          "ko": "그 보고서는 매년 독립 위원단에 의해 작성됩니다.",
+          "note": "be + p.p. 는 동사구 전체가 본동사입니다. 시제는 is 가 표시합니다."
+        },
+        {
+          "en": "The report **written** by an independent panel **drew** sharp criticism.",
+          "ko": "독립 위원단이 작성한 그 보고서는 날카로운 비판을 받았습니다.",
+          "note": "be·have 같은 조동사가 없는 p.p.는 명사를 꾸미는 수식어일 뿐이며, 본동사는 drew 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "시제 도장 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 본동사와 준동사를 가르는 것은 결국 반사 속도입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "조동사 없이 홀로 선 -ing 도 절의 본동사가 될 수 있습니다.",
+          "isTrue": false,
+          "why": "홀로 선 -ing 는 시제가 없어 수식어일 뿐입니다. be와 결합해 is writing 이 되어야 본동사입니다."
+        },
+        {
+          "statement": "has written 은 동사구 전체가 본동사입니다.",
+          "isTrue": true,
+          "why": "have가 시제를 지므로 has written 덩어리가 절을 세웁니다."
+        },
+        {
+          "statement": "being repaired 는 길어 보여도 본동사가 아닙니다.",
+          "isTrue": true,
+          "why": "being 은 be의 준동사 형태라 시제가 없습니다. is being repaired 여야 본동사입니다."
+        },
+        {
+          "statement": "to부정사에는 시제가 없습니다.",
+          "isTrue": true,
+          "why": "to write 는 시간 도장이 없어 절을 세우지 못하고 명사·형용사·부사 역할만 합니다."
+        },
+        {
+          "statement": "조동사 없이 홀로 선 p.p.도 절의 본동사가 됩니다.",
+          "isTrue": false,
+          "why": "written by the panel 처럼 홀로 선 p.p.는 명사를 꾸미는 수식어입니다."
+        },
+        {
+          "statement": "is written 은 be + p.p. 로서 본동사입니다.",
+          "isTrue": true,
+          "why": "is 가 시제를 지는 수동태 동사구이므로 본동사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The letters ( sent / sending ) to the editor last year still influence the paper's policy.",
+      "givenSteps": [
+        "① 시제 동사를 찾습니다 — influence 가 시제를 표시하는 동사입니다.",
+        "② 접속사·관계사를 셉니다 — 하나도 없으므로 시제 동사는 influence 하나로 충분합니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 어떤 형태여야 합니까?",
+      "options": [
+        "sent — 본동사가 이미 있으므로 괄호는 준동사 자리이고, 편지는 보내지는 쪽이므로 과거분사입니다",
+        "sending — 편지가 스스로 보내는 것이므로 능동입니다",
+        "sends — 시제 동사가 둘이어야 문장이 자연스럽습니다"
+      ],
+      "answer": 0,
+      "explain": "본동사 influence 가 이미 있으므로 괄호는 준동사 자리입니다. 편지는 '보내지는' 쪽이므로 과거분사 sent 가 옳습니다. sends 를 넣으면 접속사 없이 시제 동사가 둘이 되어 문장이 무너집니다."
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — being·having p.p. 도 본동사가 아닙니다",
+      "body": "being 과 having p.p. 는 be·have 자체가 준동사 형태로 바뀐 것이어서 여전히 시제를 표시하지 못합니다. 길이가 길고 동사구처럼 보이지만 절의 본동사 자리를 채우지 못합니다.",
+      "example": {
+        "en": "The road **being repaired** after the flood.",
+        "ko": "홍수 뒤에 보수되고 있는 그 도로 (…무엇?)",
+        "note": "being repaired 에는 시제가 없어 문장이 완성되지 않습니다. 본동사가 되려면 is being repaired 처럼 시제를 표시하는 be동사가 앞에 있어야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u01-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The proposal that the mayor announced last week {{blank}} strong opposition from local businesses.",
+          "options": ["has faced", "facing", "having faced"],
+          "answer": 0,
+          "translation": "시장이 지난주에 발표한 그 제안은 지역 상인들의 강한 반대에 부딪혀 왔습니다.",
+          "explanation": "관계사 that 이 절을 하나 열었으므로 시제 동사는 둘이어야 합니다. announced 는 관계절의 동사이므로 주절의 본동사 자리가 비어 있습니다. facing 과 having faced 는 시제를 표시하지 못하고, have + p.p. 인 has faced 만이 시제를 가진 동사구입니다.",
+          "trapTags": ["missing-main-verb", "relative-clause-verb", "having-pp"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 has faced 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "관계사 that 이 절을 하나 열어 시제 동사가 둘 필요한데 announced 하나뿐이라 주절의 본동사 자리가 비어 있었고, 준동사는 그 자리를 채우지 못하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 판단의 근거는 '본동사 자리가 비었는가'이고, 준동사는 그 자리를 채울 수 없다는 원칙입니다."
+        },
+        {
+          "text": "이미 끝난 일을 말하고 있어 현재완료가 의미상 가장 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "의미의 자연스러움은 형태 선택의 근거가 되지 못합니다. facing 과 having faced 도 의미는 통하지만 시제를 표시하지 못해 본동사가 되지 못합니다."
+        },
+        {
+          "text": "having faced 는 지나치게 격식적인 표현이라 더 짧은 형태를 고르는 편이 낫기 때문입니다.",
+          "correct": false,
+          "feedback": "격식의 문제가 아닙니다. having faced 는 having 자체가 준동사여서 시제를 지지 못하므로 구조적으로 본동사가 될 수 없습니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "형태와 판정을 짝짓습니다",
+      "instruction": "왼쪽 형태를 오른쪽의 올바른 판정과 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "is displaying",
+          "b": "본동사 — be가 시제를 진 진행형 동사구",
+          "why": "시제는 is 가 짊어지므로 동사구 전체가 본동사입니다."
+        },
+        {
+          "a": "has displayed",
+          "b": "본동사 — have가 시제를 진 완료형 동사구",
+          "why": "시제는 has 가 짊어지므로 동사구 전체가 본동사입니다."
+        },
+        {
+          "a": "displaying (홀로)",
+          "b": "준동사 — 시제가 없는 수식어",
+          "why": "조동사가 없으면 앞의 명사를 꾸미는 분사구일 뿐입니다."
+        },
+        {
+          "a": "to display",
+          "b": "준동사 — 명사·형용사·부사 역할",
+          "why": "to부정사는 시제 없이 세 역할만 맡습니다."
+        },
+        {
+          "a": "being displayed",
+          "b": "준동사 — being에 시제가 없어 본동사 불가",
+          "why": "is being displayed 라야 시제를 갖춘 본동사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The theory [[1:proposed]] by a young physicist [[2:challenging]] the standard model, and many researchers now [[3:regard]] it as [[4:convincing]].",
+      "answer": 2,
+      "correction": "challenges",
+      "rationales": [
+        "명사 The theory 를 뒤에서 꾸미는 과거분사입니다. 이론은 제안되는 쪽이므로 p.p. 가 옳습니다.",
+        "and 가 절을 하나 더 열었으므로 시제 동사는 둘이어야 합니다. 앞 절에는 시제 동사가 하나도 없는데 -ing 는 그 자리를 채우지 못하므로 challenges 로 고칩니다.",
+        "and 뒤 절의 본동사입니다. 주어 many researchers 가 복수이므로 regard 가 맞습니다.",
+        "regard A as B 구문의 보어 자리이며, 여기서는 형용사로 굳어진 형태가 쓰였습니다. 본동사 자리가 아니므로 문제가 없습니다."
+      ],
+      "ko": "한 젊은 물리학자가 제안한 그 이론은 표준 모형에 도전하며, 많은 연구자가 이제 그것을 설득력 있다고 여깁니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 준동사만 있는 조각문을 주고 '어법에 맞는 문장으로 고쳐 쓰시오'로 물어봅니다. 본동사가 없다는 점을 지적하고 시제를 가진 형태로 바꿔 써야 만점입니다.",
+          "sample": {
+            "en": "The volunteers cleaning the riverbank every weekend.",
+            "ask": "주어진 조각문을 어법에 맞는 완전한 문장으로 고쳐 쓰십시오.",
+            "answer": "The volunteers clean the riverbank every weekend."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 긴 주어 뒤에 준동사를 놓아 본동사를 없앤 선지를 만듭니다. 밑줄이 -ing·p.p. 인데 그 절에 시제 동사가 하나도 없다면 그 밑줄이 정답입니다.",
+          "sample": {
+            "en": "A habit of reading formed in early childhood [[u:shaping]] the way adults handle new information.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "shapes — 주절에 시제 동사가 하나도 없으므로 밑줄이 본동사여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 논문에서 인용된 증거는 신뢰할 만해 보입니다.",
+      "answer": ["The evidence", "cited", "in the paper", "seems", "reliable"],
+      "tiles": [
+        "The evidence",
+        "cited",
+        "in the paper",
+        "seems",
+        "reliable",
+        "seeming"
+      ],
+      "explanation": "cited in the paper 는 앞의 명사를 꾸미는 과거분사구입니다. 본동사 자리에는 시제를 표시하는 seems 가 와야 하므로 seeming 은 쓰이지 않습니다."
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Cities have long tried to reduce the noise of traffic. [[u:A thin layer of rubber added to the asphalt absorbs much of the sound produced by tires.]] Engineers report that the effect lasts for several years, though heavy trucks wear the surface down more quickly.",
+      "instruction": "밑줄 친 문장에서 준동사를 모두 걷어내고 핵 주어와 본동사를 찾으십시오.",
+      "found": "added to the asphalt 와 produced by tires 는 앞의 명사를 꾸미는 과거분사구입니다. 둘 다 조동사가 없어 시제를 표시하지 못합니다. 이를 걷어내면 핵 주어는 A thin layer 이고 본동사는 absorbs 입니다.",
+      "gist": "아스팔트에 덧입힌 얇은 고무층이 타이어 소음을 상당 부분 흡수한다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "준동사 위장의 감별관",
+      "intro": "이 관문에는 본동사 행세를 하는 준동사가 끝없이 밀려듭니다. -ing·to부정사·p.p.의 위장을 벗기지 못하면 아무도 통과하지 못합니다. 네 문제로 그 눈을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The delegates waiting in the main hall {{blank}} the final agreement after midnight.",
+          "options": ["signed", "signing"],
+          "answer": 0,
+          "why": "waiting in the main hall 은 앞의 명사를 꾸미는 -ing 분사구라 시제를 표시하지 못합니다. 시제 동사가 하나도 없으므로 빈칸이 본동사 자리이고 signed 가 옳습니다."
+        },
+        {
+          "prompt": "The manuscript that the scholar discovered {{blank}} how the ancient city traded with its neighbors.",
+          "options": ["reveals", "revealing"],
+          "answer": 0,
+          "why": "관계사 that 이 절을 하나 열었으므로 시제 동사는 둘이어야 합니다. discovered 는 관계절의 동사이고, 주절의 본동사 reveals 가 필요합니다."
+        },
+        {
+          "prompt": "The road {{blank}} after the flood remained closed for two weeks.",
+          "options": ["damaged", "damages"],
+          "answer": 0,
+          "why": "본동사는 remained 하나입니다. 접속사가 없으므로 빈칸은 준동사 자리이고, 도로는 피해를 입는 쪽이므로 과거분사 damaged 가 옳습니다. damages 를 넣으면 시제 동사가 둘이 되어 문장이 깨집니다."
+        },
+        {
+          "prompt": "다음 중 조동사의 도움 없이 혼자서 절의 본동사가 될 수 있는 형태는 무엇입니까?",
+          "options": ["has completed", "completing", "to complete", "being completed"],
+          "answer": 0,
+          "why": "has completed 는 have + p.p. 로 시제를 have가 집니다. completing·to complete·being completed 는 모두 시제가 없는 준동사입니다."
+        }
+      ],
+      "winText": "위장을 전부 벗겼습니다. 시제를 진 것만 본동사로 인정하는 눈 — 그것이 준동사 판별의 핵심이고, 이제 당신 것입니다.",
+      "loseText": "감별관이 서류를 되돌립니다. 네 문제가 물은 것은 하나였습니다 — '이 형태에 시제가 있는가.' 조동사 없이 홀로 선 -ing·to부정사·p.p.는 언제나 준동사입니다. 판별 4단계를 짚고 다시 오십시오."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "-ing·to부정사·p.p.는 ___을 표시하지 못하므로 본동사가 못 되고, ___ 와 결합할 때에만 동사구의 일부가 됩니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "준동사(-ing·to부정사·p.p.)는 시제와 수를 표시하지 못하므로 혼자서 본동사가 되지 못합니다.",
+        "시제를 표시하는 be·have 와 결합하면 동사구 전체가 본동사입니다(is writing / has written / is written).",
+        "being·having p.p. 는 길어 보여도 시제가 없으므로 여전히 본동사가 아닙니다.",
+        "절에 시제 동사가 하나도 남지 않으면 밑줄 친 준동사가 본동사로 바뀌어야 하는 자리입니다."
+      ],
+      "keySentence": {
+        "en": "The scientists **working** on the vaccine **published** their findings last month.",
+        "ko": "그 백신을 연구하던 과학자들이 지난달에 연구 결과를 발표했습니다.",
+        "note": "working 은 조동사가 없어 수식어이고, 시제를 표시하는 published 만이 본동사입니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u01-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The volunteers {{blank}} the animal shelter every weekend collected donations from local shops.",
+          "options": ["visiting", "visit"],
+          "answer": 0,
+          "translation": "주말마다 그 동물 보호소를 방문하는 자원봉사자들은 지역 상점들로부터 기부를 모았습니다.",
+          "explanation": "문장 뒤쪽의 collected 가 이미 시제를 가진 본동사입니다. 접속사·관계사가 없으므로 시제 동사는 하나뿐이어야 하고, 빈칸에는 The volunteers 를 꾸미는 현재분사 visiting 이 옳습니다.",
+          "trapTags": ["double-verb", "bare-ing"]
+        },
+        {
+          "id": "u01-c2-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The novel [[u:being adapted]] into a film already appears on several bestseller lists.",
+          "isCorrect": true,
+          "translation": "영화로 각색되고 있는 그 소설은 이미 여러 베스트셀러 목록에 올라 있습니다.",
+          "explanation": "본동사는 appears 하나입니다. being adapted 는 시제를 표시하지 못하는 준동사구여서 앞의 명사를 꾸미는 수식어로만 기능하므로, 본동사와 충돌하지 않습니다.",
+          "trapTags": ["being-pp", "long-subject"]
+        },
+        {
+          "id": "u01-c2-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The report, which the committee revised twice, {{blank}} the council to postpone the vote, and the mayor accepted the delay.",
+          "options": ["persuaded", "persuading", "to persuade"],
+          "answer": 0,
+          "translation": "위원회가 두 번 수정한 그 보고서는 의회를 설득해 표결을 연기하게 했고, 시장은 그 연기를 받아들였습니다.",
+          "explanation": "관계사 which 와 접속사 and 가 있으므로 시제 동사는 셋이어야 합니다. revised 는 관계절의 동사, accepted 는 뒤 절의 동사이므로 첫 절의 본동사 자리가 비어 있습니다. persuading 과 to persuade 는 시제를 표시하지 못하므로 persuaded 가 옳습니다.",
+          "trapTags": ["missing-main-verb", "relative-clause-verb", "coordination"]
+        }
+      ]
+    }
+  ]
+}

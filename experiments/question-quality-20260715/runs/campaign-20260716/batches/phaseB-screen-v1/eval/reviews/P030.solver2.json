@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a process embodied in a machine' is a reduced relative clause ('a process [that is] embodied in a machine'). 'process' is the patient of 'embody' (the machine embodies the process), so the passive past participle is required; active 'embodying' would reverse the thematic roles. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Subject relative pronoun 'that' has the singular antecedent 'process' ('almost any process'), so the finite verb must be 3sg 'repeats'; the reflexive 'itself' also agrees with the singular inanimate antecedent. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Restrictive relative pronoun 'that' with antecedent 'a clock', serving as subject of the finite 'does not depend on a repetitive cycle of events'. Standard subject relative. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'another, much longer scale clock that also appearing to be like this': the subject relative pronoun 'that' requires a finite verb in its clause, so it must be 'that also appears'. 'appearing' leaves the relative clause verbless. Rescue parses fail: (i) a participial reduction deletes the relative pronoun together with the auxiliary ('a clock also appearing...'), never retaining 'that' while dropping only the verb; (ii) 'that' cannot be a demonstrative determiner since 'also appearing to be like this' is not an NP; (iii) no inversion, ellipsis, or auxiliary licenses a bare -ing form after a subject relative pronoun. Formally ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'It seems to yield a smooth time scale but in fact does not': pro-verb 'does' is VP-ellipsis substituting for 'yield a smooth time scale', coordinated with 'seems' under the 3sg subject 'It' (= the radiocarbon clock). Agreement and coordination are well-formed. Grammatical."
+    }
+  ],
+  "note": "Clean single-error item. (D) is uniquely defensible: a subject relative clause headed by 'that' must contain a finite verb ('appears'), and no alternative construal (reduced relative, demonstrative, absolute construction, ellipsis) makes 'that also appearing' grammatical. All other underlines are provably well-formed with long-distance cues verified (antecedent number agreement for B/C, passive participle patient relation for A, VP-ellipsis antecedent for E)."
+}

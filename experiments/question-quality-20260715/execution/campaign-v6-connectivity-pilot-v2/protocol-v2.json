@@ -1,0 +1,305 @@
+{
+  "schemaVersion": "question-quality-v6-connectivity-pilot-protocol-v2",
+  "artifactId": "campaign-v6-connectivity-pilot-v2",
+  "status": "OFFLINE_RUNNER_SEALED_EXECUTION_BLOCKED_PENDING_HOSTILE_AUDIT",
+  "amends": {
+    "artifactId": "campaign-v6-connectivity-pilot-v1",
+    "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v1/protocol.json",
+    "scope": "Cost ceilings, complete production input, pricing/capability evidence, durable runner, and privacy output contract only.",
+    "unchanged": [
+      "OCVP-B01 PII-free original source",
+      "STANDARD then PREMIUM serial order",
+      "B0_CURRENT_CONTROL",
+      "INTERMEDIATE",
+      "one candidate and one physical fetch maximum per assignment",
+      "no retry, repair, fallback, replacement, or top-up",
+      "two-row result cannot support a quality or reliability comparison"
+    ]
+  },
+  "authorityCommitment": {
+    "authoritySemanticSha256": "b09a67eb46387861aa72d64154a0d4f659a697e2468f43a876ccd157b0f82008",
+    "originalProtocolV1Sha256": "b6eba782e92a16c8bba3b6b3b4c5a633449fba117fcf0b5e51a3dbf3f1e8b1f2",
+    "originalPublicCorpusSha256": "465e3d6d17bd6c2748fb69d05f3947f96ecc42d0abf71bd56f4e3dbb969933f6",
+    "originalRowPublicId": "OCVP-B01",
+    "originalQuestionType": "BLANK_INFERENCE",
+    "v1MojibakeSurfaceRejected": true,
+    "v2UnicodeSurfaceAuthoritative": true
+  },
+  "exactWireSeal": {
+    "publicArtifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/offline-exact-wire-seal-v2.json",
+    "publicArtifactSha256": "8f801052a4eed1c3ec908f7105ec58b0ed1d7a96e197c45033dc2fbd79c2c181",
+    "privateArtifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/private/exact-wire-v2.private.json",
+    "privateArtifactSha256": "9f82b1d2934beafac2f32d4daa1d7328870b8928a11ab2a502f4a8f26f8fae49",
+    "privateArtifactGitIgnored": true,
+    "productionModulesImportedAfterNetworkDenyGuard": true,
+    "locallyInterceptedFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0
+  },
+  "completeProductionInput": {
+    "questionType": "BLANK_INFERENCE",
+    "planItem": {
+      "subType": "BLANK_INFERENCE",
+      "count": 1,
+      "reason": "Fixed PII-free two-call connectivity pilot assignment.",
+      "targetPoints": []
+    },
+    "schoolType": "고등학교",
+    "gradeInfo": "2학년",
+    "difficulty": "INTERMEDIATE",
+    "profileId": "B0_CURRENT_CONTROL",
+    "teacherIntentBlock": "",
+    "analysisContext": "",
+    "customPrompt": "",
+    "qualityMode": "strict",
+    "attemptIndex": 0,
+    "typeSettingsPresent": false,
+    "diversityPresent": false,
+    "passageSource": "PRIVATE_COMMITMENT_CHECKED_OCVP_B01"
+  },
+  "exactProviderContract": {
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "endpointTag": "google-vertex/global",
+    "provider": {
+      "order": [
+        "google-vertex/global"
+      ],
+      "only": [
+        "google-vertex/global"
+      ],
+      "allow_fallbacks": false,
+      "require_parameters": true,
+      "data_collection": "deny",
+      "zdr": true
+    },
+    "reasoning": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "completionCount": 1,
+    "strictJsonSchema": true,
+    "semanticCandidateMaximum": 1
+  },
+  "pricingAmendment": {
+    "amendmentRequired": true,
+    "reason": "The production exact-wire byte upper bounds plus a 4096-token server overhead, 4000 output tokens, all-active emergency rate ceilings, and a 1.1 safety multiplier exceed every v1 per-call and total cap.",
+    "formula": "ceil_1e-9(1.1 * (((exactWireBodyUtf8Bytes + 4096) * emergencyInputUsdPer1M + 4000 * emergencyOutputUsdPer1M) / 1000000))",
+    "inputAccountingRule": "Treat each UTF-8 request byte as one input token upper bound before adding the server overhead; this is intentionally conservative.",
+    "serverTokenOverheadUpperBound": 4096,
+    "safetyMultiplier": 1.1,
+    "currency": "USD",
+    "rateCeilingScope": "ALL_ACTIVE_MODEL_ENDPOINTS_AND_OVERRIDES",
+    "assignments": [
+      {
+        "ordinal": 1,
+        "plan": "STANDARD",
+        "modelId": "google/gemini-3.5-flash",
+        "exactWireBodyUtf8Bytes": 53354,
+        "maxOutputTokens": 4000,
+        "emergencyInputUsdPer1M": 2.7,
+        "emergencyOutputUsdPer1M": 16.2,
+        "calculatedWorstCaseUsdCap": 0.241906501,
+        "v1CapUsd": 0.14,
+        "v1CapSufficient": false
+      },
+      {
+        "ordinal": 2,
+        "plan": "PREMIUM",
+        "modelId": "google/gemini-3.1-pro-preview",
+        "exactWireBodyUtf8Bytes": 24943,
+        "maxOutputTokens": 4000,
+        "emergencyInputUsdPer1M": 7.2,
+        "emergencyOutputUsdPer1M": 32.4,
+        "calculatedWorstCaseUsdCap": 0.372548881,
+        "v1CapUsd": 0.2,
+        "v1CapSufficient": false
+      }
+    ],
+    "totalCalculatedWorstCaseUsdCap": 0.614455382,
+    "v1TotalCapUsd": 0.34,
+    "v1TotalCapSufficient": false,
+    "silentUnderReservationAllowed": false,
+    "futureFreshProofAboveAnyFrozenRateCeiling": "BLOCK_AND_REQUIRE_NEW_PROTOCOL_VERSION"
+  },
+  "freshPricingAndCapabilityProof": {
+    "schemaVersionRequired": 2,
+    "maximumAgeMsAtEveryLease": 900000,
+    "exactEndpointTagRequired": "google-vertex/global",
+    "exactTagCardinalityPerModel": 1,
+    "allActiveEmergencyCeilingRequired": true,
+    "publicEndpointSupportedParametersRequired": [
+      "response_format",
+      "max_tokens"
+    ],
+    "structuredOutputsFlagRecordedWhenPresent": true,
+    "capabilityClaimScope": "PUBLIC_ENDPOINT_DECLARATION_ONLY",
+    "routerRequestEvidenceSeparatelyRequires": [
+      "provider.only",
+      "provider.order",
+      "provider.allow_fallbacks=false",
+      "provider.require_parameters=true",
+      "provider.data_collection=deny",
+      "provider.zdr=true"
+    ],
+    "actualParameterAcceptanceClaim": "ONLY_AFTER_A_SUCCESSFUL_LIVE_RESPONSE_WITH_VALID_ROUTER_METADATA_AND_STRUCTURED_RESPONSE",
+    "priceAndCapabilityClaimsMustRemainSeparate": true,
+    "canonicalServedModelRequired": true,
+    "rollingAttestationRequiredAtEveryLease": true
+  },
+  "durableBounds": {
+    "sharedBatchCandidateOpportunityCap": 2,
+    "sharedBatchPhysicalFetchCap": 2,
+    "sharedBatchCostCapUsd": 0.614455382,
+    "perAssignmentCandidateOpportunityCap": 1,
+    "perAssignmentPhysicalFetchCap": 1,
+    "perAssignmentOuterAttemptCap": 1,
+    "perAssignmentSdkRetryCap": 0,
+    "concurrency": 1,
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "candidateDebitedBeforeNetworkSend": true,
+    "retryAllowed": false,
+    "repairAllowed": false,
+    "fallbackAllowed": false,
+    "replacementAllowed": false,
+    "topUpAllowed": false,
+    "timeoutMsByPlan": {
+      "STANDARD": 60000,
+      "PREMIUM": 180000
+    },
+    "ambiguousPostSendOutcomeConsumesReservationAndCannotReplay": true
+  },
+  "credentialException": {
+    "sourceEnvironmentName": "OPENROUTER_API_KEY",
+    "existingGenericCredentialAllowed": true,
+    "scope": "THIS_TWO_CALL_PII_FREE_CONNECTIVITY_PILOT_ONLY",
+    "inheritedByS1": false,
+    "alternateCredentialSourcesAllowed": false,
+    "credentialValueMayBePrinted": false,
+    "credentialValueMayBeHashed": false,
+    "credentialValueMayBePersisted": false,
+    "childEnvironmentIsMinimalAllowlist": true
+  },
+  "routerMetadataEvidence": {
+    "requiredForEverySuccessfulResponse": true,
+    "strategy": "direct",
+    "mandatoryAttempt": 1,
+    "isByok": false,
+    "selectedEndpointCount": 1,
+    "selectedModelMustEqualRequestedModel": true,
+    "topLevelServedModelMayBeExactOrCanonicalDatedSlug": true,
+    "attemptsArray": "OPTIONAL_BUT_IF_PRESENT_EXACTLY_ONE_SUCCESS_WITH_SAME_PROVIDER_AND_REQUESTED_MODEL",
+    "cacheHitWithoutMetadata": "QUARANTINE_NO_REPLAY",
+    "unknownAdditiveMetadataAllowed": true
+  },
+  "privatePersistence": {
+    "root": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/private",
+    "gitIgnored": true,
+    "rawRequestAndResponsePrivate": true,
+    "providerGenerationIdPrivate": true,
+    "durableSqlitePrivate": true,
+    "executionDirectoryMustBeNewAndEmpty": true,
+    "existingDatabaseMayBeReused": false
+  },
+  "controllerSourceFreeze": {
+    "schemaVersion": "question-quality-connectivity-pilot-controller-source-freeze-v1",
+    "files": [
+      {
+        "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+        "sha256": "b8812dbe0dc89ee103961563698a5fa47ac97add6d637be94737e886c30e3511"
+      },
+      {
+        "path": "experiments/question-quality-20260715/harness/ledger.ts",
+        "sha256": "8a1ad1b22daf4f449242c9f122c4271650cb18991d56040d54f5659e09d3833e"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+        "sha256": "529bf8a63e794d3bc3c3d4eb834cd9ef48c720bc203190c5499cc8e613c58438"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/MANIFEST.sha256",
+        "sha256": "3ed71284aaf28c6c0f78f89d75c13bc30f86d894f17ccecf88f24d4cd5c1614b"
+      }
+    ],
+    "closureSha256": "55689b32374c8b3abf31c8ec41a5ddf0be1ed03d80e81f78b7c8b7a9657f8e95"
+  },
+  "liveIsolationContract": {
+    "launcherSeparateFile": true,
+    "isolatedChildRequired": true,
+    "childCwdUnderPrivateNewExecutionDirectory": true,
+    "inheritedEnvironmentAllowlist": [
+      "SystemRoot",
+      "WINDIR",
+      "PATH",
+      "PATHEXT",
+      "TEMP",
+      "TMP",
+      "COMSPEC",
+      "OPENROUTER_API_KEY"
+    ],
+    "forbiddenEnvironmentNames": [
+      "HOME",
+      "USERPROFILE",
+      "APPDATA",
+      "LOCALAPPDATA"
+    ],
+    "forbiddenRepositoryEnvFiles": [
+      ".env",
+      ".env.local",
+      ".env.development",
+      ".env.production"
+    ],
+    "forbiddenLoaders": [
+      "dotenv",
+      "loadEnvConfig",
+      "@next/env"
+    ],
+    "credentialReadLocation": "ISOLATED_LAUNCHER_CAPABILITY_TO_CHILD_PROCESS_ENV_ONLY",
+    "offlineTransportCannotMintLiveCapability": true,
+    "currentLauncherMustFailClosed": true
+  },
+  "publicResultAllowlist": [
+    "schemaVersion",
+    "status",
+    "startedAssignments",
+    "settledAssignments",
+    "successfulAssignments",
+    "candidateOpportunitiesConsumed",
+    "physicalFetches",
+    "actualCostUsd",
+    "effectiveCostUsd",
+    "usageEvidenceComplete",
+    "routeEvidenceComplete",
+    "parserEvidenceComplete",
+    "batchBreached",
+    "auditHeadHash",
+    "executionArtifactSha256"
+  ],
+  "publicResultForbidden": [
+    "prompt",
+    "passage",
+    "question",
+    "options",
+    "answer",
+    "explanation",
+    "response body",
+    "raw metadata",
+    "provider generation id",
+    "credential value",
+    "credential hash"
+  ],
+  "authorization": {
+    "liveExecutionAuthorized": false,
+    "hostileAuditPassed": false,
+    "dispatchCommandPresent": false,
+    "networkCallsDuringSeal": 0,
+    "modelCallsDuringSeal": 0,
+    "providerCallsDuringSeal": 0,
+    "apiCandidatesConsumedDuringSeal": 0
+  }
+}

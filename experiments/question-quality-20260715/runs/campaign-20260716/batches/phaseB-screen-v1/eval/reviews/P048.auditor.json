@@ -1,0 +1,82 @@
+{
+  "pid": "P048",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-DISTRACTOR-FRAGMENT",
+      "severity": "critical",
+      "evidence": "Option ④ 'though cinema and law complement each other to cultivate highly rational minds' is a bare subordinate clause with no main clause. Inserted into the slot it yields the fragment '...cinema and law interesting: though cinema and law complement each other to cultivate highly rational minds.' The following sentence 'It tries to ensure...' then has no singular referent ('cinema and law' is plural). Options ①②③⑤ are all [conjunction + clause, main clause] structures; ④ alone is eliminable purely by grammar, mismatching the BLANK_INFERENCE type intent that all distractors be grammatical in-slot (RUBRIC §A V3: 오답의 비문 여부가 유형 의도와 정확히 일치)."
+    },
+    {
+      "code": "V4-INVISIBLE-EVIDENCE-CITATION",
+      "severity": "critical",
+      "evidence": "The main 해설 cites 'keeps it in check' and 'expresses man's affective life' as 지문 evidence ('지문 후반부에서 ... 설명합니다'), but both phrases occur only inside the blanked-out span and are invisible to the student; citing the removed answer span as passage evidence is circular. 오답해설 ① repeats the invisible citation 'keeps it in check' and 오답해설 ③ repeats 'expresses man's affective life'. Only 'suppress affects' and 'introduces us to our affects' are actually visible in the rendered passage."
+    },
+    {
+      "code": "KEYPOINTS-DUPLICATION",
+      "severity": "minor",
+      "evidence": "keyPoints[1] reads 'affective, suppress, suppress 등의 어휘를 통해' — the word 'suppress' is duplicated, an editorial corruption in an exposed field (does not break label/option sync, so V5 held)."
+    },
+    {
+      "code": "ANSWER-RESTATED-IN-PASSAGE",
+      "severity": "major",
+      "evidence": "The two sentences following the blank ('It tries to ensure that we are not overwhelmed and destroyed by our desires and drives.' and 'The law obsessively tries to suppress affects ... whereas cinema introduces us to our affects ...') restate the blanked contrast nearly verbatim, so option ② is recoverable from a single adjacent sentence. Craft defect (C3/C4/C5), not a validity gate, but decisive for the KILLER label."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "Actor/relation distortion: cinema acts on the law and the law ends up embracing affect (role reversal of law's restraining function).",
+      "temptingBecause": "Contrastive conjunction 'although' mirrors the expected contrast frame; 'moral chaos' superficially echoes the passage's 'messiness of human relations' and violence anxiety.",
+      "decisiveFlaw": "The passage says the law 'keeps it in check' / 'obsessively tries to suppress affects' — the law never embraces chaos, and nothing supports cinema 'injecting' anything into the law."
+    },
+    {
+      "label": "②",
+      "intent": "Correct answer: abstracted paraphrase of the removed span (cinema expresses affective life / law keeps it in check).",
+      "temptingBecause": "N/A (correct).",
+      "decisiveFlaw": "None — uniquely consistent with 'It tries to ensure that we are not overwhelmed...' (It = the law) and the final suppress-vs-introduce contrast."
+    },
+    {
+      "label": "③",
+      "intent": "Polarity reversal: swaps the roles (cinema suppresses, law satisfies).",
+      "temptingBecause": "Reuses passage keywords (suppress, desires) and the exact 'whereas' contrast frame of the final sentence, so shallow keyword matching can trap a student.",
+      "decisiveFlaw": "Exact reversal of the stated relation: the passage says cinema 'introduces us to our affects' while the law 'tries to suppress affects'; also incompatible with the following 'It tries to ensure that we are not overwhelmed ... by our desires'."
+    },
+    {
+      "label": "④",
+      "intent": "Similarity-for-difference overextension: asserts complementarity and rationality where the passage announces a difference.",
+      "temptingBecause": "'Complement each other' appeals to the passage's earlier commonality claims (shared subjects, both struggle with what it means to be human).",
+      "decisiveFlaw": "Contradicts the 'important difference' frame and imports 'highly rational minds' absent from the passage; additionally it is a grammatical fragment in the slot (no main clause) and leaves the following 'It' without a referent, so it is eliminable by form alone — a validity defect, effectively filler."
+    },
+    {
+      "label": "⑤",
+      "intent": "Topic substitution + condition loss: reframes cinema as aesthetic education and the law as neutral bystander.",
+      "temptingBecause": "Cinema-as-aesthetics is plausible from world knowledge, and 'remains neutral' sounds like a measured academic claim.",
+      "decisiveFlaw": "The passage never mentions aesthetic tastes, and the law is the opposite of neutral toward affect — it 'obsessively tries to suppress' it."
+    }
+  ],
+  "explanationIssues": [
+    "Main 해설 cites 'keeps it in check' and 'expresses man's affective life' as visible passage evidence although both belong to the blanked-out span (circular, invisible-to-student citation).",
+    "오답해설 ① cites 'keeps it in check' (invisible span) as its contradiction evidence.",
+    "오답해설 ③ cites 'expresses man's affective life' (invisible span) as its reversal evidence.",
+    "keyPoints[1] contains the duplicated token 'suppress, suppress'.",
+    "오답해설 content otherwise correctly corresponds to each option's actual claim (①=embrace reversal, ③=polarity reversal, ④=complementarity/rationality overextension, ⑤=aesthetics/neutrality distortion); ④'s explanation omits its grammatical-fragment defect."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V5 pass: the blanking is clean, ② is the unique correct answer, and labels/keys are synchronized. Two fatal gates fail. (1) V3: option ④ is a bare 'though'-clause fragment that does not fit the syntactic slot the other four options occupy and strands the following pronoun 'It'; a distractor eliminable purely by grammar violates the blank-inference type intent (and §D's same-slot condition). (2) V4: the explanations repeatedly quote the removed answer span ('keeps it in check', 'expresses man's affective life') as if it were visible passage evidence — reasoning written against the source text, not the rendered item. Craft is also weak for a KILLER request: the two sentences after the blank restate the answer almost verbatim, so the item solves off one adjacent sentence via a simple polarity check (C3=1, C4=1, C5=0). killerConditionsMet=false (same-slot violation by ④; no multi-clue linkage required; polarity alone separates ② from ③). Repair path: rewrite ④ as a full two-clause option, rewrite all explanations to cite only rendered-visible anchors, fix keyPoints duplication, and either blank a less-restated span or prune the verbatim restatement to reach KILLER depth."
+}

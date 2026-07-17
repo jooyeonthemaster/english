@@ -1,0 +1,689 @@
+{
+  "schemaVersion": "blind-adjudication-synthetic-fixtures-v1",
+  "privacy": {
+    "containsActualQuestion": false,
+    "containsActualPassage": false,
+    "containsDatabaseIdentifier": false,
+    "containsCredential": false
+  },
+  "baseRecords": {
+    "VALID_GRAMMAR_A": {
+      "schemaVersion": "blind-review-record-v2",
+      "reviewId": "REV_SYN_GRAMMAR_A",
+      "reviewerPseudonym": "RATER_SYN_1",
+      "itemPseudonym": "ITEM_SYN_GRAMMAR_A",
+      "surfaceSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "relabelMapSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "type": "GRAMMAR_ERROR",
+      "block": "GRAMMAR",
+      "evidenceFamily": "marked_selection",
+      "plan": "CALIBRATION_NOT_APPLICABLE",
+      "difficulty": "KILLER",
+      "stage": "CALIBRATION",
+      "blindSolve": {
+        "completedBeforeReveal": true,
+        "sealedAt": "2026-07-15T01:00:00+09:00",
+        "sealedRecordSha256": "1212121212121212121212121212121212121212121212121212121212121212",
+        "disposition": "ANSWER",
+        "answerLabels": ["C"],
+        "alternativeAnswerLabels": [],
+        "answerText": {
+          "mode": "NONE",
+          "inlineTexts": [],
+          "privateTextRef": null,
+          "sha256": null
+        },
+        "confidence": "HIGH",
+        "shortcutAudits": [
+          { "signal": "grammar", "predicts": "C", "material": false }
+        ]
+      },
+      "revealAudit": {
+        "revealedAfterBlindSolve": true,
+        "revealedAt": "2026-07-15T01:05:00+09:00",
+        "revealSha256": "1313131313131313131313131313131313131313131313131313131313131313",
+        "sourceBindingChecked": true,
+        "storedKeyChecked": true,
+        "scoringContractChecked": true,
+        "explanationChecked": true,
+        "evidenceRefs": ["SRC:SYN_G_A", "SURF:SYN_G_A"]
+      },
+      "validity": {
+        "domains": {
+          "taskAndRender": true,
+          "sourceLineage": true,
+          "answerSpace": true,
+          "surfaceLanguage": true,
+          "alternativeReading": true,
+          "explanationTruth": true,
+          "synchronization": true,
+          "leakage": true
+        },
+        "anyFatal": false,
+        "fatalCodes": [],
+        "declaredAnswerCardinality": 1,
+        "independentlyDefensibleAnswerCardinality": 1,
+        "independentlyDefensibleAnswers": ["C"],
+        "unresolved": false
+      },
+      "explanationAudit": {
+        "allClaimsAccurate": true,
+        "surfaceBound": true,
+        "keyReasonPresent": true,
+        "wrongElementReasonsComplete": true,
+        "redundantRestatementCount": 0,
+        "unsupportedClaimCount": 0,
+        "economyScore": 4
+      },
+      "craft": {
+        "scores": {
+          "pedagogicalPointWorthiness": 4,
+          "evidencePathEconomy": 4,
+          "visibleIntentCoverage": 4,
+          "competitivePlausibility": 3,
+          "shortcutResistance": 4,
+          "difficultyCalibration": 4,
+          "surfaceNaturalness": 4,
+          "explanationEconomy": 4
+        },
+        "intentCoverageFraction": 1,
+        "materialShortcut": false,
+        "holisticMaterialDefect": false,
+        "holisticReasonCode": "BEAUTIFUL_KILLER"
+      },
+      "grammarAudit": {
+        "surfaceContract": "EXACT_5_MARKERS_1_INVALID",
+        "declaredMarkerCount": 5,
+        "declaredAnswerCount": 1,
+        "markedSites": [
+          {
+            "label": "A",
+            "isKey": false,
+            "sourceCorrect": true,
+            "displayedGrammaticality": "GRAMMATICAL",
+            "correctionRestoresSource": true,
+            "pointCode": "REL_CLAUSE",
+            "pointFamily": "CLAUSE",
+            "governingRule": "A complete relative dependency is licensed by its visible governor.",
+            "governorEvidenceRefs": ["SURF:G_A"],
+            "dependencySpanTokens": 8,
+            "minimalMutation": true,
+            "alternativeParseConsidered": true,
+            "diagnosis": "VALID_DECOY",
+            "pointWorthiness": 3,
+            "explanationAccurate": true
+          },
+          {
+            "label": "B",
+            "isKey": false,
+            "sourceCorrect": true,
+            "displayedGrammaticality": "GRAMMATICAL",
+            "correctionRestoresSource": true,
+            "pointCode": "VOICE",
+            "pointFamily": "VOICE",
+            "governingRule": "The visible argument structure licenses the displayed voice.",
+            "governorEvidenceRefs": ["SURF:G_B"],
+            "dependencySpanTokens": 6,
+            "minimalMutation": true,
+            "alternativeParseConsidered": true,
+            "diagnosis": "VALID_DECOY",
+            "pointWorthiness": 3,
+            "explanationAccurate": true
+          },
+          {
+            "label": "C",
+            "isKey": true,
+            "sourceCorrect": true,
+            "displayedGrammaticality": "UNGRAMMATICAL",
+            "correctionRestoresSource": true,
+            "pointCode": "LONG_AGREEMENT",
+            "pointFamily": "AGREEMENT",
+            "governingRule": "The finite predicate agrees with the nonlocal head across an attractor phrase.",
+            "governorEvidenceRefs": ["SURF:G_C1", "SURF:G_C2"],
+            "dependencySpanTokens": 17,
+            "minimalMutation": true,
+            "alternativeParseConsidered": true,
+            "diagnosis": "ANSWER_ERROR",
+            "pointWorthiness": 4,
+            "explanationAccurate": true
+          },
+          {
+            "label": "D",
+            "isKey": false,
+            "sourceCorrect": true,
+            "displayedGrammaticality": "GRAMMATICAL",
+            "correctionRestoresSource": true,
+            "pointCode": "NONFINITE",
+            "pointFamily": "COMPLEMENT",
+            "governingRule": "The selecting predicate licenses the displayed nonfinite complement.",
+            "governorEvidenceRefs": ["SURF:G_D"],
+            "dependencySpanTokens": 7,
+            "minimalMutation": true,
+            "alternativeParseConsidered": true,
+            "diagnosis": "VALID_DECOY",
+            "pointWorthiness": 3,
+            "explanationAccurate": true
+          },
+          {
+            "label": "E",
+            "isKey": false,
+            "sourceCorrect": true,
+            "displayedGrammaticality": "GRAMMATICAL",
+            "correctionRestoresSource": true,
+            "pointCode": "PARALLEL",
+            "pointFamily": "PARALLELISM",
+            "governingRule": "The coordinated constituents have compatible syntactic form and function.",
+            "governorEvidenceRefs": ["SURF:G_E"],
+            "dependencySpanTokens": 11,
+            "minimalMutation": true,
+            "alternativeParseConsidered": true,
+            "diagnosis": "VALID_DECOY",
+            "pointWorthiness": 3,
+            "explanationAccurate": true
+          }
+        ],
+        "distinctPointFamilies": 5,
+        "allCorrectionsRoundTrip": true,
+        "allExplanationsAccurate": true
+      },
+      "blankAudit": null,
+      "typeSpecificEvidence": [
+        {
+          "checkId": "GRAMMAR_MARKED_SITE_COMPLETE",
+          "pass": true,
+          "evidenceRefs": ["SURF:SYN_G_A"]
+        }
+      ],
+      "grade": "A",
+      "calibrationStatus": {
+        "status": "UNASSESSED",
+        "certificateId": null,
+        "certificateScopeSha256": null,
+        "rowsSinceCheckpoint": 0
+      }
+    },
+    "VALID_BLANK_A": {
+      "schemaVersion": "blind-review-record-v2",
+      "reviewId": "REV_SYN_BLANK_A",
+      "reviewerPseudonym": "RATER_SYN_2",
+      "itemPseudonym": "ITEM_SYN_BLANK_A",
+      "surfaceSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "relabelMapSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "type": "BLANK_INFERENCE",
+      "block": "BLANK",
+      "evidenceFamily": "option_selection",
+      "plan": "CALIBRATION_NOT_APPLICABLE",
+      "difficulty": "KILLER",
+      "stage": "CALIBRATION",
+      "blindSolve": {
+        "completedBeforeReveal": true,
+        "sealedAt": "2026-07-15T02:00:00+09:00",
+        "sealedRecordSha256": "2323232323232323232323232323232323232323232323232323232323232323",
+        "disposition": "ANSWER",
+        "answerLabels": ["D"],
+        "alternativeAnswerLabels": [],
+        "answerText": {
+          "mode": "NONE",
+          "inlineTexts": [],
+          "privateTextRef": null,
+          "sha256": null
+        },
+        "confidence": "HIGH",
+        "shortcutAudits": [
+          { "signal": "copy", "predicts": "D", "material": false },
+          { "signal": "polarity", "predicts": "D", "material": false }
+        ]
+      },
+      "revealAudit": {
+        "revealedAfterBlindSolve": true,
+        "revealedAt": "2026-07-15T02:05:00+09:00",
+        "revealSha256": "2424242424242424242424242424242424242424242424242424242424242424",
+        "sourceBindingChecked": true,
+        "storedKeyChecked": true,
+        "scoringContractChecked": true,
+        "explanationChecked": true,
+        "evidenceRefs": ["SRC:SYN_B_A", "SURF:SYN_B_A"]
+      },
+      "validity": {
+        "domains": {
+          "taskAndRender": true,
+          "sourceLineage": true,
+          "answerSpace": true,
+          "surfaceLanguage": true,
+          "alternativeReading": true,
+          "explanationTruth": true,
+          "synchronization": true,
+          "leakage": true
+        },
+        "anyFatal": false,
+        "fatalCodes": [],
+        "declaredAnswerCardinality": 1,
+        "independentlyDefensibleAnswerCardinality": 1,
+        "independentlyDefensibleAnswers": ["D"],
+        "unresolved": false
+      },
+      "explanationAudit": {
+        "allClaimsAccurate": true,
+        "surfaceBound": true,
+        "keyReasonPresent": true,
+        "wrongElementReasonsComplete": true,
+        "redundantRestatementCount": 0,
+        "unsupportedClaimCount": 0,
+        "economyScore": 4
+      },
+      "craft": {
+        "scores": {
+          "pedagogicalPointWorthiness": 4,
+          "evidencePathEconomy": 4,
+          "visibleIntentCoverage": 4,
+          "competitivePlausibility": 4,
+          "shortcutResistance": 4,
+          "difficultyCalibration": 4,
+          "surfaceNaturalness": 4,
+          "explanationEconomy": 4
+        },
+        "intentCoverageFraction": 1,
+        "materialShortcut": false,
+        "holisticMaterialDefect": false,
+        "holisticReasonCode": "BEAUTIFUL_KILLER"
+      },
+      "grammarAudit": null,
+      "blankAudit": {
+        "slotContractEvidenceRefs": ["SURF:B_LEFT", "SURF:B_RIGHT"],
+        "options": [
+          {
+            "label": "A",
+            "isKey": false,
+            "slotGrammarCompatible": true,
+            "completedSentenceNaturalness": 4,
+            "passageGrounded": true,
+            "evidenceRefs": ["SRC:B_A"],
+            "overlappingAxes": ["actorOrTarget", "polarity", "stance"],
+            "divergentAxes": ["scopeOrQuantifier"],
+            "primaryIntentAxis": "scope_shift",
+            "nearMissStrength": 4,
+            "singleDecisiveFlaw": true,
+            "cheapGiveaway": false
+          },
+          {
+            "label": "B",
+            "isKey": false,
+            "slotGrammarCompatible": true,
+            "completedSentenceNaturalness": 4,
+            "passageGrounded": true,
+            "evidenceRefs": ["SRC:B_B"],
+            "overlappingAxes": [
+              "actorOrTarget",
+              "polarity",
+              "scopeOrQuantifier"
+            ],
+            "divergentAxes": ["causalRelationAndDirection"],
+            "primaryIntentAxis": "causal_reversal",
+            "nearMissStrength": 4,
+            "singleDecisiveFlaw": true,
+            "cheapGiveaway": false
+          },
+          {
+            "label": "C",
+            "isKey": false,
+            "slotGrammarCompatible": true,
+            "completedSentenceNaturalness": 4,
+            "passageGrounded": true,
+            "evidenceRefs": ["SRC:B_C"],
+            "overlappingAxes": [
+              "actorOrTarget",
+              "causalRelationAndDirection",
+              "stance"
+            ],
+            "divergentAxes": ["conditionOrModality"],
+            "primaryIntentAxis": "condition_loss",
+            "nearMissStrength": 3,
+            "singleDecisiveFlaw": true,
+            "cheapGiveaway": false
+          },
+          {
+            "label": "D",
+            "isKey": true,
+            "slotGrammarCompatible": true,
+            "completedSentenceNaturalness": 4,
+            "passageGrounded": true,
+            "evidenceRefs": ["SRC:B_D1", "SRC:B_D2"],
+            "overlappingAxes": [
+              "actorOrTarget",
+              "polarity",
+              "conditionOrModality",
+              "causalRelationAndDirection",
+              "scopeOrQuantifier",
+              "stance"
+            ],
+            "divergentAxes": [],
+            "primaryIntentAxis": "CORRECT",
+            "nearMissStrength": 0,
+            "singleDecisiveFlaw": false,
+            "cheapGiveaway": false
+          },
+          {
+            "label": "E",
+            "isKey": false,
+            "slotGrammarCompatible": true,
+            "completedSentenceNaturalness": 4,
+            "passageGrounded": true,
+            "evidenceRefs": ["SRC:B_E"],
+            "overlappingAxes": [
+              "actorOrTarget",
+              "conditionOrModality",
+              "scopeOrQuantifier"
+            ],
+            "divergentAxes": ["stance"],
+            "primaryIntentAxis": "stance_shift",
+            "nearMissStrength": 3,
+            "singleDecisiveFlaw": true,
+            "cheapGiveaway": false
+          }
+        ],
+        "axisOracle": [
+          { "axis": "actorOrTarget", "supportedValueEvidenceRefs": ["SRC:AXIS_ACTOR"], "answerPreserved": true },
+          { "axis": "polarity", "supportedValueEvidenceRefs": ["SRC:AXIS_POLARITY"], "answerPreserved": true },
+          { "axis": "conditionOrModality", "supportedValueEvidenceRefs": ["SRC:AXIS_CONDITION"], "answerPreserved": true },
+          { "axis": "causalRelationAndDirection", "supportedValueEvidenceRefs": ["SRC:AXIS_CAUSAL"], "answerPreserved": true },
+          { "axis": "scopeOrQuantifier", "supportedValueEvidenceRefs": ["SRC:AXIS_SCOPE"], "answerPreserved": true },
+          { "axis": "stance", "supportedValueEvidenceRefs": ["SRC:AXIS_STANCE"], "answerPreserved": true },
+          { "axis": "temporalRelation", "supportedValueEvidenceRefs": ["SRC:AXIS_TEMPORAL"], "answerPreserved": true }
+        ],
+        "allFiveSlotGrammarCompatible": true,
+        "uniqueAnswer": true,
+        "requiredEvidenceLinkCount": 2,
+        "wrongOptionPrimaryAxisDistinctness": 1,
+        "answerPreservesAllAxes": true
+      },
+      "typeSpecificEvidence": [
+        {
+          "checkId": "BLANK_FULL_SEAM_RECOMPOSED",
+          "pass": true,
+          "evidenceRefs": ["SURF:SYN_B_A"]
+        }
+      ],
+      "grade": "A",
+      "calibrationStatus": {
+        "status": "UNASSESSED",
+        "certificateId": null,
+        "certificateScopeSha256": null,
+        "rowsSinceCheckpoint": 0
+      }
+    },
+    "VALID_NONFOCUS_B": {
+      "schemaVersion": "blind-review-record-v2",
+      "reviewId": "REV_SYN_TITLE_B",
+      "reviewerPseudonym": "RATER_SYN_3",
+      "itemPseudonym": "ITEM_SYN_TITLE_B",
+      "surfaceSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "relabelMapSha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "type": "TITLE",
+      "block": "NONFOCUS",
+      "evidenceFamily": "option_selection",
+      "plan": "CALIBRATION_NOT_APPLICABLE",
+      "difficulty": "INTERMEDIATE",
+      "stage": "CALIBRATION",
+      "blindSolve": {
+        "completedBeforeReveal": true,
+        "sealedAt": "2026-07-15T03:00:00+09:00",
+        "sealedRecordSha256": "3434343434343434343434343434343434343434343434343434343434343434",
+        "disposition": "ANSWER",
+        "answerLabels": ["B"],
+        "alternativeAnswerLabels": [],
+        "answerText": {
+          "mode": "NONE",
+          "inlineTexts": [],
+          "privateTextRef": null,
+          "sha256": null
+        },
+        "confidence": "HIGH",
+        "shortcutAudits": []
+      },
+      "revealAudit": {
+        "revealedAfterBlindSolve": true,
+        "revealedAt": "2026-07-15T03:05:00+09:00",
+        "revealSha256": "3535353535353535353535353535353535353535353535353535353535353535",
+        "sourceBindingChecked": true,
+        "storedKeyChecked": true,
+        "scoringContractChecked": true,
+        "explanationChecked": true,
+        "evidenceRefs": ["SRC:SYN_T_B", "SURF:SYN_T_B"]
+      },
+      "validity": {
+        "domains": {
+          "taskAndRender": true,
+          "sourceLineage": true,
+          "answerSpace": true,
+          "surfaceLanguage": true,
+          "alternativeReading": true,
+          "explanationTruth": true,
+          "synchronization": true,
+          "leakage": true
+        },
+        "anyFatal": false,
+        "fatalCodes": [],
+        "declaredAnswerCardinality": 1,
+        "independentlyDefensibleAnswerCardinality": 1,
+        "independentlyDefensibleAnswers": ["B"],
+        "unresolved": false
+      },
+      "explanationAudit": {
+        "allClaimsAccurate": true,
+        "surfaceBound": true,
+        "keyReasonPresent": true,
+        "wrongElementReasonsComplete": true,
+        "redundantRestatementCount": 0,
+        "unsupportedClaimCount": 0,
+        "economyScore": 3
+      },
+      "craft": {
+        "scores": {
+          "pedagogicalPointWorthiness": 3,
+          "evidencePathEconomy": 3,
+          "visibleIntentCoverage": 3,
+          "competitivePlausibility": 3,
+          "shortcutResistance": 3,
+          "difficultyCalibration": 3,
+          "surfaceNaturalness": 3,
+          "explanationEconomy": 3
+        },
+        "intentCoverageFraction": 0.8,
+        "materialShortcut": false,
+        "holisticMaterialDefect": false,
+        "holisticReasonCode": "EXAM_READY"
+      },
+      "typeSpecificEvidence": [
+        {
+          "checkId": "TITLE_WHOLE_PASSAGE_COVERAGE",
+          "pass": true,
+          "evidenceRefs": ["SRC:SYN_T_B"]
+        }
+      ],
+      "grammarAudit": null,
+      "blankAudit": null,
+      "grade": "B",
+      "calibrationStatus": {
+        "status": "UNASSESSED",
+        "certificateId": null,
+        "certificateScopeSha256": null,
+        "rowsSinceCheckpoint": 0
+      }
+    }
+  },
+  "legacyCasesNotUsedByV2Verifier": [
+    {
+      "id": "VALID_GRAMMAR_A",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [],
+      "expectedErrorCodes": []
+    },
+    {
+      "id": "VALID_BLANK_A",
+      "base": "VALID_BLANK_A",
+      "mutations": [],
+      "expectedErrorCodes": []
+    },
+    {
+      "id": "VALID_NONFOCUS_B",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [],
+      "expectedErrorCodes": []
+    },
+    {
+      "id": "FATAL_CANNOT_BE_A_OR_HAVE_CRAFT",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [
+        { "op": "replace", "path": "/validity/anyFatal", "value": true },
+        {
+          "op": "replace",
+          "path": "/validity/fatalCodes",
+          "value": ["synthetic-fatal"]
+        },
+        {
+          "op": "replace",
+          "path": "/validity/domains/answerSpace",
+          "value": false
+        }
+      ],
+      "expectedErrorCodes": ["FATAL_GRADE_NOT_F", "FATAL_CRAFT_NOT_NULL"]
+    },
+    {
+      "id": "GRAMMAR_MARKER_COUNT_MISMATCH",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [{ "op": "remove", "path": "/grammarAudit/markedSites/4" }],
+      "expectedErrorCodes": [
+        "GRAMMAR_MARKER_COUNT_MISMATCH",
+        "GRAMMAR_DISTINCT_POINT_FAMILY_MISMATCH"
+      ]
+    },
+    {
+      "id": "GRAMMAR_KEY_DEFENSIBLE",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/grammarAudit/markedSites/2/displayedGrammaticality",
+          "value": "GRAMMATICAL"
+        }
+      ],
+      "expectedErrorCodes": ["GRAMMAR_KEY_NOT_UNGRAMMATICAL"]
+    },
+    {
+      "id": "GRAMMAR_FALSE_EXPLANATION",
+      "base": "VALID_GRAMMAR_A",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/grammarAudit/markedSites/1/explanationAccurate",
+          "value": false
+        }
+      ],
+      "expectedErrorCodes": [
+        "GRAMMAR_SITE_EXPLANATION_FALSE",
+        "GRAMMAR_EXPLANATION_AGGREGATE_MISMATCH"
+      ]
+    },
+    {
+      "id": "BLANK_BROKEN_OPTION_TAIL",
+      "base": "VALID_BLANK_A",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/blankAudit/options/0/slotGrammarCompatible",
+          "value": false
+        }
+      ],
+      "expectedErrorCodes": [
+        "BLANK_OPTION_SLOT_INCOMPATIBLE",
+        "BLANK_SEAM_AGGREGATE_MISMATCH"
+      ]
+    },
+    {
+      "id": "BLANK_DUPLICATED_DISTRACTOR_INTENT",
+      "base": "VALID_BLANK_A",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/blankAudit/options/4/primaryIntentAxis",
+          "value": "scope_shift"
+        }
+      ],
+      "expectedErrorCodes": [
+        "BLANK_A_INTENT_DISTINCTNESS_LOW",
+        "BLANK_DISTRACTOR_AXIS_DUPLICATE",
+        "BLANK_DISTINCTNESS_AGGREGATE_MISMATCH"
+      ]
+    },
+    {
+      "id": "BLANK_MULTIPLE_KEYS",
+      "base": "VALID_BLANK_A",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/blankAudit/options/1/isKey",
+          "value": true
+        },
+        {
+          "op": "replace",
+          "path": "/blankAudit/options/1/primaryIntentAxis",
+          "value": "CORRECT"
+        }
+      ],
+      "expectedErrorCodes": [
+        "BLANK_KEY_COUNT_NOT_ONE",
+        "BLANK_WRONG_OPTION_COUNT_NOT_FOUR"
+      ]
+    },
+    {
+      "id": "ANSWER_CARDINALITY_MISMATCH",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/validity/independentlyDefensibleAnswerCardinality",
+          "value": 2
+        }
+      ],
+      "expectedErrorCodes": [
+        "ANSWER_CARDINALITY_MISMATCH",
+        "ANSWER_LIST_CARDINALITY_MISMATCH"
+      ]
+    },
+    {
+      "id": "FALSE_EXPLANATION_NOT_FATAL",
+      "base": "VALID_NONFOCUS_B",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/explanationAudit/allClaimsAccurate",
+          "value": false
+        }
+      ],
+      "expectedErrorCodes": [
+        "EXPLANATION_DOMAIN_AGGREGATE_MISMATCH",
+        "EXPLANATION_FALSE_WITHOUT_FATAL"
+      ]
+    },
+    {
+      "id": "GRADE_A_BELOW_THRESHOLDS",
+      "base": "VALID_BLANK_A",
+      "mutations": [
+        {
+          "op": "replace",
+          "path": "/craft/scores/competitivePlausibility",
+          "value": 2
+        },
+        {
+          "op": "replace",
+          "path": "/craft/intentCoverageFraction",
+          "value": 0.75
+        }
+      ],
+      "expectedErrorCodes": [
+        "GRADE_A_CRAFT_THRESHOLD",
+        "GRADE_A_INTENT_COVERAGE"
+      ]
+    }
+  ]
+}

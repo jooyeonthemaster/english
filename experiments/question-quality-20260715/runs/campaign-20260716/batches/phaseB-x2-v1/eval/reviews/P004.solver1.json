@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "빈칸 직전 문장이 'the goal... should NOT be simply to utilize technology for its own sake. Rather...'로 부정한 바로 그 내용(기술 그 자체의 숙달·활용)을 재진술한다. '디지털 포매팅의 실용적 효율을 높이는 복잡한 기술 숙달'은 tech-for-its-own-sake의 전형이므로 Rather 이하와 정면 모순. seam(to master...)은 문법적으로 문제없음 — 논리로만 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "첫 문장의 표면 어휘(internet, share with the world, online)를 재활용한 word-matching 미끼. 배포·공유의 확대는 비평가 우려를 촉발한 '배경 상황'이지 예술가에게 처방된 목표가 아니다. 'collaborative works'는 지문 어디에도 근거가 없고, 결국 이것도 기술 활용 자체에 머무는 목표라 Rather의 대조를 충족하지 못한다. 훑어 읽는 수험생에게 순간적 끌림은 있으나 정독 시 즉시 배제."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "지문이 미리 제시한 위대한 예술의 정의 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'의 거의 완전한 패러프레이즈: 'prompt audiences to reconstruct their perspectives on reality' = 지각에 도전하여 세계관을 재구성하게 함. 'craft original works'는 창작 과정이 본질이고 기술은 도구일 뿐이라는 논지와도 정합. 'it should be to craft... works that prompt...' 결합(seam)도 문법적으로 완전. not X / Rather Y 구조의 Y 자리를 유일하게 채운다."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "가장 매력적인 미끼 — 실제로 첫 독해에서 끌림을 느꼈다. 비평가들의 우려('위대한 예술의 감각 상실')를 反기술 논조로 오독하면 '디지털 도구의 영향 최소화 + 전통 미학 보존'이 답처럼 보인다. 그러나 이중으로 모순: (1) 지문은 'new technologies are nothing more than tools that CAN BE USED in the creative process'라며 도구로서의 사용을 명시적으로 인정하므로 minimizing은 과격한 왜곡이고, (2) 위대한 예술은 지각에 '도전(challenges)'하는 것이지 '전통적 미학 가치를 보존'하는 것이 아니다 — 방향 자체가 반대."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'대중의 일반적 기대 충족'은 'challenges our perceptions... forever changes our thoughts and feelings'의 정반대(도전 vs 영합). 'strictly limiting the usage of new media'도 기술을 사용 가능한 도구로 인정하는 논지와 충돌. 이중 모순으로 끌림 자체가 약하다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 풀이 순서: (1) 빈칸 문장의 'not simply X. Rather, it should be to ___' 대조 구조 확인 → Y 자리에는 부정된 X(기술 그 자체를 위한 활용)와 대비되는 내용 필요. (2) 지문이 세 번째 문장에서 위대한 예술의 정의를 미리 공급하므로 그 패러프레이즈를 탐색 → ③ 즉시 매칭. (3) 미끼 유혹 기록: ④가 유일하게 실제 끌림이 있었던 선지(비평가 우려에 편승한 反기술 오독 유도)였으나 'tools that can be used'가 기술 배격이 아님을 못박아 배제. ①은 부정된 절의 재진술, ②는 1문장 어휘 재활용, ⑤는 논지 반전으로 각각 설계 의도가 뚜렷한 오답. 모든 선지가 be to 뒤 동사원형으로 시작해 문법 결합(seam)상 하자가 전혀 없고 변별은 순수 논리로 이루어진다. 대안 해석으로 제2정답이 성립할 여지 없음 — 단일 정답 문항."
+}

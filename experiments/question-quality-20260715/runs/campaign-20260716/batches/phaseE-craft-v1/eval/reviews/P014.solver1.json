@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'in early societies with their blossoming towns' — 'their'는 복수 선행사 'early societies'를 받는 소유격. 복수 소유격으로 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'Some individuals are buried with more precious goods' — be동사 + 과거분사 수동태. 개인이 매장되는 것이므로 수동 buried가 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'some are in group graves and some by themselves' — 'by themselves'(=alone) 관용구, 재귀대명사가 선행사 'some(=individuals)'을 정확히 받음. 옳음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'chemical and isotope analyses of teeth and long bones revealing that ... than others; some have more evidence ...' — 세미콜론이 뒤의 정동사절 'some HAVE more evidence'와 병렬을 이루므로, 앞부분도 주어(analyses)에 대응하는 정동사(reveal)가 필요하다. 'revealing'은 정동사가 없어 절이 성립하지 않음. reveal로 고쳐야 함. (대안 해석: 명사구+분사의 독립분사구문 'with the analyses revealing...'로 보면 정문이 될 여지가 있으나, 세미콜론 병렬 구조상 정동사 reveal이 지배적이고 자연스러운 독해이며, 나머지 A/B/C/E가 모두 확실히 옳으므로 틀린 것은 (D)로 특정됨.)"
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'they are becoming quite pronounced' — 'pronounced'는 '뚜렷한/현저한'을 뜻하는 형용사로 become의 보어. 어법상 옳음."
+    }
+  ],
+  "note": "발문은 '어법상 틀린 것' 1개 선택. A(복수 소유격 their), B(수동태 buried), C(재귀 by themselves), E(형용사 보어 pronounced)는 모두 정문. (D) revealing은 세미콜론으로 병렬되는 정동사절 'some have more evidence'와 짝을 이루려면 주어 analyses에 대한 정동사 reveal이 요구되므로 오류. 독립분사구문(nominative absolute)으로 정문화하려는 대안 해석이 이론상 가능하나, 세미콜론 병렬 구조와 나머지 4개 선지가 명백히 옳다는 점에서 정답은 (D)로 단일하게 특정된다."
+}

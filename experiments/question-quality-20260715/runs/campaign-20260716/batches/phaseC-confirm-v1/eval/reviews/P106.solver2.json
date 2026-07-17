@@ -1,0 +1,35 @@
+{
+  "pid": "P106",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'tasks she can perform relying entirely on formulated rules'는 분사구문으로 정문. 그러나 논리 모순 — 지문 첫 문장에서 'formulated rules'는 technical/book knowledge의 정의이고, 빈칸 문장은 practical knowledge(습관으로 축적된 기술 레퍼토리)에 관한 것. practical knowledge는 'cannot be taught or learned but only transmitted and acquired'이므로 formulated rules에 전적으로 의존한다는 것은 지문의 이분법을 정면으로 위반. 형식적으로: P(practical) → ¬R(rule-based)인데 ①은 P ∧ R을 주장하므로 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합: 'extended the number of tasks she can perform bypassing deliberate cognitive intervention' — 'bypassing...'은 perform을 수식하는 방식 부사적 분사구문(의미상 주어 = she)으로 정문. 논리: 직전 문장 'she isn't thinking more; she is thinking less'와 정확히 동치 — 의도적 인지 개입(deliberate cognitive intervention)을 우회(bypass)한다는 것은 곧 'thinking less'의 형식적 재진술. 또한 첫 문장의 'deliberately learned'(technical)와 어휘적 대조를 이루어 practical knowledge의 정의(습관·자동화)와 일관. 유일하게 전제-결론 사슬이 성립하는 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합: 'perform provoking heightened mental effort' — 분사구문으로 형식상 성립하나, 논리적으로 'she isn't thinking more; she is thinking less'와 직접 모순. 고조된 정신적 노력을 유발한다는 것은 'thinking more'이므로 지문 명제의 부정. 형식적으로: 지문이 ¬M(more thinking)을 단언하는데 ③은 M을 함의 — 즉시 기각."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 'perform before developing physical intuition' — 전치사구로 정문. 그러나 논리 역행 — 지문은 전문가가 이미 'a touch', 'a feel', 'an intuition'을 습관을 통해 축적한 상태에서 수행 능력이 확장된다고 서술. 신체적 직관을 발달시키기 '이전에' 과제 수를 확장했다는 것은 인과·시간 순서를 뒤집음(습관을 통한 축적 → 확장이 지문의 순서). 전건과 후건이 전도된 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 'perform by separating bodily metaphors from reality' — by + 동명사 수단 표현으로 정문. 그러나 논리 무관/왜곡 — 지문에서 bodily metaphors는 practical knowledge를 '기술하기 위해 우리가 사용하는 언어적 수단'일 뿐, 전문가의 수행 기제가 아님. 은유를 현실에서 분리하는 행위는 지문 어디에서도 수행 확장의 수단으로 제시되지 않으며, 오히려 지문은 은유가 실재하는 능력을 가리킨다고 봄. 범주 오류(언어 층위와 수행 층위의 혼동)."
+    }
+  ],
+  "note": "빈칸 유형. 결정 축은 'she isn't thinking more; she is thinking less'라는 명시적 명제와의 논리적 동치 여부. ②만이 이 명제의 재진술이며 첫 문장의 'deliberately learned'와의 어휘 대조까지 성립. 나머지는 각각 이분법 위반(①), 직접 모순(③), 인과 전도(④), 범주 오류(⑤)로 모두 형식적으로 기각 가능. 모든 선지가 문법적으로는 빈칸에 결합 가능하므로 순수 논리 변별 문항이며, 복수 정답 여지 없음."
+}

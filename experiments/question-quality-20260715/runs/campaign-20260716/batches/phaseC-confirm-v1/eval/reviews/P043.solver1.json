@@ -1,0 +1,35 @@
+{
+  "pid": "P043",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'who is credited with discovering America' — be credited with + 동명사는 표준 수동 관용구. 선행사 the Italian explorer(단수)와 is의 수 일치도 정상. 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "동명사구 주어 'honoring the explorer' + 단수 동사 does로 완전한 정문. 앞의 considering은 전치사화된 비인칭 분사라 의미상 주어 불일치 문제 없음. 실전에서 'to honor여야 하나' 하는 끌림이 있었으나(가장 매력적인 오답), 동명사 주어는 어법상 아무 하자가 없다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'Columbus killed and enslaved thousands' — killed와 병렬된 과거시제 동사. 병렬 시작점 확인 결과 이상 없음. 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect",
+      "reason": "주어 the diseases 뒤에 관계절 'that Columbus and other Europeans brought with them'이 끼어든 뒤 정동사가 와야 하는 자리에 reducing이 있어 문장 전체에 본동사가 없다. 대안 해석 전수 탐색: (1) 분사구문/독립분사구문으로 보려 해도 걸릴 주절이 존재하지 않음, (2) brought를 주동사로 재해석하면 that절 구조가 붕괴(them 잔류로 brought는 관계절 내부 동사 확정). 어떤 해석으로도 정문이 되지 않으므로 reduced로 고쳐야 한다. 어법상 틀림."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'a new holiday that honors ... and remembers ...' — 선행사 a new holiday(단수)를 받는 주격 관계대명사 that, 단수 동사 honors/remembers 병렬 일치. 콤마 없는 제한적 관계절이므로 that 사용 적법. 정문."
+    }
+  ],
+  "note": "장거리 주어-동사 함정(주어+관계절 삽입 후 본동사 자리에 분사)을 노린 전형적 어법 문항. (D)만 유일하게 비문이며 대안 해석으로도 구제 불가. 매력적 오답 체감 순위: B(considering 뒤 동명사 주어에 대한 순간적 의심) > E(관계대명사 that 습관적 의심) > A. C는 유혹 거의 없음. 단일 정답으로 수렴, 문항 성립."
+}

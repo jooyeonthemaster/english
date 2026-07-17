@@ -1,0 +1,35 @@
+{
+  "pid": "P091",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸 삽입 시 'rewards and soothes us by restoring a sense of stability, but not by too much' — 지문에서 도약 후 멜로디가 출발점(harmonic 'home')으로 되돌아가려 한다는 gap fill 원리와 정확히 대응. '안정감 회복'은 home으로의 복귀를 추상화한 표현이며, 'not by too much'(긴장 유지 위해 부분적으로만)와 마지막 문장 'The third note fills the gap'(3번째 음이 부분 복귀 수행)이 자연스럽게 이어짐. 문법 결합(by + 동명사구)도 깨끗함."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'더 넓은 도약 도입'은 rewards/soothes(보상·진정)와 정면 모순. gap fill 원리상 큰 도약 뒤에는 방향을 바꿔 home으로 복귀해야 하는데 더 큰 도약은 위반을 가중시킬 뿐. 논리적으로 즉시 배제."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답 — 'adjacent tones/stepwise motion'이 지문 표현을 그대로 차용했고 gap fill이 실제로 순차 진행으로 이루어지므로 실전에서 강하게 끌림. 그러나 (a) 'but not by too much'가 '인접음으로 제한한다'는 범주적(all-or-nothing) 행위를 정도 부사로 수식할 수 없어 결합이 어색함 — 지문이 등급화하는 것은 home으로의 복귀 정도이지 음정 간격 제한 여부가 아님. (b) 지문은 보상의 본질을 'closer and closer to our starting point'(안정 복귀)로 정의하며, 순차 진행은 수단일 뿐임. 인접음 제한 자체가 '지나친 진정'이 되는 것도 아니므로 뒤 절과 논리 연결 실패."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'완전히 낯선 음계 탐험'은 schematic violation을 진정시키기는커녕 오히려 기대 위반을 확대. soothes와 모순되어 배제."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "템포는 지문 어디에도 등장하지 않음. 지문 전체가 음높이/선율 기대(멜로디 도약과 복귀)에 관한 것이므로 박자 감속은 논점 이탈. 배제."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: ③이 설계된 미끼로, 지문 어휘(adjacent tones)를 재활용해 표면 매칭을 유도함. 그러나 'not by too much'의 등급성 검사와 '보상=home 복귀'라는 지문 자체의 정의를 적용하면 ①로 유일하게 수렴. 원전(Levitin, This Is Your Brain on Music)의 'bringing the melody back toward home'에 해당하는 추상화가 ①. 복수 정답 여지 없음."
+}

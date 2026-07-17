@@ -1,0 +1,44 @@
+{
+  "pid": "P031",
+  "finalV2": false,
+  "winningAnswer": "(B)",
+  "reason": "선언된 정답 (B)는 렌더된 4개 밑줄((A),(B),(D),(E)) 중 유일한 어법 오류로 성립한다 — 'a thoroughly understood of'는 관사 a와 of 보충어가 이중으로 요구하는 명사 핵 자리에 부사+과거분사를 넣은 구조로 어떤 대안 분석으로도 구제되지 않으며, (A)/(D)/(E)는 모두 명백한 정문이다. 그러나 문항 전체의 정답 유일성(V2)은 성립하지 않는다. 선지 (C) 'managing'에 대응하는 밑줄이 지문에 통째로 누락되어 있고 해당 위치는 원문 그대로 'to manage'(정문)로 인쇄되어 있다. 엄격 독해로는 (C)가 '밑줄 친 부분'이 아니어서 5지선다 형식 자체가 붕괴하고, 학생이 자연스럽게 취할 수리 독해(선지의 managing이 to manage 자리를 대체한 것으로 가정)로는 'a vague need managing a presence'가 그 자체로 비문(need는 to부정사 보충어를 취함)이 되어 (C)가 제2의 옹호 가능 정답이 된다(설계 필드의 isError:false 선언과 정면 모순). 어느 해석 경로로도 단일정답성이 확증되지 않으므로 감사자의 V2=false 판정을 유지한다. 솔버 1·2의 (B) 판정과 개별 선지 분석에는 과잉 판정이나 누락된 대안 해석이 없었으며, 두 솔버 모두 (C) 결함을 스스로 지적했다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "접속사 when + 완전절이 어법상 옳은가",
+      "verdict": "정문 확정 — 오류 아님",
+      "evidence": "'mistakes made by organizations when they first consider experimenting...'에서 when은 완전한 정형절(they first consider...)을 이끄는 시간 부사절 접속사로, 분사구 'made by organizations'가 나타내는 사건의 시점을 한정한다. 관계사 독해 등 어떤 대안 해석으로도 비문이 되지 않는다. 단, 공식 오답 해설의 'organizations가 주어' 및 'when절이 명사를 수식'이라는 설명은 오분석이다(실제 주어는 One, organizations는 by의 목적어) — 해설 결함이지 선지 결함은 아니다."
+    },
+    {
+      "label": "(B)",
+      "claim": "선언된 정답 — 'a thoroughly understood of'가 어법상 틀린가",
+      "verdict": "오류 확정 — 정답 성립",
+      "evidence": "부정관사 a 뒤이자 of 전치사구 앞이라는 이중 형태통사 단서가 명사 핵을 요구하나 understood는 과거분사로 명사 기능이 불가하고, 부사 thoroughly의 수식이 이를 재확인한다. not with A(insight into...) but with B 병렬에서 A가 명사구인 점도 B의 명사구 요건을 뒷받침한다. 후치수식 분사·명사화 분사 등 대안 해석을 전수 검토해도 관사와 of 보충어를 동시에 만족시키는 정문 분석은 존재하지 않는다. 교정형 'a thorough understanding of'는 원지문과 정확히 일치한다."
+    },
+    {
+      "label": "(C)",
+      "claim": "선지 (C) 'managing'이 판정 가능하며 정문인가",
+      "verdict": "판정 불가 — V2 붕괴의 원인",
+      "evidence": "렌더 지문에 (C) 밑줄 마커가 존재하지 않고 해당 위치는 'a vague need to manage a “presence”'(정문)로 인쇄되어 선지 문구 'managing'과 불일치한다. (i) 엄격 독해: (C)는 '밑줄 친 부분'이 아니므로 선택 불가 — 5지선다 형식 붕괴. (ii) 수리 독해(managing이 to manage를 대체했다고 가정): 'a vague need managing a presence'는 need가 to부정사 보충어를 요구하므로 그 자체로 비문 — (B)와 복수 정답 충돌이며 markedExpressions의 isError:false 선언과 자기모순. 두 독해 모두에서 단일정답성이 확증되지 않으므로 감사자의 V2-UNVERIFIABLE-SECOND-ERROR 판정은 타당하다."
+    },
+    {
+      "label": "(D)",
+      "claim": "관용구 'in and of itself'의 재귀대명사가 옳은가",
+      "verdict": "정문 확정 — 오류 아님",
+      "evidence": "재귀대명사 itself의 선행사는 동명사구 주어 'Being in social media'(단수·무생물)로 수·인칭 일치가 성립하며, 'in and of itself'는 표준 관용 표현이다. themselves나 it으로의 대체 근거가 없다."
+    },
+    {
+      "label": "(E)",
+      "claim": "'must either solve ... or result in ...'의 원형 병렬이 옳은가",
+      "verdict": "정문 확정 — 오류 아님",
+      "evidence": "병렬 시작점은 조동사 must 뒤이고 either A or B의 A(solve)와 B(result in — 자동사구)가 모두 동사원형으로 정확히 병렬된다. result를 명사로 읽는 대안 해석은 in 이하 구조와 must의 보충어 요건상 성립하지 않는다."
+    },
+    {
+      "label": "형식/유일성 총평",
+      "claim": "문항 전체로서 선언된 정답 (B)의 유일성이 성립하는가",
+      "verdict": "불성립 (finalV2=false)",
+      "evidence": "렌더된 밑줄 4개만 놓고 보면 (B)가 유일 오류라는 점에 솔버1·솔버2·조정자 3자 모두 일치하며 과잉 판정도 없다. 그러나 V2는 '문항이 인쇄된 형태 그대로 단일 정답을 확증하는가'를 묻는 기준이고, (C) 마커 누락은 엄격 독해에서는 형식 붕괴를, 수리 독해에서는 제2 정답을 낳는다. 실전 시험이라면 이의신청 인용감이므로 정답 유일성은 성립하지 않는다. 수리 방향: (C) 밑줄을 'to manage'(정문, isError:false)로 복구하거나 디코이를 재설계하고, (A)/(C) 해설과 keyPoints를 전면 재작성해야 한다."
+    }
+  ]
+}

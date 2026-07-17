@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the nature of that process is repetitive'에서 that은 같은 문장 앞부분의 'a process embodied in a machine'을 가리키는 지시 한정사. 단수 지시 대상이 명확히 존재하며 결합에 문제 없음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself'에서 관계절 주어 that(=process)과 목적어가 동일 지시이므로 재귀대명사 itself가 필수. 'repeat itself'는 표준 연어이기도 함. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "관계대명사 that의 선행사는 단수 'a clock'이므로 단수 does not depend가 옳음. 뒤따르는 'a repetitive cycle of events'의 복수 events에 이끌리는 견인 착시가 유혹 요소지만, 지배 규칙(선행사 일치)상 문제 없음. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (정답)",
+      "reason": "'The only example that comes to mind readily are a candle marked in hours' — 진짜 주어는 단수 'The only example'(주어 내부 관계절의 단수동사 comes가 이를 재확인)이고 보어 'a candle'도 단수이므로 are는 수일치 오류, is여야 함. are를 살릴 대안 해석(도치 구문, 복수 후치 주어, 근접 일치 허용 등)을 적극 탐색했으나 성립하는 것이 전혀 없음. 유일한 어법 오류."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'although at first masked'는 'although (it is) at first masked'로, 주절 주어 this와 동일한 주어+be가 생략된 표준 축약절. 접속사 바로 뒤에 완전한 절이 안 보여 최상위권도 멈칫하게 만드는 최강 매력 선지이나, although+축약절은 정문이므로 오류로 볼 수 없음. 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. (D)는 관계절 'that comes to mind readily'가 주어-동사를 분리시킨 전형적 수일치 함정으로, 장거리 단서(진짜 주어 The only example, 단수 보어 a candle) 확인 시 단독 정답으로 빠르게 수렴. 실제 풀이 중 가장 강하게 끌린 오답은 (E)의 'although + 분사/부사구 축약'(낯설어 보이지만 표준 용법)이었고, 2차 유혹은 (C)의 events 견인 착시. 대안 해석 전수 탐색 결과 (D)를 정문으로 만드는 구조는 없음. 복수 정답 소지 없음, 이의신청 여지 낮음."
+}

@@ -1,0 +1,422 @@
+{
+  "schemaVersion": "reviewer-calibration-packet-public-v1",
+  "artifactId": "reviewer-calibration-packet-v1",
+  "status": "GOLD_ADJUDICATION_PENDING",
+  "authoredDate": "2026-07-15",
+  "candidateAccounting": {
+    "newFullQuestionCandidates": 0,
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0
+  },
+  "confidentiality": {
+    "exactItemsPrivateAndGitIgnored": true,
+    "authorHypothesesPrivateAndNotGold": true,
+    "publicContainsQuestionText": false,
+    "publicContainsAnswers": false,
+    "publicContainsGold": false,
+    "packetPrivateUtf8Bytes": 168588,
+    "packetPrivateSha256": "058a1809a87137c7a0acd315b1bd41f3c419e8d2892822d6aeaf60cc23b931bf",
+    "pendingGoldSha256": "84c92afb5e7cd4bb1b937bbd670db597c96abd0755f828bf7d7da5f2cb79c629",
+    "exclusionCommitmentsSha256": "e713a4e30b5b8b3e8355c57eb45de169f6a73e4da9bb5e40d035e59874c74ba8"
+  },
+  "composition": {
+    "itemCount": 24,
+    "byBlock": {
+      "GRAMMAR": 8,
+      "BLANK": 8,
+      "NONFOCUS": 8
+    },
+    "byAuthorStratum": {
+      "F": 6,
+      "C": 6,
+      "B": 6,
+      "A": 6
+    },
+    "authorStratumPerBlock": {
+      "GRAMMAR": {
+        "F": 2,
+        "C": 2,
+        "B": 2,
+        "A": 2
+      },
+      "BLANK": {
+        "F": 2,
+        "C": 2,
+        "B": 2,
+        "A": 2
+      },
+      "NONFOCUS": {
+        "F": 2,
+        "C": 2,
+        "B": 2,
+        "A": 2
+      }
+    },
+    "nonfocusFamilies": {
+      "closed_constructed": 1,
+      "correction": 1,
+      "lexical": 1,
+      "marked_selection": 1,
+      "open_constructed": 1,
+      "option_selection": 2,
+      "ordering_or_insertion": 1
+    },
+    "uniqueTopicTags": 24
+  },
+  "rightsAndPrivacy": {
+    "directOriginalRows": 24,
+    "thirdPartySourceRows": 0,
+    "manualPiiObservedRows": 0,
+    "machinePiiPatternHits": 0,
+    "independentCodexAgentReviewAuthorizedRows": 24,
+    "externalProviderApiDispatchAuthorizedRows": 0,
+    "permittedUse": "LOCAL_REVIEWER_CALIBRATION_ONLY"
+  },
+  "disjointness": {
+    "method": "normalized exact plus hashed eight-word windows",
+    "withinPacket": {
+      "comparedPairs": 276,
+      "sharedNgrams": 0,
+      "rowsWithOverlap": 0
+    },
+    "currentS1Reference": {
+      "referenceRows": 12,
+      "comparedPairs": 288,
+      "exactNormalizedDuplicates": 0,
+      "sharedEightGrams": 0,
+      "calibrationRowsWithOverlap": 0,
+      "referenceArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68"
+    },
+    "futureCampaignRule": "Every later development, sentinel, or confirmation corpus must exclude these private normalized-source and eight-gram commitments before assignment.",
+    "currentConfirmationCorpusExists": false
+  },
+  "gold": {
+    "status": "GOLD_ADJUDICATION_PENDING",
+    "independentRatersCompleted": 0,
+    "freshAdjudicatorsCompleted": 0,
+    "certifiableReviewers": 0,
+    "authorHypothesesAreGold": false
+  },
+  "upstreamBindings": [
+    {
+      "path": "experiments/question-quality-20260715/design/blind-adjudication-power-v1/design.json",
+      "sha256": "92335a5f87bd2149ea741cde093eb1e737af5eecd5c653404115cc428bfeba55"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/blind-adjudication-power-v1/review-record.schema.json",
+      "sha256": "cf4cabf153ab63887797b108e57ab0e83453bf7c40b26dae8cd5bf6e74dc62d9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/blind-adjudication-power-v1/calibration-certificate.schema.json",
+      "sha256": "3ebd39a3d340ab8a6cc1673d469f15eceed68df865ced5ee0f1556e6e5446c97"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/blind-adjudication-power-v1/calibration-scoring.mjs",
+      "sha256": "ed0e1d967287b6267b244c647e6018a9a7d313acc01c790fedf98929bdf50894"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/blind-adjudication-power-v1/MANIFEST.sha256",
+      "sha256": "b697c15d54ee7e74ed201d56e983e1834267731428c5ebc6f15af2f33ee70571"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/rubric.json",
+      "sha256": "17960b41393df681a3626786aa638bd4b001a9fc39e6f838c6eb5a4942c86d3a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/MANIFEST.sha256",
+      "sha256": "9067d8641e463a5c955a5b73af162bf63fd181289f0ce67e95911c2c5beadf4d"
+    }
+  ],
+  "rows": [
+    {
+      "itemId": "RCAL-G01",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "GREENHOUSE_SENSORS",
+      "surfaceSha256": "566aed340bfda59d7be6bd36b625f625bd78f5fd257ca6e74e2c5656992c1f32",
+      "revealSha256": "2923f54f27678fc0799032e41b88cecfa470accac20ea29d119dfbc5073a8e8a",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "40fd4c0e163e8c2cf82fcd00e615a6cd48c17f6a82a5ed67be758c8449783d5a"
+    },
+    {
+      "itemId": "RCAL-G02",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "CERAMIC_SAMPLES",
+      "surfaceSha256": "9abfd162d6491f8c357e4ea9d243995beff289cd8233a731c0b3b74bc080d305",
+      "revealSha256": "477eed235a4c5eeb381ab25ee47a4da1c87fa802885bf07e2eb243f881c824f7",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "2415e959c34877cce62573f9d9d7924a3bf0fa196da3cbc0ab8155f60bde31ad"
+    },
+    {
+      "itemId": "RCAL-G03",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "PARK_BIRDS",
+      "surfaceSha256": "1de8c42589dfcbfd03d191e8bad8bd9bdff7fa012471d4d378ab749963bdd2a8",
+      "revealSha256": "d90990d9798153bfcb87f9b9727606ca1cef892aca23fe8b2ae925888658f82b",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "4c5a82d5f62e8cbd2f420ddac103ae5974d39ac5f5aa516ca1466a8d7112d93e"
+    },
+    {
+      "itemId": "RCAL-G04",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "KILLER",
+      "topicTag": "MEETING_NOTES",
+      "surfaceSha256": "d26a6ad45e7efded85aecf3fbf019e9305ed6bd372bb89ec320feadefae133ba",
+      "revealSha256": "344bcd1df06fae8cc43f0f26d04d20e6096e226259bb965c7f2bc0a962f8d93f",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "a9a2c30bcc1da56b869dfcd3b39d41cf864270bd2fe6922e10b621d879399639"
+    },
+    {
+      "itemId": "RCAL-G05",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "TIDAL_RECORDS",
+      "surfaceSha256": "9400520460f6e5063b785cf08d02cbc7fd682a7f52b4044c175f7a5fbf2d953c",
+      "revealSha256": "59dee288e3ae31e2d7989868535e7c3947a2f991fe344644515d67ff54c8664a",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "acec33c66bdb9530120babcc89b31d94c7ff81bcce3259b7135418607f31830d"
+    },
+    {
+      "itemId": "RCAL-G06",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "FAILURE_REPORTS",
+      "surfaceSha256": "42ea43648a527f949986f5d136b870e52084be87eb566f253d6025df9b7fad70",
+      "revealSha256": "4e9c732660861358a2ca3ed2443da0261bae4795be6164ca8b90ea2c1a33872d",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "0186e45eff865f9d9c2573796fbe78bd9fcf9b125bec3e12620b4300b5da43c3"
+    },
+    {
+      "itemId": "RCAL-G07",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "KILLER",
+      "topicTag": "FOREST_RECOVERY",
+      "surfaceSha256": "436b885ef7677c3eace5897443236869416d67d567c6f8c73e2a40f317eaf3c2",
+      "revealSha256": "5878d84fda1bfeff2d45786ed1b063aaa7594886ac436964fbe6a985c5a25def",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "4c1e989360a64293a120c1c23f6ecf40a2c73190bbdcca2dbbd2499b39cc8abf"
+    },
+    {
+      "itemId": "RCAL-G08",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "KILLER",
+      "topicTag": "ARCHAEOLOGICAL_LAYERS",
+      "surfaceSha256": "a27369b14bf1d84972ca8fba35bef9376f28f9a49b9dcde6473a8b7e65bf123d",
+      "revealSha256": "0a6f163cb471190e39e97f1c652835c022003a4447618a6d82d3d7b89b832762",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "d7e585bbdeb190df3f9ffc5a8a0bc6fce1bfd2d407eb1275c8eb2f526fe6211d"
+    },
+    {
+      "itemId": "RCAL-B01",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "LIBRARY_SIGNAGE",
+      "surfaceSha256": "b5c3a0318f81fa28eba4f4cb36420b15490f864d699868632aa7fa02e7a895aa",
+      "revealSha256": "6ebbcece44b5001359c7c3fb0037ce59d4a5b8645e6c70622989034722c69ce8",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "d9538bd2847a48ab49d8245670e5a6c71aad8a321bf72d58890852cadf41471a"
+    },
+    {
+      "itemId": "RCAL-B02",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "SOIL_MOISTURE",
+      "surfaceSha256": "6f9da618336df48e85b216bbf51699a7348dc2a3167c55ad82ed66b273fc5629",
+      "revealSha256": "4eb573a629d0314714929e66f92967fac1983a4e4a1bacaeee0ca07f8f3a91c8",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "70cff0df62adbdae569f195377dd660ff39d1261eda4da92d3a17a5fbf0da547"
+    },
+    {
+      "itemId": "RCAL-B03",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "BASIC",
+      "topicTag": "WORKSHOP_LABELS",
+      "surfaceSha256": "495da380e7211adc33e4383093b7491bd9e31f3c5441e8ccb928e5f5fd28df5f",
+      "revealSha256": "2b3ae2a0f92a88ba76f0f4248cba662b74ea6d2d3b693bc7cb62fe66ddd7c7d7",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "20d0bb45556f0d37ad9163c2935aef2e5ae9cc7aa89f3720cc2d38e564cf0c18"
+    },
+    {
+      "itemId": "RCAL-B04",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "KILLER",
+      "topicTag": "TEAM_ESTIMATES",
+      "surfaceSha256": "d7a7c217534bc5099e5bc7b24e107217db01663c8c1cecaccfda6f02fe1d354b",
+      "revealSha256": "3bf915c2b02ba01ec5b6832886fe78591bf7f041849b531254da4d1059c5223c",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "d43681e70937f6d5792ebb97a8a8d014cfc32565df3b4679c30161bdf1bed311"
+    },
+    {
+      "itemId": "RCAL-B05",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "CITY_SHADE",
+      "surfaceSha256": "97f95667aed92517ab5271908121a9fc734142e896b371701d7011aa432d4e06",
+      "revealSha256": "4ce5e1df38108ec7433a1c594b699f958e7a13a29c4490f82cf254abfcda1033",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "fcfad9f5bf0e0cd7e422957ebe782aaf25058d4ca2f33cfed4d64ef90021c1bf"
+    },
+    {
+      "itemId": "RCAL-B06",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "MUSEUM_REPLICAS",
+      "surfaceSha256": "e7d9f1e8b7397a271e45dba5b591d650c494343631d2001da482290e955f340f",
+      "revealSha256": "2aff43c37ed7e338540430e0685fff76908dd79a0bba2c1a741e3facdc18a74c",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "5f1008fe3d00c1452f3070c5fd2c16d1af21703abd58575f18f50eee9c87cc1b"
+    },
+    {
+      "itemId": "RCAL-B07",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "KILLER",
+      "topicTag": "ALARM_CALIBRATION",
+      "surfaceSha256": "47e08dedcbb013d4e3d12401be932cc32d8186ebdf56921b3eabab250c2f62c1",
+      "revealSha256": "a79612ce200d395016e5ae39f3d3e3c4581840dcc18c2400b414a44ac3f37034",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "ba64b072200d7eb09306464f3137481a26ca40b62e9c864d814f6da1fecfadab"
+    },
+    {
+      "itemId": "RCAL-B08",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "KILLER",
+      "topicTag": "SEED_ARCHIVE",
+      "surfaceSha256": "2c93798f164e94e778a8696b05685fd370d6012d9723b00a55c853beabbf543f",
+      "revealSha256": "564e89d568ef70372eeadf007b8ea0e641d5cb195f116981542ec301c8c71100",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "9ad73bb7a2ef4860cedadb4cfcdf093429083c4b993ec0c076977b11c4add733"
+    },
+    {
+      "itemId": "RCAL-N01",
+      "block": "NONFOCUS",
+      "type": "GRAMMAR_CHOICE_COMBO",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "MIGRATING_CRANES",
+      "surfaceSha256": "383400c20fea11f145e9e55d3a8bb8b7130f907f93df5c56d2c214c648502ec6",
+      "revealSha256": "aba38144f29f234074a9b1c889cd3d11e8b2fa9004b8e227375fd96b43b0f5fd",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "8cad04f2b17ed6fc4f1d9082e8c8075e40b90c42eddefd07b5b39d28a870b602"
+    },
+    {
+      "itemId": "RCAL-N02",
+      "block": "NONFOCUS",
+      "type": "TITLE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "KILLER",
+      "topicTag": "QUIET_INTERVALS",
+      "surfaceSha256": "139ea7f0bed569eae48384f6aa273c6c711361375afb4fa344c339cacfcc1453",
+      "revealSha256": "946a6b134c1ff789f9da1afc5a4bac342265fc802f6188c5035c0f0621370ddd",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "7ff7c0ca0238ee91c4dc4503940ed5e413f39e0f7c9df2943991109f0322be74"
+    },
+    {
+      "itemId": "RCAL-N03",
+      "block": "NONFOCUS",
+      "type": "SENTENCE_ORDER",
+      "evidenceFamily": "ordering_or_insertion",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "COOL_ROOF_TEST",
+      "surfaceSha256": "f2f3b7b7750fae2a9c4668b9da4f160eeb0f90228a8b4e7bc7cdde2350617db6",
+      "revealSha256": "9568a6b8ce372aee64fc53bc4392721f2bd8c2ba601345f9944c1f0cc7782a92",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "68f65ad121289f290b0b967914e4efeb768abe4c2cf1e393f819cf25069dab6f"
+    },
+    {
+      "itemId": "RCAL-N04",
+      "block": "NONFOCUS",
+      "type": "WORD_ORDER",
+      "evidenceFamily": "closed_constructed",
+      "difficulty": "KILLER",
+      "topicTag": "EVIDENCE_LIMIT",
+      "surfaceSha256": "d12df94599bf828fe8e5a0e5100bcccf344bb706ff2f7a7c7a52b017636a0082",
+      "revealSha256": "7ea2f3866112ec25c76105cf114ffd5ab3689f5ccd08f968f4abdeba5516f455",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "dbccb8139f98f96f5659c1e159b07e045336e2b347433efd61e51aad8fd82982"
+    },
+    {
+      "itemId": "RCAL-N05",
+      "block": "NONFOCUS",
+      "type": "SENTENCE_TRANSFORM",
+      "evidenceFamily": "open_constructed",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "REPORT_RELEASE",
+      "surfaceSha256": "dd5fbe67b7574635a6f43690b68096a7cf2874fa53bae579b377da9cd71442e2",
+      "revealSha256": "445773f73c7fc11e954f58b72e342c61df81d6f0249339f758e0bdd1eb6bed58",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "249aba51e5ddb1cdcd088bf1e1f6b2985e9e53f7342363b6893435b08bbaa64b"
+    },
+    {
+      "itemId": "RCAL-N06",
+      "block": "NONFOCUS",
+      "type": "GRAMMAR_CORRECTION",
+      "evidenceFamily": "correction",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "COMMUNITY_GARDEN",
+      "surfaceSha256": "c68546eee28d849f7494bffaf91c09283f35218a345ee567613b126be6e41e92",
+      "revealSha256": "a6e42b1eb3e073208c672c7859436de056e1bddd05c5e5f5630993d4c5345b72",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "0900da786879b04e02e193506478ad167014ce02a64f87f778c34a8cea0b7ab5"
+    },
+    {
+      "itemId": "RCAL-N07",
+      "block": "NONFOCUS",
+      "type": "SYNONYM",
+      "evidenceFamily": "lexical",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "NARROW_PATH",
+      "surfaceSha256": "44e3670c0823bfcb02202c16e6099b44b3ce1a6f36166f342a7897b97756047e",
+      "revealSha256": "b985c176051d82a3c2a7571739533f8f6ef3af13431cbd5f482b043e0bb8c470",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "354a0402568e924cce753367fa504f880950afe286407289259f23efe98e4d98"
+    },
+    {
+      "itemId": "RCAL-N08",
+      "block": "NONFOCUS",
+      "type": "CONTENT_MATCH",
+      "evidenceFamily": "option_selection",
+      "difficulty": "BASIC",
+      "topicTag": "WATER_BOTTLE",
+      "surfaceSha256": "77d90dab37379ca8c8a2473ee99397f8dc08f758014e1ec7d3d5d32f5e3b366f",
+      "revealSha256": "d1ce33aa04cc5a91e5af964f9f42ad9fc0271ec883d57ee253678397fa98387f",
+      "provenanceSha256": "ec8f8c8eec13d9e9af0d5aa6f89462e8b0a9ac0cebe43d2e0b39fcfa86c3b05b",
+      "fullPrivateItemSha256": "16e7c57797f47492b8276d7715e614f493043a86354c2973b8137a12620670e7"
+    }
+  ]
+}

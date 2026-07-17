@@ -1,0 +1,35 @@
+{
+  "pid": "P063",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam parses (witnessing X, not just [witnessing] fictional characters), but content is the direct opposite of the passage: method actors truly feel the scripted emotions 'rather than faking them.' The word 'emotions' gives a momentary pull, but this is an anti-answer contradicting the core claim."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Inserted: 'audiences feel like they are observing genuine individuals engaged in authentic situations, not just fictional characters in a movie.' Ellipsis of 'observing' before 'fictional characters' is grammatically clean; 'genuine individuals' vs 'fictional characters' is exactly the contrast the trailing phrase demands; 'authentic situations' matches 'truly feeling the emotions written in the script.' Also survives the alternative parse where 'they' = the on-screen figures ('they are genuine individuals, not just fictional characters'). Fits under both readings."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Verbatim lexical echo of 'method actors step out of their own comfort zone' — the lure. But that action belongs to the actors, not the audience, and the contrast collapses: 'stepping out of comfort zones, not just fictional characters' has no parallel structure (gerund action vs noun referent mismatch)."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Strongest lure for a rushed reader since 'emotional trauma' appears verbatim in the passage. But the trauma is a side effect suffered by the actor during role immersion, not what audiences perceive; and 'experiencing the emotional trauma, not just fictional characters' fails the contrast — trauma vs characters is a category mismatch. Passage never says audiences experience trauma."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Echoes 'Each role becomes a journey for the actor to explore a whole new identity,' but that journey is explicitly the actor's, not the audience's. Inserted, 'exploring a whole new identity through movie characters, not just fictional characters in a movie' is self-contradictory (uses movie characters while denying they are just fictional characters). Incoherent seam."
+    }
+  ],
+  "note": "Solved as top-tier examinee lens. Real-time lure log: ④ pulled hardest (verbatim 'emotional trauma'), then ③ and ⑤ (verbatim comfort-zone / new-identity echoes) — all three recycle actor-side actions into an audience-side slot and fail the 'not just fictional characters' parallel. ① is a polarity trap contradicting 'rather than faking them.' Alternative-parse search: reading 'they' as the on-screen figures ('they are genuine individuals, not just fictional characters') only strengthens ② and kills all gerund options. Single defensible answer: ②."
+}

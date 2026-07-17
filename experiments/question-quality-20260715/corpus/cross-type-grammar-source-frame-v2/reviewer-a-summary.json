@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "A",
+  "status": "FROZEN_FULL_CENSUS",
+  "lens": "SOURCE_INTEGRITY_AND_UNAMBIGUOUS_CORE10_SITE_FEASIBILITY",
+  "census": {
+    "boundRows": 186,
+    "reviewedRows": 186,
+    "coverage": "FULL_CENSUS",
+    "samplingUsed": false,
+    "delegationUsed": false,
+    "replacementOrTopUpUsed": false,
+    "skippedRows": 0
+  },
+  "outcomes": {
+    "PASS": 142,
+    "EXCLUDE": 40,
+    "DOMAIN_REVIEW": 4
+  },
+  "criteria": {
+    "sourceIntegrity": {
+      "PASS": 158,
+      "FAIL": 28,
+      "DOMAIN_REVIEW": 0
+    },
+    "contextCoherence": {
+      "PASS": 167,
+      "FAIL": 19,
+      "DOMAIN_REVIEW": 0
+    },
+    "core10SiteFeasibility": {
+      "PASS": 186,
+      "FAIL": 0,
+      "DOMAIN_REVIEW": 0
+    },
+    "minimalMutationUniqueCorrection": {
+      "PASS": 186,
+      "FAIL": 0,
+      "DOMAIN_REVIEW": 0
+    },
+    "nonlocalDependencyWindow": {
+      "PASS": 186,
+      "FAIL": 0,
+      "DOMAIN_REVIEW": 0
+    },
+    "ambiguityFree": {
+      "PASS": 143,
+      "FAIL": 39,
+      "DOMAIN_REVIEW": 4
+    },
+    "noRewriteOrDomainPremise": {
+      "PASS": 142,
+      "FAIL": 40,
+      "DOMAIN_REVIEW": 4
+    }
+  },
+  "reasonCodeCounts": {
+    "SOURCE_OPENING_INCOMPLETE": 1,
+    "SOURCE_ENDING_INCOMPLETE": 3,
+    "SOURCE_INTERNAL_OMISSION": 1,
+    "SOURCE_SEMANTIC_CONTRADICTION": 1,
+    "SENTENCE_BOUNDARY_CORRUPTION": 9,
+    "ENCODING_OR_CONTROL_DEFECT": 3,
+    "SOURCE_ORTHOGRAPHY_DEFECT": 2,
+    "CONTEXT_DEPENDENCY_UNRESOLVED": 4,
+    "PREEXISTING_GRAMMAR_DEFECT": 18,
+    "NO_CORE10_SITE": 0,
+    "MUTATION_NOT_UNAMBIGUOUS": 0,
+    "CORRECTION_NOT_UNIQUE": 0,
+    "NONLOCAL_WINDOW_INSUFFICIENT": 0,
+    "OPTIONAL_OR_DIALECT_AMBIGUITY": 5,
+    "QUOTATION_LANGUAGE_EXCEPTION": 1,
+    "DOUBLE_OBJECT_PASSIVE_AMBIGUITY": 0,
+    "PUNCTUATION_ARTIFACT": 22,
+    "REWRITE_REQUIRED": 40,
+    "UNSTATED_DOMAIN_PREMISE": 0,
+    "SPECIALIST_LANGUAGE_REVIEW_REQUIRED": 4
+  },
+  "independence": {
+    "reviewerBArtifactsRead": false,
+    "reviewerBMessagesRead": false,
+    "blankReviewerDecisionsRead": false,
+    "generatedQuestionsRead": false,
+    "productionValidatorsRead": false,
+    "semanticClassificationAutomated": false
+  },
+  "campaignEligible": 0,
+  "holds": {
+    "rights": "HOLD",
+    "historyExposure": "HOLD",
+    "providerAuthorization": "HOLD"
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretAccesses": 0,
+    "fullQuestionCandidatesGenerated": 0
+  },
+  "privacy": {
+    "containsFrameIds": false,
+    "containsContentHashes": false,
+    "containsPassageText": false,
+    "containsPrivateSourceIdentifiers": false,
+    "containsCandidateSites": false,
+    "containsPrivateNotes": false,
+    "containsRowLevelOutcomes": false
+  }
+}

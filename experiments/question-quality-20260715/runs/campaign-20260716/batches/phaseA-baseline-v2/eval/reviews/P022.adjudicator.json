@@ -1,0 +1,45 @@
+{
+  "pid": "P022",
+  "finalV2": true,
+  "winningAnswer": "(A)",
+  "reason": "분쟁 요약의 '선언된 정답=②'는 라벨 변환 오류로 판단된다. 권위 소스인 eval/full/P022.md 는 선언된 정답을 (A)로 명시하며((A)=① 에 해당), markedExpressions 에서도 (A)만 isError=true 다. 즉 실제로는 선언 정답 (A) = 솔버1 (A) = 솔버2 (A) = 감사자 단일정답 판정으로 4자 완전 일치이며, 답 자체의 충돌은 존재하지 않는다. 독립 재검증 결과: (A) making 은 수식 대상 mistakes 가 make 의 피동 대상이고 바로 뒤 by-행위자구(by organizations)가 수동 축약 관계절을 강제하므로 과거분사 made 가 필수 — 능동 분사 해석(목적어 부재·by구 충돌)과 동명사 해석(전치사 없는 'mistakes making' 구조 부재) 모두 구제 불가하여 유일한 비문이다. (B) 동명사 주어 creating + 정동사 begins, (C) need to-V 형용사적 용법, (D) must 지배 하 either solve or result 원형 병렬, (E) 대명사 one 수식 형용사 measurable 은 대안 해석을 전수 검토해도 전부 정문이다. 따라서 (A) 단일 정답이 성립하고 정답 유일성(V2)은 참이다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "making 이 비문이며 made 로 교정해야 한다는 솔버·감사자 공통 판정",
+      "verdict": "성립 (유일 정답)",
+      "evidence": "'One of the most common mistakes making by organizations' — 핵명사 mistakes 는 make 의 목적어(조직이 저지르는 대상)이고 직후 by organizations 행위자구가 수동을 강제한다. 능동 현재분사 making 은 타동사 make 의 목적어가 없어 논항 구조가 붕괴하고 by구와 의미 충돌한다. 동명사 구제 해석('mistakes of making' 류)도 전치사 없이는 성립하는 구조가 없다. made 로 교정 시 원지문과 정확히 일치하는 완전 문법문이 복원된다."
+    },
+    {
+      "label": "(B)",
+      "claim": "that 직후 -ing 가 오답 후보라는 표층적 의심 가능성",
+      "verdict": "기각 (정문)",
+      "evidence": "'is that creating a social media program begins not with A but with B' — that 명사절 내부에서 동명사구 creating a social media program 이 주어이고 단수 정동사 begins 와 호응한다. not with / but with 상관 병렬도 PP 대 PP 로 온전하다. 어떤 대안 해석으로도 오류가 성립하지 않는다."
+    },
+    {
+      "label": "(C)",
+      "claim": "of managing 형태를 기대할 수 있다는 유혹 요인",
+      "verdict": "기각 (정문)",
+      "evidence": "'a vague need to manage a presence' — 명사 need 를 보충하는 to부정사(형용사적 용법)는 확립된 표준 결합(need to-V)이며, manage 의 목적어(a 'presence')도 갖춰져 있다."
+    },
+    {
+      "label": "(D)",
+      "claim": "3인칭 단수 주어에 맞춰 solves 여야 한다는 수일치 미끼",
+      "verdict": "기각 (정문)",
+      "evidence": "'must either solve ... or result in ...' — 병렬 시작점이 조동사 must 직후이므로 either A or B 양항 모두 동사원형이 지배 규칙이며 solve / result 가 정확히 이를 충족한다. or 뒤 원형 result 가 결정적 병렬 단서."
+    },
+    {
+      "label": "(E)",
+      "claim": "인접 부사 preferably 에 이끌린 measurably 오판 가능성",
+      "verdict": "기각 (정문)",
+      "evidence": "'preferably a measurable one' — measurable 은 명사 대용 대명사 one(= improvement)을 수식하므로 형용사가 적법하다. 부사 measurably 는 오히려 비문을 만든다. 문맥('측정 가능한 개선')과도 정합."
+    }
+  ],
+  "meta": {
+    "declaredAnswerInFullFile": "(A)",
+    "disputeSummaryClaimedDeclared": "②",
+    "resolution": "분쟁 요약의 ② 표기는 (A)=① 매핑 기준의 변환 오류로 추정. 파일 기준 선언 정답 (A)와 솔버 2명·감사자 판정이 모두 일치하여 실질 분쟁 없음.",
+    "solverOverreachFound": false,
+    "missedAlternativesFound": false
+  }
+}

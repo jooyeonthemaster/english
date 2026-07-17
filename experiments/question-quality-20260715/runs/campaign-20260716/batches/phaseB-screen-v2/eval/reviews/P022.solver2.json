@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 seam은 정문(단수 주어 + helps + O + 원형부정사)이나, 지문이 명시적으로 감정의 정확한 '표현'(express emotions... accurately; express how he feels about the problem)을 옹호하는데 'suppress negative feelings'는 이를 정면 부정한다. 또한 지문은 갈등 '예방'이 아니라 갈등 상황 내에서의 상호 이해를 다루므로 'prevent any potential conflicts'도 논점 이탈. 논리 부적합으로 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 정문이나, 'the exact same emotional vocabulary'는 도입부 'a diverse emotion vocabulary'와 모순이고, 주어 'Appreciation of differences(차이에 대한 인식)'가 획일화를 '강제(forces)'한다는 술어는 주어 의미와 자기모순. 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "수일치(Appreciation ... establishes) 및 관계절(that turns disagreements into productive team outcomes) 결합 모두 정문. 논리적으로 전제 3의 협력(accommodate their own needs as well as the needs of others = cooperate)과 갈등 상황 예시(자기 감정 표현 + 타인 관점 취하기)의 자연스러운 일반화 결론. '차이 인식 → 협력적 분위기 → 이견의 생산적 전환'은 지문 전체 논증과 정합. 유일한 성립 후보."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 정문이나, 지문이 'their own needs as well as the needs of others'로 자신과 타인의 필요를 병렬 수용한다고 명시했으므로 '타인의 필요를 자신 것보다 엄격히(strictly) 우선'은 직접 모순. as well as 병렬 구조가 타인 우선 해석을 차단한다. 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'their'의 선행사가 단수 주어 'Appreciation'일 수 없어 원거리 복수 명사(group members/individuals)로 억지 소급해야 하는 약한 대명사 seam인 데다, 'exclusively for completing independent tasks'는 대전제 'particularly relevant in group settings'와 정면 모순. 탈락."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. 모든 선지가 표면 문법상 빈칸에 결합 가능하나(⑤는 대명사 지시가 약함), 논리 적합성 검증에서 ①(억압 vs 표현 모순), ②(획일화 vs 다양성 모순), ④(타인 우선 vs as well as 병렬 모순), ⑤(독립 과업 vs 집단 상황 모순)가 지문 명제와 직접 충돌하여 전부 탈락. ③만이 지문의 협력·관점 취하기 논증의 결론으로 성립. 단독 정답, 복수 정답 시비 없음."
+}

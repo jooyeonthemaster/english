@@ -1,0 +1,17 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "noEmit": true
+  },
+  "include": [
+    "./*.ts",
+    "../selector-core.ts",
+    "../v2/*.ts",
+    "../v3/*.ts",
+    "../../../../scripts/data/hs-passages.ts",
+    "../../../../scripts/data/ms-passages.ts",
+    "../../../../scripts/report-test-passages.ts",
+    "../../../../scripts/restoration-lite-corpus.ts"
+  ]
+}

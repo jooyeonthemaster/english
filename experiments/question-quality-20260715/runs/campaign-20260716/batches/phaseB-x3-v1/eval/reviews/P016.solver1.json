@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "consider + O + to be + C (5형식) 표준 구문. 목적어 'the virtual, or imaginative, nature of cyberspace'가 길어 consider와 to be의 거리가 멀지만 결합은 정확하다. 'consider A as B'만 암기한 학생을 노린 미끼로 잠시 끌렸으나, consider O to be C는 완전한 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'of a kind and magnitude (that has) not (been) seen before'의 축약 관계절. kind/magnitude는 see의 대상이므로 과거분사 수동 seen이 옳고, 부정어 not이 분사 앞에 오는 어순도 표준. 능동/수동 구분을 묻는 전형적 자리라 가장 오래 검토했으나 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "선행사 없는 자유관계절 'What is new about cyberspace'가 문장 주어. That/Which는 선행사가 필요해 불가, What이 옳다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "자유관계절 내부 동사. What은 단수 취급이므로 is가 옳다. 뒤이어 본동사 is가 또 나와 'is ... is' 연쇄가 시각적으로 어색해 끌리게 만들지만, 관계절 내 동사와 본동사로 각각 제 역할을 하므로 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "앞의 'the move from passive imaginary reality to the interactive virtual reality'와 병렬이 되려면 'the move from photographs to movies'여야 한다. 표기 'the move photographs from movies'는 명사 move 뒤에 무표지 NP가 붙거나 photographs를 동사로 읽어야 하는데(관계사 부재, 의미 불성립) 어떤 대안 해석(축약 관계절, 동격, 도치 등)으로도 정문이 되지 않는다. 어법상 틀림 — 정답."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 실전 풀이 순서(구문 골격 → 밑줄별 지배 규칙 확인)로 접근. (B) 능동/수동과 (D) is-is 연쇄가 매력적 오답으로 설계된 듯 실제로 끌렸으나 둘 다 정문 확인. (E)는 from A to B 병렬 파괴로 명백히 비문이며, 오히려 어법(문법성) 문제라기보다 어순 스크램블에 가까워 변별 포인트가 다소 기계적이라는 인상. 정답은 (E) 단일로 옹호 가능."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸 대입 시 'while cinema expresses man's affective life, the law restrains the emotional aspects of human nature'로 express vs restrain 대조가 성립. 직후 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'와 마지막 문장 'The law obsessively tries to suppress affects'가 정확한 재진술 근거. 문법 결합(단수 주어 the law + restrains)도 자연스러움."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "지문 2문장이 명시적으로 배제한 내용: 'Rather than an abstract desire for truth as a value in itself, the law deals with the messiness of human relations.' 법이 추상적 진리를 규제한다는 진술은 지문 방향과 정반대. 지문 어휘(abstract, truth, value in itself)를 재활용한 표면 미끼."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 마지막 문장의 'forcing us to identify the most unbearable ones'를 거의 그대로 복사해 순간적으로 끌리지만, 원문에서 이 행위의 주어는 cinema다('whereas cinema introduces us to our affects, often forcing us...'). 영화의 역할을 법에 부여하면 while/whereas 대조 구조가 붕괴. 문자열 유사성에 의존한 전형적 주체 뒤바꿈 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "법은 욕망·충동을 억압(suppress)하는 존재로 서술되며, 자연 상태는 '명령과 금지 체제 없이는 존재 불가능한' 상태로 부정적으로 제시됨. amplifies는 suppress의 정반대 방향. 지문 어구(drives, exist in a state of nature) 재조합 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'struggle with what it means to be human... try to communicate to us something about our existence'는 두 분야의 공통점으로 제시된 내용. However 이후 '차이'를 채우는 빈칸에 공통점을 넣으면 대조 논리가 파탄. 'directly'라는 한정어도 지문에 근거 없음. 공통점/차이점 혼동을 노린 미끼."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: However 대조 신호 + 빈칸 직후 It 재진술 문장(suppress affects, not overwhelmed by desires and drives)이 이중으로 ①을 지목해 논리 경로가 단선적이고 견고함. ③이 지문 마지막 문장을 문자 그대로 복사한 강한 미끼지만 주어가 cinema임을 확인하면 즉시 배제 가능. 나머지 오답도 모두 지문 어휘를 재활용하되 방향·주체가 어긋나 있어 오답 매력도 설계는 준수하나, 단서가 다소 노골적(suppress affects가 사실상 정답을 직역)이라 변별 난도는 중 정도. 옹호 가능한 정답은 ① 단독."
+}

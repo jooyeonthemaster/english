@@ -1,0 +1,35 @@
+{
+  "pid": "P048",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ([although-clause + main clause] fits after the colon), but the proposition 'the law eventually embraces it (moral chaos)' is formally contradicted by the passage's final sentence: 'The law obsessively tries to suppress affects, fearing the horror of their consequences.' Law suppresses; it never embraces. Also 'cinema injects moral chaos into the law' asserts a causal intrusion of cinema INTO law that the passage nowhere licenses — cinema acts on the viewer, not on the legal system."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Grammatical seam: a complete [while-clause + main clause] statement, exactly what a colon elaborating 'an important difference' requires. The main-clause subject 'the law' supplies the antecedent for the following sentence's 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives' — semantically only the law (the regime of commands and prohibitions) can play that role. 'them' = 'unfiltered emotional realities', matching 'affects/desires and drives'. Logic: precise paraphrase of the closing contrast — law suppresses affects (= restrains) whereas cinema introduces us to our affects, forcing identification of the most unbearable ones (= unleashes unfiltered emotional realities). Every long-distance cue checks out."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Exact role reversal of the stated contrast. Passage: law suppresses affects; cinema introduces/exposes them. Option claims cinema suppresses and law satisfies desires. Moreover 'the law strives to satisfy them' contradicts the following sentence 'It tries to ensure that we are not overwhelmed... by our desires' — a law that satisfies desires cannot coherently be the 'It' that guards against them. Formally inconsistent on two independent grounds."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Fails grammatically at the seam: 'though cinema and law complement each other to cultivate highly rational minds' is a bare subordinate clause with no main clause, so the colon-introduced elaboration is syntactically incomplete (the colon after 'an important difference here...' demands a full assertive statement). It also leaves the next sentence's 'It' with no singular antecedent (only the conjoined 'cinema and law' is available). Semantically it asserts a complementarity/similarity where the frame demands a difference, and 'cultivate highly rational minds' contradicts the affect-centered account. Triple failure."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'Aesthetic tastes' appears nowhere in the passage's conceptual inventory (affects, desires, drives, prohibitions). 'The law remains neutral to them' is contradicted by the law's 'obsessive' suppression of affects, and following it with 'It tries to ensure that we are not overwhelmed...' would be incoherent — a neutral law does not actively guard. Since-clause also presupposes a causal ground the passage never gives."
+    }
+  ],
+  "note": "Clean cloze item. The blank sits after a colon announcing 'an important difference', and two long-distance constraints pin the answer: (1) the pronoun 'It' in the next sentence must resolve to the law as guardian against desires/drives, and (2) the final sentence explicitly states the law-suppresses / cinema-exposes contrast that the blank must preview. Only ② satisfies both the syntactic seam and the logical constraints; ③ is the classic reversal decoy, ④ is additionally a syntactically incomplete fragment. No alternative construal (ellipsis, inversion, reduced clause) rescues any distractor. Single defensible answer."
+}

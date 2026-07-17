@@ -1,0 +1,18 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "include": [
+    "materialize.ts",
+    "runtime.ts",
+    "runtime.test-support.ts",
+    "runtime.hostile-types.ts",
+    "openrouter-question-parser.ts",
+    "build-fixture.ts",
+    "verify.mts",
+    "materialize.test.ts",
+    "../../harness/node-sqlite.d.ts"
+  ]
+}

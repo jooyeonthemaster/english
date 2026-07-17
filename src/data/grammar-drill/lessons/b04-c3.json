@@ -1,0 +1,750 @@
+{
+  "id": "b04-c3",
+  "unitId": "b04",
+  "order": 3,
+  "title": "제안·요구·주장 that절의 동사원형",
+  "oneLiner": "제안·요구·주장·명령의 that절은 should 가 생략된 동사원형을 씁니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 교육과정 [별책14] 별표4 언어형식 — 조동사 should 및 that 명사절 항목(중 ●, 고 ●)",
+      "천일문 고등 GRAMMAR — 주장·요구·제안·명령의 that절과 should 생략",
+      "docs/study-os-spec.md §2.3 b04 조동사"
+    ]
+  },
+  "lenses": ["L1", "L2"],
+  "confusableWith": ["b04-c1", "b04-c2", "u11-c4", "u12-c2"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The doctor suggested that he take a week off.",
+        "The doctor suggested him to take a week off."
+      ],
+      "answer": 0,
+      "afterText": "두 문장은 suggest 뒤의 모양이 다릅니다. 이 레슨을 마치면 왜 suggest 뒤에 「목적어 + to부정사」가 올 수 없는지, 그리고 왜 takes 가 아니라 take 인지 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "당위의 that절",
+      "question": "should 가 생략된다는 말이 대체 무슨 뜻입니까?",
+      "plain": "당위의 that절은 '아직 하지 않은 일을 하라'는 내용을 담은 절입니다. 명령서와 같아서 시제를 새기지 않고, should 가 생략된 동사원형만 남습니다.",
+      "analogy": "의사의 처방전과 같습니다. 처방전에는 '어제 약을 먹었다'가 아니라 '하루 세 번 복용할 것'이라고 적습니다. 이미 한 일이 아니라 앞으로 할 일이므로, 과거니 현재니 하는 시제를 새길 자리가 애초에 없습니다.",
+      "whyItMatters": "시험은 이 자리에 3인칭 단수 -s 와 과거형을 미끼로 놓습니다. 눈앞의 that절이 '하라'는 명령서인지 '그렇다'는 보고서인지 가리는 눈이 생기면, 그 미끼가 한눈에 보입니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "당위의 that절, 네 가지 규칙",
+      "intro": "당위의 that절이 움직이는 방식을 항목별로 적어 둡니다. 모든 판단이 이 노트에서 출발합니다.",
+      "entries": [
+        {
+          "head": "당위 — 아직 하지 않은 일을 하라는 말",
+          "body": "제안·요구·주장·명령은 전부 '앞으로 이렇게 하라'는 말입니다. 이미 일어난 사실을 전하는 것이 아니므로 시제를 새길 이유가 없습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "should 생략 — 동사원형만 남습니다",
+          "body": "당위의 that절 동사는 원래 should + 동사원형입니다. should 를 통째로 생략하면 동사원형만 남으며, 둘 다 옳은 형태입니다.",
+          "example": {
+            "en": "Her parents requested that she **call** home every week.",
+            "ko": "그녀의 부모는 그녀가 매주 집에 전화할 것을 요청했습니다.",
+            "note": "should call 에서 should 가 사라지고 원형 call 만 남았습니다."
+          }
+        },
+        {
+          "head": "3인칭 단수 -s 차단",
+          "body": "동사원형이므로 주어가 3인칭 단수여도 -s 를 붙이지 않습니다. 어색해 보이는 그 맨몸의 동사가 오히려 정답입니다.",
+          "example": {
+            "en": "The rules require that each visitor **wear** a badge at all times.",
+            "ko": "규정은 모든 방문객이 항상 배지를 착용할 것을 요구합니다.",
+            "note": "each visitor 는 단수이지만 wears 가 아니라 wear 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "시제 일치 차단",
+          "body": "주절이 과거여도 that절 동사는 원형 그대로입니다. 요구하는 내용은 언제나 앞날을 향하므로 주절의 시제를 따라가지 않습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "판단의 축 — 명령서인가, 보고서인가",
+          "body": "동사의 철자가 아니라 that절의 내용이 기준입니다. '하라'는 명령서면 동사원형, '그렇다'는 보고서면 평범한 시제 일치입니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "당위 신호 한 장 정리",
+      "columns": ["신호", "대표 선수", "that절의 동사"],
+      "rows": [
+        {
+          "cells": ["제안", "suggest · propose · recommend", "(should) + 동사원형"],
+          "example": {
+            "en": "The staff proposed that the meeting **be** postponed.",
+            "ko": "직원들은 회의를 연기할 것을 제안했습니다.",
+            "note": "회의는 연기되는 쪽이므로 원형을 살린 be postponed 입니다."
+          }
+        },
+        {
+          "cells": ["요구", "demand · request · require", "(should) + 동사원형"]
+        },
+        {
+          "cells": ["주장", "insist — '요구하다'의 뜻일 때", "(should) + 동사원형"]
+        },
+        {
+          "cells": ["명령·지시", "order · command", "(should) + 동사원형"],
+          "example": {
+            "en": "The general ordered that the troops **withdraw** at dawn.",
+            "ko": "장군은 부대가 동틀 녘에 철수할 것을 명령했습니다.",
+            "note": "주절이 과거여도 that절은 원형 withdraw 입니다."
+          }
+        },
+        {
+          "cells": ["당위 형용사", "necessary · essential · important · vital", "It is ~ that + 동사원형"]
+        },
+        {
+          "cells": ["예외 — 사실 전달", "suggest(시사하다) · insist(사실을 주장하다)", "평범한 시제 일치"]
+        }
+      ],
+      "takeaway": "시험이 가장 사랑하는 줄은 마지막 줄입니다. 같은 동사가 뜻에 따라 두 얼굴을 갖는다는 것을 이 표에서 눈에 새겨 두십시오."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "당위 that절을 여는 신호 동사",
+      "why": "이 신호 동사들이 보이는 순간에만 동사원형 판단이 시작됩니다. 목록이 즉시 떠오르지 않으면 밑줄 친 -s 를 보고도 의심조차 하지 못합니다. 신호등처럼 자동으로 켜져야 도구가 됩니다.",
+      "device": "제·요·주·명 — 제안하고(suggest·propose·recommend), 요구하고(demand·request·require), 주장하고(insist), 명령한다(order). '제요주명'을 네 박자로 끊어 세 번 소리 내어 읽으십시오. 전부 '남에게 시키는 말'이라는 공통점이 몸통입니다.",
+      "items": [
+        { "cue": "제안", "answer": "suggest · propose · recommend" },
+        { "cue": "요구", "answer": "demand · request · require" },
+        { "cue": "주장", "answer": "insist — '요구하다'의 뜻일 때만" },
+        { "cue": "명령", "answer": "order · command" },
+        { "cue": "당위 형용사", "answer": "It is necessary · essential · important · vital that" },
+        { "cue": "공통점", "answer": "아직 하지 않은 일을 하라는 말 → (should) + 동사원형" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "당위 신호 관문",
+      "mission": "that절에 동사원형을 부를 수 있는 당위의 신호 동사만 전부 고르십시오. 사실을 전할 줄만 아는 침입자가 셋 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "suggest",
+        "say",
+        "demand",
+        "insist",
+        "know",
+        "recommend",
+        "require",
+        "believe",
+        "order"
+      ],
+      "answers": [
+        "suggest",
+        "demand",
+        "insist",
+        "recommend",
+        "require",
+        "order"
+      ],
+      "passText": "여섯 신호를 전부 가려냈습니다. say·know·believe 는 이미 있는 사실을 전할 뿐, 남에게 무언가를 시키지 못합니다. 당위의 신호등이 손에 들어왔습니다.",
+      "retryText": "아깝습니다. 힌트 하나 — '하라'고 시킬 수 있는 동사만 당위의 that절을 엽니다. 아는 것과 믿는 것은 시키는 일이 아닙니다."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "제안·요구·주장·명령 + that + 주어 + 동사원형",
+      "rule": "제안·요구·주장·명령을 뜻하는 동사 뒤의 that절에서는 should 가 생략되어 동사원형만 남습니다. 주어가 3인칭 단수여도 -s 를 붙이지 않습니다.",
+      "examples": [
+        {
+          "en": "The doctor insisted that the patient **rest** for a week.",
+          "ko": "그 의사는 환자가 일주일 동안 쉬어야 한다고 강하게 요구했습니다.",
+          "note": "the patient 는 3인칭 단수이지만 rests 가 아니라 rest 입니다. should rest 에서 should 가 생략된 형태입니다."
+        },
+        {
+          "en": "The committee recommended that the museum **open** an hour earlier.",
+          "ko": "그 위원회는 박물관이 한 시간 일찍 문을 열 것을 권고했습니다.",
+          "note": "주절이 과거(recommended)이지만 that절 동사는 시제를 따라가지 않고 원형 open 을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "요구 동사가 여는 that절의 해부",
+      "tokens": [
+        { "t": "The safety committee", "role": "S" },
+        { "t": "demanded", "role": "V" },
+        { "t": "that", "role": "CONJ" },
+        { "t": "the old bridge", "role": "S" },
+        { "t": "be inspected", "role": "V" },
+        { "t": "immediately", "role": "M" }
+      ],
+      "ko": "안전 위원회는 그 낡은 다리를 즉시 점검할 것을 요구했습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 걷어냅니다",
+          "roles": ["M"],
+          "note": "immediately 는 부사 수식어입니다. 뼈대가 아니므로 먼저 치웁니다."
+        },
+        {
+          "label": "② 절을 여는 접속사를 찾습니다",
+          "roles": ["CONJ"],
+          "note": "that 이 명사절 하나를 엽니다. 접속사가 하나이므로 절은 둘, 곧 본동사 자리도 둘이며, 그 형태는 ④에서 판정합니다."
+        },
+        {
+          "label": "③ 두 절의 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "주절의 주어는 The safety committee, that절의 주어는 the old bridge 입니다. that절 주어는 3인칭 단수입니다."
+        },
+        {
+          "label": "④ 동사 형태를 판정합니다",
+          "roles": ["V"],
+          "note": "주절 동사 demanded 는 과거형입니다. 그러나 that절은 요구 내용이므로 should 가 생략된 원형이 오며, 다리는 점검을 받는 쪽이라 be inspected 가 됩니다."
+        }
+      ],
+      "conclusion": "주절이 과거이고 that절 주어가 3인칭 단수인데도 that절 동사는 was inspected 도 is inspected 도 아닌 be inspected 입니다. 요구·제안의 that절은 시제와 수의 지배를 받지 않습니다."
+    },
+    {
+      "id": "b9",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "동사원형 사냥",
+      "instruction": "insist 가 연 당위의 that절 안에서 should 가 생략된 동사원형을 전부 찾아 탭하십시오.",
+      "hitLabel": "동사원형",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "coach", "hit": false },
+        { "t": "insisted", "hit": false },
+        { "t": "that", "hit": false },
+        { "t": "every", "hit": false },
+        { "t": "player", "hit": false },
+        { "t": "arrive", "hit": true },
+        { "t": "early,", "hit": false },
+        { "t": "warm", "hit": true },
+        { "t": "up", "hit": false },
+        { "t": "together,", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "stay", "hit": true },
+        { "t": "until", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "end.", "hit": false }
+      ],
+      "ko": "코치는 모든 선수가 일찍 도착하고, 함께 몸을 풀고, 끝까지 남아 있어야 한다고 강하게 요구했습니다.",
+      "explain": "여기서 insist 는 '요구하다'이므로 that절의 세 동사 arrive·warm·stay 는 전부 should 가 생략된 원형입니다. every player 가 단수여도 arrives·warms·stays 가 되지 않습니다. up·together 는 동사가 아니라 동사에 딸린 부품입니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "부정은 not + 동사원형, 수동은 be + p.p.",
+      "rule": "that절의 동사원형을 부정할 때는 do 를 쓰지 않고 not 을 동사원형 앞에 그대로 놓습니다. 수동이면 be + 과거분사가 되며, 이때 be 역시 원형 그대로입니다.",
+      "examples": [
+        {
+          "en": "The safety board demanded that the old bridge **be** closed to heavy trucks.",
+          "ko": "안전 위원회는 그 낡은 다리를 대형 트럭에 대해 통행 금지할 것을 요구했습니다.",
+          "note": "다리는 '닫히는' 쪽이므로 수동입니다. is closed 가 아니라 원형 be 를 살린 be closed 입니다."
+        },
+        {
+          "en": "The counselor advised that the student **not take** more than five courses this term.",
+          "ko": "상담 교사는 그 학생이 이번 학기에 다섯 과목을 넘게 수강하지 말 것을 권고했습니다.",
+          "note": "does not take 가 아닙니다. 동사원형 앞에 not 을 그대로 붙여 not take 로 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "title": "It is + 필요·당위 형용사 + that절",
+      "rule": "necessary·essential·important·imperative·vital 처럼 '반드시 그래야 한다'는 판단을 담은 형용사가 It is ~ that 구문에 오면, that절 동사도 마찬가지로 (should) 가 생략된 동사원형이 됩니다.",
+      "examples": [
+        {
+          "en": "It is essential that every applicant **submit** the form before Monday.",
+          "ko": "모든 지원자가 월요일 전에 그 서류를 제출하는 것이 필수적입니다.",
+          "note": "every applicant 는 단수 취급이지만 submits 가 아니라 submit 입니다."
+        },
+        {
+          "en": "It is important that the measurements **be** verified by a second team.",
+          "ko": "그 측정치가 다른 팀에 의해 검증되는 것이 중요합니다.",
+          "note": "수동이므로 are verified 가 아니라 be verified 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b04-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The doctor recommended that the patient {{blank}} more water every day.",
+          "options": ["drink", "drinks"],
+          "answer": 0,
+          "translation": "그 의사는 환자가 매일 물을 더 많이 마실 것을 권고했습니다.",
+          "explanation": "recommend 는 권고를 뜻하는 제안 계열 동사입니다. that절은 should 가 생략된 동사원형을 쓰므로 3인칭 단수 the patient 뒤에도 drinks 가 아니라 drink 가 옵니다.",
+          "trapTags": ["subjunctive-that", "third-person-s"]
+        },
+        {
+          "id": "b04-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The professor insisted that every student [[u:submits]] the assignment by Friday.",
+          "isCorrect": false,
+          "correction": "submit",
+          "translation": "그 교수는 모든 학생이 금요일까지 과제를 제출해야 한다고 강하게 요구했습니다.",
+          "explanation": "여기서 insist 는 '요구하다'입니다. that절의 내용은 아직 하지 않은 일이므로 should 가 생략된 동사원형 submit 이 옳습니다.",
+          "trapTags": ["subjunctive-that", "third-person-s"]
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "that절 동사 형태를 정하는 4단계",
+      "steps": [
+        {
+          "text": "that절을 이끄는 주절의 동사(또는 It is + 형용사)가 제안·요구·주장·명령 계열인지 확인합니다.",
+          "applyNote": "demand 는 요구 동사입니다. 일단 동사원형 후보가 열립니다."
+        },
+        {
+          "text": "that절의 내용이 '아직 실현되지 않은, 해야 할 일'인지 '이미 성립한 사실'인지 가릅니다.",
+          "applyNote": "다리를 점검하는 일은 아직 하지 않은 일입니다. 따라서 당위이며 동사원형 쪽입니다."
+        },
+        {
+          "text": "당위이면 should 를 생략한 동사원형을 씁니다. 3인칭 단수 -s, 주절과의 시제 일치, 수 일치를 모두 적용하지 않습니다.",
+          "applyNote": "the old bridge 가 단수이고 주절이 과거여도 형태는 원형 be 입니다."
+        },
+        {
+          "text": "부정이면 not + 동사원형, 수동이면 be + 과거분사로 형태를 마무리합니다.",
+          "applyNote": "다리는 점검을 받는 쪽이므로 be inspected 로 확정합니다."
+        }
+      ],
+      "example": {
+        "en": "The safety board demanded that the old bridge **be** inspected immediately.",
+        "ko": "안전 위원회는 그 낡은 다리를 즉시 점검할 것을 요구했습니다.",
+        "note": "요구 동사 + 아직 하지 않은 일 + 수동 → be inspected 로 귀결됩니다."
+      }
+    },
+    {
+      "id": "b14",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The city council recommended that the library ( stay / stays ) open until ten on weekdays.",
+      "steps": [
+        {
+          "title": "① 주절 동사를 확인합니다",
+          "body": "recommended 는 권고, 곧 제안 계열의 동사입니다. 뒤의 that절이 동사원형을 요구할 수 있는 자리입니다."
+        },
+        {
+          "title": "② that절의 내용을 확인합니다",
+          "body": "도서관이 열 시까지 문을 여는 것은 아직 실현되지 않은, 앞으로 하자는 일입니다. 이미 성립한 사실을 전하는 것이 아니므로 당위입니다."
+        },
+        {
+          "title": "③ 시제·수 일치를 차단합니다",
+          "body": "the library 는 3인칭 단수이고 주절은 과거입니다. 그러나 당위의 that절이므로 -s 도 과거형도 붙지 않습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "should stay 에서 should 가 생략된 원형 stay 가 옳습니다. recommend 는 '권고'의 뜻만 가지므로 that절은 언제나 당위이며, stays 처럼 시제·수를 반영한 형태가 들어갈 자리가 애초에 없습니다. 뜻에 따라 두 얼굴을 갖는 동사로는 suggest(제안하다/시사하다)·insist(요구하다/사실을 주장하다)가 대표적이며, propose 도 '가설을 내놓다'의 뜻으로 쓰이면 that절이 직설법이 됩니다."
+        }
+      ],
+      "answer": "stay",
+      "ko": "시 의회는 그 도서관이 평일에 열 시까지 문을 열 것을 권고했습니다."
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "당위인가, 사실인가",
+      "columns": ["당위 — 동사원형", "사실 — 시제 일치"],
+      "rows": [
+        {
+          "criterion": "insist 의 뜻",
+          "a": "요구하다 → that S + 동사원형",
+          "b": "(사실을) 주장하다 → that S + 시제를 가진 동사"
+        },
+        {
+          "criterion": "suggest 의 뜻",
+          "a": "제안하다 → that S + 동사원형",
+          "b": "시사하다·암시하다 → that S + 시제를 가진 동사"
+        },
+        {
+          "criterion": "that절 내용의 성격",
+          "a": "아직 하지 않은 일, 하라고 요구하는 일입니다.",
+          "b": "이미 성립했거나 성립한 것으로 보이는 사실입니다."
+        }
+      ],
+      "examples": [
+        {
+          "en": "The manager insisted that the machine **be** repaired at once.",
+          "ko": "그 관리자는 기계를 즉시 수리할 것을 강하게 요구했습니다.",
+          "note": "수리는 아직 하지 않은 일입니다. 당위이므로 원형 be repaired 입니다."
+        },
+        {
+          "en": "The witness insisted that he **had seen** the car near the gate.",
+          "ko": "그 목격자는 자신이 정문 근처에서 그 차를 보았다고 강하게 주장했습니다.",
+          "note": "이미 있었던 일에 대한 사실 주장입니다. 원형이 아니라 시제를 가진 had seen 을 씁니다."
+        },
+        {
+          "en": "Recent evidence **suggests** that the volcano **erupted** more than once.",
+          "ko": "최근의 증거는 그 화산이 한 번 이상 분출했음을 시사합니다.",
+          "note": "여기서 suggest 는 '시사하다'입니다. 요구가 아니므로 that절은 시제를 가진 erupted 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SORT",
+      "tier": 2,
+      "instruction": "각 문장의 that절 동사가 동사원형이어야 하는지, 시제를 가진 형태여야 하는지 분류하십시오.",
+      "buckets": [
+        { "id": "base", "label": "동사원형" },
+        { "id": "tense", "label": "시제를 가진 동사" }
+      ],
+      "chips": [
+        {
+          "text": "The union demanded that the company ( disclose ) the results.",
+          "bucketId": "base",
+          "why": "demand 는 요구 동사이고 that절은 아직 하지 않은 일이므로 원형 disclose 입니다."
+        },
+        {
+          "text": "The judge ordered that the documents ( be ) released to the public.",
+          "bucketId": "base",
+          "why": "order 는 명령 동사이며 수동이므로 원형을 살린 be released 입니다."
+        },
+        {
+          "text": "The doctor suggested that he ( give ) up smoking.",
+          "bucketId": "base",
+          "why": "여기서 suggest 는 '제안하다'입니다. 3인칭 단수여도 원형 give 를 씁니다."
+        },
+        {
+          "text": "The report suggests that the population ( decline ) since 2015.",
+          "bucketId": "tense",
+          "why": "여기서 suggest 는 '시사하다'입니다. 이미 성립한 사실이므로 시제를 가진 형태로 굴절하여 has declined 가 됩니다."
+        },
+        {
+          "text": "She insisted that she ( be ) not at the scene that night.",
+          "bucketId": "tense",
+          "why": "과거의 사실을 부인하는 주장입니다. 요구가 아니므로 시제 일치를 지켜 was not 으로 굴절합니다."
+        },
+        {
+          "text": "His silence suggested that he ( know ) the answer already.",
+          "bucketId": "tense",
+          "why": "침묵이 무언가를 암시한 것입니다. 요구가 아니므로 시제를 가진 knew 로 굴절합니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "명령서·보고서 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. that절이 명령서인지 보고서인지부터 보십시오.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "demand 의 that절에서는 주어가 3인칭 단수여도 -s 를 붙이지 않습니다.",
+          "isTrue": true,
+          "why": "당위의 that절은 should 가 생략된 동사원형이므로 -s 가 붙지 않습니다."
+        },
+        {
+          "statement": "주절이 과거이면 당위의 that절 동사도 과거형이 됩니다.",
+          "isTrue": false,
+          "why": "당위의 that절은 시제 일치를 받지 않습니다. 주절이 과거여도 원형 그대로입니다."
+        },
+        {
+          "statement": "당위의 that절을 부정할 때는 not 을 동사원형 앞에 그대로 놓습니다.",
+          "isTrue": true,
+          "why": "do 를 부르지 않고 not take 처럼 원형 앞에 not 만 놓습니다."
+        },
+        {
+          "statement": "suggest 는 어떤 뜻으로 쓰이든 that절에 동사원형을 요구합니다.",
+          "isTrue": false,
+          "why": "suggest 가 '시사하다'로 쓰이면 that절은 사실 진술이므로 시제 일치를 따릅니다."
+        },
+        {
+          "statement": "It is essential that 뒤의 that절에도 동사원형이 옵니다.",
+          "isTrue": true,
+          "why": "necessary·essential 같은 당위 형용사 구문도 should 가 생략된 원형을 씁니다."
+        },
+        {
+          "statement": "당위의 that절이 수동이면 was + 과거분사로 씁니다.",
+          "isTrue": false,
+          "why": "원형을 살린 be + 과거분사입니다. 주절이 과거여도 be 는 원형 그대로입니다."
+        },
+        {
+          "statement": "The witness insisted that he had seen the car. 는 어법상 옳은 문장입니다.",
+          "isTrue": true,
+          "why": "과거 사실에 대한 주장이므로 당위가 아니며, 시제를 가진 had seen 이 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "title": "suggest·insist 의 두 얼굴",
+      "trapTitle": "동사 목록만 외우면 걸린다",
+      "body": "suggest·insist 를 보자마자 동사원형을 쓰는 것은 절반만 맞는 판단입니다. suggest 가 '시사하다', insist 가 '(사실을) 주장하다'로 쓰이면 that절은 평범한 시제 일치를 따릅니다. 동사 목록이 아니라 that절의 내용이 '해야 할 일'인지 '이미 성립한 사실'인지를 보고 갈라야 합니다.",
+      "example": {
+        "en": "Recent research suggests that the human brain **continue** to change well into adulthood.",
+        "ko": "최근 연구는 인간의 뇌가 성인기까지도 계속 변화한다는 것을 시사합니다.",
+        "note": "이 문장의 suggest 는 '시사하다'이므로 that절은 사실 진술입니다. 원형 continue 가 아니라 continues 가 되어야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 2,
+      "title": "suggest·insist 뒤의 목적어 + to부정사",
+      "trapTitle": "suggest him to go 는 없는 형태입니다",
+      "body": "advise·order·urge 는 「목적어 + to부정사」를 취하지만, suggest 와 insist 는 그 형태를 취하지 못합니다. suggest 는 that절 또는 동명사를, insist 는 that절 또는 on + 동명사를 씁니다.",
+      "example": {
+        "en": "The doctor suggested **him to take** a week off.",
+        "ko": "그 의사는 그가 일주일을 쉬어야 한다고 제안했습니다.",
+        "note": "suggest 는 목적어와 to부정사를 나란히 받지 못합니다. suggested that he take a week off 또는 suggested taking a week off 로 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b20",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 위원회는 그 보고서가 다시 작성되어야 한다고 요구했습니다.",
+      "answer": ["The committee", "demanded", "that", "the report", "be rewritten"],
+      "tiles": [
+        "The committee",
+        "demanded",
+        "that",
+        "the report",
+        "be rewritten",
+        "was rewritten"
+      ],
+      "explanation": "demand 는 요구 동사이므로 that절은 should 가 생략된 동사원형을 씁니다. 보고서는 작성되는 쪽이라 수동이며, was rewritten 이 아니라 원형을 살린 be rewritten 이 옳습니다."
+    },
+    {
+      "id": "b21",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The principal insisted that every student ( wear / wears / wore ) the school badge on field trips.",
+      "givenSteps": [
+        "① 주절 동사를 확인합니다 — insist 가 이끄는 that절입니다.",
+        "② that절의 내용을 확인합니다 — 배지를 착용하는 것은 앞으로 지키라고 요구하는 일이지, 이미 성립한 사실의 진술이 아닙니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "wear — 요구를 뜻하는 insist 의 that절이므로 should 가 생략된 동사원형입니다",
+        "wears — every student 가 3인칭 단수이므로 -s 를 붙여야 합니다",
+        "wore — 주절이 과거이므로 that절도 시제를 맞춰야 합니다"
+      ],
+      "answer": 0,
+      "explain": "당위를 나타내는 insist 의 that절에서는 3인칭 단수 -s 도, 주절과의 시제 일치도 적용되지 않습니다. should wear 에서 should 가 생략된 원형 wear 가 옳습니다."
+    },
+    {
+      "id": "b22",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b04-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The excavated pottery suggests that the ancient city {{blank}} destroyed by a flood rather than by an invading army.",
+          "options": ["was", "be", "being"],
+          "answer": 0,
+          "translation": "발굴된 도자기는 그 고대 도시가 침략군이 아니라 홍수로 파괴되었음을 시사합니다.",
+          "explanation": "여기서 suggest 는 '시사하다'이며 that절은 이미 일어난 일에 대한 사실 진술입니다. 요구가 아니므로 동사원형 be 를 쓰지 않고 시제를 가진 was 를 씁니다.",
+          "trapTags": ["suggest-indicative", "subjunctive-that"]
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 was 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "이 문장의 suggest 는 '시사하다'이고 that절이 이미 일어난 사실을 진술하므로, 당위의 동사원형이 아니라 시제를 가진 동사가 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 판단의 축은 동사의 철자가 아니라 that절이 '해야 할 일'인지 '성립한 사실'인지입니다."
+        },
+        {
+          "text": "suggest 는 사물 주어와 함께 쓰이면 언제나 시제를 가진 동사를 취하기 때문입니다.",
+          "correct": false,
+          "feedback": "주어가 사람인지 사물인지는 기준이 아닙니다. 사람이 주어여도 '시사하다'로 쓰일 수 있고, 사물이 주어인 제안 문장도 가능합니다. 기준은 that절 내용의 성격입니다."
+        },
+        {
+          "text": "destroyed 가 과거분사라서 앞에 was 만 올 수 있기 때문입니다.",
+          "correct": false,
+          "feedback": "형태만 보면 be destroyed 도 가능합니다. 실제로 요구를 뜻하는 that절이었다면 be destroyed 가 옳습니다. 형태가 아니라 의미가 갈랐습니다."
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The board [[1:demanded]] that every subcontractor [[2:submits]] a safety report before the inspection, and it [[3:insisted]] that the deadline [[4:be]] extended by two weeks.",
+      "answer": 2,
+      "correction": "submit",
+      "rationales": [
+        "demand 는 요구 동사이고 주절의 본동사이므로 과거형 demanded 가 옳습니다.",
+        "demand 가 이끄는 that절이므로 every subcontractor 가 3인칭 단수여도 submits 가 아니라 should 가 생략된 원형 submit 이 옳습니다.",
+        "주절의 본동사이므로 시제를 가진 insisted 가 옳습니다.",
+        "여기서 insist 는 '요구하다'이고 마감이 연장되는 쪽이므로 원형을 살린 수동 be extended 가 옳습니다."
+      ],
+      "ko": "이사회는 모든 하청업체가 점검 전에 안전 보고서를 제출할 것을 요구했고, 마감이 2주 연장되어야 한다고 강하게 요구했습니다."
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 괄호 안의 동사를 알맞은 형태로 바꿔 쓰게 하고, 그 근거를 함께 묻습니다. 'should 가 생략된 동사원형'이라는 근거를 적어야 만점입니다.",
+          "sample": {
+            "en": "The mayor demanded that the old market ( preserve ) as a cultural site.",
+            "ask": "괄호 안의 동사를 어법에 맞는 형태로 바꿔 쓰십시오.",
+            "answer": "be preserved — demand 의 that절이므로 should 가 생략된 원형이며, 보존되는 대상은 the old market(그 낡은 시장 건물)이므로 수동 be preserved 입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 요구·제안 동사가 이끄는 that절의 동사에 밑줄을 그어, 3인칭 단수 -s 나 주절과의 시제 일치가 잘못 적용되었는지 판단하게 합니다.",
+          "sample": {
+            "en": "The council demanded that every restaurant [[u:display]] the results of its inspection at the entrance.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — demand 의 that절이므로 every restaurant 가 3인칭 단수여도 displays 가 아니라 원형 display 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "당위 법정의 대법관",
+      "intro": "이 법정은 동사의 철자가 아니라 판결을 봅니다. 눈앞의 that절이 '하라'는 명령서인지 '그렇다'는 보고서인지 — 네 건의 판결로 보는 눈을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The residents demanded that the streetlight {{blank}} before winter.",
+          "options": ["be repaired", "was repaired"],
+          "answer": 0,
+          "why": "demand 의 that절은 당위입니다. 가로등은 수리되는 쪽이므로 원형을 살린 be repaired 입니다."
+        },
+        {
+          "prompt": "The fossil record suggests that the species {{blank}} long before the ice age.",
+          "options": ["disappear", "disappeared"],
+          "answer": 1,
+          "why": "여기서 suggest 는 '시사하다'입니다. 이미 일어난 사실이므로 시제를 가진 disappeared 를 씁니다."
+        },
+        {
+          "prompt": "It is vital that no one {{blank}} the laboratory during the experiment.",
+          "options": ["enter", "enters"],
+          "answer": 0,
+          "why": "It is vital that 은 당위 구문입니다. no one 이 단수 취급이어도 should 가 생략된 원형 enter 를 씁니다."
+        },
+        {
+          "prompt": "The lawyer insisted that her client {{blank}} at home on the night of the theft.",
+          "options": ["be", "was"],
+          "answer": 1,
+          "why": "과거 사실에 대한 주장이므로 당위가 아닙니다. 시제 일치를 지켜 was 를 씁니다."
+        }
+      ],
+      "winText": "판결 네 건이 전부 정확했습니다. 명령서와 보고서를 가르는 눈은 이제 대법관의 것과 다르지 않습니다. 법정이 문을 열어 드립니다.",
+      "loseText": "판결이 뒤집혔습니다. 오판의 공통점을 보십시오 — 전부 동사의 철자가 아니라 that절의 내용이 기준이었습니다. 대조표를 다시 보고 오면 재심은 언제든 열립니다."
+    },
+    {
+      "id": "b27",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "suggest·insist·demand 뒤 that절이 ___ 를 말하면 동사는 ___ 이고, 3인칭 단수라도 ___ 를 붙이지 않습니다. 다만 that절이 ___ 를 말하면 시제 일치를 지킵니다."
+    },
+    {
+      "id": "b28",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "제안·요구·주장·명령 동사(suggest·propose·recommend·insist·demand·request·require·order) 뒤의 that절은 should 가 생략된 동사원형을 씁니다.",
+        "동사원형이므로 3인칭 단수 -s, 주절과의 시제 일치, 수 일치를 모두 적용하지 않습니다.",
+        "부정은 not + 동사원형, 수동은 be + 과거분사입니다. It is necessary·essential·important that 구문도 같은 규칙을 따릅니다.",
+        "suggest 가 '시사하다', insist 가 '(사실을) 주장하다'로 쓰이면 that절은 평범한 시제 일치를 따릅니다. 동사 목록이 아니라 that절 내용의 성격이 판단의 축입니다."
+      ],
+      "keySentence": {
+        "en": "The safety board demanded that the old bridge **be** inspected immediately.",
+        "ko": "안전 위원회는 그 낡은 다리를 즉시 점검할 것을 요구했습니다.",
+        "note": "주절이 과거이고 주어가 3인칭 단수여도 that절 동사는 원형 be 입니다."
+      }
+    },
+    {
+      "id": "b29",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b04-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The city council demanded that the factory {{blank}} its waste before releasing it into the river.",
+          "options": ["treat", "treats"],
+          "answer": 0,
+          "translation": "시 의회는 그 공장이 폐수를 강에 방류하기 전에 처리할 것을 요구했습니다.",
+          "explanation": "demand 는 요구 동사이며 that절의 내용은 아직 하지 않은 일입니다. should 가 생략된 동사원형이 오므로 the factory 가 3인칭 단수여도 treat 입니다.",
+          "trapTags": ["subjunctive-that", "third-person-s"]
+        },
+        {
+          "id": "b04-c3-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The historian insisted that the letters [[u:were]] written by the queen herself.",
+          "isCorrect": true,
+          "translation": "그 역사학자는 그 편지들이 여왕 자신에 의해 쓰였다고 강하게 주장했습니다.",
+          "explanation": "여기서 insist 는 요구가 아니라 이미 성립한 사실에 대한 주장입니다. 당위가 아니므로 원형 be 가 아니라 시제를 가진 were 가 옳습니다.",
+          "trapTags": ["insist-indicative"]
+        },
+        {
+          "id": "b04-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "It is essential that every sample {{blank}} at a constant temperature until the test ends.",
+          "options": ["be kept", "keeping", "to keep"],
+          "answer": 0,
+          "translation": "모든 시료가 시험이 끝날 때까지 일정한 온도로 보관되는 것이 필수적입니다.",
+          "explanation": "It is essential that 구문은 당위를 나타내므로 that절에 should 가 생략된 동사원형이 옵니다. 시료는 보관되는 쪽이므로 수동이며, 원형을 살린 be kept 가 옳습니다. keeping·to keep 은 절의 본동사가 될 수 없습니다.",
+          "trapTags": ["subjunctive-that", "passive-be"]
+        }
+      ]
+    }
+  ]
+}

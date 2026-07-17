@@ -1,0 +1,193 @@
+{
+  "schemaVersion": "deterministic-structural-v10-independent-final-manifest-v1",
+  "auditId": "deterministic-structural-reaudit-v10-independent-audit",
+  "sealedOn": "2026-07-15",
+  "verdict": {
+    "rawOracleVerdict": "BLOCK_CANDIDATE",
+    "productionPatchAuthorization": "NONE_FROM_THIS_AUDIT",
+    "total": 200,
+    "correct": 125,
+    "rawAccuracy": 0.625,
+    "confusion": {
+      "expectedDefectPredictedDefect": 25,
+      "expectedDefectPredictedNormal": 75,
+      "expectedNormalPredictedDefect": 0,
+      "expectedNormalPredictedNormal": 100
+    },
+    "confirmedProductContractDefects": 34,
+    "oracleScopeMismatches": 41,
+    "ambiguous": 0,
+    "redundantUpstream": 0
+  },
+  "chainOfCustody": {
+    "authorPayloadSeal": "2ddce4ecbebdcbb5d411a812185f2613d3639a727ab4ded3e8aa594c231fbc03",
+    "casesSha256": "002ed425202c28f3dc7476d9381a6b65bce8e66f0616ebbeddb000d56221a222",
+    "blindProjectionSha256": "6cffb121e362dd40fe19fdb71890824cee8851b7aab4a2f2b02795aae164a171",
+    "executedPreAdjudicationRunnerSha256": "9586c15b3ac1eeb1eb36ea83ff1c7de89b15203982692196c286cb1b18ba9e79",
+    "preAdjudicationPredictionsSha256": "fc5a1dfe5fbc198eaf9488daf07f9c4c8745f2344a4cd29bdc142c06f37657f6",
+    "productionSourceClosureSha256": "c77ed3b68eaf67da61ef157a182c84d4366833d6a5c0373bec318440517427f7",
+    "productionSourceClosureFiles": 56
+  },
+  "integrityQualification": {
+    "supervisorLevelBlindness": false,
+    "computationalPredictionSeparation": true,
+    "osEnforcedFilesystemIsolation": false,
+    "disclosure": "PROCESS_INTEGRITY.md",
+    "executedRunnerPreservation": "run_blind_predictions.pre-adjudication-sealed.txt"
+  },
+  "externalSystems": {
+    "apiCalls": 0,
+    "networkAttempts": 0,
+    "databaseCalls": 0,
+    "secretsReadByPredictionProcess": 0,
+    "estimatedCostUsd": 0
+  },
+  "artifactFiles": [
+    {
+      "path": "AUDIT_SUMMARY.md",
+      "bytes": 4960,
+      "sha256": "863c36efec82eccecf95442aee73b5ae4ff1b86220e06755b740477aed37d218"
+    },
+    {
+      "path": "BLIND_EXTRACTION.json",
+      "bytes": 1578,
+      "sha256": "6b805a4849e4d52cf19393a4e167ffffc1d6c0c0af11adc8ec007b4b578ced3c"
+    },
+    {
+      "path": "PREDICTION_SEAL.json",
+      "bytes": 1555,
+      "sha256": "2b586c9078295cb8a238b4ee1e6afd1ce2d3ff5433d946a4f5a0510ca54aad10"
+    },
+    {
+      "path": "PROCESS_ACCESS_ATTESTATION.json",
+      "bytes": 1543,
+      "sha256": "1e67a54b3941a505d79a48e2d91764f72731d6067c5ca9f777065429eca55530"
+    },
+    {
+      "path": "PROCESS_INTEGRITY.md",
+      "bytes": 3187,
+      "sha256": "e7beccffa94f4af54e30a97f570356146688edc42f049cacbdef3c9bdb1b1d42"
+    },
+    {
+      "path": "SOURCE_CLOSURE.json",
+      "bytes": 10221,
+      "sha256": "e0fbdbb21a53f08892ff446c65f6e3f83af6ec2ffbbd3e9c78d4146f2615ef13"
+    },
+    {
+      "path": "TEST_RESULTS.json",
+      "bytes": 2391,
+      "sha256": "6e780a340ae134b7d0e437d77d97a1f4ed398b876817dd2b4e18b130818678ba"
+    },
+    {
+      "path": "adjudicate.mjs",
+      "bytes": 6811,
+      "sha256": "1dd43255bcf441a3a4d16213b6d3ddf607def54b3cc04f6a20ff6ab9afcb930d"
+    },
+    {
+      "path": "adjudication.json",
+      "bytes": 39202,
+      "sha256": "9ca88d607a490d28d0b9cd4aaafa1faa99ea338d650559b40e7a1e38a3883722"
+    },
+    {
+      "path": "blinded-cases.json",
+      "bytes": 112490,
+      "sha256": "6cffb121e362dd40fe19fdb71890824cee8851b7aab4a2f2b02795aae164a171"
+    },
+    {
+      "path": "build_manifest.mjs",
+      "bytes": 4260,
+      "sha256": "c4402a099b43a13073a13ab8deec617b0b59c7f5e883aaf2e00563dcff20a0d9"
+    },
+    {
+      "path": "classify_disagreements.mjs",
+      "bytes": 16887,
+      "sha256": "f3cb28ac7e11c44bc6c646d5fb8535450456acacbd7d9dd6bf816c56bf03d66a"
+    },
+    {
+      "path": "collect_source_closure.mjs",
+      "bytes": 2679,
+      "sha256": "117dad4756d79e42835903379234475685dcbef31ad3f97c325e08bd545b2c16"
+    },
+    {
+      "path": "disagreements-with-fixtures.json",
+      "bytes": 86338,
+      "sha256": "31b0a5473fda2756faadfac28cb8a25130ced5228ce3717184cea1a8a76db4d2"
+    },
+    {
+      "path": "extract_blind.mjs",
+      "bytes": 6079,
+      "sha256": "c5699c0126f79c50ad2a88b0718e9423f87ea70a22f0ede070d664e799c294c0"
+    },
+    {
+      "path": "package.json",
+      "bytes": 42,
+      "sha256": "609158e6c5fbc237939fa3ddf7faab80ab690bdc0c8d584414a885130103c4e8"
+    },
+    {
+      "path": "predictions.json",
+      "bytes": 58617,
+      "sha256": "fc5a1dfe5fbc198eaf9488daf07f9c4c8745f2344a4cd29bdc142c06f37657f6"
+    },
+    {
+      "path": "run_blind_predictions.pre-adjudication-sealed.txt",
+      "bytes": 12657,
+      "sha256": "9586c15b3ac1eeb1eb36ea83ff1c7de89b15203982692196c286cb1b18ba9e79"
+    },
+    {
+      "path": "run_blind_predictions.ts",
+      "bytes": 12660,
+      "sha256": "a56f4dc4c442285c8c50d022a87bf2341f47687ba0a6a48e996fef6b9a4a21e0"
+    },
+    {
+      "path": "sealed-blind-map.json",
+      "bytes": 18573,
+      "sha256": "20bb2ded29e1ffc5316b72dc02efc01cb5937ff9eb30374c87b8a88fec91e225"
+    },
+    {
+      "path": "source-aware-adjudication.json",
+      "bytes": 233516,
+      "sha256": "adc51d8ca3a1a7cb73aeac31f5d4a8320c674e4def2e38e1762f26e589b13a30"
+    },
+    {
+      "path": "tsconfig.audit.json",
+      "bytes": 227,
+      "sha256": "2eb64768e1ce8c1bebbdb6e3651bf0a4039047b3a36fa2f72c9db1d80894d839"
+    },
+    {
+      "path": "verify_audit.mjs",
+      "bytes": 21062,
+      "sha256": "e21342c58bd137bc8a54bdf3737a91452b17707b07ed03ccbc43b854057518cd"
+    }
+  ],
+  "externalSealedInputs": [
+    {
+      "path": "../deterministic-structural-reaudit-v10/IMMUTABILITY.md",
+      "bytes": 1174,
+      "sha256": "d07e27ea4b606d397dcf3f421d001428babcc9703180ac98dd22d99029fe2862"
+    },
+    {
+      "path": "../deterministic-structural-reaudit-v10/ORACLE_PROTOCOL.md",
+      "bytes": 4751,
+      "sha256": "535aa21e1080d954a636ace59437db85031386a58db554808ad08cc9c259a9cb"
+    },
+    {
+      "path": "../deterministic-structural-reaudit-v10/PRE_INSPECTION_MANIFEST.json",
+      "bytes": 2344,
+      "sha256": "d49592fd684fc91d3f918fd6fe3031523a42853c81fb770d55f7101f39d4b66a"
+    },
+    {
+      "path": "../deterministic-structural-reaudit-v10/cases.json",
+      "bytes": 187906,
+      "sha256": "002ed425202c28f3dc7476d9381a6b65bce8e66f0616ebbeddb000d56221a222"
+    },
+    {
+      "path": "../deterministic-structural-reaudit-v10/verify_author_seal.ps1",
+      "bytes": 9749,
+      "sha256": "acadea85b565bc1517e2ed3e37f7765612a49c782aefdf57a4ca063cd3f5b609"
+    }
+  ],
+  "verification": {
+    "command": "node experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v10-independent-audit/verify_audit.mjs",
+    "expectedTerminalLine": "VERIFY_AUDIT_OK deterministic-structural-reaudit-v10-independent-audit"
+  }
+}

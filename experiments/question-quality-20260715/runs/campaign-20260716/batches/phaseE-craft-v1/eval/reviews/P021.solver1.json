@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) are not allowed",
+      "verdict": "correct",
+      "reason": "진짜 주어는 관계절(who have been adopted)을 건너뛴 people(복수)이므로 are 수일치 정문. 'allow + O + to-V'의 수동태 'be allowed to have access'도 정상. 관계절 내부의 have been adopted(현재완료 수동)도 선행사 people과 일치. 유혹 포인트: 관계절이 주어와 동사 사이에 끼어 단수 착시를 노릴 수 있으나 people 자체가 복수라 흔들림 없음."
+    },
+    {
+      "label": "(B) them",
+      "verdict": "correct",
+      "reason": "tell + 간접목적어 + 직접목적어(nothing) 구조에서 간접목적어 자리이므로 목적격 them이 정확. 지시 대상은 앞 문장들의 adoptees/people who have been adopted로 복수 일치. 재귀대명사(themselves)로 바꿀 이유도 없음(주어는 adoption officials로 지시 대상과 다름)."
+    },
+    {
+      "label": "(C) have publicly protested",
+      "verdict": "correct",
+      "reason": "'in the past decade'는 현재까지 이어지는 기간 부사구이므로 현재완료가 정확 — 오히려 단순과거였다면 어색. protest를 타동사로 쓰는 것(protest this situation)은 특히 미국 영어에서 표준 용법이며 protest against도 가능하나 둘 다 정문. 부사 publicly의 위치(have와 과거분사 사이)도 정상. 유혹 포인트: 현재완료+기간 표현 조합이 낯설게 보이도록 설계된 매력 오답이지만 실제로는 교과서적 정문."
+    },
+    {
+      "label": "(D) what",
+      "verdict": "correct",
+      "reason": "find의 목적어절을 이끄는 자리이며 절 내부에서 know의 목적어가 비어 있음(they want to know __). 선행사를 포함한 관계대명사 what(= the thing which)이 정확히 요구되는 환경. that이었다면 know의 목적어가 남아돌아 비문. 유혹 포인트: 'find that they want...' 명사절 착시를 노리지만 know의 목적어 공백이 결정적 장거리 단서."
+    },
+    {
+      "label": "(E) find",
+      "verdict": "incorrect",
+      "reason": "'devote + 목적어 + to'에서 to는 전치사이므로 동명사 finding(out)이 와야 함: devote all their time and energy to finding (out) more about their origins. 대안 해석 적극 탐색 — 목적의 to부정사('찾기 위해 시간과 에너지를 바친다')로 읽으려 해도, devote는 'devote X to Y' 틀을 요구하는 동사라 to 없이 'devote all their time and energy'만으로는 논항이 미완결이며, 바로 뒤의 to는 devote가 지배하는 전치사로 해석되는 것이 유일하게 자연스러운 구조. 따라서 원형 find는 비문. 정답."
+    }
+  ],
+  "note": "정답은 (E) 하나로 수렴. 핵심 규칙은 'devote A to B(전치사구)'의 to가 전치사라는 점 — be used to, look forward to, object to 계열의 고전적 함정. 최상위권 유혹 경로: (C)의 현재완료+in the past decade 조합과 protest의 타동사 용법이 가장 강한 매력 오답이었으나 둘 다 표준 정문으로 확인. (D)의 what도 know의 목적어 공백을 확인하면 즉시 해소. (E)에서 목적 부정사 대안 해석은 devote의 필수 논항 구조(devote X to Y) 때문에 성립하지 않음. 부차적으로 'find more about'보다 'find out more about'가 관용적이나 채점 포인트는 to-동명사이며 판정에 영향 없음."
+}

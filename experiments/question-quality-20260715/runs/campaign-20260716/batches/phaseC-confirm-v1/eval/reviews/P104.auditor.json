@@ -1,0 +1,79 @@
+{
+  "pid": "P104",
+  "blindAnswer": "④",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문과 완전 일치하며, 유일한 변형은 마지막 문장의 'commit to having no random breaks' 구간을 '_____'로 치환한 것뿐이다. 'So to prevent procrastination, _____ instead.'로 seam이 깨끗하고 고아 문장부호·중복·누락·오탈자 없음. 선지 라벨 ①~⑤가 5개 선지와 정확히 대응한다.",
+    "V2": "빈칸 슬롯은 명령형 VP 자리('So to prevent procrastination, [VP] instead.'). 독립 검증: ① '남는 시간에 소소한 일 처리'는 지문이 'free time'을 미루기를 부르는 착각으로 규정하므로 논지 이탈 — 부적합. ② 'scheduled와 unscheduled 휴식 모두 제거'는 첫 문장 'Breaks are necessary...' 및 'you should already have scheduled breaks'라는 전제와 정면 충돌 — 부적합. ③ '즉흥적 휴식 허용'은 'unscheduled breaks derail you', 'sure-fire way to fall into the procrastination trap'과 극성 반대 — 부적합. ④ '미리 계획된 휴식 일정 고수'는 원문 span 'commit to having no random breaks'(계획된 휴식만 유지, 임의 휴식 금지)의 의미를 정확히 보존 — 유일 정답. ⑤ '휴식이 완전 회복에 충분히 길도록 보장'은 지문이 다루지 않는 길이/강도 초점이며 'instead'의 대조 대상도 성립하지 않음 — 부적합. 정답 집합 = {④}, 선언과 일치.",
+    "V3": "지문·발문 문법적. 완성문 'So to prevent procrastination, stick to your premeditated downtime schedule instead.'는 문법적이며 'instead'는 문맥상 임의 휴식과의 대조로 자연 회복된다. 'premeditated'는 범죄 맥락 연상이 있어 'pre-planned'보다 약간 딱딱하나 '사전에 계획된' 의미로 정상 용법 범위 내. 다섯 선지 모두 동일 명령형 VP 슬롯에 문법적으로 들어가 문법만으로 탈락하는 오답 없음(§D 첫 조건 충족). 비단어·오탈자 없음.",
+    "V4": "해설이 인용한 'scheduled breaks keep you on track', 'Taking unscheduled breaks is a sure-fire way to fall into the procrastination trap'은 지문에 실재하는 원문 그대로의 인용이다. ④를 'commit to having no random breaks'의 재진술로 설명한 것도 정확. 오답 해설 4건 모두 실제 해당 선지 내용과 대응: ①의 'free time' 착각 규정, ②의 scheduled breaks 필요 전제, ③의 극성 반대, ⑤의 무관한 초점 — 모두 사실과 일치. 오분석·환각·용어 오류 없음.",
+    "V5": "선언 정답 ④ = 해설의 정답 라벨 = keyPoints 세 번째 항목('having no random breaks' → 'stick to premeditated schedule' paraphrase)과 일치. 오답 해설이 ①②③⑤ 전부를 커버하고 정답 ④는 본해설에서 다룸. 필드 간 모순 없음."
+  },
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 글의 결론(해결책 제시문)의 핵심 span을 겨냥해 주제 논리를 직접 묻는다. 다만 '계획 휴식 좋음/임의 휴식 나쁨'의 대조가 지문 전반에 반복 명시되어 재진술 거리가 짧은 편 — 핵심적이지만 정교함은 중상 수준.",
+    "C2": "네 오답이 서로 다른 함정을 겨냥: ① half-truth('free time' 앵커 오독), ② scope overreach(전제 부정), ③ polarity reversal(논지 정반대, 'boost energy'가 도입부 'revive your energy'와 어휘 중첩), ⑤ focus shift(휴식 목적 언급을 길이/강도 논점으로 전환). 의도 밀도는 좋으나 ⑤의 앵커가 상대적으로 약함.",
+    "C3": "①이 실질 경쟁 선지로 기능하나 ③은 논지 극성만 잡아도 즉시 소거되고 ②도 첫 문장만으로 빠르게 탈락한다. 전체 구조 이해 없이 극성 판단만으로 후보가 ①④로 좁혀져 실경쟁 폭이 제한적 — 중급 기준으로는 수용 가능한 수준.",
+    "C4": "빈칸 위치('So to prevent procrastination,' 직후)가 근거를 필연화하고 길이·절대어·꼬리 소거 누출은 없음. 다만 ④의 'schedule'이 지문에서 긍정적으로 반복되는 'scheduled/schedule'과 표층 어휘가 겹쳐 키워드 매칭만으로도 도달 가능한 약한 누출 존재.",
+    "C5": "요청 난이도 INTERMEDIATE에 정확히 부합: 단서는 지문 내 명시적 대조에서 나오되 정답이 원문 축자 복사가 아닌 한 단계 재진술이며, 함정 깊이(극성 1개, 전제 위반 1개, 근접 오독 1개, 초점 이탈 1개)가 중급 사고 단계에 맞다.",
+    "C6": "해설이 근거 인용→정답 재진술 매핑→핵심 함정(③) 분리의 구조로 정확하다. 다만 ③ 해설이 본해설과 오답 해설에 중복 수록되어 다소 장황 — 우아함에서 감점."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "half-truth / 'free time' 앵커 오독 — 생산성 조언처럼 들리는 그럴듯한 처방",
+      "temptingBecause": "지문의 'free time' 표현을 표층 앵커로 공유하고, '미루지 말고 일을 하라'는 일반 통념과 부합해 논지를 대충 읽은 학생에게 매력적",
+      "decisiveFlaw": "지문은 'free time'을 실재하는 시간이 아니라 미루기를 유혹하는 주관적 착각('feel as if you've got free time')으로 규정하므로, 그것을 활용하라는 조언은 논지와 양립 불가"
+    },
+    {
+      "label": "②",
+      "intent": "scope overreach / condition loss — 결론을 과잉 일반화한 전제 위반",
+      "temptingBecause": "'휴식이 미루기를 부른다'는 후반부 경고만 읽으면 휴식 전면 금지가 결론처럼 보임",
+      "decisiveFlaw": "첫 문장 'Breaks are necessary...'와 'you should already have scheduled breaks'가 계획된 휴식의 필요성을 명시 — scheduled까지 없애라는 주장은 전제와 정면 충돌"
+    },
+    {
+      "label": "③",
+      "intent": "polarity reversal — 핵심 논지의 정반대",
+      "temptingBecause": "'boost energy'가 도입부 'revive your energy levels'와 어휘적으로 겹쳐 휴식의 긍정 효과 프레임을 재활용",
+      "decisiveFlaw": "즉흥적(unscheduled) 휴식은 지문이 'derail you from your goal', 'sure-fire way to fall into the procrastination trap'으로 명시 경고한 대상 — 극성 정반대"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — source span 'commit to having no random breaks'의 의미 보존 재진술",
+      "temptingBecause": "(정답) 계획 휴식 유지 + 임의 휴식 배제라는 대조 구조 전체를 한 구로 요약",
+      "decisiveFlaw": "없음 — 'instead'와의 대조(임의 휴식 대신 계획 일정 고수)도 자연스럽게 성립"
+    },
+    {
+      "label": "⑤",
+      "intent": "focus shift — 휴식의 '길이/회복 충분성'이라는 지문 밖 논점으로 전환",
+      "temptingBecause": "도입부의 'revive energy / recharge stamina'가 회복 프레임을 제공해 표층적으로 관련 있어 보임",
+      "decisiveFlaw": "지문은 휴식의 '계획 여부'를 논점으로 삼을 뿐 길이·회복 충분성은 전혀 다루지 않으며, 'instead'가 요구하는 임의 휴식과의 대조도 성립하지 않음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "REDUNDANT_COVERAGE",
+      "severity": "minor",
+      "evidence": "③에 대한 해설이 본해설 말미('③은 얼핏 휴식의 긍정적 효과를...')와 오답 해설 ③ 항목에 사실상 동일 내용으로 중복 수록됨 — 오류는 아니나 장황"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 게이트 통과, 정답 ④ 유일성 확정(blind solve 일치, 확신 high). 오답 4개가 각기 다른 함정 유형(half-truth/overreach/polarity reversal/focus shift)을 갖춘 견실한 중급 빈칸 문항. 다만 ③·②가 극성/전제 판단만으로 조기 소거되어 실경쟁이 ①-④로 좁고, 정답 ④의 'schedule' 표층 어휘가 지문의 긍정 키워드와 겹치는 약한 누출이 있어 C3·C4가 3에 머묾. C 합계 19로 A 기준(21)에 미달 — B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,72 @@
+{
+  "pid": "P018",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "해설이 세미콜론으로 이어진 같은 문장의 앞 절('theorists describe a tendency ... jumping-off point')을 '앞 문장', 등위접속된 뒤 절('and tones that follow ...')을 '바로 뒤 문장'이라고 지칭. 실제로는 동일 문장 내부의 절이다. 구조 오분석은 아니며 논리 설명 자체는 정확하므로 V4 통과로 유지."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "polarity reversal (causal/directional opposite)",
+      "temptingBecause": "'leap', 'moving' 등 도약 관련 어휘를 재사용하고, 직전에 큰 도약이 일어났다는 서술과 표면적으로 이어져 보임.",
+      "decisiveFlaw": "지문은 도약 후 멜로디가 출발점으로 '되돌아가려는' 경향(return to the jumping-off point, change direction)을 명시. 계속 멀어진다는 것은 정반대이며, 뒤따르는 'tones that follow need to bring us closer and closer to our starting point'와 직접 모순."
+    },
+    {
+      "label": "2",
+      "intent": "half-truth / near-miss paraphrase",
+      "temptingBecause": "'disappear soon'이 원문 'only temporary'의 일시성과 유사하게 들려 가장 강력한 경쟁 선지.",
+      "decisiveFlaw": "지문이 말하는 것은 '변화(variation)가 사라짐'이 아니라 이미 일어난 도약이 반대 방향으로 보상되어 출발점(home)으로 복귀한다는 방향성. 'variation'은 도약(leap)의 오지칭이고, '사라진다'는 복귀 메커니즘(다음 음이 방향을 바꿔 점점 가까워짐)을 담지 못해 뒤 절과의 재진술 관계가 성립하지 않음."
+    },
+    {
+      "label": "3",
+      "intent": "overextension / absolute claim",
+      "temptingBecause": "'home'으로 돌아간다는 안정성 개념을 '변하지 않아야 한다'로 극단화하면 그럴듯해 보임.",
+      "decisiveFlaw": "지문은 전형적 멜로디가 순차 진행(stepwise motion)과 도약을 모두 포함한다고 했고, 실제로 큰 도약이 방금 발생했으므로 '정확히 똑같이 유지되어야 한다'는 기대는 지문 사실과 모순."
+    },
+    {
+      "label": "4",
+      "intent": "correct answer",
+      "temptingBecause": "(정답) 'big jump'는 'large leap'의, 'soon be reversed'는 'only temporary' + 'change direction' + 'return to the jumping-off point'의 정확한 환언.",
+      "decisiveFlaw": "없음. 앞 절의 경향 서술과 뒤 절의 'bring us closer and closer to our starting point'를 동시에 만족하는 유일한 선지."
+    },
+    {
+      "label": "5",
+      "intent": "polarity reversal (state negation)",
+      "temptingBecause": "'jumping-off point'라는 지문 고유 표현을 그대로 재사용해 앵커가 강함.",
+      "decisiveFlaw": "지문은 그 출발점으로 '되돌아가고 싶어 한다'고 했으므로 '영원히 잃어버렸다'는 정반대이며, 뒤 절의 복귀 서술과 직접 모순."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "clause-vs-sentence",
+      "severity": "minor",
+      "evidence": "정답 해설의 '앞 문장에서 ... 설명했고 / 바로 뒤 문장에서도'는 실제로는 동일 문장 내 세미콜론 앞 절과 and 등위절을 가리킴. 논리 내용은 정확."
+    },
+    {
+      "code": "duplicate-trap-type",
+      "severity": "minor",
+      "evidence": "오답 ①과 ⑤가 모두 '극성 반전'으로 분류되어 함정 유형이 부분 중복됨(행위 주체는 다름: 도약의 지속 vs 출발점 상실)."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V 전부 통과. 렌더 지문은 원지문에서 'the leap was only temporary' 한 스팬만 빈칸화했고 복원 diff로 완전 일치 확인(빈칸 1개). 다섯 선지 모두 that-절 슬롯에 동일하게 들어가는 완전한 정형절로 suffix에 의한 문법 탈락 없음(빈칸 §D 슬롯 조건 충족). 정답 ④는 유일하며 앞 절의 경향 서술과 뒤 절의 복귀 서술을 모두 만족. 약점: 빈칸이 'this is another way to say that' 직후의 재진술 자리라 직전 절('return to the jumping-off point') 하나만으로 도출 가능해 변별력(C3=2)이 제한적이고, ①③⑤가 극성/절대어로 빠르게 소거되어 실질 경쟁 선지는 ② 하나. INTERMEDIATE 요청 난이도에는 부합. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false. 종합 B(C 합계 17, 최저 2): 소폭 수정(①/⑤ 함정 유형 분화 또는 ② 수준의 경쟁 선지 추가)으로 출제 가능."
+}

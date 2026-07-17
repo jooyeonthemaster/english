@@ -1,0 +1,44 @@
+{
+  "pid": "P008",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "독립 재검증 결과 5개 밑줄 중 어법 오류는 (C) direct 하나뿐이다. 주격 관계대명사 that의 선행사가 단수 'a kind of \"program\"'이므로 관계절 정형동사는 directs여야 하며, direct를 살릴 수 있는 대안 해석(형용사 독해, 복수 선행사 재지정, 원형 허가 구문, 가정법/명령문)은 전수 점검에서 모두 불성립한다. (A)(B)(D)(E)는 각각 동명사구 주어+helps 수일치, help+목적어+원형부정사, 전치사+관계대명사+완전절, help+목적어+원형부정사로 전부 정문이며 원문 대조로도 (C) 외 변형이 없음을 확인했다. 분쟁 요약의 '선언된 정답=④'는 라벨-번호 변환 오류다: 권위 소스인 full/P008.md의 선언 정답은 (C)이고 markedExpressions도 (C)만 isError:true인데, (C)는 5지 중 3번째(③)에 해당한다. 따라서 실제로는 선언 정답 (C) = 솔버1 = 솔버2 = 감사자 V2=true로 전원 일치하며 실질 분쟁이 없다. 선언된 정답 (C)는 유일한 정답으로 성립한다. finalV2=true.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "expressing이 병렬 파괴 또는 현수분사로 비문일 가능성",
+      "verdict": "정문 — 대안 오류 해석 불성립",
+      "evidence": "'Fear has helped..., expressing anger helps..., and expressing positive emotions helps...'는 세 독립절의 A, B, and C 병렬. 'expressing anger'는 동명사구 주어(단수 취급)로 정형동사 helps와 정확히 호응하고, 세 번째 절과 형태 병렬도 완전하다. 절 단위 병렬에서는 각 절 주어의 품사·형태가 달라도 무방하며(명사 Fear vs 동명사구), 현재완료(과거의 기여)와 현재형(일반 현상)의 시제 차이도 의미상 정당하다."
+    },
+    {
+      "label": "(B)",
+      "claim": "help의 목적격 보어로 원형부정사 bond가 비문일 가능성",
+      "verdict": "정문 — 표준 용법",
+      "evidence": "'helps us bond with others'는 help + 목적어 + 원형부정사 구조로, help는 원형부정사와 to부정사를 모두 허용하는 준사역동사다. 어법상 흠 없음."
+    },
+    {
+      "label": "(C)",
+      "claim": "선언된 정답 — direct가 유일한 어법 오류인지",
+      "verdict": "오류 확정 — 유일 정답 성립",
+      "evidence": "선행사 'a kind of \"program\"'은 kind·program 모두 단수 핵이므로 주격 관계대명사 that 뒤 정형동사는 directs여야 한다(원문도 directs). 삽입구 ', when triggered,'는 축약 부사절로 통사 관계를 바꾸지 못한다. 구제 해석 전수 점검: direct를 형용사로 읽으면 관계절에 정형동사가 없어 비문; 선행사를 activities로 볼 수 없음(activities는 direct의 목적어); 원형을 허가할 조동사·사역구문 부재; 가정법·명령문 트리거 없음. 어떤 해석으로도 정문이 되지 않는 확정적 주어-동사 수일치 위반."
+    },
+    {
+      "label": "(D)",
+      "claim": "in which가 which/where/that이어야 하는지",
+      "verdict": "정문 — 전치사+관계대명사 자리",
+      "evidence": "'the specific ways in which they activate our systems'에서 관계절 내부가 완전절(주어 they + 타동사 activate + 목적어 our systems)이므로 전치사+관계대명사 in which(= in ways)가 정확히 요구되는 형태다."
+    },
+    {
+      "label": "(E)",
+      "claim": "helped 뒤 to survive가 필요한지",
+      "verdict": "정문 — (B)와 동일 구조",
+      "evidence": "'have helped us (as a species) survive challenges'는 help + 목적어 + 원형부정사 구조이고 괄호 삽입구 (as a species)는 통사 구조에 영향이 없다. survive는 적법하다."
+    },
+    {
+      "label": "메타: 선언 정답 표기 불일치",
+      "claim": "분쟁 요약이 '선언된 정답=④'라고 기재하여 솔버 판정 (C)와 충돌하는 것처럼 보임",
+      "verdict": "전사 아티팩트 — 실질 분쟁 없음",
+      "evidence": "권위 소스 full/P008.md의 '선언된 정답' 필드는 (C)이고 markedExpressions에서도 (C)만 isError:true다. (C)는 (A)~(E) 중 3번째이므로 원문자 변환 시 ③이지 ④가 아니다. ④로 환산하면 (D) in which가 되는데 (D)는 명백한 정문이므로 파일이 (D)를 정답으로 선언했을 가능성은 구조 필드와 해설 전체에 의해 배제된다. 따라서 선언 정답 (C) = 솔버1 (C) = 솔버2 (C) = 감사자 V2=true로 전원 일치."
+    }
+  ]
+}

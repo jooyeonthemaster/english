@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20241015-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 135
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-generic-answer-point"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=b  (C):dec=i  (D):dec=f  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 160,
+        "relPos": 0.192,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 288,
+        "relPos": 0.345,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 448,
+        "relPos": 0.537,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 560,
+        "relPos": 0.671,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 758,
+        "relPos": 0.908,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.908,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "packed",
+        "isError": false,
+        "correction": "packed",
+        "errorExpression": "packed",
+        "surroundingText": "Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "where",
+        "isError": false,
+        "correction": "where",
+        "errorExpression": "where",
+        "surroundingText": "That's where the beauty of integrating mini-exercises into household chores comes into play.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "taking",
+        "isError": false,
+        "correction": "taking",
+        "errorExpression": "taking",
+        "surroundingText": "Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(D)",
+        "expression": "obligatory",
+        "isError": false,
+        "correction": "obligatory",
+        "errorExpression": "obligatory",
+        "surroundingText": "But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity?",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "Incorporating",
+        "isError": true,
+        "correction": "Incorporating",
+        "errorExpression": "Incorporate",
+        "surroundingText": "Incorporating quick exercises into your daily chores can improve your health.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "packed"
+      },
+      {
+        "label": "(B)",
+        "text": "where"
+      },
+      {
+        "label": "(C)",
+        "text": "taking"
+      },
+      {
+        "label": "(D)",
+        "text": "obligatory"
+      },
+      {
+        "label": "(E)",
+        "text": "Incorporate"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "스케줄(schedules)이 꽉 채워졌다는 수동적 의미를 지니므로, 명사를 앞쪽에서 수식하는 과거분사 'packed'의 사용은 어법상 적절합니다.",
+      "(B)": "동사 'is' 뒤에서 주격 보어 역할을 하는 명사절을 이끌고 있으며, 뒤에 주어와 동사를 갖춘 완전한 절이 등장하므로 의문부사 혹은 관계부사 'where'의 쓰임은 올바릅니다.",
+      "(C)": "등위접속사 'or'를 사이에 두고 동명사 'washing'과 형태 및 문법적 역할을 통일하여 맞춘 병렬 구조이므로 'taking'은 어법상 바릅니다.",
+      "(D)": "명사 'activities'를 수식해야 하므로 부사가 아닌 형용사 자리이며, 형용사 'obligatory'의 사용은 알맞습니다."
+    },
+    "explanation": "정답 문장의 골격을 분석해보면, 후반부에 'can improve'라는 명확한 주절의 정동사가 이미 존재합니다. 따라서 문장의 주어 자리에는 명사 역할을 할 수 있는 구문이 와야 합니다. 밑줄 친 자리에 동사원형 'Incorporate'를 사용하게 되면, 문장이 명령문 구조를 취하게 되어 뒤에 이어지는 정동사와 문장 구조상 충돌하는 비문이 됩니다. 따라서 이를 문장의 진짜 주어 역할을 할 수 있도록 동명사 형태인 'Incorporating'으로 고쳐야 어법상 완전히 올바릅니다. 많은 학생이 문두의 동사만 보고 즉시 명령문으로 착각할 수 있지만 구조 전체를 보는 시각이 필수적입니다.",
+    "keyPoints": [
+      "(E) 정동사 vs 준동사 — 주절의 동사가 있으므로 동명사구 주어 필요 판단",
+      "(B) 관계대명사 vs 관계부사 — 완전한 절을 이끄는 부사 where의 쓰임 판단",
+      "(C) 병렬 구조 — 등위접속사 or에 의해 이어지는 동일 형태 준동사 구조 파악"
+    ],
+    "tags": [
+      "수능어법",
+      "정동사준동사",
+      "구조분석",
+      "동명사구주어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our __(A) packed__ schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's __(B) where__ the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or __(C) taking__ out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely __(D) obligatory__ activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. __(E) Incorporate__ quick exercises into your daily chores can improve your health."
+  }
+}

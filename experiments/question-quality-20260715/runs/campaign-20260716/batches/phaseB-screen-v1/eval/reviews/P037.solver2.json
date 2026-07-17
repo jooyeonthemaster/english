@@ -1,0 +1,40 @@
+{
+  "pid": "P037",
+  "answer": "F",
+  "multipleDefensible": false,
+  "defensibleLabels": ["F"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'perception and behavior can be influenced by external factors' — modal 'can' + passive infinitive. The coordinated subjects are patients of 'influence' and the by-phrase supplies the agent, so the passive is both licensed and required. Well-formed."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'told a bunch of healthy undergraduates that he was testing their language abilities' — 'tell' in its ditransitive frame [tell + NP + that-clause]; 'that' is the complementizer introducing a finite declarative complement. Canonical and grammatical."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'asked them to create a coherent sentence' — object-control 'ask' [ask + NP + to-infinitive]. The to-infinitive is the required complement form; 'creating' would be ungrammatical here, 'to create' is exactly right."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'Those students who had been exposed to an elderly mix of words took ... longer' — relative pronoun 'who' agrees with plural human antecedent 'students'; past perfect passive is temporally licensed because the exposure precedes the past matrix event 'took', and it is parallel with the second 'who had been exposed'. Passive voice fits (students receive the exposure)."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'walked with their shoulders bent forwards' — 'with + NP + participle' absolute construction. 'their shoulders' is the patient of 'bend' (the shoulders are bent), so the past participle 'bent' is the grammatically required form. Well-formed."
+    },
+    {
+      "label": "F",
+      "verdict": "incorrect",
+      "reason": "'like if they were 50 years older than they actually were' — the intended meaning is counterfactual manner comparison, which standard English expresses with 'as if / as though' (+ past subjunctive 'were', which is present). 'like if' is not a licensed manner-comparison conjunction: conjunctive 'like' takes a bare finite clause ('like they were...'), and 'if' cannot head a true conditional here because there is no apodosis — the matrix clause is not a consequent of the condition. An elided-comparative rescue ('like [it would be] if...') is not licensed by 'like' in standard grammar. Ungrammatical; should be 'as if'."
+    }
+  ],
+  "note": "Six underlined options (A)-(F) rather than the usual five, but the item is internally consistent. The error is a long-noted KSAT target: 'as if' vs. the ungrammatical 'like if'. All other options are canonical structures (passive infinitive, tell+that, ask+O+to-V, past-perfect passive relative, with+NP+p.p. absolute) with no defensible alternative fault, so the answer narrows uniquely to (F). Alternative parses for (F) (conditional adjunct, ellipsis) were checked and fail for lack of an apodosis/licenser."
+}

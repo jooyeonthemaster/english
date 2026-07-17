@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "incorrect",
+      "reason": "'this need not be interpreted as the primary function of evolutionary musical adaptation' — 문법 결합은 정상이나 논리 불성립. 발 구르기가 인간 고유 능력이라는 사실이 '진화적 음악 적응의 주된 기능'으로 해석될 이유가 없고, 뒤 문장('개들은 다른 음악적 특징에도 반응했다')과 인과·대조가 연결되지 않는다. 진화나 적응은 지문 어디에도 논의되지 않은 새 개념 도입(주제 이탈)."
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "'the ultimate proof of cognitive superiority over other species' — 문법상 결합 가능. '과대해석 금지' 톤은 그럴듯한 미끼이나, 지문의 논지 축은 '인지 우월성'이 아니라 '음악/리듬에 대한 반응(musical engagement)'이다. 뒤따르는 근거(사이렌·색소폰에 짖음, 음정 어긋난 콘서티나에 낑낑댐)는 인지 우월성 반박이 아니라 '개도 다양한 음악적 반응을 한다'는 참여의 폭을 보여주므로 seam 이후 문장과 논리 정합이 약하다. 대조군 함정 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "'the physiological mechanism behind rhythmic motor synchronization' — 발 구르기(인간 능력)를 '~의 생리적 기전으로 해석'한다는 것은 의미론적으로 성립하지 않는다(행위를 기전으로 동일시 불가). 뒤 문장과도 무관. 전문 용어를 나열한 순수 오답."
+    },
+    {
+      "label": "④",
+      "verdict": "incorrect",
+      "reason": "'an exclusive response limited to harmonious musical instruments' — 'this(=발 구르며 외부 리듬을 표시하는 반응)'는 애초에 '조화로운 악기에 한정된 반응'이 아니므로 지시어-술어 정합이 깨진다. 지문 말미의 'out of tune(음정이 맞지 않는)' 콘서티나 언급을 역이용한 미끼(harmonious). 인간 고유성 진술과 '조화로운 악기 한정' 사이에 논리 연결 고리가 없다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "correct",
+      "reason": "'The specific response of tapping one's foot ... does seem to be a particularly human skill, but this need not be interpreted as the sole metric for defining musical engagement.' — 양보(발 구르기=인간 고유) 뒤 but 역접이 요구하는 것은 '그렇다고 그것이 음악적 참여를 정의하는 유일한 척도는 아니다'라는 완화 명제다. 바로 뒤 'My dogs in fact responded to other musical features...'의 in fact + other musical features(사이렌 하울링, 색소폰, 음정 이탈 음에 낑낑댐, Darwin 관찰)가 '발 구르기 외의 음악적 참여 형태'를 열거하며 이 명제를 직접 뒷받침한다. 문법 결합·주제 정합·전후 논리 모두 완결. 유일한 정답."
+    }
+  ],
+  "note": "빈칸형. 논리 축은 '음악적 참여(musical engagement)의 유일 척도가 아니다'로, but 역접 + 후속 'in fact ... other musical features' 열거가 결정적 단서. ②(cognitive superiority)는 톤은 유사하나 주제 축(인지 우월성 vs 음악 참여)이 어긋나 배제, ④는 'out of tune' 세부를 역이용한 harmonious 미끼. ⑤ 단일 정답, 고신뢰."
+}

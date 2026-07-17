@@ -1,0 +1,38 @@
+{
+  "pid": "P021",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "5개 밑줄을 전부 독립 재검증한 결과 어법 오류는 (E) 'are' 하나뿐이다. 주어 명사구의 핵은 단수 'The move'이고 'from passive imaginary reality to the interactive virtual reality of cyberspace'는 전치사구 수식어 사슬이며, 동사 앞 개입 명사(reality, reality, cyberspace)가 전부 단수라 'are'를 지지하는 어떤 대안 해석(근접 견인, 도치, 존재구문, 병렬)도 성립하지 않는다. is로 교정하면 원지문과 정확히 일치한다(최소대립쌍 확인). (A)~(D)는 각각 현재완료 be(복수 주어 realities+have+been), 자유관계사 주어절(절 내 주어 공백+무선행사), 완전절 앞 관계부사(where=in which), 분사구문 의미상 주어 real people(복수)과의 소유격 일치로 모두 정문이다. 따라서 정답 유일성(V2)은 실제로 성립한다. 분쟁 요약의 '선언된 정답=(B)'는 권위 파일(eval/full/P021.md)의 '선언된 정답 (E)' 및 markedExpressions((E)만 isError=true, errorExpression 'are'→correction 'is')와 모순되는 오케스트레이터 측 데이터 오류로 판정한다 — (B) 'What'은 렌더 지문에서 흠결 없는 정문이므로 정답일 수 없다. 솔버1·솔버2의 (E) 단독 판정은 과잉·누락 없이 정확하며, 감사자의 V2=true도 확정한다(감사자의 V4 실패는 해설의 함정 기제 오설명 문제로 정답 유일성과 무관).",
+  "perDispute": [
+    {
+      "label": "(B)",
+      "claim": "분쟁 요약상 '선언된 정답=(B)' — (B) What이 어법상 틀렸다는 주장",
+      "verdict": "기각 — (B)는 완전한 정문이며 정답이 될 수 없음. 파일상 실제 선언 정답은 (E)로, 분쟁 요약의 (B)는 데이터 전달 오류",
+      "evidence": "'What is new about cyberspace is its interactive nature' — 선행사 포함 관계대명사 What이 절 내부 주어 공백을 채우며 문장 주어 명사절을 이끄는 표준 의사분열문. 선행사가 없어 That/Which 대체 불가, What만 적법. eval/full/P021.md 25-26행은 '선언된 정답 (E)'를 명시하고 markedExpressions에서 (B)는 isError=false."
+    },
+    {
+      "label": "(E)",
+      "claim": "솔버1·솔버2 공통 판정 — (E) are가 유일한 어법 오류",
+      "verdict": "인용(확정) — (E)는 비문이며 유일 오류",
+      "evidence": "'The move from passive imaginary reality to the interactive virtual reality of cyberspace are much more radical than the move from photographs to movies.' — 주어 핵 The move(단수) vs are(복수)로 수일치 위반. 개입 명사 전원 단수라 근접 견인으로도 are 정당화 불가, 도치·존재구문 등 구제 구조 부재. is로 교정 시 원지문(full 10행)과 정확히 일치."
+    },
+    {
+      "label": "(A)",
+      "claim": "정문 여부 재검증 (대안 해석 탐색)",
+      "verdict": "정문 확정",
+      "evidence": "'less developed virtual realities have always been integral parts of human life' — 복수 주어 핵 realities + have(수일치 성립) + been(be의 과거분사) + 명사 보어. 현재완료 계속 용법으로 문맥('과거부터 늘 인간 삶의 일부')과 부합. being/be로 바꿔야 할 근거 없음."
+    },
+    {
+      "label": "(C)",
+      "claim": "정문 여부 재검증 (which 대체 주장 가능성)",
+      "verdict": "정문 확정",
+      "evidence": "'a space where real people have actual interactions with other real people' — where 뒤 절이 주어(real people)+타동사(have)+목적어(actual interactions)를 갖춘 완전절이므로 관계부사 where(=in which)가 요구되는 자리. which/that이면 공백 부재로 오히려 비문."
+    },
+    {
+      "label": "(D)",
+      "claim": "정문 여부 재검증 (its 대체 주장 가능성)",
+      "verdict": "정문 확정",
+      "evidence": "'while being able to shape, or even create, their own and other people's personalities' — while 분사구문의 의미상 주어는 관계절 주어 real people(복수)이므로 their가 정확. 단수 후보 a space/It은 shape/create의 행위 주체가 될 수 없어 its 대안 해석 불성립."
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "pid": "P010",
+  "requestedDifficulty": "KILLER",
+  "type": "BLANK_INFERENCE",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-TERM",
+      "severity": "minor",
+      "evidence": "keyPoints[2] calls the single conjunctive adverb 'Rather' a '부사구' (adverbial phrase). 'Rather' is a one-word adverb, not a phrase. Loose terminology, not a structural misanalysis; does not fail V4."
+    }
+  ],
+  "validityEvidence": {
+    "V1": "Rendered passage is identical to the source except the intended blank: the final span 'allow the public to have new, eye-opening experiences' is replaced by '_____'. No splice damage, duplication, omission, orphan punctuation, or typos. Labels ①–⑤ match the five options; declared answer ② exists among them.",
+    "V2": "Independent per-option check in the slot 'produce unique creations that will ___': ① is the explicitly rejected stance ('not simply to utilize technology for its own sake'); ③ contradicts 'unique creations' in the carrier sentence itself; ④ is antonymic to 'challenges our perceptions ... forever changes our thoughts and feelings'; ⑤ elevates a peripheral sentence-1 detail (online sharing) to the artist's goal, contradicting the Rather-contrast. Only ② preserves the source span ('new, eye-opening experiences') and the sentence-3 definition of great art. Exactly one correct answer.",
+    "V3": "All five options are VPs that fit uniformly after 'will' (same syntactic slot, no suffix/tail asymmetry). Completed sentence with ②: 'Rather, it should be to produce unique creations that will provide people with transformative and fresh perspectives.' — grammatical and natural. Stem is standard. No seam artifacts, non-words, or typos.",
+    "V4": "Main explanation correctly attributes the great-art definition to the third sentence (verbatim quote matches), correctly reads the Rather contrast, and correctly frames ② as an abstracted restatement. Each distractor explanation corresponds to its actual option content with an accurate source anchor: ①→'utilize technology for its own sake', ③→'unique creations', ④→'challenges our perceptions', ⑤→sentence-1 sharing. No hallucinated content, no misattributed sentences, no fabricated grammar analysis. One minor terminology slip noted separately.",
+    "V5": "Declared answer ② = answer argued in main explanation; distractor-explanation keys cover exactly {①,③,④,⑤}; keyPoints[1] quotes 'transformative and fresh perspectives', matching option ② verbatim. No cross-field contradiction."
+  },
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "Blank sits on the thesis-completing span; solving it requires linking the sentence-3 definition of great art to the final prescriptive claim. Core canonical point, well-chosen abstraction level in the key ('transformative and fresh perspectives' ← 'new, eye-opening experiences' + 'challenges our perceptions').",
+    "C2": "Each distractor has a distinct source anchor (①: technology-for-its-own-sake; ③: 'unique creations' antonym; ④: emotions/familiarity vs. perception-challenging; ⑤: sentence-1 sharing detail), but three of the four are simple polarity reversals of the thesis rather than distinct misreading mechanisms; only ⑤ is a genuine scope shift.",
+    "C3": "Weak competitiveness for the requested tier: ①, ③, ④ are near-instant eliminations for a skilled solver because they transparently state the rejected position. ⑤ offers mild resistance. Real discrimination happens only between ② and ⑤, and even that is settled quickly by the Rather-contrast.",
+    "C4": "No meta leakage in stem or formatting; evidence in the passage is sufficient and the key is necessary. However, the uniform negative polarity of all four distractors functions as an implicit hint that deflates the clue economy.",
+    "C5": "Requested difficulty is KILLER, but the item plays as a mid-tier blank: single-passage restatement with a working polarity shortcut and transparently wrong distractors. Substantial mismatch with the label.",
+    "C6": "Explanation is accurate, cites the correct evidence sentence, and cleanly separates each distractor's flaw with a real source anchor. Slightly verbose, and the '부사구 Rather' terminology slip in keyPoints costs polish."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "Trap: elevate the explicitly criticized stance (technology for its own sake) into the artist's goal — polarity reversal on the Rather-contrast.",
+      "temptingBecause": "Surface overlap with the passage's heavy technology vocabulary ('new technology', 'editing digital material', 'tools').",
+      "decisiveFlaw": "The passage explicitly negates this: 'the goal ... should NOT be simply to utilize technology for its own sake.' It is the rejected antecedent of Rather, not the endorsed goal."
+    },
+    {
+      "label": "②",
+      "intent": "Key: meaning-preserving abstraction of the source span 'allow the public to have new, eye-opening experiences', reinforced by sentence 3's 'challenges our perceptions ... forever changes our thoughts and feelings'.",
+      "temptingBecause": "N/A (correct answer).",
+      "decisiveFlaw": "None — uniquely consistent with both the carrier sentence and the great-art definition."
+    },
+    {
+      "label": "③",
+      "intent": "Trap: antonym of 'unique creations' — replication vs. originality.",
+      "temptingBecause": "Mentions 'modern art' and user-friendly technology, echoing the passage's frame of democratized creation.",
+      "decisiveFlaw": "Directly contradicts 'unique creations' in the very sentence containing the blank; replication is the opposite of the demanded originality."
+    },
+    {
+      "label": "④",
+      "intent": "Trap: comfort/familiarity vs. perception-challenging art — antonym of the sentence-3 definition.",
+      "temptingBecause": "'Emotions' overlaps lexically with 'changes our thoughts and feelings', and audience acceptance sounds plausibly desirable.",
+      "decisiveFlaw": "Great art is defined as challenging perceptions and permanently changing feelings; evoking familiar, readily accepted emotions is its stated opposite."
+    },
+    {
+      "label": "⑤",
+      "intent": "Trap: scope shift — promote a peripheral sentence-1 fact (online sharing) to the artist's essential goal.",
+      "temptingBecause": "Anchored in a true passage detail ('share them with the world' via the internet), so it survives a pure fact-check.",
+      "decisiveFlaw": "Distribution speed is a by-product of the technology the author subordinates to mere 'tools'; the Rather-contrast demands the goal be unique, perception-changing creation, not dissemination."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoints[2]: '부사구 Rather를 통한 대조적 흐름' — 'Rather' is a single conjunctive adverb, not an adverbial phrase (부사구). '연결부사' or '부사' would be accurate.",
+      "recommendation": "Rename to '연결부사 Rather' in keyPoints."
+    },
+    {
+      "severity": "minor",
+      "evidence": "Main explanation is somewhat verbose relative to the item's actual reasoning depth (restates the same restatement chain twice).",
+      "recommendation": "Compress the key-evidence chain to one pass: sentence 3 definition → Rather contrast → ② abstraction."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "slotUniformity": "PASS — all five options occupy the same VP slot after 'will'; no distractor is eliminated by grammar alone.",
+    "meaningPreservingAbstraction": "PASS — ② abstracts the source span faithfully at an appropriate level.",
+    "distractorAnchors": "PASS — every distractor has a source anchor, tempting overlap, and single decisive flaw.",
+    "twoClueIntegration": "FAIL — nominally sentence 3 + final sentence, but the item is solvable from the carrier sentence's Rather-contrast alone.",
+    "noSingleCueShortcut": "FAIL — ② is the only option with positive polarity aligned with the advocated value; all four distractors transparently state the rejected/opposite stance, so polarity alone picks the key. RUBRIC §D forbids this for KILLER.",
+    "trapDiversity": "PARTIAL — ⑤ is a real scope shift, but ①, ③, ④ are all simple polarity reversals rather than distinct mechanisms (half-truth, causal reversal, condition loss, etc.)."
+  },
+  "grade": "C",
+  "notes": "All validity gates pass: the item is clean, single-keyed, grammatical, factually explained, and field-synchronized — it is a shippable mid-tier blank item. But it was requested as KILLER and falls well short: the key is reachable via a single polarity cue, the distractor field is dominated by transparent thesis-opposites, and no genuine two-clue integration is forced. C5=1 (below the B threshold of min 2), so the grade is C: redesign needed for the KILLER tier — e.g., add at least one positive-polarity distractor with a subtle scope or condition flaw (half-truth of the thesis), and move the blank or recast the key so the sentence-3 link is load-bearing rather than decorative. Craft total: 16/24."
+}

@@ -1,0 +1,44 @@
+{
+  "pid": "P012",
+  "finalV2": true,
+  "winningAnswer": "1",
+  "reason": "분쟁 자체가 오케스트레이션 요약의 전사 오류로 판단됨: full/P012.md의 '선언된 정답' 필드는 ②가 아니라 1이며, 이는 솔버1·솔버2의 답(1) 및 감사자의 V2 증거('Exactly one defensible answer: 1')와 완전히 일치한다. 독립 재검증 결과 빈칸 직후 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'와 종결 문장 'The law obsessively tries to suppress affects, whereas cinema introduces us to our affects'가 원 삭제구 'keeps it in check'의 충실한 재진술인 ①(attempts to regulate and restrain it)만을 필연적으로 지지한다. ②·⑤는 극성 반전/행위자 전도로 suppress affects와 정면 모순, ③은 suppress(억제)를 permanently eradicate all(영구 절멸)로 과잉 극단화하여 'man desires freedom' 전제 및 봉쇄(containment) 프레임과 충돌, ④는 법에 depict(재현) 술어를 적용한 범주 오류에 exclusively가 무근거 한정. 대안 해석 성립 여지 없음. 유일 정답 ①, V2 유지.",
+  "perDispute": [
+    {
+      "label": "declared-answer-mismatch",
+      "claim": "분쟁 요약은 선언된 정답이 ②라고 주장하나 솔버 양측은 1을 제출했다.",
+      "verdict": "요약 전사 오류 — 실제 분쟁 아님",
+      "evidence": "full/P012.md 25-26행 '## 선언된 정답' 아래 값은 '1'. 해설도 'attempts to regulate and restrain it'을 정답으로 명시하고 오답 해설은 2~5번에 대해 작성되어 있음. 파일 근거상 선언 정답=1이며 솔버1·솔버2·감사자와 전원 일치."
+    },
+    {
+      "label": "1",
+      "claim": "① 'attempts to regulate and restrain it'이 문법적·논리적으로 성립하는 유일한 완성인가.",
+      "verdict": "성립 — 유일 정답",
+      "evidence": "대명사 it은 while절의 단수 선행사 'man's affective life'에 깨끗이 결속. 빈칸 직후 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives' 및 'The law obsessively tries to suppress affects'가 regulate/restrain을 이중으로 재진술. 도입부 'a regime of commands and prohibitions'도 정합. 원문 삭제구 'keeps it in check'의 충실한 패러프레이즈."
+    },
+    {
+      "label": "2",
+      "claim": "② '자유로운 표현 장려'가 대안 정답으로 성립하는가.",
+      "verdict": "불성립",
+      "evidence": "'express'는 while 대조 구문에서 cinema에 배정된 술어이며, 법이 정서 표현을 장려한다는 명제는 후행 'obsessively tries to suppress affects'와 정면 모순. 극성 반전 오답으로 옹호 불가."
+    },
+    {
+      "label": "3",
+      "claim": "③ '모든 욕망의 영구 절멸'이 suppress의 강한 어조(obsessively, horror)에 의해 성립하는가.",
+      "verdict": "불성립",
+      "evidence": "지문이 명시한 법의 목적은 '욕망에 압도·파괴되지 않도록 보장'하는 봉쇄이지 절멸이 아님. suppress/keep in check ≠ permanently eradicate. 'all human desires'는 지문 전제 'man desires freedom'(욕망의 존속)과 충돌. 두 솔버의 기각 논리에 과잉 판정 없음."
+    },
+    {
+      "label": "4",
+      "claim": "④ '폭력 범죄 묘사에 전적으로 집중'이 법의 폭력성 불안(man is too violent)으로 정당화되는가.",
+      "verdict": "불성립",
+      "evidence": "depict(묘사)는 재현 매체인 영화의 술어로 법에 적용하면 범주 오류. 'exclusively'는 어떤 지문 명제로도 지지되지 않는 무근거 한정. 'violent' 단어 회수만으로는 성립 불가."
+    },
+    {
+      "label": "5",
+      "claim": "⑤ '숨겨진 감정 방출의 매개 제공'이 법에 대해 성립하는가.",
+      "verdict": "불성립",
+      "evidence": "'cinema introduces us to our affects, often forcing us to identify the most unbearable ones'가 명시하듯 감정 대면·방출은 영화의 기능. 빈칸에 넣으면 while 대조가 소멸하고 후행 suppress affects와 모순되는 행위자 전도 오답."
+    }
+  ]
+}

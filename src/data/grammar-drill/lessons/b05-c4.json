@@ -1,0 +1,769 @@
+{
+  "id": "b05-c4",
+  "unitId": "b05",
+  "order": 4,
+  "title": "부정대명사 — one·another·the other",
+  "oneLiner": "전체를 세고 남은 것을 셉니다 — 남은 것이 하나로 정해지면 the other, 정해지지 않으면 another 입니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 교육과정 [별책14] 별표4 언어형식 — 대명사(부정대명사) 항목(중 ●)",
+      "천일문 중등 GRAMMAR — 부정대명사 one·another·other 단원",
+      "어법끝 5.0 — 대명사가 되받는 명사의 수·격 일치 판별"
+    ]
+  },
+  "lenses": ["L5"],
+  "confusableWith": ["b05-c1", "b05-c2", "b05-c3"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Two paths lead to the summit; one is steep, and the other is gentle.",
+        "Two paths lead to the summit; one is steep, and another is gentle."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 단어 하나입니다. 이 레슨을 마치면 왜 여기서 another 가 설 수 없는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "부정대명사",
+      "question": "그런데 부정대명사가 대체 무엇입니까?",
+      "plain": "부정대명사는 정해지지 않은 대상을 막연하게 가리키는 대명사입니다. one·another·other 가 대표이며, 이름을 못 박지 않고 \"하나·또 하나·나머지\"라는 방식으로 가리킵니다.",
+      "analogy": "상자에서 귤을 꺼내는 장면을 떠올려 보십시오. 아무거나 하나(one)를 꺼내고, 또 하나(another)를 꺼내고, 마지막에 저절로 남은 나머지 하나(the other)를 꺼냅니다. 귤에 이름표를 붙이지 않아도 셋을 전부 가리킬 수 있습니다.",
+      "whyItMatters": "시험은 another 와 the other 를 서로 바꿔 놓고 밑줄을 칩니다. \"전체가 몇 개이고 남은 것이 정해졌는가\"를 세는 법을 익히면, 이 유형은 감이 아니라 계산으로 풀리는 문제가 됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "다섯 형태, 하나씩 정면으로",
+      "intro": "부정대명사의 다섯 형태를 한 항목씩 만납니다. 각 항목의 예문에서 굵은 표현이 그 형태입니다.",
+      "entries": [
+        {
+          "head": "one — 같은 종류의 하나",
+          "body": "앞에 나온 가산명사를 종류로 되받아 \"같은 종류의 하나\"를 가리킵니다. 바로 그것을 가리키는 it 과 구별되며, 복수형은 ones 입니다.",
+          "example": {
+            "en": "The old lamp broke, so the family bought a new **one**.",
+            "ko": "그 낡은 램프가 고장 나서 그 가족은 새것을 하나 샀습니다.",
+            "note": "one 은 lamp 라는 종류를 되받습니다. 고장 난 바로 그 램프를 가리키려면 it 을 씁니다."
+          }
+        },
+        {
+          "head": "another — 정해지지 않은 또 하나",
+          "body": "앞엣것 말고 \"또 하나\"를 가리키되, 어느 것인지 특정되지 않습니다. an 과 other 가 합쳐진 말이므로 원칙적으로 단수와 결합합니다.",
+          "example": {
+            "en": "This ladder is too short; please bring **another**.",
+            "ko": "이 사다리는 너무 짧으니 다른 것을 하나 가져오십시오.",
+            "note": "남은 사다리가 몇 개인지 정해져 있지 않으므로 another 입니다."
+          }
+        },
+        {
+          "head": "the other — 정해진 나머지 하나",
+          "body": "전체에서 앞엣것을 빼고 남은 \"마지막 하나\"를 가리킵니다. 남은 것이 하나로 정해졌기 때문에 정관사 the 가 붙습니다.",
+          "example": {
+            "en": "One glove is on the desk, and **the other** is in the drawer.",
+            "ko": "장갑 한 짝은 책상 위에 있고, 다른 한 짝은 서랍 안에 있습니다.",
+            "note": "장갑은 두 짝이므로 한 짝을 집으면 남은 한 짝은 자동으로 정해집니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "the others — 정해진 나머지 전부",
+          "body": "전체가 한정된 상태에서 남은 것 전부를 가리킵니다. 여럿이므로 동사도 복수로 받습니다.",
+          "example": {
+            "en": "Two of the five singers left early, and **the others** stayed until the end.",
+            "ko": "다섯 명의 가수 중 둘은 일찍 떠났고, 나머지는 끝까지 남았습니다.",
+            "note": "전체가 다섯으로 한정되어 남은 셋이 특정됩니다. 여럿이므로 동사도 복수형 stayed 류로 받습니다."
+          }
+        },
+        {
+          "head": "others — 정해지지 않은 다른 것들",
+          "body": "전체가 한정되지 않아 \"다른 것들\"이 누구인지 특정되지 않을 때 씁니다. 특정되지 않았으므로 the 가 붙지 않습니다.",
+          "example": {
+            "en": "Some people enjoy crowds, while **others** prefer quiet places.",
+            "ko": "어떤 사람들은 인파를 즐기고, 다른 사람들은 조용한 곳을 선호합니다.",
+            "note": "사람 전체가 몇 명인지 한정되어 있지 않으므로 무관사 others 입니다."
+          }
+        },
+        {
+          "head": "other — 홀로 서지 못하는 말",
+          "body": "other 는 명사 앞에서 꾸미는 자리에만 서고, 홀로 대명사로 쓰이지 못합니다. 홀로 세우려면 another·the other·others 중 하나로 바꿉니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "다섯 형태 한 장 정리",
+      "columns": ["형태", "가리키는 것", "동사의 수"],
+      "rows": [
+        {
+          "cells": ["one", "같은 종류의 하나 (특정되지 않음)", "단수"]
+        },
+        {
+          "cells": ["another", "정해지지 않은 또 하나", "단수"],
+          "example": {
+            "en": "The first key did not fit, so the guard tried **another**.",
+            "ko": "첫 번째 열쇠가 맞지 않아서 경비원은 다른 열쇠를 하나 더 써 보았습니다.",
+            "note": "남은 열쇠가 몇 개인지 정해져 있지 않으므로 another 입니다."
+          }
+        },
+        {
+          "cells": ["the other", "정해진 나머지 하나", "단수"],
+          "example": {
+            "en": "Of the two bridges, one is closed, and **the other** carries all the traffic.",
+            "ko": "두 다리 중 하나는 폐쇄되었고, 다른 하나가 모든 교통량을 감당합니다.",
+            "note": "전체가 둘이므로 남은 하나가 특정됩니다. 그래서 the other 입니다."
+          }
+        },
+        {
+          "cells": ["the others", "정해진 나머지 전부", "복수"],
+          "example": {
+            "en": "Three of the ten computers were repaired; **the others** still wait for parts.",
+            "ko": "열 대의 컴퓨터 중 세 대는 수리되었고, 나머지는 아직 부품을 기다립니다.",
+            "note": "남은 일곱 대가 특정되고 여럿이므로 the others 이며, 동사도 복수형 wait 입니다."
+          }
+        },
+        {
+          "cells": ["others", "정해지지 않은 다른 것들", "복수"]
+        }
+      ],
+      "takeaway": "다섯 형태를 가르는 질문은 둘뿐입니다 — 남은 것이 정해졌습니까(the), 몇 개입니까(-s). 이 두 질문이 이 레슨의 전부입니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "부정대명사 다섯 형태의 선택 공식",
+      "why": "one·another·the other·the others·others 는 뜻이 아니라 \"남은 것의 상태\"로 갈립니다. 문장을 읽을 때마다 다섯 뜻을 하나씩 더듬으면 늦습니다. 두 가지 질문이 반사적으로 나와야 시험장에서 셈이 곧바로 끝납니다.",
+      "device": "\"정해지면 the, 여럿이면 s\" — 이 손놀림은 other 계열만 가릅니다: the other·the others·others. 정해지지 않은 하나는 맨 other 로 홀로 못 서니 an 을 붙인 another 로, one 은 별개 형태로 따로 잡습니다.",
+      "items": [
+        { "cue": "정해지지 않은 또 하나", "answer": "another" },
+        { "cue": "정해진 나머지 하나", "answer": "the other" },
+        { "cue": "정해진 나머지 전부", "answer": "the others" },
+        { "cue": "정해지지 않은 다른 것들", "answer": "others" },
+        { "cue": "같은 종류의 하나 (복수형은 ones)", "answer": "one" },
+        { "cue": "셋을 차례로 집는 순서", "answer": "one → another → the other" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "나머지 계산 관문",
+      "mission": "전체가 셋일 때는 하나씩 집어 나가는 순서가 정해져 있습니다. 첫째·둘째·셋째로 집는 형태를 순서대로 탭하십시오.",
+      "mode": "ORDER",
+      "pool": ["one", "another", "the other", "others", "the others"],
+      "answers": ["one", "another", "the other"],
+      "passText": "정확한 순서입니다. 처음은 아무거나 하나, 다음은 아직 정해지지 않은 또 하나, 마지막은 저절로 정해진 나머지 하나 — 이 행진이 부정대명사의 뼈대입니다.",
+      "retryText": "순서가 어긋났습니다. 힌트 하나 — 마지막에 남은 것은 고를 필요조차 없이 정해져 있으므로, 정관사 the 를 단 형태가 맨 뒤에 섭니다."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "전체가 둘일 때 — one … the other",
+      "rule": "전체가 둘뿐일 때 하나를 one 으로 집으면, 남은 하나는 자동으로 특정됩니다. 특정된 나머지 하나는 정관사를 붙여 the other 로 씁니다.",
+      "examples": [
+        {
+          "en": "The library has two reading rooms: **one** stays open at night, and **the other** closes at six.",
+          "ko": "그 도서관에는 열람실이 둘 있는데, 하나는 밤에도 열려 있고 다른 하나는 여섯 시에 문을 닫습니다.",
+          "note": "열람실이 둘뿐이므로 one 을 집고 나면 남은 것은 하나로 정해집니다. 그래서 the other 입니다."
+        },
+        {
+          "en": "Of the two treatments tested, **one** reduces pain quickly, while **the other** works more slowly.",
+          "ko": "시험된 두 가지 치료법 중 하나는 통증을 빠르게 줄이고, 다른 하나는 더 느리게 작용합니다.",
+          "note": "the other 는 하나를 가리키므로 동사도 단수로 받아 works 가 쓰였습니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "title": "셋 이상일 때 — one … another … the other",
+      "rule": "셋 이상에서 하나를 집은 뒤, 남은 것이 아직 여럿이어서 어느 것인지 특정되지 않으면 another 를 씁니다. 그렇게 집어 나가다가 마지막 하나만 남으면 그때는 the other 입니다.",
+      "examples": [
+        {
+          "en": "The center offers three programs: **one** trains teachers, **another** supports researchers, and **the other** serves the public.",
+          "ko": "그 센터는 세 가지 프로그램을 운영하는데, 하나는 교사를 양성하고, 다른 하나는 연구자를 지원하며, 나머지 하나는 일반인을 대상으로 합니다.",
+          "note": "두 번째를 집을 때는 남은 것이 둘이어서 특정되지 않으므로 another 이고, 마지막 하나는 특정되므로 the other 입니다."
+        },
+        {
+          "en": "The first method failed, so the researchers designed **another** experiment.",
+          "ko": "첫 번째 방법이 실패하자 연구자들은 또 다른 실험을 설계했습니다.",
+          "note": "another 는 an 과 other 가 합쳐진 말이므로 원칙적으로 단수명사와 결합합니다(수량·기간을 한 덩어리로 세는 another two weeks 는 예외입니다). 남은 실험이 몇 개인지 한정되어 있지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b05-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The museum has two entrances: one faces the park, and {{blank}} opens onto the main road.",
+          "options": ["the other", "another"],
+          "answer": 0,
+          "translation": "그 박물관에는 출입구가 둘 있는데, 하나는 공원 쪽을 향해 있고 다른 하나는 대로로 열립니다.",
+          "explanation": "출입구가 둘뿐이므로 one 을 집고 나면 남은 하나가 자동으로 특정됩니다. 특정된 나머지 하나는 the other 입니다. another 는 남은 것이 아직 특정되지 않을 때 쓰는 형태이므로 여기에 올 수 없습니다.",
+          "trapTags": ["another-vs-the-other"]
+        },
+        {
+          "id": "b05-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The grant supports three projects: one restores wetlands, another monitors birds, and [[u:another]] educates visitors.",
+          "isCorrect": false,
+          "correction": "the other",
+          "translation": "그 지원금은 세 개의 사업을 지원하는데, 하나는 습지를 복원하고, 다른 하나는 새를 관찰하며, 나머지 하나는 방문객을 교육합니다.",
+          "explanation": "전체가 셋으로 한정되어 있고 one 과 another 가 이미 둘을 집었으므로 남은 것은 하나뿐입니다. 남은 하나는 특정되므로 another 가 아니라 the other 로 받아야 합니다.",
+          "trapTags": ["another-vs-the-other", "definite-remainder"]
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "남은 것이 여럿일 때 — the others 와 others",
+      "rule": "전체가 한정되어 있어 남은 여럿이 특정되면 the others 를 쓰고, 전체가 한정되지 않아 특정되지 않으면 무관사 복수형 others 를 씁니다.",
+      "examples": [
+        {
+          "en": "Of the ten paintings, three hang in the main hall and **the others** stay in storage.",
+          "ko": "열 점의 그림 중 세 점은 중앙 홀에 걸려 있고 나머지는 수장고에 보관되어 있습니다.",
+          "note": "전체가 열 점으로 한정되어 있으므로 남은 일곱 점은 특정됩니다. 여럿이므로 the others 이고 동사도 복수형 stay 입니다."
+        },
+        {
+          "en": "Some researchers accept the theory, while **others** reject it outright.",
+          "ko": "일부 연구자들은 그 이론을 받아들이지만, 다른 연구자들은 그것을 단호히 거부합니다.",
+          "note": "연구자 전체가 몇 명인지 한정되어 있지 않으므로 남은 사람들이 특정되지 않습니다. 그래서 the 가 없는 others 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현이 '정해진 나머지'를 가리키는지, '정해지지 않은 다른 것'을 가리키는지 분류하십시오.",
+      "buckets": [
+        { "id": "def", "label": "정해진 나머지" },
+        { "id": "indef", "label": "정해지지 않은 다른 것" }
+      ],
+      "chips": [
+        {
+          "text": "the other",
+          "bucketId": "def",
+          "why": "전체가 한정된 상태에서 남은 하나를 가리킵니다. 정관사가 그 특정성을 표시합니다."
+        },
+        {
+          "text": "the others",
+          "bucketId": "def",
+          "why": "전체가 한정된 상태에서 남은 것 전부를 가리킵니다. 여럿이므로 동사도 복수로 받습니다."
+        },
+        {
+          "text": "the other students",
+          "bucketId": "def",
+          "why": "정해진 집단에서 남은 학생 전부를 가리킵니다. the other 뒤에는 복수명사도 올 수 있습니다."
+        },
+        {
+          "text": "another",
+          "bucketId": "indef",
+          "why": "앞엣것 말고 또 하나를 가리키되 어느 것인지 특정되지 않습니다."
+        },
+        {
+          "text": "others",
+          "bucketId": "indef",
+          "why": "전체가 한정되지 않은 상태에서 '다른 것들'을 가리킵니다. 그래서 관사가 붙지 않습니다."
+        },
+        {
+          "text": "other students",
+          "bucketId": "indef",
+          "why": "특정되지 않은 다른 학생들을 가리킵니다. other 는 이렇게 명사 앞에서만 쓰이고 홀로 대명사가 되지는 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "RULE",
+      "tier": 2,
+      "title": "one 의 본래 기능 — 같은 종류의 하나",
+      "rule": "one 은 앞에 나온 가산명사를 종류로 되받아 '같은 종류의 다른 하나'를 가리킵니다. 반면 it 은 앞에 나온 바로 그것을 가리킵니다. one 의 복수형은 ones 입니다.",
+      "examples": [
+        {
+          "en": "The old microscope broke last week, so the laboratory ordered a new **one**.",
+          "ko": "그 낡은 현미경이 지난주에 고장 나서 실험실은 새것을 하나 주문했습니다.",
+          "note": "one 은 microscope 라는 종류를 되받습니다. 새로 주문한 것은 고장 난 그 현미경이 아니라 같은 종류의 다른 현미경입니다."
+        },
+        {
+          "en": "The curator left the manuscript on the train, and a passenger found **it** the next morning.",
+          "ko": "그 큐레이터가 기차에 원고를 두고 내렸는데, 한 승객이 이튿날 아침에 그것을 찾았습니다.",
+          "note": "it 은 잃어버린 바로 그 원고를 가리킵니다. 여기에 one 을 쓰면 다른 원고를 찾았다는 뜻이 되어 문장이 어긋납니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b05-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The old projector no longer works, so the school ordered a new {{blank}} for the lecture hall.",
+          "options": ["one", "it", "other"],
+          "answer": 0,
+          "translation": "그 낡은 영사기는 더 이상 작동하지 않아서 학교는 강당에 쓸 새것을 하나 주문했습니다.",
+          "explanation": "one 은 앞에 나온 가산명사 projector 를 종류로 되받아 '같은 종류의 다른 하나'를 가리킵니다. it 은 앞서 말한 바로 그 낡은 영사기를 가리키므로 새로 주문한 물건이 될 수 없고, other 는 홀로 대명사로 쓰이지 못합니다.",
+          "trapTags": ["one-vs-it", "other-not-pronoun"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "another 와 the other 의 대조",
+      "columns": ["another", "the other"],
+      "rows": [
+        {
+          "criterion": "가리키는 대상",
+          "a": "앞엣것 말고 또 하나 — 어느 것인지 특정되지 않습니다",
+          "b": "전체에서 앞엣것을 뺀 뒤 남은 마지막 하나 — 특정됩니다"
+        },
+        {
+          "criterion": "전체 집합",
+          "a": "한정되지 않았거나, 남은 것이 아직 둘 이상입니다",
+          "b": "한정되어 있고, 남은 것이 하나뿐입니다"
+        },
+        {
+          "criterion": "관사·소유격과의 결합",
+          "a": "an + other 이므로 앞에 the·a·my 를 다시 붙이지 못합니다",
+          "b": "정관사 the 가 이미 표지로 들어 있습니다"
+        },
+        {
+          "criterion": "뒤에 오는 명사",
+          "a": "단수명사가 원칙입니다 (another approach). 단, 덩어리로 세는 수량·기간은 예외입니다 (another two weeks)",
+          "b": "단수·복수 모두 옵니다 (the other approach / the other approaches)"
+        }
+      ],
+      "examples": [
+        {
+          "en": "This method failed, so the team tried **another** method.",
+          "ko": "이 방법이 실패해서 그 팀은 또 다른 방법을 시도했습니다.",
+          "note": "시도할 방법이 몇 개 남았는지 한정되어 있지 않으므로 특정되지 않는 another 입니다."
+        },
+        {
+          "en": "The road forks here: one branch leads north, and **the other** leads south.",
+          "ko": "그 길은 여기에서 갈라지는데, 한 갈래는 북쪽으로 이어지고 다른 갈래는 남쪽으로 이어집니다.",
+          "note": "갈래가 둘뿐이므로 남은 하나가 특정됩니다. 그래서 the other 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "전체가 둘인 문장의 해부",
+      "tokens": [
+        { "t": "Of the two doors in the corridor,", "role": "M" },
+        { "t": "one", "role": "S" },
+        { "t": "leads", "role": "V" },
+        { "t": "to the archive", "role": "M" },
+        { "t": "and", "role": "CONJ" },
+        { "t": "the other", "role": "S" },
+        { "t": "opens", "role": "V" },
+        { "t": "onto the courtyard.", "role": "M" }
+      ],
+      "ko": "복도에 있는 두 개의 문 중 하나는 문서고로 이어지고, 다른 하나는 안뜰로 열립니다.",
+      "layers": [
+        {
+          "label": "① 전체 집합의 크기를 확인합니다",
+          "roles": ["M"],
+          "note": "Of the two doors 가 전체를 둘로 못 박습니다. 부정대명사의 형태는 이 숫자에서 결정됩니다."
+        },
+        {
+          "label": "② 부정대명사 자리를 확인합니다",
+          "roles": ["S"],
+          "note": "먼저 집는 하나는 one 입니다. 전체가 둘이므로 남은 하나는 특정되며, 그 자리는 another 가 아니라 the other 입니다."
+        },
+        {
+          "label": "③ 동사의 수를 맞춥니다",
+          "roles": ["V"],
+          "note": "one 도 the other 도 하나를 가리키므로 동사는 단수형 leads·opens 입니다."
+        },
+        {
+          "label": "④ 병렬 축을 확인합니다",
+          "roles": ["CONJ"],
+          "note": "and 가 잇는 것은 one 이 주어인 절과 the other 가 주어인 절입니다. 두 절이 같은 무게로 마주 놓입니다."
+        }
+      ],
+      "conclusion": "전체가 몇 개인지 먼저 세고, 남은 것이 특정되는지를 판단한 뒤, 마지막으로 동사의 수를 맞춥니다. 판단은 이 순서를 따릅니다."
+    },
+    {
+      "id": "b16",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. '정해졌는가'(the 유무)와 '몇 개인가'(단수·복수), 그리고 '애초에 성립하는 형태인가'를 차례로 따져 보십시오. 묶음마다 오직 한 기준에서만 갈립니다.",
+      "rounds": [
+        {
+          "words": ["one", "the other", "another"],
+          "odd": 1,
+          "why": "정해짐(the 유무)으로만 갈립니다. the other 만 정관사 the 를 달아 '정해진 나머지 하나'를 가리키고, one 과 another 는 정해지지 않은 대상을 가리켜 the 가 붙지 않습니다. 셋 다 하나를 가리키므로 '몇 개인가'로는 갈리지 않습니다."
+        },
+        {
+          "words": ["one", "another", "the other", "the others"],
+          "odd": 3,
+          "why": "the others 만 여럿을 가리켜 동사를 복수로 받습니다. 나머지 셋은 전부 하나를 가리키므로 동사도 단수입니다."
+        },
+        {
+          "words": ["another method", "other methods", "another idea", "another methods"],
+          "odd": 3,
+          "why": "정해짐(the 유무)으로도 수(단수·복수)로도 갈리지 않습니다 — 넷 다 the 가 없고 단수와 복수가 둘씩입니다. 오직 형태가 성립하느냐로 갈립니다. another 는 an + other 이므로 원칙적으로 단수명사와만 결합해 another methods 는 성립하지 않습니다(another method·another idea 는 단수라 옳고, other methods 는 other 가 복수명사를 꾸며 옳습니다). 수량을 한 덩어리로 세는 another two weeks 같은 표현만 예외입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "부정대명사를 고르는 4단계",
+      "steps": [
+        {
+          "text": "전체 집합이 몇 개인지 셉니다. 문장이 전체를 한정하고 있는지부터 확인합니다.",
+          "applyNote": "Of the four exhibits 가 전체를 넷으로 한정합니다."
+        },
+        {
+          "text": "이미 집은 것을 빼고 남은 것이 몇 개인지 셉니다.",
+          "applyNote": "one 과 another 로 둘을 집었으므로 남은 것은 둘입니다."
+        },
+        {
+          "text": "남은 것이 특정되는지 판단합니다. 전체가 한정되어 있으면 남은 것은 자동으로 특정되므로 the 를 붙입니다.",
+          "applyNote": "전체가 넷으로 한정되어 있으므로 남은 둘은 특정됩니다. 따라서 the 가 붙습니다."
+        },
+        {
+          "text": "남은 것의 수에 맞추어 형태를 확정합니다. 하나면 the other, 여럿이면 the others 이며, 동사의 수도 여기에 맞춥니다.",
+          "applyNote": "남은 것이 둘이므로 the others 이고, 복수 주어이므로 동사도 remain 입니다(the other 였다면 remains)."
+        }
+      ],
+      "example": {
+        "en": "Of the four exhibits, one closed early, another moved to the second floor, and **the others** remain open.",
+        "ko": "네 개의 전시 중 하나는 일찍 문을 닫았고, 다른 하나는 2층으로 옮겨 갔으며, 나머지는 계속 열려 있습니다.",
+        "note": "남은 것이 둘이므로 the other 가 아니라 복수형 the others 입니다."
+      }
+    },
+    {
+      "id": "b18",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "There are three routes to the village: one crosses the bridge, another follows the river, and ( another / the other ) climbs the hill.",
+      "steps": [
+        {
+          "title": "① 전체 집합을 셉니다",
+          "body": "three routes 가 전체를 셋으로 한정합니다. 부정대명사의 형태는 이 숫자에서 출발합니다."
+        },
+        {
+          "title": "② 남은 것을 셉니다",
+          "body": "one 이 하나를 집었고 another 가 또 하나를 집었습니다. 셋에서 둘을 뺐으므로 남은 것은 하나입니다."
+        },
+        {
+          "title": "③ 특정 여부를 판단합니다",
+          "body": "전체가 셋으로 한정되어 있고 남은 것이 하나뿐이므로, 그것이 무엇인지 자동으로 정해집니다. 특정되었으므로 the 를 붙여야 합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "another 는 남은 것이 특정되지 않을 때만 쓰는 형태입니다. 남은 것이 하나로 정해진 이 자리에는 the other 가 옳습니다."
+        }
+      ],
+      "answer": "the other",
+      "ko": "그 마을로 가는 길은 셋인데, 하나는 다리를 건너고, 다른 하나는 강을 따라가며, 나머지 하나는 언덕을 오릅니다."
+    },
+    {
+      "id": "b19",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 두 지도 중 하나는 도로를 보여 주고, 다른 하나는 등고선을 보여 줍니다.",
+      "answer": [
+        "One of the two maps",
+        "shows the roads",
+        "and",
+        "the other",
+        "shows the contour lines"
+      ],
+      "tiles": [
+        "One of the two maps",
+        "shows the roads",
+        "and",
+        "the other",
+        "shows the contour lines",
+        "another"
+      ],
+      "explanation": "지도가 둘로 한정되어 있으므로 남은 하나는 특정됩니다. 특정된 나머지 하나를 가리키는 자리에는 the other 가 오며, another 는 쓰이지 않습니다."
+    },
+    {
+      "id": "b20",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Five students entered the contest: three reached the final round, and ( the others / others / the other ) withdrew before the deadline.",
+      "givenSteps": [
+        "① 전체 집합을 셉니다 — Five students 가 전체를 다섯 명으로 한정합니다.",
+        "② 남은 것을 셉니다 — 셋이 이미 언급되었으므로 남은 사람은 두 명입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 옵니까?",
+      "options": [
+        "the others — 전체가 다섯으로 한정되어 남은 두 명이 특정되므로 정관사를 붙입니다",
+        "others — 남은 사람이 여럿이면 언제나 무관사 복수형을 씁니다",
+        "the other — 남은 사람이 둘이어도 하나로 묶어 단수로 나타냅니다"
+      ],
+      "answer": 0,
+      "explain": "전체가 다섯으로 한정되어 있고 셋을 뺐으므로 남은 두 명이 누구인지 자동으로 정해집니다. 특정된 나머지 전부는 the others 입니다. others 는 전체가 한정되지 않았을 때 쓰는 형태이고, the other 는 남은 것이 하나일 때만 쓰므로 두 명을 받지 못합니다."
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "함정 — another 앞에 관사나 소유격을 붙이는 경우",
+      "body": "another 는 an 과 other 가 합쳐진 말입니다. 관사가 이미 안에 들어 있으므로 앞에 the·a·my 를 다시 붙일 수 없습니다. '또 다른 하나'를 가리키는 자리에는 another 한 단어로 충분합니다.",
+      "example": {
+        "en": "The committee rejected the first proposal and asked the team to prepare **the another** version.",
+        "ko": "그 위원회는 첫 번째 제안을 거부하고 팀에 또 다른 안을 준비하라고 요청했습니다.",
+        "note": "another 에는 이미 관사가 들어 있으므로 앞에 the 를 붙이지 못합니다. another version 이 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 남은 것의 수와 동사의 수가 어긋나는 자리",
+      "body": "부정대명사가 주어이면 동사는 그것이 가리키는 수를 따릅니다. the other 는 하나를, the others 는 여럿을 가리키므로 동사의 수가 갈립니다. 남은 것을 세지 않고 형태만 외우면 이 자리에서 무너집니다. 다만 수사가 붙어 하나의 덩어리를 이루는 기간·수량 표현 앞에서는 another 가 예외적으로 복수와 결합합니다(another two weeks).",
+      "example": {
+        "en": "Of the six panels, two were replaced last month, and **the others remains** damaged.",
+        "ko": "여섯 개의 패널 중 둘은 지난달에 교체되었고, 나머지는 손상된 채로 남아 있습니다.",
+        "note": "the others 는 남은 네 개를 가리키는 복수이므로 동사는 remain 이어야 합니다. remains 는 단수형이라 쓸 수 없습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b23",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "나머지 셈 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. '정해졌는가'와 '몇 개인가', 두 질문만 하면 됩니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "전체가 둘일 때, 남은 하나는 the other 로 받습니다.",
+          "isTrue": true,
+          "why": "둘에서 하나를 집으면 남은 하나는 자동으로 특정되므로 정관사 the 가 붙습니다."
+        },
+        {
+          "statement": "another 앞에는 the 를 붙여 the another 로 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "another 는 an + other 이므로 관사가 이미 안에 들어 있습니다. the another 는 성립하지 않습니다."
+        },
+        {
+          "statement": "the others 가 주어이면 동사는 복수형으로 받습니다.",
+          "isTrue": true,
+          "why": "the others 는 남은 여럿 전부를 가리키므로 동사도 복수로 맞춥니다."
+        },
+        {
+          "statement": "other 는 홀로 대명사로 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "other 는 명사 앞에서 꾸미는 자리에만 섭니다. 홀로 세우려면 another·the other·others 로 바꿉니다."
+        },
+        {
+          "statement": "전체가 한정되지 않은 '다른 사람들'은 무관사 others 로 씁니다.",
+          "isTrue": true,
+          "why": "특정되지 않은 다른 것들에는 the 가 붙지 않습니다. Some ~, others ~ 짝이 대표입니다."
+        },
+        {
+          "statement": "another 는 어떤 경우에도 복수명사와 결합하지 못합니다.",
+          "isTrue": false,
+          "why": "원칙은 단수 결합이지만, another two weeks 처럼 수량·기간을 한 덩어리로 셀 때는 예외적으로 복수와 결합합니다."
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The library keeps three copies of the manuscript: [[1:one]] stays in the reading room, [[2:another]] travels to exhibitions abroad, and [[3:the others]] remains locked in the vault, where [[4:other]] rare books are also stored.",
+      "answer": 3,
+      "correction": "the other",
+      "rationales": [
+        "세 부 가운데 처음 하나를 집는 자리이므로 one 이 옳습니다.",
+        "아직 남은 것이 둘이어서 어느 것인지 특정되지 않으므로 another 가 옳습니다.",
+        "one 과 another 가 이미 둘을 집었으므로 남은 것은 한 부뿐입니다. 하나뿐인 나머지는 단수형 the other 로 받아야 하며, 뒤의 단수 동사 remains 와도 the other 가 호응합니다.",
+        "뒤에 복수명사 rare books 가 이어지고 그 책들이 특정되지 않으므로 무관사 other 가 옳습니다."
+      ],
+      "ko": "그 도서관은 그 필사본을 세 부 보관하고 있는데, 한 부는 열람실에 두고, 다른 한 부는 해외 전시에 나가며, 나머지 한 부는 다른 희귀 서적들도 함께 보관되는 금고에 잠겨 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞의 오류 찾기에서 ③ the others 를 오류로 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "사본이 셋인데 one 과 another 로 둘을 이미 집었으므로 남은 것은 한 부뿐이고, 하나뿐인 나머지는 단수형 the other 로 받아야 하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 전체를 세고 남은 것을 세는 절차가 형태를 결정합니다."
+        },
+        {
+          "text": "정관사가 붙은 부정대명사는 문장의 주어 자리에 올 수 없기 때문입니다.",
+          "correct": false,
+          "feedback": "the other·the others 는 주어로 얼마든지 쓰입니다. 문제는 자리가 아니라 남은 것의 수입니다."
+        },
+        {
+          "text": "앞에서 another 를 썼으므로 그 뒤도 another 로 형태를 통일해야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "형태를 통일해야 한다는 규칙은 없습니다. 남은 것이 하나로 특정되는 순간 another 는 the other 로 바뀝니다."
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 짧은 지문을 주고 괄호 안의 표현을 알맞은 형태로 고쳐 쓰게 합니다. 전체가 몇 개인지, 남은 것이 특정되는지를 근거로 밝혀야 만점입니다.",
+          "sample": {
+            "en": "The report offers two solutions. One reduces the cost, and (other) shortens the schedule.",
+            "ask": "괄호 안의 표현을 어법에 맞게 고쳐 쓰십시오.",
+            "answer": "the other — 해결책이 둘뿐이므로 남은 하나가 특정됩니다. other 는 홀로 대명사로 쓰이지 못합니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서는 부정대명사 자체보다, 그것이 되받는 명사의 수에 대명사와 동사가 맞는지를 밑줄로 묻습니다. 밑줄 친 대명사가 무엇을 되받고 남은 것이 몇 개인지부터 확인합니다.",
+          "sample": {
+            "en": "Some of the tribes recorded their history in writing, while [[u:the others]] preserved it in song.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — the tribes 로 전체가 한정되어 있고 남은 부족들이 여럿으로 특정되므로 복수형 the others 가 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b27",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "나머지 계산소의 회계장",
+      "intro": "이 계산소에서는 이름을 부르지 않습니다. 하나, 또 하나, 나머지 — 세는 법이 전부입니다. 전체를 세고 남은 것을 세는 자만 장부를 넘길 수 있습니다. 네 번의 셈으로 실력을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The clinic has two doctors: one works mornings, and {{blank}} covers the evenings.",
+          "options": ["the other", "another"],
+          "answer": 0,
+          "why": "의사가 둘뿐이므로 하나를 집으면 남은 하나가 자동으로 특정됩니다. 특정된 나머지 하나는 the other 입니다."
+        },
+        {
+          "prompt": "Four ships set sail: one returned in May, another in June, and {{blank}} were lost at sea.",
+          "options": ["the others", "the other", "another"],
+          "answer": 0,
+          "why": "넷에서 둘을 집었으므로 남은 것은 둘입니다. 한정된 전체에서 남은 여럿은 the others 이며, 복수 동사 were 와 호응합니다."
+        },
+        {
+          "prompt": "Some readers trust the report, while {{blank}} doubt every figure in it.",
+          "options": ["others", "the others", "another"],
+          "answer": 0,
+          "why": "독자 전체가 한정되어 있지 않으므로 남은 사람들이 특정되지 않습니다. 무관사 복수형 others 가 옳습니다."
+        },
+        {
+          "prompt": "This filter is clogged, so the technician installed {{blank}}.",
+          "options": ["another", "other", "the others"],
+          "answer": 0,
+          "why": "전체가 몇 개인지 한정하는 말이 없으므로 '또 하나'는 another 입니다. other 는 홀로 대명사로 쓰이지 못합니다."
+        }
+      ],
+      "winText": "회계장이 장부를 덮고 자리를 내어 줍니다. 전체를 세고, 남은 것을 세고, 정해졌는지 물었습니다 — 네 번의 셈이 전부 맞았으니 이 계산소에서 더 배울 것은 없습니다.",
+      "loseText": "회계장은 고개를 젓고 장부를 다시 폅니다. 틀린 셈의 공통점을 보십시오 — 전체가 몇인지 세지 않고 형태부터 골랐습니다. 남은 것을 먼저 세면 문은 열립니다."
+    },
+    {
+      "id": "b28",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "전체를 세고 남은 것을 셌을 때, 남은 것이 정해지면 ___ 를 쓰고 정해지지 않으면 ___ 를 씁니다."
+    },
+    {
+      "id": "b29",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "전체가 둘이면 one … the other 입니다. 남은 하나가 자동으로 특정되므로 정관사가 붙습니다.",
+        "셋 이상에서는 남은 것이 특정되지 않으면 another, 마지막 하나로 특정되면 the other, 남은 것이 여럿이면서 특정되면 the others 입니다.",
+        "전체가 한정되지 않은 '다른 것들'은 무관사 복수형 others 입니다. other 는 명사 앞에서만 쓰이고 홀로 대명사가 되지 못합니다.",
+        "another 는 an + other 이므로 관사·소유격을 앞에 붙이지 못하고 원칙적으로 단수명사와만 결합합니다. 다만 수량·기간이 한 덩어리로 묶이는 표현은 예외입니다(another two weeks / another ten dollars).",
+        "부정대명사가 주어이면 동사의 수를 그것이 가리키는 수에 맞춥니다. the other is, the others are 입니다."
+      ],
+      "keySentence": {
+        "en": "Of the three drafts, one was accepted, another was revised, and **the other** was discarded.",
+        "ko": "세 개의 초고 중 하나는 채택되었고, 다른 하나는 수정되었으며, 나머지 하나는 폐기되었습니다.",
+        "note": "전체가 셋으로 한정되어 있으므로 마지막 하나는 특정됩니다. 그래서 another 가 아니라 the other 입니다."
+      }
+    },
+    {
+      "id": "b30",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b05-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The survey used two methods: one relied on interviews, and {{blank}} depended on written questionnaires.",
+          "options": ["the other", "another", "the others"],
+          "answer": 0,
+          "translation": "그 조사는 두 가지 방법을 썼는데, 하나는 면담에 의존했고 다른 하나는 서면 설문에 의존했습니다.",
+          "explanation": "방법이 둘뿐이므로 남은 하나가 특정됩니다. another 는 남은 것이 특정되지 않을 때, the others 는 남은 것이 여럿일 때 쓰는 형태이므로 둘 다 이 자리에 올 수 없습니다.",
+          "trapTags": ["another-vs-the-other", "definite-remainder"]
+        },
+        {
+          "id": "b05-c4-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Some of the volunteers arrived before dawn, and [[u:the others]] joined the crew after lunch.",
+          "isCorrect": true,
+          "translation": "그 자원봉사자들 중 일부는 새벽 전에 도착했고, 나머지는 점심 이후에 작업조에 합류했습니다.",
+          "explanation": "the volunteers 로 전체가 한정되어 있으므로 일부를 뺀 나머지가 특정됩니다. 남은 사람이 여럿이므로 복수형 the others 가 옳습니다. 전체가 한정되지 않은 '다른 사람들'이었다면 무관사 others 를 썼을 것입니다.",
+          "trapTags": ["definite-remainder"]
+        },
+        {
+          "id": "b05-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The first site proved unsuitable, so the team spent {{blank}} month looking for a better location.",
+          "options": ["another", "the other", "other"],
+          "answer": 0,
+          "translation": "첫 번째 부지가 부적합한 것으로 드러나서 그 팀은 더 나은 장소를 찾는 데 한 달을 더 썼습니다.",
+          "explanation": "another 는 an + other 이므로 단수명사 month 와 결합해 '또 한 번의 한 달'을 나타냅니다. 후보 기간이 몇 개로 한정되어 있다는 정보가 없으므로 남은 것을 특정하는 the other 는 쓸 수 없고, other 는 단수 가산명사 앞에 홀로 오지 못합니다.",
+          "trapTags": ["another-singular-noun", "another-vs-the-other"]
+        }
+      ]
+    }
+  ]
+}

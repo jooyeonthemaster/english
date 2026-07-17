@@ -1,0 +1,704 @@
+{
+  "id": "b04-c1",
+  "unitId": "b04",
+  "order": 1,
+  "title": "조동사 + 동사원형",
+  "oneLiner": "can·will·must·should 뒤에는 반드시 동사원형이 옵니다.",
+  "gradeStamp": {
+    "introduced": "초4",
+    "judged": null,
+    "csatPoints": [],
+    "sourceRefs": [
+      "docs/study-os-spec.md §2.3 — b04 조동사(도입 초4~고1)",
+      "src/lib/grammar-drill/curriculum.ts — b04 frequencyNote",
+      "천일문 중등 GRAMMAR — 조동사 can·will·must·should 단원"
+    ]
+  },
+  "lenses": ["L2", "L4"],
+  "confusableWith": ["b04-c2", "b04-c3", "b03-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "A single tree in a city park can lower the temperature around it.",
+        "A single tree in a city park can lowers the temperature around it."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 글자 하나입니다. 이 레슨을 마치면 왜 조동사 뒤에서 -s 가 사라지는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "조동사",
+      "question": "그런데 조동사가 대체 무엇입니까?",
+      "plain": "조동사는 동사 앞에 서서 말하는 사람의 태도를 얹는 단어입니다. can(할 수 있다)·will(할 것이다)·must(해야 한다)·should(하는 것이 좋다)가 대표입니다.",
+      "analogy": "한국어는 '가다'에 '갈 수 있다·가야 한다'처럼 말끝을 바꿔 태도를 답니다. 영어는 동사를 그대로 두고 앞에 조동사 한 단어를 세워 같은 일을 합니다. 동사가 몸이라면 조동사는 그 위에 걸치는 태도라는 옷입니다.",
+      "whyItMatters": "조동사가 보이는 순간 그 뒤 동사의 형태는 원형 하나로 확정됩니다. 주어가 단수인지 세기 전에 밑줄 왼쪽에서 조동사부터 찾는 눈 — 그것이 이 유닛 전체와 병렬·도치 판단의 출발점입니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "조동사 4인방, 하나씩 정면으로",
+      "intro": "이 레슨의 주인공 네 단어를 한 항목씩 만납니다. 각 예문의 굵은 부분이 조동사와 그 뒤의 동사원형입니다.",
+      "entries": [
+        {
+          "head": "can — 할 수 있다(능력·가능)",
+          "body": "능력과 가능성을 얹습니다. 과거형은 could 입니다.",
+          "example": {
+            "en": "Some birds **can fly** thousands of kilometers without a rest.",
+            "ko": "어떤 새들은 쉬지 않고 수천 킬로미터를 날 수 있습니다.",
+            "note": "can 이 fly 에 '할 수 있다'는 태도를 얹고, fly 는 원형으로 남습니다."
+          }
+        },
+        {
+          "head": "will — 할 것이다(미래·의지)",
+          "body": "앞으로의 일과 말하는 사람의 의지를 얹습니다. 과거형은 would 입니다.",
+          "example": {
+            "en": "The city **will build** a new bridge across the river.",
+            "ko": "그 도시는 강을 가로지르는 새 다리를 지을 것입니다.",
+            "note": "will 이 미래를 얹으므로 build 에는 아무 어미도 붙지 않습니다."
+          }
+        },
+        {
+          "head": "must — 해야 한다(의무·강한 추측)",
+          "body": "피할 수 없는 의무를 얹습니다. must be 뒤에 명사·형용사가 오면 '~임에 틀림없다'는 강한 추측이 되기도 합니다.",
+          "example": {
+            "en": "Drivers **must stop** at a red light.",
+            "ko": "운전자는 빨간불에서 멈춰야 합니다.",
+            "note": "must 뒤의 stop 은 원형입니다."
+          }
+        },
+        {
+          "head": "should — 하는 것이 좋다(충고·당위)",
+          "body": "충고와 마땅함을 얹습니다. must 보다 강제력이 약한 권고입니다.",
+          "example": {
+            "en": "You **should check** the weather before a long hike.",
+            "ko": "긴 산행 전에는 날씨를 확인하는 것이 좋습니다.",
+            "note": "should 뒤의 check 도 원형입니다."
+          }
+        },
+        {
+          "head": "공통 성질 ① — 뒤에는 언제나 동사원형",
+          "body": "네 단어 모두 뒤에 동사원형만 데려옵니다. -s·-ed·-ing·to 는 전부 올 수 없습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "공통 성질 ② — 주어가 바뀌어도 형태 불변",
+          "body": "일반동사와 달리 3인칭 단수 주어 뒤에서도 -s 가 붙지 않습니다. 시제와 태도는 조동사가 전부 짊어집니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "조동사 한 장 정리",
+      "columns": ["조동사", "얹는 태도", "과거형"],
+      "rows": [
+        {
+          "cells": ["can", "능력·가능 — 할 수 있다", "could"],
+          "example": {
+            "en": "Some spiders **can survive** for months without food.",
+            "ko": "어떤 거미들은 먹이 없이 몇 달을 버틸 수 있습니다.",
+            "note": "can 뒤에 원형 survive 가 옵니다."
+          }
+        },
+        {
+          "cells": ["will", "미래·의지 — 할 것이다", "would"],
+          "example": {
+            "en": "The museum **will open** a new wing next spring.",
+            "ko": "그 박물관은 내년 봄에 새 전시관을 개관할 것입니다.",
+            "note": "will 뒤에 원형 open 이 옵니다."
+          }
+        },
+        {
+          "cells": ["may", "허가·약한 추측 — 해도 된다·일지 모른다", "might"]
+        },
+        {
+          "cells": ["must", "의무·강한 추측 — 해야 한다", "없음 — had to 로 대신합니다"]
+        },
+        {
+          "cells": ["should", "충고·당위 — 하는 것이 좋다", "없음 — 과거는 다음 레슨 「조동사 + have p.p.」에서 처음 다룹니다"]
+        }
+      ],
+      "takeaway": "태도는 다섯 줄이 전부 다르지만 문법은 한 줄입니다 — 어느 조동사든 뒤에는 동사원형이 옵니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "조동사 여덟 단어",
+      "why": "조동사는 밑줄 왼쪽을 훑을 때 즉시 알아봐야 하는 신호입니다. 목록이 입에 붙어 있지 않으면 will carries 같은 오류를 보고도 -s 를 의심조차 하지 못합니다. 구구단처럼 즉시 나와야 도구가 됩니다.",
+      "device": "캔·윌·메이·머스트·슈드 — 현재형 다섯을 먼저 세우고, 캔·윌·메이 뒤에만 과거형 꼬리 쿠드·우드·마이트를 답니다. \"다섯 대장, 꼬리 셋\"을 두 박자로 끊어 세 번 소리 내어 읽으십시오.",
+      "items": [
+        { "cue": "할 수 있다", "answer": "can — 과거형 could" },
+        { "cue": "할 것이다", "answer": "will — 과거형 would" },
+        { "cue": "해도 된다 · 일지 모른다", "answer": "may — 과거형 might" },
+        { "cue": "해야 한다", "answer": "must — 과거형 없음(had to 로 대신)" },
+        { "cue": "하는 것이 좋다", "answer": "should" },
+        { "cue": "조동사 뒤 동사의 형태", "answer": "언제나 동사원형" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "원형 관문",
+      "mission": "다음 중 조동사만 전부 고르십시오. 조동사가 아닌 침입자가 셋 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "can",
+        "will",
+        "have to",
+        "must",
+        "should",
+        "wants",
+        "may",
+        "might",
+        "to",
+        "could",
+        "would"
+      ],
+      "answers": [
+        "can",
+        "will",
+        "must",
+        "should",
+        "may",
+        "might",
+        "could",
+        "would"
+      ],
+      "passText": "여덟을 전부 가려냈습니다. have to 가 조동사 흉내를 내지만 주어에 따라 has to 로 변하는 순간 정체가 드러난다는 것까지 눈치챘다면, 이 유닛의 절반은 이미 끝났습니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 진짜 조동사는 주어가 바뀌어도 형태가 변하지 않고, to 없이 동사원형을 데려옵니다. 암기 카드의 \"다섯 대장, 꼬리 셋\"을 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "can·will·must·should 같은 조동사 뒤에는 언제나 동사원형이 옵니다.",
+      "examples": [
+        {
+          "en": "The museum **will open** a new wing next spring.",
+          "ko": "그 박물관은 내년 봄에 새 전시관을 개관할 것입니다.",
+          "note": "will 뒤에는 원형 open 이 옵니다. opens·opened·to open 은 모두 올 수 없습니다."
+        },
+        {
+          "en": "Students **should read** the instructions before the experiment.",
+          "ko": "학생들은 실험 전에 지시문을 읽어야 합니다.",
+          "note": "should 뒤에는 원형 read 가 옵니다. 조동사가 시제를 지고 있으므로 뒤 동사는 형태를 바꾸지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "조동사는 주어의 인칭·수에 따라 형태가 바뀌지 않고, 그 뒤의 동사원형에도 -s 를 붙이지 않습니다.",
+      "examples": [
+        {
+          "en": "The engineer **can explain** the design in three minutes.",
+          "ko": "그 기술자는 그 설계를 3분 만에 설명할 수 있습니다.",
+          "note": "주어가 3인칭 단수여도 can 은 cans 가 되지 않고, explain 도 explains 가 되지 않습니다."
+        },
+        {
+          "en": "A trained dog **can detect** small changes in a person's breathing.",
+          "ko": "훈련된 개는 사람의 호흡에서 일어나는 작은 변화를 감지할 수 있습니다.",
+          "note": "주어 A trained dog 은 3인칭 단수이지만, 시제를 지고 있는 것은 can 이므로 동사 자리(can·detect) 어디에도 -s 가 붙지 않습니다. changes 의 -s 는 명사 복수형이라 이 규칙과 무관합니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "조동사 사냥",
+      "instruction": "이 문장에서 조동사를 전부 찾아 탭하십시오. 동사 앞에 서서 태도를 얹는 단어가 조동사입니다.",
+      "hitLabel": "조동사",
+      "tokens": [
+        { "t": "Visitors", "hit": false },
+        { "t": "may", "hit": true },
+        { "t": "take", "hit": false },
+        { "t": "photos", "hit": false },
+        { "t": "in", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "lobby,", "hit": false },
+        { "t": "but", "hit": false },
+        { "t": "they", "hit": false },
+        { "t": "must", "hit": true },
+        { "t": "not", "hit": false },
+        { "t": "use", "hit": false },
+        { "t": "a", "hit": false },
+        { "t": "flash", "hit": false },
+        { "t": "inside", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "hall.", "hit": false }
+      ],
+      "ko": "방문객은 로비에서 사진을 찍어도 되지만, 전시장 안에서는 플래시를 사용해서는 안 됩니다.",
+      "explain": "may 와 must 가 조동사입니다. 그래서 뒤의 take 와 use 는 주어와 상관없이 원형입니다. not 은 조동사 뒤에 붙는 부정어일 뿐이고, but 은 두 절을 잇는 접속사이므로 조동사가 아닙니다."
+    },
+    {
+      "id": "b10",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "조동사가 들어간 문장의 해부",
+      "tokens": [
+        { "t": "The new policy", "role": "S" },
+        { "t": "on recycling", "role": "M" },
+        { "t": "can reduce", "role": "V" },
+        { "t": "household waste", "role": "O" },
+        { "t": "significantly", "role": "M" }
+      ],
+      "ko": "재활용에 관한 그 새 정책은 가정 폐기물을 상당히 줄일 수 있습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "on recycling 은 앞 명사를 꾸미는 전치사구이고, significantly 는 동사를 꾸미는 부사입니다. 둘 다 뼈대가 아니므로 묶어서 치웁니다."
+        },
+        {
+          "label": "② 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "남는 주어는 The new policy 이며 3인칭 단수입니다. 그러나 조동사는 주어의 수에 따라 형태가 변하지 않으므로 can 은 그대로입니다."
+        },
+        {
+          "label": "③ 동사구를 확인합니다",
+          "roles": ["V"],
+          "note": "동사구는 can reduce 입니다. 시제를 지고 있는 것은 조동사 can 이고, 그 뒤 reduce 는 원형입니다."
+        },
+        {
+          "label": "④ 동사구가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "reduce 는 목적어를 부르는 동사이고, household waste 가 그 목적어입니다."
+        }
+      ],
+      "conclusion": "조동사에는 -s 가 붙지 않고 그 뒤 동사도 원형이므로, 주어가 단수여도 이 문장에는 -s 가 나타날 자리가 없습니다."
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "조동사 뒤 동사 형태를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄이나 괄호의 왼쪽을 훑어 조동사(can·could·will·would·may·might·must·should)가 있는지 확인합니다.",
+          "applyNote": "must 가 보입니다. 따라서 그 뒤 동사의 형태는 조동사가 결정합니다."
+        },
+        {
+          "text": "조동사가 있으면 뒤의 동사는 원형입니다. -s·-ed·-ing·to 를 붙일 근거를 더 찾지 않습니다.",
+          "applyNote": "wear 는 원형입니다. 주어 Anyone 이 3인칭 단수라고 해서 wears 가 되지 않습니다."
+        },
+        {
+          "text": "동사구가 수동(be p.p.)·완료(have p.p.)·진행(be -ing)으로 이어지면, 원형이 되어야 하는 것은 그 덩어리의 첫 단어인 be·have 입니다.",
+          "applyNote": "만약 must be worn 이었다면 원형이 되는 것은 be 이고, worn 은 그대로 둡니다."
+        },
+        {
+          "text": "and·or 뒤에 동사가 또 나오면 그것이 같은 조동사에 걸리는지 확인합니다. 걸린다면 그 동사도 원형입니다.",
+          "applyNote": "follow 는 must 에 걸린 두 번째 동사이므로 원형입니다. follows 로 쓰면 must 에 걸리지 못하고 별개의 시제 동사가 됩니다."
+        }
+      ],
+      "example": {
+        "en": "Anyone who visits the site **must wear** a helmet and **follow** the guide's instructions.",
+        "ko": "그 현장을 방문하는 사람은 누구나 헬멧을 착용하고 안내인의 지시를 따라야 합니다.",
+        "note": "must 는 wear 와 follow 둘 다에 걸립니다. and 뒤의 두 번째 동사도 원형입니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Every student who joins the exchange program ( must submit / must submits ) a short essay by Friday.",
+      "steps": [
+        {
+          "title": "① 괄호 앞을 봅니다",
+          "body": "두 후보 모두 조동사 must 를 포함하고 있습니다. 따라서 판단은 must 뒤 동사의 형태 하나로 좁혀집니다."
+        },
+        {
+          "title": "② 핵 주어를 확인합니다",
+          "body": "핵 주어는 Every student 이고, who joins the exchange program 은 주어를 꾸미는 관계절입니다. joins 는 관계절의 동사이지 주절의 동사가 아닙니다."
+        },
+        {
+          "title": "③ 수일치의 함정을 걷어냅니다",
+          "body": "Every student 가 3인칭 단수이므로 -s 를 붙이고 싶어집니다. 그러나 주절에서 시제를 지고 있는 것은 조동사 must 이고, 조동사에는 -s 가 붙지 않습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "조동사 뒤는 동사원형이므로 must submit 이 옳습니다. must submits 는 성립하지 않습니다."
+        }
+      ],
+      "answer": "must submit",
+      "ko": "교환 프로그램에 참여하는 모든 학생은 금요일까지 짧은 에세이를 제출해야 합니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b04-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The library will {{blank}} at six on weekdays.",
+          "options": ["close", "closes"],
+          "answer": 0,
+          "translation": "그 도서관은 평일에 여섯 시에 문을 닫을 것입니다.",
+          "explanation": "조동사 will 뒤에는 동사원형이 옵니다. 주어 The library 가 3인칭 단수여도 closes 를 쓰지 않습니다.",
+          "trapTags": ["modal-plus-base", "third-person-s"]
+        },
+        {
+          "id": "b04-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "A well-designed survey can [[u:reveals]] patterns that interviews often miss.",
+          "isCorrect": false,
+          "correction": "reveal",
+          "translation": "잘 설계된 설문은 면담이 종종 놓치는 경향을 드러낼 수 있습니다.",
+          "explanation": "조동사 can 뒤에는 동사원형이 와야 하므로 reveals 를 reveal 로 고칩니다. 주어가 단수라는 사실은 조동사가 있는 한 동사 형태에 영향을 주지 않습니다.",
+          "trapTags": ["modal-plus-base", "third-person-s"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "부정문·의문문·수동태·완료형에서도 조동사 바로 뒤에 오는 것은 원형입니다. 수동·완료가 이어지면 원형이 되는 것은 be·have 입니다.",
+      "examples": [
+        {
+          "en": "The results **must not be** released before the official announcement.",
+          "ko": "그 결과는 공식 발표 전에 공개되어서는 안 됩니다.",
+          "note": "must not 뒤에 수동태가 이어지므로 원형이 되는 것은 be 입니다. is·being 은 올 수 없습니다."
+        },
+        {
+          "en": "**Should** the committee **postpone** the vote until next month?",
+          "ko": "위원회가 표결을 다음 달까지 미루어야 합니까?",
+          "note": "의문문에서 조동사가 주어 앞으로 나가도 뒤의 동사는 원형 postpone 입니다."
+        },
+        {
+          "en": "The road **will be** closed while the bridge is repaired.",
+          "ko": "그 다리가 수리되는 동안 그 도로는 폐쇄될 것입니다.",
+          "note": "will 뒤에는 be 가 원형으로 옵니다. 뒤 절 is repaired 에는 조동사가 없으므로, 수동의 be 가 시제를 지고 주어 the bridge 에 맞춰 is 가 됩니다. 조동사가 앞에 있는 will be closed 에서는 같은 be 가 원형으로 남습니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "조동사와 to 를 품은 대체 표현",
+      "columns": ["조동사 — 바로 뒤에 동사원형", "have to·ought to·be able to — to 를 품은 표현"],
+      "rows": [
+        {
+          "criterion": "대표 형태",
+          "a": "must finish / can finish / will finish",
+          "b": "have to finish / ought to finish / be able to finish"
+        },
+        {
+          "criterion": "주어가 3인칭 단수일 때",
+          "a": "형태가 변하지 않습니다 — He must finish.",
+          "b": "have to 는 has to 로, be able to 는 is able to 로 변하고, ought to 는 변하지 않습니다 — He has to finish. / He is able to finish. / He ought to finish. ought to 는 to 를 품지만 뒤에는 조동사처럼 동사원형이 오는 준조동사입니다."
+        },
+        {
+          "criterion": "두 개를 잇달아 쓸 때",
+          "a": "조동사 두 개를 연달아 쓸 수 없습니다 — will can (✕)",
+          "b": "will be able to / will have to 로 대신합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The team **must finish** the prototype before the exhibition.",
+          "ko": "그 팀은 전시회 전에 시제품을 완성해야 합니다.",
+          "note": "조동사 must 뒤에 동사원형 finish 가 왔습니다."
+        },
+        {
+          "en": "The team **will be able to finish** the prototype once the parts arrive.",
+          "ko": "부품이 도착하면 그 팀은 시제품을 완성할 수 있을 것입니다.",
+          "note": "조동사 will 뒤에는 원형 be 가 오고, be able to 가 can 의 역할을 대신합니다."
+        },
+        {
+          "en": "The team **will can finish** the prototype next week.",
+          "ko": "그 팀은 다음 주에 시제품을 완성할 수 있을 것입니다.",
+          "note": "조동사 will 과 can 을 연달아 쓸 수 없습니다. will be able to finish 로 고쳐야 합니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 동사구의 형태가 조동사 뒤에서 옳은지 분류하십시오.",
+      "buckets": [
+        { "id": "ok", "label": "형태가 옳습니다" },
+        { "id": "bad", "label": "형태가 틀렸습니다" }
+      ],
+      "chips": [
+        { "text": "must attend", "bucketId": "ok", "why": "조동사 must 뒤에 동사원형 attend 가 왔습니다." },
+        { "text": "may take", "bucketId": "ok", "why": "조동사 may 뒤에 동사원형 take 가 왔습니다." },
+        { "text": "should be repaired", "bucketId": "ok", "why": "수동태가 이어질 때는 be 가 원형으로 옵니다." },
+        { "text": "will discusses", "bucketId": "bad", "why": "조동사 will 뒤에 3인칭 단수 현재형은 올 수 없습니다. will discuss 가 되어야 합니다." },
+        { "text": "can to explain", "bucketId": "bad", "why": "조동사 뒤에는 to 가 붙지 않습니다. can explain 이 되어야 합니다." },
+        { "text": "might going", "bucketId": "bad", "why": "조동사 뒤에 -ing 형은 올 수 없습니다. might go 또는 might be going 이 되어야 합니다." }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 섞여 있습니다.",
+      "ko": "학생들은 한 번에 다섯 권의 책을 빌릴 수 있습니다.",
+      "answer": ["Students", "can", "borrow", "five books", "at a time"],
+      "tiles": ["Students", "can", "borrow", "five books", "at a time", "borrows", "to borrow"],
+      "explanation": "조동사 can 뒤에는 동사원형이 오므로 borrow 가 옳습니다. borrows 와 to borrow 는 조동사 뒤에 올 수 없습니다."
+    },
+    {
+      "id": "b18",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. 조동사의 성질과 그 뒤에 올 수 있는 형태가 기준입니다.",
+      "rounds": [
+        {
+          "words": ["can explain", "must attend", "may borrow", "will opens"],
+          "odd": 3,
+          "why": "will opens 만 조동사 뒤에 3인칭 단수 현재형이 온 오류입니다. 나머지 셋은 조동사 뒤에 동사원형이 온 옳은 형태입니다."
+        },
+        {
+          "words": ["should", "must", "might", "has to"],
+          "odd": 3,
+          "why": "has to 만 주어에 따라 형태가 변하는 표현입니다. 나머지 셋은 주어가 바뀌어도 형태가 변하지 않는 조동사입니다."
+        },
+        {
+          "words": ["will be closed", "must be stored", "can be seen", "should is repaired"],
+          "odd": 3,
+          "why": "should is repaired 만 조동사 뒤에 시제를 진 is 가 온 오류입니다. 수동태가 이어지면 원형 be 가 와야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "주어와 조동사 사이에 수식어가 길면 -s 를 붙이고 싶어집니다",
+      "body": "주어 뒤에 관계절이나 전치사구가 길게 붙으면, 그 안의 동사에 이끌려 조동사 뒤에도 -s 를 붙이는 오류가 나옵니다. 수식어를 괄호로 묶어 치우고, 동사구의 첫 단어가 조동사인지부터 확인해야 합니다.",
+      "example": {
+        "en": "The machine that sorts thousands of letters every night **must handles** the heaviest parcels as well.",
+        "ko": "매일 밤 수천 통의 편지를 분류하는 그 기계는 가장 무거운 소포도 처리해야 합니다.",
+        "note": "관계절 안의 sorts 에 이끌려 must 뒤에도 -s 를 붙인 오류입니다. must handle 이 되어야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "도치되면 조동사와 동사가 주어를 사이에 두고 떨어집니다",
+      "body": "Rarely·Never·Not until·Only + 부사구가 문두에 나오면 조동사가 주어 앞으로 이동합니다. 조동사와 동사가 멀어져 보이지만, 그 동사는 여전히 조동사에 걸린 원형입니다.",
+      "example": {
+        "en": "Only after months of training **can** a diver **descend** to that depth safely.",
+        "ko": "몇 달간의 훈련을 거친 뒤에야 잠수부는 그 깊이까지 안전하게 내려갈 수 있습니다.",
+        "note": "조동사 can 이 주어 a diver 앞으로 도치되었지만, descend 는 can 에 걸린 동사원형 그대로입니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b04-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Every visitor to the laboratory must {{blank}} a safety card at the front desk.",
+          "options": ["show", "shows"],
+          "answer": 0,
+          "translation": "실험실을 방문하는 모든 사람은 안내 데스크에서 안전 카드를 제시해야 합니다.",
+          "explanation": "핵 주어 Every visitor 는 3인칭 단수이지만, 시제를 지고 있는 것은 조동사 must 입니다. 조동사 뒤에는 동사원형 show 가 옵니다.",
+          "trapTags": ["modal-plus-base", "third-person-s"]
+        },
+        {
+          "id": "b04-c1-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Rarely can a single experiment [[u:proves]] a theory beyond doubt.",
+          "isCorrect": false,
+          "correction": "prove",
+          "translation": "단 한 번의 실험이 어떤 이론을 의심의 여지 없이 증명하는 일은 드뭅니다.",
+          "explanation": "Rarely 가 문두에 나와 조동사 can 이 주어 a single experiment 앞으로 도치되었습니다. 도치되어도 동사는 can 에 걸린 원형이므로 proves 를 prove 로 고칩니다.",
+          "trapTags": ["modal-plus-base", "inversion"]
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 prove 가 옳다고 판단한 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "Rarely 가 문두에 나와 조동사 can 이 주어 앞으로 도치된 것이므로, 주어 뒤의 동사는 여전히 can 에 걸린 동사원형입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 도치는 조동사의 자리만 바꿀 뿐, 조동사 뒤 동사원형 규칙은 그대로 남습니다."
+        },
+        {
+          "text": "주어 a single experiment 가 단수이므로 동사에 -s 를 붙이지 않습니다.",
+          "correct": false,
+          "feedback": "근거가 뒤집혀 있습니다. 조동사가 없다면 3인칭 단수 주어는 오히려 -s 를 요구합니다. 형태를 결정한 것은 앞에 나온 조동사 can 입니다."
+        },
+        {
+          "text": "Rarely 가 부정의 뜻을 가지므로 뒤의 동사를 원형으로 씁니다.",
+          "correct": false,
+          "feedback": "부정어의 의미가 동사 형태를 바꾸지는 않습니다. Rarely 는 도치를 일으킬 뿐이고, 원형을 요구하는 것은 조동사 can 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "City planners argue that a bus network [[1:can reduce]] congestion more cheaply than new roads, and that a single dedicated lane [[2:will carries]] as many people as three ordinary lanes, though the plan [[3:cannot succeed]] unless drivers [[4:are]] willing to change their habits.",
+      "answer": 2,
+      "correction": "will carry",
+      "rationales": [
+        "조동사 can 뒤에 동사원형 reduce 가 왔으므로 옳습니다.",
+        "조동사 will 뒤에는 동사원형이 와야 합니다. carries 는 3인칭 단수 현재형이므로 carry 로 고칩니다.",
+        "cannot 뒤에 동사원형 succeed 가 왔으므로 옳습니다. 부정형이어도 원형 규칙은 그대로 적용됩니다.",
+        "unless 가 이끄는 절의 본동사입니다. 이 절에는 조동사가 없으므로 주어 drivers 에 맞춘 are 가 옳습니다."
+      ],
+      "ko": "도시 계획가들은 버스 노선망이 새 도로보다 저렴하게 혼잡을 줄일 수 있고 전용 차선 하나가 일반 차선 세 개만큼의 인원을 실어 나를 것이라고 주장하지만, 운전자들이 습관을 바꿀 의향이 없다면 그 계획은 성공할 수 없습니다."
+    },
+    {
+      "id": "b24",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 조동사를 조건으로 지정하고 문장을 다시 쓰게 합니다. 조동사 뒤 동사를 원형으로 바꾸지 않으면 감점됩니다.",
+          "sample": {
+            "en": "The visitors keep their voices low inside the gallery.",
+            "ask": "조동사 must 를 사용하여 위 문장을 다시 쓰십시오.",
+            "answer": "The visitors must keep their voices low inside the gallery."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서 조동사 뒤 동사원형이 단독으로 밑줄되는 일은 드뭅니다. 대신 도치나 병렬로 조동사와 동사가 멀어진 문장에서, 밑줄 친 동사의 형태를 판정하는 근거로 쓰입니다.",
+          "sample": {
+            "en": "Not until the data are verified **can** the research team **announce** the result.",
+            "ask": "굵게 표시된 announce 가 어법상 옳습니까?",
+            "answer": "옳습니다 — 문두 부정어구 때문에 조동사 can 이 주어 앞으로 도치되었을 뿐, announce 는 can 에 걸린 동사원형입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "원형 관문의 수문장",
+      "intro": "나는 조동사 뒤에 원형이 아닌 것이 지나가려 하면 문을 닫는 수문장입니다. -s 하나, to 하나에도 문은 열리지 않습니다. 네 번의 판단으로 통과할 자격을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "Each participant must {{blank}} an ID card at the gate.",
+          "options": ["present", "presents"],
+          "answer": 0,
+          "why": "핵 주어 Each participant 는 단수이지만, 시제는 조동사 must 가 지고 있습니다. 조동사 뒤에는 동사원형 present 가 옵니다."
+        },
+        {
+          "prompt": "The bridge will {{blank}} for repairs next month.",
+          "options": ["be closed", "is closed", "being closed"],
+          "answer": 0,
+          "why": "조동사 will 뒤는 원형입니다. 수동태가 이어지면 원형이 되는 것은 be 이므로 will be closed 가 옳습니다."
+        },
+        {
+          "prompt": "Only in deep water can this fish {{blank}} its true color.",
+          "options": ["show", "shows", "showed"],
+          "answer": 0,
+          "why": "문두의 Only 부사구 때문에 조동사 can 이 주어 앞으로 도치되었습니다. 도치되어도 동사는 can 에 걸린 원형 show 입니다."
+        },
+        {
+          "prompt": "A guide must plan the route and {{blank}} the group's pace.",
+          "options": ["controls", "control", "to control"],
+          "answer": 1,
+          "why": "and 뒤의 동사도 같은 조동사 must 에 걸립니다. 병렬로 이어진 두 번째 동사 역시 원형 control 이어야 합니다."
+        }
+      ],
+      "winText": "수문장이 문을 엽니다. -s 의 유혹, 수동태의 be, 도치, 병렬 — 원형을 위협하는 네 개의 관문을 전부 통과했습니다. 이제 조동사가 보이면 눈이 먼저 원형을 찾을 것입니다.",
+      "loseText": "문은 아직 닫혀 있습니다. 오답의 공통점을 보십시오 — 전부 \"시제를 지는 것은 조동사\"라는 한 문장으로 풀립니다. 판단 절차 4단계를 다시 보고 오면 문은 열립니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "조동사 뒤에는 항상 ___ 이 오고, 주어가 3인칭 단수여도 ___ 를 붙이지 않습니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "can·will·must·should 등 조동사 뒤에는 언제나 동사원형이 옵니다.",
+        "조동사에는 -s 가 붙지 않고, 그 뒤 동사에도 -s·-ed·-ing·to 를 붙이지 않습니다.",
+        "수동·완료·진행이 이어지면 원형이 되는 것은 그 덩어리의 첫 단어인 be·have 입니다.",
+        "도치나 and 병렬로 조동사와 동사가 떨어져도, 그 동사는 여전히 조동사에 걸린 원형입니다.",
+        "조동사 두 개를 연달아 쓸 수 없으므로 will be able to·will have to 같은 표현으로 대신합니다."
+      ],
+      "keySentence": {
+        "en": "Anyone who visits the site **must wear** a helmet and **follow** the guide's instructions.",
+        "ko": "그 현장을 방문하는 사람은 누구나 헬멧을 착용하고 안내인의 지시를 따라야 합니다.",
+        "note": "must 뒤의 wear 도, and 로 이어진 follow 도 모두 동사원형입니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b04-c1-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Ancient sailors could {{blank}} their position from the stars.",
+          "options": ["estimate", "estimated"],
+          "answer": 0,
+          "translation": "고대의 항해자들은 별을 보고 자신의 위치를 추정할 수 있었습니다.",
+          "explanation": "could 는 조동사이므로 뒤에는 동사원형이 옵니다. 과거의 일이라도 시제는 could 가 이미 지고 있으므로 estimated 를 쓰지 않습니다.",
+          "trapTags": ["modal-plus-base", "past-form-after-modal"]
+        },
+        {
+          "id": "b04-c1-ls-006",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The council should [[u:consider]] the residents' complaints before it approves the plan.",
+          "isCorrect": true,
+          "translation": "위원회는 그 계획을 승인하기 전에 주민들의 민원을 검토해야 합니다.",
+          "explanation": "조동사 should 뒤에 동사원형 consider 가 왔으므로 옳습니다. 뒤 절의 approves 는 조동사가 없는 절의 본동사이므로 주어 it 에 맞추어 -s 가 붙습니다.",
+          "trapTags": ["modal-plus-base"]
+        },
+        {
+          "id": "b04-c1-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The samples must {{blank}} stored at a low temperature until the analysis begins.",
+          "options": ["be", "are", "being"],
+          "answer": 0,
+          "translation": "그 시료들은 분석이 시작될 때까지 낮은 온도에서 보관되어야 합니다.",
+          "explanation": "조동사 must 뒤는 동사원형입니다. 수동태 be stored 에서 원형이 되어야 하는 것은 be 이므로 are·being 은 올 수 없습니다.",
+          "trapTags": ["modal-plus-base", "passive-be"]
+        }
+      ]
+    }
+  ]
+}

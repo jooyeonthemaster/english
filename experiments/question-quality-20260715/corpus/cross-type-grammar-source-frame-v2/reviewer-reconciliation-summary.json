@@ -1,0 +1,362 @@
+{
+  "schemaVersion": "cross-type-grammar-v2-reconciliation-summary-v1",
+  "reviewDate": "2026-07-15",
+  "status": "DUAL_PASS_SUPPLY_SUFFICIENT_EXACT_SPLIT_FROZEN_NOT_AUTHORIZED",
+  "sealedInputVerification": {
+    "sourceFrameVerifier": "PASS",
+    "reviewerAVerifier": "PASS",
+    "reviewerBVerifier": "PASS",
+    "exactManifestBindingsStoredOnlyInPrivateArtifact": true,
+    "verifierRerunsCompletedBeforePrivateVerdictAccess": true
+  },
+  "reconciliationPolicy": {
+    "anyExcludeMeansExclude": true,
+    "otherwiseAnyDomainReviewMeansDomainReview": true,
+    "dualPassRequiresPassPass": true
+  },
+  "intersectionMatrix": {
+    "A_PASS__B_PASS": 137,
+    "A_PASS__B_EXCLUDE": 2,
+    "A_PASS__B_DOMAIN_REVIEW": 3,
+    "A_EXCLUDE__B_PASS": 11,
+    "A_EXCLUDE__B_EXCLUDE": 24,
+    "A_EXCLUDE__B_DOMAIN_REVIEW": 5,
+    "A_DOMAIN_REVIEW__B_PASS": 2,
+    "A_DOMAIN_REVIEW__B_EXCLUDE": 0,
+    "A_DOMAIN_REVIEW__B_DOMAIN_REVIEW": 2
+  },
+  "dispositions": {
+    "DUAL_PASS": 137,
+    "EXCLUDE": 42,
+    "DOMAIN_REVIEW": 7
+  },
+  "threshold": {
+    "requiredDualPassRows": 38,
+    "availableDualPassRows": 137,
+    "met": true,
+    "replacementOrTopUpUsed": false
+  },
+  "dualPassDistribution": {
+    "discourse": {
+      "argumentative": 35,
+      "expository": 63,
+      "narrative": 38,
+      "practical": 1
+    },
+    "topic": {
+      "art-culture": 9,
+      "humanities": 42,
+      "science": 33,
+      "social": 14,
+      "narrative-practical": 39
+    },
+    "wordBand": {
+      "120-169": 89,
+      "170-229": 43,
+      "230-360": 5
+    },
+    "topicByDiscourse": {
+      "art-culture": {
+        "argumentative": 0,
+        "expository": 9,
+        "narrative": 0,
+        "practical": 0
+      },
+      "humanities": {
+        "argumentative": 19,
+        "expository": 23,
+        "narrative": 0,
+        "practical": 0
+      },
+      "science": {
+        "argumentative": 10,
+        "expository": 23,
+        "narrative": 0,
+        "practical": 0
+      },
+      "social": {
+        "argumentative": 6,
+        "expository": 8,
+        "narrative": 0,
+        "practical": 0
+      },
+      "narrative-practical": {
+        "argumentative": 0,
+        "expository": 0,
+        "narrative": 38,
+        "practical": 1
+      }
+    }
+  },
+  "frozenSplit": {
+    "seed": "cross-type-grammar-v2-dual-pass-split-20260715-v1",
+    "selectedRows": 38,
+    "frozenTopicTargets": {
+      "development": {
+        "art-culture": 1,
+        "humanities": 1,
+        "science": 1,
+        "social": 1,
+        "narrative-practical": 2
+      },
+      "confirmatory": {
+        "art-culture": 2,
+        "humanities": 5,
+        "science": 5,
+        "social": 4,
+        "narrative-practical": 4
+      },
+      "reserve": {
+        "art-culture": 1,
+        "humanities": 3,
+        "science": 3,
+        "social": 2,
+        "narrative-practical": 3
+      }
+    },
+    "quotaFeasibility": "FEASIBLE_EXACT_NO_RELAXATION",
+    "availableDualPassByTopic": {
+      "art-culture": 9,
+      "humanities": 42,
+      "science": 33,
+      "social": 14,
+      "narrative-practical": 39
+    },
+    "availableDualPassByTopicAndDiscourse": {
+      "art-culture": {
+        "argumentative": 0,
+        "expository": 9,
+        "narrative": 0,
+        "practical": 0
+      },
+      "humanities": {
+        "argumentative": 19,
+        "expository": 23,
+        "narrative": 0,
+        "practical": 0
+      },
+      "science": {
+        "argumentative": 10,
+        "expository": 23,
+        "narrative": 0,
+        "practical": 0
+      },
+      "social": {
+        "argumentative": 6,
+        "expository": 8,
+        "narrative": 0,
+        "practical": 0
+      },
+      "narrative-practical": {
+        "argumentative": 0,
+        "expository": 0,
+        "narrative": 38,
+        "practical": 1
+      }
+    },
+    "selectionMethod": "Exact frozen topic quotas; deterministic discourse-diversity optimization; then seeded ordering of content digests within topic/discourse cells.",
+    "metadataFieldsUsed": [
+      "discourse",
+      "topic",
+      "wordBand"
+    ],
+    "passageTextUsed": false,
+    "reviewerOutcomeScoreUsed": false,
+    "noSingleDiscourseOverHalf": true,
+    "majorityAvoidanceFeasible": true,
+    "maximumRowsFromOneDiscourse": 15,
+    "splitSummary": {
+      "development": {
+        "rows": 6,
+        "discourse": {
+          "argumentative": 2,
+          "expository": 2,
+          "narrative": 1,
+          "practical": 1
+        },
+        "topic": {
+          "art-culture": 1,
+          "humanities": 1,
+          "science": 1,
+          "social": 1,
+          "narrative-practical": 2
+        },
+        "wordBand": {
+          "120-169": 4,
+          "170-229": 1,
+          "230-360": 1
+        },
+        "topicByDiscourse": {
+          "art-culture": {
+            "argumentative": 0,
+            "expository": 1,
+            "narrative": 0,
+            "practical": 0
+          },
+          "humanities": {
+            "argumentative": 0,
+            "expository": 1,
+            "narrative": 0,
+            "practical": 0
+          },
+          "science": {
+            "argumentative": 1,
+            "expository": 0,
+            "narrative": 0,
+            "practical": 0
+          },
+          "social": {
+            "argumentative": 1,
+            "expository": 0,
+            "narrative": 0,
+            "practical": 0
+          },
+          "narrative-practical": {
+            "argumentative": 0,
+            "expository": 0,
+            "narrative": 1,
+            "practical": 1
+          }
+        }
+      },
+      "confirmatory": {
+        "rows": 20,
+        "discourse": {
+          "argumentative": 8,
+          "expository": 8,
+          "narrative": 4,
+          "practical": 0
+        },
+        "topic": {
+          "art-culture": 2,
+          "humanities": 5,
+          "science": 5,
+          "social": 4,
+          "narrative-practical": 4
+        },
+        "wordBand": {
+          "120-169": 15,
+          "170-229": 4,
+          "230-360": 1
+        },
+        "topicByDiscourse": {
+          "art-culture": {
+            "argumentative": 0,
+            "expository": 2,
+            "narrative": 0,
+            "practical": 0
+          },
+          "humanities": {
+            "argumentative": 4,
+            "expository": 1,
+            "narrative": 0,
+            "practical": 0
+          },
+          "science": {
+            "argumentative": 3,
+            "expository": 2,
+            "narrative": 0,
+            "practical": 0
+          },
+          "social": {
+            "argumentative": 1,
+            "expository": 3,
+            "narrative": 0,
+            "practical": 0
+          },
+          "narrative-practical": {
+            "argumentative": 0,
+            "expository": 0,
+            "narrative": 4,
+            "practical": 0
+          }
+        }
+      },
+      "reserve": {
+        "rows": 12,
+        "discourse": {
+          "argumentative": 4,
+          "expository": 5,
+          "narrative": 3,
+          "practical": 0
+        },
+        "topic": {
+          "art-culture": 1,
+          "humanities": 3,
+          "science": 3,
+          "social": 2,
+          "narrative-practical": 3
+        },
+        "wordBand": {
+          "120-169": 7,
+          "170-229": 4,
+          "230-360": 1
+        },
+        "topicByDiscourse": {
+          "art-culture": {
+            "argumentative": 0,
+            "expository": 1,
+            "narrative": 0,
+            "practical": 0
+          },
+          "humanities": {
+            "argumentative": 2,
+            "expository": 1,
+            "narrative": 0,
+            "practical": 0
+          },
+          "science": {
+            "argumentative": 1,
+            "expository": 2,
+            "narrative": 0,
+            "practical": 0
+          },
+          "social": {
+            "argumentative": 1,
+            "expository": 1,
+            "narrative": 0,
+            "practical": 0
+          },
+          "narrative-practical": {
+            "argumentative": 0,
+            "expository": 0,
+            "narrative": 3,
+            "practical": 0
+          }
+        }
+      }
+    },
+    "replacementOrTopUpUsed": false
+  },
+  "remainingHolds": {
+    "historyRefresh": "PENDING",
+    "rightsReview": "PENDING",
+    "providerControls": "PENDING",
+    "operationalQueueSeal": "PENDING"
+  },
+  "authorization": {
+    "campaignEligibleRows": 0,
+    "generationAuthorized": false
+  },
+  "privacy": {
+    "containsRowIds": false,
+    "containsContentDigests": false,
+    "containsPassageText": false,
+    "containsSplitMembership": false,
+    "containsPrivateJudgments": false,
+    "containsPrivateArtifactHashes": false
+  },
+  "safety": {
+    "generatedQuestionsRead": 0,
+    "candidateSitesRead": 0,
+    "passageTextsReadByReconciler": 0,
+    "reviewerFreeTextNotesRead": 0,
+    "priorOutcomeScoresRead": 0,
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretAccesses": 0,
+    "fullQuestionCandidatesGenerated": 0,
+    "apiCandidateCount": 0
+  }
+}

@@ -1,0 +1,726 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reviewer-calibration-v4-production-bound-v4-events",
+  "title": "Reviewer calibration v4 production-bound v4 future evidence",
+  "description": "Schemas only; this design contains zero event instances.",
+  "oneOf": [
+    { "$ref": "#/$defs/principalIdentityBinding" },
+    { "$ref": "#/$defs/identityCustodianAttestation" },
+    { "$ref": "#/$defs/identityBindingDenial" },
+    { "$ref": "#/$defs/roleAssignment" },
+    { "$ref": "#/$defs/artifactAuthorshipRecord" },
+    { "$ref": "#/$defs/slotMaterialization" },
+    { "$ref": "#/$defs/fingerprintReservation" },
+    { "$ref": "#/$defs/fingerprintTombstone" },
+    { "$ref": "#/$defs/disjointnessProof" },
+    { "$ref": "#/$defs/passedCoverageEvent" },
+    { "$ref": "#/$defs/reviewerCertificate" },
+    { "$ref": "#/$defs/freshAdjudicatorBinding" },
+    { "$ref": "#/$defs/trustedGoldAuditReport" },
+    { "$ref": "#/$defs/authorization" },
+    { "$ref": "#/$defs/openEvent" },
+    { "$ref": "#/$defs/capabilityConsume" },
+    { "$ref": "#/$defs/closeEvent" },
+    { "$ref": "#/$defs/denial" },
+    { "$ref": "#/$defs/phaseTransition" },
+    { "$ref": "#/$defs/certificationEvidenceSeal" },
+    { "$ref": "#/$defs/activationCandidate" },
+    { "$ref": "#/$defs/activationCandidateAuditReport" },
+    { "$ref": "#/$defs/activationGrant" }
+  ],
+  "x-semanticConstraints": [
+    "ALL_ROLE_AUTHORSHIP_AND_AUDITOR_EXCLUSIONS_COMPARE_STABLE_PRINCIPAL_COMMITMENTS_NOT_PSEUDONYM_STRINGS",
+    "IDENTITY_BINDING_IS_ONE_SOURCE_TO_ONE_PRINCIPAL_TO_ONE_OR_MORE_CANONICAL_PSEUDONYMS_WITH_INDEPENDENT_CUSTODIAN_ATTESTATION",
+    "IDENTITY_CASE_UNICODE_CONFUSABLE_SOURCE_OR_PSEUDONYM_COLLISIONS_AND_SELF_ATTESTATION_ARE_DENIED_WITHOUT_REGISTRY_MUTATION",
+    "ROLE_ASSIGNMENT_MUST_SATISFY_ROLE_AND_ARTIFACT_AUTHORSHIP_INCOMPATIBILITY_GRAPH",
+    "ARTIFACT_CLASS_MUST_MAP_TO_ITS_EXACT_AUTHOR_ROLE",
+    "TRUSTED_GOLD_AUDITOR_CANNOT_BE_PACKET_ITEM_OR_GOLD_AUTHOR_OR_ANY_RATER_REVIEWER_ADJUDICATOR_CUSTODIAN_RESULT_VIEWER",
+    "ACTIVATION_AUDITOR_CANNOT_BE_ANY_AUTHOR_REVIEWER_GOLD_AUDITOR_ADJUDICATOR_CUSTODIAN_RESULT_VIEWER_OR_AUDIT_OWN_ARTIFACT",
+    "SLOT_TYPE_FAMILY_EPOCH_MUST_EQUAL_BINDING_V4_SELECTED_AT_FOR_PHASE_AND_EPOCH",
+    "ALL_60_FINGERPRINT_BUNDLES_MUST_BE_PAIRWISE_DISJOINT_AND_ABSENT_FROM_FAILED_REJECTED_PREVIOUSLY_ISSUED_TOMBSTONES",
+    "CONTACT_EVENT_IS_NEVER_A_PASSED_COVERAGE_EVENT",
+    "FOCUS_ONLY_REQUIRES_EXACT_TWO_TYPE_IDS_AND_TWO_PASSED_COVERAGE_EVENT_HASHES_FOR_BOTH_REVIEWERS",
+    "ALL_25_REQUIRES_EXACT_25_TYPE_IDS_AND_25_PASSED_COVERAGE_EVENT_HASHES_FOR_BOTH_REVIEWERS",
+    "EACH_COVERAGE_HASH_RESOLVES_TO_A_DISTINCT_PASSED_EVENT_WITH_CANONICAL_TYPE_EQUAL_TO_ITS_MAP_KEY",
+    "EVERY_PASSED_EVENT_DEREFERENCES_ONE_EXACT_ELIGIBLE_MATERIALIZATION_AND_MATCHES_SLOT_TYPE_FAMILY_PHASE_FINGERPRINT_AND_TERMINAL_DECISION",
+    "DISTINCT_COVERAGE_TYPES_REQUIRE_DISTINCT_MATERIALIZATION_EVENTS_AND_DISTINCT_SLOT_IDS",
+    "ACTIVATION_CANDIDATE_HAS_AUTHORITY_FALSE_AND_CONTAINS_NO_FUTURE_AUDIT_HASH",
+    "CANDIDATE_AUDIT_BINDS_EXACT_PREEXISTING_CANDIDATE_BYTES_AND_HAS_AUTHORITY_FALSE",
+    "CANDIDATE_AUDIT_REPORT_CONTAINS_NO_HASH_OF_ITS_OWN_FUTURE_PACKAGE_MANIFEST",
+    "CANDIDATE_AUDIT_AND_GRANT_PAYLOAD_DIGESTS_USE_EXACT_JCS_DOMAIN_VERSION_KIND_PROFILE_AND_LENGTH_FRAMING_WITH_SELF_DIGEST_FIELDS_EXCLUDED",
+    "ALL_SEVEN_FINGERPRINT_COMPONENTS_ARE_RECOMPUTED_FROM_ACTUAL_COMMITTED_INPUTS_UNDER_THE_EXACT_DERIVATION_VERSION",
+    "FINAL_GRANT_BINDS_PREEXISTING_PASS_AUDIT_REPORT_AND_MANIFEST_AND_CANNOT_EXCEED_CANDIDATE_OR_CERTIFICATE_SCOPE",
+    "AUTHORIZATION_AND_DENIAL_BIND_CURRENT_STATE_RESOURCE_CLASS_POLICY_ALLOWLIST_DENY_SET_AND_POLICY_PROOF",
+    "AUTHORIZATION_DEREFERENCES_ACTIVE_PRINCIPAL_ROLE_ASSIGNMENT_AND_EXACT_NONEMPTY_ALLOWED_AND_DENIED_ROLE_SETS",
+    "PHASE1_AUTHORIZATION_SCHEMA_CANNOT_ENCODE_ANSWER_REVEAL_OR_TRUSTED_GOLD_RESOURCE_CLASS",
+    "AUTHORIZATION_OPEN_CONSUME_CLOSE_ARE_FOUR_IMMEDIATELY_CONSECUTIVE_APPEND_ONLY_EVENTS",
+    "CAPABILITY_HASH_IS_UNIQUE_SINGLE_USE_AND_CONSUME_USE_ORDINAL_IS_ONE",
+    "AUTHORIZED_AT_LT_OPENED_AT_LTE_CONSUMED_AT_LTE_CLOSED_AT_AND_EACH_TIME_EQUALS_ITS_EVENT_OCCURRED_AT",
+    "NO_RESULT_ACCESS_BEFORE_FINAL_ACTIVATION_GRANT"
+    ,"FINAL_GRANT_BINDS_A_RECOMPUTED_SEALED_READY_NONEMPTY_POLICY_REGISTRY_AND_ALL_STATE_ROLE_RESOURCE_TRANSITION_AND_POST_SCOPE_ROOTS"
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "nullableSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+    "rfc3339": { "type": "string", "format": "date-time" },
+    "pseudonym": { "type": "string", "minLength": 16, "maxLength": 128, "pattern": "^[a-z0-9][a-z0-9._:-]{15,127}$" },
+    "principalCommitment": { "$ref": "#/$defs/sha256" },
+    "canonicalSourceIdCommitment": { "$ref": "#/$defs/sha256" },
+    "state": {
+      "type": "string",
+      "enum": [
+        "PRE_ACCESS_UNAUTHORIZED", "TAXONOMY_PILOT_12_ISSUED", "TAXONOMY_PILOT_12_PASSED_SEALED",
+        "MAIN_CERTIFICATION_24_ISSUED", "MAIN_CERTIFICATION_24_PASSED_SEALED",
+        "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED", "ACTIVATION_HOLDOUT_24_ISSUED",
+        "ACTIVATION_HOLDOUT_24_PASSED_SEALED", "CERTIFICATION_EVIDENCE_SEALED_AUTHORITY_FALSE",
+        "ACTIVATION_CANDIDATE_RECORDED_AUTHORITY_FALSE", "ACTIVATION_CANDIDATE_AUDIT_PASSED_AUTHORITY_FALSE",
+        "ACTIVATION_GRANTED"
+      ]
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "TAXONOMY_PILOT", "TAXONOMY_PILOT_PHASE1", "MAIN_CERTIFICATION", "MAIN_CERTIFICATION_PHASE1",
+        "MAIN_CERTIFICATION_PHASE2", "MAIN_CERTIFICATION_PHASE3", "INDEPENDENT_TRUSTED_GOLD_AUDIT",
+        "ACTIVATION_HOLDOUT", "ACTIVATION_HOLDOUT_PHASE1", "ACTIVATION_CANDIDATE_AUDIT",
+        "POST_ACTIVATION_RESULT", "SEPARATE_ACTIVATION"
+      ]
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "PACKET_AUTHOR", "ITEM_AUTHOR", "GOLD_AUTHOR", "IDENTITY_BINDING_CUSTODIAN", "TAXONOMY_PILOT_RATER", "MAIN_CERTIFICATION_RATER",
+        "ACTIVATION_HOLDOUT_RATER", "CERTIFICATION_REVIEWER", "TRUSTED_GOLD_AUDITOR", "CALIBRATION_ADJUDICATOR",
+        "S1_REVIEWER", "S1_ADJUDICATOR", "S1_RESULT_CUSTODIAN", "S1_RESULT_VIEWER",
+        "ACTIVATION_CANDIDATE_AUTHOR", "INDEPENDENT_ACTIVATION_AUDITOR", "ACTIVATION_GRANT_AUTHOR"
+      ]
+    },
+    "typeId": {
+      "type": "string",
+      "enum": [
+        "BLANK_INFERENCE", "GRAMMAR_ERROR", "GRAMMAR_CHOICE_COMBO", "VOCAB_CHOICE", "SENTENCE_ORDER",
+        "SENTENCE_INSERT", "TOPIC", "MAIN_IDEA", "TITLE", "IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH",
+        "SUMMARY_COMPLETE_MC", "IRRELEVANT", "CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "FILL_BLANK_KEY",
+        "SUMMARY_COMPLETE", "SUMMARY_WRITING", "WORD_ORDER", "TOPIC_SENTENCE_WRITING", "GRAMMAR_CORRECTION",
+        "CONTEXT_MEANING", "SYNONYM", "ANTONYM"
+      ]
+    },
+    "familyId": {
+      "type": "string",
+      "enum": [
+        "NF-F1-GLOBAL_MEANING_SELECTION", "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "NF-F3-DISCOURSE_STRUCTURE",
+        "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "NF-F5-LEXICAL_SEMANTICS", "NF-F6-SUMMARY_AND_COMPRESSION",
+        "NF-F7-CONTROLLED_REWRITE_AND_ORDER", "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION"
+      ]
+    },
+    "resourceClass": {
+      "type": "string",
+      "enum": [
+        "BLIND_STUDENT_VISIBLE_SURFACE", "FROZEN_PUBLIC_CODEBOOK", "OWN_PHASE1_RESPONSE",
+        "BOUND_ANSWER_EXPLANATION_REVEAL", "TRUSTED_GOLD_AUDIT_BUNDLE", "ADJUDICATION_BUNDLE",
+        "ACTIVATION_CANDIDATE_BYTES", "ACTIVATION_AUDIT_REPORT_BYTES", "S1_RESULT_SCOPE_BOUND",
+        "OUT_OF_SCOPE_S1_RESULT", "OTHER_RATER_IDENTITY", "RAW_HIDDEN_COMMITMENT", "REJECTION_SURPLUS_HISTORY",
+        "RAW_PRIVATE_TRUSTED_GOLD"
+      ]
+    },
+    "baseEvent": {
+      "type": "object",
+      "required": ["schemaVersion", "eventKind", "eventId", "eventOrdinal", "priorEventSha256", "occurredAtRfc3339", "artifactId", "eventSha256"],
+      "properties": {
+        "schemaVersion": { "const": "reviewer-calibration-v4-production-bound-event-4" },
+        "eventKind": { "type": "string" },
+        "eventId": { "type": "string", "minLength": 12, "maxLength": 128 },
+        "eventOrdinal": { "type": "integer", "minimum": 1 },
+        "priorEventSha256": { "$ref": "#/$defs/sha256" },
+        "occurredAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+        "artifactId": { "type": "string", "minLength": 8 },
+        "eventSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "principalIdentityBinding": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        { "type": "object", "required": ["identityBindingVersion", "authorityNamespace", "canonicalSourceIdCommitmentSha256", "principalCommitmentSha256", "canonicalPseudonyms", "identityCustodianAttestationSha256", "identityRegistryBeforeSha256", "identityRegistryAfterSha256", "mappingCardinalityProofSha256", "decision"], "properties": {
+          "eventKind": { "const": "PRINCIPAL_IDENTITY_BINDING" },
+          "identityBindingVersion": { "const": "NARA_QCAL_V4_STABLE_PRINCIPAL_HMAC_SHA256_1" },
+          "authorityNamespace": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$" },
+          "canonicalSourceIdCommitmentSha256": { "$ref": "#/$defs/canonicalSourceIdCommitment" },
+          "principalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+          "canonicalPseudonyms": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/pseudonym" } },
+          "identityCustodianAttestationSha256": { "$ref": "#/$defs/sha256" },
+          "identityRegistryBeforeSha256": { "$ref": "#/$defs/sha256" },
+          "identityRegistryAfterSha256": { "$ref": "#/$defs/sha256" },
+          "mappingCardinalityProofSha256": { "$ref": "#/$defs/sha256" },
+          "decision": { "const": "REGISTER_ONE_PRINCIPAL_BINDING" }
+        } }
+      ],
+      "unevaluatedProperties": false
+    },
+    "identityCustodianAttestation": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        { "type": "object", "required": ["identityBindingVersion", "authorityNamespace", "custodianPrincipalCommitmentSha256", "custodianPublicKeySha256", "custodianRole", "subjectPrincipalCommitmentSha256", "canonicalSourceIdCommitmentSha256", "canonicalPseudonyms", "custodianSubjectDistinctProofSha256", "signatureAlgorithm", "signatureBase64", "attestationSha256", "verdict"], "properties": {
+          "eventKind": { "const": "IDENTITY_CUSTODIAN_ATTESTATION" },
+          "identityBindingVersion": { "const": "NARA_QCAL_V4_STABLE_PRINCIPAL_HMAC_SHA256_1" },
+          "authorityNamespace": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._:-]{2,127}$" },
+          "custodianPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+          "custodianPublicKeySha256": { "$ref": "#/$defs/sha256" },
+          "custodianRole": { "const": "IDENTITY_BINDING_CUSTODIAN" },
+          "subjectPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+          "canonicalSourceIdCommitmentSha256": { "$ref": "#/$defs/canonicalSourceIdCommitment" },
+          "canonicalPseudonyms": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/pseudonym" } },
+          "custodianSubjectDistinctProofSha256": { "$ref": "#/$defs/sha256" },
+          "signatureAlgorithm": { "const": "Ed25519" },
+          "signatureBase64": { "type": "string", "pattern": "^[A-Za-z0-9+/]{86}==$" },
+          "attestationSha256": { "$ref": "#/$defs/sha256" },
+          "verdict": { "const": "ATTEST_ONE_PRINCIPAL_BINDING" }
+        } }
+      ],
+      "unevaluatedProperties": false
+    },
+    "identityBindingDenial": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        { "type": "object", "required": ["attemptedCanonicalSourceIdCommitmentSha256", "attemptedPrincipalCommitmentSha256", "attemptedCanonicalPseudonym", "identityRegistryBeforeSha256", "identityRegistryAfterSha256", "registryMutated", "reasonCode", "collisionOrFraudEvidenceSha256", "decision"], "properties": {
+          "eventKind": { "const": "IDENTITY_BINDING_DENIAL" },
+          "attemptedCanonicalSourceIdCommitmentSha256": { "$ref": "#/$defs/canonicalSourceIdCommitment" },
+          "attemptedPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+          "attemptedCanonicalPseudonym": { "$ref": "#/$defs/pseudonym" },
+          "identityRegistryBeforeSha256": { "$ref": "#/$defs/sha256" },
+          "identityRegistryAfterSha256": { "$ref": "#/$defs/sha256" },
+          "registryMutated": { "const": false },
+          "reasonCode": { "enum": ["SOURCE_TO_MULTIPLE_PRINCIPALS", "PRINCIPAL_TO_MULTIPLE_SOURCES", "PSEUDONYM_TO_MULTIPLE_PRINCIPALS", "NONCANONICAL_PSEUDONYM", "UNICODE_CONFUSABLE", "SELF_ATTESTATION", "ATTESTATION_DIGEST_MISMATCH", "UNTRUSTED_CUSTODIAN", "CUSTODIAN_KEY_FINGERPRINT_MISMATCH", "CUSTODIAN_SIGNATURE_INVALID"] },
+          "collisionOrFraudEvidenceSha256": { "$ref": "#/$defs/sha256" },
+          "decision": { "const": "DENY" }
+        } }
+      ],
+      "unevaluatedProperties": false
+    },
+    "roleAssignment": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        { "type": "object", "required": ["roleSlotId", "actorPseudonym", "canonicalPseudonym", "principalCommitmentSha256", "role", "identityBindingEventSha256", "identityCustodianAttestationSha256", "identityRegistryRootSha256", "roleRegistryBeforeSha256", "roleRegistryAfterSha256", "principalRoleExclusionProofSha256", "principalArtifactAuthorshipExclusionProofSha256", "decision"], "properties": {
+          "eventKind": { "const": "ROLE_ASSIGNMENT" },
+          "roleSlotId": { "type": "string", "minLength": 4 },
+          "actorPseudonym": { "$ref": "#/$defs/pseudonym" },
+          "canonicalPseudonym": { "$ref": "#/$defs/pseudonym" },
+          "principalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+          "role": { "$ref": "#/$defs/role" },
+          "identityBindingEventSha256": { "$ref": "#/$defs/sha256" },
+          "identityCustodianAttestationSha256": { "$ref": "#/$defs/sha256" },
+          "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+          "roleRegistryBeforeSha256": { "$ref": "#/$defs/sha256" },
+          "roleRegistryAfterSha256": { "$ref": "#/$defs/sha256" },
+          "principalRoleExclusionProofSha256": { "$ref": "#/$defs/sha256" },
+          "principalArtifactAuthorshipExclusionProofSha256": { "$ref": "#/$defs/sha256" },
+          "decision": { "enum": ["ASSIGN", "DENY"] }
+        } }
+      ],
+      "unevaluatedProperties": false
+    },
+    "artifactAuthorshipRecord": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        { "if": { "properties": { "artifactClass": { "const": "PACKET" } }, "required": ["artifactClass"] }, "then": { "properties": { "authorRole": { "const": "PACKET_AUTHOR" } } } },
+        { "if": { "properties": { "artifactClass": { "const": "ITEM" } }, "required": ["artifactClass"] }, "then": { "properties": { "authorRole": { "const": "ITEM_AUTHOR" } } } },
+        { "if": { "properties": { "artifactClass": { "const": "GOLD" } }, "required": ["artifactClass"] }, "then": { "properties": { "authorRole": { "const": "GOLD_AUTHOR" } } } },
+        { "if": { "properties": { "artifactClass": { "const": "REVIEWER_CERTIFICATE" } }, "required": ["artifactClass"] }, "then": { "properties": { "authorRole": { "const": "CERTIFICATION_REVIEWER" } } } },
+        { "if": { "properties": { "artifactClass": { "const": "TRUSTED_GOLD_AUDIT" } }, "required": ["artifactClass"] }, "then": { "properties": { "authorRole": { "const": "TRUSTED_GOLD_AUDITOR" } } } },
+        { "if": { "properties": { "artifactClass": { "const": "ACTIVATION_CANDIDATE" } }, "required": ["artifactClass"] }, "then": { "properties": { "authorRole": { "const": "ACTIVATION_CANDIDATE_AUTHOR" } } } },
+        { "if": { "properties": { "artifactClass": { "const": "ACTIVATION_AUDIT_REPORT" } }, "required": ["artifactClass"] }, "then": { "properties": { "authorRole": { "const": "INDEPENDENT_ACTIVATION_AUDITOR" } } } },
+        { "if": { "properties": { "artifactClass": { "const": "ACTIVATION_GRANT" } }, "required": ["artifactClass"] }, "then": { "properties": { "authorRole": { "const": "ACTIVATION_GRANT_AUTHOR" } } } },
+        { "type": "object", "required": ["artifactSha256", "artifactClass", "authorPseudonym", "authorCanonicalPseudonym", "authorPrincipalCommitmentSha256", "authorRole", "identityRegistryRootSha256", "authorshipRegistryBeforeSha256", "authorshipRegistryAfterSha256"], "properties": {
+          "eventKind": { "const": "ARTIFACT_AUTHORSHIP_RECORD" },
+          "artifactSha256": { "$ref": "#/$defs/sha256" },
+          "artifactClass": { "enum": ["PACKET", "ITEM", "GOLD", "REVIEWER_CERTIFICATE", "TRUSTED_GOLD_AUDIT", "ACTIVATION_CANDIDATE", "ACTIVATION_AUDIT_REPORT", "ACTIVATION_GRANT"] },
+          "authorPseudonym": { "$ref": "#/$defs/pseudonym" },
+          "authorCanonicalPseudonym": { "$ref": "#/$defs/pseudonym" },
+          "authorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+          "authorRole": { "$ref": "#/$defs/role" },
+          "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+          "authorshipRegistryBeforeSha256": { "$ref": "#/$defs/sha256" },
+          "authorshipRegistryAfterSha256": { "$ref": "#/$defs/sha256" }
+        } }
+      ],
+      "unevaluatedProperties": false
+    },
+    "fingerprintInputCommitments": {
+      "type": "object",
+      "required": ["fullTextUtf8Sha256", "visibleSurfaceUtf8Sha256", "surfaceTemplateUtf8Sha256", "topicTagsInputSha256", "scenarioEntitiesInputSha256", "authorPrincipalCommitmentSha256", "canonicalTypeId", "canonicalFamilyId", "rotationEpoch"],
+      "properties": {
+        "fullTextUtf8Sha256": { "$ref": "#/$defs/sha256" },
+        "visibleSurfaceUtf8Sha256": { "$ref": "#/$defs/sha256" },
+        "surfaceTemplateUtf8Sha256": { "$ref": "#/$defs/sha256" },
+        "topicTagsInputSha256": { "$ref": "#/$defs/sha256" },
+        "scenarioEntitiesInputSha256": { "$ref": "#/$defs/sha256" },
+        "authorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "canonicalTypeId": { "$ref": "#/$defs/typeId" },
+        "canonicalFamilyId": { "oneOf": [{ "$ref": "#/$defs/familyId" }, { "type": "null" }] },
+        "rotationEpoch": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "fingerprintComponents": {
+      "type": "object",
+      "required": ["normalizedFullTextSha256", "hashedEightWordWindowSetSha256", "topicTagSetSha256", "scenarioEntityTupleSha256", "itemAuthorPrincipalSha256", "surfaceTemplateFingerprintSha256", "compositeFingerprintSha256"],
+      "properties": {
+        "normalizedFullTextSha256": { "$ref": "#/$defs/sha256" },
+        "hashedEightWordWindowSetSha256": { "$ref": "#/$defs/sha256" },
+        "topicTagSetSha256": { "$ref": "#/$defs/sha256" },
+        "scenarioEntityTupleSha256": { "$ref": "#/$defs/sha256" },
+        "itemAuthorPrincipalSha256": { "$ref": "#/$defs/sha256" },
+        "surfaceTemplateFingerprintSha256": { "$ref": "#/$defs/sha256" },
+        "compositeFingerprintSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "fingerprintBundle": {
+      "type": "object",
+      "required": ["derivationVersion", "inputCommitments", "inputCommitmentRootSha256", "components"],
+      "properties": {
+        "derivationVersion": { "const": "NARA_QCAL_V4_FINGERPRINT_NFKC_WS_ASCII_FOLD_8TOKEN_1" },
+        "inputCommitments": { "$ref": "#/$defs/fingerprintInputCommitments" },
+        "inputCommitmentRootSha256": { "$ref": "#/$defs/sha256" },
+        "components": { "$ref": "#/$defs/fingerprintComponents" }
+      },
+      "additionalProperties": false
+    },
+    "slotMaterialization": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        { "if": { "properties": { "block": { "const": "GRAMMAR" } }, "required": ["block"] }, "then": { "properties": { "canonicalTypeId": { "const": "GRAMMAR_ERROR" }, "canonicalFamilyId": { "type": "null" } } } },
+        { "if": { "properties": { "block": { "const": "BLANK" } }, "required": ["block"] }, "then": { "properties": { "canonicalTypeId": { "const": "BLANK_INFERENCE" }, "canonicalFamilyId": { "type": "null" } } } },
+        { "if": { "properties": { "block": { "const": "NONFOCUS" } }, "required": ["block"] }, "then": { "properties": { "canonicalFamilyId": { "$ref": "#/$defs/familyId" } } } },
+        { "if": { "properties": { "phase": { "const": "TAXONOMY_PILOT" } }, "required": ["phase"] }, "then": { "properties": { "eligibleForCoverage": { "const": false } } }, "else": { "properties": { "eligibleForCoverage": { "const": true } } } },
+        { "type": "object", "required": [
+          "slotId", "phase", "block", "slotOrdinal", "canonicalTypeId", "canonicalFamilyId", "rotationEpoch", "eligibleForCoverage",
+          "itemAuthorPrincipalCommitmentSha256", "identityRegistryRootSha256",
+          "itemIdentityAndSourceSha256", "visibleSurfaceSha256", "answerKeySha256", "trustedGoldSha256",
+          "explanationFatalCraftEvidenceSha256", "authorHypothesisTargetSha256", "rejectionHistoryRootSha256",
+          "surplusHistoryRootSha256", "packetOrderRelabelSha256", "rightsPiiEvidenceSha256", "fingerprintBundle",
+          "fingerprintInputCommitmentRootSha256", "fingerprintDerivationProofSha256", "fingerprintPrivateInputAccessReceiptSha256",
+          "fingerprintReservationEventSha256", "typeFamilyRotationProofSha256", "bindingV4ManifestSha256", "decision"
+        ], "properties": {
+          "eventKind": { "const": "SLOT_MATERIALIZATION" },
+          "slotId": { "type": "string", "pattern": "^(TP|MC|AH)-(G|B|N)-[0-9]{2}$" },
+          "phase": { "enum": ["TAXONOMY_PILOT", "MAIN_CERTIFICATION", "ACTIVATION_HOLDOUT"] },
+          "block": { "enum": ["GRAMMAR", "BLANK", "NONFOCUS"] },
+          "slotOrdinal": { "type": "integer", "minimum": 1, "maximum": 8 },
+          "canonicalTypeId": { "$ref": "#/$defs/typeId" },
+          "canonicalFamilyId": { "oneOf": [{ "$ref": "#/$defs/familyId" }, { "type": "null" }] },
+          "rotationEpoch": { "type": "integer", "minimum": 1 },
+          "eligibleForCoverage": { "type": "boolean" },
+          "itemAuthorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+          "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+          "itemIdentityAndSourceSha256": { "$ref": "#/$defs/sha256" }, "visibleSurfaceSha256": { "$ref": "#/$defs/sha256" },
+          "answerKeySha256": { "$ref": "#/$defs/sha256" }, "trustedGoldSha256": { "$ref": "#/$defs/sha256" },
+          "explanationFatalCraftEvidenceSha256": { "$ref": "#/$defs/sha256" }, "authorHypothesisTargetSha256": { "$ref": "#/$defs/sha256" },
+          "rejectionHistoryRootSha256": { "$ref": "#/$defs/sha256" }, "surplusHistoryRootSha256": { "$ref": "#/$defs/sha256" },
+          "packetOrderRelabelSha256": { "$ref": "#/$defs/sha256" }, "rightsPiiEvidenceSha256": { "$ref": "#/$defs/sha256" },
+          "fingerprintBundle": { "$ref": "#/$defs/fingerprintBundle" },
+          "fingerprintInputCommitmentRootSha256": { "$ref": "#/$defs/sha256" },
+          "fingerprintDerivationProofSha256": { "$ref": "#/$defs/sha256" },
+          "fingerprintPrivateInputAccessReceiptSha256": { "$ref": "#/$defs/sha256" },
+          "fingerprintReservationEventSha256": { "$ref": "#/$defs/sha256" },
+          "typeFamilyRotationProofSha256": { "$ref": "#/$defs/sha256" },
+          "bindingV4ManifestSha256": { "const": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04" },
+          "decision": { "const": "MATERIALIZE" }
+        } }
+      ],
+      "unevaluatedProperties": false
+    },
+    "fingerprintReservation": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["slotId", "phase", "fingerprintBundle", "fingerprintInputCommitmentRootSha256", "fingerprintDerivationProofSha256", "fingerprintPrivateInputAccessReceiptSha256", "registryBeforeSha256", "failedRejectedPriorIssuedTombstoneRootSha256", "collisionCheckProofSha256", "registryAfterSha256", "decision"], "properties": {
+        "eventKind": { "const": "FINGERPRINT_RESERVATION" }, "slotId": { "type": "string" }, "phase": { "$ref": "#/$defs/phase" },
+        "fingerprintBundle": { "$ref": "#/$defs/fingerprintBundle" },
+        "fingerprintInputCommitmentRootSha256": { "$ref": "#/$defs/sha256" },
+        "fingerprintDerivationProofSha256": { "$ref": "#/$defs/sha256" },
+        "fingerprintPrivateInputAccessReceiptSha256": { "$ref": "#/$defs/sha256" },
+        "registryBeforeSha256": { "$ref": "#/$defs/sha256" },
+        "failedRejectedPriorIssuedTombstoneRootSha256": { "$ref": "#/$defs/sha256" }, "collisionCheckProofSha256": { "$ref": "#/$defs/sha256" },
+        "registryAfterSha256": { "$ref": "#/$defs/sha256" }, "decision": { "enum": ["RESERVE", "DENY_COLLISION"] }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "fingerprintTombstone": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["slotId", "fingerprintBundle", "terminalDisposition", "registryBeforeSha256", "registryAfterSha256", "neverReissue"], "properties": {
+        "eventKind": { "const": "FINGERPRINT_TOMBSTONE" }, "slotId": { "type": "string" }, "fingerprintBundle": { "$ref": "#/$defs/fingerprintBundle" },
+        "terminalDisposition": { "enum": ["FAILED", "REJECTED", "PREVIOUSLY_ISSUED"] }, "registryBeforeSha256": { "$ref": "#/$defs/sha256" },
+        "registryAfterSha256": { "$ref": "#/$defs/sha256" }, "neverReissue": { "const": true }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "disjointnessProof": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["pilotCount", "mainCount", "holdoutCount", "all60CompositeFingerprintRootSha256", "componentRootsByPhaseSha256", "pairwiseComparisonCount", "allPairwiseComparisonsRootSha256", "failedRejectedTombstoneRootSha256", "priorIssuedFingerprintRootSha256", "noCollisionVerdict", "proofSha256"], "properties": {
+        "eventKind": { "const": "DISJOINTNESS_PROOF" }, "pilotCount": { "const": 12 }, "mainCount": { "const": 24 }, "holdoutCount": { "const": 24 },
+        "all60CompositeFingerprintRootSha256": { "$ref": "#/$defs/sha256" }, "componentRootsByPhaseSha256": { "$ref": "#/$defs/sha256" },
+        "pairwiseComparisonCount": { "const": 1770 }, "allPairwiseComparisonsRootSha256": { "$ref": "#/$defs/sha256" },
+        "failedRejectedTombstoneRootSha256": { "$ref": "#/$defs/sha256" }, "priorIssuedFingerprintRootSha256": { "$ref": "#/$defs/sha256" },
+        "noCollisionVerdict": { "const": true }, "proofSha256": { "$ref": "#/$defs/sha256" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "passedCoverageEvent": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["materializationEventSha256", "materializationRecordRootSha256", "materializationEligible", "canonicalTypeId", "canonicalFamilyId", "phase", "slotId", "fingerprintCompositeSha256", "fingerprintDerivationProofSha256", "terminalDecisionEventSha256", "terminalDecisionSha256", "decisionSealSha256", "uniqueAnswerCheckPassed", "fatalChecksPassed", "coverageVerdict"], "properties": {
+        "eventKind": { "const": "PASSED_COVERAGE_EVENT" },
+        "materializationEventSha256": { "$ref": "#/$defs/sha256" },
+        "materializationRecordRootSha256": { "$ref": "#/$defs/sha256" },
+        "materializationEligible": { "const": true },
+        "canonicalTypeId": { "$ref": "#/$defs/typeId" },
+        "canonicalFamilyId": { "oneOf": [{ "$ref": "#/$defs/familyId" }, { "type": "null" }] },
+        "phase": { "enum": ["MAIN_CERTIFICATION", "ACTIVATION_HOLDOUT"] }, "slotId": { "type": "string", "pattern": "^(MC|AH)-(G|B|N)-[0-9]{2}$" },
+        "fingerprintCompositeSha256": { "$ref": "#/$defs/sha256" },
+        "fingerprintDerivationProofSha256": { "$ref": "#/$defs/sha256" },
+        "terminalDecisionEventSha256": { "$ref": "#/$defs/sha256" },
+        "terminalDecisionSha256": { "$ref": "#/$defs/sha256" },
+        "decisionSealSha256": { "$ref": "#/$defs/sha256" }, "uniqueAnswerCheckPassed": { "const": true },
+        "fatalChecksPassed": { "const": true }, "coverageVerdict": { "const": "PASS" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "focusCoverageEvidence": {
+      "type": "object",
+      "required": ["scopeEnum", "canonicalTypeIds", "coverageCount", "passedCoverageEventSha256ByCanonicalType", "materializationEventSha256ByCanonicalType", "coverageMapRootSha256", "coverageRecomputationRootSha256"],
+      "properties": {
+        "scopeEnum": { "const": "FOCUS_ONLY" },
+        "canonicalTypeIds": { "type": "array", "prefixItems": [{ "const": "GRAMMAR_ERROR" }, { "const": "BLANK_INFERENCE" }], "minItems": 2, "maxItems": 2 },
+        "coverageCount": { "const": 2 },
+        "passedCoverageEventSha256ByCanonicalType": {
+          "type": "object", "required": ["GRAMMAR_ERROR", "BLANK_INFERENCE"],
+          "properties": { "GRAMMAR_ERROR": { "$ref": "#/$defs/sha256" }, "BLANK_INFERENCE": { "$ref": "#/$defs/sha256" } },
+          "additionalProperties": false
+        },
+        "materializationEventSha256ByCanonicalType": {
+          "type": "object", "required": ["GRAMMAR_ERROR", "BLANK_INFERENCE"],
+          "properties": { "GRAMMAR_ERROR": { "$ref": "#/$defs/sha256" }, "BLANK_INFERENCE": { "$ref": "#/$defs/sha256" } },
+          "additionalProperties": false
+        },
+        "coverageMapRootSha256": { "$ref": "#/$defs/sha256" },
+        "coverageRecomputationRootSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "all25CoverageMap": {
+      "type": "object",
+      "required": [
+        "BLANK_INFERENCE", "GRAMMAR_ERROR", "GRAMMAR_CHOICE_COMBO", "VOCAB_CHOICE", "SENTENCE_ORDER", "SENTENCE_INSERT", "TOPIC", "MAIN_IDEA", "TITLE", "IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH", "SUMMARY_COMPLETE_MC", "IRRELEVANT", "CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "FILL_BLANK_KEY", "SUMMARY_COMPLETE", "SUMMARY_WRITING", "WORD_ORDER", "TOPIC_SENTENCE_WRITING", "GRAMMAR_CORRECTION", "CONTEXT_MEANING", "SYNONYM", "ANTONYM"
+      ],
+      "properties": {
+        "BLANK_INFERENCE": { "$ref": "#/$defs/sha256" }, "GRAMMAR_ERROR": { "$ref": "#/$defs/sha256" }, "GRAMMAR_CHOICE_COMBO": { "$ref": "#/$defs/sha256" }, "VOCAB_CHOICE": { "$ref": "#/$defs/sha256" }, "SENTENCE_ORDER": { "$ref": "#/$defs/sha256" }, "SENTENCE_INSERT": { "$ref": "#/$defs/sha256" }, "TOPIC": { "$ref": "#/$defs/sha256" }, "MAIN_IDEA": { "$ref": "#/$defs/sha256" }, "TITLE": { "$ref": "#/$defs/sha256" }, "IMPLIED_MEANING": { "$ref": "#/$defs/sha256" }, "REFERENCE": { "$ref": "#/$defs/sha256" }, "CONTENT_MATCH": { "$ref": "#/$defs/sha256" }, "SUMMARY_COMPLETE_MC": { "$ref": "#/$defs/sha256" }, "IRRELEVANT": { "$ref": "#/$defs/sha256" }, "CONDITIONAL_WRITING": { "$ref": "#/$defs/sha256" }, "SENTENCE_TRANSFORM": { "$ref": "#/$defs/sha256" }, "FILL_BLANK_KEY": { "$ref": "#/$defs/sha256" }, "SUMMARY_COMPLETE": { "$ref": "#/$defs/sha256" }, "SUMMARY_WRITING": { "$ref": "#/$defs/sha256" }, "WORD_ORDER": { "$ref": "#/$defs/sha256" }, "TOPIC_SENTENCE_WRITING": { "$ref": "#/$defs/sha256" }, "GRAMMAR_CORRECTION": { "$ref": "#/$defs/sha256" }, "CONTEXT_MEANING": { "$ref": "#/$defs/sha256" }, "SYNONYM": { "$ref": "#/$defs/sha256" }, "ANTONYM": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "all25CoverageEvidence": {
+      "type": "object",
+      "required": ["scopeEnum", "canonicalTypeIds", "coverageCount", "passedCoverageEventSha256ByCanonicalType", "materializationEventSha256ByCanonicalType", "coverageMapRootSha256", "coverageRecomputationRootSha256"],
+      "properties": {
+        "scopeEnum": { "const": "ALL_25" },
+        "canonicalTypeIds": {
+          "type": "array", "prefixItems": [
+            { "const": "BLANK_INFERENCE" }, { "const": "GRAMMAR_ERROR" }, { "const": "GRAMMAR_CHOICE_COMBO" }, { "const": "VOCAB_CHOICE" }, { "const": "SENTENCE_ORDER" }, { "const": "SENTENCE_INSERT" }, { "const": "TOPIC" }, { "const": "MAIN_IDEA" }, { "const": "TITLE" }, { "const": "IMPLIED_MEANING" }, { "const": "REFERENCE" }, { "const": "CONTENT_MATCH" }, { "const": "SUMMARY_COMPLETE_MC" }, { "const": "IRRELEVANT" }, { "const": "CONDITIONAL_WRITING" }, { "const": "SENTENCE_TRANSFORM" }, { "const": "FILL_BLANK_KEY" }, { "const": "SUMMARY_COMPLETE" }, { "const": "SUMMARY_WRITING" }, { "const": "WORD_ORDER" }, { "const": "TOPIC_SENTENCE_WRITING" }, { "const": "GRAMMAR_CORRECTION" }, { "const": "CONTEXT_MEANING" }, { "const": "SYNONYM" }, { "const": "ANTONYM" }
+          ], "minItems": 25, "maxItems": 25
+        },
+        "coverageCount": { "const": 25 },
+        "passedCoverageEventSha256ByCanonicalType": { "$ref": "#/$defs/all25CoverageMap" },
+        "materializationEventSha256ByCanonicalType": { "$ref": "#/$defs/all25CoverageMap" },
+        "coverageMapRootSha256": { "$ref": "#/$defs/sha256" },
+        "coverageRecomputationRootSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "coverageEvidence": { "oneOf": [{ "$ref": "#/$defs/focusCoverageEvidence" }, { "$ref": "#/$defs/all25CoverageEvidence" }] },
+    "reviewerCertificate": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["reviewerPseudonym", "reviewerCanonicalPseudonym", "reviewerPrincipalCommitmentSha256", "reviewerRoleAssignmentEventSha256", "identityRegistryRootSha256", "coverageEvidence", "pilotDecisionSha256", "mainDecisionSha256", "trustedGoldAuditReportSha256", "holdoutDecisionSha256", "certificateVerdict"], "properties": {
+        "eventKind": { "const": "REVIEWER_CERTIFICATE" },
+        "reviewerPseudonym": { "$ref": "#/$defs/pseudonym" },
+        "reviewerCanonicalPseudonym": { "$ref": "#/$defs/pseudonym" },
+        "reviewerPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "reviewerRoleAssignmentEventSha256": { "$ref": "#/$defs/sha256" },
+        "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "coverageEvidence": { "$ref": "#/$defs/coverageEvidence" }, "pilotDecisionSha256": { "$ref": "#/$defs/sha256" },
+        "mainDecisionSha256": { "$ref": "#/$defs/sha256" }, "trustedGoldAuditReportSha256": { "$ref": "#/$defs/sha256" },
+        "holdoutDecisionSha256": { "$ref": "#/$defs/sha256" }, "certificateVerdict": { "const": "CERTIFY_SCOPE_ONLY" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "freshAdjudicatorBinding": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["adjudicatorPseudonym", "adjudicatorCanonicalPseudonym", "adjudicatorPrincipalCommitmentSha256", "adjudicatorRole", "roleAssignmentEventSha256", "identityRegistryRootSha256", "roleRegistrySha256", "freshnessProofSha256", "principalRoleExclusionProofSha256", "principalResultViewerExclusionProofSha256", "decision"], "properties": {
+        "eventKind": { "const": "FRESH_ADJUDICATOR_BINDING" },
+        "adjudicatorPseudonym": { "$ref": "#/$defs/pseudonym" },
+        "adjudicatorCanonicalPseudonym": { "$ref": "#/$defs/pseudonym" },
+        "adjudicatorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "adjudicatorRole": { "const": "S1_ADJUDICATOR" },
+        "roleAssignmentEventSha256": { "$ref": "#/$defs/sha256" },
+        "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "roleRegistrySha256": { "$ref": "#/$defs/sha256" }, "freshnessProofSha256": { "$ref": "#/$defs/sha256" },
+        "principalRoleExclusionProofSha256": { "$ref": "#/$defs/sha256" },
+        "principalResultViewerExclusionProofSha256": { "$ref": "#/$defs/sha256" },
+        "decision": { "const": "BIND_FRESH" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "trustedGoldAuditReport": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["auditorPseudonym", "auditorCanonicalPseudonym", "auditorPrincipalCommitmentSha256", "auditorRole", "auditorRoleAssignmentEventSha256", "identityRegistryRootSha256", "auditedGoldRootSha256", "goldAuthorRegistrySha256", "itemAuthorRegistrySha256", "packetAuthorRegistrySha256", "principalRoleExclusionProofSha256", "principalArtifactAuthorshipExclusionProofSha256", "auditInputSha256", "auditReportSha256", "verdict"], "properties": {
+        "eventKind": { "const": "TRUSTED_GOLD_AUDIT_REPORT" },
+        "auditorPseudonym": { "$ref": "#/$defs/pseudonym" },
+        "auditorCanonicalPseudonym": { "$ref": "#/$defs/pseudonym" },
+        "auditorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "auditorRole": { "const": "TRUSTED_GOLD_AUDITOR" },
+        "auditorRoleAssignmentEventSha256": { "$ref": "#/$defs/sha256" },
+        "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "auditedGoldRootSha256": { "$ref": "#/$defs/sha256" }, "goldAuthorRegistrySha256": { "$ref": "#/$defs/sha256" },
+        "itemAuthorRegistrySha256": { "$ref": "#/$defs/sha256" }, "packetAuthorRegistrySha256": { "$ref": "#/$defs/sha256" },
+        "principalRoleExclusionProofSha256": { "$ref": "#/$defs/sha256" },
+        "principalArtifactAuthorshipExclusionProofSha256": { "$ref": "#/$defs/sha256" },
+        "auditInputSha256": { "$ref": "#/$defs/sha256" }, "auditReportSha256": { "$ref": "#/$defs/sha256" },
+        "verdict": { "const": "PASS_NO_BLOCKERS" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "authorization": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        { "type": "object", "required": ["transactionId", "currentState", "phase", "resourceClass", "resourceSha256", "visibleSurfaceSha256", "actorPseudonym", "actorCanonicalPseudonym", "actorPrincipalCommitmentSha256", "actorRole", "activeRoleAssignmentEventSha256", "identityRegistryRootSha256", "capabilityTokenSha256", "capabilityUniquenessProofSha256", "sealedPolicyRegistryRootSha256", "policyMatrixRootSha256", "allStateAllowRootSha256", "allStateDenyRootSha256", "allowedRolesRootSha256", "deniedRolesRootSha256", "policyTupleSha256", "resourceClassPolicyProofSha256", "stateTransitionEvidenceSha256", "authorizedAtRfc3339", "decision"], "properties": {
+          "eventKind": { "const": "AUTHORIZATION" }, "transactionId": { "type": "string", "minLength": 12 },
+          "currentState": { "$ref": "#/$defs/state" }, "phase": { "$ref": "#/$defs/phase" }, "resourceClass": { "$ref": "#/$defs/resourceClass" },
+          "resourceSha256": { "$ref": "#/$defs/sha256" }, "visibleSurfaceSha256": { "$ref": "#/$defs/nullableSha256" },
+          "actorPseudonym": { "$ref": "#/$defs/pseudonym" },
+          "actorCanonicalPseudonym": { "$ref": "#/$defs/pseudonym" },
+          "actorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+          "actorRole": { "$ref": "#/$defs/role" },
+          "activeRoleAssignmentEventSha256": { "$ref": "#/$defs/sha256" },
+          "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+          "capabilityTokenSha256": { "$ref": "#/$defs/sha256" }, "capabilityUniquenessProofSha256": { "$ref": "#/$defs/sha256" },
+          "sealedPolicyRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+          "policyMatrixRootSha256": { "$ref": "#/$defs/sha256" },
+          "allStateAllowRootSha256": { "$ref": "#/$defs/sha256" },
+          "allStateDenyRootSha256": { "$ref": "#/$defs/sha256" },
+          "allowedRolesRootSha256": { "$ref": "#/$defs/sha256" },
+          "deniedRolesRootSha256": { "$ref": "#/$defs/sha256" },
+          "policyTupleSha256": { "$ref": "#/$defs/sha256" },
+          "resourceClassPolicyProofSha256": { "$ref": "#/$defs/sha256" }, "stateTransitionEvidenceSha256": { "$ref": "#/$defs/sha256" },
+          "authorizedAtRfc3339": { "$ref": "#/$defs/rfc3339" }, "decision": { "const": "ALLOW" }
+        } },
+        { "if": { "properties": { "phase": { "enum": ["TAXONOMY_PILOT_PHASE1", "MAIN_CERTIFICATION_PHASE1", "ACTIVATION_HOLDOUT_PHASE1"] } }, "required": ["phase"] }, "then": { "properties": { "resourceClass": { "enum": ["BLIND_STUDENT_VISIBLE_SURFACE", "FROZEN_PUBLIC_CODEBOOK"] } } } }
+      ],
+      "unevaluatedProperties": false
+    },
+    "openEvent": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["transactionId", "authorizationEventSha256", "authorizationEventOrdinal", "capabilityTokenSha256", "openedAtRfc3339", "contentBytesReleasedBeforeOpenSeal", "decision"], "properties": {
+        "eventKind": { "const": "OPEN" }, "transactionId": { "type": "string" }, "authorizationEventSha256": { "$ref": "#/$defs/sha256" },
+        "authorizationEventOrdinal": { "type": "integer", "minimum": 1 }, "capabilityTokenSha256": { "$ref": "#/$defs/sha256" },
+        "openedAtRfc3339": { "$ref": "#/$defs/rfc3339" }, "contentBytesReleasedBeforeOpenSeal": { "const": 0 }, "decision": { "const": "OPEN_SEALED" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "capabilityConsume": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["transactionId", "authorizationEventSha256", "openEventSha256", "openEventOrdinal", "capabilityTokenSha256", "capabilityRegistryBeforeSha256", "capabilityUniquenessProofSha256", "useOrdinal", "consumedAtRfc3339", "contentBytesReleasedBeforeConsumeSeal", "capabilityRegistryAfterSha256", "decision"], "properties": {
+        "eventKind": { "const": "CAPABILITY_CONSUME" }, "transactionId": { "type": "string" }, "authorizationEventSha256": { "$ref": "#/$defs/sha256" },
+        "openEventSha256": { "$ref": "#/$defs/sha256" }, "openEventOrdinal": { "type": "integer", "minimum": 2 },
+        "capabilityTokenSha256": { "$ref": "#/$defs/sha256" }, "capabilityRegistryBeforeSha256": { "$ref": "#/$defs/sha256" },
+        "capabilityUniquenessProofSha256": { "$ref": "#/$defs/sha256" }, "useOrdinal": { "const": 1 },
+        "consumedAtRfc3339": { "$ref": "#/$defs/rfc3339" }, "contentBytesReleasedBeforeConsumeSeal": { "const": 0 },
+        "capabilityRegistryAfterSha256": { "$ref": "#/$defs/sha256" }, "decision": { "const": "CONSUME_ONCE" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "closeEvent": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["transactionId", "authorizationEventSha256", "openEventSha256", "consumeEventSha256", "consumeEventOrdinal", "capabilityTokenSha256", "authorizedAtRfc3339", "openedAtRfc3339", "consumedAtRfc3339", "closedAtRfc3339", "bytesRead", "contentReadSha256", "decision"], "properties": {
+        "eventKind": { "const": "CLOSE" }, "transactionId": { "type": "string" }, "authorizationEventSha256": { "$ref": "#/$defs/sha256" },
+        "openEventSha256": { "$ref": "#/$defs/sha256" }, "consumeEventSha256": { "$ref": "#/$defs/sha256" },
+        "consumeEventOrdinal": { "type": "integer", "minimum": 3 }, "capabilityTokenSha256": { "$ref": "#/$defs/sha256" },
+        "authorizedAtRfc3339": { "$ref": "#/$defs/rfc3339" }, "openedAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+        "consumedAtRfc3339": { "$ref": "#/$defs/rfc3339" }, "closedAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+        "bytesRead": { "type": "integer", "minimum": 0 }, "contentReadSha256": { "$ref": "#/$defs/sha256" }, "decision": { "const": "CLOSE_SEALED" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "denial": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["currentState", "phase", "resourceClass", "resourceSha256", "actorPseudonym", "actorCanonicalPseudonym", "actorPrincipalCommitmentSha256", "actorRole", "identityRegistryRootSha256", "sealedPolicyRegistryRootSha256", "policyMatrixRootSha256", "allStateAllowRootSha256", "allStateDenyRootSha256", "allowedRolesRootSha256", "deniedRolesRootSha256", "policyTupleSha256", "policyDecisionProofSha256", "capabilityTokenSha256", "authorizationEventSha256", "openedAtRfc3339", "closedAtRfc3339", "hasOpenConsumeOrClose", "decision", "reasonCode"], "properties": {
+        "eventKind": { "const": "DENIAL" }, "currentState": { "$ref": "#/$defs/state" }, "phase": { "$ref": "#/$defs/phase" },
+        "resourceClass": { "$ref": "#/$defs/resourceClass" }, "resourceSha256": { "$ref": "#/$defs/sha256" },
+        "actorPseudonym": { "$ref": "#/$defs/pseudonym" },
+        "actorCanonicalPseudonym": { "$ref": "#/$defs/pseudonym" },
+        "actorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "actorRole": { "$ref": "#/$defs/role" },
+        "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "sealedPolicyRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "policyMatrixRootSha256": { "$ref": "#/$defs/sha256" },
+        "allStateAllowRootSha256": { "$ref": "#/$defs/sha256" },
+        "allStateDenyRootSha256": { "$ref": "#/$defs/sha256" },
+        "allowedRolesRootSha256": { "$ref": "#/$defs/sha256" },
+        "deniedRolesRootSha256": { "$ref": "#/$defs/sha256" },
+        "policyTupleSha256": { "$ref": "#/$defs/sha256" },
+        "policyDecisionProofSha256": { "$ref": "#/$defs/sha256" },
+        "capabilityTokenSha256": { "type": "null" }, "authorizationEventSha256": { "type": "null" },
+        "openedAtRfc3339": { "type": "null" }, "closedAtRfc3339": { "type": "null" },
+        "hasOpenConsumeOrClose": { "const": false }, "decision": { "const": "DENY" }, "reasonCode": { "type": "string", "minLength": 4 }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "phaseTransition": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["stateBefore", "stateAfter", "requiredSealSha256s", "transitionProofSha256", "authorityAfter", "resultAccessAfter", "decision"], "properties": {
+        "eventKind": { "const": "PHASE_TRANSITION" }, "stateBefore": { "$ref": "#/$defs/state" }, "stateAfter": { "$ref": "#/$defs/state" },
+        "requiredSealSha256s": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/sha256" } },
+        "transitionProofSha256": { "$ref": "#/$defs/sha256" }, "authorityAfter": { "const": false }, "resultAccessAfter": { "const": false },
+        "decision": { "const": "ADVANCE_EXACTLY_ONE_STATE" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "certificationEvidenceSeal": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["reviewerCertificateSha256s", "reviewerPseudonyms", "reviewerCanonicalPseudonyms", "reviewerPrincipalCommitmentSha256s", "reviewerRoleAssignmentEventSha256s", "identityRegistryRootSha256", "freshAdjudicatorBindingSha256", "freshAdjudicatorPrincipalCommitmentSha256", "requestedCoverageEvidence", "authorityAfter", "resultAccessAfter", "decision"], "properties": {
+        "eventKind": { "const": "CERTIFICATION_EVIDENCE_SEAL" },
+        "reviewerCertificateSha256s": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/sha256" } },
+        "reviewerPseudonyms": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/pseudonym" } },
+        "reviewerCanonicalPseudonyms": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/pseudonym" } },
+        "reviewerPrincipalCommitmentSha256s": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/principalCommitment" } },
+        "reviewerRoleAssignmentEventSha256s": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/sha256" } },
+        "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "freshAdjudicatorBindingSha256": { "$ref": "#/$defs/sha256" },
+        "freshAdjudicatorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "requestedCoverageEvidence": { "$ref": "#/$defs/coverageEvidence" },
+        "authorityAfter": { "const": false }, "resultAccessAfter": { "const": false }, "decision": { "const": "SEAL_AUTHORITY_FALSE" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "activationCandidatePayload": {
+      "type": "object",
+      "required": ["profile", "stateBefore", "stateAfter", "candidateAuthorPrincipalCommitmentSha256", "designManifestSha256", "evaluationAuthorityManifestSha256", "productionTypeBindingManifestSha256", "reviewerCertificateSha256s", "reviewerPrincipalCommitmentSha256s", "reviewerCertificateScopeEnums", "requestedCoverageEvidence", "coverageRecomputationRootSha256", "freshAdjudicatorBindingSha256", "allPhaseSealRootSha256", "zeroPreauthorityResultAccessProofSha256", "identityRegistryRootSha256", "policyDesignContractSha256", "authorityGranted", "resultAccessAuthorized"],
+      "properties": {
+        "profile": { "const": "NARA_QCAL_V4_ACTIVATION_CANDIDATE_PAYLOAD_1" },
+        "stateBefore": { "const": "CERTIFICATION_EVIDENCE_SEALED_AUTHORITY_FALSE" },
+        "stateAfter": { "const": "ACTIVATION_CANDIDATE_RECORDED_AUTHORITY_FALSE" },
+        "candidateAuthorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "designManifestSha256": { "$ref": "#/$defs/sha256" },
+        "evaluationAuthorityManifestSha256": { "$ref": "#/$defs/sha256" },
+        "productionTypeBindingManifestSha256": { "const": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04" },
+        "reviewerCertificateSha256s": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/sha256" } },
+        "reviewerPrincipalCommitmentSha256s": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/principalCommitment" } },
+        "reviewerCertificateScopeEnums": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "enum": ["FOCUS_ONLY", "ALL_25"] } },
+        "requestedCoverageEvidence": { "$ref": "#/$defs/coverageEvidence" },
+        "coverageRecomputationRootSha256": { "$ref": "#/$defs/sha256" },
+        "freshAdjudicatorBindingSha256": { "$ref": "#/$defs/sha256" },
+        "allPhaseSealRootSha256": { "$ref": "#/$defs/sha256" },
+        "zeroPreauthorityResultAccessProofSha256": { "$ref": "#/$defs/sha256" },
+        "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "policyDesignContractSha256": { "$ref": "#/$defs/sha256" },
+        "authorityGranted": { "const": false },
+        "resultAccessAuthorized": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "activationCandidateAuditPayload": {
+      "type": "object",
+      "required": ["profile", "stateBefore", "stateAfter", "auditorPrincipalCommitmentSha256", "candidateEventSha256", "candidateCanonicalBytesSha256", "candidateAuthorPrincipalCommitmentSha256", "roleRegistrySha256", "identityRegistryRootSha256", "artifactAuthorshipRegistrySha256", "auditorRoleExclusionProofSha256", "auditorArtifactAuthorshipExclusionProofSha256", "coverageRecomputationRootSha256", "auditInputRootSha256", "verdict", "authorityGranted", "resultAccessAuthorized"],
+      "properties": {
+        "profile": { "const": "NARA_QCAL_V4_ACTIVATION_CANDIDATE_AUDIT_PAYLOAD_1" },
+        "stateBefore": { "const": "ACTIVATION_CANDIDATE_RECORDED_AUTHORITY_FALSE" },
+        "stateAfter": { "const": "ACTIVATION_CANDIDATE_AUDIT_PASSED_AUTHORITY_FALSE" },
+        "auditorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "candidateEventSha256": { "$ref": "#/$defs/sha256" },
+        "candidateCanonicalBytesSha256": { "$ref": "#/$defs/sha256" },
+        "candidateAuthorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "roleRegistrySha256": { "$ref": "#/$defs/sha256" },
+        "identityRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "artifactAuthorshipRegistrySha256": { "$ref": "#/$defs/sha256" },
+        "auditorRoleExclusionProofSha256": { "$ref": "#/$defs/sha256" },
+        "auditorArtifactAuthorshipExclusionProofSha256": { "$ref": "#/$defs/sha256" },
+        "coverageRecomputationRootSha256": { "$ref": "#/$defs/sha256" },
+        "auditInputRootSha256": { "$ref": "#/$defs/sha256" },
+        "verdict": { "const": "PASS_NO_BLOCKERS" },
+        "authorityGranted": { "const": false },
+        "resultAccessAuthorized": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "activationGrantPayload": {
+      "type": "object",
+      "required": ["profile", "stateBefore", "stateAfter", "grantAuthorPrincipalCommitmentSha256", "candidateEventSha256", "candidateCanonicalBytesSha256", "candidateAuditReportSha256", "candidateAuditCanonicalBytesSha256", "candidateAuditManifestSha256", "candidateAuditVerdict", "grantedCoverageEvidence", "coverageRecomputationRootSha256", "sealedPolicyRegistryRootSha256", "policyMatrixRootSha256", "allStateAllowRootSha256", "allStateDenyRootSha256", "allTupleAllowedRolesRootSha256", "allTupleDeniedRolesRootSha256", "resourceClassProofRootSha256", "stateTransitionProofRootSha256", "postActivationScopeProofSha256", "postActivationAllowRootSha256", "postActivationDenyRootSha256", "postActivationAllowedRolesRootSha256", "postActivationDeniedRolesRootSha256", "policyRegistryReady", "policyRegistrySealed", "deterministicGrantProofSha256", "authorityGranted", "resultAccessAuthorized"],
+      "properties": {
+        "profile": { "const": "NARA_QCAL_V4_ACTIVATION_GRANT_PAYLOAD_1" },
+        "stateBefore": { "const": "ACTIVATION_CANDIDATE_AUDIT_PASSED_AUTHORITY_FALSE" },
+        "stateAfter": { "const": "ACTIVATION_GRANTED" },
+        "grantAuthorPrincipalCommitmentSha256": { "$ref": "#/$defs/principalCommitment" },
+        "candidateEventSha256": { "$ref": "#/$defs/sha256" },
+        "candidateCanonicalBytesSha256": { "$ref": "#/$defs/sha256" },
+        "candidateAuditReportSha256": { "$ref": "#/$defs/sha256" },
+        "candidateAuditCanonicalBytesSha256": { "$ref": "#/$defs/sha256" },
+        "candidateAuditManifestSha256": { "$ref": "#/$defs/sha256" },
+        "candidateAuditVerdict": { "const": "PASS_NO_BLOCKERS" },
+        "grantedCoverageEvidence": { "$ref": "#/$defs/coverageEvidence" },
+        "coverageRecomputationRootSha256": { "$ref": "#/$defs/sha256" },
+        "sealedPolicyRegistryRootSha256": { "$ref": "#/$defs/sha256" },
+        "policyMatrixRootSha256": { "$ref": "#/$defs/sha256" },
+        "allStateAllowRootSha256": { "$ref": "#/$defs/sha256" },
+        "allStateDenyRootSha256": { "$ref": "#/$defs/sha256" },
+        "allTupleAllowedRolesRootSha256": { "$ref": "#/$defs/sha256" },
+        "allTupleDeniedRolesRootSha256": { "$ref": "#/$defs/sha256" },
+        "resourceClassProofRootSha256": { "$ref": "#/$defs/sha256" },
+        "stateTransitionProofRootSha256": { "$ref": "#/$defs/sha256" },
+        "postActivationScopeProofSha256": { "$ref": "#/$defs/sha256" },
+        "postActivationAllowRootSha256": { "$ref": "#/$defs/sha256" },
+        "postActivationDenyRootSha256": { "$ref": "#/$defs/sha256" },
+        "postActivationAllowedRolesRootSha256": { "$ref": "#/$defs/sha256" },
+        "postActivationDeniedRolesRootSha256": { "$ref": "#/$defs/sha256" },
+        "policyRegistryReady": { "const": true },
+        "policyRegistrySealed": { "const": true },
+        "deterministicGrantProofSha256": { "$ref": "#/$defs/sha256" },
+        "authorityGranted": { "const": true },
+        "resultAccessAuthorized": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "activationCandidate": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["canonicalPayload", "candidateCanonicalBytesSha256", "decision"], "properties": {
+        "eventKind": { "const": "ACTIVATION_CANDIDATE" },
+        "canonicalPayload": { "$ref": "#/$defs/activationCandidatePayload" },
+        "candidateCanonicalBytesSha256": { "$ref": "#/$defs/sha256" },
+        "decision": { "const": "RECORD_CANDIDATE_ONLY" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "activationCandidateAuditReport": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["canonicalPayload", "auditReportCanonicalBytesSha256", "decision"], "properties": {
+        "eventKind": { "const": "ACTIVATION_CANDIDATE_AUDIT_REPORT" },
+        "canonicalPayload": { "$ref": "#/$defs/activationCandidateAuditPayload" },
+        "auditReportCanonicalBytesSha256": { "$ref": "#/$defs/sha256" },
+        "decision": { "const": "AUDIT_EXACT_CANDIDATE_AUTHORITY_FALSE" }
+      } }],
+      "unevaluatedProperties": false
+    },
+    "activationGrant": {
+      "allOf": [{ "$ref": "#/$defs/baseEvent" }, { "type": "object", "required": ["canonicalPayload", "grantCanonicalBytesSha256", "decision"], "properties": {
+        "eventKind": { "const": "ACTIVATION_GRANT" },
+        "canonicalPayload": { "$ref": "#/$defs/activationGrantPayload" },
+        "grantCanonicalBytesSha256": { "$ref": "#/$defs/sha256" },
+        "decision": { "const": "GRANT_EXACT_SCOPE_WITH_SEALED_READY_POLICY" }
+      } }],
+      "unevaluatedProperties": false
+    }
+  },
+  "x-currentInstanceCounts": {
+    "principalIdentityBinding": 0,
+    "identityCustodianAttestation": 0,
+    "identityBindingDenial": 0,
+    "roleAssignment": 0,
+    "artifactAuthorshipRecord": 0,
+    "slotMaterialization": 0,
+    "fingerprintReservation": 0,
+    "fingerprintTombstone": 0,
+    "disjointnessProof": 0,
+    "passedCoverageEvent": 0,
+    "reviewerCertificate": 0,
+    "freshAdjudicatorBinding": 0,
+    "trustedGoldAuditReport": 0,
+    "authorization": 0,
+    "openEvent": 0,
+    "capabilityConsume": 0,
+    "closeEvent": 0,
+    "denial": 0,
+    "phaseTransition": 0,
+    "certificationEvidenceSeal": 0,
+    "activationCandidate": 0,
+    "activationCandidateAuditReport": 0,
+    "activationGrant": 0
+  }
+}

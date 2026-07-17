@@ -1,0 +1,409 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smoat.invalid/schemas/reviewer-calibration-v4-events-1.json",
+  "title": "Reviewer calibration v4 append-only execution events and sealed scorers",
+  "oneOf": [
+    { "$ref": "#/$defs/candidateAuthoredEvent" },
+    { "$ref": "#/$defs/sealEvent" },
+    { "$ref": "#/$defs/preAccessEvent" },
+    { "$ref": "#/$defs/accessReceiptEvent" },
+    { "$ref": "#/$defs/coverageEvent" },
+    { "$ref": "#/$defs/rejectionEvent" },
+    { "$ref": "#/$defs/grammarConstraintBundle" },
+    { "$ref": "#/$defs/blankPropositionScorer" }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "stage": {
+      "enum": ["TAXONOMY", "MAIN", "HOLDOUT"]
+    },
+    "block": {
+      "enum": ["GRAMMAR", "BLANK", "NONFOCUS"]
+    },
+    "baseEvent": {
+      "type": "object",
+      "required": [
+        "eventId",
+        "sequence",
+        "previousEventHash",
+        "eventType",
+        "recordedAt",
+        "eventSha256"
+      ],
+      "properties": {
+        "eventId": { "type": "string", "minLength": 1 },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "previousEventHash": {
+          "oneOf": [
+            { "$ref": "#/$defs/sha256" },
+            { "type": "null" }
+          ]
+        },
+        "eventType": { "type": "string", "minLength": 1 },
+        "recordedAt": { "type": "string", "format": "date-time" },
+        "eventSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "candidateAuthoredEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "eventType",
+            "candidateSlotId",
+            "stage",
+            "block",
+            "typeId",
+            "briefId",
+            "authorRoleId",
+            "surfaceSha256",
+            "rightsDeclarationSha256"
+          ],
+          "properties": {
+            "eventType": { "const": "CANDIDATE_AUTHORED" },
+            "candidateSlotId": { "type": "string", "pattern": "^RCAL4-" },
+            "stage": { "$ref": "#/$defs/stage" },
+            "block": { "$ref": "#/$defs/block" },
+            "typeId": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+            "familyId": { "type": ["string", "null"] },
+            "briefId": { "type": "string", "pattern": "^[GBN]B-[0-9]{2}$" },
+            "authorRoleId": { "type": "string", "pattern": "^AUTHOR_" },
+            "surfaceSha256": { "$ref": "#/$defs/sha256" },
+            "rightsDeclarationSha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "sealEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "eventType",
+            "stage",
+            "sealKind",
+            "resourceId",
+            "resourceSha256",
+            "sealedByRoleId",
+            "sealedAt",
+            "issueState"
+          ],
+          "properties": {
+            "eventType": { "const": "RESOURCE_SEALED" },
+            "stage": { "$ref": "#/$defs/stage" },
+            "sealKind": {
+              "enum": [
+                "SOURCE_AND_SURFACE",
+                "ANSWER_FATAL_CRAFT_EVIDENCE",
+                "FOCUS_SCORER",
+                "CODEBOOK_THRESHOLD",
+                "BLIND_PACKET",
+                "SUBMISSION",
+                "REVEAL"
+              ]
+            },
+            "resourceId": { "type": "string", "minLength": 1 },
+            "resourceSha256": { "$ref": "#/$defs/sha256" },
+            "sealedByRoleId": { "type": "string", "minLength": 1 },
+            "sealedAt": { "type": "string", "format": "date-time" },
+            "issueState": { "enum": ["PRE_ISSUE", "ISSUED", "OPENED"] },
+            "supersedesResourceSha256": {
+              "oneOf": [
+                { "$ref": "#/$defs/sha256" },
+                { "type": "null" }
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "preAccessEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "eventType",
+            "actorPseudonym",
+            "roleId",
+            "stage",
+            "phase",
+            "resourceId",
+            "resourceSha256",
+            "allowedPurpose",
+            "denySetSha256",
+            "authorizedAt",
+            "capabilityTokenSha256"
+          ],
+          "properties": {
+            "eventType": { "const": "PRE_ACCESS_AUTHORIZED" },
+            "actorPseudonym": { "type": "string", "minLength": 1 },
+            "roleId": { "type": "string", "minLength": 1 },
+            "stage": { "$ref": "#/$defs/stage" },
+            "phase": { "type": "integer", "minimum": 1, "maximum": 3 },
+            "resourceId": { "type": "string", "minLength": 1 },
+            "resourceSha256": { "$ref": "#/$defs/sha256" },
+            "allowedPurpose": { "type": "string", "minLength": 1 },
+            "denySetSha256": { "$ref": "#/$defs/sha256" },
+            "authorizedAt": { "type": "string", "format": "date-time" },
+            "capabilityTokenSha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "accessReceiptEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "eventType",
+            "preAccessEventSha256",
+            "capabilityTokenSha256",
+            "resourceId",
+            "resourceSha256",
+            "openedAt",
+            "closedAt",
+            "bytesRead"
+          ],
+          "properties": {
+            "eventType": { "const": "ACCESS_RECEIPT" },
+            "preAccessEventSha256": { "$ref": "#/$defs/sha256" },
+            "capabilityTokenSha256": { "$ref": "#/$defs/sha256" },
+            "resourceId": { "type": "string", "minLength": 1 },
+            "resourceSha256": { "$ref": "#/$defs/sha256" },
+            "openedAt": { "type": "string", "format": "date-time" },
+            "closedAt": { "type": "string", "format": "date-time" },
+            "bytesRead": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "coverageEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "eventType",
+            "epoch",
+            "stage",
+            "typeId",
+            "familyId",
+            "anchorSlotId",
+            "freshnessEvidenceSha256",
+            "result",
+            "countsTowardAllTypeClaim"
+          ],
+          "properties": {
+            "eventType": { "const": "TYPE_COVERAGE" },
+            "epoch": { "type": "integer", "minimum": 1 },
+            "stage": { "enum": ["MAIN", "HOLDOUT"] },
+            "typeId": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+            "familyId": { "type": "string", "pattern": "^NF-F[1-8]-" },
+            "anchorSlotId": { "type": "string", "pattern": "^RCAL4-" },
+            "freshnessEvidenceSha256": { "$ref": "#/$defs/sha256" },
+            "result": { "enum": ["PASS", "FAIL"] },
+            "countsTowardAllTypeClaim": { "type": "boolean" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "rejectionEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "eventType",
+            "candidateSlotId",
+            "stage",
+            "block",
+            "reasonCode",
+            "terminal",
+            "replacementCandidateSlotId"
+          ],
+          "properties": {
+            "eventType": { "enum": ["CANDIDATE_REJECTED", "CANDIDATE_SURPLUS"] },
+            "candidateSlotId": { "type": "string", "pattern": "^RCAL4-" },
+            "stage": { "$ref": "#/$defs/stage" },
+            "block": { "$ref": "#/$defs/block" },
+            "reasonCode": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+            "terminal": { "const": true },
+            "replacementCandidateSlotId": {
+              "oneOf": [
+                { "type": "string", "pattern": "^RCAL4-" },
+                { "type": "null" }
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "grammarConstraintBundle": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "recordType",
+        "candidateSlotId",
+        "displayedGrammaticality",
+        "diagnosis",
+        "acceptedPointFamilies",
+        "requiredGrammarFeatures",
+        "forbiddenGrammarFeatures",
+        "semanticPropositionsToPreserve",
+        "forbiddenMeaningChanges",
+        "sourceRestorationPredicate",
+        "explanationTruthPredicates",
+        "closedAtIssue",
+        "bundleSha256"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "closed-grammar-semantic-constraints-v1" },
+        "recordType": { "const": "GRAMMAR_CONSTRAINT_BUNDLE" },
+        "candidateSlotId": { "type": "string", "pattern": "^RCAL4-" },
+        "displayedGrammaticality": { "enum": ["GRAMMATICAL", "UNGRAMMATICAL", "GENUINELY_CONTESTED"] },
+        "diagnosis": { "enum": ["ANSWER_ERROR", "VALID_DECOY", "INVALID_SITE"] },
+        "acceptedPointFamilies": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+          "uniqueItems": true
+        },
+        "requiredGrammarFeatures": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "forbiddenGrammarFeatures": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "semanticPropositionsToPreserve": { "type": "array", "items": { "$ref": "#/$defs/sha256" }, "minItems": 1, "uniqueItems": true },
+        "forbiddenMeaningChanges": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "sourceRestorationPredicate": { "type": "string", "minLength": 1 },
+        "explanationTruthPredicates": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "closedAtIssue": { "const": true },
+        "bundleSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "blankOptionVector": {
+      "type": "object",
+      "required": [
+        "actorOrTarget",
+        "polarity",
+        "conditionOrModality",
+        "causalRelationAndDirection",
+        "scopeOrQuantifier",
+        "stance",
+        "temporalRelation"
+      ],
+      "properties": {
+        "actorOrTarget": { "$ref": "#/$defs/axisRelation" },
+        "polarity": { "$ref": "#/$defs/axisRelation" },
+        "conditionOrModality": { "$ref": "#/$defs/axisRelation" },
+        "causalRelationAndDirection": { "$ref": "#/$defs/axisRelation" },
+        "scopeOrQuantifier": { "$ref": "#/$defs/axisRelation" },
+        "stance": { "$ref": "#/$defs/axisRelation" },
+        "temporalRelation": { "$ref": "#/$defs/axisRelation" }
+      },
+      "additionalProperties": false
+    },
+    "axisRelation": {
+      "enum": [
+        "PRESERVED",
+        "REVERSED",
+        "NARROWED",
+        "BROADENED",
+        "OMITTED",
+        "UNSUPPORTED_ADDITION",
+        "SHIFTED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "blankPropositionScorer": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "recordType",
+        "candidateSlotId",
+        "correctOptionId",
+        "mandatoryAxes",
+        "options",
+        "closedAtIssue",
+        "bundleSha256"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "blank-proposition-vector-scorer-v1" },
+        "recordType": { "const": "BLANK_PROPOSITION_SCORER" },
+        "candidateSlotId": { "type": "string", "pattern": "^RCAL4-" },
+        "correctOptionId": { "type": "string", "minLength": 1 },
+        "mandatoryAxes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "actorOrTarget",
+              "polarity",
+              "conditionOrModality",
+              "causalRelationAndDirection",
+              "scopeOrQuantifier",
+              "stance",
+              "temporalRelation"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "optionId",
+              "slotGrammarCompatible",
+              "groundedInPassage",
+              "relationVector",
+              "decisiveAxes",
+              "mechanismTags",
+              "cheapGiveaway"
+            ],
+            "properties": {
+              "optionId": { "type": "string", "minLength": 1 },
+              "slotGrammarCompatible": { "type": "boolean" },
+              "groundedInPassage": { "type": "boolean" },
+              "relationVector": { "$ref": "#/$defs/blankOptionVector" },
+              "decisiveAxes": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 2,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "actorOrTarget",
+                    "polarity",
+                    "conditionOrModality",
+                    "causalRelationAndDirection",
+                    "scopeOrQuantifier",
+                    "stance",
+                    "temporalRelation"
+                  ]
+                }
+              },
+              "mechanismTags": { "type": "array", "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }, "minItems": 1, "uniqueItems": true },
+              "cheapGiveaway": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "closedAtIssue": { "const": true },
+        "bundleSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

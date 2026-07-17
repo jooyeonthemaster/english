@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "verdict": "PASS_LOCAL_INTEGRATION",
+  "campaignExecutionVerdict": "NO_GO",
+  "dynamicEvidence": {
+    "profileIds": [
+      "G0_CURRENT_CONTROL",
+      "G1_FINAL_CHECKLIST_ABLATION",
+      "G2_POSITIVE_COMPACT",
+      "G3_SITE_CERTIFICATE",
+      "B0_CURRENT_CONTROL",
+      "B1_TYPE_SCOPED_TAIL",
+      "B2_POSITIVE_COMPACT",
+      "B3_OPTION_INTENT_LEDGER"
+    ],
+    "prompts": {
+      "G2_POSITIVE_COMPACT": { "chars": 960, "sha256": "fc01702f19bba345db20445d2a6f69fb287fbb4defa7d4b9cb66043bceba43bb", "frozenEqual": true },
+      "G3_SITE_CERTIFICATE": { "chars": 1641, "sha256": "001139b7bb5cee0b9b249029c6e1e4eaac3f103b2cd7096cb37901893175bee1", "frozenEqual": true },
+      "B2_POSITIVE_COMPACT": { "chars": 926, "sha256": "ff10990a134b692d343e4557c4f239ab76d293642a7ec41d76786b240da58cb8", "frozenEqual": true },
+      "B3_OPTION_INTENT_LEDGER": { "chars": 1612, "sha256": "1b98cb8aeda2d791eaa3782d512bf782277f0df71f713e7f2032fb8aeafcbcca", "frozenEqual": true }
+    },
+    "schemas": {
+      "grammar": {
+        "productionV1ComparableSha256": "40e24f989c16c6e9016cd51b2efe6e77118965694fc80a1ef25a6e7dd151fabb",
+        "frozenV1Sha256": "40e24f989c16c6e9016cd51b2efe6e77118965694fc80a1ef25a6e7dd151fabb",
+        "productionExactOneSha256": "0e87616ad0ba6ff37251ed0143d4c1bb82bbcadbd383e9e72025742af3becd9e",
+        "frozenV1PlusExactOneSha256": "0e87616ad0ba6ff37251ed0143d4c1bb82bbcadbd383e9e72025742af3becd9e",
+        "exactEqual": true,
+        "differingPaths": []
+      },
+      "blank": {
+        "productionV1ComparableSha256": "3130f865f4d08e7c9cbdf791449ea03cb33d4dad911513eb6b5fb905823ce801",
+        "frozenV1Sha256": "3130f865f4d08e7c9cbdf791449ea03cb33d4dad911513eb6b5fb905823ce801",
+        "productionExactOneSha256": "0f6a3ed11e2025f324308e44ebc242f43e51fe4525723f6e4c1245ce24295195",
+        "frozenV1PlusExactOneSha256": "0f6a3ed11e2025f324308e44ebc242f43e51fe4525723f6e4c1245ce24295195",
+        "exactEqual": true,
+        "differingPaths": []
+      }
+    },
+    "adversarial": {
+      "engineEntryHasCountOneAndDriftGuard": true,
+      "g3AdapterAcceptedUnboundNonAnswerMarker": false,
+      "b3BlueprintSchemaAcceptedDuplicateDistractorMechanisms": true,
+      "b3AdapterAcceptedDuplicateDistractorMechanisms": false
+    },
+    "ordinaryIdentity": { "promptSurface": true, "schema": true }
+  },
+  "sideEffects": {
+    "externalApiCalls": 0,
+    "networkCalls": 0,
+    "applicationDatabaseReads": 0,
+    "applicationDatabaseWrites": 0,
+    "secretsInspectedOrLogged": 0,
+    "candidatesConsumed": 0
+  }
+}

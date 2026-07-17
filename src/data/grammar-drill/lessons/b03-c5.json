@@ -1,0 +1,682 @@
+{
+  "id": "b03-c5",
+  "unitId": "b03",
+  "order": 5,
+  "title": "시간·조건 부사절의 현재시제",
+  "oneLiner": "시간·조건 부사절에서는 미래의 일도 현재시제로 쓰고, 미래는 주절이 맡습니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "별표4 #24 시간·조건의 부사절(중 ●)",
+      "천일문 중등 GRAMMAR 시제 — 시간·조건의 부사절",
+      "천일문 고등 GRAMMAR 시제 — 미래를 대신하는 현재시제"
+    ]
+  },
+  "lenses": ["L1", "L2"],
+  "confusableWith": ["b03-c2", "b03-c4", "b07-c3", "b07-c4"],
+  "estimatedMinutes": 18,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 1,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "We will begin the ceremony when the mayor will arrive.",
+        "We will begin the ceremony when the mayor arrives."
+      ],
+      "answer": 1,
+      "afterText": "시장이 도착하는 것은 분명히 앞으로의 일입니다. 그런데도 will 을 쓰지 않습니다. 이 레슨을 마치면 그 이유를 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "시간·조건 부사절",
+      "question": "그런데 부사절이 대체 무엇입니까?",
+      "plain": "부사절은 접속사가 이끄는 절이 시간·조건 같은 배경 정보를 문장에 덧붙이는 부품입니다. 통째로 지워도 남은 문장이 완전하면 그 절은 부사절입니다.",
+      "analogy": "주절이 휴대전화 본체라면 부사절은 이어폰 같은 부속품입니다. 이어폰을 빼도 전화가 꺼지지 않듯, 부사절을 지워도 주절은 멀쩡히 살아 있습니다.",
+      "whyItMatters": "when·if 절 안의 동사에 밑줄을 긋고 will 이 필요한지 묻는 것이 이 개념의 단골 출제입니다. 절의 신분을 가리는 눈이 없으면 매번 반반 확률로 찍게 됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "규칙을 다섯 항목으로 필기합니다",
+      "intro": "항목마다 한 가지만 기억하면 됩니다. 예문의 굵은 부분이 판단 포인트입니다.",
+      "entries": [
+        {
+          "head": "부사절 — 지워도 문장이 성한 덧붙임",
+          "body": "접속사가 이끄는 절이 시간·조건 같은 배경을 문장에 덧붙입니다. 통째로 지워도 주절이 완전하면 그 절은 부사절입니다.",
+          "example": {
+            "en": "**If the storm continues**, the flight will be delayed.",
+            "ko": "폭풍이 계속되면 그 항공편은 지연될 것입니다.",
+            "note": "if 절을 지워도 the flight will be delayed 는 완전한 문장입니다. 그래서 부사절입니다."
+          }
+        },
+        {
+          "head": "시간의 접속사 여섯",
+          "body": "when·before·after·until·as soon as·once 가 시간의 부사절을 엽니다. 이 여섯이 보이면 시제 검사를 시작합니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "조건의 접속사 셋",
+          "body": "if·unless·as long as 가 조건의 부사절을 엽니다. unless 는 '~하지 않는 한'이라는 부정의 조건입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "핵심 — 부사절 안에서는 will 금지",
+          "body": "시간·조건 부사절의 동사는 미래의 일이라도 현재시제로 씁니다. tomorrow 같은 미래 표현이 있어도 규칙은 그대로입니다.",
+          "example": {
+            "en": "If ticket sales **increase** next month, the theater will extend the run.",
+            "ko": "다음 달 입장권 판매가 늘면 그 극장은 공연 기간을 연장할 것입니다.",
+            "note": "next month 가 있어도 조건 부사절의 동사는 현재시제 increase 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "미래는 주절의 몫",
+          "body": "will 은 주절에 한 번이면 충분합니다. 주절이 명령문이어도 부사절의 현재시제 규칙은 그대로 적용됩니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "시간·조건의 접속사 9개",
+      "why": "이 아홉이 즉시 떠올라야 밑줄 옆의 접속사를 본 순간 판별이 시작됩니다. 목록을 더듬는 사이에는 will arrive 같은 미끼가 오히려 자연스러워 보입니다.",
+      "device": "시간 여섯은 뜻으로 두 박자 — \"할 때(when)·전(before)·후(after)\" 그리고 \"까지(until)·하자마자(as soon as)·일단(once)\". 조건 셋은 \"되면(if)·안 되면(unless)·되는 한(as long as)\". 세 묶음을 소리 내어 두 번 읽으십시오.",
+      "items": [
+        { "cue": "~할 때 / ~하기 전 / ~한 후", "answer": "when · before · after" },
+        { "cue": "~할 때까지", "answer": "until" },
+        { "cue": "~하자마자", "answer": "as soon as" },
+        { "cue": "일단 ~하면", "answer": "once" },
+        { "cue": "만약 ~하면", "answer": "if" },
+        { "cue": "~하지 않는 한", "answer": "unless" },
+        { "cue": "~하는 한", "answer": "as long as" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "시제 관문",
+      "mission": "미래의 일도 현재시제로 쓰게 만드는 시간·조건의 접속사만 전부 고르십시오. 그런 힘이 없는 침입자가 셋 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "when",
+        "before",
+        "after",
+        "until",
+        "as soon as",
+        "once",
+        "if",
+        "unless",
+        "as long as",
+        "because",
+        "that",
+        "what"
+      ],
+      "answers": [
+        "when",
+        "before",
+        "after",
+        "until",
+        "as soon as",
+        "once",
+        "if",
+        "unless",
+        "as long as"
+      ],
+      "passText": "아홉을 전부 가려냈습니다. 이제 문장에서 이 아홉 중 하나가 보이면, 절을 지워 보는 검사가 자동으로 시작될 것입니다.",
+      "retryText": "아깝습니다. 힌트 하나 — because 는 이유를 붙이는 말이고, that 과 what 은 명사절·관계사의 자리를 지키는 말입니다. 암기 카드의 세 묶음을 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "title": "미래의 일도 현재시제로 씁니다",
+      "rule": "시간·조건을 나타내는 부사절에서는 미래의 일이라도 will 을 쓰지 않고 현재시제로 씁니다.",
+      "examples": [
+        {
+          "en": "When the results **arrive**, the committee will announce them.",
+          "ko": "결과가 도착하면 위원회가 그것을 발표할 것입니다.",
+          "note": "결과가 도착하는 것은 앞으로의 일이지만, when 이 이끄는 시간 부사절이므로 will arrive 가 아니라 arrive 입니다."
+        },
+        {
+          "en": "If the weather **improves** tomorrow, the research team will resume the field study.",
+          "ko": "내일 날씨가 나아지면 연구팀은 현장 조사를 재개할 것입니다.",
+          "note": "tomorrow 라는 미래 표현이 있어도 if 조건 부사절 안의 동사는 현재시제 improves 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "미래는 주절이 담당합니다",
+      "rule": "미래는 주절이 담당합니다. 주절에는 will·조동사가 그대로 남고, 명령문이 주절인 경우도 있습니다.",
+      "examples": [
+        {
+          "en": "The library **will close** its doors as soon as the last reader **leaves**.",
+          "ko": "도서관은 마지막 독자가 나가는 즉시 문을 닫을 것입니다.",
+          "note": "주절의 will close 는 그대로 두고, as soon as 절의 동사만 현재시제 leaves 로 씁니다."
+        },
+        {
+          "en": "Please call the office when you **reach** the station.",
+          "ko": "역에 도착하면 사무실로 전화해 주십시오.",
+          "note": "주절이 명령문이어도 시간 부사절의 동사는 현재시제입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "조건 부사절이 붙은 문장의 해부",
+      "tokens": [
+        { "t": "The organizers", "role": "S" },
+        { "t": "will postpone", "role": "V" },
+        { "t": "the ceremony", "role": "O" },
+        { "t": "if", "role": "CONJ" },
+        { "t": "the storm continues", "role": "M" }
+      ],
+      "ko": "폭풍이 계속되면 주최 측은 행사를 연기할 것입니다.",
+      "layers": [
+        {
+          "label": "① 절을 여는 접속사를 표시합니다",
+          "roles": ["CONJ"],
+          "note": "if 가 조건의 절을 엽니다. 접속사가 하나이므로 이 문장의 시제 동사는 둘이어야 합니다."
+        },
+        {
+          "label": "② 그 절을 통째로 걷어냅니다",
+          "roles": ["CONJ", "M"],
+          "note": "if the storm continues 를 지워도 The organizers will postpone the ceremony 는 그대로 완전한 문장입니다. 빠진 자리가 없으므로 이 절은 부사절입니다."
+        },
+        {
+          "label": "③ 주절에서 미래를 확인합니다",
+          "roles": ["S", "V", "O"],
+          "note": "주절의 뼈대는 The organizers will postpone the ceremony 이고, 미래는 will 이 담당합니다."
+        },
+        {
+          "label": "④ 부사절 안의 시제를 판정합니다",
+          "roles": ["M"],
+          "note": "폭풍이 계속되는 것은 앞으로의 일이지만, 조건 부사절이므로 will continue 가 아니라 현재시제 continues 로 씁니다."
+        }
+      ],
+      "conclusion": "미래를 나타내는 will 은 주절에 한 번이면 충분합니다. 시간·조건 부사절은 현재시제로 그 미래에 얹힙니다."
+    },
+    {
+      "id": "b9",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "will 을 쓸지 판단하는 4단계",
+      "steps": [
+        {
+          "text": "그 절을 이끄는 말을 확인합니다. when·before·after·until·as soon as·once 는 시간, if·unless·as long as 는 조건을 나타냅니다.",
+          "applyNote": "절을 이끄는 말은 once 입니다. 시간을 나타내는 접속사 후보입니다."
+        },
+        {
+          "text": "그 절을 통째로 지워 봅니다. 지워도 남은 문장이 완전하면 부사절이고, 목적어·보어 자리가 비면 명사절입니다.",
+          "applyNote": "once 절을 지우면 traffic through the old district will decrease 가 남아 그대로 완전합니다. 따라서 부사절입니다."
+        },
+        {
+          "text": "부사절이면 미래의 일이라도 will 을 지우고 현재시제로 씁니다. 완료의 뜻이 필요하면 현재완료를 씁니다.",
+          "applyNote": "부사절이므로 will open 이 아니라 현재시제 opens 가 옳습니다."
+        },
+        {
+          "text": "주절의 미래 표현(will·조동사·명령문)이 그대로 남아 있는지 확인합니다.",
+          "applyNote": "주절의 will decrease 는 그대로 둡니다. 이 문장의 미래는 주절이 나타냅니다."
+        }
+      ],
+      "example": {
+        "en": "Once the new bridge **opens**, traffic through the old district will decrease.",
+        "ko": "새 다리가 개통되면 옛 구역을 통과하는 교통량이 줄어들 것입니다.",
+        "note": "once 가 이끄는 시간 부사절의 동사는 현재시제 opens 이고, 미래는 주절의 will decrease 가 담당합니다."
+      }
+    },
+    {
+      "id": "b10",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The panel will start the interview as soon as the last candidate ( arrives / will arrive ).",
+      "steps": [
+        {
+          "title": "① 절을 이끄는 말을 봅니다",
+          "body": "괄호가 든 절은 as soon as 가 이끕니다. 시간을 나타내는 접속사입니다."
+        },
+        {
+          "title": "② 그 절을 지워 봅니다",
+          "body": "as soon as 절을 지우면 The panel will start the interview 가 남습니다. 주어·동사·목적어가 모두 있어 완전합니다. 따라서 부사절입니다."
+        },
+        {
+          "title": "③ 시제를 판정합니다",
+          "body": "마지막 지원자가 도착하는 것은 앞으로의 일이지만, 시간 부사절이므로 will 을 쓰지 않습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "현재시제 arrives 가 옳습니다. 미래는 주절의 will start 가 이미 나타내고 있습니다."
+        }
+      ],
+      "answer": "arrives",
+      "ko": "마지막 지원자가 도착하는 즉시 심사단은 면접을 시작할 것입니다."
+    },
+    {
+      "id": "b11",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞서 함께 푼 The panel will start the interview as soon as the last candidate ( arrives / will arrive ). 에서 arrives 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "면접이 이미 시작된 상황을 말하고 있어서 현재시제가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "문장은 아직 시작되지 않은 면접을 말합니다. 현재시제를 쓰는 이유는 의미가 현재여서가 아니라 그 절이 시간 부사절이기 때문입니다."
+        },
+        {
+          "text": "as soon as 절을 지워도 주절이 완전하므로 그 절은 시간 부사절이고, 시간 부사절에서는 미래의 일도 현재시제로 쓰기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 절을 지워 보아 부사절임을 확인한 뒤 시제를 판정하는 것이 이 개념의 절차입니다."
+        },
+        {
+          "text": "한 문장 안에 will 을 두 번 쓸 수 없다는 규칙이 있기 때문입니다.",
+          "correct": false,
+          "feedback": "will 을 두 번 쓰지 못한다는 규칙은 없습니다. 명사절이라면 주절과 종속절에 will 이 둘 다 올 수 있습니다. 판단 근거는 절의 종류입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b03-c5-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "If the temperature {{blank}} below zero tonight, the roads will freeze.",
+          "options": ["drops", "will drop"],
+          "translation": "오늘 밤 기온이 영하로 떨어지면 도로가 얼 것입니다.",
+          "answer": 0,
+          "explanation": "if 가 이끄는 조건 부사절입니다. 기온이 떨어지는 것은 앞으로의 일이지만 부사절에서는 will 을 쓰지 않으므로 현재시제 drops 가 옳습니다. 미래는 주절의 will freeze 가 나타냅니다.",
+          "trapTags": ["time-condition-clause", "future-in-adverbial-clause"]
+        },
+        {
+          "id": "b03-c5-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The guide will explain the exhibit before the visitors [[u:enter]] the main hall.",
+          "isCorrect": true,
+          "translation": "안내인은 방문객들이 중앙 홀에 들어가기 전에 그 전시를 설명할 것입니다.",
+          "explanation": "before 가 이끄는 시간 부사절이므로 미래의 일이라도 현재시제 enter 를 씁니다. 미래는 주절의 will explain 이 담당하므로 이 문장은 옳습니다.",
+          "trapTags": ["time-condition-clause"]
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "같은 when·if 라도 절의 신분이 다릅니다",
+      "columns": ["시간·조건 부사절", "명사절(목적어 자리)"],
+      "rows": [
+        {
+          "criterion": "그 절을 지우면",
+          "a": "주절이 그대로 완전합니다",
+          "b": "목적어 자리가 비어 문장이 무너집니다"
+        },
+        {
+          "criterion": "미래를 나타낼 때",
+          "a": "will 을 쓰지 않고 현재시제로 씁니다",
+          "b": "will 을 그대로 씁니다"
+        },
+        {
+          "criterion": "if 의 뜻",
+          "a": "만약 ~라면 (조건)",
+          "b": "~인지 아닌지 (whether)"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The company will lower the price if demand **falls** next quarter.",
+          "ko": "다음 분기에 수요가 줄어들면 그 회사는 가격을 낮출 것입니다.",
+          "note": "if 절을 지워도 주절이 완전합니다. 조건 부사절이므로 현재시제 falls 를 씁니다."
+        },
+        {
+          "en": "No one knows if demand **will fall** next quarter.",
+          "ko": "다음 분기에 수요가 줄어들지는 아무도 모릅니다.",
+          "note": "이 if 절은 knows 의 목적어 자리를 채우는 명사절입니다. 부사절이 아니므로 will fall 을 그대로 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "SORT",
+      "tier": 2,
+      "instruction": "각 문장의 종속절이 시간·조건 부사절인지, 목적어 자리를 채우는 명사절인지 분류하십시오.",
+      "buckets": [
+        { "id": "adv", "label": "부사절 — 현재시제" },
+        { "id": "nom", "label": "명사절 — will 가능" }
+      ],
+      "chips": [
+        {
+          "text": "We will buy the equipment if the price falls.",
+          "bucketId": "adv",
+          "why": "if 절을 지워도 주절이 완전합니다. 조건 부사절이므로 현재시제 falls 가 옳습니다."
+        },
+        {
+          "text": "No one knows if the price will fall.",
+          "bucketId": "nom",
+          "why": "knows 의 목적어 자리를 채우는 명사절입니다. 미래는 will fall 로 그대로 나타냅니다."
+        },
+        {
+          "text": "Call the driver when the shipment arrives.",
+          "bucketId": "adv",
+          "why": "주절이 명령문이고, when 절은 시간 부사절이므로 현재시제 arrives 를 씁니다."
+        },
+        {
+          "text": "The manager has not decided when the shipment will leave.",
+          "bucketId": "nom",
+          "why": "decided 의 목적어 자리를 채우는 명사절입니다. 부사절이 아니므로 will leave 가 옳습니다."
+        },
+        {
+          "text": "Unless the road reopens, the delivery will be delayed.",
+          "bucketId": "adv",
+          "why": "unless 가 이끄는 조건 부사절입니다. 미래의 일이라도 현재시제 reopens 를 씁니다."
+        },
+        {
+          "text": "The report does not say when the road will reopen.",
+          "bucketId": "nom",
+          "why": "say 의 목적어 자리를 채우는 명사절이므로 will reopen 을 그대로 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "시제 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 접속사를 보고, 절을 지워 보고, 시제를 판정하는 순서를 반사신경으로 만듭니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "시간·조건 부사절에서는 미래의 일도 현재시제로 씁니다.",
+          "isTrue": true,
+          "why": "미래는 주절이 나타내고, 부사절은 현재시제로 그 미래에 얹힙니다."
+        },
+        {
+          "statement": "when 이 보이면 무조건 will 을 지워야 합니다.",
+          "isTrue": false,
+          "why": "when 절이 목적어 자리를 채우는 명사절이면 will 을 그대로 씁니다. 절의 신분이 기준입니다."
+        },
+        {
+          "statement": "If it rains tomorrow, the match will be canceled. 는 옳은 문장입니다.",
+          "isTrue": true,
+          "why": "if 조건 부사절의 동사는 현재시제 rains 이고, 미래는 주절의 will be canceled 가 나타냅니다."
+        },
+        {
+          "statement": "Once the gate will open, visitors will enter the hall. 은 옳은 문장입니다.",
+          "isTrue": false,
+          "why": "once 가 이끄는 시간 부사절이므로 will open 이 아니라 현재시제 opens 를 써야 합니다."
+        },
+        {
+          "statement": "주절이 명령문이면 시간 부사절에 will 을 써도 됩니다.",
+          "isTrue": false,
+          "why": "주절이 명령문이어도 시간 부사절의 동사는 현재시제입니다. Please call the office when you reach the station 처럼 씁니다."
+        },
+        {
+          "statement": "No one can tell if the fog will clear tonight. 은 옳은 문장입니다.",
+          "isTrue": true,
+          "why": "이 if 절은 tell 의 목적어 자리를 채우는 명사절입니다. '~인지 아닌지'의 뜻이므로 will clear 를 그대로 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "RULE",
+      "tier": 2,
+      "title": "완료가 필요하면 현재완료로 씁니다",
+      "rule": "부사절이 '그때까지 이미 끝난 일'을 나타내면 미래완료(will have + 과거분사) 대신 현재완료(have + 과거분사)를 씁니다.",
+      "examples": [
+        {
+          "en": "After the technicians **have replaced** the sensors, the machine will run again.",
+          "ko": "기술자들이 센서를 교체하고 나면 그 기계는 다시 작동할 것입니다.",
+          "note": "교체가 먼저 끝난다는 점을 드러내려면 현재완료 have replaced 를 씁니다. will have replaced 는 쓰지 않습니다."
+        },
+        {
+          "en": "The panel will not begin the discussion until every member **has read** the report.",
+          "ko": "모든 위원이 보고서를 다 읽을 때까지 위원단은 논의를 시작하지 않을 것입니다.",
+          "note": "until 이 이끄는 시간 부사절이므로 현재완료 has read 를 씁니다. 미래는 주절의 will not begin 이 나타냅니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The museum will not open the new wing until the safety inspection ( ends / will end ).",
+      "givenSteps": [
+        "① 절을 이끄는 말은 until 입니다. 시간을 나타내는 접속사입니다.",
+        "② until 절을 지우면 The museum will not open the new wing 이 남아 그대로 완전합니다. 따라서 부사절입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "will end — 점검이 끝나는 것이 미래의 일이므로 will 이 필요합니다",
+        "ended — 아직 일어나지 않은 일이므로 과거형으로 씁니다",
+        "ends — 시간 부사절이므로 미래의 일이라도 현재시제로 씁니다"
+      ],
+      "answer": 2,
+      "explain": "until 이 이끄는 시간 부사절이므로 현재시제 ends 가 옳습니다. 미래는 주절의 will not open 이 이미 나타내고 있어 부사절에 will 을 한 번 더 쓸 필요가 없습니다. 과거형 ended 는 시점이 맞지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "접속사와 뜻 연결하기",
+      "instruction": "왼쪽 접속사가 여는 절의 종류와 뜻을 오른쪽에서 찾아 연결하십시오.",
+      "pairs": [
+        {
+          "a": "as soon as",
+          "b": "시간 — ~하자마자",
+          "why": "시간 부사절을 여는 접속사이므로 그 절의 동사는 미래의 일도 현재시제로 씁니다."
+        },
+        {
+          "a": "until",
+          "b": "시간 — ~할 때까지",
+          "why": "The panel will not begin until every member has read the report 처럼 씁니다."
+        },
+        {
+          "a": "once",
+          "b": "시간 — 일단 ~하면",
+          "why": "once 도 시간 부사절을 엽니다. Once the bridge opens 처럼 현재시제가 따라옵니다."
+        },
+        {
+          "a": "unless",
+          "b": "조건 — ~하지 않는 한",
+          "why": "부정을 품은 조건의 접속사입니다. unless 절의 동사도 현재시제로 씁니다."
+        },
+        {
+          "a": "if",
+          "b": "조건 — 만약 ~하면",
+          "why": "조건 부사절을 열 때의 if 입니다. 목적어 자리를 채우는 if(~인지)와 신분이 다릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "우리는 회의가 끝나면 결과를 발표할 것입니다.",
+      "answer": ["We", "will announce", "the results", "when", "the meeting", "ends"],
+      "tiles": [
+        "We",
+        "will announce",
+        "the results",
+        "when",
+        "the meeting",
+        "ends",
+        "will end"
+      ],
+      "explanation": "미래는 주절의 will announce 가 나타냅니다. when 이 이끄는 시간 부사절에서는 will 을 쓰지 않으므로 will end 가 아니라 ends 를 씁니다."
+    },
+    {
+      "id": "b20",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b03-c5-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "No one knows when the government {{blank}} the new policy.",
+          "options": ["will introduce", "introduces"],
+          "translation": "정부가 그 새 정책을 언제 도입할지는 아무도 모릅니다.",
+          "answer": 0,
+          "explanation": "when 절이 knows 의 목적어 자리를 채우고 있습니다. 이 절을 지우면 목적어가 사라지므로 부사절이 아니라 명사절입니다. 명사절에서는 미래를 will introduce 로 그대로 나타냅니다.",
+          "trapTags": ["noun-clause-vs-adverbial", "time-condition-clause"]
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — when·if 가 명사절을 이끌면 will 을 씁니다",
+      "body": "이 규칙은 접속사의 생김새가 아니라 절의 신분에 걸려 있습니다. when·if 뒤라고 무조건 현재시제로 고치면, 목적어 자리를 채우는 명사절까지 잘못 고치게 됩니다. 절을 통째로 지워 보아 주절에 빠진 자리가 생기는지 먼저 확인하십시오.",
+      "example": {
+        "en": "The forecasters cannot yet predict when the storm **will reach** the coast.",
+        "ko": "예보관들은 그 폭풍이 언제 해안에 도달할지 아직 예측하지 못합니다.",
+        "note": "when 절이 predict 의 목적어 자리를 채우는 명사절입니다. 이 절을 지우면 목적어가 사라져 주절이 무너지므로 부사절이 아니고, 현재시제로 고치지 않고 will reach 를 그대로 둡니다."
+      }
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 괄호 안에 동사원형을 주고 어법에 맞는 형태로 바꿔 쓰게 합니다. 조건절임을 밝히고 현재시제로 쓴 답만 만점입니다.",
+          "sample": {
+            "en": "If it ( rain ) tomorrow, the outdoor rehearsal will be canceled.",
+            "ask": "괄호 안의 동사를 어법에 맞는 형태로 고쳐 쓰십시오.",
+            "answer": "rains — if 가 이끄는 조건 부사절이므로 미래의 일이라도 현재시제로 씁니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 접속사가 이끄는 절 안의 동사에 밑줄이 놓입니다. 밑줄에 will 이 붙어 있으면, 그 절을 지워 보아 부사절인지 명사절인지부터 가립니다.",
+          "sample": {
+            "en": "The research team will publish the findings as soon as the peer review [[u:is]] complete.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — as soon as 가 이끄는 시간 부사절이므로 will be 가 아니라 현재시제 is 를 씁니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "시간 국경의 세관원",
+      "intro": "여기는 시간·조건 부사절의 국경입니다. 절 안으로 will 을 밀반입하려는 자를 통과시킨 적이 없습니다. 네 문장의 통관 심사를 받으십시오.",
+      "questions": [
+        {
+          "prompt": "The staff will lock the gallery after the last visitor ( ___ ).",
+          "options": ["will leave", "leaves"],
+          "answer": 1,
+          "why": "after 가 이끄는 시간 부사절이므로 미래의 일이라도 현재시제 leaves 를 씁니다. 미래는 주절의 will lock 이 담당합니다."
+        },
+        {
+          "prompt": "The mayor has not announced when the new subway line ( ___ ).",
+          "options": ["will open", "opens"],
+          "answer": 0,
+          "why": "이 when 절은 announced 의 목적어 자리를 채우는 명사절입니다. 절을 지우면 목적어가 사라지므로 will open 을 그대로 씁니다."
+        },
+        {
+          "prompt": "Unless the sponsors ( ___ ) more funding, the festival will be shortened.",
+          "options": ["provide", "will provide"],
+          "answer": 0,
+          "why": "unless 가 이끄는 조건 부사절이므로 will 을 쓰지 않고 현재시제 provide 를 씁니다."
+        },
+        {
+          "prompt": "The crew will reopen the tunnel once they ( ___ ) the safety checks.",
+          "options": ["will have finished", "have finished"],
+          "answer": 1,
+          "why": "once 가 이끄는 시간 부사절에서는 '그때까지 끝난 일'도 미래완료가 아니라 현재완료 have finished 로 씁니다."
+        }
+      ],
+      "winText": "세관원이 도장을 찍어 줍니다. 네 문장 어디에도 will 을 밀반입하지 않았습니다. 미래는 주절에 맡기는 습관이 이제 손에 붙었습니다.",
+      "loseText": "세관원이 통관을 보류합니다. 압수된 will 을 보십시오 — 전부 시간·조건 부사절 안에서 나온 것입니다. 절을 지워 보는 검사부터 다시 하면 국경은 열립니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "when·if 절을 지웠을 때 주절이 ___면 부사절이므로 미래의 일도 ___시제로 쓰고, 주절이 ___면 명사절이므로 ___ 을 그대로 씁니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "시간·조건 부사절(when·before·after·until·as soon as·once·if·unless 등)에서는 미래의 일이라도 will 을 쓰지 않고 현재시제로 씁니다.",
+        "미래는 주절이 담당합니다. 주절의 will·조동사·명령문은 그대로 둡니다.",
+        "부사절이 '그때까지 끝난 일'을 나타내면 미래완료 대신 현재완료(have p.p.)를 씁니다.",
+        "같은 when·if 라도 목적어 자리를 채우는 명사절이면 will 을 그대로 씁니다. 절을 지워 보아 주절에 빈자리가 생기는지로 가립니다."
+      ],
+      "keySentence": {
+        "en": "The library **will close** its doors as soon as the last reader **leaves**.",
+        "ko": "도서관은 마지막 독자가 나가는 즉시 문을 닫을 것입니다.",
+        "note": "will 은 주절에 한 번, 시간 부사절의 동사는 현재시제입니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b03-c5-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The technicians will restart the server after they {{blank}} the software update.",
+          "options": ["finish", "will finish", "will have finished"],
+          "translation": "기술자들은 소프트웨어 업데이트를 마친 뒤에 서버를 다시 가동할 것입니다.",
+          "answer": 0,
+          "explanation": "after 가 이끄는 시간 부사절이므로 will finish 도 will have finished 도 쓰지 않습니다. 현재시제 finish 가 옳습니다. 미래는 주절의 will restart 가 나타냅니다.",
+          "trapTags": ["time-condition-clause", "future-in-adverbial-clause"]
+        },
+        {
+          "id": "b03-c5-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The engineers do not know if the bridge [[u:will reopen]] before winter.",
+          "isCorrect": true,
+          "translation": "기술자들은 그 다리가 겨울 전에 다시 열릴지 알지 못합니다.",
+          "explanation": "이 if 절은 know 의 목적어 자리를 채우는 명사절입니다. 절을 지우면 목적어가 사라지므로 부사절이 아니고, '~인지 아닌지'의 뜻이므로 will reopen 을 그대로 쓴 이 문장은 옳습니다.",
+          "trapTags": ["noun-clause-vs-adverbial"]
+        },
+        {
+          "id": "b03-c5-ls-006",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Once the contract [[u:will be]] signed, both companies will announce the merger.",
+          "isCorrect": false,
+          "correction": "is",
+          "translation": "계약이 체결되면 두 회사는 합병을 발표할 것입니다.",
+          "explanation": "once 가 이끄는 시간 부사절입니다. 이 절을 지워도 주절이 완전하므로 부사절이며, 미래의 일이라도 will be 가 아니라 현재시제 is 를 써야 합니다.",
+          "trapTags": ["time-condition-clause", "future-in-adverbial-clause"]
+        }
+      ]
+    }
+  ]
+}

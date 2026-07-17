@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20200312-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "함축의미",
+    "words": 141
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-generic-answer-point"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=k  (C):dec=e  (D):dec=d  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 53,
+        "relPos": 0.072,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 218,
+        "relPos": 0.295,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 291,
+        "relPos": 0.394,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 389,
+        "relPos": 0.526,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 400,
+        "relPos": 0.541,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.541,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "lost",
+        "isError": false,
+        "correction": "lost",
+        "errorExpression": "lost",
+        "surroundingText": "We all know that tempers are one of the first things lost in many arguments.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "to get",
+        "isError": false,
+        "correction": "to get",
+        "errorExpression": "to get",
+        "surroundingText": "The point to remember is that sometimes in arguments the other person is trying to get you to be angry.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "designed",
+        "isError": false,
+        "correction": "designed",
+        "errorExpression": "designed",
+        "surroundingText": "They may be saying things that are intentionally designed to annoy you.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "sounds",
+        "isError": false,
+        "correction": "sounds",
+        "errorExpression": "sounds",
+        "surroundingText": "They know that if they get you to lose your cool you'll say something that sounds foolish",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": true,
+        "correction": "is",
+        "errorExpression": "being",
+        "surroundingText": "but responding with a cool answer that focuses on the issue raised is likely to be most effective.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "lost"
+      },
+      {
+        "label": "(B)",
+        "text": "to get"
+      },
+      {
+        "label": "(C)",
+        "text": "designed"
+      },
+      {
+        "label": "(D)",
+        "text": "sounds"
+      },
+      {
+        "label": "(E)",
+        "text": "being"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "명사구인 'one of the first things'를 뒤에서 수식하는 과거분사형용사구의 일부로, '잃어버리게 되는 첫 번째 것들'이라는 수동의 의미를 나타내므로 과거분사 lost는 어법상 적절합니다.",
+      "(B)": "동사 try는 미래 지향적이거나 노력하는 행위를 목적으로 취할 때 to부정사를 목적어로 가집니다. 여기서는 '당신을 화나게 하려고 노력하다(시도하다)'의 의미로 쓰여 trying 뒤의 to get은 어법상 옳습니다.",
+      "(C)": "주격 관계대명사 that절 안에서 선행사 things가 설계 혹은 의도되는 대상이므로, 수동태 'are intentionally designed'를 구성하는 과거분사형 designed는 어법상 적절합니다.",
+      "(D)": "선행사인 부정대명사 -thing(something)은 단수로 취급하므로, 주격 관계대명사 that절 안의 동사는 단수형인 sounds 동사를 서술하여 수일치시킨 형태가 어법상 맞습니다."
+    },
+    "explanation": "문장의 뼈대를 분석해 보면, 접속사 but 뒤에 이어지는 주어는 동명사구인 'responding with a cool answer that focuses on the issue raised'이며, 이에 대응하는 이 문장의 정동사(본동사)가 뒤따라야 합니다. 그러나 밑줄 친 (E) 자리에는 준동사인 'being'이 쓰여 문장의 정동사가 존재하지 않는 비문이 되었습니다. 주어 구절인 동명사구 'responding ~ raised'는 단수 취급하므로, 준동사 being을 3인칭 단수 정동사인 'is'로 고쳐야 올바른 문장이 됩니다. 수식어구가 길어 주어와 동사 사이가 멀어질 때 정동사 자리를 정확히 파악하는지 묻는 고난도 문제입니다.",
+    "keyPoints": [
+      "(E) 정동사 vs 준동사 — 수식어구로 인해 주어와 멀어진 문장의 정동사 자리 판단",
+      "(A) 과거분사 vs 현재분사 — 명사와의 능동·수동 관계 파악",
+      "(D) 주어-동사 수일치 — 주격 관계대명사의 선행사에 따른 동사의 수일치"
+    ],
+    "tags": [
+      "정동사와 준동사",
+      "동명사 주어",
+      "수일치",
+      "과거분사 수식"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all know that tempers are one of the first things __(A) lost__ in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying __(B) to get__ you to be angry. They may be saying things that are intentionally __(C) designed__ to annoy you. They know that if they get you to lose your cool you'll say something that __(D) sounds__ foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised __(E) being__ likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\""
+  }
+}

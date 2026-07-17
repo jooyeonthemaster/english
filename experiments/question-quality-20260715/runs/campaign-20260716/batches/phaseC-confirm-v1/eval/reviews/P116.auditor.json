@@ -1,0 +1,75 @@
+{
+  "pid": "P116",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-SPAN-LEAK-MINOR",
+      "severity": "minor",
+      "evidence": "오답 ① 해설이 \"본문이 강조하는 '도전 과제로 보고 실행에 돌입하라'는 취지\"라고 쓰는데, '도전 과제(challenge)'는 빈칸으로 제거된 원문 span의 표현이라 학생에게 보이는 지문(④ 삽입 완성문 포함)에는 존재하지 않는다. '실행에 돌입(jump into action)'과 논지 자체는 지문에 실재하므로 논리 오류는 아니고 귀속 표현의 사소한 부정확이다."
+    },
+    {
+      "code": "V4-DICTION-MINOR",
+      "severity": "minor",
+      "evidence": "오답 ③ 해설의 '장기적이고 포괄적인 도정이나 경력 계획'에서 '도정'은 어색한 어휘 선택('여정/로드맵'이 자연스러움). 비단어는 아니며 의미 전달에는 지장 없음."
+    },
+    {
+      "code": "V2-GLOBAL-EXCLUSION-NOTE",
+      "severity": "minor",
+      "evidence": "⑤를 넣은 완성 단락은 마지막 문장과 국소적으로는 자연스럽게 이어진다(일일 계획 → 스트레스 관리 가능). 배제는 전역 근거(본문 어디에도 세부 일정 분할 지지 없음 + S1이 '시간을 단위로 쪼개는 것'을 문제의 원인으로 제시)에 의존한다. 이는 정답 유일성을 해치지 않는 정상적 강미끼 설계이며 V2 통과."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal) — 임박 프레이밍의 정반대인 유연/연기 프레이밍",
+      "temptingBecause": "'flexible', 'targets' 등 마감 관리 어휘를 쓰고, 스트레스를 줄이는 조언처럼 들린다",
+      "decisiveFlaw": "본문은 마감을 임박한 것으로 인식해 행동 개시를 앞당기라는 논지다. 마감을 쉽게 미룰 수 있는 것으로 보면 '제때 시작-완료'라는 후행 문장과 인과가 성립하지 않는다"
+    },
+    {
+      "label": "②",
+      "intent": "절대어 과확장(half-truth) — 스트레스 '관리'를 스트레스 '완전 제거'로 왜곡",
+      "temptingBecause": "마지막 문장의 'the stress is more manageable'와 어휘가 겹친다",
+      "decisiveFlaw": "본문은 압박을 무시하는 게 아니라 시간 프레임을 재인식해 스트레스를 관리 가능한 수준으로 낮추는 것이며, 압박을 완전히 무시하면 'jump into action'과 정면 충돌한다"
+    },
+    {
+      "label": "③",
+      "intent": "범위 이동(scope shift) — 즉각적 인지 전환을 장기 계획 수립으로 치환",
+      "temptingBecause": "학업(students)·경력 맥락과 계획 수립이라는 상식적 조언 프레임에 올라탄다",
+      "decisiveFlaw": "본문의 기제는 지각된 시간 프레임을 좁혀 임박하게 만드는 것이다. 장기·광범위 이정표 정렬은 오히려 마감을 멀게 인식하게 하는 방향이라 'imminent' 논지와 반대"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 제거된 span 'view deadlines as a challenge that you have to meet within a period that's imminent'의 의미 보존 추상화",
+      "temptingBecause": "(정답) imminent→urgent/very near future 환언, view A as B→perceive A as B 환언으로 원문 의미를 정확히 보존",
+      "decisiveFlaw": "없음 — 예시 문장(this winter vs next year)과 결과 문장(스트레스 관리·제때 시작) 양쪽에서 필연적으로 지지됨"
+    },
+    {
+      "label": "⑤",
+      "intent": "기제 교체(mechanism swap) + 어휘 앵커 미끼 — S1의 'break up time into units'를 재활용",
+      "temptingBecause": "'break ... down'이 첫 문장과 어휘적으로 겹치고, 일일 계획 수립은 시간관리 주제의 강한 상식 통념이라 국소적으로는 후행 문장과도 자연스럽다",
+      "decisiveFlaw": "본문의 해결책은 일정 세분화가 아니라 시간 인식 프레임의 재조정이며, 시간을 단위로 쪼개는 행위는 S1에서 문제의 '원인'으로 제시된다. 본문 어디에도 세부 일정 분할을 지지하는 근거가 없다"
+    }
+  ],
+  "explanationIssues": [
+    "① 해설의 '도전 과제로 보고'는 제거된 원문 span의 표현을 본문 귀속으로 인용 — 논지는 맞으나 표현 귀속이 부정확(minor)",
+    "③ 해설의 '도정'은 어색한 어휘 선택(minor)",
+    "본해설이 ③⑤를 '무관한 일반론'으로 묶는데 오답해설에서는 각각 다른 구체 결함(범위 이동/기제 교체)을 제시 — 모순은 아니나 본해설 쪽이 다소 뭉툭함(minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 의도된 빈칸 치환 외 원지문과 완전 일치. 다섯 선지 모두 'to + 동사원형' 동일 통사 슬롯에 들어가며(D 조건의 슬롯 균질성 충족), 정답 ④는 독립 blind solve에서 유일하게 지지된다. 강미끼는 ⑤(어휘 앵커+상식 통념), 보조 미끼 ②(stress 어휘 겹침). 공예: 결론부 논지를 묻는 출제 가치(C1=4), INTERMEDIATE 난이도 정합(C5=4)은 우수하나, ①이 다소 평이한 정반대 선지이고 오답 쪽에만 절대어(completely/any/only)가 몰려 시험 요령 소거의 약한 단서가 되는 점, 해설의 사소한 귀속·어휘 결함으로 C2·C3·C4·C6=3. 합계 20 → 등급 B(전 V 통과, C 최저 3, 합계 17 이상 21 미만). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

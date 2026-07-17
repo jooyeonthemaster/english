@@ -1,0 +1,35 @@
+{
+  "pid": "P046",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "showing (that) human perception and behavior can be influenced by external factors — showing 뒤 that 생략 명사절이며, 주어 perception and behavior는 외부 요인에 의해 '영향을 받는' 대상이므로 수동태 can be influenced가 정확. by external factors와의 결합도 정상. 수동/능동 미끼로 매력적이지만 완전한 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "asked them to create a coherent sentence — ask + 목적어 + to부정사의 표준 5형식 구조. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "인용 예시 문장의 본동사. 주어 the lonely old man(전치사구 with the wrinkled face는 수식어) + 과거시제 자동사 sat down. 원 단어 리스트(SAT, DOWN)의 재배열로도 자연스러움. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Those students who had been exposed ... took almost 40 percent longer to walk — 관계절을 건너뛴 복수 주어 Those students의 본동사이며 take + 시간 + to부정사 구문. than 비교 구조와도 정합. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "Some students even walked with their shoulders bent forwards, dragged their feet as they left — walked와 dragged가 접속사 없이 콤마로만 연결되어 비문. 대안 해석 탐색: ① with 구문 연장으로 보면 과거분사 dragged가 목적어 their feet를 뒤에 취할 수 없음(그 경우 with their feet dragged 어순이어야 함), ② 등위 병렬이려면 and 필요, ③ 도치·삽입 구조 불성립. 동시동작 분사구문 dragging their feet가 유일한 정문 형태이므로 어법상 틀림."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: 1차 통독에서 (A)의 수동태(showing + that 생략 + can be influenced)가 가장 매력적인 오답으로 시선을 끌었으나, 의미상 perception/behavior가 영향을 받는 쪽이므로 수동이 맞다고 확정. (E)는 walked ... , dragged 의 무접속사 연결이 즉시 비문으로 판독되며 dragging으로 교정해야 함. 대안 해석(축약 관계절, with 분사구문 잔류 목적어 등)을 모두 검토했으나 (E)를 정문으로 만드는 구조는 존재하지 않음. 정답 후보는 (E) 단일."
+}

@@ -1,0 +1,385 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reviewer-calibration-v4-production-bound-v2-events",
+  "title": "Reviewer calibration v4 production-bound v2 future execution evidence",
+  "description": "Schema only. This design package contains zero instances of every event type.",
+  "oneOf": [
+    { "$ref": "#/$defs/roleAssignment" },
+    { "$ref": "#/$defs/slotMaterialization" },
+    { "$ref": "#/$defs/capabilityAuthorization" },
+    { "$ref": "#/$defs/accessReceipt" },
+    { "$ref": "#/$defs/denialEvent" },
+    { "$ref": "#/$defs/phaseSeal" },
+    { "$ref": "#/$defs/reviewerCertificate" },
+    { "$ref": "#/$defs/freshAdjudicatorBinding" },
+    { "$ref": "#/$defs/separateActivationEvent" }
+  ],
+  "x-semanticConstraints": [
+    "EVENT_ORDINAL_STARTS_AT_ONE_AND_INCREMENTS_WITHOUT_GAPS",
+    "PRIOR_EVENT_SHA256_BINDS_THE_IMMEDIATELY_PRECEDING_EVENT_OR_ZERO_GENESIS",
+    "EVENT_SHA256_IS_SHA256_OF_CANONICAL_EVENT_WITH_EVENT_SHA256_OMITTED",
+    "AUTHORIZATION_EVENT_MUST_BE_SEALED_EARLIER_IN_THE_CHAIN_THAN_ITS_ACCESS_RECEIPT",
+    "AUTHORIZATION_AND_RECEIPT_MUST_MATCH_ACTOR_ROLE_PHASE_RESOURCE_VISIBLE_SURFACE_CAPABILITY_AND_DENY_SET",
+    "AUTHORIZED_AT_MUST_BE_STRICTLY_EARLIER_THAN_OPENED_AT_AND_OPENED_AT_NO_LATER_THAN_CLOSED_AT",
+    "CAPABILITY_IS_SINGLE_USE_AND_EXPIRES_AT_PHASE_CLOSE",
+    "DENIAL_HAS_NULL_AUTHORIZATION_OPEN_CLOSE_AND_NO_RECEIPT",
+    "NO_RETROACTIVE_INSERTION_REWRITE_OR_LATE_AUTHORIZATION",
+    "SEPARATE_ACTIVATION_EVENT_REQUIRES_A_FRESH_INDEPENDENT_PASS_AUDIT_AND_CANNOT_BE_STORED_IN_THIS_DESIGN"
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "nullableSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+    "rfc3339": { "type": "string", "format": "date-time" },
+    "pseudonym": { "type": "string", "minLength": 16, "maxLength": 128, "pattern": "^[A-Za-z0-9._:-]+$" },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "TAXONOMY_PILOT",
+        "MAIN_CERTIFICATION",
+        "MAIN_CERTIFICATION_PHASE1",
+        "MAIN_CERTIFICATION_PHASE2",
+        "MAIN_CERTIFICATION_PHASE3",
+        "INDEPENDENT_TRUSTED_GOLD_AUDIT",
+        "ACTIVATION_HOLDOUT",
+        "S1_PHASE1",
+        "S1_PHASE2",
+        "SEPARATE_ACTIVATION"
+      ]
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "PACKET_AUTHOR",
+        "TAXONOMY_PILOT_RATER",
+        "MAIN_CERTIFICATION_RATER",
+        "ACTIVATION_HOLDOUT_RATER",
+        "TRUSTED_GOLD_AUDITOR",
+        "S1_REVIEWER",
+        "S1_ADJUDICATOR",
+        "CALIBRATION_ADJUDICATOR",
+        "S1_RESULT_CUSTODIAN",
+        "INDEPENDENT_ACTIVATION_AUDITOR"
+      ]
+    },
+    "baseEvent": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "eventKind",
+        "eventId",
+        "eventOrdinal",
+        "priorEventSha256",
+        "occurredAtRfc3339",
+        "artifactId",
+        "eventSha256"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "reviewer-calibration-v4-production-bound-event-2" },
+        "eventKind": { "type": "string" },
+        "eventId": { "type": "string", "minLength": 12, "maxLength": 128 },
+        "eventOrdinal": { "type": "integer", "minimum": 1 },
+        "priorEventSha256": { "$ref": "#/$defs/sha256" },
+        "occurredAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+        "artifactId": { "type": "string", "minLength": 8 },
+        "eventSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "roleAssignment": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": ["roleSlotId", "actorPseudonym", "role", "saltedPseudonymRegistrySha256", "incompatibilityProofSha256", "decision"],
+          "properties": {
+            "eventKind": { "const": "ROLE_ASSIGNMENT" },
+            "roleSlotId": { "type": "string", "minLength": 4 },
+            "actorPseudonym": { "$ref": "#/$defs/pseudonym" },
+            "role": { "$ref": "#/$defs/role" },
+            "saltedPseudonymRegistrySha256": { "$ref": "#/$defs/sha256" },
+            "incompatibilityProofSha256": { "$ref": "#/$defs/sha256" },
+            "decision": { "enum": ["ASSIGN", "DENY"] }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "slotMaterialization": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "slotId",
+            "phase",
+            "block",
+            "slotOrdinal",
+            "typeId",
+            "familyId",
+            "itemIdentityCommitmentSha256",
+            "visibleSurfaceSha256",
+            "answerCommitmentSha256",
+            "trustedGoldCommitmentSha256",
+            "rejectionHistoryCommitmentSha256",
+            "packetOrderRelabelCommitmentSha256",
+            "rightsAndPiiPassSha256"
+          ],
+          "properties": {
+            "eventKind": { "const": "SLOT_MATERIALIZATION" },
+            "slotId": { "type": "string", "pattern": "^(TP|MC|AH)-(G|B|N)-[0-9]{2}$" },
+            "phase": { "$ref": "#/$defs/phase" },
+            "block": { "enum": ["GRAMMAR", "BLANK", "NONFOCUS"] },
+            "slotOrdinal": { "type": "integer", "minimum": 1, "maximum": 8 },
+            "typeId": { "type": "string", "minLength": 3 },
+            "familyId": { "oneOf": [{ "type": "string", "pattern": "^NF-F[1-8]-" }, { "type": "null" }] },
+            "itemIdentityCommitmentSha256": { "$ref": "#/$defs/sha256" },
+            "visibleSurfaceSha256": { "$ref": "#/$defs/sha256" },
+            "answerCommitmentSha256": { "$ref": "#/$defs/sha256" },
+            "trustedGoldCommitmentSha256": { "$ref": "#/$defs/sha256" },
+            "rejectionHistoryCommitmentSha256": { "$ref": "#/$defs/sha256" },
+            "packetOrderRelabelCommitmentSha256": { "$ref": "#/$defs/sha256" },
+            "rightsAndPiiPassSha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "capabilityAuthorization": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "actorPseudonym",
+            "actorRole",
+            "phase",
+            "action",
+            "resourceSha256",
+            "visibleSurfaceSha256",
+            "capabilityTokenSha256",
+            "denySetSha256",
+            "authorizedAtRfc3339",
+            "openedAtRfc3339",
+            "closedAtRfc3339",
+            "authorizationEventSha256",
+            "decision",
+            "reasonCode"
+          ],
+          "properties": {
+            "eventKind": { "const": "AUTHORIZATION" },
+            "actorPseudonym": { "$ref": "#/$defs/pseudonym" },
+            "actorRole": { "$ref": "#/$defs/role" },
+            "phase": { "$ref": "#/$defs/phase" },
+            "action": { "const": "AUTHORIZE_OPEN" },
+            "resourceSha256": { "$ref": "#/$defs/sha256" },
+            "visibleSurfaceSha256": { "$ref": "#/$defs/sha256" },
+            "capabilityTokenSha256": { "$ref": "#/$defs/sha256" },
+            "denySetSha256": { "$ref": "#/$defs/sha256" },
+            "authorizedAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+            "openedAtRfc3339": { "type": "null" },
+            "closedAtRfc3339": { "type": "null" },
+            "authorizationEventSha256": { "type": "null" },
+            "decision": { "const": "ALLOW" },
+            "reasonCode": { "type": "string", "minLength": 4 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "accessReceipt": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "actorPseudonym",
+            "actorRole",
+            "phase",
+            "action",
+            "resourceSha256",
+            "visibleSurfaceSha256",
+            "capabilityTokenSha256",
+            "denySetSha256",
+            "authorizationEventSha256",
+            "authorizedAtRfc3339",
+            "openedAtRfc3339",
+            "closedAtRfc3339",
+            "bytesRead",
+            "decision",
+            "reasonCode"
+          ],
+          "properties": {
+            "eventKind": { "const": "ACCESS_RECEIPT" },
+            "actorPseudonym": { "$ref": "#/$defs/pseudonym" },
+            "actorRole": { "$ref": "#/$defs/role" },
+            "phase": { "$ref": "#/$defs/phase" },
+            "action": { "const": "OPEN_AND_CLOSE" },
+            "resourceSha256": { "$ref": "#/$defs/sha256" },
+            "visibleSurfaceSha256": { "$ref": "#/$defs/sha256" },
+            "capabilityTokenSha256": { "$ref": "#/$defs/sha256" },
+            "denySetSha256": { "$ref": "#/$defs/sha256" },
+            "authorizationEventSha256": { "$ref": "#/$defs/sha256" },
+            "authorizedAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+            "openedAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+            "closedAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+            "bytesRead": { "type": "integer", "minimum": 0 },
+            "decision": { "const": "ALLOW" },
+            "reasonCode": { "type": "string", "minLength": 4 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "denialEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "actorPseudonym",
+            "actorRole",
+            "phase",
+            "action",
+            "resourceSha256",
+            "visibleSurfaceSha256",
+            "capabilityTokenSha256",
+            "authorizationEventSha256",
+            "authorizedAtRfc3339",
+            "openedAtRfc3339",
+            "closedAtRfc3339",
+            "hasOpenReceipt",
+            "decision",
+            "reasonCode"
+          ],
+          "properties": {
+            "eventKind": { "const": "DENIAL" },
+            "actorPseudonym": { "$ref": "#/$defs/pseudonym" },
+            "actorRole": { "$ref": "#/$defs/role" },
+            "phase": { "$ref": "#/$defs/phase" },
+            "action": { "const": "DENY_OPEN" },
+            "resourceSha256": { "$ref": "#/$defs/sha256" },
+            "visibleSurfaceSha256": { "$ref": "#/$defs/nullableSha256" },
+            "capabilityTokenSha256": { "type": "null" },
+            "authorizationEventSha256": { "type": "null" },
+            "authorizedAtRfc3339": { "type": "null" },
+            "openedAtRfc3339": { "type": "null" },
+            "closedAtRfc3339": { "type": "null" },
+            "hasOpenReceipt": { "const": false },
+            "decision": { "const": "DENY" },
+            "reasonCode": { "type": "string", "minLength": 4 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "phaseSeal": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": ["phase", "sealKind", "sealedArtifactSha256", "allPrerequisiteSeals", "decision"],
+          "properties": {
+            "eventKind": { "const": "PHASE_SEAL" },
+            "phase": { "$ref": "#/$defs/phase" },
+            "sealKind": { "type": "string", "minLength": 4 },
+            "sealedArtifactSha256": { "$ref": "#/$defs/sha256" },
+            "allPrerequisiteSeals": { "type": "array", "items": { "$ref": "#/$defs/sha256" }, "uniqueItems": true },
+            "decision": { "enum": ["PASS", "FAIL"] }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "reviewerCertificate": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": ["reviewerPseudonym", "pilotDecisionSha256", "mainDecisionSha256", "trustedGoldAuditReportSha256", "holdoutDecisionSha256", "scope", "expiresAtRfc3339", "decision"],
+          "properties": {
+            "eventKind": { "const": "REVIEWER_CERTIFICATE" },
+            "reviewerPseudonym": { "$ref": "#/$defs/pseudonym" },
+            "pilotDecisionSha256": { "$ref": "#/$defs/sha256" },
+            "mainDecisionSha256": { "$ref": "#/$defs/sha256" },
+            "trustedGoldAuditReportSha256": { "$ref": "#/$defs/sha256" },
+            "holdoutDecisionSha256": { "$ref": "#/$defs/sha256" },
+            "scope": { "const": "BOUND_CONSTRUCT_AND_FRESH_PASSED_TYPE_COVERAGE_ONLY" },
+            "expiresAtRfc3339": { "$ref": "#/$defs/rfc3339" },
+            "decision": { "const": "CERTIFY" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "freshAdjudicatorBinding": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": ["adjudicatorPseudonym", "roleRegistrySha256", "freshnessProofSha256", "distinctFromActorPseudonyms", "decision"],
+          "properties": {
+            "eventKind": { "const": "FRESH_ADJUDICATOR_BINDING" },
+            "adjudicatorPseudonym": { "$ref": "#/$defs/pseudonym" },
+            "roleRegistrySha256": { "$ref": "#/$defs/sha256" },
+            "freshnessProofSha256": { "$ref": "#/$defs/sha256" },
+            "distinctFromActorPseudonyms": { "type": "array", "minItems": 5, "uniqueItems": true, "items": { "$ref": "#/$defs/pseudonym" } },
+            "decision": { "const": "BIND" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "separateActivationEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/baseEvent" },
+        {
+          "type": "object",
+          "required": [
+            "designManifestSha256",
+            "evaluationAuthoritySubjectManifestSha256",
+            "evaluationAuthorityAuditManifestSha256",
+            "productionTypeBindingSubjectManifestSha256",
+            "productionTypeBindingSubjectSnapshotSha256",
+            "productionTypeBindingAuditManifestSha256",
+            "roleRegistrySha256",
+            "reviewerCertificateSha256s",
+            "freshAdjudicatorBindingSha256",
+            "allPhaseSealsMerkleRootSha256",
+            "zeroPreauthorityViolationProofSha256",
+            "independentActivationAuditManifestSha256",
+            "independentActivationAuditVerdict",
+            "decision"
+          ],
+          "properties": {
+            "eventKind": { "const": "SEPARATE_ACTIVATION_EVENT" },
+            "designManifestSha256": { "$ref": "#/$defs/sha256" },
+            "evaluationAuthoritySubjectManifestSha256": { "$ref": "#/$defs/sha256" },
+            "evaluationAuthorityAuditManifestSha256": { "$ref": "#/$defs/sha256" },
+            "productionTypeBindingSubjectManifestSha256": { "$ref": "#/$defs/sha256" },
+            "productionTypeBindingSubjectSnapshotSha256": { "$ref": "#/$defs/sha256" },
+            "productionTypeBindingAuditManifestSha256": { "$ref": "#/$defs/sha256" },
+            "roleRegistrySha256": { "$ref": "#/$defs/sha256" },
+            "reviewerCertificateSha256s": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/sha256" } },
+            "freshAdjudicatorBindingSha256": { "$ref": "#/$defs/sha256" },
+            "allPhaseSealsMerkleRootSha256": { "$ref": "#/$defs/sha256" },
+            "zeroPreauthorityViolationProofSha256": { "$ref": "#/$defs/sha256" },
+            "independentActivationAuditManifestSha256": { "$ref": "#/$defs/sha256" },
+            "independentActivationAuditVerdict": { "const": "PASS_NO_BLOCKERS" },
+            "decision": { "const": "ACTIVATE" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  },
+  "x-currentInstanceCounts": {
+    "roleAssignment": 0,
+    "slotMaterialization": 0,
+    "capabilityAuthorization": 0,
+    "accessReceipt": 0,
+    "denialEvent": 0,
+    "phaseSeal": 0,
+    "reviewerCertificate": 0,
+    "freshAdjudicatorBinding": 0,
+    "separateActivationEvent": 0
+  }
+}

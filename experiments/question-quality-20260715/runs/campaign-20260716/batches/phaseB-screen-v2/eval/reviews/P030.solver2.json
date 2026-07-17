@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "삽입 시 'the audience's inclination to engage deeply with ambiguity, and not immediately ask...'가 되어 'inclination to [engage ... and not (to) ask ...]'의 to부정사 병렬이 형식적으로 성립한다. 빈칸 뒤 원형동사 ask의 병렬 시작점(to)을 제공하는 유일한 선지. 의미상으로도 'put up with many obscurities', 'struggle to interpret elements that flout principles of efficient communication'과 정확히 대응 — 독자가 모호함에 깊이 관여하고 즉각 의미를 따져 묻지 않는 성향이 문학의 특징들의 원천이라는 지문 결론과 일치한다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "문법: 'the immediate demand of readers for linguistic clarity, and not immediately ask'에는 ask가 접속될 to부정사 앵커가 없어 병렬이 파탄난다(명사구 뒤 원형동사 직접 접속 불가; follow와의 병렬로 읽으면 주어가 features of literature가 되어 '문학의 특징이 묻는다'는 비문 논리). 의미: 지문은 독자가 명료성을 즉각 요구하지 않고 모호함을 견딘다고 했으므로 정반대."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "문법: 'adaptation to faster reading speeds'의 to는 전치사+명사구이므로 ask의 병렬 시작점이 될 수 없어 seam이 파탄난다. 의미: 읽기 속도는 지문 어디에도 등장하지 않는 무관 소재."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "문법: 'obedience to established grammatical rules'의 to 역시 전치사+명사구로 ask 병렬 불가. 의미: 지문은 효율적 소통 원리를 위반(flout)하는 요소조차 해석하려 애쓴다고 했으므로 '규칙에 대한 무조건적 복종'은 논지와 반대."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "문법: 부정사 앵커 부재로 'and not immediately ask'가 접속할 곳이 없어 비문. 의미: 'Literature'라는 제도적 라벨은 일반 독자의 기대(읽을 가치)를 형성하는 장치이지 전문 비평 기술의 습득과는 무관."
+    }
+  ],
+  "note": "빈칸 뒤 ', and not immediately ask'의 원형동사 ask가 강력한 문법 seam 단서로 작동한다. to부정사 병렬 시작점을 제공하는 선지는 ①뿐이며(inclination to engage ... and not ask), 나머지 네 선지는 모두 명사구로 끝나거나 전치사 to+명사구라서 삽입 시 비문이 된다. 의미 적합성도 ①만 지문 논지(모호함 관용·해석 노력)와 일치하므로 정답이 단독으로 확정된다. 다만 seam 단서가 문법적으로 매우 강해 지문을 읽지 않고도 병렬 검사만으로 정답이 노출될 수 있다는 점은 문항 변별 설계상 참고할 만하다. 원전은 Jonathan Culler의 hyper-protected cooperative principle 논의로 보이며 지문 자체의 논리 왜곡은 없다."
+}

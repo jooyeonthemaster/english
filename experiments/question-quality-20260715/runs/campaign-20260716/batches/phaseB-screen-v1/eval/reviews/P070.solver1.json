@@ -1,0 +1,35 @@
+{
+  "pid": "P070",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'This form of ethics is distinct from ...' — be동사 뒤 보어 자리의 형용사 distinct + from 결합은 정확한 관용 구조(distinct from). 주어 'This form'(단수)과 is의 수일치도 문제없음. 실전에서 distinguish/distinguished와의 혼동을 노린 자리로 보이지만 형용사 distinct가 표준 표현이라 유혹이 약함."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (정답)",
+      "reason": "'The nature of an ethical issue or problem from this perspective are that ...' — 진짜 주어는 The nature(단수). 'of an ethical issue or problem'과 'from this perspective'는 모두 전치사구 수식어이며, 심지어 최근접 명사(problem)도 단수여서 are를 정당화할 어떤 해석도 성립하지 않음. is가 되어야 함. 보어인 that절('that there is no clear right or wrong response')은 명사절로서 구조상 정상. 전형적 장거리 수일치 오류로 (B)가 유일한 어법 오류."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the principles of conduct that are considered correct' — 관계대명사 that의 선행사는 the principles(복수). consider + O + 형용사(5형식)의 수동태 'are considered correct'로 복수 동사와 목적격 보어 correct 모두 정확. 선행사를 conduct(단수/불가산)로 착각하면 is가 필요해 보이는 유혹이 있으나, 의미상 '옳다고 여겨지는' 것은 행위의 원칙들(principles)이므로 are가 맞음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'What a person values relates to their ... beliefs' — 자유(선행사 포함) 관계대명사 What이 values의 목적어 역할을 하면서 명사절 전체가 주어가 되고, 그 명사절은 단수 취급되어 relates와 일치. That으로 바꾸면 values의 목적어가 비어 불완전절이 되어 오히려 비문. 'That...relates'로 끌리는 수험생을 노린 자리지만 What이 정확함."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'their social, religious, or civic beliefs influenced by their formal and informal learning experiences' — beliefs를 수식하는 과거분사(축약 관계절: beliefs (which are) influenced by ...). beliefs는 영향을 '받는' 대상이므로 수동 분사 influenced가 정확. 문장의 본동사 relates가 이미 있으므로 influenced를 본동사로 오독해 which influenced나 influencing을 기대하는 유혹이 있으나, 축약 관계절 해석이 표준적으로 성립."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: (B)는 주어(The nature)와 동사(are) 사이에 전치사구 2개가 끼어든 전형적 장거리 수일치 함정으로, 근접 명사조차 단수(problem)라 are를 옹호할 대안 해석이 전무함. 매력적 오답은 (C)(선행사를 conduct로 오인 시 is 기대)와 (E)(본동사로 오독 시 능동/정동사 기대)였으나 둘 다 표준 문법으로 정문임을 확인. 정답 후보는 (B) 하나로 유일하게 수렴."
+}

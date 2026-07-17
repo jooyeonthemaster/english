@@ -1,0 +1,4994 @@
+{
+  "schemaVersion": 1,
+  "sealedCasesSha256": "564064210a382bd41c54913d9cf6edbd4943385f968517a5dfba81827afcb08f",
+  "cases": [
+    {
+      "id": "SCB-01-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-01",
+      "control": "normal",
+      "tags": [
+        "korean-particle-omitted",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-01-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-01",
+      "control": "defect",
+      "tags": [
+        "korean-particle-omitted",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-02-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-02",
+      "control": "normal",
+      "tags": [
+        "korean-particle-omitted",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-02-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-02",
+      "control": "defect",
+      "tags": [
+        "korean-particle-omitted",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-03-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-03",
+      "control": "normal",
+      "tags": [
+        "korean-particle-omitted",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-03-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-03",
+      "control": "defect",
+      "tags": [
+        "korean-particle-omitted",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-04-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-04",
+      "control": "normal",
+      "tags": [
+        "korean-particle-omitted",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-04-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-04",
+      "control": "defect",
+      "tags": [
+        "korean-particle-omitted",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-05-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-05",
+      "control": "normal",
+      "tags": [
+        "korean-particle-stacked",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-05-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-05",
+      "control": "defect",
+      "tags": [
+        "korean-particle-stacked",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-06-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-06",
+      "control": "normal",
+      "tags": [
+        "korean-particle-stacked",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-06-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-06",
+      "control": "defect",
+      "tags": [
+        "korean-particle-stacked",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-07-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-07",
+      "control": "normal",
+      "tags": [
+        "korean-particle-stacked",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-07-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-07",
+      "control": "defect",
+      "tags": [
+        "korean-particle-stacked",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-08-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-08",
+      "control": "normal",
+      "tags": [
+        "korean-particle-stacked",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-08-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-08",
+      "control": "defect",
+      "tags": [
+        "korean-particle-stacked",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-09-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-09",
+      "control": "normal",
+      "tags": [
+        "nominalized-or-passive-command",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-09-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-09",
+      "control": "defect",
+      "tags": [
+        "nominalized-or-passive-command",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-10-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-10",
+      "control": "normal",
+      "tags": [
+        "nominalized-or-passive-command",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-10-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-10",
+      "control": "defect",
+      "tags": [
+        "nominalized-or-passive-command",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-11-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-11",
+      "control": "normal",
+      "tags": [
+        "nominalized-or-passive-command",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-11-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-11",
+      "control": "defect",
+      "tags": [
+        "nominalized-or-passive-command",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-12-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-12",
+      "control": "normal",
+      "tags": [
+        "nominalized-or-passive-command",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-12-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-12",
+      "control": "defect",
+      "tags": [
+        "nominalized-or-passive-command",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-13-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-13",
+      "control": "normal",
+      "tags": [
+        "multiple-objects",
+        "source-phrase",
+        "english-relative-clause",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-13-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-13",
+      "control": "defect",
+      "tags": [
+        "multiple-objects",
+        "source-phrase",
+        "english-relative-clause",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-14-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-14",
+      "control": "normal",
+      "tags": [
+        "multiple-objects",
+        "source-phrase",
+        "english-relative-clause",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-14-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-14",
+      "control": "defect",
+      "tags": [
+        "multiple-objects",
+        "source-phrase",
+        "english-relative-clause",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-15-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-15",
+      "control": "normal",
+      "tags": [
+        "multiple-objects",
+        "source-phrase",
+        "english-relative-clause",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-15-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-15",
+      "control": "defect",
+      "tags": [
+        "multiple-objects",
+        "source-phrase",
+        "english-relative-clause",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-16-N",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-16",
+      "control": "normal",
+      "tags": [
+        "multiple-objects",
+        "source-phrase",
+        "english-relative-clause",
+        "binding-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "SCB-16-D",
+      "family": "summary_complete_mc_answer_object_binding",
+      "pairId": "SCB-16",
+      "control": "defect",
+      "tags": [
+        "multiple-objects",
+        "source-phrase",
+        "english-relative-clause",
+        "binding-mismatch"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "summary-mc-direction-frame"
+      ],
+      "projection": "sealed Korean command -> question.direction",
+      "support": "bounded production direction answer-object classifier",
+      "notes": "The current gate classifies task objects, not whether an explanation command selects the keyed option text.",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-01-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-01",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-01-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-01",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-02-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-02",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-02-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-02",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-03-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-03",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-03-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-03",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-04-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-04",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-04-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-04",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-05-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-05",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-05-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-05",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-06-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-06",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-06-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-06",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-07-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-07",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-07-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-07",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-08-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-08",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-08-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-08",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-09-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-09",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-09-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-09",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-10-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-10",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-10-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-10",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-11-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-11",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-11-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-11",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-12-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-12",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-12-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-12",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-13-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-13",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-13-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-13",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-14-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-14",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-14-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-14",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-15-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-15",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-15-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-15",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-16-N",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-16",
+      "control": "normal",
+      "tags": [
+        "real-option-analysis",
+        "circled-labels"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "BOA-16-D",
+      "family": "blank_explanation_option_analysis",
+      "pairId": "BOA-16",
+      "control": "defect",
+      "tags": [
+        "procedural-circled-steps",
+        "no-option-analysis"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "allIssueCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "projection": "sealed explanation -> BLANK_INFERENCE explanation",
+      "support": "bounded circled-marker discourse classifier",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-01-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-01",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-01-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-01",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-01"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-02-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-02",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-02-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-02",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-02"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-03-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-03",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-03-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-03",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-03"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "grammar-keypoint-nonexistent-label"
+      ],
+      "allIssueCodes": [
+        "grammar-keypoint-nonexistent-label"
+      ],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-04-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-04",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-04-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-04",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-04"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-05-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-05",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-05-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-05",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-05"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-06-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-06",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-06-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-06",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-06"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-07-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-07",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-07-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-07",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-07"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-08-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-08",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-08-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-08",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-08"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-09-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-09",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-09-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-09",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-09"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-10-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-10",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-10-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-10",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-10"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-11-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-11",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-11-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-11",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-11"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-12-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-12",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-12-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-12",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-12"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "grammar-keypoint-nonexistent-label"
+      ],
+      "allIssueCodes": [
+        "grammar-keypoint-nonexistent-label"
+      ],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-13-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-13",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-13-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-13",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-13"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-14-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-14",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-14-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-14",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-14"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-15-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-15",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-15-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-15",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-15"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-16-N",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-16",
+      "control": "normal",
+      "tags": [
+        "existing-label",
+        "render-control"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GGL-16-D",
+      "family": "grammar_ghost_labels_unicode_rendered",
+      "pairId": "GGL-16",
+      "control": "defect",
+      "tags": [
+        "ghost-label",
+        "ghost-form-16"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "grammar-keypoint-nonexistent-label"
+      ],
+      "allIssueCodes": [
+        "grammar-keypoint-nonexistent-label"
+      ],
+      "projection": "sealed explanation -> one keyPoint; sealed labels -> rendered labels",
+      "support": "bounded leading-label grammar normalizer",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-01-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-01",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-01-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-01",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-02-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-02",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-02-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-02",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-03-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-03",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-03-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-03",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-04-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-04",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-04-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-04",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-05-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-05",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-05-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-05",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-06-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-06",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-06-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-06",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-07-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-07",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-07-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-07",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-08-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-08",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-08-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-08",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-09-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-09",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-09-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-09",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-10-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-10",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-10-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-10",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-11-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-11",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-11-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-11",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-12-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-12",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-12-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-12",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-13-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-13",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-13-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-13",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-14-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-14",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-14-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-14",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-15-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-15",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-15-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-15",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-16-N",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-16",
+      "control": "normal",
+      "tags": [
+        "true-free-text-rule"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "GRT-16-D",
+      "family": "grammar_free_text_rule_truth",
+      "pairId": "GRT-16",
+      "control": "defect",
+      "tags": [
+        "false-free-text-rule"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed rule explanation -> deterministic terminology checks",
+      "support": "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH",
+      "notes": "Production intentionally recognizes a finite high-confidence terminology set; it is not a general truth verifier.",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-01-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-01",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-01-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-01",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(A)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-02-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-02",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-02-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-02",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(B)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-03-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-03",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-03-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-03",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(C)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-04-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-04",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-04-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-04",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(A)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-05-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-05",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-05-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-05",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(C)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-06-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-06",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-06-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-06",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(B)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-07-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-07",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-07-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-07",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(A)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-08-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-08",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-08-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-08",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(B)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-09-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-09",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-09-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-09",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(C)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-10-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-10",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-10-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-10",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(A)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-11-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-11",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-11-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-11",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(B)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-12-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-12",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-12-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-12",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(C)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-13-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-13",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-13-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-13",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(A)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-14-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-14",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-14-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-14",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(C)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-15-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-15",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-15-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-15",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(B)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-16-N",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-16",
+      "control": "normal",
+      "tags": [
+        "unique-heading-labels",
+        "clean-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SOD-16-D",
+      "family": "sentence_order_body_duplicate_label_contamination",
+      "pairId": "SOD-16",
+      "control": "defect",
+      "tags": [
+        "duplicate-label-in-body",
+        "duplicate-(A)"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded paragraph-body label detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-01-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-01",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "although"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-01-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-01",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "although"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-02-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-02",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "because"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-02-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-02",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "because"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-03-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-03",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "when"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-03-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-03",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "when"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-04-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-04",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "while"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-04-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-04",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "while"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-05-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-05",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "if"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-05-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-05",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "if"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-06-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-06",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "unless"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-06-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-06",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "unless"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-07-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-07",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "since"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-07-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-07",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "since"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-08-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-08",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "after"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-08-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-08",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "after"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-09-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-09",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "before"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-09-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-09",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "before"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-10-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-10",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "even"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-10-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-10",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "even"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-11-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-11",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "whereas"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-11-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-11",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "whereas"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-12-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-12",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "as"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-12-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-12",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "as"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-13-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-13",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "once"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-13-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-13",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "once"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-14-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-14",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "whenever"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-14-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-14",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "whenever"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-15-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-15",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "provided"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-15-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-15",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "provided"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-16-N",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-16",
+      "control": "normal",
+      "tags": [
+        "complete-dependent-opener",
+        "so"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "SDF-16-D",
+      "family": "sentence_order_dependent_fragments",
+      "pairId": "SDF-16",
+      "control": "defect",
+      "tags": [
+        "dependent-fragment",
+        "so"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed segments -> labeled production paragraphs",
+      "support": "bounded dependent-opener completeness detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-01-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-01",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-01-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-01",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-02-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-02",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-02-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-02",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-03-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-03",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-03-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-03",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-04-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-04",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-04-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-04",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-05-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-05",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-05-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-05",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-06-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-06",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-06-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-06",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-07-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-07",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-07-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-07",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-08-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-08",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-08-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-08",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-09-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-09",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-09-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-09",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-10-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-10",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-10-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-10",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-11-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-11",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-11-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-11",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-12-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-12",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-12-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-12",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-13-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-13",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-13-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-13",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-14-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-14",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-14-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-14",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-15-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-15",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-15-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-15",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-16-N",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-16",
+      "control": "normal",
+      "tags": [
+        "exact-answer-absent-from-visible-body"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "TAR-16-D",
+      "family": "exact_transformed_answer_residue",
+      "pairId": "TAR-16",
+      "control": "defect",
+      "tags": [
+        "exact-answer-residue",
+        "visible-body-leak"
+      ],
+      "expectedBlock": true,
+      "observedBlock": true,
+      "pass": true,
+      "targetedCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "allIssueCodes": [
+        "blank-answer-residual-visible",
+        "blank-weak-distractors"
+      ],
+      "projection": "sealed transformed_body -> passageWithBlank; answer_text -> originalExpression",
+      "support": "exact normalized residual visibility detector",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-01-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-01",
+      "control": "normal",
+      "tags": [
+        "actor",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-01-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-01",
+      "control": "defect",
+      "tags": [
+        "actor",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-02-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-02",
+      "control": "normal",
+      "tags": [
+        "actor",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-02-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-02",
+      "control": "defect",
+      "tags": [
+        "actor",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-03-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-03",
+      "control": "normal",
+      "tags": [
+        "actor",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-03-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-03",
+      "control": "defect",
+      "tags": [
+        "actor",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-04-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-04",
+      "control": "normal",
+      "tags": [
+        "actor",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-04-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-04",
+      "control": "defect",
+      "tags": [
+        "actor",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-05-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-05",
+      "control": "normal",
+      "tags": [
+        "polarity",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "narrow lexical polarity pattern only",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-05-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-05",
+      "control": "defect",
+      "tags": [
+        "polarity",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "narrow lexical polarity pattern only",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-06-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-06",
+      "control": "normal",
+      "tags": [
+        "polarity",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "narrow lexical polarity pattern only",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-06-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-06",
+      "control": "defect",
+      "tags": [
+        "polarity",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "narrow lexical polarity pattern only",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-07-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-07",
+      "control": "normal",
+      "tags": [
+        "polarity",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "narrow lexical polarity pattern only",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-07-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-07",
+      "control": "defect",
+      "tags": [
+        "polarity",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "narrow lexical polarity pattern only",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-08-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-08",
+      "control": "normal",
+      "tags": [
+        "condition",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-08-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-08",
+      "control": "defect",
+      "tags": [
+        "condition",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-09-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-09",
+      "control": "normal",
+      "tags": [
+        "condition",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-09-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-09",
+      "control": "defect",
+      "tags": [
+        "condition",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-10-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-10",
+      "control": "normal",
+      "tags": [
+        "condition",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-10-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-10",
+      "control": "defect",
+      "tags": [
+        "condition",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-11-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-11",
+      "control": "normal",
+      "tags": [
+        "cause",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-11-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-11",
+      "control": "defect",
+      "tags": [
+        "cause",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-12-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-12",
+      "control": "normal",
+      "tags": [
+        "cause",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-12-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-12",
+      "control": "defect",
+      "tags": [
+        "cause",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-13-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-13",
+      "control": "normal",
+      "tags": [
+        "cause",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-13-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-13",
+      "control": "defect",
+      "tags": [
+        "cause",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-14-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-14",
+      "control": "normal",
+      "tags": [
+        "scope",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-14-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-14",
+      "control": "defect",
+      "tags": [
+        "scope",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-15-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-15",
+      "control": "normal",
+      "tags": [
+        "scope",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-15-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-15",
+      "control": "defect",
+      "tags": [
+        "scope",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-16-N",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-16",
+      "control": "normal",
+      "tags": [
+        "scope",
+        "equal-token-pair",
+        "role-faithful"
+      ],
+      "expectedBlock": false,
+      "observedBlock": false,
+      "pass": true,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    },
+    {
+      "id": "BSR-16-D",
+      "family": "blank_inference_semantic_role_preservation",
+      "pairId": "BSR-16",
+      "control": "defect",
+      "tags": [
+        "scope",
+        "equal-token-pair",
+        "role-corrupted"
+      ],
+      "expectedBlock": true,
+      "observedBlock": false,
+      "pass": false,
+      "targetedCodes": [],
+      "allIssueCodes": [],
+      "projection": "sealed source/correct answer -> current semantic-preservation helper",
+      "support": "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+      "notes": "Equal token count is enforced by the sealed author and verifier; length is not a confound.",
+      "evaluationError": null
+    }
+  ]
+}

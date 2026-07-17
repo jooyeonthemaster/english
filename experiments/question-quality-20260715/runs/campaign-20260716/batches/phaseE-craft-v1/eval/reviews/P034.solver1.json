@@ -1,0 +1,35 @@
+{
+  "pid": "P034",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Recent evidence suggests that the common ancestor ... may have already been using ...' — 'suggests' 다음의 'that'는 목적어 명사절을 이끄는 접속사로 정문. 뒤에 완전한 절이 온다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'why did the Neanderthal toolkit show so little cultural change?' — 조동사 'did'가 앞에 있으므로 본동사는 원형 'show'가 맞다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'selected for mutations for retaining lactose digestion' — 전치사 'for' 뒤의 동명사 'retaining'. '~을 유지하기 위한 돌연변이'로 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "error",
+      "reason": "'The appeal to a genetic change driven evolution gets ... backwards' — 전치사 to의 목적어는 'a genetic change'이고, 이를 뒤에서 수식하려면 '진화를 이끄는(주도하는) 유전적 변화'라는 능동 의미가 필요하므로 현재분사 'driving'(a genetic change driving evolution = a genetic change that drives evolution)이어야 한다. 과거분사 'driven'을 쓰면 'a genetic change driven BY evolution'처럼 by가 필요하고 의미상 주체가 뒤바뀌며, 현재 표기 'a genetic change driven evolution'은 두 명사구가 연결어 없이 이어져 비문이 된다. 유혹: 'genetic-change-driven evolution'(유전적 변화에 의해 추동된 진화)라는 복합형용사 해석이 문맥상 그럴듯해 driven을 정당화하고 싶지만, 하이픈이 없고 'genetic'이 'change-driven'을 수식하는 어색한 구조가 되어 자연스러운 파싱이 아니다. 문항이 오류 1개를 보장하므로 driven이 정답. → 'driving'으로 고쳐야 함."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'gets gene-culture co-evolution backwards' — 'get something backwards(거꾸로 이해하다)' 관용 표현의 부사 'backwards'로 정문."
+    }
+  ],
+  "note": "지배 규칙: (D)의 to의 목적어 'a genetic change'를 능동적으로 수식하려면 현재분사 driving이 필요. driven(과거분사)은 by 없이 뒤 명사 evolution과 결합할 수 없어 비문. 복합형용사(genetic-change-driven evolution) 대안 해석은 하이픈 부재·부자연스러운 수식 관계로 성립이 약하고, 문항이 오류 1개를 전제하므로 D가 유일하게 옹호 가능한 정답. 나머지 A/B/C/E는 모두 어법상 옳음."
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "auditId": "deterministic-structural-reaudit-v11-fresh",
+  "chronology": "corpus-and-oracle-written-and-hashed-before-production-validator-execution",
+  "sealedOn": "2026-07-15",
+  "caseCount": 288,
+  "familyCount": 48,
+  "classBalance": {
+    "expectedValid": 144,
+    "expectedInvalid": 144
+  },
+  "sha256": {
+    "build-corpus.mjs": "489bc98f1ae572f3f70d0be850c514a44167afdb5fe28f0f7d7e223862b3b17c",
+    "corpus.json": "8c4c6a5d41488b433bccde5b08acbdff198a089273a6e4c0b5e6ce45607777ab",
+    "oracle.json": "30961d05f6020bc87cf8528f72abd19cf8f70055b5ce515ef1e0b13bd5595f9f"
+  }
+}

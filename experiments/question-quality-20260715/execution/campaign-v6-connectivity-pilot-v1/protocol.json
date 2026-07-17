@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "question-quality-v6-connectivity-pilot-v1",
+  "artifactId": "campaign-v6-connectivity-pilot-v1",
+  "status": "DESIGN_ONLY_EXECUTION_BLOCKED",
+  "purpose": "Exercise the current production structured question-generation wire once with Standard and once with Premium before any 180-assignment campaign is admitted.",
+  "nonClaims": [
+    "The two rows cannot estimate quality, compare models, select a prompt profile, or establish endpoint reliability.",
+    "A successful micro-pilot does not authorize the S1 v6 campaign.",
+    "A failed or rejected started assignment is never replayed or replaced."
+  ],
+  "source": {
+    "corpusArtifactId": "original-connectivity-pilot-v1",
+    "publicCorpusPath": "experiments/question-quality-20260715/corpus/original-connectivity-pilot-v1/source-public.json",
+    "privateCorpusPath": "experiments/question-quality-20260715/corpus/original-connectivity-pilot-v1/private/pilot-source.private.json",
+    "publicCorpusSha256": "465e3d6d17bd6c2748fb69d05f3947f96ecc42d0abf71bd56f4e3dbb969933f6",
+    "rowPublicId": "OCVP-B01",
+    "questionType": "BLANK_INFERENCE",
+    "exactTextPubliclyPersisted": false,
+    "piiFreeOriginalCorpusRequired": true,
+    "excludedFromS1S2S3S4": true
+  },
+  "fixedAssignmentSurface": {
+    "profileId": "B0_CURRENT_CONTROL",
+    "difficulty": "INTERMEDIATE",
+    "schoolType": "고등학교",
+    "gradeInfo": "2학년",
+    "questionCount": 1,
+    "qualityMode": "strict",
+    "attemptIndex": 0,
+    "teacherIntentBlock": "",
+    "analysisContext": "",
+    "customPrompt": "",
+    "targetPointCount": 0
+  },
+  "assignments": [
+    {
+      "ordinal": 1,
+      "assignmentId": "V6-CONNECTIVITY-STANDARD-01",
+      "plan": "STANDARD",
+      "modelId": "google/gemini-3.5-flash",
+      "maxOutputTokens": 4000,
+      "candidateOpportunityCap": 1,
+      "physicalFetchCap": 1,
+      "outerAttemptCap": 1,
+      "sdkRetryCap": 0,
+      "frozenWorstCaseUsdCap": 0.14
+    },
+    {
+      "ordinal": 2,
+      "assignmentId": "V6-CONNECTIVITY-PREMIUM-01",
+      "plan": "PREMIUM",
+      "modelId": "google/gemini-3.1-pro-preview",
+      "maxOutputTokens": 4000,
+      "candidateOpportunityCap": 1,
+      "physicalFetchCap": 1,
+      "outerAttemptCap": 1,
+      "sdkRetryCap": 0,
+      "frozenWorstCaseUsdCap": 0.2
+    }
+  ],
+  "campaignBounds": {
+    "globalCandidateLimit": 1000,
+    "requiredPrePilotUsedCandidates": 0,
+    "reservedCandidates": 2,
+    "maximumPostPilotUsedCandidates": 2,
+    "maximumPhysicalFetches": 2,
+    "maximumStartedAssignments": 2,
+    "totalFrozenWorstCaseUsdCap": 0.34,
+    "concurrency": 1,
+    "replacementAllowed": false,
+    "topUpAllowed": false,
+    "automaticRetryAllowed": false
+  },
+  "exactProviderContract": {
+    "gateway": "OPENROUTER",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "provider": {
+      "order": ["google-vertex/global"],
+      "only": ["google-vertex/global"],
+      "allow_fallbacks": false,
+      "require_parameters": true,
+      "data_collection": "deny",
+      "zdr": true
+    },
+    "reasoning": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "completionCount": 1,
+    "strictJsonSchema": true
+  },
+  "admissionHolds": [
+    "Independent hostile corpus audit must pass without a fatal source defect.",
+    "Both assignments must be compiled through the current production core into byte-sealed exact-wire registries.",
+    "A public OpenRouter endpoint snapshot captured no more than 15 minutes before the first lease must bind the exact google-vertex/global tag, supported parameters, model slug, and price.",
+    "A durable controller must reserve one candidate, one fetch, and the per-call cost ceiling separately for each assignment and a shared two-call campaign ceiling.",
+    "The live child process must have exactly one OpenRouter credential source and must never print, hash, label, or persist the credential.",
+    "No other question-quality campaign call may be in flight.",
+    "The private output directory must be git-ignored and the public result must contain no prompt, passage, question, explanation, response body, provider generation id, or credential-shaped value."
+  ],
+  "credentialPolicy": {
+    "fullS1RequiresDedicatedZeroUsageHardCappedCredential": true,
+    "microPilotMayUseExistingCredential": true,
+    "microPilotExceptionReason": "Only two serial no-retry calls carrying newly composed PII-free text are permitted; the exception is never inherited by S1.",
+    "providerSideHardCapProvenForMicroPilot": false,
+    "localPhysicalAndTokenBoundsRequired": true
+  },
+  "accounting": {
+    "debitRule": "Debit one candidate opportunity immediately when a live provider fetch lease starts, including timeout, provider failure, parse failure, validation rejection, or an empty result.",
+    "costRule": "Record returned usage cost when available and retain the reserved maximum for missing or non-final usage; never infer zero cost from a failed client parse.",
+    "currentApiCandidatesConsumed": 0,
+    "generationAuthorized": false
+  }
+}

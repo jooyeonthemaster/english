@@ -1,0 +1,35 @@
+{
+  "pid": "P092",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'expanding their legal protection beyond minimum spaces'는 개선책(good act)이므로 'the problem is ... one about ___' 프레임에 넣으면 범주 오류가 된다(문제 자리에 해결책이 옴). 또한 공간·보호 확대는 복지(welfare) 패러다임 내부의 개량으로, '사용 자체가 문제'라는 권리(rights) 관점의 더 근본적인 문제를 표현하지 못한다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'banning inhuman slaughtering and experimentation entirely'도 조치(해결책)이지 문제가 아니며, 수식어 'inhuman'이 금지 대상을 '비인도적' 도살·실험으로 한정한다. 직전 절이 'not one about treating animals inhumanely'라고 비인도성 프레임을 명시적으로 배제했으므로, 빈칸에 넣으면 같은 문장 안에서 자기모순이 발생한다. 권리 관점은 비인도적 사용만이 아니라 사용 전부를 반대한다."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'perceiving them as mere instruments for human use'는 (a) 'treating animals inhumanely'와 병렬되는 나쁜 행위(gerund)로 형식적 결합이 완전하고(them→animals 지시 해소, about+동명사 정문), (b) 'animals are not the kinds of thing that humans should use in this way at all'의 직접적 패러프레이즈다. 복지법이 '사용을 전제'한다는 권리 진영 비판(welfare legislation accepts that animals may be used...)과 정확히 정합한다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'recognizing them as equal legal subjects'는 긍정적 행위여서 'the problem is one about ___'에 넣으면 '인정하는 것이 문제'라는 역방향 의미가 되며, 정합하려면 'failing to recognize' 같은 부정이 필요하다. 병렬 구조(나쁜 행위 vs 나쁜 행위)가 깨진다. 또한 '평등한 법적 주체'라는 주장은 지문 어디에도 없어 지문 초과 진술이다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'inflicting unnecessary pain without scientific purposes'는 나쁜 행위라는 점에서 형식 병렬은 성립하지만, 내용상 '비인도적 처우(treating animals inhumanely)'의 하위 사례에 불과하다. 문장이 명시적으로 'not one about treating animals inhumanely'라고 그 범주를 배제했으므로 빈칸에 넣으면 즉각 모순이다. 이는 복지 관점의 문제 규정이지 권리 관점의 근본 문제가 아니다."
+    }
+  ],
+  "note": "빈칸 프레임 'not one about [나쁜 행위: 비인도적 처우], but one about [Y]'는 Y가 (i) 문제시되는 행위 자체를 나타내는 동명사구이고 (ii) '사용 자체(use at all)'를 지시할 것을 요구한다. 두 조건을 동시에 만족하는 선지는 ③뿐이다. ②·⑤는 배제된 '비인도성' 프레임으로 회귀하는 자기모순, ①·④는 해결책을 문제 자리에 넣는 범주 오류. 단일 정답으로 수렴, 복수 옹호 가능성 없음."
+}

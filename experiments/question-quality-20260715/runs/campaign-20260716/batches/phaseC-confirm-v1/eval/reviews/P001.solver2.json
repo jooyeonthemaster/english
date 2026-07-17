@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "논리 모순. 지문 전체가 'completely immerse themselves', 'seem to actually become the characters'로 몰입·동일화를 기술하는데, '역할과 객관적 거리 유지'는 그 정반대 명제다. 'goal of + 동명사구' 문법 결합 자체는 정문이나, 궁극 목표로 놓으면 지문 1문장부터 모순이 발생한다."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "유일하게 성립. 'goal of genuinely experiencing...' 동명사구 결합 정문. 논리적으로 (i) 'actually become the characters'(연기가 아닌 실제화), (ii) 'step out of their own comfort zone and into the character's shoes', (iii) 결말의 대조 'real people doing real things, not just fictional characters'가 'instead of pretending'과 정확히 대응한다. 수면 패턴·외모 변경이라는 수단이 '캐릭터의 내면 상태를 진짜로 경험한다'는 목표에 대한 수단으로 자연스럽게 종속된다."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "무관 진술. 지문은 대본(script)을 한 번도 언급하지 않으며, 오히려 카메라가 꺼진 뒤에도 역할을 계속한다는 기술은 대본 범위를 넘어서는 몰입을 함의한다. '대본의 정확한 문구에만 엄격히 의존'은 몰입 기법의 목표로 논리적 연결이 전무하다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "순환 논증. 빈칸 문장 자체가 'they will change their sleeping patterns ... with the ultimate goal of ___' 구조인데, 목표 자리에 '수면 패턴을 일시적으로 바꾸는 것'을 넣으면 수단과 목표가 동일해져 공허한 동어반복이 된다(수면 패턴을 바꾸는 목적이 수면 패턴을 바꾸는 것). 'ultimate goal'이라는 상위 층위 표지와도 층위가 어긋난다. 문법 결합은 정문이나 논리적으로 성립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "과잉 확장. 지문은 심리·행동 변화와 정서적 트라우마를 'It can cause... sometimes even resulting in'으로, 즉 의도하지 않은 부작용으로 기술한다. '원래 정체성을 회복 불가능하게 완전히 상실'을 궁극 '목표'로 놓으면 부작용을 목적으로 승격시키는 오류이며, 'explore a whole new identity'(탐험, 즉 돌아옴을 전제)와도 충돌한다. 매력적 오답이지만 목표/결과 층위 구분으로 배제된다."
+    }
+  ],
+  "note": "다섯 선지 모두 'goal of' 뒤 동명사구로 문법 결합(seam)은 정문이므로 변별은 전적으로 논리 적합성에서 발생. ①은 정면 모순, ③은 무관, ④는 수단=목표 순환, ⑤는 부작용의 목표 승격 오류로 각각 형식적으로 배제되고 ②만 지문 세 곳의 장거리 단서(actually become / into the character's shoes / not just fictional characters)와 정합. 복수 정답 소지 없음. 렌즈: 문법가/논리학자, 블라인드 풀이."
+}

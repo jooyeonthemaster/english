@@ -1,0 +1,69 @@
+{
+  "pid": "P060",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints labels (E) as '분사구문(능동/수동)' although the slot is a gerund (object of preposition 'alongside'); the same keyPoint line then correctly says '능동형 동명사가 적절함'. Tag-level mislabel, self-corrected in the same line; the main 해설 analyzes it correctly as 동명사 병렬."
+    },
+    {
+      "code": "V4-minor-hedge",
+      "severity": "minor",
+      "evidence": "Main 해설 says the slot must be '동명사 혹은 현재분사 형태' — after the preposition 'alongside' only a gerund fits; '혹은 현재분사' is loose (harmless: both point to the -ing form)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "to부정사 부사적 용법(목적) vs -ing 병렬 오인 — 앞의 identifying/evaluating -ing 연쇄에 이어 guiding 병렬을 기대하게 함",
+      "temptingBecause": "'identifying ... and evaluating ... to guide'에서 -ing 병렬 사슬 뒤에 to부정사가 나와 형태 불일치로 보일 수 있음",
+      "decisiveFlaw": "'to guide how to respond'는 evaluating을 수식하는 목적의 to부정사로 정문 — 병렬 대상이 아님. 오답(정문) 판정 타당."
+    },
+    {
+      "label": "(B)",
+      "intent": "동격 명사절 that vs 관계대명사 혼동 — 긴 although 삽입절로 절 완전성 판단을 지연시킴",
+      "temptingBecause": "that 직후 콤마와 긴 'although ...' 삽입절 때문에 뒤 절이 불완전해 보이거나 which가 필요해 보임",
+      "decisiveFlaw": "'these principles vary both between and within individuals'는 완전한 절이며 추상명사 recognition의 동격절 — that 정문. 판정 타당."
+    },
+    {
+      "label": "(C)",
+      "intent": "선행사 포함 관계대명사 What vs 접속사 that 혼동 + values를 명사로 오독하게 유도",
+      "temptingBecause": "'What a person values relates ...'에서 values를 명사로 읽으면 구조가 깨져 보이고, 단수동사 relates와의 호응도 헷갈림",
+      "decisiveFlaw": "What은 타동사 values의 목적어 공백을 채우며 주어절을 이끄는 자유관계사 — 정문. 판정 타당."
+    },
+    {
+      "label": "(D)",
+      "intent": "분사구문 능동/수동(meaning vs meant) — 의미상 주어가 앞 절 전체라는 비명시적 구조",
+      "temptingBecause": "meaning의 의미상 주어가 표면에 없어 수동 meant로 고쳐야 한다고 오판하기 쉬운 유명 포인트",
+      "decisiveFlaw": "앞 절 내용을 의미상 주어로 삼아 that절 목적어를 취하는 능동 분사구문 'meaning that'은 관용적 정문. 판정 타당."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 전치사 alongside의 목적어 자리 동명사 병렬(recognizing and accepting)에서 능동 -ing을 수동 -ed로 교체한 최소대립쌍",
+      "temptingBecause": "-ed 형태가 분사로 흔히 등장하므로 무심코 지나칠 수 있음",
+      "decisiveFlaw": "alongside(전치사)+동명사 병렬이며 뒤에 that 명사절 목적어가 직접 연결되므로 능동 recognizing이어야 함. recognized는 비문 — 교정 시 정확히 원문 복원. 다만 'recognized and accepting'의 3어절 내 병렬 파손이 즉각적 표면 단서라 KILLER 은닉성 미달."
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints의 (E) 포인트 태그 '분사구문(능동/수동)'은 동명사 자리 오라벨(같은 줄에서 '능동형 동명사'로 자기교정, 본해설은 정확) — minor",
+    "본해설 '동명사 혹은 현재분사 형태' 표현은 전치사 목적어 자리에서 동명사만 가능하므로 다소 느슨 — minor"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 통과. 유일 오류·최소대립쌍·교정 시 원문 복원 확인. 그러나 요청 난이도 KILLER 대비 정답 단서가 과도하게 국소적: 'alongside recognized and accepting'에서 -ed/-ing 병렬 파손이 인접 3어절 내에 노출되어 §C의 '구조를 읽어야 하며 즉시 드러나지 않는다' 조건 위배(killerConditionsMet=false), C5=1. 디코이 (B)(C)(D)는 실제 흡인력이 있으나 정답의 표면 탐지 용이성이 변별 상한을 깎음. C 합계 16, C5<2로 B 미달 → 등급 C(난이도 재설계 필요: 오류점을 라이선서에서 원거리화하거나 병렬 인접 단서 제거)."
+}

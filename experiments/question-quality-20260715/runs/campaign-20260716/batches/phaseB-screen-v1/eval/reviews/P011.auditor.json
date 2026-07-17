@@ -1,0 +1,66 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원 span(facilitate clear communication between co-workers)을 지문 후반의 perspective-taking·conflict resolution 내용으로 추상화한 완성",
+      "temptingBecause": "지문 전체의 협력·소통 논조 및 'take the perspective of the other group members', 'Appreciation of differences... constructive conflict resolution'과 직접 정합",
+      "decisiveFlaw": "없음(정답). 단 'understanding others' viewpoints'가 빈칸 문장의 직접 원인(express accurately)보다 지문 후반 내용에 기대는 약한 인과 어긋남이 있으나 정답성은 훼손하지 않음"
+    },
+    {
+      "label": "②",
+      "intent": "통제/규칙 강제 오개념 — 집단 기능 개선을 규율 강화로 오독하게 유도",
+      "temptingBecause": "'group functioning', 'group settings' 등 집단 운영 어휘와 표면적 연관",
+      "decisiveFlaw": "개방적 소통·차이 존중(Appreciation of differences → open communication)이라는 본문 기제와 정반대의 통제적 수단"
+    },
+    {
+      "label": "③",
+      "intent": "감정 억제 = 객관성 오개념(극성 반전)",
+      "temptingBecause": "'objective reasoning'이 집단 갈등 상황에서 바람직해 보이는 상식적 프레임",
+      "decisiveFlaw": "같은 문장의 'express emotions, feelings and moods accurately'와 문장 내부에서 직접 모순 — 표현 능력이 있어서 억제한다는 완성문은 자기모순"
+    },
+    {
+      "label": "④",
+      "intent": "정서적 거리두기 오개념(condition loss — 관점 취하기 조건 삭제)",
+      "temptingBecause": "'professional'이 직장(co-workers) 맥락에서 규범적으로 그럴듯함",
+      "decisiveFlaw": "'take the perspective of the other group members and understand why they are reacting'이라는 본문 권장 행동과 정면 배치"
+    },
+    {
+      "label": "⑤",
+      "intent": "half-truth / actor 강조 왜곡 — 자기 감정 표현을 논의 지배로 과잉 해석 유도",
+      "temptingBecause": "'express how he feels about the problem', 'asserting... clearly'가 '정확한 표현'과 어휘적으로 겹침",
+      "decisiveFlaw": "'dominate'가 바로 다음 문장 'accommodate their own needs as well as the needs of others (i.e. cooperate)'와 모순 — Furthermore로 이어지는 첨가 관계상 빈칸은 협력 극성이어야 함"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "PARAPHRASE_CLAIM_STRETCH",
+      "severity": "minor",
+      "evidence": "해설이 ①을 원 span 'facilitate clear communication between co-workers'의 '패러프레이징'이라 칭하나, ①은 실제로 그 span의 의미 보존 환언이 아니라 지문 후반(perspective-taking, conflict resolution)에서 끌어온 추상화다. 해설 자체가 그 맥락을 함께 밝히고 있어 오분석·환각 수준은 아님(V4 통과, 표현 정밀도 문제)"
+    },
+    {
+      "code": "KEYPOINT_TERM_NOT_IN_TEXT",
+      "severity": "minor",
+      "evidence": "keyPoints의 'empathy'는 지문에 문자 그대로 존재하지 않는 용어(perspective-taking의 요약으로는 타당) — 사실 오류는 아니나 근거 어휘와 1:1 대응은 아님"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 통과. V1: 렌더 지문은 의도된 blank 치환 외 원지문과 완전 일치, 라벨·마커 정상. V2: 5개 선지 독립 검증 결과 ① 유일 정답 — ③은 같은 문장 내 직접 모순, ⑤는 후속 문장(cooperate)과 모순, ②④는 본문 기제와 배치. V3: 5개 선지 모두 'may' 뒤 동일 VP 슬롯에 문법적으로 들어가며 seam 비문 없음. V4/V5: 인용 어구 실재·귀속 정확, 오답 해설이 각 선지 내용과 대응, 필드 동기화 정상. 공예 결함: (1) 극성 군집 — 오답 4개가 모두 반협력·부정 극성이라 유일한 긍정 선지 ①을 논조만으로 소거 선택 가능(C3=2, C4=2의 주 근거, 약한 메타 누출). (2) 정답이 지문 마지막 문장들의 어휘('differences', 'viewpoints'≈'perspective')를 거의 그대로 반향해 베껴쓰기에 근접 — 원 span('clear communication')의 의미 보존 추상화가 아니라 지문 후반 요약이어서 slot-단서 필연성보다 전체 논조 의존. (3) INTERMEDIATE 요청 대비 함정 깊이가 얕은 편이나 2문장 연결 추론은 요구되어 대체로 정합(C5=3). 합계 16, 최저 2 → 모든 V 통과하나 합계 17 미만으로 B 미달, 등급 C. 재설계 방향: 오답 중 1~2개를 긍정 극성이면서 scope shift/half-truth인 선지로 교체해 극성 소거를 차단하고, 정답 표현을 후반부 어휘 직반향에서 한 단계 더 추상화할 것. KILLER 아님(요청 난이도 INTERMEDIATE) → killerConditionsMet=false."
+}

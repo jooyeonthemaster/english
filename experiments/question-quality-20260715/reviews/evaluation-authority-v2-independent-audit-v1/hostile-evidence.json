@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "evaluation-authority-v2-independent-hostile-evidence-v1",
+  "subjectProtocolSha256": "149228ef8ce2273f143a8a265c070a69735124d5a140e2e0ca2bca3d88b479fa",
+  "method": "Independent deep-clone mutations evaluated only by independent-core.mjs; no subject build, verifier, or hostile implementation was imported or executed.",
+  "mutationSummary": {
+    "passed": 127,
+    "total": 127,
+    "undetected": []
+  },
+  "categories": [
+    { "category": "exact_1000_allocation_and_no_drift", "cases": 4 },
+    { "category": "legacy_singleton_taxonomy_rejection", "cases": 3 },
+    { "category": "unauthorized_score_selection_release_or_authority", "cases": 9 },
+    { "category": "phase_skip_reorder_overlap_or_post_open_change", "cases": 7 },
+    { "category": "two_reviewers_fresh_adjudicator_and_role_collisions", "cases": 13 },
+    { "category": "all_nine_state_deny_sets_missing_or_empty", "cases": 18 },
+    { "category": "authorization_receipt_binding_time_backfill_and_deny", "cases": 17 },
+    { "category": "each_required_phase_seal_removed", "cases": 15 },
+    { "category": "s1_packet_and_result_access_order", "cases": 3 },
+    { "category": "each_hidden_class_and_hidden_commitment_binding", "cases": 27 },
+    { "category": "n6_ranking_selection_inference", "cases": 6 },
+    { "category": "type_binding_v4_and_failed_predecessor_lineage", "cases": 5 }
+  ],
+  "accessScenarioSummary": {
+    "passed": 12,
+    "total": 12,
+    "failed": []
+  },
+  "accessScenarios": [
+    "valid-bound-receipt",
+    "reject-actorPseudonym-mismatch",
+    "reject-actorRole-mismatch",
+    "reject-phase-mismatch",
+    "reject-resourceSha256-mismatch",
+    "reject-visibleSurfaceSha256-mismatch",
+    "reject-capabilityTokenSha256-mismatch",
+    "reject-late-equal-authorization",
+    "reject-backfilled-allow",
+    "reject-authorization-hash-mismatch",
+    "valid-deny-no-receipt",
+    "reject-deny-open-receipt"
+  ],
+  "semanticCounterexampleResolutions": [
+    {
+      "attack": "A pre-authority ALLOW attempts to expose an S1 hidden class in a state whose local deny-set label does not repeat every hidden class.",
+      "resolution": "REJECTED_BY_COMPOSED_CONTRACT",
+      "reason": "All eight classes are content of the separate presealed hidden commitment; reveal requires the reviewer's own phase-1 response seal and a bound ALLOW receipt. A local deny list cannot override this global conjunctive gate. Every one of the nine states nevertheless has an explicit nonempty deny set."
+    },
+    {
+      "attack": "A phase-1 packet uses the relabel surface to include model, profile, answer, explanation, cost, or generation metadata.",
+      "resolution": "REJECTED_BY_EXACT_ALLOWLIST_AND_HIDDEN_COMMITMENT",
+      "reason": "The allowlist is exact and student-visible-only; each hidden class is separately enumerated, bound outside the visible surface, and leakage mandates quarantine, capability revocation, DENY evidence, and no result access."
+    }
+  ],
+  "activity": {
+    "privateReads": 0,
+    "goldReads": 0,
+    "revealReads": 0,
+    "answerPayloadReads": 0,
+    "envReads": 0,
+    "databaseCalls": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "ledgerReadsOrWrites": 0,
+    "subjectBuildImportsOrExecutions": 0,
+    "subjectVerifierImportsOrExecutions": 0,
+    "subjectHostileImportsOrExecutions": 0,
+    "subjectWrites": 0
+  }
+}

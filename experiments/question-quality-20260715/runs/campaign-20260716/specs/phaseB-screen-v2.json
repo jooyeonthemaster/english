@@ -1,0 +1,460 @@
+{
+ "batchId": "phaseB-screen-v2",
+ "phase": "B",
+ "note": "서킷브레이커로 미실행된 B-V1/B-D1/B-T1 + 프롬프트 정밀화(I3/I4) 후 G3r/B3r 재실행",
+ "concurrency": 3,
+ "geminiReasoningEffort": "low",
+ "providerRouting": "none",
+ "assignments": [
+  {
+   "itemId": "B2-B-V1-01",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-02",
+   "frameId": "blank-supply-v2-052",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-03",
+   "frameId": "blank-supply-v2-080",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-04",
+   "frameId": "blank-supply-v2-101",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-05",
+   "frameId": "blank-supply-v2-124",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-06",
+   "frameId": "blank-supply-v2-150",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-07",
+   "frameId": "blank-supply-v2-037",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-08",
+   "frameId": "blank-supply-v2-042",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-09",
+   "frameId": "blank-supply-v2-046",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-V1-10",
+   "frameId": "blank-supply-v2-062",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-V1"
+  },
+  {
+   "itemId": "B2-B-D1-01",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-02",
+   "frameId": "blank-supply-v2-052",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-03",
+   "frameId": "blank-supply-v2-080",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-04",
+   "frameId": "blank-supply-v2-101",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-05",
+   "frameId": "blank-supply-v2-124",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-06",
+   "frameId": "blank-supply-v2-150",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-07",
+   "frameId": "blank-supply-v2-037",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-08",
+   "frameId": "blank-supply-v2-042",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-09",
+   "frameId": "blank-supply-v2-046",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-D1-10",
+   "frameId": "blank-supply-v2-062",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-D1"
+  },
+  {
+   "itemId": "B2-B-T1-01",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-02",
+   "frameId": "blank-supply-v2-052",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-03",
+   "frameId": "blank-supply-v2-080",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-04",
+   "frameId": "blank-supply-v2-101",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-05",
+   "frameId": "blank-supply-v2-124",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-06",
+   "frameId": "blank-supply-v2-150",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-07",
+   "frameId": "blank-supply-v2-037",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-08",
+   "frameId": "blank-supply-v2-042",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-09",
+   "frameId": "blank-supply-v2-046",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-T1-10",
+   "frameId": "blank-supply-v2-062",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "B-T1"
+  },
+  {
+   "itemId": "B2-B-B3r-01",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-02",
+   "frameId": "blank-supply-v2-052",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-03",
+   "frameId": "blank-supply-v2-080",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-04",
+   "frameId": "blank-supply-v2-101",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-05",
+   "frameId": "blank-supply-v2-124",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-06",
+   "frameId": "blank-supply-v2-150",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-07",
+   "frameId": "blank-supply-v2-037",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-08",
+   "frameId": "blank-supply-v2-042",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-09",
+   "frameId": "blank-supply-v2-046",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-B-B3r-10",
+   "frameId": "blank-supply-v2-062",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "B3_OPTION_INTENT_LEDGER",
+   "armId": "B-B3r"
+  },
+  {
+   "itemId": "B2-G-G3r-01",
+   "frameId": "grammar-frame-v2-006",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-02",
+   "frameId": "grammar-frame-v2-017",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-03",
+   "frameId": "grammar-frame-v2-050",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-04",
+   "frameId": "grammar-frame-v2-055",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-05",
+   "frameId": "grammar-frame-v2-071",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-06",
+   "frameId": "grammar-frame-v2-160",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-07",
+   "frameId": "grammar-frame-v2-011",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-08",
+   "frameId": "grammar-frame-v2-020",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-09",
+   "frameId": "grammar-frame-v2-028",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  },
+  {
+   "itemId": "B2-G-G3r-10",
+   "frameId": "grammar-frame-v2-032",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "STANDARD",
+   "profile": "G3_SITE_CERTIFICATE",
+   "armId": "G-G3r"
+  }
+ ]
+}

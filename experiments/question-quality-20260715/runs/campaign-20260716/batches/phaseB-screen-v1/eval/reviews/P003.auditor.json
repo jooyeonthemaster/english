@@ -1,0 +1,66 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-MINOR-SURROUNDINGTEXT",
+      "severity": "minor",
+      "evidence": "markedExpressions (B)의 surroundingText가 렌더 형태 'listen'이 아닌 원문 형태 'listening to it again ...'을 담고 있다. expression=원형/errorExpression=표시형 이라는 필드 관례 안에서는 자기일관적이지만, surroundingText를 렌더 지문 anchor 로 문자열 매칭하는 소비자가 있으면 매칭에 실패한다. 학생 노출 필드(정답 라벨·선지·해설·keyPoints)에는 모순 없음 → V5 통과, 경고만 기록."
+    },
+    {
+      "code": "V5-MINOR-POINTCODE",
+      "severity": "minor",
+      "evidence": "pointCode 가 (C)(D)(E) 모두 'k'로 중복되어 있어 디코이별 포인트 분류 메타데이터의 변별력이 없다(코드 의미 비공개라 판정 불가, 참고용)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "지각동사 see + 목적어 + 목적격보어(현재분사) 구조의 준동사 형태 판별",
+      "temptingBecause": "seeing someone 뒤에 원형부정사(scribble)만 가능하다고 외운 학생, 또는 scribbling을 동명사로 오분류한 학생이 오류로 의심할 수 있다",
+      "decisiveFlaw": "see + O + V-ing(진행 중 동작)은 표준 어법으로 완전히 문법적 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답. 주절 정동사(can be) 앞 주어 자리에는 명사 상당어구(동명사구)가 필요 — 정동사/준동사 구분",
+      "temptingBecause": "if절과 콤마 뒤에 오는 동사원형이 명령문 어순처럼 자연스럽게 읽혀, 뒤의 can be까지 파싱하지 않으면 지나치기 쉽다",
+      "decisiveFlaw": "listen(동사원형)은 주어구를 이끌 수 없고, 명령문으로 읽으면 can be의 주어가 사라져 어떤 해석으로도 비문 — listening(원문 복원)으로 교정해야 한다"
+    },
+    {
+      "label": "(C)",
+      "intent": "목적격 관계대명사 생략 관계절 안의 wish + to부정사 구조 파악",
+      "temptingBecause": "표면 연쇄 'you wish to use can be'가 어색해 보여 오류로 의심하기 쉽다 — 정답 (B)와 같은 문장에 있어 전체 구조 파싱을 강제한다",
+      "decisiveFlaw": "the quotes [which] you wish to use 의 목적어 공백 관계절로 정상 — to use는 wish의 to부정사 보충어로 어법상 옳다"
+    },
+    {
+      "label": "(D)",
+      "intent": "involve가 동명사를 목적어로 취하는 동사별 목적어 선택 규칙",
+      "temptingBecause": "to부정사 목적어 동사들과 혼동해 to write down으로 고치고 싶어질 수 있다",
+      "decisiveFlaw": "involve + V-ing 는 표준 규칙으로 writing down 이 정확 — 오류 아님. 다만 규칙 암기만으로 즉시 소거 가능해 유혹도는 낮다"
+    },
+    {
+      "label": "(E)",
+      "intent": "형용사(비교급) + to부정사 한정 구조(tough 구문)의 목적어 공백 이해",
+      "temptingBecause": "handle의 목적어가 표면에 없어 to be handled(수동)나 handling으로 고쳐야 한다고 오인할 수 있다",
+      "decisiveFlaw": "easier/quicker to handle 의 목적어 공백은 the material 과 연결되는 표준 tough 구문 — 능동형 to handle 이 정확"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문 대비 의도된 변형(listening→listen) 하나만 있고 접합 파손·중복·누락·오탈자 없음, 라벨 (A)~(E)가 선지와 일치. V2: 5개 밑줄 독립 검증 결과 (B)만 비문(주절 정동사 can be의 주어 자리에 동사원형) — 명령문 대안 해석도 can be의 주어 부재로 배제되어 단일 정답 확정. V3: 교정문(listening) 포함 지문·발문 모두 문법적·자연스러움. V4: 해설의 구조 분석(정동사 can be, 동명사 주어, listening/to listen 교정)이 실제 문장과 일치하고, 4개 오답 해설도 각 선지의 실제 구조(지각동사 보어·관계절 내 wish+to부정사·involve+동명사·형용사 한정 부정사)와 정확히 대응 — 학교문법 용어 사용도 표준 범위. V5: 학생 노출 필드 간 모순 없음(내부 구조 필드의 surroundingText 관례는 minor 경고). 공예: 교정 시 정확히 원문 복원, 메타 누출 없음(C4=4), INTERMEDIATE 요청에 사고 단계·함정 깊이가 정확히 부합(C5=4). 다만 (D)(E)는 암기 규칙으로 빠르게 소거되어 다수 선지가 끝까지 매력적이지는 않고(C2·C3=3), 출제 포인트 자체는 정전적이나 매우 전형적(C1=3). 합계 20 — 모든 V 통과·최저 C 3이지만 21 미만이라 A 기준 미달, B 판정. KILLER 요청이 아니므로 killerConditionsMet=false."
+}

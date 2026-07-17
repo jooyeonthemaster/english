@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "Suppressing personal emotions to avoid clashes — 빈칸에 넣으면 문법 결합은 성립하지만(동명사구 주어 + creates 단수 일치) 지문 논리와 정면 충돌한다. 지문은 감정 이해 능력이 뛰어난 사람이 감정을 '정확히 표현(express emotions, feelings and moods accurately)'하고 갈등 상황에서도 'express how he feels about the problem and why'라고 명시한다. 감정 억제는 open communication과 정반대다. 다만 실전에서 '충돌 회피 = 갈등 해결'로 착각하기 쉬운 매력적 오답 — '갈등 상황'이라는 프레임에 끌려 잠깐 유혹되지만, 지문의 핵심이 감정 표현+조망 수용임을 확인하면 즉시 배제된다."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "Forcing one's own opinions on other members — 자기 의견 강요는 'take the perspective of the other group members'와 정반대이며, open communication·constructive conflict resolution을 만들어낼 수 없다. 논리적 유혹도 거의 없는 명백한 오답."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "Dividing tasks based on individual expertise — 과업 분담은 지문에 전혀 등장하지 않는 소재(off-topic). 'improved group functioning'이라는 결과어에만 표면적으로 닿아 있어 결과 단어만 훑은 수험생을 노리는 오답이지만, 빈칸은 앞 문장들(감정 표현+조망 수용)을 받는 요약 주어이므로 성립 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "정답",
+      "reason": "Valuing other people's distinct perspectives — 바로 앞 문장 'He also should be able to take the perspective of the other group members and understand why they are reacting in a certain manner'를 직접 받아, 이것이 open communication의 장을 만들고 constructive conflict resolution·improved group functioning을 촉진한다는 결론과 정확히 연결된다. 동명사구 주어 + creates 단수 일치도 자연스럽다. 유일한 결점은 빈칸이 '자기 감정 표현' 절반은 담지 못하고 조망 수용 절반만 요약한다는 점인데, 빈칸 직전 문장이 조망 수용이므로 지시 범위상 문제없고 다른 선지는 전부 논리 충돌이라 유일하게 옹호 가능하다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "Preventing any potential disagreement from arising — 지문은 갈등을 '예방'하는 것이 아니라 갈등 상황에서 '건설적으로 해결(constructive conflict resolution)'한다고 말한다. 갈등 해결이 목표라는 점 때문에 ①과 함께 실전에서 가장 끌리는 오답 축이지만, 'resolution'은 갈등이 이미 발생했음을 전제하므로 'preventing...from arising'과 논리적으로 모순된다. any라는 전칭 표현도 지문 톤과 어긋난다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 빈칸이 문두 주어 자리이고 뒤가 'creates an arena for open communication'이므로, 빈칸은 직전 두 문장(자기 감정 표현 + 타인 조망 수용)의 행위를 요약해야 한다. ①·⑤가 '갈등' 키워드로 유혹하는 쌍둥이 오답인데 둘 다 '갈등 회피/예방' 방향이라 'constructive conflict resolution'(갈등의 존재를 전제)과 모순되어 탈락. ④만이 직전 문장의 perspective-taking을 정확히 환언한다. 사소한 흠: ④가 감정 표현 측면까지는 포괄하지 못해 요약 주어로서 절반만 커버하지만, 정답성은 흔들리지 않는다. 단일 정답 ④로 확정, 신뢰도 높음."
+}

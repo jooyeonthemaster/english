@@ -1,0 +1,38 @@
+{
+  "pid": "P034",
+  "finalV2": true,
+  "winningAnswer": "D",
+  "reason": "GRAMMAR_ERROR 유형. 다섯 밑줄을 독립 재검증한 결과, 어법상 틀린 것은 (D) 하나뿐이며 선언된 정답과 일치한다. (D) 'The appeal to a genetic change driven evolution gets ... backwards'에서 의도된 구조는 전치사 to의 목적어 'a genetic change'를 뒤에서 수식하는 현재분사 축약관계절 'driving evolution'(= a genetic change that drives evolution)로, 분사가 뒤에 목적어 'evolution'을 직접 취한다. 과거분사 driven(수동)은 by 없이 목적어 evolution을 취할 수 없고, 현재 표기는 두 명사구가 연결어 없이 병치되어 비문이 된다. 나머지 (A)명사절 접속사 that, (B)did 뒤 동사원형 show, (C)전치사 for 뒤 동명사 retaining, (E)'get something backwards' 관용구의 부사 backwards는 모두 각 지배 규칙상 정문. 과잉 대안해석(무하이픈 복합형용사 'a genetic-change-driven evolution')은 하이픈 부재·관사 재부착 강제·저자 논지(gene-first/top-down 비판)와의 충돌로 표준 파싱이 아니어서 기각한다. 따라서 정답은 (D)로 단일하며 문항은 유효하다.",
+  "perDispute": [
+    {
+      "label": "A",
+      "claim": "suggests 뒤 that이 관계대명사/what/의문사로 교정되어야 하는가 (오류인가)",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "타동사 suggests의 목적어인 명사절을 이끄는 접속사 that. 뒤에 결여 성분 없는 완전한 절('the common ancestor ... may have already been using ...')이 이어진다. 삽입구 'living about 400,000 years ago'는 주어-동사 거리를 벌리는 함정일 뿐 완전성에 영향을 주지 않는다."
+    },
+    {
+      "label": "B",
+      "claim": "3인칭 단수 주어에 맞춰 shows/showed로 교정되어야 하는가 (오류인가)",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "의문문에서 조동사 did가 시제·수를 담당하므로 본동사는 동사원형 show가 정확하다(did + 원형). 주어 the Neanderthal toolkit의 인칭·수는 did가 흡수한다."
+    },
+    {
+      "label": "C",
+      "claim": "for가 목적 부사여서 to retain/retain으로 교정되어야 하는가 (오류인가)",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "'mutations for retaining lactose digestion'에서 for는 전치사이고 그 목적어로 동명사 retaining이 왔다(retaining이 다시 목적어구 'lactose digestion'을 취함). 전치사+동명사 정문."
+    },
+    {
+      "label": "D",
+      "claim": "driven(과거분사)이 어법상 틀렸는가, 아니면 복합형용사 해석으로 성립하는가",
+      "verdict": "오류 확정 — 유일한 정답",
+      "evidence": "to의 목적어 'a genetic change'를 뒤에서 수식하며 목적어 'evolution'을 직접 취하는 자리이므로 능동 의미의 현재분사 driving('a genetic change driving evolution' = a genetic change that drives evolution)이 요구된다. 과거분사 driven은 수동으로, by 등 행위자 표지 없이 목적어 evolution을 취할 수 없어 두 명사구('a genetic change'와 'evolution')가 연결어 없이 병치되는 비문이 된다. 대안 해석인 무하이픈 복합형용사 'a genetic-change-driven evolution'(진화가 유전변화에 의해 추동됨)은 (1)하이픈 부재로 비표준, (2)관사 a의 부착 대상을 change→evolution으로 강제 재괄호화, (3)'유전변화 주도설(top-down)'을 비판하는 저자 논지와 상충하여 자연 파싱이 아니므로 기각. 교정 시 원문 'driving'으로 복원되는 최소대립쌍이다."
+    },
+    {
+      "label": "E",
+      "claim": "형용사 backward로 교정되어야 하는가 (오류인가)",
+      "verdict": "정문 — 오류 아님",
+      "evidence": "'get something backwards'(~을 거꾸로/잘못 이해하다) 관용 구문에서 동사 gets를 수식하는 부사 backwards. backward/backwards 모두 부사로 허용되며 의미·품사 모두 적법하다."
+    }
+  ]
+}

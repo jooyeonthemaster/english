@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "문법 결합: 빈칸은 'the willingness of readers to pay attention, _____, and not immediately ask...'의 3항 병렬 중 둘째 항으로, to부정사 'to tolerate and investigate ambiguities'가 'to pay attention'과 '(to) not immediately ask'와 완전한 병렬을 이룬다(willingness to-V 보충구조 성립). 논리 결합: 지문의 'We can put up with many obscurities and apparent irrelevancies'(=tolerate ambiguities)와 'they struggle to interpret elements that flout principles of efficient communication'(=investigate ambiguities)를 정확히 요약 재진술하며, 셋째 항 'not immediately ask what do you mean by that'(즉각적 해명 요구 유보)과도 의미적으로 정합. 형식적으로 전건(hyper-protected cooperative principle → 독자의 인내·해석 노력)에서 도출되는 유일한 결론."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립(to부정사 병렬 무결). 논리 결합 실패: 지문은 독자가 규범 위반적 언어(elements that flout principles of efficient communication)를 배척하지 않고 오히려 해석하려 애쓴다고 명시한다. 'reject any language that violates standard rules'는 이 핵심 주장과 정면 모순이며, 또한 셋째 병렬항 'not immediately ask what do you mean'(관용적 태도)과도 내적 모순을 일으킨다. 반박 불가한 오답."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "문법 결합 성립. 논리 결합 실패: 독자가 '고도로 예측 가능하고 단순화된 서사를 요구'한다면 'put up with many obscurities and apparent irrelevancies'라는 전제와 모순된다. 지문은 오히려 복잡성(complications of language)이 소통 목적을 가진다고 독자가 가정한다고 서술하므로, 단순성 요구는 논증 구조상 부정된다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "문법 결합 성립. 논리 결합 실패: 'seek external validation from academic authorities'는 지문 앞부분의 선별 과정(published, reviewed, reprinted)·제도적 라벨을 표면적으로 연상시키는 미끼이나, 빈칸 문장은 '독서 행위 중 독자의 태도'(pay attention / not immediately ask)를 열거하는 자리다. 외부 권위의 승인 추구는 독서 중 해석 태도가 아니며, 병렬 3항의 의미 범주(주의 기울임–관용–해명 유보)에서 이탈한다. 지문 어디에도 독자가 권위의 승인을 '추구'한다는 진술이 없다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "문법 결합 성립. 논리 결합 실패: 'require immediate and literal clarification'은 바로 뒤의 병렬항 'and not immediately ask what do you mean by that?'와 직접 모순된다(즉각적 해명을 요구하면서 동시에 즉각 묻지 않는다는 것은 형식적 모순). 지문 전체의 hyper-protected cooperative principle 논지와도 반대. 반박 불가한 오답."
+    }
+  ],
+  "note": "출처는 Jonathan Culler의 hyper-protected cooperative principle 논의로 보이는 지문. 다섯 선지 모두 to부정사로 병렬 seam이 문법적으로는 동일하게 성립하므로 판별은 순수 논리·의미 적합성으로 이루어진다. ①만이 지문의 두 핵심 진술(obscurity 관용 + 해석 노력)을 정확히 재진술하며 병렬 3항의 의미 범주에 부합. ②③⑤는 지문 논지와 정면 모순, ④는 범주 이탈형 미끼. 복수 정답 여지 없음."
+}

@@ -1,0 +1,694 @@
+{
+  "id": "b06-c4",
+  "unitId": "b06",
+  "order": 4,
+  "title": "수량형용사 — many·much·few·little",
+  "oneLiner": "명사가 셀 수 있는가를 먼저 판정하면 many·much, few·little, fewer·less 의 선택이 전부 자동으로 끝납니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 수량 표현(many/much/a few/a little)",
+      "docs/study-os-spec.md §2.3 b06 형용사·부사·비교",
+      "판별 연결: 수량 표현이 주어에 붙으면 동사의 수가 결정되므로 핵 주어 수일치(u02-c1) 판별의 전제가 됩니다"
+    ]
+  },
+  "lenses": ["L5"],
+  "confusableWith": ["b05-c1", "b06-c2", "b06-c3", "u02-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The report contains much information about local traditions.",
+        "The report contains many information about local traditions."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 information 이라는 명사 하나가 결정합니다. 이 레슨을 마치면 왜 many 가 이 자리에 올 수 없는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "수량형용사",
+      "question": "그런데 수량형용사가 대체 무엇입니까?",
+      "plain": "수량형용사는 명사 앞에서 '얼마나 많은가'를 표시하는 형용사입니다. many·much·few·little 이 대표이며, 뒤에 오는 명사가 셀 수 있는가에 따라 쓸 수 있는 짝이 정해져 있습니다.",
+      "analogy": "마트에서 사과는 '몇 개'로 묻고 물은 '얼마나'로 묻습니다. 개수로 세는 물건과 양으로 재는 물건에 다른 말을 쓰는 습관은 한국어에도 있는데, 영어는 그 구분을 문법 규칙으로 강제할 뿐입니다.",
+      "whyItMatters": "시험은 many 자리에 much 를, fewer 자리에 less 를 슬쩍 바꿔 놓고 밑줄을 칩니다. 명사의 가산성 하나만 판정하면 수량 표현의 선택은 자동으로 끝나고, 이 판정은 뒤에서 동사의 수일치 판별(u02-c1)로 그대로 이어집니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "가산과 불가산, 그다음 두 계열",
+      "intro": "수량형용사를 고르는 데 필요한 개념을 순서대로 쌓습니다. 먼저 명사를 두 종류로 가른 뒤, 표현을 계열별로 만납니다.",
+      "entries": [
+        {
+          "head": "가산명사 — 하나, 둘 셀 수 있는 이름",
+          "body": "a(n) 을 붙일 수 있고 복수형 -s 를 만들 수 있으면 가산명사입니다. book·question·student 가 대표입니다.",
+          "example": {
+            "en": "The shelf holds two hundred **books**.",
+            "ko": "그 선반에는 이백 권의 책이 꽂혀 있습니다.",
+            "note": "books 처럼 복수형이 되면 가산명사입니다."
+          }
+        },
+        {
+          "head": "불가산명사 — 양으로 재는 이름",
+          "body": "복수형도 a(n) 도 거부하는 명사입니다. 물질(water)·추상 개념(progress)·총칭(furniture)이 여기에 속합니다.",
+          "example": {
+            "en": "The lab needs new **equipment** for the experiment.",
+            "ko": "그 실험실은 실험을 위한 새 장비가 필요합니다.",
+            "note": "장비가 여러 대여도 equipment 는 복수형을 만들지 않습니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "시험 단골 불가산명사",
+          "body": "information·advice·evidence·furniture·equipment·money·progress·news 는 전부 불가산입니다. 한국어 감각으로는 셀 수 있어 보이기 때문에 시험이 즐겨 씁니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "many · much — 많다",
+          "body": "뜻은 같은 '많은'이지만 many 는 가산 복수명사 앞에만, much 는 불가산명사 앞에만 섭니다."
+        },
+        {
+          "head": "a few · a little — 조금 있다",
+          "body": "a 가 붙은 짝은 '조금은 있다'는 긍정입니다. a few 는 가산 복수 앞에, a little 은 불가산 앞에 섭니다."
+        },
+        {
+          "head": "few · little — 거의 없다",
+          "body": "a 가 빠지면 '거의 없다'는 부정으로 뒤집힙니다. 형태는 한 글자 차이지만 문장의 논리가 반대가 됩니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "fewer · less — 더 적은",
+          "body": "비교급에서도 계열은 유지됩니다. 가산 복수에는 fewer 를, 불가산에는 less 를 씁니다."
+        },
+        {
+          "head": "양다리 표현 — some·any·a lot of·plenty of",
+          "body": "이 표현들은 가산·불가산을 가리지 않고 붙습니다. 밑줄이 이들이라면 가산성 시비는 걸리지 않습니다.",
+          "example": {
+            "en": "The library has **plenty of** books and **plenty of** space for group work.",
+            "ko": "그 도서관에는 책도 많고 모둠 활동을 위한 공간도 넉넉합니다.",
+            "note": "plenty of 는 가산 복수(books)와 불가산(space) 모두에 붙습니다."
+          },
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "불가산명사 사냥",
+      "instruction": "이 문장에서 불가산명사를 전부 찾아 탭하십시오. 복수형이 되지 않는 이름이 사냥감입니다.",
+      "hitLabel": "불가산명사",
+      "tokens": [
+        { "t": "Students", "hit": false },
+        { "t": "collected", "hit": false },
+        { "t": "information", "hit": true },
+        { "t": "and", "hit": false },
+        { "t": "advice", "hit": true },
+        { "t": "before", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "trip,", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "their", "hit": false },
+        { "t": "equipment", "hit": true },
+        { "t": "filled", "hit": false },
+        { "t": "three", "hit": false },
+        { "t": "boxes.", "hit": false }
+      ],
+      "ko": "학생들은 여행 전에 정보와 조언을 모았고, 그들의 장비는 상자 세 개를 가득 채웠습니다.",
+      "explain": "information·advice·equipment 는 복수형을 만들지 않는 불가산명사여서 much·little·less 와 어울립니다. Students·trip·boxes 는 가산명사입니다 — 특히 boxes 의 복수형 어미가 가산의 증거입니다."
+    },
+    {
+      "id": "b5",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "두 계열 한 장 정리",
+      "columns": ["의미", "가산 복수 앞", "불가산 앞"],
+      "rows": [
+        {
+          "cells": ["많다", "many · a number of", "much · a great deal of"],
+          "example": {
+            "en": "**Many** students asked questions, but there was not **much** time left.",
+            "ko": "많은 학생이 질문을 했지만 남은 시간은 많지 않았습니다.",
+            "note": "students 는 가산 복수이므로 many, time 은 불가산이므로 much 입니다."
+          }
+        },
+        {
+          "cells": ["조금 있다", "a few", "a little"],
+          "example": {
+            "en": "The team still has **a little** time before the deadline.",
+            "ko": "그 팀에는 마감 전까지 시간이 조금 남아 있습니다.",
+            "note": "time 은 '시간의 양'을 뜻할 때 불가산이므로 a few 가 아니라 a little 을 씁니다."
+          }
+        },
+        {
+          "cells": ["거의 없다", "few", "little"]
+        },
+        {
+          "cells": ["더 적은(비교급)", "fewer", "less"]
+        },
+        {
+          "cells": ["주어일 때 동사의 수", "복수동사(are·have)", "단수동사(is·has)"],
+          "example": {
+            "en": "**Much** of the equipment **is** stored in the basement.",
+            "ko": "그 장비의 상당 부분은 지하실에 보관되어 있습니다.",
+            "note": "much of + 불가산명사는 단수 취급이므로 동사가 is 입니다."
+          }
+        }
+      ],
+      "takeaway": "어느 칸을 묻든 첫 질문은 하나입니다 — 이 명사는 셀 수 있습니까. 그 답이 가산 열과 불가산 열을 가릅니다."
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "수량 표현의 두 계열",
+      "why": "밑줄 옆에서 명사의 가산성을 판정해도, 어느 계열을 골라야 하는지 즉시 나오지 않으면 판정이 소용없습니다. 여덟 단어의 소속이 구구단처럼 나와야 표가 도구가 됩니다.",
+      "device": "'세면 many–few–fewer, 부으면 much–little–less.' 사과처럼 개수를 세는 명사에는 세는 팀이, 물처럼 부어서 재는 명사에는 붓는 팀이 붙습니다. 두 팀의 구호를 세 번 소리 내어 읽으십시오.",
+      "items": [
+        { "cue": "가산 · 많다", "answer": "many" },
+        { "cue": "불가산 · 많다", "answer": "much" },
+        { "cue": "가산 · 조금 있다", "answer": "a few" },
+        { "cue": "불가산 · 조금 있다", "answer": "a little" },
+        { "cue": "가산 · 거의 없다", "answer": "few" },
+        { "cue": "불가산 · 거의 없다", "answer": "little" },
+        { "cue": "가산 · 더 적은", "answer": "fewer" },
+        { "cue": "불가산 · 더 적은", "answer": "less" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "세는 팀 선발전",
+      "mission": "가산 복수명사 앞에 설 수 있는 수량 표현만 전부 고르십시오. 불가산 전용이 다섯 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "many",
+        "much",
+        "a few",
+        "a little",
+        "few",
+        "little",
+        "fewer",
+        "less",
+        "a number of",
+        "a great deal of"
+      ],
+      "answers": ["many", "a few", "few", "fewer", "a number of"],
+      "passText": "다섯을 전부 가려냈습니다. 세는 팀의 명단이 손에 붙었으니, 이제 명사의 가산성만 판정하면 나머지는 자동입니다.",
+      "retryText": "아깝습니다. 힌트 하나 — '부으면 much·little·less'입니다. 붓는 팀부터 지우고 남는 것을 고르십시오."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "셀 수 있는 명사(복수형)에는 many 를, 셀 수 없는 명사에는 much 를 붙입니다.",
+      "examples": [
+        {
+          "en": "**Many** students in the program study two foreign languages.",
+          "ko": "그 과정의 많은 학생들이 외국어를 두 개 배웁니다.",
+          "note": "students 는 복수형이 있는 가산명사이므로 many 가 옳습니다."
+        },
+        {
+          "en": "**Much** evidence comes from long-term surveys.",
+          "ko": "많은 증거가 장기 조사에서 나옵니다.",
+          "note": "evidence 는 복수형을 만들지 않는 불가산명사이므로 much 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "a 가 붙은 a few·a little 은 '조금 있다'는 긍정, a 가 없는 few·little 은 '거의 없다'는 부정 의미입니다.",
+      "examples": [
+        {
+          "en": "**A few** visitors stayed until the end of the lecture.",
+          "ko": "몇몇 방문객은 강연이 끝날 때까지 남아 있었습니다.",
+          "note": "a few 는 '몇몇은 있다'는 긍정 의미입니다. 뒤에는 가산 복수명사가 옵니다."
+        },
+        {
+          "en": "**Few** visitors stayed until the end of the lecture.",
+          "ko": "강연이 끝날 때까지 남아 있는 방문객은 거의 없었습니다.",
+          "note": "a 가 빠지면 '거의 없다'는 부정 의미가 됩니다. 형태는 한 글자 차이지만 뜻은 정반대입니다."
+        },
+        {
+          "en": "The team still has **a little** time before the deadline.",
+          "ko": "그 팀에는 마감 전까지 시간이 조금 남아 있습니다.",
+          "note": "time 은 '시간의 양'을 뜻할 때 불가산이므로 a few 가 아니라 a little 을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b06-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The museum displays {{blank}} paintings from the early modern period.",
+          "options": ["many", "much"],
+          "answer": 0,
+          "translation": "그 박물관은 근대 초기의 그림을 많이 전시합니다.",
+          "explanation": "paintings 는 복수형을 가진 가산명사입니다. 가산 복수명사 앞에는 much 가 아니라 many 가 옵니다.",
+          "trapTags": ["countable-uncountable"]
+        },
+        {
+          "id": "b06-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The teacher gave us [[u:a few advice]] before the presentation.",
+          "isCorrect": false,
+          "correction": "a little advice",
+          "translation": "선생님은 발표 전에 우리에게 조언을 조금 해 주셨습니다.",
+          "explanation": "advice 는 복수형 advices 를 만들지 않는 불가산명사입니다. 따라서 a few 가 아니라 a little 을 써야 합니다.",
+          "trapTags": ["countable-uncountable", "few-vs-little"]
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 명사가 many 계열과 어울리는지 much 계열과 어울리는지 분류하십시오.",
+      "buckets": [
+        { "id": "cnt", "label": "many · a few 와 어울립니다" },
+        { "id": "unc", "label": "much · a little 과 어울립니다" }
+      ],
+      "chips": [
+        { "text": "books", "bucketId": "cnt", "why": "a book, two books 처럼 셀 수 있는 가산명사입니다." },
+        { "text": "questions", "bucketId": "cnt", "why": "복수형 questions 가 있으므로 가산명사입니다." },
+        { "text": "experiments", "bucketId": "cnt", "why": "an experiment 처럼 관사를 붙일 수 있는 가산명사입니다." },
+        { "text": "advice", "bucketId": "unc", "why": "advices 라는 복수형이 없는 불가산명사입니다." },
+        { "text": "information", "bucketId": "unc", "why": "informations 나 an information 으로 쓰지 않는 불가산명사입니다." },
+        { "text": "furniture", "bucketId": "unc", "why": "가구 하나는 a piece of furniture 로 세는 불가산명사입니다." }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "비교급에서도 계열이 유지됩니다. 가산 복수명사에는 fewer 를, 불가산명사에는 less 를 씁니다.",
+      "examples": [
+        {
+          "en": "**Fewer** people attend the evening class, and they need **less** equipment.",
+          "ko": "저녁 수업에는 더 적은 사람이 참석하며, 그들에게는 더 적은 장비가 필요합니다.",
+          "note": "people 은 가산 복수이므로 fewer, equipment 는 불가산이므로 less 입니다."
+        },
+        {
+          "en": "This route takes **less** time and passes through **fewer** villages.",
+          "ko": "이 길은 시간이 덜 걸리고 더 적은 마을을 지납니다.",
+          "note": "time 은 불가산이므로 less, villages 는 가산 복수이므로 fewer 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "수량 표현이 붙은 주어의 해부",
+      "tokens": [
+        { "t": "A few of the books", "role": "S" },
+        { "t": "on this shelf", "role": "M" },
+        { "t": "contain", "role": "V" },
+        { "t": "useful information", "role": "O" }
+      ],
+      "ko": "이 선반에 있는 책들 중 몇 권에는 유용한 정보가 들어 있습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "on this shelf 는 앞의 명사를 꾸미는 전치사구입니다. 문장의 뼈대가 아니므로 묶어서 치웁니다."
+        },
+        {
+          "label": "② 핵 주어와 그 수량 표현을 확인합니다",
+          "roles": ["S"],
+          "note": "b06-c3의 one of the ~ 처리를 떠올리면, 그때는 of 구를 걷어내 One 을 단수 핵 주어로 삼았습니다. 그러나 수량 표현 A few 뒤의 of the books 는 걷어내지 않습니다. a few 는 부분사여서 of 뒤의 명사가 핵 주어이므로, 여기서는 복수명사 books 가 핵 주어입니다. a few 는 가산 복수에만 붙습니다. 핵 주어 수일치 자체는 u02-c1 에서 더 다룹니다."
+        },
+        {
+          "label": "③ 본동사의 수를 맞춥니다",
+          "roles": ["V"],
+          "note": "a few + 복수명사는 복수 취급이므로 본동사는 contains 가 아니라 contain 입니다."
+        },
+        {
+          "label": "④ 목적어의 가산성도 확인합니다",
+          "roles": ["O"],
+          "note": "information 은 불가산명사이므로 복수형 informations 도, 관사 an 도 붙지 않습니다."
+        }
+      ],
+      "conclusion": "수량 표현은 뒤에 오는 명사의 가산성을 따르고, 그 명사가 다시 본동사의 수를 결정합니다. 걷어내기 기준은 한 줄로 정리됩니다 — one of·each of·the number of 는 앞의 단수 핵어(One·each·The number)가 주어여서 of 구를 걷어내 단수 동사를 쓰고, a few of·a number of·some of 는 부분사여서 of 뒤 명사가 핵 주어이므로 걷어내지 않고 그 명사의 수를 따릅니다. b06-c3의 one of the ~(걷어냄)와 이 레슨의 a few of the ~(안 걷어냄)가 정반대로 갈리는 까닭이 여기에 있습니다."
+    },
+    {
+      "id": "b14",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "수량 표현을 고르는 4단계",
+      "steps": [
+        {
+          "text": "수량 표현 뒤의 명사가 가산인지 불가산인지 먼저 판정합니다. 복수형(-s)이 되거나 a(n)을 붙일 수 있으면 가산입니다.",
+          "applyNote": "progress 는 복수형 progresses 로 쓰이지 않고 a progress 도 되지 않습니다. 불가산명사입니다."
+        },
+        {
+          "text": "가산 복수면 many·(a) few·fewer 계열, 불가산이면 much·(a) little·less 계열에서 고릅니다.",
+          "applyNote": "불가산 progress 앞이므로 few 가 아니라 little 계열을 씁니다."
+        },
+        {
+          "text": "a 가 붙었는지 확인해 의미를 정합니다. a few·a little 은 '조금 있다', few·little 은 '거의 없다'입니다.",
+          "applyNote": "a 가 없는 little progress 는 '진전이 거의 없다'는 뜻이며 뒤 문맥과 맞습니다."
+        },
+        {
+          "text": "그 수량 표현이 주어에 붙어 있으면 동사의 수를 맞춥니다. many·(a) few 는 복수동사, much·(a) little 은 단수동사입니다.",
+          "applyNote": "little progress 는 단수 취급이므로 has been made 가 옳습니다."
+        }
+      ],
+      "example": {
+        "en": "Few teachers doubt the plan, but **little** progress **has been** made this year.",
+        "ko": "그 계획을 의심하는 교사는 거의 없지만, 올해 진전은 거의 이루어지지 않았습니다.",
+        "note": "가산 복수 teachers 앞에는 few, 불가산 progress 앞에는 little 이 오고, 동사는 각각 복수·단수로 갈립니다."
+      }
+    },
+    {
+      "id": "b15",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Because ( few / little ) rain falls in this region, farmers rely on deep wells.",
+      "steps": [
+        {
+          "title": "① 뒤의 명사를 봅니다",
+          "body": "rain 은 여기서 '비'라는 현상 전체를 가리키는 불가산 용법입니다. 이 용법에서는 복수형을 쓰지 않으므로 가산 계열이 붙을 수 없습니다."
+        },
+        {
+          "title": "② 계열을 고릅니다",
+          "body": "few 는 가산 복수 전용이므로 후보에서 빠집니다. 불가산명사 앞에는 little 계열이 옵니다."
+        },
+        {
+          "title": "③ a 의 유무로 의미를 확인합니다",
+          "body": "a 가 없는 little 은 '거의 없다'는 부정 의미입니다. 깊은 우물에 의존한다는 뒷문장과 뜻이 맞습니다."
+        },
+        {
+          "title": "④ 동사로 검산합니다",
+          "body": "little rain 은 단수 취급이므로 동사가 falls 입니다. 만약 가산 복수였다면 fall 이었을 것입니다."
+        }
+      ],
+      "answer": "little",
+      "ko": "이 지역에는 비가 거의 내리지 않기 때문에 농부들은 깊은 우물에 의존합니다."
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The new machine uses ( few / less / fewer ) energy than the old one.",
+      "givenSteps": [
+        "① 괄호 뒤의 명사를 봅니다 — energy 는 복수형을 만들지 않는 불가산명사입니다.",
+        "② 두 계열을 떠올립니다 — 비교급에서 가산 복수에는 fewer, 불가산에는 less 를 씁니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어갑니까?",
+      "options": [
+        "less — 불가산명사 energy 앞이므로 less 가 옳습니다",
+        "fewer — energy 를 여러 단위로 나누어 셀 수 있기 때문입니다",
+        "few — 비교 대상이 기계 둘뿐이기 때문입니다"
+      ],
+      "answer": 0,
+      "explain": "판단 근거는 비교 대상의 개수가 아니라 뒤에 오는 명사의 가산성입니다. energy 는 불가산명사이므로 less 가 옳습니다. few 는 비교급 형태도 아니어서 than 과 함께 쓸 수 없습니다."
+    },
+    {
+      "id": "b17",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 도서관에는 오래된 지도가 몇 장 있습니다.",
+      "answer": ["The library", "has", "a few", "old maps"],
+      "tiles": ["The library", "has", "a few", "old maps", "a little"],
+      "explanation": "maps 는 복수형을 가진 가산명사이므로 a little 이 아니라 a few 를 씁니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b06-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "{{blank}} of the equipment in the laboratory needs regular inspection.",
+          "options": ["Much", "Many"],
+          "answer": 0,
+          "translation": "그 실험실 장비의 상당 부분은 정기 점검이 필요합니다.",
+          "explanation": "equipment 는 복수형을 만들지 않는 불가산명사이므로 Many 가 아니라 Much 가 옵니다. 단수동사 needs 도 불가산 취급을 확인해 줍니다.",
+          "trapTags": ["countable-uncountable"]
+        },
+        {
+          "id": "b06-c4-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The number of visitors to the museum [[u:have]] increased steadily.",
+          "isCorrect": false,
+          "correction": "has",
+          "translation": "그 박물관의 방문객 수는 꾸준히 증가해 왔습니다.",
+          "explanation": "the number of 는 '~의 수'라는 뜻이며 핵 주어는 단수명사 The number 입니다. of visitors 는 수식어이므로 동사는 has 여야 합니다.",
+          "trapTags": ["the-number-of", "subject-verb-agreement"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 Much 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "equipment 가 복수형을 만들지 않는 불가산명사이므로 many 계열을 쓸 수 없기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 수량 표현의 선택은 뒤에 오는 명사의 가산성 하나로 결정됩니다."
+        },
+        {
+          "text": "실험실에 장비가 한 대뿐이라고 보아 단수로 판단했기 때문입니다.",
+          "correct": false,
+          "feedback": "불가산은 '하나'라는 뜻이 아니라 세는 단위가 따로 없다는 뜻입니다. 장비가 여러 대여도 equipment 는 불가산명사입니다."
+        },
+        {
+          "text": "of 뒤에 the 가 붙어 있어서 Much 를 써야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "of the 는 many 뒤에도 옵니다(Many of the students…). the 의 유무는 판단 근거가 되지 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "a 하나가 빠지면 뜻이 뒤집힙니다",
+      "body": "few·little 을 a few·a little 로 읽어 버리면 문장의 논리가 반대로 뒤집힙니다. 수량 표현 앞에 a 가 있는지를 먼저 보고 긍정인지 부정인지를 확정해야 합니다.",
+      "example": {
+        "en": "The professor gave **few** examples, and the class remained confused.",
+        "ko": "교수는 예를 거의 들지 않았고, 학생들은 계속 혼란스러운 상태였습니다.",
+        "note": "a 가 없는 few 는 '거의 없다'는 부정입니다. '몇 개의 예를 들었다'로 읽으면 뒤 절의 내용과 어긋납니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "가산성 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 명사의 가산성부터 보는 눈을 자동화합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "advice 앞에는 a few 를 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "advice 는 복수형이 없는 불가산명사이므로 a few 가 아니라 a little 을 씁니다."
+        },
+        {
+          "statement": "a 가 없는 few 는 '거의 없다'는 부정 의미입니다.",
+          "isTrue": true,
+          "why": "a few 는 '조금 있다', few 는 '거의 없다'입니다. a 하나가 긍정과 부정을 가릅니다."
+        },
+        {
+          "statement": "less 는 가산 복수명사 앞에 옵니다.",
+          "isTrue": false,
+          "why": "less 는 불가산 전용입니다. 가산 복수명사 앞에는 fewer 가 옵니다."
+        },
+        {
+          "statement": "much of + 불가산명사가 주어면 동사는 단수입니다.",
+          "isTrue": true,
+          "why": "핵 주어가 불가산명사이므로 단수 취급합니다. Much of the equipment is stored 처럼 씁니다."
+        },
+        {
+          "statement": "information 은 복수형 informations 로 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "information 은 불가산명사여서 복수형이 없습니다. 그래서 many 가 아니라 much 와 어울립니다."
+        },
+        {
+          "statement": "plenty of 는 가산·불가산 어느 쪽에도 붙습니다.",
+          "isTrue": true,
+          "why": "plenty of·a lot of·some·any 는 계열을 가리지 않는 양다리 표현입니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — a number of 와 the number of",
+      "body": "두 표현은 한 단어 차이지만 핵 주어가 다릅니다. a number of 는 '많은'이라는 수량 표현이어서 뒤의 복수명사가 핵 주어가 되고, the number of 는 '~의 수'라는 뜻이어서 The number 가 핵 주어가 됩니다. 따라서 동사의 수가 반대로 갈립니다.",
+      "example": {
+        "en": "**A number of** students **have** volunteered, but **the number of** applicants **is** still small.",
+        "ko": "많은 학생이 자원했지만, 지원자의 수는 여전히 적습니다.",
+        "note": "a number of + 복수명사는 복수동사(have), the number of + 복수명사는 단수동사(is)를 부릅니다."
+      }
+    },
+    {
+      "id": "b23",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The city has planted [[1:many trees]] along the river, but [[2:little progress]] [[3:have been]] made in cleaning the water, and [[4:fewer residents]] visit the park than before.",
+      "answer": 3,
+      "correction": "has been",
+      "rationales": [
+        "trees 는 복수형을 가진 가산명사이므로 many 가 옳습니다.",
+        "progress 는 불가산명사이므로 little 이 옳습니다. a 가 없으므로 '진전이 거의 없다'는 부정 의미이며 문맥과 맞습니다.",
+        "little progress 는 불가산명사가 핵 주어이므로 단수 취급입니다. have been 이 아니라 has been 이어야 합니다.",
+        "residents 는 가산 복수명사이므로 less 가 아니라 fewer 가 옳습니다."
+      ],
+      "ko": "그 도시는 강을 따라 많은 나무를 심었지만 물을 정화하는 일에는 진전이 거의 없었고, 예전보다 더 적은 주민이 그 공원을 찾습니다."
+    },
+    {
+      "id": "b24",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신에서는 fewer 와 less, many 와 much 를 바꿔 놓고 틀린 곳을 찾아 고쳐 쓰게 합니다. 뒤에 오는 명사의 가산성을 근거로 적어야 만점입니다.",
+          "sample": {
+            "en": "There are less chairs in the meeting room than we expected.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "less → fewer (chairs 는 가산 복수명사이므로 fewer 를 씁니다.)"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서는 수량 표현 자체보다 그것이 결정하는 동사의 수로 물어봅니다. 밑줄이 동사라면 앞의 수량 표현과 핵 주어를 먼저 확인해야 합니다.",
+          "sample": {
+            "en": "A number of studies [[u:suggests]] that sleep strongly affects memory.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "suggest — a number of + 복수명사는 복수 취급이므로 복수동사가 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "가산·불가산 시장의 저울 상인",
+      "intro": "어서 오십시오. 제 시장에서는 세는 물건과 붓는 물건에 다른 저울을 씁니다. many 와 much 를 섞어 내미는 손님과는 거래하지 않습니다 — 네 번의 흥정으로 눈썰미를 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "There isn't {{blank}} space left in the storage room.",
+          "options": ["much", "many"],
+          "answer": 0,
+          "why": "space 는 양으로 재는 불가산명사이므로 much 가 옳습니다. many 는 가산 복수명사 앞에만 섭니다."
+        },
+        {
+          "prompt": "{{blank}} witnesses came forward, so the case was closed without a trial.",
+          "options": ["Few", "A few"],
+          "answer": 0,
+          "why": "재판 없이 종결되었다는 뒤 문맥은 증인이 '거의 없었다'는 부정 의미를 요구합니다. a 가 없는 Few 가 옳습니다."
+        },
+        {
+          "prompt": "The new printer uses {{blank}} ink than the old model.",
+          "options": ["less", "fewer"],
+          "answer": 0,
+          "why": "ink 는 불가산명사이므로 비교급은 less 입니다. fewer 는 가산 복수명사 전용입니다."
+        },
+        {
+          "prompt": "The number of complaints {{blank}} fallen sharply since the update.",
+          "options": ["has", "have"],
+          "answer": 0,
+          "why": "the number of 는 '~의 수'라는 뜻이고 핵 주어는 단수 The number 입니다. of complaints 는 수식어이므로 has 가 옳습니다."
+        }
+      ],
+      "winText": "상인이 저울을 내려놓고 고개를 숙입니다. 세는 것과 붓는 것을 한 번도 섞지 않았으니, 이 시장의 어떤 밑줄도 더는 손님을 속이지 못합니다.",
+      "loseText": "상인이 저울을 다시 올립니다. 오답의 공통점은 하나 — 명사의 가산성을 묻기 전에 답부터 골랐다는 것입니다. '이 명사는 셀 수 있습니까'를 먼저 물으면 문은 다시 열립니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "가산 복수명사에는 ___ 계열을, 불가산명사에는 ___ 계열을 쓰고, a 가 없으면 뜻이 ___ 이 됩니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "가산 복수명사에는 many·(a) few·fewer 를, 불가산명사에는 much·(a) little·less 를 붙입니다.",
+        "a 가 붙으면 '조금 있다'는 긍정, a 가 없으면 '거의 없다'는 부정입니다.",
+        "수량 표현이 주어에 붙으면 동사의 수가 따라옵니다. many·a few 는 복수동사, much·a little 은 단수동사입니다.",
+        "a number of + 복수명사는 복수 취급, the number of + 복수명사는 단수 취급입니다."
+      ],
+      "keySentence": {
+        "en": "**A number of** experts **report fewer** side effects, but **little** evidence **has been** collected on long-term use.",
+        "ko": "많은 전문가가 더 적은 부작용을 보고하지만, 장기 사용에 관해서는 증거가 거의 수집되지 않았습니다.",
+        "note": "a number of + 복수명사는 복수동사(report), 가산 복수 앞에는 fewer, 불가산 evidence 앞에는 little 이 오고 단수동사(has been)를 부릅니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b06-c4-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "There is {{blank}} furniture in the newly opened office.",
+          "options": ["little", "few"],
+          "answer": 0,
+          "translation": "새로 문을 연 그 사무실에는 가구가 거의 없습니다.",
+          "explanation": "furniture 는 복수형을 만들지 않는 불가산명사이므로 few 가 아니라 little 이 옳습니다. 단수동사 is 도 불가산 취급을 확인해 줍니다.",
+          "trapTags": ["countable-uncountable", "few-vs-little"]
+        },
+        {
+          "id": "b06-c4-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Fewer people attend the lecture now, and they ask [[u:less questions]] than before.",
+          "isCorrect": false,
+          "correction": "fewer questions",
+          "translation": "지금은 더 적은 사람이 그 강연에 참석하고, 그들은 예전보다 더 적은 질문을 합니다.",
+          "explanation": "questions 는 가산 복수명사이므로 비교급 수량 표현은 less 가 아니라 fewer 입니다. less 는 불가산명사 앞에만 옵니다.",
+          "trapTags": ["fewer-vs-less", "countable-uncountable"]
+        },
+        {
+          "id": "b06-c4-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "{{blank}} of the students in this class have visited the exhibition.",
+          "options": ["Many", "Much"],
+          "answer": 0,
+          "translation": "이 반 학생들 중 다수가 그 전시를 관람했습니다.",
+          "explanation": "of 뒤의 명사가 복수형 students 이므로 가산 계열인 Many 가 옵니다. 복수동사 have 역시 핵 주어가 복수임을 확인해 줍니다.",
+          "trapTags": ["countable-uncountable", "subject-verb-agreement"]
+        }
+      ]
+    }
+  ]
+}

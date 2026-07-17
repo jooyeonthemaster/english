@@ -1,0 +1,40 @@
+{
+  "batchId": "phaseE-craft-v1",
+  "phase": "E",
+  "atKst": "2026-07-17T02:48:07.300+09:00",
+  "assignments": 40,
+  "slotsConsumed": 91,
+  "accepted": 24,
+  "modelCalls": 268,
+  "inputTokens": 437612,
+  "outputTokens": 180052,
+  "costUsd": 2.985102,
+  "ledgerAfter": {
+    "used": 656,
+    "cap": 1000,
+    "costUsd": 18.903271
+  },
+  "byArm": {
+    "G-E1": {
+      "n": 20,
+      "accepted": 7,
+      "gateRejected": 12,
+      "noCandidate": 1,
+      "slots": 53,
+      "costUsd": 1.213101
+    },
+    "B-E1": {
+      "n": 20,
+      "accepted": 17,
+      "gateRejected": 1,
+      "noCandidate": 2,
+      "slots": 38,
+      "costUsd": 1.772001
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 1162538
+}

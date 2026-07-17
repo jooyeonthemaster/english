@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "Seam: 'That means we allows cars to park all day' — S–V agreement violation (1pl 'we' + 3sg 'allows'); no rescue parse (no ellipsis/inversion/reduced relative applies). Logic: 'No Standing' is a prohibition sign, so 'allows ... park all day' inverts its force; also agent mismatch — 'we' cannot grant parking permission."
+    },
+    {
+      "label": "②",
+      "verdict": "intended-correct-but-seam-defective",
+      "reason": "Semantics: uniquely coherent — US 'No Standing' means the vehicle may not wait/park, but brief stops to load/unload passengers are allowed, matching the contrast 'but we can stop to pick up passengers'. Seam: 'we prohibits parking' is ungrammatical (agreement violation) and the agent is wrong ('we' are the prohibited party, not the prohibitor); the option was clearly written for a subject like 'the sign/that'. Minor semantic quibble: 'for extended periods' understates (No Standing bans any waiting), but it is the only option consistent with the but-clause."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "Seam: 'we requires drivers' — agreement violation. Logic: 'drive without stopping' (a No-Stopping reading) directly contradicts the immediately following concession 'but we can stop to pick up passengers'."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "Seam: 'we restricts passengers' — agreement violation. Logic: forbidding passengers from getting in cars flatly contradicts 'we can stop to pick up passengers' and the story (the friend picks Carol up)."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Seam: 'we bans' — agreement violation. Logic: formal contradiction — {stops to pick up passengers} is a subset of {temporary vehicular stops}; banning ALL temporary stops while permitting pickup stops is inconsistent. This describes 'No Stopping', not 'No Standing'."
+    }
+  ],
+  "note": "FORMAL DEFECT: the stem places the blank after 1st-person-plural 'we' ('That means we _____'), yet all five options begin with 3rd-person-singular verbs (allows/prohibits/requires/restricts/bans). No option produces a grammatical sentence at the seam; the option set was evidently authored for a subject like 'the sign' or 'that'. There is additionally an agent mismatch for the key ('we prohibits parking' — the sign, not 'we', does the prohibiting). By intended meaning the key is uniquely ② (No Standing = no waiting/parking, but passenger pickup allowed), so the item is answerable but should be flagged for repair: either change the stem to 'That means the sign _____' / 'That means we can't wait there' or rewrite options with plural/1pl-compatible predicates (e.g., \"can't park or wait there\")."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P048",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'the law eventually embraces it(moral chaos)'는 마지막 문장 'The law obsessively tries to suppress affects'와 정면 모순. 절 끝이 the law라서 뒤 문장의 It과 접속은 자연스럽지만 의미가 지문과 반대라 탈락. (매력도: 낮~중 — It의 선행사 연결만 보고 고르면 걸리는 함정)"
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "마지막 문장의 대비(law=suppress affects / cinema=introduces us to our affects)를 정확히 요약: cinema가 여과 없는 정서적 실재를 풀어놓고(unleashes) law가 그것을 억제한다(restrain). 주절 주어가 the law라서 빈칸 직후 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'의 It=the law 연결이 완벽하며, 그 문장 내용(욕망·충동에 압도되지 않게 보장)도 restrain 기능의 부연으로 정합."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "역할 반전 함정(가장 매력적인 오답). 'suppress', 'desires' 등 지문 핵심 어휘를 재활용해 표면적으로 끌리지만, 지문은 law가 suppress하고 cinema가 affects를 introduce한다고 명시. 주체가 정반대. 게다가 law가 본능적 욕망을 'satisfy'하려 한다는 것은 'regime of commands and prohibitions'와도 모순."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "빈칸은 'an important difference'를 설명해야 하는데 상보성(complement each other) 진술이라 담화 기능 자체가 어긋남. 'highly rational minds' 육성도 지문 무근거. though 종속절만 있고 뒤 문장과의 결합도 어색."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "미적 취향(aesthetic tastes) 논의는 지문에 전혀 없음. law가 'remains neutral'이라면 빈칸 직후 'It tries to ensure...'(법의 적극적 개입)와 모순. 탈락."
+    }
+  ],
+  "note": "빈칸 직후 대명사 It의 선행사 확보(절 말미가 the law여야 함)와 마지막 문장의 명시적 대비(law suppresses affects / cinema introduces affects)가 이중 장거리 단서로 작동해 ②로 유일하게 수렴. 최상위권 렌즈에서 실제 유혹 지점: ③은 어휘 겹침으로 1차 스캔 시 눈이 가지만 주체 반전을 확인하는 순간 즉시 배제되고, ①은 It 연결만 보면 그럴듯하나 embraces가 suppress와 모순. 복수정답 소지 없음, 깔끔한 문항."
+}

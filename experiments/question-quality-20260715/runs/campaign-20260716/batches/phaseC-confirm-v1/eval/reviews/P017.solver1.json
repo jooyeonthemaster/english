@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'no two performances are identical' — be동사의 주격 보어 자리에 형용사 identical이 오는 것이 옳다. 부사(identically)가 올 자리가 아님. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'only through music are we able to...' — 'only + 부사구'가 문두에 오면 주어-조동사 도치가 필수. 'are we'는 규칙에 정확히 부합하는 도치. 평서 어순 'we are'로 착각하도록 유도하는 매력적 오답이지만 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'making it present here and now, without which it will not be music at all' — 전치사+관계대명사. 선행사는 동명사구 'making it present here and now'(또는 'presenting music')로 성립하며, '그 현전 행위 없이는 음악이 아니다'라는 계속적 용법이 자연스럽다. 'without it'으로 바꾸면 절 연결이 끊겨 오히려 비문. 선행사가 멀고 추상적이라 유혹적이나 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'want music to have a role' — want + 목적어 + to부정사의 표준 5형식 구문. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "'involve all pupils to work directly with music' — involve는 목적어 뒤 to부정사를 취하지 않는 동사. 'involve + O + (in) -ing'가 옳으므로 to work → working이어야 한다. want/allow/enable 등 5형식 to부정사 동사와의 유추로 정문처럼 보이게 한 함정. 목적의 부사적 용법으로 읽는 대안 해석도 의미상 주어가 주절 주어(activities)에 걸려 성립하지 않음. 어법상 틀린 부분."
+    }
+  ],
+  "note": "최상위권 렌즈: 실전에서 실제로 멈칫하게 되는 지점은 (B)의 only 도치와 (C)의 장거리 선행사 without which였다. (B)는 only 부사구 도치 규칙으로, (C)는 동명사구 선행사 성립 확인으로 각각 정문 판정. (E)의 involve + O + to-inf는 명백한 비문으로 대안 해석(부사적 용법)도 기각되어 정답이 하나로 깨끗하게 수렴한다. 지문은 John Paynter 계열의 음악교육론 텍스트로 보이며 원문 표현은 'involve all pupils working directly with music'으로 추정됨."
+}

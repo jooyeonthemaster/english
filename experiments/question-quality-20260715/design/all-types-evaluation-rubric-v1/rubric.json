@@ -1,0 +1,220 @@
+{
+  "schemaVersion": "all-types-evaluation-rubric-v1",
+  "frozenAt": "2026-07-15",
+  "scope": "25 active English Workbench question types",
+  "gradeScale": {
+    "F": "Fatal: no unique defensible answer, source/surface corruption, grammatical invalidity, false explanation, task mismatch, or unusable rendering.",
+    "C": "Valid but not exam-ready: answer exists, yet distractors, inference depth, wording, or explanation are materially weak.",
+    "B": "Exam-ready: valid, calibrated, natural, and purposeful with no material defect.",
+    "A": "Beautiful: B plus economical wording, an elegant evidence path, and every visible component has a deliberate misconception-testing role."
+  },
+  "globalFatalChecks": [
+    "student-facing task matches the registered type",
+    "source-bound fields and transformations are exact and non-destructive",
+    "answer cardinality is exactly the configured cardinality",
+    "no alternative standard reading yields another answer",
+    "all visible English is grammatical except the intentionally displayed error surface",
+    "answer, explanation, wrong-option notes, labels, and rendered surface agree",
+    "explanation contains no false linguistic or passage claim",
+    "no answer leakage, ghost label, internal field, or generation-process language"
+  ],
+  "blindEvaluation": {
+    "raters": 2,
+    "adjudicatorOnDisagreement": 1,
+    "generatorIdentityHidden": true,
+    "solveBeforeKeyAndExplanation": true,
+    "missingOrUnresolvedCountsAs": "F",
+    "nonFocusSmokeInterpretation": "Existence-of-defect discovery only; 4 rows per type cannot establish a type-level rate, noninferiority, model ranking, or release conclusion."
+  },
+  "nonFocusSentinelAllocation": {
+    "nonFocusTypeCount": 23,
+    "rowsPerType": 4,
+    "cellPattern": ["STANDARD_BASIC", "STANDARD_KILLER", "PREMIUM_BASIC", "PREMIUM_KILLER"],
+    "totalRows": 92,
+    "interpretation": "Defect discovery only; absence of a found defect is not evidence of a clean type-level rate."
+  },
+  "calibrationCertificateScope": {
+    "perReviewer": true,
+    "all25TypesCertified": false,
+    "grammarSurfaceContract": "EXACT_5_MARKERS_1_INVALID",
+    "blankRequiredAxes": ["actorOrTarget", "polarity", "conditionOrModality", "causalRelationAndDirection", "scopeOrQuantifier", "stance", "temporalRelation"],
+    "evidenceFamilies": ["marked_selection", "option_selection", "ordering_or_insertion", "closed_constructed", "open_constructed", "correction", "lexical"]
+  },
+  "types": {
+    "BLANK_INFERENCE": {
+      "task": "Infer the expression that completes the passage's intended proposition.",
+      "fatalDefects": ["source span is absent/non-unique", "any option breaks the shared grammar slot", "key loses actor/target, polarity, condition/modality, causal relation/direction, scope/quantifier, stance, or temporal relation", "another option is equally supported"],
+      "craftChecks": ["four passage-grounded near misses", "each distractor has one identifiable misconception axis", "parallel length/register/polarity", "no local-copy shortcut"],
+      "killerCriterion": "Requires synthesis of at least two separated clues and four high-overlap single-axis traps; the key remains unambiguous.",
+      "explanationCriterion": "Names the discourse role, links exact evidence, and excludes every option by its real semantic axis without verbosity."
+    },
+    "GRAMMAR_ERROR": {
+      "task": "Identify the configured number of ungrammatical marked expressions.",
+      "fatalDefects": ["keyed surface is defensible standard English", "a decoy is ungrammatical", "correction is not the exact source form", "point/rule/explanation misanalyses the structure", "marked dependency is not visible"],
+      "craftChecks": ["every decoy is a real structural decision", "point diversity", "no decorative or lexical filler", "minimal mutation with natural context"],
+      "killerCriterion": "The error depends on a nonlocal governor, clause, agreement, voice, or parallel relation rather than a local broken form.",
+      "explanationCriterion": "Quotes the displayed error, gives the correction, identifies the bounded rule, and explains all four decoys accurately and briefly."
+    },
+    "GRAMMAR_CHOICE_COMBO": {
+      "task": "Choose the option containing the correct forms for every marked slot.",
+      "fatalDefects": ["a slot admits both alternatives", "the keyed combination contains an invalid form", "another combination is also fully valid", "slot source binding or option mapping is wrong"],
+      "craftChecks": ["each slot tests a distinct structural dependency", "alternatives are minimal and plausible", "combinations prevent one-slot guessing", "no filler slot"],
+      "killerCriterion": "At least two slots require different nonlocal analyses and no single superficial cue determines the combination.",
+      "explanationCriterion": "Resolves each slot independently, then maps those results to the keyed combination."
+    },
+    "VOCAB_CHOICE": {
+      "task": "Identify the contextually inappropriate marked word(s).",
+      "fatalDefects": ["keyed word is contextually defensible", "a non-key word is contextually wrong", "replacement is not a valid contextual correction", "marker/key cardinality mismatch"],
+      "craftChecks": ["all words belong to the passage's semantic field", "wrong word is a near semantic relation, not nonsense", "decoys require context", "point diversity"],
+      "killerCriterion": "Resolution depends on discourse relation or collocation across sentences, not a dictionary antonym alone.",
+      "explanationCriterion": "States the local meaning, discourse conflict, correction, and why each non-key word fits."
+    },
+    "SENTENCE_ORDER": {
+      "task": "Reconstruct the unique logical order of the three source paragraphs.",
+      "fatalDefects": ["paragraph text is not a verbatim complete partition", "duplicate labels or fragments contaminate a paragraph", "key order differs from source", "two orders are coherent"],
+      "craftChecks": ["given sentence is a useful but non-revealing anchor", "pronoun/connective/topic progression supports reasoning", "all wrong orders remain initially plausible", "no label or copied-position giveaway"],
+      "killerCriterion": "Requires combining at least two cohesion signals whose local cues point to competing partial orders.",
+      "explanationCriterion": "Explains the decisive transitions in sequence and why the strongest rival order fails."
+    },
+    "SENTENCE_INSERT": {
+      "task": "Choose the unique position for a removed source sentence.",
+      "fatalDefects": ["inserted sentence/source slots are not faithfully reconstructed", "key does not restore source", "another slot is equally coherent", "option-slot mapping is wrong"],
+      "craftChecks": ["candidate slots are genuine boundaries", "sentence has backward and forward ties", "near slots are plausible", "no explicit ordinal leak"],
+      "killerCriterion": "Both backward reference and forward development are needed; a single connective cannot solve it.",
+      "explanationCriterion": "Binds exact antecedent and forward consequence, then rejects the nearest competing positions."
+    },
+    "TOPIC": {
+      "task": "Choose the topic that covers the whole passage.",
+      "fatalDefects": ["key omits the central relation", "another option has equal full-passage coverage", "option language violates the configured mode", "explanation invents a theme"],
+      "craftChecks": ["options share abstraction level and grammatical form", "distractors represent scope/relation/stance errors", "no keyword-copy shortcut", "key is concise"],
+      "killerCriterion": "Separates closely related topic formulations by the passage's exact relation or scope.",
+      "explanationCriterion": "States the recurring subject plus controlling relation and excludes each near topic."
+    },
+    "MAIN_IDEA": {
+      "task": "Choose the author's controlling claim or point.",
+      "fatalDefects": ["key is merely a topic", "stance or claim direction is wrong", "another option states the same thesis", "explanation overstates the author"],
+      "craftChecks": ["all options are claim-shaped and parallel", "distractors encode real partial claims", "scope and stance are balanced", "no quoted-sentence giveaway"],
+      "killerCriterion": "Requires integrating qualification, contrast, or conclusion rather than copying one sentence.",
+      "explanationCriterion": "Identifies claim, stance, and qualification with distributed evidence."
+    },
+    "TITLE": {
+      "task": "Choose the title that best captures the passage's organizing idea.",
+      "fatalDefects": ["key misstates thesis or genre", "another title is equally comprehensive", "title contains unsupported sensational framing", "explanation treats a detail as the thesis"],
+      "craftChecks": ["titles are parallel in tone/length", "distractors are attractive scope or relation errors", "key is memorable but accurate", "no key-length giveaway"],
+      "killerCriterion": "Competing titles share subject vocabulary; only the key preserves the passage's organizing tension or relation.",
+      "explanationCriterion": "Connects title wording to subject, relation, and conclusion, not keyword frequency."
+    },
+    "IMPLIED_MEANING": {
+      "task": "Infer the contextual meaning of the exact underlined expression.",
+      "fatalDefects": ["underlined expression is not uniquely bound", "key is literal but context contradicts it", "another interpretation is equally licensed", "explanation uses unsupported background knowledge"],
+      "craftChecks": ["options are interpretation-shaped and parallel", "distractors reflect literal, partial, polarity, and scope errors", "key paraphrases rather than repeats", "context is sufficient"],
+      "killerCriterion": "Requires linking figurative/local wording to a nonlocal thesis or contrast.",
+      "explanationCriterion": "Moves from exact context to inferred proposition and rejects the strongest literal/partial readings."
+    },
+    "REFERENCE": {
+      "task": "Identify the exact antecedent of the bound pronoun/reference expression.",
+      "fatalDefects": ["wrong occurrence is underlined", "key violates number/gender/semantic compatibility", "multiple antecedents remain defensible", "explanation cites a different occurrence"],
+      "craftChecks": ["candidates are discourse-salient", "distance and competing nouns create real reasoning", "no grammatical mismatch giveaway", "referent matters to passage meaning"],
+      "killerCriterion": "Requires discourse-role or event-reference resolution beyond nearest-noun matching.",
+      "explanationCriterion": "Binds the exact occurrence and explains syntactic plus discourse compatibility."
+    },
+    "CONTENT_MATCH": {
+      "task": "Select exactly the configured number of statements supported or contradicted by the passage.",
+      "fatalDefects": ["any statement has ambiguous truth status", "key cardinality/mapping is wrong", "statement adds an unsupported quantifier or relation unintentionally", "explanation contradicts passage"],
+      "craftChecks": ["statements distribute across passage", "false items use single controlled distortions", "parallel specificity", "no trivial lexical mismatch"],
+      "killerCriterion": "Near-miss statements alter actor, condition, cause, time, or scope while preserving passage vocabulary.",
+      "explanationCriterion": "Cites the decisive passage evidence for every statement and names the exact distortion."
+    },
+    "SUMMARY_COMPLETE_MC": {
+      "task": "Choose the option that completes every summary blank consistently.",
+      "fatalDefects": ["summary misstates the passage", "key does not fit all blanks", "another option pair is equivalent", "direction asks a different answer object", "labels or blank mapping drift"],
+      "craftChecks": ["summary compresses the whole argument", "pair distractors cross plausible partial meanings", "parallel form at every blank", "no one-blank giveaway"],
+      "killerCriterion": "Both blanks encode linked but distinct passage relations; solving either alone does not determine the option.",
+      "explanationCriterion": "Maps each blank to evidence and explains why the pair, not isolated words, is uniquely coherent."
+    },
+    "IRRELEVANT": {
+      "task": "Identify the unique sentence that breaks the passage's coherence.",
+      "fatalDefects": ["source order/content is corrupted", "more than one sentence is irrelevant", "key sentence is actually integrated", "inserted sentence is ungrammatical or obviously off-topic"],
+      "craftChecks": ["intruder shares topic vocabulary", "failure is relation/progression, not subject mismatch", "remaining passage is coherent", "slot count and labels are exact"],
+      "killerCriterion": "Intruder is locally compatible but violates the passage's global causal, temporal, or argumentative progression.",
+      "explanationCriterion": "Shows the intact progression around the sentence and identifies its precise discourse mismatch."
+    },
+    "CONDITIONAL_WRITING": {
+      "task": "Produce one grammatical sentence satisfying every explicit transformation condition.",
+      "fatalDefects": ["any condition is omitted", "answer changes source meaning", "answer is ungrammatical", "multiple incompatible target answers are implied", "answer leaks into prompt"],
+      "craftChecks": ["conditions test meaningful structure", "target is natural English", "scoring alternatives are explicit", "no busywork condition"],
+      "killerCriterion": "Combines interacting constraints while preserving meaning and natural information structure.",
+      "explanationCriterion": "Checks each condition against an exact answer span and explains the transformation concisely."
+    },
+    "SENTENCE_TRANSFORM": {
+      "task": "Rewrite the source sentence in the required form with equivalent meaning.",
+      "fatalDefects": ["meaning, polarity, tense, actor, or scope changes", "required form is absent", "answer is ungrammatical", "source/answer binding is wrong"],
+      "craftChecks": ["transformation is substantive", "answer is idiomatic", "constraints permit a stable scoring key", "no gratuitous lexical rewrite"],
+      "killerCriterion": "Requires coordinating two structural changes without semantic drift.",
+      "explanationCriterion": "Maps source constituents to transformed constituents and verifies preserved meaning."
+    },
+    "FILL_BLANK_KEY": {
+      "task": "Supply the exact key expression removed from the passage.",
+      "fatalDefects": ["blank span is absent/non-unique", "stored answer differs from removed source", "completed sentence is ungrammatical", "another answer is equally expected under the stated scoring rule"],
+      "craftChecks": ["span is pedagogically meaningful", "context determines form and meaning", "blank width is appropriate", "no nearby duplicate leak"],
+      "killerCriterion": "Requires reconstructing a meaningful multiword expression from syntax plus discourse, not recalling a visible duplicate.",
+      "explanationCriterion": "Shows exact source restoration and the contextual constraints that determine it."
+    },
+    "SUMMARY_COMPLETE": {
+      "task": "Complete the summary blanks with the expected key expressions.",
+      "fatalDefects": ["summary is inaccurate", "answer forms do not fit the slots", "blank/key mapping is wrong", "multiple answer sets are equally valid without accepted variants"],
+      "craftChecks": ["summary covers the passage's controlling relation", "blanks target distinct essential concepts", "parallel syntax", "scoring variants are controlled"],
+      "killerCriterion": "Requires mapping compressed abstract summary language to multiple separated passage clues.",
+      "explanationCriterion": "Binds every blank to evidence and explains their relationship within the summary."
+    },
+    "SUMMARY_WRITING": {
+      "task": "Write a grammatical summary under the configured word and content constraints.",
+      "fatalDefects": ["reference answer omits or reverses thesis", "required concepts are absent", "word/format constraint is impossible or violated", "reference answer is ungrammatical"],
+      "craftChecks": ["rubric separates required meaning from optional wording", "reference is concise", "distractor/chip support is non-leaking", "constraints match difficulty"],
+      "killerCriterion": "Demands synthesis and compression of multiple relations, not sentence copying.",
+      "explanationCriterion": "Lists required propositions and demonstrates where the reference answer realizes each one."
+    },
+    "WORD_ORDER": {
+      "task": "Arrange the supplied tokens into the intended grammatical sentence.",
+      "fatalDefects": ["token multiset differs between prompt and answer", "more than one materially different order is grammatical and equivalent", "key is ungrammatical", "punctuation/contraction mapping is broken"],
+      "craftChecks": ["tokens test syntax, not arbitrary chunks", "distractors/chunks avoid leakage", "sentence is natural", "answer length fits difficulty"],
+      "killerCriterion": "Requires resolving clause hierarchy or long-distance dependency, not adjacent collocation alone.",
+      "explanationCriterion": "Explains the governing structure and verifies exact token consumption once each."
+    },
+    "TOPIC_SENTENCE_WRITING": {
+      "task": "Construct the passage's topic sentence from the configured blanks/chips.",
+      "fatalDefects": ["reference sentence misstates passage thesis", "chips/blanks cannot form the key", "another materially different thesis is equally supported", "rendered order or labels are broken"],
+      "craftChecks": ["topic sentence is abstract and complete", "chips represent meaningful constituents", "distractors are syntactically plausible", "no direct copy shortcut"],
+      "killerCriterion": "Requires selecting and ordering thesis constituents across the whole passage.",
+      "explanationCriterion": "Connects each constituent to passage evidence and explains the final information structure."
+    },
+    "GRAMMAR_CORRECTION": {
+      "task": "Find and correct exactly the configured number of grammatical errors.",
+      "fatalDefects": ["displayed error is defensible", "an unmarked error remains", "correction is not grammatical/source-faithful", "error count or segment mapping is wrong", "explanation gives a false rule"],
+      "craftChecks": ["errors are distinct structural points", "segments are minimally marked", "no stylistic preference posed as error", "corrections preserve meaning"],
+      "killerCriterion": "At least one error requires nonlocal dependency analysis while all errors remain unequivocal.",
+      "explanationCriterion": "For each segment, quotes error and correction and gives a bounded accurate rule."
+    },
+    "CONTEXT_MEANING": {
+      "task": "State the contextual meaning of the exact underlined word/expression.",
+      "fatalDefects": ["underlined occurrence is not uniquely bound", "key meaning is wrong in context", "definition language is circular or ungrammatical", "explanation relies on a different sense"],
+      "craftChecks": ["context disambiguates a meaningful sense", "answer is concise", "near senses are acknowledged", "not a trivial cognate gloss"],
+      "killerCriterion": "Meaning emerges from discourse or metaphor rather than the most frequent dictionary sense.",
+      "explanationCriterion": "Uses local collocation and wider discourse to justify the selected sense."
+    },
+    "SYNONYM": {
+      "task": "Choose or supply a context-preserving synonym for the bound source word.",
+      "fatalDefects": ["key changes denotation, polarity, register, or grammar", "another option is equally substitutable", "source word occurrence is misbound", "explanation claims false synonymy"],
+      "craftChecks": ["options share part of speech and register", "distractors are near relations", "substitution is tested in sentence", "no morphology giveaway"],
+      "killerCriterion": "Distinguishes near-synonyms by collocation, stance, or scope in the exact context.",
+      "explanationCriterion": "Performs the substitution and contrasts the decisive nuance for each near option."
+    },
+    "ANTONYM": {
+      "task": "Identify the contextually valid antonym pair/replacement for the bound word(s).",
+      "fatalDefects": ["key is not an antonym in context", "another option forms an equal opposite", "replacement breaks grammar/collocation", "marker/pair/key mapping is wrong"],
+      "craftChecks": ["opposition is scalar/complementary/directional as intended", "options share form/register", "distractors are semantic neighbors", "context determines the axis"],
+      "killerCriterion": "Requires identifying the passage-specific opposition axis rather than a memorized dictionary pair.",
+      "explanationCriterion": "Names the opposition type, substitutes the key, and rejects false opposition axes."
+    }
+  }
+}

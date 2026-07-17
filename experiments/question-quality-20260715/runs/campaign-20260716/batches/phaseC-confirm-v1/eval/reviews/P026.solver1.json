@@ -1,0 +1,35 @@
+{
+  "pid": "P026",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "'builds a localized production network'를 빈칸에 넣으면 'the employer builds a localized production network in the places where it was once an employer'가 되어 문법 결합은 자연스러우나 논지와 정면 충돌한다. 지문 전체가 일-장소 결합의 해체(less sticky, ties ... can be disconnected, no offices or factories need to be built)를 말하므로 '현지화된 생산 네트워크를 구축한다'는 반대 방향. 지문을 대충 읽고 'production network'라는 표면 어휘만 매칭하면 끌릴 수 있으나 'localized'가 결정적으로 배치된다."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "'global reserve army'는 지문에 실제 등장하는 표현이라 표면 어휘 재활용형 미끼로서 순간적으로 끌린다. 실제로 풀 때 잠깐 후보로 올려봤으나, 지문에서 이 표현은 1990년대 아웃소싱 시대의 특징으로 제시된 것이고, 빈칸 문장은 클라우드워크가 '한때 고용주였던 장소들에서' 고용주가 어떻게 되는가를 말하는 자리다. 'monopolizes'(독점한다)는 지문 어디에도 근거가 없고, 장소 부사구 'in the places where it was once an employer'와 의미 결합도 어색하다(예비 노동군을 특정 과거 장소'에서' 독점한다?)."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "직전 문장들이 근거를 직렬로 깔아준다: 'No offices or factories need to be built, no local regulations are observed, no local taxes are paid' + 'simply sending some emails or clicking some buttons'. 이를 'in this way'로 받아 일반화하면 '고용주는 한때 자신이 고용주였던 장소들에 사실상 아무런 물리적 발자국(physical footprint)을 남기지 않는다'가 정확히 성립한다. 문법 결합도 완전함: 'the employer generates essentially no physical footprint in the places where...'. 글의 대주제(디지털 플랫폼에 의한 일과 장소의 탈동조화)와도 일치."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "지문이 'no local taxes are paid'를 언급하므로 세금 관련 선지가 미끼로 기능한다. 실전에서 두 번째로 끌린 선지. 그러나 지문은 '현지 세금이 납부되지 않는다'고만 했지 '세금 부담이 노동자에게 이전된다'는 인과·이전 관계는 어디에도 없다. 지문 밖 배경지식(프리랜서는 스스로 세금을 낸다)을 동원해야만 성립하는 과잉 추론형 오답. 또한 빈칸 문장의 초점은 세금이 아니라 '한때 고용주였던 장소'와의 관계 전반이다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'constructs facilities'는 'No offices or factories need to be built'와 정면으로 모순되고, 'standardized work'는 둘째 문장의 'standardised'를 표면 재활용한 어휘 미끼다. 넣어보면 문법은 성립하지만 논리적으로 지문이 명시적으로 부정한 내용을 단정하는 꼴이라 즉시 배제된다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 재현: 빈칸 문장의 'in this way'가 직전 열거(사무실·공장 불필요, 현지 규제·세금 회피, 이메일/클릭만으로 전환)를 요약하는 자리임을 먼저 확정한 뒤 선지를 대입했다. 표면 어휘 재활용 미끼가 ①(production network), ②(global reserve army), ⑤(standardised)로 세 개나 배치되어 있고, ④는 세금 언급을 과잉 추론으로 비트는 미끼로 매력도가 가장 높았다. 그러나 ④는 지문에 '이전(transfer)' 근거가 전무해 탈락. ③만이 열거된 근거 전부를 포괄하는 일반화로 성립하며, 문법 seam('generates essentially no physical footprint in ...')도 자연스럽다. 대안 해석으로 정답이 흔들릴 여지는 발견하지 못했다. 단일 정답 ③, 확신도 높음."
+}

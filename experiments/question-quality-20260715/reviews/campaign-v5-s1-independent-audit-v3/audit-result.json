@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "campaign-v5-s1-independent-source-closure-audit-v3",
+  "verdict": "PASS_CURRENT_SOURCE_AND_OFFLINE_WIRE_EXECUTION_REMAINS_BLOCKED",
+  "scope": "Offline delta re-audit after research-wire privacy hardening; no live provider request or execution authorization",
+  "builderDeterminism": {
+    "writeReplayPassed": true,
+    "prePostHashesIdentical": true,
+    "officialVerifierPassed": true
+  },
+  "campaign": {
+    "passages": 12,
+    "assignments": 180,
+    "allocation": {
+      "grammar": 96,
+      "blank": 84,
+      "standard": 96,
+      "premium": 84,
+      "intermediate": 90,
+      "killer": 90
+    },
+    "reservationUsd": 44.16,
+    "privateQueueFileSha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+    "privateQueueSemanticSha256": "c120ebcc5aea5f83c1c9e97447c2913b0ebf76932e2a0cf91d2e10887a86225e",
+    "semanticQueueUnchangedFromV2": true,
+    "campaignPublicArtifactSha256": "f4e2085c90736042329d4a921cc2d28bfc81fe47bf4b72f410253a688c8b909a",
+    "campaignManifestSha256": "5a31e85be1b8c6c25fd0110f06566193c645f295e92566b60ecdd7ecefd6dff9",
+    "currentFastWorkbenchIncludedInClosure": true
+  },
+  "exactWire": {
+    "offlineRows": 180,
+    "interceptedFetches": 180,
+    "uniqueWireBodies": 180,
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "providerRouting": {
+      "order": [
+        "google-vertex/global"
+      ],
+      "only": [
+        "google-vertex/global"
+      ],
+      "allow_fallbacks": false,
+      "require_parameters": true,
+      "data_collection": "deny",
+      "zdr": true
+    },
+    "reasoning": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "staticAtlasSourcePassed": true,
+    "emittedWirePreflightPassed": true,
+    "profilePlanWireTestsPassed": 4,
+    "controllerPreflightSemanticSha256": "e72659dad93504a5aa96abdac38e0faedfc58934649f8c307a8cd8f1518c5446"
+  },
+  "privacy": {
+    "privateQueueGitIgnoredAndUntracked": true,
+    "privateControllerGitIgnoredAndUntracked": true,
+    "publicPrivateValueLeaks": 0,
+    "credentialValueLeaks": 0,
+    "accountPrivacyStateAttested": false
+  },
+  "authorization": {
+    "campaignEligibleAssignments": 0,
+    "generationAuthorized": false,
+    "apiCandidateCount": 0,
+    "globalCandidateLimit": 1000
+  },
+  "executionBlocks": {
+    "sourceRights": true,
+    "accountLoggingRetentionAndGuardrailAttestation": true,
+    "freshAllowlistedProviderPrice": true,
+    "dedicatedLimitedCredentialAndHardCeiling": true,
+    "durableExecutionRegistryAndLedger": true
+  },
+  "verification": {
+    "independentVerifierPassed": true,
+    "officialCampaignVerifierPassed": true,
+    "controllerPreflightVerifierPassed": true,
+    "campaignAndControllerTypechecksPassed": true,
+    "globalTypecheckPassed": true,
+    "targetedWireTestPassed": true
+  },
+  "safety": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "databaseCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "liveExecutionAuthorized": false,
+    "credentialValuesRecorded": 0
+  }
+}

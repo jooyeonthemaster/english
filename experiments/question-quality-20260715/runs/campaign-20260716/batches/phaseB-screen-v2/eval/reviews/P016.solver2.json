@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'movies illuminate human rationality'는 전제 불일치 — 마지막 문장이 명시하는 영화의 대상은 affects(정동)이지 rationality가 아니다('cinema introduces us to our affects'). 'judicial bodies govern physical violence'도 과협소화: 법이 억압하는 것은 physical violence가 아니라 affects 일반이다. 또한 빈칸 직후 단수 'It tries to ensure…'가 복수 'judicial bodies'와 지시 결합하기 어렵다(수 불일치 seam)."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'legal institutions actively unleash them'에서 unleash(풀어놓다)는 'The law obsessively tries to suppress affects'의 직접 부정 — 형식적 모순(suppress vs unleash)이라 어떤 대안 해석으로도 구제 불가. 게다가 접속사 as는 대조가 아닌 유사·병행을 함축하여 'an important difference'라는 빈칸 예고 프레임 자체와 충돌한다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'law completely ignores human nature'는 지문의 'foundational to law is its anxiety about human nature'(법의 근간이 인간 본성에 대한 불안)와 정면 모순. 전칭 표현 completely ignores 때문에 부분적 참으로도 옹호 불가능. 전건 'cinema explores our emotional depths'는 지문과 부합하나 후건 하나의 모순으로 선지 전체가 거짓."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "역할 전도. 금지(forbid)의 주체는 'a regime of commands and prohibitions'로 표상되는 법이지 영화가 아니며, 영화는 오히려 affects를 소개하고 직면시키는('introduces us to our affects, forcing us to identify') 쪽이다. 'law codifies our instinctive desires'도 법이 욕망을 성문화한다는 주장으로 법=억압이라는 지문 진술과 어긋난다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "accept",
+      "reason": "빈칸 뒤 대조문 'The law obsessively tries to suppress affects, whereas cinema introduces us to our affects'와 명제적으로 동형: manifest ≈ introduces us to, control ≈ suppress. seam 검사도 통과 — whereas 절 구조 정문이고, 후속 문장의 단수 'It tries to ensure…'는 담화상 유일한 통제 행위자인 법(the law)으로 해소된다. 'legal systems'(복수)와 후행 'It'(단수) 사이 미세한 수 불일치 seam이 있으나, 직후 문장이 'The law'로 지시를 재고정하므로 응집성이 유지되어 정답성을 훼손하지 않는다. 유일하게 옹호 가능한 선지."
+    }
+  ],
+  "note": "장거리 단서 두 개가 빈칸을 이중으로 고정한다: (1) 빈칸 직후 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'의 지시체는 법이어야 하고, (2) 마지막 문장의 명시적 대조(suppress vs introduce)가 '영화=정서 노출, 법=정서 통제' 구도를 요구한다. ①~④는 각각 지문 명시 진술과의 형식적 모순(rationality 오귀속, unleash-suppress 모순, ignores-anxiety 모순, 금지 주체 전도)을 포함해 축약 관계절·분사구문 등 어떤 대안 해석으로도 구제 불가. 경미한 흠: ⑤ 채택 시 'legal systems'(복수)와 후행 'It'(단수)의 수 일치가 어색하나 담화 층위에서 'the law'로 해소 가능. 단일 정답 수렴, 복수 정답 여지 없음."
+}

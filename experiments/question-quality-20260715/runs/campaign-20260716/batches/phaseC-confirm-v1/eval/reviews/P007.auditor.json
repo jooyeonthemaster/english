@@ -1,0 +1,79 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-order",
+      "severity": "minor",
+      "evidence": "해설이 '고양이를 넣지 않은 필자가 문책을 당하고, 다른 기자들은 혼날 위험을 감수하지 않기 위해... 지어냈음이 연속적으로 제시됩니다'라고 서술하나, 지문의 실제 순서는 두 번째 난파에서 다른 기자들이 먼저 고양이를 지어 넣고(did not wish to take a chance, and put the cat in) 그 다음 필자가 고양이를 뺐다가 문책당한다(severely scolded). 사실 자체는 모두 참이고 인과 왜곡은 없어 V4 실패로 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(상식적 언론 규범: 사실 검증)",
+      "temptingBecause": "'verifying the survivor's identity'가 도입부 'a cat that had survived'와 어휘적으로 겹치고, 언론의 당위적 역할이라는 상식 스키마에 부합한다",
+      "decisiveFlaw": "지문의 결론은 검증이 아니라 검증 없는 허위 삽입의 제도화이므로 정반대 극성"
+    },
+    {
+      "label": "2",
+      "intent": "처벌받은 행동의 재활용(극성 반전 + half-truth)",
+      "temptingBecause": "필자가 실제로 '증거 없는 고양이를 뺀' 행동을 했으므로 부주의한 독자는 지문 내용 그대로라고 착각한다",
+      "decisiveFlaw": "그 행동이 문책의 원인이었고, 그 결과 형성된 관행은 배제가 아니라 삽입이다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 'always put in the cat'의 추상적 재진술",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 두 에피소드(실제 고양이 누락 문책 → 허위 고양이 삽입 관행)의 종합 결론과 정확히 일치. 다만 'fabricated'가 'there was no cat but... put the cat in'을, 'unanimously'가 'all of us'를 강하게 반향해 어휘·극성 단서만으로도 도달 가능한 점이 난이도상 약점"
+    },
+    {
+      "label": "4",
+      "intent": "행위자·권력관계 반전(actor swap)",
+      "temptingBecause": "editors가 called down/scolded의 주체로 지문에서 현저하게 등장한다",
+      "decisiveFlaw": "기자들은 편집자 압력에 저항하는 것이 아니라 순응하여 허위를 삽입한다"
+    },
+    {
+      "label": "5",
+      "intent": "국소 앵커 재사용(scope shift, 지엽적 소재)",
+      "temptingBecause": "'the crew went back to save it'이라는 생생한 도입부 사실을 그대로 끌어온다",
+      "decisiveFlaw": "1회성 과거 사실일 뿐, '지금 모든 기자가 하는 일'이라는 결론 슬롯의 집단적 관행과 무관"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "episode-order-inversion",
+      "severity": "minor",
+      "evidence": "해설이 문책 에피소드를 허위 삽입 에피소드보다 먼저 서술('연속적으로 제시됩니다')하나 지문 순서는 반대. 사실 오류나 인과 오설명은 아님."
+    },
+    {
+      "code": "redundancy-in-completed-sentence",
+      "severity": "minor",
+      "evidence": "완성문 'all of us unanimously incorporate'에서 unanimously가 all of us와 의미 중복. 비문은 아니며 자연스러움 범위 내."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": [
+    "§D 통사 슬롯 동일성: 충족 — 5개 선지 모두 동일 VP 슬롯, suffix/tail로 문법 탈락하는 오답 없음",
+    "§D 의미 보존·추상화: 충족 — ③은 'always put in the cat'을 정확히 추상화",
+    "§D 오답 3요소(anchor/overlap/flaw): 대체로 충족",
+    "§D '극성·길이·고유어·절대어 하나로 못 찍음': 미충족 — 정답만이 냉소적/허위 극성을 가진 유일한 선지이고 'fabricated'가 'there was no cat but... put the cat in'을 직접 반향, 'unanimously'가 'all of us'를 반향하며, 선지 중 최단(5단어). 톤·극성 단서만으로 두 문장 종합 없이 정답 도달 가능",
+    "§D 함정 다양성: 부분 미충족 — ①과 ②가 모두 '올바른 저널리즘' 방향의 극성 반전으로 함정 유형이 겹침"
+  ],
+  "grade": "B",
+  "notes": "유효성 5개 게이트 전부 통과: 렌더 지문은 'always put in the cat'만 빈칸으로 치환되고 나머지는 원지문과 완전 일치(V1), 블라인드 풀이에서 ③만 유일 정답(V2), 완성문·전 선지 슬롯 문법성 양호(V3), 해설 인용 어구와 구조 분석 모두 실제 지문과 일치(V4), 정답 라벨·선지·오답 해설·keyPoints 동기화(V5). 출제 지점은 일화의 최종 일반화라는 정전 포인트로 C1=4. 그러나 요청 난이도 KILLER 대비 실제 난이도는 중상 수준: 정답이 유일한 부정 극성 선지이며 어휘 반향('fabricated', 'unanimously')으로 인해 다문장 종합 없이도 소거 가능해 C5=2, KILLER 추가 조건 미충족. ①·② 함정 유형 중복으로 C2=3. 공예 합계 18 → 등급 B(작은 수정으로 출하 가능: ①·② 중 하나를 다른 함정 유형—예: causal reversal 또는 half-truth—으로 교체하고, 오답 중 하나에 부정/냉소 극성을 부여해 극성 단서를 무력화하면 KILLER 정합 개선 가능)."
+}

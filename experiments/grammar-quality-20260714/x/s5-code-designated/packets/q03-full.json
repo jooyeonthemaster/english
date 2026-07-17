@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go3_20191015-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "요지",
+    "words": 172
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-overdrilled-answer",
+    "grammar-underline-wide",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=m  (B):dec=b  (C):dec=h  (D):dec=m  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 31,
+        "relPos": 0.03,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 82,
+        "relPos": 0.079,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 514,
+        "relPos": 0.492,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 617,
+        "relPos": 0.591,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 825,
+        "relPos": 0.79,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.79,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to think of technology as shiny tools and gadgets. Even if we acknowledge that technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie. The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "as shiny",
+        "isError": false,
+        "correction": "as shiny",
+        "errorExpression": "as shiny",
+        "surroundingText": "We tend to think of technology as shiny tools and gadgets.",
+        "pointCode": "m"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "Even if we acknowledge that technology can exist in disembodied form",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "enable",
+        "isError": false,
+        "correction": "enable",
+        "errorExpression": "enable",
+        "surroundingText": "They both can change our behavior, alter the course of events, or enable future inventions.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "as Google",
+        "isError": false,
+        "correction": "as Google",
+        "errorExpression": "as Google",
+        "surroundingText": "A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine",
+        "pointCode": "m"
+      },
+      {
+        "label": "(E)",
+        "expression": "rendering of the original novel is",
+        "isError": true,
+        "correction": "rendering of the original novel is",
+        "errorExpression": "rendering of the original novel are",
+        "surroundingText": "The literary rendering of the original novel is as much an invention as",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "as shiny"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "enable"
+      },
+      {
+        "label": "(D)",
+        "text": "as Google"
+      },
+      {
+        "label": "(E)",
+        "text": "rendering of the original novel are"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'think of A as B' 구조에서 전치사 as 뒤에 형용사 shiny가 명사구 tools and gadgets를 수식하는 형태로 자연스럽게 연결되었습니다.",
+      "(B)": "타동사 acknowledge의 목적어로 쓰인 명사절을 이끌고 있으며, 뒤에 주어(technology), 동사(can exist), 수식어(in disembodied form)로 구성된 완전한 절이 이어지므로 접속사 that은 올바릅니다.",
+      "(C)": "조동사 can에 걸려 병렬 관계를 이루는 세 개의 동사원형 change, alter, 그리고 enable 중 마지막 항목으로 올바르게 연결되었습니다.",
+      "(D)": "'the same A as B' 구문으로, 'B와 같은 A'라는 비교 표현에서 전치사 as 뒤에 명사 지시어 Google's search engine이 오는 올바른 형태입니다."
+    },
+    "explanation": "문장의 주어는 'The literary rendering of the original novel'이며, 주어의 핵은 단수 명사인 rendering입니다. 바로 앞에 복수 명사인 novel이 제시되어 있어 동사의 수일치를 헷갈리기 쉽지만, 수식어구인 'of the original novel'을 걷어내면 단수 주어에 수일치해야 함을 알 수 있습니다. 따라서 복수 동사 형태로 표현된 'rendering of the original novel are'는 비문이며, 단수 동사를 사용한 'rendering of the original novel is'로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(E) 주어-동사 수일치 — 수식어구 뒤에 감춰진 주어의 핵을 찾아 단수/복수 판정",
+      "(B) 명사절 접속사 — 뒤에 완전한 문장 구조가 뒤따르는지 확인",
+      "(C) 병렬구조 — 조동사에 공통으로 연결되는 원형 동사들의 형태 일치"
+    ],
+    "tags": [
+      "수일치",
+      "명사절 접속사",
+      "병렬구조",
+      "수능어법",
+      "킬러문항"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We tend to think of technology __(A) as shiny__ tools and gadgets. Even if we acknowledge __(B) that__ technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or __(C) enable__ future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category __(D) as Google__'s search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie. The literary __(E) rendering of the original novel are__ as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological."
+  }
+}

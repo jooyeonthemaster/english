@@ -1,0 +1,35 @@
+{
+  "pid": "P027",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'an experiment showing (that) human perception and behavior can be influenced...' — 현재분사 showing이 experiment를 후치 수식하며, showing 뒤 접속사 that 생략도 허용된다. 'did an experiment'가 정동사이므로 분사 수식은 정문. 실전에서 'that이 없어서 이상하다'는 유혹이 살짝 있으나 show 계열 동사의 that 생략은 표준적이라 금방 배제된다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'He presented them with a list of words' — present A with B 구문의 목적어 자리로 목적격 대명사 them이 맞고, 지시 대상(healthy undergraduates)도 복수로 일치. 어떤 각도에서도 흠이 없어 매력도가 가장 낮은 선지."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'What he found was extraordinary.' — what은 선행사를 포함한 관계대명사(자유관계절)로, found의 목적어이자 절 전체가 문장의 주어가 되는 표준 구문. 매력적 오답 후보: 'That he found was extraordinary'로 바꿔야 한다고 착각하기 쉬우나, that절이면 found의 목적어가 비어 비문이 된다. what이 정답처럼 보이도록 문두 소문자 표기가 시선을 끌지만 이는 밑줄 표기 문제일 뿐 어법 판단 대상이 아니다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'Those students who had been exposed to an elderly mix of words taking almost 40 percent longer to walk...' — 주어 Those students의 정동사가 문장 어디에도 없다. who had been exposed...는 관계절, taking은 비정형이므로 문장이 술어 없이 끝난다. 분사구문·동격 등 어떤 대안 해석으로도 정동사 부재를 구제할 수 없다. took으로 고쳐야 정문. 긴 관계절이 주어와 동사 자리를 벌려 놓아 taking을 분사 수식으로 착각하게 만드는 전형적 함정이며, 이것이 유일한 오류."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'walked with their shoulders bent forwards' — with + 명사 + 분사의 부대상황 구문. shoulders는 '구부러지는' 대상(수동)이므로 과거분사 bent가 맞다. 최상위권 관점의 유혹 포인트: 'bending'이어야 하지 않나 잠깐 흔들릴 수 있으나 bend의 타동사 용법(어깨를 구부리다)을 상기하면 수동 관계가 명확하다. 뒤따르는 dragging(주어 students와 능동 관계)과의 대비도 자연스럽다."
+    }
+  ],
+  "note": "실전 풀이 순서: (D)에서 주어-동사 스캔이 즉시 걸린다. Those students [who had been exposed ... words] 뒤에 정동사가 와야 하는데 taking이라 문장 전체가 술어 없는 비문. 나머지 밑줄은 모두 표준 구문(분사 수식, present A with B, 자유관계절 what, with+O+p.p.). 가장 매력적인 오답은 (C)(what vs that 착시)와 (E)(bent vs bending)였으나 둘 다 정문임이 확정된다. 정답 후보는 (D) 단일. 문항 자체는 장거리 단서(긴 관계절로 벌려 놓은 주어-동사)를 이용한 정석적 출제로 결함 없음. 사소한 표기 문제: (C) 밑줄이 문두인데 소문자 'what'으로 제시됨 — 어법 판단에는 영향 없으나 조판 시 대문자 처리 필요."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Originally born in France, Brunel escaped...' is a past-participle phrase modifying the subject Brunel (= As he was originally born in France). Passive participle of 'bear' is exactly right. Distractor pull: 'originally born' feels semantically redundant and one may wonder about 'being born', but plain participial 'born in France' is standard and grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'During the Napoleonic Wars, Brunel's factory supplying British troops with boots.' has no finite verb — it is a sentence fragment. Rescue readings were actively checked: an absolute construction requires an accompanying main clause (none exists), and a reduced relative ('factory [which was] supplying') still leaves the sentence verbless. Must be finite past 'supplied' (supply A with B). This is the error."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the government stopped buying his boots' — stop + gerund = cease the activity, which matches the context (he went out of business). Distractor pull: the classic 'stop to-V vs stop V-ing' trap invites second-guessing, but the intended meaning (ceasing purchases) requires the gerund, so it is correct as written."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'imprisoned for several months because of his debt' — 'because of' governs the noun phrase 'his debt'. Correct; bare 'because' would need a full clause. No genuine ambiguity."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'needed more ways for people and goods to move across it' — the pattern 'ways (for X) to-V' with the for-phrase as the semantic subject of the infinitive is standard. Distractor pull: some expect 'ways of moving', but 'ways to move' is equally idiomatic and the for-phrase forces the infinitive."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. The error type is a missing finite verb (fragment) at (B) — a long-distance/structural cue rather than a local morphology cue, which is a fair and clean discriminator. The most attractive wrong pulls are (C) via the stop+gerund/infinitive trap and (E) via ways+to-V vs of+V-ing, but both are unambiguously correct in context. Single defensible answer: (B)."
+}

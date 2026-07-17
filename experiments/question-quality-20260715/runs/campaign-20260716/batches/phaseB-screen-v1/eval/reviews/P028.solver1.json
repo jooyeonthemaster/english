@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Relative clause 'exchanges that are put-downs': antecedent of 'that' is plural 'exchanges' (the stacked adjectives 'subtle, stunning, often automatic, and nonverbal' all modify 'exchanges'), so plural 'are' agrees. Checked for a nearer singular attractor (work, Pierce) — semantically only 'exchanges' can be the antecedent."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'indignities, whether intentional or unintentional, that communicate...' — 'whether A or B' is the standard elliptical concessive (= whether they are intentional or unintentional). Felt a real pull here because the parenthetical separates 'indignities' from its relative clause 'that communicate...', making 'whether' look stranded, but the reduced concessive is fully idiomatic and the post-parenthetical relative clause attaches normally."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Causative 'make + object (target groups) + bare infinitive feel'. The 'to feel'/'felt' temptation is a known trap, but the bare infinitive after causative make is required; the adjective complements 'unwelcome, isolated, and unsafe' parallel cleanly."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong",
+      "reason": "'People raising their voices while speaking to him implying a hidden message that ... functioning.' contains no finite verb: raising, speaking, and implying are all non-finite, so the sentence is a fragment. Rescue parses actively tested and all fail: (1) if 'raising...' is a participial modifier of 'People', the predicate must be finite 'imply' (plural head noun People); (2) if 'raising their voices' is a gerund subject, the verb must be 'implies'; (3) an absolute-construction/participial-adjunct reading fails because there is no following main clause — the sentence ends at 'functioning' and is punctuated as independent; (4) no inversion or ellipsis structure applies. Under every parse 'implying' leaves the sentence verbless — the sole grammatical error."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'they are nevertheless damaging to targets' — subject 'they' (= these actions/microaggressions) is the agent of harm, so the active participial adjective 'damaging' is right. The damaged/damaging pull exists (targets are the damaged party), but the subject is the actions, confirmed by 'because they result in harmful psychological consequences'; 'damaged' would be the actual error."
+    }
+  ],
+  "note": "Top-tier solver lens: the distractors that actually exerted pull were (B) (parenthetical 'whether' phrase visually stranded between noun and its relative clause; brief either/whether hesitation) and (E) (damaging vs damaged). Both resolve cleanly on inspection. (D) is identified by the long-distance cue that the sentence never delivers a finite verb — the classic KSAT 'main verb missing after a long participially-modified subject' pattern — and no alternative construction (reduced relative, gerund subject, absolute construction, inversion) rescues it. Single defensible answer: (D)."
+}

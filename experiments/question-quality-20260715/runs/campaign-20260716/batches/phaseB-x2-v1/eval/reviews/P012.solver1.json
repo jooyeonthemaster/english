@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "법과 영화 두 키워드를 모두 담아 표면적으로 끌리는 유일한 미끼. 그러나 지문은 법이 자신의 '합리적 한계'를 영화 매체에 투사한다는 상호작용을 말한 적이 없고, 빈칸 자리는 whereas 뒤 '영화는 정동에 노출시킨다'와 대조되는 '법의 억제 기능' 재진술을 요구한다. 법→영화 투사는 대조 축을 형성하지 못함. 유혹 강도 낮음."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "법이 질서 보존(preservation of orders)보다 예술적 완결성을 우선한다는 진술은 'a regime of commands and prohibitions', 'keeps it in check'와 정반대. 즉시 배제."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'unleash raw human impulses for emotional release'는 오히려 영화 쪽 기능에 가까운 서술을 주어만 Legal practice로 바꿔치기한 역방향 미끼. 법의 역할은 억제이지 해방이 아니므로 지문과 정반대."
+    },
+    {
+      "label": "④",
+      "verdict": "정답",
+      "reason": "'contain emotional disruptions' = 'keeps it (man's affective life) in check' / 'ensure that we are not overwhelmed and destroyed by our desires and drives'의 재진술이고, 'dreading their potential fallout' = 'law's anxiety about human nature'까지 반영. whereas 뒤 영화의 역할(정동에 노출·직면 강제)과 완벽한 대조 축을 형성. 문법 결합도 완전한 절 + 분사구문으로 자연스러움."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "법이 스스로 법전의 경계를 허물어 영화를 포용한다는 진술은 지문에 근거가 없고, 'interaction between cinema and law'라는 표면 어구에만 낚이는 미끼. 빈칸이 요구하는 억제 vs 노출의 대조 구조를 붕괴시킴."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 빈칸은 whereas 대조 구문의 앞 절로, 직전 두 문장(법이 정동적 삶을 억제하고 욕망·충동에 의한 파괴를 막는다)의 재진술 + 'anxiety'(두려움) 단서까지 회수해야 한다. ④만이 세 단서(억제·파괴 방지·불안)를 모두 충족한다. ①이 유일하게 잠깐 눈이 가는 미끼였으나 법→영화 투사 관계는 무근거라 유혹 강도는 낮다. 오답들의 방향성이 대부분 정반대(②③⑤)여서 변별은 어법·논리 모두에서 깨끗하다. 복수 정답 여지 없음."
+}

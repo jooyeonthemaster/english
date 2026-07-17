@@ -1,0 +1,35 @@
+{
+  "pid": "P098",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Colon introduces an appositive to 'a typical high school task'; the gerund phrase 'writing a research paper' is the standard nominal appositive form. No error."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'things like [how to spell words]': interrogative word + to-infinitive functions as a noun phrase, object of the preposition 'like'. Perfectly grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (the answer)",
+      "reason": "Relative clause: 'the workout ... that they ___ for previous generations.' The antecedent 'the workout' is the OBJECT of the action verb 'get' in the main clause, so the pro-form must substitute for 'get the workout' -> 'did'. 'Were' forces a predicate-nominative reading ('the activities were the workout'), which clashes with 'don't get': the gap cannot be simultaneously the thing received (main clause) and the thing constituted (relative clause). Rescue reading tested: 'X isn't the workout that it was' would be fine only if the main verb were 'aren't', not 'don't get'. Long-distance cue: main-clause verb 'get' demands do-substitution. Correction: were -> did."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'brains are heavily focused on scanning and processing' — be focused on + gerund(s); 'scanning and processing' are parallel objects of 'on'. No error."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct (most attractive distractor)",
+      "reason": "Strong pull toward marking this wrong via the 'preposition to + -ing' rule (be used to -ing, be accustomed to -ing), which would demand 'tuned to requiring'. But 'tuned' here is the instrument-adjustment sense — cf. 'sensors tuned to detect X', 'engines tuned to deliver Y' — where a result/purpose infinitive is idiomatic: 'highly tuned to require more stimulation and (to) become more easily bored', with clean parallelism 'require ... and become'. Grammatical as written."
+    }
+  ],
+  "note": "Lens: top-tier examinee under exam conditions. Real distractor pull was (E) 'to require' (over-application of preposition-to + gerund rule); resolved by recognizing the 'tuned/adjusted so as to V' pattern and the require/become parallelism. (C) is a clean, well-motivated error keyed to a long-distance cue (main-clause 'get' requires do-substitution 'did', not 'were'); the 'the man he was' rescue reading fails because the antecedent is object of 'get', not a copular predicate. Single defensible answer: (C)."
+}

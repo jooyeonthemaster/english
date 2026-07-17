@@ -1,0 +1,76 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "critical",
+      "evidence": "렌더 지문의 (D) 문장이 'His confidence was, however, quickly __was changed__ to nervousness'로, 선행 조동사 was가 남은 채 changed를 was changed로 치환하여 'was ... was changed' 이중 조동사 중복 손상이 발생했다. 의도된 변형(능동 changed → 수동 was changed 최소대립쌍)이 아니라 단어 중복 파손이다. 또한 파일에 기록된 원지문 자체가 'His confidence was, however, quickly changed'로, 실제 2025 수능 43~45 원문('His confidence, however, quickly changed to nervousness')에 없는 잉여 was를 이미 포함하고 있어 원지문 무결성도 의심된다."
+    },
+    {
+      "code": "V3",
+      "severity": "critical",
+      "evidence": "선언된 교정(was changed → changed)을 적용한 완성문은 'His confidence was, however, quickly changed to nervousness'가 되는데, 이는 여전히 be+과거분사(was ... changed) 수동 구조로 해설 자신이 '비문'이라 규정한 바로 그 형태다. 자연스러운 완성문이 되려면 첫 번째 was까지 삭제하여 'His confidence, however, quickly changed ...'(자동사 능동)가 되어야 한다. 즉 교정 후 완성문이 문항 자체 논리 기준으로 비문/부자연이다."
+    },
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "해설은 (D)를 'changed'로 고치면 능동태가 되고 change가 자동사로 쓰인다고 설명하지만, 교정 후 문장에는 조동사 was가 그대로 남아 'His confidence was ... changed'이므로 changed는 능동 정동사로 해석될 수 없다(여전히 수동/과거분사). 해설의 통사 분석이 실제 문장 구조와 불일치한다. 또한 학생이 실제로 보는 결정적 결함(밑줄 앞의 was와 밑줄 속 was의 이중 출현)을 전혀 언급하지 않으며, 마지막 문장 '능동형으로 변화를 나타냅니다'는 표현 자체도 손상된 서술이다."
+    }
+  ],
+  "craft": {
+    "C1": 1,
+    "C2": 3,
+    "C3": 1,
+    "C4": 1,
+    "C5": 1,
+    "C6": 0
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 as가 이끄는 부사절에서 주어(they) 뒤 정동사 자리 판별 — 분사(entering)와 정동사(entered)의 구분",
+      "temptingBecause": "replied as they ~ 구조에서 분사구문으로 오인하면 entering을 기대할 수 있음",
+      "decisiveFlaw": "없음(어법상 옳음). as절 안에 명시적 주어 they가 있으므로 과거형 정동사 entered가 정확하다."
+    },
+    {
+      "label": "(B)",
+      "intent": "감각/연결동사 look 뒤 주격보어 자리의 형용사 vs 부사 판별",
+      "temptingBecause": "동사를 수식한다고 오해하면 부사 greatly를 기대하는 오개념을 자극",
+      "decisiveFlaw": "없음(어법상 옳음). look은 연결동사이므로 형용사 great가 보어로 맞다."
+    },
+    {
+      "label": "(C)",
+      "intent": "분사구문의 능동/수동 판별 — 의미상 주어(The clerk)와 agree의 능동 관계",
+      "temptingBecause": "agreed(과거분사)와의 혼동, 또는 and agreed 병렬로 바꿔야 한다는 착각을 유도",
+      "decisiveFlaw": "없음(어법상 옳음). The clerk가 동의의 주체이므로 현재분사 agreeing 분사구문이 정확하다."
+    },
+    {
+      "label": "(D)",
+      "intent": "(의도) 자동사 change의 능동 vs 수동 태 판정 — 선언된 정답",
+      "temptingBecause": "(의도상) change가 타동사로도 쓰이므로 confidence가 '바뀌어지는' 대상처럼 보여 수동이 그럴듯함",
+      "decisiveFlaw": "실행 결함: 렌더 문장이 'was, however, quickly was changed'로 이중 was 중복이라, 학생은 태 판정이 아니라 단순 중복 단어로 즉시 정답을 식별한다. 게다가 선언된 교정을 적용해도 문장에 was가 남아 여전히 수동 구조이므로, '능동태로 고친다'는 출제 의도 자체가 이 원지문 위에서 성립하지 않는다."
+    },
+    {
+      "label": "(E)",
+      "intent": "완전한 절을 이끄는 시간 접속사 when의 적격성 판별(관계부사/전치사 자리와의 구분)",
+      "temptingBecause": "선행사 없는 when을 관계부사로 오인하게 하려는 정도의 약한 유혹",
+      "decisiveFlaw": "없음(어법상 옳음). 뒤에 완전한 절(he thought of ~)이 이어지는 시간 부사절 접속사로 정확하다."
+    }
+  ],
+  "explanationIssues": [
+    "해설이 교정 결과를 '능동태 changed'로 서술하나, 교정 적용 후 문장은 'His confidence was ... changed'로 조동사 was가 남아 있어 능동 해석이 불가능하다 — 통사 분석과 실제 문장의 불일치",
+    "학생이 실제로 보는 결정적 근거(밑줄 밖 was + 밑줄 안 was의 중복)를 해설이 전혀 다루지 않아, 해설과 렌더된 문항이 서로 다른 문장을 설명하는 상태",
+    "마지막 문장 '주어가 감정과 태도의 변화를 나타낼 때 change는 자동사로 사용되어 능동형으로 변화를 나타냅니다'는 서술이 손상/장황하여 문법 설명으로 부정확",
+    "오답 해설 (A)(B)(C)(E)는 각 선지의 실제 내용과 대응하며 사실 오류 없음"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "치명 결함 3건. (1) V1: (D) 치환 시 선행 조동사 was가 제거되지 않아 렌더 지문에 'was ... was changed' 이중 조동사 중복 손상 — 의도된 능동/수동 최소대립쌍이 아닌 텍스트 파손이며, 기록된 원지문 자체도 실제 수능 원문(능동 'His confidence, however, quickly changed')에 없는 잉여 was를 포함. (2) V3: 선언된 교정을 적용한 완성문이 여전히 be+p.p. 수동 구조로, 해설이 비문이라 규정한 형태와 동일 — 완성문이 부자연/자기모순. (3) V4: 해설의 '능동태 교정' 분석이 실제 교정 후 문장 구조와 불일치하고 실제 결함(중복 was)을 설명하지 않음. V2는 기술적으로 통과(정답 집합 정확히 {(D)}, 나머지 4개 밑줄 독립 검증 결과 모두 어법상 옳음), V5도 라벨·선지·해설·keyPoints 상호 동기화됨. 공예 측면: 디코이 4개는 각기 다른 문법 포인트를 겨냥해 C2=3이나, 정답이 중복 단어로 즉시 노출되어 변별력(C3=1)·단서 경제성(C4=1)이 붕괴하고 INTERMEDIATE 난이도에도 못 미침(C5=1). 해설은 사실 오류로 C6=0. 등급 F — 원지문의 잉여 was 제거 후 능동 changed → 수동 was changed 변형으로 재생성해야 의도한 태 판정 문항이 성립한다."
+}

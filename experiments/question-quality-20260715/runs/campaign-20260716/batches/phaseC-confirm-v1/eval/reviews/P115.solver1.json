@@ -1,0 +1,35 @@
+{
+  "pid": "P115",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸 직전 'That was the turning point'와 직후 'Within a few weeks shoppers readily accepted those carts'가 긍정적 성과 서술을 요구한다. 'theoretical persuasion'은 앞부분의 'repeated advertisements and explanations, he could not persuade his shoppers'와 정확히 대응하고, shills(사회적 증거)가 그 설득이 못 이룬 결과(수용)를 만들어냈다는 요지와 완전 일치. 문법 결합도 'easily brought about the results that...'로 자연스럽다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "지문 전반부의 부정적 인식(남성=약해 보임, 여성=유모차 연상) 어휘를 재활용해 표면적으로 끌리는 미끼. 그러나 'easily could not overcome'이라는 결합 자체가 어색하고, 무엇보다 직전 문장 'turning point'와 직후 'readily accepted'에 정면 모순. 부정적 귀결은 논리적으로 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'persuaded' 어휘 반복으로 유혹하는 미끼. shills의 전략은 논리적 접근이 아니라 시연을 통한 사회적 증거였고, 실패했던 방식에 의존했다는 서술은 'turning point' 및 성공 귀결과 모순."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "지문에서 노인만 사용하는 것이 오히려 카트의 매력을 떨어뜨렸다(made the carts even less attractive)고 명시했으므로, 전환점 이후 서술로 노인만 끌어들였다는 내용은 정반대 방향. 지문 세부(elderly shoppers)를 재활용한 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "매장 구조 전면 재설계는 지문 어디에도 근거가 없는 무관 진술. 쉽게 배제되는 선지."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 빈칸 앞뒤 인과 사슬(turning point → easily ___ → readily accepted)이 긍정적 성과만 허용해 방향 판정은 즉시 끝남. 매력적 오답으로는 ③(persuade 어휘 반복)과 ②(전반부 부정 인식 재활용)이 순간적으로 끌리지만 각각 방법 불일치·결과 모순으로 5초 내 탈락. 미끼 강도는 중간 이하 — 오답들이 모두 결과 방향(부정)으로 몰려 있어 변별력은 어휘 대응(theoretical persuasion ↔ advertisements and explanations) 파악에 달려 있다. 복수 정답 여지 없음."
+}

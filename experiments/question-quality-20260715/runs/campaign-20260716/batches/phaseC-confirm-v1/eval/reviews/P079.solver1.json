@@ -1,0 +1,35 @@
+{
+  "pid": "P079",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "'touch'가 악기(피아노) 이미지를 환기해 표면 소재로 유혹하지만, 'master the logical structure'는 공식화된 규칙을 다루는 기술적·책 지식 쪽 술어다. 빈칸은 bodily metaphor인 'touch'의 동격이므로 논리 구조 숙달은 범주가 어긋난다. 최상위권도 소재(musical instrument) 때문에 한 번 멈칫하게 되는 매력적 오답."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "지문 첫 문장의 'formulated rules'를 'formulated textbook guidelines'로 그대로 회수한 표면 매칭 미끼. 실천적 지식은 가르치거나 배울 수 없고 규칙화되지 않는다는 지문 논지와 정반대라 넣는 순간 모순."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "빈칸은 'a touch for doing some activity'의 동격으로, 신체적 은유가 가리키는 능력을 풀어써야 한다. 'execute physical actions with precise intensity and tempo'는 손끝 감각(touch)의 내용과 정확히 일치하고, 뒤따르는 'feel for the game', 'thinking less', 무의식적 수행(without conscious awareness)이라는 장거리 단서와도 정합. seam(an ability to + 동사원형)도 정상."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "'when you should plow ahead / put it aside' 대목이 침착한 판단처럼 읽혀 잠깐 끌리지만, 'analytical calmness'의 'analytical'이 'she isn't thinking more; she is thinking less'와 정면충돌. 전문가의 실천지는 분석의 증가가 아니라 감소로 특징지어지므로 옹호 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'a touch for doing some activity'는 행위 수행 능력인데 'passively appreciate'는 수동적 감상으로 행위성 자체가 없다. 신체 은유·능동적 수행이라는 빈칸 요건과 범주적으로 불일치해 즉시 탈락."
+    }
+  ],
+  "note": "빈칸은 bodily metaphor 'touch'의 동격 자리. 유일하게 신체적·수행적 술어를 가진 ③만 성립하며, ①(악기 소재 유혹)과 ④(침착함 유혹)가 매력적 오답이지만 각각 'logical', 'analytical'이라는 단어가 지문의 명시적 대비(기술지 vs 실천지, thinking less)와 모순되어 배제된다. 복수 정답 여지 없음."
+}

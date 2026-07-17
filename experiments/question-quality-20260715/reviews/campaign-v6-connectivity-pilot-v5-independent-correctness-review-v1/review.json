@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "campaign-v6-connectivity-pilot-v5-independent-correctness-review-v1",
+  "subject": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5",
+  "verdict": "FAIL_BLOCKERS",
+  "blockers": [
+    {
+      "code": "C1_VALID_WRAPPER_CARDINALITY_UNDERCOUNT",
+      "category": "cardinality correctness",
+      "status": "REPRODUCED"
+    },
+    {
+      "code": "C2_CLOSED_TEMP_PATH_IDENTITY_NOT_REATTESTED",
+      "category": "file-identity correctness",
+      "status": "REPRODUCED"
+    },
+    {
+      "code": "C3_BUNDLER_IMPLEMENTATION_UNSEALED_NO_INDEPENDENT_EQUIVALENCE",
+      "category": "build-provenance correctness",
+      "status": "REPRODUCED"
+    },
+    {
+      "code": "C4_INTENT_WRITE_FAILURE_DOES_NOT_GATE_SETTLEMENT",
+      "category": "control-flow correctness",
+      "status": "REPRODUCED"
+    }
+  ],
+  "passedChecks": [
+    "MODEL_ORDER_ROUTE_REASONING",
+    "PRICE_MAXIMA",
+    "BILLING_EQUALITY",
+    "PERMANENT_NO_DISPATCH"
+  ],
+  "subjectPublicManifest": {
+    "entriesChecked": 39,
+    "allMatched": true,
+    "startEqualsEnd": true,
+    "snapshotSha256": "24ff47fc58580de5f0341e220ebde8c491fa61fe507196739648e4d70f93539b"
+  },
+  "accessCounters": {
+    "network": 0,
+    "credentials": 0,
+    "globalLedger": 0,
+    "api": 0,
+    "model": 0,
+    "database": 0,
+    "privateExactWire": 0,
+    "subjectWrites": 0
+  },
+  "artifacts": {
+    "report": "REPORT.md",
+    "reportSha256": "796c75902cedab7caff02a805199bec6ca54213d197f616dd913a596fbcf106c",
+    "evidence": "evidence.json",
+    "evidenceSha256": "b0c1f3cb619abd822474ebb088db56edae0eff636bd847af8804705823311f71",
+    "reproduction": "reproduce.mts",
+    "reproductionSha256": "c160519bdcf49380f172b3419b518aaec04be3b9589d4fa36d93e60ea208edf6",
+    "manifest": "MANIFEST.sha256"
+  }
+}

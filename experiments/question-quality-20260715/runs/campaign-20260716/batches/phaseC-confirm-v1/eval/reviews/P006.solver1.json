@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the stream of remote associations coming from the right hemisphere' — coming은 associations(또는 stream)를 수식하는 현재분사로, 'that come from ...' 축약 관계절. 능동 관계이므로 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'when solving problems analytically' — when + -ing 축약 부사절. 주절 주어(this pattern of attention)와 의미상 주어(일반인 we)가 불일치해 현수분사 의심이 드는 매력 지점이나, 'when solving problems'는 일반 주어 생략의 표준적 관용 용법으로 수능 기준 정문. 화자가 지문 전체에서 일반론(we)을 전개하고 있어 의미상 주어 복원도 자연스럽다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'detecting the connections that leads to creative insights' — 관계대명사 that의 선행사는 복수명사 the connections(의미상으로도 '통찰로 이어지는 연결들')이므로 관계절 동사는 lead여야 함. that이 동명사구 detecting...을 받아 단수 호응이 되는 대안 해석을 검토했으나, that은 명사 직후 주어-공백 관계절 자리에 있어 선행사가 connections일 수밖에 없고 detecting을 받으려면 별도 절 경계가 필요해 성립 불가. 장거리 요소가 짧아 발견 난도는 낮은 편."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'so many insights happen during warm showers' — 복수 주어 insights + 복수 동사 happen, 수 일치 정확. so many가 단수 착시를 유발하는 미끼지만 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'It's not until we're being massaged ..., unable to check our e-mail, that we're finally able ...' — 'It is not until X that Y' 분열문(강조구문)의 표준형. 삽입구 'unable to check our e-mail'로 거리를 벌려 놓아 매력적이지만 구조상 완전한 정문."
+    }
+  ],
+  "note": "정답 (C) 단일 옹호 가능. 실전 풀이에서 (B)의 축약절 의미상 주어 불일치와 (E)의 not until 분열문이 가장 유혹적이었으나 둘 다 표준 용법으로 해소됨. (C)는 선행사 connections와 동사 leads 사이 거리가 짧아 최상위권에게는 즉시 포착되는 수준 — 오답 유인 설계는 양호하나 정답 지점의 은닉도는 중간 이하."
+}

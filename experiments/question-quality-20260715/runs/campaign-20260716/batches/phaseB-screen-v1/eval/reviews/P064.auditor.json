@@ -1,0 +1,102 @@
+{
+  "pid": "P064",
+  "requestedDifficulty": "KILLER",
+  "type": "GRAMMAR_ERROR",
+  "blindAnswer": "(B)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문을 원지문과 문장 단위 대조: 유일한 변형은 의도된 involve→involves (B)뿐. 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 밑줄 (A) seen / (B) involves / (C) What / (D) where / (E) being 모두 선택지 목록과 1:1 일치.",
+    "V2": "각 밑줄 독립 검증 — (A) 'of a kind and magnitude not seen before'의 과거분사 seen은 수동 수식으로 적법. (C) What은 자유 관계사(선행사 포함)로 뒤에 주어 결여 불완전절 'is new...'를 취해 적법. (D) where 뒤 'real people have actual interactions...'는 완전절이므로 관계부사 적법('in which'와 교체 가능). (E) while being은 접속사 잔류 분사구문, 의미상 주어 real people로 적법. (B)만 'All forms of art, ..., involves'에서 핵 forms(복수)와 불일치로 유일한 비문. 단일 정답 확정.",
+    "V3": "지문은 (B)의 의도된 오류를 제외하면 전부 문법적·자연스러움. 발문은 표준형. involves→involve 교정 시 완성문이 정확히 원문과 일치.",
+    "V4": "핵심 구조 분석은 사실과 일치: (B) 주어 핵 forms 지목·삽입구 범위(including~ancestors) 정확, (C) 불완전절 판정 정확, (D) 완전절 성분(S/V/O) 열거 정확, (E) 접속사 잔류 분사구문 설명 정확. 다만 (A) 해설이 seen의 수식 대상을 'events of a kind and magnitude'로 지목했는데 엄밀한 부착점은 'a kind and magnitude'임(경미한 부정확). (B) 해설의 '원문 그대로'는 소스 원문의 존재를 학생에게 노출하는 메타 표현(사실 오류는 아니나 부적절). 치명적 오분석은 없어 통과로 판정.",
+    "V5": "선언 정답 (B) = markedExpressions에서 isError:true인 유일 항목 = 해설 대상 = keyPoints 첫 항목. errorExpression 'involves'/correction 'involve'가 렌더·해설과 일치. 비오류 4개는 expression=errorExpression=correction으로 자기일관. 모순 없음."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-attachment",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 \"앞의 'events of a kind and magnitude'를 뒤에서 수식하는 과거분사 seen\"이라 했으나 seen의 실제 수식 핵은 of구 내부의 'a kind and magnitude'다. 수동 관계 판정 자체는 옳아 치명 아님."
+    },
+    {
+      "code": "V4-minor-meta-leak",
+      "severity": "minor",
+      "evidence": "(B) 해설의 \"'involves'를 원문 그대로 'involve'로 바로잡아야 합니다\" — 학생 노출 해설에 '원문'(소스 지문) 존재를 언급하는 메타 표현."
+    },
+    {
+      "code": "C6-verbosity",
+      "severity": "minor",
+      "evidence": "(B) 해설이 동일 결론(복수 주어이므로 involve)을 세 번 반복하며 '삽입구 앞부분에 위치하는 복수 명사구의 핵심어' 등 우회적 표현으로 장황."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "craftRationale": {
+    "C1": "삽입구를 건너뛴 주어-동사 수일치는 정전 포인트이고 지문도 검증된 기출계 지문. 다만 포인트 자체가 가장 표준적인 유형이라 정교함은 보통.",
+    "C2": "네 오답이 각각 분사 태(A), 자유 관계사 What(C), 관계부사 완전절(D), 접속사 잔류 분사구문(E)으로 서로 다른 오개념을 겨냥. 다만 pointCode가 b/c 중복 쌍으로 5칸의 포인트 다양성은 4점 수준에 못 미침.",
+    "C3": "숙련 학생은 'All forms of art, ..., involves' 패턴을 즉시 인지해 디코이를 소비하지 않고 종결 가능. (C)(D)(E)는 실제 판단을 요구하지만 정답이 너무 빨리 갈림.",
+    "C4": "메타 누출·꼬리 소거 단서 없음. 교정하면 정확히 원문이 되고 정답 근거 필연적. 유일한 정형동사 밑줄이 (B)라는 점은 경미한 시험지혜 단서.",
+    "C5": "요청 난이도 KILLER 대비 콤마로 명확히 구획된 삽입구 수일치는 고2 모의 수준의 중난도 포인트. 요구 사고 단계가 라벨에 크게 미달.",
+    "C6": "구조 지목은 정확하나 (B) 해설이 장황·삼중 반복이고 '원문 그대로' 메타 표현, (A) 수식 대상 경미 오지정."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "과거분사 vs 현재분사(수동 수식) 판정",
+      "temptingBecause": "not 뒤에 분사가 홀로 서 있고 수식 핵('a kind and magnitude')이 앞쪽에 떨어져 있어 정형동사 결여나 seeing으로의 교체를 의심하게 만든다",
+      "decisiveFlaw": "'(이전에) 보여진 적 없는 종류와 규모'라는 수동 관계이므로 seen이 정확 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "삽입구(including ~ ancestors)를 건너뛴 주어-동사 수일치 — 선언된 정답",
+      "temptingBecause": "동사 직전 명사 ancestors·삽입 내부의 art(단수)가 수 판단을 교란하고, 콤마 삽입구가 주어 핵 forms와 동사를 분리한다",
+      "decisiveFlaw": "주어 핵 forms(복수)와 involves(단수)의 수 불일치 — 유일한 비문, involve로 교정 시 원문 복원"
+    },
+    {
+      "label": "(C)",
+      "intent": "자유 관계사 What vs 접속사 That — 후행절 완결성 판정",
+      "temptingBecause": "문두의 What이 의문사·That과의 교체 가능성을 떠올리게 한다",
+      "decisiveFlaw": "후행절 'is new about cyberspace'가 주어 결여 불완전절이므로 선행사 포함 관계사 What이 정확 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "관계부사 where vs 관계대명사 which — 후행절 완결성 판정",
+      "temptingBecause": "선행사 space가 구체 명사라 which로 받아야 한다는 기계적 규칙 적용을 유도한다",
+      "decisiveFlaw": "후행절이 S(real people)+V(have)+O(actual interactions) 완전절이므로 관계부사 where가 정확 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "접속사를 잔류시킨 분사구문의 태·주어 일치 판정",
+      "temptingBecause": "while 뒤에 주어 없이 being이 바로 와서 'while they are'의 생략 구조를 재구성해야 한다",
+      "decisiveFlaw": "의미상 주어 real people과 능동 관계이고 be able to의 be가 being으로 실현된 적법 구조 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설: seen의 수식 대상을 'events of a kind and magnitude'로 지목 — 엄밀한 부착점은 'a kind and magnitude' (경미한 오지정, 판정 논리는 유효)",
+    "(B) 해설: '원문 그대로'라는 메타 표현으로 소스 지문 존재를 노출",
+    "(B) 해설: 동일 결론 3회 반복으로 장황",
+    "keyPoints가 (B)(A)(D)만 다루고 (C)(E)의 why-tempting이 어디에도 명시되지 않음"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "minimalPair": "충족 — involve→involves 최소대립쌍, 교정 시 정확히 원문 복원",
+    "clearGrammarJudgment": "충족 — 핵 forms 기준 수일치는 대안 분석 여지 없는 명확한 판단",
+    "perUnderlineTriple": "미충족 — 각 밑줄에 pointCode와 why-correct는 있으나 (C)(E)의 why-tempting이 해설·keyPoints 어디에도 없음",
+    "structuralDepth": "미충족(보수 판정) — 콤마로 명확히 구획된 삽입구 수일치는 인접 수일치보다는 낫지만 숙련 학생에게 즉시 드러나는 정형 패턴으로 KILLER급 구조 독해를 요구하지 않음",
+    "noShadowingDecoy": "충족 — 수일치(pointCode d) 디코이가 (B) 외에 없음"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과로 출하 가능한 유효 문항이나, 요청 난이도 KILLER에 대해 정답 포인트(삽입구 수일치)가 정형·중난도 패턴이라 C5=1로 난이도 정합이 크게 미달하고, KILLER 추가 조건 2개(밑줄별 why-tempting 완비, 즉시 노출되지 않는 구조 독해)를 충족하지 못함. 해설은 구조 분석이 사실과 일치하지만 장황하고 '원문' 메타 표현·(A) 수식 대상 경미 오지정이 있어 C6=2. KILLER로 출하하려면 정답 포인트 교체(예: 병렬·도치·분사구문 태 등 구조 의존 포인트) 및 해설 압축·정밀화가 필요한 재설계 수준."
+}

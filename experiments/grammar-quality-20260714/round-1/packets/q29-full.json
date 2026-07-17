@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20200312-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "함축의미",
+    "words": 141
+  },
+  "attempts": 4,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-overdrilled-answerx3",
+    "grammar-marker-too-densex1"
+  ],
+  "layout": "(A):dec=c  (B):dec=k  (C):dec=g  (D):ANS=f  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 53,
+        "relPos": 0.072,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 148,
+        "relPos": 0.2,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 242,
+        "relPos": 0.327,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 396,
+        "relPos": 0.536,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 557,
+        "relPos": 0.754,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.754,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "lost",
+        "isError": false,
+        "errorExpression": "lost",
+        "surroundingText": "We all know that tempers are one of the first things lost in many arguments.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "to remember",
+        "isError": false,
+        "errorExpression": "to remember",
+        "surroundingText": "The point to remember is that sometimes in arguments the other person is",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "They",
+        "isError": false,
+        "errorExpression": "They",
+        "surroundingText": "intentionally designed to annoy you. They know that if they get you to",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "foolish",
+        "isError": true,
+        "correction": "foolish",
+        "errorExpression": "foolishly",
+        "surroundingText": "get you to lose your cool you'll say something that sounds foolish; you'll simply get",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "responding",
+        "isError": false,
+        "errorExpression": "responding",
+        "surroundingText": "may be made to cause your anger, but responding with a cool answer that focuses",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "lost"
+      },
+      {
+        "label": "(B)",
+        "text": "to remember"
+      },
+      {
+        "label": "(C)",
+        "text": "They"
+      },
+      {
+        "label": "(D)",
+        "text": "foolishly"
+      },
+      {
+        "label": "(E)",
+        "text": "responding"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 명사 things를 뒤에서 수식하는 분사의 태를 묻고 있으며, things가 잃어버려지는 수동 관계이므로 과거분사 'lost'는 어법상 옳습니다.",
+      "(B)": "이 자리는 명사구 The point를 뒤에서 수식하는 형용사적 용법의 to부정사를 묻고 있으므로 'to remember'는 어법상 옳습니다.",
+      "(C)": "이 자리는 앞 문장의 복수 대명사인 'the other person'을 성별을 모르는 불특정 단수로 인식하여 복수 대명사 'They'로 지칭한 것이므로 어법상 옳습니다.",
+      "(E)": "이 자리는 역접 접속사 but 뒤에서 주어 역할을 하는 준동사인 동명사 'responding'을 묻고 있으므로 어법상 옳습니다."
+    },
+    "explanation": "이 문장에서는 주격 관계대명사 that절 내의 동사 structures를 파악해야 합니다. 관계대명사 절의 동사인 'sounds'는 2형식 감각동사이므로 뒤에 주어를 보충 설명해 주는 주격보어가 와야 합니다. 보어 자리에는 부사가 올 수 없고 형용사만 올 수 있으므로 부사 형태인 'foolishly'는 부적절하며 형용사인 'foolish'로 고쳐야 합니다. 우리말 번역상 '~하게'로 해석되어 부사처럼 보이기 쉬우나, 어법 구조상 보어 자리임을 늘 명심해야 합니다.",
+    "keyPoints": [
+      "(D) 형용사 자리 vs 부사 자리 — 감각동사의 보어 판단",
+      "(A) 분사 능동 vs 수동 — 명사와 수식하는 과거분사의 수동 관계",
+      "(E) 정·준동사 — 문장의 주어 역할을 수행하는 동명사 형태"
+    ],
+    "tags": [
+      "어법",
+      "주격보어",
+      "감각동사",
+      "분사의후치수식",
+      "동명사주어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all know that tempers are one of the first things __(A) lost__ in many arguments. It's easy to say one should keep cool, but how do you do it? The point __(B) to remember__ is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. __(C) They__ know that if they get you to lose your cool you'll say something that sounds __(D) foolishly__; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but __(E) responding__ with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

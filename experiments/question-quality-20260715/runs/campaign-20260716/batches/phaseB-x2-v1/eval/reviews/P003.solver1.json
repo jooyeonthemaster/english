@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'If the interview lasts a while' — while은 관사 a 뒤의 명사(=a period of time)로 lasts의 지속 기간 보충어. 'last a while'은 표준 표현. 'awhile'(부사)이나 접속사 while과의 혼동을 유도하지만 관사 a가 있으므로 명사형이 정확히 맞다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop...' — 가주어 it + be의 주격 보어 자리이므로 비교급 형용사가 적법. 비교 대상(앞서 서술한 녹음 방식)은 문맥상 암시되어 than절 생략 가능. 부사 'more efficiently' 유혹은 술어가 진주어(to develop...)를 서술함을 확인하면 해소. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가주어 it + 'be ADJ + to부정사' 외치(extraposition) 구문의 진주어 to develop. 삽입구 '(using a recorder as backup if you wish)'가 the technique과 of selective note-taking 사이 거리를 벌려 구조 파악을 방해하지만, 'It is ADJ to-V'는 표준 패턴. 동명사 developing 유혹도 어법상 오류 근거가 못 됨. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'writing down the key answers from an interview so what they can be transcribed easily afterwards' — 목적의 접속사 'so that + 완전절' 자리. what은 결여(gap)를 포함한 명사절을 이끌어야 하는데 'they can be transcribed easily afterwards'는 주어와 필수성분이 모두 갖춰진 완전절이라 what이 채울 공백이 없고, so 뒤에 명사절이 올 자리도 없다. 자유관계절·'so what' 관용구·도치 등 구제 가능한 대안 해석을 적극 탐색했으나 어느 것도 성립하지 않음. what → that. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle' — make의 목적격 보어로 쓰인 tough 구문 형용사(the material이 handle의 이해상 목적어: the material is easier to handle). much는 비교급 강화어로 적법하고 quicker와의 병렬도 성립. 부사 'more easily'로 고치고 싶은 고전적 유혹이 있으나 보어가 material의 상태를 서술하므로 형용사가 필수. 정문."
+    }
+  ],
+  "note": "렌즈: 최상위권 수험생 실전 풀이. 매력적 오답에 실제로 끌려본 기록 — (E) 형용사/부사(more easily) 유혹이 가장 강했고, (B) 부사 유혹, (A) a while/awhile 품사 유혹, (C) 동명사 대체 유혹 순. 모두 지배 규칙(가주어 보어, make 5형식 tough 구문, 관사+명사, it–to 외치)으로 해소되어 정문 확정. (D)만이 어떤 대안 해석으로도 구제 불가능한 유일한 비문(so that의 that 자리에 what, 뒤 절이 무공백 완전절). 단일 정답으로 수렴, 복수 정답 소지 없음."
+}

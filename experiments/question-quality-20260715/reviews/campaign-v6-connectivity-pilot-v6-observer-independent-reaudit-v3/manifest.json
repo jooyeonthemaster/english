@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "campaign-v6-observer-independent-reaudit-manifest-v3",
+  "reviewId": "campaign-v6-connectivity-pilot-v6-observer-independent-reaudit-v3",
+  "createdAt": "2026-07-16T01:52:19.1046929+09:00",
+  "verdict": "FAIL_BLOCKERS",
+  "authority": "NONE",
+  "scope": "OBSERVER_ONLY",
+  "authorizesV6": false,
+  "subject": {
+    "strictObserverPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/strict-json-observer.ts",
+    "strictObserverSha256": "736911a9f5763c17ec839ed30c04e960503ab803fdd4c1b8af220a49106bb2bb",
+    "coordinatedOfflineTestPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/offline.test.ts",
+    "coordinatedOfflineTestObservedSha256": "30a04ca8e82fabca47f2a432a6c1182b17053f6e195ba5c9c40abb075606a4b3",
+    "coordinatedTestImportedExecutedOrInspected": false
+  },
+  "predecessor": {
+    "reviewPath": "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v6-observer-independent-reaudit-v2",
+    "manifestSha256": "3dddc69acabe9e4fa7cb7fa3c5366bd8cd9c6e8c3cd8aa7f65d4cb92d7f4f85d",
+    "sealedAuditAlgorithmSha256": "ec6f91e5db2be738f3ad77d0c06e07798a24de52a59e328f7d7b10693696ba37",
+    "replayTransformation": "exact sealed v2 audit.ts with only the expected subject SHA-256 replaced",
+    "role": "immutable 917-case behavioral contract"
+  },
+  "matrix": {
+    "combinedCases": 1903,
+    "combinedPassingCases": 1873,
+    "combinedFailingCases": 30,
+    "predecessorCases": 917,
+    "predecessorPassingCases": 917,
+    "predecessorFailingCases": 0,
+    "predecessorMatrixFingerprintSha256": "d03275523a39930086f490ef5857a95ea75797739a0caadba05061e1bf249fda",
+    "freshNonDerivedCases": 986,
+    "freshPassingCases": 956,
+    "freshFailingCases": 30,
+    "freshExactFullOutputCases": 234,
+    "freshSafetyPredicateCases": 752,
+    "combinedExactFullOutputCases": 987,
+    "combinedSafetyPredicateCases": 916,
+    "freshMatrixFingerprintSha256": "fd9c88b6c2838f125bb974e13a05653982fe956e821797326674076bf31ea50d",
+    "freshFailureFingerprintSha256": "6fd77d85b3e0d24a75fe7c6620f78cf0a4019770fe4fb2415453e023d70e4ca3",
+    "freshEvidenceCounts": {
+      "affirmativeMultiplicity": 752,
+      "neutralLiveness": 96,
+      "exactAccounting": 138
+    },
+    "freshEvidenceFailures": {
+      "affirmativeMultiplicity": 21,
+      "neutralLiveness": 9,
+      "exactAccounting": 0
+    },
+    "freshFailureCategories": {
+      "quote-backslash-parity": 20,
+      "raw-later-root": 1,
+      "quote-storm-liveness": 7,
+      "quote-storm-exact-boundary": 2
+    }
+  },
+  "blockers": [
+    {
+      "id": "B1_ODD_BACKSLASH_QUOTED_ROOT_BLIND_SPOT",
+      "failures": 20,
+      "unsafeState": "affirmative multiplicity becomes choices=0, questions=0, units=1, ambiguous=false, saturated=false"
+    },
+    {
+      "id": "B2_MALFORMED_STRING_LATER_QUOTED_ROOT_DESYNC",
+      "failures": 1,
+      "unsafeState": "a later valid quoted two-choice root becomes choices=0, questions=0, units=1, ambiguous=false, saturated=false"
+    },
+    {
+      "id": "B3_NEUTRAL_QUOTED_PROSE_RECOVERY_CAP_EXHAUSTION",
+      "failures": 9,
+      "unsafeState": "complete neutral quoted prose becomes ambiguous=true and saturated=true"
+    }
+  ],
+  "boundsObserved": {
+    "rawUtf8Bytes": 2097152,
+    "jsonNodes": 50000,
+    "jsonDepth": 128,
+    "candidateSentinel": 1001,
+    "recoveryAttempts": 4096
+  },
+  "staticRecoveryProof": {
+    "parserOffsetInitializations": 1,
+    "parserOffsetIncrementsMinimum": 10,
+    "parserOffsetDecrements": 0,
+    "scanStartsAtPriorOffset": true,
+    "recoveryOffsetMonotonic": true,
+    "malformedDecoderSinglePassForward": true,
+    "attemptCapBound": true,
+    "decodedExpansionByteBound": true,
+    "unboundedQuadraticRewindOrRescanFound": false
+  },
+  "reviewFiles": [
+    {
+      "path": "AUDIT-REPORT.md",
+      "sha256": "b1ec74da8a0999ca838418a5ffba33e4b4251b855cd90580eb85b7df6c9b6a30"
+    },
+    {
+      "path": "audit.ts",
+      "sha256": "98457fdb533bf3a88b54f59351cccad6a62cc3121cfb77e042382a93ea0cb847"
+    },
+    {
+      "path": "predecessor-replay.ts",
+      "sha256": "d11331a55ecb9380cfb567de4f47b404eddb5bcb6fc01f91732a27ec184bd47a"
+    },
+    {
+      "path": "verify.mts",
+      "sha256": "06b7076f7350cb4b363d8bc01cb672c740599fe7c5811e4c1f1b99beb1b5a39c"
+    }
+  ],
+  "activity": {
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "secretReads": 0,
+    "privateArtifactReads": 0,
+    "ledgerReads": 0,
+    "ledgerWrites": 0,
+    "buildOrFreezeCommands": 0,
+    "liveCommands": 0,
+    "subjectEdits": 0
+  }
+}

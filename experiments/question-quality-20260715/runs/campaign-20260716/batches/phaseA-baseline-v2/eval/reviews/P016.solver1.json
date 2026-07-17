@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "빈칸 문장은 '서로 다른 과업은 이상적으로 ___되어야 한다'는 일반 원리이고, 뒤따르는 내용 전체가 그 원리의 예시다: (a) 분석적 과업은 에너지가 높고 집중 가능할 때 가장 잘 수행된다, (b) 필자는 아침에 에너지가 넘치므로 어려운 일을 아침 첫 일과로 처리한다, (c) 아침형 인간이 아니면 어려운 일을 하루 늦은 시간대로 배치하라. 세 요소가 모두 '과업을 개인의 활력(에너지) 상태에 맞춰 배치하라'로 수렴한다. 'be aligned with our personal states of vitality'는 문법 결합도 자연스럽고(수동태 be aligned with + 명사구) 마지막 문장(사람마다 다른 personal 스케줄 전략)까지 포괄하는 유일한 선지다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'감정 반응과 엄격히 분리되어야 한다'는 지문 어디에도 근거가 없다. 필자는 오히려 감정 에너지 낭비(worrying, avoiding)를 줄이기 위해 과업 '시점'을 조정하는 것이지, 과업과 감정을 분리하라는 주장이 아니다. 감정 어휘(emotional energy)가 지문에 등장해 표면적 어휘 매칭을 노린 미끼지만 논리적으로 성립하지 않는다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "가장 강력한 매력 오답. 필자 개인의 사례('eating my problems for breakfast', 'it'll always be the first thing I get done')만 읽으면 '아침에 최대한 일찍 끝내야 한다'가 그럴듯해 실제로 끌린다. 그러나 두 가지 장거리 단서가 이를 배제한다: (1) 빈칸 문장의 주어는 'different tasks' — 서로 다른 과업들이 하나같이 '아침 일찍'이라는 단일 시점을 가져야 한다는 것은 'different'와 충돌한다. (2) 결정적으로 마지막 문장 'If you know you are not a morning person, be strategic about scheduling your difficult work later in the day'가 아침 일찍 처리를 명시적으로 반박한다. 아침은 필자 개인의 vitality 패턴일 뿐, 일반 원리는 '자기 에너지 상태에 맞추라'다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'스트레스가 완전히 사라질 때까지 미뤄야 한다'는 지문의 핵심 교훈과 정반대다. 필자는 미루기(procrastinate)가 감정 에너지 낭비를 낳는다고 명시하며 어려운 일을 가장 먼저 처리한다. 반대 방향 미끼."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'어려운 고객과의 접촉을 최소화하여 관리해야 한다'는 지문 속 unhappy client라는 소재만 차용한 지엽 미끼. 필자는 접촉을 피하라는 것이 아니라 오히려 회피(avoiding)가 비용을 키우므로 빨리 처리하라고 말한다. 지문 논지와 충돌."
+    }
+  ],
+  "note": "실전 풀이 관점에서 ③이 필자 개인 사례와 강하게 공명해 유혹적이지만, 빈칸 문장의 일반성(different tasks + ideally)과 마지막 문장의 'later in the day' 반례가 ③을 확실히 배제한다. 정답은 ① 하나로 수렴하며 복수 정답 소지 없음."
+}

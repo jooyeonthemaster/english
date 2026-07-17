@@ -1,0 +1,35 @@
+{
+  "pid": "P033",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to be",
+      "verdict": "correct",
+      "reason": "consider + O + to be + C 구문. 'consider the virtual...nature of cyberspace to be its unique characteristic'에서 목적어가 길어 보이지만 'consider X (to be) Y' 5형식 구조가 정확히 성립한다. to be는 생략 가능할 뿐 있어도 완전한 정문. 실전에서 목적어(the virtual, or imaginative, nature of cyberspace)가 삽입구로 길어져 순간 낯설게 보이는 유혹이 있으나, 구조 확인 즉시 해소된다."
+    },
+    {
+      "label": "(B) seen",
+      "verdict": "correct",
+      "reason": "'events of a kind and magnitude not seen before'에서 seen은 앞의 명사구(a kind and magnitude)를 수식하는 축약 관계절(which have not been seen before)의 과거분사. kind/magnitude는 '보여지는' 대상이므로 수동 관계가 맞다. 능동 seeing으로 바꿀 이유가 전혀 없어 유혹 강도는 낮다."
+    },
+    {
+      "label": "(C) involve",
+      "verdict": "correct",
+      "reason": "주어는 'All forms of art'(복수). 'including cave drawings made by our Stone Age ancestors'는 삽입구이고, 밑줄 직전 명사 ancestors(복수)와 art(단수)가 뒤섞여 시선을 흐리는 전형적 장거리 수일치 함정 설계다. 매력적 오답 후보로 실제 끌림이 있었으나(직전 단수명사 art에 이끌려 involves를 기대하게 만드는 배열), 진짜 주어 All forms가 복수이므로 involve가 정확히 옳다."
+    },
+    {
+      "label": "(D) which",
+      "verdict": "incorrect",
+      "reason": "'It is a space which real people have actual interactions with other real people...'에서 관계절 내부가 완전한 절이다: real people(주어) + have(동사) + actual interactions(목적어) + with other real people(전치사구). which가 맡을 문법적 공백(gap)이 없다. 대안 해석을 적극 탐색해도 성립하지 않는다 — 'interactions with ___'의 목적어 자리는 이미 other real people이 채우고 있어 전치사 좌초(preposition stranding) 해석 불가, space를 목적어로 받는 다른 동사도 없다. 선행사 a space는 장소이므로 where 또는 in which가 필요하다. 명백한 어법 오류."
+    },
+    {
+      "label": "(E) radical",
+      "verdict": "correct",
+      "reason": "'The move ... is much more radical than ...'에서 be동사의 보어 자리이므로 형용사 radical이 맞다. much는 비교급 강조 부사로 정상. 부사 radically였다면 틀렸겠지만 보어 자리 형용사로 흠잡을 데 없다."
+    }
+  ],
+  "note": "정답 (D) 단독. 관계절 내부 완전성(공백 부재)으로 which→where/in which 오류가 확정적. 최상위권 실전 관점에서 가장 강한 미끼는 (C)의 장거리 수일치(삽입구+직전 단수명사 art)였고 (A)의 긴 목적어+to be도 순간적 이질감을 주지만, 둘 다 지배 규칙 확인으로 정문 판정. 복수정답 여지 없음."
+}

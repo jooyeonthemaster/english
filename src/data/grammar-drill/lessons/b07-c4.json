@@ -1,0 +1,647 @@
+{
+  "id": "b07-c4",
+  "unitId": "b07",
+  "order": 4,
+  "title": "부사절 — 시간·이유·양보·조건",
+  "oneLiner": "부사절은 <접속사 + 주어 + 동사>로 이루어져 주절에 얹히며, 빼내도 주절은 문장으로 남습니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 부사절을 이끄는 접속사(중 ●, 고 ●)",
+      "천일문 중등 GRAMMAR — 시간·이유·양보·조건의 접속사",
+      "천일문 고등 GRAMMAR — 접속사 vs 전치사(because / because of, although / despite)",
+      "docs/study-os-spec.md §2.3 b07 전치사·접속사·절"
+    ]
+  },
+  "lenses": ["L1", "L2"],
+  "confusableWith": ["b07-c1", "b07-c2", "b07-c3", "b03-c5"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The match was postponed because the field was flooded.",
+        "The match was postponed because of the field was flooded."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 뒤에 <주어 + 동사>가 오느냐입니다. 이 레슨을 마치면 그 자리에 접속사를 쓸지 전치사를 쓸지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "부사절",
+      "question": "그런데 부사절이 대체 무엇입니까?",
+      "plain": "부사절은 접속사가 이끄는, 주어와 동사를 갖춘 한 덩어리입니다. 주절에 얹혀 '언제·왜·그럼에도·만약'을 덧붙이는 곁가지 절입니다.",
+      "analogy": "완성된 편지가 주절이라면, 부사절은 그 편지에 '비가 와서'·'급했지만'처럼 사정을 적어 붙인 포스트잇입니다. 포스트잇을 떼어 내도 편지가 그대로 읽히듯, 부사절을 걷어내도 주절은 온전한 문장으로 남습니다.",
+      "whyItMatters": "어법에서는 이 곁가지 앞에 접속사를 쓸지 전치사를 쓸지, 동사 개수가 맞는지를 끊임없이 묻습니다. 전치사와 접속사의 표면 구분(during·while, despite·although)은 앞의 전치사 레슨에서 이미 보았고, 이 레슨은 그것을 부사절 안에서 시제 동사 세기와 시간·조건절 시제까지 밀고 나갑니다. 부사절을 알아보면 그 자리에서 판단이 서고, 모르면 문장이 통째로 흐릿해집니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "부사절 접속사, 뜻으로 네 묶음",
+      "intro": "부사절 접속사는 뜻에 따라 네 묶음입니다. 한 묶음씩 만납니다. 예문의 굵은 말이 그 접속사입니다.",
+      "entries": [
+        {
+          "head": "시간 — 언제 일어났는가",
+          "body": "when·while·before·after·until·as soon as 가 대표입니다. 사건이 일어난 시점이나 두 사건의 앞뒤·동시를 나타냅니다.",
+          "example": {
+            "en": "**When** the alarm sounded, the workers left the building.",
+            "ko": "경보가 울렸을 때 인부들은 건물을 빠져나갔습니다.",
+            "note": "When 뒤에 주어 the alarm 과 동사 sounded 가 이어져 시간의 부사절을 이룹니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "이유 — 왜 그러한가",
+          "body": "because·since·as 가 대표입니다. 주절의 일이 일어난 원인이나 근거를 앞이나 뒤에서 밝힙니다.",
+          "example": {
+            "en": "The trail was closed **because** heavy rain had loosened the soil.",
+            "ko": "폭우가 흙을 무르게 했기 때문에 그 등산로가 폐쇄되었습니다.",
+            "note": "because 뒤에 절이 와서 폐쇄의 원인을 밝힙니다."
+          }
+        },
+        {
+          "head": "양보 — 그럼에도 불구하고",
+          "body": "although·though·even though 가 대표입니다. 앞 절의 내용과 반대되는 결과가 주절에 온다는 신호입니다.",
+          "example": {
+            "en": "**Although** the budget was small, the team completed the project on time.",
+            "ko": "예산이 적었음에도 그 팀은 그 프로젝트를 제때 끝냈습니다.",
+            "note": "Although 는 예상과 반대되는 결과가 뒤따름을 알립니다."
+          }
+        },
+        {
+          "head": "조건 — 만약 그러하다면",
+          "body": "if·unless 가 대표입니다. unless 는 '~하지 않는다면'이라는 부정 조건이므로 절 안에 not 을 다시 넣지 않습니다.",
+          "example": {
+            "en": "**Unless** the fever drops, the doctor will keep the patient overnight.",
+            "ko": "열이 내리지 않으면 그 의사는 환자를 하룻밤 입원시킬 것입니다.",
+            "note": "unless 가 이미 부정을 품으므로 절 안에 not 을 넣지 않습니다."
+          },
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "부사절 접속사의 네 묶음",
+      "why": "접속사를 보는 순간 뜻이 떠올라야 문장의 논리가 잡히고, because of·despite·during 같은 전치사 짝과도 즉시 갈립니다. 목록을 그때그때 더듬으면 판단이 늦어집니다.",
+      "device": "네 물음으로 묶습니다 — 언제(시간)·왜(이유)·그럼에도(양보)·만약(조건). '언제·왜·그럼에도·만약'을 네 박자로 끊어 세 번 소리 내어 읽으면 접속사가 뜻과 함께 딸려 나옵니다.",
+      "items": [
+        { "cue": "언제 (시간)", "answer": "when·while·before·after·until·as soon as" },
+        { "cue": "왜 (이유)", "answer": "because·since·as" },
+        { "cue": "그럼에도 (양보)", "answer": "although·though·even though" },
+        { "cue": "만약 (조건)", "answer": "if·unless" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "첫 관문 — 접속사만 통과",
+      "mission": "부사절을 이끄는 접속사만 전부 고르십시오. 절 앞에 설 수 없는 전치사가 미끼로 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "because",
+        "although",
+        "while",
+        "unless",
+        "since",
+        "because of",
+        "despite",
+        "during"
+      ],
+      "answers": ["because", "although", "while", "unless", "since"],
+      "passText": "다섯 접속사를 전부 가려냈습니다. because of·despite·during 이 뒤에 절을 못 데려온다는 것까지 손에 잡혔다면, 이 개념의 절반은 이미 끝났습니다.",
+      "retryText": "아깝습니다. 힌트 하나 — of·despite·during 은 뒤에 명사(구)만 데려오는 전치사입니다. 뒤에 <주어 + 동사>를 데려올 수 있는 말만 접속사입니다."
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "title": "부사절은 접속사가 이끄는 한 절입니다",
+      "rule": "부사절은 <접속사 + 주어 + 동사>로 이루어진 한 절이며, 주절에 얹혀 언제·왜·그럼에도·만약을 덧붙입니다.",
+      "examples": [
+        {
+          "en": "**When** the bell rang, the students left the classroom.",
+          "ko": "종이 울렸을 때 학생들은 교실을 떠났습니다.",
+          "note": "When 뒤에 주어 the bell 과 동사 rang 이 있으므로 부사절입니다. 주절은 the students left the classroom 입니다."
+        },
+        {
+          "en": "The library closed early **because** the power went out.",
+          "ko": "정전이 되었기 때문에 그 도서관은 일찍 문을 닫았습니다.",
+          "note": "because 뒤에 the power went out 이라는 절이 왔습니다. 부사절은 주절 뒤에 놓일 수도 있습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "부사절이 앞에 온 문장의 해부",
+      "tokens": [
+        { "t": "Although", "role": "CONJ" },
+        { "t": "the evidence was limited,", "role": "M" },
+        { "t": "the committee", "role": "S" },
+        { "t": "approved", "role": "V" },
+        { "t": "the plan", "role": "O" }
+      ],
+      "ko": "증거가 제한적이었음에도 그 위원회는 그 계획을 승인했습니다.",
+      "layers": [
+        {
+          "label": "① 종속접속사를 찾습니다",
+          "roles": ["CONJ"],
+          "note": "Although 가 부사절의 시작을 알립니다. 종속접속사는 뒤에 오는 절을 주절에 매답니다."
+        },
+        {
+          "label": "② 부사절의 끝을 확인해 통째로 걷어냅니다",
+          "roles": ["CONJ", "M"],
+          "note": "Although the evidence was limited 까지가 부사절이고 콤마가 그 경계입니다. 접속사까지 포함해 통째로 괄호로 묶어 치웁니다."
+        },
+        {
+          "label": "③ 남은 주절의 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "부사절을 걷어내면 주어는 the committee 입니다. 부사절 안의 the evidence 는 주절의 주어가 아닙니다."
+        },
+        {
+          "label": "④ 주절의 본동사와 목적어를 확인합니다",
+          "roles": ["V", "O"],
+          "note": "본동사는 approved 이고 목적어는 the plan 입니다. 접속사가 하나 있으므로 시제 동사는 was 와 approved 로 둘입니다."
+        }
+      ],
+      "conclusion": "부사절을 걷어내도 the committee approved the plan 이 완전한 문장으로 남습니다. 부사절은 주절 위에 얹힌 부가 성분입니다."
+    },
+    {
+      "id": "b8",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "부사절 어절 사냥",
+      "instruction": "이 문장에서 부사절을 이루는 어절을 전부 탭하십시오. 접속사부터 콤마 앞까지가 한 덩어리입니다.",
+      "hitLabel": "부사절에 속한 말",
+      "tokens": [
+        { "t": "Although", "hit": true },
+        { "t": "the", "hit": true },
+        { "t": "sky", "hit": true },
+        { "t": "darkened,", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "climbers", "hit": false },
+        { "t": "continued", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "ascent.", "hit": false }
+      ],
+      "ko": "하늘이 어두워졌지만 그 등반가들은 등반을 계속했습니다.",
+      "explain": "Although the sky darkened 까지가 양보의 부사절이며 콤마가 그 경계입니다. 접속사 Although 와 주어 the sky, 동사 darkened 가 한 덩어리를 이룹니다. 콤마 뒤 the climbers continued the ascent 는 부사절을 걷어내도 남는 주절입니다."
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 2,
+      "title": "부사절은 걷어내도 되는 부가 성분입니다",
+      "rule": "부사절은 통째로 걷어내도 주절이 완전한 문장으로 남는 부가 성분이며, 이 점이 자리를 차지하는 명사절과 다릅니다.",
+      "examples": [
+        {
+          "en": "**After the committee reviewed the report,** the mayor announced the new plan.",
+          "ko": "위원회가 그 보고서를 검토한 뒤 시장은 새 계획을 발표했습니다.",
+          "note": "부사절을 걷어내도 the mayor announced the new plan 이 남아 문장이 성립합니다."
+        },
+        {
+          "en": "The mayor announced **that the plan would take three years.**",
+          "ko": "시장은 그 계획이 3년이 걸릴 것이라고 발표했습니다.",
+          "note": "여기서 that절은 announced 의 목적어입니다. 걷어내면 목적어 자리가 비므로 부사절이 아니라 명사절입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "접속사 자리인지 판단하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄이나 괄호 바로 뒤에 무엇이 오는지 봅니다. <주어 + 동사>가 오면 절이고, 명사(구)만 오면 절이 아닙니다.",
+          "applyNote": "the runway was covered with ice 에는 주어 the runway 와 동사 was 가 있으므로 절입니다."
+        },
+        {
+          "text": "절이면 접속사를, 명사(구)면 전치사를 씁니다. because·although 는 접속사, because of·despite 는 전치사입니다.",
+          "applyNote": "절이 왔으므로 because 를 씁니다. because of 를 쓰면 전치사 뒤에 절이 오게 되어 무너집니다."
+        },
+        {
+          "text": "절과 절을 잇는 접속사·관계사를 셉니다. 절을 잇는 접속사(관계사 포함)가 하나 늘면 시제 동사도 하나 늘어야 합니다. 단, 구와 구를 잇는 and·or 는 세지 않고, 생략된 that·관계대명사도 하나로 세어야 합니다.",
+          "applyNote": "접속사 because 가 하나이므로 시제 동사는 둘이어야 합니다. 주절의 was canceled 와 부사절의 was covered 로 둘입니다. 수동태 was canceled 는 두 단어지만 시제 동사 하나로 셉니다."
+        },
+        {
+          "text": "부사절을 통째로 걷어내 봅니다. 주절이 그대로 완전하면 부사절이고, 자리가 비면 명사절입니다.",
+          "applyNote": "부사절을 걷어내도 The morning flight was canceled 가 남으므로 부사절이 맞습니다."
+        }
+      ],
+      "example": {
+        "en": "The morning flight was canceled **because** the runway was covered with ice.",
+        "ko": "활주로가 얼음으로 뒤덮였기 때문에 그 아침 항공편이 취소되었습니다.",
+        "note": "뒤에 절이 왔으므로 접속사 because 가 옳고, 접속사 하나에 시제 동사가 둘이라는 계산도 맞습니다."
+      }
+    },
+    {
+      "id": "b11",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "( Because / Because of ) the storm damaged the old bridge, the delivery was delayed by two days.",
+      "steps": [
+        {
+          "title": "① 괄호 뒤의 덩어리를 봅니다",
+          "body": "the storm damaged the old bridge 에는 주어 the storm 과 시제 동사 damaged 가 있습니다. 따라서 이것은 명사구가 아니라 절입니다."
+        },
+        {
+          "title": "② 절 앞에 올 수 있는 것을 고릅니다",
+          "body": "절을 이끌 수 있는 것은 접속사입니다. Because 는 접속사이고, Because of 는 전치사이므로 뒤에 명사(구)만 올 수 있습니다."
+        },
+        {
+          "title": "③ 동사 개수로 검산합니다",
+          "body": "접속사가 하나이면 시제 동사는 둘이어야 합니다. damaged 와 was delayed 로 둘이므로 계산이 맞습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "Because of 를 넣으면 전치사 뒤에 절이 오게 되어 문장이 성립하지 않습니다. Because 가 옳습니다."
+        }
+      ],
+      "answer": "Because",
+      "ko": "폭풍이 그 낡은 다리를 파손했기 때문에 배송이 이틀 지연되었습니다."
+    },
+    {
+      "id": "b12",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b07-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "{{blank}} the temperature dropped sharply, the workers stopped the outdoor survey.",
+          "options": ["During", "When"],
+          "answer": 1,
+          "translation": "기온이 급격히 떨어졌을 때 인부들은 야외 조사를 중단했습니다.",
+          "explanation": "뒤에 주어 the temperature 와 동사 dropped 가 있는 절이 왔습니다. 절을 이끌 수 있는 것은 접속사 When 이며, During 은 전치사여서 뒤에 명사(구)만 올 수 있습니다.",
+          "trapTags": ["conjunction-vs-preposition"]
+        },
+        {
+          "id": "b07-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The flight was canceled [[u:because]] the airport closed for repairs.",
+          "isCorrect": true,
+          "translation": "그 공항이 보수를 위해 폐쇄되었기 때문에 그 항공편이 취소되었습니다.",
+          "explanation": "밑줄 뒤에 the airport closed for repairs 라는 절이 왔으므로 접속사 because 가 옳습니다. because of 였다면 전치사 뒤에 절이 와 성립하지 않습니다.",
+          "trapTags": ["conjunction-vs-preposition"]
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "접속사와 전치사는 뒤에 오는 것이 다릅니다",
+      "columns": ["접속사 — 뒤에 <주어 + 동사>", "전치사 — 뒤에 명사(구)"],
+      "rows": [
+        { "criterion": "이유", "a": "because / since / as", "b": "because of / owing to" },
+        { "criterion": "양보", "a": "although / though / even though", "b": "despite / in spite of" },
+        { "criterion": "시간", "a": "while / when / until", "b": "during / until" },
+        {
+          "criterion": "주의",
+          "a": "until 은 접속사로도 전치사로도 쓰입니다",
+          "b": "뒤에 절이면 접속사, 명사(구)면 전치사입니다"
+        },
+        {
+          "criterion": "뒤에 절을 놓았을 때",
+          "a": "옳은 문장이 됩니다",
+          "b": "문장이 성립하지 않습니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "**While** the guide was explaining the exhibit, the visitors took notes.",
+          "ko": "안내인이 전시물을 설명하는 동안 관람객들은 필기를 했습니다.",
+          "note": "While 뒤에 절이 왔으므로 접속사 자리입니다."
+        },
+        {
+          "en": "**During** the guide's explanation, the visitors took notes.",
+          "ko": "안내인의 설명 동안 관람객들은 필기를 했습니다.",
+          "note": "During 뒤에는 the guide's explanation 이라는 명사구가 왔습니다. 같은 뜻이라도 뒤에 오는 형태가 다릅니다."
+        },
+        {
+          "en": "**During** the guide was explaining the exhibit, the visitors took notes.",
+          "ko": "(안내인이 전시물을 설명하는 동안 관람객들은 필기를 했습니다.)",
+          "note": "전치사 During 뒤에 절이 왔으므로 성립하지 않습니다. While 로 고쳐야 합니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "접속사·전치사 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 뒤에 절이 왔는지 명사(구)가 왔는지를 눈이 먼저 봐야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "The road was blocked because of a fallen tree.",
+          "isTrue": true,
+          "why": "because of 뒤에 명사구 a fallen tree 가 왔으므로 옳습니다. 명사(구) 앞에는 전치사 because of 를 씁니다."
+        },
+        {
+          "statement": "Despite the results were surprising, the team stayed calm.",
+          "isTrue": false,
+          "why": "Despite 는 전치사여서 뒤에 절을 데려올 수 없습니다. the results were surprising 은 절이므로 Although 로 고쳐야 합니다."
+        },
+        {
+          "statement": "시간·조건의 부사절에서는 미래의 일도 현재시제로 씁니다.",
+          "isTrue": true,
+          "why": "as soon as the train leaves 처럼 will 을 쓰지 않고 현재시제로 미래를 나타냅니다. will 은 주절에만 둡니다."
+        },
+        {
+          "statement": "although 와 but 은 한 문장에서 함께 써야 짝이 맞습니다.",
+          "isTrue": false,
+          "why": "두 절을 잇는 접속사는 하나면 충분합니다. although 를 썼으면 but 을 지워야 합니다."
+        },
+        {
+          "statement": "The hikers rested until the storm passed.",
+          "isTrue": true,
+          "why": "until 뒤에 the storm passed 라는 절이 왔으므로 접속사 until 이 옳습니다."
+        },
+        {
+          "statement": "전치사 during 뒤에는 <주어 + 동사>가 옵니다.",
+          "isTrue": false,
+          "why": "during 은 전치사여서 뒤에 명사(구)가 옵니다. 절 앞에는 시간의 접속사 while 을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "although 와 but 을 한 문장에 겹쳐 쓰는 함정",
+      "body": "한국어 '비록 ~이지만'을 그대로 옮기면 although 와 but 을 함께 쓰게 됩니다. 그러나 영어에서는 두 절을 잇는 접속사가 하나면 충분합니다. although 로 이미 두 절이 연결되었으므로 but 을 또 넣으면 접속사가 하나 남아돕니다.",
+      "example": {
+        "en": "**Although** the machine was old, **but** it still worked without any problem.",
+        "ko": "(그 기계는 낡았지만 여전히 아무 문제 없이 작동했습니다.)",
+        "note": "although 가 이미 두 절을 이었으므로 but 을 지워야 합니다. but 을 남기려면 although 를 지웁니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b16",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "토양이 건조하면 그 씨앗은 싹트지 않을 것입니다.",
+      "answer": ["If", "the soil is dry,", "the seeds", "will not sprout"],
+      "tiles": ["If", "the soil is dry,", "the soil will be dry,", "the seeds", "will not sprout"],
+      "explanation": "조건을 나타내는 부사절에서는 미래의 일이라도 현재시제로 씁니다. 따라서 the soil will be dry 가 아니라 the soil is dry 가 옳습니다. 주절에는 will 을 그대로 씁니다."
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Unless the committee ( approve / approves / will approve ) the budget, the project cannot begin next month.",
+      "givenSteps": [
+        "① 괄호 뒤를 봅니다 — Unless 뒤에 주어 the committee 가 있으므로 이 자리는 부사절의 동사 자리입니다.",
+        "② 부사절의 의미를 확인합니다 — unless 는 '~하지 않는다면'이라는 조건을 나타냅니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 어떤 형태가 들어가야 합니까?",
+      "options": [
+        "will approve — 승인은 아직 일어나지 않은 미래의 일이기 때문입니다",
+        "approves — 조건을 나타내는 부사절에서는 미래의 일도 현재시제로 씁니다",
+        "approve — 조건절의 동사는 항상 원형으로 씁니다"
+      ],
+      "answer": 1,
+      "explain": "시간·조건의 부사절에서는 미래의 일을 현재시제로 나타냅니다. 따라서 will approve 가 아니라 approves 가 옳습니다. 주어 the committee 는 단수이므로 원형 approve 도 쓸 수 없습니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b07-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "{{blank}} repeated warnings from the engineers, the company continued the risky test.",
+          "options": ["Despite", "Although", "Because"],
+          "answer": 0,
+          "translation": "기술자들의 거듭된 경고에도 불구하고 그 회사는 위험한 시험을 계속했습니다.",
+          "explanation": "빈칸 뒤의 repeated warnings from the engineers 에는 시제 동사가 없으므로 절이 아니라 명사구입니다. 명사구 앞에는 전치사가 와야 하므로 Despite 가 옳고, 접속사인 Although 와 Because 는 올 수 없습니다.",
+          "trapTags": ["conjunction-vs-preposition", "concession"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 Despite 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "뒤에 온 것이 시제 동사가 없는 명사구여서 절을 이끄는 접속사가 아니라 전치사가 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 뒤에 <주어 + 동사>가 있는지만 보면 접속사와 전치사는 기계적으로 갈립니다."
+        },
+        {
+          "text": "문장이 양보의 의미를 담고 있어서 양보를 나타내는 말이 필요했기 때문입니다.",
+          "correct": false,
+          "feedback": "의미만으로는 Despite 와 Although 를 가를 수 없습니다. 둘 다 양보를 나타냅니다. 판단은 뒤에 절이 왔는가에서 나옵니다."
+        },
+        {
+          "text": "Despite 가 문장 맨 앞에 올 수 있는 유일한 말이기 때문입니다.",
+          "correct": false,
+          "feedback": "Although 도 문장 맨 앞에 올 수 있습니다. 위치가 아니라 뒤에 오는 것이 절인지 명사구인지가 근거입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 시간·조건의 부사절에 will 을 넣는 함정",
+      "body": "시간·조건의 부사절에서는 미래의 일이라도 현재시제로 씁니다. 주절에만 will 을 씁니다. 다만 같은 if 라도 '~인지 아닌지'라는 뜻의 명사절이면 will 을 쓸 수 있으므로, 그 절이 부사절인지 명사절인지 먼저 가려야 합니다.",
+      "example": {
+        "en": "The curator will move the paintings as soon as the new gallery **opens**.",
+        "ko": "새 전시실이 문을 여는 즉시 그 큐레이터는 그림들을 옮길 것입니다.",
+        "note": "as soon as 가 이끄는 시간의 부사절이므로 will open 이 아니라 현재시제 opens 를 씁니다. 주절의 will move 는 그대로 둡니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The port authority delayed the shipment [[1:because]] a heavy storm was approaching. The workers secured the containers [[2:before]] the wind [[3:will become]] too strong, and they stayed indoors [[4:until]] the warning was lifted.",
+      "answer": 3,
+      "correction": "became",
+      "rationales": [
+        "뒤에 a heavy storm was approaching 이라는 절이 왔으므로 접속사 because 가 옳습니다.",
+        "뒤에 절이 왔으므로 시간의 접속사 before 를 쓸 수 있습니다.",
+        "before 가 이끄는 시간의 부사절입니다. 주절의 동사 secured 가 과거이므로 이 절도 과거시제 became 이어야 하며, 부사절에는 미래를 나타내는 will 을 쓰지 않습니다.",
+        "뒤에 the warning was lifted 라는 절이 왔으므로 접속사 until 이 옳습니다."
+      ],
+      "ko": "심한 폭풍이 다가오고 있었기 때문에 항만 당국은 선적을 미루었습니다. 인부들은 바람이 너무 거세지기 전에 컨테이너를 고정했고, 경보가 해제될 때까지 실내에 머물렀습니다."
+    },
+    {
+      "id": "b22",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. 뒤에 절을 데려오는지, 어떤 뜻을 나타내는지를 보십시오.",
+      "rounds": [
+        {
+          "words": ["because", "since", "as", "because of"],
+          "odd": 3,
+          "why": "because of 만 전치사여서 뒤에 명사(구)가 옵니다. 나머지 because·since·as 는 절을 이끄는 이유의 접속사입니다."
+        },
+        {
+          "words": ["although", "though", "even though", "despite"],
+          "odd": 3,
+          "why": "despite 만 전치사여서 뒤에 명사(구)가 옵니다. 나머지 셋은 절을 이끄는 양보의 접속사입니다."
+        },
+        {
+          "words": ["when", "while", "until", "because"],
+          "odd": 3,
+          "why": "because 만 이유를 나타냅니다. 나머지 when·while·until 은 모두 시간을 나타내는 접속사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 두 문장을 주고 접속사를 이용해 한 문장으로 잇게 합니다. 접속사 뒤에 <주어 + 동사>를 그대로 두고, 앞에 온 부사절 끝에 콤마를 찍어야 감점을 피합니다.",
+          "sample": {
+            "en": "The road was closed. The residents used the mountain path.",
+            "ask": "because 를 이용해 두 문장을 한 문장으로 이어 쓰십시오.",
+            "answer": "Because the road was closed, the residents used the mountain path."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 밑줄 뒤가 절인지 명사구인지를 바꾸어 접속사와 전치사를 바꿔치기합니다. 밑줄 뒤에 시제 동사가 있으면 접속사, 없으면 전치사입니다.",
+          "sample": {
+            "en": "[[u:Although]] the heavy rain, the outdoor ceremony continued as planned.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "Despite — 뒤의 the heavy rain 은 시제 동사가 없는 명사구이므로 접속사 Although 가 아니라 전치사 Despite 를 써야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "부사절 경계의 파수꾼",
+      "intro": "뒤에 절이 오는지 명사(구)가 오는지, 미래를 현재로 낮출 수 있는지 — 경계를 네 번 지켜 보십시오. 판단 하나라도 밀리면 이 문은 닫힙니다.",
+      "questions": [
+        {
+          "prompt": "The concert was postponed {{blank}} the lead singer lost her voice.",
+          "options": ["because", "because of"],
+          "answer": 0,
+          "why": "뒤에 the lead singer lost her voice 라는 절이 왔으므로 접속사 because 가 옳습니다. because of 는 전치사여서 명사(구)만 데려옵니다."
+        },
+        {
+          "prompt": "{{blank}} the instructions were unclear, the team completed the task on time.",
+          "options": ["Despite", "Although"],
+          "answer": 1,
+          "why": "뒤에 the instructions were unclear 라는 절이 왔으므로 양보의 접속사 Although 가 옳습니다. Despite 는 전치사입니다."
+        },
+        {
+          "prompt": "The guards will close the gate as soon as the last train {{blank}}.",
+          "options": ["will leave", "leaves"],
+          "answer": 1,
+          "why": "as soon as 가 이끄는 시간의 부사절이므로 미래의 일도 현재시제 leaves 로 씁니다. will 은 주절의 will close 에만 둡니다."
+        },
+        {
+          "prompt": "{{blank}} the weather improves, the outdoor rehearsal will be canceled.",
+          "options": ["Unless", "Despite"],
+          "answer": 0,
+          "why": "뒤에 the weather improves 라는 절이 왔고 '나아지지 않으면'이라는 부정 조건이므로 접속사 Unless 가 옳습니다. Despite 는 전치사여서 절을 이끌 수 없습니다."
+        }
+      ],
+      "winText": "파수꾼이 길을 내어 줍니다. 뒤에 온 것이 절인지 명사(구)인지, 미래를 현재로 낮출 자리인지를 네 번 모두 정확히 갈랐습니다. 이 눈이 앞으로 접속사 문항의 출발점이 됩니다.",
+      "loseText": "파수꾼은 아직 비켜서지 않습니다. 오답의 공통점을 보십시오 — 전부 '뒤에 절이 왔는가, 미래를 현재로 쓸 자리인가'를 묻고 있었습니다. 대조표와 킬러 함정을 다시 보고 오면 문은 열립니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "뒤에 ___ 가 오면 접속사를 쓰고, ___ 만 오면 전치사를 씁니다. 부사절은 걷어내도 주절이 ___."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "부사절은 <접속사 + 주어 + 동사>이며, 시간·이유·양보·조건을 주절에 덧붙입니다.",
+        "부사절을 통째로 걷어내도 주절은 완전한 문장으로 남습니다. 걷어냈을 때 자리가 비면 그것은 부사절이 아니라 명사절입니다.",
+        "뒤에 절이 오면 접속사(because·although·while), 명사(구)만 오면 전치사(because of·despite·during)를 씁니다.",
+        "접속사가 하나 늘면 시제 동사도 하나 늘어야 합니다. 부사절이 앞에 오면 그 끝에 콤마를 찍습니다.",
+        "시간·조건의 부사절에서는 미래의 일도 현재시제로 씁니다. will 은 주절에만 둡니다."
+      ],
+      "keySentence": {
+        "en": "**Although** the evidence was limited, the committee **approved** the plan.",
+        "ko": "증거가 제한적이었음에도 그 위원회는 그 계획을 승인했습니다.",
+        "note": "부사절을 걷어내면 the committee approved the plan 이 남습니다. 접속사 하나에 시제 동사는 was 와 approved 로 둘입니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b07-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The archaeologists kept digging {{blank}} the sun set behind the hills.",
+          "options": ["until", "during"],
+          "answer": 0,
+          "translation": "그 고고학자들은 해가 언덕 뒤로 질 때까지 발굴을 계속했습니다.",
+          "explanation": "빈칸 뒤에 주어 the sun 과 시제 동사 set 이 있는 절이 왔습니다. 절을 이끌 수 있는 것은 접속사 until 이며, 전치사 during 뒤에는 명사(구)만 올 수 있습니다.",
+          "trapTags": ["conjunction-vs-preposition", "time-clause"]
+        },
+        {
+          "id": "b07-c4-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "[[u:Despite]] the results were unexpected, the research team repeated the experiment.",
+          "isCorrect": false,
+          "correction": "Although",
+          "translation": "결과가 예상 밖이었음에도 그 연구팀은 실험을 반복했습니다.",
+          "explanation": "밑줄 뒤에 the results were unexpected 라는 절이 왔습니다. Despite 는 전치사여서 절을 이끌 수 없으므로 양보의 접속사 Although 로 고쳐야 합니다.",
+          "trapTags": ["conjunction-vs-preposition", "concession"]
+        },
+        {
+          "id": "b07-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The committee will announce the result as soon as the review {{blank}}.",
+          "options": ["will end", "ends"],
+          "answer": 1,
+          "translation": "검토가 끝나는 즉시 그 위원회는 결과를 발표할 것입니다.",
+          "explanation": "as soon as 가 이끄는 시간의 부사절입니다. 시간·조건의 부사절에서는 미래의 일도 현재시제로 나타내므로 will end 가 아니라 ends 가 옳습니다. 미래를 나타내는 will 은 주절의 will announce 하나로 충분합니다.",
+          "trapTags": ["time-clause", "future-in-adverbial-clause"]
+        }
+      ]
+    }
+  ]
+}

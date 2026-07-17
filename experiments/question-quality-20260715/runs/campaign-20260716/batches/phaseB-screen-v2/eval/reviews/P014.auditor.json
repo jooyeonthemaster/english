@@ -1,0 +1,85 @@
+{
+  "pid": "P014",
+  "blindAnswer": "⑤",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TYPO",
+      "severity": "minor",
+      "evidence": "해설 마지막 문장 '따라서 빈칸에 드갈 원문…'에서 '드갈'은 '들어갈'의 오탈자. 학생 노출 텍스트의 표면 오류일 뿐 통사·논리 분석 자체의 오류는 아니므로 V4는 통과로 유지."
+    },
+    {
+      "code": "V4-TEMPLATE-ARTIFACT",
+      "severity": "minor",
+      "evidence": "오답 해설 4건 모두 'Darwin을(를)', 'particularly human skill을(를)', 'tapping one's foot을(를)', 'out of tune을(를)' 형태의 기계적 조사 병기가 노출됨 — 템플릿 치환 미완료 잔재. 사실 오류는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "scope shift — 논지를 지문 밖의 '진화적 적응의 주요 기능' 프레임으로 확장",
+      "temptingBecause": "지문 말미 Darwin 언급과 동물의 음악 반응 소재가 진화론 프레임을 연상시킴.",
+      "decisiveFlaw": "지문은 진화적 적응·기능을 전혀 논하지 않음. 삽입 시 'this(발장단 반응) need not be interpreted as the primary function of evolutionary musical adaptation'은 반응을 '기능'으로 규정하는 범주 비정합이 생겨 담화상 성립하지 않고, 후속 근거(개들의 음악 반응)는 음악적 반응의 '척도/범위' 문제이지 진화적 유용성이 아님."
+    },
+    {
+      "label": "②",
+      "intent": "overreach — '인간 고유 기술'이라는 양보를 종(種) 차원의 인지적 우월성 증명으로 과잉 확대",
+      "temptingBecause": "빈칸 직전 'does seem to be a particularly human skill'과 양보-반박 구조가 '인간 우월성 부정' 독해를 유도. 로컬 문장만 보면 ⑤와 함께 유일하게 자연스럽게 읽히는 실질 경쟁 선지.",
+      "decisiveFlaw": "후속 문장 'My dogs in fact responded to other musical features'와 근거 [1]이 빈칸의 범위를 '음악적 반응의 지표'로 한정함. 지문 어디에도 일반 인지능력 비교 논의가 없어 종 차원 인지 우월성으로의 확장은 범위 이탈. 원문 span 'musical response'를 정확히 보존하는 ⑤가 결정적으로 우월."
+    },
+    {
+      "label": "③",
+      "intent": "mechanism reduction — 담화적 '기준/의의' 층위를 생리적 메커니즘 층위로 축소",
+      "temptingBecause": "'tapping one's foot', 'rhythm' 등 표면 어휘가 'rhythmic motor synchronization'과 강하게 중첩됨.",
+      "decisiveFlaw": "발장단 자체가 리듬 운동 동조인데 그것을 '그 뒤의 생리적 메커니즘'이라 부르면 순환·범주 오류. 빈칸은 '~로 해석될 필요가 없는 기준/의의'를 요구하고 지문에 생리적 메커니즘 논의 자체가 없어 담화 역할 불일치."
+    },
+    {
+      "label": "④",
+      "intent": "half-truth/condition distortion — 반응 범위를 '조화로운 악기'로 국한하는 조건 왜곡",
+      "temptingBecause": "'out of tune', saxophone·concertina 등 악기 관련 어휘를 차용해 표면 친숙성을 만듦.",
+      "decisiveFlaw": "지시어 'this'는 인간 고유 기술인 발장단을 가리키므로 '조화로운 악기에 국한된 반응'으로 치환 불가. 게다가 지문은 개들이 사이렌·색소폰·조율이 어긋난(out of tune) 콘서티나에 모두 반응했다고 명시 — '조화로운 악기 한정'은 지문 사실과 정면 모순."
+    },
+    {
+      "label": "⑤",
+      "intent": "정답 — 원문 span 'the decisive capacity involved in musical response'의 의미 보존 패러프레이즈",
+      "temptingBecause": "(정답) 양보-반박 구조와 근거 [1] 'wrong to claim that animals are incapable of responding to pronounced rhythms' + [2] 'My dogs in fact responded to other musical features'를 종합하면 '유일한/결정적 척도 아님'이 필연적으로 도출됨.",
+      "decisiveFlaw": "없음. 삽입 완성문이 문법·의미·담화 모두 정합('decisive capacity'→'sole metric', 'musical response'→'musical engagement')."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'빈칸에 드갈 원문' — 오탈자('들어갈').",
+      "recommendation": "오탈자 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 전건의 '을(를)' 조사 병기 노출 — 템플릿 치환 미완료 인상.",
+      "recommendation": "조사 자동 결정 또는 문장 재작성으로 자연스러운 한국어로 정리."
+    },
+    {
+      "severity": "minor",
+      "evidence": "③ 해설 '주체적 관점'은 문맥상 '기준/담화 층위'를 의도한 듯한 모호한 어휘. 사실 오류는 아님.",
+      "recommendation": "'음악적 반응을 정의하는 기준이라는 담화 층위' 등으로 명확화."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 'the decisive capacity involved in musical response' 한 span만 빈칸 치환했고 나머지 문장·구두점 완전 일치, 라벨 ①~⑤ 정상 → 통과. V2: 다섯 선지를 각각 빈칸에 넣어 독립 검증 — ⑤만 양보-반박 구조와 후속 근거에 필연적으로 부합. ①진화 범위이동(범주 비정합), ②인지 우월성 과잉확장(근거 미지지), ③생리 메커니즘 축소(범주 오류), ④조화악기 한정(지문 사실 모순) 모두 소거 → 단일정답 유지. V3: 다섯 선지 모두 'interpreted as [NP]' 슬롯에 동일하게 들어가는 명사구(문장 말미 빈칸, tail 없음), 완성문 문법적·자연스러움. V4: 해설의 원문 span 지목·근거 인용·각 오답 anchor·결함 대응이 실제 선지 내용과 일치, 오분석·환각 없음(오탈자·조사 잔재는 표면 결함으로 minor 처리). V5: 정답 라벨 ⑤·선지·정답해설·오답해설(①~④)·keyPoints 동기화. KILLER(§D) 판정=false: (1)동일 NP 슬롯·문법만으로 탈락하는 오답 없음은 충족하나, (2)'decisive capacity involved in musical response'→'sole metric for defining musical engagement'는 근사동의어 치환에 가까운 얕은 추상화로 KILLER급 변형 심도 미달, (4)①③④는 삽입 시 로컬 범주 점검만으로 소거되고 2단서 연결 필수성은 ②/⑤ 변별에만 국한 → 강한 경쟁 선지가 사실상 ② 하나여서 KILLER 요구(2개 이상 강경쟁·다단서 강제)에 미달. 보수적으로 미충족 판정. 공예: 빈칸이 지문 논지 축(양보-반박 피벗)을 정확히 겨냥(C1=4)하고 함정축도 서로 구분(C2=3, C3=3)되며 정답 필연성 확보(C4=3)이나, 양보 구문 프레임과 바로 다음 근거가 정답을 비교적 직접 노출해 실효 난이도가 중상급 수준 → 요청 KILLER와 불일치(C5=2). 해설은 근거 인용은 정확하나 오탈자·'을(를)' 템플릿 잔재로 표면 완성도 낮음(C6=2). 합계 17, 최저 2, 전 V 통과 → B. 오탈자·조사 정리 소수정으로 중상급 문항 출하 가능하며, KILLER 승격하려면 정답 패러프레이즈 추상화 심화와 ①③의 삽입 정합성 보강으로 강경쟁 선지 2개 이상 확보 필요."
+}

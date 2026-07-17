@@ -1,0 +1,35 @@
+{
+  "pid": "P102",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "방향 반전 미끼. 지문은 뇌가 무해한 상황을 위협으로 '과잉 감지'(false alarm)한다는 논지인데, ①은 실제 위협을 '놓친다'(miss)는 반대 방향. '석기시대 뇌의 오작동'이라는 큰 틀이 겹쳐 순간적으로 끌리지만, 지문 어디에도 실제 물리적 위협 인식 실패 사례가 없다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "표면 어휘 재활용 미끼. 지문 앞부분의 starving과 diabetes/high blood pressure를 조합했지만, 기아와 현대 질병 사이의 '우선순위 매김'이라는 논지는 지문에 존재하지 않는다. 지문은 그 어휘들을 과거 위험 vs 현대 위험의 대비 예시로만 사용."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "정답. 'many situations are considered a threat by our brains, although they are harmless to our survival', 'There is no danger, but our brain rates it as such', 'The danger is an illusion'의 정확한 재진술. 'fatal'이 다소 강한 표현이지만 지문의 danger가 'flee or fight' / 'threaten our lives' 수준의 생존 위협을 뜻하므로 non-lethal→fatal 대응이 정합적. 교통체증·불쾌한 대화 예시가 모두 이 진술을 지지."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "지문 전체와 정면 모순. 'Stone Age brain that lives in a modern world'라는 핵심 전제 자체가 뇌가 현대의 안전에 적응하지 못했음을 말한다. 빠른 적응은 반대 진술."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "flee 어휘 재활용 미끼. 뇌가 신체 질환으로부터 '도망치도록 부추긴다'는 논지는 지문에 없으며 의미 자체도 왜곡. flee/fight는 과거의 위험 대응 방식으로만 언급되고, 질병은 도망칠 수 있는 대상으로 제시되지 않는다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 모든 선지가 주어 'Our Stone Age brain' 뒤 3인칭 단수 동사로 문법 결합(seam)에는 문제가 없어 판별은 순수 논리 적합성 싸움. ①이 '뇌의 오판'이라는 틀 유사성으로 가장 매력적인 오답이나 오판의 방향(false alarm vs miss)이 반대라 탈락. ③ 단독 정답으로 깔끔하게 수렴하며 복수 정답 여지 없음."
+}

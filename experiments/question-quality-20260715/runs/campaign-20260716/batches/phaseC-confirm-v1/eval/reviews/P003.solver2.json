@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam: 'by fully absorbing and sharing...' is grammatical (by + gerund). Logic: directly contradicts three explicit propositions — 'Don't damage yourself by adopting negative... attitudes', 'be careful not to be overcome by the misfortune', and the closing 'just don't allow yourself to be pulled down too.' Fully absorbing their pain IS being overcome/pulled down. Formally: passage asserts ¬P (do not internalize the distress); ① asserts P. Contradiction, hence indefensible."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Seam: 'by maintaining an objective distance from their emotional turmoil' — grammatical. Logic: (i) 'discriminate between events themselves and your interpretations' = the objectivity operation; (ii) the self-reminder that the hurt lies in the adopted response, not the occurrence, is precisely how one keeps that distance; (iii) the following sentence begins with 'Still, ... show them kindness and give them a sympathetic ear; just don't allow yourself to be pulled down' — a concessive that only computes if the blank asserted distance/detachment (concession: distance does not exclude kindness). The discourse connective 'Still' is a strong long-range cue: it requires the blank to contain something in apparent tension with showing kindness. Only ② satisfies this. Entailed by the passage; uniquely coherent."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Seam: grammatical. Logic: the passage explicitly demotes the occurrence — 'What hurts this person is not the occurrence itself but the response...'. A service defined as pinpointing 'the exact occurrence that caused their anxiety' presupposes the occurrence is the causal locus of the hurt, which the quoted reminder formally denies (¬(occurrence causes hurt) asserted; ③ presupposes occurrence causes anxiety). Also 'Still' would have no concessive target. Indefensible."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Seam: grammatical; lexical-overlap trap — recycles 'the responses they have uncritically adopted' verbatim from the quote. Logic: the quote is a self-directed reminder ('Remind yourself'), an internal epistemic move, not a license to rebuke the sufferer. 'Strictly criticizing' the depressed/hurt person contradicts the prescribed conduct 'show them kindness and give them a sympathetic ear', and 'Still' cannot rescue it: the concession in the final sentence targets emotional distance (kindness despite distance), not harsh criticism — 'Still, ... show kindness' after 'we serve them by strictly criticizing them' would be a retraction, not a concession. Attractive distractor, not defensible."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam: grammatical. Logic: expressing one's own hidden depressive feelings to the sufferer is (a) unsupported by any proposition in the passage and (b) the inverse of its thesis — it would spread the 'virus' of negative attitudes the opening sentence warns against, and would constitute being 'pulled down'. Indefensible."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. All five options are syntactically valid gerund complements of 'by', so the item discriminates purely on logic — as a cloze it is clean. The decisive long-range cue is the concessive 'Still' opening the final sentence: it presupposes the blank asserted detachment, which ② alone provides. ①/⑤ contradict explicit negations in the text; ③ contradicts the occurrence-vs-response distinction; ④ is a surface-copy distractor defeated by the 'Remind yourself' framing and the kindness prescription. Single defensible answer: ②."
+}

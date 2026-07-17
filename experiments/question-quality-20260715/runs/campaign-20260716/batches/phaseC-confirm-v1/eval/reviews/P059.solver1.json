@@ -1,0 +1,35 @@
+{
+  "pid": "P059",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Although they are controlled by Denmark' — 주어 they(= the Faroe Islands)가 덴마크에 의해 통제되는 대상이므로 be + p.p. 수동태가 정확. controlling(능동)으로 볼 의미적 여지가 전혀 없어 유혹 강도도 낮음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'they have their own government' — 지문 첫 문장 'The Faroe Islands are...'가 군도를 복수로 취급함을 확정했고, 같은 절의 주어 they와 일치하는 복수 소유격 their가 정확. '군도=단수 개체이니 its 아닌가' 하는 순간적 유혹이 있으나 지문 내 일관된 복수 취급(are, they)이 이를 차단. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'Most of the whale meat and blubber distributing for free to the local community, although some is sold...' — 주절에 정동사(finite verb)가 없다. distributing을 축약 관계절이나 분사구문으로 읽어 구제하려 해도 뒤에 본동사가 끝내 등장하지 않아 문장이 비문이며, 의미상으로도 고기·지방은 '분배되는' 대상이므로 수동 is distributed가 필요. 바로 뒤 'although some is sold'의 수동 병렬이 장거리 결정 단서. 명백한 오류로 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'must take place as quickly and efficiently as possible' — 동사구 take place를 수식하므로 부사가 맞고, and로 병렬된 efficiently(부사)와의 품사 병렬도 정확. as~as 원급 구문에서 형용사 quick을 떠올리게 하는 전형적 미끼이지만 동사 수식이므로 부사 확정. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'environmental groups still question whether this practice should be allowed to continue' — question은 의문·회의의 내용을 whether절(명사절 목적어)로 받는 것이 표준 관용이며, '계속 허용되어야 하는지 여부'라는 문맥 논리와도 정합. that로 바꾸면 오히려 의문의 의미가 약화됨. 정문."
+    }
+  ],
+  "note": "실전 풀이 순서: 정동사 골격 스캔에서 (C) 문장이 본동사 결핍으로 즉시 적발됨. 매력적 오답 유혹은 (D)의 as~as 원급(형용사/부사 혼동)과 (B)의 집합명사 수일치 정도였으나 둘 다 지배 규칙 확인으로 해소. 대안 해석(분사구문·축약 관계절)으로 (C)를 정문화할 경로를 적극 탐색했으나 주절 정동사 부재 + distribute의 타동사성 때문에 구제 불가. 정답 후보는 (C) 단일."
+}

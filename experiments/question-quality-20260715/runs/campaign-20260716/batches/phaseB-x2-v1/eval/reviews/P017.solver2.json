@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam은 정문(until + 수동절, it = a scientific truth)이나 논리 모순. '개별 과학자의 좁은 전문성에 의해 고립됨'이 standing의 조건이라는 명제는 지문의 핵심 규범 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'와 정면 충돌한다. 고립(isolation)은 지문이 기각하는 개인주의적 수사 방향이며, 빈칸 뒤 'only one stage in its construction'(실험실 이후 공동체 단계 필요)과도 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법: until절 내 수동 병렬 'is validated and shared'가 정합하고 it의 지시(a scientific truth)가 명확하여 seam 성립. 논리: 'authorized by disciplinary specialists'의 직접 재진술이며, 전문가 검토 없는 기자회견 발표가 비난받는다는 사례, 그리고 빈칸 직후 '실험실은 진리 구성의 한 단계일 뿐'(이후 공동체 검증 단계 존재)과 완전 정합. 유일하게 성립하는 후보."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Seam은 정문이나 논리적으로 지문과 정면 모순. 전문가 검토를 거치지 않고 기자회견으로 발견을 공표하는 과학자는 'automatically castigated as a publicity seeker'라고 명시되어 있으므로, 대중매체를 통한 즉각적 대중 인정은 standing의 조건이 아니라 오히려 비난 사유다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Seam은 정문(until + 완전절 'personal dedication is proven to be...'). 그러나 '개인적 헌신이 객관성의 절대적 원천으로 증명됨'은 지문 도입부의 개인주의적 수사(inspired patience, skilled hands, unbiased mind) 그 자체이며, 지문은 이를 'sincerely held'일지언정 공적 행동의 근거가 못 된다고 명시적으로 기각한다. 논리 방향 정반대."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam은 표면상 정문이나 전제 실패(presupposition failure)로 논리 불성립. 'the established truth'는 이미 확립되어 standing을 가진 진리를 전제하는데, 주절은 'has little standing until'로 그 이전 상태를 서술하므로 순환·모순이 발생한다. 또한 인과 방향 역전: 지문은 공동체 승인이 standing을 만든다고 하지, 확립된 진리가 학계 협력 네트워크를 개시한다고 하지 않는다."
+    }
+  ],
+  "note": "빈칸 유형. 지문의 명시 규범 문장('knowledge isn't knowledge unless it has been authorized by disciplinary specialists')과 빈칸 후행 문장('What happens in somebody's laboratory is only one stage in its construction')이 이중으로 ②를 강제한다. ①④는 기각된 개인주의 수사의 재진술, ③은 명시 사례와 정면 모순, ⑤는 전제 실패 및 인과 역전. 대안 해석(축약절·도치 등)으로 타 선지가 구제될 여지 없음. 단일 정답 문항으로 판정."
+}

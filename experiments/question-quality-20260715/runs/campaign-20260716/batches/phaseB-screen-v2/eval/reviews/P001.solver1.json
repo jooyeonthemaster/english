@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'Helping us systematically erase those unbearable affects' is the law's function (suppression/erasure), not cinema's. It directly contradicts the governing clause 'cinema introduces us to our affects.'"
+    },
+    {
+      "label": "②",
+      "verdict": "reject (attractive distractor)",
+      "reason": "Strong pull as the antithesis of law in the whereas-contrast, and I genuinely felt the temptation: 'cinema undoes what law builds' sounds like the intended opposition. But the passage never claims cinema acts AGAINST the law or removes its restraints — cinema expresses/introduces affects while law suppresses them; they operate in parallel domains, not in direct combat. 'Dismantling the limits that the law imposes' imports an unsupported antagonistic causal claim. Rejected on close reading, but this would trap mid-to-upper-level students."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'Reinforcing the legal barriers that suppress our desires and drives' assigns cinema the law's role, flatly reversing the whereas-contrast. Easy elimination."
+    },
+    {
+      "label": "④",
+      "verdict": "accept (answer)",
+      "reason": "Perfect appositive expansion of 'introduces us to our affects': 'inner impulses' = affects/desires and drives; 'we would prefer to avoid' echoes the fear framing ('fearing the horror of their consequences,' 'not overwhelmed and destroyed by our desires and drives'). The participle seam ('introduces us to our affects, often confronting us with...') is grammatically clean and rhetorically natural."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'Preventing us from experiencing the horror of uncontrolled consequences' is the protective function the passage explicitly assigns to the LAW ('tries to ensure that we are not overwhelmed and destroyed'). Attached to cinema it contradicts the contrast."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. All five options attach identically as participial phrases, so discrimination is purely semantic — no grammar-seam or alternative-parse escape routes exist. ④ is the only defensible answer. ② is a well-built attractive distractor exploiting the cinema-vs-law opposition; it fails only on the unsupported 'dismantling' (active antagonism) claim. ①/③/⑤ all recycle the law's role and are eliminated quickly. Clean single-answer item."
+}

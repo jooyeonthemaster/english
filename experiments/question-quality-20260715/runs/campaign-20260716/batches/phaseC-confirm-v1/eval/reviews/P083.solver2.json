@@ -1,0 +1,35 @@
+{
+  "pid": "P083",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) how",
+      "verdict": "correct",
+      "reason": "demonstrate의 목적어인 간접의문문 'how our minds have adapted'를 이끄는 의문사. how + 완전한 절(our minds have adapted) 구조로 절 내부 결손 없음. 정문."
+    },
+    {
+      "label": "(B) was",
+      "verdict": "correct",
+      "reason": "진짜 주어는 단수 'the process'('of checking'은 후치 수식 전치사구)이므로 단수 was 일치. 등위된 앞 절 'reference materials weren't readily available'과 과거시제 병렬도 일치. 정문."
+    },
+    {
+      "label": "(C) typing",
+      "verdict": "correct",
+      "reason": "'when (they were) typing'의 접속사+분사 축약. 축약절의 의미상 주어가 주절 주어 they(타자 치는 주체)와 일치하므로 현재분사 typing 적법. 정문."
+    },
+    {
+      "label": "(D) who",
+      "verdict": "correct",
+      "reason": "it-분열문 'it's not only the young who are...'에서 초점 명사구 'the young'(the+형용사=복수 보통명사, 사람)을 받는 관계사 who. 복수 동사 are와의 일치도 정상. 정문."
+    },
+    {
+      "label": "(E) making",
+      "verdict": "incorrect",
+      "reason": "주어 명사구 'Their saturation in and early use of technology'(전치사 공유 등위) 뒤에 정동사가 없어 making을 두면 본동사 부재. 독립분사구문으로 읽으려 해도 뒤에 등위접속사 'but + 절(everyone's brains are changing)'이 이어져 분사구가 매달릴 주절이 성립하지 않음(등위접속사는 절-절 결합만 허용). 정형 동사 makes(또는 make)로 고쳐야 함. 어법상 틀린 유일한 밑줄."
+    }
+  ],
+  "note": "정답 (E) 단일 수렴. (A)~(D)는 각각 간접의문문, 주어-동사 수일치, 접속사+분사 축약, it-분열문 관계사로 모두 정문임을 형식적으로 확인. (E)를 정문화할 대안 해석(독립분사구문, 축약 관계절, 무동사절)을 적극 탐색했으나 'but' 등위 구조 때문에 전부 배제됨."
+}

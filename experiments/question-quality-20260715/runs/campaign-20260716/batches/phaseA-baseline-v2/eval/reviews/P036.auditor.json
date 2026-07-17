@@ -1,0 +1,87 @@
+{
+  "pid": "P036",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V5-KEYPOINT-MISLABEL",
+      "severity": "major",
+      "evidence": "keyPoints[1] = \"(B) 분사 능/수동 — 선행 명사를 수식하는 형용사절 내 대과거 시제 판단\". (B) 'had found'는 분사 능/수동 포인트가 아니라 관계사절 내 대과거 시제 포인트다. 태그(분사 능/수동)가 같은 항목의 설명(대과거 시제 판단) 및 (B) 오답해설(목적격 관계대명사절 내부의 대과거 동사)과 정면 모순 — keyPoints와 해설 간 필드 비동기."
+    },
+    {
+      "code": "V5-SURROUNDINGTEXT-DESYNC",
+      "severity": "minor",
+      "evidence": "markedExpressions (D).surroundingText = \"...nervousness when he thought of how many people should be there.\" — 원지문·렌더 지문 모두 'would be there'이며 'should be there'가 아니다. 구조 필드가 지문과 불일치."
+    },
+    {
+      "code": "V4-PASSIVE-TERMINOLOGY",
+      "severity": "minor",
+      "evidence": "(E) 오답해설이 'the band가 연주를 끝마쳤다는 완료적 의미를 나타내는 수동태 자리'로 기술. the band가 행위 주체인 be finished는 형용사화된 과거분사(완료 관용 표현)로, '수동태'라는 명명은 엄밀하지 않다. 다만 한국 교수법 관례('수동태 형태로 완료 의미')로 통용되는 기술이라 V4 실패까지는 판정하지 않음."
+    },
+    {
+      "code": "V4-KEYPOINT-D-TAG",
+      "severity": "minor",
+      "evidence": "keyPoints[0] 태그가 '(D) 관계사절'이나 실제 포인트는 '부사절 접속사 vs 명사절 what' 구분. 학교문법에서 what을 관계대명사로 분류하는 관례상 변호 가능하지만 태그-내용 정합성이 낮다."
+    },
+    {
+      "code": "V4-EXPLANATION-WORDING",
+      "severity": "minor",
+      "evidence": "정답 해설 마지막 문장 '지문 뒤편 목적어의 완전성이나 명사절의 요건을 간과하면...'이 지시 대상이 불명확한 어색한 문장. 사실 오류는 아니나 학생에게 혼란 여지."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "복수 지시 대상(Garcia+Jeff)에 대한 대명사 수·격 판단",
+      "temptingBecause": "직전 화자가 Garcia 단독이라 단수 he를 기대하게 만들 수 있음",
+      "decisiveFlaw": "오답 아님(source-correct). 두 사람이 함께 입장하므로 they가 정확 — 디코이로서는 유혹도가 거의 없는 필러급"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계사 생략 목적격 관계사절 내 대과거(had found) 시제 적합성",
+      "temptingBecause": "관계사가 생략되어 구조가 즉시 보이지 않고, 단순과거 found가 더 자연스럽다고 느낄 수 있음",
+      "decisiveFlaw": "오답 아님. 발견 시점이 pointing 시점보다 선행하므로 대과거 적법(단순과거도 가능하나 had found가 비문은 아님)"
+    },
+    {
+      "label": "(C)",
+      "intent": "연결동사 look + 형용사 보어(great) vs 부사(greatly) 판단",
+      "temptingBecause": "동사 뒤 자리라 부사가 와야 한다고 오인 가능",
+      "decisiveFlaw": "오답 아님. look은 보어를 취하는 연결동사이므로 형용사 great가 정확"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. 완전한 시간 부사절을 이끄는 접속사 when 자리에 명사절/관계사 what을 배치한 최소대립쌍",
+      "temptingBecause": "뒤따르는 'thought of how many people...'의 의문사절 구조가 what 명사절처럼 보이게 할 수 있음",
+      "decisiveFlaw": "what은 명사 역할 절만 이끌 수 있어 'nervousness ___ he thought...'의 부사절 자리에 올 수 없음. when으로 교정하면 정확히 원문 복원. 다만 'nervousness what he thought'는 국소 독해만으로 즉시 비문임이 드러나 KILLER 은닉성 부족"
+    },
+    {
+      "label": "(E)",
+      "intent": "be finished(완료 상태) 관용 표현의 적법성 판단",
+      "temptingBecause": "the band가 행위 주체이므로 능동 had finished/finished여야 한다고 의심하게 만듦 — 5개 중 가장 실질적인 디코이",
+      "decisiveFlaw": "오답 아님. be finished는 '끝마친 상태'를 나타내는 표준 관용 표현으로 적법. 단 해설의 '수동태' 명명은 엄밀하지 않음"
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints[1] 태그 '분사 능/수동'이 (B)의 실제 포인트(관계사절 내 대과거 시제)와 모순 — 자체 설명·오답해설과도 불일치 (major)",
+    "(E) 해설의 '수동태 자리' 기술은 형용사화된 과거분사 관용 표현을 수동태로 명명한 것으로 엄밀성 부족 (minor)",
+    "정답 해설의 '지문 뒤편 목적어의 완전성이나...' 문장이 어색하고 지시가 불명확 (minor)",
+    "keyPoints[0] 태그 '관계사절'과 내용(접속사 vs 명사절 what 구분)의 정합성 낮음 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "RUBRIC §C 위배: (1) 'KILLER 정답은 구조를 읽어야 하며 즉시 드러나지 않는다' — 'nervousness what he thought'는 밑줄 주변 3단어 국소 독해만으로 즉시 비문이 드러남. (2) (A) they는 why-tempting이 성립하지 않는 필러급 디코이. 충족 항목: 최소대립쌍(what→when 교정 시 원문 복원), 명확한 문법 판단(문맥 선호 아님), 동일 포인트 디코이 간섭 없음.",
+  "grade": "F",
+  "notes": "정답 유일성(V2)·지문 무결성(V1)·문법성(V3)은 통과. 그러나 keyPoints[1]의 포인트 태그가 해당 선지의 실제 문법 포인트 및 오답해설과 정면 모순되고(V5 실패, major), markedExpressions (D).surroundingText가 지문과 불일치(should vs would)한다. 치명 실패는 공예 점수로 상쇄되지 않으므로 F. 공예 측면에서도 요청 난이도 KILLER 대비 정답이 국소 단서로 즉시 노출되고(C5=1), (A) 필러 디코이로 변별력이 낮아(C3=2) V5를 수리하더라도 KILLER 출하는 불가 — 재설계 필요(수리 시 C등급 상당). 합계 C=14."
+}

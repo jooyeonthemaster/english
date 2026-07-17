@@ -1,0 +1,53 @@
+{
+  "pid": "P077",
+  "validity": { "V1": true, "V2": true, "V3": true, "V4": true, "V5": true },
+  "validityIssues": [
+    {
+      "code": "V2-note",
+      "severity": "minor",
+      "evidence": "정답 ② 'before she added any extra toppings'는 before-절의 비함의(non-veridical) 특성상 토핑을 실제로 얹었음을 전제하지 않아 원문 'without the cream and jam'과 의미 동치로 성립한다. 단 'extra'는 기본 토핑이 존재함을 약하게 암시해 표현이 완벽히 정밀하지는 않다(치명 아님)."
+    },
+    {
+      "code": "V3-note",
+      "severity": "minor",
+      "evidence": "오답 ③④를 삽입한 완성문('eat hers taking a sip... first' 등)은 쉼표 없는 분사 부가어로 다소 어색하나 비문은 아니며, 소거는 의미 기반으로 이루어져 유형 의도와 일치한다."
+    }
+  ],
+  "craft": { "C1": 3, "C2": 3, "C3": 3, "C4": 3, "C5": 4, "C6": 3 },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성/행동 반전 — 앞부분의 'carefully mirrored her grandmother's actions'를 근거로 착각하게 유도",
+      "temptingBecause": "지문 전반부에서 클로이가 할머니를 그대로 따라 했다는 서술이 명시적으로 존재",
+      "decisiveFlaw": "빈칸 문장 시점에는 클로이가 'boldly chose the biscuit-looking thing before her grandmother'로 모방을 중단했고, 할머니가 크림·잼을 바르는 동안 클로이의 스콘은 이미 입에 들어가 있어 '똑같이 따라 함'과 정면 모순"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — source span 'without the cream and jam'의 의미 보존 패러프레이즈",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. before-절은 비함의적이므로 토핑을 얹었다는 함의 없이 '토핑 없이 먹기 시작했다'와 동치이며, 후행절 'it was mostly all in her mouth already'와 정합"
+    },
+    {
+      "label": "3",
+      "intent": "표면 어휘 재활용(lexical recycling) — 'took a sip of the sweet tea'의 소재 연상",
+      "temptingBecause": "'sweet tea' 'sip'이 지문에 실제로 등장",
+      "decisiveFlaw": "차를 마신 것은 티트레이 도착 직후의 별개 사건으로, 스콘을 먹는 방식과 무관하며 할머니와의 대조 구조를 설명하지 못함"
+    },
+    {
+      "label": "4",
+      "intent": "사건 순서 오배치 — 앞선 사건(샌드위치)을 빈칸 시점으로 끌어옴",
+      "temptingBecause": "'delicate sandwich'가 지문에 실제로 등장하고 클로이가 연달아 먹은 소재",
+      "decisiveFlaw": "'all the sandwiches were eaten up'으로 샌드위치는 이미 소진되었음이 명시되어 시간적으로 불가능"
+    },
+    {
+      "label": "5",
+      "intent": "그럴듯한 사회적 행동 날조(fabrication)",
+      "temptingBecause": "다정한 조손 관계라는 분위기상 표면적으로 그럴듯함",
+      "decisiveFlaw": "지문에 근거 전무 + 'it was mostly all in her mouth already'(거의 다 먹음)와 직접 모순"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 원문에서 'without the cream and jam' 한 구간만 빈칸화했고 접합부 손상 없음. 정답 유일성 확인: ②만 원문 의미를 보존하며, ①은 행동 반전, ③④는 소재 재활용, ⑤는 날조로 각각 단일 결정적 결함을 가짐. 해설의 모든 사실 진술이 지문과 일치하고 오답 해설이 각 선지 내용과 정확히 대응. 공예 합계 19(3/3/3/3/4/3)로 A 기준(합 21)에는 미달 — 실질 경쟁이 ①·② 이파전에 집중되고 ③④⑤의 소거가 빠른 점, 정답만 유일하게 정형 before-절(나머지는 분사구)이라는 경미한 형태 비대칭, 'extra toppings'의 미세한 표현 부정밀이 감점 요인. INTERMEDIATE 난이도 정합은 정확함. 작은 수정(오답 1개의 경쟁력 강화, 형태 통일)으로 출제 가능한 B."
+}

@@ -1,0 +1,1590 @@
+[
+  {
+    "itemId": "Q001",
+    "blindAnswer": "C",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 3,
+      "C3": 1,
+      "C4": 2,
+      "C5": 0,
+      "C6": 0
+    },
+    "optionAudit": [
+      {
+        "label": "A",
+        "intent": "result participial clause",
+        "temptingBecause": "The comma may make the attachment look loose.",
+        "decisiveFlaw": "None; encouraging naturally states the resulting effect of the harsh compounds."
+      },
+      {
+        "label": "B",
+        "intent": "gerund after prevent A from",
+        "temptingBecause": "A bare infinitive can be expected after some causatives.",
+        "decisiveFlaw": "None; from requires damaging here."
+      },
+      {
+        "label": "C",
+        "intent": "bare infinitive after let + object",
+        "temptingBecause": "known is a familiar complement after make/become and resembles know.",
+        "decisiveFlaw": "Let their neighbors requires the bare infinitive know, not known."
+      },
+      {
+        "label": "D",
+        "intent": "nonrestrictive relative clause",
+        "temptingBecause": "The possible antecedents insects and ways can look ambiguous.",
+        "decisiveFlaw": "None; which can refer to the plural ways (and plural help agrees), with a coherent causal reading."
+      },
+      {
+        "label": "E",
+        "intent": "finite verb agreeing with plural subject",
+        "temptingBecause": "The intervening singular wording can distract from the head variations.",
+        "decisiveFlaw": "None; New variations is plural and takes maintain."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "The sole error is the immediately local and elementary frame let + object + bare infinitive (known -> know).",
+        "recommendation": "For KILLER difficulty, target a nonlocal but unambiguous dependency and remove easy morphological giveaway errors."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The stored explanation for (D) says which can take 'the preceding clause or the insects' as antecedent. With a clause antecedent, 'which in turn help' has the wrong number; only a plural nominal antecedent such as ways/insects licenses help.",
+        "recommendation": "Name the plural nominal antecedent only and remove the false sentential-relative analysis."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "Independent completion: Plants ... let their same-species neighbors know that an attack is likely coming.",
+      "All four non-answer underlines are grammatical, so the item is valid, but the answer requires no cross-sentence or deep structural reasoning.",
+      "Private fields storedAnswer, question.correctAnswer, structuredData.correctAnswer, and correctAnswers all store (C).",
+      "markedExpressions records source-correct know and displayed-wrong known at (C), so the intended source mutation and blind key agree.",
+      "The explanation/content copies and option labels are synchronized, but the factual error in the (D) explanation fails V4."
+    ],
+    "storedAnswer": "(C)",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V4"
+      ],
+      "summary": "Fails V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 0,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The main C correction is accurate, but the D explanation wrongly allows the entire preceding clause as an antecedent of plural help; a sentential which would require singular helps."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "Source-correct know was changed to displayed known only at (C); the correction field restores know.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "PREMIUM",
+      "qualityMode": null,
+      "qualityWarnings": [],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q002",
+    "blindAnswer": "3",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": false,
+      "V2": true,
+      "V3": true,
+      "V4": true,
+      "V5": true
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 3,
+      "C3": 1,
+      "C4": 2,
+      "C5": 0,
+      "C6": 2
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "causal reversal of law's cooperative function",
+        "temptingBecause": "It repeats co-operative living from the setup.",
+        "decisiveFlaw": "The passage says legal frameworks enable, rather than strip away, cooperative living."
+      },
+      {
+        "label": "2",
+        "intent": "deny the rational-choice premise",
+        "temptingBecause": "It echoes genuine reflection and rational choices.",
+        "decisiveFlaw": "The conditional explicitly posits laws embodying what rational beings would freely choose."
+      },
+      {
+        "label": "3",
+        "intent": "correct inference about compatible liberty",
+        "temptingBecause": "It directly resolves the conditional relation between rational choice and legal prohibition.",
+        "decisiveFlaw": "None; a ban on what one would not rationally choose is not a substantive restriction of liberty."
+      },
+      {
+        "label": "4",
+        "intent": "Hobbes/devils half-truth",
+        "temptingBecause": "Violent human nature makes an effective framework necessary.",
+        "decisiveFlaw": "The final ideal-law conditional rejects treating such law as a restraint or merely a necessary evil."
+      },
+      {
+        "label": "5",
+        "intent": "scope shift from civic peace to external threats",
+        "temptingBecause": "Security and peace appear at the beginning.",
+        "decisiveFlaw": "External physical threats are not the issue in the concluding rational-choice argument."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "The student-visible first sentence ends with the malformed punctuation 'as well..'.",
+        "recommendation": "Normalize the duplicated period and re-render the passage before release."
+      },
+      {
+        "severity": "major",
+        "evidence": "Option 3 is nearly a direct restatement of the final conditional, while all distractors contradict explicit nearby claims.",
+        "recommendation": "For KILLER difficulty, require integration of separated premises and make distractors preserve the conditional while shifting scope or necessity."
+      },
+      {
+        "severity": "major",
+        "evidence": "Private metadata carries both blank-paraphrase-killer-too-easy and blank-weak-distractors warnings while reviewRecommended remains false.",
+        "recommendation": "Propagate difficulty/weak-distractor warnings into mandatory review or block KILLER release."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "The final conditional entails that law does not actually function as a limitation on liberty, uniquely selecting 3.",
+      "Packet SHA-256 matches the blind manifest, but the matched packet itself contains duplicated terminal punctuation.",
+      "The root, question, and structured stored keys are all ③ and match the frozen blind answer.",
+      "originalExpression is 'cannot be understood as a restraint on their freedom'; option ③ is an accurate paraphrase.",
+      "The duplicated 'as well..' persists in questionText and passageWithBlank, so internal field synchronization does not cure the V1 render defect."
+    ],
+    "storedAnswer": "③",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V1"
+      ],
+      "summary": "Fails V1; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "pass",
+      "C6Score": 2,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "Correctly links rationally self-chosen principles to the conclusion that law is not a substantive limitation on liberty; all four distractors are addressed, though the explanation is repetitive."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The original concluding expression was blanked and paraphrased accurately by option ③.",
+      "renderStatus": "fail",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The source/render audit found a student-visible integrity or label defect recorded in the failed gates."
+    },
+    "metadataAudit": {
+      "generationPlan": "STANDARD",
+      "qualityMode": null,
+      "qualityWarnings": [
+        "blank-paraphrase-killer-too-easy",
+        "blank-weak-distractors"
+      ],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q003",
+    "blindAnswer": "B",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 3,
+      "C3": 1,
+      "C4": 2,
+      "C5": 0,
+      "C6": 0
+    },
+    "optionAudit": [
+      {
+        "label": "A",
+        "intent": "subject-verb agreement",
+        "temptingBecause": "The singular phrase good style is nearby.",
+        "decisiveFlaw": "None; the plural head guidelines requires are."
+      },
+      {
+        "label": "B",
+        "intent": "content-clause complementizer",
+        "temptingBecause": "Those readers is itself a possible noun phrase in isolation.",
+        "decisiveFlaw": "Acknowledging must take the content clause that readers expect...; those leaves expect without a licensed clause boundary."
+      },
+      {
+        "label": "C",
+        "intent": "human relative pronoun",
+        "temptingBecause": "That could also introduce a restrictive relative.",
+        "decisiveFlaw": "None; who correctly refers to someone and serves as the subject of is."
+      },
+      {
+        "label": "D",
+        "intent": "comparative intensification",
+        "temptingBecause": "Important can occur without comparison.",
+        "decisiveFlaw": "None; even more important ... than is a complete comparative construction."
+      },
+      {
+        "label": "E",
+        "intent": "relative clause modifying a coordinated antecedent",
+        "temptingBecause": "Communication alone is morphologically singular.",
+        "decisiveFlaw": "None; that refers to nonverbal communication and immediate feedback, so are is licensed."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "Those for that creates a conspicuous local category error immediately after acknowledging.",
+        "recommendation": "Replace the surface complementizer error with an unambiguous dependency that requires tracking a clause or coordination across intervening material."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The explanation says expect has a missing object and that is an objective relative linked to the same things. In the actual corrected string, 'acknowledging that [readers expect the same things ...]', that is a content-clause complementizer and expect already has the object the same things.",
+        "recommendation": "Rewrite the analysis around acknowledging + that-clause and distinguish it from the later relative that after the same things."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "The only grammatical completion is acknowledging that readers expect the same things....",
+      "The error is unique but far below requested KILLER depth.",
+      "All stored key fields contain (B), matching the frozen blind answer.",
+      "markedExpressions correctly records source that -> displayed those at (B).",
+      "The duplicated explanation fields are byte-consistent, but they consistently duplicate the same syntactic hallucination."
+    ],
+    "storedAnswer": "(B)",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V4"
+      ],
+      "summary": "Fails V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 0,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The key and correction are right, but the explanation analyzes the blank that as an objective relative pronoun modifying the same things and falsely says expect lacks an object. It is a complementizer after acknowledging, and readers expect the same things is complete."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "Source-correct complementizer that was changed to displayed those at (B).",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "STANDARD",
+      "qualityMode": null,
+      "qualityWarnings": [],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q004",
+    "blindAnswer": "3",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": true,
+      "V4": true,
+      "V5": true
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 2,
+      "C3": 1,
+      "C4": 1,
+      "C5": 0,
+      "C6": 3
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "beneficiary/actor narrowing",
+        "temptingBecause": "Insect counter-adaptation is discussed immediately after the blank.",
+        "decisiveFlaw": "The process alternately benefits plant defenses and insect countermeasures, not only insects."
+      },
+      {
+        "label": "2",
+        "intent": "static-balance reversal",
+        "temptingBecause": "Stalemate later suggests persistence.",
+        "decisiveFlaw": "The passage explicitly denies natural balance and describes continuing conflict and adaptation."
+      },
+      {
+        "label": "3",
+        "intent": "correct abstraction of the arms race",
+        "temptingBecause": "It integrates plant innovation with insect counter-adaptation.",
+        "decisiveFlaw": "None; reciprocal adaptation accurately paraphrases the drawn-out evolutionary exchange."
+      },
+      {
+        "label": "4",
+        "intent": "directional decline",
+        "temptingBecause": "Insects repeatedly get around new defenses.",
+        "decisiveFlaw": "The next sentence also produces more resilient and resistant plant species, not a simple decline."
+      },
+      {
+        "label": "5",
+        "intent": "part-for-whole scope reduction",
+        "temptingBecause": "Neighbor signaling occupies a substantial earlier portion.",
+        "decisiveFlaw": "The blank summarizes the larger plant-insect evolutionary dynamic, not only same-species signaling."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "The next two sentences explicitly spell out reciprocal adaptation and a maintained stalemate, leaving option 3 virtually paraphrastic.",
+        "recommendation": "Use closer half-truth distractors and move the decisive relation across at least two less redundant clues."
+      }
+    ],
+    "grade": "C",
+    "evidence": [
+      "New defenses select counter-adapted insects, which bring about more resistant plants: an ongoing reciprocal process.",
+      "Every option fits the syntactic slot, but semantic competition is weak and KILLER calibration fails.",
+      "Root/question/structured keys are all 3 and match the frozen answer.",
+      "originalExpression is 'more like a drawn-out evolutionary conversation'; option 3 preserves it as reciprocal adaptation.",
+      "The generator itself flagged blank-paraphrase-killer-too-easy, corroborating the blind craft finding; no V gate fails."
+    ],
+    "storedAnswer": "3",
+    "agreement": true,
+    "fatality": {
+      "fatal": false,
+      "failedGates": [],
+      "summary": "No validity gate fails; final grade is determined by craft."
+    },
+    "explanationAudit": {
+      "status": "pass",
+      "C6Score": 3,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "Accurately explains the not-balance contrast, reciprocal adaptation, and each distractor's direction or scope. It is clear but longer than necessary."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The source span 'more like a drawn-out evolutionary conversation' was blanked; option 3 preserves its meaning.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "PREMIUM",
+      "qualityMode": null,
+      "qualityWarnings": [
+        "blank-paraphrase-killer-too-easy"
+      ],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q005",
+    "blindAnswer": "5",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": false,
+      "V2": true,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 3,
+      "C3": 1,
+      "C4": 2,
+      "C5": 3,
+      "C6": 1
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "benevolence reversal",
+        "temptingBecause": "Harmony and cooperation might ordinarily be associated with sympathy.",
+        "decisiveFlaw": "The next sentence says benevolence and goodwill cannot be counted on."
+      },
+      {
+        "label": "2",
+        "intent": "liberty-cost reversal",
+        "temptingBecause": "Hobbesian restraint can sound like curtailment of liberty.",
+        "decisiveFlaw": "The conclusion says rational law cannot be understood as a restraint on freedom; shared codependence is unsupported."
+      },
+      {
+        "label": "3",
+        "intent": "moral-transformation misconception",
+        "temptingBecause": "A nation of devils living harmoniously might sound reformed.",
+        "decisiveFlaw": "The point is that binding law coordinates even wicked citizens without making them altruistic."
+      },
+      {
+        "label": "4",
+        "intent": "eradication of self-interest",
+        "temptingBecause": "Aggressive desires motivate the need for law.",
+        "decisiveFlaw": "The framework contains conflict-prone conduct; it does not erase human desires."
+      },
+      {
+        "label": "5",
+        "intent": "correct regulatory necessity",
+        "temptingBecause": "It paraphrases maintain an effective legal framework to secure peace.",
+        "decisiveFlaw": "None; uphold binding systems to preserve order and harmony is the required continuation."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "The first sentence contains the duplicated period 'as well..'.",
+        "recommendation": "Repair punctuation and regenerate the student-visible passage."
+      },
+      {
+        "severity": "minor",
+        "evidence": "For INTERMEDIATE level, option 5 is strongly cued by legal frameworks, binds, harmony, and the parallel verb maintain in the surrounding text.",
+        "recommendation": "Reduce lexical copying if a firmer intermediate discrimination is desired."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The explanation uses '사법 체계' and '사법 질서' for the passage's legal framework/legal system. In Korean civics/philosophy usage, 사법 denotes the judiciary; 법적 체계 or 법질서 is required here.",
+        "recommendation": "Replace the judiciary-specific terminology and keep the explanation at the level of binding legal institutions."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "The Hobbesian premise requires maintaining effective law to secure peace, uniquely selecting 5.",
+      "All option heads can occupy the coordinated verb position, though several are semantically implausible.",
+      "The stored keys are uniformly ⑤ and match the frozen blind answer.",
+      "originalExpression is 'maintain an effective legal framework in order to secure peace'; option ⑤ accurately paraphrases it.",
+      "The explanation's overall logic is sound, but its repeated legal/judicial terminology error fails V4 in addition to the duplicated-period V1 failure."
+    ],
+    "storedAnswer": "⑤",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V1",
+        "V4"
+      ],
+      "summary": "Fails V1, V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 1,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The core causal logic and key ⑤ are correct, but the explanation repeatedly renders legal system/legal order as 사법 체계/사법 질서, improperly narrowing Kant's legal framework to the judiciary."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The source continuation about maintaining an effective legal framework was blanked; option ⑤ is semantically faithful.",
+      "renderStatus": "fail",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The source/render audit found a student-visible integrity or label defect recorded in the failed gates."
+    },
+    "metadataAudit": {
+      "generationPlan": "STANDARD",
+      "qualityMode": null,
+      "qualityWarnings": [],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q006",
+    "blindAnswer": "1",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": true,
+      "V4": true,
+      "V5": true
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 2,
+      "C3": 1,
+      "C4": 2,
+      "C5": 0,
+      "C6": 3
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "correct metaphorical paraphrase",
+        "temptingBecause": "Shade represents benefits inherited across generations, and stealing it represents present appropriation.",
+        "decisiveFlaw": "None; it preserves the present-gain/future-loss relation."
+      },
+      {
+        "label": "2",
+        "intent": "time-horizon reversal",
+        "temptingBecause": "Technological and genetic power are named in the opening.",
+        "decisiveFlaw": "The stewardship metaphor concerns remote future consequences, not ignoring immediate ones."
+      },
+      {
+        "label": "3",
+        "intent": "generation-direction and scope shift",
+        "temptingBecause": "Environmental power and ancestors' gardens support an ecological association.",
+        "decisiveFlaw": "It targets resilience used by past generations rather than the well-being owed to descendants, and narrows the scope to environment."
+      },
+      {
+        "label": "4",
+        "intent": "keyword collage",
+        "temptingBecause": "Limited resources and networked data streams echo passage language.",
+        "decisiveFlaw": "The text never frames adapting resources to data streams as the stewardship duty."
+      },
+      {
+        "label": "5",
+        "intent": "Iroquois-anchor scope shift",
+        "temptingBecause": "The Iroquois example is prominent.",
+        "decisiveFlaw": "The example teaches future-impact stewardship, not preservation of indigenous cultural heritage."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "The descendants/gardens/shade metaphor maps transparently onto option 1, while the other options change the time target or topic.",
+        "recommendation": "For KILLER level, use alternatives that retain both future generations and intergenerational benefits but vary the exact duty, scope, or tradeoff."
+      }
+    ],
+    "grade": "C",
+    "evidence": [
+      "The passage says present decisions must protect the well-being of future people; stealing their shade is sacrificing that well-being for present use.",
+      "No alternative option preserves both direction and scope.",
+      "All stored key fields contain ① and match the frozen answer.",
+      "underlinedExpression and surroundingText exactly identify 'steal the shade from our descendants'.",
+      "The explanation, evidenceChain, impliedMeaning, and four distractor explanations are complete and mutually consistent."
+    ],
+    "storedAnswer": "①",
+    "agreement": true,
+    "fatality": {
+      "fatal": false,
+      "failedGates": [],
+      "summary": "No validity gate fails; final grade is determined by craft."
+    },
+    "explanationAudit": {
+      "status": "pass",
+      "C6Score": 3,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "Accurately maps garden/shade to inherited benefits and future well-being, and cleanly separates the time-direction and scope errors in all distractors."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The exact source metaphor is underlined without alteration.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "PREMIUM",
+      "qualityMode": null,
+      "qualityWarnings": [],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q007",
+    "blindAnswer": "C",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 3,
+      "C3": 1,
+      "C4": 2,
+      "C5": 0,
+      "C6": 1
+    },
+    "optionAudit": [
+      {
+        "label": "A",
+        "intent": "reduced passive relative",
+        "temptingBecause": "An active trapping interpretation is possible elsewhere.",
+        "decisiveFlaw": "None; individuals are trapped within limited time, so the past participle is correct."
+      },
+      {
+        "label": "B",
+        "intent": "compound adjective",
+        "temptingBecause": "Reach is a verb in other frames.",
+        "decisiveFlaw": "None; far-reaching correctly modifies impacts."
+      },
+      {
+        "label": "C",
+        "intent": "possessive relative determiner",
+        "temptingBecause": "Which is a common nonhuman relative pronoun.",
+        "decisiveFlaw": "Lives requires a possessive determiner: people whose lives, not people which lives."
+      },
+      {
+        "label": "D",
+        "intent": "supplementive participial clause",
+        "temptingBecause": "The historical leaders, rather than stewardship, are the understood instructors.",
+        "decisiveFlaw": "None; instructing appropriately states the associated action/result of creating the stewardship principle."
+      },
+      {
+        "label": "E",
+        "intent": "finite predicate in a temporal relative clause",
+        "temptingBecause": "During which would be a more formal connector.",
+        "decisiveFlaw": "None; the decades that Earth is ours is an acceptable temporal relative construction."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "People which lives exposes a local missing possessive whose with no meaningful competitor.",
+        "recommendation": "Use an unambiguous but structurally nonlocal grammar point for KILLER level."
+      },
+      {
+        "severity": "critical",
+        "evidence": "After correctly identifying possessive whose, the explanation says it 'connects 질의 관계,' which is not a valid grammatical term and obscures the ownership relation being taught.",
+        "recommendation": "Replace 질의 관계 with 소유 관계 and proofread the student-facing explanation terminology."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "Only C fails: the relative element must mark possession of lives.",
+      "The four distractors each test a recognizable point, but the target is instantly visible.",
+      "storedAnswer, question.correctAnswer, structuredData.correctAnswer, and correctAnswers are all (C).",
+      "markedExpressions records source whose -> displayed which at (C), matching the frozen answer.",
+      "The labels and duplicate explanation fields synchronize, but the student-facing terminology defect violates the no-terminology-error requirement of V4."
+    ],
+    "storedAnswer": "(C)",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V4"
+      ],
+      "summary": "Fails V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 1,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The whose analysis and correction are correct, but the final sentence of the main explanation contains the nonsensical term 질의 관계 where 소유 관계 is required."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "Source-correct whose was changed to displayed which at (C), with whose stored as the correction.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "PREMIUM",
+      "qualityMode": null,
+      "qualityWarnings": [],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q008",
+    "blindAnswer": "1",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": false,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 2,
+      "C3": 1,
+      "C4": 0,
+      "C5": 0,
+      "C6": 0
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "correct absence-of-feedback inference",
+        "temptingBecause": "Physical cues and instant responses paraphrase nonverbal communication and immediate feedback.",
+        "decisiveFlaw": "None semantically, but the completed wording is clumsy: 'the resource of [plural items] ... from the recipient that are part....'"
+      },
+      {
+        "label": "2",
+        "intent": "audience-control reversal",
+        "temptingBecause": "The absent reader must be anticipated.",
+        "decisiveFlaw": "Writing does not let a passive audience dominate real-time flow; additionally the tail most naturally attaches that are to singular exchange, causing agreement failure."
+      },
+      {
+        "label": "3",
+        "intent": "formal-grammar substitution",
+        "temptingBecause": "Writing can demand more explicit form than conversation.",
+        "decisiveFlaw": "The stated reason is loss of nonverbal feedback, not heightened formal grammar; the tail claim is also false."
+      },
+      {
+        "label": "4",
+        "intent": "misuse of the proportion point",
+        "temptingBecause": "Too much information can make listeners lose interest.",
+        "decisiveFlaw": "The passage advises appropriate information, not an inherent writing restriction; the residual relative clause attaches awkwardly to readers or ungrammatically to interest."
+      },
+      {
+        "label": "5",
+        "intent": "polarity reversal",
+        "temptingBecause": "Gestures and real-time adjustments are indeed conversational resources.",
+        "decisiveFlaw": "Writing lacks rather than actively encourages those resources."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "The fixed suffix 'that are part of conversation' makes option 2 naturally yield singular 'exchange that are' and option 4 singular 'interest that are', while options 1, 3, and 5 provide plural antecedents.",
+        "recommendation": "Make the blank consume the entire complement or rewrite every option so the same plural antecedent cleanly licenses the fixed relative clause."
+      },
+      {
+        "severity": "major",
+        "evidence": "The intended completion 'lacks the resource of physical cues and instant responses from the recipient that are...' is grammatical only through a strained nonlocal attachment and is less natural than the source-like wording.",
+        "recommendation": "Use a natural completion such as 'does not permit the nonverbal communication and immediate feedback' and rebuild all distractors to match its syntax."
+      },
+      {
+        "severity": "major",
+        "evidence": "Option 1 directly paraphrases the immediately surrounding causal sentence; the item is not KILLER-calibrated.",
+        "recommendation": "Require integration of the audience/cooperation thesis and the feedback contrast rather than lexical matching alone."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The explanation endorses 'lacks the resource ... from the recipient' without addressing how the following plural relative clause attaches, and it ignores that options ②/④ naturally yield singular antecedents before 'that are'.",
+        "recommendation": "Audit every completed option with the fixed suffix; rewrite the slot and then explain both semantic and syntactic fit."
+      },
+      {
+        "severity": "major",
+        "evidence": "Private metadata already flags missing answer logic, weak distractors, and a polarity shortcut, yet reviewRecommended is false.",
+        "recommendation": "Escalate this warning combination to mandatory review."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "Option 1 is the unique semantic answer, but the all-options completed-sentence requirement for blank items fails.",
+      "The fixed tail leaks number/attachment information and the correct completion itself is stylistically strained.",
+      "All stored keys are ① and match the frozen blind answer.",
+      "originalExpression is 'does not permit the nonverbal communication and immediate feedback'; ① preserves its broad meaning but not its clean syntax with the retained tail.",
+      "The stored explanation is synchronized across fields but repeats the semantic-only audit, so it fails V4 rather than repairing V3."
+    ],
+    "storedAnswer": "①",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V3",
+        "V4"
+      ],
+      "summary": "Fails V3, V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 0,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The semantic inference is correct, but the explanation evaluates option ① only as a paraphrase and never parses the retained 'that are part of conversation' tail or the agreement failures it creates for some distractors."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The source predicate was blanked while the suffix 'that are part of conversation' was retained; the generated option set does not preserve uniform syntax.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "STANDARD",
+      "qualityMode": null,
+      "qualityWarnings": [
+        "blank-paraphrase-missing-answer-logic",
+        "blank-weak-distractors",
+        "blank-killer-polarity-shortcut"
+      ],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q009",
+    "blindAnswer": "3",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": true,
+      "V4": true,
+      "V5": true
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 2,
+      "C3": 1,
+      "C4": 1,
+      "C5": 0,
+      "C6": 3
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "present/future priority reversal",
+        "temptingBecause": "Ancestors and present innovations both connect to time horizons.",
+        "decisiveFlaw": "The passage does not demand preserving present innovation at the expense of ancestral traditions; its explicit object is descendants' welfare."
+      },
+      {
+        "label": "2",
+        "intent": "genetic-power keyword lure",
+        "temptingBecause": "Genetic power is named in the first sentence.",
+        "decisiveFlaw": "No claim is made about restricting adaptations needed for survival."
+      },
+      {
+        "label": "3",
+        "intent": "correct intergenerational-duty paraphrase",
+        "temptingBecause": "Rightful prospects corresponds to the future well-being protected by good ancestors.",
+        "decisiveFlaw": "None; it preserves both beneficiary and negative duty."
+      },
+      {
+        "label": "4",
+        "intent": "data/culture keyword lure",
+        "temptingBecause": "Cultural power and data streams occur in the setup.",
+        "decisiveFlaw": "Cultural achievements in data streams are not the conclusion's object."
+      },
+      {
+        "label": "5",
+        "intent": "Iroquois/grander-humanity collage",
+        "temptingBecause": "Both expressions are passage anchors.",
+        "decisiveFlaw": "The Iroquois are an example of stewardship, not the group from whom humanity must avoid isolation."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "Option 3 is a direct abstract paraphrase of becoming good ancestors and protecting future well-being; distractors mostly recombine isolated nouns.",
+        "recommendation": "For KILLER level, make every distractor retain descendants and long-term responsibility while varying sacrifice, entitlement, or causal scope."
+      }
+    ],
+    "grade": "C",
+    "evidence": [
+      "The conclusion must prohibit harming the prospects of future people, uniquely selecting 3.",
+      "All options fit after must not, but only one remains on the paragraph's actual topic.",
+      "Root/question/structured keys are all 3 and match the frozen answer.",
+      "originalExpression is 'steal the shade from our descendants'; option 3 accurately abstracts the beneficiary and harm.",
+      "Two stored warnings independently confirm that the KILLER item is too easy and polarity-scannable, but the explanation itself passes V4."
+    ],
+    "storedAnswer": "3",
+    "agreement": true,
+    "fatality": {
+      "fatal": false,
+      "failedGates": [],
+      "summary": "No validity gate fails; final grade is determined by craft."
+    },
+    "explanationAudit": {
+      "status": "pass",
+      "C6Score": 3,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "Correctly maps the source metaphor to future generations' rightful prospects and explains all four distractors by topic, actor, or time-direction drift."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The source metaphor was blanked and accurately paraphrased by option 3.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "PREMIUM",
+      "qualityMode": null,
+      "qualityWarnings": [
+        "blank-paraphrase-killer-too-easy",
+        "blank-killer-polarity-shortcut"
+      ],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q010",
+    "blindAnswer": "4",
+    "confidence": "low",
+    "alternativeAnswers": [
+      "NO_ANSWER"
+    ],
+    "validity": {
+      "V1": false,
+      "V2": false,
+      "V3": true,
+      "V4": false,
+      "V5": false
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 2,
+      "C4": 0,
+      "C5": 1,
+      "C6": 0
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "negative property of defensive compounds",
+        "temptingBecause": "Harsh is evaluative rather than chemically specific.",
+        "decisiveFlaw": "None; unpleasant or intoxicating compounds are aptly described as harsh."
+      },
+      {
+        "label": "2",
+        "intent": "blocking function of wax",
+        "temptingBecause": "Wax may reduce rather than absolutely stop every insect.",
+        "decisiveFlaw": "None; may prevent some species is properly hedged."
+      },
+      {
+        "label": "3",
+        "intent": "mutual-benefit relation",
+        "temptingBecause": "Predators eat the insects, not the plant's tissue.",
+        "decisiveFlaw": "None; the plant gains protection and predators gain prey."
+      },
+      {
+        "label": "4",
+        "intent": "intended antonym substitution for stalemate",
+        "temptingBecause": "Maintaining an unequal state can sound inconsistent with reciprocal adaptation.",
+        "decisiveFlaw": "Not decisive: the text explicitly says the process is 'not a matter of natural balance,' so 'maintain the imbalance' is contextually defensible and no equality claim is stated."
+      },
+      {
+        "label": "5",
+        "intent": "variety of plant defenses",
+        "temptingBecause": "The comparison 'as diverse as the number of genera' is rhetorically loose.",
+        "decisiveFlaw": "None; diverse appropriately describes the wide range of defenses."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "The intended target 'imbalance' is not necessarily inappropriate: it is directly licensed by 'not a matter of natural balance,' and the passage never asserts equal strength between plants and insects.",
+        "recommendation": "Replace the target with a word that unambiguously contradicts ongoing reciprocal adaptation, or rewrite the surrounding claim to establish a stalemate before testing its antonym."
+      },
+      {
+        "severity": "critical",
+        "evidence": "Underline markers appear in the order (e), (a), (b), (c), (d), while the displayed answer list is numbered by word rather than synchronized with those markers.",
+        "recommendation": "Render markers in sequential option order and keep marker labels synchronized with answer labels."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The explanation claims imbalance does not fit but omits the immediately preceding 'not ... natural balance' wording that positively licenses an imbalance reading.",
+        "recommendation": "Redesign the target and explain why the displayed substitute is impossible under every contextually available sense."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The rendered marker occurrence order is (e),(a),(b),(c),(d), answer choices use 1-5, and wrong-option explanations use (a)-(e). Although word strings can be manually matched, the student-facing ordinal and explanation-key namespaces are not synchronized.",
+        "recommendation": "Assign markers in passage order and use one label namespace end-to-end for choices, stored keys, and explanations."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "If forced, 4 is the intended answer because stalemate is the source-coherent endpoint, but NO_ANSWER is defensible under the displayed wording.",
+      "The marker permutation independently fails the render/label consistency gate.",
+      "storedAnswer, question.correctAnswer, and structuredData.correctAnswer all contain 4, so the frozen forced answer agrees with storage; that does not resolve the defensible NO_ANSWER analysis.",
+      "markedWords confirms source stalemate -> displayed imbalance at (d), while the first visible underline is nevertheless labeled (e).",
+      "Metadata marks this item qualityMode=relaxed, reviewRecommended=true, and includes a generation notice recommending review; the substantive defects validate that warning."
+    ],
+    "storedAnswer": "4",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V1",
+        "V2",
+        "V4",
+        "V5"
+      ],
+      "summary": "Fails V1, V2, V4, V5; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 0,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The explanation simply asserts that imbalance contradicts a stalemate and never addresses the displayed premise 'not a matter of natural balance,' which makes imbalance defensible. It therefore cannot establish a unique wrong word."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "Source stalemate was replaced by imbalance, but the substitution is not unambiguously wrong in the displayed context.",
+      "renderStatus": "fail",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": false,
+      "assessment": "The source/render audit found a student-visible integrity or label defect recorded in the failed gates."
+    },
+    "metadataAudit": {
+      "generationPlan": "PREMIUM",
+      "qualityMode": "relaxed",
+      "qualityWarnings": [],
+      "reviewRecommended": true
+    }
+  },
+  {
+    "itemId": "Q011",
+    "blindAnswer": "E",
+    "confidence": "low",
+    "alternativeAnswers": [
+      "NO_ANSWER"
+    ],
+    "validity": {
+      "V1": true,
+      "V2": false,
+      "V3": false,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 3,
+      "C3": 2,
+      "C4": 1,
+      "C5": 0,
+      "C6": 0
+    },
+    "optionAudit": [
+      {
+        "label": "A",
+        "intent": "pronoun reference",
+        "temptingBecause": "Style is singular nearby.",
+        "decisiveFlaw": "None; them refers to plural guidelines."
+      },
+      {
+        "label": "B",
+        "intent": "content-clause complementizer",
+        "temptingBecause": "Acknowledging can also take a noun phrase.",
+        "decisiveFlaw": "None; that correctly introduces readers expect...."
+      },
+      {
+        "label": "C",
+        "intent": "human relative pronoun",
+        "temptingBecause": "That would also be possible in a restrictive relative.",
+        "decisiveFlaw": "None; who is fully licensed."
+      },
+      {
+        "label": "D",
+        "intent": "comparative construction",
+        "temptingBecause": "Even is optional emphasis.",
+        "decisiveFlaw": "None; even more important ... than is grammatical."
+      },
+      {
+        "label": "E",
+        "intent": "intended active/passive valency error",
+        "temptingBecause": "The natural source-like meaning is writing does not permit communication and feedback.",
+        "decisiveFlaw": "Not decisive: permit licenses a double-object passive (compare 'Passengers are permitted one item'), so 'writing is not permitted [communication and feedback]' is syntactically possible under a metonymic recipient reading, though pragmatically awkward."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "E is not categorically ungrammatical because be permitted + noun phrase is a standard passive frame; inanimate/system recipients are also possible. The item therefore has a defensible no-answer analysis.",
+        "recommendation": "Do not use a valency/voice mutation with a licensed double-object passive. Replace it with a form whose grammatical failure survives all plausible parses."
+      },
+      {
+        "severity": "major",
+        "evidence": "Even under the intended reading, E is identified by local awkwardness rather than KILLER-level structure.",
+        "recommendation": "Choose a nonlocal and unambiguous dependency rather than relying on semantic oddness."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The explanation says passive is impossible because 'the nonverbal communication and immediate feedback' follows permit. English permits patterns such as 'Passengers are permitted one item,' so a passive may retain the second object.",
+        "recommendation": "Withdraw the false voice rule and replace the target with an unambiguously ill-formed source-to-display mutation."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "E is the intended answer and restoring 'does not permit' gives the natural proposition, but grammaticality—not stylistic preference—is what the stem asks.",
+      "The standard passive frame leaves NO_ANSWER defensible, failing uniqueness and type intent.",
+      "All stored key fields contain (E), agreeing with the frozen intended answer but not defeating the NO_ANSWER alternative.",
+      "markedExpressions records source 'does not permit' -> displayed 'is not permitted', exactly the valency mutation challenged in the blind review.",
+      "The explanation is internally synchronized and label-complete, yet its central grammatical claim is false, failing V4."
+    ],
+    "storedAnswer": "(E)",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V2",
+        "V3",
+        "V4"
+      ],
+      "summary": "Fails V2, V3, V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 0,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The explanation states a false absolute rule that a transitive verb followed by a noun phrase must be active. Permit allows a retained-object/double-object passive, so the displayed form is awkward but grammatically analyzable."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "Source active 'does not permit' was changed to passive 'is not permitted'; the latter has a defensible double-object parse.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": false,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "STANDARD",
+      "qualityMode": null,
+      "qualityWarnings": [],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q012",
+    "blindAnswer": "3",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 3,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": 0
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "A-only error",
+        "temptingBecause": "Even and absent are correct, and what can introduce fused relatives elsewhere.",
+        "decisiveFlaw": "What would itself fill the object role of expect, which is already filled by the same things."
+      },
+      {
+        "label": "2",
+        "intent": "all-three-error distractor",
+        "temptingBecause": "Each word is morphologically related to a locally plausible form.",
+        "decisiveFlaw": "What conflicts with same things, very cannot directly intensify more, and absently cannot prenominally modify reader."
+      },
+      {
+        "label": "3",
+        "intent": "correct combination",
+        "temptingBecause": "It supplies a complementizer, a comparative intensifier, and an attributive adjective.",
+        "decisiveFlaw": "None; that - even - absent is grammatical and natural throughout."
+      },
+      {
+        "label": "4",
+        "intent": "B-only error",
+        "temptingBecause": "That and absent are correct, while very is a common degree word.",
+        "decisiveFlaw": "Standard English requires even/much/far more important, not very more important."
+      },
+      {
+        "label": "5",
+        "intent": "C-only error",
+        "temptingBecause": "That and even are correct, and absently resembles the intended adjective.",
+        "decisiveFlaw": "The noun reader requires the adjective absent, not the adverb absently."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "Each box is solved by a short local rule, and the option matrix includes a clean one-error distractor for each; no integrated KILLER-level dependency is needed.",
+        "recommendation": "Retain the systematic matrix but use at least one unambiguous nonlocal structural dependency and calibrate the requested difficulty accordingly."
+      },
+      {
+        "severity": "critical",
+        "evidence": "For A the explanation says expect lacks an object and that modifies the same things. The actual structure is 'acknowledging that [readers expect the same things [that listeners expect...]]'; the first that is a complementizer and expect's object is present.",
+        "recommendation": "Rewrite A to distinguish the content-clause that from the later relative that; update the key point that currently repeats the same misconception."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "A requires that because same things is already expect's object; B requires even before a comparative; C requires adjective absent.",
+      "Option 3 is unique and the matrix is orderly, but difficulty is ordinary.",
+      "The stored key is 3 in every answer field and matches the frozen answer.",
+      "The slots and option matrix correctly store that-even-absent, so V1-V3 remain valid.",
+      "The duplicated explanation and keyPoints consistently encode the same false A analysis; synchronization alone cannot pass V4.",
+      "Metadata warnings combo-killer-trap-mix and combo-killer-point-mix corroborate the ordinary difficulty."
+    ],
+    "storedAnswer": "3",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V4"
+      ],
+      "summary": "Fails V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 0,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "B and C are explained correctly, but A is fundamentally misparsed: the blank that is a complementizer after acknowledging, not an objective relative modifying the same things; readers expect the same things is complete."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The source-correct slot values that-even-absent are preserved as option 3.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "STANDARD",
+      "qualityMode": null,
+      "qualityWarnings": [
+        "combo-killer-trap-mix",
+        "combo-killer-point-mix"
+      ],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q013",
+    "blindAnswer": "3",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": false,
+      "V2": true,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 3,
+      "C3": 1,
+      "C4": 1,
+      "C5": 1,
+      "C6": 1
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "adjacent-art-domain distraction",
+        "temptingBecause": "Architecture and sculpture are listed near the blank.",
+        "decisiveFlaw": "Their physical restoration does not solve the missing continuous evidence for garments."
+      },
+      {
+        "label": "2",
+        "intent": "problem/consequence overstatement",
+        "temptingBecause": "The passage seeks equal significance for dress study.",
+        "decisiveFlaw": "It does not say other disciplines destroyed credibility; it explains the evidentiary method needed to reconstruct dress history."
+      },
+      {
+        "label": "3",
+        "intent": "correct cross-media inference",
+        "temptingBecause": "Later painted, printed, photographed, filmed, drawn, and sculpted sources show garments in use.",
+        "decisiveFlaw": "None; non-textile artistic representations compensate for gaps in surviving garments."
+      },
+      {
+        "label": "4",
+        "intent": "polarity reversal",
+        "temptingBecause": "Scholarly purity can sound methodologically cautious.",
+        "decisiveFlaw": "The whole passage advocates relying on visual art to understand dress."
+      },
+      {
+        "label": "5",
+        "intent": "source-direction reversal",
+        "temptingBecause": "Dress is compared with other artistic genres.",
+        "decisiveFlaw": "Art is evidence for dress, not dress the primary reference for all other genres."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "The final sentence says that without art it is 'unlikely' displays would be awkward imitations, reversing the paragraph's claim. Coherence requires 'likely' or 'unlikely ... anything other than awkward imitations.'",
+        "recommendation": "Restore the missing polarity/exception wording and verify the entire source span before release."
+      },
+      {
+        "severity": "major",
+        "evidence": "Despite its length, the passage repeatedly lists non-textile visual evidence, making option 3 direct and the other options topically remote.",
+        "recommendation": "For KILLER level, use competing claims about what visual evidence supplies (movement, continuity, maker intention, or chronology) rather than unrelated reversals."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The explanation says non-textile art is indispensable but does not reconcile the displayed final sentence: 'Without ... art ... it is unlikely that displays ... would be awkward imitations.' That sentence says the opposite unless 'anything other than' is restored.",
+        "recommendation": "Repair the source sentence first, then update the explanation to cite the corrected concluding evidence."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "The gap in surviving garments and the later inventory of art/media uniquely support 3.",
+      "The closing polarity defect is an internal passage corruption even before source comparison.",
+      "All stored key fields are ③ and match the frozen answer.",
+      "originalExpression is 'these other areas would provide much of the source material'; ③ is a faithful abstraction of that sentence.",
+      "The explanation copies and labels synchronize, but omission of the fatal closing contradiction prevents an accurate account of the actual displayed logic."
+    ],
+    "storedAnswer": "③",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V1",
+        "V4"
+      ],
+      "summary": "Fails V1, V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 1,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The blank-specific inference and key ③ are correct, but the explanation presents the passage as coherent and never acknowledges the closing sentence's reversed polarity, which directly undermines the stated evidentiary logic."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The intended source sentence for the blank is preserved in originalExpression, but another student-visible source sentence has a missing/reversed polarity phrase.",
+      "renderStatus": "fail",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The source/render audit found a student-visible integrity or label defect recorded in the failed gates."
+    },
+    "metadataAudit": {
+      "generationPlan": "STANDARD",
+      "qualityMode": null,
+      "qualityWarnings": [
+        "blank-killer-polarity-shortcut"
+      ],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q014",
+    "blindAnswer": "2",
+    "confidence": "medium",
+    "alternativeAnswers": [
+      "4"
+    ],
+    "validity": {
+      "V1": true,
+      "V2": false,
+      "V3": false,
+      "V4": false,
+      "V5": true
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 3,
+      "C3": 2,
+      "C4": 2,
+      "C5": 1,
+      "C6": 1
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "A-only error",
+        "temptingBecause": "Which and shading are source-natural.",
+        "decisiveFlaw": "Select is a verb and requires adverb unintentionally, not adjective unintentional."
+      },
+      {
+        "label": "2",
+        "intent": "intended correct combination",
+        "temptingBecause": "Adverbial modification, a nonrestrictive relative, and active gradual transition all fit.",
+        "decisiveFlaw": "None on the intended reading; unintentionally - which - shading is the most natural sequence."
+      },
+      {
+        "label": "3",
+        "intent": "all-three-error distractor",
+        "temptingBecause": "Each form exists in English in other constructions.",
+        "decisiveFlaw": "Unintentional cannot modify select, what cannot head this comma relative, and shaded imposes a passive/caused reading."
+      },
+      {
+        "label": "4",
+        "intent": "C-only alternative",
+        "temptingBecause": "A and B are correct, while 'variations, shaded into new forms' can be parsed as a reduced passive with an implicit evolutionary cause.",
+        "decisiveFlaw": "Only a preference for the intransitive gradual-transition sense favors shading; shaded is not categorically ungrammatical under the transitive/passive sense of shade."
+      },
+      {
+        "label": "5",
+        "intent": "B-only error",
+        "temptingBecause": "A and C are correct and what can introduce nominal relatives.",
+        "decisiveFlaw": "After a comma with an antecedent, a nonrestrictive relative requires which; what has no antecedent."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "C permits a defensible reduced-passive parse: 'New variations, [having been] shaded into entire new forms and adaptations....' The context prefers intransitive shading but the stem asks grammatical correctness, not stylistic preference.",
+        "recommendation": "Rewrite C so one form violates an invariant syntactic constraint, or supply context that removes the transitive/implicit-agent reading."
+      },
+      {
+        "severity": "major",
+        "evidence": "A and B are elementary local category choices, and the ambiguity at C creates dispute rather than beautiful KILLER difficulty.",
+        "recommendation": "Use a harder but uniquely licensed dependency and avoid voice/valency alternatives."
+      },
+      {
+        "severity": "critical",
+        "evidence": "The explanation says shaded merely signals passive/completed meaning and therefore cannot fit. That concedes a grammatical reduced-passive construction; 'variations, [having been] shaded into new forms' remains analyzable, making option 4 defensible under a different valency sense.",
+        "recommendation": "Replace C with a contrast governed by an invariant syntactic constraint, not a context-preferred active/passive construal."
+      }
+    ],
+    "grade": "F",
+    "evidence": [
+      "Option 2 is the source-natural answer, but option 4 remains defensible as grammatical English with a different voice construal.",
+      "The C pair therefore fails both answer uniqueness and alignment between grammaticality and the intended option matrix.",
+      "All stored answer fields contain 2 and match the frozen preferred answer; option 4 remains recorded as the frozen alternative.",
+      "Slots store shading as correct and shaded as wrong, while the explanation relies on semantic preference to enforce that distinction.",
+      "Metadata already warns that the KILLER option matrix lacks enough multi-slot traps."
+    ],
+    "storedAnswer": "2",
+    "agreement": true,
+    "fatality": {
+      "fatal": true,
+      "failedGates": [
+        "V2",
+        "V3",
+        "V4"
+      ],
+      "summary": "Fails V2, V3, V4; rubric therefore requires F."
+    },
+    "explanationAudit": {
+      "status": "fail",
+      "C6Score": 1,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "The A and B analyses are correct. For C, the explanation states the preferred intransitive gradual-transition reading but does not exclude the grammatically available reduced-passive reading of shaded with an implicit cause."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "The source-natural values unintentionally-which-shading form option 2, but the C contrast does not eliminate a passive alternative.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": false,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "PREMIUM",
+      "qualityMode": null,
+      "qualityWarnings": [
+        "combo-killer-trap-mix"
+      ],
+      "reviewRecommended": false
+    }
+  },
+  {
+    "itemId": "Q015",
+    "blindAnswer": "3",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": true,
+      "V2": true,
+      "V3": true,
+      "V4": true,
+      "V5": true
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 3,
+      "C3": 1,
+      "C4": 2,
+      "C5": 0,
+      "C6": 3
+    },
+    "optionAudit": [
+      {
+        "label": "1",
+        "intent": "quality of practical style",
+        "temptingBecause": "Practical and polished can sometimes imply different registers.",
+        "decisiveFlaw": "None; a refined, effective practical style can naturally be polished."
+      },
+      {
+        "label": "2",
+        "intent": "audience expectation",
+        "temptingBecause": "Listeners, not readers, are the comparison group.",
+        "decisiveFlaw": "None; readers do expect clarity, relevance, and proportion."
+      },
+      {
+        "label": "3",
+        "intent": "antonymic manner substitution",
+        "temptingBecause": "The preceding sentence mentions too much information.",
+        "decisiveFlaw": "Writers should give information appropriately; excessively would prescribe the very excess that makes audiences lose interest."
+      },
+      {
+        "label": "4",
+        "intent": "medium constraint",
+        "temptingBecause": "Writing does permit verbal content.",
+        "decisiveFlaw": "None; it does not permit the nonverbal communication and immediate feedback available in conversation."
+      },
+      {
+        "label": "5",
+        "intent": "planning for an absent audience",
+        "temptingBecause": "Immediate feedback is unavailable.",
+        "decisiveFlaw": "None; that absence is exactly why writers must anticipate the reader's response."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "Excessively is directly contradicted by too much or too little and by the discourse value proportion; no long-range competition is needed.",
+        "recommendation": "For KILLER level, choose a target whose polarity is resolved only by integrating multiple claims and use distractors with equally strong local anchors."
+      }
+    ],
+    "grade": "C",
+    "evidence": [
+      "Option 3 alone conflicts with the stated demand for proportion and appropriate information.",
+      "The answer is unique, but it is an immediate antonymic substitution rather than a high-difficulty contextual vocabulary judgment.",
+      "storedAnswer, question.correctAnswer, and structuredData.correctAnswer are all 3 and match the frozen answer.",
+      "markedWords records source appropriately -> displayed excessively at marker (c); the sequential (a)-(e) markers map deterministically to numeric options 1-5.",
+      "The main and wrong-option explanations are complete, synchronized, and substantively correct; the remaining failure is craft/difficulty, not validity."
+    ],
+    "storedAnswer": "3",
+    "agreement": true,
+    "fatality": {
+      "fatal": false,
+      "failedGates": [],
+      "summary": "No validity gate fails; final grade is determined by craft."
+    },
+    "explanationAudit": {
+      "status": "pass",
+      "C6Score": 3,
+      "storedKeySynchronized": true,
+      "duplicateExplanationFieldsSynchronized": true,
+      "assessment": "Accurately connects proportion and the too-much/too-little warning to appropriately, and gives a relevant explanation for each non-answer word."
+    },
+    "sourceRenderKeyAudit": {
+      "sourceTransformation": "Source appropriately was replaced by excessively at the third sequential marker.",
+      "renderStatus": "pass",
+      "storedKeyFieldsSynchronized": true,
+      "substantiveKeyValid": true,
+      "assessment": "The private passage/render fields reproduce the stored student-facing packet; any separate V2/V3 defect is recorded above."
+    },
+    "metadataAudit": {
+      "generationPlan": "STANDARD",
+      "qualityMode": null,
+      "qualityWarnings": [],
+      "reviewRecommended": false
+    }
+  }
+]

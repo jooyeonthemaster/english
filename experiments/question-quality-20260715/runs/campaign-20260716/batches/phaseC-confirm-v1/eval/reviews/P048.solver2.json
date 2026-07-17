@@ -1,0 +1,35 @@
+{
+  "pid": "P048",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'ability' obligatorily takes a to-infinitive complement ('ability to solve'). 'to creatively solve' is a split infinitive — stylistically debated historically but fully grammatical in modern standard English and accepted in KSAT conventions. The adverb correctly modifies 'solve'. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Subject 'your critical thinking skills' is plural and is the theme of transitive 'enhance', so passive 'are enhanced' is required (skills do not enhance anything here). Plural agreement 'are' is correct; 'greatly' is a well-formed adverbial modifier. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'lead to ___' requires an NP object of the preposition 'to'; 'substance abuse' is a standard N+N compound noun phrase. Semantically coherent with the following clause about alcohol/drugs as coping. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Preposition 'of' requires a gerund; since 'lonely' is an adjective, the copular gerund 'being lonely' is obligatory ('the stress of being lonely'). No alternative (e.g., bare adjective or infinitive) is grammatical here. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "The slot needs a preposition meaning 'such as' taking the NP complement 'obesity, smoking, and heart disease'. 'like' has this prepositional use; 'alike' is strictly a predicative adjective ('they are alike') or adverb ('treat them alike') and cannot govern an NP. Rescue parses fail: postpositive adverbial 'factors alike' leaves the following NP list syntactically unlicensed; no reduced relative or archaic prepositional reading exists. Must be 'like'. 비문 — 어법상 틀린 부분."
+    }
+  ],
+  "note": "Clean single-answer item. The (E) alike/like contrast is a classic, formally decidable error (category: adjective/adverb vs. preposition). All four distractors are independently verifiable as grammatical with clear governing rules (ability+to-inf, passive+plural agreement, NP after 'lead to', gerund after 'of'). No alternative parse renders 'alike' grammatical, and no distractor admits a defensible 'wrong' reading. Minor observation (not grammar): the discourse pivot 'aren't just important for academic success' is slightly abrupt since academic success was not explicitly named earlier, but this does not affect the grammar task."
+}

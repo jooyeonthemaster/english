@@ -1,0 +1,66 @@
+{
+  "pid": "P028",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "관계절 내 수동태·수일치 판정 — 'credit A with B'의 수동형 'be credited with'를 태/수 관점에서 검증하게 함",
+      "temptingBecause": "who 주격 관계절 + 수동태 + with 전치사구가 겹쳐 태를 능동('credits')으로 착각하거나 discovering과의 관계를 혼동할 수 있음",
+      "decisiveFlaw": "선행사 'the Italian explorer'(단수)에 is가 정확히 호응하고, 콜럼버스는 공을 '돌려받는' 대상이므로 수동태가 필연 — 완전 적법하여 정답 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "비인칭(무의미주어) 독립분사구문 — considering의 전치사화된 관용 용법 인지",
+      "temptingBecause": "주절 주어가 'honoring the explorer'(동명사구)여서 considering의 의미상 주어와 불일치 → 현수분사(dangling participle)로 오판하고 'considered'로 고치고 싶어짐",
+      "decisiveFlaw": "considering은 given/regarding처럼 전치사화된 관용 표현으로 주절 주어와의 일치가 요구되지 않음 — 적법하여 정답 불가"
+    },
+    {
+      "label": "(C)",
+      "intent": "주어 자리 동명사구 판정 — 준동사가 주어 핵으로 기능하는 구조 인지",
+      "temptingBecause": "직전의 considering과 -ing형이 연달아 나와 분사구문의 연속으로 오독하거나, 정동사 자리로 착각해 'to honor'/'honor'로 고치고 싶어질 수 있음",
+      "decisiveFlaw": "'honoring the explorer'는 목적어를 취한 동명사구 주어이고 뒤의 does(단수)가 정확히 호응 — 적법하여 정답 불가"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 정동사/준동사 구분: 관계절 수식을 받는 주어 'the diseases' 뒤 본동사 자리에 준동사 reducing이 온 비문 판정",
+      "temptingBecause": "관계절 내부의 brought를 본동사로 착각하거나, 'the diseases ... reducing ...'을 분사 수식 구조로 읽으면 지나칠 수 있음",
+      "decisiveFlaw": "관계절 'that Columbus and other Europeans brought with them'을 걷어내면 문장에 정동사가 전무한 fragment — 과거 정동사 'reduced'로 교정해야 하며 교정 시 원지문과 정확히 일치(최소대립쌍 성립)"
+    },
+    {
+      "label": "(E)",
+      "intent": "등위 병렬 + 관계절 내 수일치 — honors와 병렬인 remembers가 단수 선행사 'a new holiday'에 호응하는지 판정",
+      "temptingBecause": "직전 명사 'Native Americans'(복수)와 뒤의 'their suffering'에 이끌려 'remember'(복수형)로 고치고 싶어짐",
+      "decisiveFlaw": "and는 that절 내부의 honors와 remembers를 병렬로 묶고 둘 다 단수 선행사 'a new holiday'에 호응 — 적법하여 정답 불가"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TERMINOLOGY_MINOR",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설의 '전치사적 분사구문'은 다소 비표준 용어이나, considering의 전치사화(비인칭 독립분사구문) 분석 자체는 사실과 일치하므로 오분석은 아님"
+    },
+    {
+      "code": "TENSE_FRAMING_MINOR",
+      "severity": "minor",
+      "evidence": "주해설이 '과거시제 정동사가 필요한 자리'라고 단정 — 엄밀히는 '정동사'가 필요한 자리이고 과거시제는 문맥(원문) 귀결이지만, 교정형 reduced와 일치하므로 실질적 오류는 아님"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문의 유일한 변형은 reduced→reducing(의도된 오류)이며 최소대립쌍이 성립하고, 각 밑줄의 독립 검증 결과 (D)만 비문(관계절 수식 주어 뒤 정동사 부재)으로 정답 유일성이 확보된다. 해설의 구조 분석(복수 주어 the diseases, 관계절 수식, 정동사 부재, reduced 교정)도 실제 문장과 정확히 일치한다. 그러나 요청 난이도 KILLER 대비 치명적 공예 결함: '수식어 낀 주어 + 본동사 자리의 -ing'은 한국 어법 문항에서 가장 많이 훈련되는 정·준동사 기본 패턴이라 숙련 학생에게 사실상 즉시 노출되며(RUBRIC §C의 '즉시 드러나지 않는다' 조건 위배), 지문 자체도 어휘·통사 복잡도가 낮은 평이한 논설문이다. (A)·(C)는 빠르게 소거되고 실제 판단을 요구하는 디코이는 (B)·(E) 정도여서 C3=2, 난이도 정합 C5=1. killerConditionsMet=false — 최소대립쌍·명확한 문법 판단·동일 포인트 디코이 부재 조건은 충족하나 '구조를 읽어야 하며 즉시 드러나지 않는 정답' 조건과 A등급 전제를 충족하지 못함. 합계 16, C 최저 1점이므로 등급 C(중상위 난이도용 재설계 필요 — 예: 오류 포인트를 더 깊은 구조(도치·삽입절 너머 병렬 등)로 이동하거나 지문 복잡도 상향)."
+}

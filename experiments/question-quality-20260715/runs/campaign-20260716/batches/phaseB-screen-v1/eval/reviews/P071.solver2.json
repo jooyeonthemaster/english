@@ -1,0 +1,35 @@
+{
+  "pid": "P071",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "축약 관계절(수동): 'mistakes [which are] made by organizations'. 선행사 mistakes는 make의 피동작주이므로 과거분사 made가 정확하다. 능동 관계(making)로 읽을 여지가 없어 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "consider는 동명사 목적어를 취하는 동사(consider + V-ing). 'consider experimenting with social media'는 표준 결합이며, to부정사 대안은 이 의미('~해 볼 것을 고려하다')에서 비문. 정문."
+    },
+    {
+      "label": "C",
+      "verdict": "incorrect",
+      "reason": "장거리 수일치 오류. 주어 NP의 핵은 단수 대명사 'One'이고 'of the most common mistakes...'는 of-전치사구 내부 명사라 수일치를 지배하지 못한다. 'when they first consider experimenting...'은 부가절로 주어를 바꾸지 못함. 따라서 be동사는 is여야 하며 are는 비문. 도치·존재문 등 복수 핵을 살릴 대안 해석도 없음(보어가 that절이므로). 유일한 오류."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "계사 뒤 주격 보어로 기능하는 명사절을 이끄는 접속사 that. 뒤따르는 절 'they focus too much on X and not enough on Y'는 결핍 없는 완전한 절이므로 what이 아닌 that이 옳다. 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "상관접속 병렬: 'must either solve a problem ... or result in an improvement'. 병렬 시작점은 조동사 must 뒤이므로 두 등위항 모두 원형부정사(solve / result)여야 하고 result는 이를 충족. resulting/results로 바꾸면 병렬 붕괴. 정문."
+    }
+  ],
+  "note": "형식적 판정 결과 (C)만이 어법 오류(One ... is 단수일치)로 성립하며, 나머지 네 밑줄은 각각 축약 수동 관계절, 동명사 보충어, 명사절 접속사, 조동사 병렬로 모두 정문임을 확인. 대안 해석으로 (C)를 구제할 경로 없음. 복수 정답 소지 없음."
+}

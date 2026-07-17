@@ -1,0 +1,82 @@
+{
+  "pid": "P017",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 후치수식 분사의 능/수동 판별 (embodied vs embodying)",
+      "temptingBecause": "process가 무언가를 '구현한다'는 능동 해석으로 embodying을 기대하거나, 분사를 본동사로 오인할 수 있다",
+      "decisiveFlaw": "과정은 기계에 '구현되는' 대상이므로 수동 과거분사 embodied가 정확 — 오류 아님. 'a process embodied in a machine'은 원문 그대로이며 흠이 없다"
+    },
+    {
+      "label": "(B)",
+      "intent": "재귀대명사 vs 일반 목적격 대명사 판별",
+      "temptingBecause": "관계절 내부라 주어(that=any process)와 목적어의 동일 지시 관계를 놓치면 it이 맞아 보일 수 있다",
+      "decisiveFlaw": "repeats의 주어와 목적어가 동일 대상(그 과정 자신)이므로 재귀형 itself가 필수 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사가 잔류한 축약절(although + 분사)의 태 판별",
+      "temptingBecause": "although 뒤에 절이 아닌 분사만 남은 낯선 구조라 비문으로 의심하기 쉽고, masking(능동)과의 태 선택을 유발한다",
+      "decisiveFlaw": "생략된 의미상 주어 this(=iterative process)가 처음에는 '가려져 있는' 대상이므로 수동 과거분사 masked가 정확 — 오류 아님. 오답 후보 중 저항이 가장 큰 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 관계대명사 that의 적격성 (콤마를 포함한 긴 선행사 뒤)",
+      "temptingBecause": "선행사 'another, much longer scale clock' 내부의 콤마 때문에 계속적 용법으로 착각해 that이 불가하고 which여야 한다고 오인할 수 있다",
+      "decisiveFlaw": "콤마는 선행사 명사구 내부 수식(another, much longer scale)의 콤마이고 관계절은 제한적 용법이므로 주격 that 적법 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "대동사 do vs be — VP 생략의 선행사가 일반동사구일 때 do-지지 요구 (정답)",
+      "temptingBecause": "seem이 연결동사처럼 느껴져 be로 받고 싶어지고, 직전 문장의 'appears to be like this'가 be 잔상을 남기며, 'It seems ... but in fact is not'이 표면상 자연스럽게 들린다",
+      "decisiveFlaw": "생략된 VP의 선행사는 일반동사구 'yield a smooth time scale'이므로 대동사는 does여야 한다. is not은 be-선행사가 없어 복원 불가능한 비문 — 이것이 유일한 어법 오류이며 does로 교정하면 정확히 원문이 된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MINOR_TRANSLATION_LOOSE",
+      "severity": "minor",
+      "evidence": "정답 해설에서 'smooth time scale'을 '일정한 시간 척도'로 옮겼는데 '매끄러운/연속적인'이 더 정확하다. 다만 통사 분석(대동사 does 필요)에는 영향 없는 번역 느슨함"
+    },
+    {
+      "code": "MINOR_TEMPTING_NOT_EXPLICIT_PER_DECOY",
+      "severity": "minor",
+      "evidence": "오답 해설 4건은 각 밑줄의 point와 '왜 옳은가'는 정확히 제시하지만 '왜 헷갈리는가(why tempting)'를 명시적으로 서술하지는 않는다. 각 디코이의 유혹 요인은 구조상 자명하게 복원 가능하여 필러 디코이는 없음"
+    }
+  ],
+  "auditDetail": {
+    "V1": "렌더 지문을 원지문과 전문 대조: (E) 위치의 does→is 치환(의도된 오류 주입) 외에 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 밑줄 마커 (A)~(E)가 선택지 5개와 정확히 일치하고 각 마커 위치가 markedExpressions.surroundingText와 부합.",
+    "V2": "각 밑줄 독립 검증 — (A) embodied: 수동 후치수식으로 적법, embodying이면 오히려 비문. (B) itself: 동일 지시 재귀 필수. (C) masked: 'although (it is) at first masked' 생략구문, 수동으로 적법. (D) that: 제한적 주격 관계대명사 적법(선행사 내부 콤마는 계속적 용법 아님). (E) is: VP 생략의 선행사가 be가 아닌 'yield a smooth time scale'이므로 is not은 복원 불가 — does not만 적법. 정답 집합 = {(E)} 단일, 선언과 일치.",
+    "V3": "원지문·발문 모두 자연스럽고, (E)의 비문성은 유형(어법상 틀린 것 고르기) 의도와 정확히 일치. does로 교정한 완성문은 원문과 동일하게 문법적.",
+    "V4": "정답 해설의 구조 분석(대동사 자리, 선행 일반동사구 yield ... 대신, 3인칭 단수 does 교정) 모두 사실과 일치. 오답 해설 4건의 용어(후치수식 분사, 재귀대명사, 접속사 잔류 생략/분사구문, 주격 관계대명사)도 실제 통사 구조와 부합. 오분석·환각 없음.",
+    "V5": "선언 정답 (E) = markedExpressions에서 isError:true인 유일 항목 (E). errorExpression 'is'가 렌더 밑줄과 일치, correction 'does'가 해설 교정형과 일치, surroundingText는 교정 후 원문과 일치. keyPoints 3건이 (E)(B)(C) 해설과 모순 없음. (E)의 expression:'does'/errorExpression:'is'는 원형/표시형 구분 관례로 내부 모순 아님."
+  },
+  "killerConditionsMet": true,
+  "killerConditionsDetail": {
+    "minimalPair": "충족 — source 'does' → displayed 'is', 교정 시 정확히 원문 복원",
+    "clearGrammarJudgment": "충족 — do-대동사 vs be는 VP 생략 선행사에 의해 강제되는 범주적 판단. valency/수여/singular they류 대안 분석 여지 없음. 'is not'을 살릴 수 있는 타당한 대안 해석(예: 형용사 생략) 없음",
+    "allFiveExplained": "실질 충족 — 5개 밑줄 모두 고유 point와 정오 근거가 존재하고 필러 없음. 단 why-tempting이 디코이별로 명시 서술되지는 않음(minor)",
+    "structuralNotSurface": "충족 — 철자·비단어·인접 수일치가 아니라 'seems to yield'까지 거슬러 선행 VP를 복원해야 판정 가능",
+    "noShadowingDecoy": "충족 — 대동사 point의 디코이가 따로 없어 정답을 가리지 않음. (A)/(C)의 point 중복은 디코이 간 문제로 이 조건 위반 아님"
+  },
+  "grade": "A",
+  "notes": "V1~V5 전부 통과. 정답 (E)는 do-대동사/VP 생략이라는 정전급 포인트를 최소대립쌍으로 구현했고(C1=4), 교정 시 원문이 정확히 복원되며 단서 누출이 없다(C4=4). 감점 요인: (A)와 (C)가 pointCode 'c'(분사 능수동)를 공유해 오개념 커버리지가 4종이 아닌 3종+변형이라 C2=3. (A)(B)(D)는 상위권 학생이 빠르게 소거 가능하고 실질 저항은 (C)와 (E)에 집중되어 KILLER치고는 디코이 경쟁력이 다소 얕다(C3=3, C5=3) — 'in fact ___ not' 대동사 패턴 자체가 수험가에서 많이 훈련된 템플릿이라는 점도 최상위권 변별을 약화. 해설은 짧고 정확하며 함정(seem→be 착각)을 선명히 분리(C6=4). 합계 21, 전 축 3 이상으로 A. KILLER §C 조건 5항 충족(단 디코이별 why-tempting 명시 서술 부재는 minor)."
+}

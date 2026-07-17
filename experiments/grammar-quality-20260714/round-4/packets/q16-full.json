@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-obvious-adjacent-sv-agreementx1"
+  ],
+  "layout": "(A):dec=k  (B):dec=k  (C):dec=i  (D):ANS=e  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 233,
+        "relPos": 0.299,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 292,
+        "relPos": 0.374,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 385,
+        "relPos": 0.494,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 447,
+        "relPos": 0.573,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 687,
+        "relPos": 0.881,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.881,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "buying",
+        "isError": false,
+        "errorExpression": "buying",
+        "surroundingText": "He tells you that he knows you are busy and he wants to help you out by buying you the sandwich.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "to appreciate",
+        "isError": false,
+        "errorExpression": "to appreciate",
+        "surroundingText": "In this case, you are very likely to appreciate your friend's help.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "offers",
+        "isError": false,
+        "errorExpression": "offers",
+        "surroundingText": "However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(D)",
+        "expression": "be confused",
+        "isError": true,
+        "correction": "be confused",
+        "errorExpression": "be confuse",
+        "surroundingText": "Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\"",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "knowing",
+        "isError": false,
+        "errorExpression": "knowing",
+        "surroundingText": "You trust your best friend so much that you won't worry about him knowing you too well,",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "buying"
+      },
+      {
+        "label": "(B)",
+        "text": "to appreciate"
+      },
+      {
+        "label": "(C)",
+        "text": "offers"
+      },
+      {
+        "label": "(D)",
+        "text": "be confuse"
+      },
+      {
+        "label": "(E)",
+        "text": "knowing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 전치사 by 뒤에 연결되어 수단을 구성하는 동명사 자리로, 'buying' 형식이 어법상 옳습니다.",
+      "(B)": "이 자리는 형용사 likely 뒤에서 보완 관계를 이끄는 to부정사 구조로, 'to appreciate'가 어법상 옳습니다.",
+      "(C)": "이 자리는 조건절 내에서 주어인 a stranger에 병렬로 일치되는 동사 구조로, shows와 병렬을 이루는 'offers' 단수 표현이 어법상 옳습니다.",
+      "(E)": "이 자리는 전치사 about의 목적어인 동명사 knowing과 그 의미상 주어인 him의 관계를 묻는 자리로, 'knowing'이 어법상 옳습니다."
+    },
+    "explanation": "주어 'you(당신)'가 낯선 사람이 친절을 베푸는 예기치 않은 상황 속에서 혼란을 '겪는 대상'이라는 문맥입니다. 타동사인 confuse를 목적어 없이 수동을 나타내는 표현으로 쓸 때는 조동사 would 뒤에 과거분사 형태를 갖춘 be confused 형태로 표현해야 주어의 감정이나 상태를 온전하게 전달할 수 있으며, be confuse는 성립 불가능한 형태입니다. 따라서 'be confuse'는 틀린 표현이며 이를 'be confused'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 능동태 vs 수동태 — 주어의 감정 수동 상태 판정",
+      "(C) 병렬 구조 — 조건절 안의 주어-동사 병렬 일치 판단",
+      "(E) 분사능수동 — 전치사의 목적어 역할을 하는 동명사와 의미상 주어 판단"
+    ],
+    "tags": [
+      "능동태와 수동태",
+      "동명사의 의미상 주어",
+      "명사절 접속사",
+      "병렬구조"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by __(A) buying__ you the sandwich. In this case, you are very likely __(B) to appreciate__ your friend's help. However, if a stranger shows up with the same sandwich and __(C) offers__ it to you, you won't appreciate it. Instead, you would __(D) be confuse__. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him __(E) knowing__ you too well, but you certainly would not give the same level of trust to a stranger.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

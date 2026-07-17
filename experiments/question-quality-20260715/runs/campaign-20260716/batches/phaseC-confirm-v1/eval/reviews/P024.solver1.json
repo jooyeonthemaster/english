@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'erase the cultural originality of that population'은 극성 반전. 지문 어디에도 무언가를 지운다는 논지가 없고, 빈칸에 넣으면 뒤의 'Thus, ... it does mirror ... the German attitude'(속담 사용이 태도를 반영한다)와 완전한 비약이 된다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "예시 단어 재활용형 매력 오답. 마지막 문장이 일찍 일어나기 속담이라 실제로 끌린다. 그러나 빈칸 문장은 '특정 속담들의 빈번한 사용 + 다른 사회문화적 지표'라는 일반 진술이고, Thus 문장도 속담 사용이 '태도를 반영(mirror)'한다는 것이지 일찍 일어나기의 '개인적 이득을 입증'한다는 것이 아니다. 속담 내용의 참/이득 여부는 지문의 쟁점이 아니므로 결합 시 논리 파탄."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "표면어(national character) 미끼. 지문 전반부가 'no fixed conclusions about a so-called national character should be drawn'이라고 명시적으로 부정하고, Nevertheless 이후도 'could', 'at least to some degree'로 강하게 헷지되어 있어 'rigid and unchangeable'은 저자가 정확히 배격하는 입장이다."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "빈칸에 넣으면 '속담 사용 빈도 + 다른 지표들이 함께 그 문화에 대한 공유된 이해의 틀을 형성하는 데 쓰일 수 있다'가 되어, Thus 예시(독일인의 고빈도 사용이 어느 정도 독일인의 태도를 반영)가 자연스럽게 뒤따른다. 원전 취지('identify certain generally held attitudes')와 방향 일치. 동사 shape가 identify/reveal보다 다소 느슨하지만 5개 중 유일하게 극성·헷지 수준이 모두 맞는 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "앞부분의 'medieval' 표면어 재활용. 중세 문학 기록 보존은 '빈도 → 태도 반영' 논증과 무관하며 Thus 문장과 연결 불가."
+    }
+  ],
+  "note": "빈칸 문장은 Nevertheless(양보 전환) 뒤의 조심스러운 긍정 주장이고, 직후 Thus 문장이 빈칸 내용의 구체 예시여야 한다. 이 이중 제약(전반부의 국민성 단정 부정과 모순되지 않으면서 Thus 예시를 허용)을 만족하는 것은 ④뿐. ②(예시 소재 재활용)와 ③(national character 표면어)이 설계된 매력 오답으로, 특히 ②는 마지막 문장만 읽은 수험생을 강하게 유혹하지만 mirror(반영) vs demonstrate benefits(이득 입증)의 술어 불일치로 탈락한다. 복수정답 소지 없음."
+}

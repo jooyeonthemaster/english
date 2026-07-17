@@ -1,0 +1,38 @@
+{
+  "pid": "P050",
+  "finalV2": false,
+  "winningAnswer": "(D)",
+  "reason": "(D) 'issuing'은 의도된 유일 정답 후보이며 나머지 4개 밑줄은 대안 해석 없이 정문이다. 그러나 (D)의 오답성 자체가 비확정적이다: 'issue'의 자동사 용법('to appear or become available through being officially put forth or distributed' — Merriam-Webster 등재, 용례 'new stamps issued monthly'; OED 'to be published, come forth officially')이 사전 등재 표준 용법이고, 특히 미국 특허 도메인에서 'the patent issued on [date]' / 'patents issuing from an application'은 상투 관용이다. 이 지문의 주제가 바로 U.S. patents이므로 자동사 독법이 정면으로 적용되며, 그 경우 'with six of his nine U.S. patents issuing then'은 'with + NP + 자동사 V-ing' 절대구문(cf. 'with prices rising')으로 적법해져 오류가 0개가 된다. 솔버들의 기각 논거 두 가지는 모두 불충분하다: (i) 지문 내 'was issued' 수동 2회 사용은 문체 일관성 논거이지 문법성 논거가 아니며 발문은 '어법상 틀린 것'을 묻는다, (ii) '학교문법상 타동사' 관행은 사전 등재 용법에 기반한 이의신청을 방어하지 못한다(수능 이의신청 선례상 사전 등재 용법 성립 시 복수정답/전원정답 처리 반복). 따라서 감사자의 V2=false는 과잉 판정이 아니라 정당하며, 솔버들은 스스로 발견한 자동사 용법의 방어력을 과소평가했다. 최종 판정: V2 실패 유지. 수리 방향은 감사자 제안대로 자동사 독법이 불가능한 동사로 오류 지점을 교체(예: granting→being granted)하는 것이 타당하다.",
+  "perDispute": [
+    {
+      "label": "(D)",
+      "claim": "감사자: 자동사 'issue'(특허 관용 'the patent issued') 독법이 성립하면 'with six of his nine U.S. patents issuing then'이 문법적이 되어 오류 0개 — V2 실패.",
+      "verdict": "upheld",
+      "evidence": "① 사전 등재: Merriam-Webster 자동사 의미항 'to appear or become available through being officially put forth or distributed'(용례 'new stamps issued monthly'), OED 자동사 'to be published, come forth officially' — 전문 은어가 아닌 일반 사전 등재 용법. ② 도메인 정합: 미국 특허 영어에서 'the patent issued on April 18, 1922', 'any patent issuing from this application'은 표준 관용이고, 지문 소재가 바로 U.S. patents이므로 이 독법이 정확히 적용됨. ③ 구문 성립: 'with + NP + 자동사 V-ing' 절대구문은 생산적 적법 패턴('with prices rising', 'with the sun setting')이며 'issuing then'(1930년대라는 기간 내 발급 사건들)은 시상·부사 충돌 없음. ④ 반론 기각: 지문 내 'He was issued nine U.S. patents' / 'His first patent was issued'의 수동 표기는 문체적 선호를 보일 뿐 대안 독법의 문법성을 소거하지 못하고, 같은 텍스트에서 타동 수동과 자동 능동의 공존은 실제 영어에서 정상이다. '학교문법 기준 타동사' 논거는 사전 등재 용법 이의신청 앞에서 방어력이 없다. 따라서 (D)의 오답성은 어휘 결합가(valency) 쟁송 지점에 걸려 있어 비확정적."
+    },
+    {
+      "label": "(A)",
+      "claim": "잠재 쟁점(솔버 누락 가능성 점검): 'had conceptualized ... and was attempting' 시제 형태 불일치 병렬이 오류인가.",
+      "verdict": "no_error",
+      "evidence": "등위된 동사구는 동일 시제형일 필요가 없다. 'By the age of fourteen'는 과거완료(had conceptualized)의 기준시점을 제공하고, was attempting은 그 시점에 진행 중이던 행위를 기술한다 — 의미·형식 모두 적법. 원지문과 동일 표기. 대안 정답 불성립."
+    },
+    {
+      "label": "(B)",
+      "claim": "잠재 쟁점: if절 없는 would가 오류인가.",
+      "verdict": "no_error",
+      "evidence": "과거의 습관·반복을 나타내는 would + 동사원형. 기간 부사구 'Over the course of his inventing career'와 결합해 반복적 실험을 기술 — 표준 용법. 대안 정답 불성립."
+    },
+    {
+      "label": "(C)",
+      "claim": "잠재 쟁점: that이 접속사(완전절 요구)로 오판될 여지.",
+      "verdict": "no_error",
+      "evidence": "관계절 'he successfully sold __ to Sheaffer Pen Company'에서 sold의 목적어 공백 확인 — 불완전절을 잇는 목적격 관계대명사 that. 서수 수식 선행사(the first invention)에서 that이 표준 선호. 대안 정답 불성립."
+    },
+    {
+      "label": "(E)",
+      "claim": "잠재 쟁점: 'One of these patents' 뒤 was가 수일치 오류인가.",
+      "verdict": "no_error",
+      "evidence": "주어부 핵은 단수 대명사 One이고 'of these patents'는 후치 수식이므로 단수 동사 was가 정확한 수일치. 근접 복수명사에 끌린 were 교정이야말로 오류. 대안 정답 불성립."
+    }
+  ]
+}

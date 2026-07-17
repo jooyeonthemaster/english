@@ -1,0 +1,5 @@
+# Raw deployment bytes can contain sensitive source or credentials.
+# Keep every captured blob local; public audit artifacts contain hashes only.
+*
+!.gitignore
+

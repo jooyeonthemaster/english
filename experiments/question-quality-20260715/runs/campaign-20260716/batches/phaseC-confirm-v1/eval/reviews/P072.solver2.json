@@ -1,0 +1,35 @@
+{
+  "pid": "P072",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam: 'accomplished how elderly shoppers managed their heavy groceries' — accomplish는 성취 대상 NP(또는 what-자유관계절)를 요구하는 순수 타동사로, how-의문절/방식절을 목적어로 하위범주화하지 않음('그 방식을 성취했다'는 독법도 의미 불성립). 논리: 지문에서 노인 쇼핑객의 카트 사용은 오히려 카트를 'even less attractive'하게 만든 요인이므로 shills의 성취와 무관·역방향."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Seam: 'accomplished why men were reluctant...' — why-의문절은 know/explain류 인지·전달 동사만 허가하며 accomplish와의 결합은 하위범주화 위반. 사실관계도 교차 왜곡: baby carriages 연상은 여성의 거부 이유이고 남성의 이유는 '나약해 보임(appear weak)'. 문법·사실 이중 결격."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Seam: 'accomplished when the advertisements finally persuaded the customers' — when-의문절 역시 accomplish의 목적어로 비문. 논리: 지문이 'in spite of his repeated advertisements and explanations, he could not persuade his shoppers'라고 명시하므로 '광고가 마침내 설득했다'는 전제 자체가 반사실(거짓 전제). 형식·논리 모두 불성립."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "Seam: 'accomplished [what logic, explanations, and advertisements failed to do]' — what은 자유관계사(= that which)로 NP를 형성해 accomplished의 목적어가 되고, 관계절 내부에서는 do의 목적어 공백을 채움. 'accomplish what X failed to do'는 완전한 정문 프레임. 논리: 지문 전개가 '논리·설명·광고의 설득 실패 → 위장 고객(shills)의 사회적 증거 → 수 주 내 수용(readily accepted)'의 대조 구조이므로 shills가 이룬 것 = 설득 수단들이 하지 못한 것. 직후 문장이 성취 내용을 확증. 유일하게 형식·내용 모두 성립."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam: 'accomplished what made the shopping carts look less attractive' — 자유관계절 NP로서 문법 결합 자체는 정문. 논리: '카트를 덜 매력적으로 만든 것'(노인만 사용한다는 인상)은 shills가 극복한 장애물이지 성취한 결과가 아님. shills의 행위는 매력도·수용을 높였으므로 명제의 인과 극성이 지문과 정반대. 지문 어구('even less attractive') 재활용 미끼."
+    }
+  ],
+  "note": "빈칸은 타동사 accomplished의 목적어 자리라는 형식 제약이 1차 판별 기준: 의문절만 형성하는 ①②③은 하위범주화 위반으로 탈락(간접의문문 독법으로 구제하려 해도 accomplish는 인지동사가 아님). NP를 형성하는 ④⑤ 중 담화 논리(실패한 설득 수단 vs 성공한 사회적 증거의 대조 + 직후의 수용 결과)를 만족하는 것은 ④뿐. 대안 해석을 적극 탐색해도 ①②③⑤를 살리는 독법 없음 — 단일 정답 ④로 수렴."
+}

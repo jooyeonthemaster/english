@@ -1,0 +1,100 @@
+{
+  "pid": "P040",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "해설 본문: \"대명사 지시 관계에서부의 'found'는 목적어를 필요로 하는 타동사이나\" — '에서부의'는 존재하지 않는 손상된 어절이며 문장이 파손되어 있다. 학생 노출 해설에 비단어/손상 텍스트가 포함됨."
+    },
+    {
+      "code": "V4-BOGUS-TERMINOLOGY",
+      "severity": "major",
+      "evidence": "해설 본문: \"완전한 절을 이끄는 대명사 지시 관계 접속사인 'That'\" — '대명사 지시 관계 접속사'는 실존하지 않는 문법 용어. 이 자리의 That은 명사절 접속사(complementizer)로 불러야 하며, 손상/환각 용어가 정답 해설의 핵심 판정 문장에 들어가 있다."
+    },
+    {
+      "code": "V5-INTERNAL-FIELD-MISMATCH",
+      "severity": "minor",
+      "evidence": "markedExpressions (D): expression='was interested'인데 errorExpression='was'로 불일치(비오류 항목의 잔재 필드). (E): expression 필드가 렌더된 'That'이 아닌 교정형 'What'을 담고 있어 필드 규약이 항목 간 비대칭. 학생 노출 필드(정답 라벨·선지·해설·keyPoints)는 상호 모순 없어 V5 자체는 통과로 판정."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "대명사 목적격·지시 대상 일치 (them → undergraduates)",
+      "temptingBecause": "지시 대상이 두 문장 앞의 'undergraduates'라서 단복수 확인이 필요하고, presented ~ with 구문에서 재귀대명사(themselves) 혼동을 노림",
+      "decisiveFlaw": "오답 아님(정문). 복수 선행 명사 undergraduates를 받는 목적격 them이 정확하며 재귀 조건도 아님. 다만 매력도가 매우 낮아 사실상 필러에 가까움"
+    },
+    {
+      "label": "(B)",
+      "intent": "'One of the + 복수명사' 주어-동사 수일치",
+      "temptingBecause": "동사 직전의 최근접 명사 lists가 복수라서 were로 착각 유도",
+      "decisiveFlaw": "오답 아님(정문). 주어 핵이 단수 One이므로 was가 옳음 — 훈련된 학생에게는 즉시 검증되는 정형 패턴"
+    },
+    {
+      "label": "(C)",
+      "intent": "명사 수식 분사의 태 판정 (wrinkled vs wrinkling)",
+      "temptingBecause": "face가 뒤 명사를 수식하는 자리에서 -ing/-ed 선택을 요구",
+      "decisiveFlaw": "오답 아님(정문). face는 주름진 상태(수동/결과)이므로 과거분사 wrinkled가 옳음 — 표준적이고 판단이 빠름"
+    },
+    {
+      "label": "(D)",
+      "intent": "감정 분사 interested/interesting 구분",
+      "temptingBecause": "Bargh가 능동적으로 실험한 주체라는 인상 때문에 interesting/was interesting으로 혼동 유도",
+      "decisiveFlaw": "오답 아님(정문). 주어가 감정을 경험하는 자(experiencer)이므로 -ed 분사 was interested in이 옳음 — 초급 정형 포인트"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사절 접속사 that vs 선행사 포함 관계대명사 what — 절의 완전/불완전성 판정 (선언된 정답)",
+      "temptingBecause": "문두에서 주어 역할 명사절을 여는 'That S V' 패턴 자체는 흔해서(That he lied was obvious 류) 눈스캔으로 넘기기 쉬움",
+      "decisiveFlaw": "실제 오류. 타동사 found의 목적어가 비어 불완전절이고 선행사도 없으므로 완전절용 That은 불가, What(원문)으로 교정해야 함. That→What 교정 시 정확히 원문 복원. 단, 문두 That/What은 수능에서 가장 많이 훈련된 패턴이라 KILLER 은폐성은 약함"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXPL-CORRUPTED-SENTENCE",
+      "severity": "major",
+      "evidence": "\"대명사 지시 관계에서부의 'found'는\" — 비단어 '에서부의' 포함, 문장 파손"
+    },
+    {
+      "code": "EXPL-NONEXISTENT-TERM",
+      "severity": "major",
+      "evidence": "\"대명사 지시 관계 접속사인 'That'\" — 실존하지 않는 용어. 명사절 접속사로 기술해야 함"
+    },
+    {
+      "code": "EXPL-D-WORDING-TENSION",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설: \"주어가 감정을 느끼는 대상임을 나타내는 수동태\" 뒤에 \"'Bargh'가 흥미를 느낀 주체이므로\"라고 하여 대상/주체 용어가 한 문장 안에서 충돌. 판정 결론 자체는 옳으나 표현이 부정확"
+    },
+    {
+      "code": "EXPL-E-VERBOSE",
+      "severity": "minor",
+      "evidence": "(E) 정답 해설이 동일 논지(불완전절·선행사 부재)를 중복 서술하여 장황함"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesExplained": true,
+    "notImmediatelyVisible": false,
+    "noShadowingDecoy": true,
+    "note": "That→What은 최소대립쌍이고 교정 시 원문과 정확히 일치하며 대안 분석 여지도 없다. 그러나 문두 'That S V(불완전)' 패턴은 수능 어법에서 가장 집중 훈련된 정전 포인트라 구조 독해 없이도 기계적으로 탐지되는 경우가 많고, (A)~(D) 디코이가 전부 초·중급 정형 포인트로 즉시 소거되어 KILLER가 요구하는 은폐성·경합 깊이를 충족하지 못한다."
+  },
+  "grade": "F",
+  "notes": "V1~V3·V5 통과, 정답 유일성도 견고(각 밑줄 독립 검증 완료: (A) 목적격 대명사, (B) One of 수일치, (C) 과거분사, (D) 감정분사 모두 정문, (E)만 오류). 그러나 정답 해설에 손상 텍스트('대명사 지시 관계에서부의')와 실존하지 않는 문법 용어('대명사 지시 관계 접속사')가 포함되어 V4 실패 — 치명 결함으로 F. 공예 측면에서도 요청 난이도 KILLER 대비 실제 난이도는 중위권용 정형 문항(C5=1)이고 디코이 경합도가 낮다(C3=2). 출하하려면 (E) 해설 전면 재작성('명사절 접속사 That은 완전절을 이끄나 found의 목적어가 빠진 불완전절이므로 선행사를 포함한 관계대명사 What으로 교정' 수준으로 간결화)이 필수이며, KILLER로 쓰려면 정답 포인트의 은폐성과 디코이 매력도를 재설계해야 한다."
+}

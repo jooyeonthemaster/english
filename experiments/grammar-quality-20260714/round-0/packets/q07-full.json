@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=b  (C):dec=c  (D):dec=c  (E):ANS=i",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 35,
+        "relPos": 0.054,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 98,
+        "relPos": 0.15,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 292,
+        "relPos": 0.448,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 511,
+        "relPos": 0.784,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 563,
+        "relPos": 0.863,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.863,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has",
+        "isError": false,
+        "correction": "has",
+        "errorExpression": "has",
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "But you should know that multitasking doesn't save any time.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "While doing",
+        "isError": false,
+        "correction": "While doing",
+        "errorExpression": "While doing",
+        "surroundingText": "no matter what it is. While doing the laundry, just do the laundry",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "pressed",
+        "isError": false,
+        "correction": "pressed",
+        "errorExpression": "pressed",
+        "surroundingText": "it would when done with your phone pressed to your ear. The same",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "Focus",
+        "isError": true,
+        "correction": "Focus",
+        "errorExpression": "Focusing",
+        "surroundingText": "applies to your work. Focus on one task at a time, and you'll accomplish each",
+        "pointCode": "i"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "While doing"
+      },
+      {
+        "label": "(D)",
+        "text": "pressed"
+      },
+      {
+        "label": "(E)",
+        "text": "Focusing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 주어의 수일치를 묻는 자리로, 단수 주어인 'The fast pace'에 맞추어 단수 동사 'has'를 쓴 것은 어법상 옳습니다.",
+      "(B)": "이 자리는 명사절 접속사 자리를 묻는 자리로, 타동사 know의 목적어로 뒤에 주어(multitasking), 동사(doesn't save), 목적어(any time)가 모두 갖춰진 완전한 절을 이끄는 접속사 'that'은 어법상 옳습니다.",
+      "(C)": "이 자리는 줄어든 분사구문의 형태를 묻는 자리로, 의미상 주어인 'you'가 세탁을 직접 하는 능동적 주체이므로 현재분사를 활용한 'While doing'은 어법상 옳습니다.",
+      "(D)": "이 자리는 부대 상황을 나타내는 'with + 명사 + 분사' 구조를 묻는 자리로, 명사인 'your phone'이 귀에 밀착되는 대상(수동)이므로 과거분사 'pressed'는 어법상 옳습니다."
+    },
+    "explanation": "해당 문장은 등위접속사 and가 '명령문, and 주어 + 조동사 ...(~해라, 그러면 ...할 것이다)'의 구조로 두 주절을 평행하게 연결하고 있습니다. (E) 'Focusing' 뒤에는 이 유닛을 서술어로 완결 지어줄 정동사가 존재하지 않으므로, 준동사 형태인 Focusing은 올 수 없고 명령문의 본동사 역할을 하는 원형 'Focus'로 고쳐야 문법적으로 조화로운 절이 성립합니다. 바로 뒤에 이어지는 and와 조동사구 전체의 병렬 짝을 인지하지 못한 채 준동사 수식으로 착각하게 하는 함정이 있습니다.",
+    "keyPoints": [
+      "(E) 병렬 구조 — 명령문과 'and + 주어 + 동사' 연결 구조 분석",
+      "(D) 분사의 능동 vs 수동 — with 분사구문에서 명사와 분사의 수동 관계 판정",
+      "(A) 주어-동사 수일치 — 주어 핵 'The fast pace'에 따른 단수동사 형태 판단"
+    ],
+    "tags": [
+      "어법",
+      "명령문",
+      "병렬구조",
+      "분사구문",
+      "수일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The fast pace of today's lifestyle __(A) has__ us piling one thing on top of another. But you should know __(B) that__ multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. __(C) While doing__ the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone __(D) pressed__ to your ear. The same applies to your work. __(E) Focusing__ on one task at a time, and you'll accomplish each task better, and probably faster.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

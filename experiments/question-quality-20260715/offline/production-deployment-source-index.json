@@ -1,0 +1,433 @@
+{
+  "capturedAtKst": "2026-07-15T03:21:29+09:00",
+  "deployment": {
+    "actor": "claude-code_2-1-207_agent",
+    "createdAt": 1784040904535,
+    "gitDirty": "1",
+    "githubCommitMessage": "[ADD]: 릴리즈 노트 — 포인트 짚어주기·시험 분석 업데이트 (배포 시 스모트 소식 자동 발행)",
+    "githubCommitRef": "20260714jooyeon",
+    "githubCommitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "id": "dpl_CKkd1eiFq2DeEidwSxQpFSgDm4ZD",
+    "readyState": "READY",
+    "source": "cli",
+    "target": "production",
+    "url": "nara-qn6rcsvkh-jooyoens-projects-59877186.vercel.app"
+  },
+  "files": [
+    {
+      "deploymentPath": "src/package-lock.json",
+      "localPath": "package-lock.json",
+      "type": "file",
+      "uid": "21d86bebf57e2482136b32d0699c29a9d64e2686"
+    },
+    {
+      "deploymentPath": "src/package.json",
+      "localPath": "package.json",
+      "type": "file",
+      "uid": "aec434ea2c2c26bf179e0a1556a703b92eb6316e"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/build-analysis-context.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/build-analysis-context.ts",
+      "type": "file",
+      "uid": "7ad1d29a86af6ed049d5268057ef30140d9238b3"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/constants.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/constants.ts",
+      "type": "file",
+      "uid": "da29405af7739707af5598efec0f413f619ae286"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+      "type": "file",
+      "uid": "631f50736e83ca4b55ec6aad9d9f920d9ecf2ca9"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+      "type": "file",
+      "uid": "fdb47555047b83eb5fb8d6ce817e123a81f4b5d2"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts",
+      "type": "file",
+      "uid": "10f8af4e4ace66b84d9fcaabc661e2da8ae60d18"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/prompts.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/prompts.ts",
+      "type": "file",
+      "uid": "2044e358fa51a991219b99028f7c733859982565"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "type": "file",
+      "uid": "0839bea55cec9ec3c44c1b52d0fa492624a1b817"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts",
+      "type": "file",
+      "uid": "6bf6c7c53137deb89d8377f1eb813f996d6021e1"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/run-question-generation-helpers.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-helpers.ts",
+      "type": "file",
+      "uid": "745be1479ba240e80cbd96422c0890fd490f0841"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/run-question-generation-types.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-types.ts",
+      "type": "file",
+      "uid": "8eacf69572adc48d58dce076069e5edc7f1ad79e"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "type": "file",
+      "uid": "7a5a7422e2d681e6136ba1d3647b3116229dcec3"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/_lib/schemas.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/_lib/schemas.ts",
+      "type": "file",
+      "uid": "69dece0c3f440e77553290135be701225f30f82b"
+    },
+    {
+      "deploymentPath": "src/src/app/api/ai/generate-questions-auto/route.ts",
+      "localPath": "src/app/api/ai/generate-questions-auto/route.ts",
+      "type": "file",
+      "uid": "f91411896ffaf9f097b45ee1f29cf586760f8637"
+    },
+    {
+      "deploymentPath": "src/src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+      "localPath": "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+      "type": "file",
+      "uid": "90cb0acdeeb7fd97e07ce81e35fbb0602d55a5ad"
+    },
+    {
+      "deploymentPath": "src/src/app/api/workbench/ai-jobs/question-generation/route.ts",
+      "localPath": "src/app/api/workbench/ai-jobs/question-generation/route.ts",
+      "type": "file",
+      "uid": "497d2d1a95f9662f83477c7400ea90f467ad0407"
+    },
+    {
+      "deploymentPath": "src/src/lib/atlas-ai.ts",
+      "localPath": "src/lib/atlas-ai.ts",
+      "type": "file",
+      "uid": "8d84cd8da7b804f0463a92e0606bb34e46305ff3"
+    },
+    {
+      "deploymentPath": "src/src/lib/atlas-chat-rest.ts",
+      "localPath": "src/lib/atlas-chat-rest.ts",
+      "type": "file",
+      "uid": "e88f8911760e1d475de2462407a442edc868a71b"
+    },
+    {
+      "deploymentPath": "src/src/lib/atlas.ts",
+      "localPath": "src/lib/atlas.ts",
+      "type": "file",
+      "uid": "5ea6a91fb1047eee970847036f2bb2eb51dfca38"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-generation-llm.ts",
+      "localPath": "src/lib/question-generation-llm.ts",
+      "type": "file",
+      "uid": "ec278b8d64342204290926eea120c38c523032d4"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-generation-persistence.ts",
+      "localPath": "src/lib/question-generation-persistence.ts",
+      "type": "file",
+      "uid": "bfcd808c3f53c19e440a37b754167ff00b082b54"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-generation-plans.ts",
+      "localPath": "src/lib/question-generation-plans.ts",
+      "type": "file",
+      "uid": "b35fcdf10733f13e904a02e90f566176bb2c8a5b"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-generation-prompt-contract.ts",
+      "localPath": "src/lib/question-generation-prompt-contract.ts",
+      "type": "file",
+      "uid": "75cf601d985dc615b6fe2bc87d195333ab2238ba"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/antonym.ts",
+      "localPath": "src/lib/question-quality/candidate-blocks/antonym.ts",
+      "type": "file",
+      "uid": "07e172093e444b5ddd189e5383c5c93fa1f5353f"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/blank.ts",
+      "localPath": "src/lib/question-quality/candidate-blocks/blank.ts",
+      "type": "file",
+      "uid": "7ca24e2101ae17147ddf356e0d6293c803ecd1a1"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/grammar.ts",
+      "localPath": "src/lib/question-quality/candidate-blocks/grammar.ts",
+      "type": "file",
+      "uid": "3f1a101f50a41cfd0d30ac49d1fe4d517c555537"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/implied.ts",
+      "localPath": "src/lib/question-quality/candidate-blocks/implied.ts",
+      "type": "file",
+      "uid": "dee4ba57dba515ee16c2712352327132e0f7f38f"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/index.ts",
+      "localPath": "src/lib/question-quality/candidate-blocks/index.ts",
+      "type": "file",
+      "uid": "9a6f8cc0c7b7b751c05c993c6965ee5503a524ca"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/irrelevant.ts",
+      "localPath": "src/lib/question-quality/candidate-blocks/irrelevant.ts",
+      "type": "file",
+      "uid": "25e59d318ab9c8b57e9f99a562ddd043f2dc054d"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/reference.ts",
+      "localPath": "src/lib/question-quality/candidate-blocks/reference.ts",
+      "type": "file",
+      "uid": "91ec70dd39e3db641c8b3728f41bd1a87e627f65"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/candidate-blocks/shared.ts",
+      "localPath": "src/lib/question-quality/candidate-blocks/shared.ts",
+      "type": "file",
+      "uid": "04091232cd4d9968666b3404d877060e3389a796"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/core.ts",
+      "localPath": "src/lib/question-quality/core.ts",
+      "type": "file",
+      "uid": "deebd250ce98cd46d39102539ca5fd0333b9130a"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/dispatcher.ts",
+      "localPath": "src/lib/question-quality/dispatcher.ts",
+      "type": "file",
+      "uid": "fb297a318e7cc8e56c12db8f9482a2b272f4684b"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/feasibility.ts",
+      "localPath": "src/lib/question-quality/feasibility.ts",
+      "type": "file",
+      "uid": "6d4b850bc9c702e995e2a9d8bb6bdef1c2d25100"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/index.ts",
+      "localPath": "src/lib/question-quality/index.ts",
+      "type": "file",
+      "uid": "f69094b33d28c2f9da80c27b9aed3975618ff4d4"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/rubric.ts",
+      "localPath": "src/lib/question-quality/rubric.ts",
+      "type": "file",
+      "uid": "ffd76a0b9e576aad61bd433285698e7d88f00c70"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/antonym.ts",
+      "localPath": "src/lib/question-quality/validators/antonym.ts",
+      "type": "file",
+      "uid": "ab9cb70ff6e9e7de61720a6ff5a4c19885f70d66"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/fill-key.ts",
+      "localPath": "src/lib/question-quality/validators/blank/fill-key.ts",
+      "type": "file",
+      "uid": "1760feb3ec926706309efbd033616c190fd8ffe7"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/inference-distractor.ts",
+      "localPath": "src/lib/question-quality/validators/blank/inference-distractor.ts",
+      "type": "file",
+      "uid": "736272d63b466b928c0c3816a062fe35095f360a"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/inference.ts",
+      "localPath": "src/lib/question-quality/validators/blank/inference.ts",
+      "type": "file",
+      "uid": "ed77dc14b0570a54e1ecf83469b3197858cf1d3f"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/multi.ts",
+      "localPath": "src/lib/question-quality/validators/blank/multi.ts",
+      "type": "file",
+      "uid": "c3b07c19de1d19e3f159f26af8c0779782faeaf6"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/paraphrase.ts",
+      "localPath": "src/lib/question-quality/validators/blank/paraphrase.ts",
+      "type": "file",
+      "uid": "96351302f7ae0bce8c0dd595209835c06cb0b6de"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/blank/shared.ts",
+      "localPath": "src/lib/question-quality/validators/blank/shared.ts",
+      "type": "file",
+      "uid": "e192a678231d87be62ba016e4df59b094cb9a1cf"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/conditional-writing.ts",
+      "localPath": "src/lib/question-quality/validators/conditional-writing.ts",
+      "type": "file",
+      "uid": "4b9ff6e5941d125fa2d4a89e9bc4251fca39a441"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/content-match.ts",
+      "localPath": "src/lib/question-quality/validators/content-match.ts",
+      "type": "file",
+      "uid": "f42c65d2dda0c554c19998abae73dc8a829c4a12"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/combo.ts",
+      "localPath": "src/lib/question-quality/validators/grammar/combo.ts",
+      "type": "file",
+      "uid": "e840f42a5b744a62f8b5ae76f3423ece66e3f149"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/correction.ts",
+      "localPath": "src/lib/question-quality/validators/grammar/correction.ts",
+      "type": "file",
+      "uid": "3bb87fe6e0d16f6c9a11aa792bd9f1532525cd49"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/explanation-lint.ts",
+      "localPath": "src/lib/question-quality/validators/grammar/explanation-lint.ts",
+      "type": "file",
+      "uid": "b589d7b05526014f95808a56f84457509705a09a"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/marked.ts",
+      "localPath": "src/lib/question-quality/validators/grammar/marked.ts",
+      "type": "file",
+      "uid": "0326cf31642523ca60f607dbad843cf691d82019"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/nonword-filler.ts",
+      "localPath": "src/lib/question-quality/validators/grammar/nonword-filler.ts",
+      "type": "file",
+      "uid": "a67efbf88ddad96506e8587ac1d1011ce471ebae"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/grammar/shared.ts",
+      "localPath": "src/lib/question-quality/validators/grammar/shared.ts",
+      "type": "file",
+      "uid": "cc75a29d5d1f7fdae3fad40c7d5d4047c12b721b"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/implied-distractor.ts",
+      "localPath": "src/lib/question-quality/validators/implied-distractor.ts",
+      "type": "file",
+      "uid": "e9c2cc0c64d67da7bf8df0bf6ba7fb278306230f"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/implied.ts",
+      "localPath": "src/lib/question-quality/validators/implied.ts",
+      "type": "file",
+      "uid": "a87947e244bdc3664ab99c4e16034d4e7a1e2239"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/irrelevant.ts",
+      "localPath": "src/lib/question-quality/validators/irrelevant.ts",
+      "type": "file",
+      "uid": "be48f3610f05c8d5764d2e463b1ee8187defd1ce"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/misc.ts",
+      "localPath": "src/lib/question-quality/validators/misc.ts",
+      "type": "file",
+      "uid": "26349c6fe646457874cd3003989d2209a602da95"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/options.ts",
+      "localPath": "src/lib/question-quality/validators/options.ts",
+      "type": "file",
+      "uid": "01b8a0674151f5a03e1fea566bdcf32528e5586d"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/reference.ts",
+      "localPath": "src/lib/question-quality/validators/reference.ts",
+      "type": "file",
+      "uid": "81eb82f8aaa2058952348dc7b38a7e08e741e11c"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/sentence-insert.ts",
+      "localPath": "src/lib/question-quality/validators/sentence-insert.ts",
+      "type": "file",
+      "uid": "f277c154e33104c2c462ae885c3864f22c2e7266"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/sentence-order.ts",
+      "localPath": "src/lib/question-quality/validators/sentence-order.ts",
+      "type": "file",
+      "uid": "a7b446bf008ec1c723322b43d4dcdac204db27ab"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/summary/complete.ts",
+      "localPath": "src/lib/question-quality/validators/summary/complete.ts",
+      "type": "file",
+      "uid": "01d696657461b7a62315fa284e59945350540af1"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/summary/killer-trap.ts",
+      "localPath": "src/lib/question-quality/validators/summary/killer-trap.ts",
+      "type": "file",
+      "uid": "ff4712749f187ec91092f07885f5a18c71a2bdeb"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/summary/mc.ts",
+      "localPath": "src/lib/question-quality/validators/summary/mc.ts",
+      "type": "file",
+      "uid": "a508fa6b9c2aac78350615694de12a9b5a0e8758"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/summary/writing.ts",
+      "localPath": "src/lib/question-quality/validators/summary/writing.ts",
+      "type": "file",
+      "uid": "61981b745cd0a44bce9eab6779827697d378d7f1"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/topic-sentence/writing.ts",
+      "localPath": "src/lib/question-quality/validators/topic-sentence/writing.ts",
+      "type": "file",
+      "uid": "8b95e246c985999d38fa58a65776385a25d60442"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/topic.ts",
+      "localPath": "src/lib/question-quality/validators/topic.ts",
+      "type": "file",
+      "uid": "560f9c0f2dc99d30bde331f4773640f049afe6e5"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/vocab.ts",
+      "localPath": "src/lib/question-quality/validators/vocab.ts",
+      "type": "file",
+      "uid": "33ad4fa2032a250ac5f4b6d888e323fdfdb3cf72"
+    },
+    {
+      "deploymentPath": "src/src/lib/question-quality/validators/word-order.ts",
+      "localPath": "src/lib/question-quality/validators/word-order.ts",
+      "type": "file",
+      "uid": "6a3f5f0c56e965bef1a8c6bc9f9d4bfd2755c42f"
+    },
+    {
+      "deploymentPath": "src/src/trigger/workbench-question-generation.ts",
+      "localPath": "src/trigger/workbench-question-generation.ts",
+      "type": "file",
+      "uid": "d99e6fb2a6f24eb5bf332ccf7ad746edf0135e30"
+    }
+  ],
+  "schemaVersion": 1
+}

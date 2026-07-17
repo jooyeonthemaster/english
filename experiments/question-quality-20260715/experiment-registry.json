@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "status": "preregistering",
+  "primaryOutcomes": [
+    "fatalFreeRate",
+    "shipReadyRate",
+    "beautifulKillerRate",
+    "costUsdPerShipReady",
+    "latencyP50Ms",
+    "latencyP95Ms"
+  ],
+  "registeredExperiments": [
+    {
+      "id": "OBS-001",
+      "status": "in_progress",
+      "kind": "instrumentation",
+      "apiCandidateBudget": 0,
+      "question": "Can every full-question candidate and every physical provider call be attributed to an immutable run, policy and cost stage before the API campaign starts?",
+      "success": [
+        "Atomic campaign cap cannot exceed 1000 under concurrency",
+        "Failed calls are counted",
+        "Requested plan, effective plan and served model are distinct",
+        "Prompt/schema/gate/ladder provenance is immutable"
+      ]
+    },
+    {
+      "id": "G-OFF-001",
+      "status": "registered",
+      "kind": "offline_replay",
+      "apiCandidateBudget": 0,
+      "population": "Existing premium grammar ladder outputs plus known disputed/no-answer grammar cases",
+      "hypothesis": "A solver contract requiring correctedForm, isKeySurfaceUngrammatical, governingRule and per-option validity catches keyed-but-defensible errors that label convergence misses.",
+      "comparison": "Current label-only decision versus enriched structured adjudication, blinded to stored explanation",
+      "primaryOutcome": "fatal recall at fixed false-block rate",
+      "promotionRule": "Promote to paired generation only if every known no-answer case is caught and clean-item false blocks remain below the preregistered threshold."
+    },
+    {
+      "id": "G-OFF-002",
+      "status": "registered",
+      "kind": "offline_policy_replay",
+      "apiCandidateBudget": 0,
+      "population": "Existing rejection-pool and shipped relaxed/scarce grammar artifacts",
+      "hypothesis": "Removing correctness failures from salvage while retaining only craft warnings eliminates fatal shipment without an unacceptable zero-output increase.",
+      "frozenCorrectnessCodes": [
+        "grammar-answer-nonword-forced",
+        "grammar-gibberish-inversion-fragment",
+        "grammar-error-pos-change",
+        "grammar-explanation-lint",
+        "grammar-noun-clause-pronoun-mislabel",
+        "wrong-option-explanation-count"
+      ],
+      "primaryOutcomes": ["fatal shipments prevented", "additional zero-output rate", "repairable share"],
+      "note": "Codes may be split more finely after replay; the experiment does not assume every parent code has identical severity."
+    },
+    {
+      "id": "B-OFF-001",
+      "status": "registered",
+      "kind": "deterministic_replay",
+      "apiCandidateBudget": 0,
+      "population": "Historical BLANK_INFERENCE artifacts including the 7/15 fixed-tail failure",
+      "hypothesis": "Substituting all five options into the exact prefix/suffix boundary and checking shared syntactic compatibility blocks grammar-only elimination with low false-positive rate.",
+      "primaryOutcomes": ["known-failure recall", "clean-item false blocks", "warning-to-fatal precision"],
+      "nonGoal": "Do not infer semantic quality from a surface seam check."
+    },
+    {
+      "id": "SRC-OFF-001",
+      "status": "registered",
+      "kind": "preflight",
+      "apiCandidateBudget": 0,
+      "population": "Frozen clean-candidate and noisy robustness passage queues",
+      "hypothesis": "A zero-call source preflight catches punctuation/OCR/delimiter corruption and routes semantic-negation uncertainty to review before generation.",
+      "primaryOutcomes": ["obvious corruption recall", "clean-passage false blocks", "zero-call exclusion rate"],
+      "nonGoal": "Deterministic checks do not certify logical truth or discourse coherence."
+    },
+    {
+      "id": "G-PAIR-001",
+      "status": "proposed_not_reserved",
+      "kind": "paired_generation",
+      "factors": ["current answer-first", "site-candidate-first with valency-risk exclusion and explicit correction certificate"],
+      "blockingPrerequisites": ["OBS-001", "G-OFF-001", "frozen corpus manual audit"],
+      "primaryOutcomes": ["fatalFreeRate", "shipReadyRate", "beautifulKillerRate", "costUsdPerShipReady"],
+      "earlyStop": "Stop the cell on any new no-answer/multiple-answer pattern pending root-cause review."
+    },
+    {
+      "id": "B-PAIR-001",
+      "status": "proposed_not_reserved",
+      "kind": "paired_generation",
+      "factors": ["current blank design", "slot-contract plus per-distractor intent ledger"],
+      "blockingPrerequisites": ["OBS-001", "B-OFF-001", "frozen corpus manual audit"],
+      "primaryOutcomes": ["fatalFreeRate", "shipReadyRate", "beautifulKillerRate", "costUsdPerShipReady"],
+      "earlyStop": "Stop if fatal rate increases, if two pilot items repeat the same filler pattern, or if cost doubles without a clear craft gain."
+    }
+  ],
+  "rejectedHypothesesImportedFromPriorWork": [
+    "Apply the full premium ladder to STANDARD grammar without a new cost-quality result",
+    "Treat validator presence without enforcement as a quality improvement",
+    "Infer all-type quality from four representative types times five items",
+    "Use n=10 screening results as final quality estimates"
+  ]
+}

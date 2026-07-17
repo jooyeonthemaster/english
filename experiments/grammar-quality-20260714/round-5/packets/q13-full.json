@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=f  (B):dec=e  (C):dec=b  (D):dec=d  (E):ANS=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 285,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 447,
+        "relPos": 0.573,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 484,
+        "relPos": 0.621,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 598,
+        "relPos": 0.767,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 683,
+        "relPos": 0.876,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.876,
+    "firstHalfShare": 0.2,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "likely",
+        "isError": false,
+        "errorExpression": "likely",
+        "surroundingText": "In this case, you are very likely to appreciate your friend's help.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "be confused",
+        "isError": false,
+        "errorExpression": "be confused",
+        "surroundingText": "you won't appreciate it. Instead, you would be confused. You would likely think",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "Who",
+        "isError": false,
+        "errorExpression": "Who",
+        "surroundingText": "You would likely think \"Who are you, and how do you know what kind",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "your best friend shows up with your favorite sandwich. He tells you that he knows you are busy",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "him",
+        "isError": true,
+        "correction": "him",
+        "errorExpression": "he",
+        "surroundingText": "You trust your best friend so much that you won't worry about him knowing you too well",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "likely"
+      },
+      {
+        "label": "(B)",
+        "text": "be confused"
+      },
+      {
+        "label": "(C)",
+        "text": "Who"
+      },
+      {
+        "label": "(D)",
+        "text": "is"
+      },
+      {
+        "label": "(E)",
+        "text": "he"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(D)": "이 자리는 주어 'your best friend'에 이어지며, 'shows' 및 'tells'와 병렬 시제를 구성하는 3인칭 단수 정동사이므로 'is'가 어법상 옳습니다.",
+      "(A)": "이 자리는 be 동사 'are' 뒤에서 주격보어로 쓰인 형용사 'likely'를 묻고 있으므로 어법상 옳습니다.",
+      "(B)": "이 자리는 조동사 'would' 뒤에 주어 'you'가 당황함을 '느끼는' 대상이므로 수동태인 'be confused'가 어법상 옳습니다.",
+      "(C)": "이 자리는 뒤에 이어지는 직접의문문 구문 'are you'가 주격 의문사인 'Who'와 완벽하게 호응하므로 어법상 옳습니다."
+    },
+    "explanation": "이 문장의 전체적인 골격은 전치사 'about' 뒤에 동명사구 'knowing you too well'이 목적어로 연결되는 구조입니다. 전치사의 목적어로 쓰인 동명사의 의미상 주어는 격 변화 규칙에 따라 목적격 또는 소유격이어야 합니다. 따라서 대명사 주격인 'he'는 이 자리에 올 수 없으며, 목적격인 'him' 또는 소유격 'his'로 고쳐야 합니다. 학생들이 뒤따르는 동명사의 어미 변화를 능동 정동사처럼 잘못 해석하여 주격을 고르는 함정에 빠지지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      "(E) 대명사의 격과 동명사의 의미상 주어 — 전치사 뒤 동명사의 의미상 주어는 목적격이나 소유격으로 표현",
+      "(A) 형용사 vs 부사 — be likely to-V 보어 구성으로 판정",
+      "(B) 능동태 vs 수동태 — 감정을 나타내는 타동사의 주어가 주체인지 대상인지 규명"
+    ],
+    "tags": [
+      "동명사의 의미상 주어",
+      "대명사의 격",
+      "형용사 보어",
+      "수동태",
+      "고난도 구문 분석"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very __(A) likely__ to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would __(B) be confused__. You would likely think \"__(C) Who__ are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases __(D) is__ the level of trust. You trust your best friend so much that you won't worry about __(E) he__ knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

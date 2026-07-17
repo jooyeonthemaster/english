@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "incorrect",
+      "reason": "논리: 지문의 수사의문문 'getting what I want and keeping my plans, or learning to go with the flow?'와 'Clearly, to become a more peaceful person...'의 결합은 후자(흐름에 맡기기)를 택해야 함을 함의한다. 'stick to your original arrangements...'는 정확히 그 반대 항(계획 고수)이므로 논리적으로 모순. 형식: 'original arrangements plans and rules'는 명사 'arrangements'와 'plans'가 접속사 없이 병치된 비문(N+N 나열 오류 혹은 편집 잔재)으로, 삽입 시 seam 자체가 비문법적이다. 이중으로 배제됨."
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "논리: 'accept changes only when they benefit your goals'는 조건부 수용으로, 'getting what I want'(내가 원하는 것 얻기) 쪽 태도의 변형이다. 지문은 변경의 불가피성(a certain percentage of plans will change... this inevitability)을 무조건적으로 수용하라는 취지이므로 'only when they benefit' 제한은 후속 문장과 충돌한다. 문법 seam: 'you must accept changes only when... most of the time'은 'only when' 절과 'most of the time' 부사구가 겹쳐 의미상 어색하기도 하다. 배제."
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "논리: '예측(predict future variables)을 배우는 데 주력하라'는 지문의 'expect that a certain percentage of plans will change'와 표면적으로 닮았으나, 그 문장은 'I have ALSO found it helpful'로 도입되는 보조 조언이지 빈칸 문장의 핵심 결론이 아니다. 빈칸은 바로 앞 수사의문문의 두 대안 중 'go with the flow'를 받아야 한다. 또한 지문은 변경을 '예측'하는 게 아니라 변경 발생을 '허용/수용(make allowances)'하라는 것이므로 predict는 초점 왜곡. 문법 seam은 정상이나 논리 부적합으로 배제."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "논리: 'value adaptable responses more than strict schedules'는 (a) 첫머리의 'rigid work schedule'(= strict schedules)과 어휘적으로 정확히 대응하고, (b) 수사의문문의 두 번째 대안 'learning to go with the flow'(= adaptable responses)를 우선시하라는 결론을 그대로 형식화하며, (c) 후속 문장의 '계획 일부 변경은 불가피하니 미리 감안하라'는 조언과 정합한다. 문법 seam: 'you must value A more than B most of the time' — value(타동사)+목적어+비교 부사구 구조로 완전한 정문. 유일하게 성립."
+    },
+    {
+      "label": "⑤",
+      "verdict": "incorrect",
+      "reason": "논리: '예상치 못한 일정 변경 관리를 타인에게 의존하라'는 지문 어디에도 근거가 없는 무관 진술. 지문은 자기 마음가짐(priorities, make allowances in your mind)의 문제를 다루며 타인 위임은 등장하지 않는다. 문법 seam은 정상('rely on others to manage...')이나 논리적으로 완전히 배제."
+    }
+  ],
+  "note": "빈칸 문장은 직전 수사의문문(계획 고수 vs go with the flow)의 결론부로, 'Clearly, to become a more peaceful person'이 후자 선택을 강제한다. ④만이 이 이항 대립을 정확히 받는다. 결함 지적: ① 'original arrangements plans and rules'는 명사 병치 비문으로 오답지 자체의 편집 오류로 보인다(정답 판별에는 영향 없으나 문항 완성도 감점 요인). 원전은 Richard Carlson류 자기계발 텍스트로 추정되며 원 빈칸 취지(유연성 수용)와 ④가 일치한다."
+}

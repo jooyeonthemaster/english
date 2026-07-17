@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go3_20191015-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "요지",
+    "words": 172
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-answer-point-repeated",
+    "grammar-killer-overdrilled-answer",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=c  (C):ANS=f  (D):dec=m  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 311,
+        "relPos": 0.298,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 689,
+        "relPos": 0.66,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 769,
+        "relPos": 0.737,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 860,
+        "relPos": 0.824,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 1009,
+        "relPos": 0.966,
+        "sentenceIndex": 9,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.966,
+    "firstHalfShare": 0.2,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to think of technology as shiny tools and gadgets. Even if we acknowledge that technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie. The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "qualifies",
+        "isError": false,
+        "errorExpression": "qualifies",
+        "surroundingText": "If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page)",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "produced",
+        "isError": false,
+        "errorExpression": "produced",
+        "surroundingText": "the smartphone: They are something useful produced by a mind.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "responsible",
+        "isError": true,
+        "correction": "responsible",
+        "errorExpression": "responsibly",
+        "surroundingText": "We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "as",
+        "isError": false,
+        "errorExpression": "as",
+        "surroundingText": "The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures.",
+        "pointCode": "m"
+      },
+      {
+        "label": "(E)",
+        "expression": "powerfully",
+        "isError": false,
+        "errorExpression": "powerfully",
+        "surroundingText": "Both influence audiences powerfully. Both are technological.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "qualifies"
+      },
+      {
+        "label": "(B)",
+        "text": "produced"
+      },
+      {
+        "label": "(C)",
+        "text": "responsibly"
+      },
+      {
+        "label": "(D)",
+        "text": "as"
+      },
+      {
+        "label": "(E)",
+        "text": "powerfully"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "If절의 주어 주핵은 'a thousand lines of letters'에서 수식어를 제외한 'a thousand lines'가 통치하는 'qualifies'이다. 단위를 나타내는 표현으로서 단수 취급하여 qualsfies를 쓴 것은 어법상 적절하다.",
+      "(B)": "대명사 'something useful'을 뒤에서 수식하는 분사구로, '정신에 의해 생산된 유용한 것'이라는 수동의 의미 관계를 가지므로 과거분사인 produced는 적절하다.",
+      "(D)": "'as much A as B' 원급 비교 구문에서 앞의 as와 짝을 이루어 'B만큼이나 A한 것'이라는 동등비교 구조를 이끌고 있으므로 접속사 as는 적절하다.",
+      "(E)": "동사 influence를 수식하여 '강력하게 영향을 미치다'라는 의미를 더해주는 부사 자리이므로 부사형인 powerfully를 쓴 것은 어법상 적절하다."
+    },
+    "explanation": "(C) \"responsibly\"는 어법상 틀린 표현이며 \"responsible\"로 고쳐야 한다. 정답인 (C)가 속한 문장의 핵심 명사구는 'the multiple overlapping technologies'이며, 뒤이어 나오는 형용사구 'responsible for ...'가 이를 후치 수식해야 합니다. 부사 형태인 responsibly를 사용하게 되면 앞의 명사를 수식할 수 없으며, 문맥상 '반지의 제왕 영화를 책임지는 기술들'이라는 의미적 결합을 이룰 수 없으므로 비문입니다. 따라서 형용사구의 핵 역할을 수행할 수 있는 형용사 'responsible'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 형용사 vs 부사 — 후치 수식 대상인 명사와의 통사적 관계 판단",
+      "(A) 명사구 수일치 — 복합 주어 표현의 핵에 따른 동사 단복수 판단",
+      "(D) 비교구문 구조 — 원급 비교 구문 'as much A as B'의 호응 및 어순"
+    ],
+    "tags": [
+      "수능 영단어",
+      "형부자리",
+      "후치수식",
+      "원급비교"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We tend to think of technology as shiny tools and gadgets. Even if we acknowledge that technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX __(A) qualifies__ as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine and the smartphone: They are something useful __(B) produced__ by a mind. We can't separate out the multiple overlapping technologies __(C) responsibly__ for a Lord of the Rings movie. The literary rendering of the original novel is __(D) as__ much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences __(E) powerfully__. Both are technological."
+  }
+}

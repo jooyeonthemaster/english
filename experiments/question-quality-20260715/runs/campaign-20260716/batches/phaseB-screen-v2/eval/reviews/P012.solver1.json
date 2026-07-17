@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "'refine your schedule to avoid any unproductive compromise'는 일정을 더 다듬어 타협을 회피하라는 것으로, 경직된 계획 고수(rigid work schedule) 쪽을 강화하는 방향. 지문은 계획 고수 대 유연함(go with the flow)의 대비에서 유연함을 택해야 평화로워진다는 논지이므로 정반대. 문법 결합(you must refine...)은 자연스러우나 논리 불일치."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "'be willing to adjust your expectations when life disrupts your agenda'는 앞의 수사의문('내 계획 지키기 vs 흐름에 맡기기 중 무엇이 중요한가')의 결론이자, 뒤 문장 'expect that a certain percentage of plans will change / make allowances for this inevitability'(계획 변경의 불가피성을 미리 기대하라)와 정확히 연결됨. 기대(expectations) 조정이라는 어휘가 후행 문장의 expect와 호응. 문법 결합(you must be willing to adjust...)도 완전함."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'eliminate any potential source of changes before they occur'는 변화 자체를 사전에 제거하라는 것. 지문은 변화를 'inevitability(불가피한 것)'로 규정하고 받아들이라는 논지이므로 직접 모순. '변화'라는 표면 어휘만 공유하는 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "'let other people dictate how you should manage your daily routine'은 타인에게 일과 통제권을 넘기라는 것. 지문에 타인의 통제라는 개념 자체가 없음(네 살배기 아이는 우선순위 예시일 뿐 통제 주체가 아님). 무관 왜곡."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답(매력적 미끼)",
+      "reason": "지문 마지막 문장의 'make allowances'를 그대로 재사용해 표면적으로 끌리는 선지. 실전에서 어휘 일치 때문에 잠깐 눈이 가지만, 지문의 make allowances는 '계획 변경의 불가피성을 마음속에 감안해 두라'는 뜻이지 '개인적 기준(standards)을 낮추라'거나 '정서적 고통(emotional distress)을 감안하라'는 뜻이 아님. 핵심 개념을 치환한 어휘 반복형 미끼로 판정."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: 빈칸 앞 수사의문(계획 고수 vs go with the flow)과 빈칸 뒤 'expect that plans will change / allowances for inevitability'가 양방향으로 ②를 지목한다. 유혹 기록 — ⑤가 'make allowances' 어휘 반복으로 1차 시선을 끌었으나 lower your personal standards가 지문 어디에도 근거 없어 3초 내 기각. ③은 '변화' 소재 공유로 하위권 오답 유인 가능. 모든 선지가 'you must' 뒤 원형 동사구로 문법 결합에 하자 없어 seam 단서 없음(양호). 단일 정답으로 수렴, 복수 정답 소지 없음."
+}

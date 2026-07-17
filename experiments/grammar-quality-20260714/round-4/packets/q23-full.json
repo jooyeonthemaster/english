@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go3_20260507-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2026,
+    "exam": "5월",
+    "origType": "주장",
+    "words": 158
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=g  (C):dec=c  (D):ANS=f  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 28,
+        "relPos": 0.031,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 207,
+        "relPos": 0.232,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 257,
+        "relPos": 0.288,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 620,
+        "relPos": 0.696,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 859,
+        "relPos": 0.964,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 5,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.964,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Giving kids an edible treat that you know they love after a tricky day to cheer them up or soothe them can be tempting but I advise you not to. When we try to comfort a child with food rather than attend to their physical and emotional needs, we leave them feeling not understood. Instead of learning that they'll receive appropriate comfort and attention, they receive the message that their needs can't or won't be met appropriately. Consequently, they understand one of the following: that their needs are not valid; that they are too much for their parent; that they are being silly; that next time they should keep quiet; or that they need to shout louder to be heard. If, after tending to your child's emotional and physical wounds you want to offer some chocolate, ice cream or a trip to a fast-food restaurant, that is, of course completely fine -but it must not replace the nurture.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "Giving kids an edible treat that you know they love after a tricky day",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "their",
+        "isError": false,
+        "errorExpression": "their",
+        "surroundingText": "with food rather than attend to their physical and emotional needs, we",
+        "pointCode": "g"
+      },
+      {
+        "label": "(C)",
+        "expression": "feeling",
+        "isError": false,
+        "errorExpression": "feeling",
+        "surroundingText": "needs, we leave them feeling not understood. Instead of",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "quiet",
+        "isError": true,
+        "correction": "quiet",
+        "errorExpression": "quietly",
+        "surroundingText": "that next time they should keep quiet; or that they need to shout",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": false,
+        "errorExpression": "it",
+        "surroundingText": "completely fine -but it must not replace the nurture.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "their"
+      },
+      {
+        "label": "(C)",
+        "text": "feeling"
+      },
+      {
+        "label": "(D)",
+        "text": "quietly"
+      },
+      {
+        "label": "(E)",
+        "text": "it"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 뒤에 love의 목적어가 빠진 불완전한 절을 이끌고 선행사 an edible treat를 수식하므로 관계대명사 'that'은 어법상 옳습니다.",
+      "(B)": "이 자리는 복수 명사인 이중 대상 'children(a child의 의미상 복수 흐름 또는 일반적 아이들)'을 문맥상 가리키며 문맥적 소유격 'their'로 일치시키는 것이 어법상 옳습니다.",
+      "(C)": "이 자리는 5형식 'leave + 목적어 + 목적격보어' 구조에서 목적어(them)의 상태를 묘사하는 분사이므로 'feeling'은 어법상 옳습니다.",
+      "(E)": "이 자리는 단수 명사구인 'some chocolate, ice cream or a trip to a fast-food restaurant'의 제공 행위 또는 제공된 것들을 포괄하는 의미상의 단수 'it'이므로 어법상 옳습니다."
+    },
+    "explanation": "문장의 술어부 구조를 보면 'keep'은 2형식 연결동사로 사용되어 뒤에 주어를 서술하는 주격보어를 요구합니다. 따라서 부사인 'quietly'는 이 자리에 올 수 없으며, 형용사인 'quiet'로 고쳐야 합니다. 동사의 우리말 뜻이 '~하게 유지하다'로 해석되어 부사 자리가 아닌가 착각하기 쉽지만, 통사 구조상 주어의 상태를 설명하는 보어 자리에는 형용사만 올 수 있습니다.",
+    "keyPoints": [
+      "(D) 형용사 자리 vs 부사 자리 — 2형식 연결동사 keep의 보어로 형용사 요구",
+      "(A) 관계사 — 뒤가 불완전한 절을 이끄는 관계대명사 목적격",
+      "(C) 분사의 태 — 목적격보어 자리에서 대상의 상태를 수식하는 현재분사"
+    ],
+    "tags": [
+      "2형식 보어",
+      "보어 자리 형용사",
+      "관계대명사 목적격",
+      "목적격보어 분사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Giving kids an edible treat __(A) that__ you know they love after a tricky day to cheer them up or soothe them can be tempting but I advise you not to. When we try to comfort a child with food rather than attend to __(B) their__ physical and emotional needs, we leave them __(C) feeling__ not understood. Instead of learning that they'll receive appropriate comfort and attention, they receive the message that their needs can't or won't be met appropriately. Consequently, they understand one of the following: that their needs are not valid; that they are too much for their parent; that they are being silly; that next time they should keep __(D) quietly__; or that they need to shout louder to be heard. If, after tending to your child's emotional and physical wounds you want to offer some chocolate, ice cream or a trip to a fast-food restaurant, that is, of course completely fine -but __(E) it__ must not replace the nurture.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

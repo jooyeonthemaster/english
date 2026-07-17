@@ -1,0 +1,570 @@
+{
+ "P001": {
+  "itemId": "E-G-E1-02",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-003",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-perception-complement-toggle",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P002": {
+  "itemId": "E-B-E1-16",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-098",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P003": {
+  "itemId": "E-G-E1-03",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-021",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": []
+ },
+ "P004": {
+  "itemId": "E-B-E1-04",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-017",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P005": {
+  "itemId": "E-G-E1-05",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-049",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-answer-point-not-core",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P006": {
+  "itemId": "E-B-E1-05",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-028",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": []
+ },
+ "P007": {
+  "itemId": "E-B-E1-11",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-056",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P008": {
+  "itemId": "E-G-E1-18",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-148",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-generic-answer-point,grammar-keypoint-nonexistent-label",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P009": {
+  "itemId": "E-B-E1-12",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-077",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P010": {
+  "itemId": "E-B-E1-14",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-092",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ]
+ },
+ "P011": {
+  "itemId": "E-B-E1-17",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-109",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-target-trailing-function",
+    "message": "PARAPHRASE blank originalExpression ends with a modal/auxiliary/function tail; choose a cleaner semantic unit so options do not become grammar-tail variants."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-target-list-like",
+    "message": "BLANK_INFERENCE should not target a long, punctuated, or list-like span."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning."
+   }
+  ]
+ },
+ "P012": {
+  "itemId": "E-B-E1-13",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-091",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P013": {
+  "itemId": "E-B-E1-06",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-031",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:blank-killer-giveaway-distractors,blank-killer-span-too-wide",
+  "correctAnswer": "3",
+  "gateIssues": null
+ },
+ "P014": {
+  "itemId": "E-G-E1-06",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-058",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-generic-answer-point,grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P015": {
+  "itemId": "E-G-E1-09",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-079",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": []
+ },
+ "P016": {
+  "itemId": "E-B-E1-10",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-041",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "5",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P017": {
+  "itemId": "E-B-E1-07",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-035",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "5",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   }
+  ]
+ },
+ "P018": {
+  "itemId": "E-B-E1-03",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-015",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ]
+ },
+ "P019": {
+  "itemId": "E-G-E1-16",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-136",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-overdrilled-answer",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P020": {
+  "itemId": "E-B-E1-20",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-134",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P021": {
+  "itemId": "E-G-E1-04",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-035",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-pointcode-span-mismatch",
+  "correctAnswer": "(E)",
+  "gateIssues": null
+ },
+ "P022": {
+  "itemId": "E-G-E1-17",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-146",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-shallow-participle-adjective-answer",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P023": {
+  "itemId": "E-G-E1-14",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-133",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-adjacent-sv-agreement,grammar-weak-filler-decoys",
+  "correctAnswer": "(D)",
+  "gateIssues": null
+ },
+ "P024": {
+  "itemId": "E-B-E1-15",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-097",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning."
+   }
+  ]
+ },
+ "P025": {
+  "itemId": "E-G-E1-15",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-134",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": []
+ },
+ "P026": {
+  "itemId": "E-G-E1-13",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-120",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P027": {
+  "itemId": "E-B-E1-02",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-012",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P028": {
+  "itemId": "E-B-E1-08",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-038",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P029": {
+  "itemId": "E-G-E1-07",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-069",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P030": {
+  "itemId": "E-B-E1-18",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-119",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "5",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ]
+ },
+ "P031": {
+  "itemId": "E-G-E1-12",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-115",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated,grammar-decoy-filler-span",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ },
+ "P032": {
+  "itemId": "E-G-E1-10",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-093",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P033": {
+  "itemId": "E-B-E1-01",
+  "armId": "B-E1",
+  "frameId": "blank-supply-v2-002",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": []
+ },
+ "P034": {
+  "itemId": "E-G-E1-20",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-174",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": []
+ },
+ "P035": {
+  "itemId": "E-G-E1-08",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-074",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-decoy-filler-span",
+  "correctAnswer": "(B)",
+  "gateIssues": null
+ },
+ "P036": {
+  "itemId": "E-G-E1-11",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-096",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": []
+ },
+ "P037": {
+  "itemId": "E-G-E1-19",
+  "armId": "G-E1",
+  "frameId": "grammar-frame-v2-164",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-shallow-participle-adjective-answer,grammar-keypoint-choice-mismatch,grammar-explanation-lint,grammar-explanation-lint",
+  "correctAnswer": "(C)",
+  "gateIssues": null
+ }
+}

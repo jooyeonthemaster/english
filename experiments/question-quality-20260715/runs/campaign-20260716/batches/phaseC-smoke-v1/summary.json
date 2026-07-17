@@ -1,0 +1,48 @@
+{
+  "batchId": "phaseC-smoke-v1",
+  "phase": "C-SMOKE",
+  "atKst": "2026-07-17T00:31:36.297+09:00",
+  "assignments": 3,
+  "slotsConsumed": 3,
+  "accepted": 1,
+  "modelCalls": 13,
+  "inputTokens": 13641,
+  "outputTokens": 8657,
+  "costUsd": 0.113953,
+  "ledgerAfter": {
+    "used": 308,
+    "cap": 1000,
+    "costUsd": 9.172488
+  },
+  "byArm": {
+    "G-CX": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.040796
+    },
+    "B-CX": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.053406
+    },
+    "G-LX": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.019751
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 86887
+}

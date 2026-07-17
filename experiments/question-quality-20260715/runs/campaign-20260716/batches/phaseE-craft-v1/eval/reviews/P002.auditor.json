@@ -1,0 +1,69 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "오답 3 해설이 지문의 'The internal pressure you place on yourself to achieve or do well socially'를 '사회적 압박(social pressure)'과 동일시한다. 지문의 압박은 스스로 가하는 내적 압박이므로 용어 대응이 부정확하다. 다만 핵심 논지(압박은 normal and useful이며 'It's not the pressure to perform that creates your stress'로 스트레스 원인이 아님)는 지문과 일치하므로 치명적 오분석은 아니다."
+    },
+    {
+      "code": "V4-minor-label-blur",
+      "severity": "minor",
+      "evidence": "오답 해설의 함정 라벨이 1='인과 오류', 3='인과 역전', 4='인과 도치'로 사실상 같은 계열 용어를 미세하게 다르게 붙여 구분이 흐리다. 각 설명의 내용 자체는 해당 선지와 정확히 대응하므로 사실성 실패는 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "해결책을 원인으로 바꾼 인과 역할 전도 — 마지막 문장의 '객관적으로 보기'(스트레스 완화 조건)를 상황의 스트레스 유발 기준으로 승격",
+      "temptingBecause": "'objective/objectively', 자기 성찰이라는 어휘가 지문 마지막 문장('When you see situations and your strengths more objectively...')과 직접 겹친다",
+      "decisiveFlaw": "객관성은 지각자가 취하는 완화적 태도이지 상황의 속성이 아니며, 방향도 반대다(객관성↑ → 의심↓ → 스트레스↓). 상황별 스트레스 차이의 기준은 의심 활성화 여부로 명시돼 있다"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — source span 'whether or not they activate our doubt'의 의미 보존 재진술",
+      "temptingBecause": "해당 없음(정답). 'activate→trigger', 'our doubt→our inner sense of uncertainty'로 어휘를 한 단계 추상화",
+      "decisiveFlaw": "없음. 뒤따르는 대조문 'It's not the pressure... Rather, it's the self-doubt that bothers you'와 의심의 결과를 서술한 문장이 이 기준을 유일하게 지지한다"
+    },
+    {
+      "label": "3",
+      "intent": "명시적으로 부정된 원인 재도입 + 무근거 술어 결합 — 압박을 스트레스 변인으로 제시하고 '실제 능력 제한'을 날조",
+      "temptingBecause": "'pressure'가 지문에 두 번(internal pressure, the pressure to perform) 등장해 어휘 겹침이 강하고, 'socially'와 'social pressure'가 표면상 호응한다",
+      "decisiveFlaw": "지문이 'It's not the pressure to perform that creates your stress'로 압박-원인설을 직접 부정하며, 압박이 실제 능력(actual capacity)을 제한한다는 진술은 지문 어디에도 없다"
+    },
+    {
+      "label": "4",
+      "intent": "결과를 원인으로 바꾼 효과-원인 도치 — 의심의 하류 결과(부정적 해석)를 상황의 스트레스 기준으로 제시",
+      "temptingBecause": "'interpret positive events negatively'가 'Doubt causes you to see positive... experiences more negatively'와 거의 축자적으로 겹쳐 가장 강력한 매력지다",
+      "decisiveFlaw": "부정적 해석은 지문에서 '의심(doubt)'이 일으키는 결과로 귀속되지 상황이 직접 일으키는 것이 아니며, 빈칸이 요구하는 것은 그보다 상류에 있는 기준(의심 활성화 여부)이다. 'positive'만 언급해 'neutral, and even genuinely negative'도 누락"
+    },
+    {
+      "label": "5",
+      "intent": "개념 범주 이탈 — 지문에 없는 '영역 포기(abandon)' 개념을 도입",
+      "temptingBecause": "'areas of concern', 'valued'가 첫 두 문장('that area of concern', 'place greater value', 'areas that are important to you')과 겹친다",
+      "decisiveFlaw": "지문은 중요 영역에서의 능력 의심이 변인이라고 말할 뿐, 그 영역을 포기하는지 여부는 어디에서도 언급·함축되지 않는다"
+    }
+  ],
+  "explanationIssues": [
+    "오답 3 해설: 지문의 내적 압박(internal pressure ... to do well socially)을 '사회적 압박(social pressure)'으로 동일시 — 용어 부정확(minor)",
+    "함정 라벨 '인과 오류/인과 역전/인과 도치'가 세 오답에 걸쳐 같은 계열로 반복되어 함정 유형 구분의 선명도가 떨어짐(minor, C6 감점 요인)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. V1: 렌더 지문은 원지문에서 의도된 span('whether or not they activate our doubt') 삭제 외 문장 단위 완전 일치, 라벨/마커 정합. V2: 5개 선지 독립 검증 결과 2번만 성립 — 1(치료책→원인 전도), 3(명시적 부정된 원인+날조 술어), 4(결과→원인 도치), 5(무근거 개념)는 각각 결정적 결함으로 탈락, 단일 정답 확인. V3: 5개 선지 모두 'based on ___' 명사 슬롯에 문법적으로 들어가며(whether절/how절/NP) suffix 문법 탈락 없음, 정답 완성문 자연스러움. V4: 구조 분석('It's not A. Rather B' 분열문 대조, activate our doubt→trigger our inner sense of uncertainty 대응) 정확, 단 minor 용어 이슈 2건. V5: 정답 라벨·선지·해설·keyPoints 동기화. 공예: C1=4(빈칸이 지문 테제의 축인 상황-의심 인과 기준을 정조준), C2=3(네 오답이 서로 다른 오독을 겨냥하나 3번은 날조 술어 탓에 소거가 쉬움), C3=3(4번·1번이 실질적 판단을 요구, 3·5는 상대적으로 약함), C4=3(경미한 누출: 'uncertainty'가 지문에 반복되는 'self-doubt'의 근접 동의어라 어휘 대응만으로 접근 가능), C5=2(요청 난이도 KILLER 대비 미달 — 빈칸 바로 다음 대조문이 정답 근거를 사실상 직접 진술하고, doubt→uncertainty 동의어 한 번이면 도달 가능해 중상 난이도 수준), C6=3(정확하고 함정 분리도 있으나 인과 계열 라벨 반복과 용어 느슨함). 합계 18, 최저 C5=2 → B. KILLER 조건(§D): 통사 슬롯 균일성·오답별 anchor/overlap/flaw는 충족하나, '최소 두 문장/두 논리 단서 연결 필수, 단일 단서로 정답 불가' 조건을 위반 — 인접 한 문장('Rather, it's the self-doubt that bothers you')+동의어 매핑 하나로 정답 선택 가능. 또한 beautiful KILLER는 A등급 전제인데 B이므로 killerConditionsMet=false. 개선 방향: 정답 선지의 추상화 수준을 높이거나(예: 의심 개념을 자기가치-능력 연결 구조로 재표현) 빈칸 위치를 대조문 이후 결론부로 옮겨 두 단서 통합을 강제하면 KILLER 정합에 근접."
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "auditScope": "latest-source independent closure of the frozen S1 prompt-profile integration",
+  "localIntegrationVerdict": "PASS",
+  "campaignExecutionVerdict": "NO_GO",
+  "resolvedPreFixFindingIds": [
+    "SCHEMA_G3_FROZEN_V1_BYTE_DRIFT",
+    "SCHEMA_B3_FROZEN_V1_BYTE_DRIFT",
+    "G3_NONANSWER_MARKER_BINDING_NOT_FAIL_CLOSED",
+    "B3_DISTRACTOR_MECHANISM_UNIQUENESS_NOT_FAIL_CLOSED"
+  ],
+  "resolvedEvidence": [
+    {
+      "id": "SCHEMA_G3_FROZEN_V1_BYTE_DRIFT",
+      "status": "RESOLVED",
+      "evidence": "Provider-visible G3 JSON schema, after the server-owned exact-one array bound is applied to the frozen design, is byte-for-byte JSON-equal; SHA-256 0e87616ad0ba6ff37251ed0143d4c1bb82bbcadbd383e9e72025742af3becd9e."
+    },
+    {
+      "id": "SCHEMA_B3_FROZEN_V1_BYTE_DRIFT",
+      "status": "RESOLVED",
+      "evidence": "Provider-visible B3 JSON schema, after the server-owned exact-one array bound is applied to the frozen design, is byte-for-byte JSON-equal; SHA-256 0f6a3ed11e2025f324308e44ebc242f43e51fe4525723f6e4c1245ce24295195."
+    },
+    {
+      "id": "G3_NONANSWER_MARKER_BINDING_NOT_FAIL_CLOSED",
+      "status": "RESOLVED",
+      "evidence": "Every non-answer marker must bind a unique exact passage window and unique expression within that window; the frozen fabricated non-answer probe is rejected."
+    },
+    {
+      "id": "B3_DISTRACTOR_MECHANISM_UNIQUENESS_NOT_FAIL_CLOSED",
+      "status": "RESOLVED",
+      "evidence": "Cross-row uniqueness remains intentionally outside provider JSON Schema, but the server-side profile adapter rejects repeated primary distractor mechanisms before finalization/admission; the frozen four-STANCE_SHIFT probe is rejected."
+    }
+  ],
+  "positiveFindings": [
+    "All eight profile IDs are type/plan bounded and all four frozen compact prompts are byte-exact to design.",
+    "All 15 applicable profile-plan cells traverse the real production question-generation entrypoint with exactly one intercepted physical dispatch.",
+    "Standard and Premium model IDs are google/gemini-3.5-flash and google/gemini-3.1-pro-preview respectively.",
+    "Every profile wire explicitly sends reasoning={enabled:false,effort:none,exclude:true}, provider.require_parameters=true, exact questions minItems=maxItems=1, and the frozen 6000/4000 output caps.",
+    "Profile scope rejects B1 Premium and six tested input-drift forms before root operation, stage, or fetch; ladder, repair, JSON fallback, and solver children are bypassed.",
+    "Raw provider candidate object identity is retained for research observation and terminal decision even when an adapted candidate is finalized.",
+    "Accepted and deliberately mismatched G3/B3 OpenRouter-shaped response bytes exercise the SDK parse, adapter, production finalizer, current quality gate, and accepted/rejected research decisions.",
+    "No-profile prompt and schema paths retain exact object identity; ordinary retry and repair behavior is covered separately."
+  ],
+  "openCampaignHoldIds": [
+    "CAMPAIGN_HARD_SPEND_CAP_NOT_ATTESTED",
+    "S1_QUEUE_AND_SOURCE_RECONCILIATION_NOT_FROZEN_IN_THIS_AUDIT",
+    "LIVE_API_QUALITY_EFFECT_UNMEASURED",
+    "SINGLE_SHOT_MECHANISM_SCREEN_IS_NOT_RELEASE_TOPOLOGY_PROOF"
+  ],
+  "openCampaignHolds": [
+    {
+      "id": "CAMPAIGN_HARD_SPEND_CAP_NOT_ATTESTED",
+      "reason": "This audit does not prove a provider-side hard spending cap for the campaign credential."
+    },
+    {
+      "id": "S1_QUEUE_AND_SOURCE_RECONCILIATION_NOT_FROZEN_IN_THIS_AUDIT",
+      "reason": "This integration audit does not admit or freeze the private 180-cell source assignment queue."
+    },
+    {
+      "id": "LIVE_API_QUALITY_EFFECT_UNMEASURED",
+      "reason": "No live provider candidate was generated or judged here; integration correctness is not evidence that a prompt arm improves item quality."
+    },
+    {
+      "id": "SINGLE_SHOT_MECHANISM_SCREEN_IS_NOT_RELEASE_TOPOLOGY_PROOF",
+      "reason": "The S1 direct single-dispatch mechanism screen deliberately suppresses production ladder/repair/solver branches; any winner still needs separately preregistered full-topology release confirmation."
+    }
+  ],
+  "scopeBoundary": {
+    "proves": "latest-source local integration and fail-closed research plumbing",
+    "doesNotProve": "live provider availability, campaign budget admission, causal quality improvement, production winner selection, or deployment parity"
+  }
+}

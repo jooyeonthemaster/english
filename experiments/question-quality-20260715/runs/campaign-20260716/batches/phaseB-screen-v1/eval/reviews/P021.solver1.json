@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "make + 목적어 + 형용사 보어 구조. 'fear makes us very attentive'에서 attentive는 us의 상태를 서술하는 목적격 보어로 형용사가 맞다. 부사 attentively로 바꾸면 오히려 비문. 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "cause + 목적어 + to부정사 구조('cause us to face')로 to face 자체는 완전한 정문. either가 to 앞에 놓여 'either to face ... or avoid'가 되면서 상관접속사 병렬이 다소 느슨해졌지만, 문제가 되는 지점은 B의 to부정사 형태가 아니라 뒤쪽 병렬 요소이며 B 표기 자체는 흠잡을 수 없다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct-with-caveat",
+      "reason": "실전에서 가장 유혹적인 미끼였다. 'either to face ... or avoid'에서 either 뒤가 to부정사이므로 or 뒤도 to avoid여야 한다는 엄격 병렬론이 순간 끌렸다. 그러나 반복되는 to부정사의 두 번째 to는 등위접속에서 관용적으로 생략 가능하며(cause us to face or avoid), 수능 관례상 병렬 두 번째 to 생략은 정문 처리된다. either의 위치가 어색한 스타일 흠결일 뿐 avoid를 '틀린 것'으로 확정할 근거는 부족. 정문 판정."
+    },
+    {
+      "label": "D",
+      "verdict": "wrong (정답)",
+      "reason": "'the specific ways which they activate our systems'에서 관계사절 'they activate our systems'는 주어(they)·동사(activate)·목적어(our systems)가 모두 채워진 완전한 절이라 which가 맡을 문법적 공백(gap)이 없다. 선행사 ways를 받으려면 관계부사적 기능이 필요하므로 in which / that(=관계부사 대용) / how(선행사 없이) 여야 한다. 축약 관계절·전치사 잔류 등 대안 해석을 탐색해도 which를 정문으로 만들 구조가 없다. 명백한 오류."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "가정법 과거완료. if절 'had not helped'(과거완료) + 주절 'would not have evolved'(would have p.p.)로 과거 사실 반대 가정의 정석 결합. help + 목적어 + 원형(adapt and survive)도 정문. 정답 아님."
+    }
+  ],
+  "note": "실전 풀이 순서: 장거리 단서부터 스캔 → D의 관계사절 완전성 확인 즉시 확정. 매력적 오답은 C — either...or 엄격 병렬(to avoid 요구)로 한 번 끌렸으나, 병렬 구조에서 두 번째 to 생략은 표준적으로 허용되므로 오답 근거로 성립하지 않는다. 다만 출제 품질 관점에서 'either to face ... or avoid'는 either 위치를 'to either face ... or avoid'로 두거나 'or to avoid'로 썼다면 시비 소지가 없었을 것 — 상위권 학생이 C에 이의제기할 여지가 있는 스타일 흠결로 기록해 둔다. D 외 나머지는 모두 견고한 정문이라 단일 정답으로 수렴."
+}

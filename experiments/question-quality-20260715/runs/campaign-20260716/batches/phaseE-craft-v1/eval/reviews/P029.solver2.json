@@ -1,0 +1,35 @@
+{
+  "pid": "P029",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'know [where we are headed] and [what we want to do]' coordinates two wh-clauses as objects of 'know'. 'what' is a fused relative filling the object gap of transitive 'do' ('we want to do __'); a nominal filler is required, so 'what' is exactly right ('that' would leave 'do' without an object). Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'we have [to adjust to a postponement] or [create ...]' — obligation 'have to' licenses coordinated infinitival complements with the second 'to' elided ('have to adjust or (to) create'). Standard parallel structure; the to-infinitive after 'have' (obligation) is required. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'life is unpredictable' — predicative adjective after copula 'is', predicated of subject 'life'. An adverb would be ungrammatical in this slot. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the error)",
+      "reason": "'end up' subcategorizes for a gerund-participle complement ('end up spending') or PP/AdjP ('end up in jail'); it does not license a to-infinitive. A purpose-infinitive adverbial reading ('in order to spend') fails semantically because spending the hours is the result, not the purpose, of ending up. No alternative parse makes 'end up to spend' grammatical. Should be 'end up spending'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "Sentential relative 'which' with a clausal antecedent (that curveballs keep us awake / 'keeping us awake'), taking singular 'is' — a standard licensed construction, set off by dashes. The preceding 'not only are curveballs...' inversion is also correctly formed. Grammatical."
+    }
+  ],
+  "note": "Clean item under the grammarian/logician lens: four underlines are provably licensed (parallel wh-clauses, shared 'have to' coordination, predicative adjective, sentential 'which'), and (D) is a categorical subcategorization violation of 'end up' + to-infinitive with no rescuing alternative parse. Single defensible answer: (D)."
+}

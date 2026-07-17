@@ -1,0 +1,633 @@
+{
+  "id": "u03-c4",
+  "unitId": "u03",
+  "order": 4,
+  "title": "복합 시제의 수동",
+  "oneLiner": "복합 시제의 수동은 be조각의 형태만 바뀝니다 — 완료는 have been p.p., 진행은 be being p.p., 조동사 뒤는 be입니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": ["TP28"],
+    "sourceRefs": [
+      "어법끝 5.0 TP28 능동태 vs. 수동태(시제별 수동태 형태 표)",
+      "천일문 고등 GRAMMAR U31(수동태의 여러 형태)",
+      "별표4 #14 수동태(중 ●)"
+    ]
+  },
+  "lenses": ["L3", "L5"],
+  "confusableWith": ["u03-c1", "u03-c2", "u03-c3", "u04-c1"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The tunnel has been closed since the earthquake.",
+        "The tunnel has being closed since the earthquake."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 been 과 being 이라는 조각 하나입니다. 이 레슨을 마치면 왜 수동의 be조각이 have 뒤에서는 반드시 been 이 되는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "수동의 be조각",
+      "question": "수동은 be + p.p. 라고 배웠는데, 왜 갑자기 been·being·be 가 튀어나옵니까?",
+      "plain": "수동태의 뼈대는 언제나 be + p.p. 입니다. 복합 시제에서는 이 be 한 조각만 앞 단어에 맞춰 been·being·be 로 모습을 바꾸고, 뒤의 과거분사는 그대로 있습니다.",
+      "analogy": "be조각은 앞 사람이 건네주는 옷을 그대로 입는 배우입니다. have 가 건네면 완료의 옷 been, 진행의 be동사가 건네면 -ing의 옷 being, 조동사가 건네면 맨몸의 원형 be 를 입습니다.",
+      "whyItMatters": "수능 어법의 밑줄은 바로 이 be조각을 been 과 being 으로 바꿔치기하거나 조동사 뒤에 been 을 놓아 함정을 만듭니다. 앞 조각 하나만 확인하면 형태는 즉시 판정됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "수동은 be + p.p. 이므로, 복합 시제에서도 be동사를 아무 형태로나 하나 끼워 넣으면 됩니다.",
+      "truth": "복합 시제의 수동에서 be동사는 앞 조각의 지배를 받습니다. have 계열 뒤에서는 과거분사 been 으로, 진행의 be동사 뒤에서는 -ing형 being 으로, 조동사 뒤에서는 원형 be 로 형태가 고정됩니다.",
+      "counterExample": {
+        "en": "The stadium has **being** inspected twice since the accident.",
+        "ko": "그 경기장은 사고 이후 두 차례 점검을 받아 왔습니다.",
+        "note": "완료를 만드는 has 뒤에는 과거분사만 올 수 있으므로 being 은 불가능합니다. has been inspected 가 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "복합 수동 네 형태 필기",
+      "intro": "복합 시제 수동의 네 형태를 한 장에 정리합니다. 바뀌는 것은 언제나 be 한 조각뿐입니다.",
+      "entries": [
+        {
+          "head": "수동의 뼈대 — be + p.p.",
+          "body": "주어가 동작을 받는 대상이면 be동사와 과거분사를 함께 씁니다. 시제는 과거분사가 아니라 앞의 be 한 조각이 짊어집니다.",
+          "example": {
+            "en": "The annual report **is written** by outside experts.",
+            "ko": "그 연례 보고서는 외부 전문가들이 작성합니다.",
+            "note": "현재 수동은 is 와 과거분사 written 으로 만듭니다. 보고서는 작성되는 대상입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "완료 수동 — have been p.p.",
+          "body": "have·has·had 뒤에는 과거분사만 올 수 있으므로 be 는 반드시 been 이 됩니다. 그 뒤에 본동사의 과거분사가 이어집니다.",
+          "example": {
+            "en": "The harbor wall **has been rebuilt** twice.",
+            "ko": "그 항만 방벽은 두 차례 재건되었습니다.",
+            "note": "has 뒤에 been, 그 뒤에 과거분사 rebuilt 가 이어집니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "진행 수동 — be being p.p.",
+          "body": "진행을 만드는 be동사 뒤에는 -ing형만 오므로 be 는 being 이 됩니다. being 뒤에 과거분사가 이어집니다.",
+          "example": {
+            "en": "The east wing **is being renovated** now.",
+            "ko": "그 동관은 지금 보수되고 있습니다.",
+            "note": "is 뒤에 being, 그 뒤에 과거분사 renovated 가 이어집니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "조동사 수동 — 조동사 + be p.p.",
+          "body": "조동사 뒤에는 동사원형만 오므로 be 는 원형 그대로 be 입니다. 조동사가 완료와 결합하면 조동사 + have been p.p. 가 됩니다.",
+          "example": {
+            "en": "Every sample **must be kept** in a sealed container.",
+            "ko": "모든 시료는 밀폐 용기에 보관되어야 합니다.",
+            "note": "must 뒤는 원형 자리이므로 been 이 아니라 be 가 옵니다."
+          },
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "시제와 공식 짝짓기",
+      "instruction": "왼쪽의 시제와 오른쪽의 수동 공식을 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "단순 수동",
+          "b": "be + p.p.",
+          "why": "가장 기본형입니다. be동사가 시제를 지고 과거분사가 이어집니다."
+        },
+        {
+          "a": "완료 수동",
+          "b": "have / has / had + been + p.p.",
+          "why": "have 계열 뒤에는 과거분사만 오므로 be 는 been 입니다."
+        },
+        {
+          "a": "진행 수동",
+          "b": "am / is / are / was / were + being + p.p.",
+          "why": "진행의 be동사 뒤에는 -ing형만 오므로 be 는 being 입니다."
+        },
+        {
+          "a": "조동사 수동",
+          "b": "조동사 + be + p.p.",
+          "why": "조동사 뒤에는 원형만 오므로 be 는 원형 그대로입니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "been·being·be 세 자리",
+      "target": "have 뒤 been · be동사 뒤 being · 조동사 뒤 be",
+      "why": "복합 수동의 오답은 거의 전부 이 세 자리를 뒤섞어 만듭니다. 앞 조각만 보면 be 의 형태가 하나로 정해지므로, 이 대응을 손에 붙이면 판정이 즉각적으로 끝납니다.",
+      "device": "세 박자로 외웁니다 — '해브 다음 been, 비 다음 being, 조동사 다음 be'. 완료의 have 엔 과거분사 been, 진행의 be동사 엔 -ing의 being, 조동사 엔 맨몸의 원형 be. 언제나 앞 조각이 뒤 be 의 옷을 결정합니다.",
+      "items": [
+        { "cue": "has ___ inspected", "answer": "been (완료 수동: have 계열 뒤는 과거분사 been)" },
+        { "cue": "is ___ inspected", "answer": "being (진행 수동: 진행 be동사 뒤는 -ing형 being)" },
+        { "cue": "must ___ inspected", "answer": "be (조동사 수동: 조동사 뒤는 원형 be)" },
+        { "cue": "may have ___ inspected", "answer": "been (조동사+완료: have 뒤는 been)" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "세 자리 관문",
+      "mission": "have 뒤, 진행 be동사 뒤, 조동사 뒤에 오는 be 의 형태를 그 순서대로 고르십시오.",
+      "mode": "ORDER",
+      "pool": ["been", "being", "be", "having", "was"],
+      "answers": ["been", "being", "be"],
+      "passText": "세 자리가 손에 붙었습니다. 이제 앞 조각만 보면 be 의 형태가 저절로 떠오릅니다. 관문이 열립니다.",
+      "retryText": "아직 자리가 섞입니다. have 엔 been, be동사 엔 being, 조동사 엔 be — 세 박자를 한 번 더 되뇌고 오면 됩니다."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "완료 수동은 have/has/had + been + p.p. 입니다. have 계열 뒤에는 과거분사만 올 수 있으므로 be는 반드시 been 이 됩니다.",
+      "examples": [
+        {
+          "en": "The harbor wall **has been rebuilt** twice since the storm of 1953.",
+          "ko": "그 항만 방벽은 1953년의 폭풍 이후 두 차례 재건되었습니다.",
+          "note": "완료를 만드는 has 뒤에 been 이 오고, 그 뒤에 과거분사 rebuilt 가 이어집니다."
+        },
+        {
+          "en": "By the time the heirs opened the vault, the letters **had been stored** there for decades.",
+          "ko": "상속인들이 금고를 열었을 무렵, 그 편지들은 수십 년간 그곳에 보관되어 있었습니다.",
+          "note": "과거의 한 시점보다 앞선 일이므로 과거완료를 쓰고, 편지는 보관되는 대상이므로 had been stored 가 됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "진행 수동은 be동사 + being + p.p. 입니다. 진행을 만드는 be동사 뒤에는 -ing형만 올 수 있으므로 be는 being 이 됩니다.",
+      "examples": [
+        {
+          "en": "The east wing of the museum **is being renovated** and will stay closed until March.",
+          "ko": "박물관 동관은 현재 보수되고 있으며 3월까지 폐쇄된 상태로 유지될 예정입니다.",
+          "note": "진행의 is 뒤에 being 이 오고, 그 뒤에 과거분사 renovated 가 이어집니다."
+        },
+        {
+          "en": "While the survey **was being conducted**, the researchers recorded every response.",
+          "ko": "그 조사가 실시되는 동안, 연구자들은 모든 응답을 기록했습니다.",
+          "note": "과거진행의 수동은 was/were being p.p. 입니다. 조사는 실시되는 대상입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "완료 수동 문장의 해부",
+      "tokens": [
+        { "t": "The old murals", "role": "S" },
+        { "t": "in the station corridor", "role": "M" },
+        { "t": "have been restored", "role": "V" },
+        { "t": "by a local team", "role": "M" }
+      ],
+      "ko": "역 통로에 있는 그 오래된 벽화들은 지역 작업팀에 의해 복원되었습니다.",
+      "layers": [
+        {
+          "label": "① 수식어와 행위자구를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "in the station corridor 는 주어를 꾸미는 전치사구이고, by a local team 은 행위자를 밝히는 부사구입니다. 둘 다 뼈대가 아닙니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인하고 태를 판단합니다",
+          "roles": ["S"],
+          "note": "핵 주어는 The old murals 입니다. 벽화는 복원하는 주체가 아니라 복원되는 대상이므로 수동입니다."
+        },
+        {
+          "label": "③ 동사구를 한 덩어리로 묶어 공식에 대입합니다",
+          "roles": ["V"],
+          "note": "have + been + restored 는 완료 수동 have been p.p. 그대로입니다. have 뒤이므로 being 은 들어갈 수 없습니다."
+        }
+      ],
+      "conclusion": "동사구를 조각내지 말고 have been restored 를 한 덩어리로 보아야 완료 수동임이 드러납니다. 수식어와 by구를 걷어내면 판단은 주어와 동사구의 관계 하나로 줄어듭니다."
+    },
+    {
+      "id": "b11",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "been·being 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 복합 수동은 결국 앞 조각을 보는 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "has been closed 는 성립하는 완료 수동입니다.",
+          "isTrue": true,
+          "why": "완료의 has 뒤에 been, 그 뒤에 과거분사 closed 가 이어지는 정상 형태입니다."
+        },
+        {
+          "statement": "has being closed 도 성립하는 형태입니다.",
+          "isTrue": false,
+          "why": "have 계열 뒤에는 과거분사만 오므로 being 은 올 수 없습니다. been 이어야 합니다."
+        },
+        {
+          "statement": "is being widened 는 진행 수동입니다.",
+          "isTrue": true,
+          "why": "진행의 is 뒤에 being, 그 뒤에 과거분사 widened 가 이어지는 정상 형태입니다."
+        },
+        {
+          "statement": "is been widened 는 성립하는 형태입니다.",
+          "isTrue": false,
+          "why": "진행 be동사 뒤에는 -ing형 being 이 와야 하므로 been 은 올 수 없습니다."
+        },
+        {
+          "statement": "must be kept 는 성립하는 조동사 수동입니다.",
+          "isTrue": true,
+          "why": "조동사 must 뒤는 원형 자리이므로 be 가 옳고, 그 뒤에 과거분사 kept 가 옵니다."
+        },
+        {
+          "statement": "must been kept 는 성립하는 형태입니다.",
+          "isTrue": false,
+          "why": "조동사 뒤에는 원형만 오므로 been 이 아니라 be 를 써야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "복합 시제 수동을 판정하는 4단계",
+      "steps": [
+        {
+          "text": "주어가 동작을 하는 쪽인지 받는 쪽인지 판단합니다. 받는 쪽이면 수동이므로 과거분사가 반드시 필요합니다.",
+          "applyNote": "The old ferry 는 교체하는 주체가 아니라 교체되는 대상입니다. 따라서 수동입니다."
+        },
+        {
+          "text": "동사구의 첫 조각을 봅니다. have 계열이면 완료, 조동사면 원형 자리입니다. be동사이면 바로 뒤 조각을 한 번 더 봅니다 — being 이 이어지면 진행 수동이고, 곧바로 과거분사가 오면 단순 수동입니다.",
+          "applyNote": "첫 조각이 is 이고 뒤에 being 이 이어지므로 진행 수동입니다."
+        },
+        {
+          "text": "해당 공식을 대입합니다. 완료 수동은 have been p.p., 진행 수동은 be being p.p., 조동사 수동은 조동사 be p.p. 입니다.",
+          "applyNote": "진행 수동 공식에 넣으면 is being replaced 가 만들어집니다."
+        },
+        {
+          "text": "been 과 being 의 자리를 검산합니다. 수동의 be조각이 have 계열 바로 뒤이면 been, 진행의 be동사 바로 뒤이면 being, 조동사 바로 뒤이면 원형 be 입니다.",
+          "applyNote": "is 뒤이므로 being 이 옳습니다. is been replaced 는 어떤 공식에도 없는 형태입니다."
+        }
+      ],
+      "example": {
+        "en": "The old ferry that once linked the two islands **is being replaced** with a faster boat.",
+        "ko": "한때 두 섬을 이어 주던 그 낡은 여객선은 더 빠른 배로 교체되고 있습니다.",
+        "note": "관계절 that once linked the two islands 를 걷어내면 주절의 뼈대는 The old ferry … is being replaced 입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The proposal that the committee submitted last month ( is being / is been ) reviewed by two outside experts.",
+      "steps": [
+        {
+          "title": "① 태를 판단합니다",
+          "body": "The proposal 은 검토하는 주체가 아니라 검토되는 대상이고, by two outside experts 가 행위자를 밝히고 있습니다. 따라서 수동입니다."
+        },
+        {
+          "title": "② 수식어를 걷어냅니다",
+          "body": "that the committee submitted last month 는 주어를 꾸미는 관계절입니다. 그 안의 submitted 는 관계절의 동사이지 주절의 동사가 아닙니다."
+        },
+        {
+          "title": "③ 동사구의 첫 조각을 봅니다",
+          "body": "괄호 안의 첫 조각은 is 입니다. 완료를 만드는 have 가 아니라 진행을 만드는 be동사이므로 진행 수동 자리입니다."
+        },
+        {
+          "title": "④ 공식을 대입해 답을 확정합니다",
+          "body": "진행 수동은 be being p.p. 이므로 is being reviewed 가 됩니다. is been reviewed 는 be동사 뒤에 과거분사 been 을 놓은 형태이므로 성립하지 않습니다."
+        }
+      ],
+      "answer": "is being",
+      "ko": "위원회가 지난달 제출한 그 제안서는 두 명의 외부 전문가에게 검토되고 있습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u03-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The new library has {{blank}} built next to the city hall.",
+          "options": ["been", "being"],
+          "answer": 0,
+          "translation": "새 도서관은 시청 옆에 건설되었습니다.",
+          "explanation": "빈칸 앞의 has 는 완료를 만드는 조각이고, have 계열 뒤에는 과거분사만 올 수 있습니다. 따라서 완료 수동 have been p.p. 의 가운데 자리인 been 이 옳습니다. being 은 진행의 be동사 뒤에서만 쓰입니다.",
+          "trapTags": ["perfect-passive", "been-being"]
+        },
+        {
+          "id": "u03-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The main road [[u:is being widened]] and will reopen to traffic in October.",
+          "isCorrect": true,
+          "translation": "그 간선 도로는 확장되고 있으며 10월에 차량 통행이 재개될 예정입니다.",
+          "explanation": "도로는 확장되는 대상이고 공사가 지금 진행 중이므로 진행 수동 be being p.p. 가 필요합니다. 진행의 is 뒤에 being 이 오고 과거분사 widened 가 이어지므로 옳은 형태입니다.",
+          "trapTags": ["progressive-passive", "been-being"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "been 과 being 의 자리",
+      "columns": ["been", "being"],
+      "rows": [
+        {
+          "criterion": "정체",
+          "a": "be동사의 과거분사",
+          "b": "be동사의 -ing형"
+        },
+        {
+          "criterion": "바로 앞에 오는 조각",
+          "a": "have / has / had",
+          "b": "am / is / are / was / were"
+        },
+        {
+          "criterion": "만드는 시제",
+          "a": "완료 수동 — have been p.p. (주의: have been -ing 는 완료진행 능동입니다. been 만으로는 태가 정해지지 않습니다)",
+          "b": "진행 수동 — be being p.p."
+        },
+        {
+          "criterion": "서로 바꿔 쓸 수 있는가",
+          "a": "바꿔 쓰면 has being 처럼 성립하지 않는 형태가 됩니다",
+          "b": "바꿔 쓰면 is been 처럼 성립하지 않는 형태가 됩니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The archive **has been digitized** over the past three years.",
+          "ko": "그 문서고는 지난 3년에 걸쳐 디지털화되었습니다.",
+          "note": "완료를 만드는 has 뒤에는 been 만 올 수 있습니다."
+        },
+        {
+          "en": "The archive **is being digitized** floor by floor.",
+          "ko": "그 문서고는 층별로 디지털화되고 있습니다.",
+          "note": "진행을 만드는 is 뒤에는 being 만 올 수 있습니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The final results will ( be announced / been announced ) at a press conference next Friday.",
+      "givenSteps": [
+        "① 태를 판단합니다 — The final results 는 발표되는 대상이므로 수동이며 과거분사가 필요합니다.",
+        "② 앞 조각을 봅니다 — 괄호 앞에 조동사 will 이 있고, 조동사 뒤에는 동사원형만 올 수 있습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 어떤 형태가 들어가야 합니까?",
+      "options": [
+        "be announced — 조동사 뒤이므로 원형 be 를 쓰고 그 뒤에 과거분사를 붙입니다",
+        "been announced — 수동의 be는 been 이라는 완료형으로 굳어져 있습니다",
+        "being announced — 수동을 만들려면 언제나 being 이 필요합니다"
+      ],
+      "answer": 0,
+      "explain": "조동사 will 뒤에는 동사원형이 와야 하므로 조동사 수동은 조동사 + be p.p. 입니다. been 은 have 계열 뒤에서만, being 은 진행의 be동사 뒤에서만 쓰이는 형태이므로 조동사 바로 뒤에는 올 수 없습니다. 따라서 will be announced 가 옳습니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — have been 뒤가 과거분사인가 -ing형인가",
+      "body": "완료 수동(have been p.p.)과 완료진행 능동(have been -ing)은 have been 까지 똑같이 생겼습니다. 갈림길은 그 뒤 한 조각입니다. 과거분사가 오면 수동이고, -ing형이 오면 능동입니다. 형태를 외우려 하지 말고 주어가 하는 쪽인지 받는 쪽인지로 가르십시오.",
+      "example": {
+        "en": "For three years the team **has been studying** the glacier, and its retreat **has been recorded** every summer.",
+        "ko": "3년 동안 그 연구진은 그 빙하를 연구해 왔고, 빙하의 후퇴는 매년 여름 기록되어 왔습니다.",
+        "note": "연구진은 연구하는 주체이므로 완료진행 능동 has been studying 이고, 후퇴는 기록되는 대상이므로 완료 수동 has been recorded 입니다."
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u03-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The findings that the committee announced in May {{blank}} by several independent teams since then.",
+          "options": ["have been questioned", "have questioned", "have being questioned"],
+          "answer": 0,
+          "translation": "위원회가 5월에 발표한 그 연구 결과는 그 이후로 여러 독립 연구팀에게 의문이 제기되어 왔습니다.",
+          "explanation": "관계절 that the committee announced in May 를 걷어내면 핵 주어는 The findings 입니다. 연구 결과는 의문을 제기받는 대상이고 by several independent teams 가 행위자를 밝히므로 수동이며, since then 이 현재완료를 요구합니다. 따라서 완료 수동 have been p.p. 인 have been questioned 가 옳습니다. have questioned 는 목적어가 없는 능동이 되어 by구와 충돌하고, have being questioned 는 have 뒤에 being 을 놓은 성립하지 않는 형태입니다.",
+          "trapTags": ["perfect-passive", "been-being", "intervening-clause"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 have been questioned 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "핵 주어 The findings 가 의문을 제기받는 대상이므로 수동이고, since then 이 현재완료를 요구하므로 완료 수동 have been p.p. 를 쓴 것입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 태는 주어와 동작의 관계가 정하고, 시제는 since then 같은 시간 표현이 정합니다. 두 판단을 겹쳐 공식을 고르는 것이 이 개념의 절차입니다."
+        },
+        {
+          "text": "5월 이후의 일을 말하고 있어서 have 를 쓰는 것이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "have 를 쓰는 근거는 자연스러움이 아니라 since then 이 현재완료와 호응한다는 점입니다. 게다가 have 만으로는 태가 정해지지 않습니다. 태를 정하는 것은 been 의 유무가 아니라 been 뒤에 과거분사가 오는지입니다. have been studying 처럼 -ing형이 오면 been 이 있어도 능동입니다."
+        },
+        {
+          "text": "동사 뒤에 목적어가 보이지 않으므로 무조건 수동을 쓴 것입니다.",
+          "correct": false,
+          "feedback": "목적어 유무는 유용한 단서이지만 만능은 아닙니다. 자동사는 목적어가 없어도 수동이 될 수 없습니다. 이 문항의 근거는 주어가 동작을 받는 대상이라는 점입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The manuscript that [[1:was discovered]] in a monastery archive [[2:has been examined]] by three specialists, while its ink [[3:is been tested]] with a method that [[4:leaves]] no visible mark.",
+      "answer": 3,
+      "correction": "is being tested",
+      "rationales": [
+        "관계절의 동사입니다. 사본은 발견되는 대상이므로 단순 과거 수동 was discovered 가 옳습니다.",
+        "주절의 동사구입니다. 완료 수동은 have/has been p.p. 이므로 has been examined 가 옳습니다.",
+        "진행을 만드는 be동사 뒤에는 been 이 아니라 being 이 와야 합니다. 잉크는 검사되는 대상이고 검사가 진행 중이므로 진행 수동 is being tested 로 고칩니다.",
+        "관계사 that 이 연 절의 동사입니다. 선행사 method 가 자국을 남기지 않는 주체이므로 능동 leaves 가 옳습니다."
+      ],
+      "ko": "수도원 문서고에서 발견된 그 사본은 세 명의 전문가에게 검토되어 왔으며, 그 잉크는 눈에 보이는 자국을 남기지 않는 방법으로 검사되고 있습니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 문장을 통째로 주고 어법상 틀린 한 곳을 찾아 고쳐 쓰게 합니다. been 과 being 중 어느 자리가 틀렸는지 지적하고 바른 동사구를 통째로 옮겨 적어야 만점입니다.",
+          "sample": {
+            "en": "The east wing of the library has being repaired since last winter.",
+            "ask": "이 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "has been repaired — 완료를 만드는 has 뒤에는 과거분사만 올 수 있으므로 being 이 아니라 been 을 씁니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 삽입 관계절로 주어와 동사구를 멀리 떨어뜨린 뒤, been 과 being 을 바꿔 놓거나 조동사 뒤에 been 을 놓아 밑줄을 만듭니다. 동사구의 첫 조각(has·is·must)을 먼저 확인하고 공식을 대입하면 즉시 판정됩니다.",
+          "sample": {
+            "en": "A rare seventeenth-century map, which the museum acquired last year, [[u:is been displayed]] in the main hall until June.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "is being displayed — 진행을 만드는 be동사 뒤에는 being 이 와야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coastal cities have long relied on concrete sea walls to hold back storm surges. [[u:In several ports, the oldest barriers are now being replaced with flexible structures that absorb wave energy.]] Engineers report that these designs have been tested in laboratory tanks for more than a decade. The early results suggest that softer defenses may outlast rigid ones.",
+      "instruction": "밑줄 친 문장에서 동사구를 찾아 시제와 태를 각각 밝히십시오.",
+      "found": "동사구는 are being replaced 입니다. be동사 are 뒤에 being 이 왔으므로 진행이고, being 뒤에 과거분사 replaced 가 왔으므로 수동입니다. 방벽은 교체되는 대상이므로 수동이 옳습니다. 뒤 문장의 have been tested 는 같은 원리로 완료 수동입니다.",
+      "gist": "해안 도시의 낡은 방벽이 파도의 힘을 흡수하는 유연한 구조물로 교체되고 있다는 내용입니다."
+    },
+    {
+      "id": "b24",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 섞여 있습니다.",
+      "ko": "그 실험실 기록은 두 명의 독립 심사관에게 검토되어 왔습니다.",
+      "answer": ["The laboratory records", "have been reviewed", "by two independent examiners"],
+      "tiles": [
+        "The laboratory records",
+        "have been reviewed",
+        "by two independent examiners",
+        "have being reviewed",
+        "has been reviewed"
+      ],
+      "explanation": "기록은 검토되는 대상이므로 완료 수동 have been p.p. 를 씁니다. have 뒤에는 being 이 올 수 없으므로 have being reviewed 는 성립하지 않고, 핵 주어 records 가 복수이므로 has been reviewed 도 쓸 수 없습니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "복합 수동 검문소의 문지기",
+      "intro": "이 검문소는 be조각의 형태를 위조한 문장을 하루에도 수백 건 적발합니다. have 뒤·be동사 뒤·조동사 뒤 — 세 자리를 정확히 짚지 못하면 이 문을 통과할 수 없습니다. 네 건의 판정으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The old bridge {{blank}} repaired since the last typhoon.",
+          "options": ["has been", "has being"],
+          "answer": 0,
+          "why": "완료를 만드는 has 뒤에는 과거분사만 오므로 been 입니다. 다리는 수리되는 대상이므로 수동이고, since 가 완료를 부릅니다."
+        },
+        {
+          "prompt": "The laboratory {{blank}} cleaned at this very moment, so please wait outside.",
+          "options": ["is being", "is been"],
+          "answer": 0,
+          "why": "at this very moment 가 진행을 부르고 실험실은 청소되는 대상이므로 진행 수동입니다. 진행 be동사 is 뒤에는 being 이 옵니다."
+        },
+        {
+          "prompt": "Every visitor's bag {{blank}} checked before entering the vault.",
+          "options": ["must be", "must been"],
+          "answer": 0,
+          "why": "조동사 must 뒤에는 동사원형만 오므로 be 입니다. been 은 have 계열 뒤에서만 쓰이는 형태입니다."
+        },
+        {
+          "prompt": "For a decade the ruins {{blank}} studied by teams from three countries.",
+          "options": ["have been", "have being"],
+          "answer": 0,
+          "why": "For a decade 가 완료를 부르고 유적은 연구되는 대상이므로 완료 수동 have been 입니다. have 뒤에 being 은 올 수 없습니다."
+        }
+      ],
+      "winText": "검문 통과 도장이 찍혔습니다. 앞 조각만 보면 be 의 형태가 하나로 정해진다는 것 — 이 눈이 복합 시제 수동 전체를 여는 열쇠이고, 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 서류를 돌려줍니다. 네 건 모두 물은 것은 하나였습니다 — 'be 앞에 있는 조각이 무엇인가.' have면 been, be동사면 being, 조동사면 be. 세 자리를 다시 짚고 오면 도장은 준비되어 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "완료 수동은 have + ___ + p.p. 이고, 진행 수동은 be동사 + ___ + p.p. 이며, 조동사 수동은 조동사 + ___ + p.p. 입니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "수동의 뼈대는 be + p.p. 이고, 복합 시제는 그 be 한 조각의 형태만 바꿉니다.",
+        "완료 수동은 have/has/had been p.p. 입니다. have 계열 뒤에는 과거분사만 오므로 been 입니다.",
+        "진행 수동은 be동사 + being + p.p. 입니다. 진행의 be동사 뒤에는 -ing형만 오므로 being 입니다.",
+        "조동사 수동은 조동사 + be p.p. 이고, 조동사가 완료와 결합하면 조동사 + have been p.p. 가 됩니다.",
+        "have been 뒤에 과거분사가 오면 완료 수동, -ing형이 오면 완료진행 능동입니다. 주어가 하는 쪽인지 받는 쪽인지로 가릅니다."
+      ],
+      "keySentence": {
+        "en": "The harbor wall **has been rebuilt** twice, and the inner dock **is being widened** this year.",
+        "ko": "그 항만 방벽은 두 차례 재건되었고, 안쪽 부두는 올해 확장되고 있습니다.",
+        "note": "have 뒤에는 been, be동사 뒤에는 being 이라는 자리 규칙이 한 문장에 나란히 들어 있습니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u03-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The bridge over the canal {{blank}} closed to traffic since the flood damaged its supports.",
+          "options": ["has been", "has being"],
+          "answer": 0,
+          "translation": "그 운하 위의 다리는 홍수가 교각을 손상시킨 이후 차량 통행이 차단되어 왔습니다.",
+          "explanation": "다리는 차단되는 대상이므로 수동이고, since 절이 현재완료를 요구합니다. 완료 수동은 have/has been p.p. 이므로 has been closed 를 만드는 has been 이 옳습니다. has being 은 have 계열 뒤에 -ing형을 놓은 성립하지 않는 형태입니다.",
+          "trapTags": ["perfect-passive", "been-being"]
+        },
+        {
+          "id": "u03-c4-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "All hazardous samples must [[u:been sealed]] before they leave the laboratory.",
+          "isCorrect": false,
+          "correction": "be sealed",
+          "translation": "모든 위험 시료는 실험실 밖으로 나가기 전에 밀봉되어야 합니다.",
+          "explanation": "시료가 밀봉되는 대상이라는 태 판단은 맞지만 형태가 틀렸습니다. 조동사 must 뒤에는 동사원형만 오므로 조동사 수동은 조동사 + be p.p. 가 됩니다. been 은 have 계열 뒤에서만 쓰이는 형태이므로 be sealed 로 고쳐야 합니다.",
+          "trapTags": ["modal-passive", "been-being"]
+        },
+        {
+          "id": "u03-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "At this very moment the soil around the old mine {{blank}} for traces of lead, and the results will appear next week.",
+          "options": ["is being tested", "is been tested", "has being tested"],
+          "answer": 0,
+          "translation": "바로 지금 그 폐광 주변의 토양이 납 흔적에 대해 검사되고 있으며, 결과는 다음 주에 나올 예정입니다.",
+          "explanation": "토양은 검사되는 대상이므로 수동이고, At this very moment 가 진행을 요구합니다. 진행 수동은 be being p.p. 이므로 is being tested 가 옳습니다. is been tested 는 be동사 뒤에 과거분사 been 을 놓은 형태이고, has being tested 는 have 계열 뒤에 being 을 놓은 형태이므로 둘 다 성립하지 않습니다.",
+          "trapTags": ["progressive-passive", "been-being"]
+        }
+      ]
+    }
+  ]
+}

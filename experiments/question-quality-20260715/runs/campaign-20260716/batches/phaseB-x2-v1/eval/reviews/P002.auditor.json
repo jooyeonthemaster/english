@@ -1,0 +1,90 @@
+{
+  "pid": "P002",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-seam-shift",
+      "severity": "minor",
+      "evidence": "완성문 'So for me, it'll always be the most demanding problem that needs prompt resolution.'은 문법적이지만 원 span 'the first thing I get done'(처리 순서 진술)이 과제 성격 규정('가장 부담스러운 문제')+긴급성 진술로 이동해 seam에서 경미한 논리 이완이 있다. 'So'가 직접 뒷받침하는 결론은 순서/긴급성이지 성격 규정이 아니다. 'prompt resolution'이 시간 의미를 보존하므로 게이트 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V3-minor-superlative-stretch",
+      "severity": "minor",
+      "evidence": "지문은 해당 과제가 걱정하는 시간보다 실제 처리 시간이 짧다(than it would actually take to just take care of it)고 하여 작업량 면에서는 가볍다고 시사한다. 'the most demanding'의 최상급은 감정적 소모(waste too much emotional energy, hangs over my head) 독법으로는 지지되나 지문이 직접 뒷받침하지 않는 약한 과장이다."
+    },
+    {
+      "code": "V4-minor-punctuation",
+      "severity": "minor",
+      "evidence": "오답 해설 ③ '불만족스러운 고객과의 대화 이메일 처리 등의 예시' — '대화'와 '이메일 처리' 사이 접속 표현(쉼표/'나') 누락. 내용 자체는 선지 ③ 및 지문과 정확히 대응하므로 사실성 실패는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "어휘 앵커 오용 + 비유 문자적 독해: 'wake up energized'와 'breakfast' 은유를 신체 활력 아침 루틴으로 치환",
+      "temptingBecause": "에너지가 지문의 표층 핵심어(energy level, energized)이고 필자의 습관이 실제로 아침 루틴이라 표면 정합성이 있다",
+      "decisiveFlaw": "습관의 효과는 신체 에너지 증진이 아니라 감정 에너지 낭비 차단이며, 'it'의 지시 대상(머리 위에 걸린 골칫거리 과제)이 '루틴'과 동일시될 수 없다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'the first thing I get done'과 'eating my problems for breakfast'의 재진술: 피하고 싶은 까다로운 문제의 즉시 해결",
+      "temptingBecause": "해당 없음(정답). 미루기의 비용 서술(감정 에너지 낭비, 걱정 시간 > 실제 처리 시간)이 'needs prompt resolution'을 직접 뒷받침한다",
+      "decisiveFlaw": "없음. 단, 원 span의 순서 의미('가장 먼저')가 성격 규정('가장 부담스러운')으로 이동했고, 유일하게 부정적 과제 프레임과 은유 핵심어 'problem'을 그대로 공유해 키워드 매칭만으로 도달 가능한 점이 공예 감점 요인"
+    },
+    {
+      "label": "③",
+      "intent": "예시 과확장(over-extension): 불만 고객 대화·불쾌한 이메일 예시에서 '협상 기술'을 임의 도출",
+      "temptingBecause": "'talking with an unhappy client' 등 대인 갈등 소재가 지문에 실재해 소재 중복이 있다",
+      "decisiveFlaw": "지문은 과제-에너지 시점 매칭에 관한 글이지 기술 습득에 관한 글이 아니며, 'to avoid conflicts'는 문제를 정면 돌파하라는 필자 기조와 반대다. 다섯 선지 중 흡인력이 가장 약한 준필러"
+    },
+    {
+      "label": "④",
+      "intent": "극성 반전 + 조건 소실: 마지막 문장 'scheduling your difficult work later'의 조건절('not a morning person' 한정)을 떼어내 필자 자신에게 적용하도록 유도",
+      "temptingBecause": "마지막 문장의 'later'를 부주의하게 읽으면 '어려운 일은 미루는 것이 전략적'이라는 진술로 오독할 수 있다",
+      "decisiveFlaw": "필자는 아침형(I generally wake up energized)이고 procrastinate가 해결보다 더 많은 걱정·에너지 소모를 낳는다고 명시적으로 비판한다. 'delaying for better outcomes'는 필자 태도와 정반대"
+    },
+    {
+      "label": "⑤",
+      "intent": "과협소/half-truth: 예시로 등장한 이메일 처리와 '실제 처리 시간은 짧다'는 진술을 '단순 사무'로 축소",
+      "temptingBecause": "'dealing with an unpleasant email'이 문자 그대로 등장하고 'scheduling'도 마지막 문장에 실재하며, 과제가 금방 끝난다는 진술이 'simple task'와 표면적으로 부합한다",
+      "decisiveFlaw": "빈칸의 지시 대상은 감정 에너지를 소모시키며 피하고 싶은 골칫거리 자체이지 일상적 메시지 응답·일정 조정이 아니다. '단순'으로 규정하면 감정적 부담이라는 본질이 소거된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "minor-punctuation",
+      "severity": "minor",
+      "evidence": "오답 해설 ③: '고객과의 대화 이메일 처리' — 접속 표현 누락(→ '대화나 이메일 처리')"
+    },
+    {
+      "code": "minor-shallow-anchor",
+      "severity": "minor",
+      "evidence": "④ 오답 해설이 '지문 흐름과 반대'라고만 하고 실제 함정 앵커(마지막 문장 'schedule difficult work later'의 조건절 오독)를 짚지 않아 함정 설계 대비 설명이 얕다. 본해설도 ①③⑤를 '지엽적이거나 왜곡된 선지'로 뭉뚱그린다(오답 해설 블록이 보완)."
+    },
+    {
+      "code": "not-an-issue",
+      "severity": "minor",
+      "evidence": "본해설의 '아침에 눈을 뜨자마자'는 'I generally wake up energized' + 'breakfast' 은유에서 합리적으로 도출되는 의역으로, 환각으로 보지 않음"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 통과. V1: 렌더 지문의 빈칸('_____' 1개)을 원문 span 'the first thing I get done'으로 되돌리면 원지문과 바이트 단위 완전 일치(기계 검증). 라벨 ①~⑤와 선언 정답 ② 정합. V2: 블라인드 풀이 결과 ② 단독 정답. 다섯 선지 모두 'it'll always be ___' NP 슬롯에 통사적으로 삽입 가능해 suffix에 의한 문법적 배제 없음(§D 충족). ①(신체 활력 루틴)·③(협상 기술)·⑤(단순 사무)는 논지 불일치, ④는 극성 반전으로 각각 독립 배제. ②의 'demanding'은 감정적 소모 독법으로 지지되고 'prompt resolution'이 우선 처리 의미를 보존하므로 정답 적격. V3: 완성문 문법적, minor seam 이완만 존재(게이트 통과). V4: 해설의 지문 인용·논리 귀속·오답 앵커 모두 실제 지문과 일치, 용어 오분석·환각 없음. V5: 정답 라벨·4개 오답 해설·keyPoints 동기화. 공예 결함: (1) 정답 ②만 부정적 과제 프레임을 갖고 은유 핵심어 'problem'을 그대로 재사용해, gist만 잡은 학생이 키워드·프레임 매칭으로 즉시 도달 가능 — 경쟁력 저하(C3=2)와 단서 누출(C4=2)을 동시에 야기. ③은 준필러, ④는 신중한 독자에게 즉시 소거. (2) 원 span의 순서 의미가 성격 규정으로 이동해 의미 보존이 느슨하고 최상급이 약한 과장(C1=3에 반영). 오답 4개의 함정 유형은 서로 구분됨(어휘 앵커 오용/과확장/조건 소실·극성 반전/과협소, C2=3). 1~2단계 추론으로 INTERMEDIATE 라벨과 대체로 부합(C5=3), 해설은 정확하나 다소 장황(C6=3). 합계 16, 최저 2 → B 기준(합계 17) 미달로 C. 재설계 제안: 정답에서 'problem' 어휘 중복과 프레임 단독성을 제거하고 순서/시점 의미를 보존하는 추상화('what I tackle before anything else' 류)로 교체, ③을 경쟁력 있는 scope-shift 오답으로 강화. 요청 난이도 INTERMEDIATE(비-KILLER)이므로 killerConditionsMet=false."
+}

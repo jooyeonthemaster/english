@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) involves",
+      "verdict": "correct",
+      "reason": "Subject-verb agreement: the although-clause subject is 'cyberspace' (3sg, no intervening plural distractor), so 'involves' is the required form. Object NP 'imaginary characters and events of a kind and magnitude not seen before' is well-formed (reduced passive 'not seen before' modifies 'a kind and magnitude'). Grammatical."
+    },
+    {
+      "label": "(B) made",
+      "verdict": "correct",
+      "reason": "Reduced passive relative: 'cave drawings [which were] made by our Stone Age ancestors'. 'Drawings' is the patient of 'make' and the by-agent phrase confirms the passive participle reading. The sentence's finite verb is 'involve', agreeing with the true subject 'All forms of art' (plural). No parse renders 'made' ill-formed. Grammatical."
+    },
+    {
+      "label": "(C) does not offer",
+      "verdict": "correct",
+      "reason": "Regular do-support negation: 3sg subject 'cyberspace' + 'does' + bare infinitive 'offer' + object 'a totally new dimension'. Fully grammatical."
+    },
+    {
+      "label": "(D) have made",
+      "verdict": "ERROR",
+      "reason": "Subject-verb agreement violation. The sentence coordinates two clauses: 'What is new about cyberspace is its interactive nature' AND 'this interactivity ___ made it a psychological reality as well as a social reality'. The second clause's subject is 'this interactivity' - the demonstrative 'this' forces a singular NP, so the verb must be 'has made'. Rescue parse tested and rejected: reading 'its interactive nature and this interactivity' as a compound subject of 'have made' would require the whole clause to be a bare complement of 'is' ('What is new... is [that] X and Y have made...'); a subject-complement clause after copular 'be' requires overt 'that' in standard written English, the copula would otherwise lack a nominal complement, and the parse is semantically incoherent ('this interactivity' is anaphoric to 'its interactive nature', so treating them as distinct conjoined causers is redundant and the anaphor loses its antecedent). No defensible reading makes 'have made' grammatical."
+    },
+    {
+      "label": "(E) where",
+      "verdict": "correct",
+      "reason": "Relative adverb with locative antecedent 'a space'; the following clause 'real people have actual interactions with other real people, while being able to shape...' is argument-complete (no NP gap), so 'where' (= in which) is required and correct; 'which/that' would be ungrammatical here. The 'while being able to' free adjunct's implicit subject is 'real people', which is coherent."
+    }
+  ],
+  "note": "Clean single-error item. (D) is the unique ungrammatical underline via 3sg agreement ('this interactivity' -> 'has made'). Alternative parses (reduced relatives at (B), compound-subject rescue at (D), relative adverb licensing at (E)) were actively explored and none creates a second defensible answer or rescues (D). Lens: grammarian/logician, blind solve without answer key."
+}

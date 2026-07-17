@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20241015-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 135
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-answer-point-repeatedx1",
+    "grammar-killer-overdrilled-answerx1",
+    "grammar-explanation-lintx1"
+  ],
+  "layout": "(A):dec=d  (B):dec=k  (C):dec=f  (D):dec=i  (E):ANS=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 37,
+        "relPos": 0.044,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 308,
+        "relPos": 0.369,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 550,
+        "relPos": 0.659,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 591,
+        "relPos": 0.708,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 749,
+        "relPos": 0.897,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.897,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "For many of us, making time for exercise is a continuing challenge.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "integrating",
+        "isError": false,
+        "errorExpression": "integrating",
+        "surroundingText": "That's where the beauty of integrating mini-exercises into household chores comes into play.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "as purely",
+        "isError": false,
+        "errorExpression": "as purely",
+        "surroundingText": "But rather than viewing chores as purely obligatory activities, why not seize these moments",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "seize",
+        "isError": false,
+        "errorExpression": "seize",
+        "surroundingText": "rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities",
+        "pointCode": "i"
+      },
+      {
+        "label": "(E)",
+        "expression": "to boil",
+        "isError": true,
+        "correction": "to boil",
+        "errorExpression": "boiling",
+        "surroundingText": "practice squats or engage in some wall push-ups as you wait for your morning kettle to boil.",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "integrating"
+      },
+      {
+        "label": "(C)",
+        "text": "as purely"
+      },
+      {
+        "label": "(D)",
+        "text": "seize"
+      },
+      {
+        "label": "(E)",
+        "text": "boiling"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "동명사구인 'making time for exercise'가 주어이므로 단수 동사 'is'가 어법상 옳습니다.",
+      "(B)": "전치사 'of'의 목적어 자리이므로 동명사 형태인 'integrating'이 어법상 옳습니다.",
+      "(C)": "형용사인 'obligatory'를 수식해 주는 역할을 하므로 부사 형태인 'purely'가 어법상 옳습니다.",
+      "(D)": "'why not' 뒤에 동사원형이 오므로 원형인 'seize'가 어법상 옳습니다."
+    },
+    "explanation": "문장의 'wait for A to-V' 구조는 'A가 ~하는 것을 기다리다'라는 의미를 나타내어 목적격 보어 자리에 to부정사를 요구합니다. 따라서 의미상 주어인 'your morning kettle' 뒤에는 준동사 'boiling'이 올 수 없으며, to부정사 형태인 'to boil'로 고쳐야 합니다. 'for your morning kettle'을 단순 전치사구로 오인하여 분사의 수식을 받는 형태로 착각하지 않도록 문장의 전체적인 술어부 의존 구조를 확인해야 합니다.",
+    "keyPoints": [
+      "(E) 목적격보어의 준동사 형태 — wait for + 목적어 + to-V 구조 판정",
+      "(A) 동명사 주어의 수일치 — 단수 취급 판정",
+      "(C) 형용사 수식 부사 자리 — 명사를 수식하는 형용사를 앞에서 꾸미는 부사 판정"
+    ],
+    "tags": [
+      "수능 어법",
+      "목적격 보어",
+      "수일치",
+      "형용사 수식 부사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For many of us, making time for exercise __(A) is__ a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of __(B) integrating__ mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores __(C) as purely__ obligatory activities, why not __(D) seize__ these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle __(E) boiling__. Incorporating quick exercises into your daily chores can improve your health.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

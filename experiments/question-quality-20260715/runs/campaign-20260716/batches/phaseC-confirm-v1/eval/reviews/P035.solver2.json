@@ -1,0 +1,35 @@
+{
+  "pid": "P035",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'Inefficient teachers'(복수)와 동사 'overlook'(복수형)의 수일치 성립. 타동사 overlook이 목적어 'the potential power of the opening minutes'를 정상적으로 취함. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'use + O + to-부정사(목적)' 구문: 'use the first ten minutes to get your class off to a great start'. 목적의 to-부정사로 정상 결합하며 'get ~ off to a great start'는 성립하는 관용 표현. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "조건 접속사 If가 종속절 'If you are prepared for class and have taught...'를 이끌고 주절 'they can use this brief time...'과 결합. 통사·논리(조건→결과) 모두 성립. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "if절 내 병렬: 공유 주어 you 뒤 정형동사 'are prepared'와 'have taught'의 등위 병렬로, 병렬 시작점이 정형동사층에서 일치. teach + IO(your students) + DO(an opening routine)의 4형식 결합 정상. 현재완료는 '루틴을 이미 가르쳐 둔 상태'라는 완료 의미로 문맥 적합. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'establish an opening routine developed your class with an effective start'에서 과거분사 developed를 축약 관계절(= that is developed)로 읽으면 수동 분사가 직접목적어 'your class'를 취할 수 없어 비문. develop은 수여동사가 아니므로 수동태 잔류 목적어 해석도 불가하고, 정형 과거시제로 읽으려 해도 해당 절에 주어가 없어 불가. 목적의 to-부정사(예: to provide/to get your class off to an effective start) 또는 현재분사(providing your class with an effective start)가 필요한 자리. 어법상 틀림."
+    }
+  ],
+  "note": "블라인드 풀이. 축약 관계절·분사구문·도치·수여동사 수동태 잔류 목적어 등 (E)를 정문으로 만들 대안 파스를 전부 탐색했으나 존재하지 않으며, (A)~(D)를 비문으로 만드는 파스도 없음. 정답은 (E)로 유일. 다만 (E) 자리의 '의도된 정답 표현'이 무엇인지(develop이라는 동사 선택 자체가 어색: 'developed'→'to provide/providing'이 자연스러움) 출제 원문 대비 어휘 선택의 어색함은 있으나 문항 성립에는 지장 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "밑줄 동사 are의 진짜 주어는 복수 명사구 'Racial microaggressions'이다. 사이에 낀 'such as assumptions about a person's intelligence or work ethic based on their race or ethnicity'는 삽입 예시구(such as ~)일 뿐 주어의 수를 바꾸지 못한다. 복수 주어 + are + 복수 보어 'commonplace ... indignities'로 수 일치가 형식적으로 성립한다. 단수 견인(attraction) 함정('ethnicity' 직후)이지만 지배 규칙상 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'experiential microaggressions are also common and can be seen in statements ...'에서 병렬 시작점은 are와 can으로, 주어 microaggressions를 공유한다. microaggressions는 '보는' 주체가 아니라 '보이는' 대상이므로 수동태 can be seen이 의미상·형식상 모두 성립한다. see의 능동(can see)이었다면 오히려 비문. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'A well-meaning nurse was actually yelling at him when given him directions ...'에서 접속사+분사 축약절(when -ing/-ed)의 암시적 주어는 주절 주어 nurse와 동일해야 한다. nurse는 지시를 '주는' 행위자이므로 능동 현재분사 when giving him directions가 요구된다. 표기된 when given을 정문으로 만드는 대안 해석을 탐색하면: (i) 수여동사 수동 'she was given directions'(간접목적어 승격)라면 잔류 목적어는 직접목적어 directions뿐이어야 하는데 'given him directions'는 간접목적어 him까지 잔류시켜 논항 구조가 파탄난다(give는 3논항 동사로 수동 후 목적어 2개 잔류 불가). (ii) 축약절 주어를 the man으로 잡아 'when (he was) given directions'로 읽으려 해도 him이 남는 데다 축약절 주어-주절 주어 동일성 규칙 위반(dangling). 어느 해석으로도 정문이 되지 않으므로 어법상 틀림. giving으로 고쳐야 한다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a hidden message that a person with a disability is defined as lesser ...'에서 that절은 message의 동격절이며, 절 내부 주어는 단수 'a person (with a disability)'이므로 단수 is가 맞다. define A as B의 수동 'A is defined as B' 구문도 as 보어(lesser)와 함께 형식적으로 완결된다. 주절 과거(implied)에 대해 동격절이 일반적 통념을 진술하므로 현재시제도 허용. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a more equitable future'는 [관사 + 비교급 형용사 + 명사]의 정상 명사구. equitable은 3음절 형용사로 more에 의한 우언적 비교가 표준이며, 뒤의 where 관계절(everyone is treated ...)이 future를 선행사로 받는 것도 성립. 부사(more equitably)가 필요한 자리가 아니라 명사 future를 수식하는 형용사 자리이므로 정문."
+    }
+  ],
+  "note": "정답 후보는 (C) 단독. 결정적 근거는 축약 부사절의 주어 동일성 규칙(주절 주어 nurse = 분사 의미상 주어)과 give의 논항 구조: 수동 분사 given 뒤에 목적어 두 개(him, directions)가 남는 구조는 어떤 수여동사 수동태 분석(잔류 목적어 포함)으로도 구제 불가. 나머지 네 밑줄은 수 일치(A), 태(B), 동격절 내 수 일치·수동(D), 비교급 형용사(E) 모두 형식적으로 성립하며, 이중 정답 시비 여지가 없는 깨끗한 문항이다."
+}

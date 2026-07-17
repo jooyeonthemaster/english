@@ -1,0 +1,35 @@
+{
+  "pid": "P035",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법: 'can limit the total number...'은 조동사+동사원형으로 정문. 논리: 개인이 클럽에 과다 가입하는 행위가 '학교가 제공할 수 있는 클럽의 총수'를 제한한다는 인과관계는 주체(학생 개인 vs 학교)와 범주가 어긋나 성립 불가. 지문 어디에도 학교의 클럽 공급을 다루는 내용이 없다."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법: 'leave + O + with + NP' 구문으로 정문(seam 무결). 논리: 직후 예시 'you might have to spend evenings and even weekends'가 개인 시간 잠식을 직접 예증하고, 'Pacing is important', 'don't overextend yourself'라는 결론과 완전히 정합. 빈칸에 요구되는 부정적 결과의 극성도 일치. 유일하게 성립하는 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법: 'prevent + O + from -ing' 정문. 논리: '너무 많은 클럽에 가입하는 것'은 그 자체가 과외활동 참여이므로 '어떤(any) 과외활동에도 참여하지 못하게 만든다'는 서술은 전건과 자기모순. 형식적으로 P → ¬P 구조라 성립 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법: 'cause + O + to-inf' 정문이고 'those clubs'의 선행사도 앞 절의 'too many clubs'로 회수 가능해 결합 자체는 무결. 논리: 그러나 지문의 전개축은 시간 부족(evenings and weekends)과 스트레스(awfully stressed out)이며 '흥미 상실'을 지지하는 문장이 전무하다. 세상지식으로는 그럴듯하나 본문 근거 부재로 '본문 흐름상 가장 알맞은' 기준에서 기각. 오답 매력도는 있으나 옹호 가능 수준은 아님."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법: 'guarantee + NP' 정문. 논리: 빈칸은 절제 실패의 부정적 결과 자리인데 '우수한 성적 보장'은 긍정적 결과로 극성 반전. 오히려 지문은 과다 활동이 필수 과제(tasks you absolutely need to complete)에 대한 스트레스를 낳는다고 하므로 정면 모순. 성립 불가."
+    }
+  ],
+  "note": "블라인드 풀이. 렌즈: 문법가/논리학자. 다섯 선지 모두 조동사 can 뒤 동사원형 결합은 문법적으로 무결하므로 판별은 전적으로 논리 적합성에서 이루어진다. ①은 주체 오류, ③은 자기모순, ⑤는 극성 반전으로 형식적으로 즉시 기각되고, ④는 문법·결합은 성립하나 본문 내 지지 근거가 전무하다. ②는 예시(저녁·주말 소모)와 결론(overextend 경고)이 직접 지지하는 유일한 후보로, 단일 정답으로 수렴한다. 대안 해석(축약 관계절·도치 등)이 개입할 여지가 없는 빈칸 유형이며 다중 정답 위험 없음."
+}

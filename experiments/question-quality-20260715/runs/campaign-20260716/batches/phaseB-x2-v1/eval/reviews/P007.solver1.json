@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸은 'The specific response of tapping one's foot ... does seem to be a particularly human skill, but _____' 의 but 뒤에 온다. 양보(발 구르기·외부 리듬 표시는 인간 고유 기술) 뒤 반전으로, '그렇다고 다른 종이 음악적 요소에 진정한 감수성을 보이는 것을 배제하지 않는다'가 정확히 들어맞는다. 곧이어 나오는 근거(개들이 사이렌·색소폰 등 다른 음악적 특징에 반응, 아리스토텔레스·다윈의 관찰)가 이를 뒷받침한다. seam도 문법적으로 자연스럽다."
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "'신체적 협응이 소리 경험의 전제조건임을 확인한다'는 지문 논지와 정반대다. 글은 발 구르기(신체 협응) 없이도 동물이 음악적 요소에 반응함을 보여주므로 협응을 전제로 세우지 않는다. but 이후 반전 논리와 충돌."
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "'동물은 구조화된 음악 리듬이 아니라 소음에만 반응함을 증명한다'는 서두의 'it is wrong to claim that animals are incapable of responding to pronounced rhythms'와 직접 모순된다. 개들이 리듬(jingling)과 음(out-of-tune note)에 반응한 사례 자체가 이를 반박."
+    },
+    {
+      "label": "④",
+      "verdict": "incorrect",
+      "reason": "'인간의 드러밍 패턴이 공포의 진화적 부산물임을 보여준다'는 지문 어디에도 근거가 없는 새 주제 도입. 공포·진화 기원 논의가 없어 후속 문장과 연결되지 않는다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "incorrect",
+      "reason": "'비인간 종이 복잡한 멜로디를 완벽히 재현할 수 있음을 보장한다'는 과장. 지문은 동물이 음악적 요소에 '반응/감수성'을 보인다고 할 뿐 '재현(replicate)'이나 '완벽히(perfectly)'는 뒷받침하지 않는다. 매력적 오답으로 보였으나 강도가 지나쳐 근거 초과."
+    }
+  ],
+  "note": "빈칸 유형. but 뒤 반전 + 후속 예시(개의 사이렌·색소폰 반응, 다윈 관찰)가 명확히 ①을 지지한다. ⑤가 '비인간 종의 음악 능력 긍정'이라는 방향성에서 잠깐 끌렸으나 replicate/perfectly의 과잉 주장으로 탈락. ③은 서두 명제와 정면 모순. 정답 ①로 단일하게 좁혀짐."
+}

@@ -1,0 +1,86 @@
+{
+  "pid": "P050",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2_ANSWER_NOT_DECISIVE",
+      "severity": "critical",
+      "evidence": "선언된 정답 (A) 'either adapt or'는 어법상 결정적으로 틀리지 않다. (1) adapt의 절대적 자동사 용법으로 'it must either [adapt] or [indeed reinforce this balance]' (cf. 'adapt or die') 파스가 완전히 문법적이며 문맥상으로도 자연스럽다(환경에 적응하거나 균형을 강화하거나). either...or가 상이한 결합가의 VP를 연결하는 것은 표준 용법('either resign or face impeachment'). (2) adapt의 타동사 파스('균형을 조정하다')도 통사적으로 성립하며, 해설 스스로 이를 인정하고 '흐름상 불가능'이라는 문맥 판단으로만 배제한다. 따라서 정답 판정이 명확한 문법 판단이 아닌 문맥 선호에 의존하며, RUBRIC §C가 명시적으로 배제하는 valency(대안 분석 가능) 자리를 정답 포인트로 사용했다. 실질적 '어법상 틀린 것' 집합이 공집합이거나 논쟁적이므로 선언 정답과 실제 정답 집합의 일치를 보증할 수 없다."
+    },
+    {
+      "code": "V4_STRUCTURAL_MISANALYSIS",
+      "severity": "major",
+      "evidence": "해설 첫 문장 \"상관접속사 'either A or B'가 형용사구 및 동사구를 연결하는 병렬구조 문장입니다\" — 실제로 either...or가 연결하는 것은 'adapt to'와 '(indeed) reinforce'라는 두 동사(구)이며, 이 병렬에 형용사구는 존재하지 않는다. 실제 문장 구조와 불일치하는 구조 오분석."
+    },
+    {
+      "code": "V4_CONTEXT_JUDGMENT_ADMITTED",
+      "severity": "major",
+      "evidence": "해설이 \"'adapt'가 타동사로 쓰여 ... 공통 목적어로 공유하는 구조로 착각하기 쉽지만 ... 흐름상 불가능합니다\"라고 하여, 타동사 파스가 통사적으로 성립함을 자인하고 문맥('흐름상')으로만 배제한다. 어법 문항의 정답 근거가 문법성이 아닌 의미 선호임을 해설 스스로 드러내며, adapt의 절대적 자동사 파스는 아예 검토하지 않았다."
+    },
+    {
+      "code": "V4_TERMINOLOGY_LOOSE",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설의 \"선행사 'a bridge'를 지칭하며\" — '선행사(antecedent)'는 통상 관계사에 쓰는 용어로, 재귀대명사 itself의 지시 대상 표현으로는 부정확하다(사실 오류라기보다 용어 사용의 느슨함)."
+    },
+    {
+      "code": "KILLER_SAME_POINTCODE_DECOY",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 정답 (A)와 디코이 (E)가 동일 pointCode 'i'(병렬구조)를 공유한다. (E)는 쉽게 검증되는 병렬 포인트여서 §C '정답과 같은 point의 쉬운 디코이가 정답을 가리지 않는다' 조건과의 긴장이 있다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "병렬구조에서 공통 목적어를 공유하는 두 동사의 결합가 차이(자동사 adapt+to vs 타동사 reinforce) — 원문에서 'to'를 삭제해 오류를 생성",
+      "temptingBecause": "'either A or B' 병렬 형태가 표면상 온전해 보이고, adapt가 타동사 용법도 갖는 동사여서 'adapt ... this balance'가 자연스러워 보인다",
+      "decisiveFlaw": "출제 의도: 공통 목적어 'this balance'를 공유하려면 'adapt to'가 필요하므로 'to' 누락은 비문. 감사 결과: adapt의 절대적 자동사 파스 'either [adapt] or [reinforce this balance]'가 문법적·의미적으로 성립하므로 결함이 결정적이지 않음(정답 유일성 훼손)"
+    },
+    {
+      "label": "(B)",
+      "intent": "등위접속사 or 뒤 정동사 자리 판단(정동사 vs 분사 착각 유도)",
+      "temptingBecause": "Depending on ...으로 문장이 시작되고 절이 길어져 'or it makes'의 절 구조를 놓치면 making 등 비정형이 맞아 보일 수 있다",
+      "decisiveFlaw": "'it is ...' 절과 'or it makes ...' 절이 대등 연결된 완전한 등위절 구조로, 주어 it에 대응하는 단수 정동사 makes는 명백히 옳다"
+    },
+    {
+      "label": "(C)",
+      "intent": "주격 관계대명사절 내부 동사의 선행사 수일치",
+      "temptingBecause": "동사 직후의 복수형 'its surroundings'나 문장 주어 'the bridge'와 혼동해 수일치를 잘못 셀 여지",
+      "decisiveFlaw": "that의 선행사는 단수 'an intrinsic beauty'이므로 단수 동사 works가 옳다"
+    },
+    {
+      "label": "(D)",
+      "intent": "재귀대명사 vs 인칭대명사 구분('in itself' 관용 표현)",
+      "temptingBecause": "전치사 뒤 대명사 자리에서 it/itself 선택을 고민하게 만든다",
+      "decisiveFlaw": "'spectacular in itself(그 자체로)'는 표준 관용 표현이고 지시 대상 'a bridge'와 재귀 관계가 성립하므로 옳다"
+    },
+    {
+      "label": "(E)",
+      "intent": "관계사절 내부 등위접속사 but에 의한 술어 병렬과 수일치(is ... but spoils)",
+      "temptingBecause": "but 뒤에서 앞의 spectacular(형용사)에 이끌려 spoiling 등 비정형을 기대하거나, 병렬 기준점을 잘못 잡을 수 있다",
+      "decisiveFlaw": "관계대명사 that(선행사 a bridge, 단수)을 공유 주어로 is와 spoils가 병렬된 구조이므로 단수 정동사 spoils가 옳다"
+    }
+  ],
+  "explanationIssues": [
+    "본해설: either...or가 '형용사구 및 동사구를 연결'한다고 기술 — 실제 병렬 항은 동사(구) 두 개이며 형용사구는 존재하지 않는 구조 오분석",
+    "본해설: 타동사 파스를 '흐름상 불가능'으로만 배제 — 어법 판단이 아닌 문맥 판단임을 자인하며, adapt의 절대적 자동사 파스(either [adapt] or [reinforce this balance])는 검토 누락",
+    "(D) 오답해설: 재귀대명사의 지시 대상에 관계사 용어 '선행사'를 사용(용어 느슨함, minor)",
+    "keyPoints가 (A)(C)(E)만 다루고 (B)(D)는 누락 — 동기화 모순은 아니나 커버리지 불균형(minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V3/V5 통과: 렌더 지문은 의도된 'to' 삭제 외에 원지문과 완전 일치하고, 마커 5개가 선지와 정확히 대응하며, markedExpressions·정답 라벨·해설 키가 모두 동기화되어 있다. (B)~(E)는 각각 독립 검증 결과 명백히 문법적이다. 치명 결함은 정답 (A) 자체: 'to' 삭제 후 문장은 adapt의 절대적 자동사 용법으로 문법적 파스가 성립해 '어법상 틀린 것'이 결정적이지 않고, RUBRIC §C가 KILLER 어법에서 명시적으로 배제하는 valency(대안 분석 가능) 자리를 정답 포인트로 삼았다(V2 실패). 해설도 '형용사구 연결'이라는 구조 오분석과 문맥 의존 배제 논리를 포함한다(V4 실패). 공예 측면에서는 디코이 4개가 서로 다른 포인트(정동사·수일치·재귀대명사·병렬)를 겨냥해 의도 밀도는 양호하나(C2=3), KILLER 요청 대비 디코이가 쉽게 소거되고 변별이 논쟁적 단일 포인트에 의존한다(C3=C5=2). 해설 오류로 C6=1. 재설계 방향: 정답 포인트를 valency가 아닌 구조 판독형(예: 관계사/분사/도치 등 대안 분석이 닫힌 자리)으로 교체해야 한다."
+}

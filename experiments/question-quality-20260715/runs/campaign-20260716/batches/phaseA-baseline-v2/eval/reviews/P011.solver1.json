@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'demand instant clarity and efficiency'는 지문의 핵심 논지(put up with many obscurities, struggle to interpret elements that flout principles of efficient communication)와 정반대 방향. 독자는 즉각적 명료함을 요구하지 않고 견딘다. 역방향 미끼."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "독자가 문법 오류를 '교정'해 표준 규칙을 복원한다는 내용은 지문에 없음. 지문은 규칙 위반(flout)을 교정 대상이 아니라 더 큰 소통 목적의 신호로 해석한다고 말함. 무관 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "'해석적 모호함의 즉각적 해소 욕구를 유보한다'는 put up with many obscurities / explore uncertainties / struggle to interpret와 정확히 같은 방향이며, 'to pay attention, to explore uncertainties, and ___' 병렬 3항의 독자 태도 목록에 자연스럽게 결합. 원전(Culler)의 'not immediately to demand what's the point' 취지와도 일치."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "지문은 독자가 언어적 복잡성에 궁극적으로 소통 목적(저자의 의도)이 있다고 가정한다고 명시하므로, 저자의 숨은 의도를 무시하고 주관적 인상을 앞세운다는 것은 논지와 정반대."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong-attractive",
+      "reason": "가장 매력적인 오답. 첫 문장의 선별 과정과 'worth it' 보증을 표면 어휘로 되울려 실제로 끌렸음. 그러나 빈칸은 pay attention, explore uncertainties와 병렬인 능동적 해석 노력이어야 하는데 'rely solely'는 노력의 포기이며, 지문의 'our reading efforts', 'struggle to interpret'와 충돌. 'solely'의 배타성 때문에 옹호 불가."
+    }
+  ],
+  "note": "빈칸 병렬 3항(willingness ... to pay attention, to explore uncertainties, and ___)에 들어갈 독자 태도. ③이 유일 정답으로 깨끗하게 좁혀짐. ⑤가 표면 어휘 재활용형 매력 오답으로 잘 기능하나 'solely'가 논리적 배제 단서를 제공. 문항 품질 양호."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "형식 검증: 'What happens in somebody's laboratory is [NP]' 구조에서 주어는 자유관계절(단수 취급), be동사 뒤 명사구 보어로 'a preliminary step toward gaining collective validation'은 문법적으로 완전 결합(toward + 동명사구도 정문). 논리 검증: 지문의 핵심 전제 체계는 (P1) 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists', (P2) 'A scientific truth has little standing until it becomes a collective product'이다. P1·P2로부터 실험실 산출물은 집단적 승인 이전 단계, 즉 승인 획득을 향한 예비 단계라는 결론이 연역적으로 도출된다. 전문가 검토 없이 발표하면 비난받는다는 사례(press conference)도 이를 보강한다. 유일하게 지문 논리와 무모순."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립하나 논리적으로 모순. 'truths speak clearly for themselves'는 지문 서두에 제시된 individualist rhetoric의 명제('they speak for themselves')인데, 지문은 'The norms of scientific communication presuppose that nature does not speak unambiguously'로 이를 명시적으로 부정한다. 빈칸 문장은 부정된 관점이 아니라 지문의 결론부(집단적 승인 규범)를 따라야 하므로 ②를 넣으면 직전 두 문장과 정면 충돌하는 자기모순 텍스트가 된다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "문법은 성립하나 두 지점에서 논리 파탄. (a) 'complete process': P2에 의해 실험실 단계만으로는 'little standing'이므로 완결된 과정일 수 없다. (b) 'immediate public support': 전문가 검토 이전에 대중(기자회견) 지지를 구하는 행위는 지문에서 'castigated as a publicity seeker'로 비난받는 대상이다. 즉 '즉각적 대중 지지 획득'은 지문이 규범 위반으로 규정한 경로이므로 모순."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "문법은 성립(to silence는 evidence 수식 to부정사로 적법)하나 논리 모순. 'ultimate evidence to silence prejudiced humans'는 서두의 individualist 견해('they speak too powerfully ... for prejudiced humans to silence them')의 변주로, 지문이 '거의 아무도 공적 맥락의 행동 근거로 삼지 않는다'며 기각한 관점이다. 또한 'ultimate'(최종적)은 P2의 'until it becomes a collective product'(집단 산물이 되어야 비로소 지위 획득)와 직접 충돌 — 실험실 산출물은 최종이 아니라 선행 단계다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "문법은 성립하나 지문 논리의 정확한 역(逆). 지문은 동료 전문가 검토를 우회(bypass)하는 행위를 규범 위반으로 명시('without first permitting expert reviewers to examine his or her claims is automatically castigated'). 실험실에서 일어나는 일이 '동료의 엄격한 비판을 우회하는 통로'라는 명제는 지문이 기술하는 과학 커뮤니케이션 규범 체계와 정면 배치된다."
+    }
+  ],
+  "note": "형식적 판정: 다섯 선지 모두 빈칸 문장 내 문법 결합(seam)은 정문이므로 판별은 순수 논리 적합성으로 귀결된다. 지문 구조는 [기각되는 개인주의 수사(P1')] → [집단 승인 규범(P1, P2)] → [빈칸 = 결론]의 전형적 반전 구조이며, ②·④는 기각된 전제 P1'의 재진술, ③·⑤는 규범 위반 사례의 긍정 재기술로 각각 모순이 형식적으로 증명된다. ①만이 P1·P2로부터 도출 가능. 복수 정답 여지 없음. 원전은 과학사회학 계열 논의(실험실 발견의 집단적 구성)로 보이며 빈칸 위치·선지 설계 모두 표준적."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법적으로는 'That means [that] pedestrians must keep moving...'로 정문이나, 논리적으로 자기모순. 이 내용은 Carol의 오독 그 자체이며, 빈칸 발화는 'Of course you can stand there'라는 정정 직후에 온다. ①을 넣으면 친구가 방금 부정한 명제를 다시 긍정하는 모순이 발생한다."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "미국 교통 표지 'No Standing'의 실제 의미(차량이 대기/주차할 수 없으나 승객 승하차를 위한 짧은 정차는 허용)와 일치. 서사와도 정합적 — 친구 본인이 바로 그 코너에서 Carol을 태우기 위해 짧게 정차하고 있다. '표지는 보행자가 아니라 차량에 대한 것'이라는 웃음의 포인트를 유일하게 설명한다. 'prolonged parking'이라는 표현은 (No Standing이 모든 주차를 금지한다는 점에서) 약간 부정확하나 상대 평가상 유일한 옹호 가능 후보."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합은 정문이나, No Standing 표지는 통행 우선권(priority/right-of-way)과 무관. 지문 어디에도 우선권 개념의 근거가 없어 날조된 의미."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합은 정문이나, '등록된 운전자만 진입 가능'이라는 접근 제한은 No Standing과 전혀 무관. 지문에 등록·접근 개념이 등장하지 않음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합은 정문이나, 'peak hours'라는 시간 조건은 표지 문구('No Standing')와 지문 어디에서도 도출 불가. 게다가 참이라면 친구의 정차 자체가 위법이 되어 'Of course you can stand there'와 충돌."
+    }
+  ],
+  "note": "빈칸 유형. 다섯 선지 모두 'That means [that] + 절' 구조로 문법 seam은 전원 통과 — 판별은 순수 의미·논리. 정답의 유일한 축은 'No Standing은 보행자가 아닌 차량 대상 규정'이라는 문화·법규 지식이며 ②만 이를 만족. ②의 'prolonged parking is forbidden'은 엄밀히는 No Standing이 모든 주차·대기를 금지한다는 점에서 다소 느슨한 서술이지만(No Parking 표지와의 구분이 흐려짐), 정답 성립을 위협할 수준의 결함은 아니고 경쟁 선지가 전무해 단일 정답으로 수렴한다."
+}

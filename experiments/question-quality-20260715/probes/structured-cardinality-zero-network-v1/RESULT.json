@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "mode": "zero-network-sdk-wire-capture",
+  "externalModelCalls": 0,
+  "databaseWrites": 0,
+  "currentProductionWrapper": {
+    "responseFormat": "json_schema",
+    "strict": true,
+    "questionsMinItems": null,
+    "questionsMaxItems": null,
+    "emptyQuestionsAcceptedByClientSchema": true
+  },
+  "registryScope": {
+    "registeredAiTypes": 64,
+    "registeredAiTypesWithFixedQuestionCardinality": 0,
+    "activeEnglishTypes": 25,
+    "activeEnglishTypesWithFixedQuestionCardinality": 0
+  },
+  "fixedCardinalityMechanism": {
+    "one": {
+      "minItems": 1,
+      "maxItems": 1,
+      "requireParameters": true
+    },
+    "three": {
+      "minItems": 3,
+      "maxItems": 3,
+      "requireParameters": true
+    }
+  },
+  "currentSchemaSourceSha256": "bb921628a894646addd851e1ac97f30c0d65ac657826e7413bc41a25abbc52ac",
+  "probeSha256": "b27076d350bcfc232945fc21317f6252bd7567e69150c7bbb04d52e8db256e62",
+  "verdict": "MECHANISM_CONFIRMED_ONLY: exact Zod array length and OpenRouter require_parameters survive the SDK wire transform; provider acceptance and production rollout remain unproved."
+}

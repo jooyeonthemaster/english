@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어부 'One of the most common mistakes made by organizations when they first consider experimenting with social media'의 핵명사는 단수 One이므로 is가 정문. 복수 mistakes/organizations로 인한 장거리 수일치 유혹이 실제로 있었으나(are로 끌림), 'One of + 복수명사'는 단수 취급이라는 지배 규칙으로 해소. 가장 매력적인 오답 후보였음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'a thorough ___ of the organization's own goals'는 관사 a + 형용사 thorough + 명사 + of 구조로 명사 자리다. understood는 과거분사/형용사여서 명사 기능 불가 → understanding이어야 함. 축약 관계절 등 대안 해석을 탐색해도 thorough가 수식할 명사가 부재하여 정문화 불가. 어법상 명백히 틀림."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'everyone else is doing it'의 it은 앞 절의 행위(manage a presence on popular social networks / being in social media)를 받는 대명사로 정문. 행위·상황 지시의 it 용법에 부합."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'serves no purpose in and of itself'는 관용 표현이며, 재귀대명사 itself의 지시 대상은 동명사구 주어 'Being in social media'(단수 취급)로 일치. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "must 뒤 either A or B 병렬: 'must either solve a problem ... or result in an improvement'. 병렬 시작점이 조동사 must 직후이므로 원형 solve가 원형 result와 대칭을 이루어 정문. 병렬 2차 점검에서도 이상 없음."
+    }
+  ],
+  "note": "정답 (B) 단일 확정. (A)의 장거리 수일치(One of + 복수명사)가 설계상 가장 매력적인 미끼로 실제 끌림이 있었고, (E) 병렬 구조가 2차 점검 대상이었으나 둘 다 정문으로 해소됨. (B)는 명사 자리에 과거분사를 둔 품사 오류로 논쟁 여지가 없어 복수 정답 소지 없음. 최상위권 기준 난이도는 중하 — 오류 유형(understanding→understood)이 비교적 노골적임."
+}

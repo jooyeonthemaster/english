@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 seam(it should be to make...)은 정문이나, '가능한 많은 사람에게 접근 가능하게'는 첫 문장이 기술한 현상이자 비평가들이 우려하는 바로 그 상황이다. 지문은 접근성 확대를 예술가의 목표로 지지하는 명제를 제공하지 않으며, 오히려 논지는 '위대한 예술의 본질'로 전환된다. 논리 부적합."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'현대 기술의 경계를 재정의'는 기술 자체를 목적으로 삼는 것으로, 직전 문장 'should not be simply to utilize technology for its own sake'와 정면 모순. Rather 이하는 이 명제의 대안이어야 하는데 ②는 그 부정된 명제의 재진술이다. 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'employ modern devices as subordinate tools'는 전제 'new technologies are nothing more than tools'와 동치이고, 'for offering transformative perspectives'는 위대한 예술의 정의 'challenges our perceptions of the world and forever changes our thoughts and feelings'와 동치. 수단(도구)-목적(지각 변혁) 위계를 정확히 재현하며 Rather의 대조 구조에 형식적으로 정합. to-부정사 결합도 정문. 유일 성립."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'창작 과정 자체를 첨단 도구에 맞추어 혁신'은 도구를 상위 항으로, 창작 과정을 종속 항으로 두는 위계 역전. 지문의 명제(도구는 창작 과정에 쓰이는 종속적 수단)와 모순. 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "위대한 예술은 사고·감정을 '영원히 변화'시킨다고 정의되었으므로 '전통적 감정의 보존'은 지문 명제와 상충. 급변에 맞선 보존이라는 방어적 태도도 지문 어디에도 근거 없음. 탈락."
+    }
+  ],
+  "note": "빈칸은 'Rather, it should be to ___' 구조로, 부정된 명제(기술 자체가 목적)의 논리적 대안을 요구한다. 지문이 명시한 두 전제 — (a) 기술은 도구에 불과, (b) 위대한 예술은 지각에 도전하고 사고·감정을 변혁 — 를 동시에 충족하는 선지는 ③뿐이다. 모든 선지가 문법적으로는 결합 가능하므로 판별은 순수 논리 적합성에서 이루어지며, 정답이 하나로 깨끗하게 좁혀진다."
+}

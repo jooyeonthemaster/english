@@ -1,0 +1,44 @@
+{
+ "P001": {
+  "itemId": "A4-b-kil-prem-04",
+  "armId": "B-A0-PREMIUM-KILLER",
+  "frameId": "blank-supply-v2-101",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ]
+ },
+ "P002": {
+  "itemId": "A4-b-int-prem-04",
+  "armId": "B-A0-PREMIUM-INTERMEDIATE",
+  "frameId": "blank-supply-v2-101",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": []
+ },
+ "P003": {
+  "itemId": "A4-b-kil-prem-03",
+  "armId": "B-A0-PREMIUM-KILLER",
+  "frameId": "blank-supply-v2-080",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": []
+ }
+}

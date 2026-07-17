@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합 정상(to master + NP)이나 논리 모순. 직전 문장이 부정한 목표('should not be simply to utilize technology for its own sake')를 'Rather' 뒤에서 사실상 재진술한다 — 최첨단 편집 도구의 완전한 습득은 기술 자체의 목적화다. 'Rather'가 형식적으로 요구하는 대조 명제가 아니므로 배제."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "문법 결합 정상: 'it should be to offer originality...', 관계절 'that leads'는 단수 선행사 originality와 수일치. 논리적으로 지문이 명시한 위대한 예술의 정의('challenges our perceptions of the world and forever changes our thoughts and feelings')의 정확한 환언 — originality ↔ 인식에의 도전, fresh inspiration and insight ↔ 사고·감정의 변화. '기술=수단'과 '예술적 본질=목표'라는 'Rather' 대조 구조를 유일하게 충족한다."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 정상이나 논리 불성립. 지문은 'new technologies are nothing more than tools that can be used in the creative process'로 기술의 도구적 사용을 명시적으로 인정한다. 전통 방식을 현대적 표현보다 우선하라는 반(反)기술 결론은 지문 어디에도 근거가 없는 무근거 과잉확장 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법상 성립('the everyday reality'의 정관사는 다소 어색하나 비문은 아님). 논리적으로는 위대한 예술의 정의와 정면 모순 — 'without challenging normal views'는 'challenges our perceptions'의 직접 부정이다. 형식적 모순(P와 ¬P)으로 확정 배제되는 반의어 미끼."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "문법 정상이나 논리 부적합. 배포·공유는 첫 문장의 배경 현상일 뿐 예술가의 목표로 제시된 바 없고, '디지털 자료의 효율적 배포 극대화' 자체가 여전히 기술 중심 목표여서 'not ... for its own sake / Rather' 대조를 위반한다."
+    }
+  ],
+  "note": "seam 검사: 빈칸 틀은 'it should be to + 동사원형'이며 다섯 선지 모두 원형 VP라 문법 결합은 전부 통과 — 판별은 순수 논리 적합성에 의존한다. 장거리 단서 2개가 작동: (a) 'Rather'의 대조 요구(기술 목적화 부정 → 예술 본질 긍정), (b) 3문장에 명시된 위대한 예술의 정의. 두 제약을 동시에 만족하는 선지는 2번뿐. 축약 관계절·도치 등 대안 해석으로 다른 선지를 성립시킬 경로는 발견되지 않았다. 미끼 구성 clean: 1·5는 부정된 목표의 재진술, 4는 반의어, 3은 무근거 확장. 복수정답 소지 없음."
+}

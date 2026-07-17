@@ -1,0 +1,159 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):ANS=c  (C):dec=e  (D):dec=d  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 125,
+        "relPos": 0.159,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 349,
+        "relPos": 0.443,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 509,
+        "relPos": 0.646,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 693,
+        "relPos": 0.879,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.879,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "hoping",
+        "isError": true,
+        "correction": "hoping",
+        "errorExpression": "hoped",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "aren't kept",
+        "isError": false,
+        "errorExpression": "aren't kept",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "goes",
+        "isError": false,
+        "errorExpression": "goes",
+        "surroundingText": "In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "to let",
+        "isError": false,
+        "errorExpression": "to let",
+        "surroundingText": "just that it's more ideal not to let yourself fall out of touch in the first place.",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "hoped"
+      },
+      {
+        "label": "(C)",
+        "text": "aren't kept"
+      },
+      {
+        "label": "(D)",
+        "text": "goes"
+      },
+      {
+        "label": "(E)",
+        "text": "to let"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주격 관계대명사로서 선행사인 'the distance'를 수식하며, 뒤에 주어가 없는 불완전한 문장(has formed)이 이어지므로 어법상 올바른 쓰임입니다.",
+      "(C)": "문장의 주어인 'relationships'(관계)는 유지되는 대상이므로, 수동태 'aren't kept'로 표현하는 것이 자연스럽고 어법상 적절합니다.",
+      "(D)": "명사절(that절) 내의 주어인 'not too much time'이 단수 취급되므로, 단수 동사인 'goes'로 수일치시킨 것은 어법상 올바릅니다.",
+      "(E)": "가주어 'it'에 대응하는 진주어 역할을 하는 to부정사 구조이며, 부정어인 'not'이 to부정사 바로 앞에 위치하여 'not to let'으로 올바르게 표현되었습니다."
+    },
+    "explanation": "주절의 주어 'We'가 전화를 거는 행위와 동시에 희망하는 능동적 주체이므로, 분사구문의 술어는 능동을 나타내는 현재분사여야 합니다. 또한 뒤에 목적어 역할을 하는 명사절 'that one small effort...'가 이어지고 있으므로 목적어를 취할 수 없는 과거분사는 들어갈 수 없습니다. 따라서 'hoped'를 'hoping'으로 고쳐야 어법상 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(B) 분사구문의 능동 vs 수동 — 의미상 주어와의 능동 관계 및 뒤에 오는 목적어절 유무로 판정",
+      "(A) 관계대명사의 격과 역할 — 선행사 수식과 불완전한 절 구조 확인",
+      "(D) 주어-동사 수일치 — 셀 수 없는 명사 주어에 따른 단수동사 일치"
+    ],
+    "tags": [
+      "분사구문",
+      "관계대명사",
+      "수동태",
+      "수일치",
+      "to부정사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance __(A) that__ has formed and we scramble to make repairs. We call people we haven't spoken to in ages, __(B) hoped__ that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships __(C) aren't kept__ up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time __(D) goes__ by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not __(E) to let__ yourself fall out of touch in the first place. Consistency always brings better results."
+  }
+}

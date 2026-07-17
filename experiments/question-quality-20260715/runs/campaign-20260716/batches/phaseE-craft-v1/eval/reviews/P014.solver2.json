@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "소유격 their의 선행사는 'early societies'(복수). 'in early societies with their blossoming towns and eventually cities'에서 복수 소유격 일치가 성립하므로 정문. 단수 선행사로 오독할 여지 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'Some individuals are buried with more precious goods' — bury는 타동사이고 주어 individuals는 매장의 대상(피동자)이므로 수동태 are buried가 의무적. with more precious goods는 부대 상황 전치사구로 적법. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'some are in group graves and some [are] by themselves' — be동사 생략 병렬 구조. 관용구 by oneself(홀로)의 재귀대명사가 생략절의 주어 some (individuals)와 동지시이므로 재귀형 themselves가 의무적. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong (intended answer)",
+      "reason": "대시 이후 부연부 'chemical and isotope analyses of teeth and long bones revealing that ...; some have more evidence ...'에서, 세미콜론 뒤 항목 'some have ...'가 정형절이므로 대시가 도입하는 나열식 부연의 첫 항에도 정형동사가 요구된다. 주어 'chemical and isotope analyses'(복수)에 대응하는 정형동사 reveal이어야 하며, 분사 revealing은 이 구조에서 정형동사 부재를 초래한다. 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'they are becoming quite pronounced' — become의 주격 보어 자리에 형용사화 분사 pronounced(뚜렷한)가 오고 정도부사 quite의 수식을 받는 구조. 정문."
+    }
+  ],
+  "note": "정답 후보는 (D) 단독. 다만 방어 취약점 하나를 기록한다: 'The bones ... start to show us differences as well — chemical and isotope analyses ... revealing that ...'를 독립분사구문(nominative absolute, 신주어+현재분사)으로 읽으면 형식적으로 정문이 될 수 있다(대시가 콤마 역할의 부가어 도입으로 기능하는 독해). 이 독해에서는 세미콜론 뒤 정형절 'some have more evidence ...'가 문장 전체에 병렬 접속되는 것으로 처리 가능해 완전한 비문 증명이 어렵다. 그러나 (A)(B)(C)(E)가 모두 명백한 정문이어서 '틀린 것'으로 옹호 가능한 라벨은 (D)뿐이며, 출제 의도(원문 정형동사 reveal → revealing 변형)도 명확하다. 결론적으로 답은 (D)이나, absolute 구문 독해로 인한 이의신청 여지가 있어 confidence는 medium으로 보고한다."
+}

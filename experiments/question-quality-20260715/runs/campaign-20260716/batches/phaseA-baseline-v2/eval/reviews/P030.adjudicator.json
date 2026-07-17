@@ -1,0 +1,44 @@
+{
+  "pid": "P030",
+  "finalV2": true,
+  "winningAnswer": "②",
+  "reason": "분쟁 요약이 '선언된 정답=④'라고 전달했으나 이는 오케스트레이터 측 데이터 오류다. 실제 full/P030.md의 '## 선언된 정답' 필드는 ②이며, 솔버1(②)·솔버2(②)·감사자 블라인드(②)와 완전히 일치한다. 실제 분쟁은 존재하지 않는다. 독립 재검증 결과: 빈칸은 'the goal should not be simply to utilize technology for its own sake. Rather, it should be to produce unique creations that will ___' 의 Rather-대조 슬롯로, 3문장의 위대한 예술 정의('challenges our perceptions of the world and forever changes our thoughts and feelings') 및 원문 span('allow the public to have new, eye-opening experiences')의 재진술이 들어가야 한다. ②만 이 요건을 충족하고(provoke cognitive shifts ≙ changes thoughts/feelings, reshape viewers' perspectives ≙ challenges perceptions), ①·③·⑤는 직전 문장이 명시적으로 부정한 기술-활용 내용의 재진술이라 직접 모순, ④는 비평가의 배경적 우려를 창작 목표로 이식한 화용적 부조리로 어떤 대안 해석으로도 구제 불가. 정답 ② 유일성 성립, V2=true 최종 확정. 솔버들의 과잉 판정이나 누락된 대안 해석 없음.",
+  "perDispute": [
+    {
+      "label": "선언정답-불일치(요약 vs 파일)",
+      "claim": "분쟁 요약은 선언된 정답이 ④라고 주장",
+      "verdict": "요약 오류 — 파일이 근거",
+      "evidence": "full/P030.md 25-26행: '## 선언된 정답' 직후 '②'. 해설·오답해설·keyPoints 모두 ②를 정답으로 동기화(감사자 V5-OK도 동일 확인). ④를 정답으로 취급하는 산출물 필드는 어디에도 없음. 따라서 ④는 애초에 선언 정답이 아니며 분쟁 자체가 성립하지 않는다."
+    },
+    {
+      "label": "②",
+      "claim": "솔버1·솔버2·감사자 공통: ②가 유일 정답",
+      "verdict": "성립(정답)",
+      "evidence": "완성문 'produce unique creations that will provoke cognitive shifts and reshape viewers' perspectives'는 문법 정문(will + 동사원형 병렬). 논리적으로 3문장 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'의 이중 술어와 원문 빈칸 span 'new, eye-opening experiences'를 1:1 추상화 재진술. Rather-대조 슬롯(기술 활용의 반대편 = 예술 본연의 가치)에 정확히 부합."
+    },
+    {
+      "label": "④",
+      "claim": "요약상 선언 정답으로 지목된 선지 — 성립 여부 재검증",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "'enable critics to easily express concern about modern art trends'는 문법적으로는 정문(enable + O + to-inf)이나, 비평가의 우려(2문장 'Many critics... have expressed concern')는 글의 문제 제기 배경이지 예술가가 산출해야 할 결과가 아니다. '창작물의 목표 = 비평가가 우려를 쉽게 표하게 하는 것'은 화용적으로 부조리하며 지문 어디에도 목적-결과 근거가 없다. 어떤 대안 해석(예: 반어·도발적 예술론)도 지문 텍스트의 지지를 받지 못하므로 정답 불가."
+    },
+    {
+      "label": "①",
+      "claim": "오답 판정의 타당성 검증",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "'help artists easily edit digital material'은 기술 활용 편의를 창작물의 목적으로 격상시켜 직전 문장 'should not be simply to utilize technology for its own sake'와 정면 충돌. 부수적으로 창작물이 예술가의 편집을 돕는다는 행위주 역전도 어색. 두 솔버의 reject 판정 정확."
+    },
+    {
+      "label": "③",
+      "claim": "오답 판정의 타당성 검증",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "'utilize internet technology to share artistic creations globally'는 Rather 직전에 명시적으로 부정된 '기술 활용 자체' 내용의 재진술이라 대조 구조상 즉시 배제. 1문장 배경 사실(공유의 대중화)을 궁극 목표로 승격한 scope 함정. 두 솔버의 reject 판정 정확."
+    },
+    {
+      "label": "⑤",
+      "claim": "오답 판정의 타당성 검증",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "'strictly relying on digital editing tools'는 '기술은 도구일 뿐(nothing more than tools)'이라는 4-5문장 규범 진술과 정반대 극성. 'satisfy the public'도 '지각에 도전하고 사고·감정을 바꾼다'는 위대한 예술의 정의와 불일치. 이중 결격. 두 솔버의 reject 판정 정확."
+    }
+  ]
+}

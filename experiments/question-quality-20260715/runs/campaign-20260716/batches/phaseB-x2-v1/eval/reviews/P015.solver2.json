@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'as they entered the lively shopping center' — enter는 전치사 없이 직접목적어를 취하는 타동사이며(*enter into the mall 아님), 접속사 as가 이끄는 정형절의 정동사로 과거시제도 서사 흐름과 일치한다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'these would look great on my brother' — look은 연결동사로 형용사 보어(great)를 취한다(look greatly는 비문). 조동사 would 뒤 동사원형도 정확. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'The clerk stopped her work and looked at the clothes, quickly agreeing with Jeff's choice.' — 콤마 뒤 분사구문의 의미상 주어는 주절 주어 The clerk이고, 점원이 동의하는 능동 관계이므로 현재분사 agreeing이 옳다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'His confidence was, however, quickly was changed to nervousness' — 절 앞부분에 이미 정동사 was가 있는데(His confidence was, however, quickly ...) 밑줄부에 다시 was changed가 와서 한 절에 be 조동사가 중복되는 이중 정동사 구조가 된다. 축약 관계절·도치·삽입 등 어떤 대안 분석으로도 두 번째 was를 정당화할 수 없다. 옳은 형태는 'was, however, quickly changed to nervousness'. 명백한 비문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'to nervousness when he thought of how many people would be there' — 시간 부사절 접속사 when 뒤에 완전한 절이 이어진다. 정문."
+    }
+  ],
+  "note": "정답은 (D)로 유일하게 좁혀진다. (D)의 오류 유형은 동일 절 내 be 조동사 중복(was ... was changed)으로, 수험생이 문장 첫머리의 'His confidence was, however, quickly'를 놓치지 않으면 형식적으로 즉시 판별 가능한 장거리 단서형 오류다. 나머지 네 밑줄은 각각 타동사 enter, 연결동사 look+형용사, 능동 분사구문, 시간 접속사 when으로 모두 규칙상 정문임을 확인했다. 복수 정답 시비 소지 없음."
+}

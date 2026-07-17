@@ -1,0 +1,194 @@
+{
+  "schemaVersion": "calibration-v2-phase3-independent-audit-report-v1",
+  "artifactId": "calibration-v2-phase3-independent-audit-v1",
+  "auditedDate": "2026-07-15",
+  "auditedPath": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase3",
+  "verdict": "FAIL",
+  "issuanceRecommendation": "BLOCK",
+  "summary": {
+    "phase3OutputCount": 5,
+    "authorValidatorPassed": true,
+    "independentMechanicalVerifierPassed": true,
+    "mechanicalIntegrityPassed": true,
+    "semanticAdjudicationPassed": false,
+    "freshAdjudicatorIndependenceVerified": false,
+    "trustedGoldPromotionAllowed": false,
+    "certificateIssuanceAllowed": false,
+    "blockerCount": 2,
+    "majorCount": 2
+  },
+  "issues": [
+    {
+      "id": "CALV2-P3-B01",
+      "severity": "BLOCKER",
+      "category": "fresh-adjudicator-provenance",
+      "title": "C phase1/phase2 independence from A/B is not cryptographically or temporally demonstrated",
+      "affectedArtifacts": [
+        "private/issued/adjudicator-c/seal.json",
+        "private/issued/adjudicator-c/review-records.json",
+        "private/issued/rater-a/review-records.json",
+        "private/issued/rater-b/review-records.json",
+        "reviews/calibration-v2-rater-interagreement-v1/report.json"
+      ],
+      "evidence": {
+        "aPhase2ReviewModifiedUtc": "2026-07-15T11:16:09.751Z",
+        "bPhase2ReviewModifiedUtc": "2026-07-15T11:31:47.204Z",
+        "cPhase1SealEquivalentUtc": "2026-07-15T11:39:51.089207Z",
+        "abInteragreementReportModifiedUtc": "2026-07-15T11:44:18.759Z",
+        "cPhase2ReviewModifiedUtc": "2026-07-15T11:46:53.632Z",
+        "cPhase2SemanticSha256": "1680233f49f01d937e33539b3c24d64570b60e5a34a6c4d07aa951279f5bd8ad",
+        "phase2CompletionTimestampPresent": false,
+        "accessLogOrSignedPreAccessCommitmentPresent": false
+      },
+      "analysis": "The hash chain proves which C answers and records are present, and the seal precedes C reveal. It does not prove that C could not read A/B. Both raw A/B phase2 reviews existed before C phase1 was sealed, and the A/B interagreement report existed before C phase2 records were written. The notes are an assertion, not an independently verifiable access-control fact.",
+      "impact": "The required fresh-adjudicator independence cannot be certified, so this proposal cannot be promoted to trusted gold even if every mechanical binding remains intact.",
+      "remediation": "Create an append-only or signed C phase2 seal containing the full semantic hash and completion timestamp before A/B artifacts or their interagreement report become accessible; preserve access-control/audit evidence and then rerun adjudication."
+    },
+    {
+      "id": "CALV2-P3-B02",
+      "severity": "BLOCKER",
+      "category": "constructed-answer-space",
+      "title": "N05/N06/N07 exact-hash accepted sets are structurally sound but not a closed defensible answer space",
+      "affectedItems": [
+        "RCAL2-N05",
+        "RCAL2-N06",
+        "RCAL2-N07"
+      ],
+      "evidence": {
+        "N05": {
+          "acceptedSets": 9,
+          "structuralHashesValid": true,
+          "problem": "The unchanged source is accepted despite Rewrite, while a natural until paraphrase is omitted."
+        },
+        "N06": {
+          "acceptedSets": 16,
+          "activeMembers": 4,
+          "passiveMembers": 4,
+          "fullCrossProduct": true,
+          "memberOrderInvariant": true,
+          "problem": "Open wording admits additional exact pairs; eight cross-aspect pairs are also contestable as exact active/passive counterparts."
+        },
+        "N07": {
+          "acceptedSets": 2,
+          "structuralHashesValid": true,
+          "problem": "The second order is marked but defensible; exact punctuation variants remain unaccepted because punctuation is not canonicalized."
+        }
+      },
+      "analysis": "The independent verifier recomputed every text hash, normalized hash, set hash, duplicate guard, and MULTIPLE_TEXTS order invariance. Those mechanics pass. The failure is semantic closure: exact-byte accepted sets cannot exhaust these open constructed prompts, and at least one accepted N05 response does not perform the requested rewrite.",
+      "impact": "A future reviewer can submit a grammatical meaning-preserving response and fail blind exact agreement solely because its bytes were not enumerated. The final labels therefore remain unsafe as a scoring oracle.",
+      "remediation": "Either replace exact enumeration with a reviewed semantic/constraint canonicalizer, define a genuinely closed construction grammar including punctuation policy, or remove these items from any certifying gold set."
+    },
+    {
+      "id": "CALV2-P3-M01",
+      "severity": "MAJOR",
+      "category": "adjudication-evidence",
+      "title": "RCAL2-N01 concrete finding directly reverses the authorized notice",
+      "affectedArtifact": "phase3/adjudication-records.json",
+      "affectedItem": "RCAL2-N01",
+      "evidence": {
+        "authorizedSource": "Saturday morning brings a railing-inspection closure, and the path below stays open.",
+        "recordedFinding": "The evidence supports canonical option 3: the upper path remains open while the lower path closes."
+      },
+      "analysis": "The recorded concrete finding states the opposite path/bridge status. The mapped option and reveal still independently support an F/fatal synchronization defect, but the adjudication evidence is internally false.",
+      "impact": "The adjudication record cannot be treated as a faithful evidence trail, and its downstream hash merely commits the contradiction.",
+      "remediation": "Correct the finding to state that the bridge closes while the path below remains open, independently re-review the item, and regenerate adjudication/proposal/report hashes."
+    },
+    {
+      "id": "CALV2-P3-M02",
+      "severity": "MAJOR",
+      "category": "adjudication-evidence",
+      "title": "RCAL2-B02 concrete finding invents delay and manipulation claims absent from the revealed explanation",
+      "affectedArtifact": "phase3/adjudication-records.json",
+      "affectedItem": "RCAL2-B02",
+      "evidence": {
+        "revealedExplanation": "Requiring two sensors mathematically guarantees that no future leak can be missed and that false alarms are impossible.",
+        "recordedFinding": "The revealed explanation falsely claims the protocol makes delay, error, and manipulation impossible."
+      },
+      "analysis": "The explanation is indeed fatally false, but the rationale expands it into claims about delay and manipulation that were never made. This is posterior embellishment rather than concrete evidence.",
+      "impact": "The final F/fatal decision remains supportable, but this rationale line is not evidence-faithful.",
+      "remediation": "Replace the finding with the two actual unsupported guarantees and regenerate all bound hashes after independent review."
+    }
+  ],
+  "verifiedClaims": {
+    "idsAndBindings": {
+      "itemIds": 24,
+      "oneToOne": true,
+      "phase1SubmissionSealReveal": "PASS",
+      "surfacePseudonymRelabel": "PASS",
+      "aScoreBoundJudgmentMutation": false,
+      "bScoreBoundJudgmentMutation": false
+    },
+    "answerCanonicalization": {
+      "exactTextHashes": "PASS",
+      "normalizedTextHashes": "PASS",
+      "duplicateGuards": "PASS",
+      "multipleTextsOrderInvariance": "PASS"
+    },
+    "finalLabels": {
+      "grades": {
+        "A": 4,
+        "B": 4,
+        "C": 7,
+        "F": 9
+      },
+      "fatal": 9,
+      "gradeFatalInvariant": "PASS"
+    },
+    "composition": {
+      "GRAMMAR": "8 items; A2/B2/C2/F2; fatal2",
+      "BLANK": "8 items; A2/B2/C2/F2; fatal2",
+      "NONFOCUS": "8 items; C3/F5; fatal5",
+      "eligible": false,
+      "forcedBalanceObserved": false
+    },
+    "thresholdPreview": {
+      "A": false,
+      "B": false,
+      "C": false
+    },
+    "proposalAndCertificate": {
+      "proposalIsTrustedGold": false,
+      "certificateIssued": false,
+      "certificateBlocked": true,
+      "effectiveDecision": "FAILED"
+    },
+    "posteriorAuthorityContentCheck": {
+      "authorHypothesisReferenceFound": false,
+      "trustedGoldReferenceFound": false,
+      "storedKeyAndExplanationUsedAsEvidenceFields": true,
+      "offRecordNonAccessProven": false
+    },
+    "semanticHashes": {
+      "final-labels.json": "8533c6184fbf54be80b23b870b16ad5e865a4419322160637531eeef0c2f8150",
+      "adjudication-records.json": "fcde70a47273b32b7127e186a247d4d11c0f65447bb450a4f782efb247f31baf",
+      "final-gold-proposal.json": "39c7b1dbdccd451afd744f7509de445a9443b63458e61b213c0e9cd08cac2b7c",
+      "report.json": "9bf83be9db81f0a37860d97398a9820c94d28c4ce85ad805f8bcc0430edb1d1c"
+    }
+  },
+  "hostileMutationSummary": {
+    "negativeControls": 8,
+    "negativeControlsRejected": 8,
+    "positiveControls": 1,
+    "positiveControlsPassed": 1,
+    "covered": [
+      "deletion",
+      "duplicate ID",
+      "phase binding swap",
+      "accepted-set change",
+      "grade/fatal drift",
+      "forced composition balance",
+      "constructed duplicate member",
+      "declared semantic-hash drift",
+      "MULTIPLE_TEXTS member-order invariance"
+    ]
+  },
+  "limitations": [
+    "Filesystem timestamps are observations, not trusted timestamp attestations.",
+    "A passing author validator proves deterministic equality to its hard-coded adjudication constants, not the truth of those constants.",
+    "Past network/API/DB/secret activity fields in the source report are declarations; this audit independently made none of those accesses.",
+    "The private trusted-gold file was neither read nor modified, so this audit makes no claim about its bytes or contents."
+  ],
+  "evidenceFile": "evidence.json",
+  "verifierFile": "verify.mts",
+  "manifestFile": "MANIFEST.sha256"
+}

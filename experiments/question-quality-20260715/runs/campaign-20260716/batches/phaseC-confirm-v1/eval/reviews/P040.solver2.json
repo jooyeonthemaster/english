@@ -1,0 +1,35 @@
+{
+  "pid": "P040",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "seam은 정문(it is best to + 동사원형, utilize ~ that have proven effective 관계절도 어법상 옳음)이나 논리적으로 모순. 지문 첫 문장이 '익숙한 도구·기술에 의존하는 접근'을 규정하고, 둘째 문장이 그 접근이 novel한 문제에서는 'fails miserably'라고 명시적으로 부정한다. 'In this circumstance'는 바로 그 novel한 경우를 지시하므로, 실패한다고 판정된 전략을 다시 처방하는 ①은 전건-후건이 정면 충돌하는 자기모순. 또한 후속 문장의 대용어 'this sense of looking freshly at something'이 지시할 선행 내용을 제공하지 못한다."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "seam 정문: 'it is best to approach the situation with a completely unconditioned perspective'는 문법적으로 완전하다. 논리 검증: (1) 빈칸 직후 문장의 'this sense of looking freshly at something'은 빈칸 내용을 지시하는 대용 표현인데, 'unconditioned perspective(선입견·조건화가 없는 관점)'만이 'looking freshly'와 동치이다. (2) 'beginner's mind' 정의, 초심자가 모든 세부를 흡수한다는 서술, 숙련자의 경험 필터가 essential을 잘못 걸러내 실수한다는 결말까지 전부 '조건화되지 않은 관점'의 우월성을 지지한다. 형식적으로: 빈칸 = X, 후속문 = 'X라는 이 감각 = beginner's mind'이므로 X는 '새롭게 보기'여야 하고 ②가 유일하게 이를 만족한다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "seam은 정문이나 지문 논리와 정반대. 지문은 '경험이라는 필터'가 essential한 것을 잘못 걸러낼 때 seasoned masters조차 실수한다고 하여 필터 의존의 위험을 경고한다. 숙련자(master)에게 필터링을 맡기라는 ③은 지문이 명시적으로 실패 모드로 제시한 전략이며, 'this sense of looking freshly'의 선행 내용도 될 수 없다(타인 의존은 '새롭게 보기'가 아님)."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "seam 정문(analyze whether절 어법상 옳음)이나 논리 부적합. 'In this circumstance'는 이미 '문제가 particularly novel한 경우'로 조건이 확정된 상황을 지시하므로, 유사성 여부를 다시 분석하라는 처방은 시제상·논리상 한 단계 뒤로 되돌아가는 것이며 확정된 전제와 충돌한다. 또한 유사성 분석은 기존 경험 프레임을 적용하는 행위로 'looking freshly at something'과 동치가 아니어서 후속 대용어가 지시할 수 없다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "seam 정문이나 지문이 부정하는 전략의 재진술. 'separating the essential from the irrelevant'는 지문에서 경험 많은 무술가의 '필터' 작동을 기술하는 문구를 그대로 가져온 것인데, 지문은 바로 그 필터가 essential을 잘못 걸러내 실수를 낳는다고 결론짓는다. 'focus only on'은 초심자가 'absorb every detail'하는 태도(모든 것을 받아들임)와도 정반대. 지문 어휘를 그대로 재활용한 전형적 미끼."
+    }
+  ],
+  "note": "빈칸 직후의 대용 표현 'this sense of looking freshly at something'이 결정적 장거리 단서로, 빈칸은 '새롭게(선입견 없이) 보기'를 뜻해야 한다. 이를 만족하는 선지는 ②뿐이며 ①③⑤는 지문이 명시적으로 실패 모드로 규정한 '경험/필터 의존'의 변형, ④는 이미 확정된 조건(novel)을 무시하는 역행 처방이다. 다중 정답 가능성 없음. 오답 선지들이 모두 문법적으로는 정문이므로 순수 논리 변별 문항."
+}

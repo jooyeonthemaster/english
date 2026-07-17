@@ -1,0 +1,705 @@
+{
+  "id": "b01-c4",
+  "unitId": "b01",
+  "order": 4,
+  "title": "수식어 걷어내기",
+  "oneLiner": "주어 뒤의 전치사구·분사구·관계사절을 괄호로 걷어내면, 동사를 맞출 핵 주어만 남습니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "docs/study-os-spec.md §2.3 b01-c4 수식어 걷어내기",
+      "판별 렌즈 L5 핵 주어 추출(src/lib/study-os/lenses.ts)",
+      "별표4 언어형식 — 문장의 구성(중 ●)"
+    ]
+  },
+  "lenses": ["L5", "L2"],
+  "confusableWith": ["b01-c2", "b01-c3", "u02-c1"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The boxes in the storage room contain old photographs.",
+        "The boxes in the storage room contains old photographs."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 동사의 형태 하나입니다. 이 레슨을 마치면 무엇을 걷어내고 무엇에 동사를 맞추어야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "수식어",
+      "question": "왜 긴 주어만 나오면 동사의 수를 자꾸 틀릴까요?",
+      "plain": "앞서 문장성분 레슨에서 '성분이 아닌 곁가지'로 배운 그 수식어가, 이번에는 주어와 동사 사이에 끼어 수일치를 흐립니다. 수식어는 지워도 문장이 무너지지 않으므로 괄호로 묶어 통째로 걷어낼 수 있고, 걷어내고 남은 주어에만 동사의 수를 맞추면 됩니다.",
+      "analogy": "여행 가방에 붙은 스티커를 전부 떼어도 가방은 가방입니다. 문장도 같습니다. 주어에 붙은 꾸밈 덩어리를 떼어내도 문장의 몸통은 그대로 남습니다.",
+      "whyItMatters": "수능 수일치 문항은 주어와 동사 사이에 긴 수식어를 끼워 눈을 흐립니다. 괄호로 걷어내는 손이 있으면 아무리 긴 문장도 뼈대 몇 단어로 줄어들고, 동사의 수는 그때 저절로 보입니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "걷어내기의 재료들",
+      "intro": "걷어내기에 필요한 재료를 한 항목씩 정리합니다. 예문의 굵은 부분이 그 항목입니다.",
+      "entries": [
+        {
+          "head": "뼈대 — 지우면 문장이 무너지는 것",
+          "body": "주어와 서술어(앞서 문장성분 레슨에서 배운 그 자리, 곧 시제를 가진 본동사), 그리고 본동사가 부르는 목적어·보어입니다. 이것만 남아도 문장은 성립합니다.",
+          "example": {
+            "en": "**The children play** in the yard every afternoon.",
+            "ko": "그 아이들은 매일 오후 마당에서 놉니다.",
+            "note": "in the yard 와 every afternoon 을 지워도 The children play 는 무너지지 않습니다."
+          }
+        },
+        {
+          "head": "수식어 — 지워도 문장이 남는 것",
+          "body": "뼈대에 붙어 뜻을 보태는 덩어리입니다. 지워도 문장이 무너지지 않으므로 괄호로 묶어 치울 수 있습니다.",
+          "example": {
+            "en": "The teacher **near the window** answered the question calmly.",
+            "ko": "창가에 있는 그 선생님이 그 질문에 차분히 답했습니다.",
+            "note": "near the window 를 걷어내면 The teacher answered the question 이 남습니다."
+          }
+        },
+        {
+          "head": "전치사구 — 전치사 + 명사 덩어리",
+          "body": "in·of·on·near 같은 전치사로 시작해 명사로 끝나는 덩어리입니다. 주어를 뒤에서 꾸미는 가장 흔한 수식어입니다.",
+          "example": {
+            "en": "The paintings **in the main hall** attract many visitors.",
+            "ko": "중앙 홀에 있는 그 그림들은 많은 방문객을 끌어들입니다.",
+            "note": "전치사 in 으로 시작하는 덩어리는 문장의 뼈대가 아닙니다."
+          }
+        },
+        {
+          "head": "분사구 — 시제 없는 -ing·p.p. 덩어리",
+          "body": "written·taken 처럼 시제가 없는 분사로 시작합니다. 시제가 없으므로 본동사가 아니라 수식어입니다.",
+          "example": {
+            "en": "The letters **written during the war** reveal daily hardships.",
+            "ko": "전쟁 중에 쓰인 그 편지들은 일상의 고초를 드러냅니다.",
+            "note": "written 은 시제가 없으므로 본동사가 아닙니다. 본동사는 reveal 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "관계사절 — who·which·that 이 이끄는 절",
+          "body": "관계사가 절을 통째로 끌고 와 앞의 명사를 꾸밉니다. 그 안의 동사는 주절의 본동사가 아닙니다.",
+          "example": {
+            "en": "The scientist **who discovered the vaccine** received a national award.",
+            "ko": "그 백신을 발견한 그 과학자는 전국 규모의 상을 받았습니다.",
+            "note": "discovered 는 관계사절 안의 동사이고, 주절의 본동사는 received 입니다."
+          }
+        },
+        {
+          "head": "핵 주어 — 괄호 밖에 남은 명사",
+          "body": "수식어를 전부 걷어내고 괄호 밖에 남은 진짜 주어입니다. 본동사의 수는 오직 핵 주어가 정합니다.",
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "주어를 부풀리는 수식어 3종 정리",
+      "columns": ["수식어", "알아보는 신호", "대표 모습"],
+      "rows": [
+        {
+          "cells": [
+            "전치사구",
+            "in·of·on·near 같은 전치사로 시작합니다",
+            "over the river, of the survey"
+          ],
+          "example": {
+            "en": "The bridge **over the narrow river** connects two villages.",
+            "ko": "그 좁은 강 위의 다리는 두 마을을 잇습니다.",
+            "note": "over the narrow river 를 걷어내면 The bridge connects two villages 가 남습니다."
+          }
+        },
+        {
+          "cells": [
+            "분사구",
+            "시제 없는 -ing·p.p. 로 시작합니다",
+            "sung by the children"
+          ],
+          "example": {
+            "en": "The songs **sung by the children** filled the hall.",
+            "ko": "아이들이 부른 그 노래들이 홀을 가득 채웠습니다.",
+            "note": "sung 은 시제가 없으므로 수식어의 시작입니다. 본동사는 filled 입니다."
+          }
+        },
+        {
+          "cells": [
+            "관계사절",
+            "who·which·that 로 시작합니다",
+            "who scored the goal"
+          ],
+          "example": {
+            "en": "The player **who scored the final goal** became a hero.",
+            "ko": "결승 골을 넣은 그 선수는 영웅이 되었습니다.",
+            "note": "scored 는 관계사절 안의 동사이고, 주절의 본동사는 became 입니다."
+          }
+        }
+      ],
+      "takeaway": "세 수식어는 생김새만 다를 뿐 하는 일이 같습니다. 명사 뒤에 붙어 꾸밀 뿐, 본동사의 수에는 손대지 못합니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "주어 뒤에 붙는 수식어 3종",
+      "why": "괄호를 치려면 무엇이 수식어인지 목록이 즉시 떠올라야 합니다. 문장을 읽다가 \"이것이 수식어였나\"를 고민하는 순간 시험 시간은 흘러갑니다. 전치사구·분사구·관계사절 세 가지가 구구단처럼 나와야 손이 움직입니다.",
+      "device": "전·분·관 — \"전부 분해해서 관에 넣는다\"라고 외우십시오. 주어 뒤에 붙은 전치사구·분사구·관계사절은 전부 분해해 괄호라는 관에 넣고 뚜껑을 닫습니다. 두 박자로 끊어 세 번 소리 내어 읽으십시오.",
+      "items": [
+        { "cue": "전", "answer": "전치사구 — in·of·on·near 같은 전치사로 시작합니다" },
+        { "cue": "분", "answer": "분사구 — 시제 없는 -ing·p.p. 로 시작합니다" },
+        { "cue": "관", "answer": "관계사절 — who·which·that 로 시작합니다" },
+        { "cue": "괄호 친 뒤 남는 것", "answer": "핵 주어 — 본동사의 수를 결정합니다" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "괄호의 관문",
+      "mission": "주어 뒤에 붙어 주어를 부풀리는 수식어 3종만 전부 고르십시오. 걷어내면 안 되는 뼈대 성분들이 침입해 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "전치사구",
+        "핵 주어",
+        "분사구",
+        "본동사",
+        "관계사절",
+        "목적어",
+        "보어"
+      ],
+      "answers": ["전치사구", "분사구", "관계사절"],
+      "passText": "세 수식어를 전부 가려냈습니다. 이제 어떤 문장을 만나도 괄호를 칠 재료는 손안에 있습니다. 관문이 열립니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 걷어낼 것은 \"지워도 문장이 무너지지 않는 덩어리\"입니다. 전·분·관, 암기 카드의 세 글자를 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "뼈대와 수식어",
+      "rule": "문장의 뼈대는 주어와 시제를 가진 본동사, 그리고 그 본동사가 부르는 목적어·보어입니다. 그 밖에 붙어 있는 덩어리가 걷어낼 수 있는 수식어입니다.",
+      "examples": [
+        {
+          "en": "The children **play** in the yard every afternoon.",
+          "ko": "그 아이들은 매일 오후 마당에서 놉니다.",
+          "note": "in the yard 와 every afternoon 을 걷어내도 The children play 라는 뼈대가 그대로 남습니다."
+        },
+        {
+          "en": "The teacher **near the window** answered the question calmly.",
+          "ko": "창가에 있는 그 선생님이 그 질문에 차분히 답했습니다.",
+          "note": "near the window 는 주어를 뒤에서 꾸미는 수식어입니다. 걷어내면 The teacher answered the question 이 남습니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "긴 주어를 가진 문장의 해부",
+      "tokens": [
+        { "t": "The report", "role": "S" },
+        { "t": "on the effects of climate change", "role": "M" },
+        { "t": "contains", "role": "V" },
+        { "t": "several new findings.", "role": "O" }
+      ],
+      "ko": "기후 변화의 영향에 관한 그 보고서는 몇 가지 새로운 발견을 담고 있습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "on the effects of climate change 는 전치사구입니다. 앞의 명사를 꾸밀 뿐 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "괄호 밖에 남은 명사는 The report 입니다. 이것이 핵 주어이며 단수입니다."
+        },
+        {
+          "label": "③ 본동사를 핵 주어에 맞춥니다",
+          "roles": ["V"],
+          "note": "핵 주어가 단수이므로 본동사는 contains 입니다. 괄호 안의 effects 는 동사의 수와 아무 관계가 없습니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "contains 는 목적어를 부르는 동사이고, several new findings 가 그 목적어입니다."
+        }
+      ],
+      "conclusion": "괄호를 치고 나면 이 문장의 뼈대는 The report contains several new findings 뿐입니다. 동사의 수는 이 뼈대만 보고 결정합니다."
+    },
+    {
+      "id": "b9",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "수식어 사냥",
+      "instruction": "이 문장에서 주어 뒤에 붙은 전치사구 수식어에 속하는 어절을 전부 탭하십시오. 걷어낼 덩어리를 손으로 가려내는 연습입니다.",
+      "hitLabel": "전치사구 수식어",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "pictures", "hit": false },
+        { "t": "on", "hit": true },
+        { "t": "the", "hit": true },
+        { "t": "white", "hit": true },
+        { "t": "wall", "hit": true },
+        { "t": "look", "hit": false },
+        { "t": "very", "hit": false },
+        { "t": "old", "hit": false }
+      ],
+      "ko": "흰 벽에 걸린 그 그림들은 매우 오래되어 보입니다.",
+      "explain": "on the white wall 은 전치사 on 으로 시작해 명사 wall 로 끝나는 전치사구이며, 주어 The pictures 를 꾸밀 뿐입니다. 걷어내면 The pictures look very old 라는 뼈대가 남고, 본동사 look 은 wall 이 아니라 핵 주어 pictures 에 맞춘 형태입니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "동사는 핵 주어에 맞춥니다",
+      "rule": "동사의 수는 수식어 속 명사가 아니라, 수식어를 걷어내고 남은 핵 주어에 맞춥니다.",
+      "examples": [
+        {
+          "en": "The box **of old letters** **was** kept in the attic.",
+          "ko": "오래된 편지들이 든 그 상자는 다락에 보관되어 있었습니다.",
+          "note": "of old letters 를 걷어내면 핵 주어는 The box 입니다. 단수이므로 was 입니다. letters 는 전치사의 목적어일 뿐입니다."
+        },
+        {
+          "en": "The buildings **near the old harbor** **attract** many visitors every summer.",
+          "ko": "옛 항구 근처의 그 건물들은 여름마다 많은 방문객을 끌어들입니다.",
+          "note": "near the old harbor 를 걷어내면 핵 주어는 The buildings 입니다. 복수이므로 attract 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 덩어리가 문장의 뼈대인지, 걷어낼 수식어인지 분류하십시오.",
+      "buckets": [
+        { "id": "core", "label": "뼈대" },
+        { "id": "mod", "label": "수식어" }
+      ],
+      "chips": [
+        { "text": "The report", "bucketId": "core", "why": "문장의 주어입니다. 걷어내면 문장이 무너집니다." },
+        { "text": "contains", "bucketId": "core", "why": "시제를 가진 본동사입니다." },
+        { "text": "several new findings", "bucketId": "core", "why": "본동사 contains 가 부르는 목적어입니다." },
+        { "text": "on the effects of climate change", "bucketId": "mod", "why": "전치사 on 으로 시작하는 전치사구이므로 앞의 명사를 꾸미는 수식어입니다." },
+        { "text": "written by young scientists", "bucketId": "mod", "why": "시제가 없는 분사로 시작하는 분사구이므로 앞의 명사를 꾸미는 수식어입니다." },
+        { "text": "who studied abroad", "bucketId": "mod", "why": "관계사 who 가 이끄는 관계사절이므로 앞의 명사를 꾸미는 수식어입니다." }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "수식어를 걷어내는 4단계",
+      "steps": [
+        {
+          "text": "주어 자리(문장 맨 앞)의 첫 명사를 찾습니다. 단, 문장이 There 로 시작하거나 one of·a number of 같은 수량 표현이 앞에 오는 경우는 이 절차의 예외이며 뒤 단원에서 따로 다룹니다.",
+          "applyNote": "문장 맨 앞의 The students 가 첫 명사입니다."
+        },
+        {
+          "text": "그 명사 뒤에 붙은 전치사구·분사구·관계사절을 괄호로 묶습니다.",
+          "applyNote": "who joined the exchange program last year 는 관계사절이므로 통째로 묶어 치웁니다."
+        },
+        {
+          "text": "괄호 밖에 남은 명사가 핵 주어이고, 괄호 밖의 시제 동사가 본동사입니다.",
+          "applyNote": "핵 주어는 The students 이고 본동사는 describe 입니다. joined 는 관계사절 안의 동사입니다."
+        },
+        {
+          "text": "핵 주어의 수에 본동사를 맞춥니다.",
+          "applyNote": "The students 는 복수이므로 describe 가 옳습니다. year 가 바로 앞에 있다고 해서 describes 를 쓰면 틀립니다."
+        }
+      ],
+      "example": {
+        "en": "The students who joined the exchange program last year **describe** the experience as life-changing.",
+        "ko": "지난해 교환 프로그램에 참여한 그 학생들은 그 경험을 인생을 바꾼 것으로 설명합니다.",
+        "note": "관계사절을 걷어내면 뼈대는 The students describe the experience 입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The paintings on the wall of the main hall ( shows / show ) scenes from the city's history.",
+      "steps": [
+        {
+          "title": "① 주어 자리의 첫 명사를 찾습니다",
+          "body": "문장 맨 앞의 The paintings 가 첫 명사입니다. 이것이 핵 주어 후보입니다."
+        },
+        {
+          "title": "② 뒤따르는 전치사구를 괄호로 묶습니다",
+          "body": "on the wall 과 of the main hall 은 모두 전치사구입니다. 둘 다 묶어 치웁니다."
+        },
+        {
+          "title": "③ 괄호 밖에 남은 핵 주어를 확인합니다",
+          "body": "남은 명사는 The paintings 입니다. 복수입니다. wall 과 hall 은 전치사의 목적어이므로 주어가 될 수 없습니다."
+        },
+        {
+          "title": "④ 동사를 핵 주어에 맞춥니다",
+          "body": "핵 주어가 복수이므로 복수 동사 show 가 옳습니다. 동사 바로 앞의 hall 에 이끌려 shows 를 고르면 틀립니다."
+        }
+      ],
+      "answer": "show",
+      "ko": "중앙 홀 벽에 걸린 그 그림들은 도시의 역사 장면들을 보여 줍니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b01-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The books on the top shelf {{blank}} very old.",
+          "options": ["are", "is"],
+          "answer": 0,
+          "translation": "맨 위 선반에 있는 그 책들은 아주 오래되었습니다.",
+          "explanation": "on the top shelf 는 전치사구 수식어입니다. 걷어내면 핵 주어는 The books 이고 복수이므로 are 가 옳습니다.",
+          "trapTags": ["head-subject", "prepositional-phrase"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "괄호 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 괄호 치는 눈은 속도가 생명입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "동사의 수는 동사 바로 앞의 명사에 맞춥니다.",
+          "isTrue": false,
+          "why": "동사 바로 앞의 명사는 대개 전치사구 안에 있습니다. 동사의 수는 괄호 밖에 남은 핵 주어가 정합니다."
+        },
+        {
+          "statement": "수식어를 걷어내도 문장의 뼈대는 그대로 남습니다.",
+          "isTrue": true,
+          "why": "수식어는 뜻을 보탤 뿐입니다. 지워도 주어와 본동사는 무너지지 않습니다."
+        },
+        {
+          "statement": "시제가 없는 분사는 본동사가 될 수 없습니다.",
+          "isTrue": true,
+          "why": "written·taken 처럼 시제가 없는 형태는 수식어의 시작일 뿐입니다. 본동사는 시제를 가집니다."
+        },
+        {
+          "statement": "관계사절 안의 동사가 주절의 본동사가 될 수 있습니다.",
+          "isTrue": false,
+          "why": "관계사절 안의 동사는 그 절의 서술일 뿐입니다. 주절의 본동사는 괄호 밖에 있습니다."
+        },
+        {
+          "statement": "The keys on the desk 에서 핵 주어는 desk 입니다.",
+          "isTrue": false,
+          "why": "on the desk 는 전치사구 수식어입니다. 걷어내면 핵 주어는 The keys 입니다."
+        },
+        {
+          "statement": "주어 뒤의 전치사구는 아무리 길어도 통째로 걷어낼 수 있습니다.",
+          "isTrue": true,
+          "why": "전치사구가 몇 개 겹쳐도 전부 수식어입니다. 길이는 뼈대 판단과 무관합니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "뼈대와 수식어의 차이",
+      "columns": ["뼈대(주어·본동사·목적어·보어)", "수식어(걷어낼 것)"],
+      "rows": [
+        {
+          "criterion": "대표 형태",
+          "a": "명사(주어) · 시제 동사 · 목적어 · 보어",
+          "b": "전치사구 · 분사구 · 관계사절 · 형용사 · 부사"
+        },
+        {
+          "criterion": "지우면 어떻게 되는가",
+          "a": "문장이 무너집니다",
+          "b": "문장이 짧아질 뿐 그대로 남습니다"
+        },
+        {
+          "criterion": "수일치에 관여하는가",
+          "a": "핵 주어가 본동사의 수를 결정합니다",
+          "b": "수식어 속 명사는 본동사의 수와 무관합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The theory proposed by two researchers in the 1980s still **guides** current studies.",
+          "ko": "1980년대에 두 연구자가 제안한 그 이론은 여전히 현재의 연구를 이끕니다.",
+          "note": "수식어를 걷어내면 The theory guides current studies 라는 뼈대가 남습니다."
+        },
+        {
+          "en": "The theory **proposed by two researchers in the 1980s.**",
+          "ko": "1980년대에 두 연구자가 제안한 그 이론 (…무엇?)",
+          "note": "수식어만 있고 시제를 가진 본동사가 없습니다. 뼈대가 없으므로 이것은 문장이 아니라 명사 덩어리입니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The influence of social media on young readers ( remain / remains ) a subject of debate.",
+      "givenSteps": [
+        "① 주어 자리의 첫 명사를 찾습니다 — The influence 입니다.",
+        "② 뒤따르는 전치사구 of social media 와 on young readers 를 괄호로 묶어 치웁니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "remains — 괄호 밖에 남은 핵 주어 The influence 가 단수이기 때문입니다",
+        "remain — 동사 바로 앞의 readers 가 복수이기 때문입니다",
+        "remain — social media 가 여러 매체를 가리키기 때문입니다"
+      ],
+      "answer": 0,
+      "explain": "전치사구 두 개를 걷어내면 핵 주어는 The influence 하나만 남습니다. 단수이므로 remains 가 옳습니다. readers 와 social media 는 전치사의 목적어여서 동사의 수를 결정하지 못합니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b01-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The letters from her grandmother [[u:describes]] life in a small farming village.",
+          "isCorrect": false,
+          "correction": "describe",
+          "translation": "할머니에게서 온 그 편지들은 작은 농촌 마을의 삶을 묘사합니다.",
+          "explanation": "from her grandmother 는 전치사구 수식어입니다. 걷어내면 핵 주어는 The letters 이고 복수이므로 describe 가 되어야 합니다. grandmother 는 전치사의 목적어여서 동사의 수를 결정하지 못합니다.",
+          "trapTags": ["head-subject", "prepositional-phrase"]
+        },
+        {
+          "id": "b01-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The results of the recent survey {{blank}} a clear change in public opinion.",
+          "options": ["show", "shows"],
+          "answer": 0,
+          "translation": "최근 설문의 그 결과들은 여론의 뚜렷한 변화를 보여 줍니다.",
+          "explanation": "of the recent survey 를 괄호로 걷어내면 핵 주어는 The results 이고 복수입니다. 따라서 복수 동사 show 가 옳습니다.",
+          "trapTags": ["head-subject", "prepositional-phrase"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항의 정답이 show 인 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "전치사구 of the recent survey 를 걷어내면 핵 주어가 The results 이고, 복수이므로 복수 동사가 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 수식어를 괄호로 묶고 남은 명사에 동사를 맞추는 것이 이 개념의 전부입니다."
+        },
+        {
+          "text": "동사 바로 앞의 명사에 수를 맞추는 것이 원칙이기 때문입니다.",
+          "correct": false,
+          "feedback": "그런 원칙은 없습니다. 이 문장에서 동사 바로 앞의 명사는 survey 이고, 그 원칙을 따랐다면 shows 를 골랐을 것입니다."
+        },
+        {
+          "text": "문장이 여러 사람의 의견을 다루므로 복수 동사가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "의미의 자연스러움은 수일치의 근거가 되지 못합니다. 동사의 수는 핵 주어의 형태가 결정합니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 동사 바로 앞의 명사에 수를 맞추는 습관",
+      "body": "주어가 길어지면 학생의 눈은 핵 주어를 잊고 동사 바로 앞의 명사를 붙잡습니다. 그러나 그 명사는 대개 전치사구 안에 들어 있어 주어가 될 수 없습니다. 전치사의 목적어는 핵 주어가 아니므로 대개 본동사의 수를 결정하지 못합니다. 다만 a number of·some of·most of·half of 처럼 수량 표현이 앞에 오는 경우에는 of 뒤의 명사가 수를 정하며, 이 예외는 u02-c1 에서 따로 다룹니다. 괄호를 먼저 친 뒤에 동사를 봅니다.",
+      "example": {
+        "en": "The quality of the photographs taken during the expedition **surprises** everyone.",
+        "ko": "탐사 중에 찍힌 그 사진들의 품질은 모두를 놀라게 합니다.",
+        "note": "photographs 와 expedition 은 모두 전치사구 안에 있습니다. 괄호를 걷어내면 핵 주어는 The quality 이므로 단수 동사 surprises 가 옳습니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "걷어낼 수 없는 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. 걷어낼 것과 남길 것을 가르는 눈을 시험합니다.",
+      "rounds": [
+        {
+          "words": [
+            "in the main hall",
+            "written during the war",
+            "who discovered the vaccine",
+            "contains new findings"
+          ],
+          "odd": 3,
+          "why": "앞의 셋은 명사 뒤에 붙는 수식어(전치사구·분사구·관계사절)입니다. contains new findings 는 시제를 가진 본동사가 이끄는 뼈대입니다."
+        },
+        {
+          "words": [
+            "on the top shelf",
+            "near the old harbor",
+            "from her grandmother",
+            "the young trees"
+          ],
+          "odd": 3,
+          "why": "앞의 셋은 전치사로 시작하는 전치사구 수식어입니다. the young trees 는 걷어내면 안 되는 명사구, 곧 핵 주어 후보입니다."
+        },
+        {
+          "words": ["written", "taken", "proposed", "keeps"],
+          "odd": 3,
+          "why": "keeps 는 시제를 가진 본동사입니다. 나머지 셋은 시제가 없는 과거분사로, 명사를 꾸미는 분사구를 시작합니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 긴 주어를 가진 문장을 주고 어법상 틀린 부분을 고쳐 쓰게 합니다. 수식어를 괄호로 묶어 핵 주어를 밝히고, 그 수에 동사를 맞추어 써야 만점입니다.",
+          "sample": {
+            "en": "The list of items that students must bring [[u:are]] posted on the door.",
+            "ask": "밑줄 친 부분을 어법에 맞게 고쳐 쓰십시오.",
+            "answer": "is — 전치사구 of items 와 관계사절 that students must bring 을 걷어내면 핵 주어는 The list 이므로 단수 동사 is 가 옳습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항은 주어와 동사 사이에 관계사절과 전치사구를 겹쳐 넣어 핵 주어를 흐립니다. 밑줄이 동사이면 먼저 수식어를 전부 괄호로 묶고, 남은 핵 주어의 수를 확인합니다.",
+          "sample": {
+            "en": "Every strategy that experts recommend for reducing waste in large cities [[u:requires]] steady public support.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — 관계사절과 전치사구를 걷어내면 핵 주어는 Every strategy 이고 단수이므로 requires 가 맞습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "박물관 앞의 그 조각상들은 많은 방문객을 끌어들입니다.",
+      "answer": ["The statues", "in front of the museum", "attract", "many visitors"],
+      "tiles": [
+        "The statues",
+        "in front of the museum",
+        "attract",
+        "many visitors",
+        "attracts"
+      ],
+      "explanation": "in front of the museum 은 전치사구 수식어이므로 주어와 동사 사이에 들어갑니다. 핵 주어 The statues 가 복수이므로 본동사는 attract 이며, museum 에 이끌려 attracts 를 쓰면 틀립니다."
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "부풀린 주어의 환술사",
+      "intro": "나는 주어와 동사 사이에 수식어를 끼워 넣어 눈을 흐리는 환술사입니다. 동사 앞의 명사에 눈이 끌리는 순간 당신은 내 환술 속에 갇힙니다. 괄호를 칠 줄 안다면, 네 번의 판단으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The photographs in the old album {{blank}} a forgotten world.",
+          "options": ["show", "shows"],
+          "answer": 0,
+          "why": "in the old album 은 전치사구 수식어입니다. 걷어내면 핵 주어는 The photographs 이고 복수이므로 show 입니다. album 은 전치사의 목적어일 뿐입니다."
+        },
+        {
+          "prompt": "The recipe handed down through three generations {{blank}} only five ingredients.",
+          "options": ["requires", "require"],
+          "answer": 0,
+          "why": "handed down through three generations 는 시제 없는 분사구 수식어입니다. 걷어내면 핵 주어는 The recipe 이고 단수이므로 requires 입니다. generations 는 수와 무관합니다."
+        },
+        {
+          "prompt": "The novels that the author wrote in exile {{blank}} her longing for home.",
+          "options": ["reveal", "reveals"],
+          "answer": 0,
+          "why": "that the author wrote in exile 은 관계사절 수식어입니다. 걷어내면 핵 주어는 The novels 이고 복수이므로 reveal 입니다. author 나 exile 에 이끌리면 함정에 빠집니다."
+        },
+        {
+          "prompt": "다음 문장의 핵 주어는 무엇입니까? — The noise from the crowded streets keeps the residents awake.",
+          "options": ["The noise", "the crowded streets", "the residents"],
+          "answer": 0,
+          "why": "from the crowded streets 는 전치사구 수식어입니다. 괄호 밖에 남는 명사는 The noise 하나이며, 그래서 본동사도 단수 keeps 입니다."
+        }
+      ],
+      "winText": "환술이 걷혔습니다. 아무리 부풀린 주어도 괄호 앞에서는 몇 단어의 뼈대로 줄어든다는 것을 네 번의 판단으로 증명했습니다. 이 괄호가 앞으로 모든 수일치 문항의 첫 손놀림이 됩니다.",
+      "loseText": "환술사는 아직 웃고 있습니다. 오답의 공통점을 보십시오 — 전부 동사 바로 앞의 명사에 눈이 끌린 순간이었습니다. 괄호를 먼저 치고 다시 도전하면 환술은 힘을 잃습니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "주어 뒤의 ___·___·___ 를 괄호로 묶으면 ___ 가 남고, 본동사는 그것의 수에 맞춥니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "문장의 뼈대는 주어·본동사와 본동사가 부르는 목적어·보어이며, 나머지가 걷어낼 수 있는 수식어입니다.",
+        "주어 뒤에 붙는 수식어는 전치사구·분사구·관계사절이 대부분입니다. 전·분·관, 전부 분해해서 관에 넣습니다.",
+        "수식어를 괄호로 묶고 남은 명사가 핵 주어이며, 본동사는 핵 주어의 수에 맞춥니다.",
+        "전치사의 목적어는 핵 주어가 아니므로 (수량 표현 구문을 제외하면) 본동사의 수를 결정하지 못합니다."
+      ],
+      "keySentence": {
+        "en": "The trees along the river **provide** shade for the entire path.",
+        "ko": "강을 따라 늘어선 그 나무들은 길 전체에 그늘을 제공합니다.",
+        "note": "along the river 를 걷어내면 핵 주어는 The trees 이고 복수이므로 provide 입니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b01-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The house at the end of the narrow street {{blank}} empty for years.",
+          "options": ["has stood", "have stood"],
+          "answer": 0,
+          "translation": "그 좁은 거리 끝의 그 집은 수년째 비어 있습니다.",
+          "explanation": "at the end 와 of the narrow street 는 전치사구입니다. 걷어내면 핵 주어는 The house 이고 단수이므로 has stood 가 옳습니다.",
+          "trapTags": ["head-subject", "prepositional-phrase"]
+        },
+        {
+          "id": "b01-c4-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The advice given by teachers who have taught for decades [[u:help]] students plan their studies.",
+          "isCorrect": false,
+          "correction": "helps",
+          "translation": "수십 년간 가르쳐 온 교사들이 준 그 조언은 학생들이 학업을 계획하도록 돕습니다.",
+          "explanation": "분사구 given by teachers 와 관계사절 who have taught for decades 를 걷어내면 핵 주어는 The advice 입니다. advice 는 단수 취급하는 명사이므로 helps 가 되어야 합니다. teachers 는 분사구 안의 명사여서 동사의 수와 무관합니다.",
+          "trapTags": ["head-subject", "participle-phrase", "relative-clause"]
+        },
+        {
+          "id": "b01-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The effect of new roads on nearby forests {{blank}} difficult to measure.",
+          "options": ["is", "are", "being"],
+          "answer": 0,
+          "translation": "새 도로가 인근 숲에 미치는 그 영향은 측정하기 어렵습니다.",
+          "explanation": "전치사구 of new roads 와 on nearby forests 를 걷어내면 핵 주어는 The effect 이고 단수이므로 is 가 옳습니다. being 은 시제가 없어 본동사가 되지 못하고, forests 에 이끌려 are 를 고르면 틀립니다.",
+          "trapTags": ["head-subject", "prepositional-phrase"]
+        }
+      ]
+    }
+  ]
+}

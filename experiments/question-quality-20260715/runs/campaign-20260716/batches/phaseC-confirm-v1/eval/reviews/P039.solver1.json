@@ -1,0 +1,35 @@
+{
+  "pid": "P039",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'memorize the musical notes step by step'는 'formulated rules which are, or may be, deliberately learned' 즉 기술적/책 지식의 정의 그 자체다. 빈칸은 그와 대비되는 실천적 지식(touch)의 능력을 정의하는 자리이므로 정반대 개념. 반(反)정답형 오답으로 유혹 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "'physical'은 지문의 bodily metaphors(touch, feel)와 직결되고, 'intuition'은 바로 다음 문장의 'an intuition for how events are going to unfold'와 호응하며, 의식적 사고 없이 수행한다는 'she is thinking less / without conscious awareness'와도 정합. seam 점검: 'an ability to perform the task with perfect physical intuition'은 문법적으로 결합에 문제 없고 'the task'는 선행 'some activity'를 자연스럽게 받는다. 'perfect'가 다소 강한 표현이지만 전문가의 touch를 설명하는 gloss로 허용 범위."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "가장 강한 매력적 오답. 'touch'가 악기 연주와 자연스럽게 연어를 이루고 'cannot be taught or learned'가 표면적으로 '연습 불필요'처럼 읽혀 끌린다. 그러나 지문은 이 지식이 'built up through experience'이고 'built up a repertoire of skills through habit'이라고 명시하므로 'without any prior practice'(사전 연습 전혀 없이)는 지문과 정면 모순. 실천적 지식은 선천적 재능이 아니라 경험 축적의 산물이다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문은 두 지식을 대조할 뿐 전문가가 기술적 지식의 규칙을 '완전히 무시(ignore ... completely)'한다고 말하지 않는다. 대조를 배척으로 과장한 극단 표현(completely) 오답."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "두 번째 매력적 오답. 마지막 문장 'it is passed along through shared experience'를 그대로 재활용해 표면 어휘 일치로 유혹한다. 그러나 빈칸은 'a touch for doing some activity'라는 수행 능력 자체를 정의하는 자리이지 지식의 전수 방식을 말하는 자리가 아니며, 'musical'은 일반적 activity를 부당하게 좁힌다. 위치(정의 슬롯)와 기능(전수)이 불일치."
+    }
+  ],
+  "note": "빈칸은 'a touch' 뒤의 동격 gloss 자리로, 신체적·직관적·무의식적 수행이라는 세 단서가 모두 2번을 가리킨다. 매력적 오답 3번(선천성 함정)과 5번(마지막 문장 표면 재활용)에 실제로 끌렸으나 각각 'built up through experience' 모순, 정의 슬롯-전수 기능 불일치로 배제. 정답 후보는 2번 단일. 소소한 지적: 선지 1·3·5가 'musical/instrument'로 음악을 특정하는데 지문 빈칸 문장은 'some activity'로 일반적이라, 음악 언급 선지들이 상대적으로 쉽게 배제되는 편(변별도 측면 참고)."
+}

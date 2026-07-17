@@ -1,0 +1,72 @@
+{
+  "batchId": "phaseC-confirm-v1",
+  "phase": "C",
+  "atKst": "2026-07-17T01:08:31.317+09:00",
+  "assignments": 120,
+  "slotsConsumed": 195,
+  "accepted": 82,
+  "modelCalls": 513,
+  "inputTokens": 920941,
+  "outputTokens": 359517,
+  "costUsd": 5.317311,
+  "ledgerAfter": {
+    "used": 503,
+    "cap": 1000,
+    "costUsd": 14.489799
+  },
+  "byArm": {
+    "B-A0": {
+      "n": 20,
+      "accepted": 19,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 24,
+      "costUsd": 0.830342
+    },
+    "B-X3": {
+      "n": 20,
+      "accepted": 16,
+      "gateRejected": 3,
+      "noCandidate": 1,
+      "slots": 26,
+      "costUsd": 1.0371
+    },
+    "B-CX": {
+      "n": 20,
+      "accepted": 16,
+      "gateRejected": 4,
+      "noCandidate": 0,
+      "slots": 20,
+      "costUsd": 1.07636
+    },
+    "G-A0": {
+      "n": 20,
+      "accepted": 18,
+      "gateRejected": 1,
+      "noCandidate": 1,
+      "slots": 47,
+      "costUsd": 0.270178
+    },
+    "G-LX": {
+      "n": 20,
+      "accepted": 11,
+      "gateRejected": 9,
+      "noCandidate": 0,
+      "slots": 49,
+      "costUsd": 0.714956
+    },
+    "G-CX": {
+      "n": 20,
+      "accepted": 2,
+      "gateRejected": 18,
+      "noCandidate": 0,
+      "slots": 29,
+      "costUsd": 1.388375
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 2132650
+}

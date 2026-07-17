@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "tell + 간접목적어(a bunch of healthy undergraduates) + that절은 4형식 정문. say/tell 구분을 노린 미끼이나 tell은 that절을 직접목적어로 취할 수 있어 옳다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "ask + O + to부정사(5형식) 구조. 'asked them to create a coherent sentence'는 표준 용법으로 정문."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'after they were exposed to the words' — 학생들이 단어에 노출된 것이므로 수동태 be exposed to가 맞다."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect (정답)",
+      "reason": "주어 'Those students who had been exposed to an elderly mix of words' 뒤에 정동사가 와야 하는데 taking(분사)이 와서 문장 전체에 finite verb가 없다. who절은 종속절이고, taking을 분사구문/축약관계절로 재분석해도 본동사 부재가 해소되지 않으므로 어떤 독법으로도 정문이 될 수 없다. took이어야 한다."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "비교 대상 'than those who had been exposed to random words'에서 those는 복수 선행사 students를 대신하는 대명사로 수 일치가 맞다. that/those 함정이지만 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이: 문장의 뼈대(주어-동사) 추적으로 (D)의 본동사 부재를 즉시 포착. 가장 매력적인 오답 유혹은 (A)의 tell+that절(say/tell 혼동 유도)과 (E)의 those(단복수 일치 확인 유도)였으나 둘 다 표준 정문으로 확인. (D)를 구제할 대안 해석(분사구문, 축약 관계절 등)을 적극 탐색했으나 주절 동사 부재는 어떤 재분석으로도 해소 불가. 정답 유일성 확보, 이의 제기 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P085",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'동료와의 적극적 교류를 차단하는 정신적 장벽 구축'은 close out their opponents(상대 제압)의 수단으로 논리적 인과가 성립하지 않고, 지문 어디에도 고립·차단 개념이 없다. 문법 결합(strength and stamina to erect...)은 무결하나 의미 논리로 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'오로지 경기 규칙에 부합하는 신체 통제 유지'는 규칙 준수가 승부 마무리의 원인이라는 명제가 되는데, 지문의 인과는 규칙이 아닌 체력 우위→승리다. 한정어 solely가 논리를 더 좁혀 지문과 접점이 사라진다. 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'순수한 신체 지구력을 궁극적 심리적 우위로 전환하다'를 대입하면, 협상가 사례의 'physical stamina to see the deal through → wins in negotiations'와 정확히 동형인 [신체 능력 → 경쟁적 우위 → 승부 관철] 구조가 완성된다. in order to close out their opponents와의 인과 연결이 자연스럽고, translate A into B의 to-부정사 결합도 문법적으로 무결하다. psychological dominance가 명시어는 아니나 wins/close out이 함의하는 경쟁적 우위의 추론 범위 내."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'신체적 제약 없이(without any physical constraints)'는 신체가 승부의 토대라는 지문 핵심 전제와 정면 모순이며, 골프 승부에 '무제한 창의적 에너지'는 무관 개념. 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "지문은 압박으로부터의 도피(escape)가 아니라 상대를 제압(close out)하는 공격적 우위를 논한다. 방향이 정반대이며 '즉각적 정서 안정 확보'도 체력 훈련(weight room)의 귀결로 부적절. 탈락."
+    }
+  ],
+  "note": "빈칸 문장은 'strength and stamina to ___ in order to close out their opponents' 구조로, 빈칸은 신체 능력이 승부 제압으로 이어지는 매개 행위여야 한다. 협상가 병렬 사례(physical stamina → see the deal through → wins)가 장거리 단서로 작동하여 ③의 '신체 지구력→심리적 우위 전환'만이 동형 논리를 완성한다. 나머지 4개 선지는 각각 무관 개념(①), 과잉 한정(②), 전제 모순(④), 방향 역전(⑤)으로 형식적으로 배제 가능. 복수 정답 여지 없음."
+}

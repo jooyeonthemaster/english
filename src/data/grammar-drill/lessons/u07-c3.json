@@ -1,0 +1,682 @@
+{
+  "id": "u07-c3",
+  "unitId": "u07",
+  "order": 3,
+  "title": "전치사 + 관계대명사",
+  "oneLiner": "완전한 절 앞에 관계대명사만 덜렁 놓지 않습니다. 그 자리는 전치사 + 관계대명사(in which·to whom)의 자리입니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 관계사(전치사 + 관계대명사와 뒤 절의 완전성)",
+      "천일문 고등 GRAMMAR — 관계대명사와 전치사의 위치",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 관계대명사(중 ●, 고 ●)",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L1 절의 완전성",
+      "SMOAT 어법 드릴 뱅크 u07-choice(u07-c3-ch-001~012) — trapTag: prep-rel, prep-that, in-where"
+    ]
+  },
+  "lenses": ["L1", "L5"],
+  "confusableWith": ["u07-c1", "u07-c2", "u07-c4", "u06-c4"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The manner in which the data were collected remains unclear.",
+        "The manner which the data were collected remains unclear."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 전치사 in 하나입니다. 이 레슨을 마치면 왜 그 전치사가 반드시 있어야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "전치사 + 관계대명사",
+      "question": "앞 레슨에서 외운 in which·for which — 그 전치사는 대체 어디서 온 것입니까?",
+      "plain": "앞 레슨에서 관계부사를 in which·for which 로 환원할 때 이미 이 형태를 보았습니다. 그 전치사의 정체는 이렇습니다 — 관계대명사가 원래 전치사의 목적어였는데, 그 전치사가 관계대명사를 따라 절 앞으로 올라온 것입니다.",
+      "analogy": "물건에 달린 손잡이와 같습니다. 상자(관계대명사)를 앞으로 꺼내면 거기 달린 손잡이(전치사)도 함께 딸려 나옵니다. 손잡이만 상자 뒤에 남겨 둘 수도 있습니다.",
+      "whyItMatters": "수능 어법은 완전한 절 앞에 관계대명사만 덜렁 놓아 함정을 만듭니다. 전치사가 빠졌는지 가려내는 눈이 곧 이 유형의 정답 열쇠입니다. 판별 도구 \"절의 완전성\"이 바로 여기서 작동합니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "전치사 + 관계대명사는 격식을 갖춘 장식일 뿐이므로, 전치사를 빼고 which 만 써도 뜻이 통합니다.",
+      "truth": "전치사가 있고 없고에 따라 뒤 절의 모양이 달라집니다. 전치사가 앞에 있으면 관계대명사가 그 전치사의 목적어 자리를 채우므로 뒤 절에는 빠진 성분이 없어야 하고, 전치사가 없으면 관계대명사가 절 안의 빈 자리를 채워야 합니다. 둘은 바꿔 쓸 수 있는 형태가 아닙니다.",
+      "counterExample": {
+        "en": "The village **which** the mountain trail begins is now almost empty.",
+        "ko": "그 산길이 시작되는 마을은 이제 거의 비어 있습니다.",
+        "note": "the mountain trail begins 는 자동사로 완결된 절이라 빠진 자리가 없습니다. which 가 들어갈 성분 자리가 없으므로 in which 로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "전치사 + 관계대명사 필기",
+      "intro": "판별에 필요한 네 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "완전한 절 — 빠진 자리가 없는 절",
+          "body": "주어·목적어·보어가 모두 갖춰져 더 채울 성분이 없는 절입니다. 이런 절 앞에는 관계대명사가 홀로 서지 못하고 전치사가 함께 필요합니다.",
+          "example": {
+            "en": "The archive **in which** the historians worked closed last spring.",
+            "ko": "그 역사가들이 일한 문서고는 지난봄에 문을 닫았습니다.",
+            "note": "the historians worked 는 완전한 절이므로 전치사 in 이 필요합니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "불완전한 절 — 한 자리가 비어 있는 절",
+          "body": "주어나 목적어 한 자리가 비어 있는 절입니다. 그 빈자리를 관계대명사 which 가 홀로 채우므로 전치사를 붙이지 않습니다.",
+          "example": {
+            "en": "The theory **which** the model replaces was dominant for years.",
+            "ko": "그 모형이 대체하는 이론은 여러 해 동안 지배적이었습니다.",
+            "note": "replaces 의 목적어 자리가 비어 있어 which 가 그 자리를 채웁니다."
+          }
+        },
+        {
+          "head": "전치사가 앞으로 오는 이유",
+          "body": "관계대명사가 전치사의 목적어였다가 선행사로 빠져나가면, 갈 곳을 잃은 전치사가 관계대명사 앞으로 따라 올라옵니다. 절 끝에 그대로 남겨 둘 수도 있습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "전치사 복원 — 어느 전치사인가",
+          "body": "어떤 전치사인지는 관계사절 안의 표현이 정합니다. work in a mine, rest on a theory 처럼 절 안으로 되돌려 읽어 복원합니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "전치사 뒤 자리에 올 수 있는 관계사",
+      "columns": ["형태", "전치사 뒤", "이유"],
+      "rows": [
+        {
+          "cells": ["which", "가능", "사물 선행사를 받아 전치사의 목적어 자리를 채웁니다."],
+          "example": {
+            "en": "The method **by which** the script was decoded is still disputed.",
+            "ko": "그 문자가 해독된 방법은 여전히 논쟁의 대상입니다.",
+            "note": "전치사 by 뒤의 목적어 자리를 which 가 채웁니다."
+          }
+        },
+        {
+          "cells": ["whom", "가능", "사람 선행사의 목적격입니다. 전치사 뒤에는 who 가 아니라 whom 을 씁니다."],
+          "example": {
+            "en": "The scholar **to whom** the letters were sent never replied.",
+            "ko": "그 편지들이 보내진 학자는 끝내 답하지 않았습니다.",
+            "note": "사람 선행사이므로 전치사 뒤에 목적격 whom 을 씁니다."
+          }
+        },
+        {
+          "cells": ["that", "불가", "전치사 바로 뒤에는 that 을 쓰지 못합니다. which 로 바꿔 씁니다."],
+          "example": {
+            "en": "The method **by that** the script was decoded is disputed.",
+            "ko": "그 문자가 해독된 방법은 논쟁의 대상입니다.",
+            "note": "전치사 바로 뒤 that 은 존재하지 않는 형태입니다. by which 로 고칩니다.",
+            "wrong": true
+          }
+        },
+        {
+          "cells": ["who", "불가", "주격이라 전치사의 목적어가 되지 못합니다. whom 으로 씁니다."]
+        },
+        {
+          "cells": ["where·when 등 관계부사", "불가", "부사여서 전치사의 목적어가 되지 못합니다. in which 하나로 쓰거나 where 하나로 씁니다."]
+        }
+      ],
+      "takeaway": "전치사 바로 뒤 자리를 채우는 것은 결국 목적격 관계대명사 which 와 whom 둘뿐입니다."
+    },
+    {
+      "id": "b6",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "다음 관계사 형태가 어법상 가능한지 분류하십시오.",
+      "buckets": [
+        { "id": "ok", "label": "가능한 형태" },
+        { "id": "no", "label": "불가능한 형태" }
+      ],
+      "chips": [
+        { "text": "in which", "bucketId": "ok", "why": "전치사 뒤에 관계대명사 which 가 온 정상적인 형태입니다." },
+        { "text": "to whom", "bucketId": "ok", "why": "사람 선행사일 때 전치사 뒤에는 목적격 whom 을 씁니다." },
+        { "text": "by which", "bucketId": "ok", "why": "수단을 나타내는 전치사 by 와 which 가 결합한 형태입니다." },
+        { "text": "in that", "bucketId": "no", "why": "관계사 구문에서 전치사 바로 뒤에는 that 을 쓰지 못합니다. in which 로 써야 합니다." },
+        { "text": "to who", "bucketId": "no", "why": "전치사의 목적어 자리이므로 주격 who 가 아니라 목적격 whom 이 옵니다." },
+        { "text": "in where", "bucketId": "no", "why": "where 는 관계부사, 즉 부사이므로 전치사의 목적어가 될 수 없습니다. 전치사의 목적어 자리에는 명사 상당어(관계대명사 which·whom)만 옵니다. 뜻이 필요하면 in which 하나로 쓰거나 where 하나로 씁니다." }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "관계사절 안의 전치사가 자기 목적어를 선행사로 내보내면, 그 전치사는 절 끝에 남거나 관계대명사 앞으로 이동합니다.",
+      "examples": [
+        {
+          "en": "The laboratory **in which** the vaccine was developed is now a museum.",
+          "ko": "그 백신이 개발된 실험실은 이제 박물관입니다.",
+          "note": "원래 절은 the vaccine was developed in the laboratory 였습니다. 전치사 in 이 관계대명사 앞으로 이동한 형태입니다."
+        },
+        {
+          "en": "The laboratory **which** the vaccine was developed **in** is now a museum.",
+          "ko": "그 백신이 개발된 실험실은 이제 박물관입니다.",
+          "note": "같은 문장에서 전치사를 절 끝에 남긴 형태입니다. 뜻은 같고 격식이 덜합니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "전치사 + 관계대명사 뒤에는 빠진 성분이 없는 완전한 절이 옵니다. 관계대명사가 이미 전치사의 목적어 자리를 채웠기 때문입니다.",
+      "examples": [
+        {
+          "en": "The archive **in which** the historians worked for years closed last spring.",
+          "ko": "그 역사가들이 여러 해 일한 문서고는 지난봄에 문을 닫았습니다.",
+          "note": "the historians worked for years 는 주어와 자동사가 다 있는 완전한 절입니다. 그래서 전치사 in 이 필요합니다."
+        },
+        {
+          "en": "The archive **which** the historians catalogued item by item closed last spring.",
+          "ko": "그 역사가들이 한 점씩 목록화한 문서고는 지난봄에 문을 닫았습니다.",
+          "note": "catalogued 의 목적어 자리가 비어 있으므로 which 가 그 자리를 대신합니다. 전치사를 앞에 붙이면 빈 목적어 자리가 남습니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "전치사 + 관계대명사가 낀 문장의 해부",
+      "tokens": [
+        { "t": "The rate", "role": "S" },
+        { "t": "at which", "role": "REL" },
+        { "t": "the glacier is retreating", "role": "M" },
+        { "t": "alarms", "role": "V" },
+        { "t": "the research team", "role": "O" }
+      ],
+      "ko": "그 빙하가 후퇴하는 속도는 연구팀을 불안하게 합니다.",
+      "layers": [
+        {
+          "label": "① 관계사절의 범위를 괄호로 묶습니다",
+          "roles": ["REL", "M"],
+          "note": "at which the glacier is retreating 전체가 선행사 The rate 를 뒤에서 꾸미는 관계사절입니다. 주절의 뼈대가 아니므로 통째로 치웁니다."
+        },
+        {
+          "label": "② 관계사절 안에 빠진 자리가 있는지 셉니다",
+          "roles": ["REL", "M"],
+          "note": "강조된 the glacier is retreating 은 주어와 자동사가 모두 있는 완전한 절이므로, 앞의 at which 에서 which 가 채울 성분 자리가 없습니다. 그래서 전치사 at 이 앞에 필요합니다."
+        },
+        {
+          "label": "③ 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "관계사절을 걷어내면 주어는 The rate 하나입니다. 단수이므로 주절 동사도 단수형이어야 합니다."
+        },
+        {
+          "label": "④ 주절의 본동사와 목적어를 확인합니다",
+          "roles": ["V", "O"],
+          "note": "alarms 가 주절의 본동사이고 the research team 이 그 목적어입니다. is retreating 은 관계사절의 동사이므로 주절의 본동사가 아닙니다."
+        }
+      ],
+      "conclusion": "전치사 at 은 절 안의 표현 the glacier is retreating at a rate 에서 왔습니다. 전치사를 절 안으로 되돌려 읽으면 at which 가 옳다는 것이 확인됩니다."
+    },
+    {
+      "id": "b10",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "전치사 + 관계대명사를 판단하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 뒤의 절만 따로 떼어 읽고, 주어·목적어·보어 중 빠진 자리가 있는지 셉니다.",
+          "applyNote": "toddlers pick up new words 에는 주어 toddlers 와 목적어 new words 가 다 있습니다. 빠진 자리가 없습니다."
+        },
+        {
+          "text": "빠진 자리가 없으면 관계대명사는 홀로 설 수 없습니다. 전치사 + 관계대명사이거나 관계부사 자리입니다.",
+          "applyNote": "따라서 which 만 쓴 선지는 이 단계에서 탈락합니다."
+        },
+        {
+          "text": "관계사절 안의 동사·명사·형용사가 어떤 전치사를 요구하는지 확인해 전치사를 복원합니다.",
+          "applyNote": "원래 표현은 toddlers pick up new words with ease 입니다. 따라서 전치사는 with 입니다."
+        },
+        {
+          "text": "전치사의 목적어 자리는 which(사물)와 whom(사람)이 채웁니다. that·who·관계부사는 오지 못합니다.",
+          "applyNote": "with which 가 옳습니다. with that·with where 는 존재하지 않는 형태입니다."
+        }
+      ],
+      "example": {
+        "en": "The ease **with which** toddlers pick up new words still puzzles many researchers.",
+        "ko": "유아들이 새 단어를 익히는 그 수월함은 여전히 많은 연구자를 곤혹스럽게 합니다.",
+        "note": "뒤 절이 완전하므로 전치사가 필요하고, 그 전치사는 절 안의 with ease 에서 복원됩니다."
+      }
+    },
+    {
+      "id": "b11",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The framework ( within which / which ) early economists explained consumer choice has since been revised.",
+      "steps": [
+        {
+          "title": "① 뒤 절만 떼어 읽습니다",
+          "body": "early economists explained consumer choice 는 주어와 타동사, 그리고 목적어 consumer choice 까지 갖춘 완전한 절입니다."
+        },
+        {
+          "title": "② 빠진 자리를 셉니다",
+          "body": "빠진 성분이 하나도 없습니다. 관계대명사 which 가 홀로 들어가면 채울 자리가 없어 문장이 성립하지 않습니다."
+        },
+        {
+          "title": "③ 전치사를 복원합니다",
+          "body": "원래 표현은 early economists explained consumer choice within the framework 입니다. 절의 필수 성분(주어·목적어)은 다 있지만, 전치사 within 의 목적어였던 the framework 가 선행사로 빠져나갔습니다. 그래서 그 전치사를 관계대명사 앞으로 옮겨 within which 로 씁니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "within which 가 옳습니다. 주절의 핵 주어는 The framework 이고 본동사는 has since been revised 입니다."
+        }
+      ],
+      "answer": "within which",
+      "ko": "초기 경제학자들이 소비자의 선택을 설명하던 그 틀은 그 뒤로 수정되었습니다."
+    },
+    {
+      "id": "b12",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u07-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The cabin {{blank}} the poet spent her last winter still stands by the lake.",
+          "options": ["in which", "which"],
+          "answer": 0,
+          "translation": "그 시인이 마지막 겨울을 보낸 오두막은 여전히 호숫가에 서 있습니다.",
+          "explanation": "뒤 절 the poet spent her last winter 는 주어와 목적어가 모두 있는 완전한 절입니다. which 가 채울 자리가 없으므로 전치사가 필요하며, the poet spent her last winter in the cabin 으로 복원되므로 in which 가 옳습니다.",
+          "trapTags": ["prep-rel", "clause-completeness"]
+        },
+        {
+          "id": "u07-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The instrument [[u:by which]] the astronomer measured the star's distance is now kept in a museum.",
+          "isCorrect": true,
+          "translation": "그 천문학자가 별까지의 거리를 측정할 때 쓴 기구는 이제 박물관에 보관되어 있습니다.",
+          "explanation": "measured 의 목적어 the star's distance 가 이미 있어 뒤 절은 완전합니다. 완전한 절 앞이므로 전치사 + 관계대명사 자리이며, the astronomer measured the distance by the instrument 로 복원되므로 by which 가 옳습니다.",
+          "trapTags": ["prep-rel", "clause-completeness"]
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "전치사가 앞에 있을 때와 없을 때",
+      "columns": ["전치사 + which", "which 단독"],
+      "rows": [
+        {
+          "criterion": "뒤 절의 상태",
+          "a": "빠진 성분이 없는 완전한 절",
+          "b": "주어·목적어·보어 중 한 자리가 비어 있는 불완전한 절"
+        },
+        {
+          "criterion": "관계대명사의 역할",
+          "a": "앞선 전치사의 목적어",
+          "b": "절 안의 주어 또는 목적어"
+        },
+        {
+          "criterion": "관계부사로 바꿀 수 있는가",
+          "a": "선행사가 장소·시간이고 전치사가 in·on·at 이면 where·when 으로 바꿀 수 있습니다",
+          "b": "바꿀 수 없습니다"
+        },
+        {
+          "criterion": "생략 가능성",
+          "a": "전치사가 앞에 있으면 관계대명사를 생략할 수 없습니다",
+          "b": "목적격이면 생략할 수 있습니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The theory **on which** the model rests has been questioned repeatedly.",
+          "ko": "그 모형이 근거로 삼는 이론은 거듭 의문시되어 왔습니다.",
+          "note": "rests 는 자동사이고 뒤 절에 빠진 자리가 없습니다. the model rests on the theory 로 복원됩니다."
+        },
+        {
+          "en": "The theory **which** the model replaces was dominant for decades.",
+          "ko": "그 모형이 대체하는 이론은 수십 년간 지배적이었습니다.",
+          "note": "replaces 의 목적어가 비어 있으므로 which 가 그 자리를 대신합니다. 이때는 전치사를 붙이지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "완전성 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 완전성 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 9,
+      "rounds": [
+        {
+          "statement": "전치사 + 관계대명사 뒤에는 빠진 자리가 없는 완전한 절이 옵니다.",
+          "isTrue": true,
+          "why": "관계대명사가 이미 전치사의 목적어 자리를 채웠으므로 뒤 절에는 빈자리가 없습니다."
+        },
+        {
+          "statement": "전치사 바로 뒤에 관계대명사 that 을 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "전치사 바로 뒤에는 which·whom 만 옵니다. that 은 이 자리에 오지 못하며 which 로 씁니다."
+        },
+        {
+          "statement": "The bench **on which** the old man sat every morning is now gone.",
+          "isTrue": true,
+          "why": "sat 은 자동사라 뒤 절이 완전하므로 on which 가 옳습니다. sit on the bench 의 on 을 복원한 형태입니다."
+        },
+        {
+          "statement": "The tool **which** the blacksmith shaped the blade is badly rusted.",
+          "isTrue": false,
+          "why": "shaped the blade 로 목적어가 이미 있어 뒤 절이 완전하므로 which 홀로는 설 수 없습니다. with which 가 되어야 합니다."
+        },
+        {
+          "statement": "밑줄이 which 단독인데 뒤 절에 빈 목적어 자리가 있으면 그 문장은 옳습니다.",
+          "isTrue": true,
+          "why": "which 가 그 빈 목적어 자리를 채우므로 전치사 없이 옳습니다."
+        },
+        {
+          "statement": "The scholar **to whom** the prize was awarded politely declined it.",
+          "isTrue": true,
+          "why": "award the prize to the scholar 에서 온 to whom 이고, 뒤 절이 완전하며 선행사가 사람이므로 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The degree ( to which / which ) the two languages influenced each other is still debated.",
+      "givenSteps": [
+        "① 뒤 절을 읽습니다 — the two languages influenced each other 는 주어·타동사·목적어가 모두 있는 완전한 절입니다.",
+        "② 빠진 자리가 없으므로 관계대명사가 홀로 설 성분 자리가 없습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "to which — influence each other to a degree 의 전치사 to 를 복원한 형태입니다",
+        "which — 선행사 The degree 가 사물이므로 which 하나면 충분합니다",
+        "where — 뒤 절이 완전하므로 관계부사 where 를 씁니다"
+      ],
+      "answer": 0,
+      "explain": "뒤 절이 완전하다는 사실은 which 단독을 배제할 뿐, 어떤 전치사인지까지 정해 주지는 않습니다. 절 안의 표현 influence each other to a degree 에서 전치사 to 를 복원해 to which 가 됩니다. where 는 장소 선행사를 받는 관계부사이므로 The degree 를 받지 못합니다."
+    },
+    {
+      "id": "b16",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "전치사를 복원해 짝지으십시오",
+      "instruction": "관계사절 안의 표현을 보고, 관계대명사 앞에 복원될 전치사 + 관계대명사와 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "the artisan carved the statue ___",
+          "b": "with which",
+          "why": "carve the statue with a chisel 의 전치사 with 를 복원합니다. 도구를 나타내므로 with which 입니다."
+        },
+        {
+          "a": "the committee relied ___",
+          "b": "on which",
+          "why": "rely on the data 의 전치사 on 을 복원합니다. rely 는 on 만 지배하고 선행사가 사물이므로 on which 입니다."
+        },
+        {
+          "a": "the prize was awarded ___",
+          "b": "to whom",
+          "why": "award the prize to the scholar 의 전치사 to 를 복원합니다. 선행사가 사람이므로 to whom 입니다."
+        },
+        {
+          "a": "the merchant guild flourished ___",
+          "b": "in which",
+          "why": "flourish in a city 의 전치사 in 을 복원합니다. flourish 는 장소를 in 으로만 받으므로 in which 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u07-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The conditions {{blank}} the refugees were living had worsened long before the report appeared.",
+          "options": ["under which", "which", "under that"],
+          "answer": 0,
+          "translation": "그 난민들이 살아가던 환경은 보고서가 나오기 훨씬 전에 이미 악화되어 있었습니다.",
+          "explanation": "were living 은 자동사 구문이라 뒤 절에 빠진 자리가 없습니다. 따라서 which 단독은 불가능합니다. live under such conditions 의 전치사 under 를 복원해야 하며, 전치사 뒤에는 that 을 쓰지 못하므로 under which 가 옳습니다.",
+          "trapTags": ["prep-rel", "prep-that", "clause-completeness"]
+        },
+        {
+          "id": "u07-c3-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The instrument [[u:with that]] the surgeon repaired the damaged valve was designed by her own team.",
+          "isCorrect": false,
+          "correction": "with which",
+          "translation": "그 외과의가 손상된 판막을 복구할 때 쓴 기구는 그녀의 팀이 직접 설계한 것입니다.",
+          "explanation": "repaired 의 목적어가 이미 있어 뒤 절은 완전하므로 전치사 + 관계대명사 자리가 맞습니다. 다만 전치사 바로 뒤에는 that 을 쓰지 못하므로 with which 로 고쳐야 합니다.",
+          "trapTags": ["prep-that", "prep-rel"]
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "The conditions ( ) the refugees were living ... 문항에서 under which 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "뒤 절 the refugees were living 에 빠진 성분이 없어 which 가 채울 자리가 없었고, live under conditions 의 전치사 under 를 복원해야 했기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 완전성 판단으로 which 단독을 배제하고, 절 안의 표현에서 전치사를 복원하는 것이 이 유형의 절차입니다."
+        },
+        {
+          "text": "선행사 The conditions 가 사물이므로 who 계열이 아니라 which 계열을 써야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "선행사의 종류는 which 냐 whom 이냐를 가릴 뿐, 전치사가 필요한지 여부를 정하지 못합니다. 판단의 축은 뒤 절의 완전성입니다."
+        },
+        {
+          "text": "문장이 과거의 상황을 서술하고 있어 under which 가 문맥상 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "자연스러움은 어법 판단의 근거가 되지 못합니다. 시제와 무관하게 구조가 형태를 결정합니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 전치사를 두 번 쓰는 문장",
+      "body": "전치사가 관계사절 끝에 남아 있으면 그 절에는 전치사의 목적어 자리가 비어 있는 것입니다. 그 상태에서 관계대명사 앞에 전치사를 또 얹으면 같은 전치사가 두 번 쓰여 문장이 무너집니다. 밑줄이 전치사 + 관계대명사이면 절 끝까지 읽어 같은 전치사가 또 남아 있지 않은지 확인해야 합니다. 반대로 밑줄이 which 단독인데 절 끝에 전치사가 남아 있다면 그것은 옳은 문장입니다.",
+      "example": {
+        "en": "The house **in which** the family had lived **in** for thirty years was finally sold.",
+        "ko": "그 가족이 삼십 년간 살았던 집이 마침내 팔렸습니다.",
+        "note": "전치사 in 이 앞뒤로 두 번 나왔습니다. 앞의 in 을 지워 which … in 으로 쓰거나, 뒤의 in 을 지워 in which 로 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b20",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 형태 찾기",
+      "instruction": "네 형태 중 나머지와 결이 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["in which", "in that", "on which", "at which"],
+          "odd": 1,
+          "why": "in that 만 불가능한 형태입니다. 전치사 바로 뒤에는 that 을 쓰지 못하고 which 를 씁니다. 나머지 셋은 모두 「전치사 + which」로 올바른 형태입니다."
+        },
+        {
+          "words": ["to whom", "on which", "to who", "under which"],
+          "odd": 2,
+          "why": "to who 만 틀립니다. 전치사의 목적어 자리이므로 주격 who 가 아니라 목적격 whom 을 씁니다."
+        },
+        {
+          "words": ["which", "where", "when", "why"],
+          "odd": 0,
+          "why": "which 만 관계대명사입니다. 나머지 셋은 관계부사여서 전치사의 목적어가 되지 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The laboratory [[1:in which]] the compound was first synthesized still keeps the original notebooks, [[2:which]] visiting researchers consult, and the shelf [[3:on that]] the notebooks rest [[4:has]] never been moved.",
+      "answer": 3,
+      "correction": "on which",
+      "rationales": [
+        "뒤 절 the compound was first synthesized 는 수동태로 완결된 완전한 절입니다. the compound was synthesized in the laboratory 로 복원되므로 in which 가 옳습니다.",
+        "consult 는 타동사인데 목적어가 비어 있습니다. 관계대명사 which 가 그 목적어 자리를 채우므로 전치사 없이 which 만 쓰는 것이 옳습니다.",
+        "the notebooks rest 는 빠진 자리가 없는 완전한 절이므로 전치사가 필요하지만, 전치사 바로 뒤에는 that 을 쓰지 못합니다. on which 로 고칩니다.",
+        "관계사절 on which the notebooks rest 를 걷어내면 핵 주어는 the shelf 로 단수입니다. 따라서 단수형 has 가 옳습니다."
+      ],
+      "ko": "그 화합물이 처음 합성된 실험실은 원래의 실험 노트들을 여전히 보관하고 있고, 방문 연구자들은 그 노트들을 지금도 참고하며, 노트들이 놓인 선반은 한 번도 옮겨진 적이 없습니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 두 문장을 주고 전치사 + 관계대명사로 이어 쓰라고 요구합니다. 전치사를 관계대명사 앞으로 옮겨 쓰고, 절 끝의 대명사를 지웠는지까지 확인해야 만점입니다.",
+          "sample": {
+            "en": "This is the tool. The carpenter shaped the beam with it.",
+            "ask": "두 문장을 전치사 + 관계대명사를 사용해 한 문장으로 이어 쓰십시오.",
+            "answer": "This is the tool with which the carpenter shaped the beam."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 완전한 절 앞에 which 만 놓아 오답 선지를 만듭니다. 밑줄이 which 이면 뒤 절에서 빠진 자리를 먼저 찾고, 빠진 자리가 없으면 전치사가 누락된 것으로 판단합니다.",
+          "sample": {
+            "en": "The speed [[u:which]] the epidemic spread through the port cities surprised the health authorities.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "아니요. 틀렸습니다 — 뒤 절이 완전하므로 which 단독은 불가능하며, spread at that speed 의 전치사 at 을 복원해 at which 로 고쳐야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Historians of science often return to a single decade in the seventeenth century. [[u:The precision with which the new instruments measured the heavens changed what counted as evidence.]] Claims that had rested on authority alone began to lose their force. Within a generation, measurement itself had become an argument.",
+      "instruction": "밑줄 친 문장에서 관계사절의 범위를 정하고, 전치사 with 가 어디에서 왔는지 복원하십시오.",
+      "found": "관계사절은 with which the new instruments measured the heavens 이고 선행사는 The precision 입니다. 절 안에는 주어와 목적어가 모두 있어 빠진 자리가 없으므로 which 홀로는 설 수 없습니다. 원래 표현은 the instruments measured the heavens with precision 이며, 이 전치사 with 가 관계대명사 앞으로 이동한 것입니다. 관계사절을 걷어내면 주절의 핵 주어는 The precision, 본동사는 changed 입니다.",
+      "gist": "새 관측 기구의 정밀도가 무엇을 증거로 인정할지에 대한 기준 자체를 바꾸었다는 내용입니다."
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "완전한 절의 문지기",
+      "intro": "이 문은 절 하나하나를 뒤져 빠진 자리가 있는지 살핍니다. 빠진 자리가 없는데 전치사를 빠뜨린 문장은 이 문을 지나지 못합니다. 네 개의 절로 당신의 눈을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The valley {{blank}} the rare orchids still grow is closed to all visitors.",
+          "options": ["in which", "which"],
+          "answer": 0,
+          "why": "grow 는 자동사라 뒤 절이 완전합니다. grow in the valley 의 전치사 in 을 복원해 in which 가 옳습니다."
+        },
+        {
+          "prompt": "The fund {{blank}} the small clinic long depended was suddenly cut off.",
+          "options": ["on which", "which", "on that"],
+          "answer": 0,
+          "why": "depend on the fund 의 on 을 복원합니다. 뒤 절이 완전해 which 홀로는 못 서고, 전치사 뒤 that 도 불가하여 on which 가 옳습니다."
+        },
+        {
+          "prompt": "The ease {{blank}} the software handles massive files impressed every reviewer.",
+          "options": ["with which", "which", "that"],
+          "answer": 0,
+          "why": "handle files with ease 의 with 를 복원합니다. 뒤 절이 완전하므로 which·that 단독은 설 자리가 없습니다."
+        },
+        {
+          "prompt": "The mentor {{blank}} the young pianist owed her success rarely took any credit.",
+          "options": ["to whom", "to which", "whom"],
+          "answer": 0,
+          "why": "owe her success to the mentor 의 to 이고 선행사가 사람이므로 to whom 이 옳습니다. to which 는 사물용이고, whom 단독은 전치사를 빠뜨린 형태입니다."
+        }
+      ],
+      "winText": "문이 열립니다. 빠진 자리가 있는 절과 없는 절을 가르는 눈 — 그것 하나로 이 유형의 함정은 더 이상 당신을 속이지 못합니다.",
+      "loseText": "문지기가 문을 닫습니다. 네 문제가 물은 것은 언제나 하나였습니다 — \"뒤 절에 빠진 자리가 있는가.\" 완전성부터 다시 세고 오면 문은 그대로 열려 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 두 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "뒤 절에 빠진 자리가 ___면 which 를 홀로 쓰고, ___면 전치사 + which 를 씁니다. 전치사 바로 뒤 관계대명사 자리에는 ___ 와 ___ 를 씁니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "관계사절 안의 전치사가 자기 목적어를 선행사로 내보내면, 전치사는 절 끝에 남거나 관계대명사 앞으로 이동합니다.",
+        "전치사 + 관계대명사 뒤에는 빠진 성분이 없는 완전한 절이 옵니다. 관계대명사가 이미 전치사의 목적어 자리를 채웠기 때문입니다.",
+        "전치사의 목적어 자리에 오는 관계대명사는 which 와 whom 이고, 그 관계대명사는 생략하지 못합니다.",
+        "어떤 전치사인지는 관계사절 안의 표현이 결정합니다. at a rate, with ease, to a degree, under conditions 처럼 절 안으로 되돌려 읽어 복원합니다.",
+        "밑줄이 which 단독이면 뒤 절에서 빠진 자리를 찾고, 빠진 자리가 없으면 전치사가 누락된 것으로 판단합니다."
+      ],
+      "keySentence": {
+        "en": "The ease **with which** toddlers pick up new words still puzzles many researchers.",
+        "ko": "유아들이 새 단어를 익히는 그 수월함은 여전히 많은 연구자를 곤혹스럽게 합니다.",
+        "note": "뒤 절이 완전하므로 which 홀로는 설 수 없고, pick up new words with ease 의 전치사 with 를 복원해 with which 가 됩니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u07-c3-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The platform {{blank}} the speaker stood was barely large enough for two people.",
+          "options": ["on which", "which"],
+          "answer": 0,
+          "translation": "그 연사가 서 있던 단상은 두 사람이 서기에도 겨우 충분한 크기였습니다.",
+          "explanation": "stood 는 자동사이므로 뒤 절 the speaker stood 에는 빠진 자리가 없습니다. the speaker stood on the platform 으로 복원되므로 on which 가 옳습니다.",
+          "trapTags": ["prep-rel", "clause-completeness"]
+        },
+        {
+          "id": "u07-c3-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The proposal [[u:for which]] the council rejected last month has been submitted again.",
+          "isCorrect": false,
+          "correction": "which",
+          "translation": "의회가 지난달 부결한 그 제안은 다시 제출되었습니다.",
+          "explanation": "rejected 는 타동사인데 뒤 절에 목적어가 없습니다. 그 빈 목적어 자리를 관계대명사가 채워야 하므로 전치사 없이 which 만 써야 합니다. for which 로 쓰면 채워지지 않은 목적어 자리가 그대로 남습니다.",
+          "trapTags": ["prep-rel", "relative-gap"]
+        },
+        {
+          "id": "u07-c3-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The terms {{blank}} the treaty was signed remain secret, and historians still argue about them.",
+          "options": ["under which", "which", "under that"],
+          "answer": 0,
+          "translation": "그 조약이 체결된 조건들은 여전히 비밀이며, 역사가들은 지금도 그것을 두고 논쟁합니다.",
+          "explanation": "the treaty was signed 는 수동태로 완결된 완전한 절이므로 which 단독은 불가능합니다. sign a treaty under such terms 의 전치사 under 를 복원해야 하고, 전치사 뒤에는 that 을 쓰지 못하므로 under which 가 옳습니다.",
+          "trapTags": ["prep-rel", "prep-that", "clause-completeness"]
+        }
+      ]
+    }
+  ]
+}

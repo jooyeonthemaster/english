@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed after 'can' (bare VP), but logically inverted: the passage states readers 'struggle to interpret elements that flout principles of efficient communication', i.e. they suspend, not apply, strict efficiency norms. Formal seam failure as well: in 'without assuming that this makes no sense', the demonstrative 'this' requires an antecedent denoting potentially nonsensical material; 'applying strict principles' supplies no such referent."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Inserted: 'We can tolerate confusing and seemingly unrelated details, without assuming that this makes no sense.' Grammatical (modal + bare VP; plural object licensed). The demonstrative 'this' gains a coherent antecedent (the confusing/apparently irrelevant material), and the without-adjunct expresses precisely the 'hyper-protected cooperative principle': readers presume communicative purpose behind complications ('instead of imagining that the speaker or writer is being uncooperative... they struggle to interpret elements that flout principles of efficient communication') and 'not immediately ask what do you mean by that'. Entailed by the surrounding argument in both directions; uniquely satisfies seam and discourse logic."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Directly contradicted by the closing clause 'not immediately ask what do you mean by that?' and by 'instead of imagining that the speaker or writer is being uncooperative'. Pragmatic incoherence at the seam: one demands clarification precisely when one suspects the text makes no sense, so 'demand instant clarification without assuming that this makes no sense' is self-undermining; 'this' also lacks a natural referent."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Contradicts the stated 'willingness of readers to pay attention, to explore uncertainties' and the claim that the label literature 'gives us reason to expect that the results of our reading efforts will be worth it'. Doubting the value of exploring uncertainties is the negation of the passage's thesis; the without-clause again has no antecedent for 'this'."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Distractor recycling the background premise (works are published/reviewed/reprinted). The blank sentence, however, concerns the reader's tolerance behavior toward difficult language, not corpus selection; 'focus only on carefully reviewed narratives' leaves 'this makes no sense' referentless and connects to nothing in the following sentences about interpreting flouted maxims. Logically off-target."
+    }
+  ],
+  "note": "Passage is Culler's hyper-protected cooperative principle argument (original wording: 'We can put up with obscurity or apparent irrelevance...'). Option 2 is a faithful paraphrase of the original blank content. The decisive formal cue is the anaphor 'this' in the without-clause, which only option 2 licenses; discourse logic (flouted maxims tolerated, no immediate clarification demands, exploring uncertainties) independently confirms it. No alternative parse (reduced relative, absolute construction, etc.) rescues any other option. Single defensible answer."
+}

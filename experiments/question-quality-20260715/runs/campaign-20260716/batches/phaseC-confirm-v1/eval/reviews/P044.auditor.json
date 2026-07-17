@@ -1,0 +1,61 @@
+{
+  "pid": "P044",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "과거분사 후치수식(축약 관계절 'which are called')의 수동 분사 판단",
+      "temptingBecause": "'Such species,' 뒤 콤마 삽입구 위치라 정동사나 'calling'을 기대하는 학생이 흔들릴 수 있음",
+      "decisiveFlaw": "종은 keystone species라고 '불리는'(수동) 대상이므로 과거분사 'called'가 정확 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "추상명사 뒤 동격 접속사 that vs 관계대명사 구별",
+      "temptingBecause": "'The fact that ...'에서 that을 관계대명사(which/what)로 오인할 여지",
+      "decisiveFlaw": "뒤 절 'other species depend on or are greatly affected by the keystone species'가 gap 없는 완전한 절 → 동격 접속사 that이 옳음 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "주어 'The fact ...'에 대한 수동 be+과거분사 판단",
+      "temptingBecause": "긴 that절 주어와 떨어져 있어 능동 'revealing'을 떠올릴 수 있음",
+      "decisiveFlaw": "사실이 (제거 시) '드러나게 되는' 수동 주체이므로 'is revealed'가 정확 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사 in의 목적어 자리 = 동명사 필요(정답 오류)",
+      "temptingBecause": "'become important in' 뒤라 동사구처럼 보여 정동사 'sustains'를 무심코 수용하기 쉬움; 3인칭 단수 -s가 수일치처럼 위장",
+      "decisiveFlaw": "'in'은 전치사이므로 목적어로 동명사 'sustaining'이 와야 함 — 접속사 없이 정동사가 전치사 뒤에 올 수 없어 비문 → 유일한 어법 오류(정답)"
+    },
+    {
+      "label": "(E)",
+      "intent": "문장 주어 역할의 동명사 판단",
+      "temptingBecause": "문두 -ing 형태라 분사/명령형과 혼동하거나 동명사 주어에 단수 'is'가 어색하다고 오판할 수 있음",
+      "decisiveFlaw": "'Protecting ... is an important conservation goal'로 동명사 주어 + 단수 본동사 'is' 결합이 정확 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "minor-phrasing",
+      "severity": "minor",
+      "evidence": "(D) 해설의 '전치사 in 뒤에 접속사 없이 단독 정동사절이 오는 꼴이 되어 비문' 표현은 다소 느슨함(핵심은 접속사 부재가 아니라 전치사 목적어가 동명사여야 한다는 점)이나 결론(비문·sustaining 교정)은 정확함"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 유효성 게이트(V1~V5) 통과. 정답 (D)는 source-correct 'sustaining' → displayed-wrong 'sustains'의 깔끔한 최소대립쌍이며 교정 시 원문과 정확히 일치. 5개 밑줄이 각각 서로 다른 문법 포인트(과거분사 후치수식/동격 that/수동 분사/전치사+동명사/동명사 주어)를 겨냥해 의도 밀도가 양호하고 메타 누출·꼬리 소거가 없어 정답이 필연적. 다만 요청 난이도 KILLER 대비 정답 오류 'in + 정동사 sustains'가 즉시 눈에 띄어(3인칭 단수형이 눈에 걸림) 상위권 학생이 신속 소거 가능 — §C의 '즉시 드러나지 않는다' 조건 미달로 killerConditionsMet=false, C5=2로 하향. (D)와 (E)가 pointCode 'a'(준동사)를 공유해 KILLER 청결도를 약간 희석하나 (E)는 명백히 정답이라 정답을 가리지는 않음. 합계 18, 전 V 통과, 최저 C=2 → 등급 B(작은 난이도 재보정으로 출제 가능)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P042",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "지문은 '내적(internal)' 압력을 다루며, 그 압력조차 'normal and useful'로 문제의 원인이 아니라고 명시한다. 'external pressure'는 지문에 없는 개념이고, 객관적 시각이 외적 압력을 '강화(intensify)'하는 것과 인과적으로 연결될 근거도 없다. 매력도 낮음."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "지문 핵심 논지 재진술. 'It's not the pressure... Rather, it's the self-doubt that bothers you'가 고통의 뿌리를 self-doubt로 특정하고, 이어 doubt가 경험을 더 부정적으로·자기 결함의 반영으로 보게 만든다는 왜곡 메커니즘을 제시한다. 마지막 문장의 'see situations and your strengths more objectively'는 이 왜곡의 해독제이므로, 객관적으로 보면 self-doubt가 고통의 뿌리가 되도록 놔둘 가능성이 줄어든다. seam(문법 결합)도 자연스럽고 논리 적합성 완벽."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'shortcomings' 어휘 반복을 이용한 lexical-echo 미끼. 지문은 doubt가 경험을 결함의 '반영으로 인식(see... as a reflection)'하게 만든다고 했지, 결함 제거에 몰두하는 '행동'을 기술하지 않았다. 객관적 시각의 반대급부로 성립하지 않음. 잠깐 끌리지만 인식 대 행동의 불일치로 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "극성 반전 오답. doubt는 경험을 '더 부정적으로'(underestimate 방향) 보게 만든다고 명시되어 있어, 'overestimate your strengths'는 지문 메커니즘과 정반대. 객관적 시각이 줄여줄 대상이 아님."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답 — 'It's not the pressure to perform that creates your stress'를 그대로 메아리치므로 실제로 끌린다. 그러나 지문은 '압력 탓하기(misattribution)'를 doubt가 유발하는 행동으로 제시한 적이 없고, 마지막 문장의 객관성은 '상황과 자기 강점'에 대한 인식 왜곡(=doubt의 산물)을 겨냥한다. 객관적으로 보면 고통의 원인 귀속이 정확해지는 것이 아니라 doubt발(發) 고통 자체가 줄어드는 것이 지문의 결론 구조. 인과 사슬 불일치로 탈락."
+    }
+  ],
+  "note": "렌즈: 최상위권 수험생 실전 풀이. 결론 문장은 'doubt의 왜곡 ↔ 객관적 시각' 대비 구조로, 빈칸에는 doubt가 초래하는 부정적 결과가 와야 한다. ②가 논지 직결 정답. ⑤는 지문 문장을 표면적으로 메아리치는 강력한 미끼였으나 doubt→misattribution 연결고리가 지문에 없어 방어 불가. 단일 정답, 복수 방어 가능성 없음."
+}

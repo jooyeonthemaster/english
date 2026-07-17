@@ -1,0 +1,71 @@
+{
+  "pid": "P041",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "능수동 판단 — 관용 수동 'be headed'(향하고 있다)를 능동 heading의 오형으로 의심하게 유도",
+      "temptingBecause": "주어 we가 스스로 향하는 능동 의미로 읽혀 'are heading'을 기대한 학생이 수동형 headed를 오류로 고를 수 있음",
+      "decisiveFlaw": "'be headed (where/for ...)'는 표준 관용 수동으로 문법적으로 옳음 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계사 판단 — 선행사 없는 융합 관계대명사 what vs that/which 구별",
+      "temptingBecause": "'This is that ...' 형태를 기대하거나, what 뒤 절 구조(주어 공백)를 못 읽은 학생이 오류로 의심할 수 있음",
+      "decisiveFlaw": "선행사가 없고 뒤 절에서 happens의 주어 자리가 비어 있으므로 what이 정확히 옳음 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "보어 자리 품사 판단 — be동사 주격 보어 자리의 형용사 vs 부사",
+      "temptingBecause": "unpredictably(부사)와의 혼동을 노리나, be동사 뒤 보어 자리는 학생 대부분이 즉시 판정 — 매력도 낮은 필러 성향 디코이",
+      "decisiveFlaw": "is의 주격 보어 자리이므로 형용사 unpredictable이 옳음 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "동사 보충어 형태 — end up + V-ing 고정 구문 판단",
+      "temptingBecause": "'end up to spend'처럼 to부정사를 기대하는 학생이 동명사를 오류로 의심할 수 있음",
+      "decisiveFlaw": "end up은 동명사를 취하는 고정 구문이므로 spending이 옳음 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 전치사 of의 목적어 자리에는 동명사가 필요하며, 목적어(us)+목적격 보어(awake)를 취하는 능동 keeping이어야 함",
+      "temptingBecause": "keep-kept-kept의 친숙한 형태이고, 'not only are curveballs ...' 도치문 내부에 위치해 문장 구조 파악 부담이 판단을 흐림",
+      "decisiveFlaw": "과거분사 kept는 전치사 뒤 명사(동명사) 자리에 올 수 없고 능동으로 목적어·보어를 취할 수도 없음. keeping으로 교정하면 정확히 원문과 일치하는 최소대립쌍 — 유일 정답"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXPL-PHRASING",
+      "severity": "minor",
+      "evidence": "해설 문구 \"'kept'는 전치사 of 뒤에서 명사 역할을 하면서 뒤에 목적어 'us'를 취할 수 없으므로\"는 kept가 명사 역할 자체를 할 수 없다는 사실을 어색하게 압축한 표현이라 오독 여지가 있음. 교정 방향과 구조 설명 자체는 정확."
+    },
+    {
+      "code": "EXPL-FRAMING",
+      "severity": "minor",
+      "evidence": "포인트를 '능수동의 구별'로 프레이밍했고 keyPoints도 (E)를 '분사능수동'으로 분류했으나, 1차 판정 기준은 '전치사 뒤 동명사 자리'임. 능동/수동 해석은 부차적 근거로는 성립하므로 오분석까지는 아님."
+    },
+    {
+      "code": "POINTCODE-OVERLAP",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (A)와 (E)가 동일 pointCode 'c'(분사능수동) — 디코이와 정답의 포인트 분류 중복. INTERMEDIATE에서는 게이트 위반이 아니나 포인트 다양성 관점에서 감점 요인."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문 대비 유일 변형은 (E) keeping→kept(의도된 오류 주입)이며 접합 파손·중복·누락·오탈자 없음, 라벨·선택지·렌더 일치. V2: 5개 밑줄 독립 검증 결과 (A) be headed 관용 수동, (B) 융합 관계사 what(뒤 절 주어 공백), (C) 보어 형용사, (D) end up ~ing 모두 문법적으로 옳고 (E)만 비문 — 단일 정답 확정, 교정 시 원문 복원. V3: 비문은 (E) 한 곳뿐으로 유형 의도와 일치, 발문·완성문 자연스러움. V4: 해설의 구조 분석·교정형·오답 해설 모두 실제 문장과 대응(minor 표현 결함 3건은 explanationIssues 참조). V5: 정답 라벨·해설·keyPoints·markedExpressions 동기화 완료. 공예: 'of kept'는 국소 단서로 포착 가능한 편이나 not only 도치문 내부 배치가 구조 독해 부담을 더해 INTERMEDIATE 정합. (C)는 필러 성향. C6=2(핵심은 정확하나 문구 둔탁·포인트 분류 느슨). 합계 17, 전 V 통과 → B. 요청 난이도 INTERMEDIATE이므로 killerConditionsMet=false."
+}

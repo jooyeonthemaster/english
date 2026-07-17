@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 they = the Faroe Islands(복수)이고 덴마크에 의해 '통제되는' 수동 관계이므로 'are controlled by Denmark'는 수 일치·태 모두 정상."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct (attractive distractor)",
+      "reason": "주어 'Most of the whale meat and blubber'는 등위된 불가산 명사구. 지문 앞의 'whale meat and blubber are important parts'(복수 호응) 때문에 실전에서 강하게 끌리는 지점이나, meat and blubber를 하나의 식량 물량(단일 mass)으로 보는 단수 호응이 관용적으로 성립하며, 바로 뒤 'some is sold'와도 단수로 일관된다. 옹호 가능한 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Multiple hunts are held each year' — hunts는 개최되는 대상이므로 수동태 are held가 정상. 능동으로 오독할 여지 없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'as quickly and efficiently as possible' — 동사 take place를 수식하는 부사 병렬 구조로 quickly와 대등하게 부사 efficiently가 옳다. 형용사 efficient였다면 틀렸을 자리."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "'claims what the average annual catch is only about 800 whales' — what 뒤 절이 주어·동사·보어가 모두 채워진 완전한 절이라 gap이 없어 what이 성립 불가. 접속사 that이 필요하며, 뒤따르는 병렬 'and that this is...'가 that 요구를 장거리 단서로 확정한다. 의문사절 독법('어획량이 무엇인지')도 보어 'only about 800 whales'가 이미 있어 구제 불가."
+    }
+  ],
+  "note": "정답은 (E)로 유일하게 좁혀짐. 매력적 오답은 (B): 지문 앞부분의 복수 호응('meat and blubber are important parts')과 등위 명사구 주어 때문에 수 일치 의심을 유발하지만, most of + 단일 mass 독법과 후속 'some is sold'의 단수 일관성으로 정문 옹호 가능. 다만 지문 내 수 일치 표기가 앞뒤로 엇갈리는 점(are parts vs is distributed)은 극상위권 수험생에게 잡음을 줄 수 있어 출제 품질 관점에서 경미한 감점 요인."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P026",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('builds a localized production network in the places where it was once an employer'), but the proposition is directly contradicted by the passage: 'ties between service work and particular places can be disconnected' and 'No offices or factories need to be built.' The whole argument is about de-localization, so asserting the employer builds a LOCALIZED network in its former places is the logical negation of the thesis."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Grammatically the verb phrase composes, but it clashes with the locative adjunct: a 'global reserve army' cannot coherently be monopolized 'in the places where it was once an employer' (global vs. place-specific scope conflict). Logically, 'global reserve army' is a lexical echo from the 1990s outsourcing sentence — the OLD model being contrasted with cloudwork — and no premise asserts monopolization. Unsupported and anachronistic within the argument."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Seam: 'generates essentially no physical footprint in the places where it was once an employer' is fully grammatical and the locative adjunct attaches naturally. Logic: 'in this way' anaphorically points to the enumerated evidence — no offices or factories built, no local regulations observed, no local taxes paid, the switch executed by emails/button clicks. 'No physical footprint' is precisely the generalization entailed by that list, and 'where it was once an employer' matches the contrast with the earlier call-centre/outsourcing era when the firm did have local presence. This is the unique entailed conclusion."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatical seam ('transfers tax obligations to the workers in the places...'), but logically unsupported: the passage states local taxes are simply NOT paid ('in most cases ― no local taxes are paid'), not that the obligation is shifted onto workers. It over-strengthens one list item into an unstated claim and ignores the offices/regulations items that the concluding generalization must also cover."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatical seam, but flatly contradicted: 'No offices or factories need to be built' negates 'constructs facilities.' 'Standardized' is a lexical decoy lifted from 'modularised, commoditised and standardised' in sentence 2; the standardization happens to the WORK, not to any facilities the employer builds. Antithetical to the concluding sentence's point."
+    }
+  ],
+  "note": "Clean single-answer item. All four distractors are grammatically well-formed at the seam (no grammar-based elimination shortcut), so discrimination rests purely on logical entailment: ①/⑤ are direct contradictions of explicit negations in the passage, ②/⑤ additionally rely on lexical echoes ('global reserve army', 'standardised'), and ④ is an unsupported strengthening of the no-taxes item. ③ is the only generalization entailed by the 'in this way' anaphor over the enumerated evidence. Checked alternative parses (e.g., reduced relatives, adjunct attachment of 'in the places...') — none rescues a competitor. No defensibility ambiguity found."
+}

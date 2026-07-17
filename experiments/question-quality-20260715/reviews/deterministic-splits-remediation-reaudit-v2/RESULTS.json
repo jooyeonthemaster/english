@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "auditDateKst": "2026-07-15",
+  "auditKind": "deterministic-splits-remediation-reaudit-v2",
+  "verdict": "BLOCK",
+  "summary": {
+    "total": 144,
+    "pass": 120,
+    "fail": 24,
+    "base97": {
+      "total": 97,
+      "pass": 97,
+      "fail": 0,
+      "categories": {
+        "summary-collocation": { "total": 15, "pass": 15, "fail": 0 },
+        "summary-direction": { "total": 15, "pass": 15, "fail": 0 },
+        "blank-circled-numbering": { "total": 10, "pass": 10, "fail": 0 },
+        "grammar-ghost-label": { "total": 12, "pass": 12, "fail": 0 },
+        "sentence-order-structure": { "total": 11, "pass": 11, "fail": 0 },
+        "blank-residual": { "total": 15, "pass": 15, "fail": 0 },
+        "grammar-terminology": { "total": 10, "pass": 10, "fail": 0 },
+        "policy-isolation": { "total": 9, "pass": 9, "fail": 0 }
+      },
+      "failedCaseIds": []
+    },
+    "extra": {
+      "total": 47,
+      "pass": 23,
+      "fail": 24,
+      "categories": {
+        "summary-collocation-neighbors": { "total": 4, "pass": 4, "fail": 0 },
+        "summary-direction-neighbors": { "total": 8, "pass": 4, "fail": 4 },
+        "blank-circled-neighbors": { "total": 6, "pass": 2, "fail": 4 },
+        "grammar-ghost-neighbors": { "total": 8, "pass": 4, "fail": 4 },
+        "sentence-order-format-neighbors": { "total": 8, "pass": 0, "fail": 8 },
+        "blank-residual-neighbors": { "total": 7, "pass": 5, "fail": 2 },
+        "grammar-terminology-neighbors": { "total": 6, "pass": 4, "fail": 2 }
+      }
+    },
+    "failedCaseIds": [
+      "v2-direction-valid-second-option",
+      "v2-direction-mixed-same-clause-and",
+      "v2-direction-mixed-colon",
+      "v2-direction-mixed-korean-same-clause",
+      "v2-circled-option-must-be-seen",
+      "v2-circled-option-judgment-modal",
+      "v2-circled-option-deemed",
+      "v2-circled-narrative-elimination-method",
+      "v2-ghost-circled-period",
+      "v2-ghost-number-colon",
+      "v2-ghost-bracket-number",
+      "v2-ghost-korean-list",
+      "v2-sentence-empty-u200e",
+      "v2-sentence-empty-u200f",
+      "v2-sentence-empty-u202a",
+      "v2-sentence-empty-u202e",
+      "v2-sentence-empty-u2061",
+      "v2-sentence-empty-u2063",
+      "v2-sentence-empty-soft-hyphen",
+      "v2-sentence-empty-mixed-format",
+      "v2-residual-straight-possessive",
+      "v2-residual-curly-possessive",
+      "v2-terminology-sexagenary-year",
+      "v2-terminology-sexagenary-day"
+    ]
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "browserCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "productionEdits": 0,
+    "existingTestEdits": 0
+  },
+  "provenance": {
+    "auditScriptSha256": "b3dace778b7f3d4d52bd002e88b88b7b985b33545cdcccbf8e7d499eccd29a98",
+    "baseHarnessSha256": "b5f93a598c0f7e142a79cde2da3343fa5e4789e7d9fe21ee2ab9ddb3daeb6f11",
+    "baseHarnessReportedSha256": "b5f93a598c0f7e142a79cde2da3343fa5e4789e7d9fe21ee2ab9ddb3daeb6f11",
+    "auditedSourceAndTestSha256": {
+      "src/lib/question-quality/core.ts": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+      "src/lib/question-quality/dispatcher.ts": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "src/lib/question-quality/validators/sentence-order.ts": "b5fa6a9598d17e3e146538575dc946274a7eeb49076ede667622e7b7b2096afb",
+      "src/lib/question-quality/validators/summary/mc.ts": "070e11ae0ffc90c52c68e161068473d68f244a530e65f11e04cc6859ba888e6e",
+      "src/lib/question-quality/validators/blank/inference.ts": "bb37b15b19ddafd4133a32d347061c8bbff1014524c35c39062f9641f3d68dbc",
+      "src/lib/question-quality/validators/grammar/shared.ts": "fa0a68382c3c1bcaa956261783fe531d9a601fccfde2b6d6b1ffd6fda9006b94",
+      "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts": "a672875d20315667b7a662737930f63c76328136656bbb635c014d5f1ed24bff",
+      "tests/unit/sentence-order-quality.test.mjs": "c4aa920d3242fb3e05b873c4c6f7d8fb83c04ae172a9963a95fe6accdcb0b8e9",
+      "tests/unit/summary-mc-direction-split.test.mjs": "6883796b237a803c7fc1fb038c0124335510e36a58515b76ab659b1eff035394",
+      "tests/unit/blank-explanation-step-numbering.test.mjs": "1ab97c59f80c7cacf5d0a9a2d343ab6c63a6dcb44ebbc849f6e3bff5627859a6",
+      "tests/unit/question-validity-invariants.test.mjs": "5259b5a4eb2a20b14c5d2b26479a74662d5c8781c8be986c63b6d805a6a09dc6",
+      "tests/unit/grammar-keypoint-core10.test.mjs": "39924a76995bb81100146496a598d38f598c761c52074e9f3541d92444ac1cfb",
+      "tests/unit/grammar-killer-overdrilled.test.mjs": "3cc37e203e03b36cc019d446540bc11a5d0253a5451733d124221033139302d7",
+      "tests/unit/summary-mc-collocation-severity-split.test.mjs": "1644b66882c16927f396dad73afa2f155db0ee94d77b2ac49f48fea768dee2db"
+    },
+    "frozenBlockArtifactManifestSha256": "a42840584a91349019bcf3f2ece86d0512896b67d96c93d71204af67caf1193b"
+  },
+  "policy": { "baseViolations": [] },
+  "caseLedger": {
+    "allCaseIdsSha256": "5e2c09808b37b805937a27658f3249620131b19450cf5e81509dea627df7b617",
+    "passedCaseIdsSha256": "0a5a8140da06558515d2878adf4ac016ead186f6aa5ab2f5e1de76d0fe2a22dd"
+  },
+  "failures": [
+    { "id": "v2-direction-valid-second-option", "category": "summary-direction-neighbors", "expectation": "second sentence that restates summary-option selection is valid", "expected": false, "observed": true },
+    { "id": "v2-direction-mixed-same-clause-and", "category": "summary-direction-neighbors", "expectation": "same-clause second grammar task is fatal", "expected": true, "observed": false },
+    { "id": "v2-direction-mixed-colon", "category": "summary-direction-neighbors", "expectation": "colon-introduced competing blank task is fatal", "expected": true, "observed": false },
+    { "id": "v2-direction-mixed-korean-same-clause", "category": "summary-direction-neighbors", "expectation": "Korean same-clause competing grammar task is fatal", "expected": true, "observed": false },
+    { "id": "v2-circled-option-must-be-seen", "category": "blank-circled-neighbors", "expectation": "보아야 한다 verdicts are option analysis", "expected": false, "observed": true },
+    { "id": "v2-circled-option-judgment-modal", "category": "blank-circled-neighbors", "expectation": "판단할 수 있다 verdicts are option analysis", "expected": false, "observed": true },
+    { "id": "v2-circled-option-deemed", "category": "blank-circled-neighbors", "expectation": "간주된다 verdicts are option analysis", "expected": false, "observed": true },
+    { "id": "v2-circled-narrative-elimination-method", "category": "blank-circled-neighbors", "expectation": "describing an elimination method remains narrative steps", "expected": true, "observed": false },
+    { "id": "v2-ghost-circled-period", "category": "grammar-ghost-neighbors", "expectation": "common list-prefix variant cannot hide nonexistent label", "expected": true, "observed": false },
+    { "id": "v2-ghost-number-colon", "category": "grammar-ghost-neighbors", "expectation": "common list-prefix variant cannot hide nonexistent label", "expected": true, "observed": false },
+    { "id": "v2-ghost-bracket-number", "category": "grammar-ghost-neighbors", "expectation": "common list-prefix variant cannot hide nonexistent label", "expected": true, "observed": false },
+    { "id": "v2-ghost-korean-list", "category": "grammar-ghost-neighbors", "expectation": "common list-prefix variant cannot hide nonexistent label", "expected": true, "observed": false },
+    { "id": "v2-sentence-empty-u200e", "category": "sentence-order-format-neighbors", "expectation": "another visually empty Unicode format-only paragraph is fatal", "expected": true, "observed": false },
+    { "id": "v2-sentence-empty-u200f", "category": "sentence-order-format-neighbors", "expectation": "another visually empty Unicode format-only paragraph is fatal", "expected": true, "observed": false },
+    { "id": "v2-sentence-empty-u202a", "category": "sentence-order-format-neighbors", "expectation": "another visually empty Unicode format-only paragraph is fatal", "expected": true, "observed": false },
+    { "id": "v2-sentence-empty-u202e", "category": "sentence-order-format-neighbors", "expectation": "another visually empty Unicode format-only paragraph is fatal", "expected": true, "observed": false },
+    { "id": "v2-sentence-empty-u2061", "category": "sentence-order-format-neighbors", "expectation": "another visually empty Unicode format-only paragraph is fatal", "expected": true, "observed": false },
+    { "id": "v2-sentence-empty-u2063", "category": "sentence-order-format-neighbors", "expectation": "another visually empty Unicode format-only paragraph is fatal", "expected": true, "observed": false },
+    { "id": "v2-sentence-empty-soft-hyphen", "category": "sentence-order-format-neighbors", "expectation": "another visually empty Unicode format-only paragraph is fatal", "expected": true, "observed": false },
+    { "id": "v2-sentence-empty-mixed-format", "category": "sentence-order-format-neighbors", "expectation": "another visually empty Unicode format-only paragraph is fatal", "expected": true, "observed": false },
+    { "id": "v2-residual-straight-possessive", "category": "blank-residual-neighbors", "expectation": "exact transformed answer with ordinary punctuation remains detectable", "expected": true, "observed": false },
+    { "id": "v2-residual-curly-possessive", "category": "blank-residual-neighbors", "expectation": "exact transformed answer with ordinary punctuation remains detectable", "expected": true, "observed": false },
+    { "id": "v2-terminology-sexagenary-year", "category": "grammar-terminology-neighbors", "expectation": "계사 substring inside a longer lexical word remains clean", "expected": false, "observed": true },
+    { "id": "v2-terminology-sexagenary-day", "category": "grammar-terminology-neighbors", "expectation": "계사 substring inside a longer lexical word remains clean", "expected": false, "observed": true }
+  ]
+}

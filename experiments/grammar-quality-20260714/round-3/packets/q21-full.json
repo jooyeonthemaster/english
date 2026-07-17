@@ -1,0 +1,179 @@
+{
+  "passageId": "ebsi_go1_20150311-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 112
+  },
+  "attempts": 6,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-obvious-noun-what-relative"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-obvious-noun-what-relativex2",
+    "option-countx1",
+    "grammar-marker-countx1",
+    "grammar-render-marker-countx1",
+    "grammar-correction-form-exposedx1"
+  ],
+  "layout": "(A):dec=l  (B):dec=k  (C):dec=d  (D):ANS=b  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 87,
+        "relPos": 0.14,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 276,
+        "relPos": 0.444,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 308,
+        "relPos": 0.496,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 405,
+        "relPos": 0.652,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 453,
+        "relPos": 0.729,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.729,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Some people need money more than we do. For example, some people have lost their homes due to natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family to donate money to a charity instead of buying us presents. I know that some kids might not want to give up their birthday presents, and I understand. However, remember that we can live without new toys or games more easily than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "due to",
+        "isError": false,
+        "errorExpression": "due to",
+        "surroundingText": "some people have lost their homes due to natural disasters or war",
+        "pointCode": "l"
+      },
+      {
+        "label": "(B)",
+        "expression": "buying",
+        "isError": false,
+        "errorExpression": "buying",
+        "surroundingText": "to a charity instead of buying us presents",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "some kids",
+        "isError": false,
+        "errorExpression": "some kids",
+        "surroundingText": "I know that some kids might not want to give up",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "that",
+        "isError": true,
+        "correction": "that",
+        "errorExpression": "what",
+        "surroundingText": "However, remember that we can live without new toys or games more easily",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "easily",
+        "isError": false,
+        "errorExpression": "easily",
+        "surroundingText": "can live without new toys or games more easily than someone",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "due to"
+      },
+      {
+        "label": "(B)",
+        "text": "buying"
+      },
+      {
+        "label": "(C)",
+        "text": "some kids"
+      },
+      {
+        "label": "(D)",
+        "text": "what"
+      },
+      {
+        "label": "(E)",
+        "text": "easily"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 구 구성을 이끄는 전치사가 필요한 자리이며, 뒤에 명사구인 'natural disasters or war'가 이어지므로 'due to'는 어법상 옳습니다.",
+      "(B)": "이 자리는 전치사 'instead of'의 목적어 역할을 하는 동명사가 오는 자리이므로 동명사형인 'buying'은 어법상 옳습니다.",
+      "(C)": "이 자리는 명사절 접속사 that이 이끄는 절의 주어이며, 복수 명사인 'some kids'는 조동사 might와 연결되어 주어 역할을 하므로 어법상 옳습니다.",
+      "(E)": "이 자리는 일차적으로 동사 'live'를 수식하는 비교급 수식어의 일부로 부사 'easily'가 오는 자리이므로 어법상 옳습니다."
+    },
+    "explanation": "이 문장의 구조는 타동사 'remember' 뒤에 목적어 역할을 하는 명사절이 이어지는 형태입니다. 밑줄 친 (D) 뒤의 절 'we can live without new toys or games'는 주어(we), 동사(can live), 전치사구(without new toys or games)를 모두 갖춘 완전한 절입니다. 따라서 선행사를 포함하며 불완전한 절을 이끄는 관계대명사 'what'은 이 자리에 올 수 없으며, 완전한 명사절을 이끄는 접속사 'that'으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 대명사 지시 관계 접속사 vs 관계대명사 — 뒤에 완전한 절이 오므로 접속사 that이 필요",
+      "(A) 전치사 vs 접속사 — 뒤에 명사구가 오므로 전치사 due to가 적절",
+      "(B) 전치사의 목적어 — 전치사 뒤에는 동명사(buying) 형태가 적절"
+    ],
+    "tags": [
+      "명사절 접속사",
+      "관계대명사 what",
+      "전치사와 동명사",
+      "부사의 수식"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Some people need money more than we do. For example, some people have lost their homes __(A) due to__ natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family to donate money to a charity instead of __(B) buying__ us presents. I know that __(C) some kids__ might not want to give up their birthday presents, and I understand. However, remember __(D) what__ we can live without new toys or games more __(E) easily__ than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-obvious-noun-what-relative",
+        "message": "INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+      }
+    ],
+    "_qualityMode": "relaxed",
+    "_reviewRecommended": true,
+    "_generationNotice": "여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — 일부 포인트가 평이할 수 있음. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다."
+  }
+}

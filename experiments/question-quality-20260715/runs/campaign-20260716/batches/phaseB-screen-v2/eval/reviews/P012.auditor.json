@@ -1,0 +1,70 @@
+{
+  "pid": "P012",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "오답 ① 해설이 '비행적인 타협을 피하고'라고 쓰고 있으나 선지 ①의 실제 문구는 'avoid any unproductive compromise'(비생산적인 타협 회피)다. '비행적인'(非行/飛行)은 unproductive와 대응하지 않는 손상된 용어로, 오답 해설이 실제 선지 내용과 대응하지 않는다. RUBRIC V4의 '비단어·손상 용어' 및 '오답 해설-선지 대응' 기준 위반."
+    },
+    {
+      "code": "V4-SENTENCE-ATTRIBUTION",
+      "severity": "minor",
+      "evidence": "본 해설이 '마지막 문장에서도 일정 비율의 계획은 변하는 것이 필연적이라고 기대하는 것이 도움이 된다고 조언합니다'라고 하나, 해당 내용은 마지막에서 두 번째 문장('I have also found it helpful to expect that a certain percentage of plans will change.')이다. 실제 마지막 문장은 'If you make allowances in your mind for this inevitability...' 조건문으로, 문장 귀속 오류."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "표면 어휘(schedule, compromise 회피) 재활용으로 경직성 강화를 유연성 해법처럼 위장한 극성 반전",
+      "temptingBecause": "본문의 'rigid work schedule'과 어휘가 겹치고, '비생산적 타협을 피한다'가 자기관리 조언처럼 들린다",
+      "decisiveFlaw": "일정을 다듬어 타협을 배제하는 것은 rigidity의 강화로, 'prioritize flexibility over rigidity'라는 필자 주장과 정반대. 'any'라는 절대어도 배제 신호"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'prioritize flexibility over rigidity most of the time'의 추상화 패러프레이즈",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 직후 문장 'expect that a certain percentage of plans will change'와 go with the flow 단서가 기대치 조정 의미를 필연화한다"
+    },
+    {
+      "label": "③",
+      "intent": "변화 '수용' 논지를 변화 '예방/제거'로 뒤집는 feasibility 반전(condition loss)",
+      "temptingBecause": "계획 변경이 문제의 원인이므로 원인 제거가 해결처럼 보이는 직관에 편승",
+      "decisiveFlaw": "본문은 변화를 inevitability로 받아들이라고 하므로 사전 제거는 정면 모순. 'eliminate any potential source'의 절대어·불가능성으로 즉시 탈락"
+    },
+    {
+      "label": "④",
+      "intent": "'go with the flow'를 타인 주도권 위임으로 왜곡하는 actor swap",
+      "temptingBecause": "흐름에 맡기라는 표현이 타인 결정 수용처럼 들릴 수 있다",
+      "decisiveFlaw": "본문의 유연성은 자기 우선순위에 근거한 내적 태도이지 타인이 일과를 'dictate'하게 두는 것이 아님. 본문에 타인 관련 근거 부재"
+    },
+    {
+      "label": "⑤",
+      "intent": "'make allowances' 문구를 그대로 가져와 '기준 하향'으로 비트는 scope shift/half-truth",
+      "temptingBecause": "본문 표현 'make allowances'가 verbatim으로 들어 있어 표면 일치가 강하다",
+      "decisiveFlaw": "본문의 make allowances는 '계획 변경 가능성을 마음속에 미리 감안'이라는 뜻이지 개인적 기준(standards)을 낮추라는 뜻이 아니며, emotional distress 완화 목적도 아님"
+    }
+  ],
+  "explanationIssues": [
+    "오답 ① 해설의 '비행적인 타협'은 선지의 'unproductive compromise'와 대응하지 않는 손상 용어(추정 원문: '비생산적인')",
+    "본 해설의 '마지막 문장에서도 ... 기대하는 것이 도움이 된다'는 실제로는 마지막에서 두 번째 문장의 내용 — 문장 귀속 오류",
+    "본 해설이 장황하고('가장 본질적인 마음가짐인 결론을 도출하는 자리' 등 비문 경계 표현), '평온성 논리' 같은 어색한 조어 사용"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 통과: 렌더 지문은 source span('prioritize flexibility over rigidity most of the time')만 빈칸으로 치환한 무결 상태이고, 다섯 선지 모두 'you must' 뒤 동일한 bare-VP 슬롯에 문법적으로 들어가며, 독립 검증 결과 ②만이 유일 정답이다. 그러나 V4에서 오답 ① 해설의 '비행적인 타협'이 실제 선지 내용(unproductive compromise)과 대응하지 않는 손상 용어이고, 본 해설에 문장 귀속 오류가 있어 보수적 기준으로 V4 실패 → F. KILLER 조건도 미충족: 지문이 유연성 옹호로 극성이 명확해 pro-flexibility 극성을 가진 선지가 ② 하나뿐이라 극성 스캔만으로 정답이 찍히고, ①·③에 'any' 류 절대어 tell이 있으며, 빈칸 문장이 직후 문장에서 사실상 재진술되어 두 문장 통합 추론 부담이 낮다. 난이도 체감은 중(中) 수준으로 KILLER 라벨과 불일치(C5=1). 수리 방향: ① 해설 용어 교정 및 귀속 수정(V4 해소), KILLER 유지 시 선지 극성 균형 재설계(pro-flexibility 계열 경쟁 선지 추가) 필요."
+}

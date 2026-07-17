@@ -1,0 +1,77 @@
+{
+  "pid": "P037",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-structure-field-semantics",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (E)만 expression 필드가 교정형 'proceeds'이고 나머지 4개는 표시형과 동일하다. 또한 (E)의 surroundingText가 렌더형('proceeding')이 아닌 원문형('as the interview proceeds.')을 담고 있어 필드 의미가 항목 간 비일관적이다. errorExpression('proceeding')·correction('proceeds')·선언 정답 (E)·해설은 모두 일치하므로 학생 노출 필드 동기화 실패는 아니다."
+    },
+    {
+      "code": "V4-minor-korean-particle",
+      "severity": "minor",
+      "evidence": "해설 첫 문장 \"'proceeding'는\"의 조사가 어색하다('proceeding'은 이 자연스러움). 문법 분석 자체는 정확하므로 V4 실패로 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "지각동사류 see(-ing형 seeing) + 목적어 + 현재분사 목적격보어의 형태 판단",
+      "temptingBecause": "seeing someone 뒤의 -ing형을 원형(scribble)이나 과거분사(scribbled)로 바꿔야 한다고 착각할 수 있고, 문장 앞부분의 비교 구조(less unnerving ... than) 속에 있어 구조 파악 부담이 있다",
+      "decisiveFlaw": "someone이 능동적으로 낙서하는 진행 상황이므로 see + O + V-ing는 완전히 문법적이다. 오류가 아니다."
+    },
+    {
+      "label": "(B)",
+      "intent": "be동사 보어 자리의 형용사 vs 부사 판단",
+      "temptingBecause": "more ___ to develop 어순에서 뒤의 to부정사를 수식하는 부사(efficiently) 자리로 오독할 수 있다",
+      "decisiveFlaw": "It is more efficient to-V 의 가주어-진주어 구문에서 efficient는 is의 주격보어이므로 형용사가 맞다. 오류가 아니다. 다만 상위권에게는 즉시 소거되는 낮은 매력도의 체크포인트다."
+    },
+    {
+      "label": "(C)",
+      "intent": "involve의 목적어로 동명사 vs to부정사 판단",
+      "temptingBecause": "This involves to write 형을 기대하는 하위권 학생에게만 유효한 암기형 포인트",
+      "decisiveFlaw": "involve는 동명사를 목적어로 취하므로 writing이 맞다. 오류가 아니다. 일회성 암기 판정이라 매력도가 낮다."
+    },
+    {
+      "label": "(D)",
+      "intent": "능동태 vs 수동태 — 주어 they(the key answers)와 동사 transcribe의 의미 관계 판단",
+      "temptingBecause": "so that절 안에서 they의 지시 대상을 the key answers로 복원해야 하고, transcribe easily의 부사가 능동처럼 읽히게 할 수 있다",
+      "decisiveFlaw": "key answers는 전사되는 대상(피동작주)이므로 can be transcribed 수동태가 맞다. 오류가 아니다."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답. 시간 접속사 as가 이끄는 부사절의 정동사 자리 — 정동사(proceeds) vs 준동사(proceeding) 판단",
+      "temptingBecause": "직전의 editing out과 -ing 형태가 평행하게 보이고, 명사(the interview) 뒤의 -ing를 후치 수식 분사나 분사구문으로 오독할 수 있다",
+      "decisiveFlaw": "as는 여기서 전치사로 해석될 수 없고(as + 동명사구 '자격/기능' 해석은 의미상 불가) 접속사이므로 절에 정동사가 필요하다. proceeding은 준동사여서 비문이며 proceeds로 고치면 정확히 원문이 된다. 유일 정답."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "korean-particle-typo",
+      "severity": "minor",
+      "evidence": "\"'proceeding'는 어법상 틀린 표현\" — 조사 오류('proceeding'은)."
+    },
+    {
+      "code": "redundancy",
+      "severity": "minor",
+      "evidence": "정답 해설에서 '본동사가 필요하다 → 준동사이므로 정동사 역할을 할 수 없다 → 정동사 proceeds로 고쳐야 한다'가 같은 논지를 세 번 반복한다. 정확하지만 다소 둔하다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 렌더 지문을 원지문과 전문 대조한 결과 의도된 변형(proceeds→proceeding) 외 손상 없음. 라벨 (A)~(E)와 선지·밑줄 마커 일치. V2: 5개 밑줄을 각각 독립 검증 — (A) see+O+V-ing 적법, (B) 보어 형용사 적법, (C) involve+동명사 적법, (D) 수동태 적법, (E)만 접속사 as 절의 정동사 결여로 비문. 정답 유일. V3: 지문·발문·교정 완성문 모두 문법적. V4: 해설의 통사 분석(as 종속절 주어 the interview, 정동사 필요, proceeds 교정)이 실제 구조와 일치하고 오답 해설 4건도 각 선지 내용과 정확히 대응. V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음(keyPoints의 (E)(D)(A) 포인트가 해설과 일치). KILLER 조건 판정: §C-1(최소대립쌍, 교정 시 원문 복원) 충족, §C-2(명확한 문법 판단, valency류 아님) 충족, §C-3(각 밑줄 point/설명 존재) 대체로 충족, §C-5(동일 포인트 쉬운 디코이 없음) 충족. 그러나 §C-4 불충족 — 'as the interview proceeding'은 접속사 직후 3어 구간에서 국소적으로 즉시 드러나는 교과서급 오류로, 전체 구조를 읽어야만 보이는 KILLER 깊이가 아니다. (B)(C)는 즉시 소거되는 암기형 체크포인트라 실질 경쟁 선지가 (A)(D)뿐이다. 따라서 요청 난이도 KILLER 대비 실제 난이도는 중상 수준으로 C5=1(라벨 불일치에 가까움), C3=2. 문항 자체는 유효하고 출제 가능한 중상 난이도 어법 문항이지만 KILLER 요청 정합 관점에서 재설계(더 깊은 구조 의존적 오류 지점, 더 매력적인 디코이)가 필요하므로 등급 C."
+}

@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "auditDateKst": "2026-07-15",
+  "kind": "deterministic-v7-nonsummary-remediation",
+  "verdict": "BLOCK",
+  "verdictReason": "The bounded surface-defect subset passes, but unrestricted free-text grammar-rule truth remains uncertified and one immutable v7 negative oracle contradicts its own declared labels.",
+  "apiCandidatesConsumed": 0,
+  "exactFrozenScoringReplay": {
+    "total": 1160,
+    "pass": 1138,
+    "fail": 22,
+    "verdict": "BLOCK",
+    "familiesInScope": {
+      "blank_explanation_step_numbering": {
+        "total": 32,
+        "pass": 32,
+        "fail": 0,
+        "falseNegative": 0,
+        "falsePositive": 0
+      },
+      "grammar_keypoint_nonexistent_label": {
+        "total": 32,
+        "pass": 31,
+        "fail": 1,
+        "falseNegative": 0,
+        "falsePositive": 1
+      },
+      "grammar_terminology_accuracy": {
+        "total": 32,
+        "pass": 16,
+        "fail": 16,
+        "falseNegative": 16,
+        "falsePositive": 0
+      },
+      "sentence_order_paragraph_integrity": {
+        "total": 32,
+        "pass": 27,
+        "fail": 5,
+        "falseNegative": 5,
+        "falsePositive": 0
+      }
+    },
+    "scorerCoverageCaveat": "The immutable v7 scorer does not count sentence-order-dependent-fragment, so the five newly detected fragment cases remain false negatives in this exact legacy score."
+  },
+  "remediationAwareReplay": {
+    "total": 128,
+    "pass": 111,
+    "fail": 17,
+    "families": {
+      "blank_explanation_step_numbering": {
+        "total": 32,
+        "pass": 32,
+        "fail": 0
+      },
+      "grammar_keypoint_nonexistent_label": {
+        "total": 32,
+        "pass": 31,
+        "fail": 1
+      },
+      "grammar_terminology_accuracy": {
+        "total": 32,
+        "pass": 16,
+        "fail": 16
+      },
+      "sentence_order_paragraph_integrity": {
+        "total": 32,
+        "pass": 32,
+        "fail": 0
+      }
+    },
+    "boundedHighConfidenceSubset": {
+      "total": 95,
+      "pass": 95,
+      "fail": 0,
+      "verdict": "PASS",
+      "exclusions": [
+        "32 grammar_terminology_accuracy cases: semantic truth is outside deterministic free-text regex scope",
+        "v7-grammar-label-neg-12: immutable negative oracle declares ㉡ valid against declared labels [1]..[5]"
+      ]
+    }
+  },
+  "implementedFindings": {
+    "blankProceduralCircledNumbering": "Two or more non-option circled clauses ending in bounded solver actions now receive blank-explanation-narrative-circled-numbering.",
+    "grammarGhostLabelGrammars": "Leading references now compare circled digits/letters, bracketed or parenthesized numbers, lower-case Roman numerals, Korean ordinal underline labels, and existing parenthesized Latin labels against rendered labels.",
+    "sentenceOrderBodyLabels": "Leading (A)/[A]/circled A-C tokens duplicated inside paragraph text now receive sentence-order-paragraph-body-label.",
+    "sentenceOrderFragments": "Short punctuation-free bodies beginning with an overt dependent marker receive sentence-order-dependent-fragment; complete dependent openers with a main clause remain controls."
+  },
+  "residualBlockers": {
+    "freeTextGrammarTruth": {
+      "count": 16,
+      "failedCaseIds": [
+        "v7-grammar-term-pos-01",
+        "v7-grammar-term-pos-02",
+        "v7-grammar-term-pos-03",
+        "v7-grammar-term-pos-04",
+        "v7-grammar-term-pos-05",
+        "v7-grammar-term-pos-06",
+        "v7-grammar-term-pos-07",
+        "v7-grammar-term-pos-08",
+        "v7-grammar-term-pos-09",
+        "v7-grammar-term-pos-10",
+        "v7-grammar-term-pos-11",
+        "v7-grammar-term-pos-12",
+        "v7-grammar-term-pos-13",
+        "v7-grammar-term-pos-14",
+        "v7-grammar-term-pos-15",
+        "v7-grammar-term-pos-16"
+      ],
+      "decision": "No unsafe open-ended regex list was added. See GRAMMAR-TRUTH-DESIGN.md."
+    },
+    "frozenOracleContradiction": {
+      "count": 1,
+      "id": "v7-grammar-label-neg-12",
+      "declaredLabels": ["[1]", "[2]", "[3]", "[4]", "[5]"],
+      "referencedLabel": "㉡",
+      "correctSemanticObservation": "ghost label",
+      "frozenExpectedFlag": false
+    },
+    "frozenScorerCoverageGap": {
+      "count": 5,
+      "ids": [
+        "v7-order-pos-12",
+        "v7-order-pos-13",
+        "v7-order-pos-14",
+        "v7-order-pos-15",
+        "v7-order-pos-16"
+      ],
+      "emittedCode": "sentence-order-dependent-fragment"
+    }
+  },
+  "verification": {
+    "focusedTests": {
+      "command": "node --test tests/unit/blank-explanation-step-numbering.test.mjs tests/unit/grammar-keypoint-core10.test.mjs tests/unit/sentence-order-quality.test.mjs",
+      "pass": 37,
+      "fail": 0
+    },
+    "eslint": {
+      "files": 6,
+      "pass": true
+    },
+    "adjacentRegression": {
+      "pass": 180,
+      "fail": 1,
+      "unrelatedFailure": "grammar-generation-quality.test.mjs: structurally-loaded KILLER fixture is rejected by pre-existing grammar-decoy-filler-span on label E; none of this remediation's edited branches emit that code."
+    },
+    "projectTypecheck": {
+      "pass": false,
+      "remediationFileDiagnostics": 0,
+      "unrelatedDiagnostics": 4,
+      "reason": "Concurrent untracked policy-severity-reaudit-v2/build-reaudit.mts uses four default imports for modules with no default export."
+    }
+  },
+  "frozenV7": {
+    "manifestSha256": "d79f00fd7cfe5a1fe92ba09f3c429391a50981b9fb9cd2f3e60f02c22720537c",
+    "untouched": true
+  },
+  "provenance": {
+    "replayScriptSha256": "e1254864d895ae5f70302375ab3cbfa4e3728d890ed049697f9df25c0ba34e45",
+    "grammarTruthDesignSha256": "2da6b1bf4953a0d55310fa294550b6f34403486f52be90a6a7752058532595d0",
+    "sourceAndTestSha256": {
+      "src/lib/question-quality/validators/blank/inference.ts": "0e517dd2dde81f06cf20bab6c7bab90e2155ed7c9e239f07d02e3fb099ff8f60",
+      "src/lib/question-quality/validators/grammar/shared.ts": "78c72f4d16ecda0f49b52035012115a9736b6024ca6acdd8e67d6f7ef8e2d2cb",
+      "src/lib/question-quality/validators/sentence-order.ts": "f7ca1abd81b46f3ce23db34c1d8676b1b8f3f186535f348081f97a2b0158aa08",
+      "tests/unit/blank-explanation-step-numbering.test.mjs": "d16dde74fe75a69c28cbbaa75150e4de07e4cb3b5397375b65e0269eb26033dc",
+      "tests/unit/grammar-keypoint-core10.test.mjs": "fec6106f91d8480a6332725a4b27d55e191d5717bdf2d5858472b5f26a3bbec4",
+      "tests/unit/sentence-order-quality.test.mjs": "18b3c6525f7ea705c6c9724e20071e36dcb46768e591fce8f05ed638e45ae177"
+    }
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "secretReads": 0
+  }
+}

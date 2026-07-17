@@ -1,0 +1,71 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "동사별 목적격보어 형태 구분 — ask + O + to부정사(5형식). 정답 (C)의 사역동사 포인트와 대조되는 통제 선지.",
+      "temptingBecause": "정답과 같은 '목적격보어 형태' 계열(pointCode h)이라, make의 원형부정사 규칙을 어렴풋이 아는 학생이 to teach까지 의심하도록 유도한다.",
+      "decisiveFlaw": "ask는 목적격 보어로 to부정사를 취하는 것이 표준 어법이므로 오류가 아니다. 'asks ... Mr. Miyagi to teach him karate'는 완전히 적법하다."
+    },
+    {
+      "label": "(B)",
+      "intent": "분사의 태 판단 — 명사 수식 과거분사 opposed vs 현재분사 opposing.",
+      "temptingBecause": "'opposing motions'가 더 흔한 능동형 연어라서 과거분사 opposed가 어색하게 느껴진다. 원문 특유의 다소 드문 표현이라 오류로 오판하기 쉽다.",
+      "decisiveFlaw": "'opposed'는 상호 대립을 나타내는 관용적 분사형용사(cf. diametrically opposed)로 원지문 그대로이며 문법적으로 적법하다. 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "사역동사 make + 목적어 + 원형부정사 규칙. source-correct 'hammer' → displayed-wrong 'to hammer'의 최소대립쌍.",
+      "temptingBecause": "직전 문장들의 asks/orders/tells + O + to부정사 병렬 패턴이 'makes Daniel to hammer'를 표면적으로 자연스러워 보이게 위장한다.",
+      "decisiveFlaw": "능동태 사역동사 make는 목적격 보어로 원형부정사만 허용하므로 'to hammer'는 비문이다. hammer로 교정하면 정확히 원문이 복원된다. 정답."
+    },
+    {
+      "label": "(D)",
+      "intent": "태 판단 — 'is limited to'의 수동태 적법성.",
+      "temptingBecause": "limit의 능동/수동 판단과, 'limited to'의 to를 부정사 to로 오독할 여지가 결합해 형태를 재검토하게 만든다.",
+      "decisiveFlaw": "주어 he가 가사일에 '제한되는' 대상이므로 수동태 is limited가 필연적이다. 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "관계대명사의 격 판단 — 계속적 용법 주격 who vs 목적격 whom.",
+      "temptingBecause": "who와 동사 defends 사이에 부사구 'without thought or hesitation'이 삽입되어 주어-동사 관계가 가려지고, 직전 'attacks Daniel'의 목적어 위치 때문에 whom으로 오판하기 쉽다.",
+      "decisiveFlaw": "who는 관계절 내 동사 defends의 주어이므로 주격 who가 정확하다. 오류 아님."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXPL_LOOSE_TERM",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설이 'circular motions와 수동의 관계'라고 설명하나, opposed는 상호 대립(서로 반대되는) 의미의 분사형용사에 가깝다. 학교문법 관례상 허용 범위이며 정오 판정에는 영향 없음."
+    },
+    {
+      "code": "KEYPOINT_FOCUS_MISMATCH",
+      "severity": "minor",
+      "evidence": "keyPoints의 '(E) 관계사 — 계속적 용법과 선행사 수일치'는 (E)의 실제 함정(삽입 부사구로 인한 주격/목적격 판단)과 초점이 다소 어긋난다. 오답 해설과 모순되지는 않음."
+    },
+    {
+      "code": "FIELD_CONVENTION_NOTE",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 expression 필드가 표시형 'to hammer'가 아닌 원문형 'hammer'를 담고 있다. errorExpression='to hammer', correction='hammer'와는 정합적이라 학생 노출 필드 동기화(V5)는 유지됨."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "요청 난이도 INTERMEDIATE의 GRAMMAR_ERROR. V1~V5 전부 통과: 렌더 지문은 (C) hammer→to hammer의 의도된 단일 변형 외 원지문과 완전 일치하고, 5개 밑줄 독립 검증 결과 (C)만 비문으로 정답 유일성이 성립하며, 교정 시 정확히 원문이 복원된다. 공예 측면에서는 asks/orders/tells + to부정사의 병렬 패턴이 make의 원형부정사 규칙을 자연스럽게 위장하는 지문 선정이 돋보이고, 5개 선지가 각기 다른 문법 포인트(동사 보어 형태 대조 2, 분사 태, 수동태, 관계사 격)를 겨냥한다. 다만 '사역동사 make + 원형부정사'는 극히 정형화된 포인트라 규칙을 아는 학생에게는 즉시 풀리며, 합계 18점으로 A 기준(21점)에는 미달 — 소폭 수정 없이도 출제 가능한 B. KILLER 아님(killerConditionsMet=false)."
+}

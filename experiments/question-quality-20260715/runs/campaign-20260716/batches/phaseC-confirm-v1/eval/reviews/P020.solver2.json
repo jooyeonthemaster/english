@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) are controlled",
+      "verdict": "correct",
+      "reason": "주어 they = the Faroe Islands(복수)이므로 복수 be동사 are가 맞고, 섬은 덴마크에 의해 '통제되는' 대상이므로 수동태 are controlled가 태(voice)상으로도 성립한다. 능동 해석(control)이 성립할 여지가 없어 정문."
+    },
+    {
+      "label": "(B) is distributed",
+      "verdict": "correct (defensibly)",
+      "reason": "주어는 'Most of the whale meat and blubber'. 등위 접속된 두 불가산 명사(meat, blubber)가 하나의 식량 덩어리(single mass)로 개념화되면 단수 일치가 표준적으로 허용된다(cf. 'most of the bread and butter is gone'). 앞 문장에서는 'whale meat and blubber are important parts'로 복수 일치를 썼으나, 그 문장은 두 항목을 'parts(복수 항목들)'로 개별화한 반면 이 문장은 배분되는 총량을 단일 물질로 본 것이므로 상충이 아니다. 또한 뒤따르는 'although some is sold'의 단수 some/is와 정합적이다. 단수·복수 모두 문법서에서 용인되는 영역이므로 '틀린 것'으로 판정할 수 없다. 다만 앞 문장과의 일치 패턴 불일치 때문에 학생이 헷갈릴 수 있는 준(準)매력지."
+    },
+    {
+      "label": "(C) held",
+      "verdict": "correct",
+      "reason": "'Multiple hunts are held each year' — hold의 수동태(be + p.p.). hunts는 '개최되는' 대상이므로 수동이 필수이고, 주어 hunts(복수)-are 일치도 맞다. 축약 관계절 등 대안 해석을 동원할 필요 없이 표면 구조 그대로 정문."
+    },
+    {
+      "label": "(D) efficiently",
+      "verdict": "correct",
+      "reason": "'must take place as quickly and efficiently as possible' — 자동사구 take place를 수식하므로 부사가 요구되고, as ~ as possible 동등비교 안에서 quickly와 and로 병렬된 자리이므로 부사 efficiently가 정확하다. 형용사 efficient였다면 병렬 위반."
+    },
+    {
+      "label": "(E) what",
+      "verdict": "INCORRECT — 정답",
+      "reason": "'The government claims what the average annual catch is only about 800 whales and that this is ...' — claims의 목적어인 내포절 'the average annual catch is only about 800 whales'는 주어(the average annual catch)·동사(is)·보어(about 800 whales)가 모두 채워진 완전한 절이다. what은 자유관계사/의문사로서 내포절 안에서 명사 자리(주어·목적어·보어) 하나를 자신이 차지해야 하므로 완전한 절 앞에는 올 수 없다. 접속사 that이어야 한다. 결정적 장거리 단서: 바로 뒤에 'and that this is a small percentage...'로 두 번째 목적절이 that으로 시작하므로, 병렬 구조상 첫 목적절도 that으로 시작해야 한다. what이 정문이 되는 대안 해석(예: what을 한정사로 보는 감탄 구문 등)은 이 어순·문맥에서 전혀 성립하지 않는다."
+    }
+  ],
+  "note": "정답이 (E)로 유일하게 좁혀지는 깨끗한 문항. (E)는 '완전한 절 + and that 병렬'이라는 이중 근거로 형식적으로 오류가 증명된다. 유일한 논쟁 여지는 (B)의 단수 일치인데, 등위된 불가산 명사의 단일 덩어리 해석 + 후속 'some is sold'와의 정합으로 정문 판정이 우세하며, (E)라는 명백한 오류가 존재하므로 복수 정답 시비로 번질 가능성은 낮다. 다만 앞 문장의 'whale meat and blubber are'와 표면상 엇갈려 보이는 점은 출제 노트에 남길 만하다."
+}

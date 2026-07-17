@@ -1,0 +1,35 @@
+{
+  "pid": "P096",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Just as ..., so + AUX + S' 도치 구문. 기저문 'so they would have been (better than others) in early societies'에서 so가 문두로 나오며 조동사 would가 도치된 정문. would have been은 과거 사회에 대한 추정(epistemic)으로 문맥 적합. they의 선행사는 복수 명사 jobs로 수·의미 일치."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "with-절대구문 병렬: 'with [some roles (being) more dangerous] and [some ___ more plentiful access]'. with + NP + 보어 구조에서는 정형동사 have가 올 수 없고 having(분사)이어야 한다. 대안 해석 검토: 'and some have...'를 독립 정형절로 보려면 선행 등위항이 정형절이어야 하나 'with some roles more dangerous'는 전치사구라 병렬 불성립; 주절(so would they have been, 도치+조동사)과의 병렬로도 구조·시제상 결합 불가. 따라서 어법상 틀림 — have → having."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "bury는 타동사이고 individuals는 매장되는 대상이므로 수동태 'are buried' 정문. 뒤의 'some are in group graves'와 고고학적 현재 시제 및 태가 정합."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "seem + to부정사 보어 구조에서 주어 others가 매장되는 대상이므로 수동 부정사 'to be buried' 정문. 'don't even seem to be buried at all'은 부정극어 at all과도 자연스럽게 결합."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 복수 명사 analyses이며 'of teeth and long bones'는 후치 수식 전치사구. 복수동사 reveal이 옳다(근접 명사 bones 역시 복수여서 수 일치 함정도 없음)."
+    }
+  ],
+  "note": "정답 후보는 (B) 단일. with-절대구문 내 정형동사 사용이라는 명확한 규칙 위반이며, (B)를 정문으로 구제할 수 있는 대안 통사 구조(정형절 병렬, 도치, 축약관계절 등)는 존재하지 않음. 나머지 밑줄 4개는 각각 도치·수동태·수동부정사·주어-동사 수일치의 표준 규칙에 부합하는 정문."
+}

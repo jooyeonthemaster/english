@@ -1,0 +1,35 @@
+{
+  "pid": "P058",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'an experiment showing (that) human perception and behavior can be influenced...' — experiment를 수식하는 현재분사. experiment가 show의 의미상 주어(실험이 ~을 보여줌)이므로 능동 -ing 적절, 접속사 that 생략도 정문. 매력적 오답 유혹: 'showed(정동사)가 필요하지 않나' 하는 착시가 있으나 did가 정동사이고 showing은 후치 수식 분사로 완전한 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'He told ... that he was testing their language abilities' — 주절 과거(told)에 맞춘 간접화법 시제 일치. 직접화법 'I am testing' → was testing. 과거진행이 실험 당시 진행 중인 (위장된) 검사 상황과도 부합."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "주어 'Those students who had been exposed to an elderly mix of words'는 복수이며, 긴 관계절(had been exposed, 대과거) 뒤 본동사 took(과거)이 수·시제 모두 적절. 관계절 단수 명사(mix, words)에 의한 수 일치 착시가 함정이나 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'took ... longer ... than those who had been exposed to random words' — 비교급 longer와 호응하는 than, those는 students를 받는 대명사로 뒤 관계절 who...와 결합. 학생 집단 vs 학생 집단의 병렬 비교가 성립하여 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "'walked with their shoulders bending forwards' — with + 명사 + 분사 부대상황 구문에서 어깨는 걷는 동안 '앞으로 구부러진 상태'로 유지되는 것이므로 상태·결과의 과거분사 bent가 필요('with their shoulders bent forwards'). 대안 해석 검증: bend의 자동사 용법(몸이 스스로 굽다)으로 bending을 옹호하려면 어깨가 진행 중인 굽힘 동작의 능동 주체여야 하나, 문맥은 'as if they were 50 years older' — 노인 같은 정적 자세 묘사이므로 성립하지 않음. 바로 뒤 'dragging their feet'(students가 능동 주체인 분사구문)와의 대비가 bent의 필요성을 뒷받침. 유일한 어법 오류."
+    }
+  ],
+  "note": "정답 후보는 (E) 단일. 실전 유혹 포인트: (A)의 '정동사 필요' 착시, (C)의 장거리 수 일치 착시가 매력적 오답 역할을 하지만 모두 명백한 정문. (E)는 bend의 자동사 대안 해석까지 탐색해도 문맥상(정적 자세 묘사) 옹호 불가. 문항 자체는 어법 문항으로 성립하며 정답 유일성 확보."
+}

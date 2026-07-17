@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam(문법 결합)은 성립: 'could be used ... to erase the cultural originality of that population'은 목적 부정사로 정문. 그러나 논리적으로 파탄. 지문은 속담 사용 빈도가 다른 사회·문화 지표와 '함께 사용되어' 무언가 긍정적/생산적 결론(뒤의 Thus 문장: 독일인의 아침형 태도를 어느 정도 반영)을 도출한다는 흐름이다. '그 집단의 문화적 독창성을 지운다'는 도출 목적으로 삼을 이유가 지문 어디에도 없고, Thus 이하의 예시(속담 빈도 → 태도 반영)와 인과적으로 연결되지 않는다. 형식적으로: 빈칸 P에 대해 지문은 'Thus, [속담 빈도가 태도를 반영]'을 P의 귀결/예화로 제시하므로 P는 '문화적 태도 파악'류 명제여야 한다. ①은 이 함의 관계를 만족하지 못한다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합은 정문. 그러나 범주 오류(scope error). 빈칸 문장은 '특정 문화에서 특정 속담들의 빈번한 사용 일반'에 대한 총괄 명제이고, '아침 일찍 일어나기'는 그 뒤 Thus 문장에서 처음 등장하는 하나의 예시 소재일 뿐이다. 일반 명제 자리에 예시 고유의 내용(early rising)을 넣으면 일반→구체의 논증 구조가 붕괴한다. 또한 지문의 논점은 속담이 '태도(attitude)를 반영(mirror)'한다는 것이지 일찍 일어나는 것의 '개인적 이득(personal benefits)을 입증(demonstrate)'한다는 것이 아니다. 속담을 많이 쓴다는 사실은 그 행위의 이득을 증명하는 증거가 될 수 없으므로 논리적으로도 비약."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합은 정문이나 지문 명제와 직접 모순. 지문 앞부분이 명시적으로 'no fixed conclusions about a so-called national character should be drawn', 'foolish to think of them as showing some imagined national character'라고 부정한 바로 그 내용('rigid and unchangeable national character' = fixed conclusions about national character)이다. Nevertheless 이하는 국민성 규정이 아니라 '다른 지표와 함께 제한적으로(at least to some degree)' 문화적 태도를 읽는 용도라는 양보-절충이므로, ③을 넣으면 지문이 자기모순(P ∧ ¬P)이 된다. 전형적 모순 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "문법 결합 정문: 'could be used together with other social and cultural indicators to shape a shared framework of cultural understanding' — 목적 부정사 + 타동사 shape + 명사구 목적어, 결합부 무결. 논리 검증: 빈칸 명제 P는 (i) Nevertheless로 앞의 '국민성 단정 금지'와 양립해야 하고(단정이 아닌 온건한 활용), (ii) Thus 문장 '속담의 고빈도 사용이 그 문화의 태도를 어느 정도 반영한다'가 P의 귀결/예화로 성립해야 한다. '문화 이해의 공유된 틀을 형성한다'는 다른 지표들과 결합해 그 문화(독일인의 아침 태도 등)를 이해하는 근거 틀을 만든다는 뜻으로, (i) 단정적 국민성 규정이 아니고 (ii) 독일 속담 예시가 그 틀의 한 사례로 자연스럽게 연결된다. 'shared framework'라는 표현이 원문 취지('문화적 심성에 대한 일반적 관념 형성')보다 다소 느슨하지만, 5개 중 유일하게 함의 구조를 만족한다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합 정문이나 논리 무관. 'medieval times'는 앞에서 속담의 출처가 여러 문화에 공통(classical, Biblical, medieval)이라 국민성 논거가 될 수 없다는 반례 재료로만 언급된 것이고, '중세 문학의 역사적 기록 보존'은 속담 빈도 + 사회문화 지표의 활용 목적으로서 Thus 이하 예시와 아무런 함의 관계가 없다. 지문 표면 어휘(medieval)만 재활용한 무관 미끼."
+    }
+  ],
+  "note": "지문은 Wolfgang Mieder류의 속담-국민성 논의로 보임. 논증 구조: [경고: 국민성 단정 금지] → Nevertheless [제한적 활용 가능: 빈칸] → Thus [독일 속담 예시: 태도를 어느 정도 반영]. 빈칸은 '다른 지표와 함께 문화적 태도/이해를 도출하는 용도'여야 하며 ④만 이를 만족. ③은 직접 모순, ②는 예시 내용의 범주 침범, ①·⑤는 무관. 모든 선지의 문법 결합(seam)은 정문이므로 변별은 순수 논리로 이루어지며, 정답 유일성 양호. 단 ④의 'shared framework of cultural understanding'은 '누구와 공유하는 틀인가'가 다소 모호해 원문형 표현('형성된 일반적 관념/통찰')보다 정밀도가 떨어지는 점은 경미한 흠."
+}

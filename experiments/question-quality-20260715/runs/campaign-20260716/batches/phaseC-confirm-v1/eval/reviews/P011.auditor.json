@@ -1,0 +1,61 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-note",
+      "severity": "minor",
+      "evidence": "(E) 'ways for people and goods moving across it'에는 moving을 people and goods를 수식하는 축약 관계절로 읽는 대안 파스가 표면상 존재하나, 그 해석에서는 ways가 보어(무엇을 위한 ways인지) 없이 남아 의미가 성립하지 않으므로 정답 유일성은 유지된다. 기계적 diff로 원지문 대비 변형이 (E) 'to move'->'moving' 단 한 곳임을 확인했고, 교정 시 정확히 원문이 복원된다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "문두 분사구문에서 주절 주어와의 능·수동 판단 (과거분사 born)",
+      "temptingBecause": "문두 분사구문이라 주어 Brunel과의 태 관계를 스스로 따져야 하고, bear의 특수한 과거분사형이라 형태 판단을 한 번 더 요구한다",
+      "decisiveFlaw": "Brunel은 '태어나지는' 수동 관계이므로 과거분사 born이 정확히 옳다 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "전치사 for 뒤 동명사 자리 판단 (v-ing 정형)",
+      "temptingBecause": "정답 (E)와 같은 v-ing 계열이라 'for + -ing' 패턴을 (E)와 교차 비교하게 만드는 미러 디코이로 기능한다",
+      "decisiveFlaw": "machines for making에서 for는 순수 전치사이고 목적어로 동명사가 필수 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "전치사구 because of vs 접속사 because 구별",
+      "temptingBecause": "because/because of 치환은 빈출 함정이라 뒤따르는 성분의 품사를 실제로 확인해야 한다",
+      "decisiveFlaw": "뒤에 절이 아닌 명사구 his debt가 오므로 because of가 정확 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "주어 London과 divide의 태 관계 (수동태)",
+      "temptingBecause": "very much가 개입해 표면 구조가 낯설고, 분사/형용사 경계라 능동 dividing과 비교하게 만든다",
+      "decisiveFlaw": "London은 강에 의해 '나뉘는' 대상이고 by the River Thames 행위자구가 있으므로 was divided가 정확 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사 ways를 수식하는 형용사적 to부정사 + for 의미상 주어 구조 (정답)",
+      "temptingBecause": "(B) 'for making'과 표면이 유사해 'for 뒤니까 v-ing'로 과잉일반화하기 쉽고, moving을 people and goods 수식 분사로 착각할 수 있다",
+      "decisiveFlaw": "ways는 '~할 방법/통로'로서 to부정사 수식이 필요하고 for people and goods는 그 의미상 주어다. moving으로는 ways의 내용이 미완결되어 비문이며, to move로 교정하면 정확히 원문이 된다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 기계 diff로 원지문 대비 유일 변형이 (E) to move->moving임을 확인, 라벨·마커·선지 완전 일치. V2: 5개 밑줄 독립 검증 결과 (A)~(D)는 모두 명백히 정문, (E)만 비문 — 단일정답 성립. V3: 오류 삽입 위치 외 전 문장 정문, 교정 완성문은 원문과 동일. V4: 해설의 '형용사적 용법 to부정사 + 의미상 주어' 분석과 4개 오답 해설 모두 실제 구조와 일치, 용어 오류·환각 없음. V5: 정답 라벨·isError 플래그·해설·keyPoints·오답해설 키 전부 동기화(markedExpressions의 expression='to move'/errorExpression='moving' 관례도 일관). 공예: (B)-(E)의 v-ing 미러 디코이 설계가 좋고 4개 디코이가 서로 다른 포인트(분사 태/전치사+동명사/because of/수동태)를 겨냥하나, (A)(B)(D)는 중상위권 학생에게 비교적 빠르게 소거되는 표준 디코이라 C3는 3에 머문다. 난이도는 INTERMEDIATE 요청에 정확히 부합(C5=4). 해설은 짧고 정확하지만 핵심 함정인 (B)와의 대비를 명시하지 않아 C6=3. 합계 19, 전 V 통과, 전 C>=3 — 소폭 손질로 출제 가능한 B. KILLER 요청이 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 2,
+  "status": "draft_non_executable",
+  "auditVerdict": "FAIL_BLOCKED",
+  "operationallyAuthorizedCandidateAttemptSlots": 0,
+  "candidateAttemptCap": 1000,
+  "allocatedCandidateAttemptSlots": 990,
+  "permanentSafetyMarginSlots": 10,
+  "unit": "pre-network physical HTTP opportunity to emit one full-question candidate output",
+  "unitStatus": "not_enforceable_until_trusted_provider_and_parser_boundaries_are_integrated",
+  "productionParityStatus": "not_established_candidate_attempt_ceilings_currently_change_the_production_policy_tail",
+  "safetyMarginPolicy": {
+    "executable": false,
+    "reallocatable": false,
+    "plannedMaximumAuthorizedSlots": 990,
+    "overflowProofStatus": "unproven_until_single-output-cardinality-and-bounded-concurrency-are-enforced_before_network"
+  },
+  "phaseOrder": [
+    "PREREQUISITES",
+    "A1_CORE_ALL_CURRENT",
+    "A2_DEV_FOCUS_SCREEN",
+    "FREEZE_WINNER_OR_STOP",
+    "A5_FOCUS_ROBUSTNESS",
+    "A3_HOLDOUT_FOCUS_PAIRED",
+    "IMPLEMENT_AND_FREEZE",
+    "A4_ROUTE_ALL_WINNER"
+  ],
+  "phases": [
+    {
+      "id": "A1_CORE_ALL_CURRENT",
+      "candidateAttemptSlots": 100,
+      "logicalAssignments": 50,
+      "assignmentDesign": "25 active types x 2 plans, KILLER current-policy sentinel",
+      "candidateCeilingStatus": "invalid_placeholder_for_production_parity",
+      "fixedQueueHash": null,
+      "maxPhysicalProviderCalls": null,
+      "maxCostUsd": null,
+      "planQuotas": {
+        "STANDARD": {"assignments": 25, "maxCandidateAttemptsPerAssignment": 1, "slots": 25},
+        "PREMIUM": {"assignments": 25, "maxCandidateAttemptsPerAssignment": 3, "slots": 75}
+      },
+      "inferentialStatus": "defect-discovery sentinel only; neither a quality-rate estimate nor production-parity evidence"
+    },
+    {
+      "id": "A2_DEV_FOCUS_SCREEN",
+      "candidateAttemptSlots": 200,
+      "logicalAssignments": 80,
+      "assignmentDesign": "4 frozen profiles x 2 focus types x 2 plans x 5 plan-specific dev passages; every passage-plan block receives all 4 profiles",
+      "candidateCeilingStatus": "invalid_placeholder_for_production_parity",
+      "fixedQueueHash": null,
+      "maxPhysicalProviderCalls": null,
+      "maxCostUsd": null,
+      "winnerPolicyStatus": "unresolved_numeric_rule_and_multiplicity_family",
+      "winnerPolicyUnit": null,
+      "planQuotas": {
+        "STANDARD": {"assignments": 40, "maxCandidateAttemptsPerAssignment": 2, "slots": 80},
+        "PREMIUM": {"assignments": 40, "maxCandidateAttemptsPerAssignment": 3, "slots": 120}
+      },
+      "inferentialStatus": "complete-block screening and winner selection only; no population quality claim"
+    },
+    {
+      "id": "A3_HOLDOUT_FOCUS_PAIRED",
+      "candidateAttemptSlots": 600,
+      "logicalAssignments": 240,
+      "assignmentDesign": "2 focus types x 2 policies (CURRENT/WINNER) x 60 independent KILLER passages; within each type 30 passages are STANDARD and 30 PREMIUM, both policies share each passage-plan block, and CURRENT/WINNER execution order is frozen 15/15 AB/BA within each type-plan stratum",
+      "candidateCeilingStatus": "invalid_placeholder_for_production_parity",
+      "fixedQueueHash": null,
+      "maxPhysicalProviderCalls": null,
+      "maxCostUsd": null,
+      "multiplicityRule": null,
+      "primaryEstimand": null,
+      "attritionRule": "provider-attempt timeout, parse failure, cap exhaustion and policy no-output are ITT failures; missing corpus/review/provenance makes the phase incomplete and cannot be imputed or topped up",
+      "planQuotas": {
+        "STANDARD": {"assignments": 120, "maxCandidateAttemptsPerAssignment": 2, "slots": 240},
+        "PREMIUM": {"assignments": 120, "maxCandidateAttemptsPerAssignment": 3, "slots": 360}
+      },
+      "inferentialStatus": "planned paired sample is 60 pairs per type pooled across plan and 30 pairs per type-plan; adequacy is not established because alpha, multiplicity, MDE and discordance assumptions are unresolved"
+    },
+    {
+      "id": "A4_ROUTE_ALL_WINNER",
+      "candidateAttemptSlots": 75,
+      "logicalAssignments": 50,
+      "assignmentDesign": "25 active types x 2 plans through the isolated production fast route; BASIC/INTERMEDIATE/KILLER are assigned on a frozen near-balanced 17/17/16 schedule across 50 cells, so no type has full three-difficulty coverage",
+      "candidateCeilingStatus": "invalid_placeholder_for_production_parity",
+      "fixedQueueHash": null,
+      "maxPhysicalProviderCalls": null,
+      "maxCostUsd": null,
+      "planQuotas": {
+        "STANDARD": {"assignments": 25, "maxCandidateAttemptsPerAssignment": 1, "slots": 25},
+        "PREMIUM": {"assignments": 25, "maxCandidateAttemptsPerAssignment": 2, "slots": 50}
+      },
+      "inferentialStatus": "route/persistence/render/scoring smoke sentinel only; one cell cannot establish route parity or type/difficulty quality"
+    },
+    {
+      "id": "A5_FOCUS_ROBUSTNESS",
+      "candidateAttemptSlots": 15,
+      "logicalAssignments": 6,
+      "assignmentDesign": "6 preregistered grammar/blank boundary passages balanced 3/3 by type, 3/3 by plan and 2/2/2 by difficulty",
+      "candidateCeilingStatus": "invalid_placeholder_for_production_parity",
+      "fixedQueueHash": null,
+      "maxPhysicalProviderCalls": null,
+      "maxCostUsd": null,
+      "planQuotas": {
+        "STANDARD": {"assignments": 3, "maxCandidateAttemptsPerAssignment": 2, "slots": 6},
+        "PREMIUM": {"assignments": 3, "maxCandidateAttemptsPerAssignment": 3, "slots": 9}
+      },
+      "inferentialStatus": "adversarial boundary smoke cases only"
+    }
+  ],
+  "preregistrationHolds": [
+    "Freeze disjoint corpus rows, strata, total order, within-block execution order and hashes; do not replace or top up after any outcome is observed.",
+    "Freeze one primary estimand, exact test direction, alpha allocation, multiplicity family, MDE and winner/noninferiority/Pareto thresholds.",
+    "Freeze requested/effective/served model and provider assertions, endpoint price snapshot, per-stage token ceilings, physical-call caps, phase USD caps and a campaign USD cap.",
+    "Specify model/provider drift and incomplete-pair handling. A drifted or provenance-incomplete phase is invalid rather than repaired with new passages.",
+    "Reconcile the per-assignment candidate ceiling with the actual STANDARD, PREMIUM and grammar-ladder call graph. A budget-truncated policy cannot be labelled current production parity."
+  ],
+  "executionHold": [
+    "This file is not an operational registry and authorizes zero calls.",
+    "Corpus v3 certification, trusted provider/parser instrumentation, immutable provenance and fresh audits must pass first.",
+    "Every phase needs frozen physical-call and USD caps derived from model token ceilings and a fresh endpoint-price snapshot.",
+    "The 10 safety slots are never executable or reallocatable, but ten slots alone do not prove the 1,000-output cap until output cardinality and concurrent in-flight overflow are bounded before network.",
+    "The current 1/2/3 candidate ceilings are arithmetic placeholders and must not be used to claim production parity.",
+    "A2/A3 winner, multiplicity, MDE and power rules are unresolved; A3 is not yet a confirmatory design."
+  ]
+}

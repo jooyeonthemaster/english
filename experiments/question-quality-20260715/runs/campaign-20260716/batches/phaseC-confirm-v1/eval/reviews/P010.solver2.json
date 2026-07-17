@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'repeats the identical leap forward'는 지배 문장 'the composer rewards and soothes us by bringing the melody back toward home again'과 정면 모순. 동일 도약의 반복은 gap fill 원리(도약 후 방향 전환·귀환)의 부정이며, soothing이 아니라 위반의 가중이다. 문법적으로는 정문이나 논리적으로 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "지배 문장의 두 연언지 (a) 'bringing the melody back toward home'(간극 축소) (b) 'but not by too much'(완전 해소 금지)를 정확히 충족. 'narrows'는 부분 축소를 뜻하므로 (a)와 (b)를 동시에 만족하는 유일한 술어. 'the distance created by the leap'은 gap fill의 'gap'과 지시적으로 일치. 3인칭 단수 동사 결합도 정문."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'brings us entirely back home at once'는 연언지 (a)는 만족하나 (b) 'but not by too much because he wants to continue to build tension'이 명시적으로 부정하는 바로 그 명제('entirely, at once' = 완전·즉시 귀환). 텍스트가 직접 배제한 강한 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'violates the schematic expectation completely'는 시제·수 일치는 정문이나, 지문에서 schematic violation은 첫 옥타브 도약에 귀속되고 셋째 음은 'rewards and soothes'(보상·완화)로 기술되므로 셋째 음에 위반을 귀속시키는 것은 역할 전도. 논리적 모순."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'eliminates the need for stepwise motion'은 gap fill의 실현 기제가 바로 stepwise motion('tones that follow need to bring us closer and closer')이라는 지문 전제와 모순. 셋째 음 하나가 순차 진행의 필요를 제거한다는 주장은 이론 자체의 부정이며 지문 어디에도 근거 없음."
+    }
+  ],
+  "note": "빈칸 문장 seam은 5개 선지 모두 3인칭 단수 VP로 문법 결합에 하자가 없어 판별은 순수 논리 층위에서 이루어진다. 지배 문장 'brings the melody back toward home again, but not by too much'가 장거리 단서로 작동하여 ②를 유일하게 선택한다. ③은 (b) 위반, ①·④는 (a) 위반, ⑤는 이론 전제 위반. 대안 해석(도치·축약 관계절 등)으로 구제되는 선지 없음. 단일 정답으로 수렴."
+}

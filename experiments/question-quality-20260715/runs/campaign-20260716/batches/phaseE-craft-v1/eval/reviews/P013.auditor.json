@@ -1,0 +1,74 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-KEYPOINT-CHARACTERIZATION",
+      "severity": "minor",
+      "evidence": "keyPoints의 'That is와 Nevertheless를 통한 통념 반박' 표현에서 'That is'는 통념 반박이 아니라 첫 문장의 주의 촉구를 재진술하는 담화 표지다. 구조 오분석이라기보다 느슨한 표찰이므로 V4 실패로는 판정하지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "지문 어휘(classical/Biblical times, various cultures) 재활용 + 보존이라는 절반의 진실로 유인하는 half-truth 함정",
+      "temptingBecause": "셋째 문장의 'proverbs from classical, Biblical, and medieval times current in various cultures'와 어휘가 직접 겹쳐 표면 독해자가 끌린다.",
+      "decisiveFlaw": "if절(독일인의 특정 속담 고빈도 사용)로부터 '고대 지혜의 완벽한 보존 증명'이라는 결론은 도출 불가하며, 'proves/perfectly'라는 절대 표현이 지문의 신중한 논조와 충돌한다."
+    },
+    {
+      "label": "2",
+      "intent": "필자가 명시적으로 배격한 주장(고정된 국민성 결론)을 그대로 복원하는 반박 대상 재진술 함정",
+      "temptingBecause": "'national character'가 지문에 두 번 등장하는 핵심 어휘라 주제어 매칭으로 고르기 쉽다.",
+      "decisiveFlaw": "둘째 문장 'no fixed conclusions about a so-called national character should be drawn'과 정면 모순. 'absolute basis', 'unchanging'이라는 절대어가 결정적 배제 근거."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — source span('does mirror at least to some degree the German attitude')을 'partial indicator of specific cultural tendencies'로 추상화한 절충 결론",
+      "temptingBecause": "정답이므로 해당 없음. 넷째 문장의 양보(다른 사회·문화 지표와 함께 공통 개념 형성 가능)와 원문 결과절의 'at least to some degree'를 정확히 보존한다.",
+      "decisiveFlaw": "없음 (유일 정답). 다만 다섯 선지 중 유일하게 완화 표현(partial, specific)을 쓴 선지라 절대어 회피 휴리스틱만으로도 선택 가능하다는 출제 결함이 있다."
+    },
+    {
+      "label": "4",
+      "intent": "Nevertheless 이후의 긍정적 전환을 무시한 극성 반전(polarity reversal) 함정",
+      "temptingBecause": "지문 전반부(1~3문장)의 경고 논조만 읽은 학생에게는 '속담으로는 아무것도 알 수 없다'가 자연스러운 결론으로 보인다.",
+      "decisiveFlaw": "넷째 문장의 양보와 원문 결과절('does mirror at least to some degree')이 명시적으로 부분적 유용성을 인정하므로 전면 부정('fails to offer any')은 모순."
+    },
+    {
+      "label": "5",
+      "intent": "속담이라는 소재만 공유하는 무근거 인과 주장(unmentioned causal claim) 함정",
+      "temptingBecause": "'traditional sayings'가 proverbs와 동의어라 소재 연속성은 있다.",
+      "decisiveFlaw": "속담이 현대적 가치를 '가린다(obscure)'는 인과 주장은 지문 어디에도 없고 극성도 반대다. source anchor가 소재 수준에 그쳐 유인력이 다섯 선지 중 가장 약하다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "KEYPOINT-LOOSE-LABEL",
+      "severity": "minor",
+      "evidence": "keyPoints 첫 항목이 'That is'를 통념 반박 장치로 묶었으나 실제 기능은 재진술(restatement)이다. 학생 오개념을 유발할 수준은 아님."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": [
+    "위반: '극성·길이·고유어·절대어 하나로 정답을 찍을 수 없다' — 오답 4개 전부가 절대·극단 표지를 포함(① proves/perfectly, ② absolute/unchanging, ④ fails to offer any, ⑤ obscure의 강한 부정 극성)하고 정답 ③만 유일하게 완화 표현(partial, specific)을 사용한다. 지문을 읽지 않고 온건 선지 휴리스틱만으로 정답 도달 가능.",
+    "위반(부분): '최소 두 문장/두 논리 단서 연결' — 빈칸 직전의 Nevertheless 문장 하나가 사실상 정답을 패러프레이즈하고 있고 'Thus'가 이를 직결하므로, 다문장 종합이 강제되지 않는다.",
+    "충족: 다섯 선지 모두 동일 통사 슬롯('it + VP')에 들어가며 문법으로 탈락하는 오답 없음.",
+    "충족: 정답은 source span('mirror at least to some degree the German attitude towards getting up early')의 의미를 보존하며 적절히 추상화.",
+    "부분 충족: 오답 함정 유형은 half-truth(①), 반박 대상 재진술/과확장(②), 극성 반전(④), 무근거 인과(⑤)로 분화되어 있으나 ⑤의 source anchor가 약하다."
+  ],
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한다. 렌더 지문은 결과절 전체를 빈칸화한 의도된 변형 외 손상이 없고(V1), 각 선지 독립 검증 결과 ③이 유일 정답이며(V2), 다섯 완성문 모두 문법적이고(V3), 해설의 문장 위치·구조 분석('넷째 문장 Nevertheless', 'at least to some degree ↔ partial indicator' 동치)이 사실과 일치하고(V4), 정답 라벨·오답 해설 키·keyPoints가 동기화되어 있다(V5). 그러나 공예 측면에서 KILLER 요청과 실제 난이도의 괴리가 크다: (1) 오답 4개가 모두 절대어/극단 극성을 달고 있어 정답 ③이 유일한 완화 선지로 노출되는 메타 단서(C4=2), (2) 빈칸이 직전 문장의 직접 재진술이라 요구 사고 단계가 얕아 KILLER 라벨과 불일치(C5=1), (3) ①②④는 실제 판단을 요구하나 ⑤는 즉시 소거급(C3=2). 빈칸 지점 자체는 글의 양보-절충 결론이라는 정전 포인트로 우수하며(C1=4) 해설도 정확하고 함정 분리가 선명하다(C6=3). 재설계 방향: 오답의 절대어 제거 및 완화 표현 재분배, 정답 근거를 다문장 종합이 필요하도록 추상화 수위 상향. 합계 15/24, 등급 C (출하 전 재설계 필요)."
+}

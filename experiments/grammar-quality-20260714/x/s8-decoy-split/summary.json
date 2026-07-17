@@ -1,0 +1,45 @@
+{
+  "strategy": "s8-decoy-split",
+  "describe": "콜1 정답 1개만 심은 문항(미끼 없이 정답 밑줄+해설) → 콜2 정답을 가리지 않으면서 저울질이 성립하는 미끼 4자리 추가",
+  "callPlan": "flash x2 (직렬: 정답→미끼)",
+  "total": 30,
+  "ok": 30,
+  "failed": 0,
+  "avgMs": 14611,
+  "avgAttempts": 2.03,
+  "avgCalls": 2,
+  "totalCostUsd": 0.67346,
+  "avgCostUsd": 0.02245,
+  "costRecordedCalls": 60,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 1.23,
+  "zeroErrorItems": 7,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.877,
+  "avgAnswerRelPos": 0.571,
+  "answerRelPosInBand": 23,
+  "models": {
+    "google/gemini-3.5-flash": 60
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 5
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 1
+    }
+  ]
+}

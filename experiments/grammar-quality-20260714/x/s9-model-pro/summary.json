@@ -1,0 +1,45 @@
+{
+  "strategy": "s9-model-pro",
+  "describe": "minimal 과 동일 프롬프트, 모델만 google/gemini-3.1-pro-preview — atlas openai-compatible 클라이언트 직접 호출(strict 스키마 동일 강제)",
+  "callPlan": "gemini-3.5-pro x1",
+  "total": 30,
+  "ok": 29,
+  "failed": 1,
+  "avgMs": 20323,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.5263,
+  "avgCostUsd": 0.01815,
+  "costRecordedCalls": 29,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 1,
+  "avgErrorCount": 1.72,
+  "zeroErrorItems": 6,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.818,
+  "avgAnswerRelPos": 0.488,
+  "answerRelPosInBand": 27,
+  "models": {
+    "google/gemini-3.1-pro-preview": 30
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 10,
+      "ok": 9,
+      "zeroError": 3
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 2
+    }
+  ]
+}

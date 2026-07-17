@@ -1,0 +1,69 @@
+{
+  "pid": "P026",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-QUOTE-PARAPHRASE",
+      "severity": "minor",
+      "evidence": "오답 해설 ④가 원문 \"no local taxes are paid\"를 'local taxes are not paid'로 재구성한 문자열을 인용부호 안에 제시함. 의미는 동일하나 직접 인용 형식으로는 부정확."
+    },
+    {
+      "code": "V4-MINOR-AWKWARD-PHRASING",
+      "severity": "minor",
+      "evidence": "정답 해설 말미 \"⑤의 경우 본문의 'No factories need to be built'와 정면으로 대치되어 함정을 피할 수 있습니다\"는 주어가 불명확한 어색한 문장(학생이 함정을 피할 수 있다는 의도로 보이나 표면상 ⑤가 주어처럼 읽힘). 사실 오류는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "인과/방향 역전 — 탈장소화(delocalization) 논지를 지역화 구축으로 뒤집는 오독 유도",
+      "temptingBecause": "'production network'가 지문 문구(\"The switch in the production network of work\")와 어휘적으로 직접 겹침",
+      "decisiveFlaw": "지문 전체가 노동-장소 연결의 해체를 서술(\"ties ... can be disconnected\", \"No offices or factories need to be built\")하므로 지역화된 네트워크 구축은 정면 모순. 직전 문장만 읽어도 즉시 소거 가능."
+    },
+    {
+      "label": "②",
+      "intent": "범위 과잉(scope overreach) — 배경 개념을 결론으로 승격시키는 오독 유도",
+      "temptingBecause": "'global reserve army'가 지문의 눈에 띄는 고유 표현이라 어휘 anchor로 강하게 작동",
+      "decisiveFlaw": "해당 표현은 1990년대 아웃소싱의 배경 서술에만 등장하며, 클라우드워크 환경에서 고용주가 이를 '독점'한다는 진술은 어떤 문장으로도 지지되지 않음. 빈칸 위치(결론 문장)의 담화 기능과도 불일치."
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span \"leaves behind no material traces\"의 추상화 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). material traces → physical footprint 대응이 정확하고, \"No offices or factories ...\" 문장이 충분한 근거를 제공",
+      "decisiveFlaw": "없음. 단, 5개 선지 중 유일하게 부정 표현('no')을 포함해 극성 단서만으로 선택 가능한 것이 문항 설계상 약점."
+    },
+    {
+      "label": "④",
+      "intent": "행위자 전가/half-truth — 세금 언급을 전가 행위로 확장하는 오독 유도",
+      "temptingBecause": "지문에 \"no local taxes are paid\"라는 세금 관련 진술이 실재하여 부분 사실(half-truth) anchor가 있음",
+      "decisiveFlaw": "지문은 지역 세금이 납부되지 않는다는 결과만 진술할 뿐, 고용주가 세금 의무를 노동자에게 '전가'한다는 행위 주체·메커니즘은 전혀 언급되지 않음."
+    },
+    {
+      "label": "⑤",
+      "intent": "극성 반전 — 명시된 부정 진술을 긍정으로 뒤집는 오독 유도",
+      "temptingBecause": "'standardised'와 'facilities(offices/factories)'가 모두 지문 어휘와 겹침",
+      "decisiveFlaw": "\"No offices or factories need to be built\"와 정면 모순. ①과 함정 유형(직전 문장 정면 모순형 극성 반전)이 부분 중복되어 변별 기여가 낮음."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ④: 원문 \"no local taxes are paid\"를 'local taxes are not paid'로 바꾼 문자열을 인용부호로 제시 (의미 동일, 형식상 부정확 — minor)",
+    "정답 해설: \"⑤의 경우 ... 정면으로 대치되어 함정을 피할 수 있습니다\" — 주어 불명확한 비문에 가까운 어색한 표현 (사실 오류 아님 — minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트 통과: 렌더 무결(유일한 변형은 마지막 문장의 'leaves behind no material traces' → 빈칸 치환), 정답 집합 정확히 {③}, 다섯 선지 모두 동일 통사 슬롯(3인칭 단수 VP)에 적합하며 tail과의 문법 충돌로 탈락하는 오답 없음, 완성문 문법적, 필드 동기화 완전. 그러나 공예 결함으로 등급 C: (1) 5개 선지 중 부정 극성('no')을 포함한 선지가 정답 ③ 하나뿐인데 직전 문장이 'No X, no Y, no Z' 3연속 부정 나열이라, 시험 요령이 있는 학생은 전역 독해 없이 극성 매칭만으로 정답 도달 가능(C4=2, 약한 메타 누출). (2) ①⑤는 직전 문장과의 정면 모순으로 즉시 소거되어 실질 경쟁 선지가 ②④뿐(C3=2). (3) 정답이 원문 span의 1:1 직역에 가까워 추상화 깊이가 얕음. 재설계 제안: 오답 중 최소 1~2개에 부정 극성 표현을 포함시키고(예: 'retains no ties to its former workforce'류의 half-truth 부정 선지), 정답의 추상화 수준을 한 단계 높이면 B 이상 도달 가능. INTERMEDIATE 요청이므로 KILLER 조건 판정 대상 아님(false)."
+}

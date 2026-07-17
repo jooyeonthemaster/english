@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'just don't shut them completely out of your thoughts'는 방금 허용한 공감(show kindness, sympathetic ear)에 대한 제한이 아니라 거리두기(detachment)에 대한 제한이 된다. 'Still ... just don't X' 구조에서 X는 공감의 위험이어야 하는데, 이 선지는 담화 구조상 자리에 맞지 않고 지문이 경고하는 내용도 아니다."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "빈칸에 넣으면 'show them kindness ...; just don't let their negativity drag your feelings under'로, 서두의 주제문(troubles can spread like a virus / Don't damage yourself / be careful not to be overcome by the misfortune)으로 정확히 회귀하는 양보-재단언 구조를 완성한다. 문법 결합도 매끄럽다(let + O + 원형 drag). 친절은 베풀되 상대의 부정성에 자신이 끌려 내려가지 말라는 자기보호 경고가 지문의 핵심이며 이 선지만이 그것을 담는다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'just don't avoid any interaction'은 이미 양보절에서 허용한 'show kindness'를 중복 진술할 뿐 공감에 대한 제한(caveat)이 되지 못한다. 지문은 교류를 적극 권하지도 않으므로 논리적으로도 근거가 없다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문이 '진짜 원인은 사건이 아니라 무비판적으로 채택한 반응'이라고 말하므로 표면적으로는 끌리지만, 그 논점은 상대의 고통을 진단하는 도구이지 마지막 문장의 기능(공감을 허용하되 자기 자신을 보호하라)이 아니다. 'Don't damage yourself'라는 자기 초점과 어긋난다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong-attractive",
+      "reason": "가장 강한 매력 오답. 앞 문장의 'avoiding melodramatic reactions'와 표면 어휘가 겹쳐('dramatic') 실제로 끌렸다. 그러나 이 내용은 'Still' 이전, 즉 양보가 일어나기 전 문장('a good service to others by remaining detached')의 단순 재진술이어서 빈칸에 넣으면 마지막 문장이 직전 문장과 중복되고, 바이러스/자기손상이라는 지배 주제의 마무리 회귀가 사라진다. 'Still ... just don't' 담화 구조는 양보 이후 핵심 경고(자기보호)로 되돌아가야 하므로 구조적으로 열등하다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: ⑤가 설계된 자석 오답으로, 'melodramatic↔dramatic' 표면 매칭에 잠시 끌렸으나 'Still ... just don't' 양보-재단언 구조를 추적하면 빈칸은 서두 주제(감정 전염으로부터의 자기보호)로 회귀해야 함이 명확해 ②로 확정. 이 지문은 에픽테토스(Epictetus, The Art of Living 계열) 텍스트로 알려진 단락과 일치하며 원문 결말도 '자신까지 끌려 내려가지 말라'는 취지다. 단일 정답으로 옹호 가능."
+}

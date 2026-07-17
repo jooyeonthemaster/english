@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "지문 도입부 어휘(editing digital material)를 재활용한 표면 미끼. 빈칸 문장은 'not simply to utilize technology for its own sake / Rather...' 대조 구조로, 기술 활용 편의 자체를 목표로 삼는 내용은 주장과 정면 충돌. 문법 결합은 정상이나 논리 부적합."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'의 정확한 패러프레이즈(provoke cognitive shifts = challenges perceptions/changes thoughts, reshape viewers' perspectives = changes feelings/perceptions). 'creations that will provoke... and reshape...' 관계절 결합도 자연스러움. 지문 논리(위대한 예술의 정의로 회귀)와 완전 일치."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "internet, share 등 지문 어휘를 복사한 매력적 오답. 그러나 바로 앞 문장 'the goal should not be simply to utilize technology for its own sake'와 명시적 모순 — 빈칸은 'Rather' 뒤이므로 기술 활용의 반대편 내용이어야 함."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "비평가의 우려(critics have expressed concern)는 문제 제기용 배경 서술일 뿐. 예술가의 목표가 '비평가가 우려를 쉽게 표현하게 하는 것'이라는 결합은 의미상 성립하지 않음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'strictly relying on digital editing tools'는 기술=단순 도구라는 지문 주장과 충돌하고, 'satisfy the public'은 위대한 예술의 정의(지각에 도전, 사고·감정 변화)와 무관. 이중으로 논리 부적합."
+    }
+  ],
+  "note": "빈칸 문장은 'Rather' 대조 구조로 위대한 예술의 정의를 재진술해야 함. ②가 유일한 패러프레이즈 정답. ①·③은 지문 표면 어휘 미끼로 순간적 유혹은 있으나 대조 구조 확인 시 즉시 배제 — 실질 경합 선지 없음. 최상위권 기준 난이도는 다소 평이(정답 선지의 학술 어휘 provoke cognitive shifts가 변별 요소)."
+}

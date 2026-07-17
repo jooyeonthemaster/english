@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-overdrilled-answer",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-noun-clause-pronoun-mislabel",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=k  (C):dec=k  (D):ANS=b  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 26,
+        "relPos": 0.033,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 233,
+        "relPos": 0.299,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 292,
+        "relPos": 0.374,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 517,
+        "relPos": 0.663,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 687,
+        "relPos": 0.881,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.881,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "working",
+        "isError": false,
+        "correction": "working",
+        "errorExpression": "working",
+        "surroundingText": "Suppose that you are busy working on a project one day",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "buying",
+        "isError": false,
+        "correction": "buying",
+        "errorExpression": "buying",
+        "surroundingText": "he wants to help you out by buying you the sandwich",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "to appreciate",
+        "isError": false,
+        "correction": "to appreciate",
+        "errorExpression": "to appreciate",
+        "surroundingText": "you are very likely to appreciate your friend's help",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "what",
+        "isError": true,
+        "correction": "what",
+        "errorExpression": "that",
+        "surroundingText": "how do you know that kind of sandwich I like to eat?",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "knowing",
+        "isError": false,
+        "correction": "knowing",
+        "errorExpression": "knowing",
+        "surroundingText": "you won't worry about him knowing you too well",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "working"
+      },
+      {
+        "label": "(B)",
+        "text": "buying"
+      },
+      {
+        "label": "(C)",
+        "text": "to appreciate"
+      },
+      {
+        "label": "(D)",
+        "text": "that"
+      },
+      {
+        "label": "(E)",
+        "text": "knowing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'be busy -ing' 구문으로 '~하느라 바쁘다'라는 의미를 나타내므로 현재분사 working은 어법상 적절합니다.",
+      "(B)": "전치사 by의 목적어로 동명사가 와야 하므로 buying은 올바른 형태입니다.",
+      "(C)": "'be likely to 부정사' 구문의 일부로 to appreciate는 적절하게 사용되었습니다.",
+      "(E)": "전치사 about의 목적어인 동명사이며 의미상 주어 him 뒤에 와서 구문을 올바르게 구성하고 있습니다."
+    },
+    "explanation": "(D) \"that\"는 어법상 틀린 표현이며 \"what\"로 고쳐야 한다. 정답 문장의 골격은 'how do you know [what kind of sandwich I like to eat]?'입니다. 동사 know의 목적어 역할을 하는 명사절을 이끌면서 동시에 뒤의 명사 'kind'를 수식해야 하므로 의문형용사 what이 들어가야 합니다. 밑줄 친 that은 명사절 접속사나 관계사로 쓰일 수 있지만, 여기서는 뒤에 명사 kind를 수식하며 불완전한 절을 이끄는 의문형용사의 자리가 필요하므로 비문입니다. 따라서 that을 what으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 접속사 vs 관계사/의문사 — 명사절 내에서의 역할 파악",
+      "(A) 분사구문/동명사 관용표현 — be busy -ing 구문",
+      "(E) 전치사의 목적어와 동명사의 의미상 주어"
+    ],
+    "tags": [
+      "어법",
+      "관계사",
+      "의문사",
+      "수능영어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy __(A) working__ on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by __(B) buying__ you the sandwich. In this case, you are very likely __(C) to appreciate__ your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know __(D) that__ kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him __(E) knowing__ you too well, but you certainly would not give the same level of trust to a stranger."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "incorrect (this is the error)",
+      "reason": "'One of the most common mistakes __making__ by organizations' — mistakes를 수식하는 축약 관계절로, mistakes는 조직에 의해 '저질러지는' 대상이며 바로 뒤에 행위자구 by organizations가 있다. 수동 의미이므로 과거분사 made여야 한다. making(능동 현재분사)은 목적어가 없고 by 행위자구와 충돌해 성립 불가. 동명사 해석(mistakes of making)도 전치사 없이 불가능. 명백한 어법 오류."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'is that creating a social media program begins not with A but with B' — that절 내부에서 동명사구 creating a social media program이 주어이고 단수 동사 begins와 호응. 정문. 유혹 기록: 'that 바로 뒤에 -ing가 와도 되나?'라는 순간적 의심이 들 수 있으나 동명사 주어 구조로 완전히 정상이며, begins라는 단수 동사가 장거리 단서."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a vague need to manage a presence' — 명사 need를 수식하는 to부정사(the need to-V). 관용적으로 확립된 구조. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'must either solve a problem ... or result in an improvement' — 조동사 must 뒤 either A or B 병렬로 양쪽 모두 동사원형(solve/result). 병렬 시작점이 must 직후이므로 원형이 지배 규칙. 유혹 기록: 주어 a social media presence가 3인칭 단수라 solves로 고치고 싶은 미끼가 있으나 조동사 뒤에는 원형이 맞음. or 뒤의 result가 원형인 것이 결정적 병렬 단서."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'preferably a measurable one' — 대명사 one(=improvement)을 수식하는 형용사 measurable. '측정 가능한 개선'이라는 문맥 의미에도 부합. 부사 measurably로 착각할 유인은 거의 없음. 정문."
+    }
+  ],
+  "note": "정답 (A)로 단일 수렴. by organizations라는 행위자구가 수동 과거분사 made를 요구하는 전형적 분사 수식 문항. (D)의 수일치 미끼(solve vs solves)가 가장 매력적인 오답 유혹이지만 must+원형 병렬 규칙으로 명확히 배제됨. 복수정답 소지 없음."
+}

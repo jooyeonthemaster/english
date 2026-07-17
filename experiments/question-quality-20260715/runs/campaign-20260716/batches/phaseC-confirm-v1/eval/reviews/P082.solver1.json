@@ -1,0 +1,35 @@
+{
+  "pid": "P082",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "wrong",
+      "reason": "'Although they controlled by Denmark' — 명시적 주어 they와 행위자구 by Denmark가 있으므로 수동태 'are controlled'가 필요하다. 현재 표기는 be동사가 빠진 비문. 대안 해석 검토: (1) 분사구문 축약 'Although controlled by Denmark'는 주어 they를 삭제해야 성립하므로 현 표기와 불일치. (2) 능동 과거 'they controlled'로 읽으면 타동사 control의 목적어가 없어 비문. 어느 쪽으로도 정문이 되지 않음 — 어법상 틀림."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'They have done this for centuries' — 현재완료 + 대동사 do(= hunt pilot whales) + 기간 부사구 for centuries. 완전한 정문. 'have been doing'이 더 자연스럽다는 유혹이 있으나 'have done'도 어법상 전혀 문제 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a law that says each killing must...' — 선행사 a law를 받는 주격 관계대명사 that, 뒤에 주어 공백 + 동사 says. 정문. what으로 바꿔야 한다는 함정을 검토했으나 선행사가 명시돼 있으므로 that이 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'must take place as quickly and efficiently as possible' — 자동사 take place를 수식하는 부사 두 개(quickly, efficiently)의 병렬, as...as possible 구문 내부. 형용사/부사 미끼로 가장 끌리는 선지이지만 동사 수식이므로 부사 efficiently가 정확히 맞다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'should be allowed to continue' — allow + O + to-V의 수동태에서 to부정사가 잔류하는 구조(be allowed to-V). 정문. 'allowed continuing'이어야 한다는 착각을 검토했으나 allow는 to부정사 보어를 취한다."
+    }
+  ],
+  "note": "정답 후보는 (A) 단독. (A)는 be동사 누락으로 어떤 대안 해석(분사구문 축약, 능동 해석)으로도 구제 불가능한 명백한 비문. 최상위권 관점에서 실제로 끌린 매력적 오답은 (D)(형용사/부사 병렬 미끼)와 (E)(allowed to-V 수동 구조)였으나 둘 다 정문으로 확정. 문항 자체는 답이 하나로 깔끔하게 좁혀지며, 난도는 낮은 편(수동태 be 누락은 기초 포인트)."
+}

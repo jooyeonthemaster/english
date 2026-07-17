@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "\"Garcia stood outside..., waiting for his brother\" — present-participle adjunct whose understood subject is Garcia (the one waiting). Standard narrative construction; no dangling-modifier issue. No real distractor pull."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "\"they're a bit too colorful\" refers back to \"a patterned red shirt and yellow pants\" — a coordinated plural antecedent (and \"pants\" is plural on its own). Plural pronoun is required and used. Checked for a singular-antecedent trap; none exists."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "\"he struggled with the rhythm, making several mistakes\" — participial adjunct, subject = he, expressing accompanying result. Grammatical and parallel in form to (A)."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (ANSWER)",
+      "reason": "\"Garcia's trumpet playing was flawlessly.\" The copula \"was\" takes an adjectival subject complement: it must be \"flawless.\" An adverb cannot function as predicate complement. Actively tested a rescue parse (ellipsis of a participle, e.g. \"was flawlessly [performed]\") — no such ellipsis is licensed; as written the sentence is ungrammatical. Adjective-vs-adverb after a linking verb is the governing rule."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "\"When the band was finished\" — genuine attractor: a solver may want active \"had finished\" and suspect a passive misuse. But \"be finished\" is a standard adjectival/resultative use meaning \"done\" (cf. \"I'm finished\"), fully grammatical with an agentive subject. Felt the pull, rejected it."
+    }
+  ],
+  "note": "Clean single-answer item. (D) is unambiguously wrong by the linking-verb + adjective-complement rule; the strongest distractor is (E) (be finished vs. had finished), which is grammatically sound on the adjectival reading. No alternative parse rescues (D). Difficulty modest for a top-tier examinee — the D/E pair is the intended discrimination point."
+}

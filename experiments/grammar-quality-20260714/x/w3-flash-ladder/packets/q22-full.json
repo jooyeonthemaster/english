@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go3_20150409_A-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "4월",
+    "origType": "주장",
+    "words": 122
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-obvious-to-gerund-after-verb",
+    "grammar-pointcode-span-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=b  (C):dec=l  (D):ANS=a  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 21,
+        "relPos": 0.03,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 82,
+        "relPos": 0.116,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 372,
+        "relPos": 0.525,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 432,
+        "relPos": 0.609,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 695,
+        "relPos": 0.98,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.98,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Some of the words we use most frequently are not expressive. If someone asked you what you thought of a movie or your dinner, you might respond: \"It was fine.\" Do you mean, 'fine' as in 'fine wine,' or 'fine art?' Or do you mean, 'fine' as in 'excellent, good, fine or poor?' 'Fine' can be used to express satisfaction or disappointment. There are hundreds of words that, like 'fine,' express very little meaning. They are fillers. Choose words that are more expressive, like 'great' or 'terrific' or 'wonderful' if you want to express pleasure, and words like 'adequate' or 'satisfactory' if your intent is to communicate that the movie or meal was okay, but nothing more. These words won't be misunderstood.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "use",
+        "isError": false,
+        "correction": "use",
+        "errorExpression": "use",
+        "surroundingText": "Some of the words we use most frequently are not expressive.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "If someone asked you what you thought of a movie or your dinner, you might respond: \"It was fine.\"",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "like",
+        "isError": false,
+        "correction": "like",
+        "errorExpression": "like",
+        "surroundingText": "There are hundreds of words that, like 'fine,' express very little meaning.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(D)",
+        "expression": "Choose",
+        "isError": true,
+        "correction": "Choose",
+        "errorExpression": "Choosing",
+        "surroundingText": "They are fillers. Choose words that are more expressive, like 'great' or 'terrific' or 'wonderful' if you want to express pleasure, and words like 'adequate' or 'satisfactory' if your intent is to communicate that the movie or meal was okay, but nothing more.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "misunderstood",
+        "isError": false,
+        "correction": "misunderstood",
+        "errorExpression": "misunderstood",
+        "surroundingText": "These words won't be misunderstood.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "use"
+      },
+      {
+        "label": "(B)",
+        "text": "what"
+      },
+      {
+        "label": "(C)",
+        "text": "like"
+      },
+      {
+        "label": "(D)",
+        "text": "Choosing"
+      },
+      {
+        "label": "(E)",
+        "text": "misunderstood"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "관계절 내에서 주어인 we 뒤에 목적어가 빠진 불완전한 문장 구조를 채워주는 어법상 올바른 정동사 'use'입니다.",
+      "(B)": "asked의 직접목적어 역할을 하는 명사절을 이끄는 의문대명사 'what'으로, 전치사 of의 목적어가 비어 있으므로 문법적으로 적절합니다.",
+      "(C)": "'~와 같은'이라는 의미의 전치사 'like'가 명사 'fine'을 수동적으로 가리키며 수식 어구를 이루므로 어법상 올바릅니다.",
+      "(E)": "주어인 These words(이 단어들)가 오해를 받는 관계이므로, 조동사 뒤에서 'be + 과거분사(p.p.)' 형태를 이루어 수동 의미를 자연스럽게 전달합니다."
+    },
+    "explanation": "주절의 문장 골격을 완성할 정동사가 필요한 자리입니다. if-절 등의 종속절을 제외한 주절에서 문장의 서술어 역할을 하는 진짜 동사가 존재해야 합니다. 'Choosing'으로 쓰게 되면 문장에 정동사가 없는 비문법적 상태가 됩니다. 따라서 명령문의 형태가 되어야 하므로 준동사가 아닌 동사원형 'Choose'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 정동사 vs 준동사 — 문장 전체를 이끌 주절의 정동사(명령문 형태) 필요 여부 판단",
+      "(B) 관계사/의문사 — 명사절을 이끌며 뒤에 불완전한 절을 취하는 의문대명사의 쓰임",
+      "(E) 능동태 vs 수동태 — 주어와 동사의 의미상 수동 관계를 나타내는 be + p.p. 형태 확인"
+    ],
+    "tags": [
+      "명령문",
+      "정동사와 준동사",
+      "수동태",
+      "의문사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Some of the words we __(A) use__ most frequently are not expressive. If someone asked you __(B) what__ you thought of a movie or your dinner, you might respond: \"It was fine.\" Do you mean, 'fine' as in 'fine wine,' or 'fine art?' Or do you mean, 'fine' as in 'excellent, good, fine or poor?' 'Fine' can be used to express satisfaction or disappointment. There are hundreds of words that, __(C) like__ 'fine,' express very little meaning. They are fillers. __(D) Choosing__ words that are more expressive, like 'great' or 'terrific' or 'wonderful' if you want to express pleasure, and words like 'adequate' or 'satisfactory' if your intent is to communicate that the movie or meal was okay, but nothing more. These words won't be __(E) misunderstood__."
+  }
+}

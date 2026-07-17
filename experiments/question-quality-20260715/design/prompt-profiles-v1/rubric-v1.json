@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 1,
+  "rubricId": "question-quality-rubric-v1",
+  "frozenFor": [
+    "GRAMMAR_ERROR",
+    "BLANK_INFERENCE"
+  ],
+  "purpose": "Blind item-level validity, exam-readiness, craft, beauty, and economic derivation for the prompt-profile experiment. Generator prose, gates, certificates, and ledgers are evidence only; they never self-certify a score.",
+  "itemStatus": {
+    "allowed": [
+      "PARSED",
+      "PARSE_FAILURE",
+      "TIMEOUT",
+      "NO_SAFE_SITE",
+      "PROVIDER_FAILURE",
+      "POSTPROCESS_REJECTION",
+      "VALIDATOR_REJECTION",
+      "BUDGET_NOT_ADMITTED",
+      "RATER_UNRESOLVED",
+      "ORCHESTRATION_ERROR"
+    ],
+    "scorableSurfaceStatus": "PARSED",
+    "forcedFailureStatuses": [
+      "PARSE_FAILURE",
+      "TIMEOUT",
+      "NO_SAFE_SITE",
+      "PROVIDER_FAILURE",
+      "POSTPROCESS_REJECTION",
+      "VALIDATOR_REJECTION",
+      "BUDGET_NOT_ADMITTED",
+      "RATER_UNRESOLVED",
+      "ORCHESTRATION_ERROR"
+    ],
+    "forcedFailureRule": "Every forced-failure row remains in its randomized intention-to-treat denominator with fatalFree=0, grade=F, aOrB=0, beautifulKiller=0, and no replacement or top-up.",
+    "costRule": "Charge every billed physical call, including failed, retry, repair, solver, fallback, and salvage calls. A randomized BUDGET_NOT_ADMITTED row has zero realized provider USD but is a protocol violation that makes confirmatory success impossible; it may never improve the economic conclusion. Missing or disputed billing for any started call makes the economic gate inconclusive/fail rather than being dropped or silently imputed. A pre-open whole-registry NO_GO creates no randomized row and no cost observation.",
+    "protocolRule": "Any BUDGET_NOT_ADMITTED or ORCHESTRATION_ERROR after S2 randomization invalidates confirmatory success for that type even though the affected row remains an ITT F."
+  },
+  "fieldVocabulary": {
+    "triState": [
+      "PASS",
+      "FAIL",
+      "UNRESOLVED"
+    ],
+    "triStateWithNA": [
+      "PASS",
+      "FAIL",
+      "UNRESOLVED",
+      "NOT_APPLICABLE"
+    ],
+    "difficulty": [
+      "BASIC",
+      "INTERMEDIATE",
+      "KILLER"
+    ],
+    "grade": [
+      "A",
+      "B",
+      "C",
+      "F"
+    ],
+    "solverOutcome": [
+      "ONE_ANSWER",
+      "NO_ANSWER",
+      "MULTIPLE_ANSWERS",
+      "UNRESOLVED"
+    ]
+  },
+  "blindRaterRecord": {
+    "requiredFields": [
+      "assignmentId",
+      "raterId",
+      "studentSurfaceHash",
+      "independentSolverOutcome",
+      "independentSelectedOption",
+      "independentReason",
+      "validity",
+      "readiness",
+      "typeSpecificCraft",
+      "elegance"
+    ],
+    "solveBeforeReveal": true,
+    "hiddenUntilIndependentSolve": [
+      "proposedKey",
+      "explanation"
+    ],
+    "alwaysHidden": [
+      "model",
+      "plan",
+      "profile",
+      "prompt",
+      "schema",
+      "cost",
+      "retryCount",
+      "gateStatus",
+      "siteCertificate",
+      "blankBlueprint",
+      "storedAnswer"
+    ],
+    "independentRaters": 2,
+    "adjudication": "Preserve both original records. Any disagreement on a fatal, readiness, craft, elegance, or beauty field goes to one fresh third adjudicator who sees the student surface and the two evidence statements but never generator identity or costs. If the adjudicator cannot resolve it, set itemStatus=RATER_UNRESOLVED. Majority averaging is forbidden. Grade and A/B are derived only after field adjudication; raters never override the formula."
+  },
+  "validity": {
+    "fatalFamilies": [
+      "MISSING_OR_CALL_FAILURE",
+      "SCHEMA_OR_PARSE",
+      "SOURCE_FIDELITY",
+      "ANSWER_CARDINALITY",
+      "KEY_OR_RENDER_SYNC",
+      "UNINTENDED_LANGUAGE_DEFECT",
+      "EXPLANATION_FACT_ERROR",
+      "GRAMMAR_SITE_BINDING",
+      "BLANK_OPTION_SEAM",
+      "BLANK_LEDGER_BINDING",
+      "POSTPROCESS_OR_VALIDATOR"
+    ],
+    "commonRequired": [
+      "sourceBinding",
+      "studentSurfaceWellFormed",
+      "answerCardinalityExactlyOne",
+      "proposedKeyCorrect",
+      "explanationFactAccuracy",
+      "renderScoringSynchronization"
+    ],
+    "commonDefinitions": {
+      "sourceBinding": "Every quoted/reused source span and passage transformation is attributable to the admitted source; no unsupported insertion changes the tested proposition.",
+      "studentSurfaceWellFormed": "The displayed directions, passage, stem, markings, and options form grammatical, coherent, answerable English/Korean as applicable.",
+      "answerCardinalityExactlyOne": "A competent solver applying the stated task has exactly one defensible answer; NO_ANSWER, MULTIPLE_ANSWERS, and UNRESOLVED fail.",
+      "proposedKeyCorrect": "The stored/proposed key equals the independently defensible answer.",
+      "explanationFactAccuracy": "Every grammatical, semantic, and passage-evidence claim needed to justify the key or reject an option is true; one material false claim fails.",
+      "renderScoringSynchronization": "The student-visible labels/order/text exactly match the scoring key and explanation references."
+    },
+    "grammarRequired": [
+      "displayedMarkerCountExactlyFive",
+      "markerSurfaceBinding",
+      "exactlyOneUngrammaticalMarker",
+      "allNonKeyMarkersGrammatical",
+      "correctionRestoresGrammarAndMeaning",
+      "siteCertificateBinding"
+    ],
+    "grammarDefinitions": {
+      "displayedMarkerCountExactlyFive": "The student-visible item has exactly five labeled grammar choices after deterministic spare-decoy trimming.",
+      "markerSurfaceBinding": "Every displayed marker is an exact, unambiguous occurrence in the rendered passage and is labeled once.",
+      "exactlyOneUngrammaticalMarker": "Exactly one displayed marker is ungrammatical under the intended standard written-English parse.",
+      "allNonKeyMarkersGrammatical": "Each of the other four displayed choices is grammatical in its actual sentence context, including legitimate alternative parses and ditransitive/passive constructions.",
+      "correctionRestoresGrammarAndMeaning": "The correction repairs the certified defect without introducing a new defect or materially changing the source proposition.",
+      "siteCertificateBinding": "For G3 only, exact sentence/expression/window, CORE-10 code, source form, displayed mutation, correction, and key marker all bind one-to-one after server recomputation; use NOT_APPLICABLE for G0/G1/G2."
+    },
+    "blankRequired": [
+      "displayedOptionCountExactlyFive",
+      "blankPlacementBinding",
+      "allFiveOptionSeamsValid",
+      "correctOptionPreservesFullScopeMeaning",
+      "allDistractorsDecisivelyWrong",
+      "blankBlueprintBinding"
+    ],
+    "blankDefinitions": {
+      "displayedOptionCountExactlyFive": "The student-visible item has exactly five uniquely labeled options synchronized with scoring.",
+      "blankPlacementBinding": "The rendered blank replaces exactly the admitted target occurrence and preserves its exact prefix/suffix boundary.",
+      "allFiveOptionSeamsValid": "Server reconstruction of prefix + each option + suffix is syntactically and semantically interpretable for all five options; a broken suffix/prefix seam fails.",
+      "correctOptionPreservesFullScopeMeaning": "The keyed completion preserves the passage's proposition, discourse relation, scope, stance, and polarity, not merely a local keyword.",
+      "allDistractorsDecisivelyWrong": "Every non-key option has at least one passage-grounded decisive flaw; an equally defensible distractor fails answer cardinality.",
+      "blankBlueprintBinding": "For B3 only, the answer axis, evidence anchors, slot contract, proposed option texts, labels, and primary error mechanisms match the rendered item after server recomputation; use NOT_APPLICABLE for B0/B1/B2."
+    },
+    "fatalFreeDerivation": "fatalFree=1 only for itemStatus=PARSED when every applicable common and type-specific validity field is PASS, every explicitly inapplicable profile-artifact field is NOT_APPLICABLE, and the adjudicated solver outcome is ONE_ANSWER. FAIL or UNRESOLVED anywhere yields fatalFree=0."
+  },
+  "readiness": {
+    "required": [
+      "naturalLanguage",
+      "difficultyCalibrated",
+      "directionsEconomicalAndComplete",
+      "explanationConciseComplete",
+      "evidenceGrounded",
+      "noCheapAnswerGiveaway"
+    ],
+    "definitions": {
+      "naturalLanguage": "Visible wording is idiomatic and school-exam appropriate, without model-like filler or malformed Korean/English.",
+      "difficultyCalibrated": "The cognitive demand matches the assigned difficulty without depending on obscurity, ambiguity, or a malformed surface.",
+      "directionsEconomicalAndComplete": "A student can act without hidden assumptions, redundant meta-instructions, or missing task constraints.",
+      "explanationConciseComplete": "The explanation states the decisive rule/evidence and why the key wins; it contains no irrelevant lecture or repeated boilerplate.",
+      "evidenceGrounded": "The decisive reasoning is traceable to sentence structure or passage evidence, not evaluator guesswork.",
+      "noCheapAnswerGiveaway": "Length, register, polarity, formatting, grammatical seam, or option-specific wording does not reveal the key without solving the intended construct."
+    }
+  },
+  "grammarCraft": {
+    "requiredFields": [
+      "structuralDecisionDecoyCount",
+      "distinctDecoyFrameCount",
+      "keyRequiresIntendedRule",
+      "terminologyAccurate",
+      "nonlocalEvidenceAppropriateToDifficulty",
+      "markerCompetitionBalanced"
+    ],
+    "perDecoyFields": [
+      "label",
+      "structuralDecision",
+      "structuralFrame",
+      "governingEvidence",
+      "cheapGiveawayPresent"
+    ],
+    "perDecoyCardinality": 4,
+    "counts": {
+      "structuralDecisionDecoyCount": {
+        "minimum": 0,
+        "maximum": 4,
+        "definition": "Number of non-key markers whose grammaticality requires a real structural decision rather than visual confirmation or trivia."
+      },
+      "distinctDecoyFrameCount": {
+        "minimum": 0,
+        "maximum": 4,
+        "definition": "Number of materially distinct structural frames represented among the four non-key markers; cosmetic variants count once."
+      }
+    },
+    "bThreshold": "All readiness fields PASS; structuralDecisionDecoyCount=4; distinctDecoyFrameCount>=3; keyRequiresIntendedRule, terminologyAccurate, nonlocalEvidenceAppropriateToDifficulty, and markerCompetitionBalanced are PASS.",
+    "aAdditionalThreshold": "B threshold plus every elegance field PASS."
+  },
+  "blankCraft": {
+    "requiredFields": [
+      "validSeamCount",
+      "realizedDistractorIntentCount",
+      "distinctPrimaryFatalFlawCount",
+      "allOptionsSameSlotCategory",
+      "registerLengthPolarityBalanced",
+      "answerRequiresAssignedEvidenceDepth",
+      "eachDistractorTemptationPassageGrounded"
+    ],
+    "perOptionFields": [
+      "label",
+      "seamValid",
+      "slotCategory",
+      "register",
+      "polarity",
+      "lengthTokens"
+    ],
+    "perDistractorFields": [
+      "label",
+      "intentRealized",
+      "temptingPassageGroundedReason",
+      "primaryDecisiveFlaw",
+      "flawFamily",
+      "secondCheapGiveawayPresent",
+      "exclusionEvidence"
+    ],
+    "perOptionCardinality": 5,
+    "perDistractorCardinality": 4,
+    "counts": {
+      "validSeamCount": {
+        "minimum": 0,
+        "maximum": 5,
+        "definition": "Number of options that survive server prefix+option+suffix reconstruction."
+      },
+      "realizedDistractorIntentCount": {
+        "minimum": 0,
+        "maximum": 4,
+        "definition": "Number of wrong options whose visible text realizes its declared or independently reconstructed tempting misconception."
+      },
+      "distinctPrimaryFatalFlawCount": {
+        "minimum": 0,
+        "maximum": 4,
+        "definition": "Number of wrong options with a mutually distinguishable primary decisive flaw; multiple flaws in one option do not inflate the count."
+      }
+    },
+    "bThreshold": "All readiness fields PASS; validSeamCount=5; realizedDistractorIntentCount=4; distinctPrimaryFatalFlawCount=4; allOptionsSameSlotCategory, registerLengthPolarityBalanced, answerRequiresAssignedEvidenceDepth, and eachDistractorTemptationPassageGrounded are PASS.",
+    "aAdditionalThreshold": "B threshold plus every elegance field PASS."
+  },
+  "elegance": {
+    "required": [
+      "minimalArbitrariness",
+      "decisiveEvidenceEconomy",
+      "distractorsFailForIntendedReasonOnly",
+      "postExplanationInevitability"
+    ],
+    "definitions": {
+      "minimalArbitrariness": "The item tests a principled distinction rather than an idiosyncratic preference or disputed usage.",
+      "decisiveEvidenceEconomy": "All information needed to solve is present and purposeful; no decorative complexity substitutes for depth.",
+      "distractorsFailForIntendedReasonOnly": "Each distractor remains attractive until its intended decisive flaw is found and has no second cheap giveaway.",
+      "postExplanationInevitability": "After a concise correct explanation, the key feels compelled while the distractors still look professionally designed."
+    }
+  },
+  "beautifulKiller": {
+    "applicability": "difficulty=KILLER and fatalFree=1",
+    "required": [
+      "rightStructureOrEvidenceSynthesisRequired",
+      "allFourDistractorsRecognizablyTempting",
+      "oneDecisiveTeachableFlawPerDistractorNoCheapSecond",
+      "postExplanationInevitable"
+    ],
+    "definitions": {
+      "rightStructureOrEvidenceSynthesisRequired": "Grammar requires the intended nonlocal structural dependency; blank requires synthesis of the assigned passage evidence rather than local matching.",
+      "allFourDistractorsRecognizablyTempting": "Every non-key choice is attractive for a specific construct-relevant, passage/sentence-grounded reason before the decisive discriminator is applied.",
+      "oneDecisiveTeachableFlawPerDistractorNoCheapSecond": "Each distractor loses on one teachable decisive distinction and has no independent seam, wording, polarity, length, or nonsense giveaway.",
+      "postExplanationInevitable": "A concise factually correct explanation makes the key compelled without making the distractors appear careless."
+    },
+    "derivation": "beautifulKiller=1 only when applicable, all four fields are PASS after adjudication, and final grade=A. For BASIC/INTERMEDIATE set NOT_APPLICABLE and beautifulKiller is excluded from beauty-rate denominators. For invalid or unresolved KILLER rows, beautifulKiller=0."
+  },
+  "gradeDerivation": {
+    "F": "fatalFree=0.",
+    "C": "fatalFree=1 but one or more readiness fields fail/unresolve, or the applicable type-specific B threshold is not met.",
+    "B": "fatalFree=1, every readiness field PASS, the applicable type-specific B threshold is met, and at least one elegance field is not PASS.",
+    "A": "fatalFree=1, every readiness field PASS, the applicable type-specific B threshold is met, and every elegance field PASS.",
+    "aOrB": "1 exactly when final grade is A or B; otherwise 0."
+  },
+  "primaryDerivations": {
+    "fatalFreeRate": "sum(fatalFree) / all randomized ITT assignments in the locked cell.",
+    "aOrBRate": "sum(aOrB) / all randomized ITT assignments in the locked cell.",
+    "costPerAOrBUsd": "sum(charged provider USD over all randomized ITT assignments) / sum(aOrB). If sum(aOrB)=0, the endpoint is non-estimable and the economic gate fails.",
+    "costRatio": "challenger costPerAOrBUsd / control costPerAOrBUsd. If either arm has zero A/B items, or any started-call billing is missing/disputed, the economic gate fails; never simplify finite/infinity to zero.",
+    "clusterOutcome": "Within each type/profile/passage cluster, average every sealed plan-by-difficulty ITT cell. Inference uses paired challenger-minus-control passage-cluster differences; retries, candidates, and rater rows are not independent observations.",
+    "newFatalFamily": "A frozen fatal-family code observed at least once in the challenger and zero times in that type's matched control set.",
+    "unitOfInference": "Passage cluster. Candidate rows, physical calls, retries, and rater records are never independent experimental units."
+  },
+  "lockedPrimaryFamily": {
+    "familywiseAlpha": 0.05,
+    "method": "Holm step-down across all six predeclared one-sided p-values; no endpoint, plan, or difficulty substitution after unblinding. An unrun/NO_ARM type contributes p=1 for each of its three frozen tests.",
+    "intervalAlgorithm": "Use a paired passage-cluster bootstrap with seed 20260715 and 100000 replicates, resampling whole passage clusters within type and recomputing arm totals. Any cost-ratio replicate with zero A/B in either arm is +infinity. Report ordinary one-sided 95% bounds descriptively, but adjusted rejection governs success.",
+    "pValueAlgorithm": "For fatal-free and A/B endpoints, p=(1+number of bootstrap challenger-minus-control effects <= the frozen null margin)/(100000+1), with margins -0.05 and 0 respectively. For cost, p=(1+number of bootstrap challenger/control cost-per-A/B ratios >=1.25)/(100000+1); a zero-A/B or missing-billing replicate counts in that numerator. Apply Holm to these six raw p-values. Equality never passes a strict margin.",
+    "tests": [
+      {
+        "id": "G_FATAL_NI",
+        "type": "GRAMMAR_ERROR",
+        "endpoint": "fatalFreeRate",
+        "alternative": "challenger-control > -0.05",
+        "direction": "one-sided"
+      },
+      {
+        "id": "B_FATAL_NI",
+        "type": "BLANK_INFERENCE",
+        "endpoint": "fatalFreeRate",
+        "alternative": "challenger-control > -0.05",
+        "direction": "one-sided"
+      },
+      {
+        "id": "G_AB_SUP",
+        "type": "GRAMMAR_ERROR",
+        "endpoint": "aOrBRate",
+        "alternative": "challenger-control > 0",
+        "direction": "one-sided"
+      },
+      {
+        "id": "B_AB_SUP",
+        "type": "BLANK_INFERENCE",
+        "endpoint": "aOrBRate",
+        "alternative": "challenger-control > 0",
+        "direction": "one-sided"
+      },
+      {
+        "id": "G_COST_NI",
+        "type": "GRAMMAR_ERROR",
+        "endpoint": "costPerAOrBUsdRatio",
+        "alternative": "challenger/control < 1.25",
+        "direction": "one-sided"
+      },
+      {
+        "id": "B_COST_NI",
+        "type": "BLANK_INFERENCE",
+        "endpoint": "costPerAOrBUsdRatio",
+        "alternative": "challenger/control < 1.25",
+        "direction": "one-sided"
+      }
+    ],
+    "typePromotionGateIds": {
+      "GRAMMAR_ERROR": [
+        "G_FATAL_NI",
+        "G_AB_SUP",
+        "G_COST_NI"
+      ],
+      "BLANK_INFERENCE": [
+        "B_FATAL_NI",
+        "B_AB_SUP",
+        "B_COST_NI"
+      ]
+    },
+    "successRule": "A type advances only if its three typePromotionGateIds each reject after six-test Holm adjustment, the ordinary one-sided fatal-free lower bound is strictly greater than -0.05, the ordinary one-sided cost-ratio upper bound is strictly less than 1.25, and no new fatal family appears. The other type may remain NO_ARM with p=1. Beauty and interaction endpoints cannot rescue a failed locked primary."
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go1_20221123-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 153
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-error-not-mutated",
+    "grammar-error-not-mutated",
+    "grammar-answer-point-not-core"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=e  (C):dec=b  (D):ANS=j  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 68,
+        "relPos": 0.074,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 339,
+        "relPos": 0.371,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 450,
+        "relPos": 0.493,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 676,
+        "relPos": 0.74,
+        "sentenceIndex": 8,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 822,
+        "relPos": 0.9,
+        "sentenceIndex": 10,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.9,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Our language helps to reveal our deeper assumptions. Think of these revealing phrases: When we accomplish something important, we say it took \"blood, sweat, and tears.\" We say important achievements are \"hard-earned.\" We recommend a \"hard day's work\" when \"day's work\" would be enough. When we talk of \"easy money,\" we are implying it was obtained through illegal or questionable means. We use the phrase \"That's easy for you to say\" as a criticism, usually when we are seeking to invalidate someone's opinion. It's like we all automatically accept that the \"right\" way is, inevitably, the harder one. In my experience this is hardly ever questioned. What would happen if you do challenge this sacred cow? We don't even pause to consider that something important and valuable could be made easy. What if the biggest thing keeping us from doing what matters is the false assumption that it has to take huge effort?",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "revealing",
+        "isError": false,
+        "correction": "revealing",
+        "errorExpression": "revealing",
+        "surroundingText": "Think of these revealing phrases: When we accomplish something important",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "obtained",
+        "isError": false,
+        "correction": "obtained",
+        "errorExpression": "obtained",
+        "surroundingText": "When we talk of \"easy money,\" we are implying it was obtained through illegal or questionable means.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "usually when we are",
+        "isError": false,
+        "correction": "usually when we are",
+        "errorExpression": "usually when we are",
+        "surroundingText": "We use the phrase \"That's easy for you to say\" as a criticism, usually when we are seeking to invalidate someone's opinion.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "do",
+        "isError": true,
+        "correction": "do",
+        "errorExpression": "do",
+        "surroundingText": "What would happen if you do challenge this sacred cow?",
+        "pointCode": "j"
+      },
+      {
+        "label": "(E)",
+        "expression": "keeping",
+        "isError": false,
+        "correction": "keeping",
+        "errorExpression": "keeping",
+        "surroundingText": "What if the biggest thing keeping us from doing what matters is the false assumption that it has to take huge effort?",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "revealing"
+      },
+      {
+        "label": "(B)",
+        "text": "obtained"
+      },
+      {
+        "label": "(C)",
+        "text": "usually when we are"
+      },
+      {
+        "label": "(D)",
+        "text": "do"
+      },
+      {
+        "label": "(E)",
+        "text": "keeping"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "명사 phrases를 수식하는 현재분사로, '드러내는'이라는 능동의 의미가 적절합니다.",
+      "(B)": "주어 it(easy money)가 얻어지는 대상이므로 수동태인 was obtained가 적절합니다.",
+      "(C)": "when 접속사 뒤에 주어 원동사가 오는 바른 형태입니다.",
+      "(E)": "명사 the biggest thing을 후치 수식하는 현재분사로, '우리를 ~하지 못하게 막는'이라는 능동의 의미로 올바르게 사용되었습니다."
+    },
+    "explanation": "주절의 동사가 'would happen'으로 조동사의 과거형이 쓰여 현재 사실의 반대를 가정하는 가정법 과거 구문입니다. 따라서 조건절 의 동사도 과거형이 되어야 합니다. 본문의 강조의 조동사 'do'를 'did'로 고쳐야 합니다. (What would happen if you did challenge this sacred cow?)",
+    "keyPoints": [
+      "(D) 가정법 과거 - 주절과 조건절의 시제 일치",
+      "(E) 현재분사의 후치 수식",
+      "(A) 현재분사의 전치 수식"
+    ],
+    "tags": [
+      "어법",
+      "수능영어",
+      "가정법",
+      "분사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Our language helps to reveal our deeper assumptions. Think of these __(A) revealing__ phrases: When we accomplish something important, we say it took \"blood, sweat, and tears.\" We say important achievements are \"hard-earned.\" We recommend a \"hard day's work\" when \"day's work\" would be enough. When we talk of \"easy money,\" we are implying it was __(B) obtained__ through illegal or questionable means. We use the phrase \"That's easy for you to say\" as a criticism, __(C) usually when we are__ seeking to invalidate someone's opinion. It's like we all automatically accept that the \"right\" way is, inevitably, the harder one. In my experience this is hardly ever questioned. What would happen if you __(D) do__ challenge this sacred cow? We don't even pause to consider that something important and valuable could be made easy. What if the biggest thing __(E) keeping__ us from doing what matters is the false assumption that it has to take huge effort?"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20220324-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 134
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-shallow-participle-adjective-answer",
+    "grammar-shallow-nearby-passive-decoy",
+    "grammar-explanation-lint",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=e  (C):dec=e  (D):dec=k  (E):ANS=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 39,
+        "relPos": 0.057,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 169,
+        "relPos": 0.247,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 291,
+        "relPos": 0.425,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 486,
+        "relPos": 0.709,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 555,
+        "relPos": 0.81,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.81,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been proven to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you to do another task and another. By the end of the day, that one task completed will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "would",
+        "isError": false,
+        "errorExpression": "would",
+        "surroundingText": "When I was in the army, my instructors would show up in my barracks room",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "were required",
+        "isError": false,
+        "errorExpression": "were required",
+        "surroundingText": "It was a simple task, but every morning we were required to make our bed to perfection.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "has been proven",
+        "isError": false,
+        "errorExpression": "has been proven",
+        "surroundingText": "but the wisdom of this simple act has been proven to me many times over.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "to do",
+        "isError": false,
+        "errorExpression": "to do",
+        "surroundingText": "It will give you a small sense of pride and it will encourage you to do another task and another.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "completed",
+        "isError": true,
+        "correction": "completed",
+        "errorExpression": "completing",
+        "surroundingText": "By the end of the day, that one task completed will have turned into many tasks completed.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "would"
+      },
+      {
+        "label": "(B)",
+        "text": "were required"
+      },
+      {
+        "label": "(C)",
+        "text": "has been proven"
+      },
+      {
+        "label": "(D)",
+        "text": "to do"
+      },
+      {
+        "label": "(E)",
+        "text": "completing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "과거의 불규칙한 습관이나 상태를 나타내어 '~하곤 했다'라는 의미를 전달하는 조동사 would는 어법상 적절합니다.",
+      "(B)": "주어 we가 요구하는 주체가 아니라 요구를 받는 대상이며, 문맥상 군대에서의 의무를 나타내므로 수동태인 were required는 적절합니다.",
+      "(C)": "이 단순한 행위의 지혜(the wisdom of this simple act)가 시간이 흐르며 '증명되어 온' 것이므로, 현재완료 수동태인 has been proven은 올바른 표현입니다.",
+      "(D)": "동사 encourage는 목적격보어로 to부정사를 취하는 동사이므로, encourage you 뒤에 to do를 쓴 것은 구조적으로 알맞습니다."
+    },
+    "explanation": "(E) \"completing\"는 어법상 틀린 표현이며 \"completed\"로 고쳐야 한다. that one task를 뒤에서 수식하는 분사의 형태를 묻는 문제입니다. 단 하나의 과업(that one task)은 '완성하는' 능동의 주체가 아니라 '완성되는' 수동의 대상이므로, 수동의 의미를 나타내는 과거분사 completed가 쓰이는 것이 올바릅니다. 따라서 능동의 의미를 지니는 복습 및 본문completing은 어법상 적절하지 않으므로 completed로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 분사능수동 — 수식받는 명사 task와의 관계가 수동이므로 과거분사가 적합",
+      "(B) 능수동태 — 주어 we가 지시를 받는 수동 관계이므로 be required to-v가 적합",
+      "(D) to-v/v-ing — 5형식 동사 encourage의 목적격 보어로서 to부정사가 적합"
+    ],
+    "tags": [
+      "수능어법",
+      "분사의태",
+      "5형식",
+      "수동태"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "When I was in the army, my instructors __(A) would__ show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we __(B) were required__ to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act __(C) has been proven__ to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you __(D) to do__ another task and another. By the end of the day, that one task __(E) completing__ will have turned into many tasks completed. If you can't do little things right, you will never do the big things right."
+  }
+}

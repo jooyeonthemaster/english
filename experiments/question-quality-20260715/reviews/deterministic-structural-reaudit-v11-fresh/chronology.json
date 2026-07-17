@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "chronologyClaim": "The runner verified all pre-existing corpus/oracle hashes before dynamically importing the production validator.",
+  "sealChronology": "corpus-and-oracle-written-and-hashed-before-production-validator-execution",
+  "steps": [
+    {
+      "name": "evaluation-process-started",
+      "at": "2026-07-15T06:01:25.657Z"
+    },
+    {
+      "name": "sealed-input-hashes-verified",
+      "at": "2026-07-15T06:01:25.666Z"
+    },
+    {
+      "name": "production-validator-dynamically-imported",
+      "at": "2026-07-15T06:01:26.268Z"
+    },
+    {
+      "name": "evaluation-completed",
+      "at": "2026-07-15T06:01:26.445Z"
+    }
+  ],
+  "sealChecks": {
+    "corpus": true,
+    "oracle": true,
+    "builder": true
+  }
+}

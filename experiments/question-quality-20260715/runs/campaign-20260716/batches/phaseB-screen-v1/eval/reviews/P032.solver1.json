@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "less unnerving ... than + 동명사 'seeing'. 주어 'Recording an interview'(동명사구)와 형태 대응, than 뒤 동명사의 의미상 주어는 문맥의 'an interviewee'로 회복되어 정문. 'being seen' 수동 유혹이 있으나 'seeing someone scribbling'(지각동사 + 목적어 + 현재분사)은 인터뷰이 관점에서 자연스러움 — 매력적 오답이지만 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "동명사구 주어 'using a recorder'는 단수 취급. 'has some disadvantages and is not always...'로 정동사 병렬 성립. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가주어 It + 진주어 to부정사 구문 'It is often more efficient to develop...'. 괄호 삽입 '(using a recorder as backup if you wish)'가 'the technique ... of selective note-taking' 연결을 흐리지만 구조상 문제 없음. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong",
+      "reason": "'but trying to get into the habit of editing out ... as the interview proceeds.'에서 but 등위절에 정동사가 없다. 'proceeds'는 as 종속절 동사일 뿐. 대안 해석 전수 점검: (i) 'to take down'과 병렬이면 '(to) try'여야 함, (ii) 분사구문이면 걸릴 주절이 뒤에 없음(마침표 종결), (iii) 동명사 주어라면 술어 부재. 명령문 'but try to get into the habit...'이 되어야 정문. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'much easier and quicker' — 비교급 강조 부사 much는 적법. 'It makes + 목적어 + 목적격보어(비교급 형용사)' 구조도 성립. 정문."
+    }
+  ],
+  "note": "정답은 (D) 하나로 수렴. 최상위권 실전 관점에서 (A)가 가장 매력적인 오답 — 의미상 주어(기자 vs 인터뷰이) 불일치를 근거로 'being seen'을 기대하게 만드는 유혹이 있으나, than 뒤 동명사의 의미상 주어가 'to an interviewee'에서 회복되므로 정문으로 확정 가능. (C)의 괄호 삽입도 2차 유혹이지만 구조 확인으로 해소. (D)의 정동사 부재는 어떤 축약 관계절/분사구문/도치 해석으로도 구제 불가. 단일 정답으로 깨끗한 문항."
+}

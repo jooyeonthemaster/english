@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-live-closure-v4",
+  "algorithm": "TYPESCRIPT_AST_TRANSITIVE_IMPORTS_PLUS_DECLARED_RUNTIME_DATA_V1",
+  "entrypoints": [
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-child.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/operator-wrapper.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts"
+  ],
+  "files": [
+    {
+      "path": "experiments/question-quality-20260715/budget-ledger.json",
+      "kind": "mutable_runtime_data_precondition",
+      "bytes": 509,
+      "sha256": "9a05a64ed97c4746b7fe56933374d2179178885bd3e1db93f830f938bafdea1e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+      "kind": "source",
+      "bytes": 3133,
+      "sha256": "ea25a0c4eb89293b7dfa3913167094486c00356d092b968ae87870c16de65bf4"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-child.mts",
+      "kind": "source",
+      "bytes": 1717,
+      "sha256": "d2af57906656c1e3b1cecaf0eebc69f00f940a9f8b16f2623aab430945eaa059"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+      "kind": "source",
+      "bytes": 2432,
+      "sha256": "559d40a4503014194b0d86df3d906ec031f82b91127d231e06234637ec0f16a5"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/operator-wrapper.mts",
+      "kind": "source",
+      "bytes": 4346,
+      "sha256": "3f351f84b8c416106023d7342871ec0f193bc05c081bf12996c65518f56fb5be"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/price-snapshot-core.ts",
+      "kind": "source",
+      "bytes": 9792,
+      "sha256": "43b164e73fc2a47653eaafadb4a752fddd45a4ddd599709969b2aa136308f15e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/private/exact-wire-v4.private.json",
+      "kind": "immutable_runtime_data",
+      "bytes": 127331,
+      "sha256": "b81e59a209e3166bc74cd18181669d5fb87a883480dcbd33d061ddcdac5df712"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+      "kind": "source",
+      "bytes": 24604,
+      "sha256": "174a92c5be8658d766db444a93fdce3bf5cbd74ec2048e5cee4b61a92df0119a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/protocol-core.ts",
+      "kind": "source",
+      "bytes": 27840,
+      "sha256": "81ce9d2e9932b186b655d0ad427f805464f17e2a4d359970862df85d795e3df7"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/protocol-v4.json",
+      "kind": "immutable_runtime_data",
+      "bytes": 7517,
+      "sha256": "18d7eb7c60fdfc1d4b49fb868ef887d64e62db6d217abf8eaec0fbbeab8ffec9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/response-parser.ts",
+      "kind": "source",
+      "bytes": 8660,
+      "sha256": "f27cf068dfbc0b437e57fadcffb13d84f7894275a31260992ba2a5b84342fa85"
+    }
+  ],
+  "exactFileSetAndBytesSha256": "b557909aedf6bc7910750a3bf4da77755ee16587f86e33915b9d5d7268efe6ef",
+  "runtimeInterfaces": {
+    "dynamicPrivateAttestedJsonReads": 1,
+    "dynamicPrivateAttestedJsonContract": "price snapshot must be under v4/private, strict schema-v4, self-content-hashed, and <=15 minutes old",
+    "secretSourceReads": 1,
+    "secretSourceContract": ".env.local streamed by operator wrapper only after authorization; only OPENROUTER_API_KEY assignment retained; bytes/value/length/hash never committed",
+    "privateOutputContract": "exclusive v4/private run directory; response and append-only journal never public"
+  },
+  "completeness": {
+    "localStaticImportsIncluded": true,
+    "localExportsIncluded": true,
+    "literalDynamicImportsIncluded": true,
+    "literalRequireIncluded": true,
+    "nonliteralDynamicImportsRejected": true,
+    "immutableRuntimeDataIncludedWithExactBytes": true,
+    "mutableResearchLedgerIncludedWithExactPreconditionBytes": true,
+    "secretAndDynamicPrivateInputsExplicitlyClassified": true,
+    "minimumCountAcceptanceUsed": false,
+    "testSupportExcluded": true
+  },
+  "closureSemanticSha256": "02610b438f06b6a7d8acec06ae95b7877d47fd91fc4fcef90c82c86d9ecf1d7d"
+}

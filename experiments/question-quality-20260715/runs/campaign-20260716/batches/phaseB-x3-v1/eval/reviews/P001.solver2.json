@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 seam: 성립. 주어 'Appreciation of differences'에 3인칭 단수 동사 'undermines'가 'creates'와 병렬 결합되어 통사적으로 완전한 정문. 논리: 불성립. 지문 전체의 인과 사슬(감정 이해 → 정확한 감정 표현 → 명확한 소통 → 협력)은 일관되게 긍정적 귀결을 구축하는데, '조직 전체의 결속을 약화시킨다'는 이 사슬의 극성(polarity)을 정반대로 뒤집는다. 'Appreciation of differences creates an arena for open communication and [undermines cohesion]'은 등위접속으로 묶인 두 술어가 상호 모순되는 화용적 파탄을 일으킨다. 형식적으로: 지문의 전제 집합 P ⊢ 협력·소통 증진인데 ①은 ¬(협력·소통 증진)을 함의하므로 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 seam: 성립. 'encourages individuals to avoid ...'는 'creates'와 병렬인 정문. 논리: 불성립. 지문은 갈등 상황에서 구성원이 '자기 감정을 표현하고(express how he feels about the problem) 왜 그렇게 느끼는지 말한다'고 명시한다 — 즉 갈등에 대한 직접적·개방적 개입을 옹호한다. '직접 대면(confrontation)을 회피하도록 장려한다'는 바로 앞 등위항 'open communication'과도, 지문의 'express ... accurately'와도 충돌한다. 회피(avoidance)는 개방 소통의 반대 전략이므로 등위구조 내 의미 정합성이 깨진다. 갈등 관련 어휘를 쓴 그럴듯한 미끼."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 seam: 성립. 'creates ... and fosters ... and enhances ...'로 3인칭 단수 술어들이 주어 'Appreciation of differences'에 올바르게 일치하며, 'A and B and C' 형태의 다중 등위도 규범적으로 허용되는 정문. 논리: 성립. 지문의 인과 사슬 — (i) 감정 이해 능력 → 정확한 감정 표현 → 동료 간 명확한 소통, (ii) 자기 및 타인의 필요 수용(=협력), (iii) 갈등 상황에서의 관점 취하기(perspective-taking) — 의 자연스러운 종착점이 '생산적 분쟁 해결(productive ways of settling disputes)'과 '집단 수행 향상(collective performance)'이다. 갈등 예시로 전개된 문단을 결론 문장에서 일반화하는 담화 구조와 정확히 부합. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 seam: 성립. 'helps overcome ...'은 'creates'와 병렬인 정문(help + 원형부정사 허용). 논리: 불성립. 'a diverse vocabulary'는 지문 첫 문장의 'a diverse emotion vocabulary'를 표면적으로 재활용한 어휘 미끼다. 지문에서 다양한 감정 어휘는 감정 이해 능력의 '구성 요소(정의부)'이지, 글이 도달하려는 '귀결'이 아니다. 결론 문장의 빈칸은 집단 맥락에서의 귀결(소통·협력·갈등 해결)을 요구하는데 ④는 개인의 어휘 습득이라는 무관한 층위로 후퇴한다. 담화 기능(정의 vs 귀결)의 혼동으로 논리 부적합."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 seam: 성립. 'forces members to sacrifice ...'는 'creates'와 병렬인 정문. 논리: 불성립. 지문은 'accommodate their own needs as well as the needs of others'라고 하여 자기 필요와 타인 필요의 '동시 충족'을 협력의 정의로 제시한다. '자기 의견을 희생하고 집단 규범에 순응하도록 강요한다'는 as well as 구문이 보장하는 자기 필요 충족 조항과 정면 모순이며, 'open communication'의 취지(다양한 의견의 개진)와도 충돌한다. 형식적으로: 지문 ⊢ (자기필요 ∧ 타인필요)인데 ⑤는 ¬자기필요를 함의하므로 모순."
+    }
+  ],
+  "note": "블라인드 독립 풀이(문법가/논리학자 렌즈). 다섯 선지 모두 3인칭 단수 동사로 시작해 'creates'와의 병렬 등위 seam이 전 선지에서 문법적으로 성립하므로, 판별은 순수하게 담화 논리로 귀결된다. 지문은 '감정 이해 능력 → 정확한 표현 → 명확한 소통 → 협력 → 갈등 상황에서의 관점 취하기'라는 단일 방향의 긍정적 인과 사슬이고, 마지막 문장은 이를 일반화하는 결론부다. ①(결속 약화)·⑤(자기 의견 희생)는 극성 반전 모순, ②(대면 회피)는 open communication과 등위 내 충돌, ④(어휘 습득)는 정의부 어휘를 귀결부로 오배치한 층위 오류. ③만이 갈등 예시(dispute settlement)와 집단 맥락(collective performance)을 모두 회수한다. 복수 정답 여지 없음."
+}

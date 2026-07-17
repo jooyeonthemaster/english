@@ -1,0 +1,35 @@
+{
+  "pid": "P045",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'as they entered the lively shopping center': enter is transitive, taking a bare direct object (no preposition). Simple past matches the surrounding narrative tense ('Garcia replied as they entered'). Formally well-formed."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'these would look great on my brother': look is a copular (linking) verb requiring an adjectival complement; 'great' is an adjective, and 'look + ADJ + on + person' is the standard pattern for clothing. Well-formed."
+    },
+    {
+      "label": "C",
+      "verdict": "incorrect",
+      "reason": "'His confidence was quickly changed to nervousness when he thought of...': change here is ergative/inchoative, denoting a spontaneous internal state transition (confidence -> nervousness), so the intransitive active is required: 'His confidence quickly changed to nervousness.' The passive 'was changed' asserts an external agent acting on the confidence, but the context supplies only a cause in a subordinate when-clause (his own thought), not a recoverable by-agent. The transitive-passive rescue ('The news changed his mood' type) fails because the causer is realized as a temporal adverbial, not a suppressed agent, and 'confidence was changed to nervousness' is not a licensed collocation. This is the ungrammatical item."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'When the band was finished, the audience loudly cheered': designed to look like a suspect passive, but a rescue analysis succeeds — 'finished' is a standard adjectival participle meaning 'having completed (an activity)' with animate/collective subjects ('Are you finished?', 'When the speaker was finished'). Equivalent to 'was done (playing)'. Well-formed; not defensible as the error."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'the best performance I've ever seen': superlative antecedent + contact relative clause + present perfect with 'ever'; 'seen' is the correct past participle after have. Canonical construction, well-formed."
+    }
+  ],
+  "note": "Only (C) fails under formal analysis. (D) 'was finished' is the intended trap contrasting with (C): superficially both look like passives of ergative-ish verbs, but 'finished' has an entrenched adjectival reading with human/collective subjects, while 'was changed to nervousness' has no adjectival or agentive rescue in this context. (A), (B), (E) are unambiguously correct. Answer narrows uniquely to (C); no multiple-defensible issue."
+}

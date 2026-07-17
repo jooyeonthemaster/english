@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-15T15:50:08+09:00",
+  "repositoryHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "notes": "The working tree was intentionally dirty. These hashes bind only the exact source snapshot reviewed. No provider/API call, network request, database connection, or secret access was used.",
+  "sources": [
+    {
+      "path": "experiments/question-quality-20260715/design/production-assignment-budget-v1/README.md",
+      "bytes": 10281,
+      "sha256": "3f4ffe350d4f2c57d0fa1073c31a655098b95b35afe84eba2c8d7b0207f9e193"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/production-assignment-budget-v1/STATE-MACHINE.md",
+      "bytes": 1413,
+      "sha256": "8af7176b1f2e4b118384853ae184b93175b9742ba9a721fd2a36c55da481c5ad"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/production-assignment-budget-v1/CALLSITE-INVENTORY.md",
+      "bytes": 2764,
+      "sha256": "a1353f742c255e6257681056975b45139166f4442da211916ba0583616868792"
+    },
+    {
+      "path": "src/lib/atlas-fetch-scope-coordinator.ts",
+      "bytes": 588,
+      "sha256": "fd58c3e226279045f9f53ee56d320cfb2a0739387ebe1abfbc1d8afa750ca874"
+    },
+    {
+      "path": "src/lib/atlas-research-fetch-boundary.ts",
+      "bytes": 50778,
+      "sha256": "7e20acd2bd45a7e8141b66c1a58c347e6bf2e24cfe0b69710bd2327db7d84a7d"
+    },
+    {
+      "path": "src/lib/atlas-production-assignment-fetch-boundary.ts",
+      "bytes": 25368,
+      "sha256": "aa042ea9181f6b5eb256bd4361738cc948c1bc41f27866b75bb9f2728a6b36d8"
+    },
+    {
+      "path": "src/lib/question-generation-assignment-budget-policy.ts",
+      "bytes": 20830,
+      "sha256": "2d0674e224fa182b0d16bfa8b8443b65987763c3022340bb9e27db56934dda85"
+    },
+    {
+      "path": "src/lib/question-generation-assignment-budget.ts",
+      "bytes": 18719,
+      "sha256": "7effc7b7fc954f5b84936a32fa28302eec08927e9a255cee9f6d5fec20ef4f48"
+    },
+    {
+      "path": "src/lib/atlas-ai.ts",
+      "bytes": 16970,
+      "sha256": "bcab10a3d05bf5271f956e6c1004fdf832957dd53ec4c4d1d9a248a37f4d3f57"
+    },
+    {
+      "path": "src/lib/question-generation-llm.ts",
+      "bytes": 42254,
+      "sha256": "90776f0304ef9fddcbb60a92563904f8ce3213b26036d8357b3eeedb7ccf5c46"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+      "bytes": 1584,
+      "sha256": "46b6151bbde80a7b149be5f1f6d266cb640f5ad8366901072e237bca22e7ae8b"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+      "bytes": 37049,
+      "sha256": "97fb3a3d929f834267089bedaa84567a7496175e963ed31888b0e1f4170e81d6"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts",
+      "bytes": 6607,
+      "sha256": "c1eda5cc888700c432296bfd71d11e4d7ba090e906f89b0cedaf001ad19f96df"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "bytes": 20991,
+      "sha256": "648692ad0708d941d024b67d15c6d510db0f61f2fc9674f0f98316b4f63a16b9"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "bytes": 106853,
+      "sha256": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2"
+    },
+    {
+      "path": "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+      "bytes": 27668,
+      "sha256": "b8c8181691f897bfc7cc782d50efe194c2bbda91aded20a81c3ba4ed548a7b4e"
+    },
+    {
+      "path": "src/app/api/workbench/ai-jobs/question-generation/route.ts",
+      "bytes": 6343,
+      "sha256": "49a407b71ad40957cff009953153ccd368705c1afad6d4e1ba01657272097f76"
+    },
+    {
+      "path": "src/trigger/workbench-question-generation.ts",
+      "bytes": 18297,
+      "sha256": "cfc44b01c039c095759ffa1204f8e77b9cf5d62e6b1386ba9ff8d2a6beaa66be"
+    },
+    {
+      "path": "src/lib/workbench-ai-job-stale-cleanup.ts",
+      "bytes": 7715,
+      "sha256": "2940f46a81d4b9db5a36745cf9861d6fcbeee1af01a04eae89a427b33c632272"
+    },
+    {
+      "path": "src/lib/concurrency-config.ts",
+      "bytes": 8639,
+      "sha256": "8ccc1df4149d1a0bb4ddfcff63d1f4c78663827c56481d8a942341d91dc25d15"
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "bytes": 212011,
+      "sha256": "1c008d23badbb993d1e225e2f1416d1624a1e379d56542d7b27e28d04c649785"
+    },
+    {
+      "path": "prisma/migrations/20260715000000_add_question_generation_call_budgets/migration.sql",
+      "bytes": 3666,
+      "sha256": "bf094af461377adc1bc64d9490fa6bf02df1efd46466a1783ea18e26d7c189bb"
+    },
+    {
+      "path": "tests/unit/atlas-research-fetch-boundary.test.ts",
+      "bytes": 44240,
+      "sha256": "2cdee0ff0a830f76f973163ea3e053dcf4840e47692f255865f15a0fdfac8b0d"
+    },
+    {
+      "path": "tests/unit/atlas-production-assignment-fetch-boundary.test.ts",
+      "bytes": 11367,
+      "sha256": "7062164a399e3711ca8ae8f550897b93086b842d74b3df1d61dd8bfaf229ea64"
+    },
+    {
+      "path": "tests/unit/atlas-production-assignment-wire.test.ts",
+      "bytes": 2920,
+      "sha256": "d85d36ddbd79910aef888cbb05aa8d9347175a5bfffe31421323fb1b410db32a"
+    },
+    {
+      "path": "tests/unit/question-generation-assignment-budget-policy.test.ts",
+      "bytes": 11365,
+      "sha256": "1a15d685b6b984165bada196eff23657eb67640e9fce3f6aaae2f7d587f89652"
+    },
+    {
+      "path": "tests/unit/question-generation-assignment-budget-runtime.test.ts",
+      "bytes": 1150,
+      "sha256": "a6e6ae2ee1568d9e0237bef8b4b826076c82c6b70a05f23555aa539417e3f2c2"
+    },
+    {
+      "path": "tests/unit/question-generation-assignment-budget-coverage.test.ts",
+      "bytes": 3261,
+      "sha256": "75f7bea735aec181f72fba66f663f3a7dee5d6c5287db56d07349f6c2a870828"
+    },
+    {
+      "path": "tests/unit/question-generation-retry-envelope.test.ts",
+      "bytes": 14418,
+      "sha256": "67dfb71be211a125c662061b4fff5343cc301c42f68239dfc206a5a4fcf92f56"
+    }
+  ]
+}

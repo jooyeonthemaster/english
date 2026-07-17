@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "consider + 목적어(the virtual ... nature of cyberspace) + to be + 보어(its unique characteristic) 구문. 'consider O (to be) C'는 표준 어법이며 to be는 생략 가능하지만 있어도 정문. 최상위권 유혹 포인트: 'consider O as C / consider O C'만 기억하는 수험생이 to be를 어색하다고 느낄 수 있으나, consider는 to be를 허용하는 대표 동사다. 유혹을 실제로 느껴봤지만 규칙 확인 후 기각."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "imaginary characters and events of a kind and magnitude not seen before — 'a kind and magnitude (which have) not (been) seen before'의 축약 관계절(과거분사 후치수식). kind/magnitude는 '보여지는' 대상이므로 수동 과거분사 seen이 옳다. seeing과의 태 대비를 노린 자리지만 흠 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "cave drawings made by our Stone Age ancestors — drawings는 '만들어진' 대상이므로 과거분사 made의 후치수식이 정문. by 행위자가 바로 이어져 수동 판정이 즉각적이다. 유혹 강도 낮음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "That is new about cyberspace is its interactive nature — 문장 전체의 주어 자리에 선행사를 포함하는 관계대명사절이 와야 하므로 What is new about cyberspace가 옳다. That으로 두면 (1) 지시대명사 주어로 읽을 경우 'That is new about cyberspace'에서 이미 절이 완결되어 뒤의 본동사 is가 주어를 잃고, (2) 접속사 that의 명사절로 읽으려 해도 절 내부에 주어가 없어(That + is new...) 성립 불가, (3) 관계대명사 that은 선행사 없이 자유관계절을 이끌 수 없다. 대안 해석을 전부 탐색해도 정문이 되는 길이 없음. 명백한 오답 = 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "shape ... their own and other people's personalities — their는 주절의 real people을 받는 복수 소유격으로 수·인칭 일치. 'their own'과 'other people's'의 병렬도 자연스럽다. its(cyberspace를 받는)로 착각하도록 유도할 수 있으나 personalities의 소유자는 사람들이므로 their가 옳다."
+    }
+  ],
+  "note": "실전 풀이 순서: (D)에서 즉시 두 개의 정형동사(is...is)가 충돌해 What-자유관계절 필요성이 드러남. 가장 강한 매력적 오답은 (A) to be(consider 5형식 변이형 혼동)였으나 표준 어법으로 확인. 나머지는 분사 태·소유격 일치로 모두 정문. 정답 후보는 (D) 단독."
+}

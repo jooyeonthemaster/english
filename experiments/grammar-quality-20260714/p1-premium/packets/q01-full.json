@@ -1,0 +1,175 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-pointcode-span-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-pointcode-span-mismatchx1"
+  ],
+  "layout": "(A):dec=c  (B):dec=b  (C):dec=h  (D):ANS=b  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 155,
+        "relPos": 0.193,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 323,
+        "relPos": 0.401,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 540,
+        "relPos": 0.671,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 641,
+        "relPos": 0.796,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 715,
+        "relPos": 0.888,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.888,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "struck",
+        "isError": false,
+        "correction": "struck",
+        "errorExpression": "struck",
+        "surroundingText": "after several hours of immersion we lift our heads and look around, suddenly struck by the quiet",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "who",
+        "isError": false,
+        "correction": "who",
+        "errorExpression": "who",
+        "surroundingText": "The solution is to read in the company of other people who are reading",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "immersed",
+        "isError": false,
+        "correction": "immersed",
+        "errorExpression": "immersed",
+        "surroundingText": "Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "in which",
+        "isError": true,
+        "correction": "in which",
+        "errorExpression": "which",
+        "surroundingText": "Consider joining a reading group in which everybody takes turns reading aloud from a novel.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "collaboratively",
+        "isError": false,
+        "correction": "collaboratively",
+        "errorExpression": "collaboratively",
+        "surroundingText": "Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "struck"
+      },
+      {
+        "label": "(B)",
+        "text": "who"
+      },
+      {
+        "label": "(C)",
+        "text": "immersed"
+      },
+      {
+        "label": "(D)",
+        "text": "which"
+      },
+      {
+        "label": "(E)",
+        "text": "collaboratively"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어인 'we'가 놀라움을 '받은' 상황이므로 과거분사 'struck'이 분사구문으로 쓰인 것은 어법상 적절합니다.",
+      "(B)": "선행사인 'other people'을 수식하는 주격 관계대명사로, 뒤에 동사 'are'가 이어지고 있으므로 'who'의 사용은 적절합니다.",
+      "(C)": "지각동사 'see'의 목적어 'someone else'가 몰입된 대상이므로, 수동의 의미를 나타내는 과거분사 'immersed'가 목적격 보어로 쓰여 적절합니다.",
+      "(E)": "동명사 형태인 'Reading'을 수식하는 부사이므로 형용사가 아닌 부사 'collaboratively'를 쓴 것은 적절합니다."
+    },
+    "explanation": "관계대명사 which 뒤에는 주어나 목적어가 빠진 불완전한 문장이 와야 합니다. 하지만 밑줄 친 (D)의 which 뒤에는 주어(everybody), 동사(takes), 목적어(turns)를 모두 갖춘 완전한 문장이 이어지고 있으므로 부적절합니다. 따라서 전치사와 관계대명사가 결합하여 부사 역할을 할 수 있는 'in which'나 관계부사 'where'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 전치사+관계대명사 vs 관계대명사 — 뒤따르는 절의 완전성으로 판정",
+      "(B) 주격 관계대명사 — 선행사와의 일치 및 완전성 판정",
+      "(C) 목적격 보어 — 지각동사의 목적격 보어 의미 관계로 판정"
+    ],
+    "tags": [
+      "관계대명사",
+      "관계부사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly __(A) struck__ by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people __(B) who__ are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly __(C) immersed__, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group __(D) which__ everybody takes turns reading aloud from a novel. Reading a book __(E) collaboratively__ is a wonderful way to share an otherwise internal and solitary experience.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "PREMIUM",
+    "_reviewRecommended": true,
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-pointcode-span-mismatch",
+        "message": "Underline (A) is tagged pointCode (c) but its surface \"struck\" has no token matching that grammar point — the label looks fabricated. Move the underline onto the real c-token or fix the code."
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P055",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "beginner's mind 채택이 실수의 원인이라는 방향. 지문은 novel 문제에서 초심(assume nothing)을 명시적으로 권장하므로 논지와 정반대. 'seasoned instincts를 무시해서 실수'라는 인과는 지문 어디에도 근거 없음. 유혹도 낮음."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'본질/무관 분리를 너무 일찍 포기'가 실수 원인이라는 방향. 지문에서 숙련자의 실패 기제는 낡은 경험 필터에 대한 의존(익숙한 도구로 novel 문제 공략)이지 필터링 포기가 아님. 'separate the essential from the irrelevant' 어휘를 그대로 재활용해 표면 유혹은 있으나 인과 방향이 역전됨."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "'확립된 인지적 틀(=경험 필터)이 매우 독특한 요구를 수용하지 못할 때 숙련 고수도 실수한다'는 첫 문단의 'familiar tools... fails miserably when a new problem is particularly novel'을 정확히 일반화한 진술. established cognitive framework=experience-as-filter, highly unique demand=particularly novel problem 으로 1:1 대응하며 수미상관 완성. seam(When 절 결합)도 자연스러움."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'experienced filter', 'absorbed details' 등 지문 핵심 어휘를 짜깁기해 표면 정합성이 높지만, '필터 적용을 거부'하는 것은 곧 beginner's mind 유지이며 지문상 novel 문제에서 오히려 권장되는 태도. 실수의 원인으로 제시하면 논지 역방향. 실전에서 어휘 일치만 보고 고르기 쉬움을 기록함."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'모든 사소한 디테일 처리 압박이 필터 자체의 재구성을 강제'는 지문에 존재하지 않는 새 개념(필터 재구성). 지문이 말하는 실수 기제(낡은 필터가 novel 상황에 부적합)와 무관하며, 디테일 전량 흡수는 초심자의 특성으로 긍정적으로 그려짐. 논리 비약."
+    }
+  ],
+  "note": "빈칸 논리 문항. 다섯 선지 모두 When절에 문법적으로 정상 결합하므로 순수 논리 판별. 정답 조건은 '숙련자의 실수 = 경험 기반 틀이 novel 문제에 부적합할 때'로, 첫 문단과의 수미상관을 요구. ③만 이 조건을 충족. ④(어휘 짜깁기, 논리 역방향)가 최상위권도 순간 끌릴 수 있는 주 매력 오답이고 ②가 부차적 미끼. ②·④를 정문으로 만드는 대안 해석을 적극 탐색했으나 지문이 실수 원인을 명시적으로 못 박아 성립 불가. 단일 정답, 고신뢰."
+}

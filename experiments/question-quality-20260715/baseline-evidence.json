@@ -1,0 +1,649 @@
+{
+  "schemaVersion": 1,
+  "capturedAtKst": "2026-07-15",
+  "repository": {
+    "path": "D:\\Desktop\\2026project\\nara",
+    "branch": "20260714jooyeon",
+    "head": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "qualityCommit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+    "trackedFilesCleanAtRecon": true,
+    "experimentArtifactsUntracked": true
+  },
+  "productionDeployment": {
+    "platform": "vercel",
+    "deploymentId": "dpl_CKkd1eiFq2DeEidwSxQpFSgDm4ZD",
+    "deploymentUrl": "nara-qn6rcsvkh-jooyoens-projects-59877186.vercel.app",
+    "aliases": ["smoat.co.kr", "www.smoat.co.kr"],
+    "createdAtKst": "2026-07-14T23:55:04.535+09:00",
+    "readyState": "READY",
+    "source": "cli",
+    "gitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "gitRef": "20260714jooyeon",
+    "gitDirty": true,
+    "actor": "claude-code_2-1-207_agent",
+    "sourceSnapshot": {
+      "relevantDeployedFiles": 69,
+      "currentExact": 58,
+      "historyReconstructableDrift": 11,
+      "localOnlyPostDeployment": 2,
+      "unmatchedDeployedFiles": 0,
+      "pinnedIndexArtifact": "experiments/question-quality-20260715/offline/production-deployment-source-index.json",
+      "pinnedIndexSha256": "aae88590de597fb6d19c2884493337d4a97dcac43da654e956d9926142fa3fa1",
+      "reportArtifact": "experiments/question-quality-20260715/offline/production-deployment-provenance.json",
+      "reportSha256": "74a5a3c09f5dddf25f2acfc87d7ff57b0c14f646df78959a88aa030eaf2db636",
+      "markdownArtifact": "experiments/question-quality-20260715/offline/PRODUCTION-DEPLOYMENT-PROVENANCE.md",
+      "markdownSha256": "30f346331b40f4864163e69bbf65b1e063538da89623dfc1ccc07e9a07c12806",
+    "auditScript": "experiments/question-quality-20260715/offline/audit-production-deployment-provenance.mjs",
+    "auditScriptSha256": "7e27e45a463ba49b9ff4278b058b9e9e4f45fb18ad48bbae939f60de70abdfb5",
+    "selectionScope": "NARROW_HAND_SELECTED_SUBSET_NOT_IMPORT_CLOSURE",
+    "freshAudit": {
+      "verdict": "FAIL_SELECTION_INCOMPLETE",
+      "narrowSubsetRawUidMatches": 69,
+      "directMissingLocalDependencies": 42,
+      "directMissingImportEdges": 96,
+      "staticLocalImportClosureFiles": 240,
+      "closureFilesMissingFromPinnedIndex": 171,
+      "currentExactFilesWithoutGitHistoryMatch": 2,
+      "liveClosureManifestSha256": "9afb6b6d75273a66187c917027a767689a42c701a0e52cff6c01a071841a7cdb",
+      "audit": "reviews/deployment-provenance-fresh-audit/AUDIT.md",
+      "auditSha256": "e704fda591dcbb83fa1ee5998df4de61f509a3187fa34aeca09eee28af132b56",
+      "verifier": "reviews/deployment-provenance-fresh-audit/verify.mjs",
+      "verifierSha256": "6c3f7debc6dfb2d29ede7eb3b02fe8c7b630f0cfa249d510721cd35522b10f62"
+    },
+    "closureRemediation": {
+      "rawSourceClosureVerdict": "PASS_WITHIN_DECLARED_STATIC_BOUNDARY",
+      "compiledRuntimeByteParity": "BLOCKED",
+      "triggerSourceByteParity": "BLOCKED",
+      "availableVercelSourceFiles": 4410,
+      "closureFiles": 245,
+      "localEdges": 722,
+      "typeOnlyEdges": 110,
+      "externalPackageReferences": 98,
+      "unresolvedLocalReferences": 0,
+      "ambiguousLocalReferences": 0,
+      "computedModuleReferences": 0,
+      "gitRawReconstructable": 94,
+      "gitCrlfReconstructable": 147,
+      "privateBlobFiles": 4,
+      "privateBlobBytes": 58036,
+      "secretPatternMatches": 0,
+      "closureManifestSha256": "9a3364beaf64fa205e8226a2c5328e4bd6dfc967dd72b3b4430677dd71947124",
+      "verificationSha256": "ebad6dcd40d7ecace515678319878a91cd61262f88ce965bbc769e7b361fa456",
+      "privateArchiveIndexSha256": "208da5aff9bd508790e8e51ba01070cd779e9c4a3c57345b8d37800a69963f1b",
+      "triggerProvenanceSha256": "51dfcf1bf500c18060b82ab0abb16e9297462deba3d08d5d0e155f477b38df11",
+      "audit": "experiments/question-quality-20260715/reviews/deployment-closure-archive/AUDIT.md",
+      "auditSha256": "1d8a7a3cee335e288df7f16ca3442cb590afa1e7de493c9eac5669adc9db120e",
+      "qualification": "The source-input closure is reconstructable, but compiled Next.js Lambda bytes, external package bytes, generated Prisma artifacts, runtime data, and Trigger per-file source parity remain outside the proved boundary."
+    }
+  },
+  "triggerWorkerVersion": null,
+    "qualification": "The Vercel metadata Git SHA is exact, but gitDirty=1 means it is not the full source identity. The original 69-file predicate is internally verified but is only a narrow hand-selected subset: static deployed-source import closure contains 240 local files, 171 absent from the pinned index. A closure-complete raw bundle and Trigger worker parity remain required."
+  },
+  "productionQuestionGenerationEnvAttestation": {
+    "capturedAt": "2026-07-15T03:52:47.4272705+09:00",
+    "platformEnvironment": "vercel/production",
+    "allowlistedOnly": true,
+    "rawOutputSuppressed": true,
+    "transientEnvFileRemoved": true,
+    "configuredEmpty": [
+      "GEMINI_QUESTION_MAX_RETRIES",
+      "GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS",
+      "OPENROUTER_STANDARD_MODEL",
+      "OPENROUTER_GEMINI_REASONING_EFFORT"
+    ],
+    "configuredAbsent": [
+      "OPENROUTER_GEMINI_FLASH_MODEL",
+      "PREMIUM_QGEN_MODEL_ID",
+      "GRAMMAR_PREMIUM_MODEL_ID",
+      "ATLASCLOUD_GEMINI_REASONING_EFFORT",
+      "OPENROUTER_REASONING_EFFORT",
+      "ATLASCLOUD_REASONING_EFFORT"
+    ],
+    "effective": {
+      "standardModel": "google/gemini-3.5-flash",
+      "premiumGeneralModel": "google/gemini-3.1-pro-preview",
+      "premiumGrammarLadderModel": "google/gemini-3.1-pro-preview",
+      "geminiReasoningEnabled": false,
+      "geminiReasoningEffort": "none",
+      "wrapperOuterRetries": 2,
+      "emptyResultMaxAttempts": 2
+    },
+    "artifact": "experiments/question-quality-20260715/offline/production-qgen-env-attestation.json",
+    "artifactSha256": "92f551ccec6a4f188cb04246d48c212d8d328754d11630160633b0e5adaa0c48",
+    "qualification": "This proves the allowlisted production environment values and current fallback behavior, not deployed dirty-source byte parity; source closure is audited separately."
+  },
+  "openRouterCampaignKeyLimitAttestation": {
+    "capturedAt": "2026-07-15T04:50:08.8099319+09:00",
+    "readOnlyEndpoint": "GET /api/v1/key",
+    "rawResponseRetained": false,
+    "keyOrLabelRetained": false,
+    "usageValuesRetained": false,
+    "limitUsd": null,
+    "limitRemainingUsd": null,
+    "limitReset": null,
+    "isManagementKey": false,
+    "isProvisioningKey": false,
+    "executionDecision": "BLOCK_PROVIDER_SIDE_SPEND_CAP_ABSENT",
+    "artifact": "experiments/question-quality-20260715/offline/openrouter-key-limit-attestation.json",
+    "artifactSha256": "cd8cd063dc5d48cc9cf02b9d31031dcac64ebb077822ebfaeae916b5923cc565",
+    "qualification": "Do not mutate the possibly shared production key. A separate limited campaign key or independently approved equivalent external hard cap is required, then price and remaining limit must be recaptured immediately before execution."
+  },
+  "activeEnglishUiTypes": {
+    "count": 25,
+    "types": [
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR",
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "legacyExcludedByDefault": ["TOPIC_MAIN_IDEA"]
+  },
+  "historicalProductionCohorts": {
+    "june": {
+      "STANDARD": {
+        "jobs": 13794,
+        "completed": 11849,
+        "failed": 1922,
+        "successfulQuestions": 12576,
+        "distinctPassages": 1157,
+        "recordedCostKrw": 585832,
+        "descriptiveCostPerSuccessfulQuestionKrw": 47,
+        "actualModels": ["gemini-3.5-flash"]
+      },
+      "PREMIUM": {
+        "jobs": 343,
+        "completed": 312,
+        "failed": 31,
+        "successfulQuestions": 312,
+        "distinctPassages": 80,
+        "recordedCostKrw": 38232,
+        "descriptiveCostPerSuccessfulQuestionKrw": 123,
+        "actualModels": ["claude-sonnet-4-6"]
+      }
+    },
+    "julyThroughCapture": {
+      "STANDARD": {
+        "jobs": 1040,
+        "completed": 1016,
+        "failed": 23,
+        "successfulQuestions": 1032,
+        "distinctPassages": 228,
+        "recordedCostKrw": 61973,
+        "descriptiveCostPerSuccessfulQuestionKrw": 60,
+        "actualModels": ["gemini-3.5-flash", "google/gemini-3.5-flash"]
+      },
+      "PREMIUM": {
+        "jobs": 134,
+        "completed": 112,
+        "failed": 22,
+        "successfulQuestions": 112,
+        "distinctPassages": 54,
+        "recordedCostKrw": 23472,
+        "descriptiveCostPerSuccessfulQuestionKrw": 210,
+        "actualModels": [
+          "claude-sonnet-4-6",
+          "anthropic/claude-sonnet-5",
+          "google/gemini-3.1-pro-preview",
+          "google/gemini-3.5-flash"
+        ]
+      }
+    },
+    "warning": "These are descriptive calendar cohorts, not causal quality comparisons. Type, passage, customer, code, model, route and observation windows differ; failed-call cost can be missing."
+  },
+  "historicalMatching": {
+    "samePassageIdTypePlanDifficultyCells": 25,
+    "sameNormalizedContentTypePlanDifficultyCells": 76,
+    "criticalExactMatches": {
+      "STANDARD_GRAMMAR_ERROR": 4,
+      "STANDARD_BLANK_INFERENCE": 15,
+      "PREMIUM_GRAMMAR_ERROR": 0,
+      "PREMIUM_BLANK_INFERENCE": 2
+    },
+    "conclusion": "A June-versus-July calendar comparison cannot identify the effect of the quality changes."
+  },
+  "latestFifteen": {
+    "artifact": "scripts/_gen_audit_out/jul15-dawn-questions.json",
+    "artifactSha256": "9f71809e3166fe50e2f9e8e0faadcf5a9a0daed719517036051f36bf0cd5dad3",
+    "questions": 15,
+    "plans": {"STANDARD": 8, "PREMIUM": 7},
+    "difficulties": {"BASIC": 0, "INTERMEDIATE": 1, "KILLER": 14},
+    "types": {
+      "BLANK_INFERENCE": 6,
+      "GRAMMAR_ERROR": 4,
+      "GRAMMAR_CHOICE_COMBO": 2,
+      "VOCAB_CHOICE": 2,
+      "IMPLIED_MEANING": 1
+    },
+    "distinctPassages": 5,
+    "qualityWarningItems": 7,
+    "relaxedItems": 1,
+    "reviewRecommendedItems": 1,
+    "recordedCalls": 34,
+    "recordedCostKrw": 1191,
+    "mixedDeploymentBoundary": {
+      "beforeCurrentVercel": 7,
+      "afterCurrentVercel": 8,
+      "triggerParityKnown": false
+    },
+    "initialIndependentGrade": {"A": 0, "B": 4, "C": 6, "F": 5},
+    "finalIndependentAdjudication": {
+      "grades": {"A": 0, "B": 0, "C": 4, "F": 11},
+      "storedKeyAgreement": {"rater1": 15, "rater2": 15, "total": 15},
+      "note": "Stored-key agreement is not evidence of validity; the final adjudicator found fatal source, no-answer, explanation and surface defects."
+    },
+    "status": "Two blinded reviews and fresh adjudication complete; final grades supersede the reconnaissance grade."
+  },
+  "historicalPremiumGrammarSixty": {
+    "population": "30 passages generated twice by the historical premium grammar ladder",
+    "items": 60,
+    "independentPassageClusters": 30,
+    "finalGrades": {"A": 0, "B": 0, "C": 38, "F": 22},
+    "allValidityPass": 38,
+    "fatal": 22,
+    "fatalPassageClusters": 18,
+    "storedKeyMismatchIds": ["PG023", "PG040", "PG048"],
+    "historicallyAccepted": 60,
+    "fatalFalseAcceptances": 22,
+    "recordedPhysicalCalls": 242,
+    "recordedCostUsd": 5.144148,
+    "artifact": "experiments/question-quality-20260715/reviews/premium-grammar-60/adjudication/adjudication-final.json",
+    "artifactSha256": "7e2cb58a7811cb7d7baba68fe898c5ed7a90d2c0d7f598cbf1f8b2ea902e0614",
+    "status": "Two blind reviews plus full third adjudication complete. Historical 60/60 ok is rejected as an exam-validity claim."
+  },
+  "corpusV2FreshAudit": {
+    "verdict": "FAIL",
+    "humanAudit": "HOLD",
+    "generationUse": "FORBIDDEN",
+    "savedRows": 502,
+    "newCandidates": 445,
+    "savedPairwiseComparisons": 125751,
+    "blockingDefects": [
+      "Queue sizing used expected value and had only about a coin-flip probability of reaching quota, far below quota plus ten-percent reserve.",
+      "The selector treated its own derived blind packet as antecedent historical exposure on rerun.",
+      "Official reconstructed blank provenance was ranking-only rather than a hard selector invariant.",
+      "General replacement queues silently abandoned the preregistered DB-real stratum."
+    ],
+    "artifact": "experiments/question-quality-20260715/reviews/corpus-v2-audit/AUDIT.md",
+    "artifactSha256": "8ec022ded02a7596bae014619384fefe8570fb11ba177787fa41c7f61272740b",
+    "status": "The packet is usable only for sacrificial audit-tool calibration. A separately versioned v3 corpus is required before any generation experiment."
+  },
+  "corpusV3Preflight": {
+    "verdict": "HARD_FAIL_SUPPLY_SHORTAGE",
+    "generationUse": "FORBIDDEN",
+    "externalCalls": 0,
+    "databaseWrites": 0,
+    "pinnedSnapshotSha256": "c21777c8dcab7f6b46ed15e429fcb7840607e90bcbdd7c02ec607a8db02beb13",
+    "tests": {"passed": 17, "failed": 0},
+    "pinnedRebuildFindings": 0,
+    "liveDriftFindings": 0,
+    "queueShortages": {
+      "focusBlankKiller": {"eligible": 59, "requiredQueue": 262, "targetPasses": 66},
+      "generalDevDb": {"eligible": 154, "requiredQueue": 158, "targetPasses": 23},
+      "generalHoldoutDb": {"eligible": 154, "requiredQueue": 815, "targetPasses": 29}
+    },
+    "artifact": "experiments/question-quality-20260715/reviews/corpus-v3/PREFLIGHT-AUDIT.md",
+    "publicPreflightArtifact": "experiments/question-quality-20260715/corpus/v3/preflight-report-public.json",
+    "publicPreflightSha256": "e4fc9129c714d1b167b2f5fa66d16a056cc9af7b1aad3323096986eee2d88ebe",
+    "status": "The statistically preregistered queues cannot be filled from the pinned supply. No operational manifest or blind packet was written; a separately preregistered v4 supply/remediation design is required."
+  },
+  "corpusV4SupplyFreshAudit": {
+    "externalCalls": 0,
+    "databaseWrites": 0,
+    "immutableSnapshotVerdict": "FAIL_BLOCKED",
+    "supplyShortageConclusion": "CONFIRMED",
+    "independentlyReproduced": {
+      "strictBlankEligible": 59,
+      "currentCommittedEligible": 154,
+      "currentCommittedAutomaticClean": 248,
+      "currentCommittedNetNew": 0,
+      "m1Net": 86,
+      "extractionItemNet": 19,
+      "officialTypeTaggedLinkedBlankDrafts": 3,
+      "blankQueueGap": 203,
+      "dbQueueGapOptimistic": 819,
+      "minimumHoldoutRateFor154": 0.24067893214673702
+    },
+    "postingCapHiddenNearMatches": 0,
+    "blockingIntegrityDefects": [
+      "The serialized asOf value is not applied to any database query; even a 2000 timestamp returns the current-state counts.",
+      "The advertised code hash omits imported untracked selector/v2/v3 dependencies and is not dependency-closed.",
+      "officialTraceable is only an official-type tag and does not require a source reference, archived original or rights record.",
+      "The M1 crossSource count labels four within-M1 near duplicates as cross-source overlap."
+    ],
+    "audit": "experiments/question-quality-20260715/reviews/corpus-v4-supply-fresh-audit/AUDIT.md",
+    "auditSha256": "eb2f176d694afafe9830ffe9265ecd3e9d289dc0f4b46d8f9b81f12286de843d",
+    "verifier": "experiments/question-quality-20260715/reviews/corpus-v4-supply-fresh-audit/verify-fresh-audit.ts",
+    "verifierSha256": "de682fc04957b5177ad8740a02775ffb68c69dcf4c7c768e5fcf9cd7f12f3d74",
+    "remediation": {
+      "temporalSemantics": "CURRENT_STATE_READ_ONLY_CAPTURE_NOT_HISTORICAL_AS_OF",
+      "capturedAt": "2026-07-14T18:41:44.157Z",
+      "captureWindowStartedAt": "2026-07-14T18:41:36.168Z",
+      "databaseExtractSha256": "aa692b32fa8aa381d682b7980e5530bb5ec2962e88dac1e50b3d88fc9dc0b86b",
+      "databaseRecordSetSha256": "32649133ce7cf2f850bed598175922c527cb5f7eaebde97175eabba236a459d1",
+      "semanticSnapshotSha256": "5346734a689d67aaa425daff3b17c3a7b910b741f25e7f8a2e1c79cfac0d01f6",
+      "dependencyManifestFiles": 150,
+      "dependencyManifestSha256": "ddb235f236839f95bd8cd09fbfe624216ebb348ecdcc83a4d061ab68b507e0a8",
+      "publicInventorySha256": "e989e508c508ab7c11dc10f1693defab3d4145617a023737f588364e5e3864f7",
+      "tests": {"passed": 9, "failed": 0},
+      "pinnedRebuild": "PASS",
+      "liveDatabaseAndInputDrift": "PASS",
+      "operationalManifestPresent": false,
+      "artifact": "experiments/question-quality-20260715/reviews/corpus-v4-supply/SUPPLY-REMEDIATION.md",
+      "artifactSha256": "f67690280946a5251295196562a205b97a48549fc5d2cfe4f6cd81849aaf3f9a"
+    },
+    "status": "The integrity defects are remediated as an honest current-state read-only capture, but the mathematically reproduced supply shortage remains. No operational generation manifest was created."
+  },
+  "attemptAllocationV3FreshAudit": {
+    "verdict": "FAIL_BLOCKED",
+    "operationallyAuthorizedCandidateSlots": 0,
+    "externalCalls": 0,
+    "arithmetic": {"planned": 990, "permanentSafetyMargin": 10, "cap": 1000, "passed": true},
+    "criticalFindings": [
+      "Per-assignment 1/2/3 candidate ceilings truncate the current production retry, repair, fallback and premium grammar-ladder policy and therefore cannot support a production-parity claim.",
+      "A ten-slot margin alone does not bound semantic multi-output or concurrent in-flight overflow.",
+      "Per-stage physical-call, token, batch/phase/campaign USD caps and a trusted provider/parser adapter are missing."
+    ],
+    "correctedDesign": "A2 is now a five-passage complete block per type-plan with all four profiles; the prior balanced-incomplete design was arithmetically impossible (lambda=5/3).",
+    "powerSensitivity": {
+      "a3PairsPerType": 60,
+      "tenPointImprovementPowerRangeAtAlpha05": [0.169, 0.3075],
+      "fatalZeroOfSixtyOneSided95Upper": 0.0487029133
+    },
+    "artifact": "experiments/question-quality-20260715/reviews/attempt-allocation-v3-audit/AUDIT.md",
+    "artifactSha256": "991d8c679c91a75caed3464df7d63fdc289898065f9dc432a08e4beadb5ec256",
+    "draftSha256": "3da2a6ea8e7b54ff6873da04c708c49d28830c18e26c21b2909112d253c89b37",
+    "status": "The draft verifier passes only its fail-closed arithmetic invariants and explicitly reports EXECUTION_READINESS=FAIL_BLOCKED."
+  },
+  "providerFetchBoundaryProbe": {
+    "externalCalls": 0,
+    "tests": {"passed": 6, "failed": 0},
+    "sdkVersion": "ai@6.0.99",
+    "providerVersion": "@ai-sdk/openai-compatible@2.0.56",
+    "defaultSdkPhysicalAttemptsPerLogicalCall": 3,
+    "observedCapabilities": [
+      "A custom provider fetch observes every SDK HTTP and network retry.",
+      "Response cloning preserves both SDK parsing and minimum response id, usage and cost telemetry.",
+      "JSON repair is a separate provider request whose usage is not aggregated into the outer generateObject result.",
+      "AsyncLocalStorage preserves operation isolation but requires explicit child-purpose scopes."
+    ],
+    "productionPathUpperBoundPhysicalCallsPerTopLevelRequest": null,
+    "supersededProbeEstimate": 21,
+    "supersededBy": "productionCallgraphBoundAudit",
+    "resultArtifact": "experiments/question-quality-20260715/probes/RESULTS.md",
+    "resultSha256": "a5eb8bb3137949b26ead4bd73560e38c0df45da466316a80aee20a1c45b41a55",
+    "probeArtifact": "experiments/question-quality-20260715/probes/provider-fetch-boundary.probe.mjs",
+    "probeSha256": "6a3e886fcbee5c60b70cb29923f5c7fed2ce6a19bd3b37998087255f291b1a7f",
+    "status": "The custom-fetch capability remains valid, but the former 21-call production upper-bound estimate is superseded: full static call-graph audit proves no finite global cap in the current implementation."
+  },
+  "structuredCandidateCardinalityProbe": {
+    "externalModelCalls": 0,
+    "databaseWrites": 0,
+    "currentProductionWrapper": {
+      "responseFormat": "json_schema",
+      "strict": true,
+      "questionsMinItems": null,
+      "questionsMaxItems": null,
+      "emptyQuestionsAcceptedByClientSchema": true
+    },
+    "registryScope": {
+      "registeredAiTypes": 64,
+      "registeredAiTypesWithFixedQuestionCardinality": 0,
+      "activeEnglishTypes": 25,
+      "activeEnglishTypesWithFixedQuestionCardinality": 0
+    },
+    "fixedCardinalitySdkMechanism": {
+      "lengthOneWire": {"minItems": 1, "maxItems": 1},
+      "lengthThreeWire": {"minItems": 3, "maxItems": 3},
+      "openRouterRequireParametersSurvivesTransform": true
+    },
+    "verdict": "MECHANISM_CONFIRMED_ONLY",
+    "artifact": "experiments/question-quality-20260715/probes/structured-cardinality-zero-network-v1/RESULT.json",
+    "artifactSha256": "814b0ba200fe6d3a2faf731a803b73d427908d4af77c8cafc9ce0492facc7866",
+    "manifestSha256": "b9fda458d952fa0d43a817ca0b6bd2a838aa25183d94fb0709d84497f4f32f50",
+    "status": "The SDK can carry a fixed semantic question count, but the production builder remains unbounded and provider acceptance, fallback behavior and callsite regressions are not yet proved. Production-parity execution remains blocked."
+  },
+  "providerResearchBoundaryPhaseA": {
+    "externalCalls": 0,
+    "freshAuditVerdict": "PHASE_B_GO_REAL_PROVIDER_NO_GO",
+    "tests": {
+      "passed": 23,
+      "failed": 0
+    },
+    "correctedDefectCount": 7,
+    "correctedDefects": [
+      "escaped root/child AsyncLocalStorage lifetime",
+      "same-operation concurrent lineage race",
+      "mutable-request TOCTOU between lease and transport",
+      "endpoint normalization mismatch",
+      "controller error misclassified as retryable network failure",
+      "forged root parent lineage",
+      "observer evidence suppression and arbitrary error classification"
+    ],
+    "boundaryArtifact": "src/lib/atlas-research-fetch-boundary.ts",
+    "boundarySha256": "307c6e48b06f5532f094cfd4d41d8fb23ad43f640add8bc067cc001a24674b51",
+    "providerIntegrationArtifact": "src/lib/atlas-ai.ts",
+    "providerIntegrationSha256": "68a1664cd2fcdcddcd320f3e4f75cbcf655777a5774c480ac4991855d8ef1f5c",
+    "testArtifact": "tests/unit/atlas-research-fetch-boundary.test.ts",
+    "testSha256": "22e529fbcc08142735cdec9ab779dd5e5d41a76ea648955352e8af1eb4a3b048",
+    "probeArtifact": "experiments/question-quality-20260715/probes/PROVIDER-BOUNDARY-PHASE-A.md",
+    "probeSha256": "c658a55a23733a834c559a4738abeda38a11d51fac78c966939e7ff85192151f",
+    "remainingBlockers": [
+      "atomic capped-slot durable controller",
+      "process-independent identifier uniqueness",
+      "endpoint/model/plan/purpose/stage and parser attestation registry",
+      "all repair/fallback/ladder child scopes",
+      "post-parse disposition hooks",
+      "clone and unresolved lease settlement",
+      "alternate transport bypass audit",
+      "route/browser production parity"
+    ],
+    "status": "Phase B implementation may start. Real OpenRouter calls remain blocked and the experiment registry remains closed."
+  },
+  "providerResearchControllerPhaseBFreshAudit": {
+    "externalCalls": 0,
+    "canonicalDatabaseWrites": 0,
+    "verdict": "BLOCK_REAL_PROVIDER_NO_GO",
+    "passingPrimitiveTests": {
+      "boundaryAndController": {"passed": 26, "failed": 0},
+      "budgetLedger": {"passed": 25, "failed": 0},
+      "typescript": "PASS",
+      "eslint": "PASS"
+    },
+    "blockingDefects": [
+      "No production generation call site installs scopes, child lineage or parser dispositions.",
+      "Only per-physical-call admission exists; no whole-assignment worst-case envelope is reserved.",
+      "Exact preregistered wire-body hashes cannot express model-dependent repair, solver and ladder child prompts.",
+      "HTTP, clone and parser lineage is memory-only and cannot recover crash windows without replay.",
+      "Caller-asserted parser outputs are not bound to captured response bytes or a frozen parser artifact.",
+      "Durable ledger rows omit registry, exact wire/provenance, parent physical call and raw provider evidence.",
+      "No frozen stage-transition or per-entry multiplicity policy exists.",
+      "Pricing evidence and overhead are not yet a proved hard upper bound.",
+      "Controller-owned batch close and recovery protocol is absent.",
+      "The production callgraph verifier is stale against the live question-repair source."
+    ],
+    "audit": "experiments/question-quality-20260715/reviews/provider-phase-b-fresh-audit/AUDIT.md",
+    "auditSha256": "56508ddcf924dfb98028c135698a8e87c88fbd7aad62568ebfc1c17fc37009ef",
+    "status": "The original fresh audit remains the immutable BLOCK baseline.",
+    "remediation": {
+      "primitiveVerdict": "PASS",
+      "campaignVerdict": "BLOCK_PROVIDER_NO_GO",
+      "ledgerTests": {"passed": 25, "failed": 0},
+      "controllerBoundaryTests": {"passed": 36, "failed": 0},
+      "typescript": "PASS",
+      "eslint": "PASS",
+      "boundedResponseCaptureBytes": 16777216,
+      "callerReconstructedResponseAllowed": false,
+      "oversizedSuccessfulCandidateDisposition": "ALL_RESERVED_UNKNOWN_AFTER_SEND_AND_ASSIGNMENT_QUARANTINE_NO_REPLAY",
+      "remainingExecutionBlocker": "Caller-supplied derivation receipts cannot be constructed safely for actual AI SDK child calls. Trusted actual-wire-time controller mint/authorize and zero-network production-callsite integration are required.",
+      "artifact": "experiments/question-quality-20260715/reviews/provider-phase-b-remediation/REMEDIATION.md",
+      "artifactSha256": "f00b80e0727fa6170fb0ed3c31167ae58f75e9e6961f7a1491feef8d2de9d128"
+    }
+  },
+  "productionCallgraphBoundAudit": {
+    "externalCalls": 0,
+    "verdict": "FAIL_BLOCKED",
+    "activeUiTypes": 25,
+    "registryTypesIncludingLegacy": 26,
+    "globalFinitePhysicalCallCapExists": false,
+    "defaultAtomicBounds": {
+      "sdkPhysicalAttemptsPerOperation": 3,
+      "normalGenerateQuestionObject": 27,
+      "forcedJsonGenerateQuestionObject": 18,
+      "premiumGrammarLadder": 81
+    },
+    "primaryFastPathWorstDefaultPhysicalCallsPerItem": {
+      "standardBlankInferenceKiller": 648,
+      "standardGrammarExtended": 675,
+      "premiumGrammarLadder": 432
+    },
+    "unboundedInputs": [
+      "GEMINI_QUESTION_MAX_RETRIES",
+      "GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS",
+      "legacy direct-route count",
+      "legacy auto-planner plan length and per-item count",
+      "aggregate concurrent fast requests"
+    ],
+    "artifact": "experiments/question-quality-20260715/reviews/production-callgraph-bound-audit/callgraph-bound.json",
+    "artifactSha256": "6d4bc14eed634574b77bd27e33fd668d0450714a5535eed6ab2600ed2cd15066",
+    "audit": "experiments/question-quality-20260715/reviews/production-callgraph-bound-audit/AUDIT.md",
+    "auditSha256": "7b2e7f9d59f311b1e031cc370476364b772c588a794c519b7b8d1be32cff563d",
+    "verifier": "experiments/question-quality-20260715/reviews/production-callgraph-bound-audit/verify-callgraph-bound.mjs",
+    "verifierSha256": "49fb58323ef2255ec3c6f52fa3121372b5515f9f4994d550408b3d7b04fc66b9",
+    "status": "No experiment assignment may start until frozen retry/input bounds, a durable per-fetch physical/candidate/USD controller, complete child-stage scopes, and full-assignment envelope admission are independently verified."
+  },
+  "policySeverityFreshAudit": {
+    "externalCalls": 0,
+    "verdict": "BLOCK",
+    "activeTypesAudited": 25,
+    "noticeEligibleCodesAudited": 102,
+    "classification": {
+      "removeRelaxation": 3,
+      "splitRequired": 10,
+      "staleNoEmitter": 2,
+      "keepCraft": 87
+    },
+    "immediateRemovalCodes": [
+      "blank-paraphrase-subject-slot-mismatch",
+      "topic-option-language",
+      "implied-meaning-option-language"
+    ],
+    "audit": "experiments/question-quality-20260715/reviews/policy-severity-audit/AUDIT.md",
+    "auditSha256": "e3d0731723eedf43847d08c2e6e93e7502646eb8a9481a8df7050ebed863d6c4",
+    "inventory": "experiments/question-quality-20260715/reviews/policy-severity-audit/INVENTORY.json",
+    "inventorySha256": "89baf2d3ea4fd6804d9d2e822fb24e03987df467f2e4584a6e2f3a08940e8b8a",
+    "script": "experiments/question-quality-20260715/reviews/policy-severity-audit/policy-severity-audit.mts",
+    "scriptSha256": "c4c0c06a9eccbabe35316f7bb13b7a8a30424c9b93facb7361a9fe4afa9f13f7",
+    "status": "The three unambiguous validity codes have been removed from ship-first/salvage and pass targeted regression. Ten conflated codes require precision splits before the policy audit can pass."
+  },
+  "deterministicValidityGateAudit": {
+    "externalModelCalls": 0,
+    "immutableLatestVerdict": "BLOCK",
+    "latestArtifactVersion": "v6",
+    "inheritedReplay": {"passed": 712, "total": 712},
+    "freshHoldout": {"passed": 182, "total": 192, "positiveControls": 96, "negativeControls": 96},
+    "combined": {"passed": 894, "total": 904, "failed": 10},
+    "blockingFamily": "SUMMARY_COMPLETE_MC directions that separately request an unsupported/evidence-free claim using natural Korean or English source-evidence phrasing.",
+    "negativeControlFalseBlocks": 0,
+    "artifact": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v6/AUDIT.md",
+    "manifestSha256": "99f7472df3f71a8a7c00c0856b622726284370b65a155a5a4b1d3efaa9e8af56",
+    "auditSha256": "bbc9f60edf29a72d395bde970f6b0892df01596c36f36516a0949989e1774a67",
+    "resultsSha256": "feae16b10378de3881f3ee62372bbda733b7956627e3ebe687495f82cac62707",
+    "verifierSha256": "d596879962541d03bd48d4e7f6c91184dd1fbeea8470554f4863ce4f1a9e45e3",
+    "currentSourceReplay": {"passed": 904, "total": 904},
+    "currentSourceFocusedUnitTests": {"passed": 8, "total": 8},
+    "status": "The immutable v6 result remains BLOCK. The ten failures were structurally remediated and replay clean, but an independent v7 with new hard negatives is required before this gate can pass."
+  },
+  "budgetGuardV3FreshAudit": {
+    "localAccountingVerdict": "PASS",
+    "apiPhaseReadiness": "BLOCKED",
+    "tests": {"passed": 25, "failed": 0},
+    "canonicalStoreExists": false,
+    "operationalPhases": 0,
+    "fixedDefectFamilies": [
+      "Batch finalization no longer permits unreconciled billing usage.",
+      "Read-only and preview CLI operations cannot implicitly create the canonical store.",
+      "A phase cost overrun can no longer be hidden from sibling batches.",
+      "An unreserved multi-output overflow halts all subsequent campaign reservations and calls.",
+      "Cross-process provider calls racing for the final candidate slot are serialized pre-network."
+    ],
+    "remainingCriticalBlockers": [
+      "No production AsyncLocalStorage/custom-fetch enforcement boundary.",
+      "Candidate kind, cardinality and output hash remain caller-asserted.",
+      "Conservative USD reservation remains caller-asserted.",
+      "OBS-001 immutable generation provenance is not represented."
+    ],
+    "artifact": "experiments/question-quality-20260715/reviews/harness-v3-audit/AUDIT.md",
+    "artifactSha256": "31b082a4ea854119d73541ed8764a8aabd53a103f8bd12946ff800d2a6980caa",
+    "status": "The canonical store must remain absent and every registry phase blocked until the trusted provider/parser boundary and provenance constraints pass fresh audit."
+  },
+  "promptConstraintCensus": {
+    "externalCalls": 0,
+    "activeTypes": 25,
+    "measurement": "Production prompt/schema-layer character lower bounds for default KILLER settings on one frozen passage; not token or quality estimates.",
+    "standardChars": {"min": 35341, "median": 39375, "max": 61784},
+    "premiumChars": {"min": 6751, "median": 10786, "max": 54568},
+    "grammarError": {
+      "standardLowerBoundChars": 61784,
+      "premiumLowerBoundChars": 54568,
+      "targetCandidateBlockChars": 30093,
+      "typePromptChars": 13986,
+      "schemaChars": 4672,
+      "directiveLexemeCount": 89
+    },
+    "structuralFinding": "Only GRAMMAR_ERROR is registered for a type-scoped STANDARD contract. The other 24 active types receive the full cross-type contract tail.",
+    "causalQualification": "This is a preregistered prompt-density hypothesis, not evidence that shortening the prompt improves quality.",
+    "artifact": "experiments/question-quality-20260715/offline/out/prompt-constraint-census.json",
+    "focusCounterfactual": {
+      "grammarErrorStandardLegacyChars": 61784,
+      "grammarErrorStandardTypeScopedChars": 61784,
+      "blankInferenceStandardLegacyChars": 45676,
+      "blankInferenceStandardTypeScopedChars": 29141,
+      "blankInferenceReductionFraction": 0.3620063053,
+      "defaultProductionBytesChanged": false
+    },
+    "artifactSha256": "a5c9ca9d8f2d68bf5afcab97cfad042099e3a2644e3d692d78890e80ef356831"
+  },
+  "dataLineage": {
+    "jobsScanned": 15311,
+    "questionIdsInJobResults": 14032,
+    "questionsStillPresent": 13997,
+    "missingOrPurged": 35,
+    "duplicateJobMappings": 0,
+    "preferredOriginalArtifact": "WorkbenchAiJob.result.questions",
+    "reason": "Question rows can be manually edited after generation and have no direct job FK."
+  },
+  "knownTelemetryRisk": {
+    "providerRetryUsage": "ai@6.0.99 defaults each generateObject/generateText call to two SDK retries (up to three physical provider requests) unless maxRetries is set. Generic usage normally exposes only the final successful response; all-failed operations can emit none.",
+    "observedMismatch": "At least one PREMIUM IMPLIED job records outer attempts=2 but one cost-ledger call.",
+    "pricingFallback": "The known Gemini 3.1 Pro fallback misclassification was fixed, but missing physical-call usage and endpoint-tier variation still require pre-network conservative leases."
+  },
+  "unverifiableFromCurrentData": [
+    "Exact Git/Vercel/Trigger revision for each historical question",
+    "Causal quality improvement from calendar-month aggregates",
+    "Actual OpenRouter charges for failed or timed-out unrecorded calls",
+    "Cross-surface render and scoring parity for every question type",
+    "Teacher intent behind approved, edited or deleted questions"
+  ],
+  "apiCampaignUsage": {"fullQuestionCandidatesUsed": 0, "cap": 1000}
+}

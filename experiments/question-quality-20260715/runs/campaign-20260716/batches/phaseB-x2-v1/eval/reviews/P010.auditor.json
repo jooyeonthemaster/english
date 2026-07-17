@@ -1,0 +1,70 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-style",
+      "severity": "minor",
+      "evidence": "해설이 합니다체('이룹니다', '와야 합니다')와 한다체('고쳐야 한다')를 혼용하고, 마지막 문장 '형용사적 수식 구조에 현혹되어 분사처럼 잘못 판단하지 않도록 유의해야 합니다'는 어떤 수식 구조를 가리키는지 불분명하다. 사실 오류는 아니므로 V4 자체는 통과."
+    },
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints의 '(A) 관계부사/접속사 — 뒤따르는 절의 완전성으로 판정'은 판정 절차를 뭉뚱그린 표현이다. 이 문장의 when은 접속사이며 관계부사로 볼 선행사가 없다. 오답 해설 본문은 '시간의 접속사'로 정확히 기술하므로 실패로 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "관계부사/접속사 판별 — 뒤따르는 절의 완전성 판단 (pointCode b)",
+      "temptingBecause": "선행 명사(organizations) 직후에 위치해 관계부사 when 또는 which류로 오독할 여지가 있음",
+      "decisiveFlaw": "완전한 절 'they first consider experimenting with social media'를 이끄는 시간 접속사로 적법 — 오답(정답 아님)"
+    },
+    {
+      "label": "(B)",
+      "intent": "품사 판단 — 한정사+형용사 뒤 전치사 목적어 명사 핵 자리에 과거분사 배치 (pointCode c)",
+      "temptingBecause": "understand의 익숙한 활용형이고 'not with A but with B' 병렬 안에 있어 겉보기 형태가 자연스러워 보일 수 있음",
+      "decisiveFlaw": "'a thorough ___ of NP' 슬롯은 of 보충어를 취하는 명사 핵을 요구하므로 understood 불가, understanding 필요 — 선언된 유일 정답. 단, 국소 3어절 창(a thorough understood)만으로 즉시 드러나 구조 독해가 불필요함"
+    },
+    {
+      "label": "(C)",
+      "intent": "재귀대명사 조응 — 동명사구 주어와의 일치 (pointCode g)",
+      "temptingBecause": "지시 대상이 동명사구 'Being in social media'라 it/themselves와의 선택을 잠깐 고민하게 함",
+      "decisiveFlaw": "'in and of itself'는 고정 관용구로 즉시 적법 판정 — 변별력 거의 없는 필러성 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "상관접속사 either A or B 병렬 — 조동사 뒤 동사원형 형태 일치 (pointCode i)",
+      "temptingBecause": "solve/solves/solving 중 형태 선택을 확인하게 하고 or 뒤 result in과의 병렬을 추적하게 함",
+      "decisiveFlaw": "must 뒤 동사원형 병렬(solve ... or result in ...)로 적법 — 오답"
+    },
+    {
+      "label": "(E)",
+      "intent": "형용사 vs 부사 — 대명사 one 수식 (pointCode f)",
+      "temptingBecause": "measurably(부사)와의 혼동을 유도하는 자리",
+      "decisiveFlaw": "'a measurable one'에서 one(=improvement)을 수식하는 형용사 자리로 적법 — 즉시 소거 가능한 약한 디코이"
+    }
+  ],
+  "explanationIssues": [
+    "해설 문체 혼용: 합니다체와 한다체가 한 단락에 섞여 있음",
+    "정답 해설 마지막 문장('형용사적 수식 구조에 현혹되어 분사처럼 잘못 판단하지 않도록')이 가리키는 함정 구조가 모호함 — 실제 함정은 understood가 분사로 익숙하다는 점인데 표현이 뒤집혀 읽힘",
+    "keyPoints가 (C)(E)를 다루지 않음 — 5개 밑줄 각각의 point 문서화 관점에서 불완전(치명 아님)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 통과 — 무결성·정답 유일성·문법성·해설 사실성·필드 동기화 모두 확인됨. 그러나 요청 난이도 KILLER 대비 공예 실패가 크다. (1) §C 핵심 조건 위반: 정답 (B)는 'a thorough understood of'라는 국소 단서만으로 즉시 노출되는 어형(품사) 오류로, 문장 구조나 'not A but B' 병렬을 전혀 읽지 않아도 풀린다 — '구조를 읽어야 하며 즉시 드러나지 않는다' 조건 실패. (2) 디코이 약함: (C)는 고정 관용구 in and of itself, (E)는 즉시 소거되는 형용사 자리로 실질 변별력이 없고, (A)(D)도 중하 난이도. 다수 선지가 매력적이어야 하는 C3 기준 미달. (3) C5=1: 실제 체감 난이도는 중하 수준으로 KILLER 라벨과 불일치. C4는 메타 누출이 없고 정답이 필연적이라 3점. 해설은 사실적이나 문체 혼용과 모호한 마무리 문장으로 C6=2. 재설계 방향: 정답 포인트를 국소 창으로 안 드러나는 구조 의존 오류(예: 원거리 병렬 파손, 절 경계 오류)로 교체하고 (C)(E) 디코이를 실판단형으로 강화해야 KILLER 출하 가능."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P056",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "콜론 뒤에서 'the vivid images that we retain'의 내용을 풀어 쓰는 간접의문/자유관계절 병렬 나열의 첫 항. 'where we were when we got the news'는 뒤따르는 'how we learned it / how we felt / what we did'와 완전 병렬을 이루는 wh-절로 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "진짜 주어는 복수 명사 'the broad outlines'. 'of such catastrophes'(전치사구)와 'thoroughly reported in the media'(삽입 분사구)는 수 일치에 영향을 주지 않는 장거리 방해 요소일 뿐이다. 따라서 'is well remembered'가 아니라 'are well remembered'여야 한다. 'outlines'를 단수로 재해석할 통보적 일치의 여지도 없음. 명백한 주어-동사 수 일치 위반."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'your personal circumstances surrounding the events'에서 현재분사 surrounding은 circumstances를 후치 수식(= circumstances which surround the events). 명사와 분사 간 능동 관계가 성립하므로 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the respondents' memories were surveyed a week after the attacks'는 survey의 목적어(memories)가 주어로 승격된 정상적 수동태. 과거분사 surveyed 사용이 형태·의미 모두 적법."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'those of which they are most confident'는 'they are most confident of those (memories)'의 관계절화. 'be confident of + NP'가 관용적으로 성립하므로 전치사+관계대명사 'of which'가 선행사 those(= memories)를 받는 구조는 완전한 정문."
+    }
+  ],
+  "note": "정답 후보는 (B) 단일. (B)는 삽입구('thoroughly reported in the media')로 주어-동사를 멀리 떨어뜨린 전형적 수 일치 함정이며, 복수 주어 'outlines'에 단수 동사 'is'가 결합해 비문임이 형식적으로 확정된다. 나머지 네 밑줄은 병렬 wh-절, 후치 분사, 수동태, 전치사+관계대명사 모두 대안 재분석을 시도해도 비문으로 만들 수 없다. 문항 성립에 문제 없음."
+}

@@ -1,0 +1,61 @@
+{
+  "pid": "P091",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "correct answer — abstraction of the source span 'bringing the melody back toward home again'",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none — uniquely satisfies 'rewards and soothes us by ___, but not by too much because he wants to continue to build tension'; partial restoration of stability is exactly the gap-fill return-toward-home mechanism"
+    },
+    {
+      "label": "②",
+      "intent": "causal reversal / escalation trap: doubles down on the leap instead of resolving it",
+      "temptingBecause": "reuses the salient passage concept 'leap' and the tension-building clause ('continue to build tension') could superficially suggest more leaping",
+      "decisiveFlaw": "an even wider leap intensifies the schematic violation; it cannot be the means by which the composer 'rewards and soothes' the listener"
+    },
+    {
+      "label": "③",
+      "intent": "half-truth / scope-overreach trap built on a verbatim source anchor",
+      "temptingBecause": "'adjacent tones' is lifted verbatim from the passage; gap fill is in fact typically realized through stepwise (adjacent-tone) motion, so it feels textually supported — the strongest competitor",
+      "decisiveFlaw": "fully limiting notes to adjacent tones contradicts 'but not by too much because he wants to continue to build tension' (complete gap-fill would dissolve the tension); adjacency describes interval size, not the return-toward-home direction that constitutes the soothing; 'limiting ... but not by too much' is also a strained degree reading"
+    },
+    {
+      "label": "④",
+      "intent": "polarity reversal on familiarity: unfamiliar exploration vs. return to the familiar harmonic home",
+      "temptingBecause": "'scales' is passage vocabulary ('adjacent tones in the scale') and novelty superficially connects to the passage's theme of violated expectations",
+      "decisiveFlaw": "the reward/soothe mechanism is a return to the familiar starting point or harmonic 'home'; exploring completely unfamiliar scales is the direct opposite of the resolution principle"
+    },
+    {
+      "label": "⑤",
+      "intent": "domain-shift associate: swaps pitch/melodic contour for tempo",
+      "temptingBecause": "'slowing down' has a calming connotation compatible with 'soothes', and tempo is a plausible generic musical parameter",
+      "decisiveFlaw": "tempo is never mentioned in the passage; the entire mechanism concerns pitch leaps and melodic return, so there is no source anchor at all — weakest distractor"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MINOR_SIMPLIFICATION",
+      "severity": "minor",
+      "evidence": "오답 해설 ④ says '기대를 충족하는 맥락' (context of fulfilling the expectation), while the passage stresses the return is deliberately partial ('but not by too much'); a simplification, not a factual misanalysis"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: rendered passage restores byte-identically to the original when the blank is filled with the source span; no joins broken, no duplication/omission/orphan punctuation; labels ①–⑤ match the five options. V2: independent per-option solve yields answer set {①} exactly matching the declared single answer; ③ is the only genuinely competitive distractor and is decisively excluded by the 'not by too much / continue to build tension' tail and by the direction-vs-interval distinction. V3: all five options are gerund phrases filling the same slot after 'by'; no option is eliminated purely by the suffix; the completed sentence with ① is grammatical and natural. V4: explanation correctly identifies the gap-fill principle, the causal role of the blank sentence, and the exact source span paraphrased ('bringing the melody back toward home again'); each wrong-answer note corresponds to that option's actual content; no grammar-term misuse, no hallucinated content. V5: answer label, options, 해설, 오답해설 keys, keyPoints all consistent. Craft: C1=4 (blanks the passage's central causal resolution point), C2=3 (four distinct trap types but ⑤ is anchor-less and ②/④ overlap as polarity traps), C3=3 (only ③ survives the polarity cue as a real competitor), C4=3 (mild leakage: 'rewards and soothes' alone eliminates ②④⑤ by polarity), C5=4 (one-step paraphrase inference with one strong lexical-anchor competitor fits INTERMEDIATE precisely), C6=3 (accurate, well-sourced, slightly verbose). Sum=20: all V pass and min C≥3 but sum<21, so grade B (A requires ≥21). Requested difficulty is INTERMEDIATE, so KILLER conditions not applicable → killerConditionsMet=false."
+}

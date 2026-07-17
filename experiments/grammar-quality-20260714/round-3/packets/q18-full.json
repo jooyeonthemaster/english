@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20190307-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "요지",
+    "words": 118
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-thin-answerx1"
+  ],
+  "layout": "(A):dec=d  (B):dec=c  (C):dec=k  (D):dec=f  (E):ANS=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 46,
+        "relPos": 0.066,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 265,
+        "relPos": 0.382,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 382,
+        "relPos": 0.55,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 514,
+        "relPos": 0.741,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 624,
+        "relPos": 0.899,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.899,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - to join a group that has a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier. Volunteers report a sense of satisfaction at enriching their social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who is lonely might benefit from helping others. Also, they might benefit from being involved in a voluntary program where they receive support and help to build their own social network.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "engaged",
+        "isError": false,
+        "errorExpression": "engaged",
+        "surroundingText": "Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "enriching",
+        "isError": false,
+        "errorExpression": "enriching",
+        "surroundingText": "Volunteers report a sense of satisfaction at enriching their social network in the service of others.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "lonely",
+        "isError": false,
+        "errorExpression": "lonely",
+        "surroundingText": "First, someone who is lonely might benefit from helping others.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "where",
+        "isError": true,
+        "correction": "where",
+        "errorExpression": "which",
+        "surroundingText": "Also, they might benefit from being involved in a voluntary program where they receive support and help to build their own social network.",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "engaged"
+      },
+      {
+        "label": "(C)",
+        "text": "enriching"
+      },
+      {
+        "label": "(D)",
+        "text": "lonely"
+      },
+      {
+        "label": "(E)",
+        "text": "which"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "유도부사 'there'로 인한 도치절에서 단수 명사구인 'one sure way'가 실제 주어이므로 이에 호응하는 단수 동사 'is'는 어법상 옳습니다.",
+      "(B)": "'be engaged in' 구조에서 의미상 주어인 'people'이 능동적으로 참여하는 상태를 가리키며 완료되거나 고정된 상태의 형용사적 성격을 띠는 과거분사 'engaged'는 어법상 옳습니다.",
+      "(C)": "전치사 'at'의 목적어로 결합한 동명사 'enriching'이며 뒤에 명사구 목적어 'their social network'를 적절하게 수반하므로 어법상 옳습니다.",
+      "(D)": "주격 관계대명사 'who'가 이끄는 형용사절에서 be 동사 'is' 뒤의 보어 자리에 와야 하므로, 부사가 아닌 형용사인 'lonely'는 어법상 옳습니다."
+    },
+    "explanation": "(E) 'which'가 이끄는 관계절 내부는 'they(주어) + receive(동사) + support and help(목적어)'를 모두 갖춘 완전한 문장입니다. 뒤에 필수 문장 성분(주어나 목적어)이 빠진 격이 전제되어야 하는 관계대명사 which는 이 자리에 올 수 없습니다. 따라서 선행사인 'a voluntary program'을 수식하면서 완전한 부사적 결합을 이끄는 관계부사 'where'로 고쳐야 합니다. 관계대명사와 관계부사 뒤 절의 성분 완전성을 종합적으로 판정해야 하는 고난도 구조입니다.",
+    "keyPoints": [
+      "(E) 관계대명사 vs 관계부사 — 뒤 구조의 완전/불완전 여부로 판정",
+      "(A) 부정어/유도부사 도치 수일치 — 뒤로 밀려난 진짜 주어 핵과의 일치",
+      "(B) 분사의 태 — 수식받는 명사구와의 행위-대상 관계 검사"
+    ],
+    "tags": [
+      "수능어법",
+      "관계부사",
+      "수일치",
+      "동명사",
+      "분사의태"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "According to professor Jacqueline Olds, there __(A) is__ one sure way for lonely patients to make a friend - to join a group that has a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who are __(B) engaged__ in service to others, such as volunteering, tend to be happier. Volunteers report a sense of satisfaction at __(C) enriching__ their social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who is __(D) lonely__ might benefit from helping others. Also, they might benefit from being involved in a voluntary program __(E) which__ they receive support and help to build their own social network.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

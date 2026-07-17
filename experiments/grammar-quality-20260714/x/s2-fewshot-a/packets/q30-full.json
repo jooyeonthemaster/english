@@ -1,0 +1,167 @@
+{
+  "passageId": "2019_06_5023285-q29",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "6월",
+    "origType": "함축의미",
+    "words": 146
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-correction-not-source-backed",
+    "grammar-pointcode-span-mismatch",
+    "grammar-answer-point-not-core"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=j  (B):dec=b  (C):dec=b  (D):dec=c  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 197,
+        "relPos": 0.231,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 318,
+        "relPos": 0.373,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 473,
+        "relPos": 0.555,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 764,
+        "relPos": 0.896,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.896,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "Here's an interesting thought. If glaciers started re-forming, they have a great deal more water now to draw on ― Hudson Bay, the Great Lakes, the hundreds of thousands of lakes of Canada, none of which existed to fuel the last ice sheet ― so they would grow very much quicker. And if they did start to advance again, what exactly would we do? Blast them with TNT or maybe nuclear missiles? Well, doubtless we would, but consider this. In 1964, the largest earthquake ever recorded in North America rocked Alaska with 200,000 megatons of concentrated might, the equivalent of 2,000 nuclear bombs. Almost 3,000 miles away in Texas, water sloshed out of swimming pools. A street in Anchorage fell twenty feet. The quake devastated 24,000 square miles of wilderness, much of it glaciated. And what effect did all this might have on Alaska's glaciers? None.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "would have",
+        "isError": true,
+        "correction": "would have",
+        "errorExpression": "have",
+        "surroundingText": "If glaciers started re-forming, they would have a great deal more water now to draw on ― Hudson Bay, the Great Lakes,",
+        "pointCode": "j"
+      },
+      {
+        "label": "(B)",
+        "expression": "which",
+        "isError": false,
+        "correction": "which",
+        "errorExpression": "which",
+        "surroundingText": "the hundreds of thousands of lakes of Canada, none of which existed to fuel the last ice sheet",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "And if they did start to advance again, what exactly would we do?",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "recorded",
+        "isError": false,
+        "correction": "recorded",
+        "errorExpression": "recorded",
+        "surroundingText": "In 1964, the largest earthquake ever recorded in North America rocked Alaska",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "much",
+        "isError": false,
+        "correction": "much",
+        "errorExpression": "much",
+        "surroundingText": "The quake devastated 24,000 square miles of wilderness, much of it glaciated.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "have"
+      },
+      {
+        "label": "(B)",
+        "text": "which"
+      },
+      {
+        "label": "(C)",
+        "text": "what"
+      },
+      {
+        "label": "(D)",
+        "text": "recorded"
+      },
+      {
+        "label": "(E)",
+        "text": "much"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "전치사나 수량 대명사 뒤에서 관계절을 이끄는 목적격 관계대명사이며, 앞의 선행사 'the hundreds of thousands of lakes of Canada'를 명사구로 받아 'none of which' 구조를 취하는 것이 어법상 완전합니다.",
+      "(C)": "do의 직접목적어 역할을 하는 의문대명사 'what'이 이끄는 직접의문문 구조로, 의미상 '우리가 정확히 무엇을 해야 할까?'를 나타내어 완전하고 올바른 표현입니다.",
+      "(D)": "앞의 명사 'the largest earthquake'를 뒤에서 수식하는 과거분사로, 지진이 기록된 대상을 수식하므로 수동의 의미를 갖는 과거분사 'recorded'는 적절합니다.",
+      "(E)": "앞의 '24,000 square miles of wilderness'를 부연하는 독립분사구문 형태(much of it being glaciated에서 being이 생략된 형태)로 대명사 'much'와 'it'의 결합은 유효합니다."
+    },
+    "explanation": "본 문장에서 'If glaciers started re-forming'은 과거동사 started를 통해 현재의 사실과 반대되거나 실현 가능성이 희박한 가정을 나타내는 가정법 과거 조건절을 형성하고 있습니다. 따라서 가정법 과거의 문법적 규칙상 귀결(주절)에는 '주어 + 조동사의 과거형 + 동사원형'의 형태가 와야 어법상 일치하므로, 단순 현재형인 'have'를 조동사 과거형을 포함한 'would have'로 고쳐 써야 문장 구조상 완전한 문장이 됩니다.",
+    "keyPoints": [
+      "(A) 가정법 과거의 시제 일치 — 조건절의 과거동사와 호응하는 주절의 조동사 과거형 판단",
+      "(B) 부분 표시어 + 관계대명사 — 명사구 뒤의 none of which 구조에서 접속사와 대명사 역할 판단",
+      "(E) 독립분사구문과 대명사 — 주절과 주어가 달라 남겨진 주어 much of it의 격과 결합 판단"
+    ],
+    "tags": [
+      "가정법 과거",
+      "관계대명사 수량표현",
+      "독립분사구문"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Here's an interesting thought. If glaciers started re-forming, they __(A) have__ a great deal more water now to draw on ― Hudson Bay, the Great Lakes, the hundreds of thousands of lakes of Canada, none of __(B) which__ existed to fuel the last ice sheet ― so they would grow very much quicker. And if they did start to advance again, __(C) what__ exactly would we do? Blast them with TNT or maybe nuclear missiles? Well, doubtless we would, but consider this. In 1964, the largest earthquake ever __(D) recorded__ in North America rocked Alaska with 200,000 megatons of concentrated might, the equivalent of 2,000 nuclear bombs. Almost 3,000 miles away in Texas, water sloshed out of swimming pools. A street in Anchorage fell twenty feet. The quake devastated 24,000 square miles of wilderness, __(E) much__ of it glaciated. And what effect did all this might have on Alaska's glaciers? None."
+  }
+}

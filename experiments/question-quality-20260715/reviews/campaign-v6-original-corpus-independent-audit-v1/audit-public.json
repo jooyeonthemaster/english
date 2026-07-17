@@ -1,0 +1,200 @@
+{
+  "schemaVersion": "campaign-v6-original-corpus-independent-audit-public-v1",
+  "verdict": "BLOCK_UNCONDITIONAL_S1_V6_ADMISSION_PENDING_TEXT_METADATA_DIFFICULTY_AND_BLANK_POSITION_REMEDIATION",
+  "auditedAtKst": "2026-07-15T16:31:00+09:00",
+  "scope": {
+    "sourceArtifact": "experiments/question-quality-20260715/corpus/original-s1-v6",
+    "exactPrivateRowsRead": true,
+    "sentenceBySentenceReview": true,
+    "candidateApiCalls": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0
+  },
+  "sourceBindings": {
+    "privateArtifactSha256": "bcb5d7683e9ee6bd110add462da6956dea6468e29dd2222d00067e80ddcabb68",
+    "publicArtifactSha256": "e7808d0cc562e6288c806beb2455a85eafb2b9f376b9073fd7f564163a33d9a2",
+    "manifestSha256": "79a1bb6aa928aafab5cf414caf7c078a35e7310ba33a472bce54bf09a8facd79",
+    "manifestEntryCount": 8,
+    "sourceManifestAllEntriesRecomputed": true,
+    "sourceBuildHermetic": false,
+    "externalPrivateBuildInputCount": 2,
+    "externalPrivateBuildInputs": [
+      {
+        "relativePath": "experiments/question-quality-20260715/design/campaign-v5-s1/private/s1-queue-v5.json",
+        "utf8Bytes": 422141,
+        "sha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+        "includedInSourceManifest": false
+      },
+      {
+        "relativePath": "experiments/question-quality-20260715/corpus/v3/private/input-snapshot.json",
+        "utf8Bytes": 18115430,
+        "sha256": "53bf493d6392c462824dcddd2ecfdc5dfdc0810a4ab2829db5b9993b1799e92a",
+        "includedInSourceManifest": false
+      }
+    ],
+    "hermeticityNote": "The source builder reads two ignored private artifacts outside its eight-entry manifest. Derived normalized text-set commitments are public, but a clean checkout without those files cannot reproduce the build."
+  },
+  "independentMechanicalFindings": {
+    "rowCount": 12,
+    "grammarRowCount": 6,
+    "blankRowCount": 6,
+    "wordCount": 2188,
+    "sentenceCountReviewed": 127,
+    "uniqueTopicFamilyCount": 12,
+    "machinePiiPatternHits": 0,
+    "rightsProvenanceRowsStructurallyConsistent": 12,
+    "scopedProcessingRecordConsistentWithCampaignRequest": true,
+    "privateExactTextGitIgnored": true,
+    "privateExactTextGitTracked": false,
+    "sourcePublicTwelveTokenLeakWindows": 0,
+    "crossRow": {
+      "comparedPairs": 66,
+      "pairsWithFiveGramOverlap": 0,
+      "sharedFiveGramCount": 0
+    },
+    "repositoryOverlapCapture": {
+      "capturedAtKst": "2026-07-15T16:31:00+09:00",
+      "ngramSize": 8,
+      "scannedFileCount": 9032,
+      "scannedUtf8ByteCount": 450228120,
+      "skippedOversizeFileCount": 0,
+      "skippedUnreadableFileCount": 0,
+      "skippedSymlinkCount": 0,
+      "inventoryCommitmentSha256": "7552c07f104cfd8536e265fbe0bb20804d001e639ee9a8e97c89b2f0baefb7b1",
+      "hitFileRowPairCount": 0
+    }
+  },
+  "manualAdversarialFindings": {
+    "reviewedRowCount": 12,
+    "reviewedSentenceCount": 127,
+    "preExistingUngrammaticalRows": 0,
+    "contentContradictionRows": 0,
+    "sourceRevisionRequiredCount": 4,
+    "sourceRevisionRequiredRowIds": [
+      "OS1V6-B05",
+      "OS1V6-B06",
+      "OS1V6-G02",
+      "OS1V6-G03"
+    ],
+    "cleanSourceRowCount": 8,
+    "cleanSourceRowIds": [
+      "OS1V6-B01",
+      "OS1V6-B02",
+      "OS1V6-B03",
+      "OS1V6-B04",
+      "OS1V6-G01",
+      "OS1V6-G04",
+      "OS1V6-G05",
+      "OS1V6-G06"
+    ],
+    "metadataCorrectionRequiredCount": 3,
+    "metadataCorrectionRequiredRowIds": [
+      "OS1V6-G03",
+      "OS1V6-G04",
+      "OS1V6-G05"
+    ],
+    "explicitDifficultyRoutingRequiredCount": 2,
+    "explicitDifficultyRoutingRequiredRowIds": [
+      "OS1V6-B02",
+      "OS1V6-B05"
+    ],
+    "issueSeverityCounts": {
+      "MAJOR_FOR_CLEAN_SOURCE": 4,
+      "MAJOR_FOR_KILLER_BLANK": 1,
+      "METADATA": 3,
+      "ROUTING": 1
+    },
+    "grammarAffordanceConclusion": "All six grammar passages contain at least five independently viable mechanism families, but three published affordance labels need correction.",
+    "blankConclusion": "All six hinges and answer units are semantically valid and natural; B05 is not killer-safe at the recommended location because a later thesis restatement discloses the answer, and B02 needs explicit difficulty routing or a close-paraphrase option gate.",
+    "blankSitePositionAudit": {
+      "rows": [
+        {
+          "publicId": "OS1V6-B01",
+          "sentenceIndex": 12,
+          "sentenceCount": 13,
+          "bucket": "LATE_NONTERMINAL",
+          "finalOrPenultimate": true,
+          "sourceRevisionRequired": false
+        },
+        {
+          "publicId": "OS1V6-B02",
+          "sentenceIndex": 11,
+          "sentenceCount": 11,
+          "bucket": "TERMINAL",
+          "finalOrPenultimate": true,
+          "sourceRevisionRequired": false
+        },
+        {
+          "publicId": "OS1V6-B03",
+          "sentenceIndex": 11,
+          "sentenceCount": 11,
+          "bucket": "TERMINAL",
+          "finalOrPenultimate": true,
+          "sourceRevisionRequired": false
+        },
+        {
+          "publicId": "OS1V6-B04",
+          "sentenceIndex": 10,
+          "sentenceCount": 10,
+          "bucket": "TERMINAL",
+          "finalOrPenultimate": true,
+          "sourceRevisionRequired": false
+        },
+        {
+          "publicId": "OS1V6-B05",
+          "sentenceIndex": 5,
+          "sentenceCount": 10,
+          "bucket": "MIDDLE",
+          "finalOrPenultimate": false,
+          "sourceRevisionRequired": true
+        },
+        {
+          "publicId": "OS1V6-B06",
+          "sentenceIndex": 10,
+          "sentenceCount": 10,
+          "bucket": "TERMINAL",
+          "finalOrPenultimate": true,
+          "sourceRevisionRequired": true
+        }
+      ],
+      "counts": {
+        "terminal": 4,
+        "lateNonterminal": 1,
+        "middle": 1,
+        "finalOrPenultimate": 5,
+        "cleanUnrestrictedInternal": 0
+      },
+      "finalOrPenultimateShare": 0.8333333333333334,
+      "internalContrastOrCounterexampleHingeRows": 0,
+      "internalAnaphoricBridgeHingeRows": 0,
+      "externalValidityConclusion": "Five of six recommended units are final or penultimate, and the sole middle unit is blocked for answer restatement. The corpus cannot support a general claim about internal blank-site performance."
+    }
+  },
+  "rightsAndPrivacyConclusion": {
+    "result": "SCOPED_RECORD_AND_LOCAL_EVIDENCE_PASS_NOT_GLOBAL_OWNERSHIP_PROOF",
+    "selectedRowsWithRowBoundOriginScopeAndPiiRecords": 12,
+    "localRepositoryEightTokenOverlapHits": 0,
+    "globalOriginalityProven": false,
+    "legalOwnershipProven": false,
+    "externalDispatchAuthorizedByThisAudit": false
+  },
+  "requiredRemediation": [
+    "Edit and reseal G02, G03, B05, and B06 under the strict clean-source standard.",
+    "Correct the G03, G04, and G05 grammar-affordance labels so metadata names the structures actually present.",
+    "Redesign B05's recommended blank context so later prose does not restate the answer; route B02 to intermediate by default or require a killer-specific close-paraphrase option gate.",
+    "Replace or supplement terminal-thesis rows with clean internal hinge, internal contrast/counterexample, and anaphoric-bridge slots; freeze blank position as an experimental stratification variable.",
+    "Rerun this exact-text audit after changes; all source and audit hashes must change together.",
+    "Keep generationAuthorized=false until the separate provider privacy, route, credential, price, spend, physical-call, and controller gates pass.",
+    "Make the source overlap build hermetic or explicitly package a sealed reproducibility input; the current builder depends on two ignored external private files."
+  ],
+  "evidentiaryLimits": [
+    "The composition and no-external-source statements are authoring records; this audit independently establishes only internal consistency and local repository non-overlap at the stated threshold.",
+    "Local eight-token non-overlap cannot prove global originality, copyright ownership, or non-infringement.",
+    "Pattern scans and human observation reduce PII risk but cannot prove absence of every possible identifier.",
+    "Naturalness and difficulty judgments are human adjudications bound to the ignored private row findings, not machine proofs.",
+    "The 5/6 final-or-penultimate site concentration is a measured corpus property; its consequence for external validity is an adjudicative inference.",
+    "This audit does not authorize external dispatch or production use.",
+    "The source package's non-hermetic overlap inputs limit clean-checkout reproducibility even though the relevant derived selected-text sets are publicly committed."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P076",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "오답",
+      "reason": "'maximizing their utility in experimental practices'를 빈칸에 넣으면 '문제는 동물을 비인도적으로 다루는 것이 아니라, 실험에서 동물의 효용을 극대화하는 것에 관한 문제다'가 된다. 지문의 'experimental subjects', 'use'라는 표층 어휘를 재활용한 미끼로, 실전에서 잠깐 눈이 가지만 권리론의 핵심 주장(동물은 애초에 인간이 사용할 대상이 아니다)과 정반대다. 효용 극대화는 오히려 동물 이용을 전제하는 프레임이므로 논리적으로 성립 불가. 문법 결합(one about + 동명사)은 정상."
+    },
+    {
+      "label": "2",
+      "verdict": "오답 (가장 매력적인 오답)",
+      "reason": "'improving the physical surroundings during their captivity'는 지문 앞부분의 'insufficient food and space' 예시와 직접 호응해 강하게 끌린다. 그러나 이는 정확히 복지(welfare) 진영의 관심사다. 빈칸 문장은 'The problem is NOT one about treating animals inhumanely, but instead one about ___' 구조로, 복지적 처우 개선을 넘어서는 권리론의 근본 문제를 요구한다. 사육 환경 개선은 'treating animals inhumanely' 쪽 범주(처우 문제)에 속하므로 not-A but B 대조 구조상 B 자리에 올 수 없다. 표층 어휘 매칭에 의존하면 걸려드는 함정."
+    },
+    {
+      "label": "3",
+      "verdict": "정답",
+      "reason": "권리론의 주장은 'animals are not the kinds of thing that humans should use in this way at all' — 문제의 본질이 처우(비인도적 취급)가 아니라 동물을 인간의 효용을 위한 수단으로 간주하는 것 자체라는 것이다. 'viewing them merely as instrumental entities for our utility'는 이 문장을 정확히 재진술하며, not-A(처우) but B(수단화 자체)의 대조 구조와 완벽히 정합한다. 'one about + 동명사' 문법 결합도 자연스럽다. 'food and as experimental subjects'로 이용하는 것을 용인하는 복지 입법 비판과도 일치."
+    },
+    {
+      "label": "4",
+      "verdict": "오답",
+      "reason": "'delaying the legal procedures required for basic protection'은 입법 절차 지연이라는 지문에 전혀 등장하지 않는 개념. 'legislation', 'legal protection' 등의 표층 어휘만 재활용했다. 권리론 대 복지론 논쟁은 보호의 속도가 아니라 보호의 근본 프레임에 관한 것이므로 무관. 즉시 소거 가능."
+    },
+    {
+      "label": "5",
+      "verdict": "오답",
+      "reason": "'failing to secure sufficient funding for welfare enforcement'는 재원 확보 문제로, 지문 어디에도 근거가 없다. 'insufficient'라는 단어의 잔상('insufficient food and space')을 노린 초저강도 미끼. 게다가 'welfare enforcement' 강화는 복지 프레임 내부의 문제이므로 권리론이 말하는 '더 근본적인 문제'가 될 수 없다. 즉시 소거."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: 빈칸 문장이 'not one about treating animals inhumanely, but instead one about ___'라는 not-A but B 대조 구조이므로, 직전 문장 'animals are not the kinds of thing that humans should use in this way at all'의 재진술이 들어가야 함이 명확하다. 3번이 유일하게 이 재진술에 해당. 가장 매력적인 오답은 2번(지문의 'insufficient food and space'와 표층 호응)이지만 그것은 복지론의 문제의식이라 대조 구조상 배제된다. 1번도 'utility/experimental' 어휘 미끼로 순간 유혹이 있으나 방향이 반대다. 복수 정답 소지 없음, 빈칸 문법 결합(one about + V-ing) 전 선지 정상이라 문법으로는 변별 불가, 순수 논리 변별 문항. 단일 정답 3으로 확정."
+}

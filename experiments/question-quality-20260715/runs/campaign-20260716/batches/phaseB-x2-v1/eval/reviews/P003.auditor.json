@@ -1,0 +1,105 @@
+{
+  "pid": "P003",
+  "itemType": "GRAMMAR_ERROR",
+  "requestedDifficulty": "INTERMEDIATE",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MISANALYSIS-A",
+      "severity": "critical",
+      "evidence": "오답 해설 (A): \"이 자리는 전치사 vs 접속사를 묻고 있으며, 뒤에 주어+동사 절(the interview lasts)이 이어지므로 접속사 'while'이 어법상 옳습니다.\" 실제 밑줄 while은 'If the interview lasts a while'에서 관사 a 뒤의 명사(지속 기간 명사구 'a while', lasts의 목적어)이며, 절 'the interview lasts'는 while 뒤가 아니라 앞에 위치하고 그 절을 이끄는 접속사는 If다. 존재하지 않는 통사 구조(접속사 while + 후행 절)를 단정한 명백한 오분석."
+    },
+    {
+      "code": "V4-BROKEN-RATIONALE-B",
+      "severity": "major",
+      "evidence": "오답 해설 (B): \"It is 형용사 to-V 구조에서 가주어 It에 대한 진주어구의 성격과 이어지므로 비교급 형용사 형태인 'more efficient'가 어법상 옳습니다\" — '진주어구의 성격과 이어지므로'는 인과가 성립하지 않는 손상된 논증이며, 이 자리의 실제 결정 근거(be동사 보어 자리이므로 부사 more efficiently가 아닌 형용사)가 전달되지 않는다."
+    },
+    {
+      "code": "V4-CORRUPTED-TERMS",
+      "severity": "minor",
+      "evidence": "손상/비표준 용어: (E) 해설 '5형식 문양'(→ 문형의 오기), 정답 해설 '목적 분석의 구조(so that S + V)'(→ 목적의 부사절 구조), '필기화되도록'(transcribed의 비표준 역어 → 옮겨 적히도록/전사되도록)."
+    },
+    {
+      "code": "V4-KEYPOINT-MISLABEL",
+      "severity": "minor",
+      "evidence": "keyPoints의 (D) 표제가 '명사절과 관계대명사'이나 실제 교정형은 목적 부사절 접속사 so that로, 본 해설('부사절 접속사')과 표제가 상충한다. '완전한 절 앞에는 what이 올 수 없음'도 '완전한 절을 이끌 수 없음'의 부정확한 표현."
+    },
+    {
+      "code": "META-FIELD-CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression('that')·surroundingText('so that ...')가 표시형이 아닌 원문형 기재로 다른 항목들과 관례가 다르고, (B)/(C)의 surroundingText는 원문의 삽입구 '(using a recorder as backup if you wish)'를 생략한 접합 스니펫이다. 학생 노출 필드 간 모순은 아니므로 V1/V5 실패로는 판정하지 않음."
+    }
+  ],
+  "v1Evidence": "렌더 지문을 원지문과 전문 대조한 결과 의도된 단일 변형(that→what)만 존재하고 문장 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 마커 (A)~(E)가 선택지 5개(while/more efficient/to develop/what/easier)와 1:1 일치. (B)·(C)가 같은 절에 인접 밑줄로 붙어 있는 점은 이례적 형식이나 손상은 아님.",
+  "v2Evidence": "각 밑줄 독립 검증: (A) 'lasts a while'의 while은 관사 a 뒤 명사로 적법(awhile 대체 불필요). (B) 'It is more efficient to develop'의 보어 자리 비교급 형용사로 적법(암시적 비교 대상: 녹음 방식). (C) 가주어 It의 진주어 to부정사로 적법. (D) 'so what + 완전절(주어 they + 완결 수동 동사구 can be transcribed easily)'은 비문 — what은 선행사를 포함하며 불완전절을 요구하므로 성립 불가, 목적 접속사 so that로 교정 시 정확히 원문 복원. (E) 'makes the material much easier and quicker to handle'의 make+O+형용사 목적격보어로 적법. 실제 오류 집합 = {(D)}, 선언 정답과 일치, 단일정답 확정.",
+  "v3Evidence": "지문은 의도된 (D) 오류 외 전부 문법적·자연스럽고, 발문은 표준 어법 발문이며, (D)를 that으로 교정한 완성문은 원문과 동일하여 완전히 문법적. 비단어·오탈자 없음.",
+  "v5Evidence": "정답 라벨 (D)가 선언 정답·정답 해설·markedExpressions(isError=true, errorExpression='what', correction='that')·keyPoints 첫 항목과 모두 일치. 오답 해설 키 (A)(B)(C)(E)가 비정답 선택지와 정확히 동기화. keyPoints의 (C)(E) 항목도 해당 밑줄 내용과 대응.",
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "craftNotes": {
+    "C1": "완전절 판별로 관계대명사 what을 배제하고 so that 목적 구문 호응을 묻는 정전급 어법 포인트. 다만 'so ___' 국소 연어만으로도 풀리는 자리라 정교함은 중간.",
+    "C2": "(B)(C)(E)는 각각 보어 형용사/진주어 준동사/목적격보어라는 상이한 오개념을 겨냥하나, (A)는 명사 'a while' 자리에 '전치사 vs 접속사' 포인트를 잘못 부착해 의도가 자리와 어긋난 사실상의 필러이고, (B)(C)는 같은 절의 인접 밑줄로 독립 기여가 겹친다.",
+    "C3": "(A)(B)(C)(E)는 중위권 학생에게 비교적 즉시 소거 가능하고, 정답 (D)는 'so what'의 강한 표면 이질감으로 국소 단서만으로 드러나 전체 구조 판단의 경합이 약함.",
+    "C4": "메타 누출·꼬리 소거 단서 없음. 교정 시 원문이 정확히 복원되는 최소대립쌍으로 정답의 필연성 확보.",
+    "C5": "요청 난이도 INTERMEDIATE 대비 요구 사고 단계(완전절 판별 1단계)와 함정 깊이가 대체로 부합하나 다소 쉬운 쪽으로 기움.",
+    "C6": "정답 해설의 골격(완전절 → what 불가 → so that 교정)은 정확하나, (A) 해설 오분석, (B) 손상 논증, '5형식 문양'·'목적 분석의 구조'·'필기화' 등 용어 손상, keyPoints 오표제로 우아함이 크게 훼손."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "설계 의도는 while의 품사(접속사/전치사/명사) 판별로 추정되나, 실제 밑줄 자리는 'a while'의 명사 while이어서 의도가 자리와 어긋난 디코이.",
+      "temptingBecause": "while을 접속사로만 아는 학생이 관사 a 뒤의 명사 용법을 낯설어하며 오류로 의심할 수 있음.",
+      "decisiveFlaw": "관사 a가 이끄는 명사구 'a while'(lasts의 목적어)로 완전히 적법 — 옳은 표현. 단, 자체 해설이 이 구조를 '접속사 + 후행절'로 오분석함."
+    },
+    {
+      "label": "(B)",
+      "intent": "be동사 보어 자리에서 형용사(more efficient) vs 부사(more efficiently) 판별.",
+      "temptingBecause": "뒤따르는 to develop을 수식한다고 착각하면 부사가 필요해 보임.",
+      "decisiveFlaw": "It is의 보어 자리이므로 비교급 형용사가 정확 — 옳은 표현."
+    },
+    {
+      "label": "(C)",
+      "intent": "가주어 It에 대응하는 진주어 준동사 형태(to부정사 vs 동명사/원형) 판별.",
+      "temptingBecause": "developing 등 동명사 진주어 가능성을 고민하게 함.",
+      "decisiveFlaw": "It is + 형용사 + to-V의 표준 가주어-진주어 구문으로 to develop이 정확 — 옳은 표현."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. 완전한 절 앞의 관계대명사 what 불가 + so that 목적 구문 호응을 겨냥한 source-correct → displayed-wrong 최소대립쌍.",
+      "temptingBecause": "what을 '~하는 것' 명사절로 뭉개어 해석하면 의미가 그럴듯해 보이고, 수동태 절의 완전성 판별을 요구함.",
+      "decisiveFlaw": "후행절이 주어(they)+완결 수동 동사구(can be transcribed easily)를 갖춘 완전한 절이므로 불완전절을 요구하는 what은 성립 불가 — so that으로 교정해야 하며 교정 시 원문과 정확히 일치."
+    },
+    {
+      "label": "(E)",
+      "intent": "make의 목적격보어 자리에서 형용사(easier) vs 부사(more easily) 판별.",
+      "temptingBecause": "'to handle'이라는 동사 관념을 수식한다고 보아 부사를 떠올릴 수 있음.",
+      "decisiveFlaw": "make + O(the material) + 형용사 보어 구조로 easier가 정확 — 옳은 표현."
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설이 명사 'a while'의 while을 접속사로 오분석하고 '뒤에 주어+동사 절(the interview lasts)이 이어진다'는 실제 문장에 존재하지 않는 구조를 기술 — 그 절은 밑줄 앞에 있으며 접속사는 If (critical)",
+    "(B) 해설의 '진주어구의 성격과 이어지므로'는 논증이 손상되어 실제 판단 근거(보어 자리의 형용사 vs 부사)가 전달되지 않음 (major)",
+    "(E) 해설 '5형식 문양' — '5형식 문형'의 오기/손상 용어 (minor)",
+    "정답 해설 '목적 분석의 구조', '필기화되도록' — 손상/비표준 용어 (minor)",
+    "keyPoints (D) 표제 '명사절과 관계대명사'가 실제 포인트(목적 부사절 접속사 so that) 및 본 해설과 상충 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE이므로 KILLER 추가 조건 판정 대상이 아님 → false.",
+  "grade": "F",
+  "notes": "문항 본체는 건전하다: 렌더 무결(V1), 단일정답 (D) 독립 확정(V2), 완성문 문법성(V3), 필드 동기화(V5) 모두 통과. 그러나 V4에서 (A) 오답 해설이 실제 문장에 존재하지 않는 통사 구조(접속사 while + 후행절)를 단정하는 명백한 오분석이고, (B) 해설의 논증 손상과 다수의 용어 손상('5형식 문양', '목적 분석의 구조'), keyPoints 오표제가 겹쳐 해설 사실성 게이트를 통과하지 못한다. 치명(V 실패)은 공예 점수로 상쇄되지 않으므로 등급 F. 수리 방향: (A) 해설을 명사 'a while' 구조 설명으로 재작성(또는 디코이를 실제 판별 포인트가 있는 자리로 이동), (B) 해설을 '보어 자리 형용사 vs 부사' 근거로 재작성, 용어 오기 교정, keyPoints (D) 표제를 '접속사 that(so that) vs 관계대명사 what'으로 정정."
+}

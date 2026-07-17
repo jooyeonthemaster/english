@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 1,
+  "g3": {
+    "passage": "The signal that reaches the receiver remains stable, allowing engineers to compare the recorded values carefully.",
+    "minimalAbstention": {
+      "questions": [
+        {
+          "siteCertificate": {
+            "certificationStatus": "NO_SAFE_SITE",
+            "abstentionReason": "Every plausible mutation remains grammatical under at least one defensible parse."
+          }
+        }
+      ]
+    },
+    "invalidAbstentions": {
+      "missingReason": {
+        "questions": [
+          {
+            "siteCertificate": {
+              "certificationStatus": "NO_SAFE_SITE"
+            }
+          }
+        ]
+      },
+      "blankReason": {
+        "questions": [
+          {
+            "siteCertificate": {
+              "certificationStatus": "NO_SAFE_SITE",
+              "abstentionReason": "   "
+            }
+          }
+        ]
+      },
+      "fabricatedBinding": {
+        "questions": [
+          {
+            "siteCertificate": {
+              "certificationStatus": "NO_SAFE_SITE",
+              "abstentionReason": "No safe site exists.",
+              "sourceExpressionExact": "fabricated"
+            }
+          }
+        ]
+      },
+      "fabricatedQuestionShell": {
+        "questions": [
+          {
+            "direction": "A fake completed question",
+            "siteCertificate": {
+              "certificationStatus": "NO_SAFE_SITE",
+              "abstentionReason": "No safe site exists."
+            }
+          }
+        ]
+      },
+      "partialCertified": {
+        "questions": [
+          {
+            "siteCertificate": {
+              "certificationStatus": "CERTIFIED"
+            }
+          }
+        ]
+      }
+    },
+    "certifiedCandidate": {
+      "direction": "다음 글의 밑줄 친 부분 중 어법상 틀린 것은?",
+      "siteCertificate": {
+        "certificationStatus": "CERTIFIED",
+        "sourceSentenceExact": "The signal that reaches the receiver remains stable, allowing engineers to compare the recorded values carefully.",
+        "sourceExpressionExact": "reaches",
+        "surroundingTextExact": "The signal that reaches the receiver remains stable",
+        "pointCode": "d",
+        "frame": "subject-verb agreement",
+        "governingRule": "The singular subject signal requires the finite form reaches.",
+        "mutation": {
+          "sourceForm": "reaches",
+          "displayedError": "reach",
+          "correction": "reaches",
+          "mutationClass": "SUBJECT_VERB_AGREEMENT"
+        },
+        "strongestAlternativeParse": "Treat signal as a plural head.",
+        "whyAlternativeFails": "Signal is morphologically singular and is the head of the subject noun phrase.",
+        "mutationOnlyCertifiedSite": true
+      },
+      "markedExpressions": [
+        {
+          "label": "(A)",
+          "expression": "reaches",
+          "errorExpression": "reach",
+          "correction": "reaches",
+          "isError": true,
+          "surroundingText": "The signal that reaches the receiver remains stable",
+          "pointCode": "d"
+        },
+        {
+          "label": "(B)",
+          "expression": "remains",
+          "errorExpression": "remains",
+          "isError": false,
+          "surroundingText": "the receiver remains stable",
+          "pointCode": "a"
+        },
+        {
+          "label": "(C)",
+          "expression": "allowing",
+          "errorExpression": "allowing",
+          "isError": false,
+          "surroundingText": "remains stable, allowing engineers",
+          "pointCode": "c"
+        },
+        {
+          "label": "(D)",
+          "expression": "recorded",
+          "errorExpression": "recorded",
+          "isError": false,
+          "surroundingText": "compare the recorded values",
+          "pointCode": "c"
+        },
+        {
+          "label": "(E)",
+          "expression": "carefully",
+          "errorExpression": "carefully",
+          "isError": false,
+          "surroundingText": "the recorded values carefully",
+          "pointCode": "f"
+        }
+      ],
+      "correctAnswers": ["(A)"],
+      "correctAnswer": "(A)",
+      "options": [
+        { "label": "(A)", "text": "reach" },
+        { "label": "(B)", "text": "remains" },
+        { "label": "(C)", "text": "allowing" },
+        { "label": "(D)", "text": "recorded" },
+        { "label": "(E)", "text": "carefully" }
+      ],
+      "wrongOptionExplanations": [
+        { "label": "(B)", "expression": "remains", "pointCode": "a", "explanation": "remains는 단수 주어와 일치하는 적절한 정동사이다." },
+        { "label": "(C)", "expression": "allowing", "pointCode": "c", "explanation": "allowing은 앞 절의 결과를 덧붙이는 적절한 분사이다." },
+        { "label": "(D)", "expression": "recorded", "pointCode": "c", "explanation": "recorded는 values를 수식하는 적절한 과거분사이다." },
+        { "label": "(E)", "expression": "carefully", "pointCode": "f", "explanation": "carefully는 compare를 수식하는 적절한 부사이다." }
+      ],
+      "explanation": "reach는 관계절의 단수 주어 signal과 수가 일치하지 않는다. 따라서 단수 현재형 reaches로 고쳐야 하며, signal을 복수로 읽을 통사적 근거도 없다.",
+      "keyPoints": ["(A) 주어와 동사의 수일치", "(B) 정동사의 형태", "(C) 분사의 기능"],
+      "tags": ["수일치", "관계절"],
+      "difficulty": "INTERMEDIATE"
+    }
+  },
+  "b3": {
+    "passage": "Students remember new information better when they connect new facts to personal experiences. This connection gives abstract ideas a familiar anchor and makes later recall easier.",
+    "baseCandidate": {
+      "direction": "다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오.",
+      "blankBlueprint": {
+        "target": {
+          "originalExpressionExact": "connect new facts to personal experiences",
+          "surroundingTextExact": "Students remember new information better when they connect new facts to personal experiences.",
+          "discourseRole": "TOPIC_CLAIM",
+          "answerMeaningAxis": "Learners remember better by linking unfamiliar facts with their own experience.",
+          "evidenceAnchors": [
+            {
+              "id": "E1",
+              "exactQuote": "Students remember new information better when they connect new facts to personal experiences.",
+              "contribution": "States the memory benefit and the linking condition."
+            },
+            {
+              "id": "E2",
+              "exactQuote": "This connection gives abstract ideas a familiar anchor and makes later recall easier.",
+              "contribution": "Explains why the connection improves recall."
+            }
+          ],
+          "slotContract": {
+            "prefixExact": "Students remember new information better when they ",
+            "suffixExact": ".",
+            "syntacticCategory": "VERB_PHRASE",
+            "polarity": "POSITIVE",
+            "scope": "WHOLE_PASSAGE_THESIS",
+            "register": "ACADEMIC"
+          }
+        },
+        "optionIntentLedger": {
+          "correctIntent": {
+            "label": "1",
+            "status": "CORRECT",
+            "proposedText": "link new facts with their own experiences",
+            "meaningRelation": "EQUIVALENT_SYNTHESIS",
+            "evidenceIds": ["E1", "E2"],
+            "sameSlotProof": "A base-form verb phrase governed by they."
+          },
+          "distractorIntents": [
+            {
+              "label": "2",
+              "status": "DISTRACTOR",
+              "proposedText": "separate new facts from their own experiences",
+              "intent": "CAUSE_EFFECT_REVERSAL",
+              "borrowedPassageConcept": "facts and experiences",
+              "errorDistance": { "semanticOverlap": "HIGH", "distortionCount": "ONE", "eliminationDepth": "TWO_LINKED_CLUES" },
+              "decisiveExclusion": { "evidenceIds": ["E1"], "reason": "It reverses the linking condition." },
+              "mutuallyExclusiveWithAnswer": "Separating and linking cannot both preserve the stated relation.",
+              "sameSlotProof": "A base-form verb phrase governed by they."
+            },
+            {
+              "label": "3",
+              "status": "DISTRACTOR",
+              "proposedText": "connect abstract ideas only to later recall",
+              "intent": "SCOPE_NARROWING",
+              "borrowedPassageConcept": "abstract ideas and recall",
+              "errorDistance": { "semanticOverlap": "HIGH", "distortionCount": "ONE", "eliminationDepth": "TWO_LINKED_CLUES" },
+              "decisiveExclusion": { "evidenceIds": ["E2"], "reason": "It narrows the relation to recall alone." },
+              "mutuallyExclusiveWithAnswer": "The narrowed relation omits personal experience.",
+              "sameSlotProof": "A base-form verb phrase governed by they."
+            },
+            {
+              "label": "4",
+              "status": "DISTRACTOR",
+              "proposedText": "turn every familiar anchor into isolated facts",
+              "intent": "AGENT_TARGET_SWAP",
+              "borrowedPassageConcept": "anchors and facts",
+              "errorDistance": { "semanticOverlap": "HIGH", "distortionCount": "ONE", "eliminationDepth": "TWO_LINKED_CLUES" },
+              "decisiveExclusion": { "evidenceIds": ["E2"], "reason": "It swaps what the connection does." },
+              "mutuallyExclusiveWithAnswer": "It reverses the target relation.",
+              "sameSlotProof": "A base-form verb phrase governed by they."
+            },
+            {
+              "label": "5",
+              "status": "DISTRACTOR",
+              "proposedText": "use quick guessing to make later recall easier",
+              "intent": "STANCE_SHIFT",
+              "borrowedPassageConcept": "later recall",
+              "errorDistance": { "semanticOverlap": "MEDIUM", "distortionCount": "ONE", "eliminationDepth": "TWO_LINKED_CLUES" },
+              "decisiveExclusion": { "evidenceIds": ["E1", "E2"], "reason": "Guessing is not the mechanism in the passage." },
+              "mutuallyExclusiveWithAnswer": "Guessing replaces the stated linking mechanism.",
+              "sameSlotProof": "A base-form verb phrase governed by they."
+            }
+          ]
+        },
+        "seamAudit": {
+          "allFiveGrammatical": true,
+          "noOptionRepeatsBoundaryMaterial": true,
+          "noPolarityOrLengthGiveaway": true
+        }
+      },
+      "originalExpression": "connect new facts to personal experiences",
+      "surroundingText": "Students remember new information better when they connect new facts to personal experiences.",
+      "blankAnswerMode": "PARAPHRASE",
+      "answerLogic": "두 문장을 연결하면 개인 경험과 새 사실의 연결이 기억을 돕는다는 결론이 나온다.",
+      "options": [
+        { "label": "1", "text": "link new facts with their own experiences" },
+        { "label": "2", "text": "separate new facts from their own experiences" },
+        { "label": "3", "text": "connect abstract ideas only to later recall" },
+        { "label": "4", "text": "turn every familiar anchor into isolated facts" },
+        { "label": "5", "text": "use quick guessing to make later recall easier" }
+      ],
+      "correctAnswer": "1",
+      "wrongOptionExplanations": [
+        { "label": "2", "explanation": "개인 경험과 사실을 분리하므로 지문의 연결 관계를 거스른다." },
+        { "label": "3", "explanation": "개인 경험과의 연결을 빼고 회상으로 범위를 지나치게 좁힌다." },
+        { "label": "4", "explanation": "친숙한 닻이 고립된 사실을 유용하게 만든다는 방향을 뒤집는다." },
+        { "label": "5", "explanation": "지문은 추측이 아니라 개인 경험과의 연결을 기억 기제로 제시한다." }
+      ],
+      "explanation": "첫 문장은 새 사실을 개인 경험과 연결할 때 기억이 좋아진다고 말하고, 둘째 문장은 그 연결이 친숙한 닻을 제공한다고 설명한다. 따라서 1번이 두 근거를 함께 보존한다.",
+      "keyPoints": ["개인 경험과 새 사실의 연결", "친숙한 닻", "회상 개선"],
+      "tags": ["빈칸추론", "연결"],
+      "difficulty": "INTERMEDIATE"
+    },
+    "falseGrammarAttestationPatch": {
+      "optionLabel": "2",
+      "optionText": "separate new facts from their own experiences.",
+      "expectedDeterministicCode": "blank-double-punctuation-boundary"
+    },
+    "falseSemanticAttestationPatch": {
+      "optionLabel": "1",
+      "optionText": "keep new facts isolated from personal experiences",
+      "answerMeaningAxis": "Learners remember better by isolating facts from personal experience.",
+      "humanFinding": "This reverses the passage's central linking claim even though every literal seamAudit value remains true."
+    }
+  }
+}

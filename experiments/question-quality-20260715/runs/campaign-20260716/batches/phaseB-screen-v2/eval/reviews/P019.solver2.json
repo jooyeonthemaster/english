@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "tell + IO + that-clause (ditransitive frame): 'told a bunch of healthy undergraduates that he was testing...'. The that-clause is the direct object of 'told'; fully grammatical. No alternative parse renders it wrong."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "ask + object + to-infinitive (object-control construction): 'asked them to create a coherent sentence'. Standard and grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'after they were exposed to the words' — passive of 'expose sb to sth'; 'be exposed to' is the required collocation and the temporal after-clause with past passive is well-formed."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the error)",
+      "reason": "Matrix-clause finiteness failure. Subject = 'Those students [who had been exposed to an elderly mix of words]'; the only finite verb ('had been exposed') is inside the subordinate who-relative clause. After the subject the sole verbal element is the nonfinite participle 'taking', and the sentence ends at '...random words' with no later finite verb, so the clause has no predicate. Rescue parses all fail: (i) reduced-relative reading of 'taking' still leaves no matrix verb; (ii) an absolute construction would require a following main clause that does not exist; (iii) no inversion/ellipsis licenses a verbless matrix clause. Must be finite past 'took', matching the narrative past and the comparative 'than those who had been exposed'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'than those who had been exposed to random words' — plural demonstrative 'those' as comparative anaphor for 'the students', properly modified by a relative clause. Grammatical; number agreement with plural antecedent holds."
+    }
+  ],
+  "note": "Clean single-error item. (D) is a classic finite-verb-deletion trap: the long relative clause inside the subject ('who had been exposed...') supplies a finite verb that can mislead readers into accepting participial 'taking' as the predicate, but formally the matrix clause is verbless. The comparative structure ('40 percent longer ... than those who...') independently demands a finite 'took'. All other underlines are unambiguously grammatical under every plausible parse, so exactly one label is defensible."
+}

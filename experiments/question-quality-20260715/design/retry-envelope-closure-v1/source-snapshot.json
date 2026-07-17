@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "files": [
+    {
+      "path": "src/lib/concurrency-config.ts",
+      "sha256": "df0edfb5e84cafd6716251fc3fdebbf0473052ce870bc15a411ce5f20325b9d1"
+    },
+    {
+      "path": "src/lib/question-generation-research-runtime.ts",
+      "sha256": "e25b1fd8e030b61ef5b934be281bbd26b2a3d191ebfcb067cbff9c351b85c616"
+    },
+    {
+      "path": "src/lib/question-generation-llm.ts",
+      "sha256": "3eb35777d48cf9b86925efc53441c17d1472e4e06903496a7114fc2f0456546b"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+      "sha256": "46b6151bbde80a7b149be5f1f6d266cb640f5ad8366901072e237bca22e7ae8b"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "sha256": "a3da1036a72d7f9ec0e9ebc7036d07d0d2cf2128fb2420d24a6b5baaff5e41ec"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "sha256": "811702366ba41f36310d2a80963ad35076c37ed4a695f1eac3b69d4dbc4729dc"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+      "sha256": "40141d5ecf0c713f1d706cbedf434f2a7eef86d44fa3ddd22142ddba3f3c22a3"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts",
+      "sha256": "be7a80c1e4e9833f5b05352c532375534b5a1f19102b12f6fea89b9f5310da88"
+    },
+    {
+      "path": "src/trigger/workbench-question-generation.ts",
+      "sha256": "2884e251818bede925d85aba1c91f805c1fa1b7524f29deeeeff488adaaa53ad"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/question-generation-phase-c-runner.ts",
+      "sha256": "73c4a41c68e38c5bfab00edf87e28a6b9ebb4d31ae06bf504d5e967050f0d860"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts",
+      "sha256": "de53b1f2d23873779f2975a9472c61ec55909d418fff1743eb24eef1097cb765"
+    }
+  ]
+}
+

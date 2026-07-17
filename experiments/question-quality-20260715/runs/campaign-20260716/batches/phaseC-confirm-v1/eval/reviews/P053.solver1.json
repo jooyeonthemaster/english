@@ -1,0 +1,35 @@
+{
+  "pid": "P053",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong-but-attractive",
+      "reason": "가장 강한 매력 오답. 호랑이/포식자 이미지와 '석기시대 뇌의 현대 오독' 프레임을 재사용해 실제로 끌린다. 그러나 뇌가 위협으로 오독하는 대상은 명시적으로 무해한 상황(교통체증, 배우자와의 불쾌한 대화)이다 — 'that does not really threaten our lives', 'There is no danger', 'The danger is an illusion'. 이를 'genuine modern hazards'라 부르는 순간 지문 핵심 주장과 정면 충돌한다. 지문에서 진짜 현대적 위험(고혈압·당뇨)은 오히려 뇌가 경보를 울리지 않는 대상이므로 이중으로 어긋난다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "방향 반전. 뇌는 사소한 일상적 짜증거리를 무시하는 것이 아니라 그것들에 과잉 반응하여 위협으로 평가한다. 지문 논리의 정반대."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "빈칸에 넣으면 결론부와 완벽히 접합. 'fabricates' = 뇌가 만들어내는 환상의 위험(The danger is an illusion), 'a fatal crisis' = flee-or-fight가 요구되는 생명 위협 프레임, 'a harmless reality' = 생명을 위협하지 않는 교통체증·대화. 지문 전체의 요지(무해한 현실에서 치명적 위기를 지어내는 석기시대 뇌)의 정확한 패러프레이즈."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "방향 반전. 지문은 flee/fight가 실제로 필요하지 않다고 반복 명시한다('we do not have to flee or fight'). 뇌의 오류는 필요를 인식하지 못하는 것이 아니라 존재하지 않는 필요를 날조하는 것."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "전제와 정면 모순. 'a Stone Age brain that lives in a modern world'는 뇌가 더 안전한 환경에 적응하지 못했다는 것이 글의 대전제다. 적응했다면 지문의 모든 사례가 성립하지 않는다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 빈칸은 결론 문장으로, 직전의 'The danger is an illusion'과 'There is no danger, but our brain rates it as such'의 재진술이어야 한다. ①은 표면 이미지(포식자, 석기시대 뇌) 재활용으로 실제 유혹이 강했으나 'genuine'이라는 한 단어가 지문의 3중 무해성 명시와 충돌해 탈락 — 잘 설계된 매력 오답. ②④⑤는 모두 방향 반전형으로 변별이 쉽다. 대안 해석으로 ①을 정문화할 경로(예: 교통체증을 '진짜 현대적 위험'으로 보는 독해)는 지문이 명시적으로 차단하고 있어 성립 불가. 정답은 ③ 단일 옹호 가능, 확신 높음."
+}

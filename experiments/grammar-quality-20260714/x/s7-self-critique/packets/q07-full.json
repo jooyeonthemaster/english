@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=l  (C):dec=c  (D):dec=k  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 148,
+        "relPos": 0.215,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 198,
+        "relPos": 0.287,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 245,
+        "relPos": 0.356,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 493,
+        "relPos": 0.716,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 570,
+        "relPos": 0.827,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.827,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has",
+        "isError": false,
+        "correction": "has",
+        "errorExpression": "has",
+        "surroundingText": "suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "while",
+        "isError": false,
+        "correction": "while",
+        "errorExpression": "while",
+        "surroundingText": "yet we hadn't noticed the sound while it was ongoing.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(C)",
+        "expression": "predicting",
+        "isError": false,
+        "correction": "predicting",
+        "errorExpression": "predicting",
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "running",
+        "isError": false,
+        "correction": "running",
+        "errorExpression": "running",
+        "surroundingText": "Right after New York City stopped running elevated trains",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "claiming",
+        "isError": true,
+        "correction": "claiming",
+        "errorExpression": "claimed",
+        "surroundingText": "people called the police in the middle of the night claiming that something woke them up.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has"
+      },
+      {
+        "label": "(B)",
+        "text": "while"
+      },
+      {
+        "label": "(C)",
+        "text": "predicting"
+      },
+      {
+        "label": "(D)",
+        "text": "running"
+      },
+      {
+        "label": "(E)",
+        "text": "claimed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "that절의 주어 명사구의 핵심(head)이 단수 명사인 'a source'이므로 단수 동사 'has'는 수일치상 올바릅니다.",
+      "(B)": "뒤에 주어(it)와 동사(was)를 갖춘 완전한 부사절이 이어지므로 시간의 접속사 'while'은 공기하는 요소들과 부합합니다.",
+      "(C)": "과거진행형 'were predicting'의 일부로 쓰여 주어인 'Your auditory areas'가 능동적으로 그 지속을 예측하고 있었다는 문맥을 형성하므로 현재분사는 적절합니다.",
+      "(D)": "동사 'stop'은 과거에 해오던 일을 멈추는 대상(목적어)으로 동명사를 목적어로 취하므로 'running'은 문법상 타당합니다."
+    },
+    "explanation": "(E) \"claimed\"는 어법상 틀린 표현이며 \"claiming\"로 고쳐야 한다. 이 문장에서 주절의 주어는 'people'이며 본동사는 'called'로 주절의 필수 문장 성분이 완비되었습니다. 접속사 없이 동사 형태인 'claimed'를 나열할 수 없으며 의미상으로도 '전화를 걸며 동시에 주장한 것'이므로, 'claimed'는 절의 본동사 'called'와 병렬을 이룰 수 없는 구조입니다. 따라서 이 자리는 목적어인 that절을 동반하면서 주절에 부수적인 동작이나 상태를 묘사하는 분사구문의 능동형태인 'claiming'이 되어야 문장 구조상 올바릅니다. 그러므로 (E)는 명백한 비문입니다.",
+    "keyPoints": [
+      "(E) 정·준동사 — 접속사 없이 중복된 정동사 자리를 분사구문으로 수정",
+      "(C) 분사 — 진행형 시제 속 현재분사의 능동적 수식 관계 판정",
+      "(D) to-v/v-ing — 동사 stop의 목적어로 동명사가 쓰인 경우와 to부정사가 쓰인 경우의 구별"
+    ],
+    "tags": [
+      "준동사",
+      "분사구문",
+      "수일치",
+      "동명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, __(A) has__ just ceased - yet we hadn't noticed the sound __(B) while__ it was ongoing. Your auditory areas were __(C) predicting__ its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped __(D) running__ elevated trains, people called the police in the middle of the night __(E) claimed__ that something woke them up. They tended to call around the time the trains used to run past their apartments."
+  }
+}

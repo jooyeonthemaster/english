@@ -1,0 +1,35 @@
+{
+  "pid": "P072",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'accomplished how elderly shoppers managed their heavy groceries'는 의미 결합(seam)이 성립하지 않는다 — '~하는 방법'을 accomplish의 성취 대상으로 삼을 수 없고, 노인 쇼핑객은 오히려 카트 이미지를 악화시킨 부차 세부사항이다. 쉴들이 성취한 것(=쇼핑객 설득)과 무관."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'accomplished why...'는 의미상 비문이며 사실관계 짜깁기 오답 — 남성이 꺼린 것은 '쇼핑 카트'이고, 유모차(baby carriages) 연상은 '여성'의 이유였다. 지문의 서로 다른 두 문장을 접합해 만든 거짓 명제."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "어휘 반향 미끼('advertisements', 'persuaded')로 순간 끌림이 있으나 극성이 반전됨: 지문은 반복 광고·설명에도 '설득에 실패했다'고 명시한다. 광고가 '마침내 설득한 시점'은 존재하지 않으며, 'accomplished when...' seam도 부자연스럽다."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "자유관계절 'what logic, explanations, and advertisements failed to do'가 accomplished의 목적어로 문법 결합이 깨끗하고, 'in spite of his repeated advertisements and explanations, he could not persuade his shoppers' vs. 쉴 투입 후 'Within a few weeks shoppers readily accepted those carts'의 대조와 정확히 정합. 전환점(turning point)의 의미를 그대로 담는 유일한 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "가장 위험한 매력적 오답: 문법적으로 깨끗한 자유관계절 + 지문의 'even less attractive'를 그대로 되울리는 어휘 반향으로 실전에서 실제 1차 유혹이 있었다. 그러나 대입하면 '쉴들이 카트를 덜 매력적으로 만든 요인을 성취했다'가 되어 결과(즉각 수용)와 정반대 극성. 논리 검증에서 즉시 탈락."
+    }
+  ],
+  "note": "블라인드 풀이(최상위권 수험생 렌즈). ⑤(verbatim 'less attractive' 반향, 문법 무결)와 ③(advertisements/persuade 반향)에 실제 끌림을 기록했으나, 둘 다 지문의 '광고 실패'와 '최종 수용'이라는 극성 검증에서 탈락. ④가 문법 seam과 담화 논리 모두에서 유일하게 옹호 가능한 정답. 사회적 증거(social proof) 소재의 전형적 빈칸 문항으로 성립 상태 양호, 복수정답 여지 없음."
+}

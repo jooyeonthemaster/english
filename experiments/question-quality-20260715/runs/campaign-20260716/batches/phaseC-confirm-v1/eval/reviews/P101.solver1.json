@@ -1,0 +1,35 @@
+{
+  "pid": "P101",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "선행사 people(사람)을 받는 주격 관계대명사 who가 관계절 'have been adopted'의 주어 역할을 수행. 완전한 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "밑줄 직전 명사 this information(단수)에 끌려 단수 동사로 착각하기 쉬운 근접 함정이나, 진짜 주어는 장거리의 all their attempts (to discover this information)로 복수. 'attempts ... are met with firm resistance' 수동태 수 일치 정확. 매력적 오답으로 실제 끌림이 있었으나 주어 추적으로 해소."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "tell + 간접목적어(them) + 직접목적어(nothing)의 4형식 구조. 부정대명사 nothing이 직접목적어 자리에 오는 것은 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "주어 they는 앞 절의 restrictions against opening adoption files(복수)를 지시. 'do not necessarily + 동사원형' 구조이므로 원형 discourage가 정확. they의 지시 대상을 단수로 오인하면 끌리는 두 번째 매력 오답이나, 조동사 do 뒤 원형은 어차피 수와 무관하게 원형이므로 어법상 흠이 없다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "devote A to B 관용구조에서 to는 전치사이므로 'devote all their time and energy to finding'이 되어야 한다. 대안 해석(목적 부정사 '찾기 위해 바친다')을 적극 검토했으나, devote는 to+명사/동명사 보충어를 요구하는 타동사라 그 독해에서는 'devote their time and energy'가 필수 보충어 없이 비문이 되어 대안 해석 불성립. 어법상 틀림 확정."
+    }
+  ],
+  "note": "정답 (E) 단독 수렴. 매력적 오답 동선: (B)는 근접 명사 information(단수) 착시로 1차 유혹, (D)는 they의 지시 대상 추적 부담으로 2차 유혹이 있으나 둘 다 장거리 단서(진짜 주어 attempts 복수, they=restrictions 복수 + do 뒤 원형)로 정문 확인. (E)는 devote ~ to -ing라는 전형적 전치사 to 포인트로, 목적 부정사 대안 해석까지 배제되어 논쟁 여지 없음. 문항 성립."
+}

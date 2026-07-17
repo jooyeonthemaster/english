@@ -1,0 +1,83 @@
+{
+  "pid": "P096",
+  "blindAnswer": "(B)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "문두 부사 so('~도 마찬가지') 뒤 '조동사+주어+동사원형' 도치 어순의 정오 판단",
+      "temptingBecause": "'so would they have been'이 평서 어순과 다르고 완료형(have been)까지 겹쳐 구조가 복잡해 보임 — 5개 중 가장 강한 디코이",
+      "decisiveFlaw": "so-도치는 표준 문법(so + 조동사 + 주어 + 동사원형)이며 원문 그대로 정문이므로 정답이 될 수 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "[정답] with 부대상황 구문(with + 명사 + 형용사/분사) 내부 병렬에서 정동사 사용 불가 판정",
+      "temptingBecause": "'and some have'를 새로운 절의 주어+동사로 읽으면 정문처럼 보일 수 있고, 지문 후반이 역사적 현재시제를 쓰므로 present 'have'가 낯설지 않음",
+      "decisiveFlaw": "and는 with 구문 내부에서 'some roles more dangerous'(명사+형용사)와 'some ___'(명사+분사)를 병렬하므로 정동사 have는 비문 — having으로 교정하면 정확히 원문이 복원됨(최소대립쌍 성립)"
+    },
+    {
+      "label": "(C)",
+      "intent": "타동사 bury의 수동태(are buried) 적합성 판단",
+      "temptingBecause": "태 판단 자체는 요구되나, individuals가 매장 '대상'임이 문맥상 즉각 명백해 유인력이 낮음",
+      "decisiveFlaw": "Some individuals는 매장되는 대상이므로 수동태 are buried는 정문 — 오답 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "seem + to부정사의 태(수동 부정사 to be buried) 판단",
+      "temptingBecause": "부정(don't even seem)과 수동 부정사가 결합된 형태가 복잡해 보임; 단 (C)와 동일하게 'bury의 수동' 판단이라 포인트가 부분 중복됨",
+      "decisiveFlaw": "still others가 매장되는 대상이므로 to be buried는 정문 — 오답 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "of-전치사구 수식을 사이에 둔 주어-동사 수일치(analyses ... reveal)",
+      "temptingBecause": "유인력 사실상 부재 — 고전적 함정은 동사 인접 명사가 단수여서 단수 동사로 착각하게 만드는 것인데, 인접 명사 'long bones'도 복수라 복수 동사 reveal에 아무 위화감이 없음. 필러에 가까움",
+      "decisiveFlaw": "핵 명사 analyses(복수)와 reveal이 일치하는 정문 — 오답 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "IMPRECISE_REASON",
+      "severity": "minor",
+      "evidence": "정답 해설의 '정동사 have를 쓰면 접속사 없이 새로운 절이 연결되므로 비문' — 실제로는 접속사 and가 존재한다. 정확한 이유는 and가 with 구문 내부의 형용사구/분사구를 병렬하므로 정동사절이 올 수 없다(비병렬 등위)는 것이다. 핵심 분석(with+명사+분사/형용사, have→having 교정)은 정확하므로 V4 실패로는 보지 않음"
+    },
+    {
+      "code": "KEYPOINTS_COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints가 (B),(A),(E)만 다루고 (C),(D)의 포인트가 누락됨. 밑줄별 why-tempting 서술도 어디에도 없음 — KILLER 조건 '5개 밑줄 각각 point/why tempting/why correct 존재' 미충족"
+    }
+  ],
+  "auditNotesByGate": {
+    "V1": "렌더 지문과 원지문을 전문 대조 — 유일한 변형은 (B) having→have(의도된 오류 주입)이고 그 외 문장 접합·중복·누락·고아 문장부호·오탈자 없음. 5개 마커 (A)~(E)가 선택지 표기와 정확히 일치. markedExpressions의 (B) correction='having'도 원문과 일치.",
+    "V2": "각 밑줄 독립 검증: (A) so-도치 정문. (C) 수동태 정문. (D) seem+수동부정사 정문. (E) 핵 analyses(복수)-reveal 수일치 정문. (B)만 비문 — 대안 해석으로 'and some have...'를 주절 등위로 읽는 파스를 검토했으나, and 앞 'some roles more dangerous'가 절이 아니어서 등위가 비병렬이 되고, 콤마 없는 절 등위·시제 부정합(would have been 프레임 내 현재형)으로 성립하지 않음. 정답 집합 = {(B)} 유일, 선언과 일치.",
+    "V3": "원지문·발문 문법적. (B) 오류는 유형 의도와 정확히 일치하는 비문이며, having으로 교정한 완성문은 자연스러운 정문.",
+    "V4": "정답 해설의 구조 분석(with+명사+분사/형용사, and 앞 형용사·뒤 분사 병렬, have→having)은 실제 문장과 일치. '접속사 없이' 표현은 부정확하나(minor) 오개념·환각 수준 아님. 오답 해설 4건 모두 해당 선지의 실제 구조와 대응(so-도치, 수동태, 수동 부정사, analyses 수일치) — 오귀속·비단어 없음.",
+    "V5": "선언 정답 (B) = markedExpressions에서 유일한 isError:true = 해설의 교정 대상 = keyPoints 첫 항목. 선지 5개와 라벨·오답해설 키 (A)(C)(D)(E) 모두 동기화. 모순 없음."
+  },
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "perUnderlineDocumentation": false,
+    "structuralNotSurface": true,
+    "noEasySamePointDecoyShadowing": true,
+    "reason": "최소대립쌍(having→have)과 명확한 문법 판단은 충족. 그러나 (1) 5개 밑줄 각각의 point/why-tempting 문서화 부재 — keyPoints가 (C),(D)를 누락하고 why-tempting은 전무, (2) (E)는 인접 명사까지 복수라 유인 장치가 없는 사실상 필러 디코이, (3) (C)/(D)가 동일 어휘(bury)의 수동 판단으로 중복, (4) 정답 포인트(with+O+분사)는 최고빈출 교과 패턴이라 함정 깊이가 KILLER에 미달 — 훈련된 학생은 'with ... and some have'에서 즉시 적발. 종합: KILLER 추가 조건 미충족."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 치명 결함 없음. 문항 자체는 깨끗한 중상(中上) 난이도 어법 문항: 오류 주입이 정확한 최소대립쌍이고 정답 유일성이 견고하다. 그러나 KILLER 요청 대비 공예 미달: 실질 변별은 (A) vs (B)의 2파전이고 (C)(D)(E)는 빠르게 소거된다((E)는 유인 장치 자체가 없음). C 합계 15(<17)로 B 기준 미달 → 등급 C. 재설계 방향: (E)를 단수 인접 명사 유인이 있는 수일치 자리나 관계사/병렬 등 별개 포인트로 교체, (C)/(D) 중 하나를 비-수동 포인트로 교체, keyPoints 5개 전 밑줄 커버 및 why-tempting 명시."
+}

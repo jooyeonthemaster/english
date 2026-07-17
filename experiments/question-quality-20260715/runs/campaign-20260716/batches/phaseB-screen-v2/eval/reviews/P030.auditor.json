@@ -1,0 +1,67 @@
+{
+  "pid": "P030",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-TAIL-GRAMMAR-ELIMINATION",
+      "severity": "critical",
+      "evidence": "빈칸이 원문 마지막 문장의 'the willingness of readers to pay attention, to explore uncertainties'만 잘라내고 꼬리 ', and not immediately ask ...'를 남겼다. 이 꼬리의 원형부정사 'ask'는 빈칸 NP 내부의 to부정사('willingness to V')에 병렬로 걸려야만 문법적이다. ①만 'inclination to engage'로 부정사 라이선서를 제공하고, ②'demand ... for linguistic clarity' ③'adaptation to faster reading speeds'(전치사 to+NP) ④'obedience to established grammatical rules'(전치사 to+NP) ⑤'acquisition of professional skills'는 모두 전치사구/of구로 끝나 삽입 시 '..., and not immediately ask'가 붙을 자리가 없어 비문이 된다. 빈칸 유형의 의도는 오답이 문법적으로 삽입 가능하되 의미로 배제되는 것이므로, 오답 4개 전부가 통사만으로 탈락하는 것은 V3 두 번째 조항('오답의 비문 여부가 유형 의도와 정확히 일치') 위반이며, 독해 없이 정답이 특정되는 치명 결함이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 1,
+    "C4": 0,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 span 'the willingness of readers to pay attention, to explore uncertainties'의 패러프레이즈(willingness→inclination, explore uncertainties→engage deeply with ambiguity)",
+      "temptingBecause": "지문 전체 논지(독자의 신뢰·해석 노력·불확실성 감내)와 정확히 합치하고, 삽입 시 'inclination to engage ..., and not immediately ask'로 꼬리와 병렬이 성립하는 유일한 선지",
+      "decisiveFlaw": "(정답) 없음. 단, 통사 단서만으로도 특정 가능해 변별 기능이 훼손됨"
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전(polarity reversal) — '즉각적 명확성 요구'는 본문의 '모호함 감내·즉각적 질문 유보'와 정반대",
+      "temptingBecause": "readers, linguistic 등 본문 어휘를 재사용하고, 'what do you mean by that?'라는 질문 표현과 표면적으로 연상됨",
+      "decisiveFlaw": "본문은 독자가 즉각 의미를 묻지 않는다고 명시하므로 정반대. 추가로 'demand ... for clarity' 뒤에 ', and not immediately ask'가 붙을 통사 구조가 없어 삽입문 자체가 비문(설계 결함)"
+    },
+    {
+      "label": "③",
+      "intent": "무관 소재(irrelevant/over-narrow) — 독서 속도라는 본문에 없는 차원 도입",
+      "temptingBecause": "readers, reading이라는 표면 어휘 중복",
+      "decisiveFlaw": "본문은 독자가 노력을 들여 분투(struggle)하며 읽는다고 하지 속도 적응은 언급조차 없음. 'adaptation to faster reading speeds'(전치사 to+NP) 역시 꼬리와 결합 시 비문(설계 결함)"
+    },
+    {
+      "label": "④",
+      "intent": "half-truth/개념 왜곡 — '규칙 관련' 소재를 쓰되 본문 논지(효율적 소통 원칙의 위배를 감내)와 반대 방향인 '무조건적 순응'으로 비틈",
+      "temptingBecause": "본문의 'principles of efficient communication', 'flout' 등 규칙·원칙 어휘와 연상 중복이 있어 유일하게 다소 매력적",
+      "decisiveFlaw": "독자는 규칙을 위배하는(flout) 요소를 해석하려 애쓰는 것이지 문법 규칙에 순응하는 것이 아님. 'obedience to ... rules'(전치사 to+NP)도 꼬리와 결합 시 비문(설계 결함)"
+    },
+    {
+      "label": "⑤",
+      "intent": "소재 연상(topical association) — 'literary criticism' 등 문학 관련 어휘 조합",
+      "temptingBecause": "literature, reviewed 등 본문 표면 어휘와의 연상",
+      "decisiveFlaw": "본문 주제는 일반 독자의 수용 태도이지 전문 비평 기술의 습득이 아님. 'acquisition of ... skills'도 꼬리와 결합 시 비문(설계 결함)"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "CIRCULAR-EVIDENCE",
+      "severity": "minor",
+      "evidence": "정답 해설의 '마지막 문장 앞부분에서도 독자들이 기꺼이 주의를 기울이고 불확실성을 탐색한다는 맥락이 이어지므로'는 바로 빈칸으로 제거된 span 자체를 근거로 인용한 순환 논증이다. 학생이 보는 렌더 지문에는 해당 앞부분이 존재하지 않는다(원문 공개 해설로는 사실 오류는 아니나 근거 제시 방식이 부적절)."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 렌더 지문은 마지막 문장의 의도된 span 치환 외에 원지문과 완전 일치(중복·누락·고아 문장부호 없음), 라벨 ①~⑤와 정답 라벨 정합. V2: 의미 검증상 ①만 성립(② 극성 반전, ③·⑤ 무관, ④ 방향 반대)하여 단일정답 성립. V3 실패: 빈칸 꼬리 ', and not immediately ask ...'가 원형부정사 병렬을 요구하는데 오답 4개 모두 부정사 라이선서가 없어 삽입문이 비문 — 통사 단서만으로 정답이 특정되는 꼬리 소거(tail elimination) 결함. V4: 주해설·오답 해설의 내용 귀속과 문법 기술은 실제 지문과 일치(순환 근거 제시는 minor로 별도 기록). V5: 정답 라벨·선지·오답 해설 키(②~⑤)·keyPoints 상호 모순 없음. 공예: 출제 지점(결론부의 독자 태도, hyper-protected cooperative principle의 귀결)은 정전 포인트로 가치 있고(C1=3) 오답들이 서로 다른 함정 유형을 의도했으나(C2=3), 꼬리 통사 누출로 실제 변별은 붕괴(C3=1, C4=0). INTERMEDIATE 대비 의미적 패러프레이즈 깊이는 적절하나 통사 지름길로 실효 난이도가 라벨 미달(C5=2). 해설은 대체로 정확하나 순환 근거로 둔탁(C6=2). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false. 수리 방향: 빈칸 경계를 문장 끝까지 확장('follow from _____.')하거나 모든 선지에 'to V' 병렬이 가능한 동일 통사 골격을 부여하면 V3 해소 가능."
+}

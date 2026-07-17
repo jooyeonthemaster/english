@@ -1,0 +1,35 @@
+{
+  "pid": "P042",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "'help people adapt faster to the rapid paste of technological changes' — 지문 어디에도 예술이 기술 변화 적응을 돕는다는 논지가 없다. 기술은 '도구일 뿐'이라는 지문 방향과 무관한 기술 중심 서술. 덧붙여 'paste'는 'pace'의 오탈자로 보이며(rapid paste는 비문), 표기 자체가 품질 결함. seam(creations that will help...)은 문법적으로 성립하나 논리 부적합."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "빈칸은 'unique creations that will ___'로, 지문의 핵심 정의문 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'를 재진술해야 한다. 'expand the cognitive boundaries of viewers through profound perspective shifts'는 perceptions→perspective shifts, changes our thoughts and feelings→expand cognitive boundaries로 정확히 대응한다. seam도 자연스럽고(that will expand...), 논리·문법 모두 적합."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'focus on mastering digital software to maximize the visual aesthetic' — 바로 앞 문장 'the goal should not be simply to utilize technology for its own sake'와 정면 모순. 기술 자체 숙달을 목표로 삼지 말라는 지문 주장을 뒤집는 역방향 미끼. 또한 'creations that will focus on mastering software'는 작품이 소프트웨어 숙달에 집중한다는 의미가 되어 의미상으로도 어색하다."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "'facilitate real-time interaction and emotional feedback from global audiences' — 첫 문장의 'share them with the world'를 미끼 고리로 쓰지만, 지문이 제시한 위대한 예술의 기준은 상호작용·피드백이 아니라 인식의 도전과 사고·감정의 영구적 변화다. 지문에 없는 새 개념(실시간 상호작용) 도입으로 논리 부적합. 실전에서 '세계와 공유' 구절만 스킴한 수험생이 끌릴 수 있는 매력 오답."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'democratize the creative process so that anyone can easily become an artist' — 첫 문장(더 많은 사람이 예술을 생산)의 재탕이지만, 그 현상은 비평가들이 '진정 위대한 예술의 감각을 잃게 한다'고 우려하는 대상이지 예술가가 추구할 목표가 아니다. 지문 도입부에 낚이는 수험생을 노린 가장 매력적인 오답 축. 논리 방향이 역전되어 있어 옹호 불가."
+    }
+  ],
+  "note": "빈칸 재진술형의 전형적 구조: 정의문(Great art challenges perceptions...changes thoughts and feelings)을 패러프레이즈한 ②가 유일 정답. 매력 오답 유혹 기록 — ⑤는 도입부 'more people than ever can produce artistic creations'와 표면 어휘가 겹쳐 순간 끌리지만, 해당 현상은 비판 대상이므로 기각. ④는 'share with the world'와 연결되는 듯하나 지문의 위대한 예술 기준과 무관. 품질 플래그: ①에 'paste'(→'pace') 오탈자 존재 — 정답 판별에는 영향 없으나 실전 문항으로는 표기 결함."
+}

@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-obvious-adjacent-sv-agreementx1"
+  ],
+  "layout": "(A):dec=d  (B):dec=c  (C):ANS=g  (D):dec=d  (E):dec=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 130,
+        "relPos": 0.165,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 192,
+        "relPos": 0.244,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 389,
+        "relPos": 0.494,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 509,
+        "relPos": 0.646,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 709,
+        "relPos": 0.9,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.9,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has formed",
+        "isError": false,
+        "correction": "has formed",
+        "errorExpression": "has formed",
+        "surroundingText": "take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "haven't spoken to",
+        "isError": false,
+        "correction": "haven't spoken to",
+        "errorExpression": "haven't spoken to",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "They're",
+        "isError": true,
+        "correction": "They're",
+        "errorExpression": "It's",
+        "surroundingText": "aren't kept up with big one-time fixes. They're kept up with regular maintenance",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "goes by",
+        "isError": false,
+        "correction": "goes by",
+        "errorExpression": "goes by",
+        "surroundingText": "make sure that not too much time goes by between oil changes, so to speak.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "fall",
+        "isError": false,
+        "correction": "fall",
+        "errorExpression": "fall",
+        "surroundingText": "more ideal not to let yourself fall out of touch in the first place.",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has formed"
+      },
+      {
+        "label": "(B)",
+        "text": "haven't spoken to"
+      },
+      {
+        "label": "(C)",
+        "text": "It's"
+      },
+      {
+        "label": "(D)",
+        "text": "goes by"
+      },
+      {
+        "label": "(E)",
+        "text": "fall"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주격 관계대명사 that의 선행사가 단수인 the distance이므로 단수 동사 'has formed'는 수일치상 옳습니다.",
+      "(B)": "선행사 people을 수식하는 형용사절에서 전치사 to 뒤의 목적어가 비어 있는 불완전한 구조이며, 현재완료 부정형 'haven't spoken to'는 어법상 자연스럽습니다.",
+      "(D)": "명사절인 that절 내에서 복수형 명사가 아닌 불가산인 time을 수식하는 'not too much time'이 주어이므로, 단수 동사 'goes by'는 수일치상 적절합니다.",
+      "(E)": "사역동사 let의 목적격보어 자리이며, 목적어인 yourself가 스스로 '연락이 끊기다(fall out of touch)'라는 능동의 행동을 취하므로 동사원형 'fall'이 잘 쓰였습니다."
+    },
+    "explanation": "이 문장에서 (C)가 포함된 독립절은 앞 문장의 복수 명사인 relationships를 대명사로 받아 설명하는 구조를 취하고 있습니다. 지문 흐름상 일회성의 해결책으로 유지되지 않는 것은 다름 아닌 '관계들(relationships)'입니다. 따라서 단수 대명사인 'It's'는 복수 명사를 지칭할 수 없으므로 비문이며, 복수 대명사인 'They're'로 고쳐야 올바른 구조가 됩니다.",
+    "keyPoints": [
+      "(C) 대명사 일치 — 앞의 복수 명사를 지리적으로 정확히 식별하기",
+      "(A) 관계절 내 수일치 — 선행사의 단복수에 연동되는 격 변화와 동사 매칭",
+      "(E) 목적격보어 형태 — 사역동사의 의미적 특성에 부합하는 보어 결정"
+    ],
+    "tags": [
+      "대명사 수일치",
+      "사역동사 목적격보어",
+      "주격 관계대명사",
+      "자동사의 수일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that __(A) has formed__ and we scramble to make repairs. We call people we __(B) haven't spoken to__ in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. __(C) It's__ kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time __(D) goes by__ between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself __(E) fall__ out of touch in the first place. Consistency always brings better results.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

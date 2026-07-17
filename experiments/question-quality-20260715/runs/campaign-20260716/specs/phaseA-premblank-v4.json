@@ -1,0 +1,46 @@
+{
+ "batchId": "phaseA-premblank-v4",
+ "phase": "A",
+ "note": "토큰 floor 4096→8192 수정(I1) 후 PREMIUM 빈칸 실패 4건 보충 실측",
+ "concurrency": 2,
+ "geminiReasoningEffort": "low",
+ "providerRouting": "none",
+ "assignments": [
+  {
+   "itemId": "A4-b-int-prem-04",
+   "frameId": "blank-supply-v2-101",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-INTERMEDIATE"
+  },
+  {
+   "itemId": "A4-b-kil-prem-03",
+   "frameId": "blank-supply-v2-080",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  },
+  {
+   "itemId": "A4-b-kil-prem-04",
+   "frameId": "blank-supply-v2-101",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  },
+  {
+   "itemId": "A4-b-kil-prem-06",
+   "frameId": "blank-supply-v2-150",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  }
+ ]
+}

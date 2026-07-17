@@ -1,0 +1,113 @@
+{
+  "pid": "P019",
+  "requestedDifficulty": "KILLER",
+  "type": "GRAMMAR_ERROR",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문을 원지문과 문장 단위로 대조한 결과 의도된 변형(What -> That, (C) 자리) 외 손상·누락·중복·오탈자 없음. 밑줄 마커 (A)~(E)가 선택지 리스트와 정확히 일치. markedExpressions의 surroundingText 결함('cy cyberspace' 중복, (C)에 원문형 'What' 사용)은 학생 노출 렌더가 아니므로 V1 실패로 보지 않고 minor 이슈로 기록.",
+    "V2": "각 밑줄 독립 검증: (A) 'a kind and magnitude not seen before'는 see의 피동 대상에 대한 축약 관계절이라 과거분사 적법. (B) 복수 주어 + have + been 현재완료 적법. (C) 'That is new about cyberspace is its interactive nature' — 접속사 That 파스에서는 절 내부 주어 결여(is new about cyberspace), 지시대명사 That 파스에서는 두 번째 is가 주어 없이 좌초. 어느 해석으로도 비문이며 What(선행사 포함 관계대명사)만 적법 → 유일 정답. (D) while (they are) being 접속사 유지 분사구문 적법. (E) from A to B 병렬 전치사 적법. 정답 집합 {(C)} = 선언 정답, 단일정답 확인.",
+    "V3": "지문은 (C) 자리의 의도된 오류 외 전부 문법적. 발문은 표준형. 교정형(What)을 넣은 완성문은 원문과 동일하며 자연스러움. 오답 밑줄 4개는 모두 적법 — 유형 의도와 일치.",
+    "V4": "실패. (1) 정답 해설에 '이 대명사 지시 관계에서부에 주어 성분이 빠져 있습니다'라는 파손된 비문 한국어가 학생 노출 필드에 그대로 존재 — 의미 전달 불가. (2) (B) 오답 해설이 been을 '현재완료 시제의 보어 역할'로 기술 — been은 완료를 구성하는 과거분사이고 보어는 'integral parts'임(용어 오분석). (3) (A) 해설이 not seen의 위치를 '주절 앞에 위치한 분사구'로 기술 — 실제로는 Although가 이끄는 정형 부사절 내부의 NP를 수식하는 축약 관계절. (4) (D) 해설의 '주절의 주어와 be동사(they are) 생략' — 생략된 주어는 where 관계절의 주어 real people이지 주절(It is a space)의 주어 It이 아님. 핵심 정답 논리(That 완전절 vs What 불완전절)는 맞으나 V4는 용어 오류·오분석 부재를 요구하므로 실패.",
+    "V5": "정답 라벨 (C) = 선택지 (C) That = 해설(That->What 교정) = keyPoints '(C) 명사절 접속사 vs 관계대명사' 상호 모순 없음. keyPoints의 (A),(E) 언급도 해당 오답 해설과 대응. 학생 노출 필드 완전."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-EXPL-GARBLED",
+      "severity": "critical",
+      "evidence": "정답 해설 중 '이 대명사 지시 관계에서부에 주어 성분이 빠져 있습니다(is new)' — 조사·어절이 파손된 비문 한국어로 의미 해독 불가. 학생 노출 해설 필드."
+    },
+    {
+      "code": "V4-TERM-BEEN-COMPLEMENT",
+      "severity": "major",
+      "evidence": "(B) 해설 '현재완료 시제의 보어 역할을 하는 been' — been은 have와 결합해 완료를 구성하는 과거분사이며, 보어는 'integral parts of human life'. 문장 성분 오분석."
+    },
+    {
+      "code": "V4-TERM-A-CLAUSE-TYPE",
+      "severity": "minor",
+      "evidence": "(A) 해설 '주절 앞에 위치한 분사구에서 명사구를 수식' — not seen은 Although 정형 부사절 내부 전치사구(of a kind and magnitude) 속 NP를 수식하는 축약 관계절. 부사절을 분사구로 오인시킬 수 있는 기술."
+    },
+    {
+      "code": "V4-TERM-D-SUBJECT",
+      "severity": "minor",
+      "evidence": "(D) 해설 '주절의 주어와 be동사(they are)가 생략' — 생략 주어는 where 관계절 주어 real people. '주절'을 문자 그대로 읽으면 It(It is a space)을 가리켜 오독 유발."
+    },
+    {
+      "code": "META-SURROUNDING-CORRUPT",
+      "severity": "minor",
+      "evidence": "markedExpressions (A).surroundingText가 'cy cyberspace...'로 시작(파편 중복). (C).surroundingText와 expression이 렌더형 'That'이 아닌 원문형 'What'을 담고 있어 렌더 지문 내 anchor 탐색 시 불일치 위험. 학생 노출 렌더 자체는 정상이라 V1/V5 실패로는 미집계."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "craftRationale": {
+    "C1": "주어 명사절 자리의 What vs That(절 완전성 판정)은 정전급 어법 포인트이고, 이중 is 구조를 가진 좋은 문장을 골랐다. 다만 새로움 없는 전형 포인트.",
+    "C2": "각 밑줄에 pointCode와 해설이 부여되어 있으나 (B) been은 have 뒤에서 즉시 적법 확인되는 필러 수준이고, 명시적 'why tempting' 설계가 약함. (A)(D)(E)는 서로 다른 포인트(태/축약관계절, 접속사+분사구문, 병렬 전치사)를 겨냥해 부분적 의도 밀도는 있음.",
+    "C3": "훈련된 학생은 'That is ... is ...'의 이중 동사에서 즉시 정답 도달. (A),(D)가 약간의 실제 판단을 요구하나 (B),(E)는 즉시 소거 — 매력적 경쟁 선지 부족.",
+    "C4": "메타 누출·꼬리 소거 단서 없음. 두 번째 is라는 충분한 국소 근거가 있고 교정형이 필연적으로 원문 복원.",
+    "C5": "요청 난이도 KILLER 대비 불일치. What/That 완전성 판정은 최다 출제·최다 훈련 포인트로 중(中) 난이도이며, 디코이 함정 깊이도 얕아 킬러 수준의 다단계 사고를 요구하지 않음.",
+    "C6": "핵심 논리(완전절 vs 불완전절)는 맞으나 파손된 비문 문장, been '보어' 오용어, 부정확한 위치 기술로 우아함 이하 — 오류 있는 해설."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "축약 관계절에서의 태 판정 — 과거분사(수동) vs 현재분사(능동)",
+      "temptingBecause": "not과 결합한 후치 수식 구조가 낯설고, 'events ... seen'의 의미 관계를 따져야 seeing이 아님을 알 수 있음",
+      "decisiveFlaw": "'a kind and magnitude (that have) not (been) seen before' — 수식 대상이 see의 피동 대상이고 뒤에 목적어가 없으므로 과거분사 seen이 적법. 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "복수 주어 수일치 + 현재완료 구성",
+      "temptingBecause": "사실상 유인력 없음 — have 바로 뒤 been은 즉시 적법 확인 가능(필러성 디코이)",
+      "decisiveFlaw": "복수 have + 과거분사 been으로 완전 적법. 오답 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 주어 명사절 자리의 접속사 That vs 선행사 포함 관계대명사 What (절 완전성 판정)",
+      "temptingBecause": "문두 That은 지시대명사로도 읽혀 'That is new about cyberspace'까지는 자연스럽게 보임",
+      "decisiveFlaw": "That 파스에서는 절 내부에 주어가 없고(is new about cyberspace), 지시대명사 파스에서는 뒤의 본동사 is가 주어 없이 좌초. 불완전절 + 주어 역할을 겸하는 What으로 교정해야 하며 교정 시 정확히 원문 복원"
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사를 유지한 분사구문(while + -ing)의 적법성",
+      "temptingBecause": "접속사 뒤에 정형절이 아닌 -ing가 와서 during 대체나 접속사 삭제를 떠올리게 함",
+      "decisiveFlaw": "while (they[real people] are) being able to ... 의 주어 일치 생략 구문으로 적법. 오답 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "from A to B 상관 전치사 병렬",
+      "temptingBecause": "to 뒤 명사구가 길어 to부정사 자리로 착각할 여지",
+      "decisiveFlaw": "move from [NP] to [NP]의 전치사 to로 병렬 적법. 오답 아님"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 '이 대명사 지시 관계에서부에 주어 성분이 빠져 있습니다' — 파손된 비문(해독 불가), 학생 노출 필드",
+    "(B) 해설: been을 '현재완료 시제의 보어'로 오기술 — 보어는 integral parts, been은 완료 구성 과거분사",
+    "(A) 해설: 'Although 부사절'을 '주절 앞에 위치한 분사구'로 오기술할 소지",
+    "(D) 해설: 생략 주어를 '주절의 주어'로 기술 — 실제로는 where 관계절 주어 real people",
+    "정답 해설이 지시대명사 That 파스(That is new about cyberspace가 완결문이 되는 대안 해석)를 다루지 않아 논증이 불완전"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — That(표시) vs What(원문), 교정 시 정확히 원문 복원",
+    "clearGrammarJudgment": "충족 — 절 완전성 판정은 문맥 선호가 아닌 명확한 문법 판단",
+    "allFiveUnderlinesExplained": "미충족 — 오답 해설(why correct)은 5개 모두 있으나 명시적 point/why-tempting 설계가 없고, (B) been은 설명 가능한 유인 요인이 없는 필러",
+    "answerNotImmediatelyVisible": "경계 — 구조(이중 is)를 읽어야 하나 What/That은 최다 훈련 포인트라 상위권에게 즉시 노출 수준",
+    "noMaskingDecoy": "충족 — 동일 포인트의 더 쉬운 디코이 없음"
+  },
+  "grade": "F",
+  "notes": "지문 무결성·정답 유일성·필드 동기화는 견고하고 (C) 정답 자체는 흠 없는 최소대립쌍이다. 그러나 학생 노출 해설에 파손된 비문 한국어 문장과 been '보어' 용어 오분석이 있어 V4 실패 — 치명 결함은 공예 점수로 상쇄되지 않으므로 F. 해설 재작성(파손 문장 복구, been 기술 교정, (A)(D) 위치·주어 기술 정밀화)만으로 V4는 회복 가능하나, 요청 난이도 KILLER 대비 포인트 전형성과 디코이 얕음(C5=1)은 별도 재설계 사안."
+}

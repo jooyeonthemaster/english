@@ -1,0 +1,100 @@
+{
+  "pid": "P057",
+  "blindAnswer": "③",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문과 문자 단위로 동일하며, 유일한 변형은 마지막 절 'always put in the cat'을 '_____'로 치환한 의도된 빈칸이다. 문장 접합 파손·중복·누락 없음. 빈칸 뒤 마침표와 닫는 인용부호(_____.\") 모두 보존됨(원문도 cat.\"로 종결). 선지 라벨 ①~⑤가 5개 선지와 일치한다.",
+    "V2": "각 선지 독립 검증 — ① 편집장은 검증자가 아니라 특종 경쟁에서 뒤처진 기자를 문책하는 존재이므로 본문과 모순(탈락). ② 실제 생존 동물만 다룬다는 것은 '고양이가 없었는데도 집어넣는' 최종 관행과 정반대(탈락). ③ '항상 고양이를 집어넣는다' = 없는 고양이도 넣는다 → '문책을 피하려 가상의 요소를 지어낸다'와 정확히 대응(유일 정답). ④ 주어가 all of us(화자 포함 전원)이며 이들은 비판이 아니라 조작에 동참한다(탈락). ⑤ 요소를 뺐다가(leaving out) 혼난 것이 사건의 핵심이므로 정반대(탈락). 정답 집합 = {③}, 선언과 일치.",
+    "V3": "지문·발문 문법적. 다섯 선지 모두 동사원형 VP로 'all of us ___' 슬롯에 동일하게 안착하며, ③을 넣은 완성문 'Now when there is a shipwreck all of us invent a fictitious element to avoid being scolded.'는 문법적·자연스럽다. seam 비문·비단어·오탈자 없음.",
+    "V4": "해설의 서사 재구성이 원문과 정확히 일치: 1차 난파(실제 고양이·화자 특종·타 기자 문책) → 2차 난파(고양이 없음·타 기자 허위 삽입·화자만 사실 보도 후 문책) → 전원 관행화. 'be beaten = 특종을 빼앗기다', 'called down/scolded = 꾸지람 듣다'의 어휘 해석도 정확하다. 오답 해설 4건 모두 해당 선지의 실제 내용과 대응하며 오분석·환각·귀속 오류 없음.",
+    "V5": "선언 정답 ③ = 해설 결론 ③, 오답 해설 키 {①,②,④,⑤} 완전, keyPoints 3건(주제/근거/논리)이 해설·정답과 모순 없음."
+  },
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 일화 전체의 결론 문장(경쟁·문책 압력이 집단적 사실 조작 관행으로 귀결되는 인과의 정점)을 겨냥한다. 정전 포인트를 정확히 묻는 자리.",
+    "C2": "오답이 각기 다른 함정을 겨냥함 — ① 행위자/역할 전도(편집장=검증자), ② 극성 반전(실제 생존 동물), ④ 화자 태도 오독(비판 vs 동참), ⑤ 행위 반전(leave out). 다만 ①의 본문 앵커('verify')가 빈약해 밀도가 4에는 못 미침.",
+    "C3": "서사만 해독하면 ②·④·⑤는 명백한 반대/불일치로 빠르게 소거되고 ①도 근거가 얇다. 변별이 선지 간 정밀 판단이 아니라 지문 독해(beaten/called down 해독)에만 실려 있어 선지 수준 경쟁력은 중간 이하.",
+    "C4": "메타 누출(길이·어조 편차, tail 소거)은 없으나 정답 선지에 지문 어휘 'scolded'가 그대로 재등장해 표면 단서를 제공한다. 근거는 충분하고 정답은 필연적.",
+    "C5": "요청 난이도 KILLER 대비 실측 난이도는 중상 수준. 빈칸이 결론 문장의 직접적 패러프레이즈이고 동기('to avoid being scolded')까지 명시돼 추상화 폭이 얕다. 두 문책 에피소드 연결은 요구하지만 함정 깊이가 KILLER에 못 미침.",
+    "C6": "해설이 정확하고 서사 흐름·정답 근거를 선명하게 제시하며 keyPoints의 'be beaten 의미 파악'은 실제 관건을 정확히 짚었다. 다소 서술이 길지만 오류 없음."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "행위자/역할 전도 — 편집장을 문책자가 아닌 검증자로 바꿔치기",
+      "temptingBecause": "editors와 구조된 동물(rescued cat)이 모두 본문에 등장하는 어휘라 표면 중첩이 있다",
+      "decisiveFlaw": "본문의 편집장은 사실 검증을 하지 않고 특종을 놓친 기자를 문책할 뿐이며, 그 문책이 오히려 조작의 원인이다. 'verify'는 본문에 앵커가 전혀 없다"
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전 — 조작 관행을 '실제 생존 동물만 보도'로 뒤집기",
+      "temptingBecause": "첫 사건의 고양이는 실제로 생존했고 'a cat that had survived'와 어휘가 겹친다",
+      "decisiveFlaw": "최종 관행은 고양이가 없어도 집어넣는 것이므로 '실제 생존 동물에만 집중'과 정반대"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'always put in the cat'의 추상화(없는 고양이 = 가상의 요소) + 두 문책 에피소드에서 도출되는 동기(문책 회피)",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음 — 유일 정답. 단, 'scolded'가 지문 어휘 그대로라 표면 단서로 작용하는 점은 공예상 감점 요인"
+    },
+    {
+      "label": "④",
+      "intent": "화자 태도/행위자 오독 — 조작 '비판'으로 스탠스 전환",
+      "temptingBecause": "'making up stories'가 본문의 조작 행위를 정확히 지칭하고, 화자가 한때 사실대로 쓴 유일한 기자였다는 점과 결합하면 그럴듯하다",
+      "decisiveFlaw": "주어가 화자를 포함한 all of us이며, 결말은 비판이 아니라 전원이 조작에 동참하는 것"
+    },
+    {
+      "label": "⑤",
+      "intent": "행위 반전 — 'leaving out'을 관행의 결과로 뒤집기",
+      "temptingBecause": "'leave out'이 본문 'leaving out the cat'과 축자적으로 겹친다",
+      "decisiveFlaw": "요소를 뺐다가 심하게 혼난 것이 관행 형성의 직접 원인이므로 생략은 정반대 흐름"
+    }
+  ],
+  "explanationIssues": [],
+  "issues": [
+    {
+      "code": "C5-DIFFICULTY-MISMATCH",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER이나, 빈칸이 결론 문장의 직접 패러프레이즈('put in the cat' → 'invent a fictitious element')이고 동기까지 선지에 명시돼 있어 함정 깊이·추상화 수준이 중상급 문항 수준이다.",
+      "recommendation": "정답을 더 높은 추상 수준(예: 관행/규범 형성의 일반화)으로 올리고, 표면 어휘 중첩을 제거하라."
+    },
+    {
+      "code": "C4-LEXICAL-LEAK",
+      "severity": "minor",
+      "evidence": "정답 ③의 'scolded'가 지문의 'severely scolded'와 축자 일치해 표면 매칭만으로 정답에 근접할 수 있다.",
+      "recommendation": "동기 부분을 'to escape editorial reprimand' 등 비축자 표현으로 교체."
+    },
+    {
+      "code": "D-TRAP-DIVERSITY-PARTIAL",
+      "severity": "minor",
+      "evidence": "②와 ⑤가 모두 조작 관행의 극성/행위 반전 계열이라 §D의 '서로 다른 함정' 요건이 부분적으로만 충족되며, ①은 본문 앵커가 빈약해 즉시 소거된다.",
+      "recommendation": "①을 scope shift 또는 half-truth 계열(예: '고양이 기사로 독자 흥미만 좇는다')로 교체해 함정 유형을 분산."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservedWithAbstraction": "부분 충족 — 의미는 보존하나 추상화 폭이 KILLER 기준에 못 미치는 직접 패러프레이즈",
+    "eachWrongOptionAnchored": "부분 충족 — ②④⑤는 앵커·중첩·결정적 결함이 명확하나 ①의 앵커가 빈약",
+    "multiCueRequired": "미충족 — 두 문책 에피소드 연결이 이상적 풀이 경로이지만, '조작' 단서 하나 + 정답 선지의 축자 'scolded' 매칭 + 오답들의 명백한 극성 반전 소거만으로도 정답 도달이 가능",
+    "trapDiversity": "부분 충족 — ②와 ⑤가 동일 계열(반전)"
+  },
+  "grade": "B",
+  "notes": "유효성 5개 게이트 전부 통과. 정답 유일성·해설 사실성 모두 견고하며 keyPoints의 'be beaten(특종을 빼앗기다)' 해석은 정확하고 관건을 잘 짚었다. 다만 요청 난이도 KILLER 대비 실제 함정 깊이는 중상급: 정답이 제거된 span의 얕은 패러프레이즈이고 'scolded' 축자 중첩이 표면 단서를 제공하며, 오답 중 2개가 같은 반전 계열이고 1개는 앵커가 빈약하다. C 합계 17, 최저 2로 B — 정답 선지의 어휘 교체와 ① 재설계라는 작은 수정으로 출제 가능하나 beautiful KILLER 기준은 미달."
+}

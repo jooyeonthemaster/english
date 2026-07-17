@@ -1,0 +1,81 @@
+{
+  "pid": "P070",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "keyPoint 1('빈칸 문장의 문맥상 지시어(this)가 가리키는 바를 파악한다')과 오답해설 4('this가 지칭하는 바와 연결되지 않으며')가 지시어 'this'를 학생의 풀이 단서로 지시하지만, 'this'는 빈칸으로 대체된 span('this is the exception rather than the norm') 내부에 있어 렌더 지문에서 학생에게 보이지 않는다. 원지문 기준으로는 사실이고 referent(자기 돌봄 포기) 규정도 정확하므로 오분석은 아니나, 학생 관점에서 실행 불가능한 지침이다. V4 실패로는 판정하지 않되 수정 필요."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "해설 말미 '선지 ②, ④와 같이 부정 극성을 띤 오답들이 있으나' — 정답 ①(does not) 역시 부정 극성이므로 극성만으로 오답을 특징짓는 서술이 모호하다. 사실 오류는 아니며 극성 단서로 정답을 못 찍는다는 취지 자체는 유효."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span 'this is the exception rather than the norm'을 'such negligence does not become a habitual practice'로 추상화 환언. exception↔not habitual, norm↔habitual practice, this(자기 돌봄 방치)↔such negligence 대응이 정확.",
+      "temptingBecause": "정답이므로 해당 없음. 'such negligence'의 조응이 앞 문장의 'not prioritizing self-care'와 자연스럽게 연결된다.",
+      "decisiveFlaw": "없음(유일 정답). 삽입 완성문 문법·의미 모두 자연스러움."
+    },
+    {
+      "label": "2",
+      "intent": "무관 차원 함정(half-truth/irrelevance) + 부정 극성 미끼 — 자기 돌봄 연기의 '스트레스 완화 효능'이라는 본문에 없는 평가축을 도입.",
+      "temptingBecause": "'postponing self-care'가 본문 소재와 정확히 겹치고, fails라는 부정 극성이 정답의 극성과 유사하다.",
+      "decisiveFlaw": "스트레스 완화 여부는 논지(누적 효과 경계)와 무관하며, 'make sure that ... postponing self-care fails to relieve stress'는 보장할 목표로서 비논리적이다."
+    },
+    {
+      "label": "3",
+      "intent": "극성 역전(polarity reversal) — 필자가 경계하는 상황(단기 목표를 위한 자기 돌봄 유보)을 보장해야 할 목표로 제시.",
+      "temptingBecause": "본문의 단기/장기 대비 구조와 'short-term goals'(grant deadline) 소재가 겹친다.",
+      "decisiveFlaw": "글의 결론과 정반대 방향인 데다 'in the long term, ... temporarily suspended'의 의미 충돌로 seam에서 비교적 쉽게 탈락한다(문법 아닌 의미 충돌이므로 슬롯 조건은 위반 아님)."
+    },
+    {
+      "label": "4",
+      "intent": "actor/condition shift — ensure의 대상을 '자기 돌봄 방치의 상습화 방지'에서 '외부 방해(마감) 자체의 통제'로 치환한 최강 경쟁 선지. 소재 연상(deadlines) 함정 병용.",
+      "temptingBecause": "부정 극성(is not)에 본문 어휘(deadlines, 방해받는 상황)가 그대로 겹치고, 결과 상태도 정답과 유사해 보인다.",
+      "decisiveFlaw": "필자는 'No matter how much we plan, we all occasionally have days when that happens'로 방해의 발생 자체는 불가피하다고 전제하며, 마지막 문장의 보장 대상은 'not prioritizing self-care'의 누적(방치가 norm이 되지 않게 함)이다. 외부 사건 통제는 필자가 주장한 적 없는 목표이고, 'sudden deadlines'는 본문의 방해 요인(이메일 폭주·예기치 않은 회의) 묘사와도 어긋난다."
+    },
+    {
+      "label": "5",
+      "intent": "극단 과확장(over-extension, absolute word) — 균형 회복 주장을 '자기 돌봄이 생산성을 완전히 압도'로 역전 확대.",
+      "temptingBecause": "자기 돌봄의 우선순위를 회복하라는 글의 방향성과 표면상 일치한다.",
+      "decisiveFlaw": "'completely overtakes'라는 절대어가 본문 근거 없이 역전을 주장해 즉시 소거된다. 필자는 예외/일상의 균형을 말할 뿐 자기 돌봄의 우위를 주장하지 않는다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "major",
+      "evidence": "keyPoint 1과 오답해설 4가 렌더 지문에 존재하지 않는(빈칸 span으로 대체된) 지시어 'this'를 풀이 단서로 지시한다.",
+      "recommendation": "keyPoint 1을 '빈칸 직전의 not prioritizing self-care와 cumulative impact가 가리키는 대상을 파악한다'로, 오답해설 4를 ''자기 돌봄 방치'라는 보장 대상과 연결되지 않으며'로 고쳐 학생 가시 텍스트 기준으로 재기술."
+    },
+    {
+      "severity": "minor",
+      "evidence": "'선지 ②, ④와 같이 부정 극성을 띤 오답들이 있으나, 논리적 연결성에서 탈락합니다' — 정답 ①도 부정 극성이라 서술이 모호하고, ②·④가 탈락하는 이유가 하나로 뭉뚱그려져 있다.",
+      "recommendation": "극성으로는 ①·②·④가 구분되지 않음을 명시하고 ②(무관 차원)와 ④(보장 대상 치환)의 탈락 근거를 분리 서술."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "§D 판정: (통과) 다섯 선지 모두 동일 통사 슬롯의 정형절이며 문법만으로 탈락하는 오답 없음; 정답이 source span 의미를 보존·추상화; 극성 하나로는 정답 특정 불가(①②④ 모두 부정 극성). (미달) ①은 마지막 문장 하나('cumulative impact of not prioritizing self-care' + 'in the long term')만으로 도달 가능해 '최소 두 문장/두 논리 단서 연결' 요건 미충족 — 양보 문장 연결은 ④ 배제에만 필요하다. ②는 무관 소재, ⑤는 절대어 'completely'라는 국소 단서로 즉시 소거되어 실질 경쟁 선지가 ④ 하나뿐이다. 또한 등급이 A가 아니므로 beautiful KILLER 전제 자체가 성립하지 않는다.",
+  "grade": "C",
+  "notes": "V1~V5 전부 통과. 정답 유일성 견고: 유일한 실경쟁 선지 ④도 '방해는 불가피, 통제 대상은 방치의 상습화'라는 양보-결론 구조에서 결정적으로 탈락한다. 그러나 요청 난이도 KILLER 대비 실제 난이도는 중상 수준(C5=1): 지문 소재가 평이하고, 정답이 마지막 문장의 직접 환언이어서 다문장 종합이 강제되지 않으며, ②·⑤가 국소 단서로 즉시 소거된다. 해설은 논리적으로 정확하나 빈칸으로 사라진 'this'를 풀이 단서로 지시하는 major 결함과 극성 서술의 모호함이 있다(C6=2). 공예 합계 14점, C 최저 1점 → B 요건(최저 2, 합계 17) 미달로 Grade C. 출하하려면 (1) keyPoints/오답해설의 'this' 참조 재기술, (2) ②·⑤를 실질 경쟁력 있는 함정으로 교체하거나 난이도 라벨을 중상으로 하향 조정이 필요하다."
+}

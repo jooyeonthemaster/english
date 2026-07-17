@@ -1,0 +1,179 @@
+{
+  "passageId": "ebsi_go1_20150311-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 112
+  },
+  "attempts": 6,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-marker-too-dense"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-too-basic-decoysx3",
+    "grammar-obvious-noun-what-relativex2",
+    "grammar-marker-too-densex1",
+    "grammar-render-marker-countx1",
+    "grammar-explanation-lintx1"
+  ],
+  "layout": "(A):dec=g  (B):dec=l  (C):ANS=h  (D):dec=b  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 75,
+        "relPos": 0.121,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 87,
+        "relPos": 0.14,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 236,
+        "relPos": 0.38,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 303,
+        "relPos": 0.488,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 448,
+        "relPos": 0.721,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.721,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Some people need money more than we do. For example, some people have lost their homes due to natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family to donate money to a charity instead of buying us presents. I know that some kids might not want to give up their birthday presents, and I understand. However, remember that we can live without new toys or games more easily than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "their",
+        "isError": false,
+        "errorExpression": "their",
+        "surroundingText": "tell our friends and family that, for our birthdays this year, we want to",
+        "pointCode": "g"
+      },
+      {
+        "label": "(B)",
+        "expression": "due to",
+        "isError": false,
+        "errorExpression": "due to",
+        "surroundingText": "some people have lost their homes due to natural disasters or war",
+        "pointCode": "l"
+      },
+      {
+        "label": "(C)",
+        "expression": "to donate",
+        "isError": true,
+        "correction": "to donate",
+        "errorExpression": "donate",
+        "surroundingText": "let's tell our friends and family to donate money to a charity instead of buying",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "I know that some kids might not want to give up their",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "more easily",
+        "isError": false,
+        "errorExpression": "more easily",
+        "surroundingText": "we can live without new toys or games more easily than someone can live",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "their"
+      },
+      {
+        "label": "(B)",
+        "text": "due to"
+      },
+      {
+        "label": "(C)",
+        "text": "donate"
+      },
+      {
+        "label": "(D)",
+        "text": "that"
+      },
+      {
+        "label": "(E)",
+        "text": "more easily"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "뒤에 구체적인 명사구인 'natural disasters or war'가 이어지므로 이유를 나타내는 전치사 'due to'가 어법상 옳습니다.",
+      "(D)": "타동사인 know의 목적어 역할을 하는 명사절을 이끌고 있으며, 뒤에 주어(some kids)와 동사(might not want)를 모두 갖춘 완전한 절이 오므로 접속사 'that'은 어법상 옳습니다.",
+      "(E)": "조동사와 본동사(can live)를 수식하여 '더 쉽게 살 수 있다'라는 의미를 나타내고 있으므로 형용사가 아닌 부사 'more easily'가 어법상 옳습니다.",
+      "(A)": "문맥상 ‘친구와 가족’을 가리키는 복수 명사 'our friends and family'를 수식하고 있으므로 소유격 대명사 'their'는 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 5형식 구문을 취하는 동사 tell이 사용되어 'tell + 목적어(our friends and family) + 목적격보어'의 구조를 이룹니다. 사역동사나 지각동사가 아닌 일반적인 5형식 동사 tell은 목적격보어로 to부정사를 요구합니다. 따라서 동사원형의 형태를 띤 'donate'는 이 자리에 올 수 없으며, 'to donate'로 고쳐야 합니다. 사역동사 let's에 이끌려 목적격보어 자리에 동사원형을 써야 하는 것으로 혼동하지 않도록 유의해야 합니다.",
+    "keyPoints": [
+      "(C) 목적격보어 형태 — 5형식 동사 tell 뒤에는 to부정사 보어가 요구됨",
+      "(D) 명사절 접속사 — 뒤에 완전한 절을 이끄는 명사절 접속사 that의 쓰임",
+      "(E) 형용사 vs 부사 — 동사구를 수식하는 부사 지문의 역할 판단"
+    ],
+    "tags": [
+      "목적격보어",
+      "5형식",
+      "명사절접속사",
+      "부사수식"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Some people need money more than we do. For example, some people have lost __(A) their__ homes __(B) due to__ natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family __(C) donate__ money to a charity instead of buying us presents. I know __(D) that__ some kids might not want to give up their birthday presents, and I understand. However, remember that we can live without new toys or games __(E) more easily__ than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-marker-too-dense",
+        "message": "Grammar markers are placed too close together; adjacent underlines make the item look padded and non-CSAT-like."
+      }
+    ],
+    "_qualityMode": "relaxed",
+    "_reviewRecommended": true,
+    "_generationNotice": "여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — 밑줄·표기 배치가 표준과 다를 수 있음. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다."
+  }
+}

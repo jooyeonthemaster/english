@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "campaign-v5-s1-openrouter-privacy-hardcap-audit-v1",
+  "capturedAtUtc": "2026-07-15T07:10:00.000Z",
+  "capturedAtKst": "2026-07-15T16:10:00+09:00",
+  "verdict": "BLOCK_EXECUTION_ACCOUNT_PRIVACY_PROVIDER_ALLOWLIST_AND_PROVIDER_HARD_CAP_UNPROVEN",
+  "scope": "Read-only public OpenRouter documentation, unauthenticated ZDR endpoint preview, frozen S1 queue, local provider wire, and name-only configuration presence",
+  "authorization": {
+    "campaignEligibleAssignments": 0,
+    "generationAuthorized": false,
+    "apiCandidateCount": 0,
+    "globalCandidateLimit": 1000
+  },
+  "publicCapabilities": {
+    "perRequestZdrSupported": true,
+    "providerDataCollectionDenySupported": true,
+    "providerOnlyAndOrderSupported": true,
+    "providerFallbackDisableSupported": true,
+    "guardrailProviderAllowlistSupported": true,
+    "guardrailModelAllowlistSupported": true,
+    "guardrailGoogleZdrSupported": true,
+    "perKeyCreditLimitSupported": true,
+    "workspaceLifetimeBudgetSupported": true,
+    "workspaceBudgetMayOverrunInflight": true,
+    "perKeyStrictNoOverrunPubliclyDocumented": false
+  },
+  "accountSpecificEvidence": {
+    "signedInBrowserAvailable": false,
+    "authenticatedAccountRequests": 0,
+    "inputOutputLoggingOffProven": false,
+    "openRouterUseOfInputsOutputsOffProven": false,
+    "accountOrGuardrailGoogleZdrProven": false,
+    "effectiveProviderAllowlistProven": false,
+    "effectiveModelAllowlistProven": false,
+    "dedicatedCredentialProven": false,
+    "providerSideLimitAtOrBelowUsd4416Proven": false,
+    "credentialPriorUsageZeroProven": false,
+    "byokIncludedInLimitProven": false,
+    "providerNoOverrunSemanticsProven": false
+  },
+  "frozenWire": {
+    "assignments": 180,
+    "allRequireParameters": true,
+    "rowContractsWithZdr": 0,
+    "rowContractsWithDataCollection": 0,
+    "rowContractsWithProviderOnly": 0,
+    "rowContractsWithProviderOrder": 0,
+    "rowContractsWithAllowFallbacks": 0,
+    "generationAuthorizedRows": 0,
+    "productionTransformAddsRequireParametersOnly": true,
+    "privacyRoutingContractComplete": false
+  },
+  "localConfiguration": {
+    "inspectionPolicy": "VARIABLE_NAMES_AND_BOOLEAN_PRESENCE_ONLY",
+    "processEnvironmentMatchingNames": [],
+    "envLocalPresentNames": [
+      "OPENROUTER_API_KEY",
+      "OPENROUTER_BASE_URL",
+      "OPENROUTER_FREE_MODEL",
+      "OPENROUTER_GEMINI_REASONING_EFFORT",
+      "OPENROUTER_PREMIUM_MODEL",
+      "OPENROUTER_STANDARD_MODEL"
+    ],
+    "envLocalAbsentNames": [
+      "OPENROUTER_MANAGEMENT_KEY",
+      "OPENROUTER_PROVISIONING_KEY",
+      "OPENROUTER_S1_API_KEY",
+      "OPENROUTER_ZDR",
+      "QUESTION_GENERATION_ASSIGNMENT_BUDGET_MODE",
+      "QUESTION_GENERATION_ASSIGNMENT_BUDGET_POLICY_JSON",
+      "QUESTION_GENERATION_ASSIGNMENT_BUDGET_POLICY_SHA256"
+    ],
+    "credentialValuesRead": 0,
+    "secretFileHashesPersisted": 0
+  },
+  "hardCapAssessment": {
+    "frozenReservationUsd": 44.16,
+    "providerSideHardMaximumCertified": false,
+    "localReservationEquivalentToProviderCap": false,
+    "workspaceBudgetSatisfiesStrictMaximum": false,
+    "genericApiKeyPresenceSatisfiesDedicatedLimitedCredential": false,
+    "decision": "KEEP_PROVIDER_HARD_CAP_HOLD"
+  },
+  "localEvidence": [
+    {
+      "path": "src/lib/atlas-ai.ts",
+      "bytes": 16970,
+      "sha256": "bcab10a3d05bf5271f956e6c1004fdf832957dd53ec4c4d1d9a248a37f4d3f57"
+    },
+    {
+      "path": "src/lib/atlas-production-assignment-fetch-boundary.ts",
+      "bytes": 25368,
+      "sha256": "aa042ea9181f6b5eb256bd4361738cc948c1bc41f27866b75bb9f2728a6b36d8"
+    },
+    {
+      "path": "src/lib/question-generation-assignment-budget.ts",
+      "bytes": 18719,
+      "sha256": "7effc7b7fc954f5b84936a32fa28302eec08927e9a255cee9f6d5fec20ef4f48"
+    },
+    {
+      "path": "src/lib/question-generation-assignment-budget-policy.ts",
+      "bytes": 20830,
+      "sha256": "2d0674e224fa182b0d16bfa8b8443b65987763c3022340bb9e27db56934dda85"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/campaign-v5-s1/campaign-v5-s1.json",
+      "bytes": 14475,
+      "sha256": "bfe0dff9d5ebfed1eea4f1622d4c7bbecbca2db7172f925a1fc07640d46f8747"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/campaign-v5-s1/private/s1-queue-v5.json",
+      "bytes": 422141,
+      "sha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583"
+    }
+  ],
+  "safety": {
+    "modelApiCalls": 0,
+    "generationApiCalls": 0,
+    "accountMutations": 0,
+    "authenticatedAccountRequests": 0,
+    "databaseCalls": 0,
+    "executionPriceSnapshotCreated": false,
+    "pricingValuesPersistedFromZdrPreview": false,
+    "credentialValuesRead": 0,
+    "productionFilesEdited": 0,
+    "privateQueueEdited": false
+  }
+}

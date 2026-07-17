@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Logically licensed: 'strength and stamina to endure prolonged practice sessions without fatigue' is a well-formed capacity-to-outcome relation (stamina is exactly what licenses fatigue-free endurance). Textual anchor: 'They work out not just on the practice range but in the weight room' — weight-room conditioning supplements practice-range work, so the fitness gained enables sustained practice, which in turn enables closing out opponents in majors. This parallels the negotiator example ('physical stamina to see the deal through') where physical endurance is the winning factor. Grammatical seam after 'to' is clean (bare VP)."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Causal inversion. In the passage, nutrition is an INPUT to fitness ('through proper nutrition, exercise, and rest'), not an output of strength and stamina. 'Strength and stamina to balance their nutrition' asserts fitness as the means of dieting — an incoherent means-end relation. It recycles a passage word ('nutrition') as bait. Grammatically fine at the seam; fails on logic."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Two formal defects. (a) Circularity: 'strength and stamina to gain ... physical edge' makes the capacity its own product — strength/stamina already ARE the physical edge. (b) Unlicensed premise: no sentence in the passage links fitness to psychology; the negotiation example attributes winning purely to physical stamina ('to see the deal through'), and the golfer claim is grounded solely in being 'in so much better shape.' 'Psychological dominance' imports content the text never asserts. Strongest distractor, but not defensible under formal scrutiny."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Contradicts the passage's thesis. Success is attributed to physical conditioning (practice range + weight room), not to volition; 'strength and stamina to overcome bodily limits mainly through willpower' makes the stated means (fitness) collide with the claimed means (willpower). Also self-undermining: if the mechanism were 'mainly willpower,' the weight-room premise would be explanatorily idle."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Presupposition failure: 'a lack of strategic planning' presupposes a deficiency nowhere asserted or implied in the passage. Additionally, physical stamina does not logically compensate for absent strategy, and nothing in the text sets up a fitness-vs-strategy trade-off. Off-topic."
+    }
+  ],
+  "note": "All five options are bare VPs after 'to', so every grammatical seam is clean; the item is decided entirely by logical licensing. The blank must denote a capacity-consequence of weight-room conditioning that feeds the purpose clause 'in order to close out their opponents in major tournaments,' in parallel with the negotiator's 'physical stamina to see the deal through.' Only option 1 satisfies this: it is endurance-themed, textually anchored to the practice-range clause, and non-circular. Option 3 is the nearest competitor but fails on circularity ('stamina to gain physical edge') and on an unsupported psychological premise. No alternative parse (reduced relative, purpose-clause reattachment, etc.) rescues any other option. Single defensible answer: 1."
+}

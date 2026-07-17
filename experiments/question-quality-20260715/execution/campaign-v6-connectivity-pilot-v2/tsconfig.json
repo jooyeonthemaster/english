@@ -1,0 +1,23 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false
+  },
+  "include": [
+    "compile-exact-wire.mts",
+    "protocol-schema.ts",
+    "runner.ts",
+    "live-launcher.ts",
+    "live-child.mts",
+    "offline.test.ts",
+    "verify.mts",
+    "seal-offline.mts",
+    "../../harness/atlas-controller.ts",
+    "../../harness/ledger.ts",
+    "../../harness/node-sqlite.d.ts",
+    "../campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+    "../../../../src/lib/atlas-research-fetch-boundary.ts",
+    "../../../../src/lib/atlas-fetch-scope-coordinator.ts"
+  ]
+}

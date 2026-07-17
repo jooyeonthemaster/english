@@ -1,0 +1,163 @@
+{
+  "passageId": "2015_06_3026346-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "6월",
+    "origType": "주장",
+    "words": 142
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-obvious-adjacent-sv-agreement"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=c  (C):dec=b  (D):dec=a  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 56,
+        "relPos": 0.07,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 266,
+        "relPos": 0.331,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 410,
+        "relPos": 0.511,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 466,
+        "relPos": 0.58,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 630,
+        "relPos": 0.785,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.785,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Obviously, one of the judgments the public has of us is whether or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get what they want. That, however, is not all they want. They want to have the service rendered to them in a manner that pleases them; they want not only efficiency but courtesy and consideration; and they are in a position to get what they want. They are in the driver's seat; they are paying the bills; and an understanding of that fact is a real and fundamental basis of public relations. In order, therefore, for a great company to satisfactorily serve the public, it must have a philosophy and a method of doing business which will allow and insure that its people serve the public efficiently and in a pleasing manner.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "whether",
+        "isError": false,
+        "correction": "whether",
+        "errorExpression": "whether",
+        "surroundingText": "one of the judgments the public has of us is whether or not our telephone service is good.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "rendered",
+        "isError": false,
+        "correction": "rendered",
+        "errorExpression": "rendered",
+        "surroundingText": "They want to have the service rendered to them in a manner that pleases them",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "and they are in a position to get what they want.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "paying",
+        "isError": false,
+        "correction": "paying",
+        "errorExpression": "paying",
+        "surroundingText": "They are in the driver's seat; they are paying the bills;",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "serve",
+        "isError": true,
+        "correction": "serve",
+        "errorExpression": "serves",
+        "surroundingText": "insure that its people serve the public efficiently and in a pleasing manner.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "whether"
+      },
+      {
+        "label": "(B)",
+        "text": "rendered"
+      },
+      {
+        "label": "(C)",
+        "text": "what"
+      },
+      {
+        "label": "(D)",
+        "text": "paying"
+      },
+      {
+        "label": "(E)",
+        "text": "serves"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "is 뒤에서 명사절을 이끄는 접속사 whether가 올바르게 사용되었습니다.",
+      "(B)": "have + 목적어(the service) + 목적격 보어 구조에서 서비스가 제공되는(수동) 관계이므로 과거분사 rendered가 적절합니다.",
+      "(C)": "get의 목적어 역할과 want의 목적어 역할을 동시에 수행하는 선행사를 포함한 관계대명사 what이 올바르게 쓰였습니다.",
+      "(D)": "주어 they가 청구서를 지불하고 있다는 능동의 진행 시제(are paying)를 구성하므로 현재분사 paying이 적절합니다."
+    },
+    "explanation": "① 문장의 골격 해부: insure의 목적어 역할을 하는 that 명사절 내부의 주어는 its people입니다. \n② 통사적 이유 단정: people은 '사람들'이라는 뜻의 복수 명사로, 동사 역시 복수형이 와야 하므로 단수 동사 serves는 비문입니다. \n③ 따라서 serve로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 주어-동사 수일치 — 명사절 내 주어가 복수형(people)이므로 복수 동사 필요",
+      "(B) 과거분사 수동 — have 동사의 목적격 보어로 수동 관계 파악",
+      "(C) 관계대명사 what — 불완전한 문장 구조를 이끌며 선행사 포함 역할 수행"
+    ],
+    "tags": [
+      "수일치",
+      "대명사",
+      "어법"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Obviously, one of the judgments the public has of us is __(A) whether__ or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get what they want. That, however, is not all they want. They want to have the service __(B) rendered__ to them in a manner that pleases them; they want not only efficiency but courtesy and consideration; and they are in a position to get __(C) what__ they want. They are in the driver's seat; they are __(D) paying__ the bills; and an understanding of that fact is a real and fundamental basis of public relations. In order, therefore, for a great company to satisfactorily serve the public, it must have a philosophy and a method of doing business which will allow and insure that its people __(E) serves__ the public efficiently and in a pleasing manner."
+  }
+}

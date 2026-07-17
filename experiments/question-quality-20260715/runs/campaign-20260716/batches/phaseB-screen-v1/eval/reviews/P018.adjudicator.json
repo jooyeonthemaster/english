@@ -1,0 +1,38 @@
+{
+  "pid": "P018",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "5개 밑줄 전면 독립 재검증 결과 정답 집합은 {(B)}로 유일. (B) 'it must either adapting to or indeed reinforce'는 조동사 must의 원형 보어 요구와 either A or B 상관 병렬(or 뒤 원형 reinforce)을 동시에 위반하며, 진행형(be 부재)·동명사(must 뒤 불가)·분사구문(상관 병렬 붕괴) 등 어떤 대안 파스로도 정문화 불가. 교정형 'either adapt to or'는 원지문과 정확히 일치. 나머지 (A)(C)(D)(E)는 각각 표준 규칙으로 정문임이 증명되고, 유일한 실질 디코이인 (E)도 관계절 내 정형동사 병렬(that is ... but spoils)로 완전 해소되어 복수정답 위험 없음. 솔버1·솔버2 모두 과잉 판정(성립하지 않는 대안 해석 인정)이나 누락 없이 정확했고, 감사자 V2=true 판정도 타당. 감사자의 KILLER 난이도 미달·C등급 지적은 공예(craft) 차원의 문제로 정답 유일성(V2)에는 영향 없음. 최종 판정: 선언된 정답 (B)는 유일한 정답이다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "주격 관계대명사 that이 어법상 옳은가",
+      "verdict": "정문 — 정답 아님",
+      "evidence": "'a lasting mark that shows the evolution of society'에서 that절 내부에 주어가 결손되어 있으므로 that은 주격 관계대명사로만 파스 가능하고, 단수 선행사 a lasting mark와 shows의 수 일치도 성립. 동격 that절 해석은 절이 불완전하여 불가. 대안 오류 해석 전무."
+    },
+    {
+      "label": "(B)",
+      "claim": "either adapting to or가 어법상 틀렸는가 (선언된 정답)",
+      "verdict": "오류 확정 — 유일 정답",
+      "evidence": "must는 원형 보어를 요구하며 or 뒤의 병렬 짝 reinforce가 원형이므로 either 뒤도 원형 adapt여야 한다. 구제 시도 전수 검토: (i) 진행형 해석은 be 부재로 불가(must be adapting 아님), (ii) must 뒤 동명사 결합은 영어에 존재하지 않음, (iii) adapting을 분사 부가어로 읽으면 'or indeed reinforce'가 must 아래 첫 등위항 없이 고아가 되어 상관 병렬이 붕괴 — 역시 비문. 어떤 해석으로도 정문이 되지 않는 명백한 단일 오류이며, 'either adapt to or'로 교정 시 원지문을 정확히 복원한다."
+    },
+    {
+      "label": "(C)",
+      "claim": "단수 동사 makes가 어법상 옳은가",
+      "verdict": "정문 — 정답 아님",
+      "evidence": "'it is subordinate ..., or it makes a strong statement'는 or로 연결된 두 독립절이고 두 번째 절의 주어 it(단수)이 동사 바로 앞에 있어 3인칭 단수 makes가 정확. 앞 절 is와의 형태 일치 강제는 존재하지 않음. 'Depending on the type of bridge and the site'는 전치사화된 관용 부가어로 현수분사 문제도 일으키지 않음."
+    },
+    {
+      "label": "(D)",
+      "claim": "재귀대명사 itself가 어법상 옳은가",
+      "verdict": "정문 — 정답 아님",
+      "evidence": "'spectacular in itself'는 '그 자체로'라는 고빈도 관용 재귀 표현이며 지시 대상은 관계절 선행사 a bridge(단수 사물)로 인칭·수 일치. it으로 대체하면 오히려 관용성이 깨짐. 오류 해석 불가."
+    },
+    {
+      "label": "(E)",
+      "claim": "but 병렬이 to create와 걸리므로 원형 spoil이어야 한다는 대안 해석 — 잠재적 복수정답 주장",
+      "verdict": "정문 — 복수정답 불성립",
+      "evidence": "병렬 시작점 판별이 쟁점: (i) 관계절 내 정형동사 병렬 'a bridge that [is spectacular in itself] but [spoils its local environment]' — 주어 that(=a bridge, 단수)에 spoils 일치, 완전한 정문이며 의미도 정합('그 자체로는 장관이지만 주변 환경을 망치는 다리'). (ii) 대안 파스 'to create ... but spoil'(create와 병렬)은 원형 spoil을 요구하므로 표시형 spoils와 양립 불가 — 즉 표시된 형태 자체가 (i) 파스를 선택하게 하고 그 파스에서 문법적으로 성립한다. 어법 문항의 판정 기준은 '표시형이 성립 가능한 파스가 존재하는가'이며 존재하므로 오류 아님. 원지문에서도 spoils가 그대로 쓰여 그라운딩 확인. 두 솔버 모두 이 미끼를 정확히 해소했고 과잉 판정 없음."
+    }
+  ]
+}

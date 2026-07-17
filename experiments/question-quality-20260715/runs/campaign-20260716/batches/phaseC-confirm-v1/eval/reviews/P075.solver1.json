@@ -1,0 +1,35 @@
+{
+  "pid": "P075",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Indirect question 'how long the shortest war in recorded history lasted': subject-verb order is proper for an embedded wh-clause, and simple past 'lasted' is right for a completed, dated 1896 war. Felt a brief pull toward 'has lasted', but present perfect would clash with the finished historical event."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Compound subject '[Why the war took place] and [the reason behind its brief duration]' joined by 'and' takes plural 'are'. This is the strongest distractor: the wh-clause first conjunct alone would take singular 'is', and the long subject hides the coordination. But two conjoined subject NPs/clauses require plural agreement, so 'are' is grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a small African island nation called Zanzibar' is a reduced passive relative ('which was called Zanzibar') modifying 'nation'. Past participle is required; 'calling' would be wrong. No issue."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'ordered Zanzibar's new leader to step down' follows the required pattern order + object + to-infinitive. No issue."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (the answer)",
+      "reason": "In 'it killed hundreds of Zanzibaris, forced the new leader to flee and the country to immediately surrender', 'forced' cannot stand as a finite verb. Rescue attempts all fail: (1) parallel with 'killed' would need 'and' before 'forced', but the only 'and' is inside forced's complement, coordinating its two objects ('the new leader to flee' / 'the country to...surrender'); (2) a three-item list reading fails because 'the country to immediately surrender' is not a VP parallel to 'killed'/'forced'; (3) a reduced relative on 'Zanzibaris' fails because that requires passive 'forced to flee', yet here 'forced' takes its own object. Comma-only coordination of two finite VPs is ungrammatical, so it must be the resultative participle 'forcing' (= 'which forced...')."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. Answer converges uniquely on (E) ('forced' -> 'forcing'). Most attractive wrong pull: (B) 'are', since the clause-initial compound subject tempts singular agreement; second pull: (A) tense. Actively searched for alternative parses that would make (E) grammatical (asyndetic VP coordination, nonrestrictive reduced relative) and none survive, so the item is clean with a single defensible key."
+}

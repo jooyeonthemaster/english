@@ -1,0 +1,96 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERM-CORRUPTION",
+      "severity": "major",
+      "evidence": "해설: \"이에 따라 독자는 소통의 협동 원칙을 '도로 보호(hyper-protected)'받는 것으로 받아들인다\" — 지문의 핵심 기술 용어 hyper-protected 의 한국어 풀이가 '도로 보호'라는 비문/비단어 구로 렌더되어 있다('고도로 보호' 또는 '과잉 보호'의 손상으로 추정). 학생 노출 해설에서 지문 중심 개념의 용어 풀이가 무의미한 구로 제시되므로 RUBRIC V4의 '용어 오류 없음' 기준 위반. 보수적 판정 원칙에 따라 V4 실패."
+    },
+    {
+      "code": "V4-FABRICATED-QUALIFIER",
+      "severity": "minor",
+      "evidence": "해설: \"문학 작품은 역사적 선택 과정을 거쳐\" — 원지문은 'a process of selection: they have been published, reviewed, and reprinted'라고만 하며 '역사적(historical)'이라는 한정은 지문에 없는 첨가다."
+    },
+    {
+      "code": "V4-SENTENCE-ATTRIBUTION",
+      "severity": "minor",
+      "evidence": "해설: \"네 번째 문장에서는 언어적 복잡성이나 효율적 소통의 원칙을 위배하는 요소(obscurities, flouting principles)를 만나도...\" — 'obscurities'는 세 번째 문장('We can put up with many obscurities...')의 표현이고 네 번째 문장에는 'complications of language'와 'flout principles...'만 있다. 문장 귀속이 부정확하다."
+    },
+    {
+      "code": "V5-KEYPOINT-TERM-GARBLE",
+      "severity": "minor",
+      "evidence": "keyPoints[1]: \"Hyper-protected cooperative principle과 flouting communicative goals 사이의 유기적 인과 관계\" — 지문에서 flout 되는 것은 'principles of efficient communication'이고 'communicative goal'은 그 위배가 봉사하는 목적이다. 'flouting communicative goals'는 목적어가 뒤바뀐 손상 표현. (필드 간 모순은 아니어서 V5 자체는 통과, 용어 결함으로 기록)"
+    },
+    {
+      "code": "V1-MISSING-TERMINAL-PUNCT",
+      "severity": "minor",
+      "evidence": "렌더 지문이 \"...to explore uncertainties, and _____\" 로 끝나며 빈칸 뒤 마침표가 없다. 삭제된 span 이 종결 부호('...by that?')를 포함했기 때문으로, 통상 렌더는 \"_____.\"가 되어야 한다. 구조 파손은 아니므로 V1 은 통과시키되 표기 결함으로 기록."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal): 독자 태도를 '모호함 인내'에서 '즉각적 명료성 요구'로 뒤집음",
+      "temptingBecause": "'clarity', 'efficiency', 'decoding the author's message'가 지문의 'principles of efficient communication', 'communicative purpose' 어휘와 표면적으로 겹친다",
+      "decisiveFlaw": "지문 전체가 독자는 obscurities 를 견디고(put up with) 불확실성을 탐색한다고 말하므로 즉각적 명료성 요구는 정반대. 앞 등위 성분 'to pay attention, to explore uncertainties'와도 즉시 충돌해 국소 단서만으로 소거된다"
+    },
+    {
+      "label": "②",
+      "intent": "축자화(literalization): 'flout principles of efficient communication'을 '문법 오류를 교정해 규칙을 복원한다'로 왜곡",
+      "temptingBecause": "'standard communicative rules'가 cooperative principle 계열 어휘를 흉내낸다",
+      "decisiveFlaw": "독자는 규칙 위배를 교정하는 것이 아니라 그 위배 이면의 소통 목적을 해석하려 애쓴다는 것이 지문의 명시적 진술. 표면적으로도 부조리해 사실상 필러에 가깝다"
+    },
+    {
+      "label": "③",
+      "intent": "정답: 삭제된 span \"not immediately ask 'what do you mean by that?'\"을 'suspend the urge for immediate resolution of interpretive ambiguity'로 추상화",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 다만 바로 앞 등위 성분 'to explore uncertainties'와 거의 동의어라 국소 대응만으로 선택 가능 — 변별 설계상 약점"
+    },
+    {
+      "label": "④",
+      "intent": "행위자/태도 왜곡: '저자 의도 해석에 분투'를 '저자 의도 배제·주관적 인상 선호'로 반전",
+      "temptingBecause": "'the author's hidden intent'가 지문의 'some further communicative goal'(이면의 목적)과 겹치고, 주관적 감상이라는 통념적 문학관에 호소한다",
+      "decisiveFlaw": "지문은 독자가 저자를 협조적이라 가정하고 그 목적을 해석해내려 struggle 한다고 명시 — 의도 배제는 정면 배치. ①과 같은 계열의 단순 반전이라 함정 유형이 중복된다"
+    },
+    {
+      "label": "⑤",
+      "intent": "half-truth/scope shift: 첫 문장의 선택(selection) 소재를 앵커로 '검증된 품질에 전적으로 의존'으로 과장",
+      "temptingBecause": "'verified quality', 'selection process'가 첫 문장 'undergone a process of selection... assurance'와 강하게 겹쳐 다섯 선지 중 유일하게 실질적 유혹력이 있다",
+      "decisiveFlaw": "빈칸 문장은 독자의 능동적 노력(pay attention, explore uncertainties)이 문학의 특징을 낳는다는 결론이므로 수동적 '전적 의존'은 논지와 충돌. 절대어 'solely'가 추가 소거 단서를 노출한다"
+    }
+  ],
+  "explanationIssues": [
+    "핵심 용어 hyper-protected 의 한국어 풀이 '도로 보호'가 비문(V4 실패 사유)",
+    "'역사적 선택 과정' — 지문에 없는 한정어 첨가",
+    "'obscurities'를 네 번째 문장 내용으로 귀속(실제는 세 번째 문장)",
+    "keyPoints 의 'flouting communicative goals'는 'flout principles of efficient communication'의 손상 표현",
+    "정답 근거 자체(빈칸 = 원문 'not immediately ask what do you mean by that'의 추상화)는 정확하고, 오답 해설 4건 모두 해당 선지 실제 내용과 대응함"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "D1_sameSyntacticSlot": true,
+    "D2_meaningPreservingAbstraction": true,
+    "D3_anchorOverlapFlaw": "부분 충족 — ⑤는 3요소가 모두 강하나 ②는 표면 부조리로 유혹력이 없어 필러에 가깝고 ①·④는 앵커가 얕다",
+    "D4_multiCueRequired": false,
+    "D4_evidence": "정답 ③은 바로 앞 등위 성분 'to explore uncertainties'의 근동의어라 단일 국소 단서로 도달 가능하고, ①·②·④는 극성 스캔만으로, ⑤는 절대어 'solely'로 소거된다 — '단서 하나로 찍을 수 없어야 한다'는 KILLER 조건 위반",
+    "D5_variedTrapTypes": false,
+    "D5_evidence": "①과 ④가 동일 계열의 단순 태도 반전(random opposite)으로 중복"
+  },
+  "grade": "F",
+  "notes": "정답 유일성(V2)·지문 무결성(V1)·문법성(V3)·필드 동기화(V5)는 통과. 그러나 학생 노출 해설이 지문의 중심 개념어 hyper-protected 를 '도로 보호'라는 무의미한 구로 풀이해 V4(용어 오류 없음) 실패 — 치명 결함은 공예 점수로 상쇄되지 않으므로 F. 공예 측면에서도 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 빈칸이 등위 3항 나열의 마지막 항이라 직전 항 'to explore uncertainties'가 정답의 근동의어 힌트로 작동하고(C4=2), 오답 4개 중 3개가 극성만으로 소거되어 실질 경합 선지는 ⑤ 하나뿐이다(C3=2, C5=1). 수리 방향: (1) 해설 용어 손상 교정('고도로/과잉 보호'), (2) 빈칸 span 을 등위 나열 밖의 논리 요절(예: 'hyper-protected' 문장 또는 institutional label 문장)로 이동해 2문장 통합 추론을 강제, (3) ①·④ 중 하나를 scope shift 나 condition loss 계열로 교체, (4) 렌더 지문 빈칸 뒤 마침표 추가."
+}

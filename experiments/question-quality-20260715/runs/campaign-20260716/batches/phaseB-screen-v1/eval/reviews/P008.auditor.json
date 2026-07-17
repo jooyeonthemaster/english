@@ -1,0 +1,94 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-STRUCT-MISANALYSIS",
+      "severity": "critical",
+      "evidence": "렌더에서 밑줄 (C)는 what절 내부 동사다: 'What __(C) are__ new about cyberspace is its interactive nature'. 이 자리의 주어는 자유관계사 what 자신이고, 문장의 본동사는 그 뒤의 두 번째 is('is its interactive nature')로 밑줄 대상이 아니다. 그러나 해설은 \"명사절 'What is new about cyberspace'가 문장의 핵주어 역할\"을 한다며 밑줄 동사를 '주어의 인칭과 수에 직접 영향을 받는 주절의 본동사'로 규정한다. 해설이 설명하는 통사 위치(주절 본동사)와 실제 밑줄 위치(what절 내부 동사)가 다르다. are→is 교정 결론은 옳으나 통사 구조 설명 자체가 실제 문장과 불일치한다."
+    },
+    {
+      "code": "V4-CONSTITUENT-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설 말미의 \"what절 내의 단수 보어인 'its interactive nature'와의 호응\"은 성분 귀속 오류다. 'its interactive nature'는 what절('What is new about cyberspace') 밖에 있는 주절 본동사 is의 주격 보어이며 what절 내부 성분이 아니다."
+    },
+    {
+      "code": "V4-KEYPOINT-PROPAGATION",
+      "severity": "major",
+      "evidence": "keyPoints (C) \"주어 역할을 하는 관계대명사 what절은 단수 취급하므로 단수 동사 is가 올바릅니다\"도 동일 오분석을 전파한다. 이는 주절 본동사 일치 규칙인데, 실제 밑줄 자리는 'what 자체가 절 내부 주어로서 단수 취급된다'로 설명해야 한다."
+    },
+    {
+      "code": "V4-E-IMPLIED-SUBJECT",
+      "severity": "minor",
+      "evidence": "(E) 오답 해설의 '주절의 주어와 일치하는 주어가 생략된'은 부정확하다. 'while being able to shape...'의 의미상 주어는 주절 주어 It(= a space)이 아니라 where 관계절의 주어 real people이다. It을 의미상 주어로 보면 비논리적 해석이 된다."
+    },
+    {
+      "code": "KILLER-ADJACENT-AGREEMENT",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER인데 정답 오류가 주어 what 바로 옆에 붙은 국소 수일치('What are new')이며, 'what(절)은 단수 취급'이라는 정전 암기 규칙과 바로 뒤의 병렬 단서('...is its interactive nature')로 즉시 드러난다. RUBRIC §C 'KILLER 정답은 구조를 읽어야 하며 붙어 있는 단순 수일치로 즉시 드러나지 않는다' 위반. (등급에는 V4 실패가 우선 적용되며, 본 이슈는 난이도 정합 결함으로 병기)"
+    },
+    {
+      "code": "KILLER-FILLER-DECOY",
+      "severity": "minor",
+      "evidence": "(D) 'It is'는 단수 대명사 주어 바로 뒤 단수 동사로 why-tempting이 성립하지 않는 필러이며, 정답 (C)와 동일 pointCode 'd'(수일치)를 공유한다. RUBRIC §C '설명이 안 되는 디코이는 필러' 조항 저촉."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "consider + O + to be + C(5형식 목적격 보어) 구조 판단 (pointCode h)",
+      "temptingBecause": "목적어 'the virtual, or imaginative, nature of cyberspace'가 삽입구를 포함해 길어 목적어-보어 술어 관계 파악이 필요하고, consider O (as) C / consider O C 변형과 혼동 가능",
+      "decisiveFlaw": "consider O to be C는 표준 구문으로 어법상 옳다 — 오답이 될 근거 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사 후치 수식 분사의 태 판단 (made vs making) (pointCode c)",
+      "temptingBecause": "including 삽입구 내부라 수식 구조가 한눈에 안 들어오고 능동 making으로의 착각을 유도",
+      "decisiveFlaw": "cave drawings는 만들어지는 대상(수동 관계)이므로 과거분사 made가 옳다 — 오답 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 자유관계사 what이 절 내부 주어일 때의 수일치 (pointCode d)",
+      "temptingBecause": "what이 가리키는 내용이 복수 개념처럼 느껴질 수 있어 are를 허용하는 것으로 착각 가능",
+      "decisiveFlaw": "'What are new about cyberspace'는 비문 — what은 여기서 단수 취급이며 주절의 단수 서술('is its interactive nature')이 이를 확증. is로 교정하면 정확히 원문이 복원되는 최소대립쌍. 다만 What과 are가 바로 인접해 암기 규칙만으로 즉시 판별되는 국소 수일치라 KILLER가 요구하는 구조 독해 부담이 없다"
+    },
+    {
+      "label": "(D)",
+      "intent": "단수 대명사 주어 It과 본동사 is의 수일치 — 정답 (C)와 동일 pointCode(d)",
+      "temptingBecause": "사실상 없음 — 'It is'는 자명하여 학생이 의심할 여지가 거의 없는 필러성 디코이",
+      "decisiveFlaw": "It(단수)+is는 자명한 정문 — 오답 근거 없음. 정답과 같은 포인트의 극히 쉬운 자리로 선지 의도 밀도를 낮춘다"
+    },
+    {
+      "label": "(E)",
+      "intent": "접속사를 유지한 분사구문(while being)의 형태·태 판단 (pointCode k)",
+      "temptingBecause": "while 뒤 동사 형태(be/being/과거분사) 선택과 의미상 주어 파악이 필요",
+      "decisiveFlaw": "의미상 주어(where절의 real people)와 능동 관계이므로 being able이 적절 — 오답 아님. 단, 해설이 의미상 주어를 '주절의 주어'로 부정확하게 기술(V4-E-IMPLIED-SUBJECT)"
+    }
+  ],
+  "explanationIssues": [
+    "밑줄 (C)는 what절 내부 동사인데 해설은 이를 '주절의 본동사'로 규정하고 what절 전체를 핵주어로 놓는 프레임으로 설명 — 실제 밑줄 위치의 통사 구조와 불일치",
+    "'its interactive nature'를 'what절 내의 단수 보어'로 기술 — 실제로는 what절 밖 주절 본동사의 보어",
+    "keyPoints (C)에 동일 오분석 전파",
+    "(E) 해설의 '주절의 주어와 일치하는 주어가 생략' — 실제 의미상 주어는 where 관계절의 real people",
+    "keyPoints (D)가 필러 수준 자리(It is)를 '판단 영역'으로 격상하여 서술",
+    "'단수 취급이므로 단수 동사로 일치'라는 동일 결론을 세 차례 반복하여 장황"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "§C 판정: (충족) source-correct→displayed-wrong 최소대립쌍이며 교정 시 정확히 원문 복원; 문맥 선호가 아닌 명확한 문법 판단(주절 단수 서술이 확증). (미충족) ① 'KILLER 정답은 구조를 읽어야 하며 붙어 있는 단순 수일치로 즉시 드러나지 않는다' — What 바로 옆 are의 인접 수일치로 정전 암기 규칙에 의해 즉시 판별됨. ② 5개 밑줄 각각의 why-tempting이 오답 해설에 사실상 부재(왜 옳은지만 서술)하고 (D)는 설명이 성립하지 않는 필러. ③ (D)가 정답과 동일 point(d)의 쉬운 자리. 따라서 killerConditionsMet=false.",
+  "grade": "F",
+  "notes": "V1 통과: 렌더 지문은 원지문과 (C) is→are 의도 변형 외 완전 일치(문장 접합·중복·누락·고아 문장부호 없음), 마커 (A)~(E)가 선지·markedExpressions와 정합(expression=원문형, errorExpression=표시형 규약으로 내부 일관). V2 통과: 5개 밑줄 독립 검증 — (A) consider O to be C 정문, (B) 수동 과거분사 정문, (D) It is 정문, (E) while being 분사구문 정문(의미상 주어 real people과 능동), (C) 'What are new'만 비문으로 정답 유일. V3 통과: 발문·교정 완성문 모두 문법적이고 의도된 오류만 비문. V4 실패: 해설이 밑줄 (C)의 통사 위치를 오분석(실제는 what절 내부 동사인데 주절 본동사로 규정), 'its interactive nature'를 what절 내부 성분으로 오귀속, (E) 의미상 주어 오기술 — 교정 결론은 옳으나 구조 설명이 실제 문장과 불일치하므로 V4 기준 위반. V5 통과: 정답 라벨·선지·해설 키·keyPoints·markedExpressions 동기화. 공예: 지문의 주제 전환 핵심 문장을 겨냥한 정전 포인트(C1=3)이나 (D) 필러·(C)와 포인트 중복으로 의도 밀도 저하(C2=2), 암기 규칙으로 즉시 풀려 변별 판단 얕음(C3=2), 메타 누출 없이 교정 필연성 확보(C4=3), KILLER 라벨 대비 실제 난이도 하~중으로 큰 불일치(C5=1), 해설은 구조 오류+장황(C6=1). V4 실패로 등급 F — 공예 점수로 상쇄 불가. 수리 방향: (1) 해설·keyPoints를 'what은 절 내부에서 단수 취급되는 주어이며 밑줄 동사는 what절 내부 동사'로 재기술하고 보어 귀속과 (E) 의미상 주어 기술을 교정, (2) KILLER 유지 시 정답 자리를 주어-동사 분리·도치 등 구조 독해가 필요한 지점으로 재설계하고 (D)를 실질 디코이로 교체."
+}

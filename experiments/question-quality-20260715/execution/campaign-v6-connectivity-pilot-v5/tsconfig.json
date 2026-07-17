@@ -1,0 +1,36 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false
+  },
+  "include": [
+    "author-freeze-gate.ts",
+    "bounded-response-body.ts",
+    "build-frozen-runtime.mts",
+    "credential-file-boundary.ts",
+    "frozen-runtime-core.ts",
+    "protocol-core.ts",
+    "response-parser.ts",
+    "price-snapshot-core.ts",
+    "live-io.ts",
+    "live-environment.ts",
+    "strict-json-observer.ts",
+    "production-runner.ts",
+    "live-child.mts",
+    "operator-wrapper.mts",
+    "capture-price-snapshot.mts",
+    "capture-output-boundary.ts",
+    "compile-exact-wire.mts",
+    "compiler-child.mts",
+    "compiler-client.mts",
+    "compiler-closure.mts",
+    "compiler-environment.mts",
+    "live-closure.mts",
+    "terminal-reconciliation-core.ts",
+    "test-support.ts",
+    "offline.test.ts",
+    "build-offline.mts",
+    "verify.mts"
+  ]
+}

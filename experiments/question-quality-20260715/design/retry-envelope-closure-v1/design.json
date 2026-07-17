@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "designId": "retry-envelope-closure-v1-20260715",
+  "status": "DESIGN_ONLY_IMPLEMENTATION_REQUIRED",
+  "snapshot": {
+    "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "networkOrApiCalls": 0,
+    "databaseCalls": 0,
+    "productionSourceEdits": 0,
+    "secretsOrEnvironmentValuesRead": false
+  },
+  "currentVerdict": {
+    "engineInvocationAbsoluteEnvelope": "UNKNOWN_UNBOUNDED_FROM_SOURCE",
+    "triggerAssignmentAbsoluteEnvelope": "UNKNOWN_UNBOUNDED_FROM_SOURCE",
+    "fourCellResearchOperationalRegistry": "BLOCK",
+    "ordinaryWireQuestionObjectCardinality": "UNBOUNDED_FROM_SCHEMA"
+  },
+  "proposedServerOwnedCaps": {
+    "applicationMaxRetries": 2,
+    "sdkMaxRetries": 2,
+    "outerRequestedMaxAttempts": 2,
+    "workbenchTriggerMaxAttempts": 2
+  },
+  "researchSingleDispatchPolicy": {
+    "applicationMaxRetries": 0,
+    "sdkMaxRetries": 0,
+    "ladderParseMaxRetries": 0,
+    "allowStructuredRepair": false,
+    "scope": "one physical provider dispatch per registered stage; outer quality stages remain distinct"
+  },
+  "ordinaryProductionEngineAbsoluteAfterProposal": {
+    "STANDARD_BLANK_INFERENCE": {
+      "strictPasses": 10,
+      "candidateResponses": 216,
+      "evaluationResponses": 0,
+      "designResponses": 0,
+      "physicalProviderFetches": 648,
+      "triggerAssignmentPhysicalAtMaxAttempts2": 1296
+    },
+    "PREMIUM_BLANK_INFERENCE": {
+      "strictPasses": 2,
+      "candidateResponses": 54,
+      "evaluationResponses": 0,
+      "designResponses": 0,
+      "physicalProviderFetches": 162,
+      "triggerAssignmentPhysicalAtMaxAttempts2": 324
+    },
+    "STANDARD_GRAMMAR_ERROR": {
+      "strictPasses": 6,
+      "variant": "valid-settings worst",
+      "candidateResponses": 162,
+      "evaluationResponses": 63,
+      "designResponses": 0,
+      "physicalProviderFetches": 675,
+      "triggerAssignmentPhysicalAtMaxAttempts2": 1350
+    },
+    "PREMIUM_GRAMMAR_ERROR": {
+      "strictPasses": 2,
+      "variant": "five-marker ladder eligible",
+      "candidateResponses": 96,
+      "evaluationResponses": 18,
+      "designResponses": 12,
+      "physicalProviderFetches": 378,
+      "triggerAssignmentPhysicalAtMaxAttempts2": 756
+    }
+  },
+  "researchExactSingleDispatchArithmetic": {
+    "authorization": "NONE_HYPOTHETICAL_COMPLETE_REGISTRY_ONLY",
+    "STANDARD_BLANK_INFERENCE": {
+      "candidateSlots": 24,
+      "evaluationResponses": 0,
+      "designResponses": 0,
+      "physicalProviderFetches": 24
+    },
+    "PREMIUM_BLANK_INFERENCE": {
+      "candidateSlots": 6,
+      "evaluationResponses": 0,
+      "designResponses": 0,
+      "physicalProviderFetches": 6
+    },
+    "STANDARD_GRAMMAR_ERROR": {
+      "candidateSlots": 18,
+      "evaluationResponses": 7,
+      "designResponses": 0,
+      "physicalProviderFetches": 25
+    },
+    "PREMIUM_GRAMMAR_ERROR": {
+      "candidateSlots": 20,
+      "evaluationResponses": 2,
+      "designResponses": 6,
+      "physicalProviderFetches": 28
+    }
+  },
+  "adversarialFindings": [
+    "Capping environment variables alone is insufficient because public numeric arguments bypass them.",
+    "Infinity is not rejected at the transport application loop boundary.",
+    "The Workbench Trigger retry multiplier is outside the prior engine-invocation four-cell table and is itself unbounded from source.",
+    "Controller denial of an SDK retry does not prove SDK maxRetries was set to zero.",
+    "PREMIUM experimental_repairText prevents runtime-only single-dispatch unless omitted in research strict mode.",
+    "Research forceJsonFallback remains cardinality-unknown even with zero retries.",
+    "Ordinary question-object cardinality remains schema-unbounded after call caps.",
+    "maxAttempts=1 does not produce one assignment call because type-specific floors and salvage passes remain."
+  ]
+}
+

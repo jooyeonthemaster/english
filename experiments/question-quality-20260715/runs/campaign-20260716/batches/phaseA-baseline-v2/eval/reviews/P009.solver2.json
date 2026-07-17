@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법: 동명사구 주어로 단수 동사 creates와 일치, 결합은 정문. 논리: 지문은 감정을 '억누르는' 것이 아니라 '정확히 표현'하는 능력(express how he feels about the problem and why)을 전제로 개방적 소통이 성립한다고 논증한다. 감정 억제(suppressing)는 전제 (i)를 부정하므로 결론(open communication)을 도출할 수 없다. 직접 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법: 동명사구 주어 + 단수 creates, 정문. 논리: 빈칸 직전 문장 'take the perspective of the other group members and understand why they are reacting in a certain manner'의 직접적 환언으로, 조응(anaphora) 관계가 최근접 선행 명제와 정확히 성립한다. 관점 인식·존중 → 개방적 소통의 장 → 건설적 갈등 해결 → 집단 기능 향상이라는 인과 사슬이 지문 전체 논증과 정합. 자기 감정 표현(전제 i)까지 명시적으로 포괄하지는 않으나 모순은 없으며, 유일하게 논증과 양립하는 선지."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법: 정문. 논리: 지문은 'accommodate their own needs as well as the needs of others'로 자기 욕구와 타인 욕구의 균형(협력)을 명시한다. '개인 욕구보다 집단 목표를 무조건 우선'은 이 균형 명제와 직접 모순(unconditionally가 as well as 구조를 부정). 반박 가능."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법: 정문. 논리: 지문의 'diverse emotion vocabulary'는 감정 어휘의 다양성·세분화를 뜻하며, '표준화된 언어 규칙 수립'과는 범주가 다르다(오히려 표준화는 다양성과 반대 방향). 지문 어디에도 언어 규칙 코드화에 대한 전제가 없어 결론을 지지할 수 없는 무근거 명제."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법: 정문. 논리: 빈칸 뒤 결론이 'constructive conflict resolution' — 갈등의 발생을 전제하고 그것을 건설적으로 '해결'하는 것이다. 불일치 원천을 '회피'하면 해결할 갈등 자체가 성립하지 않으므로 결론과 화용적·논리적으로 모순. 지문의 갈등 상황 예시(In a group conflict situation)와도 충돌."
+    }
+  ],
+  "note": "5개 선지 모두 동명사구 주어로 creates와 수일치가 성립해 문법적 배제 단서(seam)는 없음. 판정은 전적으로 논리 적합성에 의해 결정되며 ②만 생존. 이상적으로는 빈칸이 자기 감정 표현+관점 취하기 양쪽을 포괄하는 상위 개념(예: this ability to understand emotions)이어야 하나, ②는 최근접 선행 문장의 충실한 환언으로 단독 정답 방어 가능. 복수정답 소지 없음."
+}

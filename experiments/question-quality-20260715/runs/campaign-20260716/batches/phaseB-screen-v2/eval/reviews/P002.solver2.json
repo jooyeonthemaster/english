@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합(seam)은 정문: 'until it attracts wide attention from the public media'는 3인칭 단수 주어 it + 현재시제 동사로 시간부사절 규범(미래 대신 현재)에 부합. 그러나 논리적으로 지문과 정면 충돌한다. 지문은 '전문가 검토(expert reviewers) 없이 기자회견(press conference)에서 발견을 발표하는 과학자는 publicity seeker로 자동 비난받는다'고 명시하므로, 대중 매체의 주목은 과학적 진리의 standing을 부여하는 요건이 아니라 오히려 규범 위반의 표지다. 형식적으로: 지문의 규범 명제 '지식은 disciplinary specialists의 authorization 없이는 지식이 아니다'와 ①은 무관하거나 반대 방향이므로 기각."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합 정문: 'until it undergoes validation by the scientific community' — 시간부사절 내 현재시제, undergo의 타동 용법 및 validation by + 행위자 명사구 결합 모두 규범적. 논리 증명: (i) 'norms of scientific communication presuppose ... knowledge isn't knowledge unless it has been authorized by disciplinary specialists'가 빈칸 문장의 전제이고, (ii) 빈칸 문장 'A scientific truth has little standing until it X'는 이 전제의 재진술이어야 하며, (iii) 후행 문장 'What happens in somebody's laboratory is only one stage in its construction'은 진리의 '구성(construction)'이 실험실 밖 공동체 단계로 이어짐을 요구한다. X = '과학자 공동체의 검증을 거친다'는 (i)의 authorized by disciplinary specialists를 정확히 환언하고 (iii)의 collective construction과 정합한다. 유일하게 성립하는 후보."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합 정문: 'until it secures funding from disciplinary specialists'는 통사적으로 흠 없음. 그러나 논리 기각: 지문 어디에도 '연구비(funding)'라는 화제가 없다. 'disciplinary specialists'라는 지문 어휘를 그대로 재사용해 표면 유사성을 만든 어휘 미끼이며, 지문이 specialists에게 부여한 역할은 인식적 authorization(승인·검증)이지 재정 지원이 아니다. 전제-결론 연결이 형식적으로 단절되므로 기각."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합 정문: 수동태 'is replicated in another private laboratory'는 통사적으로 성립하고, 시간부사절 내 현재 수동도 규범적(의미상 주어 문제 없음). 가장 강한 오답이지만 두 가지 논리 결함으로 기각. (1) 지문이 요구하는 것은 'disciplinary specialists에 의한 authorization', 즉 전문가 검토·공동체 승인이지 재현(replication) 자체가 아니다 — 재현은 검증의 한 수단일 뿐 지문에 언급이 없다. (2) 결정적으로 후행 문장 'What happens in somebody's laboratory is only one stage'는 실험실에서 일어나는 일 일반을 '한 단계'로 격하한다. '또 다른 사적 실험실에서의 재현'은 여전히 laboratory 내부 사건이므로, 빈칸에 넣으면 '실험실 사건으로 standing이 완성된다'는 주장과 '실험실 사건은 한 단계일 뿐'이라는 후행 문장이 모순을 일으킨다. 또한 'another private laboratory'의 private는 지문의 공적 승인 논지와 어긋나는 잉여 수식이다. 따라서 방어 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합 정문: 'until it proves its practical utility in public contexts'는 통사적으로 흠 없음. 논리 기각: 지문의 'basis for action in public contexts'는 개인주의적 수사(발견은 스스로 말한다)가 공적 맥락에서 행위 근거가 되지 못한다는 부정 명제의 일부이지, 과학적 진리의 성립 조건으로 '실용적 유용성'을 제시한 것이 아니다. 지문이 제시한 성립 조건은 오직 전문가 공동체의 authorization이다. 'public contexts'라는 지문 어휘를 재사용한 어휘 미끼로, 실용주의적 기준은 지문에 부재하므로 기각."
+    }
+  ],
+  "note": "다섯 선지 모두 빈칸에 넣었을 때 문법 seam은 정문이므로(시간부사절 내 현재시제, 태·수 일치 모두 성립) 변별은 순수하게 논리 층위에서 이루어진다 — 빈칸 문항으로서 바람직한 설계. 지문의 핵심 논증 사슬: 개인주의적 수사 부정 → 전문가 검토 규범(기자회견 사례) → '지식은 disciplinary specialists의 승인 없이는 지식이 아니다' → 빈칸(재진술 위치) → '실험실은 구성의 한 단계일 뿐'. ②만이 이 사슬을 보존한다. ④가 최강 미끼이나 후행 문장과의 모순('실험실 내 사건은 한 단계일 뿐')으로 형식적으로 배제 가능. 복수 정답 여지 없음."
+}

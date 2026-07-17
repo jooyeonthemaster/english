@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-surrounding-missing-marker",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):ANS=b  (C):dec=k  (D):dec=c  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 87,
+        "relPos": 0.121,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 219,
+        "relPos": 0.304,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 346,
+        "relPos": 0.48,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 636,
+        "relPos": 0.882,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.882,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "living",
+        "isError": false,
+        "correction": "living",
+        "errorExpression": "living",
+        "surroundingText": "a trait that kept us alive when we were living on the savannas",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": true,
+        "correction": "what",
+        "errorExpression": "that",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "to acknowledge",
+        "isError": false,
+        "correction": "to acknowledge",
+        "errorExpression": "to acknowledge",
+        "surroundingText": "train yourself to acknowledge when things go right",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "sharing",
+        "isError": false,
+        "correction": "sharing",
+        "errorExpression": "sharing",
+        "surroundingText": "start your conversations with friends by sharing a recent win",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": false,
+        "correction": "it",
+        "errorExpression": "it",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "living"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "to acknowledge"
+      },
+      {
+        "label": "(D)",
+        "text": "sharing"
+      },
+      {
+        "label": "(E)",
+        "text": "it"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 we가 직접 사는 능동의 주체이므로 현재분사 living을 사용하여 과거진행형을 만드는 것이 어법상 맞습니다.",
+      "(C)": "동사 train은 목적격 보어로 to부정사를 취하므로 to acknowledge는 어법상 적절합니다.",
+      "(D)": "전치사 by 뒤의 목적어 자리이므로 동명사 형태인 sharing이 오는 것이 맞습니다.",
+      "(E)": "지칭 대상이 단수 명사인 life이므로 단수 대명사 it으로 받는 것이 어법상 올바릅니다."
+    },
+    "explanation": "정답 문장의 전치사 on 뒤에 목적어 역할을 하는 명사절이 와야 합니다. 밑줄 친 that 뒤에는 주어가 없는 불완전한 문장(is going wrong)이 이어지는데, 명사절 접속사 that은 완전한 문장이 뒤따라야 하므로 그 자리에 쓰일 수 없습니다. 더욱이 선행사도 존재하지 않기 때문에 선행사를 포함하면서 불완전한 대명사 지시 관계을 이끄는 관계대명사 what으로 고쳐야 합니다. 따라서 that을 what으로 변경해야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(B) 관계대명사 what vs 접속사 that — 불완전한 구조와 선행사 유무로 판정",
+      "(A) 능동태 vs 수동태 — 주어와의 의미 관계로 판정",
+      "(E) 대명사 단복수 수일치 — 지칭 대상 파악"
+    ],
+    "tags": [
+      "어법",
+      "관계대명사",
+      "명사절 접속사",
+      "전치사의 목적어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that kept us alive when we were __(A) living__ on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on __(B) that__'s going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself __(C) to acknowledge__ when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by __(D) sharing__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate __(E) it__."
+  }
+}

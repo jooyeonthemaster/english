@@ -1,0 +1,160 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=b  (C):ANS=c  (D):dec=e  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 43,
+        "relPos": 0.055,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 125,
+        "relPos": 0.159,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 356,
+        "relPos": 0.452,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 509,
+        "relPos": 0.646,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.646,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "reaching out",
+        "isError": false,
+        "correction": "reaching out",
+        "errorExpression": "reaching out",
+        "surroundingText": "We tend to go long periods of time without reaching out to the people we know.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "hoping",
+        "isError": true,
+        "correction": "hoping",
+        "errorExpression": "hoped",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "kept",
+        "isError": false,
+        "correction": "kept",
+        "errorExpression": "kept",
+        "surroundingText": "relationships aren't kept up with big one-time fixes.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "goes",
+        "isError": false,
+        "correction": "goes",
+        "errorExpression": "goes",
+        "surroundingText": "we have to make sure that not too much time goes by between oil changes",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "reaching out"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "hoped"
+      },
+      {
+        "label": "(D)",
+        "text": "kept"
+      },
+      {
+        "label": "(E)",
+        "text": "goes"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 without 뒤에는 동명사 형태인 reaching out이 오는 것이 어법상 맞습니다.",
+      "(B)": "선행사 the distance를 수식하는 주격 관계대명사 that은 어법상 올바릅니다.",
+      "(D)": "주어 relationships가 유지되는 수동의 의미를 지니므로 be동사 aren't 뒤에 과거분사 kept가 쓰인 것은 적절합니다.",
+      "(E)": "that 명사절 안의 주어인 not too much time은 단수이므로 단수 동사 goes가 오는 것이 올바릅니다."
+    },
+    "explanation": "문장의 주어인 We가 동사 call을 수행하면서 동시에 '희망하는' 주체이므로 부대상황을 나타내는 분사구문이 필요합니다. 밑줄 친 부분 뒤에 목적어 역할을 하는 that 명사절이 이어지므로 수동 의미의 과거분사(또는 과거형 동사) hoped는 올 수 없습니다. 따라서 능동의 의미를 지닌 현재분사 hoping으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 능동 vs 수동 분사구문 — 뒤에 목적어절(that절)이 있으므로 능동의 현재분사 필요",
+      "(B) 관계대명사의 쓰임 — 선행사를 수식하며 뒤에 동사가 이어지는 주격 관계대명사 역할",
+      "(E) 단수/복수 주어와 수일치 — 셀 수 없는 명사 주어(time)에 맞는 단수형 동사"
+    ],
+    "tags": [
+      "분사구문",
+      "능동수동"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without __(A) reaching out__ to the people we know. Then, we suddenly take notice of the distance __(B) that__ has formed and we scramble to make repairs. We call people we haven't spoken to in ages, __(C) hoped__ that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't __(D) kept__ up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time __(E) goes__ by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results."
+  }
+}

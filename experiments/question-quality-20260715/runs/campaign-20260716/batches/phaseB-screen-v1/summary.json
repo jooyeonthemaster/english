@@ -1,0 +1,96 @@
+{
+  "batchId": "phaseB-screen-v1",
+  "phase": "B",
+  "atKst": "2026-07-16T20:01:36.515+09:00",
+  "assignments": 120,
+  "slotsConsumed": 106,
+  "accepted": 25,
+  "modelCalls": 142,
+  "inputTokens": 961347,
+  "outputTokens": 188232,
+  "costUsd": 3.031,
+  "ledgerAfter": {
+    "used": 200,
+    "cap": 1000,
+    "costUsd": 5.181121
+  },
+  "byArm": {
+    "G-A0": {
+      "n": 10,
+      "accepted": 3,
+      "gateRejected": 7,
+      "noCandidate": 0,
+      "slots": 16,
+      "costUsd": 0.658281
+    },
+    "G-G2": {
+      "n": 10,
+      "accepted": 2,
+      "gateRejected": 8,
+      "noCandidate": 0,
+      "slots": 10,
+      "costUsd": 0.225219
+    },
+    "G-G3": {
+      "n": 10,
+      "accepted": 0,
+      "gateRejected": 2,
+      "noCandidate": 8,
+      "slots": 10,
+      "costUsd": 0.24655
+    },
+    "G-V1": {
+      "n": 10,
+      "accepted": 3,
+      "gateRejected": 7,
+      "noCandidate": 0,
+      "slots": 20,
+      "costUsd": 0.692596
+    },
+    "G-D1": {
+      "n": 10,
+      "accepted": 0,
+      "gateRejected": 9,
+      "noCandidate": 1,
+      "slots": 9,
+      "costUsd": 0.342531
+    },
+    "G-X1": {
+      "n": 10,
+      "accepted": 2,
+      "gateRejected": 8,
+      "noCandidate": 0,
+      "slots": 10,
+      "costUsd": 0.19155
+    },
+    "B-A0": {
+      "n": 10,
+      "accepted": 9,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 16,
+      "costUsd": 0.47578
+    },
+    "B-B2": {
+      "n": 10,
+      "accepted": 6,
+      "gateRejected": 4,
+      "noCandidate": 0,
+      "slots": 10,
+      "costUsd": 0.198493
+    },
+    "B-B3": {
+      "n": 5,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 5,
+      "slots": 5,
+      "costUsd": 0
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 520456
+}

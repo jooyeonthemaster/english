@@ -1,0 +1,70 @@
+{
+  "pid": "P017",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-antecedent-imprecision",
+      "severity": "minor",
+      "evidence": "(C) 오답 해설이 '앞문장의 내용을 선행사로 받는 which'라고 하나, 실제 선행사는 같은 문장 내 대시로 삽입된 동명사구 'making it present here and now'(음악을 지금 여기서 현재화하는 행위)다. 직전 문장('Musical meaning cannot be separated...')의 내용이 아니다. 전치사+관계대명사라는 문법 판단 자체는 정확하므로 치명은 아님."
+    },
+    {
+      "code": "V4-minor-frame-conflation",
+      "severity": "minor",
+      "evidence": "정답 해설이 'all pupils 뒤에 이어지는 수식어 자리'(분사 수식 프레임)와 'involve는 to부정사를 허용하지 않는다'(동사 보충어 패턴 프레임)를 한 문단에 섞어 논거가 이중화되어 있다. 두 분석 모두 통용되고 핵심 판단(involve + O + -ing)은 정확하므로 오개념 유발 수준은 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "be동사 뒤 주격 보어 자리의 형용사 vs 부사 판단",
+      "temptingBecause": "동사 뒤 자리라 부사(identically)를 기대하는 학습자가 있을 수 있음",
+      "decisiveFlaw": "'are'의 보어 자리이므로 형용사 identical이 명백히 맞음 — 디코이로서는 거의 즉시 소거되는 약한 선지(준필러)"
+    },
+    {
+      "label": "(B)",
+      "intent": "only 부사구 문두(절두) 도치 — 주어·조동사 도치 및 수일치",
+      "temptingBecause": "that절 내부에서 'are we'라는 도치 어순이 어색해 보여 오류로 착각하기 쉬움",
+      "decisiveFlaw": "only+전치사구 전치 시 도치는 필수이며 주어 we에 복수형 are가 정확히 일치함"
+    },
+    {
+      "label": "(C)",
+      "intent": "전치사 + 관계대명사 구조와 추상(구 단위) 선행사 허용 여부",
+      "temptingBecause": "선행사가 명사가 아닌 동명사구('making it present here and now')라 which의 지시가 불투명해 보이고, that/it을 기대할 수 있음",
+      "decisiveFlaw": "전치사 뒤에는 that이 올 수 없고 which는 앞선 구·절 내용을 선행사로 받을 수 있어 어법상 올바름"
+    },
+    {
+      "label": "(D)",
+      "intent": "want + 목적어 + to부정사 보충어 패턴 확인",
+      "temptingBecause": "(E)의 'involve + O + to-V' 오류와 표면상 평행해서, to부정사 자체를 의심하는 학생이 흔들릴 수 있음 — want/involve 대조쌍",
+      "decisiveFlaw": "want는 O + to부정사를 취하는 대표 동사이므로 to have는 정확함"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — involve + O + -ing(동명사/분사) 보충어 패턴; to부정사 불허",
+      "temptingBecause": "want, allow, cause 등 'V + O + to-V' 패턴 동사와의 유추로 'involve all pupils to work'가 자연스러워 보임; 바로 앞 (D)의 올바른 to부정사가 평행 착시를 강화",
+      "decisiveFlaw": "involve는 목적어 뒤에 to부정사를 허용하지 않으며 -ing(working)만 가능. 'working'으로 고치면 정확히 원문이 복원되는 최소대립쌍"
+    }
+  ],
+  "explanationIssues": [
+    "(C) 오답 해설의 선행사 표기 부정확: '앞문장의 내용'이 아니라 같은 문장 내 선행 동명사구 'making it present here and now'가 선행사",
+    "정답 해설이 분사 수식 프레임과 동사 보충어 패턴 프레임을 혼합해 다소 둔중함 — 'involve + O + -ing / to-V 불허' 한 프레임으로 짧게 정리하는 편이 우아함",
+    "(A) 해설은 정확하나 해당 선지가 사실상 준필러임을 보완할 함정 설계가 없음"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문 대비 (E) working→to work 단일 변형만 존재하며 라벨·마커·선지 완전 일치, 'present-ing' 하이픈은 원문 유지. V2: 5개 밑줄 독립 검증 결과 (A) 보어 형용사, (B) only 도치+수일치, (C) 전치사+which(구 선행사), (D) want+O+to-V 모두 정문이고 (E) involve+O+to-V만 비문 — 단일 정답 확정. 목적 부정사 대안 해석은 의미상 성립하지 않음. V3: 교정 시 원문과 동일한 정문, 비문은 (E) 하나로 유형 의도와 일치. V4: 핵심 문법 설명은 사실이나 (C) 선행사 귀속과 정답 해설 프레임 혼합의 minor 부정확 2건. V5: 정답 라벨·markedExpressions(isError/correction/errorExpression)·오답 해설·keyPoints 전부 동기화. 공예: (D)/(E)가 want vs involve 대조쌍으로 pointCode k를 공유하는 것은 의도적 설계로 INTERMEDIATE에 적절하나, (A)가 준필러이고 해설 우아함이 떨어져 C6=2. 합계 17, 최저 2 — B(작은 해설 수정으로 출하 가능). 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false)."
+}

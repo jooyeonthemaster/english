@@ -1,0 +1,45 @@
+{
+  "strategy": "s5-code-designated",
+  "describe": "코드가 정답 자리를 결정론 지정 — 후보 탐지기(상대위치 0.2~0.85·S급 코드 a,b,c,d,e,f,i·mutation 힌트) 1순위 후보를 정답으로 고정, 미끼·해설만 모델 재량",
+  "callPlan": "flash x1 (+로컬 후보 탐지)",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 11761,
+  "avgAttempts": 1.1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.30821,
+  "avgCostUsd": 0.03082,
+  "costRecordedCalls": 10,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 1.9,
+  "zeroErrorItems": 1,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.82,
+  "avgAnswerRelPos": 0.436,
+  "answerRelPosInBand": 10,
+  "models": {
+    "google/gemini-3.5-flash": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 1
+    }
+  ]
+}

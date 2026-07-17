@@ -1,0 +1,44 @@
+{
+  "pid": "P026",
+  "finalV2": false,
+  "winningAnswer": "(C)",
+  "reason": "선언된 정답 (C) 'are distributed'는 출제 의도상 최선의 답이지만 결정적 비문이 아니다. 부분사 규칙(Most of + NP → of 뒤 NP에 수일치)을 적용하면 NP는 등위 접속 'the whale meat and blubber'인데, 학교문법 자체가 'A and B 주어 = 복수 취급'을 기본 규칙으로 가르치며, 등위 불가산 명사구의 복수 일치(분배적 해석: 고기도, 지방도 각각 분배된다)는 표준 영어에서 문법적으로 허용된다('most of the meat and dairy are imported' 류). 솔버들이 유일성의 결정타로 삼은 같은 문장의 'although some IS sold'(단수 대명사 일치)는 단일 덩어리 해석을 선호하게 할 뿐 복수 일치를 범주적으로 배제하지 못하고, 결정적으로 두 문장 앞의 비밑줄 문장 'whale meat and blubber ARE important parts of the local diet'가 동일 등위 명사구를 복수로 일치시켜 정문으로 제시되어 있어 지문 내부 증거가 상호 모순된다. 비밑줄 텍스트를 참으로 간주하는 시험 관례를 적용해도 단수 선례와 복수 선례가 공존하므로 (C) 자리의 요구 수가 유일하게 확정되지 않는다. 따라서 (C)의 오류는 '확정적 어법 위반'이 아니라 '해석·문체 선호'이며, 엄밀한 문법성 기준으로는 다섯 밑줄 모두 정문으로 방어 가능하다. 정답 유일성(V2) 불성립 — 감사자 판정 유지, finalV2=false.",
+  "perDispute": [
+    {
+      "label": "(C)",
+      "claim": "솔버1·2: 'Most of + 불가산 등위 명사구'는 단수 일치가 필수이고, 같은 문장의 'some is sold'가 단일 덩어리 해석을 강제하므로 'are distributed'는 비문이다 (유일 정답 성립).",
+      "verdict": "기각 (과잉 판정)",
+      "evidence": "① 등위 접속 'X and Y' 주어의 복수 일치는 학교문법의 기본 규칙이며, 등위 불가산 명사도 분배적 해석 하에 복수 일치가 표준적으로 허용된다 — 'are distributed'는 범주적 비문이 아니다. ② 'some is sold'는 대명사 수 일치의 일관성 선호일 뿐 선행 절 동사의 문법성을 소급하여 결정하지 못한다. ③ 결정타로 제시된 문장내 단서는 지문 자신의 비밀줄 문장 'whale meat and blubber ARE important parts of the local diet'(동일 등위 명사구의 복수 일치, 정문으로 제시)에 의해 상쇄된다 — 지문 내부 증거가 단수·복수로 분열되어 있어 유일한 해석을 고정할 수 없다. ④ 솔버1 스스로 note에서 '등위 불가산 주어의 복수 일치가 일반 영어에서 비문이 아니라는 점에서 이의신청 취약성' 을 인정했으므로 '유일 성립' 결론과 자기모순. 솔버2의 'most of ... some is가 joint mass reading을 강제한다'는 주장은 강제(force)가 아닌 선호(preference)를 과대평가한 과잉 판정이다."
+    },
+    {
+      "label": "(C)-보조",
+      "claim": "원문이 'is distributed'이고 출제 의도(부분사 수일치)가 명백하므로 시험 실전에서는 (C)가 답으로 수렴한다.",
+      "verdict": "부분 인정 (winningAnswer로만 인정, V2 구제 불가)",
+      "evidence": "나머지 4개 밑줄이 투명한 정문이라 상대 선택 논리로는 (C)가 최선의 답이며 두 솔버 모두 (C)에 도달했다. 그러나 '어법상 틀린 것' 유형의 V2는 상대적 최선이 아니라 결정적 오류의 필연성을 요구한다. (C)의 오류가 해석 의존적인 이상, '틀린 것이 없다'는 이의신청을 지문 내부 증거('are important parts')로 반박할 수 없어 유일성은 성립하지 않는다."
+    },
+    {
+      "label": "(A)",
+      "claim": "만장일치: 'they are controlled by Denmark'의 과거분사 controlled는 수동태 정문.",
+      "verdict": "정문 확정",
+      "evidence": "주어 they(= the Faroe Islands)가 통제의 대상인 명백한 수동 관계 + by 행위자. 대안 해석 없음."
+    },
+    {
+      "label": "(B)",
+      "claim": "만장일치: 'the killing of whales is not done for profit'의 done은 수동 정문.",
+      "verdict": "정문 확정",
+      "evidence": "대동사 do의 수동 'be done for profit'은 표준 관용 표현. insist는 여기서 요구가 아닌 사실 주장이므로 직설법도 정상이며, 밑줄 자체는 done이라 가정법 쟁점과 무관."
+    },
+    {
+      "label": "(D)",
+      "claim": "만장일치: 선행사 a law(단수)에 일치하는 says는 정문.",
+      "verdict": "정문 확정",
+      "evidence": "'a law that says ...' — 주격 관계대명사 that의 선행사가 단수이므로 3인칭 단수 says가 필수이고 실제로 그렇게 쓰였다."
+    },
+    {
+      "label": "(E)",
+      "claim": "만장일치: question의 목적어 명사절을 이끄는 whether는 정문.",
+      "verdict": "정문 확정",
+      "evidence": "'question(의심하다)'은 의문 보문을 취하며 whether가 이를 표준적으로 이끈다. 대안 해석 없음. (부수 지적: keyPoints의 '(E) 전치사 vs 접속사' 태그는 실제 포인트와 불일치하나 유일성 판정과 무관한 minor 결함.)"
+    }
+  ]
+}

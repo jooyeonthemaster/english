@@ -1,0 +1,35 @@
+{
+  "pid": "P035",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "복수 주어 'Inefficient teachers'와 수일치하는 현재시제 본동사 overlook. 일반적 진술의 현재시제로 자연스럽고 어법상 문제 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'use + 목적어(the first ten minutes) + to부정사' 목적 구문으로 정확. 'spend + 시간 + -ing' 규칙과 혼동해 getting으로 끌릴 수 있으나 동사가 use이므로 to get이 맞다. 실전에서 실제로 잠깐 끌렸던 매력적 함정."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "조건 부사절을 이끄는 접속사 If. 뒤에 완전한 절(you are prepared ... and have taught ...)과 주절(they can use ...)이 모두 갖춰져 있어 정상."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "If절 내부에서 'are prepared'와 병렬되는 정형동사 현재완료 'have taught'(공유 주어 you). 조건절의 현재완료는 '이미 ~해 두었다면'이라는 완료된 선행 조건을 나타내는 표준 용법. 시제 불일치처럼 보이게 설계된 매력적 오답이지만 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'establish an opening routine developed your class with an effective start'에서 과거분사 developed는 성립 불가. ① 축약 관계절이라면 수동 의미여야 하는데 목적어 your class가 잔류해 모순. ② 분사구문이라도 목적어를 취하려면 현재분사여야 함. ③ develop/provide는 수여동사가 아니므로 수동태 잔류 목적어 해석도 불가. 'provide A with B' 계열 능동 구조가 필요하므로 to provide(또는 providing / that provides) your class with an effective start로 고쳐야 한다. 어법상 틀린 부분."
+    }
+  ],
+  "note": "정답은 (E) 단독. 대안 해석(축약 관계절·분사구문·수여동사 수동태 잔류 목적어)을 전부 탐색했으나 developed+목적어 구조를 정문으로 만드는 해석은 없음. (D) have taught는 조건절 현재완료로 정문이지만 최상위권도 멈칫하게 만드는 좋은 미끼이며, (B) to get은 spend~ing 혼동을 노린 보조 미끼. 문항 성립에 문제 없음."
+}

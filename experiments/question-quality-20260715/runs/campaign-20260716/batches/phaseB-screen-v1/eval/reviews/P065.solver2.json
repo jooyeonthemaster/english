@@ -1,0 +1,35 @@
+{
+  "pid": "P065",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam failure: 'the immediate rejection of artistic details by readers' is a bare NP, so the trailing coordination 'and not immediately ask' has no infinitival host and is forced to coordinate with 'follow', yielding the absurd 'features of literature... not immediately ask' (features cannot ask). Logic failure: the passage says readers PUT UP WITH obscurities and struggle to interpret them — 'immediate rejection' is the direct contrary of the argument."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Seam failure: NP-only filler leaves 'and not immediately ask' without a parallel verb host — same category-error parse as ①. Logic failure: the passage explicitly states readers do NOT imagine the writer is being uncooperative and instead assume a communicative purpose; 'deep-seated distrust toward the writer's actual purpose' contradicts this."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Seam success: 'readers' voluntary readiness to endure ambiguity and actively engage, and not immediately ask...' forms a licit shared-to infinitival series (to endure / [to] actively engage / not immediately [to] ask), giving 'ask' a grammatical host and an agent (readers) that matches the quoted question 'what do you mean by that?'. Logic success: 'endure ambiguity' = 'put up with many obscurities'; 'actively engage' = 'struggle to interpret elements that flout principles of efficient communication'; 'voluntary readiness' = the hyper-protected cooperative stance induced by the institutional label. Mirrors Culler's original conclusion ('the willingness of readers to pay attention... and not immediately to ask what do you mean by that')."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Seam failure: NP-only filler ('the professional authority and reputation of the publishing cover') provides no infinitive; 'and not immediately ask' then predicates of 'features of literature' — semantically absurd and person-mismatched with the quoted first/second-person question. Logic failure: institutional selection is an earlier premise, but the concluding sentence requires the READER's interpretive stance as agent; 'publishing cover' is also a defective collocation. This is the strongest distractor thematically, but the dangling 'ask' formally excludes it."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam failure: same NP-only parse breakdown — 'ask' left hostless. Logic failure: 'administrative training' has no anchor anywhere in the passage; 'self-reflective habits' is likewise unsupported. Off-topic filler."
+    }
+  ],
+  "note": "Passage is Culler's 'hyper-protected cooperative principle'. The blank sentence carries a hard grammatical constraint: the tail 'and not immediately ask' is a bare VP that can only be licensed if the blank supplies an infinitival series for it to join. Only ③ does so; all four distractors are pure NPs that force the absurd coordination 'features... ask'. I actively searched for rescue parses (reduced relatives, absolutives, imperative reading, zeugma) for the NP options and none yields a grammatical sentence with a sensible agent for 'ask'. Answer converges uniquely on ③ by both formal grammar and passage logic. Minor quibble: 'actively engage' is used intransitively without a complement, slightly elliptical but idiomatic; does not create a second defensible answer."
+}

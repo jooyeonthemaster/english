@@ -1,0 +1,97 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "(A) 오답해설: \"뒤에 명사 process를 수식하는 지시형용사 'that'으로 뒤따르는 명사구와 완전한 문장 구조를 이끄는 구조적 수식 역할을 정상적으로 수행하고 있습니다.\" — 지시형용사(한정사)에 '완전한 문장 구조를 이끄는' 기능을 귀속시킨 손상된 구조 설명. '완전한 문장 구조를 이끈다'는 접속사 that의 판별 언어인데, keyPoints가 (A)를 '관계사 vs 지시사' 판별 포인트로 선언한 문항에서 정확히 그 판별을 흐리는 오분석/워드샐러드다. 실제 구조: that은 process를 수식하는 지시형용사일 뿐 어떤 절도 이끌지 않는다."
+    },
+    {
+      "code": "V4-adjacent(minor)",
+      "severity": "minor",
+      "evidence": "(B) 오답해설의 '상호 일치하여'는 비표준·모호 용어(재귀대명사 사용 조건은 '상호 일치'가 아니라 동일 절 내 동일 지시). 핵심 분석(관계절 주어 that=process와 동일 지시 → itself 적법) 자체는 정확."
+    },
+    {
+      "code": "V5-note(minor)",
+      "severity": "minor",
+      "evidence": "keyPoints가 (D)/(A)/(E) 3개만 다루고 (B) 재귀대명사, (C) 관계절 수일치 포인트가 누락됨. 상호 모순은 없어 V5는 통과로 판정하되 불완전 커버리지로 기록."
+    },
+    {
+      "code": "V5-note(minor)",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 surroundingText가 렌더형('are')이 아닌 원문형('is')을 담고 있음. expression=is(원문)/errorExpression=are(표시)/correction=is 로 내부 정합은 유지되므로 실패로는 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "지시형용사 that vs 접속사/관계대명사 that 판별",
+      "temptingBecause": "지문에 that이 다수 등장해 관계대명사로 오인하고 뒤 절의 완전성을 따지게 유도",
+      "decisiveFlaw": "바로 뒤에 명사 process가 이어지는 지시형용사(한정사)로 완전히 적법 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "재귀대명사 vs 목적격 대명사 (동일 절 내 동일 지시 판단)",
+      "temptingBecause": "선행사(any process)가 관계절 밖에 있어 지시 대상을 추적해야 하고, it과의 교체 가능성을 저울질하게 함",
+      "decisiveFlaw": "관계절 주어 that(=process)과 목적어가 동일 지시이므로 itself가 정확 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "주격 관계대명사절 내 동사 수일치(does)",
+      "temptingBecause": "관계절 동사 수일치는 선행사 확인을 요구하며, 뒤쪽의 복수 events가 시야에 걸림",
+      "decisiveFlaw": "단수 선행사 a clock이 that 바로 앞에 인접해 does 일치가 즉시 확인됨 — 오류 아님. 단, (D)와 동일 pointCode 'd'(수일치)의 쉬운 동일-포인트 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 관계사절 수식어가 개재된 주어-동사 수일치 (example ... are → is)",
+      "temptingBecause": "주어와 동사 사이에 관계절 'that comes to mind readily'가 개재되어 주어 핵 식별을 요구하도록 설계됨",
+      "decisiveFlaw": "주어 핵 example(단수) → is. 교정 시 원문과 정확히 일치. 다만 개재부에 복수명사가 없고(readily는 부사) 보어가 단수 a candle이라 'are a candle'이 국소적으로도 자명하게 비문 — 함정 견인력이 설계 의도보다 약함"
+    },
+    {
+      "label": "(E)",
+      "intent": "접속사 although + 축약절(주어+be 생략 분사) 구조",
+      "temptingBecause": "although 뒤에 완전한 절이 없어 전치사 despite로 바꿔야 한다고 오판하기 쉬움 — 4개 디코이 중 가장 매력적",
+      "decisiveFlaw": "although (it is) at first masked의 표준 축약 양보절로 적법 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "garbled-structure-claim",
+      "severity": "major",
+      "evidence": "(A) 해설이 지시형용사에 '뒤따르는 명사구와 완전한 문장 구조를 이끄는' 기능을 부여 — 한정사는 절을 이끌지 않으며, 해당 표현은 접속사 that 판별 언어와 혼선을 일으킴 (V4 실패 근거)"
+    },
+    {
+      "code": "nonstandard-term",
+      "severity": "minor",
+      "evidence": "(B) '상호 일치하여' — 비표준 용어. 정확한 근거는 '동일 절 내 주어와 동일 지시'"
+    },
+    {
+      "code": "loose-wording",
+      "severity": "minor",
+      "evidence": "본해설 '문장의 주어 단어는 The only example' — 구(phrase)를 '단어'로 지칭. 이어지는 '주어 핵은 example' 문장과 미세한 층위 불일치이나 내용상 오류는 아님"
+    },
+    {
+      "code": "keypoints-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints가 5개 밑줄 중 3개만 커버 — (B)/(C) 포인트 부재"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "요청 난이도 INTERMEDIATE, GRAMMAR_ERROR. V1/V2/V3/V5 통과: 렌더는 원문 대비 (D) is→are 단일 최소대립 변형만 있고, 블라인드 독립 검증에서 (A)(B)(C)(E) 모두 적법·(D)만 오류로 정답 유일성 확인, 교정 시 원문 복원. V4 단독 실패: (A) 오답해설의 후반부가 지시형용사에 절-도입 기능을 귀속시키는 손상된 설명이며, 문항이 선언한 판별 포인트(관계사 vs 지시사)를 정면으로 흐린다 — 해당 해설 한 문장 재작성으로 수리 가능한 국소 결함. 공예 측면: 정답 자리 설계가 약함 — 개재부에 복수 유인 명사가 없고 단수 보어(a candle)가 바로 이어져 'are'가 주어 핵 분석 없이도 국소적으로 자명(C4=2). (C)와 (D)가 동일 포인트(수일치)로 중복(C2 감점 요인). (E)는 우수한 디코이. KILLER 아님 → killerConditionsMet=false. V 실패는 공예로 상쇄되지 않으므로 등급 F."
+}

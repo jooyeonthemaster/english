@@ -1,0 +1,159 @@
+{
+  "passageId": "ebsi_go3_20260507-q31",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2026,
+    "exam": "5월",
+    "origType": "빈칸추론",
+    "words": 144
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=c  (C):dec=k  (D):ANS=a  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 94,
+        "relPos": 0.098,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 250,
+        "relPos": 0.26,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 406,
+        "relPos": 0.422,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 521,
+        "relPos": 0.542,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 890,
+        "relPos": 0.925,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.925,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Orb-weaving spiders often use distinct vibrational signals to defend their webs. When a rival approaches, the resident spider will rapidly shake its web, sending out a series of intense vibrations. These vibrations can be interpreted as a challenge, signaling the resident spider's readiness to fight. The intensity and complexity of these signals often correlate with the size and strength of the spider, allowing the invader to assess the risk of engaging in a direct confrontation. The beauty of vibrational signaling lies in its efficiency. It avoids costly physical clashes, allowing spiders to resolve territorial disputes with minimal risk of injury. A smaller or weaker spider, upon receiving a strong vibrational warning, may choose to retreat and seek a less contested territory, rather than risk a potentially fatal fight. This makes vibrational communication a crucial tool for maintaining stability and reducing aggression within spider populations.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "approaches",
+        "isError": false,
+        "errorExpression": "approaches",
+        "surroundingText": "When a rival approaches, the resident spider will rapidly shake its web, sending out a series of intense vibrations.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "signaling",
+        "isError": false,
+        "errorExpression": "signaling",
+        "surroundingText": "These vibrations can be interpreted as a challenge, signaling the resident spider's readiness to fight.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "allowing",
+        "isError": false,
+        "errorExpression": "allowing",
+        "surroundingText": "The intensity and complexity of these signals often correlate with the size and strength of the spider, allowing the invader to assess the risk",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "lies",
+        "isError": true,
+        "correction": "lies",
+        "errorExpression": "lying",
+        "surroundingText": "The beauty of vibrational signaling lying in its efficiency. It avoids costly physical clashes, allowing spiders to resolve territorial disputes with minimal risk of injury.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "maintaining",
+        "isError": false,
+        "errorExpression": "maintaining",
+        "surroundingText": "This makes vibrational communication a crucial tool for maintaining stability and reducing aggression within spider populations.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "approaches"
+      },
+      {
+        "label": "(B)",
+        "text": "signaling"
+      },
+      {
+        "label": "(C)",
+        "text": "allowing"
+      },
+      {
+        "label": "(D)",
+        "text": "lying"
+      },
+      {
+        "label": "(E)",
+        "text": "maintaining"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어인 'a rival'이 3인칭 단수이므로 단수 동사 'approaches'를 사용한 것은 수일치상 적절합니다.",
+      "(B)": "앞선 문장의 내용을 부대 상황으로 설명하는 분사구문으로, 주체인 'vibrations'가 능동적으로 신호를 보내는 관계이므로 현재분사인 'signaling'이 맞습니다.",
+      "(C)": "'allow + 목적어 + to-v' 구문에서 목적격 보어로 'to assess'가 쓰였으며, 술어 동사 correlate 뒤에 이어지는 분사구문 'allowing'은 어법상 올바른 형태입니다.",
+      "(E)": "전치사 'for'의 목적어 자리이므로 동명사 형태인 'maintaining'은 적절하며, 'reducing'과 대등하게 연결되어 있습니다."
+    },
+    "explanation": "해당 문장의 주어는 'The beauty'이며, 'of vibrational signaling'은 주어를 수식하는 전치사구입니다. 영어의 한 문장에는 반드시 주어의 동작이나 상태를 나타내는 정동사(finite verb)가 하나 존재해야 합니다. 하지만 제시된 'lying'은 준동사인 현재분사로 단독으로는 술어 역할을 할 수 없습니다. 따라서 문맥상 현재의 사실을 나타내면서 주어인 'The beauty'의 단수 수일치에 부합하는 정동사 'lies'로 고쳐야 문장이 성립합니다.",
+    "keyPoints": [
+      "(D) 정동사 vs 준동사 — 문장 내 본동사의 존재 여부를 파악하여 준동사 자리가 아님을 판정",
+      "(B) 현재분사 vs 과거분사 — 수식받는 대상이나 분사구문의 주체와의 능동·수동 관계를 분석",
+      "(A) 주어-동사 수일치 — 수식어구에 현혹되지 않고 문장의 핵심 주어 핵(head)을 찾아 인칭과 수 일치"
+    ],
+    "tags": [
+      "수능어법",
+      "분사구문",
+      "정동사",
+      "수일치",
+      "고3모의고사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "Orb-weaving spiders often use distinct vibrational signals to defend their webs. When a rival __(A) approaches__, the resident spider will rapidly shake its web, sending out a series of intense vibrations. These vibrations can be interpreted as a challenge, __(B) signaling__ the resident spider's readiness to fight. The intensity and complexity of these signals often correlate with the size and strength of the spider, __(C) allowing__ the invader to assess the risk of engaging in a direct confrontation. The beauty of vibrational signaling __(D) lying__ in its efficiency. It avoids costly physical clashes, allowing spiders to resolve territorial disputes with minimal risk of injury. A smaller or weaker spider, upon receiving a strong vibrational warning, may choose to retreat and seek a less contested territory, rather than risk a potentially fatal fight. This makes vibrational communication a crucial tool for __(E) maintaining__ stability and reducing aggression within spider populations."
+  }
+}

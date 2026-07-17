@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Sweeping statements have been made' — 현재완료 수동태. statements는 make의 대상이므로 수동(be made)이 옳다. 대안 해석 불필요, 즉시 정문 판정."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'we would predict that a child ... would be better behaved' — predict의 목적어 명사절을 이끄는 접속사 that. 뒤에 주어(a child)+동사(would be)가 갖춰진 완전한 절이므로 정문."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "선행사 a child에 두 관계절이 병렬: 'who was dressed in his best clothes and whose mother stressed ...'. 병렬 시작점이 who절임을 확인. whose는 소유격 관계사로 mother를 한정하며 뒤 절(whose mother stressed that ...)이 완전하므로 정문. 장거리 병렬 단서를 놓치면 and 뒤 whose가 어색해 보일 수 있으나 실제로는 옳다."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect",
+      "reason": "'might be very noisy while played cowboys' — while 뒤 축약절은 주절 주어 the child + be 생략 구조(while (he is) ___). 아이가 카우보이 놀이를 하는 능동 관계이므로 while playing cowboys여야 한다. 'he is played cowboys'라는 수동은 play cowboys(자동사적 놀이 표현 + 동족 목적어류)의 구조상 성립 불가. 주어 없는 과거시제 정동사 해석도 불가. 유일한 어법 오류."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'be no more noisy than usual' — 매력적 오답. noisy의 표준 비교급이 noisier라서 'no noisier than'이어야 한다고 끌리지만, 'no more + 원급 + than' 구문은 짧은 형용사에도 관용적으로 허용되는 표준 영어 패턴(양자 비교의 no more ... than)이며 문법적으로 옹호 가능하다. 실전에서 잠깐 유혹되었으나 D의 명백한 태(voice) 오류가 우선한다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 정답은 D(played → playing). E(no more noisy)가 설계된 매력적 오답으로 기능하나 규범적으로 정문이라 옹호 가능. C의 who/whose 병렬도 순간 점검을 요구하지만 명백히 정문. 복수정답 소지 없음."
+}

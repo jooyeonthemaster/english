@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-14T17:19:35.621Z",
+  "mode": "offline-deterministic-replay",
+  "caveat": "Findings are high-recall boundary risks, not final grammar verdicts. Every hit requires blinded human adjudication before a production block is enabled.",
+  "inputs": [
+    "scripts/_gen_audit_out",
+    "artifacts/ai-audits",
+    "experiments/grammar-quality-20260714/e2e-types/BLANK_INFERENCE",
+    "experiments/question-quality-20260715/baseline/jul15-dawn/private/manifest-private.json"
+  ],
+  "filesScanned": 250,
+  "extractedQuestionOccurrences": 386,
+  "uniqueBlankQuestions": 380,
+  "triggeredQuestions": 1,
+  "findingCounts": {
+    "blank-relative-tail-contract": 1
+  },
+  "parseErrorFileCount": 0,
+  "parseErrors": [],
+  "records": [
+    {
+      "questionHash": "2da578ce8fd408ef0f7aa2e9e21494ba5657d2bc941ef72c1b03fa1e4ca94498",
+      "sourceFile": "scripts/_gen_audit_out/jul15-dawn-questions.json",
+      "sourceLocator": "$[9]",
+      "questionId": "cmrksbcea0007ld04go06vmjz",
+      "type": "BLANK_INFERENCE",
+      "correctAnswer": "①",
+      "optionCount": 5,
+      "options": [
+        {
+          "label": "①",
+          "text": "lacks the resource of physical cues and instant responses from the recipient"
+        },
+        {
+          "label": "②",
+          "text": "allows the passive audience to dominate and control the flow of exchange"
+        },
+        {
+          "label": "③",
+          "text": "requires a much higher level of formal grammar rules and syntactic structure"
+        },
+        {
+          "label": "④",
+          "text": "restricts the amount of information sent to prevent readers from losing interest"
+        },
+        {
+          "label": "⑤",
+          "text": "actively encourages interactive bodily gestures and real-time adjustments"
+        }
+      ],
+      "findings": [
+        {
+          "code": "blank-relative-tail-contract",
+          "severity": "high",
+          "message": "A relative-clause tail remains outside the blank while option endings expose different number contracts; distractors can be eliminated by seam grammar rather than meaning.",
+          "evidence": {
+            "relativePronoun": "that",
+            "tailVerb": "are",
+            "expectedNumber": "plural",
+            "terminalNumberByLabel": {
+              "①": "plural",
+              "②": "singular",
+              "③": "plural",
+              "④": "singular",
+              "⑤": "plural"
+            },
+            "incompatibleLabels": [
+              "②",
+              "④"
+            ],
+            "correctAnswer": "①",
+            "correctAnswerFlagged": false,
+            "leftWindow": "his attention to audience and appropriateness may be even more important in writing than in conversation because writing",
+            "rightWindow": "that are part of conversation. As writers, we have to anticipate the absent reader's response; in effect, we have to ima"
+          }
+        }
+      ],
+      "manualDisposition": "ADJUDICATED_TRUE_POSITIVE",
+      "manualNote": "The fixed tail 'that are' requires a plural antecedent. Options ② (exchange) and ④ (interest) end in singular heads, so they are mechanically eliminated while ①/③/⑤ satisfy the plural contract. This reproduces Q008's independently adjudicated V3 failure."
+    }
+  ]
+}

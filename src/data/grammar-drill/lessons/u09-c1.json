@@ -1,0 +1,647 @@
+{
+  "id": "u09-c1",
+  "unitId": "u09",
+  "order": 1,
+  "title": "분사구문의 원리",
+  "oneLiner": "분사구문은 '접속사+주어+동사'로 된 부사절을 분사 하나로 압축한 부사구이며, 주절 주어를 데려와 읽습니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": ["TP01", "TP03"],
+    "sourceRefs": [
+      "어법끝 5.0 TP01 정동사 vs. 준동사(분사구문 자리는 동사 자리가 아닙니다)",
+      "어법끝 5.0 TP03 분사의 능동 v-ing vs. 수동 p.p. — 구조표: 분사구문(문두·문말)의 의미상 주어 = 주절의 주어",
+      "docs/grammar-test-points.md §TP-03 함정 4종 ①(분사구문 위치 변동: 문두 / 주어와 동사 사이 / 주절 뒤)",
+      "천일문 고등 GRAMMAR — 분사구문(부사절의 압축)",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 분사구문(중 ●, 고 ●)"
+    ]
+  },
+  "lenses": ["L2", "L3"],
+  "confusableWith": ["u09-c2", "u09-c4", "u01-c1", "u04-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Arriving at the summit, the climbers recorded the temperature.",
+        "They arrived at the summit, the climbers recorded the temperature."
+      ],
+      "answer": 0,
+      "afterText": "두 번째 문장에는 시제를 가진 동사가 둘인데 그것을 이어 줄 접속사가 없습니다. 이 레슨을 마치면 왜 앞의 동작을 분사로 압축해야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "분사구문",
+      "question": "분사구문이 대체 무엇이고, 왜 멀쩡한 동사를 -ing 로 바꿔 쓰는 것입니까?",
+      "plain": "분사구문은 '접속사+주어+동사'로 된 부사절을 분사 하나로 줄여 쓴 부사구입니다. 주절에 시간·이유 같은 배경을 얹지만, 절이 아니므로 문장을 세우지 못합니다.",
+      "analogy": "긴 부사절을 통째로 눌러 담은 압축 파일 같은 것입니다. 접속사와 주어라는 겉포장을 벗겨 내고, 동사만 분사 형태로 남긴 것이 분사구문입니다.",
+      "whyItMatters": "수능 어법은 이 분사 자리에 시제 동사를 슬쩍 넣어 함정을 만듭니다. 분사구문을 알아보면 '여기는 본동사 자리가 아니다'가 한눈에 보이고, 판별 도구 '동사 자리 카운팅'이 그대로 작동합니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "분사구문의 생략된 주어는 문맥에서 아무 명사나 가져와 붙이면 됩니다.",
+      "truth": "분사구문의 생략된 주어는 주절의 주어로 고정되어 있습니다. 주절 주어가 그 동작의 주체가 될 수 없으면 그 문장은 성립하지 않습니다.",
+      "counterExample": {
+        "en": "**Walking** along the shore at sunset, the old lighthouse looked especially tall.",
+        "ko": "해질 무렵 해변을 걷는데, 그 낡은 등대는 유난히 높아 보였습니다.",
+        "note": "주절의 주어는 the old lighthouse 입니다. 그러면 걷는 주체도 등대가 되는데, 등대는 걸을 수 없으므로 이 문장은 성립하지 않습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "분사구문 판별 필기",
+      "intro": "판별에 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "부사절 — 문장에 배경을 까는 절",
+          "body": "접속사+주어+동사로 시간·이유·조건 같은 배경을 나타내는 절입니다. 주절에 딸린 곁가지일 뿐 문장의 뼈대는 아닙니다.",
+          "example": {
+            "en": "**When** the analyst reviewed the data, she noticed an error in the results.",
+            "ko": "그 분석가가 자료를 검토했을 때, 그녀는 결과에서 오류 하나를 발견했습니다.",
+            "note": "When ~ data 가 배경을 까는 부사절이며, 이것을 눌러 담으면 분사구문이 됩니다."
+          }
+        },
+        {
+          "head": "분사구문 — 그 부사절의 압축형",
+          "body": "부사절에서 접속사와 주어를 지우고 동사를 분사로 바꾸면 분사구문이 됩니다. 절이 아니라 부사구이므로 시제가 없습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "위치는 자유 — 문두·문말·삽입",
+          "body": "분사구문은 문장 맨 앞, 맨 뒤, 주어와 본동사 사이 어디에나 놓입니다. 그러나 어느 자리에서도 본동사는 아닙니다.",
+          "example": {
+            "en": "The residents, **fearing** another flood, reinforced the riverbank with sandbags.",
+            "ko": "또 한 번의 홍수를 두려워한 그 주민들은 모래주머니로 강둑을 보강했습니다.",
+            "note": "분사구가 주어와 본동사 사이에 삽입되었습니다. 시제를 가진 동사는 reinforced 하나뿐입니다."
+          }
+        },
+        {
+          "head": "의미상 주어 = 주절의 주어",
+          "body": "분사가 나타내는 동작의 주인은 주절의 주어입니다. 주절 주어가 그 동작을 할 수 없으면 그 문장은 성립하지 않습니다.",
+          "example": {
+            "en": "**Hoping** for a better view, the tourists climbed the north tower.",
+            "ko": "더 좋은 전망을 바라며 그 관광객들은 북쪽 탑에 올랐습니다.",
+            "note": "바란 주체는 주절 주어 the tourists 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "능동 -ing / 수동 p.p.",
+          "body": "주절 주어가 동작을 하는 쪽이면 -ing, 당하는 쪽이면 p.p. 를 씁니다. 이 기본 규칙은 여기서 바로 쓰되, 자동사·감정동사·수여동사가 얽혀 태가 헷갈리는 자세한 판별은 u09-c2 에서 익힙니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "부사절을 분사구문으로 압축하기",
+      "instruction": "왼쪽의 부사절과, 그것을 압축한 오른쪽의 분사구문을 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "When she reviewed the file",
+          "b": "Reviewing the file",
+          "why": "접속사 When 과 주어 she 를 지우고 reviewed 를 Reviewing 으로 바꿉니다."
+        },
+        {
+          "a": "Because they lived near the sea",
+          "b": "Living near the sea",
+          "why": "접속사 Because 와 주어 they 를 지우고 lived 를 Living 으로 바꿉니다."
+        },
+        {
+          "a": "As the sun set behind the hills",
+          "b": "Setting behind the hills",
+          "why": "접속사 As 와 주어 the sun 을 지우고 set 을 Setting 으로 바꿉니다."
+        },
+        {
+          "a": "Since it was written in haste",
+          "b": "Written in haste",
+          "why": "수동이므로 Being 을 생략하고 과거분사 Written 으로 시작합니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "분사구문 만드는 3단계",
+      "target": "부사절을 분사구문으로 바꾸는 절차",
+      "why": "분사구문을 스스로 만들고 되돌릴 줄 알아야, 시험에서 '이 자리가 분사 자리인가 본동사 자리인가'를 즉시 판단할 수 있습니다. 세 단계가 손에 붙으면 부사절과 분사구문을 자유롭게 오갈 수 있습니다.",
+      "device": "'지·지·바' 세 글자로 외웁니다 — 접속사 지우고, 주어 지우고, 동사 바꾸기. 왼쪽에서 오른쪽으로 순서를 그대로 밟으면 그것이 곧 절차입니다.",
+      "items": [
+        { "cue": "1단계", "answer": "접속사를 지웁니다 (When·Because·As 등)" },
+        { "cue": "2단계", "answer": "주절과 같은 주어를 지웁니다" },
+        { "cue": "3단계", "answer": "동사를 분사로 바꿉니다 (-ing 또는 p.p.)" },
+        { "cue": "지운 주어는 어디로 갔습니까?", "answer": "사라지지 않습니다 — 주절의 주어가 곧 분사의 의미상 주어입니다" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "3단계 압축 관문",
+      "mission": "분사구문을 만드는 세 단계를 순서대로 눌러 관문을 여십시오.",
+      "mode": "ORDER",
+      "pool": ["동사를 분사로 바꾼다", "접속사를 지운다", "주어를 지운다"],
+      "answers": ["접속사를 지운다", "주어를 지운다", "동사를 분사로 바꾼다"],
+      "passText": "접속사, 주어, 동사 순으로 정확히 압축했습니다. 이제 분사구문을 손으로 만들 수 있습니다.",
+      "retryText": "순서가 뒤집혔습니다. '접속사 지우고 → 주어 지우고 → 동사 바꾸기', 지·지·바 순서를 떠올리며 다시 해 보십시오."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "분사구문은 부사절을 압축한 부사구일 뿐 절이 아닙니다. 그래서 주절에는 시제를 가진 본동사가 반드시 따로 하나 있어야 합니다.",
+      "examples": [
+        {
+          "en": "The glacier **retreated** slowly, **carving** deep valleys in the rock below.",
+          "ko": "그 빙하는 천천히 후퇴하면서 아래 암반에 깊은 계곡들을 깎아 냈습니다.",
+          "note": "본동사 retreated 가 이미 있고 접속사가 없으므로 콤마 뒤는 문말 분사구문 자리입니다."
+        },
+        {
+          "en": "**Working** through the night, the volunteers **sorted** the donated books by subject.",
+          "ko": "밤새 작업하면서 그 자원봉사자들은 기증받은 책을 주제별로 분류했습니다.",
+          "note": "문두 분사구 Working through the night 에는 시제가 없습니다. 시제를 가진 본동사는 sorted 하나뿐입니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "문두 분사구문의 해부",
+      "tokens": [
+        { "t": "Realizing the danger,", "role": "VERBAL" },
+        { "t": "the crew", "role": "S" },
+        { "t": "abandoned", "role": "V" },
+        { "t": "the ship", "role": "O" },
+        { "t": "immediately", "role": "M" }
+      ],
+      "ko": "위험을 깨닫고 그 승무원들은 즉시 배를 버렸습니다.",
+      "layers": [
+        {
+          "label": "① 분사 덩어리를 통째로 걷어냅니다",
+          "roles": ["VERBAL"],
+          "note": "Realizing the danger 는 시제가 없는 분사구입니다. 부사절 When the crew realized the danger 를 압축한 것이므로 문장의 뼈대가 아닙니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "걷어내고 남은 주어는 the crew 입니다. 이것이 분사 Realizing 의 의미상 주어이기도 합니다."
+        },
+        {
+          "label": "③ 시제를 가진 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "abandoned 만이 시제를 가진 동사입니다. Realizing 은 본동사 자리를 채우지 못합니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O", "M"],
+          "note": "본동사 abandoned 의 목적어는 the ship 입니다. 남은 immediately 는 본동사를 꾸미는 부사(M)이며 문장의 뼈대에는 영향이 없습니다. 분사구는 이 주절 전체에 시간·이유의 의미를 얹는 부사 역할을 합니다."
+        }
+      ],
+      "conclusion": "동사처럼 보이는 것이 둘(Realizing, abandoned)이지만 시제를 가진 것은 abandoned 하나뿐입니다. 접속사가 없으므로 나머지 하나는 반드시 분사여야 합니다."
+    },
+    {
+      "id": "b10",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "본동사 사냥",
+      "instruction": "이 문장에서 시제를 가진 본동사를 전부 탭하십시오. 분사(-ing·p.p.)는 시제가 없으므로 사냥감이 아닙니다.",
+      "hitLabel": "본동사",
+      "tokens": [
+        { "t": "Arriving", "hit": false },
+        { "t": "at", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "port,", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "sailors", "hit": false },
+        { "t": "unloaded", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "cargo,", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "officers", "hit": false },
+        { "t": "recorded", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "weight.", "hit": false }
+      ],
+      "ko": "항구에 도착한 뒤 그 선원들은 화물을 내렸고, 장교들은 무게를 기록했습니다.",
+      "explain": "시제를 가진 본동사는 unloaded 와 recorded 둘입니다. Arriving 은 문두 분사구문이라 시제가 없어 사냥감이 아닙니다. 등위접속사 and 가 절을 하나 더 열었으므로 본동사 2개 = 접속사 1개 + 1, 카운팅이 정확히 맞습니다."
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "분사의 의미상 주어는 주절의 주어입니다. 분사를 읽을 때는 주절 주어를 데려와 앞에 붙여 읽습니다.",
+      "examples": [
+        {
+          "en": "**Traveling** through the desert, the research team relied on satellite images.",
+          "ko": "사막을 가로질러 이동하는 동안 그 연구팀은 위성 영상에 의존했습니다.",
+          "note": "이동하는 주체는 주절 주어 the research team 입니다. 복원하면 While the research team traveled through the desert 가 됩니다."
+        },
+        {
+          "en": "**Founded** in 1897, the observatory still houses its original telescope.",
+          "ko": "1897년에 설립된 그 천문대는 지금도 최초의 망원경을 보관하고 있습니다.",
+          "note": "의미상 주어인 the observatory 는 설립되는 쪽이므로 분사가 p.p. 형태입니다. Being 이 생략된 수동 분사구문이며, 자세한 판별은 u09-c2 에서 다룹니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "분사구문 자리를 판별하는 4단계",
+      "steps": [
+        {
+          "text": "콤마로 나뉜 덩어리마다 시제를 가진 동사가 있는지 셉니다.",
+          "applyNote": "The typhoon struck the island at dawn 에는 시제 동사 struck 이 있습니다. 콤마 뒤에는 아직 시제 동사가 없습니다."
+        },
+        {
+          "text": "접속사·관계사의 개수를 셉니다. 하나도 없다면 문장 전체에서 시제 동사는 하나만 허용됩니다.",
+          "applyNote": "접속사도 관계사도 없습니다. 따라서 struck 외에 또 다른 시제 동사를 놓을 수 없습니다."
+        },
+        {
+          "text": "본동사 자리가 이미 찼다면 남은 자리는 준동사 자리입니다. 그 동작은 분사로 압축합니다.",
+          "applyNote": "콤마 뒤는 두 번째 본동사 자리가 아니라 문말 분사구문 자리입니다."
+        },
+        {
+          "text": "분사의 의미상 주어를 주절 주어로 복원해, 그 주어가 동작을 하는 쪽인지 확인합니다. 하는 쪽이면 -ing 입니다.",
+          "applyNote": "복원하면 The typhoon destroyed hundreds of homes 이므로 태풍은 파괴하는 쪽입니다. 능동이므로 destroying 이 옳습니다."
+        }
+      ],
+      "example": {
+        "en": "The typhoon **struck** the island at dawn, **destroying** hundreds of homes.",
+        "ko": "그 태풍은 새벽에 그 섬을 강타해 수백 채의 가옥을 파괴했습니다.",
+        "note": "시제 동사는 struck 하나이고, 접속사가 없으므로 두 번째 동작은 분사 destroying 으로 압축됩니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The volcano erupted without warning, ( forcing / it forced ) thousands of residents to flee.",
+      "steps": [
+        {
+          "title": "① 콤마 앞을 봅니다",
+          "body": "The volcano erupted without warning 에는 시제를 가진 동사 erupted 가 이미 있습니다. 주절의 본동사 자리는 채워졌습니다."
+        },
+        {
+          "title": "② 접속사·관계사를 셉니다",
+          "body": "하나도 없습니다. 따라서 이 문장에는 시제 동사가 하나만 있어야 합니다."
+        },
+        {
+          "title": "③ it forced 를 넣어 봅니다",
+          "body": "절이 둘이 되는데 그것을 이어 줄 접속사가 없습니다. 콤마만으로 두 절을 잇는 것은 허용되지 않으므로 비문이 됩니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "두 번째 동작은 분사로 압축해야 합니다. 의미상 주어인 The volcano 가 주민들을 피난하게 만드는 쪽이므로 능동 forcing 이 옳습니다."
+        }
+      ],
+      "answer": "forcing",
+      "ko": "그 화산은 예고 없이 분출했고, 그 결과 수천 명의 주민이 피난해야 했습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u09-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "{{blank}} the results carefully, the researchers repeated the experiment twice.",
+          "options": ["Checking", "They checked"],
+          "answer": 0,
+          "translation": "결과를 꼼꼼히 확인한 뒤 그 연구자들은 실험을 두 번 반복했습니다.",
+          "explanation": "They checked 를 넣으면 완전한 절 두 개가 접속사 없이 콤마로만 이어져 비문이 됩니다. 앞의 동작은 분사로 압축해야 하며, 생략된 의미상 주어는 주절 주어 the researchers 입니다.",
+          "trapTags": ["comma-splice", "double-verb"]
+        },
+        {
+          "id": "u09-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The storm moved inland overnight, [[u:it flooded]] several coastal villages.",
+          "isCorrect": false,
+          "correction": "flooding",
+          "translation": "그 폭풍은 밤사이 내륙으로 이동하면서 몇몇 해안 마을을 침수시켰습니다.",
+          "explanation": "본동사 moved 가 이미 있고 접속사가 없으므로 콤마 뒤에 또 하나의 절을 놓을 수 없습니다. 두 번째 동작은 문말 분사구문으로 압축해야 하며, 의미상 주어 The storm 이 침수시키는 쪽이므로 flooding 이 옳습니다.",
+          "trapTags": ["comma-splice", "double-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "문두의 -ing 덩어리 — 분사구문인가, 동명사 주어인가",
+      "columns": ["분사구문(부사 역할)", "동명사 주어(명사 역할)"],
+      "rows": [
+        {
+          "criterion": "덩어리 뒤에 오는 것",
+          "a": "콤마 뒤에 '주어 + 본동사'가 이어집니다",
+          "b": "콤마 없이 곧바로 본동사가 이어집니다"
+        },
+        {
+          "criterion": "문장에서의 역할",
+          "a": "주절 전체를 꾸미는 부사구입니다",
+          "b": "문장의 주어이며 단수 취급합니다"
+        },
+        {
+          "criterion": "의미상 주어",
+          "a": "주절의 주어입니다",
+          "b": "문맥이 정하며, 일반적인 사람일 수도 특정인일 수도 있고, 필요하면 소유격·목적격으로 앞에 명시합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "**Managing** a large team, the new director reorganized the weekly schedule.",
+          "ko": "큰 팀을 이끌면서 그 신임 이사는 주간 일정을 재편했습니다.",
+          "note": "콤마 뒤에 주어 the new director 와 본동사 reorganized 가 이어집니다. 따라서 앞의 -ing 덩어리는 분사구문입니다."
+        },
+        {
+          "en": "**Managing** a large team **requires** patience and clear rules.",
+          "ko": "큰 팀을 이끄는 일에는 인내와 분명한 규칙이 필요합니다.",
+          "note": "-ing 덩어리 뒤에 곧바로 본동사 requires 가 옵니다. 이때 Managing a large team 은 문장의 주어인 동명사구이며 단수 취급합니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "문두의 -ing 덩어리가 분사구문인지 동명사 주어인지 분류하십시오.",
+      "buckets": [
+        { "id": "pc", "label": "분사구문(부사 역할)" },
+        { "id": "gs", "label": "동명사 주어(명사 역할)" }
+      ],
+      "chips": [
+        {
+          "text": "Crossing the river, the herd found new grazing land.",
+          "bucketId": "pc",
+          "why": "콤마 뒤에 주어 the herd 와 본동사 found 가 이어지므로 앞의 덩어리는 부사 역할의 분사구문입니다."
+        },
+        {
+          "text": "Crossing the river takes nearly an hour on foot.",
+          "bucketId": "gs",
+          "why": "덩어리 뒤에 곧바로 본동사 takes 가 옵니다. 그 덩어리 자체가 주어인 동명사구입니다."
+        },
+        {
+          "text": "Reading the report, the manager found two errors.",
+          "bucketId": "pc",
+          "why": "콤마 뒤에 완전한 주절이 이어지므로 분사구문이며, 의미상 주어는 the manager 입니다."
+        },
+        {
+          "text": "Reading the report was surprisingly difficult.",
+          "bucketId": "gs",
+          "why": "본동사 was 의 주어 자리를 -ing 덩어리가 차지하고 있으므로 동명사 주어입니다."
+        },
+        {
+          "text": "Losing power for hours, the hospital switched to generators.",
+          "bucketId": "pc",
+          "why": "콤마 뒤 주절의 주어 the hospital 이 분사의 의미상 주어이며, 본동사는 switched 입니다."
+        },
+        {
+          "text": "Losing power damages sensitive laboratory equipment.",
+          "bucketId": "gs",
+          "why": "덩어리 뒤에 본동사 damages 가 바로 오므로 Losing power 가 주어입니다. 단수 취급이므로 동사도 damages 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The team completed the survey in June, ( publishing / it published / published ) its findings three months later.",
+      "givenSteps": [
+        "① 시제 동사를 찾습니다 — completed 가 시제를 가진 동사입니다.",
+        "② 접속사·관계사를 셉니다 — 하나도 없습니다. 따라서 시제 동사는 completed 하나로 충분합니다."
+      ],
+      "prompt": "③ 그렇다면 콤마 뒤의 자리는 무엇이어야 합니까?",
+      "options": [
+        "publishing — 본동사가 이미 있으므로 콤마 뒤는 분사구문 자리입니다",
+        "it published — 두 동작을 콤마 하나로 이으면 충분합니다",
+        "published — completed 에 이어 시제를 가진 동사를 하나 더 놓는 셈이라 비문입니다"
+      ],
+      "answer": 0,
+      "explain": "본동사 completed 가 이미 있고 접속사가 없으므로 콤마 뒤는 준동사 자리입니다. it published 는 물론, published(시제를 가진 과거형)도 동사를 하나 더 놓는 것이라 접속사 없이 두 절이 콤마로만 이어져 비문이 됩니다. 두 번째 동작은 분사로 압축해야 하므로 publishing 이 옳습니다. 능동·수동을 따지기 전에 동사 자리 카운팅만으로 답이 갈립니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 문두 분사구가 길면 본동사가 이미 나온 것처럼 보입니다",
+      "body": "문두 분사구 안에도 명사와 목적어가 들어 있어 그 덩어리가 완전한 절처럼 읽힙니다. 그러면 정작 주절의 동사 자리에 다시 준동사를 놓는 실수가 나옵니다. 콤마까지를 통째로 묶어 치운 뒤, 남은 절에 시제 동사가 있는지 반드시 확인해야 합니다.",
+      "example": {
+        "en": "**Drawing** on decades of field notes gathered across three continents, the ecologist **argues** that biodiversity loss is accelerating.",
+        "ko": "세 대륙에서 수집된 수십 년간의 현장 기록에 근거해 그 생태학자는 생물다양성 손실이 가속되고 있다고 주장합니다.",
+        "note": "콤마 앞은 전부 분사구입니다. 시제를 가진 동사는 argues 하나이며, 이 자리를 arguing 으로 쓰면 문장에서 본동사가 사라집니다."
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u09-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Drawing on records kept by early settlers, the historian {{blank}} that the village was founded much earlier.",
+          "options": ["argues", "arguing", "to argue"],
+          "answer": 0,
+          "translation": "초기 정착민들이 남긴 기록에 근거해 그 역사학자는 그 마을이 훨씬 이전에 세워졌다고 주장합니다.",
+          "explanation": "콤마 앞은 전부 문두 분사구문이므로 시제를 가진 동사가 하나도 없습니다. 접속사도 없으므로 주절에는 시제 동사가 정확히 하나 필요하며, 빈칸이 그 본동사 자리입니다. arguing 과 to argue 는 준동사여서 본동사가 되지 못합니다.",
+          "trapTags": ["long-participle-phrase", "no-main-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 argues 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "콤마 앞이 전부 분사구여서 시제 동사가 하나도 없었고, 접속사도 없으므로 주절에 시제 동사가 하나 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 분사구를 통째로 걷어낸 뒤 '동사 수 = 접속사 수 + 1' 을 확인하는 것이 판단의 근거입니다."
+        },
+        {
+          "text": "역사학자가 주장하는 쪽이므로 능동이어야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "능동·수동은 -ing 와 p.p. 중 무엇을 쓰느냐의 문제입니다. arguing 도 능동이므로 이 근거로는 arguing 을 배제하지 못합니다. 판단 근거는 그 자리가 본동사 자리라는 사실입니다."
+        },
+        {
+          "text": "문장이 현재의 사실을 말하고 있어 현재형이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제의 자연스러움은 동사와 준동사를 가르지 못합니다. arguing 과 to argue 도 현재 맥락에 쓰일 수 있습니다. 구조가 먼저이고 의미는 그다음입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "[[1:Working]] through the winter, the crew [[2:repaired]] the bridge, [[3:restoring]] the main route to the harbor, and it [[4:reopening]] to traffic within a week.",
+      "answer": 4,
+      "correction": "reopened",
+      "rationales": [
+        "문두 분사구문입니다. 부사절 As they worked through the winter 를 압축한 것이며, 의미상 주어는 주절 주어 the crew 입니다.",
+        "주절의 본동사입니다. 시제를 가진 형태이므로 옳습니다.",
+        "콤마 뒤의 문말 분사구문입니다. 본동사 repaired 가 이미 있고 접속사가 없으므로 준동사 자리이며, 항로를 복구한 주체가 the crew 이므로 능동 -ing 가 옳습니다.",
+        "등위접속사 and 뒤에 주어 it(= the bridge)이 명시되어 있고 그 뒤가 문장의 마지막 등위절이므로, 이 자리는 시제를 가진 본동사 자리입니다. 준동사 reopening 은 본동사가 되지 못하므로 reopened 로 고칩니다. 주어가 따로 붙은 분사구(독립분사구문)는 뒤 단원에서 다룹니다."
+      ],
+      "ko": "겨울 내내 작업한 끝에 그 작업반은 다리를 복구해 항구로 가는 주요 노선을 되살렸고, 그 다리는 일주일 만에 다시 교통에 개방되었습니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 부사절이 있는 문장을 주고 분사구문으로 바꾸어 쓰라고 요구합니다. 접속사와 주어를 지우고 동사를 분사로 바꾸는 세 단계를 그대로 적용해야 만점입니다.",
+          "sample": {
+            "en": "Because it detected smoke, the system shut down the power.",
+            "ask": "앞의 부사절을 분사구문으로 바꾸어 문장 전체를 다시 쓰십시오.",
+            "answer": "Detecting smoke, the system shut down the power. — 접속사 Because 를 지우고, 주절 주어와 같은 주어를 지운 뒤 동사를 분사 Detecting 으로 바꿉니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 문두 분사구를 길게 늘여 놓고 주절의 본동사 자리에 밑줄을 칩니다. 콤마까지를 통째로 걷어낸 뒤 남은 절에 시제 동사가 있는지 확인하면 판단이 끝납니다.",
+          "sample": {
+            "en": "Drawing on centuries of local knowledge, the villagers [[u:manage]] the forest without any formal map.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — 콤마 앞은 전부 분사구이므로 주절에는 시제 동사가 하나 필요하며, manage 가 그 본동사입니다. managing 으로 바꾸면 문장에 본동사가 사라집니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Cities are learning to live with extreme heat. [[u:Painting the roofs of low buildings white, some districts have lowered indoor temperatures by several degrees.]] The change costs little, and it works best where summers are long and dry. Engineers now study which surfaces reflect the most sunlight.",
+      "instruction": "밑줄 친 문장에서 분사구문을 걷어내고 주절의 주어와 본동사를 찾으십시오.",
+      "found": "Painting the roofs of low buildings white 는 시제가 없는 문두 분사구문입니다. 이를 걷어내면 주절의 주어는 some districts 이고 본동사는 have lowered 입니다. 분사의 의미상 주어 역시 주절 주어인 some districts 입니다.",
+      "gist": "낮은 건물의 지붕을 흰색으로 칠해 실내 온도를 낮춘 도시들에 관한 내용입니다."
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "부사절 압축 공정소의 문지기",
+      "intro": "이 공정소에는 접속사와 주어를 잔뜩 매단 부사절이 하루에도 수백 건 밀려듭니다. 이것을 분사 하나로 정확히 눌러 담지 못하면 라인 전체가 멈춥니다. 네 건의 공정으로 실력을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "{{blank}} the old map carefully, the sailors found a hidden route.",
+          "options": ["Studying", "They studied"],
+          "answer": 0,
+          "why": "완전한 절 두 개를 접속사 없이 콤마로만 이을 수는 없습니다. 앞 동작은 문두 분사구문 Studying 으로 압축해야 하며, 의미상 주어는 주절 주어 the sailors 입니다."
+        },
+        {
+          "prompt": "The earthquake destroyed the harbor, {{blank}} thousands of people homeless.",
+          "options": ["leaving", "it left"],
+          "answer": 0,
+          "why": "본동사 destroyed 가 이미 있고 접속사가 없으므로 콤마 뒤는 문말 분사구문 자리입니다. 의미상 주어 The earthquake 가 사람들을 그런 상태로 남기는 쪽이므로 능동 leaving 이 옳습니다."
+        },
+        {
+          "prompt": "Built on a cliff above the sea, the castle {{blank}} the entire bay.",
+          "options": ["overlooks", "overlooking"],
+          "answer": 0,
+          "why": "Built ~ sea 는 문두 수동 분사구문이라 시제 동사가 없습니다. 접속사도 없으므로 주절에는 본동사가 하나 필요하며, 시제를 가진 overlooks 가 그 자리입니다."
+        },
+        {
+          "prompt": "Managing a busy clinic {{blank}} careful scheduling every single day.",
+          "options": ["requires", "requiring"],
+          "answer": 0,
+          "why": "-ing 덩어리 뒤에 콤마 없이 곧바로 동사 자리가 옵니다. 따라서 Managing a busy clinic 은 분사구문이 아니라 문장의 주어인 동명사구이며, 시제를 가진 본동사 requires 가 필요합니다."
+        }
+      ],
+      "winText": "압축 공정 완료 도장이 찍혔습니다. 접속사와 주어를 걷어 내고 시제 동사 하나만 남기는 눈 — 그것이 분사구문 판별의 전부이며, 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 서류를 돌려줍니다. 네 건 모두 물은 것은 하나였습니다 — '이 자리는 본동사 자리인가, 분사 자리인가.' 판별 4단계를 다시 확인하고 오면 도장은 준비되어 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "분사구문은 부사절에서 ___ 와 ___ 를 지우고 동사를 ___ 로 바꾼 것이며, 생략된 주어는 언제나 ___ 입니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "분사구문은 부사절에서 접속사와 주어를 지우고 동사를 분사로 바꾼 압축 형태입니다.",
+        "분사구문은 문두·문말·주어와 본동사 사이 어디에나 놓이지만, 어느 자리에서도 본동사가 아닙니다.",
+        "접속사가 없는데 시제 동사가 둘이면 그중 하나는 반드시 분사로 압축되어야 합니다.",
+        "분사의 의미상 주어는 주절의 주어입니다. 주절 주어가 그 동작을 할 수 없으면 그 문장은 성립하지 않습니다.",
+        "문두 -ing 덩어리 뒤에 '주어+본동사'가 오면 분사구문, 본동사가 바로 오면 동명사 주어입니다."
+      ],
+      "keySentence": {
+        "en": "The glacier **retreated** slowly, **carving** deep valleys in the rock below.",
+        "ko": "그 빙하는 천천히 후퇴하면서 아래 암반에 깊은 계곡들을 깎아 냈습니다.",
+        "note": "시제 동사는 retreated 하나이고, 접속사가 없으므로 두 번째 동작은 분사 carving 으로 압축됩니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u09-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "{{blank}} the samples under a microscope, the technician identified three unknown species.",
+          "options": ["Examining", "She examined"],
+          "answer": 0,
+          "translation": "현미경으로 표본을 관찰한 끝에 그 기술자는 알려지지 않은 세 종을 식별했습니다.",
+          "explanation": "She examined 를 넣으면 완전한 절 두 개가 접속사 없이 콤마로만 이어져 비문이 됩니다. 앞의 동작은 문두 분사구문으로 압축해야 하며, 생략된 의미상 주어는 주절 주어 the technician 입니다.",
+          "trapTags": ["comma-splice", "double-verb"]
+        },
+        {
+          "id": "u09-c1-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The factory closed in 2019, [[u:leaving]] more than four hundred workers without jobs.",
+          "isCorrect": true,
+          "translation": "그 공장은 2019년에 문을 닫았고, 그리하여 사백 명이 넘는 노동자가 일자리를 잃었습니다.",
+          "explanation": "본동사 closed 가 이미 있고 접속사가 없으므로 콤마 뒤는 문말 분사구문 자리입니다. 의미상 주어인 The factory 가 노동자들을 일자리 없는 상태로 남기는 쪽이고 뒤에 목적어가 있으므로 능동 leaving 이 옳습니다.",
+          "trapTags": ["double-verb"]
+        },
+        {
+          "id": "u09-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Living on this coast for decades, the fishermen {{blank}} the changing currents better than any chart.",
+          "options": ["know", "knowing", "to know"],
+          "answer": 0,
+          "translation": "수십 년간 이 해안에서 살아온 그 어부들은 어떤 해도보다도 변화하는 해류를 잘 압니다.",
+          "explanation": "콤마 앞은 문두 분사구문이므로 시제 동사가 없습니다. 접속사도 없으므로 주절에 시제 동사가 하나 필요하며, 빈칸이 그 본동사 자리입니다. knowing 과 to know 는 준동사여서 본동사가 되지 못합니다.",
+          "trapTags": ["no-main-verb", "long-participle-phrase"]
+        }
+      ]
+    }
+  ]
+}

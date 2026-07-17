@@ -1,0 +1,72 @@
+{
+  "pid": "P032",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-seam-strain",
+      "severity": "minor",
+      "evidence": "빈칸 뒤 꼬리 'and improved group functioning' 때문에 오답을 넣은 완성문은 '... suppress their personal needs and improved group functioning'류의 강제 병렬 파스로만 성립한다. 통사적으로 성립 가능한 파스가 존재하고 정답 완성문은 원문 구조(fosters [A and B])를 정확히 재현하므로 V3 실패는 아니지만, 오답 seam이 부자연스럽다."
+    },
+    {
+      "code": "V4-minor-template-artifact",
+      "severity": "minor",
+      "evidence": "오답 해설의 '~을(를) 빌렸지만' 조사 병기 템플릿 흔적(예: 'needs of others을(를) 빌렸지만')이 그대로 노출된다. 사실 오류는 아니며 내용 대응은 전부 정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 1,
+    "C4": 1,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성/행위자 왜곡 — '자신과 타인의 요구를 조화(accommodate their own needs as well as the needs of others)'를 '개인 요구 억압'으로 반전",
+      "temptingBecause": "'needs' 어휘 앵커를 재사용하고, 자기희생이 협력처럼 들릴 수 있다",
+      "decisiveFlaw": "본문은 자신의 요구'도' 함께 수용하는 협력을 말하므로 억압은 정반대. 또한 부정 극성이라 꼬리의 긍정 병렬('improved group functioning')과 즉시 충돌한다"
+    },
+    {
+      "label": "②",
+      "intent": "관계 왜곡 — 감정 '표현'을 일방적 '강요'로 치환",
+      "temptingBecause": "'express how he feels' 앵커 — 자기 입장을 드러낸다는 표면 유사성",
+      "decisiveFlaw": "본문은 표현과 동시에 타인 관점 수용(take the perspective)을 짝지어 상호적 관계를 그린다. 'forces'의 지배 관계는 근거 없음, 부정 극성으로도 즉시 탈락"
+    },
+    {
+      "label": "③",
+      "intent": "조건 왜곡 — '갈등의 건설적 해결'을 '갈등 발생 자체의 방지'로 치환 + 절대어",
+      "temptingBecause": "'conflict/confrontation' 앵커와 갈등 감소라는 긍정적 뉘앙스",
+      "decisiveFlaw": "본문의 constructive conflict resolution은 갈등 발생을 전제로 한 해결이지 예방이 아니다. 'prevents any kind of' 절대어가 소거 단서를 추가로 노출"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 'promotes constructive conflict resolution'의 의미 보존 패러프레이즈",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 다만 패러프레이즈 거리가 짧아(promote→foster, constructive→productive, conflict resolution→resolve disagreements) 추상화 수준이 낮고, 유일한 긍정 극성 선지라 소거로도 즉시 도달된다"
+    },
+    {
+      "label": "⑤",
+      "intent": "범위 축소 — 감정 이해 전반을 '부정적 감정의 원인 분석'으로만 한정 + 절대어 'only'",
+      "temptingBecause": "'causes and consequences of emotion' 어휘 앵커를 직접 차용",
+      "decisiveFlaw": "본문은 원인과 결과 모두, 감정 전반을 다룬다. 주어 'Appreciation of differences'가 무언가를 '분석에만 집중'한다는 서술 자체가 성립하지 않고 'only'가 추가 소거 단서"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설의 '을(를)' 조사 병기 템플릿 노출 — 학생 노출 텍스트로는 다듬어지지 않은 기계 생성 흔적",
+      "recommendation": "조사 자동 선택 또는 문장 재작성"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트는 통과한다. V1: 렌더 지문은 'promotes constructive conflict resolution'만 정확히 빈칸 치환되었고 나머지는 원문과 완전 일치. V2: ①(요구 억압=조화의 반대), ②(강요=상호성의 반대), ③(예방≠건설적 해결, 절대어), ⑤(only 한정 왜곡)가 모두 독립적으로 탈락하고 ④만 성립하는 단일 정답. V3: 정답 완성문이 원문의 3중 병렬 구조를 그대로 재현해 문법적. V4: 해설 인용문·패러프레이즈 관계·단서 문장 귀속 모두 실제 지문과 일치, 오답 해설 4건 모두 해당 선지 내용과 정확히 대응. V5: 라벨·선지·해설·keyPoints 동기화. 치명적 공예 결함: 빈칸 앞뒤가 'creates an arena for open communication and ___ and improved group functioning'으로 빈칸을 긍정 성과 병렬 슬롯으로 고정하는데 오답 4개가 전부 부정/제한 극성(suppress·forces·prevents·only focuses)이어서 지문 독해 없이 극성 소거만으로 정답이 나온다(C4=1, 꼬리 소거·메타 누출). ③⑤의 절대어가 소거를 더 가속한다(C3=1). INTERMEDIATE 요청 대비 실제 요구 사고 단계는 그 이하(C5=2). C 최저점이 1이므로 B 기준(최저 2) 미달 — 오답 중 최소 2개를 긍정 극성의 half-truth/scope-shift형으로 교체하는 재설계가 필요하다. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

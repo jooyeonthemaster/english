@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "형식적 검증: (i) 문법 결합 — 'while cinema expresses man's affective life, the law regulates and suppresses such emotional impulses'는 종속절-주절 구조로 정문이며, 'such emotional impulses'의 조응 대상이 직전 절의 'man's affective life'로 명확히 성립한다. (ii) 국소 논리 — 빈칸 직후 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'의 대명사 It이 빈칸 주절의 주어(the law)를 받아야 하는데, 'regulates and suppresses'는 '욕망에 압도되지 않도록 보장한다'와 정확히 함의 관계를 이룬다. (iii) 전역 논리 — 마지막 문장 'The law obsessively tries to suppress affects ... whereas cinema introduces us to our affects'가 빈칸의 대조(cinema=표현 vs law=억압)를 명시적으로 재진술한다. 또한 서두의 'a regime of commands and prohibitions'(명령·금지 체제)와도 일관된다. 세 층위 모두 성립하므로 유일 정답."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "문법 결합은 정문이나 논리적으로 모순을 유발한다. 'the law encourages individuals to confront their hidden drives'는 지문이 영화(cinema)에 귀속시키는 기능('cinema introduces us to our affects, often forcing us to identify the most unbearable ones')을 법에 귀속시켜, while 대조 구문의 전제(영화 vs 법의 차이)를 붕괴시키고 마지막 문장 'The law obsessively tries to suppress affects'와 정면 충돌한다. 형식적으로 P(법=억압) ∧ ¬P(법=대면 장려)의 모순. 탈락."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "문법상 정문이지만 논리적으로 지문과 불일치. 지문은 'man desires freedom but is simultaneously too violent to exist ... without a regime of commands and prohibitions' — 즉 명령·금지는 자유를 제한하는 필요악이지 'absolute freedom'을 보장하는 수단이 아니다. 'guarantees absolute freedom'은 지문 어디에도 근거가 없는 과잉 주장이며, 빈칸 직후의 It-문장('욕망에 압도되지 않게 한다')과도 의미 연결이 어긋난다. 'freedom'과 'commands'를 재조합한 미끼. 탈락."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "문법적으로는 성립하나(utilizing 분사구 수식) 논리적으로 지문 왜곡. 지문은 법이 'fearing the horror of their consequences'(정동의 결과가 초래할 공포를 두려워하여) 정동을 억압한다고 하지, 법이 그 공포를 '이용하여(utilizing)' 인간을 '고립시킨다(isolates)'고 하지 않는다. 'isolate'라는 술어는 지문에 대응물이 전혀 없고, 두려움의 주체(법)를 도구 사용자로 뒤집는 인과 왜곡. while 대조의 상대항으로서 '표현 vs 고립'은 지문의 '표현 vs 억압' 축과 불일치. 탈락."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "지문 둘째 문장 'Rather than an abstract desire for truth as a value in itself, the law deals with the messiness of human relations'가 명시적으로 부정하는 명제를 그대로 주장한다(법이 추상적 진리를 추구한다는 것). 또한 while절(cinema)과의 대조 구조에서 주절 주어가 'both audiences and the law'가 되면 대조축이 붕괴하고, 직후 It의 지시 대상도 불명확해진다. 문법·논리 양면에서 탈락."
+    }
+  ],
+  "note": "빈칸 뒤 대명사 It의 지시 해소, while 대조 구문의 대칭성, 마지막 문장의 명시적 재진술(suppress affects vs introduces us to our affects)이라는 세 개의 독립적 단서가 모두 1번을 수렴 지지한다. 2~5번은 각각 역할 전도(2), 무근거 과잉주장(3), 인과 왜곡(4), 명시적 부정 명제 채택(5)으로 형식적으로 배제 가능. 복수 정답 여지 없음."
+}

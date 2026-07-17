@@ -1,0 +1,118 @@
+{
+ "batchId": "phaseA-premblank-v3",
+ "phase": "A",
+ "note": "PREMIUM 빈칸 재실측 — vertex/global transport 오염 제거(providerRouting=none, 프로덕션 동일 자유 라우팅)",
+ "concurrency": 2,
+ "geminiReasoningEffort": "low",
+ "providerRouting": "none",
+ "assignments": [
+  {
+   "itemId": "A3-b-int-prem-01",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-INTERMEDIATE"
+  },
+  {
+   "itemId": "A3-b-int-prem-02",
+   "frameId": "blank-supply-v2-052",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-INTERMEDIATE"
+  },
+  {
+   "itemId": "A3-b-int-prem-03",
+   "frameId": "blank-supply-v2-080",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-INTERMEDIATE"
+  },
+  {
+   "itemId": "A3-b-int-prem-04",
+   "frameId": "blank-supply-v2-101",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-INTERMEDIATE"
+  },
+  {
+   "itemId": "A3-b-int-prem-05",
+   "frameId": "blank-supply-v2-124",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-INTERMEDIATE"
+  },
+  {
+   "itemId": "A3-b-int-prem-06",
+   "frameId": "blank-supply-v2-150",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-INTERMEDIATE"
+  },
+  {
+   "itemId": "A3-b-kil-prem-01",
+   "frameId": "blank-supply-v2-049",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  },
+  {
+   "itemId": "A3-b-kil-prem-02",
+   "frameId": "blank-supply-v2-052",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  },
+  {
+   "itemId": "A3-b-kil-prem-03",
+   "frameId": "blank-supply-v2-080",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  },
+  {
+   "itemId": "A3-b-kil-prem-04",
+   "frameId": "blank-supply-v2-101",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  },
+  {
+   "itemId": "A3-b-kil-prem-05",
+   "frameId": "blank-supply-v2-124",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  },
+  {
+   "itemId": "A3-b-kil-prem-06",
+   "frameId": "blank-supply-v2-150",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-A0-PREMIUM-KILLER"
+  }
+ ]
+}

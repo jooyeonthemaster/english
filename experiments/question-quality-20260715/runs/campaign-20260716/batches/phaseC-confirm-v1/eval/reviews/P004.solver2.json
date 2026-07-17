@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Sweeping statements have been made about ...' — 주어 statements는 make의 대상이므로 현재완료 수동태 have been made가 정확하다. 능동 해석(statements가 행위자)은 성립하지 않으므로 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'we would predict that a child ... would be better behaved' — predict의 목적어 명사절을 이끄는 접속사 that. 뒤 절은 결손 없는 완전한 절이므로 관계사가 아닌 접속사 that이 적법하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a child who was dressed ... and whose mother stressed ...' — and가 두 관계절을 병렬하며, 선행사 a child에 대해 '그 아이의 어머니'라는 소유 관계이므로 소유격 관계대명사 whose가 유일하게 적법. 병렬 시작점(who was / whose mother)도 정합."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'might be very noisy while played cowboys' — while 축약절의 의미상 주어는 주절 주어 the child이고, 아이가 cowboys 놀이를 하는 능동 관계이므로 while playing이 요구된다. 구제 시도 전부 실패: (i) 수동 축약 'while (he was) played cowboys'는 play가 'play a person cowboys' 형의 이중목적어 용법을 갖지 않아 잔류 목적어 수동태로 성립 불가, (ii) played를 정형 과거동사로 보면 while절에 주어가 없어 비문이며 문맥 시제(is dressed, might be)와도 불일치. 따라서 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'be no more noisy than usual' — be동사 보어 자리에 형용사 noisy가 적법(부사였다면 비문). 'no more + 원급 + than'은 표준 비교 구문이고 -y 2음절 형용사도 more 비교가 허용되므로 'no noisier'만이 유일 정형이라 볼 수 없다. 정문."
+    }
+  ],
+  "note": "정답은 (D) 하나로 명확히 좁혀진다. 능동 분사구문 while playing cowboys가 요구되는 자리에 과거분사 played를 둔 전형적 분사 태(voice) 오류이며, 수여동사 수동태 잔류 목적어 등 대안 해석으로도 정문 구제가 불가능함을 확인했다. 나머지 (A)(B)(C)(E)는 모두 형식적으로 적법하여 복수 정답 시비 여지가 없다."
+}

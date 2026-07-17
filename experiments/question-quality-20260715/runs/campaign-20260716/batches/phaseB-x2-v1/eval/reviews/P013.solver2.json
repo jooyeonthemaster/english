@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'pedestrians must not wait for their companions' is exactly Carol's mistaken reading, which the friend has just denied ('Of course you can stand there'). Inserting it makes the friend's sentence self-contradictory: she would be asserting the very prohibition she rejected one line earlier. Logically inadmissible."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'standing near the road is physically dangerous' recasts a legal traffic regulation as a hazard warning. It also breaks the contrastive seam: 'X is dangerous, BUT we can stop to pick up passengers' is a non sequitur — permission to pick up passengers does not contrast with physical danger."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'active walking is required to bypass the street' is semantically incoherent as a gloss of 'No Standing' and contradicts the friend's correction that pedestrians ARE allowed to stand there. Grammatically the seam parses, but the proposition fails the discourse logic."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "Only option that reassigns the sign's scope from pedestrians to vehicles, which is the whole point of the friend's correction. The but-contrast is licensed: vehicles may not remain/wait there, yet a momentary stop to pick up passengers is allowed — matching 'but we can stop to pick up passengers' uttered from inside a car. Seam is well-formed: 'That means [that] vehicles are prohibited from being left unattended' (finite complement clause; passive gerund after preposition 'from' is grammatical). Pedantic caveat: in strict U.S. traffic law 'No Standing' bars even attended waiting, while 'left unattended' technically defines 'No Parking'; still, within this option set ④ is uniquely defensible."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'passengers cannot access public transit on this block' is directly contradicted by the following clause 'we can stop to pick up passengers' and has no connection to the meaning of a 'No Standing' sign. Fails both logic and relevance."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. The blank must (a) restate the sign's true scope (vehicles, not pedestrians) and (b) stand in licensed contrast with 'but we can stop to pick up passengers'. Only ④ satisfies both. Minor real-world quibble: ④'s wording ('left unattended') is closer to the legal definition of No Parking than No Standing (which prohibits even attended waiting), so the option is slightly imprecise as traffic law, but this does not create a second defensible answer among ①②③⑤."
+}

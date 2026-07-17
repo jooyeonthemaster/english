@@ -1,0 +1,46 @@
+{
+  "strategy": "w3-flash-ladder",
+  "describe": "w3-triple-ladder 동일 구성, 생성·수리 모델만 flash — 사다리의 모델 독립성/저가 검증",
+  "callPlan": "flash x3 (사다리)",
+  "total": 30,
+  "ok": 30,
+  "failed": 0,
+  "avgMs": 30666,
+  "avgAttempts": 3.37,
+  "avgCalls": 3.37,
+  "totalCostUsd": 1.69198,
+  "avgCostUsd": 0.0564,
+  "costRecordedCalls": 101,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 0.57,
+  "zeroErrorItems": 18,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.882,
+  "avgAnswerRelPos": 0.569,
+  "answerRelPosInBand": 24,
+  "models": {
+    "google/gemini-3.5-flash": 100,
+    "google/gemini-3.1-pro-preview": 1
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 5
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 8
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 5
+    }
+  ]
+}

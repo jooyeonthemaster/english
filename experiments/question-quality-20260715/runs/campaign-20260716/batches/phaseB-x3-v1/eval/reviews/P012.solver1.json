@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'based on their race or ethnicity'에서 their의 선행사는 a person's. 엄격한 규범문법 반사신경으로는 his or her를 기대하게 되어 잠깐 끌리지만, 단수 총칭 명사에 대한 singular they/their는 현대 표준 용법으로 어법상 문제 없음. 소유 논리(their race = 그 사람의 인종)도 정합."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "experiential microaggressions ... can be seen in statements. 주어(미세공격)는 '보이는' 대상이므로 조동사 can 뒤 수동태 be seen이 필수. 능동 see라면 목적어가 필요해 비문이 됨. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "When people speak to him, they often raise their voices. 완전한 정형절을 이끄는 시간 접속사 When으로 아무 문제 없음. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "when given him directions의 축약절 생략 주어는 주절 주어인 a well-meaning nurse. 간호사는 지시를 '주는' 행위자이므로 능동 현재분사 when giving him directions여야 함. 구제 해석 적극 검토: (1) 수여동사 수동 잔류목적어 — 'she was given directions'는 가능하나 'she was given him directions'는 give him directions의 가능한 수동형이 아님(주어 승격 후 두 목적어 모두 잔류 불가). (2) 고형 'given him'(= given to him)은 주어가 directions여야 성립하는데 축약절 주어 동일성 조건(주절 주어 = 간호사)에 위배. 어떤 대안 해석으로도 정문이 되지 않음 — 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "a hidden message that a person with a disability is defined as lesser... 동격 that절 내 'define A as B'의 수동 'be defined as + 보어'는 정상적 통사. 과거 시제 주절(implied) 안의 총칭적 현재 시제도 동격 내용절에서 허용됨. 'defined'라는 어휘 선택이 어색하게 들려 유혹적이지만(deficient를 기대) 문법적으로는 하자 없음."
+    }
+  ],
+  "note": "실전 유혹 기록: (A) singular they에 대한 규범문법 반사(his or her 기대)와 (E)의 어색한 diction('is defined as lesser')이 매력적 오답으로 작동. 그러나 둘 다 문법 검증을 통과. (D)는 축약 부사절의 의미상 주어 = 주절 주어(간호사) 규칙과 태(능동 giving vs 수동 given) 판정으로 명백히 틀림. 잔류 목적어 수동태 등 대안 해석을 전부 검토했으나 (D)를 정문으로 만들 수 있는 해석 없음. 정답 후보는 (D) 단일."
+}

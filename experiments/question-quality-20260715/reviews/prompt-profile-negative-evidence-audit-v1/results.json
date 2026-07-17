@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "verdict": "PASS_REMEDIATED_OFFLINE",
+  "g3": {
+    "providerJsonSchemaSha256": "25d96d8369e7414bba3cc985e321dd93ee0ab3e5eeebee0b8b80d1fd1952f556",
+    "outerRequired": ["siteCertificate"],
+    "certificateRequired": ["certificationStatus"],
+    "hasAnyOf": false,
+    "hasOneOf": false,
+    "minimalAbstentionParses": true,
+    "invalidAbstentionCount": 5,
+    "certifiedOuterFieldsExhaustivelyRequired": 10,
+    "certifiedBindingsExhaustivelyRequired": 10
+  },
+  "b3": {
+    "falseGrammarAttestationAdapterAccepted": true,
+    "deterministicFindingCodes": ["blank-double-punctuation-boundary"],
+    "falseSemanticAttestationAdapterAccepted": true,
+    "semanticFixtureSeamFindings": 0,
+    "scope": "literal claims are not proof; high-confidence boundary rules are recomputed, full grammar and semantic validity remain independently adjudicated"
+  },
+  "promptHashes": {
+    "g3DeltaSha256": "bdd11e72c064d09210084c1811aedfd7fac862d7f3673013c969655a25944b0f",
+    "b3DeltaSha256": "cba717b661b812f0784ecfd4379fc5c152cdd6da2acad229ed18e20a18818ec3"
+  },
+  "sideEffects": {
+    "externalApiCalls": 0,
+    "networkCalls": 0,
+    "applicationDatabaseReads": 0,
+    "applicationDatabaseWrites": 0,
+    "candidatesConsumed": 0,
+    "secretsRead": 0
+  }
+}

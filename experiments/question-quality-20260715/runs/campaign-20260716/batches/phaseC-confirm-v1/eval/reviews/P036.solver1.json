@@ -1,0 +1,35 @@
+{
+  "pid": "P036",
+  "answer": "E",
+  "multipleDefensible": false,
+  "defensibleLabels": ["E"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' — 'called'는 which are called의 축약 관계절(과거분사)로 종을 수식하는 수동 의미. 종은 '~라고 불리는' 대상이므로 과거분사가 문맥상·어법상 옳다. (능동 calling으로 착각할 유혹이 있으나 species가 부르는 주체가 아니라 불리는 대상이므로 수동 called가 정답 표기.)"
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on or are greatly affected by...' — 추상명사 fact 뒤에 오는 동격의 that절. that절 내부(other species depend on ... the keystone species)가 주어·목적어 결손 없는 완전한 절이므로 관계대명사 which가 아니라 동격 접속사 that이 옳다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "문장의 진주어 핵은 'The fact'(단수)이고 that절은 그 수식·동격부. 따라서 단수 동사 is revealed가 수 일치상 옳다. 바로 앞의 복수명사 species/vertebrates에 이끌려 are로 착각할 매력적 유혹이 있으나 장거리 지배 주어는 The fact이므로 is가 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'fig trees become important in sustaining fruit-eating vertebrates' — 전치사 in의 목적어 자리이므로 동명사 sustaining이 옳다. to sustain으로 바꾸고 싶은 유혹이 있으나 'in -ing(~하는 데 있어)'가 관용적으로 옳다."
+    },
+    {
+      "label": "E",
+      "verdict": "incorrect",
+      "reason": "가정법 조건절의 if 생략 도치는 조동사 were / had / should만 문두로 나올 수 있다. 문맥상 미래의 불확실한 가정('만약 무화과나무가 사라진다면')으로 귀결절이 would be eliminated이므로 원래 조건절은 'If the fig trees should disappear' 또는 'Were the fig trees to disappear'가 되어야 하고, 도치형은 'Should the fig trees disappear' 또는 'Were the fig trees to disappear'다. 'Would'는 조건절(protasis)의 도치 조동사로 결코 쓰이지 않으므로 어법상 틀린 표기다."
+    }
+  ],
+  "note": "어법 오류 문항. 정답은 (E) Would. if 생략 가정법 도치는 were/had/should에 한정되며 would는 도치 조건절 조동사로 불가 — Should/Were the fig trees to disappear가 정문. 나머지 (A) 수동 과거분사, (B) 동격 that, (C) 단수 주어 The fact와의 수 일치, (D) 전치사+동명사는 모두 어법상 옳으며 인접 복수명사·능동형 등의 매력적 오답 유혹은 있으나 지배 규칙상 정문이다. 정답 하나로 명확히 좁혀짐."
+}

@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-14T16:37:29.659Z",
+  "input": "experiments/question-quality-20260715/baseline/jul15-dawn/private/manifest-private.json",
+  "markedQuestionCount": 6,
+  "mismatchCount": 1,
+  "caveat": "This is a pure-function surface replay. A browser E2E is still required to prove the exact deployed student and paper pixels.",
+  "records": [
+    {
+      "blindId": "Q001",
+      "questionId": "cmrkseb86000ul9043qotqxeh",
+      "type": "GRAMMAR_ERROR",
+      "rawStoredAnswer": [
+        "3"
+      ],
+      "rawScoringAnswer": [
+        "3"
+      ],
+      "tabletVisibleSemanticAnswer": [
+        "3"
+      ],
+      "workbenchNormalizedAnswer": [
+        "3"
+      ],
+      "paperNormalizedAnswer": [
+        "3"
+      ],
+      "tabletPassageMarkerSequence": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "rawScoringMatchesTabletSemantic": true,
+      "rawScoringMatchesWorkbench": true,
+      "rawScoringMatchesPaper": true,
+      "crossSurfaceMismatch": false
+    },
+    {
+      "blindId": "Q003",
+      "questionId": "cmrkqgzuw002bmm2w8os0tlwg",
+      "type": "GRAMMAR_ERROR",
+      "rawStoredAnswer": [
+        "2"
+      ],
+      "rawScoringAnswer": [
+        "2"
+      ],
+      "tabletVisibleSemanticAnswer": [
+        "2"
+      ],
+      "workbenchNormalizedAnswer": [
+        "2"
+      ],
+      "paperNormalizedAnswer": [
+        "2"
+      ],
+      "tabletPassageMarkerSequence": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "rawScoringMatchesTabletSemantic": true,
+      "rawScoringMatchesWorkbench": true,
+      "rawScoringMatchesPaper": true,
+      "crossSurfaceMismatch": false
+    },
+    {
+      "blindId": "Q007",
+      "questionId": "cmrkquelj0033mm2wnpjleceg",
+      "type": "GRAMMAR_ERROR",
+      "rawStoredAnswer": [
+        "3"
+      ],
+      "rawScoringAnswer": [
+        "3"
+      ],
+      "tabletVisibleSemanticAnswer": [
+        "3"
+      ],
+      "workbenchNormalizedAnswer": [
+        "3"
+      ],
+      "paperNormalizedAnswer": [
+        "3"
+      ],
+      "tabletPassageMarkerSequence": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "rawScoringMatchesTabletSemantic": true,
+      "rawScoringMatchesWorkbench": true,
+      "rawScoringMatchesPaper": true,
+      "crossSurfaceMismatch": false
+    },
+    {
+      "blindId": "Q010",
+      "questionId": "cmrkscdsf000ml804ly1515m4",
+      "type": "VOCAB_CHOICE",
+      "rawStoredAnswer": [
+        "4"
+      ],
+      "rawScoringAnswer": [
+        "4"
+      ],
+      "tabletVisibleSemanticAnswer": [
+        "4"
+      ],
+      "workbenchNormalizedAnswer": [
+        "5"
+      ],
+      "paperNormalizedAnswer": [
+        "5"
+      ],
+      "tabletPassageMarkerSequence": [
+        "5",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "rawScoringMatchesTabletSemantic": true,
+      "rawScoringMatchesWorkbench": false,
+      "rawScoringMatchesPaper": false,
+      "crossSurfaceMismatch": true
+    },
+    {
+      "blindId": "Q011",
+      "questionId": "cmrksbg880009l804mlekt5eo",
+      "type": "GRAMMAR_ERROR",
+      "rawStoredAnswer": [
+        "5"
+      ],
+      "rawScoringAnswer": [
+        "5"
+      ],
+      "tabletVisibleSemanticAnswer": [
+        "5"
+      ],
+      "workbenchNormalizedAnswer": [
+        "5"
+      ],
+      "paperNormalizedAnswer": [
+        "5"
+      ],
+      "tabletPassageMarkerSequence": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "rawScoringMatchesTabletSemantic": true,
+      "rawScoringMatchesWorkbench": true,
+      "rawScoringMatchesPaper": true,
+      "crossSurfaceMismatch": false
+    },
+    {
+      "blindId": "Q015",
+      "questionId": "cmrksb97j0008l404d695i4zz",
+      "type": "VOCAB_CHOICE",
+      "rawStoredAnswer": [
+        "3"
+      ],
+      "rawScoringAnswer": [
+        "3"
+      ],
+      "tabletVisibleSemanticAnswer": [
+        "3"
+      ],
+      "workbenchNormalizedAnswer": [
+        "3"
+      ],
+      "paperNormalizedAnswer": [
+        "3"
+      ],
+      "tabletPassageMarkerSequence": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "rawScoringMatchesTabletSemantic": true,
+      "rawScoringMatchesWorkbench": true,
+      "rawScoringMatchesPaper": true,
+      "crossSurfaceMismatch": false
+    }
+  ]
+}

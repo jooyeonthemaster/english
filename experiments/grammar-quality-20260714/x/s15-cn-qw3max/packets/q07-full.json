@@ -1,0 +1,170 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense",
+    "grammar-error-not-mutated",
+    "grammar-error-not-mutated",
+    "grammar-underline-wide",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-answer-point-not-core"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=j  (B):dec=i  (C):dec=g  (D):dec=h  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 148,
+        "relPos": 0.215,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 170,
+        "relPos": 0.247,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 220,
+        "relPos": 0.319,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 334,
+        "relPos": 0.485,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 518,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.752,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "**다음 글의 밑줄 친 부분 중 어법상 가장 부적절한 것은?**",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has just ceased",
+        "isError": true,
+        "correction": "has just ceased",
+        "errorExpression": "has just ceased",
+        "surroundingText": "...has just ceased - yet we hadn't noticed...",
+        "pointCode": "j"
+      },
+      {
+        "label": "(B)",
+        "expression": "we hadn't noticed",
+        "isError": false,
+        "correction": "we hadn't noticed",
+        "errorExpression": "we hadn't noticed",
+        "surroundingText": "...yet we hadn't noticed the sound while it was ongoing.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(C)",
+        "expression": "Your auditory areas were predicting",
+        "isError": false,
+        "correction": "Your auditory areas were predicting",
+        "errorExpression": "Your auditory areas were predicting",
+        "surroundingText": "Your auditory areas were predicting its continuation...",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "you paid it no attention",
+        "isError": false,
+        "correction": "you paid it no attention",
+        "errorExpression": "you paid it no attention",
+        "surroundingText": "...and as long as the noise didn't change you paid it no attention.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(E)",
+        "expression": "people called the police",
+        "isError": false,
+        "correction": "people called the police",
+        "errorExpression": "people called the police",
+        "surroundingText": "...people called the police in the middle of the night claiming that something woke them up.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has just ceased"
+      },
+      {
+        "label": "(B)",
+        "text": "we hadn't noticed"
+      },
+      {
+        "label": "(C)",
+        "text": "Your auditory areas were predicting"
+      },
+      {
+        "label": "(D)",
+        "text": "you paid it no attention"
+      },
+      {
+        "label": "(E)",
+        "text": "people called the police"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "‘we hadn't noticed’는 과거 어느 시점 이전까지 계속되지 않았던 ‘주의하지 않음’을 나타내는 과거 완료로, ‘has just ceased’(현 시점 기준)가 아니라 ‘had just ceased’(과거 기준)와 호응하므로 어법상 적절합니다.",
+      "(C)": "‘were predicting’은 과거 특정 시점 동안 지속된 예측 활동을 나타내는 과거 진행형으로, ‘moment after moment’라는 부사구와 자연스럽게 어울립니다.",
+      "(D)": "‘pay no attention (to ~)’은 관용적인 표현이며, ‘as long as the noise didn't change’라는 조건절과 함께 과거 시제로 사용된 점에서 어법상 적절합니다.",
+      "(E)": "‘called’는 뉴욕의 고가열차가 운행을 멈춘 직후라는 과거 시점을 서술하는 일반 과거 시제로, 문맥상 어법상 전혀 문제가 없습니다."
+    },
+    "explanation": "정답은 ①번 (A)입니다. 밑줄 친 (A) 부분 ‘has just ceased’는 현재완료이지만, 이 문장 전체는 우리가 ‘과거에’ 특정 소음이 멈춘 것을 갑자기 알아차렸다는 경험을 말하고 있습니다. 이때 ‘has just ceased’는 ‘지금 막 멈췄다’는 의미로, 현재와 연결되어야 하는데, 뒤이어 나오는 ‘we hadn’t noticed’(과거완료)와 시제가 맞지 않습니다. 이 경험을 과거 기준으로 서술하려면 ‘had just ceased’(과거완료)가 되어야 앞뒤 시제가 일관되고, ‘그 소리가 멈추기 전까지 우리는 주의하지 않았다’는 의미가 자연스럽게 전달됩니다. 따라서 (A)는 어법상 명백한 비문입니다.",
+    "keyPoints": [
+      "과거 기준 서술에서 현재완료 사용은 시제 불일치",
+      "‘had just ceased’와 ‘hadn’t noticed’의 과거완료 호응",
+      "지문 전체 시제 흐름: 과거 경험 → 뇌의 과거 작동 방식 설명 → 역사적 과거 사례"
+    ],
+    "tags": [
+      "수능 영어",
+      "어법 오류",
+      "시제 일치",
+      "과거완료",
+      "현재완료 오용"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, __(A) has just ceased__ - yet __(B) we hadn't noticed__ the sound while it was ongoing. __(C) Your auditory areas were predicting__ its continuation, moment after moment, and as long as the noise didn't change __(D) you paid it no attention__. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, __(E) people called the police__ in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments."
+  }
+}

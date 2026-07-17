@@ -1,0 +1,774 @@
+{
+  "id": "b02-c4",
+  "unitId": "b02",
+  "order": 4,
+  "title": "5형식 SVOC — 목적격보어의 형태",
+  "oneLiner": "동사의 종류와 목적어의 능동·수동 관계가 목적격보어의 형태(원형·to부정사·-ing·p.p.)를 결정합니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "별표4 #10 문장의 형식(중 ●)",
+      "docs/study-os-spec.md §2.3 b02 문장의 다섯 형식",
+      "천일문 중등 — 문장의 형식(SVOC) 단원"
+    ]
+  },
+  "lenses": ["L1", "L3"],
+  "confusableWith": ["b02-c1", "b02-c2", "b02-c3", "u04-c3"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 1,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The instructor allowed the students to record the lecture.",
+        "The instructor allowed the students record the lecture."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 to 하나입니다. 이 레슨을 마치면 어떤 동사가 to 를 부르고 어떤 동사가 부르지 않는지 말할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "목적격보어",
+      "question": "2형식의 보어는 주어를 설명했습니다. 목적어를 설명하는 보어는 무엇일까요?",
+      "plain": "목적격보어는 목적어를 한 번 더 설명하는 말입니다. 2형식의 보어(주격보어)가 주어를 설명했다면, 이 목적격보어는 목적어를 설명합니다. \"보고서가 미완성이다\"의 '미완성'처럼 목적어의 상태나 동작을 채워 뜻을 완성합니다.",
+      "analogy": "증명사진 한 장만 보면 그 사람이 지금 어떤 상태인지 모릅니다. 사진 밑에 \"면접 대기 중\"이라는 한 줄이 붙는 순간 상황이 분명해집니다. 목적격보어는 목적어라는 사진 밑에 붙는 그 설명 한 줄입니다.",
+      "whyItMatters": "수능 어법은 이 자리의 형태를 집요하게 묻습니다 — 동사원형인가, to부정사인가, -ing 인가, 과거분사인가. 동사의 종류와 목적어의 능동·수동 관계, 이 두 가지만 확인하면 답이 정해집니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "목적격보어의 다섯 얼굴",
+      "intro": "목적격보어 자리에 설 수 있는 형태를 한 항목씩 만납니다. 예문의 굵은 말이 그 보어입니다.",
+      "entries": [
+        {
+          "head": "목적격보어 — 목적어를 한 번 더 설명하는 말",
+          "body": "5형식(SVOC)은 목적어 뒤에 그 목적어를 설명하는 보어가 하나 더 붙는 문장입니다. 2형식의 주격보어가 주어를 설명했다면, 이 목적격보어는 목적어를 설명합니다. 목적어와 보어 사이에는 \"목적어가 보어이다·보어한다\"는 관계가 성립합니다.",
+          "example": {
+            "en": "The judges considered the design **original**.",
+            "ko": "심사위원들은 그 디자인이 독창적이라고 여겼습니다.",
+            "note": "'디자인이 독창적이다'라는 관계가 성립하므로 original 은 목적격보어입니다."
+          }
+        },
+        {
+          "head": "형용사·명사 보어 — 상태와 신분",
+          "body": "목적격보어 자리에는 형용사와 명사가 올 수 있습니다. 부사는 이 자리에 서지 못합니다.",
+          "example": {
+            "en": "Constant practice keeps the skill **sharp**.",
+            "ko": "꾸준한 연습은 그 기술을 예리하게 유지합니다.",
+            "note": "sharp 는 the skill 의 상태를 설명하는 형용사 보어입니다. 부사 sharply 는 올 수 없습니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "to부정사 보어 — 다수파",
+          "body": "want·ask·allow·expect·advise·encourage·force 등 대다수의 5형식 동사는 목적격보어로 to부정사를 부릅니다. 목록보다 \"사역·지각만 빼면 대부분 to부정사\"로 기억합니다.",
+          "example": {
+            "en": "The doctor advised the patient **to rest** for a week.",
+            "ko": "의사는 환자에게 일주일 동안 쉬라고 권했습니다.",
+            "note": "advise 는 to부정사를 부르는 다수파 동사입니다."
+          },
+          "pin": "팁"
+        },
+        {
+          "head": "동사원형 보어 — 사역·지각동사",
+          "body": "사역동사 make·let·have 와 지각동사 see·hear·watch·feel·notice 는 to 없이 동사원형을 부릅니다. 시험이 가장 좋아하는 소수파입니다.",
+          "example": {
+            "en": "The teacher let the class **leave** early.",
+            "ko": "그 교사는 학급이 일찍 나가도록 두었습니다.",
+            "note": "let 은 사역동사이므로 to leave 가 아니라 동사원형 leave 입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "-ing 보어 — 한창인 장면",
+          "body": "지각동사는 동작이 진행 중임을 강조할 때 -ing 보어도 씁니다. 원형은 처음부터 끝까지 본 것, -ing 는 한창인 장면을 본 것입니다.",
+          "example": {
+            "en": "We watched the technician **installing** the new equipment.",
+            "ko": "우리는 그 기술자가 새 장비를 설치하고 있는 것을 지켜보았습니다.",
+            "note": "설치가 한창인 장면을 본 것이므로 installing 이 자연스럽습니다."
+          }
+        },
+        {
+          "head": "과거분사 보어 — 목적어가 당하는 쪽",
+          "body": "목적어가 그 동작을 하는 쪽이 아니라 당하는 쪽이면 보어는 과거분사입니다. 어떤 동사군이든 이 관계 확인이 먼저입니다.",
+          "example": {
+            "en": "The manager had the invoice **corrected** at once.",
+            "ko": "그 관리자는 즉시 송장이 수정되게 했습니다.",
+            "note": "송장은 수정되는 쪽이므로 correct 가 아니라 corrected 입니다."
+          },
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "목적격보어 사냥",
+      "instruction": "이 문장에서 목적격보어를 전부 찾아 탭하십시오. 목적어 뒤에서 그 목적어의 상태나 동작을 설명하는 말이 목적격보어입니다.",
+      "hitLabel": "목적격보어",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "news", "hit": false },
+        { "t": "made", "hit": false },
+        { "t": "everyone", "hit": false },
+        { "t": "nervous", "hit": true },
+        { "t": "and", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "boss", "hit": false },
+        { "t": "had", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "schedule", "hit": false },
+        { "t": "changed", "hit": true }
+      ],
+      "ko": "그 소식은 모두를 불안하게 만들었고, 사장은 일정이 변경되게 했습니다.",
+      "explain": "nervous 는 목적어 everyone 의 상태를 설명하는 형용사 보어이고, changed 는 목적어 the schedule 이 변경되는 쪽이므로 과거분사 보어입니다. made·had 는 본동사이고 everyone·the schedule 은 목적어이므로 사냥 대상이 아닙니다."
+    },
+    {
+      "id": "b5",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "동사군 × 능동·수동 한 장 정리",
+      "columns": ["동사군", "목적어가 하는 쪽(능동)", "목적어가 당하는 쪽(수동)"],
+      "rows": [
+        {
+          "cells": ["사역 make·let·have", "동사원형", "과거분사 (단 let은 be + 과거분사)"],
+          "example": {
+            "en": "The landlord let the tenants **repaint** the walls.",
+            "ko": "집주인은 세입자들이 벽을 다시 칠하도록 두었습니다.",
+            "note": "세입자가 칠하는 쪽이므로 동사원형 repaint 입니다."
+          }
+        },
+        {
+          "cells": ["지각 see·hear·watch·feel·notice", "동사원형 (진행 강조는 -ing)", "과거분사"],
+          "example": {
+            "en": "I felt the ground **shake** for a few seconds.",
+            "ko": "나는 땅이 몇 초 동안 흔들리는 것을 느꼈습니다.",
+            "note": "땅이 흔들리는 쪽이므로 동사원형 shake 입니다. 여기 feel 은 5형식 지각동사입니다. 2형식 감각동사 feel(형용사 보어)과 달리, 지각동사 feel 은 동사원형 보어를 부릅니다."
+          }
+        },
+        {
+          "cells": ["help", "동사원형·to부정사 모두", "—"]
+        },
+        {
+          "cells": ["want·need 계열", "to부정사", "과거분사"],
+          "example": {
+            "en": "They need the documents **translated** by Monday.",
+            "ko": "그들은 그 문서들이 월요일까지 번역되어 있기를 원합니다.",
+            "note": "문서는 번역되는 쪽이므로 과거분사 translated 입니다."
+          }
+        },
+        {
+          "cells": ["allow·ask·expect 등 그 밖", "to부정사", "to be + 과거분사"],
+          "example": {
+            "en": "The airline expects all bags **to be checked** at the gate.",
+            "ko": "그 항공사는 모든 가방이 게이트에서 검사될 것으로 예상합니다.",
+            "note": "가방은 검사되는 쪽이므로 to be checked 입니다."
+          }
+        }
+      ],
+      "takeaway": "이 표의 축은 두 개뿐입니다 — 어떤 동사인가(세로), 목적어가 하는 쪽인가 당하는 쪽인가(가로). 이 두 질문이 이 레슨의 전부입니다."
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "동사원형을 부르는 사역 3 · 지각 5",
+      "why": "목적격보어 문제의 첫 갈림길은 \"이 동사가 사역·지각인가\"입니다. 이 여덟을 즉시 대지 못하면 매 문항마다 목록을 더듬다가 정작 능동·수동 판단을 놓칩니다. 구구단처럼 나와야 도구가 됩니다.",
+      "device": "시키는 셋 — 메이크·렛·해브(make·let·have). 지켜보는 다섯 — 씨·히어·워치·필·노티스(see·hear·watch·feel·notice). \"시켜 놓고 지켜본다\"로 묶어 두 박자로 세 번 소리 내어 읽으십시오. help 는 양쪽 문에 발을 걸친 경첩입니다.",
+      "items": [
+        { "cue": "시키는 셋(사역)", "answer": "make · let · have — 목적격보어는 동사원형" },
+        { "cue": "지켜보는 다섯(지각)", "answer": "see · hear · watch · feel · notice — 동사원형(진행은 -ing)" },
+        { "cue": "양쪽에 발 걸친 하나", "answer": "help — 동사원형과 to부정사 모두 허용" },
+        { "cue": "그 밖의 5형식 동사", "answer": "want · ask · allow · expect · advise 등 — to부정사" },
+        { "cue": "목적어가 당하는 쪽이면", "answer": "동사군보다 우선 — 사역·지각·want 계열은 과거분사" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "원형의 관문",
+      "mission": "목적격보어로 동사원형을 부르는 사역·지각동사만 전부 고르십시오. to부정사를 부르는 침입자가 다섯 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "make",
+        "let",
+        "have",
+        "see",
+        "hear",
+        "watch",
+        "feel",
+        "notice",
+        "want",
+        "allow",
+        "ask",
+        "expect",
+        "advise"
+      ],
+      "answers": [
+        "make",
+        "let",
+        "have",
+        "see",
+        "hear",
+        "watch",
+        "feel",
+        "notice"
+      ],
+      "passText": "여덟을 전부 가려냈습니다. 이제 어떤 동사를 만나도 첫 갈림길에서 머뭇거리지 않습니다. 관문이 열립니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 시키는 셋과 지켜보는 다섯입니다. want·allow·ask·expect·advise 는 전부 to 를 데리고 다니는 다수파입니다."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "title": "목적어 뒤에 보어가 하나 더 온다",
+      "rule": "5형식(SVOC)은 목적어만으로 뜻이 끝나지 않고, 그 목적어의 상태나 동작을 설명하는 목적격보어가 뒤에 하나 더 붙는 문장입니다.",
+      "examples": [
+        {
+          "en": "The committee found the report **incomplete**.",
+          "ko": "위원회는 그 보고서가 미완성이라고 판단했습니다.",
+          "note": "목적어 the report 와 보어 incomplete 사이에 '보고서가 미완성이다'라는 관계가 성립합니다. 그래서 incomplete 는 목적격보어입니다."
+        },
+        {
+          "en": "Many critics consider the novel **a masterpiece**.",
+          "ko": "많은 비평가는 그 소설을 걸작으로 여깁니다.",
+          "note": "목적격보어는 형용사뿐 아니라 명사도 될 수 있습니다. a masterpiece 는 the novel 을 설명합니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 1,
+      "title": "대부분의 5형식 동사는 to부정사를 부른다",
+      "rule": "want·ask·allow·expect·advise·encourage·enable·force 처럼 대다수의 5형식 동사는 목적격보어로 to부정사를 씁니다.",
+      "examples": [
+        {
+          "en": "The manager wants every member **to submit** the form by Friday.",
+          "ko": "관리자는 모든 구성원이 금요일까지 그 서식을 제출하기를 원합니다.",
+          "note": "want 의 목적격보어는 to부정사입니다. submit 만 쓰면 어법상 틀립니다."
+        },
+        {
+          "en": "The new rule enables researchers **to access** the archive online.",
+          "ko": "새 규정은 연구자들이 온라인으로 그 자료실에 접근할 수 있게 합니다.",
+          "note": "enable 도 to부정사 보어를 부릅니다. 목적어 researchers 가 access 하는 주체입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 동사가 능동 관계의 목적격보어로 무엇을 부르는지 분류하십시오.",
+      "buckets": [
+        { "id": "root", "label": "동사원형을 부른다" },
+        { "id": "to", "label": "to부정사를 부른다" }
+      ],
+      "chips": [
+        { "text": "make", "bucketId": "root", "why": "사역동사입니다. made the players run 처럼 동사원형이 옵니다." },
+        { "text": "let", "bucketId": "root", "why": "사역동사입니다. let us enter 처럼 동사원형이 옵니다." },
+        { "text": "have", "bucketId": "root", "why": "사역동사입니다. had the assistant record 처럼 동사원형이 옵니다." },
+        { "text": "watch", "bucketId": "root", "why": "지각동사입니다. watched the technician install 처럼 동사원형이 옵니다." },
+        { "text": "want", "bucketId": "to", "why": "wants every member to submit 처럼 to부정사가 옵니다." },
+        { "text": "ask", "bucketId": "to", "why": "asked the team to hurry 처럼 to부정사가 옵니다." },
+        { "text": "allow", "bucketId": "to", "why": "allows employees to work 처럼 to부정사가 옵니다." },
+        { "text": "expect", "bucketId": "to", "why": "expects the price to rise 처럼 to부정사가 옵니다." }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "title": "사역동사·지각동사는 동사원형을 부른다",
+      "rule": "사역동사(make·let·have)와 지각동사(see·hear·watch·feel·notice)는 목적격보어로 to 없는 동사원형을 씁니다.",
+      "examples": [
+        {
+          "en": "The coach made the players **run** an extra lap.",
+          "ko": "그 감독은 선수들에게 한 바퀴를 더 뛰게 했습니다.",
+          "note": "사역동사 make 의 목적격보어는 동사원형입니다. to run 은 쓰지 않습니다."
+        },
+        {
+          "en": "We heard the speaker **mention** the same statistic twice.",
+          "ko": "우리는 그 발표자가 같은 통계를 두 번 언급하는 것을 들었습니다.",
+          "note": "지각동사 hear 의 목적격보어도 동사원형입니다. 진행 중인 장면을 강조하려면 mentioning 도 가능합니다."
+        },
+        {
+          "en": "Regular feedback helps students **improve** their writing.",
+          "ko": "정기적인 피드백은 학생들이 글쓰기를 향상시키도록 돕습니다.",
+          "note": "help 는 improve 와 to improve 를 모두 허용합니다. 이 점에서 다른 동사와 다릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "RULE",
+      "tier": 2,
+      "title": "목적어가 당하는 쪽이면 과거분사",
+      "rule": "목적어가 그 동작을 당하는 쪽이면 목적격보어는 과거분사입니다 — 사역동사 have·make 도, 지각동사도, want 계열도 같습니다.",
+      "examples": [
+        {
+          "en": "She had her essay **reviewed** by a professor.",
+          "ko": "그녀는 자신의 소논문을 교수에게 검토받았습니다.",
+          "note": "소논문은 스스로 검토하지 못하고 검토되는 쪽입니다. 그래서 review 가 아니라 reviewed 입니다."
+        },
+        {
+          "en": "The witness heard his name **called** from the hallway.",
+          "ko": "그 목격자는 복도에서 자신의 이름이 불리는 것을 들었습니다.",
+          "note": "지각동사 뒤라도 목적어가 당하는 쪽이면 과거분사를 씁니다. 이름은 불리는 쪽입니다."
+        },
+        {
+          "en": "The speaker could not make herself **heard** over the noise.",
+          "ko": "그 발표자는 소음 때문에 자신의 말을 들리게 할 수 없었습니다.",
+          "note": "herself 는 듣는 쪽이 아니라 들리는 쪽이므로 hear 가 아니라 heard 입니다. allow·expect 처럼 to부정사를 부르는 동사군은 같은 상황에서 to be + 과거분사를 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "목적격보어가 과거분사인 문장의 해부",
+      "tokens": [
+        { "t": "The editor", "role": "S" },
+        { "t": "had", "role": "V" },
+        { "t": "the manuscript", "role": "O" },
+        { "t": "checked", "role": "C" },
+        { "t": "by two reviewers", "role": "M" }
+      ],
+      "ko": "그 편집자는 원고를 두 명의 검토자에게 점검받았습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "by two reviewers 는 행위자를 덧붙이는 전치사구입니다. 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 주어와 본동사를 확인합니다",
+          "roles": ["S", "V"],
+          "note": "주어는 The editor 이고 본동사는 사역동사 had 입니다. had 는 뒤에 목적어와 목적격보어를 함께 부릅니다."
+        },
+        {
+          "label": "③ 목적어를 확인합니다",
+          "roles": ["O"],
+          "note": "had 바로 뒤의 the manuscript 가 목적어입니다. 여기서 문장이 끝나면 뜻이 완성되지 않습니다."
+        },
+        {
+          "label": "④ 목적격보어의 형태를 결정합니다",
+          "roles": ["C"],
+          "note": "원고는 점검하는 쪽이 아니라 점검받는 쪽입니다. 목적어가 당하는 쪽이므로 과거분사 checked 가 옳습니다."
+        }
+      ],
+      "conclusion": "사역동사 have 라고 해서 언제나 동사원형이 오는 것이 아닙니다. 목적어와 보어의 관계가 능동이면 원형, 수동이면 과거분사입니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b02-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The rules allow each participant {{blank}} two questions.",
+          "options": ["to ask", "ask"],
+          "answer": 0,
+          "translation": "그 규정은 각 참가자가 두 개의 질문을 하도록 허용합니다.",
+          "explanation": "allow 는 목적격보어로 to부정사를 부르는 동사입니다. 사역동사가 아니므로 동사원형 ask 는 쓸 수 없습니다.",
+          "trapTags": ["to-infinitive-oc"]
+        },
+        {
+          "id": "b02-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The instructor made the students [[u:to repeat]] the experiment.",
+          "isCorrect": false,
+          "correction": "repeat",
+          "translation": "그 강사는 학생들에게 그 실험을 다시 하게 했습니다.",
+          "explanation": "make 는 사역동사이므로 목적격보어에 동사원형이 옵니다. 학생들이 실험을 다시 하는 쪽이므로 능동이고, to repeat 이 아니라 repeat 이 옳습니다.",
+          "trapTags": ["causative-bare-infinitive"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "목적격보어의 형태를 정하는 4단계",
+      "steps": [
+        {
+          "text": "동사 뒤의 명사를 목적어로 잡고, 그 뒤에 성분이 더 남아 있는지 확인합니다.",
+          "applyNote": "let 뒤에는 the assistant 가, had 뒤에는 the report 가 목적어이고, 두 자리 모두 뒤에 성분이 더 남아 있습니다."
+        },
+        {
+          "text": "목적어와 그 뒤 성분 사이에 '무엇이 무엇이다 · 무엇을 한다'는 관계가 성립하면 그것이 목적격보어입니다.",
+          "applyNote": "'조수가 일정을 처리한다', '보고서가 인쇄된다'는 관계가 성립하므로 handle 과 printed 는 목적격보어입니다."
+        },
+        {
+          "text": "목적어가 그 동작을 하는 쪽인지 당하는 쪽인지 봅니다. 당하는 쪽이면 보어는 수동형입니다 — 사역·지각동사와 want 계열이면 과거분사(had the report printed), 그 밖의 to부정사 동사군이면 to be + 과거분사(allowed the door to be opened)입니다.",
+          "applyNote": "보고서는 스스로 인쇄하지 못하고 인쇄되는 쪽이고 had 는 사역동사이므로 printed 입니다."
+        },
+        {
+          "text": "하는 쪽이면 동사가 형태를 결정합니다. 사역·지각동사는 동사원형, 그 밖의 동사는 대체로 to부정사입니다.",
+          "applyNote": "조수는 일정을 처리하는 쪽이고 let 은 사역동사이므로 to handle 이 아니라 동사원형 handle 입니다."
+        }
+      ],
+      "example": {
+        "en": "The director **let** the assistant **handle** the schedule and **had** the report **printed** in advance.",
+        "ko": "그 책임자는 조수가 일정을 처리하도록 두었고 보고서를 미리 인쇄시켰습니다.",
+        "note": "같은 문장 안에서 사역동사가 둘이지만, 목적어가 하는 쪽이냐 당하는 쪽이냐에 따라 보어의 형태가 갈립니다."
+      }
+    },
+    {
+      "id": "b16",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The company had its old servers ( replace / replaced ) last summer.",
+      "steps": [
+        {
+          "title": "① 목적어를 잡습니다",
+          "body": "본동사는 had 이고, 그 뒤의 its old servers 가 목적어입니다. 괄호는 목적어 뒤에 남은 자리이므로 목적격보어 자리입니다."
+        },
+        {
+          "title": "② 목적어와 보어의 관계를 봅니다",
+          "body": "서버가 무엇을 교체하는 것이 아니라, 서버가 교체되는 것입니다. 목적어는 동작을 당하는 쪽입니다."
+        },
+        {
+          "title": "③ 능동인지 수동인지 확정합니다",
+          "body": "목적어가 당하는 쪽이므로 목적격보어는 과거분사여야 합니다. 사역동사 have 뒤라고 해서 무조건 동사원형이 오는 것이 아닙니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "replace 를 넣으면 '서버가 무언가를 교체한다'는 뜻이 되어 문장이 무너집니다. replaced 가 옳습니다."
+        }
+      ],
+      "answer": "replaced",
+      "ko": "그 회사는 지난여름에 낡은 서버들을 교체시켰습니다."
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The passengers heard their flight number ( announce / announced ) over the speakers.",
+      "givenSteps": [
+        "① 본동사는 지각동사 hear 이고, 그 뒤의 their flight number 가 목적어입니다. 괄호는 목적격보어 자리입니다.",
+        "② 목적어와 보어의 관계를 봅니다 — 편명이 무언가를 방송하는 것이 아니라, 편명이 방송되는 것입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에 들어갈 형태는 무엇입니까?",
+      "options": [
+        "announced — 목적어가 동작을 당하는 쪽이므로 과거분사입니다",
+        "announce — 지각동사 뒤에는 언제나 동사원형이 오기 때문입니다",
+        "to announce — 지각동사도 to부정사 보어를 받기 때문입니다"
+      ],
+      "answer": 0,
+      "explain": "지각동사 뒤라는 사실만으로 형태가 정해지지 않습니다. 목적어 their flight number 는 방송되는 쪽이므로 과거분사 announced 가 옳습니다. announce 를 넣으면 편명이 스스로 방송한다는 뜻이 되고, 지각동사는 to부정사 보어를 받지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "보어 형태 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 동사의 종류와 능동·수동 관계, 두 가지만 보면 됩니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "make 의 목적격보어는 능동 관계일 때 동사원형입니다.",
+          "isTrue": true,
+          "why": "make 는 사역동사입니다. made the players run 처럼 to 없이 동사원형이 옵니다."
+        },
+        {
+          "statement": "allow 는 목적격보어로 동사원형을 부릅니다.",
+          "isTrue": false,
+          "why": "allow 는 사역동사가 아닙니다. allowed us to enter 처럼 to부정사를 부릅니다."
+        },
+        {
+          "statement": "목적어가 동작을 당하는 쪽이면 have 뒤라도 과거분사가 옵니다.",
+          "isTrue": true,
+          "why": "had the essay reviewed 처럼 목적어가 당하는 쪽이면 사역동사 뒤라도 과거분사입니다."
+        },
+        {
+          "statement": "지각동사의 목적격보어로 to부정사도 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "지각동사는 to부정사 보어를 받지 않습니다. 동사원형이나, 진행을 강조하는 -ing 만 가능합니다."
+        },
+        {
+          "statement": "help 는 동사원형과 to부정사를 모두 허용합니다.",
+          "isTrue": true,
+          "why": "helps students improve 와 helps students to improve 는 둘 다 옳습니다."
+        },
+        {
+          "statement": "be made 뒤에서도 목적격보어는 여전히 동사원형입니다.",
+          "isTrue": false,
+          "why": "수동태가 되면 사라졌던 to 가 되살아납니다. were made to work 처럼 to부정사로 나타납니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "동사원형 보어와 to부정사 보어",
+      "columns": ["동사원형 (사역·지각동사)", "to부정사 (그 밖의 5형식 동사)"],
+      "rows": [
+        {
+          "criterion": "대표 동사",
+          "a": "make, let, have, see, hear, watch, feel",
+          "b": "want, ask, allow, expect, advise, encourage, force"
+        },
+        {
+          "criterion": "능동 관계일 때 보어 형태",
+          "a": "동사원형 (지각동사는 진행을 강조하면 -ing 도 가능)",
+          "b": "to부정사"
+        },
+        {
+          "criterion": "수동 관계일 때 보어 형태",
+          "a": "과거분사 (had the report printed)",
+          "b": "want·need 계열은 과거분사 (wanted the contract signed), allow·ask·expect·advise·encourage·force 계열은 to be + 과거분사 (allows the form to be submitted)"
+        },
+        {
+          "criterion": "수동태 문장으로 바꿀 때",
+          "a": "make·see·hear·watch·feel 만 해당합니다 — be made / be seen + to부정사로 사라졌던 to 가 되살아납니다. 사역 have 는 이 수동태를 만들지 않고, let 은 be allowed to 로 바꿔 씁니다",
+          "b": "be allowed / be asked + to부정사 — 형태가 그대로입니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The guide **let** us **enter** the hall before the ceremony.",
+          "ko": "그 안내자는 우리가 식 전에 그 홀에 들어가도록 두었습니다.",
+          "note": "사역동사 let 이므로 동사원형 enter 입니다."
+        },
+        {
+          "en": "The guide **allowed** us **to enter** the hall before the ceremony.",
+          "ko": "그 안내자는 우리가 식 전에 그 홀에 들어가도록 허락했습니다.",
+          "note": "뜻은 비슷하지만 allow 는 to부정사를 부릅니다. 동사가 바뀌면 보어의 형태도 바뀝니다."
+        },
+        {
+          "en": "The workers **were made to work** two extra hours.",
+          "ko": "그 노동자들은 두 시간을 더 일하도록 강요받았습니다.",
+          "note": "능동문에서는 made them work 였지만, 수동태가 되면 to 가 되살아나 to work 가 됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b02-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The manager wanted the contract {{blank}} before the deadline, so she asked the team to hurry.",
+          "options": ["signed", "sign", "to sign"],
+          "answer": 0,
+          "translation": "그 관리자는 마감 전에 계약서가 서명되기를 원했고, 그래서 팀에 서두르라고 요청했습니다.",
+          "explanation": "want 는 to부정사 보어를 부르는 동사이지만, 그것은 목적어가 동작을 하는 쪽일 때입니다. 계약서는 서명하는 쪽이 아니라 서명되는 쪽이므로 과거분사 signed 가 옳습니다.",
+          "trapTags": ["passive-oc", "to-infinitive-oc"]
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞의 점검 문항(The manager wanted the contract signed before the deadline …)에서 signed 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "목적어 the contract 가 서명되는 쪽이므로, 목적격보어는 능동형이 아니라 과거분사여야 하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 목적어와 목적격보어의 능동·수동 관계가 형태를 결정합니다."
+        },
+        {
+          "text": "want 는 언제나 과거분사 보어를 부르는 동사이기 때문입니다.",
+          "correct": false,
+          "feedback": "want 의 기본 보어는 to부정사입니다. wanted the team to hurry 처럼 목적어가 하는 쪽이면 to부정사가 옵니다. 형태를 가른 것은 동사가 아니라 능동·수동 관계입니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어서 과거형이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "목적격보어는 시제를 갖지 않습니다. 문장의 시제는 본동사 wanted 가 이미 지고 있으므로 시제는 판단 근거가 되지 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 수동태가 되면 사라졌던 to 가 되살아납니다",
+      "body": "사역동사 make 와 지각동사(see·hear 등)는 능동문에서 동사원형 보어를 부릅니다. 그러나 그 문장을 수동태로 바꾸면 목적격보어는 to부정사로 나타납니다. '사역·지각동사 뒤에는 무조건 원형'이라고만 외운 학생은 be made 뒤의 to 를 오답으로 잘못 지목합니다.",
+      "example": {
+        "en": "The volunteers **were made to fill out** the same form twice.",
+        "ko": "그 자원봉사자들은 같은 서식을 두 번 작성하도록 강요받았습니다.",
+        "note": "능동문은 The staff made the volunteers fill out … 였습니다. 수동태에서는 to fill out 이 옳고, fill out 은 틀립니다."
+      }
+    },
+    {
+      "id": "b23",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 교사는 학생들이 자신의 답을 설명하게 했습니다.",
+      "answer": ["The teacher", "had", "the students", "explain", "their answers"],
+      "tiles": [
+        "The teacher",
+        "had",
+        "the students",
+        "explain",
+        "their answers",
+        "to explain"
+      ],
+      "explanation": "have 는 사역동사이고 학생들이 설명하는 쪽이므로 목적격보어는 동사원형 explain 입니다. to explain 은 쓰이지 않습니다."
+    },
+    {
+      "id": "b24",
+      "type": "ERROR_HUNT",
+      "tier": 2,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The head of the laboratory [[1:had]] the samples [[2:analyzed]] overnight and let the assistants [[3:to record]] every result that the machine [[4:produced]].",
+      "answer": 3,
+      "correction": "record",
+      "rationales": [
+        "주절의 본동사인 사역동사 had 입니다. 뒤에 목적어 the samples 와 목적격보어 analyzed 를 제대로 부르고 있으므로 문제가 없습니다. 과거형 had 는 주어의 수와 무관합니다.",
+        "표본은 분석하는 쪽이 아니라 분석되는 쪽입니다. 목적어가 당하는 쪽이므로 과거분사가 옳습니다.",
+        "let 은 사역동사이므로 목적격보어에 동사원형이 옵니다. 조수들이 기록하는 쪽이므로 to record 를 record 로 고칩니다.",
+        "관계대명사 that 이 연 절의 동사입니다. 기계가 산출하는 쪽이므로 능동 과거형이 맞습니다."
+      ],
+      "ko": "그 실험실의 책임자는 표본을 밤새 분석시켰고, 조수들이 그 기계가 산출한 모든 결과를 기록하도록 두었습니다."
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "title": "시험에서는 이렇게 나옵니다",
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 목적격보어의 형태를 일부러 틀리게 준 문장을 주고 바르게 고쳐 쓰게 합니다. 어느 동사가 부른 보어인지 밝히고 형태를 고쳐야 만점입니다.",
+          "sample": {
+            "en": "The coach made the players to practice for three more hours.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "to practice → practice. 사역동사 make 의 목적격보어는 동사원형입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 목적격보어 자리에 -ing 를 놓아 두고, 목적어가 그 동작을 당하는 쪽이 아닌지 묻습니다. 목적어와 보어의 능동·수동 관계가 판단의 축입니다.",
+          "sample": {
+            "en": "The researchers had the data [[u:collecting]] by trained assistants over two years.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "collected. 자료는 수집하는 쪽이 아니라 수집되는 쪽이므로 과거분사가 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "보어 형태의 재판관",
+      "intro": "나는 목적어 뒤의 자리를 다스리는 재판관입니다. 원형·to부정사·-ing·과거분사 — 네 형태 중 오직 하나만이 각 자리의 주인입니다. 네 번의 판결로 자리를 보는 눈이 있음을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The security team noticed a drone {{blank}} over the stadium.",
+          "options": ["hovering", "to hover"],
+          "answer": 0,
+          "why": "notice 는 지각동사이므로 to부정사 보어를 받지 않습니다. 드론이 떠 있는 쪽(능동)이고 한창인 장면이므로 hovering 이 옳습니다."
+        },
+        {
+          "prompt": "The landlord had the leaking roof {{blank}} before winter.",
+          "options": ["repair", "repaired"],
+          "answer": 1,
+          "why": "지붕은 수리하는 쪽이 아니라 수리되는 쪽입니다. 사역동사 have 뒤라도 목적어가 당하는 쪽이면 과거분사입니다."
+        },
+        {
+          "prompt": "Her parents expected her {{blank}} the family business.",
+          "options": ["run", "to run"],
+          "answer": 1,
+          "why": "expect 는 사역동사가 아니라 to부정사를 부르는 다수파입니다. 그녀가 운영하는 쪽(능동)이므로 to run 입니다."
+        },
+        {
+          "prompt": "The prisoners were made {{blank}} the yard every morning.",
+          "options": ["clean", "to clean"],
+          "answer": 1,
+          "why": "능동문에서는 made them clean 이지만, 수동태 be made 뒤에서는 사라졌던 to 가 되살아나 to clean 이 됩니다."
+        }
+      ],
+      "winText": "재판관이 판결봉을 내려놓습니다. 동사를 확인하고 목적어가 하는 쪽인지 당하는 쪽인지를 물은 판단이 네 번 모두 정확했습니다. 이 자리의 주인을 가리는 눈은 이제 당신의 것입니다.",
+      "loseText": "재판은 아직 끝나지 않았습니다. 오답의 공통점을 보십시오 — 동사만 보고 형태를 정했거나, 능동·수동을 묻지 않았습니다. 정리표의 두 축을 다시 확인하고 오면 법정은 다시 열립니다."
+    },
+    {
+      "id": "b27",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "목적어가 동작을 ___ 쪽이면 목적격보어는 과거분사이고, ___ 쪽이면 사역·지각동사는 ___ 을, 그 밖의 동사는 ___ 을 부릅니다."
+    },
+    {
+      "id": "b28",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "5형식은 목적어 뒤에 그 목적어를 설명하는 목적격보어가 하나 더 오는 문장입니다.",
+        "동사원형을 부르는 것은 시키는 셋(make·let·have)과 지켜보는 다섯(see·hear·watch·feel·notice)뿐입니다. help 는 동사원형과 to부정사를 모두 허용합니다.",
+        "목적어가 동작을 당하는 쪽이면 목적격보어는 수동형입니다 — 사역·지각·want 계열은 과거분사, allow·expect 계열은 to be + 과거분사입니다.",
+        "목적어가 하는 쪽이면 동사가 형태를 결정합니다. 사역·지각동사는 동사원형, 그 밖의 동사는 대체로 to부정사입니다.",
+        "사역동사 make 와 지각동사가 수동태로 바뀌면 목적격보어는 to부정사로 나타납니다."
+      ],
+      "keySentence": {
+        "en": "The editor **had** the manuscript **checked** by two reviewers.",
+        "ko": "그 편집자는 원고를 두 명의 검토자에게 점검받았습니다.",
+        "note": "사역동사 have 뒤라도 목적어가 당하는 쪽이면 과거분사입니다."
+      }
+    },
+    {
+      "id": "b29",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b02-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The new policy allows employees {{blank}} from home twice a week.",
+          "options": ["to work", "work"],
+          "answer": 0,
+          "translation": "새 정책은 직원들이 일주일에 두 번 재택으로 근무하도록 허용합니다.",
+          "explanation": "allow 는 사역동사가 아니라 to부정사 보어를 부르는 동사입니다. 직원들이 근무하는 쪽이므로 능동이고, to work 가 옳습니다.",
+          "trapTags": ["to-infinitive-oc"]
+        },
+        {
+          "id": "b02-c4-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The technician had the broken monitor [[u:replaced]] within a day.",
+          "isCorrect": true,
+          "translation": "그 기술자는 고장 난 모니터를 하루 안에 교체받았습니다.",
+          "explanation": "모니터는 교체하는 쪽이 아니라 교체되는 쪽입니다. 목적어가 당하는 쪽이므로 사역동사 have 뒤라도 과거분사 replaced 가 옳습니다.",
+          "trapTags": ["passive-oc", "causative-bare-infinitive"]
+        },
+        {
+          "id": "b02-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The guard saw a stranger {{blank}} the fence and immediately reported it.",
+          "options": ["climbing", "climbed", "to climb"],
+          "answer": 0,
+          "translation": "그 경비원은 낯선 사람이 담을 넘고 있는 것을 보고 즉시 그것을 신고했습니다.",
+          "explanation": "지각동사 see 의 목적격보어는 동사원형이거나, 진행 중인 동작을 나타내는 -ing 입니다. 낯선 사람은 담을 넘는 쪽이므로 과거분사 climbed 는 성립하지 않고, 지각동사는 to부정사 보어를 받지 않습니다.",
+          "trapTags": ["perception-verb-oc"]
+        }
+      ]
+    }
+  ]
+}

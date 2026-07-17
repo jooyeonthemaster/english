@@ -1,0 +1,35 @@
+{
+  "pid": "P052",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "Seam: pseudo-cleft 'What you need to do ... is + bare VP' — 'find another way to think about the timeframe' is grammatical. Logic: the immediately following example ('tell yourself you have to get it done \"this winter\" rather than \"next year\"') is precisely a reframing of the time label, and the conclusion ('view deadlines as a challenge ... within a period that's imminent') generalizes the same reframing. Perfect forward and backward cohesion."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Grammatically fine in the seam, but logically contradicts the passage: the advice retains the deadline and reframes it as an imminent challenge ('deadlines as a challenge that you have to meet'); it never proposes removing time limits."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "Grammatically fine, but the passage's remedy is to mentally erase the break from the framing (call it 'this winter', not 'next year'), not to organize a schedule around the New Year's break. Using the break as a planning anchor preserves exactly the boundary the text says makes deadlines feel remote. The example is about relabeling, not scheduling."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "Grammatically fine, but logically inverted: pushing the deadline beyond a barrier would place it farther away and make it feel more remote, whereas the text wants the deadline perceived as falling within the current, imminent period."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Grammatically fine, but contradicts 'be less ready to jump into action' being the problem and 'starting - and therefore finishing - in good time' being the goal; manageable stress is presented as a consequence of reframing ('That way the stress is more manageable'), not a precondition to wait for."
+    }
+  ],
+  "note": "Pseudo-cleft frame accepts all five bare-VP options grammatically, so discrimination is purely logical; only ① is instantiated by the example sentence and generalized by the concluding sentence. No alternative reading rescues ②–⑤; single defensible answer."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P046",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'when you are happy' — 주어 you(2인칭)에 be동사 are가 수·인칭 일치. 시간 부사절의 단순 현재로 일반적 사실 진술에도 부합. 흠 없음. 실전에서는 3초 내 통과하는 밑줄."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'That means that if you feel lonely ..., you may struggle ...' — means의 목적어인 명사절을 이끄는 접속사 that. 바로 뒤에 if 조건절이 삽입되어 'that if' 연쇄가 낯설게 보일 수 있으나, that절 내부 구조는 [if-절 + 주절(you may struggle ...)]로 완전하며 정문. 매력적 오답 후보 1: 'that 뒤에 바로 if가 오면 틀린 것 아닌가' 하는 유혹이 있으나, 명사절 접속사 that 뒤에 부사절이 선행 삽입되는 것은 표준 어순이다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'you may struggle to adapt to new information or find creative solutions' — find는 struggle to에 걸리는 to부정사 병렬의 두 번째 항으로, to가 공유되어 (to) adapt ... or (to) find ...로 정문. 매력적 오답 후보 2: 'or 뒤인데 to find나 finding이 되어야 하지 않나' 하고 끌리기 쉽지만, 병렬 시작점을 adapt(원형)로 잡으면 find 원형이 정확히 일치한다. 설령 병렬 시작점을 조동사 may로 잡아 may (struggle ... or find ...)로 읽어도 형태상 원형으로 성립(의미상은 전자가 자연스러움). 어느 해석으로도 어법상 틀리지 않음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'you are more likely to experiencing depression and anxiety' — be likely to는 to부정사(to + 동사원형)를 요구하는 구문이므로 to experiencing은 비문. to experience로 고쳐야 한다. 이 to를 전치사로 볼 수 있는 대안 해석(look forward to -ing, be used to -ing 류)은 likely에는 존재하지 않는다 — likely는 형용사이고 뒤의 to는 부정사 표지다. 대안 구제 불가, 명백한 오류."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'as some individuals use alcohol or drugs to cope with ...' — 이유의 접속사 as절에서 복수 주어 some individuals에 복수 동사 use가 일치. 일반적 사실의 단순 현재. 흠 없음."
+    }
+  ],
+  "note": "실전 풀이 흐름: (D)의 'to experiencing'이 스캔 단계에서 즉시 눈에 걸린다(be likely to + 원형 위반). 유혹 강도가 있었던 선지는 (B)의 'that if' 연쇄와 (C)의 병렬 'or find'였으나, 각각 명사절 접속사 + 삽입 부사절, to 공유 병렬로 정문임이 확정된다. (D)는 전치사 to로 구제할 대안 해석이 전무하여 단독 정답. 지문 논리도 일관적이며 다중 정답 소지 없음."
+}

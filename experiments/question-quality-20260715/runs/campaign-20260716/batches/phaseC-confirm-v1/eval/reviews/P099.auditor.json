@@ -1,0 +1,55 @@
+{
+  "pid": "P099",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "능동/수동 분사 수식 판단 — 축약 관계절(동격) 안의 과거분사 called가 옳은지.",
+      "temptingBecause": "'Such species, ___ keystone species'에서 능동형 calling으로 바꿔야 한다고 착각하거나 정동사가 필요하다고 오판할 수 있다.",
+      "decisiveFlaw": "종(species)은 keystone species로 '불리는' 대상이므로 수동 의미의 과거분사 called가 맞다. 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "동격 접속사 that vs 관계대명사 판별 — 뒤 절의 완전성.",
+      "temptingBecause": "The fact 뒤 that을 관계대명사로 오인하고 뒤 절에 빠진 성분(불완전성)을 찾으려다 오류로 판단할 수 있다.",
+      "decisiveFlaw": "'other species depend on or are greatly affected by the keystone species'는 완전한 절이므로 추상명사 The fact와 동격을 이루는 접속사 that이 맞다. 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "전치사 + 동명사 구조 판단.",
+      "temptingBecause": "become important in 다음에 to부정사(to sustain)나 정동사를 기대해 동명사가 어색하다고 볼 수 있다.",
+      "decisiveFlaw": "in은 전치사이므로 목적어로 동명사 sustaining이 옳다. 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "수동태 과거분사 판단.",
+      "temptingBecause": "would be 다음 능동 원형(eliminate)으로 바꿔야 한다고 오판할 수 있다.",
+      "decisiveFlaw": "대부분의 척추동물은 제거되는 대상이므로 would be eliminated의 수동태 과거분사가 옳다. 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "동명사구 주어-동사 수일치 (정답). 전치사구 뒤 근접 복수명사 attractor를 넘어 진주어를 파악하는 구조 판단.",
+      "temptingBecause": "동사 are 바로 앞의 복수명사 ecosystems를 주어로 착각하면 수일치가 맞아 보인다.",
+      "decisiveFlaw": "진주어는 단수 취급되는 동명사구 'Protecting fig trees'이며, 뒤의 'because it increases'의 단수 it이 이를 확증한다. 따라서 are는 비문이고 is로 고쳐야 하는 유일한 오류다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": true,
+  "grade": "B",
+  "notes": "깨끗한 GRAMMAR_ERROR 문항. V1~V5 모두 통과: 의도된 변형(is->are) 외 손상 없음, 정답 (E) 유일(나머지 4개 밑줄은 독립 분석상 전부 적법), 교정문·발문·해설 자연스럽고 정확, 5개 밑줄 오답해설이 실제 통사와 일치, markedExpressions·keyPoints 동기화 완전. §C KILLER 추가조건 충족: is<->are 최소대립쌍(교정 시 원문 복원), 문맥선호가 아닌 명확한 수일치 판단, 5개 밑줄 각각 point/tempting/correct 설명, 근접 복수명사(ecosystems) attractor로 단순 인접 수일치로는 드러나지 않고 진주어(동명사구) 구조 독해 필요, 동일 point 쉬운 디코이 없음. 다만 수일치 오류는 KILLER치고 상대적으로 탐지가 쉬운 편이라 C5는 3(대체로 정합). 공예 합계 19 (<21)로 A 미달이나 전 항목 3 이상·전 V 통과이므로 B. 작은 상향(더 미묘한 정답 point) 없이도 출제 가능한 안정적 문항."
+}

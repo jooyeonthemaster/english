@@ -1,0 +1,682 @@
+{
+  "id": "b03-c4",
+  "unitId": "b03",
+  "order": 4,
+  "title": "현재완료 — have + p.p.",
+  "oneLiner": "과거의 일이 지금과 이어져 있으면 현재완료 have/has + p.p.를 씁니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 교육과정 별책14 별표4 언어형식 — 시제(현재완료)(중 ●)",
+      "docs/study-os-spec.md §2.3 b03 동사와 시제의 기본",
+      "천일문 중등 GRAMMAR 시제 — 현재완료"
+    ]
+  },
+  "lenses": ["L2"],
+  "confusableWith": ["b03-c2", "b03-c3", "u01-c1"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The company has expanded its research center since 2018.",
+        "The company has expanded its research center in 2018."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 전치사 하나입니다. 이 레슨을 마치면 왜 in 2018 이 현재완료와 함께 설 수 없는지 규칙으로 말할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "현재완료",
+      "question": "과거에 일어난 일인데, 이름에는 왜 '현재'가 붙습니까?",
+      "plain": "현재완료는 have/has 뒤에 과거분사(p.p.)를 붙인 동사 형태입니다. 과거에 시작된 일을 지금과 이어 붙여, 그 일이 현재에 남긴 몫까지 한 번에 말합니다.",
+      "analogy": "과거시제가 그날 찍어 둔 사진 한 장이라면, 현재완료는 그때부터 지금까지 이어 찍는 동영상입니다. 사진은 그 순간에 멈춰 있지만, 이 동영상의 마지막 장면은 언제나 지금입니다.",
+      "whyItMatters": "시제 문항의 정답은 해석의 느낌이 아니라 시간 표현이 가릅니다. 현재완료가 서면 yesterday 한 단어로 정오가 갈리는 문항을 근거를 들어 풀 수 있고, have/has + p.p.를 한 덩어리 본동사로 보는 눈은 뒤의 본동사 판별(u01-c1)로 이어집니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "현재완료 다섯 줄 필기",
+      "intro": "다섯 항목으로 나눠 적습니다. 앞의 둘은 형태, 뒤의 셋은 쓰임입니다.",
+      "entries": [
+        {
+          "head": "형태 — have/has + 과거분사",
+          "body": "주어가 3인칭 단수이면 has, 그 밖에는 have 를 씁니다. 두 낱말이 합쳐 하나의 본동사구가 됩니다.",
+          "example": {
+            "en": "The city **has built** three new libraries.",
+            "ko": "그 도시는 새 도서관 세 개를 세웠습니다.",
+            "note": "The city 가 3인칭 단수이므로 has built 입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "과거분사(p.p.) — 동사의 세 번째 모습",
+          "body": "c1에서 be동사 뒤 수동태로 만난 바로 그 과거분사(p.p.)입니다. go–went–gone 처럼 동사 변화표의 셋째 칸 형태이며, 홀로는 시제가 없으므로 이번에는 have/has 와 합쳐져 본동사가 됩니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "경험 — 지금까지 해 본 적",
+          "body": "태어나서 지금까지 쌓인 경험을 셉니다. ever·never·twice 같은 말과 자주 어울립니다.",
+          "example": {
+            "en": "She **has visited** the national archive twice.",
+            "ko": "그녀는 그 국립 기록관을 두 번 방문한 적이 있습니다.",
+            "note": "언제 갔는지가 아니라 지금까지 몇 번인지를 말합니다."
+          }
+        },
+        {
+          "head": "계속 — 과거에 시작해 지금도",
+          "body": "과거에 시작된 일이 지금까지 이어지고 있음을 말합니다. since(시작점)·for(기간)와 짝을 이룹니다.",
+          "example": {
+            "en": "The observatory **has recorded** the tides since 1974.",
+            "ko": "그 관측소는 1974년 이래로 조수를 기록해 왔습니다.",
+            "note": "since 1974 가 시작점을 열고, 기록은 지금도 이어집니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "완료·결과 — 끝났지만 흔적은 지금",
+          "body": "일 자체는 끝났고 그 결과가 지금 남아 있음을 말합니다. just·already·yet 과 자주 어울립니다.",
+          "example": {
+            "en": "The rain **has stopped**, and the streets are drying now.",
+            "ko": "비가 그쳤고, 지금 거리가 마르고 있습니다.",
+            "note": "그친 것은 과거의 일이지만, 말라 가는 거리가 지금의 결과입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "시간 표현 신호등",
+      "columns": ["시간 표현", "가리키는 것", "현재완료와 함께 설 수 있습니까"],
+      "rows": [
+        {
+          "cells": ["since 2015", "시작점 — 거기서 지금까지", "예 — 대표 짝입니다"],
+          "example": {
+            "en": "The city **has grown** rapidly since 2015.",
+            "ko": "그 도시는 2015년 이래로 빠르게 성장해 왔습니다.",
+            "note": "시작점만 있고 끝은 열려 있으므로 현재완료입니다."
+          }
+        },
+        {
+          "cells": ["for ten years", "기간의 길이", "예 — 기간이 지금까지 이어질 때"],
+          "example": {
+            "en": "The lab **has kept** these samples for ten years.",
+            "ko": "그 실험실은 10년 동안 이 표본들을 보관해 왔습니다.",
+            "note": "보관하는 기간의 끝이 지금에 닿아 있으므로 현재완료입니다."
+          }
+        },
+        {
+          "cells": ["so far", "지금까지", "예 — 구간의 끝이 지금입니다"]
+        },
+        {
+          "cells": ["yesterday", "끝난 하루", "아니오 — 과거시제 전용"],
+          "example": {
+            "en": "The store **closed** early yesterday.",
+            "ko": "그 가게는 어제 일찍 문을 닫았습니다.",
+            "note": "어제로 끝난 일이므로 과거시제입니다."
+          }
+        },
+        {
+          "cells": ["last summer", "끝난 지난여름", "아니오 — 과거시제 전용"]
+        },
+        {
+          "cells": ["in 1998", "못 박힌 지난 연도", "아니오 — 과거시제 전용"],
+          "example": {
+            "en": "The theater **opened** in 1998.",
+            "ko": "그 극장은 1998년에 문을 열었습니다.",
+            "note": "연도가 한 시점을 못 박으므로 과거시제입니다."
+          }
+        },
+        {
+          "cells": ["two days ago", "거슬러 센 끝난 시점", "아니오 — 과거시제 전용"]
+        }
+      ],
+      "takeaway": "끝난 한 시점을 못 박는 표현이 하나라도 보이면 그 문장에서 현재완료는 곧바로 탈락합니다. 시제 판단은 언제나 시간 표현 수색에서 시작하십시오."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "현재완료를 봉쇄하는 시점 표현 — 예·라·인·고",
+      "why": "시제 문항의 첫 동작은 선택지 읽기가 아니라 시간 표현 수색입니다. 봉쇄 표현 넷이 즉시 떠오르지 않으면 우리말 뜻으로 감을 잡다가 함정에 걸립니다. 구구단처럼 반사적으로 나와야 수색이 1초 안에 끝납니다.",
+      "device": "예(yesterday)·라(last ~)·인(in+지난 연도)·고(~ ago) — \"예라, 인고 앞에서 완료의 문은 닫힌다\"를 두 박자로 끊어 세 번 소리 내어 읽으십시오. 문을 여는 열쇠 셋은 since·for·so far 입니다.",
+      "items": [
+        { "cue": "예 — yesterday", "answer": "끝난 하루 — 현재완료 봉쇄, 과거시제" },
+        { "cue": "라 — last ~ (last year)", "answer": "끝난 지난 시점 — 현재완료 봉쇄, 과거시제" },
+        { "cue": "인 — in + 지난 연도 (in 1998)", "answer": "못 박힌 연도 — 현재완료 봉쇄, 과거시제" },
+        { "cue": "고 — ~ ago (two days ago)", "answer": "거슬러 센 끝난 시점 — 현재완료 봉쇄, 과거시제" },
+        { "cue": "since + 시작점", "answer": "거기서 지금까지 — 현재완료와 짝" },
+        { "cue": "for + 기간", "answer": "지금까지 이어진 기간 — 현재완료와 짝" },
+        { "cue": "so far", "answer": "지금까지 — 현재완료와 짝" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "시간 표현 관문",
+      "mission": "현재완료와 함께 설 수 있는 시간 표현만 전부 고르십시오. 현재완료를 봉쇄하는 침입자 넷이 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "since 2015",
+        "yesterday",
+        "for ten years",
+        "last summer",
+        "so far",
+        "in 1998",
+        "two days ago"
+      ],
+      "answers": ["since 2015", "for ten years", "so far"],
+      "passText": "세 열쇠를 정확히 골라냈습니다. 예·라·인·고가 문을 닫고 since·for·so far 가 문을 연다는 것이 손에 붙었습니다. 관문이 열립니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 끝난 한 시점을 못 박는 예·라·인·고는 전부 침입자입니다. 지금까지의 구간을 여는 표현만 남기십시오."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "형태의 규칙",
+      "rule": "현재완료의 형태는 have/has + 과거분사이며, 두 낱말이 합쳐 하나의 본동사구를 이룹니다.",
+      "examples": [
+        {
+          "en": "The city **has built** three new libraries in the last decade.",
+          "ko": "그 도시는 지난 10년 동안 새 도서관을 세 개 세웠습니다.",
+          "note": "주어 The city 가 3인칭 단수이므로 has built 입니다. in the last decade 는 지금까지 이어진 구간이라 현재완료와 어울립니다."
+        },
+        {
+          "en": "Researchers **have collected** data from twelve weather stations.",
+          "ko": "연구자들은 열두 개의 기상 관측소에서 자료를 수집했습니다.",
+          "note": "주어 Researchers 가 복수이므로 have 를 씁니다. never·already 같은 부사가 사이에 끼어도 두 낱말은 한 덩어리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "현재완료 문장의 해부",
+      "tokens": [
+        { "t": "The archive", "role": "S" },
+        { "t": "has preserved", "role": "V" },
+        { "t": "these letters", "role": "O" },
+        { "t": "since 1953", "role": "M" }
+      ],
+      "ko": "그 기록관은 1953년 이래로 이 편지들을 보존해 왔습니다.",
+      "layers": [
+        {
+          "label": "① 시간 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "since 1953 은 언제부터인지만 알려 주는 수식어입니다. 문장의 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "핵 주어는 The archive 이며 3인칭 단수입니다. 따라서 have 가 아니라 has 를 씁니다."
+        },
+        {
+          "label": "③ 본동사구를 한 덩어리로 묶습니다",
+          "roles": ["V"],
+          "note": "has preserved 가 통째로 본동사입니다. has 가 시제를 지고, preserved 는 과거분사로 의미를 담습니다. preserved 만 떼어 보면 본동사가 될 수 없습니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "preserve 는 목적어를 부르는 동사이고, these letters 가 그 목적어입니다."
+        }
+      ],
+      "conclusion": "현재완료는 has + preserved 두 낱말이 합쳐 하나의 본동사입니다. 걷어낸 since 1953 이 그 구간의 시작점을 알려 줍니다."
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 2,
+      "title": "봉쇄의 규칙",
+      "rule": "과거의 한 시점을 못 박는 표현(yesterday·last year·in 1998·two days ago)이 있으면 현재완료를 쓰지 못하고 과거시제를 씁니다.",
+      "examples": [
+        {
+          "en": "The committee **published** the report last March.",
+          "ko": "그 위원회는 지난 3월에 그 보고서를 발간했습니다.",
+          "note": "last March 가 시점을 못 박았습니다. 끝난 과거의 일이므로 과거시제 published 가 옳습니다."
+        },
+        {
+          "en": "The committee **has published** the report, and the debate still continues.",
+          "ko": "그 위원회는 그 보고서를 발간했고, 논쟁은 여전히 이어지고 있습니다.",
+          "note": "시점을 못 박는 표현이 없고 그 일이 지금의 논쟁으로 이어지므로 현재완료가 옳습니다."
+        },
+        {
+          "en": "The committee **has published** the report last March.",
+          "ko": "(그 위원회는 지난 3월에 그 보고서를 발간했습니다)",
+          "note": "현재완료는 지금까지의 구간을 말하는데 last March 는 끝난 한 시점을 못 박습니다. 두 표현이 서로 충돌하므로 성립하지 않습니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "since 와 for 의 분업",
+      "rule": "계속을 말할 때 since 뒤에는 시작된 시점이, for 뒤에는 기간의 길이가 오며 둘 다 현재완료와 짝을 이룹니다.",
+      "examples": [
+        {
+          "en": "The observatory **has recorded** the tides since 1974.",
+          "ko": "그 관측소는 1974년 이래로 조수를 기록해 왔습니다.",
+          "note": "since 1974 는 시작된 시점만 알릴 뿐 끝난 시점을 못 박지 않습니다. 그래서 현재완료와 어울립니다."
+        },
+        {
+          "en": "The two nations **have maintained** the treaty for over thirty years.",
+          "ko": "그 두 나라는 30년 넘게 그 조약을 유지해 왔습니다.",
+          "note": "for 뒤에는 기간의 길이가 옵니다. 그 기간이 지금까지 이어지므로 현재완료입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "과거시제와 현재완료를 가르는 4단계",
+      "steps": [
+        {
+          "text": "과거의 한 시점을 못 박는 표현(yesterday·last year·in 1998·ago)이 있는지 먼저 찾습니다.",
+          "applyNote": "이 문장에는 그런 표현이 없습니다. since the accident 는 시작점만 알릴 뿐 끝난 시점을 못 박지 않습니다."
+        },
+        {
+          "text": "그런 표현이 있으면 과거시제로 확정합니다. 현재완료는 후보에서 지웁니다.",
+          "applyNote": "못 박는 표현이 없으므로 과거시제로 확정할 근거가 없습니다. 판단을 다음 단계로 넘깁니다."
+        },
+        {
+          "text": "없다면 그 일이 지금과 이어져 있는지(경험·계속·완료·결과) 확인합니다. 이어져 있으면 현재완료입니다.",
+          "applyNote": "사고 이후 지금까지 두 차례 점검했다는 뜻이므로 과거의 일이 현재와 이어져 있습니다. 현재완료가 맞습니다."
+        },
+        {
+          "text": "형태를 맞춥니다. 주어가 3인칭 단수면 has, 그 밖에는 have 를 쓰고 뒤에는 반드시 과거분사를 둡니다.",
+          "applyNote": "주어 The engineer 가 3인칭 단수이므로 has 를 쓰고 과거분사 inspected 를 붙여 has inspected 로 완성합니다."
+        }
+      ],
+      "example": {
+        "en": "The engineer **has inspected** the bridge twice since the accident.",
+        "ko": "그 기술자는 사고 이후 그 다리를 두 번 점검했습니다.",
+        "note": "inspected 는 과거형과 과거분사의 형태가 같습니다. 앞에 has 가 있으므로 여기서는 과거분사입니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The research team ( completed / has completed ) the national survey last November.",
+      "steps": [
+        {
+          "title": "① 시점을 못 박는 표현을 찾습니다",
+          "body": "last November 가 있습니다. 지난 11월이라는 끝난 한 시점을 못 박는 표현입니다."
+        },
+        {
+          "title": "② 현재완료를 후보에서 지웁니다",
+          "body": "현재완료는 과거에서 지금까지의 구간을 말합니다. 끝난 한 시점을 못 박는 표현과는 함께 설 수 없습니다."
+        },
+        {
+          "title": "③ 남은 후보를 확인합니다",
+          "body": "남은 것은 과거시제 completed 입니다. 조사가 지난 11월에 끝났다는 사실만 전하면 되므로 의미도 맞습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "has completed 를 넣으면 last November 와 충돌합니다. completed 가 옳습니다."
+        }
+      ],
+      "answer": "completed",
+      "ko": "그 연구팀은 지난 11월에 전국 조사를 마쳤습니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b03-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The city {{blank}} three new bridges since 2015.",
+          "options": ["has built", "builds"],
+          "answer": 0,
+          "translation": "그 도시는 2015년 이래로 새 다리를 세 개 건설했습니다.",
+          "explanation": "since 2015 는 과거의 시점에서 시작해 지금까지 이어지는 구간을 나타냅니다. 그 구간에 쌓인 일을 말하려면 현재완료 has built 를 써야 합니다. 현재시제 builds 는 지금의 습관이나 사실만 나타내어 지금까지의 누적을 담지 못합니다.",
+          "trapTags": ["present-perfect", "since-for"]
+        },
+        {
+          "id": "b03-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The council [[u:has approved]] the new housing plan last month.",
+          "isCorrect": false,
+          "correction": "approved",
+          "translation": "그 의회는 지난달에 새 주택 계획을 승인했습니다.",
+          "explanation": "last month 가 끝난 과거의 한 시점을 못 박고 있습니다. 현재완료는 그런 표현과 함께 설 수 없으므로 과거시제 approved 로 고쳐야 합니다.",
+          "trapTags": ["present-perfect", "past-time-adverb"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "과거시제와 현재완료의 갈림길",
+      "columns": ["과거시제", "현재완료(have/has + p.p.)"],
+      "rows": [
+        {
+          "criterion": "시선이 머무는 곳",
+          "a": "끝나 버린 과거의 한 시점",
+          "b": "과거에서 지금까지 이어진 구간"
+        },
+        {
+          "criterion": "함께 쓰는 시간 표현",
+          "a": "yesterday / last year / in 1998 / two days ago",
+          "b": "since 1998 / for ten years / so far"
+        },
+        {
+          "criterion": "지금과의 연결",
+          "a": "지금과 끊겨 있어도 됩니다",
+          "b": "반드시 지금과 이어져 있습니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The scholar **wrote** the book in 1998.",
+          "ko": "그 학자는 1998년에 그 책을 썼습니다.",
+          "note": "in 1998 이 시점을 못 박았으므로 과거시제입니다. 지금과의 연결은 말하지 않습니다."
+        },
+        {
+          "en": "The scholar **has written** four books since then.",
+          "ko": "그 학자는 그 이후로 네 권의 책을 썼습니다.",
+          "note": "since then 이 지금까지의 구간을 열어 줍니다. 그 구간에 쌓인 네 권을 말하므로 현재완료입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "시제 반사신경 단련",
+      "instruction": "영어 문장은 어법이 옳으면 ○, 틀리면 ×. 한국어 명제는 내용이 옳으면 ○를 누르십시오.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "She has lived in Busan since 2019.",
+          "isTrue": true,
+          "why": "since 2019 가 지금까지의 구간을 열고, 현재완료 has lived 가 그와 호응합니다."
+        },
+        {
+          "statement": "The team has won the final last week.",
+          "isTrue": false,
+          "why": "last week 가 끝난 한 시점을 못 박으므로 현재완료와 충돌합니다. 과거시제 won 이 옳습니다."
+        },
+        {
+          "statement": "since 뒤에는 기간의 길이가 옵니다.",
+          "isTrue": false,
+          "why": "since 뒤에는 시작된 시점이 옵니다. 기간의 길이는 for 가 맡습니다."
+        },
+        {
+          "statement": "have 와 has 의 선택은 주어의 인칭과 수가 결정합니다.",
+          "isTrue": true,
+          "why": "주어가 3인칭 단수이면 has, 그 밖에는 have 입니다."
+        },
+        {
+          "statement": "They have moved to Seoul two years ago.",
+          "isTrue": false,
+          "why": "ago 가 끝난 한 시점을 가리키므로 현재완료는 봉쇄됩니다. 과거시제 moved 로 써야 합니다."
+        },
+        {
+          "statement": "The rain has stopped, so the streets are drying now.",
+          "isTrue": true,
+          "why": "시점을 못 박는 표현이 없고, 비가 그친 결과가 지금 남아 있으므로 현재완료가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "함정 — 시점을 못 박는 부사에 현재완료를 붙이는 오류",
+      "body": "우리말 '올렸습니다'는 과거시제로도 현재완료로도 옮겨집니다. 그래서 학생들은 뜻만 보고 현재완료를 고릅니다. 그러나 영어에서는 시점을 못 박는 부사가 하나라도 있으면 현재완료가 봉쇄됩니다. 뜻이 아니라 부사를 먼저 보아야 합니다.",
+      "example": {
+        "en": "The government **has raised** the tax rate two years ago.",
+        "ko": "(그 정부는 2년 전에 세율을 올렸습니다)",
+        "note": "two years ago 는 끝난 한 시점입니다. 현재완료가 가리키는 지금까지의 구간과 충돌하므로 raised 로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b17",
+      "type": "GENERATE",
+      "tier": 1,
+      "title": "직접 배열해 봅니다",
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 쓰이지 않는 타일이 섞여 있습니다.",
+      "ko": "그 연구소는 2009년 이래로 그 빙하를 관찰해 왔습니다.",
+      "answer": ["The institute", "has observed", "the glacier", "since 2009"],
+      "tiles": [
+        "The institute",
+        "has observed",
+        "the glacier",
+        "since 2009",
+        "observed",
+        "in 2009"
+      ],
+      "explanation": "since 2009 는 지금까지 이어지는 구간을 열므로 본동사구는 현재완료 has observed 입니다. 과거형 observed 만 쓰면 지금과의 연결이 끊기고, in 2009 는 한 시점을 못 박아 현재완료와 함께 설 수 없습니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b03-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Scientists {{blank}} the ice sheet closely since the survey began.",
+          "options": ["have monitored", "monitored", "monitoring"],
+          "answer": 0,
+          "translation": "과학자들은 그 조사가 시작된 이래로 빙상을 면밀히 관찰해 왔습니다.",
+          "explanation": "since 절이 지금까지의 구간을 열었으므로 주절은 현재완료여야 합니다. 주어 Scientists 가 복수이므로 have monitored 가 옳습니다. monitored 만 쓰면 지금과의 연결이 끊기고, monitoring 은 시제가 없어 본동사가 될 수 없습니다.",
+          "trapTags": ["present-perfect", "since-for"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 have monitored 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "since 절이 조사 시작 시점부터 지금까지의 구간을 열었고, 주어가 복수이므로 have + 과거분사가 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. since 가 여는 구간과 주어의 수, 두 가지를 함께 확인한 판단입니다."
+        },
+        {
+          "text": "관찰이 지금도 계속되고 있으므로 진행의 뜻을 담은 monitoring 이 자연스럽지만, 형태상 have 가 필요했습니다.",
+          "correct": false,
+          "feedback": "monitoring 은 be동사 없이 홀로 시제를 가질 수 없어 본동사 후보가 아닙니다. 자연스러움이 아니라 본동사 자리의 유무가 판단 근거입니다."
+        },
+        {
+          "text": "과학이라는 학술적 소재에는 현재완료를 쓰는 것이 관례이기 때문입니다.",
+          "correct": false,
+          "feedback": "소재는 시제를 결정하지 않습니다. 시제는 시간 표현과 지금과의 연결 여부가 결정합니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. 시간 표현은 문을 여는지 닫는지를, 동사는 형태를 보십시오.",
+      "rounds": [
+        {
+          "words": ["since 2015", "for ten years", "so far", "last night"],
+          "odd": 3,
+          "why": "last night 만 끝난 한 시점을 못 박는 과거시제 전용 표현입니다. 나머지 셋은 지금까지의 구간을 열어 현재완료와 짝을 이룹니다."
+        },
+        {
+          "words": ["gone", "written", "kept", "went"],
+          "odd": 3,
+          "why": "went 는 go 의 과거형이라 have 뒤에 서지 못합니다. 나머지 셋은 과거분사이므로 have/has 와 합쳐 현재완료를 만듭니다."
+        },
+        {
+          "words": ["has built", "has taken", "has knew", "has written"],
+          "odd": 2,
+          "why": "knew 는 과거형이므로 has 뒤에 올 수 없습니다. 바른 결합은 has known 입니다. 나머지는 모두 has + 과거분사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The foundation [[1:has supported]] rural schools since 2004, and last year it [[2:has opened]] a training center that [[3:offers]] free courses to teachers who [[4:have worked]] in remote areas.",
+      "answer": 2,
+      "correction": "opened",
+      "rationales": [
+        "since 2004 가 지금까지의 구간을 열었으므로 현재완료가 옳습니다. 주어 The foundation 이 단수이므로 has 입니다.",
+        "last year 가 끝난 한 시점을 못 박습니다. 현재완료와 충돌하므로 과거시제 opened 로 고칩니다.",
+        "관계사 that 이 연 절의 동사입니다. 선행사 a training center 가 단수이므로 offers 가 맞습니다.",
+        "관계사 who 가 연 절의 동사입니다. 선행사 teachers 가 복수이고 지금까지의 경력을 말하므로 have worked 가 맞습니다."
+      ],
+      "ko": "그 재단은 2004년 이래로 농촌 학교를 지원해 왔고, 지난해에는 벽지에서 근무해 온 교사들에게 무료 강좌를 제공하는 연수 센터를 열었습니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 시간 표현을 주고 시제를 바르게 고쳐 쓰게 합니다. 부사를 근거로 들며 고쳐야 만점입니다.",
+          "sample": {
+            "en": "The library has opened its reading room in 2019.",
+            "ask": "어법상 틀린 부분을 찾아 문장을 바르게 고쳐 쓰십시오.",
+            "answer": "The library opened its reading room in 2019. — in 2019 가 한 시점을 못 박으므로 현재완료를 과거시제로 바꿉니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서 have/has + 과거분사는 동사구 전체가 하나의 본동사라는 점이 중요합니다. 밑줄이 본동사인지 준동사인지 가르는 판별(u01-c1)의 근거가 됩니다.",
+          "sample": {
+            "en": "The archive that the university founded in 1901 [[u:has preserved]] thousands of letters.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — 관계사 that 이 절을 하나 열었으므로 시제 동사는 둘이어야 하고, has preserved 가 주절의 본동사구입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "끝난 시간의 수문장",
+      "intro": "나는 끝난 시간과 이어진 시간 사이의 문을 지키는 수문장입니다. 시간 표현 하나만 흘려 읽어도 문은 열리지 않습니다. 네 번의 판단으로 통행 자격을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The orchestra {{blank}} in this hall since 2010.",
+          "options": ["has performed", "performed"],
+          "answer": 0,
+          "why": "since 2010 이 지금까지의 구간을 열므로 현재완료 has performed 가 옳습니다."
+        },
+        {
+          "prompt": "The factory {{blank}} its old machines in 2016.",
+          "options": ["replaced", "has replaced"],
+          "answer": 0,
+          "why": "in 2016 이 끝난 한 시점을 못 박으므로 현재완료는 봉쇄되고 과거시제 replaced 만 설 수 있습니다."
+        },
+        {
+          "prompt": "My grandparents {{blank}} in this town for forty years.",
+          "options": ["has lived", "have lived"],
+          "answer": 1,
+          "why": "for forty years 가 지금까지 이어진 기간을 말하고, 주어 My grandparents 가 복수이므로 have lived 입니다."
+        },
+        {
+          "prompt": "현재완료가 어법상 옳게 쓰인 문장은 무엇입니까?",
+          "options": [
+            "The child has drew a map of the village.",
+            "The child has drawn a map of the village."
+          ],
+          "answer": 1,
+          "why": "have/has 뒤에는 과거분사가 옵니다. draw 의 과거분사는 drawn 이며, drew 는 과거형이라 has 뒤에 서지 못합니다."
+        }
+      ],
+      "winText": "수문장이 물러나며 문이 열립니다. 끝난 시점과 이어진 구간을 한 번도 섞지 않았습니다. 이제 문장을 보면 시간 표현이 먼저 보이고, 시제는 그 뒤를 따라올 것입니다.",
+      "loseText": "수문장은 아직 자리를 지킵니다. 틀린 자리마다 시간 표현이 먼저 서 있었습니다 — since·for·so far 는 문을 열고, 예·라·인·고는 문을 닫습니다. 신호등 표를 다시 보고 오면 문은 열립니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "현재완료는 have/has 뒤에 ___ 를 붙인 형태이며, 문장에 ___ 같은 표현이 있으면 쓸 수 없습니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "현재완료는 have/has + 과거분사이며, 두 낱말이 합쳐 하나의 본동사구입니다.",
+        "과거의 일이 지금과 이어져 있을 때(경험·계속·완료·결과) 씁니다.",
+        "예(yesterday)·라(last ~)·인(in+지난 연도)·고(~ ago)가 보이면 현재완료는 그 자리에서 탈락하고 과거시제를 씁니다.",
+        "since 뒤에는 시작된 시점이, for 뒤에는 기간의 길이가 오며 둘 다 현재완료와 짝을 이룹니다."
+      ],
+      "keySentence": {
+        "en": "The archive **has preserved** these letters since 1953.",
+        "ko": "그 기록관은 1953년 이래로 이 편지들을 보존해 왔습니다.",
+        "note": "since 1953 이 여는 구간과 has preserved 라는 본동사구가 정확히 호응합니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b03-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The scholar {{blank}} the manuscript in 1998, and it now remains in the museum.",
+          "options": ["examined", "has examined"],
+          "answer": 0,
+          "translation": "그 학자는 1998년에 그 필사본을 조사했고, 그것은 지금 박물관에 남아 있습니다.",
+          "explanation": "in 1998 이 끝난 한 시점을 못 박고 있으므로 현재완료는 쓸 수 없습니다. 과거시제 examined 가 옳습니다. 뒤 절이 현재의 사실을 말하는 것과는 별개로, 앞 절의 시제는 그 절의 시간 표현이 결정합니다.",
+          "trapTags": ["present-perfect", "past-time-adverb"]
+        },
+        {
+          "id": "b03-c4-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The two countries [[u:have kept]] the agreement for more than twenty years.",
+          "isCorrect": true,
+          "translation": "그 두 나라는 20년 넘게 그 합의를 지켜 왔습니다.",
+          "explanation": "for more than twenty years 는 지금까지 이어진 기간의 길이를 말합니다. 주어가 복수이므로 have 를 쓰고 과거분사 kept 를 붙인 have kept 가 옳습니다.",
+          "trapTags": ["present-perfect", "since-for"]
+        },
+        {
+          "id": "b03-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The tunnel that engineers finished in 1998 {{blank}} the two valleys since then.",
+          "options": ["has connected", "connected", "connecting"],
+          "answer": 0,
+          "translation": "기술자들이 1998년에 완공한 그 터널은 그 이후로 두 골짜기를 이어 왔습니다.",
+          "explanation": "관계사 that 이 절을 하나 열었으므로 시제 동사는 둘이어야 하며, finished 는 관계절의 동사이므로 주절의 본동사가 아직 비어 있습니다. 빈칸은 본동사 자리이므로 시제가 없는 connecting 은 후보가 아닙니다. since then 이 지금까지의 구간을 여니 현재완료 has connected 가 옳습니다.",
+          "trapTags": ["present-perfect", "missing-main-verb", "since-for"]
+        }
+      ]
+    }
+  ]
+}

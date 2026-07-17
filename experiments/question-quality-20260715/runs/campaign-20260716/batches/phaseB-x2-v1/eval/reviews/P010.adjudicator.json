@@ -1,0 +1,38 @@
+{
+  "pid": "P010",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "독립 재검증 결과 선언된 정답 (B)가 유일한 어법 오류임을 확인. 'with a thorough ___ of NP' 슬롯은 부정관사 a + 형용사 thorough + of 보충어 환경으로 명사 핵을 강제하는데, 과거분사 understood는 이 자리에 설 수 없고 어떤 구제 해석(명사화된 'the understood' 절대용법, 축약 관계절, 분사 수식)도 부정관사·of구와 양립 불가하다. 'not with insight into A but with ___ of B' 병렬도 insight에 대응하는 명사(understanding)를 독립적으로 요구한다. 나머지 네 밑줄 (A)(C)(D)(E)는 각각 완전절을 이끄는 시간 접속사, 고정 관용구 in and of itself의 재귀대명사, 조동사 must 뒤 either-or 동사원형 병렬, 대명사 one 수식 형용사로 모두 형식적으로 증명 가능한 정문이며, 이를 오답으로 만들 수 있는 방어 가능한 대안 해석은 존재하지 않는다. 솔버1·솔버2 모두 (B) 단독 수렴이 타당하고 과잉 판정(성립하지 않는 대안 해석 주장)도 없다. 감사자의 V2=true 판정을 유지한다. 감사자가 지적한 KILLER 난이도 미달·디코이 약화는 공예(craft) 결함이지 정답 유일성(V2) 결함이 아니다.",
+  "perDispute": [
+    {
+      "label": "(A) when",
+      "claim": "시간 접속사 when이 어법상 적절한가 — 관계부사 오독 또는 절 부착 모호성으로 오류 주장이 가능한가",
+      "verdict": "정문 확정 (오답 선지로 적법)",
+      "evidence": "when 뒤에 완전한 정형절 'they first consider experimenting with social media'(주어+동사+목적어)가 따르므로 시간 부사절 접속사의 결합 조건을 충족한다. 부사절은 분사구 'made by organizations'에 걸리는 삽입 수식이며 모문 골격 'One of the most common mistakes ... is that ...'의 주어-동사 일치(One ... is)에 영향을 주지 않는다. 관계부사로 볼 시간 선행사도 없고 필요하지도 않다. (B)를 위협할 대안 해석 불성립."
+    },
+    {
+      "label": "(B) understood",
+      "claim": "선언된 정답 — 'a thorough understood of'가 어법상 틀렸으며 understanding으로 고쳐야 하는가, 구제 가능한 대안 해석은 없는가",
+      "verdict": "오류 확정 (유일 정답)",
+      "evidence": "한정사 a + 형용사 thorough + ___ + of구 환경은 of 보충어를 취하는 명사 핵을 요구한다. understood는 understand의 과거분사로 명사 핵 기능 불가. 구제 해석 전수 검토: (1) 'the understood'류 명사화 절대용법은 정관사 전용이며 부정관사 a 및 of 보충어와 결합 불가, (2) 축약 관계절/분사 수식 독해는 수식받을 명사가 부재하여 불성립, (3) 도치·생략 등 여타 구문 재해석도 불가. 추가로 'begins not with insight into A but with a thorough ___ of B' 상관 병렬이 insight에 대응하는 명사를 독립적으로 강제하므로 understanding이 유일한 정문 형태다. 두 솔버의 판정과 완전 일치."
+    },
+    {
+      "label": "(C) itself",
+      "claim": "재귀대명사 itself가 적절한가 — themselves/it 대체 주장이 성립하는가",
+      "verdict": "정문 확정 (오답 선지로 적법)",
+      "evidence": "'in and of itself'(그 자체로는)는 고정 관용구이며, 재귀대명사의 조응 선행사는 단수 취급되는 동명사구 주어 'Being in social media'로 수 일치가 성립한다. themselves로 바꿀 복수 선행사가 없고 비재귀 it은 관용구를 파괴한다. 오류 주장 불성립."
+    },
+    {
+      "label": "(D) solve",
+      "claim": "동사원형 solve가 적절한가 — 3인칭 단수 주어에 따른 solves 요구 주장이 성립하는가",
+      "verdict": "정문 확정 (오답 선지로 적법)",
+      "evidence": "조동사 must 뒤에는 주어의 인칭·수와 무관하게 동사원형이 온다. 'must either solve a problem ... or result in an improvement'에서 either A or B의 A(solve)와 B(result)가 모두 원형으로 정확히 병렬된다. 주어 'a social media presence'가 단수라는 사실은 solves를 정당화하지 못한다(조동사 지배). 오류 주장 불성립."
+    },
+    {
+      "label": "(E) measurable",
+      "claim": "형용사 measurable이 적절한가 — 부사 measurably 요구 주장이 성립하는가",
+      "verdict": "정문 확정 (오답 선지로 적법)",
+      "evidence": "'preferably a measurable one'에서 measurable은 대명사 one(= improvement)을 수식하는 형용사이며 'a + 형용사 + one' 구조가 정상 성립한다. 부사 measurably는 명사류 one을 수식할 수 없어 오히려 비문이 된다. 의미상으로도 '측정 가능한 개선'으로 문맥 정합. 오류 주장 불성립."
+    }
+  ]
+}

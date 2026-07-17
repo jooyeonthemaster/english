@@ -1,0 +1,66 @@
+{
+  "pid": "P025",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-ALT-PARSE",
+      "severity": "minor",
+      "evidence": "(B) 'skills and behaviors that are necessarily for future survival'에는 이론상 'be + 부사 + PP'(cf. 'is mainly for beginners') 대안 파스가 존재한다. 다만 affirmative 'necessarily + for-PP'는 극히 부자연스럽고 문맥 의미('생존에 필요한 기술')와 불일치하므로 정답 유일성은 유지된다. 유일성 훼손은 아니나 이의신청 여지가 있는 자리."
+    },
+    {
+      "code": "V5-KEYPOINTS-COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints가 (B)·(D)·(A)만 다루고 (C) in which, (E) to try는 누락. 필드 간 모순은 없어 V5 통과이나 커버리지가 불완전."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "병렬 구조 — 전치사 of의 목적어로 연결된 동명사 learning and practicing",
+      "temptingBecause": "and 뒤 형태를 to practice나 동사 원형으로 기대하는 학습자가 병렬 기준점(of의 목적어)을 놓치면 틀렸다고 오판할 수 있다",
+      "decisiveFlaw": "learning과 동일하게 of의 목적어인 동명사로 정확히 병렬되어 있어 어법상 흠이 없다 — 정답이 될 수 없다"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — 관계절 내 be동사(are)의 주격 보어 자리에 형용사(necessary) 대신 부사(necessarily)를 배치한 최소대립쌍",
+      "temptingBecause": "뒤에 for future survival(PP)이 이어져 부사가 동사를 수식하는 것처럼 보일 수 있고, -ly 형태가 표면상 자연스러워 보인다",
+      "decisiveFlaw": "are의 보어 자리이므로 형용사 necessary가 필요하다. necessarily로는 보어가 비어 비문이 된다. 교정하면 정확히 원문(necessary)으로 복원된다"
+    },
+    {
+      "label": "(C)",
+      "intent": "전치사+관계대명사 — 뒤에 완전한 절이 오는 in which의 적격성 판단",
+      "temptingBecause": "in which vs which 구분에 약한 학생은 전치사 결합형을 틀린 것으로 의심하기 쉽다",
+      "decisiveFlaw": "후행절 'children learn about the world and their place in it'이 완전하고 선행사 a way와 'in a way'로 호응하므로 in which가 정확하다"
+    },
+    {
+      "label": "(D)",
+      "intent": "수일치 — like walking, running, and jumping 삽입구 너머 선행사 skills와 관계절 동사의 일치",
+      "temptingBecause": "관계대명사 that 직전의 jumping(단수형 동명사)을 선행사로 오인하면 are를 틀렸다고 판단하게 된다",
+      "decisiveFlaw": "관계절의 실제 선행사는 복수 명사 skills이므로 are가 정확하다. 단, 이 문장에 'that are necessary for everyday living'이 원형 그대로 남아 (B)의 정답 형태를 직접 노출하는 단서 누출이 있다"
+    },
+    {
+      "label": "(E)",
+      "intent": "5형식 동사 보어 — allow + 목적어 + to부정사 구조 확인",
+      "temptingBecause": "let/make 등 원형부정사를 취하는 사역동사와 혼동하는 학생이 to try를 틀렸다고 볼 수 있다",
+      "decisiveFlaw": "allow는 목적격 보어로 to부정사를 취하므로 to try (out)가 정확하다 — 정답이 될 수 없다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 유일한 변형은 (B) necessary→necessarily 최소대립쌍이며 교정 시 원문으로 정확히 복원된다. 해설의 통사 분석(주격 관계대명사 that, be동사 보어 자리, 각 오답의 선행사·병렬·보어 구조)은 모두 실제 문장과 일치한다. 공예 측면 최대 감점 요인: (D) 문장에 동일 구문 'that are necessary for everyday living'이 무변형으로 남아 정답 자리의 올바른 형태를 지문 내에서 그대로 보여준다(베껴쓰기식 소거 경로 → C3=2, C4=2). 오답 4개는 병렬·관계사·수일치·5형식 보어라는 서로 다른 정전 오개념을 각각 겨냥하고 전 선지에 해설이 존재한다(C2=4). 난이도는 INTERMEDIATE 요청에 부합(C5=3). 합계 17, 최저 2 → B. 개선 제안: (D) 문장의 necessary를 needed 등으로 paraphrase하여 단서 누출 제거 시 A 후보. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

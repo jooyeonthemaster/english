@@ -1,0 +1,44 @@
+{
+  "pid": "P014",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "독립 재검증 결과 (C) 'are'만이 유일한 비문이다. 주어 핵은 단수 'The only example'이고 'that comes to mind readily'는 수식 관계절(내부 동사 comes가 단수 일치를 재확인), 보어 'a candle'도 단수이므로 도치·존재구문·통보적 복수·근접 견인 등 어떤 대안 해석으로도 복수 동사 are를 옹호할 수 없다(동사 직전 어휘는 readily로 견인 명사조차 없음). is로 교정하면 원지문과 정확히 일치한다. (A) 지시한정사, (B) 재귀대명사, (D) although+주어·be 생략 축약 양보절, (E) 전치사구 개입 수일치는 모두 정문으로 재확인되어 복수정답 소지가 없다. 분쟁 요약의 '선언된 정답=⑤'는 전체 파일(full/P014.md)의 '## 선언된 정답: (C)'와 불일치하며, (C)는 3번째 선지이므로 원형 숫자 매핑상 ③에 해당한다 — 이는 오케스트레이션 계층의 라벨-숫자 매핑 오류로 판단되고, 실제 정답 키에 대한 이견은 존재하지 않는다(솔버1·솔버2·감사자 V2 및 본 조정 재검증 전원 (C) 수렴). 따라서 선언된 정답 (C)의 유일성은 성립하며 finalV2=true. 참고: 감사자의 F 등급은 정답 유일성(V2)이 아니라 해설의 사실 오류(V4 — 존재하지 않는 '동사 직전 복수형 hours' 함정을 지목한 환각) 때문이며, 이는 해설 재작성 사안으로 정답 유일성 판정과는 무관하다.",
+  "perDispute": [
+    {
+      "label": "(C)",
+      "claim": "선언된 정답. 'The only example that comes to mind readily are a candle marked in hours'에서 are가 비문이라는 주장 (솔버1·솔버2 일치)",
+      "verdict": "CONFIRMED — 유일한 오류",
+      "evidence": "주어 핵 'The only example'(단수) + 수식 관계절 'that comes to mind readily'(내부 동사 comes가 단수 일치 확인) + 단수 보어 'a candle'. 복수 일치를 성립시킬 대안 해석(도치, 존재구문, 집합명사의 통보적 복수, 근접 견인) 전무 — 동사 직전 어휘는 부사 readily이며 동사 앞에 복수 명사가 아예 없다. are→is 교정 시 원지문과 완전 일치하는 최소대립쌍."
+    },
+    {
+      "label": "declared=⑤ 표기 불일치",
+      "claim": "분쟁 요약이 '선언된 정답=⑤'라고 보고하여 솔버 답 (C)와 충돌하는 것처럼 보임",
+      "verdict": "REJECTED — 실질 분쟁 아님 (라벨 매핑 오류)",
+      "evidence": "권위 소스인 full/P014.md는 '## 선언된 정답: (C)'를 명시하고 markedExpressions에서도 (C)만 isError=true(errorExpression 'are', correction 'is'). (C)는 5개 선지 중 3번째이므로 원형 숫자로는 ③이지 ⑤가 아니다. ⑤는 (E)를 뜻하는데 (E) 'is'는 정문이므로, ⑤ 표기는 오케스트레이션의 라벨-숫자 변환 오류로 판정. 정답 키 자체에 대한 이견은 어느 검토자에게도 없다."
+    },
+    {
+      "label": "(A)",
+      "claim": "지시형용사 that의 적법성",
+      "verdict": "CONFIRMED 정문",
+      "evidence": "'the nature of that process is repetitive' — that이 앞 절의 'a process embodied in a machine'을 조응 지시하며 단수 process를 한정. 한정사-명사 수일치 및 지시 해소 모두 적법."
+    },
+    {
+      "label": "(B)",
+      "claim": "재귀대명사 itself의 적법성",
+      "verdict": "CONFIRMED 정문",
+      "evidence": "'any process that repeats itself' — 관계절 주어 that(=process, 단수 사물)과 목적어가 동일 지시이므로 재귀대명사 필수이고 itself가 수·성 일치. 결속원리 A 충족."
+    },
+    {
+      "label": "(D)",
+      "claim": "although + 분사구(주어·be 생략) 축약 양보절의 적법성",
+      "verdict": "CONFIRMED 정문",
+      "evidence": "'although (it is) at first masked' — 생략된 주어가 주절 주어 this(= iterative process)와 동일 지시라는 축약 조건 충족. although+분사/형용사 축약은 규범적 표준 구문이며 부사구 at first의 위치도 적법. 가장 강한 디코이지만 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "claim": "전치사구 개입 주어-동사 수일치(is)의 적법성",
+      "verdict": "CONFIRMED 정문",
+      "evidence": "'the decay of atoms of carbon-14 is repetitive' — 주어 핵은 단수 decay, 'of atoms of carbon-14'는 전치사구 수식어(복수 견인 요소일 뿐 일치 지배자 아님). 단수 is가 정확. (C)와 대조되는 정용 사례."
+    }
+  ]
+}

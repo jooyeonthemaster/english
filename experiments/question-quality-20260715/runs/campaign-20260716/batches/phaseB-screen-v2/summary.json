@@ -1,0 +1,64 @@
+{
+  "batchId": "phaseB-screen-v2",
+  "phase": "B",
+  "atKst": "2026-07-16T20:10:00.063+09:00",
+  "assignments": 50,
+  "slotsConsumed": 44,
+  "accepted": 25,
+  "modelCalls": 74,
+  "inputTokens": 286207,
+  "outputTokens": 85351,
+  "costUsd": 1.196651,
+  "ledgerAfter": {
+    "used": 244,
+    "cap": 1000,
+    "costUsd": 6.377772
+  },
+  "byArm": {
+    "B-V1": {
+      "n": 10,
+      "accepted": 10,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 11,
+      "costUsd": 0.401541
+    },
+    "B-D1": {
+      "n": 10,
+      "accepted": 6,
+      "gateRejected": 2,
+      "noCandidate": 2,
+      "slots": 8,
+      "costUsd": 0.218258
+    },
+    "B-T1": {
+      "n": 10,
+      "accepted": 9,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 10,
+      "costUsd": 0.155348
+    },
+    "B-B3r": {
+      "n": 5,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 5,
+      "slots": 5,
+      "costUsd": 0.173115
+    },
+    "G-G3r": {
+      "n": 10,
+      "accepted": 0,
+      "gateRejected": 7,
+      "noCandidate": 3,
+      "slots": 10,
+      "costUsd": 0.248389
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 267991
+}

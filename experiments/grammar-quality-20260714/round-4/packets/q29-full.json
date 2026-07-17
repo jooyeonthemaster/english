@@ -1,0 +1,177 @@
+{
+  "passageId": "2019_06_5023285-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "6월",
+    "origType": "주장",
+    "words": 166
+  },
+  "attempts": 5,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-decoy-point-monotony"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-point-monotonyx3",
+    "grammar-noun-clause-pronoun-mislabelx2",
+    "grammar-too-basic-decoysx2",
+    "grammar-weak-filler-decoysx2",
+    "duplicate-option-textx1"
+  ],
+  "layout": "(A):dec=b  (B):dec=b  (C):dec=c  (D):ANS=f  (E):dec=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 76,
+        "relPos": 0.083,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 338,
+        "relPos": 0.368,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 622,
+        "relPos": 0.678,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 722,
+        "relPos": 0.786,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 795,
+        "relPos": 0.866,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.866,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We say to ourselves: “There is plenty of time. I’ll manage somehow or other when the time comes for action.” We are rather proud of our ability to meet emergencies. So we do not plan and take precautions to prevent emergencies from arising. It is too easy to drift through school and college, taking the traditional, conventional studies that others take, following the lines of least resistance, electing “snap courses,” and going with the crowd. It is too easy to take the attitude: “First I will get my education and develop myself, and then I will know better what I am fitted to do for a life work.” And so we drift, driven by the winds of circumstance, tossed about by the waves of tradition and custom. Eventually, most men find they must be satisfied with “any port in a storm.” Sailors who select a port because they are driven to it have scarcely one chance in a thousand of dropping anchor in the right one.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "when",
+        "isError": false,
+        "errorExpression": "when",
+        "surroundingText": "manage somehow or other when the time comes for action.” We are",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "traditional, conventional studies that others take, following the lines",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "driven",
+        "isError": false,
+        "errorExpression": "driven",
+        "surroundingText": "And so we drift, driven by the winds of circumstance, tossed",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "most",
+        "isError": true,
+        "correction": "most",
+        "errorExpression": "mostly",
+        "surroundingText": "Eventually, most men find they must be satisfied with",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "who",
+        "isError": false,
+        "errorExpression": "who",
+        "surroundingText": "any port in a storm.” Sailors who select a port because they are",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "when"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "driven"
+      },
+      {
+        "label": "(D)",
+        "text": "mostly"
+      },
+      {
+        "label": "(E)",
+        "text": "who"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 시간의 부사절을 이끄는 접속사 'when'의 자리로, 뒤이어 주어(the time)와 자동사(comes)를 포함한 완전한 절이 이어지므로 어법상 옳습니다.",
+      "(B)": "이 자리는 선행사 'traditional, conventional studies'를 수식하는 주격/목적격 관계대명사 자리로, 뒤의 세부 절에 타동사 take의 목적어가 빠져 있으므로 목적격 관계대명사 'that'은 어법상 옳습니다.",
+      "(C)": "이 자리는 주절의 주어 'we'를 의미상 주어로 삼는 분사구문 자리로, 우리가 외부 상황에 의해 '휩쓸리는(driven)' 수동 관계이므로 과거분사 'driven'은 어법상 옳습니다.",
+      "(E)": "이 자리는 복수 명사 선행사 'Sailors'를 수식하는 주격 관계대명사 자리로, 관계절 내부의 주어가 결손되어 있으므로 'who'는 어법상 옳습니다."
+    },
+    "explanation": "Eventually 뒤의 명사절 주어 자리에 오는 명사 'men'을 수식할 수 있는 문법 단위가 필요합니다. 하지만 제시된 (D)의 'mostly'는 '대개, 주로'라는 뜻의 부사로, 명사를 직접 수식할 수 없어 비문입니다. 명사 'men'을 수식하여 '대부분의 사람들'이라는 뜻을 성립시키기 위해서는 형용사인 'most'로 고쳐야 합니다. 부사와 형용사의 수식 대상을 명확히 구분해야 하는 문제입니다.",
+    "keyPoints": [
+      "(D) 형용사 자리 vs 부사 자리 — 명사를 수식하는 수식어의 품사 판별",
+      "(C) 분사의 능동 vs 수동 — 의미상 주어인 we와의 수동 관계 파악",
+      "(B) 관계대명사의 격과 완전성 — 타동사 take의 목적어 결손 여부 확인"
+    ],
+    "tags": [
+      "수식어의 품사 구분",
+      "명사 수식 형용사",
+      "분사구문의 태",
+      "관계대명사 격"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "We say to ourselves: “There is plenty of time. I’ll manage somehow or other __(A) when__ the time comes for action.” We are rather proud of our ability to meet emergencies. So we do not plan and take precautions to prevent emergencies from arising. It is too easy to drift through school and college, taking the traditional, conventional studies __(B) that__ others take, following the lines of least resistance, electing “snap courses,” and going with the crowd. It is too easy to take the attitude: “First I will get my education and develop myself, and then I will know better what I am fitted to do for a life work.” And so we drift, __(C) driven__ by the winds of circumstance, tossed about by the waves of tradition and custom. Eventually, __(D) mostly__ men find they must be satisfied with “any port in a storm.” Sailors __(E) who__ select a port because they are driven to it have scarcely one chance in a thousand of dropping anchor in the right one.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-decoy-point-monotony",
+        "message": "pointCode (b) is used 3 times across the marks — decoys are monotonous (one grammar point repeated). Use at most 2 marks per code and spread across more grammar points."
+      }
+    ],
+    "_qualityMode": "relaxed"
+  }
+}

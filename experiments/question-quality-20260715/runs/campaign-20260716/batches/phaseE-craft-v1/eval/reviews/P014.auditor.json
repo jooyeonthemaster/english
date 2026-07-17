@@ -1,0 +1,77 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-ALTERNATIVE-ANALYSIS",
+      "severity": "critical",
+      "evidence": "선언된 정답 (D) revealing 이 명백한 비문이 아니다. 해당 자리는 본동사 자리가 아니라 대시(—) 뒤 보충(supplement) 위치다: 주절 'The bones from the burials start to show us differences as well'이 이미 정동사(start)를 갖춘 완전한 문장이므로, '— chemical and isotope analyses of teeth and long bones revealing that ...'는 영어에서 흔히 쓰이는 '명사구 + 현재분사' 무동사 절(nominal absolute / supplementive) 구문으로 온전히 문법적인 대안 분석이 성립한다(예: 'There were signs of change everywhere — new buildings rising, roads being paved.'). 이 독해 하에서는 실제 오류 집합이 0개가 되어 '단일정답형이면 정확히 하나'라는 V2 조건이 흔들린다. 세미콜론 뒤 정형절 'some have more evidence ...'와의 병렬 붕괴는 문체적 결함일 뿐 엄밀한 어법 오류 판정 근거로 부족하다. RUBRIC §C '정답 포인트는 문맥 선호가 아닌 명확한 문법 판단이며 대안 분석이 가능한 자리는 제외한다'에 정면으로 저촉된다. 대시가 없는 단문 주어-동사 자리였다면 성립했을 포인트를, 하필 absolute 구문이 허용되는 보충 위치에 심었다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "복수 선행사(early societies)와 소유격 대명사의 수 일치 판별",
+      "temptingBecause": "도치 구문 'so would they have been' 직후라 지시 대상 추적이 한 단계 필요하고, 단수 오독(its) 유혹이 있다",
+      "decisiveFlaw": "선행사 early societies가 복수이므로 their가 정확하다 — 오류 아님. 다만 지시 대상이 바로 인접해 있어 강한 수험생에게는 즉시 소거된다"
+    },
+    {
+      "label": "(B)",
+      "intent": "수동태(be + p.p.)의 태 판별 — 주어와 동사의 의미 관계",
+      "temptingBecause": "burying/buried 태 전환 함정의 전형적 자리이며 뒤에 with 부사구가 이어져 능동 오독 여지를 만든다",
+      "decisiveFlaw": "Some individuals는 매장되는 대상이므로 are buried 수동이 정확하다 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "재귀대명사 관용구 by oneself 와 지시 대상 일치",
+      "temptingBecause": "선행 명사가 생략된 'some [are] by themselves' 구조라 지시 대상이 표면에 없어 them/themselves 판별을 요구한다",
+      "decisiveFlaw": "by themselves(홀로)는 주어 some(개인들)을 받는 정확한 관용 표현 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정동사 vs 준동사 — 긴 주어(analyses of teeth and long bones) 뒤 본동사 자리 판별 (선언된 정답)",
+      "temptingBecause": "of 전치사구로 주어가 길어져 revealing이 분사 수식처럼 자연스럽게 읽힌다",
+      "decisiveFlaw": "출제 의도는 '대시 뒤 절에 정동사 부재'이나, 해당 위치는 주절이 완결된 뒤의 보충 위치라 'NP + revealing ...' 무동사 절(absolute)로 읽으면 문법적으로 성립한다. 오류 판정이 유일하지 않아 정답 지위 자체가 계쟁적 — V2 실패의 원인"
+    },
+    {
+      "label": "(E)",
+      "intent": "2형식 연결동사(become) 뒤 주격 보어 자리의 분사형 형용사 판별",
+      "temptingBecause": "becoming + pronounced 로 분사가 연속돼 능동/수동·품사 혼동을 유발한다",
+      "decisiveFlaw": "pronounced는 '뚜렷한'이라는 형용사(분사형 형용사)로 보어 자리에 정확하다 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXPL-OMITS-ALT-READING",
+      "severity": "major",
+      "evidence": "정답 해설이 '주어 뒤에 정동사가 와야 하는데 준동사 revealing이 쓰여 서술어가 없는 비문'이라고 단정하나, 대시 뒤 보충 위치의 absolute 구문 대안 분석을 배제하는 논거(세미콜론 병렬 등)를 제시하지 않는다. 이의제기 방어가 불가능한 해설이다."
+    },
+    {
+      "code": "EXPL-LOOSE-TERM-C",
+      "severity": "minor",
+      "evidence": "(C) 해설의 '앞의 의미상 주어인 some' — some은 'some [are] by themselves'에서 동사가 생략된 절의 문법상 주어이지 '의미상 주어'가 아니다. 용어가 다소 부정확하나 학생 오도 수준은 아니다."
+    },
+    {
+      "code": "FIELD-CONVENTION-D",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (D)만 expression 필드가 렌더 표기(revealing)가 아닌 원문형(reveal)을 담고 있어 다른 4개 항목(렌더 표기 = expression)과 규약이 어긋난다. errorExpression/correction이 정확해 V5 실패까지는 아니다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 렌더 지문은 reveal→revealing 단일 의도 변형 외에 원지문과 완전 일치하며 라벨·마커·선지 동기화 정상. V3: 오답 4개 밑줄 모두 문법적(유형 의도 일치), 교정형(reveal) 삽입 시 완성문은 원문과 동일하게 자연스럽다. V4: 해설의 주어 식별·교정형·태/보어 분석은 실제 구조와 일치(오분석 없음). V5: 정답 라벨·선지·해설·keyPoints·markedExpressions 상호 모순 없음. 치명 결함은 V2 하나다 — 정동사 포인트를 대시 뒤 보충 위치에 심어 'NP + V-ing' absolute 대안 분석이 성립하고, RUBRIC §C의 '대안 분석 가능 자리 제외' 조건을 정면 위반한다. 같은 포인트를 유지하려면 대시 구조를 제거하고 revealing이 문장의 유일한 서술어 후보가 되도록 재배치해야 한다(예: 해당 부분을 독립 문장으로 분리). KILLER 요청 대비 실제 함정 깊이도 표준 모의고사 수준(C5=1): 정동사/준동사 + 긴 주어는 가장 정형화된 포인트이고 (A)(C)는 즉시 소거 가능하다. killerConditionsMet=false(§C 2번 조건 위반; 나머지 최소대립쌍·5밑줄 설명·동일 포인트 디코이 부재 조건은 충족). 공예 합계 13/24이나 V2 실패로 등급은 F."
+}

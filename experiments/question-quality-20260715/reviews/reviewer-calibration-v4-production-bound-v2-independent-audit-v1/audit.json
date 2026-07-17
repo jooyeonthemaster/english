@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-v2-independent-audit-1",
+  "artifactId": "reviewer-calibration-v4-production-bound-v2-independent-audit-v1",
+  "verdict": "FAIL_BLOCKERS",
+  "subject": {
+    "artifactId": "reviewer-calibration-v4-production-bound-v2",
+    "path": "experiments/question-quality-20260715/design/reviewer-calibration-v4-production-bound-v2",
+    "fileCount": 9,
+    "manifestSha256": "10801e127bb612e2bb6909acf857ff6fa2ef0cac667a0fd7e4e39f774e656413",
+    "publicManifestSha256": "2b5426fdab4e5d56e0e8e45ebdd34f0cabf8c72270b1d3ac7b4932dca1332d98",
+    "protocolSha256": "d537cc551612951565bacd8293786b44a5b18276720f9b04e6ab21d932f074de",
+    "registriesSha256": "0ee8e767b6f712a946c3c5e94f271e07fd266ad2f0e1d14694bbf1851a5de6cc",
+    "eventSchemasSha256": "0569b2406f2eb244cc4c7b44a01c379b0af6bb3e72d79eaac6a5f7f510709511"
+  },
+  "lineage": {
+    "directUpstreamBytesRehashed": 7,
+    "directManifestRowsRehashed": 26,
+    "evaluationAuthorityNestedUpstreamBytesRehashed": 10,
+    "evaluationAuthorityNestedManifestRows": 24,
+    "evaluationAuthorityNestedSafeRowsRehashed": 23,
+    "forbiddenPrivateRowsRefusedUnopened": 1,
+    "evaluationAuthoritySubjectManifestSha256": "ac4ed7ee8bd5eb21bd45837f2a7396219142e6ccd3a1fe933916238e447f0180",
+    "evaluationAuthorityAuditManifestSha256": "0cdf9d676bdec820e728a3b3890237b3b80d201caa2c20afc7af46ed6482adf5",
+    "evaluationAuthorityAuditVerdict": "PASS_NO_BLOCKERS",
+    "productionTypeBindingV4SubjectManifestSha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04",
+    "productionTypeBindingV4SubjectSnapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+    "productionTypeBindingV4BindingJsonSha256": "47df395f54179538d27a714ac0df4dc9e82f04b767bc82f45b8473c38d04cc3d",
+    "productionTypeBindingV4AuditManifestSha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d",
+    "productionTypeBindingV4AuditVerdict": "PASS_NO_BLOCKERS",
+    "methodologyProtocolSha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+    "methodologyManifestSha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64",
+    "methodologyStatus": "DESIGN_ONLY_UNISSUED",
+    "methodologyGrantsProductionOrExecutionAuthority": false
+  },
+  "independentRecomputation": {
+    "uiTypeCount": 25,
+    "focusTypeCount": 2,
+    "nonfocusTypeCount": 23,
+    "familyCount": 8,
+    "rotationRows": 32,
+    "epoch1MainPlusHoldoutDistinctNonfocusTypes": 16,
+    "twoEpochMainPlusHoldoutContactNonfocusTypes": 23,
+    "fourEpochMainOnlyContactNonfocusTypes": 23,
+    "contactIsCertification": false,
+    "futureSlotCount": 60,
+    "pilotItems": 12,
+    "mainItems": 24,
+    "trustedGoldAuditNewItems": 0,
+    "activationHoldoutItems": 24,
+    "activationEventNewItems": 0
+  },
+  "zeroCurrentAuthority": {
+    "filledSlots": 0,
+    "eligibleSlots": 0,
+    "assignedActors": 0,
+    "itemPayloads": 0,
+    "answerPayloads": 0,
+    "goldPayloads": 0,
+    "capabilityAuthorizations": 0,
+    "accessReceipts": 0,
+    "denialEvents": 0,
+    "phaseSeals": 0,
+    "reviewerCertificates": 0,
+    "adjudicatorBindings": 0,
+    "activationEvents": 0,
+    "evaluatorAuthorityGranted": false,
+    "scoringAuthorityGranted": false,
+    "executionAuthorized": false
+  },
+  "hostileAudit": {
+    "independentMutations": 256,
+    "detectedMutations": 256,
+    "accessScenarios": 21,
+    "structuralBypasses": 6,
+    "totalCases": 277,
+    "caseDigestSha256": "e5044394edcf5e24867b7dea527ba3f4e566312019009215b1ffed9bd62b91a7"
+  },
+  "blockers": [
+    {
+      "code": "B1_TRUSTED_GOLD_SELF_AUDIT_NOT_EXCLUDED",
+      "severity": "BLOCKER",
+      "finding": "PACKET_AUTHOR is never defined as a superset of item or gold author. ITEM_AUTHOR and GOLD_AUTHOR cannot be materialized by the role schema, and the trusted-gold auditor incompatibility omits both categories.",
+      "impact": "A person may author an item or its trusted gold and independently audit the same gold without violating the declared role graph."
+    },
+    {
+      "code": "B2_ACTIVATION_AUDITOR_SELF_REVIEW_NOT_EXCLUDED",
+      "severity": "BLOCKER",
+      "finding": "INDEPENDENT_ACTIVATION_AUDITOR is incompatible only with FRESH_ADJUDICATOR, not packet/item/gold authors, either certification reviewer, the trusted-gold auditor, or the S1 result custodian.",
+      "impact": "The separate activation audit can be performed by an actor auditing their own packet, certificate, gold audit, result custody, or activation evidence."
+    },
+    {
+      "code": "B3_EXACT_TYPE_COVERAGE_NOT_BOUND_TO_CERTIFICATE_OR_ACTIVATION",
+      "severity": "BLOCKER",
+      "finding": "Reviewer certificates and activation events bind no canonical type list, coverage count/map, or passed coverage-event hashes. The generic certificate scope string is not linked to coverageRegistry.",
+      "impact": "Epoch-1 contact with 16 of 23 nonfocus types can be escalated to global 25-type authority even though contact is expressly non-certifying."
+    },
+    {
+      "code": "B4_ACTIVATION_AUDIT_DEPENDENCY_IS_CIRCULAR",
+      "severity": "BLOCKER",
+      "finding": "The prose orders activation before its independent audit, while separateActivationEvent requires that future audit's manifest hash and PASS verdict inside the event being audited.",
+      "impact": "The evidence graph cannot be constructed without a post-event hash in a preexisting immutable event or an audit that does not cover the final event."
+    },
+    {
+      "code": "B5_SLOT_MATERIALIZATION_CANNOT_BIND_REQUIRED_HIDDEN_AND_TYPE_EVIDENCE",
+      "severity": "BLOCKER",
+      "finding": "slotMaterialization omits explanation-evidence, author-hypothesis, and rotation-epoch commitments; typeId is any string and familyId only matches a prefix. unevaluatedProperties=false prevents adding the omitted fields.",
+      "impact": "Slots can be materialized without the presealed evidence required by protocol or with aliases and incorrect type-family-epoch assignments."
+    },
+    {
+      "code": "B6_FRESH_DISJOINT_NO_REPLAY_SEQUENCE_HAS_NO_MATERIAL_PROOF",
+      "severity": "BLOCKER",
+      "finding": "No event binds the normalized text-window, topic, scenario, author, and surface fingerprints or a disjointness proof claimed by calibrationSequence.",
+      "impact": "Pilot, failed, or near-duplicate items can be replayed or backfilled into main/holdout under new opaque commitments."
+    },
+    {
+      "code": "B7_ACCESS_AUTHORIZATION_DOES_NOT_BIND_RESOURCE_CLASS_OR_CURRENT_STATE",
+      "severity": "BLOCKER",
+      "finding": "Authorization binds only opaque resource, visible-surface, capability, and deny-set hashes. It binds no current state, resource class, expected policy digest, or phase allowlist proof; DENY lacks state and deny-set binding.",
+      "impact": "A phase-1 answer or gold resource can be authorized under an opaque hash while satisfying the schema, defeating the hidden-surface boundary."
+    },
+    {
+      "code": "B8_PREOPEN_AND_SINGLE_USE_CAPABILITY_CLAIMS_LACK_CHAIN_EVIDENCE",
+      "severity": "BLOCKER",
+      "finding": "There is no sealed OPEN or capability-consumption event. The close receipt self-reports openedAt and no uniqueness index prevents repeated authorizations or receipts for one capability.",
+      "impact": "Backdated authorization after actual open and capability replay remain structurally admissible."
+    }
+  ],
+  "disposition": {
+    "designAccepted": false,
+    "actualReviewerCertificationClaimed": false,
+    "reviewerCertificatesIssued": 0,
+    "activationAuthorized": false,
+    "executionAuthorized": false,
+    "requiredNextStep": "CREATE_A_NEW_SUCCESSOR_DESIGN_AND_OBTAIN_A_FRESH_INDEPENDENT_AUDIT"
+  },
+  "independence": {
+    "subjectVerifierExecutedOrImported": false,
+    "subjectVerifierSourceInspectedAsUntrusted": true,
+    "subjectHostileFixtureInspectedAsUntrusted": true,
+    "subjectHostileFixtureParsedByIndependentVerifier": false,
+    "subjectMutationGeneratorReused": false,
+    "subjectWrites": 0,
+    "forbiddenPrivateRowsOpened": 0
+  },
+  "activity": {
+    "privateReads": 0,
+    "networkCalls": 0,
+    "apiCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0,
+    "subjectWrites": 0,
+    "actualReviewerCertifications": 0
+  }
+}

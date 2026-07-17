@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) been",
+      "verdict": "correct",
+      "reason": "지배 구조: 'less developed virtual realities have always been integral parts of human life.' 주어는 복수 명사구 'less developed virtual realities'(head = realities), 조동사 have와 수 일치 성립. 'have been + NP(integral parts)'는 be동사의 현재완료 + 보어 구조로 정문. always는 have와 been 사이 부사 위치로 표준적. 대안 해석(been을 being/be로 바꿔야 할 근거)은 존재하지 않음 — 현재완료가 'have always been ~'(과거부터 지금까지 늘 그래왔다)라는 문맥 의미와 정확히 부합."
+    },
+    {
+      "label": "(B) What",
+      "verdict": "correct",
+      "reason": "'What is new about cyberspace is its interactive nature' — 자유(융합) 관계대명사 What이 명사절 'What is new about cyberspace'를 이끌어 문장 전체의 주어가 되고, 절 내부에서 is의 주어 역할(빈자리)을 채운다. 선행사가 없으므로 That/Which로 대체 불가. 명사절 주어 + 단수 동사 is 결합도 성립. 형식적으로 완벽한 의사분열문(pseudo-cleft) 구조로 정문."
+    },
+    {
+      "label": "(C) where",
+      "verdict": "correct",
+      "reason": "'It is a space where real people have actual interactions with other real people' — 선행사 'a space'는 장소 명사이고, where 뒤의 절은 주어(real people)+타동사(have)+목적어(actual interactions)가 모두 채워진 완전한 절. 따라서 관계부사 where(= in which)가 요구되는 자리이며 which/that(불완전절 요구)이었다면 오히려 비문. 정문."
+    },
+    {
+      "label": "(D) their",
+      "verdict": "correct",
+      "reason": "'while being able to shape, or even create, their own and other people's personalities' — 분사구문 'while being able ...'의 의미상 주어는 주절(where절)의 주어 'real people'(복수). 따라서 소유격 대명사는 복수 their가 맞고, 'their own ... personalities'의 own도 소유격 뒤 강조 용법으로 정상. 단수 선행 후보(a space, It)는 의미상 소유 주체가 될 수 없어 수 불일치 대안 해석이 성립하지 않음. 정문."
+    },
+    {
+      "label": "(E) are",
+      "verdict": "incorrect",
+      "reason": "'The move from passive imaginary reality to the interactive virtual reality of cyberspace are much more radical ...' — 주어 명사구의 핵(head)은 단수 'The move'이며, 'from ... to ... of cyberspace'는 전부 전치사구 수식어라 수 일치에 관여하지 못한다. 따라서 단수 동사 is가 필요한데 복수 are가 쓰여 주어-동사 수 일치 위반. 근접 명사 'cyberspace'(단수)로도 are는 정당화 불가. 도치·존재구문 등 are를 살릴 대안 구조도 없음(주어가 문두에 그대로 있는 평서문). 명백한 비문."
+    }
+  ],
+  "note": "정답 후보는 (E) 하나로 유일. (A)~(D)는 각각 현재완료 수일치, 자유관계사 주어절, 완전절+관계부사, 분사구문 의미상 주어와의 대명사 일치로 모두 형식적으로 정문임을 확인. (E)는 긴 전치사구 수식어로 주어 head(The move, 단수)를 가린 전형적 수일치 함정으로, are→is 교정 필요. 복수정답 소지 없음."
+}

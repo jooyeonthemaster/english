@@ -1,0 +1,35 @@
+{
+  "pid": "P040",
+  "answer": "E",
+  "multipleDefensible": false,
+  "defensibleLabels": ["E"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "Frame 'present + NP + with + NP'. Antecedent is 'a bunch of healthy undergraduates' (plural); matrix subject is 'He' (Bargh), so no reflexive is required and the plural object pronoun 'them' in indirect-object position is exactly right."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "Subject head is singular 'One'; the PP 'of the lists' is a postmodifier and does not control agreement. Singular 'was' agrees with 'One'. Correct."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'wrinkled' is a past participle used attributively as a deverbal adjective ('the face that is wrinkled'). Standard attributive participle; no active/passive mismatch. Correct."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'be interested in + wh-clause' ('in how long it took the students to leave...') is the standard experiencer construction; the participial adjective 'interested' in predicative position with copula 'was' is well-formed. Correct."
+    },
+    {
+      "label": "E",
+      "verdict": "incorrect",
+      "reason": "Two possible parses both fail: (i) complementizer 'that' heading a subject clause requires a complete clause, but transitive 'found' lacks its object ('That he found' is incomplete); (ii) demonstrative 'that' as head of a zero (contact) relative in subject function is not licensed in standard English — 'That which he found' or fused relative 'What he found' is required. Since 'found' needs an object gap bound by the wh-head, the correct form is 'What he found was extraordinary'. Ungrammatical as written."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. The item has a single, formally provable answer: (E) 'That' must be the fused relative 'What' because 'found' is transitive and needs its object supplied by the clause-initial wh-element, while the matrix needs a nominal subject. All rescue parses (complementizer clause, demonstrative + contact relative) were checked and fail. Options (A)-(D) are each independently verifiable as grammatical with clear governing rules (present-with frame, One-of-NP agreement, attributive past participle, be-interested-in). Clean, unambiguous item."
+}

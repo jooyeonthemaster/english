@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-hostile-fixtures-3",
+  "artifactId": "reviewer-calibration-v4-production-bound-v3",
+  "status": "SYNTHETIC_PUBLIC_MUTATION_SPEC_ONLY_NO_ITEMS_GOLD_ACTORS_OR_EVENTS",
+  "minimums": {
+    "structuralMutations": 250,
+    "semanticBypasses": 50,
+    "allMustBeDetectedOrRejected": true
+  },
+  "requiredBlockerFamilies": [
+    {
+      "code": "B1",
+      "attacks": [
+        "remove PACKET_AUTHOR role",
+        "remove ITEM_AUTHOR role",
+        "remove GOLD_AUTHOR role",
+        "allow trusted-gold auditor to share each author role",
+        "omit audited item/gold/packet author registries",
+        "omit auditor artifact-authorship exclusion proof"
+      ]
+    },
+    {
+      "code": "B2",
+      "attacks": [
+        "remove each activation-auditor incompatibility",
+        "activation auditor equals candidate author",
+        "activation auditor equals certificate author",
+        "activation auditor equals gold auditor",
+        "activation auditor equals custodian or prior result viewer",
+        "activation auditor audits its own report or candidate"
+      ]
+    },
+    {
+      "code": "B3",
+      "attacks": [
+        "FOCUS_ONLY missing either exact focus type",
+        "FOCUS_ONLY coverage count other than two",
+        "ALL_25 missing each canonical ID in turn",
+        "ALL_25 missing each per-type passed coverage-event hash in turn",
+        "epoch-1 16 contact events presented as 25 passed coverage events",
+        "candidate scope wider than either reviewer certificate"
+      ]
+    },
+    {
+      "code": "B4",
+      "attacks": [
+        "candidate grants authority",
+        "candidate contains future audit hash",
+        "audit report omits exact candidate event or bytes hash",
+        "audit report embeds the hash of its own future package manifest",
+        "audit report grants authority",
+        "grant omits preexisting PASS audit report or manifest",
+        "result access before final grant",
+        "state skip candidate or audit phase"
+      ]
+    },
+    {
+      "code": "B5",
+      "attacks": [
+        "remove each hidden commitment",
+        "remove explanation, author hypothesis, rejection or surplus history",
+        "remove rights/PII or rotation epoch",
+        "use alias type ID",
+        "use unknown family ID",
+        "use a valid type in the wrong binding-v4 family",
+        "use main or holdout type not selected for epoch"
+      ]
+    },
+    {
+      "code": "B6",
+      "attacks": [
+        "remove each normalized fingerprint component",
+        "duplicate across pilot/main/holdout",
+        "reuse failed fingerprint",
+        "reuse rejected fingerprint",
+        "reuse previously issued fingerprint",
+        "change surface without new collision check",
+        "reduce pairwise comparison count below 1770"
+      ]
+    },
+    {
+      "code": "B7",
+      "attacks": [
+        "authorization missing current state",
+        "authorization missing resource class",
+        "authorization missing policy/allowlist/deny-set digest or proof",
+        "denial missing the same bindings",
+        "phase-1 answer reveal authorization",
+        "phase-1 trusted-gold authorization",
+        "resource allowed in a different state",
+        "empty state deny set including post-grant"
+      ]
+    },
+    {
+      "code": "B8",
+      "attacks": [
+        "skip OPEN",
+        "skip CAPABILITY_CONSUME",
+        "ordinal gap or reorder",
+        "prior-hash mismatch",
+        "backdated authorization",
+        "content released before OPEN or CONSUME seal",
+        "capability useOrdinal greater than one",
+        "duplicate authorization or consume for capability",
+        "close without consume",
+        "timestamp or occurredAt mismatch"
+      ]
+    }
+  ],
+  "crossCuttingAttacks": [
+    "upstream or predecessor pin drift",
+    "predecessor FAIL promoted to authority",
+    "author evidence mislabeled as independent PASS",
+    "nonzero actor/item/access/certificate/candidate/grant counter",
+    "legacy v2 execution",
+    "private path read",
+    "package manifest drift"
+  ],
+  "expectedDisposition": "AUTHOR_EVIDENCE_COMPLETE_PENDING_FRESH_INDEPENDENT_AUDIT_NO_PASS_OR_AUTHORITY",
+  "activity": {
+    "privateReads": 0,
+    "itemAnswerGoldReadsOrWrites": 0,
+    "actorReadsOrWrites": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0
+  }
+}

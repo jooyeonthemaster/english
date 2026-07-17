@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답 (매력적 오답)",
+      "reason": "'pedestrians must keep moving without any temporary halting'은 Carol이 표지판을 오해한 내용 그대로다. 빈칸은 친구가 웃음을 터뜨리며 Carol의 오해를 '교정'하는 발화('Of course you can stand there' 직후)이므로, Carol의 오해를 재진술하는 이 선지는 담화 방향과 정반대다. 실전에서 지문 앞부분(walking back and forth)만 보고 표면 어휘 매칭으로 고르면 끌리는 선지 — 나도 첫 스캔에서 'keep moving'이 지문의 'walking back and forth'와 호응해 잠깐 멈칫했으나, 친구의 대사가 반박 맥락임을 확인하고 배제했다."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "미국 교통 표지 'No Standing'의 실제 의미: 차량이 그 자리에서 대기(standing)하거나 주차하는 것은 금지되지만, 승객 승·하차를 위한 짧은 정차는 허용된다. 'prolonged parking is forbidden while brief stops for boarding are allowed'가 이를 정확히 진술한다. 지문 상황과도 정합적 — 친구가 실제로 그 모퉁이에서 차로 Carol을 태웠으므로(brief stop for boarding) 그 행위가 허용되는 규칙이어야 하고, 표지판이 보행자가 아닌 차량 대상임을 드러내야 웃음 포인트가 성립한다. 문법 결합도 자연스럽다(That means + 명사절 상당 어구)."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'priority is given to vehicles currently in motion'은 통행 우선권 개념으로 'No Standing' 표지의 의미가 아니며, 지문 어디에도 우선권 관련 단서가 없다. 친구가 Carol을 태우러 정차한 상황과도 무관하다."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "'only registered drivers have the right to access'는 접근 허가/등록 개념으로 표지판 의미와 전혀 무관하다. 지문에 등록·허가 관련 단서가 전무하다. 매력도가 가장 낮은 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답 (준매력 오답)",
+      "reason": "'all vehicles must clear the lane during peak hours'는 러시아워 정차금지(No Stopping during rush hours) 류의 규정이다. 'No Standing'을 '차량 대상 규제'로 옳게 파악한 학생이 정확한 정의를 모르면 끌릴 수 있다. 그러나 (a) 'peak hours'라는 시간 한정이 표지판·지문 어디에도 없고, (b) 모든 차량이 즉시 비켜야 한다면 친구가 11:30에 그 모퉁이에서 Carol을 태운 행위 자체가 불가능해져 지문 서사와 모순된다. 실제로 잠시 이 선지를 빈칸에 대입해 봤으나 서사 정합성 검증에서 탈락."
+    }
+  ],
+  "note": "실전 풀이 순서: 서사 파악(보행자 Carol이 차량용 표지 'No Standing'을 자신에게 적용해 오해) → 빈칸이 친구의 교정 발화임을 확인 → 각 선지 대입. 유혹 기록: ①은 지문 표면 어휘(standing/moving)와의 매칭 때문에 최초 3초간 가장 끌렸으나 담화 기능(교정 vs 재진술) 검증으로 배제, ⑤는 '차량 규제'라는 방향은 맞아 2차로 끌렸으나 peak hours 무근거+서사 모순으로 배제. 유일하게 표지판의 실제 법적 의미와 지문 서사(친구가 그 자리에서 승차시킴) 모두를 만족하는 것은 ②뿐. 유머 포인트(보행자 오해 vs 차량 규정)도 ②에서만 완결된다. 단일 정답으로 수렴, 이의 여지 낮음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'tasks should ideally be aligned with our personal states of vitality' — 'be + 과거분사 aligned with NP'는 수동태로 문법 결합에 하자가 없다. 논리: (a) 직후 예시 'analytical tasks are best accomplished when our energy is high'가 '과제↔활력 상태 정렬' 명제의 사례로 정확히 기능하고, (b) 필자 사례(아침에 energized → 어려운 일을 아침에 처리)와 (c) 마지막 문장 'If you know you are not a morning person, ... schedule your difficult work later in the day'가 모두 '개인의 활력 상태에 맞춰 과제를 배치하라'는 일반 원리로 수렴한다. 특히 마지막 문장은 원리가 '아침'이 아니라 '개인별 활력'에 조건화됨을 결정적으로 보여준다. 형식적으로 지문 전체 명제 집합과 무모순이며 유일하게 일반화 수준이 맞는 후보."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Seam: 'be strictly separated from our emotional responses'는 문법적으로 성립. 논리: 지문은 감정 반응과 과제를 분리하라는 주장을 하지 않는다. 오히려 필자는 미루기가 'emotional energy' 낭비를 낳는다는 이유로 과제를 일찍 처리한다 — 감정적 비용이 스케줄링 판단의 근거로 '통합'되어 있지 분리 대상이 아니다. 지문 어디에도 감정 억제/분리 규범 명제가 없으므로 반증됨."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Seam: 'be finished as early in the morning as possible'은 문법적으로 성립. 논리: 필자 개인 사례(아침형 인간)만 보면 그럴듯하나, 빈칸 문장은 'different tasks should ideally be ___'라는 연구 기반의 일반 명제이고, 마지막 문장 'If you know you are not a morning person, ... schedule your difficult work later in the day'가 이 후보와 정면으로 모순된다(아침이 아니라 개인 리듬에 맞추라는 반례 조건문). 또한 'different tasks'(과제 유형별 차등)라는 주어와도 어긋난다 — '전부 아침에'는 차등이 아니라 일률이다. 형식적으로 반증되는 강한 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Seam: 'be postponed until we are completely free of stress'는 문법적으로 성립. 논리: 지문의 핵심 서사가 '미루기(procrastinate)는 감정 에너지 낭비를 낳으므로 즉시 처리한다'이다. 연기(postpone)를 이상적 전략으로 제시하는 이 후보는 지문 주장과 정반대 방향이므로 즉시 반증됨."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Seam: 'be managed by minimizing contact with difficult clients'는 문법적으로 성립. 논리: unhappy client는 어려운 과제의 한 예시로만 등장하며, 필자의 처방은 접촉 최소화가 아니라 '먼저 처리하기'다. 빈칸은 과제 일반의 스케줄링 원리를 요구하는데 이 후보는 특정 예시 소재를 오용한 지엽적 진술로, 일반화 수준 불일치 + 지문 처방과 모순으로 반증됨."
+    }
+  ],
+  "note": "빈칸 유형. 정답 1이 유일하게 옹호 가능 — 예시 문장(에너지가 높을 때 분석 과제), 필자 사례, 마지막 조건문(non-morning person은 늦게 배치)이 모두 '개인 활력 상태와의 정렬'로 수렴. 최강 미끼는 3이나 마지막 문장이 명시적 반례로 작동해 형식적으로 배제됨. 모든 선지의 문법 결합(seam)은 정상이므로 판별은 순수 논리 적합성으로 이루어지며, 복수정답 소지 없음."
+}

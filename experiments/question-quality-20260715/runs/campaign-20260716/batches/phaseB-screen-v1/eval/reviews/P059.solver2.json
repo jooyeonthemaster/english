@@ -1,0 +1,35 @@
+{
+  "pid": "P059",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'Recording an interview'(동명사구·단수)에 대해 [is easier and more thorough] and [can be less unnerving]의 병렬. 조동사 can 뒤 원형 be는 필수 형태로 정문. 병렬 시작점(and can ...)이 주절 술부와 정확히 결합한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "동명사구 'using a recorder'가 문장 주어. 동명사 주어는 적법하며 단수 취급되어 후속 'has ... and is ...'와의 수 일치도 정확. 분사구문/현수분사로 볼 여지가 없는 명백한 주어 위치."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop the technique ... of selective note-taking'은 가주어 It + 진주어 to부정사 외치 구문. 'It is + 형용사 + to-V' 규칙을 정확히 충족하는 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "involve는 동명사를 목적어로 취하는 동사(*involve to write는 비문). 'This involves writing down ...'은 규칙 충족. so that절 내부 'they can be transcribed'의 수동태도 key answers를 지시하여 논리적으로 성립."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'It make the material much easier ...'에서 주어 It(3인칭 단수, 앞 문장의 편집 습관 지시) + 현재시제이므로 makes여야 한다. 원형 make를 구제할 대안 해석 전수 검토: (i) 명령문 — 주어 It 명시로 불가, (ii) 가정법 현재/요구동사 that절 — 해당 구문 아님, (iii) 선행 조동사 공백(gapping) — 선행 조동사 부재로 불가, (iv) 사역 원형 — It이 주어라 불가. 어법상 틀린 유일한 밑줄."
+    }
+  ],
+  "note": "정답 (E)가 3인칭 단수 현재 일치라는 명확한 단일 규칙 위반으로 유일하게 성립. (A)~(D)는 각각 조동사+원형, 동명사 주어, 가주어-진주어 외치, involve+동명사라는 독립적 규칙으로 모두 정문임을 형식적으로 확인. 복수 정답 여지 없음. 난이도는 다소 낮은 편(E의 오류가 장거리 단서 없이 국지적 일치만으로 판별 가능)."
+}

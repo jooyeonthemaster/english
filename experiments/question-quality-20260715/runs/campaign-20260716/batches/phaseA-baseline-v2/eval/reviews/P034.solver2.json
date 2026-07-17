@@ -1,0 +1,35 @@
+{
+  "pid": "P034",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam은 정문(make sure you + 원형 VP)이나, '한계를 넘어 밀어붙여라'는 지문의 핵심 명제 'know where to draw the line / exercise some moderation'과 정면 모순. 논리적으로 부정된다."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합 완전(avoid + 동명사 taking on, 정문). 논리: 'Joining too many clubs → 자유시간 잠식 → 스트레스', 'exercise some moderation' 명제에서 직접 도출되는 유일한 결론. 등위 명령문 구조(의미 있는 활동에 참여하라 + 절제 조건)와 정확히 호응."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법상 정문이나, 지문에서 'as perfect as you want it to be'는 완벽주의가 crunch time 스트레스의 원인 사례로 제시된 것이지 권고가 아님. 완벽 우선은 pacing/moderation 논지와 모순. 표면어 'perfect'를 재활용한 오답 미끼로 논리적으로 기각."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법상 정문이나, 사회적 인맥 확장은 지문의 어떤 전제에도 등장하지 않아 결론으로 도출 불가. 무관 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법상 정문이나, 활동 일지 기록은 절제(moderation) 명제에서 도출되지 않는 무근거 처방. 시간 관리 소재와의 표면적 연상만 있을 뿐 논리적 지지가 없음."
+    }
+  ],
+  "note": "다섯 선지 모두 seam은 문법적으로 성립하므로 판별은 순수 논리 적합성으로 이루어짐. 지문 논지(절제·한계 설정)에서 연역되는 결론은 ②뿐이며 대안 해석으로 정당화되는 타 선지는 없음. 단일 정답으로 수렴, 복수정답 소지 없음. 참고: 지문 내 'reduce a large amount of your free time'은 관용상 다소 어색(eat up/cut into가 자연스러움)하나 문항 성립에는 영향 없음."
+}

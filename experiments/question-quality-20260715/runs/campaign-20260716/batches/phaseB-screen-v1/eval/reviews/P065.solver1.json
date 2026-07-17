@@ -1,0 +1,35 @@
+{
+  "pid": "P065",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'the immediate rejection of artistic details by readers'는 지문 논지(독자는 모호함을 감내하고 해석하려 애쓴다)와 정반대. seam도 실패: 'follow from the immediate rejection..., and not immediately ask'에서 ask가 병렬로 걸릴 부정사 앵커가 없어 비문."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "지문은 독자가 작가를 비협조적이라 상상하지 않는다(instead of imagining the writer is being uncooperative)고 명시하므로 'deep-seated distrust'는 반테마. 명사구 뒤에 'and not immediately ask'가 병렬될 수 없어 문법 결합도 실패."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "'readers' voluntary readiness to endure ambiguity and actively engage'를 넣으면 to endure / (to) actively engage / and not (to) immediately ask 의 3항 부정사 병렬이 완성되어 seam이 유일하게 성립. 내용상으로도 'put up with many obscurities', 'struggle to interpret'와 정확히 대응. 문학의 특징들이 독자의 이러한 태도(hyper-protected cooperative principle에 기반한 인내와 적극적 해석)에서 따라 나온다는 결론과 일치."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong (매력적 오답)",
+      "reason": "지문이 출판·서평·재판(institutional selection, 'institutional label')을 강조하므로 표면적으로 강하게 끌린다 — 실제로 잠시 유혹됨. 그러나 (a) seam 실패: 'follow from the professional authority..., and not immediately ask'에서 ask의 행위자·병렬 앵커 부재로 비문. (b) 논리 실패: 제도적 권위는 독자의 기대를 낳는 '이유'일 뿐이고, 마지막 절 'not immediately ask'는 독자 행동을 기술하므로 빈칸은 독자의 태도여야 함. 'publishing cover'라는 표현 자체도 부자연."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'administrative training'(행정 훈련)은 지문과 전혀 무관한 논외 소재. seam 역시 성립하지 않음. 즉시 소거."
+    }
+  ],
+  "note": "원전은 Culler의 hyper-protected cooperative principle 논의로 추정. 빈칸 뒤 잔여 병렬 'and not immediately ask ...'가 장거리 문법 단서로 작동하여 부정사 연쇄를 포함한 독자-행위자 명사구(③)만 정문을 만든다. ④가 유일한 실질적 미끼이나 seam 테스트와 담화 논리(라벨→기대→독자 태도→문학의 특징) 양쪽에서 탈락. 대안 해석(축약 관계절 등)으로 다른 선지가 구제될 여지 탐색했으나 없음 — 단일 정답 ③."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam is clean: 'strength and stamina to endure prolonged practice sessions without fatigue' is exactly what weight-room conditioning buys. Stays entirely in the passage's concept space (stamina, fatigue, physical conditioning) and completes the explicit chain 'not just on the practice range but in the weight room' -> capacity to sustain longer/harder practice -> close out opponents in majors. Minor residual worry: the negotiation parallel ('stamina to see the deal through') points at endurance DURING the event, while this option locates endurance in practice; still, it is the only option that stamina can plausibly enable, and the purpose clause 'in order to close out their opponents' carries the tournament payoff."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Reversed causality. Nutrition is presented as a CAUSE of physical fitness ('proper nutrition, exercise, and rest'), not something that strength and stamina enable. 'Stamina to balance their nutrition' is semantically incoherent."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "Genuinely tempting: 'close out their opponents' and 'head and shoulders above' read like dominance language, and I felt the pull. But (i) 'strength and stamina to GAIN ... physical edge' is circular - the stamina IS the physical edge they already possess; (ii) 'psychological dominance' imports a mental/psychological dimension the passage never mentions - the argument is purely physiological (fitness -> stamina -> lasting to the end). Unsupported addition disqualifies it."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Contradicts the thesis. The passage credits physical conditioning (nutrition, exercise, rest, weight room), not willpower. 'Overcome bodily limits mainly through willpower' inverts the message that the body itself must be trained."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Irrelevant. Nothing suggests world-class golfers lack strategic planning or that fitness compensates for planning deficits. Off-topic insertion."
+    }
+  ],
+  "note": "Blind solve, top-tier test-taker lens. Answer 1 is the sole survivor: options 2/4/5 fail on causality, contradiction, and irrelevance respectively; option 3 is the designed magnet (dominance framing) but adds an unsupported psychological concept and is circular about 'gaining' a physical edge. Recorded temptation toward 3. One craft note for the item author: option 1's endurance is sited at PRACTICE rather than late-tournament play, so the parallel with 'physical stamina to see the deal through' (endurance during the event) is slightly loosened; a fill like 'stay strong down the stretch' would parallel more tightly, but among the given five, 1 is unambiguously best and uniquely defensible."
+}

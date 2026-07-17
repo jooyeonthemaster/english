@@ -1,0 +1,35 @@
+{
+  "pid": "P075",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Indirect question 'how long the shortest war in recorded history lasted': 'last' is intransitive with a duration wh-phrase, subject-verb order is proper for an embedded question, and past tense matches the historical fact. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "The subject is a coordination of two distinct subjects — the wh-clause 'Why the war took place' AND the NP 'the reason behind its brief duration' — joined by 'and'. Coordinated subjects denoting two things take a plural verb, so 'are' is correct. (A lone wh-clause subject would take singular, but that is not the structure here.)"
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a small African island nation called Zanzibar' is a passive reduced relative clause (= which was called Zanzibar). The nation is the thing being named, so the past participle 'called' is correct."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'ordered Zanzibar's new leader to step down' instantiates the established pattern order + object + to-infinitive. 'to step' is correct."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "In 'it killed hundreds of Zanzibaris, forced the new leader to flee and the country to immediately surrender', treating 'forced' as a finite verb parallel to 'killed' requires a conjunction ('killed ..., and forced ...'), but the only 'and' in the clause is consumed coordinating forced's two object+infinitive complements ('the new leader to flee' and 'the country to (immediately) surrender'). The two VPs are thus joined by a bare comma — ungrammatical asyndetic VP coordination. Alternative parses fail: a bare past-participle reduced relative on 'Zanzibaris' must be passive, but 'forced' here is active with its own object (would need 'who forced'); a three-item list parse fails because 'the country to immediately surrender' is not a VP but a retained complement of 'forced'. The grammatical form is the resultative participle 'forcing'. Hence (E) is the error."
+    }
+  ],
+  "note": "Answer converges uniquely on (E): 'forced' must be the participial 'forcing' because the sentence's sole 'and' binds forced's two complements, leaving the killed/forced VP pair conjunction-less. All other underlined forms are provably grammatical under their governing rules (embedded-question word order and intransitive 'last'; plural agreement with coordinated clause+NP subjects; passive reduced relative; order+O+to-infinitive). No alternative parse rescues (E)."
+}

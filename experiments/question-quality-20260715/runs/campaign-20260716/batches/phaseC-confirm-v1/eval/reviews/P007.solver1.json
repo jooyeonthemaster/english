@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'strictly focus on verifying the survivor's identity' is logically reversed: the anecdote shows verification/accuracy being punished (the honest reporter was scolded both times), and the converged behavior is fabrication, not verification. Grammar seats fine but logic fails."
+    },
+    {
+      "label": "2",
+      "verdict": "reject (designed trap)",
+      "reason": "'cautiously exclude details that lack factual evidence' is the attractive moral-inversion distractor — it anchors on 'I wrote the report, leaving out the cat' as the virtuous model. But that exact behavior earned a severe scolding; 'Now when there is a shipwreck all of us...' states the punishment-avoiding behavior everyone converged on, which is the opposite of exclusion. I felt the pull momentarily before the incentive logic killed it."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "'unanimously incorporate the fabricated detail' seats perfectly both grammatically ('all of us unanimously incorporate...') and logically: after honest omission was punished twice, every reporter now inserts the cat whether or not one exists. The definite article 'the fabricated detail' correctly refers back to the (nonexistent) cat. Completes the ironic convergence the anecdote builds toward."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'deliberately challenge the editors' biased preferences' contradicts the dynamic: reporters capitulate to editorial pressure (fear of being beaten/scolded), they never challenge editors. No textual support."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'shift our reports toward the crew's actual heroism' uses a superficial lexical echo of 'crew' from the first story, but 'actual' contradicts the fabrication theme; the converged behavior is inserting a fictitious cat, not reporting real heroism."
+    }
+  ],
+  "note": "Classic journalism-lore anecdote ('now we all put the cat in'). Blank is a plain predicate for 'all of us' with no syntactic ambiguity at the seam; no alternative parsing rescues any distractor. Option 2 is the only option with real pull and it is a clean logical inversion trap, not a defensible answer. Single answer: 3."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "문법 결합: 'make sure you + avoid(원형 동사구)'로 seam 완전 성립, 'avoid + taking(동명사)'도 규범 어법. 논리: 지문의 핵심 명제는 (a) 과다 가입이 자유시간을 잠식한다, (b) 'draw the line', 'Pacing is important', 'exercise some moderation'이 반복적으로 절제를 지시한다, (c) 절제 실패 시 필수 과업에 대한 스트레스가 발생한다. '능력 범위를 넘는 과도한 개입을 피하라'는 이 절제 논지의 정확한 재진술이며, 앞 절 'get involved in the activities that are most meaningful to you'(선별적 참여)와 병렬 접속(and)으로도 정합적이다. 형식적으로 모순 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "문법 결합은 성립하나('make sure you relinquish...') 논리적으로 지문과 정면 모순. 지문은 과다 활동이 자유시간을 대량 잠식하는 것(reduce a large amount of your free time)을 문제 상황으로 제시하므로, 자유시간을 '완전히 포기하라'는 지시는 경고 대상 그 자체를 권고하는 자기모순이다. 'for genuine growth'라는 목적어구를 붙여도 절제(moderation) 논지와 양립 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "문법 결합 성립. 그러나 지문은 마감(deadline)을 무시할 대상이 아니라 반드시 완수해야 하는 과업(the tasks you absolutely need to complete)의 예시로 제시한다. 신문 마감 예화는 '마감이 오면 저녁·주말까지 투입해야 한다'는 현실을 인정하는 전제이지 마감 회피 권고가 아니다. '느긋한 생활을 위해 마감을 무시하라'는 지문의 규범 구조(과업 완수는 필수, 조절 대상은 활동의 양)를 뒤집는 논리 왜곡."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "문법 결합 성립. 논리적으로는 그럴듯해 보이는 미끼이나 형식적으로 두 지점에서 붕괴한다. (i) 빈칸 직전 절이 'activities that are most meaningful to you'를 선택 기준으로 명시했는데, 'solely in clubs with very light workloads'는 선택 기준을 '업무량 최소'로 대체하여 병렬절과 충돌한다 — 지문의 신문 예시처럼 의미 있는 활동이 고강도일 수 있음을 지문 스스로 인정한다. (ii) 지문의 처방은 활동의 개수·강도에 대한 '절제'이지 '경부하 활동만 골라라'가 아니다. solely라는 전칭 한정이 과잉 주장을 만든다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "문법 결합 성립. 그러나 'without limits'는 지문의 'draw the line', 'exercise some moderation'과 직접적 반의 관계다. 'gradually'로 완화해도 '한계 없이 늘려라'는 결론은 과다 가입을 경고하는 지문 전체 논지와 모순. 형식 논리상 P(절제하라)와 ¬P(무제한 늘려라)의 관계로 즉시 기각."
+    }
+  ],
+  "note": "다섯 선지 모두 'make sure you + 동사원형' seam에서 문법적으로 결합 가능하므로 변별은 순수 논리 층위에서 이뤄진다. 지문의 논지(절제·선별 참여·과업 완수 필수)에 대해 1번만이 정합적이고 2·3·5는 직접 모순, 4는 병렬절의 선택 기준('가장 의미 있는 활동')과 충돌하는 왜곡 미끼다. 대안 해석으로 정답 후보가 늘어날 여지를 탐색했으나(예: 4번을 '절제의 한 형태'로 읽기) solely의 전칭 한정과 신문 예시의 고강도 활동 인정 때문에 옹호 불가. 단일 정답 1번."
+}

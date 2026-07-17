@@ -1,0 +1,61 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-nonstandard-plural",
+      "severity": "minor",
+      "evidence": "Option 5 'a sign of failed cooperations' uses a nonstandard countable plural of 'cooperation' (normally uncountable; should be 'failed cooperation'). The inserted sentence remains parseable and a solver cannot confidently eliminate the option on grammar alone, so V3 is not failed, but it is a blemish on a premium item."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "Polarity reversal of the core claim (readers demand immediate clarity)",
+      "temptingBecause": "Recycles the 'immediately' / clarity-of-communication vocabulary from the final clause and the efficiency-of-communication theme.",
+      "decisiveFlaw": "Directly contradicted by the sentence's own tail: readers 'not immediately ask what do you mean by that' — they withhold demands for clarity."
+    },
+    {
+      "label": "2",
+      "intent": "Correct answer — abstraction of source span 'explore uncertainties'",
+      "temptingBecause": "N/A (correct). Combines 'put up with many obscurities' with 'in the interests of some further communicative goal'; meaning-preserving and uniquely consistent with the passage's positive stance toward ambiguity.",
+      "decisiveFlaw": "None — this is the declared and verified answer. Craft note: 'underlying communicative goals' is a near-verbatim echo of 'further communicative goal', giving a lexical shortcut."
+    },
+    {
+      "label": "3",
+      "intent": "Scope-narrowing detail trap (peripheral fact promoted to main attitude)",
+      "temptingBecause": "'Reprinted' is anchored verbatim in the first sentence ('published, reviewed, and reprinted').",
+      "decisiveFlaw": "Reprinting belongs to the institutional selection process, not to the reader's interpretive stance that the final sentence summarizes; obviously off-slot in a list about reading attitudes."
+    },
+    {
+      "label": "4",
+      "intent": "Distortion/reversal of the flouting point (expect rule conformity instead of accepting rule-flouting)",
+      "temptingBecause": "Reuses 'narrative' and the rules/principles vocabulary ('principles of efficient communication', 'narrative display texts').",
+      "decisiveFlaw": "The passage says readers struggle to interpret elements that FLOUT principles, assuming a further purpose — the opposite of expecting authors to conform to standard rules."
+    },
+    {
+      "label": "5",
+      "intent": "Polarity reversal with heavy lexical overlap (dismiss complications as failed cooperation)",
+      "temptingBecause": "Lifts 'linguistic complications' and the 'cooperative/cooperation' terminology almost verbatim from the passage.",
+      "decisiveFlaw": "Passage states readers assume complications 'ultimately have a communicative purpose' instead of imagining uncooperativeness — dismissal is the stated anti-behavior. Also contains the nonstandard plural 'cooperations'."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "All five validity gates pass: the render is an exact copy of the source with only 'explore uncertainties' blanked; blind solve confirms option 2 as the unique answer with options 1/3/4/5 independently wrong; the answer-inserted completion is grammatical; the explanation's structural and logical claims match the actual text; all fields are synchronized. However, the item fails its requested KILLER difficulty (C5=1) and the RUBRIC section D KILLER conditions: (a) polarity alone identifies the answer — option 2 is the only positively-valenced choice while 1, 4, 5 are same-family polarity reversals of one core claim (insufficient trap-type diversity, weakening C2/C3); (b) the blank is locally solvable — the flanking conjuncts 'to pay attention ... and not immediately ask what do you mean by that' telegraph the answer within the same sentence, and 'tolerate ambiguity' is nearly synonymous with the earlier 'put up with many obscurities', making the solve retrieval rather than multi-sentence inference (C4 leakage); (c) the correct option's 'underlying communicative goals' echoes 'further communicative goal' almost verbatim. Craft total 15 with C5 below 2, so grade C: sound and shippable as a MEDIUM item after difficulty relabeling or distractor redesign, but requires redesign (more competitive, differently-trapped distractors; reduced local/lexical leakage) to honor the KILLER label. Minor wording fix needed: 'failed cooperations' -> 'failed cooperation' in option 5."
+}

@@ -1,0 +1,23 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false
+  },
+  "include": [
+    "protocol-core.ts",
+    "response-parser.ts",
+    "price-snapshot-core.ts",
+    "live-io.ts",
+    "production-runner.ts",
+    "live-child.mts",
+    "operator-wrapper.mts",
+    "capture-price-snapshot.mts",
+    "compile-exact-wire.mts",
+    "live-closure.mts",
+    "test-support.ts",
+    "offline.test.ts",
+    "build-offline.mts",
+    "verify.mts"
+  ]
+}

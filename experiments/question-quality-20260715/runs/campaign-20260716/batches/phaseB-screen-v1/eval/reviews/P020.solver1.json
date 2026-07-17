@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the nature of that process is repetitive'에서 that은 앞 문장의 'a process embodied in a machine'을 받는 지시형용사로 단수 명사 process를 수식. 지시 대상 명확, 수·격 문제 없음. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself over and over again'에서 관계절 주어(= process)와 목적어가 동일 지시이므로 재귀대명사 itself가 필수인 자리. 정확한 용법. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'a clock that do not depend on a repetitive cycle'에서 관계대명사 that의 선행사는 단수 a clock이므로 관계절 동사는 does not depend여야 함. 대안 해석 탐색: 복수 선행사 후보 없음(직전 명사구가 a clock뿐), 가정법·원형부정사가 성립할 통사 환경도 아님. 어떤 해석으로도 do가 정당화되지 않는 유일한 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'The only example that comes to mind readily is a candle'에서 진짜 주어는 단수 The only example이고 that comes to mind readily는 삽입 관계절. 거리 함정(readily is의 낯선 인접)으로 순간 끌리지만 수일치는 정확하고 부사 readily의 위치도 허용됨. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'although at first masked'는 although (it is) at first masked의 「접속사 + 과거분사」 축약 구문. 생략된 주어가 주절 주어 this(= iterative process 지시)와 일치해 표준적 용법. despite류 전치사를 기대하게 만드는 미끼지만 완전한 정문."
+    }
+  ],
+  "note": "최상위권 렌즈: 실전에서 (D)의 삽입 관계절 수일치 착시와 (E)의 축약 concessive 구문이 설계된 매력적 오답으로 작동하나, 지배 규칙(진짜 주어 확인, 접속사+분사 생략 규칙) 점검 시 즉시 해소됨. (C)는 선행사 a clock(단수)과의 수일치 위반으로 대안 해석 여지가 전혀 없는 깨끗한 단일 정답. 문항 성립에 문제 없음."
+}

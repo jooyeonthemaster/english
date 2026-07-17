@@ -1,0 +1,45 @@
+{
+  "strategy": "w4-25p-all",
+  "describe": "w3-triple-ladder 역할별 모델 조합 — answer=gemini-2.5-pro / decoy=gemini-2.5-pro / repair=gemini-2.5-pro",
+  "callPlan": "gemini-2.5-pro(정답)+gemini-2.5-pro(미끼) x1 (+재생성 최대 2회·표적수리=gemini-2.5-pro)",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 185292,
+  "avgAttempts": 3.3,
+  "avgCalls": 3.3,
+  "totalCostUsd": 1.06598,
+  "avgCostUsd": 0.1066,
+  "costRecordedCalls": 33,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 0.5,
+  "zeroErrorItems": 6,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.89,
+  "avgAnswerRelPos": 0.632,
+  "answerRelPosInBand": 9,
+  "models": {
+    "google/gemini-2.5-pro": 33
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 3
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 2
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 1
+    }
+  ]
+}

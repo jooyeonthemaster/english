@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "삽입 시 문법적으로는 성립한다('The law defines human relationships through cold contracts, fearing the horror of their consequences'에서 their는 contracts/relationships를 받을 수 있음). 그러나 논리적으로 실패: 지문 어디에도 '계약(contracts)'이라는 개념이 등장하지 않고, 빈칸 문장은 직전 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'의 재진술이어야 하며 whereas 이하의 'cinema introduces us to our affects'와 대조를 이뤄야 한다. '차가운 계약으로 인간관계를 정의한다'는 정서적 삶(affective life) 억제라는 대조축과 무관하다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합은 가능하나(their = sensitive images로 해석 가능) 논리적으로 실패: 지문은 법이 '예술 채널/영화'를 검열한다고 말한 적이 없다. 지문의 대조는 '영화는 정서적 삶을 표현하고, 법은 그것(인간의 정서적 삶 자체)을 억제한다'는 것이지, 법이 예술 매체를 규제한다는 것이 아니다. 법의 억제 대상은 인간의 desires and drives이지 images가 아니므로 지문 논리를 왜곡한다."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "형식적 증명: (1) 문법 seam — 'The law strives to contain our emotional impulses, fearing the horror of their consequences'에서 fearing 분사구문의 의미상 주어는 The law로 일치하고, their의 선행사는 our emotional impulses(복수)로 명확히 회복된다. (2) 논리 — 직전 문장 'the law keeps it(=man's affective life) in check' 및 'ensure that we are not overwhelmed and destroyed by our desires and drives'의 정확한 재진술이며, whereas 이하 'cinema introduces us to our affects'와의 대조(억제 vs 대면·표현)를 완벽히 완성한다. emotional impulses ≈ desires and drives ≈ affects의 지시 연쇄도 정합적이다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "논리·문법 양면에서 실패: (1) their의 선행사가 선지 내부에 없다(cinema 단수, anxiety 단수·불가산). 직전 문장의 desires and drives까지 거슬러 올라가야 하는데 그러면 fearing 절이 선지 내용(영화 감독·감시)과 의미적으로 단절된다. (2) 논리 — 지문은 법이 영화를 감독한다는 주장을 전혀 하지 않으며, 법과 영화는 각각 인간 본성에 대해 독립적으로 작동하는 평행한 두 제도로 제시된다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "직접 모순: 지문은 'the law keeps it(affective life) in check'라고 명시하므로 법이 정서적 표현을 '환영한다(welcomes)'는 것은 지문과 정면 충돌한다. 또한 whereas 이하의 영화와의 대조 구조가 붕괴한다(둘 다 정서를 긍정하게 되어 However로 도입된 '중요한 차이'가 사라짐). fearing the horror of their consequences와도 의미 충돌(환영하면서 결과의 공포를 두려워한다는 것은 비정합적)."
+    }
+  ],
+  "note": "빈칸은 '법은 정서적 충동을 억제하려 한다 vs 영화는 정서를 대면시킨다'는 명시적 대조의 법 쪽 항을 채우는 문제. ③만이 fearing 분사구문의 의미상 주어 일치와 their의 선행사 회복(복수 명사구)을 동시에 만족하면서 keeps-it-in-check의 재진술로 성립한다. 복수정답 여지 없음."
+}

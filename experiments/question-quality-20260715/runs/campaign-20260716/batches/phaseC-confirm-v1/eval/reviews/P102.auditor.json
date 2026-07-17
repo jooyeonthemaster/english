@@ -1,0 +1,61 @@
+{
+  "pid": "P102",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "error-direction flip: false negative (missing real threats) instead of the passage's false positive (seeing threats that are not there)",
+      "temptingBecause": "anchors on 'Our dangers today are high blood pressure or diabetes' — a student may infer the Stone Age brain overlooks these real modern threats",
+      "decisiveFlaw": "the concluding seam 'The danger is an illusion. Our Stone Age brain ___' demands a false-positive reading; the passage never asserts the brain fails to detect real threats, only that it manufactures nonexistent ones"
+    },
+    {
+      "label": "②",
+      "intent": "fabricated comparison / half-truth linking two separate examples (past starvation vs modern diseases)",
+      "temptingBecause": "both 'starving' and 'high blood pressure or diabetes' appear verbatim in the passage",
+      "decisiveFlaw": "the passage states we no longer worry about starving and makes no prioritization claim between the two; no such ranking is derivable"
+    },
+    {
+      "label": "③",
+      "intent": "correct answer — meaning-preserving paraphrase of the source span 'sees a mortal danger that is not there'",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none — matches the thesis restated in 'There is no danger, but our brain rates it as such' and 'The danger is an illusion'"
+    },
+    {
+      "label": "④",
+      "intent": "thesis polarity reversal (claims adaptation where the passage claims maladaptation)",
+      "temptingBecause": "reuses 'modern world' and the safety framing of the opening sentences",
+      "decisiveFlaw": "directly contradicts 'we have a Stone Age brain that lives in a modern world' and the entire misfiring mechanism; 'adapts quickly' is the exact opposite of the point"
+    },
+    {
+      "label": "⑤",
+      "intent": "actor/condition mash-up combining the flee-or-fight response with the modern-disease examples",
+      "temptingBecause": "'flee' and physical ailments (blood pressure, diabetes) both appear in the passage",
+      "decisiveFlaw": "flee-or-fight is described as the past response to real danger, never as something the brain urges toward diseases; the combination is incoherent with the passage's logic"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MINOR_PARAPHRASE_SHARPENING",
+      "severity": "minor",
+      "evidence": "해설이 'unpleasant conversation with our partner'를 '연인과의 말다툼'으로 옮겨 원문보다 다소 강하게 특정하나, 사실 왜곡이나 구조 오분석은 아님"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "All validity gates pass: the rendered passage is byte-identical to the source except the intended final-span blank; exactly one option (③) survives independent per-option verification; all five options occupy the same VP slot with no tail-based grammatical elimination; the explanation is factually accurate and synchronized with the declared answer, options, and keyPoints. The item fails as a KILLER, however. RUBRIC §D requires that the answer demand synthesis of at least two sentences/logic clues and not be selectable from a single local cue — here the thesis is stated explicitly three times ('There is no danger, but our brain rates it as such', 'The danger is an illusion', plus the earlier 'many situations are considered a threat... although they are harmless'), and the correct option is a near-literal paraphrase retrievable from the single adjacent sentence. Abstraction level of the answer is also too low for KILLER (minimal distance from the source span). Distractor set has well-differentiated trap intents (direction flip, fabricated comparison, polarity reversal, mash-up) but only ① is genuinely competitive; ②⑤ are eliminable on sight. Craft: C1=4, C2=3, C3=2, C4=3, C5=1, C6=3 (total 16). C5=1 for severe difficulty-label mismatch drives the grade to C: valid and publishable as an easy-to-mid blank item, but requires redesign (deeper abstraction, removal/relocation of redundant thesis restatements, stronger second competitor) to honor the KILLER label."
+}

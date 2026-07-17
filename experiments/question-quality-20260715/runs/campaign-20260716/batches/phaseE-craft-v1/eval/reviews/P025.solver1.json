@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a way of learning and practicing skills' — 전치사 of의 목적어로 동명사 learning과 practicing이 병렬. 병렬 시작점은 'of' 바로 뒤이며 practicing은 learning과 정확히 대칭. skills and behaviors를 공유 목적어로 취하는 구조도 자연스럽다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'behaviors that are necessarily for future survival' — be동사의 보어 자리이므로 형용사 necessary가 와야 한다('necessary for ~' = ~에 필수적인). 부사 necessarily가 'are + PP'를 수식하는 대안 해석('필연적으로 미래 생존을 위한 것이다')을 적극 검토했으나, 이 지문의 의미는 명백히 '미래 생존에 필요한 기술과 행동'이고, 같은 지문 후반부에 'that are necessary for everyday living'이라는 올바른 대조 표본이 존재해 부사 표기를 정문으로 옹호할 수 없다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a way in which children learn about the world' — 관계절 내부(children learn about the world and their place in it)가 완전한 절이므로 '전치사+관계대명사(in which)'가 옳다. learn about이 이미 자체 전치사구를 가지므로 which 단독이면 오히려 틀렸을 자리. 'the way how'만 금지될 뿐 'a way in which'는 표준 정문. 최상위권도 'way 뒤엔 that/how?' 하고 잠깐 끌리는 자리지만 검증하면 흠이 없다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'skills like walking, running, and jumping that are necessary' — 관계대명사 that의 선행사는 최근접 명사 jumping(단수처럼 보이는 동명사)이 아니라 핵 명사 skills(복수). 'like walking, running, and jumping'은 skills의 예시 삽입구다. 의미상으로도 '일상생활에 필요한 것'은 기술들 전체이므로 are가 옳다. 근접 명사 함정으로 is에 끌리게 설계된 매력 오답이나, 장거리 선행사 확인으로 해소된다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'allows children to try out and learn ... and to acquire ...' — allow + 목적어 + to부정사 구문으로 to try는 옳다. try out and learn은 하나의 to를 공유하는 병렬, to acquire는 to를 반복한 두 번째 병렬 가지로 둘 다 표준 용법. allow가 동명사를 직접 취하는 경우(allows trying)는 목적어가 없을 때이므로 여기서는 to부정사가 유일하게 맞다. 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 1차 통독에서 (B)의 necessarily가 즉시 이질감을 준다(be + ___ + for 보어 자리). 매력적 오답 유혹 기록 — (D) 'jumping that are'는 근접 단수 명사 함정으로 순간 is를 떠올리게 하지만 선행사가 skills임이 명확해 해소되고, (C) 'a way in which'는 'way 뒤 관계사' 불안을 자극하지만 완전절 앞 전치사+관계대명사로 정문. (B)를 부사+PP 서술('필연적으로 ~을 위한 것')로 옹호하는 대안 해석을 탐색했으나 의미가 지문 논지와 어긋나고, 지문 내 'are necessary for everyday living'이라는 병렬 대조 단서가 형용사 necessary가 원문임을 확정한다. 정답 후보는 (B) 단독, 복수 정답 소지 없음."
+}

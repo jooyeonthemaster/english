@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "valid",
+      "reason": "문법 결합(seam): 'make sure (that) you avoid taking on more than you can handle' — make sure + that절(접속사 생략) 정문, avoid는 동명사 taking을 목적어로 취하며, 'more than you can handle'은 handle의 목적어 공백을 갖는 비교 관계절로 성립. 논리: 지문의 논증 구조는 (a) 양보: 과외활동은 좋다 (b) 문제 제기: 선을 그을 줄 모르면 과다 가입으로 자유 시간 잠식 (c) 사례: 신문부 마감기의 저녁·주말 잠식 (d) 명시적 논제: 'Pacing is important' + 'exercise some moderation' (e) 결론 명령문: 의미 있는 활동에 참여하되 + ___. 빈칸은 등위된 두 번째 명령으로 (d)의 재진술을 요구하며 '감당할 수 있는 것 이상을 떠맡지 않도록 하라'가 정확히 그것이다. 형식적으로 유일하게 함의되는 결론."
+    },
+    {
+      "label": "2",
+      "verdict": "invalid",
+      "reason": "문법 결합은 정문('make sure you try to join as many club activities as possible'). 그러나 전제 'Joining too many clubs can reduce a large amount of your free time' 및 moderation 논제와 정면 모순(반의 미끼). 논리적으로 옹호 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "invalid",
+      "reason": "문법 결합은 정문('dedicate NP to V-ing' 구문 올바름). 그러나 학교 신문 사례는 과부하의 비용을 보여주는 예시일 뿐 처방이 아니며, '모든 자유 시간'을 바치라는 것은 'Pacing is important'와 moderation 명령에 모순. 예시를 결론으로 승격시키는 미끼로 옹호 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "invalid",
+      "reason": "문법 결합은 정문. 그러나 논리적 비약(non sequitur): 지문의 인과 주장은 [절제 없음 → 과도한 스트레스]이고 처방은 원인(활동량)의 절제이지 결과(스트레스)의 제거가 아니다. 'all ... completely'라는 절대 수량화는 지문 어디에서도 지지되지 않는 과잉 진술. 그럴듯하지만 옹호 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "invalid",
+      "reason": "문법 결합은 정문. 그러나 'evenings and even weekends'는 과다 참여의 바람직하지 않은 귀결로 제시된 것인데 이를 권장으로 뒤집는 극성 반전 미끼. 사례 어구(weekends) 표면 매칭 유혹만 있을 뿐 논지와 모순되어 옹호 불가."
+    }
+  ],
+  "note": "렌즈: 문법가/논리학자. 다섯 선지 모두 'make sure you ___' 뒤에서 동사원형 시작 술부로 문법 seam 결함이 전무하므로 변별은 순수 논리로 이루어진다. 대안 해석(축약 관계절, 분사구문, 도치 등)으로 오답 선지를 구제할 여지도 탐색했으나 본 문항은 빈칸 유형이라 해당 구제 경로 자체가 없고, 논리적으로도 2·3·5는 논제와 극성 모순, 4는 절대 수량화 비약으로 어느 것도 성립하지 않는다. 단일 정답 1로 수렴하는 깨끗한 문항."
+}

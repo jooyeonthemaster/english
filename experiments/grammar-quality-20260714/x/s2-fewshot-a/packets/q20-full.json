@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go1_20220324-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 134
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-shallow-participle-adjective-answer",
+    "grammar-shallow-nearby-passive-decoy",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):dec=f  (C):dec=d  (D):ANS=c  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 169,
+        "relPos": 0.247,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 233,
+        "relPos": 0.34,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 291,
+        "relPos": 0.425,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 555,
+        "relPos": 0.81,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 639,
+        "relPos": 0.933,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.933,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been proven to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you to do another task and another. By the end of the day, that one task completed will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "were required",
+        "isError": false,
+        "correction": "were required",
+        "errorExpression": "were required",
+        "surroundingText": "It was a simple task, but every morning we were required to make our bed to perfection.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "ridiculous",
+        "isError": false,
+        "correction": "ridiculous",
+        "errorExpression": "ridiculous",
+        "surroundingText": "It seemed a little ridiculous at the time, but the wisdom of this simple act",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "has been",
+        "isError": false,
+        "correction": "has been",
+        "errorExpression": "has been",
+        "surroundingText": "but the wisdom of this simple act has been proven to me many times over.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "completed",
+        "isError": true,
+        "correction": "completed",
+        "errorExpression": "completing",
+        "surroundingText": "By the end of the day, that one task completed will have turned into many tasks completed.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "right",
+        "isError": false,
+        "correction": "right",
+        "errorExpression": "right",
+        "surroundingText": "If you can't do little things right, you will never do the big things right.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "were required"
+      },
+      {
+        "label": "(B)",
+        "text": "ridiculous"
+      },
+      {
+        "label": "(C)",
+        "text": "has been"
+      },
+      {
+        "label": "(D)",
+        "text": "completing"
+      },
+      {
+        "label": "(E)",
+        "text": "right"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어인 we가 군대에서 '침대를 정돈하도록 요구받았다'는 수동의 대상이므로, 수동태 'were required'는 어법상 옳습니다.",
+      "(B)": "이형식 연결동사인 seem 뒤에서 주어를 보충 설명하는 주격보어의 자리이므로 형용사 'ridiculous'는 어법상 옳습니다.",
+      "(C)": "주어 부분 'the wisdom of this simple act'에서 전치사구의 수식을 받는 명사구의 핵은 단수 명사인 'wisdom'이므로, 단수 동사 'has been'은 수일치상 옳습니다.",
+      "(E)": "여기서 'right'은 타동사 do와 그 목적어(little things) 뒤에서 '올바르게, 제대로'라는 뜻을 나타내는 부사로 쓰였으므로 어법상 옳습니다."
+    },
+    "explanation": "(D) \"completing\"는 어법상 틀린 표현이며 \"completed\"로 고쳐야 한다. 문장의 주어는 'that one task'이며, 뒤에서 이를 수식하는 분사의 자리입니다. '과업(task)'은 스스로 완성하는 주체가 아니라 인간에 의해 '완성되는' 대상이므로, 수동의 의미를 지닌 과거분사 'completed'가 수식하는 것이 올바릅니다. 현재분사인 'completing'을 쓰면 타동사의 성질상 뒤에 목적어가 나타나야 하는데 목적어가 없으므로 문장 구조상 비문입니다. 따라서 복귀형인 'completed'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 분사의 능동 vs 수동 — 의미상 주어(task)와의 능동/수동 관계 및 목적어 유무로 판정",
+      "(A) 능동태 vs 수동태 — 요구를 받는 대상수동 여부를 주어와의 동작 관계를 통해 판정",
+      "(C) 주어-동사 수일치 — 전치사구 수식어구(of this simple act)를 제외한 진짜 주어 핵(wisdom)과의 일치"
+    ],
+    "tags": [
+      "수능 어법",
+      "분사의 수식",
+      "수동태",
+      "주어 동사 수일치"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we __(A) were required__ to make our bed to perfection. It seemed a little __(B) ridiculous__ at the time, but the wisdom of this simple act __(C) has been__ proven to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you to do another task and another. By the end of the day, that one task __(D) completing__ will have turned into many tasks completed. If you can't do little things __(E) right__, you will never do the big things right."
+  }
+}

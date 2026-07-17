@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "문법 결합: 'So get involved ..., and avoid taking on ...' — 명령문 등위 병렬(get involved / avoid)이 정확히 성립하고, avoid + 동명사(taking on) 및 비교 상관구문 'more than you can handle'(handle의 목적어가 관계사 축약으로 회수됨) 모두 정문. 논리: 지문의 논증 사슬은 [과외활동은 좋음 → 그러나 선을 그어야 함(draw the line) → 과다 가입 → 자유시간 잠식 → Pacing is important → 요지: moderation 없으면 필수 과업에 극심한 스트레스]이며, 결론 명령문은 '가장 의미 있는 활동에 참여하되 감당 범위를 넘게 떠맡지 마라'로 귀결된다. 'more than you can handle'은 'where to draw the line' 및 'exercise some moderation'의 직접 환언으로, 결론 자리에 형식적으로 정확히 부합한다."
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "문법 결합은 정문(try to maximize ..., 명령문 병렬 성립)이나 논리 모순. '최대화(maximize)'는 확장 지향으로 지문 핵심 명제인 절제(moderation)·draw the line과 정면 충돌하고, 사회적 관계망은 지문 어디에서도 과외활동의 목적으로 언급되지 않는 무근거 신정보다. 전제(과다 참여가 문제)에서 결론(무언가를 최대화하라)은 도출 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "문법 결합은 정문. 논리 부적합: 지문의 deadline은 학교신문(과외활동)의 마감 사례이지 academic(학업) 마감이 아니며, 요지는 '모든 마감을 지켜라'가 아니라 '마감 스트레스에 짓눌리지 않도록 참여량을 사전에 절제하라'이다. 원인(과부하)이 아닌 증상(마감 압박)에 대응하는 어긋난 처방으로, 표층 어휘(deadline, tasks you need to complete) 회수형 미끼다."
+    },
+    {
+      "label": "④",
+      "verdict": "incorrect",
+      "reason": "문법 결합은 정문이나 즉각적 자기모순 유발. 앞절 'get involved in the activities that are most meaningful to you'와 and로 연언되는데 'eliminate all ... entirely'는 그 활동마저 전부 제거하라는 뜻이 되어 동일 문장 내 모순(participate ∧ eliminate-all). 첫 문장 'Participating ... is a very good thing'과도 충돌한다. 'some moderation'을 전면 금지로 극단화한 오답."
+    },
+    {
+      "label": "⑤",
+      "verdict": "incorrect",
+      "reason": "문법 결합은 정문. 논리 부적합: 지문에서 스트레스는 절제 실패의 '결과'로 제시되며, 처방은 스트레스로부터의 사후적 '도피(escape)'가 아니라 스트레스가 생기지 않도록 수임량을 사전 조절하는 것이다. 원인 통제 권고를 결과 회피 권고로 치환했고 'daily stress'로 범위도 과잉 일반화되어 'exercise some moderation'의 환언이 될 수 없다. 표층 어휘(stressed out) 회수형 미끼."
+    }
+  ],
+  "note": "빈칸은 'get involved in the most meaningful activities, and ___' 형태의 명령문 병렬 결론 자리. 다섯 선지 모두 문법적으로는 빈칸에 결합 가능하므로 판별은 순수 논리 적합성으로 이루어진다. ①만이 요지(draw the line / Pacing / moderation)의 환언으로 성립하고, ②는 반대 방향(최대화), ④는 문장 내 자기모순, ③·⑤는 표층 어휘(deadline/stress) 회수형 미끼로 처방 층위가 어긋난다. 대안 해석으로 정답이 흔들릴 여지 없음 — 단일 정답 ①."
+}

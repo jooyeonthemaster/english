@@ -1,0 +1,35 @@
+{
+  "pid": "P036",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'no two performances are identical' — 계사 are의 주격 보어 자리이므로 형용사 identical이 지배 규칙상 옳다. 부사형(identically)이 요구될 통사 환경이 아니다. 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect (정답)",
+      "reason": "'that only through music we are able to ...' — 절 전체에 작용역을 갖는 초점 부가어 only+전치사구(only through music)가 절두로 전치되면 주어-조동사 도치가 의무적이다: 'only through music ARE WE able to realize the present.' 이 규칙은 내포절(that절) 내부 전치에도 동일하게 적용된다. only가 주어를 수식하는 면제 사례가 아니므로 비도치 어순 'we are'는 표준 영문법상 비문. 어법상 틀림."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'making it present here and now, without which it will not be music at all' — 비제한적 관계절의 which는 동명사구 'making it present here and now'(또는 'the necessity of present-ing music')를 선행사로 취할 수 있고, 전치사+관계대명사(without which) 구조는 정규적. 논리적으로도 '그것(현전화) 없이는 음악이 아니게 된다'로 성립. 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'activities that will involve all pupils ...' — 선행사 activities를 받는 제한적 관계대명사 that이 관계절 주어 공백(will involve의 주어)을 채운다. 콤마 없는 제한적 용법이므로 that 적법. 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'the emphasis is still on pupils absorbing factual information' — 전치사 on의 목적어인 동명사 absorbing에 대격 의미상 주어 pupils가 결합한 표준 구성(acc-ing). 명사+현재분사 후치수식으로 분석해도 정문. 정문."
+    }
+  ],
+  "note": "유일한 어법 오류는 (B)의 only+부가어 전치 후 비도치. 대안 해석(축약 관계절, 분사구문, 도치 면제 등)을 전수 탐색했으나 (B)를 정문으로 구제하는 독법은 없고, 나머지 네 밑줄을 비문으로 만드는 독법도 없다. 정답 후보 단일 — B."
+}

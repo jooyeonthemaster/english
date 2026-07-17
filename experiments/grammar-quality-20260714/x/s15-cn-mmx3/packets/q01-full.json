@@ -1,0 +1,176 @@
+{
+  "passageId": "ebsi_go3_20151013-q26",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "내용일치",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-decoy-point-monotony",
+    "grammar-marker-context-mismatch",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-correction-not-source-backed",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-too-long-hard"
+  ],
+  "warnings": [
+    "grammar-decoy-point-diversity"
+  ],
+  "topReject": [],
+  "layout": "(A):ANS=c  (B):dec=b  (C):dec=b  (D):dec=c  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 0,
+    "lastMarkerRelPos": null,
+    "firstHalfShare": null,
+    "notFoundCount": 5
+  },
+  "originalPassage": "Allan Houser created contemporary Apache sculpture. As a child, he listened to his father's stories about the adventures of Chief Geronimo. This gave him a deep attachment to his ancestral background, an attachment that is shown in his artwork. Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, where he worked as a freelance artist. During World War II, he traveled to California, where he became interested in the media of sculpture. He created works in a variety of styles and mastered bronze, metal, and stone sculpture. Houser's designs are modern, yet firmly rooted in the special tradition of his Native American forefathers. He drew inspiration from both past and present, but like all successful artists, his sculpture transcends race and language. The sculpture Reverie shows a distinct Native American influence, but it can be appreciated by anyone, regardless of his or her background.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 옳지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "Allan Houser (A) [has been] creating contemporary Apache sculpture for decades.",
+        "isError": true,
+        "errorExpression": "Allan Houser created contemporary Apache sculpture.",
+        "surroundingText": "지문 첫 문장: 'Allan Houser created contemporary Apache sculpture.'을 완전시제 그대로 둔 상태에서, 이 문장의 주절에 'has been creating ... for decades'를 붙여 문장 전체를 비문으로 만든다. 첫 문장 동사(created)와 뒤따르는 'has been creating' 사이에 의미적·통사적 충돌이 발생하도록 한다.",
+        "pointCode": "c",
+        "correction": "Allan Houser (A) [has been] creating contemporary Apache sculpture for decades."
+      },
+      {
+        "label": "(B)",
+        "expression": "This gave him a deep attachment to his ancestral background, (B) [an attachment that was shown] in his artwork.",
+        "isError": false,
+        "surroundingText": "원문 'an attachment that is shown in his artwork'를 수동형 과거 'an attachment that was shown in his artwork'로 변형한다. 시제만 바꾸었을 뿐 문법적으로 정당하므로 학생이 시 일치에 대해 고민하게 만든다.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "During World War II, he traveled to California, where he (C) [became interested] in the media of sculpture.",
+        "isError": false,
+        "surroundingText": "원문 그대로 'became interested in the media of sculpture'를 둔다. become interested in은 수동태 형태의 형용사적 구문으로 정문이며, 학생이 수동태처럼 보이기에 혼동할 수 있는 미끼이다.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "He created works in a variety of styles and (D) [had mastered] bronze, metal, and stone sculpture.",
+        "isError": false,
+        "surroundingText": "원문 'mastered bronze, metal, and stone sculpture'를 과거완료 'had mastered'로 변형한다. 'He created ... and had mastered ...' 구문에서 두 동사의 시제 차이를 학생이 고민하게 만든다. 과거완료는 과거보다 더 먼저 일어난 행동을 나타내므로 의미상 정당하다.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "Houser's designs are modern, yet (E) [firmly rooted] in the special tradition of his Native American forefathers.",
+        "isError": false,
+        "surroundingText": "원문 'firmly rooted in the special tradition'에서 'special'을 그대로 유지한 채 'firmly rooted' 구문은 원형 그대로 둔다. 'yet firmly rooted'는 분사구문으로 정문이며, 학생이 분사의 부사적用法에 대해 고민하게 만든다.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "Allan Houser created contemporary Apache sculpture."
+      },
+      {
+        "label": "(B)",
+        "text": "This gave him a deep attachment to his ancestral background, (B) [an attachment that was shown] in his artwork."
+      },
+      {
+        "label": "(C)",
+        "text": "During World War II, he traveled to California, where he (C) [became interested] in the media of sculpture."
+      },
+      {
+        "label": "(D)",
+        "text": "He created works in a variety of styles and (D) [had mastered] bronze, metal, and stone sculpture."
+      },
+      {
+        "label": "(E)",
+        "text": "Houser's designs are modern, yet (E) [firmly rooted] in the special tradition of his Native American forefathers."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "'This gave'라는 과거 시제와 'attachment that was shown'이라는 과거 수동태는 시 일치가 성립하므로 어법상 정문이다.",
+      "(C)": "'become interested in ~'은 수동태 형태를 빌린 형용사적 구문으로, '~에 관심을 갖게 되다'라는 의미로 쓰인다. 여기서 interested는 자동사로 기능하므로 정문이다.",
+      "(D)": "'had mastered'는 'created'(과거)보다 더 먼저 완료된 동작을 나타내는 과거완료로, '다양한 작품을 만들었고, 그보다 먼저 청동·금속·석조 조각을 마스터했다'는 의미적 관계가 성립하므로 정문이다.",
+      "(E)": "'yet firmly rooted'는 분사구문으로 주어(Houser's designs)를 수식하는 형용사적 용법이며, 어법상 정문이다."
+    },
+    "explanation": "정답은 **(A)**이다. **(A) Allan Houser has been creating contemporary Apache sculpture for decades.**\n이 문장은 어법상 명백한 비문이다. 첫 문장 'Allan Houser created contemporary Apache sculpture.'에서 단순 과거 시제(created)를 사용하고 있는데, 이를 'has been creating... for decades'로 바꾸면 두 가지 측면에서 문제가 발생한다. 첫째, 문맥적으로 두 개의 시제 표현이 충돌한다. 본문은 Houser가 이미 세상을 떠난 역사적 인물을 묘사하고 있으므로 단순 과거(created)가 적절하다. 그런데 'has been creating for decades'를 사용하면 과거부터 현재까지 계속되는 진행 행동을 나타내는 현재완료진행형이 되어, 작고난 작가의 일생 동안의 업적을 기술하는 본문 서술과 어긋난다. 둘째, 문장 구조상 'created'와 'has been creating'이 같은 주어(Allan Houser)의 술어로 공존할 수 없다. 하나의 주절에 두 개의 동사 시제가 성립하지 않으며, 원문의 단순 과거 created를 현재완료진행형으로 대체하는 것은 시제 일관성 원칙에 위배된다. **(B)**는 시 일치 문제로 보이는 미끼이다. 'This gave'(과거)와 'that was shown'(과거 수동태)는 시 일치가 성립하므로 정문이다. **(C)**는 수동태처럼 보이는 미끼이다. 'become interested in ~'은 '~에 관심을 갖게 되다'라는 의미의 자동사적 형용사 구문으로, interested는 수동태가 아닌 형용사로 기능한다. **(D)**는 시제 문제로 보이는 미끼이다. 'had mastered'는 'created'보다 더 먼저 완료된 동작을 나타내는 과거완료로, 의미적으로 정당하다. **(E)**는 분사구문 관련 미끼이다. 'yet firmly rooted'는 분사가 형용사적用法으로 주어를 수식하며 정문이다.",
+    "keyPoints": [
+      "현재완료진행형은 과거부터 현재까지 계속되는 동작에만 쓰이며, 역사적 인물의 일회성 업적 기술에는 부적절하다.",
+      "become + 과거분사 구문(interested, excited 등)은 수동태가 아닌 형용사적 구문으로 자동사用法이다.",
+      "과거완료(past perfect)는 과거보다 더 먼저 완료된 동작을 나타낼 때 사용한다.",
+      "분사구문에서 분사는 형용사적으로 주어를 수식할 수 있다."
+    ],
+    "tags": [
+      "시제",
+      "현재완료진행형",
+      "자동사적 형용사 구문",
+      "과거완료",
+      "분사구문"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "__(A) Allan Houser created contemporary Apache sculpture.__ As a child, he listened to his father's stories about the adventures of Chief Geronimo. This gave him a deep attachment to his ancestral background, an attachment that is shown in his artwork. Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, where he worked as a freelance artist. During World War II, he traveled to California, where he became interested in the media of sculpture. He created works in a variety of styles and mastered bronze, metal, and stone sculpture. Houser's designs are modern, yet firmly rooted in the special tradition of his Native American forefathers. He drew inspiration from both past and present, but like all successful artists, his sculpture transcends race and language. The sculpture Reverie shows a distinct Native American influence, but it can be appreciated by anyone, regardless of his or her background."
+  }
+}

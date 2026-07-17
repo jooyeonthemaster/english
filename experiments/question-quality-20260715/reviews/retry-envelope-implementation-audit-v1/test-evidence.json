@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "auditId": "retry-envelope-implementation-audit-v1-20260715",
+  "executionWindow": {
+    "initialSourceFreezeAtUtc": "2026-07-14T21:37:39.629Z",
+    "postDriftRefreezeAtUtc": "2026-07-14T21:52:28.064Z",
+    "completedAtUtc": "2026-07-14T21:54:12.661Z",
+    "repositoryHead": "467c6d107137a91088d3eba1620ba4036a63d709"
+  },
+  "concurrentDriftEvents": [
+    {
+      "event": "initial seal verifier rejected changed source hashes",
+      "attribution": "root-authorized structured-cardinality closure after the initial retry freeze",
+      "resolution": "affected source and tests were independently re-read, rerun, and re-frozen"
+    },
+    {
+      "event": "intermediate global TypeScript run observed TS18048 in a concurrently incomplete new test",
+      "attribution": "root concurrent test edit, not an audit edit",
+      "resolution": "root completed the test-only narrowing; final global TypeScript rerun passed"
+    }
+  ],
+  "commands": [
+    {
+      "id": "focused-retry-envelope",
+      "command": ".\\node_modules\\.bin\\tsx.cmd --test tests/unit/question-generation-retry-envelope.test.ts tests/unit/grammar-premium-reasoning-off.test.mjs",
+      "exitCode": 0,
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "externalNetwork": 0,
+      "transport": "test-local mocked fetch"
+    },
+    {
+      "id": "design-implementation-checker",
+      "command": "node experiments/question-quality-20260715/design/retry-envelope-closure-v1/verify-implementation.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "sdkCallsites": 5
+    },
+    {
+      "id": "phase-c-controller-adapter",
+      "command": ".\\node_modules\\.bin\\tsx.cmd --test tests/unit/atlas-research-fetch-boundary.test.ts experiments/question-quality-20260715/harness/atlas-controller.test.ts experiments/question-quality-20260715/harness/question-generation-callsite-adapter.test.ts experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts tests/unit/fallback-json-null-promotion.test.mjs tests/unit/wave1-schema-order.test.mjs tests/unit/wave3-premium-writing.test.mjs",
+      "exitCode": 0,
+      "tests": 68,
+      "passed": 68,
+      "failed": 0,
+      "externalNetwork": 0,
+      "transport": "test-local mocked fetch",
+      "database": "disposable test-local SQLite ledgers only"
+    },
+    {
+      "id": "budget-guard-harness",
+      "command": ".\\node_modules\\.bin\\tsx.cmd experiments/question-quality-20260715/harness/test.ts",
+      "exitCode": 0,
+      "tests": 25,
+      "passed": 25,
+      "failed": 0,
+      "externalNetwork": 0,
+      "database": "disposable test-local SQLite ledgers only"
+    },
+    {
+      "id": "grammar-regression",
+      "command": ".\\node_modules\\.bin\\tsx.cmd --test tests/unit/grammar*.test.mjs tests/unit/never-fail-salvage.test.mjs tests/unit/wave3-premium-writing.test.mjs",
+      "exitCode": 0,
+      "tests": 199,
+      "passed": 199,
+      "failed": 0,
+      "externalNetwork": 0
+    },
+    {
+      "id": "targeted-eslint",
+      "command": ".\\node_modules\\.bin\\eslint.cmd <40-file retry/source/test closure subset>",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "id": "global-typescript",
+      "command": ".\\node_modules\\.bin\\tsc.cmd --noEmit --pretty false",
+      "exitCode": 0,
+      "errors": 0
+    },
+    {
+      "id": "post-refreeze-focused-retry-cardinality",
+      "command": ".\\node_modules\\.bin\\tsx.cmd --test tests/unit/question-generation-retry-envelope.test.ts tests/unit/grammar-premium-reasoning-off.test.mjs tests/unit/question-generation-response-cardinality.test.ts",
+      "exitCode": 0,
+      "tests": 15,
+      "passed": 15,
+      "failed": 0,
+      "externalNetwork": 0,
+      "transport": "test-local mocked fetch"
+    },
+    {
+      "id": "post-refreeze-phase-c-cardinality",
+      "command": ".\\node_modules\\.bin\\tsx.cmd --test experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts tests/unit/question-generation-response-cardinality.test.ts",
+      "exitCode": 0,
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "externalNetwork": 0,
+      "transport": "test-local mocked fetch"
+    },
+    {
+      "id": "post-refreeze-design-implementation-checker",
+      "command": "node experiments/question-quality-20260715/design/retry-envelope-closure-v1/verify-implementation.mjs",
+      "exitCode": 0,
+      "status": "PASS",
+      "sdkCallsites": 5
+    },
+    {
+      "id": "post-refreeze-global-typescript",
+      "command": ".\\node_modules\\.bin\\tsc.cmd --noEmit --pretty false",
+      "exitCode": 0,
+      "errors": 0
+    },
+    {
+      "id": "post-refreeze-targeted-eslint",
+      "command": ".\\node_modules\\.bin\\eslint.cmd src/lib/question-generation-research-schema.ts src/lib/question-ai-schemas-mc.ts src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts tests/unit/question-generation-response-cardinality.test.ts experiments/question-quality-20260715/reviews/retry-envelope-implementation-audit-v1/verify.mjs",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "totals": {
+    "testAssertions": 326,
+    "passed": 326,
+    "failed": 0,
+    "externalNetworkOrApiCalls": 0,
+    "applicationOrExternalDatabaseCalls": 0,
+    "disposableTestLedgerUsed": true,
+    "secretValuesInspected": false,
+    "liveCandidateOutputsGenerated": 0,
+    "productionSourceEditsByAudit": 0,
+    "existingDesignArtifactEditsByAudit": 0,
+    "sourceClosureDriftAfterTests": 0
+  }
+}

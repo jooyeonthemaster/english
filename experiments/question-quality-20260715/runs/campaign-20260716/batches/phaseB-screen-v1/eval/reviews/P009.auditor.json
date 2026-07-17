@@ -1,0 +1,89 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-collocation",
+      "severity": "minor",
+      "evidence": "정답 ②를 넣은 완성문 'you must embrace a mind that accommodates unexpected disruptions most of the time'에서 'embrace a mind'는 'embrace a mindset/adopt a mindset'보다 덜 관용적이고, 원문에서 'prioritize ... most of the time'을 수식하던 'most of the time'이 ② 삽입 시 관계절 뒤에 다소 어색하게 걸린다. 문법 오류(비문)는 아니므로 V3 통과."
+    },
+    {
+      "code": "V4-minor-phrasing",
+      "severity": "minor",
+      "evidence": "해설이 'disruptions'를 '단절'로 옮겼으나 '차질/혼란'이 더 정확하고, 오답 ⑤ 해설의 '모든 단 하나의 변화'는 'every single change'의 어색한 직역이다. 구조 분석·문장 귀속·인과 설명은 모두 실제 지문과 일치(빈칸=다섯 번째 문장, 아이 예시=셋째 문장, go with the flow 대조=넷째 문장 확인)하므로 V4 통과."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(경직성 옹호)을 글의 목표(평온/마찰 최소화)로 포장한 half-truth형 함정",
+      "temptingBecause": "'minimize emotional friction'이 'peaceful person'의 목표어와 공명하고 'scheduled routines'가 본문 'rigid work schedule' 어휘를 재활용한다",
+      "decisiveFlaw": "본문 원표현 'prioritize flexibility over rigidity' 및 'go with the flow'와 정반대로 경직성을 옹호한다. ④와 함정 유형이 중복된다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'prioritize flexibility over rigidity'의 의미 보존 추상화 패러프레이즈",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음 — 셋째 문장(아이에게 available), 넷째 문장(go with the flow), 여섯째~일곱째 문장(계획 변경의 불가피성 수용)이 모두 지지한다"
+    },
+    {
+      "label": "③",
+      "intent": "scope shift/과확장 — 우선순위 재조정 맥락을 '외부 사회적 요구로부터의 고립'으로 왜곡",
+      "temptingBecause": "'personal goals'가 'getting what I want / keeping my plans'와, 'external social demands'가 four-year-old의 요구와 표면적으로 겹친다",
+      "decisiveFlaw": "본문은 오히려 타인(아이)의 요구에 응해주는 유연성을 옹호하므로 '고립'은 무근거이자 역방향이다. 소재 이탈이 커서 매력도가 낮다"
+    },
+    {
+      "label": "④",
+      "intent": "극성 반전(계획 수립·고수 옹호)",
+      "temptingBecause": "'establish a systematic plan'이 본문의 plans/work schedule 어휘를 앵커링하고 'without hesitation'이 단호함이라는 긍정 뉘앙스를 준다",
+      "decisiveFlaw": "본문이 평가절하하는 'keeping my plans'를 긍정하는 정반대 진술이다. ①과 함정 유형(극성 반전)이 중복되어 §D의 '서로 다른 함정' 조건을 훼손한다"
+    },
+    {
+      "label": "⑤",
+      "intent": "condition distortion/절대어 과장 — '일정 비율의 변화를 예상하라'를 '모든 변화를 사전 예측하라'로 왜곡",
+      "temptingBecause": "마지막 두 문장 'expect that a certain percentage of plans will change'와 표면 앵커가 연결되어 방향이 비슷해 보인다",
+      "decisiveFlaw": "본문은 변화의 '수용'이지 '예측 능력 의존'이 아니며 'a certain percentage'를 'every single'로 과장했다. 절대어 'every single'이 즉시 소거 단서로 작동한다(C4 감점 요인)"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "translation-imprecision",
+      "severity": "minor",
+      "evidence": "'unexpected disruptions'를 '예상치 못한 단절'로 번역 — '차질/혼란'이 정확하다"
+    },
+    {
+      "code": "awkward-phrasing",
+      "severity": "minor",
+      "evidence": "오답 ⑤ 해설 '모든 단 하나의 변화를 미리 예측하는' — 어색한 직역이나 선지 내용과의 대응 자체는 정확하다"
+    },
+    {
+      "code": "design-admission",
+      "severity": "minor",
+      "evidence": "정답 해설이 ①·④를 '극성 반전' 하나로 묶어 처리 — 해설은 정확하지만 두 오답의 함정 유형 중복을 자인하는 구조다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "syntacticSlotUniformity": "통과 — 다섯 선지 모두 'you must ___ most of the time'의 동일 VP 슬롯에 문법적으로 삽입되며 suffix 때문에 문법 탈락하는 오답이 없다",
+    "meaningPreservation": "통과 — ②는 source span의 의미를 난이도에 맞게 추상화하여 보존한다",
+    "twoClueRequirement": "실패 — 넷째 문장(go with the flow) 하나만 읽어도 정답 방향이 확정되어 '최소 두 문장/두 논리 단서 연결'이 필수적이지 않다",
+    "noSingleCueSolve": "실패 — ②가 유일한 친유연성(변화 수용) 극성 선지이므로 극성 판별 하나로 정답을 찍을 수 있고, ⑤는 절대어 'every single'로 자기 소거된다",
+    "distinctTrapTypes": "부분 실패 — ①·④가 동일한 극성 반전 함정으로 중복된다. ③(scope shift)·⑤(condition distortion)는 구별된다"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 'prioritize flexibility over rigidity'→빈칸 치환 외에 원지문과 완전 일치하고(접합 파손·중복·누락·고아 문장부호 없음), 각 선지 독립 검증 결과 ②가 유일 정답이며(①·④ 극성 반전, ③ 무근거 고립, ⑤ 절대어 과장으로 각각 배제), 완성문 문법성·해설 사실성·라벨/선지/해설/keyPoints 동기화 모두 이상 없음. 그러나 요청 난이도 KILLER에 크게 미달한다: (1) ②만이 '변화 수용' 극성을 가진 유일 선지라 극성 판별 단독으로 해결 가능 — §D '극성·절대어 하나로 찍을 수 없어야 한다' 위반. (2) 단일 단서(go with the flow)로 풀려 '두 논리 단서 연결' 위반. (3) ①·④ 함정 중복, ⑤ 절대어 자기 소거로 경쟁 선지가 형성되지 않아 C3=2, C5=1. 합계 16, C 최저 1로 B 기준(최저 2·합계 17) 미달 — 재설계가 필요한 C 등급. 개선 방향: 친유연성 방향의 정교한 half-truth 경쟁 선지를 도입해 극성 단독 해결을 차단하고, 오답 함정을 actor swap·condition loss 등으로 다변화하며, ⑤의 절대어 노출을 제거해야 한다."
+}

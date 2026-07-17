@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "artifactId": "prompt-profiles-v1",
+  "hashAlgorithm": "sha256",
+  "manifestSelfExcluded": true,
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "bytes": 18872,
+      "sha256": "69a1f67dbc7c31490a5c5ff0c7fa76bf22cf49a7f6a31d1c8870d20928668b4b"
+    },
+    {
+      "path": "expected-measurements.json",
+      "bytes": 8888,
+      "sha256": "8a101d8c943b72d68c7899d69113f79ab74cd9b1fd1235488b29f60b719edf11"
+    },
+    {
+      "path": "MEASUREMENTS.md",
+      "bytes": 6760,
+      "sha256": "110b7fd0d2902d4475773a06645042fe7003d566a5ac43697fae73c67328c562"
+    },
+    {
+      "path": "profile-spec.json",
+      "bytes": 24060,
+      "sha256": "4e0af3095def9a503be1bee4a76b98ab2305a0ca576fc2b0dba452752d92f8ef"
+    },
+    {
+      "path": "prompt-deltas.ts",
+      "bytes": 6752,
+      "sha256": "b1c2480e590b51993918b170c70c96f02f0e5d3a67a7d4d1cdb747c43a5bfd8d"
+    },
+    {
+      "path": "rubric-v1.json",
+      "bytes": 19101,
+      "sha256": "c7adc914c37634fb75d97ef1e03b4d3aa83c4e8f10842b93424b26a7ff8372e3"
+    },
+    {
+      "path": "schema-drafts.ts",
+      "bytes": 7776,
+      "sha256": "4b3f379674d3953a84a2891c6b6831b76ef1780306e6c6b20825f2aca96c3d32"
+    },
+    {
+      "path": "SOURCE-TRACE.md",
+      "bytes": 13672,
+      "sha256": "424d4fbb3e4abf72b992121ad78b19f9a34b3728d7b61082337e13c8a7c7f8c9"
+    },
+    {
+      "path": "VERIFICATION.md",
+      "bytes": 5135,
+      "sha256": "55d4ac6f6cac302f1a2377c2ee84439404a58addd8814aad6c7481f28005e669"
+    },
+    {
+      "path": "verify.ts",
+      "bytes": 40619,
+      "sha256": "5c065dc790a5c22d0a7d4e20e7089a1636d2d5992a74fba5e3b8a1ca420c0cec"
+    }
+  ]
+}

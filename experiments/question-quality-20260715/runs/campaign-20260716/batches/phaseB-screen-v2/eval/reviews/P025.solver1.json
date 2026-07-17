@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "expand your participation to as many clubs as possible — 지문의 'Joining too many clubs can reduce a large amount of your free time'와 'exercise some moderation' 논지에 정면으로 반대되는 반의어 미끼. 문법 결합은 자연스러우나 논리상 즉시 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "avoid taking on more commitments than you can manage — 'don't know where to draw the line', 'exercise some moderation', 'stressed out about the tasks you absolutely need to complete'의 결론적 재진술. 앞절 'get involved in the activities that are most meaningful to you'와 '선택적 참여 + 과부하 회피'로 자연스럽게 병렬. seam(make sure you + 동사원형) 무결."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "focus exclusively on activities that improve your grades — 성적(grades)은 지문에 전혀 등장하지 않는 무근거 개념. 지문이 제시한 선택 기준은 'most meaningful to you'이므로 exclusively grades 기준은 앞절과도 충돌하는 out-of-scope 선지."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "finish up your school newspaper duties well before the deadline — 매력적 오답. 신문부·마감이 지문에 실제 등장해 표면 어휘가 일치하므로 끌리지만, 신문부는 crunch time을 보여주는 예시일 뿐이며 'The point is this' 이후 결론부는 일반 원칙 층위다. 예시로 회귀하는 scope 축소 미끼이고, 내용상으로도 절제(활동량 조절)가 아닌 시간관리 조언이라 논지 불일치."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "prioritize the tasks that require zero free time to accomplish — 'free time', 'tasks', 'Pacing' 등 지문 키워드를 재조합한 미끼. '자유시간이 전혀 들지 않는 과업을 우선하라'는 명제 자체가 비논리적이며, 지문의 'tasks you absolutely need to complete'는 과부하 시 스트레스의 대상으로 언급된 것이지 우선순위 선정 기준이 아니다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: 결론 문장 'The point is this' 이후의 일반화 단계에서 moderation 재진술을 찾는 문제. ④(예시 어휘 재활용)와 ⑤(키워드 재조합)가 설계된 유혹이나 둘 다 층위/논리 오류로 명확히 배제 가능. 대안 해석(④를 구체 조언으로 옹호, ⑤의 선해)을 적극 탐색했으나 성립하지 않음. 정답은 ② 단독으로 수렴하며 복수정답 소지 없음."
+}

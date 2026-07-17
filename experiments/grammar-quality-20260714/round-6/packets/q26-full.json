@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20200312-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "함축의미",
+    "words": 141
+  },
+  "attempts": 4,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-filler-spanx2",
+    "grammar-killer-overdrilled-answerx1",
+    "grammar-explanation-lintx1"
+  ],
+  "layout": "(A):dec=b  (B):dec=c  (C):ANS=h  (D):dec=k  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 12,
+        "relPos": 0.016,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 53,
+        "relPos": 0.072,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 229,
+        "relPos": 0.31,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 300,
+        "relPos": 0.406,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 449,
+        "relPos": 0.608,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.608,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "We all know that tempers are one of the first things lost in many arguments.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "lost",
+        "isError": false,
+        "errorExpression": "lost",
+        "surroundingText": "We all know that tempers are one of the first things lost in many arguments.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "to be",
+        "isError": true,
+        "correction": "to be",
+        "errorExpression": "be",
+        "surroundingText": "The point to remember is that sometimes in arguments the other person is trying to get you to be angry.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "to annoy",
+        "isError": false,
+        "errorExpression": "to annoy",
+        "surroundingText": "They may be saying things that are intentionally designed to annoy you.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "impossible",
+        "isError": false,
+        "errorExpression": "impossible",
+        "surroundingText": "you'll simply get angry and then it will be impossible for you to win the argument.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "lost"
+      },
+      {
+        "label": "(C)",
+        "text": "be"
+      },
+      {
+        "label": "(D)",
+        "text": "to annoy"
+      },
+      {
+        "label": "(E)",
+        "text": "impossible"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "타동사 know의 목적어 역할을 하는 명사절을 이끄는 접속사 'that'은 뒤에 완전한 절을 동반하므로 어법상 옳습니다.",
+      "(B)": "명사구 'the first things'를 뒤에서 수식하는 과거분사 'lost'는 수동의 의미를 나타내므로 어법상 옳습니다.",
+      "(D)": "부사 'intentionally'와 수동형 'designed'의 수식을 받으며, '~하기 위해'라는 목적을 뜻하는 to부정사 'to annoy'는 어법상 옳습니다.",
+      "(E)": "가주어 'it'에 대한 형용사 보어 자리이므로, 부사 형태가 아닌 형용사 'impossible'은 어법상 옳습니다."
+    },
+    "explanation": "해당 문장은 준사역동사 get이 목적어(you)와 목적격보어(to be angry)를 취하는 구조를 이룹니다. get은 사역동사(make, have, let)와 달리 목적격보어 자리에 원형 부정사를 취하지 않고 to부정사를 요구합니다. 따라서 준사역동사 get의 통사적 성격에 맞춰 목적격보어인 동사원형 (C) 'be'는 잘못된 표현이며, 'to be'로 고쳐야 합니다. 학생들이 일반 사역동사의 쓰임과 혼동하여 원형 원형보어가 옳다고 착각하기 쉬운 고난도 함정입니다.",
+    "keyPoints": [
+      "(C) 목적격보어 형태 — 준사역동사 get의 보어로 to부정사 요구",
+      "(A) 명사절 접속사 — 타동사의 목적어 역할을 명사절 접속사 that으로 해결",
+      "(B) 분사의 후치 수식 — 수식을 받는 대상과의 수동 관계 파악"
+    ],
+    "tags": [
+      "목적격보어",
+      "명사절 접속사",
+      "과거분사 수식",
+      "준동사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all know __(A) that__ tempers are one of the first things __(B) lost__ in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you __(C) be__ angry. They may be saying things that are intentionally designed __(D) to annoy__ you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be __(E) impossible__ for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

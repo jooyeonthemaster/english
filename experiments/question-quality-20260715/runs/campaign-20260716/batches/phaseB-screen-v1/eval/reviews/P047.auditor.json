@@ -1,0 +1,66 @@
+{
+  "pid": "P047",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SEAM-COLLOCATION",
+      "severity": "major",
+      "evidence": "정답 ②를 넣은 완성문 'If you don't exercise reasonable limits on your level of involvement, ...'에서 'exercise + limits'는 비관용 결합이다. 자연스러운 영어는 'set/impose (reasonable) limits' 또는 'exercise restraint/moderation'이다. 원지문은 'exercise some moderation'으로 완전히 자연스러웠으나, 빈칸 경계가 결합 제약이 강한 동사 exercise를 빈칸 밖에 남긴 채 목적어만 교체하여 학생에게 노출되는 핵심 완성문(정답 문장)이 어색해졌다."
+    },
+    {
+      "code": "V3-OPTION-SLOT-COLLOCATION",
+      "severity": "minor",
+      "evidence": "다섯 선지 모두 'exercise ___' 슬롯과 결합이 어색하다: 'exercise maximum efforts'(make efforts가 관용), 'exercise fair competition', 'exercise frequent estimation', 'exercise total avoidance'(practice avoidance가 관용). 어색함이 균등해 특정 오답만 문법으로 탈락하지는 않으나(§D 차별 탈락 없음), 빈칸 경계 설계 자체가 잘못되었음을 보여준다. 동사 exercise를 빈칸에 포함시키거나 목적어를 restraint/moderation 계열로 유지했어야 한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(anti-thesis): 절제 대신 다영역 최대 노력을 권하는 반대 방향",
+      "temptingBecause": "'multiple domains'가 'Joining too many clubs'의 다중 활동 맥락을 표면적으로 반향하고, '노력'이라는 표현이 규범적으로 긍정적으로 들린다",
+      "decisiveFlaw": "지문의 처방('exercise some moderation', 'don't overextend yourself')과 정반대다. 삽입 시 '최대 노력을 하지 않으면 스트레스를 받는다'는 인과가 되어 지문 논리(과잉 참여→스트레스)를 뒤집는다"
+    },
+    {
+      "label": "②",
+      "intent": "정답: 원문 span 'some moderation in terms of your extracurricular activities'의 패러프레이즈('참여 수준에 대한 합리적 제한')",
+      "temptingBecause": "해당 없음(정답). 'Pacing is important'와 'don't overextend yourself' 두 단서가 수렴한다",
+      "decisiveFlaw": "의미상 결함 없음. 단 seam에서 'exercise reasonable limits'라는 비관용 결합이 발생(V3 이슈) — 의미 유일성은 유지되나 완성문 자연성이 손상됨"
+    },
+    {
+      "label": "③",
+      "intent": "무관 소재 삽입(topic swap): 학교 맥락에서 그럴듯한 '또래와의 공정 경쟁'으로 유인",
+      "temptingBecause": "학교 동아리·신문 등 학교 활동 배경이 경쟁 프레임을 연상시킨다",
+      "decisiveFlaw": "지문 어디에도 경쟁·또래 비교가 등장하지 않는다. 텍스트 앵커가 사실상 없어 즉시 소거 가능(매력도 낮음)"
+    },
+    {
+      "label": "④",
+      "intent": "세부 정보 오독(half-truth/detail misdirection): 'free time 감소'와 'deadline' 단서를 시간 계산 기술로 왜곡",
+      "temptingBecause": "'time savings'가 지문의 free time·deadline 어휘와 국소적으로 겹친다",
+      "decisiveFlaw": "지문의 처방은 참여 범위의 절제라는 태도이지 시간 절약량을 빈번히 추산하는 기법이 아니다. 'exact time savings'는 지문에 근거가 없다"
+    },
+    {
+      "label": "⑤",
+      "intent": "동일 방향 과잉 일반화(overshoot/absolute): 절제를 '완전 회피'로 극단화",
+      "temptingBecause": "정답과 같은 극성(부담 줄이기)이라 방향 판단만으로는 소거되지 않는 유일한 경쟁 선지다",
+      "decisiveFlaw": "'total avoidance'는 마지막 문장 'get involved in the activities that are most meaningful to you'(의미 있는 활동에는 참여하라)와 직접 충돌한다. 절제≠전면 회피"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V4/V5는 통과. 렌더 지문은 의도된 빈칸 외 손상이 없고, 독립 검증 결과 정답 ②는 유일하며(⑤만 실질 경쟁, ①은 극성 반전·③은 무앵커·④는 세부 왜곡으로 소거), 해설·오답 해설·keyPoints는 실제 지문 내용과 정확히 대응하고 상호 모순이 없다. 그러나 V3에서 실패: 빈칸이 결합 제약이 강한 동사 'exercise'의 목적어만을 대체하도록 설계되어, 정답을 넣은 완성문 'exercise reasonable limits on your level of involvement'가 비관용 결합(자연: set/impose limits 또는 exercise restraint/moderation)이 되고, 나머지 네 선지도 모두 exercise와 어색하게 결합한다. 공예는 총 17점(C3=2: ①③④가 즉시 소거되어 실질 판단이 ②vs⑤ 하나뿐)으로 INTERMEDIATE 라벨에는 대체로 부합하나, V 실패는 공예로 상쇄되지 않으므로 등급 F. 수정 방향: 빈칸 경계를 'exercise some moderation' 전체(동사 포함)로 확장하거나 선지를 'reasonable restraint over your level of involvement'류로 교체하면 B 이상 재평가 가능."
+}

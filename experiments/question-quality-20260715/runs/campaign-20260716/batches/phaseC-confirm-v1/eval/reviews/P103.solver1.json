@@ -1,0 +1,35 @@
+{
+  "pid": "P103",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'Animals as well as humans'에서 'as well as' 구문은 앞 명사(Animals, 복수)에 수일치하므로 복수동사 engage가 옳다. 근접 명사 humans에 끌리는 유혹이 설계되어 있으나 humans 역시 복수라 어느 해석으로도 engage는 정문. 'engage in play activities'도 관용적으로 올바름."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'see A as B'의 수동태 'A is seen as B'가 현재완료 수동 'has long been seen as'로 실현된 것. play는 '여겨지는' 대상이므로 과거분사 seen이 옳다. seeing(능동)으로의 유혹은 의미상 성립하지 않음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'play is a way which children learn about the world and their place in it'에서 관계절 내부 'children learn about the world and their place in it'은 이미 완전한 절로, which가 차지할 문법적 공백(gap)이 없다. 선행사 way는 방법의 부사어로 기능해야 하므로 'in which' 또는 'that'(관용적으로 the way that / the way + 무접속)이 필요하다. 대안 해석을 적극 탐색했으나: (1) 절 말미에 좌초 전치사(learn ... in)가 없어 which를 목적어로 수용할 수 없고, (2) 'their place in it'의 in it은 place를 수식하는 별개 성분이라 way와 연결되지 않는다. 따라서 which 단독은 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'skills like walking, running, and jumping'에서 전치사 like의 목적어로 동명사 3개(walking, running, jumping)가 병렬. 병렬 시작점이 walking이므로 jumping은 정확히 대등하다. to jump 등으로 바꿀 이유가 없음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'allow + 목적어 + to부정사' 구문으로 to try가 옳다. 뒤따르는 bare 'learn'이 병렬 파괴처럼 보여 유혹적이나, 'to try out and (to) learn'처럼 등위 부정사에서 to 공유는 표준 용법이며, 'and to acquire'는 별도의 대등 성분으로 allows children [to try out and learn ...] and [to acquire ...] 구조가 성립한다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 매력적 오답은 (A)(as well as 수일치 착시)와 (E)(to 공유 병렬 착시)였으나 둘 다 정문으로 확정. (C)는 완전절 앞의 관계대명사 which라는 전형적 오류 포인트로, in which/that 교정이 유일한 정문화 경로. 단일 정답으로 수렴하는 깔끔한 문항."
+}

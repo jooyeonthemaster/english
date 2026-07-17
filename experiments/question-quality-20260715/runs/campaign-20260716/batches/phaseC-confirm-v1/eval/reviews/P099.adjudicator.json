@@ -1,0 +1,38 @@
+{
+  "pid": "P099",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "GRAMMAR_ERROR 문항. 발문은 '어법상 틀린 것'을 고르는 것. 독립 재검증 결과 (E) are 만이 오류이며 나머지 4개 밑줄은 모두 정문이다. (E)의 진주어는 동명사구 'Protecting fig trees ...'(단수 취급)이므로 술어동사는 is여야 하는데 are로 되어 수 일치 위반이다. 인접 복수명사 ecosystems는 전치사 in의 목적어일 뿐 주어가 아니며(근접 수일치 미끼), 뒤따르는 단수 대명사 it(because it increases)이 단수 주어임을 확증한다. (A) 과거분사 후치수식(which are called), (B) 추상명사 fact 뒤 완전절을 이끄는 동격 that, (C) 전치사 in + 동명사 sustaining, (D) 가정법 도치(Should~) 주절의 수동태 would be eliminated는 모두 어법상 적법하여 대안 정답이 성립하지 않는다. 솔버1(E)·솔버2((E))·감사자(V2=true) 및 독립 재검증이 모두 단일 정답 (E)로 수렴. 정답 유일성 성립.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "called가 능동(calling)이거나 정동사여야 하는 오류인가?",
+      "verdict": "정문(오류 아님)",
+      "evidence": "'Such species, called keystone species, are vital...' — called는 축약 관계절(which are called keystone species)에서 유래한 과거분사 삽입구로 Such species를 후치 수식한다. 종은 keystone species라고 '불리는' 대상이므로 수동 의미의 과거분사 called가 적절. 대안 해석(능동/정동사) 불성립."
+    },
+    {
+      "label": "(B)",
+      "claim": "that이 관계대명사여야 하는(불완전절) 오류인가?",
+      "verdict": "정문(오류 아님)",
+      "evidence": "'The fact that other species depend on or are greatly affected by the keystone species is revealed...' — depend on과 are greatly affected by가 공통 목적어 the keystone species를 취해 that절이 완전하다. 추상명사 The fact와 동격을 이루는 접속사 that이 정확. 관계대명사 대안 해석 불성립."
+    },
+    {
+      "label": "(C)",
+      "claim": "in 뒤에 to부정사(to sustain)나 정동사가 와야 하는 오류인가?",
+      "verdict": "정문(오류 아님)",
+      "evidence": "'become important in sustaining fruit-eating vertebrates' — in은 전치사이므로 목적어로 동명사 sustaining이 옳다. 동명사가 목적어(vertebrates)를 취하는 능동 구조도 정상. 대안 해석 불성립."
+    },
+    {
+      "label": "(D)",
+      "claim": "would be 뒤에 능동 원형(eliminate)이 와야 하는 오류인가?",
+      "verdict": "정문(오류 아님)",
+      "evidence": "'Should the fig trees disappear, most of the fruit-eating vertebrates would be eliminated' — Should 도치 가정법 조건절 + 주절 would be + 과거분사 수동태. vertebrates는 제거되는 대상이므로 수동태 eliminated가 옳다. 대안 해석 불성립."
+    },
+    {
+      "label": "(E)",
+      "claim": "are가 수 일치 오류인가(is로 교정)?",
+      "verdict": "오류(정답)",
+      "evidence": "'Protecting fig trees in such tropical rainforest ecosystems are an important conservation goal because it increases...' — 진주어는 단수 취급하는 동명사구 Protecting fig trees...이므로 술어동사는 is여야 한다. 복수명사 ecosystems는 전치사 in의 목적어(근접 수일치 미끼)이며, 뒤의 단수 대명사 it이 단수 주어를 확증한다. 따라서 are는 어법상 틀린 유일한 부분이다."
+    }
+  ]
+}

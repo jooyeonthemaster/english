@@ -1,0 +1,35 @@
+{
+  "pid": "P116",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "마감을 '유연하고 쉽게 미룰 수 있는 목표'로 취급하라는 것은 행동 개시를 앞당기라는 지문 논지(jump into action, starting in good time)와 정반대. 리프레이밍 예시와도 무관."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'시간 제한 압박을 완전히 무시해 스트레스 회피'는 후속 문장의 'stress is more manageable'만 표면적으로 반향하는 낚시. 지문은 압박 무시가 아니라 마감을 심리적으로 가깝게 당겨 일찍 시작하라는 것이며, 무시하면 시작 확률이 오히려 낮아져 인과가 붕괴."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "장기 계획·커리어 마일스톤 정렬은 시간 프레임을 넓히는 방향으로, 마감을 멀게 느끼게 만드는 지문의 문제 상황('next year' 프레임)을 오히려 강화. 논지 역행."
+    },
+    {
+      "label": "④",
+      "verdict": "answer",
+      "reason": "직전 예시('내년'이 아닌 '이번 겨울'로 명명 = 마감을 같은 시간 단위 안으로 당겨 가깝게 인식)를 정확히 일반화. 가깝고 긴급한 요구로 인식 → 즉시 착수 → 작업이 분산되어 'stress is more manageable' → 제때 시작·완료. 빈칸 앞뒤 문장과의 결합(seam)과 지문 전체 인과가 모두 성립. 'urgent'가 스트레스를 높인다는 반론을 검토했으나, 후속 문장의 스트레스 완화는 '일찍 시작함'의 결과이므로 정합적."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "가장 매력적인 오답. 실전에서 실제로 끌렸음: 'That way the stress is more manageable'와 이어 읽으면 문장 결합이 매끄럽고, 첫 문장 'break up time into units'와 어휘(break ... down)가 반향되어 그럴듯함. 그러나 (a) 지문의 처방은 스케줄 분해가 아니라 시간 단위 '명명 리프레이밍'이고, (b) 시간을 단위로 쪼개는 행위는 지문이 문제의 원인으로 지목한 것이며, (c) 'focus only on immediate tasks'는 지문에 전혀 근거가 없음. 빈칸의 기능(직전 예시의 일반화)을 수행하지 못해 탈락."
+    }
+  ],
+  "note": "빈칸은 'For example ...' 예시 직후에 위치하므로 그 예시를 일반화해야 한다. ④만이 '마감을 심리적으로 가까운 시간 단위 안으로 당겨 인식하라'는 예시의 요지를 담는다. ⑤는 seam이 자연스러운 강력한 미끼이나 지문 근거 부재('daily schedules', 'only immediate tasks')와 원인-처방 혼동으로 옹호 불가. 단일 정답으로 수렴, 신뢰도 높음."
+}

@@ -1,0 +1,73 @@
+{
+  "pid": "P018",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4_SENTENCE_ATTRIBUTION_ERROR",
+      "severity": "major",
+      "evidence": "해설: '본문 두 번째와 세 번째 문장에 따르면 실천적 지식은 신체적 은유로 표현되며, 직접 배우는 것이 아니라 경험과 습관을 통해 체득됩니다.' 실제 문장 순서: (1) Technical, book knowledge... (2) Practical knowledge... cannot be taught or learned but only transmitted and acquired. (3) It exists only in practice. (4) When we talk about practical knowledge, we tend to use bodily metaphors. 신체적 은유 언급은 4번째 문장이고, '경험과 습관을 통한 체득'은 후반부 문장(built up a repertoire of skills through habit / built up through experience)에 있다. 2~3번째 문장에는 신체적 은유·습관 내용이 없으므로 문장 귀속 오류다. 어떤 대안적 문장 계수 방식으로도 2~3번째 문장에 신체적 은유 주장은 성립하지 않는다."
+    },
+    {
+      "code": "V3_NOTE_POLARITY_TAGGED_WORD_IN_KEY",
+      "severity": "minor",
+      "evidence": "정답 ①의 'a learned physical action'에서 'learned'는 지문이 실천적 지식에 대해 명시적으로 부정한 어휘('cannot be taught or learned')와 충돌하는 인상을 준다. 기능(동작 자체는 habit을 통해 익혀짐)으로는 옹호 가능하고 완성문도 문법적·자연스러워 V3 실패는 아니지만, 정답 선지에 반대 극성 표지어가 들어가 정답 확신도를 흐리는 공예 소음이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'hit the right piano key with just enough force and pace'를 '정교하게 조율된 신체 제어로 학습된 신체 동작 수행'으로 추상화",
+      "temptingBecause": "해당 없음(정답). 'touch', 'bodily metaphors', 무의식적 수행 등 지문 핵심 논지와 정합",
+      "decisiveFlaw": "없음. 단, 'learned'가 지문의 'cannot be taught or learned'와 표면 충돌하는 어휘 소음이 있음"
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전 — 대조 개념(technical/theoretical knowledge)의 특성으로 치환",
+      "temptingBecause": "'physical movements'가 신체적 은유 논의와 표면적으로 겹치고, 지문이 두 지식 유형을 모두 다루므로 주제어 매칭이 됨",
+      "decisiveFlaw": "'analyze the theoretical mechanics'는 지문이 대조시킨 이론적 지식의 속성이며, 'touch'는 분석이 아닌 체화된 감각이다. 전문가는 'thinking less'라고 명시"
+    },
+    {
+      "label": "3",
+      "intent": "극성 반전 — 1문장 'formulated rules ... deliberately learned'를 그대로 차용한 어휘 미끼",
+      "temptingBecause": "'formulated rules'가 지문 1문장에 원문 그대로 등장하는 강한 lexical anchor",
+      "decisiveFlaw": "규칙 암기는 technical/book knowledge의 정의이고, 빈칸은 practical knowledge의 예시 자리다. ②와 동일한 함정 유형(이론 지식으로의 극성 반전)이라 함정 다양성 측면에서 중복"
+    },
+    {
+      "label": "4",
+      "intent": "행위 치환(actor/action swap) — 'intuition', 'shared'를 차용해 수행 능력을 대인 소통으로 왜곡",
+      "temptingBecause": "지문에 'transmitted', 'passed along through shared experience', 'an intuition'이 실제로 존재해 어휘 중첩이 가장 강함",
+      "decisiveFlaw": "빈칸은 'a touch for doing some activity'의 동격으로 '수행 능력'을 정의하는 자리이며, 타인에게 감정을 전달하는 소통 능력이 아니다"
+    },
+    {
+      "label": "5",
+      "intent": "조건 반전 — 무의식적 수행을 의식적 관찰·교정으로 뒤집음",
+      "temptingBecause": "'habits'가 지문 어휘와 겹치고 자기 교정은 학습 서사에서 그럴듯하게 들림",
+      "decisiveFlaw": "지문은 전문가가 'without conscious awareness'로 수행하며 'thinking less'라고 명시 — 정반대 진술"
+    }
+  ],
+  "explanationIssues": [
+    "문장 귀속 오류: 신체적 은유(4문장)와 경험·습관을 통한 체득(후반부)을 '두 번째와 세 번째 문장'의 내용으로 잘못 귀속 (V4 실패 사유)",
+    "오답 해설 자체(②③④⑤)는 각 선지의 실제 내용과 정확히 대응하며 오개념 없음",
+    "정답 근거 서술이 다소 장황하고, 정답 ①의 'learned' 어휘가 지문의 'cannot be ... learned'와 표면 충돌하는 점을 언급하지 않아 예상 이의신청에 무방비"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 렌더 지문은 의도된 빈칸 치환('hit the right piano key with just enough force and pace' → _____) 외에 원지문과 전 구간 일치, 라벨 1~5와 선지·해설 번호 일치 — 통과. V2: 블라인드 풀이 정답 ①, 각 선지 독립 검증 결과 ②③(이론 지식 극성 반전), ④(소통으로의 행위 치환), ⑤(의식성 반전) 모두 배제 가능해 단일 정답 — 통과. V3: 다섯 선지 모두 'an ability to + 동사원형' 슬롯에 문법적으로 삽입되고 seam 비문 없음 — 통과. V4: 해설의 문장 번호 귀속 오류로 실패(치명은 공예로 상쇄 불가). V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음 — 통과. 공예: ②③이 동일 함정 유형이라 C2=2, 실질 경쟁 선지가 ④ 하나뿐이고 ②③⑤는 명시적 극성 단서로 즉시 소거되어 C3=2, 정답에만 'bodily control'이 있어 직전 문장 'bodily metaphors'와의 어휘 에코가 꼬리 단서로 작동해 C4=2, INTERMEDIATE 요구 대비 사고 단계는 쉬운 편이나 대체로 정합해 C5=3, 해설은 구조는 갖췄으나 사실 오류 포함으로 C6=1. 합계 13. KILLER 아님(요청 난이도 INTERMEDIATE) → killerConditionsMet=false. 재출하 조건: 해설의 문장 귀속만 수정하면 V4 통과 가능하며, ②→scope shift 계열로 교체하고 ①의 'learned'를 'practiced' 등으로 바꾸면 B 이상 가능."
+}

@@ -1,0 +1,80 @@
+{
+  "pid": "P064",
+  "blindAnswer": "(A)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-note-attachment-ambiguity",
+      "severity": "minor",
+      "evidence": "In '(A) a way of learning and practicing skills and behaviors that __is__ necessary for future survival', a high-attachment parse ('a way ... that is necessary') is theoretically available, under which 'is' would be grammatical. Judged non-fatal: nearest-NP attachment is strongly preferred, the source text has 'are' (low attachment intended), and the parallel sentence '(D) ... jumping that are necessary for everyday living' fixes the intended construction. V2 kept true, but this is exactly the kind of '대안 분석 가능 자리' RUBRIC §C bans for KILLER items."
+    },
+    {
+      "code": "V4-note-loose-terminology",
+      "severity": "minor",
+      "evidence": "해설 phrase '선행사를 수식하는 동사로 단수형 is를 쓰는 것' is imprecise — a verb does not modify the antecedent; the relative clause does. The opening sentence ('주격 관계대명사 that이 이끄는 관계절 내의 동사 자리') is structurally correct, so this is sloppy wording, not a misanalysis. V4 kept true."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "Subject-verb agreement inside a subject relative clause: plural compound antecedent 'skills and behaviors' vs displayed singular 'is'. Minimal pair with source ('are' -> 'is'); correcting restores the original exactly.",
+      "temptingBecause": "The singular NP 'a way (of learning and practicing ...)' sits earlier in the chain, luring students into matching the verb to 'way' or to the nearest gerund phrase.",
+      "decisiveFlaw": "This is the declared error, not a decoy: the relative clause attaches to the plural 'skills and behaviors', so 'is' violates agreement and must be 'are'."
+    },
+    {
+      "label": "(B)",
+      "intent": "Preposition + relative pronoun ('in which') followed by a complete clause, modifying 'a way'.",
+      "temptingBecause": "Students often doubt 'a way in which' vs 'a way that/how', and must verify clause completeness after 'in which'.",
+      "decisiveFlaw": "None — 'children learn about the world and their place in it' is a complete clause, so 'in which' is correct."
+    },
+    {
+      "label": "(C)",
+      "intent": "Gerund as object of the preposition 'for' ('training ground for developing ...').",
+      "temptingBecause": "Students may expect an infinitive ('to develop') after a purpose-flavored noun phrase.",
+      "decisiveFlaw": "None — a preposition requires a gerund object, so 'developing' is correct. Fairly easy to clear, weak as a decoy."
+    },
+    {
+      "label": "(D)",
+      "intent": "Subject relative pronoun 'that' after the appositive list 'skills like walking, running, and jumping'.",
+      "temptingBecause": "The gerund list before 'that' can make antecedent identification feel uncertain (which vs that, what the antecedent is).",
+      "decisiveFlaw": "None — 'that' correctly heads a subject relative clause on 'skills'. Side effect: the visible 'that are necessary for everyday living' is a near-verbatim structural parallel to (A), leaking the answer by analogy (C4 penalty)."
+    },
+    {
+      "label": "(E)",
+      "intent": "Interrogative + to-infinitive ('how to compete') as object of 'learn'.",
+      "temptingBecause": "Coordination 'compete and cooperate with others' invites a (false) suspicion about parallelism or a missing subject.",
+      "decisiveFlaw": "None — 'wh-word + to-infinitive' is a standard nominal, correctly used; the following 'how to lead...', 'how to make...' parallels confirm it."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "loose-terminology",
+      "severity": "minor",
+      "evidence": "'선행사를 수식하는 동사로 단수형 is를 쓰는 것은 복수 주어와 일치하지 않는 비문입니다' — verbs do not '수식' antecedents; should read e.g. '관계절의 동사'."
+    },
+    {
+      "code": "redundant-connective",
+      "severity": "minor",
+      "evidence": "Two consecutive sentences both begin with '따라서' ('따라서 선행사를 수식하는... / 따라서 is를 are로 고쳐야 합니다'), making the core 해설 slightly repetitive."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: rendered passage matches the source with exactly one intended alteration (are->is at (A)); no splice damage, duplication, omission, or orphan punctuation; markers (A)-(E) appear in order and match the option list. V2: independent check of all five underlines finds exactly one ungrammatical spot, (A); (B)/(C)/(D)/(E) each verified correct (complete clause after 'in which'; gerund after 'for'; subject relative 'that' with plural 'are'; wh+to-infinitive object). Minor residual concern: a high-attachment parse of (A)'s relative clause to 'a way' would make 'is' grammatical, but nearest-attachment preference plus the in-passage parallel makes the intended reading decisive, so V2 passes for an INTERMEDIATE item. V3: passage, stem, and corrected sentence are all grammatical; the single deliberate ungrammaticality matches the type intent. V4: main and distractor explanations match the actual structures (two minor wording blemishes noted, no misconceptions). V5: declared answer (A) is consistent with markedExpressions (isError true only at (A), errorExpression 'is', correction 'are'), 오답해설 keys (B)-(E), and keyPoints. Craft: solid canonical agreement point (C1=3) with decoys that each carry a distinct grammatical intent (C2=3), but the item resolves almost immediately for a trained student — agreement is the first thing checked, and decoys (C)/(E) are easy clears (C3=2). The biggest craft defect is cue leakage: (D)'s visible 'that are necessary for everyday living' is a structural twin of (A)'s 'that is necessary for future survival', letting students answer by surface analogy (C4=2). Difficulty sits at easy-intermediate, acceptably close to the INTERMEDIATE label (C5=3). 해설 is accurate but dull, with a loose phrase and repeated '따라서' (C6=2). All V pass; craft total 15 (<17, B threshold) with min 2 -> grade C: shippable point but needs redesign of the decoy set (replace or trim the (D) parallel giveaway, strengthen (C)/(E)) to reach B/A. Not a KILLER request, so killerConditionsMet=false."
+}

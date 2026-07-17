@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "'inquiring but unbiased mind'는 지문 첫 부분의 개인주의적(individualist) 수사에서 그대로 가져온 표현. 지문은 그런 믿음이 '공적 맥락에서 행동의 근거가 될 수 없다'고 명시적으로 격하하므로, 과학적 진리의 지위(standing)를 부여하는 조건으로 개인의 편견 없는 정신을 드는 것은 지문 논지와 정반대. 문법 결합(until it originates...)은 자연스러우나 논리상 탈락. 표면 어휘 재활용형 미끼."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "지문은 전문가 검토 없이 기자회견에서 발견을 발표하는 과학자를 'publicity seeker'로 자동 비난받는다고 서술한다. 즉 기자회견 발표는 지위 획득 조건이 아니라 오히려 규범 위반 사례. until절에 넣으면 '기자회견 발표 전까지는 지위가 없다'가 되어 지문이 비판하는 행위를 정당화하는 역방향 진술. 실전에서 지문을 대충 스캔한 수험생이 'press conference'라는 눈에 띄는 어구에 끌릴 수 있는 미끼지만, 문맥 극성(비난 대상)을 확인하면 즉시 배제된다."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "직전 문장 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'의 재진술이며, 직후 문장 'What happens in somebody's laboratory is only one stage in its construction'(실험실은 진리 구성의 한 단계일 뿐)과도 정합적. '과학적 진리는 과학자 공동체의 승인(validation)을 받기 전까지는 지위가 거의 없다'는 지문 전체의 반(反)개인주의 논지—지식은 집단적·제도적 승인 과정을 거쳐 구성된다—를 정확히 완성한다. until + 현재시제 결합도 정문."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "지문은 'nature does not speak unambiguously'라고 명시하고, 'speak too powerfully...for prejudiced humans to silence them'은 지문이 격하하는 개인주의 수사의 일부다. 이 선지는 지문의 인상적 어휘(speak powerfully, unambiguously)를 그대로 조합해 만든 강력한 표면 미끼로, 어휘 친숙도에 의존하는 수험생을 끌어당긴다. 그러나 규범 문장이 부정한 명제('자연은 명확하게 말하지 않는다')를 긍정 조건으로 뒤집었으므로 논리상 정반대. 최상위권은 극성 반전을 잡아낸다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'disciplinary specialists의 승인(authorization)'을 'inspired patience(개인의 영감 어린 인내)'로 대체한다는 것은 지문의 논증 방향(개인주의 수사 → 집단적 승인 규범)을 정확히 거꾸로 뒤집은 진술. 지문 핵심 어휘 두 덩어리를 재조합했지만 관계가 역전되어 있어 정독한 수험생에게는 배제가 쉽다. 문법 결합(replaces A with B)은 정문이나 논리 탈락."
+    }
+  ],
+  "note": "빈칸 직전 문장(unless it has been authorized by disciplinary specialists)과 직후 문장(laboratory is only one stage in its construction)이 이중으로 ③을 지지하는 깔끔한 구조. 유일하게 옹호 가능한 답은 ③. 매력적 오답 강도: ④가 표면 어휘 재활용으로 가장 강한 유혹(단, 극성 반전으로 논리 붕괴), ②가 지문 소재(press conference) 재활용으로 그다음. ①⑤는 개인주의 수사 재활용이라 논지 파악 시 즉시 배제. 실전 풀이 중 어느 시점에도 ③ 외 후보가 살아남지 않았다. 다만 정답 선지 ③이 직전 문장의 거의 동의어적 재진술이라 최상위권 기준 난도는 중하 수준 — 변별력은 ④의 표면 미끼에 의존한다."
+}

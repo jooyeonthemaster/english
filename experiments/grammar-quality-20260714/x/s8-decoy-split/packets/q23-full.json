@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20200312-q36",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=k  (C):ANS=a  (D):dec=b  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 24,
+        "relPos": 0.029,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 252,
+        "relPos": 0.31,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 298,
+        "relPos": 0.366,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 414,
+        "relPos": 0.509,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 481,
+        "relPos": 0.591,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.591,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A god called Moinee was defeated by a rival god called Dromerdeener in a terrible battle up in the stars. Moinee fell out of the stars down to Tasmania to die. Before he died, he wanted to give a last blessing to his final resting place, so he decided to create humans. But he was in such a hurry, knowing he was dying, that he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, which meant they couldn't sit down. Then he died. The people hated having kangaroo tails and no knees, and they cried out to the heavens for help. Dromerdeener heard their cry and came down to Tasmania to see what the matter was. He took pity on the people, gave them bendable knees and cut off their inconvenient kangaroo tails so they could all sit down at last. Then they lived happily ever after.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "defeated",
+        "isError": false,
+        "correction": "defeated",
+        "errorExpression": "defeated",
+        "surroundingText": "A god called Moinee was defeated by a rival god called Dromerdeener in a terrible battle up in the stars.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "to create",
+        "isError": false,
+        "correction": "to create",
+        "errorExpression": "to create",
+        "surroundingText": "Before he died, he wanted to give a last blessing to his final resting place, so he decided to create humans.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "knowing",
+        "isError": true,
+        "correction": "knowing",
+        "errorExpression": "knew",
+        "surroundingText": "But he was in such a hurry, knowing he was dying, that he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, which meant they couldn't sit down.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "which",
+        "isError": false,
+        "correction": "which",
+        "errorExpression": "which",
+        "surroundingText": "and he absent-mindedly gave them big tails like kangaroos, which meant they couldn't sit down.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "having",
+        "isError": false,
+        "correction": "having",
+        "errorExpression": "having",
+        "surroundingText": "The people hated having kangaroo tails and no knees, and they cried out to the heavens for help.",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "defeated"
+      },
+      {
+        "label": "(B)",
+        "text": "to create"
+      },
+      {
+        "label": "(C)",
+        "text": "knew"
+      },
+      {
+        "label": "(D)",
+        "text": "which"
+      },
+      {
+        "label": "(E)",
+        "text": "having"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "신 Moinee가 라이벌 신인 Dromerdeener에 의해 '패배당했다(수동)'는 의미이므로, 과거분사 defeated가 주격보어 자리에 수동태(was defeated)의 일부로 적절하게 사용되었습니다.",
+      "(B)": "decide 동사는 미래지향적 의미를 지니는 to부정사만을 목적어로 취하는 대표적인 동사이므로 to create를 쓴 것은 어법상 옳습니다.",
+      "(D)": "콤마 뒤에서 앞의 구나 절 전체('그들에게 캥거루 같은 큰 꼬리를 주었다는 것')를 선행사로 받는 관계대명사의 계속적 용법으로, 뒷문장에 주어가 빠져 있어 관계대명사 which가 적절하게 쓰였습니다.",
+      "(E)": "hate 동사는 목적어로 to부정사와 동명사 모두를 취할 수 있으므로, 목적어로 쓰인 동명사 having은 어법상 적절합니다."
+    },
+    "explanation": "부사구 수식어 속에 놓인 분사구문의 어법적 성격을 묻는 문제입니다. 주절의 주어 he와 연결되는 정동사 was가 이미 존재하고, 뒤이은 문맥과 연결해 주는 적절한 접속사가 없는 상태입니다. 따라서 접속사 없이 정동사 'knew'가 단독으로 등장하는 것은 구조상 불가능합니다. 의미적으로 신(he)이 자신이 죽어간다는 사실을 '알면서' 서둘렀다는 관계를 표현하고 있으므로, 생략된 접속사(as/because 등)와 주어 역할을 대신하면서 능동의 관계를 나타내도록 하는 현재분사 'knowing'으로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(C) 정동사 vs 준동사 — 접속사 없이 절에 정동사 중복 사용 불가",
+      "(A) 과거분사 수동태 — 주어와의 수동 관계 판정",
+      "(D) 관계대명사 계속적 용법 — 앞의 절을 선행사로 받는 주격 관계대명사 판정"
+    ],
+    "tags": [
+      "동사와 준동사",
+      "분사구문",
+      "관계대명사 계속적용법",
+      "동사의 목적어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "A god called Moinee was __(A) defeated__ by a rival god called Dromerdeener in a terrible battle up in the stars. Moinee fell out of the stars down to Tasmania to die. Before he died, he wanted to give a last blessing to his final resting place, so he decided __(B) to create__ humans. But he was in such a hurry, __(C) knew__ he was dying, that he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, __(D) which__ meant they couldn't sit down. Then he died. The people hated __(E) having__ kangaroo tails and no knees, and they cried out to the heavens for help. Dromerdeener heard their cry and came down to Tasmania to see what the matter was. He took pity on the people, gave them bendable knees and cut off their inconvenient kangaroo tails so they could all sit down at last. Then they lived happily ever after."
+  }
+}

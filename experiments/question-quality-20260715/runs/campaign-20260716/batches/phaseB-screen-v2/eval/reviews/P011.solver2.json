@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 정상(will + help + O + bare infinitive)이나 논리 불성립. 목표를 '기술 도구의 한계 극복'으로 두면 여전히 도구 중심 목표가 되어 'new technologies are nothing more than tools'라는 전제(도구는 부차적)와 충돌한다. 지문 어디에도 도구의 한계 극복이 위대한 예술의 조건이라는 진술이 없다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합 정상(appeal to + NP). 그러나 지문의 가치 기준은 'truly great art'이며 그 정의는 '지각에 도전하고 사고·감정을 영구히 바꾸는 것'이다. 대중적 취향에의 영합은 지문에서 가치로 제시된 적이 없고, 오히려 great art 담론과 상충하는 방향이므로 논리 불성립."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합 정상. 그러나 '예술 생산의 민주화'는 첫 문장이 기술한 현상(더 많은 사람이 창작 가능)의 재진술이며, 비평가들이 우려의 맥락에서 언급한 배경이지 예술가의 목표로 제시된 것이 아니다. 빈칸 슬롯은 'not tech for its own sake, rather X'의 X로서 great art의 본질 정의를 요구하므로 범주 착오."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "문법 결합 정상(provoke + NP and NP 병렬). 논리적으로 3번째 문장의 great art 정의를 거의 축자 재진술: 'challenges our perceptions' ↔ 'provoke fresh perceptions', 'forever changes our thoughts and feelings' ↔ 'profound shifts in the audience'. 대조 구문(not A, rather B)의 B 자리에 great art의 본질이 와야 한다는 논증 구조에서 유일하게 도출 가능."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합 정상. 그러나 'exclusively through digital platforms'는 기술을 수단 이상으로 격상시키는 진술로, '기술은 도구에 불과하다', '기술 그 자체를 위한 활용이 목표가 아니다'라는 지문의 핵심 전제와 정면 모순. 미학 기준의 재정의도 지문에 근거 없음."
+    }
+  ],
+  "note": "다섯 선지 모두 조동사 will 뒤 원형 VP로 문법적 이음새는 전부 정상이어서 판별은 순수 논리 적합성으로 이루어진다. 논증 구조(great art 정의 제시 → 기술은 도구 → not A rather B 대조)가 빈칸을 great art 정의의 재진술로 강제하며 ④만 이를 충족. 오답들은 각각 도구 중심 회귀(①), 무근거 가치(②), 현상/목표 범주 착오(③), 전제 모순(⑤)으로 명확히 배제되어 복수정답 소지 없음. 빈칸 유형으로는 정답 단서가 다소 직접적(3문장의 어휘 대응이 투명)이라 난도는 낮은 편."
+}

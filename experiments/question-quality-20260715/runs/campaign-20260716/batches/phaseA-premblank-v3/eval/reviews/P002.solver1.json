@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'focuses solely on asserting individual academic needs' contradicts the passage's cooperation theme (accommodating own AND others' needs); 'academic' is off-domain in a co-worker/group-conflict context. Seam failure: the trailing conjunct forces 'asserting individual academic needs and improved group functioning', which is incoherent ('asserting improved group functioning')."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "'escalates emotional distress by confronting others' is negative polarity where the sentence lists positive outcomes of appreciating differences. Seam failure: 'by confronting others and improved group functioning' cannot integrate the trailing conjunct grammatically or semantically."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Coordinates cleanly with 'creates' as a second VP: 'Appreciation of differences creates an arena for open communication and leads to [productive settlements of disagreements and improved group functioning]' — the trailing 'and improved group functioning' is absorbed naturally as a second object of 'leads to'. Thematically exact: the passage sets up a group-conflict scenario where emotion understanding (expressing feelings + perspective-taking) yields resolution, so 'productive settlements of disagreements' is the precise consequence."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'forces members to hide their true feelings' directly contradicts 'express emotions, feelings and moods accurately' and 'open communication' in the same sentence. Seam failure: 'hide their true feelings and improved group functioning' is incoherent."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "The only bait-shaped option — 'maintain a ... peace' reads positive to a skimmer — but it self-contradicts within the clause: the subject is 'Appreciation of differences', and appreciation cannot 'ignore differences'; 'superficial peace' also clashes with the passage's genuine open-communication theme. The temptation dissolves immediately on re-reading the subject."
+    }
+  ],
+  "note": "Single defensible answer: 3. Solver-experience notes: (a) the blank sits in an 'arena for NP and ___ and NP' frame yet all five options are finite VPs, so the only viable parse is VP-coordination with 'creates'; only option 3 stitches the trailing 'and improved group functioning' coherently, meaning grammar alone nearly identifies the answer — a uniqueness strength but a difficulty weakness. (b) Distractors 1/2/4 are overtly negative-polarity and anti-thematic, so no genuinely attractive wrong option exists for a top-tier examinee; option 5 is the closest to bait but self-destructs against the sentence subject. Item is unambiguous but easy."
+}

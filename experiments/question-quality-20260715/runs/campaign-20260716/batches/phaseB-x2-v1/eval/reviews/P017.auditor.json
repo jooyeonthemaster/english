@@ -1,0 +1,77 @@
+{
+  "pid": "P017",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-corrupted-term",
+      "severity": "critical",
+      "evidence": "해설 핵심 도출부: '...공동의 산물이 될 때야 비로소 그 확고한 지위를 얻게 된다는 논리가 도립되므로' — '도출'의 오기로 보이는 손상 용어. 문면 그대로 읽으면 '논리가 거꾸로 선다(倒立)'는 무의미한 진술이 되며, 이는 오히려 ⑤의 결함(인과 전도)을 정답 근거 자리에 놓는 오설명이 된다. 학생 노출 해설의 손상 용어/오탈자로 V4 게이트 실패."
+    },
+    {
+      "code": "V4-option-misattribution",
+      "severity": "major",
+      "evidence": "① 오답해설이 \"본문의 'disciplinary specialists'라는 어휘를 활용했으나\"라고 서술하지만, 선지 ①의 실제 문면은 'the narrow expertise of individual scientists'로 해당 어구를 포함하지 않는다. 어휘장 차용(expertise/scientists)이지 인용된 어휘의 활용이 아니므로 선지 내용과 해설의 대응이 부정확하다."
+    },
+    {
+      "code": "V4-grammar-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints 3번: \"until이 이끄는 조건 부사절\" — until절은 시간 부사절이다. 이 문장에서 의미상 조건적 기능을 하는 것은 사실이나, 문법 용어로 '조건 부사절'이라 명명한 것은 부정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 왜곡(polarity twist) — 전문성 어휘장을 차용하되 방향을 부정으로 반전",
+      "temptingBecause": "expertise/individual scientists 등 지문의 전문가·과학자 어휘장을 그대로 재사용하여 표면적 근거 매칭을 유도한다",
+      "decisiveFlaw": "'고립(isolated)'은 지위 획득의 조건이 될 수 없다. 지문의 논지는 집단적 승인(collective product)이 지위를 부여한다는 것이므로 고립은 정반대 기제이며, 'has little standing until it is isolated'는 의미상 자기모순이다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'it becomes a collective product'의 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 직전 문장 'authorized by disciplinary specialists'와 마지막 문장 'only one stage in its construction'이 근거",
+      "decisiveFlaw": "없음. 다만 직전 문장과의 어휘 중복(specialists)이 커서 국소 키워드 매칭만으로 도달 가능하다는 점이 KILLER 정합성 결함"
+    },
+    {
+      "label": "③",
+      "intent": "명시 진술 정면 배치(explicit contradiction) — 언론 공표 경계 문장의 반전",
+      "temptingBecause": "press conference, publicity 등 지문에 등장하는 대중 매체 소재를 앵커로 쓴다",
+      "decisiveFlaw": "동료 검토 없는 언론 발표자는 publicity seeker로 비난받는다는 지문 진술과 정면으로 모순된다. 즉시 소거 가능해 미끼로서는 가장 약하다"
+    },
+    {
+      "label": "④",
+      "intent": "half-truth 과확장 — 개인주의 수사(2문장)의 내용을 절대화",
+      "temptingBecause": "inspired patience, unbiased mind 등 지문 앞부분의 개인적 덕목 서술을 앵커로 재활용한다",
+      "decisiveFlaw": "지문은 그런 믿음이 '공적 맥락의 행동 근거가 될 수 없다'고 명시하므로, 개인적 헌신을 객관성의 절대 원천으로 보는 것은 필자가 기각하는 입장이다"
+    },
+    {
+      "label": "⑤",
+      "intent": "인과 전도(causal reversal) — 집단 검증과 진리 확립의 선후 뒤집기",
+      "temptingBecause": "긍정 극성에 collaborative/academia 등 정답과 같은 협력·학계 어휘장을 공유하여 ②와 최종 경합한다",
+      "decisiveFlaw": "지문 논리는 집단적 검증이 선행해야 진리가 지위를 얻는다는 것인데, ⑤는 '이미 확립된 진리'가 협력을 촉발한다고 순서를 전도했다. 'has little standing until the established truth...'는 전제 자체가 자기모순이다"
+    }
+  ],
+  "explanationIssues": [
+    "해설 '논리가 도립되므로' — '도출'의 오기로 보이는 손상 용어(V4 critical, 위 참조)",
+    "① 오답해설의 'disciplinary specialists 어휘 활용' 주장은 선지 ①의 실제 문면과 불일치(V4 major, 위 참조)",
+    "keyPoints의 'until이 이끄는 조건 부사절'은 시간 부사절의 오명명(V4 minor, 위 참조)",
+    "정답 해설이 다소 장황하며(정답 근거와 오답 소거가 한 문단에 혼재 후 오답해설에서 재반복), C6 감점 요인"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "§D 위반 2건: (1) '최소 두 문장/두 논리 단서 연결' 불충족 — 빈칸 직전 문장(knowledge isn't knowledge unless it has been authorized by disciplinary specialists) 하나만으로 정답 도달이 가능하다. (2) 긍정 극성 필터로 ②/⑤ 이지선다로 즉시 압축되고, 정답 ②가 직전 문장과 'specialists' 어휘를 공유해 국소 키워드 매칭으로 판별 가능하다. 슬롯 균일성(5개 선지 모두 정형절), 오답별 anchor/overlap/decisive flaw 보유는 충족.",
+  "grade": "F",
+  "notes": "지문 무결성·정답 유일성·문법성·필드 동기화는 모두 통과했고 선지 설계 자체는 서로 다른 함정 기제(극성 왜곡/명시 모순/half-truth/인과 전도)를 갖춰 공예 수준이 낮지 않다. 그러나 학생 노출 해설의 핵심 도출부에 손상 용어('도립')가 있고 ① 해설이 선지 문면을 오기술하며 keyPoints에 문법 용어 오류가 있어 V4 실패로 F. 난이도 측면에서도 정답이 직전 문장의 근접 패러프레이즈라 요청 난이도 KILLER에 미달(C5=2, killer 조건 불충족). 참고: 이 지문(Shapin류 과학 수사학 지문, 'collective product' 빈칸)은 기출/기존 문항과 소재·빈칸 위치가 동일할 가능성이 높아 신규 출제 원본성 검토도 권장."
+}

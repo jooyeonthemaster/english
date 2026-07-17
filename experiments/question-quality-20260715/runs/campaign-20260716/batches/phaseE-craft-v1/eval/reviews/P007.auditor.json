@@ -1,0 +1,66 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-INFO-TAIL",
+      "severity": "minor",
+      "evidence": "빈칸이 원문 'commit to having no random breaks instead'에서 'instead'를 남기고 절단됨. 손상은 아니며 원문에 충실하지만, 잔여 tail 'instead'가 담화적으로 '무언가를 대신하라'는 단서를 제공한다. 5개 선지 모두 명령형 VP로 동일 슬롯에 문법적으로 들어가므로 D 조건(일부 오답만 문법 탈락) 위반은 아님."
+    },
+    {
+      "code": "C4-LOCAL-CUE",
+      "severity": "minor",
+      "evidence": "빈칸 문장 자체의 'to prevent procrastination'이 극성 단서로 작동하여 선지 ④(자발적 휴식 허용)를 지문 전체를 읽지 않고도 국소적으로 소거할 수 있다. 또한 ③은 본문과 접점이 없어 즉시 소거 가능한 필러에 가깝다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "과협소(over-narrow) — 지엽적 소재(커피/카페인)를 결론으로 격상시키는 함정",
+      "temptingBecause": "직전 문장 'getting a cup of coffee to keep yourself alert'와 표면 어휘가 직접 겹쳐, 마지막 예시에 주의를 뺏긴 학생이 선택하기 쉽다",
+      "decisiveFlaw": "본문에서 커피는 미루기를 합리화하는 핑계의 예시일 뿐이며, 카페인 의존 자체를 비판하지 않는다. 미루기 방지의 수단으로 '무계획 휴식 제거'라는 논지와 무관하다"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — source span 'commit to having no random breaks'의 긍정형 환언",
+      "temptingBecause": "해당 없음(정답). 'planned intervals'가 'scheduled breaks'의 적절한 추상화이며, 'stick strictly'가 'no random breaks'의 부정 논리를 긍정 진술로 뒤집어 표현함",
+      "decisiveFlaw": "없음. scheduled vs. unscheduled 대조 구조와 결론의 지시 모두와 정합"
+    },
+    {
+      "label": "3",
+      "intent": "무관 진술(off-topic) — 일반적 생산성 조언처럼 들리는 짜깁기",
+      "temptingBecause": "일·휴식 관리라는 장르적 분위기와 어울리는 일반론이라 소재 감으로 찍는 학생을 노림. 다만 본문 anchor가 전혀 없어 견인력이 약하다",
+      "decisiveFlaw": "본문은 근무 시간의 길이를 전혀 논하지 않는다. 텍스트 근거 부재로 즉시 소거 가능 — 필러에 가까움"
+    },
+    {
+      "label": "4",
+      "intent": "극성 반전(polarity/causal reversal) — 저자 주장과 정반대 지시",
+      "temptingBecause": "첫 문장 'Breaks are necessary to revive your energy levels'만 읽은 학생에게 휴식 옹호 결론처럼 보인다",
+      "decisiveFlaw": "본문 논지는 자발적(무계획) 휴식이 곧 미루기 함정이라는 것. 빈칸 문장의 'to prevent procrastination'과도 국소적으로 모순되어 성립 불가"
+    },
+    {
+      "label": "5",
+      "intent": "소재 연상(scope shift) — 도입부 소재(에너지 수준)를 결론으로 이동시키는 함정",
+      "temptingBecause": "첫 문장의 'revive your energy levels'와 어휘가 겹치고, 자기 점검이라는 그럴듯한 자기관리 프레임을 갖는다",
+      "decisiveFlaw": "본문은 오히려 작업 중 즉흥적 자기 판단('커피가 필요하다'는 합리화)을 경계한다. 결론의 지시는 에너지 모니터링이 아니라 무계획 휴식 금지다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과. 렌더 지문은 의도된 빈칸 외 원지문과 완전 일치하고, 정답 ②는 독립 검증에서 유일하다(각 오답은 서로 다른 결정적 결함으로 탈락). 해설의 구조 분석·함정 명명(과협소/극성 반전/소재 연상)이 실제 선지 내용과 정확히 대응한다. 공예 측면: 결론 지시문 빈칸으로 출제 가치는 충분하나, (a) 잔여 tail 'instead'와 빈칸 문장 내 'to prevent procrastination'이 ④를 국소 소거하게 하는 약한 단서 누출, (b) ③이 본문 anchor 없는 필러 수준이라는 점에서 C2~C4가 3에 머문다. INTERMEDIATE 난이도 정합은 양호(다소 쉬운 쪽). 합계 18로 A 기준(21) 미달 — 작은 수정(③을 half-truth형 anchor 보유 오답으로 교체, 빈칸 범위를 'commit ...' 앞 discourse까지 확장 검토)으로 상향 가능한 B."
+}

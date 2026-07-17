@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "지배 구문은 consider + NP + to be + NP(목적격 보어)인 표준 5형식. 'consider the virtual, or imaginative, nature of cyberspace to be its unique characteristic'에서 진짜 목적어는 nature(핵)이고 to be가 보어 its unique characteristic을 연결한다. consider X (to be) Y에서 to be는 수의적이되 존재해도 완전히 적법. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a kind and magnitude not seen before'는 축약 관계절 (that has/have not been) seen before. 피수식 명사 kind/magnitude는 see의 대상(피동)이므로 과거분사 seen이 요구되고, 부정어 not이 분사 앞에 오는 어순도 적법. 능동 seeing이면 비문이 되지만 현 표기는 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'What is new about cyberspace is its interactive nature'에서 What은 선행사를 포함한 자유관계사로 문장 전체의 주어절을 이끈다. 절 내부에 주어 공백(gap)이 있고 선행사가 없으므로 that/which 대체는 불가, What이 유일하게 적법. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "자유관계절 내부 동사 'What IS new about cyberspace'. what절 내부의 what은 기본적으로 단수 일치하며, 주절 보어(its interactive nature)도 단수여서 의미 기준으로도 단수. 시제(현재, 일반 진술)도 문맥과 일치. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'much more radical than the move photographs from movies'에서 명사 move 뒤에 명사구 photographs가 연결사 없이 병치되어 통사적으로 성립 불가. 앞의 평행 구문 'the move FROM passive imaginary reality TO the interactive virtual reality'가 요구하는 형태는 'the move from photographs to movies'(사진→영화로의 이행). 대안 재분석 시도 — photographs를 동사로 읽어 'the move photographs from movies'(그 움직임이 영화에서 사진을 찍는다)로 보는 해석 — 는 비교급 than 뒤 비교 대상 명사구 요건과 지문 논리(정적 심상→상호작용 가상현실의 이행과, 사진→영화의 이행 간 비교) 양쪽과 충돌하여 기각. 유일한 어법 오류."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (A)~(D)는 각각 5형식 to부정사 보어, 수동 축약관계절, 자유관계사, what절 단수일치로 형식적으로 정문임을 확인. (E)는 전치사 배열 오류(from photographs to movies가 정상형)로 어떤 대안 통사 분석으로도 구제 불가. 정답 후보가 (E) 하나로 유일하게 좁혀지는 깨끗한 문항. 참고로 이 지문은 Aaron Ben-Ze'ev 'Love Online' 계열의 기출 소재 문체로, 원문 대응 표현도 'the move from photographs to movies'와 정합적."
+}

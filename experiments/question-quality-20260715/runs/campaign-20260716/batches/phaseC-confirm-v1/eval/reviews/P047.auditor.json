@@ -1,0 +1,61 @@
+{
+  "pid": "P047",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "polarity/attitude reversal — passive acceptance instead of active seeking",
+      "temptingBecause": "reuses the passage word 'misfortunes' verbatim as a lexical anchor",
+      "decisiveFlaw": "passage describes active response ('gather their resources, overcome their problem', 'actively seek the advantage'); quiet acceptance is the direct opposite"
+    },
+    {
+      "label": "②",
+      "intent": "polarity/attitude reversal — passive waiting for external improvement",
+      "temptingBecause": "'circumstances' echoes the passage's 'circumstance'; waiting sounds patient and virtuous",
+      "decisiveFlaw": "contradicts the explicit agency in 'gather their resources, overcome their problem'; also duplicates the same passivity trap as ①, reducing distractor diversity"
+    },
+    {
+      "label": "③",
+      "intent": "correct answer — paraphrase of the removed span 'actively seek the advantage in their disadvantage'",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none; note it is the only positive-active option and shares 'positive' with the passage's 'positive aspect', so it is identifiable by polarity alone — a cue-economy leak, not a validity flaw"
+    },
+    {
+      "label": "④",
+      "intent": "actor swap / scope shift on 'remarkable feats'",
+      "temptingBecause": "'remarkable feats' is a verbatim lexical anchor from the passage",
+      "decisiveFlaw": "the passage says these people achieve their own feats despite hardships; replicating others' feats is outside the passage's claim entirely"
+    },
+    {
+      "label": "⑤",
+      "intent": "actor swap + over-literal narrowing of the opening laughter anecdote",
+      "temptingBecause": "'Laughter' anchors to the pen-salesman anecdote and the thematic sentence 'Laughter can turn any disadvantage into an advantage'",
+      "decisiveFlaw": "the laughter in the passage is directed at one's own mishap to convert one's own disadvantage; tolerating others' mistakes is a different actor and a different act"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TRAP_LABEL_IMPRECISE",
+      "severity": "minor",
+      "evidence": "④의 오답 해설이 함정을 '과확장 오류'로 명명하지만 실제 함정 구조는 actor swap(타인의 업적 모방)에 가깝다. 사실 오류는 아니며 특성화가 다소 부정확한 수준."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문에서 마지막 절('actively seek the advantage in their disadvantage')만 빈칸으로 치환했고 손상이 없다. 정답 ③은 유일하며 각 오답은 독립 검증에서 모두 탈락한다. 완성문은 문법적이고 다섯 선지가 동일 통사 슬롯(VP)에 들어간다. 해설 인용문은 전부 지문에 실재하며 오답 해설이 실제 선지 내용과 대응한다. 그러나 공예 측면에서 요청 난이도 KILLER 와 심각하게 불일치: (1) 빈칸 직전 절 'every cloud has a silver lining' 하나만으로 정답이 결정되어 두 문장/두 단서 연결 요건 위반, (2) ③이 유일한 긍정·능동 선지라 극성만으로 소거 가능하고 'positive' 어휘가 지문의 'positive aspect'와 직접 겹치는 단서 누출, (3) 지문이 동일 논지를 4회 이상 반복해 함정 깊이가 얕음, (4) ①·②가 동일한 수동성 반전 함정을 중복 사용. §D KILLER 추가 조건 중 '최소 두 논리 단서 연결'과 '극성 하나로 찍기 불가' 요건을 충족하지 못해 killerConditionsMet=false. C5=1 로 B 요건(최저 2) 미달 → 등급 C. 출하하려면 난이도 라벨을 하향하거나, 빈칸 위치를 앞쪽 추론 요구 지점으로 옮기고 긍정 극성 디코이를 추가하는 재설계가 필요하다."
+}

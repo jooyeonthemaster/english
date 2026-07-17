@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Just as today some jobs are better than others, so would they have been in early societies' — just as 절은 today라는 명시적 현재 시점을 가지므로 현재시제 are가 정문. 주절의 would have been(과거 추정)과의 시제 차이는 각 절이 서로 다른 시점을 지시하므로 문제없음. 유혹 포인트: would have been과의 표면적 시제 불일치로 끌리지만 성립하지 않는 미끼."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (정답)",
+      "reason": "'with some roles more dangerous and some have more plentiful access' — with 부대상황(absolute) 구문 내부이므로 정형동사 have는 불가, having(또는 with 재사용)이어야 함. 병렬 짝인 'some roles more dangerous'가 무동사 서술(= being 생략)임이 장거리 단서. 대안 해석 탐색: 'and some have...'를 독립절로 보려 해도 주절 'so would they have been'과의 병렬이 시제·구조상 성립하지 않아 정문화 경로 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'The archeological record shows that soon after ..., some burials start to look different' — shows의 목적절을 이끄는 접속사 that. 뒤에 주어(some burials)+동사(start)의 완전한 절이 오므로 정문. 삽입 부사구(soon after...)가 절을 불완전해 보이게 하는 시각적 미끼일 뿐."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'some are in group graves and some by themselves' — 앞 절의 are (buried)가 생략된 병렬로, by themselves(단독으로)는 주어 some (individuals)를 재귀 지시하는 관용 표현. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'analyses reveal that some members of groups were getting more protein' — 과거진행 were getting, 복수 주어 some members와 수일치. reveal 목적절 내 시제(과거)도 고고학적 과거 사실 서술로 적합. 정문."
+    }
+  ],
+  "note": "정답은 (B) 하나로 명확히 수렴. 가장 강한 매력적 오답은 (A)로, would have been과의 표면적 시제 충돌을 노렸으나 just as today 절의 독립 시점으로 방어됨. (B)는 with 절대구문의 비정형 요구라는 장거리 단서(병렬 짝 'more dangerous'의 무동사 서술)를 읽어야 확정되는 양질의 출제 포인트."
+}

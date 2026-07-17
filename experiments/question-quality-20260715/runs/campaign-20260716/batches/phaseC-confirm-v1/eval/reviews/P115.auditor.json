@@ -1,0 +1,61 @@
+{
+  "pid": "P115",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-seam-minor",
+      "severity": "minor",
+      "evidence": "선지 ②를 빈칸에 넣으면 'A few shills ... easily could not overcome ...'가 되어, 부사 easily가 부정 조동사구(could not) 앞에 놓이는 의미적으로 부자연스러운 결합('쉽게 ~하지 못했다')이 생긴다. 엄밀한 비문은 아니어서 V3 실패로는 판정하지 않으나, 학생이 의미 판단 없이 형태 어색함만으로 ②를 소거할 여지가 있다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — source span 'accomplished what logic, explanations, and advertisements failed to do'를 'brought about the results that theoretical persuasion could not achieve'로 추상화한 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 'That was the turning point'와 후행 문장 'Within a few weeks shoppers readily accepted those carts'가 성공 귀결을 요구하며 이를 유일하게 충족",
+      "decisiveFlaw": "없음. 삽입 시 'A few shills ... easily brought about the results that theoretical persuasion could not achieve.'로 문법·논리 모두 성립"
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전(polarity reversal) — 성공 귀결을 실패로 뒤집음",
+      "temptingBecause": "'negative perceptions held by the majority of shoppers'가 본문의 'less attractive to the majority of the shoppers'와 표면 어휘가 겹침",
+      "decisiveFlaw": "직후 문장 'Within a few weeks shoppers readily accepted those carts' 및 'That was the turning point'와 정면 모순. 부수적으로 'easily could not overcome' seam이 부자연스러워 형태 단서로도 소거 가능"
+    },
+    {
+      "label": "③",
+      "intent": "인과/수단 왜곡(causal-method confusion) — 실패한 수단(논리·설명)을 바람잡이의 성공 수단으로 뒤바꿈",
+      "temptingBecause": "'logical approaches', 'had not persuaded'가 본문의 'logic, explanations ... failed', 'could not persuade'와 직접 어휘 중첩되어 소재 연상 유발",
+      "decisiveFlaw": "바람잡이 전략의 핵심은 논리적 설득이 아니라 행동 시연(사회적 증거)이었으므로, 그들이 '같은 논리적 접근에 의존했다'는 서술은 본문 인과와 모순"
+    },
+    {
+      "label": "④",
+      "intent": "과협소(scope narrowing) — 초기 국면의 세부(노인 이용자)를 최종 결과로 축소",
+      "temptingBecause": "'It was only a few elderly shoppers who used them'이라는 본문 앵커가 실제로 존재",
+      "decisiveFlaw": "그 현상은 바람잡이 투입 이전의 실패 국면이며, 직후 문장에서 전체 쇼핑객이 수용했다고 명시되어 '노인만 끌어들였다'와 모순. 'who could not walk without assistance'는 본문에 없는 첨가"
+    },
+    {
+      "label": "⑤",
+      "intent": "과확장(over-extension) — 본문에 없는 대규모 구조 개편으로 결과를 부풀림",
+      "temptingBecause": "'retail stores'라는 배경 소재 정도의 표면 연관만 있음",
+      "decisiveFlaw": "매장 구조 개편은 본문 어디에도 근거가 없어 source anchor 부재로 즉시 소거됨 — 가장 약한 필러성 선지"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문에 source span을 복원하면 원지문과 문자 단위로 완전 일치함을 스크립트로 확인(빈칸 마커 1개, 접합부 손상·중복·누락·고아 문장부호 없음). V2: 각 선지를 독립 삽입 검증한 결과 ①만이 선행 단서(turning point)와 후행 단서(readily accepted)를 동시에 만족, ②·④는 후행 문장과 모순, ③은 인과 모순, ⑤는 무근거로 정답 유일성 성립. V3: 정답 완성문 문법·자연스러움 양호, 지문·발문 이상 없음(②의 easily seam은 minor). V4: 해설의 흐름 요약(광고·설명 실패 → 바람잡이 시연 성공)과 패러프레이즈 대응(logic/explanations→theoretical persuasion, accomplished→brought about) 모두 본문과 일치, 오답 해설 4건 모두 실제 선지 내용과 정확히 대응하며 함정 유형 명명(극성 반전·소재 연상·과협소·과확장)도 타당. V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음. 공예 감점 요인: (a) 정답 ①이 유일한 '성공 극성' 선지이자 최장 선지여서 극성·길이 스캔만으로 근접 가능(C4=2), (b) ⑤가 즉시 소거되는 필러에 가깝고 실질 경합 선지가 ③(부분적으로 ②) 정도라 변별 경쟁이 얕음(C3=2), (c) 빈칸 문장이 요약문 위치라 국소 단서가 풍부 — INTERMEDIATE 라벨에는 대체로 부합하나 쉬운 쪽(C5=3). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false. 종합: 모든 V 통과, C 최저 2, 합계 17 → B(선지 ⑤ 강화 및 정답 길이/극성 단서 완화라는 작은 수정으로 출제 가능)."
+}

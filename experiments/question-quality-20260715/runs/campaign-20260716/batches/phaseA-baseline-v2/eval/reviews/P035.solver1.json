@@ -1,0 +1,35 @@
+{
+  "pid": "P035",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a process embodied in a machine'은 축약 수동 관계절(a process [that is] embodied in a machine). 기계가 과정을 구현하므로 process는 embody의 대상 → 과거분사 정문. embodying으로의 유혹은 의미역 확인(과정이 기계를 구현하지 않음)으로 기각."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself'에서 관계절 주어(that=process)와 목적어가 동일 지시 → 재귀대명사 itself 정문. 'repeat itself'는 관용적 결합이기도 함."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'it is almost impossible to think of...'는 가주어 it + 진주어 to부정사 구문. impossible + to-inf 표준 결합으로 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'The only example that comes to mind'에서 that은 선행사 the only example을 받는 주격 관계대명사(only 수식 선행사 뒤에는 that이 오히려 선호됨). 단수 주어-comes 수일치도 정확. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'It seems to yield a smooth time scale but in fact is not'에서 조동사 뒤 생략(ellipsis)은 선행 VP를 복원해야 하는데, 선행 술어의 핵은 일반동사 yield이므로 대동사는 does가 되어야 함: 'but in fact does not (yield one)'. is not이 성립하려면 선행부에 be-술어(예: seems to be smooth)가 필요하나 없음. 'is not [a smooth time scale]'(one 생략) 구제 해석도 ① 이런 NP 보어 복원은 불가하고 ② 의미상 clock은 time scale을 산출하는 것이지 time scale 자체가 아니므로 기각. 어법상 틀림."
+    }
+  ],
+  "note": "정답 (E) 단일 확정. is→does 대동사 오류. (A)의 embodied/embodying, (B)의 itself/it 이 매력적 오답 후보였으나 각각 의미역·재귀 지시 확인으로 명확히 정문 판정. 복수정답 소지 없음."
+}

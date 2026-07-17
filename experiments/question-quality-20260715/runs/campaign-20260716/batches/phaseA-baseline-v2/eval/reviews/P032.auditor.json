@@ -1,0 +1,75 @@
+{
+  "pid": "P032",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-participle-controller",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설이 'when triggered'의 의미상 주어를 '주절의 주어 an emotion'이라고 설명하나, 구조상 통제자는 관계절 주어인 관계대명사 that(= a kind of program)이다. 'an emotion is a kind of program'이므로 지시 대상은 동일 개체라 사실 오류까지는 아니고 구조 기술의 부정확성 수준."
+    },
+    {
+      "code": "V5-minor-duplicate-pointCode",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (A)와 정답 (E)가 동일 pointCode 'b'(관계대명사 계열)를 공유한다. 모순은 아니나 point 분포 메타데이터로서는 변별 의도가 흐려진다."
+    },
+    {
+      "code": "V4-minor-vague-wording",
+      "severity": "minor",
+      "evidence": "(C) 해설의 \"'either A or' 병렬 구조 속에서 목적격보어 원칙을 지키는\"과 (D) 해설의 \"'more acutely'의 형성은 어법상 부사 자리에 완벽히 부합\"은 사실 오류는 없으나 표현이 모호/어색하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사 that + 불완전절(주어 결손) 판단. 정답 (E)의 '완전절 앞 관계대명사' 포인트와 대구를 이루는 대조 디코이.",
+      "temptingBecause": "that과 동사 directs 사이에 ', when triggered,' 삽입구가 끼어 있어 절의 완전/불완전 판단이 시각적으로 방해받는다.",
+      "decisiveFlaw": "삽입구를 걷어내면 'that ... directs many of our activities'로 주어가 결손된 불완전절이므로 주격 관계대명사 that은 적법하다. 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "intent": "접속사 유지 분사구문(when + p.p.)의 능동/수동 판정.",
+      "temptingBecause": "축약절의 의미상 주어를 복원해야 하고, triggering/triggered 태 선택을 스스로 판단해야 한다.",
+      "decisiveFlaw": "의미상 주어인 program(= emotion)은 '촉발되는' 대상이므로 수동의 과거분사 triggered가 적법하다. 어법상 옳음."
+    },
+    {
+      "label": "(C)",
+      "intent": "cause + 목적어 + to부정사 목적격보어, either A or B 병렬 구조 판단.",
+      "temptingBecause": "'either to face ... or avoid'에서 or 뒤에 to가 없어 병렬이 어긋나 보이므로 to face 쪽을 의심하게 만든다.",
+      "decisiveFlaw": "cause + O + to-V는 정상 결합이고 either...or 병렬에서 to는 공유 생략이 허용된다. 밑줄 부분 자체는 어법상 옳음."
+    },
+    {
+      "label": "(D)",
+      "intent": "동사 수식 부사(비교급) 자리 판단 (acute vs acutely).",
+      "temptingBecause": "매력도 낮음 — 형용사 acute와의 혼동을 노린 정도로, 부사 자리임이 즉시 드러난다. 필러에 가까운 약한 디코이.",
+      "decisiveFlaw": "remember를 수식하는 부사 자리이므로 more acutely는 적법하다. 어법상 옳음."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답. 관계대명사 vs 전치사+관계대명사 — 뒤따르는 절의 완전성 판단.",
+      "temptingBecause": "선행사 ways 뒤 which가 표면상 자연스러워 보이고, Regardless of 부사구 내부라 절 구조 확인을 건너뛰기 쉽다.",
+      "decisiveFlaw": "뒤 절이 they(주어) + activate(타동사) + our systems(목적어)로 완전하므로 결손을 요구하는 관계대명사 which는 불가. in which로 고치면 정확히 원문이 복원된다(최소대립쌍 충족)."
+    }
+  ],
+  "explanationIssues": [
+    "(B) 해설: 분사구문 의미상 주어를 '주절의 주어 an emotion'으로 기술 — 구조상 통제자는 관계절 주어 that(= program). 지시 대상 동일로 치명은 아님(minor).",
+    "(D) 해설: '형성은 어법상 부사 자리에 완벽히 부합' 등 어색한 표현. 왜 매력적인지(tempting 근거)는 어떤 밑줄에도 명시돼 있지 않음.",
+    "본해설의 '관계부사 how를 대신하는 that' 병기는 학교문법 관행상 허용 가능한 기술."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과. 변형은 (E) 'in which'→'which' 단일 최소대립쌍뿐이고 교정 시 원문이 정확히 복원된다. 5개 밑줄 독립 검증 결과 (E)만 비문으로 단일 정답 확정. 다만 KILLER 요청 대비 실제 난이도가 못 미친다: 'the way(s) + which + 완전절'은 가장 많이 훈련되는 정전 트리거 패턴이라 숙련 학생은 구조 정독 없이 즉시 표적화 가능하고(§C '즉시 드러나지 않는다' 조건 미충족), (D)는 필러에 가까우며 밑줄별 명시적 why-tempting 근거가 부재해 §C 3번 조건도 미충족 — killerConditionsMet=false. (A)의 삽입구 방해, (B)의 태 판단, (C)의 병렬 착시는 실제 판단을 요구해 공예 수준은 준수하나 C5(난이도 정합)=2로 A 불가. 합계 17, 최저 2 → B: 정답 포인트를 더 깊은 구조(예: 긴 명사구 내 동사/분사, 대동사 등)로 교체하거나 디코이 (D)를 강화하면 KILLER 재도전 가능."
+}

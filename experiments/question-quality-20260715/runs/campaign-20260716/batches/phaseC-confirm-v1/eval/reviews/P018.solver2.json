@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합은 정문('expect that + S + will VP')이나 논리 실패. gap fill 원리는 큰 도약 후 '방향 전환(the next note should change direction)'과 '출발점 복귀'를 기대한다고 명시하는데, '도약이 계속 멀어진다'는 그 정확한 부정이다. 빈칸 뒤 등위절 'tones that follow need to bring us closer and closer to our starting point'와 직접 모순. 'but not by too much' 구절로 옹호를 시도해도 그 문장은 복귀 자체를 전제한 채 정도만 제한하므로 옹호 불성립."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "문법 정문이나 'variation'(변주)이라는 개념이 지문에 전혀 도입되지 않음. 도약(leap)은 변주가 아니며, 빈칸은 'another way to say' 재진술 자리이므로 앞 문장의 '복귀 경향'을 지시해야 하는데 지시 대상 실패. 논리 성립 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 정문이나 논리 모순. 이미 큰 도약이 발생한 맥락에서 '선율이 정확히 그대로 유지된다'는 기대는 방향 전환 요구와 모순되고, 'stay exactly the same'이면 뒤 절의 점진적 접근('closer and closer to our starting point')이 성립할 수 없다."
+    },
+    {
+      "label": "4",
+      "verdict": "accept",
+      "reason": "문법: 'our brains expect that the big jump will soon be reversed' — that절 내 수동태 미래로 정문이며, 'the big jump'는 앞 문장 'if the melody makes a big leap'의 확정 선행 지시체로 정관사 적법. 논리: 'reversed'(역행) = 'change direction'의 재진술이고, 역행은 출발점 복귀 과정이므로 빈칸 뒤 등위절('bring us closer and closer to our starting point, or harmonic home')과 완전 정합. 'Over the Rainbow' 예시(옥타브 도약 후 back toward home, 제3음이 gap을 fill)와도 일치. 유일 성립."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "문법 정문이나 논리 정면 모순. 출발점이 '영구히 상실'된다면 선율이 jumping-off point로 '돌아가고 싶어 한다'는 경향 서술 및 'starting point로 점점 가까워져야 한다'는 후속 절과 양립 불가."
+    }
+  ],
+  "note": "다섯 선지 모두 'expect that' 보문으로서 문법 seam은 무결하므로 변별은 순수 논리. 빈칸은 'this is another way to say that ...' 구조로 직전 문장(큰 도약 후 출발점 복귀 경향)의 재진술이어야 하고, 등위 연결된 후속 절 및 'Over the Rainbow' 예시가 이중으로 구속한다. 4번만 세 구속 조건을 모두 만족하며 나머지는 모두 지문 명제와 직접 모순되거나(1,3,5) 지시 대상이 없다(2). 복수 정답 여지 없음."
+}

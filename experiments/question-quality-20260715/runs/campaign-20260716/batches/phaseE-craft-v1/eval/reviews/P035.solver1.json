@@ -1,0 +1,35 @@
+{
+  "pid": "P035",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'who is credited with discovering America' — 'be credited with + 동명사'는 표준 수동 연어. 선행사 the Italian explorer(단수)와 is 수일치도 맞음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "문두 분사구문 'considered his mistreatment ... and the devastating effect ...'에서 과거분사(수동)는 직접목적어 'his mistreatment'를 취할 수 없음. 문맥상 '~을 고려하면'을 뜻하는 준전치사적 considering이 필요. 대안 해석 탐색: 절대구문([being] considered ...)도 수동분사가 목적어를 취하는 문제가 동일하게 발생해 성립 불가, consider에 잔류목적어를 남기는 수여동사 수동 구조도 없음. 어법상 틀림 — considering으로 고쳐야 함."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the diseases that Columbus and other Europeans brought with them' — them은 Columbus and other Europeans(복수)를 지시하는 'bring X with one' 관용 구조의 비재귀 대명사. 재귀형 themselves를 요구하고 싶은 유혹이 있으나 'brought with them'이 표준 관용형이며, 관계절의 공백은 brought의 목적어(= diseases)이므로 지시 혼선도 없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "조동사 should 뒤 동사원형 support — 규칙대로 정확함."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a new holiday that honors ... and remembers ...' — 관계대명사 that의 선행사는 직전 복수명사가 아니라 핵명사 a new holiday(단수)이므로 단수동사 honors가 맞고 remembers와 병렬도 정합. 인접 복수(Native Americans)에 끌려 오답으로 고르기 쉬운 대표적 미끼였으나 선행사 확인으로 배제."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 실제로 끌린 미끼는 (E)(인접 복수명사에 의한 수일치 착시)와 (C)(재귀대명사 요구 착시)였으나, 각각 선행사 확인과 관용 구조 확인으로 해소됨. (B)는 'considering(전치사적) vs considered' 고전 포인트로, 수동분사가 목적어를 취할 수 없다는 장거리 규칙이 결정적. 정답 후보는 (B) 단일로 수렴, 복수 정답 소지 없음."
+}

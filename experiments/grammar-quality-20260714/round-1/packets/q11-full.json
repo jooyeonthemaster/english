@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):ANS=e  (C):dec=g  (D):dec=d  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 125,
+        "relPos": 0.159,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 356,
+        "relPos": 0.452,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 389,
+        "relPos": 0.494,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 509,
+        "relPos": 0.646,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 595,
+        "relPos": 0.755,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.755,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "kept",
+        "isError": true,
+        "correction": "kept",
+        "errorExpression": "keeping",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "They",
+        "isError": false,
+        "errorExpression": "They",
+        "surroundingText": "They're kept up with regular maintenance, like a car.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "goes",
+        "isError": false,
+        "errorExpression": "goes",
+        "surroundingText": "we have to make sure that not too much time goes by between oil changes, so to speak.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "calling",
+        "isError": false,
+        "errorExpression": "calling",
+        "surroundingText": "This isn't to say that you shouldn't bother calling someone just because it's been a while",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "keeping"
+      },
+      {
+        "label": "(C)",
+        "text": "They"
+      },
+      {
+        "label": "(D)",
+        "text": "goes"
+      },
+      {
+        "label": "(E)",
+        "text": "calling"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "선행사 'the distance'를 수식하며 뒤에 주어가 빠진 불완전한 절을 연결하는 주격 관계대명사 'that'은 어법상 옳습니다.",
+      "(C)": "앞 문장의 복수 명사인 'relationships'를 지칭하는 대명사이므로 복수 인칭대명사 주격인 'They'는 어법상 옳습니다.",
+      "(D)": "명사절(that절) 내의 주어인 'not too much time'은 단수이므로 단수 동사 'goes'로 일치시킨 수일치는 옳습니다.",
+      "(E)": "부정 또는 노력을 나타내는 동사 'bother'의 목적어로 동명사 'calling'이 온 구조는 어법상 자연스럽고 옳습니다."
+    },
+    "explanation": "문장의 주어인 'relationships'는 유지(keep up)하는 행동을 하는 주체가 아니라 유지의 대상(목적어)이므로 수동의 관계가 성립합니다. 따라서 문맥과 통사 구조상 복수 수동태 형식을 취해야 하는데, 능동태 절의 일부분처럼 쓰인 'aren't keeping'은 어법상 틀린 표현입니다. 행위의 대상을 주어로 삼은 문장이므로 이를 과거분사인 'aren't kept'로 고쳐서 타동사구의 수동 형태를 만들어야 합니다.",
+    "keyPoints": [
+      "(B) 능동태 vs 수동태 — 주어(relationships)와 동사의 관계에서 목적어 성분이 부재하므로 수동형으로 고쳐야 함",
+      "(A) 관계대명사의 역할 — 선행사 뒤에서 주어가 빠진 불완전한 관계절을 이끄는 격과 쓰임의 일치",
+      "(D) 주어-동사의 수일치 — 불가산 명사(not too much time)가 주어일 때 단수형 동사를 선택하는 수일치"
+    ],
+    "tags": [
+      "어법",
+      "능동태와 수동태",
+      "관계대명사",
+      "수일치",
+      "동명사 목적어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance __(A) that__ has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't __(B) keeping__ up with big one-time fixes. __(C) They__'re kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time __(D) goes__ by between oil changes, so to speak. This isn't to say that you shouldn't bother __(E) calling__ someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

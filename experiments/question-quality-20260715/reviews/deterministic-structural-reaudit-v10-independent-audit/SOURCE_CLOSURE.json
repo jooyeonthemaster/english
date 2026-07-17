@@ -1,0 +1,296 @@
+{
+  "schemaVersion": "deterministic-structural-v10-production-source-closure-v1",
+  "collector": "esbuild metafile over the three dynamically imported production entry modules",
+  "esbuildVersion": "0.27.3",
+  "packagesExternal": true,
+  "entryExports": [
+    "findSummaryMcAnswerObjectMismatch",
+    "findGrammarKeypointNonexistentLabel",
+    "validateSentenceOrderQuestion"
+  ],
+  "fileCount": 56,
+  "aggregateCanonicalization": "sorted path<TAB>bytes<TAB>sha256<LF>",
+  "aggregateSha256": "c77ed3b68eaf67da61ef157a182c84d4366833d6a5c0373bec318440517427f7",
+  "files": [
+    {
+      "path": "src/lib/korean/core/ko-text.ts",
+      "bytes": 12791,
+      "sha256": "00492f195787d69b245cbf7b8b239cb4ea7c0d8857a38e80b35fb6558a017d65"
+    },
+    {
+      "path": "src/lib/korean/core/markers.ts",
+      "bytes": 6055,
+      "sha256": "8786817c70d21eb54787dbc506e447aa13a9fe9e929f890c94f428dbf5ccb3ed"
+    },
+    {
+      "path": "src/lib/korean/core/passage-meta.ts",
+      "bytes": 6161,
+      "sha256": "96832c08c8958025da0aef2bb5a4c83e196c9d8ad58a5b65c0f5b3bbb19ee788"
+    },
+    {
+      "path": "src/lib/korean/core/render-model.ts",
+      "bytes": 14901,
+      "sha256": "4ae4d7185340779ea890e71bc6f27ddaa2b00c29b8b4809947bd415d44484915"
+    },
+    {
+      "path": "src/lib/korean/quality/common.ts",
+      "bytes": 32570,
+      "sha256": "9fb4bfe2a7fbd4173b9d04739842fbd55805e2f1a48f2209b712249467c5d9f0"
+    },
+    {
+      "path": "src/lib/korean/registry/envelope-schema.ts",
+      "bytes": 9121,
+      "sha256": "597f84c16389fcc8d64587b717ed625ab5daa9fcf11d2b415323b9e9abf18422"
+    },
+    {
+      "path": "src/lib/korean/registry/index.ts",
+      "bytes": 4709,
+      "sha256": "ad6f8095578634bd31139ea8a8054f793aff56ec7355a46b32b64114168253cc"
+    },
+    {
+      "path": "src/lib/korean/registry/type-module.ts",
+      "bytes": 6651,
+      "sha256": "0049a55d0e27d910e6d7f0f1d8c7472a90fdb42852548df3151e9e7c3cf99e76"
+    },
+    {
+      "path": "src/lib/korean/text/ko-markers.ts",
+      "bytes": 3646,
+      "sha256": "2df2eac87a502ff973ffe5096c53002a40da8343f66e477dd3f099457290af2f"
+    },
+    {
+      "path": "src/lib/korean/text/ko-sentence-splitter.ts",
+      "bytes": 9640,
+      "sha256": "0a78496d18f2481ddc9598eaf2639a372779af790ee6907a1ef5aab0efb7ac63"
+    },
+    {
+      "path": "src/lib/korean/text/ko-tokenizer.ts",
+      "bytes": 18933,
+      "sha256": "26b2e3b5417c5848e040635a7316d22889a4b2cf268959f098a9deb314955a74"
+    },
+    {
+      "path": "src/lib/korean/types/KO_GR_APPLY.ts",
+      "bytes": 29371,
+      "sha256": "0a9f0c4d51142ab9e3e2f27126197a03e171b539a8a67d64a39167c0979c16ea"
+    },
+    {
+      "path": "src/lib/korean/types/KO_GR_ELEMENT.ts",
+      "bytes": 42149,
+      "sha256": "0d478943ea785322541927aecdbca5fbee747413dc06d298c35a5f18fcfe90c5"
+    },
+    {
+      "path": "src/lib/korean/types/KO_GR_HIST.ts",
+      "bytes": 32303,
+      "sha256": "db9ca275fbaaa205c3eab698eee2fab154880349b0db8fe9db26c9f5258c90dd"
+    },
+    {
+      "path": "src/lib/korean/types/KO_GR_MORPH.ts",
+      "bytes": 34119,
+      "sha256": "6bf51b9e03d950561bf23f62dc76dc682c5aa2937e0ab31855f6bfc10aa98e67"
+    },
+    {
+      "path": "src/lib/korean/types/KO_GR_NORM.ts",
+      "bytes": 41810,
+      "sha256": "d5caca4d0378549f7789b9bd077178e55223bec3f28ea09fa7996f2264654262"
+    },
+    {
+      "path": "src/lib/korean/types/KO_GR_PHONO.ts",
+      "bytes": 40135,
+      "sha256": "65ff60b04a0c58aee92f8dd4321518628659c6203541a9fa832bc2eaecbbc536"
+    },
+    {
+      "path": "src/lib/korean/types/KO_GR_READ.ts",
+      "bytes": 16782,
+      "sha256": "c7ff5007f6b9c7edc77bbc45f7ebd009f49dbf5d15ce19b7b4956b97b0029c98"
+    },
+    {
+      "path": "src/lib/korean/types/KO_GR_SYNTAX.ts",
+      "bytes": 43314,
+      "sha256": "ced861cb2edfa77069272bef41ffd7f99b93054386de983be374e19253c3a465"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_BOGI.ts",
+      "bytes": 23069,
+      "sha256": "fbb487aa328e172e6d4de802015f6a1e04fadc62d508242f24a35693c7f466f1"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_COMPARE.ts",
+      "bytes": 32200,
+      "sha256": "8d3d691034ae1da57e84b5622285b3a41cdbe987027f5305fda2a031b4b8aeb6"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_EXPR.ts",
+      "bytes": 29334,
+      "sha256": "4d39d2b6090404d2e35a17aa6870c01d0746c021a58b814ddd08ddbf9f3daf5e"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_FACT.ts",
+      "bytes": 22638,
+      "sha256": "f230dd0ca2994fa9a56f3416c4eaa020f57c61856b5679c6780a5204de3a2928"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_MOTIF.ts",
+      "bytes": 25431,
+      "sha256": "8492ce90754d0e6911baa58965071ec816855432806bc697dd8acaf703aad12f"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_NARR.ts",
+      "bytes": 28321,
+      "sha256": "11c2c91f433120c5621b9fced091c34952b994644a1e02fdf555b33043ca701b"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_PHRASE.ts",
+      "bytes": 10163,
+      "sha256": "66eba9419e8490d0cf268f78cd9c60466dd0cf5d86c2fb44a6d5c547e27ada73"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_PSYCH.ts",
+      "bytes": 26111,
+      "sha256": "a8309ae2eba11802749eacd4214e8671016f562586b78c8780eb344ed012dcfe"
+    },
+    {
+      "path": "src/lib/korean/types/KO_LIT_SPEECH.ts",
+      "bytes": 24339,
+      "sha256": "4ac20eeb9c74937c8067981a847c6cfc810cd733bbda959db2603f3a618f580a"
+    },
+    {
+      "path": "src/lib/korean/types/KO_MD_LANG.ts",
+      "bytes": 33618,
+      "sha256": "61261721de091555c7abeb5e8753d9932ddc3a64fdf4c4711d70322fe044ddc9"
+    },
+    {
+      "path": "src/lib/korean/types/KO_NS_CLOZE.ts",
+      "bytes": 26780,
+      "sha256": "1338918f37d5d857ae0f78e3bb0a35c38039a559350573b7382feaa2e4f10458"
+    },
+    {
+      "path": "src/lib/korean/types/KO_NS_COND.ts",
+      "bytes": 29625,
+      "sha256": "fb3b96285d0a036c140de7d14154857e7c9d9b9c9bd50304e838816de552c342"
+    },
+    {
+      "path": "src/lib/korean/types/KO_NS_EXTRACT.ts",
+      "bytes": 25352,
+      "sha256": "239b9e9f1ad453071daaed2a5ee8975634f34132ed24c52d48881d3cd58d1abb"
+    },
+    {
+      "path": "src/lib/korean/types/KO_RD_APPLY.ts",
+      "bytes": 24918,
+      "sha256": "360c4b1c275de86631cb01456f8a792e241450a8e1e87efaae73d2564906c6de"
+    },
+    {
+      "path": "src/lib/korean/types/KO_RD_CONCEPT.ts",
+      "bytes": 18130,
+      "sha256": "2603a6ba3a883a5639561ab3f518c0acc4fac1139320f5a9d7e00848e02e96df"
+    },
+    {
+      "path": "src/lib/korean/types/KO_RD_CRIT.ts",
+      "bytes": 26334,
+      "sha256": "d2b3ee89b5c4dd2b5df15604496c7c05f30669ff51e6be778124bdb1027c2d92"
+    },
+    {
+      "path": "src/lib/korean/types/KO_RD_FACT.ts",
+      "bytes": 10957,
+      "sha256": "26ae0a2ba584b5d53eae57b2fa37e693f8c8bd1cef4dd06216dc9ea8145f63fc"
+    },
+    {
+      "path": "src/lib/korean/types/KO_RD_INFER.ts",
+      "bytes": 25573,
+      "sha256": "56cea90c23a89b51acd5abf94288b2e99827bf07ac107c6085e81acea2f1c5f4"
+    },
+    {
+      "path": "src/lib/korean/types/KO_RD_STRUCT.ts",
+      "bytes": 26451,
+      "sha256": "9bb5eb79e1cae5edae0b256e4327c8234b658d3dfa50f39325fc48726c6ab6c9"
+    },
+    {
+      "path": "src/lib/korean/types/KO_RD_THEORY.ts",
+      "bytes": 24229,
+      "sha256": "db624c515113546b6e59a08e1418a7f43f40dbeb54126b07dffa480ea08d5083"
+    },
+    {
+      "path": "src/lib/korean/types/KO_RD_VOCAB.ts",
+      "bytes": 19255,
+      "sha256": "d2bc31f2bee3b16ddb97f112dcdf95490c9fff08253f6f2ca559fa0d5cb3e984"
+    },
+    {
+      "path": "src/lib/korean/types/KO_SP_AUD.ts",
+      "bytes": 26336,
+      "sha256": "51c475ba9a0435dd5992a14b121a89e0b7835e8255d29fab1367410f19a10849"
+    },
+    {
+      "path": "src/lib/korean/types/KO_SP_DEBATE.ts",
+      "bytes": 31829,
+      "sha256": "5bc916f6391742e6e790f1ee23b0ee5fe63bc887a5a3af269b870a71de327d75"
+    },
+    {
+      "path": "src/lib/korean/types/KO_SP_FUNC.ts",
+      "bytes": 33135,
+      "sha256": "feb38977f89ccf92000e44ebd772cbab91390408b4e34bf508aec4007d1e1a67"
+    },
+    {
+      "path": "src/lib/korean/types/KO_SP_PLAN.ts",
+      "bytes": 23669,
+      "sha256": "c38b77f254454c41b6798e272413aaaca5f8ad8946621c2c53ce257a63a024c4"
+    },
+    {
+      "path": "src/lib/korean/types/KO_SP_STRAT.ts",
+      "bytes": 28829,
+      "sha256": "0f8ba61ba76dcce05a43ef0adc5cde7d462da0430126edf67621f24bc61fa82e"
+    },
+    {
+      "path": "src/lib/korean/types/KO_WR_COND.ts",
+      "bytes": 41372,
+      "sha256": "f99e0b79cc997351bb37c119013872239f1034dbaaea9522e073ee1af6958f51"
+    },
+    {
+      "path": "src/lib/korean/types/KO_WR_METHOD.ts",
+      "bytes": 31094,
+      "sha256": "631bb58d4071c837104203bd6a552f4ed299acbc94822829799043b0ecd6c523"
+    },
+    {
+      "path": "src/lib/korean/types/KO_WR_PLAN.ts",
+      "bytes": 22880,
+      "sha256": "a0ccba051ee6e05f945cb15e53c0120b8b5a2876f6dfe100eb963a527c210953"
+    },
+    {
+      "path": "src/lib/korean/types/KO_WR_REVISE.ts",
+      "bytes": 30632,
+      "sha256": "c64ca105c23a6c6cf625b66429c784ac77f055408733e241e192a3e432f21e9c"
+    },
+    {
+      "path": "src/lib/passage-sentence-utils.ts",
+      "bytes": 685,
+      "sha256": "572dc2dbab87731faee1caa15055a096b5a0695b216e836e63c0a1bc9f2f8aa6"
+    },
+    {
+      "path": "src/lib/question-postprocess/types.ts",
+      "bytes": 2757,
+      "sha256": "95d082598f8974b15ac26987f4090a8b94cd511603e5e1f5d0c1224cf45ab4b7"
+    },
+    {
+      "path": "src/lib/question-quality/core.ts",
+      "bytes": 18736,
+      "sha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35"
+    },
+    {
+      "path": "src/lib/question-quality/validators/grammar/shared.ts",
+      "bytes": 80295,
+      "sha256": "fb57409f1695f10f8d3ba2fdf1ce9845f0c273b724b8711e5e17fefa9b99931b"
+    },
+    {
+      "path": "src/lib/question-quality/validators/sentence-order.ts",
+      "bytes": 25549,
+      "sha256": "dcb1314d70a9877716802cafe2037be43feebebb036f7608f29a104746be3bc5"
+    },
+    {
+      "path": "src/lib/question-quality/validators/summary/killer-trap.ts",
+      "bytes": 6813,
+      "sha256": "1705ad8aca1e5b6f7428d924e9f2ed94139a02a5bdca6a81be5d4fae23d09174"
+    },
+    {
+      "path": "src/lib/question-quality/validators/summary/mc.ts",
+      "bytes": 38596,
+      "sha256": "200e497fd99c82d13db3ddb5e752722b150f39d3cf4428b46f81814ef369c00c"
+    }
+  ]
+}

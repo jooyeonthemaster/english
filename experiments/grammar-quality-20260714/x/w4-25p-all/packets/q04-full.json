@@ -1,0 +1,160 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=h  (C):ANS=a  (D):dec=b  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 55,
+        "relPos": 0.076,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 208,
+        "relPos": 0.288,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 331,
+        "relPos": 0.459,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 447,
+        "relPos": 0.62,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 705,
+        "relPos": 0.978,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.978,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "focused",
+        "isError": false,
+        "errorExpression": "focused",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime).",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "train",
+        "isError": true,
+        "correction": "train",
+        "errorExpression": "training",
+        "surroundingText": "To break out of this neural rut, training yourself to acknowledge when things go right.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "to celebrate",
+        "isError": false,
+        "errorExpression": "to celebrate",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "focused"
+      },
+      {
+        "label": "(C)",
+        "text": "training"
+      },
+      {
+        "label": "(D)",
+        "text": "what"
+      },
+      {
+        "label": "(E)",
+        "text": "to celebrate"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "선행사 a trait을 수식하는 주격 관계대명사 that이 쓰였으며, 뒤에 동사 kept가 이어지는 완전한 구조이므로 어법상 맞습니다.",
+      "(B)": "동사 keep은 ‘목적어(you)를 목적격 보어(~한 상태)로 유지하다’라는 의미로 쓰입니다. 목적어인 you가 ‘집중되는’ 수동의 대상이므로 과거분사 focused는 어법상 맞습니다.",
+      "(D)": "‘~하는 것’이라는 의미로 선행사를 포함하는 관계대명사 what이 명사절을 이끌고 있습니다. 이 명사절은 전치사 down의 목적어 역할을 하므로 어법상 맞습니다.",
+      "(E)": "앞의 명사 reasons를 뒤에서 수식하는 형용사적 용법의 to부정사로 쓰였습니다. ‘축하할 이유들’이라는 의미로 자연스러우므로 to celebrate는 어법상 맞습니다."
+    },
+    "explanation": "‘~하기 위해서’라는 의미의 to부정사구(To break out of this neural rut)가 문장 앞에 왔으므로, 뒤에는 주절이 이어져야 합니다. 이 문장은 주절의 주어 You가 생략된 명령문이므로 동사원형이 와야 문장이 성립합니다. 따라서 현재분사(또는 동명사) 형태인 (C) training은 주절의 동사가 될 수 없으므로, 이를 동사원형 train으로 고쳐야 어법에 맞습니다.",
+    "keyPoints": [
+      "(C) 정동사 vs 준동사 — 문장 전체 구조를 보고 동사 자리인지 판단",
+      "(B) 목적격 보어 — 5형식 동사(keep) 뒤 목적어와 보어의 의미 관계(능동/수동) 파악",
+      "(A) 관계사 — 선행사의 유무와 관계절 내부의 문장 성분 완전성 확인"
+    ],
+    "tags": [
+      "어법",
+      "정동사",
+      "준동사",
+      "명령문",
+      "관계대명사",
+      "목적격보어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait __(A) that__ kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you __(B) focused__ on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, __(C) training__ yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down __(D) what__ went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have __(E) to celebrate__ it."
+  }
+}

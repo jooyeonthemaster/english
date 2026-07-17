@@ -1,0 +1,35 @@
+{
+  "pid": "P091",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "Gerund fits 'by ___'. 'Restoring a sense of stability' is gradable, so the tail 'but not by too much' composes cleanly (partial restoration leaves residual tension, matching 'he wants to continue to build tension'). Logically it names exactly the gap-fill mechanism the passage defines: after the octave leap (schematic violation), returning toward the jumping-off point / harmonic 'home' is what rewards and soothes the listener, and the closing sentence ('The third note fills the gap') instantiates this partial restoration. Fully coherent at both the seam and discourse level."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Grammatically well-formed in the frame, but logically contradictory: an even wider leap would amplify the schematic violation, which cannot be what 'rewards and soothes us'. It also contradicts the final sentence — a wider leap widens, not fills, the gap. No alternative parse rescues it."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "Strongest distractor (recycles 'adjacent tones' from the passage), but fails twice. (a) Seam failure: 'limiting the notes to adjacent tones' is a categorical constraint, not a gradable act, so 'but not by too much' does not compose — one cannot limit 'by too much' vs 'by a little' in this frame. (b) Mechanism mismatch: the passage says the reward comes from moving back toward the starting point (gap fill), not from imposing blanket stepwise motion; stepwise motion is described as what a 'typical melody' does, not as the composer's soothing response to the leap."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "Grammatical but logically inverted: exploring completely unfamiliar scales would add further schematic violation and increase tension, the opposite of 'rewards and soothes'. Also unsupported — the passage never discusses scale familiarity as a variable."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Grammatical but off-dimension: the passage's expectation mechanism is melodic/pitch-based (gap fill, leaps, adjacent tones, return to home). Tempo is never mentioned, and the final sentence 'The third note of this melody fills the gap' would be a non sequitur after a tempo-based blank."
+    }
+  ],
+  "note": "Passage is a close paraphrase of Levitin's 'This Is Your Brain on Music' discussion of 'Over the Rainbow' (original: the composer 'rewards and soothes us by bringing the melody back toward home, but not by too much'). ① abstracts that exact clause. The gradability requirement imposed by 'but not by too much' formally eliminates ③, the only semantically tempting rival. Single defensible answer."
+}

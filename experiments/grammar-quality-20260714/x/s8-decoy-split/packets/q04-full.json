@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=h  (C):dec=b  (D):dec=k  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 60,
+        "relPos": 0.083,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 208,
+        "relPos": 0.288,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.304,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 700,
+        "relPos": 0.971,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.971,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "kept",
+        "isError": false,
+        "correction": "kept",
+        "errorExpression": "kept",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "focused",
+        "isError": false,
+        "correction": "focused",
+        "errorExpression": "focused",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime).",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "sharing",
+        "isError": false,
+        "correction": "sharing",
+        "errorExpression": "sharing",
+        "surroundingText": "If you're more of a verbal processor, start your conversations with friends by sharing a recent win",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "have",
+        "isError": true,
+        "correction": "have",
+        "errorExpression": "has",
+        "surroundingText": "Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "kept"
+      },
+      {
+        "label": "(B)",
+        "text": "focused"
+      },
+      {
+        "label": "(C)",
+        "text": "what"
+      },
+      {
+        "label": "(D)",
+        "text": "sharing"
+      },
+      {
+        "label": "(E)",
+        "text": "has"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주격 관계대명사 that절 내의 동사로, 과거의 역사적 또는 진화적 사실(사바나에서 살던 시절)을 기술하고 있으므로 과거시제 동사 'kept'는 적절합니다.",
+      "(B)": "'keep + 목적어 + 목적격 보어' 구문에서 목적어 'you'가 보어의 동작인 집중을 '당하는(되어지는)' 관계이므로, 수동의 의미를 나타내는 과거분사 'focused'는 적절합니다.",
+      "(D)": "수단을 나타내는 전치사 'by'의 목적어 자리이므로, 동명사 'sharing'은 어법상 적절합니다.",
+      "(C)": "타동사구 'write down'의 목적어 역할을 하는 명사절을 이끌고 있으며, 선행사가 없고 뒤에 동사 'went'로 시작하는 불완전한 문장이 이어지므로 관계대명사 'what'은 적절합니다."
+    },
+    "explanation": "(E) \"has\"는 어법상 틀린 표현이며 \"have\"로 고쳐야 한다. 'the+비교급, the+비교급' 구문 내인 'the more reasons you have to celebrate it'에서 주어는 2인칭 대명사인 'you'입니다. 따라서 주어와 동사의 수일치 관계에 따라 3인칭 단수형 동사인 'has'는 비문이며, 'you'에 호응하는 복수 및 2인칭형 동사 'have'로 고쳐야 올바릅니다. 전치 수식어구인 'more reasons'에 의해 주어가 혼동되지 않도록 실제 행위의 주체인 'you'를 정확히 파악하는 것이 중요합니다.",
+    "keyPoints": [
+      "(E) 수일치 — the+비교급 구문의 도치된 주어 'you'에 맞추어 수일치 판단",
+      "(B) 목적격 보어 — 동사 keep의 목적격 보어 자리에 수동 관계를 나타내는 분사 형태 판단",
+      "(C) 관계대명사 — 명사절 역할을 하면서 뒤에 주어가 없는 불완전한 절을 이끄는 관계대명사 what의 쓰임"
+    ],
+    "tags": [
+      "수일치",
+      "the+비교급",
+      "분사구문",
+      "관계대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that __(A) kept__ us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you __(B) focused__ on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down __(C) what__ went well. If you're more of a verbal processor, start your conversations with friends by __(D) sharing__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you __(E) has__ to celebrate it."
+  }
+}

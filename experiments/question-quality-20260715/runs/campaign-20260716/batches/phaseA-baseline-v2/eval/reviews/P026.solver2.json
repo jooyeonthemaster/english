@@ -1,0 +1,35 @@
+{
+  "pid": "P026",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'If the interview lasts a while'에서 'a while'은 관사+명사로 이루어진 명사구가 지속 동사 last의 기간 보충어로 쓰인 표준 용법(cf. 'stay a while', 'last a while'). 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop ...'는 가주어 it + be + 형용사 보어 + 진주어 to부정사 구조. 비교급 more efficient는 앞 문장의 녹음 재청취 방식(time-consuming)과의 암시적 비교로 논리적으로 성립. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'writing down the key answers ... so that they can transcribe easily afterwards'에서 they의 선행사는 the key answers. transcribe는 타동사이고 답변(answers)은 전사 행위의 피동작주이므로 수동 'can be transcribed easily'가 요구된다. 대안으로 중간태(middle construction, 'This book reads easily' 유형)를 검토했으나 transcribe는 read/sell/wash처럼 중간태가 관습화된 동사가 아니고, 중간태는 총칭적 단순현재가 전형이어서 조동사 can과 결합한 'they can transcribe easily'는 표준 영어에서 성립하지 않는다. 능동 정문화 해석 실패 — 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the habit of editing out the material'에서 전치사 of 뒤 동명사 editing out이 오고 구동사 edit out이 목적어 the material을 취한다. 뒤의 'the material you are not going to need'는 접촉 관계절로 정합. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle'는 make + 목적어 + 형용사 목적보어 구조. easier/quicker 비교급 병렬, tough-구문(easy to handle)의 목적어 공백이 the material과 정합, much는 비교급 강화사로 적법. 정문."
+    }
+  ],
+  "note": "유일한 어법 오류는 (C): 수동태 be transcribed가 필요한 자리에 능동 transcribe가 쓰였다. 중간태 등 대안 정문화 해석을 적극 탐색했으나 성립하지 않아 단일 정답으로 판정."
+}

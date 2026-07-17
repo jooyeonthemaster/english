@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "fully absorbing and sharing their deep emotional pain은 지문의 핵심 경고인 'be careful not to be overcome by the misfortune', 'don't allow yourself to be pulled down too'와 정면으로 모순되는 주제 반대 선지. 즉시 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "maintaining an objective distance from their emotional turmoil은 '사건 자체와 해석을 구별하라', '타인의 불행에 휩쓸리지 마라'는 스토아적 논지와 정확히 일치. 결정적 장거리 단서는 빈칸 직후의 'Still' 역접 — 거리 유지가 냉담을 의미할까 봐 '그래도 친절과 공감의 귀는 내주되, 너까지 끌려 내려가지는 마라'로 보완하는 흐름이 ②일 때만 완벽하게 성립한다. 문법 결합(by + 동명사구)도 자연스럽다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "identifying the exact occurrence that caused their anxiety는 'discriminate between events themselves and your interpretations'의 어휘(occurrence/events)를 재활용한 미끼. 그러나 지문은 'What hurts this person is not the occurrence itself'라고 명시해 사건 자체는 원인이 아니라고 못 박으므로, 사건을 특정하는 것은 논지에 역행. 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "가장 강한 매력 오답 — 'the responses they have uncritically adopted'가 지문 인용문('the response he or she has uncritically adopted')을 축자 복사해 순간적으로 끌린다(실제로 끌렸음을 기록). 그러나 (a) 그 문장은 'Remind yourself'로 시작하는 자기 내면용 지침이지 상대를 질책하라는 지시가 아니고, (b) 'strictly criticizing'은 직후의 'show them kindness and give them a sympathetic ear'와 태도상 충돌하며, (c) 지문에서 타인에 대한 봉사는 내가 부정적 감정에 감염되지 않는 것이지 상대의 반응을 엄하게 비판하는 것이 아니다. 어휘 일치 함정으로 최종 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "expressing your own hidden depressive feelings to them은 부정적 태도를 오히려 전파하는 행위로, 첫 두 문장('views and troubles can spread like a virus', 'Don't damage yourself by adopting negative attitudes')이 금지하는 것과 정반대. 탈락."
+    }
+  ],
+  "note": "에픽테토스(Enchiridion 계열, The Art of Living 스타일) 지문. 빈칸 직후 'Still' 역접이 정답을 단일하게 고정하는 잘 설계된 문항. ④는 인용문 축자 복사형 매력 오답으로 실전에서 실제 유혹이 있으나 'strictly criticizing' vs 'show kindness' 충돌로 옹호 불가. 복수 정답 여지 없음."
+}

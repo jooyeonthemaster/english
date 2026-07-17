@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어는 동명사구 'Recording an interview'로 단수 취급 → 단수 동사 is가 옳다. 근접 명사 'an interview'에 의한 수일치 함정을 점검했으나 동명사 주어 규칙상 문제 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'lasts a while'에서 last는 지속 기간 명사를 목적어처럼 취할 수 있고, 'a while'은 관사+명사 형태로 적법. 'awhile(부사)/a while(명사구)' 혼동을 유도하는 매력적 오답이지만 관사 a 뒤이므로 명사 while이 정확히 맞다. 실전에서 가장 오래 쳐다보게 만든 선지."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop ...'는 가주어 it + 형용사 + 진주어 to부정사의 표준 외치(extraposition) 구문. developing으로 바꾸고 싶은 순간적 유혹이 있으나 to develop이 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'writing down the key answers ... so that they can be transcribing easily afterwards'에서 they의 선행사는 the key answers(피동작주). 답변은 전사(transcribe)의 대상이므로 수동태 'can be transcribed'가 필요하다. 능동 진행 'be transcribing'은 무생물 피동작주 주어와 양립 불가. 구제 해석(형용사적 분사, 중간태 'they transcribe easily' 등)을 적극 탐색했으나 'can be transcribing' 형태로는 어느 해석도 성립하지 않음. 장거리 단서: 선행사 확인 + 부사 easily afterwards가 수동 읽기를 확정."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'much easier and quicker'에서 much는 비교급 강조 부사로 적법(very는 불가, much는 가능). 등위된 두 비교급(easier, quicker)을 공동 수식하는 것도 문제 없음. 두 번째로 유혹적인 선지였으나 규칙상 정문."
+    }
+  ],
+  "note": "정답 (D) 단일 확정. 매력적 오답 견인력 순위: (B) a while/awhile 철자 의심 > (E) much+비교급 강조 재확인 > (C) to부정사/동명사 선택. (D)는 수동태 필요 자리에 능동 진행형을 둔 전형적 태(voice) 오류로, 선행사(the key answers)를 확인하는 장거리 단서 처리만 하면 유일 오류로 수렴한다. 복수정답 소지 없음."
+}

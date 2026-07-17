@@ -1,0 +1,38 @@
+{
+  "pid": "P021",
+  "finalV2": true,
+  "winningAnswer": "(D)",
+  "reason": "독립 재검증 결과 (D) 'which'만이 확정적 비문이며 나머지 4개 선지는 모두 견고한 정문이다. (D)의 관계절 'they activate our systems'는 주어·타동사·목적어가 모두 포화된 완전절이라 관계대명사 which가 맡을 gap이 없고, 목적격 관계사·전치사 잔류·비제한절·구어체 용인 등 어떤 대안 해석으로도 정문화가 불가능해 'in which'(원문 복원 최소대립쌍) 또는 that/생략으로만 교정된다. 유일한 실질 쟁점이었던 (C)는 misplaced either에 따른 문체 차원 이완일 뿐 to 공유 생략 병렬(cause us to [face ... or avoid ...])로 표준 허용되는 정문이며 원지문 그대로의 형태다. 솔버1·솔버2 모두 놓친 대안 해석이나 과잉 판정 없이 정확했고, 감사자 V2=true 판정도 타당하다. 선언된 정답 (D)를 유일 정답으로 최종 확정한다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "attentive가 부사 attentively여야 한다는 잠재 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "'fear makes us very attentive'는 5형식 make + O + 목적격보어 구조로, 목적어 us의 상태를 서술하는 보어 자리에 형용사가 필수. very는 형용사도 수식하므로 표면 단서로도 부사 요구 근거가 없다. attentively로 교체 시 오히려 비문."
+    },
+    {
+      "label": "(B)",
+      "claim": "사역동사류 유추로 원형 face를 요구하거나, either 위치 때문에 to face가 잘못이라는 잠재 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "cause는 목적격보어로 to부정사를 지배(cause A to do)하며 make/have/let과 달리 원형부정사를 취하지 않는다. 'will cause us ... to face'가 규범을 정확히 충족. either의 위치는 B의 형태와 무관한 별도 쟁점이고, to face 자체를 비문으로 만드는 해석은 존재하지 않는다."
+    },
+    {
+      "label": "(C)",
+      "claim": "either to face ... or avoid에서 엄격 병렬(either X or Y 범주 일치)에 따라 'or to avoid'여야 하므로 avoid도 오류라는 복수정답 시비 (솔버1이 미끼로 지목 후 기각한 쟁점)",
+      "verdict": "기각 — 정문 (복수정답 불성립)",
+      "evidence": "① 등위 축약에서 반복 to부정사의 두 번째 to는 공유 생략이 표준 허용('cause us to [face a situation or avoid it]'). ② either가 to 앞에 놓인 것은 출판 영어에서 광범위하게 수용되는 misplaced either로 문체 차원의 흠결이지 범주적 비문이 아니며, 수능 관행상 오답 처리 대상이 아님. ③ 해당 형태는 원지문 그대로임(full 파일 원지문 대조 확인). 따라서 avoid를 '어법상 틀린 것'으로 확정할 근거가 없고 (D)의 구조적 비문성과 경합할 수준이 아니다. 두 솔버의 정문 판정은 과잉이 아니라 정확한 판단."
+    },
+    {
+      "label": "(D)",
+      "claim": "선언된 정답 — which가 완전절 앞 관계대명사로 어법상 틀렸다는 판정",
+      "verdict": "인용 — 확정적 비문 (유일 정답)",
+      "evidence": "'the specific ways which they activate our systems'에서 관계절 내부가 S(they)+V(activate)+O(our systems)로 논항 포화 완전절이라 which가 받을 문법적 공백(gap)이 없음. 대안 해석 전수 탐색: ① 목적격 관계사 해석 — activate의 목적어 자리는 our systems가 점유(activate는 단일 목적어 타동사)하여 불가. ② 전치사 잔류(stranding) 해석 — 절 끝에 잔류 전치사가 없어 불가. ③ 비제한 삽입절 해석 — 콤마 부재 및 구조상 불가. ④ 구어체 'the way(s) which' 용인론 — 비표준이며 수능 규범 문법상 명백 오류('*the way which he did it'은 표준 영어에서 비문). 어느 경로로도 정문화되지 않으므로 'in which'(원문을 정확히 복원하는 최소대립쌍) 또는 that/관계사 생략으로만 교정 가능한 범주적 오류."
+    },
+    {
+      "label": "(E)",
+      "claim": "혼합가정 또는 직설법 과거(did not help)를 요구한다는 잠재 이의",
+      "verdict": "기각 — 정문",
+      "evidence": "진화사적 과거 사실에 반대되는 가정이므로 가정법 과거완료가 정확: if절 'had not helped'(had p.p.) + 주절 'would not have evolved'(would have p.p.)의 정석 결합(3형 조건문). help + O + 원형부정사(adapt and survive)도 정문. 주절 시제와의 조합에 어떤 불일치도 없다."
+    }
+  ]
+}

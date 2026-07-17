@@ -1,0 +1,65 @@
+{
+  "manifest_version": "1.0.0",
+  "corpus_id": "deterministic-structural-reaudit-v9-blind-holdout",
+  "sealed_stage": "pre_inspection",
+  "sealed_at": "2026-07-15T00:00:00+09:00",
+  "hash_algorithm": "SHA-256",
+  "blindness_declaration": {
+    "production_source_inspected": false,
+    "tests_inspected": false,
+    "prior_v7_v8_material_inspected": false,
+    "research_note_inspected": false,
+    "external_io_used": false
+  },
+  "files": {
+    "author_v9_corpus.py": {
+      "sha256": "7349c929f289ae8438545dee4335ed31c98823eab8e544bef119ee04764c1b4e",
+      "bytes": 77824
+    },
+    "PROTOCOL.md": {
+      "sha256": "6323f8d10846fd51592fa1c2ac9d8f15e1e86c9f12b2ef2d842ac6d75c40dccc",
+      "bytes": 4144
+    },
+    "cases.json": {
+      "sha256": "64c8f3bdf16eafef1c8c6f11ad2a54799f2f9bcb1c1bd095800a7cebb6cd01ea",
+      "bytes": 238983
+    },
+    "IMMUTABILITY.md": {
+      "sha256": "fe5cf12047ca815e8c486a2dcbfb3052981a2c34688f27074a1c5b442f12e258",
+      "bytes": 1450
+    }
+  },
+  "aggregate_case_digest": "ffb88b27b00e632805bba8d0963d1074b7f0a65321a8c10eec2c7ceaff36fff8",
+  "verified_metrics": {
+    "total_cases": 160,
+    "total_pairs": 80,
+    "unique_case_ids": 160,
+    "unique_surface_payloads": 160,
+    "families": {
+      "F1_SUMMARY_KEY_OPTION_COHESION": {
+        "pairs": 20,
+        "cases": 40,
+        "normal": 20,
+        "defect": 20
+      },
+      "F2_GRAMMAR_RENDERED_LABEL_REFERENCE": {
+        "pairs": 20,
+        "cases": 40,
+        "normal": 20,
+        "defect": 20
+      },
+      "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION": {
+        "pairs": 20,
+        "cases": 40,
+        "normal": 20,
+        "defect": 20
+      },
+      "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY": {
+        "pairs": 20,
+        "cases": 40,
+        "normal": 20,
+        "defect": 20
+      }
+    }
+  }
+}

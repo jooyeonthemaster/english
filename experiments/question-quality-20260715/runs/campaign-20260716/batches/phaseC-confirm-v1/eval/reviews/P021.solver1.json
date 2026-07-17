@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "ask + 목적어 + to부정사 구조(asks Mr. Miyagi to teach him karate)는 표준 5형식 결합. ask는 원형부정사가 아닌 to부정사를 목적격 보어로 취하므로 to teach가 정확하다. 유혹 요소 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "매력적 오답으로 실제 끌렸던 지점. '동작이 서로 반대 방향으로 움직이는' 능동적 의미라 opposing이어야 하지 않나 하는 유혹이 있으나, opposed는 'diametrically opposed views'처럼 '서로 반대 방향으로 놓인/맞선'을 뜻하는 확립된 분사형용사다. wax-on/wax-off의 좌우 반대 원운동을 'precisely opposed circular motions'로 표현한 것은 관용적으로 정문이며, 원전(Robert Greene, Mastery)에서도 동일 표현이 쓰인다. 정문 판정."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong",
+      "reason": "사역동사 make는 능동태에서 목적격 보어로 원형부정사를 취한다: makes Daniel hammer nails가 옳다. to hammer는 어법상 틀림. 대안 해석 탐색 — make가 '~하게 만들다'가 아닌 다른 의미(제작 등)로 to부정사를 허용하는 구조가 성립하는지 검토했으나, 'makes Daniel to hammer nails'는 어떤 해석으로도 정문이 되지 않는다(수동태 be made to hammer라면 to가 부활하지만 여기는 능동). 앞 문장들의 orders/tells Daniel to-V 병렬 흐름이 to를 자연스럽게 보이게 만드는 함정 설계이나, 지배 동사가 make로 바뀐 순간 원형이 강제된다. 확정 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "limit A to B(A를 B로 제한하다)의 수동형 be limited to + 명사구(household chores). 여기서 to는 전치사이므로 뒤에 명사가 오는 것이 맞고, 문맥(호신술 대신 집안일에 묶여 있다)과도 정합. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "계속적 용법의 관계대명사 who. 선행사 Daniel(사람)이고, 삽입 부사구 'without thought or hesitation'을 걷어내면 who가 defends의 주어임이 드러난다. 삽입구 때문에 who 뒤에 동사가 바로 안 보여 whom/전치사 결합을 의심하게 하는 장거리 유혹이 있으나, 주격 who가 정확하다. 정문."
+    }
+  ],
+  "note": "실전 풀이 순서: 사역동사 make + O + 원형 규칙 위반인 (C)가 1차 스캔에서 즉시 포착됨. 매력적 오답 체험: (B) opposed vs opposing에서 가장 오래 머물렀으나 분사형용사 관용 용법으로 정문 확정, (E)는 삽입 부사구가 만든 착시일 뿐 주격 관계대명사로 정문. orders/tells의 to-V 병렬이 (C)의 to hammer를 위장하는 설계가 미끼로 작동하지만 규칙 위반이 명백해 복수 정답 여지는 없다. 단일 정답 (C), 신뢰도 높음."
+}

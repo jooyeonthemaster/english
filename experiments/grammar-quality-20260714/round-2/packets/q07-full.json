@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-too-basic-decoysx1"
+  ],
+  "layout": "(A):dec=a  (B):dec=c  (C):dec=k  (D):dec=e  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 157,
+        "relPos": 0.228,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 245,
+        "relPos": 0.356,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 363,
+        "relPos": 0.527,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 594,
+        "relPos": 0.862,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 655,
+        "relPos": 0.951,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.951,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "ceased",
+        "isError": false,
+        "errorExpression": "ceased",
+        "surroundingText": "constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "predicting",
+        "isError": false,
+        "errorExpression": "predicting",
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment,",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "ceasing",
+        "isError": false,
+        "errorExpression": "ceasing",
+        "surroundingText": "By ceasing, it violated your prediction and attracted your attention.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "woke",
+        "isError": false,
+        "errorExpression": "woke",
+        "surroundingText": "claiming that something woke them up. They tended to call around the time",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "used",
+        "isError": true,
+        "correction": "used",
+        "errorExpression": "were used",
+        "surroundingText": "They tended to call around the time the trains used to run past their apartments.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "ceased"
+      },
+      {
+        "label": "(B)",
+        "text": "predicting"
+      },
+      {
+        "label": "(C)",
+        "text": "ceasing"
+      },
+      {
+        "label": "(D)",
+        "text": "woke"
+      },
+      {
+        "label": "(E)",
+        "text": "were used"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 현재완료 시제(has just ceased)를 완성하는 정동사 자리로, 주어인 constant background noise가 능동적으로 멈추는 행위를 나타내므로 과거분사 'ceased'는 어법상 옳습니다.",
+      "(B)": "의미상 주어인 'Your auditory areas'가 능동적으로 그 지속을 예측하는 진행 상황을 표현하므로 현재분사 'predicting'은 어법상 옳습니다.",
+      "(C)": "전치사 'By' 뒤에 오는 명사구 자리에 동명사 'ceasing'이 쓰여 '멈춤으로써'라는 수단의 부사구를 올바르게 형성하고 있습니다.",
+      "(D)": "대명사 'something'을 주어로 하고 대명사 'them'을 목적어로 취하는 타동사구 뒤에서, 과거의 특정한 동작을 능동형태로 기술하는 정동사 'woke'는 어법상 옳습니다."
+    },
+    "explanation": "관계부사(when)가 생략된 the time 뒤의 관계절 내에서, 과거에 기차들이 아파트 옆을 지나가며 달리곤 했던 규칙적인 습관이나 상태를 나타내야 합니다. 따라서 (E)의 'were used'는 '기차들이 달리기 위해 사용되었다'라는 불필요하고 부자연스러운 수동태 표현을 만들 뿐만 아니라 행위의 주체성을 해치게 되므로, '~하곤 했다'라는 조동사 표현인 'used'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 정·준동사 — 과거에 지속되던 규칙적인 주체적 동작을 드러내는 조동사 used to와 수동태 be used to의 비교 판단",
+      "(B) 분사능수동 — 주어인 청각 영역(auditory areas)이 능동적으로 계속을 예측하므로 현재분사 predicting 사용",
+      "(C) to-v/v-ing — 전치사 뒤 명사 및 동명사 목적어 자리에 결합한 동명사 ceasing의 쓰임 판단"
+    ],
+    "tags": [
+      "준동사",
+      "조동사",
+      "분사의 태"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just __(A) ceased__ - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were __(B) predicting__ its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By __(C) ceasing__, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something __(D) woke__ them up. They tended to call around the time the trains __(E) were used__ to run past their apartments.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

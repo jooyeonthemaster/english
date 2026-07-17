@@ -1,0 +1,75 @@
+{
+  "pid": "P012",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-EVIDENCE-ATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설이 \"앞부분에서 cinema는 인간의 감정적 삶을 표현(expresses man's affective life)하는 반면, law는 그것을 제어(keeps it in check, suppress affects)한다고 설명하고 있습니다\"라고 하여 'suppress affects'를 학생에게 보이는 지문 앞부분의 근거로 인용한다. 그러나 'suppress affects'는 빈칸으로 제거된 원문 스팬('The law obsessively tries to suppress affects, fearing the horror of their consequences') 내부 표현으로, 렌더된 지문 어디에도 존재하지 않는다. 빈칸 정답 내용을 지문 가시 근거처럼 귀속시킨 문장 귀속 오류이자 순환 논증이다. 렌더 지문에서 실제 가시적 근거는 'keeps it in check'와 'ensure that we are not overwhelmed and destroyed by our desires and drives'뿐이다."
+    },
+    {
+      "code": "V4-PARAPHRASE-DRIFT",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤가 선지의 'break down the boundaries of legal codes'를 '이성적 체계를 무너트려'로 옮겼다. '법전(법 규범)의 경계'가 정확한 대응이며 '이성적 체계'는 선지에 없는 표현으로 약한 의역 드리프트다. 오답 판정 논리 자체는 유효하므로 minor."
+    },
+    {
+      "code": "V3-MINOR-AWKWARD-DISTRACTOR",
+      "severity": "minor",
+      "evidence": "선지 ②의 'preservation of orders'는 복수형 'orders' 사용이 부자연스럽다('preservation of order'가 자연스러움). 비문은 아니어서 V3 실패로 보지 않으나, 원어민 감각으로 어색한 표현이 오답에만 있어 미세한 소거 단서가 될 수 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "행위 방향 전도(actor/direction swap) — 법이 감정을 억제한다는 관계를 '법이 자신의 이성적 한계를 영화에 투사한다'는 존재하지 않는 법→영화 작용으로 왜곡",
+      "temptingBecause": "'interaction between cinema and law'라는 지문 앵커와 법=이성 프레임 어휘(rational)가 겹쳐 상호작용을 언급한 문장으로 보임",
+      "decisiveFlaw": "지문에 법이 영화에 무언가를 투사한다는 진술이 전혀 없고, 뒤따르는 'whereas cinema introduces us to our affects'와의 대조(법의 감정 처리 방식)가 성립하지 않는다"
+    },
+    {
+      "label": "②",
+      "intent": "가치 우선순위 반전(priority reversal) + 무근거 개념 도입 — 법이 질서 유지보다 예술적 온전성을 우선한다는 주장",
+      "temptingBecause": "'legal system'과 'orders'가 'a regime of commands and prohibitions'(질서 체계)를 연상시키고, 예술(영화) 어휘가 지문 소재와 표면적으로 겹침",
+      "decisiveFlaw": "'artistic integrity'는 지문에 근거가 전혀 없는 도입 개념이며, 법이 질서 보존을 뒤로 미룬다는 진술은 법이 욕망으로부터 인간을 지키고 감정을 제어한다는 지문 방향과 정면 모순"
+    },
+    {
+      "label": "③",
+      "intent": "극성 반전(polarity reversal) — 법이 감정을 억제한다는 핵심을 '원초적 충동을 해방한다'로 뒤집음",
+      "temptingBecause": "'raw human impulses', 'emotional release' 등 감정 관련 어휘가 지문의 affects/desires/drives와 어휘적으로 강하게 겹침",
+      "decisiveFlaw": "'keeps it in check', 'ensure that we are not overwhelmed'와 정반대 극성이라 지문을 한 번만 읽어도 즉시 소거된다 — KILLER 오답으로는 저항력이 없음"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 제거된 원문 스팬 'The law obsessively tries to suppress affects, fearing the horror of their consequences'의 의미 보존 패러프레이즈",
+      "temptingBecause": "정답: obsessively→relentlessly, suppress affects→contain emotional disruptions, fearing the horror of their consequences→dreading their potential fallout 로 1:1 대응",
+      "decisiveFlaw": "없음 — 유일하게 '법이 감정을 억제한다' 극성을 갖고 whereas 대조와 지문 전체 논지에 부합. 단, 이 극성 단서 하나만으로 지목 가능하다는 점이 KILLER 요건 위반"
+    },
+    {
+      "label": "⑤",
+      "intent": "과확장(overextension/boundary dissolution) — 영화·법의 '상호작용 연구가 흥미롭다'는 진술을 법이 자기 경계를 허물어 영화를 수용한다는 주장으로 비약",
+      "temptingBecause": "'a study of the interaction between cinema and law interesting'이라는 지문 앵커가 있어 두 분야의 융합을 말한 문장처럼 보임",
+      "decisiveFlaw": "법이 법전의 경계를 해체해 영화를 끌어안는다는 내용은 지문에 전혀 없고, 오히려 법은 감정을 견제하는 쪽이라는 대조 구조와 불일치"
+    }
+  ],
+  "explanationIssues": [
+    "해설이 빈칸으로 제거된 스팬의 표현 'suppress affects'를 '앞부분에서 설명하고 있다'며 렌더 지문의 가시 근거처럼 인용 — 문장 귀속 오류·순환 논증 (V4 실패 사유)",
+    "keyPoints 3번이 'suppress affects, fearing the horror와 동등한 의미의 학술적 어휘 매칭'을 학습 포인트로 제시 — 원문 스팬 표현을 그대로 노출하므로 학생 노출 필드라면 정답 유출성 표현, 최소한 출제자 노트로 격리 필요",
+    "오답 해설 ⑤의 '이성적 체계를 무너트려'는 선지의 'boundaries of legal codes'와 정확히 대응하지 않는 의역 드리프트 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V2는 통과: ④가 유일 정답이며 나머지 네 선지는 각각 독립 검증에서 탈락한다(①⑤ 무근거 법→영화 작용, ② 무근거 개념+방향 모순, ③ 극성 반전). 다섯 선지 모두 동일한 절 슬롯에 문법적으로 들어가 suffix로 인한 문법 탈락도 없다(§D 1조건 충족). 그러나 V4 실패: 해설이 빈칸 제거 스팬의 'suppress affects'를 지문 앞부분의 가시 근거로 귀속시키는 사실 오류가 있다. KILLER 조건 미충족: (1) 정답이 직전 대조문 'the law keeps it in check'와 whereas-tail이라는 국소 단서 하나로 결정되어 두 문장/두 논리 단서 연결이 강제되지 않고, (2) '감정 억제' 극성을 가진 선지가 ④ 하나뿐이라 극성 단서 하나로 정답을 찍을 수 있으며, (3) ③이 즉시 소거되는 등 함정 저항력이 약하다. 빈칸 스팬 내용이 가시 지문에서 두 번('keeps it in check', 'ensure that we are not overwhelmed') 선행 진술되어 과잉 단서 상태(C4=2). 요청 난이도 KILLER 대비 실제 체감은 중하 수준(C5=1). 해설 오류로 C6=1. V 실패는 공예 점수로 상쇄되지 않으므로 최종 F. 수리 방향: 해설의 'suppress affects' 인용을 'keeps it in check' 등 가시 근거로 교체하고, KILLER 유지가 목표라면 '감정 억제' 극성을 공유하되 scope/causal 결함을 가진 경쟁 오답(예: 억제 주체·대상 왜곡, half-truth)을 2개 이상 배치해 극성 단독 풀이를 차단해야 한다."
+}

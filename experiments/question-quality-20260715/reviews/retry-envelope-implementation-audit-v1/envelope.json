@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "auditId": "retry-envelope-implementation-audit-v1-20260715",
+  "countingUnit": {
+    "assignment": "one engine invocation for one English subtype with requested count=1",
+    "excluded": [
+      "legacy auto-planner shared route call",
+      "duplicate client submissions",
+      "provider-side work not represented by a client fetch",
+      "semantic question objects emitted inside an ordinary plain-text prompt-JSON response"
+    ],
+    "logicalResponseOpportunity": "one explicit AI SDK generateObject/generateText invocation",
+    "physicalProviderFetch": "one fetch at the Atlas custom-fetch boundary, including SDK retries"
+  },
+  "sourceCapsAndDefaults": {
+    "applicationMaxRetriesR": 2,
+    "applicationAttemptsA": 3,
+    "sdkMaxRetriesK": 2,
+    "physicalFetchesPerSdkInvocationH": 3,
+    "outerRequestedAttemptsHardCapE": 2,
+    "workbenchTriggerAttemptsT": 2,
+    "logicalResponsesPerFullSchemaWrapperO": 9,
+    "fullSchemaWorstCompatibleRoute": [
+      "structured",
+      "prompt-json-fallback",
+      "json-continuation-repair"
+    ]
+  },
+  "ordinaryProductionResponseOpportunityUpperBounds": {
+    "STANDARD_BLANK_INFERENCE": {
+      "variant": "single-blank KILLER",
+      "strictPasses": 10,
+      "relaxedPasses": 1,
+      "salvagePasses": 1,
+      "candidateLogicalResponses": 216,
+      "evaluationLogicalResponses": 0,
+      "designLogicalResponses": 0,
+      "physicalProviderFetches": 648,
+      "formula": "(10+1+1) * 2 candidate wrappers * O(9) * H(3)"
+    },
+    "PREMIUM_BLANK_INFERENCE": {
+      "variant": "default E=2 under PREMIUM cap=5",
+      "strictPasses": 2,
+      "relaxedPasses": 0,
+      "salvagePasses": 1,
+      "candidateLogicalResponses": 54,
+      "evaluationLogicalResponses": 0,
+      "designLogicalResponses": 0,
+      "physicalProviderFetches": 162,
+      "formula": "(2+1) * 2 candidate wrappers * O(9) * H(3)"
+    },
+    "STANDARD_GRAMMAR_ERROR": {
+      "variant": "valid-settings worst with the source floor=6",
+      "strictPasses": 6,
+      "relaxedPasses": 1,
+      "scarcePasses": 1,
+      "salvagePasses": 1,
+      "solverEligiblePasses": 7,
+      "candidateLogicalResponses": 162,
+      "evaluationLogicalResponses": 63,
+      "designLogicalResponses": 0,
+      "physicalProviderFetches": 675,
+      "formula": "((6+1+1+1) * 2 * O(9) + 7 * O(9)) * H(3)"
+    },
+    "PREMIUM_GRAMMAR_ERROR": {
+      "variant": "five-marker ladder eligible",
+      "strictPasses": 2,
+      "scarcePasses": 1,
+      "salvagePasses": 1,
+      "candidateLogicalResponses": 96,
+      "evaluationLogicalResponses": 18,
+      "designLogicalResponses": 12,
+      "physicalProviderFetches": 378,
+      "formula": "2 strict * (ladder 54 + legacy generation/repair/solver 81) + 2 non-solver legacy passes * 54"
+    }
+  },
+  "workbenchTriggerResponseOpportunityUpperBounds": {
+    "multiplier": 2,
+    "STANDARD_BLANK_INFERENCE": 1296,
+    "PREMIUM_BLANK_INFERENCE": 324,
+    "STANDARD_GRAMMAR_ERROR": 1350,
+    "PREMIUM_GRAMMAR_ERROR": 756
+  },
+  "researchTransportPolicy": {
+    "ownership": "canonical frozen server-owned object; adapter identity equality required",
+    "applicationMaxRetries": 0,
+    "sdkMaxRetries": 0,
+    "outerRequestedMaxAttempts": 1,
+    "ladderParseMaxRetries": 0,
+    "allowStructuredRepair": false,
+    "accurateScope": "one physical provider dispatch per admitted registered stage",
+    "wholeAssignmentSingleDispatch": false,
+    "reason": "strict, relaxed, scarce, salvage, repeat-root, repair, ladder, and solver operations remain distinct stages"
+  },
+  "semanticAndOperationalLimits": {
+    "workbenchStructuredQuestionsArray": "PASS_EXACT_SERVER_PLAN_COUNT",
+    "legacyWrapperWithoutServerCount": "UNBOUNDED_BY_DESIGN_FOR_LEGACY_CALLERS",
+    "ordinaryQuestionsArray": "BLOCK_PLAINTEXT_PROMPT_JSON_UNBOUNDED",
+    "ordinaryResponseOpportunityEnvelope": "PASS_FINITE_FROM_SOURCE",
+    "completeFourCellResearchRegistry": "BLOCK_NOT_PRESENT",
+    "researchFourCellExecutionAuthorization": "NONE",
+    "researchFourCellNumericTableClaimedByThisAudit": false,
+    "forcedPromptJsonExactCandidateCardinality": "BLOCK_NOT_STRUCTURALLY_FIXED_BEFORE_CLIENT_VALIDATION"
+  }
+}

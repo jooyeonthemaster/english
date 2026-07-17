@@ -1,0 +1,81 @@
+{
+  "pid": "P039",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V4-NONWORD",
+      "severity": "major",
+      "evidence": "(A) 오답 해설에 비단어 '동동하게'가 등장한다('동등하게'의 손상형). 학생 노출 해설 필드의 손상 용어로, V4의 '비단어·손상 용어' 기준에 저촉된다."
+    },
+    {
+      "code": "V4-CAUSAL-MISEXPLANATION",
+      "severity": "major",
+      "evidence": "본해설의 함정 설명 \"주어 내부의 명사구 'a recorder'가 단수 단어 형태를 띠고 있어서 혼동하기 쉬우나\"는 인과가 성립하지 않는다. 'a recorder'가 단수이므로 근접 일치(proximity agreement)로 잘못 분석해도 결론은 동일하게 has이며, 'have'가 매력적으로 보일 어떤 경로도 만들지 않는다. 존재하지 않는 함정 메커니즘을 설명한 인과 오설명이다."
+    },
+    {
+      "code": "V4-STRUCTURE-MISDESCRIPTION",
+      "severity": "major",
+      "evidence": "(C) 오답 해설 \"선행사 'the quotes'를 목적어로 취하는 목적격 관계대명사\"는 구조 오기술이다. 생략된 목적격 관계대명사는 선행사 'the quotes'를 지시하며 관계사절 내 동사 'use'의 목적어로 기능하는 것이지, 선행사를 자신의 목적어로 '취하는' 것이 아니다."
+    },
+    {
+      "code": "V5-KEYPOINT-LABEL-SWAP",
+      "severity": "major",
+      "evidence": "keyPoints의 원문자 라벨이 선지 위치와 어긋난다. ①은 주어-동사 수일치(has) — 실제로는 (B)의 포인트 — 를 기술하고, ②는 비교 병렬(Recording~seeing) — 실제로는 (A)의 포인트 — 를 기술한다. ⑤(=E, try to-inf)만 일치한다. ①/②가 스왑되어 정답 라벨·선지와 keyPoints가 모순된다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "비교 구문(than) 뒤 준동사 형태 — 주어 동명사구 'Recording an interview'와의 대등 비교 병렬",
+      "temptingBecause": "than 뒤에 to see/see 등 다른 준동사 형태를 기대하는 학생이 형태 적절성을 의심할 수 있음",
+      "decisiveFlaw": "정답 아님 — 비교 대상인 주어가 동명사구(Recording)이므로 동명사 seeing이 정확히 대칭이며 원문 그대로 문법적"
+    },
+    {
+      "label": "(B)",
+      "intent": "동명사구 주어('using a recorder')의 단수 취급 — 주어-동사 수일치 (선언된 정답)",
+      "temptingBecause": "옳아 보이게 하는 요인이 약함 — 직전 명사 'a recorder'조차 단수여서 근접 일치로 분석해도 has가 도출되므로 have를 옹호할 경로가 없음",
+      "decisiveFlaw": "동명사구 주어는 단수 취급이므로 have는 비문; has로 교정하면 정확히 원문이 복원되는 최소대립쌍 — 유일 정답"
+    },
+    {
+      "label": "(C)",
+      "intent": "목적격 관계대명사가 생략된 관계사절 내 정형동사의 수일치(you wish)",
+      "temptingBecause": "관계대명사 생략 구조에서 'the quotes you wish to use'의 층위를 파악해야 하며 wishes/wishing 대안을 떠올릴 수 있음",
+      "decisiveFlaw": "정답 아님 — 관계사절 주어 you에 일치하는 현재형 본동사 wish로 문법적"
+    },
+    {
+      "label": "(D)",
+      "intent": "형용사/부사 구별 — 수동태 동사구 수식",
+      "temptingBecause": "be transcribed 뒤 자리를 보어 자리로 착각하면 easy를 고려할 수 있음",
+      "decisiveFlaw": "정답 아님 — 동사구 'can be transcribed'를 수식하는 부사 easily가 적절"
+    },
+    {
+      "label": "(E)",
+      "intent": "명령문 동사원형 + try to-부정사(시도 의미) 구조",
+      "temptingBecause": "선행절이 'It is sensible to ...' 평서문이어서 but 뒤 동사원형 try의 정당성(명령문 전환)을 판단해야 함",
+      "decisiveFlaw": "정답 아님 — but 뒤 명령문으로 원문 그대로이며 try + to get 결합도 문법적"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설 비단어 '동동하게' ('동등하게' 오탈자·손상 용어)",
+    "본해설의 함정 근거 오설명 — 'a recorder'가 단수라는 사실은 have를 매력적으로 만들지 않으며(근접 일치로도 has 도출), 존재하지 않는 혼동 메커니즘을 기술",
+    "(C) 해설 구조 오기술 — 생략된 목적격 관계대명사가 '선행사를 목적어로 취한다'고 서술(실제로는 관계대명사 자신이 use의 목적어로 기능)",
+    "본해설 '주어부의 핵심 핵(head)을 이루며' 등 군더더기 표현으로 장황함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1~V3은 통과: 렌더 지문은 의도된 has→have 최소대립쌍 외 원문과 완전 일치하고, 5개 밑줄 독립 검증 결과 (B)만 비문으로 정답 유일성이 성립한다. 그러나 V4(해설 비단어 '동동하게', 성립하지 않는 함정 인과 설명, (C) 관계대명사 구조 오기술)와 V5(keyPoints ①/② 라벨이 (A)/(B) 포인트와 스왑됨)가 실패하여 F. 공예 측면에서도 요청 난이도 INTERMEDIATE 대비 쉬움 — 진짜 주어(동명사구)와 인접 명사(a recorder)가 모두 단수를 지시해 견인(attractor)이 전혀 없고, 'have'가 즉시 드러난다(C3=2, C5=2). 수리 방향: (1) keyPoints 라벨 ①↔② 교정, (2) '동동하게'→'동등하게', (3) 본해설 함정 근거를 '동명사구 주어를 복수 관념(여러 단점 나열 등)으로 오인하기 쉽다' 류의 실제 성립하는 설명으로 교체하거나 복수 견인 명사가 개입하는 자리로 오류 포인트 재설계, (4) (C) 해설의 관계대명사 기술 교정. 유형 의도·정답 자체는 건전하므로 해설·필드 수리로 회생 가능."
+}

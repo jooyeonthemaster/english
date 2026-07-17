@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a process (A) embodied in a machine'은 축약 관계절(a process [that is] embodied in a machine)이다. 'embody'는 타동사로 '기계가 과정을 구현한다(the machine embodies the process)'의 수동 관계가 성립하므로 과거분사 embodied가 process를 후치 수식하는 것은 정문이다. 현재분사 embodying이라면 process가 무언가를 구현하는 능동 주체여야 하는데 그 목적어가 없어 오히려 비문이 된다. 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats (B) itself over and over again'에서 관계절의 주어는 that(선행사 process, 3인칭 단수)이고 repeat의 목적어가 주어와 동일 지시체이므로 재귀대명사 itself가 형식적으로 요구된다. 'repeat itself'는 표준 결합(예: history repeats itself)이며, 일반 대명사 it을 쓰면 주어-목적어 동일지시 조건에서 재귀사 의무 규칙을 위반한다. 어법상 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong",
+      "reason": "'a clock that (C) do not depend on a repetitive cycle of events'에서 관계대명사 that의 선행사는 단수 명사 'a clock'이다. 관계절 동사는 선행사와 수 일치해야 하므로 'does not depend'가 되어야 한다. 대안 해석 검토: 선행사를 뒤따르는 'events'로 볼 수 없고(관계절이 events보다 앞), 'of events'의 events가 선행사가 될 통사 구조도 없다. 가정법·명령형 등 do 원형이 허용될 환경(insist/suggest류 that절, 가정법 현재)도 아니다 — 이 that은 관계대명사이지 명사절 접속사가 아니다. 따라서 수 일치 위반으로 명백한 비문. 어법상 틀린 것."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'The only example that comes to mind (D) readily'에서 readily는 자동사구 'comes to mind'를 수식하는 부사이다. 동사 수식 자리이므로 형용사 ready는 불가하고 부사 readily가 형식적으로 요구된다. 위치(동사구 뒤)도 정상적인 부사 배치이다. 어법상 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'this too is an iterative process, (E) although at first masked'는 접속사 although 뒤에서 주어+be(it is)가 생략된 표준적 생략 구문(although [it is] at first masked)이다. 생략절의 암묵 주어(the iterative process/iteration)가 주절 주어(this = 촛불의 연소 과정)와 동일 지시이므로 생략 조건을 충족한다. masked는 과거분사 보어로 '처음에는 가려져 있지만'이라는 양보 의미가 문맥과 논리적으로 정합한다. 어법상 옳다."
+    }
+  ],
+  "note": "명백한 단일 정답 (C). 관계절 수 일치(단수 선행사 a clock → does)는 장거리 단서 없이도 국지적으로 확정되는 위반이며, do가 정문이 될 대안 해석(가정법 현재, 도치, 복수 선행사 등)은 이 구조에서 성립하지 않는다. 나머지 네 밑줄은 각각 축약 수동 관계절, 재귀사 의무 결합, 부사 수식, although 생략 구문으로 모두 형식적으로 증명 가능한 정문."
+}

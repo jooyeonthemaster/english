@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "question-quality-original-connectivity-pilot-public-v1",
+  "artifactId": "original-connectivity-pilot-v1",
+  "status": "SEALED_ORIGINAL_RUN_IN_SOURCE_NOT_DISPATCH_AUTHORIZATION",
+  "campaignScopeId": "question-quality-20260715-v6-connectivity-pilot",
+  "row": {
+    "publicId": "OCVP-B01",
+    "questionType": "BLANK_INFERENCE",
+    "wordCount": 182,
+    "sentenceCount": 12,
+    "passageUtf8Bytes": 1199,
+    "passageSha256": "3499b4d752d7244f5f4acb756418889ae534d74f92de7979bb19c2cee4137b50",
+    "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_BY_CODEX_FOR_THIS_USER_REQUEST",
+    "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_V6_CONNECTIVITY_PILOT_ONLY",
+    "thirdPartyPermissionClaimed": false,
+    "machinePiiPatternHits": 0,
+    "manualPiiObserved": false
+  },
+  "privateBoundary": {
+    "exactTextGitIgnored": true,
+    "publicContainsPassageText": false,
+    "privateArtifactUtf8Bytes": 1940,
+    "privateArtifactSha256": "8578b249210470bf87d7ba4670b342bba1a781384b8616242ca87d6ca42d7adf"
+  },
+  "separation": {
+    "excludedFromS1S2S3S4": true,
+    "excludedFromProfileSelection": true,
+    "minimumEightTokenOverlapWithS1V6Rows": 0,
+    "reason": "Operational run-in output and this passage cannot enter mechanism screening or confirmatory inference."
+  },
+  "authorization": {
+    "generationAuthorized": false,
+    "apiCandidatesConsumed": 0
+  }
+}

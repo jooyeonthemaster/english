@@ -1,0 +1,87 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TYPO-MINOR",
+      "severity": "minor",
+      "evidence": "정답 해설의 '수식어귀의 수식을 받을 수 있는'에서 '수식어귀'는 '수식어구'의 오탈자. 문법 분석 내용 자체(복수 주어 memories → 복수 대명사 those, of which 후치 수식)는 전부 사실과 일치하므로 개념 오류가 아닌 표기 오류로 판정, V4 실패로 보지 않음."
+    },
+    {
+      "code": "V5-SCHEMA-NOTE",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression 필드가 원문형 'those'이고 errorExpression이 표시형 'that'. 비오류 항목들은 세 필드가 동일한 관례라 내부 스키마상 일관되며, 학생 노출 필드(렌더 지문·선택지 '(E) that'·해설)는 모두 동기화되어 있어 V5 통과. 스키마 명명상 혼동 여지만 기록."
+    }
+  ],
+  "v1Evidence": "렌더 지문을 원지문과 전어절 대조: 유일한 차이는 (E) those→that 의도 변형뿐. 문장 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 밑줄 라벨 (A)~(E)가 지문 등장 순서대로이며 선택지 목록과 정확히 일치.",
+  "v2Evidence": "각 밑줄 독립 검증 — (A) named: memories를 수식하는 과거분사, '이름 붙여진' 수동 관계로 적법(naming 불가). (B) where: 콜론 뒤 the vivid images와 동격인 의문사절 나열(where/how/how/what)로, where가 be의 처소 보충을 담당해 뒤 구조 완전 — 적법. (C) surrounding: circumstances가 events를 둘러싸는 능동 관계의 현재분사 — 적법. (D) precise: be의 주격보어 자리 형용사 — 적법(precisely 불가). (E) that: 주어 핵 'Respondents' most emotional memories'(복수)를 받아 'are also ___ of which they are most confident'의 보어 대명사가 되어야 하므로 복수 those가 필수, 단수 that은 비문 — 유일 오류. 대안 해석(that을 접속사/관계사로 보는 독법)은 'are also that of which' 구조상 성립 불가. 정답 집합 = {(E)} 정확히 하나.",
+  "v3Evidence": "교정형(those)을 넣은 완성 지문은 원지문과 동일하여 문법적·자연스러움. 발문은 표준 어법 발문. 유일한 비문은 의도된 (E) 자리뿐이며 유형 의도와 정확히 일치. 비단어·seam 파손 없음.",
+  "v4Evidence": "정답 해설의 주어 판정(복수 memories), 교정형(those), 정답 라벨(E) 모두 정확. 오답 해설 4건 모두 실제 해당 선지의 구조와 대응: (A) 수동 과거분사, (B) 의문부사+완전절(표준 학교문법 분석), (C) 능동 현재분사, (D) be 보어 형용사. 오분석·환각·귀속 오류 없음. 유일 흠결은 '수식어귀' 오탈자(minor).",
+  "v5Evidence": "선언 정답 (E) = 해설 대상 = markedExpressions isError:true 항목 = keyPoints 첫 항목. 오답 해설 키 (A)~(D)가 선택지와 1:1 대응. keyPoints의 (C)·(B) 언급도 실제 선지 내용과 일치. 모순 없음.",
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "대명사 수일치 that/those + 'of which' 후치 수식은 정전급 어법 포인트이고 교정 시 정확히 원문이 되는 최소대립쌍. 다만 매우 자주 드릴되는 포인트라 정교함이 특출하진 않음 → 3.",
+    "C2": "네 디코이가 각각 분사 태(수동)/의문사절 완전성/분사 태(능동)/보어 품사라는 판별 가능한 포인트를 가짐. 단 (A)와 (C)가 같은 분사 태 판단 계열이라 오개념 커버리지가 부분 중복 → 3.",
+    "C3": "정답 (E)는 주어 핵과 대명사 사이에 긴 수식('of their personal details at the time they learned of the attacks')이 개입해 구조 독해를 요구. (B)도 콜론 뒤 무선행사 wh절이라 실제 판단을 유발. 반면 (A)(C)(D)는 중급 학습자가 비교적 빨리 소거 → 3.",
+    "C4": "메타 누출·꼬리 소거 단서 없음. 'are ... that'의 수 불일치는 필연적으로 판정 가능하되, 직전 복수 동사 are가 국소 단서를 일부 제공 → 3.",
+    "C5": "요청 난이도 INTERMEDIATE. that/those of which는 중급 정규 포인트이고 요구 사고 단계(주어 핵 식별 1단계 + 대명사 조응)와 함정 깊이가 라벨에 정확히 부합 → 4.",
+    "C6": "짧고 정확하며 정답 근거(복수 주어)와 교정형(those)을 선명히 제시, 오답 해설도 간결. '수식어귀' 오탈자와 다소 상투적인 마무리로 감점 → 3."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "과거분사의 수동 수식 판단(memories, named for ...)",
+      "temptingBecause": "콤마 뒤 분사구가 이어져 naming(능동)과의 태 선택 및 관계절 축약 인식을 요구",
+      "decisiveFlaw": "memories는 '이름 붙여지는' 대상이므로 수동 named가 정확 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "의문부사(where)가 이끄는 명사절의 완전성 판단",
+      "temptingBecause": "콜론 뒤 선행사 없이 wh절이 갑자기 나열되어 관계사/의문사 및 완전·불완전 판단을 유발",
+      "decisiveFlaw": "where가 처소 부사 역할을 흡수해 뒤 구조(we were when ...)가 완전 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "현재분사의 능동 수식 판단(circumstances surrounding the events)",
+      "temptingBecause": "surrounded(수동)와의 태 대립이 표준 함정 자리",
+      "decisiveFlaw": "circumstances가 events를 둘러싸는 능동 주체이므로 surrounding이 정확 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "be 동사 보어 자리의 형용사 vs 부사 판별",
+      "temptingBecause": "동사 뒤 위치라 precisely(부사)를 떠올릴 수 있음",
+      "decisiveFlaw": "be의 주격보어이므로 형용사 precise가 정확 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "대명사 수일치(that vs those) + of which 후치 수식 구조 독해",
+      "temptingBecause": "주어 핵 memories와 대명사 사이 거리가 멀고 'that of which'가 표면상 관용구처럼 보임",
+      "decisiveFlaw": "복수 선행 명사 memories를 받아야 하므로 단수 that은 비문, those로 교정해야 정확히 원문 복원 — 유일 정답"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TYPO",
+      "severity": "minor",
+      "evidence": "'수식어귀의 수식을 받을 수 있는' — '수식어귀'는 '수식어구'의 오탈자",
+      "recommendation": "'수식어구의 수식을 받을 수 있는 복수 대명사 those'로 수정"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE이므로 KILLER 추가 조건 판정 대상 아님 → false.",
+  "grade": "B",
+  "notes": "모든 V 통과. 유일 오류 (E) those→that은 교정 시 정확히 원문이 되는 최소대립쌍이며 정답 유일성 확고. 공예 합계 19(최저 3)로 A 기준(합계 21)에 미달하는 B — (A)/(C)의 분사 태 포인트 중복 해소(둘 중 하나를 수일치·시제 등 다른 계열로 교체)와 해설 오탈자 수정이 이루어지면 상향 여지 있음."
+}

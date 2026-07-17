@@ -1,0 +1,82 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-TERM",
+      "severity": "minor",
+      "evidence": "정답 해설의 \"to-v 형태에 맞춰 동사원형인 'avoid' (또는 to avoid)로 고쳐야\"는 '동사원형'과 'to부정사' 용어를 혼용한다. 실제 교정형은 either to face ... or (to) avoid의 to 생략 병렬 부정사로, '(또는 to avoid)' 병기가 있어 내용상 오류는 아니나 표현이 학생에게 혼동을 줄 수 있다. V4 실패로 볼 오분석은 아님."
+    },
+    {
+      "code": "V4-MINOR-TERM",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설의 '단수 동사(makes, narrows, will cause, may cause가 병렬)'는 수굴절이 없는 조동사 결합형(will cause, may cause)까지 '단수 동사' 괄호 안에 나열해 용어상 느슨하다. 병렬 정형 술어 목록 제시 의도로 읽히므로 오분석은 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "동명사 주어 판별 — 콤마 뒤 -ing형을 분사구문/콤마 스플라이스 오류로 오인하는지 검사",
+      "temptingBecause": "직전 절이 'Fear has helped us...'로 시작해 콤마 직후의 expressing이 Fear에 걸리는 분사나 비문(콤마 스플라이스)처럼 보일 수 있다",
+      "decisiveFlaw": "오류 아님 — 세 독립절 나열(X, Y, and Z) 구조에서 expressing anger는 helps의 단수 동명사 주어로 수일치까지 정확하다"
+    },
+    {
+      "label": "(B)",
+      "intent": "혼합 술어열(일반동사+조동사) 속 단수 주어 fear와의 수일치·정형동사 판별",
+      "temptingBecause": "주어 fear와의 거리가 멀고 뒤따르는 will cause/may cause의 원형 cause를 보고 narrows도 narrow(또는 narrowing)로 맞춰야 한다고 오인할 수 있다",
+      "decisiveFlaw": "오류 아님 — makes, narrows, will cause, may cause는 모두 fear를 공유하는 병렬 정형 술어이며, 뒤의 정형 조동사구가 분사 해석을 배제하므로 narrows의 -s는 정당하다"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — cause + 목적어 + to부정사 목적격보어에서 either A or B 상관접속 병렬(to face ... or (to) avoid) 파손 판별",
+      "temptingBecause": "삽입 괄호 (fight)와 긴 술어열이 to face와의 병렬 관계를 가려 or 뒤의 -ing이 국소적으로 자연스럽게 읽힐 수 있다",
+      "decisiveFlaw": "'cause us either to face ... or avoiding'은 어떤 대안 분석으로도 성립 불가 — cause는 -ing 보어를 취하지 못하고 avoiding은 to face의 병렬항이 될 수 없다. avoid로 교정하면 정확히 원문이 복원되는 최소대립쌍"
+    },
+    {
+      "label": "(D)",
+      "intent": "형용사/부사 선택 — 비교급 more 뒤, 목적어 뒤 위치의 부사 사용 판별",
+      "temptingBecause": "remember an experience more ___에서 명사 직후 위치와 비교급 more가 형용사 acute를 연상시킬 수 있다",
+      "decisiveFlaw": "오류 아님 — more acutely는 동사 remember를 수식하는 부사 비교급으로 정확하다. 다만 다섯 밑줄 중 유인력이 가장 약해 준필러에 가깝다"
+    },
+    {
+      "label": "(E)",
+      "intent": "가정법 과거완료(제3조건문) 시제 정합 판별",
+      "temptingBecause": "진화라는 먼 과거 서술 맥락에서 if절의 had p.p.가 과잉 시제처럼 보이거나 단순과거 did not help로 충분하다고 오인할 수 있다",
+      "decisiveFlaw": "오류 아님 — 주절 would not have evolved와 짝을 이루는 정석 가정법 과거완료(과거 사실 반대)"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 '동사원형/to-v' 용어 혼용(V4-MINOR-TERM 1건과 동일 지점)",
+      "recommendation": "\"either to face ... or (to) avoid 병렬에서 반복되는 to가 생략된 부정사 avoid로 고친다\"로 명시하면 더 정확하다"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(B) 해설의 '단수 동사' 괄호 안에 조동사 결합형(will cause, may cause) 포함(V4-MINOR-TERM 2건과 동일 지점)",
+      "recommendation": "'단수 주어 fear를 공유하는 병렬 술어(makes, narrows, will cause, may cause)'로 표현을 다듬을 것"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(B)(E) 3개만 다루고 (A)(D)는 누락 — 오답 해설에는 전부 존재하므로 필드 모순(V5 실패)은 아니나 커버리지가 부분적",
+      "recommendation": "keyPoints에 (A) 동명사 주어, (D) 부사 수식을 추가하면 완결성이 높아진다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문 대비 (C) avoid→avoiding 단일 의도 변형만 존재하며 토큰 단위 대조에서 접합 파손·중복·누락·고아 문장부호·오탈자 없음, 라벨 (A)~(E) 5개가 선지 목록과 일치. V2: 5개 밑줄 독립 통사 분석 결과 (C)만 비문(cause+O+to-V 목적격보어, either...or 병렬 파손, 대안 정문 해석 없음)이고 (A) 동명사 주어, (B) 병렬 정형동사·수일치, (D) 부사, (E) 제3조건문은 모두 정문 — 단일정답 확정. V3: 교정 시 원문 완전 복원, 지문·발문 정문, 의도된 오류 외 비문 없음. V4: 구조 분석(cause+O+to-V, either-or 병렬, 동명사 주어, fear 수일치, 가정법 과거완료)이 실제 문장과 일치하며 용어 느슨함 2건은 minor. V5: 정답 라벨·선지·markedExpressions·해설·keyPoints 상호 모순 없음. 공예: 정전급 상관접속 병렬 포인트를 정확한 최소대립쌍으로 출제(C1=3), 5개 밑줄이 서로 다른 오개념(동명사 주어, 수일치/정형성, 병렬, 부사, 가정법)을 겨냥하나 (D)의 유인력이 약함(C2=3), (B)(E)는 실제 판단을 요구하지만 정답 패턴(either to-V or -ing)이 비교적 빨리 드러나 변별 상한이 있음(C3=3), 메타 누출 없고 교정이 원문과 최소대립이며 정답 필연적(C4=3), 요구 사고 단계가 INTERMEDIATE에 정확히 부합(C5=4), 해설은 간결·정확하나 용어 다듬기 여지(C6=3). 합계 19 — 모든 V 통과, 최저 C=3, 합계 17 이상 21 미만이므로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P054",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'suggests' 뒤에서 목적어 명사절을 이끄는 접속사 that. 절(the common ancestor ... may have been using)이 완전하게 이어지므로 that은 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주어 'the common ancestor'를 콤마로 삽입 수식하는 분사구(축약 관계절 'who was living about 400,000 years ago'). 능동 의미이므로 현재분사 living이 맞다. 문장의 본동사는 뒤의 'may have ... been using'로 따로 존재한다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'why did the Neanderthal toolkit show ...?' 직접의문문. 조동사 did가 이미 시제를 지므로 뒤에는 원형 show가 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'more in response to new habits than as causes of them' — 'more A than B' 병렬 비교. them은 복수명사 'new habits'를 지시하는 대명사로 수·격 모두 정상이다. (genes가 new habits의 원인이라기보다 new habits에 반응해 변했다는 의미로 지시 관계도 자연스럽다.)"
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "주어 'The appeal to a genetic change driving evolution'('driving evolution'은 change를 수식하는 분사구) 뒤에 본동사가 와야 한다. 뒤의 콜론은 완전한 절에 대한 부연('it is a top-down explanation ...')을 이끌므로 앞부분이 독립절이어야 한다. 현재분사 getting은 정형동사가 아니어서 문장에 본동사가 없어진다. gets(또는 is getting)로 고쳐야 하므로 어법상 틀림."
+    }
+  ],
+  "note": "핵심은 (E). 문장이 콜론 앞에서 독립절을 이뤄야 하는데 주어 'The appeal ...'에 대응하는 정형 본동사가 없다. getting은 비정형이라 오류. 매력적 오답 후보로 (D) them의 지시 애매성을 살폈으나 복수 선행사 new habits로 자연스럽게 해석되어 정문. (B) living, (A) that, (C) show 모두 정상."
+}

@@ -1,0 +1,39 @@
+{
+  "passageId": "ebsi_go3_20151013-q26",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "내용일치",
+    "words": 152
+  },
+  "difficulty": "INTERMEDIATE",
+  "strategy": "s15-cn-kimi26",
+  "ok": false,
+  "ms": 300014,
+  "attempts": 1,
+  "calls": 1,
+  "callLog": [
+    {
+      "purpose": "generate#failed",
+      "modelId": "moonshotai/kimi-k2.5",
+      "ms": 300014,
+      "attempts": 1,
+      "inputTokens": null,
+      "outputTokens": null,
+      "costUsd": null,
+      "costSource": "unknown"
+    }
+  ],
+  "models": [
+    "moonshotai/kimi-k2.5"
+  ],
+  "costUsd": null,
+  "costSource": "unknown",
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "error": "The operation was aborted due to timeout",
+  "question": null,
+  "passageText": "Allan Houser created contemporary Apache sculpture. As a child, he listened to his father's stories about the adventures of Chief Geronimo. This gave him a deep attachment to his ancestral background, an attachment that is shown in his artwork. Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, where he worked as a freelance artist. During World War II, he traveled to California, where he became interested in the media of sculpture. He created works in a variety of styles and mastered bronze, metal, and stone sculpture. Houser's designs are modern, yet firmly rooted in the special tradition of his Native American forefathers. He drew inspiration from both past and present, but like all successful artists, his sculpture transcends race and language. The sculpture Reverie shows a distinct Native American influence, but it can be appreciated by anyone, regardless of his or her background."
+}

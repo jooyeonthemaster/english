@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'isolated by the narrow expertise of individual scientists'는 지문이 해체하는 개인주의적 수사 프레임을 재긍정하는 데다, 'isolated(고립)'는 마지막 문장의 공동체적 'construction'과 정면 충돌한다. 문법 결합(until it is isolated...)은 성립하지만 논리상 배제."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'의 직접 환언이며, 'What happens in somebody's laboratory is only one stage in its construction'(실험실은 진리 구성의 한 단계일 뿐 = 나머지 단계는 전문가 공동체의 검증·공유)과 완벽히 정합. seam도 깨끗함(until it is validated and shared through the community of specialists)."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "기자회견을 통한 대중적 공표는 지문에서 'automatically castigated as a publicity seeker'로 명시적으로 비난받는 경로. 기자회견 장면의 표면적 인상만 취한 수험생을 노린 함정. 논리상 정반대라 배제."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "until 뒤 새 주어절로 문법상 성립하나, 'personal dedication = 객관성의 절대 원천'은 도입부에서 소개되고 곧바로 'almost nobody thinks they can provide a basis for action'으로 기각된 개인주의 신조의 재진술. 배제."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong (most attractive distractor)",
+      "reason": "'collaborative networks in academia'가 공동체적 주제를 표면적으로 반향해 가장 오래 끌렸던 선지. 그러나 (a) 순환 오류 — standing을 얻기 전 단계를 말하는 빈칸에 이미 'the established truth'가 전제로 들어가 자기모순, (b) 인과 역전 — 공동체가 진리를 검증하는 것이지 진리가 네트워크를 개시하는 것이 아님. 이 두 결함으로 배제."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: 역접 구조(개인주의 수사 소개 → 기각 → 전문가 승인 규범)만 잡으면 ②가 'authorized by disciplinary specialists'의 환언임이 명확. 매력 오답은 ⑤(공동체 어휘 반향이나 순환·인과역전)와 ③(기자회견 표면 단서 함정). 정답 단일 옹호 가능, 복수 정답 소지 없음."
+}

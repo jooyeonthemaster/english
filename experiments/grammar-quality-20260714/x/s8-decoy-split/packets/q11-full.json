@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20221123-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 153
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-noun-clause-pronoun-mislabel"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=e  (C):dec=d  (D):ANS=a  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 19,
+        "relPos": 0.021,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 319,
+        "relPos": 0.349,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 445,
+        "relPos": 0.487,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 822,
+        "relPos": 0.9,
+        "sentenceIndex": 10,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 838,
+        "relPos": 0.918,
+        "sentenceIndex": 10,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.918,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Our language helps to reveal our deeper assumptions. Think of these revealing phrases: When we accomplish something important, we say it took \"blood, sweat, and tears.\" We say important achievements are \"hard-earned.\" We recommend a \"hard day's work\" when \"day's work\" would be enough. When we talk of \"easy money,\" we are implying it was obtained through illegal or questionable means. We use the phrase \"That's easy for you to say\" as a criticism, usually when we are seeking to invalidate someone's opinion. It's like we all automatically accept that the \"right\" way is, inevitably, the harder one. In my experience this is hardly ever questioned. What would happen if you do challenge this sacred cow? We don't even pause to consider that something important and valuable could be made easy. What if the biggest thing keeping us from doing what matters is the false assumption that it has to take huge effort?",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "to reveal",
+        "isError": false,
+        "errorExpression": "to reveal",
+        "surroundingText": "Our language helps to reveal our deeper assumptions. Think of these revealing phrases",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "are implying",
+        "isError": false,
+        "errorExpression": "are implying",
+        "surroundingText": "When we talk of \"easy money,\" we are implying it was obtained through illegal or questionable means.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "In my experience this is hardly ever questioned. What would happen if you do challenge",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "keeping",
+        "isError": true,
+        "correction": "keeping",
+        "errorExpression": "keeps",
+        "surroundingText": "What if the biggest thing keeping us from doing what matters is the false assumption that it has to take huge effort?",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "doing",
+        "isError": false,
+        "errorExpression": "doing",
+        "surroundingText": "What if the biggest thing keeping us from doing what matters is the false assumption",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "to reveal"
+      },
+      {
+        "label": "(B)",
+        "text": "are implying"
+      },
+      {
+        "label": "(C)",
+        "text": "is"
+      },
+      {
+        "label": "(D)",
+        "text": "keeps"
+      },
+      {
+        "label": "(E)",
+        "text": "doing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "help는 목적어나 목적보어로 원형부정사와 to부정사 둘 다를 취할 수 있으므로, 'helps to reveal'에서 'to reveal'은 어법상 적절합니다.",
+      "(B)": "주어 'we'의 행동인 'amultaneously implying'을 나타내며, 뒤에 명사절 목적어가 이어지는 능동 진행 시제 'are implying'은 어법상 적절합니다.",
+      "(C)": "단수 앞의 대명사 'this'를 주어로 받으므로, 단수 동사 'is'는 주어-동사 수일치상 적절합니다.",
+      "(E)": "전치사 'from'의 목적어로 명사 역할을 하는 동명사 'doing'을 쓴 것은 어법상 적절합니다."
+    },
+    "explanation": "주어 'the biggest thing' 뒤에서 수식하는 분사구 자리에 정동사인 'keeps'를 쓰면, 뒤에 오는 본동사 'is'와 충돌하여 한 문장에 두 개의 동사(keeps와 is)가 접속사 없이 나열되는 비문이 됩니다. 따라서 명사구를 수식하는 준동사인 현재분사 'keeping'을 쓰는 것이 올바릅니다.",
+    "keyPoints": [
+      "(D) 정동사 vs 준동사 — 한 문장의 진짜 동사인 'is'의 존재를 파악하여 준동사 자리임을 판단",
+      "(A) to-v/v-ing — 동사 'help'의 목적어로서 to부정사 형태의 적합성 판단",
+      "(E) to-v/v-ing — 전치사 'from' 뒤에 오는 명사/동명사 목적어 자리의 형태 판단"
+    ],
+    "tags": [
+      "정·준동사",
+      "동명사",
+      "수일치"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Our language helps __(A) to reveal__ our deeper assumptions. Think of these revealing phrases: When we accomplish something important, we say it took \"blood, sweat, and tears.\" We say important achievements are \"hard-earned.\" We recommend a \"hard day's work\" when \"day's work\" would be enough. When we talk of \"easy money,\" we __(B) are implying__ it was obtained through illegal or questionable means. We use the phrase \"That's easy for you to say\" as a criticism, usually when we are seeking to invalidate someone's opinion. It's like we all automatically accept that the \"right\" way is, inevitably, the harder one. In my experience this __(C) is__ hardly ever questioned. What would happen if you do challenge this sacred cow? We don't even pause to consider that something important and valuable could be made easy. What if the biggest thing __(D) keeps__ us from __(E) doing__ what matters is the false assumption that it has to take huge effort?"
+  }
+}

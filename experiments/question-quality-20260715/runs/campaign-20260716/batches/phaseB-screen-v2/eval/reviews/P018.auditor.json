@@ -1,0 +1,88 @@
+{
+  "pid": "P018",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPT-TERM",
+      "severity": "major",
+      "evidence": "해설 첫 문장 '참다운 현대 예술가가 추구해야 할 궁합과 목적을 제시하는' — '궁합'(compatibility)은 문맥상 성립하지 않는 손상 용어. '지향/목표' 류의 오변환으로 추정되며 학생 노출 해설에 무의미어가 포함됨."
+    },
+    {
+      "code": "V4-GARBLED-SENTENCE",
+      "severity": "major",
+      "evidence": "오답 해설 ⑤ '참된 예술은 세상을 보는 지각에 도전하고 우리의 생각과 감정을 생각의 변화를 이끈다는 본문의 진술과 달리' — 목적어 성분이 중복·파손된 비문. 원문 'forever changes our thoughts and feelings'를 옮기다 문장이 깨짐."
+    },
+    {
+      "code": "V4-TERM-MINOR",
+      "severity": "minor",
+      "evidence": "해설의 '본론의 마지막 문장' — 단일 단락 지문에서 '본론'은 부정확한 지칭('본문'의 오기 추정). '지각을 자극하고'도 'challenges our perceptions'(지각에 도전한다)의 다소 느슨한 번역."
+    },
+    {
+      "code": "V2-SPAN-DRIFT-NOTE",
+      "severity": "minor",
+      "evidence": "정답 유일성 자체는 성립하나(각 선지 독립 검증 결과 ③만 방어 가능), ③ 'employ modern devices as subordinate tools...'는 blank 원문 span('produce unique creations that will allow the public to have new, eye-opening experiences')의 직접 추상화가 아니라 4번째 문장(tools)의 내용을 수입해 합성한 것. 'unique creations'와 'the public' 요소가 탈락됨. §D의 'source span 의미 정확 보존' 기준에서 느슨함 — 유일성은 유지되므로 V2 통과, 단 감점 사유."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "half-truth / 도입부 표면 반향 — 첫 문장의 '더 많은 사람이 공유' 현상을 필자의 처방으로 오독하게 유도",
+      "temptingBecause": "지문 첫 문장 'more people than ever before can produce artistic creations and share them with the world'와 어휘·소재가 직접 겹침",
+      "decisiveFlaw": "접근성 확대는 비판론자들이 우려하는 '현상'이지 필자가 제시하는 목표가 아님. 위대한 예술의 조건(지각에 도전, 새로운 경험 제공)이 전혀 담기지 않음"
+    },
+    {
+      "label": "②",
+      "intent": "goal inversion — 기술을 수단이 아닌 목적으로 격상시키는 주객전도",
+      "temptingBecause": "'utilize', 'modern technology' 등 지문 핵심 어휘를 재사용하고 'redefine the boundaries'가 혁신적으로 들림",
+      "decisiveFlaw": "'the goal should not be simply to utilize technology for its own sake'와 정면 충돌 — 기술 경계 재정의를 목적으로 삼는 것은 필자가 명시적으로 배격한 태도"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 4문장(technologies are nothing more than tools)과 3문장(challenges our perceptions... changes thoughts and feelings)/원문 span(eye-opening experiences)을 합성한 재진술",
+      "temptingBecause": "해당 없음(정답). 단 'subordinate tools'가 'nothing more than tools'를 어휘적으로 강하게 반향해 표면 단서만으로도 식별 가능한 점이 KILLER 취지에 어긋남",
+      "decisiveFlaw": "없음 — 유일하게 방어 가능한 선지. 다만 원문 span의 'unique creations'와 'the public' 요소가 탈락되고 도구 종속 프레임이 수입된 느슨한 추상화"
+    },
+    {
+      "label": "④",
+      "intent": "priority reversal — 창작 과정을 도구에 맞추는 종속 관계 역전",
+      "temptingBecause": "'innovate'가 긍정적으로 들리고 'advanced tools'가 지문의 신기술 소재와 겹침",
+      "decisiveFlaw": "창작이 도구에 맞춰야 한다는 방향은 '기술은 창작 과정에서 쓰이는 도구일 뿐'이라는 필자의 도구 종속 명제를 뒤집음 — ②와 사실상 동일한 명제 하나로 함께 소거됨"
+    },
+    {
+      "label": "⑤",
+      "intent": "polarity reversal — 변화 대신 보존이라는 정반대 방향",
+      "temptingBecause": "'against the rapid changes'가 비판론자들의 우려(잃어간다는 concern)를 보수적으로 읽은 학생에게 어필",
+      "decisiveFlaw": "지문은 위대한 예술이 생각과 감정을 '영원히 바꾼다(forever changes)'고 명시 — 전통적 감정의 보존은 정반대이며 즉시 소거 가능"
+    }
+  ],
+  "explanationIssues": [
+    "해설 '궁합과 목적' — 손상 용어(궁합은 문맥상 무의미)",
+    "오답해설 ⑤ '우리의 생각과 감정을 생각의 변화를 이끈다는' — 성분 중복 비문",
+    "해설 '본론의 마지막 문장' — '본문' 오기 추정",
+    "'지각을 자극하고'는 'challenges our perceptions'의 느슨한 번역(도전한다가 정확)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionDetail": {
+    "sameSyntacticSlot": true,
+    "sourceSpanPreserved": false,
+    "distractorAnchorsComplete": true,
+    "requiresMultiClueSynthesis": false,
+    "reason": "①통사 슬롯 통일은 충족(전 선지 to부정사 보어, suffix 문제 없음). ②정답이 blank span의 직접 추상화가 아니라 인접 문장 내용을 수입한 합성이라 span 의미 보존이 느슨함. ③'subordinate tools'가 'nothing more than tools'의 표면 반향이어서 단일 어휘·명제 단서('기술=도구' 하나)로 정답 도달 가능 — 두 문장/두 논리 단서 연결 강제 실패. ④⑤는 극성만으로 즉시 소거되고 ②④는 동일 함정의 중복이라 실질 경쟁 선지가 ①뿐."
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과. 렌더 지문 무결, 정답 ③ 유일성 성립(전 선지 독립 검증), 완성문 문법적, 필드 동기화 정상. 그러나 V4 실패 — 학생 노출 해설에 손상 용어('궁합')와 파손 비문(오답해설 ⑤) 2건이 존재해 출하 불가. 공예 측면: 결론 문장 빈칸이라는 출제 지점 자체는 정전(C1=3)이고 오답 함정 유형도 분화되어 있으나(C2=3), ②④가 동일 명제 하나로 함께 소거되고 ⑤는 극성으로 즉시 탈락해 실질 변별이 얕음(C3=2). 정답의 'subordinate tools'가 원문 'nothing more than tools'를 표면 반향해 단서 경제성이 손상(C4=2). 요청 난이도 KILLER 대비 실제로는 단일 명제(기술=도구 종속)만 잡으면 풀리는 중간 난이도 문항(C5=1). 해설은 손상 텍스트로 인해 C6=1. KILLER 추가 조건 미충족. 수리 방향: (a)해설 손상 2건 교정, (b)정답 표현에서 'subordinate' 노골성 완화 및 span의 'unique creations/public' 요소 복원, (c)②④ 함정 분화."
+}

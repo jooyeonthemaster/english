@@ -1,0 +1,92 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "info",
+      "evidence": "통과 근거: 렌더 지문을 원지문과 단어 단위로 대조 — 결론 문장의 주어 NP 'Appreciation of differences'만 '_____'로 치환되었고 그 외 전 문장이 동일. em-dash(―), '(i.e. cooperate)', 'co-workers', 'he feels' 등 원문 표기 보존. 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 선지 라벨 ①~⑤, 선언 정답 ②, 오답 해설 키 {①,③,④,⑤} 일치."
+    },
+    {
+      "code": "V2",
+      "severity": "info",
+      "evidence": "통과 근거: 5개 선지 각각을 빈칸에 독립 삽입해 검증. ① 억제는 'express emotions, feelings and moods accurately'·'express how he feels'와 정면 충돌. ③ 표준화는 'diverse emotion vocabulary'와 타인 반응의 개별적 이해(understand why they are reacting in a certain manner)와 상충. ④ 회피는 같은 문장 꼬리 'promotes constructive conflict resolution'과 자기모순(해결은 직면을 전제). ⑤ 사익 극대화는 'their own needs as well as the needs of others (i.e. cooperate)'와 상충. ②만이 원문 스팬 'Appreciation of differences'와 직전 두 문장(관점 취하기·타인 필요 수용)을 보존하는 유일 정답. 대안 정답 없음."
+    },
+    {
+      "code": "V3",
+      "severity": "info",
+      "evidence": "통과 근거: 완성문 'Value placed on diverse perspectives creates an arena for open communication and promotes constructive conflict resolution and improved group functioning.'은 축약 관계절('placed on...')이 수식하는 단수 핵명사 Value가 creates/promotes와 호응하는 문법적 문장. 무관사 'Value...'는 수능 선지 관례상 자연스러움. 5개 선지 모두 동일한 NP 주어 슬롯에 통사적으로 들어가며(문법으로 탈락하는 오답 없음) seam 비문·비단어·오탈자 없음."
+    },
+    {
+      "code": "V4",
+      "severity": "info",
+      "evidence": "통과 근거: 해설의 담화 분석(마지막 문장=결론), 근거 앵커 인용(take the perspective of the other group members), 정답 라벨 ② 지목이 실제 지문·정답과 일치. 문법 용어 오분석 없음(통사 용어를 사용하지 않음). 오답 해설 4건 모두 해당 선지의 실제 내용과 대응(①=억제 vs 표현, ③=표준화 vs 다양성·개별 이해, ④=회피 vs constructive conflict resolution, ⑤=사익 vs cooperate). 지문에 없는 내용 첨가·문장 귀속 오류 없음. 어휘 손질 거리 2건은 explanationIssues에 기재(사실 오류 아님)."
+    },
+    {
+      "code": "V5",
+      "severity": "info",
+      "evidence": "통과 근거: 선언 정답 ② = 본해설 지목 ② = 오답 해설 키 집합의 여집합. keyPoints(감정 이해의 집단적 의의·관점 취하기와 차이 수용·명사 기반 주어부 paraphrase)가 발문 유형(BLANK_INFERENCE)·정답 근거와 모순 없이 동기화."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal) — 감정의 정확한 '표현'을 '억제'로 뒤집은 반테제 오답",
+      "temptingBecause": "지문이 감정·불안 같은 정서 관리 소재를 다루므로, 갈등 상황에서는 감정을 다스리는 것이 침착한 소통에 좋다는 통념과 겹침",
+      "decisiveFlaw": "지문은 감정을 정확히 표현해야(express emotions... accurately / express how he feels) 소통이 원활해진다고 명시 — 억제는 open communication과 정반대. gist만 잡아도 즉시 소거"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 스팬 'Appreciation of differences'의 의미 보존 paraphrase",
+      "temptingBecause": "(정답) 직전 문장의 타인 관점 취하기·반응 원인 이해와 'needs of others... cooperate'를 종합한 필연적 재진술",
+      "decisiveFlaw": "없음. 다만 'diverse/perspectives'가 앵커 문장 어휘를 그대로 되울려 word-matching 우회로가 열리는 점이 공예상 약점(C4)"
+    },
+    {
+      "label": "③",
+      "intent": "scope shift/획일화 함정 — 개별적 차이 이해를 '표준화'로 치환",
+      "temptingBecause": "'facilitate clear communication'과 표면적으로 어울리고 'response'가 'reacting in a certain manner'를 어휘적으로 되울림",
+      "decisiveFlaw": "지문은 diverse emotion vocabulary와 타인 반응 원인의 개별적 이해(차이의 인정)를 강조 — 표준화는 핵심 기제와 상충하며 지문에 근거 없음. 'response codes'의 이질적 register가 매력도를 스스로 깎음"
+    },
+    {
+      "label": "④",
+      "intent": "조화 half-truth — 'conflict' 소재 중첩을 이용해 갈등 '회피'를 화합으로 오인 유도",
+      "temptingBecause": "지문 배경이 group conflict situation이고 갈등을 피하는 것이 집단 화합에 좋다는 통념과 부합 — 네 오답 중 가장 강한 유인",
+      "decisiveFlaw": "빈칸이 든 바로 그 문장의 꼬리 'promotes constructive conflict resolution'이 갈등의 건설적 '해결'(직면)을 전제 — 문장 내부에서 자기모순. 같은 문장 꼬리만으로 탈락하는 값싼 소거 경로이기도 함"
+    },
+    {
+      "label": "⑤",
+      "intent": "half-truth/condition loss — 'their own needs'만 취하고 'as well as the needs of others'를 절단",
+      "temptingBecause": "'accommodate their own needs'라는 실제 지문 구절에 어휘 앵커가 있어 부분 인용 착시를 유발",
+      "decisiveFlaw": "원문은 자기와 타인의 필요를 함께 수용하는 협력(i.e. cooperate)을 말함 — 개인 이익만의 극대화는 정면 상충. gist 파악 시 빠르게 소거"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "본해설 '타인의 다름을 이해하고 수락하는' — '수락'은 어색한 어휘 선택('수용'이 적절). 사실 오류 아님.",
+      "recommendation": "'수용하는'으로 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "③ 오답 해설 '지문의 맥락과 무관한 과확장된 주장' — '무관'(앵커 없음)과 '과확장'(과잉 일반화)이 뒤섞여 배제 논리가 흐림. 실제 결함은 '다양한 감정 어휘·개별적 이해'와의 정면 충돌.",
+      "recommendation": "'다양성과 개별적 이해를 강조하는 지문 논지와 정반대의 획일화 주장'으로 명료화"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 렌더 무결, 정답 유일(전 선지 독립 삽입 검증), 완성문 문법적, 해설 사실 정확, 필드 동기화 완전. 치명 결함 없음. 그러나 공예 합계 16(3+3+2+2+3+3)으로 B 기준(17) 미달 → C. 핵심 공예 결함 두 가지: (1) 극성 불균형 누출 — 빈칸 술부(creates an arena for open communication... promotes constructive conflict resolution...)가 강한 긍정 극성인데 긍정 극성 선지가 ② 하나뿐(①④⑤ 반테제, ③ 중립-관료적)이라 시험 요령만으로 극성 대조 소거가 가능하고, 정답이 앵커 문장의 'perspective/diverse'를 그대로 되울려 word-matching 우회로도 열려 있음(C4=2). (2) 국소 소거 — ④는 같은 문장 꼬리로, ①⑤는 지문 전체 극성으로 즉시 탈락해 실질 경쟁이 ③④ 일부 판단에 그침(C3=2). 정답의 추상화 거리도 'Appreciation of differences'와 거의 등가 수준으로 짧아 종합 추론 부담이 낮음(C1=3, INTERMEDIATE에는 허용 범위·C5=3). 오답 4개가 서로 다른 함정 유형(극성 반전·획일화·조화 half-truth·condition loss)과 서로 다른 지문 앵커를 갖는 설계(C2=3), 담화 역할-앵커-함정을 분리한 해설(C6=3)은 양호. 개선 방향: 긍정 극성이지만 scope/인과가 어긋나는 half-truth 오답(예: 'Recognition of shared goals' 류) 1~2개로 교체해 극성 소거를 차단하면 B 이상 가능. 요청 난이도가 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(killerConditionsMet=false). 참고: KILLER였다면 '극성 하나로 찍을 수 없다' 요건(§D) 불충족이었을 것."
+}

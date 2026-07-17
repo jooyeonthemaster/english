@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'The term ... originated from Harvard University professor ...' — originate은 자동사이고 과거시제 능동이 맞다. 'originate from + 출처'는 정상 결합. 굳이 따지면 사람 출처에는 'originated with'가 더 관용적이라는 어휘 선호 문제는 있으나 어법 오류는 아니다. 대안 해석 검토: 수동태 'was originated'를 요구할 근거 없음(자동사)."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'assumptions about a person's intelligence or work ethic based on their race' — 선행사는 단수 'a person'이지만 generic singular they(their)는 현대 표준 용법으로 사전·주요 스타일 가이드가 인정한다. 유혹 기록: 규범문법(his or her)을 떠올리면 순간 끌리는 매력적 미끼였으나, singular they를 '틀림'으로 처리할 수는 없다. based on 분사구도 assumptions를 수식하며 문제없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'A well-meaning nurse was actually yelling at him when given him directions on taking his medication.' — 축약 부사절 'when + 분사'의 생략된 주어는 주절 주어 nurse. 간호사가 지시를 '주는' 행위자이므로 능동 현재분사 when giving him directions여야 한다. 대안 해석 적극 탐색: 수여동사 수동태의 잔류 목적어 구문('when (she was) given directions')이 성립하려면 목적어가 하나만 남아야 하는데 여기는 'him'과 'directions' 두 목적어가 모두 남아 'the nurse was given him directions'는 어떤 해석으로도 비문. 의미상으로도 간호사는 지시의 수령자가 아니다. 구조적으로 구제 불가능한 명백한 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a hidden message that a person with a disability is defined as lesser in all aspects of functioning' — that절은 message의 동격절이고, 단수 주어 a person에 단수 동사 is, define A as B의 수동태 'be defined as'가 올바르게 결합. 유혹 기록: 'defined'가 의미상 다소 어색해(perceived/regarded가 자연스러움) 잠깐 멈칫하게 만드는 미끼지만 이는 어휘 선택 문제이지 어법 오류가 아니다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a more equitable future where everyone is treated with respect and dignity' — 3음절 형용사 equitable의 비교급은 more equitable이 맞고, 관사-비교급-명사 어순도 정상. 관계부사 where도 future(추상적 배경) 선행사와 정상 결합. 오류 없음."
+    }
+  ],
+  "note": "실전 풀이 순서: 준동사·축약절 밑줄부터 스캔 → (C)에서 즉시 구조 붕괴 확인. when given은 수동 축약인데 뒤에 이중 목적어(him + directions)가 잔류해 잔류 목적어 수동태를 포함한 어떤 대안 해석으로도 정문이 되지 않아 유일 정답. 매력적 오답 체감 순위: (B) their(singular they를 규범문법상 수 불일치로 착각 유도) > (D) is defined(어휘 어색함을 어법 오류로 착각 유도) > (A) originated from(collocation 유혹). 셋 다 어법상 옹호 가능하므로 정답은 (C) 하나로 수렴."
+}

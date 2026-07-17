@@ -1,0 +1,35 @@
+{
+  "pid": "P073",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'no matter how well you believe you are disguising yourself'에서 believe의 목적절 내부 진행형 서술어. 주어 you가 자기 자신(yourself)을 위장하는 능동 행위이므로 현재진행 disguising이 정확하다. 'you are disguised'(수동/상태)로 바꿔도 어색하지 않아 보일 수 있으나, 재귀목적어 yourself가 뒤따르므로 능동 -ing만 성립한다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'dropping their masks would make them appear weak' — 사역동사 make + 목적어 + 원형부정사 구문. appear(원형)가 규칙에 부합하고, appear + 형용사 보어(weak)도 정상 결합. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'In every case, however, the leader's subordinates perceiving the removal of the mask as an act of strength and courage.' — 문장의 정형 본동사가 없다. perceiving을 축약 관계절(subordinates [who were] perceiving...)이나 분사구문으로 읽으려 해도 그 뒤에 주절 서술어가 전혀 남지 않아 완전한 문장이 성립하지 않는다. 과거시제 본동사 perceived로 고쳐야 한다. 대안 해석(도치, 무동사 절 등)을 적극 탐색해도 정문화 경로가 없다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'encouraged a culture where those subordinates did the same' — 선행사 culture는 situation/environment/case 계열의 추상적 장소 명사로 관계부사 where(= in which)가 표준적으로 허용된다. 뒤따르는 절 'those subordinates did the same'은 완전한 절이므로 관계부사가 옳다. 최상위권도 'culture에 where가 되나?' 순간 멈칫하는 매력 포인트지만 기출·표준 용법상 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'we helped the CEOs remove their masks' — help + 목적어 + (to) 원형부정사에서 원형 remove 허용(미국식 표준). 또한 주절 'Some of the ways ... were to actually name..., explore..., and ask...'의 병렬(to name / (to) explore / (to) ask)도 별개로 성립. 정문."
+    }
+  ],
+  "note": "실전 풀이 기록: (A)(B)는 즉시 통과. (C)에서 문장을 끝까지 읽으며 본동사를 찾았으나 부재 — perceiving을 축약 관계절로 살리려 해도 주절 서술어가 없어 단편(fragment)이 되므로 확정 오류. 가장 매력적인 오답 유혹은 (D) where(선행사가 물리적 장소가 아닌 culture)와 (E) remove(help 뒤 to 생략 가능 여부)였으나 둘 다 표준 용법으로 정문. (A)의 disguising도 수동 disguised와 헷갈리게 설계됐으나 yourself가 장거리 단서로 능동을 확정. 정답 후보는 (C) 단일."
+}

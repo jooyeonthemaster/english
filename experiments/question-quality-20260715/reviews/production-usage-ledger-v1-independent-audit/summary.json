@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS_SNAPSHOT_ARITHMETIC_AND_PRIVACY",
+  "sourceLabel": "baseline-v3-root-20260715-1501-kst",
+  "sourcePublicSha256": "44782149c518bbff736e78a76b5039ba95bbe3ba58c1454d26ff2802492ecd25",
+  "sourcePrivateDeclaredSha256": "959c7790d4f40e473047080180d528d8e67a82bde8fb7c9035d8f91cba7f5563",
+  "sourceAuditScriptSha256": "99f1166e09277d8c1189c1d67086310a11e62732f2d6efe787bd4e70ec326c91",
+  "jobs": 15311,
+  "costRows": 19070,
+  "joinedLedgerEvents": 19064,
+  "orphanCostRows": 6,
+  "kstDays": 44,
+  "mixedLedgerCostUsd": 462.304344,
+  "largestDailySpike": {
+    "kstDate": "2026-06-28",
+    "jobs": 2524,
+    "events": 3465,
+    "mixedCostUsd": 85.199761
+  },
+  "postDeploymentTimestampCorrelated": {
+    "jobs": 8,
+    "events": 19,
+    "gatewayRecordedCostUsd": 0.463582,
+    "causalClaim": false
+  },
+  "privacyFlagsAllFalse": true,
+  "databaseReadsOnly": true,
+  "databaseWrites": 0,
+  "modelApiCalls": 0
+}

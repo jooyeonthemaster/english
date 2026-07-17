@@ -1,0 +1,100 @@
+{
+  "pid": "P012",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPT-TERM",
+      "severity": "critical",
+      "evidence": "오답 해설 (E): \"대절의 주어인 'a person with a disability'가...\" — '대절'은 존재하지 않는 문법 용어(손상 용어/비단어)다. 해당 절은 'a hidden message'와 동격인 that절(동격절)이므로 '동격절의 주어' 또는 'that절의 주어'여야 한다. 학생 노출 해설에 손상 용어가 포함되어 V4(용어 오류 없음) 실패."
+    },
+    {
+      "code": "V2-DISPUTE-RISK-SINGULAR-THEY",
+      "severity": "major",
+      "evidence": "(A) 'their'는 단수 명사 a person을 받는 singular they로, 원문 그대로이고 현대 표준 용법이라 정답은 아니지만, RUBRIC §C가 '대안 분석이 가능한 자리'로 명시적으로 배제한 singular they를 밑줄 선지로 사용했다. 규범문법(his or her 요구) 관점의 복수정답 이의신청 위험이 있다. V2 자체는 통과로 판정하되 KILLER 품질 결격 사유."
+    },
+    {
+      "code": "V4-INACCURATE-PARAPHRASE",
+      "severity": "minor",
+      "evidence": "오답 해설 (B): \"표현 등의 형태로 '목격되는'\" — 실제 지문은 'can be seen in statements that dismiss...'로 '(개인의 배경을 무시하는) 진술 속에서 확인된다'는 뜻이다. '표현 등의 형태로'는 어색하고 부정확한 축약이나 구조 분석 자체(수동 판정)는 옳다."
+    },
+    {
+      "code": "V5-TYPO-KEYPOINTS",
+      "severity": "minor",
+      "evidence": "keyPoints 세 번째 항목 '수동태be seen' — 띄어쓰기 누락 오탈자. 필드 간 논리적 동기화(정답 라벨 (D), 선지, 해설, markedExpressions의 expression=교정형/errorExpression=표시형 규약)는 모두 일치하므로 V5는 통과."
+    },
+    {
+      "code": "C2-DUPLICATE-POINT",
+      "severity": "major",
+      "evidence": "(B)와 (E)가 동일 pointCode 'e'(수동태 판정)로 중복되고, 정답 (D)도 분사구문 태 판정이라 5개 밑줄 중 3개가 '태' 계열이다. 선지별로 서로 다른 오개념을 겨냥해야 한다는 C2 기준 미달이며, 태 주제가 반복 노출되어 정답 포인트를 오히려 예고한다."
+    },
+    {
+      "code": "C5-DIFFICULTY-MISMATCH",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER 대비 실제 난이도는 중상급 이하다. 정답 (D)는 분사 바로 뒤 간접목적어 him + 직접목적어 directions라는 국소 인접 단서로 즉시 판별되는, 가장 많이 훈련되는 '분사 뒤 목적어→현재분사' 패턴이다. (C) When은 즉시 소거되고 (B)/(E)도 쉬운 수동 판정이라 함정 깊이가 KILLER에 못 미친다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "대명사 수·성 일치 — 단수 명사 a person을 받는 성중립 단수 their(singular they) 판정",
+      "temptingBecause": "선행 명사 a person이 단수라 복수형 their가 수일치 위반처럼 보인다. 규범문법 교육을 받은 학생일수록 his or her를 기대한다.",
+      "decisiveFlaw": "성중립 singular they/their는 현대 표준 용법이며 원문 그대로다. 어법상 옳으므로 정답 불가 — 다만 RUBRIC §C가 배제하라고 명시한 대안 분석 가능 자리라서 이의신청 위험이 있는 디코이다."
+    },
+    {
+      "label": "(B)",
+      "intent": "조동사 뒤 태 판정 — can be seen의 수동태 적절성",
+      "temptingBecause": "can 뒤 동사원형 자리에서 능동 see와 수동 be seen 중 태를 판단해야 하는 것처럼 보인다.",
+      "decisiveFlaw": "주어 experiential microaggressions는 진술 속에서 '목격되는' 대상이므로 수동이 옳다. 쉽게 소거되며, (E)와 pointCode('e')가 중복되어 평가요소 밀도를 깎는다."
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사 판정 — 완전한 절을 이끄는 시간 접속사 When",
+      "temptingBecause": "접속사/전치사/관계사 구분을 묻는 것처럼 보이나 매력도가 매우 낮다.",
+      "decisiveFlaw": "바로 뒤에 주어(people)+동사(speak)를 갖춘 완전절이 따라와 즉시 소거된다. 사실상 필러에 가깝다."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 접속사가 남은 분사구문(when ~ing)의 태 판정: source-correct 'giving' → displayed-wrong 'given' 최소대립쌍",
+      "temptingBecause": "'when given directions'(지시를 받았을 때)라는 흔한 수동 패턴과 표면이 유사해 p.p.가 익숙하게 읽힌다.",
+      "decisiveFlaw": "생략된 주어 A well-meaning nurse가 지시를 '주는' 능동 주체이고, 분사 뒤에 간접목적어 him과 직접목적어 directions가 모두 남아 있어 수동 p.p.는 두 목적어를 지배할 수 없다. giving으로 교정하면 원문과 정확히 일치한다. 다만 목적어 인접이라는 국소 단서로 즉시 드러나 KILLER 깊이가 아니다."
+    },
+    {
+      "label": "(E)",
+      "intent": "동격 that절 내 태 판정 — is defined as의 수동태 적절성",
+      "temptingBecause": "define의 능·수동 판단과 as lesser라는 다소 생소한 보어 표면 때문에 한 번 더 읽게 만든다.",
+      "decisiveFlaw": "a person with a disability는 '규정되는' 대상이므로 수동이 옳다. (B)와 동일 포인트(수동태) 중복이며, 해설이 이 절을 '대절'이라는 비단어 용어로 지칭한 것이 V4 실패의 직접 근거다."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 (E) '대절의 주어' — '대절'은 비단어/손상 용어. 올바른 용어는 '동격절(that절)'이다. (V4 실패 사유)",
+    "오답 해설 (B) '표현 등의 형태로 목격되는' — 지문의 'in statements that dismiss...'(무시하는 진술 속에서)를 부정확하게 축약. 구조 판정 자체는 옳음 (minor)",
+    "keyPoints '수동태be seen' 띄어쓰기 오탈자 (minor)",
+    "정답 해설의 '조건이나 시간을 나타내는 부사절' — 해당 when절은 시간만 나타내므로 다소 느슨한 일반화이나 오분석은 아님 (info)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": "충족 — giving→given 최소대립쌍, 교정 시 원문과 정확히 일치",
+    "clearGrammarJudgment": "정답 포인트 자체는 충족(분사구문 태는 명확한 문법 판단)이나, 디코이 (A)가 rubric이 배제한 singular they 자리라 항목 전체의 판정 청결성을 훼손",
+    "fivePointExplanations": "부분 미충족 — 5개 밑줄 모두 point와 correct/incorrect 설명은 있으나 명시적 'why tempting'이 없고 (C)는 사실상 필러",
+    "notImmediatelyRevealed": "미충족 — 정답이 분사 직후 목적어(him directions)라는 인접 국소 단서로 즉시 드러나는 고빈도 훈련 패턴",
+    "easyDecoySamePoint": "취약 — (B)/(E)가 정답과 같은 태 계열의 쉬운 디코이로, 정답을 가리지는 않으나 태 포인트를 예고"
+  },
+  "grade": "F",
+  "notes": "정답 유일성(V2)과 렌더 무결성(V1)은 견고하다: (D) 'when given him directions'는 수동 분사가 이중목적어를 지배할 수 없어 유일하게 비문이고, 교정 시 원문이 정확히 복원된다. 그러나 학생 노출 해설 (E)의 '대절'이라는 비단어 문법 용어가 V4를 실패시켜 등급은 F(출하 금지)다. 용어 1건 수정('동격절')과 (B) 해설 표현 정비는 손쉬운 수리 대상이나, KILLER 요청 대비 실제 난이도 미달(C5=1), (B)/(E) 포인트 중복(C2=2), singular-they 디코이의 이의신청 위험은 구조적 결함이라 KILLER 출하용으로는 재설계가 필요하다."
+}

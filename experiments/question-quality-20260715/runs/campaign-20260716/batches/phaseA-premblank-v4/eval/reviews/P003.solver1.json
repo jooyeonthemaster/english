@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'다음 날 아침까지 미루라'는 조언은 이중으로 모순: (a) 아침형 인간이 아니라면 아침은 에너지 저점이므로 지문 대전제(과제-에너지 매칭)에 반하고, (b) 지문이 명시적으로 경고한 '미루면 감정 에너지를 낭비한다(task hangs over my head)'와 정면충돌한다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "가장 강한 매력 오답. 필자 자신의 루틴('eating my problems for breakfast')을 그대로 복사한 선지라 일화만 훑은 수험생은 끌린다(실제로 잠깐 끌렸음). 그러나 빈칸 문장은 'If you are NOT a morning person'이라는 반대 조건이므로 필자의 아침 루틴을 그대로 적용하면 논리가 역전된다. 조건절 하나로 배제 확정."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "정답. 1문장의 대전제 'different tasks should ideally be matched to our energy level'을 비(非)아침형 인간에게 일반화해 재적용한 유일한 선지. 아침형인 필자는 아침에, 아침형이 아니면 자신의 에너지 피크 시간에 — 조건절에 정확히 응답한다. 문법 결합도 문제없음(if절 뒤 명령문, 다섯 선지 모두 동일 구조라 seam 단서 없음)."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'과제를 잘게 쪼개라'는 전략은 지문 어디에도 없음. 'emotional energy'라는 지문 어휘를 미끼로 재활용했지만 지문의 처방은 '쪼개기'가 아니라 '에너지 피크 시간대 배치'다. 조건절('아침형이 아니라면')에도 응답하지 못한다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "2순위 매력 오답. 2문장('analytical tasks ... free from distractions and able to focus')의 표현을 그대로 재활용해 그럴듯하지만, 핵심 변수인 '에너지 수준/시간대'가 빠져 있다. '아침형 인간이 아니라면'이라는 조건은 에너지 피크 타이밍에 관한 것인데 이 선지는 방해 요소 유무만 말하므로 조건절에 대한 응답이 되지 못한다."
+    }
+  ],
+  "note": "빈칸이 마지막 문장 조건절 뒤 명령문 자리라 다섯 선지 모두 문법적으로는 결합 가능 — 순수 논리 적합성 문항. 대전제(과제-에너지 매칭)→필자 사례(아침형)→반대 조건(비아침형) 재적용이라는 구조가 명확해 정답은 3으로 유일하게 수렴. 매력 오답 배치가 좋음: 2는 필자 루틴 복사(조건 역전 함정), 5는 지문 어휘 재활용(핵심 변수 누락). 대안 해석으로 정답이 흔들릴 여지 없음."
+}

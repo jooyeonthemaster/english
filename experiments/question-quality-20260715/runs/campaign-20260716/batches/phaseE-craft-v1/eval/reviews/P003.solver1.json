@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'flashbulb' memories, named for the vivid images... — 과거분사 축약 관계절(= which are (so) named for ~). memories는 name의 대상이므로 수동 분사 named가 정확하다. 'named for'(~을 따서 명명된)는 관용적으로도 정문. 첫 밑줄이라 'so named'가 아니어서 어색하다는 유혹이 있으나 so 없이도 문법적으로 성립한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "콜론 뒤 'where we were when we got the news, how we learned it, how we felt, what we did'는 간접의문(자유관계) 명사절 나열로 the vivid images의 동격. how/what 절과 병렬이며 where 절 내부(we were)도 완전하다. '선행사 없는 관계부사'로 오인하게 만드는 유혹 선지지만 의문사절이므로 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "your personal circumstances surrounding the events — circumstances가 the events를 '둘러싸는' 능동 관계이고 분사가 목적어(the events)를 직접 취하므로 현재분사 surrounding이 필수. surrounded(수동)였다면 목적어를 취할 수 없어 오히려 비문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "may not necessarily be precise — be동사의 주격 보어 자리이므로 형용사 precise가 맞다. 부사 precisely로의 교체 유혹을 노린 자리지만 보어 자리이므로 형용사가 정답 형태."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "Respondents' most emotional memories ... are also that of which they are most confident and ... the ones that have most changed — 지시대명사가 복수 주어 memories를 받으므로 those여야 한다. 등위 병렬짝 'the ones that have most changed'(복수)도 복수형을 강제하는 장거리 단서. 'that of which'라는 격식체 배열이 정문처럼 보이는 매력적 표기지만 수 일치 위반으로 명백한 오류. 접속사/관계사 that 재해석은 전치사구 of which 앞 대명사 자리라 불가능."
+    }
+  ],
+  "note": "정답은 (E) that → those (복수 수 일치). 매력적 오답 체감: (B) where가 '선행사 없는 관계부사'로 보여 가장 끌렸고, (A) named도 'so named'가 아니라는 점에서 잠깐 의심했으나 둘 다 정문으로 확정. (E)는 주어 memories(복수)와 병렬 요소 the ones(복수)라는 두 개의 장거리 단서가 일관되게 those를 요구하므로 대안 해석으로 옹호 불가. 정답 후보는 (E) 단일."
+}

@@ -1,0 +1,45 @@
+{
+  "strategy": "s11-reasoning-high",
+  "describe": "flash 그대로 + OpenRouter reasoning effort high (flash 는 disable 형상만 400, effort 지정은 허용)",
+  "callPlan": "flash(reasoning high) x1",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 11123,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.18368,
+  "avgCostUsd": 0.01837,
+  "costRecordedCalls": 10,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 1.1,
+  "zeroErrorItems": 1,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.867,
+  "avgAnswerRelPos": 0.471,
+  "answerRelPosInBand": 10,
+  "models": {
+    "google/gemini-3.5-flash": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

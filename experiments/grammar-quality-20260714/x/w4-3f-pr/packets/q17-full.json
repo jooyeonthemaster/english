@@ -1,0 +1,159 @@
+{
+  "passageId": "ebsi_go1_20190307-q33",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "빈칸추론",
+    "words": 159
+  },
+  "attempts": 6,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=f  (C):ANS=c  (D):dec=d  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 23,
+        "relPos": 0.028,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 199,
+        "relPos": 0.242,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 303,
+        "relPos": 0.369,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 429,
+        "relPos": 0.522,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 817,
+        "relPos": 0.994,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.994,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "helping",
+        "isError": false,
+        "errorExpression": "helping",
+        "surroundingText": "A lovely technique for helping children take the first steps towards creating their own",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "frequently",
+        "isError": false,
+        "errorExpression": "frequently",
+        "surroundingText": "One story I have done this with frequently is a tale I call Benno and the Beasts.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "found",
+        "isError": true,
+        "correction": "found",
+        "errorExpression": "founding",
+        "surroundingText": "It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "disturbs",
+        "isError": false,
+        "errorExpression": "disturbs",
+        "surroundingText": "tells it to be quiet in case it disturbs his prayers. Later, he regrets this",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "used",
+        "isError": false,
+        "errorExpression": "used",
+        "surroundingText": "It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "helping"
+      },
+      {
+        "label": "(B)",
+        "text": "frequently"
+      },
+      {
+        "label": "(C)",
+        "text": "founding"
+      },
+      {
+        "label": "(D)",
+        "text": "disturbs"
+      },
+      {
+        "label": "(E)",
+        "text": "used"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 for 뒤에 동명사 helping이 오는 것은 문법적으로 적절합니다.",
+      "(B)": "동사구 have done this를 수식하는 위치이므로 부사 frequently를 사용하는 것은 어법상 적절합니다.",
+      "(D)": "접속사 in case가 이끄는 절의 주어 it(a frog)이 3인칭 단수이므로 disturbs를 쓴 것은 수일치상 옳습니다.",
+      "(E)": "지각동사 hearing의 목적어인 their ideas가 '사용되는' 수동 관계이므로 과거분사 used가 온 것은 적절합니다."
+    },
+    "explanation": "문맥상 '(C) founding'은 앞에 위치한 명사인 'a story called St. Benno and the Frog'를 수식하는 분사구의 핵심입니다. 수식을 받는 대상인 이 이야기는 Helen Waddell이 쓴 책 속에서 '발견되는' 수동적 관계에 있으므로, 현재분사 founding이 아닌 과거분사 found로 고쳐야 합니다. 현재분사 founding을 쓰게 될 경우 '~을 설립하는'이라는 능동의 의미가 되며, 뒤에 목적어가 존재하지 않아 문법적으로도 성립하지 않습니다. 따라서 과거분사 found가 적절합니다.",
+    "keyPoints": [
+      "(C) 분사능수동 — 수식받는 명사(story)와의 수동 관계 파악",
+      "(E) 지각동사의 목적격 보어 — 목적어(ideas)와 분사의 관계(수동) 판정",
+      "(B) 형용사 vs 부사자리 — 동사 수식 부사의 기능"
+    ],
+    "tags": [
+      "수능어법",
+      "과거분사",
+      "수동관계",
+      "부사자리",
+      "수일치"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "A lovely technique for __(A) helping__ children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with __(B) frequently__ is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, __(C) founding__ in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it __(D) disturbs__ his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas __(E) used__."
+  }
+}

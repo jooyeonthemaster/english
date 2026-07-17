@@ -1,0 +1,174 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense",
+    "grammar-decoy-point-monotony",
+    "grammar-surrounding-missing-marker",
+    "grammar-error-not-mutated",
+    "grammar-error-not-mutated",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=g  (B):dec=g  (C):ANS=d  (D):dec=c  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 26,
+        "relPos": 0.026,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 140,
+        "relPos": 0.139,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 205,
+        "relPos": 0.204,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 301,
+        "relPos": 0.299,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 798,
+        "relPos": 0.792,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.792,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중 어법상 옳지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "naturally and automatically break it up into shapes, colors, and concepts that we have learned through education.",
+        "isError": false,
+        "surroundingText": "When we see something, we ",
+        "pointCode": "g"
+      },
+      {
+        "label": "(B)",
+        "expression": "We recode what we see through the lens of everything we know.",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "g"
+      },
+      {
+        "label": "(C)",
+        "expression": "reconstruct memories rather than retrieving the video from memory.",
+        "isError": true,
+        "correction": "reconstruct memories rather than retrieving the video from memory.",
+        "errorExpression": "reconstruct memories rather than retrieving the video from memory.",
+        "surroundingText": "We ",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file.",
+        "isError": false,
+        "surroundingText": "It's ",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony.",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "naturally and automatically break it up into shapes, colors, and concepts that we have learned through education."
+      },
+      {
+        "label": "(B)",
+        "text": "We recode what we see through the lens of everything we know."
+      },
+      {
+        "label": "(C)",
+        "text": "reconstruct memories rather than retrieving the video from memory."
+      },
+      {
+        "label": "(D)",
+        "text": "a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file."
+      },
+      {
+        "label": "(E)",
+        "text": "The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "break A up into B는 ‘A를 B로 나누다’라는 고정표현으로, ‘it(=something)’을 ‘shapes, colors, and concepts’으로 나누는 맥락에서 어법상 전혀 문제가 없습니다.",
+      "(B)": "recode는 ‘다시 부호화하다, 다시 해석하다’라는 뜻의 타동사로, ‘what we see(우리가 보는 것)’를 목적어로 취하는 구조가 자연스럽고 문맥상 의미도 적절합니다.",
+      "(D)": "‘rather than’ 뒤에 동명사(storing)가 오는 것은 ‘to store information’과 비교되는 방식을 설명하는 것으로, parallelism 관점에서 보완적 용법으로 허용됩니다. 특히 비교 대상이 구체적 예시를 제시할 때는 동명사가 자주 쓰입니다.",
+      "(E)": "‘are reconstructed’와 ‘(are) played back’은 수동태 동사구로 병렬 구조를 이룹니다. ‘rather than’ 뒤에 ‘are’가 생략된 것이지만, 동일한 조동사가 반복됨으로써 생략은 문법적으로 정당하며 오히려 문장을 간결하게 만듭니다."
+    },
+    "explanation": "(C)에서 ‘reconstruct memories rather than retrieving the video from memory’는 병렬 구조(parallelism)를 어기고 있습니다. ‘rather than’로 연결된 두 동작은 동일한 문법 형태를 가져야 합니다. 주절의 동사인 ‘reconstruct’가 원형 동사이므로, ‘rather than’ 뒤에도 원형 동사 ‘retrieve’가 와야 합니다. 동명사 ‘retrieving’을 쓰면 동사와 명사 형태가 혼합되어 문법적으로 맞지 않습니다. 따라서 올바른 표현은 ‘reconstruct memories rather than retrieve the video from memory’입니다.",
+    "keyPoints": [
+      "parallelism",
+      "rather than",
+      "verb vs. gerund",
+      "sentence structure",
+      "advanced grammar"
+    ],
+    "tags": [
+      "ADVANCED",
+      "parallelism",
+      "rather than",
+      "gerund misuse",
+      "sentence correction",
+      "CSAT English"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "When we see something, we __(A) naturally and automatically break it up into shapes, colors, and concepts that we have learned through education.__ __(B) We recode what we see through the lens of everything we know.__ We __(C) reconstruct memories rather than retrieving the video from memory.__ This is a useful trait. It's __(D) a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file.__ People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. __(E) The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony.__ Seeing is not believing."
+  }
+}

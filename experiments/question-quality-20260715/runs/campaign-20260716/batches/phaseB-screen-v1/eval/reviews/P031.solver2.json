@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) is",
+      "verdict": "correct",
+      "reason": "주어는 동명사구 'Recording an interview'. 동명사구 주어는 단수 취급이 규칙이므로 단수 동사 is가 정확히 일치한다. 'an interview'는 동명사의 목적어일 뿐 주어 핵이 아니며, 설령 그것에 이끌려도 단수이므로 어느 해석으로도 is는 정문. 뒤의 'and can be less unnerving'과의 병렬(is ... and can be ...)도 주어 공유 구조로 성립한다."
+    },
+    {
+      "label": "(B) while",
+      "verdict": "correct",
+      "reason": "'lasts a while'에서 while은 관사 a를 동반한 명사('한동안'이라는 기간 명사)로 쓰였고, last는 기간 명사구를 부가어(또는 준목적어)로 취하는 동사이므로 'last a while'은 표준 정문이다 (cf. 'It lasted a while / for a while'). 접속사 while로 오독하게 하는 미끼이나, 관사 a가 명사임을 확정한다."
+    },
+    {
+      "label": "(C) to develop",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop ...'는 가주어 it + 진주어 to부정사 구문. 형용사 efficient 뒤에 진주어로 to부정사가 오는 것은 표준 구조이며, develop의 목적어 'the technique ... of selective note-taking'도 온전하다. 동명사 developing으로 바꿔야 할 강제 요인이 전혀 없다."
+    },
+    {
+      "label": "(D) be transcribing",
+      "verdict": "incorrect",
+      "reason": "'so that they can be transcribing easily afterwards'에서 they의 선행사는 'the key answers'. 답변(answers)은 전사 행위의 대상이지 행위자가 아니므로 수동태 'can be transcribed'가 요구된다. 'be transcribing'은 능동 진행형으로, (i) 무정물 answers가 스스로 전사한다는 의미 위반, (ii) transcribe는 타동사인데 목적어가 없어 논항 구조도 붕괴한다. 대안 해석 검토: transcribing을 동명사 보어로 보는 해석(be + 동명사 'transcribing이라는 것이다')은 they(answers)와의 동일성 서술이 의미상 성립하지 않아 배제되고, 진행 수동 'be being transcribed'의 축약으로 볼 근거도 없다. 어느 해석으로도 정문화 불가 — 명백한 오류."
+    },
+    {
+      "label": "(E) much",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle'에서 much는 비교급 easier/quicker를 강조하는 표준 비교급 강화사(much/even/still/far/a lot). very는 비교급 앞에 불가하지만 much는 가능하므로 정문. 'easier ... to handle'의 tough-구문(handle의 목적어 공백이 the material과 연결)도 온전히 성립한다."
+    }
+  ],
+  "note": "블라인드 풀이. 유일한 어법 오류는 (D): 선행사 the key answers가 transcribe의 피동작주이므로 'be transcribed'(수동)여야 하는데 능동 진행 'be transcribing'으로 표기되어 태(voice) 오류이자 타동사 목적어 결락. (A) 동명사 주어 수일치, (B) 명사 while(a while), (C) 가주어-진주어 to부정사, (E) 비교급 강조 much는 모두 형식적으로 정문임을 각각 지배 규칙으로 확인했다. 복수 정답 여지 없음."
+}

@@ -1,0 +1,45 @@
+{
+  "audit_id": "deterministic-structural-reaudit-v9-source-aware-audit",
+  "recorded_at": "2026-07-15T06:32:45.6680596+09:00",
+  "production_source_inspection_had_begun": false,
+  "chronology_finding": {
+    "seal_existed_and_was_independently_verified_before_this_auditor_inspected_production_source": true,
+    "manifest_declares_blind_authoring_before_source_inspection": true,
+    "seal_alone_is_a_cryptographic_integrity_record_not_an_external_trusted_timestamp": true,
+    "conclusion": "The sealed bytes provably predate this audit's production-source inspection. The author's earlier blindness is declared by the sealed manifest but is not independently timestamp-attested."
+  },
+  "source_bundle": "C:/Users/jooye/Desktop/2026project/nara/experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v9",
+  "relocated_bundle": "../deterministic-structural-reaudit-v9",
+  "verification": {
+    "author_verifier_passed_before_copy": true,
+    "independent_verifier_passed_before_copy": true,
+    "author_verifier_passed_after_copy": true,
+    "source_and_destination_hashes_identical": true,
+    "sealed_file_set_exact": true,
+    "seal_matches_manifest_sha256": true,
+    "manifest_declared_hashes_and_sizes_match": true,
+    "aggregate_case_digest_matches": true,
+    "cardinality_pair_oracle_uniqueness_invariants_hold": true
+  },
+  "aggregate_case_digest": "ffb88b27b00e632805bba8d0963d1074b7f0a65321a8c10eec2c7ceaff36fff8",
+  "metrics": {
+    "total_cases": 160,
+    "total_pairs": 80,
+    "unique_case_ids": 160,
+    "unique_surface_payloads": 160,
+    "families": {
+      "F1_SUMMARY_KEY_OPTION_COHESION": {"pairs": 20, "cases": 40, "normal": 20, "defect": 20},
+      "F2_GRAMMAR_RENDERED_LABEL_REFERENCE": {"pairs": 20, "cases": 40, "normal": 20, "defect": 20},
+      "F3_SENTENCE_ORDER_STRUCTURAL_LABEL_POSITION": {"pairs": 20, "cases": 40, "normal": 20, "defect": 20},
+      "F4_FRAGMENT_COMPLETE_SENTENCE_BOUNDARY": {"pairs": 20, "cases": 40, "normal": 20, "defect": 20}
+    }
+  },
+  "file_sha256": {
+    "author_v9_corpus.py": "7349c929f289ae8438545dee4335ed31c98823eab8e544bef119ee04764c1b4e",
+    "cases.json": "64c8f3bdf16eafef1c8c6f11ad2a54799f2f9bcb1c1bd095800a7cebb6cd01ea",
+    "IMMUTABILITY.md": "fe5cf12047ca815e8c486a2dcbfb3052981a2c34688f27074a1c5b442f12e258",
+    "PRE_INSPECTION_MANIFEST.json": "2f8e98078388d74b1e3f2d84e6bab25ff337e63898cb4802e265049146aae1dc",
+    "PRE_INSPECTION_SEAL.sha256": "f2ab695a99cbeee3e9e99fa52751cf4e5e5bf30fba0c9bd0d5efea2f7fa7487c",
+    "PROTOCOL.md": "6323f8d10846fd51592fa1c2ac9d8f15e1e86c9f12b2ef2d842ac6d75c40dccc"
+  }
+}

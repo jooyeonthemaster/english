@@ -1,0 +1,103 @@
+{
+  "round": "round-6",
+  "total": 30,
+  "ok": 30,
+  "failed": 0,
+  "relaxed": 7,
+  "avgAttempts": 2.67,
+  "answers": {
+    "S": 20,
+    "A": 10,
+    "B": 0
+  },
+  "answerCodeDist": {
+    "b": 10,
+    "a": 1,
+    "h": 4,
+    "d": 6,
+    "g": 5,
+    "k": 1,
+    "e": 1,
+    "c": 1,
+    "i": 1
+  },
+  "decoyCodeDist": {
+    "e": 14,
+    "b": 15,
+    "c": 26,
+    "g": 9,
+    "d": 13,
+    "k": 14,
+    "f": 11,
+    "a": 5,
+    "h": 7,
+    "l": 3,
+    "m": 1,
+    "j": 1,
+    "i": 1
+  },
+  "dupAnswerDecoy": [
+    "ebsi_go3_20151013-q26(INTERMEDIATE)",
+    "ebsi_go1_20221123-q21(ADVANCED)",
+    "ebsi_go1_20231219-q21(INTERMEDIATE)",
+    "ebsi_go1_20200312-q36(ADVANCED)"
+  ],
+  "dupDecoyPairs": [
+    "ebsi_go3_20151013-q19(ADVANCED)",
+    "ebsi_go1_20151117-q21(INTERMEDIATE)",
+    "ebsi_go1_20191120-q21(KILLER)",
+    "ebsi_go1_20231219-q20(ADVANCED)",
+    "ebsi_go1_20190307-q33(ADVANCED)",
+    "ebsi_go1_20190307-q22(KILLER)",
+    "ebsi_go1_20220324-q20(ADVANCED)",
+    "ebsi_go1_20220324-q23(INTERMEDIATE)",
+    "2019_06_5023285-q20(ADVANCED)"
+  ],
+  "posLastUnder07": [
+    "ebsi_go3_20151013-q26",
+    "ebsi_go1_20200312-q21",
+    "ebsi_go3_20260507-q31",
+    "2019_06_5023285-q29"
+  ],
+  "firstSentenceAnswer": [],
+  "answerBefore20pct": [],
+  "sameSentenceCrowd": [
+    "ebsi_go1_20241015-q20",
+    "ebsi_go3_20191015-q22",
+    "ebsi_go1_20241015-q21",
+    "ebsi_go1_20151117-q21",
+    "ebsi_go1_20151117-q20",
+    "ebsi_go1_20191120-q21",
+    "ebsi_go1_20221123-q21",
+    "ebsi_go1_20231219-q21",
+    "ebsi_go1_20231219-q20",
+    "ebsi_go1_20221123-q20",
+    "ebsi_go1_20220324-q20",
+    "ebsi_go1_20200312-q36",
+    "ebsi_go3_20260507-q20",
+    "ebsi_go3_20150409_A-q22",
+    "2015_06_3026346-q21",
+    "ebsi_go1_20200312-q21",
+    "2019_06_5023285-q20",
+    "2015_06_3026346-q19",
+    "2019_06_5023285-q29"
+  ],
+  "answerSentenceCrowd": [
+    "ebsi_go1_20241015-q21",
+    "ebsi_go1_20151117-q21",
+    "ebsi_go1_20191120-q21",
+    "ebsi_go1_20220324-q20",
+    "ebsi_go1_20200312-q36",
+    "ebsi_go3_20260507-q20",
+    "2015_06_3026346-q21",
+    "2019_06_5023285-q29"
+  ],
+  "answerFirstMarker": 0,
+  "answerLabelDist": {
+    "(C)": 6,
+    "(D)": 5,
+    "(B)": 6,
+    "(E)": 13
+  },
+  "avgDecoyGoodShare": 0.97
+}

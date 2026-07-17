@@ -1,0 +1,77 @@
+{
+  "pid": "P027",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "critical",
+      "evidence": "오답 해설 (A): \"목적을 나타내는 부사적 용법의 t-부정사\" — 'to부정사'의 손상 표기(비단어 용어)가 학생 노출 해설에 존재. RUBRIC V4('용어 오류 없음') 및 감사 기준의 '비단어·손상 용어' 실패 유형에 해당. 수정은 't-부정사' → 'to부정사' 한 토큰이지만 게이트 기준상 실패로 판정."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "준동사 형태 판정 — 동명사구 뒤에 이어지는 목적의 to부정사(부사적 용법)의 적절성",
+      "temptingBecause": "주어가 'listening to it again...'인 동명사구라서 'to select'를 'selecting'과의 병렬로 오인하거나, 긴 명사구 내부의 준동사 형태에 혼란을 느낄 수 있음",
+      "decisiveFlaw": "정문(오답 선지) — '인용구를 선택하기 위해 다시 듣는 것'이라는 목적의 to부정사로 원문 그대로 어법상 적절"
+    },
+    {
+      "label": "(B)",
+      "intent": "연결동사의 주격 보어 자리 — 분사형 합성 형용사(time-consuming)의 품사 판정",
+      "temptingBecause": "-ing로 끝나는 하이픈 합성어라 진행형 동사나 분사구문으로 오인할 수 있고, 주어(동명사구)가 길어 보어 관계 파악이 어려움",
+      "decisiveFlaw": "정문(오답 선지) — 'can be'의 주격 보어 자리에 온 형용사로 적절"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 단수 지시대명사 주어(This)와 정동사의 수일치",
+      "temptingBecause": "This가 앞 문장의 개념(selective note-taking)을 받는 추상 지시라 수 관념이 흐려질 수 있고, 직후에 동명사구 목적어(writing down the key answers)가 이어져 복수 명사(answers)에 시선이 끌림",
+      "decisiveFlaw": "This는 단수 주어이므로 involve는 수일치 위반 — involves로 교정해야 하며 교정 시 정확히 원문이 복원됨 (source-correct → displayed-wrong 최소대립쌍 성립)"
+    },
+    {
+      "label": "(D)",
+      "intent": "형용사 vs 부사 — 수동태 동사구(be transcribed)를 수식하는 부사 자리 판정",
+      "temptingBecause": "be동사가 보이므로 보어 자리 형용사(easy)가 와야 한다고 착각할 수 있음",
+      "decisiveFlaw": "정문(오답 선지) — 'be transcribed'는 수동태 동사구이므로 이를 수식하는 부사 easily가 올바름"
+    },
+    {
+      "label": "(E)",
+      "intent": "비교급 강조 부사 — much가 비교급(easier and quicker)을 수식할 수 있는지 판정",
+      "temptingBecause": "원급 강조 very와의 구별, much가 명사 수량 표현이라는 고정관념과 충돌",
+      "decisiveFlaw": "정문(오답 선지) — much는 비교급 easier/quicker를 강조하는 부사로 적절"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "CORRUPTED-TERM",
+      "severity": "critical",
+      "evidence": "오답 해설 (A) 't-부정사' — 'to부정사'의 비단어 손상 용어 (V4 실패 근거)"
+    },
+    {
+      "code": "REDUNDANT-CONTENT",
+      "severity": "minor",
+      "evidence": "본 해설 말미에 (D) easily 분석이 포함되어 있고 오답 해설 (D)에 사실상 동일한 내용이 반복됨 — 해설/오답해설 역할 분리가 흐림 (C6 감점 요인)"
+    },
+    {
+      "code": "LOOSE-TERMINOLOGY",
+      "severity": "minor",
+      "evidence": "keyPoints (D) '준동사(분사) 및 동사구를 수식하는 부사' — easily가 실제로 수식하는 것은 수동태 동사구 be transcribed이며 '준동사(분사) 수식'이라는 표현은 다소 부정확하나 오분석 수준은 아님. 또한 본 해설의 '복수형 동사 involve'는 비3인칭단수 현재형에 대한 관행적 표현으로 허용 범위."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 원지문 대비 렌더 지문의 유일한 차이는 (C) involves→involve(의도된 변형)이며 마커·라벨·선지 완전 일치, 손상 없음. V2: 5개 밑줄 독립 검증 결과 (A) 목적 to부정사, (B) 보어 형용사, (D) 수동태 수식 부사, (E) 비교급 강조 much 모두 정문이고 (C) 'This involve'만 수일치 위반 — 정답 집합 {(C)} 유일. V3: 발문·지문·교정 완성문 모두 문법적. V5: 정답 라벨·선지·해설·markedExpressions(correction=involves, isError는 (C)만 true)·keyPoints 상호 모순 없음. V4만 실패: 오답 해설 (A)의 't-부정사'는 학생 노출 해설의 손상 용어(비단어)로, 감사 기준이 명시한 V4 실패 유형. 내용 분석 자체는 전부 사실과 일치하므로 't-부정사'→'to부정사' 1토큰 수정 후 재감사 시 V4 통과 가능. 공예: 정답 포인트가 'This ___' 인접 수일치라 노출이 빠름 — INTERMEDIATE 라벨 대비 쉬운 편(C3=2, C5=2). 오답 4개는 서로 다른 문법 포인트를 겨냥해 의도 밀도 양호(C2=3), 메타 누출 없음(C4=3). 해설은 손상 용어 + (D) 중복으로 C6=1. 게이트 원칙(V 실패는 공예로 상쇄 불가)에 따라 등급 F. 요청 난이도 INTERMEDIATE이므로 killerConditionsMet=false."
+}

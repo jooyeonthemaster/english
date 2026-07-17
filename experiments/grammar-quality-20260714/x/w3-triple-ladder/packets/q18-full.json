@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20190307-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "요지",
+    "words": 118
+  },
+  "attempts": 8,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-thin-answer",
+    "grammar-noun-clause-pronoun-mislabel"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=c  (C):ANS=d  (D):dec=a  (E):dec=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 101,
+        "relPos": 0.146,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 265,
+        "relPos": 0.382,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 317,
+        "relPos": 0.457,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 369,
+        "relPos": 0.532,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 624,
+        "relPos": 0.899,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.899,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - to join a group that has a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier. Volunteers report a sense of satisfaction at enriching their social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who is lonely might benefit from helping others. Also, they might benefit from being involved in a voluntary program where they receive support and help to build their own social network.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "to join",
+        "isError": false,
+        "correction": "to join",
+        "errorExpression": "to join",
+        "surroundingText": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - to join a group that has a shared purpose.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "engaged in",
+        "isError": false,
+        "correction": "engaged in",
+        "errorExpression": "engaged in",
+        "surroundingText": "Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "tend",
+        "isError": true,
+        "correction": "tend",
+        "errorExpression": "tends",
+        "surroundingText": "Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is",
+        "errorExpression": "is",
+        "surroundingText": "First, someone who is lonely might benefit from helping others.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "where",
+        "isError": false,
+        "correction": "where",
+        "errorExpression": "where",
+        "surroundingText": "Also, they might benefit from being involved in a voluntary program where they receive support and help to build their own social network.",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "to join"
+      },
+      {
+        "label": "(B)",
+        "text": "engaged in"
+      },
+      {
+        "label": "(C)",
+        "text": "tends"
+      },
+      {
+        "label": "(D)",
+        "text": "is"
+      },
+      {
+        "label": "(E)",
+        "text": "where"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "앞선 'one sure way'를 구체적으로 설명하는 명사적 용법의 부정사로 사용되어 어법상 적절합니다.",
+      "(B)": "'~에 종사하다, 관여하다'라는 의미로 수동태 구문(be engaged in)이 올바르게 쓰였습니다.",
+      "(D)": "주격 관계대명사절 내의 동사로 선행사 someone에 수일치하여 is가 적절하게 쓰였습니다.",
+      "(E)": "완전한 절('they receive support~')을 이끌며 선행사 'a voluntary program'을 수식하는 관계부사로 적절히 쓰였습니다."
+    },
+    "explanation": "명사절인 that절 내부의 핵심 주어는 복수명사인 'people'이고, 'who are engaged in service to others, such as volunteering'은 주어를 수식하는 관계대명사절입니다. 주어가 복수이므로 단수 동사인 tends는 잘못되었으며, 복수 동사인 tend로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 수일치 — 관계사절과 수식어구에 의해 주어와 동사가 멀리 떨어져 있을 때의 수일치",
+      "(B) 분사/능수동 — 관용적인 수동태 표현 be engaged in의 활용",
+      "(E) 관계사 — 관계부사 where 뒤에 이어지는 완전한 절 구조의 이해"
+    ],
+    "tags": [
+      "수일치",
+      "관계대명사",
+      "동사",
+      "어법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - __(A) to join__ a group that has a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who are __(B) engaged in__ service to others, such as volunteering, __(C) tends__ to be happier. Volunteers report a sense of satisfaction at enriching their social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who __(D) is__ lonely might benefit from helping others. Also, they might benefit from being involved in a voluntary program __(E) where__ they receive support and help to build their own social network."
+  }
+}

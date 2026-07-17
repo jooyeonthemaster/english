@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "incremental": false
+  },
+  "files": [
+    "authority-core.mts",
+    "build.mts",
+    "verify.mts",
+    "hostile-tests.mts"
+  ],
+  "exclude": []
+}

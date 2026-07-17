@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-predecessor-binding-v6",
+  "v5Subject": {
+    "directory": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5",
+    "protocolSha256": "0110dd37d475d3c16af6203774ddc77f0b560f803cf5a98c75455a452287ff0e",
+    "verifierSha256": "9b300f8335228629ee13e7a92dc2d545973dde2ecb63cbd259f3883a66279401",
+    "manifestFileSha256": "3e38abaf88a7cfae759b2621272c3951df19c6c95de98425d6aa7f7affe624ac",
+    "authorReportSha256": "b26eb140073adbe96d01ffdb992d1658636c0ff7e072837a51d81aa2d22343c2",
+    "publicFilesRead": 4,
+    "privateFilesRead": 0
+  },
+  "independentCorrectnessReview": {
+    "directory": "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v5-independent-correctness-review-v1",
+    "manifestFileSha256": "4d8b3037450e3d9d5a02d755e7a567f1dd30f0cf1f2bccc8c3f870b499e0ab55",
+    "manifestRows": 4,
+    "verdict": "FAIL_BLOCKERS",
+    "blockerCodes": [
+      "C1_VALID_WRAPPER_CARDINALITY_UNDERCOUNT",
+      "C2_CLOSED_TEMP_PATH_IDENTITY_NOT_REATTESTED",
+      "C3_BUNDLER_IMPLEMENTATION_UNSEALED_NO_INDEPENDENT_EQUIVALENCE",
+      "C4_INTENT_WRITE_FAILURE_DOES_NOT_GATE_SETTLEMENT"
+    ],
+    "exactPublicRows": {
+      "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v5-independent-correctness-review-v1/REPORT.md": "796c75902cedab7caff02a805199bec6ca54213d197f616dd913a596fbcf106c",
+      "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v5-independent-correctness-review-v1/evidence.json": "b0c1f3cb619abd822474ebb088db56edae0eff636bd847af8804705823311f71",
+      "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v5-independent-correctness-review-v1/reproduce.mts": "c160519bdcf49380f172b3419b518aaec04be3b9589d4fa36d93e60ea208edf6",
+      "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v5-independent-correctness-review-v1/review.json": "0395112facc4b44f9e664ca828883cd89e81eb8717ca1ee0ad1e60de75db8e28"
+    }
+  },
+  "remediationOwnership": {
+    "C1_VALID_WRAPPER_CARDINALITY_UNDERCOUNT": "strict-json-observer.ts + offline.test.ts",
+    "C2_CLOSED_TEMP_PATH_IDENTITY_NOT_REATTESTED": "live-io.ts + system-boundary.test.ts",
+    "C3_BUNDLER_IMPLEMENTATION_UNSEALED_NO_INDEPENDENT_EQUIVALENCE": "bundler-toolchain-provenance.ts + build-frozen-runtime.mts + frozen-runtime-core.ts",
+    "C4_INTENT_WRITE_FAILURE_DOES_NOT_GATE_SETTLEMENT": "durable-private-marker.ts + terminal-reconciliation-core.ts + system-boundary.test.ts",
+    "status": "IMPLEMENTED_PENDING_AUTHOR_FREEZE_AND_INDEPENDENT_AUDIT"
+  },
+  "readPolicy": {
+    "predecessorPublicFilesOnly": true,
+    "predecessorPrivateFilesRead": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "globalLedgerReadsOrWrites": 0
+  },
+  "contentSha256": "e8cbaf66435ce55924fc8a56b456cedb612082311398ba89f220af0cf7b5138a"
+}

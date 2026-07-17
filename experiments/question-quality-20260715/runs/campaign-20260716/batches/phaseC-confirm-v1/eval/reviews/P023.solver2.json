@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Indirect interrogative 'how long the shortest war in recorded history lasted' — degree phrase 'how long' is fronted from the duration complement of 'lasted'. Wh-movement fully licensed; 'learn' takes an interrogative clause complement. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Subject is an overt coordination of a wh-clause ('Why the war took place') and an NP ('the reason behind its brief duration') joined by 'and', denoting two distinct things (cause of occurrence vs. reason for brevity). Coordinated subjects take plural agreement, so 'are' is correct; singular would only be licensed for a lone clausal subject or a single-referent reading, which is not the case here."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "In 'had a great deal of influence over Zanzibar, even chosen who the nation's leader would be', the only viable structure is a participial adjunct whose understood subject is 'the United Kingdom' — the AGENT of choosing — with the overt object clause 'who the nation's leader would be'. That requires active 'choosing'; passive 'chosen' both reverses the thematic role (UK would be the thing chosen) and clashes with the retained object clause. Rescue parses fail: (i) ellipsis of auxiliary 'had' ('had ... even (had) chosen') is blocked because 'had' is a lexical verb here and there is no coordinator 'and' to license asyndetic VP coordination; (ii) a reduced relative on 'Zanzibar' ('Zanzibar, chosen who...') is semantically and syntactically incoherent. Ungrammatical — the error."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'ordered Zanzibar's new leader to step down' — canonical object-control frame order + NP + to-infinitive. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'quickly destroying the new leader's army' — adverb 'quickly' correctly modifies the participle 'destroying' in the free adjunct; an adjective would be unlicensed. Grammatical."
+    }
+  ],
+  "note": "Clean single-error item. (C) 'chosen' must be 'choosing' (active participial adjunct with UK as agent); no alternative parse (auxiliary ellipsis, reduced relative) rescues the printed form. All other underlines are robustly grammatical, including (B) where coordinated subjects force plural 'are'. Answer uniquely defensible: (C)."
+}

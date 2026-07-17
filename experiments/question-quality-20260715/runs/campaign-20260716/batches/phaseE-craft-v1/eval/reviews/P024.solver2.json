@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'the jumping motion should be continuously maintained'를 빈칸에 넣으면 뒤따르는 등위절 'and tones that follow need to bring us closer and closer to our starting point'와 정면 모순된다. 도약이 계속 유지된다는 기대(P)와 후속 음들이 출발점으로 복귀해야 한다는 요구(¬P 방향)는 동일한 'this is another way to say' 환언 구조 안에서 공존 불가. 또한 gap fill 원리 자체('the next note should change direction')와 논리적으로 배치된다. 문법 결합(expect that + 평서절)은 성립하나 의미 논리가 붕괴."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "'our brains expect that the departure from the original pitch would not last long'은 (a) 직전 명제 'a tendency for the melody to want to return to the jumping-off point'의 환언으로 정확히 기능하고, (b) 후속 등위절 '후속 음들이 출발점(harmonic home)으로 점점 가까이 데려가야 한다'와 논리적으로 정합하며, (c) 마지막 예시(옥타브 도약 후 melody를 home 쪽으로 되돌림)와도 일치한다. 문법 seam: expect that + 절 성립, 주절이 현재시제(expect)임에도 that절의 would는 가정적/완곡 미래로 허용 가능한 표준 용법. 원전(Levitin, This Is Your Brain on Music)의 'the jump was only temporary'와 의미 동치."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "'the leap must exactly construct an entire octave'는 gap fill 원리의 일반 진술과 무관하다. 옥타브는 'Over the Rainbow' 한 곡의 예시적 사실일 뿐, 뇌가 '도약이 정확히 옥타브여야 한다'고 기대한다는 주장은 지문 어디서도 지지되지 않는다. 오히려 원리는 '큰 도약이면(if a melody makes a large leap, either up or down)'이라는 조건부로 크기·방향을 특정하지 않는다. 지엽 예시를 일반 원리 자리에 승격시킨 전형적 오답. 'construct an octave'는 연어(collocation)도 부자연."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'a sudden shift inevitably eliminates musical tension'은 지문 사실과 역방향. 지문에서 큰 도약은 'a strong schematic violation'으로 긴장을 생성하며, 작곡가는 'wants to continue to build tension'이라 하여 긴장이 유지·축적됨을 명시한다. 도약이 긴장을 필연적으로 제거한다는 명제는 반증됨. 또한 이 명제는 뒤 등위절(출발점 복귀 요구)과 인과적 연결도 만들지 못한다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "가장 강한 미끼. gap fill이 '다음 음은 방향을 바꿔야 한다(change direction)'고 하므로 방향 전환 자체는 참이나, 이 선지는 '즉각적인 반대 방향 도약(an immediate opposite leap)'을 요구한다. 지문은 복귀가 'closer and closer'라는 점진적 접근이며, 예시에서도 'but not by too much'로 한 번에 되돌아가지 않음을 명시 — 즉 요구되는 것은 반대 방향의 (대개 순차적) 이동이지 또 하나의 leap이 아니다. 나아가 'our brains expect that our auditory expectation demands...'는 기대가 기대를 목적어로 삼는 순환 구문으로 환언 관계도 성립하지 않는다. 형식적으로 반박 가능하므로 기각."
+    }
+  ],
+  "note": "원전은 Levitin의 This Is Your Brain on Music의 gap fill 대목으로, 원문 빈칸 자리는 'the jump was only temporary'. 선지 2가 이를 그대로 환언한다. 빈칸 뒤 등위절('and tones that follow need to...')이 강한 장거리 단서로 작동해 1·4를 즉시 배제하고, 'closer and closer'+'but not by too much'가 5의 'immediate opposite leap'을 형식적으로 반증한다. 3은 예시의 지엽 사실 승격형 오답. 복수 정답 여지 없음."
+}

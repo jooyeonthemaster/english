@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):dec=b  (C):dec=k  (D):ANS=c  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 16,
+        "relPos": 0.022,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.304,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 346,
+        "relPos": 0.48,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 636,
+        "relPos": 0.882,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.882,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is wired",
+        "isError": false,
+        "errorExpression": "is wired",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "what's",
+        "isError": false,
+        "errorExpression": "what's",
+        "surroundingText": "negativity bias\" can keep you focused on what's going wrong (which explains",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "to acknowledge",
+        "isError": false,
+        "errorExpression": "to acknowledge",
+        "surroundingText": "To break out of this neural rut, train yourself to acknowledge when things go right.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "sharing",
+        "isError": true,
+        "correction": "sharing",
+        "errorExpression": "shared",
+        "surroundingText": "start your conversations with friends by sharing a recent win (anything that gives",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": false,
+        "errorExpression": "it",
+        "surroundingText": "appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is wired"
+      },
+      {
+        "label": "(B)",
+        "text": "what's"
+      },
+      {
+        "label": "(C)",
+        "text": "to acknowledge"
+      },
+      {
+        "label": "(D)",
+        "text": "shared"
+      },
+      {
+        "label": "(E)",
+        "text": "it"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어인 'The human brain'이 '타고나다', '고정되다'라는 수동의 의미를 갖는 것이 타당하고 뒤에 목적어가 없으므로 수동태인 'is wired'는 어법상 옳습니다.",
+      "(B)": "전치사 on의 목적어 역할을 하는 명사절을 이끌며, 뒤에 주어가 빠진 불완전한 절('s going wrong)이 이어지므로 선행사를 포함한 관계대명사 'what's'는 어법상 옳습니다.",
+      "(C)": "재귀대명사 목적어인 yourself 뒤에서 목적격보어로 쓰인 준동사 자리이며, train 동사는 목적격보어로 to부정사를 요구하므로 'to acknowledge'는 어법상 옳습니다.",
+      "(E)": "앞에 언급된 단수 명사인 'life'를 가리키는 대명사이므로 단수 대명사의 목적격 형태인 'it'은 어법상 옳습니다."
+    },
+    "explanation": "전치사 by 뒤에서 수식 구조를 동반하는 준동사절을 형성하는 자리로, 뒤에 명사구 목적어인 'a recent win'이 직접 주어져 있습니다. 목적어를 취하기 위해서는 수동 의미의 과거분사인 'shared'는 올 수 없으며, 능동적으로 목적어를 지배할 수 있는 동명사 형태가 필요합니다. 따라서 'shared'를 능동 형태의 동명사인 'sharing'으로 고쳐야 합니다. 뒤에 바로 목적어로 명사구가 이어질 때는 과거분사가 아닌 현재분사나 동명사 형태의 능동적 성격이 와야 함을 인지하는 것이 핵심입니다.",
+    "keyPoints": [
+      "(D) 분사의 능동 vs 수동 — 뒤에 오는 목적어 명사구의 존재 여부로 판정",
+      "(C) to-v vs v-ing — 본동사 train이 취하는 목적격보어 구조의 통사적 형태 판단",
+      "(B) 관계사 — 전치사의 목적어 역할을 하는 명사절 내에서의 선행사 유무와 완전성 판단"
+    ],
+    "tags": [
+      "분사의 태",
+      "동명사 목적어",
+      "수동태",
+      "관계대명사 what"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain __(A) is wired__ to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on __(B) what's__ going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself __(C) to acknowledge__ when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by __(D) shared__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate __(E) it__.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "TOPIC",
+  "plan": "PREMIUM",
+  "difficulty": "INTERMEDIATE",
+  "total": 5,
+  "ok": 5,
+  "failed": 0,
+  "relaxed": 0,
+  "avgAttempts": 1,
+  "avgMs": 7892,
+  "withErrors": 0,
+  "withWarnings": 0
+}

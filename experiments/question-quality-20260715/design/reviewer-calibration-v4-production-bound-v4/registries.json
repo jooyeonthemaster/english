@@ -1,0 +1,293 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-registries-4",
+  "artifactId": "reviewer-calibration-v4-production-bound-v4",
+  "status": "EMPTY_IMMUTABLE_REGISTRY_TEMPLATES_PENDING_FRESH_AUDIT",
+  "chainGenesis": {
+    "nextEventOrdinal": 1,
+    "lastEventSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "eventCount": 0,
+    "appendOnly": true
+  },
+  "roleRegistry": {
+    "sealed": false,
+    "registrySha256": null,
+    "assignedActorCount": 0,
+    "slots": [
+      { "slotId": "PILOT_PACKET_AUTHOR", "role": "PACKET_AUTHOR", "phase": "TAXONOMY_PILOT", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "MAIN_PACKET_AUTHOR", "role": "PACKET_AUTHOR", "phase": "MAIN_CERTIFICATION", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "HOLDOUT_PACKET_AUTHOR", "role": "PACKET_AUTHOR", "phase": "ACTIVATION_HOLDOUT", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "ITEM_AUTHOR_POOL", "role": "ITEM_AUTHOR", "actorPseudonym": null, "assignmentEventSha256": null, "artifactAuthorshipRegistrySha256": null },
+      { "slotId": "GOLD_AUTHOR_POOL", "role": "GOLD_AUTHOR", "actorPseudonym": null, "assignmentEventSha256": null, "artifactAuthorshipRegistrySha256": null },
+      { "slotId": "IDENTITY_BINDING_CUSTODIAN", "role": "IDENTITY_BINDING_CUSTODIAN", "actorPseudonym": null, "principalCommitmentSha256": null, "assignmentEventSha256": null, "custodianAuthorityAttestationSha256": null },
+      { "slotId": "CERTIFICATION_REVIEWER_1", "role": "CERTIFICATION_REVIEWER", "phaseRoles": ["TAXONOMY_PILOT_RATER", "MAIN_CERTIFICATION_RATER", "ACTIVATION_HOLDOUT_RATER"], "actorPseudonym": null, "assignmentEventSha256": null, "certificateSha256": null },
+      { "slotId": "CERTIFICATION_REVIEWER_2", "role": "CERTIFICATION_REVIEWER", "phaseRoles": ["TAXONOMY_PILOT_RATER", "MAIN_CERTIFICATION_RATER", "ACTIVATION_HOLDOUT_RATER"], "actorPseudonym": null, "assignmentEventSha256": null, "certificateSha256": null },
+      { "slotId": "TRUSTED_GOLD_AUDITOR", "role": "TRUSTED_GOLD_AUDITOR", "actorPseudonym": null, "assignmentEventSha256": null, "roleExclusionProofSha256": null, "artifactAuthorshipExclusionProofSha256": null },
+      { "slotId": "CALIBRATION_ADJUDICATOR", "role": "CALIBRATION_ADJUDICATOR", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "S1_REVIEWER_1", "role": "S1_REVIEWER", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "S1_REVIEWER_2", "role": "S1_REVIEWER", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "S1_ADJUDICATOR", "role": "S1_ADJUDICATOR", "actorPseudonym": null, "assignmentEventSha256": null, "freshnessProofSha256": null },
+      { "slotId": "S1_RESULT_CUSTODIAN", "role": "S1_RESULT_CUSTODIAN", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "S1_RESULT_VIEWER_REGISTRY", "role": "S1_RESULT_VIEWER", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "ACTIVATION_CANDIDATE_AUTHOR", "role": "ACTIVATION_CANDIDATE_AUTHOR", "actorPseudonym": null, "assignmentEventSha256": null },
+      { "slotId": "INDEPENDENT_ACTIVATION_AUDITOR", "role": "INDEPENDENT_ACTIVATION_AUDITOR", "actorPseudonym": null, "assignmentEventSha256": null, "roleExclusionProofSha256": null, "artifactAuthorshipExclusionProofSha256": null },
+      { "slotId": "ACTIVATION_GRANT_AUTHOR", "role": "ACTIVATION_GRANT_AUTHOR", "actorPseudonym": null, "assignmentEventSha256": null }
+    ],
+    "actorRoleAssignments": [],
+    "principalRoleAssignments": [],
+    "artifactAuthorshipRecords": [],
+    "roleExclusionProofs": [],
+    "artifactAuthorshipExclusionProofs": [],
+    "ready": false
+  },
+  "identityRegistry": {
+    "version": "NARA_QCAL_V4_STABLE_PRINCIPAL_HMAC_SHA256_1",
+    "trustedCustodianPublicKeysByPrincipal": {},
+    "trustedCustodianKeySha256ByPrincipal": {},
+    "principalRecords": {},
+    "principalByCanonicalSourceCommitment": {},
+    "principalByCanonicalPseudonym": {},
+    "canonicalPseudonymsByPrincipal": {},
+    "custodianAttestations": {},
+    "identityBindingEvents": [],
+    "identityCustodianAttestationEvents": [],
+    "identityDenialEvents": [],
+    "denialRecords": [],
+    "principalCount": 0,
+    "canonicalPseudonymCount": 0,
+    "custodianAttestationCount": 0,
+    "denialCount": 0,
+    "registryRootSha256": null,
+    "ready": false,
+    "sealed": false
+  },
+  "slotRegistry": {
+    "epoch": 1,
+    "epochAdvanceAuthorized": false,
+    "totalFutureSlots": 60,
+    "materializedSlots": 0,
+    "eligibleSlots": 0,
+    "issuedSlots": 0,
+    "generators": [
+      {
+        "phase": "TAXONOMY_PILOT",
+        "prefix": "TP",
+        "total": 12,
+        "coverageCredit": false,
+        "blocks": [
+          { "block": "GRAMMAR", "prefix": "G", "count": 4, "typeId": "GRAMMAR_ERROR", "familyId": null },
+          { "block": "BLANK", "prefix": "B", "count": 4, "typeId": "BLANK_INFERENCE", "familyId": null },
+          { "block": "NONFOCUS", "prefix": "N", "count": 4, "targets": [
+            { "ordinal": 1, "familyId": "NF-F1-GLOBAL_MEANING_SELECTION", "typeId": "TOPIC" },
+            { "ordinal": 2, "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "typeId": "IMPLIED_MEANING" },
+            { "ordinal": 3, "familyId": "NF-F3-DISCOURSE_STRUCTURE", "typeId": "SENTENCE_ORDER" },
+            { "ordinal": 4, "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "typeId": "GRAMMAR_CHOICE_COMBO" }
+          ] }
+        ]
+      },
+      {
+        "phase": "MAIN_CERTIFICATION",
+        "prefix": "MC",
+        "total": 24,
+        "coverageCredit": true,
+        "blocks": [
+          { "block": "GRAMMAR", "prefix": "G", "count": 8, "typeId": "GRAMMAR_ERROR", "familyId": null },
+          { "block": "BLANK", "prefix": "B", "count": 8, "typeId": "BLANK_INFERENCE", "familyId": null },
+          { "block": "NONFOCUS", "prefix": "N", "count": 8, "targets": [
+            { "ordinal": 1, "familyId": "NF-F1-GLOBAL_MEANING_SELECTION", "typeId": "TOPIC" },
+            { "ordinal": 2, "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "typeId": "IMPLIED_MEANING" },
+            { "ordinal": 3, "familyId": "NF-F3-DISCOURSE_STRUCTURE", "typeId": "SENTENCE_ORDER" },
+            { "ordinal": 4, "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "typeId": "GRAMMAR_CHOICE_COMBO" },
+            { "ordinal": 5, "familyId": "NF-F5-LEXICAL_SEMANTICS", "typeId": "VOCAB_CHOICE" },
+            { "ordinal": 6, "familyId": "NF-F6-SUMMARY_AND_COMPRESSION", "typeId": "SUMMARY_COMPLETE_MC" },
+            { "ordinal": 7, "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER", "typeId": "CONDITIONAL_WRITING" },
+            { "ordinal": 8, "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION", "typeId": "FILL_BLANK_KEY" }
+          ] }
+        ]
+      },
+      {
+        "phase": "ACTIVATION_HOLDOUT",
+        "prefix": "AH",
+        "total": 24,
+        "coverageCredit": true,
+        "oneTime": true,
+        "blocks": [
+          { "block": "GRAMMAR", "prefix": "G", "count": 8, "typeId": "GRAMMAR_ERROR", "familyId": null },
+          { "block": "BLANK", "prefix": "B", "count": 8, "typeId": "BLANK_INFERENCE", "familyId": null },
+          { "block": "NONFOCUS", "prefix": "N", "count": 8, "targets": [
+            { "ordinal": 1, "familyId": "NF-F1-GLOBAL_MEANING_SELECTION", "typeId": "TITLE" },
+            { "ordinal": 2, "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "typeId": "CONTENT_MATCH" },
+            { "ordinal": 3, "familyId": "NF-F3-DISCOURSE_STRUCTURE", "typeId": "IRRELEVANT" },
+            { "ordinal": 4, "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "typeId": "GRAMMAR_CORRECTION" },
+            { "ordinal": 5, "familyId": "NF-F5-LEXICAL_SEMANTICS", "typeId": "SYNONYM" },
+            { "ordinal": 6, "familyId": "NF-F6-SUMMARY_AND_COMPRESSION", "typeId": "SUMMARY_WRITING" },
+            { "ordinal": 7, "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER", "typeId": "WORD_ORDER" },
+            { "ordinal": 8, "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION", "typeId": "TOPIC_SENTENCE_WRITING" }
+          ] }
+        ]
+      }
+    ],
+    "expandedSlotIds": [
+      "TP-G-01", "TP-G-02", "TP-G-03", "TP-G-04", "TP-B-01", "TP-B-02", "TP-B-03", "TP-B-04", "TP-N-01", "TP-N-02", "TP-N-03", "TP-N-04",
+      "MC-G-01", "MC-G-02", "MC-G-03", "MC-G-04", "MC-G-05", "MC-G-06", "MC-G-07", "MC-G-08", "MC-B-01", "MC-B-02", "MC-B-03", "MC-B-04", "MC-B-05", "MC-B-06", "MC-B-07", "MC-B-08", "MC-N-01", "MC-N-02", "MC-N-03", "MC-N-04", "MC-N-05", "MC-N-06", "MC-N-07", "MC-N-08",
+      "AH-G-01", "AH-G-02", "AH-G-03", "AH-G-04", "AH-G-05", "AH-G-06", "AH-G-07", "AH-G-08", "AH-B-01", "AH-B-02", "AH-B-03", "AH-B-04", "AH-B-05", "AH-B-06", "AH-B-07", "AH-B-08", "AH-N-01", "AH-N-02", "AH-N-03", "AH-N-04", "AH-N-05", "AH-N-06", "AH-N-07", "AH-N-08"
+    ],
+    "slotMaterializationEvents": []
+  },
+  "fingerprintRegistry": {
+    "hashAlgorithm": "SHA-256",
+    "derivationVersion": "NARA_QCAL_V4_FINGERPRINT_NFKC_WS_ASCII_FOLD_8TOKEN_1",
+    "derivationModule": "fingerprint.mjs",
+    "inputCommitmentRoots": [],
+    "derivationProofEvents": [],
+    "reservedCompositeFingerprints": [],
+    "pilotFingerprints": [],
+    "mainFingerprints": [],
+    "holdoutFingerprints": [],
+    "failedTombstones": [],
+    "rejectedTombstones": [],
+    "previouslyIssuedFingerprints": [],
+    "reservationEvents": [],
+    "tombstoneEvents": [],
+    "disjointnessProofEvents": [],
+    "uniqueCompositeFingerprintIndex": [],
+    "duplicateCount": 0,
+    "ready": false
+  },
+  "coverageRegistry": {
+    "contactEvents": [],
+    "passedCoverageEvents": [],
+    "eligibleMaterializationEvents": [],
+    "materializationEventSha256ByPassedCoverageEventSha256": {},
+    "materializationEventSha256ByCanonicalType": {},
+    "terminalPassedCoverageEventSha256BySlotId": {},
+    "coverageRecomputationRoots": [],
+    "passedCoverageEventSha256ByCanonicalType": {},
+    "focusOnlyTemplate": {
+      "scopeEnum": "FOCUS_ONLY",
+      "canonicalTypeIds": ["GRAMMAR_ERROR", "BLANK_INFERENCE"],
+      "coverageCount": 2,
+      "passedCoverageEventSha256ByCanonicalType": { "GRAMMAR_ERROR": null, "BLANK_INFERENCE": null },
+      "complete": false
+    },
+    "all25Template": {
+      "scopeEnum": "ALL_25",
+      "canonicalTypeIds": [
+        "BLANK_INFERENCE", "GRAMMAR_ERROR", "GRAMMAR_CHOICE_COMBO", "VOCAB_CHOICE", "SENTENCE_ORDER",
+        "SENTENCE_INSERT", "TOPIC", "MAIN_IDEA", "TITLE", "IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH",
+        "SUMMARY_COMPLETE_MC", "IRRELEVANT", "CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "FILL_BLANK_KEY",
+        "SUMMARY_COMPLETE", "SUMMARY_WRITING", "WORD_ORDER", "TOPIC_SENTENCE_WRITING", "GRAMMAR_CORRECTION",
+        "CONTEXT_MEANING", "SYNONYM", "ANTONYM"
+      ],
+      "coverageCount": 25,
+      "passedCoverageEventSha256ByCanonicalType": {
+        "BLANK_INFERENCE": null, "GRAMMAR_ERROR": null, "GRAMMAR_CHOICE_COMBO": null, "VOCAB_CHOICE": null,
+        "SENTENCE_ORDER": null, "SENTENCE_INSERT": null, "TOPIC": null, "MAIN_IDEA": null, "TITLE": null,
+        "IMPLIED_MEANING": null, "REFERENCE": null, "CONTENT_MATCH": null, "SUMMARY_COMPLETE_MC": null,
+        "IRRELEVANT": null, "CONDITIONAL_WRITING": null, "SENTENCE_TRANSFORM": null, "FILL_BLANK_KEY": null,
+        "SUMMARY_COMPLETE": null, "SUMMARY_WRITING": null, "WORD_ORDER": null, "TOPIC_SENTENCE_WRITING": null,
+        "GRAMMAR_CORRECTION": null, "CONTEXT_MEANING": null, "SYNONYM": null, "ANTONYM": null
+      },
+      "complete": false
+    },
+    "contactIsCertification": false,
+    "epoch1ContactCount": 0,
+    "certifiedTypeCount": 0,
+    "ready": false
+  },
+  "policyRegistry": {
+    "bindingVersion": "NARA_QCAL_V4_ROLE_RESOURCE_STATE_POLICY_1",
+    "policyRows": [],
+    "policyTuples": [],
+    "policyDesignContractSha256": null,
+    "policyMatrixRootSha256": null,
+    "sealedPolicyRegistryRootSha256": null,
+    "allStateAllowRootSha256": null,
+    "allStateDenyRootSha256": null,
+    "allTupleAllowedRolesRootSha256": null,
+    "allTupleDeniedRolesRootSha256": null,
+    "resourceClassProofRootSha256": null,
+    "stateTransitionProofRootSha256": null,
+    "postActivationScopeProofSha256": null,
+    "postActivationAllowRootSha256": null,
+    "postActivationDenyRootSha256": null,
+    "postActivationAllowedRolesRootSha256": null,
+    "postActivationDeniedRolesRootSha256": null,
+    "allowlistSha256ByPhaseState": {},
+    "denySetSha256ByPhaseState": {},
+    "allowedRolesSha256ByPhaseStateResource": {},
+    "deniedRolesSha256ByPhaseStateResource": {},
+    "resourceClassPolicyProofs": [],
+    "stateTransitionEvidence": [],
+    "ready": false,
+    "sealed": false
+  },
+  "capabilityRegistry": {
+    "issuedCapabilityHashes": [],
+    "consumedCapabilityHashes": [],
+    "revokedCapabilityHashes": [],
+    "uniqueCapabilityIndex": [],
+    "authorizationEvents": [],
+    "openEvents": [],
+    "consumeEvents": [],
+    "closeEvents": [],
+    "denialEvents": [],
+    "completedTransactions": [],
+    "duplicateIssueCount": 0,
+    "duplicateConsumeCount": 0,
+    "ready": false
+  },
+  "certificateRegistry": {
+    "reviewerCertificates": [],
+    "freshAdjudicatorBindings": [],
+    "certificateScopeRoots": [],
+    "distinctReviewerProofs": [],
+    "ready": false
+  },
+  "activationRegistry": {
+    "activationCandidateEvents": [],
+    "activationCandidateAuditReports": [],
+    "activationCandidateAuditManifests": [],
+    "activationGrantEvents": [],
+    "resultAccessEvents": [],
+    "currentCandidateSha256": null,
+    "currentAuditReportSha256": null,
+    "currentAuditManifestSha256": null,
+    "currentGrantSha256": null,
+    "currentGrantCanonicalBytesSha256": null,
+    "boundSealedPolicyRegistryRootSha256": null,
+    "boundPostActivationScopeProofSha256": null,
+    "authorityGranted": false,
+    "resultAccessAuthorized": false,
+    "ready": false
+  },
+  "phaseEvidenceRegistry": {
+    "packetSeals": [],
+    "responseSeals": [],
+    "revealSeals": [],
+    "decisionSeals": [],
+    "trustedGoldAuditReports": [],
+    "rightsPiiEvidence": [],
+    "hiddenCommitmentRoots": [],
+    "phaseTransitions": []
+  },
+  "operationalState": {
+    "currentState": "PRE_ACCESS_UNAUTHORIZED",
+    "actors": 0,
+    "principalBindings": 0,
+    "canonicalPseudonymMappings": 0,
+    "identityCustodianAttestations": 0,
+    "identityDenials": 0,
+    "materializedSlots": 0,
+    "eligibleSlots": 0,
+    "issuedSlots": 0,
+    "accessEvents": 0,
+    "coverageEvents": 0,
+    "certificates": 0,
+    "activationCandidates": 0,
+    "activationAudits": 0,
+    "activationGrants": 0,
+    "resultAccesses": 0,
+    "authorityGranted": false,
+    "executionAuthorized": false
+  }
+}

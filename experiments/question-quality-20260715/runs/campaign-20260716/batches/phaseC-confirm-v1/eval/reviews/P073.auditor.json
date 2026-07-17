@@ -1,0 +1,80 @@
+{
+  "pid": "P073",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-schema-note",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (C)의 expression 필드가 표시형(perceiving)이 아닌 교정형(perceived)로 기록됨. 다른 4개 항목은 expression=표시형. errorExpression/correction과는 정합하므로 동기화 실패는 아니나 스키마 일관성이 떨어짐."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "-ing 표면형 검증: 진행형 능동(are disguising) vs 수동/과거분사 오판",
+      "temptingBecause": "정답 (C)와 동일한 -ing 표면형이라 표면 스캔 단계에서 후보로 보이고, disguise가 타동사라 'be disguised' 수동형을 떠올리게 함",
+      "decisiveFlaw": "'you are disguising yourself'는 재귀대명사 목적어를 취한 능동 진행형으로 완전히 적법 — be동사 'are'가 이미 정동사 역할을 하므로 결함 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "사역동사 make + 목적격 보어 동사원형 판단",
+      "temptingBecause": "'would make them appear'에서 appear를 to appear/appearing으로 고쳐야 한다는 유혹",
+      "decisiveFlaw": "make + O + 동사원형이 표준 구문이므로 appear가 정확히 맞음"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 정동사 vs 준동사: 문장 전체에 본동사가 결여됨",
+      "temptingBecause": "'perceive A as B' 패턴이 분사구문/축약 관계절('the subordinates perceiving...')처럼 읽힐 수 있고, 다음 문장의 진짜 분사구 'creating a snowball effect'가 병렬 착시를 제공",
+      "decisiveFlaw": "해당 문장('In every case, however, the leader's subordinates perceiving the removal ... as an act of strength and courage.')에 정동사가 하나도 없어 비문 — perceived로 교정하면 정확히 원문이 복원됨. 유일한 오류 지점"
+    },
+    {
+      "label": "(D)",
+      "intent": "관계부사 where vs 관계대명사 which: 후속 절의 완전성 판단",
+      "temptingBecause": "선행사 'a culture'가 물리적 장소 명사가 아니어서 where 사용을 의심하게 함",
+      "decisiveFlaw": "뒤에 완전한 절(those subordinates did the same)이 오므로 where(=in which)가 적법 — 'a culture where'는 표준 관용 표현"
+    },
+    {
+      "label": "(E)",
+      "intent": "준사역동사 help + O + (to) 동사원형 판단",
+      "temptingBecause": "'the ways we helped the CEOs remove'에서 관계절 내부 구조가 겹쳐 removed/removing으로 고칠 유혹이 생김",
+      "decisiveFlaw": "help는 목적격 보어로 원형부정사와 to부정사를 모두 허용하므로 remove가 적법"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "no-why-tempting-per-underline",
+      "severity": "minor",
+      "evidence": "각 밑줄에 point(pointCode)와 why correct/incorrect(오답 해설)는 존재하나, RUBRIC §C가 요구하는 명시적 'why tempting'이 밑줄별로 제공되지 않음 (해설에서 암시될 뿐)."
+    },
+    {
+      "code": "duplicate-point-decoys",
+      "severity": "minor",
+      "evidence": "(B) make(사역동사)+원형과 (E) help(준사역동사)+원형이 동일 pointCode 'h'로 같은 오개념 계열을 중복 겨냥 — 디코이 5개 중 실질 포인트는 4개."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "perUnderlinePointTemptingCorrect": false,
+    "structuralNotSurface": true,
+    "noSamePointEasyDecoy": true,
+    "reasoning": "최소대립쌍(perceived→perceiving, 교정 시 원문 복원)과 명확한 문법 판단(본동사 결여)은 충족. 철자/비단어/인접 수일치로 드러나지 않는 점도 충족. 그러나 (1) 밑줄별 명시적 'why tempting'이 부재하고, (2) (B)/(E)의 포인트 중복으로 디코이 밀도가 KILLER 기준에 미달하며, (3) 오류 문장이 짧고 주어('the leader's subordinates')와 오류 지점이 인접해 정동사 부재가 한 문장 스캔으로 탐지됨 — 다층 구조 독해를 강제하는 KILLER 깊이에 못 미침."
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 의도된 (C) perceived→perceiving 변형 외에 원지문과 완전 일치하며, 정답 유일성이 각 선지 독립 검증으로 확인됨((A) 능동 진행형, (B) make+원형, (D) where+완전절, (E) help+원형 모두 적법). 해설의 통사 분석도 실제 구조와 일치. 다만 요청 난이도 KILLER 대비 실제 난이도는 중상 수준: 정동사/준동사는 정전 포인트지만 오류 문장이 짧고 위장이 얕아 훈련된 학생은 빠르게 탐지 가능(C5=2). (B)/(E) 포인트 중복으로 C2도 만점 불가. 공예 합계 17, 최저 2 → B. 소규모 수정(오류 문장의 주어-동사 거리 확장, (E)를 다른 포인트로 교체, 밑줄별 why-tempting 보강)으로 KILLER 승급 가능."
+}

@@ -1,0 +1,38 @@
+{
+  "pid": "P032",
+  "finalV2": true,
+  "winningAnswer": "(D)",
+  "reason": "독립 재검증 결과 밑줄 5개 중 어법 오류는 (D) 하나뿐이다. 'they have few reason to be on time'에서 few는 복수 가산명사만 선택하는 수량사인데 핵명사 reason이 무관사 단수(이 문맥에서 불가산 용법)여서 경성 선택제약 위반 — 축약절·방언·대안 파스 어느 것으로도 구제 불가하며, little로 교정 시 원문이 정확히 복원된다. (A) 복수 주어 teachers + 동사원형 overlook 수일치 정상, (B) pressing은 '긴급한' 의미의 관용적 능동 분사형용사로 pressed 대체 근거 불성립, (C) It's no wonder that + 완전절은 표준 보문 구문, (E) prepare + to부정사는 표준 보충어이고 'to make ... and prepare ...' 병렬도 정상. 양 솔버 모두 D 단독 판정으로 수렴했고 과잉 판정(성립하지 않는 대안 해석을 성립한다고 주장한 사례) 없음. 솔버2의 'reason→reasons로도 고칠 수 있다'는 편집상 소견은 밑줄이 few에만 있으므로 제2 정답을 만들지 않는다. 감사자 V2=true 유지, 선언된 정답 (D)의 유일성 확정.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "overlook이 수일치 오류이거나 자동사 오용이라는 대안 해석 가능성",
+      "verdict": "불성립 — 정문",
+      "evidence": "주어 'Inefficient teachers'는 복수이므로 현재시제 동사원형 overlook이 정확히 일치한다. overlook은 표준 타동사로 목적어 'the potential power of the opening minutes of class'를 직접 취한다. 주어를 단수로 오인시키거나 전치사를 요구하게 하는 어떤 파스도 성립하지 않는다."
+    },
+    {
+      "label": "(B)",
+      "claim": "demands가 press의 대상이므로 과거분사 pressed여야 한다는 대안 해석",
+      "verdict": "불성립 — 정문",
+      "evidence": "'many pressing demands on a teacher's time'의 pressing은 '긴급한' 의미로 굳어진 능동 분사형용사이며 pressing demands/needs는 관용 결합이다. 의미 관계도 demands가 시간을 압박하는(press on) 능동 관계이므로 pressed는 오히려 비문에 가깝다. 가장 매력적인 오답이지만 오류 근거가 없다."
+    },
+    {
+      "label": "(C)",
+      "claim": "that을 관계대명사로 보아 what 등으로 교체해야 한다는 대안 해석",
+      "verdict": "불성립 — 정문",
+      "evidence": "'It's no wonder that students are late for class'는 표준 외치/보문 관용 구문으로, that 뒤의 절이 주어·동사·보어를 모두 갖춘 완전절이므로 명사절 접속사(보문소) that이 정확하다. 불완전절을 요구하는 관계사 분석은 적용 불가."
+    },
+    {
+      "label": "(D)",
+      "claim": "선언된 정답 — few가 단수 명사 reason과 결합하여 어법상 틀림",
+      "verdict": "성립 — 유일한 오류 확정",
+      "evidence": "few는 복수 가산명사만 수식하는 수량사인데 'few reason'의 reason은 무관사 단수(이 문맥의 관용 표현 'have little reason to do'에서의 불가산 용법)이다. 경성 선택제약 위반으로 어떤 대안 파스(축약 관계절, 도치, 방언, 생략)로도 정문화되지 않는다. little로 교정하면 원지문('they have little reason to be on time')이 정확히 복원됨을 full 파일 원지문 대조로 확인했다. 솔버2가 지적한 'reason을 reasons로 고치는 대안 교정'은 오류 위치 서술의 문제일 뿐 밑줄 친 few 자체가 틀렸다는 판정을 바꾸지 않으며 제2 정답을 만들지 않는다."
+    },
+    {
+      "label": "(E)",
+      "claim": "prepare가 동명사를 취해야 하므로 to focus가 틀렸다는 대안 해석",
+      "verdict": "불성립 — 정문",
+      "evidence": "prepare는 주어 통제 to부정사를 보충어로 취하는 표준 동사이다(prepare to do). 'use this brief time to make ... transitions ... and prepare to focus ...'의 병렬 구조도 정상이며, focus on learning(전치사 + 동명사) 결합 역시 정확하다. 오류 근거 없음."
+    }
+  ]
+}

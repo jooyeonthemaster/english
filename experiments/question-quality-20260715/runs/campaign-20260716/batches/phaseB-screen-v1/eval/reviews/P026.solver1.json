@@ -1,0 +1,30 @@
+{
+  "pid": "P026",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Fear has helped us avoid dangers' — help + object + bare infinitive is standard usage (help us (to) avoid). No structural issue; the only superficial temptation is expecting 'to avoid', but both are grammatical and bare infinitive is the more common exam pattern."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a kind of program that, when triggered, directs...' — reduced adverbial clause 'when (it is) triggered'. The antecedent 'program' is the thing being triggered (passive relation), so the past participle is correct. Distractor pull toward 'triggering' fails because the program does not trigger something here; it gets triggered. The long-distance check (relative-clause subject = program, main verb 'directs' agrees) confirms the parse."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong (the answer)",
+      "reason": "'the specific ways which they activate our systems' — inside the relative clause, 'they activate our systems' is already a complete S+V+O clause, leaving 'which' with no grammatical role. It must be 'in which' (adverbial), 'that' (quasi-adverbial after way(s)), or a zero relative ('the ways they activate...'). Rescue readings were actively tested: 'activate' cannot take 'ways' as an object gap since 'our systems' fills the object slot; no dislocation or reduced-clause analysis makes bare 'which' grammatical. Clearly ungrammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'If they had not helped us adapt and survive, they would not have evolved with us' — canonical third conditional about the evolutionary past, anchored by 'long ago' in the preceding sentence. The consequent 'would not have evolved' is past-referring, so past perfect in the if-clause is exactly right; a mixed-conditional objection does not apply. 'helped us adapt' also correctly repeats the help + bare-infinitive pattern."
+    }
+  ],
+  "note": "Clean single-answer item. (C) is the classic 'way(s) + which vs. in which/that' point requiring the solver to verify clause completeness (long-distance gap check). (B) and (D) are the intended attractive distractors — reduced passive participle and third conditional — but both survive scrutiny under every alternative parse attempted. No secondary defensible answer found."
+}

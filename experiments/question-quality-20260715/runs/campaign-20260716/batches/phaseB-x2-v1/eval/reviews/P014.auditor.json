@@ -1,0 +1,89 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-minor-internal-field",
+      "severity": "minor",
+      "evidence": "markedExpressions (C).surroundingText가 'What a person values relates to...'로 교정형(relates)을 담고 있어 렌더 지문의 표시형(relate)과 불일치. 학생 노출 필드가 아니고 expression/correction='relates', errorExpression='relate' 컨벤션과는 정합하므로 V1 실패로 보지 않음. 렌더 지문 자체는 diff 검증 결과 원지문 대비 relates→relate 단일 변경만 존재(접합 파손·중복·누락·고아 문장부호 없음), 라벨 (A)~(E)와 선지·밑줄 스팬 완전 일치."
+    },
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설이 'between'과 'within'을 '전치사구'로 지칭 — 엄밀히는 전치사(공유 목적어 individuals를 갖는 병렬 전치사, 생략 분석 시에만 PP). (A) 해설의 '문장의 주어'는 정확히는 although 종속절의 주어. 두 건 모두 판정 논리를 오도하지 않는 용어 느슨함 수준이라 V4 실패로 격상하지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "태 판정 — 동명사구 주어(being ethical)와 동사의 수동 관계",
+      "temptingBecause": "주어가 명사가 아닌 구(being ethical)여서 주어 파악이 한 단계 필요하고, 뒤에 as acting이 이어져 능동 defines를 기대할 수 있음",
+      "decisiveFlaw": "define은 타동사로 '~라고 정의되다'가 의미상 요구되어 수동 is defined가 정확함. 동명사구 주어는 단수 취급이므로 is도 옳음. 어법상 흠 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "상관접속사 both A and B의 병렬 대상 판단",
+      "temptingBecause": "both가 통상 명사(구)를 연결한다고 암기한 학생에게 'both between and within'처럼 전치사가 직접 연결된 표면형이 낯설게 보임",
+      "decisiveFlaw": "both...and가 공유 목적어 individuals를 갖는 전치사 between/within을 대등 연결하는 표준 구문(vary both between and within individuals). 어법상 흠 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — what 명사절 주어의 단수 취급 수일치",
+      "temptingBecause": "밑줄 바로 앞 values가 복수 명사처럼 보여 relate가 수일치된 것으로 오판하기 쉬움(values는 실제로는 a person을 주어로 하는 동사)",
+      "decisiveFlaw": "주어는 명사절 'What a person values' 전체로 단수 취급. 비계사 동사 relate는 단수형 relates여야 하며, 교정 시 정확히 원지문이 복원되는 최소대립쌍. 유일 정답"
+    },
+    {
+      "label": "(D)",
+      "intent": "조동사 may 뒤 동사원형 판정",
+      "temptingBecause": "주어 the same individual이 단수라서 makes를 기대하는 하위권 학생을 겨냥하나, may 뒤 원형은 즉시 판정 가능해 유인력이 약함(필러에 근접)",
+      "decisiveFlaw": "조동사 may + 동사원형 make + 목적어 different choices로 완전히 규범적. 어법상 흠 없음"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사절 접속사 that vs 관계사(what/which) 판단 — 후행절 완전성",
+      "temptingBecause": "뒤에 'the factors that drive...'로 that이 연속 출현하고 절이 길어 완전/불완전 판정에 실제 구조 독해가 필요함",
+      "decisiveFlaw": "that절 내부가 'the factors(주어)+that drive...(관계절)+may be different(술어)'의 완전한 절이므로 recognizing and accepting의 목적어인 명사절 접속사 that이 정확함. 어법상 흠 없음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "loose-term-preposition-phrase",
+      "severity": "minor",
+      "evidence": "(B) 해설: \"전치사구인 'between'과 'within'을 대등하게 연결\" — 연결 대상은 전치사(또는 생략 분석상 PP)이며 낱말 between 자체를 전치사구로 부르는 것은 용어 느슨함"
+    },
+    {
+      "code": "imprecise-subject-scope",
+      "severity": "minor",
+      "evidence": "(A) 해설: \"문장의 주어가 동명사구 'being ethical'\" — 정확히는 although 종속절의 주어. 판정 논리에는 영향 없음"
+    },
+    {
+      "code": "awkward-phrasing",
+      "severity": "minor",
+      "evidence": "정답 해설의 \"주어절 내부의 가치들을 뜻하는 동사 values를 복수 명사로 혼동하여\"는 표현이 꼬여 있으나(동사 values를 '가치들'이라 지칭) 함정 기술 자체는 사실과 부합. '관계대명사 what'은 한국 학교문법 표준 용어(선행사 포함 관계대명사)로 오류 아님"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — relates→relate 최소대립쌍, 교정 시 원문 정확 복원(diff로 단일 변경 확인)",
+    "clearGrammarJudgment": "충족 — 비계사 동사에 대한 what 명사절 주어 수일치는 대안 분석 여지가 없는 명확한 판단(복수 일치가 허용되는 계사 특정문 유형이 아님)",
+    "allFivePointsExplained": "경계 — 5개 밑줄에 point는 있으나 (D) may make는 유인 논리가 빈약해 필러에 근접",
+    "structuralConcealment": "실패 — 정답이 '붙어 있는 단순 수일치'로 즉시 드러남. 주어 명사절 'What a person values'가 밑줄 동사 relate에 직접 인접하고, 'what절 주어 단수 취급'은 기본 문법서 수준까지 반복 훈련되는 최다 출제 패턴이어서 상위권 학생은 구조 독해 없이 패턴 매칭으로 즉시 적발함. KILLER급 은닉 아님",
+    "noShadowingDecoy": "충족 — 동일 point(수일치)의 더 쉬운 디코이가 정답을 가리지 않음"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문 대비 의도된 relates→relate 단일 변경만 존재하고, 각 선지 독립 검증 결과 (C)만 비문이며 나머지 4개는 대안 해석으로도 오류로 만들 수 없어 정답 유일성이 성립한다. 해설의 구조 분석도 실질적으로 정확하다(용어 느슨함 2건은 minor). 그러나 요청 난이도 KILLER 대비 결정적 공예 결함: 정답 포인트(what 명사절 주어 수일치)는 주어-동사가 인접한 최다 빈출 패턴이라 상위권에게 즉시 소거되는 중위권 문항이다(C5=1, C3=2). RUBRIC §C의 KILLER 은닉 조건('단순 수일치로 즉시 드러나지 않는다') 불충족으로 killerConditionsMet=false. (D) 밑줄은 필러에 가까워 선지 밀도도 감손. 합계 15/24, C5<2로 B 기준(최저 2, 합계 17) 미달 — 등급 C. 출하하려면 정답 포인트를 구조 독해가 필수인 자리(도치·삽입구 개입 병렬·분사구문 주어 판정 등)로 재설계하고 (D)를 실질 유인력 있는 포인트로 교체해야 한다."
+}

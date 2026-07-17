@@ -1,0 +1,35 @@
+{
+  "pid": "P027",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to select",
+      "verdict": "correct",
+      "reason": "Gerund subject 'listening to it again' is modified by the adverbial infinitive of purpose 'to select the quotes you wish to use'; implied agent 'you' is recoverable from context. Standard purpose-infinitive construction; no basis for prepositional 'to selecting'. Grammatical."
+    },
+    {
+      "label": "(B) time-consuming",
+      "verdict": "correct",
+      "reason": "Predicative complement of linking verb 'can be'. The compound adjective N+V-ing ('time-consuming') correctly encodes the active relation (the activity consumes time). A past-participle form would be ungrammatical here. Grammatical."
+    },
+    {
+      "label": "(C) involve",
+      "verdict": "incorrect",
+      "reason": "Subject is the singular demonstrative pronoun 'This' (referring to 'the technique of selective note-taking'), so third-person singular present 'involves' is required. Alternative rescues fail: no mandative subjunctive trigger, no inversion, no determiner-This + plural noun, no ellipsis of a preceding modal. Base form 'involve' is a subject-verb agreement violation."
+    },
+    {
+      "label": "(D) easily",
+      "verdict": "correct",
+      "reason": "Adverb modifying the passive verb phrase 'be transcribed' inside the purpose clause 'so that they can be transcribed easily afterwards'. Not a linking-verb slot, so adjective 'easy' would be wrong; adverb is required. Grammatical."
+    },
+    {
+      "label": "(E) much",
+      "verdict": "correct",
+      "reason": "'much' is a standard intensifier of comparatives ('much easier and quicker'); 'very' would be ungrammatical but 'much' is licensed. The following 'to handle' is a tough-construction infinitive complementing the comparative adjectives. Grammatical."
+    }
+  ],
+  "note": "Clean single-error item. (C) is an unambiguous number-agreement error with no defensible alternative parse; all other underlines are robustly grammatical under adversarial re-analysis (purpose infinitive, compound adjective predicate, passive-modifying adverb, comparative intensifier). No plausibility of multiple answers."
+}

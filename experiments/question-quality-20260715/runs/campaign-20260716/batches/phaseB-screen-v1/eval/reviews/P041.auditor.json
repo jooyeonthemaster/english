@@ -1,0 +1,75 @@
+{
+  "pid": "P041",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-note",
+      "severity": "minor",
+      "evidence": "markedExpressions (B) stores expression:\"that\" (source form) while the rendered display is \"where\"; errorExpression:\"where\" and correction:\"that\" keep the record internally consistent, but the expression field convention differs from non-error items (where expression = displayed form). Not student-exposed; no sync failure."
+    },
+    {
+      "code": "V4-note",
+      "severity": "minor",
+      "evidence": "(D) 해설이 'although (it is) at first masked'를 '분사구문(축약절)'로 명명 — 엄밀히는 접속사 뒤 주어+be 생략의 축약 부사절이며 분사구문 명칭은 다소 느슨하나 괄호로 축약절을 병기했고 구조 기술 자체는 정확하여 V4 실패로 보지 않음."
+    },
+    {
+      "code": "V4-note",
+      "severity": "minor",
+      "evidence": "(E) 해설의 '동명사구가 수식 관계로 자연스럽게 연결'은 모호한 표현(실제로는 전치사 of의 목적어) — 핵심 판단(전치사+동명사)은 정확."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사절 내 동사의 수일치 (선행사 파악)",
+      "temptingBecause": "관계절 동사의 일치 대상을 잘못 잡거나(문맥의 clocks 복수 이미지), that 뒤 동사원형을 기대하는 학생이 repeats의 -s를 의심할 수 있다.",
+      "decisiveFlaw": "선행사 'almost any process'는 단수이므로 단수 동사 repeats가 정확히 옳다."
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — 관계부사 vs 주격 관계대명사 (뒤따르는 절의 완전/불완전 판단)",
+      "temptingBecause": "선행사 clock을 장소·상황처럼 받아들이면 'a clock where...'가 자연스럽게 들려 절 구조 점검 없이 수용할 수 있다.",
+      "decisiveFlaw": "where 바로 뒤에 주어 없이 동사 does not depend가 이어지는 불완전한 절 — 관계부사는 주어 역할을 할 수 없으므로 주격 관계대명사 that/which로 고쳐야 하며, 교정 시 정확히 원문이 복원된다."
+    },
+    {
+      "label": "(C)",
+      "intent": "분사의 능동/수동 (후치 수식 과거분사)",
+      "temptingBecause": "candle이 시간을 '표시한다'는 능동 해석(marking)으로 착각할 여지가 있다.",
+      "decisiveFlaw": "a candle은 시간 단위로 '표시되는' 대상이므로 수동의 과거분사 marked가 옳다."
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사 vs 전치사 + 축약절(주어+be 생략)",
+      "temptingBecause": "although 뒤에 완전한 절이 아닌 'at first masked' 구가 와서 전치사(despite)가 필요하다고 오판하기 쉽다 — 실질적으로 가장 매력적인 디코이.",
+      "decisiveFlaw": "'although (it is) at first masked'의 주어+be 생략 구조로 접속사 although가 옳다."
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사의 목적어로서의 동명사",
+      "temptingBecause": "'appearance of being continuous'에서 being이 잉여로 느껴지거나 to be를 기대하는 학생이 의심할 수 있다.",
+      "decisiveFlaw": "전치사 of의 목적어 자리이므로 동명사 being이 정확히 옳으며 관용적으로도 자연스럽다."
+    }
+  ],
+  "explanationIssues": [
+    "본해설의 '주어가 생략된 불완전한 절'은 '주어가 빠진(없는) 불완전한 절'이 더 엄밀한 표현이나 통용되는 교수 어법 범위 내.",
+    "(D) 해설의 '분사구문(축약절)' 명명이 느슨함 — 접속사 뒤 주어+be 생략 축약 부사절이 정확한 기술.",
+    "(E) 해설의 '수식 관계로 연결' 표현이 모호함 — 전치사 목적어 관계가 정확한 기술."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 의도된 that→where 단일 치환 외 원지문과 완전 일치, 라벨/마커/선지 동기화 확인. V2: 5개 밑줄 독립 검증 결과 (B)만 비문(where가 주어 공백 절을 이끌 수 없음), 나머지 4개는 모두 명확히 적법 — 단일 정답 유일성 성립. V3: 정답 교정 시 원문 완전 복원, 발문·비오류 문장 모두 문법적. V4: 구조 분석 사실과 일치, 경미한 용어 느슨함만 존재. V5: 정답 라벨·해설·keyPoints·markedExpressions 상호 모순 없음. 공예: 관계부사/관계대명사 완전·불완전 절 판단이라는 정전 포인트를 최소대립쌍으로 깔끔하게 구현(C4=4), INTERMEDIATE 난이도 정합 우수(C5=4). 다만 (B)의 주어 공백이 밑줄 직후에 드러나는 국소 단서라 변별 상한이 있고(C3=3), (C)/(E)가 준동사 하위 영역을 일부 공유(C2=3). 합계 20 — A 기준(21) 미달로 B. KILLER 요청 아님 → killerConditionsMet=false."
+}

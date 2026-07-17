@@ -1,0 +1,171 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "grammar-pointcode-span-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=f  (B):dec=f  (C):ANS=e  (D):dec=b  (E):dec=l",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 21,
+        "relPos": 0.027,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 285,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 447,
+        "relPos": 0.573,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 517,
+        "relPos": 0.663,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 677,
+        "relPos": 0.868,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.868,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "busy",
+        "isError": false,
+        "errorExpression": "busy",
+        "surroundingText": "Suppose that you are busy working on a project one day and you have no time to buy lunch.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "likely",
+        "isError": false,
+        "errorExpression": "likely",
+        "surroundingText": "In this case, you are very likely to appreciate your friend's help.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "be confused",
+        "isError": true,
+        "correction": "be confused",
+        "errorExpression": "be confusing",
+        "surroundingText": "Instead, you would be confused. You would likely think \"Who are you",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "are you, and how do you know what kind of sandwich I like to eat?\"",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "about",
+        "isError": false,
+        "errorExpression": "about",
+        "surroundingText": "You trust your best friend so much that you won't worry about him knowing you too well",
+        "pointCode": "l"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "busy"
+      },
+      {
+        "label": "(B)",
+        "text": "likely"
+      },
+      {
+        "label": "(C)",
+        "text": "be confusing"
+      },
+      {
+        "label": "(D)",
+        "text": "what"
+      },
+      {
+        "label": "(E)",
+        "text": "about"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 주격보어로 형용사가 요구되는 자리이며, 'be busy -ing(~하느라 바쁘다)' 구문의 한 구성 요소로 형용사 'busy'가 어법상 옳습니다.",
+      "(B)": "이 자리는 주어의 상태를 설명하는 형용사 보어 자리로, 'be likely to-V(~할 것 같다)' 구문을 이루는 형용사 'likely'가 어법상 옳습니다.",
+      "(E)": "이 자리는 자동사 worry와 함께 'worry about N(~에 대해 걱정하다)' 구문을 형성하고, 동명사구의 의미상 주어를 포함한 명사 상당어구를 목적어로 취하는 전치사 'about'의 자리로 어법상 옳습니다.",
+      "(D)": "이 자리는 간접의문문 명사절을 이끄는 의문형용사 'what'의 자리로, 명사구 'what kind of sandwich'를 수식하며 동사 know의 목적어절을 완성하므로 어법상 옳습니다."
+    },
+    "explanation": "'Instead, you would be confused' 문장에서 주어 'you'는 낯선 사람의 갑작스러운 호의를 마주하고 감정을 느끼게 되는 대상(감정의 수혜자)입니다. (C)에서 주어가 감정을 겪고 느끼는 당사자일 때는 수동태 혹은 과거분사를 써서 나타내야 하는데, 타인에게 당혹감을 유발한다는 능동의 뜻을 가진 현재분사 'be confusing'으로 잘못 표현되었습니다. 따라서 틀린 표현 'be confusing'을 감정을 수동적으로 느끼는 상태를 묘사하는 과거분사형인 'be confused'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 능동태 vs 수동태 — 감정을 나타내는 분사의 능동·수동 수식 관계 판정",
+      "(B) 형용사 vs 부사 — 주격보어로 주어의 상태를 설명하는 형용사 보어 판정",
+      "(E) 전치사 vs 접속사 — 뒤에 주어와 정동사 절이 없으므로 전치사 목적어 구조 판정"
+    ],
+    "tags": [
+      "태",
+      "현재분사",
+      "과거분사",
+      "감정동사",
+      "수동태"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are __(A) busy__ working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very __(B) likely__ to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would __(C) be confusing__. You would likely think \"Who are you, and how do you know __(D) what__ kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry __(E) about__ him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-pointcode-span-mismatch",
+        "message": "Underline (E) is tagged pointCode (l) but its surface \"about\" has no token matching that grammar point — the label looks fabricated. Move the underline onto the real l-token or fix the code."
+      }
+    ]
+  }
+}

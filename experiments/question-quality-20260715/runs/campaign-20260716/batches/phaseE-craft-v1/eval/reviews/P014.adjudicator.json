@@ -1,0 +1,38 @@
+{
+  "pid": "P014",
+  "finalV2": true,
+  "winningAnswer": "(D)",
+  "reason": "선언된 정답 (D)는 유일한 정답으로 성립한다. 감사자의 V2=false 근거인 'NP + revealing' 독립분사구문(absolute/supplementive) 대안 분석은 문장을 'than others'에서 절단했을 때만 성립하는 과잉 판정이다. 실제 문장에는 그 뒤에 세미콜론으로 연결된 정형절 'some have more evidence of diseases ...'가 존재하며, absolute 독해 하에서는 이 정형절이 문법적으로 접속될 자리가 없다: (1) 세미콜론이 비정형 absolute구와 정형 독립절을 등위접속하는 것은 이종 범주 등위로서 문체가 아닌 통사 위반이고, (2) 단일 대시 보충어는 문장 끝까지 이어지므로(닫는 대시 부재) 정형절이 대시 앞 주절에 복귀 접속할 수도 없으며, (3) that 반복 없이 revealing의 보문 내부로 편입될 수도 없다. 따라서 revealing을 유지하는 어떤 파스도 전체 문장을 정문으로 만들지 못하고, 유일한 교정은 정동사 reveal이다. (A)(B)(C)(E)는 모두 명백한 정문이므로 오류 집합은 정확히 {(D)} 하나 — V2 충족. 솔버1의 세미콜론 병렬 논거가 결정적 증거로 옳았고, 솔버2의 '완전한 비문 증명이 어렵다'는 유보는 좌초절(stranded finite clause) 논증으로 해소된다. 감사자의 예문('— new buildings rising, roads being paved.')은 콤마 연결 비정형구만 있는 구조로 본 문항과 비유사하다. 단, 해설이 세미콜론 병렬 논거를 명시하지 않아 이의신청 방어력이 약한 점은 실재하는 결함이므로 해설 보강을 권고한다(정답 유일성 자체에는 영향 없음).",
+  "perDispute": [
+    {
+      "label": "(D)",
+      "claim": "감사자: 대시 뒤 보충 위치이므로 'analyses ... revealing that ...'을 무동사 절(nominal absolute)로 읽으면 정문이 되어, 오류 집합이 0개가 될 수 있다 → V2 실패.",
+      "verdict": "기각 — (D)는 어법상 틀림이 확정되며 유일 정답. 감사자 판정은 과잉 판정(문장 절단 오류).",
+      "evidence": "전체 문장은 '... as well — [analyses ... revealing that ... than others]; some have more evidence ...'이다. absolute 독해를 채택하면 세미콜론 뒤 정형절 'some have more evidence ...'의 접속 host가 사라진다. (1) 세미콜론은 등위 기능이므로 좌항과 우항이 동종 범주여야 하는데, 비정형 absolute구(좌) + 정형 독립절(우)의 등위는 이종 범주 등위로 통사적으로 비문이다 — '문체적 결함'이 아니다. (2) 정형절을 대시 앞 주절('The bones ... start to show us differences as well')에 접속시키려면 대시 보충어가 세미콜론 앞에서 닫혀야 하나, 닫는 대시가 없는 단일 대시 보충어는 문장 끝까지 이어지므로 불가능하다. (3) 'revealing that X; Y'로 Y를 보문 내부에 넣는 독해는 that 미반복 상태에서 세미콜론이 종속절 내부를 넘나드는 비표준 구조라 성립하지 않는다. 결국 revealing으로는 전체 문장의 정문 파스가 존재하지 않으며, 두 정형절이 세미콜론으로 병렬되어 'differences'를 부연하는 구조(reveal ... ; have ...)만이 정문이다. 의미상으로도 '단백질 섭취 격차'와 '질병·부상 흔적'은 뼈 분석이 보여주는 두 병렬 소견으로, 대시 부연부 내부 병렬 독해가 유일하게 정합적이다. 참고로 감사자가 든 예문 'There were signs of change everywhere — new buildings rising, roads being paved.'는 콤마로 연결된 비정형구만 존재해 세미콜론+정형절이 있는 본 문항과 구조적으로 비유사하다. 문장이 'than others'에서 끝났다면 감사자 판정이 옳았을 것이나, 실제 문장은 그렇지 않다."
+    },
+    {
+      "label": "(A)",
+      "claim": "their가 복수 선행사 early societies를 받는 소유격으로 적절한가.",
+      "verdict": "정문 확정 — 오류 아님.",
+      "evidence": "'in early societies with their blossoming towns and eventually cities' — 선행사 early societies(복수)와 수 일치하는 복수 소유격 their. 도치('so would they have been')에도 지시 대상은 명확하며 단수(its)로 읽을 근거가 없다. 양 솔버·감사자 일치."
+    },
+    {
+      "label": "(B)",
+      "claim": "are buried의 수동태가 적절한가.",
+      "verdict": "정문 확정 — 오류 아님.",
+      "evidence": "bury는 타동사이고 주어 Some individuals는 매장의 대상(피동자)이므로 be + p.p. 수동이 의무적. 'with more precious goods'는 부대 상황 전치사구로 능동 오독을 유발하지만 태 판단을 바꾸지 못한다. 양 솔버·감사자 일치."
+    },
+    {
+      "label": "(C)",
+      "claim": "by themselves의 재귀대명사가 적절한가.",
+      "verdict": "정문 확정 — 오류 아님.",
+      "evidence": "'some are in group graves and some [are] by themselves' — be동사 생략 병렬에서 관용구 by oneself(홀로)의 재귀대명사가 생략절 주어 some(= individuals)과 동지시이므로 재귀형이 의무적. by them으로 바꾸면 관용 의미가 소실된다. 양 솔버·감사자 일치. (해설의 '의미상 주어' 용어는 부정확하나 — 실제로는 생략절의 문법상 주어 — 정오 판정에는 무관.)"
+    },
+    {
+      "label": "(E)",
+      "claim": "becoming 뒤 보어 pronounced가 적절한가.",
+      "verdict": "정문 확정 — 오류 아님.",
+      "evidence": "'they are becoming quite pronounced' — pronounced는 '뚜렷한'을 뜻하는 분사형 형용사로 2형식 연결동사 become의 주격 보어 자리에 적절하며 정도부사 quite의 수식도 자연스럽다. 양 솔버·감사자 일치."
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "pid": "P027",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "polarity reversal — uniformity enforcement as the opposite of appreciating differences",
+      "temptingBecause": "sounds like a plausible group-management measure that could reduce conflict; 'standards of behavior' superficially relates to group functioning",
+      "decisiveFlaw": "the passage argues that taking others' perspectives and appreciating differences enables open communication; enforcing uniform standards suppresses exactly the differences the passage says should be appreciated"
+    },
+    {
+      "label": "②",
+      "intent": "half-truth / lexical anchor — echoes 'a diverse emotion vocabulary' from the opening definition",
+      "temptingBecause": "verbatim lexical overlap with 'emotion vocabulary' in the first sentence rewards surface matching",
+      "decisiveFlaw": "vocabulary is only one component of the ability; the sentences immediately preceding the blank are about perspective-taking, not lexicon size, and 'a simple increase in vocabulary size' is explicitly reductive, so it cannot summarize what creates open communication and constructive resolution"
+    },
+    {
+      "label": "③",
+      "intent": "concept substitution — conflict avoidance confused with constructive conflict resolution",
+      "temptingBecause": "uses the passage's own anchor word 'conflict' and avoidance intuitively sounds like a path to group harmony",
+      "decisiveFlaw": "internally contradictory with the completed sentence itself: avoiding conflicts cannot 'promote constructive conflict resolution', and the passage's example is a conflict being worked through, not avoided"
+    },
+    {
+      "label": "④",
+      "intent": "correct answer — abstraction of the removed span 'Appreciation of differences'",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none — entailed by 'take the perspective of the other group members and understand why they are reacting in a certain manner' and is a faithful, appropriately abstracted paraphrase of the source span"
+    },
+    {
+      "label": "⑤",
+      "intent": "priority/actor reversal — individual over group",
+      "temptingBecause": "the passage does mention accommodating 'their own needs', so a partial reader may recall the individual-needs mention",
+      "decisiveFlaw": "the passage says members accommodate their own needs AS WELL AS the needs of others (i.e. cooperate); prioritizing individual over group goals reverses the cooperation claim and cannot yield improved group functioning"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ②에서 '집단 내 갈등 해결과 시너지의 핵심'이라 표현했으나 '시너지'는 지문에 직접 등장하지 않는 표현('improved group functioning'의 의역). 사실 왜곡은 아니며 미용상 문제.",
+      "recommendation": "'시너지' 대신 지문 표현('향상된 집단 기능')을 그대로 쓰면 더 정확하다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 마지막 문장 주어 'Appreciation of differences'를 빈칸으로 치환한 것 외에 원지문과 완전 일치(문장 접합 파손·중복·누락·고아 문장부호 없음). V2: 5개 선지를 각각 빈칸에 대입해 독립 검증한 결과 ④만 성립 — ①(획일 강요)은 논지 정반대, ②(단순 어휘량)는 도입부 어휘 anchor의 half-truth, ③(갈등 회피)은 같은 문장의 'constructive conflict resolution'과 자기모순, ⑤(개인 우선)는 cooperate 논지 역행. V3: 5개 선지 모두 동일 NP 주어 슬롯에 문법적으로 들어가며(suffix/tail로 인한 일부 오답 문법 탈락 없음) ④ 완성문 자연스러움. V4: 해설의 anchor 인용(take the perspective...)과 패러프레이즈 관계 설명이 실제 지문 구조와 일치, 오답 해설도 각 선지 내용과 정확히 대응. V5: 정답 라벨 ④가 해설·오답해설 키(①②③⑤)·keyPoints와 모두 동기화. 공예: 결론 요약 문장의 핵심 추상화를 묻는 정전적 빈칸(C1=3), 4개 오답이 각기 다른 함정 유형(극성 역전·half-truth·개념 치환·우선순위 역전)을 사용(C2=3), ②③이 실질적으로 매력적이나 ①⑤는 비교적 빠른 소거(C3=3), 메타 누출·길이/극성 단서 없음, 다만 빈칸 문장 내부 술부가 소거의 상당 부분을 수행(C4=3), 단일 패러프레이즈 추론+중간 깊이 함정으로 INTERMEDIATE에 부합(C5=3), 해설은 정확하나 다소 장황(C6=3). 합계 18, 모든 V 통과, 모든 C≥3이나 21 미만 → B. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false)."
+}

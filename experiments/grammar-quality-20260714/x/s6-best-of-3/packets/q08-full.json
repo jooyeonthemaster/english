@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=h  (B):dec=f  (C):ANS=b  (D):dec=c  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 42,
+        "relPos": 0.064,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 185,
+        "relPos": 0.284,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 238,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 490,
+        "relPos": 0.752,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 511,
+        "relPos": 0.784,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.784,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "piling",
+        "isError": false,
+        "correction": "piling",
+        "errorExpression": "piling",
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing on top of another.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "contrary",
+        "isError": false,
+        "correction": "contrary",
+        "errorExpression": "contrary",
+        "surroundingText": "Very often, multitasking only slows you down, contrary to popular belief.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "what",
+        "isError": true,
+        "correction": "what",
+        "errorExpression": "how",
+        "surroundingText": "Give your whole focus to what you're doing at the moment no matter what it is.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "done",
+        "isError": false,
+        "correction": "done",
+        "errorExpression": "done",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "pressed",
+        "isError": false,
+        "correction": "pressed",
+        "errorExpression": "pressed",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "piling"
+      },
+      {
+        "label": "(B)",
+        "text": "contrary"
+      },
+      {
+        "label": "(C)",
+        "text": "how"
+      },
+      {
+        "label": "(D)",
+        "text": "done"
+      },
+      {
+        "label": "(E)",
+        "text": "pressed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "사역동사 has가 동작의 능동적 진행 과정을 생생하게 강조하기 위해 목적격보어로 현재분사를 취한 것으로, 문법적으로 적절합니다.",
+      "(B)": "contrary to popular belief 형용사구는 앞 문장 전체 혹은 상황을 서술하는 일종의 분사구문이나 유사 보어 형태처럼 기능하여 '대중적 믿음과는 반대로'의 뜻을 나타내므로 올바른 표현입니다.",
+      "(D)": "when done은 접속사 when 뒤에 'it(doing the laundry) is'가 생략된 분사구문으로, 주어와의 관계가 '행해지는' 수동이므로 과거분사 done은 적절합니다.",
+      "(E)": "「with + 목적어 + 분사」 구문으로, 목적어인 phone이 귀에 '밀착되는' 수동의 관계이므로 과거분사 pressed는 정확한 어법입니다."
+    },
+    "explanation": "(C) \"how\"는 어법상 틀린 표현이며 \"what\"로 고쳐야 한다. no matter 뒤에서 양보의 부사절을 이끄는 복합관계대명사와 복합관계부사의 쓰임을 묻는 문항입니다. no matter 뒤에 이어지는 절(it is)에서 be동사(is)의 주격 보어 자리가 비어 있으므로, 이를 대신할 수 있는 대명사인 what이 와야 합니다. 만약 how를 쓰게 되면, 형용사나 부사가 how와 밀접하게 결합하여 앞으로 나갔어야 하거나(예: no matter how difficult it is), 문장 구조상 보어 역할을 수행할 수 없으므로 비문이 됩니다. 따라서 how를 what으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 관계사 vs 복합관계부사 — 완전성과 대명사/부사 역할 구별",
+      "(A) 목적격보어 — 사역동사 have + 목적어 + 현재분사(V-ing)",
+      "(E) 위드 분사구문 — with + 목적어 + 수동 관계 과거분사(p.p.)"
+    ],
+    "tags": [
+      "수능어법",
+      "복합관계사",
+      "명사절/부사절",
+      "분사구문",
+      "목적격보어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "The fast pace of today's lifestyle has us __(A) piling__ one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, __(B) contrary__ to popular belief. Give your whole focus to __(C) how__ you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when __(D) done__ with your phone __(E) pressed__ to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster."
+  }
+}

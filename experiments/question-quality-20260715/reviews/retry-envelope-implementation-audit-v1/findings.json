@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "auditId": "retry-envelope-implementation-audit-v1-20260715",
+  "verdict": {
+    "retryEnvelopeImplementation": "PASS",
+    "overall": "PASS_SCOPED_WITH_EXPLICIT_BLOCKS",
+    "workbenchStructuredQuestionCardinality": "PASS",
+    "ordinarySemanticQuestionCardinality": "BLOCK",
+    "completeFourCellResearchRegistry": "BLOCK",
+    "campaignAuthorization": "NONE"
+  },
+  "findings": [
+    {
+      "id": "RETRY-01",
+      "status": "PASS",
+      "requirement": "Public and environment application retry values are total and hard-bounded to 0..2.",
+      "evidence": [
+        "src/lib/concurrency-config.ts:12-43",
+        "src/lib/concurrency-config.ts:71-78",
+        "src/lib/concurrency-config.ts:205-208",
+        "tests/unit/question-generation-retry-envelope.test.ts"
+      ],
+      "note": "Explicit zero is preserved; malformed, fractional, unsafe, negative, and non-finite values fall back to 2; larger safe integers clamp to 2."
+    },
+    {
+      "id": "RETRY-02",
+      "status": "PASS",
+      "requirement": "Caller/environment outer attempts and Workbench Trigger attempts are bounded to 1..2 while existing subtype floors/caps remain.",
+      "evidence": [
+        "src/lib/concurrency-config.ts:46-68",
+        "src/lib/concurrency-config.ts:183-188",
+        "src/lib/concurrency-config.ts:209-214",
+        "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts:1696-1730",
+        "src/trigger/workbench-question-generation.ts:130-135"
+      ],
+      "note": "The input boundary is capped; source floors 4/5/6/10, PREMIUM cap 5, and STANDARD grammar KILLER cap 4 remain in the pass graph. A research outer request of 1 does not make the assignment one call."
+    },
+    {
+      "id": "RETRY-03",
+      "status": "PASS",
+      "requirement": "Every direct AI SDK call in the audited question-generation closure sets maxRetries explicitly.",
+      "evidence": [
+        "src/lib/question-generation-llm.ts:374",
+        "src/lib/question-generation-llm.ts:716",
+        "src/lib/question-generation-llm.ts:863",
+        "src/lib/question-generation-llm.ts:941",
+        "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts:540"
+      ],
+      "note": "TypeScript AST enumeration found exactly four direct calls in question-generation-llm.ts and one in grammar-premium-ladder.ts; all five object literals contain maxRetries."
+    },
+    {
+      "id": "RETRY-04",
+      "status": "PASS",
+      "requirement": "Ordinary production retry defaults and subtype pass defaults remain unchanged.",
+      "evidence": [
+        "src/lib/concurrency-config.ts:183-214",
+        "src/lib/question-generation-llm.ts:262-293",
+        "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts:634-649",
+        "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts:1696-1730",
+        "node_modules/ai/dist/index.js"
+      ],
+      "note": "The ordinary defaults remain R=2, SDK K=2, outer E=2, Trigger T=2, and ladder parse retry=1. The new source caps intentionally change only oversized or malformed overrides. Ordinary structured and prompt-JSON repair children remain enabled."
+    },
+    {
+      "id": "RETRY-05",
+      "status": "PASS",
+      "requirement": "Research uses one canonical server-owned policy with R=0, K=0, ladder parse retry=0, and no structured repair child.",
+      "evidence": [
+        "src/lib/question-generation-research-runtime.ts:53-74",
+        "src/lib/question-generation-research-runtime.ts:110-149",
+        "src/lib/question-generation-llm.ts:284-293",
+        "src/lib/question-generation-llm.ts:383-396",
+        "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts:634-649"
+      ],
+      "note": "The runtime rejects value-equal policy copies and accepts only identity with the frozen canonical object."
+    },
+    {
+      "id": "RETRY-06",
+      "status": "PASS",
+      "requirement": "Research is described and enforced as single-dispatch per registered stage, not as one dispatch for the whole assignment.",
+      "evidence": [
+        "src/lib/question-generation-research-runtime.ts:61-65",
+        "src/lib/question-generation-research-runtime.ts:90-103",
+        "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts:156-209",
+        "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts:248-324"
+      ],
+      "note": "One assignment can contain multiple admitted production operations and child stages. The outer subtype floors and salvage topology remain separate from transport single-dispatch."
+    },
+    {
+      "id": "RETRY-07",
+      "status": "PASS",
+      "requirement": "PREMIUM Gemini reasoning remains off by source default and the grammar ladder has no reasoning-on fallback.",
+      "evidence": [
+        "src/lib/atlas-ai.ts:202-249",
+        "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts:568-628",
+        "tests/unit/grammar-premium-reasoning-off.test.mjs"
+      ],
+      "note": "The audited claim is the source default. No deployment environment value was read; an explicit operator environment override is outside this audit."
+    },
+    {
+      "id": "RETRY-08",
+      "status": "PASS",
+      "requirement": "Currently wired dynamic research children use trusted, honest parent lineage hooks.",
+      "evidence": [
+        "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts:320-348",
+        "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts:90-103",
+        "src/lib/korean/quality/solver-gate.ts:101-114",
+        "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts:585-628",
+        "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts:711-819",
+        "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts:1241-1595",
+        "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts:326-381"
+      ],
+      "note": "Candidate repair, solver, ladder regeneration, and ladder repair bind the exact observed provider-returned object. Sequential add-decoys/legacy child stages and repeat roots bind the adapter's trusted latest physical parent. Unknown or stale parents fail before child fetch. This does not claim that every possible stage is registered."
+    },
+    {
+      "id": "RETRY-09",
+      "status": "PASS",
+      "requirement": "The source-derived response-opportunity arithmetic is 648/162/675/378, with Workbench Trigger bounds exactly doubled.",
+      "evidence": [
+        "envelope.json",
+        "src/lib/question-generation-llm.ts",
+        "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+        "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+        "src/trigger/workbench-question-generation.ts"
+      ],
+      "note": "These are physical provider-fetch bounds for one count=1 engine assignment under the source defaults and compatible worst branches. They are not ordinary semantic question-object cardinality bounds."
+    },
+    {
+      "id": "BLOCK-01",
+      "status": "BLOCK",
+      "requirement": "Every ordinary provider-response path has exact semantic question cardinality before client validation.",
+      "evidence": [
+        "src/lib/question-generation-research-schema.ts:5-60",
+        "src/lib/question-ai-schemas-mc.ts:830-961",
+        "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts:650-657",
+        "src/lib/question-generation-llm.ts:799-957",
+        "tests/unit/question-generation-response-cardinality.test.ts"
+      ],
+      "note": "Both Workbench structured branches now pass the normalized server plan count and emit equal minItems/maxItems; that subclaim passes. The ordinary forced prompt-JSON transport is still plain text, however, so a provider can emit arbitrarily many complete question objects before client-side parsing/validation rejects them. The no-count helper also intentionally retains a legacy unbounded form. No complete semantic-wire cardinality closure is claimed."
+    },
+    {
+      "id": "BLOCK-02",
+      "status": "BLOCK",
+      "requirement": "A complete operational four-cell research registry is present and authorized.",
+      "evidence": [
+        "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts:98-153",
+        "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts"
+      ],
+      "note": "The repository contains mechanistic test registries, not a frozen STANDARD|PREMIUM x BLANK_INFERENCE|GRAMMAR_ERROR registry covering roots, repeats, ladder, repair, solver, scarce, and salvage stages. Campaign authorization remains NONE."
+    }
+  ]
+}

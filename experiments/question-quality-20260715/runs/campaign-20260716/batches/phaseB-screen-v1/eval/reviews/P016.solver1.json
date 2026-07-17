@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "Avoiding emotional conflicts: 지문은 갈등 회피가 아니라 건설적 해결(constructive conflict resolution)을 말한다. 회피는 open communication과 정면 모순. 주제 반대 방향 오답."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Uncompromising expression of feelings: 'express how he feels'라는 지문 어휘를 재활용해 유혹하지만, 'uncompromising'이 accommodate the needs of others / cooperate / perspective-taking과 모순. 감정 이해 능력은 일방적·비타협적 표출이 아니다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong (most attractive distractor)",
+      "reason": "Valuing diverse perspectives: 빈칸 직전 문장(take the perspective of the other group members)과의 근접 연결로 가장 강하게 끌리는 선지. 그러나 빈칸은 직전 문장만이 아니라 예시 전체(자기 감정 표현 + 타인의 감정적 반응 이해)를 주제 개념으로 회수해야 하는 자리이며, ③은 절반만 포착하고 지문의 핵심축인 '감정(emotion)'이 통째로 빠져 일반적 다양성 담론으로 이탈한다. 관점 취하기는 타인의 감정 반응을 이해하기 위한 수단이지 '다양한 관점의 존중' 자체가 주제가 아니다."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "Vocabulary for understanding emotions: 주제문의 'a diverse emotion vocabulary and to understand the causes and consequences of emotion'을 압축 재진술. 2문장에서 이 능력자들은 'express emotions... accurately and thus may facilitate clear communication'이라 했으므로, 감정 이해 어휘 → 정확한 감정 표현 → open communication → constructive conflict resolution → improved group functioning의 인과가 지문 내부에서 직접 성립한다. 예시(감정 표현 + 타인 감정 이해)를 주제 개념으로 수렴시키는 유일한 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Suppression of difference in opinions: 의견 차이 억압은 open communication 및 건설적 갈등 해결과 정반대. 주제 반대 방향 오답."
+    }
+  ],
+  "note": "빈칸은 결론부 주어 자리(원문의 지시어 'This ~' 대체 추정). 최상위권 실전 관점에서 ③이 직전 문장 근접성 함정으로 상당히 매력적이었으나, 글 전체 논증 구조(주제 제시→메커니즘→예시→주제 회수)에서 결론 주어는 '감정 이해 능력'이어야 하고 ③은 감정 축을 상실해 복수 정답 수준으로는 옹호 불가. ④의 'vocabulary가 arena를 만든다'는 표현이 다소 압축적이라는 점은 경미한 흠이지만 주제문·2문장과의 명시적 인과로 유일 정답 성립."
+}

@@ -1,0 +1,717 @@
+{
+  "id": "u12-c1",
+  "unitId": "u12",
+  "order": 1,
+  "title": "부정어 도치 · so/neither",
+  "oneLiner": "부정·제한의 어구가 문두로 나가면 주절에서 조동사가 주어 앞에 섭니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고2",
+    "csatPoints": [],
+    "sourceRefs": [
+      "커리큘럼 백본 u12-c1(부정어 도치 · so/neither) — src/lib/grammar-drill/curriculum.ts",
+      "SMOAT 어법 드릴 뱅크 u12-choice·u12-support(u12-c1 문항 30개) — trapTag: negative-inversion, so-neither",
+      "천일문 고등 GRAMMAR — 도치 구문(부정어구 문두·so/neither 동의 표현)",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 문장의 어순·도치(고 ●)"
+    ]
+  },
+  "lenses": ["L2", "L5"],
+  "confusableWith": ["u12-c2", "u12-c4", "u05-c2"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Rarely does the desert receive more than a few centimeters of rain.",
+        "Rarely the desert receives more than a few centimeters of rain."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 단어 하나의 위치입니다. 이 레슨을 마치면 왜 문두의 Rarely 가 어순을 바꾸는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "도치",
+      "question": "도치가 대체 무엇이고, 왜 멀쩡한 문장의 어순을 뒤집습니까?",
+      "plain": "도치는 주어와 (조)동사의 자리를 뒤바꾸는 것입니다. 특정 어구가 문장 맨 앞으로 나가면, 그 대가로 뒤의 어순이 의문문처럼 뒤집힙니다.",
+      "analogy": "문장의 맨 앞자리는 무대의 스포트라이트입니다. 부정·제한의 어구가 그 자리를 차지하려 앞으로 나서면, 원래 앞에 있던 주어는 한 칸 뒤로 밀려 조동사에 자리를 내줍니다.",
+      "whyItMatters": "수능 어법에서 문두에 Never·Not until·Only 가 놓인 문장은 대개 어순을 묻습니다. 부정·제한 어구가 문두로 나가 일어나는 이 도치를 부정어 도치라 부르며, 그 방아쇠를 알아보면 밑줄이 옳은지 한눈에 가려낼 수 있습니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "도치 한 장 필기",
+      "intro": "판단에 필요한 사실을 항목마다 하나씩만 담았습니다.",
+      "entries": [
+        {
+          "head": "도치 신호어 — 부정·제한 어구가 문두로",
+          "body": "never·rarely·seldom·hardly·little, 그리고 not until·no sooner·only 가 문두에 오면 도치가 시작됩니다. 이 어구가 주어보다 앞에 있는지부터 봅니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "조동사가 주어 앞으로",
+          "body": "be동사·조동사·완료의 have 는 그대로 주어 앞으로 나갑니다. 본동사는 제자리에 남습니다.",
+          "example": {
+            "en": "Never **has the museum shown** the whole archive at once.",
+            "ko": "그 박물관이 소장 자료 전체를 한 번에 보여 준 적은 없습니다.",
+            "note": "완료의 has 가 주어 앞으로 나가고 본동사 shown 은 그 뒤에 남습니다."
+          }
+        },
+        {
+          "head": "일반동사는 do·does·did",
+          "body": "본동사가 일반동사이면 do·does·did 를 주어 앞에 세우고 본동사를 원형으로 되돌립니다. 시제는 do·does·did 가 집니다.",
+          "example": {
+            "en": "Rarely **does the court reverse** its own earlier ruling.",
+            "ko": "그 법원이 자신의 앞선 판결을 뒤집는 일은 드뭅니다.",
+            "note": "일반동사 문장이므로 does 가 주어 앞에 서고 본동사는 원형 reverse 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "not until·only 는 주절을 도치",
+          "body": "Not until·Only 로 시작하는 어구가 문두에 와도, 어순이 뒤집히는 곳은 그 종속절이 아니라 뒤따르는 주절입니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "so 와 neither 의 동의 표현",
+          "body": "앞 문장이 긍정이면 so + 조동사 + 주어, 부정이면 neither(nor) + 조동사 + 주어로 「~도 그렇다」를 나타냅니다.",
+          "example": {
+            "en": "The map was outdated, and **so was** the guidebook.",
+            "ko": "그 지도는 오래되었고, 안내서도 그러했습니다.",
+            "note": "앞 절이 긍정이고 be동사 was 이므로 so was + 주어가 됩니다."
+          }
+        },
+        {
+          "head": "hardly…when / no sooner…than",
+          "body": "Hardly…when 과 No sooner…than 은 '~하자마자'를 뜻합니다. 앞절은 「had + p.p.」의 과거완료, 뒷절은 과거로 씁니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "도치 신호어 암기",
+      "target": "도치를 부르는 문두 신호어",
+      "why": "이 신호어 목록이 손에 붙어 있어야 문장을 읽자마자 '아, 도치구나' 하고 어순 판단으로 넘어갈 수 있습니다. 목록이 흐릿하면 매번 처음부터 헤맵니다.",
+      "device": "세 부류로 묶으면 외우기 쉽습니다. '거의 아니다'의 부정 다섯 — never·rarely·seldom·hardly·little, '~하고 나서야 비로소'의 제한 둘 — only·not until, '~하자마자'의 즉시성 짝 — no sooner·hardly 입니다.",
+      "items": [
+        { "cue": "빈도가 거의 0인 부정 부사 다섯", "answer": "never, rarely, seldom, hardly, little" },
+        { "cue": "'~하고 나서야 비로소'를 뜻하는 제한 어구", "answer": "only, not until" },
+        { "cue": "'~하자마자'를 만드는 순간의 짝 부사", "answer": "no sooner, hardly" },
+        { "cue": "이 신호어들이 문두에 오면 뒤에서 벌어지는 일", "answer": "조동사가 주어 앞으로 나가는 도치" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "신호어 관문",
+      "mission": "도치를 부르는 문두 신호어를 전부 고르십시오. 도치를 부르지 않는 부사가 미끼로 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "Never",
+        "Rarely",
+        "Seldom",
+        "Hardly",
+        "Not until",
+        "Only after",
+        "Sometimes",
+        "Fortunately",
+        "Usually",
+        "Suddenly"
+      ],
+      "answers": ["Never", "Rarely", "Seldom", "Hardly", "Not until", "Only after"],
+      "passText": "여섯 신호어가 손에 붙었습니다. 이제 문두만 봐도 도치의 방아쇠가 눈에 들어옵니다. 관문이 열립니다.",
+      "retryText": "Sometimes·Usually 같은 평범한 빈도부사는 도치를 부르지 않습니다. 부정·제한의 뜻이 있는 어구만 골라 다시 시도하십시오."
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "title": "규칙 1 — 부정·제한 부사가 문두에 오면 조동사가 주어 앞에 섭니다",
+      "rule": "never·rarely·seldom·hardly·little 처럼 부정·제한의 뜻을 가진 부사가 문두에 오면, 조동사가 주어 앞으로 나가 의문문과 같은 어순이 됩니다.",
+      "examples": [
+        {
+          "en": "Never **has the museum displayed** the entire collection at once.",
+          "ko": "그 박물관이 전체 소장품을 한 번에 전시한 적은 없습니다.",
+          "note": "완료의 has 가 주어 the museum 앞으로 나갔습니다. 본동사 displayed 는 그 뒤에 그대로 남습니다."
+        },
+        {
+          "en": "Rarely **is the northern pass** open before the end of May.",
+          "ko": "북쪽 고개가 5월 말 이전에 열리는 일은 드뭅니다.",
+          "note": "be동사 is 가 주어 the northern pass 앞으로 나갔습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "title": "규칙 2 — 일반동사 문장은 do·does·did 를 주어 앞에 세웁니다",
+      "rule": "본동사가 일반동사이면 시제를 넘겨받을 do·does·did 를 주어 앞에 세우고, 본동사는 원형으로 되돌립니다. 시제는 do·does·did 가 집니다.",
+      "examples": [
+        {
+          "en": "Rarely **do volcanoes erupt** without any warning signs.",
+          "ko": "화산이 아무런 전조 없이 분출하는 일은 드뭅니다.",
+          "note": "일반동사 문장이므로 do 를 주어 앞에 세우고 본동사는 원형 erupt 를 씁니다."
+        },
+        {
+          "en": "Seldom **did the assembly overturn** a ruling of the high court.",
+          "ko": "그 의회가 고등 법원의 판결을 뒤집는 일은 드물었습니다.",
+          "note": "과거의 일이므로 did 를 세우고 본동사는 원형 overturn 입니다. overturned 로 쓰면 시제가 이중이 됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "도치 반사신경",
+      "instruction": "제한시간 안에 어순이 옳으면 ○, 틀리면 ×를 누르십시오. 판별은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "Rarely does the desert receive more than a few centimeters of rain.",
+          "isTrue": true,
+          "why": "제한의 부사 Rarely 가 문두에 왔고 일반동사이므로 does 가 주어 앞에 섰습니다. 어순이 옳습니다."
+        },
+        {
+          "statement": "Never the committee has approved such a costly plan.",
+          "isTrue": false,
+          "why": "부정 부사 Never 가 문두에 왔으므로 has 가 주어 앞으로 나가 Never has the committee approved 가 되어야 합니다."
+        },
+        {
+          "statement": "부정어가 주어 자체의 일부이면 도치하지 않습니다.",
+          "isTrue": true,
+          "why": "Not a single member attended 처럼 주어가 제자리에 있으면 어순을 바꾸지 않습니다."
+        },
+        {
+          "statement": "Seldom did the council approved the annual budget.",
+          "isTrue": false,
+          "why": "did 가 이미 시제를 지므로 본동사는 원형 approve 여야 합니다. approved 는 시제 이중 표시입니다."
+        },
+        {
+          "statement": "Hardly had the meeting begun when the power failed across the building.",
+          "isTrue": true,
+          "why": "Hardly 가 문두에 와 had 가 주어 앞으로 나가고 짝 접속사 when 이 뒤따릅니다. 어순이 옳습니다."
+        },
+        {
+          "statement": "Only after the vote the delegates left the hall.",
+          "isTrue": false,
+          "why": "only 부사절이 문두에 왔으므로 주절이 도치되어 did the delegates leave 가 되어야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u12-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Never {{blank}} such a sudden change in the river's course.",
+          "options": ["have the villagers witnessed", "the villagers have witnessed"],
+          "answer": 0,
+          "translation": "그 마을 사람들이 강의 흐름에 그런 갑작스러운 변화를 목격한 적은 없습니다.",
+          "explanation": "부정어 Never 가 문두에 왔으므로 조동사가 주어 앞에 서야 합니다. 완료의 have 를 주어 the villagers 앞으로 보낸 have the villagers witnessed 가 옳습니다. 평서문 어순을 그대로 두면 문두의 부정어와 호응하지 못합니다.",
+          "trapTags": ["negative-inversion"]
+        },
+        {
+          "id": "u12-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Seldom did the council [[u:approved]] a budget without a long debate.",
+          "isCorrect": false,
+          "correction": "approve",
+          "translation": "그 의회가 긴 논쟁 없이 예산을 승인하는 일은 드물었습니다.",
+          "explanation": "제한의 부사 Seldom 이 문두에 와 did 가 주어 앞에 섰습니다. 시제는 이미 did 가 지고 있으므로 본동사는 원형 approve 여야 합니다. approved 를 쓰면 시제가 이중으로 표시됩니다.",
+          "trapTags": ["negative-inversion", "double-tense"]
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "문장에 부정어가 들어 있으면 도치합니다.",
+      "truth": "도치는 부정·제한의 어구가 주어보다 앞, 즉 문두로 나갔을 때만 일어납니다. 부정어가 제자리(동사 앞·조동사 뒤)에 있으면 어순은 그대로입니다.",
+      "counterExample": {
+        "en": "The committee **has never** approved such a costly proposal.",
+        "ko": "그 위원회는 그렇게 비용이 큰 제안을 승인한 적이 없습니다.",
+        "note": "never 가 조동사 has 뒤 제자리에 있습니다. 문두로 나가지 않았으므로 도치하지 않습니다."
+      }
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "title": "규칙 3 — not until·only 어구는 뒤따르는 주절을 도치시킵니다",
+      "rule": "Not until 또는 Only 로 시작하는 부사어구·부사절이 문두에 오면, 도치는 그 종속절이 아니라 뒤따르는 주절에서 일어납니다. 종속절 안의 어순은 평서문 그대로 둡니다.",
+      "examples": [
+        {
+          "en": "Not until the samples were analyzed in a second laboratory **did the team announce** the result.",
+          "ko": "표본이 두 번째 실험실에서 분석되고 나서야 그 팀은 결과를 발표했습니다.",
+          "note": "종속절 the samples were analyzed 는 정상 어순입니다. 도치는 주절에서만 일어나 did the team announce 가 됩니다."
+        },
+        {
+          "en": "Only when the tide retreats **can visitors reach** the island monastery on foot.",
+          "ko": "조수가 물러날 때에만 방문객들은 걸어서 그 섬 수도원에 닿을 수 있습니다.",
+          "note": "조동사 can 이 주어 visitors 앞으로 나갔습니다. only 절 안의 the tide retreats 는 그대로입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "not until 문두 문장의 해부",
+      "tokens": [
+        { "t": "Not until the final bell rang", "role": "M" },
+        { "t": "did", "role": "X" },
+        { "t": "the students", "role": "S" },
+        { "t": "hand in", "role": "V" },
+        { "t": "their answer sheets.", "role": "O" }
+      ],
+      "ko": "마지막 종이 울리고 나서야 학생들은 답안지를 제출했습니다.",
+      "layers": [
+        {
+          "label": "① 문두의 부정 어구를 걷어냅니다",
+          "roles": ["M"],
+          "note": "Not until the final bell rang 은 시점을 말하는 부사절입니다. 절 안의 어순(the final bell rang)은 정상이며, 이 덩어리는 문장의 뼈대가 아니라 수식어입니다."
+        },
+        {
+          "label": "② 남은 주절의 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주절의 주어는 the students 입니다. 도치가 일어나도 주어는 바뀌지 않습니다."
+        },
+        {
+          "label": "③ 조동사가 주어 앞에 섰는지 확인합니다",
+          "roles": ["X", "V"],
+          "note": "일반동사 문장이므로 did 가 주어 앞으로 나가고, 본동사는 원형 hand in 이 됩니다. did 와 hand 가 시제를 나눠 지고 있으므로 handed 로 쓰면 시제가 이중이 됩니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "hand in 은 목적어를 부르는 동사구이고, their answer sheets 가 그 목적어입니다."
+        }
+      ],
+      "conclusion": "문두로 나간 것은 Not until 부사절이고, 도치된 것은 그 뒤의 주절입니다. 종속절과 주절을 갈라 보아야 도치의 자리가 보입니다."
+    },
+    {
+      "id": "b13",
+      "type": "GENERATE",
+      "tier": 2,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 섞여 있습니다.",
+      "ko": "폭풍이 지나가고 나서야 구조대가 그 마을에 도착했습니다.",
+      "answer": [
+        "Not until",
+        "the storm passed",
+        "did",
+        "the rescue teams",
+        "reach",
+        "the village"
+      ],
+      "tiles": [
+        "Not until",
+        "the storm passed",
+        "did",
+        "the rescue teams",
+        "reach",
+        "the village",
+        "reached",
+        "did pass"
+      ],
+      "explanation": "Not until 부사절이 문두에 왔으므로 주절은 did + 주어 + 원형으로 도치됩니다. 시제는 did 가 지므로 본동사는 reach 이며 reached 는 쓰이지 않습니다. 종속절 the storm passed 는 도치하지 않고 평서문 어순 그대로 두므로 did pass(강조의 do)는 필요하지 않습니다. 도치가 일어나는 곳은 주절 하나뿐입니다."
+    },
+    {
+      "id": "b14",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "도치를 판별하는 4단계",
+      "steps": [
+        {
+          "text": "문두 어구가 부정·제한의 뜻을 가졌는지 확인합니다(never·rarely·seldom·hardly·little·not until·no sooner·only+부사어구).",
+          "applyNote": "문두는 Only after the storm had passed 입니다. only + 부사절이므로 도치 신호입니다."
+        },
+        {
+          "text": "그 어구가 주어보다 앞에 나와 있는지 확인합니다. 부정어가 주어 자체의 일부라면 도치하지 않습니다.",
+          "applyNote": "주어는 the crew 이고 문두 어구는 그보다 앞에 있습니다. 따라서 도치가 필요한 문장입니다."
+        },
+        {
+          "text": "도치할 절을 정합니다. not until·only 가 이끄는 종속절이 아니라, 뒤따르는 주절을 도치합니다.",
+          "applyNote": "종속절 the storm had passed 는 정상 어순 그대로 두고, 주절을 도치 대상으로 잡습니다."
+        },
+        {
+          "text": "조동사를 주어 앞에 세웁니다. be·조동사·완료 have 는 그대로 앞으로, 일반동사는 do/does/did 를 세우고 본동사는 원형으로 씁니다.",
+          "applyNote": "주절의 동사가 일반동사 과거 began 이므로 did 를 주어 앞에 세우고 본동사는 원형 begin 으로 씁니다."
+        }
+      ],
+      "example": {
+        "en": "Only after the storm had passed **did the crew begin** to repair the damaged hull.",
+        "ko": "폭풍이 지나간 뒤에야 승무원들은 손상된 선체를 수리하기 시작했습니다.",
+        "note": "종속절은 그대로, 주절만 did + 주어 + 원형으로 도치되었습니다."
+      }
+    },
+    {
+      "id": "b15",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Only after the second trial ended ( the researchers published / did the researchers publish ) their findings.",
+      "steps": [
+        {
+          "title": "① 문두 어구를 봅니다",
+          "body": "문두는 Only after the second trial ended 입니다. only + 부사절이므로 제한의 어구가 주어보다 앞에 나온 형태입니다."
+        },
+        {
+          "title": "② 도치할 절을 정합니다",
+          "body": "도치는 only 절 안에서가 아니라 뒤따르는 주절에서 일어납니다. 종속절 the second trial ended 는 그대로 둡니다."
+        },
+        {
+          "title": "③ 조동사를 세웁니다",
+          "body": "주절의 동사는 일반동사 과거 published 입니다. 일반동사이므로 did 를 주어 앞에 세우고 본동사는 원형이 되어야 합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "the researchers published 는 평서문 어순이라 문두의 Only 와 호응하지 못합니다. 일반동사이므로 did 를 주어 앞에 세우고 본동사를 원형 publish 로 되돌린 did the researchers publish 가 옳습니다."
+        }
+      ],
+      "answer": "did the researchers publish",
+      "ko": "두 번째 시험이 끝난 뒤에야 그 연구자들은 자신들의 연구 결과를 발표했습니다."
+    },
+    {
+      "id": "b16",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u12-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Not until the last passenger had boarded {{blank}} the harbor.",
+          "options": ["did the ferry leave", "the ferry left", "did the ferry left"],
+          "answer": 0,
+          "translation": "마지막 승객이 승선하고 나서야 그 여객선은 항구를 떠났습니다.",
+          "explanation": "Not until 부사절이 문두에 왔으므로 주절이 도치됩니다. the ferry left 는 평서문 어순이라 문두의 Not until 과 호응하지 못하고, did the ferry left 는 did 와 left 가 시제를 이중으로 표시합니다. 본동사는 원형이어야 하므로 did the ferry leave 가 옳습니다.",
+          "trapTags": ["negative-inversion", "double-tense", "main-clause-inversion"]
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 did the ferry leave 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "Not until 부사절이 주어보다 앞에 나갔으므로 주절에서 조동사가 주어 앞에 서야 하고, 시제는 did 가 지므로 본동사는 원형이어야 합니다.",
+          "correct": true,
+          "feedback": "정확합니다. 도치의 자리(주절)와 시제의 자리(조동사)를 둘 다 짚었습니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어서 과거형 표현이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제의 자연스러움은 어순을 결정하지 못합니다. the ferry left 도 과거이지만 문두의 Not until 과 호응하지 않아 틀립니다."
+        },
+        {
+          "text": "Not until 절 안에 had boarded 라는 완료형이 있어서 주절도 완료형과 짝을 이루어야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "종속절의 시제가 주절의 어순을 결정하지는 않습니다. 판단 근거는 부정 어구가 문두로 나갔다는 사실 하나입니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Hardly ( the train had / had the train / did the train ) left the platform when the storm knocked out every signal on the line.",
+      "givenSteps": [
+        "① 문두 어구를 봅니다 — Hardly 는 제한의 부사이며 주어보다 앞에 있습니다.",
+        "② 짝을 확인합니다 — 뒤에 when 절이 있으므로 「Hardly + had + 주어 + p.p. + when + 과거」의 틀입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "had the train — 문두의 Hardly 때문에 조동사 had 가 주어 앞에 서야 합니다",
+        "the train had — 종속절이 아니라 주절이므로 평서문 어순을 지켜야 합니다",
+        "did the train — 완료를 만드는 조동사는 had 이므로 did 를 쓸 수 없습니다"
+      ],
+      "answer": 0,
+      "explain": "Hardly 가 문두에 왔으므로 조동사 had 가 주어 the train 앞으로 나가 had the train left 가 됩니다. 이 자리는 주절이므로 평서문 어순을 유지할 수 없고, 완료형을 만드는 조동사는 had 이므로 did 도 쓸 수 없습니다."
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 1 — 도치해 놓고 본동사에 시제를 또 붙이는 실수",
+      "body": "일반동사 문장을 도치하면 do/does/did 가 시제를 가져갑니다. 그러면 본동사는 반드시 원형이어야 합니다. 문두의 부정어만 보고 도치는 했는데 본동사를 과거형·3인칭 단수형 그대로 두는 것이 가장 흔한 오답 경로입니다.",
+      "example": {
+        "en": "Rarely did the senate **approved** a maritime treaty without months of debate.",
+        "ko": "그 원로원이 여러 달의 논쟁 없이 해양 조약을 승인하는 일은 드물었습니다.",
+        "note": "did 가 이미 과거 시제를 지고 있으므로 본동사는 원형 approve 여야 합니다. approved 는 시제 이중 표시입니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 2 — 도치의 자리를 잘못 잡는 실수",
+      "body": "Not until·Only when 이 문두에 오면 도치는 그 절 안이 아니라 뒤따르는 주절에서 일어납니다. 종속절만 정상 어순으로 써 놓고 주절을 그대로 두면 문장 전체가 도치 없는 평서문이 되어 틀립니다.",
+      "example": {
+        "en": "Not until the final bell rang the students **handed in** their answer sheets.",
+        "ko": "마지막 종이 울리고 나서야 학생들은 답안지를 제출했습니다.",
+        "note": "종속절 the final bell rang 은 옳지만 주절이 도치되지 않았습니다. did the students hand in 으로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "Never before [[1:had the committee faced]] such a divided public. Only after weeks of hearings [[2:it agreed]] to postpone the vote. [[3:Seldom does]] a local council delay a decision for so long, and [[4:neither do]] its members enjoy the criticism that follows.",
+      "answer": 2,
+      "correction": "did it agree",
+      "rationales": [
+        "부정 부사구 Never before 가 문두에 왔으므로 완료의 had 가 주어 the committee 앞으로 나갔습니다. 본동사는 과거분사 faced 로 옳습니다.",
+        "only + 부사구가 문두에 왔으므로 뒤따르는 주절이 도치되어야 합니다. 평서문 어순 it agreed 를 did it agree 로 고쳐야 합니다.",
+        "제한의 부사 Seldom 이 문두에 왔고 일반동사 delay 의 문장이므로 does 가 주어 앞에 섰습니다. 본동사가 원형 delay 인 점도 옳습니다.",
+        "앞 절이 Seldom 으로 시작하는 부정의 진술이므로 neither 로 이어받고, 조동사 do 를 주어 its members 앞에 세웠습니다."
+      ],
+      "ko": "그 위원회가 그렇게 분열된 여론에 직면한 적은 없었습니다. 여러 주에 걸친 청문회를 거친 뒤에야 표결을 연기하기로 했습니다. 지방 의회가 결정을 그렇게 오래 미루는 일은 드물며, 그 구성원들도 뒤따르는 비판을 즐기지는 않습니다."
+    },
+    {
+      "id": "b22",
+      "type": "RULE",
+      "tier": 2,
+      "title": "규칙 4 — so 와 neither 는 앞 문장을 이어받습니다",
+      "rule": "앞 문장이 긍정이면 so + 조동사 + 주어로, 부정이면 neither(nor) + 조동사 + 주어로 「~도 그렇다」를 나타냅니다. 조동사는 앞 절의 것을 그대로 가져오되, neither 에는 not 을 다시 쓰지 않습니다.",
+      "examples": [
+        {
+          "en": "The recipe was simple, and **so was** the cooking process.",
+          "ko": "그 조리법은 간단했고, 조리 과정도 그러했습니다.",
+          "note": "앞 절이 긍정이고 동사가 be동사 was 이므로 so was + 주어가 됩니다."
+        },
+        {
+          "en": "The pilot could not see the runway, and **neither could** the copilot.",
+          "ko": "그 조종사는 활주로를 볼 수 없었고, 부조종사도 볼 수 없었습니다.",
+          "note": "앞 절이 부정이므로 neither 를 쓰고 조동사 could 를 그대로 가져옵니다. neither 에 부정이 이미 들어 있으므로 not 을 다시 쓰지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "so 와 neither 의 갈림길",
+      "columns": ["so + 조동사 + 주어", "neither / nor + 조동사 + 주어"],
+      "rows": [
+        {
+          "criterion": "앞 문장의 극성",
+          "a": "긍정문",
+          "b": "부정문(not·never·cannot 등)"
+        },
+        {
+          "criterion": "나타내는 뜻",
+          "a": "~도 그렇습니다",
+          "b": "~도 그렇지 않습니다"
+        },
+        {
+          "criterion": "조동사 선택",
+          "a": "앞 절의 be·조동사·완료 have 를 그대로, 일반동사면 do/does/did",
+          "b": "동일합니다. 다만 not 을 다시 쓰지 않습니다"
+        },
+        {
+          "criterion": "어순",
+          "a": "so 뒤에서 조동사가 주어 앞에 섭니다",
+          "b": "neither 뒤에서 조동사가 주어 앞에 섭니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The first survey overlooked the smaller islands, and **so did** the second.",
+          "ko": "첫 번째 조사는 작은 섬들을 빠뜨렸고, 두 번째 조사도 그러했습니다.",
+          "note": "앞 절의 동사가 일반동사 과거 overlooked 이므로 did 를 가져옵니다."
+        },
+        {
+          "en": "The northern colony could not survive the winter, and **neither could** the southern one.",
+          "ko": "북쪽 정착지는 겨울을 견디지 못했고, 남쪽 정착지도 견디지 못했습니다.",
+          "note": "앞 절이 부정이므로 so 가 아니라 neither 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "so / neither 짝 맞추기",
+      "instruction": "왼쪽의 앞 문장과, 그에 이어질 오른쪽의 동의 표현을 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "The report was thorough,",
+          "b": "and so was the summary.",
+          "why": "앞 절이 긍정이고 be동사 was 이므로 so was 로 이어받습니다."
+        },
+        {
+          "a": "The captain could not reach the port,",
+          "b": "and neither could the crew.",
+          "why": "앞 절이 부정이고 조동사 could 이므로 neither could 로 이어받습니다."
+        },
+        {
+          "a": "The first draft ignored the coastline,",
+          "b": "and so did the revision.",
+          "why": "앞 절이 긍정의 일반동사 과거 ignored 이므로 so did 로 이어받습니다."
+        },
+        {
+          "a": "The old engine does not start in the cold,",
+          "b": "and neither does the spare.",
+          "why": "앞 절이 부정의 does not 이므로 neither does 로 이어받습니다."
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 평서문을 주고 '주어진 단어로 시작하는 문장으로 바꿔 쓰시오'로 물어봅니다. 조동사를 주어 앞에 세우고 본동사를 원형으로 되돌려야 만점입니다.",
+          "sample": {
+            "en": "The residents rarely complained about the noise from the harbor.",
+            "ask": "Rarely 로 시작하도록 이 문장을 다시 쓰십시오.",
+            "answer": "Rarely did the residents complain about the noise from the harbor."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 문두에 not until·only·hardly 를 놓고 주절의 어순이나 본동사 형태에 밑줄을 칩니다. 밑줄이 평서문 어순이거나 조동사 뒤 본동사가 원형이 아니면 그것이 정답입니다.",
+          "sample": {
+            "en": "Only when the ice sheets began to retreat [[u:the first settlers moved]] into the northern valleys.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳지 않습니다. did the first settlers move 로 고쳐야 합니다 — only + 부사절이 문두에 왔으므로 주절이 도치되어야 하고, 시제는 did 가 집니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Astronomers long assumed that the outer planets had formed where we now find them. [[u:Not until a survey of distant orbits was completed did researchers seriously question that assumption.]] The new measurements suggested that several giant planets had drifted inward over millions of years. Rarely does a single dataset overturn a settled model, but this one did.",
+      "instruction": "밑줄 친 문장에서 문두 어구를 걷어내고, 도치가 어느 절에서 일어났는지 확인하십시오.",
+      "found": "문두의 Not until a survey of distant orbits was completed 는 종속 부사절이며 그 안의 어순은 정상입니다. 도치는 뒤따르는 주절에서 일어나 did researchers question 이 되었습니다. researchers questioned 로 두면 문두의 Not until 과 호응하지 않습니다.",
+      "gist": "먼 궤도에 대한 조사가 끝나고 나서야 연구자들이 외행성의 형성 위치에 대한 기존 가정을 의심하기 시작했다는 내용입니다."
+    },
+    {
+      "id": "b27",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "문두를 지키는 도치의 문지기",
+      "intro": "이 문 앞에서는 문두에 무엇이 서 있는지가 전부입니다. 부정과 제한의 신호를 보고도 어순을 바로 세우지 못하면 문은 열리지 않습니다. 네 문장으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "Never {{blank}} such a violent storm in these waters.",
+          "options": ["have the sailors seen", "the sailors have seen"],
+          "answer": 0,
+          "why": "부정 부사 Never 가 문두에 왔으므로 완료의 have 가 주어 the sailors 앞으로 나가야 합니다."
+        },
+        {
+          "prompt": "Not until the results were verified {{blank}} the discovery.",
+          "options": ["did the lab announce", "the lab announced"],
+          "answer": 0,
+          "why": "not until 부사절이 문두에 왔으므로 주절이 도치되어 did the lab announce 가 됩니다. 종속절은 정상 어순 그대로입니다."
+        },
+        {
+          "prompt": "Rarely {{blank}} the border region without an official permit.",
+          "options": ["did travelers cross", "did travelers crossed"],
+          "answer": 0,
+          "why": "did 가 시제를 지므로 본동사는 원형 cross 여야 합니다. crossed 는 시제 이중 표시입니다."
+        },
+        {
+          "prompt": "The first survey overlooked the reef, and {{blank}} the second.",
+          "options": ["so did", "so was"],
+          "answer": 0,
+          "why": "앞 절의 동사가 일반동사 과거 overlooked 이므로 so did 로 이어받습니다. be동사가 아니므로 so was 는 쓸 수 없습니다."
+        }
+      ],
+      "winText": "문지기가 옆으로 비켜섭니다. 문두의 신호 하나로 어순 전체를 되세우는 눈 — 그것이 도치 단원을 여는 열쇠이고, 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 문장을 돌려줍니다. 네 문장이 물은 것은 하나였습니다 — '문두에 부정·제한의 신호가 섰는가, 그렇다면 조동사는 주어 앞으로 갔는가.' 판별 4단계를 다시 짚고 오면 문은 그대로 기다립니다."
+    },
+    {
+      "id": "b28",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "부정·제한 어구가 ___ 에 오면 ___ 가 주어 앞에 서고, 일반동사 문장이면 본동사는 ___ 형태가 됩니다."
+    },
+    {
+      "id": "b29",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "부정·제한의 어구(never·rarely·seldom·hardly·little·not until·no sooner·only+부사어구)가 문두로 나가면 조동사가 주어 앞에 섭니다.",
+        "be동사·조동사·완료 have 는 그대로 앞으로 나가고, 일반동사는 do/does/did 를 세운 뒤 본동사를 원형으로 씁니다.",
+        "not until·only 절이 문두에 오면 도치는 그 절이 아니라 뒤따르는 주절에서 일어납니다.",
+        "부정어가 주어 자체의 일부이면(Not a single member …) 도치하지 않습니다.",
+        "so + 조동사 + 주어는 앞 문장이 긍정일 때, neither(nor) + 조동사 + 주어는 앞 문장이 부정일 때 씁니다."
+      ],
+      "keySentence": {
+        "en": "Not until the final bell rang **did the students hand in** their answer sheets.",
+        "ko": "마지막 종이 울리고 나서야 학생들은 답안지를 제출했습니다.",
+        "note": "문두로 나간 것은 부사절이고, 도치된 것은 주절입니다. 시제는 did 가 지므로 본동사는 원형 hand in 입니다."
+      }
+    },
+    {
+      "id": "b30",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u12-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The morning shuttle does not stop at the old terminal, and {{blank}} the evening one.",
+          "options": ["neither does", "so does", "neither did"],
+          "answer": 0,
+          "translation": "아침 셔틀은 옛 터미널에 서지 않고, 저녁 셔틀도 서지 않습니다.",
+          "explanation": "앞 절이 does not 이 들어간 부정문이므로 부정 방향의 동의를 나타내는 neither 를 씁니다. 조동사는 앞 절의 does 를 그대로 가져와야 하므로 neither does 가 옳습니다. so 는 앞 문장이 긍정일 때만 쓰고, neither did 는 시제가 어긋납니다.",
+          "trapTags": ["so-neither"]
+        },
+        {
+          "id": "u12-c1-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Only after the flood receded [[u:did the villagers return]] to their damaged homes.",
+          "isCorrect": true,
+          "translation": "홍수가 물러난 뒤에야 마을 사람들은 손상된 집으로 돌아갔습니다.",
+          "explanation": "only + 부사절이 문두에 왔으므로 주절이 도치되어야 합니다. 일반동사 문장이므로 did 가 주어 앞에 서고 본동사는 원형 return 입니다. 종속절 the flood receded 는 정상 어순 그대로이므로 이 문장은 옳습니다.",
+          "trapTags": ["negative-inversion", "main-clause-inversion"]
+        },
+        {
+          "id": "u12-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Little {{blank}} that a routine survey of the field would uncover a buried settlement.",
+          "options": ["did the students imagine", "the students imagined", "did the students imagined"],
+          "answer": 0,
+          "translation": "그 학생들은 들판에 대한 통상적인 조사가 매몰된 정착지를 드러내리라고는 거의 상상하지 못했습니다.",
+          "explanation": "Little 은 '거의 ~하지 않다'는 부정의 부사이며 문두에 왔으므로 조동사가 주어 앞에 서야 합니다. the students imagined 는 평서문 어순이라 틀리고, did the students imagined 는 did 와 imagined 가 시제를 이중으로 표시해 틀립니다. 본동사는 원형이어야 하므로 did the students imagine 이 옳습니다.",
+          "trapTags": ["negative-inversion", "double-tense"]
+        }
+      ]
+    }
+  ]
+}

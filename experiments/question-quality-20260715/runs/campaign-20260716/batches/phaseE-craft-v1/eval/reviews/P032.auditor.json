@@ -1,0 +1,82 @@
+{
+  "pid": "P032",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 base form 동사 overlook을 '복수 형태의 동사'라고 부른다. 교육 현장 관용 표현이라 오개념 유발 수준은 아니어서 V4 실패로 보지 않았으나 용어가 느슨하다."
+    },
+    {
+      "code": "V4-minor-overgeneralization",
+      "severity": "minor",
+      "evidence": "본 해설이 reason을 '셀 수 없는 단수 명사'라고 단정한다. reason은 다른 의미('이유들')에서는 가산 명사이며, 이 문맥('little reason to ~' 관용적 불가산 용법)에 한정해 불가산이다. 이 문맥에서는 결론(few→little)이 정확하므로 치명으로 보지 않았다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주어-동사 수일치: 형용사 수식을 받은 복수 주어(Inefficient teachers) 뒤 본동사 형태 판단",
+      "temptingBecause": "문두 주어를 단수로 오인하거나 3인칭 단수 -s를 기대하는 학생을 겨냥. 다만 주어와 동사가 바로 인접해 유혹 강도가 약하다.",
+      "decisiveFlaw": "teachers는 복수이므로 base form overlook이 정확 — 오류가 될 수 없다."
+    },
+    {
+      "label": "(B)",
+      "intent": "분사의 태 구별: 현재분사 vs 과거분사 (pressing vs pressed)",
+      "temptingBecause": "demands가 '가해지는' 대상으로 읽혀 pressed(수동)를 떠올릴 수 있다.",
+      "decisiveFlaw": "pressing은 '긴급한'이라는 능동적 의미의 분사형 형용사로 pressing demands가 관용적으로 정확하다."
+    },
+    {
+      "label": "(C)",
+      "intent": "명사절 접속사 that vs 관계대명사 that 구별 (뒤따르는 절의 완전/불완전 판단)",
+      "temptingBecause": "It's no wonder that 구문에서 that을 관계대명사로 오분석해 what 등으로 바꿔야 한다고 착각할 수 있다.",
+      "decisiveFlaw": "that 뒤의 절(students are late for class)이 완전하므로 명사절 접속사 that이 정확하다."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. 가산/불가산 명사에 따른 수량 형용사 선택 (few vs little)",
+      "temptingBecause": "few와 little 모두 '거의 없는' 부정 의미라 의미상 자연스럽게 읽혀 지나칠 수 있다.",
+      "decisiveFlaw": "few는 가산 복수 명사만 수식한다. 이 문맥의 reason은 불가산 단수 용법('little reason to be on time')이므로 few reason은 비문 — little로 교정하면 정확히 원문이 복원된다. 대안 정답 해석 없음."
+    },
+    {
+      "label": "(E)",
+      "intent": "동사에 따른 목적어 형태: prepare + to부정사 vs 동명사",
+      "temptingBecause": "focusing 등 동명사 목적어를 취하는 동사군과 혼동하도록 유도.",
+      "decisiveFlaw": "prepare는 to부정사를 취하므로 prepare to focus가 정확하다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(A) 해설의 '복수 형태의 동사 overlook' — 정확히는 복수 주어에 일치하는 동사원형(base form)이다. 결론은 옳으나 용어가 느슨하다.",
+      "recommendation": "'복수 주어에 수일치한 동사원형' 등으로 교체."
+    },
+    {
+      "severity": "minor",
+      "evidence": "본 해설의 '셀 수 없는 단수 명사인 reason' — reason은 문맥에 따라 가산으로도 쓰이는 명사이므로 '이 문맥에서 불가산으로 쓰인 reason'이 정확하다.",
+      "recommendation": "문맥 한정 표현으로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(D)(E) 세 밑줄만 다루고 (A)(B)를 누락한다. 필드 간 모순은 없으나 포인트 목록의 완전성이 떨어진다.",
+      "recommendation": "(A) 수일치, (B) 분사 태 포인트를 keyPoints에 추가."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 렌더 지문은 원지문과 대조 시 의도된 (D) little→few 치환 외 손상·누락·중복 없음, 5개 라벨-선지-markedExpressions 모두 일치. V2: 5개 밑줄 독립 검증 결과 오류는 (D) 하나뿐 — (A) 복수 수일치 정확, (B) pressing 관용적 능동 분사 정확, (C) 완전절을 이끄는 명사절 that 정확(가주어-진주어 분석도 표준적), (E) prepare+to-v 정확. few는 어떤 대안 분석으로도 단수 불가산 reason과 결합할 수 없어 정답 유일. V3: 원문 복원 시(few→little) 완전문 문법적·자연스러움, 오답 밑줄 4개 모두 문법적(유형 의도와 일치). V4: 해설의 구조 분석이 실제 문장과 대응하며 오개념·환각 없음(용어 느슨함 2건은 minor). V5: 정답 라벨 (D)·선지·해설·오답해설·keyPoints·markedExpressions 동기화됨. 치명 결함: 없음(모든 V 통과). 그러나 요청 난이도 KILLER 대비 공예 결함이 크다 — 정답 (D)는 'few'가 단수 명사 'reason' 바로 옆에 붙어 있는 국소 가산성 불일치로, 구조 독해 없이 즉시 발견되는 자리다. RUBRIC §C의 KILLER 조건('붙어 있는 단순 수일치류로 즉시 드러나지 않아야 함')을 정면으로 위반하여 killerConditionsMet=false, C5=1(라벨-실제 난이도 심각 불일치, 실제 체감은 고1~2 기본 수준). C3=2: (C)(E)는 어느 정도 실제 판단을 요구하나 (A)는 주어-동사 인접으로 즉시 소거되고, 정답이 국소 단서만으로 갈린다. C 최저점이 2 미만이므로 B 불가 — KILLER 라벨을 만족시키려면 정답 포인트 자체의 재설계가 필요하여 등급 C."
+}

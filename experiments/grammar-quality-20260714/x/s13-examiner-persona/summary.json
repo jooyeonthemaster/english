@@ -1,0 +1,45 @@
+{
+  "strategy": "s13-examiner-persona",
+  "describe": "평가원 출제위원 페르소나 — 출제 → 연구노트 5절 기준 A~F 자가채점 → A 아니면 내부 수정 후 최종본만 출력",
+  "callPlan": "flash x1",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 10271,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.18449,
+  "avgCostUsd": 0.01845,
+  "costRecordedCalls": 10,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 1.4,
+  "zeroErrorItems": 2,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.848,
+  "avgAnswerRelPos": 0.433,
+  "answerRelPosInBand": 9,
+  "models": {
+    "google/gemini-3.5-flash": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 1
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

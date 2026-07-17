@@ -1,0 +1,35 @@
+{
+  "pid": "P062",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'demand strict adherence ... immediately'는 지문이 제시한 스펙트럼의 한 극단인 'rejection and correction' 그 자체다. 빈칸 뒤 예시의 교사는 교정을 요구하지 않고 표준형으로 재진술(recast)만 하며, 마지막 문장 'results won't be apparent immediately'가 'immediately'와 정면 충돌한다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "첫 문장의 'economic opportunities'를 재활용한 매력적 오답 — 실전에서 어휘 겹침 때문에 잠깐 끌린다. 그러나 'eliminate dialect use'는 거부 극단이고 culturally responsive teaching의 핵심인 학생 언어·문화 수용 요소가 전무하다. 예시의 교사도 방언을 제거하려 하지 않고 수용 후 모델링한다."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "빈칸 직후 예시와 정확히 일치: 교사는 'I ain't got no pencil'을 꾸짖지 않고 수용(first accept)한 뒤 'Oh, you don't have a pencil'로 표준형을 자연스럽게 모델링하고 대화를 확장(build on it)한다. 거부·교정과 완전 수용 두 극단 사이의 종합이며, '장기적으로 언어 발달과 학교에 대한 태도 모두에 이득'이라는 결론과도 정합한다. 'is to first accept ... and then build ...' 문법 결합도 자연스럽다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'fully embrace ... as the ultimate learning goal'은 '완전 수용' 극단이다. 표준 영어가 교육·경제적 기회의 통로이며 그것이 가르치는 1차 이유라는 첫 문장, 그리고 예시에서 교사가 표준형을 모델링하는 행위와 모순된다. 비표준형이 '궁극적 학습 목표'가 될 수 없다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "지문에 또래(peer) 상호작용 언급이 전혀 없고, 예시의 교정(재진술) 주체는 교사다. 지문 근거 없는 무관 선지로, 유혹 강도도 낮다."
+    }
+  ],
+  "note": "빈칸 뒤 'For example' 이하의 교사 재진술(recast) 예시가 결정적 단서로, 두 극단(rejection/correction vs complete acceptance) 사이의 중간 경로를 요구한다. 다섯 선지 모두 'is to + 동사원형' seam에 문법적으로 결합 가능하므로 순수 논리 변별 문항. ②가 도입부 어휘(economic opportunities) 재활용으로 가장 매력적인 오답이나 방향(eliminate)이 반대라 옹호 불가. 유일 정답 ③, 복수정답 소지 없음."
+}

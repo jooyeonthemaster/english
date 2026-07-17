@@ -1,0 +1,71 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-HALLUCINATED-STRUCTURE",
+      "severity": "major",
+      "evidence": "정답 해설이 \"동사 직전에 복수형 명사인 'hours'가 있어 복수형 동사로 착각하기 쉬우니 주의해야 합니다\"라고 주장하나, 렌더 문장은 'The only example that comes to mind readily are a candle marked in hours.'로 'hours'는 동사 뒤(문미)에 위치한다. 동사 직전 어휘는 'readily'이며 동사 앞에는 복수 명사가 전혀 없다. 존재하지 않는 근접 견인(attraction) 구조를 지목한 구조 오분석/환각."
+    },
+    {
+      "code": "V4-MISLEADING-FOCUS",
+      "severity": "minor",
+      "evidence": "해설이 주어 핵 분석 맥락에서 \"'marked in hours'는 'a candle'을 수식하는 분사구에 불과합니다\"라고 언급하나, 이 분사구는 보어('a candle')의 수식어로 주어-동사 수일치 판단과 무관하다. 정작 주어와 동사 사이에 실제로 개입하는 관계절 'that comes to mind readily'는 언급하지 않아 문장의 함정 구조를 잘못 프레이밍한다. (주어 핵이 'The only example'이라는 핵심 판정 자체는 정확함.)"
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "지시형용사 that의 쓰임(단수 명사 수식) 판단",
+      "temptingBecause": "관계대명사 that과 형태가 같아 역할 혼동을 유도하고, those와의 수일치 여부를 재확인하게 만든다",
+      "decisiveFlaw": "없음(정용). 앞 문장에서 언급된 특정 process를 가리키는 지시형용사로 단수 'process'를 수식 — 어법상 옳다"
+    },
+    {
+      "label": "(B)",
+      "intent": "재귀대명사 vs 인칭대명사 선택 및 선행사 수일치",
+      "temptingBecause": "주어가 관계대명사 that이라 선행사('any process')까지 거슬러 올라가 동일 지시 여부와 단·복수를 판단해야 한다",
+      "decisiveFlaw": "없음(정용). repeats의 주어(that=process)와 목적어가 동일 지시체이고 선행사가 단수이므로 itself가 옳다"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계절이 개입한 주어 핵('The only example', 단수)과 동사의 수일치 — 선언된 정답",
+      "temptingBecause": "주어와 동사 사이에 관계절 'that comes to mind readily'가 개입해 주어 핵을 놓치면 지나칠 수 있다",
+      "decisiveFlaw": "단수 주어 핵에 복수 동사 are는 비문. 보어 'a candle'도 단수여서 오류가 이중으로 드러나며, 동사 앞에 복수 견인 명사가 없어 정답 노출도가 높다(중간 난이도에는 허용 범위). is로 교정하면 원문과 정확히 일치하는 최소대립쌍"
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사 although 뒤 '주어+be' 생략(분사/형용사구) 구문의 적법성 판단",
+      "temptingBecause": "접속사 뒤에 완전한 절이 없어 despite 등 전치사로 바꿔야 한다고 오판하기 쉽다 — 5개 중 가장 실질적인 매력 디코이",
+      "decisiveFlaw": "없음(정용). although (it is) at first masked의 표준 생략 구문"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사구('of atoms of carbon-14')가 개입한 주어 핵('the decay')과 동사의 수일치",
+      "temptingBecause": "동사 직전에 복수 'atoms'/'carbon-14'가 실제로 개입해 있어 견인에 의한 오판(are로 고쳐야 한다는 착각)을 유도한다 — 정답 (C)와 동일 포인트의 대조 정용 사례",
+      "decisiveFlaw": "없음(정용). 주어 핵 decay가 단수이므로 is가 옳다"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 함정 설명이 사실과 불일치: 'hours'는 동사 뒤에 위치하므로 '동사 직전 복수 명사에 의한 착각' 메커니즘이 이 문장에 존재하지 않는다 (V4-HALLUCINATED-STRUCTURE)",
+    "주어 구조 설명에서 실제 개입 요소인 관계절('that comes to mind readily') 대신 보어 수식 분사구('marked in hours')를 지목해 초점이 어긋남 (V4-MISLEADING-FOCUS)",
+    "(B) 해설의 \"'repeats'의 행위자이자 대상인 주격 관계대명사 'that'\" 표현은 다소 뭉뚱그려져 있으나(행위자=that, 대상=itself가 정확) 오개념 수준은 아님 — 문체 결함",
+    "오답 해설 (A)(D)(E)는 각 선지의 실제 구조와 정확히 대응함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 모두 통과: 렌더 지문은 의도된 is→are 단일 변형 외 원지문과 완전 일치하고, 독립 검증 결과 (C)만이 유일한 비문이며(각 밑줄 대안 분석 포함), 교정 시 원문이 정확히 복원되고, 필드 간 동기화도 무결하다. 그러나 정답 해설이 존재하지 않는 구조('동사 직전의 복수형 hours')를 함정 근거로 지목하는 사실 오류(환각)를 포함해 V4 실패 → 등급 F. 공예 측면: 포인트 배치는 의도적이고(A 지시사/B 재귀/C·E 수일치 대조/D 생략 구문) D·E가 실질적 변별을 제공하나, 정답 (C)는 견인 명사가 없고 보어까지 단수라 노출도가 높아 C3=2. 해설 오류로 C6=1. 요청 난이도 INTERMEDIATE에는 전반적으로 부합(C5=3). 해설의 함정 설명 한 단락만 사실에 맞게 재작성하면(예: 관계절 개입 + (E)와의 대조를 근거로) B등급 이상으로 회복 가능한 문항."
+}

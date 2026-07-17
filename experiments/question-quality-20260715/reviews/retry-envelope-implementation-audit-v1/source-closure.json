@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "auditId": "retry-envelope-implementation-audit-v1-20260715",
+  "snapshot": {
+    "capturedAtUtc": "2026-07-14T21:52:28.064Z",
+    "capturedAtKst": "2026-07-15T06:52:28.064+09:00",
+    "initialFreezeAtUtc": "2026-07-14T21:37:39.629Z",
+    "initialFreezeAtKst": "2026-07-15T06:37:39.629+09:00",
+    "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "worktreeState": "dirty_preexisting",
+    "implementationFreezeConfirmed": true,
+    "authorizedPostInitialFreezeDrift": {
+      "actor": "root",
+      "purpose": "server-owned structured response-cardinality closure",
+      "paths": [
+        "src/lib/question-generation-research-schema.ts",
+        "src/lib/question-ai-schemas-mc.ts",
+        "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+        "tests/unit/question-generation-response-cardinality.test.ts"
+      ],
+      "retryEnvelopeReauditedAfterDrift": true
+    },
+    "auditProductionSourceEdits": 0,
+    "auditExistingDesignArtifactEdits": 0
+  },
+  "files": [
+    {
+      "path": "package.json",
+      "sha256": "bfc9c68a6d0df116f969b5349131fc6bc0e2f9edfe9f9c105d5b2abb8f2be7d8",
+      "role": "package contract"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "69df7075b9a70cb1740531a24cc787d396d735ac2977a359b7700fd0701253be",
+      "role": "dependency lock"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "sha256": "c93c2f956143b0335600b4a9c62826283ed9061f32a5ea99c87bc19ecfa8afd1",
+      "role": "lint configuration"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "62bfd7b4d81ce2b6db78920e2a9005c4fe5e9669bbd3a6c18108c9ea4eab0b06",
+      "role": "global TypeScript configuration"
+    },
+    {
+      "path": "node_modules/ai/package.json",
+      "sha256": "0765dee25104f9194b1bbcb1d34997e01e5ae07907e33d4344e6c09f4d4a00ae",
+      "role": "installed AI SDK identity"
+    },
+    {
+      "path": "node_modules/ai/dist/index.js",
+      "sha256": "7dd36753c2c85a8b6da84309831237acad2568ad2b68fe4d3f097e4db3a41b98",
+      "role": "installed AI SDK retry implementation"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/retry-envelope-closure-v1/README.md",
+      "sha256": "95cb202bfc2873e8229d2ccfaf15b3ce0de8271c69957475673be1aff9542127",
+      "role": "immutable input design"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/retry-envelope-closure-v1/design.json",
+      "sha256": "e4121666c5090a2cd28946c910bf26a8f992e3c08d45cf427d7a86a5b2590474",
+      "role": "immutable input design data"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/retry-envelope-closure-v1/verify-implementation.mjs",
+      "sha256": "f89f65cbb47b2cdb9a84b4dbb359cc3135dbf39265632c50f7f59e2d1dcc1859",
+      "role": "design-side implementation checker"
+    },
+    {
+      "path": "src/lib/concurrency-config.ts",
+      "sha256": "8ccc1df4149d1a0bb4ddfcff63d1f4c78663827c56481d8a942341d91dc25d15",
+      "role": "public and environment retry boundaries"
+    },
+    {
+      "path": "src/lib/atlas-ai.ts",
+      "sha256": "17264619ecb3536f65061147527ff1a5e37e28cd6b74f073d75a7426cfe5153b",
+      "role": "provider transport and default reasoning policy"
+    },
+    {
+      "path": "src/lib/atlas-research-fetch-boundary.ts",
+      "sha256": "c00056c9e1ef91aa0ca5bfe31a97c251e43d2e11a073f5f406999804b0148682",
+      "role": "physical-fetch and trusted lineage boundary"
+    },
+    {
+      "path": "src/lib/question-generation-research-runtime.ts",
+      "sha256": "727905b19ba7003a0f7983310c65492a13f28257720c921be6fa60319009d10b",
+      "role": "canonical research transport policy"
+    },
+    {
+      "path": "src/lib/question-generation-research-schema.ts",
+      "sha256": "a507b40880ad83940c754687a9bb04db00490bdf8b7ad554f7f34d9cdad1d7e5",
+      "role": "legacy-unbounded versus server/research exact wrapper"
+    },
+    {
+      "path": "src/lib/question-ai-schemas-mc.ts",
+      "sha256": "c538452b7810e0efd8dd1d2c9345c3b1a64f8650a4590afc11850ce0d2bb5694",
+      "role": "server-owned exact question response-schema consumer"
+    },
+    {
+      "path": "src/lib/question-generation-llm.ts",
+      "sha256": "e2ed666726cd60e2fc49fb3f278978dceba16002c75ae369844c1a5c0cb6f438",
+      "role": "application, SDK, fallback, and repair retry closure"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+      "sha256": "46b6151bbde80a7b149be5f1f6d266cb640f5ad8366901072e237bca22e7ae8b",
+      "role": "question-wrapper adapter"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "sha256": "8d2f37f72c96af176e88441aab0f614628bf58374cf715931b8b100ab0ca749b",
+      "role": "outer pass graph, child lineage callers, and exact production count"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts",
+      "sha256": "dfca1f2bd8751cad25025c1e593d4551e73be349c0a147dcf1026842aba018b4",
+      "role": "quality-mode pass policy constants"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-helpers.ts",
+      "sha256": "bda4f9f2c10a7284a74424b16799024ff07e3956cc5357292b4ce9416cc549d4",
+      "role": "pass and salvage predicates"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-types.ts",
+      "sha256": "085e6f52b1a91e4aba83beb0d2ed085d4f96377be9acd65ddbea5fb38a0b1009",
+      "role": "generation runner contracts"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "sha256": "811702366ba41f36310d2a80963ad35076c37ed4a695f1eac3b69d4dbc4729dc",
+      "role": "candidate repair child"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+      "sha256": "6783b64aa71f750b526da1f207112b089a7e7b8f2a6cedb5b3b33ca66db5b74d",
+      "role": "premium grammar ladder and parse retry"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts",
+      "sha256": "be7a80c1e4e9833f5b05352c532375534b5a1f19102b12f6fea89b9f5310da88",
+      "role": "English grammar evaluation child"
+    },
+    {
+      "path": "src/lib/korean/quality/solver-gate.ts",
+      "sha256": "0684d70bceeb33de90f56f5cd055aac3327274c5a6e39d188c1597d197e3b499",
+      "role": "Korean evaluation child"
+    },
+    {
+      "path": "src/trigger/workbench-question-generation.ts",
+      "sha256": "2884e251818bede925d85aba1c91f805c1fa1b7524f29deeeeff488adaaa53ad",
+      "role": "Workbench Trigger assignment multiplier"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+      "sha256": "f8bfd56e07fcf1f9cb7a75d2962909530abadda934b7d7fefe697773530b1f60",
+      "role": "research registry and durable controller"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/atlas-controller.test.ts",
+      "sha256": "40cedf94a35612462564f6c78b23863fffa7362df19576acedb86600cba0e1c2",
+      "role": "controller zero-network evidence"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/ledger.ts",
+      "sha256": "39aaf5a3efec66129de0c8cfe557a6cac41c67ab7da9284cbb5687aa2f00cc81",
+      "role": "test-local durable evidence ledger"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/question-generation-phase-c-runner.ts",
+      "sha256": "73c4a41c68e38c5bfab00edf87e28a6b9ebb4d31ae06bf504d5e967050f0d860",
+      "role": "actual engine-entry research runner"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts",
+      "sha256": "658a08f5d0d61fb217e9da2d6d76f523e6c0c332c37e81b340c241f4d92d75f6",
+      "role": "stage registry and lineage adapter"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.test.ts",
+      "sha256": "d282690b96b73e99c182ff2b55f4f11e06c5b64b043aac5fd673de58a885d9ce",
+      "role": "adapter zero-network evidence"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/test.ts",
+      "sha256": "3a56278c680292657b84c720abc6d02e8cf33b78338639ad944fa3e0fe653e27",
+      "role": "budget-guard harness"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts",
+      "sha256": "418920b27ff364ef70047530d1935e287f307341aa4ae3b0e91150af1bc5e2a1",
+      "role": "Phase-C wire evidence"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts",
+      "sha256": "fd3c786f6a43019f0d40bbf1979ba1beb88e1b1ba895e103a99067d686cf18ea",
+      "role": "Phase-C actual-entrypoint evidence"
+    },
+    {
+      "path": "tests/unit/atlas-research-fetch-boundary.test.ts",
+      "sha256": "2cdee0ff0a830f76f973163ea3e053dcf4840e47692f255865f15a0fdfac8b0d",
+      "role": "physical retry and fail-closed boundary evidence"
+    },
+    {
+      "path": "tests/unit/question-generation-retry-envelope.test.ts",
+      "sha256": "67dfb71be211a125c662061b4fff5343cc301c42f68239dfc206a5a4fcf92f56",
+      "role": "focused retry-envelope transport evidence"
+    },
+    {
+      "path": "tests/unit/question-generation-response-cardinality.test.ts",
+      "sha256": "e304b4b4da621b5c2c5b4a73fa67ecc7600f4b3a31a4daf163fcbf0c3372093a",
+      "role": "post-drift exact structured-cardinality and wire evidence"
+    },
+    {
+      "path": "tests/unit/grammar-premium-reasoning-off.test.mjs",
+      "sha256": "4de0315afc79b46b5d0c62d141f800ae4a6a0ed7dca8421d67af7b1719dffe64",
+      "role": "premium reasoning-off regression"
+    },
+    {
+      "path": "tests/unit/never-fail-salvage.test.mjs",
+      "sha256": "3d5692415ddcf5d8dbcb9c61a1651fcd2b0ba51afe808e580a7ad243ac3527d5",
+      "role": "salvage pass regression"
+    },
+    {
+      "path": "tests/unit/wave3-premium-writing.test.mjs",
+      "sha256": "04940da284b89d0349b150c4fd1561fa113833c829bc50f9275e4dbac8f964a2",
+      "role": "ordinary prompt-JSON fallback regression"
+    }
+  ]
+}

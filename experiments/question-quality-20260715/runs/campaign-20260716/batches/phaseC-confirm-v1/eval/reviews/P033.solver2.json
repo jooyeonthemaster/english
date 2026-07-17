@@ -1,0 +1,35 @@
+{
+  "pid": "P033",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'if students are quiet enough' — plural subject 'students' governs plural 'are'. Straightforward subject-verb agreement; no intervening noun or long-distance trap. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It's no wonder that students are late' — canonical 'It is no wonder that S' construction; 'that' introduces the complement/appositive clause to 'wonder'. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'little reason to be on time' — infinitive as post-nominal modifier of 'reason' ('reason to-V') is the standard pattern. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the error)",
+      "reason": "'have been taught your students an opening routine' — 'teach' is ditransitive (IO + DO). In a passive, one object is promoted to subject, leaving at most ONE retained object; here subject 'you' plus TWO post-verbal NPs ('your students', 'an opening routine') would require three argument slots, which 'teach' cannot license. Rescue parses fail: retained-object passive allows 'you have been taught an opening routine' but cannot absorb the extra NP 'your students'; no appositive/vocative reading is available. Semantically the addressee-teacher is the agent, so passive also inverts the logic. Correct form: active 'have taught your students an opening routine' (parallel with 'are prepared ... and have taught'). Ungrammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'use this brief time to make ... transitions ... and prepare to focus' — parallelism anchored at shared 'to': to [make ... and prepare ...]. Alternative parse coordinating with modal 'can use ... and (can) prepare' would also be grammatical, so the bare form 'prepare' is well-formed under either analysis. Grammatical."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Exactly one item fails formal licensing: (D) passive 'been taught' with two remaining objects violates argument-structure constraints of ditransitive 'teach' and inverts agent semantics. All other items are unambiguously well-formed; no second defensible answer. Clean single-key item."
+}

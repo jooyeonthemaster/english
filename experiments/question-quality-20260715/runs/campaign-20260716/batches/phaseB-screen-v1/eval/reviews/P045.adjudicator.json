@@ -1,0 +1,38 @@
+{
+  "pid": "P045",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "As rendered, the (C) sentence reads 'His confidence was, however, quickly changed to nervousness when he thought of how many people would be there.' The predicate the student evaluates is the passive 'was ... changed to nervousness'. In the state-transition frame 'X change(s) to Y' with X = a spontaneously shifting internal state, change is ergative/intransitive ('his confidence quickly changed to nervousness'); the agentless passive requires a transitive-agentive frame that the context does not supply — the only causer is inside a temporal when-clause, not a recoverable by-agent — and the collocation 'confidence was changed to nervousness' is unattested in native usage. A statal-adjective rescue ('was changed' = 'was different') fails because adjectival changed does not license a 'to Y' new-state complement and 'quickly' forces the eventive reading. All other underlines — (A) transitive entered + object, (B) linking look + adjective, (D) adjectival 'be finished' = done, (E) superlative + present-perfect 'I've ever seen' — are grammatical, including the designed (D) temptation. Therefore exactly one underline is ungrammatical and the answer set is {(C)}, matching the declared answer: V2 holds. Both blind solvers independently converged on (C) with high confidence after explicitly testing and rejecting rescue readings. The auditor's V2=false is overturned: its empty-answer-set claim was circular (it inferred grammaticality from identity between the rendered text and the recorded 원지문, but the 원지문 field itself contains the anomalous 'was ... changed' — the injected variant leaking into the original-snapshot metadata is a known pipeline artifact and field identity proves nothing about grammaticality) and its standalone judgment that the agentless passive is a 정문 does not survive licensing/collocation analysis. The auditor is nonetheless correct that the explanation is broken — it describes the reverse transformation, falsely claiming bare active 'changed' would be objectless and ungrammatical (refuted by the ergative reading), and correction==errorExpression contradicts the stated fix — plus the nonword '접동사' and the (E) misanalysis; these are genuine V4/V5 defects requiring an explanation rewrite (correct fix: delete 'was' → 'His confidence, however, quickly changed to nervousness'), but they do not affect answer uniqueness (V2).",
+  "perDispute": [
+    {
+      "label": "(C)",
+      "claim": "Solvers: rendered passive 'was ... quickly changed to nervousness' is ungrammatical; intransitive 'quickly changed to nervousness' is required. Auditor: the passive as rendered is grammatical, so no error exists.",
+      "verdict": "solvers upheld — (C) is ungrammatical as rendered",
+      "evidence": "In 'X change(s) to Y' denoting a spontaneous internal-state transition, change is ergative/intransitive: 'his smile changed to a frown', 'her expression changed to horror', 'confidence changed to nervousness'. The passive of transitive change ('the date was changed to Friday') presupposes an external agent acting on the theme; here no agentive frame exists — the causer ('when he thought of how many people would be there') is a temporal adverbial, not a suppressed by-agent — so the passive is unlicensed. Collocationally, agentless 'confidence was changed to nervousness' is effectively unattested. Statal-adjective rescue fails: adjectival 'changed' (as in 'a changed man') does not take a 'to + new state' complement, and 'quickly' forces the eventive reading. By the exam's voice-judgment standard (주어와 동사의 의미상 능동/수동 관계), the underline is categorically wrong; correction: delete 'was'."
+    },
+    {
+      "label": "(C)-auditor-empty-set",
+      "claim": "Auditor V1/V2: rendered text is letter-identical to the 원지문 and errorExpression==correction, therefore no error was injected and the true answer set is empty.",
+      "verdict": "rejected",
+      "evidence": "The inference is circular: grammaticality was derived from identity with the recorded 원지문, but that field itself contains the anomalous 'was ... changed' — consistent with the injected variant being propagated into the original-snapshot metadata (the same corruption already evidenced by correction==errorExpression in markedExpressions). Field identity is a provenance defect, not evidence that the rendered sentence is grammatical. Independent re-derivation of the answer set from the rendered text alone yields {(C)}: two blind solvers converged on (C) with high confidence, and this adjudicator's from-scratch analysis confirms the passive is unlicensed in context. The answer set is not empty."
+    },
+    {
+      "label": "(D)",
+      "claim": "Potential competing answer: 'When the band was finished' looks like an illicit passive of an active accomplishment ('when the band finished').",
+      "verdict": "not an error — (D) is grammatical, no second answer",
+      "evidence": "'finished' here is the entrenched adjectival participle meaning 'done / having completed an activity' with animate or collective subjects: 'Are you finished?', 'When the speaker was finished, ...'. 'When the band was finished' = 'when the band was done (playing)' is fully idiomatic. Both solvers explicitly tested this temptation and rescued it; the auditor also concedes it is a 정문. It does not create a multiple-answer conflict with (C)."
+    },
+    {
+      "label": "(A)/(B)/(E)",
+      "claim": "Routine fillers alleged grammatical by all parties.",
+      "verdict": "confirmed grammatical",
+      "evidence": "(A) 'entered the lively shopping center': transitive enter + bare direct object, past tense consistent with narrative. (B) 'would look great on my brother': linking look + adjectival complement, standard 'look + ADJ + on + person' clothing pattern. (E) 'the best performance I've ever seen': superlative antecedent + contact relative + present perfect with ever; 'seen' is the correct participle after 've. No party disputes these; independent check agrees."
+    },
+    {
+      "label": "explanation/metadata (V4/V5, out of V2 scope)",
+      "claim": "Auditor: the explanation describes a nonexistent sentence state (claims bare active 'changed' is objectless and ungrammatical, prescribing 'was changed' as the fix, though the rendered text already contains 'was'), correction field contradicts the stated fix, '접동사' is a nonword, and the (E) explanation misanalyzes 'seen' as a noun-modifying passive participle.",
+      "verdict": "auditor upheld on these points — but they do not affect V2",
+      "evidence": "The explanation is factually inverted: the correct account is that the rendered passive must become the intransitive active (delete 'was'), the opposite of what the 해설 says; its claim that active 'changed' without an object is a 비문 denies the ergative use of change and is a grammar misconception. correction=='changed' while the 해설 prescribes 'was changed' is a V5 sync failure. '접동사' is a corrupted term; the (E) 해설 mislabels a relative-clause present-perfect participle as an attributive/passive participle. These require an explanation rewrite before shipping, but the answer key label (C) remains uniquely correct, so V2 (answer uniqueness) is unaffected."
+    }
+  ]
+}

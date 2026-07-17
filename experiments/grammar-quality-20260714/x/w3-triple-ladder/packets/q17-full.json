@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20190307-q33",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "빈칸추론",
+    "words": 159
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=c  (C):dec=d  (D):ANS=h  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 23,
+        "relPos": 0.028,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 303,
+        "relPos": 0.369,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 429,
+        "relPos": 0.522,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 554,
+        "relPos": 0.674,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 817,
+        "relPos": 0.994,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.994,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "helping",
+        "isError": false,
+        "correction": "helping",
+        "errorExpression": "helping",
+        "surroundingText": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "found",
+        "isError": false,
+        "correction": "found",
+        "errorExpression": "found",
+        "surroundingText": "It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "disturbs",
+        "isError": false,
+        "correction": "disturbs",
+        "errorExpression": "disturbs",
+        "surroundingText": "In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "to think",
+        "isError": true,
+        "correction": "to think",
+        "errorExpression": "think",
+        "surroundingText": "I invite children to think of different animals for the saint to meet and different places for him to meet them.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(E)",
+        "expression": "used",
+        "isError": false,
+        "correction": "used",
+        "errorExpression": "used",
+        "surroundingText": "It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "helping"
+      },
+      {
+        "label": "(B)",
+        "text": "found"
+      },
+      {
+        "label": "(C)",
+        "text": "disturbs"
+      },
+      {
+        "label": "(D)",
+        "text": "think"
+      },
+      {
+        "label": "(E)",
+        "text": "used"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 for의 목적어 자리이므로 동명사 helping을 쓴 것은 어법상 올바릅니다.",
+      "(B)": "a story를 수식하는 분사로, 이야기가 발견되는 수동의 의미이므로 과거분사 found는 어법상 맞습니다.",
+      "(C)": "부사절 주어 it이 3인칭 단수이고 현재 시제이므로 단수 동사 disturbs는 어법상 올바릅니다.",
+      "(E)": "지각동사 hearing의 목적어 their ideas와 목적격 보어의 관계가 수동이므로 과거분사 used는 올바릅니다."
+    },
+    "explanation": "문장의 동사 invite는 목적어 뒤에 목적격 보어로 to부정사를 취하는 동사입니다(invite A to-v). 따라서 목적격 보어 자리에 원형 부정사인 think를 쓰면 어법에 맞지 않습니다. think를 to think로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 목적격 보어의 형태 — 동사 invite의 쓰임 확인",
+      "(E) 능동태 vs 수동태 — 목적어와 목적격 보어의 수동 관계",
+      "(B) 분사의 능동·수동 — 수식받는 명사와의 능동·수동 관계 파악"
+    ],
+    "tags": [
+      "어법",
+      "목적격보어",
+      "to부정사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "A lovely technique for __(A) helping__ children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, __(B) found__ in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it __(C) disturbs__ his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children __(D) think__ of different animals for the saint to meet and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas __(E) used__."
+  }
+}

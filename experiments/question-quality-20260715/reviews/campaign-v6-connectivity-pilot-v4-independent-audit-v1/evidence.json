@@ -1,0 +1,2352 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-v4-independent-audit-evidence-v1",
+  "generatedFromTargetBytesOnly": true,
+  "compilerClosure": {
+    "algorithm": "INDEPENDENT_TYPESCRIPT_RESOLVER_PLUS_AST_TRANSITIVE_V1",
+    "entrypoints": [
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compile-exact-wire.mts"
+    ],
+    "sourceFiles": 192,
+    "declaredDataInputs": 4,
+    "totalFiles": 196,
+    "sourceListSha256": "be116d49c0a06c179d9f61714082cf53fa728ab4b5aa77447ee551778d2083f6",
+    "exactSourceSetAndBytesSha256": "d5817e141d44a2065d2460b590e0d6da38e8b691cb94d8f81c5a4a68551e3257",
+    "exactDeclaredDataSetAndBytesSha256": "4f9b79867921d343f8b0d3f2ea2511eb7c61543ad7838f561970159f4aa7f8b1",
+    "exactClosureSetAndBytesSha256": "392d53c829803775987a6585976a8011ff0659feaf65f70e539ddf6f7f34c19f",
+    "artifactBytesSha256": "673effc7574891a32d1ddad79531ef5573ecfb5be61e9df8ad4b74e1d8a5ebbd",
+    "artifactSemanticSha256": "4ff97962aa65651d4bd913ef9d1a05e2f149de60a69d6d6b90cca804165eecbb",
+    "astImportPlusDeclaredRowsEqualAuthorArtifact": true,
+    "actualFileInputClosureEqualAuthorArtifact": false,
+    "actualUniqueFileInputs": 199,
+    "actualFileInputListSha256": "74a6458f6c439bf4319acb8fd8254145ff309ba264bd2a3102d272175956cd71",
+    "actualFileInputSetAndBytesSha256": "eb032a8e56d7177132cba106d9114edc690f3b355d8d07b7dca56d65879d73c0",
+    "unresolvedLocalSpecifiers": [],
+    "nonliteralDynamicLoads": [],
+    "importTypeSpecifiersObservedButNonRuntime": [
+      "@/app/api/ai/generate-questions-auto/_lib/constants",
+      "@/app/api/ai/generate-questions-auto/_lib/run-question-generation",
+      "@/lib/question-generation-research-profiles",
+      "@/lib/question-generation-research-runtime",
+      "node:fs",
+      "node:path"
+    ],
+    "externalSpecifiers": [
+      "@ai-sdk/openai-compatible",
+      "ai",
+      "node:assert/strict",
+      "node:async_hooks",
+      "node:child_process",
+      "node:crypto",
+      "node:fs",
+      "node:path",
+      "node:url",
+      "typescript",
+      "zod"
+    ],
+    "externalNetworkTransportModules": [],
+    "v3ThirtyTwoRowLegacyList": {
+      "rows": 32,
+      "overlapWithExactClosure": 29,
+      "legacyOnlyRows": [
+        "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+        "experiments/question-quality-20260715/harness/atlas-controller.ts",
+        "experiments/question-quality-20260715/harness/ledger.ts"
+      ],
+      "exactClosureOnlyRows": 167,
+      "rejectedByExactEquality": true,
+      "note": "The historical 32-row list is colloquially called a subset, but set comparison shows 29 overlapping rows and 3 legacy-only harness rows; it is decisively not the exact 196-row closure."
+    },
+    "oneRowDeletionTests": {
+      "attempted": 196,
+      "rejected": 196
+    },
+    "actualFileInputOneRowDeletionTests": {
+      "attempted": 199,
+      "rejected": 199
+    },
+    "fileSystemCalls": [
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 184,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "filePath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 189,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "path.join(repoRoot, relativePath)"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 318,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "paths.originalProtocolV1"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 322,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "paths.corpusPublic"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 330,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "paths.corpusPublic"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 492,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "paths.originalProtocolV1"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 494,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "paths.corpusPublic"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 495,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "paths.corpusPrivate"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 596,
+        "operation": "mkdirSync",
+        "category": "write-or-open",
+        "argumentExpression": "path.dirname(paths.privateArtifact)"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 597,
+        "operation": "writeFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "paths.privateArtifact"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 598,
+        "operation": "writeFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "paths.publicArtifact"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compile-exact-wire.mts",
+        "line": 70,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "upstreamCompilerPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compile-exact-wire.mts",
+        "line": 71,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "upstreamSchemaPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compile-exact-wire.mts",
+        "line": 73,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "originalProtocolPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compile-exact-wire.mts",
+        "line": 74,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "publicCorpusPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compiler-closure.mts",
+        "line": 53,
+        "operation": "statSync",
+        "category": "metadata-read",
+        "argumentExpression": "resolved"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compiler-closure.mts",
+        "line": 74,
+        "operation": "existsSync",
+        "category": "metadata-read",
+        "argumentExpression": "candidate"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compiler-closure.mts",
+        "line": 74,
+        "operation": "statSync",
+        "category": "metadata-read",
+        "argumentExpression": "candidate"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compiler-closure.mts",
+        "line": 82,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "canonicalRepoFile(path.join(repoRoot, relative))"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compiler-closure.mts",
+        "line": 100,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "absolute"
+      },
+      {
+        "path": "src/lib/question-generation-llm.ts",
+        "line": 548,
+        "operation": "mkdirSync",
+        "category": "write-or-open",
+        "argumentExpression": "dir"
+      },
+      {
+        "path": "src/lib/question-generation-llm.ts",
+        "line": 553,
+        "operation": "writeFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "file"
+      }
+    ],
+    "dataReadSourceModules": [
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compile-exact-wire.mts",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/compiler-closure.mts"
+    ],
+    "declaredDataPaths": [
+      "experiments/question-quality-20260715/corpus/original-connectivity-pilot-v1/private/pilot-source.private.json",
+      "experiments/question-quality-20260715/corpus/original-connectivity-pilot-v1/source-public.json",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v1/protocol.json",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/protocol-v2.json"
+    ],
+    "literalSourcePathsRows": [
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/constants.ts",
+        "bytes": 6744,
+        "sha256": "a58a825d8d768b8df81efdca7eccace5631bbd71ac2d61e817a73ef3028bcc7b"
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+        "bytes": 106853,
+        "sha256": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2"
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts",
+        "bytes": 29924,
+        "sha256": "50d33bba9a532eff59d8205e3913abfeec6c178082ae5c061339b71164bc2e21"
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-helpers.ts",
+        "bytes": 40850,
+        "sha256": "bda4f9f2c10a7284a74424b16799024ff07e3956cc5357292b4ce9416cc549d4"
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-types.ts",
+        "bytes": 3532,
+        "sha256": "085e6f52b1a91e4aba83beb0d2ed085d4f96377be9acd65ddbea5fb38a0b1009"
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/prompts.ts",
+        "bytes": 11104,
+        "sha256": "7d6f0d25e2933f122323dda29d3f65bacb03dafc62444f4cff72088e8422bf59"
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/schemas.ts",
+        "bytes": 1491,
+        "sha256": "bd14cadf02bd6aa2859ded1c1544bbdaa426968d1d4c32ee4f9da933807ca5cb"
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+        "bytes": 1584,
+        "sha256": "46b6151bbde80a7b149be5f1f6d266cb640f5ad8366901072e237bca22e7ae8b"
+      },
+      {
+        "path": "src/lib/question-generation-llm.ts",
+        "bytes": 42254,
+        "sha256": "90776f0304ef9fddcbb60a92563904f8ce3213b26036d8357b3eeedb7ccf5c46"
+      },
+      {
+        "path": "src/lib/question-generation-prompt-contract.ts",
+        "bytes": 46240,
+        "sha256": "5fcf0144529af8b5cc72616c25fd45535d5920098acc5434e7c7ec428e9cd354"
+      },
+      {
+        "path": "src/lib/question-generation-research-profiles.ts",
+        "bytes": 33970,
+        "sha256": "aad875be9e4cc678f345d38f670d3b6fe51b8d579a46b503a937dfa162c0f094"
+      },
+      {
+        "path": "src/lib/question-generation-research-schema.ts",
+        "bytes": 2256,
+        "sha256": "a507b40880ad83940c754687a9bb04db00490bdf8b7ad554f7f34d9cdad1d7e5"
+      },
+      {
+        "path": "src/lib/question-generation-research-runtime.ts",
+        "bytes": 7447,
+        "sha256": "727905b19ba7003a0f7983310c65492a13f28257720c921be6fa60319009d10b"
+      },
+      {
+        "path": "src/lib/question-type-generation-settings/index.ts",
+        "bytes": 6555,
+        "sha256": "fd05afade45fee9ff933dbaba749dd25af05a37732193b7b5aa1438bc5e3be4d"
+      },
+      {
+        "path": "src/lib/question-type-generation-settings/blank-inference.ts",
+        "bytes": 4213,
+        "sha256": "5f9d95d393073c1fc33d6ce8cf612bcfe6a27e4b7d43180a54c1841d941589c8"
+      },
+      {
+        "path": "src/lib/question-quality/dispatcher.ts",
+        "bytes": 116286,
+        "sha256": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99"
+      },
+      {
+        "path": "src/lib/question-quality/core.ts",
+        "bytes": 18736,
+        "sha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35"
+      },
+      {
+        "path": "src/lib/question-quality/validators/blank/inference.ts",
+        "bytes": 35315,
+        "sha256": "0e517dd2dde81f06cf20bab6c7bab90e2155ed7c9e239f07d02e3fb099ff8f60"
+      },
+      {
+        "path": "src/lib/question-quality/validators/blank/inference-distractor.ts",
+        "bytes": 19201,
+        "sha256": "a9c478cf1a10a1a3865fc75dacba1c93fbd3e43c1ea3e01b858a7f8f5b561acc"
+      },
+      {
+        "path": "src/lib/question-quality/validators/blank/shared.ts",
+        "bytes": 1262,
+        "sha256": "c5488dc16723b45f4da3c099c8bd0c7c620a388c91aaf7027c84c0ea0b1e137b"
+      },
+      {
+        "path": "src/lib/question-quality/validators/blank/paraphrase.ts",
+        "bytes": 15490,
+        "sha256": "d8a660b09e124744705111ea9413245648c18aa94f88ba20471afbd0d164df14"
+      },
+      {
+        "path": "src/lib/question-quality/validators/blank/seam.ts",
+        "bytes": 10932,
+        "sha256": "890869a6d1f210ec957b6eea81f304fde6b8f3a245f803503a5debce0aa85783"
+      },
+      {
+        "path": "src/lib/question-quality/validators/options.ts",
+        "bytes": 9268,
+        "sha256": "e5f50756acebc6db9d95e1f9111c5d5a43936cc2f729834ccdae8c61f9451503"
+      },
+      {
+        "path": "src/lib/atlas-ai.ts",
+        "bytes": 17718,
+        "sha256": "c69d9115e834b9a379c80791653e3bd51aecef117dca3367391460aa2ff60922"
+      },
+      {
+        "path": "src/lib/atlas-research-fetch-boundary.ts",
+        "bytes": 52523,
+        "sha256": "0aefa4a2ca66e0997f3f012d153dc273cae46f60cbdde4306c7aa2d8bce89e1d"
+      },
+      {
+        "path": "src/lib/atlas-fetch-scope-coordinator.ts",
+        "bytes": 588,
+        "sha256": "fd58c3e226279045f9f53ee56d320cfb2a0739387ebe1abfbc1d8afa750ca874"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v1/protocol.json",
+        "bytes": 5073,
+        "sha256": "b6eba782e92a16c8bba3b6b3b4c5a633449fba117fcf0b5e51a3dbf3f1e8b1f2"
+      },
+      {
+        "path": "experiments/question-quality-20260715/corpus/original-connectivity-pilot-v1/source-public.json",
+        "bytes": 1395,
+        "sha256": "465e3d6d17bd6c2748fb69d05f3947f96ecc42d0abf71bd56f4e3dbb969933f6"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+        "bytes": 4095,
+        "sha256": "529bf8a63e794d3bc3c3d4eb834cd9ef48c720bc203190c5499cc8e613c58438"
+      },
+      {
+        "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+        "bytes": 109444,
+        "sha256": "b8812dbe0dc89ee103961563698a5fa47ac97add6d637be94737e886c30e3511"
+      },
+      {
+        "path": "experiments/question-quality-20260715/harness/ledger.ts",
+        "bytes": 244663,
+        "sha256": "8a1ad1b22daf4f449242c9f122c4271650cb18991d56040d54f5659e09d3833e"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/protocol-schema.ts",
+        "bytes": 45437,
+        "sha256": "2daf5f982e25ccffdcd83411c56026e6ea209bbf8f9d64eedf358ebe080b0a46"
+      }
+    ],
+    "hiddenFileDataInputsDetected": [
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+        "bytes": 4095,
+        "sha256": "529bf8a63e794d3bc3c3d4eb834cd9ef48c720bc203190c5499cc8e613c58438",
+        "kind": "undeclared_literal_sourceClosure_file_input"
+      },
+      {
+        "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+        "bytes": 109444,
+        "sha256": "b8812dbe0dc89ee103961563698a5fa47ac97add6d637be94737e886c30e3511",
+        "kind": "undeclared_literal_sourceClosure_file_input"
+      },
+      {
+        "path": "experiments/question-quality-20260715/harness/ledger.ts",
+        "bytes": 244663,
+        "sha256": "8a1ad1b22daf4f449242c9f122c4271650cb18991d56040d54f5659e09d3833e",
+        "kind": "undeclared_literal_sourceClosure_file_input"
+      }
+    ],
+    "hiddenInputMutationRegressions": [
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+        "authorCompilerClosureCommitmentChanges": false,
+        "upstreamLiteralClosureCommitmentChanges": true,
+        "upstreamPrivateSemanticChanges": true,
+        "v4PrivateSemanticChanges": true
+      },
+      {
+        "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+        "authorCompilerClosureCommitmentChanges": false,
+        "upstreamLiteralClosureCommitmentChanges": true,
+        "upstreamPrivateSemanticChanges": true,
+        "v4PrivateSemanticChanges": true
+      },
+      {
+        "path": "experiments/question-quality-20260715/harness/ledger.ts",
+        "authorCompilerClosureCommitmentChanges": false,
+        "upstreamLiteralClosureCommitmentChanges": true,
+        "upstreamPrivateSemanticChanges": true,
+        "v4PrivateSemanticChanges": true
+      }
+    ],
+    "externalProcessInputs": [
+      {
+        "command": "git rev-parse HEAD",
+        "classification": "declared provenance label input; affects artifact gitVersion but not sealed body bytes"
+      }
+    ],
+    "environmentReferences": [
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 212,
+        "expression": "process.env[name]"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 214,
+        "expression": "process.env.OPENROUTER_BASE_URL"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 215,
+        "expression": "process.env.OPENROUTER_API_KEY"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 216,
+        "expression": "process.env.OPENROUTER_STANDARD_MODEL"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 217,
+        "expression": "process.env.PREMIUM_QGEN_MODEL_ID"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 218,
+        "expression": "process.env.OPENROUTER_GEMINI_REASONING_EFFORT"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts",
+        "line": 219,
+        "expression": "process.env.OPENROUTER_REASONING_EFFORT"
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+        "line": 65,
+        "expression": "process.env.GRAMMAR_PREMIUM_MODEL_ID"
+      },
+      {
+        "path": "src/lib/atlas-ai.ts",
+        "line": 17,
+        "expression": "process.env[name]"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 2,
+        "expression": "process.env[name]"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 65,
+        "expression": "process.env[name]"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 75,
+        "expression": "process.env[name]"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 85,
+        "expression": "process.env.TRIGGER_WORKBENCH_QUESTION_QUEUE_NAME"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 87,
+        "expression": "process.env.TRIGGER_WORKBENCH_ANALYSIS_QUEUE_NAME"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 89,
+        "expression": "process.env.TRIGGER_TUTOR_PROGRAM_QUEUE_NAME"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 91,
+        "expression": "process.env.TRIGGER_EXTRACTION_PAGE_QUEUE_NAME"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 93,
+        "expression": "process.env.TRIGGER_EXTRACTION_ORCHESTRATOR_QUEUE_NAME"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 96,
+        "expression": "process.env.TRIGGER_EXTRACTION_FINALIZE_QUEUE_NAME"
+      },
+      {
+        "path": "src/lib/concurrency-config.ts",
+        "line": 98,
+        "expression": "process.env.TRIGGER_SIMILAR_EXAM_QUEUE_NAME"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 30,
+        "expression": "process.env.NEXT_PUBLIC_SHOW_MODEL_SELECTOR"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 43,
+        "expression": "process.env.NEXT_PUBLIC_SHOW_USER_RESULTS"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 53,
+        "expression": "process.env.NEXT_PUBLIC_SHOW_SIMILAR_EXAM_GENERATION"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 63,
+        "expression": "process.env.NEXT_PUBLIC_SHOW_CREDIT_TOP_UP"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 64,
+        "expression": "process.env.NEXT_PUBLIC_SHOW_CREDIT_PAYMENTS"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 74,
+        "expression": "process.env.NEXT_PUBLIC_SHOW_SUBSCRIPTION_BILLING"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 87,
+        "expression": "process.env.NEXT_PUBLIC_ENABLE_LONG_PASSAGE_SETS"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 104,
+        "expression": "process.env.NEXT_PUBLIC_EXTRACTION_ADAPTIVE_INTAKE"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 118,
+        "expression": "process.env.NEXT_PUBLIC_SHOW_TUTOR_BILLING"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 129,
+        "expression": "process.env.NEXT_PUBLIC_ENABLE_EXAM_DEPLOYMENT"
+      },
+      {
+        "path": "src/lib/feature-flags.ts",
+        "line": 138,
+        "expression": "process.env.NEXT_PUBLIC_ENABLE_GRAMMAR_DRILL"
+      },
+      {
+        "path": "src/lib/question-generation-llm.ts",
+        "line": 541,
+        "expression": "process.env.QGEN_FALLBACK_RAW_DUMP_DIR"
+      },
+      {
+        "path": "src/lib/question-generation-llm.ts",
+        "line": 1118,
+        "expression": "process.env[name]"
+      }
+    ]
+  },
+  "liveClosure": {
+    "algorithm": "INDEPENDENT_TYPESCRIPT_RESOLVER_PLUS_AST_TRANSITIVE_RUNTIME_V1",
+    "entrypoints": [
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-child.mts",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/operator-wrapper.mts",
+      "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts"
+    ],
+    "sourceFiles": 8,
+    "runtimeDataFiles": 3,
+    "totalFiles": 11,
+    "sourceListSha256": "f2c8fc158cfe860973ae41fc7882155dec86fa0be3937ab3b7d3fd846af5ed2c",
+    "exactSetAndBytesSha256": "b557909aedf6bc7910750a3bf4da77755ee16587f86e33915b9d5d7268efe6ef",
+    "artifactBytesSha256": "775156d6b74c5651fc0eedba3ed3b07b2733acfefe3f74a89f96236d6f46c92a",
+    "artifactSemanticSha256": "02610b438f06b6a7d8acec06ae95b7877d47fd91fc4fcef90c82c86d9ecf1d7d",
+    "authorExactEquality": true,
+    "excludedTestSupportVerifyOfflineFiles": true,
+    "runtimeData": [
+      {
+        "path": "experiments/question-quality-20260715/budget-ledger.json",
+        "kind": "mutable_runtime_data_precondition",
+        "bytes": 509,
+        "sha256": "9a05a64ed97c4746b7fe56933374d2179178885bd3e1db93f830f938bafdea1e"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/private/exact-wire-v4.private.json",
+        "kind": "immutable_runtime_data",
+        "bytes": 127331,
+        "sha256": "b81e59a209e3166bc74cd18181669d5fb87a883480dcbd33d061ddcdac5df712"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/protocol-v4.json",
+        "kind": "immutable_runtime_data",
+        "bytes": 7517,
+        "sha256": "18d7eb7c60fdfc1d4b49fb868ef887d64e62db6d217abf8eaec0fbbeab8ffec9"
+      }
+    ],
+    "fileSystemCalls": [
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+        "line": 46,
+        "operation": "mkdirSync",
+        "category": "write-or-open",
+        "argumentExpression": "path.dirname(outputPath)"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+        "line": 58,
+        "operation": "openSync",
+        "category": "write-or-open",
+        "argumentExpression": "outputPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+        "line": 60,
+        "operation": "writeFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "handle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+        "line": 61,
+        "operation": "fsyncSync",
+        "category": "write-or-open",
+        "argumentExpression": "handle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts",
+        "line": 63,
+        "operation": "closeSync",
+        "category": "write-or-open",
+        "argumentExpression": "handle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 27,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "resolveRepoPath(relativePath)"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 40,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "absolute"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 50,
+        "operation": "openSync",
+        "category": "write-or-open",
+        "argumentExpression": "lockPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 52,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "target"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 55,
+        "operation": "openSync",
+        "category": "write-or-open",
+        "argumentExpression": "tempPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 57,
+        "operation": "writeFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "tempHandle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 58,
+        "operation": "fsyncSync",
+        "category": "write-or-open",
+        "argumentExpression": "tempHandle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 60,
+        "operation": "closeSync",
+        "category": "write-or-open",
+        "argumentExpression": "tempHandle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 62,
+        "operation": "renameSync",
+        "category": "write-or-open",
+        "argumentExpression": "tempPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 65,
+        "operation": "closeSync",
+        "category": "write-or-open",
+        "argumentExpression": "lockHandle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-io.ts",
+        "line": 66,
+        "operation": "unlinkSync",
+        "category": "write-or-open",
+        "argumentExpression": "lockPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/operator-wrapper.mts",
+        "line": 37,
+        "operation": "createReadStream",
+        "category": "data-read",
+        "argumentExpression": "envLocalPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/operator-wrapper.mts",
+        "line": 70,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "protocolPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 314,
+        "operation": "mkdirSync",
+        "category": "write-or-open",
+        "argumentExpression": "runsRoot"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 316,
+        "operation": "mkdirSync",
+        "category": "write-or-open",
+        "argumentExpression": "runRoot"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 319,
+        "operation": "openSync",
+        "category": "write-or-open",
+        "argumentExpression": "journalPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 320,
+        "operation": "closeSync",
+        "category": "write-or-open",
+        "argumentExpression": "handle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 338,
+        "operation": "openSync",
+        "category": "write-or-open",
+        "argumentExpression": "temporary"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 340,
+        "operation": "writeFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "fd"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 341,
+        "operation": "fsyncSync",
+        "category": "write-or-open",
+        "argumentExpression": "fd"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 343,
+        "operation": "closeSync",
+        "category": "write-or-open",
+        "argumentExpression": "fd"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 345,
+        "operation": "existsSync",
+        "category": "metadata-read",
+        "argumentExpression": "statePath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 347,
+        "operation": "writeFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "statePath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 347,
+        "operation": "readFileSync",
+        "category": "data-read",
+        "argumentExpression": "temporary"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 354,
+        "operation": "appendFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "journalPath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 439,
+        "operation": "openSync",
+        "category": "write-or-open",
+        "argumentExpression": "responsePath"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 441,
+        "operation": "writeFileSync",
+        "category": "write-or-open",
+        "argumentExpression": "responseHandle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 442,
+        "operation": "fsyncSync",
+        "category": "write-or-open",
+        "argumentExpression": "responseHandle"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 444,
+        "operation": "closeSync",
+        "category": "write-or-open",
+        "argumentExpression": "responseHandle"
+      }
+    ],
+    "environmentReferences": [
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/live-child.mts",
+        "line": 23,
+        "expression": "process.env[LIVE_CHILD_ENV]"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/operator-wrapper.mts",
+        "line": 58,
+        "expression": "process.env[name]"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 195,
+        "expression": "process.env[LIVE_CHILD_ENV]"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 199,
+        "expression": "process.env.OPENROUTER_API_KEY"
+      },
+      {
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts",
+        "line": 392,
+        "expression": "process.env.OPENROUTER_API_KEY"
+      }
+    ],
+    "dynamicContracts": {
+      "priceSnapshotPath": "argv path constrained under v4/private; strict content hash/schema/freshness",
+      "secretSource": ".env.local stream, not opened by this audit",
+      "clock": "Date.now/new Date used for price freshness, journal timestamps, and ledger timestamps",
+      "processArguments": "runId, price snapshot path, and capture output path",
+      "mutableOutput": "global ledger transaction plus exclusive private run files"
+    }
+  },
+  "artifactBindings": {
+    "protocolBytesSha256": "18d7eb7c60fdfc1d4b49fb868ef887d64e62db6d217abf8eaec0fbbeab8ffec9",
+    "privateBytesSha256": "b81e59a209e3166bc74cd18181669d5fb87a883480dcbd33d061ddcdac5df712",
+    "privateSemanticSha256": "52eae627b2a03d987967639817d3f58cb0c5c8fdfec03d6b04aa84b335e32d7a",
+    "publicBytesSha256": "6a0d9ef8775a528b2e90c9c96069753aa26b67d4f34a3a2409d2e34ae4a2362a",
+    "publicSemanticSha256": "6d3c1a04b7afd09c2c69e5f5a04000b2ea15b9e6e033d227121340263e87fa0b",
+    "compilerArtifactBytesSha256": "673effc7574891a32d1ddad79531ef5573ecfb5be61e9df8ad4b74e1d8a5ebbd",
+    "compilerArtifactSemanticSha256": "4ff97962aa65651d4bd913ef9d1a05e2f149de60a69d6d6b90cca804165eecbb",
+    "liveArtifactBytesSha256": "775156d6b74c5651fc0eedba3ed3b07b2733acfefe3f74a89f96236d6f46c92a",
+    "liveArtifactSemanticSha256": "02610b438f06b6a7d8acec06ae95b7877d47fd91fc4fcef90c82c86d9ecf1d7d",
+    "authorReportBytesSha256": "1c12ef1a9a74eee9d36a15bcec1e5ebd172f1e45a8d794aaf02db94f19f68c08",
+    "allCrossBindingsValid": true,
+    "wireSemanticBindings": {
+      "v2PrivateSemanticSha256": "275d4b29082e221850bc4f1c249ac6d80e5cb62cbe40791c3012d0f02eb97f27",
+      "inheritedThirtyTwoRowClosureSha256": "26725e6f8b90368fdd168a491117414f56689f964506a430e2b405fd12d3796b",
+      "inheritedThirtyTwoRows": 32,
+      "rowBindings": [
+        {
+          "plan": "STANDARD",
+          "bodySha256": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003",
+          "bodyUtf8Bytes": 53354,
+          "promptSha256": "d0b354ca8dc9f83db4105d92124356f5c8b97b23ea3f43157e712bc3930da15d",
+          "schemaSha256": "c6ea0593f89d66f1ab4db229d5dbfb521a6f355494ba10d0e5378d590ec42f90",
+          "requestEnvelopeSha256": "4567cd7be14086338f0124790549f4918f97fc61b2a8a261b7eaeb803735c5ab",
+          "profileArtifactSha256": "87b9b46e4a2ac9d8ea3ce7d1391b901221929973b48e7a73d42d75ce3dcd23c3",
+          "gateArtifactSha256": "cded452d75396f73eedba0a71c48bb0b9acb932a080bd04223de30d33a621e50",
+          "policyArtifactSha256": "93c0251b3737827bae7497e7a2ba159b56328cedde9bed5da7d1a00dcf8ab67c"
+        },
+        {
+          "plan": "PREMIUM",
+          "bodySha256": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643",
+          "bodyUtf8Bytes": 24943,
+          "promptSha256": "c51fff37beb66ba5415336e2b1db86364b7f7b77b59811b572fdf56d4e1cea36",
+          "schemaSha256": "c6ea0593f89d66f1ab4db229d5dbfb521a6f355494ba10d0e5378d590ec42f90",
+          "requestEnvelopeSha256": "37a90db210fa9fc3586769f57f2a9f42190b26f49ef122c2b0b4bf201dfdcae4",
+          "profileArtifactSha256": "87b9b46e4a2ac9d8ea3ce7d1391b901221929973b48e7a73d42d75ce3dcd23c3",
+          "gateArtifactSha256": "cded452d75396f73eedba0a71c48bb0b9acb932a080bd04223de30d33a621e50",
+          "policyArtifactSha256": "93c0251b3737827bae7497e7a2ba159b56328cedde9bed5da7d1a00dcf8ab67c"
+        }
+      ],
+      "diffInstructionSha256": "41a210cbe5ff40c031cd746a335a5a9522c39b552488c943aa185275e43d80ef"
+    }
+  },
+  "manifests": {
+    "targetRows": 24,
+    "targetExactCoverage": true,
+    "v2Rows": 13,
+    "v3Rows": 22,
+    "v2ManifestSha256": "8234032c53b742648345c06020f37f3f069dd60d883cf490076cc5dde7c18ea2",
+    "v3ManifestSha256": "f5baacde25a267e6a6413a5f21380f1ed735308b39213099393eab1d4c78b192",
+    "v2MatchesPriorIndependentAuditBaseline": true,
+    "v3MatchesPriorIndependentAuditBaseline": true,
+    "everyV2V3ManifestRowMatchesCurrentBytes": true
+  },
+  "responseParser": {
+    "actualSealedSchemaSummaries": [
+      {
+        "plan": "STANDARD",
+        "schemaSha256": "c6ea0593f89d66f1ab4db229d5dbfb521a6f355494ba10d0e5378d590ec42f90",
+        "keywords": [
+          "$schema",
+          "additionalProperties",
+          "description",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "minLength",
+          "properties",
+          "required",
+          "type"
+        ],
+        "types": [
+          "array",
+          "object",
+          "string"
+        ],
+        "keywordCounts": {
+          "$schema": 1,
+          "type": 24,
+          "properties": 4,
+          "required": 4,
+          "additionalProperties": 4,
+          "minItems": 3,
+          "maxItems": 3,
+          "items": 5,
+          "description": 17,
+          "enum": 2,
+          "minLength": 1
+        },
+        "constraintCounts": {
+          "required": 4,
+          "additionalProperties": 4,
+          "minItems": 3,
+          "maxItems": 3,
+          "enum": 2,
+          "minLength": 1
+        }
+      },
+      {
+        "plan": "PREMIUM",
+        "schemaSha256": "c6ea0593f89d66f1ab4db229d5dbfb521a6f355494ba10d0e5378d590ec42f90",
+        "keywords": [
+          "$schema",
+          "additionalProperties",
+          "description",
+          "enum",
+          "items",
+          "maxItems",
+          "minItems",
+          "minLength",
+          "properties",
+          "required",
+          "type"
+        ],
+        "types": [
+          "array",
+          "object",
+          "string"
+        ],
+        "keywordCounts": {
+          "$schema": 1,
+          "type": 24,
+          "properties": 4,
+          "required": 4,
+          "additionalProperties": 4,
+          "minItems": 3,
+          "maxItems": 3,
+          "items": 5,
+          "description": 17,
+          "enum": 2,
+          "minLength": 1
+        },
+        "constraintCounts": {
+          "required": 4,
+          "additionalProperties": 4,
+          "minItems": 3,
+          "maxItems": 3,
+          "enum": 2,
+          "minLength": 1
+        }
+      }
+    ],
+    "totalCases": 172,
+    "expectedAccepts": 3,
+    "expectedRejects": 169,
+    "observedAccepts": 5,
+    "observedRejects": 167,
+    "mismatches": [
+      {
+        "id": "standard:message-tool-calls-coexists",
+        "expected": "reject",
+        "observed": "accept"
+      },
+      {
+        "id": "premium:message-tool-calls-coexists",
+        "expected": "reject",
+        "observed": "accept"
+      }
+    ],
+    "allCases": [
+      {
+        "id": "standard:valid-actual-schema",
+        "expected": "accept",
+        "observed": "accept"
+      },
+      {
+        "id": "standard:finish-length",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is not an allowed terminal non-truncated reason"
+      },
+      {
+        "id": "standard:finish-content_filter",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is not an allowed terminal non-truncated reason"
+      },
+      {
+        "id": "standard:finish-tool_calls",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is not an allowed terminal non-truncated reason"
+      },
+      {
+        "id": "standard:finish-null",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is missing"
+      },
+      {
+        "id": "standard:finish-undefined",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is missing"
+      },
+      {
+        "id": "standard:choices-zero",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "response must have exactly one choice"
+      },
+      {
+        "id": "standard:choices-two",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "response must have exactly one choice"
+      },
+      {
+        "id": "standard:choice-index-wrong",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice index must be zero"
+      },
+      {
+        "id": "standard:content-null",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content is missing"
+      },
+      {
+        "id": "standard:content-missing",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content is missing"
+      },
+      {
+        "id": "standard:content-invalid-json",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      },
+      {
+        "id": "standard:message-tool-calls-coexists",
+        "expected": "reject",
+        "observed": "accept"
+      },
+      {
+        "id": "standard:served-model-wrong",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "served model is not price-attested"
+      },
+      {
+        "id": "standard:provider-wrong",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "provider route is not the exact price-attested route"
+      },
+      {
+        "id": "standard:request-id-missing",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "response.id is missing"
+      },
+      {
+        "id": "standard:questions-zero",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions array length violates exact response schema"
+      },
+      {
+        "id": "standard:questions-two",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions array length violates exact response schema"
+      },
+      {
+        "id": "standard:schema:extra:root",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.undefined is not allowed by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:wrong-type-object:root",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.undefined is not allowed by exact response schema"
+      },
+      {
+        "id": "standard:schema:wrong-type-array:questions",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions must be an array"
+      },
+      {
+        "id": "standard:schema:minItems:questions",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions array length violates exact response schema"
+      },
+      {
+        "id": "standard:schema:maxItems:questions",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions array length violates exact response schema"
+      },
+      {
+        "id": "standard:schema:extra:questions.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].__offline_extra is not allowed by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.direction",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].direction is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.blankDesign",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].blankDesign is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.originalExpression",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].originalExpression is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.surroundingText",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].surroundingText is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.options",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.correctAnswer",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].correctAnswer is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.wrongOptionExplanations",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].explanation is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.keyPoints",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].keyPoints is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.tags",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].tags is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.difficulty",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].difficulty is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:wrong-type-object:questions.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0] must be an object"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.direction",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].direction must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.blankDesign",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].blankDesign must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.originalExpression",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].originalExpression must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.surroundingText",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].surroundingText must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.blankAnswerMode",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].blankAnswerMode is outside schema enum"
+      },
+      {
+        "id": "standard:schema:enum:questions.0.blankAnswerMode",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].blankAnswerMode is outside schema enum"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.answerLogic",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].answerLogic must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-array:questions.0.options",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options must be an array"
+      },
+      {
+        "id": "standard:schema:minItems:questions.0.options",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options array length violates exact response schema"
+      },
+      {
+        "id": "standard:schema:maxItems:questions.0.options",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options array length violates exact response schema"
+      },
+      {
+        "id": "standard:schema:extra:questions.0.options.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].__offline_extra is not allowed by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.options.0.label",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].label is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.options.0.text",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].text is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:wrong-type-object:questions.0.options.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0] must be an object"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.options.0.label",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].label must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.options.0.text",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].text must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.correctAnswer",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].correctAnswer must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-array:questions.0.wrongOptionExplanations",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations must be an array"
+      },
+      {
+        "id": "standard:schema:minItems:questions.0.wrongOptionExplanations",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations array length violates exact response schema"
+      },
+      {
+        "id": "standard:schema:maxItems:questions.0.wrongOptionExplanations",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations array length violates exact response schema"
+      },
+      {
+        "id": "standard:schema:extra:questions.0.wrongOptionExplanations.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].__offline_extra is not allowed by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.wrongOptionExplanations.0.label",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].label is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:missing:questions.0.wrongOptionExplanations.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].explanation is required by exact response schema"
+      },
+      {
+        "id": "standard:schema:wrong-type-object:questions.0.wrongOptionExplanations.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0] must be an object"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.wrongOptionExplanations.0.label",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].label must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.wrongOptionExplanations.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].explanation must be a string"
+      },
+      {
+        "id": "standard:schema:minLength:questions.0.wrongOptionExplanations.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].explanation string length violates exact response schema"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].explanation must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-array:questions.0.keyPoints",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].keyPoints must be an array"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.keyPoints.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].keyPoints[0] must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-array:questions.0.tags",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].tags must be an array"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.tags.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].tags[0] must be a string"
+      },
+      {
+        "id": "standard:schema:wrong-type-string:questions.0.difficulty",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].difficulty is outside schema enum"
+      },
+      {
+        "id": "standard:schema:enum:questions.0.difficulty",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].difficulty is outside schema enum"
+      },
+      {
+        "id": "standard:usage:prompt-negative",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.prompt_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "standard:usage:prompt-zero",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.prompt_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "standard:usage:prompt-fractional",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.prompt_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "standard:usage:prompt-unsafe",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.prompt_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "standard:usage:completion-negative",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.completion_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "standard:usage:total-inexact",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage token total is inconsistent"
+      },
+      {
+        "id": "standard:usage:cost-negative",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.cost is invalid"
+      },
+      {
+        "id": "standard:usage:cost-null",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.cost is invalid"
+      },
+      {
+        "id": "standard:usage:cost-nonfinite",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.cost is invalid"
+      },
+      {
+        "id": "premium:valid-actual-schema",
+        "expected": "accept",
+        "observed": "accept"
+      },
+      {
+        "id": "premium:finish-length",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is not an allowed terminal non-truncated reason"
+      },
+      {
+        "id": "premium:finish-content_filter",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is not an allowed terminal non-truncated reason"
+      },
+      {
+        "id": "premium:finish-tool_calls",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is not an allowed terminal non-truncated reason"
+      },
+      {
+        "id": "premium:finish-null",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is missing"
+      },
+      {
+        "id": "premium:finish-undefined",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.finish_reason is missing"
+      },
+      {
+        "id": "premium:choices-zero",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "response must have exactly one choice"
+      },
+      {
+        "id": "premium:choices-two",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "response must have exactly one choice"
+      },
+      {
+        "id": "premium:choice-index-wrong",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice index must be zero"
+      },
+      {
+        "id": "premium:content-null",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content is missing"
+      },
+      {
+        "id": "premium:content-missing",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content is missing"
+      },
+      {
+        "id": "premium:content-invalid-json",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      },
+      {
+        "id": "premium:message-tool-calls-coexists",
+        "expected": "reject",
+        "observed": "accept"
+      },
+      {
+        "id": "premium:served-model-wrong",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "served model is not price-attested"
+      },
+      {
+        "id": "premium:provider-wrong",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "provider route is not the exact price-attested route"
+      },
+      {
+        "id": "premium:request-id-missing",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "response.id is missing"
+      },
+      {
+        "id": "premium:questions-zero",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions array length violates exact response schema"
+      },
+      {
+        "id": "premium:questions-two",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions array length violates exact response schema"
+      },
+      {
+        "id": "premium:schema:extra:root",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.undefined is not allowed by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:wrong-type-object:root",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.undefined is not allowed by exact response schema"
+      },
+      {
+        "id": "premium:schema:wrong-type-array:questions",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions must be an array"
+      },
+      {
+        "id": "premium:schema:minItems:questions",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions array length violates exact response schema"
+      },
+      {
+        "id": "premium:schema:maxItems:questions",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions array length violates exact response schema"
+      },
+      {
+        "id": "premium:schema:extra:questions.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].__offline_extra is not allowed by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.direction",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].direction is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.blankDesign",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].blankDesign is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.originalExpression",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].originalExpression is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.surroundingText",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].surroundingText is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.options",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.correctAnswer",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].correctAnswer is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.wrongOptionExplanations",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].explanation is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.keyPoints",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].keyPoints is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.tags",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].tags is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.difficulty",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].difficulty is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:wrong-type-object:questions.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0] must be an object"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.direction",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].direction must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.blankDesign",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].blankDesign must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.originalExpression",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].originalExpression must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.surroundingText",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].surroundingText must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.blankAnswerMode",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].blankAnswerMode is outside schema enum"
+      },
+      {
+        "id": "premium:schema:enum:questions.0.blankAnswerMode",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].blankAnswerMode is outside schema enum"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.answerLogic",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].answerLogic must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-array:questions.0.options",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options must be an array"
+      },
+      {
+        "id": "premium:schema:minItems:questions.0.options",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options array length violates exact response schema"
+      },
+      {
+        "id": "premium:schema:maxItems:questions.0.options",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options array length violates exact response schema"
+      },
+      {
+        "id": "premium:schema:extra:questions.0.options.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].__offline_extra is not allowed by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.options.0.label",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].label is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.options.0.text",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].text is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:wrong-type-object:questions.0.options.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0] must be an object"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.options.0.label",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].label must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.options.0.text",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].options[0].text must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.correctAnswer",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].correctAnswer must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-array:questions.0.wrongOptionExplanations",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations must be an array"
+      },
+      {
+        "id": "premium:schema:minItems:questions.0.wrongOptionExplanations",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations array length violates exact response schema"
+      },
+      {
+        "id": "premium:schema:maxItems:questions.0.wrongOptionExplanations",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations array length violates exact response schema"
+      },
+      {
+        "id": "premium:schema:extra:questions.0.wrongOptionExplanations.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].__offline_extra is not allowed by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.wrongOptionExplanations.0.label",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].label is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:missing:questions.0.wrongOptionExplanations.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].explanation is required by exact response schema"
+      },
+      {
+        "id": "premium:schema:wrong-type-object:questions.0.wrongOptionExplanations.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0] must be an object"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.wrongOptionExplanations.0.label",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].label must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.wrongOptionExplanations.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].explanation must be a string"
+      },
+      {
+        "id": "premium:schema:minLength:questions.0.wrongOptionExplanations.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].wrongOptionExplanations[0].explanation string length violates exact response schema"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.explanation",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].explanation must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-array:questions.0.keyPoints",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].keyPoints must be an array"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.keyPoints.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].keyPoints[0] must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-array:questions.0.tags",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].tags must be an array"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.tags.0",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].tags[0] must be a string"
+      },
+      {
+        "id": "premium:schema:wrong-type-string:questions.0.difficulty",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].difficulty is outside schema enum"
+      },
+      {
+        "id": "premium:schema:enum:questions.0.difficulty",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.questions[0].difficulty is outside schema enum"
+      },
+      {
+        "id": "premium:usage:prompt-negative",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.prompt_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "premium:usage:prompt-zero",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.prompt_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "premium:usage:prompt-fractional",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.prompt_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "premium:usage:prompt-unsafe",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.prompt_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "premium:usage:completion-negative",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.completion_tokens must be a nonnegative safe integer"
+      },
+      {
+        "id": "premium:usage:total-inexact",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage token total is inconsistent"
+      },
+      {
+        "id": "premium:usage:cost-negative",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.cost is invalid"
+      },
+      {
+        "id": "premium:usage:cost-null",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.cost is invalid"
+      },
+      {
+        "id": "premium:usage:cost-nonfinite",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "usage.cost is invalid"
+      },
+      {
+        "id": "synthetic:valid",
+        "expected": "accept",
+        "observed": "accept"
+      },
+      {
+        "id": "synthetic:maxLength",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.bounded string length violates exact response schema"
+      },
+      {
+        "id": "synthetic:pattern",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.bounded violates schema pattern"
+      },
+      {
+        "id": "synthetic:integer-minimum",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.integer must be a nonnegative safe integer"
+      },
+      {
+        "id": "synthetic:integer-maximum",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.integer exceeds schema maximum"
+      },
+      {
+        "id": "synthetic:integer-fractional",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.integer must be a nonnegative safe integer"
+      },
+      {
+        "id": "synthetic:number-minimum",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.number is invalid"
+      },
+      {
+        "id": "synthetic:number-maximum",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.number exceeds schema maximum"
+      },
+      {
+        "id": "synthetic:array-maxItems",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.list array length violates exact response schema"
+      },
+      {
+        "id": "synthetic:array-enum",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.list[0] is outside schema enum"
+      },
+      {
+        "id": "synthetic:null-wrong",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.nil must be null"
+      },
+      {
+        "id": "synthetic:unsupported-keyword",
+        "expected": "reject",
+        "observed": "reject",
+        "error": "choice.message.content JSON.probe.bounded uses unsupported schema keyword oneOf"
+      }
+    ],
+    "exactSchemaCoveragePass": true,
+    "requiredFinishReasonRejectCasesPass": true,
+    "requiredTokenCostRouteModelAndCardinalityCasesPass": true,
+    "messageToolCallsCoexistenceRejected": false
+  },
+  "costAccountingFaults": {
+    "independentPureFaultFixtures": [
+      {
+        "id": "sent-http-200-valid-usage-parser-failure",
+        "sent": true,
+        "rawUsageCostUsd": 0.123456,
+        "parserRejected": true,
+        "assignmentEvidencePersistedByRunner": false,
+        "runnerStateActualCostUsd": 0,
+        "globalSettlementCostUsd": 0,
+        "underreportedUsd": 0.123456
+      },
+      {
+        "id": "sent-http-200-valid-parser-evidence-cost-cap-failure",
+        "sent": true,
+        "rawUsageCostUsd": 0.251906501,
+        "parserAccepted": true,
+        "capFailureOccursBeforeAssignmentEvidencePersistence": true,
+        "assignmentEvidencePersistedByRunner": false,
+        "runnerStateActualCostUsd": 0,
+        "globalSettlementCostUsd": 0,
+        "underreportedUsd": 0.251906501
+      },
+      {
+        "id": "sent-http-non-ok-body-with-valid-usage",
+        "sent": true,
+        "rawUsageCostUsd": 0.045,
+        "responseOk": false,
+        "parserInvokedByRunner": false,
+        "assignmentEvidencePersistedByRunner": false,
+        "runnerStateActualCostUsd": 0,
+        "globalSettlementCostUsd": 0,
+        "underreportedUsd": 0.045
+      }
+    ],
+    "staticDataflowCharacterOffsets": {
+      "responseBodyRead": 19722,
+      "httpOkCheck": 20104,
+      "parserCall": 20181,
+      "capCheck": 20676,
+      "evidencePersistence": 20866,
+      "actualCostAccumulation": 20988,
+      "catchBlock": 21638,
+      "settlementEvidenceFilter": 23574,
+      "settlementCost": 23970
+    },
+    "confirmed": true,
+    "conclusion": "For HTTP, parser, or cost-cap failures after send, only success evidence contributes usage/cost. A body can contain finite positive usage.cost while global settlement records zero.",
+    "networkCalls": 0,
+    "ledgerMutations": 0
+  },
+  "safetyBoundary": {
+    "authorization": {
+      "liveExecutionAuthorized": false,
+      "hostileAuditPassed": false,
+      "dispatchCommandPresent": false
+    },
+    "cli": {
+      "operatorBlocked": true,
+      "liveChildGatedByRunner": true,
+      "productionRunnerHasNoCliMain": true,
+      "capturePriceSnapshotBlocked": false,
+      "capturePriceSnapshotDirectMain": true,
+      "capturePriceSnapshotNetworkCallSites": 2,
+      "capturePriceSnapshotEffectiveGetCount": 3
+    },
+    "networkBoundary": {
+      "modulePrivateFetchCapturedAtLoad": true,
+      "uniqueDirectPostCallSite": true,
+      "redirectError": true,
+      "injectedDelegateAbsent": true,
+      "alternateNodeTransportImports": []
+    },
+    "budgetStateMachine": {
+      "authorizationBeforeReservation": true,
+      "globalReservationBeforeAnyFetch": true,
+      "serialBreakOnFirstFailure": true,
+      "retryFallbackReplacementTopUpSurfaceAbsent": false,
+      "unknownAfterSendNoReplay": true,
+      "settlementInFinally": true,
+      "initialJournalAppendAfterReservationBeforeProtectedTry": true,
+      "synthesizedFaultConclusion": "If the initial DUAL_RESERVATION_COMMITTED journal append throws, the global reservation has committed but execution has not entered the settle-finally region; this leaks a fail-closed reservation without network dispatch."
+    },
+    "operatorWrapper": {
+      "retainedAssignments": 1,
+      "childCredentialAssignments": 1,
+      "childLiveMarkerAssignments": 1,
+      "inheritedEnvironmentSpread": false,
+      "otherCredentialNamesInChildBuilder": [
+        "OPENROUTER_API_KEY"
+      ],
+      "envLocalContentsReadByAudit": false
+    },
+    "liveChild": {
+      "productionRunnerImportedBeforeMainEnvironmentAssertion": true,
+      "credentialLikeEnvironmentNamesRejected": true,
+      "soleCredentialValueReadByRunner": 2
+    }
+  },
+  "importTimeNetworkDenySentinel": {
+    "productionRunnerImportAttempts": 0,
+    "captureModuleImportAttempts": 0,
+    "totalAttempts": 0
+  },
+  "findings": [
+    {
+      "id": "V4-CLOSURE-004",
+      "severity": "critical",
+      "blocker": true,
+      "title": "Claimed 192+4 compiler closure omits three literal file inputs read by the inherited compiler",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts:58",
+      "evidence": {
+        "claimedRows": 196,
+        "actualUniqueFileInputs": 199,
+        "omitted": [
+          "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+          "experiments/question-quality-20260715/harness/atlas-controller.ts",
+          "experiments/question-quality-20260715/harness/ledger.ts"
+        ],
+        "mutationRegressions": [
+          {
+            "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+            "authorCompilerClosureCommitmentChanges": false,
+            "upstreamLiteralClosureCommitmentChanges": true,
+            "upstreamPrivateSemanticChanges": true,
+            "v4PrivateSemanticChanges": true
+          },
+          {
+            "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+            "authorCompilerClosureCommitmentChanges": false,
+            "upstreamLiteralClosureCommitmentChanges": true,
+            "upstreamPrivateSemanticChanges": true,
+            "v4PrivateSemanticChanges": true
+          },
+          {
+            "path": "experiments/question-quality-20260715/harness/ledger.ts",
+            "authorCompilerClosureCommitmentChanges": false,
+            "upstreamLiteralClosureCommitmentChanges": true,
+            "upstreamPrivateSemanticChanges": true,
+            "v4PrivateSemanticChanges": true
+          }
+        ]
+      },
+      "impact": "Each omitted byte input changes the inherited sourceClosure hash, inherited private semantic hash, and v4 private semantic artifact while the advertised compiler-closure commitment remains unchanged."
+    },
+    {
+      "id": "V4-CLI-001",
+      "severity": "critical",
+      "blocker": true,
+      "title": "Price-snapshot live entrypoint bypasses the three authorization flags",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts:42",
+      "evidence": "The direct CLI guard invokes main(); main performs one models GET and two model-endpoint GETs without loading or checking protocol authorization. Static source has no authorization reference.",
+      "impact": "A direct command can cause three real external requests while liveExecutionAuthorized, hostileAuditPassed, and dispatchCommandPresent are all false."
+    },
+    {
+      "id": "V4-PARSER-002",
+      "severity": "minor",
+      "blocker": false,
+      "title": "Defense-in-depth gap: parser ignores a coexisting message.tool_calls field",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/response-parser.ts:130",
+      "evidence": [
+        {
+          "id": "standard:message-tool-calls-coexists",
+          "expected": "reject",
+          "observed": "accept"
+        },
+        {
+          "id": "premium:message-tool-calls-coexists",
+          "expected": "reject",
+          "observed": "accept"
+        }
+      ],
+      "impact": "The required finish_reason=tool_calls negative case is correctly rejected. This separate provider-envelope condition is outside the sealed content-schema contract, but exact message-envelope hardening would reject it explicitly."
+    },
+    {
+      "id": "V4-LEDGER-003",
+      "severity": "major",
+      "blocker": false,
+      "title": "One post-reservation pre-try journal fault can leave a fail-closed global reservation unsettled",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts:501",
+      "evidence": "If the initial DUAL_RESERVATION_COMMITTED journal append throws, the global reservation has committed but execution has not entered the settle-finally region; this leaks a fail-closed reservation without network dispatch.",
+      "impact": "No network overrun occurs, but the global two-candidate reservation can be stranded and the private/global state pair is not durably coupled for that fault point."
+    },
+    {
+      "id": "V4-COST-005",
+      "severity": "major",
+      "blocker": true,
+      "title": "Post-send failure paths can settle finite positive billed usage cost as zero",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts:446",
+      "evidence": [
+        {
+          "id": "sent-http-200-valid-usage-parser-failure",
+          "sent": true,
+          "rawUsageCostUsd": 0.123456,
+          "parserRejected": true,
+          "assignmentEvidencePersistedByRunner": false,
+          "runnerStateActualCostUsd": 0,
+          "globalSettlementCostUsd": 0,
+          "underreportedUsd": 0.123456
+        },
+        {
+          "id": "sent-http-200-valid-parser-evidence-cost-cap-failure",
+          "sent": true,
+          "rawUsageCostUsd": 0.251906501,
+          "parserAccepted": true,
+          "capFailureOccursBeforeAssignmentEvidencePersistence": true,
+          "assignmentEvidencePersistedByRunner": false,
+          "runnerStateActualCostUsd": 0,
+          "globalSettlementCostUsd": 0,
+          "underreportedUsd": 0.251906501
+        },
+        {
+          "id": "sent-http-non-ok-body-with-valid-usage",
+          "sent": true,
+          "rawUsageCostUsd": 0.045,
+          "responseOk": false,
+          "parserInvokedByRunner": false,
+          "assignmentEvidencePersistedByRunner": false,
+          "runnerStateActualCostUsd": 0,
+          "globalSettlementCostUsd": 0,
+          "underreportedUsd": 0.045
+        }
+      ],
+      "impact": "HTTP-status, response-parser, and cost-cap failures do not persist response usage evidence; the final global settlement aggregates only success evidence and state.actualCostUsd, underreporting already-sent/billed calls."
+    }
+  ],
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "productionDatabaseCalls": 0,
+    "browserCalls": 0,
+    "realCredentialValuesRead": 0,
+    "environmentFileContentsRead": 0,
+    "globalLedgerReservationMutations": 0,
+    "liveExecutionAuthorizedOrPerformed": false
+  }
+}

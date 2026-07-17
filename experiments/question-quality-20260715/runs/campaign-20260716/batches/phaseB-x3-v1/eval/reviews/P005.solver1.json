@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "present A with B 구문의 목적격 대명사. 주어 He(=Bargh)가 undergraduates에게 제시하는 것이므로 재귀대명사가 아닌 them이 맞다. 'presented to them a list'를 기대하며 어색함을 느낄 수 있으나 'present sb with sth'은 표준 결합이라 유혹은 금방 해소된다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "He presented them with... and asked them to...의 등위 병렬. 병렬 시작점은 과거시제 동사 presented이므로 과거형 asked가 정확하다. asking으로 바꿔야 할 분사구문 근거도 없다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "wrinkled는 '주름진'이라는 형용사화된 과거분사로 face를 수식. 얼굴이 주름을 '가진(당한 상태의)' 대상이므로 과거분사가 맞고, 지문 내 원 단어 목록(WRINKLED)과도 일치한다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "That he found was extraordinary에서 found는 타동사인데 목적어가 없어 he found는 불완전한 절이다. 접속사 that은 완전한 절을 이끌어야 하므로 불가하고, 지시대명사 that 뒤에 관계대명사가 생략된 접촉절(that (which) he found)도 표준 영어에서 허용되지 않는다(That which he found 또는 What he found여야 함). 문장 전체의 주어 역할과 found의 목적어 역할을 겸하는 선행사 포함 관계대명사 What으로 고쳐야 한다. 대안 해석(동격절, 도치, 강조구문 등)을 탐색해도 정문이 되는 parse가 존재하지 않는다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "students who had been exposed to...: 학생들이 단어에 '노출된' 수동 대상이므로 expose의 수동태가 필요하고, 실험(노출)이 복도를 걷는 시점보다 앞서므로 과거완료 수동 had been exposed가 정확하다. 뒤 문장의 who had been exposed to 'random' words와도 평행하다. 최상위권 기준 (D) 다음으로 눈이 가는 밑줄이지만(had exposed vs had been exposed 태 판별), 의미상 주어가 노출의 행위자가 아니어서 유혹이 오래가지 않는다."
+    }
+  ],
+  "note": "전형적인 what/that 판별 문항. 밑줄 (D) 직전 문장까지는 서사가 평이하게 흘러 (D)의 That이 자연스러운 지시어처럼 읽히도록 배치되어 있으나, found의 목적어 공백을 확인하는 순간 오류가 확정된다. 매력적 오답으로는 (E)(태·시제 복합 판단)와 (A)(present with 결합 낯섦)가 있으나 둘 다 규칙 확인으로 즉시 배제 가능. 정답이 (D) 하나로 명확히 수렴하며 복수정답 소지 없음."
+}

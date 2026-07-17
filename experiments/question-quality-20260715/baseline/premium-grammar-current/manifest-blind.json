@@ -1,0 +1,182 @@
+[
+  {
+    "blindId": "Q001",
+    "packetSha256": "e0d4a242db261f20e4cb9aea51878bac5d58cef79e4bfc802747cd4995802bcd",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q002",
+    "packetSha256": "28a8b7b654ad69097ee0e0966031a980dfbb3204d822b42062a972d4a4e57286",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q003",
+    "packetSha256": "beccd595dd4db28a7ce8886941d1400451195725d6a00d78359b0262ef2e1c94",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q004",
+    "packetSha256": "e801a534d11e149f5c863a8b1de2d508cc4bc3f1323a0e08ee7dafceb101f51b",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q005",
+    "packetSha256": "7986c8a4fd31dd2dab10a6ba7fc64d58f482580a6281ee51a8522e6457a55f9f",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q006",
+    "packetSha256": "cff8f12d8f6f5d84634cee741dc780aa5b45f57c4ab6315364629d2c649f80bb",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q007",
+    "packetSha256": "0fdb9f1e25aa889ad35f35934a06aa4f565fab18b004811ad19e1a9c79a0bf7d",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q008",
+    "packetSha256": "c6b04182c61ca9650098cd49788053fda1a13bee39b6d269b65afc6550df8c17",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q009",
+    "packetSha256": "e28e182c412fcdbcdf146fffe81b4fcccb59edc21ab2e52b5652262ce17f4712",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q010",
+    "packetSha256": "e790fb089c57a5c2dfcecdd22f826e5e37889e878d302ab6cc6100c3300c0575",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q011",
+    "packetSha256": "fb7025ff69b560c8c21326a87a2475bdb9393240328f1e292cc05529f207011c",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q012",
+    "packetSha256": "1858f96698369622a84bf638e3aabaf23533da28ec70c0c077615a89a2b9333a",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q013",
+    "packetSha256": "15390869e553320b680d8d9f67447eb105916c695163b3f5c7273027046e5964",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q014",
+    "packetSha256": "e5afb0b4455c22a718f5db91db173d3c756fd51be3d04b1d7c796ec45f08f57b",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q015",
+    "packetSha256": "727c8011d35556c97ce4211672978476ec7b7cb2c363d12eeccca0bc9065a042",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q016",
+    "packetSha256": "c875601acc482ab19e090fbff7308be241baf90d016e2e82daff3bbdb4521b59",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q017",
+    "packetSha256": "000a7ebcbdcdea5c79a8ceb03baf4247315c06c20f282385165621eb57bead67",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q018",
+    "packetSha256": "02a0669ef9218d4cc35d08fdc71cab5e97e615c8bdef4532136d2367ec24331f",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q019",
+    "packetSha256": "5b83b40d1fcad97a438992916ecac29278e022e29c8d8172fe46da15e67756ee",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q020",
+    "packetSha256": "f18ba3bd549b10abae2f0aed04f0f9551e36b828a17751f11a35a7341acf64e2",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q021",
+    "packetSha256": "41a8edac4537c0fea79341e973e4c84f19b5a432c2a6871eaf3194b52d878a25",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q022",
+    "packetSha256": "777dbe3e5ab8341cedbcaee9253db7a828bcac26c251b40db0948e3e084dd535",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q023",
+    "packetSha256": "9304a81889dce300845d5c92e50bfa5e0177809238244218ff4676c4ed397109",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q024",
+    "packetSha256": "ab376e3e5c940352c7ffd0682c1ab41dd82605a99b91426075a6f587029fa98c",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q025",
+    "packetSha256": "f79a258b1d194ade6d4b047281babe16ac8a3351a81b635002890af3e43d3b2a",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "KILLER"
+  },
+  {
+    "blindId": "Q026",
+    "packetSha256": "4748c95e2118cb14c28ecbc7287b967ca4184a19e62688cee6f34fc469d24ad4",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q027",
+    "packetSha256": "41442f9f81689cd75ec2f17922da5df91c5b44ac8a1e556759de81bb240a3b8f",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q028",
+    "packetSha256": "d3674413ef0ee4c27f9de7368c12e78a6b27587bd2c07adf4b714b660dad4b57",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  },
+  {
+    "blindId": "Q029",
+    "packetSha256": "af1492c0048ea3c66ca9c16482c4495c44bbd31fc10c7ba41bc29f42f577c46d",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "ADVANCED"
+  },
+  {
+    "blindId": "Q030",
+    "packetSha256": "7f498f04994f74b8337fe3b61961421691ef331b11feb86765288ec722a4819c",
+    "type": "GRAMMAR_ERROR",
+    "requestedDifficulty": "INTERMEDIATE"
+  }
+]

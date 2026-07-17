@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "learn + to부정사는 표준 결합('students learn to think through ethical issues'). 뒤따르는 'rather than follow'의 원형 follow는 (to) think와 to를 공유하는 병렬로 정상 성립하므로, 병렬 불안감이 (A)로 역류해도 밑줄 자체는 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주어가 동명사구 'being ethical'이므로 단수 동사 is defined가 옳고, define A as B의 수동형 'is defined as acting...'도 정상. ethical/ethics 복수 착시를 노린 미끼지만 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "복수 주어 'these principles'에 복수동사 vary 일치. 'both between and within individuals' 상관 병렬도 정상. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (정답)",
+      "reason": "'What a person values relating to their social, religious, or civic beliefs influenced by their formal and informal learning experiences.' — 명사절 주어 'What a person values' 뒤에 문장 전체를 통틀어 정동사가 없다. relating은 분사라 본동사 불가, influenced는 바로 뒤에 행위자 by구가 오고 목적어가 없어 능동 과거시제 본동사로 볼 수 없으며 beliefs를 수식하는 과거분사일 뿐이다. 대안 해석 적극 탐색: (i) values를 명사로 재해석하면 what절 내부 동사가 사라져 불성립, (ii) influenced 본동사설은 수동 의미상 is influenced 필요로 불성립, (iii) 무동사 절을 허용할 절대구문·생략 구조도 없음. 유일한 수리는 정동사 relates ('What a person values relates to their beliefs, influenced by...'). 결정적 구조 오류로 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "가장 강한 유혹 — 후행 선행사 'the same individual'(단수)에 대한 선행(cataphoric) they라서 '복수 대명사 + 단수 선행사 + 대명사가 선행사보다 앞'이라는 삼중 위화감으로 실제로 끌렸다. 그러나 총칭 단수 지시의 singular they는 현대 표준 학술 용법이고, 지문이 밑줄 없는 부분에서 이미 'What a person values ... THEIR social, religious, or civic beliefs'로 동일 관행을 일관 사용하므로 저자 관행상 정문 확정. (D)의 정동사 부재라는 범주적 오류에 밀려 정답 경합이 되지 않는다."
+    }
+  ],
+  "note": "블라인드 풀이, 최상위권 실전 렌즈. (D)는 문장에 정동사가 완전히 부재하는 구조적 오류(relating → relates)로 단일 정답이며 대안 정문 해석이 존재하지 않는다. 실전에서 가장 오래 붙잡은 미끼는 (E) singular they였고, 지문 내 대명사 일관성(their for 'a person')이라는 장거리 단서로 해소했다 — 중상위권을 가르는 좋은 변별 미끼로 판단. 부차 미끼는 (A) 주변의 rather than 병렬. (B)·(C)는 지배 규칙(동명사 주어 단수 일치, 복수 주어 일치) 확인으로 빠르게 소거."
+}

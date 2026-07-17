@@ -1,0 +1,70 @@
+{
+  "pid": "P035",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-template-artifact",
+      "severity": "minor",
+      "evidence": "네 개의 오답 해설 모두 '...을(를) 빌렸지만' 형태로 조사 미해결 템플릿 잔재가 노출된다. 사실 오류는 아니므로 V4 실패로는 판정하지 않으나 학생 노출 텍스트 품질 결함이다."
+    },
+    {
+      "code": "V4-minor-hedged-explanation",
+      "severity": "minor",
+      "evidence": "④ 해설의 '인과관계가 반만 일치하거나 본문에 없는 내용입니다'는 결함 축을 하나로 확정하지 못한 헤지 표현이다. 실제 결함(본문이 귀속하는 해악은 시간 손실·스트레스이지 흥미 상실이 아님)은 단일하게 특정 가능하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "scope shift — 개인의 시간 관리 조언을 학교의 클럽 개설 정책이라는 거시 층위로 이탈",
+      "temptingBecause": "'too many clubs'에서 클럽 개수라는 어휘 앵커를 빌려 '개수 제한'이라는 그럴듯한 결과를 제시한다",
+      "decisiveFlaw": "본문 전체가 개인 학생의 자유 시간·스트레스 관리 조언이며 학교의 개설 총량은 어디에도 등장하지 않는다. 또한 뒤 문장 'This is especially true during certain crunch times'와 의미 연결이 불가능하다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'reduce a large amount of your free time'의 의미 보존 패러프레이즈",
+      "temptingBecause": "정답이므로 해당 없음",
+      "decisiveFlaw": "없음. 신문 마감 예시(저녁·주말 소진)와 결론부(moderation 없으면 stressed out)가 모두 자유 시간 상실을 지지하며 유일 정답이다"
+    },
+    {
+      "label": "③",
+      "intent": "extreme overreach — 수위 조절 권고를 전면 차단으로 절대화",
+      "temptingBecause": "경고 어조의 부정적 극성과 'extracurricular activity' 어휘 앵커를 공유한다",
+      "decisiveFlaw": "'any ... activity'의 원천 차단은 결론부 'get involved in the activities that are most meaningful to you'의 선별적 참여 권고와 정면 모순이며, 클럽 가입이 활동 참여를 막는다는 자기모순도 발생한다"
+    },
+    {
+      "label": "④",
+      "intent": "unsupported causal outcome(half-truth) — 부정적 결과이지만 본문이 귀속하지 않는 해악으로 치환",
+      "temptingBecause": "과다 가입의 부정적 결과라는 틀이 맞고 'clubs' 앵커를 공유해 다섯 선지 중 가장 저항이 크다",
+      "decisiveFlaw": "본문이 제시하는 해악의 기제는 시간 손실→스트레스이며, 마감 예시도 시간 소진을 보여줄 뿐 흥미 상실은 어디에도 없다. 'This is especially true during crunch times'와도 결이 맞지 않는다"
+    },
+    {
+      "label": "⑤",
+      "intent": "polarity reversal — 경고 맥락에 긍정적 결과를 배치",
+      "temptingBecause": "'the tasks you absolutely need to complete'에서 학업 과제 어휘 앵커를 빌린다",
+      "decisiveFlaw": "본문은 성적과 클럽 활동의 관계를 전혀 언급하지 않으며, 'but some people don't know where to draw the line'의 경고 어조와 극성이 반대라 즉시 소거된다"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 4건 모두 '을(를)' 조사 미해결 템플릿 잔재 노출 (학생 노출 텍스트 품질 결함, minor)",
+    "④ 해설이 '반만 일치하거나 본문에 없는'으로 결함 축을 헤지 — 단일 결정 결함(귀속 오류)으로 특정 가능함에도 확정하지 않음 (minor)",
+    "정답 해설 자체는 source span 인용·두 문장 결합 논리·패러프레이즈 설명 모두 실제 지문과 일치 (사실 오류 없음)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과. 빈칸은 지문의 중심 인과 주장(과다 가입→자유 시간 상실)을 겨냥해 출제 가치는 있고(C1=3), 네 오답이 scope shift/overreach/귀속 오류/극성 반전으로 서로 다른 함정축을 갖는다(C2=3). 그러나 정답 ②가 제거된 span의 거의 직역 수준 패러프레이즈이고 빈칸이 'The result?' 직후라 회수형 풀이로 즉시 도달 가능해 경쟁력이 낮으며(C3=2), ①⑤는 즉시 소거·③은 절대어로 조기 탈락해 실질 경합은 ④ 하나뿐이다. INTERMEDIATE 요청 대비 사고 단계가 1단계 회수-대응에 가까워 쉬운 쪽으로 치우친다(C5=2). 해설은 정확하나 조사 템플릿 잔재와 ④ 헤지로 다듬기가 필요하다(C6=2). 합계 15로 B 기준(17) 미달 — 정답 패러프레이즈의 추상화 수위를 올리고 ④급 경합 오답을 하나 더 확보하는 재설계가 필요하다. KILLER 아님(killerConditionsMet=false)."
+}

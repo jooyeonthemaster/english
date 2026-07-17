@@ -1,0 +1,44 @@
+{
+  "pid": "P034",
+  "finalV2": true,
+  "winningAnswer": "②",
+  "reason": "분쟁 요약이 '선언된 정답=⑤'라고 전달했으나, 권위 소스인 full/P034.md(25-26행)의 선언 정답은 ②이며 해설·오답해설·keyPoints 전부 ② 기준으로 동기화되어 있다. 즉 실제 아티팩트 상에는 분쟁이 존재하지 않고, 요약의 '⑤'는 오케스트레이션 데이터 오기입으로 판정한다. 독립 재검증 결과: 다섯 선지 모두 'make sure you ___' 슬롯에 문법적으로 정상 결합하므로 판별은 순수 논리 적합성이며, 원문 span 'don't overextend yourself'의 의미 보존 paraphrase는 ②뿐이다. ②는 'don't know where to draw the line', 'Joining too many clubs can reduce ... free time', 'exercise some moderation' 세 단서가 수렴하는 유일 결론이고, ①은 극성 반전, ③은 예시 지엽 어휘 'perfect'의 주제 승격(예시는 스트레스 원인 묘사이지 권고가 아님), ④는 텍스트 앵커 부재, ⑤는 본문이 권고한 바 없는 수단 차원 조언으로 각각 논리적으로 기각된다. 솔버 1·2의 기각 논거에 과잉 판정 없음, 놓친 대안 해석 없음. 따라서 선언 정답 ②의 유일성 성립(V2=true). 만약 선언 정답이 실제로 ⑤였다면 ⑤는 방어 불가능하므로 V2=false가 되었을 것이나, 파일 증거상 그런 사실은 없다.",
+  "perDispute": [
+    {
+      "label": "선언정답 표기",
+      "claim": "분쟁 요약: 선언된 정답이 ⑤라고 주장",
+      "verdict": "기각(데이터 오기입)",
+      "evidence": "full/P034.md 25-26행 '## 선언된 정답 / ②'. 해설(29행)도 '정답은 ... ②'로 명시, 오답 해설 키는 ①③④⑤로 ②를 제외하며, auditor.json V5도 '정답 라벨·오답 해설 키·keyPoints 모두 동기화'로 확인. 아티팩트 어디에도 ⑤ 선언 흔적 없음."
+    },
+    {
+      "label": "②",
+      "claim": "솔버1·2 공통: ②가 유일 정답",
+      "verdict": "인용(유일 정답 확정)",
+      "evidence": "'make sure you avoid taking on too many responsibilities'는 문법 완결(avoid + 동명사). 원문 빈칸 span 'don't overextend yourself'의 의미 보존 재진술이며, 'draw the line'·'too many clubs'·'exercise some moderation' 3중 단서와 등위 명령문 구조('get involved in the activities that are most meaningful to you, and ...')에 정확히 호응. 지문 논지에서 연역되는 결론은 이것뿐."
+    },
+    {
+      "label": "①",
+      "claim": "try to push beyond your limits가 성립하는가",
+      "verdict": "불성립",
+      "evidence": "문법은 정상이나 'know where to draw the line', 'exercise some moderation', 'Pacing is important'로 반복 강조된 절제 논지와 정면 모순(극성 반전). 결론 문장에 삽입 시 글 전체 논리가 붕괴."
+    },
+    {
+      "label": "③",
+      "claim": "prioritize perfect results over active participation이 대안 정답인가",
+      "verdict": "불성립",
+      "evidence": "문법은 정상이고 'as perfect as you want it to be'와 표면 어휘가 겹치나, 해당 예시는 완벽 추구가 저녁·주말까지 잠식하는 스트레스 원인 사례로 제시된 것이지 권고가 아님. 완벽 우선 권고는 moderation 결론과 모순되는 어휘 재활용형 미끼."
+    },
+    {
+      "label": "④",
+      "claim": "focus on expanding your social networks가 대안 정답인가",
+      "verdict": "불성립",
+      "evidence": "문법은 정상이나 본문 어디에도 사교·인맥 관련 언급이 없어 source anchor 부재. 동아리 소재에서의 배경지식 연상만으로는 빈칸 추론 결론으로 도출 불가."
+    },
+    {
+      "label": "⑤",
+      "claim": "keep a daily record of your club activities가 대안 정답인가 (분쟁 요약상 선언 정답으로 지목된 선지)",
+      "verdict": "불성립",
+      "evidence": "문법은 정상이나 기록 유지는 본문이 권고한 바 없는 수단 차원 조언. 지문의 처방은 활동량 자체의 절제('moderation', 'don't overextend')이지 기록·관리가 아니며, 'Pacing is important'와의 연상은 표면적일 뿐. 이 선지가 정답으로 선언되었다면 V2 위반이나, 파일상 선언 정답은 ②."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "Imperative form fits the parallel list, and the lure is real — the passage mentions early-morning energy and 'writing' explicitly, so keyword-anchoring pulls here. But the passage's advice is conditional ('IF you have lots of energy early in the morning'), and the final sentence explicitly notes some people 'hit their stride later in the day' while the author asks people to 'respect their own body rhythms.' Forcing early waking contradicts the individual-rhythm thesis."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "Directly contradicts the immediately coordinated clause 'pay attention to how your energy level ebbs and flows during the day.' Anti-thematic reversal; grammatically fine but logically impossible. Minimal pull."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "Base-form imperative preserves the three-part parallel list ('Know..., align..., and pay attention...'). Semantically it paraphrases the thesis sentence ('do the right thing at the right time of day') and is confirmed by every subsequent sentence: schedule difficult activities when your energy peaks, apply the principle to teams, respect individual body rhythms. Coheres with both the morning-peak majority and the later-peak minority cases."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "Grammatically seamless, and 'team' appears later in the passage ('Use the same principle in planning activities for your team'), giving surface-level pull. But the passage never mentions tracking data or sharing it; the team sentence is about applying the same scheduling principle to others, not about disclosure. Unsupported content."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "Strongest surface echo — 'difficult tasks' mirrors 'schedule difficult activities' in the passage — making it the most tempting distractor after ①. But 'regardless of time' inverts the core thesis 'do the right thing at the right time of day.' Half-right lexis with a reversed qualifier; classic trap, clearly rejected on the timing clause."
+    }
+  ],
+  "note": "Blind solve, top-tier test-taker lens. The blank is the middle element of a three-part imperative parallel structure, so all five options are grammatically admissible (all base-form VPs); discrimination is purely thematic. Distractor pull ranking experienced during solving: ⑤ (lexical echo of 'difficult activities' but reversed by 'regardless of time') > ① (morning/writing keyword anchor, killed by the later-peak concession and 'respect body rhythms') > ④ (team keyword, unsupported 'tracking/sharing') > ② (blatant reversal). Only ③ survives; single defensible answer. Minor stylistic observation, not a defect: ③ placed before 'pay attention to how your energy level ebbs and flows' is slightly redundant/ordered oddly (one would observe before aligning), but this is typical of thesis-restating blanks and does not open a second defensible answer."
+}

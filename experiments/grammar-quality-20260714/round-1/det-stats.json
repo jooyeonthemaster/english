@@ -1,0 +1,94 @@
+{
+  "round": "round-1",
+  "total": 30,
+  "ok": 30,
+  "failed": 0,
+  "relaxed": 0,
+  "avgAttempts": 1.9,
+  "answers": {
+    "S": 21,
+    "A": 9,
+    "B": 0
+  },
+  "answerCodeDist": {
+    "d": 1,
+    "c": 3,
+    "e": 5,
+    "i": 2,
+    "b": 7,
+    "k": 3,
+    "f": 3,
+    "g": 4,
+    "h": 2
+  },
+  "decoyCodeDist": {
+    "c": 16,
+    "b": 17,
+    "e": 8,
+    "k": 11,
+    "g": 14,
+    "f": 15,
+    "l": 7,
+    "d": 15,
+    "i": 2,
+    "a": 7,
+    "m": 4,
+    "h": 4
+  },
+  "dupAnswerDecoy": [
+    "ebsi_go1_20221123-q21(ADVANCED)",
+    "ebsi_go3_20260507-q20(INTERMEDIATE)"
+  ],
+  "dupDecoyPairs": [
+    "ebsi_go3_20151013-q19(ADVANCED)",
+    "ebsi_go1_20151117-q21(INTERMEDIATE)",
+    "ebsi_go1_20191120-q21(KILLER)",
+    "ebsi_go1_20241015-q20(KILLER)",
+    "ebsi_go1_20221123-q21(ADVANCED)",
+    "ebsi_go1_20231219-q20(ADVANCED)",
+    "ebsi_go1_20231219-q21(INTERMEDIATE)",
+    "ebsi_go1_20221123-q20(KILLER)",
+    "ebsi_go1_20180308-q35(KILLER)",
+    "ebsi_go1_20220324-q23(INTERMEDIATE)",
+    "ebsi_go3_20150409_A-q19(INTERMEDIATE)",
+    "ebsi_go3_20260507-q20(INTERMEDIATE)",
+    "2019_06_5023285-q20(ADVANCED)"
+  ],
+  "posLastUnder07": [],
+  "firstSentenceAnswer": [],
+  "answerBefore20pct": [
+    "ebsi_go1_20231219-q20"
+  ],
+  "sameSentenceCrowd": [
+    "ebsi_go3_20151013-q19",
+    "ebsi_go1_20151117-q21",
+    "ebsi_go1_20191120-q21",
+    "ebsi_go1_20151117-q20",
+    "ebsi_go1_20231219-q20",
+    "ebsi_go1_20231219-q21",
+    "ebsi_go1_20221123-q20",
+    "ebsi_go1_20190307-q33",
+    "ebsi_go1_20150311-q19",
+    "ebsi_go1_20220324-q20",
+    "ebsi_go1_20220324-q23",
+    "ebsi_go3_20260507-q20",
+    "2015_06_3026346-q21",
+    "2015_06_3026346-q19",
+    "2019_06_5023285-q29"
+  ],
+  "answerSentenceCrowd": [
+    "ebsi_go1_20191120-q21",
+    "ebsi_go1_20151117-q20",
+    "ebsi_go3_20260507-q20",
+    "2015_06_3026346-q21"
+  ],
+  "answerFirstMarker": 2,
+  "answerLabelDist": {
+    "(E)": 7,
+    "(D)": 9,
+    "(A)": 2,
+    "(C)": 8,
+    "(B)": 4
+  },
+  "avgDecoyGoodShare": 0.91
+}

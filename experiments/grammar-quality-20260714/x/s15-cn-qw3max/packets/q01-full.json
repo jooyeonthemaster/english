@@ -1,0 +1,160 @@
+{
+  "passageId": "ebsi_go3_20151013-q26",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "내용일치",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-surrounding-missing-marker",
+    "grammar-underline-wide",
+    "grammar-underline-too-long",
+    "grammar-underline-wide",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=g  (C):ANS=g  (D):dec=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 13,
+        "relPos": 0.014,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 140,
+        "relPos": 0.149,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 343,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 478,
+        "relPos": 0.509,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 870,
+        "relPos": 0.927,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.927,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Allan Houser created contemporary Apache sculpture. As a child, he listened to his father's stories about the adventures of Chief Geronimo. This gave him a deep attachment to his ancestral background, an attachment that is shown in his artwork. Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, where he worked as a freelance artist. During World War II, he traveled to California, where he became interested in the media of sculpture. He created works in a variety of styles and mastered bronze, metal, and stone sculpture. Houser's designs are modern, yet firmly rooted in the special tradition of his Native American forefathers. He drew inspiration from both past and present, but like all successful artists, his sculpture transcends race and language. The sculpture Reverie shows a distinct Native American influence, but it can be appreciated by anyone, regardless of his or her background.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중 어법상 가장 적절하지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "created contemporary Apache sculpture",
+        "isError": false,
+        "surroundingText": "Allan Houser <u>(A)</u>. As a child, he listened to his father's stories about the adventures of Chief Geronimo.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "This gave him a deep attachment to his ancestral background",
+        "isError": false,
+        "surroundingText": "This gave him a deep attachment to his ancestral background, an attachment that is shown in his artwork.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(C)",
+        "expression": "he worked as a freelance artist",
+        "isError": true,
+        "errorExpression": "he works as a freelance artist",
+        "surroundingText": "Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, where <u>(C)</u>.",
+        "pointCode": "g",
+        "correction": "he worked as a freelance artist"
+      },
+      {
+        "label": "(D)",
+        "expression": "He created works in a variety of styles and mastered bronze, metal, and stone sculpture",
+        "isError": false,
+        "surroundingText": "<u>(D)</u>. Houser's designs are modern, yet firmly rooted in the special tradition of his Native American forefathers.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "it can be appreciated by anyone, regardless of his or her background",
+        "isError": false,
+        "surroundingText": "The sculpture Reverie shows a distinct Native American influence, but <u>(E)</u>.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "created contemporary Apache sculpture"
+      },
+      {
+        "label": "(B)",
+        "text": "This gave him a deep attachment to his ancestral background"
+      },
+      {
+        "label": "(C)",
+        "text": "he works as a freelance artist"
+      },
+      {
+        "label": "(D)",
+        "text": "He created works in a variety of styles and mastered bronze, metal, and stone sculpture"
+      },
+      {
+        "label": "(E)",
+        "text": "it can be appreciated by anyone, regardless of his or her background"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "과거 시제 ‘created’는 앨런 하우저의 생애를 서술하는 전반적인 시간 흐름(과거 시제 일관성)과 부합하며, ‘contemporary Apache sculpture’라는 표현도 ‘현대적인 아파치 조각’이라는 의미로 자연스럽습니다.",
+      "(B)": "‘This’는 앞 문장의 ‘his father's stories’를 가리키며, ‘gave him a deep attachment’는 ‘그에게 깊은 애착을 주었다’는 의미로 문맥상 자연스럽고 어법상 문제 없습니다.",
+      "(D)": "‘created’와 ‘mastered’는 나열된 두 동사로, 모두 과거 시제를 사용해 시제 일관성을 유지했고, ‘bronze, metal, and stone sculpture’라는 복합 명사 표현도 어법상 적절합니다.",
+      "(E)": "‘regardless of his or her background’는 성별 중립 표현으로 널리 사용되며, ‘it can be appreciated’의 수동태도 문맥상 자연스럽습니다."
+    },
+    "explanation": "정답은 (C)입니다. 앞 문장에서 ‘Houser studied at the Indian School...’라고 과거 시제로 서술하고 있고, 전체 지문은 앨런 하우저의 생애와 작업을 과거 기준으로 서술하고 있으므로, ‘he works as a freelance artist’는 현재 시제로 시제 일관성을 깨뜨리는 비문입니다. 올바른 표현은 ‘he worked as a freelance artist’입니다.",
+    "keyPoints": [
+      "과거 시제 일관성 유지 (sequence of tenses)"
+    ],
+    "tags": [
+      "tense-consistency",
+      "narrative-past"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Allan Houser __(A) created contemporary Apache sculpture__. As a child, he listened to his father's stories about the adventures of Chief Geronimo. __(B) This gave him a deep attachment to his ancestral background__, an attachment that is shown in his artwork. Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, where __(C) he works as a freelance artist__. During World War II, he traveled to California, where he became interested in the media of sculpture. __(D) He created works in a variety of styles and mastered bronze, metal, and stone sculpture__. Houser's designs are modern, yet firmly rooted in the special tradition of his Native American forefathers. He drew inspiration from both past and present, but like all successful artists, his sculpture transcends race and language. The sculpture Reverie shows a distinct Native American influence, but __(E) it can be appreciated by anyone, regardless of his or her background__."
+  }
+}

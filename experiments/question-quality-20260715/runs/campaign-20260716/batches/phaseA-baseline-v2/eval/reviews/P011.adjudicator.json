@@ -1,0 +1,38 @@
+{
+  "pid": "P011",
+  "finalV2": true,
+  "winningAnswer": "③",
+  "reason": "독립 재검증 결과 ③이 유일 정답으로 성립한다. 빈칸은 원지문에서 삭제된 span \"not immediately ask 'what do you mean by that?'\"의 자리이며, ③ 'suspend the urge for immediate resolution of interpretive ambiguity'는 이 span의 의미 보존적 추상화다. 지문의 'put up with many obscurities ... without assuming that this makes no sense', 'complications of language ultimately have a communicative purpose', 'struggle to interpret ... in the interests of some further communicative goal'이 모두 ③을 함의하고, 등위 3항('to pay attention, to explore uncertainties, and ___')의 독자 능동 태도 목록과도 정합한다. 다섯 선지는 모두 동일한 bare 동사구 형태라 문법·병렬 이음새로는 변별되지 않으며(솔버2 판단 타당), 소거는 전적으로 논리적이다: ①·④는 극성 반전, ②는 지문에 없는 개념(문법 오류 교정) 도입, ⑤는 표면 어휘 재활용 미끼이나 'rely solely'의 수동성·배타성이 등위항의 능동적 노력 및 'our reading efforts'/'struggle to interpret'와 충돌해 옹호 불가. 솔버들의 과잉 판정이나 누락된 대안 해석은 발견되지 않았다. 분쟁 요약의 '선언된 정답=(B)'는 소스 파일(full/P011.md 선언된 정답=③)과 불일치하는 오케스트레이터 라벨링 산물(A/B/C 문자 인덱스 오적용)로 보이며, ②가 정답이 되는 해석은 어떤 독법에서도 존재하지 않으므로 실질 분쟁이 아니다. 선언 정답 ③ = 솔버1 = 솔버2 = 감사자 V2=true, 본 조정 결과와 전원 일치.",
+  "perDispute": [
+    {
+      "label": "①",
+      "claim": "demand instant clarity and efficiency in decoding the author's message — 성립 여부",
+      "verdict": "reject",
+      "evidence": "지문 논지의 정반대(극성 반전). 독자는 'put up with many obscurities and apparent irrelevancies'하며 'principles of efficient communication'을 위배(flout)하는 요소를 견디고 해석하려 애쓴다고 명시. 즉각적 명료성·효율 요구는 이와 정면 배치되고, 직전 등위항 'to explore uncertainties'와도 즉시 충돌. 문법은 성립하나 논리 불성립."
+    },
+    {
+      "label": "②",
+      "claim": "correct grammatical errors to restore standard communicative rules — 성립 여부 (분쟁 요약의 '(B)' 라벨이 이 선지를 지시할 가능성 포함 검토)",
+      "verdict": "reject",
+      "evidence": "지문은 언어적 파격을 '교정할 오류'가 아니라 '더 큰 소통 목적의 신호'로 해석한다고 명시('struggle to interpret elements that flout principles ... in the interests of some further communicative goal'). '문법 오류'라는 개념 자체가 지문에 부재. 어떤 독법으로도 정답이 될 수 없으므로, 분쟁 요약의 '(B)'가 이 선지를 지칭한다면 그것은 메타데이터 오류이지 내용상 분쟁이 아님. 소스 파일 full/P011.md의 선언 정답은 ③."
+    },
+    {
+      "label": "③",
+      "claim": "suspend the urge for immediate resolution of interpretive ambiguity — 유일 정답 성립 여부",
+      "verdict": "accept-unique",
+      "evidence": "원지문 삭제 span 'not immediately ask what do you mean by that?'의 정확한 추상화. 'immediate resolution 유보'는 지문의 'put up with obscurities' + 'ultimately have a communicative purpose'(궁극적 = 즉각 아님) + 'struggle to interpret'가 삼중으로 함의. 등위항 'pay attention', 'explore uncertainties'와 의미 방향 일치. bare form 병렬은 5개 선지 공통이라 이음새 페널티 없음. 유일하게 옹호 가능."
+    },
+    {
+      "label": "④",
+      "claim": "dismiss the author's hidden intent in favor of subjective impressions — 성립 여부",
+      "verdict": "reject",
+      "evidence": "지문은 'Readers assume that in literature complications of language ultimately have a communicative purpose'라 명시하며, 독자가 저자를 협조적이라 가정하고 그 이면의 소통 목적을 해석하려 분투한다고 서술. 저자 의도 배제·주관적 인상 선호는 정면 배치. 논리 불성립."
+    },
+    {
+      "label": "⑤",
+      "claim": "rely solely on the verified quality assured by the selection process — 최강 미끼의 옹호 가능성",
+      "verdict": "reject",
+      "evidence": "첫 문장 앵커('process of selection', 'assurance', 'worth it')를 재활용한 표면 어휘 미끼로 유혹력은 실재하나 옹호 불가: (1) 빈칸 문장은 독자의 능동적 노력 목록이며 'rely solely'는 노력의 포기·배제라 'willingness ... to explore uncertainties, and rely solely...'가 내적으로 모순, (2) 'the results of our reading efforts', 'struggle to interpret'와 직접 충돌, (3) 지문 논리상 선별 과정의 보증은 독자가 노력을 투자하는 이유이지 노력의 대체물이 아님. 관용적 독해를 적용해도 'solely'의 배타성 때문에 성립하지 않음. 솔버 양측의 기각 판정은 과잉이 아니라 정당."
+    }
+  ]
+}

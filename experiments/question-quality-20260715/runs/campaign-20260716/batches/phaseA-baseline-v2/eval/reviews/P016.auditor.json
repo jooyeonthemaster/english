@@ -1,0 +1,71 @@
+{
+  "pid": "P016",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "correct answer — paraphrase of source span 'matched to our energy level' abstracted to 'aligned with our personal states of vitality'",
+      "temptingBecause": "n/a (correct); supported jointly by 'analytical tasks are best accomplished when our energy is high', the author's morning-person routine, and the final-sentence advice to evening people",
+      "decisiveFlaw": "none — unique answer"
+    },
+    {
+      "label": "2",
+      "intent": "lexical-echo trap on 'emotional' (source anchor: 'waste too much emotional energy')",
+      "temptingBecause": "the passage repeatedly discusses emotional energy drained by procrastination, inviting a word-association match",
+      "decisiveFlaw": "the passage never advocates separating tasks from emotional responses; the emotional-energy mention explains the cost of procrastination, not a separation principle — relation unsupported by any sentence"
+    },
+    {
+      "label": "3",
+      "intent": "scope-narrowing trap — elevates the author's personal morning routine to a universal rule",
+      "temptingBecause": "most of the passage describes the author doing the hardest task first thing in the morning ('eating my problems for breakfast', 'the first thing I get done')",
+      "decisiveFlaw": "the final sentence explicitly tells non-morning people to schedule difficult work later in the day, contradicting 'as early in the morning as possible' as a general principle"
+    },
+    {
+      "label": "4",
+      "intent": "condition-loss / absolute-term overextension ('completely free of stress') that also reverses the author's stance",
+      "temptingBecause": "the passage values being 'free from distractions' and describes stress from pending tasks, suggesting a stress-free precondition",
+      "decisiveFlaw": "the author argues the opposite of postponement — unpleasant tasks should be handled first precisely because delaying them wastes emotional energy; 'completely free of stress' appears nowhere as a condition"
+    },
+    {
+      "label": "5",
+      "intent": "example-as-principle trap — promotes the unhappy-client detail to the passage's general rule",
+      "temptingBecause": "the unhappy client and unpleasant email are the passage's most concrete, memorable details",
+      "decisiveFlaw": "the client is a peripheral illustration of procrastination cost; the author advises dealing with such contacts promptly, not minimizing them, and the blank sentence states a general task-energy principle, not a client-management tactic"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXPL_EMPHASIS",
+      "severity": "minor",
+      "evidence": "오답 해설 4는 절대 부사('completely') 과확장을 주된 결함으로 제시하지만, 더 결정적인 결함은 'postponed'가 필자의 반(反)미루기 주장('the first thing I get done')과 정면 모순된다는 점이다. 사실 오류는 아니며 강조점 선택의 문제."
+    }
+  ],
+  "notesByGate": {
+    "V1": "렌더 지문은 원지문에서 'matched to our energy level'만 빈칸으로 치환했고 나머지는 문자 단위로 동일. 중복·누락·고아 문장부호 없음. 선지 라벨 1~5와 빈칸 마커 정상.",
+    "V2": "각 선지 독립 검증 결과 ①만 성립. ③은 마지막 문장('schedule your difficult work later in the day')과 모순, ④는 필자의 즉시 처리 원칙과 모순, ②·⑤는 본문 어디에서도 지지되지 않는 원리. 단일 정답 확정.",
+    "V3": "다섯 선지 모두 'should ideally be ___'의 수동 슬롯에 들어가는 과거분사구로 통사 슬롯 균일(§D 첫 조건 충족). seam 비문·비단어·오탈자 없음. ① 삽입 완성문 자연스러움.",
+    "V4": "주제문 판정, 아침형 사례와 마지막 문장 대비 인용, ③ 과협소 함정 분석 모두 실제 지문과 일치. 오답 해설 2~5가 각 선지의 실제 내용과 대응. 문법 용어 오분석 없음.",
+    "V5": "선언 정답 1 = 해설 ① = keyPoints의 패러프레이즈(energy level -> personal states of vitality) = 오답 해설 키(2,3,4,5) 전부 동기화."
+  },
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "요청 난이도 INTERMEDIATE의 빈칸 문항으로 모든 V 게이트 통과. 빈칸이 주제문의 핵심 원리(과제-에너지 매칭)에 위치하고(C1=4), 오답 4개가 어휘 반향·범위 축소·조건 상실·예시 승격이라는 서로 다른 함정을 사용(C2=3). 실질 경쟁 선지는 ③ 하나로, 마지막 문장을 읽어야 소거되는 좋은 함정이지만 ②·④·⑤는 비교적 빨리 탈락(C3=3). 빈칸 직후 'energy is high'가 vitality 매핑의 강한 국소 단서를 제공해 중급 기준으로 약간 쉬운 편이나 원지문 구조상 불가피(C4=3, C5=3). 해설은 정확하고 근거-함정 분리가 되어 있으나 다소 장황하고 ④ 해설의 강조점이 아쉬움(C6=3). 합계 19 — 최저 C 2 이상·17 이상이지만 21 미만이므로 B. KILLER 아님 → killerConditionsMet=false. §D 조건 참고 점검: 통사 슬롯 균일 충족, 오답별 anchor/overlap/flaw 존재, 함정 유형 다양성 충족."
+}

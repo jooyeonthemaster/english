@@ -1,0 +1,35 @@
+{
+  "pid": "P116",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'Flexible and open-ended targets that can be easily shifted' negates the deadline's motivating force. The passage's goal is to increase readiness to 'jump into action' and to start/finish 'in good time'; treating deadlines as shiftable licenses postponement, the exact failure mode the passage warns against. Logically contradicts the sequel clause."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'Completely ignoring the pressure of a time limit' contradicts the post-blank consequence 'That way the stress is more manageable,' which presupposes stress persists but is managed, not eliminated by denial. Ignoring pressure also removes the trigger for early action, contradicting 'a better chance of starting.'"
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "A long-term plan aligned with 'broad academic and career milestones' is orthogonal to the passage and, worse, inverts the remedy: long-horizon framing is precisely what makes a deadline feel remote (the 'next year' framing the passage tells you to abandon). No textual support."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "Exact generalization of the reframing strategy: telling yourself the deadline is 'this winter' rather than 'next year' collapses the categorical break so the deadline is perceived as proximate and urgent, prompting an early start. Seam is grammatical ('The best approach is to perceive...'). The consequence clause follows: early start spreads the work, so stress is manageable and finishing in good time is likelier. The apparent tension between 'urgent' and 'stress more manageable' resolves because manageability derives from starting earlier, not from lowered urgency."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Daily scheduling and 'focus only on immediate tasks' is plausible-sounding time-management advice never discussed in the passage. The passage's mechanism is time-unit categorization (which side of a 'break' the deadline sits on), not micro-scheduling; 'only on immediate tasks' would in fact ignore the deadline horizon. Attractive distractor, unsupported."
+    }
+  ],
+  "note": "Blank completion is uniquely determined by the two-sided constraint: it must generalize the 'this winter vs. next year' reframing example before it and license the 'stress manageable / start early / finish in good time' consequence after it. Only ④ satisfies both. No grammatical seam defects in any option; the discrimination is purely logical."
+}

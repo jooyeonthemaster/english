@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "evaluation-authority-v2-independent-audit-v1",
+  "artifactId": "evaluation-authority-v2-independent-audit-v1",
+  "subject": {
+    "artifactId": "evaluation-authority-v2",
+    "path": "experiments/question-quality-20260715/design/evaluation-authority-v2",
+    "protocolSha256": "149228ef8ce2273f143a8a265c070a69735124d5a140e2e0ca2bca3d88b479fa",
+    "publicManifestSha256": "c62fb02e27b0342ce31fe8fc38ec32034738bfe2ddadec9fe2861a1ae8e614bd",
+    "manifestSha256": "ac4ed7ee8bd5eb21bd45837f2a7396219142e6ccd3a1fe933916238e447f0180",
+    "fileCount": 10,
+    "manifestRows": 9
+  },
+  "verdict": "PASS_NO_BLOCKERS",
+  "blockers": [],
+  "disposition": {
+    "designContractAccepted": true,
+    "evaluatorAuthorityGranted": false,
+    "scoringAuthorityGranted": false,
+    "authorizedReviewers": 0,
+    "authorizedAdjudicators": 0,
+    "s1ResultAccessAuthorized": false,
+    "eligibleAssignments": 0,
+    "generationAuthorized": false,
+    "profileSelectionAuthorized": false,
+    "releaseClaimAuthorized": false,
+    "executionEvidenceStillRequiredInSeparateImmutableArtifact": true
+  },
+  "independence": {
+    "independentCore": "independent-core.mjs",
+    "independentCoreSha256": "98f80827d266db9182b65f3e4d9b5c651b9afb967c63e0b2f17859868099cd0b",
+    "independentVerifier": "independent-verify.mjs",
+    "independentVerifierSha256": "2d55b92a3e6f8a1d2c61b36f2174d67b017624dfee446218d8725770f3733b78",
+    "subjectBuildImportedOrExecuted": false,
+    "subjectVerifierImportedOrExecuted": false,
+    "subjectHostileLogicImportedOrExecuted": false,
+    "subjectBuildVerifierHostileContentUsedAsSemanticEvidence": false,
+    "subjectPackageFilesOnlyByteHashedForFrozenManifestClosure": true
+  },
+  "checks": {
+    "staticPassed": true,
+    "staticErrorCount": 0,
+    "artifactPassed": true,
+    "artifactErrorCount": 0,
+    "mutationsPassed": 127,
+    "mutationsTotal": 127,
+    "scenariosPassed": 12,
+    "scenariosTotal": 12,
+    "reproducibilityRuns": 2,
+    "reproducibilityPasses": 2
+  },
+  "attackCoverage": [
+    "OLD_998_PLUS_2_AND_OUTCOME_DRIVEN_ALLOCATION_DRIFT",
+    "SINGLETON_POINT_FAMILY_PRIMARY_INTENT_AXIS_DIVERGENT_AXES",
+    "UNAUTHORIZED_ITEM_OR_AGGREGATE_SCORE_ARM_RANKING_PROFILE_SELECTION_RELEASE",
+    "EVERY_PHASE_SKIP_REORDER_OVERLAP_AND_POST_OPEN_REVISION",
+    "TRUSTED_GOLD_AUDITOR_COLLISION_WITH_PILOT_MAIN_HOLDOUT_S1_ROLES",
+    "FEWER_THAN_TWO_DISTINCT_REVIEWERS_OR_NONFRESH_ADJUDICATOR",
+    "MISSING_OR_EMPTY_DENY_SET_IN_EACH_OF_NINE_STATES",
+    "LATE_BACKFILLED_ALLOW_RECEIPTS_AND_AUTHORIZATION_HASH_MISMATCH",
+    "ACTOR_ROLE_PHASE_RESOURCE_SURFACE_CAPABILITY_MISMATCH",
+    "AUTHORIZED_OPENED_CLOSED_TIME_INEQUALITY",
+    "DENY_WITH_OPEN_RECEIPT",
+    "EACH_REQUIRED_PHASE_SEAL_REMOVED",
+    "S1_PACKET_OR_RESULT_ACCESS_BEFORE_REQUIRED_SEAL_AND_AUTHORITY",
+    "EACH_OF_EIGHT_HIDDEN_CLASSES_LEAKED_INTO_PHASE1",
+    "EACH_HIDDEN_COMMITMENT_BINDING_REMOVED",
+    "N6_ARM_RANKING_SELECTION_SUPERIORITY_OR_RELEASE_CLAIM",
+    "MISSING_TYPE_BINDING_V4_SUBJECT_OR_INDEPENDENT_AUDIT",
+    "INHERITED_FAILED_V4_DRAFT_OR_V2_AUTHORITY",
+    "PERMANENT_FALSE_AUTHORITY_AND_ZERO_ELIGIBILITY_ESCALATION"
+  ],
+  "upstreams": [
+    { "id": "all-types-evaluation-rubric-v1-rubric", "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/rubric.json", "observedSha256": "17960b41393df681a3626786aa638bd4b001a9fc39e6f838c6eb5a4942c86d3a" },
+    { "id": "all-types-evaluation-rubric-v1-manifest", "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/MANIFEST.sha256", "observedSha256": "9067d8641e463a5c955a5b73af162bf63fd181289f0ce67e95911c2c5beadf4d" },
+    { "id": "global-candidate-registry-v2-registry", "path": "experiments/question-quality-20260715/design/global-candidate-registry-v2/registry.json", "observedSha256": "1e2fc90252de8790ebd7df86e81602825c3fd8b50f5fa96de237ec3cc8fdbab1" },
+    { "id": "global-candidate-registry-v2-manifest", "path": "experiments/question-quality-20260715/design/global-candidate-registry-v2/MANIFEST.sha256", "observedSha256": "13f5fdb997c616694b297c6e3c22c22a2f60b97668bbe549589807a3acdd3f1e" },
+    { "id": "campaign-v6-s1-current-source-v2-plan", "path": "experiments/question-quality-20260715/design/campaign-v6-s1-current-source-v2/campaign-v6-s1-current-source-v2.json", "observedSha256": "3fdff5bcbb6cc24f981dd09f3c53a0d2418c6089287fea906223b104097339a2" },
+    { "id": "campaign-v6-s1-current-source-v2-manifest", "path": "experiments/question-quality-20260715/design/campaign-v6-s1-current-source-v2/MANIFEST.sha256", "observedSha256": "8554231197d0e2a5194ef9a44c36750e820333183cb3ce6c4299d5e69c307d43" },
+    { "id": "reviewer-calibration-v3-replacement-v1-protocol", "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json", "observedSha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162" },
+    { "id": "reviewer-calibration-v3-replacement-v1-manifest", "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/MANIFEST.sha256", "observedSha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64" },
+    { "id": "reviewer-calibration-v3-production-type-binding-v4-subject-manifest", "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4/MANIFEST.sha256", "observedSha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04" },
+    { "id": "reviewer-calibration-v3-production-type-binding-v4-independent-audit-manifest", "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1/MANIFEST.sha256", "observedSha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d" }
+  ],
+  "manifestLineage": [
+    { "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/MANIFEST.sha256", "rows": 3, "verified": 3, "skippedForbidden": 0, "mismatches": 0 },
+    { "path": "experiments/question-quality-20260715/design/global-candidate-registry-v2/MANIFEST.sha256", "rows": 2, "verified": 2, "skippedForbidden": 0, "mismatches": 0 },
+    { "path": "experiments/question-quality-20260715/design/campaign-v6-s1-current-source-v2/MANIFEST.sha256", "rows": 7, "verified": 6, "skippedForbidden": 1, "mismatches": 0 },
+    { "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/MANIFEST.sha256", "rows": 4, "verified": 4, "skippedForbidden": 0, "mismatches": 0 },
+    { "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4/MANIFEST.sha256", "rows": 4, "verified": 4, "skippedForbidden": 0, "mismatches": 0 },
+    { "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1/MANIFEST.sha256", "rows": 4, "verified": 4, "skippedForbidden": 0, "mismatches": 0 }
+  ],
+  "semanticFindings": {
+    "exactAllocation": "C0=2,S1=180,S2=480,S3=92,S4=144,S5=102; sum=1000; used=0; no outcome-driven reallocation, replacement, or top-up",
+    "taxonomy": "Legacy singleton fields are explicit rejected history only; active grammar uses sealed family/correction sets and blank uses a seven-axis vector with one or two decisive axes.",
+    "calibration": "Exact order is fresh 12-item pilot, fresh disjoint 24-item main, independent trusted-gold audit, and fresh disjoint 24-item activation holdout. No skip, reorder, overlap, backfill, replay, or post-open threshold/taxonomy change is allowed.",
+    "roles": "Two distinct certified reviewers and one fresh adjudicator are required. The trusted-gold auditor is incompatible with packet author, pilot, main, holdout, and S1 review/adjudication roles.",
+    "access": "All nine states have nonempty deny sets. Every open requires a prior chained ALLOW and bound capability; actor, role, phase, resource, visible surface, capability, authorization hash, and strict time order are conjunctive. DENY has no open receipt.",
+    "s1Blindness": "The exact phase-1 allowlist is student-visible and blinded. All eight hidden classes live in a separate presealed commitment, cannot appear in phase 1, and reveal requires the reviewer's own sealed phase-1 response plus a bound ALLOW receipt.",
+    "n6": "A six-item cell is only a mechanism/safety/yield/cost/fatal-family screen and cannot rank arms, select a profile, claim superiority, or support release.",
+    "typeBinding": "Production type-binding v4 subject and its independent PASS_NO_BLOCKERS audit are both byte-pinned; neither grants evaluator or scoring authority."
+  },
+  "limitations": [
+    "This passes a design-only fail-closed contract, not an execution evidence package, reviewer certificate, score, selection, generation, or release decision.",
+    "One upstream manifest declares one forbidden private-path row. The manifest bytes were independently pinned, but that row was deliberately not opened or rehashed; all 23 public declared rows were rehashed.",
+    "Actual access events, phase seals, reviewer certificates, adjudicator freshness, S1 packet bytes, and result receipts remain absent and must be proven in a separate immutable independently audited artifact."
+  ],
+  "reproducibility": {
+    "runs": 2,
+    "bothPass": true,
+    "expectedVerifierOutputVerdict": "PASS_NO_BLOCKERS"
+  },
+  "activity": {
+    "privateReads": 0,
+    "goldReads": 0,
+    "revealReads": 0,
+    "answerPayloadReads": 0,
+    "envReads": 0,
+    "databaseCalls": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "ledgerReadsOrWrites": 0,
+    "subjectBuildImportsOrExecutions": 0,
+    "subjectVerifierImportsOrExecutions": 0,
+    "subjectHostileImportsOrExecutions": 0,
+    "subjectWrites": 0
+  }
+}

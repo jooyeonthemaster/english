@@ -1,0 +1,77 @@
+{
+  "pid": "P033",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERM-SLIP",
+      "severity": "minor",
+      "evidence": "정답 해설이 which 뒤의 관계절 성분을 '주절의 주어(real people), 동사(have), 목적어(actual interactions)'라고 기술. real people은 관계절(종속절)의 주어이며 실제 주절(It is a space)의 주어는 It이다. '주어·동사·목적어를 모두 갖춘 완전한 절'이라는 핵심 분석과 교정형(where/in which)은 정확하므로 치명으로 보지 않으나 용어가 부정확하다."
+    },
+    {
+      "code": "V4-ATTACH-IMPRECISE",
+      "severity": "minor",
+      "evidence": "(B) 해설이 분사의 피수식 명사구를 'events of a kind and magnitude'로 지목. 'not seen before'는 직접적으로는 'a kind and magnitude'에 걸린다. 능수동 판정 결과는 어느 해석에서도 동일하므로 정답성에는 영향 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "consider + 목적어 + to be(목적격 보어) 5형식 구조 판정 (pointCode h)",
+      "temptingBecause": "목적어(the virtual, or imaginative, nature of cyberspace)가 삽입 콤마를 포함해 길어 동사-보어 관계가 한눈에 안 들어오고, consider 뒤 to부정사가 어색하다고 느낄 수 있다",
+      "decisiveFlaw": "consider O to be C는 표준 구문이므로 오류 아님 — 밑줄은 어법상 정확하다"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사구 후치 수식 분사의 능동/수동 판정 (pointCode c)",
+      "temptingBecause": "be동사 없이 'not seen'이 축약형으로 놓여 있고 추상명사(kind, magnitude)가 '보이는' 대상인지 직관이 서지 않아 seeing과 혼동 유발",
+      "decisiveFlaw": "수식받는 명사(a kind and magnitude)가 '보여지는' 수동 관계이므로 과거분사 seen이 정확 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "삽입구(including ... ancestors)로 분리된 주어-동사 수일치 (pointCode d)",
+      "temptingBecause": "동사 직전 명사 ancestors 또는 전치사구 내 단수 art에 이끌려 involves를 기대할 수 있다",
+      "decisiveFlaw": "주어의 핵은 복수 All forms이므로 involve가 정확 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답: 관계대명사 vs 관계부사 — 후행절 완전성 판정 (pointCode b, where→which 최소대립 변형)",
+      "temptingBecause": "선행사 a space가 사물 명사라 which가 표면적으로 자연스러워 보인다",
+      "decisiveFlaw": "후행절 'real people have actual interactions with other real people'이 주어·동사·목적어를 모두 갖춘 완전한 절이어서 격 공백이 없다. 관계대명사 which 불가, 관계부사 where(또는 in which)로 교정해야 하며 교정 시 원문과 정확히 일치"
+    },
+    {
+      "label": "(E)",
+      "intent": "be동사 보어 자리의 형용사 vs 부사 판정 (pointCode f)",
+      "temptingBecause": "much more와 결합한 비교 구문에서 동사 수식으로 착각해 radically를 기대할 수 있다",
+      "decisiveFlaw": "is의 주격 보어 자리이므로 형용사 radical이 정확 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 '주절의 주어(real people)...' — 관계절 내부 성분을 주절 성분으로 오기(실제 주절 주어는 It). 학생에게 절 위계 오개념을 줄 수 있는 용어 흠결이나 완전성 판정·교정형 결론은 정확",
+      "recommendation": "'주절의'를 삭제하고 '주어·동사·목적어를 모두 갖춘 완전한 절'로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(B) 해설의 피수식 명사구 지목이 'events of a kind and magnitude'로 다소 넓음(직접 피수식부는 a kind and magnitude)",
+      "recommendation": "피수식부를 'a kind and magnitude'로 정밀화"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 의도된 where→which 단일 변형 외 원지문과 완전 일치, 정답 (D) 유일성 독립 검증 완료(각 선지 대안 해석 포함), 필드 동기화 이상 없음. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달(C5=1): which/where 후행절 완전성은 교육과정에서 가장 반복 훈련되는 포인트이고 해당 절이 짧고 명백히 완전해 상위권 학생에게 즉시 노출된다. 디코이 4개도 모두 표준적·즉시 검증형이라 실질 경합이 약함(C3=2). §C KILLER 조건 중 최소대립쌍·명확한 문법 판단·동일 포인트 쉬운 디코이 부재는 충족하나, 밑줄별 why-tempting 명시 부재 및 '구조를 읽어야 즉시 드러나지 않는 정답' 요건의 취지 미달로 killerConditionsMet=false. 해설 용어 흠결('주절의' 오기) 2건은 minor로 기록. 종합: V 통과 + C5<2 → B 요건(C 최저 2) 미달 → 등급 C. KILLER로 출하하려면 정답 포인트를 더 깊은 구조(예: 장거리 병렬, 복합 내포절)로 재설계하고 디코이 경합도를 올려야 한다."
+}

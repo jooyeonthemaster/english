@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어가 동명사구 'Recording an interview'이므로 단수 취급하여 단수 동사 is가 옳다. 'is easier and more thorough, and can be less unnerving'의 is/can be 병렬도 성립한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'lasts a while'에서 while은 관사 a와 결합한 명사(잠시, 한동안)로 last의 지속 기간 부가어로 기능하는 표준 용법이다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가주어 it + 진주어 to부정사 구문에서 보어로 쓰인 비교급. efficient는 다음절 형용사이므로 more efficient가 규범적 비교급이며, 문맥상 비교 대상(녹음 전체를 다시 듣는 방식 대비)이 성립한다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'writing down the key answers ... so ___ they can be transcribed easily afterwards'에서 뒤 절(they can be transcribed easily afterwards)은 공백(gap) 없는 완전한 절이고 문맥상 목적을 나타내야 하므로 접속사 so that이 필요하다. what은 절 내부 공백을 요구하는 wh-요소여서 완전한 절을 이끌 수 없고, 'so what'이라는 연결사 결합은 영어에 존재하지 않는다. 감탄·간접의문·자유관계절 등 어떤 대안 해석으로도 정문이 되지 않는다. what -> that 이어야 한다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "much는 비교급 easier(병렬된 quicker 포함)를 강조하는 표준 비교급 강화어(much/even/far/still/a lot 부류)다. very와 달리 much는 비교급 수식이 가능하며, 'easier to handle'의 tough-구문도 정상. 정문."
+    }
+  ],
+  "note": "정답 후보는 (D) 단일. 나머지 선지는 각각 동명사 주어 수일치(A), 명사 a while(B), 다음절 형용사 비교급(C), 비교급 강화어 much(E)로 모두 명백한 정문이며 대안 해석으로 (D)를 정문화할 방법이 없다. 전형적 so that vs what 포인트로 논쟁 여지 없음."
+}

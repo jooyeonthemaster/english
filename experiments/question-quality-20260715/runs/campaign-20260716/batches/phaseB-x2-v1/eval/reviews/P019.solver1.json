@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'characters and events of a kind and magnitude not seen before'에서 not seen은 명사구 a kind and magnitude를 수식하는 축약 관계절(which has not been seen before)의 과거분사. 수식 대상이 '보이는' 객체이므로 수동 분사가 정확하다. 'never seen'이 더 흔하다는 표층적 유혹이 있으나 not seen도 완전한 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'less developed virtual realities have always been integral parts of human life' — have always been의 현재완료(계속) 구조. '석기시대 동굴벽화 이래 늘 인간 삶의 일부였다'는 문맥(계속 용법)과 정확히 부합. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'That is new about cyberspace is its interactive nature'는 문장의 주어 자리에 명사절이 필요한 구조. That을 지시대명사 주어로 읽으면 'That is new about cyberspace'가 완결되어 뒤의 'is its interactive nature'가 주어 없이 남고, 관계대명사 that으로 읽으려 해도 선행사가 없다. 접속사 that절(That + 완전한 절)도 아니다(is new about...은 주어 결여). 선행사 포함 관계대명사 What이어야 한다. 도치·강조구문 등 대안 독법을 탐색해도 정문이 되는 해석이 존재하지 않는다. 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'real people have actual interactions with other real people, while being able to shape...' — 접속사를 유지한 분사구문. 의미상 주어가 주절 주어 real people과 일치하고 능동 관계이므로 while being able은 정문. 매력적 오답으로 잠깐 끌리는 자리(while + -ing의 어색함 검토)지만 장거리 단서(주절 주어 일치)로 해소된다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'The move from passive imaginary reality to the interactive virtual reality' — from A to B 상관 전치사 구조. 같은 문장 말미의 'from photographs to movies'가 병렬 확인 사격 역할까지 한다. 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 정답 (C)는 문두 대문자 That이 지시대명사로 자연스럽게 읽혀 눈이 미끄러지기 쉬우나 두 번째 동사 is에서 반드시 걸리는 구조로, What is new about... 유형의 전형적 출제 포인트(원전은 Ben-Ze'ev 계열의 사이버스페이스 논의로 보이는 기출풍 지문). 유일하게 유혹적인 오답 후보는 (D)(while + being)였으나 주절 주어와의 일치로 즉시 정문 판정. 복수 정답 여지 없음."
+}

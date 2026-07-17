@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-v3-author-report",
+  "verdict": "READY_FOR_INDEPENDENT_OFFLINE_AUDIT_LIVE_EXECUTION_BLOCKED",
+  "protocolSha256": "9502c1801584084dd026365aaacca46b30c63a1c0aea392f8de3cb32d2f55e15",
+  "exactWirePrivateSha256": "754144b8ea8cd4c5f4cda1c4aab591cec9caae44db6f39c7bf9f870b136f7dcb",
+  "exactWirePublicSha256": "cf20076d6f023a200f65366eff2627016fed127fe4060f0a8f85dcf6dd3f433b",
+  "liveClosureSha256": "86609d2f688f854ed63bbdf35b84f586252becb1f0787e4f2c1ec29e13e79d10",
+  "liveClosureSemanticSha256": "812f914fdcb8209cba418f40171ed4c5ccaef02754542e7f4427ffaa45e0b931",
+  "liveEntrypoints": [
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/capture-price-snapshot.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/live-child.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/operator-wrapper.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/production-runner.ts"
+  ],
+  "exactLiveClosureFiles": 11,
+  "bounds": {
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "candidates": 2,
+    "physicalFetches": 2,
+    "completions": 2,
+    "retries": 0,
+    "repairs": 0,
+    "fallbacks": 0,
+    "replacements": 0,
+    "topUps": 0,
+    "frozenWorstCaseCostUsd": 0.614455382
+  },
+  "globalLedger": {
+    "cap": 1000,
+    "observedUsedAtAuthorFreeze": 0,
+    "observedReservedAtAuthorFreeze": 0,
+    "futureLiveReservation": 2,
+    "authorFreezeReservationMutation": 0
+  },
+  "activity": {
+    "locallyInterceptedProductionCompilerFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "productionDatabaseCalls": 0,
+    "realCredentialValuesRead": 0
+  },
+  "authorization": {
+    "liveExecutionAuthorized": false,
+    "hostileAuditPassed": false,
+    "dispatchCommandPresent": false
+  },
+  "scientificScope": "Two connectivity rows cannot establish quality, reliability, or comparative performance."
+}

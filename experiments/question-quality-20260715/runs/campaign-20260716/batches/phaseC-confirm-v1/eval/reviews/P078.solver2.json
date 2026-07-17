@@ -1,0 +1,35 @@
+{
+  "pid": "P078",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'과학 실험 중 가해지는 신체적 고통을 최소화하지 못하는 것'은 정확히 복지(welfare) 프레임의 쟁점이다. 결론 문장이 'not one about treating animals inhumanely'로 명시 배제한 축과 동치이므로, 삽입 시 'A가 아니라 A'라는 논리 모순이 발생한다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "삽입하면 '문제는 동물에게 인간과 동일한 도덕적·법적 지위를 부여하는 것에 관한 것'이 되는데, 권리 진영에서 지위 부여는 해법이지 문제가 아니다. 'failing to grant'였다면 옹호 여지가 있었으나 표기 그대로는 극성이 반대이며, 지문은 '인간과 동일한(same) 지위'라는 강한 주장도 하지 않았다. 형식적으로 'one about + granting'의 문법 결합은 정문이지만 논리 부적합."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'상호작용하는 생명체를 단지 인간 효용의 도구로만 간주하는 것'은 직전 문장 'animals are not the kinds of thing that humans should use in this way at all'의 정확한 재진술이다. 'not (treating inhumanely: 처우 방식의 문제) but (viewing merely as instruments: 이용 자체·범주의 문제)'라는 대조 구조가 성립하고, 'one about + 동명사구' 결합도 정문."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'실질적 법 집행력을 상실한 오래된 입법에 의존하는 것'은 지문에 없는 소재다. 첫 문장은 입법이 수십·수백 년 존재해 왔다는 사실만 진술할 뿐 집행력 상실을 주장하지 않으며, 권리-복지 논쟁의 핵심 대조와 무관하다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'인간종과 비인간종 간 생물학적 구별을 부정하는 것'은 지문 어디에도 없는 논점이다. 권리 논변은 생물학적 동일성이 아니라 도덕적 지위와 이용 가능성에 관한 주장이므로 논리 적합성이 없다."
+    }
+  ],
+  "note": "빈칸은 권리(rights) 관점의 핵심 명제 재진술 자리. 'The problem is not one about X but one about Y' 대조에서 X=비인도적 처우(복지 쟁점), Y=동물을 도구로 이용하는 것 자체여야 하며 ③만 이를 충족한다. ②는 극성 반전('부여하지 않는 것'이 아니라 '부여하는 것') 때문에 형식 논리상 성립 불가 — 유일 정답으로 수렴. ③의 'interactive living beings'라는 표현은 다소 이례적이나 정답 성립에는 지장 없음."
+}

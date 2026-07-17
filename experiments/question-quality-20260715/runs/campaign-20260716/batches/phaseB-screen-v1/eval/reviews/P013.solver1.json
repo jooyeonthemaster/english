@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'I'm late because traffic was terrible' — because 뒤에 완전한 절(주어 traffic + 동사 was)이 오므로 접속사 because가 정확하다. because of(전치사)로 바꿔야 한다는 유혹은 뒤 성분이 명사구가 아닌 절임을 확인하면 즉시 해소된다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "\"Aren't these cool?\" Garcia asked, pointing at ... — 부대상황 분사구문. 의미상 주어는 주절 주어 Garcia이고, 묻는 사람과 가리키는 사람이 일치하므로 현수분사가 아니다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "The clerk stopped her work and looked at the clothes, quickly agreeing with Jeff's choice. — 매력적 오답: stopped/looked와 병렬로 'and agreed'여야 한다는 유혹이 실제로 있었으나, 콤마 뒤 결과·연속동작 분사구문으로 완전히 성립하며 의미상 주어(the clerk)도 일치한다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "he arrived at the concert hall for the rehearsal wearing his new clothes — 주어 he의 상태를 나타내는 부대상황 분사. arrive + 현재분사 결합은 표준 용법. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "His confidence was, however, quickly changing to nervousness when he thought of how many people would be there. — 과거진행형 오류. when절(he thought ...)은 변화를 촉발한 점적 시점·계기인데, 진행형은 그 생각 시점에 변화가 이미 진행 중이었다는 의미가 되어 인과 순서와 모순된다. 서사 전체가 단순과거 연쇄이고 however가 직전 문장 'felt good'과의 급전환을 표시하며 quickly도 순간적 전환을 가리키므로 'however, quickly changed to nervousness'(단순과거)가 옳다. 유일한 어법 오류."
+    }
+  ],
+  "note": "정답 (E) 단일 수렴. 오류 유형이 구조 오류(수일치·태 등)가 아닌 시제·상(단순과거 vs 과거진행) 오류라 다소 부드러운 편이지만, when 점적 부사절 + 인과 관계 + quickly + however 라는 장거리 단서가 명확해 옹호 불가. 나머지 4개 밑줄은 대안 해석(병렬 요구, 현수분사, because of 치환)을 적극 탐색해도 모두 흠 없는 정문. 실전에서 가장 끌린 오답은 (C)의 병렬 유혹이었으나 결과 분사구문으로 성립함을 확인하고 배제했다."
+}

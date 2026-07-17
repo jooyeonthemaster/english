@@ -1,0 +1,164 @@
+{
+  "passageId": "2019_06_5023285-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "6월",
+    "origType": "주장",
+    "words": 166
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-point-monotonyx1",
+    "grammar-noun-clause-pronoun-mislabelx1"
+  ],
+  "layout": "(A):dec=c  (B):dec=b  (C):dec=c  (D):dec=f  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 356,
+        "relPos": 0.388,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 564,
+        "relPos": 0.614,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 622,
+        "relPos": 0.678,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 722,
+        "relPos": 0.786,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 843,
+        "relPos": 0.918,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.918,
+    "firstHalfShare": 0.2,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We say to ourselves: “There is plenty of time. I’ll manage somehow or other when the time comes for action.” We are rather proud of our ability to meet emergencies. So we do not plan and take precautions to prevent emergencies from arising. It is too easy to drift through school and college, taking the traditional, conventional studies that others take, following the lines of least resistance, electing “snap courses,” and going with the crowd. It is too easy to take the attitude: “First I will get my education and develop myself, and then I will know better what I am fitted to do for a life work.” And so we drift, driven by the winds of circumstance, tossed about by the waves of tradition and custom. Eventually, most men find they must be satisfied with “any port in a storm.” Sailors who select a port because they are driven to it have scarcely one chance in a thousand of dropping anchor in the right one.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "following",
+        "isError": false,
+        "errorExpression": "following",
+        "surroundingText": "traditional, conventional studies that others take, following the lines of least resistance",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "myself, and then I will know better what I am fitted to do for a",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "driven",
+        "isError": false,
+        "errorExpression": "driven",
+        "surroundingText": "And so we drift, driven by the winds of circumstance",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "most",
+        "isError": false,
+        "errorExpression": "most",
+        "surroundingText": "Eventually, most men find they must be satisfied with",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "have",
+        "isError": true,
+        "correction": "have",
+        "errorExpression": "has",
+        "surroundingText": "Sailors who select a port because they are driven to it have scarcely one chance in a thousand",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "following"
+      },
+      {
+        "label": "(B)",
+        "text": "what"
+      },
+      {
+        "label": "(C)",
+        "text": "driven"
+      },
+      {
+        "label": "(D)",
+        "text": "most"
+      },
+      {
+        "label": "(E)",
+        "text": "has"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(D)": "이 자리는 명사 수식 및 품사 판별을 묻고 있으며, 복수 명사인 'men'을 수식하는 형용사로서 'most'가 오는 것이 어법상 옳습니다.",
+      "(A)": "이 자리는 분사구문의 태를 묻고 있으며, 주절의 주어인 'we'가 능동적으로 저항이 가장 적은 경로를 따르는(follow) 주체이므로 현재분사 'following'이 어법상 옳습니다.",
+      "(B)": "이 자리는 명사절 접속사를 묻고 있으며, 타동사 know의 목적어 자리에 위치한 명사절이면서 전치사 to 뒤의 목적어가 비어 있는 불완전한 절을 이끄므로 'what'이 어법상 옳습니다.",
+      "(C)": "이 자리는 주절 뒤에 이어진 분사구문의 태를 묻고 있으며, 주격 주어 'we'가 환경의 바람에 의해 휩쓸리는(drive) 수동의 대상이므로 과거분사 'driven'이 어법상 옳습니다."
+    },
+    "explanation": "Sailors가 문장의 진짜 주어 핵이며, 그 뒤에 관계사절인 'who select a port because they are driven to it'이 수식어구로 길게 이어져 주어와 동사 사이를 분리하고 있습니다. 주어인 'Sailors'가 복수형이므로, 단수형 술어 동사인 'has'는 이 자리에 올 수 없습니다. 따라서 복수형 정동사인 'have'로 고쳐야 합니다. 동사 직전에 단수 명사 'it'이나 'a port'가 위치하여 단수형 동사로 착각하기 쉽지만, 수식어구를 걷어내고 진짜 주어 핵과의 수일치 관계를 파악해야 하는 문항입니다.",
+    "keyPoints": [
+      "(E) 주어-동사 수일치 — 관계사절 수식을 받는 복수 주어와 동사의 수일치 확인",
+      "(B) 명사절 접속사 what — 선행사 없이 명사절을 이끌며 뒤에 불완전한 절이 오는지 확인",
+      "(C) 분사구문의 능수동 — 의미상 주어인 'we'와의 수동 관계(driven) 판단"
+    ],
+    "tags": [
+      "수일치",
+      "관계대명사",
+      "분사구문",
+      "형용사부사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "We say to ourselves: “There is plenty of time. I’ll manage somehow or other when the time comes for action.” We are rather proud of our ability to meet emergencies. So we do not plan and take precautions to prevent emergencies from arising. It is too easy to drift through school and college, taking the traditional, conventional studies that others take, __(A) following__ the lines of least resistance, electing “snap courses,” and going with the crowd. It is too easy to take the attitude: “First I will get my education and develop myself, and then I will know better __(B) what__ I am fitted to do for a life work.” And so we drift, __(C) driven__ by the winds of circumstance, tossed about by the waves of tradition and custom. Eventually, __(D) most__ men find they must be satisfied with “any port in a storm.” Sailors who select a port because they are driven to it __(E) has__ scarcely one chance in a thousand of dropping anchor in the right one.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

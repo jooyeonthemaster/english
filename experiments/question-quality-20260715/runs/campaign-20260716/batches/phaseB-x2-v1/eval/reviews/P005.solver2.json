@@ -1,0 +1,30 @@
+{
+  "pid": "P005",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Fear has helped us __avoid__ dangers' — 지배 규칙: help + 목적어 + (to) 원형부정사. help는 목적격 보어로 원형부정사와 to부정사를 모두 허용하므로 avoid는 정문. 후속 절 'helps us scare off threats', 'helps us bond with others'와 동일 패턴으로 병렬 일관성도 유지된다. 비문이 되는 대안 해석 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'narrows our perceptual focus to __threatening__ stimuli' — 명사 stimuli를 수식하는 분사 자리. 자극(stimuli)은 위협을 가하는 능동 주체이므로 현재분사 threatening이 의미·형태 모두 옳다. threatened(위협받는)로 바꾸면 의미가 전도되어 오히려 비문. 능동/수동 분사 선택 규칙상 성립."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'Regardless of the specific ways __which__ they activate our systems' — 관계대명사 which가 허가되려면 관계절 내부에 명사구 공백(주어·목적어·전치사 목적어 gap)이 있어야 한다. 그러나 'they activate our systems'는 주어(they)+타동사(activate)+목적어(our systems)가 모두 채워진 완전절로 gap이 없어 which가 격을 받을 자리가 없다. 정문이 되려면 'the ways in which ...', 'the ways that ...'(that의 관계부사적 용법), 또는 관계사 생략 'the ways they activate ...'여야 한다. 전치사 잔류(...activate our systems in), 축약관계절, 도치 등 어떤 대안 해석으로도 which에 통사적 자리를 부여할 수 없음을 적극 탐색으로 확인했다. 형식적으로 비문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'If they __had not helped__ us adapt and survive, they would not have evolved with us.' — 과거 사실(감정이 실제로 적응·생존을 도왔고 함께 진화했다)의 반대를 가정하는 제3조건문. if절 과거완료 + 주절 would have p.p.의 시제 호응이 정확하다. 직전 문장의 'survive challenges ... long ago'가 과거 시점 반사실임을 뒷받침하는 장거리 단서. helped us adapt and survive의 원형 병렬(adapt and survive)도 성립."
+    }
+  ],
+  "note": "형식 통사론 관점에서 (C) 단독 정답. 판별의 핵심은 관계사 뒤 절의 완전/불완전 검사: which 뒤 절이 논항 완전절이므로 관계대명사는 허가되지 않고 관계부사 상당 표현(in which/that/무표지)이 요구된다. (A)(B)(D)는 각각 help+원형부정사, 능동 현재분사 수식, 제3조건문으로 규칙적으로 정문임이 증명되어 복수 정답 시비 여지가 없다."
+}

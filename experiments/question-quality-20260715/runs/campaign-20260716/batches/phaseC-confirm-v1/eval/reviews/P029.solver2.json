@@ -1,0 +1,35 @@
+{
+  "pid": "P029",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합(seam)은 정문: 'ask people to conform to a standardized work schedule'는 ask+O+to-V 구조와 conform to 결합 모두 성립. 그러나 논리적으로 지문 전체 논지와 정면 모순. 지문은 '각자의 body rhythm/internal clock을 존중하라'는 개별화 원리를 주장하는데, 표준화된(standardized) 일정에 맞추라는 것은 그 부정이다. 특히 빈칸 직후 문장 'most people are far more productive in the morning, but there are those who differ'가 개인차의 존재를 명시적으로 인정하므로, 표준화 요구는 후행 문장과도 충돌. 형식적으로: 전제 P(개인별 리듬 존중) ∧ 선지(표준화 준수) → 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합 정문: 'allocate all critical tasks to the early morning'은 allocate A to B 구조로 성립. 논리 판정: 지문의 아침 예시는 조건문 'If you have lots of energy early in the morning, that is when you should schedule difficult activities'로 제시된 조건부 권고일 뿐이며, 빈칸 직후 'but there are those who differ and hit their stride later in the day'가 보편양화('all critical tasks' + 무조건적 아침 배정)를 명시적으로 반증한다. 전칭 주장을 반례 문장이 즉시 기각하므로 논리적으로 성립 불가. 전형적 과잉일반화 미끼."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 결합 정문: 'ask people to align their schedules with their personal energy cycles' — ask+목적어+to부정사, align A with B 결합 모두 규범적. 논리 판정: (i) 지문 전반부의 규칙 'do the right thing at the right time of day' + 'pay attention to how your energy level ebbs and flows'의 재진술이며, (ii) 'Use the same principle in planning activities for your team'이 이 원리를 타인에게 확장한다고 예고하고, (iii) 빈칸 직후 문장이 '대부분은 아침형이지만 늦게 컨디션이 오르는 사람도 있다'며 개인별 에너지 주기의 다양성을 근거로 제시 — 이는 '개인 에너지 주기에 일정을 맞추라'는 요구의 정당화로만 정합적으로 읽힌다. 전건(개별 리듬 존중 원리)과 후건(개인차 관찰)을 모두 만족하는 유일한 선지."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합 정문: 'prioritize social intervals over productive work time'은 prioritize A over B 구조로 성립. 논리 판정: 'social intervals'라는 개념은 지문에 등장하지 않음(지문의 breaks는 생산성 극대화를 위한 수단이지 사교 목적이 아님). 또한 지문의 목표는 'get the most from people' 즉 생산성 극대화인데, 생산적 시간보다 사교를 우선하라는 것은 목표 함수와 역방향. 무관 개념 도입 + 목적 역전으로 기각."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합 정문: 'expand their break times to prevent physical fatigue'는 성립. 논리 판정: 지문이 breaks를 언급하긴 하나 이는 'schedule intervals of productive time and breaks'로 리듬 관리의 한 요소일 뿐이며, '휴식 시간을 늘려라'나 '신체 피로 방지'는 논지가 아님. 결정적으로 빈칸 직후 문장(아침형/저녁형 개인차)은 휴식 확대 요구와 아무런 추론적 연결이 없어, 빈칸-후행문 정합성 검사를 통과하지 못함."
+    }
+  ],
+  "note": "렌즈: 문법가/논리학자. 다섯 선지 모두 빈칸 삽입 시 문법 결합(ask people to + 원형 V)은 정문이므로 판별은 순수 논리 정합성으로 이루어짐. 빈칸 직후의 'most people ... in the morning, but there are those who differ and hit their stride later in the day'가 강력한 장거리 단서: 이 문장은 개인차의 존재를 근거로 제시하므로, 빈칸은 '개인별 에너지 주기에 맞추라'는 요구여야만 담화 관계(주장-근거)가 성립한다. ②는 이 문장에 의해 직접 반증되는 과잉일반화 미끼, ①은 지문 전체 논지의 부정. 정답 ③ 단독 옹호 가능, 복수 정답 여지 없음. 대안 해석(축약 관계절·도치 등)이 판정을 바꿀 여지도 탐색했으나 해당 없음."
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-15T08:10:00+09:00",
+  "verdict": "BLOCK",
+  "qualification": "Independent pre-remediation evidence. The auditor made no production/test edits. Source may subsequently be remediated by another agent; these hashes preserve the exact inspected state.",
+  "sourcePins": [
+    {
+      "path": "src/lib/question-generation-research-profiles.ts",
+      "bytes": 26638,
+      "sha256": "e9ecbb61d5c85d8d9c98d550d10ee26644f106a8086f43a31883642ed931af66"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "bytes": 106853,
+      "sha256": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2"
+    },
+    {
+      "path": "tests/unit/question-generation-research-profile-wire.test.ts",
+      "bytes": 17794,
+      "sha256": "4c03aa0c0e1fa0129b969c212db9225913c86f5e5ae5d316de83f6383fa6e204"
+    },
+    {
+      "path": "tests/unit/question-generation-research-profile-response.test.ts",
+      "bytes": 17858,
+      "sha256": "b73ca437a9f32c23ea8a9021e0b6721ae4c6fcfa2fb5d7f1a29a1fffb525cc66"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/prompt-profiles-v1/schema-drafts.ts",
+      "bytes": 7776,
+      "sha256": "4b3f379674d3953a84a2891c6b6831b76ef1780306e6c6b20825f2aca96c3d32"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/prompt-profiles-v1/expected-measurements.json",
+      "bytes": 8888,
+      "sha256": "8a101d8c943b72d68c7899d69113f79ab74cd9b1fd1235488b29f60b719edf11"
+    }
+  ],
+  "focusedTests": {
+    "tests": 70,
+    "passed": 70,
+    "failed": 0,
+    "externalNetworkCalls": 0,
+    "mockProviderResponses": 4
+  },
+  "promptParity": {
+    "G2_POSITIVE_COMPACT": { "chars": 960, "sha256": "fc01702f19bba345db20445d2a6f69fb287fbb4defa7d4b9cb66043bceba43bb", "pass": true },
+    "G3_SITE_CERTIFICATE": { "chars": 1641, "sha256": "001139b7bb5cee0b9b249029c6e1e4eaac3f103b2cd7096cb37901893175bee1", "pass": true },
+    "B2_POSITIVE_COMPACT": { "chars": 926, "sha256": "ff10990a134b692d343e4557c4f239ab76d293642a7ec41d76786b240da58cb8", "pass": true },
+    "B3_OPTION_INTENT_LEDGER": { "chars": 1612, "sha256": "1b98cb8aeda2d791eaa3782d512bf782277f0df71f713e7f2032fb8aeafcbcca", "pass": true }
+  },
+  "blockingDefects": [
+    {
+      "id": "SCHEMA_G3_FROZEN_V1_BYTE_DRIFT",
+      "productionComparableSha256": "4132ff8d0dfd9b01c2e0b10174094e4f10fd420da715d3680014555413eac2e5",
+      "frozenV1Sha256": "40e24f989c16c6e9016cd51b2efe6e77118965694fc80a1ef25a6e7dd151fabb",
+      "missingProviderVisibleDescriptions": 11
+    },
+    {
+      "id": "SCHEMA_B3_FROZEN_V1_BYTE_DRIFT",
+      "productionComparableSha256": "c980433b762c5a21558119552bdd5494274e2b2f2e1456751bcd3178db87865d",
+      "frozenV1Sha256": "3130f865f4d08e7c9cbdf791449ea03cb33d4dad911513eb6b5fb905823ce801",
+      "missingProviderVisibleDescriptions": 8
+    },
+    {
+      "id": "G3_NONANSWER_MARKER_BINDING_NOT_FAIL_CLOSED",
+      "adversarialAdapterAccepted": true,
+      "detail": "A fabricated non-answer expression/window absent from the admitted passage was accepted by the profile adapter."
+    },
+    {
+      "id": "B3_DISTRACTOR_MECHANISM_UNIQUENESS_NOT_FAIL_CLOSED",
+      "adversarialSchemaAccepted": true,
+      "adversarialAdapterAccepted": true,
+      "detail": "Four distractor ledger rows using the same STANCE_SHIFT primary mechanism were accepted."
+    }
+  ],
+  "sideEffects": {
+    "externalApiCalls": 0,
+    "networkCalls": 0,
+    "applicationDatabaseReads": 0,
+    "applicationDatabaseWrites": 0,
+    "secretsInspectedOrLogged": 0,
+    "candidatesConsumed": 0
+  }
+}

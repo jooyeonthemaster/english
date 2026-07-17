@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'makes a lasting mark' — last는 자동사이므로 능동 현재분사 lasting이 명사 mark를 수식하는 것이 옳다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'one of the first qualities (that) a bridge must exhibit' — 목적격 관계대명사 생략 관계절. exhibit은 타동사이고 목적어 공백이 관계화된 구조로 성립하며, 조동사 must + 동사원형도 옳다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "본동사 자리. 주어의 핵은 'one'(단수)이고 'of the first qualities'는 수식 전치사구이므로 concerns(단수형)여야 한다. 복수형 concern은 수 일치 위반. 대안 해석('exhibit concern'의 명사 concern으로 읽기)은 ① concern이 전치사 없이 how-절을 취할 수 없고 ② 문장 본동사가 사라져 비문이 되므로 구제 불가. 인접 명사 qualities에 의한 근접 일치도 규범상 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'It is not acceptable to create...' — 가주어 it + be + 형용사 보어 + 진주어 to부정사 구문. 형용사 acceptable이 보어 자리에 온 것이 옳다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment' — 관계절 내 동사 is와 spoils가 but으로 병렬. 선행사 a bridge(단수)에 일치하는 3인칭 단수 spoils가 옳다. 병렬 시작점이 관계절 정형동사이므로 원형이 아닌 단수형이 요구됨. 정문."
+    }
+  ],
+  "note": "정답 후보는 (C) 단일. 주어 핵 'one' 단수 대 동사 'concern' 복수형의 수 일치 위반은 대안 통사 해석으로도 구제되지 않는다. 나머지 네 밑줄은 모두 명백한 정문으로 복수 정답 소지 없음."
+}

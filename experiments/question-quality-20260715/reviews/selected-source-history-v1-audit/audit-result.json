@@ -1,0 +1,70 @@
+{
+  "baseline": {
+    "baselineHistoryCleanRows": 76,
+    "blankRows": 38,
+    "frozenAiQuestionZeroRows": 76,
+    "frozenQuestionZeroRows": 76,
+    "frozenSelectorOverallStatus": "HARD_FAIL_SUPPLY_SHORTAGE",
+    "frozenWorkbenchJobZeroRows": 76,
+    "grammarRows": 38,
+    "origins": {
+      "db-global": 20,
+      "repo-official": 56
+    },
+    "selectedRows": 76
+  },
+  "independentCurrentDbRecapture": {
+    "aiQuestionRows": 0,
+    "allAcademies": true,
+    "allPassageRowsExamined": 2736,
+    "exactNormalizedContentMatches": 20,
+    "loaderEligibleExactMatches": 20,
+    "pinnedDbPassageIds": 20,
+    "pinnedDbPassageIdsStillContentIdentical": 20,
+    "pinnedDbPassageIdsStillPresent": 20,
+    "questionRows": 0,
+    "subjectExcludedExactMatches": 0,
+    "workbenchAiJobRows": 0
+  },
+  "integrity": {
+    "baselineFilesOverwritten": 0,
+    "immutableWriteFlagPresent": true,
+    "manifestEntriesVerified": 6,
+    "privateBindingFromPublicVerified": true,
+    "privateInternalSealVerified": true,
+    "publicInternalSealVerified": true
+  },
+  "label": "independent-audit-20260715-v1",
+  "privacy": {
+    "opaqueAggregateCryptographicBindingsPresent": true,
+    "privateIdentifiersOrPassagesFoundVerbatimInPublic": 0
+  },
+  "residualRisks": {
+    "baselineManifestPinsTransitiveLoaderAndSelectorBytes": false,
+    "currentPinnedDbRowsCloseDeleteOrMutationRiskForThisCapture": true,
+    "exactContentMatchingDetectsNearDuplicates": false,
+    "frozenSelectorOverallReady": false,
+    "futureRefreshCanRecoverDeletedOrPreviouslyMutatedPassageContent": false,
+    "supplementalAlternateLineageExactIdProbesWereClean": true,
+    "threeArtifactWriteIsAtomic": false
+  },
+  "safety": {
+    "databaseReadMethods": [
+      "findMany",
+      "groupBy",
+      "count"
+    ],
+    "databaseWrites": 0,
+    "fullQuestionCandidatesGenerated": 0,
+    "modelApiCalls": 0
+  },
+  "schemaVersion": "selected-source-history-v1-independent-audit-v1",
+  "scopeQualification": "Exact normalized-content matches plus directly linked Question/aiQuestion/WorkbenchAiJob rows across all academies; not a universal proof over deleted content or every alternate lineage store.",
+  "supplementalExactIdLineageProbe": {
+    "customQuestionJobsReferencingSelectedIds": 0,
+    "detachedWorkbenchJobsWithSelectedIdInConfigOrResult": 0,
+    "naeshinQuestionRows": 0,
+    "similarQuestionJobsReferencingSelectedIds": 0
+  },
+  "verdict": "PASS"
+}

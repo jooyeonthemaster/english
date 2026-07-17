@@ -1,0 +1,308 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-v5-author-report",
+  "verdict": "READY_FOR_INDEPENDENT_OFFLINE_AUDIT_LIVE_EXECUTION_BLOCKED",
+  "protocolSha256": "0110dd37d475d3c16af6203774ddc77f0b560f803cf5a98c75455a452287ff0e",
+  "exactWirePrivateSha256": "f27e851c6dcf4072bc3fd17b33115e422edfd9e7f19861dc96bf721083d659da",
+  "exactWirePublicSha256": "1cfdd96afc0e6873a6eab8b0a42ca454a46714881d22b588deb831a0c5ac3137",
+  "compilerClosureSha256": "eeed64b31af88947ba853bc7b8f8a6ca9995224c3b216ab584b07177f4cd127f",
+  "compilerClosureSemanticSha256": "c1938124a83b21f147bb3d81b9c24d1b3258a3fe5c7f47c086437917371e6e2c",
+  "exactCompilerSourceFiles": 195,
+  "exactCompilerDynamicSourceInputs": 3,
+  "exactCompilerDeclaredDataInputs": 4,
+  "exactCompilerClosureFiles": 202,
+  "liveClosureSha256": "07b5c18c34ffce56d4899d9238ef775c49f206dc22e70fb87cb024fee768cc6e",
+  "liveClosureSemanticSha256": "a128a21d41dbe2f6a37e07eefe7087c21872b6de0bda27e317570c449f8747ff",
+  "liveEntrypoints": [
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/capture-price-snapshot.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/live-child.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/operator-wrapper.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/production-runner.ts"
+  ],
+  "exactLiveClosureFiles": 23,
+  "frozenRuntime": {
+    "artifactSha256": "92269c3a91934d93ffd8eddec8351ab3869c2f1fd9c00a0b7aed26c30b29d236",
+    "contentSha256": "1c46dc1b46f8f6248744af5e9563de8deed154e3b2b6c3bcddc75f3f7df6812a",
+    "bundleSetSha256": "2a905ad6efe9b84368da7c0bf3f6debf046864e44f8ad7994201c7ceafe6e812",
+    "bundles": [
+      {
+        "role": "CAPTURE_PRICE_METADATA",
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/capture-price-snapshot-v5.bundle.mjs",
+        "bytes": 97279,
+        "sha256": "82443b490e1158add2b3f41dd6e4e43231418dcf240fb46d3f4331b993a74709",
+        "externalRuntimeSpecifiers": [
+          "node:crypto",
+          "node:fs",
+          "node:path",
+          "node:url"
+        ],
+        "networkContract": {
+          "fetchCallSites": 1,
+          "directNetworkFetchCallSites": 0,
+          "maximumRequestsPerInvocation": 3,
+          "authorizedUrlTemplates": [
+            "https://openrouter.ai/api/v1/models",
+            "https://openrouter.ai/api/v1/models/${modelId}/endpoints"
+          ],
+          "observedHttpsLiterals": [
+            "https://openrouter.ai/api/v1/chat/completions",
+            "https://openrouter.ai/api/v1/models",
+            "https://openrouter.ai/api/v1/models/${modelId}/endpoints"
+          ]
+        },
+        "forbiddenSyntaxCounts": {
+          "dynamicImport": 0,
+          "requireCall": 0,
+          "evalCall": 0,
+          "functionConstructor": 0,
+          "webSocket": 0,
+          "eventSource": 0
+        }
+      },
+      {
+        "role": "LIVE_CHILD",
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/live-child-v5.bundle.mjs",
+        "bytes": 192695,
+        "sha256": "baa8fbb4872d9ada9371f4460613b60ce67854b056a01eaf0eefa988dbf5158a",
+        "externalRuntimeSpecifiers": [
+          "node:crypto",
+          "node:fs",
+          "node:path",
+          "node:url"
+        ],
+        "networkContract": {
+          "fetchCallSites": 0,
+          "directNetworkFetchCallSites": 1,
+          "maximumRequestsPerInvocation": 2,
+          "authorizedUrlTemplates": [
+            "https://openrouter.ai/api/v1/chat/completions"
+          ],
+          "observedHttpsLiterals": [
+            "https://openrouter.ai/api/v1/chat/completions",
+            "https://openrouter.ai/api/v1/models",
+            "https://openrouter.ai/api/v1/models/${modelId}/endpoints"
+          ]
+        },
+        "forbiddenSyntaxCounts": {
+          "dynamicImport": 0,
+          "requireCall": 0,
+          "evalCall": 0,
+          "functionConstructor": 0,
+          "webSocket": 0,
+          "eventSource": 0
+        }
+      },
+      {
+        "role": "OPERATOR",
+        "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/operator-wrapper-v5.bundle.mjs",
+        "bytes": 115027,
+        "sha256": "3d1d253870392d7ff7713e8d45ac7b40e1ebc22bc11e65cd7bf2d36c6a34909a",
+        "externalRuntimeSpecifiers": [
+          "node:child_process",
+          "node:crypto",
+          "node:fs",
+          "node:path",
+          "node:url"
+        ],
+        "networkContract": {
+          "fetchCallSites": 0,
+          "directNetworkFetchCallSites": 0,
+          "maximumRequestsPerInvocation": 0,
+          "authorizedUrlTemplates": [],
+          "observedHttpsLiterals": [
+            "https://openrouter.ai/api/v1/chat/completions",
+            "https://openrouter.ai/api/v1/models",
+            "https://openrouter.ai/api/v1/models/${modelId}/endpoints"
+          ]
+        },
+        "forbiddenSyntaxCounts": {
+          "dynamicImport": 0,
+          "requireCall": 0,
+          "evalCall": 0,
+          "functionConstructor": 0,
+          "webSocket": 0,
+          "eventSource": 0
+        }
+      }
+    ],
+    "externalRuntimeSpecifiers": [
+      "node:child_process",
+      "node:crypto",
+      "node:fs",
+      "node:path",
+      "node:url"
+    ],
+    "nodeRuntime": {
+      "executableRealPath": "C:\\Program Files\\nodejs\\node.exe",
+      "executableBytes": 89578992,
+      "executableSha256": "c1b274a8d0a23e060fc42ce71c3cdfa1569b83d91ba82cc59fa907da97a425e9",
+      "nodeVersion": "v24.7.0",
+      "modulesAbi": "137",
+      "v8Version": "13.6.233.10-node.26",
+      "platform": "win32",
+      "arch": "x64"
+    },
+    "sourceTsxRuntimeAllowed": false
+  },
+  "offlineFixtureSuite": {
+    "runner": "NODE_TSX_TEST_OFFLINE_TEST_TS",
+    "testSourcePath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/offline.test.ts",
+    "testSourceSha256": "003170622bf0abe0536466ff4c02d43a9356c7848ef44f8f4856ef3a10fabf29",
+    "total": 72,
+    "passed": 72,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exitCode": 0
+  },
+  "priceEvidenceAndInputPins": {
+    "historicalPublicPriceInputPath": "experiments/question-quality-20260715/pricing/openrouter-pricing-snapshot.json",
+    "historicalPublicPriceInputSha256": "4b8c0cf36d3bca226e6ce824fa566ef96e496c384cb37256a987247332cc73e3",
+    "rawHttpEvidenceBundleRequired": true,
+    "privateBundleFdBoundExactReadRequired": true,
+    "captureToLiveInMemoryFileAndBundleHashHandoffRequired": true,
+    "cacheReadWriteRatesIncludedInEmergencyInputCeiling": true,
+    "reasoningRatesIncludedInEmergencyOutputCeiling": true,
+    "topLevelPromptCompletionAndFixedRequestIncluded": true,
+    "assignments": [
+      {
+        "plan": "STANDARD",
+        "modelId": "google/gemini-3.5-flash",
+        "exactWireBodyUtf8Bytes": 53354,
+        "exactWireBodySha256": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003",
+        "emergencyInputUsdPer1M": 2.7,
+        "emergencyOutputUsdPer1M": 32.4,
+        "emergencyRequestUsd": 0,
+        "calculatedWorstCaseUsdCap": 0.313186501
+      },
+      {
+        "plan": "PREMIUM",
+        "modelId": "google/gemini-3.1-pro-preview",
+        "exactWireBodyUtf8Bytes": 24943,
+        "exactWireBodySha256": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643",
+        "emergencyInputUsdPer1M": 7.2,
+        "emergencyOutputUsdPer1M": 64.8,
+        "emergencyRequestUsd": 0,
+        "calculatedWorstCaseUsdCap": 0.515108881
+      }
+    ]
+  },
+  "v4IndependentAuditPins": {
+    "directory": "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v4-independent-audit-v1",
+    "verdict": "FAIL",
+    "protocolV4Sha256": "18d7eb7c60fdfc1d4b49fb868ef887d64e62db6d217abf8eaec0fbbeab8ffec9",
+    "authorGatesSha256": "5b0346fb581b5cd12381484061fee8b4fc17e56a10882d7e29651ee8cbf613b0",
+    "evidenceSha256": "2aff0d69c81169f2f806dcd59f9053ce939927603d75cb7d7c2a60cab501f3b6",
+    "reportSha256": "8f135466efc5182843cf5a257c5bb361cafb2c91122798c29768839d0f31fae3",
+    "verifierSha256": "2211da72c2249c1302eddac8f138acf91c4c302a36fbb7810d24f20035c73dd0",
+    "manifestFileSha256": "2b7fb398cad98647698c7dd4120f819c50645116c71e8ffe79ccb53530ba0791",
+    "manifestRows": 9
+  },
+  "closureSeparation": {
+    "compilerClosureAuthority": "compiler-closure-v5.json exact 195 AST source + 3 dynamic source + 4 declared data rows plus exact git/environment inputs",
+    "liveRuntimeClosureAuthority": "live-closure-v5.json exact 23 total source/runtime-data rows",
+    "inheritedV3ThirtyTwoRowSubsetAuthority": false,
+    "minimumCountAcceptanceUsed": false
+  },
+  "closedV4AuditFindings": {
+    "V4-CLOSURE-004": "195 AST source + 3 dynamic SOURCE_PATHS source + 4 data plus exact git/environment input sealing",
+    "V4-CLI-001": "metadata authorization + hostile audit + dispatch required before any GET; author metadata calls zero",
+    "V4-COST-005": "HTTP/schema/parser/cap failures independently attribute representable actual cost; absent cost uses effective reserve",
+    "V4-PARSER-002": "exact top-level, choice, and assistant role/content shape rejects tool/function/refusal/audio extras",
+    "V4-LEDGER-003": "pre-reserve durable no-replay marker and post-reserve try/finally terminal settlement"
+  },
+  "parserContract": {
+    "allowedFinishReasons": [
+      "stop"
+    ],
+    "exactWireResponseSchemaRequired": true,
+    "nonnegativeSafeIntegerUsageRequired": true,
+    "exactTokenTotalConsistencyRequired": true,
+    "exactTopLevelChoiceAndAssistantMessageShapeRequired": true,
+    "independentBillingExtractionOnHttpSchemaParserAndCostCapFailure": true,
+    "maximumActualCostUsdPerResponse": 1000,
+    "maximumUsageTokensPerResponse": 10000000,
+    "negativeRegressions": [
+      "finish_reason_length",
+      "schema_invalid_single_object",
+      "fractional_usage",
+      "message_tool_calls",
+      "message_function_call",
+      "message_refusal",
+      "message_audio",
+      "top_level_extra",
+      "choice_extra",
+      "huge_finite_cost",
+      "two_row_usage_aggregate_overflow"
+    ]
+  },
+  "terminalReconciliation": {
+    "durableNoReplayMarkerBeforeGlobalReservation": true,
+    "terminalIntentBeforeSettlement": true,
+    "journalFailureAfterReservationStillSettled": true,
+    "actualKnownAndEffectiveCostSeparated": true,
+    "absentOrMalformedBillingUsesReservedCap": true,
+    "explicitPositiveUnrepresentableCostForcesManualReconciliation": true,
+    "settlementFailureRequiresManualReconciliationAndForbidsReplay": true
+  },
+  "boundedResponseBodies": {
+    "modelBytesBeforeMaterialization": 2097152,
+    "priceMetadataBytesBeforeMaterialization": 16777216,
+    "contentLengthPreflightRequiredWhenPresent": true,
+    "streamOverflowCancellationRequired": true
+  },
+  "v4WirePreservation": {
+    "STANDARD": {
+      "bodyUtf8Bytes": 53354,
+      "bodySha256": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003"
+    },
+    "PREMIUM": {
+      "bodyUtf8Bytes": 24943,
+      "bodySha256": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643"
+    }
+  },
+  "preservedPackages": {
+    "v2Unmodified": true,
+    "v3Unmodified": true,
+    "v4Unmodified": true
+  },
+  "bounds": {
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "candidates": 2,
+    "physicalFetches": 2,
+    "completions": 2,
+    "retries": 0,
+    "repairs": 0,
+    "fallbacks": 0,
+    "replacements": 0,
+    "topUps": 0,
+    "frozenWorstCaseCostUsd": 0.828295382
+  },
+  "globalLedger": {
+    "cap": 1000,
+    "observedUsedAtAuthorFreeze": 0,
+    "observedReservedAtAuthorFreeze": 0,
+    "futureLiveReservation": 2,
+    "authorFreezeReservationMutation": 0
+  },
+  "activity": {
+    "locallyInterceptedProductionCompilerFetches": 2,
+    "externalNetworkCalls": 0,
+    "metadataNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "productionDatabaseCalls": 0,
+    "realCredentialValuesRead": 0
+  },
+  "authorization": {
+    "liveExecutionAuthorized": false,
+    "metadataNetworkAuthorized": false,
+    "hostileAuditPassed": false,
+    "dispatchCommandPresent": false
+  },
+  "scientificScope": "Two connectivity rows cannot establish quality, reliability, or comparative performance."
+}

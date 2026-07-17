@@ -1,0 +1,30 @@
+[
+  {
+    "route": "or-gemini-plain",
+    "ok": true,
+    "latencyMs": 12672,
+    "provider": "Google",
+    "model": "google/gemini-3.5-flash",
+    "inputTokens": 21762,
+    "outputTokens": 1819,
+    "reasoningTokens": 0,
+    "normalizedPrompt": 24111,
+    "nativePrompt": 21762,
+    "costUsd": 0.049014,
+    "costSource": "openrouter-recorded",
+    "finish": "stop",
+    "genTimeMs": 12136
+  },
+  {
+    "route": "or-gemini-schema",
+    "ok": true,
+    "latencyMs": 9543,
+    "model": "google/gemini-3.5-flash",
+    "inputTokens": 24181,
+    "outputTokens": 1216,
+    "reasoningTokens": 0,
+    "costUsd": 0.0472155,
+    "costSource": "usage-field",
+    "finish": "stop"
+  }
+]

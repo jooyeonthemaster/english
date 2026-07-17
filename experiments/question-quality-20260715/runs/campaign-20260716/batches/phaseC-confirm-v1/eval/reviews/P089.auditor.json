@@ -1,0 +1,87 @@
+{
+  "pid": "P089",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-MINOR-TYPO",
+      "severity": "minor",
+      "evidence": "keyPoints 첫 항목에 '타인의 행동 행동 모방을 통해'로 '행동'이 중복(dittography)되어 있다. 의미 왜곡은 없으나 학생/교사 노출 필드의 오탈자."
+    },
+    {
+      "code": "V4-MINOR-PHRASING",
+      "severity": "minor",
+      "evidence": "해설의 '바람잡이 모델들이 카트를 빌려 쓰는 모습을 직접 보여주자'에서 '빌려 쓰는'은 지문 내용(고용된 모델들이 카트를 끌며 쇼핑하는 모습을 연출)과 미세하게 어긋난 표현이다. 사실 오분석 수준은 아니어서 V4 실패로는 보지 않음."
+    },
+    {
+      "code": "V3-MINOR-PRONOUN",
+      "severity": "minor",
+      "evidence": "정답 ③ 삽입 완성문 'A few shills disguised as regular shoppers guided them to adopt...'에서 'them'의 선행사가 문장 내부에 없고 직전 문장의 'the regular shoppers'에 의존한다. 문맥상 해석은 명확하나 seam이 완전히 매끄럽지는 않다. 또한 ③만 유일하게 대명사 'them'을 쓰고 나머지 선지는 'customers/shoppers'를 명시해 미세한 표면 비대칭이 있다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "keyword patchwork — 지문의 'logic', 'explanations'를 짜깁기해 무관한 명제(매장 배치 설명 요구 유발)로 재조립",
+      "temptingBecause": "'logical explanations'가 빈칸 원문 span('what logic, explanations ... failed to do')의 어휘와 직접 겹친다",
+      "decisiveFlaw": "shills의 역할은 시범 행동으로 동조를 유도한 것이지 고객이 설명을 '요구하게' 만든 것이 아니며, 'store layouts'는 지문에 전혀 없는 대상이다. 논리 방향 자체가 반대(설명이 실패했음을 보여준 이야기)."
+    },
+    {
+      "label": "②",
+      "intent": "half-truth + actor swap — 지문에 실제로 나오는 카트의 이점(피로 경감)을 shills의 행위로 바꿔치기",
+      "temptingBecause": "'without getting tired'라는 카트의 본래 장점이 지문 앞부분에 명시되어 있어 내용 일치처럼 보인다",
+      "decisiveFlaw": "피로 완화는 카트 자체의 기능이지 shills가 한 일이 아니다. 문제의 본질은 물리적 이점이 아니라 심리적 거부감이었고, shills는 사회적 시범으로 이를 해소했다."
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'easily accomplished what logic, explanations, and advertisements failed to do'를 '이성 의존이 아닌 타인 행동 채택 유도(사회적 동조)'로 추상화",
+      "temptingBecause": "해당 없음(정답). 'That was the turning point'와 후행 문장 'Within a few weeks shoppers readily accepted those carts'가 근거를 완결한다",
+      "decisiveFlaw": "없음. 남녀 각 연령대의 모델 시범 + 'everyone is using the carts' 대사 + 논리·설명·광고의 실패라는 3중 근거와 정확히 정합."
+    },
+    {
+      "label": "④",
+      "intent": "topic-association filler — '쇼핑' 소재에서 연상되는 예산 관리로 이탈",
+      "temptingBecause": "'shoppers', 'shopping'이라는 표면 소재만 겹친다. source anchor가 사실상 없어 5개 중 가장 약한 미끼",
+      "decisiveFlaw": "예산·비용은 지문 어디에도 없다. 즉시 소거 가능."
+    },
+    {
+      "label": "⑤",
+      "intent": "keyword trap + outcome contradiction — 'advertisements' 재활용 + 결과 부정",
+      "temptingBecause": "'advertisements'가 지문·원문 span 모두에 등장하고, '심리적 거부감'이라는 지문의 실제 문제 진단을 그대로 언급해 정교해 보인다",
+      "decisiveFlaw": "shills는 광고를 수정한 주체가 아니며(광고는 이미 실패한 수단), 'without addressing the psychological discomfort'는 직후 문장의 성공적 수용 결과와 정면 모순된다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoints: '타인의 행동 행동 모방' — 단어 중복 오탈자",
+      "recommendation": "'타인의 행동 모방'으로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설: '카트를 빌려 쓰는 모습' — 지문은 고용된 모델들이 카트를 끌고 쇼핑하는 시범(hired models wheeling carts)이지 '빌려 쓰는' 행위 묘사가 아님",
+      "recommendation": "'카트를 끌며 쇼핑하는 모습' 등으로 수정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설 말미 '본문 핵심 단어에 이끌려 성급한 판단을 내리지 않도록 주의해야 합니다'는 일반론적 상투구로 정보량이 낮음",
+      "recommendation": "①·⑤의 keyword trap을 구체적으로 지목하는 문장으로 대체하면 C6 상승"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문 대비 렌더 지문의 word-level diff 결과 유일한 차이는 의도된 빈칸 치환('easily accomplished what logic, explanations, and advertisements failed to do.' → '_____.')뿐이며 라벨 ①~⑤와 선지 5개가 일치한다. V2: 5개 선지를 각각 빈칸에 넣어 독립 검증한 결과 ③만 성립 — ①은 논리 방향 반전+무근거 대상(store layouts), ②는 행위 주체 오류(카트의 기능≠shills의 행위), ④는 source anchor 부재, ⑤는 후행 문장(수용 성공)과 정면 모순. 다섯 선지 모두 과거시제 VP로 동일 통사 슬롯에 들어가 문법만으로 탈락하는 오답이 없다. V3: 완성문·지문·발문 모두 문법적('rather than + V-ing' 병렬 허용, 'them'의 선행사는 직전 문장에서 회복 가능 — minor). V4: 빈칸 문장을 '마지막에서 두 번째 문장'으로 지목한 것 정확, 사회적 동조 분석 정확, 오답 해설 4건 모두 실제 선지 내용과 대응('빌려 쓰는'은 minor 표현 문제). V5: 정답 라벨 ③이 해설·keyPoints(③⑤② 언급)와 모순 없음('행동 행동' 오탈자는 minor). 공예: 빈칸이 지문의 핵심 논지(논리적 설득 vs 사회적 동조)를 정확히 겨냥(C1=4), ②⑤는 실질 판단을 요구하나 ①④가 즉시 소거되어 경쟁 폭이 다소 좁고(C2=3, C3=3), ③만 대명사를 쓰는 표면 비대칭+최장 선지라는 약한 tell(C4=3), INTERMEDIATE 라벨에 대체로 정합하나 상위권에겐 다소 평이(C5=3), 해설은 정확하나 상투구·오탈자·표현 흠집(C6=3). 합계 19 → 모든 V 통과, 최저 C=3, 합계 17 이상 21 미만으로 B. KILLER 요청이 아니므로 killerConditionsMet=false."
+}

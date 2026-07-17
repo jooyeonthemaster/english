@@ -1,0 +1,35 @@
+{
+  "pid": "P045",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'they were careful and precise when typing' — 접속사 when 뒤 분사구문으로 의미상 주어가 주절 주어 they와 일치하고(when they were typing의 축약), they가 타이핑하는 능동 관계이므로 현재분사 typing이 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'This means that those brain activities don't get...' — means의 목적어인 명사절을 이끄는 접속사 that. 뒤 절은 주어(those brain activities)·동사(don't get)·목적어(the workout)를 모두 갖춘 완전한 절이므로 what이 아닌 that이 맞다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'don't get the workout today that they were for previous generations' — 관계절에서 they(= those brain activities)가 대신 받는 것은 주절의 일반동사구 'get the workout'이므로 대동사는 were가 아니라 did여야 한다(...the workout that they did for previous generations). were를 살리려면 '그 활동들이 이전 세대에게는 workout이었다'는 보어 관계절 해석이 필요한데, 이는 주절의 'get the workout'(운동을 받다)과 의미가 충돌하여 비교 구문이 성립하지 않는다. 대안 해석으로도 구제 불가한 대동사 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'focused on scanning and processing mountains of information' — 전치사 on의 목적어로 동명사 scanning과 processing이 and로 병렬. 병렬 시작점이 on 직후로 명확하며 processing은 mountains of information을 목적어로 취하는 능동 동명사로 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "매력적 오답 — 'Their saturation in and early use of technology makes' 에서 saturation과 use 두 명사 핵의 and 병렬을 보고 복수 make로 끌렸다. 그러나 단일 소유격 Their가 전체를 묶고 'in and of'가 공통 보충어 technology를 공유하는 구조로, '기술에의 몰입과 조기 사용'이 하나의 복합 원인(단일 관념)으로 제시된 등위 주어이므로 단수 수일치 makes가 실제 용법상 허용된다. (C)가 범주적 비문으로 확정되는 이상 이 경계 사례는 정문으로 처리하는 것이 옳다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 1차 스캔에서 (C)의 were가 'get the workout'의 대동사 자리라는 장거리 단서(주절 동사 get)로 즉시 포착됨 — did 요구. 가장 강한 유혹은 (E)로, 'A and B → 복수동사' 반사규칙 때문에 makes를 오류로 찍고 싶어지지만, 공통 보충어 공유(in and of technology)와 단일 소유격이 단일 관념 등위임을 시사해 단수 허용. (B)는 what/that 혼동을 노린 보조 미끼이나 완전절이라 쉽게 배제. 단일 정답 (C)로 수렴, 이중정답 소지는 (E)가 이론상 있으나 규범·용법 양면에서 makes 옹호가 충분해 실질 결함으로 보지 않음."
+}

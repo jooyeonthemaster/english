@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "⑤",
+  "multipleDefensible": false,
+  "defensibleLabels": ["⑤"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'Distance ourselves from emotional impulses through objective observation' directly contradicts the passage's explicit claim that 'cinema expresses man's affective life.' It would put cinema on the law's side of the contrast (keeping affect in check), collapsing the whereas-antithesis. Mild pull for a reader who imagines cinema as detached spectatorship, but the long-range anchor sentence rules it out."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Internalizing social commands and adhering to civilized norms is the law's stated function ('a regime of commands and prohibitions'). Assigning it to cinema erases the required contrast after 'whereas.'"
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "The most seductive lexical trap: it recycles 'abstract desire for truth' and echoes 'messiness of human relations,' but both phrases describe the LAW in sentence 2, not cinema. 'Resolving human conflicts' is attributed to neither discipline, and the option fails to supply the needed opposite of 'suppress affects.' I felt the pull of the recycled vocabulary but the referent mismatch is decisive."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'Co-establishes a regime of prohibitions that prevents our hidden dark drives from erupting' verbatim-recycles the law's job description ('regime of commands and prohibitions,' 'drives'). It makes cinema a co-suppressor — the exact opposite of the contrast demanded by 'whereas the law suppresses affects.'"
+    },
+    {
+      "label": "⑤",
+      "verdict": "accept",
+      "reason": "Perfect antithesis of the final clause: law suppresses affects fearing their consequences, whereas cinema 'brings us face-to-face with our feelings, compelling us to confront our most painful inner passions.' Confront vs. suppress; feelings/passions = affects/affective life. Restates the thesis sentence 'cinema expresses man's affective life, the law keeps it in check.' Grammatical seam after 'whereas' (full clause with subject 'cinema') is clean."
+    }
+  ],
+  "note": "Single defensible answer. The item's distractor design leans on lexical recycling (③ 'abstract desire for truth', ④ 'regime of prohibitions') that describes the law rather than cinema; a rushed reader pattern-matching surface vocabulary could pick ③ or ④, which is legitimate distractor attraction rather than a flaw. The contrast anchor ('while cinema expresses man's affective life, the law keeps it in check') is unambiguous, so the key is clean at high confidence."
+}

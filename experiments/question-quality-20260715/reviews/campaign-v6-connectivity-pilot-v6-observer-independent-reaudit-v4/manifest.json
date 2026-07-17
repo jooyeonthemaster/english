@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "campaign-v6-observer-independent-reaudit-manifest-v4",
+  "reviewId": "campaign-v6-connectivity-pilot-v6-observer-independent-reaudit-v4",
+  "createdAt": "2026-07-16T03:36:58.7612457+09:00",
+  "verdict": "PASS_NO_BLOCKERS",
+  "authority": "NONE",
+  "scope": "OBSERVER_ONLY",
+  "authorizesV6": false,
+  "subject": {
+    "strictObserverSha256": "8df2072304c3bc48873dac05889c6d22ddf313f25fa321f9e6baac69fcc1fd3a",
+    "coordinatedOfflineTestObservedSha256": "212dadaad0f3812c2f4c2836bf4048694f237f8aeb618937bf09cd44149f5172"
+  },
+  "matrix": {
+    "legacyCases": 1903,
+    "legacyPassing": 1903,
+    "freshCases": 1950,
+    "freshPassing": 1950,
+    "combinedCases": 3853,
+    "combinedPassing": 3853,
+    "combinedFailing": 0,
+    "freshMatrixFingerprintSha256": "35dd30ef4331961889d6d12196cc11e3502508b655261b84484dd2610a42eae4",
+    "combinedMatrixBindingFingerprintSha256": "d3fb25e744b2ac941ac9118e7a144777ac34db3f97eb9c504e2af912cf946bae"
+  },
+  "reviewFiles": [
+    {
+      "path": "REPORT.md",
+      "sha256": "d83ea15fa571e53bb4750defc3c9412d175a902904f75c1c5df7695d86c77d66"
+    },
+    {
+      "path": "audit.ts",
+      "sha256": "c11f6d8bc817a3a930b0530010960ebf0b499914db85a6bc7677db1fb551b85a"
+    },
+    {
+      "path": "evidence.json",
+      "sha256": "7bcbc147566486d4965c3ed8b1a36f3b62342c8d5660be4d076e8df7a7b927cf"
+    },
+    {
+      "path": "legacy-replay.mts",
+      "sha256": "dd5b15358940875c7bfc0f541cf12ea446ae7c6c96dfa835df72e77e7753a379"
+    },
+    {
+      "path": "verify.mts",
+      "sha256": "5ba73f474528e22edca0c3600db9f242a22b90347fee22dcb7109de734b659de"
+    }
+  ],
+  "activity": {
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "secretReads": 0,
+    "privateArtifactReads": 0,
+    "ledgerReads": 0,
+    "ledgerWrites": 0,
+    "buildOrFreezeCommands": 0,
+    "liveCommands": 0,
+    "subjectEdits": 0
+  }
+}

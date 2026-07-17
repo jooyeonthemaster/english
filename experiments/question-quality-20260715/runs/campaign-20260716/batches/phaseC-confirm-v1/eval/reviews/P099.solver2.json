@@ -1,0 +1,35 @@
+{
+  "pid": "P099",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' 의 called 는 축약 관계절(which are called ...)에서 유래한 과거분사 삽입구다. 주어 species 가 '~라 불리는' 대상이므로 수동 의미의 과거분사 called 가 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on ... is revealed' 에서 that 은 추상명사 fact 의 내용을 설명하는 동격(appositive) 명사절 접속사다. that 절 내부(other species depend on ... are greatly affected by ...)가 완전한 절이므로 관계대명사가 아니라 동격 that 이 정확하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'become important in sustaining fruit-eating vertebrates' 에서 in 은 전치사이고 그 목적어로 동명사 sustaining 이 오는 것이 어법상 옳다. 뒤에 목적어(vertebrates)를 취하므로 능동 동명사가 적절하다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'Should the fig trees disappear, most of the fruit-eating vertebrates would be eliminated' 에서 vertebrates 는 제거되는 대상이므로 수동태 would be eliminated 가 옳다. Should 도치 가정법 조건절과 결과절 시제 결합도 정상이다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "진주어는 동명사구 'Protecting fig trees in such tropical rainforest ecosystems' 이며 동명사구 주어는 단수 취급한다. 따라서 술어동사는 is 여야 하는데 are 로 되어 수 일치 위반이다. 인접한 복수명사 ecosystems 는 전치사 in 의 목적어일 뿐 주어가 아니므로 복수동사의 근거가 될 수 없다. 이것이 어법상 틀린 부분이다."
+    }
+  ],
+  "note": "지배 규칙 검증: (E)의 참주어는 gerund phrase(Protecting ...)로 단수 → is 필요. are 는 오류. 나머지 (A)축약관계절 과거분사, (B)동격 that, (C)전치사+동명사, (D)수동태 가정법 결과절 모두 정문. 단일 정답 (E)로 명확히 수렴."
+}

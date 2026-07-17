@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "allows cars to park all day — 표지판 'No Standing'의 의미와 정반대(금지가 아니라 허용). 뒤의 'but we can stop to pick up passengers'와의 대조 구조도 성립하지 않는다(허용+허용이면 but이 무의미). 즉시 소거."
+    },
+    {
+      "label": "②",
+      "verdict": "correct (intended)",
+      "reason": "prohibits parking for extended periods — 'No Standing' 표지의 실제 의미(차를 세워 두고 기다리는 것은 금지, 승객 승하차를 위한 일시 정차는 허용)와 부합하고, 'but we can stop to pick up passengers'와 모순 없이 자연스러운 예외 대조를 이룬다. 다만 두 가지 흠: (a) 문장 주어가 we인데 3인칭 단수 동사 prohibits라 'we prohibits parking'으로 주어-동사 수일치가 깨진다(의미상 주어는 the sign/it이어야 함) — 이 결함은 5개 선지 전부에 공통. (b) 엄밀한 미국 교통법상 No Standing은 '장시간 주차'만이 아니라 대기 자체(잠깐의 standing)도 금지하므로 'for extended periods'는 다소 부정확하나, 선지 중 유일하게 내적 모순이 없다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "requires drivers to drive without stopping — 'No Stopping' 표지의 의미에 해당하는 미끼. 실제로 잠깐 끌렸으나, 뒤 절 'we can stop to pick up passengers'가 정차 가능을 명시하므로 '멈추지 않고 운전해야 한다'와 정면 충돌. 소거."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "restricts passengers from getting in cars — 뒤 절 'we can stop to pick up passengers'(승객 태우기 가능)와 직접 모순. 또한 표지판은 차량 행위를 규제하는 것이지 승객의 승차를 규제하는 것이 아니다. 소거."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong (most attractive distractor)",
+      "reason": "bans any temporary vehicular stops — 가장 강하게 끌린 오답. 'but'을 예외 표지로 읽으면 'No Standing = 일시 정차 금지, 단 승객 픽업은 예외'라는 실제 법규 의미에 가까워 보인다. 그러나 'any temporary stops'는 절대 표현이어서 승객 픽업(그 자체가 temporary stop)을 허용하는 뒤 절과 논리적 자기모순을 일으킨다. 또한 '모든 일시 정차 금지'는 No Standing이 아니라 No Stopping 표지의 의미다. 신중히 소거."
+    }
+  ],
+  "note": "정답은 ②로 하나로 좁혀지나 문항 품질 결함이 뚜렷하다. (1) 치명적 seam 결함: 빈칸 앞 주어가 'we'인데 다섯 선지 모두 3인칭 단수 동사(allows/prohibits/requires/restricts/bans)로 시작해 어떤 선지를 넣어도 'we prohibits...' 식의 수일치 파탄이 생긴다. 출제자는 'That means it/the sign _____'를 의도한 것으로 보이며, 결함이 5개 선지에 균일해 변별에는 영향이 없지만 실전 문항으로는 수리 필수. (2) 의미상으로도 금지 주체는 we가 아니라 표지판이어서 행위주 불일치가 이중으로 발생. (3) 발문이 실제 시험 발문('빈칸에 들어갈 말로 가장 적절한 것은?')이 아니라 출제 의도 설명문 형태. (4) ②의 'for extended periods'는 No Standing의 엄밀한 의미(대기 자체 금지)보다 완화된 표현이지만 상대 비교상 유일하게 옹호 가능. 원전으로 보이는 유명 ESL 일화의 원문은 'we can't park the car here and wait, but we can stop to pick up passengers'로, 빈칸에는 'can't + 동사' 형태가 와야 자연스럽다."
+}

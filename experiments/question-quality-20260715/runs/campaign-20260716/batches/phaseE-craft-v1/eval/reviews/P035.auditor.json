@@ -1,0 +1,83 @@
+{
+  "pid": "P035",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V4_EXPLANATION_CONTRADICTS_ANSWER",
+      "severity": "critical",
+      "evidence": "해설 마지막 문장 \"(B)의 'considered'를 고르면 안 됩니다.\"가 선언 정답 (B)와 정면 모순된다. 발문은 '어법상 틀린 것은?'이므로 학생은 (B)를 골라야 하는데, 해설이 (B)를 고르지 말라고 지시한다. 해설의 구조 분석(분사구문 뒤 목적어 NP → 능동 considering 요구) 자체는 정확하나, 정답 라벨 안내가 오류다."
+    },
+    {
+      "code": "V5_FIELD_DESYNC_EXPLANATION_VS_ANSWER",
+      "severity": "critical",
+      "evidence": "정답 라벨(B)과 해설 결론 문장이 상호 모순(위 V4 근거와 동일 문장). 학생 노출 필드 간 동기화 실패."
+    },
+    {
+      "code": "V5_MARKED_EXPRESSION_CONVENTION_MISMATCH",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (B)만 expression=\"considering\"(교정형)이고 surroundingText도 렌더 텍스트(considered)가 아닌 원문(considering)을 인용한다. 다른 4개 항목은 렌더 텍스트 기준이라 필드 규약이 항목 간 불일치한다. errorExpression/correction 자체는 의도와 일치."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "수동태 판정 — 'be credited with' 구조에서 주어(선행사 the Italian explorer)가 공로를 인정받는 대상임을 인식",
+      "temptingBecause": "관계절 내부의 태 판정이라 who is credited/who credits 능동·수동 혼동을 유도할 수 있음",
+      "decisiveFlaw": "explorer는 credit의 대상이므로 수동 'is credited with'가 정확 — 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "분사구문(또는 전치사적 considering) 능동/수동 판정 — 뒤따르는 목적어 NP 유무로 판별 (정답)",
+      "temptingBecause": "'all things considered' 류의 관용 수동 분사를 연상해 considered를 허용 가능하다고 오판할 수 있음",
+      "decisiveFlaw": "밑줄 뒤에 목적어 명사구 'his mistreatment ... and the devastating effect ...'가 직접 이어지므로 과거분사 considered는 비문 — 능동 considering이어야 하며 교정 시 정확히 원문이 됨. 유일 정답"
+    },
+    {
+      "label": "(C)",
+      "intent": "대명사 판정 — 전치사 with의 목적어로 목적격 them vs 재귀대명사/단수 오인",
+      "temptingBecause": "주어와 동일 지시라는 이유로 themselves를 요구한다고 오인할 수 있음",
+      "decisiveFlaw": "'bring A with them'은 표준 관용이며 them은 복수 선행 표현 Columbus and other Europeans를 정확히 지시 — 오답 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "조동사 should 뒤 동사원형 판정",
+      "temptingBecause": "유혹 요인이 사실상 없음 — supports/supporting류 오형이 제시되지 않은 원형 그대로라 즉시 소거됨. 필러에 가까움",
+      "decisiveFlaw": "should + 동사원형 support는 자명하게 적법 — 오답 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "주격 관계절 수일치 — 선행사(a new holiday) 파악",
+      "temptingBecause": "직후의 복수 명사 Native Americans에 이끌려 honor(복수형)로 오판하도록 유도",
+      "decisiveFlaw": "관계대명사 that의 선행사는 단수 a new holiday(혹은 the creation, 어느 쪽이든 단수)이므로 honors가 정확 — 오답 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "ANSWER_DIRECTIVE_REVERSED",
+      "severity": "critical",
+      "evidence": "\"(B)의 'considered'를 고르면 안 됩니다.\" — 정답을 고르지 말라고 안내하는 문장. 삭제하거나 \"따라서 정답은 (B)이다\"로 교체해야 함."
+    },
+    {
+      "code": "LOOSE_TERMINOLOGY_MINOR",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설의 \"주격 관계대명사절에서 주어 역할을 하는 선행사 the Italian explorer\"는 엄밀히는 관계대명사 who가 절 내 주어이고 선행사는 절 밖에 있음 — 통용되는 느슨한 교육적 표현이나 정밀성이 떨어짐."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "최소대립쌍(considering→considered, 교정 시 원문 복원)과 명확한 문법 판단 조건은 충족. 그러나 (1) 정답이 '분사 뒤 목적어 → 능동'이라는 최빈출 교과서 패턴이라 구조를 깊이 읽지 않아도 즉시 드러남(§C 'KILLER 정답은 즉시 드러나지 않는다' 불충족), (2) (D)는 유혹 설계가 없는 필러성 디코이, (3) 지문 자체가 중학 수준 논설문으로 통사 밀도가 낮음, (4) 등급이 A가 아니므로 자동 불충족.",
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·문법성(V3)은 모두 통과하고 정답 (B)의 문법 포인트 자체는 건전하다. 그러나 해설 마지막 문장이 정답 (B)를 '고르면 안 된다'고 지시해 정답 라벨과 정면 모순 — V4·V5 치명 실패로 등급 F, 출하 불가. 이 한 문장을 교체하면 유효성은 회복되지만, 요청 난이도 KILLER 대비 실제 난이도는 기초~중 수준(C5=1)이고 (D) 필러 디코이·즉답형 정답 패턴 때문에 KILLER로는 재설계가 필요하다."
+}

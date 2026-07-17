@@ -1,0 +1,44 @@
+{
+  "pid": "P035",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "독립 재검증 결과 (B) 'considered'만 유일하게 비문이다. 밑줄 직후에 직접목적어 명사구 'his mistreatment ... and the devastating effect ...'가 이어지므로 수동 과거분사는 성립할 수 없고, '~을 고려하면'을 뜻하는 준전치사적 능동형 considering이 필요하다. 구제 가능한 대안 파스(절대구문, consider X Y 수동 축약, 정형동사 해석)는 전부 통사·의미적으로 붕괴한다. (A)(C)(D)(E)는 각각 be credited with 수동 연어, bring X with one 관용 비재귀 대명사, 조동사+동사원형, 단수 선행사 수일치로 모두 명백히 적법하며, 어느 것도 제2정답으로 방어 불가. 솔버 1·2 모두 과잉 판정 없이 정확했고 놓친 대안 해석도 없다. 감사자가 지적한 해설 결어 모순('(B)를 고르면 안 됩니다')은 V4/V5 표기 결함일 뿐 정답 유일성(V2)에는 영향이 없다. 정답 유일성 확정: (B).",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "credited가 어법상 적절한가 (수동태 판정)",
+      "verdict": "정답 아님 — 적법",
+      "evidence": "'who is credited with discovering America' — be credited with + 동명사는 고정 수동 연어이며, 선행사 the Italian explorer(단수)와 is의 수일치도 정확하다. 능동 credits로 바꿀 근거가 없고 대안 해석상 결함도 없다."
+    },
+    {
+      "label": "(B)",
+      "claim": "considered가 비문인가 (분사구문 능동/수동, 유일 오류 여부)",
+      "verdict": "유일 오류 확정",
+      "evidence": "문두 분사구 뒤에 직접목적어 NP 'his mistreatment of Native Americans and the devastating effect of his arrival'이 바로 이어지므로 수동 과거분사 considered는 목적어를 지배할 수 없어 비문. 필요한 형태는 준전치사화된 considering('~을 고려하면'). 구제 시도 전수 검토: (1) 절대구문은 'all things considered'처럼 명사 선행 어순을 요구하므로 불성립, (2) consider X Y 수동 축약 독법('honoring the explorer가 his mistreatment이자 the devastating effect로 간주되어')은 등위 NP 두 개와 동시 동일시되는 의미 붕괴로 불성립, (3) 주어 없는 정형 과거시제 독법도 불성립. 교정 시 considering으로 원문이 정확히 복원되는 최소대립쌍이다."
+    },
+    {
+      "label": "(C)",
+      "claim": "them이 themselves여야 하거나 지시 모호로 비문인가",
+      "verdict": "정답 아님 — 적법",
+      "evidence": "'the diseases that Columbus and other Europeans brought with them' — 동반 전치사구에서 주어와 동일 지시하는 평대명사는 표준 관용(bring X with one; cf. 'He took his bag with him')이라 재귀형 요구는 착시다. 관계절 공백은 brought의 목적어(= the diseases)이므로 them의 지시도 복수 주어 Columbus and other Europeans로 유일하게 해석된다."
+    },
+    {
+      "label": "(D)",
+      "claim": "support가 어법상 적절한가 (조동사 뒤 동사원형)",
+      "verdict": "정답 아님 — 적법",
+      "evidence": "'should support' — 조동사 should 뒤 동사원형으로 자명하게 적법. 유혹 요인 자체가 없는 필러성 선지(감사자 C 지적과 일치)이나, 이는 난이도 문제일 뿐 유일성에는 무관하다."
+    },
+    {
+      "label": "(E)",
+      "claim": "honors의 단수 수일치가 틀렸는가 (인접 복수명사 견인)",
+      "verdict": "정답 아님 — 적법",
+      "evidence": "'a new holiday that honors Native Americans and remembers their suffering' — 관계대명사 that의 선행사는 단수 a new holiday(설령 the creation으로 보더라도 단수)이므로 단수 honors가 정확하고, 병렬 동사 remembers와도 정합한다. 직후 복수 Native Americans는 근접 견인 미끼일 뿐이다."
+    },
+    {
+      "label": "메타(해설 모순)",
+      "claim": "해설 결어 '(B)를 고르면 안 됩니다'가 정답 유일성을 훼손하는가",
+      "verdict": "V2 무관 — 표기 결함(V4/V5)",
+      "evidence": "해설의 구조 분석(분사 뒤 목적어 → 능동 considering 요구)은 정확하며, 모순은 결어 한 문장의 라벨 안내 오류다. 지문·선지·정답 키 자체의 유일성 판정에는 영향이 없다. 출하 전 해당 문장 교체 필요(감사자 판정 유지)."
+    }
+  ]
+}

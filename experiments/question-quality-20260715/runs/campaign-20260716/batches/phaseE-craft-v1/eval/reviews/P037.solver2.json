@@ -1,0 +1,35 @@
+{
+  "pid": "P037",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) have",
+      "verdict": "correct",
+      "reason": "주어 'Sweeping statements'는 복수이므로 현재완료 수동태 'have been made'의 복수 조동사 have가 정확히 일치한다. 진짜 주어가 statements임이 명백하고 개입 명사도 없어 수 일치 문제가 없다. 정문."
+    },
+    {
+      "label": "(B) that",
+      "verdict": "correct",
+      "reason": "'It has been said that ...' 구문에서 It은 가주어, that절이 진주어(전달된 내용)를 이끄는 명사절 접속사다. 뒤에 완전한 절 'a child who is better dressed is better behaved'가 오므로 관계사가 아닌 접속사 that이 요구되며, 이어지는 'and that a child ...'와의 병렬도 성립한다. 정문."
+    },
+    {
+      "label": "(C) dressing",
+      "verdict": "incorrect",
+      "reason": "문맥은 '가장 좋은 옷을 입고 있는(입혀진) 상태'의 아이를 말하므로 수동/상태 표현 'a child who was dressed in his best clothes'가 필요하다. 능동 진행 'was dressing in his best clothes'는 '옷을 입는 동작이 진행 중'이라는 뜻이 되어, 뒤따르는 'would be better behaved for a short period ... by the end of the hour the child would have forgotten his clothes'(입은 상태로 한동안 행동함)와 논리적으로 충돌한다. 대안 해석 검토: 능동 자동사 dress in(~을 입고 다니다)은 습관적 상태 동사로 'He dresses in black'처럼 단순시제로는 성립하지만, 진행형 'was dressing in'은 착용 동작 진행으로만 읽혀 본문 의미를 구제하지 못한다. 또한 지문 내 병렬 단서 'dressed like a cowboy', 'when dressed in ordinary clothes', 'who is dressed in a cowboy outfit'이 모두 과거분사 dressed를 사용하여 장거리 병렬로도 dressed가 요구된다. 어법상 틀림 — dressed로 고쳐야 한다."
+    },
+    {
+      "label": "(D) stressed",
+      "verdict": "correct",
+      "reason": "'whose mother stressed that they were best'에서 stressed는 관계절 내 본동사(과거시제 능동)로, 주절의 가정적 서술(would predict ... who was dressed)과 시제가 일치한다. whose mother가 주어, that절이 목적어인 완전한 구조. 정문."
+    },
+    {
+      "label": "(E) who",
+      "verdict": "correct",
+      "reason": "'the child who is dressed in a cowboy outfit'에서 선행사는 사람(the child)이고, 관계절 내에서 주어 역할(is dressed의 주어)을 하므로 주격 관계대명사 who가 정확하다. 정문."
+    }
+  ],
+  "note": "형식적 판정: (A)(B)(D)(E)는 각각 수일치, 명사절 접속사 병렬, 관계절 시제, 주격 관계사로 모두 증명 가능하게 정문. (C)만이 상태 수동(dressed) 대신 능동 진행(dressing)을 써서 문맥 의미(옷을 입은 상태)와 지문 전체의 dressed 병렬 단서에 어긋난다. 능동 자동사 dress in의 습관 용법으로 구제하려 해도 진행형에서는 착용 동작 의미로 전환되어 성립하지 않으므로 단일 정답으로 옹호 가능. 문항 품질 양호."
+}

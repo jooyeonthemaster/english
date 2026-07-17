@@ -1,0 +1,35 @@
+{
+  "pid": "P029",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) what",
+      "verdict": "correct",
+      "reason": "know의 목적어로 두 개의 명사절이 병렬: 'where we are headed and what we want to do'. what은 선행사를 포함한 관계대명사(=the thing which)로 do의 목적어 자리가 비어 있으므로 적법. do가 자동사처럼 완결된 문장이 아니므로 that으로 바꿀 수 없고 what이 정확히 맞는 자리. 유혹 포인트: where와의 병렬에서 접속사 착시를 노릴 수 있으나 do의 목적어 공백을 확인하면 즉시 해소된다."
+    },
+    {
+      "label": "(B) to adjust",
+      "verdict": "correct",
+      "reason": "have to + 동사원형 구문. 'have to adjust to a postponement or (have to) create a whole new set of circumstances'로 adjust와 create가 have to 뒤에서 병렬. adjust to의 to는 전치사(명사 a postponement가 뒤따름)로 별개이며 혼동을 유도하지만 구조는 정상. 유혹 포인트: to adjust to의 to 중복이 어색해 보이게 만드는 시각적 미끼이나 어법상 문제 없음."
+    },
+    {
+      "label": "(C) unpredictable",
+      "verdict": "correct",
+      "reason": "be동사(is)의 주격 보어 자리이므로 형용사 unpredictable이 정확. 부사(unpredictably)였다면 틀렸을 자리. 끌림 요소가 거의 없는 안전 선지."
+    },
+    {
+      "label": "(D) to spend",
+      "verdict": "wrong",
+      "reason": "end up은 동명사를 목적보어로 취하는 관용 표현으로 'end up spending'이어야 한다. end up + to부정사는 표준 어법에서 성립하지 않으며, '결과적으로 ~하게 되다'라는 문맥 의미상으로도 spending이 유일한 정형. to부정사가 목적/결과로 해석될 여지를 탐색해도 end up의 보어 구조를 대체할 수 있는 대안 해석이 없다. 어법상 틀린 부분."
+    },
+    {
+      "label": "(E) which",
+      "verdict": "correct",
+      "reason": "대시 사이 삽입절에서 which는 앞선 어구 'the universe's way of keeping us awake'(혹은 curveball이 우리를 깨어 있게 한다는 사실 전체)를 받는 (계속적 용법의) 관계대명사로 적법하며 단수 동사 is와도 일치. 유혹 포인트: 문두 not only 도치(are curveballs)와 결합해 문장 구조가 복잡해 보여 which의 선행사를 못 찾게 만드는 미끼이나, 절/명사구 선행 which는 정문. 실제로 가장 오래 들여다본 선지였으나 대안 해석 탐색 결과 하자 없음."
+    }
+  ],
+  "note": "실전 풀이 순서: (C) 즉시 소거 → (A)(B) 병렬 확인 후 소거 → (E)의 도치+삽입 구조가 가장 강한 매력적 오답으로 작동(선행사 탐색에 시간 소모) → (D) end up to-V가 결정적 오류로 확정. 'not only are curveballs ...' 도치도 부정어구 문두 도치로 정상. 정답 후보는 (D) 단독이며 복수 정답 소지 없음. 참고: 'you never arrive at that important meeting'의 never는 문맥상 다소 부자연스러우나(단회 사건에 never) 어법 문제는 아니고 지문 완성도 차원의 사소한 흠."
+}

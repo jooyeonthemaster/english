@@ -1,0 +1,91 @@
+{
+  "pid": "P001",
+  "blindAnswer": "③",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-attribution",
+      "severity": "minor",
+      "evidence": "해설이 '본문 중반부에서 감정을 잘 이해하는 사람들이 ... 열린 소통을 위한 장(arena for open communication)을 마련한다고 설명했습니다'라고 하나, 'arena for open communication'은 마지막 문장에만 등장하며 그 주어는 'Appreciation of differences'다. 중반부의 실제 표현은 'facilitate clear communication between co-workers'. 인과 요지는 유지되므로 치명 아님."
+    },
+    {
+      "code": "V4-minor-addition",
+      "severity": "minor",
+      "evidence": "해설의 '집단 평화와 기능'에서 '평화(peace)'는 지문에 없는 해석적 첨가다. 지문은 'constructive conflict resolution and improved group functioning'만 말한다. 논지 왜곡은 아니므로 치명 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal) — 긍정적 인과 결론을 정반대 방향으로 뒤집은 오답",
+      "temptingBecause": "collective cohesion, organization 등 집단 차원 어휘를 재사용해 표면적으로 주제와 닿아 보임",
+      "decisiveFlaw": "undermines는 지문 전체의 일관된 긍정적 인과 흐름(협력·명확한 소통·건설적 해결)과 정면 충돌. 즉시 소거 가능한 조악한 반대항"
+    },
+    {
+      "label": "②",
+      "intent": "갈등 처리 방식 혼동(half-truth/mode confusion) — '갈등 해결'을 '대립 회피'로 치환",
+      "temptingBecause": "갈등 상황이라는 주제 앵커를 공유하고, '갈등을 줄인다 = 부딪히지 않는다'는 통념과 부합해 가장 매력적인 오답",
+      "decisiveFlaw": "지문은 'express how he feels about the problem'처럼 직접 표현과 관점 취하기를 통한 건설적 해결(constructive conflict resolution)을 말하며, 회피는 열린 소통(open communication)과 대치됨"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'promotes constructive conflict resolution and improved group functioning'의 적절한 추상화 패러프레이즈",
+      "temptingBecause": "(정답) settling disputes ← conflict resolution, collective performance ← group functioning 대응",
+      "decisiveFlaw": "(없음) 유일하게 긍정 극성이면서 결론 문장의 주제(갈등 해결·집단 기능)에 정합"
+    },
+    {
+      "label": "④",
+      "intent": "어휘 앵커 오용(lexical anchor misuse + scope shift) — 첫 문장의 'diverse emotion vocabulary'를 개인 어휘 습득으로 지엽화",
+      "temptingBecause": "'diverse vocabulary'가 지문과 verbatim 중복되고 유일하게 ③ 외 긍정 극성이라 표면 독해자를 유인",
+      "decisiveFlaw": "결론 문장은 집단 차원의 소통·갈등 해결에 관한 것. 개인의 어휘 습득 한계 극복은 빈칸 자리의 논리적 귀결과 무관한 scope 이탈"
+    },
+    {
+      "label": "⑤",
+      "intent": "관계 왜곡(relation distortion/condition loss) — 상호 수용을 일방적 자기희생·순응으로 왜곡",
+      "temptingBecause": "집단 규범·협력이라는 소재를 공유하고 '집단을 위해 양보한다'는 통념적 프레임에 부합",
+      "decisiveFlaw": "지문은 'accommodate their own needs as well as the needs of others'로 자신의 필요까지 포함한 양방향 수용을 명시. forces/sacrifice의 강제·희생 프레임과 모순"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'arena for open communication'을 본문 중반부(감정을 잘 이해하는 사람들 서술)에 귀속했으나 실제로는 마지막 문장(주어: Appreciation of differences)의 표현임",
+      "recommendation": "'중반부에서 명확한 소통을 촉진한다(facilitate clear communication)고 했고, 마지막 문장에서 차이의 인정이 열린 소통의 장을 만든다'로 문장 귀속을 분리해 서술"
+    },
+    {
+      "severity": "minor",
+      "evidence": "'집단 평화와 기능'의 '평화'는 지문에 없는 첨가어",
+      "recommendation": "'갈등 해결과 집단 기능'으로 지문 어휘에 맞춰 수정"
+    }
+  ],
+  "issues": [
+    {
+      "severity": "minor",
+      "evidence": "C4 단서 경제성: 오답 4개 중 3개(①②⑤)가 부정 극성(undermines, avoid, forces/sacrifice)이고 유일한 긍정 오답 ④는 명백한 지엽이라, '긍정 + 결론 주제 정합' 스캔만으로 ③이 특정됨. 전체 구조 독해 없이 극성+주제 휴리스틱으로 풀리는 약한 누출",
+      "recommendation": "①이나 ⑤ 하나를 긍정 극성이지만 인과 방향·범위가 어긋나는 오답(예: 조건 상실형·과잉 일반화형)으로 교체해 극성 스캔 지름길 차단"
+    },
+    {
+      "severity": "minor",
+      "evidence": "①은 사실상 random opposite에 가까운 조악한 반전으로, 실질 변별에 기여하지 않는 필러 성격",
+      "recommendation": "서로 다른 함정 유형(scope shift, causal reversal 등)으로 재설계"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 원문에서 마지막 span('promotes constructive conflict resolution and improved group functioning')만 빈칸으로 치환했고 손상 없음. 5개 선지 모두 3인칭 단수 VP로 동일 통사 슬롯에 들어가며 tail로 탈락하는 선지 없음. 독립 blind solve에서 ③ 단일 정답 확인. 공예 합계 18(4+3+3+2+3+3), 최저 2 → B. 요청 난이도 INTERMEDIATE에 대체로 정합하나, 오답 극성 편중으로 극성 스캔 지름길이 존재해 C4가 약함. ①의 극성 오답을 긍정형 함정으로 교체하는 작은 수정으로 출제 가능. KILLER 아님(요청 난이도 INTERMEDIATE)이므로 killerConditionsMet=false."
+}

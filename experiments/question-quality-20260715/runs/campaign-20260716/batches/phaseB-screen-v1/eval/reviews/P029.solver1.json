@@ -1,0 +1,35 @@
+{
+  "pid": "P029",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "동격 접속사 that. 'encourage recognition that + 완전한 절(although 양보절 삽입 후 these principles vary...)' 구조로, recognition/fact/belief류 추상명사 뒤 동격 that절은 표준 용법. that절 내부가 완전하므로 관계대명사가 아닌 동격 접속사로 정확히 쓰였다. 'recognition of'를 기대하는 직관을 자극하는 미끼 자리이나 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'define A as B'의 수동태 'being ethical is defined as acting...'에서 전치사 as의 목적어로 동명사 acting은 표준 용법. 주어 being ethical(동명사구)과의 형태 대응도 자연스럽다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "관계대명사 that의 선행사 판별이 관건인 장거리 단서 자리. 인접 단수명사 conduct가 아니라 핵명사 복수 principles가 선행사이며(의미상 '옳다고 여겨지는' 대상은 원칙들), 복수동사 are considered + 목적보어 correct(consider O C의 수동)로 정문. 근접 단수명사에 의한 수일치 함정으로 실전에서 가장 오래 검토하게 되는 매력적 오답이지만 흠이 없다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "상관접속사 both는 반드시 'both A and B'로 병렬되어야 하는데 'these principles vary both between or within individuals'로 or가 쓰였다. 'both between and within individuals'가 되어야 정문. either...or와의 혼동을 유도한 자리이며, both를 대명사로 떼어 읽는 대안 해석('vary both, between or within')도 지시 대상·어순상 성립하지 않아 or를 구제할 방법이 없다. 유일하고 명백한 어법 오류."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "조동사 may 뒤 동사원형 make + 목적어 different choices. 형태·결합 모두 정상이고, '같은 개인도 상황·시점·기분에 따라 다른 선택을 할 수 있다'는 문맥 흐름과도 일치한다. 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 실제로 끌린 순서는 (C) > (A). (C)는 관계사 직전 단수 conduct 때문에 'is considered'가 아닌지 잠시 검토했으나 핵명사 principles가 선행사임이 의미·구조상 확정되어 기각. (A)는 뒤에 완전한 절이 이어져 순간 의심을 유발하나 동격 that로 정문. (D)의 both...or는 상관접속사 짝 불일치로 대안 해석 여지가 전혀 없는 단일 정답. 복수 정답 소지 없음 — 문항 성립에 문제 없다."
+}

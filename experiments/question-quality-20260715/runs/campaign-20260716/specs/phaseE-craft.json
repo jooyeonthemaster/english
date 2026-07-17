@@ -1,0 +1,370 @@
+{
+ "batchId": "phaseE-craft-v1",
+ "phase": "E",
+ "note": "공예 심판+표적 오답 업그레이드 (검증 기반 A0+egate 위). Phase C 컨트롤과 동일 confirmatory 지문·난이도 paired.",
+ "concurrency": 3,
+ "geminiReasoningEffort": "low",
+ "providerRouting": "none",
+ "assignments": [
+  {
+   "itemId": "E-G-E1-01",
+   "frameId": "grammar-frame-v2-002",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-02",
+   "frameId": "grammar-frame-v2-003",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-03",
+   "frameId": "grammar-frame-v2-021",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-04",
+   "frameId": "grammar-frame-v2-035",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-05",
+   "frameId": "grammar-frame-v2-049",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-06",
+   "frameId": "grammar-frame-v2-058",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-07",
+   "frameId": "grammar-frame-v2-069",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-08",
+   "frameId": "grammar-frame-v2-074",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-09",
+   "frameId": "grammar-frame-v2-079",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-10",
+   "frameId": "grammar-frame-v2-093",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-11",
+   "frameId": "grammar-frame-v2-096",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-12",
+   "frameId": "grammar-frame-v2-115",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-13",
+   "frameId": "grammar-frame-v2-120",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-14",
+   "frameId": "grammar-frame-v2-133",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-15",
+   "frameId": "grammar-frame-v2-134",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-16",
+   "frameId": "grammar-frame-v2-136",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-17",
+   "frameId": "grammar-frame-v2-146",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-18",
+   "frameId": "grammar-frame-v2-148",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-19",
+   "frameId": "grammar-frame-v2-164",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-G-E1-20",
+   "frameId": "grammar-frame-v2-174",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "G-E1"
+  },
+  {
+   "itemId": "E-B-E1-01",
+   "frameId": "blank-supply-v2-002",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-02",
+   "frameId": "blank-supply-v2-012",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-03",
+   "frameId": "blank-supply-v2-015",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-04",
+   "frameId": "blank-supply-v2-017",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-05",
+   "frameId": "blank-supply-v2-028",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-06",
+   "frameId": "blank-supply-v2-031",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-07",
+   "frameId": "blank-supply-v2-035",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-08",
+   "frameId": "blank-supply-v2-038",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-09",
+   "frameId": "blank-supply-v2-040",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-10",
+   "frameId": "blank-supply-v2-041",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-11",
+   "frameId": "blank-supply-v2-056",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-12",
+   "frameId": "blank-supply-v2-077",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-13",
+   "frameId": "blank-supply-v2-091",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-14",
+   "frameId": "blank-supply-v2-092",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-15",
+   "frameId": "blank-supply-v2-097",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-16",
+   "frameId": "blank-supply-v2-098",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-17",
+   "frameId": "blank-supply-v2-109",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-18",
+   "frameId": "blank-supply-v2-119",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-19",
+   "frameId": "blank-supply-v2-120",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  },
+  {
+   "itemId": "E-B-E1-20",
+   "frameId": "blank-supply-v2-134",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "KILLER",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "B-E1"
+  }
+ ]
+}

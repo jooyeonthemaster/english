@@ -1,0 +1,412 @@
+{
+  "schemaVersion": "calibration-v3-production-type-binding-independent-audit-evidence-1",
+  "artifactId": "calibration-v3-production-type-binding-independent-audit-v1",
+  "target": {
+    "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v1",
+    "hashes": {
+      "REPORT.md": "730613f34f5d5d42645dc1670d4f41c5d79c0b85d7f3ca5b0a1d8cf6f9a14a82",
+      "binding.json": "f731f790413bb6fa7bb5ec9be797553032846e1d8902d3e94b46d75066702c18",
+      "verify.mjs": "36ff4873d80d01c5198e28e658f43ae429ddc99a7e26f033efd36e49e08b96c8",
+      "MANIFEST.sha256": "655bfc33ef47f06752fddde0c2ac4c3750ca7468d97d84a241dca28fefac1539"
+    },
+    "manifestEntriesValid": true,
+    "authorVerifierBaseline": {
+      "arguments": ["--check-manifest"],
+      "exitCode": 0,
+      "status": "PASS_WITH_DECLARED_PRIOR_DESIGN_BLOCKER",
+      "checks": 154,
+      "passed": 154,
+      "failed": 0
+    }
+  },
+  "productionAuthority": {
+    "parser": "typescript-5.9.3 AST",
+    "chain": [
+      {
+        "path": "src/lib/question-type-ui.ts",
+        "symbol": "QUESTION_TYPE_GROUPS",
+        "astFact": "three static groups referencing QUESTION_TYPE_UI properties",
+        "groupSizes": [14, 8, 3]
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generate-page-types.ts",
+        "symbol": "EXAM_TYPE_GROUPS",
+        "astFact": "initializer is the identifier QUESTION_TYPE_GROUPS"
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+        "symbol": "panelTypeGroups",
+        "astFact": "koPanel is passageSubject === KOREAN and false branch is EXAM_TYPE_GROUPS"
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+        "symbol": "allTypeItems/groupedTypeItems",
+        "astFact": "panelTypeGroups.flatMap feeds rendered group.items.map"
+      }
+    ],
+    "uiTypeIdsInOrder": [
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR",
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "focusTypeIds": ["BLANK_INFERENCE", "GRAMMAR_ERROR"],
+    "nonfocusTypeIdsInUiOrder": [
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ]
+  },
+  "registryDrift": {
+    "structuredSchemaCount": 26,
+    "aiSchemaCount": 26,
+    "filterCount": 26,
+    "legacyConstantCount": 24,
+    "schemaOnlyRelativeToUi": ["TOPIC_MAIN_IDEA"],
+    "filterOnlyRelativeToUi": ["TOPIC_MAIN_IDEA"],
+    "legacyMissingRelativeToUi": ["GRAMMAR_CHOICE_COMBO"],
+    "legacyExtraRelativeToUi": [],
+    "topicMainIdeaSourceEvidence": [
+      "QUESTION_TYPE_META description contains 레거시",
+      "TYPE_TAGLINES value contains 레거시 통합형"
+    ],
+    "classificationConfirmed": {
+      "TOPIC_MAIN_IDEA": "LEGACY_SCHEMA_AND_FILTER_COMPATIBILITY_ONLY",
+      "GRAMMAR_CHOICE_COMBO": "CANONICAL_UI_AND_SCHEMA_LEGACY_CONSTANT_MISSING"
+    }
+  },
+  "familyMapping": {
+    "familyCount": 8,
+    "mappedCount": 23,
+    "mappedUniqueCount": 23,
+    "missingCanonicalIds": [],
+    "extraIds": [],
+    "focusIdsPresent": [],
+    "legacyIdsPresent": [],
+    "families": [
+      {
+        "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+        "rotationOrder": ["TOPIC", "MAIN_IDEA", "TITLE"]
+      },
+      {
+        "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+        "rotationOrder": ["IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH"]
+      },
+      {
+        "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+        "rotationOrder": ["SENTENCE_ORDER", "SENTENCE_INSERT", "IRRELEVANT"]
+      },
+      {
+        "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+        "rotationOrder": ["GRAMMAR_CHOICE_COMBO", "GRAMMAR_CORRECTION"]
+      },
+      {
+        "familyId": "NF-F5-LEXICAL_SEMANTICS",
+        "rotationOrder": ["VOCAB_CHOICE", "CONTEXT_MEANING", "SYNONYM", "ANTONYM"]
+      },
+      {
+        "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+        "rotationOrder": ["SUMMARY_COMPLETE_MC", "SUMMARY_COMPLETE", "SUMMARY_WRITING"]
+      },
+      {
+        "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+        "rotationOrder": ["CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "WORD_ORDER"]
+      },
+      {
+        "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+        "rotationOrder": ["FILL_BLANK_KEY", "TOPIC_SENTENCE_WRITING"]
+      }
+    ]
+  },
+  "rotationCounterexample": {
+    "declaredMainFormula": "(2 * (epoch - 1)) mod familySize",
+    "declaredHoldoutFormula": "(2 * (epoch - 1) + 1) mod familySize",
+    "epochOneMainPlusHoldoutDistinct": 16,
+    "epochTwoMainPlusHoldoutDistinct": 23,
+    "epochFourMainOnlyDistinct": 19,
+    "eventualMainOnlyDistinct": 19,
+    "recordedMainOnlyEpochClaim": 4,
+    "mainOnlyAll23Possible": false,
+    "unreachableByMain": [
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "ANTONYM"
+    ],
+    "perFamilyMainOrbits": [
+      {
+        "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+        "period": 3,
+        "ids": ["TOPIC", "TITLE", "MAIN_IDEA"]
+      },
+      {
+        "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+        "period": 3,
+        "ids": ["IMPLIED_MEANING", "CONTENT_MATCH", "REFERENCE"]
+      },
+      {
+        "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+        "period": 3,
+        "ids": ["SENTENCE_ORDER", "IRRELEVANT", "SENTENCE_INSERT"]
+      },
+      {
+        "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+        "period": 1,
+        "ids": ["GRAMMAR_CHOICE_COMBO"]
+      },
+      {
+        "familyId": "NF-F5-LEXICAL_SEMANTICS",
+        "period": 2,
+        "ids": ["VOCAB_CHOICE", "SYNONYM"]
+      },
+      {
+        "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+        "period": 3,
+        "ids": ["SUMMARY_COMPLETE_MC", "SUMMARY_WRITING", "SUMMARY_COMPLETE"]
+      },
+      {
+        "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+        "period": 3,
+        "ids": ["CONDITIONAL_WRITING", "WORD_ORDER", "SENTENCE_TRANSFORM"]
+      },
+      {
+        "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+        "period": 1,
+        "ids": ["FILL_BLANK_KEY"]
+      }
+    ],
+    "authorVerifierContradiction": {
+      "combinedFormulaCode": "const offset = 2 * (epoch - 1) + (holdout ? 1 : 0)",
+      "mainOnlyFormulaCode": "family.rotationOrder[(epoch - 1) % family.rotationOrder.length]",
+      "combinedFormulaLine": 270,
+      "mainOnlyFormulaLines": [296, 298],
+      "mainFormulaFieldReferenced": false,
+      "holdoutFormulaFieldReferenced": false
+    }
+  },
+  "priorMismatch": {
+    "priorLogicalCount": 23,
+    "priorLogicalUniqueCount": 23,
+    "productionCount": 23,
+    "exactIntersectionCount": 9,
+    "exactIntersectionIds": [
+      "TOPIC",
+      "TITLE",
+      "CONTENT_MATCH",
+      "SYNONYM",
+      "SENTENCE_ORDER",
+      "SENTENCE_TRANSFORM",
+      "GRAMMAR_CHOICE_COMBO",
+      "GRAMMAR_CORRECTION",
+      "WORD_ORDER"
+    ],
+    "priorOnlyIds": [
+      "PURPOSE",
+      "CLAIM",
+      "GIST",
+      "CONTENT_MISMATCH",
+      "INFERENCE",
+      "CHART",
+      "PRACTICAL_INFO",
+      "MOOD",
+      "VOCABULARY_CONTEXT",
+      "IRRELEVANT_SENTENCE",
+      "SENTENCE_INSERTION",
+      "SUMMARY_COMPLETION",
+      "SHORT_ANSWER",
+      "MULTI_ITEM_COMPOSITE"
+    ],
+    "productionOnlyIds": [
+      "VOCAB_CHOICE",
+      "SENTENCE_INSERT",
+      "MAIN_IDEA",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "TOPIC_SENTENCE_WRITING",
+      "CONTEXT_MEANING",
+      "ANTONYM"
+    ],
+    "verdict": "BLOCKED",
+    "code": "PRIOR_V3_LOGICAL_UNIVERSE_NOT_PRODUCTION_BOUND"
+  },
+  "sourceGitEvidence": {
+    "repositoryHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "records": [
+      {
+        "path": "src/lib/question-type-ui.ts",
+        "sha256": "19946584a591138a484034691230c2faa1b8d79ced811db96b5afed43f41e9f7",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "7a15f2feba4533a97a446a23ab17506609748f0d",
+        "lastCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generate-page-types.ts",
+        "sha256": "bef8c1a9c9854b276807df02d06381927a005e6cc050dd3d2e1097769742a1a1",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "6a26b726935a947ccac16a385a3f699f7d23de30",
+        "lastCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+        "sha256": "b20357b0d224e096680c8dfe5a1915c816d30c4bf288569ac4a9a98696aa0a1e",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "5dc433eb6f42b108b292c7f29316227c74f28191",
+        "lastCommit": "b8cfd5f9845c638c82843e6fd4e10e14b95cf903"
+      },
+      {
+        "path": "src/lib/question-schemas.ts",
+        "sha256": "6037aaad366f029afc2b0ebf1b0194cdcc8874173002256baa24a95d15888a22",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "ebb1b92690d96861580e3ea9499c431083534fbd",
+        "lastCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+      },
+      {
+        "path": "src/lib/question-ai-schemas-mc.ts",
+        "sha256": "c538452b7810e0efd8dd1d2c9345c3b1a64f8650a4590afc11850ce0d2bb5694",
+        "gitStatus": "M src/lib/question-ai-schemas-mc.ts",
+        "clean": false,
+        "headBlob": "1f04c99402d8a92ec770d82052e9bd1ae7c9a661",
+        "lastCommit": "3f155ca682baec204559d07d1516c847e13ba347",
+        "registryKeysEqualHead": true
+      },
+      {
+        "path": "src/lib/question-ai-schemas-vocab.ts",
+        "sha256": "71f041c8f073262db1a181c2c23c932a0fe24e0e130fb605adbaa6613503de4a",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "747b8f5eaf3da4781b09b7014a7eafb163abc105",
+        "lastCommit": "72418a0ce517a6fcf0ce2b883f4e80d81ecdda04"
+      },
+      {
+        "path": "src/app/api/ai/generate-question/route.ts",
+        "sha256": "afadfaf79d51657e546233c78ed9d092dfba9060cd89240ff9d2be3f0e03c1fa",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "fa5bcc0fb50ae3a8b9d4c8824f7f7f633fdd3641",
+        "lastCommit": "11163f32565fb2c7278a550138ec4f08e0475e01"
+      },
+      {
+        "path": "src/components/workbench/question-type-filter.tsx",
+        "sha256": "adaf0585b8e3f9a6d0232e2119d6fbd99ce9cafd373d90519dc55b8bd1fc2fd9",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "b4fecf97f3203169e9defe85a034ce847a9d37f1",
+        "lastCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+      },
+      {
+        "path": "src/lib/constants.ts",
+        "sha256": "a826ee6070a1ccb957cb993d80a429f1bfbfbd50568638d34153d859d9d8c10f",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "f2d88069ab7036d2dc7384e61d2c4658ac2dc2fa",
+        "lastCommit": "867d3de8558f18a47ff9e960774e25bbca8692e2"
+      },
+      {
+        "path": "src/lib/question-ai-edit/type-edit-config.ts",
+        "sha256": "c9ffea7b5a156a863e097cf5aface8874d9296802580bd298045dc7987990cd9",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "2f27293f1cdd3eca009afde27e2517fd2ab882a6",
+        "lastCommit": "6530ef2a82a4670f0a96afa4f44465c466dc77a6"
+      },
+      {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+        "sha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+        "gitStatus": "?? experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+        "clean": false,
+        "headBlob": null,
+        "lastCommit": null
+      }
+    ],
+    "authorVerifierGaps": {
+      "cleanStateInsideTruthyHeadBlobConditional": true,
+      "lastPathCommitReferenced": false,
+      "authorityChainUsesRawSubstring": true
+    }
+  },
+  "hostileMutations": [
+    { "name": "canonical UI deletion", "detectedAs": "CANONICAL_UI_BINDING_MISMATCH", "rejected": true },
+    { "name": "schema enum addition", "detectedAs": "SCHEMA_SET_DRIFT", "rejected": true },
+    { "name": "schema enum removal", "detectedAs": "SCHEMA_SET_DRIFT", "rejected": true },
+    { "name": "legacy alias misclassification", "detectedAs": "ALIAS_CLASSIFICATION_DRIFT", "rejected": true },
+    { "name": "family duplicate", "detectedAs": "FAMILY_DUPLICATE_OR_OMISSION", "rejected": true },
+    { "name": "family omission", "detectedAs": "FAMILY_DUPLICATE_OR_OMISSION", "rejected": true },
+    { "name": "focus injection", "detectedAs": "FAMILY_FOCUS_INJECTION", "rejected": true },
+    { "name": "legacy injection", "detectedAs": "FAMILY_LEGACY_INJECTION", "rejected": true },
+    { "name": "rotation formula drift", "detectedAs": "ROTATION_FORMULA_DRIFT", "rejected": true },
+    { "name": "source byte mutation", "detectedAs": "SOURCE_SHA_MISMATCH", "rejected": true },
+    { "name": "manifest hash mutation", "detectedAs": "MANIFEST_HASH_MISMATCH", "rejected": true },
+    { "name": "dirty-state metadata mutation", "detectedAs": "GIT_DIRTY_STATE_DRIFT", "rejected": true },
+    { "name": "HEAD blob null bypass", "detectedAs": "HEAD_BLOB_DRIFT", "rejected": true },
+    { "name": "last-path-commit mutation", "detectedAs": "LAST_PATH_COMMIT_DRIFT", "rejected": true },
+    {
+      "name": "commented alias semantic break",
+      "detectedAs": "AUTHORITY_CHAIN_AST_MISMATCH",
+      "rejected": true,
+      "authorSubstringPredicateWouldPassAfterCoherentRebind": true
+    }
+  ],
+  "activity": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0,
+    "ledgerReads": 0,
+    "ledgerWrites": 0
+  }
+}

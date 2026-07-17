@@ -1,0 +1,35 @@
+{
+  "pid": "P053",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "Seam is grammatical ('mistake X for Y'), but the proposition fails on the premise set: the stimuli the brain misreads (traffic jam, unpleasant conversation) are explicitly declared NOT genuine hazards ('harmless to our survival', 'there is no danger', 'the danger is an illusion'), while the genuine modern hazards actually named (high blood pressure, diabetes) are the ones the brain does not react to. 'Genuine modern hazards' misassigns the domain of the brain's error. Attractive distractor because 'ancient predators' echoes the tiger image."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Logical contrapositive of the text: the brain does not ignore minor daily annoyances; it inflates them into flee-or-fight threats. Direct contradiction of 'our brain considers this a danger'."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "Grammatically clean ('fabricate X out of Y', agreement holds). Every constituent is entailed by an explicit premise: 'fabricates' = creates falsely -> 'the danger is an illusion'; 'a fatal crisis' -> the flee-or-fight threat rating; 'a harmless reality' -> 'harmless to our survival', 'there is no danger'. This is the only option the passage logically entails as its concluding restatement."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Presupposes a real immediate need to flee or fight exists that the brain misses; the text asserts the opposite ('we do not have to flee or fight'). The brain's failure mode is over-triggering, not under-recognition. Contradiction of an explicit premise."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Direct negation of the thesis: the entire passage argues the Stone Age brain has NOT adapted to the safer modern environment ('a Stone Age brain that lives in a modern world'). 'Gradually adapts' reverses the argument."
+    }
+  ],
+  "note": "Blank-completion item. Conclusion slot must restate: the brain manufactures a life-or-death threat where none exists. Option 3 uniquely satisfies this; options 2/4/5 contradict explicit premises; option 1 fails on the word 'genuine', which the text explicitly denies of the misread stimuli. All five options are grammatically well-formed in the seam, so discrimination is purely logical, as intended. Single defensible answer."
+}

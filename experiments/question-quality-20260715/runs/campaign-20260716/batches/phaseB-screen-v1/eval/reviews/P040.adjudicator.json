@@ -1,0 +1,38 @@
+{
+  "pid": "P040",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "독립 재검증 결과 (A)~(D)는 각각 지배 규칙이 명확한 정문이고 (E)만 어법 오류로, 선언된 정답 (E)가 유일 정답이다. (E)의 구제 해석 3종(명사절 접속사 that + 완전절, 자동사 found 독법, 지시대명사 that + 접촉절)을 전부 처음부터 검토했으나 모두 성립하지 않는다: found는 타동사인데 목적어가 절 내에 없어 접속사 that 독법이 불가하고, find의 자동사 용법(법률 관용구)과 동철어 found(설립하다, 현재형·타동사) 독법은 문법·문맥 모두 실패하며, 표준 영어에서 지시대명사 that은 zero relative의 선행사가 될 수 없다(that which / what 필요). 주절은 명사 주어를 요구하고 found는 목적어 공백을 요구하므로 선행사 포함 관계대명사 What만 가능하며, That→What 교정 시 원문과 정확히 일치한다. 솔버1·솔버2·감사자의 선지별 판정과 모두 일치하고, 솔버들의 과잉 판정(성립하지 않는 대안 해석을 성립한다고 주장)이나 누락된 대안 해석은 발견되지 않았다. 감사자의 F 등급은 해설 텍스트 손상(V4) 및 KILLER 난이도 미달에 근거한 것으로 정답 유일성(V2)과는 무관하다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "목적격 대명사 them이 정문인가",
+      "verdict": "정문 — 분쟁 없음",
+      "evidence": "'present + 사람 + with + 사물' 구문에서 them은 복수 선행사 'a bunch of healthy undergraduates'를 받는 목적격으로 정확하다. 주절 주어가 He(Bargh)이므로 재귀대명사 조건도 아니며, them이 presented의 직접목적어라서 'a list'를 받는 it 독법도 구조상 불가능하다. 양 솔버·감사자 판정과 일치."
+    },
+    {
+      "label": "(B)",
+      "claim": "One of the lists 뒤 단수동사 was가 정문인가",
+      "verdict": "정문 — 분쟁 없음",
+      "evidence": "수일치 지배자는 주어 핵 One(단수)이고 'of the lists'는 후치 수식 전치사구다. 근접 복수명사 lists에 의한 were 유도는 함정일 뿐이며 was가 옳다. 양 솔버·감사자 판정과 일치."
+    },
+    {
+      "label": "(C)",
+      "claim": "명사 수식 과거분사 wrinkled가 정문인가",
+      "verdict": "정문 — 분쟁 없음",
+      "evidence": "face는 '주름진 상태(수동·결과)'의 대상이므로 한정 용법 과거분사 wrinkled가 표준이다. wrinkling(능동)과의 최소대립에서 wrinkled가 정확하다. 양 솔버·감사자 판정과 일치."
+    },
+    {
+      "label": "(D)",
+      "claim": "was interested in + wh절이 정문인가",
+      "verdict": "정문 — 분쟁 없음",
+      "evidence": "감정 경험자 주어 + be interested in은 표준 구문이고, in의 목적어인 간접의문절 'how long it took the students to leave...'(가주어 it + take + NP + to부정사, 평서 어순)도 정확하다. full 해설의 '수동태/주체' 용어 충돌은 해설 품질 문제일 뿐 정오 판정에는 영향 없음. 양 솔버·감사자 판정과 일치."
+    },
+    {
+      "label": "(E)",
+      "claim": "That he found was extraordinary가 어법 오류인가 (선언된 정답)",
+      "verdict": "오류 확정 — 유일 정답",
+      "evidence": "구제 해석 전수 검토: (1) 접속사 that 독법 — that 명사절은 완전절을 요구하나 타동사 found의 목적어가 절 내에 없어 불성립. (2) 자동사 독법 — find의 자동사 용법은 'found for the plaintiff' 류 법률 관용구에 한정되고, 동철어 found(설립하다)는 현재형인 데다 역시 타동사라 문법·문맥 모두 불성립. (3) 지시대명사 that + 목적격 관계대명사 생략(접촉절) 독법 — 표준 영어에서 지시대명사 that은 zero relative의 선행사로 허가되지 않으며 'that which he found' 또는 'what he found'가 필요해 불성립. 따라서 주어 명사구 요구와 found의 목적어 공백 요구를 동시에 충족하는 선행사 포함 관계대명사 What만 가능하고, 교정 시 원지문 'What he found was extraordinary'와 정확히 일치한다. 솔버1·솔버2 모두 동일한 구제 해석들을 검토·기각했고 과잉 판정 없음."
+    }
+  ]
+}

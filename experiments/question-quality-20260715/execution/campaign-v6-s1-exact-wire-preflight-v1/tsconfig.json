@@ -1,0 +1,13 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "incremental": false,
+    "noEmit": true
+  },
+  "include": [
+    "compile-exact-wire-preflight.mts",
+    "verify.mts",
+    "../../harness/node-sqlite.d.ts"
+  ]
+}

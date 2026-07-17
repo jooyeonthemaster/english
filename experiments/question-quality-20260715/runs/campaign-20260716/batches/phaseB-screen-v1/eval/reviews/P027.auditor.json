@@ -1,0 +1,88 @@
+{
+  "pid": "P027",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-RENDER-CASE-CORRUPTION",
+      "severity": "critical",
+      "evidence": "원지문 'What he found was extraordinary.'가 렌더 지문에서 '__(C) what__ he found was extraordinary.'로 문두 대문자 W가 소문자로 손상됐다. 이 문항의 의도된 변형은 (D) took→taking 단 하나인데 그 외 변경이 발생했고, markedExpressions의 (C) surroundingText('What he found was extraordinary.')와도 표기가 불일치한다(렌더-구조필드 비동기). 선택지 표기 '(C) what'도 소문자로 노출된다."
+    },
+    {
+      "code": "V3-ORTHOGRAPHY-STUDENT-FACING",
+      "severity": "major",
+      "evidence": "학생 노출 지문에 소문자로 시작하는 문장('what he found was extraordinary.')이 존재하는 표기 결함(오탈자류). (C)는 isError=false로 선언된 밑줄인데 그 위에 무관한 표기 오류가 얹혀 있어, '어법상 틀린 것' 문항 특성상 학생이 (C)를 오류로 오인 선택하거나 이의를 제기할 소지가 있다. (D)를 took로 교정한 완성 지문 기준으로도 이 결함은 남는다. V1과 동일 근원이지만 지문 표기 건전성 게이트도 통과하지 못한다."
+    },
+    {
+      "code": "V5-FIELD-SEMANTIC-MINOR",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 비오류 항목은 expression==errorExpression(표시형)인데, (D)만 expression='took'(원문형), errorExpression='taking'(표시형)으로 필드 의미가 혼용된다. correction='took'과 정합하고 학생 노출 모순은 없어 V5 자체는 통과 처리하되 파이프라인 정비 대상으로 기록."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사(experiment)를 수식하는 분사의 태 판단 + 분사가 that 생략 명사절을 목적어로 취하는 구조 인식",
+      "temptingBecause": "showing 바로 뒤에 접속사 없이 완전한 절(human perception and behavior can be influenced...)이 이어져, shown(수동)이나 접속사 필요로 오판하기 쉽다",
+      "decisiveFlaw": "experiment가 능동적으로 '보여주는' 주체이므로 현재분사 showing이 정당하고, 뒤의 절은 that이 생략된 showing의 명사절 목적어다 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "일반 대명사 vs 재귀대명사(them vs themselves) 판별",
+      "temptingBecause": "them이 한 문장에 두 번 등장하고 present A with B 구문의 지시 추적을 요구한다 — 다만 실제 유인력은 낮다",
+      "decisiveFlaw": "presented의 주어 He(Bargh)와 목적어(undergraduates)가 서로 다른 지시체이므로 them이 정당 — 오류 아님. 판단이 자명해 필러에 가까운 약한 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "선행사 포함 관계대명사 what vs 접속사 that — 불완전 절(목적어 공백) 판정",
+      "temptingBecause": "문두 명사절 도입 자리라 That과의 교체를 검토하게 만드는 고전적 유인점이다",
+      "decisiveFlaw": "타동사 found의 목적어 자리가 비어 있는 불완전절이므로 what이 정당하고 that은 불가 — 어법 판단으로는 오류 아님. 단 렌더에서 문두 대문자가 소문자로 손상되어(V1/V3) 표기 오류로 오인될 소지가 있음"
+    },
+    {
+      "label": "(D)",
+      "intent": "선언된 정답 — 긴 관계사절(who had been exposed to an \"elderly\" mix of words) 수식을 받는 주어 뒤 본동사 자리의 정동사 vs 준동사 판단",
+      "temptingBecause": "주어 Those students와 동사 자리 사이에 관계사절이 길게 개입하고 절 내부의 had been exposed가 정동사처럼 시야를 채우며, 뒤에 비교 구문(than those who...)까지 이어져 taking을 분사 수식으로 착각하고 지나칠 수 있다",
+      "decisiveFlaw": "taking을 두면 해당 문장에 정동사가 하나도 없는 파편문이 된다. 과거시제 정동사 took로 교정해야 하며 교정 시 정확히 원문이 복원된다(source-correct→displayed-wrong 최소대립쌍) — 독립 검증 결과 유일 오류"
+    },
+    {
+      "label": "(E)",
+      "intent": "with + 명사 + 분사 부대상황 구문에서 분사의 태(bent vs bending) 판단",
+      "temptingBecause": "bend의 불규칙 변화형 인지와 shoulders의 능동/수동 관계 판단을 동시에 요구해 bending과 비교하게 만든다",
+      "decisiveFlaw": "shoulders는 구부림을 당하는 대상이므로 수동 관계의 과거분사 bent가 정당 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "target": "(C) 오답 해설",
+      "evidence": "\"what은 타동사 found의 목적어 자리가 비어 있는 불완전한 명사절을 이끄는 관계대명사로 주어 역할을 수행하고 있으므로\" — 주어 역할을 하는 것은 what이 이끄는 명사절 전체(What he found)이고, what 자체는 절 내부에서 found의 목적어다. 같은 문장 안에서 '목적어 자리가 비어 있다'는 진술과 '주어 역할 수행'이 표면상 충돌하는 축약 표현. 목적어 공백을 먼저 명시했으므로 치명 오분석은 아니나 역할 귀속이 부정확하다",
+      "recommendation": "'what은 절 안에서 found의 목적어이고, what이 이끄는 명사절 전체가 문장의 주어 역할을 한다'로 절 내 기능과 절의 문장 내 기능을 분리해 기술"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": "충족 — 정동사 부재는 문맥 선호가 아닌 명확한 문법 판단이며 valency/수여/singular they/가정법류 대안 분석 자리가 아님",
+    "allUnderlinesExplained": "부분충족 — 5개 밑줄 모두 point·해설은 있으나 (B) them은 why tempting이 빈약해 필러에 가까움(§C '설명이 안 되는 디코이는 필러' 저촉 소지)",
+    "notImmediatelyVisible": "미충족 — '주어+관계사절 뒤 V-ing' 정동사/준동사 패턴은 최다 훈련 정형 패턴으로, 문장 내 정동사 부재가 상위권에게 빠르게 드러나 KILLER급 구조 은닉에 못 미침",
+    "noEasierDecoySamePoint": "충족 — 동일 포인트(정동사 자리)의 더 쉬운 디코이가 정답을 가리지 않음"
+  },
+  "grade": "F",
+  "notes": "V2(정답 유일성)는 견고하다: 5개 밑줄을 독립 검증한 결과 (A) showing(능동 분사+that 생략 절 목적어), (B) them(주어≠목적어), (C) what(found 목적어 공백 불완전절), (E) bent(with 구문 수동 분사)는 모두 어법상 정당하고 (D) taking만 정동사 부재 파편문을 만들며, took 교정 시 원문이 정확히 복원되는 최소대립쌍이다. 그러나 렌더 단계에서 의도되지 않은 문두 대문자 손상('What'→'(C) what')이 발생해 V1(무결성)과 V3(학생 노출 지문의 표기 건전성, 오탈자 점검)이 실패한다 — 치명 결함은 공예 점수로 상쇄되지 않으므로 등급 F(출하 금지). 결함은 문두 밑줄 렌더링 시 대문자 처리 버그로 추정되며 수정은 자명하다(대문자 복원). 난이도 정합: 요청 난이도 KILLER 대비 정답 포인트가 최다 훈련 정형 패턴이라 실제 난이도는 중상 수준(C5=1)이고, (B)가 필러성 디코이라 C3=2, killerConditionsMet=false. 재출하 경로: (1) 렌더 대문자 복원으로 V1/V3 해소, (2) KILLER 라벨 유지 시 정답 포인트의 구조적 은닉(삽입구·병렬 중첩 등) 강화 또는 난이도 라벨 하향."
+}

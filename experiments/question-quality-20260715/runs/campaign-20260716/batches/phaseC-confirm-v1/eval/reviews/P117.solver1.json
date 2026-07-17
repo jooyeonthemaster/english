@@ -1,0 +1,35 @@
+{
+  "pid": "P117",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'an immediate boost'는 양보절 'Although results won't be apparent immediately'와 정면 충돌하는 극성 반전 함정. 'immediate'라는 표층 어휘 반복으로 유혹하지만 논리가 뒤집힌다. 또한 단수 주어 'a boost'가 동사 'are'와 수일치 실패."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "'enduring'이 '즉시 드러나지 않는다'는 양보와 정확히 호응(장기적 보상). 복수 'outcomes'가 'are worthwhile'과 수일치. 대시 삽입구 'both for language development and attitudes toward school'가 'growth(언어 발달)'와 'connection(학교에 대한 태도/유대)'에 각각 대응. 문법 결합과 담화 논리 모두 성립."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "표준 영어가 교육·경제적 기회를 여는 가치라는 지문 전제와 모순. 접근법은 '수용 후 그 위에 쌓기'이지 표준 규범 거부가 아님. 단수 'complete freedom'이 'are'와 수일치도 실패."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "지문의 방법은 언어 발달과 학교에 대한 태도를 함께 잇는 것인데 'disconnection'은 주제 반대 방향. 단수 'a disconnection'이 'are'와 수일치 실패."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "가장 매력적인 오답: 복수형이라 'are'와 수일치가 되고 'employment'가 앞부분 'interview for a first job'을 표층적으로 반향해 실제로 끌린다. 그러나 'short-term'이 '결과가 즉시 드러나지 않는다'는 양보절과 직접 충돌하고, 고용상 이점은 대시 삽입구 'for language development and attitudes toward school'로 부연될 수 없다."
+    }
+  ],
+  "note": "정답은 ② 하나로 좁혀짐. 수일치(are)만으로 ①③④가 1차 배제되고, 남는 복수 후보 ②⑤ 중 'short-term'(⑤)이 양보절 논리와 충돌하므로 ②만 생존. 오답 ①⑤는 각각 'immediate'/'first job'의 표층 어휘 반복으로 설계된 유인 장치로 기능함. 대안 해석(도치·축약 관계절 등)으로 다른 선지가 정문·정답이 되는 경로는 탐색했으나 없음."
+}

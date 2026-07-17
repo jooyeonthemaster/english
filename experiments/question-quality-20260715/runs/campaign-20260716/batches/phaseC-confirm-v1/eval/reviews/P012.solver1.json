@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'focus solely on maximizing your daily work hours'는 휴식 자체를 배제하는 방향. 지문은 첫 문장부터 'Breaks are necessary'라며 계획된 휴식을 긍정하므로 'solely... work hours'는 지문의 전제와 정면 충돌. 매력 포인트: 'any other breaks are unwarranted'를 반(反)휴식 논조로 오독하면 잠깐 끌리지만, scheduled breaks 옹호 문장에서 즉시 배제됨."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'delay complex tasks until your energy is fully restored'는 과제를 미루는 행위 그 자체, 즉 procrastination이다. 'to prevent procrastination'이라는 빈칸 프레임과 논리적으로 모순. 지문 어디에도 과제 연기를 권하는 근거 없음."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'strictly stick to a predetermined break policy'는 'you should already have scheduled breaks at appropriate times', 'scheduled breaks keep you on track by being strategic, re-energizing methods'를 정확히 요약·재진술. 'instead'가 직전에 비판된 unscheduled breaks(즉흥 커피 휴식)와 깔끔하게 대조됨. 명령문 결합(seam)도 자연스러움. 유일한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "지문에 coffee가 등장해 표면 어휘 매칭으로 끌리는 함정 선지. 그러나 지문에서 커피는 '깨어있기 위해서'라는 자기합리화, 즉 회피(avoidance)의 핑계로만 제시됨. 커피 휴식을 보상으로 쓰라는 것은 지문이 비판하는 행동을 오히려 권장하는 셈이라 정반대."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'spontaneous rest within flexible schedules'는 unscheduled breaks의 동의어적 재진술로, 지문이 'a sure-fire way to fall into the procrastination trap'이라고 명시적으로 규탄한 대상. 'instead'를 '쉬지 않고 일하는 것 대신'으로 오독하면 끌릴 수 있으나, 직전 문맥이 무계획 휴식 비판이므로 성립 불가. 안티테제 선지."
+    }
+  ],
+  "note": "빈칸 프레임 'So to prevent procrastination, _____ instead.'에서 instead의 대조 대상은 직전 문맥의 unscheduled breaks(즉흥 커피 휴식)로 유일하게 확정됨. 다섯 선지 모두 명령형 동사구라 문법 결합은 전부 성립하며 판별은 순수 논리. ③만이 지문의 scheduled vs unscheduled 이분법에서 옹호되는 쪽을 재진술. 대안 해석 탐색 결과 ⑤를 살릴 만한 독해(휴식 자체 옹호로 읽기)는 직전 두 문장의 명시적 비판에 의해 차단됨. 복수 정답 소지 없음."
+}

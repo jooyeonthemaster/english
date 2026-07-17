@@ -1,0 +1,161 @@
+{
+  "passageId": "2015_06_3026346-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "6월",
+    "origType": "주장",
+    "words": 142
+  },
+  "attempts": 6,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=b  (C):dec=c  (D):dec=c  (E):ANS=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 53,
+        "relPos": 0.066,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 183,
+        "relPos": 0.228,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 266,
+        "relPos": 0.331,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 466,
+        "relPos": 0.58,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 612,
+        "relPos": 0.762,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.762,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Obviously, one of the judgments the public has of us is whether or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get what they want. That, however, is not all they want. They want to have the service rendered to them in a manner that pleases them; they want not only efficiency but courtesy and consideration; and they are in a position to get what they want. They are in the driver's seat; they are paying the bills; and an understanding of that fact is a real and fundamental basis of public relations. In order, therefore, for a great company to satisfactorily serve the public, it must have a philosophy and a method of doing business which will allow and insure that its people serve the public efficiently and in a pleasing manner.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is",
+        "errorExpression": "is",
+        "surroundingText": "Obviously, one of the judgments the public has of us is whether or not our telephone service is good.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "Technically, if they get their calls through, efficiently and promptly, they get what they want.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "rendered",
+        "isError": false,
+        "correction": "rendered",
+        "errorExpression": "rendered",
+        "surroundingText": "They want to have the service rendered to them in a manner that pleases them;",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "paying",
+        "isError": false,
+        "correction": "paying",
+        "errorExpression": "paying",
+        "surroundingText": "They are in the driver's seat; they are paying the bills; and an understanding of that fact",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "to satisfactorily serve",
+        "isError": true,
+        "correction": "to satisfactorily serve",
+        "errorExpression": "satisfactorily serving",
+        "surroundingText": "In order, therefore, for a great company to satisfactorily serve the public, it must have a philosophy and a method",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "what"
+      },
+      {
+        "label": "(C)",
+        "text": "rendered"
+      },
+      {
+        "label": "(D)",
+        "text": "paying"
+      },
+      {
+        "label": "(E)",
+        "text": "satisfactorily serving"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 'one of the judgments'의 핵은 'one'이므로 단수 동사 'is'가 올바릅니다.",
+      "(B)": "목적어 자리를 이끌면서 뒤에 'they want'라는 불완전한 절이 오므로 선행사를 포함하는 관계대명사 'what'이 적절합니다.",
+      "(C)": "'have + 목적어 + 목적격보어' 구조에서 목적어 'the service'와 보어의 관계가 수동이므로 과거분사 'rendered'가 맞습니다.",
+      "(D)": "be동사 뒤에서 진행의 의미를 나타내며, 목적어 'the bills'가 있으므로 현재분사 'paying'이 올바르게 쓰였습니다."
+    },
+    "explanation": "밑줄 친 (E)는 'In order to-v(~하기 위하여)' 구문의 일부입니다. 여기서 'for a great company'는 to 부정사의 의미상 주어 역할을 합니다. 따라서 'In order for A to-v' 구조가 성립되어야 하므로 'satisfactorily serving'을 'to satisfactorily serve' 형태로 고쳐야 올바른 문장이 됩니다. 분사나 동명사 형태인 serving은 이 자리에 올 수 없습니다.",
+    "keyPoints": [
+      "(E) to-v vs v-ing — 구문의 형식 고정 (In order to)",
+      "(A) 수일치 — 주어의 핵 파악",
+      "(B) 관계사 — 선행사 포함 관계대명사 what의 쓰임"
+    ],
+    "tags": [
+      "어법",
+      "준동사",
+      "to부정사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Obviously, one of the judgments the public has of us __(A) is__ whether or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get __(B) what__ they want. That, however, is not all they want. They want to have the service __(C) rendered__ to them in a manner that pleases them; they want not only efficiency but courtesy and consideration; and they are in a position to get what they want. They are in the driver's seat; they are __(D) paying__ the bills; and an understanding of that fact is a real and fundamental basis of public relations. In order, therefore, for a great company __(E) satisfactorily serving__ the public, it must have a philosophy and a method of doing business which will allow and insure that its people serve the public efficiently and in a pleasing manner."
+  }
+}

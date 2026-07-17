@@ -1,0 +1,78 @@
+{
+  "pid": "P005",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "부사절(Although) 내 정동사 자리의 수일치·시제 판정 (cyberspace 3인칭 단수 + involves)",
+      "temptingBecause": "직후에 복수 명사구(imaginary characters and events)가 이어져 수 착각을 유도하고, 종속절 안이라 정동사/준동사 판단을 요구하는 것처럼 보임",
+      "decisiveFlaw": "주어 cyberspace가 단수이고 involves가 정확히 일치하므로 흠이 없음 — 정답이 될 수 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사(cave drawings)를 후치 수식하는 분사의 능동/수동 판정",
+      "temptingBecause": "made가 문장의 본동사(과거시제)로 오인될 수 있고, 진짜 본동사 involve가 삽입구 뒤에 떨어져 있음",
+      "decisiveFlaw": "'조상들에 의해 만들어진 벽화'라는 수동 관계이므로 과거분사 made가 정확함 — 정답이 될 수 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "do-support 부정문에서 3인칭 단수 does + 동사원형 offer의 적절성 (포인트가 불명확한 약한 디코이)",
+      "temptingBecause": "매력도가 낮음 — 부정문 구조 외에 학생이 의심할 국소 단서가 거의 없어 사실상 필러에 가까움",
+      "decisiveFlaw": "does(3단현) + 원형 offer + 직접목적어 구조가 완전히 정상 — 정답이 될 수 없음"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 등위접속된 두 번째 절의 주어 this interactivity(단수)와 동사의 수일치",
+      "temptingBecause": "앞절의 What 주어절과 'nature and this interactivity'를 복수 병렬 주어로 오독하면 have가 맞아 보일 수 있음",
+      "decisiveFlaw": "주어 this interactivity는 지시사 this가 붙은 명백한 단수이며 동사 바로 앞에 인접해 있어 have made는 수일치 위반 — has made로 교정하면 정확히 원문이 됨"
+    },
+    {
+      "label": "(E)",
+      "intent": "선행사 a space 뒤 관계부사 where vs 관계대명사 which/that 판정",
+      "temptingBecause": "장소 선행사 뒤 관계사 선택은 표준 함정이며, 뒤따르는 절의 완전/불완전 판정을 요구함",
+      "decisiveFlaw": "뒤에 주어(real people)+동사(have)+목적어(actual interactions)를 갖춘 완전한 절이 이어지므로 관계부사 where가 정확함 — 정답이 될 수 없음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설이 '고쳐야 한다'(평서체)로 시작한 뒤 '입니다/합니다'체로 전환되어 문체가 혼용됨",
+      "recommendation": "해설 전체를 단일 문체로 통일"
+    },
+    {
+      "severity": "minor",
+      "evidence": "'주어의 단수 인칭과 수에 맞추어'는 용어가 부정확함(인칭과 수는 별개 범주이며 여기서 문제는 수뿐임)",
+      "recommendation": "'주어의 수에 맞추어 단수형 has made로 고친다'로 정리"
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설이 '복잡한 절 구조와 병렬 착시 때문에 주어를 복수로 오인하기 쉽도록 함정을 판 문항'이라고 주장하나, 실제로는 단수 주어 this interactivity가 동사 바로 앞에 인접해 있어 함정 깊이가 과장됨",
+      "recommendation": "함정 깊이 서술을 실제 구조에 맞게 완화하거나, 문항 자체의 함정을 실제로 깊게 재설계"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(C) 오답 해설의 '주어가 능동적으로 제공하지 않는다는 의미이므로 능동태 부정형은 적절'은 근거 구성이 어색하고 이 밑줄이 무엇을 평가하는지(태? 수일치? do-support?)가 불명확함",
+      "recommendation": "(C)의 평가 포인트를 하나로 명시하고 그 포인트 기준으로 근거를 재서술"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트는 통과한다: 렌더 지문은 (D) has made→have made 단일 주입 외 원지문과 완전 일치하고(V1), 5개 밑줄 독립 검증 결과 (D)만이 유일한 어법 오류이며(V2), 지문·발문·교정 완성문 모두 문법적이고(V3), 해설의 구조 분석(등위접속 두 번째 절의 단수 주어 this interactivity, 교정형 has made)이 실제 문장과 일치하며(V4), 정답 라벨·markedExpressions·오답 해설·keyPoints가 모순 없이 동기화되어 있다(V5). 그러나 요청 난이도 KILLER 대비 치명적 공예 결함: 정답이 지시사 this가 붙은 명백한 단수 주어 바로 뒤에 인접한 단순 수일치라서 RUBRIC §C의 'KILLER 정답은 구조를 읽어야 하며 붙어 있는 단순 수일치로 즉시 드러나지 않는다' 조건을 정면으로 위반한다(killerConditionsMet=false, C5=1). 해설이 주장하는 '병렬 착시' 함정은 오독 경로(nature and this interactivity를 복수 병렬 주어로 읽기)가 존재하긴 하나 인접 단수 주어 때문에 상급 학생에게는 즉시 무력화된다. (C)는 평가 포인트가 불명확한 사실상 필러 디코이(C2=2)이고, 정답이 쉽게 드러나 선지 간 실질 경쟁이 약하다(C3=2). 해설은 사실적으로는 정확하나 문체 혼용·용어 느슨함·함정 과장이 있다(C6=2). 합계 13, C5<2이므로 B 기준(최저 2, 합계 17) 미달 → 등급 C: 출하하려면 KILLER 라벨에 맞는 구조적 함정(비인접 주어, 도치, 삽입구 등)으로 재설계가 필요하다. 참고: 이 지문은 실제 수능 기출로 널리 알려진 cyberspace 지문이어서 기출 중복/노출 가능성도 검토할 가치가 있다."
+}

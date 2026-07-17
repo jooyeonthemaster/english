@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "가장 매력적인 오답. 첫 문장 'more people than ever before can produce artistic creations and share them with the world'의 어휘를 그대로 되울려 실전에서 실제로 1차 유혹이 있었다. 그러나 그 첫 문장은 비평가들이 우려하는 '현상'의 서술이지 처방이 아니다. 지문의 처방은 예술의 도달 범위(접근성)가 아니라 위대한 예술의 질(지각에 도전하고 사고·감정을 영구히 바꾸는 것)에 관한 것이다. 'Rather'가 요구하는 대안은 '기술 그 자체를 위한 사용'의 반대편, 즉 위대한 예술의 본령에 봉사하는 방향이어야 하므로 기각. 빈칸 결합('...should be to make artistic creations accessible...')은 문법상 자연스러워 오직 논리로만 걸러야 하는 선지."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "수단-목적 위계를 뒤집는다. 'redefine the boundaries of modern technology'는 기술 자체를 목적으로 삼는 것으로, 바로 앞에서 부정된 'to utilize technology for its own sake'와 사실상 같은 방향이다. 'utilize digital platforms'라는 표면 어휘 반복이 오히려 배제 신호. Rather 대조 구문과 정면 모순되어 즉시 배제."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "'employ modern devices as subordinate tools'는 'new technologies are nothing more than tools that can be used in the creative process'의 정확한 환언이고, 'for offering transformative perspectives'는 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'의 압축이다. Rather 뒤 대조 구조가 요구하는 두 축(기술의 도구적 종속 + 위대한 예술의 변혁적 본질)을 유일하게 동시에 충족한다. 'it should be to employ...' 문법 결합도 깨끗하다."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "종속 관계 역전. '첨단 도구에 맞추어 창작 과정 자체를 혁신하라'는 것은 도구가 주인이 되고 창작이 도구를 따라가는 구도로, '기술은 창작 과정에서 쓰이는 도구에 불과하다'는 지문의 주장과 정반대다. 'creative process' 어휘 반향과 기술-예술 결합의 그럴듯함으로 두 번째로 끌리는 선지였으나, 주종 방향을 확인하면 기각된다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "지문은 위대한 예술이 사고와 감정을 '영원히 바꾼다'고 했지, 전통적 감정을 '보존'하라고 하지 않았다. 급격한 변화에 맞선 보수적 수호 프레임은 본문 어디에도 근거가 없고 핵심 명제(변화)와 충돌한다. critics의 우려 어조에서 보수적 뉘앙스를 과잉 추론하면 걸리는 미끼."
+    }
+  ],
+  "note": "실전 풀이 순서: 빈칸 문장의 지배 구조 확인 → 'not simply to utilize technology for its own sake. Rather, it should be to ___'이므로 빈칸은 기술 사용의 올바른 목적 → 앞서 정의된 위대한 예술의 본질(지각 도전·사고와 감정의 영구적 변화)과 기술의 지위(단지 도구)를 동시에 반영해야 함 → ③만 두 축을 모두 충족. 매력적 오답 체감 기록: ①(첫 문장 접근성 어휘 재활용)이 가장 강한 유혹, ④(창작 과정 혁신의 그럴듯함)가 그다음이었으나 둘 다 논리 검증에서 탈락 — ①은 지문이 문제 상황으로 제시한 현상이고 ④는 주종 역전. 대안 해석으로 복수 정답이 성립하는 경로 없음. 다만 ③의 'subordinate tools'가 'nothing more than tools'의 직역투라 정답 신호가 다소 노출되어 변별 난도는 중하 수준. 문항 성립 자체에는 하자 없음."
+}

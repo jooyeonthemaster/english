@@ -1,0 +1,82 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2",
+      "severity": "critical",
+      "evidence": "선언된 정답 (E)의 표시형 'His confidence was, however, quickly changing to nervousness when he thought of how many people would be there.'는 비문이 아니다. 영어 change는 사역/기동 교체(causative/inchoative alternation) 동사로, 자동사 'change to X'(= X로 변하다: 'The lights changed to green', 'His mood was changing to anger')가 표준 용법이며 과거진행 'was quickly changing to nervousness'는 완전히 문법적이고 오히려 행위자 없는 수동 'was quickly changed to nervousness'보다 자연스럽다는 판단도 가능하다. (A)~(D)는 모두 명백히 적절하므로 이 문항은 어법상 틀린 선지가 0개일 수 있다. RUBRIC §C가 명시적으로 배제하는 'valency 등 대안 분석이 가능한 자리'를 정답 포인트로 사용했다 — 문맥 선호이지 명확한 문법 판단이 아니다."
+    },
+    {
+      "code": "V3",
+      "severity": "critical",
+      "evidence": "V3의 '오답의 비문 여부가 유형 의도와 정확히 일치한다' 위반. GRAMMAR_ERROR 유형은 정답 밑줄이 비문이어야 하나, (E)의 표시형은 자동사 change의 진행형으로 문법적이다. 지문·발문·소스 완성문 자체는 문법적이므로 실패 지점은 오류 선지의 비문성 불일치 단일 항목이다."
+    },
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "해설이 \"만약 '(E) was, however, quickly changing'이 되면 자신감이 무언가를 변화시키고 있는 진행적 행동을 직접 한다는 능동의 의미가 되며\"라고 주장하나 이는 오분석이다. 'change to nervousness'의 능동형은 타동(무언가를 변화시킴)이 아니라 자동사 기동 용법(스스로 ~로 변하다)으로 해석되는 것이 표준이며, 목적어가 없는 'was changing to nervousness'를 타동 능동으로 규정한 것은 실제 통사 구조와 불일치한다. 자동사 change의 존재를 무시한 채 '수동태만 가능하다'는 잘못된 문법 일반화를 학생에게 전달한다."
+    }
+  ],
+  "craft": {
+    "C1": 1,
+    "C2": 1,
+    "C3": 1,
+    "C4": 1,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 because vs 전치사구 because of 판별 — 뒤따르는 성분이 절인지 명사구인지 분석",
+      "temptingBecause": "because/because of 혼동은 빈출 포인트이고 인용문 내부라 구조 파악에 한 단계가 필요하다",
+      "decisiveFlaw": "뒤에 'traffic was terrible'라는 완전한 절(주어+동사)이 이어지므로 접속사 because가 명백히 적절 — 즉시 소거 가능한 쉬운 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "분사구문의 능·수동 — 주절 주어 Garcia와 point의 능동 관계 판단 (pointCode c)",
+      "temptingBecause": "분사 태 판단은 표준 출제 지점이며 pointed와의 대조를 떠올리게 한다",
+      "decisiveFlaw": "Garcia가 가리키는 행위의 명백한 주체이고 'at ...' 보충어까지 자연스러워 현재분사가 즉시 확정된다"
+    },
+    {
+      "label": "(C)",
+      "intent": "분사구문의 능·수동 — 주어 The clerk의 부수 동작 (pointCode c, (B)와 동일 포인트)",
+      "temptingBecause": "'quickly agreeing'의 부사 삽입이 순간적 시선을 끈다",
+      "decisiveFlaw": "The clerk가 agree의 명백한 주체이므로 현재분사가 즉시 확정 — (B)·(D)와 동일 포인트의 중복 디코이로 필러에 가깝다"
+    },
+    {
+      "label": "(D)",
+      "intent": "분사구문(부대상황)의 능·수동 — 목적어를 취하는 wearing (pointCode c, 세 번째 중복)",
+      "temptingBecause": "worn(입혀진)과의 태 대조를 유도할 수 있다",
+      "decisiveFlaw": "목적어 'his new clothes'가 바로 이어지므로 능동 현재분사가 즉시 확정 — 동일 포인트 3연속 중복"
+    },
+    {
+      "label": "(E)",
+      "intent": "선언된 정답: 수동태 'was changed to'를 능동 진행 'was changing to'로 바꿔 태 오류를 만들려는 의도",
+      "temptingBecause": "출제 의도상 '자신감이 변화되는 대상이므로 수동'이라는 논리로 changing을 오류로 보게 하려 함",
+      "decisiveFlaw": "치명적 설계 결함: change는 자동사 용법('change to X' = X로 변하다)이 표준이라 표시형 'His confidence was quickly changing to nervousness'가 완전히 문법적이다. source-correct → displayed-wrong 최소대립쌍이 성립하지 않으며(둘 다 문법적), RUBRIC §C가 배제하는 대안 분석 가능(valency 교체) 자리다. 어법상 틀린 선지가 존재하지 않는 문항이 된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "V4-MISANALYSIS",
+      "severity": "critical",
+      "evidence": "정답 해설이 능동 'was changing'을 '자신감이 무언가를 변화시키는' 타동 의미로 규정 — 목적어 없는 자동사 기동 용법을 무시한 사실 오류이며, 이를 근거로 '수동태로 고쳐야 한다'는 잘못된 필연성을 주장한다."
+    },
+    {
+      "code": "KEYPOINT-COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E)·(B)·(A) 3개만 다루고 (C)·(D)는 누락 — 모순은 아니나 §C의 '5개 밑줄 각각 point/why 존재' 기준에 미달."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1 기계 대조 결과 원지문과 렌더 지문의 차이는 (E) 자리의 changed→changing 단 1개로 의도된 변형만 존재하며 라벨·선지·markedExpressions 필드는 모두 동기화되어 있다(V1·V5 통과). 그러나 정답 포인트 자체가 성립하지 않는다: change의 사역/기동 교체 때문에 표시형 '(E) was, however, quickly changing to nervousness'는 문법적 문장이고, (A)~(D)도 모두 적절하므로 blind solve 시 '어법상 틀린 것 없음'이 정직한 답이다. RUBRIC §C가 명시 배제한 valency 대안 분석 자리를 정답으로 삼은 설계 오류이며, 해설은 자동사 용법을 무시한 오분석으로 이를 봉합한다(V2·V3·V4 실패 → F, 공예 점수로 상쇄 불가). 부차적으로 디코이 (B)(C)(D)가 동일 pointCode 'c'의 3연속 중복이라 의도 밀도(C2)와 변별력(C3)도 낮다. 재설계 방향: (E)를 대안 분석이 불가능한 명확한 문법 판단 자리(예: 수일치·병렬·관계사 격)로 교체하고 디코이 포인트를 다변화해야 한다. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false)."
+}

@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-14T17:25:19.359Z",
+  "mode": "offline-historical-descriptive",
+  "caveat": "Historical artifact codes were produced by different commits and are not causal estimates. Proposed classes require item-level adjudication before changing production policy.",
+  "filesScanned": 49,
+  "parseErrors": [],
+  "rowsWithAnyCurrentSalvageCode": 323,
+  "okRowsWithAnyCurrentSalvageCode": 323,
+  "okRowsWithProposedHardInvariant": 0,
+  "okRowsWithSplitOrRepairRequired": 7,
+  "uniqueOkQuestionsWithAnyCurrentSalvageCode": 266,
+  "uniqueOkQuestionsWithProposedHardInvariant": 0,
+  "uniqueOkQuestionsWithSplitOrRepairRequired": 5,
+  "currentSalvageCodeFrequency": {
+    "grammar-keypoint-choice-mismatch": 109,
+    "grammar-killer-generic-answer-point": 68,
+    "grammar-killer-answer-point-repeated": 33,
+    "grammar-decoy-filler-span": 31,
+    "grammar-obvious-adjacent-sv-agreement": 29,
+    "grammar-decoy-point-monotony": 27,
+    "grammar-marker-too-dense": 25,
+    "grammar-answer-point-not-core": 23,
+    "grammar-shallow-participle-adjective-answer": 21,
+    "grammar-underline-too-long": 19,
+    "grammar-killer-overdrilled-answer": 18,
+    "grammar-decoy-point-diversity": 15,
+    "grammar-too-basic-decoys": 15,
+    "grammar-underline-punctuated-fragment": 13,
+    "grammar-killer-thin-answer": 11,
+    "grammar-obvious-noun-what-relative": 11,
+    "grammar-error-explanation-surface-order": 7,
+    "grammar-explanation-too-long-hard": 6,
+    "grammar-obvious-local-agreement": 6,
+    "grammar-obvious-to-gerund-after-verb": 6,
+    "grammar-shallow-nearby-passive-decoy": 6,
+    "grammar-obvious-pronoun-agreement": 5,
+    "grammar-agreement-explanation-too-thin": 4,
+    "grammar-killer-thin-relative-animacy": 4,
+    "grammar-obvious-object-pronoun-subject": 4,
+    "grammar-weak-filler-decoys": 4,
+    "grammar-obvious-local-pronoun-agreement": 2,
+    "blank-paraphrase-difficulty-mismatch": 1,
+    "blank-paraphrase-target-trailing-function": 1,
+    "grammar-obvious-adverb-adjective": 1,
+    "grammar-obvious-intransitive-passive": 1
+  },
+  "proposedHardInvariantFrequency": {},
+  "proposedSplitOrRepairFrequency": {
+    "grammar-error-explanation-surface-order": 7
+  },
+  "currentSalvageCodeCount": 102,
+  "proposedHardInvariants": [
+    "combo-explanation-truncated",
+    "grammar-afford-modal-mislabel",
+    "grammar-answer-nonword-forced",
+    "grammar-appear-adverb-mislabel",
+    "grammar-appear-pointcode-voice-mismatch",
+    "grammar-category-mislabel",
+    "grammar-error-pos-change",
+    "grammar-gibberish-inversion-fragment",
+    "grammar-human-made-postmodifier-mislabel",
+    "grammar-look-like-complement-mislabel",
+    "grammar-noun-clause-pronoun-mislabel",
+    "grammar-phrasal-verb-mislabel",
+    "grammar-pointcode-span-mismatch",
+    "grammar-seem-to-complement-mislabel",
+    "grammar-seem-to-object-mislabel",
+    "grammar-that-way-adverb-mislabel",
+    "wrong-option-explanation-count"
+  ],
+  "proposedSplitOrRepairRequired": [
+    "blank-awkward-correct-option",
+    "blank-paraphrase-subject-slot-mismatch",
+    "grammar-correction-form-exposed",
+    "grammar-error-explanation-surface-order",
+    "grammar-explanation-lint",
+    "grammar-explanation-typo"
+  ],
+  "affectedRows": [
+    {
+      "file": "experiments/grammar-quality-20260714/x/s10-model-claude/results.jsonl",
+      "line": 3,
+      "questionHash": "537adfcfdb6d4d890e2430ed0619a03fa982e583f23e42666f8d32932869d8f4",
+      "passageId": "ebsi_go3_20191015-q22",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-obvious-adjacent-sv-agreement",
+        "grammar-underline-wide"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-obvious-adjacent-sv-agreement"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s15-cn-dsv4p/results.jsonl",
+      "line": 2,
+      "questionHash": "8cb94e566e7ce413f2c26d566362477fc7e7df204c8e2a0bafed5c3ff3edb2e8",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-decoy-point-diversity",
+        "grammar-decoy-point-monotony",
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-point-diversity",
+        "grammar-decoy-point-monotony",
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results-w2.jsonl",
+      "line": 27,
+      "questionHash": "01513f509769d5ec284509bdc328f6436bdfc4a7be613393edbd970df6548b01",
+      "passageId": "2015_06_3026346-q21",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results.jsonl",
+      "line": 27,
+      "questionHash": "01513f509769d5ec284509bdc328f6436bdfc4a7be613393edbd970df6548b01",
+      "passageId": "2015_06_3026346-q21",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results-w2.jsonl",
+      "line": 16,
+      "questionHash": "9df91dad7482ddd38c616277d8e277ec425fb537e3bce564f7718dc5ec690be0",
+      "passageId": "ebsi_go1_20150311-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results.jsonl",
+      "line": 16,
+      "questionHash": "9df91dad7482ddd38c616277d8e277ec425fb537e3bce564f7718dc5ec690be0",
+      "passageId": "ebsi_go1_20150311-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-triple-ladder/results-run1-100pct.jsonl",
+      "line": 10,
+      "questionHash": "60ed4cf2a925e8b13ca6fb93ce1fd20c23f321379cf568f17b177dc3c8109a8b",
+      "passageId": "ebsi_go1_20191120-q20",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-obvious-adjacent-sv-agreement"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-obvious-adjacent-sv-agreement"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    }
+  ]
+}

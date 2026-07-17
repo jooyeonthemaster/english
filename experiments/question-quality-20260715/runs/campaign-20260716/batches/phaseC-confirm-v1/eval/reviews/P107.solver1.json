@@ -1,0 +1,35 @@
+{
+  "pid": "P107",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'with some roles more dangerous and some having more plentiful access' is a with-absolute construction: with + NP + complement, where the adjective phrase 'more dangerous' stands for '(being) more dangerous'. Mild lure: the coordinated item uses a participle ('having'), tempting a reader to demand parallelism ('being more dangerous'), but mixed complement types (AdjP / -ing) inside with-absolutes are fully grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "wrong (the error)",
+      "reason": "'The archeological record shows that soon after the appearance of towns, agriculture, and surpluses, some burials starting to look different from others.' The that-clause has subject 'some burials' but no finite verb; 'starting' leaves the clause verbless. Rescue readings were actively tested and fail: (i) reading 'some burials starting to look different' as an NP object doesn't work because 'shows that' requires a finite clause, not a bare NP; (ii) no other candidate finite verb exists in the clause. Must be 'started (to look)'."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Some individuals are buried with more precious goods' — passive of 'bury'; individuals undergo the burying, so be + past participle is required. 'with more precious goods' is an accompaniment adjunct, not an agent, so no voice conflict."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'some are in group graves and some by themselves' — ellipsis of 'are' in the second conjunct; 'by themselves' is the idiomatic reflexive meaning 'alone'. The reflexive's antecedent is the elided plural subject 'some (individuals)', so number and person agree. Checked the lure of substituting 'by them' (which would wrongly imply an external agent) — reflexive is right."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'The bones from the burials start to show us differences' — 'start' licenses both to-infinitive and gerund complements; 'show' as ditransitive with 'us' + 'differences' is standard. Subject-verb agreement also checked: plural 'bones' + 'start' agrees ('from the burials' is a prepositional modifier, not the head)."
+    }
+  ],
+  "note": "Solved blind from passage and options only, in exam order. Clean single-error item: (B) is a classic finite-verb-missing-in-that-clause error with long-distance distraction (the intervening adverbial 'soon after the appearance of towns, agriculture, and surpluses' separates 'that' from the subject-verb seam, which is the intended trap). Most attractive wrong lure for a strong student is (A) via a false parallelism instinct with 'having', but the with-absolute analysis dissolves it immediately. No alternative parse makes (B) grammatical, so the item is uniquely keyed."
+}

@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "A",
+  "lens": "source-integrity-and-inference-target-feasibility",
+  "reviewProtocolSha256": "d3f751c8696ed91bd7331de7302f45534b2a1f8933d48f1bb4c9993a958904ad",
+  "frameBindingHash": "52da32f52ef03e2af9c834be2ac26d66d761c64a845dd5714b4a2791ce73ec25",
+  "frozenOn": "2026-07-15",
+  "status": "REVIEWER_A_FROZEN_FULL_CENSUS_NOT_CAMPAIGN_AUTHORIZATION",
+  "coverage": {
+    "sourceRows": 157,
+    "manuallyReadRows": 157,
+    "coverageRate": 1,
+    "sampling": false,
+    "delegation": false,
+    "replacement": false,
+    "topUp": false
+  },
+  "verdictDistribution": {
+    "PASS": 134,
+    "EXCLUDE": 23,
+    "DOMAIN_REVIEW": 0
+  },
+  "criterionDistribution": {
+    "completeBoundaries": {
+      "PASS": 148,
+      "FAIL": 9
+    },
+    "textIntegrity": {
+      "PASS": 146,
+      "FAIL": 11
+    },
+    "contextCoherence": {
+      "PASS": 150,
+      "FAIL": 7
+    },
+    "centralBlankableUnit": {
+      "PASS": 157,
+      "FAIL": 0
+    },
+    "distributedEvidence": {
+      "PASS": 157,
+      "FAIL": 0
+    },
+    "targetFormEligibility": {
+      "PASS": 154,
+      "FAIL": 3
+    },
+    "historyDisjointness": {
+      "PASS": 157,
+      "FAIL": 0
+    }
+  },
+  "reasonCodeDistribution": {
+    "A0_ALL_CRITERIA_PASS": 134,
+    "A1_INCOMPLETE_OPENING": 4,
+    "A1_INCOMPLETE_ENDING": 2,
+    "A1_EXISTING_OMISSION": 1,
+    "A1_SENTENCE_BOUNDARY_DEFECT": 3,
+    "A2_CASE_BOUNDARY_DEFECT": 1,
+    "A2_MISSING_TOKEN": 1,
+    "A2_NUMERIC_MARKER_ARTIFACT": 2,
+    "A2_PUNCTUATION_SPACING_DEFECT": 5,
+    "A2_STRAY_CHARACTER_ARTIFACT": 1,
+    "A2_WORD_SEGMENTATION_DEFECT": 1,
+    "A3_DANGLING_CONNECTIVE": 2,
+    "A3_PROGRESSIVE_GAP": 1,
+    "A3_UNRESOLVED_EXTERNAL_REFERENCE": 2,
+    "A3_INTERNAL_SEMANTIC_CONTRADICTION": 2,
+    "A6_MULTI_QUESTION_CONTAINER": 3
+  },
+  "authorization": {
+    "campaignEligible": 0,
+    "rightsStatus": "SEPARATE_REVIEW_PENDING",
+    "reconciliationStatus": "NOT_PERFORMED"
+  },
+  "privacy": {
+    "containsPassageText": false,
+    "containsFrameIds": false,
+    "containsContentHashes": false,
+    "containsPrivateSourceIdentifiers": false,
+    "containsCandidateSpans": false,
+    "containsRowLevelDecisions": false,
+    "containsPrivateNotes": false
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretAccesses": 0,
+    "fullQuestionCandidatesGenerated": 0
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "passageId": "2019_06_5023285-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "6월",
+    "origType": "주장",
+    "words": 166
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=c  (C):dec=b  (D):dec=e  (E):ANS=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 232,
+        "relPos": 0.253,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 293,
+        "relPos": 0.319,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 564,
+        "relPos": 0.614,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 574,
+        "relPos": 0.625,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 722,
+        "relPos": 0.786,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.786,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We say to ourselves: “There is plenty of time. I’ll manage somehow or other when the time comes for action.” We are rather proud of our ability to meet emergencies. So we do not plan and take precautions to prevent emergencies from arising. It is too easy to drift through school and college, taking the traditional, conventional studies that others take, following the lines of least resistance, electing “snap courses,” and going with the crowd. It is too easy to take the attitude: “First I will get my education and develop myself, and then I will know better what I am fitted to do for a life work.” And so we drift, driven by the winds of circumstance, tossed about by the waves of tradition and custom. Eventually, most men find they must be satisfied with “any port in a storm.” Sailors who select a port because they are driven to it have scarcely one chance in a thousand of dropping anchor in the right one.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "arising",
+        "isError": false,
+        "errorExpression": "arising",
+        "surroundingText": "take precautions to prevent emergencies from arising.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "taking",
+        "isError": false,
+        "errorExpression": "taking",
+        "surroundingText": "drift through school and college, taking the traditional, conventional studies",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "and then I will know better what I am fitted to do for",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "fitted",
+        "isError": false,
+        "errorExpression": "fitted",
+        "surroundingText": "and then I will know better what I am fitted to do for a life",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "most",
+        "isError": true,
+        "correction": "most",
+        "errorExpression": "mostly",
+        "surroundingText": "Eventually, most men find they must be satisfied with",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "arising"
+      },
+      {
+        "label": "(B)",
+        "text": "taking"
+      },
+      {
+        "label": "(C)",
+        "text": "what"
+      },
+      {
+        "label": "(D)",
+        "text": "fitted"
+      },
+      {
+        "label": "(E)",
+        "text": "mostly"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 'prevent A from B(v-ing)'의 동명사 목적으로 쓰인 'arising'의 쓰임을 묻고 있으며, 전치사 'from'의 뒤에 알맞은 형태의 동명사이므로 어법상 옳습니다.",
+      "(B)": "이 자리는 주절의 주어 'We'가 능동적으로 취하는 분사구문을 묻고 있으며, 뒤에 목적어인 'the traditional, conventional studies'를 취하고 있으므로 현재분사 'taking'은 어법상 옳습니다.",
+      "(C)": "이 자리는 동사 know의 목적어 역할을 하는 명사절을 이끄는 관계사를 묻고 있으며, 전치사 to의 목적어가 결손된 불완전한 절을 이끌고 선행사가 없으므로 'what'은 어법상 옳습니다.",
+      "(D)": "이 자리는 주어 I가 무언가에 적합하게 '맞추어지다(fit)'라는 의미를 전달하는 수동태 표현을 묻고 있으므로, 과거분사 형태의 'fitted'는 어법상 옳습니다."
+    },
+    "explanation": "대명사 they가 생략된 find 뒤의 대등한 대명사절 내에서 주어인 복수 명사 men을 직접 수식하는 한정사 역할을 해야 하므로, 부사 'mostly'는 올 수 없고 명사를 수식할 수 있는 형용사인 'most'로 고쳐야 합니다. 'mostly'로 쓰면 '주로 남성들'이라는 한정적 표현이 되어 문맥에 부합하지 않으며 문장 구조상 주어인 명사를 직접 수식하기 어렵습니다. 수식 범위를 확인하여 부사와 형용사의 결합 구조를 구별해야 합니다.",
+    "keyPoints": [
+      "(E) 형용사 자리 vs 부사 자리 — 명사를 수식하는 형용사와 동사/부사를 수식하는 부사의 역할 구별",
+      "(C) 명사절 that vs 관계대명사 what — 선행사가 없고 뒤이어 불완전한 절이 이어지는 명사절의 구조 판단",
+      "(B) 분사구문과 분사의 태 — 의미상 주어와의 능동 관계 및 뒤에 목적어가 있는지를 통한 현재분사 판정"
+    ],
+    "tags": [
+      "어법",
+      "형용사vs부사",
+      "관계사",
+      "분사구문"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "We say to ourselves: “There is plenty of time. I’ll manage somehow or other when the time comes for action.” We are rather proud of our ability to meet emergencies. So we do not plan and take precautions to prevent emergencies from __(A) arising__. It is too easy to drift through school and college, __(B) taking__ the traditional, conventional studies that others take, following the lines of least resistance, electing “snap courses,” and going with the crowd. It is too easy to take the attitude: “First I will get my education and develop myself, and then I will know better __(C) what__ I am __(D) fitted__ to do for a life work.” And so we drift, driven by the winds of circumstance, tossed about by the waves of tradition and custom. Eventually, __(E) mostly__ men find they must be satisfied with “any port in a storm.” Sailors who select a port because they are driven to it have scarcely one chance in a thousand of dropping anchor in the right one.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

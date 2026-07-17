@@ -1,0 +1,100 @@
+{
+  "pid": "P019",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TERMINOLOGY-CORRUPT",
+      "severity": "critical",
+      "evidence": "(D) 오답 해설: \"이 자리는 대명사절 내의 태를 묻고 있으며\" — 해당 절 'that a person with a disability is defined as lesser...'은 'a hidden message'와 동격을 이루는 명사절(동격절)이다. '대명사절'은 표준 문법 용어가 아닌 비단어/손상 용어이며, '관계대명사절'의 절단이라면 동격 명사절 that을 관계대명사절로 부르는 전형적 오분석에 해당한다. RUBRIC V4는 용어 오류 무존재를 명시적으로 요구하므로 게이트 실패."
+    },
+    {
+      "code": "V1-VERIFIED-CLEAN",
+      "severity": "minor",
+      "evidence": "기계 대조 결과: 렌더 지문에서 마커 제거 + (C) given→giving 복원 시 원지문과 완전 일치(문장 접합 파손·중복·누락·고아 문장부호 없음). 밑줄 마커 (A)~(E)와 선택지 5개가 문자열 수준으로 일치. 참고 기록용."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주어-동사 수일치: 복수 핵 주어 'Racial microaggressions'와 동사 사이에 긴 'such as ~ ethnicity' 예시 삽입구를 두어 근접 명사에 끌리게 함",
+      "temptingBecause": "동사 바로 앞 근접 명사 'ethnicity'(단수)와 삽입구 내 'a person's intelligence or work ethic'이 단수 인상을 주며, 주어-동사 거리가 김",
+      "decisiveFlaw": "삽입구를 걷어내면 핵 주어는 복수 'Racial microaggressions'이므로 'are'가 정확함 — 정답이 될 수 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "조동사 뒤 수동태(can be seen): 태 판단",
+      "temptingBecause": "and 병렬 뒤 조동사+be+p.p. 구조가 길어 보이고, 학생이 능동 'see'를 기대할 수 있음",
+      "decisiveFlaw": "주어 'experiential microaggressions'는 목격되는 대상이므로 수동 'be seen'이 정확함 — 정답이 될 수 없음. 다만 (D)와 동일한 태 포인트(pointCode e 중복)로 의도 밀도를 떨어뜨림"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답. 접속사 잔류 분사구문(when + 분사)의 능동/수동 판정 — 목적어 잔존 여부로 판단",
+      "temptingBecause": "'when given directions'류의 when+p.p. 수동 분사구문이 관용적으로 흔해 표면 패턴이 자연스러워 보임",
+      "decisiveFlaw": "의미상 주어(nurse)가 지시를 '주는' 능동 주체이고 'him'(간접목적어)+'directions'(직접목적어)가 모두 잔존하므로 과거분사 'given'은 불가능 — 'giving'으로 교정하면 정확히 원문이 복원됨(최소대립쌍 성립). 단 인접 국소 단서(이중 목적어)만으로 판정 가능한 기출 다빈도 패턴이라 KILLER 깊이에는 미달"
+    },
+    {
+      "label": "(D)",
+      "intent": "동격 명사절 내부의 태(is defined) 판단",
+      "temptingBecause": "주절 동사 'implied'(과거) 뒤 현재시제 'is'가 시제 불일치처럼 보일 수 있고, define의 태 판단을 요구",
+      "decisiveFlaw": "'a person with a disability'는 정의되는 대상이므로 수동 'is defined'가 정확하며 일반 진술의 현재시제도 허용됨 — 정답이 될 수 없음. 해설이 이 절을 '대명사절'로 오기(V4 실패 원인)"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사 수식 형용사 비교급 형태(more equitable) — 표면상 형용사/부사·비교급 형태 판단",
+      "temptingBecause": "설득력 있는 유혹 가설이 사실상 없음. 해설도 왜 매력적인지 제시하지 못함 — 필러에 가까운 디코이",
+      "decisiveFlaw": "형용사 비교급이 명사 'future'를 정상 수식하므로 흠잡을 데 없음 — 즉시 소거됨"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TERM-NONWORD",
+      "severity": "critical",
+      "evidence": "(D) 해설의 '대명사절' — 동격 명사절을 지칭하는 자리에 비표준/손상 용어 사용(또는 관계대명사절 오분석). V4 실패의 직접 원인."
+    },
+    {
+      "code": "STYLE-MIXED-REGISTER",
+      "severity": "minor",
+      "evidence": "(C) 해설에서 '고쳐야 한다'(해라체)와 '이어집니다/합니다'(합쇼체)가 한 단락에 혼용."
+    },
+    {
+      "code": "PARTICLE-TYPO",
+      "severity": "minor",
+      "evidence": "(C) 해설 첫 문장 '\"given\"는' — 받침 뒤이므로 '은'이 자연스러움."
+    },
+    {
+      "code": "KEYPOINTS-PARTIAL",
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(A)(B) 3개만 다루고 (D)(E) 포인트가 누락 — 필드 간 모순은 아니어서 V5는 통과시켰으나 KILLER 조건(5개 밑줄 각각의 point/tempting/why 완비)에는 미달."
+    },
+    {
+      "code": "NO-TEMPTING-RATIONALE",
+      "severity": "major",
+      "evidence": "오답 해설 4건 모두 '왜 옳은가'만 있고 '왜 매력적인가'가 없음. 특히 (E)는 유혹 가설 자체가 부재한 필러 디코이."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesFullyExplained": false,
+    "structuralDepthNotLocal": false,
+    "noEasySamePointDecoyMasking": true,
+    "reason": "최소대립쌍·명확한 문법 판단은 충족. 그러나 (1) 각 밑줄의 'why tempting'이 부재하고 (E)는 설명 불가능한 필러 디코이, (2) 정답 포인트(when giving/given + 이중 목적어 잔존)는 인접 국소 단서로 즉시 판정되는 다빈도 기출 패턴이라 '구조를 읽어야 드러나는' KILLER 깊이에 미달, (3) keyPoints가 5개 밑줄을 커버하지 못함."
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 기계 대조로 원지문과 (C) giving→given 의도 변형 외 완전 일치 확인, 정답 집합은 (C) 단일로 유일(각 선지 독립 검증 완료), 지문·발문·교정 완성문 모두 문법적, 필드 간 라벨·선지·해설 동기화 정상. 그러나 (D) 오답 해설의 '대명사절'이라는 비단어/오분석 용어로 V4 실패 → 공예 점수와 무관하게 F. 공예 측면: 출제 포인트 자체는 정전급(분사구문 태+목적어 잔존)이나 (B)(D) 태 포인트 중복과 (E) 필러로 의도 밀도 저하(C2=2), 정답이 국소 단서로 드러나는 중급 난도 패턴이라 KILLER 라벨과 불일치(C5=1), 해설은 용어 오류·어체 혼용·tempting 부재로 C6=1. 수리 방향: (D) 해설 용어를 '동격 명사절'로 교정하면 V4는 회복되나, KILLER 라벨을 유지하려면 정답 포인트 심화 또는 (E) 디코이 교체가 필요."
+}

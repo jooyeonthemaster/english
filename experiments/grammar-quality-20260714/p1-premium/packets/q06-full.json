@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-filler-spanx1",
+    "grammar-explanation-lintx1"
+  ],
+  "layout": "(A):dec=b  (B):dec=i  (C):dec=k  (D):ANS=c  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 52,
+        "relPos": 0.075,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 404,
+        "relPos": 0.586,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 493,
+        "relPos": 0.716,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 570,
+        "relPos": 0.827,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 660,
+        "relPos": 0.958,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.958,
+    "firstHalfShare": 0.2,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "noticing that a source of constant background noise",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "attracted",
+        "isError": false,
+        "correction": "attracted",
+        "errorExpression": "attracted",
+        "surroundingText": "violated your prediction and attracted your attention.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(C)",
+        "expression": "running",
+        "isError": false,
+        "correction": "running",
+        "errorExpression": "running",
+        "surroundingText": "Right after New York City stopped running elevated trains,",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "claiming",
+        "isError": true,
+        "correction": "claiming",
+        "errorExpression": "claimed",
+        "surroundingText": "people called the police in the middle of the night claiming that something woke them up.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "to run",
+        "isError": false,
+        "correction": "to run",
+        "errorExpression": "to run",
+        "surroundingText": "They tended to call around the time the trains used to run past their apartments.",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "attracted"
+      },
+      {
+        "label": "(C)",
+        "text": "running"
+      },
+      {
+        "label": "(D)",
+        "text": "claimed"
+      },
+      {
+        "label": "(E)",
+        "text": "to run"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "동명사 noticing의 목적어로 쓰인 명사절을 이끄는 접속사 'that'이 완전한 절을 이끌고 있어 어법상 적절합니다.",
+      "(B)": "등위접속사 and에 의해 앞의 과거형 동사 violated와 병렬 구조를 이루고 있으므로 과거형 동사 'attracted'는 어법상 적절합니다.",
+      "(C)": "동사 stop은 동명사를 목적어로 취하여 '~하는 것을 그만두다'라는 의미를 나타내므로 'running'은 적절합니다.",
+      "(E)": "과거의 습관적인 동작을 나타내는 조동사구 'used to' 뒤에는 동사원형이 오므로 'to run'은 어법상 적절합니다."
+    },
+    "explanation": "정답 문장의 주절은 주어 'people'과 정동사 'called'로 완전하게 구성되어 있습니다. 이 뒤에 이어지는 분사구문 자리에 과거분사 'claimed'를 쓰면 수동의 의미가 되어 뒤따르는 명사절 목적어(that 절)를 취할 수 없으므로 문장 구조상 비문이 됩니다. 따라서 claimed를 앞의 의미상 주어와 능동 관계를 지닌 현재분사 claiming으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 능동태 vs 수동태 — 목적어 유무와 의미상 주어와의 관계로 분사의 능수동 판정",
+      "(B) 병렬 구조 — 등위접속사 and 전후의 동사 시제 일치 확인",
+      "(C) to-v vs v-ing — stop의 목적어 형태 확인"
+    ],
+    "tags": [
+      "어법",
+      "분사",
+      "능동수동",
+      "병렬구조"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing __(A) that__ a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and __(B) attracted__ your attention. Here's a historical example. Right after New York City stopped __(C) running__ elevated trains, people called the police in the middle of the night __(D) claimed__ that something woke them up. They tended to call around the time the trains used __(E) to run__ past their apartments.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "PREMIUM"
+  }
+}

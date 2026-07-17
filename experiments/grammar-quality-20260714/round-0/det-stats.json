@@ -1,0 +1,82 @@
+{
+  "round": "round-0",
+  "total": 30,
+  "ok": 30,
+  "failed": 0,
+  "relaxed": 1,
+  "avgAttempts": 1.93,
+  "answers": {
+    "S": 23,
+    "A": 7,
+    "B": 0
+  },
+  "answerCodeDist": {
+    "b": 6,
+    "e": 3,
+    "g": 3,
+    "f": 3,
+    "h": 2,
+    "i": 3,
+    "d": 5,
+    "k": 2,
+    "c": 3
+  },
+  "decoyCodeDist": {
+    "c": 17,
+    "b": 22,
+    "f": 11,
+    "d": 18,
+    "e": 8,
+    "a": 6,
+    "l": 5,
+    "i": 3,
+    "h": 9,
+    "k": 10,
+    "g": 10,
+    "m": 1
+  },
+  "dupAnswerDecoy": [
+    "ebsi_go3_20151013-q19(ADVANCED)",
+    "ebsi_go3_20151013-q26(INTERMEDIATE)",
+    "ebsi_go1_20221123-q21(ADVANCED)",
+    "ebsi_go1_20220324-q20(ADVANCED)",
+    "ebsi_go3_20260507-q31(ADVANCED)",
+    "ebsi_go3_20260507-q20(INTERMEDIATE)"
+  ],
+  "dupDecoyPairs": [
+    "ebsi_go3_20191015-q22(KILLER)",
+    "ebsi_go1_20151117-q20(ADVANCED)",
+    "ebsi_go1_20231219-q20(ADVANCED)",
+    "ebsi_go1_20190307-q33(ADVANCED)",
+    "ebsi_go1_20231219-q21(INTERMEDIATE)",
+    "ebsi_go1_20220324-q20(ADVANCED)",
+    "ebsi_go1_20200312-q36(ADVANCED)",
+    "ebsi_go3_20150409_A-q19(INTERMEDIATE)",
+    "ebsi_go3_20260507-q20(INTERMEDIATE)",
+    "2015_06_3026346-q19(INTERMEDIATE)"
+  ],
+  "posLastUnder07": [
+    "ebsi_go1_20241015-q20",
+    "ebsi_go1_20191120-q21",
+    "ebsi_go1_20231219-q21",
+    "2015_06_3026346-q21"
+  ],
+  "firstSentenceAnswer": [
+    "ebsi_go1_20241015-q21",
+    "ebsi_go1_20191120-q21",
+    "ebsi_go1_20190307-q33"
+  ],
+  "sameSentenceCrowd": [
+    "ebsi_go1_20231219-q21",
+    "2019_06_5023285-q29"
+  ],
+  "answerFirstMarker": 3,
+  "answerLabelDist": {
+    "(D)": 7,
+    "(E)": 6,
+    "(A)": 3,
+    "(C)": 8,
+    "(B)": 6
+  },
+  "avgDecoyGoodShare": 0.95
+}

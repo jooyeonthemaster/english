@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "reviewer-calibration-protocol-v1",
+  "artifactId": "reviewer-calibration-packet-v1",
+  "status": "GOLD_ADJUDICATION_PENDING",
+  "purpose": "Local reviewer calibration for the grammar, blank-inference, and cross-type evidence contracts. It is not a generation experiment or a production-quality result.",
+  "candidateAccounting": {
+    "newFullQuestionCandidates": 0,
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0
+  },
+  "composition": {
+    "totalItems": 24,
+    "blocks": {
+      "GRAMMAR": 8,
+      "BLANK": 8,
+      "NONFOCUS": 8
+    },
+    "authorStrataPerBlock": {
+      "F": 2,
+      "C": 2,
+      "B": 2,
+      "A": 2
+    },
+    "authorStratumRule": "Author strata are construction hypotheses only. They are never shown to calibration reviewers and do not become gold without two independent reviews and fresh adjudication.",
+    "nonfocusFamilyCoverage": [
+      "marked_selection",
+      "option_selection",
+      "ordering_or_insertion",
+      "closed_constructed",
+      "open_constructed",
+      "correction",
+      "lexical"
+    ]
+  },
+  "rightsAndPrivacy": {
+    "composition": "DIRECT_ORIGINAL_LOCAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+    "copiedOrAdapted": false,
+    "thirdPartySourceCount": 0,
+    "independentCodexAgentReviewAuthorized": true,
+    "externalProviderApiDispatchAuthorized": false,
+    "permittedUse": "Local reviewer calibration for question-quality research in this campaign only.",
+    "publicationAuthorized": false,
+    "resaleAuthorized": false,
+    "trainingAuthorized": false,
+    "piiRule": "Each row carries a manual no-PII attestation and the builder applies conservative pattern scans."
+  },
+  "blinding": {
+    "phase1": "Reviewer-specific deterministic item order and answer-label permutation expose only the exact student surface.",
+    "phase1Seal": "The complete phase-1 response is hashed and sealed before reveal.",
+    "phase2": "Only after a valid phase-1 seal, disclose the authorized source binding, stored key, explanation, and scoring contract under the same pseudonyms.",
+    "perItemBindings": "Every post-reveal review binds the issued surface hash, its exact relabel-map-row hash, and its own sealed phase-one answer-record hash; cross-item hash reuse is rejected.",
+    "timestampRule": "All persisted timestamps must be real RFC3339 instants with at most microsecond precision; invalid calendar dates and non-increasing issuance/expiry order are rejected.",
+    "neverRevealBeforeSubmission": [
+      "author stratum",
+      "author rationale",
+      "author expected fatal domains",
+      "author expected grade",
+      "gold",
+      "generator identity"
+    ],
+    "goldProcedure": {
+      "independentRaters": 2,
+      "freshAdjudicator": 1,
+      "adjudicateEveryItem": true,
+      "adjudicatorFreshSolveBeforeRationales": true
+    }
+  },
+  "metricConventions": {
+    "comparator": "Each reviewer is scored independently against immutable adjudicated gold; pair consensus is forbidden.",
+    "missingRequiredValue": "INCOMPLETE_AND_FAIL",
+    "zeroDenominator": "NULL_AND_FAIL",
+    "thresholdComparison": "Compare unrounded rational values. Display rounding is non-operative.",
+    "fatalClass": "grade F or finalGold.anyFatal=true; adjudicated gold must make these equivalent.",
+    "gradeOrder": ["F", "C", "B", "A"],
+    "gwetAc1": "Binary two-rater AC1 using pooled positive marginal p=(gold positives + review positives)/(2n), chance agreement=2p(1-p), AC1=(observed agreement-chance)/(1-chance).",
+    "quadraticWeightedKappa": "Ordered categories F=0,C=1,B=2,A=3 with disagreement weights ((i-j)/3)^2 and kappa=1-observedWeightedDisagreement/expectedWeightedDisagreement."
+    ,
+    "grammarSiteAgreement": "Gold-equal atomic values across displayedGrammaticality, diagnosis, pointFamily, correctionRestoresSource, and explanationAccurate for each of five sites.",
+    "blankOptionAgreement": "Gold-equal atomic values across slotGrammarCompatible, passageGrounded, primaryIntentAxis, divergentAxes, and singleDecisiveFlaw for each of five options.",
+    "blankAxisAgreement": "Gold-equal answerPreserved values across actorOrTarget, polarity, conditionOrModality, causalRelationAndDirection, scopeOrQuantifier, stance, and temporalRelation.",
+    "decisionArithmetic": "Every gate compares exact integer numerator/denominator pairs by cross multiplication. Decimal values are reporting-only.",
+    "blindSolveGate": "Blind-solve exact agreement is a non-compensatory V6 certificate gate globally and within every block."
+  },
+  "thresholds": {
+    "global": {
+      "blindSolveExactAgreement": { "numerator": 9, "denominator": 10 },
+      "exactFatalAgreement": { "numerator": 9, "denominator": 10 },
+      "gwetAc1Fatal": { "numerator": 4, "denominator": 5 },
+      "fatalSensitivity": { "numerator": 9, "denominator": 10 },
+      "fatalSpecificity": { "numerator": 17, "denominator": 20 },
+      "quadraticWeightedKappaGrade": { "numerator": 7, "denominator": 10 },
+      "focusFieldCompleteness": { "numerator": 1, "denominator": 1 },
+      "grammarSiteAgreement": { "numerator": 19, "denominator": 20 },
+      "blankOptionAgreement": { "numerator": 19, "denominator": 20 },
+      "blankAxisAgreement": { "numerator": 1, "denominator": 1 }
+    },
+    "eachBlock": {
+      "blindSolveExactAgreement": { "numerator": 7, "denominator": 8 },
+      "exactFatalAgreement": { "numerator": 7, "denominator": 8 },
+      "fatalSensitivity": { "numerator": 1, "denominator": 1 },
+      "fatalSpecificity": { "numerator": 5, "denominator": 6 },
+      "quadraticWeightedKappaGrade": { "numerator": 3, "denominator": 5 },
+      "focusFieldCompletenessWhenApplicable": { "numerator": 1, "denominator": 1 },
+      "grammarSiteAgreementWhenApplicable": { "numerator": 19, "denominator": 20 },
+      "blankOptionAgreementWhenApplicable": { "numerator": 19, "denominator": 20 },
+      "blankAxisAgreementWhenApplicable": { "numerator": 1, "denominator": 1 }
+    }
+  },
+  "certificateScope": {
+    "focusTypes": ["GRAMMAR_ERROR", "BLANK_INFERENCE"],
+    "nonfocusScope": "Evidence-family familiarity only. Passing does not certify unobserved type-specific expertise for all 23 nonfocus types.",
+    "supplementRequiredBeforeS3": true
+  },
+  "executionHold": "No reviewer may be certified while gold status is pending, any required record is missing, packet/oracle/contract/scorer hashes differ, or truthful adjudicated gold makes the packet composition ineligible. The final-gold schema stores actual judgments without forcing the planned 2F/2C/2B/2A distribution; only certificate issuance applies PACKET_COMPOSITION_INELIGIBLE."
+}

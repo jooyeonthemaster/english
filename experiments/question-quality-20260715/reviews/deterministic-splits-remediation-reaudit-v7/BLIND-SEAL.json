@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "sealedAtUtc": "2026-07-14T20:15:14.1813684Z",
+  "gitHeadAtSeal": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "holdoutFile": "blind-holdout-cases.mjs",
+  "holdoutSha256": "d74721aafa909a641bd69de236ef1c7dcbc921b327e363ecbf93b65bbe921fdd",
+  "semanticCaseCount": 224,
+  "blindingStatement": "No v4-v6 audit script, result, narrative, manifest, verifier, or unit-test body was opened before this seal. Only production validator filenames/exports and the external audit brief were used.",
+  "oraclePolicy": "Ambiguous cases were excluded before sealing. expectedFlag=true requires the named fatal split; expectedFlag=false is a legitimate look-alike that must not trigger it."
+}

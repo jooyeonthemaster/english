@@ -1,0 +1,35 @@
+{
+  "pid": "P093",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Originally born in France, Brunel escaped to the United States' — 분사구문 'born in France'의 의미상 주어가 주절 주어 Brunel과 일치하고, escape는 자동사로 'escaped to + 장소'가 정상 결합. 과거시제도 French Revolution 시점과 일치. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'invented machines for making boots' — 전치사 for 뒤 동명사. 기계의 용도를 나타내는 'machines for V-ing'은 표준 표현. 정문. 매력도 낮은 선지."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the government stopped buying his boots' — stop+동명사(구매를 중단) vs stop+to부정사(구매하려고 멈춤)의 고전 함정 지점. 문맥상 전쟁 종료 후 정부가 군화 구매를 '중단'하여 Brunel이 파산했으므로 동명사가 정확. 실전에서 한 번 끌리지만 문맥 확인으로 즉시 해소되는 매력적 오답. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (정답)",
+      "reason": "'needed more ways for people and goods moved across it' — 지배 규칙은 'ways for + 의미상 주어 + to부정사'로 'ways for people and goods to move across it'이어야 함. 대안 해석으로 'moved across it'을 축약 관계절(= that were moved)로 읽으면 '강 건너로 운반된 사람과 물건을 위한 더 많은 방법이 필요했다'가 되는데, people이 수동 be moved의 대상으로 부자연스럽고 'needed more ways for NP'만으로는 목적 의미가 완성되지 않아 비문·비논리. 대안 해석 기각. 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'despite being in ill health' — 전치사 despite + 동명사구. 뒤가 절이 아니므로 although/though와의 혼동 함정도 성립하지 않음. 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 1차 스캔에서 (C) stopped buying이 stop+to-V 함정으로 눈길을 끌었으나 문맥(구매 중단→파산)으로 즉시 해소. (D)는 'for + 의미상 주어 + to부정사' 구조 요구를 어긴 명백한 오류이며, 축약 관계절 대안 해석도 의미·통사 양면에서 성립 불가. 정답 (D) 단독으로 옹호 가능, 복수 정답 소지 없음. 기출(2019 고1 3월 유사 소재)과 흡사한 전기문 유형으로 난도는 평이."
+}

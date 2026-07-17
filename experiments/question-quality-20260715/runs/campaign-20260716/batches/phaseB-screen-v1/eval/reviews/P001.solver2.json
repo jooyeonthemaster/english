@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "Seam: 'make sure you avoid taking on more than you can handle' — 정문. 'make sure (that) S V' 구조에 동사원형 avoid가 정상 결합, avoid + 동명사(taking on), 'more than you can handle'은 비교급 관계 구문으로 문법적 하자 없음. 논리: 지문의 논제 전개가 (a) 'don't know where to draw the line' (b) 'Joining too many clubs can reduce...' (c) 'exercise some moderation' (d) 'you can become awfully stressed out'로 일관되게 '과잉 참여 자제 = 절제'를 향한다. 결론문 'get involved in the activities that are most meaningful to you, and make sure you ___'는 '의미 있는 것만 골라 참여하되, 감당 범위를 넘기지 마라'로 완결되어야 하며 ①이 이 절제 논지를 형식적으로 정확히 재진술한다."
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "Seam: 'make sure you allocate enough hours for leisure activities' — 문법적으로는 정문. 논리: 지문에서 free time 감소는 과잉 참여의 '결과적 증상'으로 한 번 언급될 뿐이고, 주제문(The point is this: ...)은 '절제하지 않으면 필수 과업에 대해 스트레스를 받는다'이다. 결론의 명령은 여가 시간 확보가 아니라 참여 규모의 절제여야 한다. 여가 시간 배분은 절제의 부분적 파생 효과일 뿐 주제문과 등가가 아니므로 '가장 적절한' 답이 될 수 없다. 매력적 오답이지만 주제문 재진술 요건을 충족하지 못한다."
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "Seam: 문법적으로 정문. 논리: 지문에서 완벽 추구('making sure the paper is as perfect as you want it to be')는 crunch time에 저녁·주말까지 잡아먹는 스트레스 원인의 예시로 제시된 부정적 소재다. '모든 과업에서 완벽을 추구하라'는 조언은 'Pacing is important'와 moderation 논지에 정면으로 모순된다. 반대 방향 오답."
+    },
+    {
+      "label": "④",
+      "verdict": "incorrect",
+      "reason": "Seam: 문법적으로 정문. 논리: 협업은 지문 어디에서도 언급되거나 함축되지 않는 주제 외 소재다. 절제·페이스 조절 논지와 아무런 논리적 연결이 없어 무관 오답으로 판정."
+    },
+    {
+      "label": "⑤",
+      "verdict": "incorrect",
+      "reason": "Seam: 'push your limits by taking new challenges' — 관용상 'taking on new challenges'가 더 자연스러우나 'take a challenge'도 성립하므로 문법적 실격은 아니다. 논리: '한계를 밀어붙이고 새 도전을 떠맡아라'는 과잉 참여를 경계하는 지문 논지(draw the line, moderation)와 정확히 반대 방향이므로 논리적으로 배제된다."
+    }
+  ],
+  "note": "형식 판정: 주제문 'If you don't exercise some moderation ... you can become awfully stressed out'의 대우적 재진술이 빈칸에 요구되며, ①만이 이를 충족한다. ②는 지문 표층 어휘(free time)를 재활용한 매력 오답이나 주제 등가성이 없다. 모든 선지가 문법적으로는 빈칸에 결합 가능하므로 판별은 순수 논리 적합성에서 이루어졌고, 그 결과는 ① 단독으로 수렴한다. 복수 정답 시비 소지 낮음."
+}

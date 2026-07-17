@@ -1,0 +1,35 @@
+{
+  "pid": "P088",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the stream of remote associations coming from the right hemisphere' — 'coming'은 축약 관계절(= associations that come/are coming ...)로 앞의 명사(구)를 수식하는 현재분사. 분사이므로 수 일치 문제가 발생하지 않고, 능동 의미(associations가 come의 주체)도 자연스럽다. 정문. 유혹 포인트: 'that come'을 기대하고 어색하게 느낄 수 있으나 분사 축약은 표준 어법."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'when we are diligently focused' — 부사 diligently가 분사형 형용사 focused를 수식. be동사 뒤라 형용사(diligent)를 넣고 싶은 유혹이 있으나, 수식 대상이 보어 focused이므로 부사가 맞다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'the connections that leads to creative insights' — 관계대명사 that의 선행사는 복수 명사 the connections이므로 동사는 lead여야 한다. 대안 해석 검토: 선행사를 동명사구 'detecting the connections'나 'this pattern'으로 보아 단수 취급할 수 있는지 적극 탐색했으나, the connections 바로 뒤의 제한적 관계절은 그 명사를 선행사로 취하며 동명사구는 that 관계절의 선행사가 될 수 없다. 주어-동사 수 일치 오류로 유일하게 어법상 틀린 항목."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'It's not until we're being massaged by warm water, unable to check our e-mail, that we're finally able ...' — 'It is not until X that Y' 강조(분열)구문의 that으로 정문. 최상위권 기준 가장 매력적인 오답: 삽입구 'unable to check our e-mail'이 It ... that의 연결을 가려 when이나 다른 접속사를 기대하게 만들지만, 분열구문 구조를 복원하면 완벽하게 성립한다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'hear the quiet voices in the backs of our heads telling us about the insight' — 지각동사 hear + 목적어(the quiet voices) + 현재분사(telling) 구문. voices가 tell의 의미상 주어로 능동 관계 성립. 전치사구 'in the backs of our heads'가 목적어와 분사를 떨어뜨려 놓아 순간 헷갈릴 수 있으나 정문."
+    }
+  ],
+  "note": "실전 풀이 순서: (C)에서 즉시 수 일치 위반 포착(선행사 connections 복수 vs leads 단수). 매력적 오답 체험 기록 — (D)의 분열구문 that은 삽입구 때문에 한 번 더 검증하게 만들었고, (A)의 분사 coming도 'that come' 축약 여부를 확인해야 했다. 그러나 둘 다 표준 어법으로 성립하여 정답은 (C) 하나로 수렴. 복수 정답 여지 없음."
+}

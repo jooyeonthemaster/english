@@ -1,0 +1,76 @@
+{
+  "pid": "P058",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-NONWORD",
+      "severity": "critical",
+      "evidence": "오답 해설 3번: \"은학이나 손실을 외면하는 무조건적 긍정을 묘사하여\" — '은학'은 존재하지 않는 단어(손상 토큰)이며 학생 노출 필드에 그대로 포함되어 있다. 문맥상 '불행' 류의 어휘가 의도된 것으로 보이나 현재 상태로는 비단어다."
+    },
+    {
+      "code": "V4-TRAP-MISLABEL",
+      "severity": "major",
+      "evidence": "오답 해설 4번이 함정 유형을 '주체-대상 전도'로 규정했으나, 선지 4 'readily give up their resources'와 원문 'they gather their resources'는 주어(they)와 목적어(resources)가 동일하고 동사 행위만 반전된 극성/행위 반전(action reversal)이다. 주체-대상이 뒤바뀐 곳이 없어 함정 유형 분석이 실제 선지 구조와 불일치한다."
+    },
+    {
+      "code": "V4-CAUSAL-MISLABEL",
+      "severity": "minor",
+      "evidence": "본 해설에서 오답 1번을 '사실을 부인하도록 인과를 비틀었고'라고 설명했으나, 선지 1 'try to conceal their unexpected failures from the crowd'는 인과 관계 반전이 아니라 본문 행동(실패를 공개해 기회로 삼음)의 극성 반전이다. '숨긴다(conceal)'를 '부인(denial)'으로 서술한 것도 정확한 대응이 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "일화 소재(crowd, failure) 차용 + 행동 극성 반전",
+      "temptingBecause": "펜 상인 일화의 어휘(관중, 실패)를 그대로 사용해 표면적으로 지문과 연결된 것처럼 보인다",
+      "decisiveFlaw": "본문의 상인은 부러진 펜을 숨기지 않고 오히려 '내부를 보여주겠다'며 공개해 기회로 삼았다. conceal은 지문 행동의 정반대"
+    },
+    {
+      "label": "2",
+      "intent": "본문 어휘(shock, misfortune) 재조합 + 수동적 태도 half-truth",
+      "temptingBecause": "'After their initial shock'라는 실제 구절이 있어 충격이 지나간 뒤 행동한다는 절반의 진실을 담고 있다",
+      "decisiveFlaw": "본문 인물들은 기다리는 것이 아니라 자원을 모으고 기회를 포착하는 능동적 주체다. 'patiently wait'는 'actively', 'go one step further'와 정면 충돌"
+    },
+    {
+      "label": "3",
+      "intent": "긍정 태도를 맹목적 낙관으로 과확장(scope shift)",
+      "temptingBecause": "'every cloud has a silver lining', 낙관적 태도라는 본문 주제와 극성이 부분적으로 겹쳐 가장 그럴듯하다",
+      "decisiveFlaw": "본문 인물들은 'initial shock'을 겪고 'what they have lost'를 인지한 상태에서 이득에 집중하는 것이지 상실을 부인하지 않는다. 'blindly'와 'without acknowledging'이 결정적 모순"
+    },
+    {
+      "label": "4",
+      "intent": "본문 어휘(resources, hardships) 차용 + 동사 행위 반전",
+      "temptingBecause": "'gather their resources', 'in spite of their hardships' 등 본문 표현을 그대로 재사용해 표면 어휘 겹침이 크다",
+      "decisiveFlaw": "본문은 자원을 '모아(gather)' 문제를 극복한다고 했는데 선지는 자원을 '포기(give up)'한다고 하여 정반대. (해설이 이를 '주체-대상 전도'로 오분류한 것은 별도 V4 이슈)"
+    },
+    {
+      "label": "5",
+      "intent": "정답 — 삭제된 span 'actively seek the advantage in their disadvantage'의 재진술",
+      "temptingBecause": "정답이므로 해당 없음",
+      "decisiveFlaw": "없음. 다만 purposefully=actively, practical utility=advantage, adversities=disadvantage로 거의 1:1 동의어 치환 수준이라 추상화 깊이가 얕고, 5개 선지 중 유일하게 긍정·능동 극성이어서 극성만으로 선택 가능하다는 것이 문항 설계상 약점"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 3번에 비단어 '은학' 포함 (치명)",
+    "오답 해설 4번의 함정 유형 '주체-대상 전도'가 실제 구조(동사 행위 반전)와 불일치",
+    "본 해설의 오답 1번 설명 '인과를 비틀었다'가 실제 함정(행동 극성 반전)과 유형 불일치, 'conceal'을 '사실 부인'으로 서술한 대응도 부정확",
+    "본 해설이 오답 4번을 다루지 않는 것 자체는 오답 해설 필드가 보완하므로 동기화 문제는 아님"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 통과. 빈칸 자리는 글 전체 주제의 결론 재진술로 출제 가치가 있고(C1=3), 네 오답이 각각 극성 반전·수동 half-truth·과확장·행위 반전으로 서로 다른 함정을 겨냥한다(C2=3). 그러나 (a) 정답 5가 다섯 선지 중 유일한 긍정·능동 극성이어서 RUBRIC §D의 '극성 하나로 정답을 찍을 수 없다' 조건에 정면으로 걸리고, (b) 정답이 삭제 span의 거의 직역 수준 동의어 치환이라 두 문장/두 논리 단서 연결 없이 직전 절('silver lining')만으로 풀리므로 KILLER 조건 불충족(killerConditionsMet=false), 실제 체감 난이도는 중하 수준으로 요청 난이도 KILLER와 불일치(C5=1). C4는 극성·길이 누출로 2. 결정적으로 오답 해설 3번의 비단어 '은학'과 4번의 함정 유형 오분류로 V4 실패 — 치명 결함은 공예 점수로 상쇄되지 않으므로 등급 F. 수리 방향: (1) 해설 비단어·오분류 교정, (2) 오답 중 최소 1~2개를 긍정·능동 극성이지만 논리적으로 틀린 선지(예: scope shift된 긍정 진술)로 교체, (3) 정답 추상화 수준 상향."
+}

@@ -1,0 +1,61 @@
+{
+  "pid": "P034",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "polarity reversal — 필자의 절제 주장과 정반대 방향(한계를 넘어서라)",
+      "temptingBecause": "동아리 활동을 긍정적으로 시작하는 첫 문장('a very good thing')과 열심히 임하는 신문사 예시의 표면적 인상에 이끌리는 학생을 노림",
+      "decisiveFlaw": "글 전체가 'draw the line', 'moderation', 'Pacing is important'로 절제를 반복 강조하므로 한계 초과 권고는 주제와 정면 충돌"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'don't overextend yourself'의 의미 보존 paraphrase",
+      "temptingBecause": "해당 없음(정답). '과도한 책임을 떠안지 말라'가 moderation/pacing 논지의 결론 재진술로 필연적",
+      "decisiveFlaw": "없음 — 'make sure you avoid taking on too many responsibilities'는 문법적으로 완결되고 원문 의미를 정확히 보존"
+    },
+    {
+      "label": "③",
+      "intent": "half-truth / example overextension — 예시의 지엽 어휘 'perfect'를 주제로 승격",
+      "temptingBecause": "신문사 마감 예시에 'as perfect as you want it to be'가 실제로 등장해 국소 단서 겹침이 있음",
+      "decisiveFlaw": "완벽 추구는 시간을 잡아먹는 문제 상황의 묘사이지 필자의 권고가 아님 — 오히려 경계 대상"
+    },
+    {
+      "label": "④",
+      "intent": "associative off-topic — 동아리→인간관계 확장이라는 연상 유도",
+      "temptingBecause": "동아리 활동이라는 소재 자체가 사교적 함의를 가져 상식적으로 그럴듯함",
+      "decisiveFlaw": "본문 어디에도 social network 관련 언급이 없어 source anchor 부재 — 절제/스트레스 관리 주제와 무관"
+    },
+    {
+      "label": "⑤",
+      "intent": "plausible-but-unsupported practical tip (scope shift) — 시간관리 소재를 기록 습관으로 치환",
+      "temptingBecause": "'Pacing is important'와 시간 부족 문제에서 시간관리 도구를 연상할 수 있음",
+      "decisiveFlaw": "기록 유지는 본문이 권고한 바 없는 수단 차원의 조언으로, 결론이 요구하는 '활동량 자체의 절제'라는 방향성과 불일치"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "E-MINOR-WORDINESS",
+      "severity": "minor",
+      "evidence": "본 해설 첫 두 문장이 주제 요약을 다소 장황하게 반복함('결론 역할', '페이스 조절과 절제가 중요') — 정답 근거 자체는 정확하나 압축 여지가 있음"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문과 완전 일치하며 의도된 변형(문말 'don't overextend yourself' → 빈칸)만 존재. 고아 문장부호·중복·누락 없음, 라벨 ①~⑤와 선지 5개 일치. V2: 각 선지를 'make sure you ___' 슬롯에 독립 삽입 검증 — ②만 원문 span 의미를 보존하는 유일 정답, ①은 극성 반전, ③은 예시 지엽의 주제 승격, ④는 anchor 부재, ⑤는 무근거 수단 조언으로 모두 탈락. V3: 5개 선지 모두 동일 통사 슬롯(원형 VP)에 적합, 빈칸이 문말이라 suffix/tail 비문 문제 없음. 'reduce a large amount of your free time'의 어색함은 원지문 유래로 렌더 결함 아님. V4: 해설의 구조 설명(결론 재진술, '의미 있는 활동 참여 조언 직후' 위치)과 오답 해설 4건 모두 실제 선지 내용과 대응, 용어 오류 없음. V5: 정답 라벨·오답 해설 키·keyPoints 모두 동기화. 공예: 주제 재진술('draw the line'/'moderation'/'Pacing')이 3회 이상 반복돼 ①④⑤가 즉시 소거되고 ③만 잠시 저항하므로 C3=2. 나머지 축은 3. 합계 17, 모든 V 통과, 최저 C=2 → B. 요청 난이도 INTERMEDIATE로 KILLER 조건 판정 대상 아님(killerConditionsMet=false). 개선 제안: ④ 또는 ⑤에 본문 국소 단서와 겹치는 표현(예: 'meaningful' 또는 'crunch times' 관련 어휘)을 심어 경쟁력을 올리면 C3 3~4로 상향 가능."
+}

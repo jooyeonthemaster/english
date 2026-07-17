@@ -1,0 +1,90 @@
+{
+  "pid": "P055",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-TYPOGRAPHY-MINOR",
+      "severity": "minor",
+      "evidence": "선지 ①은 curly apostrophe(beginner’s)를 쓰는 반면 지문 본문은 straight apostrophe('beginner's mind')를 사용한다. 렌더 손상은 아니며 표기 일관성 문제에 불과하다."
+    },
+    {
+      "code": "V2-ABSTRACTION-DRIFT-MINOR",
+      "severity": "minor",
+      "evidence": "정답 ③은 원문 span '그 필터가 실수로 본질적인 것을 걸러낼 때'(메커니즘)를 '확립된 인지 프레임워크가 매우 독특한 요구를 수용하지 못할 때'(상위 원인)로 추상화한다. 지문 2문장(particularly novel)과 필터 문장을 연결하면 논리적으로 지지되므로 정답 유일성은 유지되지만, 직접 환언이 아닌 원인-단계 추상화라는 점은 기록해 둔다."
+    },
+    {
+      "code": "V4-WORDING-MINOR",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤의 '새로운 자극의 핵심적인 면을 오용하여 놓치는'에서 '오용'은 부정확한 어휘 선택이다(의도는 '잘못 걸러내어/오판하여'). 사실 오류는 아니나 표현이 어색하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "인과 역전 — 지문이 해결책으로 제시한 beginner's mind를 실수의 원인으로 뒤집는다.",
+      "temptingBecause": "beginner / seasoned 키워드를 재사용하며 '전문성을 버리면 위험하다'는 상식적 경고처럼 들린다.",
+      "decisiveFlaw": "지문은 novel problem 앞에서 beginner's mind를 최선의 태도로 제시한다('it is best to assume nothing'). 그것이 숙련자의 실수를 유발한다는 진술은 지문 논지와 정반대다."
+    },
+    {
+      "label": "②",
+      "intent": "메커니즘 치환(half-truth) — 실수의 원인을 '분류의 조기 포기'로 바꿔치기한다.",
+      "temptingBecause": "'separate the essential from the irrelevant'를 지문에서 그대로 인용해 국소 단서 일치가 강하다.",
+      "decisiveFlaw": "원문은 필터를 사용하는 과정에서 본질을 '실수로 걸러내는(mistakenly screens out)' 것이 원인이라고 명시한다. 포기 시점 문제가 아니다."
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'that filter mistakenly screens out something essential'을 novelty 전제(2문장)와 연결해 상위 수준으로 추상화한 환언.",
+      "temptingBecause": "정답이므로 해당 없음. 지문 키워드를 전혀 쓰지 않는 추상 표현이라 표층 매칭으로는 오히려 덜 끌린다.",
+      "decisiveFlaw": "없음. 'established cognitive framework' = 경험 기반 필터, 'highly unique demand' = particularly novel problem으로 두 문장을 통합해야 도달한다."
+    },
+    {
+      "label": "④",
+      "intent": "조건 역전 — 필터 '오작동'을 필터 '적용 거부'로 뒤집는다.",
+      "temptingBecause": "'experienced filter', 'absorbed details' 등 키워드 중첩이 크고, 규율 실패 서사로 그럴듯하다.",
+      "decisiveFlaw": "지문의 실수는 필터를 적용했는데 그것이 본질을 걸러낼 때 발생한다. 필터 적용 거부는 오히려 지문이 권하는 beginner's mind에 가까워 실수의 조건이 될 수 없다."
+    },
+    {
+      "label": "⑤",
+      "intent": "무근거 메커니즘 조작(fabrication) — 지문에 없는 '필터 재구성' 개념을 도입한다.",
+      "temptingBecause": "'process every minor detail'이 'absorb every detail'을 반향하고 'the filter itself'가 핵심어를 재사용한다.",
+      "decisiveFlaw": "필터를 재구성하도록 강제된다는 내용은 지문 어디에도 없다. 숙련자의 실패는 기존 필터의 오작동이지 재구축 압력이 아니다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "STYLE-VERBOSE",
+      "severity": "minor",
+      "evidence": "본 해설이 '이중적 파급력', '전개 국면' 등 다소 장식적·장황한 표현을 쓴다. 정확성에는 문제 없으나 우아함(C6)을 4에서 3으로 깎는 요인."
+    },
+    {
+      "code": "WORD-CHOICE",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤의 '오용하여 놓치는'은 어휘 선택이 부정확하다. 의미 전달은 되나 교정 권장."
+    }
+  ],
+  "killerConditionsMet": true,
+  "killerConditionsDetail": {
+    "sameSyntacticSlot": "다섯 선지 모두 'When [정형절], then ...' 슬롯에 들어가는 완전한 정형절이며 suffix/tail 비대칭으로 문법 탈락하는 오답이 없다.",
+    "meaningPreservingAbstraction": "③은 원문 span의 의미를 novelty 전제와 결합해 원인 수준으로 추상화한다. 경미한 메커니즘→원인 드리프트가 있으나 지문 논리로 지지된다.",
+    "anchorsAndFlaws": "네 오답 모두 source anchor(키워드 인용), tempting overlap, 단일 결정적 결함을 갖는다.",
+    "multiSentenceLinkage": "정답 도달에 2문장(particularly novel)과 6문장(filter) 최소 두 논리 단서 연결이 필요하다.",
+    "noSingleCueShortcut": "다섯 선지 모두 부정 극성 조건절이라 극성 단서 무효, 길이·고유어·절대어 단서도 없다. 유일한 약한 메타 단서는 ③만 지문 키워드가 없는 추상 표현이라는 점(C4 감점 사유).",
+    "variedTraps": "인과 역전(①), 메커니즘 치환(②), 조건 역전(④), 무근거 조작(⑤)으로 함정 유형이 서로 다르다."
+  },
+  "grade": "B",
+  "notes": "모든 V 게이트 통과. 정답 ③ 유일성은 각 선지 독립 검증으로 확인(①④ 지문 논지 역행, ② 메커니즘 왜곡, ⑤ 무근거 조작). V1 무결(빈칸 외 변형 없음, When/then 프레임 보존). KILLER 추가 조건(§D) 5개 항목 충족. 다만 공예 합계 19(C1=4, C2~C6=3)로 A 컷(21) 미달 — ②·④가 '필터 미사용' 계열로 부분 중첩되고(C2), 정답만 키워드-프리 추상 선지라는 약한 메타 단서(C4), 오답들의 논지 모순이 비교적 탐지 가능해 체감 난이도가 KILLER 하단(C5), 해설이 정확하나 장황(C6). 소폭 수정(② 또는 ④ 함정 축 분리, 해설 압축)으로 출제 가능한 B."
+}

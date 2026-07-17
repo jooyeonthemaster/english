@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) them",
+      "verdict": "correct",
+      "reason": "'present A with B'(A에게 B를 제시하다) 구문의 간접 대상 자리. 선행 명사구 'a bunch of healthy undergraduates'(복수)를 받는 목적격 대명사로 수·격 모두 일치한다. 재귀대명사가 요구될 환경(주어=목적어 동일 지시)이 아니므로 them이 정확하다. 정문."
+    },
+    {
+      "label": "(B) asked",
+      "verdict": "correct",
+      "reason": "병렬 시작점 검증: 'He presented ... and asked ...'로 과거시제 정형동사 presented와 and로 병렬되는 두 번째 정형동사이다. 시제(과거)·형태(정형) 모두 병렬 요건을 충족하고, 'ask + 목적어 + to부정사' 보문 구조도 규범에 맞는다. 정문."
+    },
+    {
+      "label": "(C) wrinkled",
+      "verdict": "correct",
+      "reason": "'the wrinkled face'에서 wrinkled는 명사 face를 수식하는 분사형 형용사(주름진). wrinkle은 자·타 양용 동사로 'a face that has wrinkled / has been wrinkled' 어느 파생으로도 과거분사 수식이 성립한다. 현재분사 wrinkling(주름지게 하는)은 의미상 부적합하므로 과거분사가 옳다. 정문."
+    },
+    {
+      "label": "(D) That",
+      "verdict": "incorrect",
+      "reason": "'__ he found was extraordinary'에서 밑줄 절은 문장 주어이며, 내부 동사 found(타동사)의 목적어가 비어 있다. 접속사 that이 이끄는 명사절은 완전한 절을 요구하므로 'That he found'는 목적어 결여로 성립 불가. 대안 해석 검토: (i) 지시대명사 that을 선행사로 한 접촉절(zero relative) 'that (which) he found'는 표준 영어에서 지시대명사 뒤 관계대명사 생략이 허용되지 않아 성립하지 않음(that which he found 또는 what he found만 정문). (ii) found를 자동사(설립하다 found의 과거형은 founded이므로 불가, find는 자동사 용법 없음)로 보는 해석도 불가. 따라서 불완전절을 이끌며 스스로 목적어 역할을 하는 융합관계대명사 What으로 교체해야 한다. 어법상 틀림."
+    },
+    {
+      "label": "(E) been exposed",
+      "verdict": "correct",
+      "reason": "'students who had been exposed to ...'는 관계절 내 과거완료 수동태. expose는 타동사이고 학생들은 노출의 대상이므로 수동태가 필수이며, 주절 과거시제(took) 이전에 일어난 노출 사건이므로 had + been + p.p.의 시제 선후 관계도 정확하다. 뒤 문장의 'who had been exposed to random words'와도 평행. 정문."
+    }
+  ],
+  "note": "형식적 판정 결과 (D)만이 유일하게 비문을 만든다. 결정적 근거는 found의 목적어 공백: 접속사 that은 완전절을, what은 불완전절을 요구한다는 상보적 분포. 지시대명사+접촉절이라는 구제 해석은 표준 문법에서 배제됨을 확인했다. 나머지 네 밑줄은 각각 대명사 일치, 정형동사 병렬, 분사형 형용사, 완료 수동태로 모두 정문이며 경쟁 후보가 없다. 단일 정답 문항."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P026",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "avoided when we feel extremely energized — 지문과 정반대. 분석적 과제는 에너지가 높고 집중 가능할 때 가장 잘 수행된다고 명시되어 있고, 필자도 에너지가 높은 아침에 어려운 일을 처리한다. seam(문법 결합)은 성립하나 논리 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "restricted to simple and repetitive routines — 지문 어디에도 과제를 단순·반복 루틴으로 제한하라는 내용 없음. 오히려 어렵고 분석적인 과제를 다루는 글."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "designed to maximize our emotional energy — 지문의 'waste too much emotional energy'를 그대로 차용한 키워드 미끼라 실제로 끌린다. 그러나 (a) 지문의 논지는 과제의 '설계'가 아니라 '언제 수행하느냐(스케줄링)'이고, (b) 감정 에너지를 '극대화'하는 게 아니라 미루기로 인한 '낭비를 피하는' 것이며, (c) 마지막 문장(아침형이 아니면 어려운 일을 늦게 배치하라)의 개인차·타이밍 일반화를 전혀 포괄하지 못한다. 유혹을 느꼈으나 기각."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "aligned with our personal energy cycles — 'different tasks should ideally be aligned with our personal energy cycles'로 완벽 결합. 분석 과제는 고에너지 시간대에(둘째 문장), 필자는 아침형이라 아침에 문제 처리(중반 예시), 아침형이 아니면 어려운 일을 늦은 시간에 배치(마지막 문장)까지 지문 전체를 유일하게 포괄. 'personal'이 개인차 논점을 정확히 담음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "delegated to coworkers with high motivation — 첫 문장의 'motivation'을 되울리는 표면 미끼일 뿐, 위임(delegation)은 지문에 전혀 등장하지 않음."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 빈칸은 첫 문장(연구의 일반 명제)이고, 이후 전체가 그 예시·부연이므로 예시 전체(고에너지=분석 과제, 아침형 필자, 비아침형 조언)를 포괄하는 일반화를 찾는 문제. ③이 지문 어휘('emotional energy')를 재활용한 매력적 오답으로 실제 끌림이 있었으나, 과제 설계 vs 스케줄링의 범주 불일치와 마지막 문장 미포괄로 명확히 기각됨. 정답은 ④ 단독으로 방어 가능하며 중복 정답 소지 없음."
+}

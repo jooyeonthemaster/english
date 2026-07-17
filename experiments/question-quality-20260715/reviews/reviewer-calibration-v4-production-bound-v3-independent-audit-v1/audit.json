@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-v3-independent-audit-1",
+  "artifactId": "reviewer-calibration-v4-production-bound-v3-independent-audit-v1",
+  "verdict": "FAIL_BLOCKERS",
+  "subject": {
+    "artifactId": "reviewer-calibration-v4-production-bound-v3",
+    "path": "experiments/question-quality-20260715/design/reviewer-calibration-v4-production-bound-v3",
+    "manifestSha256": "39f9d4729e9a09c7c4dc9644477bcdbd81c2f09b15b31f6837ea80ee73c59cd6",
+    "protocolSha256": "4581a0affddec38c8c8d041e885decb49212fdc3ee42f5e14ce0910db0e05988",
+    "registriesSha256": "753c876c509787d981f586784b6bca598ad00ea8b9f95a5dc662de85a8d37bb4",
+    "eventSchemasSha256": "e59df5fa3dec61115bb11494944606068897dbbd7ccd891ec03105229dff89f4",
+    "publicManifestSha256": "e35dad2c680eef4ce9627400bbdecb4aee2aa02a88cea5b0945cce6cdb8bb253"
+  },
+  "lineage": {
+    "directUpstreamBytesRehashed": 9,
+    "directManifestRowsRehashed": 38,
+    "evaluationNestedUpstreamBytesRehashed": 10,
+    "evaluationNestedManifestRows": 24,
+    "evaluationNestedSafeRowsRehashed": 23,
+    "forbiddenPrivateRowsRefusedUnopened": 1,
+    "forbiddenRowNamesRecordedWithoutResolutionOrOpen": [
+      "private/.gitignore"
+    ]
+  },
+  "independentRecomputation": {
+    "uiTypeCount": 25,
+    "focusTypeCount": 2,
+    "nonfocusTypeCount": 23,
+    "familyCount": 8,
+    "epoch1MainHoldoutFamilyBindingsRecomputed": 8,
+    "futureSlotCount": 60,
+    "fingerprintComponentCount": 7,
+    "fingerprintPairCount": 1770,
+    "stateCount": 12,
+    "transitionCount": 11,
+    "nonemptyStateDenySetCount": 12,
+    "phase1RowsBlindOnly": 3,
+    "postActivationDenyCount": 5,
+    "accessChainEventCount": 4
+  },
+  "hostileAudit": {
+    "jsonSchemaImplementation": "python-jsonschema Draft202012Validator",
+    "schemaDraft": "https://json-schema.org/draft/2020-12/schema",
+    "compiledRootOneOfBranches": 20,
+    "validIndependentBaselines": 20,
+    "structuralAttacks": 1522,
+    "structuralAttacksRejected": 1522,
+    "semanticStatefulAttacks": 657,
+    "semanticStatefulDeclaredRejections": 344,
+    "unrejectedDesignBypasses": 313,
+    "totalIndependentAttacks": 2179,
+    "caseDigestSha256": "59051053e13cad2d2db17c964d1f33f6d54a4d90b6e5afc9dbf9c95a31c0a7a1",
+    "bypassDigestSha256": "014f0f37d408b36680014064afddfc270bacf980b80826143fae24a8942a1488"
+  },
+  "positiveFindings": [
+    "All 20 event branches compile independently under JSON Schema Draft 2020-12, have one unambiguous valid baseline, and reject every one of 1,522 fresh structural mutations.",
+    "Role enum aliases, case changes, trailing spaces, and Unicode confusable role strings are structurally rejected.",
+    "FOCUS_ONLY is exactly GRAMMAR_ERROR then BLANK_INFERENCE; ALL_25 is the exact accepted 25-type UI order; reordered, duplicated, short, and long type arrays are rejected.",
+    "The accepted type-binding v4 bytes rehash and all eight epoch-1 main/holdout family selections recompute exactly.",
+    "The declared 12-state/11-transition chain rejects all 133 nonedges; every state has a nonempty deny set; phase 1 is blind-surface/codebook only; POST_ACTIVATION_RESULT retains five explicit denials.",
+    "The declared authorization-open-consume-close order, immediate ordinals/prior hashes, time ordering, and unique one-use capability rules reject 128 fresh stateful chain attacks.",
+    "The subject remains empty and design-only: no actor, item, gold, certificate, candidate, audit, grant, result access, evaluator authority, scoring authority, or execution authority exists."
+  ],
+  "blockers": [
+    {
+      "code": "V3-B1B2-ACTOR_IDENTITY_ALIAS_NOT_MATERIALLY_BOUND",
+      "predecessorArea": ["B1", "B2"],
+      "severity": "BLOCKER",
+      "finding": "The exclusion graph compares actorPseudonym strings but defines no one-person/one-pseudonym identity commitment, canonical normalization, or proof record. Both Actor-Pseudonym-0000 and actor-pseudonym-0000 are valid and can hold incompatible author/auditor roles as separate registry identities.",
+      "impact": "The same person can be represented by case aliases and audit their own packet, item, gold, certificate, candidate, or activation evidence while every role enum and per-record schema remains valid.",
+      "requiredClosure": "Bind each role assignment to a stable privacy-preserving human identity commitment issued once, define exact pseudonym normalization, and require a registry-wide uniqueness/exclusion proof over that commitment rather than raw display pseudonyms."
+    },
+    {
+      "code": "V3-B3-PASSED_EVENT_NOT_BOUND_TO_MATERIALIZED_SLOT",
+      "predecessorArea": ["B3", "B5"],
+      "severity": "BLOCKER",
+      "finding": "PASSED_COVERAGE_EVENT carries an unconstrained slotId and canonicalTypeId but no slot-materialization event hash. Neither the schema nor coverage policy requires that the slot exist, be eligible, be distinct in the map, or have the same phase/type under binding v4.",
+      "impact": "Twenty-five distinct PASS events can reuse MC-N-01 while claiming all 25 canonical types, satisfy the per-map-key and unique-event-hash rules, and fabricate ALL_25 from one slot.",
+      "requiredClosure": "Bind every pass event to the exact immutable slot-materialization event and decision event; require slot/type/phase equality, eligibility, one terminal pass per slot, and distinct slots for distinct coverage entries."
+    },
+    {
+      "code": "V3-B4-CANONICAL_BYTES_HASH_DOMAIN_UNDEFINED",
+      "predecessorArea": ["B4"],
+      "severity": "BLOCKER",
+      "finding": "The only canonical-event rule hashes event bytes excluding eventSha256. candidateCanonicalBytesSha256 and auditReportCanonicalBytesSha256 are themselves inside those event bytes, but no separate hash domain or exclusion list is defined for either required field.",
+      "impact": "Hashing the declared whole event is self-referential; treating the fields as arbitrary also passes. The claimed exact candidate/audit byte binding is therefore not independently reproducible even though the high-level candidate-to-audit-to-grant order is noncircular.",
+      "requiredClosure": "Define typed domain-separated canonical payloads that explicitly exclude both digest fields, publish their exact field lists/canonicalization, and bind their recomputed digests in the audit and grant."
+    },
+    {
+      "code": "V3-B6-FINGERPRINTS_NOT_DERIVED_FROM_COMMITTED_CONTENT",
+      "predecessorArea": ["B6"],
+      "severity": "BLOCKER",
+      "finding": "The seven fingerprint values and composite are opaque SHA strings. No normalization version, eight-word-window algorithm, topic/scenario canonicalization, author-identity binding, surface-template derivation, composite formula, or visible-surface recomputation proof exists.",
+      "impact": "All 60 slots can commit the identical visible surface while supplying 60 arbitrary unique bundles; the 1,770 pair proof and tombstone checks then report no collision and replay protection is illusory.",
+      "requiredClosure": "Specify deterministic versioned fingerprint derivation and composite domains, bind inputs to the item/source/surface/author commitments, and require independent recomputation before reservation, materialization, disjointness proof, and tombstone comparison."
+    },
+    {
+      "code": "V3-B7-POLICY_MATRIX_OMITS_ALLOWED_ROLES",
+      "predecessorArea": ["B7"],
+      "severity": "BLOCKER",
+      "finding": "Authorization records actorRole, but each policy row defines only phase, state, resource allow/deny lists, and optional precondition. No row defines which roles may access its allowlisted resources.",
+      "impact": "A PACKET_AUTHOR can structurally receive TRUSTED_GOLD_AUDIT_BUNDLE during the independent gold audit, and 100 analogous wrong-role authorizations remain admissible across the seven rows.",
+      "requiredClosure": "Add exact allowed-role sets per phase-state-resource tuple, bind their digest in authorization and denial proofs, and reject an actor whose stable identity lacks the exact active role assignment."
+    },
+    {
+      "code": "V3-B7-GRANT_NOT_BOUND_TO_NONEMPTY_POLICY_STATE",
+      "predecessorArea": ["B7", "B4"],
+      "severity": "BLOCKER",
+      "finding": "ACTIVATION_GRANT sets authorityGranted and resultAccessAuthorized true but has no policyMatrixSha256, allowlistSha256, denySetSha256, resourceClassPolicyProofSha256, stateTransitionEvidenceSha256, or policy-registry-ready binding. The state transition also names no such required seal.",
+      "impact": "A syntactically valid grant can be issued while policyRegistry.ready is false, contradicting the package's explicit claim that an empty policy registry cannot support a grant and leaving result-access scope dependent on an opaque deterministicGrantProofSha256.",
+      "requiredClosure": "Require the grant to bind the exact sealed nonempty policy registry, POST_ACTIVATION_RESULT allow/deny roots, role policy, scope proof, and transition proof; reject empty/zero/unresolved policy evidence before authority or result access becomes true."
+    }
+  ],
+  "disposition": {
+    "designAccepted": false,
+    "predecessorV2Accepted": false,
+    "actualReviewerCertificationClaimed": false,
+    "reviewerCertificatesIssued": 0,
+    "activationAuthorized": false,
+    "resultAccessAuthorized": false,
+    "executionAuthorized": false,
+    "requiredNextStep": "SEAL_A_NEW_IMMUTABLE_SUCCESSOR_THAT_CLOSES_ALL_SIX_BLOCKERS_AND_OBTAIN_ANOTHER_FRESH_INDEPENDENT_AUDIT"
+  },
+  "independence": {
+    "subjectVerifierExecutedOrImported": false,
+    "subjectHostileFixtureOpenedOrParsed": false,
+    "subjectVerifierAndFixtureHashedAsOpaqueBytesOnly": true,
+    "subjectMutationGeneratorReused": false,
+    "subjectWrites": 0,
+    "forbiddenPrivateRowsOpened": 0
+  },
+  "activity": {
+    "privateReads": 0,
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0,
+    "actualReviewerCertifications": 0
+  }
+}

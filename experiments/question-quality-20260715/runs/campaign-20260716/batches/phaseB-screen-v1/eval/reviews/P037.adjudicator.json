@@ -1,0 +1,44 @@
+{
+  "pid": "P037",
+  "finalV2": true,
+  "winningAnswer": "F",
+  "reason": "독립 재검증 결과 (A)~(E)는 모두 표준 규칙상 정문이고 (F) 'like if'만이 비문으로, 교정 시 원문 'as if'가 정확히 복원되는 유일 오류다. 솔버1·솔버2·감사자 V2 판정이 모두 일치하며 실질적 분쟁은 없었다. (F)를 정문화할 수 있는 대안 해석(구어 접속사 like + 절, 진짜 조건절, 'like [it would be] if' 생략 구문)을 전부 검토했으나 모두 성립하지 않았고, (A)~(E) 어느 것도 제2의 오류로 만들 수 있는 해석 경로가 없다. 정답 유일성(V2) 최종 확정. 감사자의 종합 등급 F는 해설 품질(V4 '수동 부사' 손상 용어)과 형식(밑줄 6개, 정답 표면 노출) 문제로, 정답 유일성 판정과는 무관하다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "'can be influenced'가 조동사 뒤 수동태로 정문인가",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "주어 'human perception and behavior'는 influence의 대상(피동작주)이고 'by external factors'가 행위주를 명시하므로 수동태가 의미상 필수. can + be + p.p. 형태 결합도 규범적으로 완전하다. 능동 'can influence'로 바꾸면 오히려 비문이 되므로 이 자리를 오류로 만들 해석 경로가 없다."
+    },
+    {
+      "label": "(B)",
+      "claim": "'that'이 명사절 접속사로 정문인가 (관계대명사 오독 여지)",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "tell + 간접목적어(a bunch of healthy undergraduates) + that절의 4형식 구조. 후행절 'he was testing their language abilities'는 주어·목적어 결손이 없는 완전한 절이므로 접속사 that이 정확하다. 관계대명사 해석은 절 내 공백(gap)이 없어 애초에 성립하지 않으므로 비문 판정 근거가 될 수 없다."
+    },
+    {
+      "label": "(C)",
+      "claim": "'to create'가 ask의 목적격보어로 정문인가",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "ask + 목적어 + to부정사의 목적어 통제(object-control) 구문으로, to부정사가 유일하게 허용되는 보어 형태다(*asked them creating은 비문). 대안 해석 여지 없음."
+    },
+    {
+      "label": "(D)",
+      "claim": "'who had been exposed'의 관계사 선택·시제·태가 정문인가",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "선행사 Those students(복수·사람)에 주격 who가 일치하고, 단어 노출이 주절 과거 사건 took보다 선행하므로 과거완료 수동이 시간적으로 허용된다. 후행 문장 'those who had been exposed to random words'와 병렬도 일관된다. 단순과거도 가능하다는 사실은 과거완료를 비문으로 만들지 않으므로 제2정답 경로가 아니다."
+    },
+    {
+      "label": "(E)",
+      "claim": "'bent'가 with + 명사 + 분사 구문에서 정문인가 (bending 대안 여지)",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "with + NP + 분사 부대상황에서 their shoulders는 bend의 피동작주(굽혀지는 대상)이므로 과거분사 bent가 요구되는 형태다. 능동 bending은 어깨가 스스로 굽히는 주체라는 잘못된 태 관계를 만들므로 이 자리는 bent로만 성립한다."
+    },
+    {
+      "label": "(F)",
+      "claim": "'like if they were 50 years older than they actually were'가 비문이며 유일 정답인가",
+      "verdict": "비문 확정 — 유일 정답",
+      "evidence": "반사실 양태 비교('마치 ~인 것처럼', 'than they actually were'가 반사실성을 확정)는 표준 영어에서 as if / as though + 가정법 과거로만 표현된다. 구제 해석 3종을 전수 검토: (1) 구어 접속사 like는 맨 정형절만 취하므로('like they were...') like+if 중첩은 불허, (2) 진짜 조건절 해석은 귀결절(apodosis) 부재로 불성립 — 주절은 조건의 귀결이 아님, (3) 'like [it would be] if...' 생략 구문은 'It's like if...' 형태의 절 앵커를 요구하는데 여기는 부사적 부가어 위치라 불성립. 따라서 like if는 어떤 표준 독법으로도 정문화되지 않으며, as if로 교정 시 원문이 정확히 복원된다."
+    }
+  ]
+}

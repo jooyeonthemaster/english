@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-correction-not-source-backed"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):dec=h  (C):ANS=d  (D):dec=b  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 16,
+        "relPos": 0.022,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 199,
+        "relPos": 0.276,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 573,
+        "relPos": 0.795,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 658,
+        "relPos": 0.913,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.913,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중, 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is wired",
+        "isError": false,
+        "errorExpression": "is wired",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "keep you focused",
+        "isError": false,
+        "errorExpression": "keep you focused",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "that go right",
+        "isError": true,
+        "correction": "that go right",
+        "errorExpression": "that goes right",
+        "surroundingText": "train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "that gives",
+        "isError": false,
+        "errorExpression": "that gives",
+        "surroundingText": "sharing a recent win (anything that gives you that yesssss feeling)",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "you appreciate",
+        "isError": false,
+        "errorExpression": "you appreciate",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is wired"
+      },
+      {
+        "label": "(B)",
+        "text": "keep you focused"
+      },
+      {
+        "label": "(C)",
+        "text": "that goes right"
+      },
+      {
+        "label": "(D)",
+        "text": "that gives"
+      },
+      {
+        "label": "(E)",
+        "text": "you appreciate"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어 The human brain은 단수이며 '~하도록 만들어지다'라는 수동의 의미이므로 is wired는 어법상 적절하다.",
+      "(B)": "keep은 목적격보어로 형용사를 취할 수 있는 동사이며, 목적어 you가 '집중된' 상태가 되는 것이므로 focused는 적절한 목적격보어이다.",
+      "(D)": "관계대명사 that의 선행사는 단수 명사 anything이므로 단수동사 gives가 오는 것이 어법상 맞다.",
+      "(E)": "The more ~, the more ~ 비교구문에서 앞부분 절의 주어와 동사로 you appreciate가 온 것은 구조상 적절하다."
+    },
+    "explanation": "밑줄 친 (C) 'that goes right'에서 관계대명사 that의 선행사는 복수 명사 'things'이다. 관계절의 동사는 선행사의 수에 일치해야 하므로 단수동사 goes는 복수 선행사 things와 수일치가 맞지 않아 비문이다. 따라서 복수동사 'go'를 써서 'that go right'로 고쳐야 한다. 학생들은 관계절 안의 동사만 보고 판단하기 쉬운데, 반드시 선행사의 수를 먼저 확인해야 한다.",
+    "keyPoints": [
+      "(C) 수일치 — 관계대명사 that의 선행사 things(복수)에 맞춰 동사도 복수형 go여야 한다",
+      "(D) 관계사 수일치 — 선행사 anything(단수)에 맞춰 단수동사 gives가 쓰였는지 확인해야 한다",
+      "(A) 능동태와 수동태 — 주어가 행위의 대상이면 수동태(is wired)가 적절한지 목적어 유무로 판정한다"
+    ],
+    "tags": [
+      "수일치",
+      "관계대명사",
+      "목적격보어",
+      "수동태",
+      "비교구문"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain __(A) is wired__ to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can __(B) keep you focused__ on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything __(D) that gives__ you that yesssss feeling). Where the mind goes, reality follows. The more __(E) you appreciate__ life, the more reasons you have to celebrate it."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) lively",
+      "verdict": "correct",
+      "reason": "'lively'는 -ly로 끝나지만 형용사이다(부사 아님). 'the lively shopping center'에서 명사 'shopping center'를 수식하는 관형(attributive) 형용사 자리이므로 형식적으로 완전히 적법하다. 부사가 올 수 없는 자리이며, 'lively'를 부사로 오인하게 하는 함정 선지."
+    },
+    {
+      "label": "(B) looked",
+      "verdict": "correct",
+      "reason": "'The clerk stopped her work and looked at the clothes' — 등위접속사 and의 병렬 시작점은 유한동사 'stopped'이며, 'looked'는 이와 같은 과거시제 유한동사로 병렬된다. stopped(과거)–looked(과거) 시제 일치 성립. 뒤의 'quickly agreeing...'은 부대상황 분사구문으로 별도 성립. 어법상 옳다."
+    },
+    {
+      "label": "(C) was changed",
+      "verdict": "wrong",
+      "reason": "문장이 'His confidence was, however, quickly was changed to nervousness'로 인쇄되어 있다. 주어 His confidence에 대해 유한 조동사 'was'가 이미 존재하는데 밑줄부에 다시 유한형 'was changed'가 오면서 하나의 절에 유한동사가 두 개(was ... was changed) 존재하는 이중 조동사 구조가 된다. 어떤 대안 해석(축약 관계절, 분사구문, 도치)으로도 정문이 되지 않는다. 정문이 되려면 밑줄부가 'changed'(자동사 과거 또는 과거분사)여야 한다: 'His confidence was, however, quickly changed to nervousness' 또는 'His confidence, however, quickly changed to nervousness'. 형식적으로 유일하게 비문."
+    },
+    {
+      "label": "(D) was finished",
+      "verdict": "correct",
+      "reason": "'When the band was finished, the audience loudly cheered.' — 'finished'는 여기서 수동태 과거분사가 아니라 '(하던 일을) 끝낸' 의미의 서술 형용사(participial adjective)로, 'be finished' = 'have finished'는 표준 용법이다(예: 'Are you finished?'). 따라서 유정 주어 the band와 결합해도 정문. 수동태로 오독하여 '밴드가 완성되다'로 읽게 만드는 함정이지만 어법상 옳다."
+    },
+    {
+      "label": "(E) ever seen",
+      "verdict": "correct",
+      "reason": "'the best performance I've ever seen' — 최상급 선행사 + (that 생략된) 목적격 관계절 + 현재완료 'have ever seen' 결합은 표준 구문. 'ever'는 완료형 긍정 최상급 문맥에서 적법하며, see의 과거분사 seen도 올바르다. 어법상 옳다."
+    }
+  ],
+  "note": "정답은 (C)로 유일하게 옹호 가능. 다만 문항 품질 관점에서: (C)의 비문성이 '태(voice) 오류'가 아니라 본동사 'was'가 문면에 이미 존재하는 상태에서 밑줄부에 'was changed'를 넣어 생긴 이중 유한동사(was ... was changed)라서, 수험생이 문법 지식 없이도 표면 중복만으로 오류를 탐지할 수 있는 수준으로 쉽다. 출제 의도가 '자동사 change의 불필요한 수동화'였다면 선행 'was'를 제거하고 'His confidence, however, quickly was changed...'로 인쇄했어야 변별력이 있다. (D) 'was finished'는 'be finished'(완료 형용사) 표준 용법이므로 오답 시비 소지는 없으나, 이를 수동태 오류로 오인한 채점 기준이 있다면 그것이 오히려 오류다."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 seam은 성립(완전 절 + whereas 종속절)하나 논리 불성립. 지문 어디에도 법이 자신의 '합리적 한계'를 영화 매체에 투사한다는 명제가 없으며, whereas 뒤의 '영화는 우리를 정서에 입문시킨다'와 대조축(억제 vs 정서 직면)을 형성하지 못한다. 법-영화 상호작용이라는 표면 어휘만 차용한 오답."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "지문의 명시적 명제와 정면 모순. 법은 '명령과 금지의 체제(a regime of commands and prohibitions)'로 질서를 유지하는 존재로 규정되는데, 이 선지는 법이 질서 보존보다 예술적 완결성을 우선한다고 주장한다. 논리적으로 즉시 기각."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'unleash raw human impulses'는 지문의 'keeps it in check' 및 'ensure that we are not overwhelmed and destroyed by our desires and drives'의 정확한 반대 명제. 또한 삽입 시 whereas 대조가 소멸한다(법과 영화가 모두 정서 방출 기능이 되어 버려 대조 접속사가 논리적으로 공허해짐)."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "문법: 주어 'Legal mechanisms' + 동사 'work to contain' 완전 절, 분사구문 'dreading their potential fallout'의 의미상 주어가 주절 주어와 일치(현수분사 아님; 법의 의인화는 지문의 'foundational to law is its anxiety'가 이미 확립), 뒤의 whereas 종속절과 결합 무결. 논리: 'contain emotional disruptions' = 'keeps it in check'의 재진술, 'dreading their potential fallout' = 'anxiety about human nature' 및 'overwhelmed and destroyed'의 재진술. whereas 대조(법=억제 vs 영화=정서 소개·직면)가 정확히 성립."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "법이 법전의 경계를 허물어 영화를 포용한다는 명제는 지문에 근거가 전혀 없고, 오히려 지문은 두 분야의 '차이(difference)'를 부각하는 국면이다. whereas 절과의 대조도 불성립(포용 vs 정서 소개는 대조 관계가 아님)."
+    }
+  ],
+  "note": "빈칸은 'whereas cinema introduces us to our affects'와 대조되는 법의 역할(정서 억제)을 재진술하는 완전 절 자리. 형식적으로 ④만이 (i) 분사구문 포함 문법 결합, (ii) 'keeps it in check'/'anxiety' 재진술이라는 논리 결합을 동시에 만족한다. 나머지 선지는 지문 무근거(①⑤) 또는 명시적 모순(②③)으로 복수정답 여지 없음. 문항 성립도 양호."
+}

@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20220324-q23",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2022,
+    "exam": "3월",
+    "origType": "주제",
+    "words": 152
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-filler-span"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=k  (C):dec=c  (D):ANS=d  (E):dec=l",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 102,
+        "relPos": 0.115,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 167,
+        "relPos": 0.189,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 301,
+        "relPos": 0.34,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 567,
+        "relPos": 0.641,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 782,
+        "relPos": 0.885,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.885,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The whole of human society operates on knowing the future weather. For example, farmers in India know when the monsoon rains will come next year and so they know when to plant the crops. Farmers in Indonesia know there are two monsoon rains each year, so next year they can have two harvests. This is based on their knowledge of the past, as the monsoons have always come at about the same time each year in living memory. But the need to predict goes deeper than this; it influences every part of our lives. Our houses, roads, railways, airports, offices, and so on are all designed for the local climate. For example, in England all the houses have central heating, as the outside temperature is usually below 20°C, but no air-conditioning, as temperatures rarely go beyond 26°C, while in Australia the opposite is true: most houses have air-conditioning but rarely central heating.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "when",
+        "isError": false,
+        "correction": "when",
+        "errorExpression": "when",
+        "surroundingText": "For example, farmers in India know when the monsoon rains will come next year",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "to plant",
+        "isError": false,
+        "correction": "to plant",
+        "errorExpression": "to plant",
+        "surroundingText": "and so they know when to plant the crops.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "based",
+        "isError": false,
+        "correction": "based",
+        "errorExpression": "based",
+        "surroundingText": "This is based on their knowledge of the past, as the monsoons have always come",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "are",
+        "isError": true,
+        "correction": "are",
+        "errorExpression": "is",
+        "surroundingText": "Our houses, roads, railways, airports, offices, and so on are all designed for the local climate.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "while",
+        "isError": false,
+        "correction": "while",
+        "errorExpression": "while",
+        "surroundingText": "as temperatures rarely go beyond 26°C, while in Australia the opposite is true:",
+        "pointCode": "l"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "when"
+      },
+      {
+        "label": "(B)",
+        "text": "to plant"
+      },
+      {
+        "label": "(C)",
+        "text": "based"
+      },
+      {
+        "label": "(D)",
+        "text": "is"
+      },
+      {
+        "label": "(E)",
+        "text": "while"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "타동사 know의 목적어로 쓰인 명사절에서 의문부사 when이 완전한 절을 이끌고 있으므로 어법상 적절합니다.",
+      "(B)": "의문사인 when과 함께 명사구 역할을 수행하는 '의문사 + to-v' 구조가 올바르게 사용되었습니다.",
+      "(C)": "이전 문장의 내용인 주어 This가 과거 지식에 '기반을 두게 되는' 수동의 관계이므로 과거분사 based는 적절합니다.",
+      "(E)": "영국의 상황과 호주의 상황을 대조하는 부사절을 이끄는 접속사 while은 완전한 절 앞에서 어법상 알맞게 쓰였습니다."
+    },
+    "explanation": "이 문장의 진짜 주어는 'Our houses, roads, railways, airports, offices, and so on'으로, and에 의해 복수 명사들이 나열되어 결합된 복수 주어입니다. 따라서 단수 동사 형태인 'is'가 오면 주어-동사의 수일치 규칙에 어긋나게 되므로, 복수 주어의 핵에 맞추어 복수형 동사인 'are'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 주어-동사 수일치 — 여러 개의 복수 명사들이 등위로 연결되어 복잡한 나열을 이루는 주어는 복수 동사로 일치시킨다.",
+      "(A) 명사절 접속사 vs 관계부사 — 완전한 문장 구조를 이끌며 타동사의 목적어 역할을 수행하는 의문부사의 쓰임을 점검한다.",
+      "(C) 분사의 능수동 — 의미상 주어인 This와의 피동/수동적 관계를 파악하여 동사의 수동태 표현을 판단한다."
+    ],
+    "tags": [
+      "수일치",
+      "명사절",
+      "준동사",
+      "수동태",
+      "접속사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The whole of human society operates on knowing the future weather. For example, farmers in India know __(A) when__ the monsoon rains will come next year and so they know when __(B) to plant__ the crops. Farmers in Indonesia know there are two monsoon rains each year, so next year they can have two harvests. This is __(C) based__ on their knowledge of the past, as the monsoons have always come at about the same time each year in living memory. But the need to predict goes deeper than this; it influences every part of our lives. Our houses, roads, railways, airports, offices, and so on __(D) is__ all designed for the local climate. For example, in England all the houses have central heating, as the outside temperature is usually below 20°C, but no air-conditioning, as temperatures rarely go beyond 26°C, __(E) while__ in Australia the opposite is true: most houses have air-conditioning but rarely central heating."
+  }
+}

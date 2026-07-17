@@ -1,0 +1,35 @@
+{
+  "pid": "P109",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "believe의 목적절 내부 'you are disguising yourself'는 진행형 능동 + 재귀대명사 목적어 구조. 주어 you가 스스로를 위장하는 능동 주체이므로 disguising이 옳다. disguised(수동)라면 목적어 yourself를 취할 수 없어 오히려 비문이 된다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "be concerned that절은 표준 구문. 주어(CEOs)가 걱정을 느끼는 경험자이므로 과거분사형 형용사 concerned가 옳다. concerning으로 바꾸면 의미·구조 모두 붕괴."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "매력적 오답. culture가 물리적 장소가 아니어서 in which를 떠올리게 유혹하지만, culture/situation/environment 등 추상적 공간 명사는 관계부사 where를 표준적으로 취한다. 후행절 'those subordinates did the same'이 완전한 절이므로 where(= in which)가 정확하다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "앞 절 전체(부하들이 마스크를 벗는 문화가 조성됨)를 의미상 주어로 하는 결과 분사구문. 능동 관계이므로 creating이 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "보어 자리 병렬 위반. 'Some of the ways ... were to actually name ..., explore ..., and asked ...'에서 병렬 시작점은 were 뒤의 to부정사 목록(to name, (to) explore)이므로 세 번째 항목도 (to) ask여야 하는데 과거형 asked가 왔다. 대안 해석으로 asked를 관계절 내부 동사 helped에 병렬시키려 해도('we helped ... and asked'), 그 경우 were의 보어가 'to name the masks, explore the costs'라는 접속사 없는 2항 나열로 남아 비문이 된다. 어느 해석으로도 정문 구제 불가."
+    }
+  ],
+  "note": "정답 (E) 단독. 병렬구조(A-B-and-C 목록의 마지막 항목) 유형의 전형적 출제로, 세 번째 항목이 두 번째 항목의 긴 목적어구(the significant personal and professional costs of upholding them) 뒤에 멀리 떨어져 있어 거리 단서가 유효하다. 최상위권 기준 가장 강한 유혹은 (C) where(추상명사 culture + 관계부사)였으나 표준 용법으로 정문. (A)의 disguising도 disguised와 순간 비교하게 되나 재귀목적어 존재로 즉시 해소된다. 복수 정답 소지 없음."
+}

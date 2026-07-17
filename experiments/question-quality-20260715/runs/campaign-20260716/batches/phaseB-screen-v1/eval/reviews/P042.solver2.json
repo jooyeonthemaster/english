@@ -1,0 +1,35 @@
+{
+  "pid": "P042",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "삽입 시 seam: 'creations that will help people adapt faster to the rapid paste of technological changes'. 첫째, 'paste'는 'pace'의 오철자로 정문이 아니다(rapid paste는 의미 불성립 — 표기 오류로만 해석 가능). 둘째, 논리적으로도 지문은 기술 적응 촉진을 예술의 목표로 제시한 적이 없다. 지문의 대립 구도는 '기술 그 자체의 활용 vs. 위대한 예술(지각에 도전, 사고·감정을 영원히 변화)'이며, 기술 변화 적응은 오히려 기술 중심 프레임에 속해 'not simply to utilize technology for its own sake'와 충돌한다. 형식·논리 양면에서 기각."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "'creations that will expand the cognitive boundaries of viewers through profound perspective shifts' — 관계절 내 will+동사원형 결합 정문, expand의 타동사 논항(the cognitive boundaries) 충족, through 전치사구 부가 적법. 논리적으로 지문의 위대한 예술 정의 'challenges our perceptions of the world and forever changes our thoughts and feelings'의 직접 환언이다: perceptions↔perspective shifts, changes our thoughts↔expand cognitive boundaries. 'Rather, it should be to produce unique creations that will ___'의 빈칸은 앞선 정의를 회수해야 하며 ②만이 이를 충족한다. 유일한 정답."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "삽입 시 'creations that will focus on mastering digital software...' — 무생물 주어 creations가 focus on(의도적 주의 집중)의 행위주가 되는 의미역 부조화가 있고(작품이 소프트웨어 숙달에 '집중'할 수 없음, 예술가라야 가능), 논리적으로는 지문이 명시적으로 부정한 명제의 재진술이다: 'new technologies are nothing more than tools', 'should not be simply to utilize technology for its own sake'. 디지털 소프트웨어 숙달·시각적 미학 극대화는 기술 그 자체를 목적화하는 것으로 지문 주장과 정면 모순. 기각."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'creations that will facilitate real-time interaction and emotional feedback from global audiences' — 문법 결합은 정문이나(facilitate+명사구 병렬 목적어), 논리 부적합. 실시간 상호작용·전 세계 청중의 피드백은 인터넷·신기술이 제공하는 기능적 이점으로, 지문 서두의 '기술이 가능케 한 현상' 층위에 속한다. 빈칸은 기술을 넘어서는 위대한 예술의 본질(지각에의 도전, 사고·감정의 영구적 변화)을 요구하므로 층위 불일치. emotional feedback은 'changes our... feelings'와 표면 어휘만 겹치는 미끼. 기각."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'creations that will democratize the creative process so that anyone can easily become an artist' — 문법 결합은 정문(democratize 타동사+목적어, so that 목적절). 그러나 논리적으로 '누구나 예술가가 될 수 있게 됨'은 지문 첫 문장이 기술한 현 상황(more people than ever before can produce artistic creations)이며, 비평가들이 바로 이 현상 때문에 '위대한 예술의 감각을 잃는다'고 우려한 대상이다. 빈칸(현대 예술가가 지향해야 할 목표)에 넣으면 우려의 원인을 처방으로 제시하는 자기모순. 기각."
+    }
+  ],
+  "note": "빈칸은 'Rather, it should be to produce unique creations that will ___' 구조로, 직전 대비문('not simply to utilize technology for its own sake')의 반대항이자 지문 중반의 위대한 예술 정의('challenges our perceptions... forever changes our thoughts and feelings')를 회수해야 한다. ②만이 이 정의의 환언으로 성립하며 나머지는 기술 중심 층위(①③④)이거나 비평가 우려의 재진술(⑤)이다. 품질 결함: ①의 'paste'는 'pace'의 명백한 오철자로, 오답 선지이긴 하나 실전 문항으로서는 교정 필요. 정답은 ② 단독으로 옹호 가능."
+}

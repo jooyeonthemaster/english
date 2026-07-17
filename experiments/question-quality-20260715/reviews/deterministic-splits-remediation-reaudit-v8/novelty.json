@@ -1,0 +1,594 @@
+{
+  "phase": "POST_SEAL",
+  "method": "NFKC + lowercase + whitespace-normalized exact semantic-leaf substring search across every textual artifact in all earlier sibling review directories",
+  "semanticLiteralMinimum": "8 characters and 2 word-like tokens",
+  "semanticLiteralCount": 764,
+  "priorFileCount": 116,
+  "priorBytes": 6652373,
+  "comparisonUniverseSha256": "226335a1069e155aaab582b2576929ea513123a55843fe55d08342f90ee5c284",
+  "matchCount": 0,
+  "verdict": "PASS",
+  "matches": [],
+  "files": [
+    {
+      "path": "experiments/question-quality-20260715/reviews/attempt-allocation-v3-audit/AUDIT.md",
+      "bytes": 18664,
+      "sha256": "991d8c679c91a75caed3464df7d63fdc289898065f9dc432a08e4beadb5ec256"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/attempt-allocation-v3-audit/power-sensitivity.mjs",
+      "bytes": 4301,
+      "sha256": "f03ed8f050003afa3b4429b6d8ffd99dc8193db791f1904a0e18d17f9060a97b"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v2-audit/AUDIT.md",
+      "bytes": 11839,
+      "sha256": "8ec022ded02a7596bae014619384fefe8570fb11ba177787fa41c7f61272740b"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v2/blind-packet.json",
+      "bytes": 455346,
+      "sha256": "d136035f0adf81d79ba90e5d577fb45635fa417c9bbcec2da2db6f169139a9bb"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v2/review-template.json",
+      "bytes": 123301,
+      "sha256": "b06b6ffce69d960007661c223f0cf6219c9d0f47b8655d89294fabfa526c4e19"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v2/sealed-map.json",
+      "bytes": 314884,
+      "sha256": "da56ab2fb5b00e27c1fbc835eb9afd604d5e01d7f3dbc92fe6755f1cdfb0f5ae"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v3/PREFLIGHT-AUDIT.md",
+      "bytes": 3015,
+      "sha256": "63026a3508c34356de4657f8c1a5a33833fda5100e7cb0807ac7ebd129f4bee9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v3/README.md",
+      "bytes": 415,
+      "sha256": "a527e0fba29d5884c08cba9e2f8b3e8287860c3e683cdbab38c8e1a0fe0bbcd8"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v4-supply-fresh-audit/AUDIT.md",
+      "bytes": 14138,
+      "sha256": "eb2f176d694afafe9830ffe9265ecd3e9d289dc0f4b46d8f9b81f12286de843d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v4-supply-fresh-audit/verify-fresh-audit.ts",
+      "bytes": 24625,
+      "sha256": "de682fc04957b5177ad8740a02775ffb68c69dcf4c7c768e5fcf9cd7f12f3d74"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus-v4-supply/SUPPLY-REMEDIATION.md",
+      "bytes": 8760,
+      "sha256": "f67690280946a5251295196562a205b97a48549fc5d2cfe4f6cd81849aaf3f9a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus/adjudication.json",
+      "bytes": 160320,
+      "sha256": "ccbdf4399139b084d8f7fc0cd81f55439f6e9ec48dbbd74d77112a6abce62358"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus/build-adjudication.mjs",
+      "bytes": 30341,
+      "sha256": "8111dd35458fb89a9a8157eb8e7e7345742df87f2310fa51ecfb92370642bb87"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus/build-rater-2.mjs",
+      "bytes": 30379,
+      "sha256": "118784b610aabda630766a3ba1a5782ed7bd793f1ef1f62bbc87771ef9f02dec"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus/rater-1.json",
+      "bytes": 75448,
+      "sha256": "dfe2b9148758692b79a060c3704ed41aecdf045a99b761ae1e6375525ad28df0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/corpus/rater-2.json",
+      "bytes": 82507,
+      "sha256": "b0c84a77130dd9e9ced5323b7e0475211847b124d15b36215a96d0ecf0e881f4"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/AUDIT.md",
+      "bytes": 10598,
+      "sha256": "1d8a7a3cee335e288df7f16ca3442cb590afa1e7de493c9eac5669adc9db120e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/capture-deployment-closure.mjs",
+      "bytes": 24351,
+      "sha256": "69bf8d357a78ffbb2a59b49ac5bce3fa48f86d4e93b31bfeb42b87359025a032"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/deployment-closure-lib.mjs",
+      "bytes": 15812,
+      "sha256": "b05683ce4daba1605a488095f7df1fcc34f63116832db81746ceb9882fbb4669"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/deployment-closure-manifest.json",
+      "bytes": 530160,
+      "sha256": "9a3364beaf64fa205e8226a2c5328e4bd6dfc967dd72b3b4430677dd71947124"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/deployment-closure-verification.json",
+      "bytes": 1589,
+      "sha256": "ebad6dcd40d7ecace515678319878a91cd61262f88ce965bbc769e7b361fa456"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/deployment-secret-pattern-inventory.json",
+      "bytes": 498,
+      "sha256": "9103bb837f9b5aff0f038ce4b97d99b6cd29471be60fae664e01cd46d3515798"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/deployment-source-file-index.json",
+      "bytes": 1234672,
+      "sha256": "655f1b42d53e9c19a6a4b0cba703a8fc42242ea9a19af97ee756c2f848be2008"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/trigger-worker-provenance.json",
+      "bytes": 6326,
+      "sha256": "51dfcf1bf500c18060b82ab0abb16e9297462deba3d08d5d0e155f477b38df11"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deployment-closure-archive/verify-deployment-closure.mjs",
+      "bytes": 13808,
+      "sha256": "40b78b5b708fbea91a6e85ccff75da265e905822c14c97635ed5a2665aec9625"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-fresh-audit/AUDIT.md",
+      "bytes": 9996,
+      "sha256": "3225da070809c1a5f73a1beb5b08a83085beca043daa06ba906b883d847d15e9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-fresh-audit/RESULTS.json",
+      "bytes": 9673,
+      "sha256": "91d8ed24a07c7c755d7304a15fbc4027c0f64f5154224e60fafe3e96373c41b5"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-fresh-audit/audit.mts",
+      "bytes": 14867,
+      "sha256": "ce783efe30a9246f3a21cae532a871bf36f5cf3398c368c87a8c50f8873f2380"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-fresh-audit/verify.mjs",
+      "bytes": 1646,
+      "sha256": "3dcdfdb79cf1c2de7a2962588459317a5be778e712995735c08f8aefa528f42e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-audit/AUDIT.md",
+      "bytes": 5672,
+      "sha256": "b8acd0a3cb4446ee44ba1f96b4b07a1a9565ff367ea539b3bd7cd5db3306fd11"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-audit/MANIFEST.sha256",
+      "bytes": 307,
+      "sha256": "a42840584a91349019bcf3f2ece86d0512896b67d96c93d71204af67caf1193b"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-audit/RESULTS.json",
+      "bytes": 11459,
+      "sha256": "9dbecae52d82f8d0202ecf6de01b92020a16c7bba8510aacd787bae2e28067dd"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-audit/audit.mts",
+      "bytes": 28792,
+      "sha256": "b5f93a598c0f7e142a79cde2da3343fa5e4789e7d9fe21ee2ab9ddb3daeb6f11"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-audit/verify.mjs",
+      "bytes": 3591,
+      "sha256": "2c6bfe0b4be30199f35db69996cc472f8231f289c35d1489e3d4bfd657ab50a5"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v2/AUDIT.md",
+      "bytes": 2684,
+      "sha256": "fb01ff70c7048caa4e7c39ffea4882828e41037d9cbc3f8bbd237b704fc20a88"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v2/MANIFEST.sha256",
+      "bytes": 307,
+      "sha256": "8e8e6f1f52e7bd6e6618dc553be645e81a20ad47a8bd240dba6ec7a996a27fea"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v2/RESULTS.json",
+      "bytes": 9995,
+      "sha256": "2c87a22ef5ffe4384dc928559654d8c31cde165c613d9e5581cafb9137b4943b"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v2/audit.mts",
+      "bytes": 20060,
+      "sha256": "b3dace778b7f3d4d52bd002e88b88b7b985b33545cdcccbf8e7d499eccd29a98"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v2/verify.mjs",
+      "bytes": 3351,
+      "sha256": "8aa0acbf7dc22e228126f5fd10e9866d8b6c27098ba16a955240351d49838273"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v3/AUDIT.md",
+      "bytes": 4028,
+      "sha256": "21d8bec8e98ef9c8b24876370cf207b31c6b76489c1c8cf78baa18708b674baa"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v3/MANIFEST.sha256",
+      "bytes": 307,
+      "sha256": "ef1d6e20dcb366b42a4fe268ea6e09e291b79b2b8f30f82166dc20800c2ad4f7"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v3/RESULTS.json",
+      "bytes": 10027,
+      "sha256": "c13db53abba9ef00d0f36741308ae61dc852c3269eb972af06628b5e424a67d2"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v3/audit.mts",
+      "bytes": 28046,
+      "sha256": "07dd5df02b085942142a30e6b19a8cd1c97ca1f7f227846e270c0fb1c318f3d8"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v3/verify.mjs",
+      "bytes": 3382,
+      "sha256": "e502b99f1bba6ad2e657ff507785263adbbfd3c705456d2a748508b4d167a432"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v4/AUDIT.md",
+      "bytes": 5518,
+      "sha256": "246b1f4be6e77fc7650c12bf82cee6fe1792cf218477d50795bb29d826a83a99"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v4/MANIFEST.sha256",
+      "bytes": 307,
+      "sha256": "fe3125b22d192dd5420b5cea9a1ba5223faad1dd2fd0f0d834436f9d621ef1a0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v4/RESULTS.json",
+      "bytes": 17280,
+      "sha256": "116f11c3ca17dc91258ac2087561ffd7c52d74c66542601a5b4b0bd6ce543439"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v4/audit.mts",
+      "bytes": 26187,
+      "sha256": "3e4cddb00bf6ffb868b9512aa6588d55b2eb42dbcd455a5c6d61027f96f98320"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v4/verify.mjs",
+      "bytes": 4997,
+      "sha256": "749213c1b7508ca85465fbab0fdbb7b56cc79f59ed68cc6937b50823f5a7da82"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v5/AUDIT.md",
+      "bytes": 5083,
+      "sha256": "eeb3d0008c388990cffa59849609b27feef656f622e157ba682ef17b04120e86"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v5/MANIFEST.sha256",
+      "bytes": 307,
+      "sha256": "30704ae31b74cea28f383357946ec33678362eca80a741105ba92363fc577a97"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v5/RESULTS.json",
+      "bytes": 10499,
+      "sha256": "7acedb949e221ca812b869a20977e865712cc2a161cf457c2b67c3fa173f8516"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v5/audit.mts",
+      "bytes": 37156,
+      "sha256": "282fa28f6d6c152eb62a01700589f3cf8c2befb51f14c0ac63c23a7b925fc435"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v5/verify.mjs",
+      "bytes": 7149,
+      "sha256": "99c5b05baf0c53467586bedc9ee7ae414d3eaf7f701e608c3f9b05c0d37d180b"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v6/AUDIT.md",
+      "bytes": 6156,
+      "sha256": "bbc9f60edf29a72d395bde970f6b0892df01596c36f36516a0949989e1774a67"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v6/MANIFEST.sha256",
+      "bytes": 307,
+      "sha256": "99f7472df3f71a8a7c00c0856b622726284370b65a155a5a4b1d3efaa9e8af56"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v6/RESULTS.json",
+      "bytes": 17570,
+      "sha256": "feae16b10378de3881f3ee62372bbda733b7956627e3ebe687495f82cac62707"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v6/audit.mts",
+      "bytes": 38108,
+      "sha256": "f557fb04ccf4eb83758b13b7a09a63209343ad8aaaf1658204cc4daf861653a7"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v6/verify.mjs",
+      "bytes": 9063,
+      "sha256": "d596879962541d03bd48d4e7f6c91184dd1fbeea8470554f4863ce4f1a9e45e3"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v7/AUDIT.md",
+      "bytes": 6668,
+      "sha256": "b4a23190b37c4fcaefe8e647974603ccfaacdcbd4fd9aaa0663103184260390a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v7/BLIND-SEAL.json",
+      "bytes": 704,
+      "sha256": "9f7b60997cc4c92e0b862a43c66db58cdefab161a9c1098b88185f610e1e9bc9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v7/MANIFEST.sha256",
+      "bytes": 586,
+      "sha256": "d79f00fd7cfe5a1fe92ba09f3c429391a50981b9fb9cd2f3e60f02c22720537c"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v7/RESULTS.json",
+      "bytes": 14885,
+      "sha256": "f2e19416558b34e38f79be4a60fc43b2ed09e235e56863a375746dc45f16ae71"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v7/audit.mts",
+      "bytes": 22906,
+      "sha256": "de6c6b25217abc772561834d360509798172a3a08a3c2430dc1ec9beadb75029"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v7/blind-holdout-cases.mjs",
+      "bytes": 24424,
+      "sha256": "d74721aafa909a641bd69de236ef1c7dcbc921b327e363ecbf93b65bbe921fdd"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v7/targeted-summary-answer-object-cases.mjs",
+      "bytes": 4743,
+      "sha256": "4a1b8a9b6933ec1fd6ebef1b0d18cb3887a69210309a1921bdba743fa4840478"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-splits-remediation-reaudit-v7/verify.mjs",
+      "bytes": 9573,
+      "sha256": "7f1fc5a4501ac336a2221099f43f7529f88c5bfdfe27e0fe85ae22934b109b12"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-nonsummary-remediation/AUDIT.md",
+      "bytes": 5075,
+      "sha256": "987784d0f4f12f656d46d04fa0838d13b8b4acd045392293de77f5a5cb841927"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-nonsummary-remediation/GRAMMAR-TRUTH-DESIGN.md",
+      "bytes": 3071,
+      "sha256": "2da6b1bf4953a0d55310fa294550b6f34403486f52be90a6a7752058532595d0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-nonsummary-remediation/MANIFEST.sha256",
+      "bytes": 398,
+      "sha256": "db4c222752f1c403debad6bb5e3c678423d8081073c2d534b6aeba8e1c56ca5e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-nonsummary-remediation/RESULTS.json",
+      "bytes": 6610,
+      "sha256": "429d0a61c2d7e3a2033d49557753700ac64a706c94c8dbf2f372943d6a207b4d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-nonsummary-remediation/replay.mts",
+      "bytes": 11863,
+      "sha256": "e1254864d895ae5f70302375ab3cbfa4e3728d890ed049697f9df25c0ba34e45"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-nonsummary-remediation/verify.mjs",
+      "bytes": 4664,
+      "sha256": "82727a917399406354e273911d1f0212d5cb86daf5484e1924859b058e46586a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-summary-remediation/AUDIT.md",
+      "bytes": 1497,
+      "sha256": "84102ca56b862b32ee20f814d9c20eab40a101dca10dade2ce2f6da3de8b0d65"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-summary-remediation/MANIFEST.sha256",
+      "bytes": 707,
+      "sha256": "4c096f8c7d1af013c8f6a879fd0cd21d0ed1553c85980978c5ee98818e898e74"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-summary-remediation/replay.mts",
+      "bytes": 4059,
+      "sha256": "aa7b019934f1e089d8575e1b0be3df0d3c28b017ebf222ce2fa63380c9e70b39"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/deterministic-v7-summary-remediation/verify.mjs",
+      "bytes": 1672,
+      "sha256": "a2e767be5d3d468088952680c6ed1561dc6e2e2afae50cca19eee9303664da6d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/harness-v3-audit/AUDIT.md",
+      "bytes": 9581,
+      "sha256": "31b082a4ea854119d73541ed8764a8aabd53a103f8bd12946ff800d2a6980caa"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/jul15-dawn/adjudication.json",
+      "bytes": 15012,
+      "sha256": "05a5b00d61ea2d35473fa15c4ceb1a6fd3553118494713547475da4dc16cdcb1"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/jul15-dawn/rater-1-blind.json",
+      "bytes": 33206,
+      "sha256": "be9689dd79f3f62a51bebbf68a0a6a68af214dd7f6f56f1a63c002b44170988f"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/jul15-dawn/rater-1-final.json",
+      "bytes": 41879,
+      "sha256": "0faa513b2374bd38ffcb46e4e7b16d1303b431b86ddc89e6b77acb8d5e7f7cb0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/jul15-dawn/rater-2-blind.json",
+      "bytes": 36178,
+      "sha256": "ea1ed27edda316e6fb841290cb42f383c6b4f71705deef65cecdf070945b861c"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/jul15-dawn/rater-2-final.json",
+      "bytes": 69933,
+      "sha256": "32ed09c67162c7ee47022b20e5043523bc1c3a3a4282093fa7c224f1f5bef93d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-audit/AUDIT.md",
+      "bytes": 18119,
+      "sha256": "e3d0731723eedf43847d08c2e6e93e7502646eb8a9481a8df7050ebed863d6c4"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-audit/INVENTORY.json",
+      "bytes": 79509,
+      "sha256": "89baf2d3ea4fd6804d9d2e822fb24e03987df467f2e4584a6e2f3a08940e8b8a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-audit/policy-severity-audit.mts",
+      "bytes": 29206,
+      "sha256": "5c26351e7755ddeff1414539fea437eb766d496acbbd95584ac3256219064088"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-reaudit-v2/AUDIT.md",
+      "bytes": 9141,
+      "sha256": "902be65c35dafa7832152afac9fd50c3f8b35020291fcbc4e756584beea5318c"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-reaudit-v2/build-reaudit.mts",
+      "bytes": 47753,
+      "sha256": "90b7d1c8a95d8c84fcae3762699aec3f3f3c1d9ca84fa2dca50dac66fd77e04c"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-reaudit-v2/cases.json",
+      "bytes": 5313,
+      "sha256": "e221bd3c202f122c7d871b03b057e03470fca3c5b3aa88a32d933874e7ad0eb0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-reaudit-v2/emitted-code-inventory.json",
+      "bytes": 389501,
+      "sha256": "7ca4ba7a7ce18e5b267d3400df7e62eac2e1fd2ee2502cc0290ca2884a3713ae"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-reaudit-v2/manifest.json",
+      "bytes": 7131,
+      "sha256": "505633c5959af0d9a28438c93f06073a167718dc743c1fcee4a49c09569aaf15"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-reaudit-v2/results.json",
+      "bytes": 23587,
+      "sha256": "47344c631906dc3c3a7a5821bf93ec8857f861902a4da876e5324f988904aaab"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/policy-severity-reaudit-v2/verify-reaudit.mts",
+      "bytes": 6520,
+      "sha256": "a6da24318dda78549836bfb20bd066f10d889fefa4b884cd1922884bffb86523"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/README.md",
+      "bytes": 918,
+      "sha256": "9520791e147afb87ace462d496510b568cf663d92b0b81dc79857525e34e615c"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/adjudication/adjudication-final.json",
+      "bytes": 115259,
+      "sha256": "7e2cb58a7811cb7d7baba68fe898c5ed7a90d2c0d7f598cbf1f8b2ea902e0614"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/adjudication/adjudication-final.md",
+      "bytes": 15762,
+      "sha256": "9c1d5e525a70e5fa71efef3086a94bcec1cb7ae872dea3f48a95fd0af5256ee0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/adjudication/build-adjudication.mjs",
+      "bytes": 30944,
+      "sha256": "c567944e1695c58365907f1e39484ebc8ebb452f320a5e2118738165d9c96a58"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/blind-items.json",
+      "bytes": 83647,
+      "sha256": "52870c44663367aa9029a58f5cc3d67c6fd99b5ed5420749a8c7e5feda6edbc8"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/rater-1-blind.json",
+      "bytes": 131279,
+      "sha256": "f34e5308dc121bde4f20245fd31aa9b8148f98eed339e8ac4c293ad00f8e7bd6"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/rater-1-final.json",
+      "bytes": 311440,
+      "sha256": "e7fe95eb519257d9538e745068686508028459988f62245bd2a69d4444e1e1a0"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/rater-2-blind.json",
+      "bytes": 212660,
+      "sha256": "6ed1cd330fd850fb516f0b15327e319b391afc7ff08d52525f4dc2d35557d8c4"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/rater-2-final.json",
+      "bytes": 363657,
+      "sha256": "eaca11c3be4def8b8dec273883a5cf03dfa6bf3e02952172435e0489788dff01"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/premium-grammar-60/sealed-manifest.json",
+      "bytes": 752380,
+      "sha256": "f442014ea6c02cf7a95dc2452642888ddc172bbb1a4c6c7fd6958ce72ba2893c"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/production-callgraph-bound-audit/AUDIT.md",
+      "bytes": 20412,
+      "sha256": "7b2e7f9d59f311b1e031cc370476364b772c588a794c519b7b8d1be32cff563d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/production-callgraph-bound-audit/callgraph-bound.json",
+      "bytes": 14709,
+      "sha256": "6d4bc14eed634574b77bd27e33fd668d0450714a5535eed6ab2600ed2cd15066"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/production-callgraph-bound-audit/verify-callgraph-bound.mjs",
+      "bytes": 5512,
+      "sha256": "49fb58323ef2255ec3c6f52fa3121372b5515f9f4994d550408b3d7b04fc66b9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-integration/AUDIT.md",
+      "bytes": 10252,
+      "sha256": "50b08bdc8685e56cb304cbcc6a9071e56a8b4787d0fffaac3b122ab6248a22d9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-integration/BYPASS-SCAN.md",
+      "bytes": 9148,
+      "sha256": "e2935cd439e2bd172bd75fe4a19b2167ad7e00efaac363ed457054866fc0063a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-integration/manifest.sha256",
+      "bytes": 2334,
+      "sha256": "a9a2895d3c13cbe79dd851deee3bcb17765dde386389b7cf4c48db7b0b13b050"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/AUDIT.md",
+      "bytes": 7553,
+      "sha256": "4315550c66a0aff4e453c6206f47e302f4e7b3318f93c9d8107de18c699817c5"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/BYPASS-SCAN.md",
+      "bytes": 6275,
+      "sha256": "549bd31dfa92d2323b4138debea172b43ae72183a3d0d19cf56356cbc79f394e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts",
+      "bytes": 13667,
+      "sha256": "7fd0280365494aba0d333dda179b52044d83648c8d6b6e83c723e8336955aa2e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/manifest.sha256",
+      "bytes": 3475,
+      "sha256": "2b80b4698a3f26633584135cd4d7c2ff4a168342238df0e30da76100f9a41ddb"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts",
+      "bytes": 7189,
+      "sha256": "6c30cbe3c32717311ae88da014acee3acd0f9b680a3dfae50077643407fdfd4b"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-phase-b-fresh-audit/AUDIT.md",
+      "bytes": 23636,
+      "sha256": "56508ddcf924dfb98028c135698a8e87c88fbd7aad62568ebfc1c17fc37009ef"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-phase-b-remediation/REMEDIATION.md",
+      "bytes": 14617,
+      "sha256": "f00b80e0727fa6170fb0ed3c31167ae58f75e9e6961f7a1491feef8d2de9d128"
+    }
+  ]
+}

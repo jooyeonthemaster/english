@@ -1,0 +1,95 @@
+{
+  "pid": "P075",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-nonword-term",
+      "severity": "major",
+      "evidence": "(C) 오답 해설: \"수수식어인 'a small African island nation'과...\" — '수수식어'는 존재하지 않는 용어(비단어). '피수식어'의 오탈자로 추정되나 RUBRIC V4는 비단어·손상 용어를 명시적 실패 사유로 규정한다."
+    },
+    {
+      "code": "V4-structural-misattribution",
+      "severity": "major",
+      "evidence": "(C) 오답 해설이 수동 관계를 'a small African island nation'과 'Zanzibar' 사이의 관계로 기술했다. 실제 수동 관계는 피수식 명사(nation)와 분사 call(ed) 사이에 성립한다(the nation is called Zanzibar). Zanzibar는 call의 보어이지 수동 관계의 상대항이 아니다 — 구조 오분석."
+    },
+    {
+      "code": "V4-compressed-term",
+      "severity": "minor",
+      "evidence": "keyPoints의 '(E) 분사능수동'은 비표준 압축 용어('분사의 능동/수동' 추정). 학생 노출 시 손상 용어로 읽힐 수 있다."
+    },
+    {
+      "code": "V2-alternative-analysis-note",
+      "severity": "minor",
+      "evidence": "V2 실패는 아님(정답 유일성은 유지). 다만 'it killed hundreds of Zanzibaris, forced the new leader to flee...'는 저널리즘 문체의 무접속 VP 병렬(asyndeton: 'killed dozens, forced thousands to flee')로 읽힐 여지가 실제 영어에 존재한다. 수능 관례상 접속사 없는 제2 정동사는 오류로 확립되어 있어 유일 정답은 성립하나, RUBRIC §C의 '대안 분석이 가능한 자리 제외' 기준을 완전히 만족한다고 보기 어렵다."
+    },
+    {
+      "code": "C-pointcode-duplication",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 정답 (E)와 디코이 (C)가 동일 pointCode 'c'(분사 계열)를 공유한다. (C)는 같은 분사 계열의 쉬운 디코이로, §C '정답과 같은 point의 쉬운 디코이' 조건에 저촉될 소지가 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "간접의문문(how long이 이끄는 의문사절) 내 본동사 자리·시제 판정",
+      "temptingBecause": "how long ... lasted의 어순이 의문문 도치 어순과 달라 어색하게 느껴질 수 있고, learn의 목적어절 경계 파악이 필요하다",
+      "decisiveFlaw": "정답 아님 — 의문사절은 평서 어순(S+V)을 취하므로 주어 'the shortest war in recorded history' 뒤 과거형 정동사 lasted는 정확히 올바르다"
+    },
+    {
+      "label": "(B)",
+      "intent": "절(why-절)과 명사구가 and로 병렬된 복합 주어의 수일치 판정",
+      "temptingBecause": "명사절 단독 주어는 단수 취급이 통례이고, 주어가 길어 동사와의 거리가 멀어 is를 기대하기 쉽다",
+      "decisiveFlaw": "정답 아님 — 서로 다른 두 항(why-절 + the reason NP)이 and로 병렬되어 복수 주어를 이루므로 are가 올바르다"
+    },
+    {
+      "label": "(C)",
+      "intent": "명사 후치수식 과거분사(수동)의 태 판정",
+      "temptingBecause": "능동 calling과의 태 혼동, 또는 which is called로의 절 환원 여부를 따지게 만든다",
+      "decisiveFlaw": "정답 아님 — nation은 Zanzibar라고 '불리는' 대상이므로(call의 피동작주) 과거분사 called의 후치수식이 올바르다"
+    },
+    {
+      "label": "(D)",
+      "intent": "order의 목적격 보어로서 to부정사 취함(5형식 valency) 판정",
+      "temptingBecause": "make/have/let 등 원형부정사를 취하는 사역동사 계열과의 혼동을 노린다",
+      "decisiveFlaw": "정답 아님 — order는 order + O + to-V 구조를 취하므로 to step이 올바르다"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 콤마 뒤 정동사 vs 분사구문 판정(목적어를 취하는 능동 분사)",
+      "temptingBecause": "앞의 killed와 같은 과거형이라 시제 병렬로 보이고, 뒤의 'and'가 killed와의 병렬 접속사처럼 착시를 일으킨다",
+      "decisiveFlaw": "등위접속사 없이 콤마만으로 제2 정동사 forced가 killed에 접합될 수 없고, 뒤에 목적어 the new leader가 있어 수동 과거분사 해석도 불가 — 능동 분사구문 forcing으로 고쳐야 하며 교정 시 정확히 원문이 된다"
+    }
+  ],
+  "explanationIssues": [
+    "(C) 해설의 '수수식어'는 비단어(피수식어의 오탈자 추정)",
+    "(C) 해설이 수동 관계의 상대항을 분사 call(ed)이 아닌 보어 Zanzibar로 오기술",
+    "keyPoints의 '(E) 분사능수동'은 비표준 압축 용어",
+    "정답 해설 첫 문장 \"등위접속사 'but'으로 시작되는 절 뒤에 콤마가 있고\"는 정확하나 다소 장황하며, 오답 해설 전반에 '왜 매력적인가(why tempting)' 서술이 부재해 KILLER §C의 밑줄별 3요소(point/why tempting/why correct) 요건을 충족하지 못함"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": "충족 — forced→forcing 교정 시 정확히 원문 복원",
+    "clearGrammarJudgment": "부분 미달 — 무접속 VP 병렬(asyndeton)이라는 대안 분석이 실제 영어에 존재",
+    "perUnderlineTriple": "미달 — 오답 해설에 why-tempting 서술 부재, pointCode만 존재",
+    "structureReading": "미달 — ', forced'는 최다 훈련 표면 패턴으로 상위권 학생에게 즉시 노출됨(KILLER 요구 수준의 구조 독해 불필요)",
+    "sameLevelDecoyMasking": "저촉 소지 — (C)가 정답 (E)와 동일 pointCode 'c'의 쉬운 분사 디코이"
+  },
+  "grade": "F",
+  "notes": "정답 유일성(V2)·무결성(V1)·문법성(V3)·필드 동기화(V5)는 통과하는 견실한 골격이나, (C) 오답 해설의 비단어 '수수식어'와 수동 관계 상대항 오기술로 V4 실패 — RUBRIC상 V 실패는 공예 점수로 상쇄되지 않으므로 F. 공예 측면에서도 요청 난이도 KILLER 대비 실제 난이도는 중위 수준(콤마+forced는 고도로 훈련된 표면 패턴, 지문도 평이한 서사문)으로 C5=1의 난이도 불일치가 있다. 해설의 용어 교정(수수식어→피수식어, 분사능수동→분사의 능·수동), (C) 수동 관계 서술 교정만으로 V4는 회복 가능하나, KILLER 라벨을 유지하려면 정답 포인트 자체를 더 깊은 구조 판정으로 재설계해야 한다."
+}

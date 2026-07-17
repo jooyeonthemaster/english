@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "관계절 'who is credited with discovering America'. 선행사 the Italian explorer(단수)에 수 일치하고, 'be credited with + 동명사'는 '~의 공로를 인정받다'의 표준 수동 구문. Columbus는 공로를 '인정받는' 대상이므로 수동태가 의미상으로도 옳다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'considering + 명사구'는 '~을 고려하면'이라는 굳어진 전치사적 분사(비인칭 독립분사구문)로, 의미상 주어가 주절 주어와 일치하지 않아도 허용되는 관용 표현. 주절 'honoring the explorer does not make any sense'와의 결합도 자연스럽다. 정문. — 유혹 포인트: 주절 주어(honoring the explorer)가 consider의 주체가 아니라는 점에서 현수분사로 몰아 틀렸다고 판정하고 싶어지지만, considering은 사전 등재된 전치사화 표현이므로 성립한다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "동명사구 'honoring the explorer'가 주어로 쓰였고 단수 취급되어 'does not make'와 수 일치. 정문. — 유혹 포인트: 문장 첫머리의 considering과 나란히 있어 분사구문의 연쇄로 착각해 본동사 부재를 의심할 수 있으나, honoring은 분사가 아니라 주어 역할의 동명사이고 본동사 does가 뒤따르므로 문제없다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "문장 구조: 주어 'the diseases' + 관계절 'that Columbus and other Europeans brought with them' + (본동사 자리) 'severely reducing the population...'. 관계절 안의 brought는 that절의 동사일 뿐이므로, reducing을 그대로 두면 이 문장에는 정동사(finite verb)가 없어 fragment가 된다. reduced(과거형 본동사)로 고쳐야 한다. 대안 해석 탐색: (1) reducing을 분사구문으로 보아도 주절 동사가 여전히 없어 성립 불가, (2) brought를 본동사로 보고 reducing을 후치 수식 분사로 보려 해도 'brought with them'이 완결된 관계절 서술이라 'the diseases ... severely reducing ...'이라는 명사구만 남아 역시 문장이 되지 않는다. 어떤 파스로도 정문이 되지 않으므로 명백한 오류. — 실전 감각: 관계절 that...them이 주어와 동사 자리 사이를 길게 벌려 놓아 brought를 본동사로 착각하게 만드는 전형적 장거리 함정이며, 이 함정을 통과하면 reducing의 오류가 바로 드러난다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "관계절 'that honors Native Americans and remembers their suffering'에서 honors와 remembers가 병렬. 병렬 시작점은 관계대명사 that 뒤의 honors이고 선행사는 'a new holiday'(단수)이므로 3인칭 단수형 remembers가 옳다. 정문. — 유혹 포인트 1: 병렬 기준을 'should support'로 잘못 잡으면 원형 remember를 기대하게 되지만, and 앞의 직접 병렬 상대는 honors다. 유혹 포인트 2: 바로 앞의 복수 명사 Native Americans를 선행사로 착각하면 remembers의 -s가 틀려 보이지만, Native Americans는 honors의 목적어일 뿐이고 진짜 선행사는 a new holiday다. 이 문항에서 가장 매력적인 오답."
+    }
+  ],
+  "note": "정답 (D) 단독. 밑줄 5개 중 (D)만이 어떤 대안 해석으로도 구제되지 않는 본동사 부재(fragment) 오류. reducing → reduced. 최상위권 실전 관점에서 가장 끌리는 오답은 (E)(선행사·병렬 시작점 착각 유도)와 (B)(현수분사 의심 유도)였으나, 각각 단수 선행사 a new holiday와의 병렬(honors and remembers), 전치사화된 considering 관용 용법으로 정문임이 확정된다. 복수 정답 소지 없음."
+}

@@ -1,0 +1,661 @@
+{
+  "id": "u04-c1",
+  "unitId": "u04",
+  "order": 1,
+  "title": "명사 수식 분사의 능·수동",
+  "oneLiner": "분사가 꾸미는 명사가 그 동작을 '하는' 쪽이면 -ing, '받는' 쪽이면 p.p.입니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 준동사(분사)의 명사 수식(중 ●, 고 ●)",
+      "천일문 고등 GRAMMAR — 명사를 수식하는 분사(현재분사 vs 과거분사)",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L3 의미상 주어 대조",
+      "src/lib/grammar-drill/curriculum.ts — u04 현재분사 vs 과거분사(꾸며지는 명사와의 능·수동 관계)"
+    ]
+  },
+  "lenses": ["L3", "L5"],
+  "confusableWith": ["u04-c2", "u04-c3", "u04-c4", "u01-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Scientists analyzed the data collected during the expedition.",
+        "Scientists analyzed the data collecting during the expedition."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 분사의 형태 하나뿐입니다. 이 레슨을 마치면 왜 자료가 collected 여야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "분사",
+      "question": "분사가 대체 무엇이고, 왜 -ing 와 p.p. 두 가지로 갈립니까?",
+      "plain": "분사는 동사에서 나와 명사를 꾸미는 형용사 노릇을 하는 말입니다. 명사가 그 동작을 하면 현재분사(-ing), 받으면 과거분사(p.p.)로 모양이 갈립니다.",
+      "analogy": "같은 배우가 배역에 따라 옷을 갈아입는 것과 같습니다. 동사가 무대에 설 때, 동작을 하는 명사에는 -ing 옷을, 동작을 당하는 명사에는 p.p. 옷을 입힙니다.",
+      "whyItMatters": "밑줄 친 분사가 -ing 여야 하는지 p.p.여야 하는지 묻는 문항은 수능 어법의 단골입니다. 명사가 하는 쪽인지 받는 쪽인지, 이 능·수동 판단 하나가 정답을 가릅니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "분사 뒤에 목적어가 없으면 무조건 과거분사를 씁니다.",
+      "truth": "목적어의 유무는 보조 단서일 뿐입니다. 판단의 근거는 분사가 꾸미는 명사가 그 동작을 하는 쪽인지 받는 쪽인지입니다. 되돌린 문장이 능동이면 -ing, 수동이면 p.p.입니다.",
+      "counterExample": {
+        "en": "The road **leading** to the village was closed by heavy snow.",
+        "ko": "그 마을로 이어지는 도로가 폭설로 폐쇄되었습니다.",
+        "note": "leading 뒤에는 목적어가 없지만, 길이 마을로 '이어지는' 쪽이므로 현재분사가 옳습니다. 목적어가 없다는 이유만으로 p.p.를 고르면 틀립니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "분사 능·수동 판별 필기",
+      "intro": "명사 수식 분사를 판단하는 데 필요한 것들을 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "분사 — 동사에서 온 형용사",
+          "body": "동사에서 온 말로, 현재분사(-ing)나 과거분사 꼴로 명사를 꾸밉니다. 과거분사는 보통 -ed 지만 thrown·written 처럼 불규칙형도 많고, 분사는 시제가 없어 혼자서는 본동사가 되지 못합니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "현재분사 -ing — 명사가 하는 쪽",
+          "body": "꾸며지는 명사가 그 동작의 주체이면 현재분사를 씁니다. 우리말로 '~하는·~하고 있는'으로 풀립니다.",
+          "example": {
+            "en": "the boy **throwing** the ball",
+            "ko": "공을 던지는 그 소년",
+            "note": "소년이 던지는 주체이므로 현재분사입니다."
+          }
+        },
+        {
+          "head": "과거분사 p.p. — 명사가 받는 쪽",
+          "body": "꾸며지는 명사가 그 동작을 당하는 대상이면 과거분사를 씁니다. 우리말로 '~된·~당한'으로 풀립니다.",
+          "example": {
+            "en": "the ball **thrown** by the boy",
+            "ko": "그 소년이 던진 그 공",
+            "note": "공은 던져지는 대상이므로 과거분사입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "자리 — 딸린 말이 있으면 뒤로",
+          "body": "분사 혼자면 대개 명사 앞에, 목적어·전치사구 같은 딸린 말이 있으면 명사 뒤에 놓입니다. 자리가 바뀌어도 판단 기준은 똑같습니다."
+        },
+        {
+          "head": "되돌리기 — 확신이 없을 때의 손잡이",
+          "body": "꾸며지는 명사를 주어로 삼아 짧은 문장으로 되돌립니다. 능동문이 되면 -ing, 수동문이 되면 p.p.입니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "분사가 명사를 꾸밀 때, 그 명사가 동작을 하는 쪽이면 현재분사(-ing), 동작을 받는 쪽이면 과거분사(p.p.)를 씁니다.",
+      "examples": [
+        {
+          "en": "The researchers compared the **collected** samples with earlier records.",
+          "ko": "연구자들은 수집된 표본을 이전 기록과 비교했습니다.",
+          "note": "표본은 수집되는 쪽입니다. 명사가 동작을 받으므로 과거분사 collected 를 씁니다."
+        },
+        {
+          "en": "The **rising** temperature damaged the crops in the valley.",
+          "ko": "오르는 기온이 계곡의 작물에 피해를 입혔습니다.",
+          "note": "기온이 오르는 쪽입니다. 명사가 동작을 하므로 현재분사 rising 을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "판단이 흔들리면 꾸며지는 명사를 주어로 삼아 짧은 문장으로 되돌려 봅니다. 능동문이 되면 -ing, 수동문이 되면 p.p.입니다.",
+      "examples": [
+        {
+          "en": "The novel **translated** into twelve languages sold widely in Europe.",
+          "ko": "열두 개 언어로 번역된 그 소설은 유럽에서 널리 팔렸습니다.",
+          "note": "되돌리면 The novel was translated into twelve languages 라는 수동문이 됩니다. 그래서 과거분사입니다."
+        },
+        {
+          "en": "The scholar **translating** the novel worked on it for a decade.",
+          "ko": "그 소설을 번역하는 학자는 10년 동안 그 작업에 매달렸습니다.",
+          "note": "되돌리면 The scholar translates the novel 이라는 능동문이 됩니다. 그래서 현재분사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "현재분사 사냥",
+      "instruction": "이 문장에서 명사를 꾸미는 현재분사(-ing)를 전부 탭하십시오. 시제를 가진 본동사와 과거분사는 사냥감이 아닙니다.",
+      "hitLabel": "현재분사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "scientists", "hit": false },
+        { "t": "studying", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "leaked", "hit": false },
+        { "t": "data", "hit": false },
+        { "t": "ignored", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "alarm", "hit": false },
+        { "t": "ringing", "hit": true },
+        { "t": "in", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "hallway.", "hit": false }
+      ],
+      "ko": "유출된 자료를 연구하던 과학자들은 복도에서 울리는 경보를 무시했습니다.",
+      "explain": "현재분사는 studying(과학자들이 연구하는 쪽)과 ringing(경보가 울리는 쪽) 둘입니다. leaked 는 과거분사(자료가 유출되는 쪽)라 사냥감이 아니고, ignored 는 시제를 가진 본동사입니다. 명사가 하는 쪽만 -ing 로 잡습니다."
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "후치 수식 분사가 낀 문장의 해부",
+      "tokens": [
+        { "t": "The report", "role": "S" },
+        { "t": "submitted by the research team last month", "role": "M" },
+        { "t": "raises", "role": "V" },
+        { "t": "serious questions", "role": "O" }
+      ],
+      "ko": "지난달 그 연구팀이 제출한 보고서는 심각한 문제를 제기합니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "submitted by the research team last month 는 앞의 명사를 뒤에서 꾸미는 분사구입니다. 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 핵 주어(핵 명사)는 The report 입니다. 이 명사가 바로 분사의 의미상 주어입니다 — 이 유닛에서 분사의 형태를 정하는 그 명사를 '의미상 주어'라 부르고, '꾸며지는 명사'도 같은 말입니다."
+        },
+        {
+          "label": "③ 시제를 가진 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "시제를 가진 동사는 raises 하나뿐입니다. submitted 는 본동사가 아니라 수식하는 분사입니다."
+        },
+        {
+          "label": "④ 명사와 분사의 능·수동을 판정합니다",
+          "roles": ["S", "M"],
+          "note": "보고서를 주어로 되돌리면 The report was submitted by the research team 이라는 수동문이 됩니다. 그러므로 과거분사 submitted 가 옳습니다."
+        }
+      ],
+      "conclusion": "핵 주어 The report 는 제출되는 쪽이므로 분사는 p.p.이고, 시제를 가진 본동사는 raises 하나입니다."
+    },
+    {
+      "id": "b9",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "명사 수식 분사의 능·수동을 가리는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 친 분사가 어느 명사를 꾸미는지 확정합니다. 분사 혼자면 대개 뒤의 명사를, 딸린 말이 있으면 앞의 명사를 꾸밉니다.",
+          "applyNote": "designing 은 앞의 The team 을, donated 는 앞의 materials 를 꾸밉니다."
+        },
+        {
+          "text": "그 명사를 주어로 삼아 짧은 문장으로 되돌립니다.",
+          "applyNote": "The team designs the shelter / The materials were donated by local firms 로 되돌아갑니다."
+        },
+        {
+          "text": "되돌린 문장이 능동이면 -ing, 수동이면 p.p.로 확정합니다.",
+          "applyNote": "팀은 설계하는 쪽이므로 designing, 자재는 기부되는 쪽이므로 donated 입니다."
+        },
+        {
+          "text": "분사 뒤에 목적어가 남아 있는지는 보조 단서로만 씁니다. 최종 근거는 명사와의 의미 관계입니다.",
+          "applyNote": "designing 뒤에는 목적어 the shelter 가 있고, donated 뒤에는 행위자를 나타내는 by local firms 가 옵니다."
+        }
+      ],
+      "example": {
+        "en": "The team **designing** the shelter used materials **donated** by local firms.",
+        "ko": "그 대피소를 설계하는 팀은 지역 기업들이 기부한 자재를 사용했습니다.",
+        "note": "한 문장에 분사가 둘이지만 판단은 각각의 명사와의 관계로 따로 내립니다. 시제를 가진 본동사는 used 하나입니다."
+      }
+    },
+    {
+      "id": "b10",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The witness ( questioned / questioning ) by the detectives described a tall man in a gray coat.",
+      "steps": [
+        {
+          "title": "① 분사가 꾸미는 명사를 확정합니다",
+          "body": "괄호 뒤에 by the detectives 가 딸려 있으므로 이 분사구는 앞의 명사 The witness 를 뒤에서 꾸밉니다."
+        },
+        {
+          "title": "② 본동사를 확인합니다",
+          "body": "시제를 가진 동사는 described 입니다. 본동사가 이미 있으므로 괄호는 동사 자리가 아니라 수식하는 분사 자리입니다."
+        },
+        {
+          "title": "③ 명사를 주어로 되돌립니다",
+          "body": "The witness was questioned by the detectives 가 됩니다. 목격자는 신문을 받는 쪽입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "수동 관계이므로 과거분사 questioned 가 옳습니다. questioning 을 넣으면 목격자가 신문하는 쪽이 되는데, 뒤에 목적어 없이 by the detectives 만 오므로 문장이 성립하지 않습니다."
+        }
+      ],
+      "answer": "questioned",
+      "ko": "형사들에게 신문을 받은 그 목격자는 회색 코트를 입은 키 큰 남자를 묘사했습니다."
+    },
+    {
+      "id": "b11",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u04-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The museum displays several paintings {{blank}} during the last war.",
+          "options": ["stolen", "stealing"],
+          "answer": 0,
+          "translation": "그 박물관은 지난 전쟁 중에 도난당한 그림 몇 점을 전시합니다.",
+          "explanation": "빈칸은 앞의 명사 paintings 를 뒤에서 꾸미는 분사 자리입니다. 그림을 주어로 되돌리면 '그림이 도난당했다'라는 수동 관계이므로 과거분사 stolen 이 옳습니다. stealing 을 고르면 그림이 무언가를 훔친다는 뜻이 됩니다.",
+          "trapTags": ["postnominal-participle"]
+        },
+        {
+          "id": "u04-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The engineer [[u:designed]] the new bridge answered questions from reporters.",
+          "isCorrect": false,
+          "correction": "designing",
+          "translation": "새 다리를 설계하고 있는 그 기술자가 기자들의 질문에 답했습니다.",
+          "explanation": "본동사는 answered 이므로 밑줄은 The engineer 를 꾸미는 분사 자리입니다. 기술자는 다리를 설계하는 쪽이고 뒤에 목적어 the new bridge 가 남아 있으므로 현재분사 designing 이 옳습니다.",
+          "trapTags": ["postnominal-participle", "ed-ambiguity"]
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "현재분사와 과거분사의 갈림길",
+      "columns": ["현재분사 -ing (능동)", "과거분사 p.p. (수동)"],
+      "rows": [
+        {
+          "criterion": "꾸며지는 명사와의 관계",
+          "a": "명사가 동작을 하는 쪽입니다",
+          "b": "명사가 동작을 받는 쪽입니다"
+        },
+        {
+          "criterion": "되돌린 문장",
+          "a": "The scholar edits the manuscript (능동)",
+          "b": "The manuscript was edited (수동)"
+        },
+        {
+          "criterion": "분사 뒤에 오는 말",
+          "a": "타동사에서 왔다면 목적어가 뒤에 남습니다",
+          "b": "대개 목적어가 없고 by 구나 부사구가 옵니다(수여동사·5형식에서 온 분사는 the students given extra time 처럼 명사가 남기도 합니다)"
+        },
+        {
+          "criterion": "우리말 대응",
+          "a": "~하는 · ~하고 있는",
+          "b": "~된 · ~당한"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The scholar **editing** the manuscript found two missing pages.",
+          "ko": "그 필사본을 교정하는 학자가 빠진 두 쪽을 발견했습니다.",
+          "note": "학자는 교정하는 쪽이고 뒤에 목적어 the manuscript 가 남아 있으므로 현재분사입니다."
+        },
+        {
+          "en": "The manuscript **edited** by the scholar went to the printer last week.",
+          "ko": "그 학자가 교정한 필사본은 지난주에 인쇄소로 넘어갔습니다.",
+          "note": "필사본은 교정되는 쪽이므로 과거분사이고, 행위자는 by the scholar 로 나타납니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 명사구에서 분사가 꾸미는 명사와의 관계를 판단해 분류하십시오.",
+      "buckets": [
+        { "id": "act", "label": "명사가 하는 쪽 (-ing)" },
+        { "id": "pas", "label": "명사가 받는 쪽 (p.p.)" }
+      ],
+      "chips": [
+        {
+          "text": "the officer directing traffic",
+          "bucketId": "act",
+          "why": "경찰관이 교통을 정리하는 주체이므로 현재분사입니다."
+        },
+        {
+          "text": "the traffic directed by the officer",
+          "bucketId": "pas",
+          "why": "교통은 정리되는 쪽이므로 과거분사입니다."
+        },
+        {
+          "text": "a letter written in 1902",
+          "bucketId": "pas",
+          "why": "편지는 쓰이는 쪽이므로 과거분사입니다."
+        },
+        {
+          "text": "the student writing a letter",
+          "bucketId": "act",
+          "why": "학생이 편지를 쓰는 주체이므로 현재분사입니다."
+        },
+        {
+          "text": "the machines producing the parts",
+          "bucketId": "act",
+          "why": "기계가 부품을 생산하는 주체이므로 현재분사입니다."
+        },
+        {
+          "text": "the parts produced by the machines",
+          "bucketId": "pas",
+          "why": "부품은 생산되는 쪽이므로 과거분사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "능·수동 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 능·수동 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "꾸며지는 명사가 동작을 하는 쪽이면 현재분사(-ing)를 씁니다.",
+          "isTrue": true,
+          "why": "명사가 동작의 주체이면 -ing 입니다. 그것이 이 개념의 뼈대입니다."
+        },
+        {
+          "statement": "분사 뒤에 목적어가 없으면 무조건 과거분사입니다.",
+          "isTrue": false,
+          "why": "목적어의 유무는 보조 단서일 뿐입니다. lead to 처럼 목적어를 받지 않는 동사는 -ing 로도 옵니다."
+        },
+        {
+          "statement": "the falling leaves 에서 leaves 는 떨어지는 쪽이므로 -ing 가 옳습니다.",
+          "isTrue": true,
+          "why": "잎이 떨어지는 주체이므로 현재분사 falling 입니다."
+        },
+        {
+          "statement": "the stolen car 에서 car 는 훔치는 쪽이므로 -ing 가 옳습니다.",
+          "isTrue": false,
+          "why": "차는 훔쳐지는 대상입니다. 받는 쪽이므로 과거분사 stolen 이 옳습니다."
+        },
+        {
+          "statement": "확신이 없으면 명사를 주어로 되돌려 능동인지 수동인지 확인합니다.",
+          "isTrue": true,
+          "why": "능동문이 되면 -ing, 수동문이 되면 p.p.입니다. 되돌리기가 안전한 손잡이입니다."
+        },
+        {
+          "statement": "본동사가 따로 있어도 -ed 로 끝나면 그것이 문장의 동사입니다.",
+          "isTrue": false,
+          "why": "본동사가 이미 있으면 그 -ed 는 명사를 꾸미는 과거분사입니다. 동사로 착각하면 안 됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The equipment ( shipping / shipped / ships ) from the factory last week arrived at the laboratory yesterday.",
+      "givenSteps": [
+        "① 시제를 가진 동사는 arrived 입니다. 본동사가 이미 있으므로 괄호는 분사 자리입니다.",
+        "② 괄호의 분사에는 from the factory last week 가 딸려 있으므로, 꾸미는 명사는 앞의 The equipment 입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "shipped — 장비는 공장에서 발송되는 쪽이므로 수동 관계입니다",
+        "shipping — 장비가 무언가를 발송하는 쪽이므로 능동 관계입니다",
+        "ships — 문장에 시제를 가진 동사가 하나 더 필요하기 때문입니다"
+      ],
+      "answer": 0,
+      "explain": "장비를 주어로 되돌리면 The equipment was shipped from the factory 라는 수동문이 됩니다. 따라서 과거분사 shipped 가 옳습니다. ships 를 넣으면 접속사 없이 시제 동사가 둘이 되어 문장이 깨집니다."
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 명사 바로 뒤의 -ed 를 본동사로 읽어 버리는 함정",
+      "body": "-ed 형은 과거형일 수도 있고 명사를 뒤에서 꾸미는 과거분사일 수도 있습니다. 앞의 -ed 를 본동사로 읽어 버리면 진짜 본동사가 설 자리를 잃습니다. 접속사·관계사가 없는데 시제 동사처럼 보이는 것이 둘이면, 앞의 -ed 가 분사입니다.",
+      "example": {
+        "en": "The theory **proposed** by two physicists in 1975 still **guides** current research.",
+        "ko": "1975년에 두 물리학자가 제안한 그 이론은 지금도 현재의 연구를 이끕니다.",
+        "note": "proposed 를 본동사로 읽으면 guides 가 갈 곳이 없어집니다. 이론은 제안되는 쪽이므로 proposed 는 The theory 를 꾸미는 과거분사입니다."
+      }
+    },
+    {
+      "id": "b17",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u04-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The article {{blank}} the mayor's plan appeared in every local newspaper.",
+          "options": ["criticizing", "criticized"],
+          "answer": 0,
+          "translation": "시장의 계획을 비판하는 그 기사는 모든 지역 신문에 실렸습니다.",
+          "explanation": "본동사는 appeared 이므로 빈칸은 The article 을 꾸미는 분사 자리입니다. 기사가 계획을 비판하는 쪽이고 뒤에 목적어 the mayor's plan 이 남아 있으므로 현재분사 criticizing 이 옳습니다. criticized 를 고르면 기사가 비판받는다는 뜻이 되어 뒤의 목적어와 충돌합니다.",
+          "trapTags": ["postnominal-participle", "object-after-participle"]
+        },
+        {
+          "id": "u04-c1-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The path {{blank}} to the summit becomes icy in winter.",
+          "options": ["leading", "led"],
+          "answer": 0,
+          "translation": "정상으로 이어지는 그 길은 겨울이면 얼어붙습니다.",
+          "explanation": "본동사는 becomes 이므로 빈칸은 The path 를 꾸미는 분사 자리입니다. 길이 정상으로 이어지는 쪽이므로 현재분사 leading 이 옳습니다. lead to 는 목적어를 취하지 않는 동사구여서 분사 뒤에 목적어가 없지만, 판단의 근거는 목적어의 유무가 아니라 명사와 분사의 능·수동 관계입니다. led 를 고르면 길이 어딘가로 이끌려간다는 뜻이 됩니다.",
+          "trapTags": ["postnominal-participle", "intransitive-participle"]
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 criticizing 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "본동사가 appeared 이므로 빈칸은 The article 을 꾸미는 분사 자리이고, 기사가 계획을 비판하는 쪽이므로 능동입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 먼저 본동사를 확인해 분사 자리임을 확정하고, 그다음 꾸며지는 명사와의 의미 관계로 능·수동을 정합니다."
+        },
+        {
+          "text": "빈칸 뒤에 명사가 있으므로 분사는 언제나 -ing 형이기 때문입니다.",
+          "correct": false,
+          "feedback": "뒤에 목적어가 남아 있는 것은 유용한 보조 단서이지만 그 자체가 근거는 아닙니다. 판단은 꾸며지는 명사가 그 동작을 하는지 받는지에서 나옵니다."
+        },
+        {
+          "text": "criticizing 이 문맥상 의미가 더 자연스럽게 읽히기 때문입니다.",
+          "correct": false,
+          "feedback": "자연스러움은 판단 근거가 되지 못합니다. 어법 판단은 명사와 분사 사이의 능·수동 관계라는 구조에서 나옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The novel [[1:written]] by a young journalist [[2:describes]] a city [[3:divided]] by a long war, and the film [[4:basing]] on it won several awards.",
+      "answer": 4,
+      "correction": "based",
+      "rationales": [
+        "소설은 쓰이는 쪽입니다. 명사 The novel 을 뒤에서 꾸미는 과거분사이므로 옳습니다.",
+        "핵 주어 The novel 에 대응하는 주절의 본동사입니다. 단수 주어이므로 describes 가 옳습니다.",
+        "도시는 전쟁으로 분열되는 쪽입니다. 명사 a city 를 뒤에서 꾸미는 과거분사이므로 옳습니다.",
+        "영화는 소설에 기초하여 만들어지는 쪽입니다. be based on 의 수동 관계이므로 명사 the film 을 꾸미는 분사도 based 여야 합니다."
+      ],
+      "ko": "한 젊은 기자가 쓴 그 소설은 긴 전쟁으로 분열된 도시를 그리며, 그 소설에 기초한 영화는 여러 상을 받았습니다."
+    },
+    {
+      "id": "b20",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 괄호 안의 두 형태 중 하나를 고르고 근거를 서술하게 합니다. 꾸며지는 명사를 주어로 되돌린 문장을 함께 써야 근거 점수를 받습니다.",
+          "sample": {
+            "en": "The paintings ( restoring / restored ) by the museum staff are now on display.",
+            "ask": "괄호 안에서 어법상 옳은 것을 고르고 그 근거를 서술하십시오.",
+            "answer": "restored — 그림은 복원되는 쪽이므로 The paintings were restored by the museum staff 라는 수동 관계이며, 따라서 과거분사가 옳습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 긴 주어 뒤에 분사구를 넣고 그 분사에 밑줄을 칩니다. 본동사가 따로 있는지 확인한 뒤, 핵 주어와 분사의 능·수동 관계로 판정합니다.",
+          "sample": {
+            "en": "A device [[u:attaching]] to the roof of the bus measures the level of dust in the air.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "attached — 본동사는 measures 이고, 장치는 지붕에 부착되는 쪽이므로 과거분사가 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "지역 농부들이 재배한 채소가 매주 토요일 시장에 도착합니다.",
+      "answer": [
+        "The vegetables",
+        "grown",
+        "by local farmers",
+        "arrive",
+        "at the market every Saturday"
+      ],
+      "tiles": [
+        "The vegetables",
+        "grown",
+        "by local farmers",
+        "arrive",
+        "at the market every Saturday",
+        "growing"
+      ],
+      "explanation": "채소는 재배되는 쪽이므로 과거분사 grown 이 The vegetables 를 뒤에서 꾸밉니다. growing 을 쓰면 채소가 재배하는 주체가 되어 뒤의 by local farmers 와 충돌하므로 미끼 타일입니다. 시제를 가진 본동사는 arrive 하나입니다."
+    },
+    {
+      "id": "b22",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "City planners have begun to rethink how streets are used. [[u:A narrow lane closed to cars for one weekend each month attracts hundreds of families.]] Shops along the lane report higher sales, and residents say that the noise falls sharply. The experiment is now spreading to nearby districts.",
+      "instruction": "밑줄 친 문장에서 분사가 꾸미는 명사를 찾고, 능동인지 수동인지 판정하십시오.",
+      "found": "closed to cars for one weekend each month 는 A narrow lane 을 뒤에서 꾸미는 분사구입니다. 골목은 차량에 대해 폐쇄되는 쪽이므로 과거분사 closed 가 쓰였고, 시제를 가진 본동사는 attracts 입니다.",
+      "gist": "한 달에 한 번 차량을 막는 좁은 골목이 많은 가족 방문객을 끌어들이고 상권도 살린다는 내용입니다."
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "능·수동 법정의 심판관",
+      "intro": "이 법정에서는 명사가 '하는 쪽'인지 '받는 쪽'인지를 놓고 매일 시비가 붙습니다. 되돌리기 한 번이면 판결이 나는데도 많은 이가 목적어만 보다가 넘어집니다. 네 건의 판결로 당신의 눈을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The bricks {{blank}} by skilled masons lasted for centuries.",
+          "options": ["laid", "laying"],
+          "answer": 0,
+          "why": "벽돌은 숙련된 석공에게 쌓이는 쪽입니다. 받는 쪽이므로 과거분사 laid 가 옳고, 시제를 가진 본동사는 lasted 입니다. laying 은 벽돌이 무언가를 쌓는다는 뜻이 되어 성립하지 않습니다."
+        },
+        {
+          "prompt": "The chef {{blank}} the seasonal menu trained under a famous cook.",
+          "options": ["designing", "designed"],
+          "answer": 0,
+          "why": "요리사는 메뉴를 짜는 주체이고 뒤에 목적어 the seasonal menu 가 남습니다. 하는 쪽이므로 현재분사 designing 이 옳고, 본동사는 trained 입니다."
+        },
+        {
+          "prompt": "The river {{blank}} through the canyon attracts thousands of rafters.",
+          "options": ["flowing", "flowed"],
+          "answer": 0,
+          "why": "강은 협곡을 따라 흐르는 주체입니다. flow 는 목적어를 받지 않는 동사지만, 명사가 하는 쪽이므로 현재분사 flowing 이 옳습니다. 본동사는 attracts 입니다."
+        },
+        {
+          "prompt": "The documents {{blank}} by the clerk revealed a hidden account.",
+          "options": ["signed", "signing", "sign"],
+          "answer": 0,
+          "why": "서류는 서명되는 쪽이므로 과거분사 signed 가 옳습니다. signing 은 서류가 서명한다는 뜻이 되고, sign 은 접속사 없이 시제 동사를 둘로 만들어 문장을 깹니다. 본동사는 revealed 입니다."
+        }
+      ],
+      "winText": "판결봉이 울립니다. 명사가 하는 쪽인지 받는 쪽인지 — 그 한 번의 되돌리기로 -ing 와 p.p.를 가르는 눈이 방금 당신 손에 들어왔습니다.",
+      "loseText": "심판관이 서류를 돌려줍니다. 네 건 모두 물은 것은 하나였습니다 — '이 명사는 하는 쪽인가, 받는 쪽인가.' 되돌리기로 능동·수동을 확인하고 다시 오면 판결은 준비되어 있습니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "분사가 꾸미는 명사가 동작을 ___ 쪽이면 -ing, 동작을 ___ 쪽이면 p.p.를 씁니다. 확신이 없으면 그 명사를 ___로 삼아 문장을 되돌려 봅니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "분사가 꾸미는 명사가 동작을 하는 쪽이면 -ing, 받는 쪽이면 p.p.입니다.",
+        "분사 혼자면 대개 명사 앞에, 딸린 말이 있으면 명사 뒤에 놓입니다(the people involved 처럼 단독 분사가 뒤에 오는 예외도 있습니다). 자리가 달라져도 판단 기준은 같습니다.",
+        "판단이 흔들리면 꾸며지는 명사를 주어로 되돌려 능동문인지 수동문인지 확인합니다.",
+        "밑줄이 분사인지 본동사인지 먼저 가릅니다. 본동사가 따로 있으면 그 -ed 는 수식하는 과거분사입니다.",
+        "분사 뒤 목적어의 유무는 보조 단서일 뿐이며, 최종 근거는 명사와의 의미 관계입니다."
+      ],
+      "keySentence": {
+        "en": "The report **submitted** by the research team last month **raises** serious questions.",
+        "ko": "지난달 그 연구팀이 제출한 보고서는 심각한 문제를 제기합니다.",
+        "note": "보고서는 제출되는 쪽이므로 submitted 는 과거분사이고, 시제를 가진 본동사는 raises 입니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u04-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The students {{blank}} the science club meet in the library every Friday.",
+          "options": ["organizing", "organized"],
+          "answer": 0,
+          "translation": "그 과학 동아리를 조직하는 학생들은 매주 금요일 도서관에서 만납니다.",
+          "explanation": "본동사는 meet 이므로 빈칸은 The students 를 꾸미는 분사 자리입니다. 학생들이 동아리를 조직하는 쪽이고 뒤에 목적어 the science club 이 남아 있으므로 현재분사 organizing 이 옳습니다.",
+          "trapTags": ["postnominal-participle", "object-after-participle"]
+        },
+        {
+          "id": "u04-c1-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The letters [[u:discovering]] in an old desk changed what historians knew about the war.",
+          "isCorrect": false,
+          "correction": "discovered",
+          "translation": "낡은 책상에서 발견된 그 편지들은 역사가들이 전쟁에 대해 알던 바를 바꾸어 놓았습니다.",
+          "explanation": "본동사는 changed 이므로 밑줄은 The letters 를 꾸미는 분사 자리입니다. 편지는 발견되는 쪽이므로 과거분사 discovered 가 옳습니다.",
+          "trapTags": ["postnominal-participle", "long-subject"]
+        },
+        {
+          "id": "u04-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The bridge {{blank}} the two islands carries more than ten thousand cars a day.",
+          "options": ["connecting", "connected", "connects"],
+          "answer": 0,
+          "translation": "두 섬을 연결하는 그 다리는 하루에 만 대가 넘는 차량을 실어 나릅니다.",
+          "explanation": "시제를 가진 본동사는 carries 이므로 빈칸은 분사 자리입니다. 다리가 두 섬을 연결하는 쪽이고 뒤에 목적어 the two islands 가 남아 있으므로 현재분사 connecting 이 옳습니다. connects 를 넣으면 접속사 없이 시제 동사가 둘이 되고, connected 는 다리가 연결당한다는 뜻이 되어 목적어와 충돌합니다.",
+          "trapTags": ["postnominal-participle", "verb-vs-participle"]
+        }
+      ]
+    }
+  ]
+}

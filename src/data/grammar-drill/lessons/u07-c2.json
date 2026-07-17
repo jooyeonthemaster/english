@@ -1,0 +1,683 @@
+{
+  "id": "u07-c2",
+  "unitId": "u07",
+  "order": 2,
+  "title": "관계부사 4종과 선행사",
+  "oneLiner": "where/when/why/how — 선행사가 아니라 뒤 절의 완전성이 기준입니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 관계부사(where·when·why·how)와 관계대명사의 구별: 뒤 절의 완전성",
+      "천일문 고등 GRAMMAR — 관계부사와 '전치사+관계대명사'의 환원 관계",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 관계부사(중 ●)",
+      "SMOAT 어법 드릴 뱅크 u07-choice(u07-c2-ch-001~012, trapTag: antecedent-match·clause-completeness·way-how)"
+    ]
+  },
+  "lenses": ["L1"],
+  "confusableWith": ["u07-c1", "u07-c3", "u07-c4", "u06-c2"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Winter is the season when the lake freezes completely.",
+        "Winter is the season which the lake freezes completely."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 관계사 하나입니다. 이 레슨을 마치면 뒤 절만 보고 이 자리를 판정할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "관계부사",
+      "question": "관계부사가 대체 무엇입니까?",
+      "plain": "관계부사는 두 절을 잇는 접속사 노릇과, 뒤 절 안에서 장소·시간·이유·방법을 가리키는 부사 노릇을 동시에 하는 말입니다. where·when·why·how 넷뿐입니다.",
+      "analogy": "문장의 필수 좌석은 주어·목적어·보어입니다. 관계대명사는 이 좌석 중 하나에 앉는 승객이고, 관계부사는 좌석이 아니라 통로에 서서 길을 안내하는 안내원입니다. 좌석이 모두 차 있어야 안내원이 설 자리가 생깁니다.",
+      "whyItMatters": "수능 어법은 관계사에 밑줄을 긋고 where 와 which 를 바꿔치기합니다. 이 자리를 선행사가 아니라 뒤 절의 완전성으로 판정하는 것 — 그것이 이 레슨이 벼리는 판별 도구 'L1 절의 완전성'입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "선행사가 장소이면 where, 시간이면 when 을 쓰면 됩니다.",
+      "truth": "선행사의 종류는 관계부사 4종 중 무엇을 쓸지만 결정합니다. 관계부사를 쓸 수 있는지 자체는 뒤 절이 완전한가로 결정됩니다. 뒤 절에 주어·목적어·보어 중 빠진 자리가 있으면 선행사가 장소여도 관계대명사를 써야 합니다.",
+      "counterExample": {
+        "en": "The museum **where** we visited last summer displays ancient coins.",
+        "ko": "우리가 지난여름에 방문한 그 박물관은 고대 주화를 전시합니다.",
+        "note": "visited 는 타동사인데 뒤 절에 목적어가 없습니다. 절이 불완전하므로 where 가 아니라 관계대명사 which 를 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 2,
+      "title": "관계부사 4종 필기",
+      "intro": "판정에 필요한 것만 노트 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "관계부사의 정체 — 접속사 + 부사",
+          "body": "관계부사는 절을 잇는 접속사와, 그 절 안의 부사(장소·시간 등) 역할을 겸합니다. 부사 자리를 스스로 채우므로 뒤 절에는 빈 성분이 남지 않습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "판정 기준 — 뒤 절의 완전성",
+          "body": "관계부사를 쓸 수 있는지는 선행사가 아니라 뒤 절이 완전한가로 정합니다. 주어·목적어·보어가 다 있으면 관계부사, 하나라도 비면 관계대명사입니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "where·when — 장소와 시간",
+          "body": "완전한 절 앞에서 선행사가 장소이면 where, 시간이면 when 입니다.",
+          "example": {
+            "en": "The hall **where** the choir practices has excellent acoustics.",
+            "ko": "그 합창단이 연습하는 강당은 음향이 훌륭합니다.",
+            "note": "practice 가 자동사로 완결된 완전한 절이고, 선행사가 장소이므로 where 입니다."
+          }
+        },
+        {
+          "head": "why — 선행사는 the reason 뿐",
+          "body": "why 의 선행사는 the reason 계열의 명사로 한정됩니다. 그 밖의 명사에는 why 를 쓰지 않습니다.",
+          "example": {
+            "en": "No one could explain the reason **why** the experiment failed twice.",
+            "ko": "그 실험이 두 번이나 실패한 이유를 아무도 설명하지 못했습니다.",
+            "note": "failed 가 자동사로 완결된 완전한 절이고, 선행사가 the reason 이므로 why 입니다."
+          }
+        },
+        {
+          "head": "how — 방법, the way 와 겹치지 않음",
+          "body": "how 는 선행사 the way 를 이미 품고 있어 the way how 로 겹쳐 쓰지 못합니다. the way / how / the way in which / the way that 중 하나만 씁니다.",
+          "example": {
+            "en": "The biologist described **how** desert plants store water in their stems.",
+            "ko": "그 생물학자는 사막 식물이 줄기에 물을 저장하는 방법을 설명했습니다.",
+            "note": "how 절이 described 의 목적어 역할을 하는 명사절이고, the way 와 겹쳐 쓰지 않습니다."
+          },
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "선행사와 관계부사 짝짓기",
+      "instruction": "선행사의 종류와 그 앞에 오는 관계부사를 짝지으십시오. 뒤 절이 완전하다는 전제에서 고릅니다.",
+      "pairs": [
+        {
+          "a": "the city (장소)",
+          "b": "where",
+          "why": "장소 선행사 앞에는 where 를 씁니다. in/at which 로 환원됩니다."
+        },
+        {
+          "a": "the year (시간)",
+          "b": "when",
+          "why": "시간 선행사 앞에는 when 을 씁니다. at/on which 로 환원됩니다."
+        },
+        {
+          "a": "the reason (이유)",
+          "b": "why",
+          "why": "why 의 선행사는 the reason 계열로 한정됩니다. for which 로 환원됩니다."
+        },
+        {
+          "a": "the way (방법)",
+          "b": "how",
+          "why": "방법에는 how 를 쓰되, the way 와 겹쳐 쓰지는 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "TABLE",
+      "tier": 3,
+      "title": "관계부사 환원표",
+      "columns": ["관계부사", "선행사", "전치사 + which 환원"],
+      "rows": [
+        {
+          "cells": ["where", "장소", "in / at which"],
+          "example": {
+            "en": "The town **where** the treaty was signed still holds a yearly festival.",
+            "ko": "그 조약이 체결된 도시는 여전히 해마다 축제를 엽니다.",
+            "note": "was signed 로 완결된 완전한 절이고, where 는 in which 로 바꿔 쓸 수 있습니다."
+          }
+        },
+        {
+          "cells": ["when", "시간", "at / on / in which"],
+          "example": {
+            "en": "The winter **when** the river froze solid became a local legend.",
+            "ko": "그 강이 단단히 얼어붙은 겨울은 지역의 전설이 되었습니다.",
+            "note": "froze 로 완결된 완전한 절이고, when 은 on which 로 바꿔 쓸 수 있습니다."
+          }
+        },
+        {
+          "cells": ["why", "the reason", "for which"],
+          "example": {
+            "en": "Historians still debate the reason **why** the city was abandoned.",
+            "ko": "역사학자들은 그 도시가 버려진 이유를 여전히 논쟁합니다.",
+            "note": "was abandoned 로 완결된 완전한 절이고, why 는 for which 로 바꿔 쓸 수 있습니다."
+          }
+        },
+        {
+          "cells": ["how", "the way (겹쳐 쓰지 않음)", "the way in which"],
+          "example": {
+            "en": "The guide explained **how** the bridge was built.",
+            "ko": "그 안내인은 그 다리가 건설된 방식을 설명했습니다.",
+            "note": "how 는 the way in which 로 바꿔 쓸 수 있고, the way how 는 성립하지 않습니다."
+          }
+        }
+      ],
+      "takeaway": "관계부사는 모두 '전치사 + which' 로 환원됩니다. 다만 역은 성립하지 않아, with which 처럼 대응 관계부사가 없는 형태는 관계부사로 바꿀 수 없습니다. 이 '전치사 + which' 자체의 원리는 뒤 레슨에서 다룹니다."
+    },
+    {
+      "id": "b7",
+      "type": "MNEMONIC",
+      "tier": 3,
+      "title": "환원 짝 암기",
+      "target": "관계부사의 전치사 + which 환원",
+      "why": "수능 서술형과 어법 문항은 관계부사를 '전치사 + which' 로 바꾸거나 그 역을 묻습니다. 네 짝을 외워 두면 환원과 판정을 즉시 처리할 수 있습니다.",
+      "device": "뜻이 곧 전치사입니다. 이유의 why 에는 '~를 위하여'의 for 를 걸어 for which, 장소의 where 에는 '안에·에서'의 in/at, 시간의 when 에는 '~에'의 at/on 을 겁니다.",
+      "items": [
+        { "cue": "where →", "answer": "in / at which (장소)" },
+        { "cue": "when →", "answer": "at / on / in which (시간)" },
+        { "cue": "why →", "answer": "for which (the reason)" },
+        { "cue": "how →", "answer": "the way in which (방법)" }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "관계부사 4종 관문",
+      "mission": "완전한 절 앞에 설 수 있는 관계부사를 모두 고르십시오.",
+      "mode": "SET",
+      "pool": ["where", "when", "why", "how", "which", "whom", "that", "what"],
+      "answers": ["where", "when", "why", "how"],
+      "passText": "관계부사 4종이 손에 붙었습니다. 나머지 which·whom·what 은 뒤 절의 빈자리를 채우는 관계대명사입니다. that 은 대개 그 빈자리를 맡지만, the reason·the way 뒤에서는 why 처럼 완전한 절을 이끌기도 합니다(the way that).",
+      "retryText": "which·whom·what 은 절 안에서 주어·목적어 자리를 맡는 관계대명사이고, that 도 대개 그 자리를 맡습니다(단 the reason·the way 뒤에서는 완전한 절도 이끕니다). 완전한 절 앞에 서는 관계부사는 where·when·why·how 넷뿐이니 다시 골라 보십시오."
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "관계부사 뒤에는 주어·목적어·보어가 모두 갖추어진 완전한 절이 옵니다.",
+      "examples": [
+        {
+          "en": "This is the village **where** my grandparents spent their childhood.",
+          "ko": "이곳이 제 조부모님이 어린 시절을 보낸 마을입니다.",
+          "note": "뒤 절 my grandparents spent their childhood 는 주어와 목적어가 모두 있는 완전한 절입니다."
+        },
+        {
+          "en": "I still remember the morning **when** the results were announced.",
+          "ko": "저는 그 결과가 발표된 아침을 아직 기억합니다.",
+          "note": "뒤 절 the results were announced 는 수동태로 완결된 완전한 절입니다. 빠진 성분이 없으므로 관계부사 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "완전한 절 앞임을 확인한 뒤, 선행사가 장소이면 where, 시간이면 when, the reason 이면 why 를 고릅니다.",
+      "examples": [
+        {
+          "en": "The office **where** the decision was made no longer exists.",
+          "ko": "그 결정이 내려진 사무실은 더 이상 존재하지 않습니다.",
+          "note": "was made 로 완결된 완전한 절 앞이고 선행사가 장소이므로 where 입니다."
+        },
+        {
+          "en": "The autumn **when** the comet appeared is recorded in old chronicles.",
+          "ko": "그 혜성이 나타난 가을은 옛 연대기에 기록되어 있습니다.",
+          "note": "appeared 로 완결된 완전한 절 앞이고 선행사가 시간이므로 when 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "관계부사절이 낀 문장의 해부",
+      "tokens": [
+        { "t": "The city", "role": "S" },
+        { "t": "where", "role": "REL" },
+        { "t": "the conference took place", "role": "M" },
+        { "t": "has hosted", "role": "V" },
+        { "t": "many delegations", "role": "O" }
+      ],
+      "ko": "그 학회가 열린 도시는 많은 대표단을 맞이해 왔습니다.",
+      "layers": [
+        {
+          "label": "① 관계사절을 통째로 괄호에 넣어 걷어냅니다",
+          "roles": ["REL", "M"],
+          "note": "where 부터 took place 까지가 앞의 명사를 꾸미는 관계사절입니다. 주절의 뼈대가 아니므로 묶어서 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "괄호 밖에 남은 명사는 The city 입니다. 이것이 주절의 핵 주어입니다."
+        },
+        {
+          "label": "③ 주절의 본동사를 확인합니다",
+          "roles": ["V"],
+          "note": "has hosted 가 주절의 본동사입니다. took place 는 관계사절 안의 동사이므로 주절과 무관합니다."
+        },
+        {
+          "label": "④ 관계사절 안으로 다시 들어가 완전성을 셉니다",
+          "roles": ["M"],
+          "note": "the conference took place 는 자동사 표현 take place 로 완결되어 빠진 성분이 없습니다. 완전한 절이므로 관계부사 where 가 옳습니다."
+        }
+      ],
+      "conclusion": "선행사 the city 가 장소라는 사실만으로 where 를 고른 것이 아닙니다. 뒤 절이 완전하다는 것을 센 다음, 선행사가 장소이므로 where 를 고른 것입니다."
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "관계부사를 고르는 4단계",
+      "steps": [
+        {
+          "text": "밑줄이나 빈칸 뒤의 절만 따로 떼어 소리 내어 읽습니다.",
+          "applyNote": "뒤 절은 the vaccine was first tested 입니다. 선행사 the clinic 은 잠시 잊습니다."
+        },
+        {
+          "text": "그 절 안에서 주어·목적어·보어 중 빠진 자리가 있는지 셉니다.",
+          "applyNote": "the vaccine 이 주어이고 was tested 가 수동태 동사입니다. 수동태이므로 목적어는 애초에 필요하지 않습니다. 빠진 자리가 없습니다."
+        },
+        {
+          "text": "빠진 자리가 있으면 관계대명사(which·that), 없으면 관계부사 자리입니다.",
+          "applyNote": "빠진 자리가 없으므로 관계부사 자리입니다. 여기에 which 를 넣으면 which 가 맡을 성분이 없습니다."
+        },
+        {
+          "text": "관계부사 자리로 판정된 뒤에야 선행사를 봅니다. 장소는 where, 시간은 when, the reason 은 why, 방법은 how 입니다.",
+          "applyNote": "선행사 the clinic 은 장소이므로 where 가 옳습니다. in which 로 바꿔 써도 같은 뜻입니다."
+        }
+      ],
+      "example": {
+        "en": "The clinic **where** the vaccine was first tested still keeps its original records.",
+        "ko": "그 백신이 처음 시험된 병원은 여전히 최초의 기록을 보관하고 있습니다.",
+        "note": "완전성을 먼저 세고 선행사를 나중에 보는 순서가 판단의 핵심입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The village ( where / which ) the archaeologists discovered last summer lies beneath a wheat field.",
+      "steps": [
+        {
+          "title": "① 뒤 절만 떼어 읽습니다",
+          "body": "괄호 뒤의 절은 the archaeologists discovered last summer 입니다. 선행사 The village 는 잠시 옆으로 치웁니다."
+        },
+        {
+          "title": "② 그 절의 성분을 셉니다",
+          "body": "주어는 the archaeologists 이고 동사는 discovered 입니다. discover 는 목적어가 반드시 필요한 타동사인데, 절 안에 목적어가 없습니다. last summer 는 시간 부사구일 뿐입니다."
+        },
+        {
+          "title": "③ 완전성으로 자리를 판정합니다",
+          "body": "목적어 자리가 비어 있으므로 이 절은 불완전합니다. 불완전한 절 앞은 관계대명사 자리입니다."
+        },
+        {
+          "title": "④ 선행사에 낚이지 않고 답을 확정합니다",
+          "body": "선행사 The village 가 장소라는 이유로 where 를 고르면 discovered 의 목적어가 영원히 비어 있게 됩니다. 빠진 목적어를 메우는 which 가 옳습니다."
+        }
+      ],
+      "answer": "which",
+      "ko": "고고학자들이 지난여름에 발견한 그 마을은 밀밭 아래에 있습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u07-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Autumn is the season {{blank}} migratory birds leave the wetlands.",
+          "options": ["when", "which"],
+          "answer": 0,
+          "translation": "가을은 철새들이 습지를 떠나는 계절입니다.",
+          "explanation": "뒤 절 migratory birds leave the wetlands 는 leave 의 목적어까지 갖춘 완전한 절입니다. 완전한 절 앞이므로 관계부사 자리이고, 선행사 the season 이 시간이므로 when 이 옳습니다.",
+          "trapTags": ["clause-completeness", "antecedent-match"]
+        },
+        {
+          "id": "u07-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The library [[u:where]] the scholars examined last year has been renovated.",
+          "isCorrect": false,
+          "correction": "which",
+          "translation": "학자들이 작년에 조사한 그 도서관은 개보수되었습니다.",
+          "explanation": "examined 는 타동사인데 뒤 절에 목적어가 없습니다. 절이 불완전하므로 관계부사 where 는 설 수 없고, 빠진 목적어를 메우는 관계대명사 which 가 옳습니다. 선행사가 장소라는 점에 끌리면 안 됩니다.",
+          "trapTags": ["clause-completeness", "place-antecedent"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "관계부사와 관계대명사의 갈림길",
+      "columns": ["관계부사 where·when·why·how", "관계대명사 which·that"],
+      "rows": [
+        {
+          "criterion": "뒤 절의 상태",
+          "a": "완전 — 주어·목적어·보어가 다 있습니다",
+          "b": "불완전 — 주어나 목적어가 비어 있습니다"
+        },
+        {
+          "criterion": "절 안에서 맡는 역할",
+          "a": "부사(장소·시간·이유·방법)",
+          "b": "명사(주어·목적어)"
+        },
+        {
+          "criterion": "환원 형태",
+          "a": "전치사 + which (in which, for which)",
+          "b": "전치사 없이 그 자체가 성분입니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "This is the house **where** the poet was born.",
+          "ko": "이곳이 그 시인이 태어난 집입니다.",
+          "note": "the poet was born 은 빠진 성분이 없는 완전한 절이므로 where 가 옳습니다."
+        },
+        {
+          "en": "This is the house **which** the poet bought in 1920.",
+          "ko": "이곳이 그 시인이 1920년에 산 집입니다.",
+          "note": "bought 의 목적어가 비어 있습니다. 그 자리를 메우는 관계대명사 which 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "완전성 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 관계부사 판정은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "관계부사 뒤에는 빠진 성분이 없는 완전한 절이 옵니다.",
+          "isTrue": true,
+          "why": "관계부사는 부사 자리를 스스로 채우므로 뒤 절에 빈자리가 남지 않습니다."
+        },
+        {
+          "statement": "선행사가 장소이면 뒤 절이 불완전해도 where 를 씁니다.",
+          "isTrue": false,
+          "why": "선행사가 장소여도 뒤 절이 불완전하면 관계대명사 which 를 써야 합니다. 판정은 완전성이 먼저입니다."
+        },
+        {
+          "statement": "the way how 는 어법상 성립하지 않습니다.",
+          "isTrue": true,
+          "why": "how 는 선행사 the way 를 이미 품고 있어 겹쳐 쓰지 못합니다."
+        },
+        {
+          "statement": "관계부사 where 는 in which 로 바꿔 쓸 수 있습니다.",
+          "isTrue": true,
+          "why": "완전한 절 앞의 where 는 전치사 + which 로 환원됩니다."
+        },
+        {
+          "statement": "타동사가 목적어를 잃은 절 앞에는 관계부사가 옵니다.",
+          "isTrue": false,
+          "why": "목적어가 빈 불완전한 절 앞은 그 자리를 메우는 관계대명사 자리입니다."
+        },
+        {
+          "statement": "why 의 선행사로는 어떤 명사든 올 수 있습니다.",
+          "isTrue": false,
+          "why": "why 의 선행사는 the reason 계열로 한정됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The report explains the reason ( why / which ) the coastline has eroded so quickly.",
+      "givenSteps": [
+        "① 괄호 뒤의 절만 뗍니다 — the coastline has eroded so quickly 입니다.",
+        "② 성분을 셉니다 — erode 가 '침식되다'라는 자동사로 쓰여 목적어 없이 완결됩니다. so quickly 는 부사구이므로 빠진 성분이 없습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "why — 절이 완전하고 선행사가 the reason 이므로 이유의 관계부사입니다",
+        "which — 선행사 the reason 이 사물 명사이므로 관계대명사를 씁니다",
+        "which — has eroded 가 목적어를 요구하므로 그 자리를 메웁니다"
+      ],
+      "answer": 0,
+      "explain": "뒤 절이 완전하므로 관계대명사 which 가 맡을 성분이 없습니다. 선행사가 the reason 이므로 관계부사 why 가 옳습니다. 선행사가 사물 명사인지 사람 명사인지는 관계부사와 관계대명사를 가르는 기준이 아닙니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "함정 — the way 와 how 를 겹쳐 쓰기",
+      "body": "방법을 나타낼 때 the way 와 how 는 둘 중 하나만 씁니다. the way how 라는 형태는 존재하지 않습니다. the way / how / the way in which / the way that 네 가지가 쓸 수 있는 형태입니다.",
+      "example": {
+        "en": "She explained **the way how** the algorithm sorts the data.",
+        "ko": "그녀는 그 알고리즘이 자료를 정렬하는 방법을 설명했습니다.",
+        "note": "the way how 는 어법상 성립하지 않습니다. the way 를 지우거나 how 를 지워야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 장소 선행사 뒤에 불완전한 절이 올 때",
+      "body": "선행사가 장소 명사이면 반사적으로 where 를 고르게 됩니다. 그러나 뒤 절의 타동사가 목적어를 잃고 있다면 그 자리는 관계대명사 자리입니다. 선행사는 마지막에 보고, 완전성을 먼저 셉니다.",
+      "example": {
+        "en": "The village **where** we reached after a long hike lies beside a lake.",
+        "ko": "우리가 긴 도보 끝에 도착한 그 마을은 호숫가에 있습니다.",
+        "note": "reach 는 전치사 없이 목적어를 받는 타동사입니다. 목적어 자리가 비어 있으므로 where 가 아니라 which 를 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b20",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u07-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Nobody has explained {{blank}} the ancient builders moved such enormous stones without wheels.",
+          "options": ["how", "the way how", "which"],
+          "answer": 0,
+          "translation": "고대의 건설자들이 바퀴 없이 그렇게 거대한 돌을 옮긴 방법을 아무도 설명하지 못했습니다.",
+          "explanation": "뒤 절은 moved 의 목적어 such enormous stones 까지 갖춘 완전한 절이므로 관계대명사 which 는 들어갈 수 없습니다. 선행사 없이 방법을 나타내는 절 자리이며, the way how 는 존재하지 않는 형태이므로 how 하나만 남습니다.",
+          "trapTags": ["way-how", "clause-completeness"]
+        },
+        {
+          "id": "u07-c2-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The laboratory [[u:where]] the physicist built her first prototype was demolished last year.",
+          "isCorrect": true,
+          "translation": "그 물리학자가 첫 시제품을 만든 실험실은 작년에 철거되었습니다.",
+          "explanation": "뒤 절 the physicist built her first prototype 은 built 의 목적어 her first prototype 까지 갖춘 완전한 절입니다. 완전한 절 앞이고 선행사가 장소이므로 where 가 옳습니다. built 가 타동사라는 이유만으로 which 를 고르면 목적어가 둘이 됩니다.",
+          "trapTags": ["clause-completeness", "place-antecedent"]
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 CHECK 의 how 문항(고대 건설자들이 바퀴 없이 거대한 돌을 옮긴 방법)에서 how 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "뒤 절이 목적어까지 갖춘 완전한 절이라 which 가 맡을 성분이 없고, the way 와 how 는 겹쳐 쓸 수 없으므로 how 만 남습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 완전성으로 관계대명사를 먼저 배제하고, 방법 표현의 중복 금지로 나머지 하나를 지운 절차입니다."
+        },
+        {
+          "text": "문장이 방법을 묻는 내용이므로 의미상 how 가 가장 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "의미의 자연스러움은 근거가 되지 못합니다. the way how 도 의미는 통하지만 어법상 성립하지 않습니다. 판단은 절의 완전성과 형태 규칙에서 나옵니다."
+        },
+        {
+          "text": "explained 가 타동사여서 뒤에 관계대명사를 쓸 수 없기 때문입니다.",
+          "correct": false,
+          "feedback": "주절 동사가 타동사인지는 관계사 선택과 무관합니다. 판단 대상은 관계사 뒤의 절이 완전한가입니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The town [[1:where]] the treaty was signed still attracts historians, but the archive [[2:where]] researchers consult for original documents [[3:has]] moved to a new building [[4:that]] the city opened last year.",
+      "answer": 2,
+      "correction": "which",
+      "rationales": [
+        "뒤 절 the treaty was signed 는 수동태로 완결된 완전한 절이고 선행사가 장소이므로 where 가 옳습니다.",
+        "consult 는 타동사인데 뒤 절에 목적어가 없습니다. 절이 불완전하므로 where 가 아니라 관계대명사 which 를 써야 합니다.",
+        "관계사절을 걷어내면 핵 주어는 단수 명사 the archive 이므로 has moved 가 옳습니다.",
+        "뒤 절 the city opened 는 opened 의 목적어가 비어 있는 불완전한 절이므로 관계대명사 that 이 옳습니다."
+      ],
+      "ko": "그 조약이 체결된 도시는 여전히 역사학자들을 끌어들이지만, 연구자들이 원본 문서를 찾기 위해 참조하는 그 기록보관소는 시가 작년에 개관한 새 건물로 옮겨 갔습니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 두 문장을 관계부사로 연결해 한 문장으로 쓰게 합니다. 앞 문장의 명사가 뒤 문장에서 '전치사 + 명사'로 쓰였는지 확인한 뒤, 그 전치사구를 관계부사로 바꾸어야 만점입니다.",
+          "sample": {
+            "en": "This is the cafe. The two writers first met in the cafe.",
+            "ask": "두 문장을 관계부사를 사용해 한 문장으로 연결하십시오.",
+            "answer": "This is the cafe where the two writers first met."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 관계사에 밑줄을 긋고 which 와 where 를 바꿔치기합니다. 밑줄 뒤 절만 떼어 읽어 성분이 다 있으면 관계부사가, 빠진 자리가 있으면 관계대명사가 옳습니다.",
+          "sample": {
+            "en": "Scientists study the deep caves [[u:which]] rare minerals form under extreme pressure.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "where — 뒤 절 rare minerals form 은 자동사로 완결된 완전한 절이므로 which 가 맡을 성분이 없습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coral reefs shelter about a quarter of all marine species. [[u:The shallow lagoons where the youngest colonies grow heat up faster than the open sea.]] When the water stays too warm for weeks, the corals expel the algae that feed them. Some reefs recover slowly, but others never return to their earlier state.",
+      "instruction": "밑줄 친 문장에서 관계사절을 걷어내고, where 가 옳은 이유를 완전성으로 설명하십시오.",
+      "found": "관계사절 where the youngest colonies grow 를 괄호로 묶으면 주절은 The shallow lagoons heat up faster than the open sea 입니다. 관계사절 안의 grow 는 자동사여서 목적어 없이 완결되므로 절이 완전합니다. 완전한 절 앞이고 선행사 the shallow lagoons 가 장소이므로 where 가 옳습니다.",
+      "gist": "얕은 석호가 외해보다 빠르게 데워져 산호가 백화에 취약해진다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "선행사 미끼의 문지기",
+      "intro": "이 성문은 선행사라는 미끼로 방문객을 시험합니다. 장소 명사만 보고 where 를 내미는 자는 번번이 문 앞에서 되돌아갑니다. 뒤 절의 완전성을 먼저 세는 눈을 네 번의 판정으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The hall {{blank}} the orchestra rehearses every morning stands near the river.",
+          "options": ["where", "which"],
+          "answer": 0,
+          "why": "rehearse 가 자동사로 완결되어 뒤 절이 완전합니다. 완전한 절 앞이고 선행사가 장소이므로 where 입니다."
+        },
+        {
+          "prompt": "The decade {{blank}} the two nations signed the treaty brought a fragile peace.",
+          "options": ["when", "which"],
+          "answer": 0,
+          "why": "signed 의 목적어 the treaty 까지 갖춘 완전한 절이므로 시간 선행사 앞에서 when 입니다."
+        },
+        {
+          "prompt": "The harbor {{blank}} the fishermen abandoned decades ago now draws tourists.",
+          "options": ["which", "where"],
+          "answer": 0,
+          "why": "abandon 은 타동사인데 뒤 절에 목적어가 없습니다. 불완전한 절이므로 관계대명사 which 입니다. 선행사가 장소라는 점에 낚이면 안 됩니다."
+        },
+        {
+          "prompt": "Historians debated the reason {{blank}} the empire declined so rapidly.",
+          "options": ["why", "which"],
+          "answer": 0,
+          "why": "decline 이 자동사로 완결된 완전한 절이고, 선행사가 the reason 이므로 why 입니다."
+        }
+      ],
+      "winText": "성문이 열립니다. 네 번 모두 당신은 선행사를 먼저 보지 않고 뒤 절의 성분부터 셌습니다. 장소 미끼도, 시간 미끼도 당신을 흔들지 못했습니다.",
+      "loseText": "문지기가 고개를 젓습니다. 네 문항이 물은 것은 하나였습니다 — '뒤 절에 빠진 자리가 있는가.' 선행사를 마지막에 보는 순서만 지키면 성문은 다시 열립니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "관계부사는 뒤 절이 ___할 때만 쓸 수 있고, 선행사는 ___ 4종 중 무엇을 쓸지만 정합니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "판단 순서는 완전성이 먼저이고 선행사가 나중입니다. 뒤 절에 빠진 자리가 없으면 관계부사, 있으면 관계대명사입니다.",
+        "완전한 절 앞이라고 확정된 뒤에 선행사를 봅니다. 장소는 where, 시간은 when, the reason 은 why, 방법은 how 입니다.",
+        "관계부사는 '전치사 + which'로 환원됩니다(where = in which, why = for which).",
+        "the way 와 how 는 겹쳐 쓰지 않습니다. the way / how / the way in which / the way that 중 하나만 씁니다."
+      ],
+      "keySentence": {
+        "en": "The clinic **where** the vaccine was first tested still keeps its original records.",
+        "ko": "그 백신이 처음 시험된 병원은 여전히 최초의 기록을 보관하고 있습니다.",
+        "note": "뒤 절이 완전하다는 것을 센 다음, 선행사가 장소이므로 where 를 골랐습니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u07-c2-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The stadium {{blank}} the final match was played holds sixty thousand people.",
+          "options": ["where", "which"],
+          "answer": 0,
+          "translation": "결승전이 열린 그 경기장은 6만 명을 수용합니다.",
+          "explanation": "뒤 절 the final match was played 는 수동태로 완결된 완전한 절입니다. 빠진 성분이 없으므로 관계대명사 which 는 설 수 없고, 선행사가 장소이므로 where 가 옳습니다.",
+          "trapTags": ["clause-completeness", "antecedent-match"]
+        },
+        {
+          "id": "u07-c2-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The century [[u:when]] historians describe as an age of exploration produced remarkable maps.",
+          "isCorrect": false,
+          "correction": "which",
+          "translation": "역사학자들이 탐험의 시대라고 기술하는 그 세기는 놀라운 지도들을 만들어 냈습니다.",
+          "explanation": "뒤 절에서 describe 는 목적어를 필요로 하는 타동사인데 그 목적어가 비어 있습니다. 절이 불완전하므로 시간 선행사임에도 when 은 쓸 수 없고, 빠진 목적어를 메우는 which 가 옳습니다.",
+          "trapTags": ["clause-completeness", "time-antecedent"]
+        },
+        {
+          "id": "u07-c2-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The remote island {{blank}} the expedition finally reached lies far from any shipping route.",
+          "options": ["which", "where"],
+          "answer": 0,
+          "translation": "그 탐험대가 마침내 도달한 외딴섬은 어떤 항로에서도 멀리 떨어져 있습니다.",
+          "explanation": "reach 는 전치사 없이 목적어를 받는 타동사인데 뒤 절에 목적어가 없습니다. 절이 불완전하므로 관계부사 where 는 쓸 수 없고 관계대명사 which 가 옳습니다. 선행사가 장소라는 점에 이끌리면 안 됩니다.",
+          "trapTags": ["clause-completeness", "place-antecedent"]
+        }
+      ]
+    }
+  ]
+}

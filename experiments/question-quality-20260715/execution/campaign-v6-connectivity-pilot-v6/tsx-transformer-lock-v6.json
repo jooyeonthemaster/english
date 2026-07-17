@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "question-quality-tsx-transformer-lock-v6",
+  "status": "AUTHOR_COMPILER_AND_VALIDATION_ONLY_NOT_LIVE_RUNTIME",
+  "algorithm": "SHA256_OF_SORTED_ROWS_SHA256_SPACE_BYTES_SPACE_PACKAGE_RELATIVE_PATH_LF",
+  "platform": "win32",
+  "architecture": "x64",
+  "nodeMajorPolicy": "24.x",
+  "nodeRuntime": {
+    "executablePath": "C:\\Program Files\\nodejs\\node.exe",
+    "nodeVersion": "v24.7.0",
+    "executableBytes": 89578992,
+    "executableSha256": "c1b274a8d0a23e060fc42ce71c3cdfa1569b83d91ba82cc59fa907da97a425e9"
+  },
+  "independentPreTransformRoot": {
+    "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/tsx-transform-root-v6.mjs",
+    "deliberatelyExcludedFromThisLockToAvoidHashCycle": true,
+    "futureSubjectAuditAndManifestMustPinRootBytes": true
+  },
+  "tsxEntrypoint": "node_modules/tsx/dist/esm/index.mjs",
+  "tsxCliIncludedInSealedPackageBytes": true,
+  "packageJson": {
+    "path": "package.json",
+    "bytes": 4496,
+    "sha256": "62eeef660ffc172eee422ddf9a55342366fff897633070926da7240d4ac4a7bc",
+    "enginesNode": "24.x"
+  },
+  "packageLock": {
+    "path": "package-lock.json",
+    "bytes": 777883,
+    "sha256": "c16c85142716e7a13131bd6a4bf5c8ddc667cde75e37367e22c1582ed7d96f72",
+    "lockfileVersion": 3
+  },
+  "implementationFiles": [
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/author-bootstrap-v6.ps1",
+      "bytes": 4795,
+      "sha256": "d6fc29246dab462af580d4a0468ea2d3a7e7dfbaa0ad1f0572fba5e6cde24978"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/sealed-transform-launcher.mjs",
+      "bytes": 16018,
+      "sha256": "55fded04e879597ae7d6ab8aafac2c08dc6f6f72ee938e3ccba15b859eef7831"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/transformer-provenance.ts",
+      "bytes": 6581,
+      "sha256": "abd6a84e719b861b92efaa7a66e5b868cfbad1659a3602be1275eb9b01534411"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/tsx-transform-capture-loader.mjs",
+      "bytes": 2136,
+      "sha256": "9935ad9ce3bc62905fd48269917125cb0d0f2b1f880c0c91558df14317901e99"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/tsx-transform-capture-register.mjs",
+      "bytes": 613,
+      "sha256": "cf972291c807b10f49ab8a7f6b458def4dc43831b65ec8315f4bf43776a7eaf1"
+    }
+  ],
+  "packages": [
+    {
+      "name": "@esbuild/win32-x64",
+      "version": "0.27.3",
+      "exactFiles": 3,
+      "exactBytes": 11376133,
+      "setSha256": "a5223bea9409e3c071cf3f8a2598b4a8b72de6aa6edf41e952a47172877b8ab9",
+      "kind": "platform_native_transformer_binary"
+    },
+    {
+      "name": "esbuild",
+      "version": "0.27.3",
+      "exactFiles": 7,
+      "exactBytes": 135307,
+      "setSha256": "7a99ab745e01c5452bbb5564bd543df925f83cf627ca47514d304cf676362090",
+      "kind": "transformer_implementation"
+    },
+    {
+      "name": "get-tsconfig",
+      "version": "4.13.6",
+      "exactFiles": 7,
+      "exactBytes": 156656,
+      "setSha256": "39b147aa88d4e3152f1f7b96b6c7633b493c8eb96b2e32e325385853a8614eef",
+      "kind": "tsx_transitive_implementation"
+    },
+    {
+      "name": "resolve-pkg-maps",
+      "version": "1.0.0",
+      "exactFiles": 7,
+      "exactBytes": 15037,
+      "setSha256": "b87b4cd7c3247d809c6a4c10fd51d13f2dc5cc993f41dcd6840e3d81fece49f1",
+      "kind": "tsx_transitive_implementation"
+    },
+    {
+      "name": "tsx",
+      "version": "4.21.0",
+      "exactFiles": 50,
+      "exactBytes": 432652,
+      "setSha256": "76c43945eb8cce57708f18eaf65f990cc4c3281f60aed56c3998824a7999b2a0",
+      "kind": "tsx_loader_and_cli_complete_package"
+    }
+  ],
+  "exactImplementationFiles": 5,
+  "exactImplementationBytes": 30143,
+  "exactPackages": 5,
+  "exactFiles": 74,
+  "exactBytes": 12115785,
+  "optionalDependenciesNotInstalledAreNotAuthority": true,
+  "liveRuntimeTsxAllowed": false
+}

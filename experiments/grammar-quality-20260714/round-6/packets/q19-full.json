@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20220324-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 134
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=h  (B):dec=e  (C):dec=h  (D):ANS=g  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 174,
+        "relPos": 0.254,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 300,
+        "relPos": 0.438,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 486,
+        "relPos": 0.709,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 541,
+        "relPos": 0.79,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 555,
+        "relPos": 0.81,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.81,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been proven to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you to do another task and another. By the end of the day, that one task completed will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "required",
+        "isError": false,
+        "correction": "required",
+        "errorExpression": "required",
+        "surroundingText": "It was a simple task, but every morning we were required to make our bed to perfection.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "proven",
+        "isError": false,
+        "correction": "proven",
+        "errorExpression": "proven",
+        "surroundingText": "but the wisdom of this simple act has been proven to me many times over.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "to do",
+        "isError": false,
+        "correction": "to do",
+        "errorExpression": "to do",
+        "surroundingText": "sense of pride and it will encourage you to do another task and another.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "that",
+        "isError": true,
+        "correction": "that",
+        "errorExpression": "those",
+        "surroundingText": "By the end of the day, that one task completed will have turned into many",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "completed",
+        "isError": false,
+        "correction": "completed",
+        "errorExpression": "completed",
+        "surroundingText": "By the end of the day, that one task completed will have turned into many tasks completed.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "required"
+      },
+      {
+        "label": "(B)",
+        "text": "proven"
+      },
+      {
+        "label": "(C)",
+        "text": "to do"
+      },
+      {
+        "label": "(D)",
+        "text": "those"
+      },
+      {
+        "label": "(E)",
+        "text": "completed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 수동태 구조에서 주격보어로 쓰인 준동사 역할을 묻는 자리로, 'require + 목적어 + to부정사' 구문이 수동태('be required to-V')로 전환된 구조이므로 과거분사 'required'가 어법상 옳습니다.",
+      "(B)": "이 자리는 동사의 태를 묻는 자리로, 문장의 주어인 'the wisdom of this simple act'가 증명되는 대상이므로 현재완료 수동태인 'has been proven'이 어법상 옳습니다.",
+      "(C)": "이 자리는 목적격보어의 형태를 묻는 자리로, 5형식 동사 'encourage'는 목적격보어로 to부정사를 취하므로 'to do'가 어법상 옳습니다.",
+      "(E)": "이 자리는 후치 수식 분사의 태를 묻는 자리로, 수식을 받는 명사 'one task'가 완료되는 대상이므로 수동의 의미를 나타내는 과거분사 'completed'가 어법상 옳습니다."
+    },
+    "explanation": "수식을 받는 명사구의 명사 핵이 단수인 'one task'이므로 복수형 명사를 수식하는 지시형용사 (D) 'those'는 이 자리에 올 수 없습니다. 따라서 단수 명사구를 가리키는 지시형용사인 'that'으로 고쳐야 합니다. 뒤에 오는 명사의 수에 유의하여 지시사의 형태를 일치시킬 수 있어야 합니다.",
+    "keyPoints": [
+      "(D) 대명사 일치 — 수식을 받는 핵심 명사의 수에 일치하도록 변형",
+      "(C) 목적격보어 형태 — 5형식 동사 encourage가 이끄는 to부정사 목적격보어",
+      "(E) 분사 능동 vs 수동 — 앞의 명사를 수식하는 과거분사의 수동 관계 판정"
+    ],
+    "tags": [
+      "어법",
+      "대명사수일치",
+      "목적격보어",
+      "과거분사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we were __(A) required__ to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been __(B) proven__ to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you __(C) to do__ another task and another. By the end of the day, __(D) those__ one task __(E) completed__ will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

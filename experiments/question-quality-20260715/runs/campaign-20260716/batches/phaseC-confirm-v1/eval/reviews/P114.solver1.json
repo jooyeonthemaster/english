@@ -1,0 +1,35 @@
+{
+  "pid": "P114",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'short-term deadlines are always prioritized'는 역접(But) 이후 필자가 경고하는 바로 그 행동이다. 누적적 자기관리 방치의 위험을 인식하라는 주제와 정면 충돌한다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'unexpected meetings cause immediate harm'은 도입부 세부 소재(예상치 못한 회의)를 재활용한 오답. 'make sure that in the long term, ~가 즉각적 해를 끼친다'는 결합 자체가 의미상 비문에 가깝고(해를 끼치도록 보장?), 장기적 관점이라는 부사구와도 모순된다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "지문의 'No matter how much we plan' 때문에 순간적으로 끌리지만, 그 문장은 오히려 계획으로도 가끔의 실패는 막을 수 없다는 양보다. 또한 'make sure that self-care demands constant daily planning'은 '요구한다는 사실을 보장한다'는 비논리적 결합이 된다."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "'make sure that in the long term, such neglect should remain an occasional deviation'으로 삽입 시 such neglect가 'not prioritizing self-care'를 정확히 조응하고, '가끔은 어쩔 수 없다(occasionally have days when that happens)' vs '누적되면 위험(cumulative impact)'의 대립을 정확히 해소한다 — 방치가 상시가 아닌 가끔의 일탈로만 남게 하라. seam 소견: make sure that절 안의 should는 'make sure that X remains'가 더 자연스러워 약간 잉여적이나, 문법적으로 성립하는 표현(당위의 should)이며 실격 사유는 아니다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "가장 강한 매력 오답. 지문의 'get everything done before our deadlines'를 그대로 어휘 반향하여 실제로 끌렸다. 그러나 마지막 문장의 등위 구조상 빈칸은 'recognize the cumulative impact of not prioritizing self-care'와 한 메시지를 이뤄야 하는데, '결국 모든 일을 끝낼 수 있게 하라'는 자기관리 보호가 아닌 생산성 완수로 초점을 이탈시킨다. 오히려 모든 일을 끝내려다 자기관리를 버리는 것이 지문이 경고하는 패턴이다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 어휘 반향 미끼 ⑤(get everything done)와 소재 재활용 미끼 ③(planning)에 실제 유인력이 있으나, 역접 이후 '누적 영향 인식 + 장기적 보장'이라는 이중 요구를 동시에 충족하는 것은 ④뿐. ④의 'make sure that ... should remain'은 경미한 잉여(should)가 있으나 정답성에는 영향 없음. 단일 정답으로 수렴."
+}

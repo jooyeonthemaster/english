@@ -1,0 +1,108 @@
+{
+  "pid": "P032",
+  "requestedDifficulty": "INTERMEDIATE",
+  "family": "BLANK_INFERENCE",
+  "blindAnswer": "2",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "오답 1 해설 극성 오분석: 해설은 '글은 타인을 완전히 무시하라고 한 적이 없으며, 친절하게 공감해주라고 언급했습니다. 극성 반전 함정입니다'라고 하지만, 빈칸은 'just don't _____' 안에 있으므로 선지 1을 넣은 완성문은 'just don't shut them completely out of your thoughts' = '타인을 무시하지 말라'가 된다. 완성문은 무시를 유도하지 않고 오히려 그 반대를 말하므로, 해설이 제시한 오답 사유(무시 유도)는 완성문의 실제 의미와 대응하지 않는다. 실제 결함은 '앞의 kindness 절과 중복되어 caveat 기능을 못하고 자기보호 경고를 담지 못함'인데 해설은 이를 설명하지 않는다."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "오답 3 해설 동일 극성 오분석: '힘든 동료와의 모든 교류를 끊으라는 것은 본문의 범위를 벗어난 과확장'이라고 하지만, 완성문은 'just don't avoid any interaction with troubled colleagues' = '교류를 끊지 말라'이다. 완성문은 교류 단절을 주장하지 않으므로 해설이 지목한 결함(단절 과확장)은 부정어 슬롯을 무시한 채 선지 원문만 분석한 오설명이다."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "본해설 총괄 문장 '반면에 오답들은 타인을 완전히 무시하거나 과도한 상호작용 단절을 유도하는 함정으로 지문의 논리에 어긋납니다'는 (a) 선지 4(원인 간과)·5(과잉 감정 반응)에는 전혀 해당하지 않는 일괄 서술이고, (b) 선지 1·3에 대해서도 위와 같은 부정어 슬롯 극성 오류를 반복한다."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "오답 4 해설의 '지협적인'은 비단어(오탈자, '지엽적인'의 오기)."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "오답 5 해설의 \"'감정 전염에 휘말리지 말라'는 빈칸 뒤의 논리\"는 존재하지 않는 위치를 지목한다 — 빈칸은 지문 마지막 어구이며 빈칸 뒤에는 아무 내용도 없다. '빈칸에 들어갈 논리'라고 해야 정확하다."
+    }
+  ],
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문과 전(全) 문장 일치하며, 유일한 변형은 마지막 절 'allow yourself to be pulled down too'를 '_____'로 치환한 것뿐이다. 문장 접합 파손·중복·누락·고아 문장부호 없음('just don't _____.' 마침표 정상). 선지 라벨 1~5와 선언 정답 2가 렌더와 일치.",
+    "V2": "각 선지를 'just don't ___'에 독립 대입: (1) 'don't shut them out' — kindness 절 반복일 뿐 caveat 기능 상실, 자기보호 경고 부재 → 최적 아님. (2) 'don't let their negativity drag your feelings under' — 원문 'don't allow yourself to be pulled down too'의 정확한 재진술이자 1문장 'spread like a virus'·2문장 'Don't damage yourself'가 요구하는 결론 caveat → 유일 최적. (3) 'don't avoid any interaction' — 1과 기능적으로 동일한 중복 진술, caveat 아님. (4) 'don't overlook the real cause' — 지문은 원인 진단을 조언한 적 없고 '원인'을 당사자의 uncritical response에 두므로 결론 기능 불일치. (5) 'don't respond with an overly dramatic attitude' — 지문 6문장('avoiding melodramatic reactions')과 표면 일치해 가장 강한 경쟁지이나, 'Still'이 양보한 종속·타인지향 조언의 반복일 뿐이며 글 전체가 축적한 자기 감정 전염 경고(1·2·3문장)를 담지 못함 → '가장 적절한' 기준에서 2에 열세. 정답 집합 = {2} 단일, 유일성 성립.",
+    "V3": "지문·발문 문법적. 정답 대입 완성문 '...show them kindness and give them a sympathetic ear; just don't let their negativity drag your feelings under.' 문법적·자연스러움. 5개 선지 모두 동일 VP 슬롯에 문법적으로 안착, seam 비문·비단어 없음.",
+    "V4": "실패 — validityIssues 참조. 정답 근거 설명 자체(② = 'allow yourself to be pulled down too' 재진술)는 정확하나, 오답 1·3 해설이 부정어 슬롯을 무시한 극성 오분석이고 총괄 문장이 오답 4·5를 오귀속하며 비단어('지협적')·유령 위치 지시('빈칸 뒤의 논리')가 있다.",
+    "V5": "정답 라벨 2 ↔ 선지 2 텍스트 ↔ 해설 인용(② 'let their negativity drag your feelings under') 일치. 오답 해설 키 {1,3,4,5} = 비정답 선지 전체. keyPoints 3항목이 해설 논지와 모순 없음. markedExpressions는 빈칸 유형에서 불요."
+  },
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "craftNotes": {
+    "C1": "빈칸이 글의 결론 caveat(감정 전염 자기보호)이라는 핵심 논지 지점을 겨냥 — 의미 있는 포인트이나 '마지막 문장 주제 재진술' 전형에 머무름.",
+    "C2": "설계 의도는 극성 반전(1)·과확장(3)·과협소(4)·세부 반복(5)으로 구분되나, 부정어 슬롯 안에서 1과 3은 완성문 기준 동일한 '교류 유지' 진술로 수렴해 함정 유형이 실질 중복되고, 1·3의 설계가 완성문이 아닌 선지 원문 극성 기준으로 이루어진 흔적(해설 오분석과 동일 뿌리)이 있다.",
+    "C3": "실질 경쟁은 2 vs 5 하나뿐. 4는 앵커('real cause' ↔ 'not the occurrence itself but the response')가 있어 준경쟁적이나 1·3은 완성문을 읽는 순간 caveat 기능 부재로 빠르게 소거된다.",
+    "C4": "메타 누출 없음: 5개 선지 모두 동일 VP 슬롯, 길이·극성·절대어 단서로 정답 특정 불가. 원문 'too' 제거로 조응 힌트도 없앰. 'negativity'가 2문장 'negative, unproductive attitudes'와 겹치나 근거 충분성 범위 내.",
+    "C5": "INTERMEDIATE 요청과 정합: 결론 문장 1단계 재진술 빈칸 + 강한 경쟁지 1개 수준의 함정 깊이.",
+    "C6": "정답 근거 문단은 명료하나 오답 해설 2건이 사실 오류(극성 오분석), 총괄 문장 오귀속, 비단어 1건, 유령 위치 지시 1건 — 해설 품질이 문항 본체보다 현저히 낮다."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전형 디코이(설계 의도: '타인 무시' 방향)",
+      "temptingBecause": "'remaining detached'(거리 두기) 조언과 표면적으로 공명하여, 지문을 '거리를 두라'로 요약한 학생이 고를 수 있다.",
+      "decisiveFlaw": "'just don't ___' 슬롯에 넣으면 '생각에서 완전히 몰아내지 말라'가 되어 앞의 kindness 절 반복일 뿐, 공감에 대한 자기보호 caveat 기능을 하지 못한다. 해설이 주장하는 '무시 유도'는 완성문 의미와 반대다."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 원문 결론 'don't allow yourself to be pulled down too'의 재진술",
+      "temptingBecause": "(정답) 1문장 virus 은유·2문장 'Don't damage yourself'·3문장 'not to be overcome'가 수렴하는 자기 감정 전염 경고를 결론 caveat로 완성한다.",
+      "decisiveFlaw": "없음."
+    },
+    {
+      "label": "3",
+      "intent": "과확장형 디코이(설계 의도: '모든 교류 단절')",
+      "temptingBecause": "'detached'를 물리적 거리 두기로 오독한 학생에게 그럴듯하다.",
+      "decisiveFlaw": "완성문 'don't avoid any interaction'은 교류 단절이 아니라 교류 유지 진술로, 선지 1과 기능적으로 중복되며 caveat가 아니다. 해설이 지목한 '단절 과확장'은 부정어 슬롯을 무시한 오분석."
+    },
+    {
+      "label": "4",
+      "intent": "과협소/half-truth 디코이 — 'What hurts this person is not the occurrence itself but the response' 문장 앵커",
+      "temptingBecause": "'real cause'가 지문의 원인 논의와 어휘적으로 겹쳐 세부 근거를 찾은 듯한 착각을 준다.",
+      "decisiveFlaw": "지문은 독자에게 타인 문제의 원인을 진단하라고 조언한 적이 없고, '원인'은 당사자의 무비판적 반응에 있다고 했다. 결론 caveat 자리의 담화 기능(자기보호)과 무관한 지엽 진술."
+    },
+    {
+      "label": "5",
+      "intent": "세부 조언 반복형 half-truth — 6문장 'avoiding melodramatic reactions' 반복",
+      "temptingBecause": "지문에 명시적으로 존재하는 조언과 직접 일치해 가장 강한 경쟁지다. 완성문도 그 자체로는 통사·의미 모두 성립한다.",
+      "decisiveFlaw": "'Still'은 detachment/멜로드라마 회피 조언을 양보하고 kindness로 전환하는 표지이므로, 뒤따르는 'just don't' caveat는 글 전체가 축적한 자기 감정 전염 경고여야 한다. 5는 이미 양보된 타인지향 종속 조언의 반복이라 결론 기능·원문 span('be pulled down') 보존 모두 실패."
+    }
+  ],
+  "explanationIssues": [
+    "오답 1 해설: 부정어 슬롯 극성 오분석 — 완성문은 '무시하지 말라'인데 '무시 유도 함정'으로 설명 (major).",
+    "오답 3 해설: 동일 극성 오분석 — 완성문은 '교류를 끊지 말라'인데 '교류 단절 과확장'으로 설명 (major).",
+    "본해설 총괄 문장: '오답들은 타인을 완전히 무시하거나 과도한 상호작용 단절을 유도'는 선지 4·5에 해당하지 않는 오귀속이며 1·3에 대해서도 극성 오류를 반복 (minor).",
+    "오답 4 해설: 비단어 '지협적인' ('지엽적인'의 오탈자) (minor).",
+    "오답 5 해설: '빈칸 뒤의 논리' — 빈칸이 지문 최말단이므로 빈칸 뒤에는 아무것도 없음, 유령 위치 지시 (minor)."
+  ],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님 (false 고정).",
+  "grade": "F",
+  "notes": "문항 본체는 견고하다: 렌더 무결(V1), 정답 유일성 성립(V2 — 유일한 실질 경쟁지 5도 담화 기능 불일치로 명확히 열세), 문법성 양호(V3), 필드 동기화 완전(V5), 단서 경제성·난이도 정합도 준수. 그러나 해설이 부정어 슬롯('just don't ___')을 무시하고 선지 원문 극성 기준으로 오답 1·3을 오분석하는 사실 오류를 포함하고, 총괄 문장 오귀속·비단어·유령 위치 지시가 겹쳐 V4 실패 → 등급 F. 수리 방향: 오답 1·3 해설을 완성문 의미 기준('caveat 기능 부재·kindness 절 중복')으로 재작성, 총괄 문장을 선지별 함정 유형에 맞게 교체, '지협적→지엽적', '빈칸 뒤의 논리→빈칸에 들어갈 결론 논리' 교정. 해설만 수리하면 B급(합계 14→C6 회복 시 17선) 재판정 여지가 있다."
+}

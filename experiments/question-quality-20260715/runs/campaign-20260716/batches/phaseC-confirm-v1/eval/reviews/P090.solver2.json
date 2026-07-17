@@ -1,0 +1,35 @@
+{
+  "pid": "P090",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "In 'concerned that dropping their masks would make them appear weak', the that-clause needs a nominal subject for the finite verb 'would make'. The gerund phrase 'dropping their masks' fills that slot correctly. No parse renders it ill-formed."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'subordinates perceived the removal of the mask as an act of strength' — finite past-tense verb agreeing with the plural subject 'subordinates'; 'perceive X as Y' is the standard complementation frame; tense is consistent with the surrounding narrative past ('were concerned', 'encouraged')."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'...encouraged a culture where those subordinates did the same, creating a snowball effect' — a resultative free-adjunct participle whose notional subject is the event of the preceding clause. Standard and grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'Some of the ways [we helped the CEOs remove their masks] being to actually name..., explore..., and ask...' — 'we helped' sits inside a reduced relative clause modifying 'the ways', so it cannot serve as the matrix verb. With nonfinite 'being', the sentence has no finite main verb and is a fragment. Rescue parses fail: an absolute construction requires an accompanying main clause (none exists), and a gerund-subject reading leaves no predicate. The required form is finite plural copula 'were' (subject 'Some of the ways', complement the coordinated to-infinitives)."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'rebuild a leadership identity based on values, strengths, and ambitions' — past-participle reduced relative ('which is/was based on...') modifying 'identity'; 'base X on Y' licenses the passive participle. Grammatical."
+    }
+  ],
+  "note": "Single cleanly defensible answer. (D) fails under every available parse (no finite matrix verb → sentence fragment), while (A), (B), (C), (E) each survive adversarial reparse attempts (gerund subject, finite agreement, free adjunct, reduced relative respectively). Long-distance cue for (D): recognizing 'we helped...' as a contact relative clause on 'the ways', which strips the sentence of any finite predicate."
+}

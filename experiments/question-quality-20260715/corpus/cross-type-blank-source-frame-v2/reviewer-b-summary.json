@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "B",
+  "lens": "paired-item-design-and-killer-headroom",
+  "status": "FROZEN_INDEPENDENT_FULL_CENSUS",
+  "method": {
+    "frameRows": 157,
+    "reviewedRows": 157,
+    "rawPassageReadForEveryRow": true,
+    "sampling": false,
+    "delegation": false,
+    "replacement": false,
+    "topUp": false,
+    "otherReviewerArtifactsRead": false,
+    "questionCandidatesGenerated": 0,
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0
+  },
+  "verdictDistribution": {
+    "PASS": 151,
+    "EXCLUDE": 2,
+    "DOMAIN_REVIEW": 4
+  },
+  "criterionDistributions": {
+    "answerDeterminacy": {
+      "HIGH": 155,
+      "LOW": 2
+    },
+    "targetCentrality": {
+      "HIGH": 146,
+      "MEDIUM": 10,
+      "LOW": 1
+    },
+    "pairedItems": {
+      "HIGH": 126,
+      "MEDIUM": 29,
+      "LOW": 2
+    },
+    "killerSynthesis": {
+      "HIGH": 126,
+      "MEDIUM": 30,
+      "LOW": 1
+    },
+    "distractors": {
+      "HIGH": 126,
+      "MEDIUM": 29,
+      "LOW": 2
+    },
+    "misconceptionAxes": {
+      "PASS": 156,
+      "FAIL": 1
+    },
+    "surfaceGiveawayRisk": {
+      "LOW": 145,
+      "MEDIUM": 11,
+      "HIGH": 1
+    },
+    "factualPremise": {
+      "CLEAR": 153,
+      "NEEDS_DOMAIN_EVIDENCE": 4
+    }
+  },
+  "reasonCodeDistribution": {
+    "B_UNIQUE_CENTRAL_ANSWER": 155,
+    "B_PAIRED_ARMS_SAME_READING": 155,
+    "B_MULTI_CLUE_OPTION_HEADROOM": 155,
+    "B_FACTUAL_PREMISE_REQUIRES_DOMAIN_EVIDENCE": 4,
+    "B_LOW_ANSWER_DETERMINACY": 2,
+    "B_PAIRED_ARM_COLLAPSE": 2,
+    "B_INSUFFICIENT_OPTION_HEADROOM": 2,
+    "B_PREEXISTING_SOURCE_GAP": 1,
+    "B_INTERNAL_POLARITY_CONTRADICTION": 1
+  },
+  "verdictByDiscourse": {
+    "argumentative": {
+      "PASS": 37,
+      "DOMAIN_REVIEW": 1
+    },
+    "expository": {
+      "PASS": 62,
+      "EXCLUDE": 2
+    },
+    "narrative": {
+      "PASS": 43,
+      "DOMAIN_REVIEW": 3
+    },
+    "practical": {
+      "PASS": 9
+    }
+  },
+  "verdictByTopic": {
+    "art-culture": {
+      "PASS": 12
+    },
+    "humanities": {
+      "PASS": 33,
+      "EXCLUDE": 2
+    },
+    "narrative-practical": {
+      "PASS": 52,
+      "DOMAIN_REVIEW": 3
+    },
+    "science": {
+      "PASS": 32,
+      "DOMAIN_REVIEW": 1
+    },
+    "social": {
+      "PASS": 22
+    }
+  },
+  "verdictByWordBand": {
+    "120-169": {
+      "PASS": 95,
+      "DOMAIN_REVIEW": 4
+    },
+    "170-229": {
+      "PASS": 49,
+      "EXCLUDE": 2
+    },
+    "230-360": {
+      "PASS": 7
+    }
+  },
+  "authorization": {
+    "campaignApproval": "NONE",
+    "campaignEligible": 0,
+    "rightsReview": "SEPARATE_NOT_PERFORMED",
+    "reconciliationPerformed": false
+  },
+  "privacy": {
+    "containsPassageText": false,
+    "containsFrameIdentifiers": false,
+    "containsPassageContentHashes": false,
+    "containsPrivateIdentifiers": false,
+    "containsCandidateSpans": false,
+    "containsRowLevelDecisions": false
+  },
+  "limitations": [
+    "This is Reviewer B's item-design and KILLER-headroom judgment only; it is not a source-integrity, rights, or campaign authorization decision.",
+    "DOMAIN_REVIEW outcomes require evidence outside this no-network review and do not count as passes.",
+    "No full item or option set was generated, so later item-level validation remains necessary.",
+    "Reconciliation, split balance, current-history refresh, provider controls, and queue sealing remain pending."
+  ]
+}

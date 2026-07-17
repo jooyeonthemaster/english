@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20190307-q33",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "빈칸추론",
+    "words": 159
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-shallow-nearby-passive-decoyx1"
+  ],
+  "layout": "(A):dec=k  (B):dec=h  (C):dec=e  (D):ANS=g  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 23,
+        "relPos": 0.028,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 106,
+        "relPos": 0.129,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 252,
+        "relPos": 0.307,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 643,
+        "relPos": 0.782,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 730,
+        "relPos": 0.888,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.888,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "helping",
+        "isError": false,
+        "errorExpression": "helping",
+        "surroundingText": "A lovely technique for helping children take the first steps towards creating",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "to ask",
+        "isError": false,
+        "errorExpression": "to ask",
+        "surroundingText": "unique story, is to ask them to help you complete a story",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "is based on",
+        "isError": false,
+        "errorExpression": "is based on",
+        "surroundingText": "Benno and the Beasts. It is based on a story called St. Benno",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "them",
+        "isError": true,
+        "correction": "them",
+        "errorExpression": "it",
+        "surroundingText": "different places for him to meet them. I then tell them the story",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "of involving",
+        "isError": false,
+        "errorExpression": "of involving",
+        "surroundingText": "It is a most effective way of involving children in the art of",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "helping"
+      },
+      {
+        "label": "(B)",
+        "text": "to ask"
+      },
+      {
+        "label": "(C)",
+        "text": "is based on"
+      },
+      {
+        "label": "(D)",
+        "text": "it"
+      },
+      {
+        "label": "(E)",
+        "text": "of involving"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 for 뒤에서 동명사 목적으로 쓰인 'helping'은 어법상 올바른 형태입니다.",
+      "(B)": "문장의 주어 핵인 A lovely technique의 주격 보어 역할을 하는 to부정사 'to ask'는 어법상 올바릅니다.",
+      "(C)": "주어 It(이야기)이 근거를 두고 있음을 나타내는 수동태 표현 'is based on'은 주어와의 의미 관계 및 형태상 올바릅니다.",
+      "(E)": "way를 수식하는 전치사구 내에서 동명사구의 목적어(children)를 수반하여 능동 의미를 나타내는 'of involving'은 어법상 적절합니다."
+    },
+    "explanation": "이 문장에서 의미상 'him(the saint)'이 만나는 대상은 앞서 언급된 복수 명사인 'different animals'와 'different places'를 가리킵니다. 따라서 단수 대명사인 'it'은 의미상 이 복수 대상들을 온전히 받을 수 없으므로 비문입니다. 올바른 표현인 복수 대명사 'them'으로 고쳐야 합니다. 문장 내에서 가리키는 대상이 단수(the saint)가 아니라 복수 명사구들이라는 점을 확인해야 풀 수 있는 대명사 수 일치 문제입니다.",
+    "keyPoints": [
+      "(D) 대명사 일치 — 문맥상 가리키는 복수 명사를 파악하여 수 일치 판정",
+      "(B) 목적격보어 형태 — ask + 목적어 + to부정사 구조 및 보어 자리의 to부정사 판정",
+      "(C) 능동태 vs 수동태 — 주어(이야기)가 기반을 둔 대상이므로 수동태 판정"
+    ],
+    "tags": [
+      "대명사 일치",
+      "수동태",
+      "to부정사",
+      "수일치"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "A lovely technique for __(A) helping__ children take the first steps towards creating their own, unique story, is __(B) to ask__ them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It __(C) is based on__ a story called St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet __(D) it__. I then tell them the story including their own ideas. It is a most effective way __(E) of involving__ children in the art of creating stories and they love hearing their ideas used.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

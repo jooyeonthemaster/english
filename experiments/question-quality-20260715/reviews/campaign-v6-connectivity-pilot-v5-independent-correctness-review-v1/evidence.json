@@ -1,0 +1,230 @@
+{
+  "schemaVersion": "campaign-v6-connectivity-pilot-v5-independent-correctness-evidence-v1",
+  "verdict": "FAIL_BLOCKERS",
+  "blockerCodes": [
+    "C1_VALID_WRAPPER_CARDINALITY_UNDERCOUNT",
+    "C2_CLOSED_TEMP_PATH_IDENTITY_NOT_REATTESTED",
+    "C3_BUNDLER_IMPLEMENTATION_UNSEALED_NO_INDEPENDENT_EQUIVALENCE",
+    "C4_INTENT_WRITE_FAILURE_DOES_NOT_GATE_SETTLEMENT"
+  ],
+  "constraints": {
+    "networkCalls": 0,
+    "credentialReads": 0,
+    "globalLedgerAccesses": 0,
+    "apiCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "privateExactWireReads": 0,
+    "subjectWrites": 0,
+    "transactionScratchScope": "experiments/question-quality-20260715/reviews/campaign-v6-connectivity-pilot-v5-independent-correctness-review-v1"
+  },
+  "subjectSnapshot": {
+    "publicManifestEntryCount": 39,
+    "skippedPrivateEntryCount": 2,
+    "allPublicEntriesMatchAtStart": true,
+    "allPublicEntriesMatchAtEnd": true,
+    "startSha256": "24ff47fc58580de5f0341e220ebde8c491fa61fe507196739648e4d70f93539b",
+    "endSha256": "24ff47fc58580de5f0341e220ebde8c491fa61fe507196739648e4d70f93539b",
+    "unchanged": true
+  },
+  "counterexamples": {
+    "C1_VALID_WRAPPER_CARDINALITY_UNDERCOUNT": {
+      "reproduced": true,
+      "cases": [
+        {
+          "name": "valid_root_array_containing_two_questions",
+          "rawText": "[{\"questions\":[{\"id\":1},{\"id\":2}]}]",
+          "actual": {
+            "choicesObserved": 0,
+            "fullQuestionObjectsObserved": 0,
+            "candidateUnitsEffective": 1,
+            "cardinalityAmbiguous": false,
+            "observationSaturated": false
+          }
+        },
+        {
+          "name": "valid_root_string_wrapping_two_questions",
+          "rawText": "\"{\\\"questions\\\":[{\\\"id\\\":1},{\\\"id\\\":2}]}\"",
+          "actual": {
+            "choicesObserved": 0,
+            "fullQuestionObjectsObserved": 0,
+            "candidateUnitsEffective": 1,
+            "cardinalityAmbiguous": false,
+            "observationSaturated": false
+          }
+        }
+      ],
+      "sourceWitness": {
+        "file": "strict-json-observer.ts",
+        "rootObjectOnlyLine": 268,
+        "alternateQuestionCountLine": 270,
+        "effectiveCountLine": 303
+      }
+    },
+    "C2_CLOSED_TEMP_PATH_IDENTITY_NOT_REATTESTED": {
+      "reproduced": true,
+      "scope": "review-local scratch directory only",
+      "tempPathIdentityBeforeSwap": {
+        "dev": "3807829001",
+        "ino": "281474979336136"
+      },
+      "tempPathIdentityAfterSwap": {
+        "dev": "3807829001",
+        "ino": "281474979336137"
+      },
+      "identityChanged": true,
+      "transactionOutcome": {
+        "committed": true,
+        "value": {
+          "mutateReturned": "intended"
+        },
+        "cleanupWarningKinds": []
+      },
+      "intendedValue": {
+        "identity": "transaction-created-node",
+        "amount": 1
+      },
+      "bytesActuallyCommitted": {
+        "identity": "replacement-path-node",
+        "amount": 999
+      },
+      "sourceWitness": {
+        "file": "live-io.ts",
+        "tempHandleClosedBeforeHookLine": 374,
+        "hookLine": 376,
+        "targetOnlyReattestationLine": 377,
+        "renameByPathLine": 379
+      }
+    },
+    "C3_BUNDLER_IMPLEMENTATION_UNSEALED_NO_INDEPENDENT_EQUIVALENCE": {
+      "reproduced": true,
+      "declaredBundler": {
+        "name": "esbuild",
+        "version": "0.27.3",
+        "configuration": "BUNDLE_PLATFORM_NODE_FORMAT_ESM_TARGET_NODE24_NO_SOURCEMAP_NO_RUNTIME_PACKAGES"
+      },
+      "implementationFiles": [
+        {
+          "path": "node_modules/esbuild/lib/main.js",
+          "sha256": "b090fe57c79c677256a242703ea07bb2191eced357bece2f9a25539443da070c",
+          "presentInSubjectManifest": false,
+          "hashPresentInFrozenRuntimeArtifact": false
+        },
+        {
+          "path": "node_modules/@esbuild/win32-x64/esbuild.exe",
+          "sha256": "f0dd2091eaf58d11b96c64e0c4516f8ecf94486a28d2a8e7a968bd6770db3ffe",
+          "presentInSubjectManifest": false,
+          "hashPresentInFrozenRuntimeArtifact": false
+        }
+      ],
+      "sourceMapDisabled": true,
+      "metafilePersisted": false,
+      "compilerClosureMentionsEsbuildImplementation": false,
+      "liveClosureMentionsEsbuildImplementation": false,
+      "independentMappingArtifactPaths": [],
+      "independentSourceBundleEquivalenceArtifactFound": false,
+      "ambientSameToolchainRebuild": {
+        "allByteEqual": true,
+        "bundles": [
+          {
+            "role": "CAPTURE_PRICE_METADATA",
+            "builtSha256": "82443b490e1158add2b3f41dd6e4e43231418dcf240fb46d3f4331b993a74709",
+            "storedSha256": "82443b490e1158add2b3f41dd6e4e43231418dcf240fb46d3f4331b993a74709"
+          },
+          {
+            "role": "LIVE_CHILD",
+            "builtSha256": "baa8fbb4872d9ada9371f4460613b60ce67854b056a01eaf0eefa988dbf5158a",
+            "storedSha256": "baa8fbb4872d9ada9371f4460613b60ce67854b056a01eaf0eefa988dbf5158a"
+          },
+          {
+            "role": "OPERATOR",
+            "builtSha256": "3d1d253870392d7ff7713e8d45ac7b40e1ebc22bc11e65cd7bf2d36c6a34909a",
+            "storedSha256": "3d1d253870392d7ff7713e8d45ac7b40e1ebc22bc11e65cd7bf2d36c6a34909a"
+          }
+        ]
+      }
+    },
+    "C4_INTENT_WRITE_FAILURE_DOES_NOT_GATE_SETTLEMENT": {
+      "reproduced": true,
+      "file": "production-runner.ts",
+      "intentTryLine": 933,
+      "intentWriteLine": 934,
+      "catchAssignsReconciliationError": true,
+      "settlementTryLine": 940,
+      "settlementCallLines": {
+        "quarantine": 942,
+        "ordinary": 944
+      },
+      "interveningTopLevelStatements": [
+        "let settlementError: unknown = null;",
+        "let settlementCleanupWarnings: string[] = [];"
+      ],
+      "hasUnconditionalTerminator": false,
+      "hasReconciliationErrorGate": false,
+      "settlementReachableAfterCaughtIntentFailure": true
+    }
+  },
+  "independentChecks": {
+    "modelOrderRouteReasoning": {
+      "status": "PASS",
+      "serialOrder": ["STANDARD", "PREMIUM"],
+      "assignments": [
+        { "ordinal": 1, "plan": "STANDARD", "modelId": "google/gemini-3.5-flash" },
+        { "ordinal": 2, "plan": "PREMIUM", "modelId": "google/gemini-3.1-pro-preview" }
+      ],
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "providerOrder": ["google-vertex/global"],
+      "providerOnly": ["google-vertex/global"],
+      "allowFallbacks": false,
+      "requireParameters": true,
+      "reasoning": { "enabled": false, "effort": "none", "exclude": true },
+      "runnerIteratesAssignmentArray": true,
+      "runnerStopsAfterFailure": true,
+      "privateExactWireRead": false,
+      "publicRuntimeValidatorChecksExactWire": true
+    },
+    "priceMaxima": {
+      "status": "PASS",
+      "syntheticExpected": {
+        "exactPromptUsdPer1M": 2,
+        "exactCompletionUsdPer1M": 3,
+        "exactRequestUsd": 0.2,
+        "emergencyPromptUsdPer1M": 83,
+        "emergencyCompletionUsdPer1M": 72,
+        "emergencyRequestUsd": 0.4,
+        "emergencyCacheReadUsdPer1M": 31,
+        "emergencyCacheWriteUsdPer1M": 41,
+        "emergencyInternalReasoningUsdPer1M": 51
+      },
+      "actualEqualsExpected": true
+    },
+    "billingEquality": {
+      "status": "PASS",
+      "validEvidence": {
+        "actualCostUsd": 0.125,
+        "promptTokens": 11,
+        "completionTokens": 7,
+        "totalTokens": 18,
+        "reasoningTokens": 0,
+        "cachedTokens": 0
+      },
+      "parserEqualsIndependentExtractor": true,
+      "inconsistentTotalEvidenceUnknown": true,
+      "inconsistentTotalParserRejected": true
+    },
+    "permanentNoDispatch": {
+      "status": "PASS",
+      "authorization": {
+        "liveExecutionAuthorized": false,
+        "metadataNetworkAuthorized": false,
+        "hostileAuditPassed": false,
+        "dispatchCommandPresent": false
+      },
+      "gateThrew": true,
+      "gateMessage": "AUTHOR_FREEZE_PERMANENTLY_NO_DISPATCH_V5: use a separately audited authorization package",
+      "runnerCallsGateBeforeExactWire": true,
+      "operatorCallsGate": true,
+      "liveChildCallsGate": true
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P026",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "medium",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "they(= the Faroe Islands, 복수)가 덴마크에 의해 통제를 받는 수동 관계이므로 'are controlled by Denmark'의 과거분사 controlled는 정문. 능동 controlling으로 바꿀 이유가 없다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'the killing of whales is not done for profit' — killing이 행해지는 대상이므로 수동 done이 옳다. insist 뒤 should-생략 가정법을 떠올릴 수 있으나 여기 insist는 요구가 아니라 사실 주장이므로 직설법 is도 문제없고, 어차피 밑줄은 done이다. 정문."
+    },
+    {
+      "label": "C",
+      "verdict": "wrong (정답)",
+      "reason": "'Most of the whale meat and blubber are distributed' — most of + 명사 구문은 of 뒤 명사에 수일치하며 meat/blubber는 둘 다 불가산 물질명사. 결정적으로 같은 문장의 'although some IS sold'가 동일 지시 대상을 단수로 받아 문장 내부에서 수일치가 충돌한다. is distributed가 되어야 하므로 어법상 틀림."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'There is a law that says ...' — 주격 관계대명사 that의 선행사는 단수 a law이므로 says 단수 일치가 옳다. There is 구문과 관계절 사이 수일치를 재점검하게 만드는 자리라 잠깐 눈이 가지만(오답 유혹 기록), 선행사 확인 즉시 해소되는 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'question whether this practice should be allowed to continue' — question의 목적어 명사절을 이끄는 whether는 정문. that/if 대체 논쟁 여지도 없다."
+    }
+  ],
+  "note": "정답 후보는 C 하나로 수렴(나머지 4개는 명백한 정문). 다만 회색지대 기록: C를 정문으로 옹호하는 유일한 경로는 'A and B 등위 주어 → 복수 일치' 규칙이며, 지문 앞 문장이 'whale meat and blubber ARE important parts...'로 동일 등위 명사구를 복수 취급하고 있어 이 논거에 지문 스스로 탄약을 제공한다. 출제 의도는 partitive(most of + 불가산 → 단수) + 후행 'some is sold' 단서로 단수 일치를 요구하는 것이 명백하고 시험 문법 표준으로는 C가 틀린 게 맞지만, 등위 불가산 주어의 복수 일치가 일반 영어에서 비문이 아니라는 점에서 이의신청 취약성이 있는 문항. 또한 지문 내 'whale meat and blubber are'(비밑줄)와 (C)의 단수 요구가 공존해 학습자에게 혼란을 줄 수 있는 설계 약점도 함께 보고함."
+}

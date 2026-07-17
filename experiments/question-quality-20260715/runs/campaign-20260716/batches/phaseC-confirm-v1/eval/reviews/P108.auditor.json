@@ -1,0 +1,81 @@
+{
+  "pid": "P108",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "오답 해설 (A): \"주어인 복수 명사구 'no two performances'에 연결되는 복수 비동사 are의 수일치는 올바릅니다.\" — '비동사'는 존재하지 않는 문법 용어로, 'be동사'의 손상형이다. 한국어로는 '非동사(동사가 아님)'로 읽혀 학생에게 적극적으로 오해를 유발할 수 있는 학생 노출 필드의 용어 손상이며, RUBRIC V4의 '비단어·손상 용어' 금지 조건에 해당한다."
+    },
+    {
+      "code": "V4-SPACING-TYPO",
+      "severity": "minor",
+      "evidence": "오답 해설 (C): \"조동사/본동사 역할을 하는does의 주어는\" — '하는'과 'does' 사이 공백 누락. 내용 분석 자체(삽입구 제외 시 단수 주어 the necessity와 does의 수일치)는 정확함."
+    },
+    {
+      "code": "V4-IMPRECISE-CLAIM",
+      "severity": "minor",
+      "evidence": "정답 해설: \"이 문장은 가주어 'it'과 진주어 'to acknowledge' 구조로 시작합니다\" — 해당 문장은 실제로 If 부사절(If we want music to have a role in general education)로 시작하고, 가주어 it은 주절의 시작이다. 구조 분석의 본질(가주어-진주어, to부정사 병렬)은 정확하나 '시작합니다'는 부정확한 진술."
+    },
+    {
+      "code": "V4-GARBLED-KEYPOINT",
+      "severity": "minor",
+      "evidence": "keyPoints 세 번째 항목: \"(E) to-v/v-ing — 전치사 뒤의 동명사와 의미상 주어의 수식\" — 의미상 주어는 동명사를 '수식'하는 관계가 아니므로 '수식'은 용어 오용. '결합' 또는 '의미상 주어를 동반한 동명사' 등이 정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "부정 수량 표현 주어(no two performances)와 be동사의 수일치 판단",
+      "temptingBecause": "'no two performances'의 부정어 no 때문에 단수 취급(is)으로 착각할 수 있고, 문두의 'Music has no past; it exists...'의 단수 흐름이 단수 관성을 만든다",
+      "decisiveFlaw": "주어 핵은 복수 명사 performances이므로 are가 올바르다 — 오류가 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "대시 삽입구 내부의 '전치사+관계대명사(without which)+완전절' 구조 판단",
+      "temptingBecause": "이중 대시 삽입 구문 한가운데 있어 선행사(making it present here and now)를 특정하기 어렵고, 학생이 without what/without that 류의 대안과 혼동하기 쉽다",
+      "decisiveFlaw": "뒤따르는 'it will not be music at all'이 완전한 절이므로 전치사+관계대명사가 정확히 적법하다 — 오류가 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "긴 대시 삽입구(making ... at all)를 건너뛴 주어-동사 수일치 판단",
+      "temptingBecause": "주어 the necessity와 does 사이에 15단어 이상의 삽입 구문이 끼어 있어 주어 핵을 놓치기 쉽고, 직전의 music/all 등에 이끌려 do로 판단할 수 있다",
+      "decisiveFlaw": "핵 주어는 단수 the necessity이므로 does가 올바르다 — 오류가 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 가주어 it / 진주어 to부정사 구조에서 and로 연결되는 두 번째 진주어의 병렬(to acknowledge ... and (to) give)",
+      "temptingBecause": "'acknowledge this difference and giving'처럼 and 직후의 -ing형이 앞의 동명사류(making, present-ing)와 표면적으로 어울려 보이고, giving prominence 자체는 국소적으로 자연스러운 연어라 지엽 독해로는 통과된다",
+      "decisiveFlaw": "and는 진주어 to부정사구 'to acknowledge...'와 병렬되는 원형 (to) give를 요구하므로 giving은 병렬 파괴로 비문이다. give로 교정하면 정확히 원문이 복원되는 최소대립쌍"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사 on의 목적어인 동명사와 그 의미상 주어(pupils)의 결합 구조 판단",
+      "temptingBecause": "명사 pupils 바로 뒤에 -ing가 이어져 'pupils (who are) absorbing'인지, to absorb가 와야 하는지 판단이 갈리고, 명사+(-ing) 연쇄가 어색해 보일 수 있다",
+      "decisiveFlaw": "전치사 on 뒤이므로 동명사 absorbing이 적법하며 pupils는 그 의미상 주어로 정상 구조 — 오류가 아님"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 (A)의 '복수 비동사 are'는 'be동사'의 손상 표기로, 비단어·손상 용어에 해당 (V4 실패 근거)",
+    "오답 해설 (C)의 '하는does' 공백 누락",
+    "정답 해설의 '이 문장은 가주어 it ... 구조로 시작합니다'는 부정확 — 문장은 If 부사절로 시작",
+    "keyPoints (E)의 '의미상 주어의 수식'은 용어 오용 — 의미상 주어는 수식 관계가 아님"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "본체는 견고하다: V1(렌더 무결성·라벨 일치), V2(정답 (D) 유일 — 5개 밑줄 독립 검증 완료), V3(원문 복원 시 완전 문법적), V5(라벨·선지·해설·keyPoints·markedExpressions 동기화) 모두 통과. 출제 포인트(가주어-진주어 to부정사 병렬)는 정전급이며 4개 디코이가 각각 다른 오개념(부정 수량 수일치, 전치사+관계대명사, 장거리 수일치, 전치사 뒤 동명사+의미상 주어)을 겨냥해 INTERMEDIATE 난이도에 정합한다. 그러나 학생 노출 해설의 '비동사'라는 손상 용어가 RUBRIC V4의 비타협 조건(비단어·손상 용어 금지)을 위반하여 F. 수정은 사소하다: '비동사'→'be동사', '하는does'→'하는 does', '시작합니다' 표현 완화, keyPoints (E) '수식'→'결합'. 이 텍스트 수정만으로 B~A 재판정 가능."
+}

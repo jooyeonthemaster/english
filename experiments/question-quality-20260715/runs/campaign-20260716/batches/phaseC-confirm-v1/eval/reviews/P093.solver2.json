@@ -1,0 +1,35 @@
+{
+  "pid": "P093",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Finite past-tense verb: 'Brunel escaped to the United States' — intransitive 'escape' + directional 'to' PP is standard. The fronted participial adjunct 'Originally born in France' correctly takes Brunel as its implied subject, so no dangling-modifier issue. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'machines for making boots' — the preposition 'for' obligatorily governs a gerund; 'N for V-ing' is the canonical instrument/purpose construction. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the government stopped buying his boots' — stop + gerund denotes cessation of the activity, which matches the discourse logic (they ceased purchasing, so he went out of business). 'stop to buy' (infinitive of purpose) would be both structurally different and semantically wrong here. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "error",
+      "reason": "'needed more ways for people and goods moved across it' — the governing pattern is 'ways for X to move across it': 'for people and goods' is the notional subject of a required to-infinitive complement of 'ways'. Alternative rescue parses were tested: (i) reduced relative 'people and goods [that were] moved across it' is formally constructible but logically circular (the city would be needing ways 'for goods already moved across', and 'ways for NP' is then left without its licensed infinitival complement, stranding the purpose semantics); (ii) no absolute/participial-adjunct reading yields a coherent clause. Must be 'to move' (or 'to be moved'). Ungrammatical — this is the answer."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'despite being in ill health' — 'despite' is a preposition and correctly takes a gerund phrase; the concessive parenthetical between subject and verb is well-formed (contrast the errors 'despite of' / 'despite he was'). Grammatical."
+    }
+  ],
+  "note": "Clean single-error item. (D) is a classic 'for + notional subject + to-infinitive after ways/means' target with a long-distance cue ('needed more ways for ... across it'). The distractors (A)(B)(C)(E) each test a distinct, unambiguous rule (past finite verb after participial adjunct; preposition+gerund; stop+gerund; despite+gerund), and none admits a competing defensible parse as an error. Answer (D), high confidence."
+}

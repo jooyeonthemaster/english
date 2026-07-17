@@ -1,0 +1,193 @@
+{
+  "schemaVersion": "reviewer-calibration-v3-production-type-binding-2",
+  "artifactId": "reviewer-calibration-v3-production-type-binding-v2",
+  "status": "VALID_CORRECTED_ROTATION_V1_EXECUTION_INVALID",
+  "supersedes": {
+    "artifactId": "reviewer-calibration-v3-production-type-binding-v1",
+    "path": "../reviewer-calibration-v3-production-type-binding-v1",
+    "manifestSha256": "655bfc33ef47f06752fddde0c2ac4c3750ca7468d97d84a241dca28fefac1539",
+    "manifestEntries": {
+      "REPORT.md": "730613f34f5d5d42645dc1670d4f41c5d79c0b85d7f3ca5b0a1d8cf6f9a14a82",
+      "binding.json": "f731f790413bb6fa7bb5ec9be797553032846e1d8902d3e94b46d75066702c18",
+      "verify.mjs": "36ff4873d80d01c5198e28e658f43ae429ddc99a7e26f033efd36e49e08b96c8"
+    },
+    "sourceSnapshotSha256": "e1bcb66ec8bea05a6feed8569eacc9f78a535580e6283b89a6676276d628bc60",
+    "canonicalUniverseAndFamiliesAccepted": true,
+    "rotationAndCoverageClaimsAccepted": false
+  },
+  "v1FailureProvenance": {
+    "severity": "BLOCKER",
+    "code": "V1_ROTATION_FORMULA_VERIFIER_DIVERGENCE",
+    "declaredMainFormula": "(2 * (epoch - 1)) mod familySize",
+    "verifierMainOnlyFormula": "(epoch - 1) mod familySize",
+    "minimalCounterexample": {
+      "familySize": 4,
+      "declaredMainIndicesEpoch1To4": [0, 2, 0, 2],
+      "distinctMainIndices": 2,
+      "claimedDistinctMainIndices": 4
+    },
+    "effect": "The v1 verifier could report 23/23 main-only contact by calculating a formula different from the declared protocol.",
+    "v1ExecutionEligible": false,
+    "v1MustRemainUnmodified": true
+  },
+  "canonicalUniverse": {
+    "uiTypeCount": 25,
+    "uiTypeIdsInOrder": [
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR",
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "focusTypeIds": ["BLANK_INFERENCE", "GRAMMAR_ERROR"],
+    "nonfocusTypeCount": 23,
+    "nonfocusTypeIdsInUiOrder": [
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ]
+  },
+  "families": [
+    {
+      "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+      "rotationOrder": ["TOPIC", "MAIN_IDEA", "TITLE"]
+    },
+    {
+      "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+      "rotationOrder": ["IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH"]
+    },
+    {
+      "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+      "rotationOrder": ["SENTENCE_ORDER", "SENTENCE_INSERT", "IRRELEVANT"]
+    },
+    {
+      "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+      "rotationOrder": ["GRAMMAR_CHOICE_COMBO", "GRAMMAR_CORRECTION"]
+    },
+    {
+      "familyId": "NF-F5-LEXICAL_SEMANTICS",
+      "rotationOrder": ["VOCAB_CHOICE", "CONTEXT_MEANING", "SYNONYM", "ANTONYM"]
+    },
+    {
+      "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+      "rotationOrder": ["SUMMARY_COMPLETE_MC", "SUMMARY_COMPLETE", "SUMMARY_WRITING"]
+    },
+    {
+      "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+      "rotationOrder": ["CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "WORD_ORDER"]
+    },
+    {
+      "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+      "rotationOrder": ["FILL_BLANK_KEY", "TOPIC_SENTENCE_WRITING"]
+    }
+  ],
+  "rotation": {
+    "epochIsOneBased": true,
+    "mainIndexFormula": "(epoch - 1) mod familySize",
+    "holdoutIndexFormula": "(epoch - 1 + ceil(familySize / 2)) mod familySize",
+    "implementationFunction": "selectedAt(rotationOrder, epoch, role)",
+    "formulaRowsAndCoverageMustUseSameFunction": true,
+    "oneMainAndOneHoldoutPerFamilyPerEpoch": true,
+    "mainAndHoldoutMustBeDifferentWithinEpoch": true,
+    "failureDoesNotAdvanceRotation": true,
+    "outcomeAwareSkippingForbidden": true,
+    "pilotDoesNotCountTowardCoverage": true,
+    "singleEpochDistinctCanonicalTypes": 16,
+    "singleEpochAllTypeClaimAllowed": false,
+    "mainPlusHoldoutEpochsToContactAll23": 2,
+    "mainOnlyEpochsToContactAll23": 4,
+    "contactIsCertification": false,
+    "allTypeClaimGate": "Every one of the 23 canonical IDs must have a passed fresh main or activation-holdout coverage event; contact alone is insufficient."
+  },
+  "scheduleRows": [
+    { "familyId": "NF-F1-GLOBAL_MEANING_SELECTION", "epoch": 1, "mainIndex": 0, "mainTypeId": "TOPIC", "holdoutIndex": 2, "holdoutTypeId": "TITLE" },
+    { "familyId": "NF-F1-GLOBAL_MEANING_SELECTION", "epoch": 2, "mainIndex": 1, "mainTypeId": "MAIN_IDEA", "holdoutIndex": 0, "holdoutTypeId": "TOPIC" },
+    { "familyId": "NF-F1-GLOBAL_MEANING_SELECTION", "epoch": 3, "mainIndex": 2, "mainTypeId": "TITLE", "holdoutIndex": 1, "holdoutTypeId": "MAIN_IDEA" },
+    { "familyId": "NF-F1-GLOBAL_MEANING_SELECTION", "epoch": 4, "mainIndex": 0, "mainTypeId": "TOPIC", "holdoutIndex": 2, "holdoutTypeId": "TITLE" },
+    { "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "epoch": 1, "mainIndex": 0, "mainTypeId": "IMPLIED_MEANING", "holdoutIndex": 2, "holdoutTypeId": "CONTENT_MATCH" },
+    { "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "epoch": 2, "mainIndex": 1, "mainTypeId": "REFERENCE", "holdoutIndex": 0, "holdoutTypeId": "IMPLIED_MEANING" },
+    { "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "epoch": 3, "mainIndex": 2, "mainTypeId": "CONTENT_MATCH", "holdoutIndex": 1, "holdoutTypeId": "REFERENCE" },
+    { "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE", "epoch": 4, "mainIndex": 0, "mainTypeId": "IMPLIED_MEANING", "holdoutIndex": 2, "holdoutTypeId": "CONTENT_MATCH" },
+    { "familyId": "NF-F3-DISCOURSE_STRUCTURE", "epoch": 1, "mainIndex": 0, "mainTypeId": "SENTENCE_ORDER", "holdoutIndex": 2, "holdoutTypeId": "IRRELEVANT" },
+    { "familyId": "NF-F3-DISCOURSE_STRUCTURE", "epoch": 2, "mainIndex": 1, "mainTypeId": "SENTENCE_INSERT", "holdoutIndex": 0, "holdoutTypeId": "SENTENCE_ORDER" },
+    { "familyId": "NF-F3-DISCOURSE_STRUCTURE", "epoch": 3, "mainIndex": 2, "mainTypeId": "IRRELEVANT", "holdoutIndex": 1, "holdoutTypeId": "SENTENCE_INSERT" },
+    { "familyId": "NF-F3-DISCOURSE_STRUCTURE", "epoch": 4, "mainIndex": 0, "mainTypeId": "SENTENCE_ORDER", "holdoutIndex": 2, "holdoutTypeId": "IRRELEVANT" },
+    { "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "epoch": 1, "mainIndex": 0, "mainTypeId": "GRAMMAR_CHOICE_COMBO", "holdoutIndex": 1, "holdoutTypeId": "GRAMMAR_CORRECTION" },
+    { "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "epoch": 2, "mainIndex": 1, "mainTypeId": "GRAMMAR_CORRECTION", "holdoutIndex": 0, "holdoutTypeId": "GRAMMAR_CHOICE_COMBO" },
+    { "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "epoch": 3, "mainIndex": 0, "mainTypeId": "GRAMMAR_CHOICE_COMBO", "holdoutIndex": 1, "holdoutTypeId": "GRAMMAR_CORRECTION" },
+    { "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS", "epoch": 4, "mainIndex": 1, "mainTypeId": "GRAMMAR_CORRECTION", "holdoutIndex": 0, "holdoutTypeId": "GRAMMAR_CHOICE_COMBO" },
+    { "familyId": "NF-F5-LEXICAL_SEMANTICS", "epoch": 1, "mainIndex": 0, "mainTypeId": "VOCAB_CHOICE", "holdoutIndex": 2, "holdoutTypeId": "SYNONYM" },
+    { "familyId": "NF-F5-LEXICAL_SEMANTICS", "epoch": 2, "mainIndex": 1, "mainTypeId": "CONTEXT_MEANING", "holdoutIndex": 3, "holdoutTypeId": "ANTONYM" },
+    { "familyId": "NF-F5-LEXICAL_SEMANTICS", "epoch": 3, "mainIndex": 2, "mainTypeId": "SYNONYM", "holdoutIndex": 0, "holdoutTypeId": "VOCAB_CHOICE" },
+    { "familyId": "NF-F5-LEXICAL_SEMANTICS", "epoch": 4, "mainIndex": 3, "mainTypeId": "ANTONYM", "holdoutIndex": 1, "holdoutTypeId": "CONTEXT_MEANING" },
+    { "familyId": "NF-F6-SUMMARY_AND_COMPRESSION", "epoch": 1, "mainIndex": 0, "mainTypeId": "SUMMARY_COMPLETE_MC", "holdoutIndex": 2, "holdoutTypeId": "SUMMARY_WRITING" },
+    { "familyId": "NF-F6-SUMMARY_AND_COMPRESSION", "epoch": 2, "mainIndex": 1, "mainTypeId": "SUMMARY_COMPLETE", "holdoutIndex": 0, "holdoutTypeId": "SUMMARY_COMPLETE_MC" },
+    { "familyId": "NF-F6-SUMMARY_AND_COMPRESSION", "epoch": 3, "mainIndex": 2, "mainTypeId": "SUMMARY_WRITING", "holdoutIndex": 1, "holdoutTypeId": "SUMMARY_COMPLETE" },
+    { "familyId": "NF-F6-SUMMARY_AND_COMPRESSION", "epoch": 4, "mainIndex": 0, "mainTypeId": "SUMMARY_COMPLETE_MC", "holdoutIndex": 2, "holdoutTypeId": "SUMMARY_WRITING" },
+    { "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER", "epoch": 1, "mainIndex": 0, "mainTypeId": "CONDITIONAL_WRITING", "holdoutIndex": 2, "holdoutTypeId": "WORD_ORDER" },
+    { "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER", "epoch": 2, "mainIndex": 1, "mainTypeId": "SENTENCE_TRANSFORM", "holdoutIndex": 0, "holdoutTypeId": "CONDITIONAL_WRITING" },
+    { "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER", "epoch": 3, "mainIndex": 2, "mainTypeId": "WORD_ORDER", "holdoutIndex": 1, "holdoutTypeId": "SENTENCE_TRANSFORM" },
+    { "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER", "epoch": 4, "mainIndex": 0, "mainTypeId": "CONDITIONAL_WRITING", "holdoutIndex": 2, "holdoutTypeId": "WORD_ORDER" },
+    { "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION", "epoch": 1, "mainIndex": 0, "mainTypeId": "FILL_BLANK_KEY", "holdoutIndex": 1, "holdoutTypeId": "TOPIC_SENTENCE_WRITING" },
+    { "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION", "epoch": 2, "mainIndex": 1, "mainTypeId": "TOPIC_SENTENCE_WRITING", "holdoutIndex": 0, "holdoutTypeId": "FILL_BLANK_KEY" },
+    { "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION", "epoch": 3, "mainIndex": 0, "mainTypeId": "FILL_BLANK_KEY", "holdoutIndex": 1, "holdoutTypeId": "TOPIC_SENTENCE_WRITING" },
+    { "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION", "epoch": 4, "mainIndex": 1, "mainTypeId": "TOPIC_SENTENCE_WRITING", "holdoutIndex": 0, "holdoutTypeId": "FILL_BLANK_KEY" }
+  ],
+  "claims": {
+    "singleEpochCombinedDistinctTypes": 16,
+    "twoEpochCombinedContactTypes": 23,
+    "fourEpochMainOnlyContactTypes": 23,
+    "singleEpochAllTypeClaimAllowed": false,
+    "contactEqualsCertification": false
+  },
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0
+  }
+}

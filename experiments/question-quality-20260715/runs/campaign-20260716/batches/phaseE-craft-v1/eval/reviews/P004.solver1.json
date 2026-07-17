@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "Echoes 'initial shock' from the passage, but 'merely endure ... with silent patience' is passive resignation, directly contradicting 'actually go one step further' — these people gather resources, overcome the problem, and actively seek gain. The adverb 'merely' makes the contradiction explicit."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "Inserted, it reads 'they believe every cloud has a silver lining, and they uncover profound value hidden within their apparent setbacks' — a literal cash-out of the cliché ('profound value hidden within' = silver lining, 'apparent setbacks' = cloud) and a restatement of 'focus on what they can gain from their circumstance rather than on what they have lost' and 'see opportunities where most of us fail to see them'. Grammar seam after 'and they' is clean."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "Strongest real temptation on a shallow read: the pen vendor literally persuades a crowd past an exposed product defect, so 'persuade others to overlook flaws' feels anecdote-consistent. But the generalizing sentences are about an internal orientation toward one's OWN misfortune (gain vs. loss focus), not audience manipulation; 'the fundamental flaws in their plans' has no referent in the passage, and the vendor jokes about the flaw rather than hiding it. Rejected after the tug."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong (lexical bait)",
+      "reason": "'Remarkable feats' is lifted verbatim from the passage. But the text says loss-sufferers themselves go on to achieve remarkable feats by mining their circumstance for gain — nothing about imitating feats 'previously achieved by others'. Fails on logic despite maximal lexical overlap."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Anti-thematic. The opening anecdote is precisely a public failure embraced and converted into an advantage; 'avoid any circumstance that might result in public failure' is risk-aversion, the reverse of the passage's message. Easiest elimination."
+    }
+  ],
+  "note": "Solved blind, top-tier examinee lens, real-exam order: anecdote -> thesis (laughter turns any disadvantage into advantage) -> generalization (gain-focus, silver-lining cliché) -> blank as final restatement. Recorded distractor pull in real time: (3) briefly attractive via the vendor-crowd persuasion frame, (4) via verbatim 'remarkable feats', (1) via the 'initial shock' echo — each collapses against the long-range discourse cues 'go one step further' and 'focus on what they can gain ... rather than on what they have lost'. All five options are grammatically clean after 'they', so discrimination is purely logical/semantic. The blank resolves uniquely to 2; no alternative reading makes any other option defensible."
+}

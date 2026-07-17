@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Gerund 'practicing' is coordinated with gerund 'learning' under the preposition 'of' ('a way of learning and practicing skills...'). The parallelism starting point is 'learning', so a gerund is required; both gerunds share the object 'skills and behaviors'. Well-formed."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'skills and behaviors that are necessarily for future survival' requires a predicative adjective after the copula: 'necessary for future survival' (adjective licensing the for-PP, exactly parallel to 'that are necessary for everyday living' later in the passage). 'Necessarily' is an adverb and cannot fill the predicative slot. Alternative parse actively checked: copula + adverb + PP-predicate ('are necessarily for X', cf. 'are mainly for emergencies') is formally constructible but fails — affirmative 'necessarily + be-for-PP' is idiomatic essentially only under negation ('not necessarily'), and it would assert the incoherent modal claim that the skills exist of logical necessity for the purpose of survival, clashing with the passage's plain descriptive statement and with the intra-passage parallel that fixes the adjective reading. Should be 'necessary'."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a way in which children learn about the world' — the relative 'in which' correctly resumes 'in + way' ('children learn about the world in that way'); the relative clause is gapless-complete with no stranded or doubled preposition. 'A way in which' is standard alongside 'a way that / a way to-inf'."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Long-distance agreement check: the relative clause 'that are necessary for everyday living' takes as antecedent 'skills like walking, running, and jumping'. The head noun 'skills' is plural (and even the nearer coordination 'walking, running, and jumping' is plural), so plural 'are' is required. Correct."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "Frame allow + NP + to-infinitive: 'allows children to try out ...'. 'to try out and learn' coordinates two bare verb forms sharing one 'to', and that leg is further coordinated with 'to acquire values...', both hanging correctly off 'allows children'. Well-formed parallelism."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Unique defensible answer is (B): adverb 'necessarily' occupies a predicative-adjective slot; the only rescuing parse (be + adverb + purposive for-PP) was explicitly tested and rejected on idiomaticity and passage-logic grounds. All other underlines survive formal scrutiny including alternative-parse probing (parallelism start points, relative-pronoun completeness, plural antecedent agreement, object+to-infinitive control)."
+}

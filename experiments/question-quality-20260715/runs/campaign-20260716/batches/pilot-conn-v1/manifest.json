@@ -1,0 +1,35 @@
+{
+  "batchId": "pilot-conn-v1",
+  "phase": "PILOT",
+  "note": "연결성 파일럿: 프로덕션 코어 + 연구 런타임(single-dispatch) end-to-end 검증. 어법1+빈칸1, STANDARD/INTERMEDIATE.",
+  "atKst": "2026-07-16T19:19:18.102+09:00",
+  "gitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "gitDirty": true,
+  "worstCaseReserved": 4,
+  "spec": {
+    "batchId": "pilot-conn-v1",
+    "phase": "PILOT",
+    "note": "연결성 파일럿: 프로덕션 코어 + 연구 런타임(single-dispatch) end-to-end 검증. 어법1+빈칸1, STANDARD/INTERMEDIATE.",
+    "concurrency": 1,
+    "assignments": [
+      {
+        "itemId": "pilot-g-01",
+        "frameId": "grammar-frame-v2-006",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "profile": null,
+        "armId": "G-A0-STD"
+      },
+      {
+        "itemId": "pilot-b-01",
+        "frameId": "blank-supply-v2-049",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "INTERMEDIATE",
+        "plan": "STANDARD",
+        "profile": null,
+        "armId": "B-A0-STD"
+      }
+    ]
+  }
+}

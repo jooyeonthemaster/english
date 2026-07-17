@@ -1,0 +1,88 @@
+{
+  "batchId": "phaseA-baseline-v2",
+  "phase": "A",
+  "atKst": "2026-07-16T19:35:18.739+09:00",
+  "assignments": 48,
+  "slotsConsumed": 66,
+  "accepted": 29,
+  "modelCalls": 93,
+  "inputTokens": 543349,
+  "outputTokens": 77125,
+  "costUsd": 1.542669,
+  "ledgerAfter": {
+    "used": 68,
+    "cap": 1000,
+    "costUsd": 1.619192
+  },
+  "byArm": {
+    "G-A0-STANDARD-INTERMEDIATE": {
+      "n": 6,
+      "accepted": 3,
+      "gateRejected": 2,
+      "noCandidate": 1,
+      "slots": 10,
+      "costUsd": 0.381309
+    },
+    "G-A0-PREMIUM-INTERMEDIATE": {
+      "n": 6,
+      "accepted": 5,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 10,
+      "costUsd": 0.021257
+    },
+    "G-A0-STANDARD-KILLER": {
+      "n": 6,
+      "accepted": 2,
+      "gateRejected": 4,
+      "noCandidate": 0,
+      "slots": 9,
+      "costUsd": 0.396123
+    },
+    "G-A0-PREMIUM-KILLER": {
+      "n": 6,
+      "accepted": 4,
+      "gateRejected": 1,
+      "noCandidate": 1,
+      "slots": 11,
+      "costUsd": 0.15479
+    },
+    "B-A0-STANDARD-INTERMEDIATE": {
+      "n": 6,
+      "accepted": 6,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 6,
+      "costUsd": 0.170996
+    },
+    "B-A0-PREMIUM-INTERMEDIATE": {
+      "n": 6,
+      "accepted": 3,
+      "gateRejected": 0,
+      "noCandidate": 3,
+      "slots": 6,
+      "costUsd": 0.102558
+    },
+    "B-A0-STANDARD-KILLER": {
+      "n": 6,
+      "accepted": 6,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 8,
+      "costUsd": 0.25516
+    },
+    "B-A0-PREMIUM-KILLER": {
+      "n": 5,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 4,
+      "slots": 6,
+      "costUsd": 0.060476
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 599755
+}

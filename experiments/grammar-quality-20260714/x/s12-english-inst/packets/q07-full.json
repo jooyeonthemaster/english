@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=c  (C):dec=a  (D):dec=k  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 148,
+        "relPos": 0.215,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 245,
+        "relPos": 0.356,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 338,
+        "relPos": 0.491,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 493,
+        "relPos": 0.716,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 570,
+        "relPos": 0.827,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.827,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has",
+        "isError": false,
+        "correction": "has",
+        "errorExpression": "has",
+        "surroundingText": "noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "predicting",
+        "isError": false,
+        "correction": "predicting",
+        "errorExpression": "predicting",
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "paid",
+        "isError": false,
+        "correction": "paid",
+        "errorExpression": "paid",
+        "surroundingText": "as long as the noise didn't change you paid it no attention",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "running",
+        "isError": false,
+        "correction": "running",
+        "errorExpression": "running",
+        "surroundingText": "Right after New York City stopped running elevated trains, people called the police",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "claiming",
+        "isError": true,
+        "correction": "claiming",
+        "errorExpression": "claimed",
+        "surroundingText": "Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has"
+      },
+      {
+        "label": "(B)",
+        "text": "predicting"
+      },
+      {
+        "label": "(C)",
+        "text": "paid"
+      },
+      {
+        "label": "(D)",
+        "text": "running"
+      },
+      {
+        "label": "(E)",
+        "text": "claimed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "that절 안의 주어 핵은 단수 명사인 a source이므로, 이에 호응하는 단수 동사has는 수일치상 적절합니다.",
+      "(B)": "주어인 Your auditory areas가 그것의 지속을 '예측하는' 능동의 주체이므로, 과거진행형을 만드는 현재분사 predicting은 어법상 맞습니다.",
+      "(C)": "부사절(as long as ~ didn't change)에 이어지는 주절의 정동사 자리이며, 과거 시점의 사실을 서술하므로 과거동사 paid는 적절합니다.",
+      "(D)": "동사 stop은 '~하던 것을 멈추다'라는 의미를 나타낼 때 목적어로 동명사를 취하므로 running은 어법상 적절합니다."
+    },
+    "explanation": "이 문장의 주절은 people called the police in the middle of the night로 주어(people)와 동사(called)를 갖춘 완전한 절입니다. 접속사 없이 정동사 형태인 claimed를 연결하면 한 문장에 정동사가 두 개 존재하게 되어 문장 구조상 성립하지 않습니다. 해당 자리에는 문장의 주어인 people이 '~라고 주장하면서'라는 능동의 의미를 나타내는 분사구문이 들어가야 하므로, claimed를 능동의 현재분사인 claiming으로 고쳐야 어법상 올바릅니다.",
+    "keyPoints": [
+      "(E) 정·준동사 — 한 문장 내 정동사 개수 제약과 분사구문의 능동 판단",
+      "(A) 수일치 — 수식어가 붙은 주어 명사구의 핵을 찾아 단수/복수 일치 시키기",
+      "(D) to-v/v-ing — 동사 stop의 의미 구분에 따른 목적어 형태 판정"
+    ],
+    "tags": [
+      "분사구문",
+      "수일치",
+      "동사의 목적어",
+      "어법"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, __(A) has__ just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were __(B) predicting__ its continuation, moment after moment, and as long as the noise didn't change you __(C) paid__ it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped __(D) running__ elevated trains, people called the police in the middle of the night __(E) claimed__ that something woke them up. They tended to call around the time the trains used to run past their apartments."
+  }
+}

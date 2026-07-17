@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "question-quality-s1-controller-preflight-independent-audit-v1",
+  "verdict": "PASS_OFFLINE_WIRE_PREFLIGHT_ONLY_EXECUTION_BLOCKED",
+  "auditedArtifact": {
+    "publicPreflightSha256": "e9c70852df618c9e1069c91cee6b6ff4efc362be3d11df8ccc35f29ece77b720",
+    "privatePreflightSha256": "b567bd41a5dc1673a5be0dd98c8e091430eb0360b6c6a22701272144dfe4dda2",
+    "preflightManifestSha256": "8ace7726634fd2cd2d579a517e0e16422975e34f169cd9b556a315be06ccdf05",
+    "controllerPreflightSemanticSha256": "e72659dad93504a5aa96abdac38e0faedfc58934649f8c307a8cd8f1518c5446",
+    "sourceClosureSha256": "79b7449e5d6dd0a8fcfefd22c7a3f9abb78d89a79605020c31c47c13249d8cce",
+    "privateQueueFileSha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+    "privateQueueSemanticSha256": "c120ebcc5aea5f83c1c9e97447c2913b0ebf76932e2a0cf91d2e10887a86225e"
+  },
+  "independentReplay": {
+    "replays": 2,
+    "assignmentsPerReplay": 180,
+    "interceptedFetchesPerReplay": 180,
+    "exactOneFetchRows": 180,
+    "uniqueWireBodies": 180,
+    "byteIdenticalRowsAcrossReplays": 180,
+    "strictSingleQuestionJsonSchemaRows": 180,
+    "exactModelRows": 180,
+    "exactOutputCapRows": 180,
+    "exactProviderRequireParametersRows": 180,
+    "exactGoogleVertexGlobalOnlyRows": 180,
+    "providerFallbackDisabledRows": 180,
+    "providerDataCollectionDenyRows": 180,
+    "providerZdrRows": 180,
+    "exactReasoningOffRows": 180,
+    "exactDifficultyPromptBindingRows": 180,
+    "profileEffectGroupsPassed": 48,
+    "difficultyEffectGroupsPassed": 90
+  },
+  "allocation": {
+    "byType": {
+      "BLANK_INFERENCE": 84,
+      "GRAMMAR_ERROR": 96
+    },
+    "byPlan": {
+      "PREMIUM": 84,
+      "STANDARD": 96
+    },
+    "byDifficulty": {
+      "INTERMEDIATE": 90,
+      "KILLER": 90
+    },
+    "byModel": {
+      "google/gemini-3.1-pro-preview": 84,
+      "google/gemini-3.5-flash": 96
+    },
+    "byProfile": {
+      "B0_CURRENT_CONTROL": 24,
+      "B1_TYPE_SCOPED_TAIL": 12,
+      "B2_POSITIVE_COMPACT": 24,
+      "B3_OPTION_INTENT_LEDGER": 24,
+      "G0_CURRENT_CONTROL": 24,
+      "G1_FINAL_CHECKLIST_ABLATION": 24,
+      "G2_POSITIVE_COMPACT": 24,
+      "G3_SITE_CERTIFICATE": 24
+    },
+    "frozenReservationUsd": 44.16
+  },
+  "privacy": {
+    "publicForbiddenPrivateKeysFound": 0,
+    "publicExactPrivateValuesFound": 0,
+    "reviewContainsRowLevelData": false
+  },
+  "safety": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretsReadOrLogged": 0,
+    "dummyCredentialInstalledBeforeProductionDynamicImport": true,
+    "liveExecutionAuthorized": false
+  },
+  "architecturalClassification": {
+    "exactCurrentLocalGenerationCoreWirePreflight": true,
+    "productionFastOrTriggerEntrypointExecuted": false,
+    "runQuestionGenerationWithEmptyRetryExecuted": false,
+    "durableAssignmentBudgetScopeExecuted": false,
+    "durablePerAssignmentStateLeaseOutcomeLedgerAttached": false,
+    "completeTransitiveBuildDependencyClosure": false,
+    "deploymentEnvironmentParityProven": false,
+    "pricingAttached": false,
+    "providerSideHardSpendCeilingAttached": false,
+    "rightsGateAttached": false,
+    "privacyRetentionGateAttached": false,
+    "exactRequestProviderRoutePinAttached": true,
+    "accountPrivacyRetentionAndProviderComplianceProven": false
+  },
+  "executionHolds": [
+    "documented source rights for provider processing",
+    "current privacy, retention, account settings and pinned endpoint compliance/availability decision",
+    "separate limited credential and provider-side hard spend ceiling",
+    "fresh exact-route worst-case price proof within 15 minutes",
+    "durable 180-row state/lease/outcome controller and ledger",
+    "deployment configuration and transitive build closure"
+  ]
+}

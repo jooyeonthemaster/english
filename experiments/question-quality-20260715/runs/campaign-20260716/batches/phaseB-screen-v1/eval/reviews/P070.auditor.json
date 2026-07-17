@@ -1,0 +1,77 @@
+{
+  "pid": "P070",
+  "blindAnswer": "(B)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "해설이 (B) 'are'를 '유도부사 there절의 진짜 주어로 단수 명사구인 no clear right or wrong response를 취한다'고 분석했으나, 밑줄 친 (B)는 there-구문의 동사가 아니라 주절의 계사이다. 실제 문장은 'The nature of an ethical issue or problem from this perspective __are__ that there is no clear right or wrong response.'로, (B)의 주어는 단수 핵명사 'nature'(개재 전치사구 'of an ethical issue or problem from this perspective'를 건너뛰는 수일치)이며, 유도부사절의 동사 'is'는 밑줄 밖에 그대로 남아 있다. 교정 방향(are→is)은 우연히 맞지만 통사 구조 분석 자체가 사실과 다른 환각이다.",
+      "recommendation": "해설을 '주어 핵명사 nature(단수)와의 수일치 — 개재 전치사구에 현혹되지 말 것'으로 전면 재작성하고, keyPoints의 (B) 항목('유도부사구의 실제 주어 수일치 판단')도 동일하게 수정한다."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "keyPoints[0] '(B) 수일치 — 유도부사구의 실제 주어 수일치 판단'이 해설의 오분석을 그대로 반복한다. 학생 노출 시 존재하지 않는 문법 포인트(there-구문 수일치)를 학습시키게 된다.",
+      "recommendation": "keyPoints[0]을 '주어-동사 수일치: 전치사구가 개재된 단수 핵명사(nature) 판별'로 교체한다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 0
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "계사 뒤 주격 보어 자리의 형용사 vs 부사 판별 (distinct/distinctly)",
+      "temptingBecause": "'distinct from' 뒤에 전치사구가 이어져 부사 수식처럼 읽힐 수 있고, be동사 뒤 -ly형이 자연스럽다고 오인하는 학생이 있다",
+      "decisiveFlaw": "be동사의 보어 자리이므로 형용사 distinct가 정확하다. 오류 아님 — 원문과 동일"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답. 개재 전치사구를 건너뛰는 주어 핵명사(nature, 단수) 수일치 — 원문 is를 are로 훼손한 최소대립쌍",
+      "temptingBecause": "주어와 동사 사이에 'of an ethical issue or problem from this perspective' 두 개의 전치사구가 개재되어 핵명사를 놓칠 수 있다",
+      "decisiveFlaw": "핵명사 nature는 단수이므로 are는 비문 — is로 교정하면 정확히 원문이 된다. 단, 개재 명사(issue, problem, perspective)가 전부 단수여서 복수 유인자(attractor)가 전무하므로 are가 사실상 즉시 드러난다"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계사절 내 수동태 판별 (consider O C → be considered C) + 선행사 principles(복수)와의 수일치",
+      "temptingBecause": "'are considered correct'에서 목적격 보어 correct가 남아 있어 능동으로 착각하거나, that절 내 동사 형태를 의심하게 만든다",
+      "decisiveFlaw": "principles는 '여겨지는' 대상이므로 수동태가 맞고 복수 수일치도 정확하다. 오류 아님 — 원문과 동일"
+    },
+    {
+      "label": "(D)",
+      "intent": "선행사 포함 관계대명사 what vs 접속사 that — 불완전한 명사절(values의 목적어 공백)이 주어 역할",
+      "temptingBecause": "문두 명사절 도입어로 That을 기대하는 학생이 많고, 뒤의 단수 동사 relates와의 관계도 헷갈리게 한다",
+      "decisiveFlaw": "values의 목적어가 비어 있는 불완전절이므로 what이 정확하다. 오류 아님 — 원문과 동일"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사구 후치 수식 분사의 태 판별 (influenced vs influencing)",
+      "temptingBecause": "beliefs가 사람의 행동에 '영향을 주는' 주체로도 읽힐 수 있어 현재분사를 고르게 유인한다",
+      "decisiveFlaw": "beliefs는 학습 경험에 의해 '영향을 받는' 대상이므로 과거분사 influenced가 정확하다. 오류 아님 — 원문과 동일"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 통사 분석이 전면 오류: 밑줄 (B)는 주절 계사인데 유도부사 there-구문의 동사로 오귀속하고, 주어를 'no clear right or wrong response'로 오지목했다(실제 주어 핵명사는 nature).",
+    "keyPoints의 (B) 항목이 동일한 오분석('유도부사구의 실제 주어 수일치')을 반복한다.",
+    "오답 해설 (A)(C)(D)(E)는 각 선지의 실제 구조와 정확히 대응한다 — 문제 없음.",
+    "각 밑줄별 'why tempting'이 학생/검수용 필드로 제공되지 않아 KILLER 요건(§C 3항)의 문서화 기준에 미달한다."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "최소대립쌍(is→are, 교정 시 원문 복원)과 명확한 문법 판단 요건은 충족하나, (1) 정답이 '구조를 읽어야만' 드러나지 않는다 — 동사 앞의 모든 개재 명사(issue, problem, perspective)가 단수여서 복수 유인자가 전혀 없고, 'perspective are' 인접 스캔만으로 즉시 발각되는 단순 수일치에 가깝다(§C 4항 위반). (2) 밑줄별 point/why tempting/why correct 3요소 중 why tempting이 부재(§C 3항 미비).",
+  "grade": "F",
+  "notes": "블라인드 풀이 정답 (B)로 선언 정답과 일치하며 유일성(V2)·렌더 무결성(V1)·문법성(V3)·필드 동기화(V5)는 모두 통과. 그러나 정답 해설이 밑줄의 실제 위치(주절 계사)를 there-구문 동사로 오귀속한 구조 환각이 있어 V4 치명 실패 → F. 공예 측면에서도 요청 난이도 KILLER 대비 정답 포인트가 복수 유인자 없는 수일치라 난이도 정합(C5=1)이 크게 미달하고, 해설 오류로 C6=0. 디코이 4개는 서로 다른 포인트(보어 형용사/수동태/관계사 what/분사 태)를 겨냥해 의도 밀도(C2=3)는 양호하다. 해설·keyPoints 재작성 및 오류 지점의 유인자 재설계(복수 개재명사 도입 또는 더 깊은 구조 포인트로 교체) 없이는 출하 불가."
+}

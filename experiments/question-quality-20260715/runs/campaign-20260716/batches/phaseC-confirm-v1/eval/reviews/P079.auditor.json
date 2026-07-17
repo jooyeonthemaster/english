@@ -1,0 +1,75 @@
+{
+  "pid": "P079",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CIRCULAR-EVIDENCE",
+      "severity": "critical",
+      "evidence": "해설: \"빈칸 직전에서 누군가가 어떤 활동을 하는 데 있어 'touch'가 있다는 것은 피아노 건반을 딱 알맞은 힘과 속도로 치는 능력이라 명시하고 있습니다\" — 이 내용('hit the right piano key with just enough force and pace')은 빈칸으로 제거된 span 그 자체다. 렌더 지문 어디에도(빈칸 직전에도) 명시돼 있지 않다. 제거된 원문을 학생이 볼 수 있는 근거인 것처럼 인용한 순환 논증이자 지문 사실성 오류(문장 귀속 오류)."
+    },
+    {
+      "code": "V4-OPTION1-EXPL-MISMATCH",
+      "severity": "major",
+      "evidence": "오답해설 ①: \"본문의 piano와 key라는 단어를 활용하여 그럴듯하게 유혹\" — 렌더 지문에는 'piano'도 'key'도 존재하지 않고(둘 다 빈칸 span과 함께 제거됨), 선지 ① 자체에도 두 단어가 없다('musical instrument'). 해설이 실제 지문·실제 선지 텍스트 어느 쪽과도 대응하지 않는 이중 사실 오류."
+    },
+    {
+      "code": "V4-OPTION5-EXPL-CONTEXT",
+      "severity": "minor",
+      "evidence": "오답해설 ⑤: \"피아노 건반을 치는 실천적 행위자의 관점이 아니라\" — 렌더 지문에 없는 피아노 맥락을 전제로 대비를 설명함. 논지 자체(수동 감상 vs 능동 실행)는 타당하나 근거 서술이 학생 가시 지문과 불일치."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "실천적 지식을 명시적·이론적 지식으로 치환하는 개념 혼동 유도 (음악 도메인 표면 앵커)",
+      "temptingBecause": "'musical instrument'가 원지문의 피아노 예시 스키마와 맞고, '악기를 마스터한다'는 통념적 학습 프레임과 연결됨",
+      "decisiveFlaw": "'master the logical structure'는 formulated rules 계열의 명시적·이론적 지식이며, 'touch'라는 신체 감각(bodily metaphor)과 정면 배치됨. 단, 렌더 지문에서 piano가 제거돼 음악 앵커가 지문 근거 없이 떠 있음"
+    },
+    {
+      "label": "②",
+      "intent": "대조 개념(technical/book knowledge)으로의 극성 반전 + 어휘 반복('formulated') 미끼",
+      "temptingBecause": "지문 첫 문장의 'formulated rules'를 그대로 반복해 표면 일치가 높음",
+      "decisiveFlaw": "실천적 지식은 'cannot be taught or learned'로 formulated rules와 명시적으로 대조되므로 방향이 정반대. 어휘 반복 탓에 즉시 소거 가능"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'hit the right piano key with just enough force and pace'의 난이도 적합 추상화",
+      "temptingBecause": "(정답) 'bodily metaphors', 'touch', 'thinking less', 무의식적 수행이라는 지문 전체 단서와 정합",
+      "decisiveFlaw": "없음. 'precise intensity and tempo'가 'just enough force and pace'를, 'execute physical actions'가 신체 실행을 정확히 보존"
+    },
+    {
+      "label": "④",
+      "intent": "'thinking less'와 plow ahead/put aside 판단 절을 정서·분석 조절로 오독시키는 과확장",
+      "temptingBecause": "'an awareness of when you should plow ahead...' 절이 침착한 판단력을 연상시킴",
+      "decisiveFlaw": "'analytical'은 전문가가 'thinking less'한다는 명시 진술과 모순, 'highly stressful tasks'는 지문에 근거 없음. touch(신체 감각)의 정의 자리에 인지·정서 상태를 넣어 슬롯 의미 불일치"
+    },
+    {
+      "label": "⑤",
+      "intent": "행위자 전환(actor swap): 수행자 관점을 수동적 감상자 관점으로 치환",
+      "temptingBecause": "음악 감상('auditory beauty of a performance')이 피아노 연주 스키마와 표면적으로 어울림",
+      "decisiveFlaw": "'passively appreciate'는 'a touch for doing some activity'와 'exists only in practice'가 요구하는 능동적 실행과 정면 모순"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 빈칸으로 제거된 원문 span('피아노 건반을 딱 알맞은 힘과 속도로 치는 능력')을 '빈칸 직전에 명시돼 있다'고 서술 — 렌더 지문 기준 허위이며 순환 논증. 정답 근거는 bodily metaphors·touch·feel 병렬 예시·thinking less 등 잔존 단서에서 도출됐어야 함",
+    "오답해설 ①이 '본문의 piano와 key라는 단어를 활용'했다고 주장하나 렌더 지문과 선지 ① 어디에도 두 단어가 없음 — 해설과 선지 실물 불대응",
+    "오답해설 ⑤도 지문에 없는 '피아노 건반을 치는' 맥락을 전제로 서술 (경미)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "문항 본체는 건전하다: 렌더 무결(V1), 정답 ③ 유일(V2, 각 선지 독립 검증 완료), 완성문 문법·자연스러움 양호(V3), 필드 동기화 양호(V5). 그러나 해설이 렌더 지문이 아니라 원지문을 기준으로 작성돼 제거된 span을 가시 근거로 인용하는 순환 서술과, 선지 ①에 존재하지 않는 단어('piano', 'key')를 근거로 든 사실 오류가 있어 V4 실패 → F. 설계 관찰: 빈칸이 지문의 유일한 음악 언급을 제거해 ①·⑤의 음악 앵커가 지문 근거 없이 떠 있게 됨(오히려 unanchored 선지로 의심받아 매력도 하락, C3=2 반영). 요청 난이도 INTERMEDIATE에는 사고 단계·함정 깊이가 대체로 부합(C5=3). 수정 방향: 해설을 잔존 단서 기반으로 재작성하고 오답해설 ①의 piano/key 주장 삭제 시 B~A 후보."
+}

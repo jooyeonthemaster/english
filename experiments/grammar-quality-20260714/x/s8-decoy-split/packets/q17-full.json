@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20190307-q33",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "빈칸추론",
+    "words": 159
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-filler-span"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=h  (B):dec=c  (C):ANS=k  (D):dec=h  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 23,
+        "relPos": 0.028,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 303,
+        "relPos": 0.369,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 500,
+        "relPos": 0.608,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 598,
+        "relPos": 0.727,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 817,
+        "relPos": 0.994,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.994,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "help",
+        "isError": false,
+        "errorExpression": "help",
+        "surroundingText": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "found",
+        "isError": false,
+        "errorExpression": "found",
+        "surroundingText": "It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "listening",
+        "isError": true,
+        "correction": "listening",
+        "errorExpression": "to listen",
+        "surroundingText": "Later, he regrets this, in case God was enjoying listening to the sound of the frog.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "to meet",
+        "isError": false,
+        "errorExpression": "to meet",
+        "surroundingText": "I invite children to think of different animals for the saint to meet and different places for him to meet them.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(E)",
+        "expression": "used",
+        "isError": false,
+        "errorExpression": "used",
+        "surroundingText": "It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "help"
+      },
+      {
+        "label": "(B)",
+        "text": "found"
+      },
+      {
+        "label": "(C)",
+        "text": "to listen"
+      },
+      {
+        "label": "(D)",
+        "text": "to meet"
+      },
+      {
+        "label": "(E)",
+        "text": "used"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "준사역동사 help의 목적격보어로 원형부정사 complete가 수식 구조 속에 올바르게 연결되어 있으며, '~를 돕다'라는 문맥에서 'to help' 형태 역시 어법상 적절합니다.",
+      "(B)": "a story called St. Benno and the Frog를 뒤에서 수식하는 과거분사구의 핵으로, 책에 '발견되는' 수동의 관계를 나타내므로 과거분사 found가 적절하게 쓰였습니다.",
+      "(D)": "앞의 의미상 주어인 'for the saint'와 'for him'의 수식을 받으며, 형용사적 용법으로 각각 명사 'animals'와 'places'를 수식하는 to부정사(to meet)가 적절하게 사용되었습니다.",
+      "(E)": "지각동사 hearing의 목적보어 자리로, 목적어인 'their ideas'(그들의 아이디어)와의 관계가 '사용되는' 수동 관계이므로 과거분사 used는 어법상 맞습니다."
+    },
+    "explanation": "동사 enjoy는 동작의 대상을 나타낼 때 명사나 동명사만을 목적어로 취하는 대표적인 타동사입니다. 제시된 문장에서 과거 진행형 동사구 'was enjoying' 뒤에서 목적어로 기능하는 준동사는 to부정사구인 'to listen'이 될 수 없으며, 반드시 동명사 형태인 'listening'이 와야 문장 구조상 올바릅니다. 따라서 'to listen'을 'listening'으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) to-v/v-ing — 타동사 enjoy의 목적어로 동명사 채택",
+      "(B) 분사구의 태 — 수식 대상 명사와 found의 수동 관계 판정",
+      "(E) 목적격보어 분사 — 지각동사의 목적어와 보어(used)의 능·수동 역학 관계"
+    ],
+    "tags": [
+      "어법",
+      "동명사 목적어",
+      "준동사의 태",
+      "수식구조"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them to __(A) help__ you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, __(B) found__ in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying __(C) to listen__ to the sound of the frog. I invite children to think of different animals for the saint __(D) to meet__ and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas __(E) used__."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P056",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to last",
+      "verdict": "correct",
+      "reason": "수동태 'is constructed' 뒤 목적을 나타내는 to부정사(be constructed to-V) 구조. last는 자동사로 기간 명사구 'one hundred years'를 부사적 대격으로 직접 취할 수 있어(cf. last two hours) 전치사 없이도 정문."
+    },
+    {
+      "label": "(B) what shows",
+      "verdict": "incorrect",
+      "reason": "선행사 'a lasting mark'가 명시적으로 존재하므로 선행사 내포형 자유관계사 what은 결합 불가 — that/which shows가 되어야 함. 대안 해석 전수 점검: (i) 무표지 동격 명사절로는 통사·의미 모두 비정형, (ii) make+O+OC 보어 위치의 what절도 불성립, (iii) 문장 전체를 받는 계속적 관계절이라면 which가 필요. 어떤 해석으로도 정문 구제가 안 되는 유일한 비문."
+    },
+    {
+      "label": "(C) harmonizes",
+      "verdict": "correct",
+      "reason": "간접의문(how)절 내 주어 it(= a bridge, 3인칭 단수)과 harmonizes의 수일치 정확. 상위 동사 concerns도 주어 'one (of the first qualities)'과 단수 일치하여 문장 전체 정합."
+    },
+    {
+      "label": "(D) either",
+      "verdict": "correct",
+      "reason": "either A or B 상관접속의 병렬 시작점이 조동사 must 뒤 동사원형 층위로 정렬: either [adapt to] or [indeed reinforce] + 공유 목적어 this balance. adapt to의 전치사 목적어와 reinforce의 직접목적어로 양측 모두 적법하게 결합(right-node raising). either의 위치·병렬 모두 정문."
+    },
+    {
+      "label": "(E) spoils",
+      "verdict": "correct",
+      "reason": "관계절 내 병렬 'that is spectacular in itself but spoils...': 관계대명사 that의 선행사 a bridge(단수)에 맞춘 3인칭 단수 spoils로 is와 병렬. 수일치·병렬 모두 성립."
+    }
+  ],
+  "note": "형식적 판정상 (B)만이 지배 규칙(선행사 존재 시 what 배제) 위반으로 비문이며, 축약 관계절·동격·계속적 용법 등 대안 해석을 적극 탐색해도 구제 불가. 나머지 네 밑줄은 각각 목적 부정사, 수일치, 상관접속 병렬, 관계절 내 병렬로 모두 정문. 단일 정답으로 깨끗하게 수렴하는 문항."
+}

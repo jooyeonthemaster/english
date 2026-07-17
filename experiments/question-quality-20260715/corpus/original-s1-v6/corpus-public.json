@@ -1,0 +1,527 @@
+{
+  "schemaVersion": "question-quality-original-s1-v6-public-v2",
+  "artifactId": "original-s1-v6",
+  "revisionId": "original-s1-v6-remediation-v1",
+  "supersedesPrivateArtifactSha256": "bcb5d7683e9ee6bd110add462da6956dea6468e29dd2222d00067e80ddcabb68",
+  "status": "SEALED_ORIGINAL_CORPUS_NOT_DISPATCH_AUTHORIZATION",
+  "authoredDate": "2026-07-15",
+  "campaignScopeId": "question-quality-20260715-s1-v6",
+  "confidentialityBoundary": {
+    "privateExactTextGitIgnored": true,
+    "publicArtifactContainsPassageText": false,
+    "privateArtifactUtf8Bytes": 43609,
+    "privateArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68",
+    "rowCommitmentScheme": "SHA256(stable-json(full private row))"
+  },
+  "compositionRecord": {
+    "method": "DIRECT_ORIGINAL_COMPOSITION_BY_CODEX_FOR_THIS_USER_REQUEST",
+    "webSearchUsed": false,
+    "externalApiUsed": false,
+    "externalModelCallUsed": false,
+    "sourceDocumentsConsultedForCompositionCount": 0,
+    "copiedOrAdaptedFromIdentifiableSource": false,
+    "thirdPartyPermissionClaimed": false
+  },
+  "remediationRecord": {
+    "method": "DIRECT_OFFLINE_REVISION_BY_CODEX_FOR_THIS_USER_REQUEST",
+    "basis": "experiments/question-quality-20260715/reviews/campaign-v6-original-corpus-independent-audit-v1",
+    "webSearchUsed": false,
+    "externalApiUsed": false,
+    "externalModelCallUsed": false,
+    "databaseUsed": false,
+    "rightsAndProcessingScopePreserved": true
+  },
+  "externalModelProcessingScope": {
+    "status": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+    "permissionBasis": "The requesting user directed creation and external-model question-generation testing for this campaign.",
+    "permittedPurpose": "Send each exact English passage to the separately approved external model route solely to generate and evaluate S1 v6 English questions.",
+    "permittedPayload": "The exact passage plus the frozen S1 v6 generation context required for the assigned question cell.",
+    "conditions": [
+      "A separate current provider privacy and retention review must pass.",
+      "A provider allow-list, limited credential, fresh price check, hard spend cap, exact-wire registry, and physical-call budget must pass.",
+      "No row is authorized for unrelated training, publication, resale, production use, or another campaign by this record."
+    ],
+    "revocationRule": "A later user instruction revoking this scope supersedes this record before dispatch."
+  },
+  "aggregate": {
+    "rowCount": 12,
+    "questionTypeCounts": {
+      "BLANK_INFERENCE": 6,
+      "GRAMMAR_ERROR": 6
+    },
+    "topicFamilyCounts": {
+      "ARCHAEOLOGICAL_ABSENCE": 1,
+      "ENGINEERING_SCALE_MODELS": 1,
+      "LEARNING_AND_RETRIEVAL": 1,
+      "MAPS_AND_CATEGORIES": 1,
+      "MICROBIAL_ECOLOGY": 1,
+      "MUSEUM_EPISTEMOLOGY": 1,
+      "MUSICAL_SILENCE": 1,
+      "ORCHARD_RESILIENCE": 1,
+      "PRODUCT_REPAIRABILITY": 1,
+      "QUEUE_FAIRNESS": 1,
+      "URBAN_MICROCLIMATE": 1,
+      "WARNING_CALIBRATION": 1
+    },
+    "discourseCounts": {
+      "ABSTRACT_ARGUMENT_WITH_EXAMPLES": 1,
+      "ARGUMENT_WITH_CONTRAST": 1,
+      "CAUSAL_EXPLANATION_WITH_QUALIFICATION": 1,
+      "CONCEPTUAL_REFRAMING_WITH_CONTRAST": 1,
+      "CONTROLLED_COMPARISON_TO_PRINCIPLE": 1,
+      "MISCONCEPTION_AND_PROCESS_EXPLANATION": 1,
+      "MISCONCEPTION_REBUTTAL": 1,
+      "QUALIFIED_INFERENCE_WITH_COUNTEREXAMPLES": 1,
+      "SCENARIO_TO_GENERAL_PRINCIPLE": 1,
+      "SYSTEM_DEFINITION_WITH_CHAIN_ANALOGY": 1,
+      "TEMPORAL_CAUSAL_SEQUENCE": 1,
+      "TRADEOFF_AND_CAUSAL_GENERALIZATION": 1
+    },
+    "syntaxBandCounts": {
+      "ADVANCED": 5,
+      "INTERMEDIATE": 2,
+      "UPPER_INTERMEDIATE": 5
+    },
+    "wordBandCounts": {
+      "160_189": 3,
+      "170_199": 7,
+      "180_209": 2
+    },
+    "totalWords": 2194,
+    "machinePiiPatternHits": 0,
+    "manualPiiObservedRows": 0,
+    "grammarAffordanceBindingCount": 30,
+    "blankRecommendedPositionCounts": {
+      "INTERNAL": 5,
+      "TERMINAL": 1
+    },
+    "blankStructuralRoleCounts": {
+      "INTERNAL_ANAPHORIC_CAUSAL_BRIDGE": 1,
+      "INTERNAL_CONTRAST_PIVOT": 1,
+      "INTERNAL_CONTROLLED_COMPARISON_SYNTHESIS": 1,
+      "INTERNAL_COUNTEREXAMPLE_PIVOT": 1,
+      "INTERNAL_EVIDENCE_SYNTHESIS_CONTRAST": 1,
+      "TERMINAL_QUALIFIED_SYNTHESIS": 1
+    },
+    "blankFinalOrPenultimateCount": 1,
+    "blankFinalOrPenultimateShare": 0.16666666666666666,
+    "blankInternalCount": 5,
+    "blankInternalContrastOrCounterexampleCount": 3,
+    "blankInternalAnaphoricOrCausalBridgeCount": 1,
+    "blankDualDifficultyCoverageCount": 6,
+    "maximumPostBlankContentJaccard": 0.05555555555555555
+  },
+  "rows": [
+    {
+      "publicId": "OS1V6-G01",
+      "questionType": "GRAMMAR_ERROR",
+      "descriptors": {
+        "topicFamily": "URBAN_MICROCLIMATE",
+        "discourse": "CAUSAL_EXPLANATION_WITH_QUALIFICATION",
+        "syntaxBand": "UPPER_INTERMEDIATE",
+        "wordBand": "170_199"
+      },
+      "wordCount": 179,
+      "sentenceCount": 10,
+      "passageUtf8Bytes": 1113,
+      "passageSha256": "908a3d55be090b3a818058db23b2f4a82fd181485e40fc4296e0c0f460329783",
+      "fullPrivateRowCommitmentSha256": "17a11500a0f291b4b40769f43830d806471fc55bd90766cd9e9219d343b4e465",
+      "rightsProvenanceCommitmentSha256": "7fde3d06a06de926ba0db5d0db485a4e05ef15eeb27a141b814b2a9ae4103c9c",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "grammarAffordanceCount": 5,
+        "grammarAffordanceBindingCount": 5
+      }
+    },
+    {
+      "publicId": "OS1V6-G02",
+      "questionType": "GRAMMAR_ERROR",
+      "descriptors": {
+        "topicFamily": "MUSEUM_EPISTEMOLOGY",
+        "discourse": "ARGUMENT_WITH_CONTRAST",
+        "syntaxBand": "ADVANCED",
+        "wordBand": "170_199"
+      },
+      "wordCount": 179,
+      "sentenceCount": 10,
+      "passageUtf8Bytes": 1147,
+      "passageSha256": "2e29ec6fc6f4ad1d6041dddeaf017eb2f8c5f655240ce1f6b7abc10a2cac98c5",
+      "fullPrivateRowCommitmentSha256": "857f7e17ea1a640bb6774647910060215073f9e618aeb85068fec1a111c55073",
+      "rightsProvenanceCommitmentSha256": "0975dd4667feee21f5991f0b5928e6b456494af12471060ce2f3fe3609ce7014",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "grammarAffordanceCount": 5,
+        "grammarAffordanceBindingCount": 5
+      }
+    },
+    {
+      "publicId": "OS1V6-G03",
+      "questionType": "GRAMMAR_ERROR",
+      "descriptors": {
+        "topicFamily": "MICROBIAL_ECOLOGY",
+        "discourse": "TEMPORAL_CAUSAL_SEQUENCE",
+        "syntaxBand": "ADVANCED",
+        "wordBand": "180_209"
+      },
+      "wordCount": 188,
+      "sentenceCount": 10,
+      "passageUtf8Bytes": 1175,
+      "passageSha256": "3c661d2c5b76cd1babe793e021ee60b5ac3a6937b2e013537fd20d3b336e97ff",
+      "fullPrivateRowCommitmentSha256": "7b475930da544d9be0b3670f91bd66e2bee170637612cd27b7d5a2ff88b5ff82",
+      "rightsProvenanceCommitmentSha256": "07b66c2bdc359c5bc74bd2f88bc620c94b8020b2b30758a67b34cfb4895e8fe0",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "grammarAffordanceCount": 5,
+        "grammarAffordanceBindingCount": 5
+      }
+    },
+    {
+      "publicId": "OS1V6-G04",
+      "questionType": "GRAMMAR_ERROR",
+      "descriptors": {
+        "topicFamily": "ENGINEERING_SCALE_MODELS",
+        "discourse": "MISCONCEPTION_AND_PROCESS_EXPLANATION",
+        "syntaxBand": "UPPER_INTERMEDIATE",
+        "wordBand": "170_199"
+      },
+      "wordCount": 185,
+      "sentenceCount": 10,
+      "passageUtf8Bytes": 1106,
+      "passageSha256": "d29b569fd7dc1be4241b5f44c9b952c3342983c23d5e839f27cb2cad328602f1",
+      "fullPrivateRowCommitmentSha256": "0cba5480b450d8db583be8aa9cef04fad6c9791aef546a01b01f72ef889c3758",
+      "rightsProvenanceCommitmentSha256": "59eb38a18f39f533f1e690b7f14fa6e67c82bcbc1919349740780be253ebc720",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "grammarAffordanceCount": 5,
+        "grammarAffordanceBindingCount": 5
+      }
+    },
+    {
+      "publicId": "OS1V6-G05",
+      "questionType": "GRAMMAR_ERROR",
+      "descriptors": {
+        "topicFamily": "LEARNING_AND_RETRIEVAL",
+        "discourse": "MISCONCEPTION_REBUTTAL",
+        "syntaxBand": "UPPER_INTERMEDIATE",
+        "wordBand": "170_199"
+      },
+      "wordCount": 180,
+      "sentenceCount": 11,
+      "passageUtf8Bytes": 1138,
+      "passageSha256": "96ff5b544394ed7d04e537d54d7cbfc099e7656687afbaf462878c14718e2dce",
+      "fullPrivateRowCommitmentSha256": "9ed85f88a69c4390094b870f308fabdbe20233b945b700a862c5ee403cf4cfb6",
+      "rightsProvenanceCommitmentSha256": "879375f1b994906589401f351972b4bd2288bef49354cd6bbf15c0850d7a3b3c",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "grammarAffordanceCount": 5,
+        "grammarAffordanceBindingCount": 5
+      }
+    },
+    {
+      "publicId": "OS1V6-G06",
+      "questionType": "GRAMMAR_ERROR",
+      "descriptors": {
+        "topicFamily": "PRODUCT_REPAIRABILITY",
+        "discourse": "SYSTEM_DEFINITION_WITH_CHAIN_ANALOGY",
+        "syntaxBand": "ADVANCED",
+        "wordBand": "180_209"
+      },
+      "wordCount": 188,
+      "sentenceCount": 11,
+      "passageUtf8Bytes": 1238,
+      "passageSha256": "97606be011b9f36837bda3a7cbb1f1349cc227942c86f92f95cb552a8dc3515c",
+      "fullPrivateRowCommitmentSha256": "8f4477015930447440e373c3ea9e7ccccfe12611c26ee6c4f7fc58bef7e2d594",
+      "rightsProvenanceCommitmentSha256": "d4a83057c72cc23f88be000a6f804b70d863328bd92505dd20248503ad2212e3",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "grammarAffordanceCount": 5,
+        "grammarAffordanceBindingCount": 5
+      }
+    },
+    {
+      "publicId": "OS1V6-B01",
+      "questionType": "BLANK_INFERENCE",
+      "descriptors": {
+        "topicFamily": "WARNING_CALIBRATION",
+        "discourse": "SCENARIO_TO_GENERAL_PRINCIPLE",
+        "syntaxBand": "UPPER_INTERMEDIATE",
+        "wordBand": "170_199"
+      },
+      "wordCount": 192,
+      "sentenceCount": 13,
+      "passageUtf8Bytes": 1268,
+      "passageSha256": "896d3cb04962b4d830ee6780679fb58db32b336157e4482aadd4c8ecaf2aab23",
+      "fullPrivateRowCommitmentSha256": "9d37b86b7d06aea69637e42bc3142730653b5b2dbcac045c640bb90a94eee396",
+      "rightsProvenanceCommitmentSha256": "ce365ab669ffd4e5485da8137bc042272bc68a04f3db2a810142b9c2d2d1c252",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "recommendedBlankDesign": {
+          "sentenceIndex": 7,
+          "sentenceCount": 13,
+          "positionBucket": "INTERNAL",
+          "structuralRole": "INTERNAL_ANAPHORIC_CAUSAL_BRIDGE",
+          "difficultyCoverage": [
+            "INTERMEDIATE",
+            "KILLER"
+          ],
+          "postBlankRestatementRisk": "LOW"
+        },
+        "maximumPostBlankContentJaccard": 0.05555555555555555,
+        "difficultyAffordancePresent": true
+      }
+    },
+    {
+      "publicId": "OS1V6-B02",
+      "questionType": "BLANK_INFERENCE",
+      "descriptors": {
+        "topicFamily": "MUSICAL_SILENCE",
+        "discourse": "CONCEPTUAL_REFRAMING_WITH_CONTRAST",
+        "syntaxBand": "UPPER_INTERMEDIATE",
+        "wordBand": "160_189"
+      },
+      "wordCount": 183,
+      "sentenceCount": 11,
+      "passageUtf8Bytes": 1087,
+      "passageSha256": "4cf076868a732f5a6732e8d0b8f31acc4f212a275e52586cbab190c031d66a1c",
+      "fullPrivateRowCommitmentSha256": "a45e8806fb64c443e66d373737eddc8268111ea330b729e10f4677666189e9b3",
+      "rightsProvenanceCommitmentSha256": "b3fe0944c917ae3ed71acc6d3ac1dd2d6f6c671f8dc680fde4def0a7cbff0d45",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "recommendedBlankDesign": {
+          "sentenceIndex": 5,
+          "sentenceCount": 11,
+          "positionBucket": "INTERNAL",
+          "structuralRole": "INTERNAL_EVIDENCE_SYNTHESIS_CONTRAST",
+          "difficultyCoverage": [
+            "INTERMEDIATE",
+            "KILLER"
+          ],
+          "postBlankRestatementRisk": "LOW"
+        },
+        "maximumPostBlankContentJaccard": 0,
+        "difficultyAffordancePresent": true
+      }
+    },
+    {
+      "publicId": "OS1V6-B03",
+      "questionType": "BLANK_INFERENCE",
+      "descriptors": {
+        "topicFamily": "ORCHARD_RESILIENCE",
+        "discourse": "TRADEOFF_AND_CAUSAL_GENERALIZATION",
+        "syntaxBand": "INTERMEDIATE",
+        "wordBand": "160_189"
+      },
+      "wordCount": 176,
+      "sentenceCount": 11,
+      "passageUtf8Bytes": 1073,
+      "passageSha256": "7c0c64b75a2638eb450a279d6f39d44eb0e19102a34fc7923a0d7157687ff79f",
+      "fullPrivateRowCommitmentSha256": "fd9c077527184ef66647bfb61bbf0ecac87800e3f7775fe471cacd1e29c06798",
+      "rightsProvenanceCommitmentSha256": "fe78393938d805597a078b09061a03b88e569db5652d7693a068440c48069006",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "recommendedBlankDesign": {
+          "sentenceIndex": 3,
+          "sentenceCount": 11,
+          "positionBucket": "INTERNAL",
+          "structuralRole": "INTERNAL_CONTRAST_PIVOT",
+          "difficultyCoverage": [
+            "INTERMEDIATE",
+            "KILLER"
+          ],
+          "postBlankRestatementRisk": "LOW"
+        },
+        "maximumPostBlankContentJaccard": 0,
+        "difficultyAffordancePresent": true
+      }
+    },
+    {
+      "publicId": "OS1V6-B04",
+      "questionType": "BLANK_INFERENCE",
+      "descriptors": {
+        "topicFamily": "MAPS_AND_CATEGORIES",
+        "discourse": "ABSTRACT_ARGUMENT_WITH_EXAMPLES",
+        "syntaxBand": "ADVANCED",
+        "wordBand": "170_199"
+      },
+      "wordCount": 188,
+      "sentenceCount": 10,
+      "passageUtf8Bytes": 1149,
+      "passageSha256": "055625522cc71644cabd0e25f7e171df999165a68882f7123ab661bba6b1d2d9",
+      "fullPrivateRowCommitmentSha256": "bb246cc5ecad81934ee41d64ce3932f2d4c6083f7769fed7cb008f8f95ed3f52",
+      "rightsProvenanceCommitmentSha256": "c4f3e0debcfd40ad3dd0cc1f9e2aefca2e404fe0ed5f5179c6cd68b8c81765cb",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "recommendedBlankDesign": {
+          "sentenceIndex": 6,
+          "sentenceCount": 10,
+          "positionBucket": "INTERNAL",
+          "structuralRole": "INTERNAL_COUNTEREXAMPLE_PIVOT",
+          "difficultyCoverage": [
+            "INTERMEDIATE",
+            "KILLER"
+          ],
+          "postBlankRestatementRisk": "LOW"
+        },
+        "maximumPostBlankContentJaccard": 0,
+        "difficultyAffordancePresent": true
+      }
+    },
+    {
+      "publicId": "OS1V6-B05",
+      "questionType": "BLANK_INFERENCE",
+      "descriptors": {
+        "topicFamily": "QUEUE_FAIRNESS",
+        "discourse": "CONTROLLED_COMPARISON_TO_PRINCIPLE",
+        "syntaxBand": "INTERMEDIATE",
+        "wordBand": "160_189"
+      },
+      "wordCount": 175,
+      "sentenceCount": 10,
+      "passageUtf8Bytes": 1031,
+      "passageSha256": "f91b37ebc4b4170d7695bc4e3c615852e2b18ee0632daa35f6f2a080c321aa53",
+      "fullPrivateRowCommitmentSha256": "d3852158afa60d9a915c656517b50e972916e3663789cf00e557b4202aca8af5",
+      "rightsProvenanceCommitmentSha256": "d7039af24429623e4dd5cf2cb19b80a6a5cfa052056181d154a1cac46f23d106",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "recommendedBlankDesign": {
+          "sentenceIndex": 5,
+          "sentenceCount": 10,
+          "positionBucket": "INTERNAL",
+          "structuralRole": "INTERNAL_CONTROLLED_COMPARISON_SYNTHESIS",
+          "difficultyCoverage": [
+            "INTERMEDIATE",
+            "KILLER"
+          ],
+          "postBlankRestatementRisk": "LOW"
+        },
+        "maximumPostBlankContentJaccard": 0.05263157894736842,
+        "difficultyAffordancePresent": true
+      }
+    },
+    {
+      "publicId": "OS1V6-B06",
+      "questionType": "BLANK_INFERENCE",
+      "descriptors": {
+        "topicFamily": "ARCHAEOLOGICAL_ABSENCE",
+        "discourse": "QUALIFIED_INFERENCE_WITH_COUNTEREXAMPLES",
+        "syntaxBand": "ADVANCED",
+        "wordBand": "170_199"
+      },
+      "wordCount": 181,
+      "sentenceCount": 10,
+      "passageUtf8Bytes": 1117,
+      "passageSha256": "b11da2c2c9b93460abf897e03e4ce879fb1070454122f501dc90b816274e506d",
+      "fullPrivateRowCommitmentSha256": "bb9fc76522d65311e0b01743a5fbb6e4eef77e2f563cb6ffc441c4d202e6653e",
+      "rightsProvenanceCommitmentSha256": "a7b698fbd30fcb65148640cd108e896b6df5b947ea9fe5c39b45b061be9e2bd1",
+      "provenanceStatus": "NEW_ORIGINAL_COMPOSITION_FOR_THIS_USER_REQUEST",
+      "thirdPartyPermissionClaimed": false,
+      "piiStatus": "MANUAL_ATTESTATION_FALSE_AND_MACHINE_PATTERN_SCAN_CLEAR",
+      "processingScopeStatus": "PERMITTED_BY_REQUESTING_USER_FOR_S1_V6_ONLY",
+      "typeSpecificDesign": {
+        "recommendedBlankDesign": {
+          "sentenceIndex": 10,
+          "sentenceCount": 10,
+          "positionBucket": "TERMINAL",
+          "structuralRole": "TERMINAL_QUALIFIED_SYNTHESIS",
+          "difficultyCoverage": [
+            "INTERMEDIATE",
+            "KILLER"
+          ],
+          "postBlankRestatementRisk": "NOT_APPLICABLE"
+        },
+        "maximumPostBlankContentJaccard": 0,
+        "difficultyAffordancePresent": true
+      }
+    }
+  ],
+  "originality": {
+    "methodVersion": "offline-token-ngram-v1",
+    "normalization": "lowercase ASCII word tokens; punctuation and whitespace removed",
+    "crossRow": {
+      "ngramSize": 5,
+      "comparedPairCount": 66,
+      "pairsWithOverlap": 0,
+      "sharedNgramCount": 0,
+      "maximumSharedNgramsForOnePair": 0
+    },
+    "selectedLocalCorpus": [
+      {
+        "label": "campaign-v5-s1-selected-passages",
+        "privateFixturePath": "private/local-reference-ngram-commitments.private.json",
+        "provenanceSourcePath": "experiments/question-quality-20260715/design/campaign-v5-s1/private/s1-queue-v5.json",
+        "provenanceSourceArtifactSha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+        "selectedPassageCount": 12,
+        "uniqueNormalizedPassageCount": 12,
+        "selectedTextSetCommitmentSha256": "593fb936d3c860ff406495eafd60405f2c70e77fe5c2572a68665a80e5419adf",
+        "ngramSize": 8,
+        "hashedNgramCount": 1979,
+        "exactNormalizedDuplicates": 0,
+        "rowsWithOverlap": 0,
+        "sharedNgramCount": 0,
+        "maximumSharedNgramsForOneNewRow": 0
+      },
+      {
+        "label": "corpus-v3-retained-selected-passages",
+        "privateFixturePath": "private/local-reference-ngram-commitments.private.json",
+        "provenanceSourcePath": "experiments/question-quality-20260715/corpus/v3/private/input-snapshot.json",
+        "provenanceSourceArtifactSha256": "53bf493d6392c462824dcddd2ecfdc5dfdc0810a4ab2829db5b9993b1799e92a",
+        "selectedPassageCount": 57,
+        "uniqueNormalizedPassageCount": 57,
+        "selectedTextSetCommitmentSha256": "4194f694c392a864f323d541d4b195eacb344c99d69126109ad1a108117d2f98",
+        "ngramSize": 8,
+        "hashedNgramCount": 9339,
+        "exactNormalizedDuplicates": 0,
+        "rowsWithOverlap": 0,
+        "sharedNgramCount": 0,
+        "maximumSharedNgramsForOneNewRow": 0
+      }
+    ],
+    "interpretation": "Zero overlap at these thresholds is local evidence against copying; it is not a global originality or non-infringement proof."
+  },
+  "admission": {
+    "corpusRightsAndScopeRecord": "PASS_FOR_S1_V6_SCOPED_PROCESSING",
+    "piiBoundary": "PASS_LOCAL_PATTERN_AND_MANUAL_ATTESTATION",
+    "generationAuthorized": false,
+    "reason": "Corpus scope alone does not satisfy provider privacy, allow-list, credential, price, budget, controller-registry, or exact-wire gates."
+  },
+  "evidentiaryLimits": [
+    "This is a factual engineering record, not legal advice or a legal opinion.",
+    "Local overlap checks cannot establish global uniqueness, copyrightability, ownership, or non-infringement.",
+    "No third-party permission is represented because no third-party source was intentionally used or adapted.",
+    "Pattern scanning and manual observation reduce PII risk but cannot prove the absence of every possible identifier.",
+    "The processing permission is purpose-, payload-, campaign-, and condition-limited and may be revoked before dispatch."
+  ]
+}

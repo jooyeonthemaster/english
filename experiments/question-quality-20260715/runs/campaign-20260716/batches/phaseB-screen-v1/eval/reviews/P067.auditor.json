@@ -1,0 +1,81 @@
+{
+  "pid": "P067",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "능동/수동태 판단 — 주어 Garcia's band가 '선택된' 대상임을 인식하는지 (pointCode e)",
+      "temptingBecause": "had been chosen이 과거완료+수동의 복합 형태라 시제·태를 동시에 따져야 하고, band를 행위 주체로 오독하면 능동(had chosen)이 맞다고 착각할 수 있다",
+      "decisiveFlaw": "band는 공연하도록 선택된 피동 대상이므로 수동태 had been chosen이 정확히 옳다 — 오류가 아님. 독립 검증: 'Garcia's band had been chosen to perform ...'은 완전히 문법적"
+    },
+    {
+      "label": "(B)",
+      "intent": "관계부사 why(선행사 the reason 생략, 자유관계절)가 be동사 보어 자리의 명사절을 이끄는 용법 판단 (pointCode b)",
+      "temptingBecause": "That was why 뒤에 완전한 절이 오는 구조에서 which/because와의 구별을 요구하는 것처럼 보여 학생이 흔히 혼동한다",
+      "decisiveFlaw": "'That was why + 완전한 절'은 표준 구문(= That was the reason why ...)으로 완전히 문법적 — 오류가 아님. 대안 분석(간접의문 why)으로 보더라도 문법성은 유지된다"
+    },
+    {
+      "label": "(C)",
+      "intent": "ask + 목적어 + to부정사(목적격 보어) 구조 판단 (pointCode h)",
+      "temptingBecause": "바로 뒤의 help him pick(원형부정사)과 나란히 있어 to help / help 원형 사이에서 흔들릴 수 있다",
+      "decisiveFlaw": "ask는 목적격 보어로 to부정사를 취하므로 asked Jeff to help는 정확히 옳다 — 오류가 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 분사구문의 태 판단: 주절 주어 Garcia가 가리키는 능동 주체이므로 현재분사 pointing이 필요 (pointCode c)",
+      "temptingBecause": "주변 서술이 모두 과거시제(asked, apologized, replied)라 'asked, pointed'를 과거동사 병렬로 착각하기 쉽다",
+      "decisiveFlaw": "'Garcia asked, pointed at ...'은 접속사 없는 정형동사 병렬(comma splice)이거나 수동 과거분사구문인데, 전자는 비문이고 후자는 Garcia가 '가리켜지는' 대상이 되어 의미상 불가 — pointing으로 고치면 정확히 원문이 된다. 유일한 어법 오류"
+    },
+    {
+      "label": "(E)",
+      "intent": "감각동사(연결동사) look 뒤 주격 보어 자리의 형용사/부사 구별 (pointCode f)",
+      "temptingBecause": "동사를 수식한다고 오독하면 부사 greatly를 써야 한다고 착각할 수 있는 전형적 함정 자리",
+      "decisiveFlaw": "look은 주어 상태를 서술하는 연결동사이므로 형용사 great가 정확히 옳다 — 오류가 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MINOR_WORDING",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설 '관계부사 why가 보어 자리를 이끄는 명사절로 올바르게 사용되었습니다'는 어순이 어색하다('보어 자리에서 명사절을 이끄는'이 정확한 표현). 다만 선행사 the reason 생략·명사절 기능이라는 분석 자체는 학교문법 기준으로 사실과 일치한다"
+    },
+    {
+      "code": "MINOR_REDUNDANCY",
+      "severity": "minor",
+      "evidence": "정답 해설의 '의미 및 문장 구조상 완전히 잘못된 구조가 됩니다'는 '구조상...구조'로 표현이 중복되어 다소 둔하다. 문법 분석 자체는 정확"
+    }
+  ],
+  "issues": [
+    {
+      "severity": "minor",
+      "evidence": "(A)(C)(E)는 정전 포인트이지만 중상위 학생에게는 즉시 검증-소거가 가능해 실질 경쟁 선지는 (B)(D) 정도로 좁혀진다. INTERMEDIATE 라벨에는 부합하나 C3 만점 수준의 다중 매력 선지는 아니다",
+      "recommendation": "출하 가능. 상향 변형 시 (A)를 시제 결합형(had been chosen vs was chosen 문맥 판단)으로 심화하는 방안 고려"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (D)(A)(E) 3개만 다루고 (B)(C)는 누락 — 필드 간 모순은 아니어서 V5 통과이나 완결성은 낮다",
+      "recommendation": "keyPoints에 (B) 관계부사, (C) 목적격 보어 to부정사 항목 추가 권장"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 마커 제거 후 렌더 지문을 원지문과 프로그램적으로 대조 — 의도된 단일 변형(pointing→pointed, (D)) 외에 바이트 단위로 동일함을 확인. 마커 5개 (A)~(E)가 선지 라벨과 정확히 일치. V2: 5개 밑줄을 각각 독립 검증한 결과 (A)(B)(C)(E)는 모두 문법적으로 옳고(대안 분석 포함 검토), (D)만 비문 — 단일 정답 확정, blind solve 일치. V3: 지문·발문·교정문(pointing 복원 시 원문과 동일) 모두 문법적이며, 비문은 유형 의도상 정답 (D) 하나뿐. V4: 분사구문 능수동·수동태·관계부사·5형식 ask·연결동사 분석이 모두 실제 문장 구조와 일치, 오분석·환각 없음(경미한 표현 어색함 2건은 사실성 훼손 아님). V5: 정답 라벨 (D)=markedExpressions isError:true=해설 교정형 pointing=keyPoints 첫 항목, 상호 모순 없음. 공예: 정전 포인트 5종이 각기 다른 오개념을 겨냥(C2=4)하고 난이도는 INTERMEDIATE에 정확히 정합(C5=4)하나, 디코이 소거가 빠른 편(C3=3)이고 해설이 정확하되 다소 둔함(C6=3). 합계 20 — 모든 V 통과, C 최저 3, 합계 17 이상이나 21 미만이므로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

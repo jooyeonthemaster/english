@@ -1,0 +1,90 @@
+{
+  "artifactSha256": "e952933f2f3cd976288aa4bf9865a304c0f5740bb594f075e7a945522dc57d61",
+  "byTypeAndSplit": {
+    "BLANK_INFERENCE": {
+      "confirmatory": {
+        "currentDatabaseContentMatches": 4,
+        "exposedRows": 0,
+        "historyCleanRows": 20,
+        "selectedRows": 20
+      },
+      "development": {
+        "currentDatabaseContentMatches": 1,
+        "exposedRows": 0,
+        "historyCleanRows": 6,
+        "selectedRows": 6
+      },
+      "reserve": {
+        "currentDatabaseContentMatches": 1,
+        "exposedRows": 0,
+        "historyCleanRows": 12,
+        "selectedRows": 12
+      }
+    },
+    "GRAMMAR_ERROR": {
+      "confirmatory": {
+        "currentDatabaseContentMatches": 6,
+        "exposedRows": 0,
+        "historyCleanRows": 20,
+        "selectedRows": 20
+      },
+      "development": {
+        "currentDatabaseContentMatches": 2,
+        "exposedRows": 0,
+        "historyCleanRows": 6,
+        "selectedRows": 6
+      },
+      "reserve": {
+        "currentDatabaseContentMatches": 6,
+        "exposedRows": 0,
+        "historyCleanRows": 12,
+        "selectedRows": 12
+      }
+    }
+  },
+  "capturedAt": "2026-07-15T04:47:32.668Z",
+  "databaseDiagnostics": {
+    "databaseWrites": 0,
+    "nonEnglishRowsExcluded": 1,
+    "normalizedContentGroups": 1872,
+    "passageRows": 2733,
+    "priorUsedGroups": 1527,
+    "queriedPassageRows": 2734,
+    "queryKinds": [
+      "Passage.findMany",
+      "Question.groupBy",
+      "WorkbenchAiJob.groupBy"
+    ],
+    "reviewedRows": 164,
+    "zeroPriorUseGroups": 345
+  },
+  "databaseExtractHash": "4d089b4bf0f295acfb46266268c621e92d6adf947046e7ca8e691105f9d47e39",
+  "exposedRows": 0,
+  "historyCleanRows": 76,
+  "interpretation": {
+    "antecedentRepositoryHistory": "Already sealed in the pinned v3 snapshot; prospective campaign artifacts are not relabelled as antecedent exposure.",
+    "authorization": "This refresh never authorizes generation; rights, provider/key/cost, operational queue and independent audit remain required.",
+    "mutableScope": "Current production DB normalized-content matches and all Question/WorkbenchAiJob rows across academies."
+  },
+  "label": "baseline-20260715-0745",
+  "privacy": {
+    "containsAcademyIds": false,
+    "containsContentHashes": false,
+    "containsDatabaseIds": false,
+    "containsFrameIds": false,
+    "containsPassageText": false
+  },
+  "privateArtifactSha256": "d9c98752b686eb9f2b00e7c423e0ee21cd03cddf23f582a601885531a9d60b3b",
+  "safety": {
+    "databaseReadsOnly": true,
+    "databaseWrites": 0,
+    "fullQuestionCandidatesGenerated": 0,
+    "modelApiCalls": 0,
+    "networkCallsOtherThanDatabase": 0
+  },
+  "schemaVersion": "selected-source-history-refresh-public-v1",
+  "selectedRows": 76,
+  "sourceBindings": "2f37be94bd62e79a86abdbbd9a0ec7901b0cf7946d9da5e364055c7e72681579",
+  "sourceSnapshotHash": "c21777c8dcab7f6b46ed15e429fcb7840607e90bcbdd7c02ec607a8db02beb13",
+  "status": "CURRENT_DATABASE_HISTORY_CLEAN_NOT_AUTHORIZED"
+}

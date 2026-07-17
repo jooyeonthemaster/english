@@ -1,0 +1,704 @@
+{
+  "id": "u08-c3",
+  "unitId": "u08",
+  "order": 3,
+  "title": "확장 짝과 구접속사",
+  "oneLiner": "unless·once·now that 처럼 절을 이끄는 확장 접속사와 because of·despite 처럼 명사구만 받는 구전치사를, 뜻이 아니라 뒤에 오는 것으로 가려냅니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "커리큘럼 백본 u08 접속사 vs 전치사 — 개념 3 확장 짝과 구접속사(src/lib/grammar-drill/curriculum.ts)",
+      "어법끝 5.0 — 접속사와 전치사의 구별(뒤에 절이 오는가, 명사구가 오는가)",
+      "천일문 고등 GRAMMAR — 부사절을 이끄는 접속사와 구전치사",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 접속사·전치사(중 ●)",
+      "SMOAT 어법 드릴 뱅크 u08-choice(u08-c3-ch-001~012) — trapTag: phrasal-conjunction, clause-vs-np"
+    ]
+  },
+  "lenses": ["L1", "L2"],
+  "confusableWith": ["u08-c1", "u08-c2", "u05-c2"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Once the committee approves the plan, construction will begin next spring.",
+        "Upon the committee approves the plan, construction will begin next spring."
+      ],
+      "answer": 0,
+      "afterText": "두 표현은 뜻이 비슷하지만 뒤에 올 수 있는 것이 다릅니다. 이 레슨을 마치면 왜 두 번째가 성립하지 않는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "구접속사",
+      "question": "now that·as long as·provided that 처럼 여러 단어로 된 표현은 접속사입니까, 전치사입니까?",
+      "plain": "구접속사는 여러 단어가 뭉쳐 하나의 접속사로 움직이는 표현입니다. 겉모습은 여러 단어여도, 뒤에 '주어 + 시제 동사'를 갖춘 절을 이끄는 점은 한 단어짜리 접속사와 똑같습니다.",
+      "analogy": "여러 사람이 한 조를 짜 한 명처럼 움직이는 것과 같습니다. as long as 는 세 단어이지만 한 팀으로 묶여 '접속사 한 명'의 일을 하고, 반대로 because of 는 세 단어가 뭉쳐 '전치사 한 명'이 됩니다.",
+      "whyItMatters": "수능 어법은 because of·owing to 같은 구전치사를 절 앞에 슬쩍 놓아 오답을 만듭니다. 여러 단어짜리 표현의 정체를 '뒤에 오는 것'으로 가려낼 수 있으면 이 유형은 무너집니다."
+    },
+    {
+      "id": "b3",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "접속사 뒤에는 '주어 + 시제 동사'를 갖춘 절이 오고, 전치사 뒤에는 명사(구)나 동명사가 옵니다.",
+      "examples": [
+        {
+          "en": "**Unless** the soil drains well, the seedlings will rot within a week.",
+          "ko": "토양의 배수가 좋지 않으면 그 묘목들은 일주일 안에 썩을 것입니다.",
+          "note": "Unless 뒤에 주어 the soil 과 시제 동사 drains 가 있습니다. 절이므로 접속사가 옳습니다."
+        },
+        {
+          "en": "**Without** proper drainage, the seedlings will rot within a week.",
+          "ko": "적절한 배수가 없으면 그 묘목들은 일주일 안에 썩을 것입니다.",
+          "note": "Without 뒤에는 명사구 proper drainage 만 있습니다. 시제 동사가 없으므로 전치사가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현 뒤에 무엇이 오는지 분류하십시오.",
+      "buckets": [
+        { "id": "cl", "label": "뒤에 절(주어 + 시제 동사)" },
+        { "id": "np", "label": "뒤에 명사구·동명사" }
+      ],
+      "chips": [
+        { "text": "now that", "bucketId": "cl", "why": "이유를 나타내는 부사절 접속사입니다. 뒤에 주어와 시제 동사가 옵니다." },
+        { "text": "unless", "bucketId": "cl", "why": "'~하지 않으면'의 조건절을 이끄는 접속사입니다." },
+        { "text": "as long as", "bucketId": "cl", "why": "세 단어이지만 하나의 접속사로 조건절을 이끕니다." },
+        { "text": "in case", "bucketId": "cl", "why": "'~할 경우에 대비하여'의 절을 이끄는 접속사입니다. of 가 붙지 않은 형태입니다." },
+        { "text": "in case of", "bucketId": "np", "why": "of 가 붙으면 구전치사가 되어 명사(구)만 받습니다." },
+        { "text": "owing to", "bucketId": "np", "why": "이유를 나타내는 구전치사입니다. 절을 이끌지 못합니다." },
+        { "text": "instead of", "bucketId": "np", "why": "구전치사이며 뒤에 명사(구)나 동명사가 옵니다." },
+        { "text": "prior to", "bucketId": "np", "why": "'~에 앞서'라는 뜻의 구전치사로, 뒤에 명사(구)가 옵니다." }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "unless 와 without 은 뜻이 비슷하므로 서로 바꾸어 쓸 수 있습니다.",
+      "truth": "앞 두 레슨에서 세운 원리를 이번에는 unless·without 같은 확장 짝으로 넓힙니다. 뜻이 비슷해도 뒤에 오는 것이 다릅니다 — unless 는 접속사여서 '주어 + 시제 동사'를 갖춘 절을 이끌고, without 은 전치사여서 명사(구)나 동명사만 받습니다. 판단은 단어 수가 아니라 뒤에 오는 형태로 합니다.",
+      "counterExample": {
+        "en": "**Without** the council approves the budget, the harbor repair cannot begin.",
+        "ko": "시의회가 예산을 승인하지 않으면 항구 보수 공사는 시작될 수 없습니다.",
+        "note": "전치사 without 뒤에 주어 the council 과 시제 동사 approves 를 갖춘 절이 왔습니다. 이 자리에는 접속사 Unless 를 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b6",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "확장 짝 판별 노트",
+      "intro": "확장 짝을 가르는 데 필요한 것만 노트 한 장에 모읍니다.",
+      "entries": [
+        {
+          "head": "절 — 주어와 시제 동사를 갖춘 덩어리",
+          "body": "'누가 무엇을 한다'가 들어 있으면 절입니다. 이 절 앞에 올 수 있는 것은 접속사뿐입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "명사구·동명사 — 시제 동사가 없는 덩어리",
+          "body": "the storm warning 처럼 명사 덩어리이거나 arriving 처럼 -ing 하나면 명사 자격입니다. 이 앞에는 전치사가 옵니다.",
+          "example": {
+            "en": "**In spite of** arriving late, the delegation was received warmly.",
+            "ko": "늦게 도착했음에도 그 대표단은 따뜻하게 영접받았습니다.",
+            "note": "arriving 은 동명사로 전치사 in spite of 의 목적어입니다. 주어도 시제 동사도 없으므로 절이 아닙니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "판단 기준 — 뜻이 아니라 뒤에 오는 것",
+          "body": "unless 와 without 은 뜻이 비슷해도 자격이 다릅니다. 판단은 의미가 아니라 뒤에 절이 있는가로 합니다.",
+          "pin": "팁"
+        },
+        {
+          "head": "구접속사 — 여러 단어인데 절을 받는다",
+          "body": "now that, as long as, in case, provided that 는 여러 단어로 되어 있어도 뒤에 절을 이끄는 접속사입니다. once 처럼 한 단어인 접속사와 마찬가지로, 판단은 단어 수가 아니라 뒤에 절이 오는가로 합니다.",
+          "example": {
+            "en": "**As long as** the funding continues, the observatory stays open to the public.",
+            "ko": "재정 지원이 계속되는 한 그 천문대는 일반에 계속 개방됩니다.",
+            "note": "as long as 뒤에 주어 the funding 과 시제 동사 continues 가 있으므로 절입니다."
+          }
+        },
+        {
+          "head": "구전치사 — 여러 단어인데 명사만 받는다",
+          "body": "because of, owing to, in spite of, instead of, in case of 는 여러 단어여도 명사(구)·동명사만 받는 전치사입니다.",
+          "example": {
+            "en": "**Because of** the sudden delay, the ceremony was postponed until the following week.",
+            "ko": "갑작스러운 지연 때문에 그 행사는 다음 주로 연기되었습니다.",
+            "note": "because of 뒤에 명사구 the sudden delay 만 있고 시제 동사가 없으므로 전치사가 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "뒤에 오는 것이 다른 하나",
+      "instruction": "넷 중 뒤에 오는 것(절인가 명사구인가)이 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["because of", "once", "now that", "as long as"],
+          "odd": 0,
+          "why": "once·now that·as long as 는 뒤에 절을 이끄는 접속사이고, because of 만 명사(구)를 받는 구전치사입니다."
+        },
+        {
+          "words": ["despite", "even though", "in spite of", "owing to"],
+          "odd": 1,
+          "why": "despite·in spite of·owing to 는 명사(구)를 받는 전치사이고, even though 만 절을 이끄는 접속사입니다."
+        },
+        {
+          "words": ["provided that", "given that", "by the time", "instead of"],
+          "odd": 3,
+          "why": "provided that·given that·by the time 은 절을 이끄는 접속사이고, instead of 만 명사(구)·동명사를 받는 구전치사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "확장 짝 대조표",
+      "columns": ["뜻", "접속사 — 뒤에 절", "전치사 — 뒤에 명사구"],
+      "rows": [
+        {
+          "cells": [
+            "이유",
+            "because / since / now that",
+            "because of / owing to / due to / thanks to"
+          ],
+          "example": {
+            "en": "**Now that** the archive has been digitized, historians search it within seconds.",
+            "ko": "이제 그 기록물이 디지털화되었으므로 역사학자들은 몇 초 만에 그것을 검색합니다.",
+            "note": "now that 뒤에 주어 the archive 와 시제 동사 has been digitized 가 있으므로 절입니다."
+          }
+        },
+        {
+          "cells": [
+            "양보",
+            "though / although / even though / even if",
+            "despite / in spite of"
+          ],
+          "example": {
+            "en": "**Even though** the trail was closed for repairs, dozens of hikers reached the summit.",
+            "ko": "그 등산로가 보수를 위해 폐쇄되었는데도 수십 명의 등산객이 정상에 올랐습니다.",
+            "note": "even though 뒤에 주어 the trail 과 시제 동사 was 가 있으므로 절입니다."
+          }
+        },
+        {
+          "cells": [
+            "조건",
+            "unless / as long as / provided that / in case",
+            "without / in case of"
+          ],
+          "example": {
+            "en": "**Unless** the reservoir refills soon, the town will impose water limits.",
+            "ko": "저수지가 곧 다시 차지 않으면 그 도시는 물 사용 제한을 시행할 것입니다.",
+            "note": "unless 뒤에 주어 the reservoir 와 시제 동사 refills 가 있으므로 절입니다."
+          }
+        },
+        {
+          "cells": [
+            "시간",
+            "once / as soon as / by the time / when",
+            "upon / on / following / prior to"
+          ]
+        }
+      ],
+      "takeaway": "가로줄은 뜻이 같지만, 세로 칸이 다르면 자격이 다릅니다. 뒤에 절이 보이면 왼쪽 칸, 명사구가 보이면 오른쪽 칸을 씁니다."
+    },
+    {
+      "id": "b9",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "절을 데려오는 접속사 암기",
+      "target": "절을 이끄는 접속사",
+      "why": "구전치사(because of·owing to·in case of)와 생김새가 비슷해 시험이 이 둘을 바꿔 놓습니다. 절을 받는 쪽을 통째로 외워 두면, 목록에 없는 나머지는 전치사라고 판단할 수 있습니다.",
+      "device": "'조건·시간·이유'의 세 방을 떠올리십시오. 조건 방에는 as long as·provided that·in case, 시간 방에는 once·as soon as·by the time, 이유 방에는 now that·given that 가 삽니다. 세 방의 손님은 모두 '주어와 동사'를 데리고 들어옵니다.",
+      "items": [
+        { "cue": "once", "answer": "접속사 — 뒤에 절(~하자마자, ~하면)" },
+        { "cue": "now that", "answer": "접속사 — 뒤에 절(이제 ~이므로)" },
+        { "cue": "as long as", "answer": "접속사 — 뒤에 절(~하는 한)" },
+        { "cue": "in case", "answer": "접속사 — 뒤에 절(~할 경우에 대비하여)" },
+        { "cue": "provided that", "answer": "접속사 — 뒤에 절(~라면, ~하는 조건이면)" },
+        { "cue": "by the time", "answer": "접속사 — 뒤에 절(~할 무렵에는)" }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "국경 통과 — 절을 받는 쪽만",
+      "mission": "절을 이끄는 구접속사만 전부 골라내십시오. 명사구만 받는 구전치사가 미끼로 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "once",
+        "now that",
+        "as long as",
+        "in case",
+        "provided that",
+        "because of",
+        "in case of",
+        "owing to",
+        "instead of"
+      ],
+      "answers": ["once", "now that", "as long as", "in case", "provided that"],
+      "passText": "접속사와 전치사의 국경선이 손끝에 잡혔습니다. 관문이 열립니다.",
+      "retryText": "in case 와 in case of 는 of 한 글자로 국적이 갈립니다. 절을 받는 쪽만 다시 짚어 보십시오."
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "여러 단어로 된 표현이어도 접속사이면 뒤에 절을, 전치사이면 명사(구)·동명사를 받습니다. 단어 수는 판단 근거가 아닙니다.",
+      "examples": [
+        {
+          "en": "**Now that** the archive has been digitized, historians can search it within seconds.",
+          "ko": "이제 그 기록물이 디지털화되었으므로 역사학자들은 몇 초 만에 그것을 검색할 수 있습니다.",
+          "note": "now that 은 두 단어이지만 접속사입니다. 뒤에 절 the archive has been digitized 가 옵니다."
+        },
+        {
+          "en": "**Thanks to** a detailed survey of every trail, hikers can plan their routes with confidence.",
+          "ko": "모든 등산로에 대한 상세한 조사 덕분에 등산객들은 자신 있게 경로를 계획할 수 있습니다.",
+          "note": "thanks to 는 두 단어이지만 전치사입니다. 뒤에 명사구 a detailed survey of every trail 이 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "구접속사가 이끄는 절의 해부",
+      "tokens": [
+        { "t": "Now that", "role": "CONJ" },
+        { "t": "the observatory", "role": "S" },
+        { "t": "has installed", "role": "V" },
+        { "t": "a new telescope,", "role": "O" },
+        { "t": "students", "role": "S" },
+        { "t": "can book", "role": "V" },
+        { "t": "an evening session", "role": "O" },
+        { "t": "online", "role": "M" }
+      ],
+      "ko": "이제 그 천문대가 새 망원경을 설치했으므로 학생들은 온라인으로 저녁 관측 시간을 예약할 수 있습니다.",
+      "layers": [
+        {
+          "label": "① 판단 대상 표현을 표시합니다",
+          "roles": ["CONJ"],
+          "note": "Now that 은 두 단어이지만 하나의 접속사입니다. 여기서 판단은 '뒤에 무엇이 오는가'로만 합니다."
+        },
+        {
+          "label": "② 바로 뒤의 주어를 찾습니다",
+          "roles": ["S"],
+          "note": "주어 역할의 토큰이 둘 켜집니다. 지금 볼 것은 Now that 바로 뒤의 the observatory 이며, students 는 주절의 주어입니다. 아직은 the observatory 가 전치사의 목적어인지 절의 주어인지 알 수 없습니다."
+        },
+        {
+          "label": "③ 그 명사구와 짝을 이루는 시제 동사를 찾습니다",
+          "roles": ["V"],
+          "note": "시제 동사도 둘 켜집니다. Now that 절의 동사는 has installed 이고 can book 은 주절 동사입니다. 시제 동사 has installed 가 나타났으므로 the observatory 는 절의 주어이며, 뒤에 온 것은 절입니다."
+        },
+        {
+          "label": "④ 동사 수와 접속사 수를 대조합니다",
+          "roles": ["V", "CONJ"],
+          "note": "시제 동사는 has installed 와 can book 둘이고 접속사는 Now that 하나입니다(관계사는 없습니다). 시제 동사 수 = 접속사·관계사 수 + 1 이 성립하므로 구조가 옳습니다."
+        }
+      ],
+      "conclusion": "뒤에 절이 왔으므로 이 자리에는 접속사만 올 수 있습니다. 명사(구)·동명사만 받는 Owing to·Because of 를 쓰면 문장이 무너집니다."
+    },
+    {
+      "id": "b13",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "확장 짝을 판별하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄이나 빈칸의 표현 바로 뒤에서 콤마(또는 절의 끝)까지를 한 덩어리로 묶습니다.",
+          "applyNote": "Once 바로 뒤부터 콤마까지, 즉 the ice on the runway melts 가 한 덩어리입니다."
+        },
+        {
+          "text": "그 덩어리 안에 '주어 + 시제 동사' 짝이 있는지 확인합니다. 있으면 절, 없으면 명사(구)·동명사입니다.",
+          "applyNote": "주어 the ice, 시제 동사 melts 가 있습니다. 따라서 절입니다."
+        },
+        {
+          "text": "절이면 접속사(once·now that·unless·as long as…), 명사구뿐이면 전치사(upon·thanks to·despite…)를 고릅니다.",
+          "applyNote": "절이므로 접속사 Once 가 옳습니다. 명사구만 받는 Upon 은 이 자리에 올 수 없습니다."
+        },
+        {
+          "text": "마지막으로 시제 동사 수 = 접속사·관계사 수 + 1 이 맞는지 셉니다(등위접속사 and/but/or 와 관계사도 함께 셉니다).",
+          "applyNote": "시제 동사는 melts 와 will resume 둘, 접속사는 Once 하나입니다. 2 = 1 + 1 이므로 구조가 맞습니다."
+        }
+      ],
+      "example": {
+        "en": "**Once** the ice on the runway melts, flights will resume without further delay.",
+        "ko": "활주로의 얼음이 녹으면 항공편은 더 이상의 지연 없이 재개될 것입니다.",
+        "note": "Once 뒤의 the ice on the runway melts 는 주어와 시제 동사를 갖춘 절입니다."
+      }
+    },
+    {
+      "id": "b14",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "( Despite / Even though ) the survey was completed in only three weeks, its findings proved remarkably reliable.",
+      "steps": [
+        {
+          "title": "① 뒤 덩어리를 묶습니다",
+          "body": "괄호 뒤에서 콤마까지가 the survey was completed in only three weeks 입니다. 이 덩어리만 따로 봅니다."
+        },
+        {
+          "title": "② 주어와 시제 동사를 찾습니다",
+          "body": "주어는 the survey, 시제 동사는 was completed 입니다. 짝이 갖추어졌으므로 이 덩어리는 절입니다."
+        },
+        {
+          "title": "③ 자격을 확정합니다",
+          "body": "절을 이끌 수 있는 것은 접속사뿐입니다. Despite 는 명사(구)·동명사만 받는 전치사이므로 탈락합니다."
+        },
+        {
+          "title": "④ 검산합니다",
+          "body": "Even though 를 넣으면 시제 동사는 was completed 와 proved 둘, 접속사는 하나입니다(관계사는 없습니다). 시제 동사 수 = 접속사·관계사 수 + 1 이 성립합니다."
+        }
+      ],
+      "answer": "Even though",
+      "ko": "그 조사가 겨우 3주 만에 완료되었는데도 그 결과는 놀라울 만큼 신뢰할 만한 것으로 드러났습니다."
+    },
+    {
+      "id": "b15",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u08-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "{{blank}} the tide goes out, the villagers walk across the sandbar to the island.",
+          "options": ["Upon", "Once"],
+          "answer": 1,
+          "translation": "조수가 빠지면 마을 사람들은 모래톱을 걸어서 그 섬으로 건너갑니다.",
+          "explanation": "빈칸 뒤에 주어 the tide 와 시제 동사 goes 를 갖춘 절이 이어집니다. 절을 이끌 수 있는 것은 접속사 Once 이며, 명사(구)·동명사만 받는 전치사 Upon 은 이 자리에 올 수 없습니다.",
+          "trapTags": ["clause-vs-np", "phrasal-conjunction"]
+        },
+        {
+          "id": "u08-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "[[u:Because of]] the ferry service was suspended, the island relied on supply flights for a week.",
+          "isCorrect": false,
+          "correction": "Because",
+          "translation": "여객선 운항이 중단되었기 때문에 그 섬은 일주일 동안 보급 항공편에 의존했습니다.",
+          "explanation": "because of 는 명사(구)만 받는 구전치사입니다. 밑줄 뒤에는 주어 the ferry service 와 시제 동사 was suspended 를 갖춘 절이 왔으므로, of 를 떼어 절을 이끄는 접속사 Because 로 고쳐야 합니다.",
+          "trapTags": ["clause-vs-np", "phrasal-conjunction"]
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "( Thanks to / Now that ) a grant from the city council, the youth orchestra can rehearse in the concert hall.",
+      "givenSteps": [
+        "① 뒤 덩어리를 묶습니다 — 콤마까지가 a grant from the city council 입니다.",
+        "② 그 안에서 주어와 시제 동사를 찾습니다 — from the city council 은 전치사구 수식어이고, 시제 동사는 하나도 없습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "Now that — 보조금이 주어졌다는 이유를 말하므로 이유 접속사가 옳습니다",
+        "Thanks to — 뒤가 명사구뿐이므로 명사를 받는 전치사가 옳습니다",
+        "둘 다 가능합니다 — 뜻이 통하면 어느 쪽이든 됩니다"
+      ],
+      "answer": 1,
+      "explain": "뒤에 온 것은 명사구 a grant from the city council 뿐이고 시제 동사가 없습니다. 절이 아니므로 접속사 Now that 은 쓸 수 없고, 명사를 받는 구전치사 Thanks to 가 옳습니다. 뜻이 통하는지는 판단 근거가 되지 못합니다."
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — the fact that 가 끼어든 경우",
+      "body": "전치사 뒤에 that 절이 바로 오면 틀립니다. 그러나 the fact 처럼 명사를 하나 끼워 넣으면 전치사의 목적어는 그 명사가 되고, that 절은 그 명사를 설명하는 동격절이 됩니다. despite the fact that, because of the fact that, in spite of the fact that 는 모두 옳은 구조입니다. 절이 보인다고 반사적으로 접속사를 고르지 말고, 전치사와 절 사이에 명사가 있는지 먼저 확인해야 합니다.",
+      "example": {
+        "en": "**Despite the fact that** the trial lasted five years, the drug received approval without delay.",
+        "ko": "그 임상시험이 5년이나 걸렸다는 사실에도 불구하고 그 약은 지체 없이 승인을 받았습니다.",
+        "note": "전치사 Despite 의 목적어는 명사 the fact 이고, that 절은 그 명사의 내용을 풀어 주는 동격절입니다. 전치사 뒤에 절이 바로 온 것이 아닙니다."
+      }
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 동명사를 절로 착각하는 경우",
+      "body": "전치사 뒤의 -ing 는 동명사이며 전치사의 목적어입니다. 시제가 없고 주어도 없으므로 절이 아닙니다. -ing 가 보인다는 이유로 접속사를 고르면 안 됩니다. 판단 기준은 오직 '주어 + 시제 동사' 짝의 유무입니다.",
+      "example": {
+        "en": "**Instead of** repeating the experiment, the team reexamined the original data.",
+        "ko": "그 실험을 되풀이하는 대신 연구팀은 원자료를 다시 검토했습니다.",
+        "note": "repeating 은 동명사로 전치사 instead of 의 목적어입니다. 시제 동사가 아니므로 뒤에 온 것은 절이 아니라 명사 덩어리입니다."
+      }
+    },
+    {
+      "id": "b19",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "국경 판정 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "종속접속사(부사절·명사절 접속사) 뒤에는 '주어 + 시제 동사'를 갖춘 절이 옵니다.",
+          "isTrue": true,
+          "why": "부사절·명사절을 이끄는 종속접속사는 뒤에 절을 요구합니다. 명사·구를 잇는 등위접속사 and/but/or 는 여기서 제외입니다."
+        },
+        {
+          "statement": "because of 뒤에는 '주어 + 시제 동사'를 갖춘 절이 올 수 있습니다.",
+          "isTrue": false,
+          "why": "because of 는 구전치사여서 명사(구)만 받습니다. 절 앞에는 of 를 뗀 because 를 씁니다."
+        },
+        {
+          "statement": "now that 은 that 으로 끝나므로 명사절을 이끄는 접속사입니다.",
+          "isTrue": false,
+          "why": "now that 은 that 으로 끝나지만 이유를 나타내는 부사절 접속사입니다. 뒤에 절이 옵니다."
+        },
+        {
+          "statement": "in case 뒤에는 절이 오고, in case of 뒤에는 명사구가 옵니다.",
+          "isTrue": true,
+          "why": "of 가 붙으면 구전치사가 되어 명사(구)만 받고, 붙지 않으면 절을 이끄는 접속사입니다."
+        },
+        {
+          "statement": "despite 뒤에는 '주어 + 시제 동사'가 바로 올 수 있습니다.",
+          "isTrue": false,
+          "why": "despite 는 전치사입니다. 절 앞에는 though·although·even though 를 씁니다."
+        },
+        {
+          "statement": "as long as 는 세 단어이지만 하나의 접속사로 조건절을 이끕니다.",
+          "isTrue": true,
+          "why": "단어 수와 무관하게 뒤에 절을 받으므로 접속사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u08-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The clinic stays open through the night {{blank}} at least two nurses are on duty.",
+          "options": ["in case of", "as long as"],
+          "answer": 1,
+          "translation": "적어도 두 명의 간호사가 근무하는 한 그 진료소는 밤새 문을 엽니다.",
+          "explanation": "빈칸 뒤에 주어 at least two nurses 와 시제 동사 are 를 갖춘 절이 옵니다. 절을 이끄는 접속사 as long as 가 옳으며, 구전치사 in case of 는 명사(구)·동명사만 받으므로 올 수 없습니다.",
+          "trapTags": ["clause-vs-np", "phrasal-conjunction"]
+        },
+        {
+          "id": "u08-c3-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "[[u:In spite of]] the storm warning, the ferry operator kept the noon crossing on schedule.",
+          "isCorrect": true,
+          "translation": "폭풍 경보에도 불구하고 그 여객선 운영사는 정오 운항을 예정대로 유지했습니다.",
+          "explanation": "밑줄 뒤에는 명사구 the storm warning 만 있고 시제 동사가 없습니다. 명사(구)를 받는 구전치사 in spite of 가 쓰였으므로 옳은 문장입니다.",
+          "trapTags": ["clause-vs-np", "despite-although"]
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞서 푼 'The clinic stays open through the night ___ at least two nurses are on duty.' 에서 as long as 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "as long as 가 in case of 보다 문맥상 뜻이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "의미의 자연스러움은 어법 판단의 근거가 되지 못합니다. 뒤에 절이 있으면 뜻과 무관하게 전치사는 탈락합니다."
+        },
+        {
+          "text": "빈칸 뒤에 주어 at least two nurses 와 시제 동사 are 를 갖춘 절이 왔으므로, 절을 이끄는 접속사만 올 수 있었습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 표현의 길이나 뜻이 아니라 '뒤에 절이 있는가'가 유일한 판단 근거입니다."
+        },
+        {
+          "text": "as long as 안에 as … as 가 있어 비교 구문처럼 절을 이어 줄 수 있기 때문입니다.",
+          "correct": false,
+          "feedback": "형태가 아니라 자격의 문제입니다. as long as 는 조건을 나타내는 접속사이고, in case of 는 of 가 붙은 구전치사라 명사(구)·동명사만 받습니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "[[1:Now that]] the results have been published, the research team can apply for further funding, and [[2:despite]] the review process was unusually strict, every reviewer praised the study, [[3:which]] relied on data gathered [[4:over]] three decades.",
+      "answer": 2,
+      "correction": "even though",
+      "rationales": [
+        "이유를 나타내는 접속사이며, 뒤에 주어 the results 와 시제 동사 have been published 를 갖춘 절이 옵니다. 옳습니다.",
+        "despite 는 명사(구)만 받는 전치사입니다. 뒤에 주어 the review process 와 시제 동사 was 를 갖춘 절이 왔으므로 절을 이끄는 접속사 even though 로 고쳐야 합니다.",
+        "앞의 명사 the study 를 선행사로 받는 주격 관계대명사입니다. 뒤 절에 주어 자리가 비어 있으므로 옳습니다.",
+        "전치사이며 뒤에 명사구 three decades 가 왔습니다. 시제 동사가 없으므로 옳습니다."
+      ],
+      "ko": "이제 그 결과가 발표되었으므로 연구팀은 추가 연구비를 신청할 수 있으며, 심사 과정이 유난히 엄격했음에도 모든 심사위원이 30년에 걸쳐 수집된 자료에 근거한 그 연구를 높이 평가했습니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 같은 뜻의 두 문장을 접속사↔전치사로 바꾸어 쓰게 합니다. 절을 명사구로 압축해야 전치사를 쓸 수 있다는 점이 채점 포인트입니다.",
+          "sample": {
+            "en": "Although the budget was cut, the festival went ahead as planned.",
+            "ask": "이 문장을 Despite 로 시작하도록 고쳐 쓰십시오.",
+            "answer": "Despite the budget cut, the festival went ahead as planned. — 절을 명사구 the budget cut 으로 바꾸어야 전치사 Despite 를 쓸 수 있습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 구전치사를 절 앞에 놓아 틀린 밑줄을 만듭니다. 밑줄이 because of·owing to·despite 류인데 뒤에 '주어 + 시제 동사'가 이어지면 그 밑줄이 정답(틀린 것)입니다.",
+          "sample": {
+            "en": "[[u:Owing to]] the museum has extended its evening hours, families often visit after dinner.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳지 않습니다. 뒤에 주어 the museum 과 시제 동사 has extended 를 갖춘 절이 오므로, 명사구만 받는 Owing to 는 쓸 수 없고 Now that 으로 고쳐야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coastal villages have long planned their days around tide tables. [[u:Once the tide falls below a certain level, the causeway to the island becomes passable on foot.]] Despite the convenience of this route, local guides warn that the window is short. Visitors who miss it must wait for the next low tide.",
+      "instruction": "밑줄 친 문장에서 Once 뒤에 온 것이 절인지 명사구인지 판정하고, 왜 Once 가 옳은지 설명하십시오.",
+      "found": "Once 뒤에 주어 the tide 와 시제 동사 falls 가 이어지므로 절입니다. 따라서 절을 이끄는 접속사 Once 가 옳고, 명사(구)·동명사만 받는 Upon·Following 은 이 자리에 올 수 없습니다. 시제 동사는 falls 와 becomes 둘, 접속사는 Once 하나이며 이 문장에는 관계사가 없어 접속사만 세면 되므로 시제 동사 수 = 접속사·관계사 수 + 1 도 성립합니다. 바로 다음 문장의 Despite 는 명사구 the convenience of this route 를 받고 있어 옳습니다.",
+      "gist": "조수가 일정 수위 아래로 내려가면 섬으로 가는 둑길을 걸어서 건널 수 있게 된다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "예산이 삭감되었는데도 그 축제는 예정대로 진행되었습니다.",
+      "answer": ["Even though", "the budget", "was cut,", "the festival", "went ahead", "as planned"],
+      "tiles": [
+        "Even though",
+        "the budget",
+        "was cut,",
+        "the festival",
+        "went ahead",
+        "as planned",
+        "Despite"
+      ],
+      "explanation": "the budget was cut 은 주어와 시제 동사를 갖춘 절이므로 접속사 Even though 가 이끕니다. 전치사 Despite 는 명사(구)만 받으므로 이 자리에 쓰이지 않습니다."
+    },
+    {
+      "id": "b26",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "확장 짝 국경의 문지기",
+      "intro": "이 국경은 절과 명사구를 가릅니다. 여권에 적힌 단어 수는 보지 않습니다 — 오직 '뒤에 무엇을 데려왔는가'만 봅니다. 네 명의 통행자를 심사하십시오.",
+      "questions": [
+        {
+          "prompt": "{{blank}} the reservoir reaches full capacity, the dam releases water through the side channels.",
+          "options": ["Owing to", "Once"],
+          "answer": 1,
+          "why": "뒤에 주어 the reservoir 와 시제 동사 reaches 를 갖춘 절이 오므로, 절을 이끄는 접속사 Once 가 옳습니다. 명사구만 받는 Owing to 는 올 수 없습니다."
+        },
+        {
+          "prompt": "{{blank}} the sudden drop in temperature, the marathon organizers shortened the course.",
+          "options": ["Because of", "As soon as"],
+          "answer": 0,
+          "why": "뒤에 명사구 the sudden drop in temperature 만 있고 시제 동사가 없으므로, 명사를 받는 구전치사 Because of 가 옳습니다. 절을 이끄는 As soon as 는 올 수 없습니다."
+        },
+        {
+          "prompt": "The archive remains open to the public {{blank}} the museum keeps receiving public funding.",
+          "options": ["in case of", "as long as"],
+          "answer": 1,
+          "why": "뒤에 주어 the museum 과 시제 동사 keeps 를 갖춘 절이 오므로 접속사 as long as 가 옳습니다. of 가 붙은 in case of 는 구전치사라 절을 받지 못합니다."
+        },
+        {
+          "prompt": "The committee approved the proposal {{blank}} several members had voiced concerns.",
+          "options": ["despite", "even though"],
+          "answer": 1,
+          "why": "뒤에 주어 several members 와 시제 동사 had voiced 를 갖춘 절이 오므로 접속사 even though 가 옳습니다. despite 는 전치사여서 명사(구) 없이 절 앞에 바로 올 수 없습니다."
+        }
+      ],
+      "winText": "네 건 모두 통과 도장이 찍혔습니다. 단어 수에 속지 않고 '뒤에 온 것'만 보는 눈 — 그것이 이 국경의 유일한 통행증이며, 방금 당신 것이 되었습니다.",
+      "loseText": "문지기가 여권을 돌려줍니다. 네 번의 물음은 모두 하나였습니다 — '뒤에 온 것이 절인가, 명사구인가.' 주어와 시제 동사 한 쌍을 찾는 눈을 다시 벼려 오면 국경은 열려 있습니다."
+    },
+    {
+      "id": "b27",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "표현 뒤에 ___ 와 ___ 가 함께 있으면 절이므로 ___ 를 쓰고, 명사(구)뿐이면 ___ 를 씁니다."
+    },
+    {
+      "id": "b28",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "판단은 뜻이 아니라 뒤에 오는 것으로 합니다. '주어 + 시제 동사'가 있으면 접속사, 명사(구)·동명사뿐이면 전치사입니다.",
+        "한 단어여도(once·unless) 여러 단어여도(now that·as long as·as soon as·in case·in that·given that·provided that·by the time) 절을 이끄는 접속사가 있습니다.",
+        "여러 단어여도 명사만 받는 구전치사가 있습니다 — because of, owing to, due to, thanks to, in spite of, instead of, regardless of, prior to, in case of.",
+        "전치사 뒤에 that 절이 바로 올 수는 없지만 the fact 를 끼우면 옳습니다. 동명사도 명사 자격이므로 전치사 뒤에 올 수 있습니다."
+      ],
+      "keySentence": {
+        "en": "**Now that** the archive has been digitized, historians can search it within seconds.",
+        "ko": "이제 그 기록물이 디지털화되었으므로 역사학자들은 몇 초 만에 그것을 검색할 수 있습니다.",
+        "note": "now that 뒤에 주어와 시제 동사가 있으므로 절이며, 이 자리에 명사구만 받는 owing to 는 올 수 없습니다."
+      }
+    },
+    {
+      "id": "b29",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u08-c3-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "{{blank}} the vaccine had been approved, the clinic began scheduling appointments within days.",
+          "options": ["Following", "Once"],
+          "answer": 1,
+          "translation": "백신이 승인되자 그 진료소는 며칠 안에 예약을 잡기 시작했습니다.",
+          "explanation": "빈칸 뒤에 주어 the vaccine 과 시제 동사 had been approved 를 갖춘 절이 옵니다. 절을 이끄는 접속사 Once 가 옳으며, 명사(구)·동명사만 받는 전치사 Following 은 이 자리에 올 수 없습니다.",
+          "trapTags": ["clause-vs-np", "phrasal-conjunction"]
+        },
+        {
+          "id": "u08-c3-ls-006",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "[[u:Regardless of]] the weather, the survey team recorded measurements every morning.",
+          "isCorrect": true,
+          "translation": "날씨와 상관없이 그 조사팀은 매일 아침 측정치를 기록했습니다.",
+          "explanation": "밑줄 뒤에는 명사구 the weather 만 있고 시제 동사가 없습니다. 명사(구)를 받는 구전치사 regardless of 가 쓰였으므로 옳은 문장입니다.",
+          "trapTags": ["clause-vs-np", "phrasal-conjunction"]
+        },
+        {
+          "id": "u08-c3-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "{{blank}} the funding was secured only last month, the laboratory has already recruited a full research team.",
+          "options": ["Even though", "In spite of"],
+          "answer": 0,
+          "translation": "그 재정 지원이 겨우 지난달에 확보되었는데도 그 실험실은 이미 완전한 연구팀을 꾸렸습니다.",
+          "explanation": "빈칸 뒤에 주어 the funding 과 시제 동사 was secured 를 갖춘 절이 옵니다. 절을 이끄는 접속사 Even though 가 옳으며, 명사(구)·동명사만 받는 구전치사 In spite of 는 절 앞에 올 수 없습니다.",
+          "trapTags": ["clause-vs-np", "despite-although"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'makes a lasting mark'에서 lasting은 명사 mark를 수식하는 현재분사형 형용사. last는 자동사이므로 과거분사 lasted로 쓸 수 없고, '지속적인 흔적'이라는 문맥 의미도 정확하다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'one of the first qualities [that] a bridge must exhibit'의 목적격 관계대명사 생략 구조. exhibit의 목적어 공백이 선행사 qualities와 연결되므로 능동 타동사 원형(조동사 must 뒤)이 옳다. 다리가 자질을 '보이는' 주체이므로 수동(must be exhibited)으로 바꿀 이유가 없다. 실전에서 수동 유혹이 잠깐 스치지만 gap 구조 확인으로 해소된다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong (정답)",
+      "reason": "문장 본동사. 진짜 주어는 단수 대명사 one(of the first qualities...)이고 'a bridge must exhibit'은 qualities를 수식하는 관계절이므로 concerns(3인칭 단수)여야 한다. 직전 복수 명사 qualities와 조동사 뒤 원형 exhibit이 만드는 근접 일치(attraction) 함정. 대안 해석으로 concern을 명사로 보아 'exhibit concern(우려를 표하다)'으로 읽으면 문장 전체의 본동사가 사라져 'how it harmonizes...' 명사절이 연결될 자리가 없으므로 정문화 불가. 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'It is not acceptable to create...'는 가주어 it + be + 형용사 + 진주어 to부정사 구문. 형용사 acceptable이 보어 자리에 정확히 쓰였다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment'에서 spoils는 관계절 내 동사 is와 but으로 병렬된 두 번째 동사. 선행사 a bridge(단수)에 일치한 3인칭 단수형으로 옳다. spectacular(형용사)와의 병렬로 착각해 spoiling을 기대하는 유혹이 있으나 병렬 시작점은 동사 is이므로 spoils가 정확하다. 정문."
+    }
+  ],
+  "note": "전형적 수일치(attraction) 문항. 'one of + 복수명사 + 축약 관계절' 뒤 본동사 concern이 단수 주어 one과 불일치 — 유일한 오류로 (C) 단독 정답. 매력적 오답은 (B)(수동 유혹)와 (E)(병렬/분사 유혹)이지만 각각 gap 구조와 병렬 시작점 확인으로 명확히 해소된다. 복수 정답 소지 없음."
+}

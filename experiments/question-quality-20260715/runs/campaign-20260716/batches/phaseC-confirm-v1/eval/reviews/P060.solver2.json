@@ -1,0 +1,35 @@
+{
+  "pid": "P060",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('stamina to separate X from Y'), but the causal link is never built in the passage: nothing asserts that strength/stamina insulate performance from psychological pressure, and 'pressure' itself is never introduced. It borrows the psychological flavor of the correct answer without the passage's actual claim (physical conditioning → success in both physical and mental arenas)."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Grammatically clean bare-infinitive VP after 'stamina to ___'. Logically it is the only option that completes the passage's argument: the negotiation example explicitly shows physical shape winning a psychological contest ('physical stamina to see the deal through'), and golf majors demand physical endurance plus mental toughness to 'close out opponents'. 'Prevail in both bodily and psychological realms' generalizes exactly this dual-domain claim."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Direct contradiction: the passage credits superiority to being 'in so much better shape' and working out 'in the weight room' — physical conditioning is foregrounded, not subordinated to mental techniques."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Contradicts the premise: the subjects are 'world-class golfers... head and shoulders above the other golfers of their era'; no deficit in natural ability is posited anywhere, so 'compensate for a lack' has no antecedent claim."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Flat contradiction of the passage's thesis: neglecting proper nutrition is exactly the 'sin' (missing the mark) the passage condemns; conditioning is presented as complementary to, not competing with, practice."
+    }
+  ],
+  "note": "Formal check: all five options are bare-infinitive VPs that attach grammatically to 'the strength and stamina to ___ in order to close out their opponents', so the discrimination is purely logical/semantic. Only ② is entailed by the passage's argument structure (physical fitness → advantage in both physical and psychological contests, established via the negotiation example). ① is the strongest distractor but requires an unstated pressure-immunity premise. Single defensible answer; no alternative parse (reduced relative, participial, inversion, etc.) rescues any rejected option."
+}

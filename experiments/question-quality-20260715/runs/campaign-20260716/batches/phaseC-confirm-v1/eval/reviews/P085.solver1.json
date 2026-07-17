@@ -1,0 +1,35 @@
+{
+  "pid": "P085",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'erect mental barriers that prevent active engagement with their peers'는 부정적 결과(교류 차단)를 만들어 지문의 논지(체력 → 경쟁 우위 → 상대 제압)와 극성이 반대. 'mental'이라는 어휘가 심리적 우위 개념을 연상시켜 순간적으로 끌리지만, 'prevent active engagement'는 우승과 무관한 고립을 뜻하므로 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'physical control'이 지문의 'physical shape/stamina'와 표면 어휘로 겹치는 미끼. 그러나 'aligned solely with athletic rules'(오로지 경기 규칙에 부합하는)는 상대를 close out하는 것과 인과적 연결이 전혀 없는 공허한 수식이라 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "웨이트 트레이닝으로 얻은 strength and stamina(신체적 지구력)를 심리적 지배력으로 전환해 메이저 대회에서 상대를 끝장낸다는 흐름이, 협상 사례('physical stamina to see the deal through' → 협상 승리)와 정확히 평행. 'stamina to translate ... endurance'가 다소 중복적이긴 하나 문법 결합(to translate X into Y)이 깨끗하고 인과 사슬을 유일하게 완성하는 선지."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'unlimited', 'without any physical constraints'는 극단 표현이며, 신체 단련 자체가 경쟁력의 원천이라는 지문 전제와 모순('신체적 제약 없이'는 체력 단련의 의의를 부정). 'creative energy'도 골프 우승 맥락과 무관하여 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "가장 유혹적인 미끼. 메이저 대회 = 압박 상황이라는 연상으로 'external pressure'에 끌리지만, 지문의 승자는 압박에서 '도피(escape)'하는 것이 아니라 체력으로 버텨 상대를 압도하는 존재. 'immediate emotional stability'는 지문에 근거가 전혀 없는 개념이라 탈락."
+    }
+  ],
+  "note": "빈칸의 지배 논리는 '신체적 컨디셔닝 → 경기 후반까지 지속되는 우위 → 상대 제압'이며, 협상 사례와의 평행 구조가 결정적 단서. ③만이 이 전환(신체→심리적 우위)을 명시적으로 표현. ⑤(압박 회피)와 ②(physical 표면 어휘)가 매력적 오답이나 각각 극성 오류·공허한 수식으로 배제 가능. 복수 정답 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P056",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'is normally constructed to last one hundred years' — 목적/결과를 나타내는 to부정사. 'constructed + to-V'는 표준 결합이며 last는 자동사 '지속되다'로 one hundred years를 기간 부사어로 취한다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'makes a lasting mark what shows the evolution of society' — 명시적 선행사 'a lasting mark'가 있으므로 관계사는 that/which여야 한다. what은 선행사를 포함하는 자유관계사라 선행사 뒤에 올 수 없다. 대안 해석(동격 자유관계사절, 삽입 의문절)을 적극 탐색했으나 makes의 목적어 자리가 이미 채워져 있고 콤마 동격 구조도 아니어서 모두 성립 불가. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'concerns how it harmonizes with its surroundings' — how절 내부 주어 it(= a bridge, 단수)에 대한 3인칭 단수 일치. 주절 주어 'one of the first qualities'는 concerns와 이미 올바르게 일치하므로 장거리 함정도 없음. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'it must either adapt to or indeed reinforce this balance' — either A or B 상관접속에서 A='adapt to', B='(indeed) reinforce'로 동사구 병렬이 정확하고 this balance를 공유 목적어로 취한다. either가 조동사 must 뒤, 병렬 시작점 직전에 위치해 배치도 옳다. 부사 indeed 삽입은 병렬을 깨지 않는다. 실전에서 잠깐 끌렸으나 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment' — 관계사 that(선행사 a bridge, 단수)에 걸리는 두 정형 술어 'is spectacular'와 'spoils'의 but 병렬. 형용사 서술과 동사 서술의 혼합처럼 보여 spoiling으로 고치고 싶은 유혹이 강한 매력적 오답이지만, 병렬 단위가 술어 전체이므로 3인칭 단수 현재 spoils가 정확히 옳다. 정문."
+    }
+  ],
+  "note": "정답 (B) 단일 확정. 핵심 규칙은 '선행사가 명시된 자리에는 what 불가(that/which 요구)'로 수능 어법 단골 포인트. 매력적 오답은 (E)(is spectacular / spoils의 술어 병렬을 형용사-동사 불일치로 오독하게 유도)와 (D)(indeed 삽입으로 either...or 병렬 시작점 판독 방해). 둘 다 정문임이 명확해 복수정답 소지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P036",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' — 'called'는 관계절 축약(which are called)에서 온 과거분사로, species가 '~라고 불리는' 대상이므로 수동 의미의 분사가 삽입 동격구를 이끈다. 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on...' — 추상명사 fact 뒤에 오는 동격의 that절을 이끄는 접속사 that. 뒤 절이 완전한 문장(other species depend on/are affected by ...)이므로 관계대명사 which가 아닌 동격 that이 정확. 어법상 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "주어는 'The fact (that ... keystone species)'로 단수. 긴 that절이 삽입되었지만 주절 동사는 단수 fact에 일치하는 'is revealed'가 맞다. fact가 '드러나는' 대상이므로 수동태도 적절. 어법상 옳음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'become important in sustaining fruit-eating vertebrates' — 전치사 in 다음의 동명사 sustaining. 전치사+동명사 결합이 정확하며 뒤에 목적어(vertebrates)를 취한다. 어법상 옳음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'Would the fig trees disappear, most of the fruit-eating vertebrates would be eliminated.' — 가정법 if 생략 도치는 조동사 Should / Were / Had 만으로 시작할 수 있다(Should the fig trees disappear... / Were the fig trees to disappear...). Would는 도치된 조건절(if절)의 첫머리에 올 수 없고 오직 주절에만 쓰인다. 따라서 이 도치 조건절의 'Would'는 어법상 틀리며 'Should'가 되어야 한다. 어법상 틀린 유일한 항목."
+    }
+  ],
+  "note": "빈칸/어법 판정. (A)~(D)는 각각 분사 축약 동격, 동격 that절, 단수 주어 수일치+수동, 전치사+동명사로 모두 정문. (E)는 가정법 미래 조건절의 if 생략 도치 규칙을 위반 — Should/Were/Had만 도치 허용되며 Would는 불가. 답은 (E)로 명확히 좁혀지며 대안 해석으로 (E)를 정문화할 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "seam: 'presented as an individualist rhetoric'는 문법적으로는 결합 가능하나, 지문은 개인주의적 수사(individualist rhetoric)를 '공적 맥락에서 행동의 근거가 될 수 없는 믿음'으로 격하하는 구조다. 과학적 진리가 개인주의적 수사로 '제시되어야' 지위를 얻는다는 것은 지문 논지의 정반대. 도입부 어휘(individualist rhetoric, for certain purposes)를 그대로 재활용한 표면 매칭 미끼로, 첫 문장만 읽고 답을 고르는 수험생을 노린다. 나는 실전 순서상 빈칸 앞뒤 문장을 먼저 읽었기에 끌리지 않았다."
+    },
+    {
+      "label": "②",
+      "verdict": "오답(최대 매력 오답)",
+      "reason": "seam: 'until it speaks too powerfully and too insistently to be silenced'는 문법적으로 완벽하고, 지문 3문장째의 'they speak too powerfully and too insistently for prejudiced humans to silence them'을 거의 그대로 옮긴 것이라 어휘 친숙도가 매우 높다. 실전에서 잠깐 끌렸다 — '진리가 스스로 강력하게 말한다'는 서사가 그럴듯해 보인다. 그러나 그 문장은 지문이 소개한 뒤 기각하는 개인주의적 수사의 내용이다. 빈칸 직전 문장이 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'로 반대 입장을 확립했고, 빈칸 문장은 그 귀결이므로 '스스로 말한다' 계열은 논리적으로 배제된다. 전형적 '기각된 관점 재활용' 미끼."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "seam: 'until it is validated and accepted by the professional community' — 시제·수동태 결합 자연스러움. 논리: 직전 문장 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'의 unless-절을 until-절로 환언(authorized by disciplinary specialists ≈ validated and accepted by the professional community). 직후 문장 'What happens in somebody's laboratory is only one stage in its construction'과도 정합 — 실험실은 한 단계일 뿐이고 공동체 승인 단계가 남아 있다는 구성주의적 결론. 유일하게 옹호 가능."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "seam: 문법 결합은 성립하나(until + 절), 빈칸 두 문장 앞의 'The norms of scientific communication presuppose that nature does not speak unambiguously'와 정면 충돌한다. 지문 명제의 부정을 그대로 담은 명백한 모순 선지. 표면 어휘(nature, unambiguously, laboratory)의 재활용으로 대충 읽은 수험생만 노린다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "seam: 문법적으로 성립하나, 지문은 전문가 검토 없이 기자회견에서 발견을 발표하는 과학자가 'automatically castigated as a publicity seeker'라고 명시했다. 기자회견 발표가 진리의 지위를 부여한다는 내용은 지문이 명시적으로 비난하는 행위를 승격시키는 것. 'inquiring and unbiased mind'도 기각된 개인주의 수사의 어휘 재활용."
+    }
+  ],
+  "note": "블라인드 풀이. 지문 구조: 개인주의적 과학 수사(발견은 실험실에서, 스스로 말한다) 소개 → 'yet almost nobody thinks...'로 전환 → 과학 커뮤니케이션 규범(전문가 승인 없이는 지식이 아님) 확립 → 빈칸 = 그 귀결 → 실험실은 진리 구성의 한 단계일 뿐. 빈칸은 unless-절(authorized by disciplinary specialists)의 환언을 요구하며 ③만 이를 충족. 최대 매력 오답은 ②로, 지문 문장을 거의 그대로 재활용해 어휘 친숙도가 높지만 기각된 관점이다. 복수정답 소지 없음. 문항 품질 양호 — 정답이 장거리 단서(직전·직후 문장)로 유일하게 결정되고, 오답 4개가 모두 '기각된 관점/명시적 모순' 계열로 명확히 배제 가능."
+}

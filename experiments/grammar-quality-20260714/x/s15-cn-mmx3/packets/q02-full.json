@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense",
+    "grammar-decoy-point-monotony",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-answer-in-wrong-explanations"
+  ],
+  "warnings": [
+    "difficulty-mismatch",
+    "wrong-option-explanation-count",
+    "grammar-decoy-point-diversity"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=l  (C):ANS=c  (D):dec=c  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 0,
+        "relPos": 0,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 176,
+        "relPos": 0.219,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 199,
+        "relPos": 0.247,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 517,
+        "relPos": 0.642,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 700,
+        "relPos": 0.87,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.87,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "밑줄 친 부분 중 어법상 옳지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "We all enjoy the pleasure of being left alone with a good book.",
+        "isError": false,
+        "surroundingText": "We all enjoy the pleasure of being left alone with a good book.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "the absence of others.",
+        "isError": false,
+        "surroundingText": "But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(C)",
+        "expression": "In this situation, we are suffering from reading-induced loneliness.",
+        "isError": true,
+        "errorExpression": "In this situation, we suffer from reading-induced loneliness.",
+        "surroundingText": "In this situation, we are suffering from reading-induced loneliness.",
+        "pointCode": "c",
+        "correction": "In this situation, we are suffering from reading-induced loneliness."
+      },
+      {
+        "label": "(D)",
+        "expression": "someone else similarly immersed,",
+        "isError": false,
+        "surroundingText": "Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+        "isError": false,
+        "surroundingText": "Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "We all enjoy the pleasure of being left alone with a good book."
+      },
+      {
+        "label": "(B)",
+        "text": "the absence of others."
+      },
+      {
+        "label": "(C)",
+        "text": "In this situation, we suffer from reading-induced loneliness."
+      },
+      {
+        "label": "(D)",
+        "text": "someone else similarly immersed,"
+      },
+      {
+        "label": "(E)",
+        "text": "Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "We all enjoy... 동사 enjoy는 to부정사·동명사·that절·목적어를 직접 취하는 4형식 동사이며, 'being left' 수동 형태도 목적어로 타당합니다. you enjoy the pleasure of V-ing 구문이므로 어법 오류가 없습니다.",
+      "(B)": "struck by the quiet, the absence of others에서 두 개의 명사구가 나란히 보이는 구조는, 분사구(suddenly struck by ...)가 we lift our heads and look around를 수식하고, the quiet와 the absence of others가 접속사 없이 나열된 쌍둥이 구조(asyndeton)입니다. 두 명사구는 각각 전치사 by의 목적어 역할을 하므로 어법상 적절합니다.",
+      "(C)": "suffer는 일반적·반복적 상황을 나타낼 때 단순현재를 쓰는 동사입니다. 본문 전체는 '독서로 인한 외로움'이라는 일반적 현상을 진술하는 글이므로 'we suffer from ...'이 적절합니다. 진행형 'are suffering'을 쓰면 지금 이 순간 일시적으로 겪고 있다는 뜻이 되어, 글의 뉘앙스와 어긋나므로 어법상 부적절합니다.",
+      "(D)": "you'll see someone else similarly immersed에서 immersed는 see+O+past participle(감각동사 see의 수동보어) 구문의 일부입니다. 따라서 어법 오류가 없습니다."
+    },
+    "explanation": "(C) \"In this situation, we suffer from reading-induced loneliness.\"는 어법상 틀린 표현이며 \"In this situation, we are suffering from reading-induced loneliness.\"로 고쳐야 한다. 정답은 (C)입니다. suffer는 일시적 상황이 아니라 일반적·지속적 사실을 나타내는 동사이므로 진행형(are suffering) 대신 단순현재(suffer)를 써야 합니다.",
+    "keyPoints": [
+      "suffer, believe, belong, consist 등 일반 진술에 쓰는 일부 동사는 진행형을 쓰지 않음",
+      "감각동사 see + 목적어 + 과거분사(수동보어) 구문",
+      "분사구가 절을 수식할 때, by 이하 명사구의 쌍둥이 구조(asyndeton) 파악"
+    ],
+    "tags": [
+      "동사 시제",
+      "진행형 vs 단순현재",
+      "감각동사 + 수동보어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "__(A) We all enjoy the pleasure of being left alone with a good book.__ But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, __(B) the absence of others.__ __(C) In this situation, we suffer from reading-induced loneliness.__ The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see __(D) someone else similarly immersed,__ and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. __(E) Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.__"
+  }
+}

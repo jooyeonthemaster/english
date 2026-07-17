@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20190307-q33",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "빈칸추론",
+    "words": 159
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-explanation-lintx1"
+  ],
+  "layout": "(A):dec=h  (B):dec=d  (C):dec=k  (D):ANS=g  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 40,
+        "relPos": 0.049,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 429,
+        "relPos": 0.522,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 500,
+        "relPos": 0.608,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 643,
+        "relPos": 0.782,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 817,
+        "relPos": 0.994,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.994,
+    "firstHalfShare": 0.2,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "take",
+        "isError": false,
+        "errorExpression": "take",
+        "surroundingText": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "disturbs",
+        "isError": false,
+        "errorExpression": "disturbs",
+        "surroundingText": "meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "listening",
+        "isError": false,
+        "errorExpression": "listening",
+        "surroundingText": "Later, he regrets this, in case God was enjoying listening to the sound of the frog.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "them",
+        "isError": true,
+        "correction": "them",
+        "errorExpression": "it",
+        "surroundingText": "to think of different animals for the saint to meet and different places for him to meet them.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "used",
+        "isError": false,
+        "errorExpression": "used",
+        "surroundingText": "effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "take"
+      },
+      {
+        "label": "(B)",
+        "text": "disturbs"
+      },
+      {
+        "label": "(C)",
+        "text": "listening"
+      },
+      {
+        "label": "(D)",
+        "text": "it"
+      },
+      {
+        "label": "(E)",
+        "text": "used"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "준동사 'helping'의 목적격보어로 원형부정사인 'take'를 쓴 구조로 어법상 옳습니다.",
+      "(B)": "in case절의 단수 주어 'it'에 동사의 단수형인 'disturbs'를 수일치시켰으므로 어법상 옳습니다.",
+      "(C)": "동사 'enjoy'의 목적어 자리에 동명사인 'listening'을 쓴 것으로 어법상 옳습니다.",
+      "(E)": "지각동사 'hearing'의 목적어 'their ideas'와 보어의 피동 관계를 나타내는 과거분사 'used'는 어법상 옳습니다."
+    },
+    "explanation": "전치사 'for'의 의미상 주어인 'him'(the saint)이 만나는 대상은 앞선 절의 복수 명사구인 'different animals'와 'different places'입니다. 따라서 단수 대명사 'it'은 복수 명사들을 대신할 수 없으므로 지칭 대상의 수에 맞춰 복수 대명사인 'them'으로 고쳐야 합니다. 문맥 속에서 의미상 가리키는 대상을 정확히 파악해야 하는 대명사 수일치 문제였습니다.",
+    "keyPoints": [
+      "(D) 대명사 일치 — 의미상 가리키는 복수 지시 대상을 확인하여 복수 대명사로 일치",
+      "(A) 목적격보어 형태 — help 뒤에 목적격보어로 원형부정사가 오는 구조",
+      "(E) 분사의 태 — 지각동사의 목적어와 목적격보어가 수동 관계일 때 과거분사 사용"
+    ],
+    "tags": [
+      "대명사 일치",
+      "준사역동사",
+      "지각동사 목적격보어",
+      "수일치"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "A lovely technique for helping children __(A) take__ the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it __(B) disturbs__ his prayers. Later, he regrets this, in case God was enjoying __(C) listening__ to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet __(D) it__. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas __(E) used__.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

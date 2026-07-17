@@ -1,0 +1,61 @@
+{
+  "pid": "P090",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-label-style",
+      "severity": "minor",
+      "evidence": "선택지는 (A)~(E) 라벨인데 오답 해설 키는 '① (A)' 식의 원문자+알파벳 혼용이다. 매핑은 무결(①=A…⑤=E, 정답 ④=(D) 생략)하므로 실패는 아니나 표기 체계가 이원화되어 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "that 명사절 내부에서 동명사구(dropping their masks)가 주어로 기능함을 식별하는지 — 준동사의 명사적 용법",
+      "temptingBecause": "접속사 that 직후에 -ing가 나와 절의 주어 자리가 비어 보일 수 있고, 'to drop'이나 정동사가 필요하다고 오독할 수 있다",
+      "decisiveFlaw": "동명사구는 절의 주어로 완전히 적법하며 would make가 그 절의 정동사로 존재한다 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "복수 주어 the leader's subordinates에 대응하는 과거 정동사 및 perceive A as B 구조 확인",
+      "temptingBecause": "perceive의 능/수동(was perceived) 혼동을 노린 것으로 보이나 유인력이 매우 약하다 — 주어가 명백한 행위자여서 즉시 소거된다",
+      "decisiveFlaw": "능동 과거 정동사로 완전히 적법 — 오류 아님. 사실상 필러에 가까운 가장 약한 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "결과를 나타내는 분사구문의 능동형(creating) 판별 — 분사구문 능수동",
+      "temptingBecause": "created(과거분사)로 바꿔야 한다고 생각하거나, 콤마 뒤 -ing를 본동사 부재로 오독할 수 있다",
+      "decisiveFlaw": "주절 내용(This ... encouraged a culture ...)이 의미상 주어인 능동 결과 분사구문으로 적법 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. 관계사절(we helped the CEOs remove their masks)의 수식을 받는 긴 주어 Some of the ways 뒤에 문장 전체의 정동사가 필요한 자리 — 정동사(were) vs 준동사(being) 구별",
+      "temptingBecause": "관계사절 내부의 helped/remove가 정동사처럼 보여 문장에 동사가 이미 있다고 착각할 수 있고, 'X being Y' 형태가 표면상 자연스러워 보인다",
+      "decisiveFlaw": "being으로는 주절에 정동사가 하나도 없어 문장이 완결되지 않는 비문. were로 교정하면 원문과 정확히 일치. 유일 정답 확정. 단, 밑줄 친 being은 수능 어법에서 가장 상투화된 정답 토큰이라 구조 독해 없이 휴리스틱으로 적중 가능하다는 것이 KILLER 관점의 결함"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사구 a leadership identity를 후치 수식하는 과거분사 based(수동 관계) 확인",
+      "temptingBecause": "basing(능동)과의 혼동 또는 which is based 축약 구조 오독을 노린다",
+      "decisiveFlaw": "identity가 based on의 의미상 대상이므로 과거분사가 적법 — 오류 아님. 매우 관용화된 표현(based on)이라 유인력이 낮다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 의도된 were→being 단일 치환 외 원지문과 완전 일치, 정답 (D) 유일성 독립 검증 완료(각 선지 통사 분석 결과 (A)(B)(C)(E) 모두 적법), 해설의 구조 분석(관계사절 수식, 복수 핵어 Some, 정동사 요구)도 실제 문장과 일치. 그러나 KILLER 요청 대비 난이도 정합 실패: (1) 밑줄 친 being→were는 한국 수능 어법의 최다 빈출·최고 상투 정답 유형으로, 숙련 학생은 토큰 수준 휴리스틱('밑줄 being은 거의 항상 정답')만으로 구조 독해 없이 즉답 가능 — §C '정답이 즉시 드러나지 않아야 한다' 조건의 취지 위배(C5=1). (2) (B) perceived는 유인 논리가 서술되지 않은 근필러 디코이이고, (E)도 관용 표현이라 즉시 소거됨 — 다수 선지가 매력적이어야 한다는 KILLER 변별 요건 미달(C3=2). (3) pointCode가 5개 밑줄에 a/c 두 종뿐으로 (A)(B)(D)가 동일 코드, (C)(E)가 동일 코드 — 오개념 다양성 설계가 얕다. killerConditionsMet=false. 문항 자체는 중상 난이도용으로는 출하 가능한 정합 문항이나, KILLER 라벨로는 정답 포인트 재선정(덜 상투적인 구조 오류) 및 디코이 유인력 보강의 재설계가 필요하므로 등급 C."
+}

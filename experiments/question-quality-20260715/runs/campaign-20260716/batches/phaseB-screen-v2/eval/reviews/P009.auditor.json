@@ -1,0 +1,98 @@
+{
+  "pid": "P009",
+  "blindAnswer": "④",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-note-stem-format",
+      "severity": "minor",
+      "evidence": "발문이 표준 의문형 stem이 아니라 지문 마지막 두 문장을 '[blank]' 마커로 재인용한 조각이며, 렌더 지문의 마커('_____')와 표기 스타일이 다르다. 렌더 지문 자체는 원지문과 완전 일치(마지막 문장의 목적어구 'produce unique creations that will allow the public to have new, eye-opening experiences'만 의도된 빈칸 처리)하므로 V1 실패로는 판정하지 않는다."
+    },
+    {
+      "code": "V4-template-artifact",
+      "severity": "minor",
+      "evidence": "오답 해설 4곳 모두 미해결 조사 템플릿 '을(를)'이 노출된다(예: \"editing digital material을(를) 빌렸지만\"). 기계적 잔재일 뿐 사실 오류는 아니다."
+    },
+    {
+      "code": "V4-translation-looseness",
+      "severity": "minor",
+      "evidence": "③ 해설의 '비평가들의 대중적 취향'은 선지 원문 'prevailing tastes'(지배적/주류 취향)의 부정확한 번역이고, ① 해설의 '빛나는 편집 기술'은 선지의 'advanced editing tools'에 없는 수식이다. 논지 자체는 각 선지 내용과 대응하므로 minor."
+    },
+    {
+      "code": "V5-generic-keypoints",
+      "severity": "minor",
+      "evidence": "keyPoints('빈칸의 담화 역할과 근거 종합' 등)가 문항 비특이적 메타 서술이다. 다른 필드와 모순은 없어 V5는 통과."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "수단-목적 전도(technology for its own sake) + 조건 상실: 위대한 예술의 조건인 '인식 변화'를 빼고 편집 기술 활용·청중 확대만 남긴 함정",
+      "temptingBecause": "'advanced editing tools'가 지문의 'new technology for editing digital material'을 직접 차용하고 'attract wider audiences'가 'share them with the world'의 잔상을 준다",
+      "decisiveFlaw": "빈칸 직전 문장이 명시적으로 부정하는 '기술 그 자체의 활용' 방향이며, 'challenges our perceptions / eye-opening experiences'라는 목적 요소가 없다"
+    },
+    {
+      "label": "②",
+      "intent": "scope shift: 첫 문장의 배경 현상(더 많은 사람의 창작·공유)을 예술가의 규범적 목표로 격상",
+      "temptingBecause": "'distribution / everyone can enjoy'가 'more people than ever before can produce ... and share them with the world'와 어휘적으로 겹친다",
+      "decisiveFlaw": "확산은 지문이 전제로 깐 현상이자 비평가들이 우려한 상황이지 처방이 아니며, '새로운 인식적 경험 제공'이라는 목적 의미를 보존하지 못한다"
+    },
+    {
+      "label": "③",
+      "intent": "actor swap: '우려하는 관찰자'인 비평가를 '만족시켜야 할 대상'으로 바꿔치기",
+      "temptingBecause": "'critics'와 'aesthetic value'가 둘째 문장 'Many critics ... truly great art'와 표면적으로 호응한다",
+      "decisiveFlaw": "지문 어디에도 비평가 취향 충족 요구가 없다. 수혜자는 'the public'이고 비평가의 우려는 위대함의 기준 상실에 대한 것이지 취향 문제가 아니다"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 원문 span 'produce unique creations that will allow the public to have new, eye-opening experiences'를 셋째 문장 'challenges our perceptions of the world'와 종합해 추상화한 패러프레이즈",
+      "temptingBecause": "정답이므로 해당 없음. 'novel works'↔'unique creations', 'shake habitual ways of viewing reality'↔'challenges perceptions / eye-opening experiences'로 의미 보존이 정확하다",
+      "decisiveFlaw": "없음. 단, 다섯 선지 중 유일하게 technology/digital/editing/software 계열 어휘가 없어 표면 단서 하나로 특정 가능하다는 단서 경제성 결함이 있다(C4 참조)"
+    },
+    {
+      "label": "⑤",
+      "intent": "half-truth + 수단의 목적화: 'redefine the boundaries'라는 혁신 어감으로 정답 축을 흉내 내되 수단을 기술 숙달로, 대상을 관객 인식이 아닌 매체로 치환 (가장 강한 미끼)",
+      "temptingBecause": "'cutting-edge digital software'가 지문의 신기술 서술과 겹치고 'redefine the boundaries'가 'challenges our perceptions'의 유사 표현처럼 읽힌다",
+      "decisiveFlaw": "머리부 'master cutting-edge digital software'가 기술 숙달을 목표 자리에 놓아 'new technologies are nothing more than tools'와 정면 충돌하고, 흔드는 대상이 관객의 세계 인식이 아니라 예술 매체의 경계다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "①·⑤ 해설이 동일 앵커 'editing digital material'을 중복 사용해 선지별 고유 앵커 분리가 덜 됐다.",
+      "recommendation": "⑤는 'new technology'/'nothing more than tools' 계열 앵커로 분리 서술"
+    },
+    {
+      "severity": "minor",
+      "evidence": "조사 템플릿 '을(를)' 미해결 노출 4회, '빛나는 편집 기술'(선지에 없는 수식), 'prevailing tastes'→'대중적 취향' 오역.",
+      "recommendation": "조사 자동 해소 및 선지 문면에 충실한 번역으로 교정"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "distractorAnchorOverlapFlaw": true,
+    "requiresTwoCues": false,
+    "distinctTrapAxes": false,
+    "evidence": "다섯 선지 모두 'to + 동사원형' 슬롯에 문법적으로 들어가고(①create ②maximize ③satisfy ④craft ⑤master), 정답은 의미 보존 추상화이며 각 오답에 앵커·중첩·결정적 결함이 존재한다. 그러나 §D-4 위반: 빈칸 직전의 국소 대비('should not be simply to utilize technology ... Rather')만 읽어도 ①②③⑤가 전부 technology/digital/editing/software/critics 계열 어휘를 포함하는 반면 ④만 해당 어휘가 없어, 두 문장/두 단서 종합 없이 단일 표면 단서(어휘군 배제)로 정답 특정이 가능하다. 또한 ①과 ⑤가 '기술의 목적화'라는 같은 함정 축을 공유해 함정 다양성도 완전하지 않다."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 의도된 빈칸 외 손상이 없고, 독립 검증 결과 정답 집합은 ④ 단독으로 견고하다(①⑤는 지문이 명시적으로 부정하는 '기술의 목적화', ②는 배경 현상의 목표 격상, ③은 수혜자 오귀속으로 각각 명확히 탈락). 해설의 두 인용('challenges our perceptions of the world and forever changes our thoughts and feelings', 'allow the public to have new, eye-opening experiences')은 지문에 실재하며 종합 논리도 정확하다. 그러나 요청 난이도 KILLER 대비 실제 난이도는 중 이하: (1) 정답 ④가 유일한 비(非)기술 어휘 선지라 표면 축 하나로 즉시 좁혀지고(C4=1, §D-4 위반), (2) 빈칸이 마지막 문장 주제문 위치이며 정답이 원문의 근접 패러프레이즈라 사고 단계가 얕고, (3) ②③의 실전 흡인력이 약해 실질 경쟁 선지가 ①⑤뿐인데 이마저 국소 단서로 소거된다(C3=2, C5=1). 해설은 정확하나 템플릿 잔재·중복 앵커·오역으로 둔하다(C6=2). 합계 12, 최저 C=1 → C등급. 재설계 방향: 정답에도 기술 어휘를 섞거나(예: 'use digital tools as a means to ...') 오답 하나를 비기술·인식변화 어감의 정교한 half-truth로 교체해 단일 축 소거를 차단해야 KILLER로 성립한다."
+}

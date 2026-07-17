@@ -1,0 +1,35 @@
+{
+  "pid": "P058",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'try to conceal their unexpected failures from the crowd' directly contradicts the anecdote: the salesman openly shows the broken pen to the crowd and jokes about it. The passage celebrates open, humorous reframing of failure, not concealment. No real pull."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong (designed trap)",
+      "reason": "'patiently wait for the shock of their misfortune to fade' recycles the surface phrase 'After their initial shock' and briefly tempts, but the passage stresses ACTIVE response after the shock — they gather resources, overcome the problem, see opportunities. Passive waiting contradicts 'go one step further' and cannot coordinate with 'believe every cloud has a silver lining, and they ___', which demands an active gain-seeking behavior."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (designed trap)",
+      "reason": "'blindly maintain optimism without acknowledging their major loss' rides the optimism/silver-lining wording, but 'blindly' and 'without acknowledging' contradict the text: these people HAVE experienced major loss and acknowledge it ('in spite of their hardships'), then deliberately refocus on what they can gain. Half-right vocabulary, wrong qualifiers."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'readily give up their resources to prevent further hardships' directly contradicts 'they gather their resources' in the passage. Antonym trap on 'resources'."
+    },
+    {
+      "label": "5",
+      "verdict": "correct",
+      "reason": "'purposefully explore the practical utility hidden within their adversities' paraphrases the passage's core: seeing opportunities where others fail to, focusing on what they can gain from their circumstance, and the silver-lining cliche (hidden good inside a bad thing). 'Purposefully' matches 'go one step further' / active agency. Grammar seam is clean: 'and they purposefully explore ...' coordinates naturally with 'They believe ...'."
+    }
+  ],
+  "note": "Single defensible answer. Solved in exam order: thesis (disadvantage->advantage via humor) -> escalation (not only find positives but go further: gather resources, see opportunities, focus on gain) -> blank must restate active benefit-seeking. Felt the pull of option 2 (echoes 'initial shock') and option 3 (echoes optimism/silver lining), but each contains a disqualifying element ('wait' = passivity; 'blindly/without acknowledging' = denial). No alternative reading makes any other option defensible; the blank's coordination with 'believe ... and they ___' requires an action clause, which 5 satisfies best."
+}

@@ -1,0 +1,404 @@
+{
+  "schemaVersion": "reviewer-calibration-packet-public-v2",
+  "artifactId": "reviewer-calibration-packet-v2",
+  "status": "GOLD_ADJUDICATION_PENDING",
+  "authoredDate": "2026-07-15",
+  "candidateAccounting": {
+    "newFullQuestionCandidates": 0,
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0
+  },
+  "confidentiality": {
+    "exactItemsPrivateAndGitIgnored": true,
+    "authorHypothesesPrivateAndNotGold": true,
+    "publicContainsQuestionText": false,
+    "publicContainsAnswers": false,
+    "publicContainsGold": false,
+    "packetPrivateUtf8Bytes": 177504,
+    "packetPrivateSha256": "5e6fb536026042813049f570778283dbafb9aad2e7f071dc1f163eb4c490e129",
+    "pendingGoldSha256": "f3e35408062671d4a4aaf69cb06606660708837ccc258f6e0d981778fc381700",
+    "exclusionCommitmentsSha256": "771e54e2faeebe3886bac4799977afe9bffbc53ec3d07aaa18d1f0bc44e530f9"
+  },
+  "migration": {
+    "from": "reviewer-calibration-packet-v1",
+    "v1CertificationValidity": "INVALIDATED_FOR_CERTIFICATION",
+    "v1UseInV2": "CONTENT_AUDIT_INPUT_ONLY",
+    "v1ReviewWorkMigratedAsGold": false,
+    "freshBlindIssueRequired": true,
+    "evidence": [
+      {
+        "path": "../reviewer-calibration-packet-v1/INVALIDATED.md",
+        "sha256": "fb81547e7257ddb63ffcf68f2f92686a1a5dfee83624b0c83709a9a2d547ca6c"
+      },
+      {
+        "path": "../reviewer-calibration-packet-v1/private/issued/rater-1/phase2-grading.json",
+        "sha256": "128b3675382f0e96b3c07d06c35d39d9f011ff0824a28fa8c0ac29db54e3ac75"
+      },
+      {
+        "path": "../reviewer-calibration-packet-v1/private/issued/rater-1/phase2-notes.md",
+        "sha256": "0267ab4db9200109deb1c039fbb1a674e001e693b200c4d97ea100975b1741f2"
+      },
+      {
+        "path": "../reviewer-calibration-packet-v1/private/issued/rater-2/phase1-notes.md",
+        "sha256": "cb766dcd2b50dce6321aec43d9a1ea43681cb79457086761c08e93bb5f817925"
+      },
+      {
+        "path": "../reviewer-calibration-packet-v1/private/issued/rater-2/submission.json",
+        "sha256": "d65a2495bbc7a8b93dcaab7b798752904e779cdef46f705205497b6fc267f710"
+      }
+    ]
+  },
+  "responseContract": {
+    "discriminants": [
+      "SINGLE_LABEL",
+      "MULTIPLE_LABELS",
+      "SINGLE_TEXT",
+      "MULTIPLE_TEXTS",
+      "NO_ANSWER",
+      "UNEVALUABLE"
+    ],
+    "constructedSyntheticLabelsForbidden": true,
+    "exactTextHashesBound": true,
+    "normalizedDuplicateTextRejected": true,
+    "answerSetOrderInsensitive": true,
+    "acceptedEquivalenceSetsBoundEndToEnd": true
+  },
+  "composition": {
+    "itemCount": 24,
+    "byBlock": {
+      "GRAMMAR": 8,
+      "BLANK": 8,
+      "NONFOCUS": 8
+    },
+    "authorHypothesisByBlock": {
+      "GRAMMAR": {
+        "F": 2,
+        "C": 2,
+        "B": 2,
+        "A": 2
+      },
+      "BLANK": {
+        "F": 2,
+        "C": 2,
+        "B": 2,
+        "A": 2
+      },
+      "NONFOCUS": {
+        "F": 2,
+        "C": 2,
+        "B": 2,
+        "A": 2
+      }
+    },
+    "authorHypothesesAreGold": false,
+    "truthfulAdjudicationMayMakePacketCompositionIneligible": true,
+    "uniqueTopicTags": 24,
+    "nonfocusFamilies": {
+      "closed_constructed": 1,
+      "correction": 1,
+      "lexical": 1,
+      "marked_selection": 1,
+      "open_constructed": 1,
+      "option_selection": 2,
+      "ordering_or_insertion": 1
+    }
+  },
+  "rightsAndPrivacy": {
+    "directOriginalRows": 24,
+    "copiedOrAdaptedRows": 0,
+    "thirdPartySourceRows": 0,
+    "manualPiiObservedRows": 0,
+    "machinePiiPatternHits": 0,
+    "externalProviderApiDispatchAuthorizedRows": 0
+  },
+  "disjointness": {
+    "method": "normalized exact plus hashed eight-word windows",
+    "withinPacket": {
+      "comparedPairs": 276,
+      "sharedEightGrams": 0,
+      "rowsWithOverlap": 0
+    },
+    "currentS1Reference": {
+      "referenceRows": 12,
+      "comparedPairs": 288,
+      "exactNormalizedDuplicates": 0,
+      "sharedEightGrams": 0,
+      "calibrationRowsWithOverlap": 0,
+      "referenceArtifactSha256": "342824222a0271798821b5369034d0faf7246bab84102a16cfcb64e67b8d8e68"
+    }
+  },
+  "gold": {
+    "status": "GOLD_ADJUDICATION_PENDING",
+    "independentRatersCompleted": 0,
+    "freshAdjudicatorsCompleted": 0,
+    "certifiableReviewers": 0
+  },
+  "rows": [
+    {
+      "itemId": "RCAL2-G01",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "TIDAL_SENSOR_LOG",
+      "surfaceSha256": "e4e4a4943291317e531919264627f817f1523dfbd0eaa4cac76b130a5bf4f5d0",
+      "revealSha256": "0afb9b6b9a501ba1e3ff44e8634a0c74ed4968ac0bec9bb47beaf91ee98ac87a",
+      "fullPrivateItemSha256": "187c74a6269390645f2978edaaa3a53f99eb4c4ff04406698fcc20f6651a0796"
+    },
+    {
+      "itemId": "RCAL2-G02",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "KILLER",
+      "topicTag": "CERAMIC_FIRING_RECORD",
+      "surfaceSha256": "3cfbe338f5f529b1b9fcf116144a8ec37fdc9b8ca4a2386ac406471688e39ba6",
+      "revealSha256": "4e648ef3fb27b92de2d4ace70595461c4a34abc1eca12b52d12c7cbb49acb737",
+      "fullPrivateItemSha256": "74c225ca309a45447e1f5c513fc8f7231f77ecaea87957341674b5756349460f"
+    },
+    {
+      "itemId": "RCAL2-G03",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "BASIC",
+      "topicTag": "ORCHARD_BLOOM_COUNT",
+      "surfaceSha256": "a06cd9937bc4cf902637dfe4ef9ad476f6ef472b366e16afdd56040b3cd455b3",
+      "revealSha256": "b22d40a99a1b744f26e7a31fbdcbbb9a5cdf8eee2050ac61e4dc68cc10e79109",
+      "fullPrivateItemSha256": "27ca47a41138596ffcfa23779f81b7e1203b575a551997d88c500e7a67e7966f"
+    },
+    {
+      "itemId": "RCAL2-G04",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "BASIC",
+      "topicTag": "WORKSHOP_TOOL_RETURN",
+      "surfaceSha256": "9951176eb4b8ca33d8f216319b18e1880ac956060965acc445cc04f0c04d9caf",
+      "revealSha256": "12a2dc67629e7f7fe46ea99476879305fa223b01f75b5c5af398cf54596e2f6b",
+      "fullPrivateItemSha256": "49d7f7f5be814a67a20af4a31da87e404391af113db844e72635c7cc00af835b"
+    },
+    {
+      "itemId": "RCAL2-G05",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "MUSEUM_LIGHT_DAMAGE",
+      "surfaceSha256": "dd39fb6ab3390b52a7802555298851a67f57409bd0548d52fabb63d8b3b9e74c",
+      "revealSha256": "f551eac3fed94e62f2afbdb05706848d4bd27670a7039fcd233196be5cf29275",
+      "fullPrivateItemSha256": "6068a5700de0b3bc6a7f993bc5f0c2f6243fb5216e4bd927b65d82443bce8595"
+    },
+    {
+      "itemId": "RCAL2-G06",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "MARSH_REED_MAPPING",
+      "surfaceSha256": "fd4711141c8141868d2224233532de092ec9cedf49dab55fb8312c4002914d70",
+      "revealSha256": "5885352238e480cfe5ebf711f252650ea4f4e2f3db5dbe28d0dd3c42c86d8273",
+      "fullPrivateItemSha256": "297307809cc5926197514181e92392d448b566a9f64f1c115aebc7b5e6e42a2a"
+    },
+    {
+      "itemId": "RCAL2-G07",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "KILLER",
+      "topicTag": "METEORITE_ISOTOPE_TRACE",
+      "surfaceSha256": "ce956eec298588d2213971a870d2c0c253b1a2fbe65aff2387f8ec5ebc49545d",
+      "revealSha256": "a8fb56bb61959c6e726d24892bac05c342f291fe86f712dbe7264b53847f5a64",
+      "fullPrivateItemSha256": "667f064c77c1ca441cc6971af8c0c5d0c65996d933918e46909306a4c84131f0"
+    },
+    {
+      "itemId": "RCAL2-G08",
+      "block": "GRAMMAR",
+      "type": "GRAMMAR_ERROR",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "KILLER",
+      "topicTag": "ARCHIVE_ACCESS_RULE",
+      "surfaceSha256": "4a3c654e0210caecd3220bc03b733ee5a0121534c45e48d4c6a6b9b677fe597d",
+      "revealSha256": "c45ee070b7435ba911ff4b1d05efd1e03b965c7c26d77c2c33a2c15b7d73858e",
+      "fullPrivateItemSha256": "2d9e98fc2768d2c2cfd23265bde579ef3bec67d45226d9d3cbf8cab76a00aa0d"
+    },
+    {
+      "itemId": "RCAL2-B01",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "GLACIER_CAMERA_INTERVAL",
+      "surfaceSha256": "c12895b924f9347da1b2b4d0e8325c4453f35bab72a696b9b80e1a64a3d1338d",
+      "revealSha256": "2a36e6892a80edf1ca6f233ccc550c869360845a27a3d7964bb0e3184dc6a38a",
+      "fullPrivateItemSha256": "8e1ff087e55f5e531a3037d1ff5749eef2fa8dad5d9e29a5c138a1c0b93c5c27"
+    },
+    {
+      "itemId": "RCAL2-B02",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "KILLER",
+      "topicTag": "COMMUNITY_WATER_ALERT",
+      "surfaceSha256": "45381d70044c834b9cb35d8b8624e78d4a3ca9e2c6c854c1a228a58e7f3e273e",
+      "revealSha256": "63ee1f9407599e8f0a9bacf68341351aa67e0d43c7542535fc23121beef781ec",
+      "fullPrivateItemSha256": "c6e9aeca1056e8c65a40ace95f770ac829b8c521f94b41319c6127f9125ce869"
+    },
+    {
+      "itemId": "RCAL2-B03",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "BASIC",
+      "topicTag": "LIBRARY_SHELF_ARROWS",
+      "surfaceSha256": "7c6ce0d4b26468f7e1984b35b074ab6f8cff7fdb351fc5fc085863f7ca919ee0",
+      "revealSha256": "134be1f45aef51fc4db726e9b78f3a8a071a51aeae7aa315c23e51346420026f",
+      "fullPrivateItemSha256": "b3adc1477f7d8a4ab29dcbae17627af3c7ca035715e1d00f7e051460d5fe8377"
+    },
+    {
+      "itemId": "RCAL2-B04",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "BASIC",
+      "topicTag": "SEEDLING_WATER_SCHEDULE",
+      "surfaceSha256": "e2df203ba3b8becb389bfc3af2aaa1091ce62325df8e1db4f38296f7c2adcaa2",
+      "revealSha256": "7ec0d798260d3eb2e5c8f655e56bfa3a5ad23b8378e6c3fb81ce56b0e0afd712",
+      "fullPrivateItemSha256": "ca43b2e035d60171f276d1bfd4e98aca5e668f5f05b53734b5d636c3874c7e84"
+    },
+    {
+      "itemId": "RCAL2-B05",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "BAT_ACOUSTIC_SURVEY",
+      "surfaceSha256": "c75e7653b1d0c48bb232dcc9811f1916d79e8615f29974398c0bec53ecaedf34",
+      "revealSha256": "743e42c2c1ab6fb94fe632cabd0fc0bb3b88a4e1736e80bf3a3d5e2e344795c8",
+      "fullPrivateItemSha256": "26c4d91153dafde024049661562de0b15fe6e1e974f0815bc05cd25fc4bc1da3"
+    },
+    {
+      "itemId": "RCAL2-B06",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "BRIDGE_PAINT_INSPECTION",
+      "surfaceSha256": "4c1b8df74e2dcf91a5b9a521f9a51b753d2017ff3a0b9af8cb862e96fbf7455b",
+      "revealSha256": "a1d87a057bba16c55da0e493ea50aa786966ed00aaccbd5979115dc270490245",
+      "fullPrivateItemSha256": "d251739324127e15d4490ffd33a42b18032621eb7babecaac9e072e304564d39"
+    },
+    {
+      "itemId": "RCAL2-B07",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "KILLER",
+      "topicTag": "ORAL_HISTORY_INDEX",
+      "surfaceSha256": "e851fe41e38a1360f70e1d03aef018a3a1ecc006657a48b3164c6405ef3bc63b",
+      "revealSha256": "9fac240e4c6c4d35bd9c6651742c93f1d40f178c6d6a49a5918e686ad38053ac",
+      "fullPrivateItemSha256": "70ec58094a801227f5e4e46f3574a163434055e8e7c1f39da6a7d0d5911db882"
+    },
+    {
+      "itemId": "RCAL2-B08",
+      "block": "BLANK",
+      "type": "BLANK_INFERENCE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "KILLER",
+      "topicTag": "FOREST_COOLING_MAP",
+      "surfaceSha256": "529adc7924b95c42b7d6ff06184958f089d0f4ef7c5840f0471a0b3813c61ebf",
+      "revealSha256": "e6da6a3ddda604bac61e87c695a2d1c9f207f30c53b2abce43da0876ac0b0221",
+      "fullPrivateItemSha256": "b69bf49da3b8a8b52c658c077d314a915595a2cbd34b9c8f56b20aa369b1d934"
+    },
+    {
+      "itemId": "RCAL2-N01",
+      "block": "NONFOCUS",
+      "type": "CONTENT_MATCH",
+      "evidenceFamily": "option_selection",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "FOOTBRIDGE_NOTICE_CONTENT",
+      "surfaceSha256": "e71409d92de73f8f7d7e43969fbbe59d5a96d88839977a6f57eeb5a5aa75f5f0",
+      "revealSha256": "0b39d72b8a11010671ddbcb0e913effd34328f745110037c2cd4337fd2a8de2f",
+      "fullPrivateItemSha256": "42240898429f8da7b406a166e13bc1c19811781630e4fa2c9f08ed86eac0c7e4"
+    },
+    {
+      "itemId": "RCAL2-N02",
+      "block": "NONFOCUS",
+      "type": "TITLE",
+      "evidenceFamily": "option_selection",
+      "difficulty": "KILLER",
+      "topicTag": "SHARED_CLOCK_TITLE",
+      "surfaceSha256": "1bb20e4c943d754b8ab65c4cadd25e06c63a296d31e2179efe1696ea0a75c6cc",
+      "revealSha256": "6a4de2520f6fd9effb3a9a9479f02636f47e7e267a54284e08fab52d4f4017d1",
+      "fullPrivateItemSha256": "81915fcf992e8415d29dff85c6d15e199fb3f6b3fec902db1b9fcd295a21f6f3"
+    },
+    {
+      "itemId": "RCAL2-N03",
+      "block": "NONFOCUS",
+      "type": "SENTENCE_ORDER",
+      "evidenceFamily": "ordering_or_insertion",
+      "difficulty": "BASIC",
+      "topicTag": "BAKERY_OVEN_ORDER",
+      "surfaceSha256": "1e3e0f7039dfd5512b1e7fbb9c6cf2e328917457d642cdf848c5c414b02b7de5",
+      "revealSha256": "b722d21d8877886dab5b56208efd0dca4d5b71c20483d15c36025b16bf2086b3",
+      "fullPrivateItemSha256": "9ad1d83312a3a8893e81fc3df28fc78530dcfd60faba96d59063b4dd66fbf1ec"
+    },
+    {
+      "itemId": "RCAL2-N04",
+      "block": "NONFOCUS",
+      "type": "GRAMMAR_CHOICE_COMBO",
+      "evidenceFamily": "marked_selection",
+      "difficulty": "BASIC",
+      "topicTag": "HARBOR_FLAGS_COMBO",
+      "surfaceSha256": "036b60f28c9da403c06b4a674b0e1edb742dce095618b34ec6eedcc803e70d79",
+      "revealSha256": "9b9e39f83ee89a319219fc669a71ce08911d45453074374a66cc03caccd2fd9f",
+      "fullPrivateItemSha256": "1a47754d1c1b90accbd378aede5de50ed89f594d277c49fed94c3a887214bf2b"
+    },
+    {
+      "itemId": "RCAL2-N05",
+      "block": "NONFOCUS",
+      "type": "SENTENCE_TRANSFORM",
+      "evidenceFamily": "closed_constructed",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "TRAIL_OPENING_TRANSFORM",
+      "surfaceSha256": "a13d82e54cd019a2432d0f30d3bc40f18496d77bf2d4921d44a8cf55146ee430",
+      "revealSha256": "099aed87e7add1a6146bf04058f70f04fae497e54fd8fc57349d16c75fed23f6",
+      "fullPrivateItemSha256": "c3f1b71e271203c6f45bd9c5f556b11f4d246c98e55a2a3dd0cffd2c813aab50"
+    },
+    {
+      "itemId": "RCAL2-N06",
+      "block": "NONFOCUS",
+      "type": "GRAMMAR_CORRECTION",
+      "evidenceFamily": "correction",
+      "difficulty": "INTERMEDIATE",
+      "topicTag": "SENSOR_VOICE_PAIR",
+      "surfaceSha256": "626deb4c25795f507cacc4d0661c1b640d35ddd1e34a95d7279b66c1d0e4358e",
+      "revealSha256": "a454f1cd739a539a5baec6e96147ea09f160bf93c1117fa48906b5fdc3c20ee9",
+      "fullPrivateItemSha256": "849f1a6215719c704fae9722450c9ba4ce8126359398ab768bd26068a9552c8b"
+    },
+    {
+      "itemId": "RCAL2-N07",
+      "block": "NONFOCUS",
+      "type": "WORD_ORDER",
+      "evidenceFamily": "open_constructed",
+      "difficulty": "KILLER",
+      "topicTag": "PIGMENT_REFERENCE_ORDER",
+      "surfaceSha256": "ef2fdc38dda738a0f648ad81138df17447b8a0e8a46408a94dd3f8f2994b19dd",
+      "revealSha256": "5b795a2a38e8cc7f00b6c97a1cc2af0f1143d793f89ab26465a758f6a00d5b0a",
+      "fullPrivateItemSha256": "1f654003c8f9a25442c332879a984296b9b294c3a3134fa62068afdf1984a1c6"
+    },
+    {
+      "itemId": "RCAL2-N08",
+      "block": "NONFOCUS",
+      "type": "SYNONYM",
+      "evidenceFamily": "lexical",
+      "difficulty": "KILLER",
+      "topicTag": "ARGUMENT_TEMPERING_LEXICON",
+      "surfaceSha256": "14f39294c9df1f0a063511e9e23f5abeb5cd696083883a62600789568b28fedd",
+      "revealSha256": "04a10423547baaa5fac773a17911c5f0b7fd69d7c9997e652d09d4f226e21a4e",
+      "fullPrivateItemSha256": "6cb7fe13ad14c0a2542687f5295ab8b2230b278547513f233cf47713dcb2f843"
+    }
+  ]
+}

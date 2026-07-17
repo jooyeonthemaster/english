@@ -1,0 +1,38 @@
+{
+  "pid": "P029",
+  "finalV2": true,
+  "winningAnswer": "(D)",
+  "reason": "독립 재검증 결과 5개 밑줄 중 (D)만 비문이고 나머지 4개는 모두 문법적으로 성립한다. (D) 'vary both between or within individuals'는 상관접속사 both A and B의 고정 짝을 or로 파괴한 범주적 비문이며, or→and 교정 시 원문이 정확히 복원된다. 대안 해석(부유 수량사 both, either/whether에 의한 or 인가, 생략 구문)을 전수 검토했으나 어느 것도 성립하지 않는다. 솔버1·솔버2 모두 동일 결론에 도달했고 과잉 판정(성립하지 않는 대안 해석을 성립한다고 주장한 사례)은 없었다. 감사자의 V4 지적(해설 내 'many와 any' 환각 문장, keyPoints의 '관계사' 오분류)은 실재하는 결함이지만 정답 유일성(V2)과는 무관하다. 선언된 정답 (D)는 유일 정답으로 확정한다.",
+  "perDispute": [
+    {
+      "label": "(A) that",
+      "claim": "recognition 뒤 that이 어법상 틀렸을 가능성 / 불완전절·관계사 오독 여지",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "추상명사 recognition 뒤 동격 명사절 접속사 that. 삽입된 although 양보절('although being ethical is defined as ... correct',)을 걷어내면 that 뒤에 완전한 절(these principles[S] vary[V])이 이어진다. 동격 명사절은 접속사 that + 완전절을 요구하므로 정확히 부합. that 직후 콤마는 삽입절 표시 구두점일 뿐 어법 사항이 아님. 'recognition of'를 기대하게 하는 미끼이나 'recognition that + 절'은 표준 용법."
+    },
+    {
+      "label": "(B) acting",
+      "claim": "defined as 뒤 acting이 틀렸을 가능성 (to act / 과거분사 기대)",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "define A as B 수동태 'being ethical is defined as acting ...'. 전치사 as의 목적어 자리는 명사 상당어구를 요구하며 동명사 acting이 이를 충족하고, 동명사 주어 being ethical과 형태상 호응한다. 'as to act'가 강제되는 구문이 아니므로 대안 교정 압력 없음."
+    },
+    {
+      "label": "(C) are considered",
+      "claim": "최근접 단수명사 conduct에 이끌려 is considered로 고쳐야 한다는 근접 수일치 주장",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "관계절의 실제 선행사는 명사구 핵인 복수 principles ('the principles of conduct'). 의미상 '옳다고 여겨지는' 대상은 원칙들이며, 바로 다음 절의 'these principles'가 복수 지시를 확정한다. consider O correct(SVOC)의 수동태로 목적보어 correct가 잔류한 'are considered correct'는 표준. conduct 부착 해석은 강제되지 않으므로 쓰인 형태 그대로 문법적 — 오류 아님."
+    },
+    {
+      "label": "(D) both between or",
+      "claim": "선언된 정답 — both...or 상관짝 파괴가 유일한 비문인지, 구제 가능한 대안 해석이 있는지",
+      "verdict": "비문 확정 — 유일 정답",
+      "evidence": "상관접속사 both A and B는 어떤 사용역에서도 or로 대체 불가한 고정 짝이므로 'vary both between or within individuals'는 범주적 비문. 대안 해석 전수 검토: (1) both를 대명사/부유 수량사로 읽는 'vary both, between or within...'은 쌍(dual) 지시 대상이 문맥에 없고(these principles는 2개로 확정되지 않음) 어순·구두점도 지지하지 않아 불성립; (2) or를 인가할 either/whether가 문장 내에 부재; (3) 생략 구문으로도 구제 불가. or→and 교정 시 원문(vary both between and within individuals)이 정확히 복원됨. 솔버 양측의 대안 해석 기각 판단은 모두 타당했고 과잉 판정 없음."
+    },
+    {
+      "label": "(E) make different choices",
+      "claim": "makes 수일치 또는 differently 부사 자리 오류 가능성",
+      "verdict": "정문 — 정답 불가",
+      "evidence": "조동사 may 뒤 동사원형 make — 주어 the same individual이 단수여도 조동사 뒤는 원형이므로 수일치 문제 자체가 발생하지 않음. different는 명사 choices를 수식하는 한정 형용사 자리로 옳다. 앞의 긴 부사구 나열(under different circumstances, at a different time, when they are feeling a different way)은 동사 형태에 영향 없음."
+    }
+  ]
+}

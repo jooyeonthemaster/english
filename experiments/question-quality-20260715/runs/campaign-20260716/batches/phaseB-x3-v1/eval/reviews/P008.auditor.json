@@ -1,0 +1,75 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "지문 표층 어휘(as perfect as you want it to be / tasks you absolutely need to complete)에서 연상시킨 lexical-anchor 낚시",
+      "temptingBecause": "perfect·complete 등 지문 어휘와 표면적으로 겹치고, '노력하라'는 조언문 형식이 지문 톤과 유사함",
+      "decisiveFlaw": "지문의 인과는 '과외활동 과다 → 스트레스'인데, 학업 완벽주의 결여가 스트레스를 낳는다는 조건문이 되어 논지와 무관·인과 불성립"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'exercise some moderation in terms of your extracurricular activities'의 의미 보존 패러프레이즈(moderation→reasonable boundaries, extracurricular activities→after-school commitments)",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음 — 'draw the line', 'Pacing is important', 'don't overextend yourself' 등 지문 전체 재진술 사슬과 정확히 정합"
+    },
+    {
+      "label": "③",
+      "intent": "신문사 마감 예시를 일반 결론 자리에 밀어넣는 scope 과협소(over-narrow) 함정",
+      "temptingBecause": "school newspaper·deadline이 지문 예시와 문자 그대로 겹쳐 예시에 얽매인 독해를 유도함",
+      "decisiveFlaw": "예시는 crunch time의 사례일 뿐이며, 지문의 결론은 특정 활동 우선순위가 아니라 전체 활동량의 조절임 — 완성문이 글의 요지를 대변하지 못함"
+    },
+    {
+      "label": "④",
+      "intent": "극성 반전(polarity reversal) 함정 — 활동 축소가 아닌 확장을 권함",
+      "temptingBecause": "clubs·diverse 등 소재 어휘가 겹치고, 첫 문장의 '과외활동은 좋은 것'이라는 양보부와 표면적으로 어울림",
+      "decisiveFlaw": "'Joining too many clubs can reduce...your free time'이라는 경고와 정반대 방향 — 확장하지 않으면 스트레스를 받는다는 인과가 지문과 모순"
+    },
+    {
+      "label": "⑤",
+      "intent": "절대어(completely, all)를 사용한 극단화(extreme overgeneralization) 함정",
+      "temptingBecause": "활동을 줄이라는 지문의 방향성과 같은 쪽이라 방향만 보고 고르면 걸림",
+      "decisiveFlaw": "'get involved in the activities that are most meaningful to you'와 정면 모순 — 지문은 선별적 참여를 권하지 전면 탈퇴를 권하지 않음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "KEYPOINT_HANJA",
+      "severity": "minor",
+      "evidence": "keyPoints의 '합리적인 경계 설정(合理的 境界 設定)' — 한국 수능 교육 맥락에서 불필요하고 이질적인 한자 병기"
+    },
+    {
+      "code": "TERM_IMPRECISION",
+      "severity": "minor",
+      "evidence": "keyPoints의 '지나친 교외 활동 참여' — extracurricular activities의 표준 역어는 '과외 활동'이며 '교외(校外) 활동'은 의미가 다름. 해설 본문은 '과도한 활동 참여'로 올바르게 표기"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": {
+    "V1": "원지문과 렌더 지문을 단어 단위 대조 — 빈칸이 'exercise some moderation in terms of your extracurricular activities'만 정확히 대체하고 나머지는 완전 동일. 중복·누락·고아 문장부호 없음. 선지 5개와 라벨 ①~⑤ 일치.",
+    "V2": "5개 선지를 각각 'If you don't ___, you can become awfully stressed out...'에 대입해 독립 검증. ②만 논리 성립, ①(논지 무관·인과 불성립), ③(과협소), ④(극성 모순), ⑤(마지막 문장과 정면 모순)는 모두 배제 근거가 결정적. 단일 정답 확인. 5개 선지 모두 don't 뒤 동사원형구로 동일 통사 슬롯에 적합 — 문법만으로 탈락하는 오답 없음(빈칸 D조건 1 충족).",
+    "V3": "지문·발문·완성문 모두 문법적. 'set reasonable boundaries on your after-school commitments'는 자연스러운 collocation. seam 비문 없음.",
+    "V4": "해설이 인용한 근거(reduce a large amount of your free time / Pacing is important / don't overextend yourself)는 전부 지문에 실재하며 문장 귀속 정확. 오답 해설 4건이 각 선지의 실제 내용과 정확히 대응. 용어 오분석·환각 없음. keyPoints의 한자 병기와 '교외 활동' 용어는 minor 흠으로 별도 기록.",
+    "V5": "정답 라벨 ②·해설 논증·오답 해설 키(①③④⑤)·keyPoints 상호 모순 없음.",
+    "craft": "C1=4: 'The point is this:'로 표지된 주제문의 핵심 조건절을 출제 — 정전 포인트. C2=3: 4개 오답이 각기 다른 함정(어휘낚시/과협소/극성반전/극단화)을 겨냥하나 ④는 사실상 단순 opposite에 가까움. C3=2: 빈칸 직후 문장 'make sure you don't overextend yourself'가 정답의 강한 재진술 단서여서 ④⑤가 즉시 소거되고 실질 경쟁 선지는 ③ 하나 — 변별 판단의 폭이 좁음. C4=3: 선지 길이 균형(7~8단어), 메타 누출 없음, 정답 필연적. 단서 과잉은 출제 삽입이 아니라 원지문 자체의 중복 재진술에서 기인. C5=3: 1단계 패러프레이즈 추론으로 INTERMEDIATE에 대체로 부합하되 하한선에 가까운 쉬운 편. C6=3: 정확하고 근거·함정 분리가 되어 있으나 다소 장황하고 keyPoints 표기 흠 존재. 합계 18.",
+    "grade_rationale": "전 V 통과, C 최저 2(C3), 합계 18(≥17) → B. C3(경쟁 선지 부족: ④를 opposite 대신 half-truth나 condition-loss형으로 교체)과 keyPoints 표기만 손보면 출제 가능.",
+    "killer": "요청 난이도 INTERMEDIATE — KILLER 아님, killerConditionsMet=false."
+  }
+}

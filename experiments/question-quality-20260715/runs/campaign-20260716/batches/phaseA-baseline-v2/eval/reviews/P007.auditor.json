@@ -1,0 +1,61 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "condition loss / half-truth — 원문의 'their own needs as well as the needs of others'(both/and)를 '집단 우선'의 일방 우선순위로 왜곡",
+      "temptingBecause": "'accommodate ... the needs of others (i.e. cooperate)' 구절과 어휘적으로 겹쳐 협동 프레임을 연상시킨다",
+      "decisiveFlaw": "원문은 자신과 타인의 필요를 '모두' 수용한다고 명시하며, 우선순위화는 'and thus, may facilitate clear communication'이라는 빈칸 슬롯의 인과 결과와도 연결되지 않는다"
+    },
+    {
+      "label": "2",
+      "intent": "polarity reversal — 감정의 '정확한 표현'을 '은폐'로 뒤집은 극성 반전",
+      "temptingBecause": "'avoid interpersonal tension'이 갈등 해결이라는 지문 주제와 표면적으로 공명한다",
+      "decisiveFlaw": "감정 은폐는 뒤따르는 'facilitate clear communication'과 정면 모순이고, 예시 문장 'express how he feels about the problem'이 정반대 행동을 명시한다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 삭제된 원문 span 'express emotions, feelings and moods accurately'의 의미 보존 패러프레이즈('clearly articulate their own psychological states')",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음 — 'and thus' 인과 단서와 갈등 상황 예시('express how he feels ... and why he feels this way')가 모두 이 내용을 필연적으로 지지한다"
+    },
+    {
+      "label": "4",
+      "intent": "topic-word association — 지문의 'conflict' 어휘만 차용해 무관한 '갈등 회피' 주장을 구성",
+      "temptingBecause": "지문 후반이 group conflict situation을 길게 다루므로 소재가 겹쳐 보인다",
+      "decisiveFlaw": "지문은 갈등 회피가 아니라 'constructive conflict resolution'(건설적 해결)을 옹호하며, 회피는 clear communication이라는 인과 결과도 산출하지 못한다"
+    },
+    {
+      "label": "5",
+      "intent": "actor swap / over-extension — '타인의 관점 이해'를 '타인의 집단 정서를 대변(표현)'으로 과확장",
+      "temptingBecause": "'take the perspective of the other group members and understand why they are reacting'이라는 실제 앵커 문장이 뒤에 존재해 구조적으로 가장 매력적",
+      "decisiveFlaw": "지문이 지지하는 것은 타인 감정의 '이해'까지이고 '대변/표현(represent)'은 무근거이며, 빈칸 슬롯의 근거 사슬(예시의 'express how HE feels')은 자기 자신의 상태 표현을 가리킨다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TRAP_LABEL_IMPRECISE",
+      "severity": "minor",
+      "evidence": "오답 1 해설이 함정을 '본문 내용 축소(과협소)'로 명명했으나, 선지 1은 both/and(자신+타인 필요 수용)를 일방 우선순위로 바꾼 것이므로 '왜곡/조건 상실'이 더 정확한 분류다. 사실 오류는 아니며 판정에는 영향 없음."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 의도된 span 삭제 외 원지문과 동일하며, 다섯 선지 모두 'are able to ___' 슬롯에 동일 통사형(원형 VP)으로 들어가 tail 문법 소거가 발생하지 않는다(RUBRIC §D 첫 조건 충족). 정답 ③은 'and thus → clear communication' 인과 단서와 갈등 예시 문장 두 근거로 유일하게 성립하고, 최강 미끼 ⑤(actor swap)도 'represent'의 무근거성으로 배제된다. 오답 4개가 서로 다른 함정 기제(조건상실·극성반전·소재연상·행위자전환)를 사용해 C2=4. 다만 ②·④는 국소 단서('clear communication') 하나로 즉시 탈락해 실질 경쟁 선지가 ①·⑤로 좁혀지는 점, 정답 도출이 예시 문장의 'express'에 의해 비교적 직설적으로 신호되는 점에서 C3=C4=3. INTERMEDIATE 요청 난이도에는 사고 단계(1~2 단서 연결)와 추상화 수준('psychological states')이 정확히 부합해 C5=4. 해설은 정확하고 인용이 실문장과 일치하나 다소 장황해 C6=3. 합계 20으로 A 컷(21) 미달, 최저 C=3·합계 17 이상이므로 B. KILLER 요청이 아니므로 killerConditionsMet=false."
+}

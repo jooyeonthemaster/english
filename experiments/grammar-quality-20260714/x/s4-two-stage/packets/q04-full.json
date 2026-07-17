@@ -1,0 +1,159 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=f  (B):dec=a  (C):dec=c  (D):dec=b  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 60,
+        "relPos": 0.083,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 87,
+        "relPos": 0.121,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 208,
+        "relPos": 0.288,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 447,
+        "relPos": 0.62,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.752,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "kept us alive",
+        "isError": true,
+        "correction": "kept us alive",
+        "errorExpression": "kept us alively",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "living",
+        "isError": false,
+        "errorExpression": "living",
+        "surroundingText": "a trait that kept us alive when we were living on the savannas but that can prevent",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "focused",
+        "isError": false,
+        "errorExpression": "focused",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "what went well",
+        "isError": false,
+        "errorExpression": "what went well",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "sharing",
+        "isError": false,
+        "errorExpression": "sharing",
+        "surroundingText": "start your conversations with friends by sharing a recent win (anything that gives",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "kept us alively"
+      },
+      {
+        "label": "(B)",
+        "text": "living"
+      },
+      {
+        "label": "(C)",
+        "text": "focused"
+      },
+      {
+        "label": "(D)",
+        "text": "what went well"
+      },
+      {
+        "label": "(E)",
+        "text": "sharing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "과거진행형 'were living'의 일부로 쓰인 현재분사로, 당시에 '살고 있었다'는 능동의 진행 상태를 나타내므로 어법상 옳습니다.",
+      "(C)": "5형식 동사 keep의 목적격 보어 자리입니다. 목적어인 you와 초점을 맞추는 동작(focus)의 관계가 수동('초점이 맞춰진 상태가 되다')이므로 과거분사 focused는 올바른 어법입니다.",
+      "(D)": "타동사구 write down의 목적어로 쓰인 명사절입니다. 뒤에 주어가 빠진 불완전한 문장이 오므로 관계대명사/의문명사구인 what이 이끄는 절 'what went well'은 타당합니다.",
+      "(E)": "전치사 by의 목적어로 쓰인 동명사구로, 뒤에 목적어 'a recent win'을 취하고 있어 어법상 적합합니다."
+    },
+    "explanation": "전체 문장의 뼈대를 살펴보면, 'a trait'를 선행사로 하는 주격 관계대명사절 안에 5형식 동사 keep의 과거형인 kept가 쓰였습니다. 불완전타동사 keep은 목적어(us) 뒤에 목적격을 보완 설명하는 목적격 보어를 필요로 합니다. 보어 자리에 부사나 부사류 형태는 올 수 없고 오직 형용사만 올 수 있습니다. 따라서 부사 형태를 모방한 'kept us alively'는 비문이며 형용사인 'kept us alive'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(A) 형용사 vs 부사 — 5형식 동사(keep) 뒤 목적격 보어 자리에는 부사가 아닌 형용사가 위치해야 함",
+      "(C) 분사의 능동 vs 수동 — 목적어(you)와 분사가 나타내는 행동의 수동적 관계를 판단하여 과거분사 선택",
+      "(D) 관계대명사 what — 선행사가 없고 뒤에 주어가 빠진 불완전한 절을 연결하는 명사절 유도"
+    ],
+    "tags": [
+      "5형식 문장",
+      "목적격 보어",
+      "형용사와 부사",
+      "관계대명사 what",
+      "분사의 태"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that __(A) kept us alively__ when we were __(B) living__ on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you __(C) focused__ on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down __(D) what went well__. If you're more of a verbal processor, start your conversations with friends by __(E) sharing__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it."
+  }
+}

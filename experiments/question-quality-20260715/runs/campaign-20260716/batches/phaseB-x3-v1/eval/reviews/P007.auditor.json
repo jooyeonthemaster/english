@@ -1,0 +1,83 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "해설에 비단어/손상 용어: '지협적 왜곡'(→'지엽적'의 오탈자, '지협'은 isthmus를 뜻하는 별개 단어), '절대 지상주의적 논리성 오류', '절반만 왜곡한 과장된 오류', '공포 규범에 반하는 경로'('공표'의 손상 추정), '과학적 절차적 참값' 등 다수의 훼손된 표현이 학생 노출 해설에 존재한다."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "⑤ 오답 해설이 선지 내용과 불일치: 선지는 'raw experimental data must be replicated flawlessly before any media announcement'(원시 실험 데이터의 무결점 복제가 언론 발표의 전제)인데, 해설은 '가설의 완벽한 복제를 지식의 전제로 삼음'이라고 설명하여 복제 대상(데이터 vs 가설)과 조건의 귀결(언론 발표 vs 지식의 지위)을 모두 오귀속한다."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "keyPoints 3번이 'authorized, disciplinary, collective 등의 다의어'라고 주장하나, 이 단어들은 본 지문 맥락에서 다의성이 출제 포인트가 아니며 근거 없는 언어학적 단정이다."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "④ 오답 해설이 해당 선지를 '과협소한 선지'로 규정하나, ④의 실제 결함은 협소함이 아니라 지문에 존재하지 않는 기준(실용적 유용성)으로의 기준 전환(criterion shift)이다. 결함 유형 명명이 부정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "지문 전반부의 개인주의적 수사(individualist rhetoric)를 정답처럼 재활용하는 극성 반전 함정",
+      "temptingBecause": "'unbiased mind', 'inspired patience' 등 지문 초반의 실제 어휘 앵커를 그대로 사용하며, 발견의 주체를 개인으로 두는 서술이 지문 앞부분과 표면적으로 일치한다",
+      "decisiveFlaw": "해당 개인주의적 수사는 지문이 '공공 맥락에서 행동의 근거가 될 수 없다'고 기각하는 대상이다. 빈칸 문장은 그 반대편인 '과학 소통의 규범'이 전제하는 바이므로 극성이 정반대다"
+    },
+    {
+      "label": "②",
+      "intent": "press conference 소재를 이용한 규범 역전(causal/norm reversal) 함정",
+      "temptingBecause": "'press conference', 'publicity seeker' 등 지문의 구체 소재와 겹쳐 즉각적 대중 공표가 과학 소통의 경로처럼 보인다",
+      "decisiveFlaw": "지문은 전문가 검증 없이 기자회견으로 발표하는 과학자가 '자동으로 규탄받는다(castigated)'고 명시한다. 즉각적 대중 전파는 신뢰를 얻는 경로가 아니라 규범 위반 사례다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'의 추상화 재진술",
+      "temptingBecause": "정답이므로 해당 없음. 'collective peer validation'이 후속 문장 'collective product'와 'expert reviewers' 문장을 통합한다",
+      "decisiveFlaw": "없음(유일 정답). 단, 'collective'가 바로 다음 문장의 'collective product'와 어휘 그대로 겹쳐 키워드 매칭만으로 도달 가능한 단서 누출이 있다(C4/C5 감점 요인)"
+    },
+    {
+      "label": "④",
+      "intent": "실용적 유용성이라는 지문 외 기준으로의 기준 전환(criterion shift) 함정",
+      "temptingBecause": "'laboratory findings'가 지문 소재와 겹치고, 'basis for action in public contexts'를 실용성으로 오독할 여지를 노린다",
+      "decisiveFlaw": "practical utility는 지문 어디에도 등장하지 않는 기준이다. 지문의 승인 기제는 학문 공동체의 검증이지 실용적 성과가 아니므로 소스 앵커가 사실상 부재하여 소거가 가장 쉽다"
+    },
+    {
+      "label": "⑤",
+      "intent": "전문가 검증 절차를 '무결점 복제'로 과강화한 half-truth/기제 치환 함정",
+      "temptingBecause": "'expert reviewers to examine his or her claims'와 언론 발표 전 검증이라는 절차적 사실에 앵커되어 있어 절반은 참으로 읽힌다",
+      "decisiveFlaw": "지문이 요구하는 것은 분과 전문가의 '승인(authorization)'이지 원시 데이터의 무결점 '복제(replication)'가 아니다. 'flawlessly'라는 절대어가 지문에 없는 조건을 추가한다"
+    }
+  ],
+  "explanationIssues": [
+    "비단어 '지협적'(지엽적의 오탈자)이 학생 노출 해설에 포함됨",
+    "⑤ 해설이 선지의 'raw experimental data'를 '가설'로, '언론 발표의 전제'를 '지식의 전제'로 오귀속함",
+    "'절대 지상주의적 논리성 오류', '절반만 왜곡한 과장된 오류' 등 의미가 통하지 않는 훼손 표현",
+    "'공포 규범에 반하는 경로' — '공표'의 오탈자로 추정되는 손상 용어",
+    "keyPoints의 'authorized, disciplinary, collective 등의 다의어' — 근거 없는 다의어 규정",
+    "④ 해설의 결함 명명('과협소') 부정확 — 실제 결함은 지문 외 기준 도입"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 모두 통과했고 출제 지점(C1=4)은 지문의 핵심 논지를 정확히 겨냥한 우수한 설계다. 그러나 해설(V4)이 비단어·손상 용어를 다수 포함하고 ⑤ 오답 해설이 실제 선지 내용(데이터 복제/언론 발표 전제)을 오귀속하여 V4 실패 → F. KILLER 조건도 미충족: 정답 선지의 'collective'가 바로 다음 문장 'collective product'와 어휘 그대로 겹쳐 키워드 매칭으로 도달 가능하고(§D '절대어·극성 하나로 찍을 수 없다' 취지 위반 — must/immediate/flawlessly 절대어 소거 휴리스틱도 유효), ④는 source anchor가 사실상 부재하다. 수리 방향: (1) 해설 전면 재작성(오탈자 제거, ⑤ 해설을 선지 실제 내용에 맞게 교정, ④ 결함 유형 재명명), (2) 정답 선지에서 'collective'를 다른 추상화 어휘로 치환해 어휘 누출 제거, (3) ④에 실질적 소스 앵커 부여."
+}

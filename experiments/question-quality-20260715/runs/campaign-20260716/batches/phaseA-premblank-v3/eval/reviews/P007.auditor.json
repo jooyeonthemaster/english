@@ -1,0 +1,76 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-collocation-minor",
+      "severity": "minor",
+      "evidence": "완성문 'creates an arena for open communication and encourages effective handling of disputes and overall team performance'에서 'encourages ... overall team performance'는 연어가 다소 느슨하다(fosters/enhances performance가 더 자연). 문법적 비문은 아니므로 V3 통과이나 기록한다."
+    }
+  ],
+  "validityEvidence": {
+    "V1": "원지문·렌더 지문 단어 단위 diff 결과 유일한 차이는 마지막 문장의 tail span 'promotes constructive conflict resolution and improved group functioning.'이 '_____.'로 치환된 것뿐. 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 선지 라벨 1~5 존재, 선언 정답 라벨 1이 선지와 일치, 빈칸 마커 1개로 발문과 일치.",
+    "V2": "다섯 선지 모두 주어 'Appreciation of differences'에 걸리는 3인칭 단수 현재 동사구로 'creates'와 병렬인 동일 통사 슬롯에 삽입 가능(문법으로 탈락하는 오답 없음). 독립 검증: ①은 제거된 원문 span의 의미 보존 paraphrase(disputes↔constructive conflict resolution, overall team performance↔improved group functioning)로 유일 정답. ②'absolute prevention of emotional differences'는 주어 '다름의 인정' 전제 자체와 모순. ③leadership은 지문에 부재하며 'creates an arena for open communication and shifts the focus ... from communication'은 등위절과 내적 모순. ④'suppressing one's own needs'는 'accommodate their own needs as well as the needs of others'와 정면 모순. ⑤'escalates the level of disagreement'는 건설적 갈등 해결이라는 결론의 극성 반전. 정답 집합={1}, 선언(단일정답 1)과 정확히 일치.",
+    "V3": "지문은 원문 그대로 문법적, 발문 표준형. 정답 삽입 완성문 문법적이며 빈칸 seam 비문·비단어·오탈자 없음. 유일한 흠은 'encourages ... overall team performance'의 느슨한 연어(minor, 비문 아님).",
+    "V4": "해설이 인용한 원문 표현 'promotes constructive conflict resolution and improved group functioning'은 원지문과 자구 일치. 해설의 근거 3개('자신과 타인의 필요를 모두 수용'=accommodate their own needs as well as the needs of others, '자신의 감정을 명확히 표현'=express how he feels about the problem and why, '타인의 반응 이유 이해'=understand why they are reacting in a certain manner)가 모두 실제 문장에 정확히 귀속. 빈칸 문장을 결론 요약으로 규정한 담화 분석도 실제 구조와 일치. 문법 용어 오분석·환각·비단어·지문 외 내용 첨가 없음. 오답 해설 2~5가 각 선지의 실제 내용과 정확히 대응.",
+    "V5": "선언 정답 1 = 본해설이 정답으로 인용한 텍스트('encourages effective handling of disputes and overall team performance') = 선지 ①. 오답 해설 키 2~5가 해당 선지 내용과 일치. keyPoints 3항목(결론 문장 빈칸 파악, 구체 사례→추상 결론, paraphrase 비교) 모두 문항 실제 구조와 정합. 모순 없음."
+  },
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 지문 전체 논지(다름의 인정 → 건설적 갈등 해결·집단 기능 향상)를 요약하는 결론 문장의 핵심 술부에 위치한 정전적 출제 지점. 다만 술부 전체를 통째로 비우고 정답 paraphrase가 직선적이어서 '정교하게 묻는다'(4)까지는 아님.",
+    "C2": "설계 의도상 네 오답이 서로 다른 함정을 겨냥: ②절대화·범위 과확장, ③무관 소재 전환(topic shift), ④half-truth·행위 왜곡(자기욕구 억압), ⑤극성 반전. 다만 ③은 지문 내 source anchor가 전혀 없어(leadership 부재) 필러에 가깝고, ②④⑤는 실제 풀이에서 동일한 극성 판정 하나로 함께 소거되어 의도가 기능적으로 중첩됨.",
+    "C3": "핵심 약점. 오답 ②④⑤가 전부 부정 극성이고 ③은 무관 소재 + 등위절 내적 모순이라, 정답 ①이 유일한 '긍정 극성 + 주제 정합' 선지. 지문의 일관된 긍정 톤(혹은 빈칸 문장의 긍정 등위 구조)만 파악하면 극성 판별 하나로 정답 도달 가능. 같은 극성의 경쟁 오답이 하나도 없어 전체 구조 독해를 강제하지 못함.",
+    "C4": "루브릭 C4의 0-앵커가 명시하는 '꼬리 소거'가 실질적으로 가능한 사례: 'creates an arena for open communication and ___'라는 긍정 등위 구조가 극성 단서를 누출하여 ②④⑤가 지문 본문 없이 빈칸 문장만으로 소거되고, ③도 같은 문장과의 내적 모순으로 국소 탈락. 지문 본문의 근거 축적이 사실상 불필요해짐. 완전한 메타 누출(0)은 아니지만 약하지 않은 누출이므로 2. 지문 내 근거 자체는 충분하고 정답은 필연적임.",
+    "C5": "요청 난이도 INTERMEDIATE. paraphrase 거리(disputes/team performance)가 한 단계 추상화 추론을 요구해 라벨에 대체로 부합하나, 극성 일괄 소거 때문에 실효 난이도는 INTERMEDIATE 하단~EASY 상단.",
+    "C6": "해설이 빈칸 문장의 담화 역할 → 지문 근거 3개 → 종합 → 정답 paraphrase 매핑 → 오답 함정 분류 순으로 구조적이고 사실 정확. 오답 해설도 각 함정 유형을 명명. 다소 장황하나 오류 없음."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 제거된 원문 span 'promotes constructive conflict resolution and improved group functioning'의 의미 보존 paraphrase",
+      "temptingBecause": "해당 없음(정답). disputes↔conflict resolution, overall team performance↔improved group functioning 대응이 지문 전체 논지와 정합.",
+      "decisiveFlaw": "없음. 유일하게 긍정 극성·주제 정합·원문 의미 보존을 모두 충족. (설계 관점 결함: 유일한 긍정 극성 선지라는 점이 단서가 됨)"
+    },
+    {
+      "label": "2",
+      "intent": "절대화·범위 과확장 (condition/scope 함정)",
+      "temptingBecause": "'differences', 'group' 등 지문 핵심 어휘와 겹치고, 갈등 맥락에서 '감정적 차이의 예방'이 바람직한 결과처럼 들림.",
+      "decisiveFlaw": "지문은 다름의 '인정(appreciation of differences)'을 출발점으로 삼지 다름의 제거·예방을 주장하지 않음. 'absolute prevention'은 주어 자체와 모순되는 절대어. (부정 극성으로 국소 소거 가능)"
+    },
+    {
+      "label": "3",
+      "intent": "무관 소재 연상 (topic shift)",
+      "temptingBecause": "leadership이 집단 상황·집단 기능과 연상적으로 인접한 소재라 표면상 그럴듯함.",
+      "decisiveFlaw": "leadership은 지문에 전혀 등장하지 않으며, 'creates an arena for open communication and shifts the focus ... from communication'은 같은 문장의 등위절과 내적 모순. source anchor 부재로 필러에 가까움."
+    },
+    {
+      "label": "4",
+      "intent": "half-truth·행위 왜곡 (갈등 회피를 해결로 오인시키는 자기욕구 억압)",
+      "temptingBecause": "'avoid further arguments'가 갈등 상황의 바람직한 귀결처럼 보이고 타인 배려 문맥과 표면상 어울림 — 네 오답 중 유일하게 내용 판단을 실제로 요구.",
+      "decisiveFlaw": "지문은 'accommodate their own needs as well as the needs of others'로 자기·타인 욕구의 동시 수용(협력)을 명시 — 자기 욕구 '억압(suppressing)'은 정면 배치. (부정 극성으로 국소 소거도 가능)"
+    },
+    {
+      "label": "5",
+      "intent": "극성·인과 반전 (polarity/causal reversal)",
+      "temptingBecause": "'exposing differences'가 주어 'Appreciation of differences'와 어휘·소재가 가장 강하게 겹침.",
+      "decisiveFlaw": "지문 결론은 다름의 인정이 건설적 해결·기능 향상으로 이어진다는 것 — 불일치의 '심화(escalates)'는 정확히 반대 극성."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 무결성·정답 유일성·해설 사실성이 모두 견고하여 치명 결함은 없다. 그러나 공예 결함이 재설계 수준: 오답 ②④⑤가 전부 부정 극성이고 ③은 anchor 없는 무관 소재 + 등위절 내적 모순이라, 정답이 유일한 긍정·주제 정합 선지가 되어 빈칸 문장의 긍정 등위 구조 하나로 지문 본문 독해 없이 꼬리 소거가 가능하다(C3=2, C4=2). 긍정 극성이되 지문이 지지하지 않는 경쟁 오답(예: scope shift형 half-truth 긍정 선지)을 최소 1~2개 투입하는 선지 세트 재설계가 필요. minor: 완성문의 'encourages ... overall team performance' 연어가 다소 느슨. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(killerConditionsMet=false). 공예 합계 16/24(<17)로 B 기준 미달 → 등급 C. 참고: 이전 감사본은 동일 결함을 C3에만 반영해 C4=3·합계17·B로 판정했으나, 루브릭 C4 앵커가 '꼬리 소거'를 명시하고 본 문항에서 꼬리 소거가 실제로 성립하므로 C4=2로 본 감사에서 하향함."
+}

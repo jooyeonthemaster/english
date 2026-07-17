@@ -1,0 +1,328 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-protocol-1",
+  "artifactId": "reviewer-calibration-v4-production-bound-v1",
+  "status": "DESIGN_UNISSUED_OFFLINE",
+  "purpose": "Execution-ready, production-type-bound calibration contract with no authored item, gold, operational ledger event, or external activity.",
+  "upstreams": [
+    {
+      "artifactId": "reviewer-calibration-v3-replacement-v1",
+      "path": "../reviewer-calibration-v3-replacement-v1",
+      "manifestSha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64",
+      "manifestEntries": {
+        "PLAN.md": "ce5a03257267bc99133a8407f0156dbbc4aeb230ae4863426d2deadb4f37ef51",
+        "protocol.json": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+        "schema.json": "cdffedf63ee00c058837f65c4da635ce16b23e32ce2fec8313f87f2be0951d69",
+        "verify.mjs": "417d09e46f5c1ef997fbcbb34a70d3b36ff54407f3ea0e63c27abbc2f42ae500"
+      },
+      "normativeUse": "Methodology, construct definitions, thresholds, and fail-closed principles only.",
+      "excludedUse": "Its nonfocusConstruct.families logicalTypes arrays are non-normative and must never populate v4 slots or coverage."
+    },
+    {
+      "artifactId": "reviewer-calibration-v3-production-type-binding-v2",
+      "path": "../reviewer-calibration-v3-production-type-binding-v2",
+      "manifestSha256": "4e81452d0c74f3361cd01a59e5ec6406ea2fde729fd79f588dcdaf07c380de14",
+      "manifestEntries": {
+        "REPORT.md": "cc6ddd0cd005a4707ab70f54fb31fb251f997be804f4621b45e76e82b9c72ce6",
+        "binding.json": "7ec4d2c302ce841bbc5de2ec3b6b5d1b33bfc30f867b5ff4dbaa06aeb7e42e4f",
+        "hostile-fixtures.json": "f999fa8544d41cc07e8f9e3413de1f38e17fc3d2fa7bdf6d193570a1da9ebb88",
+        "verify.mjs": "32276d69adff6df6ec3a520b40a52009230dfc7f110908527c9ce870b729729a"
+      },
+      "bindingSha256": "7ec4d2c302ce841bbc5de2ec3b6b5d1b33bfc30f867b5ff4dbaa06aeb7e42e4f",
+      "acceptedSourceSnapshotSha256": "e1bcb66ec8bea05a6feed8569eacc9f78a535580e6283b89a6676276d628bc60",
+      "canonicalBindingSha256": "6db3f58cf5b28735a3660596737d2c82a0b4fbfe3a67e22d0f27bd8d7c1f2f00",
+      "v1ExecutionPathAllowed": false,
+      "normativeUse": "Sole authority for canonical focus/nonfocus IDs, construct families, source drift, corrected rotation, and coverage-contact claims."
+    }
+  ],
+  "normativePrecedence": [
+    "This v4 protocol and its registries define execution state transitions.",
+    "The corrected v2 production type binding defines every type ID, family, and rotation decision; the superseded v1 execution path is forbidden.",
+    "The v3 replacement defines evaluator constructs and thresholds except its provisional logical type universe.",
+    "Any conflict fails closed; no implicit merge or alias inference is permitted."
+  ],
+  "typeUniverse": {
+    "focusTypeIds": ["BLANK_INFERENCE", "GRAMMAR_ERROR"],
+    "nonfocusTypeIds": [
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "familyIds": [
+      "NF-F1-GLOBAL_MEANING_SELECTION",
+      "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+      "NF-F3-DISCOURSE_STRUCTURE",
+      "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+      "NF-F5-LEXICAL_SEMANTICS",
+      "NF-F6-SUMMARY_AND_COMPRESSION",
+      "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+      "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION"
+    ],
+    "priorLogicalTypesUsed": false,
+    "legacySchemaOnlyIdsAllowedInSlots": [],
+    "singleEpochAll23ClaimAllowed": false
+  },
+  "stages": {
+    "taxonomyPilot": {
+      "items": 12,
+      "byBlock": { "GRAMMAR": 4, "BLANK": 4, "NONFOCUS": 4 },
+      "raters": 3,
+      "composition": { "A": 1, "B": 1, "C": 1, "F": 1 },
+      "compositionPerBlock": true,
+      "coverageCredit": false,
+      "freshFromMainAndHoldout": true
+    },
+    "mainCertification": {
+      "items": 24,
+      "byBlock": { "GRAMMAR": 8, "BLANK": 8, "NONFOCUS": 8 },
+      "raters": 3,
+      "composition": { "A": 2, "B": 2, "C": 2, "F": 2 },
+      "compositionPerBlock": true,
+      "fatalPerBlock": 2,
+      "coverageCredit": true
+    },
+    "freshActivationHoldout": {
+      "items": 24,
+      "byBlock": { "GRAMMAR": 8, "BLANK": 8, "NONFOCUS": 8 },
+      "raters": 3,
+      "fatalPerBlock": 4,
+      "nonfatalPerBlock": 4,
+      "coverageCredit": true,
+      "oneTimePerRater": true,
+      "freshFromPilotMainAndPriorHoldouts": true
+    }
+  },
+  "acquisition": {
+    "candidateSlotsPerStageBlockMaximum": 64,
+    "initialOpenPrefixPerStageBlock": 16,
+    "authorBriefTargetGradePresent": false,
+    "authorBriefFields": [
+      "briefId",
+      "block",
+      "constructFamilyOrFocusType",
+      "riskMechanism",
+      "difficultyBand",
+      "surfaceConstraints",
+      "rightsAndPiiConstraints"
+    ],
+    "authorBriefForbiddenFields": [
+      "targetGrade",
+      "targetFatal",
+      "desiredAnswerAmbiguity",
+      "compositionCell",
+      "raterIdentity",
+      "acceptedResponse"
+    ],
+    "requiredStages": [
+      "INDEPENDENT_AUTHORING",
+      "PREFLIGHT_SCHEMA_RIGHTS",
+      "PREFLIGHT_DOMAIN",
+      "BLIND_PILOT_SOLVER_1",
+      "BLIND_PILOT_SOLVER_2",
+      "EVIDENCE_ADJUDICATION",
+      "SCORER_SEAL",
+      "DETERMINISTIC_FIRST_TO_FILL"
+    ],
+    "preflightCount": 2,
+    "blindPilotCount": 2,
+    "authorIsAuthority": false,
+    "storedAnswerIsAuthority": false,
+    "majorityVoteIsAuthority": false,
+    "surfaceRevisionCreatesNewCandidateSlot": true,
+    "inPlaceRepairAllowed": false
+  },
+  "selection": {
+    "algorithm": "PREFIX_FIRST_FEASIBLE_THEN_LEXICOGRAPHIC",
+    "description": "Open candidate slots only in committed ordinal order. Freeze the first prefix that admits the required block composition and type/family constraints; within that prefix select the lexicographically smallest candidate-ordinal tuple.",
+    "grammarAndBlankMain": "First two eligible candidates per adjudicated grade within the earliest feasible prefix.",
+    "nonfocusMain": "Exactly one candidate per bound family and two per adjudicated grade using earliest-prefix lexicographic bipartite matching.",
+    "taxonomyPilot": "One candidate per grade per block; nonfocus also exactly one per four precommitted pilot families.",
+    "holdout": "Four fatal and four nonfatal per block; nonfocus also exactly one per bound family.",
+    "maximumPrefix": 64,
+    "failureAtMaximum": "FAIL_PACKET_VERSION",
+    "outcomeRelabelForBalanceAllowed": false,
+    "evidenceRewriteForBalanceAllowed": false,
+    "candidateSkippingAfterOutcomeAllowed": false,
+    "surplusDeletionAllowed": false,
+    "surplusDisposition": "Append a rejection/surplus event with its original adjudicated evidence and never use it to estimate production prevalence."
+  },
+  "scoring": {
+    "constructedExactTextEnumerationAllowed": false,
+    "grammar": {
+      "scorerKind": "CLOSED_GRAMMAR_SEMANTIC_CONSTRAINTS",
+      "requiredConstraintFields": [
+        "displayedGrammaticality",
+        "diagnosis",
+        "acceptedPointFamilies",
+        "requiredGrammarFeatures",
+        "forbiddenGrammarFeatures",
+        "semanticPropositionsToPreserve",
+        "forbiddenMeaningChanges",
+        "sourceRestorationPredicate",
+        "explanationTruthPredicates"
+      ],
+      "responseMayBeNovelText": true,
+      "passCondition": "A novel correction passes only if every sealed grammatical and semantic constraint is satisfied; no enumerated-string membership is necessary or sufficient.",
+      "constraintBundleClosedAtIssue": true,
+      "postIssueConstraintExpansionAllowed": false,
+      "insufficientConstraintAction": "INVALIDATE_ANCHOR_NOT_EXPAND_GOLD"
+    },
+    "blank": {
+      "scorerKind": "SEALED_PROPOSITION_VECTOR",
+      "axes": [
+        "actorOrTarget",
+        "polarity",
+        "conditionOrModality",
+        "causalRelationAndDirection",
+        "scopeOrQuantifier",
+        "stance",
+        "temporalRelation"
+      ],
+      "relations": [
+        "PRESERVED",
+        "REVERSED",
+        "NARROWED",
+        "BROADENED",
+        "OMITTED",
+        "UNSUPPORTED_ADDITION",
+        "SHIFTED",
+        "NOT_APPLICABLE"
+      ],
+      "perOptionRequired": [
+        "slotGrammarCompatible",
+        "groundedInPassage",
+        "relationVector",
+        "decisiveAxes",
+        "mechanismTags",
+        "cheapGiveaway"
+      ],
+      "primaryIntentSingletonRequired": false,
+      "exactDiagnosticProseRequired": false,
+      "postIssueVectorExpansionAllowed": false,
+      "insufficientVectorAction": "INVALIDATE_ANCHOR_NOT_EXPAND_GOLD"
+    },
+    "otherConstructedNonfocus": {
+      "defaultExactTextEnumerationAllowed": false,
+      "typeSpecificClosedConstraintScorerRequiredBeforeIssue": true,
+      "missingScorerAction": "REJECT_CANDIDATE"
+    }
+  },
+  "sealing": {
+    "algorithm": "SHA-256",
+    "requiredOrder": [
+      "SOURCE_AND_SURFACE_SEAL",
+      "ANSWER_FATAL_CRAFT_EVIDENCE_SEAL",
+      "FOCUS_SCORER_SEAL",
+      "CODEBOOK_THRESHOLD_SEAL",
+      "BLIND_PACKET_SEAL",
+      "PRE_ACCESS_AUTHORIZATION_SEAL",
+      "RESOURCE_OPEN",
+      "SUBMISSION_SEAL",
+      "REVEAL_SEAL",
+      "POST_REVEAL_ACCESS"
+    ],
+    "acceptedSetOrConstraintRevisionAfterBlindPacketSealAllowed": false,
+    "supersedingAnOpenedPacketAllowed": false,
+    "goldDefectAction": "INVALIDATE_ANCHOR_AND_NEW_PACKET_VERSION",
+    "allOperationalEventsAppendOnly": true,
+    "eventHashBindsPreviousEventHash": true
+  },
+  "accessProvenance": {
+    "gateRequiredForEveryContentRead": true,
+    "preAccessEventRequired": true,
+    "preAccessMustBeSealedBeforeResourceOpen": true,
+    "preAccessFields": [
+      "eventId",
+      "sequence",
+      "previousEventHash",
+      "actorPseudonym",
+      "roleId",
+      "stage",
+      "phase",
+      "resourceId",
+      "resourceSha256",
+      "allowedPurpose",
+      "denySetSha256",
+      "authorizedAt",
+      "eventSha256"
+    ],
+    "receiptFields": [
+      "eventId",
+      "sequence",
+      "previousEventHash",
+      "preAccessEventSha256",
+      "resourceId",
+      "resourceSha256",
+      "openedAt",
+      "closedAt",
+      "bytesRead",
+      "eventSha256"
+    ],
+    "timestampRule": "authorizedAt < openedAt <= closedAt",
+    "phase1AllowedResources": ["BLIND_SURFACE_BUNDLE", "FROZEN_CODEBOOK"],
+    "phase2Precondition": "All phase-1 submissions for all three raters are sealed before any reveal authorization.",
+    "phase2AllowedResources": ["OWN_PHASE1_SUBMISSION", "STORED_ANSWER_EXPLANATION_REVEAL", "FROZEN_CODEBOOK"],
+    "phase2DeniedResources": ["OTHER_RATER_SUBMISSIONS", "AUTHOR_HYPOTHESIS", "REJECTION_HISTORY", "ADJUDICATION_DRAFT"],
+    "phase3Precondition": "All phase-2 diagnostic submissions are sealed before adjudicator access.",
+    "unprovenPriorAccessAction": "QUARANTINE_ACTOR_AND_PACKET",
+    "missingOrLatePreAccessAction": "FAIL_CLOSED_NO_RETROACTIVE_LEDGER"
+  },
+  "rotation": {
+    "epoch": 1,
+    "mainFormula": "(epoch - 1) mod familySize",
+    "holdoutFormula": "(epoch - 1 + ceil(familySize / 2)) mod familySize",
+    "mainNonfocusDistinctTypes": 8,
+    "holdoutNonfocusDistinctTypes": 8,
+    "singleEpochCombinedDistinctTypes": 16,
+    "singleEpochAll23ClaimAllowed": false,
+    "mainPlusHoldoutEpochsToContactAll23": 2,
+    "mainOnlyEpochsToContactAll23": 4,
+    "contactIsCertification": false,
+    "all23CertificationGate": "Each canonical type must have a fresh passed coverage event; contact or family transfer is not certification.",
+    "rotationAdvanceRequires": "Terminal pass/fail/rejection event for every opened slot of the current type stream.",
+    "outcomeAwareTypeSubstitutionAllowed": false
+  },
+  "emptyOperationalState": {
+    "candidateSurfaces": 0,
+    "authoredCandidates": 0,
+    "goldRecords": 0,
+    "sealEvents": 0,
+    "accessEvents": 0,
+    "coverageEvents": 0,
+    "rejectionEvents": 0,
+    "ledgerEvents": 0,
+    "issuedPackets": 0,
+    "reviewerSubmissions": 0
+  },
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0,
+    "operationalLedgerWrites": 0,
+    "estimatedProviderCostUsd": 0
+  }
+}

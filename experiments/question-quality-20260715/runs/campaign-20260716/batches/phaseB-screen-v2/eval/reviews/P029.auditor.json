@@ -1,0 +1,77 @@
+{
+  "pid": "P029",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "C4-LEXICAL-TELL",
+      "severity": "minor",
+      "evidence": "정답 ③만이 지문 전반에 반복되는 핵심어 'energy'(energy level, energy is high, wake up energized, emotional energy)를 포함한다. 빈칸 직후 'For example... when our energy is high'가 즉시 이어져 키워드 표면 매칭만으로 정답에 근접할 수 있다. 유효성 실패는 아니나 단서 경제성(C4)을 낮추는 약한 누출."
+    },
+    {
+      "code": "KEYPOINT-EXTRAPOLATION",
+      "severity": "minor",
+      "evidence": "keyPoints의 '개인별 바이오리듬'은 지문에 없는 용어(지문은 energy level만 언급). 학생 노출 필드는 아니고 교육적 부연 수준이라 V4 실패로는 판정하지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "condition loss / 필자 개인 사례의 성급한 일반화",
+      "temptingBecause": "필자가 'eating my problems for breakfast', 'it'll always be the first thing I get done'이라며 아침 처리를 강조하고, 'I generally wake up energized'가 표면 근거를 제공한다.",
+      "decisiveFlaw": "마지막 문장 'If you know you are not a morning person, be strategic about scheduling your difficult work later in the day'가 시점을 개인 크로노타입에 조건화하므로 'must always ... early in the morning'이라는 무조건 단정은 지문과 직접 모순된다."
+    },
+    {
+      "label": "②",
+      "intent": "scope shift / 중간부 세부사항의 주제 승격",
+      "temptingBecause": "'I waste too much emotional energy', 'the task hangs over my head' 등 감정 에너지 낭비 서술이 지문 중반을 상당 부분 차지한다.",
+      "decisiveFlaw": "감정 안정은 에너지-업무 매칭의 결과적 이득일 뿐 연구가 가리키는 명제가 아니다. 빈칸 직후 'For example, analytical tasks are best accomplished when our energy is high'는 '감정 안정이 일정 관리보다 우선'을 예시하지 못하므로 담화 연결이 붕괴한다."
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'different tasks should ideally be matched to our energy level'의 추상화 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 'workload demands ↔ different tasks', 'aligned with ↔ matched to', 'personal energy fluctuations ↔ our energy level'의 의미 보존이 정확하다.",
+      "decisiveFlaw": "없음. 직후 예시 문장(에너지 높을 때 분석 업무)과 마지막 조언(비아침형은 늦게 배치) 두 단서가 모두 수렴하는 유일 선지."
+    },
+    {
+      "label": "④",
+      "intent": "polarity distortion / 전략적 시점 배치를 회피·최소화로 왜곡",
+      "temptingBecause": "지문이 불쾌한 이메일·불만 고객 등 'challenging' 업무와 미루기(procrastinate)를 다루므로 표면 소재가 겹친다.",
+      "decisiveFlaw": "필자는 어려운 일의 관여 축소가 아니라 정면 조기 처리('the first thing I get done')를 실천하고 미루기의 비용을 비판한다. minimize engagement는 논지의 정반대."
+    },
+    {
+      "label": "⑤",
+      "intent": "actor swap / 표면 앵커('client', 'scheduling') 재조합",
+      "temptingBecause": "'an unhappy client'와 'scheduling your difficult work'라는 지문 어휘가 그대로 등장해 훑어읽기 학생을 유인한다.",
+      "decisiveFlaw": "고객은 불쾌한 업무의 한 예시로만 등장하며, 협업 일정을 고객 선호에 맞추라는 논지는 지문 어디에도 없다. 일정의 기준은 고객이 아니라 본인의 에너지 수준이다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "④ 오답 해설의 '정반대의 내용'은 다소 강한 표현이나(지문이 '관여 극대화'를 주장하는 것은 아님), 회피 비판이라는 논지 대비로는 수용 가능한 서술.",
+      "recommendation": "'논지와 상반된다' 수준으로 완화하면 더 정확하다."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints의 '바이오리듬'은 지문 미등장 용어로 외삽. 해설 본문에는 오류 없음.",
+      "recommendation": "'에너지 수준(energy level)'으로 지문 어휘에 맞춰 표기."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 'different tasks should ideally be matched to our energy level' 절만 빈칸 치환, 나머지 축자 일치, 라벨-해설 키 정합. V2: 5개 선지 독립 대입 결과 ③만 성립(①은 마지막 문장의 조건화와 모순, ②는 직후 예시와 담화 단절, ④는 극성 반대, ⑤는 무관 논지). V3: 완성문 문법적·자연스럽고 5개 선지 모두 동일 절 슬롯에 적합해 꼬리 소거 없음. V4: 근거 문장 귀속·번역·함정 지목 모두 사실적. V5: 정답 라벨·해설·오답 해설·keyPoints 동기화. 공예: 주제문 빈칸으로 출제 가치 견실하고 오답 4종의 함정 유형이 분화되어 있으나, 'energy' 어휘가 정답에만 존재하는 약한 키워드 누출과 ④⑤의 낮은 유인력으로 각 축 3점. 합계 18, 최저 3 → B(작은 수정으로 출하 가능: ②나 ④에 'energy' 계열 어휘를 심어 키워드 매칭 차단 권장). 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님."
+}

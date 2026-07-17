@@ -1,0 +1,95 @@
+{
+  "pid": "P055",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MECHANISM-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설은 \"what이 이끄는 명사절이 주어 역할을 할 때는 일반적으로 단수 취급하므로, 복수형 동사 'are'는 주어와 수일치가 되지 않아\"라고 설명하지만, '명사절 주어의 단수 취급' 규칙이 지배하는 동사는 주절의 두 번째 is(\"...is its interactive nature\")다. 밑줄 친 (B) are는 what절 내부의 동사로, 절 내 주어 what(및 지정문 구조에서 단수 보어 its interactive nature)과 일치하는 자리다. 해설이 실제 밑줄 동사가 아닌 다른 동사를 설명하는 규칙을 인용해 통사 구조를 오귀속했다."
+    },
+    {
+      "code": "V4-IRRELEVANT-RATIONALE",
+      "severity": "major",
+      "evidence": "\"주어절 내부에 cyberspace라는 단수 명사가 있고 ... 단수 동사로 일치시키는 것이 흐름상 자연스럽습니다\" — cyberspace는 전치사 about의 목적어로 수일치의 컨트롤러가 아니다. '근접 단수 명사가 있으니 단수 동사'라는 잘못된 근접 일치 휴리스틱을 근거로 제시했다."
+    },
+    {
+      "code": "V4-TERMINOLOGY-INCONSISTENT",
+      "severity": "minor",
+      "evidence": "같은 절을 한 문장에서는 \"관계대명사절\", 다음 문장에서는 \"명사절\"로 혼용. 한국 학교문법 관행(선행사 포함 관계대명사 what이 이끄는 명사절)으로 수렴 가능하나 서술이 일관되지 않다."
+    },
+    {
+      "code": "V4-ATTACHMENT-LOOSE",
+      "severity": "minor",
+      "evidence": "(A) 오답해설이 \"events of a kind and magnitude를 뒤에서 수식하는 과거분사구\"라고 기술했으나, 'not seen before'는 의미상 'a kind and magnitude'(전례 없는 종류와 규모)를 수식한다. 수동 관계 판정 자체는 옳으나 부착 대상 기술이 부정확하다."
+    },
+    {
+      "code": "V4-SUBJECT-ATTRIBUTION-LOOSE",
+      "severity": "minor",
+      "evidence": "(D) 오답해설의 \"주절의 주어인 real people\" — 실제 문장의 주절 주어는 It이고 real people은 where 관계절의 주어다. 분사구문 관행 표현('분사구문이 붙은 절의 주어')으로 선해할 수 있으나 엄밀하게는 귀속 오류."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사의 태 — 명사구를 뒤에서 수식하는 축약 관계절에서 과거분사(수동) 대 현재분사(능동) 판별",
+      "temptingBecause": "'of a kind and magnitude not seen before'라는 다층 명사구 뒤의 분사 부착이 낯설고, seeing/seen 선택을 유도하는 위치다",
+      "decisiveFlaw": "수식 대상(a kind and magnitude)이 '보여지는' 대상이므로 수동 과거분사 not seen이 정확히 옳다 — 오답(디코이)으로서 정상 작동"
+    },
+    {
+      "label": "(B)",
+      "intent": "주어-동사 수일치 — what 자유관계절 내부 동사의 수 판정 (선언된 정답)",
+      "temptingBecause": "'맞는 것처럼 보이려면' what절 뒤에 복수 요소가 있어야 하나, 사실상 'what은 단수 취급'이라는 정형 암기 규칙으로 즉시 탐지되는 자리다",
+      "decisiveFlaw": "지정문 구조에서 주절 동사 is와 단수 보어 its interactive nature가 절 내부 동사의 단수를 강제하므로 are는 유일하게 비문 — is로 교정하면 원문과 정확히 일치. 정답 유일성 성립"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계부사 vs 관계대명사 — 선행사 a space 뒤 완전/불완전 절 판정",
+      "temptingBecause": "'It is a space where...'가 강조구문(It is ... that)처럼 보일 수 있고, 장소 선행사 뒤 which/where 선택은 고빈도 함정이다",
+      "decisiveFlaw": "뒤에 주어(real people)+동사(have)+목적어(actual interactions)를 갖춘 완전한 절이 오므로 관계부사 where가 옳다 — 디코이로서 정상 작동"
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사가 잔류한 분사구문의 태 판별 (being vs been)",
+      "temptingBecause": "while 뒤에 바로 -ing이 오는 형태가 생략 구조를 복원해야 판단되는 자리로 보인다",
+      "decisiveFlaw": "의미상 주어 real people이 'shape할 수 있는' 능동 관계이므로 while being이 옳다 — 다만 (A)와 동일 pointCode(c, 분사의 태)로 평가요소가 중복된다"
+    },
+    {
+      "label": "(E)",
+      "intent": "대명사 수일치 — 소유격 대명사와 복수 선행사의 일치 (its vs their)",
+      "temptingBecause": "문장 앞부분의 단수 명사 a space나 cyberspace(it)를 선행사로 오인하면 its를 기대할 수 있다",
+      "decisiveFlaw": "분사구문의 의미상 주어인 real people(복수)을 가리키므로 their가 옳다 — 판단이 거의 즉각적이어서 필러에 가까운 약한 디코이"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 '명사절 주어 단수 취급' 규칙(주절 두 번째 is를 지배)을 밑줄 친 절 내부 동사 are에 잘못 적용해 수일치 메커니즘을 오귀속했다",
+    "cyberspace가 주어절 내부에 있다는 사실을 단수 일치의 근거처럼 제시 — 전치사 목적어는 수일치와 무관하며 근접 일치 오개념을 유발할 수 있다",
+    "같은 절을 관계대명사절/명사절로 혼용해 용어 일관성이 없다",
+    "(A) 해설의 분사구 수식 대상 기술이 부정확하다(events of a kind and magnitude 전체가 아니라 a kind and magnitude)",
+    "(D) 해설이 real people을 '주절의 주어'로 지칭 — 실제 주절 주어는 It이며 real people은 관계절 주어다",
+    "정답 해설이 장황하고(규칙 오귀속 + 무관 근거 + 실제 결정적 근거인 보어 단수성이 뒤섞임) 결정적 근거와 함정의 분리가 선명하지 않다"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": [
+    "충족: 정답 오류는 source-correct(is) → displayed-wrong(are) 최소대립쌍이며 교정 시 정확히 원문 복원",
+    "충족: 수일치는 문맥 선호가 아닌 명확한 문법 판단 (주절 is + 단수 보어가 강제)",
+    "미충족: 5개 밑줄 각각의 명시적 'why tempting'이 구조 필드에 없음 (pointCode와 why-correct만 존재)",
+    "미충족(결정적): 'What are'는 컨트롤러 what과 동사가 붙어 있는 단순 수일치이며 'what절은 단수 취급'이라는 최고빈도 암기 규칙으로 구조 독해 없이 즉시 드러난다 — KILLER 정답 요건 위반",
+    "부분 미충족: (A)/(D)가 동일 point(분사의 태)로 중복되고 (E)는 필러성 — 디코이 세트가 KILLER 깊이에 못 미침"
+  ],
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 모두 통과하는 구조적으로 온전한 문항이다. 그러나 정답 해설이 수일치 메커니즘을 오귀속(명사절 주어 단수 취급 규칙을 절 내부 동사에 적용)하고 무관한 근거(cyberspace 단수)를 제시해 V4 실패 — 치명 결함은 공예 점수로 상쇄되지 않으므로 F. 또한 요청 난이도 KILLER 대비 정답 포인트가 정형 암기 규칙으로 즉시 탐지되는 중하 난이도여서 C5=1, killer 조건 미충족. 해설 재작성(what절 내부 주어 what과의 일치 + 지정문 보어 단수성으로 근거 재구성)과 정답 포인트 상향(구조 독해가 필요한 자리로 교체) 없이는 출하 불가."
+}

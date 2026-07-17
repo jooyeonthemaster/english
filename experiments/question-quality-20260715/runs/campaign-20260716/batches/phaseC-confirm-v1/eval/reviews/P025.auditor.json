@@ -1,0 +1,82 @@
+{
+  "pid": "P025",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4_TERM_MISLABEL_RELATIVE_PRONOUN",
+      "severity": "major",
+      "evidence": "정답 해설 말미 '선행사이자 관계사절의 주어 역할을 하는 3인칭 단수인 who에 맞추어' — who를 '선행사'로 지칭. 선행사는 Daniel이고 who는 관계대명사다. 같은 해설 첫 문장('선행사 Daniel을 부가적으로 설명하는 주격 관계대명사 who')과 내부 모순. RUBRIC V4가 예시한 역할 오칭(명사절 that을 관계대명사로 부르는 류)에 해당."
+    },
+    {
+      "code": "V4_NONEXISTENT_MODIFICATION",
+      "severity": "major",
+      "evidence": "(C) 오답 해설 '사역동사 make의 목적격보어 자리에 수식을 받는 Daniel과의 능동 관계' — Daniel은 이 문장에서 어떤 수식도 받지 않는다(make의 목적어일 뿐). 존재하지 않는 수식 관계를 지목한 손상 용어."
+    },
+    {
+      "code": "V4_TERM_MISLABEL_COMPLEMENT",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설 'to부정사를 목적격보어로 취하는 수식 구조이므로' — 목적격보어(보충어) 구조를 '수식 구조'로 오칭."
+    },
+    {
+      "code": "V4_GARBLED_PHRASING",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설 '주어 he와 동사 defend의 목적어가 지칭 대상이 서로 대명사적으로 일치하므로' — 취지(동일 지시 → 재귀대명사)는 맞으나 '대명사적으로 일치'는 손상된 비표준 표현."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "5형식 동사 order의 목적격보어 형태 판별(to부정사 vs 원형부정사)",
+      "temptingBecause": "make/have/let 등 사역동사류와 혼동하면 원형부정사(wax)를 기대하게 됨. 바로 뒤 (C)의 make+원형부정사와 대비돼 형태 차이가 눈에 띔.",
+      "decisiveFlaw": "order는 to부정사 목적격보어를 취하는 동사이므로 to wax가 정확히 옳다. 오답 후보로 성립 불가."
+    },
+    {
+      "label": "(B)",
+      "intent": "명사구 전치 수식 분사의 태/형태 선택(opposed vs opposing)",
+      "temptingBecause": "'반대 방향으로 도는' 능동 의미로 읽으면 opposing이 맞다고 착각할 수 있고, 부사 precisely 뒤 자리라 형태 판단을 요구함.",
+      "decisiveFlaw": "opposed는 '서로 반대되는/마주하는' 의미의 확립된 형용사적 과거분사로 원문 그대로이며 어법상 옳다."
+    },
+    {
+      "label": "(C)",
+      "intent": "사역동사 make의 목적격보어로 원형부정사 판별",
+      "temptingBecause": "to hammer 또는 hammering을 기대하는 학생이 원형 hammer를 어색하게 느낄 수 있음.",
+      "decisiveFlaw": "make + 목적어 + 원형부정사(능동 관계)는 표준 구조이므로 hammer가 옳다."
+    },
+    {
+      "label": "(D)",
+      "intent": "재귀대명사 vs 인칭대명사(동일 지시 판단)",
+      "temptingBecause": "him/himself 구별을 요구하지만 주어 he와의 동일 지시가 명백해 매력도가 낮은 편.",
+      "decisiveFlaw": "so절 주어 he와 defend의 목적어가 동일 지시이므로 himself가 옳다. 5개 중 가장 쉬운 소거 대상."
+    },
+    {
+      "label": "(E)",
+      "intent": "정답 — 주격 관계대명사 who절 내 정동사 필요성(분사 defending으로는 술어 성립 불가)",
+      "temptingBecause": "삽입 전치사구 without thought or hesitation이 who와 동사 사이에 끼어 있어 defending이 분사구문처럼 자연스럽게 읽힘. 문장 전체 구조를 복원해야 오류가 드러남.",
+      "decisiveFlaw": "who가 이끄는 관계사절에 정동사가 없어져 비문. defends로 교정하면 정확히 원문이 복원되는 최소대립쌍. 유일 정답으로 확정."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 who를 '선행사'로 오칭(선행사는 Daniel) — 같은 해설 첫 문장과 내부 모순",
+    "(C) 해설 '수식을 받는 Daniel' — 존재하지 않는 수식 관계 지목",
+    "(A) 해설 '수식 구조' — 목적격보어 구조의 오칭",
+    "(D) 해설 '대명사적으로 일치' — 손상된 비표준 표현",
+    "정답 해설이 장황함('사용하게 되면 ... 소실되게 되므로' 등 중복 서술) — C6 감점 요인"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "구조적으로는 건전한 문항이다. V1(렌더 무결성: defends→defending 단일 주입 외 원문 보존), V2(정답 유일성: (A)~(D) 모두 독립 검증으로 옳음 확인, (E)만 비문), V3, V5 모두 통과. 문항 설계도 INTERMEDIATE에 적절 — 삽입 전치사구로 위장한 정동사 소실 포인트는 정전급이며 5개 밑줄의 포인트가 모두 상이하다(C1~C5 각 3점). 그러나 해설에 용어 오류가 누적된다: who를 '선행사'로 부르는 역할 오칭(major), 존재하지 않는 수식 관계 지목(major), '수식 구조' 오칭(minor), 손상 표현(minor). RUBRIC V4는 '오개념·환각·용어 오류가 없다'를 요구하고 손상 용어·역할 오칭을 명시적 실패 유형으로 들므로 V4 실패 → F. 치명은 공예 점수로 상쇄되지 않는다. 해설 문구만 교정하면(구조 분석 자체는 정확) B~A 재판정 가능성이 높다. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

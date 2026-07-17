@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "capturedDuringAuditBeforeRemediation": true,
+  "source": {
+    "path": "src/lib/question-generation-research-profiles.ts",
+    "sha256FromPriorSealedSourceClosure": "6fe9d5b81e0e18e4cc18f6483d340cc738eda424f580132ad980aa37520e8c6f",
+    "priorSourceClosurePath": "experiments/question-quality-20260715/reviews/prompt-profile-integration-audit-v2/source-closure.json",
+    "priorSourceClosureSha256": "a66b2cd7ed331043eaa1c6f0ddda3321dc5d2fc58c5113fc61b05da00d89b406"
+  },
+  "probe": {
+    "outerRequired": [
+      "direction",
+      "siteCertificate",
+      "markedExpressions",
+      "correctAnswers",
+      "correctAnswer",
+      "options",
+      "wrongOptionExplanations",
+      "explanation",
+      "keyPoints",
+      "tags",
+      "difficulty"
+    ],
+    "certificateRequired": [
+      "certificationStatus",
+      "sourceSentenceExact",
+      "sourceExpressionExact",
+      "surroundingTextExact",
+      "pointCode",
+      "frame",
+      "governingRule",
+      "mutation",
+      "strongestAlternativeParse",
+      "whyAlternativeFails",
+      "mutationOnlyCertifiedSite"
+    ],
+    "certificateProperties": [
+      "certificationStatus",
+      "sourceSentenceExact",
+      "sourceExpressionExact",
+      "surroundingTextExact",
+      "pointCode",
+      "frame",
+      "governingRule",
+      "mutation",
+      "strongestAlternativeParse",
+      "whyAlternativeFails",
+      "mutationOnlyCertifiedSite"
+    ],
+    "minimalNoSafeSiteParsed": false,
+    "minimalNoSafeSiteWithReasonParsed": false,
+    "jsonSchemaContainedAnyOf": false
+  },
+  "finding": {
+    "id": "G3_NO_SAFE_SITE_STRUCTURALLY_UNREACHABLE",
+    "severity": "P0_METHOD_VALIDITY",
+    "statusBeforeFix": "CONFIRMED",
+    "reason": "The enum advertised NO_SAFE_SITE, but the same provider-visible object required a complete certificate and every completed-question field. A genuine abstention could not reach raw-candidate observation; the schema pressured the model to fabricate bindings or a question shell."
+  },
+  "sideEffects": {
+    "externalApiCalls": 0,
+    "networkCalls": 0,
+    "applicationDatabaseReads": 0,
+    "applicationDatabaseWrites": 0,
+    "candidatesConsumed": 0,
+    "secretsRead": 0
+  }
+}

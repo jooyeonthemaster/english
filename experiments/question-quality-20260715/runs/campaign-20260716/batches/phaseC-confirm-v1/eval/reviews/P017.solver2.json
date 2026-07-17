@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) identical",
+      "verdict": "correct",
+      "reason": "'no two performances are identical'에서 identical은 be동사 are의 주격 보어 자리이므로 형용사가 맞다. 부사 identically로 바꾸면 오히려 비문. 보어 자리 형용사 규칙이 지배하며, 'no two X are identical'은 관용적으로도 완전한 정문."
+    },
+    {
+      "label": "(B) are",
+      "verdict": "correct",
+      "reason": "'only through music are we able to...'는 only+전치사구 부사어가 문두로 전치된 구조로, 이때 주어-조동사 도치가 의무적이다(Only through music are we able...). that절 내부라도 only 부사구 전치 시 도치는 그대로 적용된다. 주어 we와의 수 일치(are)도 정확. 형식적으로 완전한 정문."
+    },
+    {
+      "label": "(C) which",
+      "verdict": "correct",
+      "reason": "'the necessity of present-ing music — making it present here and now, without which it will not be music at all —'에서 which는 전치사 without의 목적어로 쓰인 관계대명사. 선행사는 앞의 동명사구 'making it present here and now'(= presenting, 현전화 행위)로, 동명사구/사태를 선행사로 받는 '전치사+which' 비제한 관계절은 문법적으로 성립한다. 관계절 내부 'it will not be music at all'도 완전한 절로, without which(그것 없이는)가 조건 부사어 역할을 하여 정문."
+    },
+    {
+      "label": "(D) to have",
+      "verdict": "correct",
+      "reason": "'want music to have a role'은 want + 목적어 + to부정사(5형식) 구문으로 표준 어법. want는 원형부정사나 동명사를 목적격 보어로 취하지 않으므로 to have가 유일하게 옳은 형태."
+    },
+    {
+      "label": "(E) to work",
+      "verdict": "incorrect",
+      "reason": "'activities that will involve all pupils to work directly with music'에서 involve는 목적어 뒤에 to부정사 보어를 취하지 못하는 동사다. involve의 하위범주화는 involve + 목적어(+ in) + 동명사: 'involve all pupils (in) working directly with music'이어야 한다. 대안 해석 검토 — (i) 목적 부정사로 보려면 to work의 의미상 주어가 주절 주어(activities/that)가 되어 '학생들을 참여시키기 위해 일한다'는 비논리적 의미가 되고, (ii) 결과 부정사·축약 관계절 등 어떤 재분석으로도 pupils가 to work의 의미상 주어가 되는 정문 구조를 만들 수 없다. 따라서 to work → working이 필요하며, 이것이 어법상 틀린 유일한 밑줄이다."
+    }
+  ],
+  "note": "정답 후보는 (E) 하나로 유일하게 좁혀진다. (A) 보어 형용사, (B) only 부사구 전치 의무 도치, (C) 동명사구 선행사를 받는 without which, (D) want+O+to-V 모두 지배 규칙상 정문임을 각각 독립적으로 확인했다. (C)가 상대적으로 가장 정교한 미끼(삽입구 안의 장거리 선행사)이지만 문법적 하자는 없다. involve의 보어 선택 제약(동명사, *to부정사)은 논쟁 여지가 없는 표준 어법 사항이라 복수정답 소지 없음."
+}

@@ -1,0 +1,690 @@
+{
+  "id": "b02-c2",
+  "unitId": "b02",
+  "order": 2,
+  "title": "3형식 SVO — 목적어를 받는 동사",
+  "oneLiner": "목적어를 바로 받는 타동사와 전치사가 있어야 대상을 받는 자동사를 구별합니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 [별책14] 별표4 언어형식 #10 문장의 형식(중 ●)",
+      "천일문 중등 GRAMMAR — 문장의 형식(3형식 SVO)",
+      "어법끝 5.0 — 자동사와 타동사의 구별, 태(능동·수동)"
+    ]
+  },
+  "lenses": ["L1"],
+  "confusableWith": ["b02-c1", "b02-c3", "b07-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The committee discussed the new safety rules for two hours.",
+        "The committee discussed about the new safety rules for two hours."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 전치사 about 하나입니다. 이 레슨을 마치면 왜 discuss 뒤에 about 을 쓰지 않는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "타동사와 자동사",
+      "question": "그런데 타동사와 자동사가 대체 무엇입니까?",
+      "plain": "타동사는 뒤에 대상(목적어)을 전치사 없이 바로 붙일 수 있는 동사이고, 자동사는 그러지 못해 전치사의 도움이 필요한 동사입니다. 어느 쪽인지는 동사마다 처음부터 정해져 있습니다.",
+      "analogy": "타동사는 표준 플러그가 달린 가전이라 콘센트(목적어 자리)에 바로 꽂히고, 자동사는 플러그 모양이 달라 전치사라는 어댑터를 끼워야 꽂힙니다. 어댑터가 필요한 제품이 정해져 있듯, 동사도 태어날 때부터 정해져 있습니다.",
+      "whyItMatters": "어법 문항은 discuss 뒤에 about 을 밀어 넣거나 wait 뒤의 for 를 빼돌리는 식으로 밑줄을 칩니다. 동사의 신분을 알면 그 밑줄을 해석에 기대지 않고 곧바로 판정할 수 있습니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "한국어 해석에서 '~을/를'로 풀리면 영어에서도 전치사 없이 목적어를 붙이면 됩니다.",
+      "truth": "목적어를 바로 받을 수 있는지는 한국어 조사가 아니라 영어 동사 자신이 결정합니다. '기차를 기다리다'는 '~을'로 풀리지만 wait 는 목적어를 바로 받지 못해 for 가 필요하고, 반대로 discuss 는 '~에 대해 논의하다'로 풀리지만 about 을 붙이면 틀립니다. 조사와 전치사는 서로 대응하지 않습니다.",
+      "counterExample": {
+        "en": "We waited the bus for twenty minutes in the rain.",
+        "ko": "우리는 빗속에서 20분 동안 그 버스를 기다렸습니다.",
+        "note": "한국어로는 '버스를'이지만 wait 는 목적어를 바로 받지 못합니다. waited for the bus 로 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "이 레슨의 부품 네 개",
+      "intro": "3형식을 움직이는 부품을 한 항목씩 정리합니다. 예문의 굵은 부분이 그 항목의 주인공입니다.",
+      "entries": [
+        {
+          "head": "목적어 — 동사가 겨누는 대상",
+          "body": "동사의 동작이 향하는 대상을 목적어라고 합니다. 주어·동사·목적어로 완성되는 문장이 3형식 SVO 입니다.",
+          "example": {
+            "en": "The committee discussed **the new safety rules**.",
+            "ko": "그 위원회는 새 안전 규정을 논의했습니다.",
+            "note": "discussed 가 겨누는 대상, 즉 목적어가 the new safety rules 입니다."
+          }
+        },
+        {
+          "head": "타동사 — 목적어를 바로 받는 동사",
+          "body": "대상에 곧장 꽂히는 동사입니다. 동사와 목적어 사이에 전치사가 끼어들면 오히려 틀립니다.",
+          "example": {
+            "en": "Most students **entered** the lecture hall.",
+            "ko": "대부분의 학생들이 강의실에 들어갔습니다.",
+            "note": "'~에 들어가다'로 풀려도 enter 뒤에 into 를 넣지 않습니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "자동사 — 전치사가 있어야 하는 동사",
+          "body": "혼자서는 명사를 받지 못하는 동사입니다. 대상이 명사일 때는 정해진 전치사를 앞세워야 연결됩니다.",
+          "example": {
+            "en": "The passengers **waited for** the delayed train.",
+            "ko": "그 승객들은 지연된 기차를 기다렸습니다.",
+            "note": "'기차를'로 풀려도 wait 는 for 없이 기차를 받지 못합니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "판단 근거 — 동사의 신분",
+          "body": "전치사를 붙일지 뺄지는 한국어 해석이 아니라 동사 자신이 정합니다. 그래서 동사는 전치사까지 한 덩어리로 외웁니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "목적어 사냥",
+      "instruction": "이 문장에서 타동사가 전치사 없이 바로 받은 목적어(명사)를 전부 탭하십시오.",
+      "hitLabel": "목적어",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "delegates", "hit": false },
+        { "t": "entered", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "hall", "hit": true },
+        { "t": "and", "hit": false },
+        { "t": "discussed", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "schedule", "hit": true },
+        { "t": "before", "hit": false },
+        { "t": "they", "hit": false },
+        { "t": "reached", "hit": false },
+        { "t": "an", "hit": false },
+        { "t": "agreement", "hit": true }
+      ],
+      "ko": "그 대표단은 홀에 들어가 일정을 논의했고, 그런 뒤에 합의에 이르렀습니다.",
+      "explain": "hall·schedule·agreement 는 각각 타동사 entered·discussed·reached 가 전치사 없이 바로 받은 목적어입니다. 세 동사 모두 '~에 들어가다·~에 대해 논의하다·~에 이르다'로 풀리지만, 전치사를 넣으면 틀립니다."
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "타동사는 전치사 없이 목적어를 바로 받습니다. 이 구조가 3형식 SVO 입니다.",
+      "examples": [
+        {
+          "en": "The committee **discussed** the new safety rules for two hours.",
+          "ko": "그 위원회는 두 시간 동안 새 안전 규정을 논의했습니다.",
+          "note": "discuss 는 타동사입니다. 목적어 the new safety rules 가 동사 바로 뒤에 옵니다."
+        },
+        {
+          "en": "Most students **entered** the lecture hall before the bell rang.",
+          "ko": "대부분의 학생들은 종이 울리기 전에 강의실에 들어갔습니다.",
+          "note": "enter 는 타동사입니다. '~에 들어가다'로 풀리지만 전치사 into 를 넣지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "자동사는 명사(구)를 목적어로 바로 받지 못합니다. 대상이 명사일 때는 반드시 정해진 전치사를 앞세워야 합니다(that절을 받는 경우는 별개입니다).",
+      "examples": [
+        {
+          "en": "The passengers **waited for** the delayed train in silence.",
+          "ko": "그 승객들은 지연된 기차를 말없이 기다렸습니다.",
+          "note": "wait 는 자동사이므로 대상 앞에 for 가 필요합니다."
+        },
+        {
+          "en": "The researchers **listened to** the recording several times.",
+          "ko": "그 연구자들은 그 녹음을 여러 번 들었습니다.",
+          "note": "listen 은 자동사이므로 대상 앞에 to 가 필요합니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "3형식 문장의 해부",
+      "tokens": [
+        { "t": "The committee", "role": "S" },
+        { "t": "discussed", "role": "V" },
+        { "t": "the new safety rules", "role": "O" },
+        { "t": "at the monthly meeting", "role": "M" }
+      ],
+      "ko": "그 위원회는 월례 회의에서 새 안전 규정을 논의했습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "at the monthly meeting 은 전치사구 수식어입니다. 문장의 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The committee 입니다."
+        },
+        {
+          "label": "③ 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "시제를 가진 동사는 discussed 하나입니다. 이 동사가 문장의 모양을 결정합니다."
+        },
+        {
+          "label": "④ 목적어 자리를 확인합니다",
+          "roles": ["O"],
+          "note": "discussed 는 타동사이므로 전치사 없이 목적어를 부릅니다. the new safety rules 가 그 목적어이며 여기서 문장이 완성됩니다."
+        }
+      ],
+      "conclusion": "주어·타동사·목적어가 모두 채워졌으므로 이 절은 완전합니다. 목적어 자리에 about 같은 전치사를 끼워 넣으면 목적어가 사라져 3형식이 무너집니다."
+    },
+    {
+      "id": "b9",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b02-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The students {{blank}} the teacher's explanation carefully.",
+          "options": ["listened", "listened to"],
+          "answer": 1,
+          "translation": "그 학생들은 선생님의 설명을 주의 깊게 들었습니다.",
+          "explanation": "listen 은 자동사이므로 목적어를 바로 받지 못합니다. 대상 앞에 전치사 to 를 넣어 listened to 로 써야 합니다.",
+          "trapTags": ["intransitive-preposition"]
+        },
+        {
+          "id": "b02-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The committee members [[u:discussed about]] the annual budget for two hours.",
+          "isCorrect": false,
+          "correction": "discussed",
+          "translation": "그 위원회 위원들은 두 시간 동안 연간 예산을 논의했습니다.",
+          "explanation": "discuss 는 타동사이므로 전치사 about 을 쓰지 않습니다. the annual budget 이 곧바로 목적어가 되어야 합니다.",
+          "trapTags": ["transitive-no-preposition"]
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "자동사와 짝 전치사 정리표",
+      "columns": ["자동사", "짝 전치사", "이렇게 씁니다"],
+      "rows": [
+        {
+          "cells": ["wait (기다리다)", "for", "wait for the train"],
+          "example": {
+            "en": "We **waited for** the test results all afternoon.",
+            "ko": "우리는 오후 내내 검사 결과를 기다렸습니다.",
+            "note": "기다림의 대상 앞에 for 를 둡니다."
+          }
+        },
+        {
+          "cells": ["listen (듣다)", "to", "listen to the lecture"]
+        },
+        {
+          "cells": ["object (반대하다)", "to", "object to the plan"],
+          "example": {
+            "en": "Few residents **objected to** the new regulation.",
+            "ko": "그 새 규정에 반대한 주민은 거의 없었습니다.",
+            "note": "object to 를 한 덩어리로 기억합니다."
+          }
+        },
+        {
+          "cells": ["graduate (졸업하다)", "from", "graduate from the college"],
+          "example": {
+            "en": "She **graduated from** a small college in the countryside.",
+            "ko": "그녀는 시골의 작은 대학을 졸업했습니다.",
+            "note": "graduate from 을 한 덩어리로 기억합니다."
+          }
+        },
+        {
+          "cells": ["apologize (사과하다)", "to", "apologize to the customer"]
+        },
+        {
+          "cells": ["complain (불평하다)", "about", "complain about the noise"]
+        },
+        {
+          "cells": ["arrive (도착하다)", "at(지점) · in(도시)", "arrive at the station"]
+        }
+      ],
+      "takeaway": "이 표의 동사 뒤에서 전치사가 빠져 있으면 그 밑줄은 틀린 것입니다. 반대로 discuss·enter·reach 처럼 목적어를 바로 받는 동사에 전치사가 붙어 있어도 틀린 것입니다."
+    },
+    {
+      "id": "b11",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "자동사 일곱 개와 짝 전치사",
+      "why": "수능과 내신은 이 짝을 통째로 시험합니다. wait 를 보고 for 가 반사적으로 따라 나오지 않으면, 시험장에서는 한국어 해석이 먼저 끼어들어 판단을 망칩니다. 짝은 생각해 내는 것이 아니라 튀어나와야 하는 것입니다.",
+      "device": "전치사의 뜻에 겁니다 — 기다림은 목표물을 향해(for), 듣기·반대·사과는 상대에게(to), 졸업은 학교로부터(from), 불평은 그 일을 놓고(about), 도착은 그 지점에 딱(at). 뜻이 곧 암기 장치입니다.",
+      "items": [
+        { "cue": "wait ___ (기다리다)", "answer": "wait for — 목표물을 향해 for" },
+        { "cue": "listen ___ (듣다)", "answer": "listen to — 소리의 주인에게 to" },
+        { "cue": "object ___ (반대하다)", "answer": "object to — 반대의 상대에게 to" },
+        { "cue": "graduate ___ (졸업하다)", "answer": "graduate from — 출신 학교로부터 from" },
+        { "cue": "apologize ___ (사과하다)", "answer": "apologize to — 사과받을 사람에게 to" },
+        { "cue": "complain ___ (불평하다)", "answer": "complain about — 그 일을 놓고 about" },
+        { "cue": "arrive ___ (도착하다)", "answer": "arrive at — 그 지점에 딱 at" }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "동사 신분 확인 관문",
+      "mission": "전치사가 있어야 대상을 받는 자동사만 전부 고르십시오. 목적어를 바로 받는 타동사가 넷 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "wait",
+        "discuss",
+        "listen",
+        "reach",
+        "object",
+        "resemble",
+        "graduate",
+        "enter",
+        "apologize",
+        "complain"
+      ],
+      "answers": [
+        "wait",
+        "listen",
+        "object",
+        "graduate",
+        "apologize",
+        "complain"
+      ],
+      "passText": "여섯을 전부 가려냈습니다. 이제 이 동사들 뒤에서 전치사가 빠져 있으면, 그 밑줄이 틀렸다는 신호로 보일 것입니다.",
+      "retryText": "아직 신분 확인이 끝나지 않았습니다. 힌트 하나 — discuss·reach·resemble·enter 는 '~에 대해·~에·~와'로 풀려도 목적어를 바로 받는 타동사입니다. 정리표의 일곱 짝을 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b13",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "전치사가 필요한지 판단하는 절차",
+      "steps": [
+        {
+          "text": "동사 뒤에 대상이 되는 명사가 있는지 확인합니다.",
+          "applyNote": "discussed 뒤에는 the proposal 이, objected 뒤에는 the final draft 가 대상입니다."
+        },
+        {
+          "text": "그 동사가 목적어를 바로 받는 타동사인지, 받지 못하는 자동사인지 확인합니다.",
+          "applyNote": "discuss 는 타동사이고, object 는 자동사입니다."
+        },
+        {
+          "text": "타동사면 전치사를 쓰지 않고, 자동사면 정해진 전치사를 반드시 넣습니다.",
+          "applyNote": "discussed the proposal 에는 전치사를 넣지 않고, objected 뒤에는 to 를 넣습니다."
+        },
+        {
+          "text": "한국어 조사('~을/를', '~에')는 근거가 되지 못하므로 판단에 끌어들이지 않습니다.",
+          "applyNote": "'제안을 논의했다'와 '초안에 반대했다'의 조사는 서로 다르지만, 영어의 판단 근거는 동사의 성질뿐입니다."
+        }
+      ],
+      "example": {
+        "en": "The union representatives **discussed** the proposal and later **objected to** the final draft.",
+        "ko": "그 노조 대표들은 그 제안을 논의했고 나중에 최종 초안에 반대했습니다.",
+        "note": "타동사 discuss 는 전치사 없이, 자동사 object 는 to 와 함께 대상을 받습니다."
+      }
+    },
+    {
+      "id": "b14",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The negotiators finally ( reached / reached to ) an agreement after months of debate.",
+      "steps": [
+        {
+          "title": "① 대상을 찾습니다",
+          "body": "동사 뒤의 an agreement 가 동사가 가리키는 대상입니다."
+        },
+        {
+          "title": "② 동사의 성질을 확인합니다",
+          "body": "reach 는 목적어를 바로 받는 타동사입니다. '~에 도달하다'로 풀리지만 전치사 to 를 요구하지 않습니다."
+        },
+        {
+          "title": "③ 전치사 유무를 판정합니다",
+          "body": "타동사이므로 전치사를 넣지 않습니다. reached to 로 쓰면 목적어 자리가 전치사구로 바뀌어 3형식이 깨집니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "reached an agreement 가 옳습니다. 한국어의 '~에'에 이끌려 to 를 넣는 것이 대표적인 오류입니다."
+        }
+      ],
+      "answer": "reached",
+      "ko": "그 협상가들은 몇 달간의 논쟁 끝에 마침내 합의에 이르렀습니다."
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Local residents ( objected / objected to ) the plan to close the old library.",
+      "givenSteps": [
+        "① 대상을 찾습니다 — 동사 뒤의 the plan 이 대상입니다.",
+        "② 동사의 성질을 확인합니다 — object 는 목적어를 바로 받지 못하는 자동사입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "objected to — 자동사이므로 대상 앞에 전치사 to 가 필요합니다",
+        "objected — 한국어로 '계획을 반대했다'이므로 전치사가 필요 없습니다",
+        "objected — 뒤에 명사가 바로 오면 어떤 동사든 타동사가 됩니다"
+      ],
+      "answer": 0,
+      "explain": "object 는 자동사입니다. 한국어 조사는 판단 근거가 되지 못하며, 명사가 뒤에 온다고 해서 자동사가 타동사로 바뀌지도 않습니다. objected to the plan 이 옳습니다."
+    },
+    {
+      "id": "b16",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "타동사와 자동사의 대조",
+      "columns": ["타동사 (전치사 없이 목적어)", "자동사 (전치사가 필요)"],
+      "rows": [
+        {
+          "criterion": "대표 동사",
+          "a": "discuss / mention / enter / reach / resemble / answer",
+          "b": "wait for / listen to / object to / graduate from / apologize to"
+        },
+        {
+          "criterion": "동사 바로 뒤에 오는 것",
+          "a": "명사(목적어)",
+          "b": "전치사 + 명사"
+        },
+        {
+          "criterion": "수동태",
+          "a": "가능합니다 (The rules were discussed.)",
+          "b": "자동사 단독으로는 불가능하지만, '자동사+전치사'가 한 덩어리(구동사)일 때는 가능합니다 (The plan was objected to.)"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The report **mentions** three possible causes of the failure.",
+          "ko": "그 보고서는 그 실패의 세 가지 가능한 원인을 언급합니다.",
+          "note": "mention 은 타동사이므로 목적어를 바로 받습니다."
+        },
+        {
+          "en": "The author **refers to** three possible causes of the failure.",
+          "ko": "그 저자는 그 실패의 세 가지 가능한 원인을 언급합니다.",
+          "note": "refer 는 자동사이므로 같은 뜻이어도 전치사 to 가 필요합니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b02-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The novel {{blank}} a real event that took place in a mining town.",
+          "options": ["describes about", "describes"],
+          "answer": 1,
+          "translation": "그 소설은 한 탄광 마을에서 일어난 실제 사건을 묘사합니다.",
+          "explanation": "describe 는 타동사이므로 목적어를 바로 받습니다. '~에 대해 묘사하다'로 해석된다고 해서 about 을 넣으면 목적어가 사라져 틀립니다.",
+          "trapTags": ["transitive-no-preposition"]
+        },
+        {
+          "id": "b02-c2-ls-004",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Several parents [[u:complained]] the noise from the construction site.",
+          "isCorrect": false,
+          "correction": "complained about",
+          "translation": "몇몇 학부모가 공사 현장에서 나는 소음에 대해 불평했습니다.",
+          "explanation": "complain 은 자동사이므로 명사를 바로 받지 못합니다. 대상 앞에 about 을 넣어 complained about 으로 써야 합니다.",
+          "trapTags": ["intransitive-preposition"]
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 describes 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "describe 가 목적어를 바로 받는 타동사이므로 전치사 about 이 들어갈 자리가 없기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 전치사의 유무는 동사의 성질이 결정합니다."
+        },
+        {
+          "text": "a real event 가 사물이라서 전치사를 쓰지 않기 때문입니다.",
+          "correct": false,
+          "feedback": "목적어가 사람인지 사물인지는 전치사 유무와 무관합니다. listen to the recording 처럼 사물 앞에도 전치사가 필요한 동사가 있습니다."
+        },
+        {
+          "text": "한국어로 '사건을 묘사하다'라고 '~을'로 해석되기 때문입니다.",
+          "correct": false,
+          "feedback": "한국어 조사는 근거가 되지 못합니다. '기차를 기다리다'도 '~을'이지만 영어에서는 wait for 로 전치사가 필요합니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 동사가 목적어를 바로 받는지, 전치사가 필요한지 분류하십시오.",
+      "buckets": [
+        { "id": "vt", "label": "전치사 없이 목적어를 받습니다" },
+        { "id": "vi", "label": "전치사가 필요합니다" }
+      ],
+      "chips": [
+        { "text": "discuss", "bucketId": "vt", "why": "타동사입니다. discuss the issue 처럼 목적어를 바로 받습니다." },
+        { "text": "mention", "bucketId": "vt", "why": "타동사입니다. mention the problem 으로 씁니다." },
+        { "text": "resemble", "bucketId": "vt", "why": "타동사입니다. resemble his father 로 쓰며 with 를 넣지 않습니다." },
+        { "text": "reach", "bucketId": "vt", "why": "타동사입니다. reach the station 으로 쓰며 to 를 넣지 않습니다." },
+        { "text": "listen", "bucketId": "vi", "why": "자동사입니다. listen to the lecture 처럼 to 가 필요합니다." },
+        { "text": "wait", "bucketId": "vi", "why": "자동사입니다. wait for the train 처럼 for 가 필요합니다." },
+        { "text": "graduate", "bucketId": "vi", "why": "자동사입니다. graduate from the college 처럼 from 이 필요합니다." },
+        { "text": "object", "bucketId": "vi", "why": "자동사입니다. object to the plan 처럼 to 가 필요합니다." }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "신분이 다른 동사 찾기",
+      "instruction": "각 묶음에서 동사의 신분이 다른 하나를 찾아 탭하십시오. 한국어 해석은 접어 두고, 전치사가 필요한지만 보십시오.",
+      "rounds": [
+        {
+          "words": ["discuss", "mention", "reach", "listen"],
+          "odd": 3,
+          "why": "listen 만 대상 앞에 to 가 필요한 자동사입니다. 나머지 셋은 목적어를 바로 받는 타동사입니다."
+        },
+        {
+          "words": ["wait", "graduate", "resemble", "apologize"],
+          "odd": 2,
+          "why": "resemble 만 목적어를 바로 받는 타동사입니다. 나머지 셋은 for·from·to 가 필요한 자동사입니다."
+        },
+        {
+          "words": ["reach", "arrive", "enter", "discuss"],
+          "odd": 1,
+          "why": "arrive 만 대상 앞에 at·in 이 필요한 자동사입니다. reach·enter·discuss 는 목적어를 바로 받는 타동사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "함정 — 한국어 조사를 따라 전치사를 넣거나 빼는 경우",
+      "body": "'~을/를'로 풀리면 전치사를 빼고 '~에·~에게'로 풀리면 넣는 습관이 오류의 진원지입니다. 판단 근거는 해석이 아니라 동사의 신분입니다. discuss·enter·reach·resemble 에 전치사를 붙이면 틀리고(enter the room ○ / enter into the room ×), wait·listen·apologize·object 에서 빼면 틀립니다. 단 enter into an agreement 처럼 전치사가 붙어 뜻이 달라지는 별개 표현은 예외입니다.",
+      "example": {
+        "en": "He apologized me for the delay at the entrance.",
+        "ko": "그는 입구에서 지연에 대해 저에게 사과했습니다.",
+        "note": "apologize 는 자동사입니다. 사과의 대상 앞에는 to 가 필요하므로 apologized to me 로 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b22",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 마을 사람들은 그 새 도로 계획에 강하게 반대했습니다.",
+      "answer": ["The villagers", "strongly", "objected to", "the new road plan"],
+      "tiles": ["The villagers", "strongly", "objected to", "the new road plan", "objected"],
+      "explanation": "object 는 자동사이므로 대상을 바로 받지 못합니다. 전치사 to 가 붙은 objected to 가 옳고, objected 만으로는 the new road plan 을 받을 수 없습니다."
+    },
+    {
+      "id": "b23",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The panel [[1:discussed]] the proposal for an hour, and two members [[2:objected to]] the final clause, but the chair [[3:answered to]] every question calmly before the group [[4:reached]] a decision.",
+      "answer": 3,
+      "correction": "answered",
+      "rationales": [
+        "discuss 는 타동사이므로 the proposal 을 전치사 없이 목적어로 받습니다. 옳습니다.",
+        "object 는 자동사이므로 대상 앞에 to 가 필요합니다. 옳습니다.",
+        "질문에 답한다는 뜻의 answer 는 타동사이므로 every question 을 바로 받습니다. to 를 넣으면 목적어가 사라지므로 answered 로 고칩니다.",
+        "reach 는 타동사이므로 a decision 을 전치사 없이 받습니다. 옳습니다."
+      ],
+      "ko": "그 심의단은 한 시간 동안 그 제안을 논의했고, 두 위원이 최종 조항에 반대했지만, 의장은 모든 질문에 침착하게 답한 뒤 그 집단은 결정에 이르렀습니다."
+    },
+    {
+      "id": "b24",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 자동사·타동사를 뒤바꾼 문장을 주고 틀린 곳을 찾아 고쳐 쓰게 합니다. 전치사를 넣고 빼는 두 방향의 오류가 한 문장에 함께 들어오는 경우가 많습니다.",
+          "sample": {
+            "en": "Many students discussed about the topic and waited the results for a week.",
+            "ask": "어법상 틀린 두 곳을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "discussed about → discussed (타동사이므로 about 삭제), waited → waited for (자동사이므로 for 추가)"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능에서는 이 개념이 태(능동·수동) 판단으로 이어집니다. 목적어를 받지 못하는 자동사는 수동태로 쓸 수 없으므로, 밑줄이 자동사의 수동형이면 그것이 정답입니다.",
+          "sample": {
+            "en": "The earthquake that [[u:was occurred]] off the coast changed the region's building rules.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "occurred — occur 는 목적어를 받지 않는 자동사이므로 수동태로 쓸 수 없습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "전치사 세관의 심사관",
+      "intro": "여기는 전치사 세관입니다. 붙여야 할 전치사를 빼돌리는 자도, 필요 없는 전치사를 밀반입하는 자도 통과할 수 없습니다. 네 건의 심사로 판단력을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The mayor {{blank}} the reporters' questions at the press conference.",
+          "options": ["answered", "answered to"],
+          "answer": 0,
+          "why": "answer 는 질문을 목적어로 바로 받는 타동사입니다. '~에 답하다'로 풀려도 to 를 넣으면 틀립니다."
+        },
+        {
+          "prompt": "The actors {{blank}} the stage from the left side.",
+          "options": ["entered", "entered into"],
+          "answer": 0,
+          "why": "enter 는 장소를 목적어로 바로 받는 타동사입니다. enter into 는 계약처럼 뜻이 달라지는 별개 표현에만 씁니다."
+        },
+        {
+          "prompt": "After the mix-up, the manager {{blank}} every customer in person.",
+          "options": ["apologized", "apologized to"],
+          "answer": 1,
+          "why": "apologize 는 자동사이므로 사과받을 사람 앞에 to 가 필요합니다."
+        },
+        {
+          "prompt": "The express train {{blank}} the border city exactly on time.",
+          "options": ["reached", "reached to", "arrived"],
+          "answer": 0,
+          "why": "reach 는 타동사이므로 도착지를 바로 받습니다. arrive 를 쓰려면 arrived at 처럼 전치사가 필요합니다."
+        }
+      ],
+      "winText": "심사관이 통과 도장을 찍습니다. 전치사를 붙일 곳과 뺄 곳을 동사의 신분으로 판정했으니, 이 세관에서 더 잡을 것이 없습니다.",
+      "loseText": "심사관이 서류를 돌려보냅니다. 돌려받은 오답에는 공통점이 있습니다 — 전부 한국어 해석을 근거로 삼았습니다. 전치사의 유무는 동사가 정한다는 원칙을 확인하고 다시 오십시오."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "타동사는 목적어를 ___ 받고, 자동사는 대상 앞에 ___ 가 필요합니다. 판단의 근거는 한국어 조사가 아니라 ___ 입니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "3형식은 주어 + 타동사 + 목적어이며, 타동사는 전치사 없이 목적어를 바로 받습니다.",
+        "자동사는 목적어를 받지 못하므로 대상 앞에 정해진 전치사를 넣어야 합니다(wait for·listen to·object to·graduate from).",
+        "장소·대상을 목적어로 받을 때 discuss·mention·enter·reach·resemble·answer 는 전치사를 붙이면 틀립니다(enter the room ○ / enter into the room ×). 단 enter into an agreement 처럼 전치사가 붙어 뜻이 달라지는 별개 표현은 예외입니다.",
+        "전치사 목적어조차 없는 자동사(occur·happen·appear)는 수동태로 쓸 수 없습니다. 이 점이 수능 태 판별로 이어집니다."
+      ],
+      "keySentence": {
+        "en": "The union representatives **discussed** the proposal and later **objected to** the final draft.",
+        "ko": "그 노조 대표들은 그 제안을 논의했고 나중에 최종 초안에 반대했습니다.",
+        "note": "같은 문장 안에서 타동사는 전치사 없이, 자동사는 전치사와 함께 대상을 받습니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b02-c2-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Her younger brother {{blank}} their grandfather in both voice and manner.",
+          "options": ["resembles", "resembles with"],
+          "answer": 0,
+          "translation": "그녀의 남동생은 목소리와 태도 모두에서 그들의 할아버지를 닮았습니다.",
+          "explanation": "resemble 은 타동사이므로 목적어를 바로 받습니다. '~와 닮다'로 해석된다고 해서 with 를 넣으면 틀립니다.",
+          "trapTags": ["transitive-no-preposition"]
+        },
+        {
+          "id": "b02-c2-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The engineers finally [[u:arrived]] the remote research station after a long journey.",
+          "isCorrect": false,
+          "correction": "arrived at",
+          "translation": "그 기술자들은 긴 여정 끝에 마침내 그 외딴 연구소에 도착했습니다.",
+          "explanation": "arrive 는 자동사이므로 장소를 바로 받지 못합니다. 지점 앞에는 at 을 넣어 arrived at 으로 써야 합니다. 같은 뜻의 reach 는 타동사여서 전치사가 필요 없습니다.",
+          "trapTags": ["intransitive-preposition"]
+        },
+        {
+          "id": "b02-c2-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The accident {{blank}} near the old bridge late at night.",
+          "options": ["was occurred", "occurred"],
+          "answer": 1,
+          "translation": "그 사고는 밤늦게 그 낡은 다리 근처에서 발생했습니다.",
+          "explanation": "occur 는 목적어를 받지 못하는 자동사입니다. 수동태는 목적어를 주어 자리로 올린 형태이므로 목적어가 없는 자동사는 수동태로 쓸 수 없습니다.",
+          "trapTags": ["intransitive-no-passive"]
+        }
+      ]
+    }
+  ]
+}

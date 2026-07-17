@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct-as-printed-in-passage (flagged discrepancy)",
+      "reason": "지문 원문은 'because they have contributed to our survival'로, 복수 주어 they(= our emotions)에 have가 수일치하고 진화적 시간에 걸친 지속 효과이므로 현재완료도 적절하여 정문이다. 그러나 선지 라벨은 'has contributed'로 지문 표기(have)와 불일치하며, 지문에 (A) 밑줄 표시 자체가 누락되어 있다. 실제 밑줄이 'has'였다면 주어-동사 수일치 오류로 제2 정답이 되는 전사 결함이다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a kind of program that, when triggered, directs ...'에서 when triggered는 축약 부사절 when (it is) triggered이다. 의미상 주어는 관계대명사 that(= program/emotion)이고 프로그램은 촉발되는 대상이므로 수동 과거분사가 옳다. 능동 triggering은 의미상 주어가 촉발 행위자여야 하므로 불성립."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'may cause us to remember an experience'는 cause + 목적어 + to부정사의 표준 보문 구조로 정문이다. 앞의 'cause us either to face ...'와도 동일 패턴으로 일관된다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (정답)",
+      "reason": "'will cause us either to face a situation (fight) or avoiding it (flight)'에서 상관접속 either A or B는 병렬 등위를 요구한다. 첫 등위항이 to부정사 to face이므로 둘째 항은 (to) avoid여야 한다. avoiding은 cause의 보문 형식(cause + O + to-V)에도 맞지 않고, 분사구문으로 볼 경우 의미상 주어·fight/flight 대비 구조가 모두 붕괴하므로 어떤 대안 해석으로도 정문이 되지 않는다. 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the specific ways in which they activate our systems'는 in the ways에서 도출된 전치사+관계대명사 구조로, 관계절 내부에 activate의 목적어 our systems가 온전히 존재해 공백이 없다. ways that/in which 모두 표준 용법으로 정문이다."
+    }
+  ],
+  "note": "정답은 (D) 병렬구조 위반(either to face ... or (to) avoid)으로 단일하게 성립. 품질 결함 1건: 선지 (A) 라벨 'has contributed'가 지문 표기 'have contributed'와 불일치하고 지문에 (A) 밑줄 표시가 누락됨 — 실제 시험지에서 'has'로 인쇄된다면 수일치 오류로 복수정답 사유가 되는 전사/조판 결함이므로 수정 필요."
+}

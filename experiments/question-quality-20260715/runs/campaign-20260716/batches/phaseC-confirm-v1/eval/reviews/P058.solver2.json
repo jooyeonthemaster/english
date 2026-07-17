@@ -1,0 +1,35 @@
+{
+  "pid": "P058",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합: 'they try to conceal ...' 정문. 논리: 일화의 판매원은 펜이 부러진 실패를 숨기기는커녕 군중 앞에서 공개하며 웃음으로 전환했다. 'conceal their unexpected failures from the crowd'는 일화의 핵심 행위와 정면 모순이며, 'turn disadvantage into advantage'라는 지문 명제와도 배치된다. 논리적 성립 불가."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "문법 결합: 'they patiently wait for the shock ... to fade' 정문(wait for + NP + to-inf). 논리: 지문은 'After their initial shock, they gather their resources, overcome their problem'이라 하여 충격 이후의 능동적 행동을 기술한다. 수동적으로 충격이 가시기를 기다린다는 것은 'go one step further'라는 능동성 명제와 모순. 성립 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리: 지문의 인물들은 손실을 인정하되('what they have lost'와의 대비를 통해 손실의 존재를 전제) 얻을 수 있는 것에 초점을 둔다. 'without acknowledging their major loss'는 지문이 명시한 '주요한 손실을 경험한(have experienced a major loss)' 사실 인지와 모순이고, 'blindly'라는 부정적 평가어도 지문의 긍정적 서술 톤과 불일치. 성립 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리: 지문은 'they gather their resources'라고 명시한다. 'readily give up their resources'는 이와 직접 모순(gather vs give up). 또한 'prevent further hardships'라는 회피 지향도 역경 속에서 기회를 찾는다는 지문 논지와 배치. 성립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "문법 결합: 'they purposefully explore the practical utility hidden within their adversities' — 'hidden within ...'은 utility를 수식하는 축약 관계절(과거분사구)로 정문. 논리: 'every cloud has a silver lining'(불행 속 숨은 이점)의 은유를 문자화한 진술로, 'look for some positive aspect in their misfortunes', 'see opportunities where most of us fail to see them', 'focus on what they can gain from their circumstance'와 정확히 등가. 'purposefully'는 'go one step further'의 능동성과 부합. 유일하게 성립."
+    }
+  ],
+  "note": "빈칸은 and 병렬로 'They believe in the old cliché ...'에 이어지는 동사구 자리이며 다섯 선지 모두 문법적 결합은 성립한다. 판별은 전적으로 논리 정합성에서 갈리는데, 1(은폐)·2(수동적 대기)·4(자원 포기)는 지문 명제와 직접 모순, 3은 '손실 불인정'이 지문 전제와 모순. 5만이 silver lining 은유의 문자적 재진술로서 성립한다. 복수 정답 여지 없음."
+}

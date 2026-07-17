@@ -1,0 +1,81 @@
+{
+  "pid": "P019",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "keyPoints[2] = \"(C) 분사의 준동사 수식 — 부사가 과거분사를 수식하는 구조\". 실제 (C) 문장은 \"after they were exposed to the words\"로, 과거분사를 수식하는 부사가 존재하지 않는다. 지문에 없는 구조를 지목한 오분석이며, 오답 해설 (C)(수동태 과거분사 포인트)와도 내용이 모순된다. \"분사의 준동사 수식\"이라는 용어 자체도 손상된 비표준 용어다."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "keyPoints[1] = \"(A) 관계부사/관계사 — 명사절을 이끄는 접속사 that의 역할\". (A)의 that은 tell의 직접목적어인 명사절을 이끄는 접속사(보문소)로, 관계부사/관계사 범주가 아니다. 카테고리 라벨이 명사절 접속사 that을 관계사류로 오분류했다(설명부 문구 자체는 정확하나 범주 표기가 오분석)."
+    },
+    {
+      "code": "C4",
+      "severity": "minor",
+      "evidence": "정답 (D)의 밑줄이 7단어(\"taking almost 40 percent longer to walk\")로, 나머지 네 밑줄(1~2단어)과 길이 비대칭이 커서 밑줄 길이만으로 정답 후보가 드러나는 약한 메타 단서가 된다. 판정 지점은 taking 한 단어로 충분하다."
+    },
+    {
+      "code": "C5",
+      "severity": "major",
+      "evidence": "요청 난이도 KILLER 대비 실제 난이도 불일치. '긴 주어+관계사절 뒤 본동사 자리의 -ing'는 수능 어법에서 가장 많이 훈련되는 정형 패턴으로, 상위권 학생이 즉시 식별한다. (B) ask+O+to-v, (E) those 수일치는 즉시 소거되는 필러성 디코이로 KILLER급 경합을 만들지 못한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사절 접속사 that vs 관계대명사 혼동 유도",
+      "temptingBecause": "tell의 간접목적어(a bunch of healthy undergraduates) 바로 뒤에 that이 와서 선행사를 받는 관계사절처럼 오독할 여지가 있다",
+      "decisiveFlaw": "tell + IO + that절(완전한 절이 직접목적어) 구조로 접속사 that이 정확하다 — 오류 아님. 디코이 중에서는 상대적으로 유효한 편"
+    },
+    {
+      "label": "(B)",
+      "intent": "ask의 목적격보어 형태(to부정사 vs 원형/동명사) 판단",
+      "temptingBecause": "creating/create 등 대체형을 떠올리게 하려는 의도이나 실질 유인이 약하다",
+      "decisiveFlaw": "ask + O + to-v는 고정 구조로 to create가 명백히 정확 — 즉시 소거되는 필러성 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "태 판단: 수동 과거분사 exposed vs 능동 현재분사 exposing",
+      "temptingBecause": "expose의 태를 문맥에서 판단해야 하고, 뒤의 to the words가 부정사로 오독될 여지가 있다",
+      "decisiveFlaw": "주어 they가 단어에 '노출되는' 대상이므로 were exposed 수동태가 정확 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답: 긴 주어 + 관계사절 수식 뒤 본동사(정동사) 자리에 준동사 배치 — 정동사 결핍 판별",
+      "temptingBecause": "taking을 주어 Those students를 수식하는 현재분사로 읽으면 국소적으로 자연스러워 보인다",
+      "decisiveFlaw": "그렇게 읽으면 주절에 정동사가 없는 단편문이 된다. took으로 교정 시 정확히 원문이 복원되는 최소대립쌍 — 유일 정답. 단, 밑줄이 7단어로 과도하게 길어 메타 단서를 준다"
+    },
+    {
+      "label": "(E)",
+      "intent": "비교 구문 속 대명사 수일치(those vs that)",
+      "temptingBecause": "than 뒤 대용 표현의 지시 대상을 확인하게 한다",
+      "decisiveFlaw": "복수 명사 students를 대신하므로 those가 명백히 정확 — 즉시 소거되는 약한 디코이"
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints[2]가 (C)에 대해 실제 문장에 존재하지 않는 '부사가 과거분사를 수식하는 구조'를 지목 — 오답 해설 (C)의 수동태 분석과 모순 (V4 판정 근거)",
+    "keyPoints[1]의 범주 라벨 '관계부사/관계사'가 명사절 접속사 that과 불일치 — 범주 오분류",
+    "정답 해설의 어체 혼용: '고쳐야 한다'(평서) 뒤에 '구조입니다/있습니다'(존댓말)가 섞여 있어 다듬어지지 않음",
+    "오답 해설 4건 모두 '왜 맞는가'만 있고 '왜 매력적인가(why tempting)'가 없음 — KILLER 어법 요건(§C) 미충족"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1~V3은 견고하다: 렌더 손상 없음, taking→took 최소대립쌍으로 (D)가 유일 정답이며 교정 시 원문이 정확히 복원된다. 정답 해설 본문의 구조 분석(관계사절 수식, 정동사 결핍, 분사 오독 함정)도 정확하다. 치명 결함은 keyPoints 필드: (C)에 대해 지문에 존재하지 않는 '부사의 과거분사 수식' 구조를 기술하고(오답 해설과 모순), (A)를 관계사 범주로 오분류했다 — 학생 노출 필드의 사실성 오류로 V4 실패, 등급 F. 공예 측면에서도 요청 난이도 KILLER 대비 가장 정형화된 본동사 자리 패턴이라 난이도 정합(C5=1)이 낮고, (B)/(E)는 필러성 디코이, 정답 밑줄 길이 비대칭이 메타 단서를 준다. KILLER 추가 조건은 최소대립쌍·명확한 문법 판단·동일 포인트 디코이 부재는 충족하나, 디코이별 why-tempting 부재와 즉시 식별 가능한 정형 패턴으로 인해 미충족 판정. 수리 방향: keyPoints 2건 교체(예: (C) 수동태 포인트로 정정, (A) 접속사 범주로 정정), (D) 밑줄을 taking 1단어로 축소, (B)/(E)를 더 경합력 있는 포인트로 교체하면 B급 이상 재평가 가능."
+}

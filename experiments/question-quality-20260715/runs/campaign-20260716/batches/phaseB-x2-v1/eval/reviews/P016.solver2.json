@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "관계대명사 that의 선행사는 단수 명사구 'a lasting mark'(핵어 mark). 관계절 동사는 선행사와 수 일치해야 하므로 3인칭 단수 shows가 정확하다. 선행사를 'Its presence'로 보는 대안 해석에서도 단수이므로 결과가 동일하다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'it must either adapt to or indeed reinforcing this balance.' 상관접속사 either...or의 병렬 시작점은 조동사 must 직후이며, 첫 항이 원형 'adapt to'이므로 둘째 항도 must의 지배를 받는 원형 reinforce여야 한다. 대안 구조 전수 탐색: (i) 동명사로 보면 이를 지배할 동사/전치사가 없고 must는 동명사를 취하지 못함, (ii) 분사구문으로 보면 or가 요구하는 등위 병렬항 자리와 모순, (iii) 전치사 to의 목적어 병렬('adapt to [X or reinforcing]')로 보면 either의 위치(adapt 앞)와 상관 구조가 붕괴하고 의미도 성립하지 않음. 어떤 해석으로도 정문이 되지 않는다. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "주어 it(= the bridge)은 단수이고, 일반적 사실을 서술하는 현재시제로 뒤따르는 'or it makes a strong statement'와 시제·수가 모두 정합한다. 문두의 'Depending on'은 관용화된 무주어 분사 전치사구로 현수분사 문제를 일으키지 않는다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "선행사 'an intrinsic beauty'는 단수이므로 관계절 동사 works의 3인칭 단수형이 수 일치상 정확하다. work가 '(환경 안에서) 어울려 기능하다'라는 자동사 용법으로 의미상으로도 성립한다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment.' 재귀대명사 itself는 관계절 내 주어(that = a bridge)와 동일 지시이므로 재귀형이 규범적으로 옳고, 'in itself'(그 자체로)는 확립된 관용 표현이다. but 이하 spoils는 that절 내에서 is spectacular와 병렬로 수 일치도 정확하다. 정문."
+    }
+  ],
+  "note": "병렬 구조 문항의 전형. must 뒤 either A or B에서 A(adapt to)가 원형이므로 B도 원형(reinforce)이어야 하는데 reinforcing으로 표기되어 유일하게 비문. (A)/(D)는 관계절 수 일치, (C)는 단수 주어 현재시제, (E)는 재귀대명사 관용구로 모두 형식적으로 정문임을 확인. 대안 해석(동명사·분사구문·to 목적어 병렬)으로 (B)를 구제하려는 시도는 전부 실패하므로 단일 정답이 확정된다."
+}

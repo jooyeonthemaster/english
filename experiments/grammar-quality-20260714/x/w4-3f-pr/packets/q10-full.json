@@ -1,0 +1,159 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):ANS=a  (C):dec=g  (D):dec=l  (E):dec=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 125,
+        "relPos": 0.159,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 389,
+        "relPos": 0.494,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 616,
+        "relPos": 0.782,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 709,
+        "relPos": 0.9,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.9,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "hoping",
+        "isError": true,
+        "correction": "hoping",
+        "errorExpression": "hoped",
+        "surroundingText": "We call people we haven't spoken to in ages, hoped that one small effort will erase the months and years of distance we've created.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "They",
+        "isError": false,
+        "errorExpression": "They",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "because",
+        "isError": false,
+        "errorExpression": "because",
+        "surroundingText": "This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken;",
+        "pointCode": "l"
+      },
+      {
+        "label": "(E)",
+        "expression": "fall",
+        "isError": false,
+        "errorExpression": "fall",
+        "surroundingText": "just that it's more ideal not to let yourself fall out of touch in the first place.",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "hoped"
+      },
+      {
+        "label": "(C)",
+        "text": "They"
+      },
+      {
+        "label": "(D)",
+        "text": "because"
+      },
+      {
+        "label": "(E)",
+        "text": "fall"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "선행사 the distance를 수식하며 뒤에 주어가 없는 불완전한 절이 이어지므로, 주격 관계대명사 'that'을 쓴 것은 어법상 적절합니다.",
+      "(C)": "바로 앞 문장의 복수 명사인 'relationships'를 지칭하므로, 복수 대명사 'They'를 사용한 것은 어법상 적절합니다.",
+      "(D)": "뒤에 주어(it)와 동사(has been)를 완전히 갖춘 절이 이어지고 있으므로, 전치사가 아닌 접속사 'because'를 쓴 것은 어법상 적절합니다.",
+      "(E)": "본동사인 사역동사 let은 목적어 뒤 목적격보어 자리에 동사원형을 취하므로, 원형부정사 'fall'을 사용한 것은 어법상 적절합니다."
+    },
+    "explanation": "진짜 주어인 'We'와 정동사 'call'로 온전한 형태의 기준 절이 이미 존재합니다. (B) hoped 자리는 접속사 없이 연결되어 있으므로 정동사의 과거형이 올 수 없으며, 이를 수동태의 과거분사로 보려 해도 뒤에 명사절(that...) 목적어가 남아 있어 문장 구조상 불가능합니다. 따라서 목적어를 이끌면서 문맥상 능동의 부대상황을 나타낼 수 있도록, 분사구문을 이끄는 현재분사 'hoping'으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(B) 정동사 vs 준동사 — 한 절 안에 접속사 없이 두 개의 정동사가 올 수 없음을 확인",
+      "(E) 목적격보어 형태 — 사역동사 let의 목적격보어로 원형부정사가 옴을 확인",
+      "(D) 전치사 vs 접속사 — 뒤에 절이 오는지 명사구가 오는지에 따라 접속사와 전치사 구분"
+    ],
+    "tags": [
+      "정동사와준동사",
+      "분사구문",
+      "대명사일치",
+      "접속사",
+      "목적격보어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance __(A) that__ has formed and we scramble to make repairs. We call people we haven't spoken to in ages, __(B) hoped__ that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. __(C) They__'re kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just __(D) because__ it's been a while since you've spoken; just that it's more ideal not to let yourself __(E) fall__ out of touch in the first place. Consistency always brings better results."
+  }
+}

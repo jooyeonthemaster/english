@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Subject 'a child' + relative clause 'who is better dressed', then main verb 'is better behaved'. Singular agreement holds and 'behaved' functions as a participial adjective (cf. 'well-behaved'). Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'louder than he is when dressed in ordinary clothes' — standard ellipsis of 'when (he is) dressed'. The understood subject of the elided clause matches the main-clause subject 'he', so the when + past-participle reduction is legitimate. First distractor pull for strong students (looks truncated), but it survives the ellipsis check."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Coordinated relative clauses sharing the antecedent 'a child': 'who was dressed in his best clothes and whose mother stressed...'. Possessive relative 'whose' is exactly right (the child's mother). The long 'and whose' coordination is a false-parallelism trap but is grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'by the end of the hour the child would have forgotten his clothes and would have acted as he would in old clothes' — the perfect is right for 'would have forgotten' (forgetting completed by that time point), but the acting-as-in-old-clothes behavior only BEGINS once the clothes are forgotten and continues onward; it cannot be an event completed by the end of the hour. The passage's own timeline contradicts the perfect: the child 'would be better behaved for a short period' (filling the earlier part of the hour). Required form: 'would act' or 'would be acting'. The 'Likewise' sentence confirms the intended sense of subsequent ongoing behavior ('might soon change ... and be no more noisy than usual'). Attempted rescue reading (normal acting finished within the hour) collapses the 'but by the end of the hour' contrast and clashes with the habitual 'as he would in old clothes'. Not defensible as written."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'while (he is) playing cowboys' — standard while + -ing ellipsis with matching subject 'the child'; 'play cowboys' is idiomatic for role-play games. Grammatical."
+    }
+  ],
+  "note": "Top-examinee lens: the surface parallelism 'would have forgotten ... and would have acted' makes (D) read smoothly on a fast pass — the error is tense logic (completed-by-time-point perfect applied to behavior that starts at that time point), not form. Strongest distractor pulls were (B) bare 'when dressed' and (C) 'and whose' coordination; both are rescued by legitimate ellipsis/possessive-relative parses. No alternative parse makes (D) grammatical in context, so the item resolves cleanly to a single answer."
+}

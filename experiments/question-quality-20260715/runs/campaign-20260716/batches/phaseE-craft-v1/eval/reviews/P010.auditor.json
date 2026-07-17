@@ -1,0 +1,74 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'are considered a threat by our brains'의 재진술 (threat→life-threatening emergencies, brains→primitive minds)",
+      "temptingBecause": "해당 없음(정답). 'primitive minds'는 'Stone Age brain', 'life-threatening'은 'threaten our lives / mortal danger'와 직접 대응",
+      "decisiveFlaw": "없음 — 빈칸 뒤 4개 문장('our brain considers this a danger', 'our brain rates it as such', 'The danger is an illusion', 'sees a mortal danger that is not there')이 모두 이 내용을 재확인"
+    },
+    {
+      "label": "2",
+      "intent": "본문 어휘 차용 + 허위 인과 조작 (fabricated causation)",
+      "temptingBecause": "'diabetes'(본문의 현대적 위험 예시)와 'fighting'(flee or fight)을 그대로 차용",
+      "decisiveFlaw": "무해한 상황이 싸움 대비를 위해 실제 질병을 유발한다는 인과는 본문 어디에도 없음 — 당뇨는 현대의 위험 예시일 뿐 위협 지각의 산물이 아님"
+    },
+    {
+      "label": "3",
+      "intent": "귀속 대상 전도 (attribution/scope shift)",
+      "temptingBecause": "'mistakenly'와 '적응 부족' 프레임이 'Stone Age brain lives in a modern world'의 불일치 테마와 표면적으로 공명",
+      "decisiveFlaw": "본문은 상황이 위협으로 '오판된다'고 하지, 상황이 '현대적 생물학적 적응의 부족 탓으로 귀속된다'고 하지 않음 — 설명 구조 자체가 어긋남"
+    },
+    {
+      "label": "4",
+      "intent": "결과 극성 반전 / 긍정적 half-truth (기제는 실재하나 결과를 뒤집음)",
+      "temptingBecause": "'flee-or-fight responses embedded in our genes'가 본문의 'had to flee or fight' 및 석기시대 유산 프레임과 직접 겹침",
+      "decisiveFlaw": "본문의 진단은 이 기제가 불필요하게 오작동한다는 것 — '성공적으로 관리'는 정반대 극성"
+    },
+    {
+      "label": "5",
+      "intent": "작동 방향 반전 (suppress ↔ activate 극성 함정)",
+      "temptingBecause": "'outdated survival instincts'가 'Stone Age brain'의 매력적 패러프레이즈이고 'triggers' 어휘도 그럴듯함",
+      "decisiveFlaw": "본능은 억제되는 게 아니라 엉뚱하게 발동됨('sees a mortal danger that is not there') — 단일 극성 판단으로 즉시 탈락"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "E1-loose-wording",
+      "severity": "minor",
+      "evidence": "해설의 '이것을 도망치거나 싸워야 하는 비상사태이자 환상(illusion)으로 착각한다' — 본문 논리는 '지각된 위험 자체가 환상'인데, 뇌가 상황을 '환상으로' 착각한다고 읽힐 수 있는 느슨한 동격 표현"
+    },
+    {
+      "code": "E2-keypoints-trap-mislabel",
+      "severity": "minor",
+      "evidence": "keyPoints 3번째 항목이 '인과관계를 비튼 함정 선지(3번, 5번)'로 묶었으나, 5번은 본 해설·오답해설 모두에서 '극성 반전' 함정으로 설명됨 — 함정 유형 명명 불일치 (라벨/정답 동기화 자체는 유지)"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "sameSyntacticSlot": true,
+    "answerPreservesSourceMeaning": true,
+    "distractorsHaveAnchorOverlapFlaw": true,
+    "requiresMultiSentenceSynthesis": false,
+    "multiSentenceFailureEvidence": "빈칸 직후 본문이 정답 내용을 최소 4회 거의 축자적으로 재진술('our brain considers this a danger' / 'our brain rates it as such' / 'The danger is an illusion' / 'Our Stone Age brain sees a mortal danger that is not there') — 이 중 한 문장만 읽어도 정답 확정 가능. 또한 4·5번은 단일 극성 단서 하나로 소거됨. §D의 '두 문장/두 논리 단서 연결 필수, 극성 하나로 못 찍음' 조건 위반",
+    "gradeAPrerequisite": false
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과 — 렌더 무결, 정답 유일(각 선지 독립 검증), 완성문 문법적, 해설 사실성 유지(경미한 표현 2건), 필드 동기화 정상. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달: 빈칸이 지문 전반부에 있고 이후 지문이 정답을 4회 반복 재진술하여 단일 문장 매칭만으로 풀림(C5=1). 정답 선지의 추상화 수준도 낮아 사실상 직역 패러프레이즈(C3=2). 오답은 유형별 의도는 있으나 4·5번이 모두 극성 계열로 겹치고 즉시 소거 가능. 해설은 대체로 정확하나 '환상으로 착각' 표현의 논리 느슨함과 keyPoints의 함정 유형 오명명으로 C6=2. B 등급 최저선(C 전축 2 이상)을 C5가 깨므로 등급 C — 빈칸 위치를 후반 재진술 문장들로 옮기거나 재진술 일부를 삭제/추상화하는 재설계가 필요."
+}

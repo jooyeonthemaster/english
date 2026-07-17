@@ -1,0 +1,71 @@
+{
+  "pid": "P024",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-typo",
+      "severity": "minor",
+      "evidence": "오답 해설 ②에 '격게 되는'(→'겪게 되는') 오탈자, ⑤에 '이기타산적'(비표준어, '이해타산적'의 오기)이 있다. 문법 구조 오분석은 아니므로 V4 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-minor-characterization",
+      "severity": "minor",
+      "evidence": "⑤ 해설이 해당 선지를 '범위를 넓힌 선지/확대 과장'으로 규정하나, 실제 선지 'pursue only the activities that guarantee personal success'는 only로 범위를 제한하면서 기준을 '의미'에서 '성공 보장'으로 바꿔치기한 기준 왜곡+절대어 함정에 가깝다. 핵심 결론('본문 근거를 벗어남')은 맞으므로 치명으로 보지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal) — 요지인 moderation의 정반대 지침",
+      "temptingBecause": "빈칸 앞부분 'get involved in the activities'와 표면상 이어지는 긍정적·적극적 참여 어조이고 'club'이 본문 어휘와 겹친다",
+      "decisiveFlaw": "본문 전체가 '너무 많은 활동으로 한계를 넘지 말라'는 경고이므로 '가입한 모든 클럽에 전적으로 헌신하라'는 요지와 정면 충돌한다. 극성 스크리닝만으로도 즉시 소거 가능해 KILLER 매력도는 낮다"
+    },
+    {
+      "label": "②",
+      "intent": "예시의 과협소화(over-narrowing to an example) — 지엽 세부를 결론으로 승격",
+      "temptingBecause": "본문의 신문사 deadline 예시와 'Pacing is important'가 시간 관리 기술을 연상시킨다",
+      "decisiveFlaw": "deadline은 과다 참여의 부작용을 보여주는 단일 예시일 뿐이며, 'The point is this' 문장이 결론을 '조절(moderation)'로 명시한다. 마감 관리 기술 습득은 활동량 제한이라는 해결책 자체가 아니다"
+    },
+    {
+      "label": "③",
+      "intent": "해결 방향 왜곡(solution-direction distortion) — 스트레스 키워드 재활용",
+      "temptingBecause": "'stressed out'이 본문에 실제로 등장하고, 조언문 형태로 자연스럽게 읽힌다",
+      "decisiveFlaw": "필자의 해법은 활동의 양을 줄이는 것이지 활동(joint activities)을 통해 스트레스를 해소하는 것이 아니다. 원인(과다 활동)을 수단으로 뒤집은 방향 왜곡"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 원문 'make sure you don't overextend yourself'의 의미 보존 재진술",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'avoid committing to more than you can handle'은 overextend의 적절한 추상화이며 'don't know where to draw the line', 'exercise some moderation'과 정합한다"
+    },
+    {
+      "label": "⑤",
+      "intent": "기준 바꿔치기 + 절대어(criterion swap + absolute term)",
+      "temptingBecause": "빈칸 직전의 'activities that are most meaningful to you'와 병렬로 읽히는 선별적 참여 지침이다",
+      "decisiveFlaw": "'meaningful to you'(주관적 의미)를 'guarantee personal success'(성공 보장)로 바꿔치기했고 only·guarantee라는 절대어가 본문 근거를 벗어난다. 절대어 스크리닝으로 소거 가능"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ② '격게 되는' → '겪게 되는' 오탈자",
+    "오답 해설 ⑤ '이기타산적' → '이해타산적' 오기(비표준어)",
+    "오답 해설 ⑤가 선지의 결함을 '범위를 넓힌/확대 과장'으로 서술하나 실제 결함은 only에 의한 제한 + 기준 왜곡이어서 방향 서술이 다소 부정확",
+    "정답 해설이 장황한 편이며 정답 근거와 함정 분리는 되어 있으나 문체가 둔중하다"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 렌더 지문은 원지문과 마지막 절 절제('make sure you don't overextend yourself' → '_____') 외 완전 일치, 접합·중복·누락·고아 문장부호 없음, 선지 라벨 ①~⑤와 정답 라벨 ④ 일치. V2: 각 선지 독립 검증 결과 ④만 결론 슬롯에 논리적으로 적합(①극성반전 ②예시과협소 ③방향왜곡 ⑤기준왜곡+절대어), 단일 정답 확정. V3: 다섯 선지 모두 동일한 명령형 VP 슬롯에 문법적으로 삽입 가능하고 정답 완성문 'So get involved in the activities that are most meaningful to you, and avoid committing to more than you can handle.'는 자연스러움 — 문법만으로 탈락하는 선지 없음(§D 1조건 충족). V4: 해설의 본문 인용·구조 설명은 실제와 일치하나 한국어 오탈자 2건과 ⑤ 결함 방향 서술의 경미한 부정확이 있음(치명 아님). V5: 정답 라벨·선지·해설·오답해설 키(①②③⑤)·keyPoints 모두 동기화. KILLER 판정: §D의 '최소 두 문장/두 논리 단서 연결' 조건 불충족 — 'The point is this: If you don't exercise some moderation...' 단일 명시 문장만으로 정답 도달 가능하고, ①·⑤는 극성·절대어 하나로 소거 가능해 실질 경쟁 선지가 ②·③으로 축소된다. 지문 자체도 평이한 조언문으로 KILLER 요청 대비 실제 난이도는 중하 수준(C5=1). 모든 V 통과이나 난이도 정합 재설계가 필요하므로 등급 C."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('it' = the frequent use), but logic fails: 'proves' overstates the hedged 'could be used', and 'perfectly preserved across different cultures' inverts the passage's use of cross-cultural sharing, which served to UNDERMINE national-character inferences, not to celebrate preservation. The conditional's antecedent concerns a particular culture (Germans), so a cross-cultural consequent is a non sequitur."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Direct contradiction of the thesis sentence 'no fixed conclusions about a so-called national character should be drawn.' 'Absolute basis' and 'unchanging national character' are the exact absolutism the author denies. Polarity-flip distractor; grammatically fine but logically inadmissible as the consequent of the 'Thus' conditional."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Clean grammatical seam ('it' anaphoric to the frequent use; 'that society' properly anaphoric to German culture). 'Partial indicator' formally instantiates 'used TOGETHER WITH other social and cultural indicators'; 'specific cultural tendencies' matches 'form some common concepts' while respecting the ban on fixed national-character conclusions. This is exactly the consequent licensed by the 'Nevertheless' concession that 'Thus' draws on."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Contradicts the 'Nevertheless' concession, which explicitly grants the frequent use SOME evidentiary value ('could be used ... to form some common concepts'). If frequent use offered no meaningful insight, the 'Thus' inference from that concession would be incoherent. Overcorrection distractor toward total skepticism."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Presupposition failure: 'reveals why traditional sayings obscure the modern values' presupposes that sayings obscure modern values, a proposition never asserted or implied anywhere in the passage. 'Modern values' is an unanchored new topic. Grammatically well-formed but logically unsupported."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Discourse structure is caution (no fixed national-character conclusions) -> concession ('Nevertheless', partial value when combined with other indicators) -> instantiating conditional ('Thus, if ... then ...'). Only option 3 is the valid consequent: it preserves both the hedge (partial) and the scope (within that particular society). Options 2 and 4 are polarity extremes on either side of the author's calibrated middle position; 1 and 5 introduce unanchored propositions. No alternative parsing rescues any rejected option. Single defensible answer: 3."
+}

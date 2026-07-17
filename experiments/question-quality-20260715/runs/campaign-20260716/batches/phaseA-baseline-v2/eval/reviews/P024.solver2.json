@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립(명령문 병렬: get involved ... and dedicate ...). 그러나 논리적으로 모순: 지문 전체 논지는 'draw the line / exercise some moderation'(절제)인데, 'every club you join에 전적으로 헌신하라'는 절제의 정확한 반대 명제다. 전제 P(과잉 참여→스트레스)와 결론(모든 클럽에 전력투구)이 양립 불가하므로 논리적 성립 실패."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합 성립(명령문 병렬). 그러나 마감(deadline) 이야기는 school newspaper 사례로 든 예시(For example)일 뿐이며, 지문의 결론 명제는 '마감 관리 기술 습득'이 아니라 '활동량 자체의 절제'다. 예시의 세부를 결론으로 승격시키는 범주 오류. 'Pacing is important'와 'exercise some moderation'이 지시하는 결론과 불일치하므로 부적합."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합 성립. 그러나 지문의 처방은 스트레스의 '사후 해소'가 아니라 절제를 통한 '사전 예방'이다. 게다가 'joint activities'(공동 활동)를 스트레스 해소 수단으로 삼으라는 내용은 지문 어디에도 근거가 없고, 활동을 더 늘리라는 함의는 '너무 많은 클럽 가입이 문제'라는 전제와 오히려 충돌한다. 논리적 성립 실패."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "문법 결합 성립: 'So get involved in the activities that are most meaningful to you, and avoid committing to more than you can handle.' — 명령문 두 개의 정연한 병렬이며 avoid + 동명사(committing)도 정문. 논리적으로도 완전 일치: 'don't know where to draw the line' → 'exercise some moderation' → '감당할 수 있는 이상으로 약속하지 마라'로 지문의 주장(절제)을 정확히 재진술한다. 앞 절(가장 의미 있는 활동에 참여)과 대구(선택과 절제)도 성립. 유일한 정답."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합 성립. 그러나 지문이 제시한 선택 기준은 'most meaningful to you'(개인적 의미)이지 '개인적 성공을 보장하는(guarantee personal success)' 활동이 아니다. 성공 보장이라는 기준은 지문에 전혀 도입된 바 없고, 앞 절과 결합하면 '의미 있는 활동에 참여하되 성공 보장 활동만 추구하라'는 내적 긴장까지 생긴다. 논리적 근거 부재로 부적합."
+    }
+  ],
+  "note": "빈칸은 명령문 병렬 위치라 다섯 선지 모두 문법 seam은 통과하나, 지문의 결론 명제(절제·과잉 참여 회피)와 논리적으로 정합한 것은 ④뿐. ②가 예시 세부(마감)로 만든 매력적 오답이지만 예시→결론 승격 오류로 배제 가능. 복수 정답 여지 없음."
+}

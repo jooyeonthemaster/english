@@ -1,0 +1,823 @@
+{
+  "schemaVersion": "reviewer-calibration-v3-production-type-binding-3",
+  "artifactId": "reviewer-calibration-v3-production-type-binding-v3",
+  "status": "SOURCE_AUTHORITY_CANDIDATE_REQUIRES_EXTERNAL_AUDIT",
+  "purpose": "Fail-closed binding of the corrected rotation and the actual /director/workbench/questions/generate manual-English UI-to-runtime authority chain.",
+  "upstreams": [
+    {
+      "artifactId": "reviewer-calibration-v3-replacement-v1",
+      "path": "../reviewer-calibration-v3-replacement-v1",
+      "manifestSha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64",
+      "manifestEntries": {
+        "PLAN.md": "ce5a03257267bc99133a8407f0156dbbc4aeb230ae4863426d2deadb4f37ef51",
+        "protocol.json": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+        "schema.json": "cdffedf63ee00c058837f65c4da635ce16b23e32ce2fec8313f87f2be0951d69",
+        "verify.mjs": "417d09e46f5c1ef997fbcbb34a70d3b36ff54407f3ea0e63c27abbc2f42ae500"
+      },
+      "normativeUse": "Calibration constructs, thresholds, and fail-closed methodology only."
+    },
+    {
+      "artifactId": "reviewer-calibration-v3-production-type-binding-v2",
+      "path": "../reviewer-calibration-v3-production-type-binding-v2",
+      "manifestSha256": "4e81452d0c74f3361cd01a59e5ec6406ea2fde729fd79f588dcdaf07c380de14",
+      "manifestEntries": {
+        "REPORT.md": "cc6ddd0cd005a4707ab70f54fb31fb251f997be804f4621b45e76e82b9c72ce6",
+        "binding.json": "7ec4d2c302ce841bbc5de2ec3b6b5d1b33bfc30f867b5ff4dbaa06aeb7e42e4f",
+        "hostile-fixtures.json": "f999fa8544d41cc07e8f9e3413de1f38e17fc3d2fa7bdf6d193570a1da9ebb88",
+        "verify.mjs": "32276d69adff6df6ec3a520b40a52009230dfc7f110908527c9ce870b729729a"
+      },
+      "normativeUse": "Canonical universe, eight-family mapping, corrected selectedAt rotation, schedule rows, and contact claims only.",
+      "executionAuthorityAccepted": false
+    }
+  ],
+  "v2FailureProvenance": {
+    "severity": "BLOCKER",
+    "code": "V2_SOURCE_AUTHORITY_FAIL_OPEN",
+    "mathAndCanonicalMappingAccepted": true,
+    "executionAuthorityAccepted": false,
+    "defects": [
+      "Repository HEAD was not bound.",
+      "Source verification was conditional on a non-null headBlobSha1 and therefore admitted an untracked/null source.",
+      "lastPathCommit was recorded but never verified.",
+      "git diff --quiet reduced path state to a boolean instead of binding exact porcelain-v2/index/head state.",
+      "The actual route, picker alias, panel, primary workspace dispatch, secondary batch dispatch, API bridges, Trigger bridge, and schema dispatch were not proven as one AST authority chain."
+    ],
+    "requiredDisposition": "Preserve v2 as math-valid provenance; never issue or bind an execution packet to it."
+  },
+  "scope": {
+    "route": "/director/workbench/questions/generate",
+    "routeEntry": "src/app/(director)/director/workbench/questions/generate/page.tsx",
+    "language": "ENGLISH_NON_KOREAN_PANEL",
+    "generationMode": "MANUAL",
+    "dispatchPaths": [
+      "PRIMARY_WORKSPACE: GenerationConfigPanel -> GeneratePageClient -> useWorkspaceGeneration -> createFastQuestionGenerationJob -> fast route -> runQuestionGenerationWithEmptyRetry",
+      "SECONDARY_BATCH: GenerationConfigPanel -> GeneratePageClient -> useGenerationHandlers -> fast route or legacy route -> Trigger task -> runQuestionGenerationWithEmptyRetry"
+    ],
+    "excludedClaims": [
+      "Korean type registry and Korean generation dispatch",
+      "Set-mode preset membership and question-set endpoint",
+      "Other question-generation dialogs or passage-detail selectors",
+      "Schema content quality, model quality, or per-type certification"
+    ]
+  },
+  "sourceAuthority": {
+    "contract": "Every production source must be tracked at freeze, exist at HEAD, and exact-match raw worktree SHA-256/raw Git blob, clean-filtered worktree Git blob, index stage/blob, HEAD blob, last path commit, porcelain-v2 path status, and ls-files flags. Git dirty is derived from filtered worktree blob versus index blob; porcelain is bound evidence but never the sole dirty detector. Repository HEAD commit/tree/full symbolic ref must also exact-match.",
+    "nullOrUntrackedPolicy": "FAIL_CLOSED",
+    "repoFreeze": {
+      "repoHeadCommit": "467c6d107137a91088d3eba1620ba4036a63d709",
+      "repoHeadTree": "e74361c0cfae22a1092bb4738ae21b14f1aa9cb7",
+      "headRef": "refs/heads/20260714jooyeon"
+    },
+    "productionSources": [
+      {
+        "path": "src/lib/question-type-ui.ts",
+        "chainNode": "UI_CANONICAL_REGISTRY",
+        "role": "QUESTION_TYPE_GROUPS is the 25-English-type picker authority.",
+        "trackedRequired": true,
+        "worktreeSha256": "19946584a591138a484034691230c2faa1b8d79ced811db96b5afed43f41e9f7",
+        "indexStage": "100644 7a15f2feba4533a97a446a23ab17506609748f0d 0\tsrc/lib/question-type-ui.ts",
+        "headBlobSha1": "7a15f2feba4533a97a446a23ab17506609748f0d",
+        "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/lib/question-type-ui.ts",
+        "worktreeRawGitBlobSha1": "d9414dc2e61bdcc218671476d20eefa5b9326a56",
+        "worktreeFilteredGitBlobSha1": "7a15f2feba4533a97a446a23ab17506609748f0d",
+        "indexBlobSha1": "7a15f2feba4533a97a446a23ab17506609748f0d",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/app/(director)/director/workbench/questions/generate/page.tsx",
+        "chainNode": "ROUTE_ENTRY",
+        "role": "The requested URL renders GeneratePageClient in manual mode.",
+        "trackedRequired": true,
+        "worktreeSha256": "282aed4c26db1ed1929db1fcabf2c3ef7c4f155c87e8de8b27b1c6f51e54773e",
+        "indexStage": "100644 6dc5760b051682b71eb7dfe9731ab46cb8962335 0\tsrc/app/(director)/director/workbench/questions/generate/page.tsx",
+        "headBlobSha1": "6dc5760b051682b71eb7dfe9731ab46cb8962335",
+        "lastPathCommit": "c805d7263f0bbb599a365e28388e23bf5cb01284",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/app/(director)/director/workbench/questions/generate/page.tsx",
+        "worktreeRawGitBlobSha1": "6dc5760b051682b71eb7dfe9731ab46cb8962335",
+        "worktreeFilteredGitBlobSha1": "6dc5760b051682b71eb7dfe9731ab46cb8962335",
+        "indexBlobSha1": "6dc5760b051682b71eb7dfe9731ab46cb8962335",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generate-page-client.tsx",
+        "chainNode": "CLIENT_ORCHESTRATOR",
+        "role": "Renders GenerationConfigPanel and connects both batch and workspace generation hooks.",
+        "trackedRequired": true,
+        "worktreeSha256": "a1454d05b167ecddd637e5a1ce79f567910d34ffb5f6ff0328d355ee60ed1b39",
+        "indexStage": "100644 dd6b4a4e02bdeaa44b4169c03b11c811edc60c58 0\tsrc/app/(director)/director/workbench/generate/generate-page-client.tsx",
+        "headBlobSha1": "dd6b4a4e02bdeaa44b4169c03b11c811edc60c58",
+        "lastPathCommit": "b8cfd5f9845c638c82843e6fd4e10e14b95cf903",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/app/(director)/director/workbench/generate/generate-page-client.tsx",
+        "worktreeRawGitBlobSha1": "7e77ca5cc610ec8a3971625338de97a546d080c5",
+        "worktreeFilteredGitBlobSha1": "dd6b4a4e02bdeaa44b4169c03b11c811edc60c58",
+        "indexBlobSha1": "dd6b4a4e02bdeaa44b4169c03b11c811edc60c58",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generate-page-types.ts",
+        "chainNode": "UI_ALIAS",
+        "role": "Aliases EXAM_TYPE_GROUPS directly to QUESTION_TYPE_GROUPS.",
+        "trackedRequired": true,
+        "worktreeSha256": "bef8c1a9c9854b276807df02d06381927a005e6cc050dd3d2e1097769742a1a1",
+        "indexStage": "100644 6a26b726935a947ccac16a385a3f699f7d23de30 0\tsrc/app/(director)/director/workbench/generate/generate-page-types.ts",
+        "headBlobSha1": "6a26b726935a947ccac16a385a3f699f7d23de30",
+        "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/app/(director)/director/workbench/generate/generate-page-types.ts",
+        "worktreeRawGitBlobSha1": "c438ae1f45acfafc3a1fe2af6d0ba98e5c84574e",
+        "worktreeFilteredGitBlobSha1": "6a26b726935a947ccac16a385a3f699f7d23de30",
+        "indexBlobSha1": "6a26b726935a947ccac16a385a3f699f7d23de30",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+        "chainNode": "PICKER_PANEL",
+        "role": "Uses EXAM_TYPE_GROUPS for non-Korean passages and writes typeCounts.",
+        "trackedRequired": true,
+        "worktreeSha256": "b20357b0d224e096680c8dfe5a1915c816d30c4bf288569ac4a9a98696aa0a1e",
+        "indexStage": "100644 5dc433eb6f42b108b292c7f29316227c74f28191 0\tsrc/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+        "headBlobSha1": "5dc433eb6f42b108b292c7f29316227c74f28191",
+        "lastPathCommit": "b8cfd5f9845c638c82843e6fd4e10e14b95cf903",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+        "worktreeRawGitBlobSha1": "8bbcd0ab0c019d01a62072eeae483482a9939ea7",
+        "worktreeFilteredGitBlobSha1": "5dc433eb6f42b108b292c7f29316227c74f28191",
+        "indexBlobSha1": "5dc433eb6f42b108b292c7f29316227c74f28191",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/use-generation-handlers.ts",
+        "chainNode": "SECONDARY_BATCH_DISPATCH",
+        "role": "Enumerates positive typeCounts and posts questionType to fast and legacy job endpoints.",
+        "trackedRequired": true,
+        "worktreeSha256": "77ef54a97aac885bf6b45a88395e019f0dd0c2d43d5530ad64a1c0e59082b5f7",
+        "indexStage": "100644 b1aebe3d8feb26c4908cbbe28da0f51edcb18f89 0\tsrc/app/(director)/director/workbench/generate/use-generation-handlers.ts",
+        "headBlobSha1": "b1aebe3d8feb26c4908cbbe28da0f51edcb18f89",
+        "lastPathCommit": "b8cfd5f9845c638c82843e6fd4e10e14b95cf903",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/app/(director)/director/workbench/generate/use-generation-handlers.ts",
+        "worktreeRawGitBlobSha1": "dcbb81d55af1b3b03c53b196de727b7712fe813d",
+        "worktreeFilteredGitBlobSha1": "b1aebe3d8feb26c4908cbbe28da0f51edcb18f89",
+        "indexBlobSha1": "b1aebe3d8feb26c4908cbbe28da0f51edcb18f89",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/workspace/use-workspace-generation.ts",
+        "chainNode": "PRIMARY_WORKSPACE_DISPATCH",
+        "role": "Enumerates row/global typeCounts and submits each typeId through the shared fast job creator.",
+        "trackedRequired": true,
+        "worktreeSha256": "ed155b73e3df6b38ccaab9fa3cf9835816f78701a6d304d4a787b9cd5742079e",
+        "indexStage": "100644 777b29f5f73df7488e0cadecd8ff94027a029e43 0\tsrc/app/(director)/director/workbench/generate/workspace/use-workspace-generation.ts",
+        "headBlobSha1": "777b29f5f73df7488e0cadecd8ff94027a029e43",
+        "lastPathCommit": "b8cfd5f9845c638c82843e6fd4e10e14b95cf903",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/app/(director)/director/workbench/generate/workspace/use-workspace-generation.ts",
+        "worktreeRawGitBlobSha1": "e79faa0a7ed235e3cbcfc7ec8cebea0777d6f038",
+        "worktreeFilteredGitBlobSha1": "777b29f5f73df7488e0cadecd8ff94027a029e43",
+        "indexBlobSha1": "777b29f5f73df7488e0cadecd8ff94027a029e43",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/fast-generation-scheduler.ts",
+        "chainNode": "PRIMARY_WORKSPACE_SCHEDULER",
+        "role": "Preserves each typed fast request while applying the global scheduler.",
+        "trackedRequired": true,
+        "worktreeSha256": "b0e0ea0a9c764c5ed98929ad567b076f6a8364784e6a3caea9a26bb417b90f2f",
+        "indexStage": "100644 e22e68e3a483ae45b741ef9dca8252e274d25e4c 0\tsrc/app/(director)/director/workbench/generate/fast-generation-scheduler.ts",
+        "headBlobSha1": "e22e68e3a483ae45b741ef9dca8252e274d25e4c",
+        "lastPathCommit": "75c5c8aca703a0287a0b39f18cb770d42ecddd36",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/app/(director)/director/workbench/generate/fast-generation-scheduler.ts",
+        "worktreeRawGitBlobSha1": "e22e68e3a483ae45b741ef9dca8252e274d25e4c",
+        "worktreeFilteredGitBlobSha1": "e22e68e3a483ae45b741ef9dca8252e274d25e4c",
+        "indexBlobSha1": "e22e68e3a483ae45b741ef9dca8252e274d25e4c",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+        "chainNode": "FAST_API_RUNTIME_BRIDGE",
+        "role": "Validates manual questionType and directly calls the shared generation runtime.",
+        "trackedRequired": true,
+        "worktreeSha256": "b8c8181691f897bfc7cc782d50efe194c2bbda91aded20a81c3ba4ed548a7b4e",
+        "indexStage": "100644 2e5d960b8161550dfaf8cd356c54b974211e97db 0\tsrc/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+        "headBlobSha1": "2e5d960b8161550dfaf8cd356c54b974211e97db",
+        "lastPathCommit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+        "statusPorcelainV2": "1 .M N... 100644 100644 100644 2e5d960b8161550dfaf8cd356c54b974211e97db 2e5d960b8161550dfaf8cd356c54b974211e97db src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+        "lsFilesVerbose": "H src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+        "worktreeRawGitBlobSha1": "07cdd16f6c0afd4219f6125be5533b04f3dd7c27",
+        "worktreeFilteredGitBlobSha1": "e5d1e0d9cfc069abc9999d7dc902b601391bcc6e",
+        "indexBlobSha1": "2e5d960b8161550dfaf8cd356c54b974211e97db",
+        "derivedGitDirty": true
+      },
+      {
+        "path": "src/app/api/workbench/ai-jobs/question-generation/route.ts",
+        "chainNode": "LEGACY_API_TRIGGER_BRIDGE",
+        "role": "Validates manual questionType and enqueues the named Trigger.dev runtime.",
+        "trackedRequired": true,
+        "worktreeSha256": "49a407b71ad40957cff009953153ccd368705c1afad6d4e1ba01657272097f76",
+        "indexStage": "100644 70b11b13ea576880b75952fb3dd4fbf07ac103f9 0\tsrc/app/api/workbench/ai-jobs/question-generation/route.ts",
+        "headBlobSha1": "70b11b13ea576880b75952fb3dd4fbf07ac103f9",
+        "lastPathCommit": "591cdb413c8b4b9323eb3141d144df7566875cc6",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/app/api/workbench/ai-jobs/question-generation/route.ts",
+        "worktreeRawGitBlobSha1": "434a66ba89278e30661495ef71efdf3ad56ae998",
+        "worktreeFilteredGitBlobSha1": "70b11b13ea576880b75952fb3dd4fbf07ac103f9",
+        "indexBlobSha1": "70b11b13ea576880b75952fb3dd4fbf07ac103f9",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/trigger/workbench-question-generation.ts",
+        "chainNode": "TRIGGER_RUNTIME_BRIDGE",
+        "role": "Restores questionType from job config and calls the shared generation runtime.",
+        "trackedRequired": true,
+        "worktreeSha256": "cfc44b01c039c095759ffa1204f8e77b9cf5d62e6b1386ba9ff8d2a6beaa66be",
+        "indexStage": "100644 11791065843d4d0ee61605daf48b66b4fccaaa4c 0\tsrc/trigger/workbench-question-generation.ts",
+        "headBlobSha1": "11791065843d4d0ee61605daf48b66b4fccaaa4c",
+        "lastPathCommit": "d98da5a58a6e1e9aa131e1c0f5f16823938f83f3",
+        "statusPorcelainV2": "1 .M N... 100644 100644 100644 11791065843d4d0ee61605daf48b66b4fccaaa4c 11791065843d4d0ee61605daf48b66b4fccaaa4c src/trigger/workbench-question-generation.ts",
+        "lsFilesVerbose": "H src/trigger/workbench-question-generation.ts",
+        "worktreeRawGitBlobSha1": "f224ba0f1e923a49e1ea23cadd9d46d5a76a2b9b",
+        "worktreeFilteredGitBlobSha1": "42a39aaccde37156c0dc075494c6aafcd7152f9c",
+        "indexBlobSha1": "11791065843d4d0ee61605daf48b66b4fccaaa4c",
+        "derivedGitDirty": true
+      },
+      {
+        "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+        "chainNode": "TYPE_SCHEMA_DISPATCH",
+        "role": "Indexes AI_QUESTION_SCHEMAS and QUESTION_SCHEMAS by subType and calls getAiResponseSchema.",
+        "trackedRequired": true,
+        "worktreeSha256": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2",
+        "indexStage": "100644 db3c9ad5647a84cf268c2c2329a7a538c8ebf0e3 0\tsrc/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+        "headBlobSha1": "db3c9ad5647a84cf268c2c2329a7a538c8ebf0e3",
+        "lastPathCommit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+        "statusPorcelainV2": "1 .M N... 100644 100644 100644 db3c9ad5647a84cf268c2c2329a7a538c8ebf0e3 db3c9ad5647a84cf268c2c2329a7a538c8ebf0e3 src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+        "lsFilesVerbose": "H src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+        "worktreeRawGitBlobSha1": "b1f58b8941ac6cd6ee2bde79179d4a4a02e38446",
+        "worktreeFilteredGitBlobSha1": "b1f58b8941ac6cd6ee2bde79179d4a4a02e38446",
+        "indexBlobSha1": "db3c9ad5647a84cf268c2c2329a7a538c8ebf0e3",
+        "derivedGitDirty": true
+      },
+      {
+        "path": "src/lib/question-schemas.ts",
+        "chainNode": "STRUCTURED_SCHEMA_REGISTRY",
+        "role": "Structured response registry used as the fallback schema authority.",
+        "trackedRequired": true,
+        "worktreeSha256": "6037aaad366f029afc2b0ebf1b0194cdcc8874173002256baa24a95d15888a22",
+        "indexStage": "100644 ebb1b92690d96861580e3ea9499c431083534fbd 0\tsrc/lib/question-schemas.ts",
+        "headBlobSha1": "ebb1b92690d96861580e3ea9499c431083534fbd",
+        "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/lib/question-schemas.ts",
+        "worktreeRawGitBlobSha1": "f6d3e4cc34dc99713759a0782250bc3a42620ed9",
+        "worktreeFilteredGitBlobSha1": "ebb1b92690d96861580e3ea9499c431083534fbd",
+        "indexBlobSha1": "ebb1b92690d96861580e3ea9499c431083534fbd",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/lib/question-ai-schemas-mc.ts",
+        "chainNode": "AI_SCHEMA_AGGREGATOR",
+        "role": "Aggregates MC, vocabulary, and essay schema registries into AI_QUESTION_SCHEMAS.",
+        "trackedRequired": true,
+        "worktreeSha256": "c538452b7810e0efd8dd1d2c9345c3b1a64f8650a4590afc11850ce0d2bb5694",
+        "indexStage": "100644 1f04c99402d8a92ec770d82052e9bd1ae7c9a661 0\tsrc/lib/question-ai-schemas-mc.ts",
+        "headBlobSha1": "1f04c99402d8a92ec770d82052e9bd1ae7c9a661",
+        "lastPathCommit": "3f155ca682baec204559d07d1516c847e13ba347",
+        "statusPorcelainV2": "1 .M N... 100644 100644 100644 1f04c99402d8a92ec770d82052e9bd1ae7c9a661 1f04c99402d8a92ec770d82052e9bd1ae7c9a661 src/lib/question-ai-schemas-mc.ts",
+        "lsFilesVerbose": "H src/lib/question-ai-schemas-mc.ts",
+        "worktreeRawGitBlobSha1": "9267236a372ed71e4a127a04979370af3d5b9bf1",
+        "worktreeFilteredGitBlobSha1": "e3f9e2d9c4c03b1123e8a18e73297630f997c11e",
+        "indexBlobSha1": "1f04c99402d8a92ec770d82052e9bd1ae7c9a661",
+        "derivedGitDirty": true
+      },
+      {
+        "path": "src/lib/question-ai-schemas-vocab.ts",
+        "chainNode": "AI_VOCAB_SCHEMA_REGISTRY",
+        "role": "Defines the three vocabulary production IDs used by the AI aggregator.",
+        "trackedRequired": true,
+        "worktreeSha256": "71f041c8f073262db1a181c2c23c932a0fe24e0e130fb605adbaa6613503de4a",
+        "indexStage": "100644 747b8f5eaf3da4781b09b7014a7eafb163abc105 0\tsrc/lib/question-ai-schemas-vocab.ts",
+        "headBlobSha1": "747b8f5eaf3da4781b09b7014a7eafb163abc105",
+        "lastPathCommit": "72418a0ce517a6fcf0ce2b883f4e80d81ecdda04",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/lib/question-ai-schemas-vocab.ts",
+        "worktreeRawGitBlobSha1": "710be1a9f52a13b12a3186234d9660b5bcd621c8",
+        "worktreeFilteredGitBlobSha1": "747b8f5eaf3da4781b09b7014a7eafb163abc105",
+        "indexBlobSha1": "747b8f5eaf3da4781b09b7014a7eafb163abc105",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/lib/question-schemas-essay.ts",
+        "chainNode": "ESSAY_SCHEMA_PROVIDER",
+        "role": "Provides the eight constructed-response schemas named by the AI aggregator.",
+        "trackedRequired": true,
+        "worktreeSha256": "ce8991752e47ef56a054718c7e012cb020e1962cb3dbbb22f2cc705b6d5193e9",
+        "indexStage": "100644 2b766cdd1253c92b2485e22428cf75de37b7835d 0\tsrc/lib/question-schemas-essay.ts",
+        "headBlobSha1": "2b766cdd1253c92b2485e22428cf75de37b7835d",
+        "lastPathCommit": "3f155ca682baec204559d07d1516c847e13ba347",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/lib/question-schemas-essay.ts",
+        "worktreeRawGitBlobSha1": "7832b39c99a46197152e02b295134113839451b1",
+        "worktreeFilteredGitBlobSha1": "2b766cdd1253c92b2485e22428cf75de37b7835d",
+        "indexBlobSha1": "2b766cdd1253c92b2485e22428cf75de37b7835d",
+        "derivedGitDirty": false
+      },
+      {
+        "path": "src/lib/question-schemas-vocab.ts",
+        "chainNode": "VOCAB_SCHEMA_PROVIDER",
+        "role": "Provides the vocabulary base schema imported by the AI vocabulary registry.",
+        "trackedRequired": true,
+        "worktreeSha256": "5cf7302a9973182c332b20a02a163105541dde37c399c1a931b376577694e970",
+        "indexStage": "100644 cf16baf45fa348b9cf80e4c3519daf2604d504f4 0\tsrc/lib/question-schemas-vocab.ts",
+        "headBlobSha1": "cf16baf45fa348b9cf80e4c3519daf2604d504f4",
+        "lastPathCommit": "92fa534edef94c87f8aae3d065bdb45b8cdcfbc1",
+        "statusPorcelainV2": "",
+        "lsFilesVerbose": "H src/lib/question-schemas-vocab.ts",
+        "worktreeRawGitBlobSha1": "3dafe26e84bc0a0e8e35d8bfe70ef58c906cbf7d",
+        "worktreeFilteredGitBlobSha1": "cf16baf45fa348b9cf80e4c3519daf2604d504f4",
+        "indexBlobSha1": "cf16baf45fa348b9cf80e4c3519daf2604d504f4",
+        "derivedGitDirty": false
+      }
+    ],
+    "semanticSha256": "e237f8084918defeb4bad19222befed116aa1c0fcc390ab2333ee01de7a58a1d"
+  },
+  "astAuthorityChain": {
+    "parser": "TypeScript compiler AST",
+    "routeEntry": [
+      "GeneratePageClient import from ../../generate/generate-page-client",
+      "GeneratePageClient JSX defaultMode=manual"
+    ],
+    "client": [
+      "GenerationConfigPanel import/render",
+      "useGenerationHandlers call receives typeCounts/generationPlan/questionTypeSettings",
+      "useWorkspaceGeneration call receives typeCounts/generationPlan/questionTypeSettings"
+    ],
+    "picker": [
+      "QUESTION_TYPE_GROUPS has exactly the canonical 25 UI references",
+      "EXAM_TYPE_GROUPS initializer is QUESTION_TYPE_GROUPS",
+      "non-Korean panel branch selects EXAM_TYPE_GROUPS",
+      "panel consumes panelTypeGroups"
+    ],
+    "secondaryBatch": [
+      "positive typeCounts are enumerated",
+      "typeId is assigned to questionType",
+      "fast and legacy POST endpoints are literal-bound"
+    ],
+    "primaryWorkspace": [
+      "workspace hook imports shared fast creator and scheduler",
+      "typeId is assigned to questionType",
+      "scheduled fast creator call exists"
+    ],
+    "apiAndRuntime": [
+      "fast route imports/calls runQuestionGenerationWithEmptyRetry",
+      "legacy route triggers workbench-question-generation",
+      "Trigger task imports/calls runQuestionGenerationWithEmptyRetry",
+      "runtime indexes AI_QUESTION_SCHEMAS and QUESTION_SCHEMAS by subType and calls getAiResponseSchema(subType)"
+    ],
+    "schemaRegistry": [
+      "structured and AI registry IDs exact-match the 25 UI IDs plus legacy TOPIC_MAIN_IDEA",
+      "vocabulary and essay providers are exact source-bound"
+    ]
+  },
+  "canonicalUniverse": {
+    "uiTypeCount": 25,
+    "uiTypeIdsInOrder": [
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR",
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "focusTypeIds": [
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR"
+    ],
+    "nonfocusTypeCount": 23,
+    "nonfocusTypeIdsInUiOrder": [
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ]
+  },
+  "families": [
+    {
+      "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+      "rotationOrder": [
+        "TOPIC",
+        "MAIN_IDEA",
+        "TITLE"
+      ]
+    },
+    {
+      "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+      "rotationOrder": [
+        "IMPLIED_MEANING",
+        "REFERENCE",
+        "CONTENT_MATCH"
+      ]
+    },
+    {
+      "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+      "rotationOrder": [
+        "SENTENCE_ORDER",
+        "SENTENCE_INSERT",
+        "IRRELEVANT"
+      ]
+    },
+    {
+      "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+      "rotationOrder": [
+        "GRAMMAR_CHOICE_COMBO",
+        "GRAMMAR_CORRECTION"
+      ]
+    },
+    {
+      "familyId": "NF-F5-LEXICAL_SEMANTICS",
+      "rotationOrder": [
+        "VOCAB_CHOICE",
+        "CONTEXT_MEANING",
+        "SYNONYM",
+        "ANTONYM"
+      ]
+    },
+    {
+      "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+      "rotationOrder": [
+        "SUMMARY_COMPLETE_MC",
+        "SUMMARY_COMPLETE",
+        "SUMMARY_WRITING"
+      ]
+    },
+    {
+      "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+      "rotationOrder": [
+        "CONDITIONAL_WRITING",
+        "SENTENCE_TRANSFORM",
+        "WORD_ORDER"
+      ]
+    },
+    {
+      "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+      "rotationOrder": [
+        "FILL_BLANK_KEY",
+        "TOPIC_SENTENCE_WRITING"
+      ]
+    }
+  ],
+  "rotation": {
+    "epochIsOneBased": true,
+    "mainIndexFormula": "(epoch - 1) mod familySize",
+    "holdoutIndexFormula": "(epoch - 1 + ceil(familySize / 2)) mod familySize",
+    "implementationFunction": "selectedAt(rotationOrder, epoch, role)",
+    "formulaRowsAndCoverageMustUseSameFunction": true,
+    "oneMainAndOneHoldoutPerFamilyPerEpoch": true,
+    "mainAndHoldoutMustBeDifferentWithinEpoch": true,
+    "failureDoesNotAdvanceRotation": true,
+    "outcomeAwareSkippingForbidden": true,
+    "pilotDoesNotCountTowardCoverage": true,
+    "singleEpochDistinctCanonicalTypes": 16,
+    "singleEpochAllTypeClaimAllowed": false,
+    "mainPlusHoldoutEpochsToContactAll23": 2,
+    "mainOnlyEpochsToContactAll23": 4,
+    "contactIsCertification": false,
+    "allTypeClaimGate": "Every one of the 23 canonical IDs must have a passed fresh main or activation-holdout coverage event; contact alone is insufficient."
+  },
+  "scheduleRows": [
+    {
+      "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+      "epoch": 1,
+      "mainIndex": 0,
+      "mainTypeId": "TOPIC",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "TITLE"
+    },
+    {
+      "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+      "epoch": 2,
+      "mainIndex": 1,
+      "mainTypeId": "MAIN_IDEA",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "TOPIC"
+    },
+    {
+      "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+      "epoch": 3,
+      "mainIndex": 2,
+      "mainTypeId": "TITLE",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "MAIN_IDEA"
+    },
+    {
+      "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+      "epoch": 4,
+      "mainIndex": 0,
+      "mainTypeId": "TOPIC",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "TITLE"
+    },
+    {
+      "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+      "epoch": 1,
+      "mainIndex": 0,
+      "mainTypeId": "IMPLIED_MEANING",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "CONTENT_MATCH"
+    },
+    {
+      "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+      "epoch": 2,
+      "mainIndex": 1,
+      "mainTypeId": "REFERENCE",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "IMPLIED_MEANING"
+    },
+    {
+      "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+      "epoch": 3,
+      "mainIndex": 2,
+      "mainTypeId": "CONTENT_MATCH",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "REFERENCE"
+    },
+    {
+      "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+      "epoch": 4,
+      "mainIndex": 0,
+      "mainTypeId": "IMPLIED_MEANING",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "CONTENT_MATCH"
+    },
+    {
+      "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+      "epoch": 1,
+      "mainIndex": 0,
+      "mainTypeId": "SENTENCE_ORDER",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "IRRELEVANT"
+    },
+    {
+      "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+      "epoch": 2,
+      "mainIndex": 1,
+      "mainTypeId": "SENTENCE_INSERT",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "SENTENCE_ORDER"
+    },
+    {
+      "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+      "epoch": 3,
+      "mainIndex": 2,
+      "mainTypeId": "IRRELEVANT",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "SENTENCE_INSERT"
+    },
+    {
+      "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+      "epoch": 4,
+      "mainIndex": 0,
+      "mainTypeId": "SENTENCE_ORDER",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "IRRELEVANT"
+    },
+    {
+      "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+      "epoch": 1,
+      "mainIndex": 0,
+      "mainTypeId": "GRAMMAR_CHOICE_COMBO",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "GRAMMAR_CORRECTION"
+    },
+    {
+      "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+      "epoch": 2,
+      "mainIndex": 1,
+      "mainTypeId": "GRAMMAR_CORRECTION",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "GRAMMAR_CHOICE_COMBO"
+    },
+    {
+      "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+      "epoch": 3,
+      "mainIndex": 0,
+      "mainTypeId": "GRAMMAR_CHOICE_COMBO",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "GRAMMAR_CORRECTION"
+    },
+    {
+      "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+      "epoch": 4,
+      "mainIndex": 1,
+      "mainTypeId": "GRAMMAR_CORRECTION",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "GRAMMAR_CHOICE_COMBO"
+    },
+    {
+      "familyId": "NF-F5-LEXICAL_SEMANTICS",
+      "epoch": 1,
+      "mainIndex": 0,
+      "mainTypeId": "VOCAB_CHOICE",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "SYNONYM"
+    },
+    {
+      "familyId": "NF-F5-LEXICAL_SEMANTICS",
+      "epoch": 2,
+      "mainIndex": 1,
+      "mainTypeId": "CONTEXT_MEANING",
+      "holdoutIndex": 3,
+      "holdoutTypeId": "ANTONYM"
+    },
+    {
+      "familyId": "NF-F5-LEXICAL_SEMANTICS",
+      "epoch": 3,
+      "mainIndex": 2,
+      "mainTypeId": "SYNONYM",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "VOCAB_CHOICE"
+    },
+    {
+      "familyId": "NF-F5-LEXICAL_SEMANTICS",
+      "epoch": 4,
+      "mainIndex": 3,
+      "mainTypeId": "ANTONYM",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "CONTEXT_MEANING"
+    },
+    {
+      "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+      "epoch": 1,
+      "mainIndex": 0,
+      "mainTypeId": "SUMMARY_COMPLETE_MC",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "SUMMARY_WRITING"
+    },
+    {
+      "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+      "epoch": 2,
+      "mainIndex": 1,
+      "mainTypeId": "SUMMARY_COMPLETE",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "SUMMARY_COMPLETE_MC"
+    },
+    {
+      "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+      "epoch": 3,
+      "mainIndex": 2,
+      "mainTypeId": "SUMMARY_WRITING",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "SUMMARY_COMPLETE"
+    },
+    {
+      "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+      "epoch": 4,
+      "mainIndex": 0,
+      "mainTypeId": "SUMMARY_COMPLETE_MC",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "SUMMARY_WRITING"
+    },
+    {
+      "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+      "epoch": 1,
+      "mainIndex": 0,
+      "mainTypeId": "CONDITIONAL_WRITING",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "WORD_ORDER"
+    },
+    {
+      "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+      "epoch": 2,
+      "mainIndex": 1,
+      "mainTypeId": "SENTENCE_TRANSFORM",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "CONDITIONAL_WRITING"
+    },
+    {
+      "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+      "epoch": 3,
+      "mainIndex": 2,
+      "mainTypeId": "WORD_ORDER",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "SENTENCE_TRANSFORM"
+    },
+    {
+      "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+      "epoch": 4,
+      "mainIndex": 0,
+      "mainTypeId": "CONDITIONAL_WRITING",
+      "holdoutIndex": 2,
+      "holdoutTypeId": "WORD_ORDER"
+    },
+    {
+      "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+      "epoch": 1,
+      "mainIndex": 0,
+      "mainTypeId": "FILL_BLANK_KEY",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "TOPIC_SENTENCE_WRITING"
+    },
+    {
+      "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+      "epoch": 2,
+      "mainIndex": 1,
+      "mainTypeId": "TOPIC_SENTENCE_WRITING",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "FILL_BLANK_KEY"
+    },
+    {
+      "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+      "epoch": 3,
+      "mainIndex": 0,
+      "mainTypeId": "FILL_BLANK_KEY",
+      "holdoutIndex": 1,
+      "holdoutTypeId": "TOPIC_SENTENCE_WRITING"
+    },
+    {
+      "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+      "epoch": 4,
+      "mainIndex": 1,
+      "mainTypeId": "TOPIC_SENTENCE_WRITING",
+      "holdoutIndex": 0,
+      "holdoutTypeId": "FILL_BLANK_KEY"
+    }
+  ],
+  "claims": {
+    "singleEpochCombinedDistinctTypes": 16,
+    "twoEpochCombinedContactTypes": 23,
+    "fourEpochMainOnlyContactTypes": 23,
+    "singleEpochAllTypeClaimAllowed": false,
+    "contactEqualsCertification": false
+  },
+  "semanticDigests": {
+    "canonicalBindingSha256": "433d72598f123a19950b57e4684d0ba004031d3beb0860fc5d5d226ddcf8022b",
+    "productionSourceContractSha256": "e237f8084918defeb4bad19222befed116aa1c0fcc390ab2333ee01de7a58a1d",
+    "auditCoreSha256": "356085dcf0a5d34b5026519b03ea2d1e098db97de5a5e5b769aba8ff6fcc60cb"
+  },
+  "independentAudit": {
+    "required": true,
+    "mode": "EXTERNAL_IMMUTABLE_SUBJECT",
+    "completedInThisArtifact": false,
+    "subjectManifestAssignedAfterFreeze": true,
+    "downstreamGate": "A downstream v4 packet must exact-bind this immutable v3 manifest and a separate independent PASS audit manifest whose subject manifest and audit-core digests match."
+  },
+  "issuance": {
+    "executionEligibleByThisArtifactAlone": false,
+    "v1ExecutionEligible": false,
+    "v2ExecutionEligible": false,
+    "downstreamV4FreezeRequiresExternalAuditManifest": true,
+    "downstreamV4FreezeAllowedByThisArtifactAlone": false
+  },
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0
+  }
+}
+

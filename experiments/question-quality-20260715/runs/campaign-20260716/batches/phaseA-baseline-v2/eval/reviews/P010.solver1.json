@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'defines human relationships through cold contracts' — 계약(contracts)은 지문 어디에도 근거가 없다. 'the law deals with the messiness of human relations'의 표면 어휘(human relations)를 재활용한 미끼. 빈칸 뒤 'fearing the horror of their consequences'에서 their의 선행사가 contracts/relationships가 되면 '그것들의 결과의 공포를 두려워하여'라는 논리가 붕괴한다. 지문이 요구하는 것은 desires/drives 억제이지 관계의 계약적 정의가 아니다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "'strictly regulates artistic channels to filter out sensitive images' — 'a study of the interaction between cinema and law'라는 구절에 이끌리면 법이 영화를 검열한다는 그림이 순간 매력적으로 보인다(실제로 끌렸음). 그러나 지문의 대비 구조는 '법이 영화를 규제한다'가 아니라 '영화는 정동을 표현하고 법은 정동을 억제한다'는 병렬 대비다. keeps it in check의 it은 man's affective life이지 cinema가 아니다. sensitive images를 their의 선행사로 삼아도 앞 문장의 'overwhelmed and destroyed by our desires and drives'와 정합하지 않는다."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "'strives to contain our emotional impulses' — 직전 두 문장 'the law keeps it(=man's affective life) in check' + 'tries to ensure that we are not overwhelmed and destroyed by our desires and drives'의 정확한 패러프레이즈(keeps in check→contain, affective life/desires and drives→emotional impulses, tries to ensure→strives). 'their consequences'의 복수 선행사(emotional impulses)를 완벽히 공급하며, whereas 뒤 'cinema introduces us to our affects'와 정확한 반대 대구를 이룬다. 문법 이음새와 논리 모두 무결."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "'attempts to supervise how cinema captures anxiety' — ②와 같은 계열의 검열/감독 미끼에 'anxiety' 표면 어휘 재활용을 더한 이중 미끼. 지문의 anxiety는 'foundational to law is its anxiety about human nature', 즉 법 자신이 인간 본성에 대해 갖는 불안이지 영화가 포착하는 대상이 아니다. 법-영화의 감독 관계는 지문에 전혀 없으며, their의 복수 선행사도 이 선지 안에 없어 이음새도 어색하다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'welcomes affective expressions as a vital key' — 'the law keeps it in check'와 정면 모순. 정동 표현을 환영하는 쪽은 whereas 뒤에 배치된 영화의 역할이다. 대비 구조를 뒤집은 극성 반전 오답으로, 최상위권에게는 즉시 소거된다."
+    }
+  ],
+  "note": "빈칸은 whereas 대구 구조상 'keeps it in check'의 재진술 자리이며 ③이 유일한 정답. ②·④는 '법이 영화를 규제/감독한다'는 검열 프레임 미끼로 'interaction between cinema and law' 구절에 순간 끌리게 설계됐으나, 지문의 대비는 두 분야가 정동(affect)을 다루는 반대 방식이므로 논리적으로 배제된다. their의 선행사 공급(emotional impulses)까지 ③만 무결. 복수 정답 여지 없음."
+}

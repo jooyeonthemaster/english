@@ -1,0 +1,72 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4_EXPLANATION_CORRUPTED_TERM",
+      "severity": "critical",
+      "evidence": "오답 해설 (C)에 '... 진행형 시제를 구성하는 настоящее 분사 working ...' — 한국어 문법 용어 '현재분사' 자리에 러시아어 단어 'настоящее'(=현재)가 혼입된 학생 노출 텍스트 손상. RUBRIC V4의 '용어 오류·환각 없음' 조건 위반. 문법 분석 자체(working=진행형의 현재분사)는 옳으나 용어가 판독 불가능한 외국어 토큰으로 깨져 있어 출하 불가."
+    },
+    {
+      "code": "V5_MARKED_EXPRESSION_FIELD_CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (B)의 expression 필드가 'listening'(원문형)인데 렌더 표시는 'listen'(errorExpression). expression=원문형, errorExpression=표시형, correction=교정형이라는 관례로 읽으면 내부적으로 일관되므로 V5 실패로는 판정하지 않음(비정답 4개 항목은 세 필드가 모두 동일하여 관례와 합치). 스키마 문서화 필요."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "감정유발 동사의 현재분사(-ing) vs 과거분사(-ed) 판정",
+      "temptingBecause": "'to an interviewee'가 바로 뒤에 있어 인터뷰 대상자(경험자)를 기준으로 unnerved를 떠올리기 쉬움",
+      "decisiveFlaw": "서술 대상은 'Recording an interview'(불안을 유발하는 상황)이므로 능동 의미의 unnerving이 옳다 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "[정답] 문장 주어 자리의 동사원형 vs 동명사 판정 (동사 vs 준동사)",
+      "temptingBecause": "'If the interview lasts a while, listen to it again ...'까지만 읽으면 조건절 뒤 명령문으로 자연스럽게 읽혀 오류로 인지되지 않음",
+      "decisiveFlaw": "뒤따르는 술어 'can be time-consuming'이 주어를 요구하므로 'listen to it again ... use' 전체가 주어여야 하고, 동사원형은 주어가 될 수 없다 → listening(동명사)으로 교정하면 정확히 원문 복원. 명령문 대안 해석은 'can be'의 주어 부재로 배제됨 — 유일 정답 확인"
+    },
+    {
+      "label": "(C)",
+      "intent": "be + 현재분사(진행형) 구성 판정",
+      "temptingBecause": "'work to a tight deadline' 콜로케이션이 생소해 형태(worked/work)를 의심하게 만듦",
+      "decisiveFlaw": "'you are working'은 정상적인 현재진행형 — 오류 아님. 다만 정답 (B)와 pointCode 'a'를 공유하며 소거가 빠른 편"
+    },
+    {
+      "label": "(D)",
+      "intent": "능동태 vs 수동태 (be + p.p.) 판정",
+      "temptingBecause": "so that절의 주어 they(the key answers)의 지시 대상을 놓치면 능동 transcribe를 고려하게 됨",
+      "decisiveFlaw": "핵심 답변들은 '전사되는' 대상이므로 can be transcribed(수동)가 옳다 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "비교급 강조 부사 much의 적법성 판정",
+      "temptingBecause": "형용사 원급 앞 much가 비문이라는 지식과 혼동하거나, 'easier and quicker' 병렬 수식 범위를 의심하게 함",
+      "decisiveFlaw": "much는 비교급 강조 부사로 적법 — 오류 아님. 훈련된 학생에게는 즉시 소거되는 가장 약한 디코이"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "FOREIGN_TOKEN_IN_EXPLANATION",
+      "severity": "critical",
+      "evidence": "오답 해설 (C): 'настоящее 분사' — '현재분사'로 표기되어야 할 자리에 러시아어 혼입. 학생 노출 필드의 생성 아티팩트."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 렌더 지문은 원지문 대비 의도된 변형(listening→listen) 외 손상 없음 — 전 문장 대조 완료, 라벨 (A)~(E)가 선지·본문 마커와 일치. V2: 5개 밑줄 독립 검증 결과 (B)만 오류(동사원형이 주어 자리) — 명령문 대안 해석은 'can be time-consuming'의 주어 부재로 배제되어 유일 정답 성립. (A)(C)(D)(E)는 모두 어법상 적절함을 개별 확인. V3: 교정형(listening) 삽입 시 원문과 동일한 문법적 문장, 발문 표준형. V4 실패: 오답 해설 (C)에 러시아어 'настоящее'가 '현재'를 대체하여 혼입 — 구조 분석은 옳으나 학생 노출 해설의 용어 손상은 RUBRIC V4('환각·용어 오류 없음') 위반이며 공예 점수로 상쇄 불가. V5: 정답 라벨 (B)·해설·오답해설 4건·keyPoints 3건 모두 상호 모순 없음. 공예: 동명사 주어 판정은 정전 포인트(C1=3), 디코이가 감정분사/진행형/수동태/비교급 강조로 서로 다른 오개념을 겨냥(C2=3), (E)·(C)가 빠르게 소거되는 점을 감안해도 INTERMEDIATE 변별로 적절(C3=3, C5=3), 메타 누출 없고 교정 시 원문 복원으로 정답 필연적(C4=4), 해설은 간결·정확하나 (C) 해설의 토큰 손상으로 C6=1. 등급: V4 실패로 F(출하 금지). 수정은 단순 — 'настоящее 분사'를 '현재분사'로 교체하면 재감사 시 B 이상 예상."
+}

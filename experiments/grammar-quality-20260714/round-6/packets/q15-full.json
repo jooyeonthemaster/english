@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20190307-q33",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "빈칸추론",
+    "words": 159
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=c  (C):ANS=h  (D):dec=k  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 103,
+        "relPos": 0.125,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 272,
+        "relPos": 0.331,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 406,
+        "relPos": 0.494,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 627,
+        "relPos": 0.763,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 817,
+        "relPos": 0.994,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.994,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A lovely technique for helping children take the first steps towards creating their own, unique story, is to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story called St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it to be quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places for him to meet them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas used.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "children take the first steps towards creating their own, unique story, is to ask them",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "called",
+        "isError": false,
+        "errorExpression": "called",
+        "surroundingText": "the Beasts. It is based on a story called St. Benno and the Frog",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "to be",
+        "isError": true,
+        "correction": "to be",
+        "errorExpression": "be",
+        "surroundingText": "meets a frog in a marsh and tells it to be quiet in case it disturbs his",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "for him to meet",
+        "isError": false,
+        "errorExpression": "for him to meet",
+        "surroundingText": "different animals for the saint to meet and different places for him to meet them. I",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "used",
+        "isError": false,
+        "errorExpression": "used",
+        "surroundingText": "of creating stories and they love hearing their ideas used. I then",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "called"
+      },
+      {
+        "label": "(C)",
+        "text": "be"
+      },
+      {
+        "label": "(D)",
+        "text": "for him to meet"
+      },
+      {
+        "label": "(E)",
+        "text": "used"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 문장의 진짜 주어 핵은 동명사구인 'A lovely technique ~ story'로 단수 취급하므로 단수 동사인 'is'는 어법상 옳습니다.",
+      "(B)": "수식을 받는 명사구 'a story'가 '~라고 불리는' 대상이므로 과거분사 'called'는 어법상 옳습니다.",
+      "(D)": "to부정사의 의미상 주어를 나타내는 'for + 목적격(him)' 뒤에 형용사적 용법의 'to meet'이 수식하는 구조로 어법상 옳습니다.",
+      "(E)": "지각동사 'hearing'의 목적어 'their ideas'와 목적격보어의 관계가 수동(아이디어가 사용되는 것)이므로 과거분사 'used'는 어법상 옳습니다."
+    },
+    "explanation": "주절의 동사 'tells'는 5형식 문형에서 목적어 뒤에 목적격보어로 to부정사를 취하는 대표적인 동사입니다. 따라서 목적어인 'it'의 보어 자리에는 원형부정사 형태인 'be'가 단독으로 올 수 없으므로, 이를 'to be'로 고쳐야 올바른 문장이 됩니다. 문장 앞부분의 'meets'와 'tells'가 병렬 구조를 이루고 있음에 유의하여, 목적격보어의 구조적 실재를 판별하는 것이 중요합니다.",
+    "keyPoints": [
+      "(C) 목적격보어의 준동사 형태 — 5형식 동사의 목적격보어 유형 판정",
+      "(A) 주어-동사 수일치 — 동명사구 주어의 단수동사 일치",
+      "(E) 분사의 태 — 목적어와 목적격보어의 수동 관계 분석"
+    ],
+    "tags": [
+      "목적격보어",
+      "준동사",
+      "수일치",
+      "분사의태"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "A lovely technique for helping children take the first steps towards creating their own, unique story, __(A) is__ to ask them to help you complete a story before you tell it. One story I have done this with frequently is a tale I call Benno and the Beasts. It is based on a story __(B) called__ St. Benno and the Frog, found in an old book by Helen Waddell. In the original, the saint meets a frog in a marsh and tells it __(C) be__ quiet in case it disturbs his prayers. Later, he regrets this, in case God was enjoying listening to the sound of the frog. I invite children to think of different animals for the saint to meet and different places __(D) for him to meet__ them. I then tell them the story including their own ideas. It is a most effective way of involving children in the art of creating stories and they love hearing their ideas __(E) used__.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

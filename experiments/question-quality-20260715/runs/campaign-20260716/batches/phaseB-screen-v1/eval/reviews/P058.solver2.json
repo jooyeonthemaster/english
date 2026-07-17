@@ -1,0 +1,35 @@
+{
+  "pid": "P058",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'did an experiment showing [that] human perception and behavior can be influenced...' — present participle post-modifying 'experiment' with a that-clause complement (complementizer omitted, licit). The experiment actively shows the finding, so active 'showing' is right; passive 'shown' would strand the following finite clause without a licenser. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Reported speech under past-tense 'told': backshifted past progressive 'he was testing their language abilities' obeys sequence of tenses and matches the ongoing-activity sense. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Long-distance agreement check: head subject is plural 'Those students'; the relative clause 'who had been exposed to an elderly mix of words' is an interposed modifier. Finite past 'took' serves as the main verb of the sentence (the sentence otherwise lacks a matrix verb). Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "Comparative 'took ... longer ... than those who had been exposed to random words': pro-form 'those' = 'the students', preserving like-with-like comparison (students vs. students) with predicate ellipsis ('than those [took]'). Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'walked with their shoulders bending forwards' — in the 'with + NP + participle' absolute, participle voice must match the NP's semantic role. Shoulders are the patient held in a bent state, not an agent performing bending; the required form is past participle 'bent' (cf. 'with arms folded', 'with eyes closed'). An inchoative process reading ('shoulders in the act of bending as they walked') fails against the sustained-posture context ('dragging their feet', 'as if they were 50 years older'). Ungrammatical."
+    }
+  ],
+  "note": "Clean item under the grammarian/logician lens: (A)-(D) each survive formal verification including long-distance checks (participle complementation, tense backshift, subject-verb agreement across a relative clause, comparative parallelism/ellipsis). (E) is the sole violation — 'with + NP + participle' voice mismatch; 'bending' should be 'bent'. No alternative parse (reduced relative, absolute construction with intransitive inchoative 'bend') rescues (E) in context, so exactly one defensible answer."
+}

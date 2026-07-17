@@ -1,0 +1,695 @@
+{
+  "id": "b02-c3",
+  "unitId": "b02",
+  "order": 3,
+  "title": "4형식 SVOO — 목적어가 둘",
+  "oneLiner": "동사 뒤에 명사 덩어리 둘, 사이에 전치사 없음 — 이것이 4형식이며, 순서를 바꾸면 동사가 정한 전치사 to·for·of 가 붙습니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 교육과정 별책14 별표4 언어형식 — 문장의 형식(중 ●)",
+      "docs/study-os-spec.md §2.3 b02 문장의 다섯 형식"
+    ]
+  },
+  "lenses": ["L1"],
+  "confusableWith": ["b02-c2", "b02-c4"],
+  "estimatedMinutes": 18,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The library lent me two books about ancient trade.",
+        "The library lent to me two books about ancient trade."
+      ],
+      "answer": 0,
+      "afterText": "차이는 전치사 to 하나입니다. 이 레슨을 마치면 그 전치사를 언제 붙이고 언제 붙이지 않는지 규칙으로 말할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "4형식(SVOO)",
+      "question": "목적어가 둘이라니, 대체 무슨 말입니까?",
+      "plain": "give·send 같은 동사는 '누구에게'와 '무엇을'을 한꺼번에 데리고 다닙니다. 이렇게 동사 뒤에 목적어가 두 개 서는 문장을 4형식이라고 부릅니다.",
+      "analogy": "택배와 같습니다. 무언가를 보내는 일에는 언제나 '받는 사람'과 '보내는 물건'이 함께 필요합니다. 받는 사람이 간접목적어, 상자 속 물건이 직접목적어입니다.",
+      "whyItMatters": "시험은 두 목적어의 순서와 전치사를 집요하게 묻습니다. '사람 먼저, 전치사 없음'이라는 이 형식의 규칙을 알면 lent me 와 lent to me 중 무엇이 옳은지 감이 아니라 규칙으로 판정할 수 있습니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "4형식을 읽는 부품 네 개",
+      "intro": "4형식 문장을 읽는 데 필요한 부품을 항목 하나에 하나씩 적습니다.",
+      "entries": [
+        {
+          "head": "간접목적어 — '누구에게'",
+          "body": "동사 바로 뒤에 서는 첫 번째 목적어로, 받는 상대를 가리킵니다. 주로 사람이며, him 처럼 목적격 대명사가 그대로 옵니다.",
+          "example": {
+            "en": "The coach gave **the players** new uniforms.",
+            "ko": "그 감독은 선수들에게 새 유니폼을 주었습니다.",
+            "note": "동사 바로 뒤의 the players 가 '누구에게', 곧 간접목적어입니다."
+          }
+        },
+        {
+          "head": "직접목적어 — '무엇을'",
+          "body": "간접목적어 뒤에 서는 두 번째 목적어로, 건네지는 물건이나 내용을 가리킵니다. 동사가 실제로 주고받는 대상입니다.",
+          "example": {
+            "en": "The coach gave the players **new uniforms**.",
+            "ko": "그 감독은 선수들에게 새 유니폼을 주었습니다.",
+            "note": "new uniforms 가 건네지는 물건, 곧 직접목적어입니다."
+          }
+        },
+        {
+          "head": "황금 순서 — 사람 먼저, 전치사 없음",
+          "body": "4형식의 어순은 언제나 '간접목적어 → 직접목적어'입니다. 두 목적어 사이에는 전치사를 쓰지 않습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "3형식 전환 — 사물이 앞으로 나오면 전치사 등장",
+          "body": "직접목적어를 앞으로 보내면 사람 앞에 to·for·of 중 하나가 붙습니다. 어느 것이 붙는지는 동사가 정합니다.",
+          "example": {
+            "en": "The coach gave new uniforms **to** the players.",
+            "ko": "그 감독은 새 유니폼을 선수들에게 주었습니다.",
+            "note": "사물이 앞으로 나왔으므로 사람 앞에 to 가 필요합니다. 뜻은 같습니다."
+          },
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "부품과 역할 연결하기",
+      "instruction": "왼쪽 항목이 가리키는 것을 오른쪽에서 찾아 연결하십시오. 방금 적은 필기를 그대로 씁니다.",
+      "pairs": [
+        {
+          "a": "간접목적어",
+          "b": "두 목적어 중 먼저 서서 「누구에게」로 읽는 역할의 이름",
+          "why": "4형식에서 언제나 앞자리에 서는 목적어입니다."
+        },
+        {
+          "a": "직접목적어",
+          "b": "'무엇을' — 건네지는 물건·내용",
+          "why": "간접목적어 뒤에 서는 두 번째 목적어입니다."
+        },
+        {
+          "a": "4형식",
+          "b": "동사 뒤에 목적어 둘, 사이에 전치사 없음",
+          "why": "명사 덩어리 둘 사이에 전치사가 없다는 것이 4형식의 표지입니다."
+        },
+        {
+          "a": "3형식 전환문",
+          "b": "사물이 앞으로 나오고 사람 앞에 전치사",
+          "why": "직접목적어를 앞세우면 간접목적어 앞에 to·for·of 가 붙습니다."
+        },
+        {
+          "a": "him · us · me",
+          "b": "전치사 없이 그대로 쓰는 목적격 대명사의 예",
+          "why": "간접목적어 자리에는 목적격 대명사가 전치사 없이 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "title": "목적어를 둘 받는 동사가 있습니다",
+      "rule": "일부 동사는 목적어를 둘 받습니다. 앞의 목적어는 '누구에게'(간접목적어), 뒤의 목적어는 '무엇을'(직접목적어)입니다.",
+      "examples": [
+        {
+          "en": "The teacher **showed** the students an old photograph.",
+          "ko": "그 교사는 학생들에게 오래된 사진 한 장을 보여 주었습니다.",
+          "note": "showed 뒤에 명사 덩어리가 둘입니다. the students 가 간접목적어, an old photograph 가 직접목적어입니다."
+        },
+        {
+          "en": "The company **offered** him a position in the research team.",
+          "ko": "그 회사는 그에게 연구팀의 자리를 제안했습니다.",
+          "note": "간접목적어 자리에는 him 처럼 목적격 대명사가 그대로 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "title": "황금 순서 — 사람 먼저, 전치사 없음",
+      "rule": "4형식의 어순은 '간접목적어 → 직접목적어'로 고정이며, 두 목적어 사이에 전치사를 쓰지 않습니다. 직접목적어를 앞으로 보내면 그때는 간접목적어 앞에 전치사가 필요합니다.",
+      "examples": [
+        {
+          "en": "The museum **sent** every member a printed catalogue.",
+          "ko": "그 박물관은 모든 회원에게 인쇄된 도록을 보냈습니다.",
+          "note": "every member 앞에 to 를 붙이지 않습니다. 간접목적어가 앞자리에 있을 때는 전치사가 없습니다."
+        },
+        {
+          "en": "The museum **sent** a printed catalogue **to** every member.",
+          "ko": "그 박물관은 인쇄된 도록을 모든 회원에게 보냈습니다.",
+          "note": "직접목적어를 앞으로 보내 순서를 바꾸면, 간접목적어 앞에 전치사 to 가 필요합니다. 뜻은 같습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "목적어가 둘인 문장의 해부",
+      "tokens": [
+        { "t": "The head librarian", "role": "S" },
+        { "t": "in the reading room", "role": "M" },
+        { "t": "handed", "role": "V" },
+        { "t": "the new students", "role": "O" },
+        { "t": "a rare manuscript", "role": "O" }
+      ],
+      "ko": "열람실의 수석 사서는 새로 온 학생들에게 희귀한 필사본을 건네주었습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "in the reading room 은 앞의 명사를 꾸미는 전치사구입니다. 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The head librarian 입니다."
+        },
+        {
+          "label": "③ 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "시제를 가진 동사는 handed 하나입니다. 이 동사가 뒤에 무엇을 부르는지가 문장의 형식을 결정합니다."
+        },
+        {
+          "label": "④ 동사 뒤의 명사 덩어리를 셉니다",
+          "roles": ["O"],
+          "note": "명사 덩어리가 둘입니다. 앞의 the new students 가 '누구에게', 뒤의 a rare manuscript 가 '무엇을'에 해당합니다."
+        }
+      ],
+      "conclusion": "동사 뒤에 명사 덩어리가 둘 있고 그 사이에 전치사가 없으면 4형식입니다. 앞이 간접목적어, 뒤가 직접목적어입니다."
+    },
+    {
+      "id": "b8",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "4형식인지 판별하는 4단계",
+      "steps": [
+        {
+          "text": "본동사를 찾고, 그 뒤에 오는 명사 덩어리의 개수를 셉니다.",
+          "applyNote": "본동사는 offered 이고, 뒤에 the young researcher 와 a two-year grant 두 덩어리가 있습니다."
+        },
+        {
+          "text": "두 덩어리 사이에 전치사가 있는지 봅니다. 전치사가 없으면 4형식 후보입니다.",
+          "applyNote": "the young researcher 앞에도, a two-year grant 앞에도 전치사가 없습니다. 4형식입니다."
+        },
+        {
+          "text": "앞 덩어리가 '~에게', 뒤 덩어리가 '~을'로 읽히는지 확인합니다.",
+          "applyNote": "'그 젊은 연구자에게 2년짜리 연구비를' 로 읽힙니다. 앞이 간접목적어, 뒤가 직접목적어입니다."
+        },
+        {
+          "text": "3형식으로 바꾸려면 직접목적어를 앞으로 보내고, 간접목적어 앞에 그 동사가 요구하는 전치사(to·for·of)를 붙입니다.",
+          "applyNote": "offer 는 to 계열이므로 offered a two-year grant to the young researcher 가 됩니다."
+        }
+      ],
+      "example": {
+        "en": "The foundation **offered** the young researcher a two-year grant.",
+        "ko": "그 재단은 그 젊은 연구자에게 2년짜리 연구비를 제안했습니다.",
+        "note": "동사 뒤 명사 덩어리 둘, 그 사이에 전치사 없음 — 4형식의 표지입니다."
+      }
+    },
+    {
+      "id": "b9",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "전치사는 동사가 정합니다 — to·for·of 한 장 정리",
+      "columns": ["전치사", "동사 무리", "핵심 감각"],
+      "rows": [
+        {
+          "cells": [
+            "to",
+            "give · send · show · tell · lend · teach · offer",
+            "물건·정보가 상대에게 도달합니다"
+          ],
+          "example": {
+            "en": "The volunteers teach English **to** the children.",
+            "ko": "자원봉사자들은 그 아이들에게 영어를 가르칩니다.",
+            "note": "지식이 상대에게 전달되므로 to 입니다."
+          }
+        },
+        {
+          "cells": [
+            "for",
+            "buy · make · cook · get · find",
+            "상대를 위해 대신 해 줍니다"
+          ],
+          "example": {
+            "en": "Her father found a quiet room **for** her.",
+            "ko": "그녀의 아버지는 그녀에게 조용한 방을 찾아 주었습니다.",
+            "note": "상대를 위해 대신 찾아 주는 행위이므로 for 입니다."
+          }
+        },
+        {
+          "cells": ["of", "ask", "상대에게서 답·부탁을 받아 냅니다"],
+          "example": {
+            "en": "The judge asked a question **of** the witness.",
+            "ko": "판사는 증인에게 질문을 하나 했습니다.",
+            "note": "ask 는 전환형에서 of 를 쓰는 단골 예외이며, 격식체 문어에서 주로 보입니다."
+          }
+        }
+      ],
+      "takeaway": "표의 세 줄 중 시험이 가장 좋아하는 것은 to 와 for 의 대결입니다. 도달이면 to, 봉사면 for 입니다."
+    },
+    {
+      "id": "b10",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "target": "3형식 전환 전치사 — to·for·of 동사 무리",
+      "why": "전환 문제는 결국 이 목록에서 나옵니다. 문제를 만날 때마다 '이 동사가 어느 무리였더라' 하고 더듬으면 시간을 다 씁니다. give 를 보는 순간 to 가 따라 나올 만큼 붙여 두어야 도구가 됩니다.",
+      "device": "전달은 to, 봉사는 for, 질문은 of — 물건이 건너가면 to, 상대를 위해 대신 하면 for, 물어보는 ask 하나만 of. 세 박자로 끊어 세 번 소리 내어 읽으십시오.",
+      "items": [
+        { "cue": "give · send · show", "answer": "to — 물건·정보가 상대에게 도달합니다" },
+        { "cue": "tell · lend · teach · offer", "answer": "to — 말·돈·지식·제안이 상대에게 건너갑니다" },
+        { "cue": "buy · make · cook", "answer": "for — 상대를 위해 대신 사고 만들고 요리합니다" },
+        { "cue": "get · find", "answer": "for — 상대를 위해 대신 구하고 찾아 줍니다" },
+        { "cue": "ask", "answer": "of — 상대에게서 답을 받아 내는 단골 예외입니다" }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "전치사 관문",
+      "mission": "3형식 전환에서 to 를 쓰는 동사만 전부 고르십시오. for·of 무리가 미끼로 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "give",
+        "send",
+        "show",
+        "tell",
+        "lend",
+        "teach",
+        "buy",
+        "make",
+        "cook",
+        "ask"
+      ],
+      "answers": ["give", "send", "show", "tell", "lend", "teach"],
+      "passText": "여섯을 전부 가려냈습니다. 물건이 건너가는 동사에는 to — 이 감각이 손에 붙었으면 전환 문제의 절반은 이미 끝났습니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 상대를 위해 대신 사 주고 만들어 주는 동사(buy·make·cook)는 for 무리이고, ask 는 혼자 of 를 씁니다. 암기 카드의 세 박자를 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The chef made a special dessert ( to / for ) the guests from abroad.",
+      "steps": [
+        {
+          "title": "① 동사 뒤의 구조를 봅니다",
+          "body": "본동사 made 뒤에 명사 덩어리 a special dessert 가 하나 오고, 그 뒤에 괄호와 the guests 가 옵니다. 사람이 뒤로 밀려 있습니다."
+        },
+        {
+          "title": "② 어느 형식인지 판정합니다",
+          "body": "원래 4형식은 made the guests a special dessert 입니다. 지금은 직접목적어가 앞으로 나온 3형식 전환문이므로, 사람 앞에 전치사가 필요합니다."
+        },
+        {
+          "title": "③ 어느 전치사인지 결정합니다",
+          "body": "전치사는 동사가 정합니다. make 는 상대를 위해 대신 만들어 주는 동사이므로 for 계열입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "to 를 넣으면 도달 대상을 나타내는 전치사가 되어 make 와 어울리지 않습니다. for 가 옳습니다."
+        }
+      ],
+      "answer": "for",
+      "ko": "그 요리사는 외국에서 온 손님들에게 특별한 후식을 만들어 주었습니다."
+    },
+    {
+      "id": "b13",
+      "type": "COMPLETION",
+      "tier": 1,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The editor sent a signed copy ( to / for / of ) every contributor.",
+      "givenSteps": [
+        "① 본동사 sent 뒤에 명사 덩어리 a signed copy 가 하나 오고, 사람은 그 뒤로 밀려 있습니다.",
+        "② 직접목적어가 앞으로 나온 3형식 전환문이므로, 사람 앞에는 전치사가 필요합니다."
+      ],
+      "prompt": "③ 그렇다면 send 는 어느 전치사를 요구합니까?",
+      "options": [
+        "to — send 는 상대에게 물건이 도달하게 하는 동사이므로 to 계열입니다",
+        "for — 상대를 위해 대신 해 주는 행위이므로 for 계열입니다",
+        "of — 상대에게서 무언가를 받아 내는 동사이므로 of 계열입니다"
+      ],
+      "answer": 0,
+      "explain": "send·give·show·tell·lend·teach·offer 는 물건이나 정보가 상대에게 도달하는 동사여서 to 를 씁니다. for 는 buy·make·cook 처럼 상대를 위해 대신 해 주는 동사, of 는 ask 에 붙습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b02-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The guide gave {{blank}} a map of the old city.",
+          "options": ["us", "to us"],
+          "answer": 0,
+          "translation": "그 안내인은 우리에게 옛 도시의 지도를 한 장 주었습니다.",
+          "explanation": "간접목적어가 직접목적어 앞에 오는 4형식입니다. 이 자리에는 전치사를 쓰지 않으므로 us 가 옳습니다. to 를 쓰려면 gave a map of the old city to us 처럼 순서를 바꾸어야 합니다.",
+          "trapTags": ["svoo-order", "preposition-insertion"]
+        },
+        {
+          "id": "b02-c3-ls-002",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "My father bought a new dictionary {{blank}} me.",
+          "options": ["for", "to"],
+          "answer": 0,
+          "translation": "제 아버지는 저에게 새 사전을 한 권 사 주셨습니다.",
+          "explanation": "직접목적어가 앞으로 나온 3형식 전환문이므로 사람 앞에 전치사가 필요합니다. buy 는 상대를 위해 대신 사 주는 동사이므로 for 계열입니다.",
+          "trapTags": ["preposition-choice"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "4형식과 3형식 전환문",
+      "columns": ["4형식 S+V+간접목적어+직접목적어", "3형식 전환 S+V+직접목적어+전치사+사람"],
+      "rows": [
+        {
+          "criterion": "어순",
+          "a": "사람(간접목적어)이 먼저 옵니다",
+          "b": "사물(직접목적어)이 먼저 옵니다"
+        },
+        {
+          "criterion": "전치사",
+          "a": "두 목적어 사이에 전치사를 쓰지 않습니다",
+          "b": "사람 앞에 to / for / of 를 붙입니다"
+        },
+        {
+          "criterion": "직접목적어가 대명사일 때",
+          "a": "gave me it 처럼 쓰지 않습니다",
+          "b": "gave it to me 처럼 전환형을 씁니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The coach **gave** the players new uniforms.",
+          "ko": "그 감독은 선수들에게 새 유니폼을 주었습니다.",
+          "note": "사람이 앞, 사물이 뒤이며 전치사가 없습니다."
+        },
+        {
+          "en": "The coach **gave** new uniforms **to** the players.",
+          "ko": "그 감독은 새 유니폼을 선수들에게 주었습니다.",
+          "note": "사물을 앞으로 보냈으므로 사람 앞에 to 가 붙습니다. 두 문장의 뜻은 같습니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 동사가 3형식 전환에서 요구하는 전치사로 분류하십시오.",
+      "buckets": [
+        { "id": "to", "label": "to 를 쓴다" },
+        { "id": "for", "label": "for 를 쓴다" },
+        { "id": "of", "label": "of 를 쓴다" }
+      ],
+      "chips": [
+        { "text": "give", "bucketId": "to", "why": "물건이 상대에게 도달하는 동사이므로 to 를 씁니다." },
+        { "text": "lend", "bucketId": "to", "why": "빌려주는 물건이 상대에게 건너가므로 to 를 씁니다." },
+        { "text": "teach", "bucketId": "to", "why": "지식이 상대에게 전달되므로 to 를 씁니다." },
+        { "text": "buy", "bucketId": "for", "why": "상대를 위해 대신 사 주는 행위이므로 for 를 씁니다." },
+        { "text": "make", "bucketId": "for", "why": "상대를 위해 대신 만들어 주는 행위이므로 for 를 씁니다." },
+        { "text": "cook", "bucketId": "for", "why": "상대를 위해 대신 요리해 주는 행위이므로 for 를 씁니다." },
+        { "text": "ask", "bucketId": "of", "why": "상대에게서 답을 받아 내는 동사로, 전환형에서 of 를 쓰는 예외입니다." }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "4형식처럼 보이지만 목적어를 둘 받지 못하는 동사",
+      "body": "explain · describe · suggest · introduce · announce · say 는 '~에게 ~을'로 해석되지만 목적어를 둘 받지 못합니다. 사람은 반드시 to 를 앞세운 전치사구로만 붙습니다. 한국어 해석이 '~에게'라는 이유로 사람을 동사 바로 뒤에 놓는 것이 전형적인 오류입니다.",
+      "example": {
+        "en": "The professor **explained** us the theory of relativity.",
+        "ko": "그 교수는 우리에게 상대성 이론을 설명했습니다.",
+        "note": "explain 은 4형식을 만들지 못합니다. explained the theory of relativity to us 로 써야 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b02-c3-ls-003",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The consultant [[u:suggested us a new strategy]] at the quarterly meeting.",
+          "isCorrect": false,
+          "correction": "suggested a new strategy to us",
+          "translation": "그 자문 위원은 분기 회의에서 우리에게 새로운 전략을 제안했습니다.",
+          "explanation": "suggest 는 목적어를 둘 받지 못합니다. 사람은 to 를 앞세운 전치사구로만 붙으므로 suggested a new strategy to us 가 옳습니다.",
+          "trapTags": ["false-ditransitive"]
+        },
+        {
+          "id": "b02-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The librarian showed the rare manuscript {{blank}} the visiting scholars.",
+          "options": ["to", "for"],
+          "answer": 0,
+          "translation": "그 사서는 방문한 학자들에게 그 희귀한 필사본을 보여 주었습니다.",
+          "explanation": "직접목적어가 앞으로 나온 3형식 전환문입니다. show 는 대상에게 무언가를 보이게 하는 동사이므로 to 계열이며, for 는 쓰지 않습니다.",
+          "trapTags": ["preposition-choice"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "이중 목적어 반사신경",
+      "instruction": "제한시간 안에 명제 또는 문장이 옳으면 ○, 틀리면 ×를 누르십시오. 순서와 전치사만 보면 됩니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "The librarian lent me a rare atlas.",
+          "isTrue": true,
+          "why": "간접목적어 me 가 직접목적어 앞에 전치사 없이 왔으므로 옳은 4형식입니다."
+        },
+        {
+          "statement": "The librarian lent to me a rare atlas.",
+          "isTrue": false,
+          "why": "간접목적어가 앞자리에 있을 때는 전치사를 쓰지 않습니다. lent me a rare atlas 가 옳습니다."
+        },
+        {
+          "statement": "buy 는 3형식 전환에서 for 를 씁니다.",
+          "isTrue": true,
+          "why": "buy·make·cook·get·find 는 상대를 위해 대신 해 주는 for 무리입니다."
+        },
+        {
+          "statement": "My aunt bought a scarf to me.",
+          "isTrue": false,
+          "why": "buy 는 for 무리이므로 bought a scarf for me 가 옳습니다."
+        },
+        {
+          "statement": "explain 은 목적어를 둘 받을 수 있습니다.",
+          "isTrue": false,
+          "why": "explain 은 4형식을 만들지 못합니다. 사람은 to 전치사구로만 붙습니다."
+        },
+        {
+          "statement": "The mayor asked a favor of the citizens.",
+          "isTrue": true,
+          "why": "ask 는 전환형에서 of 를 쓰는 예외입니다. 옳은 문장입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 간접목적어를 앞에 두는 4형식으로 어절을 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 재단은 그 학생에게 전액 장학금을 주었습니다.",
+      "answer": ["The foundation", "gave", "the student", "a full scholarship"],
+      "tiles": [
+        "The foundation",
+        "gave",
+        "the student",
+        "a full scholarship",
+        "to the student"
+      ],
+      "explanation": "간접목적어가 직접목적어 앞에 오는 4형식이므로 사람 앞에 전치사를 쓰지 않습니다. to the student 를 쓰려면 gave a full scholarship to the student 처럼 순서를 바꾸어야 합니다."
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The committee [[1:offered]] the applicant [[2:a written contract]], and the lawyer [[3:explained him the terms]] before he [[4:signed]] it.",
+      "answer": 3,
+      "correction": "explained the terms to him",
+      "rationales": [
+        "offer 는 목적어를 둘 받는 동사입니다. the applicant 가 간접목적어이므로 전치사 없이 바로 옵니다.",
+        "간접목적어 뒤에 온 직접목적어입니다. 두 목적어 사이에 전치사가 없으므로 4형식으로 옳습니다.",
+        "explain 은 목적어를 둘 받지 못합니다. 사람은 to 를 앞세워야 하므로 explained the terms to him 으로 고칩니다.",
+        "접속사 and 가 절을 하나 더 열었고, before 절의 동사입니다. 목적어 it 이 계약서를 가리키므로 옳습니다."
+      ],
+      "ko": "그 위원회는 지원자에게 서면 계약서를 제안했고, 변호사는 그가 서명하기 전에 그에게 계약 조건을 설명했습니다."
+    },
+    {
+      "id": "b22",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞의 오류 찾기에서 ③을 정답으로 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "explain 은 목적어를 둘 받지 못하는 동사여서, 사람은 to 를 앞세운 전치사구로만 붙을 수 있기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 4형식이 가능한지는 해석이 아니라 그 동사가 목적어를 둘 받을 수 있는지로 결정됩니다."
+        },
+        {
+          "text": "him 이 목적격 대명사여서 동사 바로 뒤에 올 수 없기 때문입니다.",
+          "correct": false,
+          "feedback": "목적격 대명사는 간접목적어 자리에 얼마든지 옵니다. offered him a contract 는 옳은 문장입니다. 문제는 대명사가 아니라 explain 이라는 동사입니다."
+        },
+        {
+          "text": "the terms 가 복수여서 앞의 사람과 순서가 맞지 않기 때문입니다.",
+          "correct": false,
+          "feedback": "직접목적어의 수는 어순과 무관합니다. 판단 근거는 explain 이 목적어를 둘 받지 못한다는 점입니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 4형식 문장을 주고 '3형식으로 바꾸어 쓰시오'로 물어봅니다. 어순을 바꾸는 것만으로는 부족하고, 동사에 맞는 전치사를 골라야 만점입니다.",
+          "sample": {
+            "en": "The museum sent every member a new catalogue.",
+            "ask": "이 문장을 3형식으로 바꾸어 쓰십시오.",
+            "answer": "The museum sent a new catalogue to every member."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서는 4형식 자체보다, 목적어를 둘 받는 동사가 관계절 안에 들어갔을 때 그 절이 완전한지를 묻습니다. 목적어 하나가 비어 있으면 불완전한 절이므로 목적격 관계대명사가 필요합니다.",
+          "sample": {
+            "en": "The grant [[u:that]] the foundation offered the young researcher covered three years of fieldwork.",
+            "ask": "밑줄 친 자리에 관계대명사 that 을 쓸 수 있는지 판단하고 그 근거를 절의 구조로 설명하십시오.",
+            "answer": "쓸 수 있습니다. 이 절 안에서 offered 는 간접목적어 the young researcher 만 데리고 있고 직접목적어 자리가 비어 있습니다. 그 빈 자리를 메우는 것이 선행사 The grant 이므로 목적격 관계대명사 that 이 옵니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "이중 목적어 세관의 관장",
+      "intro": "이 세관은 목적어가 둘인 화물만 통과시킵니다. 순서가 틀리거나 전치사가 잘못 붙은 문장은 전부 압수합니다. 네 건의 통관 심사로 실력을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The mentor told {{blank}} the history of the observatory.",
+          "options": ["the interns", "to the interns"],
+          "answer": 0,
+          "why": "뒤에 직접목적어 the history 가 있으므로 이 자리는 간접목적어입니다. 간접목적어 앞에는 전치사를 쓰지 않습니다."
+        },
+        {
+          "prompt": "The tailor made a formal suit {{blank}} the young pianist.",
+          "options": ["for", "to"],
+          "answer": 0,
+          "why": "직접목적어가 앞으로 나온 3형식 전환문입니다. make 는 상대를 위해 대신 만들어 주는 for 무리의 동사입니다."
+        },
+        {
+          "prompt": "The host introduced {{blank}} at the banquet.",
+          "options": ["the guests to the mayor", "the mayor the guests"],
+          "answer": 0,
+          "why": "introduce 는 목적어를 둘 받지 못합니다. 사람은 to 를 앞세운 전치사구로만 붙습니다."
+        },
+        {
+          "prompt": "The examiner asked a final question {{blank}} the candidate.",
+          "options": ["of", "for", "to"],
+          "answer": 0,
+          "why": "ask 는 3형식 전환에서 of 를 쓰는 예외 동사입니다."
+        }
+      ],
+      "winText": "통관 도장이 찍혔습니다. 순서·전치사·가짜 4형식 동사까지 네 검문을 전부 통과했습니다. 이 세관에서 더 잡을 수 있는 화물은 없습니다.",
+      "loseText": "화물이 압수되었습니다. 압수 사유는 전부 같습니다 — 사람이 앞이면 전치사 없음, 사물이 앞이면 동사가 정한 전치사. 정리표를 다시 보고 오면 통관은 열립니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "동사 뒤에 명사 덩어리가 ___ 있고 그 사이에 전치사가 ___면 4형식이며, 순서를 바꾸면 사람 앞에 ___ 를 붙입니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "4형식은 동사 뒤에 명사 덩어리가 둘 오고, 그 사이에 전치사가 없습니다. 앞이 간접목적어, 뒤가 직접목적어입니다.",
+        "3형식으로 바꾸면 직접목적어가 앞으로 나오고, 사람 앞에 전치사가 붙습니다.",
+        "전치사는 동사가 정합니다. give·send·show·tell·lend·teach·offer 는 to, buy·make·cook·get·find 는 for, ask 는 of 입니다.",
+        "explain·describe·suggest·introduce·announce·say 는 해석이 '~에게'여도 목적어를 둘 받지 못합니다. 사람은 to 전치사구로만 붙습니다."
+      ],
+      "keySentence": {
+        "en": "The museum **sent** every member a printed catalogue.",
+        "ko": "그 박물관은 모든 회원에게 인쇄된 도록을 보냈습니다.",
+        "note": "명사 덩어리 둘 사이에 전치사가 없다는 것이 4형식의 표지입니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b02-c3-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The organizers sent {{blank}} a detailed schedule two weeks before the conference.",
+          "options": ["the speakers", "to the speakers"],
+          "answer": 0,
+          "translation": "주최 측은 학회 2주 전에 발표자들에게 상세한 일정표를 보냈습니다.",
+          "explanation": "직접목적어 a detailed schedule 이 뒤에 있으므로 앞자리는 간접목적어입니다. 간접목적어 앞에는 전치사를 쓰지 않으므로 the speakers 가 옳습니다.",
+          "trapTags": ["svoo-order", "preposition-insertion"]
+        },
+        {
+          "id": "b02-c3-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The architect [[u:described the committee her final design]] in a short presentation.",
+          "isCorrect": false,
+          "correction": "described her final design to the committee",
+          "translation": "그 건축가는 짧은 발표에서 위원회에 최종 설계안을 설명했습니다.",
+          "explanation": "describe 는 목적어를 둘 받지 못하는 동사입니다. 사람은 to 를 앞세운 전치사구로만 붙으므로 described her final design to the committee 가 옳습니다.",
+          "trapTags": ["false-ditransitive"]
+        },
+        {
+          "id": "b02-c3-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The chef cooked a traditional dish {{blank}} the foreign guests.",
+          "options": ["for", "to", "of"],
+          "answer": 0,
+          "translation": "그 요리사는 외국 손님들에게 전통 요리를 만들어 주었습니다.",
+          "explanation": "직접목적어가 앞으로 나온 3형식 전환문입니다. cook 은 상대를 위해 대신 만들어 주는 동사이므로 for 계열이며, to 는 물건이 도달하는 동사(give·send 류), of 는 ask 에 붙습니다.",
+          "trapTags": ["preposition-choice"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법: 'habit of + V-ing(boosting)' 결합은 정문. 논리: 식사·신체 체력은 지문에 전혀 언급되지 않음. 화자의 아침 에너지는 'I generally wake up energized'로 이미 주어진 전제(사실)이지 습관으로 획득하는 대상이 아니며, 빈칸 뒤 근거 문장들(미루기의 감정 에너지 낭비, 'first thing I get done')과 아무 연결이 없다."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "문법: 'habit of tackling ... as the very first task' 정문. 논리: (i) 전제 '어려운/분석적 과제는 에너지가 높을 때' + (ii) 'I wake up energized' + (iii) 미루면 감정 에너지 낭비·과제가 머리 위에 걸림 + (iv) 결정 문장 'So for me, it'll always be the first thing I get done' + (v) 마지막 문장의 대우(아침형이 아니면 어려운 일을 늦게 배치하라)와 전부 무모순으로 정합. 유일하게 성립."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법: 'practicing and rehearsing'은 병렬 시작점이 일치하는 정문. 논리: 'overthink different scenarios'는 화자가 에너지 낭비로 규정한 문제 행동이지 유지해 온 습관이 아니다. 'all day'는 지문이 비판하는 '하루 종일 걱정하며 낭비하는 상태'와 동일하므로 취지와 정반대. 지문 어휘(scenarios)를 재활용한 표면 유사 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법: 'delaying ... until ...' 정문. 논리: 지문이 명시적으로 비판하는 procrastination 그 자체이며 'it'll always be the first thing I get done'과 직접 모순. 대안 해석(과거 미루던 습관의 반성 서사)은 'have consistently stuck to the habit'(수년간 일관 유지)과 현재시제 결론에 의해 차단됨. 논리적으로 정반대인 강한 미끼."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "문법: 'writing down ... on a list' 정문. 논리: 목록 작성·계획 수립·해결책 기록은 지문에 근거가 전무하다. 빈칸 뒤 근거는 '즉시 처리 vs 미루기'의 대립이지 '기록 여부'가 아니므로 지문 논리와 접점이 없음."
+    }
+  ],
+  "note": "다섯 선지 모두 'habit of' 뒤 동명사구로 문법 결합(seam)은 성립하므로 판별은 순수 논리로 이뤄진다. 빈칸 뒤 'So for me, it'll always be the first thing I get done'이 결정적 장거리 단서이고, 마지막 문장(非아침형은 어려운 일을 늦게)이 대조로 습관의 내용을 재확인한다. ②만이 무모순. 복수 정답 여지 없음."
+}

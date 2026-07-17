@@ -1,0 +1,73 @@
+{
+  "pid": "P097",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "be동사 뒤 주격 보어 자리에서 형용사/부사 구분",
+      "temptingBecause": "'are ___ to' 패턴에서 부사형(fundamentally)을 떠올리게 할 수 있다는 정도가 전부",
+      "decisiveFlaw": "보어 자리의 형용사로 너무 명백히 옳아 실질 변별력이 없는 필러성 디코이 — why tempting이 사실상 성립하지 않음"
+    },
+    {
+      "label": "(B)",
+      "intent": "[정답] 타동사 enhance의 태 판정 — be + p.p.(수동) vs be + -ing(능동 진행)",
+      "temptingBecause": "표면상 'are + -ing' 진행형 꼴이 자연스러워 보이고 greatly가 동사성을 흐림",
+      "decisiveFlaw": "enhance는 타동사인데 목적어가 없어 능동 진행이 불가 — skills는 향상되는 대상이므로 수동 'are enhanced'여야 함. 교정 시 원문과 정확히 일치하는 최소대립쌍"
+    },
+    {
+      "label": "(C)",
+      "intent": "감각동사 feel 뒤 보어 자리의 분사 태 판정(-ed vs -ing)",
+      "temptingBecause": "feel 뒤 분사 태 혼동을 유도하며, 정답 (B)와 같은 태 판정 계열이라 비교 판단을 요구",
+      "decisiveFlaw": "주어 you가 거부당하는 피동 대상이므로 과거분사 rejected가 옳음 — lonely와의 병렬도 자연스러움"
+    },
+    {
+      "label": "(D)",
+      "intent": "정동사 vs 준동사 — 절 내 본동사 필요성 판별",
+      "temptingBecause": "as절 내부라 using 같은 준동사형이 어울린다고 착각하도록 유도",
+      "decisiveFlaw": "복수 주어 some individuals의 술어(정동사)가 필요한 자리이므로 use가 옳음"
+    },
+    {
+      "label": "(E)",
+      "intent": "수일치 — 전치사구 수식어를 제외한 주어 핵 판별",
+      "temptingBecause": "동사 직전의 복수명사 connections에 이끌려 are로 판단하기 쉬움",
+      "decisiveFlaw": "주어 핵은 단수 'a lack'이고 of social connections는 수식어이므로 is가 옳음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "AGENT_MISATTRIBUTION_MINOR",
+      "severity": "minor",
+      "evidence": "정답 해설의 '사람에 의해 향상되는 수동의 대상' — 지문 논리상 skills를 향상시키는 것은 사람(행위자)이 아니라 행복(when you are happy)이다. 통사 분석 자체(타동사·목적어 부재·수동 필요)는 정확하므로 V4 실패는 아니지만 행위자 귀속이 부정확함."
+    },
+    {
+      "code": "KEYPOINTS_PARTIAL_COVERAGE",
+      "severity": "minor",
+      "evidence": "keyPoints가 (B)(D)(E)만 다루고 (A)(C)는 누락 — 모순은 아니나 5개 밑줄 전체의 point 명세로는 불완전."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — enhanced→enhancing 최소대립쌍, 교정 시 원문과 정확히 일치",
+    "clearGrammarJudgment": "충족 — 타동사 태 판정은 문맥 선호가 아닌 명확한 문법 판단이며 대안 분석 여지가 없음",
+    "allUnderlinesExplained": "부분 미충족 — 다섯 밑줄 모두 why correct/incorrect는 있으나 why tempting이 명시되지 않았고, (A) fundamental은 매력 근거를 설명할 수 없는 필러성 디코이",
+    "structuralDepth": "미충족 — 'are greatly enhancing'은 타동사+목적어 부재라는 단일 절 내 국소 판단으로 즉시 드러나는 전형 오류. 다문장·다절 구조 독해가 필요 없어 KILLER 깊이에 미달",
+    "noSamePointEasyDecoy": "충족 — (C) rejected가 같은 태 판정 계열이지만 정답의 유일성을 가리지는 않음"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과. 정답 (B)는 유일하고 최소대립쌍·교정 정합성도 완벽하다. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 'be + -ing(타동사, 목적어 없음)'은 훈련된 수험생이 즉시 포착하는 정형 패턴이고, 디코이 (A)는 필러 수준, (D)(E)도 표준 중위 포인트라 경쟁 선지가 형성되지 않는다. C5=1(난이도 정합 실패)로 B등급 요건(합계 17+, 최저 2)에 미달하여 C. KILLER로 출하하려면 정답 포인트를 다절 구조 판단이 필요한 자리로 재설계하고 (A)를 실질 오개념을 겨냥한 디코이로 교체해야 한다."
+}

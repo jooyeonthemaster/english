@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20241015-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 135
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-overdrilled-answerx1"
+  ],
+  "layout": "(A):dec=d  (B):dec=d  (C):dec=g  (D):dec=i  (E):ANS=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 37,
+        "relPos": 0.044,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 401,
+        "relPos": 0.48,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 470,
+        "relPos": 0.563,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 535,
+        "relPos": 0.641,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 749,
+        "relPos": 0.897,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.897,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "For many of us, making time for exercise is a continuing challenge.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "are",
+        "isError": false,
+        "errorExpression": "are",
+        "surroundingText": "Let's be realistic; chores are inevitable. Whether it's washing dishes",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "these tasks",
+        "isError": false,
+        "errorExpression": "these tasks",
+        "surroundingText": "Whether it's washing dishes or taking out the trash, these tasks are an essential part",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "viewing",
+        "isError": false,
+        "errorExpression": "viewing",
+        "surroundingText": "But rather than viewing chores as purely obligatory activities, why not seize",
+        "pointCode": "i"
+      },
+      {
+        "label": "(E)",
+        "expression": "to boil",
+        "isError": true,
+        "correction": "to boil",
+        "errorExpression": "boiling",
+        "surroundingText": "as you wait for your morning kettle to boil. Incorporating quick exercises",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "are"
+      },
+      {
+        "label": "(C)",
+        "text": "these tasks"
+      },
+      {
+        "label": "(D)",
+        "text": "viewing"
+      },
+      {
+        "label": "(E)",
+        "text": "boiling"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "동명사구인 'making time for exercise'가 주어이므로 단수 동사인 'is'가 오는 것은 어법상 명백히 옳습니다.",
+      "(B)": "복수 명사인 주어 'chores'에 수동 및 자동사의 수일치를 맞춘 복수 동사 'are'가 오는 것은 옳습니다.",
+      "(C)": "앞서 언급된 'washing dishes or taking out the trash' 작업을 복수 명사구인 'these tasks'로 적절히 지칭하고 있습니다.",
+      "(D)": "전치사적 성격을 갖는 'rather than' 뒤에서 동명사구의 병렬 구조를 형성하는 'viewing'은 어법상 옳습니다."
+    },
+    "explanation": "as가 이끄는 부사절 내부에서 동사 wait는 'wait for + 목적어 + to부정사' 구조를 취하여 '목적어가 ~하기를 기다리다'라는 의미를 나타냅니다. 따라서 wait 뒤의 목적어인 'your morning kettle' 뒤에는 목적격보어 역할을 하는 to부정사가 오는 것이 올바른 통사적 규칙입니다. 제시된 표현 'boiling'은 현재분사(V-ing) 형태로 이 구조에 어긋나 비문이 되므로, to부정사 형태인 'to boil'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 준동사의 형태 — wait for O to-V의 문형적 특징 파악",
+      "(A) 주어-동사의 수일치 — 동명사구 주어의 단수 취급 일치",
+      "(D) 병렬 구조 — rather than 뒤에 오는 준동사의 적절한 형태 판단"
+    ],
+    "tags": [
+      "목적격보어",
+      "수일치",
+      "준동사",
+      "동명사",
+      "병렬구조"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For many of us, making time for exercise __(A) is__ a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores __(B) are__ inevitable. Whether it's washing dishes or taking out the trash, __(C) these tasks__ are an essential part of daily life. But rather than __(D) viewing__ chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle __(E) boiling__. Incorporating quick exercises into your daily chores can improve your health.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

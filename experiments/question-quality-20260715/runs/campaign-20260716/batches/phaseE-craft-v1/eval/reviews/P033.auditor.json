@@ -1,0 +1,77 @@
+{
+  "pid": "P033",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-ABSTRACTION-DRIFT-MINOR",
+      "severity": "minor",
+      "evidence": "정답 ① 'as part of an ongoing present timeframe'는 source span 'within a period that's imminent'(임박한, 곧 시작될 시기)를 '진행 중인 현재 시간 틀'로 약간 이동시켜 추상화했다. 11월 시점에서 '이번 겨울'은 엄밀히는 임박한 시기이지 진행 중인 시기가 아니다. 다만 '내년 vs 이번 겨울' 예시가 '현재와 이어진 틀'이라는 독해를 충분히 지지하고, 나머지 4개 선지가 모두 결정적으로 탈락하므로 정답 유일성은 훼손되지 않는다. V2 통과."
+    },
+    {
+      "code": "V4-LABEL-INCONSISTENCY-MINOR",
+      "severity": "minor",
+      "evidence": "본 해설은 ⑤를 '스트레스가 덜하다는 내용을 극단화한 오답'이라 부르는데 오답 해설(JSON)은 같은 선지를 '소재 연상 오답'으로 명명한다. 내용 설명 자체는 양쪽 다 사실과 일치하므로(스트레스는 '관리 가능'해질 뿐 완전 회피가 아님) 오분석은 아니고 명명 불일치에 그친다. V4 통과."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span 'within a period that's imminent'의 추상화. '내년'이 아닌 '이번 겨울'처럼 마감을 현재와 이어진 시간 틀 안에 두라는 결론.",
+      "temptingBecause": "해당 없음(정답). 예시('this winter' vs 'next year')와 문제 진단(단절 너머의 마감은 멀게 느껴짐)을 종합하면 필연적으로 도출된다.",
+      "decisiveFlaw": "없음. 'meet as part of an ongoing present timeframe' 완성문도 문법적으로 자연스럽다."
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전 — 지문이 경고한 문제 상황('see it as remote')을 해결책 자리에 재배치.",
+      "temptingBecause": "지문의 어휘장('remote', 'far')과 표면적으로 겹쳐 훑어 읽는 학생에게 낯익게 보인다.",
+      "decisiveFlaw": "멀게 인식하는 것이 행동 지연의 원인이라고 지문이 명시했으므로 '가장 좋은 접근법'과 정면 모순. 가장 먼저 소거되는 선지."
+    },
+    {
+      "label": "3",
+      "intent": "조건 상실/과확장 — '스트레스가 관리 가능해진다'를 '시간 압박을 전혀 느끼지 않음'으로 확대.",
+      "temptingBecause": "마지막 문장의 'the stress is more manageable'과 소재가 겹친다.",
+      "decisiveFlaw": "지문은 압박 제거가 아니라 임박성 유지를 통한 압박의 관리 가능화를 주장한다. 절대어 'any'가 지문의 완화된 표현과 충돌."
+    },
+    {
+      "label": "4",
+      "intent": "인과 역전 — 문제의 원인(시간을 단위로 쪼개기)을 해결책으로 둔갑.",
+      "temptingBecause": "해결 예시가 하필 계절 단어('this winter')를 사용하고, 지문 첫 문장에 'seasons'가 등장해 국소 단서가 강하게 겹친다. 본 문항 최심부 함정.",
+      "decisiveFlaw": "시간을 별개 단위로 나누는 행위 자체가 '단절(break)'을 만들어 마감을 멀게 느끼게 하는 원인이라고 지문이 명시. 나누기가 아니라 현재와 잇기가 해결책이다."
+    },
+    {
+      "label": "5",
+      "intent": "극단화/절대화 — '스트레스가 더 관리 가능해진다'를 '스트레스를 아예 회피'로 절대화.",
+      "temptingBecause": "빈칸 바로 다음 문장이 스트레스를 언급해 인접 단서로 연상된다.",
+      "decisiveFlaw": "'more manageable'은 스트레스의 존속을 전제한다. 'altogether'가 지문 근거를 초과하며, 빈칸 문장의 초점(마감을 보는 관점)과도 목적이 어긋난다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "LABEL-MISMATCH",
+      "severity": "minor",
+      "evidence": "⑤에 대해 본 해설은 '극단화', 오답 해설은 '소재 연상 오답'으로 서로 다른 함정 명칭을 부여. 내용 설명은 양쪽 모두 사실과 일치."
+    },
+    {
+      "code": "AWKWARD-KOREAN",
+      "severity": "minor",
+      "evidence": "본 해설의 '가장 좋은 접근법은 ...으로 바라보는 결론이 도출됩니다'는 주어-서술어 호응이 어색하다(접근법은 ~것이다 / ~라는 결론이 도출된다 중 하나로 정리 필요)."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과. 빈칸은 지문의 핵심 결론 span을 정확히 겨냥했고(C1=4), 5개 선지가 동일 통사 슬롯에 들어가며 문법 꼬리 소거가 없다. ④(인과 역전, 계절 앵커)는 진짜 깊은 함정으로 INTERMEDIATE 난이도에 정확히 부합(C5=4). 감점 요인: ③과 ⑤가 같은 '스트레스/압박 극단화' 계열로 겹쳐 오답 의도 밀도가 분산되고(C2=3), ②는 즉시 소거되며 절대어 'any/altogether'가 ③⑤의 꼬리 소거를 허용(C3=3, C4=3). 해설은 정확하나 ⑤ 함정 명명 불일치와 어색한 문장 하나(C6=3). 합계 20으로 A 기준(21) 미달 — B. 소폭 수정 제안: ③ 또는 ⑤ 중 하나를 actor swap/scope shift 계열로 교체하고 절대어를 완화하면 A 도달 가능."
+}

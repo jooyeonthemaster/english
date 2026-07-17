@@ -1,0 +1,35 @@
+{
+  "pid": "P067",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Garcia's band had been chosen to perform...' — 밴드는 '선택되는' 대상이므로 수동태가 맞고, 대과거(기다리던 시점 이전에 선정 완료) 맥락이므로 had been chosen(과거완료 수동)이 정확하다. choose + O + to-V의 수동 잔형 'be chosen to perform'도 정상 결합. 유혹 포인트: 과거완료 수동이 낯설어 '시제 과잉'으로 느껴질 수 있으나, 몰 앞에서 기다리는 과거 시점보다 앞선 사건이므로 오히려 정석적이다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'That was why he had asked Jeff...' — 'That is/was why + 완전한 절'은 이유의 결과를 잇는 표준 구문. why 뒤 절(he had asked Jeff to help him)이 완전하므로 관계부사 why가 옳다. because(뒤에 이유가 와야 함)나 the reason과의 혼동을 노린 선지지만, 여기서는 앞 문장(완벽한 옷을 찾고 싶었다)이 이유, 뒤 절(Jeff에게 부탁했다)이 결과이므로 why가 정확하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'he had asked Jeff to help him pick out new clothes' — ask + 목적어 + to부정사(5형식)의 정석. 이어지는 'help him pick out'도 help + O + 원형부정사로 정상. 유혹 포인트 없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong (정답)",
+      "reason": "'\"Aren't these cool?\" Garcia asked, pointed at a patterned red shirt...' — 주절 동사 asked 뒤에 접속사 없이 또 하나의 정형동사 pointed가 올 수 없다(asyndetic 병렬 불가: and pointed라면 가능하나 and가 없음). 분사구문으로 보려면 의미상 주어 Garcia가 '가리키는' 능동 주체이므로 현재분사 pointing이어야 한다. 과거분사 pointed로 수동 해석('Garcia가 가리켜진')은 의미상 성립 불가. 대안 해석 탐색: (i) 축약 관계절로 these/shirt를 수식한다고 보기에는 위치·콤마 구조상 불가, (ii) 'asked, pointed'를 등위 삭제 병렬로 보는 것은 접속사 부재로 비문. 어느 해석으로도 정문이 되지 않으므로 명백한 오류."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'these would look great on my brother' — look은 연결동사(2형식)로 보어 자리에 형용사 great가 오는 것이 맞다. greatly(부사)로 바꾸면 오히려 비문. 부사/형용사 구분을 노린 전형적 미끼지만 표기는 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: (A)의 과거완료 수동과 (B)의 That was why가 표면상 유혹 요소이나 장거리 단서(시간 선후관계, 앞뒤 절의 인과 방향)를 확인하면 모두 정문으로 확정된다. (D)는 접속사 없는 이중 정형동사이자 능동 의미의 분사 자리에 과거분사를 둔 전형적 pointing/pointed 오류로, 대안 정문 해석이 존재하지 않아 정답이 (D) 하나로 유일하게 좁혀진다. 복수 정답 여지 없음."
+}

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "auditScope": "methodological coercion, self-attestation, and exact parse-to-admission flow for G3/B3 research profiles",
+  "verdict": "PASS_REMEDIATED_OFFLINE",
+  "findings": [
+    {
+      "id": "G3_NO_SAFE_SITE_STRUCTURALLY_UNREACHABLE",
+      "severity": "P0_METHOD_VALIDITY",
+      "preFixStatus": "CONFIRMED",
+      "postFixStatus": "RESOLVED",
+      "evidence": "Before remediation the provider schema required all ten completed-question fields and all ten certificate bindings even when certificationStatus was NO_SAFE_SITE. Minimal abstention failed Zod parsing and therefore could not reach raw-candidate observation.",
+      "remediation": "The provider-visible surface remains one object and uses no anyOf/oneOf. Only siteCertificate and its certificationStatus are unconditionally required. A conditional server refinement admits status+nonblank abstentionReason only for NO_SAFE_SITE, rejects any fabricated binding or question shell, and revalidates CERTIFIED against the original complete schema.",
+      "proof": "One valid minimal abstention, five hostile abstentions, ten deleted completed-question fields, and ten deleted certificate bindings are checked dynamically. The exact production response test proves a minimal abstention is observed once and terminally recorded as parsed_rejected without finalization or shipment."
+    },
+    {
+      "id": "B3_SEAM_AUDIT_LITERAL_IS_SELF_ATTESTATION",
+      "severity": "P1_METHOD_INTERPRETATION",
+      "preFixStatus": "CONFIRMED_OVERCLAIM",
+      "postFixStatus": "WORDING_CORRECTED_AND_BOUNDARY_PROVEN",
+      "evidence": "The B3 schema requires three literal true values, but the profile adapter never reads seamAudit. It validates exact span/evidence/label/text bindings and distinct declared mechanisms, then serializes the blueprint into blankDesign. The blank postprocessor removes blankDesign before the actual quality validator runs.",
+      "deterministicCoverage": [
+        "relative-clause tail number contract",
+        "finite-tail subject agreement contract",
+        "duplicated connector at the left boundary",
+        "duplicated preposition at the right boundary",
+        "duplicated punctuation at the right boundary",
+        "fixed a/an article sound mismatch",
+        "additional contextual syntax, polarity, length, and lexical heuristics elsewhere in the blank validators"
+      ],
+      "notDeterministicallyProven": [
+        "full grammaticality of every arbitrary prefix+option+suffix combination",
+        "truth of the declared distractor mechanism",
+        "equivalence of the declared correct intent",
+        "mutual exclusivity and decisive semantic exclusion",
+        "overall item validity and craft quality"
+      ],
+      "adversarialProof": "A synchronized B3 ledger with all three seamAudit literals true is accepted by the adapter, but a duplicated final period is independently recomputed as blank-double-punctuation-boundary and rejected by the production quality gate. A second fixture reverses the passage thesis while retaining a clean seam; the adapter accepts it and the seam analyzer returns no finding, demonstrating why semantic adjudication remains necessary.",
+      "wordingChange": "The prompt now says the server recomputes only named high-confidence boundary signals and explicitly states that seamAudit=true is not server certification of full grammar or semantics."
+    }
+  ],
+  "flow": [
+    "Zod profile schema is converted to provider JSON Schema and used by the AI SDK structured-output parser.",
+    "Parsed raw question candidates are observed before profile adaptation.",
+    "G3 NO_SAFE_SITE is terminally rejected by the adapter after observation and before postprocessing.",
+    "G3 CERTIFIED is conditionally complete-schema validated, then exact passage and marked-field bindings are checked by the adapter.",
+    "B3 exact ledger bindings are checked by the adapter; seamAudit literals are not consulted as evidence.",
+    "Production postprocessing reconstructs the actual student surface and removes the internal blankDesign payload.",
+    "Production quality validation recomputes high-confidence blank-boundary findings from passageWithBlank and visible options; high findings are blocking errors.",
+    "Semantic validity and complete naturalness remain blind-rater/manual adjudication targets."
+  ],
+  "scopeBoundary": {
+    "proves": "offline schema reachability, fail-closed conditional validation, exact adapter ordering, selected deterministic B3 recomputation, and non-trust of literal seam claims",
+    "doesNotProve": "live provider adherence, G3/B3 quality improvement, semantic correctness of generated questions, or production promotion eligibility"
+  },
+  "sideEffects": {
+    "externalApiCalls": 0,
+    "networkCalls": 0,
+    "applicationDatabaseReads": 0,
+    "applicationDatabaseWrites": 0,
+    "candidatesConsumed": 0,
+    "secretsRead": 0
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "pid": "P049",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문과 완전 일치하며 유일한 의도 변형은 'it'll always be the first thing I get done'을 '_____'로 치환한 것뿐이다. 문장 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 ①~⑤와 정답/오답 해설 키가 일치한다.",
+    "V2": "각 선지 독립 검증: ①은 미루기 권장으로 필자의 습관('eating my problems for breakfast', 'the first thing I get done')과 정반대이고 마지막 문장의 조건('If you know you are not a morning person')은 필자('I generally wake up energized')에게 적용되지 않으므로 탈락. ③은 동료 도움이 지문 어디에도 근거 없음. ④는 무시(ignore)가 필자의 '즉시 처리' 해법과 상반되고 'minor tasks'는 범위 왜곡. ⑤는 필자가 overthink를 에너지 낭비 원인으로 명시적으로 비판하므로 탈락. ②만이 아침 에너지 활용 + 즉시 처리 논리와 정합. 정답 집합 {②} = 선언 정답.",
+    "V3": "완성문 'So for me, it is essential to tackle those stressful tasks right after waking up.'은 문법적·자연스럽고 다음 문장(not a morning person 대비)과 담화적으로 매끄럽다. 다섯 선지 모두 'it is + 형용사 + to부정사' 동일 통사 슬롯에 들어가 seam 비문 없음. 비단어·오탈자 없음.",
+    "V4": "해설의 근거 인용('procrastinate on... dealing with an unpleasant email', 'just take care of it')이 실제 지문과 일치하고, keyPoints의 '가주어 (it) 구문' 분석은 선지 ②의 실제 구조(허사 it + 외치된 to부정사)와 부합한다. 인과 설명(미루기→감정 에너지 낭비→아침 즉시 처리)도 지문 논리와 일치. 오답 해설 ①③④⑤ 모두 해당 선지의 실제 내용과 대응한다. 경미한 표현 문제만 존재(아래 explanationIssues).",
+    "V5": "선언 정답 ②, 본해설의 정답 지목 ②, 오답 해설 키 {①,③,④,⑤}, keyPoints 3개 항목이 모두 상호 모순 없이 동기화되어 있다."
+  },
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 글의 결론 문장(필자의 핵심 에너지 관리 습관)에 위치해 중심 논리를 직접 묻는다. 다만 'eating my problems for breakfast' 은유가 이미 결론을 상당히 예고하므로 정교함은 최고 수준은 아님.",
+    "C2": "① 극성 반전(+마지막 문장 오적용 유도), ③ 어휘 앵커(unhappy client) 기반 외부상식 함정, ④ 행위 치환(처리→무시)+범위 왜곡(minor), ⑤ 지문 어휘(overthink) 앵커의 half-truth로 각기 다른 오독을 겨냥. 다만 ④⑤는 해설 스스로 묶듯 '필자가 경계하는 행동' 계열로 의도가 다소 겹침.",
+    "C3": "①이 마지막 문장('scheduling your difficult work later in the day')을 국소 단서로 삼아 실질적 경쟁 선지가 되고, ③⑤도 어휘 중첩으로 표면 매력이 있다. 그러나 요지를 잡은 독자는 ④⑤를 빠르게 소거 가능.",
+    "C4": "선지 길이 균형(11~13단어), 절대어·극단어 누출 없음. 다만 ②의 'right after waking up'이 지문의 'wake up energized'/'breakfast'와 표면 어휘가 겹쳐 완전 이해 없이도 매칭 선택이 일부 가능한 약한 누출.",
+    "C5": "요청 난이도 INTERMEDIATE. 두 문장 이상(미루기의 비용 + 아침 에너지 + 마지막 문장 대비) 연결이 필요하되 함정 깊이가 과하지 않아 라벨과 정합.",
+    "C6": "정답 근거와 함정 유형(극성 반전/방해 초점/경계 행동)을 분리해 제시하고 인용이 정확. 다만 '주어부 문장 구조' 언급은 다섯 선지가 모두 동일 구조라 변별 근거가 아니어서 군더더기."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전 + 마지막 문장(비아침형 인간 조언)의 조건 무시 오적용",
+      "temptingBecause": "지문 마지막 문장에 'scheduling your difficult work later in the day'가 실제로 등장해 표면 매칭됨",
+      "decisiveFlaw": "그 조언은 'If you know you are not a morning person' 조건부이며 필자는 'I generally wake up energized'라고 명시해 자신에게는 정반대 습관을 적용함"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 'it'll always be the first thing I get done'의 의미 보존 패러프레이즈",
+      "temptingBecause": "정답",
+      "decisiveFlaw": "없음. 'eating my problems for breakfast' + 미루기의 감정 에너지 비용 + 'just take care of it' 논리와 유일하게 정합"
+    },
+    {
+      "label": "③",
+      "intent": "어휘 앵커(unhappy client) 기반 외부상식 주입",
+      "temptingBecause": "'unhappy client'가 지문에 실제 등장하고 동료 협업은 상식적으로 그럴듯함",
+      "decisiveFlaw": "지문은 도움 요청이 아니라 본인이 직접·즉시 처리하는 습관을 말하며 colleagues 관련 근거가 전무함"
+    },
+    {
+      "label": "④",
+      "intent": "행위 치환(직면 처리 → 무시) + 범위 왜곡(minor tasks)",
+      "temptingBecause": "'drain my overall emotional energy'가 지문의 'waste too much emotional energy'와 어휘적으로 겹침",
+      "decisiveFlaw": "필자의 해법은 회피/무시가 아니라 즉시 처리('just take care of it')이며, 대상도 minor tasks가 아니라 불쾌하지만 중요한 과제임"
+    },
+    {
+      "label": "⑤",
+      "intent": "지문 어휘(overthink) 앵커의 half-truth — 필자가 비판하는 행동을 권장으로 뒤집음",
+      "temptingBecause": "'reflect deeply on unexpected scenarios'가 지문의 'overthink different scenarios'와 표면적으로 유사함",
+      "decisiveFlaw": "지문에서 과도한 사전 숙고는 에너지 낭비의 원인으로 지목된 경계 대상이지 권장 행동이 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "NON_DISCRIMINATING_RATIONALE",
+      "severity": "minor",
+      "evidence": "해설이 ②를 \"빈칸 앞의 'So for me,'와 유기적으로 매끄럽게 연결되는 주어부 문장 구조를 가진\"이라고 근거 삼으나 다섯 선지 모두 동일한 'it is + 형용사 + to부정사' 구조라 구조는 변별 근거가 될 수 없음. 학생에게 잘못된 풀이 신호를 줄 수 있는 군더더기."
+    },
+    {
+      "code": "LOOSE_TRANSLATION",
+      "severity": "minor",
+      "evidence": "해설의 '어색한 메일이나 불쾌한 과제'는 원문 'an unhappy client ... an unpleasant email'의 느슨한 옮김(어색한≠unpleasant, 대응 어긋남). 사실 왜곡 수준은 아님."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE이므로 KILLER 추가 조건 판정 대상 아님(false).",
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 정답 유일성 견고(②만 정합, 나머지 넷은 각각 독립적 결정적 결함 보유), 다섯 선지가 동일 통사 슬롯을 공유해 문법 소거 불가 — 빈칸 유형의 기본기가 좋다. 공예는 전 축 3점(합 18)으로 A 커트(합 21)에는 미달: 'eating my problems for breakfast' 은유와 ②의 'right after waking up' 표면 중첩이 정답을 다소 예고하고, ④⑤의 함정 의도가 부분적으로 겹치며, 해설의 구조 언급이 군더더기. 소폭 수정(② 표현의 추상화, 해설 구조 언급 삭제)으로 출제 가능한 B."
+}

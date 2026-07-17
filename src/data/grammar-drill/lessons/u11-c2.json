@@ -1,0 +1,701 @@
+{
+  "id": "u11-c2",
+  "unitId": "u11",
+  "order": 2,
+  "title": "의미가 갈리는 동사",
+  "oneLiner": "remember·forget·regret 은 -ing(이미 한 일)와 to-V(앞으로 할 일)로 시점이 갈리고, try 는 의미로, stop 은 자리로 갈립니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": ["TP05"],
+    "sourceRefs": [
+      "어법끝 5.0 TP05 to-v vs. v-ing 목적어 선택 — 구조표: to-v(동사 시점보다 뒤에 올 일) / v-ing(동사 시점보다 앞서 했거나 진행된 일)",
+      "어법끝 5.0 TP05 B 표 — 의미 변화 동사 remember·forget·regret·try·stop",
+      "docs/grammar-test-points.md §TP-05 대표 예문 Q01~Q06(remember to plug / stopped operating / stopped to check / forget her singing / try to learn·try twisting)",
+      "천일문 고등 GRAMMAR — 목적어로 쓰이는 to부정사와 동명사의 의미 차이",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — to부정사·동명사의 목적어 용법(중 ●, 고 ●)"
+    ]
+  },
+  "lenses": ["L2"],
+  "confusableWith": ["u11-c1", "u11-c4", "u05-c4"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 뒤 절의 결과와 앞뒤가 맞는 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "He forgot to lock the storeroom, and the door was still standing wide open when the manager arrived at dawn.",
+        "He forgot locking the storeroom, and the door was still standing wide open when the manager arrived at dawn."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 forget 뒤의 형태 하나입니다. 이 레슨을 마치면 왜 두 번째가 뒤 절과 모순되는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "의미가 갈리는 동사",
+      "question": "remember 뒤에 -ing 를 쓰든 to부정사를 쓰든 결국 같은 말 아닙니까?",
+      "plain": "대부분의 동사는 목적어로 to부정사나 -ing 중 하나만 받습니다. 그러나 remember·forget·regret·try·stop 은 둘 다 받되, 어느 형태를 쓰느냐가 문장의 뜻 자체를 바꿉니다.",
+      "analogy": "같은 버튼이라도 짧게 누르면 볼륨, 길게 누르면 전원이 되는 리모컨처럼, 이 다섯 동사는 목적어의 형태 하나로 문장의 뜻을 갈아 끼웁니다.",
+      "whyItMatters": "수능과 내신은 바로 이 다섯 동사 뒤 형태에 밑줄을 긋습니다. 형태를 외워 찍는 것이 아니라, 문맥이 가리키는 사건의 시점과 의미로 판단해야 정답이 보입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "remember·forget·regret 뒤에는 -ing 를 쓰든 to부정사를 쓰든 뜻이 거의 같습니다.",
+      "truth": "이 동사들에서 목적어의 형태는 장식이 아니라 사건의 시점을 지정하는 장치입니다. -ing 는 그 일이 이미 일어났음을, to부정사는 아직 일어나지 않았음을 뜻합니다. 형태를 바꾸면 문장의 사실 관계가 통째로 뒤집힙니다. u11-c1에서 본 begin·start·like 류는 둘 다 취해도 뜻이 같아 판별 대상이 아니었지만, 이 다섯 동사는 형태가 곧 뜻을 가르므로 오히려 이 유닛의 핵심 판별 대상입니다.",
+      "counterExample": {
+        "en": "The intern forgot **updating** the backup drive, and the entire week's data was lost because no copy of it existed anywhere.",
+        "ko": "그 인턴은 백업 드라이브를 갱신했다는 사실을 잊었는데, 그 어디에도 사본이 없어서 그 주의 데이터 전체가 사라졌습니다.",
+        "note": "forget + -ing 는 갱신을 이미 했다는 뜻이므로 어딘가에 사본이 남아 있어야 합니다. 그러나 사본이 전혀 없었다는 뒤 절과 정면으로 충돌합니다. 문법이 아니라 사실 관계가 깨지는 것입니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "판단의 뼈대 필기",
+      "intro": "형태를 외우기 전에, 판단의 뼈대부터 필기 한 장으로 세웁니다.",
+      "entries": [
+        {
+          "head": "목적어 두 형태 — to부정사와 동명사",
+          "body": "이 다섯 동사는 목적어로 to부정사와 -ing 를 모두 받습니다. 형태는 자유 선택이 아니라 뜻을 가르는 스위치입니다."
+        },
+        {
+          "head": "시간축 — to는 뒤에 올 일, -ing는 이미 한 일",
+          "body": "to부정사는 동사의 시점보다 뒤에 올 일을, -ing 는 이미 했거나 진행되던 일을 가리킵니다.",
+          "example": {
+            "en": "She remembered **to lock** the lab, and the samples stayed safe overnight.",
+            "ko": "그녀는 실험실을 잠글 것을 기억했고, 그래서 시료들은 밤새 안전했습니다.",
+            "note": "잠그는 일은 기억한 시점보다 뒤에 올 일이므로 to부정사입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "시간축을 그대로 따르는 삼총사",
+          "body": "remember·forget·regret 는 이 시간축을 그대로 따릅니다. 문장 속 결과 절이 그 일이 이미 일어났는지 아닌지 알려 줍니다."
+        },
+        {
+          "head": "try — 시간이 아니라 의미로 갈립니다",
+          "body": "try + to부정사는 어려운 일을 해내려는 노력이고, try + -ing 는 효과를 보려고 시험 삼아 해 보는 조치입니다."
+        },
+        {
+          "head": "stop — 목적어냐, 멈춘 목적이냐",
+          "body": "stop 은 -ing 만 목적어로 받습니다. 뒤의 to부정사는 목적어가 아니라 '~하기 위해'라는 목적의 부사구입니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "판단 순서 — 형태보다 문맥이 먼저",
+          "body": "형태를 외워 답하지 말고, 결과 절과 시간 단서로 사건의 시점과 의미를 먼저 확정한 뒤 형태를 정합니다."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "형태와 뜻을 맞춰 봅니다",
+      "instruction": "왼쪽의 '동사 + 형태'와 오른쪽의 뜻을 맞추십시오.",
+      "pairs": [
+        {
+          "a": "remember + to부정사",
+          "b": "앞으로 할 일을 기억하다",
+          "why": "to부정사는 기억한 시점보다 뒤에 올 일을 가리킵니다."
+        },
+        {
+          "a": "forget + -ing",
+          "b": "이미 한 일을 잊다",
+          "why": "-ing 는 이미 한 일을 가리키므로, 했다는 사실 자체를 잊었다는 뜻입니다."
+        },
+        {
+          "a": "try + to부정사",
+          "b": "어려운 일을 해내려 애쓰다",
+          "why": "try + to부정사는 시간이 아니라 노력의 의미입니다."
+        },
+        {
+          "a": "stop + -ing",
+          "b": "하던 동작을 중단하다",
+          "why": "stop 은 중단된 동작을 -ing 형 목적어로 받습니다."
+        },
+        {
+          "a": "regret + to부정사",
+          "b": "유감스럽지만 알리게 되다",
+          "why": "announce·inform 처럼 알리는 동사와 결합한 격식 표현입니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 2,
+      "title": "remember · forget",
+      "rule": "forget + to부정사는 해야 할 일을 하지 못했다는 뜻이고, forget + -ing 는 이미 한 일 자체를 잊었다는 뜻입니다. 문장 안의 결과 절이 어느 쪽인지 알려 줍니다.",
+      "examples": [
+        {
+          "en": "The driver forgot **to renew** his license, and the police fined him last week.",
+          "ko": "그 운전자는 면허를 갱신하는 것을 잊어서 지난주에 경찰에게 벌금을 물었습니다.",
+          "note": "벌금이라는 결과가 갱신이 실제로 일어나지 않았음을 보여 줍니다. 해야 할 일을 하지 못한 것이므로 to부정사입니다."
+        },
+        {
+          "en": "She will never forget **watching** the eclipse from the observatory roof.",
+          "ko": "그녀는 관측소 지붕에서 일식을 보았던 일을 결코 잊지 못할 것입니다.",
+          "note": "일식을 본 것은 이미 겪은 경험입니다. 경험을 잊지 못한다는 뜻이므로 -ing 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 3,
+      "title": "regret",
+      "rule": "regret + -ing 는 이미 한 일을 후회한다는 뜻입니다. regret + to부정사는 announce·inform·say 처럼 알리는 동사와 결합해 '유감스럽지만 ~하게 되었습니다'라는 공식적 표현을 만듭니다.",
+      "examples": [
+        {
+          "en": "The airline regrets **to announce** that flight 402 has been cancelled.",
+          "ko": "항공사는 402편이 취소되었음을 유감스럽게 알려 드립니다.",
+          "note": "알리는 행위는 지금 하는 일입니다. 후회가 아니라 유감의 격식 표현이므로 to부정사입니다."
+        },
+        {
+          "en": "He still regrets **selling** the family's old piano to a stranger.",
+          "ko": "그는 낯선 사람에게 집안의 오래된 피아노를 팔았던 일을 아직도 후회합니다.",
+          "note": "판 것은 이미 끝난 일입니다. 이미 한 일에 대한 후회이므로 -ing 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u11-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Fortunately, the volunteers remembered {{blank}} the seedlings the night before the frost; if they had not, the whole nursery would have been lost.",
+          "options": ["watering", "to water"],
+          "answer": 1,
+          "translation": "다행히 자원봉사자들은 서리가 내리기 전날 밤 묘목에 물을 줄 것을 기억했습니다. 만약 그러지 않았다면 묘목장 전체를 잃었을 것입니다.",
+          "explanation": "if they had not, the whole nursery would have been lost 는 기억한 덕분에 물주기가 실제로 이루어졌음을 뜻합니다. 앞으로 할 일을 잊지 않고 해낸 것이므로 to water 가 옳습니다. watering 을 고르면 이미 물을 주었던 일을 회상한다는 뜻이 되는데, 회상만으로는 묘목장을 구할 수 없으므로 뒤 절과 어긋납니다.",
+          "trapTags": ["meaning-shift"]
+        },
+        {
+          "id": "u11-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "She will never forget [[u:to stand]] on the summit at sunrise with her father.",
+          "isCorrect": false,
+          "correction": "standing",
+          "translation": "그녀는 아버지와 함께 해 뜰 무렵 정상에 서 있었던 일을 결코 잊지 못할 것입니다.",
+          "explanation": "정상에 선 것은 이미 겪은 경험입니다. 이미 한 일을 잊지 못한다는 뜻이므로 forget + -ing 인 standing 이 옳습니다. to stand 를 쓰면 앞으로 정상에 서야 할 일을 잊지 않겠다는 뜻이 되어 회상이라는 문맥과 어긋납니다.",
+          "trapTags": ["meaning-shift"]
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "형태의 뜻 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 형태의 뜻이 손에 붙었는지 확인합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "remember 뒤의 -ing 는 이미 한 일을 가리킵니다.",
+          "isTrue": true,
+          "why": "-ing 는 동사 시점보다 앞선 일, 즉 이미 했거나 진행되던 일입니다."
+        },
+        {
+          "statement": "stop 뒤의 to부정사는 하던 동작을 중단한다는 뜻입니다.",
+          "isTrue": false,
+          "why": "stop 뒤의 to부정사는 중단이 아니라 '~하기 위해'라는 목적의 부사구입니다. 중단은 -ing 가 맡습니다."
+        },
+        {
+          "statement": "forget + to부정사는 해야 할 일을 결국 하지 못했다는 뜻입니다.",
+          "isTrue": true,
+          "why": "to부정사는 앞으로 할 일이므로, 그것을 잊었다는 것은 해야 할 일을 못 했다는 뜻입니다."
+        },
+        {
+          "statement": "try + -ing 는 어려운 일을 해내려는 노력을 뜻합니다.",
+          "isTrue": false,
+          "why": "노력의 뜻은 try + to부정사입니다. try + -ing 는 효과를 보려는 시험적 조치입니다."
+        },
+        {
+          "statement": "regret + to부정사는 소식을 알리는 동사와 결합한 격식 표현입니다.",
+          "isTrue": true,
+          "why": "regret to announce·inform·say 는 '유감스럽지만 알린다'는 격식 표현입니다."
+        },
+        {
+          "statement": "다섯 동사 뒤의 형태는 뜻과 상관없는 자유 선택입니다.",
+          "isTrue": false,
+          "why": "이 동사들에서 형태는 뜻을 가르는 스위치입니다. 형태를 바꾸면 문장의 사실 관계가 바뀝니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "try",
+      "rule": "try + to부정사는 어려운 일을 해내려고 애쓴다는 뜻이고, try + -ing 는 효과를 보려고 시험 삼아 한번 해 본다는 뜻입니다.",
+      "examples": [
+        {
+          "en": "The engineer tried **to open** the valve, but the rust had sealed it shut.",
+          "ko": "그 기술자는 밸브를 열려고 애썼지만, 녹이 밸브를 완전히 막아 놓았습니다.",
+          "note": "여는 행위 자체가 어렵고 결국 실패했습니다. 노력의 뜻이므로 to부정사입니다."
+        },
+        {
+          "en": "If the engine keeps stalling, try **replacing** the fuel filter first.",
+          "ko": "엔진이 계속 멈춘다면 우선 연료 필터를 교체해 보십시오.",
+          "note": "교체 자체는 어렵지 않고, 문제가 해결되는지 보려고 시험 삼아 하는 조치입니다. 그래서 -ing 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 3,
+      "title": "stop — 목적어가 아닌 to부정사",
+      "rule": "stop 은 -ing 만 목적어로 취합니다. stop 뒤의 to부정사는 목적어가 아니라 '~하기 위해'라는 목적의 부사구이며, 멈춘 뒤에 할 일을 가리킵니다.",
+      "examples": [
+        {
+          "en": "The audience stopped **talking** as soon as the conductor raised his baton.",
+          "ko": "지휘자가 지휘봉을 들자마자 청중은 이야기를 멈췄습니다.",
+          "note": "하던 동작을 중단한 것입니다. 중단된 동작이 stop 의 목적어이므로 -ing 입니다."
+        },
+        {
+          "en": "Halfway through the hike, she stopped **to photograph** the frozen waterfall.",
+          "ko": "등산 중간에 그녀는 얼어붙은 폭포를 사진에 담으려고 멈춰 섰습니다.",
+          "note": "멈춘 것은 걷는 일이고, to photograph 는 멈춘 목적입니다. stop 의 목적어가 아닙니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "stop 뒤의 to부정사는 어디에 붙는가",
+      "tokens": [
+        { "t": "Halfway through the hike,", "role": "M" },
+        { "t": "she", "role": "S" },
+        { "t": "stopped", "role": "V" },
+        { "t": "to photograph the frozen waterfall", "role": "VERBAL" }
+      ],
+      "ko": "등산 중간에 그녀는 얼어붙은 폭포를 사진에 담으려고 멈춰 섰습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "Halfway through the hike 는 시점을 알려 주는 부사구입니다. 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 she 입니다."
+        },
+        {
+          "label": "③ 본동사와 그 목적어 자리를 봅니다",
+          "roles": ["V"],
+          "note": "본동사는 stopped 입니다. 멈춘 대상은 문맥상 걷는 일이며, 문장에 -ing 형 목적어는 없습니다."
+        },
+        {
+          "label": "④ to부정사구의 역할을 정합니다",
+          "roles": ["VERBAL"],
+          "note": "to photograph the frozen waterfall 은 stop 의 목적어가 아니라 멈춘 목적을 밝히는 부사구입니다. 즉 '사진을 찍기 위해' 멈춘 것입니다."
+        }
+      ],
+      "conclusion": "stop 뒤의 to부정사는 목적어 자리에 들어간 것이 아닙니다. 목적어 자리에 무엇이 들어갔는지를 먼저 물어야 형태를 정할 수 있습니다."
+    },
+    {
+      "id": "b13",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나를 찾습니다",
+      "instruction": "넷 중 결이 다른 하나를 고르십시오.",
+      "rounds": [
+        {
+          "words": ["remember", "forget", "regret", "try"],
+          "odd": 3,
+          "why": "remember·forget·regret 는 -ing 가 이미 한 일을 가리키는 점을 공유합니다(regret 의 to부정사는 announce·inform 류와 결합한 격식 표현입니다). try 는 시간이 아니라 '애써 해냄 vs 시험 삼아 해 봄'이라는 의미로 갈리므로 결이 다릅니다."
+        },
+        {
+          "words": ["stop reading", "regret saying", "forget locking", "remember to lock"],
+          "odd": 3,
+          "why": "앞의 셋은 모두 이미 했거나 하던 일을 가리키는 -ing 형입니다. remember to lock 만 아직 하지 않은 앞으로 할 일을 가리키는 to부정사이므로 결이 다릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "다섯 동사 한눈에 대조",
+      "columns": ["+ to부정사", "+ 동명사(-ing)"],
+      "rows": [
+        {
+          "criterion": "remember",
+          "a": "할 것을 기억하다 — 아직 하지 않은 일",
+          "b": "한 것을 기억하다 — 이미 한 일"
+        },
+        {
+          "criterion": "forget",
+          "a": "할 것을 잊다 — 결국 하지 못했다",
+          "b": "한 것을 잊다 — 했다는 사실 자체를 잊었다"
+        },
+        {
+          "criterion": "regret",
+          "a": "유감스럽지만 알리게 되다 — announce·inform·say 류",
+          "b": "한 것을 후회하다 — 이미 끝난 일"
+        },
+        {
+          "criterion": "try",
+          "a": "하려고 애쓰다 — 어려운 일",
+          "b": "시험 삼아 해 보다 — 효과 확인"
+        },
+        {
+          "criterion": "stop",
+          "a": "하기 위해 멈추다 — 목적의 부사구(목적어 아님)",
+          "b": "하던 것을 멈추다 — 중단된 동작이 목적어"
+        }
+      ],
+      "examples": [
+        {
+          "en": "We regret **to inform** you that your manuscript has not been selected.",
+          "ko": "귀하의 원고가 선정되지 않았음을 유감스럽게 알려 드립니다.",
+          "note": "inform 과 결합한 격식 표현입니다. 알리는 일은 지금 하는 일이므로 to부정사입니다."
+        },
+        {
+          "en": "The council regrets **approving** the plan without a public hearing.",
+          "ko": "의회는 공청회 없이 그 계획을 승인한 것을 후회합니다.",
+          "note": "승인은 이미 끝난 일입니다. 이미 한 일에 대한 후회이므로 -ing 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "형태를 정하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 앞의 동사가 의미 변화 동사(remember·forget·regret·try·stop)인지 확인합니다.",
+          "applyNote": "stopped 가 그 목록에 있습니다. 따라서 형태 선택이 뜻을 바꾸는 자리입니다."
+        },
+        {
+          "text": "문장의 시간 단서와 결과 절을 찾아, 그 동작이 이미 일어난 일인지 앞으로 할 일인지 고정합니다.",
+          "applyNote": "when the funding ran out 은 벽화 복원이 그 전부터 진행되던 일임을 알려 줍니다."
+        },
+        {
+          "text": "이미 했거나 진행되던 일이면 -ing, 동사의 시점보다 뒤에 올 일이면 to부정사를 씁니다. 다만 try 는 시간이 아니라 의미로 갈립니다 — 어려운 일을 해내려는 노력이면 to부정사, 효과를 보려는 시험적 조치면 -ing 입니다.",
+          "applyNote": "진행되던 복원을 중단한 것이므로 restoring 이 옳습니다."
+        },
+        {
+          "text": "동사가 stop 이면 한 단계 더 확인합니다. 중단된 동작이 목적어로 필요한 자리인지, 멈춘 뒤에 할 일을 덧붙이는 자리인지 봅니다.",
+          "applyNote": "to restore 를 쓰면 '복원하기 위해 멈췄다'가 되어 자금이 끊겼다는 상황과 어긋납니다."
+        }
+      ],
+      "example": {
+        "en": "The curator stopped **restoring** the mural when the funding ran out.",
+        "ko": "그 큐레이터는 자금이 끊기자 벽화 복원을 중단했습니다.",
+        "note": "중단된 동작이 stop 의 목적어이므로 -ing 형이 옳습니다."
+      }
+    },
+    {
+      "id": "b16",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "After the meeting, he regretted ( to tell / telling ) his colleagues about the merger, because the news spread within an hour.",
+      "steps": [
+        {
+          "title": "① 동사를 확인합니다",
+          "body": "regret 은 목적어 형태에 따라 뜻이 갈리는 동사입니다. 형태 선택이 곧 의미 선택입니다."
+        },
+        {
+          "title": "② 시간 단서를 찾습니다",
+          "body": "because the news spread within an hour 는 소식을 이미 말했음을 전제합니다. 말하는 행위는 후회보다 앞선 일입니다."
+        },
+        {
+          "title": "③ 두 형태의 뜻을 대조합니다",
+          "body": "regret + -ing 는 이미 한 일에 대한 후회이고, regret + to부정사는 announce·inform 류와 결합해 '유감스럽지만 알린다'는 격식 표현입니다. 여기서는 후회의 뜻입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "이미 말해 버린 일을 후회하는 것이므로 telling 이 옳습니다. to tell 을 넣으면 지금 유감스럽게 알린다는 뜻이 되어 소식이 이미 퍼졌다는 뒤 절과 어긋납니다."
+        }
+      ],
+      "answer": "telling",
+      "ko": "회의가 끝난 뒤 그는 동료들에게 합병 이야기를 한 것을 후회했습니다. 그 소식이 한 시간 만에 퍼졌기 때문입니다."
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The novelist stopped ( writing / to write ) her memoir when her eyesight failed, and the manuscript remains unfinished today.",
+      "givenSteps": [
+        "① 동사를 확인합니다 — stop 은 형태에 따라 뜻이 갈리는 동사입니다.",
+        "② 단서를 읽습니다 — when her eyesight failed 와 the manuscript remains unfinished 는 회고록 집필이 그 전부터 진행되던 일이었고 끝내 중단되었음을 알려 줍니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 어느 형태여야 합니까?",
+      "options": [
+        "writing — 진행되던 집필을 중단한 것이므로 중단된 동작이 stop 의 목적어입니다",
+        "to write — 회고록을 쓰기 위해 하던 일을 멈춘 것입니다",
+        "to write — stop 은 to부정사를 목적어로 취하는 동사입니다"
+      ],
+      "answer": 0,
+      "explain": "원고가 미완인 채 남았다는 서술은 집필이 중단되었음을 뜻합니다. 중단된 동작이 stop 의 목적어이므로 writing 이 옳습니다. to write 를 넣으면 '회고록을 쓰기 위해 멈췄다'가 되어 원고가 미완이라는 결과와 어긋납니다. 또한 stop 은 to부정사를 목적어로 취하지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u11-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "As the storm intensified, the pilot stopped {{blank}} the approach and diverted to a nearby airport.",
+          "options": ["attempting", "to attempt"],
+          "answer": 0,
+          "translation": "폭풍이 거세지자 조종사는 착륙 시도를 중단하고 인근 공항으로 항로를 바꿨습니다.",
+          "explanation": "and diverted to a nearby airport 는 착륙 접근을 그만두었음을 보여 줍니다. 진행되던 동작을 중단한 것이므로 stop 의 목적어인 attempting 이 옳습니다. to attempt 를 고르면 '접근을 시도하기 위해 멈췄다'가 되어 항로를 바꿨다는 뒤 절과 모순됩니다.",
+          "trapTags": ["meaning-shift", "stop-to-v"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 attempting 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "항로를 바꿨다는 뒤 절이 착륙 접근이 중단되었음을 확정하고, stop 은 중단된 동작을 -ing 형 목적어로 취하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 결과 절이 사건의 시점을 고정하고, 그 시점이 형태를 결정합니다."
+        },
+        {
+          "text": "stop 은 언제나 -ing 만 취하고 to부정사와는 결합할 수 없기 때문입니다.",
+          "correct": false,
+          "feedback": "stop 뒤에도 to부정사는 올 수 있습니다. 다만 목적어가 아니라 '~하기 위해'라는 목적의 부사구로 올 뿐입니다. 형태를 외우는 것이 아니라 자리를 판단해야 합니다."
+        },
+        {
+          "text": "폭풍이라는 부정적 상황에서는 -ing 형이 더 자연스럽게 들리기 때문입니다.",
+          "correct": false,
+          "feedback": "어감은 판단 근거가 되지 못합니다. 근거는 뒤 절이 알려 주는 사건의 시점입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — stop 뒤의 to부정사를 목적어로 착각하는 함정",
+      "body": "stop 뒤에 to부정사가 오면 학생은 그것을 목적어로 읽고 '멈추는 대상'이라고 생각합니다. 그러나 stop 은 -ing 만 목적어로 취합니다. to부정사는 멈춘 뒤에 무엇을 하려는지를 밝히는 목적의 부사구입니다. 멈춘 동작과 멈춘 목적은 서로 다른 동작이라는 점을 확인해야 합니다.",
+      "example": {
+        "en": "During the survey, the biologist stopped **to record** the exact position of every nest.",
+        "ko": "조사 도중 그 생물학자는 모든 둥지의 정확한 위치를 기록하려고 멈춰 섰습니다.",
+        "note": "멈춘 동작은 이동이고, 기록은 멈춘 뒤에 한 일입니다. to record 는 목적어가 아니라 목적의 부사구입니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "SORT",
+      "tier": 2,
+      "instruction": "각 문장의 빈칸에 어떤 형태가 들어가야 하는지 분류하십시오.",
+      "buckets": [
+        { "id": "to", "label": "to부정사" },
+        { "id": "ing", "label": "동명사(-ing)" }
+      ],
+      "chips": [
+        {
+          "text": "Remember ___ your passport when you leave tomorrow morning.",
+          "bucketId": "to",
+          "why": "여권을 챙기는 일은 내일 아침, 즉 기억하는 시점보다 뒤에 올 일입니다."
+        },
+        {
+          "text": "I clearly remember ___ this melody at the school festival years ago.",
+          "bucketId": "ing",
+          "why": "years ago 가 그 일을 과거로 고정합니다. 이미 한 일을 기억하는 것입니다."
+        },
+        {
+          "text": "He forgot ___ off the gas, and the soup boiled over.",
+          "bucketId": "to",
+          "why": "국이 넘쳤다는 결과는 가스를 끄지 않았음을 보여 줍니다. 해야 할 일을 하지 못한 것입니다."
+        },
+        {
+          "text": "The gallery regrets ___ visitors that the exhibition has closed early.",
+          "bucketId": "to",
+          "why": "inform 과 결합한 격식 표현입니다. 후회가 아니라 유감의 통보입니다."
+        },
+        {
+          "text": "If the display keeps flickering, try ___ the cable into another port.",
+          "bucketId": "ing",
+          "why": "문제가 해결되는지 보려고 시험 삼아 해 보는 조치입니다."
+        },
+        {
+          "text": "The children stopped ___ noisily among themselves the moment their teacher entered the room.",
+          "bucketId": "ing",
+          "why": "하던 동작을 중단한 것이므로 중단된 동작이 stop 의 목적어가 됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 문맥과 어법에 맞지 않는 것을 고르고 바르게 고치십시오.",
+      "text": "The technician remembered [[1:to calibrate]] the sensors on Monday, but this morning she forgot [[2:checking]] the battery level, so the device stopped [[3:transmitting]] data before noon, and the team now regrets [[4:ignoring]] the warning light.",
+      "answer": 2,
+      "correction": "to check",
+      "rationales": [
+        "remember + to부정사는 앞으로 해야 할 일을 기억한다는 뜻입니다. 월요일에 해야 할 보정을 기억해 실제로 수행했으므로 옳습니다.",
+        "배터리 확인은 실제로 이루어지지 않았고, 그 때문에 기기가 멈췄습니다. 해야 할 일을 하지 못한 것이므로 forget + to부정사인 to check 로 고칩니다.",
+        "stop + -ing 는 하던 동작의 중단입니다. 데이터 전송이 끊긴 것이므로 transmitting 이 옳습니다.",
+        "regret + -ing 는 이미 한 일에 대한 후회입니다. 경고등을 무시한 것은 이미 지나간 일이므로 ignoring 이 옳습니다."
+      ],
+      "ko": "그 기술자는 월요일에 센서를 보정할 것을 기억했지만, 오늘 아침에는 배터리 잔량을 확인하는 것을 잊었고, 그래서 기기가 정오 전에 데이터 전송을 멈추었으며, 팀은 이제 경고등을 무시한 것을 후회합니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "title": "시험에서는 이렇게 나옵니다",
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 결과 절을 주고 괄호 안 형태를 고르게 하거나, 형태를 바꾸었을 때 뜻이 어떻게 달라지는지 우리말로 쓰게 합니다. 형태만 고르고 근거를 쓰지 않으면 감점됩니다.",
+          "sample": {
+            "en": "The engineer forgot ( to submit / submitting ) the safety report, and the inspection was delayed by two weeks.",
+            "ask": "괄호에서 옳은 것을 고르고, 그렇게 판단한 근거를 한 문장으로 쓰십시오.",
+            "answer": "to submit — 점검이 지연되었다는 결과가 보고서 제출이 이루어지지 않았음을 보여 주므로, 해야 할 일을 하지 못했다는 뜻의 forget + to부정사가 옳습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 밑줄 앞뒤 절에 사건의 시점을 알려 주는 단서를 숨겨 둡니다. 밑줄이 remember·forget·regret·try·stop 뒤의 형태라면, 형태 자체가 아니라 그 단서가 가리키는 시점을 먼저 확정해야 합니다.",
+          "sample": {
+            "en": "After three failed attempts, the team stopped [[u:to test]] the prototype and moved on to an entirely new design.",
+            "ask": "밑줄 친 부분이 문맥과 어법에 맞습니까?",
+            "answer": "testing — 세 번의 실패 뒤 시제품 시험 자체를 중단하고 새 설계로 넘어간 것이므로, 중단된 동작을 목적어로 취하는 stop + -ing 가 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "A field notebook is more than a record of measurements. [[u:Many naturalists remember sketching a species long before they could name it, and those rough drawings often survive as the only evidence of a first encounter.]] When a specimen is finally classified, the sketch tells researchers where and when it was seen. Modern databases have not replaced that habit.",
+      "instruction": "밑줄 친 문장에서 remember 뒤의 형태가 왜 -ing 인지 근거를 찾으십시오.",
+      "found": "long before they could name it 이 스케치한 일을 이름을 붙인 시점보다 앞선 과거로 고정합니다. 이미 한 일을 기억하는 것이므로 remember + -ing 가 옳습니다. to sketch 를 쓰면 앞으로 스케치할 일을 기억한다는 뜻이 되어, 그 그림들이 지금까지 남아 있다는 뒤 절과 모순됩니다.",
+      "gist": "현장 노트의 스케치가 최초 관찰의 유일한 증거로 남는다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "시간축의 문지기",
+      "intro": "이 문 앞에서는 형태를 외워 온 사람일수록 쉽게 무너집니다. 문지기가 묻는 것은 언제나 하나입니다 — '그 일은 이미 일어난 일입니까, 아직 남은 일입니까.' 네 건의 문장으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The guard remembered {{blank}} the alarm before leaving; if he had not, the vault would have stayed unlocked all night.",
+          "options": ["to reset", "resetting"],
+          "answer": 0,
+          "why": "경보를 재설정하지 않았다면 금고가 밤새 열려 있었을 것이라는 가정이, 재설정이 기억한 뒤에 실제로 이루어졌음을 확정합니다. 앞으로 할 일을 잊지 않고 해낸 것이므로 to reset 입니다."
+        },
+        {
+          "prompt": "Everyone in the square will never forget {{blank}} the two leaders shake hands after so many years of war.",
+          "options": ["watching", "to watch"],
+          "answer": 0,
+          "why": "그 자리에 있던 모두가 결코 잊지 못한다는 것은 이미 목격한 장면을 두고 하는 말입니다. 이미 겪은 일을 잊지 못하는 것이므로 -ing 인 watching 이 옳습니다."
+        },
+        {
+          "prompt": "When the siren rang, the workers stopped {{blank}} the machine and rushed out of the hall.",
+          "options": ["operating", "to operate"],
+          "answer": 0,
+          "why": "서둘러 홀 밖으로 나갔다는 뒤 절이 기계 작동을 그만두었음을 보여 줍니다. 중단된 동작이 stop 의 목적어이므로 operating 입니다. to operate 를 넣으면 '작동하기 위해 멈췄다'가 되어 대피 상황과 어긋납니다."
+        },
+        {
+          "prompt": "During the night march, the scouts stopped {{blank}} their position on the map before pressing on.",
+          "options": ["to mark", "marking"],
+          "answer": 0,
+          "why": "위치를 표시한 뒤 다시 행군했다는 흐름은 걷기를 잠시 멈추고 지도에 위치를 표시했다는 뜻입니다. to mark 는 멈춘 목적을 밝히는 부사구이지 stop 의 목적어가 아닙니다. marking 을 넣으면 '위치 표시를 중단했다'가 되어 문맥과 어긋납니다."
+        }
+      ],
+      "winText": "문지기가 길을 엽니다. 형태가 아니라 시점을 읽는 눈 — remember·forget·regret 의 시간축과 stop 의 두 얼굴을 가른 그 눈이 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 문장을 돌려줍니다. 네 건이 물은 것은 늘 같았습니다 — '그 일은 이미 일어났는가, 아직 남았는가.' 결과 절이 가리키는 시점을 다시 확인하고 오면 문은 그대로 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "remember·forget·regret 뒤의 -ing 는 ___ 일이고 to부정사는 ___ 일입니다. stop 뒤의 to부정사는 목적어가 아니라 ___ 입니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "remember·forget·regret 의 판단 기준은 동사의 시점입니다. 목적어의 일이 그 시점보다 뒤면 to부정사, 앞이거나 진행 중이면 -ing 입니다.",
+        "remember·forget·regret 는 시간축이 뒤집히면 문장의 사실 관계가 통째로 바뀝니다. 결과 절이 어느 쪽인지 알려 줍니다.",
+        "try + to부정사는 애쓰는 것이고, try + -ing 는 효과를 보려고 시험 삼아 해 보는 것입니다.",
+        "stop 은 -ing 만 목적어로 취합니다. stop 뒤의 to부정사는 멈춘 목적을 밝히는 부사구입니다.",
+        "형태를 외우지 말고, 그 일이 언제 일어난 일인지를 문장 안 단서로 먼저 확정하십시오."
+      ],
+      "keySentence": {
+        "en": "The curator stopped **restoring** the mural when the funding ran out.",
+        "ko": "그 큐레이터는 자금이 끊기자 벽화 복원을 중단했습니다.",
+        "note": "중단된 동작이 stop 의 목적어입니다. to restore 였다면 '복원하기 위해 멈췄다'는 다른 뜻이 됩니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u11-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Noticing an unfamiliar bird in the reeds, the ornithologist stopped {{blank}} a photograph before it flew away.",
+          "options": ["taking", "to take"],
+          "answer": 1,
+          "translation": "갈대밭에서 낯선 새를 발견한 그 조류학자는 새가 날아가기 전에 사진을 찍으려고 멈춰 섰습니다.",
+          "explanation": "멈춘 동작은 이동이고, 사진 촬영은 멈춘 뒤에 하려는 일입니다. 목적을 나타내는 부사구이므로 to take 가 옳습니다. taking 을 고르면 사진을 찍던 일을 중단했다는 뜻이 되어, 새를 발견하고 멈춰 섰다는 앞부분과 어긋납니다.",
+          "trapTags": ["meaning-shift", "stop-to-v"]
+        },
+        {
+          "id": "u11-c2-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Looking back on her career, she does not regret [[u:to spend]] those long winters in the workshop.",
+          "isCorrect": false,
+          "correction": "spending",
+          "translation": "자신의 경력을 돌아보며 그녀는 작업장에서 보낸 그 긴 겨울들을 후회하지 않습니다.",
+          "explanation": "Looking back on her career 가 그 겨울들을 이미 지나간 일로 고정합니다. 이미 한 일에 대한 후회이므로 regret + -ing 인 spending 이 옳습니다. regret + to부정사는 announce·inform 처럼 알리는 동사와 결합해 유감을 표하는 격식 표현이며, 이 문맥에는 맞지 않습니다.",
+          "trapTags": ["meaning-shift"]
+        },
+        {
+          "id": "u11-c2-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "When the storm siren sounded, the workers stopped {{blank}} the trench and ran for the shelter.",
+          "options": ["digging", "to dig"],
+          "answer": 0,
+          "translation": "폭풍 경보가 울리자 인부들은 참호 파는 일을 멈추고 대피소로 달려갔습니다.",
+          "explanation": "and ran for the shelter 는 작업을 그만두었음을 보여 줍니다. 진행되던 동작을 중단한 것이므로 stop 의 목적어인 digging 이 옳습니다. to dig 를 고르면 '참호를 파기 위해 멈췄다'가 되어 대피했다는 뒤 절과 모순됩니다.",
+          "trapTags": ["meaning-shift", "stop-to-v"]
+        }
+      ]
+    }
+  ]
+}

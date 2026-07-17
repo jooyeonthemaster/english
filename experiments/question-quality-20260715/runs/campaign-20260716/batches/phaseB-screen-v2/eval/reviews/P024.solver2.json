@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam: base-verb infinitive parallel to 'to pay attention' — grammatical. Logic: direct contradiction. The passage states readers 'struggle to interpret elements that flout principles of efficient communication', i.e. readers accept violations of efficient communication rather than requiring strict adherence to it. Inserting ① negates the thesis of the hyper-protected cooperative principle."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Seam: 'to tolerate ... and (to) seek ...' — well-formed coordinated infinitive parallel to 'to pay attention'. Logic: two-way entailment with the passage. 'Tolerate apparent obscurities' restates 'we can put up with many obscurities and apparent irrelevancies'; 'seek underlying communicative intents' restates 'struggle to interpret elements ... in the interests of some further communicative goal' and 'complications of language ultimately have a communicative purpose'. Perfect fit as the summarizing conclusion."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Grammatical in the seam, but explicitly negated by the passage: 'instead of imagining that the speaker or writer is being uncooperative ... they struggle to interpret'. Readers assume complications HAVE communicative purpose, not that they indicate a lack of cooperative intent. Antithesis distractor."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatical ('rely structurally on' is an odd collocation but well-formed). Logic: the institutional label 'Literature' gives readers reason to expect their reading EFFORTS will be worth it — it motivates interpretative effort ('struggle to interpret'), it does not replace or bypass it. 'Bypass their own interpretative efforts' contradicts the passage's central claim about readers' willingness to work."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatical, but a category error logically. Reprinting is mentioned only as one stage of the institutional selection filter that distinguishes literary works from other narrative display texts; it is never presented as a criterion readers use to evaluate texts, and the concluding sentence concerns features of literature and reader willingness, not evaluation of other display texts. Surface-word recycling distractor."
+    }
+  ],
+  "note": "Passage is recognizably Jonathan Culler's discussion of the 'hyper-protected cooperative principle' (Literary Theory: A Very Short Introduction); the original continuation ('to explore uncertainties of meaning, and not immediately demand what's the point') is substantively equivalent to ②. All four distractors are grammatically viable in the seam but each is either a direct contradiction (①③④) or an off-scope category error (⑤), so the item has a single defensible key. Clean item from a grammarian/logician standpoint."
+}

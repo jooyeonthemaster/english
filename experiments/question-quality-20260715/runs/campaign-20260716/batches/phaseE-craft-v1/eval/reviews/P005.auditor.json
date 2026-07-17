@@ -1,0 +1,61 @@
+{
+  "pid": "P005",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-note",
+      "severity": "minor",
+      "evidence": "markedExpressions (C) carries expression='Although' (corrected form) while non-error entries carry the displayed form; internally consistent because errorExpression='Despite' and correction='Although' are both present and the rendered passage shows 'Despite', but the field semantics differ between error and non-error rows."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "voice-mixed coordination: passive 'was issued' and active 'held' sharing subject He across 'and'",
+      "temptingBecause": "first conjunct is passive, so students expect a matching passive ('was held') or a participle and suspect the bare past-tense 'held'",
+      "decisiveFlaw": "'He ... held patents' is a fully grammatical second finite predicate; mixed-voice coordination under one subject is standard, so it is not an error"
+    },
+    {
+      "label": "(B)",
+      "intent": "relative pronoun case / that vs what and clause completeness after superlative-like 'the first'",
+      "temptingBecause": "students may misread 'he successfully sold to Sheaffer Pen Company' as a complete clause or expect 'what'",
+      "decisiveFlaw": "'sold' lacks its object, so object relative 'that' with antecedent 'the first invention' is exactly right"
+    },
+    {
+      "label": "(C)",
+      "intent": "declared answer: preposition vs subordinating conjunction (Despite vs Although)",
+      "temptingBecause": "Despite carries the correct concessive meaning, so meaning-based readers may accept it",
+      "decisiveFlaw": "Despite is a preposition and cannot govern the finite clause 'he was working ...'; correcting to 'Although' restores the source verbatim — this is the unique error"
+    },
+    {
+      "label": "(D)",
+      "intent": "prove as linking verb taking a to-be subject complement",
+      "temptingBecause": "learners who know prove mainly as a transitive verb may find 'proved to be' odd or expect a gerund",
+      "decisiveFlaw": "'prove to be + complement' is the standard construction; nothing is wrong"
+    },
+    {
+      "label": "(E)",
+      "intent": "with-absolute construction voice: with + NP + being + participle",
+      "temptingBecause": "classic active/passive choice (issuing vs issued) inside a with-absolute invites second-guessing",
+      "decisiveFlaw": "patents undergo issuing, so the passive 'being issued' is correct; 'issued' as past participle is not an error"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "All validity gates pass. V1: only the intended Although->Despite substitution differs from source; markers/labels align. V2: independent per-option syntactic analysis confirms (C) as the single error; (A) mixed-voice coordination, (B) object relative, (D) prove+to be, (E) passive with-absolute are all grammatical, with no plausible alternative reading making any of them wrong. V3: passage, stem, and corrected sentence are grammatical and natural. V4: every grammatical term and structural claim in the main and distractor explanations matches the actual sentences. V5: answer label, options, explanations, keyPoints, and markedExpressions are mutually consistent. Craft: canonical but textbook-standard error point (C1=3); decoys target four distinct misconception types with distinct pointCodes (C2=3); (A)/(E) require genuine structural judgment though the key is identifiable from a local cue, appropriate for INTERMEDIATE but not deeply discriminating (C3=3); no meta leakage, correction restores source exactly, answer inevitable (C4=4); difficulty matches the INTERMEDIATE label (C5=3); explanation concise and accurate, cleanly separating answer basis from traps (C6=3). Sum 19 with all C>=3 but <21 -> grade B: shippable with little or no revision, not exceptional craft. Requested difficulty is not KILLER, so killerConditionsMet=false."
+}

@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "auditDateKst": "2026-07-15",
+  "auditKind": "deterministic-splits-remediation-reaudit-v6",
+  "verdict": "BLOCK",
+  "summary": {
+    "total": 904,
+    "pass": 894,
+    "fail": 10,
+    "v5SemanticReplay": {
+      "total": 712,
+      "pass": 712,
+      "fail": 0,
+      "verdict": "PASS",
+      "failedCaseIds": []
+    },
+    "newHoldout": {
+      "total": 192,
+      "pass": 182,
+      "fail": 10,
+      "minimumRequired": 160,
+      "categories": {
+        "summary-evidence-source-v6": {
+          "total": 32,
+          "pass": 22,
+          "fail": 10,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 6,
+          "observedNegative": 26
+        },
+        "blank-circled-role-v6": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        },
+        "grammar-ghost-decoration-v6": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        },
+        "grammar-terminology-v6": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        },
+        "blank-residual-punctuation-v6": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        },
+        "sentence-order-cf-v6": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16
+        }
+      },
+      "controlBalance": {
+        "positive": 96,
+        "negative": 96
+      },
+      "generatedFreshCfCount": 16,
+      "postV4CfPoolCount": 105,
+      "ambiguityExclusionCount": 12
+    },
+    "failedCaseIds": [
+      "v6-summary-evidence-mixed-07",
+      "v6-summary-evidence-mixed-08",
+      "v6-summary-evidence-mixed-09",
+      "v6-summary-evidence-mixed-10",
+      "v6-summary-evidence-mixed-11",
+      "v6-summary-evidence-mixed-12",
+      "v6-summary-evidence-mixed-13",
+      "v6-summary-evidence-mixed-14",
+      "v6-summary-evidence-mixed-15",
+      "v6-summary-evidence-mixed-16"
+    ]
+  },
+  "oraclePolicy": {
+    "mismatchRule": "Any expected/observed mismatch blocks; no warning credit, tolerance, majority vote, or oracle relaxation is permitted.",
+    "positiveDefinition": "A positive control unambiguously requires the named deterministic detector/fatal.",
+    "negativeDefinition": "A negative control is an explicit boundary neighbor for which that detector/fatal must abstain.",
+    "balance": "Exactly 16 positive and 16 negative controls per family; 96/96 overall.",
+    "ambiguityExclusions": [
+      {
+        "id": "exclude-summary-evidence-method",
+        "family": "summary-evidence-source-v6",
+        "candidate": "본문을 근거로 답을 확인한 뒤 (A), (B)를 완성하시오.",
+        "reason": "Checking evidence describes a solution method and does not unambiguously request a second scored response."
+      },
+      {
+        "id": "exclude-summary-unsupported-pair-pronoun",
+        "family": "summary-evidence-source-v6",
+        "candidate": "(A), (B)를 채우고 근거 없는 것은 제외하시오.",
+        "reason": "것 may refer to a summary pair or to a separate statement, so the answer object is not syntactically fixed."
+      },
+      {
+        "id": "exclude-circled-nominal-fragments",
+        "family": "blank-circled-role-v6",
+        "candidate": "① 정답 근거 ② 오답 이유",
+        "reason": "Bare nominal fragments lack both finite option verdicts and narrative discourse predicates, leaving marker role indeterminate."
+      },
+      {
+        "id": "exclude-circled-single-marker",
+        "family": "blank-circled-role-v6",
+        "candidate": "① 우선 문맥을 읽는다.",
+        "reason": "One marker cannot satisfy the two-marker narrative fatal threshold and does not test the intended split."
+      },
+      {
+        "id": "exclude-ghost-roman-letter",
+        "family": "grammar-ghost-decoration-v6",
+        "candidate": "I (J) 관계사를 확인한다.",
+        "reason": "I can be English prose or a Roman-numeral list marker, so the prefix is not an unambiguous decoration-only control."
+      },
+      {
+        "id": "exclude-ghost-quoted-heading",
+        "family": "grammar-ghost-decoration-v6",
+        "candidate": "‘(J) 관계사’라는 제목을 검토한다.",
+        "reason": "The quoted text could be a discussed heading or an actual keyPoint anchor; the structural role is not fixed."
+      },
+      {
+        "id": "exclude-term-bare-calendar-stem",
+        "family": "grammar-terminology-v6",
+        "candidate": "오늘은 계사에 해당한다.",
+        "reason": "Without an explicit 년/월/일/시 suffix or linguistic context, 계사 may be a calendar stem or the grammar term."
+      },
+      {
+        "id": "exclude-term-relative-standard",
+        "family": "grammar-terminology-v6",
+        "candidate": "관계사 용법을 설명한다.",
+        "reason": "관계사 is a legitimate school-grammar term containing the same character sequence and tests policy scope, not the 계사 boundary."
+      },
+      {
+        "id": "exclude-residual-apostrophe-equivalence",
+        "family": "blank-residual-punctuation-v6",
+        "candidate": "students’ duty vs students' duty",
+        "reason": "Curly and ASCII apostrophes are intentionally normalized as equivalent and cannot serve as strict negative controls."
+      },
+      {
+        "id": "exclude-residual-slash-spacing",
+        "family": "blank-residual-punctuation-v6",
+        "candidate": "input/output vs input / output",
+        "reason": "The contract does not establish slash-adjacent whitespace as semantic, so assigning either polarity would be oracle speculation."
+      },
+      {
+        "id": "exclude-cf-tag-in-broken-word",
+        "family": "sentence-order-cf-v6",
+        "candidate": "one lexical fragment split only by a tag character",
+        "reason": "A malformed fragment does not establish substantive paragraph content even if some visible letters remain."
+      },
+      {
+        "id": "exclude-cf-punctuation-only",
+        "family": "sentence-order-cf-v6",
+        "candidate": "Cf plus visible punctuation but no words",
+        "reason": "Visible punctuation alone is not a sentence-order paragraph, so nonempty glyph presence is insufficient for a negative oracle."
+      }
+    ]
+  },
+  "novelty": {
+    "frozenV5ReplayCaseCount": 712,
+    "newCaseCount": 192,
+    "allIdsUseV6Namespace": true,
+    "uniqueIdCount": 192,
+    "uniqueInputCount": 192,
+    "priorAuditLiteralCollisionIds": [],
+    "cfOverlapWithV5Count": 0,
+    "newCaseIdsSha256": "9051cc20c447dc2ed9ad30786d0d0333bf8a1bd47dc863b23a7602c85fbd70dd",
+    "newInputsSha256": "da76dd870660361d1a08fa40c16f1788e6dcfadb3c2df0bd28ae2a94391882da",
+    "passedCaseIdsSha256": "152e49e78ecdd3aab0ff1b569d67f8a382174bfd528e544c2117f440abdc5dcb"
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "browserCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "productionEdits": 0,
+    "existingTestEdits": 0
+  },
+  "provenance": {
+    "auditScriptSha256": "f557fb04ccf4eb83758b13b7a09a63209343ad8aaaf1658204cc4daf861653a7",
+    "v5ReplayHarnessSha256": "282fa28f6d6c152eb62a01700589f3cf8c2befb51f14c0ac63c23a7b925fc435",
+    "v5ReplayHarnessReportedSha256": "282fa28f6d6c152eb62a01700589f3cf8c2befb51f14c0ac63c23a7b925fc435",
+    "frozenV4ArtifactSha256": {
+      "AUDIT.md": "246b1f4be6e77fc7650c12bf82cee6fe1792cf218477d50795bb29d826a83a99",
+      "RESULTS.json": "116f11c3ca17dc91258ac2087561ffd7c52d74c66542601a5b4b0bd6ce543439",
+      "audit.mts": "3e4cddb00bf6ffb868b9512aa6588d55b2eb42dbcd455a5c6d61027f96f98320",
+      "verify.mjs": "749213c1b7508ca85465fbab0fdbb7b56cc79f59ed68cc6937b50823f5a7da82",
+      "MANIFEST.sha256": "fe3125b22d192dd5420b5cea9a1ba5223faad1dd2fd0f0d834436f9d621ef1a0"
+    },
+    "frozenV5ArtifactSha256": {
+      "AUDIT.md": "eeb3d0008c388990cffa59849609b27feef656f622e157ba682ef17b04120e86",
+      "RESULTS.json": "7acedb949e221ca812b869a20977e865712cc2a161cf457c2b67c3fa173f8516",
+      "audit.mts": "282fa28f6d6c152eb62a01700589f3cf8c2befb51f14c0ac63c23a7b925fc435",
+      "verify.mjs": "99c5b05baf0c53467586bedc9ee7ae414d3eaf7f701e608c3f9b05c0d37d180b",
+      "MANIFEST.sha256": "30704ae31b74cea28f383357946ec33678362eca80a741105ba92363fc577a97"
+    },
+    "auditedSourceAndTestSha256": {
+      "src/lib/question-quality/index.ts": "2db502873ac6fbb295afdd8315fb166d5a6a408fdc213f3def1be1a300a4137f",
+      "src/lib/question-quality/core.ts": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+      "src/lib/question-quality/dispatcher.ts": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "src/lib/question-quality/validators/summary/mc.ts": "059bffea483afe0ee0903f7a9001d7de9b5b69346bf933c285a59cb9f8b2b5e0",
+      "src/lib/question-quality/validators/blank/inference.ts": "383a8b557097184e62ae6a924e47e682cb0224893db314a1c11d542a6e77dc99",
+      "src/lib/question-quality/validators/grammar/shared.ts": "f1eb1dc3b1e8d9596bf9dd8f9dcc1766753538be0e1c4462d16d93cb38c842c5",
+      "src/lib/question-quality/validators/sentence-order.ts": "14963483d7a66e8cd3f376aed2701616c963ff1c778a6165a671becfa25b0de3",
+      "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts": "a672875d20315667b7a662737930f63c76328136656bbb635c014d5f1ed24bff",
+      "tests/unit/sentence-order-quality.test.mjs": "9501144bcc8dde4a4258136dc260d3ffe5a652f99121a5b0c8a22c76935197d0",
+      "tests/unit/summary-mc-direction-split.test.mjs": "3d0390682f2f290271beed6cfdd8a03ed6b11221d20e2cbc8ce2ce87dcc6c1a1",
+      "tests/unit/blank-explanation-step-numbering.test.mjs": "6b79576842650b2abcf129b4aed4d7e9d35d8fccf26409eceacc5a06a811c324",
+      "tests/unit/question-validity-invariants.test.mjs": "73c74c3274c48fafe9712b198e61077b662e79fc14caa2b09f813015cd167aed",
+      "tests/unit/grammar-keypoint-core10.test.mjs": "894458f6bc9a467f14125fd9e9459e73e77541e6dd096192b16e1f76751fa2bc",
+      "tests/unit/grammar-killer-overdrilled.test.mjs": "aff501d56a409a64874898c1c35b50a81f9161fc64091c503a77df2e583ccdca",
+      "tests/unit/summary-mc-collocation-severity-split.test.mjs": "1644b66882c16927f396dad73afa2f155db0ee94d77b2ac49f48fea768dee2db"
+    }
+  },
+  "failures": [
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-07",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "요약문 빈칸 (A), (B)를 먼저 완성하시오. 별개 과제로 글의 내용을 근거로 옳지 않은 진술을 고르시오.",
+      "displayInput": "요약문 빈칸 (A), (B)를 먼저 완성하시오. 별개 과제로 글의 내용을 근거로 옳지 않은 진술을 고르시오.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-08",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 빈칸 (A)와 (B)에 단어를 넣으시오. 또한 본문 내용을 근거로 사실이 아닌 주장을 찾으시오.",
+      "displayInput": "요약문의 빈칸 (A)와 (B)에 단어를 넣으시오. 또한 본문 내용을 근거로 사실이 아닌 주장을 찾으시오.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-09",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "요약문 빈칸 (A), (B)를 완성하시오. 이와 독립적으로 글에서 뒷받침할 근거가 없는 주장을 고르시오.",
+      "displayInput": "요약문 빈칸 (A), (B)를 완성하시오. 이와 독립적으로 글에서 뒷받침할 근거가 없는 주장을 고르시오.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-10",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 빈자리 (A), (B)를 채우시오. 두 번째 과제로 본문이 뒷받침하지 않는 진술을 선택하시오.",
+      "displayInput": "요약문의 빈자리 (A), (B)를 채우시오. 두 번째 과제로 본문이 뒷받침하지 않는 진술을 선택하시오.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-11",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "요약문 빈칸 (A)와 (B)를 완성하시오. 별도로 글의 증거로 정당화할 수 없는 주장을 찾으시오.",
+      "displayInput": "요약문 빈칸 (A)와 (B)를 완성하시오. 별도로 글의 증거로 정당화할 수 없는 주장을 찾으시오.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-12",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 두 빈칸 (A), (B)를 채우시오. 추가로 본문에 제시된 증거가 지지하지 않는 진술을 고르시오.",
+      "displayInput": "요약문의 두 빈칸 (A), (B)를 채우시오. 추가로 본문에 제시된 증거가 지지하지 않는 진술을 고르시오.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-13",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "Complete summary blanks (A) and (B). As a separate task, choose the claim for which the passage provides no evidence.",
+      "displayInput": "Complete summary blanks (A) and (B). As a separate task, choose the claim for which the passage provides no evidence.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-14",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "Fill (A) and (B) in the summary. Independently select the statement not supported by evidence in the text.",
+      "displayInput": "Fill (A) and (B) in the summary. Independently select the statement not supported by evidence in the text.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-15",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary at (A) and (B); then identify the assertion with no textual support in the source passage.",
+      "displayInput": "Complete the summary at (A) and (B); then identify the assertion with no textual support in the source passage.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    },
+    {
+      "source": "v6-holdout",
+      "id": "v6-summary-evidence-mixed-16",
+      "category": "summary-evidence-source-v6",
+      "expected": true,
+      "observed": false,
+      "input": "Choose the pair for summary slots (A) and (B). Separately, select the claim that cannot be justified from the passage.",
+      "displayInput": "Choose the pair for summary slots (A) and (B). Separately, select the claim that cannot be justified from the passage.",
+      "oracle": "The direction explicitly separates summary completion from a second scored task whose answer is an unsupported, contradictory, or unjustified claim; mismatch fatal is mandatory."
+    }
+  ]
+}

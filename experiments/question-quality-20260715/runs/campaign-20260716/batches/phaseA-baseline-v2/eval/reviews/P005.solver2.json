@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'can be less unnerving to an interviewee' — 주어는 'Recording an interview'(행위)이고, 이 행위가 인터뷰이를 불안하게 '만드는' 주체이므로 능동 의미의 현재분사형 형용사 unnerving이 옳다. 비교 대상 'than seeing someone scribbling...'과의 병렬(동명사구 대 동명사구)도 성립한다. unnerved(과거분사)로 쓰면 행위 자체가 불안을 '느끼는' 것이 되어 비문. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'If the interview lasts a while, listen to it again to select the quotes ... can be time-consuming' — 술어 'can be time-consuming'의 진짜 주어 자리인데 원형동사 listen은 주어가 될 수 없다. 동명사 listening(또는 to listen)이어야 한다. 대안 해석 검증: (i) 명령문으로 읽으면 'can be time-consuming'이 주어를 잃어 비문, (ii) 조건절 도치·생략 구문으로도 구제 불가. 형식적으로 구제 불가능한 유일한 오류. 어법상 틀림."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'if you are working to a tight deadline' — be동사 + 현재분사의 현재진행형으로 주어 you와 능동 관계 성립. 'work to a deadline'은 '마감에 맞춰 일하다'라는 표준 관용 표현(특히 영국 영어)으로 전치사 to 결합도 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'so that they can be transcribed easily afterwards' — they의 선행사는 the key answers(복수)로 수 일치 성립. transcribe는 타동사이고 답변들은 '옮겨 적히는' 대상이므로 조동사 수동태 can be transcribed가 옳다. 능동 transcribe로 쓰면 목적어 결여로 비문이 되므로 수동이 필수. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle' — much는 비교급 easier(및 병렬된 quicker)를 강조하는 표준 비교급 강화사. very는 비교급을 수식할 수 없으므로 much가 정확하다. tough-구문 'easy to handle'의 목적어 공백(the material = handle의 목적어)도 성립. 정문."
+    }
+  ],
+  "note": "명백한 단일 정답 (B). 진짜 주어 자리의 원형동사는 동명사 listening으로 교정해야 하며, 명령문 등 어떤 대안 해석으로도 정문이 되지 않는다. 나머지 네 밑줄은 모두 형식적으로 옹호 가능한 정문."
+}

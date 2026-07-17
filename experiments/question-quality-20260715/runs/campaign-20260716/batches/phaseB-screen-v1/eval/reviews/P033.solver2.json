@@ -1,0 +1,35 @@
+{
+  "pid": "P033",
+  "answer": "(A)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(A)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) what",
+      "verdict": "틀림 (정답)",
+      "reason": "구문: 'The nature of an ethical issue ... is __ there is no clear right or wrong response.' 여기서 밑줄 어휘는 be동사의 보어가 되는 명사절을 이끌어야 한다. 'what'은 자유관계절(free relative)을 이끌며 절 내부에 반드시 명사 공백(gap)을 요구하는데, 후속절 'there is no clear right or wrong response'는 존재구문으로서 주어(response)·동사(is)가 모두 충족된 완전한 절이라 what이 채울 공백이 없다. 'response to what' 같은 전치사 잔류 해석도 전치사가 부재하므로 성립 불가. 완전한 절을 보어 명사절로 연결하려면 접속사 'that'이어야 한다. 대안 해석(간접의문문, 감탄문, what+명사 한정 구조) 전부 검토했으나 어느 것도 성립하지 않음 — 형식적으로 비문 확정."
+    },
+    {
+      "label": "(B) is defined",
+      "verdict": "옳음",
+      "reason": "'although being ethical is defined as ...' — 양보절의 주어는 동명사구 'being ethical'로 단수 취급이 규칙(동명사구 주어는 항상 단수)이므로 단수 동사 is가 맞고, 'define A as B'의 수동태 'A is defined as B' 구조도 정확하다. 시제(일반적 사실의 현재)도 문맥과 일치."
+    },
+    {
+      "label": "(C) as acting",
+      "verdict": "옳음",
+      "reason": "'define A as B'에서 B 자리에는 명사 상당어구가 와야 하며, 동명사구 'acting in accordance with ...'가 그 역할을 정확히 수행한다. 주어 'being ethical'(동명사)과 보어 'acting'(동명사)의 형태 평행도 자연스럽다. as 뒤에 원형이나 to부정사를 쓰면 오히려 비문."
+    },
+    {
+      "label": "(D) are considered",
+      "verdict": "옳음",
+      "reason": "관계절 'that ___ correct'의 선행사를 장거리로 확인: 'the principles of conduct'에서 관계절의 의미상 주어는 'the principles'(복수)다 — '옳다고 여겨지는' 대상은 conduct가 아니라 principles이며, 설령 conduct를 선행사로 보더라도 뒤 문장 'these principles vary'가 principles를 화제로 이어받으므로 principles 선행사 해석이 확정적. 복수 동사 are + 'consider A (to be) correct'의 수동 'A is considered correct' 구조 모두 정확."
+    },
+    {
+      "label": "(E) both between and",
+      "verdict": "옳음",
+      "reason": "'vary both between and within individuals' — 상관접속사 both A and B가 전치사구 병렬을 이루며, 두 전치사 between/within이 공통 목적어 individuals를 공유하는 우측 마디 인상(right-node raising) 구조로 완전한 정문. between individuals(개인들 간)와 within individuals(한 개인 내부: 뒤 문장의 '같은 개인도 상황에 따라 다른 선택을 한다'가 이를 뒷받침)의 의미 대비도 논리적으로 성립."
+    }
+  ],
+  "note": "정답 후보는 (A) 단독. what은 완전절 앞이라 공백 요구를 충족할 수 없어 형식적으로 비문이며, that으로의 교체가 유일한 정문화 경로. 나머지 네 밑줄은 대안 해석 탐색(축약관계절·병렬 시작점·선행사 재지정 등)에서도 모두 정문으로 판정되어 복수정답 소지 없음."
+}

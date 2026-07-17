@@ -1,0 +1,75 @@
+{
+  "pid": "P026",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "해설의 근거 문장 첫 인용 'different tasks should ideally be matched to our energy level'은 빈칸으로 제거된 원문 스팬 자체다. 렌더 지문에는 존재하지 않는 문장을 '근거 문장'으로 제시해 순환 논증이 된다(정답의 근거가 아니라 정답의 원형). 두 번째 인용('If you know you are not a morning person...')은 실제 지문에 존재하는 유효한 근거."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "오답 해설 ②는 'analytical tasks을(를) 빌렸지만'이라고 주장하나 선지 ② 'restricted to simple and repetitive routines'는 해당 표현을 어휘적으로 차용하지 않는다(analytical의 대조 개념으로 작동할 뿐). 앵커 귀속이 부정확하지만 결정적 결함 설명('일의 범위를 단순 반복 루틴으로 제한하라는 진술은 본문 미지지')은 선지 내용과 정확히 대응한다."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "오답 해설 템플릿의 조사 처리('energy is high을(를) 빌렸지만')가 기계적으로 노출되어 한국어 문장으로 어색하다. 사실 오류는 아니며 문체 결함."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal): 에너지가 높을 때 일을 '피하라'로 본문 주장을 정반대로 뒤집음",
+      "temptingBecause": "본문의 핵심 어휘 'energy is high / energized'를 차용하여 표면적 관련성이 높음",
+      "decisiveFlaw": "빈칸 직후 예시 문장이 'analytical tasks are best accomplished when our energy is high'라고 명시하므로, 에너지가 높을 때 작업을 피한다는 진술은 즉시 모순됨"
+    },
+    {
+      "label": "②",
+      "intent": "범위 제한(scope restriction): 다양한 작업을 에너지에 맞추라는 주장을 '단순 반복 루틴으로 제한'으로 축소",
+      "temptingBecause": "'routines/tasks' 계열 소재어와 작업 관리라는 주제 프레임을 공유함(단, 어휘 차용은 약해 앵커가 가장 빈약한 선지)",
+      "decisiveFlaw": "본문은 분석적 작업·어려운 업무 등 다양한 작업을 에너지 수준에 '배치'하라는 것이지 작업 종류를 제한하라는 내용이 전혀 없음. 빈칸 뒤 'For example' 문장과도 연결 불가"
+    },
+    {
+      "label": "③",
+      "intent": "인과/초점 전환(causal-focus shift): '에너지에 맞춘 일정 배치 → 감정 에너지 낭비 방지'의 결과를 목적('감정 에너지 극대화 설계')으로 승격",
+      "temptingBecause": "본문 중반의 'waste too much emotional energy'를 직접 차용하며, 감정 에너지 보존이라는 실제 부분 논지와 절반쯤 겹치는 half-truth라 가장 유인력이 큼",
+      "decisiveFlaw": "본문의 주장은 작업의 '설계(design)'가 아니라 '시점 배치(scheduling/matching)'이며, 빈칸 직후 예시(에너지가 높을 때 분석 작업)와 마지막 조언(아침형이 아니면 늦은 시간에 배치)은 ③으로는 예시 관계가 성립하지 않음"
+    },
+    {
+      "label": "④",
+      "intent": "정답: 원문 스팬 'matched to our energy level'의 의미 보존 패러프레이즈. 'cycles'로 하루 중 에너지 변동(아침형/저녁형) 단서를 통합하는 적정 추상화",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'For example' 이하 전체(에너지 높을 때 분석 작업, 아침형 인간의 아침 처리 습관, 비아침형은 늦은 시간 배치)가 일관되게 지지"
+    },
+    {
+      "label": "⑤",
+      "intent": "주체 전환(actor swap): 자기 에너지에 맞춘 자기 일정 조율을 '동기 높은 동료에게 위임'으로 행위 주체를 교체",
+      "temptingBecause": "첫 문장의 'peak performance and motivation'에서 'motivation'을 차용해 표면적 연속성을 가장함",
+      "decisiveFlaw": "본문 전체가 1인칭 자기 관리 서사이며 위임·동료는 언급조차 없음. 빈칸 뒤 예시와도 논리적으로 단절됨"
+    }
+  ],
+  "explanationIssues": [
+    "근거 문장 첫 인용이 빈칸으로 제거된 원문 스팬 자체라 순환적임 — '원문 표현' 등으로 명시하거나 지문에 실재하는 문장으로 교체 필요",
+    "오답 ②의 차용 앵커('analytical tasks') 귀속이 부정확함 — 대조 관계임을 정확히 기술하거나 앵커 주장 삭제 권장",
+    "'X을(를) 빌렸지만' 템플릿의 기계적 조사 병기가 반복되어 해설의 우아함을 해침(C6 감점 요인)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 의도된 스팬 치환('matched to our energy level' → 빈칸) 외 원지문과 문자 단위 일치, 마커·구두점 정상. V2: 5개 선지 독립 대입 검증 결과 ④만 성립 — ①은 직후 예시와 정면 모순, ②는 무지지 범위 축소, ③은 설계/배치 초점 전환으로 'For example' 연결 실패, ⑤는 무근거 주체 전환. 단일 정답 확정. V3: 다섯 선지 모두 과거분사구로 'should ideally be ___.' 수동 슬롯에 동일하게 적합(문장 말미 빈칸이라 tail 비대칭 없음), ④ 완성문 문법적·자연스러움. V4: 논리·라벨 설명은 정확하나 순환 인용 및 ② 앵커 귀속 부정확이라는 minor 결함 존재(오개념·환각·용어 오류는 없어 통과). V5: 정답 라벨·선지·해설·오답 해설(①②③⑤ 전원 커버)·keyPoints 상호 모순 없음. 공예: 주제문 빈칸화로 정전 포인트를 묻고(C1=3) 4개 오답이 서로 다른 함정축(극성 반전·범위 제한·인과 전환·주체 전환)을 사용하나(C2=3), ①②⑤가 비교적 빨리 소거되어 변별은 중간 수준(C3=3), 선지 길이·표기 누출 없음(C4=3), INTERMEDIATE 라벨에 부합하는 2단서 종합 난이도(C5=3), 해설은 정확하지만 템플릿 문체·순환 인용으로 둔함(C6=2). 합계 17, 전 V 통과, C 최저 2 → B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

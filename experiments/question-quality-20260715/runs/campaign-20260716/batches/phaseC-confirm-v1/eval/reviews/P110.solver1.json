@@ -1,0 +1,35 @@
+{
+  "pid": "P110",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'secures a long-term local presence'는 지문의 핵심 주장과 정반대. 'No offices or factories need to be built'와 'ties between service work and particular places can be disconnected'가 명시적으로 부정. 'in the places where it was once an employer'라는 표현이 지속성을 기대하게 만들어 순간적 유혹은 있으나, 부정 나열(no offices, no regulations, no taxes)이 즉시 배제시킨다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "노동자 복지는 지문에서 전혀 다루지 않음. 오히려 'global reserve army'·저임금 노동시장 언급은 복지 극대화와 반대 뉘앙스. 문법 결합은 가능하나 논리적 근거 전무."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "정답. 사무실·공장 불필요, 현지 규제 미준수, 현지 세금 미납부, 이메일/클릭만으로 생산 네트워크 전환 — 모두 고용주의 물리적 존재(footprint) 소멸을 가리킨다. 'eliminates its physical footprint in the places where it was once an employer'는 문법 seam도 깨끗하고, 'once an employer'(과거)와의 대비도 정확히 성립."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'no local taxes are paid'가 직접 반박. 세금을 언급한 유일한 선지라 지문 소재와 표면적으로 겹쳐 스키밍한 수험생에게 가장 매력적인 오답이나, 지문은 준수가 아니라 회피를 서술한다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'No offices or factories need to be built'가 직접 반박. 또한 지문은 서비스·디지털 노동을 다루므로 전통 제조 인프라 의존은 소재 차원에서도 어긋난다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 빈칸 문장은 'in this way'로 앞의 부정 나열(no offices/regulations/taxes)을 요약하는 자리. 대안 해석 검토 — 'the places where it was once an employer'를 고용주의 본거지로 읽어 ①을 살리는 독해를 시도했으나, 지문 전체가 노동시장 소재지에서의 고용주 소멸을 논하므로 성립 불가. 매력 오답은 ④(세금 소재 중복)이지만 명시적 부정문 때문에 유혹 강도는 낮음. 단일 정답 ③, 이의신청 여지 없음."
+}

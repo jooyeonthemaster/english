@@ -1,0 +1,45 @@
+{
+  "strategy": "s15-cn-kimi26",
+  "describe": "minimal 동일 프롬프트, 모델만 moonshotai/kimi-k2.5 — Moonshot Kimi K2.5 (K2.6 스키마 파싱 실패로 강등)",
+  "callPlan": "moonshotai/kimi-k2.5 x1",
+  "total": 10,
+  "ok": 4,
+  "failed": 6,
+  "avgMs": 255467,
+  "avgAttempts": 1.2,
+  "avgCalls": 1.2,
+  "totalCostUsd": 0.07413,
+  "avgCostUsd": 0.01483,
+  "costRecordedCalls": 5,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 7,
+  "avgErrorCount": 7.25,
+  "zeroErrorItems": 0,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.754,
+  "avgAnswerRelPos": 0.298,
+  "answerRelPosInBand": 1,
+  "models": {
+    "moonshotai/kimi-k2.5": 12
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 2,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 1,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 1,
+      "zeroError": 0
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "pid": "P032",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-terminology-minor",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 'than'을 전치사로 규정('전치사 than 뒤에서 동명사구를 이끌고'). 이 비교 구문의 표준 학교문법 분석은 접속사 than + 생략(비교 대상 'Recording an interview'와 'seeing...'의 동명사 병렬)이다. 다만 than을 전치사로 보고 동명사를 보어로 취한다는 분석도 CGEL 등에서 인정되는 방식이고, 핵심 주장(동명사 병렬, see+목적어+scribbling 현재분사)은 정확하므로 치명 오분석은 아니다."
+    },
+    {
+      "code": "V5-metadata-note",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression/surroundingText 필드가 표시형('trying')이 아닌 원문 교정형('try')을 담고 있음. isError/correction/errorExpression과 내부적으로 일관되고 학생 노출 필드가 아니므로 동기화 실패로 보지 않으나, 스키마 상 expression 의미가 다른 밑줄(표시형 기재)과 비대칭이다. (A) surroundingText도 원문 문장을 축약('is easier and more thorough, and' 탈락)해 인용하고 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "비교 구문에서 비교 대상 병렬(동명사 vs to부정사) + 지각동사 see의 목적보어 형태 판단",
+      "temptingBecause": "'than to see'나 'than seen'이 맞다고 착각하거나, scribbling까지 묶어 구조가 복잡해 보임. 문두의 동명사 주어 'Recording'과의 병렬을 확인해야 함",
+      "decisiveFlaw": "'Recording an interview ... less unnerving than seeing ...'은 동명사끼리의 올바른 비교 병렬이며 see+목적어+현재분사(scribbling)도 정문. 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "동명사구 주어의 단수 취급 및 has/is 병렬 수일치",
+      "temptingBecause": "직전 복수명사 'disadvantages'에 이끌려 'are'가 맞다고 오판할 수 있고, 주어가 'a recorder'인지 'using a recorder'인지 판단해야 함",
+      "decisiveFlaw": "주어는 동명사구 'using a recorder'(단수)이고 has와 is가 and로 병렬 연결된 정문. 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "가주어 It — 진주어 to부정사(extraposition) 구조 판단",
+      "temptingBecause": "'more efficient' 뒤의 형태로 developing이 맞다고 착각하거나 It의 지시 대상을 찾으려다 혼란 가능",
+      "decisiveFlaw": "'It is often more efficient to develop ...'은 가주어-진주어 구문의 정문. 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 정동사 vs 준동사: 등위접속사 but 뒤 절에 정동사가 없어지는 구조 파손(명령문 try가 원문)",
+      "temptingBecause": "앞의 'It is sensible to take down ...'과 이어져 'trying'이 분사구문이나 동명사 주어처럼 보일 수 있고, 뒤에 긴 목적어절이 이어져 정동사 부재가 즉시 드러나지 않음",
+      "decisiveFlaw": "but 뒤 등위절에 정동사가 전무('as the interview proceeds'는 부사절). 'trying'을 주어로 봐도 술어가 없어 어떤 대안 분석으로도 정문이 되지 않으며, 동사원형 'try'(명령문)로 고치면 정확히 원문이 복원됨"
+    },
+    {
+      "label": "(E)",
+      "intent": "비교급 강조 부사 much (vs very) 판단",
+      "temptingBecause": "'very easier'류의 오류 여부를 묻는 자리로 보이고, easier and quicker 두 비교급을 동시에 수식하는 구조",
+      "decisiveFlaw": "much는 비교급 easier/quicker를 강조하는 올바른 부사. 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(A) 해설의 'than'을 전치사로 부른 용어 선택 — 접속사+생략 분석이 더 표준적이나 전치사 분석도 학설상 인정되어 치명 아님",
+      "recommendation": "'비교 대상인 동명사 주어 Recording과 병렬을 이루는 동명사'로 기술하면 용어 논란 없이 동일한 판단 근거를 전달할 수 있음"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문 대비 의도된 변형(try→trying, (D))만 존재하며 나머지 전 문장 축자 일치, 라벨-선지 동기화 완전. V2: 5개 밑줄 독립 검증 결과 (D)만 비문(but 뒤 등위절 정동사 부재로 단편화)이고 (A)(B)(C)(E)는 대안 분석 포함 모두 정문 — 단일정답 성립. V3: 지문·발문·교정 완성문 모두 문법적. V4: 정답 해설의 구조 분석(등위접속, 정동사 부재, 명령문 교정) 정확, (A) than 전치사 호칭만 minor. V5: 정답 라벨·선지·해설·오답해설·keyPoints·markedExpressions 상호 모순 없음. 공예: 정동사/명령문 병렬이라는 정전 포인트를 구조 독해로 묻고(C1=3), 4개 오답이 각기 다른 오개념(병렬 비교, 수일치, 가주어, 비교급 강조)을 겨냥(C2=3), (A)(B)는 실제 판단 요구·(C)(E)는 소거가 빠름(C3=3), 메타 누출 없이 교정 시 원문 정확 복원으로 정답 필연(C4=4), INTERMEDIATE 라벨에 사고 단계·함정 깊이 정합(C5=4), 해설 간결·정확하나 용어 소흠(C6=3). 합계 20으로 A 기준(21)에 1점 미달 — 모든 V 통과, C 최저 3, 합계 17 이상으로 B. 요청 난이도 INTERMEDIATE이므로 killerConditionsMet=false."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P103",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어는 'Animals as well as humans'. 'X as well as Y' 구조에서 수 일치의 지배자는 첫 명사 X(복수 Animals)이므로 복수 동사 engage가 옳다. as well as 뒤의 humans는 부가어로 일치에 관여하지 않는다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'see A as B'의 수동 완료형 'A has been seen as B'. play는 '여겨지는' 대상(피동작주)이므로 수동태 been seen이 어법상 옳다. 능동(seeing)으로 바꿀 근거 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong (정답)",
+      "reason": "관계대명사 which는 관계절 내부에 명사구 공백(주어/목적어/전치사 목적어)을 요구한다. 그러나 'children learn about the world and their place in it'은 주어(children)+동사(learn)+전치사구(about...)로 완전한 절이며 which가 채울 공백이 없다. 대안 해석 검토: (i) 'learn a way about the world'처럼 way를 learn의 목적어로 보는 파스는 비관용적이고 의미상 불성립(의도된 의미는 방법의 관계부사 'the way in which children learn'); (ii) way 뒤 관계부사 기능은 in which / that / 무표지(the way (that))만 가능하고 bare which는 관계부사로 쓸 수 없다. 어떤 정문 파스도 성립하지 않으므로 in which(또는 that)로 고쳐야 한다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'skills like walking, running, and jumping' — 전치사 like의 목적어로 동명사 3개 병렬. 병렬 시작점 walking과 형태 일치하므로 jumping이 옳다. 뒤의 'that are necessary...'는 skills를 선행사로 하는 관계절로 별개."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'allow + 목적어 + to부정사' 필수 패턴. 'allows children to try out and learn ... and to acquire ...'에서 to try는 첫 부정사이고 (to) learn, to acquire와 정상 병렬. 어법상 옳다."
+    }
+  ],
+  "note": "형식 문법 판정으로 (C) 단독 정답. 관계절 완전성 테스트(공백 유무)로 which의 불성립이 증명되며, 축약 관계절·관계부사 무표지 등 어떤 대안 해석으로도 bare which는 구제되지 않는다. 나머지 4개 밑줄은 수 일치·수동태·병렬·5형식 목적보어 규칙상 모두 정문. 복수 정답 소지 없음."
+}

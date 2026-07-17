@@ -1,0 +1,74 @@
+[
+  {
+    "route": "anthropic-direct-schema",
+    "ok": true,
+    "latencyMs": 78779,
+    "provider": "Anthropic(1P)",
+    "model": "claude-sonnet-5",
+    "inputTokens": 41475,
+    "outputTokens": 2477,
+    "costUsd": 0.10772,
+    "costSource": "computed@$2/$10(intro)",
+    "finish": "end_turn"
+  },
+  {
+    "route": "anthropic-direct-plain",
+    "ok": true,
+    "latencyMs": 27193,
+    "provider": "Anthropic(1P)",
+    "model": "claude-sonnet-5",
+    "inputTokens": 33240,
+    "outputTokens": 2624,
+    "costUsd": 0.09272,
+    "costSource": "computed@$2/$10(intro)",
+    "finish": "end_turn"
+  },
+  {
+    "route": "openrouter-claude-pin:amazon-bedrock",
+    "ok": true,
+    "latencyMs": 50821,
+    "provider": "Amazon Bedrock",
+    "model": "anthropic/claude-sonnet-5-20260630",
+    "inputTokens": 41475,
+    "outputTokens": 2189,
+    "normalizedPrompt": 23284,
+    "nativePrompt": 41475,
+    "nativeCompletion": 2189,
+    "reasoningTokens": 0,
+    "costUsd": 0.10484,
+    "costSource": "openrouter-recorded",
+    "finish": "stop",
+    "genTimeMs": 50239
+  },
+  {
+    "route": "openrouter-claude-pin:anthropic",
+    "ok": true,
+    "latencyMs": 34897,
+    "provider": "?",
+    "model": "anthropic/claude-sonnet-5",
+    "inputTokens": 41475,
+    "outputTokens": 2208,
+    "reasoningTokens": 0,
+    "costUsd": 0.10503,
+    "costSource": "openrouter-recorded",
+    "finish": "stop"
+  },
+  {
+    "route": "gemini-direct-plain",
+    "ok": true,
+    "latencyMs": 13948,
+    "provider": "Google(1P)",
+    "model": "gemini-3.5-flash",
+    "inputTokens": 21763,
+    "outputTokens": 1894,
+    "reasoningTokens": 0,
+    "costSource": "unknown-google-list-price",
+    "finish": "STOP"
+  },
+  {
+    "route": "openrouter-gemini-plain",
+    "ok": false,
+    "latencyMs": 366,
+    "error": "HTTP 400: {\"message\":\"Reasoning is mandatory for this endpoint and cannot be disabled.\",\"code\":400,\"metadata\":{\"provider_name\":null,\"previous_errors\":[{\"code\":400,\"message\":\"Reasoning is mandatory for this endpoint and cannot be disabled.\"}]}}"
+  }
+]

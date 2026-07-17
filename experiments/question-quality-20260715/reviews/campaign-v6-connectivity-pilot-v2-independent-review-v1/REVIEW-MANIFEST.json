@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "question-quality-independent-review-manifest-v1",
+  "reviewId": "campaign-v6-connectivity-pilot-v2-independent-review-v1",
+  "selfExcluded": true,
+  "artifacts": [
+    {
+      "path": "README.md",
+      "bytes": 861,
+      "sha256": "5160a3510f300c72388ec1f2bf04a39648ca0a65309b0b74aab09ed71c545dae"
+    },
+    {
+      "path": "SOURCE-HASHES.sha256",
+      "bytes": 24777,
+      "sha256": "bbeb3ee6a0218de09b8283987fb4949e04f2988d7e4ae5c6182a98d46cca7936"
+    },
+    {
+      "path": "result.json",
+      "bytes": 2479,
+      "sha256": "b5444db6ab422372a46794d5ab893014306e7183ec0d0fc6fa310c1fa4e5a4e3"
+    },
+    {
+      "path": "verify.mts",
+      "bytes": 21716,
+      "sha256": "b47ce2909f0db9f4622cc5c3f4bb7e1c53d870037d8ad8486617ff266d7afd4e"
+    }
+  ]
+}

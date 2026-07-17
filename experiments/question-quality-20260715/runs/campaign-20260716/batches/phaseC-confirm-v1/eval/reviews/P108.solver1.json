@@ -1,0 +1,35 @@
+{
+  "pid": "P108",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'no two performances'는 복수이므로 복수 동사 are가 정당하다. 'no two X are Y'는 표준 구문이며 identical(서로 동일한)과의 결합도 자연스럽다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "전치사+관계대명사 'without which'의 선행사는 동명사구 'making it present here and now'(= presenting music). '그것(현재화하는 행위) 없이는 음악이 전혀 아니게 된다'로 의미·문법 모두 성립. 선행사가 일반 명사가 아닌 행위 전체라 낯설어 보이는 매력 오답이지만, 앞선 동명사구/절을 받는 which는 정문이다. 실전에서 1차로 끌렸던 선지."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 대시 삽입구('making it present here and now, without which...') 건너편의 'the necessity (of presenting music)'로 단수. 삽입구 내부의 music/it에 낚이면 수 일치를 의심하게 되는 장거리 함정이나, necessity가 주어이므로 does가 정당. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'it would seem logical to acknowledge this difference and giving prominence to...'에서 병렬 시작점은 to 부정사: to [acknowledge ... and (to) give ...]. 따라서 giving은 give(또는 to give)여야 한다. 대안 해석 검토 — giving을 acknowledge의 두 번째 목적어(동명사)로 읽으면 '비중을 두는 것을 인정한다'가 되어 문맥(인정하고 나서 비중을 두는 두 개의 병렬 행위)과 충돌하고, 분사구문 독법은 seem logical 비인칭 구문 안에서 의미상 주어가 성립하지 않아 불가. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the emphasis is still on pupils absorbing factual information'은 전치사 on + 의미상 주어 pupils + 동명사 absorbing 구조로 완전한 정문. 바로 앞 문장의 'all pupils working directly with music'과 동일 패턴이라는 지문 내 평행 단서도 있다. 명사+~ing 연쇄가 어색해 보여 2차로 끌렸던 매력 오답이나 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 매력 오답 유혹 순위는 (B) without which(동명사구 선행사) > (E) pupils absorbing(의미상 주어+동명사) > (C) does(장거리 수일치). 셋 다 대안 해석 검증 후 정문 확정. (D)는 to부정사 병렬 위반으로 유일하게 옹호 불가능한 밑줄이며, 동명사 목적어·분사구문 등 구제 독법을 적극 탐색했으나 모두 의미상 붕괴. 단일 정답으로 수렴, 신뢰도 high."
+}

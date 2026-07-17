@@ -1,0 +1,35 @@
+{
+  "pid": "P036",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'no two performances are identical' — predicate adjective after linking verb 'are'. Adjective (not adverb) is required; standard collocation. No defensible objection."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect (정답)",
+      "reason": "'pointed out that only through music we are able to realize the present' — the fronted restrictive adverbial 'only + PP' (only through music) at the head of the clause obligatorily triggers subject–auxiliary inversion: 'only through music ARE WE able to...'. The rule applies inside an embedded that-clause as well. As written ('we are'), the sentence is ungrammatical in standard English. No alternative parse (e.g., treating 'only through music' as non-initial or non-restrictive) rescues it, since it clearly fronts the clause and modifies the whole predication restrictively."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'making it present here and now, without which it will not be music at all' — preposition + relative 'which' whose antecedent is the phrasal act 'making it present here and now' (equivalently, the presenting of music). Restoration test: 'without making it present here and now, it will not be music at all' — coherent and grammatical. This is the strongest distractor: the antecedent is a gerund phrase inside a dash parenthetical rather than a simple noun, which tempts a test-taker to flag 'which' for antecedent vagueness. But 'which' taking a phrasal/act antecedent with a fronted preposition is well-formed; the temptation was felt and rejected."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'activities that will involve all pupils working...' — subject relative pronoun 'that' with antecedent 'activities'; finite verb 'will involve' follows with no double subject. Unambiguously correct."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'the emphasis is still on pupils absorbing factual information' — after the preposition 'on', a gerund is required; 'pupils' serves as the notional subject of the gerund (fused participle, standard usage; formal variant 'pupils'' also exists but the accusative-subject gerund is fully acceptable). Alternative parse as noun + participial modifier ('pupils who absorb') is also grammatical. Mild temptation for students who over-apply the possessive-gerund prescription, but not defensible as an error."
+    }
+  ],
+  "note": "Clean single-answer item. (B) tests obligatory inversion after fronted 'only + adverbial' — a long-distance/structural cue rather than local morphology, appropriate for top-band difficulty. Main attractive distractor is (C) 'without which' (phrasal antecedent inside a parenthetical), secondary lure (E) 'absorbing' (gerund with notional subject). Both survive scrutiny as grammatical. No competing defensible answer found."
+}

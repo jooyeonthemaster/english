@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "4",
+  "multipleDefensible": false,
+  "defensibleLabels": ["4"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'the leap will keep moving further away'는 gap fill 원리(큰 도약 후 다음 음은 방향을 바꿔 출발점으로 복귀)의 정반대. 마지막 문장의 'continue to build tension'에 끌려 고를 유혹이 있으나, 그 구절은 복귀의 정도를 제한하는('not by too much') 근거일 뿐 뇌의 기대 내용이 아니다. 빈칸 직후 병렬절 'and tones that follow need to bring us closer and closer to our starting point'와 논리적으로 접속 불가."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'variation(변주)' 개념이 지문 어디에도 등장하지 않음. 화제 이탈."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "멜로디가 '정확히 그대로 머문다'는 것은 stepwise motion·도약·복귀라는 지문의 동적 서술 전체와 충돌. 복귀는 이동을 전제하므로 정체 기대는 성립 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "correct",
+      "reason": "'in a sequence of tones, if a melody makes a large leap... the next note should change direction'과 'a tendency for the melody to want to return to the jumping-off point'의 정확한 재진술. 빈칸에 넣으면 'our brains expect that the big jump will soon be reversed, and tones that follow need to bring us closer and closer to our starting point'로 문법 결합(that절 주어+수동태 미래)과 병렬 논리가 모두 자연스러움. Over the Rainbow 옥타브 도약 후 home으로 되돌리는 예시도 확증."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'jumping-off point가 영구히 상실된다'는 'return to the jumping-off point'와 정면 모순. 'largest leaps we've ever experienced'의 극적 어조에 낚일 수 있으나 뒤 병렬절(출발점에 점점 가까워져야 함)과 양립 불가."
+    }
+  ],
+  "note": "Levitin 계열의 gap fill 지문. 빈칸은 바로 앞 절('want to return to the jumping-off point')의 재진술('this is another way to say')이라는 장거리 단서가 명확해 정답이 4로 유일하게 수렴. 최상위권 실전 관점에서 매력 오답은 1(마지막 문장의 tension 유지 구절 오독 유도)이나, 빈칸 뒤 병렬절이 복귀 방향을 강제하므로 방어 불가. 단일 정답 문항으로 판정."
+}

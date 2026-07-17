@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "자유관계사 what. 'psychologists call [OBJ] \"flashbulb\" memories'는 call의 5형식 구문으로 목적어 자리가 공백이며, 이 공백을 채우면서 상위 동사 create의 목적어 역할을 하는 명사절을 이끌려면 선행사 포함 관계사 what이 유일하게 적법하다. 선행사가 없으므로 which/that은 불가. 정문."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "축약 관계절의 과거분사(= which are named for...). 피수식어 'flashbulb' memories는 명명되는 대상(수동)이므로 named가 옳다. 'be named for X'(X를 따서 명명되다)는 표준 연어. 능동 naming이면 memories가 명명 주체가 되어 비문. 정문."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "가주어 it + 외치 진주어 that절. 'it is true that ...'에서 that절 내부는 'the broad outlines ... are well remembered'로 공백 없는 완전한 절이므로 접속사 that이 옳다(관계사 what이면 공백 필요). 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect",
+      "reason": "주어-동사 수일치 위반. 진주어의 핵은 복수 명사 memories('Respondents' most emotional MEMORIES of their personal details at the time they learned of the attacks')이고 'of their personal details'와 'at the time ...' 절은 모두 후치 수식어(장거리 방해 요소)일 뿐이다. 보어 those(복수)도 방증. is → are 이어야 한다. 주어 핵을 단수로 읽을 대안 해석(도치, 존재문 등)이 성립하지 않아 구제 불가. 유일한 오류."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "전치사+관계대명사 pied-piping. 기저문 'they are most confident OF those (memories)'가 성립하며(be confident of는 표준 연어), 관계절 내부가 공백 없이 완전하다. 'those of which they are most confident'는 적법한 구조. 정문."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (D)의 수일치 오류는 핵명사 memories와 동사 is 사이에 두 개의 후치 수식어가 개입한 전형적 장거리 수일치 함정으로, 형식적으로 명확히 판정된다. 나머지 네 밑줄은 각각 유일 정합 분석이 존재하여 오류로 몰 수 있는 대안 해석이 없다. 단독 정답 (D), 복수 정답 여지 없음."
+}

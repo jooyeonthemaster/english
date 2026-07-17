@@ -1,0 +1,80 @@
+{
+  "pid": "P030",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-FACT-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설: '다른 기자들이 고양이를 언급하지 않아 특종을 놓친 것으로 오해받고 편집자에게 질책을 받았으며(called down by their editors for being beaten)'. 지문의 첫 번째 사건에서 다른 기자들은 실제로 존재한 고양이(구조된 고양이가 실화)를 누락했으므로 '특종을 놓친 것'은 사실이지 오해가 아니다. '오해받고(부당하게 인식됨)'라는 서술은 지문에 없는 내용 첨가이며, 부당한 질책이라는 속성은 두 번째 사건에서 고양이가 없는데도 혼난 글쓴이에게만 귀속된다(문장 귀속 오류). 이 일화의 논리 구조는 '정당한 질책(1차) → 예방적 조작(2차) → 진실 보도가 오히려 부당하게 질책됨 → 전원 조작 규범화'인데, 해설은 1차 질책까지 오해로 기술해 인과 구조를 흐린다.",
+      "recommendation": "'특종을 놓친 것으로 오해받고'를 '고양이 특종을 놓쳐(실제로 뒤처져)'로 교정하고, '부당한 질책'은 두 번째 사건의 글쓴이에게만 귀속시킬 것."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(polarity reversal) — 조작(fabrication)의 반대인 '실제 서사 고수'를 제시",
+      "temptingBecause": "'heroic crew'가 지문의 'the crew went back to save it'에 직접 anchoring되고, 'indiscriminately'가 결론부의 획일성('all of us always')과 표면적으로 공명한다",
+      "decisiveFlaw": "기자들은 실제 서사에 집착한 것이 아니라 고양이가 없어도 넣는 허위 기재로 수렴했다. 'actual narrative에 집착'은 본문 결론과 극성이 정반대다"
+    },
+    {
+      "label": "2",
+      "intent": "half-truth + 목적 왜곡 — 결과적 행동 일치를 '협력'과 '신빙성 제고 목적'으로 재포장",
+      "temptingBecause": "모든 기자가 결국 같은 내용(고양이)을 쓰게 된 수렴 현상이 'collaborate with rivals'처럼 보일 수 있다",
+      "decisiveFlaw": "기자들은 협의 없이 각자 방어적으로 행동했고(오히려 서로 경쟁·특종 압박 관계), 동기는 그럴듯함이 아니라 질책 회피다. actor 관계와 목적이 모두 지문과 불일치"
+    },
+    {
+      "label": "3",
+      "intent": "condition 추가/본질 왜곡 — 자발적 선제 조작을 '지시 대기'라는 수동적 조건부 행동으로 치환",
+      "temptingBecause": "편집자(editors)가 지문에서 질책의 주체로 반복 등장하므로 편집자 관련 선지가 anchoring된다",
+      "decisiveFlaw": "지문 어디에도 명시적 지시를 기다린다는 내용이 없다. 기자들은 지시 이전에 스스로 위험 회피('did not wish to take a chance')로 고양이를 넣었다. 4개 오답 중 매력도가 가장 낮은 편"
+    },
+    {
+      "label": "4",
+      "intent": "인과 역전(causal reversal) — 편집자 압박 '때문에' 하는 행동을 편집자 의향과 '무관하게' 하는 행동으로 반전",
+      "temptingBecause": "'dramatic rescue narratives'가 고양이 구조 서사와 표면 어휘가 강하게 겹쳐 절반까지는 정답처럼 읽힌다",
+      "decisiveFlaw": "'regardless of what the editors want'가 결정적 오류 — 기자들의 행동은 철저히 편집자의 질책 압박에 대한 굴복이므로 핵심 인과가 정반대다"
+    },
+    {
+      "label": "5",
+      "intent": "정답 — 'always put in the cat'을 '예상되는 세부(고양이)를 질책 회피 목적으로 조작한다'로 추상화",
+      "temptingBecause": "정답이므로 해당 없음. 'there was no cat but ... put the cat in'(조작 단서)과 'called down / severely scolded'(동기 단서) 두 문장의 결합으로 도출된다",
+      "decisiveFlaw": "없음(정답). 단, 5번만 유일하게 처벌 어휘('reprimanded')를 포함해 지문에서 두 번 반복된 질책(scolded/called down)과의 어휘 에코만으로 원큐 선택이 가능한 shortcut이 존재 — KILLER 조건 관점의 결함"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "FACT-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "'다른 기자들이 ... 특종을 놓친 것으로 오해받고' — 1차 사건의 질책은 오해가 아니라 실제 누락에 대한 정당한 질책이며, '부당하게 혼남'은 2차 사건의 글쓴이에게만 해당한다(V4 실패 사유와 동일)"
+    },
+    {
+      "code": "VERBOSITY",
+      "severity": "minor",
+      "evidence": "본해설이 오답 1·2를 중복 서술하고(별도 오답 해설과 내용 반복) 한 문장이 과도하게 길어 정답 근거와 함정 분리가 둔하다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "sameSyntacticSlot": true,
+    "sourceMeaningPreserved": true,
+    "distractorAnchorOverlapFlaw": true,
+    "requiresTwoLogicCues": "부분적 — 원리상 조작 단서('no cat but put the cat in')와 동기 단서('scolded')를 결합해야 하나, 5번만 유일하게 처벌 어휘(reprimanded)를 담고 있어 지문에서 두 번 반복된 질책 어휘와의 에코 하나로 정답을 찍을 수 있는 단일 단서 shortcut이 존재한다. '극성·길이·고유어·절대어 하나로 정답을 찍을 수 없다'는 KILLER 조건의 취지(단일 표면 단서 차단)에 위배",
+    "distinctTrapTypes": true
+  },
+  "grade": "F",
+  "notes": "V1: 렌더 지문은 원지문에서 'always put in the cat'만 '_____'로 치환했고 폐쇄 인용부호·마침표가 보존됨(프로그램 diff로 확인, 공통 접두 690자). V2: 5개 선지를 각각 빈칸에 대입해 독립 검증 — 1은 극성 반전, 2는 actor/목적 왜곡, 3은 지문에 없는 조건, 4는 인과 역전으로 모두 탈락하고 5만 성립, 단일 정답 유일성 확보. V3: 5개 선지 모두 'all of us' 뒤 동사원형 VP로 동일 슬롯에 문법적으로 안착하며 완성문 자연스러움. V4: 해설의 '오해받고'가 1차 사건 기자들에게 부당 질책 속성을 잘못 귀속(지문에 없는 내용 첨가·인과 오설명) — 일화의 핵심 아이러니(정당한 1차 질책 vs 부당한 2차 질책)를 흐리므로 실패. V5: 정답 라벨 5, 오답 해설 키 1~4, keyPoints('put in'→fabricate 함축, 질책→허위 기재 인과) 모두 동기화. 공예: 출제 지점(결론부 일반화)과 오답 설계 밀도는 우수하나, (a) 서사 지문의 낮은 난도와 2단계 추론으로 KILLER 라벨 대비 실난이도 미달(C5=2), (b) 5번만의 처벌 어휘 에코라는 단일 단서 shortcut(C3·C4 감점, KILLER 조건 불충족), (c) 해설 사실 오류·장황(C6=1). V4 실패는 공예 점수로 상쇄되지 않으므로 등급 F. 수정 방향: 해설 한 구절 교정만으로 V4는 회복 가능하며, KILLER 충족을 위해서는 오답 중 하나에 처벌/질책 어휘를 심어 에코 shortcut을 차단할 필요."
+}

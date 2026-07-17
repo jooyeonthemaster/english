@@ -1,0 +1,61 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-MINOR-FIELD-CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (E) has expression=\"absorbing\" (corrected/source form) while (A)-(D) use the displayed form for expression; the displayed form \"to absorb\" is only in errorExpression. Rendered passage and option list are correct and consistent, so no student-facing desync — internal field convention inconsistency only."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "Subject-auxiliary inversion triggered by fronted only-adverbial ('only through music are we able') plus agreement check.",
+      "temptingBecause": "Inverted V-S order looks anomalous to students expecting 'we are'; the fronting occurs inside a that-clause, making the trigger less salient.",
+      "decisiveFlaw": "None — 'only + adverbial' fronting obligatorily inverts, and plural subject 'we' takes 'are'. Correct as displayed."
+    },
+    {
+      "label": "(B)",
+      "intent": "Voice discrimination: passive 'cannot be separated from' with theme subject.",
+      "temptingBecause": "Students confuse 'be + p.p.' with 'be + -ing' after modal, or expect active 'separate'.",
+      "decisiveFlaw": "None — 'Musical meaning' is the theme of transitive 'separate', so passive is required. Correct as displayed."
+    },
+    {
+      "label": "(C)",
+      "intent": "Preposition + relative pronoun with a phrasal/situational antecedent ('without which' = without making it present here and now).",
+      "temptingBecause": "No adjacent noun antecedent; students may expect 'without it' (thinking no relative is possible) or 'what'.",
+      "decisiveFlaw": "None — 'which' grammatically takes the preceding gerund phrase 'making it present here and now' as antecedent; construction is in the source text. Correct as displayed."
+    },
+    {
+      "label": "(D)",
+      "intent": "Adverbial to-infinitive of purpose in the canonical 'use X to do Y' frame.",
+      "temptingBecause": "Nearby -ing forms ('making', 'working') invite a false parallelism intuition suggesting 'making'.",
+      "decisiveFlaw": "None — 'uses the past to make sense of the present' is the standard purpose construction. Correct as displayed."
+    },
+    {
+      "label": "(E)",
+      "intent": "Declared answer: gerund vs to-infinitive as object of a preposition, with an intervening notional subject ('on pupils absorbing').",
+      "temptingBecause": "The intervening noun 'pupils' obscures the on-to-verbal dependency, and a purpose-like reading of 'to absorb' feels superficially plausible.",
+      "decisiveFlaw": "A to-infinitive cannot function as the object of preposition 'on'; 'pupils' is the notional subject of a required gerund, so 'to absorb' must be 'absorbing' — exactly restoring the source. Uniquely ungrammatical; minimal pair holds."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "Requested difficulty INTERMEDIATE (killer gate not applicable, killerConditionsMet=false). All validity gates pass: rendered passage differs from source only by the intended (E) minimal pair; independent solve confirms (E) as the unique error while (A)-(D) are independently verified correct (inversion, passive, prep+relative with situational antecedent, purpose infinitive); the main explanation correctly identifies the gerund-object-of-preposition rule and the notional-subject role of 'pupils', and all distractor explanations match the actual structures. Craft: clean, leak-free design (C4=4) and trap depth precisely matched to intermediate (C5=4); decoys target four distinct canonical points with a deliberate (D)/(E) to-infinitive contrast pair, but (B) and (D) are quick eliminations and the tested point, while canonical, is standard rather than exceptional, holding C1/C2/C3/C6 at 3. Total 20 with min 3 -> Grade B (one point short of A's 21 threshold); shippable with at most cosmetic polish (e.g., aligning markedExpressions (E) expression field to the displayed form, sharpening (B)/(D) decoy bite)."
+}

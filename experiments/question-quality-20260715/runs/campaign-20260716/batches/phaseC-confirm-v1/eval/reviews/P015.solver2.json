@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립(명령문 병렬: Know..., force..., and pay attention...). 그러나 논리적으로 지문은 조건부 스케줄링을 주장한다 — 'If you have lots of energy early in the morning...'과 'there are those who differ and hit their stride later in the day'가 아침형이 아닌 사람의 존재를 명시하므로, 무조건적 이른 기상 강제는 지문 논리와 모순. 'for writing'도 writing을 예시 중 하나로만 든 지문 범위를 부당하게 축소."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립하나, 같은 문장의 세 번째 병렬항 'pay attention to how your energy level ebbs and flows'와 정면 모순(무시하라 ∧ 주의하라 = P ∧ ¬P). 문장 내부 자기모순으로 즉시 배제되는 명백한 반대 미끼."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "명령문 병렬 성립(Know your own body rhythm, align your tasks with your biological schedule, and pay attention...). 논리적으로 주제문 'do the right thing at the right time of day'의 재진술이며, 앞항(리듬 파악)→빈칸(과업 정렬)→뒤항(에너지 관찰)의 삼단 흐름과 이후 전개(아침 에너지→어려운 활동 배치, 팀 스케줄링, body rhythm 존중)와 전부 정합. 모순 없는 유일한 선지."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립. 'team'이 지문 후반에 등장하나 해당 문장은 '같은 원리를 팀 활동 계획에 적용하라'는 내용이지 일일 추적 데이터 공유가 아님. 'daily tracking'이라는 개체 자체가 지문에 도입된 바 없어 전제 불성립. 어휘 겹침만 노린 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립하나 'regardless of time'이 주제문 'at the right time of day' 및 조건문 'If you have lots of energy early in the morning, that is when you should schedule difficult activities'를 직접 부정. 지문은 어려운 과업을 '시간을 가려' 배치하라는 글이므로 논리적 정반대."
+    }
+  ],
+  "note": "다섯 선지 모두 동사원형 시작 명령구여서 병렬 seam은 전 선지에서 성립 — 변별은 순수 논리 적합성으로 이루어짐. ②⑤는 주제 정면 모순, ①은 조건부 주장을 무조건 명령으로 왜곡, ④는 미도입 개체 전제. ③만이 무모순으로 성립하며 복수 정답 여지 없음. 단, ③이 주제문을 거의 그대로 재진술해 변별도가 낮은(쉬운) 문항이라는 품질 소견은 있음."
+}

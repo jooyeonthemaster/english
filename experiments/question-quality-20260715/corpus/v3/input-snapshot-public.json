@@ -1,0 +1,61 @@
+{
+  "asOf": "2026-07-14T18:03:00.000Z",
+  "codeHash": "3a26b63e6ac823bf3780607510f464083e1c46d48844ac5f133bcc534256c30a",
+  "databaseExtractHash": "4d089b4bf0f295acfb46266268c621e92d6adf947046e7ca8e691105f9d47e39",
+  "diagnostics": {
+    "apiCalls": 0,
+    "candidates": {
+      "dbGlobal": 345,
+      "dbGlobalReviewed": 0,
+      "repo": 4537,
+      "total": 4882
+    },
+    "database": {
+      "databaseWrites": 0,
+      "nonEnglishRowsExcluded": 1,
+      "normalizedContentGroups": 1872,
+      "passageRows": 2733,
+      "priorUsedGroups": 1527,
+      "queriedPassageRows": 2734,
+      "queryKinds": [
+        "Passage.findMany",
+        "Question.groupBy",
+        "WorkbenchAiJob.groupBy"
+      ],
+      "reviewedRows": 164,
+      "zeroPriorUseGroups": 345
+    },
+    "databaseWrites": 0,
+    "forbiddenReferences": 3914,
+    "history": {
+      "excludedDerivedFiles": 1,
+      "filesScanned": 987,
+      "parseFailures": 0,
+      "uniquePassageIds": 810,
+      "uniqueTexts": 2447
+    },
+    "retained": {
+      "devDb": 10,
+      "devRepo": 22,
+      "holdoutDb": 4,
+      "holdoutRepo": 21,
+      "total": 57
+    }
+  },
+  "gitDirty": true,
+  "gitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "historicalExtractHash": "e689cd64ffd405feb223c884db7890631dc633eb08bbe96d7b73ae619ee6dfcc",
+  "historicalFilesHash": "a2453b5365ca091085a5e46271b47497c83424adb26d527a69c2081bd6c8a2cc",
+  "policy": {
+    "academyIdentifiersPublic": false,
+    "databaseScope": "All academies, English/null-subject passages, normalized-content groups.",
+    "derivedLineageExclusion": "Only this v3 campaign's corpus/v3 and reviews/corpus-v3 JSON outputs are excluded from antecedent history.",
+    "pinnedBeforeSelection": true,
+    "privateSnapshot": "private/input-snapshot.json (git-ignored)",
+    "reviewedAtRule": "Metadata/stratum only; not an automatic eligibility gate."
+  },
+  "repoPassagesFileHash": "4337bc34ba2f98cf9af708cdf27d27219fe7599bf30f03fb5fd4698e84347a6f",
+  "schemaVersion": 3,
+  "seed": "question-quality-20260715-corpus-v3-pinned-stratified",
+  "snapshotHash": "c21777c8dcab7f6b46ed15e429fcb7840607e90bcbdd7c02ec607a8db02beb13"
+}

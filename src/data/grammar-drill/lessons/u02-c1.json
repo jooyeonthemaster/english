@@ -1,0 +1,625 @@
+{
+  "id": "u02-c1",
+  "unitId": "u02",
+  "order": 1,
+  "title": "진짜 주어 찾기 — 수식어 괄호치기",
+  "oneLiner": "주어와 동사 사이의 수식어를 괄호로 걷어내면, 동사의 수를 결정하는 핵 주어 하나가 남습니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 주어-동사 수일치(주어와 동사 사이에 수식어가 삽입된 패턴)",
+      "천일문 고등 GRAMMAR — 주어와 동사의 수일치",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L5 핵 주어 추출",
+      "src/lib/grammar-drill/curriculum.ts u02 주어-동사 수일치"
+    ]
+  },
+  "lenses": ["L5", "L2"],
+  "confusableWith": ["u02-c2", "u02-c3", "u02-c4", "u01-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The list of recommended books for the course was posted yesterday.",
+        "The list of recommended books for the course were posted yesterday."
+      ],
+      "answer": 0,
+      "afterText": "동사 바로 앞의 명사는 course 이고, 그 앞에는 복수 books 가 있습니다. 그럼에도 동사가 단수인 이유를 이 레슨을 마치면 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "핵 주어",
+      "question": "핵 주어가 대체 무엇입니까? 그냥 '주어'와 다른 것입니까?",
+      "plain": "핵 주어는 수식어를 전부 걷어냈을 때 남는, 동사의 수를 실제로 결정하는 단 하나의 명사입니다. 주어 덩어리가 아무리 길어도 이 하나만 셉니다.",
+      "analogy": "주어 덩어리는 수행원을 잔뜩 거느린 인물과 같습니다. 수행원(수식어)이 몇 명이든 결정권자는 한 명이고, 동사는 그 한 명의 수만 바라봅니다.",
+      "whyItMatters": "수능 29번과 내신 수일치 문항은 동사 바로 앞에 복수 명사를 심어 함정을 팝니다. 핵 주어를 뽑아내는 눈이 있으면 이 함정은 통하지 않습니다. 판별 도구 \"핵 주어 추출(L5)\"이 여기서 출발합니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "동사 바로 앞에 있는 명사가 주어이므로 그 명사에 동사를 맞추면 됩니다.",
+      "truth": "동사 바로 앞의 명사는 대개 수식어 안에 들어 있는 명사입니다. 동사의 수를 결정하는 것은 수식어를 전부 걷어낸 뒤 남는 핵 주어 하나뿐입니다.",
+      "counterExample": {
+        "en": "The **quality** of the recordings **were** poor.",
+        "ko": "그 녹음물의 음질은 좋지 않았습니다.",
+        "note": "동사 바로 앞의 복수 명사 recordings 에 끌려 were 를 쓴 문장입니다. 핵 주어는 단수 The quality 이므로 was 가 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "핵 주어 판별 필기",
+      "intro": "수를 결정하는 하나를 뽑아내는 데 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "수식어 — 괄호로 걷어낼 것",
+          "body": "주어와 동사 사이에 끼어드는 전치사구·관계사절·분사구·콤마 삽입구를 통틀어 이릅니다. 뜻을 보탤 뿐 동사의 수에는 관여하지 못합니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "핵 주어 — 수를 결정하는 단 하나",
+          "body": "수식어를 전부 괄호로 묶은 뒤 남는 명사입니다. 동사는 오직 이 명사 하나의 수만 따릅니다.",
+          "example": {
+            "en": "The **box** of old letters **sits** on the top shelf.",
+            "ko": "오래된 편지가 담긴 그 상자는 맨 위 선반에 놓여 있습니다.",
+            "note": "of old letters 를 괄호로 묶으면 핵 주어는 단수 The box 이므로 동사도 단수 sits 입니다."
+          }
+        },
+        {
+          "head": "동사 앞 명사 — 최대의 미끼",
+          "body": "동사 바로 앞의 명사는 대개 수식어 안에 들어 있습니다. 가장 가까워 눈에 띄지만 수 판단의 근거가 되지 못합니다.",
+          "example": {
+            "en": "The **effects** of a single volcanic eruption **reach** the entire hemisphere within weeks.",
+            "ko": "단 한 번의 화산 분출이 미치는 영향은 몇 주 안에 반구 전체에 이릅니다.",
+            "note": "동사 앞의 단수 eruption 에 끌리면 안 됩니다. 핵 주어는 복수 The effects 이므로 reach 가 옳습니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "삽입구 — 곁다리는 주어가 아니다",
+          "body": "along with·together with·as well as·including 이 데려오는 명사는 콤마 안의 곁다리일 뿐, 핵 주어에 더해지지 않습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "and — 유일한 예외",
+          "body": "등위접속사 and 로 이어진 명사구는 하나의 복수 주어를 이룹니다. 이것만은 괄호로 묶지 않습니다.",
+          "example": {
+            "en": "The **teacher and the student discuss** the essay every Friday.",
+            "ko": "그 교사와 그 학생은 매주 금요일에 그 글을 논의합니다.",
+            "note": "and 로 이어진 두 명사가 복수 주어를 이루므로 동사는 복수형 discuss 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "동사의 수는 수식어를 걷어낸 뒤 남는 핵 주어 하나가 결정합니다.",
+      "examples": [
+        {
+          "en": "The **cost** of the new textbooks **has** risen sharply this year.",
+          "ko": "새 교과서들의 가격은 올해 가파르게 올랐습니다.",
+          "note": "of the new textbooks 는 전치사구입니다. 괄호를 치면 핵 주어는 단수 The cost 이므로 has 가 옳습니다."
+        },
+        {
+          "en": "The **effects** of a single volcanic eruption **reach** the entire hemisphere within weeks.",
+          "ko": "단 한 번의 화산 분출이 미치는 영향은 몇 주 안에 반구 전체에 이릅니다.",
+          "note": "동사 앞의 eruption 은 단수이지만 괄호 안의 명사입니다. 핵 주어가 복수 The effects 이므로 reaches 가 아니라 reach 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "주어와 동사 사이에 관계사절이나 분사구가 끼어들어도 본동사의 수는 여전히 핵 주어를 따릅니다.",
+      "examples": [
+        {
+          "en": "The **theory** that scientists proposed in the 1960s still **shapes** current research.",
+          "ko": "과학자들이 1960년대에 제시한 그 이론은 여전히 현재의 연구를 형성합니다.",
+          "note": "that scientists proposed in the 1960s 는 관계사절입니다. 그 안의 proposed 는 관계사절의 동사이고, 주절의 본동사 shapes 는 단수 핵 주어 The theory 를 따릅니다."
+        },
+        {
+          "en": "The **documents** stored in the national archive **reveal** how the treaty was drafted.",
+          "ko": "국립 문서고에 보관된 그 문서들은 그 조약이 어떻게 기초되었는지 드러냅니다.",
+          "note": "stored in the national archive 는 앞의 명사를 꾸미는 분사구입니다. 핵 주어가 복수 The documents 이므로 reveal 이 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "수식어가 두 겹으로 낀 주어의 해부",
+      "tokens": [
+        { "t": "The results", "role": "S" },
+        { "t": "of a survey", "role": "M" },
+        { "t": "conducted in five countries", "role": "M" },
+        { "t": "suggest", "role": "V" },
+        { "t": "a clear pattern", "role": "O" }
+      ],
+      "ko": "다섯 개 나라에서 실시된 한 설문의 결과는 뚜렷한 경향을 시사합니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 묶습니다",
+          "roles": ["M"],
+          "note": "of a survey 는 전치사구이고 conducted in five countries 는 그 명사를 꾸미는 분사구입니다. 두 덩어리 모두 뼈대가 아니므로 통째로 괄호에 넣습니다."
+        },
+        {
+          "label": "② 괄호 밖에 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "괄호를 걷어내면 The results 만 남습니다. 이것이 핵 주어이고 복수입니다."
+        },
+        {
+          "label": "③ 핵 주어의 수에 본동사를 맞춥니다",
+          "roles": ["V"],
+          "note": "핵 주어가 복수이므로 본동사는 복수형 suggest 입니다. 단수형 suggests 를 쓰면 오류입니다."
+        }
+      ],
+      "conclusion": "동사 바로 앞의 명사는 countries 이지만 그것은 괄호 안의 미끼입니다. 수를 결정하는 것은 괄호 밖의 핵 주어 The results 하나뿐입니다."
+    },
+    {
+      "id": "b8",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "미끼 명사 사냥",
+      "instruction": "핵 주어처럼 보이지만 동사의 수를 결정하지 못하는 미끼 명사를 전부 탭하십시오. 동사 앞에서 수식어 안에 들어 있는 명사가 대상입니다.",
+      "hitLabel": "미끼 명사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "report", "hit": false },
+        { "t": "on", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "effects", "hit": true },
+        { "t": "of", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "new", "hit": false },
+        { "t": "taxes", "hit": true },
+        { "t": "surprises", "hit": false },
+        { "t": "many", "hit": false },
+        { "t": "economists.", "hit": false }
+      ],
+      "ko": "새 세금의 영향에 관한 그 보고서는 많은 경제학자를 놀라게 합니다.",
+      "explain": "핵 주어는 단수 The report 입니다. on the effects of the new taxes 를 괄호로 묶으면 그 안의 effects·taxes 는 미끼이고, 동사는 이들에 끌리지 않고 report 를 따라 단수 surprises 가 됩니다. economists 는 동사 뒤의 목적어이므로 애초에 대상이 아닙니다."
+    },
+    {
+      "id": "b9",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "핵 주어를 뽑아내는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 친 본동사를 확인하고, 그 앞의 주어 덩어리를 통째로 잡습니다.",
+          "applyNote": "본동사는 attract 이고, 그 앞의 The paintings in the small gallery near the old harbor 가 주어 덩어리입니다."
+        },
+        {
+          "text": "주어 덩어리 안의 전치사구·관계사절·분사구·콤마 삽입구를 모두 괄호로 묶습니다.",
+          "applyNote": "in the small gallery 와 near the old harbor 는 전치사구이므로 괄호에 넣습니다."
+        },
+        {
+          "text": "괄호 밖에 남은 명사가 핵 주어입니다. 하나만 남으면 그 명사의 수를 따르고, and 로 이어져 둘 이상 남으면 그 전체가 복수 주어입니다.",
+          "applyNote": "괄호를 걷어내면 The paintings 만 남습니다. 이것이 핵 주어이며 복수입니다."
+        },
+        {
+          "text": "핵 주어의 수에 동사를 맞춥니다. 동사 바로 앞의 명사는 근거가 되지 못합니다.",
+          "applyNote": "핵 주어가 복수이므로 attract 가 옳습니다. 동사 앞의 harbor 는 괄호 안의 명사이므로 무시합니다."
+        }
+      ],
+      "example": {
+        "en": "The **paintings** in the small gallery near the old harbor **attract** thousands of tourists each summer.",
+        "ko": "옛 항구 근처의 작은 미술관에 있는 그 그림들은 매년 여름 수천 명의 관광객을 끌어들입니다.",
+        "note": "전치사구가 두 개 겹쳐 있어도 핵 주어는 The paintings 하나입니다."
+      }
+    },
+    {
+      "id": "b10",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The influence of digital platforms on traditional newspapers ( remain / remains ) a topic of heated debate.",
+      "steps": [
+        {
+          "title": "① 본동사 자리를 잡습니다",
+          "body": "괄호가 이 문장의 유일한 시제 동사 자리입니다. 괄호 앞의 The influence of digital platforms on traditional newspapers 전체가 주어 덩어리입니다."
+        },
+        {
+          "title": "② 수식어를 괄호로 묶습니다",
+          "body": "of digital platforms 와 on traditional newspapers 는 모두 전치사구입니다. 두 덩어리를 괄호에 넣습니다."
+        },
+        {
+          "title": "③ 핵 주어를 확인합니다",
+          "body": "괄호를 걷어내면 The influence 만 남습니다. 이것이 핵 주어이고 단수입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "핵 주어가 단수이므로 단수 동사 remains 가 옳습니다. 동사 바로 앞의 복수 명사 newspapers 는 괄호 안에 있으므로 판단 근거가 아닙니다."
+        }
+      ],
+      "answer": "remains",
+      "ko": "전통 신문에 대한 디지털 플랫폼의 영향은 여전히 뜨거운 논쟁의 주제입니다."
+    },
+    {
+      "id": "b11",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u02-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The price of the concert tickets {{blank}} with demand.",
+          "options": ["change", "changes"],
+          "answer": 1,
+          "translation": "그 공연 표의 가격은 수요에 따라 변합니다.",
+          "explanation": "of the concert tickets 는 전치사구 수식어입니다. 괄호를 치면 핵 주어는 단수 The price 이므로 단수 동사 changes 가 옳습니다. 동사 앞의 복수 명사 tickets 는 괄호 안의 미끼입니다.",
+          "trapTags": ["intervening-pp", "head-noun"]
+        },
+        {
+          "id": "u02-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The books on the shelf near the window [[u:belongs]] to the school library.",
+          "isCorrect": false,
+          "correction": "belong",
+          "translation": "창가 선반에 있는 그 책들은 학교 도서관의 것입니다.",
+          "explanation": "on the shelf 와 near the window 는 전치사구입니다. 괄호를 걷어내면 핵 주어는 복수 The books 이므로 복수 동사 belong 이 옳습니다. 동사 앞의 단수 명사 window 에 끌리면 안 됩니다.",
+          "trapTags": ["intervening-pp", "head-noun"]
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "괄호로 묶는 것과 묶으면 안 되는 것",
+      "columns": ["괄호로 묶는다(수식어)", "괄호로 묶지 않는다(주어의 일부)"],
+      "rows": [
+        {
+          "criterion": "표지",
+          "a": "of·in·on·with 등의 전치사구, 관계사절, 분사구, 콤마 삽입구",
+          "b": "등위접속사 and 로 이어진 명사구"
+        },
+        {
+          "criterion": "동사의 수",
+          "a": "그 안의 명사는 수 판단에 관여하지 않습니다",
+          "b": "A and B 는 하나의 복수 주어를 이룹니다"
+        },
+        {
+          "criterion": "보기",
+          "a": "The box (of old letters) — 단수 주어",
+          "b": "The teacher and the student — 복수 주어"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The box of old letters **sits** on the top shelf.",
+          "ko": "오래된 편지가 담긴 그 상자는 맨 위 선반에 놓여 있습니다.",
+          "note": "of old letters 는 전치사구이므로 괄호로 묶습니다. 핵 주어는 단수 The box 입니다."
+        },
+        {
+          "en": "The teacher and the student **discuss** the essay every Friday.",
+          "ko": "그 교사와 그 학생은 매주 금요일에 그 글을 논의합니다.",
+          "note": "and 로 이어진 두 명사는 주어의 일부이므로 괄호로 묶지 않습니다. 주어가 복수이므로 discuss 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 주어 덩어리가 어떤 수의 동사를 부르는지 분류하십시오.",
+      "buckets": [
+        { "id": "sg", "label": "단수 동사를 부른다" },
+        { "id": "pl", "label": "복수 동사를 부른다" }
+      ],
+      "chips": [
+        {
+          "text": "The quality of the recordings",
+          "bucketId": "sg",
+          "why": "of the recordings 는 전치사구입니다. 핵 주어는 단수 The quality 입니다."
+        },
+        {
+          "text": "The students in the front row",
+          "bucketId": "pl",
+          "why": "in the front row 는 전치사구입니다. 핵 주어는 복수 The students 입니다."
+        },
+        {
+          "text": "The teacher, along with her assistants,",
+          "bucketId": "sg",
+          "why": "along with 가 이끄는 삽입구는 주어에 명사를 더하지 않습니다. 핵 주어는 단수 The teacher 입니다."
+        },
+        {
+          "text": "The trees planted along the road",
+          "bucketId": "pl",
+          "why": "planted along the road 는 앞의 명사를 꾸미는 분사구입니다. 핵 주어는 복수 The trees 입니다."
+        },
+        {
+          "text": "The argument that the authors present",
+          "bucketId": "sg",
+          "why": "that the authors present 는 관계사절입니다. 핵 주어는 단수 The argument 입니다."
+        },
+        {
+          "text": "The doctor and the nurse",
+          "bucketId": "pl",
+          "why": "and 로 이어진 두 명사가 하나의 복수 주어를 이룹니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "곁다리 삽입구 5인방",
+      "target": "주어에 명사를 더하지 않는 삽입구 5인방",
+      "why": "이 다섯은 콤마 뒤에 복수 명사를 데려와 동사 코앞에 세웁니다. 정체를 외워 두지 않으면 그 복수 명사에 끌려 동사를 잘못 복수로 바꾸게 됩니다.",
+      "device": "다섯은 모두 '주인공 곁의 곁다리'를 잠깐 데려올 뿐입니다. 곁다리는 콤마 사이에 얼굴만 비추고 빠지므로, 동사는 콤마 앞의 주인공 하나만 셉니다. 오직 and 만이 새 주인공을 하나 더 데려옵니다.",
+      "items": [
+        { "cue": "along with", "answer": "~와 함께 — 주어에 명사를 더하지 않음(동사는 앞 주어 단독)" },
+        { "cue": "together with", "answer": "~와 더불어 — 곁다리 동반, 주어의 수 불변" },
+        { "cue": "as well as", "answer": "~도 마찬가지로 — 주어에 명사 안 더함" },
+        { "cue": "including", "answer": "~을 포함하여 — 삽입구, 주어의 수 불변" },
+        { "cue": "in addition to", "answer": "~에 더하여 — 삽입구, 동사는 앞 주어만" },
+        { "cue": "and", "answer": "예외! 이것만은 복수 주어를 만든다" }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "곁다리 감별 관문",
+      "mission": "동사 앞에 붙어도 핵 주어에 명사를 더하지 않는 삽입구를 전부 고르십시오. 콤마 사이에 잠깐 끼어드는 곁다리들입니다.",
+      "mode": "SET",
+      "pool": [
+        "along with",
+        "together with",
+        "as well as",
+        "including",
+        "in addition to",
+        "and",
+        "or"
+      ],
+      "answers": [
+        "along with",
+        "together with",
+        "as well as",
+        "including",
+        "in addition to"
+      ],
+      "passText": "곁다리 다섯을 전부 가려냈습니다. 이제 콤마 뒤의 복수 명사가 아무리 요란해도 동사는 흔들리지 않습니다. 관문이 열립니다.",
+      "retryText": "하나가 빠졌거나 곁다리가 아닌 것이 섞였습니다. and 는 주어를 실제로 늘리는 유일한 예외임을 떠올리고 다시 골라 보십시오."
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The reports from the research center in Oslo ( confirms / confirm ) the earlier findings.",
+      "givenSteps": [
+        "① 본동사 자리는 괄호이고, 그 앞의 The reports from the research center in Oslo 가 주어 덩어리입니다.",
+        "② 수식어를 괄호로 묶습니다 — from the research center 와 in Oslo 는 전치사구입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "confirms — 동사 바로 앞의 Oslo 가 단수이기 때문입니다",
+        "confirm — 괄호를 걷어내면 핵 주어는 복수 The reports 이기 때문입니다",
+        "confirms — from 뒤의 center 가 실제 주어이기 때문입니다"
+      ],
+      "answer": 1,
+      "explain": "전치사구 두 개를 괄호로 묶으면 남는 명사는 The reports 하나이며 복수입니다. 따라서 복수 동사 confirm 이 옳습니다. Oslo 와 center 는 모두 괄호 안의 명사이므로 동사의 수를 결정하지 못합니다."
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — of 뒤의 명사를 언제나 무시해서는 안 됩니다",
+      "body": "전치사구는 원칙적으로 괄호로 묶습니다. 그러나 some·most·half·the rest·분수·퍼센트 같은 부분 표현이 주어의 머리에 오면 수를 결정하는 것은 of 뒤의 명사입니다. 이때만은 of 구를 괄호로 묶지 않습니다. 이 예외군은 개념 u02-c3에서 따로 다룹니다.",
+      "example": {
+        "en": "Most of the **evidence** collected at the site **points** to a single cause.",
+        "ko": "그 현장에서 수집된 증거의 대부분은 하나의 원인을 가리킵니다.",
+        "note": "부분 표현 Most 는 그 자체로 수가 없습니다. 수를 결정하는 것은 of 뒤의 evidence 이고, 이 명사는 불가산 단수이므로 points 가 옳습니다."
+      }
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u02-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The novels that the young writer published in the 1990s {{blank}} still widely read in schools.",
+          "options": ["is", "being", "are"],
+          "answer": 2,
+          "translation": "그 젊은 작가가 1990년대에 발표한 소설들은 학교에서 여전히 널리 읽힙니다.",
+          "explanation": "관계사절 that the young writer published in the 1990s 를 괄호로 묶으면 핵 주어는 복수 The novels 입니다. 주절의 본동사는 아직 없으므로 시제를 가진 복수 동사 are 가 옳습니다. published 는 관계사절의 동사이고, being 은 시제가 없어 본동사가 되지 못합니다.",
+          "trapTags": ["relative-clause-verb", "head-noun"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 are 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "동사 앞의 the 1990s 가 복수 형태이므로 동사도 복수여야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "1990s 는 관계사절 안의 전치사구에 들어 있는 명사입니다. 괄호 안의 명사는 동사의 수를 결정하지 못합니다."
+        },
+        {
+          "text": "관계사절을 괄호로 묶으면 괄호 밖에 남는 핵 주어가 복수 The novels 이기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 수식어를 걷어낸 뒤 남는 핵 주어의 수가 유일한 판단 근거입니다."
+        },
+        {
+          "text": "소설은 대개 여러 권이므로 복수 동사가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "의미상의 자연스러움은 근거가 되지 못합니다. 어법 판단은 핵 주어의 형태에서 나옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The collection of rare maps [[1:displayed]] in the university library [[2:attract]] scholars from many countries, and the oldest map, which [[3:was drawn]] in 1520, [[4:remains]] the most valuable item.",
+      "answer": 2,
+      "correction": "attracts",
+      "rationales": [
+        "앞의 명사를 뒤에서 꾸미는 과거분사입니다. 지도는 전시되는 쪽이므로 p.p. 형태가 옳습니다.",
+        "주절의 본동사입니다. 전치사구와 분사구를 괄호로 묶으면 핵 주어는 단수 The collection 이므로 attracts 로 고쳐야 합니다.",
+        "관계사 which 가 연 절의 동사입니다. 선행사 the oldest map 이 단수이고 지도는 그려지는 쪽이므로 단수 수동형이 옳습니다.",
+        "and 가 연 두 번째 절의 본동사입니다. 핵 주어 the oldest map 이 단수이므로 remains 가 옳습니다."
+      ],
+      "ko": "대학 도서관에 전시된 희귀 지도 소장품은 여러 나라의 학자들을 끌어들이며, 1520년에 그려진 가장 오래된 지도는 가장 가치 있는 소장품으로 남아 있습니다."
+    },
+    {
+      "id": "b21",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 수식어가 낀 문장을 주고 어법상 틀린 부분을 찾아 고쳐 쓰게 합니다. 핵 주어를 밝히고 동사의 수를 바로잡아야 만점을 받습니다.",
+          "sample": {
+            "en": "The advice of the two counselors were helpful to the new students.",
+            "ask": "이 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "were → was. of the two counselors 를 괄호로 묶으면 핵 주어는 불가산 단수 명사 The advice 이므로 단수 동사가 옳습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 주어와 동사 사이에 전치사구·분사구를 겹쳐 넣고 동사에 밑줄을 칩니다. 동사 바로 앞 명사의 수를 핵 주어와 어긋나게 배치하는 것이 전형적인 설계입니다.",
+          "sample": {
+            "en": "The sudden rise in the number of migratory birds visiting the wetland [[u:have]] surprised local researchers.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳지 않습니다. have → has — in the number of migratory birds 와 visiting the wetland 를 괄호로 묶으면 핵 주어는 단수 The sudden rise 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Cities have begun to rethink how they manage rainwater. [[u:The network of small basins built along the roadside slows the flow of water during heavy storms.]] Engineers report that the basins also filter pollutants before the water reaches the river. The approach costs far less than rebuilding the old drainage system.",
+      "instruction": "밑줄 친 문장에서 수식어를 괄호로 묶고 핵 주어와 본동사의 수를 확인하십시오.",
+      "found": "of small basins 는 전치사구이고 built along the roadside 는 분사구입니다. 둘을 괄호로 묶으면 핵 주어는 단수 The network 이므로 본동사는 단수형 slows 입니다. 동사 바로 앞의 복수 명사 basins 에 끌리면 slow 로 잘못 고치게 됩니다.",
+      "gist": "도로변에 만든 작은 저류지들의 연결망이 폭우 때 물의 흐름을 늦춘다는 내용입니다."
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "미끼 명사 밀수단 두목",
+      "intro": "이 조직은 동사 코앞에 가짜 명사를 밀어 넣어 수를 조작합니다. 괄호를 쳐서 진짜 주인을 짚어내지 못하면 매번 속아 넘어갑니다. 네 건의 화물을 검색해 정체를 밝히십시오.",
+      "questions": [
+        {
+          "prompt": "The display of rare coins in the museum ___ many visitors each year.",
+          "options": ["attracts", "attract"],
+          "answer": 0,
+          "why": "of rare coins in the museum 를 괄호로 묶으면 핵 주어는 단수 The display 입니다. 단수 동사 attracts 가 옳습니다. 동사에 가까운 museum·coins 는 괄호 안의 미끼입니다."
+        },
+        {
+          "prompt": "The buildings damaged in the recent earthquake ___ unsafe to enter.",
+          "options": ["remain", "remains"],
+          "answer": 0,
+          "why": "damaged in the recent earthquake 는 앞의 명사를 꾸미는 분사구입니다. 괄호로 묶으면 핵 주어는 복수 The buildings 이므로 복수 동사 remain 이 옳습니다."
+        },
+        {
+          "prompt": "The report that the auditors reviewed last week ___ several errors.",
+          "options": ["reveals", "reveal"],
+          "answer": 0,
+          "why": "관계사절 that the auditors reviewed last week 를 괄호로 묶으면 핵 주어는 단수 The report 입니다. 단수 동사 reveals 가 옳습니다. reviewed 는 관계사절 안의 동사입니다."
+        },
+        {
+          "prompt": "The mayor, along with several council members, ___ the ceremony every June.",
+          "options": ["attends", "attend"],
+          "answer": 0,
+          "why": "along with several council members 는 콤마 삽입구이므로 주어에 명사를 더하지 않습니다. 핵 주어는 단수 The mayor 이고 단수 동사 attends 가 옳습니다."
+        }
+      ],
+      "winText": "밀수품이 전부 압수되었습니다. 동사 코앞의 명사가 아무리 요란해도, 이제 당신의 눈은 괄호 밖의 진짜 주인 하나만 봅니다. 이 눈이 수일치 문항의 자물쇠를 엽니다.",
+      "loseText": "두목이 미끼를 회수하며 물러납니다. 네 건 모두 물은 것은 하나였습니다 — \"괄호를 걷어내면 무엇이 남는가.\" 핵 주어 추출 4단계를 다시 밟고 오면 검색대는 열려 있습니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "동사의 수는 ___이(가) 결정하고, 주어 뒤의 ___·___·___·___는 괄호로 묶어 무시합니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "동사의 수를 결정하는 것은 수식어를 걷어낸 뒤 남는 핵 주어 하나뿐입니다.",
+        "주어 뒤의 전치사구·관계사절·분사구·콤마 삽입구는 모두 괄호로 묶어 무시합니다.",
+        "along with·together with·as well as·including 이 이끄는 삽입구는 주어에 명사를 더하지 않습니다. 반면 and 로 이어진 명사구는 주어의 일부이므로 복수 주어가 됩니다.",
+        "동사 바로 앞의 명사는 대개 괄호 안의 미끼입니다. 그 명사의 수는 판단 근거가 되지 못합니다.",
+        "예외로 some·most·half 같은 부분 표현이 주어의 머리에 오면 of 뒤의 명사가 수를 결정합니다."
+      ],
+      "keySentence": {
+        "en": "The **results** of a survey conducted in five countries **suggest** a clear pattern.",
+        "ko": "다섯 개 나라에서 실시된 한 설문의 결과는 뚜렷한 경향을 시사합니다.",
+        "note": "괄호 밖에 남는 핵 주어가 복수 The results 이므로 동사도 복수형 suggest 입니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u02-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The cost of the repairs to the old bridges {{blank}} the city's yearly budget.",
+          "options": ["exceed", "exceeds"],
+          "answer": 1,
+          "translation": "그 오래된 다리들의 보수 비용은 시의 연간 예산을 초과합니다.",
+          "explanation": "of the repairs 와 to the old bridges 는 전치사구입니다. 괄호를 걷어내면 핵 주어는 단수 The cost 이므로 단수 동사 exceeds 가 옳습니다. 동사 앞의 복수 명사 bridges 는 괄호 안의 미끼입니다.",
+          "trapTags": ["intervening-pp", "head-noun"]
+        },
+        {
+          "id": "u02-c1-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The engineer, together with two assistants, [[u:inspects]] the tunnel every month.",
+          "isCorrect": true,
+          "translation": "그 기술자는 두 명의 조수와 함께 매달 그 터널을 점검합니다.",
+          "explanation": "together with two assistants 는 콤마로 삽입된 어구이며 주어에 명사를 더하지 않습니다. 핵 주어가 단수 The engineer 이므로 단수 동사 inspects 가 옳게 쓰였습니다.",
+          "trapTags": ["additive-phrase", "head-noun"]
+        },
+        {
+          "id": "u02-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The machines operated by the night shift {{blank}} the entire order before dawn.",
+          "options": ["complete", "completes"],
+          "answer": 0,
+          "translation": "야간 조가 가동하는 그 기계들은 동트기 전에 주문 전량을 완성합니다.",
+          "explanation": "operated by the night shift 는 앞의 명사를 꾸미는 분사구입니다. 괄호로 묶으면 핵 주어는 복수 The machines 이므로 복수 동사 complete 가 옳습니다. 동사 앞의 단수 명사 shift 는 괄호 안의 미끼입니다.",
+          "trapTags": ["postnominal-participle", "head-noun"]
+        }
+      ]
+    }
+  ]
+}

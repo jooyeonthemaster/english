@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20231219-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "주장",
+    "words": 146
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-explanation-lintx2"
+  ],
+  "layout": "(A):dec=c  (B):dec=e  (C):dec=e  (D):dec=f  (E):ANS=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 118,
+        "relPos": 0.145,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 368,
+        "relPos": 0.452,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 539,
+        "relPos": 0.662,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 564,
+        "relPos": 0.693,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 790,
+        "relPos": 0.971,
+        "sentenceIndex": 9,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.971,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race laid out for them. They do well enough in school to keep advancing. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey ends with college. They have checked all the boxes in the life that was laid out for them and now lack a road map describing the right ways to move forward and continue to grow. In truth, that's when the journey really begins. When school is finished, your growth becomes voluntary. Like healthy eating habits or a regular exercise program, you need to commit to it and devote thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "laid out",
+        "isError": false,
+        "errorExpression": "laid out",
+        "surroundingText": "Instead, they simply run the race laid out for them. They do well enough",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "was laid",
+        "isError": false,
+        "errorExpression": "was laid",
+        "surroundingText": "the boxes in the life that was laid out for them and now lack a",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "is finished",
+        "isError": false,
+        "errorExpression": "is finished",
+        "surroundingText": "really begins. When school is finished, your growth becomes voluntary.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "becomes voluntary",
+        "isError": false,
+        "errorExpression": "becomes voluntary",
+        "surroundingText": "really begins. When school is finished, your growth becomes voluntary. Like healthy eating",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "progressing",
+        "isError": true,
+        "correction": "progressing",
+        "errorExpression": "to progress",
+        "surroundingText": "and your life and career are likely to stop progressing as a result.",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "laid out"
+      },
+      {
+        "label": "(B)",
+        "text": "was laid"
+      },
+      {
+        "label": "(C)",
+        "text": "is finished"
+      },
+      {
+        "label": "(D)",
+        "text": "becomes voluntary"
+      },
+      {
+        "label": "(E)",
+        "text": "to progress"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 명사 the race를 뒤에서 수식하는 분사의 태를 묻고 있으며, race는 마련되는 대상이므로 과거분사 'laid out'이 어법상 옳습니다.",
+      "(B)": "관계대명사 that절 내에서 선행사인 the life가 마련되는 대상이므로 수동태 'was laid'가 어법상 옳습니다.",
+      "(C)": "시간의 부사절에서 주어인 school이 끝나는 대상이므로 수동태 'is finished'가 어법상 옳습니다.",
+      "(D)": "이 자리는 불완전 자동사 becomes 뒤의 보어 자리이므로, 부사가 아닌 형용사 보어 'voluntary'를 사용한 'becomes voluntary'가 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 전체적으로 '그렇지 않으면 성장이 일어나지 않아 삶과 경력이 발전하는 것을 멈추게 된다'라는 부정적인 결과를 설명하고 있습니다. 문맥상 삶과 경력이 계속해서 성장하는 것을 멈춘다는 의미가 되어야 하므로, 동사 stop 뒤에는 동명사 목적어가 와야 합니다. 표시된 '(E) to progress'로 쓰면 '발전하기 위해 (하던 동작을) 멈추다'라는 긍정적인 목적의 의미가 되므로 전체 흐름상 어색합니다. 따라서 목적 역할을 하는 동명사 'progressing'으로 고쳐야 합니다. 'stop to-v'와 'stop v-ing'의 의미적 차이를 문맥 속에서 정확히 구별하는 것이 핵심입니다.",
+    "keyPoints": [
+      "(E) to-v vs v-ing — stop 뒤에 동명사와 to부정사가 올 때의 의미 차이 판정",
+      "(D) 형용사 자리 vs 부사 자리 — linkage verb 뒤의 보어 자리에 형용사가 올바르게 쓰였는지 판정",
+      "(A) 분사 능수동 — 명사를 후치 수식하는 과거분사의 수동 관계 판정"
+    ],
+    "tags": [
+      "동명사 목적어",
+      "과거분사 수식",
+      "형용사 보어",
+      "고2 어법"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race __(A) laid out__ for them. They do well enough in school to keep advancing. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey ends with college. They have checked all the boxes in the life that __(B) was laid__ out for them and now lack a road map describing the right ways to move forward and continue to grow. In truth, that's when the journey really begins. When school __(C) is finished__, your growth __(D) becomes voluntary__. Like healthy eating habits or a regular exercise program, you need to commit to it and devote thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop __(E) to progress__ as a result.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

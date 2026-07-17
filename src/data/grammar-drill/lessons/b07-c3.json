@@ -1,0 +1,783 @@
+{
+  "id": "b07-c3",
+  "unitId": "b07",
+  "order": 3,
+  "title": "명사절 — that·whether·의문사",
+  "oneLiner": "절 하나가 명사가 되어 자리를 통째로 채우고, 뒤 절이 완전한지가 that·what 을 가릅니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 명사절을 이끄는 that·whether·의문사(중 ●, 고 ●)",
+      "천일문 중등 GRAMMAR — 접속사 that·간접의문문",
+      "천일문 고등 GRAMMAR — 명사절 that vs what",
+      "docs/study-os-spec.md §2.3 PART 0 b07 전치사·접속사·절"
+    ]
+  },
+  "lenses": ["L1", "L2"],
+  "confusableWith": ["b07-c1", "b07-c2", "b07-c4", "u06-c2", "u12-c4"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Nobody knows what the ancient builders used for the foundation.",
+        "Nobody knows that the ancient builders used for the foundation."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 단어 하나입니다. 이 레슨을 마치면 뒤에 오는 절만 보고 that 과 what 중 무엇이 필요한지 한 번에 판단할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "명사절",
+      "question": "그런데 명사절이 대체 무엇입니까?",
+      "plain": "명사절은 주어와 동사를 갖춘 절 하나가 통째로 명사 노릇을 하는 것입니다. 한 문장 분량의 내용이 명사 한 덩어리로 접혀 주어·목적어·보어 자리에 앉습니다.",
+      "analogy": "명사 하나가 앉을 의자에, 단어 대신 '작은 문장 한 채'를 접어서 앉히는 것입니다. 그 상자 겉면에는 that·whether·what 같은 이름표가 붙어 '이 덩어리는 명사 자리에 앉는 절입니다'라고 알려 줍니다.",
+      "whyItMatters": "명사절을 알아보면 긴 문장도 '주어 자리에 절 한 덩어리, 동사 하나' 식으로 접혀 보입니다. 그리고 그 이름표를 that·what·whether 중 무엇으로 다는가가 이 단원 어법 판단의 전부입니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "명사절이 앉는 네 자리",
+      "intro": "명사절은 명사가 앉을 수 있는 자리라면 어디든 앉습니다. 네 자리를 하나씩 확인합니다. 각 예문에서 굵은 표시가 명사절입니다.",
+      "entries": [
+        {
+          "head": "주어 자리 — 문장의 맨 앞",
+          "body": "명사절이 통째로 주어가 됩니다. 절이 길어 무거우면 가주어 It 을 앞세우고 진짜 주어인 절을 뒤로 보냅니다.",
+          "example": {
+            "en": "That the plan succeeded surprised the whole committee.",
+            "ko": "그 계획이 성공했다는 것은 위원회 전체를 놀라게 했습니다.",
+            "note": "That 절 전체가 주어이고, 문장의 본동사는 surprised 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "목적어 자리 — 타동사 뒤",
+          "body": "believe·know·explain 같은 타동사 뒤에서 명사절이 목적어가 됩니다. 명사절 어법 문제가 가장 자주 나오는 자리입니다.",
+          "example": {
+            "en": "Scientists believe that the climate is shifting rapidly.",
+            "ko": "과학자들은 기후가 빠르게 변하고 있다고 믿습니다.",
+            "note": "that 절이 believe 의 목적어 한 덩어리입니다."
+          }
+        },
+        {
+          "head": "보어 자리 — be동사 뒤",
+          "body": "The question is ~ 처럼 be동사 뒤에서 주어를 설명하는 보어가 됩니다. 이 보어 자리에는 if 를 쓰지 못합니다.",
+          "example": {
+            "en": "The question is whether the bridge can bear the load.",
+            "ko": "문제는 그 다리가 하중을 견딜 수 있는지입니다.",
+            "note": "be동사 is 뒤 보어 자리이므로 if 가 아니라 whether 를 씁니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "전치사의 목적어 자리 — 전치사 뒤",
+          "body": "on·about 같은 전치사 뒤에서도 명사절이 옵니다. 단 이 자리에는 whether·의문사절만 오고 that·if 절은 오지 못합니다.",
+          "example": {
+            "en": "The debate centered on whether the tax should rise.",
+            "ko": "그 논쟁은 세금을 올려야 하는지에 집중되었습니다.",
+            "note": "전치사 on 뒤이므로 whether 만 올 수 있습니다."
+          },
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "명사절을 이끄는 말 한 장 정리",
+      "columns": ["이끄는 말", "뒤에 오는 절", "뜻과 자리"],
+      "rows": [
+        {
+          "cells": ["that", "완전한 절", "'~라는 것' · 주어·목적어·보어(전치사 뒤 불가)"],
+          "example": {
+            "en": "We know that the store opens at nine.",
+            "ko": "우리는 그 가게가 아홉 시에 연다는 것을 압니다.",
+            "note": "opens 앞에 주어 store 가 있는 완전한 절이므로 that 입니다."
+          }
+        },
+        {
+          "cells": ["whether", "완전한 절", "'~인지' · 모든 자리 가능(if 보다 넓음)"]
+        },
+        {
+          "cells": ["if", "완전한 절", "'~인지' · 타동사 목적어 자리에서만"],
+          "example": {
+            "en": "I wonder if the results are reliable.",
+            "ko": "나는 그 결과가 믿을 만한지 궁금합니다.",
+            "note": "타동사 wonder 의 목적어 자리이므로 if 를 쓸 수 있습니다."
+          }
+        },
+        {
+          "cells": ["what·who·which", "불완전한 절", "성분을 겸함 · 빈 주어·목적어 자리를 채움"],
+          "example": {
+            "en": "Nobody knows what caused the failure.",
+            "ko": "무엇이 그 고장을 일으켰는지 아무도 모릅니다.",
+            "note": "caused 의 주어가 비어 what 이 그 자리를 겸합니다."
+          }
+        },
+        {
+          "cells": ["when·where·why·how", "완전한 절", "때·곳·이유·방법을 물음(의문부사)"]
+        }
+      ],
+      "takeaway": "that·whether·if·의문부사 넉 줄은 완전한 절을, what·who·which 는 불완전한 절을 이끕니다. 그래서 첫 판단은 언제나 '뒤 절이 완전한가'입니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "명사절 연결어를 고르는 세 물음",
+      "why": "명사절 어법 문제는 언제나 같은 세 물음으로 풀립니다. 이 순서가 손에 붙어 있지 않으면 매번 뜻으로 감을 잡다가 함정에 걸립니다. 세 물음을 구구단처럼 즉시 떠올릴 수 있어야 도구가 됩니다.",
+      "device": "'빈자리·뜻·자리' 세 글자로 기억하십시오. ① 뒤 절에 빈자리가 있는가(있으면 what·who·which) ② 없으면 무슨 뜻인가(that·whether·의문부사) ③ 그 명사절이 앉은 자리가 if 금지 자리인가. 빈자리→뜻→자리, 세 박자로 세 번 읽으십시오.",
+      "items": [
+        { "cue": "뒤 절에 주어나 목적어가 빈다", "answer": "성분을 겸하는 what·who·which" },
+        { "cue": "완전한 절 + 사실을 전달", "answer": "접속사 that" },
+        { "cue": "완전한 절 + '~인지 아닌지'", "answer": "whether(목적어 자리면 if 도 가능)" },
+        { "cue": "완전한 절 + 때·곳·이유·방법", "answer": "의문부사 when·where·why·how" },
+        { "cue": "주어·보어·전치사 뒤·or not 앞", "answer": "if 금지, whether 만" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "첫 번째 관문",
+      "mission": "명사절을 이끌 수 있는 말만 전부 고르십시오. 명사절을 이끌지 못하는 침입자가 넷 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "that",
+        "whether",
+        "if",
+        "what",
+        "who",
+        "when",
+        "why",
+        "and",
+        "but",
+        "because",
+        "so"
+      ],
+      "answers": ["that", "whether", "if", "what", "who", "when", "why"],
+      "passText": "일곱을 전부 가려냈습니다. and·but·because·so 는 절을 잇더라도 명사 자리를 채우는 명사절을 만들지는 못한다는 것까지 눈치챘다면, 판단의 절반은 이미 끝났습니다.",
+      "retryText": "아깝습니다. 힌트 하나 — and·but 은 대등하게 잇기만 하고, because·so 는 이유·결과를 잇는 접속사일 뿐입니다. 어느 것도 주어·목적어 자리에 앉는 명사 덩어리를 만들지는 못합니다."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "접속사 that 은 완전한 절을 이끕니다",
+      "rule": "접속사 that 은 뒤에 완전한 절을 이끌며, 그 절 안에서는 아무 성분도 맡지 않습니다. 잇는 일만 합니다.",
+      "examples": [
+        {
+          "en": "Everyone agrees that the new policy needs more time.",
+          "ko": "그 새 정책이 더 많은 시간을 필요로 한다는 데에 모두가 동의합니다.",
+          "note": "needs 의 주어 policy 와 목적어 more time 이 다 있는 완전한 절이므로 that 이 옵니다."
+        },
+        {
+          "en": "It is certain that the glacier has retreated for decades.",
+          "ko": "그 빙하가 수십 년 동안 후퇴해 왔다는 것은 확실합니다.",
+          "note": "주어 자리의 that 절을 가주어 It 뒤로 보낸 형태입니다. 진짜 주어는 that 절입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "명사절이 목적어 자리를 채우는 문장의 해부",
+      "tokens": [
+        { "t": "The researchers", "role": "S" },
+        { "t": "finally", "role": "M" },
+        { "t": "proved", "role": "V" },
+        { "t": "that", "role": "CONJ" },
+        { "t": "the vaccine protects older adults", "role": "O" }
+      ],
+      "ko": "그 연구자들은 마침내 그 백신이 고령자를 보호한다는 것을 입증했습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 걷어냅니다",
+          "roles": ["M"],
+          "note": "finally 는 동사를 꾸미는 부사입니다. 뼈대가 아니므로 먼저 치웁니다."
+        },
+        {
+          "label": "② 주절의 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "전치사구만 걷어낼 때 찾던 '핵 주어'처럼, 여기서는 명사절을 걷어내고 남는 주절의 주어를 확인합니다. 주절의 주어는 The researchers 이고, 명사절 안의 the vaccine 은 주절의 주어가 아닙니다."
+        },
+        {
+          "label": "③ 주절의 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "proved 가 주절의 본동사입니다. 목적어를 부르는 타동사이므로 뒤에 명사 한 덩어리가 와야 합니다."
+        },
+        {
+          "label": "④ 명사절을 한 덩어리로 묶습니다",
+          "roles": ["CONJ", "O"],
+          "note": "that 이 이끄는 절 전체가 proved 의 목적어 한 덩어리입니다. 그 안의 protects 는 명사절의 동사이고, 접속사가 하나 늘었으므로 시제 동사도 하나 늘었습니다."
+        }
+      ],
+      "conclusion": "명사절은 아무리 길어도 문장에서는 명사 하나와 같은 자리를 차지합니다. 절 안의 동사(protects)와 주절의 본동사(proved)를 섞어 세지 않는 것이 핵심입니다."
+    },
+    {
+      "id": "b9",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "동사 사냥 — 절은 몇 개입니까",
+      "instruction": "이 문장에서 시제 동사를 전부 찾아 탭하십시오. 명사절이 들어 있으면 시제 동사는 둘 이상입니다.",
+      "hitLabel": "시제 동사",
+      "tokens": [
+        { "t": "Everyone", "hit": false },
+        { "t": "knows", "hit": true },
+        { "t": "that", "hit": false },
+        { "t": "the museum", "hit": false },
+        { "t": "closes", "hit": true },
+        { "t": "early", "hit": false },
+        { "t": "on Mondays", "hit": false }
+      ],
+      "ko": "그 박물관이 월요일에 일찍 문을 닫는다는 것을 모두가 압니다.",
+      "explain": "주절의 시제 동사 knows 와 명사절의 시제 동사 closes, 둘입니다. 접속사 that 이 하나 늘면 시제 동사도 하나 늘어납니다. 이때 세는 것은 시제(정형)동사뿐이며, to부정사·동명사·분사는 세지 않습니다. 시제 동사 개수로 절의 수를 세는 것이 명사절을 알아보는 가장 빠른 방법입니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "whether 와 if 의 분업",
+      "rule": "whether 는 '~인지 아닌지'를 뜻하는 명사절 접속사로 주어·목적어·보어·전치사의 목적어 자리에 모두 쓸 수 있습니다. if 는 타동사의 목적어 자리에서만 whether 를 대신할 수 있습니다.",
+      "examples": [
+        {
+          "en": "Researchers still wonder whether the practice improves memory.",
+          "ko": "연구자들은 그 습관이 기억력을 향상시키는지 여전히 궁금해합니다.",
+          "note": "타동사 wonder 의 목적어 자리입니다. 이 자리에서는 whether 대신 if 도 쓸 수 있습니다."
+        },
+        {
+          "en": "The question is whether the city can afford the new subway line.",
+          "ko": "문제는 그 도시가 새 지하철 노선을 감당할 수 있는지입니다.",
+          "note": "be동사 뒤 보어 자리입니다. 보어 자리에는 if 를 쓰지 못하고 whether 만 옵니다."
+        },
+        {
+          "en": "If the treaty will hold is still uncertain.",
+          "ko": "그 조약이 유지될지는 여전히 불확실합니다.",
+          "note": "주어 자리에 if 를 쓸 수 없습니다. Whether the treaty will hold 로 고쳐야 옳은 문장이 됩니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "title": "의문사절의 어순",
+      "rule": "의문사가 이끄는 명사절(간접의문문)의 어순은 '의문사 + 주어 + 동사'입니다. 의문문의 도치를 하지 않고 do·does·did 도 넣지 않습니다.",
+      "examples": [
+        {
+          "en": "No one knows why the ancient city was abandoned.",
+          "ko": "그 고대 도시가 왜 버려졌는지는 아무도 모릅니다.",
+          "note": "의문사 why 뒤에 주어 the ancient city, 동사 was abandoned 순으로 놓입니다. 도치가 없습니다."
+        },
+        {
+          "en": "No one knows why was the ancient city abandoned.",
+          "ko": "그 고대 도시가 왜 버려졌는지는 아무도 모릅니다.",
+          "note": "명사절 안에서 was 를 주어 앞으로 보내면 안 됩니다. 직접의문문의 어순을 그대로 옮긴 오류입니다.",
+          "wrong": true
+        },
+        {
+          "en": "The report explains what causes the sudden drop in temperature.",
+          "ko": "그 보고서는 무엇이 갑작스러운 기온 하락을 일으키는지를 설명합니다.",
+          "note": "what 은 접속사 노릇만 하는 것이 아니라 절 안에서 causes 의 주어 자리를 스스로 차지합니다. 그래서 what 뒤의 절에는 주어가 없습니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "명사절 접속사를 고르는 4단계",
+      "steps": [
+        {
+          "text": "빈칸(또는 밑줄) 뒤의 절만 따로 떼어 읽습니다.",
+          "applyNote": "the students had learned during the field trip 을 따로 떼어 읽습니다."
+        },
+        {
+          "text": "그 절 안에서 주어·목적어·보어가 모두 채워져 있는지 셉니다.",
+          "applyNote": "타동사 learned 의 목적어가 비어 있습니다. 따라서 불완전한 절입니다."
+        },
+        {
+          "text": "빠진 성분 자리가 있으면 그 자리를 스스로 메우는 의문대명사(what·who·which)를 씁니다.",
+          "applyNote": "목적어 자리가 비었으므로 그 자리를 채우는 what 이 옳습니다. that 은 성분 자리를 채우지 못하므로 쓸 수 없습니다."
+        },
+        {
+          "text": "완전한 절이라면 뜻으로 갈라, 시간·장소·이유·방법을 묻는 뜻이면 의문부사(when·where·why·how), 사실 전달이면 that, '~인지 아닌지'이면 whether 를 씁니다. 이때 명사절이 놓인 자리가 주어·보어·전치사 뒤라면 if 는 쓸 수 없습니다.",
+          "applyNote": "이 문장은 불완전한 절이므로 that·whether 단계로 내려가지 않고 what 에서 끝납니다."
+        }
+      ],
+      "example": {
+        "en": "The teacher asked ( that / what ) the students had learned during the field trip.",
+        "ko": "그 교사는 학생들이 현장 학습에서 무엇을 배웠는지 물었습니다.",
+        "note": "learned 의 목적어가 비어 있으므로 what 이 옳습니다. 절의 완전성이 첫 번째 관문입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b07-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Everyone knows {{blank}} the museum closes early on Mondays.",
+          "options": ["that", "what"],
+          "answer": 0,
+          "translation": "그 박물관이 월요일에 일찍 문을 닫는다는 것을 모두가 압니다.",
+          "explanation": "뒤의 절 the museum closes early on Mondays 는 주어와 동사가 모두 갖추어진 완전한 절입니다. 완전한 절 앞에는 접속사 that 이 옵니다. what 을 쓰면 what 이 채울 빈 성분 자리가 없어 문장이 성립하지 않습니다.",
+          "trapTags": ["that-vs-what", "clause-completeness"]
+        },
+        {
+          "id": "b07-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The lecture explained [[u:that]] causes the northern lights.",
+          "isCorrect": false,
+          "correction": "what",
+          "translation": "그 강의는 무엇이 오로라를 일으키는지를 설명했습니다.",
+          "explanation": "밑줄 뒤에는 동사 causes 만 있고 그 주어가 없습니다. 접속사 that 은 성분 자리를 채우지 못하므로 주어가 빠진 절을 이끌 수 없습니다. 주어 자리를 스스로 채우는 의문사 what 으로 고쳐야 합니다.",
+          "trapTags": ["that-vs-what", "subject-gap"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "접속사 that 과 의문사 what",
+      "columns": ["접속사 that", "의문사 what"],
+      "rows": [
+        {
+          "criterion": "뒤에 오는 절",
+          "a": "완전한 절(주어·목적어·보어가 다 있음)",
+          "b": "불완전한 절(주어나 목적어가 비어 있음)"
+        },
+        {
+          "criterion": "절 안에서의 역할",
+          "a": "없음 — 절을 잇기만 합니다",
+          "b": "있음 — 주어 또는 목적어 자리를 스스로 차지합니다"
+        },
+        {
+          "criterion": "해석",
+          "a": "~라는 것 / ~라고",
+          "b": "무엇이 ~하는지 / ~하는 것"
+        },
+        {
+          "criterion": "생략",
+          "a": "타동사의 목적어 자리에서는 생략할 수 있습니다",
+          "b": "생략할 수 없습니다 — 빠지면 성분 자리가 빕니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "We all know that the library offers free lectures to students.",
+          "ko": "우리 모두는 그 도서관이 학생들에게 무료 강연을 제공한다는 것을 압니다.",
+          "note": "offers 의 목적어 free lectures 가 있습니다. 완전한 절이므로 that 이 옳습니다."
+        },
+        {
+          "en": "We all know what the library offers to students.",
+          "ko": "우리 모두는 그 도서관이 학생들에게 무엇을 제공하는지 압니다.",
+          "note": "offers 의 목적어가 비어 있습니다. what 이 그 목적어 자리를 채우므로 절이 완성됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 절이 완전한지 불완전한지 분류하십시오. 불완전한 절(주어나 목적어가 빔) 앞에는 의문대명사 what·who·which 가 오고, 완전한 절 앞에는 that·whether 또는 의문부사 when·where·why·how 가 옵니다.",
+      "buckets": [
+        { "id": "full", "label": "완전한 절 — that·whether(또는 의문부사)" },
+        { "id": "gap", "label": "불완전한 절 — 의문대명사 what·who·which" }
+      ],
+      "chips": [
+        {
+          "text": "the museum closed early last Friday",
+          "bucketId": "full",
+          "why": "주어 the museum 과 동사 closed 가 모두 있고 빠진 성분이 없습니다."
+        },
+        {
+          "text": "the volunteers built the shelter in a week",
+          "bucketId": "full",
+          "why": "타동사 built 의 목적어 the shelter 까지 채워진 완전한 절입니다."
+        },
+        {
+          "text": "the treaty will take effect next year",
+          "bucketId": "full",
+          "why": "주어와 동사가 갖추어져 있고 빠진 자리가 없습니다."
+        },
+        {
+          "text": "caused the sudden blackout",
+          "bucketId": "gap",
+          "why": "동사 caused 의 주어가 비어 있습니다. what 이 그 자리를 채웁니다."
+        },
+        {
+          "text": "the researchers had discovered",
+          "bucketId": "gap",
+          "why": "타동사 discovered 의 목적어가 비어 있습니다."
+        },
+        {
+          "text": "surprised the audience most",
+          "bucketId": "gap",
+          "why": "동사 surprised 의 주어가 비어 있으므로 그 자리를 채우는 의문사가 필요합니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The article explains ( that / what ) makes coral reefs so fragile.",
+      "steps": [
+        {
+          "title": "① 뒤의 절만 떼어 읽습니다",
+          "body": "괄호 뒤에 남은 것은 makes coral reefs so fragile 입니다."
+        },
+        {
+          "title": "② 성분을 셉니다",
+          "body": "동사 makes 는 있는데 그 동사의 주어가 없습니다. 주어 자리가 비어 있으므로 불완전한 절입니다."
+        },
+        {
+          "title": "③ 빈 자리를 누가 채울지 판정합니다",
+          "body": "접속사 that 은 절을 잇기만 할 뿐 주어 자리를 채우지 못합니다. 의문사 what 은 스스로 주어 노릇을 하면서 절을 이끕니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "what 을 넣으면 what 이 makes 의 주어가 되어 절이 완성되고, 그 절 전체가 explains 의 목적어가 됩니다. that 을 넣으면 주어 없는 절이 남아 문장이 무너집니다."
+        }
+      ],
+      "answer": "what",
+      "ko": "그 기사는 무엇이 산호초를 그토록 취약하게 만드는지를 설명합니다."
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The letter did not explain ( that / what ) had happened to the missing files.",
+      "givenSteps": [
+        "① 괄호 뒤의 절을 떼어 읽습니다 — had happened to the missing files 입니다.",
+        "② 성분을 셉니다 — 동사 had happened 의 주어가 비어 있습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "what — 주어 자리가 비어 있으므로 그 자리를 스스로 채우는 의문사가 필요합니다",
+        "that — explain 의 목적어 자리이므로 접속사 that 이면 충분합니다",
+        "whether — 사실 여부를 묻는 문장이므로 whether 가 옳습니다"
+      ],
+      "answer": 0,
+      "explain": "명사절 접속사 선택의 첫 관문은 절의 완전성입니다. 뒤 절에 주어 자리가 비어 있으므로 성분을 채우지 못하는 that·whether 는 들어갈 수 없고, 주어 노릇을 겸하는 what 이 옳습니다."
+    },
+    {
+      "id": "b18",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "완전성 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 뒤 절이 완전한지부터 눈이 먼저 봐야 합니다.",
+      "timeLimitSec": 9,
+      "rounds": [
+        {
+          "statement": "주어·목적어·보어 자리에서는 완전한 절 앞에 that 을 쓸 수 있습니다.",
+          "isTrue": true,
+          "why": "완전한 절은 성분을 겸하지 않는 that 이 이끕니다. 다만 전치사 뒤 자리에는 that 을 쓰지 못합니다."
+        },
+        {
+          "statement": "what 뒤에는 주어나 목적어가 빠진 불완전한 절이 옵니다.",
+          "isTrue": true,
+          "why": "what 이 그 빠진 성분 자리를 스스로 채우기 때문입니다."
+        },
+        {
+          "statement": "if 는 주어 자리에서도 whether 를 대신할 수 있습니다.",
+          "isTrue": false,
+          "why": "if 는 타동사의 목적어 자리에서만 whether 를 대신합니다. 주어 자리에는 whether 만 옵니다."
+        },
+        {
+          "statement": "의문사 명사절은 '의문사 + 동사 + 주어' 순서로 씁니다.",
+          "isTrue": false,
+          "why": "명사절 어순은 '의문사 + 주어 + 동사'입니다. 도치하지 않습니다."
+        },
+        {
+          "statement": "전치사 뒤 명사절 자리에는 that 절을 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "전치사 뒤에는 that 절·if 절을 쓰지 못하고 whether·의문사절만 옵니다."
+        },
+        {
+          "statement": "명사절이 목적어로 들어가면 문장에 시제 동사가 둘 이상입니다.",
+          "isTrue": true,
+          "why": "주절의 시제 동사와 명사절의 시제 동사가 각각 있으므로 시제 동사가 둘 이상입니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "if 를 whether 자리에 무조건 넣는 함정",
+      "body": "if 와 whether 를 완전한 동의어로 외우면 무너집니다. if 가 whether 를 대신할 수 있는 자리는 타동사의 목적어 자리 하나뿐입니다. 주어 자리, 보어 자리, 전치사의 목적어 자리, 그리고 바로 뒤에 or not 이 붙는 자리에는 whether 만 옵니다.",
+      "example": {
+        "en": "The decision depends on if the funding arrives in time.",
+        "ko": "그 결정은 자금이 제때 도착하는지에 달려 있습니다.",
+        "note": "전치사 on 의 목적어 자리이므로 if 를 쓸 수 없습니다. on whether the funding arrives in time 으로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "명사절 안에서 의문문 어순으로 되돌아가는 함정",
+      "body": "의문사가 보이면 반사적으로 의문문 어순을 쓰게 됩니다. 그러나 의문사절이 동사의 목적어로 들어간 순간 그것은 더 이상 의문문이 아니라 명사 한 덩어리입니다. 조동사·be동사를 주어 앞으로 보내지 않고 '의문사 + 주어 + 동사' 순서를 지켜야 합니다.",
+      "example": {
+        "en": "The guide asked us how could we reach the summit before dark.",
+        "ko": "그 안내인은 우리가 어두워지기 전에 어떻게 정상에 도달할 수 있는지 물었습니다.",
+        "note": "asked 의 목적어로 들어간 명사절이므로 도치하지 않습니다. how we could reach the summit before dark 가 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 보고서는 그 호수가 왜 말랐는지를 설명합니다.",
+      "answer": ["The report", "explains", "why", "the lake", "dried up"],
+      "tiles": [
+        "The report",
+        "explains",
+        "why",
+        "the lake",
+        "dried up",
+        "did the lake dry up"
+      ],
+      "explanation": "의문사절이 explains 의 목적어로 들어갔으므로 '의문사 + 주어 + 동사' 어순을 지킵니다. did 를 넣는 순간 직접의문문의 어순이 되어 명사절이 성립하지 않습니다."
+    },
+    {
+      "id": "b22",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "연결어와 판단 기준 연결하기",
+      "instruction": "왼쪽 명사절 연결어를 오른쪽 판단 기준과 연결하십시오.",
+      "pairs": [
+        {
+          "a": "that",
+          "b": "완전한 절 앞 · 절 안 역할 없음",
+          "why": "성분을 겸하지 않고 절을 잇기만 하므로 뒤 절이 완전합니다."
+        },
+        {
+          "a": "what",
+          "b": "불완전한 절 앞 · 주어·목적어 자리를 겸함",
+          "why": "빠진 성분 자리를 what 이 스스로 채웁니다."
+        },
+        {
+          "a": "whether",
+          "b": "모든 자리 가능 · '~인지'",
+          "why": "주어·목적어·보어·전치사 뒤 어디에나 쓰고 or not 도 붙일 수 있습니다."
+        },
+        {
+          "a": "if",
+          "b": "타동사 목적어 자리에서만",
+          "why": "주어·보어·전치사 뒤·or not 앞에는 쓰지 못합니다."
+        },
+        {
+          "a": "why",
+          "b": "완전한 절 앞 · 이유를 물음",
+          "why": "의문부사이므로 성분을 겸하지 않고 완전한 절을 이끕니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b07-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The committee has not yet decided {{blank}} or not the funding should be renewed.",
+          "options": ["whether", "that", "if"],
+          "answer": 0,
+          "translation": "그 위원회는 그 지원금을 갱신할지 말지를 아직 결정하지 않았습니다.",
+          "explanation": "바로 뒤에 or not 이 붙어 있으므로 이 자리는 whether 만 가능합니다. if 는 or not 을 바로 뒤에 달 수 없고, that 은 '~인지 아닌지'의 뜻을 나타내지 못합니다.",
+          "trapTags": ["whether-vs-if", "whether-or-not"]
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "The article explains ( that / what ) makes coral reefs so fragile. 에서 what 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "뒤의 절에 makes 의 주어 자리가 비어 있었고, 그 자리를 스스로 채울 수 있는 것은 that 이 아니라 what 뿐이기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 절의 완전성을 세고, 빈 성분 자리를 누가 채우는지 확인하는 것이 판단의 근거입니다."
+        },
+        {
+          "text": "explains 는 의문사절을 목적어로 취하는 동사여서 what 을 써야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "explains 는 that 절도 목적어로 취할 수 있습니다. 동사의 목록이 아니라 뒤 절의 완전성이 판단 근거입니다."
+        },
+        {
+          "text": "산호초가 취약해지는 원인을 묻는 의미이므로 의문사가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "의미의 자연스러움은 근거가 되지 못합니다. 어법 판단은 뒤 절에 빠진 성분이 있는가라는 구조에서 나옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The panel could not agree on [[1:whether]] the ban [[2:was]] effective, and no one explained [[3:that]] the earlier study [[4:had missed]].",
+      "answer": 3,
+      "correction": "what",
+      "rationales": [
+        "전치사 on 의 목적어 자리입니다. 이 자리에는 that 절과 if 절을 쓸 수 없습니다. whether 절(또는 의문사절)은 올 수 있으므로 whether 는 옳습니다.",
+        "whether 절의 동사입니다. 그 절의 주어 the ban 이 단수이므로 was 가 옳습니다.",
+        "뒤의 절 the earlier study had missed 는 타동사 missed 의 목적어가 비어 있는 불완전한 절입니다. 접속사 that 은 완전한 절만 이끌므로 목적어 자리를 겸하는 what 으로 고쳐야 합니다.",
+        "explained 의 목적어로 들어간 명사절의 동사입니다. 앞선 시점을 나타내는 과거완료 형태로 옳습니다."
+      ],
+      "ko": "그 위원회는 그 금지 조치가 효과적이었는지에 대해 합의하지 못했고, 그 이전 연구가 무엇을 놓쳤는지는 아무도 설명하지 않았습니다."
+    },
+    {
+      "id": "b26",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 두 문장을 하나로 합쳐 간접의문문으로 쓰게 합니다. 의문사를 앞에 세우고 도치를 풀어 '의문사 + 주어 + 동사'로 배열해야 만점입니다.",
+          "sample": {
+            "en": "Do you know? + When does the library open on weekends?",
+            "ask": "두 문장을 하나로 이어 간접의문문으로 고쳐 쓰십시오.",
+            "answer": "Do you know when the library opens on weekends?"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항은 밑줄 친 that 또는 what 을 놓고 뒤 절의 완전성을 묻습니다. 밑줄 뒤의 절만 떼어 읽어 빠진 성분이 있는지 세면 답이 갈립니다.",
+          "sample": {
+            "en": "The experiment revealed [[u:what]] the two metals expand at different rates.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳지 않습니다. 뒤 절(the two metals expand at different rates)에 빠진 성분이 없는 완전한 절이므로 성분을 채우는 what 은 쓸 수 없고, 접속사 that 으로 고쳐야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b27",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "명사절 미궁의 문지기",
+      "intro": "that 과 what 을 뜻으로만 가르는 자는 이 문을 넘지 못합니다. 뒤 절의 빈자리를 세는 눈이 있는지, 네 번의 판단으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "Historians still debate {{blank}} the empire collapsed so suddenly.",
+          "options": ["why", "what"],
+          "answer": 0,
+          "why": "collapsed 앞에 주어 the empire 가 있는 완전한 절입니다. 이유를 묻는 의문부사 why 가 옵니다. what 은 채울 빈 성분 자리가 없어 쓸 수 없습니다."
+        },
+        {
+          "prompt": "The manual does not say {{blank}} the device should be restarted.",
+          "options": ["whether", "what"],
+          "answer": 0,
+          "why": "restarted 까지 갖춘 완전한 절입니다. '~인지'를 뜻하고 목적어 자리이므로 whether 가 옳습니다. what 은 빈 성분 자리가 없어 들어갈 수 없습니다."
+        },
+        {
+          "prompt": "No one could explain {{blank}} had triggered the alarm.",
+          "options": ["what", "that"],
+          "answer": 0,
+          "why": "triggered 의 주어가 비어 있는 불완전한 절입니다. 주어 자리를 겸하는 what 이 옳고, 성분을 채우지 못하는 that 은 절을 무너뜨립니다."
+        },
+        {
+          "prompt": "The report reveals {{blank}} the two rivers once formed a single lake.",
+          "options": ["that", "what"],
+          "answer": 0,
+          "why": "formed 의 주어 the two rivers 와 목적어 a single lake 가 다 있는 완전한 절입니다. 빈 성분이 없으므로 접속사 that 이고, what 은 들어갈 자리가 없습니다."
+        }
+      ],
+      "winText": "문지기가 물러섭니다. 뜻이 아니라 빈자리를 세어 네 번 모두 맞혔습니다. 이 눈이 앞으로 that 과 what 이 나오는 모든 밑줄의 출발점이 됩니다.",
+      "loseText": "문지기는 아직 비켜서지 않습니다. 오답을 다시 보십시오 — 모두 '뒤 절에 빠진 자리가 있는가'를 세지 않아 갈린 것입니다. 완전성 대조표를 한 번 더 보고 오면 문은 열립니다."
+    },
+    {
+      "id": "b28",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "뒤의 절이 완전하면 ___ 를 쓰고, 주어나 목적어가 비어 있으면 ___ 를 씁니다. if 는 ___ 자리에서만 whether 를 대신할 수 있습니다."
+    },
+    {
+      "id": "b29",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "명사절은 절 하나가 명사처럼 쓰여 주어·목적어·보어·전치사의 목적어 자리를 통째로 채웁니다.",
+        "접속사 that 은 완전한 절을 이끌고 절 안에서 아무 성분도 맡지 않습니다. 의문사 what·who 는 절 안의 주어·목적어 자리를 스스로 차지하므로 그 절은 불완전합니다.",
+        "whether 는 모든 명사절 자리에 쓸 수 있지만, if 는 타동사의 목적어 자리에서만 whether 를 대신합니다. 바로 뒤에 or not 이 붙는 자리에도 whether 만 옵니다.",
+        "의문사절의 어순은 '의문사 + 주어 + 동사'입니다. 도치하지 않고 do·does·did 도 넣지 않습니다.",
+        "주어 자리의 that 절은 흔히 가주어 It 을 앞세우고 뒤로 보냅니다."
+      ],
+      "keySentence": {
+        "en": "The report explains what causes the drop in temperature, but it never says that the trend will continue.",
+        "ko": "그 보고서는 무엇이 기온 하락을 일으키는지 설명하지만, 그 경향이 계속될 것이라고는 말하지 않습니다.",
+        "note": "앞의 what 절은 주어가 빠진 불완전한 절을 이끌고, 뒤의 that 절은 완전한 절을 이끕니다. 두 명사절 모두 동사의 목적어 자리를 채웁니다."
+      }
+    },
+    {
+      "id": "b30",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b07-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The debate over {{blank}} the law should change has lasted for years.",
+          "options": ["whether", "if", "that"],
+          "answer": 0,
+          "translation": "그 법을 바꾸어야 하는지를 둘러싼 논쟁은 수년간 계속되었습니다.",
+          "explanation": "전치사 over 의 목적어 자리입니다. 전치사 뒤에는 if 절도 that 절도 올 수 없고, 명사절 접속사 중에서는 whether 만 이 자리에 놓일 수 있습니다.",
+          "trapTags": ["whether-vs-if", "preposition-object"]
+        },
+        {
+          "id": "b07-c3-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The letter did not say [[u:when would the ceremony begin]].",
+          "isCorrect": false,
+          "correction": "when the ceremony would begin",
+          "translation": "그 편지는 그 의식이 언제 시작될지를 말하지 않았습니다.",
+          "explanation": "say 의 목적어로 들어간 의문사 명사절이므로 의문문의 도치를 하지 않습니다. '의문사 + 주어 + 동사' 순서에 따라 when the ceremony would begin 이 옳습니다.",
+          "trapTags": ["indirect-question", "word-order"]
+        },
+        {
+          "id": "b07-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The archaeologists could not explain {{blank}} had destroyed the ancient wall.",
+          "options": ["that", "what"],
+          "answer": 1,
+          "translation": "그 고고학자들은 무엇이 그 고대 성벽을 파괴했는지 설명하지 못했습니다.",
+          "explanation": "빈칸 뒤에는 동사 had destroyed 와 그 목적어만 있고 주어가 없습니다. 주어 자리가 빈 불완전한 절이므로, 그 자리를 스스로 채우는 what 이 옳습니다. that 은 성분 자리를 채우지 못합니다.",
+          "trapTags": ["that-vs-what", "subject-gap"]
+        }
+      ]
+    }
+  ]
+}

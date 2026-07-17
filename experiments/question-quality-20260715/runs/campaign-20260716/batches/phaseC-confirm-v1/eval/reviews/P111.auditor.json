@@ -1,0 +1,75 @@
+{
+  "pid": "P111",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-person-shift",
+      "severity": "minor",
+      "evidence": "정답 완성문 'Situations are uniquely stressful for each of us based on the extent to which they trigger your inner uncertainty.'에서 주절은 'each of us'인데 빈칸 내부는 'your'로 인칭이 전환된다. 원문은 'our doubt'로 인칭을 유지했다. 지문 전체가 us/you를 혼용하므로 비문은 아니지만 자연스러움이 소폭 떨어진다."
+    },
+    {
+      "code": "V4-minor-loose-terminology-causal",
+      "severity": "minor",
+      "evidence": "해설이 ①을 '인과관계를 반대로 왜곡한 함정'이라 부르나, ①은 원인과 결과를 뒤바꾼 것이 아니라 지문이 명시적으로 부정한 원인(pressure)을 그대로 원인으로 내세운 '부정된 원인 대입(contradiction)'이다. 오답 해설 자체('본문과 정반대의 주장')는 정확하므로 구조 오분석 수준은 아니다."
+    },
+    {
+      "code": "V4-minor-loose-syntax-description",
+      "severity": "minor",
+      "evidence": "해설의 '주어부 뒤의 전치사 목적어 자리'는 부정확한 위치 기술이다. 빈칸은 술부 부가어 'based on'의 전치사 목적어이며 주어부 바로 뒤가 아니다. 명사절/관계절 오분류 같은 범주 오류는 아니어서 minor로 처리."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "명시적으로 부정된 원인 대입(rejected-cause substitution) + internal→external 속성 왜곡",
+      "temptingBecause": "지문 핵심 어휘 'pressure to perform', 'internal pressure ... to achieve or do well'을 재조합해 표면 일치도가 높다.",
+      "decisiveFlaw": "지문이 'It's not the pressure to perform that creates your stress'로 압박을 원인에서 명시적으로 배제했고, 지문의 압박은 스스로 부과하는 internal pressure이지 external pressure가 아니다."
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'whether or not they activate our doubt'의 패러프레이즈(doubt→inner uncertainty, activate→trigger, whether or not→the extent to which).",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 뒤따르는 cleft 대구('not the pressure ... Rather, it's the self-doubt')와 정확히 정합한다."
+    },
+    {
+      "label": "③",
+      "intent": "해결책을 원인 기준으로 바꿔치기(remedy-as-criterion role swap)",
+      "temptingBecause": "마지막 문장 'When you see situations and your strengths more objectively'의 어휘를 그대로 활용해 지문 근거가 있는 것처럼 보인다.",
+      "decisiveFlaw": "객관적 평가는 의심(distress의 원천)을 줄이는 처방이지 상황을 개인별로 스트레스로 만드는 기준이 아니며, 빈칸 직후 'Rather, it's the self-doubt'와의 담화 결속이 깨진다."
+    },
+    {
+      "label": "④",
+      "intent": "전제 조건을 결정 요인으로 격상(scope/condition shift)",
+      "temptingBecause": "도입부 'If you care deeply about something'과 'do well socially'를 앵커로 삼아 그럴듯하다.",
+      "decisiveFlaw": "깊이 신경 쓰는 것은 배경 전제일 뿐이고 개인차의 결정 요인은 의심의 활성화 여부다. '분야의 다양성(variety)'은 지문에 근거가 전혀 없다."
+    },
+    {
+      "label": "⑤",
+      "intent": "주관적 메커니즘을 객관적 빈도로 치환(half-truth / condition loss)",
+      "temptingBecause": "'genuinely negative experiences'를 지문에서 그대로 인용해 표면 중첩이 크다.",
+      "decisiveFlaw": "지문은 의심이 진짜 부정적 경험조차 더 부정적으로 보이게 한다고 하여 스트레스의 개인차가 주관적 렌즈에 있음을 말한다. 부정적 경험의 조우 빈도는 'uniquely stressful for each of us'의 근거가 되지 못한다."
+    }
+  ],
+  "explanationIssues": [
+    "① 해설(오답 해설 항목)은 정확하나, 본해설의 '인과관계를 반대로 왜곡' 표현은 엄밀히는 '부정된 원인 재주장'이어서 용어가 느슨하다.",
+    "'주어부 뒤의 전치사 목적어 자리'는 빈칸 위치 기술이 부정확하다(술부 부가어 based on의 목적어).",
+    "⑤ 오답 해설이 한 문장에 수식이 과적되어 장황하다('본질적이고 주관적인 스트레스 메커니즘을 설명하지 못하는 단순한 환경적 빈도')."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 의도된 빈칸 외 원지문과 완전 일치, 정답 ② 유일성은 5개 선지 독립 검증으로 확인, 다섯 선지 모두 동일 통사 슬롯(전치사 on의 목적어)에 들어가 문법으로 탈락하는 선지가 없다. 오답 4개가 rejected-cause/role-swap/condition-shift/half-truth로 서로 다른 함정을 쓰고 각자 지문 앵커를 가진 점은 우수(C2=3, C3=3). 그러나 KILLER 정합 실패: 정답 ②의 'inner uncertainty'는 지문에 4회 반복되는 핵심어 'doubt'의 사실상 투명 동의어이고, 빈칸 바로 뒤 cleft 문장 하나만으로 답이 결정되므로 '최소 두 문장/두 논리 단서 연결' 및 '단일 어휘 단서로 찍기 불가' 조건을 충족하지 못한다. 키워드 매칭만 하는 학생도 ②에 도달 가능 → killerConditionsMet=false, C5=2. 합계 18, 최저 2, 모든 V 통과이므로 등급 B(정답 패러프레이즈의 추상화 수준을 올리거나 doubt 계열 어휘를 다른 오답에도 분산하는 작은 수정으로 상향 가능)."
+}

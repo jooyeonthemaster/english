@@ -1,0 +1,50 @@
+{
+  "pid": "P013",
+  "finalV2": true,
+  "winningAnswer": "①",
+  "reason": "선언된 정답 ①이 유일하게 성립함을 독립 재검증으로 확인. 빈칸은 콜론 뒤에서 'an important difference'의 동격 명세로 기능해야 하며, 후속 두 문장('It tries to ensure...desires and drives', 'The law obsessively tries to suppress affects, whereas cinema introduces us to our affects')을 라이선스해야 한다. ①(영화=감정의 생생한 반영, 법=감정 통제)은 원문 span('while cinema expresses man's affective life, the law keeps it in check')의 등가 패러프레이즈로 마지막 문장이 거의 verbatim으로 재진술한다. ②는 극성 역전으로 마지막 문장과 정면 모순, ③은 무근거 전제(이성 예찬)에 후속 정교화와 단절, ④⑤는 차이 슬롯에 공통성/협력 진술로 극성 모순 + 내용 모순 + 콜론 뒤 종속절 단독 파편이라는 형식 결함까지 겹쳐 성립 불가. 솔버 양측 모두 과잉 판정 없음(성립하지 않는 대안을 성립한다고 주장한 사례 없음), 누락된 대안 해석도 없음. 유일한 흠은 ① 삽입 시 후속 'It'(단수)의 표면 선행사가 'legal codes'(복수)가 되는 수 불일치 seam이나, 'It'은 의미상 억제 주체(법)로 강제되고 담화 주제어 the law로 회복되므로 정답 유일성에 영향 없음. 분쟁 요약의 '선언된 정답=(D)'는 라벨 매핑 아티팩트로 판단 — 권위 파일(full/P013.md 26행)의 선언 정답은 ①이며 솔버1·솔버2·감사자 모두 이와 일치한다.",
+  "perDispute": [
+    {
+      "label": "①",
+      "claim": "정답으로 선언됨 — 영화는 감정을 생생히 반영하고 법은 통제하려 한다는 차이 진술",
+      "verdict": "성립(유일 정답)",
+      "evidence": "빈칸 자리는 콜론 뒤 'an important difference'의 명세. 마지막 문장 'The law obsessively tries to suppress affects..., whereas cinema introduces us to our affects'가 ①의 대응쌍(legal codes strive to control ↔ suppress affects / movie screens vividly reflect ↔ introduces us to our affects)을 그대로 증명. 원지문 span 'while cinema expresses man's affective life, the law keeps it in check'의 정확한 패러프레이즈. 통사적으로 'while 종속절+주절' 완전 절 복합체로 슬롯에 적합."
+    },
+    {
+      "label": "①-cohesion",
+      "claim": "삽입 후 'It tries to ensure...'의 선행사가 복수 'legal codes'가 되어 수 불일치 seam 발생(양 솔버·감사자 공통 지적)",
+      "verdict": "minor — 유일성 훼손 없음",
+      "evidence": "'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'의 It은 의미상 억제의 행위 주체여야 하며(①의 목적어 'human emotion'은 ensure의 주체가 될 수 없음), 담화 전반의 주제어 the law로 회귀 해석이 강제된다. 응집성이 원문 대비 저하되나 판별과 정답 성립에는 영향 없음. 감사자도 V3-COHESION-MINOR(severity: minor)로 동일 판정."
+    },
+    {
+      "label": "②",
+      "claim": "법=욕망의 배출구 제공, 영화=엄격한 규칙 부과 (표면 구조가 정답과 가장 유사한 극성 반전 함정)",
+      "verdict": "불성립",
+      "evidence": "마지막 문장이 법=suppress affects(억압), 영화=introduces us to our affects(표출·대면)로 명시하므로 역할 배정이 정반대. 삽입 시 후속 전개와 즉시 모순. 대안 정답 불가."
+    },
+    {
+      "label": "③",
+      "claim": "두 분야 모두 인간 이성을 예찬하되 존재를 다르게 정의한다 (유일하게 '차이'를 형식상 진술하는 오답)",
+      "verdict": "불성립",
+      "evidence": "'both fields highly praise human reason'은 지문 어디에도 근거 없음 — 지문은 오히려 인간의 폭력성과 정동에 대한 불안(anxiety about human nature, too violent)을 말한다. '존재의 의미를 함께 고민한다'가 공통점으로 제시되었으므로 '존재를 다르게 정의'도 무근거. 결정적으로 후속 'It tries to ensure...desires and drives'(정동 억제)와 논리 연결 불가."
+    },
+    {
+      "label": "④",
+      "claim": "두 분야 모두 도덕적 판단을 완전히 유보하므로",
+      "verdict": "불성립",
+      "evidence": "삼중 결함: (1) 극성 — 'difference' 예고 슬롯에 'both'로 공통성 진술, (2) 내용 — 법은 'a regime of commands and prohibitions'로 규범 판단을 부과하므로 '판단 유보'는 거짓, (3) 형식 — 'since+절' 단독 파편으로 콜론 뒤 차이의 동격 명세로 통사적으로 불성립."
+    },
+    {
+      "label": "⑤",
+      "claim": "영화와 법이 심리적 억압 완화를 위해 협력하므로",
+      "verdict": "불성립",
+      "evidence": "삼중 결함: (1) 극성 — 'work together'는 차이 슬롯과 정면 충돌, (2) 내용 — 법은 억압의 완화가 아니라 수행 주체('obsessively tries to suppress affects'), (3) 형식 — 'because+절' 단독 파편으로 ④와 동일한 통사 결함."
+    },
+    {
+      "label": "메타-분쟁: 선언 정답 라벨 (D) vs ①",
+      "claim": "분쟁 요약은 선언 정답을 (D)로 표기했으나 솔버 양측은 ①을 제출",
+      "verdict": "실질 분쟁 아님 — 라벨 매핑 아티팩트",
+      "evidence": "권위 파일 eval/full/P013.md 26행의 '## 선언된 정답'은 ①이며, 해설·오답 해설·keyPoints 전부 ①을 정답으로 일관 기술. 솔버1=①, 솔버2=①, 감사자 optionAudit도 ①을 정답으로 감사. 즉 정답 키 자체의 충돌은 존재하지 않고, 분쟁 요약의 '(D)' 표기는 오케스트레이터 측 문자 매핑 오류로 판단. 최종 정답 ①, V2 유지."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "manifestVersion": "pre-inspection-seal-v10.1",
+  "setId": "deterministic-structural-reaudit-v10",
+  "sealedOn": "2026-07-15",
+  "sealedBeforeProductionInspection": true,
+  "authoringBoundary": {
+    "usedOnlyProductFacingContract": true,
+    "productionSourceInspected": false,
+    "productionTestsRun": false,
+    "gitHistoryOrDiffInspected": false,
+    "priorAuditOrRemediationArtifactsInspected": false,
+    "researchNotesInspected": false,
+    "agentMessagesInspected": false,
+    "generatedQuestionRecordsInspected": false,
+    "apiNetworkDatabaseSecretsUsed": false
+  },
+  "counts": {
+    "total": 200,
+    "pairs": 100,
+    "families": {
+      "SUMMARY_COMPLETE_MC": {
+        "total": 50,
+        "DEFECT": 25,
+        "NORMAL": 25
+      },
+      "GRAMMAR_ERROR_LEADING_LABEL": {
+        "total": 50,
+        "DEFECT": 25,
+        "NORMAL": 25
+      },
+      "SENTENCE_ORDER_COMPLETE_UNITS": {
+        "total": 50,
+        "DEFECT": 25,
+        "NORMAL": 25
+      },
+      "SENTENCE_ORDER_STANDALONE_LABELS": {
+        "total": 50,
+        "DEFECT": 25,
+        "NORMAL": 25
+      }
+    }
+  },
+  "sealedFiles": [
+    {
+      "path": "cases.json",
+      "bytes": 187906,
+      "sha256": "002ed425202c28f3dc7476d9381a6b65bce8e66f0616ebbeddb000d56221a222"
+    },
+    {
+      "path": "ORACLE_PROTOCOL.md",
+      "bytes": 4751,
+      "sha256": "535aa21e1080d954a636ace59437db85031386a58db554808ad08cc9c259a9cb"
+    },
+    {
+      "path": "verify_author_seal.ps1",
+      "bytes": 9749,
+      "sha256": "acadea85b565bc1517e2ed3e37f7765612a49c782aefdf57a4ca063cd3f5b609"
+    },
+    {
+      "path": "IMMUTABILITY.md",
+      "bytes": 1174,
+      "sha256": "d07e27ea4b606d397dcf3f421d001428babcc9703180ac98dd22d99029fe2862"
+    }
+  ],
+  "payloadSealCanonicalization": "listed-order UTF-8 lines: path<TAB>bytes<TAB>lowercase_sha256<LF>",
+  "payloadSealSha256": "2ddce4ecbebdcbb5d411a812185f2613d3639a727ab4ded3e8aa594c231fbc03",
+  "caseIdOrderCanonicalization": "cases.json array order, UTF-8 case IDs separated and terminated by LF",
+  "caseIdOrderSha256": "28b6db379fb995bb8ce368985f85ac42bfa9c960c4ee256c53c9b04bb6f0d8a5",
+  "immutability": "Any byte change invalidates v10; corrections require a newly named and newly sealed version.",
+  "verificationScope": "verify_author_seal.ps1 reads only this directory and invokes no production."
+}

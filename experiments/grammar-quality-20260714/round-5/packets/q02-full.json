@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):dec=c  (C):dec=b  (D):ANS=g  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 16,
+        "relPos": 0.022,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 208,
+        "relPos": 0.288,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 239,
+        "relPos": 0.331,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 337,
+        "relPos": 0.467,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 705,
+        "relPos": 0.978,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.978,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is wired",
+        "isError": false,
+        "errorExpression": "is wired",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "focused",
+        "isError": false,
+        "errorExpression": "focused",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "which",
+        "isError": false,
+        "errorExpression": "which",
+        "surroundingText": "keep you focused on what's going wrong (which explains why complaining is",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "yourself",
+        "isError": true,
+        "correction": "yourself",
+        "errorExpression": "you",
+        "surroundingText": "To break out of this neural rut, train yourself to acknowledge when things go right.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "to celebrate",
+        "isError": false,
+        "errorExpression": "to celebrate",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is wired"
+      },
+      {
+        "label": "(B)",
+        "text": "focused"
+      },
+      {
+        "label": "(C)",
+        "text": "which"
+      },
+      {
+        "label": "(D)",
+        "text": "you"
+      },
+      {
+        "label": "(E)",
+        "text": "to celebrate"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어인 human brain은 ‘신경망이 연결되어 구성되는’ 대상이므로 수동태 'is wired'는 어법상 옳습니다.",
+      "(B)": "keep + 목적어(you) + 목적격보어 구조에서, 목적어인 ‘당신’이 특정 대상에 ‘집중된 상태’가 되는 수동의 관계이므로 과거분사 'focused'는 어법상 옳습니다.",
+      "(C)": "앞 절의 내용(complaining 관련 구문 전체)을 선행사로 삼아 부가 설명하는 관계대명사의 계속적 용법이므로 주격 관계대명사 'which'는 어법상 옳습니다.",
+      "(E)": "reasons를 수식하는 형용사적 용법의 부정사 구문이므로 'to celebrate'는 어법상 옳습니다."
+    },
+    "explanation": "동사 train으로 시작하는 명령문 문장으로, 명령문의 생략된 주어는 행위자인 2인칭(you)입니다. 문장의 주어와 목적어가 동일인물(너 자신을 훈련시켜라)을 가리키는 대귀(reflexive) 구조이므로, 대명사 목적격인 'you'는 이 자리에 올 수 없고 재귀대명사 'yourself'로 고쳐야 합니다. 생략된 명령문의 주어 핵이 2인칭임을 놓치면 단순히 인칭대명사 목적격으로 착각하기 쉬우니 주의해야 합니다.",
+    "keyPoints": [
+      "(D) 대명사 일치 — 명령문의 주어(you)와 목적어의 동일성 판단",
+      "(B) 분사 능수동 — 5형식 keep 구문 내 목적어와 보어의 수동 관계",
+      "(C) 관계사 — 앞 문장(상황)을 선행사로 갖는 계속적 관계대명사"
+    ],
+    "tags": [
+      "재귀대명사",
+      "명령문 주격",
+      "수동태",
+      "과거분사 보어",
+      "계속적용법"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain __(A) is wired__ to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you __(B) focused__ on what's going wrong (__(C) which__ explains why complaining is such a popular pastime). To break out of this neural rut, train __(D) you__ to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have __(E) to celebrate__ it.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

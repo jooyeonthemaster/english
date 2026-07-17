@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'until it originates from an inquiring but unbiased mind' — 시제·구문 성립(it = a scientific truth, 정문). 논리: 'inquiring but unbiased mind'는 지문 앞부분이 소개한 individualist rhetoric의 구성 요소로, 필자는 'almost nobody thinks they can provide a basis for action in public contexts'라며 그 관점을 공적 효력 없는 것으로 기각한다. 개인의 정신에서 기원하는 것만으로 truth가 standing을 얻는다는 명제는 지문의 결론('knowledge isn't knowledge unless it has been authorized by disciplinary specialists', 'only one stage in its construction')과 정면 모순. 형식적으로 P(개인적 기원)→Q(standing)를 주장하는 셈인데 지문은 ¬(P→Q)를 명시. 기각."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합: 수동태 'is announced to the public at a press conference' 정문. 논리: 지문은 전문가 검토 없이 기자회견에서 발견을 발표하는 과학자를 'automatically castigated as a publicity seeker'라고 명시적으로 비난한다. 즉 기자회견 발표는 standing 부여 조건이 아니라 오히려 규범 위반의 표지다. 지문 명제의 정확한 반례이므로 기각. 다만 'without first permitting expert reviewers...'라는 조건절이 붙어 있어 '검토 후 발표'라면 비난 대상이 아니지만, 선지 자체에는 검토 조건이 없어 일반 명제로서 성립 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 결합: 'until it receives validation from the scientific community' — it의 선행사 a scientific truth 명확, 시제·태 정문. 논리: 지문의 핵심 전제 두 개와 정확히 동치 — (i) 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'(전문가 승인 필요조건), (ii) 빈칸 직후 'What happens in somebody's laboratory is only one stage in its construction'(진리는 집단적 구성물). 'validation from the scientific community'는 'authorized by disciplinary specialists'의 패러프레이즈로, until-절이 요구하는 필요조건을 형식적으로 충족한다. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 'allows nature to speak powerfully and unambiguously' — allow+목적어+to부정사 정문. 논리: 지문은 'The norms of scientific communication presuppose that nature does not speak unambiguously'라고 명시한다. 자연이 unambiguously 말한다는 전제는 지문이 명시적으로 부정한 individualist rhetoric('they speak for themselves')의 재진술이므로 직접 모순. 기각."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 'replaces authorization by disciplinary specialists with inspired patience' — replace A with B 구문 정문. 논리: 지문의 방향과 정반대의 치환. 지문은 inspired patience(개인주의적 미덕)로는 부족하고 disciplinary specialists의 authorization이 필수라고 주장하는데, 이 선지는 그 authorization을 inspired patience로 대체할 때 standing을 얻는다고 말한다. 필요조건을 제거하는 조작이므로 형식적으로 지문 논리의 부정. 기각."
+    }
+  ],
+  "note": "빈칸 문장은 'A scientific truth has little standing until X' 구조로, until-절에는 지문이 제시한 standing의 필요조건이 들어가야 한다. 지문은 그 필요조건을 '분과 전문가의 승인(authorized by disciplinary specialists)'으로 명시했고, 빈칸 뒤 문장('only one stage in its construction')이 집단적 구성 과정을 재확인한다. ③만이 이 필요조건의 패러프레이즈이며 ①②④⑤는 모두 지문이 명시적으로 기각한 individualist rhetoric의 요소를 재도입하거나(①④⑤) 지문이 비난한 행위(②)를 조건으로 제시한다. 오답들이 지문 표면 어휘를 재활용한 미끼로 잘 설계되어 있고, 문법 결합(seam)은 5개 선지 모두 정문이어서 순수하게 논리로 변별된다. 복수정답 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P053",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'when they first consider experimenting...' is a finite temporal adverbial clause attaching to the participial modifier 'made by organizations'. Subordinator + full finite clause is fully licensed; no parse renders it ill-formed."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Long-distance subject-verb agreement: the subject head is singular 'One' (of the most common mistakes...). Intervening plurals 'mistakes/organizations' and the (A) adverbial clause are distractors. 'One ... is that-clause' — singular 'is' is correct and the that-clause is a well-formed predicative complement."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (the error)",
+      "reason": "'a thorough understood of the organization's own goals' — the slot after determiner 'a' + attributive adjective 'thorough', taking an of-complement, requires a noun. 'understood' is only a past participle/adjective; English has no noun 'understood'. Required form: 'understanding'. No rescue parse (reduced relative, absolute, etc.) makes 'a thorough understood of X' a constituent."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'serves no purpose in and of itself' is the fixed reflexive idiom 'in and of itself'; antecedent is the clausal/gerund subject '\"Being in social media\"' (3sg neuter), matching 'itself'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "Correlative 'either ... or' coordinating two parallel bare-VP conjuncts ('solve a problem...' / 'result in an improvement...') both governed by modal 'must'. 'either' placed immediately before the first conjunct marks the canonical parallel start point."
+    }
+  ],
+  "note": "Clean single-error item. (C) is the unique defensible answer: a categorical part-of-speech violation (past participle in an obligatory noun slot). All four distractors survive formal scrutiny, including the long-distance agreement trap at (B) and the correlative-parallelism check at (E). Passage recognizable as adapted from Olivier Blanchard's 'Social Media ROI' (used in prior KSAT-style items), but judgment here is independent of that provenance."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "정답 성립",
+      "reason": "문법: 주어 'the law' + 3인칭 단수 동사 'restrains' 결합 정문. 논리: 빈칸은 'while cinema expresses man's affective life, the law ___' 대조 구문의 후항이며, 직후 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'와 마지막 문장 'The law obsessively tries to suppress affects'가 장거리 단서로 빈칸 내용을 확정한다. 'restrains the emotional aspects' = 'suppress affects'의 정확한 패러프레이즈이고, 'emotional aspects of human nature'는 'affective life'와 대응. 대조(표현 vs 억제)가 형식적으로 성립한다."
+    },
+    {
+      "label": "②",
+      "verdict": "기각",
+      "reason": "문법 결합은 정문이나 지문과 직접 모순. 둘째 문장이 'Rather than an abstract desire for truth as a value in itself, the law deals with the messiness of human relations'라고 명시하여, 법이 '그 자체로 가치인 추상적 진리'를 다루는 것이 아님을 부정한다. 지문 어구를 그대로 재활용한 반대 명제형 미끼."
+    },
+    {
+      "label": "③",
+      "verdict": "기각",
+      "reason": "문법 결합은 정문이나 귀속 오류. 'forcing us to identify the most unbearable ones in ourselves'는 마지막 문장에서 명백히 cinema의 술어로 제시된다. 이를 법에 넣으면 빈칸 문장이 진술하려는 '중요한 차이(important difference)'가 소멸하고 대조 구문(while...)이 논리적으로 붕괴한다."
+    },
+    {
+      "label": "④",
+      "verdict": "기각",
+      "reason": "문법 결합은 정문이나 방향 반전. 지문에서 법은 욕구·충동에 압도되지 않도록 보장하고(ensure that we are not overwhelmed... by our desires and drives) 정동을 강박적으로 억제(suppress)하는 주체다. 'amplifies our drives'는 정반대이며, 'exist in a state of nature'는 법 없이는 불가능하다고 지문이 명시한 상태다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "기각",
+      "reason": "문법 결합은 정문이나 담화 기능 모순. 'struggle with what it means to be human... communicate to us something about our existence'는 지문에서 영화와 법의 공통점으로 제시된 내용이다. 빈칸은 'an important difference'를 진술하는 자리이므로 공통점을 넣으면 문장의 대조 기능(while cinema..., the law...)이 성립하지 않는다. 'directly'라는 한정어도 지문에 근거가 없다."
+    }
+  ],
+  "note": "다섯 선지 모두 3인칭 단수 동사구로 문법 seam은 전부 정문이므로 판별은 순수 논리·담화 층위에서 이루어진다. 빈칸 직후 'It tries to ensure...'와 최종 문장의 'suppress affects ↔ cinema introduces us to our affects' 대조가 이중 장거리 단서로 ①을 유일하게 확정한다. 오답들은 각각 지문 명시 부정(②), 영화 술어의 오귀속(③), 방향 반전(④), 공통점-차이점 혼동(⑤)으로 형식적으로 기각 가능하여 복수 정답 여지가 없다. 문항 완결성 양호."
+}

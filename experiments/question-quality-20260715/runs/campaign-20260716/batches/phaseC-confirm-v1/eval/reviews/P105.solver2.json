@@ -1,0 +1,35 @@
+{
+  "pid": "P105",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "know의 목적어로 간접의문문 병렬(where we are headed and what we want to do). 뒤 절에서 do의 목적어 공백을 채우는 wh-어가 필요하므로 what이 필수. that이면 do의 목적어가 없어 비문이 되므로 what이 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "be동사 보어 자리의 자유관계절 'what happens'. happen은 자동사로 주어 공백이 있고 그 공백을 what이 채운다. 단수 일치(happens)도 옳음. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "end up은 동명사 보어를 요구한다(end up V-ing). 'you end up spend ...'에서 spend가 원형으로 쓰일 통사적 자리가 없다. 접속사 없는 병렬('end up and spend')로도 구제 불가, end up은 조동사가 아니므로 원형부정사 보어도 불가. spending이어야 하므로 어법상 틀림. 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "부정어구 not only가 절두에 위치하면 주어-(조)동사 도치가 의무적이며 계사 be는 스스로 도치한다. 'not only are curveballs the universe's way ...'는 올바른 도치이고 복수 주어 curveballs와 are의 수 일치도 옳다. 뒤의 but they are also와의 상관 병렬도 성립."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "its는 앞 절의 the universe's를 받는 단수 무생물 소유격. 'the universe's way ... its method'로 병렬 지시가 일관되며 선행사 일치에 문제 없음. 정문."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (C)만이 유일하게 비문이며 대안 해석(병렬 시작점, 조동사 해석 등)으로도 구제 불가. (A)(B)(D)(E)는 각각 wh-공백 인허, 자유관계절 주어 공백, 부정어 도치, 소유격 대명사 일치로 형식적으로 정문임을 확인. 복수 정답 여지 없음."
+}

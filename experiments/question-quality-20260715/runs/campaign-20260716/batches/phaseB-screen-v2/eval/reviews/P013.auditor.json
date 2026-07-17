@@ -1,0 +1,102 @@
+{
+  "pid": "P013",
+  "blindAnswer": "④",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3_OPTION_UNGRAMMATICAL",
+      "severity": "critical",
+      "evidence": "선지 ① 'stick to your original arrangements plans and rules'에서 'arrangements plans'는 명사 병치 비문(쉼표 누락 또는 잉여 단어로 인한 텍스트 손상). 빈칸에 삽입하면 'you must stick to your original arrangements plans and rules most of the time'라는 비문이 되어, BLANK_INFERENCE에서 모든 선지가 문법적으로 삽입 가능해야 한다는 유형 의도와 불일치하며(V3 후반부), RUBRIC §D의 '일부 오답만 문법으로 탈락하지 않는다' 조건도 위반한다. 학생이 문법만으로 ①을 소거할 수 있다."
+    },
+    {
+      "code": "V1_RENDER_OK",
+      "severity": "minor",
+      "evidence": "렌더 지문은 원지문에서 'prioritize flexibility over rigidity'만 빈칸으로 치환한 것 외에 손상·중복·누락·오탈자 없음(참고 기록). 라벨 ①~⑤와 선지·해설 키 일치."
+    },
+    {
+      "code": "STEM_META_WORDING",
+      "severity": "minor",
+      "evidence": "발문 '수정된 지문에 들어갈 가장 적절한 빈칸 표현을 고르시오'는 표준 발문('다음 빈칸에 들어갈 말로 가장 적절한 것을 고르시오')이 아니고 '수정된 지문'이라는 메타 정보를 노출한다. 치명은 아니나 실전 출하 전 교체 필요."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 글의 주제문(prioritize flexibility over rigidity) 핵심 술부를 겨냥 — 정전 포인트.",
+    "C2": "①극성 반전, ②조건부 수용(half-truth/condition loss), ③범주 전환(수용→예측), ⑤행위자 전도로 함정축이 서로 다르나, ①은 단순 정반대(random opposite)에 가까워 밀도가 떨어진다.",
+    "C3": "수사의문문 'stick to some rigid work schedule or ... learning to go with the flow'가 정답을 한 문장 안에서 직접 제공하고, ④는 근접 동의어 치환이라 극성 판단+국소 패러프레이즈만으로 도달 가능. ①⑤ 즉시 소거, 실질 경합은 ②③ 정도.",
+    "C4": "④만이 'more than' 비교 구조로 원문 'prioritize X over Y' 슬롯을 구조적으로 복제해 형태 단서가 누출. ①의 비문 손상도 소거 단서. 발문의 '수정된 지문' 메타 누출.",
+    "C5": "요청 난이도 KILLER 대비 실제 난이도는 하~중(단일 문장 단서, 저추상화 패러프레이즈). 라벨과 불일치.",
+    "C6": "해설이 짧고 정답 근거(flexibility→adaptable responses, rigid work schedule→strict schedules 대응)와 오답 함정축을 분리해 제시. 다만 ① 해설의 앵커 표기가 부정확(하단 explanationIssues)."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(주제 정반대) — 계획·규칙 고수",
+      "temptingBecause": "본문 'stick to some rigid work schedule'과 'keeping my plans'의 어휘(stick to, plans)를 직접 차용해 표면 겹침이 큼.",
+      "decisiveFlaw": "본문은 유연함>엄격함을 명시적으로 주장하므로 정반대 진술. 추가로 'arrangements plans' 명사 병치 비문으로 텍스트 자체가 손상되어 문법만으로도 소거됨(V3 위반)."
+    },
+    {
+      "label": "②",
+      "intent": "조건 손실/half-truth — 이익이 될 때만 변화 수용",
+      "temptingBecause": "'getting what I want'와 목표 지향 어휘를 차용, '변화 수용'이라는 방향 자체는 본문과 일치해 보임.",
+      "decisiveFlaw": "본문은 계획 변경의 필연성을 무조건적으로 예상·수용하라고 권하며('a certain percentage of plans will change'), 자기 이익 조건부 수용은 'getting what I want' 쪽을 택하는 것이므로 논조와 충돌."
+    },
+    {
+      "label": "③",
+      "intent": "범주 전환 — 수용적 태도를 예측 능력으로 치환",
+      "temptingBecause": "'expect that a certain percentage of plans will change'/'inevitability'와 겹쳐 '미리 대비'라는 인상을 줌.",
+      "decisiveFlaw": "본문은 변경의 필연성을 마음속으로 허용(accept/allow)하라는 태도의 문제이지 미래 변수를 예측하는 기술 습득이 아님. 또한 빈칸 문장의 '평화로운 사람이 되기 위해' 목적과 예측 훈련은 인과가 어긋남."
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 'prioritize flexibility over rigidity'의 패러프레이즈",
+      "temptingBecause": "(정답) flexibility→adaptable responses, rigidity/rigid work schedule→strict schedules 대응으로 원문 span 의미를 보존.",
+      "decisiveFlaw": "없음. 다만 다섯 선지 중 유일하게 'A more than B' 비교 구조여서 원문 슬롯 형태를 구조적으로 누출(C4 감점 요인)."
+    },
+    {
+      "label": "⑤",
+      "intent": "행위자 전도 — 내면적 유연성을 타인 의존으로 왜곡",
+      "temptingBecause": "'unexpected schedule changes'가 본문의 계획 변경 소재와 겹치고, '흐름에 맡기기'를 '남에게 맡기기'로 오독하도록 유도.",
+      "decisiveFlaw": "본문 전체가 자신의 우선순위와 내면적 태도(you must, in your mind)에 관한 글이므로 타인에게 관리 책임을 의존하는 것은 주체 왜곡."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "① 오답 해설이 \"rigid work schedule을(를) 빌렸지만\"이라고 하나 선지 ①에는 해당 문자열이 없고 실제 차용은 'stick to'와 'plans'이다. 개념적 대응은 성립하므로 오분석은 아니나 앵커 표기 부정확.",
+      "recommendation": "앵커를 'stick to ... work schedule / keeping my plans'로 정정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "⑤ 오답 해설의 앵커 \"go with the flow을(를) 빌렸지만\"은 선지 ⑤의 실제 표면 겹침('unexpected schedule changes')보다 설계 의도(흐름에 맡기기의 오독) 쪽 설명이라 차용 관계 표현이 느슨함.",
+      "recommendation": "'go with the flow의 오독을 유도'로 표현을 명확화."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": false,
+    "sameSyntacticSlotEvidence": "① 비문 손상으로 문법 삽입 불가 → 문법만으로 탈락하는 오답 존재.",
+    "meaningPreservingAbstraction": false,
+    "meaningPreservingAbstractionEvidence": "④는 의미 보존은 완벽하나 'flexibility→adaptable responses, rigidity→strict schedules'의 근접 동의어 1:1 치환으로 KILLER급 추상화가 아님.",
+    "distractorAnatomy": true,
+    "distractorAnatomyEvidence": "②③⑤는 anchor/overlap/decisive flaw가 성립하고 함정축이 상이(§D 마지막 조건 부분 충족). 단 ①은 random opposite에 가까움.",
+    "multiClueSynthesis": false,
+    "multiClueSynthesisEvidence": "수사의문문 한 문장('rigid work schedule or ... go with the flow')이 정답을 직접 제공하고 ④만 비교 구조여서 극성·형태 단서만으로 결정 가능 — 두 문장/두 논리 단서 종합 요건 미충족."
+  },
+  "grade": "F",
+  "notes": "V2(정답 유일성 ④)·V1·V4·V5는 통과했으나, 선지 ①의 텍스트 손상('arrangements plans' 명사 병치 비문)으로 V3 실패 → 규정상 F. 손상 수리(예: 'original plans and rules') 시에도 KILLER 요건(다중 단서 종합, 정답 추상화, 구조 단서 비누출)은 미달이므로 난이도 하향 재라벨 또는 정답 패러프레이즈 추상화·수사의문문 단서 완화 재설계가 필요. 공예 합계 15(C1=4, C2=3, C3=2, C4=2, C5=1, C6=3)."
+}

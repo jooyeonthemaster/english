@@ -1,0 +1,927 @@
+{
+  "alternatives": [
+    {
+      "design": "Acquire and provenance-audit genuinely new central-span official blank passages and committed zero-prior DB groups before freezing a new snapshot.",
+      "id": "V4-A-ACQUIRE-SAME-ESTIMAND",
+      "minimumSupplyImplication": {
+        "blankNetNewCandidates": 203,
+        "committedDbOptimisticNetNewGroups": 819
+      },
+      "preservesV3Estimand": true,
+      "recommendationRank": 1,
+      "tradeoff": "Only option that preserves the v3 claim, but local inventory cannot supply it; source authority, rights clearance, ingestion, and independent audit are prerequisites."
+    },
+    {
+      "availableSeparateBlankStrata": {
+        "centralLongV3Estimand": 59,
+        "long150PlusLocalOrNoPivotSeparateEstimand": 43,
+        "short120To149SeparateEstimand": 300,
+        "sourceGateAndHistoryClean": 402
+      },
+      "design": "Audit the full central-long blank census and committed DB census; report certified count and exact interval. Audit 120-149/local blank passages as separately named strata and never pool them with central-long.",
+      "id": "V4-B-SEPARATE-STRATA-CENSUS",
+      "preservesV3Estimand": false,
+      "recommendationRank": 2,
+      "tradeoff": "Immediately honest and bounded, but estimates yield/prevalence rather than certifying 66 central blank and DB33+repo33 diversity targets."
+    },
+    {
+      "constraints": [
+        "Do not call DRAFT rows committed DB passages.",
+        "Do not reuse pilot rows in validation certification.",
+        "Do not pool customer-uploaded school exams with official national-exam blanks."
+      ],
+      "design": "After explicit rights clearance, freeze extraction drafts as a new DB_EXTRACT_REVIEWED population, run an independent discovery pilot, then size a non-overlapping validation queue from its own one-sided lower bound.",
+      "id": "V4-C-REVIEWED-EXTRACTION-PILOT",
+      "preservesV3Estimand": false,
+      "recommendationRank": 3,
+      "tradeoff": "Potentially expands supply, but current pass rate is unknown, all linked blank ExtractionItem rows are DRAFT, and no license/rights field exists."
+    }
+  ],
+  "capturedAt": "2026-07-14T18:41:44.157Z",
+  "captureWindow": {
+    "completedAt": "2026-07-14T18:41:44.157Z",
+    "startedAt": "2026-07-14T18:41:36.168Z"
+  },
+  "constraints": {
+    "browserCalls": 0,
+    "databaseWrites": 0,
+    "modelApiCalls": 0,
+    "operationalManifestCreated": false,
+    "productionEdits": 0
+  },
+  "exactV3Feasibility": {
+    "blank": {
+      "currentStrictPool": 59,
+      "netNewRequired": 203,
+      "rawPassTarget": 66,
+      "rawTargetImpossible": true,
+      "requiredQueue": 262
+    },
+    "committedDb": {
+      "currentCoreZeroPriorGroupsBeforeHistoryAndCrossPanelGates": 290,
+      "currentEligibleAfterAutomaticAndHistoricalGatesBeforeCrossPanelAllocation": 154,
+      "holdoutOnlyMinimumConservativeRateForCurrentSupply": 0.24067893214673655,
+      "optimisticNetNewRequired": 819,
+      "requiredDisjointQueues": 973
+    },
+    "feasibleWithoutNewSourceAuthority": false
+  },
+  "familySummaries": [
+    {
+      "allExactOrNearV3Overlap": 248,
+      "automaticCleanUnique": 248,
+      "coreEnglishUnique": 290,
+      "distinctAcademiesPrivateOnly": 22,
+      "distinctSourceDocuments": 48,
+      "earlierFamilyExactOrNearOverlap": 0,
+      "earlierWithinFamilyExactOrNearOverlap": 0,
+      "exactOrMarkupV3Overlap": 177,
+      "family": "committed-passage-current",
+      "immediateSameEstimandEligible": 0,
+      "lineageStateCore": {
+        "CANONICAL_COMMITTED_PASSAGE": 290
+      },
+      "linkedBlankEvidenceCore": 0,
+      "nearOverlapCodes": {
+        "EXACT_NORMALIZED_HASH": 164,
+        "FIVE_GRAM_SIMILARITY": 70,
+        "LONG_CONTIGUOUS_OVERLAP": 1,
+        "MARKUP_STRIPPED_EXACT": 13
+      },
+      "netIncrementalAfterV3AndEarlierInventory": 0,
+      "netIncrementalLineageState": {},
+      "netIncrementalLinkedBlankButNotYetEligible": 0,
+      "netIncrementalOfficialTypeTagged": 0,
+      "netIncrementalOfficialTypeTaggedWithSourceRefOrOriginalFileLocator": 0,
+      "netIncrementalReviewState": {},
+      "netIncrementalRightsStatus": {},
+      "officialTypeTaggedCore": 36,
+      "officialTypeTaggedWithSourceRefOrOriginalFileLocatorCore": 0,
+      "reviewedOrCommittedCore": 290,
+      "reviewState": {
+        "COMMITTED": 290
+      },
+      "rightsStatus": {
+        "CUSTOMER_UPLOAD_RIGHTS_NOT_RECORDED": 278,
+        "OFFICIAL_EXAM_PROVENANCE_LICENSE_NOT_RECORDED": 12
+      },
+      "rows": 345,
+      "sourceMaterialType": {
+        "EXAM": 24,
+        "HANDOUT": 160,
+        "NONE": 3,
+        "OTHER": 59,
+        "SUNEUNG": 12,
+        "TEXTBOOK": 32
+      },
+      "uniqueNormalizedContent": 345
+    },
+    {
+      "allExactOrNearV3Overlap": 1818,
+      "automaticCleanUnique": 1908,
+      "coreEnglishUnique": 2131,
+      "distinctAcademiesPrivateOnly": 64,
+      "distinctSourceDocuments": 235,
+      "earlierFamilyExactOrNearOverlap": 0,
+      "earlierWithinFamilyExactOrNearOverlap": 4,
+      "exactOrMarkupV3Overlap": 1378,
+      "family": "m1-passage-draft",
+      "immediateSameEstimandEligible": 0,
+      "lineageStateCore": {
+        "NONE": 306,
+        "SAVED_PASSAGE_LINKED": 1825
+      },
+      "linkedBlankEvidenceCore": 0,
+      "nearOverlapCodes": {
+        "EXACT_NORMALIZED_HASH": 1253,
+        "FIVE_GRAM_SIMILARITY": 436,
+        "LONG_CONTIGUOUS_OVERLAP": 4,
+        "MARKUP_STRIPPED_EXACT": 125
+      },
+      "netIncrementalAfterV3AndEarlierInventory": 86,
+      "netIncrementalLineageState": {
+        "NONE": 13,
+        "SAVED_PASSAGE_LINKED": 73
+      },
+      "netIncrementalLinkedBlankButNotYetEligible": 0,
+      "netIncrementalOfficialTypeTagged": 1,
+      "netIncrementalOfficialTypeTaggedWithSourceRefOrOriginalFileLocator": 0,
+      "netIncrementalReviewState": {
+        "COMMITTED": 71,
+        "DRAFT": 14,
+        "REVIEWED": 1
+      },
+      "netIncrementalRightsStatus": {
+        "CUSTOMER_UPLOAD_RIGHTS_NOT_RECORDED": 86
+      },
+      "officialTypeTaggedCore": 232,
+      "officialTypeTaggedWithSourceRefOrOriginalFileLocatorCore": 0,
+      "reviewedOrCommittedCore": 1769,
+      "reviewState": {
+        "COMMITTED": 1753,
+        "DRAFT": 362,
+        "REVIEWED": 16
+      },
+      "rightsStatus": {
+        "CUSTOMER_UPLOAD_RIGHTS_NOT_RECORDED": 2080,
+        "OFFICIAL_EXAM_PROVENANCE_LICENSE_NOT_RECORDED": 51
+      },
+      "rows": 4715,
+      "sourceMaterialType": {
+        "EXAM": 181,
+        "HANDOUT": 1276,
+        "NONE": 69,
+        "OTHER": 508,
+        "SUNEUNG": 51,
+        "TEXTBOOK": 45,
+        "WORKBOOK": 1
+      },
+      "uniqueNormalizedContent": 2594
+    },
+    {
+      "allExactOrNearV3Overlap": 1,
+      "automaticCleanUnique": 1,
+      "coreEnglishUnique": 2,
+      "distinctAcademiesPrivateOnly": 1,
+      "distinctSourceDocuments": 1,
+      "earlierFamilyExactOrNearOverlap": 0,
+      "earlierWithinFamilyExactOrNearOverlap": 0,
+      "exactOrMarkupV3Overlap": 0,
+      "family": "m2-passage-draft",
+      "immediateSameEstimandEligible": 0,
+      "lineageStateCore": {
+        "NONE": 2
+      },
+      "linkedBlankEvidenceCore": 0,
+      "nearOverlapCodes": {
+        "FIVE_GRAM_SIMILARITY": 1
+      },
+      "netIncrementalAfterV3AndEarlierInventory": 0,
+      "netIncrementalLineageState": {},
+      "netIncrementalLinkedBlankButNotYetEligible": 0,
+      "netIncrementalOfficialTypeTagged": 0,
+      "netIncrementalOfficialTypeTaggedWithSourceRefOrOriginalFileLocator": 0,
+      "netIncrementalReviewState": {},
+      "netIncrementalRightsStatus": {},
+      "officialTypeTaggedCore": 0,
+      "officialTypeTaggedWithSourceRefOrOriginalFileLocatorCore": 0,
+      "reviewedOrCommittedCore": 0,
+      "reviewState": {
+        "DRAFT": 2
+      },
+      "rightsStatus": {
+        "CUSTOMER_UPLOAD_RIGHTS_NOT_RECORDED": 2
+      },
+      "rows": 3,
+      "sourceMaterialType": {
+        "OTHER": 2
+      },
+      "uniqueNormalizedContent": 3
+    },
+    {
+      "allExactOrNearV3Overlap": 553,
+      "automaticCleanUnique": 582,
+      "coreEnglishUnique": 859,
+      "distinctAcademiesPrivateOnly": 35,
+      "distinctSourceDocuments": 174,
+      "earlierFamilyExactOrNearOverlap": 10,
+      "earlierWithinFamilyExactOrNearOverlap": 0,
+      "exactOrMarkupV3Overlap": 330,
+      "family": "extraction-item-passage",
+      "immediateSameEstimandEligible": 0,
+      "lineageStateCore": {
+        "NONE": 859
+      },
+      "linkedBlankEvidenceCore": 94,
+      "nearOverlapCodes": {
+        "EXACT_NORMALIZED_HASH": 267,
+        "FIVE_GRAM_SIMILARITY": 222,
+        "LONG_CONTIGUOUS_OVERLAP": 1,
+        "MARKUP_STRIPPED_EXACT": 63
+      },
+      "netIncrementalAfterV3AndEarlierInventory": 19,
+      "netIncrementalLineageState": {
+        "NONE": 19
+      },
+      "netIncrementalLinkedBlankButNotYetEligible": 3,
+      "netIncrementalOfficialTypeTagged": 16,
+      "netIncrementalOfficialTypeTaggedWithSourceRefOrOriginalFileLocator": 0,
+      "netIncrementalReviewState": {
+        "DRAFT": 19
+      },
+      "netIncrementalRightsStatus": {
+        "CUSTOMER_UPLOAD_RIGHTS_NOT_RECORDED": 14,
+        "OFFICIAL_EXAM_PROVENANCE_LICENSE_NOT_RECORDED": 5
+      },
+      "officialTypeTaggedCore": 261,
+      "officialTypeTaggedWithSourceRefOrOriginalFileLocatorCore": 0,
+      "reviewedOrCommittedCore": 0,
+      "reviewState": {
+        "DRAFT": 859
+      },
+      "rightsStatus": {
+        "CUSTOMER_UPLOAD_RIGHTS_NOT_RECORDED": 757,
+        "OFFICIAL_EXAM_PROVENANCE_LICENSE_NOT_RECORDED": 102
+      },
+      "rows": 3025,
+      "sourceMaterialType": {
+        "EXAM": 159,
+        "NONE": 9,
+        "OTHER": 549,
+        "SUNEUNG": 102,
+        "TEXTBOOK": 26,
+        "WORKBOOK": 14
+      },
+      "uniqueNormalizedContent": 1207
+    },
+    {
+      "allExactOrNearV3Overlap": 520,
+      "automaticCleanUnique": 548,
+      "coreEnglishUnique": 797,
+      "distinctAcademiesPrivateOnly": 34,
+      "distinctSourceDocuments": 154,
+      "earlierFamilyExactOrNearOverlap": 26,
+      "earlierWithinFamilyExactOrNearOverlap": 0,
+      "exactOrMarkupV3Overlap": 317,
+      "family": "extraction-result",
+      "immediateSameEstimandEligible": 0,
+      "lineageStateCore": {
+        "NONE": 797
+      },
+      "linkedBlankEvidenceCore": 0,
+      "nearOverlapCodes": {
+        "EXACT_NORMALIZED_HASH": 257,
+        "FIVE_GRAM_SIMILARITY": 202,
+        "LONG_CONTIGUOUS_OVERLAP": 1,
+        "MARKUP_STRIPPED_EXACT": 60
+      },
+      "netIncrementalAfterV3AndEarlierInventory": 2,
+      "netIncrementalLineageState": {
+        "NONE": 2
+      },
+      "netIncrementalLinkedBlankButNotYetEligible": 0,
+      "netIncrementalOfficialTypeTagged": 2,
+      "netIncrementalOfficialTypeTaggedWithSourceRefOrOriginalFileLocator": 0,
+      "netIncrementalReviewState": {
+        "DRAFT": 2
+      },
+      "netIncrementalRightsStatus": {
+        "CUSTOMER_UPLOAD_RIGHTS_NOT_RECORDED": 2
+      },
+      "officialTypeTaggedCore": 261,
+      "officialTypeTaggedWithSourceRefOrOriginalFileLocatorCore": 0,
+      "reviewedOrCommittedCore": 0,
+      "reviewState": {
+        "DRAFT": 797
+      },
+      "rightsStatus": {
+        "CUSTOMER_UPLOAD_RIGHTS_NOT_RECORDED": 697,
+        "OFFICIAL_EXAM_PROVENANCE_LICENSE_NOT_RECORDED": 100
+      },
+      "rows": 2933,
+      "sourceMaterialType": {
+        "EXAM": 161,
+        "OTHER": 499,
+        "SUNEUNG": 100,
+        "TEXTBOOK": 23,
+        "WORKBOOK": 14
+      },
+      "uniqueNormalizedContent": 1079
+    },
+    {
+      "allExactOrNearV3Overlap": 19,
+      "automaticCleanUnique": 19,
+      "coreEnglishUnique": 19,
+      "distinctAcademiesPrivateOnly": 0,
+      "distinctSourceDocuments": 0,
+      "earlierFamilyExactOrNearOverlap": 0,
+      "earlierWithinFamilyExactOrNearOverlap": 0,
+      "exactOrMarkupV3Overlap": 17,
+      "family": "local-hs-ms",
+      "immediateSameEstimandEligible": 0,
+      "lineageStateCore": {
+        "NONE": 19
+      },
+      "linkedBlankEvidenceCore": 0,
+      "nearOverlapCodes": {
+        "EXACT_NORMALIZED_HASH": 17,
+        "FIVE_GRAM_SIMILARITY": 2
+      },
+      "netIncrementalAfterV3AndEarlierInventory": 0,
+      "netIncrementalLineageState": {},
+      "netIncrementalLinkedBlankButNotYetEligible": 0,
+      "netIncrementalOfficialTypeTagged": 0,
+      "netIncrementalOfficialTypeTaggedWithSourceRefOrOriginalFileLocator": 0,
+      "netIncrementalReviewState": {},
+      "netIncrementalRightsStatus": {},
+      "officialTypeTaggedCore": 0,
+      "officialTypeTaggedWithSourceRefOrOriginalFileLocatorCore": 0,
+      "reviewedOrCommittedCore": 0,
+      "reviewState": {
+        "UNKNOWN": 19
+      },
+      "rightsStatus": {
+        "GENERIC_SOURCE_LABEL_RIGHTS_UNVERIFIED": 19
+      },
+      "rows": 36,
+      "sourceMaterialType": {
+        "NONE": 19
+      },
+      "uniqueNormalizedContent": 36
+    },
+    {
+      "allExactOrNearV3Overlap": 0,
+      "automaticCleanUnique": 1,
+      "coreEnglishUnique": 1,
+      "distinctAcademiesPrivateOnly": 0,
+      "distinctSourceDocuments": 0,
+      "earlierFamilyExactOrNearOverlap": 0,
+      "earlierWithinFamilyExactOrNearOverlap": 0,
+      "exactOrMarkupV3Overlap": 0,
+      "family": "local-test-restoration",
+      "immediateSameEstimandEligible": 0,
+      "lineageStateCore": {
+        "NONE": 1
+      },
+      "linkedBlankEvidenceCore": 0,
+      "nearOverlapCodes": {},
+      "netIncrementalAfterV3AndEarlierInventory": 1,
+      "netIncrementalLineageState": {
+        "NONE": 1
+      },
+      "netIncrementalLinkedBlankButNotYetEligible": 0,
+      "netIncrementalOfficialTypeTagged": 0,
+      "netIncrementalOfficialTypeTaggedWithSourceRefOrOriginalFileLocator": 0,
+      "netIncrementalReviewState": {
+        "UNKNOWN": 1
+      },
+      "netIncrementalRightsStatus": {
+        "PROJECT_SYNTHETIC_TEST_NOT_INDEPENDENT": 1
+      },
+      "officialTypeTaggedCore": 0,
+      "officialTypeTaggedWithSourceRefOrOriginalFileLocatorCore": 0,
+      "reviewedOrCommittedCore": 0,
+      "reviewState": {
+        "UNKNOWN": 1
+      },
+      "rightsStatus": {
+        "PROJECT_SYNTHETIC_TEST_NOT_INDEPENDENT": 1
+      },
+      "rows": 32,
+      "sourceMaterialType": {
+        "NONE": 1
+      },
+      "uniqueNormalizedContent": 32
+    },
+    {
+      "allExactOrNearV3Overlap": 0,
+      "automaticCleanUnique": 5,
+      "coreEnglishUnique": 5,
+      "distinctAcademiesPrivateOnly": 0,
+      "distinctSourceDocuments": 0,
+      "earlierFamilyExactOrNearOverlap": 0,
+      "earlierWithinFamilyExactOrNearOverlap": 0,
+      "exactOrMarkupV3Overlap": 0,
+      "family": "local-grammar-drill",
+      "immediateSameEstimandEligible": 0,
+      "lineageStateCore": {
+        "NONE": 5
+      },
+      "linkedBlankEvidenceCore": 0,
+      "nearOverlapCodes": {},
+      "netIncrementalAfterV3AndEarlierInventory": 5,
+      "netIncrementalLineageState": {
+        "NONE": 5
+      },
+      "netIncrementalLinkedBlankButNotYetEligible": 0,
+      "netIncrementalOfficialTypeTagged": 0,
+      "netIncrementalOfficialTypeTaggedWithSourceRefOrOriginalFileLocator": 0,
+      "netIncrementalReviewState": {
+        "UNKNOWN": 5
+      },
+      "netIncrementalRightsStatus": {
+        "PROJECT_CURRICULUM_NOT_PASSAGE_SOURCE": 5
+      },
+      "officialTypeTaggedCore": 0,
+      "officialTypeTaggedWithSourceRefOrOriginalFileLocatorCore": 0,
+      "reviewedOrCommittedCore": 0,
+      "reviewState": {
+        "UNKNOWN": 5
+      },
+      "rightsStatus": {
+        "PROJECT_CURRICULUM_NOT_PASSAGE_SOURCE": 5
+      },
+      "rows": 5,
+      "sourceMaterialType": {
+        "NONE": 5
+      },
+      "uniqueNormalizedContent": 5
+    }
+  ],
+  "historicalAsOfSupported": false,
+  "inputHashes": {
+    "codeHash": "ddb235f236839f95bd8cd09fbfe624216ebb348ecdcc83a4d061ab68b507e0a8",
+    "databaseExtractHash": "aa692b32fa8aa381d682b7980e5530bb5ec2962e88dac1e50b3d88fc9dc0b86b",
+    "databaseRecordSetHash": "32649133ce7cf2f850bed598175922c527cb5f7eaebde97175eabba236a459d1",
+    "dependencyFileCount": 150,
+    "dependencyManifestHash": "ddb235f236839f95bd8cd09fbfe624216ebb348ecdcc83a4d061ab68b507e0a8",
+    "gitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "localSourceHashes": {
+      "src/data/exam-passages-korean/passages.json": "ce53ec6714820903d72055083280bffeabe2e47bb9cc9f2691711015a79afb69",
+      "src/data/exam-passages/facets.json": "545403559e7acfe5261f4ab121d0c85d6c12523cba4b48462386509aeb72332e",
+      "src/data/exam-passages/passages.json": "4337bc34ba2f98cf9af708cdf27d27219fe7599bf30f03fb5fd4698e84347a6f",
+      "src/data/grammar-drill/concepts/u01.json": "37b8d82e32faffceaca6aa57d8c5b9bb78be02a9f9508a5f9674c94cb8240535",
+      "src/data/grammar-drill/concepts/u02.json": "769e282adabf1638895fe888281c2bee62163f09b3c3fd5283d5549bb0fa2e8b",
+      "src/data/grammar-drill/concepts/u03.json": "f6aea0eb6f5fd26c8c7fe027db278d9cfa238fa3a89ee0d571d2fc6f17cba2c0",
+      "src/data/grammar-drill/concepts/u04.json": "7d864fee9fde1ff71834e95369fc1b2c9b734b48ef21a0f825f5dbac7db98c41",
+      "src/data/grammar-drill/concepts/u05.json": "883702f8d221eca6a180240770d9fe846e73dfb7609c98d31846e68e00a2a4be",
+      "src/data/grammar-drill/concepts/u06.json": "4c5b54827e977cd40f7962a8ee95c881a919a1c0931c5f63806b4cd276e21b41",
+      "src/data/grammar-drill/concepts/u07.json": "ecc422b2cbf746cebb68b395c2ec9f2b770a09bf8ee1e3383dee9d47510dd6d6",
+      "src/data/grammar-drill/concepts/u08.json": "396154f0f9e385741dab719c9f3ddc06edab9129ddc8aa07251938ff515e6436",
+      "src/data/grammar-drill/concepts/u09.json": "9227e9f63fce30553e11f3c8988052475acef1e9af0f4a5727ff6ece3da95e39",
+      "src/data/grammar-drill/concepts/u10.json": "7e29f4c9f8e01885e4dff7f9c4722b8f6f7e8928b02446ea30cc06735fc83981",
+      "src/data/grammar-drill/concepts/u11.json": "f32f0b37ecbc69b7da79bc0cb660251110b63b494027cf8b3eeb136ed7721cb8",
+      "src/data/grammar-drill/concepts/u12.json": "1ab60a18370aa3f12f79f779f3eacb4cf5fda323323cdfc0ddc43f3aa6b1dd2e",
+      "src/data/grammar-drill/items/u01-choice.json": "de91652b2a0249c0300a93314705ab068dac3eb6c64dcc116978bc8eaee74ede",
+      "src/data/grammar-drill/items/u01-reading.json": "5424f2f184c148d4db6389a8077d17746d62dcaffdf1cc95f103019e4f403f37",
+      "src/data/grammar-drill/items/u01-support.json": "f3f1496ad2f2ff3f748c0f5189d48e786395515e31bfef7c1e3423164411e58b",
+      "src/data/grammar-drill/items/u02-choice.json": "8b4c305940520b1e5d14011cbb3a96e6d6c57a7bd0204fd239052550d271da6d",
+      "src/data/grammar-drill/items/u02-reading.json": "6aa363fa814ca1df91a9b82da7e133fe5445205479ee3a2efc9aa8776cefe254",
+      "src/data/grammar-drill/items/u02-support.json": "2335a76b25a7d9a3863f40f61f4c80a345b6d04df3590002a3f8adec3b64f34a",
+      "src/data/grammar-drill/items/u03-choice.json": "3a5d34972caadb7ebe450bfb41bce0baccc3aa54f0491da825ba0d8a123a6993",
+      "src/data/grammar-drill/items/u03-reading.json": "2dc2048693a0d2c0129d214f4b4f4f9e148d140561a6462e169668dca6567e10",
+      "src/data/grammar-drill/items/u03-support.json": "4722041a2832f1bcb2a178f17b585c23f2bb9aceb1f4ecfe59da93dbc40a2039",
+      "src/data/grammar-drill/items/u04-choice.json": "cb1af8f11e9ea9250c08357162742ff723a9665fd3230528c751b268c1e9dfcf",
+      "src/data/grammar-drill/items/u04-reading.json": "80d53f950b8950bdfceffe7857c5afa78df7619b971794eaf4d5e9b41d5aa46f",
+      "src/data/grammar-drill/items/u04-support.json": "fa654389db369943721690b3ede2576c3ad2a786f053a66e69df716563a160f8",
+      "src/data/grammar-drill/items/u05-choice.json": "fd500d6247d305587877e16ceb10442476f262079be23ab4ac27fb9e7f9839c5",
+      "src/data/grammar-drill/items/u05-reading.json": "a21a0e6a361bd41bd5e2aba3907193954bf52d1aa7cd5cf94311eb90edf67389",
+      "src/data/grammar-drill/items/u05-support.json": "5be1134857d81f324a11249d07f452ec49cc7d3807bb68d695b44f89ce70d6f6",
+      "src/data/grammar-drill/items/u06-choice.json": "d2b599e227d27382cfc203aec700416b8dbd7128235fe9462a9fae54b4010ec6",
+      "src/data/grammar-drill/items/u06-reading.json": "36591f9926bbdcc6bddc8b27bc2ec74148bed7612c1dbef0ce106048df130339",
+      "src/data/grammar-drill/items/u06-support.json": "0f5573c0242c1401907512821d01d68607d2b4664050aaf7f1fa0c8def463d5b",
+      "src/data/grammar-drill/items/u07-choice.json": "d18816b7dd0c5cfaeb9fc0d64c9c9f8bf558bf84aa69f8dab337e9a9237fc865",
+      "src/data/grammar-drill/items/u07-reading.json": "6dec65454467efe939e545df9269fd39ee88a5a2b54e2beabc601b5de54b5d51",
+      "src/data/grammar-drill/items/u07-support.json": "3e5d4690e3fe465b5b6385437794b6109a86fc79602c04c23de350ff0a3327fb",
+      "src/data/grammar-drill/items/u08-choice.json": "cd761d46c76709af8fc941ecef72ed4d1cd4f33c6d57aa3f67946022f6bccc72",
+      "src/data/grammar-drill/items/u08-reading.json": "3737906b1f287546a6798187dd2f5e01ce2570e9798f3c3b6c53cc7a71ee6441",
+      "src/data/grammar-drill/items/u08-support.json": "8950b198c9465232e695b4dddf8bf3690a0b63bddd8f1a3eecfc31f6277d7013",
+      "src/data/grammar-drill/items/u09-choice.json": "7e35736d2aad498de99de25b6cf2ba88b390292f8007d0ddebd90d80ae8c68cc",
+      "src/data/grammar-drill/items/u09-reading.json": "d4a16f327ed625a9faad41b399a8080a8a07c65c1e06f20054ca35892f8a1ae0",
+      "src/data/grammar-drill/items/u09-support.json": "51f3f99fa0de6cdedd339434051e668e0ba6c6b8ec446f0d8631029d1f361b4e",
+      "src/data/grammar-drill/items/u10-choice.json": "315e3ff07a2fdee71eced440dd24fb5b54fcb07314850a9cd13b79e2787f5c43",
+      "src/data/grammar-drill/items/u10-reading.json": "68d9639b2f3b74ffab95ea70c9fe2c1413cee99f867f75d9053d23eb08005a0d",
+      "src/data/grammar-drill/items/u10-support.json": "6e9e22934a6038365d77c01cc948ce0fbea82fa2b58638b3c64ad4b5c9ba01ea",
+      "src/data/grammar-drill/items/u11-choice.json": "6cb318caa0544e4045525922ad52c1403e6ce7baafb2e24f612d16d6ca4b509c",
+      "src/data/grammar-drill/items/u11-reading.json": "54219fb9d4aa2787324712d47226314c8d814c952e04c589e84cda3c8197ced7",
+      "src/data/grammar-drill/items/u11-support.json": "dc6faad4f88d9bdbbf6c4159c33292c67db7e0d930daf76053e2c93f79f6a535",
+      "src/data/grammar-drill/items/u12-choice.json": "f06e1463ceb4db29bc0c56940e517b3ae5d049b77ad05cbab20edab9180edfcd",
+      "src/data/grammar-drill/items/u12-reading.json": "cd9cff13e79eeea31e198f1680a085ff585b585592b057a159f8f762e862283c",
+      "src/data/grammar-drill/items/u12-support.json": "26d588af8ea564bc7a640ce85d3575e5a07194583e8eeaa476dc586532c72536",
+      "src/data/grammar-drill/lessons/b01-c1.json": "1a3f0d6cf24b79d8457e6fb5a1312f929aa99571d0daecc4a56d5db08f08bc18",
+      "src/data/grammar-drill/lessons/b01-c2.json": "f4e95c3db9845b78e893bc643712b6c574ad1d09d485e55044b5505231ceb850",
+      "src/data/grammar-drill/lessons/b01-c3.json": "df4f3073031bee9e8f8af6f50eb3c64c64735a6c9b9d70cf04fa1a181e1ce25e",
+      "src/data/grammar-drill/lessons/b01-c4.json": "3a76bfc9893ea1e2805b7a2af95529fd87ee4f359c904e6f5f3be8d6f22ab0fb",
+      "src/data/grammar-drill/lessons/b02-c1.json": "f0680ca5ad2b413d9e63ee33e45b8011cc7db846b9c59264d67e641acfb7c6cf",
+      "src/data/grammar-drill/lessons/b02-c2.json": "aeb4c1dabc81222f720c3bcda5311ec9ee967cfdeda672a5c9630ff5eb2aaac9",
+      "src/data/grammar-drill/lessons/b02-c3.json": "8352085fba5f42e39a620aac9655e9519e40f9505277172f4b333b6e0f5fe209",
+      "src/data/grammar-drill/lessons/b02-c4.json": "43aed5de5fbef5134c7214f30084ad36911084e07ec54a06bde7abf4d4b76939",
+      "src/data/grammar-drill/lessons/b03-c1.json": "8755ccd95bfc55998dc7c1069e90460a71706bf6c7bbefc9ab3b8b59506b2e82",
+      "src/data/grammar-drill/lessons/b03-c2.json": "5cf3ea2d4d0f8a28e856105c89e6856b93a3e9ff5ca904610a20b6e8b0db1ca0",
+      "src/data/grammar-drill/lessons/b03-c3.json": "37236088b1ff8c85f203dc687095ed5fdddac693ca2097caa23a6dbf88ba161a",
+      "src/data/grammar-drill/lessons/b03-c4.json": "fdef05019c4d2cf1777f9ba67e84868ede98ffa596a3fab4a05f33401a514de7",
+      "src/data/grammar-drill/lessons/b03-c5.json": "886cf8b392845ecbfa6f347b2df95888c5e47ca0dd3c8e4385674a4a6d53d6d1",
+      "src/data/grammar-drill/lessons/b04-c1.json": "34e8866db5b868ce20e45cd76372aa1f46ad83619fc3c0383d702d1fac39961f",
+      "src/data/grammar-drill/lessons/b04-c2.json": "cacac46ce1fa92f315001b988a5303161d5935dfbe0da148e29652b013bbba67",
+      "src/data/grammar-drill/lessons/b04-c3.json": "ce74a84ee7023319925f702b1d7a83ccb998d4f9a7a412d48d83e9b6a9ee1715",
+      "src/data/grammar-drill/lessons/b05-c1.json": "e33ebd77b6e90ed1bb6851de94070baa5c3a47e1231f19b5c396bcaf44d18704",
+      "src/data/grammar-drill/lessons/b05-c2.json": "93478d797ac16c56a4a2879b5bf60c3867a407475c521ba3382e4e8db36d2942",
+      "src/data/grammar-drill/lessons/b05-c3.json": "0d96fc95eb40d7c8ca1a91752d941d9910ec4d1b25e717f68837f137d42dc5cc",
+      "src/data/grammar-drill/lessons/b05-c4.json": "7799684245e5154e21e646eb92c1dc41bbd7c366e694f3320beb4a4065c239a0",
+      "src/data/grammar-drill/lessons/b06-c1.json": "12ce31f8e1407df9ab2285018b29cd7d7517d056ef2fc1f19f3e0c98a4667c20",
+      "src/data/grammar-drill/lessons/b06-c2.json": "381f45b408c51e547f56ded1e2dde1909fac9aa79e6ac9f77267508d98813d09",
+      "src/data/grammar-drill/lessons/b06-c3.json": "da93888939bc8d8c7332f4b2a88f588418e9276bd1317ac15b0c2250a926438e",
+      "src/data/grammar-drill/lessons/b06-c4.json": "c949c24a2305de246225bf636e2d546ab0a4440e91d53cf47a1285902aac61d4",
+      "src/data/grammar-drill/lessons/b07-c1.json": "e1455002b5e0ed5862991c393b77cf75ad2d267cfd403ce2b39f99cd8b383f76",
+      "src/data/grammar-drill/lessons/b07-c2.json": "68bd0f37653d7a39dc78f183b909a500b4a2015a364146bceb15b54a9b67b3ed",
+      "src/data/grammar-drill/lessons/b07-c3.json": "a98309a2fd2c65fe64436b4ed4a3ad76c1fc14a1d592dc06fffb89f2f0f1abd1",
+      "src/data/grammar-drill/lessons/b07-c4.json": "2d6e1de11179c96915c6a6cd164fe1113cd8e69b959bb5ecc0aa3aab093ccc01",
+      "src/data/grammar-drill/lessons/u01-c1.json": "4604886b030550ea636515c6f49462956e451834f1200886c52c444a51dffc2d",
+      "src/data/grammar-drill/lessons/u01-c2.json": "677f3644491256553c7d730b53265c74a0847a8c7ff25834907fe1d24aeb2ee8",
+      "src/data/grammar-drill/lessons/u01-c3.json": "05f40e4e9c39a64e2f63b4662da337a645554c25d4ef7e437a5a286bb153ee50",
+      "src/data/grammar-drill/lessons/u01-c4.json": "8ea454c927e254630221f8b55be08dc55591300f45d34063943fcb785ba562b0",
+      "src/data/grammar-drill/lessons/u02-c1.json": "53f9052f18bcf75a595e022473d530370ae5c6548c9ec393a826229d8b061616",
+      "src/data/grammar-drill/lessons/u02-c2.json": "95bf2010517fe6e8e69b03f3183abb6d04e3f55cd377865edd36ff5dc2ac64fd",
+      "src/data/grammar-drill/lessons/u02-c3.json": "6c3a3b3460d97f80cc30b285c63b3084ab224cb32a2f7aeb570e1d3b00a96b6b",
+      "src/data/grammar-drill/lessons/u02-c4.json": "97f0be0b6c484149cb411dd479c9efd094c0ce9f9bac524cc63b0218faf5c936",
+      "src/data/grammar-drill/lessons/u03-c1.json": "81933d63f6be127c72eefb8b24d6e0b0a3c6de4f0cec62f7e4b6fa09d8441bcb",
+      "src/data/grammar-drill/lessons/u03-c2.json": "ad4522a4a2a5419f1152147a5f685f5eeb3c63923ca3c75c61dbf9ea413037a5",
+      "src/data/grammar-drill/lessons/u03-c3.json": "1ed7562ee91c54877becf1d945aec5fc8bba0a11e0221ed6024c572e056bc119",
+      "src/data/grammar-drill/lessons/u03-c4.json": "24d5abf793764f86aa86321ded903a9a4e35235890f339697b0975ad9286e4fa",
+      "src/data/grammar-drill/lessons/u04-c1.json": "ed9bb010bb666ec86d6fe43536bcf61ca54c18c081cf7692908d634b971a5b2b",
+      "src/data/grammar-drill/lessons/u04-c2.json": "e9bb1247673bc7f9f3a0482bb91775b527573425db2481eb96c2df2271021805",
+      "src/data/grammar-drill/lessons/u04-c3.json": "c44adeb95dd675a10ef5f0c7b57106334cc0d55e072dc607b2bec5475b2ff14b",
+      "src/data/grammar-drill/lessons/u04-c4.json": "7688d10b7b92387f40bfdf5b6a1f9c84fec065572f16d59c25eed12866b1b70b",
+      "src/data/grammar-drill/lessons/u05-c1.json": "5660bf86459a11eab94f90d5fc3346ce19b5833a2ef49ac614218f0e186f924c",
+      "src/data/grammar-drill/lessons/u05-c2.json": "3b4fc720bf7235e1991c8a89c10eafece7c14651dd01177e15c1fbe7e3c4504e",
+      "src/data/grammar-drill/lessons/u05-c3.json": "05c509575d31b30db8834d8d6374f9ce32f63a9394bcbfe7a6930c5cdf65fd31",
+      "src/data/grammar-drill/lessons/u05-c4.json": "39db59188f8d83376c271fa5b8538ce378e64bbb67367567accca37a6410ce5f",
+      "src/data/grammar-drill/lessons/u06-c1.json": "48726c24525d07bf411f819aa6397e574380d3d6ee2bf6d6fc40f91c4e917560",
+      "src/data/grammar-drill/lessons/u06-c2.json": "2463ff90545e96de4813a7e4df2710fb6835b062f03701b53d160c01c9fb1bed",
+      "src/data/grammar-drill/lessons/u06-c3.json": "d9ae3f0a93a357f5a85e813ec7426061adec60c3950f3491338fca9a74cb640b",
+      "src/data/grammar-drill/lessons/u06-c4.json": "2b22be59d2dccc64ce70f78ad9437b92e908e303fd947a2d5c6ac0ec8e42b7f3",
+      "src/data/grammar-drill/lessons/u07-c1.json": "3ea1f51b40611e528ba235750cf02558fbfb0a192954b1519899ef076c08d139",
+      "src/data/grammar-drill/lessons/u07-c2.json": "d079c8da5dc9eab3f20e8c6354d51947b4e6c61ec09bb0e1f4979cf819ec5b10",
+      "src/data/grammar-drill/lessons/u07-c3.json": "dd5db75f3548d16bee817eeaafe6a76b9388dc83198b8717a91c2d0ee70861d9",
+      "src/data/grammar-drill/lessons/u07-c4.json": "4ccc1dda1c877d94dd03b41da8b04cb9ea3c7265dfe1065ad5a584da3a46c346",
+      "src/data/grammar-drill/lessons/u08-c1.json": "d4e2beb62b5fe164ff53f12e5ee2c3324af4e194f9e213c4c3fcd0fc61657cf4",
+      "src/data/grammar-drill/lessons/u08-c2.json": "32d2c8c0a7c34be80f2384883abf961c9e98790141e28291916ec2b848383bdc",
+      "src/data/grammar-drill/lessons/u08-c3.json": "380b166187a3a4ec56f78146ae48abfb5120a47e3f4c362dade29fddb85d7b23",
+      "src/data/grammar-drill/lessons/u09-c1.json": "4d74bde9bd94d9c367feb8c37dfc3b149fb0d0e16a1b4a75249dc661dba4e204",
+      "src/data/grammar-drill/lessons/u09-c2.json": "6fe1c05bf1458c4ac47aae4d21f7d4ec6b6199ede453d4ab01d513fcba5341e6",
+      "src/data/grammar-drill/lessons/u09-c3.json": "63b50a010944ee64a94ec009897545164b1329501f65d1ea08fbd70925e3000f",
+      "src/data/grammar-drill/lessons/u09-c4.json": "12cfecb3cb859206eeef5bd89a9499c2112f8802053c453c0dc73b45e3382e8c",
+      "src/data/grammar-drill/lessons/u10-c1.json": "486e474fd03dc8eab3eafefd68f258388f9dcf844a39f6fddb066985138da5f4",
+      "src/data/grammar-drill/lessons/u10-c2.json": "536927d5dbdc38238a01029c78badf31700ff415ef2224f829464952d8a407dd",
+      "src/data/grammar-drill/lessons/u10-c3.json": "122525df56aaa4070cc2e703827e321bddf5a2b7fe6709a00d1603d94142d9e9",
+      "src/data/grammar-drill/lessons/u10-c4.json": "6084425766003d626161d71d4c43b6c7f8d20ecbbfcfdb7699b47ac0a9ae2b51",
+      "src/data/grammar-drill/lessons/u11-c1.json": "fb8591222071b8ea8c734badb0e9adad3b863f9c8c784328d8d993fea0f19a53",
+      "src/data/grammar-drill/lessons/u11-c2.json": "c3c5aef7b5ee58b00a395840621decaf68eb4315c0ee323e98f17ef3504bf350",
+      "src/data/grammar-drill/lessons/u11-c3.json": "f71597a62d2516ac212259f260cbffabaf9a28326df420c4fdc9d812131f1057",
+      "src/data/grammar-drill/lessons/u11-c4.json": "86add4dafcd7764364c2a7f07468bc2563a3373cd19d9711be8d0a51a9dd9d08",
+      "src/data/grammar-drill/lessons/u12-c1.json": "41b0feca87f3389269807318a2d843e08c1d751a689c2130646a4637e1f9f4dd",
+      "src/data/grammar-drill/lessons/u12-c2.json": "0739b8920061ae88e913195c5d155ba2e1ca46ec66b978432f1d6ef498d2f61a",
+      "src/data/grammar-drill/lessons/u12-c3.json": "cb445c7e631e8f45f66e1cbbd578a1101a1702697dc6049c3e5fa6de3aa23235",
+      "src/data/grammar-drill/lessons/u12-c4.json": "f88cb4eea048fd85a7edea31c1e4afc3cebb7a1f6f005abecbacfa62ea89cde6",
+      "src/data/grammar-drill/mixed/final.json": "4ad476d2abbb809797d1bc0025e45477e3e79da8bfc6da8af87736c3cec79f65",
+      "src/data/grammar-drill/mixed/set1.json": "abb28b1182bc0e3a40dcbfc31dc41723902e9646b7f2717b92ab073d7fbcd902",
+      "src/data/grammar-drill/mixed/set2.json": "aa72f6e494c6b5eaedeab028a4fe7fbb743a0164b5bef71ec264fa6967bd4e23",
+      "src/data/suneung-wanseong/passages.json": "348bbf96a17f3bf159e7ff3391ee941652806d37f5574c52a08d204abc530944"
+    },
+    "repositoryGit": {
+      "dependencyDirty": true,
+      "dependencyDirtyPaths": [
+        "experiments/question-quality-20260715/corpus/selector-core.ts",
+        "experiments/question-quality-20260715/corpus/v2/history-index.ts",
+        "experiments/question-quality-20260715/corpus/v2/selector-core-v2.ts",
+        "experiments/question-quality-20260715/corpus/v3/history-v3.ts",
+        "experiments/question-quality-20260715/corpus/v3/private/input-snapshot.json",
+        "experiments/question-quality-20260715/corpus/v3/queue-sizing.ts",
+        "experiments/question-quality-20260715/corpus/v3/snapshot-v3.ts",
+        "experiments/question-quality-20260715/corpus/v3/types-v3.ts",
+        "experiments/question-quality-20260715/corpus/v4-supply/build-inventory-v4.ts",
+        "experiments/question-quality-20260715/corpus/v4-supply/inventory-core-v4.ts",
+        "experiments/question-quality-20260715/corpus/v4-supply/types-v4.ts",
+        "prisma/schema.prisma",
+        "src/data/grammar-drill/lessons/b01-c1.json",
+        "src/data/grammar-drill/lessons/b01-c2.json",
+        "src/data/grammar-drill/lessons/b01-c3.json",
+        "src/data/grammar-drill/lessons/b01-c4.json",
+        "src/data/grammar-drill/lessons/b02-c1.json",
+        "src/data/grammar-drill/lessons/b02-c2.json",
+        "src/data/grammar-drill/lessons/b02-c3.json",
+        "src/data/grammar-drill/lessons/b02-c4.json",
+        "src/data/grammar-drill/lessons/b03-c1.json",
+        "src/data/grammar-drill/lessons/b03-c2.json",
+        "src/data/grammar-drill/lessons/b03-c3.json",
+        "src/data/grammar-drill/lessons/b03-c4.json",
+        "src/data/grammar-drill/lessons/b03-c5.json",
+        "src/data/grammar-drill/lessons/b04-c1.json",
+        "src/data/grammar-drill/lessons/b04-c2.json",
+        "src/data/grammar-drill/lessons/b04-c3.json",
+        "src/data/grammar-drill/lessons/b05-c1.json",
+        "src/data/grammar-drill/lessons/b05-c2.json",
+        "src/data/grammar-drill/lessons/b05-c3.json",
+        "src/data/grammar-drill/lessons/b05-c4.json",
+        "src/data/grammar-drill/lessons/b06-c1.json",
+        "src/data/grammar-drill/lessons/b06-c2.json",
+        "src/data/grammar-drill/lessons/b06-c3.json",
+        "src/data/grammar-drill/lessons/b06-c4.json",
+        "src/data/grammar-drill/lessons/b07-c1.json",
+        "src/data/grammar-drill/lessons/b07-c2.json",
+        "src/data/grammar-drill/lessons/b07-c3.json",
+        "src/data/grammar-drill/lessons/b07-c4.json",
+        "src/data/grammar-drill/lessons/u01-c1.json",
+        "src/data/grammar-drill/lessons/u01-c2.json",
+        "src/data/grammar-drill/lessons/u01-c3.json",
+        "src/data/grammar-drill/lessons/u01-c4.json",
+        "src/data/grammar-drill/lessons/u02-c1.json",
+        "src/data/grammar-drill/lessons/u02-c2.json",
+        "src/data/grammar-drill/lessons/u02-c3.json",
+        "src/data/grammar-drill/lessons/u02-c4.json",
+        "src/data/grammar-drill/lessons/u03-c1.json",
+        "src/data/grammar-drill/lessons/u03-c2.json",
+        "src/data/grammar-drill/lessons/u03-c3.json",
+        "src/data/grammar-drill/lessons/u03-c4.json",
+        "src/data/grammar-drill/lessons/u04-c1.json",
+        "src/data/grammar-drill/lessons/u04-c2.json",
+        "src/data/grammar-drill/lessons/u04-c3.json",
+        "src/data/grammar-drill/lessons/u04-c4.json",
+        "src/data/grammar-drill/lessons/u05-c1.json",
+        "src/data/grammar-drill/lessons/u05-c2.json",
+        "src/data/grammar-drill/lessons/u05-c3.json",
+        "src/data/grammar-drill/lessons/u05-c4.json",
+        "src/data/grammar-drill/lessons/u06-c1.json",
+        "src/data/grammar-drill/lessons/u06-c2.json",
+        "src/data/grammar-drill/lessons/u06-c3.json",
+        "src/data/grammar-drill/lessons/u06-c4.json",
+        "src/data/grammar-drill/lessons/u07-c1.json",
+        "src/data/grammar-drill/lessons/u07-c2.json",
+        "src/data/grammar-drill/lessons/u07-c3.json",
+        "src/data/grammar-drill/lessons/u07-c4.json",
+        "src/data/grammar-drill/lessons/u08-c1.json",
+        "src/data/grammar-drill/lessons/u08-c2.json",
+        "src/data/grammar-drill/lessons/u08-c3.json",
+        "src/data/grammar-drill/lessons/u09-c1.json",
+        "src/data/grammar-drill/lessons/u09-c2.json",
+        "src/data/grammar-drill/lessons/u09-c3.json",
+        "src/data/grammar-drill/lessons/u09-c4.json",
+        "src/data/grammar-drill/lessons/u10-c1.json",
+        "src/data/grammar-drill/lessons/u10-c2.json",
+        "src/data/grammar-drill/lessons/u10-c3.json",
+        "src/data/grammar-drill/lessons/u10-c4.json",
+        "src/data/grammar-drill/lessons/u11-c1.json",
+        "src/data/grammar-drill/lessons/u11-c2.json",
+        "src/data/grammar-drill/lessons/u11-c3.json",
+        "src/data/grammar-drill/lessons/u11-c4.json",
+        "src/data/grammar-drill/lessons/u12-c1.json",
+        "src/data/grammar-drill/lessons/u12-c2.json",
+        "src/data/grammar-drill/lessons/u12-c3.json",
+        "src/data/grammar-drill/lessons/u12-c4.json"
+      ],
+      "dependencyUntrackedPaths": [
+        "experiments/question-quality-20260715/corpus/selector-core.ts",
+        "experiments/question-quality-20260715/corpus/v2/history-index.ts",
+        "experiments/question-quality-20260715/corpus/v2/selector-core-v2.ts",
+        "experiments/question-quality-20260715/corpus/v3/history-v3.ts",
+        "experiments/question-quality-20260715/corpus/v3/private/input-snapshot.json",
+        "experiments/question-quality-20260715/corpus/v3/queue-sizing.ts",
+        "experiments/question-quality-20260715/corpus/v3/snapshot-v3.ts",
+        "experiments/question-quality-20260715/corpus/v3/types-v3.ts",
+        "experiments/question-quality-20260715/corpus/v4-supply/build-inventory-v4.ts",
+        "experiments/question-quality-20260715/corpus/v4-supply/inventory-core-v4.ts",
+        "experiments/question-quality-20260715/corpus/v4-supply/types-v4.ts",
+        "src/data/grammar-drill/lessons/b01-c1.json",
+        "src/data/grammar-drill/lessons/b01-c2.json",
+        "src/data/grammar-drill/lessons/b01-c3.json",
+        "src/data/grammar-drill/lessons/b01-c4.json",
+        "src/data/grammar-drill/lessons/b02-c1.json",
+        "src/data/grammar-drill/lessons/b02-c2.json",
+        "src/data/grammar-drill/lessons/b02-c3.json",
+        "src/data/grammar-drill/lessons/b02-c4.json",
+        "src/data/grammar-drill/lessons/b03-c1.json",
+        "src/data/grammar-drill/lessons/b03-c2.json",
+        "src/data/grammar-drill/lessons/b03-c3.json",
+        "src/data/grammar-drill/lessons/b03-c4.json",
+        "src/data/grammar-drill/lessons/b03-c5.json",
+        "src/data/grammar-drill/lessons/b04-c1.json",
+        "src/data/grammar-drill/lessons/b04-c2.json",
+        "src/data/grammar-drill/lessons/b04-c3.json",
+        "src/data/grammar-drill/lessons/b05-c1.json",
+        "src/data/grammar-drill/lessons/b05-c2.json",
+        "src/data/grammar-drill/lessons/b05-c3.json",
+        "src/data/grammar-drill/lessons/b05-c4.json",
+        "src/data/grammar-drill/lessons/b06-c1.json",
+        "src/data/grammar-drill/lessons/b06-c2.json",
+        "src/data/grammar-drill/lessons/b06-c3.json",
+        "src/data/grammar-drill/lessons/b06-c4.json",
+        "src/data/grammar-drill/lessons/b07-c1.json",
+        "src/data/grammar-drill/lessons/b07-c2.json",
+        "src/data/grammar-drill/lessons/b07-c3.json",
+        "src/data/grammar-drill/lessons/b07-c4.json",
+        "src/data/grammar-drill/lessons/u01-c1.json",
+        "src/data/grammar-drill/lessons/u01-c2.json",
+        "src/data/grammar-drill/lessons/u01-c3.json",
+        "src/data/grammar-drill/lessons/u01-c4.json",
+        "src/data/grammar-drill/lessons/u02-c1.json",
+        "src/data/grammar-drill/lessons/u02-c2.json",
+        "src/data/grammar-drill/lessons/u02-c3.json",
+        "src/data/grammar-drill/lessons/u02-c4.json",
+        "src/data/grammar-drill/lessons/u03-c1.json",
+        "src/data/grammar-drill/lessons/u03-c2.json",
+        "src/data/grammar-drill/lessons/u03-c3.json",
+        "src/data/grammar-drill/lessons/u03-c4.json",
+        "src/data/grammar-drill/lessons/u04-c1.json",
+        "src/data/grammar-drill/lessons/u04-c2.json",
+        "src/data/grammar-drill/lessons/u04-c3.json",
+        "src/data/grammar-drill/lessons/u04-c4.json",
+        "src/data/grammar-drill/lessons/u05-c1.json",
+        "src/data/grammar-drill/lessons/u05-c2.json",
+        "src/data/grammar-drill/lessons/u05-c3.json",
+        "src/data/grammar-drill/lessons/u05-c4.json",
+        "src/data/grammar-drill/lessons/u06-c1.json",
+        "src/data/grammar-drill/lessons/u06-c2.json",
+        "src/data/grammar-drill/lessons/u06-c3.json",
+        "src/data/grammar-drill/lessons/u06-c4.json",
+        "src/data/grammar-drill/lessons/u07-c1.json",
+        "src/data/grammar-drill/lessons/u07-c2.json",
+        "src/data/grammar-drill/lessons/u07-c3.json",
+        "src/data/grammar-drill/lessons/u07-c4.json",
+        "src/data/grammar-drill/lessons/u08-c1.json",
+        "src/data/grammar-drill/lessons/u08-c2.json",
+        "src/data/grammar-drill/lessons/u08-c3.json",
+        "src/data/grammar-drill/lessons/u09-c1.json",
+        "src/data/grammar-drill/lessons/u09-c2.json",
+        "src/data/grammar-drill/lessons/u09-c3.json",
+        "src/data/grammar-drill/lessons/u09-c4.json",
+        "src/data/grammar-drill/lessons/u10-c1.json",
+        "src/data/grammar-drill/lessons/u10-c2.json",
+        "src/data/grammar-drill/lessons/u10-c3.json",
+        "src/data/grammar-drill/lessons/u10-c4.json",
+        "src/data/grammar-drill/lessons/u11-c1.json",
+        "src/data/grammar-drill/lessons/u11-c2.json",
+        "src/data/grammar-drill/lessons/u11-c3.json",
+        "src/data/grammar-drill/lessons/u11-c4.json",
+        "src/data/grammar-drill/lessons/u12-c1.json",
+        "src/data/grammar-drill/lessons/u12-c2.json",
+        "src/data/grammar-drill/lessons/u12-c3.json",
+        "src/data/grammar-drill/lessons/u12-c4.json"
+      ],
+      "dirty": true,
+      "dirtyPathCount": 1938,
+      "headSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+      "untrackedPathCount": 1874
+    }
+  },
+  "inventorySnapshotHash": "5346734a689d67aaa425daff3b17c3a7b910b741f25e7f8a2e1c79cfac0d01f6",
+  "privacy": {
+    "academyIdentifiersPublic": false,
+    "privateSnapshotGitIgnored": true,
+    "rawPassagesPublic": false
+  },
+  "recommendation": "Choose V4-A if the original v3 claim is mandatory. Until new rights-cleared independent supply exists, use V4-B for measurement only; never relabel V4-B/C as v3 certification.",
+  "repoBlankAlternativeStrata": {
+    "centralLongV3Estimand": 59,
+    "long150PlusLocalOrNoPivotSeparateEstimand": 43,
+    "short120To149SeparateEstimand": 300,
+    "sourceGateAndHistoryClean": 402
+  },
+  "reportSha256": "0253c1600c5e4b29891a0b296fb901700414490c9e491fd54ba4e2e6192278af",
+  "schemaVersion": 4,
+  "sourceDiagnostics": {
+    "apiCalls": 0,
+    "browserCalls": 0,
+    "capture": {
+      "captureWindow": {
+        "completedAt": "2026-07-14T18:41:44.157Z",
+        "startedAt": "2026-07-14T18:41:36.168Z"
+      },
+      "databaseExtractHash": "aa692b32fa8aa381d682b7980e5530bb5ec2962e88dac1e50b3d88fc9dc0b86b",
+      "databaseRecordSetHash": "32649133ce7cf2f850bed598175922c527cb5f7eaebde97175eabba236a459d1",
+      "historicalAsOfSupported": false,
+      "semantics": "CURRENT_STATE_READ_ONLY_CAPTURE_NOT_HISTORICAL_AS_OF"
+    },
+    "committedDatabase": {
+      "databaseWrites": 0,
+      "nonEnglishRowsExcluded": 1,
+      "normalizedContentGroups": 1872,
+      "passageRows": 2733,
+      "priorUsedGroups": 1527,
+      "queriedPassageRows": 2734,
+      "queryKinds": [
+        "Passage.findMany",
+        "Question.groupBy",
+        "WorkbenchAiJob.groupBy"
+      ],
+      "reviewedRows": 164,
+      "zeroPriorUseGroups": 345
+    },
+    "databaseWrites": 0,
+    "extraction": {
+      "allExtractionRowsObservedAsReadOnly": true,
+      "itemRows": 5586,
+      "linkedBlankPassageBodies": 667,
+      "m1Rows": 4715,
+      "m2Rows": 3,
+      "passageBodyRows": 3025,
+      "resultRows": 2933,
+      "sourceMaterialCounts": [
+        {
+          "_count": {
+            "_all": 20
+          },
+          "examType": "SUNEUNG",
+          "subject": "ENGLISH",
+          "type": "SUNEUNG"
+        },
+        {
+          "_count": {
+            "_all": 188
+          },
+          "examType": null,
+          "subject": "ENGLISH",
+          "type": "OTHER"
+        },
+        {
+          "_count": {
+            "_all": 1
+          },
+          "examType": null,
+          "subject": "KOREAN",
+          "type": "HANDOUT"
+        },
+        {
+          "_count": {
+            "_all": 54
+          },
+          "examType": null,
+          "subject": "ENGLISH",
+          "type": "HANDOUT"
+        },
+        {
+          "_count": {
+            "_all": 1
+          },
+          "examType": null,
+          "subject": "KOREAN",
+          "type": "OTHER"
+        },
+        {
+          "_count": {
+            "_all": 114
+          },
+          "examType": "MIDTERM",
+          "subject": "ENGLISH",
+          "type": "EXAM"
+        },
+        {
+          "_count": {
+            "_all": 1
+          },
+          "examType": null,
+          "subject": "ENGLISH",
+          "type": "WORKBOOK"
+        },
+        {
+          "_count": {
+            "_all": 1
+          },
+          "examType": "FINAL",
+          "subject": "ENGLISH",
+          "type": "EXAM"
+        },
+        {
+          "_count": {
+            "_all": 15
+          },
+          "examType": null,
+          "subject": "ENGLISH",
+          "type": "TEXTBOOK"
+        }
+      ],
+      "suneungPassageRows": 0
+    },
+    "local": {
+      "englishOfficialCatalog": "src/data/exam-passages/passages.json is already wholly represented in immutable v3 candidates.",
+      "experimentAndScriptJsonLineage": "Already blocking antecedent history in immutable v3; never counted as new v4 supply.",
+      "grammarDrillLongEnglishLeaves": 5,
+      "hsMsRows": 36,
+      "koreanCatalogs": "Out of English scope.",
+      "testRestorationRows": 32
+    }
+  },
+  "status": "SUPPLY_REMEDIATION_RESEARCH_ONLY",
+  "temporalSemantics": "CURRENT_STATE_READ_ONLY_CAPTURE_NOT_HISTORICAL_AS_OF",
+  "v3SnapshotHash": "c21777c8dcab7f6b46ed15e429fcb7840607e90bcbdd7c02ec607a8db02beb13",
+  "version": "2026-07-15-v4-supply-remediation-capture-contract-v2"
+}

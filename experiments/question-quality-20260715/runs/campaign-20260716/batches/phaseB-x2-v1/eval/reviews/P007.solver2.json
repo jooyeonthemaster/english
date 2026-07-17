@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "Seam: 'The specific response of tapping one's foot ... does seem to be a particularly human skill, but this does not exclude other species from showing genuine sensitivity to musical elements.' 문법적으로 완결(대명사 this는 앞 문장의 '발 구르기=인간 고유 능력'이라는 사실을 지시, does not exclude A from -ing 구문 정문). 논리적으로도 'but' 양보 대조를 정확히 실현: 특정 운동 반응(발 구르기)은 인간 고유일지 몰라도, 그것이 다른 종의 음악 요소에 대한 진짜 감수성을 배제하지는 않는다. 이어지는 문장들(개가 사이렌·색소폰·음정 어긋난 콘서티나에 반응)이 바로 '다른 종의 음악적 감수성' 근거로 뒷받침하며, 앞선 'animals are incapable of responding to pronounced rhythms 라는 주장은 틀렸다'는 논지와도 일관."
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "'this confirms that physical coordination is a prerequisite for experiencing sound' — 지문 논지와 정반대. 지문은 개가 발을 구르지(신체적 조율) 못해도 리듬·음악 요소에 반응한다고 주장한다. 신체적 조율이 소리 경험의 전제조건이라는 진술은 이 근거들과 모순되며, 'but' 뒤에 오면 대조가 아니라 앞 문장을 강화하는 방향이 되어 후속 반례 문장들과 단절된다."
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "'this proves animals only react to noise rather than structured musical rhythms' — 지문과 모순. 저자는 'animals are incapable of responding to pronounced rhythms 라는 주장이 틀렸다'고 명시했고, 개가 규칙적 리듬(jingling)과 특정 음(out of tune note)에 반응한 사례를 든다. 'only ... noise rather than structured rhythms'는 이를 부정하는 진술."
+    },
+    {
+      "label": "④",
+      "verdict": "incorrect",
+      "reason": "'this shows that human drumming patterns are evolutionary byproducts of fear' — 주제 이탈. 지문은 인간 드러밍의 진화적 기원이나 공포를 논하지 않는다. 'but' 대조 논리와도 무관하고 후속 문장(개의 음악 반응)과 연결되지 않는다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "incorrect",
+      "reason": "'this guarantees that non-human species can replicate complex melodies perfectly' — 과대 진술. 지문 근거는 개가 소리·리듬에 '반응/감수성'을 보인다는 것이지, 복잡한 멜로디를 '완벽히 재현(replicate perfectly)'한다는 것이 아니다. guarantees/perfectly의 강도가 anecdote 수준 근거를 크게 초과하여 논리적으로 성립하지 않는다."
+    }
+  ],
+  "note": "빈칸은 'but' 뒤 양보 대조 자리. 앞: 발 구르기 같은 특정 운동 반응은 인간 고유. 뒤: 개가 사이렌·색소폰·음정 어긋난 음에 반응(=다른 종의 음악적 감수성 근거). 이 흐름을 잇는 것은 ①뿐이며 문법·논리 모두 무결. 나머지는 지문과 모순(②③), 주제 이탈(④), 과대 일반화(⑤)로 배제. 정답 ① 단일, 신뢰도 high."
+}

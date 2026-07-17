@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "embrace their linguistic starting point to foster standard proficiency — 예시와 정확히 일치. 교사는 'I ain't got no pencil'을 거부하지 않고 받아주며(embrace) 'Oh, you don't have a pencil'로 표준형을 recast하여 표준영어 숙달을 기른다(foster standard proficiency). 후속 문장의 'language development'(표준 숙달)와 'attitudes toward school'(수용의 정서적 효과) 두 축을 모두 회수한다. 스펙트럼('rejection and correction' vs 'complete acceptance')의 중간 지대라는 지문 구도와도 부합."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "prioritize direct correction — 첫 문장의 '경제적 기회' 명분과 공명해 순간 끌리는 미끼. 그러나 이는 스펙트럼의 한쪽 극단인 'rejection and correction'이며, 예시의 교사는 직접 교정 대신 간접 recast를 사용한다. 예시가 직접 반증."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "validate their native dialects as the ultimate educational objective — 'complete acceptance' 극단에 끌리는 수험생용 미끼. 교사가 학생 발화를 수용하는 것은 맞지만, 첫 문장이 교육 목표를 표준영어(기회 접근)로 명시하므로 방언 인정이 '궁극적 교육 목표'라는 진술은 과잉이며 지문과 모순."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "assess their readiness for post-school opportunities by their dialect usage — 'post-high school education' 어휘를 재활용한 표면 매칭 미끼. 방언 사용으로 준비도를 평가한다는 내용은 지문에 전혀 없고, 예시의 교사 행동(수용+모델링)과도 무관."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "separate standard English instruction from their existing linguistic background — 예시는 정반대: 학생의 비표준 발화를 출발점 삼아 그 위에서 표준형을 가르친다. 분리가 아니라 연결이므로 지문 논리와 정면 충돌."
+    }
+  ],
+  "note": "렌즈: 최상위권 수험생 실전 풀이. 예시 문장('Oh, you don't have a pencil')이 빈칸의 결정적 단서 — 수용과 표준형 모델링의 결합만이 예시를 설명한다. ②는 도입부 경제 명분 앵커링, ③은 'complete acceptance' 극단 앵커링으로 각각 유혹하지만 둘 다 예시 또는 첫 문장이 직접 반증한다. 문법 seam은 5개 선지 모두 무결('is to + 원형'). 복수 정답 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "'avoid taking on more than you can handle'은 지문의 핵심 논지인 'don't know where to draw the line' + 'exercise some moderation'의 직접적 패러프레이즈. 결론 명령문('get involved in the most meaningful activities, and make sure you ___')이 논지 재진술 자리이므로 절제 처방이 정확히 들어맞음. 'make sure you' 뒤 동사원형 결합도 자연스러움."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong (attractive distractor)",
+      "reason": "가장 유혹적인 오답. 지문에 'reduce a large amount of your free time'이 명시되어 여가 시간 확보로 끌리게 설계됨. 그러나 자유시간 감소는 과다 가입의 '증상'으로 제시된 것이고, 저자가 명시한 처방은 여가 시간 배분이 아니라 활동 자체의 절제(moderation). 스트레스의 원인도 여가 부족이 아니라 'the tasks you absolutely need to complete'에 대한 부담. 논지 문장과의 정합성 검사에서 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "신문 예시의 'as perfect as you want it to be'를 재활용한 어휘 함정. 지문에서 완벽주의는 시간 압박(crunch)의 원인으로 묘사되므로 'strive for perfection in every task'는 메시지와 정반대."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "협업은 지문 어디에도 근거가 없음. 무관 선지."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'push your limits by taking new challenges'는 절제하라는 논지의 정반대. 자기계발 클리셰로 표면적 매력만 있음."
+    }
+  ],
+  "note": "5개 선지 모두 'make sure you' 뒤 동사원형으로 문법 결합(seam)은 동일하게 정문이므로 문법으로는 변별 불가 — 순수 논리 변별 문항. 실전 풀이에서 ②의 유혹을 실제로 느꼈으나(자유시간 언급 앵커링), 결론 명령문은 논지(절제) 재진술 자리라는 원칙으로 기각. 대안 해석 탐색에서도 ①外 옹호 가능한 후보 없음. 정답 단일, 난이도는 중하 수준으로 판단."
+}

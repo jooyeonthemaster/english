@@ -1,0 +1,35 @@
+{
+  "pid": "P087",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "\"By the age of fourteen, he had conceptualized his first invention\" — 'by + 과거 시점' 부사구는 그 시점까지의 완료를 요구하며, 뒤이어 'was attempting'(과거진행)이 오는 서사 흐름에서 과거완료 'had conceptualized'는 시제 위계상 정확하다. 타동사 conceptualize의 목적어(his first invention)도 갖추어져 형식적으로 결함이 없다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "\"the first invention that he successfully sold to Sheaffer Pen Company\" — 'that'은 목적격 관계대명사로, 관계절 내부에서 sold의 목적어 공백(he sold __ to X)을 채운다. 선행사가 'the first + 명사'일 때 that이 선호되는 전형적 환경이며, 전치사 잔류도 없어 정문이다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "\"Although he was working as a real estate agent ...\" — Although는 종속접속사로서 정형절(he was working)을 이끌고 있어 통사적으로 완전하다. 의미상으로도 '부동산 중개인으로 일하고 있었음에도 1930년대가 가장 생산적인 특허 시기였다'는 양보 관계가 성립한다. 원전은 While(시간)일 가능성이 높으나 Although로의 교체는 어법상 오류를 만들지 않는다. 단, (D)를 proving으로 유지한 채 Although 삭제로 문장을 구제하는 대안(절대구문화)이 이론상 존재하지만, 이는 밑줄 어휘의 '교체'가 아닌 '삭제'이므로 (C) 자체의 어법 오류로 볼 수 없다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "\"..., the 1930s proving to be his most productive patenting period\" — (C)의 Although절은 종속절이므로 주절에는 정형동사가 반드시 필요한데, 이 문장에서 주절 후보인 'the 1930s proving ...'의 동사가 비정형 분사 proving이어서 문장 전체가 정형동사 없는 단편(fragment)이 된다. 형식 증명: [Although + S + V(정형)] + [NP + V-ing] + [with-구] 구조에는 정형 주절이 존재하지 않는다. 절대구문(absolute construction) 해석은 주절이 따로 있어야 성립하는데 여기서는 주절이 없으므로 구제 불가. 유일한 최소 수정은 proving → proved (proved to be = '~로 판명되다', 연결동사적 자동사 용법)이며, 따라서 (D)가 어법상 틀린 부분이다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "\"with six of his nine U.S. patents being issued then\" — 'with + NP + 분사'의 부대상황 구문. 의미상 주어 six patents와 issue(발급하다)는 수동 관계이므로 수동 분사가 요구되며, being issued는 이를 충족한다(with ... issued then도 가능하지만 being issued 역시 정문). 장거리 단서인 then(=the 1930s)과의 시제 정합도 문제없다."
+    }
+  ],
+  "note": "핵심 지배 규칙: 종속접속사(Although)가 이끄는 절 뒤에는 정형동사를 가진 주절이 와야 한다. (D) proving을 유지하는 대안 해석(절대구문)은 주절 부재로 성립 불가하며, Although를 삭제해 (C)를 오답으로 모는 경로는 '삭제'라는 비표준 수정이라 옹호 불가능. 정답 후보는 (D) 단일로 수렴한다. 지문은 Smithsonian의 Joseph B. Friedman 문서 소개문 계열로, 원문은 'the 1930s proved to be'로 추정된다."
+}

@@ -1,0 +1,170 @@
+{
+  "passageId": "ebsi_go3_20191015-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "요지",
+    "words": 172
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-point-monotony",
+    "grammar-killer-generic-answer-point",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-wide",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-meta-leak",
+    "grammar-explanation-too-long-hard",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "grammar-decoy-point-diversity"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=d  (C):dec=d  (D):dec=d  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 31,
+        "relPos": 0.03,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 147,
+        "relPos": 0.141,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 311,
+        "relPos": 0.298,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 769,
+        "relPos": 0.737,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 857,
+        "relPos": 0.821,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.821,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to think of technology as shiny tools and gadgets. Even if we acknowledge that technology can exist in disembodied form, such as software, we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies responsible for a Lord of the Rings movie. The literary rendering of the original novel is as much an invention as the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological.",
+  "question": {
+    "direction": "You are an expert Korean SAT English question setter. Output the question and explanation in Korean.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "as shiny tools and gadgets",
+        "isError": false,
+        "errorExpression": "as shiny tools and gadgets",
+        "surroundingText": "We tend to think of technology (A)as shiny tools and gadgets.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "we tend not to include in this category",
+        "isError": false,
+        "errorExpression": "we tend not to include in this category",
+        "surroundingText": "Even if we acknowledge that technology can exist in disembodied form, such as software, (B)we tend not to include in this category paintings, literature, music, dance, poetry, and the arts in general.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "qualifies as a technology",
+        "isError": false,
+        "errorExpression": "qualifies as a technology",
+        "surroundingText": "If a thousand lines of letters in UNIX (C)qualifies as a technology (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "responsible for a Lord of the Rings movie",
+        "isError": false,
+        "errorExpression": "responsible for a Lord of the Rings movie",
+        "surroundingText": "We can't separate out the multiple overlapping technologies (D)responsible for a Lord of the Rings movie.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "is as much an invention as",
+        "isError": true,
+        "correction": "is as much an invention as",
+        "errorExpression": "is so much an invention as",
+        "surroundingText": "The literary rendering of the original novel (E)is so much an invention as the digital rendering of its fantastical creatures.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "as shiny tools and gadgets"
+      },
+      {
+        "label": "(B)",
+        "text": "we tend not to include in this category"
+      },
+      {
+        "label": "(C)",
+        "text": "qualifies as a technology"
+      },
+      {
+        "label": "(D)",
+        "text": "responsible for a Lord of the Rings movie"
+      },
+      {
+        "label": "(E)",
+        "text": "is so much an invention as"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'think of A as B'(~를 B로 생각하다)는 올바른 관용 표현입니다. 학생들은 'consider A to be B'와 혼동하여 'as'를 어색하게 느낄 수 있는 강력한 미끼입니다.",
+      "(B)": "후치사용(Heavy NP Shift)이 적용된 완벽한 문법 구조입니다. 목적어가 너무 길기 때문에 'include [paintings...] in this category'를 'include in this category [paintings...]'로 도치한 것입니다.",
+      "(C)": "'a thousand lines of letters'를 하나의 단위(코드 전체)로 보아 단수 취급했으므로 단수 동사 'qualifies'가 쓰인 것은 적절합니다.",
+      "(D)": "과거분사구의 형용사적 용법(수식)으로, 'technologies [that are] responsible for'에서 관계대명사+be동사가 생략된 구조입니다. 문법상 완벽합니다."
+    },
+    "explanation": "(E) \"is so much an invention as\"는 어법상 틀린 표현이며 \"is as much an invention as\"로 고쳐야 한다. 정답은 (E)입니다. (A) 'think of A as B'(~를 B로 생각하다)는 올바른 관용 표현입니다. 학생들은 'consider A to be B'와 혼동하여 'as'를 어색하게 느낄 수 있는 강력한 미끼입니다. (B) 후치사용(Heavy NP Shift)이 적용된 완벽한 문법 구조입니다. 목적어가 너무 길기 때문에 'include [paintings...] in this category'를 'include in this category [paintings...]'로 도치한 것입니다. (C) 'a thousand lines of letters'를 하나의 단위(코드 전체)로 보아 단수 취급했으므로 단수 동사 'qualifies'가 쓰인 것은 적절합니다. 학생들은 명사 'lines'를 본문의 주어로 착각해 복수 동사를 요구할 수 있습니다. (D) 과거분사구의 형용사적 용법(수식)으로, 'technologies [that are] responsible for'에서 관계대명사+be동사가 생략된 구조입니다. 학생들은 관계대명사 없이 수식어가 바로 붙는 것을 의심할 수 있는 킬러급 미끼입니다. (E) 'as much [명사] as'(~만큼이나...한) 구문이 원문입니다. 'so much A as B'는 부정문에서 'B라기보다는 A다'라는 뜻으로 쓰이는 표현으로, 긍정문인 이 문장에 쓰이면 어법상 명백한 비문이 됩니다. 따라서 (E)가 어색한 부분입니다.",
+    "keyPoints": [
+      "어색한 것 찾기 문항",
+      "원문 표현 변형",
+      "관용표현 및 구문 분석",
+      "킬러급 미끼 포함"
+    ],
+    "tags": [
+      "어법",
+      "수능",
+      "킬러문항"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We tend to think of technology __(A) as shiny tools and gadgets__. Even if we acknowledge that technology can exist in disembodied form, such as software, __(B) we tend not to include in this category__ paintings, literature, music, dance, poetry, and the arts in general. But we should. If a thousand lines of letters in UNIX __(C) qualifies as a technology__ (the computer code for a web page), then a thousand lines of letters in English (Hamlet) must qualify as well. They both can change our behavior, alter the course of events, or enable future inventions. A Shakespeare sonnet and a Schubert symphony, then, are in the same category as Google's search engine and the smartphone: They are something useful produced by a mind. We can't separate out the multiple overlapping technologies __(D) responsible for a Lord of the Rings movie__. The literary rendering of the original novel __(E) is so much an invention as__ the digital rendering of its fantastical creatures. Both are useful works of the human imagination. Both influence audiences powerfully. Both are technological."
+  }
+}

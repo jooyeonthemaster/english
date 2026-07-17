@@ -1,0 +1,177 @@
+{
+  "passageId": "ebsi_go3_20150409_A-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2015,
+    "exam": "4월",
+    "origType": "제목",
+    "words": 150
+  },
+  "attempts": 5,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-pointcode-span-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-filler-spanx3",
+    "grammar-marker-too-densex2",
+    "grammar-pointcode-span-mismatchx1",
+    "grammar-killer-answer-point-repeatedx1",
+    "grammar-keypoint-choice-mismatchx1"
+  ],
+  "layout": "(A):dec=b  (B):dec=l  (C):dec=k  (D):ANS=g  (E):dec=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 0,
+        "relPos": 0,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 185,
+        "relPos": 0.219,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 407,
+        "relPos": 0.481,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 536,
+        "relPos": 0.634,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 818,
+        "relPos": 0.967,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 5,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.967,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers; the latest evidence suggests that while it isn't ideal, it might help. When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability of insulin to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation causes, which is encouraging given how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and making up for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "Whether",
+        "isError": false,
+        "errorExpression": "Whether",
+        "surroundingText": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "When",
+        "isError": false,
+        "errorExpression": "When",
+        "surroundingText": "help. When Peter Liu, a UCLA sleep researcher, brought chronically",
+        "pointCode": "l"
+      },
+      {
+        "label": "(C)",
+        "expression": "to process",
+        "isError": false,
+        "errorExpression": "to process",
+        "surroundingText": "showed improvements in the ability of insulin to process blood sugar. That suggests",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "which",
+        "isError": true,
+        "correction": "which",
+        "errorExpression": "it",
+        "surroundingText": "all of the damage that sleep deprivation causes, which is encouraging given how many",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "whatever",
+        "isError": false,
+        "errorExpression": "whatever",
+        "surroundingText": "week you can eat whatever you like,\" he says.",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "Whether"
+      },
+      {
+        "label": "(B)",
+        "text": "When"
+      },
+      {
+        "label": "(C)",
+        "text": "to process"
+      },
+      {
+        "label": "(D)",
+        "text": "it"
+      },
+      {
+        "label": "(E)",
+        "text": "whatever"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 명사절을 이끄는 접속사 'Whether'가 쓰여 'or not'과 함께 '~인지 아닌지'라는 의미의 주어 역할을 주도하므로 어법상 옳습니다.",
+      "(B)": "시간을 나타내는 부사절을 이끄는 접속사 'When'으로서, 주절인 'they showed~' 앞에 위치하여 문맥상 시간의 부사절을 올바르게 이끌고 있습니다.",
+      "(C)": "'the ability'라는 명사를 뒤에서 수식하는 형용사적 용법의 to부정사 'to process'가 올바르게 사용되었습니다.",
+      "(E)": "타동사 'eat'의 목적어 역할을 하는 명사절을 이끄는 복합관계대명사 'whatever'로서 뒤에 목적어가 빠진 불완전한 절을 연결하고 있으므로 옳습니다."
+    },
+    "explanation": "정답이 속한 문장은 'That suggests ~'로 시작하는 주절 뒤에, 앞 절의 내용 전체를 선행사로 삼아 보충 설명하는 관계대명사의 계속적 용법이 이어지는 구조입니다. (D) 자리에 대명사 'it'을 사용하게 되면, 앞의 주절과 뒤의 종속절을 연결해 줄 등위접속사(and)가 없는 상태에서 한 문장에 두 개의 정동사 절(suggests와 is)이 단순 나열되는 비문이 됩니다. 따라서 접속사와 대명사의 역할을 동시에 수행하는 주격 관계대명사 'which'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 관계대명사 vs 대명사 — 접속사의 기능 유무를 통한 절의 연결 판단",
+      "(A) 전치사 vs 접속사 — 뒤에 주어와 동사를 갖춘 완전한 절을 이끄는 접속사 Whether 확인",
+      "(E) 관계사 vs 대명사 — 타동사 eat의 목적어절을 이끄는 복합관계대명사 whatever의 쓰임 판단"
+    ],
+    "tags": [
+      "관계대명사",
+      "명사절 접속사",
+      "to부정사의 형용사적 용법",
+      "동명사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "__(A) Whether__ or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers; the latest evidence suggests that while it isn't ideal, it might help. __(B) When__ Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability of insulin __(C) to process__ blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation causes, __(D) it__ is encouraging given how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and making up for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat __(E) whatever__ you like,\" he says.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-pointcode-span-mismatch",
+        "message": "Underline (E) is tagged pointCode (b) but its surface \"whatever\" has no token matching that grammar point — the label looks fabricated. Move the underline onto the real b-token or fix the code."
+      }
+    ],
+    "_qualityMode": "relaxed"
+  }
+}

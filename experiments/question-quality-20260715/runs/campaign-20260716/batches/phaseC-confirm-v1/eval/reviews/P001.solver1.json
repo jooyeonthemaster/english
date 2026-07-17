@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'배역과 객관적 거리를 유지'는 지문 전체 논지(completely immerse, actually become the characters, step into the character's shoes)와 정면으로 모순되는 반의(反意) 오답. 'goal of + 동명사' 결합(seam)은 문법적으로 문제없으나 논리적으로 즉시 배제됨. 유혹도 낮음."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "메소드 연기의 궁극적 목표 = 연기하는 척(pretending)이 아니라 캐릭터의 내면을 진짜로 경험하는 것. 지문의 'seem to actually become the characters', 'step out of their own comfort zone and into the character's shoes', 그리고 결말의 'real people doing real things, not just fictional characters'와 정확히 대응. 특히 'instead of pretending'이 'not just fictional characters in a movie'의 대비 구조와 일치. 'goal of genuinely experiencing...' 문법 결합도 자연스러움."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'대본에 적힌 단어에만 엄격히 의존'은 지문에 근거가 전혀 없고, 오히려 즉흥적·전인적 몰입이라는 메소드 연기의 취지와 상충. 무관 소재 오답. 유혹도 낮음."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "가장 표면적으로 매력적인 오답. 빈칸 직전 문장에 'change their sleeping patterns'가 그대로 등장해 단어 매칭으로 끌린다. 실제로 잠깐 끌려봤으나, 빈칸 구조가 'they will change their sleeping patterns ... with the ultimate goal of ___'이므로 여기에 '수면 패턴을 일시적으로 바꾸는 것'을 넣으면 수단과 목적이 동어반복(순환)이 되어 논리 파탄. 수면 변경은 수단이지 궁극적 목표가 아님. 또한 'temporarily ... for filming'은 카메라가 꺼진 뒤에도 역할을 계속한다는 지문 내용과도 어긋남."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "두 번째로 매력적인 오답. 'explore a whole new identity', 'serious psychological changes', 'emotional trauma' 때문에 정체성 상실 쪽으로 끌리게 설계됨. 그러나 정체성 상실·트라우마는 부작용(It can cause...)으로 서술될 뿐이며, 목적은 'to give the best performance possible'. 'without recovering it(회복 불능의 영구 상실)'은 지문이 지지하지 않는 극단 표현이라 궁극적 '목표'로는 옹호 불가. 극단어(completely, without recovering) 함정."
+    }
+  ],
+  "note": "빈칸 유형. 다섯 선지 모두 동명사구로 'goal of' 뒤 문법 결합은 전부 성립하므로 순수 논리 문제. 정답 2는 지문 첫 문장(immersion)과 마지막 문장(real people, not just fictional characters)의 수미상관 구조에서 도출되며 유일하게 옹호 가능. 매력 오답 서열: 4(단어 반복+수단·목적 혼동) > 5(극단화) >> 1(반의) ≈ 3(무관). 대안 해석으로 정답이 흔들릴 여지 없음 — 단일 정답 문항으로 판단."
+}

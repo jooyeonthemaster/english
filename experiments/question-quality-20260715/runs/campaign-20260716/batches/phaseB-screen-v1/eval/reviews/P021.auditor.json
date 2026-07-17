@@ -1,0 +1,82 @@
+{
+  "pid": "P021",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-surroundingText",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 surroundingText가 렌더된 형태('the specific ways which')가 아니라 교정/원문 형태('the specific ways in which')를 담고 있음. 같은 항목에서 expression='in which'(원문형) vs errorExpression='which'(표시형) 관례로 읽으면 내부 일관성은 유지되나, 다른 4개 항목은 expression=표시형이라 필드 의미가 항목 간 비대칭. 학생 노출 필드(지문·선지·정답·해설)는 모두 동기화되어 있어 게이트 실패는 아님."
+    },
+    {
+      "code": "V5-minor-keyPoints-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints가 (D),(A),(C)만 다루고 (B) cause+to부정사, (E) 가정법 과거완료는 누락. 모순은 아니며 상위 포인트 요약으로 읽히므로 minor."
+    },
+    {
+      "code": "V3-note-source-parallelism",
+      "severity": "minor",
+      "evidence": "'either to face ... or avoid'는 either가 to 앞에 놓여 규범적으로는 'either to face or (to) avoid'가 더 정연하지만, 원지문 그대로이고 to 공유 생략은 표준적으로 허용되는 용법이라 비문 아님. (C)를 옳은 것으로 처리한 판정과 일치."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "5형식 make의 목적격보어 자리 품사 판정(형용사 vs 부사)",
+      "temptingBecause": "동사(makes) 뒤 + very 다음이라 'attentively'(부사)가 와야 한다고 착각하기 쉬움. very는 부사도 수식하므로 표면 단서로는 배제 불가.",
+      "decisiveFlaw": "make us [C] 구조에서 목적어 us의 상태를 서술하는 목적격보어이므로 형용사 attentive가 옳음 — 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "cause의 목적격보어 형태(to부정사) 판정 — 사역동사류와의 구별",
+      "temptingBecause": "make/have/let 사역동사와 혼동하면 원형 face를 기대하게 됨. 앞의 'will cause us either' 흐름에서 원형 병렬로 오독 가능.",
+      "decisiveFlaw": "cause는 목적격보어로 to부정사를 취함(cause A to do) — to face가 옳으므로 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "상관접속사 either A or B 병렬에서 to 생략된 동사원형 허용 여부",
+      "temptingBecause": "or 뒤에 to 없이 원형 avoid만 있어 'to avoid'가 아니면 병렬 파괴라고 판단하기 쉬움. 원문이 either를 to 앞에 둔 형태라 규범 감각을 자극.",
+      "decisiveFlaw": "to face와의 병렬에서 두 번째 to는 공유 생략 가능(cause us either to face ... or (to) avoid) — 원문 그대로이며 옳으므로 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "관계대명사 vs 전치사+관계대명사 — 후행절 완전성 판정 (정답)",
+      "temptingBecause": "'the specific ways which they activate...'가 선행사 수식으로 자연스럽게 읽혀 절 내부 성분을 따지지 않으면 그냥 넘어가기 쉬움. the way(s) that 구문과의 표면 유사성도 착시 유발.",
+      "decisiveFlaw": "관계절 'they activate our systems'가 S+V+O 완전절이라 gap이 없음. 격을 받을 자리가 없는 관계대명사 which는 불가하며 in which로 고쳐야 정확히 원문이 복원됨(최소대립쌍). 유일 정답."
+    },
+    {
+      "label": "(E)",
+      "intent": "가정법 과거완료(과거 반사실) 시제 형태 판정",
+      "temptingBecause": "주절 'would not have evolved'와의 시제 조합이 복잡해 혼합가정·직설법 과거와 혼동하면 'did not help' 등을 기대할 수 있음.",
+      "decisiveFlaw": "과거 사실 반대 가정(진화사적 과거)이므로 If + had p.p. / would have p.p. 조합이 정확 — 오류 아님."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 '선행사와 함께 부사적 성격의 수식을 구성할 수 있도록'은 다소 느슨한 표현. in which 관계절 전체는 여전히 ways를 형용사적으로 수식하며, 부사적 역할을 하는 것은 절 내부에서의 in which임. 한국 교재 관용 표현 수준의 부정확성으로 오개념 유발 정도는 아님.",
+      "recommendation": "'전치사+관계대명사가 절 내부에서 부사어 역할을 하므로 완전한 절을 이끌 수 있다'로 정밀화."
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 교정으로 'in which'만 제시했으나 'that'(the ways that they activate) 및 관계부사적 대체도 문법적으로 가능. 단 교정형이 원문 복원과 일치하므로 채점 경계 문제는 없음.",
+      "recommendation": "해설에 '(또는 that)' 병기 여부는 선택 사항."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "A",
+  "notes": "V1: 렌더 지문은 원지문 대비 (D) 지점의 'in which'→'which' 단일 의도 변형 외 손상·누락·중복 없음. 5개 마커 라벨이 선지와 정확히 일치. V2: 독립 검증 결과 (A) 목적격보어 형용사, (B) cause+to부정사, (C) to 공유 생략 병렬(원문 그대로), (E) 가정법 과거완료 모두 옳고, (D)만 완전절 앞 관계대명사로 확정적 오류 — 단일 정답 성립. V3: 지문·발문·교정 완성문 모두 문법적, 오답 밑줄의 정문성이 유형 의도와 일치. V4: 완전절 판정, 5형식 보어, cause 보어, 병렬, 가정법 설명 모두 실제 구조와 일치하며 오분석·환각 없음(부사적 수식 표현의 경미한 느슨함만 존재). V5: 정답 라벨 (D)·isError·correction·해설·keyPoints 상호 모순 없음. 공예: 4개 디코이가 서로 다른 오개념(품사/보어형태/병렬/가정법)을 겨냥해 C2=4, 최소대립쌍 교정과 무누출 단서로 C4=4, INTERMEDIATE 요구 사고 단계(절 완전성 파싱)와 정확히 정합해 C5=4. C1·C3·C6은 정전적이되 고빈도 기출 패턴('ways in which')이라 3. 합계 21, 전 V 통과, 전 C 3 이상 → A. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "담화 연결어 'In contrast'. 앞 문장(mind at ease → attention inward)과 뒤 문장(diligently focused → attention outward)은 방향이 정반대인 명시적 대조 관계다. 논리적으로 성립하며, 문두 부사구로서 통사적 지위(콤마로 분리된 문장부사)도 정문. 형식적 판정: 대조 접속부사의 성립 조건 [P: inward] vs [¬P: outward] 충족."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'when we are diligently focused'에서 diligently는 형용사화된 분사 focused를 수식하는 부사. 형용사/분사를 수식하는 것은 부사이므로 -ly형이 요구되고 실제로 -ly형이 쓰였다. 'diligent focused'였다면 오류였겠으나 현재 표기는 정문. 의미상으로도 '부지런히(열심히) 집중된'으로 자연스럽다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'when solving problems analytically'는 접속사가 남은 분사구문(= when we are solving / when one solves)의 표준 축약. 주절 주어 'this pattern of attention'과 의미상 주어가 어긋난다는 지적(현수분사)이 가능하나, 일반주어 we가 문맥 전체를 지배하고 있고 'when + V-ing'의 총칭적 용법은 규범적으로 널리 허용되어 수능 관례상 정문으로 판정한다. solving 자체의 형태(능동·진행 의미)도 문제없다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (정답)",
+      "reason": "관계대명사 that의 선행사는 직전의 복수명사 'the connections'이므로 관계절 동사는 lead여야 한다. 'connections that leads'는 수일치 위반. 대안 해석 검토: (i) 선행사를 동명사구 'detecting the connections' 전체(단수)로 보는 해석 — that 관계절은 명사구 핵에 부가되며 동명사구 전체를 선행사로 취하는 구조는 성립하지 않음(그 경우 which + 콤마 비제한 용법이 필요). (ii) 'the stream'이나 'this pattern' 등 원거리 단수 선행사 — 관계절과의 인접성·의미('통찰로 이어지는 것'은 connections)상 배제. 따라서 leads는 어떤 정문 해석으로도 구제 불가. 어법상 틀린 유일한 밑줄."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'it's the most relaxing part of the day'의 it은 앞 문장의 (taking) warm showers, 즉 '따뜻한 샤워(를 하는 시간)'를 받는 지시 대명사. 단수 취급이 자연스럽고(shower를 하나의 활동/시간대로 지시), be동사 단수형과 일치. 가주어·비인칭 it으로 읽어도 파탄 없음. 정문."
+    }
+  ],
+  "note": "전형적 장거리 수일치 문항. 정답 후보는 (D) 하나로 수렴. (C)의 현수분사 논란이 유일한 잠재적 이의 지점이나 'when solving problems'는 총칭 주어 축약으로 규범상·수능 관례상 정문이어서 옹호 가능 오답이 되지 못한다. 지문은 Jonah Lehrer 계열의 창의성-통찰 텍스트를 개작한 것으로 보이며 원문도 복수 동사(lead)를 사용한다."
+}

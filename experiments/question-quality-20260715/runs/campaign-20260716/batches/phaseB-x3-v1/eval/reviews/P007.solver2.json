@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Grammatically valid as the second conjunct of 'presuppose that X, and that Y', but logically contradictory: 'personal, unbiased intuition' restates the individualist rhetoric the passage explicitly discredits ('almost nobody thinks they can provide a basis for action in public contexts'). The norms of scientific communication cannot presuppose the very view they are introduced to replace."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Grammatically valid, but directly falsified by the passage's own example: a scientist announcing a discovery at a press conference (i.e., immediate public dissemination) without expert review is 'automatically castigated as a publicity seeker'. Immediate dissemination destroys credibility here rather than conferring it."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Grammatically a well-formed finite clause in the 'and that ___' slot, parallel to 'nature does not speak unambiguously'. Logically it is the unique option entailed by the surrounding sentences: the necessary-condition form 'do not attain valid-knowledge status WITHOUT collective peer validation' matches 'A scientific truth has little standing UNTIL it becomes a collective product' and the expert-reviewer gatekeeping example. The lab is 'only one stage in its construction' — validation must be collective."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatically valid, but 'practical utility' is a criterion nowhere invoked in the passage. 'Basis for action in public contexts' concerns epistemic warrant/public credibility, not usefulness of findings. No sentence links validity to utility, and the closing sentences point to collective construction, not application."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatically valid, but doubly wrong logically: (a) the gatekeeping mechanism in the passage is expert/collective review, not flawless replication — 'flawlessly' is an unsupported extreme; (b) as the object of 'presuppose', the blank must be a general epistemological presupposition parallel to 'nature does not speak unambiguously', whereas this is a narrow procedural rule about media timing, and it cannot license the following claim that truth is a 'collective product'."
+    }
+  ],
+  "note": "Seam check: all five options are finite declarative clauses, so every option is grammatical in the 'presuppose that X, and that ___' frame; discrimination is purely logical. The long-range anchor is the pair of sentences after the blank ('little standing until it becomes a collective product' / 'only one stage in its construction'), which uniquely entail ③. Distractors are cleanly wrong (① contradicts the turn, ② contradicts the press-conference example, ④ imports an absent utility criterion, ⑤ over-specifies with an extreme replication rule). Single defensible answer; no alternative parse rescues any other option. Passage register and argument structure are coherent (constructivist sociology-of-science argument)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'helping us systematically erase those unbearable affects from our minds'는 정동의 제거·억압으로, 지문이 법(the law obsessively tries to suppress affects)에 배정한 기능이다. whereas 대조 구문에서 cinema 측 술어로 넣으면 극성 역전이 일어나 논리 모순. 통사적으로는 정문(분사구문, 의미상 주어 cinema)이므로 결함은 순수 논리적."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "극성(반-억압)은 맞아 가장 강한 미끼다. 그러나 지문은 cinema가 정동을 'expresses / introduces us to'한다고만 말하며, 법이 부과한 제한을 '해체(dismantle)'한다는 인과적 작용은 어디에도 없다. 오히려 두 제도는 공존하며 상호작용이 흥미롭다고 서술된다(makes a study of the interaction ... interesting). cinema가 법의 한계를 파괴한다는 주장은 텍스트 초과(overreach)로, 형식적으로 지지 불가. 문법은 정문."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'reinforcing the legal barriers that suppress our desires and drives'는 whereas 대조를 정면으로 붕괴시킨다. cinema가 법적 억압 장치를 강화한다면 '차이(important difference)'라는 지문의 핵심 프레임과 모순. 문법은 정문, 논리적으로 즉시 배제."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "'confronting us with the very inner impulses we would prefer to avoid'는 'introduces us to our affects'의 정밀한 부연이다. inner impulses = affects/desires and drives의 재어휘화, 'we would prefer to avoid'는 법 측의 'fearing the horror of their consequences'와 대칭을 이룬다. 법=억압(suppress) vs 영화=대면(confront)이라는 마지막 문장의 수사 구조를 정확히 완성. 분사구문의 의미상 주어 cinema와의 결합(seam)도 자연스러움. 유일 정답."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'preventing us from experiencing the horror of uncontrolled consequences'는 지문이 법에 배정한 기능(It tries to ensure that we are not overwhelmed and destroyed...; fearing the horror of their consequences)의 재진술이다. cinema 측 술어로 넣으면 whereas 대조가 무효화된다. 문법은 정문, 논리 배제."
+    }
+  ],
+  "note": "다섯 선지 모두 현재분사 부가어로 통사적 결함이 없어 판별은 전적으로 논리 적합성에 달린 문항. 대조 축(법=suppress vs 영화=introduce/confront)이 명확해 ④가 유일하게 옹호 가능. ②는 극성이 맞는 유일한 오답이라 상위권 미끼로 기능하나 'dismantling the limits the law imposes'는 텍스트가 주장하지 않는 영화→법 인과 작용이라 방어 불가. 대안 해석(축약 관계절 등)으로 다른 선지가 성립할 여지는 탐색했으나 없음."
+}

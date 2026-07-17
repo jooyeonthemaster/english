@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "'집단의 필요를 자기 욕구보다 우선시한다'는 지문과 정면 충돌. 바로 다음 문장이 'accommodate their own needs as well as the needs of others (i.e. cooperate)' — 자기 필요와 타인 필요를 '둘 다' 수용하는 것이지 자기를 희생해 집단을 우선하는 것이 아니다. 협동(cooperate) 어휘에 끌려 고르기 쉬우나 'over their own desires'가 결정적 결격."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "'긴장을 피하려 진짜 감정을 숨긴다'는 지문의 핵심 예시와 정반대. 갈등 상황 예시에서 감정 이해 능력이 뛰어난 구성원은 'express how he feels about the problem and why he feels this way' — 감정을 표현한다. 또한 빈칸 뒤 'facilitate clear communication'과도 논리적으로 충돌(은폐는 명확한 소통을 촉진하지 않음)."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "빈칸 문장의 근거 사슬이 완벽히 맞물린다. (a) 앞 문장의 'diverse emotion vocabulary'는 자신의 심리 상태를 언어로 표현할 자원이고, (b) 빈칸 뒤 'thus, may facilitate clear communication between co-workers'는 자기 상태를 명확히 말하는 행위의 자연스러운 귀결이며, (c) 뒤의 구체 예시 'will be able to express how he feels about the problem and why he feels this way'가 빈칸 내용을 그대로 재진술한다. 문법 결합(be able to + 동사원형)도 정상."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "'빨리 해결 안 되는 갈등은 피한다'는 마지막 문장 'promotes constructive conflict resolution'과 충돌. 지문은 갈등 회피가 아니라 갈등의 건설적 해결을 감정 이해 능력의 효과로 제시한다."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "가장 매력적인 오답. 'take the perspective of the other group members and understand why they are reacting'이라는 후반 문장 때문에 타인 감정 관련 선지에 실제로 끌린다. 그러나 (a) 지문이 말하는 것은 타인 감정의 '이해(understand)'이지 집단 기분의 '대변/표상(represent)'이 아니고, (b) 빈칸의 직접 귀결인 'clear communication between co-workers'는 자기 상태의 명확한 표현에서 나오는 것이며, (c) 갈등 예시의 1차 서술('express how he feels')이 빈칸을 재진술하는 구조다. 'represent the collective moods'는 지문 어디에도 근거가 없는 과장된 재기술."
+    }
+  ],
+  "note": "정답 3으로 단일 수렴. 빈칸-근거 사슬(emotion vocabulary → articulate own states → clear communication → 예시의 express how he feels)이 삼중으로 맞물려 논쟁 여지가 없다. 5번이 perspective-taking 문장을 미끼로 쓰는 잘 설계된 매력적 오답이나 'represent'라는 동사 선택이 지문의 'understand'와 결이 달라 옹호 불가."
+}

@@ -1,0 +1,72 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-keypoint-source-leak",
+      "severity": "minor",
+      "evidence": "keyPoints[1] 'put up with, put up with obscurities의 문맥상 의미 추론능력 배양'은 (a) 렌더 지문에서 이미 제거된 원문 표현(put up with many obscurities)을 학습 포인트로 지목하고 있고 (b) 'put up with, put up with obscurities'라는 어구 중복이 있다. 정답·선지·해설과 모순되지는 않으므로 V5 실패로는 판정하지 않으나 필드 다듬기가 필요하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(polarity reversal): 독자가 효율적 소통 원칙을 '적용'한다는, 본문 태도의 정반대 진술",
+      "temptingBecause": "본문 4문장의 'principles of efficient communication'과 어휘가 겹쳐 표면 매칭으로 고를 수 있다",
+      "decisiveFlaw": "본문은 독자가 효율적 소통 원칙을 위반(flout)하는 요소를 해석하려 애쓴다(즉 원칙 적용을 유예한다)고 하므로 방향이 정반대. 완성문도 후행절 'without assuming that this makes no sense'와 논리적으로 어긋난다"
+    },
+    {
+      "label": "2",
+      "intent": "정답: source span 'put up with many obscurities and apparent irrelevancies'의 충실한 동의 패러프레이즈(tolerate=put up with, confusing=obscurities, seemingly unrelated details=apparent irrelevancies)",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 삽입 시 완성문이 문법적·자연스럽고, 4문장(struggle to interpret)·마지막 문장(explore uncertainties, not immediately ask)과 정확히 수렴한다. 유일 정답 확인"
+    },
+    {
+      "label": "3",
+      "intent": "극성 반전: 즉각적 해명 요구, 마지막 문장의 태도를 뒤집은 진술",
+      "temptingBecause": "마지막 문장의 'ask what do you mean by that?' 어구와 표면적으로 겹친다",
+      "decisiveFlaw": "본문은 'not immediately ask'라고 명시하여 즉각적 해명 요구를 하지 않는 것이 문학 독자의 태도라고 말한다. 정반대 극성"
+    },
+    {
+      "label": "4",
+      "intent": "극성 반전: 불확실성 탐구의 가치를 의심한다는, willingness 진술의 부정",
+      "temptingBecause": "마지막 문장의 'explore uncertainties' 어휘를 그대로 가져와 표면 매칭을 유도한다",
+      "decisiveFlaw": "본문은 독자들이 기꺼이(willingness) 불확실성을 탐구한다고 하며, 'worth it'이라는 기대(가치 긍정)도 두 번 강조된다. 가치 의심은 정반대"
+    },
+    {
+      "label": "5",
+      "intent": "소재 연상(lexical decoy): 1문장의 선별·검토(reviewed) 소재만 따온 지엽 선지",
+      "temptingBecause": "1문장의 'published, reviewed, and reprinted'와 어휘가 겹쳐 지문 초반만 읽은 학생을 유인한다",
+      "decisiveFlaw": "빈칸 문장은 독자의 인내·수용 태도를 말하는 자리이며, '검토된 서사에만 집중한다'는 것은 빈칸의 논지(hyper-protection의 귀결)와 무관하다. 후행절 'without assuming that this makes no sense'와도 의미적으로 결합되지 않는다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "keypoint-removed-phrase",
+      "severity": "minor",
+      "evidence": "keyPoints가 렌더 지문에 존재하지 않는(빈칸으로 제거된) 'put up with obscurities'를 문맥 추론 대상으로 언급하고, 같은 항목 안에 'put up with, put up with obscurities' 어구 중복이 있다."
+    },
+    {
+      "code": "trap-grouping-coarse",
+      "severity": "minor",
+      "evidence": "본해설이 ①③④를 '극성 반전 함정' 하나로 묶어 설명하는데, 이는 사실과 일치하지만 동시에 세 오답의 함정 유형이 실제로 동일하다는 설계상 한계를 드러낸다(개별 오답해설 자체는 각 선지 내용과 정확히 대응하며 문장 귀속 오류 없음: 4문장 인용, 마지막 문장 인용, 1문장 'reviewed' 귀속 모두 실제 지문과 일치)."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 'put up with many obscurities and apparent irrelevancies'만 _____로 치환했고 나머지는 자모 단위로 동일하다. 접합부('We can _____, without assuming...')에 고아 문장부호·중복·누락 없음. 선지 라벨 1~5와 선언 정답 2가 정합. V2: 다섯 선지 전부 'We can ___' 뒤 VP 슬롯에 문법적으로 삽입 가능(문법으로 일부만 탈락하는 구조 아님)하며, 의미 검증 결과 ②만 후행절 및 4·6문장의 논지와 정합. ①③④는 극성 반전, ⑤는 지엽으로 각각 독립 배제 확인 — 정답 유일. V3: 완성문 'We can tolerate confusing and seemingly unrelated details, without assuming that this makes no sense.'는 문법적·자연스럽다. seam 비문·비단어 없음. V4: 해설의 문장 번호 귀속(4문장 struggle to interpret, 마지막 문장 willingness/explore uncertainties, 1문장 reviewed)이 모두 실제 지문과 일치하고 인과 설명·용어 오류 없음. V5: 정답 라벨·선지·본해설·오답해설(1,3,4,5 전부 존재)·keyPoints 간 모순 없음(단 keyPoints의 소스 표현 언급·중복은 minor). 공예: C1=4(하이퍼-보호된 협력 원리의 귀결이라는 지문 핵심 논지를 정조준). C2=2(오답 4개 중 3개가 동일한 극성 반전 유형이라 서로 다른 오개념을 겨냥하는 밀도가 낮음 — RUBRIC §D의 '서로 다른 함정' 다양성 미달). C3=2(지문의 태도 방향만 파악하면 ①③④가 극성 하나로 일괄 소거되고 ⑤는 무관 소재라 실제 경합 판단이 얕음; 어휘 겹침에 의한 표면 유인은 있음). C4=3(근거는 충분하고 정답 필연적이나, 정답이 유일한 긍정/수용 극성 선지이고 빈칸 직후 절이 강한 국소 단서를 제공해 다문장 통합 없이도 풀리는 약한 누출 존재). C5=3(요청 난이도 INTERMEDIATE — 1~2단계 패러프레이즈 매칭 과제로 라벨과 대체로 일치; 지문 어휘 수준은 다소 높음). C6=3(정확하고 근거-함정 분리가 되어 있으나 keyPoints 중복 등 마감 흠). 합계 17, 모든 V 통과, C 최저 2 → B. KILLER 아님 → killerConditionsMet=false."
+}

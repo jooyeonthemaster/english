@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Garcia stood outside Frontcountry Mall, waiting for his brother.' Present-participle adjunct whose understood subject is the matrix subject 'Garcia'; Garcia performs the waiting (active relation), so the -ing form is licensed. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'Garcia asked, pointing at a patterned red shirt...' Same participial-adjunct structure; the understood subject 'Garcia' actively points. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'The clerk stopped her work and looked at the clothes, quickly agreeing with Jeff's choice.' Participial adjunct predicated of 'the clerk', who actively agrees. Nothing forces a third finite conjunct ('and agreed'); the adjunct parse is fully well-formed. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'His confidence was, however, quickly was changed to nervousness...' The clause already contains the finite auxiliary 'was' before 'however'; the underlined 'was changed' introduces a second finite 'was', producing *was ... was changed* — two finite verbs in a single clause with no coordination or subordination. No alternative parse rescues it: 'His confidence was' has no complement of its own, 'however' is a connective adverb (not a clause boundary), and no ellipsis/inversion/reduced-relative reading is available. The only repair is the bare past participle 'changed', giving the passive 'was ... quickly changed to nervousness'. Ungrammatical as written."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'everyone fell silent, fascinated by the music.' Past-participle adjunct predicated of 'everyone' with an overt by-phrase agent — everyone is fascinated by the music (passive/psych-participle relation). Grammatical."
+    }
+  ],
+  "note": "Clean item from the grammarian lens. The error in (D) is a hard, formally provable double-finite-auxiliary violation (was ... was changed), unambiguous under every reasonable parse. All four distractors are standard participial-adjunct constructions that survive an active search for alternative parses (reduced relatives, absolutes, inversion). Single defensible answer: (D)."
+}

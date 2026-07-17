@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "선행사 'the Italian explorer'(단수·사람)를 받는 관계절 'who is credited with discovering America'. 'be credited with + 동명사'는 표준 수동 관용구이며(credit A with B의 수동), 단수 주어-단수 동사 일치(is)도 성립. 역사적 사실을 현재에도 인정받는 상태로 기술하므로 현재시제도 논리적으로 정당. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'considering + NP'는 의미상 주어와 무관하게 쓰이는 문법화된 전치사(무주어 분사 관용구: considering, regarding, concerning 등). 'However, considering his mistreatment ... and the devastating effect ..., honoring the explorer does not make sense'에서 현수분사 문제가 발생하지 않는 것으로 확립된 형식. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "동명사구 'honoring the explorer'가 주절의 진짜 주어로 기능하며, 동명사구 주어는 단수 취급이므로 'does not make'와 수 일치 성립. 'to honor'로도 쓸 수 있으나 동명사 주어 역시 완전한 정문. 문맥(기념하는 행위 일반) 논리에도 부합."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "문장 구조: 주어 'the diseases' + 목적격 관계절 'that Columbus and other Europeans brought with them'(brought의 목적어 공백을 채움) 뒤에 정형동사가 와야 하는데 'severely reducing'은 비정형. 이 문장에는 다른 정형동사가 전혀 없어 완전한 조각문(fragment)이 된다. 대안 해석 검토: (i) 독립분사구문/absolute로 보려 해도 걸릴 주절이 문장 내에 존재하지 않음. (ii) 'reducing'을 후치 수식 분사로 보면 문장 전체가 명사구만 남아 역시 비문. (iii) 도치·생략 구조도 성립 불가. 따라서 유일한 구제 불가능 오류이며 'reduced'(과거 정형동사)로 고쳐야 한다. 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "병렬 시작점 확인: 'a new holiday that honors Native Americans and remembers their suffering'에서 and는 관계절 내부의 정형동사 'honors'와 'remembers'를 병렬. 공통 선행사 'a new holiday'(단수)에 대해 3인칭 단수 현재 -s 일치가 양쪽 모두 성립. 'should support ... and remembers'로 잘못 병렬하면 비문처럼 보이나, 근접 병렬(honors and remembers)이 의미·구조상 자연스러운 유일 해석. 정문."
+    }
+  ],
+  "note": "형식 판정: (A)(B)(C)(E)는 각각 수동 관용구, 문법화된 전치사적 분사, 동명사 주어 수일치, 관계절 내 병렬로 모두 정문임을 증명 가능. (D)는 문장에 정형동사가 없어지는 fragment로, 어떤 대안 통사 분석(분사구문·절대구문·축약관계절)으로도 구제되지 않는 유일한 오류. 정답 (D) 단독, 복수 정답 소지 없음."
+}

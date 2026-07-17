@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go1_20200312-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "함축의미",
+    "words": 141
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-overdrilled-answerx1"
+  ],
+  "layout": "(A):dec=b  (B):dec=h  (C):dec=d  (D):dec=a  (E):ANS=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 12,
+        "relPos": 0.016,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 229,
+        "relPos": 0.31,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 389,
+        "relPos": 0.526,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 557,
+        "relPos": 0.754,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 623,
+        "relPos": 0.843,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.843,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is that sometimes in arguments the other person is trying to get you to be angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that sounds foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but responding with a cool answer that focuses on the issue raised is likely to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "The point to remember is that sometimes in arguments the other",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "to be",
+        "isError": false,
+        "errorExpression": "to be",
+        "surroundingText": "sometimes in arguments the other person is trying to get you to be angry.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "sounds",
+        "isError": false,
+        "errorExpression": "sounds",
+        "surroundingText": "you'll say something that sounds foolish; you'll simply get",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "responding",
+        "isError": false,
+        "errorExpression": "responding",
+        "surroundingText": "So don't fall for it. A remark may be made to cause your anger, but responding with a cool",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "likely",
+        "isError": true,
+        "correction": "likely",
+        "errorExpression": "likelily",
+        "surroundingText": "focuses on the issue raised is likely to be most effective.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "to be"
+      },
+      {
+        "label": "(C)",
+        "text": "sounds"
+      },
+      {
+        "label": "(D)",
+        "text": "responding"
+      },
+      {
+        "label": "(E)",
+        "text": "likelily"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "be동사 is 뒤에서 주어(sometimes in arguments the other person)와 술어가 모두 갖추어진 완전한 명사절을 이끄는 접속사 'that'이 쓰인 것은 어법상 올바릅니다.",
+      "(B)": "준사역동사 'get'은 목적어(you) 뒤에 목적격보어로 to부정사를 선택하므로 'to be'는 어법상 옳습니다.",
+      "(C)": "관계대명사 that절 안의 동사로, -thing으로 끝나는 단수형 선행사인 'something'과 수일치하여 단수형 동사 'sounds'가 쓰인 것은 올바릅니다.",
+      "(D)": "but이 이끄는 주절에서 'responding' 이하의 동명사구가 문장의 주어 역할을 하고 있으므로 동명사 형태로 쓰인 것은 문법적으로 타당합니다."
+    },
+    "explanation": "주절의 'responding with a cool answer ~ raised'까지의 동명사구 주어에 연결되는 술어 동사는 'is'입니다. 연결동사 'is' 뒤의 보어로 쓰이면서 뒤따르는 'to be'와 호응하여 '~할 가능성이 높다'라는 의미를 완성하는 주격보어 자리에는 형용사가 와야 합니다. 따라서 부사 형태인 'likelily'는 이 자리에 올 수 없으며, 형용사 'likely'로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(E) 형용사 자리 vs 부사 자리 — 2형식 연결동사의 보어 자리에 형용사 likely 판단",
+      "(B) 목적격보어 형태 — 준사역동사 get의 목적격보어 to부정사 호응 검사",
+      "(C) 주어-동사 수일치 — 선행사-관계사절 내부 동사의 수일치 판단"
+    ],
+    "tags": [
+      "어법",
+      "형용사 부사",
+      "수일치",
+      "목적격보어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all know that tempers are one of the first things lost in many arguments. It's easy to say one should keep cool, but how do you do it? The point to remember is __(A) that__ sometimes in arguments the other person is trying to get you __(B) to be__ angry. They may be saying things that are intentionally designed to annoy you. They know that if they get you to lose your cool you'll say something that __(C) sounds__ foolish; you'll simply get angry and then it will be impossible for you to win the argument. So don't fall for it. A remark may be made to cause your anger, but __(D) responding__ with a cool answer that focuses on the issue raised is __(E) likelily__ to be most effective. Indeed, any attentive listener will admire the fact that you didn't \"rise to the bait.\"",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

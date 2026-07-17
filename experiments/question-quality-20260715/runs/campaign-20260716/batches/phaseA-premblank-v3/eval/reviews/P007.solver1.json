@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "삽입 시 'Appreciation of differences creates an arena for open communication and encourages effective handling of disputes and overall team performance.' 주어 'Appreciation of differences'에 3인칭 단수 동사 encourages가 creates와 병렬로 정확히 결합(seam 무결). 논리적으로도 지문의 전체 인과사슬(감정 이해 능력 → 명확한 의사소통 → 협력 → 갈등 상황에서 감정 표현·조망 수용)의 귀결로서 '분쟁의 효과적 처리와 팀 성과 촉진'이 갈등 예시(group conflict situation)와 직장 프레임(co-workers)을 모두 회수한다. 'encourages ... performance'가 문체상 약간 느슨하나(promotes 의미) 용인 가능."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'absolute prevention'은 극단 수량어 함정. 지문은 감정적 차이를 '예방'하는 것이 아니라 차이를 '인정(Appreciation of differences)'하는 것을 긍정한다. 같은 문장의 주어와 정면 모순. 갈등 관리라는 소재 때문에 순간적으로 끌릴 수 있으나 방향이 반대."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "leadership은 지문에 전혀 등장하지 않는 무관 개념. 또한 'from communication to leadership'은 open communication을 긍정하는 바로 그 문장의 전반부와 충돌한다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. '타인의 필요 수용(accommodate the needs of others)'과 '조망 수용(take the perspective of others)'만 훑은 수험생은 자기 억제로 오독할 수 있으나, 지문은 명시적으로 'accommodate their OWN needs as well as the needs of others (i.e. cooperate)'라고 하여 자기 필요와 타인 필요의 동시 충족=협력을 말한다. 장거리 단서에 의해 직접 반박됨."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "escalates disagreement는 지문 전체의 긍정적 논조(명확한 소통·협력·갈등의 건설적 해소)와 극성 반전. 'exposing differences'로 그럴듯하게 포장했으나 'Appreciation of differences creates an arena for open communication'과 병렬될 수 없는 부정적 귀결."
+    }
+  ],
+  "note": "다섯 선지 모두 3인칭 단수 동사로 시작해 creates와의 병렬 결합이 성립하므로 문법 seam으로는 변별 불가 — 순수 논리 변별 문항. 빈칸이 'for open communication and ___'의 명사구 병렬로 읽힐 대안 파스도 검토했으나 어떤 선지도 명사구가 아니어서 대안 해석이 오답을 구제하지 못함. 매력적 오답은 4번(협력→자기억제 오독 유도)과 2번(갈등 관리→차이 예방 극단화)이나 둘 다 지문 명시 문구로 기각. 정답 후보는 1번 단독."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합: 'they merely endure...' — 'and they' 뒤 원형 동사구로 병렬 성립, 정문. 논리: 지문은 이런 사람들이 '단순히 긍정적 측면을 찾는 데 그치지 않고 실제로 한 걸음 더 나아간다(not only look for... but actually go one step further)'고 명시한다. '단지(merely) 침묵의 인내로 충격을 견딘다'는 수동적 태도는 'go one step further', 'overcome their problem', 'see opportunities'와 정면 모순. 형식적으로 지문 명제 ¬(passive endurance only)와 선지 명제(passive endurance only)가 충돌하므로 기각."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "문법 결합: 'they uncover profound value hidden within their apparent setbacks' — believe와 병렬되는 현재시제 동사구, hidden은 value를 수식하는 축약 관계절(value [which is] hidden), 정문. 논리: 직전 절 'every cloud has a silver lining'(모든 불행에는 숨은 좋은 면이 있다)의 은유를 문자적으로 전개한 것이 정확히 '겉보기 좌절(cloud/apparent setbacks) 속에 숨은(silver lining/hidden) 가치를 발굴한다(uncover)'이다. 또한 'focus on what they can gain from their circumstance', 'turn any disadvantage into an advantage', 'see opportunities where most of us fail to see them'과 모두 함의 방향이 일치. and 병렬은 '믿음(believe)'에서 '실행(uncover)'으로의 전개로, 'not only look for... but actually go one step further'의 능동성 요구도 충족. 유일하게 옹호 가능."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리: '타인을 설득해 자기 계획의 근본적 결함을 눈감게 한다'는 기만적 행위는 지문 어디에도 근거가 없다. 지문의 주제는 결함 은폐가 아니라 불운의 재해석·활용이다. 펜 장수 일화도 결함을 숨기는 게 아니라 오히려 드러내며 웃음으로 전환하는 사례이므로, 이 선지는 일화의 방향과도 반대. 기각."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리: 지문은 '큰 상실을 겪은 많은 이들이 스스로 놀라운 업적을 이룬다(go on to achieve remarkable feats)'고 했지, '남들이 이전에 이룬 업적을 복제(replicate... previously achieved by others)'한다고 하지 않았다. 'remarkable feats'라는 표층 어휘를 재활용한 미끼로, 행위 주체와 원천(자기 상실의 재해석 vs 타인 모방)이 다르다. 지문 명제와 선지 명제가 별개이므로 기각."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "문법 결합: 정문. 논리: '공개적 실패를 초래할 상황을 회피한다'는 것은 지문의 핵심 주장(실패·불운을 회피하지 않고 이점으로 전환한다)과 정면 모순. 첫 일화의 펜 장수는 공개적 실패 상황에서 도망가지 않고 그것을 활용했다. 지문 전체가 ¬avoidance를 전제하므로 형식적 모순으로 기각."
+    }
+  ],
+  "note": "빈칸은 'They believe in the old cliché that every cloud has a silver lining, and they ___' 구조로, 앞 절의 은유(silver lining)를 실행 층위로 옮긴 명제가 요구된다. ②만이 은유의 문자적 전개(구름=apparent setbacks, 은빛 안감=hidden value, 찾기=uncover)이자 지문 전반의 논지(disadvantage→advantage, gain>loss, see opportunities)와 함의가 일치한다. ①⑤는 지문 명제와 직접 모순, ③은 무근거 신정보, ④는 표층 어휘 재활용 미끼. 다섯 선지 모두 문법적으로는 seam이 성립(원형 현재시제 VP 병렬)하므로 판별은 순수 논리 층위에서 이루어지며, 정답이 하나로 명확히 좁혀진다."
+}

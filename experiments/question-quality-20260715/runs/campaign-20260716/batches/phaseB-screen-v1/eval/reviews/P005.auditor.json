@@ -1,0 +1,111 @@
+{
+  "pid": "P005",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-KEYPOINT-STRUCTURE-HALLUCINATION",
+      "severity": "critical",
+      "evidence": "keyPoints의 (D) 항목이 '진주어와 수동 관계를 맺는 정동사 수일치태 판정'이라고 기술하나, 해당 문장 'People raising their voices ... implied a hidden message that a person with a disability is defined as lesser...'에는 가주어(it)-진주어(extraposition) 구조가 전혀 없다. that절은 a hidden message의 동격절이고 'a person with a disability'는 그 절의 일반 주어다. 오답 해설 자체는 '명사절 that절'로 옳게 기술하여 keyPoints와 구조 기술이 상호 모순된다. 또한 '수일치태 판정'은 수일치와 태를 뭉갠 손상 용어다. 존재하지 않는 구조 지목 + 손상 용어 = V4 실패."
+    },
+    {
+      "code": "V2-RISK-SINGULAR-THEY-DECOY",
+      "severity": "major",
+      "evidence": "정답 집합은 {(C)} 유일로 판단되어 V2 자체는 통과. 그러나 디코이 (B) 'a person ... their'는 singular they로, RUBRIC §C가 '대안 분석이 가능한 자리'로 명시 배제하는 유형의 지점이다. 규범문법(his or her 요구) 기준으로 훈련된 학생·강사가 (B)를 오류로 주장할 이의신청 여지가 있다. 원문 그대로이고 현대 표준 용법이므로 오류가 아니지만, KILLER 문항의 디코이로는 부적절한 논쟁 지점."
+    },
+    {
+      "code": "V4-MINOR-E-EXPLANATION-FRAMING",
+      "severity": "minor",
+      "evidence": "(E) 오답 해설이 '형용사의 서술/한정 역할을 묻고 있습니다'라고 프레이밍하나 실제로는 서술 용법 판단이 개입하지 않는 단순 한정(attributive) 비교급 자리다. 사실 오류라기보다 초점이 흐린 기술."
+    },
+    {
+      "code": "V4-MINOR-KEYPOINT-B-GARBLED",
+      "severity": "minor",
+      "evidence": "keyPoints (B) '성별 중립적인 소유격 대상의 지시 수일치'는 의미가 통하지 않는 어색한 합성 표현. '단수 선행사 a person을 받는 성별 중립 대명사 they의 소유격 their' 취지로 재작성 필요."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "자동사 originate의 태 판단 — '유래하다' 의미의 자동사에 능동태 유지",
+      "temptingBecause": "'용어가 만들어졌다'는 의미 연상으로 수동태(was originated)를 기대하는 오개념을 자극",
+      "decisiveFlaw": "originate from은 '~에서 유래하다'의 자동사 용법으로 능동 과거형이 표준 — 오류 아님. 판별이 어휘 지식 한 단계로 끝나 매력도는 중간 이하"
+    },
+    {
+      "label": "(B)",
+      "intent": "대명사 수일치 — 성별 미상 단수 선행사 a person을 받는 singular they",
+      "temptingBecause": "단수 선행사 → 복수형 소유격 their의 표면 불일치가 기계적 수일치 학습자에게 강하게 오류로 보임",
+      "decisiveFlaw": "성별 미상 단수 총칭 지시의 singular they는 현대 표준이며 원문도 their를 그대로 사용 — 오류 아님. 다만 RUBRIC §C가 배제하는 논쟁 지점이라 이의신청에 취약한 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 접속사 유지 분사구문(when -ing)의 태 판정: 의미상 주어와의 능/수동 관계",
+      "temptingBecause": "when + p.p.(when asked, when given directions 등) 관용 패턴과 'be given + 목적어' 수여동사 수동 패턴의 잔상으로 표면상 자연스러워 보임",
+      "decisiveFlaw": "의미상 주어는 주절 주어 A well-meaning nurse(지시를 주는 능동 행위자)이고 과거분사 뒤에 이중목적어 him directions가 모두 잔존하여 수동 분사가 성립 불가(수여동사 수동은 목적어 하나만 잔존 가능). when giving으로 교정하면 정확히 원문 복원 — 최소대립쌍 성립. 단, 잔존 이중목적어가 즉각적 국소 단서라 KILLER 깊이에는 미달"
+    },
+    {
+      "label": "(D)",
+      "intent": "동격 that절 내 주어-동사 수일치 및 수동태 판단 — 전치사구가 낀 긴 단수 주어 뒤 is defined",
+      "temptingBecause": "주절 과거시제 implied와의 시제 불일치 의심, 긴 주어(a person with a disability)로 인한 수일치 착시",
+      "decisiveFlaw": "단수 주어와 일치하고 '정의되는' 대상이므로 단수 수동 현재(일반 진술)가 옳음 — 오류 아님. 단 keyPoints가 이 자리를 '진주어' 구조로 오분석(V4 실패 지점)"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사 future를 한정 수식하는 형용사 비교급 more equitable의 적격성",
+      "temptingBecause": "사실상 없음 — 명사구 내부의 비교급 형용사를 의심할 유인이 거의 없는 약한 필러",
+      "decisiveFlaw": "비교급 형용사의 한정 용법으로 완전히 정상 — 오류 아님. 즉시 소거되어 변별 기여 미미"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "field": "keyPoints[(D)]",
+      "severity": "critical",
+      "evidence": "'진주어와 수동 관계를 맺는 정동사 수일치태 판정' — 해당 문장에 가주어-진주어 구조 없음(동격 that절의 일반 주어). 오답 해설의 '명사절 that절' 기술과 모순. '수일치태'는 손상 용어.",
+      "recommendation": "'(D) 동격 that절 주어 a person with a disability와의 수일치 및 수동태 판정'으로 교체"
+    },
+    {
+      "field": "keyPoints[(B)]",
+      "severity": "minor",
+      "evidence": "'성별 중립적인 소유격 대상의 지시 수일치' — 의미가 성립하지 않는 어색한 표현.",
+      "recommendation": "'단수 선행사 a person을 받는 성별 중립 they(소유격 their)의 수일치'로 재작성"
+    },
+    {
+      "field": "keyPoints",
+      "severity": "major",
+      "evidence": "밑줄 5개 중 (C)(B)(D) 3개만 수록되고, 오답 해설 전반에 '왜 매력적인가(why tempting)' 서술이 부재 — §C의 '5개 밑줄 각각 point/why tempting/why correct 존재' 조건 미충족. 특히 (E)는 매력 근거 자체가 성립하기 어려운 필러.",
+      "recommendation": "각 오답 해설에 학생이 빠지는 오개념 한 줄 추가, (E)를 더 매력적인 자리로 교체"
+    },
+    {
+      "field": "오답해설[(E)]",
+      "severity": "minor",
+      "evidence": "'형용사의 서술/한정 역할을 묻고 있습니다' — 실제로는 한정 용법만 개입하는 자리로 프레이밍이 부정확.",
+      "recommendation": "'명사를 수식하는 비교급 형용사의 적격성' 취지로 단순화"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": "충족 — giving→given 최소대립쌍, 교정 시 정확히 원문 복원",
+    "clearGrammarJudgment": "정답 포인트(분사구문 태) 자체는 대안 분석이 불가능한 명확한 판정. 다만 디코이 (B)가 §C 배제 목록의 singular they 자리라 조항의 정신에 위배",
+    "allFivePointsDocumented": "미충족 — point/why correct는 있으나 why tempting이 전반적으로 부재, keyPoints는 3/5만 수록",
+    "notImmediatelyRevealed": "미충족 — 과거분사 직후 잔존한 이중목적어 him directions가 '분사 뒤 목적어 → 능동'이라는 훈련된 즉시 단서로 정답을 노출",
+    "noShadowingDecoy": "충족 — 동일 포인트(분사 태)의 쉬운 디코이 없음"
+  },
+  "grade": "F",
+  "notes": "V1 기계 검증 통과: 렌더 지문에서 마커 제거 후 (C)만 원문형(when giving)으로 되돌리면 원지문과 문자 단위 완전 일치, 5개 마커-선지 라벨 동기화 정상. V2 통과: 블라인드 풀이 정답 (C) 유일 — (A) 자동사 능동, (B) singular they(원문 그대로, 현대 표준), (D) 단수 수동 현재, (E) 한정 비교급 모두 정상이고 (C)만 결정적 비문. V3 통과: 교정 완성문 = 원문. V4 실패(치명): keyPoints (D)의 '진주어' 환각 구조 지목 + '수일치태' 손상 용어 + 해설 본문과의 구조 기술 모순. V5 통과: 정답 라벨·선지·해설 키·markedExpressions(expression=원문형/errorExpression=표시형/correction 일관) 동기화 정상. 공예: 분사구문 태는 정전급 포인트(C1=3), 디코이가 서로 다른 오개념을 겨냥(C2=3)하나 (E)가 필러이고 실질 경쟁 선지가 (B) 정도라 C3=2, 근거는 충분하되 잔존 이중목적어가 정답 필연성을 담보(C4=3), 요청 난이도 KILLER 대비 실제는 즉시 단서형 표준 중위 포인트로 C5=1, keyPoints 용어 오류로 C6=1. V 실패는 공예로 상쇄 불가 — 등급 F. 수리 방향: keyPoints (D)(B) 재작성, (B)·(E) 디코이 교체, 정답 자리를 목적어 단서가 덜 노골적인 분사 지점으로 심화."
+}

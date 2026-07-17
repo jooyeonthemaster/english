@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'avoid taking on excessive commitments beyond your capacity'는 지문의 핵심 명제 'exercise some moderation'과 도입부 'where to draw the line'의 정확한 재진술. 결론절 'get involved in the activities that are most meaningful to you, and make sure you ~'의 병렬 논리(의미 있는 것에 참여하되 + 과잉은 피하라)와 완벽 정합. 'make sure you + 동사원형구' seam도 문법적으로 정상."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'relinquish your free time completely'는 지문이 문제로 지적한 상황('Joining too many clubs can reduce a large amount of your free time')을 오히려 권장하는 역방향 진술. 'for genuine growth'라는 그럴듯한 명분이 붙어 있으나 지문 어디에도 성장을 위한 자유시간 희생 논리는 없음."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "지문은 마감(deadline)을 'tasks you absolutely need to complete'로 반드시 지켜야 할 대상으로 취급하며, 신문 마감 예시에서도 완성도를 위해 저녁·주말까지 투자하는 태도를 긍정적으로 서술. 마감 무시는 지문 태도와 정면 충돌."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "매력적 오답. '스트레스를 줄이려면 부담 적은 클럽만'이라는 표면 논리로 끌리지만, 병렬 선행절 'the activities that are most meaningful to you'(선택 기준 = 의미)와 충돌(이 선지의 기준 = 업무량). 지문은 school newspaper처럼 crunch time이 있는 활동 자체를 부정하지 않고 '개수·총량의 절제'를 요구하므로 'solely ... very light workloads'는 극단적 왜곡. 실전에서 잠시 끌렸으나 결론절 정합성 검사에서 배제."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'without limits'가 도입부 'where to draw the line' 및 핵심어 'moderation'과 정면 충돌. 'gradually'라는 완충어가 있어도 무제한 증가는 지문 전체 논지의 반대."
+    }
+  ],
+  "note": "5개 선지 모두 'make sure you + VP' 결합이 문법적으로 정상이므로 순수 논리 변별 문항. 정답 1은 moderation 재진술로 유일하게 성립. 가장 강한 미끼는 4(스트레스 회피 표면 논리)이나 'solely'+'very light workloads'의 극단성과 'most meaningful' 병렬 충돌로 옹호 불가. 단일 정답 수렴, 신뢰도 높음."
+}

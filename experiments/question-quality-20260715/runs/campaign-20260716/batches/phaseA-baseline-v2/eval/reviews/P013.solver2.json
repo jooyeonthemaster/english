@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "형식: 'while 종속절 + 주절'의 완전한 문장으로, '차이'를 명시하는 콜론 뒤 동격 위치에 통사적으로 성립한다. 논리: 빈칸 직후 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'는 억제 주체(법)를 가리키며, 마지막 문장 'The law obsessively tries to suppress affects ... whereas cinema introduces us to our affects'가 ①의 대응(영화 스크린이 인간 감정을 생생히 반영 ↔ cinema introduces us to our affects / 법전이 감정을 통제 ↔ law suppresses affects)을 정확히 증명한다. 유일한 미세 결함: 후속 대명사 'It'(단수)의 표면 선행사가 'legal codes'(복수)라는 수 불일치 seam이 있으나, 담화 차원에서 지문 전반의 'the law'가 선행사로 가용하므로 응집성은 유지된다."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "극성 역전. 지문의 결론부는 법=억압(suppress affects), 영화=감정 대면(introduces us to our affects)인데, ②는 법=욕망의 배출구, 영화=엄격한 규칙 부과로 정반대를 주장한다. 마지막 문장과 형식적으로 모순되어 성립 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'both fields highly praise human reason'은 지문 어디에서도 지지되지 않는 명제(지문은 오히려 인간의 폭력성·정동에 대한 불안을 말함). 또한 지문은 '존재의 의미를 함께 고민한다'를 유사점으로 제시했으므로 '존재를 다르게 정의한다'는 차이 규정도 근거 없음. 후속 문장들의 affects 억압/대면 대비와 연결되지 않는다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "내용 모순: 법은 'a regime of commands and prohibitions'로 규범적 판단을 부과하는 것으로 기술되므로 '도덕적 판단을 완전히 유보한다'는 거짓. 논리 구조 모순: 빈칸은 '차이'의 명세인데 ④는 'both'로 유사점을 진술. 형식 결함: 'since + 절'만으로는 주절 없는 파편이며, 콜론 뒤에서 'difference'의 동격 명세로 기능할 수 없다(이유절은 차이의 내용이 될 수 없음)."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "내용 모순: 'work together to relieve psychological suppression'은 협력·유사성 진술로 'an important difference'라는 빈칸의 요구와 정면 충돌하며, 법은 억압을 완화하기는커녕 'obsessively tries to suppress affects'로 억압을 수행한다. 형식 결함: 'because + 절' 단독 파편으로 ④와 동일하게 콜론 뒤 차이 명세로 통사·논리적으로 성립하지 않는다."
+    }
+  ],
+  "note": "정답 ① 단독 옹호 가능. 빈칸 뒤 'It'(단수) 대 ①의 'legal codes'(복수) 수 불일치 seam이 유일한 미세 흠이나 담화상 'the law'가 선행사로 가용해 치명적이지 않음. ②는 극성 역전, ③은 무근거 전제, ④⑤는 내용 모순에 더해 종속절 파편으로 콜론 뒤 '차이' 동격 위치에 형식적으로도 부적합."
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-07-15T08:40:00+09:00",
+  "worktreeRoot": "D:/Desktop/2026project/nara",
+  "focused": {
+    "command": "npx.cmd tsx --test tests/unit/question-generation-research-profiles.test.ts tests/unit/question-generation-research-profile-wire.test.ts tests/unit/question-generation-research-profile-response.test.ts tests/unit/question-generation-retry-envelope.test.ts tests/unit/question-generation-response-cardinality.test.ts tests/unit/atlas-research-fetch-boundary.test.ts experiments/question-quality-20260715/harness/question-generation-callsite-adapter.test.ts experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts",
+    "tests": 70,
+    "passed": 70,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exitCode": 0
+  },
+  "typecheck": {
+    "command": "npx.cmd tsc --noEmit",
+    "exitCode": 0
+  },
+  "eslint": {
+    "command": "npx.cmd eslint src/lib/question-generation-research-profiles.ts src/lib/question-generation-research-runtime.ts src/lib/question-generation-research-schema.ts src/lib/atlas-research-fetch-boundary.ts src/lib/atlas-ai.ts src/lib/question-generation-llm.ts src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts experiments/question-quality-20260715/harness/question-generation-phase-c-runner.ts tests/unit/question-generation-research-profiles.test.ts tests/unit/question-generation-research-profile-wire.test.ts tests/unit/question-generation-research-profile-response.test.ts experiments/question-quality-20260715/reviews/prompt-profile-integration-audit-v2/verify.ts",
+    "exitCode": 0
+  },
+  "coverageAssertions": {
+    "applicableProfilePlanWireCells": 15,
+    "allCellsExactlyOnePhysicalFetch": true,
+    "modelIdsExact": true,
+    "reasoningExplicitlyOff": true,
+    "providerRequireParameters": true,
+    "exactQuestionCardinality": true,
+    "outputTokenCapsExact": true,
+    "noRepairSolverOrLadderChild": true,
+    "b1PremiumPredispatchExclusion": true,
+    "engineInputDriftPredispatchRejection": true,
+    "rawCandidateDecisionIdentity": true,
+    "acceptedAndRejectedFullResponsePaths": true,
+    "ordinaryNoProfileIdentity": true
+  },
+  "sideEffects": {
+    "externalApiCalls": 0,
+    "networkCalls": 0,
+    "applicationDatabaseReads": 0,
+    "applicationDatabaseWrites": 0,
+    "mockProviderResponses": 4,
+    "campaignCandidatesConsumed": 0
+  }
+}

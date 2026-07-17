@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20231219-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "주장",
+    "words": 146
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=l  (C):dec=c  (D):dec=d  (E):ANS=i",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 118,
+        "relPos": 0.145,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 271,
+        "relPos": 0.333,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 414,
+        "relPos": 0.509,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 564,
+        "relPos": 0.693,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 670,
+        "relPos": 0.823,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.823,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race laid out for them. They do well enough in school to keep advancing. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey ends with college. They have checked all the boxes in the life that was laid out for them and now lack a road map describing the right ways to move forward and continue to grow. In truth, that's when the journey really begins. When school is finished, your growth becomes voluntary. Like healthy eating habits or a regular exercise program, you need to commit to it and devote thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "laid out",
+        "isError": false,
+        "correction": "laid out",
+        "errorExpression": "laid out",
+        "surroundingText": "Instead, they simply run the race laid out for them. They do well enough",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "as if",
+        "isError": false,
+        "correction": "as if",
+        "errorExpression": "as if",
+        "surroundingText": "But so many think and act as if their learning journey ends with college.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(C)",
+        "expression": "describing",
+        "isError": false,
+        "correction": "describing",
+        "errorExpression": "describing",
+        "surroundingText": "now lack a road map describing the right ways to move forward and continue to grow.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "becomes",
+        "isError": false,
+        "correction": "becomes",
+        "errorExpression": "becomes",
+        "surroundingText": "When school is finished, your growth becomes voluntary.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "devote",
+        "isError": true,
+        "correction": "devote",
+        "errorExpression": "devoting",
+        "surroundingText": "you need to commit to it and devote thought, time, and energy to it.",
+        "pointCode": "i"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "laid out"
+      },
+      {
+        "label": "(B)",
+        "text": "as if"
+      },
+      {
+        "label": "(C)",
+        "text": "describing"
+      },
+      {
+        "label": "(D)",
+        "text": "becomes"
+      },
+      {
+        "label": "(E)",
+        "text": "devoting"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "명사 the race를 뒤에서 수식하는 과거분사구로, '그들을 위해 마련된(설계된) 경주'라는 수동의 의미 관계를 형성하므로 과거분사인 laid out은 어법상 적절합니다.",
+      "(B)": "뒤에 주어(their learning journey)와 동사(ends)를 갖춘 완전한 절을 이끌며 '마치 ~인 것처럼'이라는 양보/비유의 의미를 나타내는 접속사 자수이므로 as if는 어법상 적절합니다.",
+      "(C)": "명사 a road map을 뒤에서 수식하는 현재분사구로, 로드맵이 올바른 방향을 '설명하는' 능동의 의미 관계를 형성하므로 현재분사인 describing은 어법상 적절합니다.",
+      "(D)": "시간의 부사절 When school is finished 뒤의 주절 주어가 3인칭 단수인 your growth이므로, 이에 호응하는 단수 동사형인 becomes는 어법상 적절합니다."
+    },
+    "explanation": "(E) \"devoting\"는 어법상 틀린 표현이며 \"devote\"로 고쳐야 한다. 주절의 술어 부에서 조동사구 'need to'에 걸리는 두 개의 동사원형 'commit'과 'devote'가 등위접속사 'and'를 통해 병렬구조를 이루어야 합니다. 따라서 동사원형 자리인데 준동사 형태인 'devoting'으로 쓰인 것은 문장 구조상 틀린 비문입니다. 이를 원래의 동사원형 형태인 'devote'로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(E) 병렬 구조 — 등위접속사와 조동사에 걸리는 동사의 평행 구조 파악",
+      "(A) 과거분사 vs 현재분사 — 수식받는 명사와 분사의 능동·수동 관계 판정",
+      "(D) 주어-동사 수일치 — 수식 장치를 건너뛰고 핵심 단수 주어 구별하기"
+    ],
+    "tags": [
+      "병렬구조",
+      "준동사",
+      "수일치",
+      "분사구"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race __(A) laid out__ for them. They do well enough in school to keep advancing. Maybe they manage to get a good job at a well-run company. But so many think and act __(B) as if__ their learning journey ends with college. They have checked all the boxes in the life that was laid out for them and now lack a road map __(C) describing__ the right ways to move forward and continue to grow. In truth, that's when the journey really begins. When school is finished, your growth __(D) becomes__ voluntary. Like healthy eating habits or a regular exercise program, you need to commit to it and __(E) devoting__ thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result."
+  }
+}

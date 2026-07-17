@@ -1,0 +1,35 @@
+{
+  "pid": "P043",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "mistakes (that are) made by organizations — 축약 수동 관계절의 과거분사 후치수식. mistakes는 make의 피동 대상이므로 made가 옳고, 문장의 본동사 is가 뒤에 별도로 존재하므로 정형동사와의 충돌도 없다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "that절 내부 주어가 동명사구 creating a social media program이므로 단수 취급, 단수동사 begins가 일치한다. begins not with A but with B의 상관 병렬(not ... but ...)도 begins with와 정상 결합. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "because of는 전치사로 명사(구)만 목적어로 취하는데, 뒤에 오는 것은 everyone else(주어) + is doing it(술어)의 완전한 절이다. 절을 이끌려면 접속사 because가 필요하다. 대안 해석(인용부호가 절을 인용 명사구로 명사화한다는 방어)은 형식상 상정 가능하나, 여기 인용부호는 흔한 변명임을 표시하는 scare quotes이고 의미가 직접 이유절('남들이 다 하니까')이므로 명사화 독법은 문맥상 성립하지 않는다. 비문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "주어 \"Being in social media\"는 동명사구로 단수 취급, 단수동사 serves가 일치한다. serve no purpose의 타동사+목적어 결합도 정상. in and of itself는 삽입 부사구로 문법에 영향 없음. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "In all things는 전치 부사구(도치 유발 안 함), 주어는 단수 불가산명사 purpose이므로 단수동사 drives가 일치한다. drives success의 타동 결합도 정상. 정문."
+    }
+  ],
+  "note": "다섯 밑줄 중 넷은 수일치(동명사구 주어 2건, 단수명사 주어 1건)와 축약 관계절 분사 1건으로 모두 정문이며, (C)만이 전치사 because of 뒤에 완전한 절이 온 비문이다. 유일하게 상정 가능한 반론(인용부호에 의한 절의 명사화)은 scare quotes 용법과 의미 구조상 기각된다. 정답은 (C) 하나로 좁혀지며 복수 정답 소지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "대입 시 'such emotional impulses'가 직전의 'man's affective life'를 자연스럽게 지시하여 결합(seam)이 매끄럽고, 뒤 문장 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'의 It(=the law)과 논리 일치. 결정적으로 마지막 문장 'The law obsessively tries to suppress affects... whereas cinema introduces us to our affects'가 빈칸 내용(법=정서 충동의 규제·억압)을 그대로 재진술한다. 대조 구문(while cinema expresses..., the law regulates...)의 병렬 구조도 완벽."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "역할 뒤바꿈(role-swap) 미끼. 'confront hidden drives'는 마지막 문장의 'cinema introduces us to our affects, often forcing us to identify the most unbearable ones'와 어휘가 겹쳐 순간적으로 끌리지만, 숨은 충동과 대면하게 하는 것은 영화의 역할이다. 법은 'obsessively tries to suppress affects'로 명시되어 정반대. 대입 시 while 대조 구문도 붕괴된다(영화도 정서 표현, 법도 대면 유도면 대조가 없음)."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'commands'는 지문 어휘('a regime of commands and prohibitions') 재활용이지만, 지문은 인간이 자유를 욕망하되 법의 명령·금지 체제가 필요할 만큼 폭력적이라고 했다. 즉 법은 자유를 제한하는 쪽이지 'absolute freedom'을 보장하지 않는다. '엄격한 명령을 통한 절대 자유 보장'은 지문 근거 없는 내적 모순 진술."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "표면 어휘 매칭 미끼('horror', 'affects'). 지문에서 horror는 법이 두려워하는(fearing the horror of their consequences) 대상이지 법이 활용(utilizing)하는 수단이 아니다. 'deliberately isolates humans'(인간을 의도적으로 고립시킨다)는 지문 어디에도 근거가 없다. 어휘는 지문에서 왔으나 관계가 왜곡된 전형적 오답."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "두 번째 문장이 명시적으로 부정: 'Rather than an abstract desire for truth as a value in itself, the law deals with the messiness of human relations.' 법이 추상적 진리를 추구한다는 진술은 정반대. 또한 'while cinema..., ___' 대조 구문에 'both audiences and the law'가 오면 대조 자체가 성립하지 않아 문법·논리 결합 모두 어색하다."
+    }
+  ],
+  "note": "정답이 1로 명확하게 수렴하는 문항. 빈칸 직후 'It' 지시와 마지막 문장의 suppress/introduce 대조가 이중 장거리 단서로 작동한다. 매력적 오답의 유혹 강도: 2번(영화 역할과의 어휘 중복으로 성급한 수험생이 끌릴 수 있음) > 4번(horror/affects 표면 매칭) > 3번(commands 재활용) > 5번(도입부 abstract truth 재활용이나 명시적으로 부정된 내용). 다만 1번이 마지막 문장의 suppress를 거의 그대로 노출해 최상위권에게는 다소 직접적(transparent)일 수 있다."
+}

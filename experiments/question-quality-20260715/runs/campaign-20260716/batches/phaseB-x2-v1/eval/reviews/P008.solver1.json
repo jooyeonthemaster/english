@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Suppression of internal anxieties contradicts the passage's central mechanism: the emotionally skilled member 'will be able to express how he feels about the problem and why he feels this way.' Suppression is the opposite of the accurate emotional expression the passage credits with clear communication, and it cannot 'create an arena for open communication.'"
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Seam check: 'Value placed on diverse perspectives creates...' — singular head noun 'Value' agrees with 'creates'; grammatically clean. Logic check: the immediately preceding sentence ('take the perspective of the other group members and understand why they are reacting in a certain manner') is exactly valuing/engaging diverse perspectives, and the stated outcomes (open communication, constructive conflict resolution, improved group functioning) follow naturally from it. Minor imperfection: it summarizes mainly the perspective-taking half rather than also the self-expression half, but it is the only option coherent with the passage and points back to the nearest antecedent, as a summary sentence should."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Standardization of response codes has no textual basis. The passage is about individualized, accurate expression of emotions and understanding others' unique reactions — the opposite of standardized responses. Standardization would not plausibly produce 'open communication.'"
+    },
+    {
+      "label": "④",
+      "verdict": "reject (attractive distractor — felt the pull)",
+      "reason": "The lure: the blank sentence ends with 'constructive conflict resolution and improved group functioning,' inviting the pattern-match 'conflict is bad → avoid it → group functions better.' On second look it fails twice: (1) the passage's example is set INSIDE 'a group conflict situation' and the skill's payoff is expressing feelings and resolving the conflict constructively — engagement, not avoidance; (2) internal incoherence — avoiding interpersonal conflicts cannot simultaneously 'create an arena for open communication' and 'promote constructive conflict resolution'; avoidance forecloses both."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Maximization of personal interests directly contradicts 'act in ways that accommodate their own needs as well as the needs of others (i.e. cooperate).' Self-interest maximization is antithetical to the cooperation-and-open-communication outcome the blank must produce."
+    }
+  ],
+  "note": "Blank is an anaphoric summary subject: it must name what the preceding two sentences described (expressing one's own feelings + taking others' perspectives) as the thing that 'creates an arena for open communication.' Only ② does this. Ideal filler would be something like 'This kind of perspective taking' or 'This ability to understand emotions'; ② ('Value placed on diverse perspectives') is a slightly abstracted paraphrase weighted toward the perspective-taking half, but no other option is remotely defensible, so the item resolves to a single answer. ④ is the designed trap via the word 'conflict' but self-destructs against 'constructive conflict resolution' in the same sentence."
+}

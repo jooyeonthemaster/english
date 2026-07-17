@@ -1,0 +1,710 @@
+{
+  "id": "u10-c1",
+  "unitId": "u10",
+  "order": 1,
+  "title": "형용사 자리 vs 부사 자리",
+  "oneLiner": "명사 수식·보어 자리는 형용사, 동사·형용사·문장 수식은 부사입니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": ["TP16"],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 형용사·부사의 쓰임(중 ●)",
+      "어법끝 5.0 — 형용사 자리 vs 부사 자리(보어 자리 판별)",
+      "천일문 고등 GRAMMAR — 형용사와 부사의 자리, 목적격보어를 취하는 동사"
+    ]
+  },
+  "lenses": ["L1"],
+  "confusableWith": ["u10-c2", "b06-c1", "b02-c4"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The residents found the new subway schedule confusing.",
+        "The residents found the new subway schedule confusingly."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 어미 -ly 하나입니다. 이 레슨을 마치면 왜 이 자리가 형용사 자리인지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "보어",
+      "question": "보어가 대체 무엇이고, 왜 이 레슨의 열쇠입니까?",
+      "plain": "보어는 주어나 목적어가 '무엇인지·어떠한지'를 보충해 설명하는 자리입니다. 문장의 필수 성분이라 이 자리가 비면 문장이 불완전해집니다.",
+      "analogy": "주어·목적어에 붙이는 상태 이름표입니다. 'The soup is ___' 에서 빈칸이 비면 수프가 어떻다는 것인지 알 수 없듯, 보어는 그 대상의 상태를 대신 말해 줍니다.",
+      "whyItMatters": "형용사와 부사를 가르는 열쇠가 바로 이 보어 자리입니다. 보어 자리에는 부사가 절대 오지 못하고 형용사가 오므로, 보어 자리를 알아보는 순간 판단의 절반이 끝납니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "우리말로 '~하게'라고 번역되면 부사를 씁니다.",
+      "truth": "형용사와 부사를 가르는 것은 우리말 번역이 아니라 그 단어가 앉는 자리입니다. 연결동사 뒤 보어 자리는 우리말로 '~하게'로 옮겨지더라도 형용사 자리입니다.",
+      "counterExample": {
+        "en": "The witness's account sounded **convincingly** to the jury.",
+        "ko": "그 증인의 진술은 배심원단에게 설득력 있게 들렸습니다.",
+        "note": "sound 는 주어의 상태를 설명하는 연결동사이므로 뒤는 보어 자리입니다. 우리말 '설득력 있게'에 끌려 부사를 넣었지만 convincing 이어야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "형용사 자리·부사 자리 필기",
+      "intro": "형용사가 앉는 세 자리와 부사가 앉는 한 자리를 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "자리가 품사를 정합니다",
+          "body": "품사를 먼저 고르지 않습니다. 그 단어가 문장에서 앉는 자리를 먼저 정하고, 그 자리에 맞는 품사를 넣습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "형용사 자리 ① 명사 수식",
+          "body": "명사를 앞이나 뒤에서 한정하는 자리입니다. 이 자리에는 형용사가 옵니다.",
+          "example": {
+            "en": "The committee published a **detailed** report on air quality.",
+            "ko": "그 위원회는 대기 질에 관한 상세한 보고서를 발간했습니다.",
+            "note": "명사 report 를 앞에서 꾸미므로 형용사입니다."
+          }
+        },
+        {
+          "head": "형용사 자리 ② 주격보어",
+          "body": "be·become·seem·remain·look 같은 연결동사 뒤는 주어의 상태를 설명하는 보어 자리입니다. 이 자리에는 형용사가 옵니다.",
+          "example": {
+            "en": "The findings of the study remain **controversial**.",
+            "ko": "그 연구의 결과는 여전히 논쟁적입니다.",
+            "note": "연결동사 remain 뒤의 주격보어 자리이므로 형용사입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "형용사 자리 ③ 목적격보어",
+          "body": "make·keep·find·consider·leave·render 는 목적어 뒤에 그 목적어의 상태를 설명하는 자리를 부릅니다. 이 자리에도 형용사가 옵니다.",
+          "example": {
+            "en": "The heavy fog made the coastal road **dangerous**.",
+            "ko": "짙은 안개는 그 해안 도로를 위험하게 만들었습니다.",
+            "note": "make 의 목적어 the coastal road 의 상태를 설명하는 목적격보어이므로 형용사입니다."
+          }
+        },
+        {
+          "head": "부사 자리 — 수식어",
+          "body": "동사·형용사·다른 부사·문장 전체를 꾸미는 자리입니다. 보어가 되지 못하며, 지워도 문장이 성립합니다.",
+          "example": {
+            "en": "The researchers analyzed the census data **thoroughly**.",
+            "ko": "연구자들은 인구 조사 자료를 철저하게 분석했습니다.",
+            "note": "동사 analyzed 가 이루어진 방식을 꾸미므로 부사입니다."
+          },
+          "pin": "팁"
+        },
+        {
+          "head": "-ly 라고 다 부사는 아닙니다",
+          "body": "friendly·costly·lively·timely 는 -ly 로 끝나지만 형용사입니다. 어미만 보고 부사로 판단하면 안 됩니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "형용사는 명사를 꾸미거나, 주어·목적어의 상태를 설명하는 보어 자리에 옵니다.",
+      "examples": [
+        {
+          "en": "The committee published a **detailed** report on air quality.",
+          "ko": "그 위원회는 대기 질에 관한 상세한 보고서를 발간했습니다.",
+          "note": "명사 report 를 앞에서 꾸미는 자리이므로 형용사입니다."
+        },
+        {
+          "en": "The findings of the study remain **controversial** among economists.",
+          "ko": "그 연구의 결과는 경제학자들 사이에서 여전히 논쟁적입니다.",
+          "note": "remain 은 주어의 상태를 설명하는 연결동사이므로 그 뒤는 형용사 보어 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "부사는 동사·형용사·다른 부사·문장 전체를 꾸미며, 문장의 필수 성분인 보어가 되지 못합니다.",
+      "examples": [
+        {
+          "en": "The researchers analyzed the census data **thoroughly** before publishing it.",
+          "ko": "연구자들은 인구 조사 자료를 발표하기 전에 철저하게 분석했습니다.",
+          "note": "동사 analyzed 가 이루어진 방식을 꾸미는 자리이므로 부사입니다."
+        },
+        {
+          "en": "The experiment produced **surprisingly** consistent results.",
+          "ko": "그 실험은 놀라울 정도로 일관된 결과를 냈습니다.",
+          "note": "뒤의 형용사 consistent 를 꾸미는 자리입니다. 형용사를 꾸미는 것은 부사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "자리 판정 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "명사를 꾸미는 자리에는 형용사가 옵니다.",
+          "isTrue": true,
+          "why": "명사를 한정하는 것은 형용사입니다. a detailed report 가 그 예입니다."
+        },
+        {
+          "statement": "연결동사 seem 뒤의 보어 자리에는 부사가 옵니다.",
+          "isTrue": false,
+          "why": "연결동사 뒤는 주어의 상태를 설명하는 보어 자리이므로 형용사가 옵니다."
+        },
+        {
+          "statement": "우리말로 '~하게'로 번역되면 반드시 부사를 씁니다.",
+          "isTrue": false,
+          "why": "번역은 근거가 되지 못합니다. 보어 자리는 '~하게'로 옮겨져도 형용사 자리입니다."
+        },
+        {
+          "statement": "make·keep·find 의 목적어 뒤 목적격보어 자리에는 형용사가 옵니다.",
+          "isTrue": true,
+          "why": "목적격보어는 목적어의 상태를 설명하는 보어 자리이므로 형용사가 옵니다."
+        },
+        {
+          "statement": "형용사를 꾸미는 자리에는 부사가 옵니다.",
+          "isTrue": true,
+          "why": "형용사를 수식하는 것은 부사입니다. surprisingly consistent 가 그 예입니다."
+        },
+        {
+          "statement": "friendly 는 -ly 로 끝나므로 부사입니다.",
+          "isTrue": false,
+          "why": "friendly 는 -ly 로 끝나지만 형용사입니다. 어미는 품사의 근거가 되지 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "어떤 동사가 어떤 자리를 여는가",
+      "columns": ["자리를 여는 동사", "그 뒤에 열리는 자리", "그 자리의 품사"],
+      "rows": [
+        {
+          "cells": [
+            "연결동사: be·become·seem·appear·remain·look·sound·feel·taste·smell·grow·turn·prove",
+            "주격보어",
+            "형용사"
+          ],
+          "example": {
+            "en": "The soup tasted **bitter** even after the chef added sugar.",
+            "ko": "요리사가 설탕을 넣은 뒤에도 그 수프는 쓴맛이 났습니다.",
+            "note": "taste 가 주어의 상태를 설명하는 연결동사이므로 형용사 보어가 옵니다."
+          }
+        },
+        {
+          "cells": [
+            "목적격보어 동사: make·keep·find·consider·leave·render",
+            "목적어 뒤의 목적격보어",
+            "형용사"
+          ],
+          "example": {
+            "en": "The cold weather kept the mountain roads **icy** for a week.",
+            "ko": "추운 날씨는 일주일 동안 산악 도로를 얼어붙은 상태로 유지시켰습니다.",
+            "note": "keep 의 목적어 the mountain roads 의 상태를 설명하는 목적격보어이므로 형용사입니다."
+          }
+        },
+        {
+          "cells": [
+            "그 밖의 일반동사: review·analyze·describe·examine 등",
+            "동사를 꾸미는 수식어",
+            "부사"
+          ],
+          "example": {
+            "en": "The auditors reviewed the accounts **carefully** last month.",
+            "ko": "감사관들은 지난달 그 회계 장부를 신중하게 검토했습니다.",
+            "note": "review 는 목적어를 취하는 일반동사이므로 뒤는 방식을 꾸미는 부사 자리입니다."
+          }
+        }
+      ],
+      "takeaway": "동사가 어떤 자리를 여는지가 품사를 결정합니다. 앞의 두 무리는 형용사를, 나머지 일반동사는 부사를 부릅니다."
+    },
+    {
+      "id": "b9",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "목적격보어가 있는 문장의 해부",
+      "tokens": [
+        { "t": "The long delay", "role": "S" },
+        { "t": "made", "role": "V" },
+        { "t": "the passengers", "role": "O" },
+        { "t": "extremely", "role": "M" },
+        { "t": "uncomfortable.", "role": "C" }
+      ],
+      "ko": "긴 지연은 승객들을 대단히 불편하게 만들었습니다.",
+      "layers": [
+        {
+          "label": "① 본동사와 그 종류를 확인합니다",
+          "roles": ["V"],
+          "note": "본동사는 made 입니다. make 는 목적어 뒤에 목적격보어를 부르는 동사입니다."
+        },
+        {
+          "label": "② 목적어를 확인합니다",
+          "roles": ["O"],
+          "note": "made 의 목적어는 the passengers 입니다. 그렇다면 그 뒤에는 이 목적어의 상태를 설명할 자리가 남습니다."
+        },
+        {
+          "label": "③ 남은 자리는 목적격보어입니다",
+          "roles": ["C"],
+          "note": "uncomfortable 은 the passengers 의 상태를 설명하는 보어입니다. 보어 자리이므로 부사가 아니라 형용사가 옵니다."
+        },
+        {
+          "label": "④ 보어를 꾸미는 말은 부사입니다",
+          "roles": ["M"],
+          "note": "extremely 는 형용사 uncomfortable 을 꾸미는 수식어입니다. 형용사를 꾸미므로 부사가 옳습니다."
+        }
+      ],
+      "conclusion": "같은 문장 안에서도 보어 자리에는 형용사가, 그 형용사를 꾸미는 자리에는 부사가 옵니다. 자리를 먼저 정하고 품사를 고릅니다."
+    },
+    {
+      "id": "b10",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "예문 조각과 자리 이름 맞추기",
+      "instruction": "왼쪽 예문 조각을 오른쪽 자리 이름과 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "a **detailed** report on air quality",
+          "b": "명사 수식 — 형용사 자리",
+          "why": "명사 report 를 앞에서 꾸미는 자리이므로 형용사입니다."
+        },
+        {
+          "a": "The findings remained **controversial**",
+          "b": "주격보어 — 형용사 자리",
+          "why": "연결동사 remain 뒤에서 주어의 상태를 설명하는 보어 자리이므로 형용사입니다."
+        },
+        {
+          "a": "made the coastal road **dangerous**",
+          "b": "목적격보어 — 형용사 자리",
+          "why": "make 의 목적어 뒤에서 목적어의 상태를 설명하는 보어 자리이므로 형용사입니다."
+        },
+        {
+          "a": "analyzed the census data **thoroughly**",
+          "b": "수식어 — 부사 자리",
+          "why": "동사 analyze 가 이루어진 방식을 꾸미는 자리이므로 부사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "형용사인지 부사인지 정하는 4단계",
+      "steps": [
+        {
+          "text": "그 자리가 명사를 꾸미는 자리인지 봅니다. 명사를 한정하면 형용사입니다.",
+          "applyNote": "앞 괄호 자리 뒤에는 명사가 없습니다. 명사를 꾸미는 자리가 아니므로 다음 단계로 넘어갑니다."
+        },
+        {
+          "text": "앞의 동사가 be·become·seem·remain·look·sound·feel·taste·smell·grow·turn·prove 같은 연결동사인지 확인합니다. 연결동사 뒤는 주어를 설명하는 보어 자리이므로 형용사입니다.",
+          "applyNote": "found 는 연결동사가 아니므로 이 단계에서는 걸리지 않습니다. 다음 단계로 넘어갑니다."
+        },
+        {
+          "text": "동사가 make·keep·find·consider·leave·render 처럼 목적격보어를 취하고 앞에 목적어가 있으면, 그 자리는 목적격보어이므로 형용사입니다.",
+          "applyNote": "found 의 목적어는 the original plan 이고, 그 뒤 자리는 목적격보어입니다. 따라서 impractical 이 옳습니다."
+        },
+        {
+          "text": "위 어디에도 해당하지 않으면 그 자리는 수식어 자리입니다. 동사·형용사·부사·문장을 꾸미므로 부사가 옵니다.",
+          "applyNote": "revised 뒤의 자리는 동사가 이루어진 방식을 꾸미는 자리이므로 부사 thoroughly 가 옳습니다."
+        }
+      ],
+      "example": {
+        "en": "The council found the original plan **impractical** and revised it **thoroughly**.",
+        "ko": "그 의회는 원래의 계획이 실행 불가능하다고 판단했고 그것을 철저하게 수정했습니다.",
+        "note": "앞의 자리는 목적격보어이므로 형용사, 뒤의 자리는 동사를 꾸미는 수식어이므로 부사입니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The evidence collected at the site made the earlier conclusion ( doubtful / doubtfully ).",
+      "steps": [
+        {
+          "title": "① 자리가 명사를 꾸미는 자리인지 봅니다",
+          "body": "괄호 뒤에는 명사가 없습니다. 명사를 꾸미는 자리가 아니므로 다음 단계로 넘어갑니다."
+        },
+        {
+          "title": "② 앞의 동사를 확인합니다",
+          "body": "본동사는 made 입니다. collected 는 앞의 명사 The evidence 를 꾸미는 분사이므로 본동사가 아닙니다."
+        },
+        {
+          "title": "③ 목적어가 있는지 봅니다",
+          "body": "made 의 목적어는 the earlier conclusion 입니다. make 는 목적어 뒤에 목적격보어를 부르는 동사이므로, 괄호는 목적격보어 자리입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "목적격보어 자리에는 목적어의 상태를 설명하는 형용사가 옵니다. 부사 doubtfully 를 넣으면 목적어의 상태를 설명할 성분이 사라집니다. 따라서 doubtful 이 옳습니다."
+        }
+      ],
+      "answer": "doubtful",
+      "ko": "현장에서 수집된 증거는 앞선 결론을 의심스럽게 만들었습니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u10-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The instructions seemed {{blank}} to most of the participants.",
+          "options": ["confusing", "confusingly"],
+          "answer": 0,
+          "translation": "그 지시 사항은 참가자 대다수에게 혼란스러워 보였습니다.",
+          "explanation": "seem 은 주어의 상태를 설명하는 보어를 요구하는 연결동사입니다. 보어 자리에는 형용사가 오므로 confusing 이 옳습니다. 우리말 '혼란스럽게'에 끌려 부사를 넣으면 보어 자리가 비게 됩니다.",
+          "trapTags": ["linking-verb"]
+        },
+        {
+          "id": "u10-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The committee reviewed the revised proposal [[u:careful]] before the final vote.",
+          "isCorrect": false,
+          "correction": "carefully",
+          "translation": "그 위원회는 최종 표결 전에 수정된 제안서를 신중하게 검토했습니다.",
+          "explanation": "review 는 연결동사도 아니고 목적격보어를 취하는 동사도 아닙니다. 밑줄 자리는 동사가 이루어진 방식을 꾸미는 수식어 자리이므로 부사 carefully 가 옳습니다.",
+          "trapTags": ["adverb-slot"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "같은 동사, 다른 자리",
+      "columns": ["형용사 자리(보어)", "부사 자리(수식어)"],
+      "rows": [
+        {
+          "criterion": "앞의 동사",
+          "a": "연결동사(taste·look·seem·remain) 또는 목적격보어를 취하는 동사(make·keep·find)",
+          "b": "목적어를 취하는 일반동사, 또는 이미 보어가 채워진 뒤"
+        },
+        {
+          "criterion": "무엇을 설명·수식하는가",
+          "a": "주어 또는 목적어의 상태를 설명합니다",
+          "b": "동사·형용사·부사·문장 전체를 꾸밉니다"
+        },
+        {
+          "criterion": "지우면 어떻게 되는가",
+          "a": "문장이 불완전해집니다(필수 성분)",
+          "b": "문장은 그대로 성립합니다(수의 성분)"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The soup tasted **bitter** even after the chef added sugar.",
+          "ko": "요리사가 설탕을 넣은 뒤에도 그 수프는 쓴맛이 났습니다.",
+          "note": "taste 가 '~한 맛이 나다'로 쓰였습니다. 주어의 상태를 설명하는 보어 자리이므로 형용사입니다."
+        },
+        {
+          "en": "The chef tasted the soup **carefully** before serving it.",
+          "ko": "그 요리사는 수프를 내놓기 전에 신중하게 맛보았습니다.",
+          "note": "같은 taste 이지만 목적어 the soup 를 취한 일반동사입니다. 뒤의 자리는 동작의 방식을 꾸미는 부사 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 목적어와 목적격보어 사이에 수식어가 길게 끼는 경우",
+      "body": "목적어 뒤에 분사구나 전치사구가 길게 붙으면 목적격보어가 동사에서 멀어집니다. 그러면 그 자리가 보어라는 사실이 보이지 않아 부사를 넣게 됩니다. 목적어를 찾은 뒤 그 뒤의 수식어를 괄호로 묶고, 괄호 밖에 보어 자리가 남았는지 확인해야 합니다.",
+      "example": {
+        "en": "The committee found the arguments presented at the public hearing entirely **convincing**.",
+        "ko": "그 위원회는 공청회에서 제시된 논거들이 전적으로 설득력 있다고 판단했습니다.",
+        "note": "목적어는 the arguments 이고 presented at the public hearing 은 그것을 꾸미는 분사구입니다. 이를 걷어내면 convincing 이 목적격보어 자리임이 드러나므로 형용사가 옳습니다."
+      }
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "-ly 로 끝나지만 부사가 아닌 말",
+      "body": "friendly·costly·lively·timely 는 -ly 로 끝나지만 형용사입니다. 어미만 보고 부사로 판단하면 동사를 꾸미는 자리에 형용사를 넣게 됩니다. 반대로 이 단어들이 명사 앞이나 보어 자리에 있으면 그것이 정상입니다.",
+      "example": {
+        "en": "The museum staff greeted the foreign visitors **friendly**.",
+        "ko": "그 박물관 직원들은 외국인 방문객들을 친절하게 맞이했습니다.",
+        "note": "friendly 는 형용사이므로 동사 greeted 를 꾸밀 수 없습니다. in a friendly manner 로 바꾸거나 gave the visitors a friendly welcome 처럼 명사를 꾸미는 자리로 옮겨야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b17",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나 찾기",
+      "instruction": "넷 중 나머지 셋과 결이 다른 하나를 고르십시오.",
+      "rounds": [
+        {
+          "words": ["friendly", "costly", "lively", "quickly"],
+          "odd": 3,
+          "why": "friendly·costly·lively 는 -ly 로 끝나는 형용사이고, quickly 만이 진짜 부사입니다."
+        },
+        {
+          "words": ["seem", "remain", "become", "examine"],
+          "odd": 3,
+          "why": "seem·remain·become 은 형용사 보어를 취하는 연결동사이고, examine 만이 목적어를 취하는 일반동사입니다."
+        },
+        {
+          "words": ["made it clear", "kept it warm", "found it useful", "did it quickly"],
+          "odd": 3,
+          "why": "앞의 셋은 목적어 뒤에 형용사 목적격보어가 온 구조이고, did it quickly 만이 동사를 부사가 꾸민 구조입니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Although the surface of the metal felt ( smooth / smoothly ), the microscope revealed deep cracks.",
+      "givenSteps": [
+        "① 괄호 뒤에 명사가 없습니다 — 명사를 꾸미는 자리가 아닙니다.",
+        "② 앞의 동사는 felt 입니다 — feel 은 목적어를 취하는 일반동사로도, 보어를 취하는 연결동사로도 쓰입니다. 이 문장에서 felt 뒤에는 목적어가 없습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "smooth — 연결동사 뒤는 주어의 상태를 설명하는 보어 자리이므로 형용사입니다",
+        "smoothly — 만지는 방식을 꾸미는 자리이므로 부사입니다",
+        "smoothly — felt 가 일반동사이므로 뒤에는 부사가 옵니다"
+      ],
+      "answer": 0,
+      "explain": "여기서 feel 은 목적어 없이 주어 the surface of the metal 의 상태를 설명하는 연결동사입니다. 따라서 괄호는 보어 자리이며 형용사 smooth 가 옳습니다. 방식을 꾸미는 부사 smoothly 를 넣으면 보어 자리가 비어 문장이 불완전해집니다."
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u10-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Regular exercise keeps the immune system {{blank}} through the winter months.",
+          "options": ["strong", "strongly"],
+          "answer": 0,
+          "translation": "규칙적인 운동은 겨울 동안 면역 체계를 튼튼하게 유지시킵니다.",
+          "explanation": "keep 은 목적어 뒤에 목적격보어를 부르는 동사입니다. 빈칸은 목적어 the immune system 의 상태를 설명하는 보어 자리이므로 형용사 strong 이 옳습니다.",
+          "trapTags": ["object-complement"]
+        },
+        {
+          "id": "u10-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The residents grew {{blank}} impatient as the repair work dragged on.",
+          "options": ["increasing", "increasingly"],
+          "answer": 1,
+          "translation": "보수 공사가 길어지면서 주민들은 점점 더 참을성을 잃어 갔습니다.",
+          "explanation": "grow 가 연결동사이므로 보어 자리에는 형용사가 오는데, 그 보어는 이미 impatient 가 채우고 있습니다. 빈칸은 형용사 impatient 를 꾸미는 자리이므로 부사 increasingly 가 옳습니다.",
+          "trapTags": ["adverb-modifying-adjective", "linking-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 increasingly 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "grow 가 부르는 보어 자리는 형용사 impatient 가 이미 채웠으므로, 빈칸은 그 형용사를 꾸미는 수식어 자리였습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 보어 자리가 채워졌는지부터 확인하고, 남은 자리가 수식어면 부사를 넣는 것이 판단 순서입니다."
+        },
+        {
+          "text": "grow 가 일반동사이므로 그 뒤에는 언제나 부사가 오기 때문입니다.",
+          "correct": false,
+          "feedback": "grow 는 여기서 연결동사입니다. 'The residents grew impatient.' 처럼 형용사 보어를 취할 수 있습니다. 부사가 온 이유는 동사 때문이 아니라 뒤의 형용사를 꾸미기 때문입니다."
+        },
+        {
+          "text": "주민들의 감정이 점점 커지는 것이므로 진행의 뜻을 가진 -ing 형이 어울리기 때문입니다.",
+          "correct": false,
+          "feedback": "의미의 자연스러움은 형태 선택의 근거가 되지 못합니다. 어법 판단은 그 단어가 앉는 자리에서 나옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 새로운 규정은 절차를 훨씬 더 단순하게 만들었습니다.",
+      "answer": ["The new regulation", "made", "the procedure", "much", "simpler"],
+      "tiles": [
+        "The new regulation",
+        "made",
+        "the procedure",
+        "much",
+        "simpler",
+        "simply"
+      ],
+      "explanation": "make + 목적어 + 목적격보어 구문이므로 the procedure 뒤의 자리에는 형용사가 옵니다. 부사 simply 는 목적어의 상태를 설명하는 보어가 될 수 없습니다. much 는 비교급 simpler 를 강조하는 부사입니다."
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The engineers who [[1:carefully]] inspected the bridge reported that the supports had become [[2:dangerous]] weak, although the surface still looked [[3:solid]] to the drivers who crossed it [[4:daily]].",
+      "answer": 2,
+      "correction": "dangerously",
+      "rationales": [
+        "동사 inspected 가 이루어진 방식을 꾸미는 수식어 자리이므로 부사가 옳습니다.",
+        "become 이 부르는 보어 자리는 뒤의 형용사 weak 가 이미 채우고 있습니다. 이 자리는 형용사 weak 를 꾸미는 수식어 자리이므로 부사 dangerously 로 고칩니다.",
+        "look 은 주어의 상태를 설명하는 연결동사이므로 그 뒤는 형용사 보어 자리입니다. solid 가 옳습니다.",
+        "동사 crossed 가 얼마나 자주 일어나는지를 꾸미는 부사입니다. daily 는 형용사와 부사로 모두 쓰이며 여기서는 부사입니다."
+      ],
+      "ko": "다리를 신중하게 점검한 그 기술자들은, 표면은 매일 다리를 건너는 운전자들에게 여전히 단단해 보였지만 지지대가 위험할 정도로 약해졌다고 보고했습니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 형용사·부사 중 하나를 괄호로 제시하고 알맞은 형태를 쓰게 하거나, 틀린 한 곳을 찾아 고쳐 쓰게 합니다. 자리 판단의 근거(보어 자리인가, 수식어 자리인가)를 함께 쓰라고 요구하는 경우가 많습니다.",
+          "sample": {
+            "en": "The long drought left the farmland almost completely barren.",
+            "ask": "밑줄 없이 주어진 이 문장에서 barren 이 형용사인 이유를 한 문장으로 쓰십시오.",
+            "answer": "leave 가 부르는 목적격보어 자리이며, 목적어 the farmland 의 상태를 설명하기 때문입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 연결동사 뒤나 목적격보어 자리에 부사를 놓아 오답 선지를 만듭니다. 밑줄이 -ly 부사인데 그 자리가 주어·목적어의 상태를 설명하는 자리라면 그것이 정답입니다.",
+          "sample": {
+            "en": "A steady supply of clean water keeps the local ecosystem [[u:stably]] even in years of drought.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "stable — keep 의 목적격보어 자리이므로 목적어 the local ecosystem 의 상태를 설명하는 형용사가 와야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Urban planners have long argued that the shape of a street quietly governs how people behave on it. [[u:Narrow lanes lined with old trees make drivers noticeably cautious, while wide avenues encourage them to accelerate.]] Traffic records from several European cities support this claim. The effect appears strongest in residential districts.",
+      "instruction": "밑줄 친 문장에서 형용사 자리와 부사 자리를 각각 찾고, 그렇게 판단한 근거를 말하십시오.",
+      "found": "make 의 목적어는 drivers 이고 그 뒤의 cautious 는 목적어의 상태를 설명하는 목적격보어이므로 형용사입니다. noticeably 는 그 형용사 cautious 를 꾸미는 수식어이므로 부사입니다. lined with old trees 는 주어 Narrow lanes 를 꾸미는 분사구로, 자리 판단에서는 걷어내고 봅니다.",
+      "gist": "가로수가 늘어선 좁은 차로는 운전자를 조심스럽게 만들지만 넓은 대로는 가속을 부추긴다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "자리 배정소의 심사관",
+      "intro": "이 배정소에서는 단어 하나하나가 형용사석에 앉을지 부사석에 앉을지 심사받습니다. 우리말 번역이나 -ly 어미로 우기는 단어는 문 앞에서 돌아갑니다. 네 건의 배정으로 그 눈을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The autumn air grew {{blank}} soon after sunset.",
+          "options": ["cold", "coldly"],
+          "answer": 0,
+          "why": "grow 는 여기서 연결동사이므로 뒤는 주어 the autumn air 의 상태를 설명하는 보어 자리입니다. 형용사 cold 가 옳습니다."
+        },
+        {
+          "prompt": "The new evidence made the earlier verdict {{blank}}.",
+          "options": ["questionable", "questionably"],
+          "answer": 0,
+          "why": "make 의 목적어 the earlier verdict 뒤의 목적격보어 자리이므로 목적어의 상태를 설명하는 형용사 questionable 이 옳습니다."
+        },
+        {
+          "prompt": "The lecture was {{blank}} clear despite the difficult topic.",
+          "options": ["remarkable", "remarkably"],
+          "answer": 1,
+          "why": "be 의 보어 자리는 뒤의 형용사 clear 가 이미 채웠습니다. 빈칸은 그 형용사를 꾸미는 자리이므로 부사 remarkably 가 옳습니다."
+        },
+        {
+          "prompt": "The technicians examined the damaged cables {{blank}}.",
+          "options": ["thorough", "thoroughly"],
+          "answer": 1,
+          "why": "examine 은 목적어를 취하는 일반동사이므로 뒤는 동작의 방식을 꾸미는 수식어 자리입니다. 부사 thoroughly 가 옳습니다."
+        }
+      ],
+      "winText": "네 자리 모두 정확히 배정되었습니다. 품사를 먼저 고르지 않고 자리를 먼저 보는 눈 — 그것이 이 심사소의 통과 기준이었고, 방금 당신의 것이 되었습니다.",
+      "loseText": "심사관이 배정표를 돌려줍니다. 네 문제 모두 물은 것은 하나였습니다 — 이 자리는 보어인가, 수식어인가. 판별 4단계를 다시 확인하고 오면 창구는 열려 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "연결동사 뒤와 목적어 뒤의 ___ 자리에는 ___가 오고, 동사·형용사·문장을 꾸미는 자리에는 ___가 옵니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "품사를 먼저 고르지 않습니다. 그 단어가 앉는 자리를 먼저 정하고 자리에 맞는 품사를 넣습니다.",
+        "명사 수식·주격보어·목적격보어 자리에는 부사가 올 수 없습니다. 그 자리에는 형용사가(목적격보어라면 명사·분사도) 옵니다. 연결동사(be·become·seem·remain·look·sound·feel·taste·smell·grow·turn·prove) 뒤와 make·keep·find·consider·leave·render 의 목적어 뒤가 그 자리입니다.",
+        "동사·형용사·부사·문장 전체를 꾸미는 자리에는 부사가 옵니다. 보어 자리가 이미 형용사로 채워져 있다면 그 앞자리는 부사 자리입니다.",
+        "우리말 번역의 '~하게'와 어미 -ly 는 근거가 되지 못합니다. friendly·costly·lively·timely 는 -ly 로 끝나는 형용사입니다."
+      ],
+      "keySentence": {
+        "en": "The long delay made the passengers **extremely** **uncomfortable**.",
+        "ko": "긴 지연은 승객들을 대단히 불편하게 만들었습니다.",
+        "note": "보어 자리에는 형용사 uncomfortable 이, 그 형용사를 꾸미는 자리에는 부사 extremely 가 옵니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u10-c1-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The witnesses described the sequence of events {{blank}} to the investigators.",
+          "options": ["accurate", "accurately"],
+          "answer": 1,
+          "translation": "목격자들은 사건의 전개 순서를 수사관들에게 정확하게 진술했습니다.",
+          "explanation": "describe 는 연결동사가 아니며 목적격보어도 취하지 않습니다. 목적어 the sequence of events 뒤의 자리는 동사가 이루어진 방식을 꾸미는 수식어 자리이므로 부사 accurately 가 옳습니다.",
+          "trapTags": ["adverb-slot"]
+        },
+        {
+          "id": "u10-c1-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Prolonged exposure to loud noise can render even a healthy person [[u:anxiously]].",
+          "isCorrect": false,
+          "correction": "anxious",
+          "translation": "소음에 오래 노출되면 건강한 사람조차 불안한 상태가 될 수 있습니다.",
+          "explanation": "render 는 목적어 뒤에 목적격보어를 부르는 동사입니다. 밑줄은 목적어 even a healthy person 의 상태를 설명하는 보어 자리이므로 형용사 anxious 가 옳습니다.",
+          "trapTags": ["object-complement"]
+        },
+        {
+          "id": "u10-c1-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The new bicycle lanes proved {{blank}} effective in reducing traffic accidents.",
+          "options": ["remarkable", "remarkably"],
+          "answer": 1,
+          "translation": "그 새로운 자전거 도로는 교통사고를 줄이는 데 놀라울 만큼 효과적이었습니다.",
+          "explanation": "prove 는 형용사 보어를 취하는 연결동사이지만, 그 보어 자리는 이미 effective 가 채우고 있습니다. 빈칸은 형용사 effective 를 꾸미는 자리이므로 부사 remarkably 가 옳습니다.",
+          "trapTags": ["adverb-modifying-adjective", "linking-verb"]
+        }
+      ]
+    }
+  ]
+}

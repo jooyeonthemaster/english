@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "빈칸까지의 논리는 'rigid work schedule 고수'를 비판하고 'go with the flow'를 옹호하는 방향이다. 'establish a structured routine'은 오히려 경직된 계획 쪽으로 회귀하는 내용이라 지문 논리와 정면 충돌한다. 다만 'to manage changes efficiently'가 '계획 변경'이라는 지문 키워드를 재활용해 실전에서 잠깐 눈이 가는 매력적 오답 — 후반부만 보고 고르면 걸린다. 'structured routine'이 지문의 'rigid schedule'과 동치임을 확인하는 순간 탈락. 문법 결합(you must + 동사원형)은 정상."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "빈칸 문장은 직전 수사적 질문 'What's more important — getting what I want and keeping my plans, or learning to go with the flow?'의 답을 요구하고, 뒤 문장(계획의 일정 비율은 바뀔 것을 미리 예상하고 make allowances 하라)이 이를 뒷받침한다. 'value adaptability over strict adherence to predefined schedules'는 'adaptability = go with the flow', 'strict adherence to predefined schedules = rigid work schedule / keeping my plans'로 1:1 대응하며 지문 전체 논지를 정확히 요약한다. 'must value A over B' 문법 결합도 자연스럽다."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "지문은 우선순위가 '왜 바뀌는지 그 이유를 분리·분석하라'고 말한 적이 없다. 'priorities'가 지문 2문장('That depends on what your priorities are')에 등장해 표면 어휘 매칭으로 유혹하지만, 지문에서 priorities는 '무엇을 더 중시할지 스스로 정하라'는 맥락이지 '변동 원인 규명'이 아니다. 평화로운 사람이 되는 방법과 논리적 연결 없음. 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "네 살배기 아이는 'rigid schedule vs. availability' 대립을 보여주는 하나의 예시일 뿐이며, 지문 스스로 'The more general question is...'라고 명시적으로 일반화 층위로 넘어간다. 빈칸은 그 일반화 질문에 대한 결론 자리이므로 특정 예시로 되돌아가는 선지는 층위가 틀렸다. 'entirely'라는 극단 표현도 수능식 오답 신호. 예시 어휘(four-year-old, available)를 노출해 대충 읽은 수험생을 낚는 전형적 미끼 — 실전에서 잠깐 끌리지만 'general question' 표지어에서 배제."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'make allowances'가 빈칸 뒤 문장에 그대로 나와 표면 매칭 유혹이 가장 강한 선지 — 실전에서 마지막까지 눈이 간다. 그러나 지문은 'a certain percentage of plans will change'라는 불가피성(inevitability)을 '미리, 조건 없이' 마음에 대비해 두라는 것이지, '결과를 예측할 수 있을 때만(only when you can predict the outcome)' 허용하라는 조건부가 아니다. 'only'가 지문 논지를 정반대로 제한·왜곡하며, 예측 불가능하기에 미리 여지를 두라는 취지와 모순되어 탈락."
+    }
+  ],
+  "note": "최상위권 실전 풀이 순서: 빈칸 직전 수사적 질문(keeping my plans vs. go with the flow)이 사실상 답을 제시하고, 빈칸 뒤 '계획 변경의 불가피성을 미리 감안하라'가 재확인하는 전형적 빈칸 구조(Richard Carlson류 자기계발 텍스트 스타일). 매력적 오답 강도: ⑤(allowances 어휘 복사+only 조건 왜곡) > ①(manage changes 키워드 재활용) > ④(예시 어휘 노출+entirely 극단화) > ③(priorities 표면 매칭). 대안 해석으로 정답이 흔들릴 여지 없고 문법 결합(seam)은 5개 선지 모두 정상(must + 동사원형)이므로 순수 논리 변별 문항. 정답 ② 유일, 다중 정답 소지 없음."
+}

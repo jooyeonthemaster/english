@@ -1,0 +1,35 @@
+{
+  "pid": "P067",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "\"Garcia's band had been chosen to perform...\" — 기준 시점(과거: stood, was hoping)보다 앞서 일어난 '선발' 사건이므로 과거완료가 정당하고, band는 choose의 대상이므로 수동태(had been chosen)가 옳다. choose + O + to-V 구문의 수동화로 'be chosen to perform'도 정상. 시제·태 모두 형식적으로 성립한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "\"That was why he had asked Jeff...\" — 관계부사 why가 선행사 the reason이 생략된 자유관계절(That was [the reason] why ...)을 이끄는 표준 구문. why 뒤 절(he had asked Jeff to help him)은 완전한 절이므로 관계부사가 요구되는 자리이며, what/which 등 관계대명사였다면 오히려 비문이 된다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "\"had asked Jeff to help him pick out new clothes\" — ask는 5형식에서 목적격 보어로 to부정사를 취한다(ask + O + to-V). 따라서 to help가 옳고, help가 다시 원형부정사 pick out을 취하는 것(help him (to) pick out)도 표준 용법. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "\"Garcia asked, pointed at a patterned red shirt...\" — 주절 동사 asked에 딸린 부대상황 분사구문 자리로, 의미상 주어 Garcia가 point 행위의 능동 주체이므로 현재분사 pointing이어야 한다. 과거분사 pointed로 두려면 (i) 수동 분사구문 해석: Garcia가 '가리켜지는' 대상이 되어 의미상 모순, point at의 수동 축약도 'Garcia being pointed at'이라는 불가능한 의미를 낳음; (ii) 정형동사 병렬 해석: 'asked, pointed'는 등위접속사 없는 술어 나열로 comma splice이며, 인용문 뒤 전달문 구조상 pointed가 said류 전달동사로도 기능할 수 없음; (iii) 명사 수식 축약관계절 해석: 수식할 명사가 인접해 있지 않음. 어떤 대안 분석으로도 정문이 되지 않으므로 어법상 틀렸다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "\"these would look great on my brother\" — look은 연결동사(linking verb)로 주격 보어에 형용사를 취한다(look + adj). 부사 greatly가 아니라 형용사 great이 옳다. 정문."
+    }
+  ],
+  "note": "정답 후보는 (D) 하나로 유일하게 수렴한다. (D)는 능동 부대상황 분사구문(pointing)이 요구되는 자리에 과거분사(pointed)를 둔 전형적 분사 태 오류이며, 병렬 정형동사·수동 분사구문·축약관계절 등 어떤 대안 해석으로도 구제되지 않는다. 나머지 네 밑줄은 각각 과거완료 수동, 선행사 생략 관계부사 why, ask+O+to-V, 연결동사+형용사 보어로 모두 형식적으로 성립한다. 복수정답 소지 없음."
+}

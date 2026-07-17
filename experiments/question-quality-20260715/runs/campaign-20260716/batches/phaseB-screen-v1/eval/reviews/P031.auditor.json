@@ -1,0 +1,71 @@
+{
+  "pid": "P031",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "오답 해설 (B): \"lasts 뒤에서 명사구 'a while'은 '잠시 동안'이라는 명사구로, 동사 last가 목적어 내지 시간의 부사구를 취하므로 접부사구로 쓰인 'while'은 문맥상 자연스럽습니다.\" — '접부사구'는 표준 문법 용어가 아닌 손상/비단어 용어다. 같은 문장 안에서 'a while'을 명사구라고 정확히 규정해 놓고 곧바로 'while'을 '접부사구'로 재명명하여 내적으로 모순된다. '접속(부)사구'의 오타로 읽더라도 이 자리의 while은 명사이므로 접속사 분석은 오분석이 된다. 어느 쪽으로 읽어도 V4의 '오개념·환각·용어 오류 없음' 조건 위반."
+    },
+    {
+      "code": "V4-BROKEN-KOREAN-SENTENCE",
+      "severity": "minor",
+      "evidence": "같은 (B) 해설 문장이 \"명사구 'a while'은 ... 명사구로\"처럼 술어 중복으로 손상되어 있고, 결론도 어법 판단('어법상 옳다')이 아닌 '문맥상 자연스럽습니다'로 흐려져 어법 문항 해설로서 판단 근거가 불명확하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "동명사구 주어의 수일치 — 'Recording an interview'가 단수 취급됨을 아는지",
+      "temptingBecause": "주어가 -ing로 시작해 분사구문/진행형과 혼동할 수 있고, 병렬된 'easier and more thorough'와 'can be'가 이어져 구조 파악 부담이 있다",
+      "decisiveFlaw": "정답 아님 — 동명사구 주어는 단수이므로 'is'가 정확히 옳다"
+    },
+    {
+      "label": "(B)",
+      "intent": "어휘 범주 판단 — while이 접속사가 아니라 'a while'(잠시 동안)이라는 명사로 쓰인 자리",
+      "temptingBecause": "학생 다수가 while을 접속사로만 알고 있어 'lasts a while'에서 관사+while 결합이 비문처럼 보인다",
+      "decisiveFlaw": "정답 아님 — 'a while'은 지속 시간을 나타내는 명사구로 'last a while'은 완전히 관용적·문법적이다"
+    },
+    {
+      "label": "(C)",
+      "intent": "가주어 It — 진주어 to부정사 구조(to-v vs v-ing)",
+      "temptingBecause": "삽입 괄호구 '(using a recorder as backup if you wish)'가 뒤따라 구조가 길어지고, developing으로 바꿔야 한다고 착각할 수 있다",
+      "decisiveFlaw": "정답 아님 — 'It is more efficient to develop ...'의 외치(extraposition) 구조로 to부정사가 정확히 요구된다"
+    },
+    {
+      "label": "(D)",
+      "intent": "태 판단 — 대명사 they의 지시 대상(the key answers)을 추적해 수동태 필요를 판정",
+      "temptingBecause": "조동사 can 뒤 'be + -ing'가 표면상 정상적인 진행형 패턴으로 보인다",
+      "decisiveFlaw": "정답(선언된 오류) — they = the key answers는 필사되는 대상이고 타동사 transcribe 뒤에 목적어가 없으므로 'be transcribed'(수동)여야 한다. 'be transcribing'은 비문"
+    },
+    {
+      "label": "(E)",
+      "intent": "비교급 강조 부사 — much(가능) vs very(불가) 구분",
+      "temptingBecause": "very/much 강조 부사 선택은 빈출 함정이라 반사적으로 의심하게 된다",
+      "decisiveFlaw": "정답 아님 — 비교급 'easier and quicker'를 강조하는 much는 정확히 옳다"
+    }
+  ],
+  "explanationIssues": [
+    "(B) 해설에 비단어 용어 '접부사구' 사용 — 동일 문장 내에서 'a while'을 명사구로 규정한 뒤 while을 '접부사구'로 재명명하는 내적 모순 (V4 실패 사유)",
+    "(B) 해설의 한국어 문장 자체가 손상됨(\"명사구 ... 명사구로\" 술어 중복) 및 결론이 '어법상 옳다'가 아닌 '문맥상 자연스럽다'로 어법 판단 근거가 흐림",
+    "keyPoints가 (D)(A)(C)만 다루고 (B)(E)의 포인트를 누락 — 모순은 아니므로 V5 통과이나 완결성 결함(minor)",
+    "정답 해설 본문 자체는 정확함: they의 지시 대상 규명, 타동사 transcribe의 목적어 부재, 교정형 'be transcribed' 제시 모두 실제 구조와 일치"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 전부 통과. 원지문 대비 변형은 (D) 'be transcribed'→'be transcribing' 단 한 곳으로 깨끗하며, 5개 밑줄 독립 검증 결과 정답 집합은 정확히 {(D)} 하나다(source-correct → displayed-wrong 최소대립쌍, 교정 시 원문과 일치). 공예 측면도 견실: 5개 포인트가 서로 다른 오개념(동명사 주어 수일치·while 어휘범주·가주어/진주어·태·비교급 강조)을 겨냥하고 (B)가 특히 매력적이며 INTERMEDIATE 난이도에 정합한다. 그러나 오답 해설 (B)의 손상 용어 '접부사구'와 명사구/접부사구 내적 모순이 V4(용어 오류·오분석 금지)를 실패시켜 등급은 F. (B) 해설 한 문장만 재작성하면(예: \"'a while'은 '잠시 동안'을 뜻하는 명사구로, last의 지속 시간을 나타내는 관용 표현이므로 어법상 옳다\") B~A 등급으로 즉시 회복 가능한 국소 결함이다. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,81 @@
+{
+  "pid": "P058",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "critical",
+      "evidence": "해설 첫 문장 '해당 문장은 부대형황을 나타내는 with + 명사 + 분사 구문…' — '부대형황'은 존재하지 않는 손상 용어(정상 용어: '부대상황'). 학생 노출 해설의 핵심 문법 용어가 비단어로 깨져 있어 RUBRIC V4('용어 오류가 없다') 위반."
+    },
+    {
+      "code": "V4-IMPRECISE-ANTECEDENT",
+      "severity": "minor",
+      "evidence": "오답 해설 (D) '비교 대상인 선행사 Those students를 가리키는 대치대명사' — than those의 those는 명사 students를 대용(substitution)하는 것이지, 앞의 NP 'Those students who had been exposed to an elderly mix'와 동일 지시(coreference)하는 것이 아니다(지시 대상은 random 단어에 노출된 다른 집단). '가리키는(지칭)'이라는 서술과 비표준 용어 '대치대명사'는 부정확. keyPoints의 '(D) …Those students를 지칭하는 지시대명사'도 동일한 부정확성을 공유."
+    },
+    {
+      "code": "V2-VALENCY-CAVEAT",
+      "severity": "major",
+      "evidence": "정답 포인트 bend는 자동사 용법이 실재한다(e.g., 'his shoulders bending under the weight'). 'with their shoulders bending forwards'를 자동사 진행 사건으로 읽는 대안 분석이 이론상 가능하며, 이를 배제하는 근거는 순수 통사 판단이 아니라 '보행 중 자세는 정적 상태'라는 상(aspect)·의미 판단이다. 문맥상 bending은 명백히 이상하고 (A)~(D)가 모두 무결하므로 V2(정답 유일성) 자체는 유지하나, RUBRIC §C 'valency처럼 대안 분석이 가능한 자리는 제외' 조건에는 저촉된다."
+    },
+    {
+      "code": "V5-SNIPPET-TRUNCATION",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 surroundingText가 'most 40 percent longer…'로 단어 중간(almost→most)에서 잘려 시작한다. 내부 구조 필드라 학생 비노출로 판단해 V5는 통과 처리하되 데이터 위생 결함으로 기록."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 후치수식 분사의 태(showing vs shown) + 목적어절(that 생략) 인지",
+      "temptingBecause": "experiment 뒤에 절이 바로 이어져 'that shows'나 수동 shown을 기대하기 쉬움",
+      "decisiveFlaw": "없음(정문). experiment가 능동적으로 '~임을 보여주는' 주체이며 뒤의 (that) human perception… 절을 목적어로 취하므로 현재분사 showing이 옳다."
+    },
+    {
+      "label": "(B)",
+      "intent": "that절 내부 주어-동사 수일치·과거진행 시제",
+      "temptingBecause": "간접화법의 시제 일치를 의심하게 하려는 의도로 보이나, he+was는 즉시 확인 가능",
+      "decisiveFlaw": "없음(정문). 3인칭 단수 he에 was testing은 자명하게 옳다 — 함정 논리가 빈약한 필러성 디코이."
+    },
+    {
+      "label": "(C)",
+      "intent": "긴 주어(관계절 수식) 뒤 본동사 자리 식별",
+      "temptingBecause": "Those students who had been exposed… 관계절이 길어 took의 문법 기능(본동사)을 놓치고 준동사(taking)를 기대할 수 있음",
+      "decisiveFlaw": "없음(정문). who~words 관계절 종료 후 문장의 본동사 자리이므로 과거형 took이 옳다."
+    },
+    {
+      "label": "(D)",
+      "intent": "비교구문 대용 대명사의 수(that vs those)",
+      "temptingBecause": "선행 명사와의 거리가 멀고 단수 that과의 선택을 유도",
+      "decisiveFlaw": "없음(정문). 복수 명사 students를 대용하므로 those가 옳다."
+    },
+    {
+      "label": "(E)",
+      "intent": "with + 명사 + 분사 부대상황 구문에서 분사의 태(bent vs bending) — 선언된 정답",
+      "temptingBecause": "바로 뒤 능동 분사 dragging과의 병렬 인상, 그리고 신체 동작이라 능동처럼 느껴짐",
+      "decisiveFlaw": "보행 중의 정적 자세(굽은 상태)를 묘사하므로 결과상태의 과거분사 bent가 요구된다. bending(진행 사건)은 문맥상 비문 — 교정하면 정확히 원문(bent)이 된다. 단, bend의 자동사 용법 탓에 순수 통사 최소대립이 아니라 상·의미 판단이 개입한다(KILLER 조건 저촉)."
+    }
+  ],
+  "explanationIssues": [
+    "손상 용어 '부대형황'(→부대상황) — 학생 노출 해설 첫 문장의 비단어 (critical)",
+    "(D) 해설의 '선행사 Those students를 가리키는' — 대용(substitution)과 지시(reference)를 혼동; those의 실제 대용 대상은 명사 students이고 지시 대상은 별개 집단",
+    "'대치대명사'는 비표준 용어(통용 용어: 지시대명사/대용 대명사)",
+    "keyPoints가 (A)(D)(E)만 다루고 (B)(C)의 point/함정 설명이 없음 — KILLER 요건(5개 밑줄 각각 point·why tempting·why correct) 미충족"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V3/V5 통과: 렌더 지문은 원지문 대비 bent→bending 단일 의도 변형만 있고 라벨·마커·선지·정답·해설 키가 동기화되어 있다. V2 통과: (A)~(D)는 각각 독립 검증 결과 명백한 정문이고 (E)만 문맥상 비문이므로 정답 집합은 정확히 {(E)}. 그러나 V4 실패: 해설의 핵심 문법 용어가 '부대형황'이라는 비단어로 손상되어 있어 RUBRIC A의 '용어 오류 없음'을 위반 — 공예 점수와 무관하게 F. KILLER 부적합 사유: (1) bend의 자동사 valency로 대안 분석이 가능한 자리(§C 2번 조건 위반), (2) 'with+신체부위+분사'는 고도로 훈련된 정형 포인트라 국소 단서만으로 즉시 식별되어 구조 독해를 요구하지 않음(§C 4번 조건 위반), (3) 5개 밑줄 전부에 대한 point/why-tempting 설명 부재 — (B)는 함정 논리가 서지 않는 필러(§C 3번 조건 위반). 난이도 정합 C5=1: 요청 KILLER 대비 실제 체감 난이도는 중(中) 수준. 수리 방향: 해설 용어 교정(부대형황→부대상황), (D) 해설의 대용/지시 서술 정밀화, keyPoints (B)(C) 보강 — 용어 교정만으로 V4는 회복 가능하나 KILLER 요건은 정답 포인트 자체 교체 없이는 충족 불가."
+}

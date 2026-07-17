@@ -1,0 +1,170 @@
+{
+  "passageId": "ebsi_go1_20241015-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 135
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-thin-answer",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-answer-in-wrong-explanations"
+  ],
+  "warnings": [
+    "wrong-option-explanation-count",
+    "grammar-explanation-too-long"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=i  (C):dec=h  (D):ANS=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 37,
+        "relPos": 0.044,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 126,
+        "relPos": 0.151,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 226,
+        "relPos": 0.271,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 357,
+        "relPos": 0.428,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 401,
+        "relPos": 0.48,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.48,
+    "firstHalfShare": 1,
+    "notFoundCount": 0
+  },
+  "originalPassage": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)∼(E) 중에서 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is (correct as is)",
+        "errorExpression": "is",
+        "surroundingText": "For many of us, making time for exercise (A) <u>is</u> a continuing challenge. ...  (B) ... (C) ... (D) ... (E) ...",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "feels",
+        "isError": false,
+        "correction": "feels (correct as is)",
+        "errorExpression": "feels",
+        "surroundingText": "Between work commitments and family obligations, it often (B) <u>feels</u> like there's no room in our packed schedules for a dedicated workout.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(C)",
+        "expression": "came",
+        "isError": false,
+        "correction": "came (correct as is)",
+        "errorExpression": "came",
+        "surroundingText": "But what if the workout (C) <u>came</u> to you, right in the midst of your daily routine?",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "comes",
+        "isError": true,
+        "correction": "comes",
+        "errorExpression": "come",
+        "surroundingText": "That's where the beauty of integrating mini-exercises into household chores (D) <u>come</u> into play.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "are",
+        "isError": false,
+        "correction": "are (correct as is)",
+        "errorExpression": "are",
+        "surroundingText": "Let's be realistic; chores (E) <u>are</u> inevitable.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "feels"
+      },
+      {
+        "label": "(C)",
+        "text": "came"
+      },
+      {
+        "label": "(D)",
+        "text": "come"
+      },
+      {
+        "label": "(E)",
+        "text": "are"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "동명사 주어 ‘making time for exercise’가 단수 취급되므로 단수 동사 is는 적절합니다.",
+      "(B)": "가주어 it 구문에서 단수 동사 feels가 쓰였고, 시제도 현재로 어법상 하자가 없습니다.",
+      "(C)": "‘what if’ 구문은 가정법 과거를 써서 현재 사실과 반대되는 상상이나 제안을 나타낼 수 있으므로 came은 올바른 표현입니다. \n오답 포인트: 많은 학생들이 ‘what if’ 뒤에는 현재 시제가 와야 한다고 착각하여 (C)를 정답으로 고르지만, 이는 가상적 상황을 나타내는 가정법 과거 용법으로 어법상 완벽합니다.",
+      "(D)": "주어는 ‘the beauty’로 단수이기 때문에 동사는 comes가 되어야 합니다. ‘of integrating mini-exercises into household chores’는 전치사구로 주어의 수에 영향을 주지 않습니다. 따라서 come은 주어-동사 수 일치 오류입니다."
+    },
+    "explanation": "정답은 ④ (D)입니다.\n(D)의 동사 ‘come’은 주어 ‘the beauty’와 수가 일치하지 않는 것이 명백한 어법 오류입니다. ‘the beauty’는 단수 명사이므로 동사는 ‘comes’가 되어야 합니다. ‘of integrating mini-exercises into household chores’라는 긴 수식어구 때문에 주어를 ‘chores’나 ‘exercises’로 착각하여 복수 동사를 써서는 안 됩니다. (D)가 틀린 부분입니다.\n\n오답 (C)는 ‘what if’ 다음에 과거 시제 ‘came’이 와서 의아할 수 있지만, 이는 ‘지금 운동이 내게 다가온다면?’이라는 현실과 동떨어진 가상의 상황을 나타내는 가정법 과거입니다. 따라서 어법상 전혀 문제가 없으며, 오히려 고난도 함정 역할을 합니다.\n나머지 (A), (B), (E)는 각각 동명사 주어와 단수 동사의 일치, 가주어 구문, 복수 주어와 동사의 일치가 올바르게 이루어져 있습니다. 주어와 동사 사이의 거리가 먼 구문과 가정법을 동시에 배치하여, 1등급 학생들조차 실수하기 쉬운 킬러 문항으로 설계되었습니다.",
+    "keyPoints": [
+      "주격 관계대명사절 내 동사의 수일치는 선행사에 따른다",
+      "‘what if’ + 가정법 과거는 가상의 상황을 나타내는 올바른 표현",
+      "‘the beauty’와 같은 추상명사가 주어일 때 길어진 수식어구에 현혹되지 않아야 함"
+    ],
+    "tags": [
+      "주어-동사 수 일치",
+      "가정법 과거",
+      "동명사 주어",
+      "가주어",
+      "킬러 문항"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For many of us, making time for exercise __(A) is__ a continuing challenge. Between work commitments and family obligations, it often __(B) feels__ like there's no room in our packed schedules for a dedicated workout. But what if the workout __(C) came__ to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores __(D) come__ into play. Let's be realistic; chores __(E) are__ inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health."
+  }
+}

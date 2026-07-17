@@ -1,0 +1,86 @@
+{
+  "pid": "P056",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "critical",
+      "evidence": "(C) 오답 해설: \"'harmonizes'는 간접의문문 대명사 지시 관계 'how it harmonizes...'의 주어인 3인칭 단수 대명사 'it'에 일치하는...\" — '간접의문문 대명사 지시 관계'는 실재하지 않는 손상 용어다. 'how it harmonizes...'는 concerns의 목적어인 의문사절(간접의문문)이고 판정 포인트는 단순 주어-동사 수일치인데, '대명사 지시 관계'라는 무의미한 용어 조각이 절 라벨에 접합되어 있다. 핵심 문법 주장(it 3인칭 단수 → harmonizes)은 맞지만 용어 손상은 V4 기준(비단어·손상 용어) 위반."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "수동태 동사구(is constructed) 뒤 to부정사의 부사적 용법 판단",
+      "temptingBecause": "constructed 뒤에 오는 형태가 to last인지 lasting/for lasting인지 형태 선택을 의심하게 함",
+      "decisiveFlaw": "정답 아님 — 수동태 뒤 목적/결과의 to부정사는 표준 구조이며 원문과 동일한 정문. 다만 소거가 즉각적이어서 매력도는 낮음"
+    },
+    {
+      "label": "(B)",
+      "intent": "선행사 유무에 따른 관계대명사 what vs that/which 구별 (정답)",
+      "temptingBecause": "뒤따르는 절(shows the evolution...)이 주어 없는 불완전절이라 '불완전절 = what'으로 기계 암기한 학생이 정문으로 오인할 수 있음",
+      "decisiveFlaw": "선행사 'a lasting mark'가 바로 앞에 명시적으로 존재하므로 선행사를 자체 포함하는 what은 불가. that/which로 교정하면 정확히 원문이 복원됨. 단, 명사 직후 what 패턴이라 국소 단서만으로 즉시 판별되어 KILLER급 구조 독해를 요구하지 않음"
+    },
+    {
+      "label": "(C)",
+      "intent": "의문사절 내 주어(it)와 정동사의 수일치",
+      "temptingBecause": "문두의 'one of the first qualities a bridge must exhibit concerns'라는 복잡한 주부가 주어 혼동을 노리지만, 밑줄 동사의 주어는 인접한 it이라 실제 유혹은 거의 없음",
+      "decisiveFlaw": "정답 아님 — 3인칭 단수 it에 일치하는 harmonizes는 정문. 인접 대명사 수일치라 사실상 필러 수준의 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "상관접속사 either...or의 위치와 병렬 대상 판단",
+      "temptingBecause": "either의 위치(must 뒤, 두 동사구 앞)가 적절한지, 'adapt to or indeed reinforce'의 병렬이 성립하는지 구조 판단을 요구",
+      "decisiveFlaw": "정답 아님 — either가 'adapt to'와 '(indeed) reinforce' 두 동사구 앞에 정확히 위치하고 둘이 this balance를 공유하는 정상 병렬. 원문과 동일"
+    },
+    {
+      "label": "(E)",
+      "intent": "관계사절 내 등위접속사 but으로 병렬된 동사의 수일치",
+      "temptingBecause": "but 뒤 spoils가 create(원형)나 주절 동사와 병렬로 보이면 spoil(원형)로 고쳐야 한다고 오판할 수 있음 — 디코이 중 가장 유의미",
+      "decisiveFlaw": "정답 아님 — spoils는 관계사절 내부에서 is와 병렬이며 주격 that(선행사 a bridge, 3인칭 단수)에 일치하는 정문"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "CORRUPTED-TERM",
+      "severity": "critical",
+      "evidence": "(C) 해설의 '간접의문문 대명사 지시 관계' — 실재하지 않는 손상 용어 접합 (V4 실패 사유)"
+    },
+    {
+      "code": "MISSING-WHY-TEMPTING",
+      "severity": "minor",
+      "evidence": "오답 해설이 각 밑줄이 '왜 정문인지'만 서술하고 '왜 매력적인지'(why tempting)를 명시하지 않음 — §C 어법 KILLER 조건 미충족 요소"
+    },
+    {
+      "code": "VERBOSE-MAIN",
+      "severity": "minor",
+      "evidence": "(B) 본해설이 정확하지만 '선행사와 공존 불가' 논지를 반복 서술하여 다소 장황함"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerAudit": {
+    "minimalPair": true,
+    "clearGrammaticalJudgment": true,
+    "allUnderlinesExplained": "부분 충족 — pointCode와 why-correct는 있으나 why-tempting 부재",
+    "structuralNotInstant": false,
+    "structuralNotInstantEvidence": "정답 (B)는 명사 'a lasting mark' 직후의 what이라 국소 인접 단서만으로 즉시 판별되는 최빈출·저난도 포인트. 구조 독해 불요 → 'KILLER 정답은 즉시 드러나지 않는다' 조건 위반",
+    "noShadowingDecoy": true,
+    "otherDefects": "(C)와 (E)가 동일 pointCode 'd'(수일치)를 공유하고 (C)는 인접 대명사 수일치 필러 수준 — KILLER급 디코이 세트 아님"
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 의도된 that→what 변형 외 원지문과 완전 일치하고, 5개 밑줄 중 (B)만 유일 오류이며 교정 시 원문이 정확히 복원된다. 그러나 (C) 오답 해설의 '간접의문문 대명사 지시 관계'라는 손상 용어로 V4 실패 → F. 난이도 측면에서도 요청 KILLER 대비 정답 포인트(명사+what)가 즉시 판별되는 저난도 정전 포인트라 C5=1, killerConditionsMet=false. 수리 방향: (C) 해설의 손상 용어를 '의문사절(간접의문문)의 주어 it와의 수일치'로 교체하면 V4는 회복되나, KILLER 라벨 충족을 위해서는 정답 포인트 자체를 구조 독해형(예: 원거리 수일치·병렬 심화)으로 재설계하거나 난이도 라벨을 하향해야 한다."
+}

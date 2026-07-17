@@ -1,0 +1,75 @@
+{
+  "pid": "P069",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-RENDER-DEVIATION",
+      "severity": "major",
+      "evidence": "렌더 지문 (B)가 'does NOT'으로 대문자화되어 있으나 원지문은 'does not'이다. 의도된 변형은 (E) is→are 하나뿐이므로 이는 의도 외 변형이며, markedExpressions (B)의 surroundingText('cyberspace does not offer')와도 불일치한다. 학생에게 노출되는 비표준 표기(강조 대문자)로 실제 수능 렌더 규격에 어긋난다."
+    },
+    {
+      "code": "V4-NONWORD-TYPO",
+      "severity": "major",
+      "evidence": "정답 해설 마지막 문장 \"단수 동사인 'is'로 교쳐야 합니다\" — '교쳐야'는 비단어('고쳐야'의 오탈자)로 학생 노출 해설에 손상 용어가 포함되어 있다."
+    },
+    {
+      "code": "V4-DISTRACTOR-MISATTRIBUTION",
+      "severity": "minor",
+      "evidence": "해설이 \"복수 명사구인 'photographs'나 'movies' 등에 현혹되지 않고\"라고 유혹 기제를 설명하지만, 두 복수 명사는 동사 'are' 뒤(비교구문 내부)에 위치한다. 주어 'The move'와 동사 사이에 개재하는 명사는 reality, reality, cyberspace로 전부 단수여서 근접 수일치 유인이 실제로는 존재하지 않는다. 인과(함정 기제) 오설명."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사구 후치수식 과거분사(수동) vs 본동사/현재분사 판별",
+      "temptingBecause": "삽입구(including ...) 내부라 made가 본동사 자리처럼 보일 수 있고, drawings와의 능동/수동 관계를 따져야 함",
+      "decisiveFlaw": "cave drawings는 '그려진' 대상이므로 수동 관계의 과거분사 made가 정문 — 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "단수 주어 뒤 조동사 do 수일치(do/does) 및 부정문 형성",
+      "temptingBecause": "유혹 강도가 약함 — cyberspace가 단수임이 직전에 명시되어 즉시 확인됨. 게다가 렌더가 'does NOT'으로 대문자화되어 있어 오히려 이상 표기로 시선만 끄는 필러성 디코이",
+      "decisiveFlaw": "단수 주어 cyberspace + does + 동사원형 offer로 정문 — 오답 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "선행사 포함 관계대명사 what vs that/which 판별",
+      "temptingBecause": "문두의 명사절 주어 구조라 뒤따르는 절의 완전/불완전 판단과 선행사 유무를 동시에 따져야 함 — 디코이 중 가장 실질적",
+      "decisiveFlaw": "선행사가 없고 'is new about cyberspace'가 주어 결핍 불완전절이므로 what이 정문 — 오답 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "접속사(while)를 유지한 분사구문의 적격성",
+      "temptingBecause": "while 뒤에 주어+be가 생략된 형태가 낯설 수 있고 being 생략 가능성과 혼동 유발",
+      "decisiveFlaw": "의미상 주어 real people와 일치하는 접속사 잔류 분사구문으로 정문 — 오답 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "긴 전치사구 수식을 받는 주어 핵(The move)과 동사의 장거리 수일치",
+      "temptingBecause": "주어와 동사 사이 수식어구가 길다 — 그러나 개재 명사(reality, reality, cyberspace)가 전부 단수라 복수 유인자가 없어 유혹 기제가 사실상 작동하지 않음",
+      "decisiveFlaw": "주어 핵 The move(단수)에 대해 are는 비문. is로 교정하면 정확히 원문 복원(최소대립쌍 성립) — 선언된 유일 정답"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 '교쳐야'는 비단어(오탈자, '고쳐야').",
+    "정답 해설이 유혹 요인으로 photographs/movies(복수)를 지목하나 두 명사는 동사 뒤에 위치해 근접 수일치 유인이 될 수 없음 — 함정 기제 오설명.",
+    "오답 해설 (A)~(D)의 구조 분석 자체는 실제 문장과 일치함(과거분사 수식, do-support, 자유관계사 what의 불완전절, 접속사 잔류 분사구문 모두 정확)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V2/V3/V5는 통과: 정답 (E) 유일성 확보, 교정 시 원문 복원, 학생 노출 필드 동기화 양호. 그러나 V1 실패(렌더 (B) 'does NOT' 대문자화 — 의도 외 변형이자 구조 필드와 불일치), V4 실패(해설 내 비단어 '교쳐야' + 함정 기제 오설명)로 F. KILLER 정합성도 미달: 정답이 장거리 수일치이긴 하나 주어-동사 사이 개재 명사가 전부 단수여서 복수 유인자가 없고, 'cyberspace are'라는 단수 명사 직후 복수 동사 배열이 단순 스캔만으로 즉시 드러난다(§C '구조를 읽어야 하며 즉시 드러나지 않는다' 위배). 실현 난이도는 중하급으로 요청 난이도 KILLER와 크게 불일치(C5=1). 디코이 (A)(C)(D)는 정전 포인트로 의도 밀도는 양호(C2=3)하나 (B)는 필러에 가깝고, 훈련된 학생 기준 실질 변별은 낮음(C3=2). markedExpressions (E)의 expression 필드가 렌더 표시형('are')이 아닌 원형('is')을 담는 등 내부 컨벤션 흔들림도 관찰됨(errorExpression='are'로 보완되어 V5 실패로는 미판정)."
+}

@@ -1,0 +1,77 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-minor-terminal-punctuation",
+      "severity": "minor",
+      "evidence": "렌더 지문이 'follow from _____' 로 끝나며 빈칸 뒤 종결 마침표가 없다. 원문 마지막 스팬(따옴표 포함 물음표)이 통째로 빈칸에 흡수되면서 문장 종결부호가 함께 사라졌다. 내용 무결성은 손상되지 않았으나 실물 조판 관행('_____.')과 다른 표기 결함."
+    },
+    {
+      "code": "V3-minor-distractor-idiom",
+      "severity": "minor",
+      "evidence": "④ 'delivering communicative contents' 의 가산 복수 contents 사용이 다소 부자연스럽다(communicative content 가 자연). 오답 선지 내부의 어색함이며 유형 의도(내용상 오답)를 훼손하지 않으므로 V3 실패로 보지 않음."
+    },
+    {
+      "code": "V4-minor-trap-label",
+      "severity": "minor",
+      "evidence": "① 오답 해설이 함정 유형을 '과확장된 오답'으로 명명했으나 실제로는 지문에 근거 자체가 없는 무근거 연상(어휘 앵커 readers/texts 재활용)에 가깝다. 구조 분석·인용 자체는 정확하므로 사실성 실패는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "무근거 연상 확장 — 지문의 독자(readers)·텍스트(texts) 어휘를 앵커로 지문에 없는 '역사적 배경지식' 개념을 주입",
+      "temptingBecause": "지문이 시종 독자의 텍스트 접근 방식(readers approach them...)을 다루므로 독자의 사전 지식이라는 프레임이 표면적으로 그럴듯하다",
+      "decisiveFlaw": "지문이 말하는 원천은 지식이 아니라 태도(willingness, put up with, struggle to interpret)다. 역사적 배경지식은 지문 어디에도 앵커가 없다"
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전 (독자 태도 축) — 모호함을 견딘다는 핵심을 '명확·즉각적 정보 선호'로 뒤집음",
+      "temptingBecause": "communicative purpose, assurance, 'worth it' 등 정보·보상 관련 표면 어휘가 지문에 존재해 대충 읽으면 '독자가 명확한 보상을 기대한다'로 오독 가능",
+      "decisiveFlaw": "지문은 독자가 obscurities 를 견디고 not immediately ask 'what do you mean by that?' 라고 명시 — 즉각적·명확한 정보 선호와 정반대"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 스팬 'the willingness of readers to pay attention, to explore uncertainties, and not immediately ask...' 의 학술적 패러프레이즈 (willingness→voluntary commitment, explore uncertainties→enduring ambiguity, further communicative goal→deeper intent)",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음 — 'put up with many obscurities', 'struggle to interpret elements that flout principles of efficient communication' 두 근거 문장이 필연적으로 지지"
+    },
+    {
+      "label": "④",
+      "intent": "극성 반전 (소통 효율 축) — 문학이 효율적 소통 원칙을 위반한다는 명제를 '효율적 전달 방식'으로 뒤집음",
+      "temptingBecause": "communicative, efficient communication 이 지문에 문자 그대로 등장해 어휘 매칭으로 찍는 학생을 유인",
+      "decisiveFlaw": "지문은 문학이 flout principles of efficient communication 하는 요소를 가진다고 명시 — 효율적 전달은 문학 특징의 원천이 아니라 문학이 위반하는 대상"
+    },
+    {
+      "label": "⑤",
+      "intent": "주체 전도(actor swap) — 특징의 원천을 독자 태도에서 작가의 개작 노력으로 치환",
+      "temptingBecause": "'published, reviewed, and reprinted' 의 선별 과정이 작가가 리뷰(피드백)를 반영해 고친다는 서사로 오독될 여지가 있다",
+      "decisiveFlaw": "빈칸 문장의 논리적 주어 자리는 독자 쪽 요인이어야 하며(직전까지 전부 readers 의 태도 서술), 작가가 피드백으로 작품을 수정한다는 내용은 지문에 없다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "trap-label-imprecise",
+      "severity": "minor",
+      "evidence": "① 해설의 '과확장된 오답' 명명은 부정확 — 실제 함정 기제는 무근거 연상/어휘 재활용이다. 인용·내용 분석 자체는 정확"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 원지문에서 최종 스팬만 빈칸 처리했고 접합 손상 없음(단, 빈칸 뒤 마침표 누락은 minor). 각 선지 독립 검증 결과 ③ 단독 정답이며 다섯 선지 모두 동일 NP 슬롯에 문법적으로 들어가 tail 소거가 불가능하다(빈칸 D 조건 1 충족). 공예: C1=4(지문 결론 문장의 핵심 인과 — 문학의 특징 ← 독자의 자발적 태도 — 를 정확히 겨냥), C2=3(①이 앵커가 약한 준필러이고 ②·④가 사실상 같은 '반대 극성' 계열이라 함정 다양성이 만점에 못 미침), C3=3(②④⑤는 국소 어휘 앵커가 실재하나 ①은 유인력 약함; 요지 파악 즉시 ③ 이 유일한 긍정-인내 방향 선지라 경쟁이 중간 수준), C4=3(근거는 충분·필연적이나 선지 집합 구조상 '모호함에 긍정적' 방향이 ③ 하나뿐이어서 극성 스캔만으로 좁혀지는 약한 누출 + 마침표 누락), C5=4(단일 스팬 패러프레이즈 + 명시적 근거 2곳 — INTERMEDIATE 요구 사고 단계와 정확히 일치), C6=3(정확하고 선지별 함정 유형을 분리 서술하나 본 해설이 다소 장황하고 ① 함정 명명이 헐거움). 합계 20 → B (모든 V 통과, 최저 C=3, 합계 17 이상, 21 미만). 요청 난이도가 KILLER 가 아니므로 killerConditionsMet=false. 작은 수정 제안: 빈칸 뒤 마침표 추가, ①을 지문 앵커가 있는 함정(예: 'worth it' 보상 심리 관련 half-truth)으로 교체, ②·④ 중 하나를 scope shift 계열로 분화."
+}

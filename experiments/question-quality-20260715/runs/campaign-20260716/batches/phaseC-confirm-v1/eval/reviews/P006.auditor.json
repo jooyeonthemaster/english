@@ -1,0 +1,86 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-field-convention",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 expression·surroundingText가 교정형 'lead'를 담고 있는 반면 학생 렌더는 'leads'다. errorExpression='leads'가 표시형을 담고 있어 '원문형 저장' 관례로 해석 가능하며 비오류 항목(A/B/D/E)은 세 필드가 동일해 모순은 아니다. 다만 필드 의미가 문서화되지 않으면 하류 소비자가 혼동할 수 있다."
+    },
+    {
+      "code": "V5-minor-typo-internal",
+      "severity": "minor",
+      "evidence": "markedExpressions (B) surroundingText: 'analytically,it actually' — 쉼표 뒤 공백 누락. 내부 필드라 학생 노출 없음."
+    },
+    {
+      "code": "V4-minor-phrasing",
+      "severity": "minor",
+      "evidence": "정답 해설의 '(C)가 단수 동사 leads로 주어져 있다면'은 조건문 어투이나 실제로 leads로 렌더되어 있다. 사실 오류는 아니고 어색한 서술."
+    },
+    {
+      "code": "V4-minor-ellipsis-claim",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설이 'when 뒤에 we are가 생략'이라 주장하나 주절 주어는 'this pattern of attention'이다. 'when solving'은 일반 행위자 축약(관용적 dangling)으로 원문 자체가 정문이며, 'we' 지목은 문맥상 의미적으로 타당한 통상적 교수법 서술이라 V4 실패로는 보지 않는다."
+    },
+    {
+      "code": "V4-minor-cleft-wording",
+      "severity": "minor",
+      "evidence": "(E) 해설 '시간의 부사절을 강조하여 이끄는 접속사 that'은 that이 시간 부사절 자체를 이끈다고 읽힐 여지가 있다(실제로는 until절이 강조 초점, that은 나머지 절을 도입). 핵심 판단(강조구문 that 적법)은 정확."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사구 후치수식 현재분사의 태(능동 coming vs 수동/정형동사 대안) 판단",
+      "temptingBecause": "'the stream of remote associations'라는 긴 명사구 뒤라 수식 대상과 태 관계가 즉시 안 보이고, 정형동사(comes/come)로 바꿔야 한다고 의심할 수 있다",
+      "decisiveFlaw": "수식 대상이 스스로 '오는' 능동 관계이므로 현재분사 coming이 정확히 적법 — 원문과 동일"
+    },
+    {
+      "label": "(B)",
+      "intent": "when + V-ing 축약 부사절(분사구문)의 태·주어 회복 판단",
+      "temptingBecause": "주절 주어가 'this pattern of attention'이라 solving의 의미상 주어가 어긋나 보여 solved(수동)로 고쳐야 한다고 의심하게 만든다",
+      "decisiveFlaw": "'when solving problems'는 일반 행위자 해석의 관용 표현으로 정문이며 원문 그대로 — 능동 solving이 옳다"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 주격 관계대명사 that절 동사의 선행사(복수 the connections) 수일치",
+      "temptingBecause": "관계절 내부 동사라 무심코 지나칠 수 있고, 앞의 단수 대명사 it(주절 주어)에 이끌려 단수 leads가 자연스러워 보일 수 있다",
+      "decisiveFlaw": "선행사 'the connections'가 복수이므로 leads는 비문 — lead로 교정하면 정확히 원문이 된다. 단, 선행사가 관계대명사 바로 앞에 인접해 있어 판단이 즉각적이다"
+    },
+    {
+      "label": "(D)",
+      "intent": "복수 주어 수일치 + 완전자동사(수동 불가) 능동형 판단",
+      "temptingBecause": "'That's why so many insights ...'의 도치 없는 절에서 so many에 눈이 흐려 happens로 고쳐야 한다고 착각하거나 수동형을 떠올릴 수 있다",
+      "decisiveFlaw": "주어 insights가 복수이고 happen은 수동 불가 자동사이므로 happen이 정확 — 원문과 동일"
+    },
+    {
+      "label": "(E)",
+      "intent": "'It is not until ~ that ...' 강조구문(cleft)의 that 적법성 판단",
+      "temptingBecause": "not until절과 that 사이에 'unable to check our e-mail' 삽입구가 끼어 구조 파악이 지연되고, when이나 관계사로 바꿔야 한다고 의심할 수 있다",
+      "decisiveFlaw": "not until 부사 요소를 초점화한 it-cleft에서 that은 정확히 적법 — 원문과 동일"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 조건문 어투('leads로 주어져 있다면') — 실제 렌더가 leads이므로 단정 서술이 옳다",
+    "(B) 해설의 'we are 생략' 주장은 주절 주어(this pattern of attention)와 불일치하는 통사적 단순화 — 의미상 타당하나 정밀성이 떨어진다",
+    "(E) 해설 '시간의 부사절을 강조하여 이끄는 접속사 that'은 that의 도입 대상이 모호하게 읽힌다",
+    "keyPoints가 5개 밑줄 중 3개((C)/(A)/(E))만 다룬다 — 오답 해설에는 4개 디코이 전부 설명이 있어 모순은 아니나 §C의 '5개 밑줄 각각 point/tempting/why' 요건에는 keyPoints 단독으로 미달"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 게이트 통과: 렌더는 원문 대비 (C) lead→leads 단일 의도 변형만 있고(V1), 5개 밑줄 독립 검증 결과 (C)만 비문으로 단일 정답이 성립하며(V2), 교정 시 정확히 원문 복원(V3), 해설의 통사 분석이 사실과 부합(V4, 경미한 표현 결함만), 필드 동기화 정상(V5). 그러나 요청 난이도 KILLER 대비 치명적 공예 결함: 정답이 선행사 'the connections'가 관계대명사 that 바로 앞에 인접한 단순 수일치로, RUBRIC §C의 'KILLER 정답은 붙어 있는 단순 수일치로 즉시 드러나지 않는다' 조건을 정면 위반한다(killerConditionsMet=false, C5=1). 디코이들은 각기 다른 문법 포인트(분사 태·축약 부사절·자동사 수일치·강조구문)를 겨냥해 의도 밀도는 양호하나(C2=3), 정답 탐지가 스캔 한 번으로 끝나 경쟁력이 약하다(C3=2). C 합계 14. 등급 C — 유효하지만 KILLER로 출하하려면 정답 포인트를 구조 독해가 필요한 자리(선행사-동사 원거리 분리, 삽입구 개입 등)로 재설계해야 한다."
+}

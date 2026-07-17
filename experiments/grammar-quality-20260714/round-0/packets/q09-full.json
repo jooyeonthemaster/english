@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20161123-q28",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2016,
+    "exam": "11월",
+    "origType": "어법",
+    "words": 150
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-error-not-mutatedx2",
+    "grammar-decoy-point-monotonyx1",
+    "grammar-obvious-noun-what-relativex1"
+  ],
+  "layout": "(A):dec=a  (B):dec=g  (C):ANS=d  (D):dec=c  (E):dec=m",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 257,
+        "relPos": 0.287,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 383,
+        "relPos": 0.427,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 599,
+        "relPos": 0.668,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 732,
+        "relPos": 0.816,
+        "sentenceIndex": 8,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 868,
+        "relPos": 0.968,
+        "sentenceIndex": 10,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.968,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Improved consumer water consciousness may be the cheapest way to save the most water, but it is not the only way consumers can contribute to water conservation. With technology progressing faster than ever before, there are plenty of devices that consumers can install in their homes to save more. More than 35 models of high-efficiency toilets are on the U.S. market today, some of them use less than 1.3 gallons per flush. Starting at $200, these toilets are affordable and can help the average consumer save hundreds of gallons of water per year. Appliances officially approved as most efficient are tagged with the Energy Star logo to alert the shopper. Washing machines with that rating use 18 to 25 gallons of water per load, compared with older machines that use 40 gallons. High-efficiency dishwashers save even more water. These machines use up to 50 percent less water than older models.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "can install",
+        "isError": false,
+        "errorExpression": "can install",
+        "surroundingText": "there are plenty of devices that consumers can install in their homes to save more.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "them",
+        "isError": false,
+        "errorExpression": "them",
+        "surroundingText": "More than 35 models of high-efficiency toilets are on the U.S. market today, some of them use less",
+        "pointCode": "g"
+      },
+      {
+        "label": "(C)",
+        "expression": "are tagged",
+        "isError": true,
+        "correction": "are tagged",
+        "errorExpression": "is tagged",
+        "surroundingText": "Appliances officially approved as most efficient are tagged with the Energy Star logo to alert",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "compared",
+        "isError": false,
+        "errorExpression": "compared",
+        "surroundingText": "Washing machines with that rating use 18 to 25 gallons of water per load, compared with older machines that",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "less",
+        "isError": false,
+        "errorExpression": "less",
+        "surroundingText": "These machines use up to 50 percent less water than older models.",
+        "pointCode": "m"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "can install"
+      },
+      {
+        "label": "(B)",
+        "text": "them"
+      },
+      {
+        "label": "(C)",
+        "text": "is tagged"
+      },
+      {
+        "label": "(D)",
+        "text": "compared"
+      },
+      {
+        "label": "(E)",
+        "text": "less"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "조동사 뒤에 동사원형 'can install'이 와서 관계대명사절 내의 올바른 정동사 구조를 형성하고 있습니다.",
+      "(B)": "앞 절의 'More than 35 models of high-efficiency toilets'에서 복수 명사구인 'More than 35 models'를 대명사 'them'으로 적절하게 지칭하고 있습니다.",
+      "(D)": "Washing machines가 구형 세탁기들과 '비교되는' 수동의 관계이므로 과거분사 'compared'가 이끄는 분사구문 표현은 올바릅니다.",
+      "(E)": "셀 수 없는 명사인 water를 수식하는 비교급 표현으로 'less water'는 어법상 자연스럽습니다."
+    },
+    "explanation": "이 문장의 전체 주어의 핵은 복수 명사인 'Appliances'이며, 후치 수식어구인 'officially approved as most efficient'가 주어를 수식하고 있습니다. 따라서 이에 호응하는 본동사는 복수형인 'are tagged'가 되어야 하므로 단수형으로 변형된 (C) 'is tagged'는 문장 구조상 틀린 표현입니다. 주어 핵과 동사 사이에 수식어구가 길게 개입하여 수의 일치가 흐려지는 구조적 함정에 걸리지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      "(C) 주어-동사 수일치 — 주어 핵과 동사 사이의 수식어구를 걷어내고 판단",
+      "(B) 대명사 일치 — 앞 문장의 복수 명사를 받는 인칭대명사의 수 일치",
+      "(D) 분사의 수동 태 — 의미상 주어와의 수동 관계를 지닌 수식 표현"
+    ],
+    "tags": [
+      "수일치",
+      "태",
+      "분사",
+      "대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Improved consumer water consciousness may be the cheapest way to save the most water, but it is not the only way consumers can contribute to water conservation. With technology progressing faster than ever before, there are plenty of devices that consumers __(A) can install__ in their homes to save more. More than 35 models of high-efficiency toilets are on the U.S. market today, some of __(B) them__ use less than 1.3 gallons per flush. Starting at $200, these toilets are affordable and can help the average consumer save hundreds of gallons of water per year. Appliances officially approved as most efficient __(C) is tagged__ with the Energy Star logo to alert the shopper. Washing machines with that rating use 18 to 25 gallons of water per load, __(D) compared__ with older machines that use 40 gallons. High-efficiency dishwashers save even more water. These machines use up to 50 percent __(E) less__ water than older models.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

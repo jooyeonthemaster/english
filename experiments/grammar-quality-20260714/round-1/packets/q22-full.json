@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go3_20150409_A-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "4월",
+    "origType": "주장",
+    "words": 122
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-noun-clause-pronoun-mislabelx1"
+  ],
+  "layout": "(A):dec=f  (B):dec=b  (C):ANS=k  (D):dec=b  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 25,
+        "relPos": 0.035,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 82,
+        "relPos": 0.116,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 295,
+        "relPos": 0.416,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 366,
+        "relPos": 0.516,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 646,
+        "relPos": 0.911,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.911,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Some of the words we use most frequently are not expressive. If someone asked you what you thought of a movie or your dinner, you might respond: \"It was fine.\" Do you mean, 'fine' as in 'fine wine,' or 'fine art?' Or do you mean, 'fine' as in 'excellent, good, fine or poor?' 'Fine' can be used to express satisfaction or disappointment. There are hundreds of words that, like 'fine,' express very little meaning. They are fillers. Choose words that are more expressive, like 'great' or 'terrific' or 'wonderful' if you want to express pleasure, and words like 'adequate' or 'satisfactory' if your intent is to communicate that the movie or meal was okay, but nothing more. These words won't be misunderstood.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "most",
+        "isError": false,
+        "errorExpression": "most",
+        "surroundingText": "Some of the words we use most frequently are not expressive. If someone",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "frequently are not expressive. If someone asked you what you thought of a movie or your",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "to express",
+        "isError": true,
+        "correction": "to express",
+        "errorExpression": "to expressing",
+        "surroundingText": "or poor?' 'Fine' can be used to express satisfaction or disappointment. There are",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "disappointment. There are hundreds of words that, like 'fine,' express very little meaning. They",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "was",
+        "isError": false,
+        "errorExpression": "was",
+        "surroundingText": "intent is to communicate that the movie or meal was okay, but nothing more.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "most"
+      },
+      {
+        "label": "(B)",
+        "text": "what"
+      },
+      {
+        "label": "(C)",
+        "text": "to expressing"
+      },
+      {
+        "label": "(D)",
+        "text": "that"
+      },
+      {
+        "label": "(E)",
+        "text": "was"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 최상급 부사 표현을 묻고 있으며, 부사 frequently를 수식하여 '가장 빈번하게'라는 의미를 나타내는 부사 'most'가 어법상 옳습니다.",
+      "(B)": "이 자리는 4형식 동사 ask의 직접목적어 자리에 쓰인 간접의문문 접속사를 묻고 있으며, thought 뒤의 목적어가 비어 있는 불완전한 절을 이끄는 의문대명사 'what'이 어법상 옳습니다.",
+      "(D)": "이 자리는 선행사 hundreds of words를 수식하는 주격 관계대명사를 묻고 있으며, 뒤이어 동사 express로 시작하는 불완전한 절이 오므로 관계대명사 'that'이 어법상 옳습니다.",
+      "(E)": "이 자리는 명사절 내에서의 수일치를 묻고 있으며, 등위접속사 or로 연결된 단수 주어인 the movie or meal에 서술어인 단수 동사 'was'가 호응하므로 어법상 옳습니다."
+    },
+    "explanation": "(C) \"to expressing\"는 어법상 틀린 표현이며 \"to express\"로 고쳐야 한다. 이 문장의 주어는 단어인 'Fine'으로 무생물 주어입니다. 'be used to v-ing'는 '~하는 것에 익숙하다'라는 의미를 가지므로, 감정을 느끼거나 습득할 수 없는 무생물 주어인 'Fine'과는 호응할 수 없습니다. 따라서 문맥상 단어 'Fine'이 만족이나 실망을 표현하는 도구로 '사용될 수 있다'라는 수동의 의미를 전해야 하므로, to부정사 목적 부사적 용법의 'to express' 형태로 고쳐 쓰는 것이 어법상 옳습니다.",
+    "keyPoints": [
+      "(C) to-v vs v-ing — 주어의 성격에 따른 used to 구문의 의미 구분",
+      "(B) 관계사 — 명사절 내 목적어 결손에 따른 의문대명사 선택",
+      "(E) 주어-동사 수일치 — or로 연결된 주어의 단수 취급 판단"
+    ],
+    "tags": [
+      "어법",
+      "to부정사",
+      "동명사",
+      "used to",
+      "수일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Some of the words we use __(A) most__ frequently are not expressive. If someone asked you __(B) what__ you thought of a movie or your dinner, you might respond: \"It was fine.\" Do you mean, 'fine' as in 'fine wine,' or 'fine art?' Or do you mean, 'fine' as in 'excellent, good, fine or poor?' 'Fine' can be used __(C) to expressing__ satisfaction or disappointment. There are hundreds of words __(D) that__, like 'fine,' express very little meaning. They are fillers. Choose words that are more expressive, like 'great' or 'terrific' or 'wonderful' if you want to express pleasure, and words like 'adequate' or 'satisfactory' if your intent is to communicate that the movie or meal __(E) was__ okay, but nothing more. These words won't be misunderstood.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

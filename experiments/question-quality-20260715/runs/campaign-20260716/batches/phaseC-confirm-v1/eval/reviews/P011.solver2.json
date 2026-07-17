@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Originally born in France, Brunel escaped...' — bear의 과거분사 born이 주절 주어 Brunel과 수동 관계를 이루는 분사구문('(Having been) born in France'의 축약). 의미상 주어 일치. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'machines for making boots' — 전치사 for의 목적어로 동명사 making. 용도의 'for + V-ing' 구문으로 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'because of his debt' — 뒤에 명사구(his debt)가 오므로 구 전치사 because of가 요구되는 자리. 절이 아니므로 because는 불가. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'London was very much divided by the River Thames' — divide의 과거분사가 by 행위자와 결합한 수동태(서술적 형용사 독법도 가능). London은 나뉘는 대상이므로 수동이 맞고, very much의 분사 수식도 적법. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "'needed more ways for people and goods moving across it' — 명사 ways는 목적/수단 의미의 to부정사 보충어를 취하며('ways to move'), 'for people and goods'는 그 부정사의 의미상 주어이므로 'ways for people and goods to move across it'이어야 한다. 대안 해석으로 moving을 people and goods 수식 축약 관계절('건너고 있는 사람·물자를 위한 길')로 읽는 시도는, 건널 수단이 부족하다는 문맥과 모순되는 전제를 낳아 논리적으로 성립하지 않는다. 어법상 틀림."
+    }
+  ],
+  "note": "정답 후보는 (E) 단일. (A)~(D)는 각각 분사구문 수동, 전치사+동명사, 구 전치사, 수동태로 형식적 규칙 검증을 통과했다. (E)는 'ways for + 의미상 주어 + to부정사' 패턴 위반이며, 축약 관계절 대안 해석도 의미·논리상 기각된다."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P088",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) coming",
+      "verdict": "correct",
+      "reason": "현재분사 coming은 'the stream of remote associations'의 핵 명사 associations를 후치 수식하는 축약 관계절(= that come from the right hemisphere). associations와 come은 능동 관계이므로 현재분사가 정확하다. 정문."
+    },
+    {
+      "label": "(B) diligently",
+      "verdict": "correct",
+      "reason": "'we are diligently focused'에서 diligently는 형용사화된 분사 focused를 수식하는 부사. be+부사+분사형 형용사 구조로 품사 선택이 올바르다. 정문."
+    },
+    {
+      "label": "(C) leads",
+      "verdict": "incorrect",
+      "reason": "관계대명사 that의 선행사는 인접 복수 명사 'the connections'이며, 단수 일치를 정당화할 대안 선행사(동명사 detecting, 원거리 this pattern 등)는 구조상·의미상 성립하지 않는다(의미상으로도 connections가 creative insights로 이어지는 인과가 자연스러움). 따라서 관계절 동사는 lead여야 하고 leads는 주어-동사 수 일치 위반. 비문 — 정답."
+    },
+    {
+      "label": "(D) that",
+      "verdict": "correct",
+      "reason": "'It's not until X that Y' 강조구문(cleft)의 that으로 형식적으로 완전하다. 삽입구 'unable to check our e-mail'은 형용사구 보충어로 cleft 구조를 깨지 않는다. 정문."
+    },
+    {
+      "label": "(E) telling",
+      "verdict": "correct",
+      "reason": "지각동사 구문 hear + 목적어(the quiet voices) + 현재분사 보어. voices가 tell의 의미상 주어로 능동 관계이므로 현재분사 telling이 올바르다(voices를 수식하는 분사로 보아도 정문). 정문."
+    }
+  ],
+  "note": "블라인드 풀이. 문법가/논리학자 렌즈로 각 밑줄의 지배 규칙을 검증. (C)의 수 일치 오류가 유일한 비문이며 대안 해석으로 구제 불가. 나머지 네 밑줄은 모두 정문으로 확정되어 복수 정답 소지 없음. 단일 정답 (C), 신뢰도 높음."
+}

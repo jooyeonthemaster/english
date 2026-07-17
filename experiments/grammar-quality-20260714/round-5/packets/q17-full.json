@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20190307-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "요지",
+    "words": 118
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=e  (C):dec=g  (D):dec=e  (E):ANS=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 122,
+        "relPos": 0.176,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 261,
+        "relPos": 0.376,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 392,
+        "relPos": 0.565,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 586,
+        "relPos": 0.844,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 624,
+        "relPos": 0.899,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.899,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - to join a group that has a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier. Volunteers report a sense of satisfaction at enriching their social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who is lonely might benefit from helping others. Also, they might benefit from being involved in a voluntary program where they receive support and help to build their own social network.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has",
+        "isError": false,
+        "errorExpression": "has",
+        "surroundingText": "one sure way for lonely patients to make a friend - to join a group that has a shared purpose. This may",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "are engaged",
+        "isError": false,
+        "errorExpression": "are engaged",
+        "surroundingText": "reveal that people who are engaged in service to others, such as volunteering,",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "their",
+        "isError": false,
+        "errorExpression": "their",
+        "surroundingText": "satisfaction at enriching their social network in the service of others. Volunteering helps",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "being involved",
+        "isError": false,
+        "errorExpression": "being involved",
+        "surroundingText": "they might benefit from being involved in a voluntary program where they receive support",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "where",
+        "isError": true,
+        "correction": "where",
+        "errorExpression": "which",
+        "surroundingText": "being involved in a voluntary program where they receive support and help to build their own",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has"
+      },
+      {
+        "label": "(B)",
+        "text": "are engaged"
+      },
+      {
+        "label": "(C)",
+        "text": "their"
+      },
+      {
+        "label": "(D)",
+        "text": "being involved"
+      },
+      {
+        "label": "(E)",
+        "text": "which"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주격 관계대명사 that절의 선행사인 단수 명사 'a group'에 수일치하는 단수 동사이므로 'has'는 어법상 옳습니다.",
+      "(B)": "사람들이 서비스에 참여하는 대상이며 'be engaged in(~에 참여하다)'의 수동 형태로 쓰였으므로 'are engaged'는 어법상 옳습니다.",
+      "(C)": "주절의 복수 주어인 'Volunteers'를 지칭하는 제삼자 복수 소유격 대명사이므로 'their'는 어법상 옳습니다.",
+      "(D)": "전치사 'from'의 목적으로서 동명사구가 쓰였으며 온전하게 사회적 활동에 '참여하게 되는(수동)' 대상이므로 동명사 수동태 'being involved'는 어법상 옳습니다."
+    },
+    "explanation": "해당 문장은 선행사 'a voluntary program'을 관계사가 이끌며 수식하는 구조입니다. 밑줄 친 (E)의 뒤에 이어지는 절인 'they receive support and help...'는 주어(they), 동사(receive), 목적어(support and help)를 모두 포함한 완전한 절의 형태를 띠고 있습니다. 따라서 뒤에 불완전한 절을 연결하는 관계대명사 'which'는 이 자리에 올 수 없으며, 선행사의 공간적 장소 및 맥락을 수식하며 완전한 절을 이끄는 관계부사 'where'로 고쳐야 합니다. 학생들이 관계동사 뒤의 목적격 보어 생략 여부나 'and' 병렬로 인한 복잡한 구문에서 완전성 판단을 실수하도록 유도하는 전형적인 관계사 유형입니다.",
+    "keyPoints": [
+      "(E) 관계사 — 관계대명사와 관계부사 뒤 절의 완전성 비교로 판정",
+      "(B) 능동태 vs 수동태 — 참여 주체가 대상을 직접 종사시키는 것이 아니라 참여되는 관계이므로 수동태 판정",
+      "(A) 주어-동사 수일치 — 관계대명사절 내부 동사의 수는 선행사의 수에 일치"
+    ],
+    "tags": [
+      "관계사",
+      "관계부사",
+      "수일치",
+      "능수동태"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - to join a group that __(A) has__ a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who __(B) are engaged__ in service to others, such as volunteering, tend to be happier. Volunteers report a sense of satisfaction at enriching __(C) their__ social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who is lonely might benefit from helping others. Also, they might benefit from __(D) being involved__ in a voluntary program __(E) which__ they receive support and help to build their own social network.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

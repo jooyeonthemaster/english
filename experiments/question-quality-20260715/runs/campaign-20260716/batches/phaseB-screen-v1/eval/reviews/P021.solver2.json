@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "make + O + OC 구조. 'fear makes us very attentive'에서 목적격 보어 자리에 형용사 attentive가 오는 것은 정문 패턴이며, 부사 attentively라면 오히려 비문. very의 수식도 형용사와 정합."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "cause + O + to-V 지배 규칙. 'will cause us either to face a situation'에서 cause는 목적격 보어로 to부정사를 요구하며 to face가 정확히 충족. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'cause us to [face ... or avoid ...]'로 to를 공유하는 등위 축약이 성립하여 bare form avoid는 표준적으로 허용. either가 to 앞에 있어 엄격한 either X or Y 병렬로는 X(to부정사구) vs Y(원형구) 범주 불일치라는 지적이 가능하나, 이는 출판 영어에서 광범위하게 허용되는 misplaced either로 문체 차원의 흠결이지 범주적 비문이 아님. 수능 관행에서도 오답 처리 대상이 아님."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'the specific ways which they activate our systems' — 관계절 내부 'they activate our systems'가 주어·타동사·목적어로 논항이 이미 포화되어 which가 맡을 gap이 없음. 선행사 ways는 방식 부가어이므로 'in which', 관계부사적 'that', 또는 관계사 생략이 요구됨. 축약 관계절·목적격 관계절 등 대안 해석을 탐색해도 gap을 만들 수 없어 형식적으로 비문임이 증명됨."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "과거 사실 반대 가정법 과거완료(3형 조건문): if절 'had not helped'(had p.p.) + 주절 'would not have evolved'(would have p.p.) 완전 일치. help + O + 원형부정사(adapt and survive)도 정문."
+    }
+  ],
+  "note": "정답은 (D) 단독. which는 관계절 내 문법 기능(gap)이 없어 in which/that로 교정되어야 하는 범주적 오류. 유일한 품질 유의점: (C)에서 either의 위치가 to 앞이라 엄격 병렬주의자는 'or (to) avoid'를 요구할 수 있으나, 이는 실사용에서 널리 수용되는 문체 이완이며 (D)의 구조적 비문성과 경합할 수준이 아님. 복수정답 시비 가능성 낮음."
+}

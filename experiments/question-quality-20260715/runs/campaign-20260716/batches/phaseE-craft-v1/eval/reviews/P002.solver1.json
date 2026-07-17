@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'the extent to which they foster objective self-reflection'은 마지막 문장의 'objectively'를 재활용한 매력적 오답. 그러나 객관적 시각은 지문에서 '의심을 제거하는 처방'으로 제시될 뿐, 상황이 스트레스가 되는 '기준'이 아니다. 빈칸에 넣으면 인과 프레임이 역전되고(객관적 성찰을 촉진하는 상황일수록 스트레스가 줄어야 함), 바로 뒤의 'Rather, it's the self-doubt' 해소 문장과 어긋난다. seam(based on the extent to which...)은 문법적으로 문제없으나 논리 부적합."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "'whether they trigger our inner sense of uncertainty'에서 inner sense of uncertainty = self-doubt. 빈칸 직후의 'It's not the pressure to perform... Rather, it's the self-doubt that bothers you'가 빈칸 내용을 직접 해소하며, 상황별 스트레스의 개인차 기준이 '의심 촉발 여부'임을 명시한다. 'based on whether...' 결합도 정문. 지문 전체(의심이 경험을 부정적으로 채색, 객관적으로 보면 의심이 고통의 원천이 될 가능성 감소)와 정합."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'the degree to which social pressure limits our actual capacity'는 빈칸 바로 뒤 'It's NOT the pressure to perform that creates your stress'와 정면 충돌. 또한 지문은 실제 능력(actual capacity)의 제한이 아니라 능력에 대한 '지각/의심'을 문제 삼는다. 이중으로 배제."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'how fiercely they make us interpret positive events negatively'는 'Doubt causes you to see positive... more negatively'를 그대로 메아리치는 최고 매력 오답. 실제로 끌렸으나, 긍정 경험의 부정적 해석은 의심의 '하류 결과'이지 상황이 스트레스가 되는 '근거(basis)'가 아니다. 원인(의심 촉발)과 결과(부정적 해석)를 뒤바꾼 인과 전도형 오답."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'whether we abandon the areas of concern we initially valued'의 '포기(abandon)'는 지문에 등장하지 않는 개념. 지문은 오히려 계속 깊이 아끼는(care deeply) 상태를 전제로 의심의 작동을 설명한다. 근거 부재로 배제."
+    }
+  ],
+  "note": "빈칸 뒤 두 문장(It's not the pressure... Rather, it's the self-doubt)이 빈칸을 직접 해소하는 구조라 정답 결정이 명확하다. 최상위권 기준 실제 유혹 강도: ④(결과-원인 전도, 표면 어휘 일치) > ①(objectively 재활용, 인과 역전) > ③(pressure 재활용이나 명시적 부정과 충돌) > ⑤. 대안 해석·문법 결합상 복수 정답 여지는 없음. 참고: 이 지문은 실제 수능 기출(자기의심과 스트레스) 소재와 동일 계열로 보이며, 원 기출 정답 방향(whether or not they activate our doubt)과 ②가 일치한다."
+}

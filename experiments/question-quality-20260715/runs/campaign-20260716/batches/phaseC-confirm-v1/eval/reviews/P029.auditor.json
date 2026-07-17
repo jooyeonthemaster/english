@@ -1,0 +1,69 @@
+{
+  "pid": "P029",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-OVERSTATEMENT",
+      "severity": "minor",
+      "evidence": "해설이 '마지막 문장에서도 ... 이를 일정에 반영해야 한다고 설명합니다'라고 하나, 마지막 문장(In my experience, most people are far more productive in the morning, but there are those who differ...)은 개인차라는 사실만 진술하고 '일정에 반영하라'는 처방은 빈칸 문장 맥락에서의 추론이다. 사실 오류 수준은 아니어서 V4 실패로 보지 않음."
+    },
+    {
+      "code": "V4-COVERAGE-ASYMMETRY",
+      "severity": "minor",
+      "evidence": "본 해설이 ①②⑤만 언급하고 ④를 생략함. 별도 오답 해설에서 ④가 정확히 다뤄지므로 필드 동기화(V5)나 사실성 실패는 아니지만 해설 완결성이 다소 비대칭."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "polarity reversal — 개인 리듬 존중이라는 지문 논지를 표준화 강제로 뒤집은 반명제 함정",
+      "temptingBecause": "'work schedule'이 빈칸 문장의 scheduling appointments 맥락 및 지문 전반의 일정 계획 어휘(schedule)와 표면적으로 겹친다",
+      "decisiveFlaw": "'Know your own body rhythm, respect your internal clock'과 정면 충돌 — 지문은 표준화가 아니라 개인화된 타이밍을 일관되게 옹호한다"
+    },
+    {
+      "label": "②",
+      "intent": "half-truth / over-generalization — 지문에 실재하는 아침 생산성 단서를 무조건 규칙으로 과잉 일반화",
+      "temptingBecause": "'If you have lots of energy early in the morning ... schedule difficult activities'와 'most people are far more productive in the morning'이라는 두 개의 실제 anchor가 있어 가장 강력한 미끼",
+      "decisiveFlaw": "전자는 조건문(If)이고, 마지막 문장이 'there are those who differ and hit their stride later in the day'로 명시적으로 반례를 제시 — 'all critical tasks'의 전칭 배치는 개인차 존중 논지와 모순"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'respect their own body rhythms'의 의미 보존 환언",
+      "temptingBecause": "해당 없음(정답). 'personal energy cycles'가 'energy level ebbs and flows'를, 'align their schedules'가 'respect ... when scheduling'을 정확히 반영",
+      "decisiveFlaw": "없음 — 앞부분 원칙 제시와 마지막 문장의 개인차 진술 양쪽과 정합하는 유일한 선지"
+    },
+    {
+      "label": "④",
+      "intent": "off-topic shift + lexical bait — 지문 어휘 'intervals'만 차용하고 주제를 사교적 시간으로 이탈",
+      "temptingBecause": "'intervals'가 'Schedule intervals of productive time and breaks'에 실제로 등장하고, 팀 활동(planning activities for your team) 언급이 사교적 해석을 유도할 수 있음",
+      "decisiveFlaw": "'social'은 지문에 전혀 근거가 없고, 생산 시간보다 사교 시간을 우선하라는 것은 효율 극대화라는 첫 문장 목적과 정반대 — anchor가 약해 소거가 가장 빠른 선지"
+    },
+    {
+      "label": "⑤",
+      "intent": "scope shift — 지문의 '휴식 간격 배치' 세부를 '휴식 확대·피로 예방'이라는 다른 목적으로 확대 왜곡",
+      "temptingBecause": "'Schedule intervals of productive time and breaks'로 휴식이 실제 언급되어 표면 근거가 있음",
+      "decisiveFlaw": "지문에서 휴식은 'get the most from people' 즉 생산성 극대화 수단이며, '늘려라(expand)'나 '신체 피로 예방'이라는 목적은 어디에도 없음"
+    }
+  ],
+  "explanationIssues": [
+    "본 해설이 오답 중 ④를 다루지 않음(별도 오답 해설에는 존재) — 완결성 비대칭이나 오류는 아님",
+    "'마지막 문장에서도 ... 일정에 반영해야 한다고 설명합니다'는 마지막 문장의 실제 내용(개인차 진술)보다 약간 과한 귀속 — 맥락 추론으로 정당화 가능한 수준"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 원지문에서 'respect their own body rhythms'만 빈칸화한 것 외에 손상 없음. 다섯 선지 모두 'ask people to ___'의 to부정사 슬롯에 문법적으로 들어가며(suffix로 인한 문법 탈락 없음), 독립 검증 결과 정답은 ③ 단일. ②가 지문 내 실제 anchor 두 개를 가진 강한 미끼로 마지막 문장과의 전역 결합을 요구해 INTERMEDIATE 난이도에 적합. 다만 ④의 source anchor가 약해 즉시 소거 가능하고 정답 ③이 원문 span의 비교적 직접적인 환언이라 C 합계 18로 A 기준(21)에는 미달 — B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

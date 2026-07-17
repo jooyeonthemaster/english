@@ -1,0 +1,665 @@
+{
+  "id": "u11-c4",
+  "unitId": "u11",
+  "order": 4,
+  "title": "시제 호응",
+  "oneLiner": "시제는 문장 속 시간 단서가 정합니다. ago·last year는 단순 과거를, since+과거 시점·so far는 현재완료를 부릅니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 완료 시제(중 ●)",
+      "천일문 고등 GRAMMAR — 시제(현재완료와 과거시제의 구별·시제 일치)",
+      "어법끝 5.0 — 시제 단원(시간 부사와 시제의 호응)",
+      "docs/study-os-spec.md §2 u11 시제 호응"
+    ]
+  },
+  "lenses": ["L2", "L5"],
+  "confusableWith": ["u11-c3", "b03-c4", "b03-c5"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The canal has silted up steadily since the dam was completed.",
+        "The canal silted up steadily since the dam was completed."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 주절의 시제 하나입니다. 이 레슨을 마치면 since라는 단어 하나가 왜 주절의 시제를 고정하는지 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "시간 단서",
+      "question": "시제는 말하려는 내용에 맞춰 고르는 것 아닙니까? 왜 부사 하나가 시제를 정합니까?",
+      "plain": "시간 단서는 문장에서 '언제'를 알려 주는 부사·부사구·부사절입니다. 어법에서 동사의 시제는 이 단서가 결정하므로, 시제를 고르기 전에 단서부터 찾습니다.",
+      "analogy": "시간 단서는 도로의 표지판과 같습니다. '여기서 정지'라고 적힌 표지판 앞에서는 기분과 상관없이 멈춰야 하듯, 문장에 ago가 보이면 동사는 무조건 단순 과거로 섭니다.",
+      "whyItMatters": "수능과 내신 어법은 밑줄 친 동사의 시제가 옳은지 묻고, 그 답은 언제나 문장 어딘가의 시간 단서에 적혀 있습니다. 단서를 먼저 찾는 습관이 이 유형 전체를 지배합니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "현재완료는 과거에 일어난 일을 말하는 시제이므로 ago·last year 같은 표현과 함께 써도 됩니다.",
+      "truth": "현재완료는 과거의 일을 현재와 이어서 말하는 시제입니다. 이미 끝나 못 박힌 과거 시점을 가리키는 부사가 붙는 순간 현재와의 연결이 끊기므로, 그 자리는 단순 과거만 허용합니다.",
+      "counterExample": {
+        "en": "The institute **has published** its first climate report in 1998.",
+        "ko": "그 연구소는 1998년에 첫 기후 보고서를 발표했습니다.",
+        "note": "in 1998은 이미 끝난 과거 시점입니다. 현재완료 has published와 함께 설 수 없으므로 published로 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "시간 단서 정리 필기",
+      "intro": "시제를 결정하는 시간 단서를 성격별로 정리합니다. 판단은 언제나 단서를 찾는 데서 시작합니다.",
+      "entries": [
+        {
+          "head": "끝난 시점 부사 — 단순 과거",
+          "body": "ago·last year·yesterday·in+과거 연도는 이미 끝나 못 박힌 시점을 가리킵니다. 현재와의 연결이 끊겨 있으므로 단순 과거만 허용합니다.",
+          "example": {
+            "en": "The mill **closed** more than a century ago.",
+            "ko": "그 방앗간은 한 세기도 더 전에 문을 닫았습니다.",
+            "note": "ago가 끝난 과거 시점을 못 박으므로 단순 과거 closed입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "since + 과거 시점 — 현재완료",
+          "body": "since 뒤에 과거 시점이나 과거시제 절이 오면, 그 출발점부터 지금까지를 말하는 주절의 동사는 현재완료입니다. since절 자체는 과거시제입니다.",
+          "example": {
+            "en": "The port **has expanded** rapidly since the railway arrived.",
+            "ko": "철도가 들어선 이후 그 항구는 빠르게 확장되어 왔습니다.",
+            "note": "since절은 과거 arrived, 주절은 현재완료 has expanded입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "지금까지의 기간 — 현재완료",
+          "body": "so far·up to now·over the past decade는 과거의 한 시점부터 현재까지 이어지는 기간을 나타냅니다. 끝이 현재에 닿아 있으므로 현재완료를 부릅니다.",
+          "example": {
+            "en": "The team **has interviewed** forty candidates so far.",
+            "ko": "그 팀은 지금까지 마흔 명의 지원자를 면접했습니다.",
+            "note": "so far가 기간의 끝을 현재에 고정합니다."
+          }
+        },
+        {
+          "head": "for + 기간 — 끝점이 시제를 가른다",
+          "body": "for+기간은 그 기간의 끝이 현재이면 현재완료, 이미 끝났으면 단순 과거입니다. for라는 단어만으로는 시제가 정해지지 않습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "시간·조건의 부사절 — 미래라도 현재시제",
+          "body": "when·as soon as·if 등이 이끄는 부사절에서는 미래의 일이라도 will 없이 현재시제로 씁니다. will은 주절에만 남습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "have와 has — 마지막은 핵 주어의 수",
+          "body": "현재완료로 쓰기로 정했다면 마지막으로 핵 주어의 수를 봅니다. 수식어 속 명사에 속지 말고, 단수면 has 복수면 have를 씁니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "시간 단서 사냥",
+      "instruction": "이 문장에서 동사의 시제를 결정하는 시간 표현을 찾아, 그 표현을 이루는 단어를 전부 탭하십시오. 시간 표현은 하나가 아닙니다.",
+      "hitLabel": "시간 단서",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "mine", "hit": false },
+        { "t": "closed", "hit": false },
+        { "t": "in", "hit": true },
+        { "t": "1998,", "hit": true },
+        { "t": "and", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "local", "hit": false },
+        { "t": "economy", "hit": false },
+        { "t": "has", "hit": false },
+        { "t": "stagnated", "hit": false },
+        { "t": "ever", "hit": true },
+        { "t": "since.", "hit": true }
+      ],
+      "ko": "그 광산은 1998년에 폐쇄되었고, 그 지역 경제는 그때 이후로 계속 침체되어 왔습니다.",
+      "explain": "시간 표현은 둘입니다. in 1998은 이미 끝난 과거 시점이므로 앞 절을 단순 과거 closed로 고정하고, ever since는 그때부터 지금까지 이어지는 기간이므로 뒤 절을 현재완료 has stagnated로 고정합니다. 한 문장에 단서가 둘이면 각 단서가 자기 절의 시제만 지배합니다."
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "ago·last year·yesterday·in+과거 연도처럼 끝난 시점을 못 박는 부사가 있으면 동사는 단순 과거입니다.",
+      "examples": [
+        {
+          "en": "The city **abandoned** its tram network more than fifty years ago.",
+          "ko": "그 도시는 50년도 더 전에 전차망을 폐기했습니다.",
+          "note": "ago는 이미 끝난 과거 시점을 가리키므로 단순 과거 abandoned가 옳습니다."
+        },
+        {
+          "en": "Astronomers **detected** the first planet orbiting a sun-like star in 1995.",
+          "ko": "천문학자들은 1995년에 태양과 비슷한 별을 도는 첫 행성을 발견했습니다.",
+          "note": "in 1995는 못 박힌 과거 시점입니다. 현재완료 have detected는 이런 부사와 함께 쓸 수 없습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "since + 과거 시점(또는 과거시제 절)이 있으면, 그 시점부터 지금까지를 말하는 주절의 동사는 현재완료입니다.",
+      "examples": [
+        {
+          "en": "Enrollment in rural schools **has fallen** every year since the factory closed.",
+          "ko": "그 공장이 문을 닫은 이후 농촌 학교의 등록 학생 수는 해마다 줄어 왔습니다.",
+          "note": "since절은 과거 closed, 주절은 현재완료 has fallen입니다. 두 시제가 짝을 이룹니다."
+        },
+        {
+          "en": "The museum **has admitted** visitors free of charge since 2011.",
+          "ko": "그 박물관은 2011년 이후로 방문객을 무료로 입장시켜 왔습니다.",
+          "note": "since 뒤에 시점 하나만 와도 출발점이 제시된 것이므로 주절은 현재완료입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "since 구문의 해부",
+      "tokens": [
+        { "t": "The population", "role": "S" },
+        { "t": "of the coastal village", "role": "M" },
+        { "t": "has fallen", "role": "V" },
+        { "t": "steadily", "role": "M" },
+        { "t": "since", "role": "CONJ" },
+        { "t": "the fishing industry", "role": "S" },
+        { "t": "collapsed", "role": "V" }
+      ],
+      "ko": "그 해안 마을의 인구는 어업이 붕괴한 이후로 꾸준히 줄어 왔습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 걷어냅니다",
+          "roles": ["M"],
+          "note": "of the coastal village와 steadily는 뼈대가 아닙니다. 판단에 필요한 것은 주어·동사와 시간 단서뿐입니다."
+        },
+        {
+          "label": "② 시간 단서를 찾습니다",
+          "roles": ["CONJ"],
+          "note": "since가 과거의 출발점을 여는 접속사입니다. 이 단어 하나가 주절의 시제를 고정합니다."
+        },
+        {
+          "label": "③ 두 절의 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "주절의 핵 주어는 The population이고, since절의 주어는 the fishing industry입니다. 핵 주어가 단수이므로 have가 아니라 has를 씁니다."
+        },
+        {
+          "label": "④ 두 동사의 시제를 맞춥니다",
+          "roles": ["V"],
+          "note": "since절은 과거 collapsed, 주절은 현재완료 has fallen입니다. 두 절의 시제가 서로 다른 것이 이 구문의 정상 형태입니다."
+        }
+      ],
+      "conclusion": "since + 과거시제 절은 주절을 현재완료로 고정합니다. 주절을 fell로 쓰면 '그때부터 지금까지'라는 방향이 사라집니다."
+    },
+    {
+      "id": "b9",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "시간 단서 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 시제 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "since + 과거 시점이 있으면 주절의 동사는 현재완료입니다.",
+          "isTrue": true,
+          "why": "since는 과거의 출발점부터 지금까지를 뜻하므로 주절을 현재완료로 고정합니다."
+        },
+        {
+          "statement": "ago가 붙은 동사는 현재완료로 씁니다.",
+          "isTrue": false,
+          "why": "ago는 이미 끝나 못 박힌 과거 시점이므로 단순 과거만 허용합니다."
+        },
+        {
+          "statement": "so far는 현재완료와 짝을 이룹니다.",
+          "isTrue": true,
+          "why": "so far는 기간의 끝을 현재에 고정하므로 현재완료를 부릅니다."
+        },
+        {
+          "statement": "in 1990처럼 못 박힌 과거 연도는 현재완료와 함께 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "못 박힌 과거 시점은 현재와의 연결을 끊으므로 단순 과거만 씁니다."
+        },
+        {
+          "statement": "시간·조건의 부사절에서는 미래의 일이라도 will 없이 현재시제로 씁니다.",
+          "isTrue": true,
+          "why": "as soon as·if 등이 이끄는 부사절은 미래라도 현재시제로 쓰고, will은 주절에만 남습니다."
+        },
+        {
+          "statement": "since절 안의 동사도 현재완료로 써야 합니다.",
+          "isTrue": false,
+          "why": "since절 자체는 출발점을 나타내는 과거시제입니다. 현재완료는 주절의 몫입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "시제를 결정하는 4단계",
+      "steps": [
+        {
+          "text": "문장에서 시간 단서(부사·부사구·부사절)를 모두 찾아 표시합니다.",
+          "applyNote": "in the 1970s와 since then, 둘이 시간 단서입니다."
+        },
+        {
+          "text": "각 단서가 지배하는 절을 확인합니다. 단서는 자기 절의 동사에만 작용합니다.",
+          "applyNote": "in the 1970s는 앞 절의 동사를, since then은 뒤 절의 동사를 지배합니다."
+        },
+        {
+          "text": "그 단서가 '끝난 시점'인지 '지금까지 이어지는 기간'인지 판정합니다.",
+          "applyNote": "in the 1970s는 못 박힌 과거 시점이고, since then은 과거의 출발점부터 지금까지입니다."
+        },
+        {
+          "text": "끝난 시점이면 단순 과거, 지금까지의 기간이면 현재완료로 씁니다. 이때 주어의 수에 맞춰 have·has를 고릅니다.",
+          "applyNote": "앞 절은 단순 과거 banned, 뒤 절은 현재완료 has recovered가 됩니다. 핵 주어 The population이 단수이므로 has입니다."
+        }
+      ],
+      "example": {
+        "en": "The government **banned** the pesticide in the 1970s, and the population of raptors **has recovered** steadily since then.",
+        "ko": "정부는 1970년대에 그 살충제를 금지했고, 그 이후로 맹금류의 개체 수는 꾸준히 회복되어 왔습니다.",
+        "note": "한 문장 안에 시간 단서가 둘입니다. 각 단서는 자기 절의 동사만 지배하므로 두 절의 시제가 달라집니다."
+      }
+    },
+    {
+      "id": "b11",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Air quality in the valley ( improved / has improved ) markedly since the coal plant was shut down.",
+      "steps": [
+        {
+          "title": "① 시간 단서를 찾습니다",
+          "body": "since the coal plant was shut down이 유일한 시간 단서입니다. 다른 시간 부사는 없습니다."
+        },
+        {
+          "title": "② 단서의 성격을 판정합니다",
+          "body": "since 뒤에 과거시제 절(was shut down)이 옵니다. 과거의 한 시점을 출발점으로 제시하는 단서입니다."
+        },
+        {
+          "title": "③ 단서가 지배하는 절을 확인합니다",
+          "body": "괄호는 주절의 동사 자리이고 since절은 그 주절을 수식합니다. 따라서 괄호의 시제는 since가 결정합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "출발점부터 지금까지 이어진 결과이므로 현재완료 has improved가 옳습니다. 핵 주어 Air quality가 단수이므로 has입니다."
+        }
+      ],
+      "answer": "has improved",
+      "ko": "석탄 발전소가 폐쇄된 이후 그 계곡의 대기질은 뚜렷하게 개선되었습니다."
+    },
+    {
+      "id": "b12",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u11-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The library {{blank}} its rare manuscripts to the public in 1987.",
+          "options": ["opened", "has opened"],
+          "answer": 0,
+          "translation": "그 도서관은 1987년에 희귀 필사본을 일반에 공개했습니다.",
+          "explanation": "in 1987은 이미 끝난 과거 시점을 못 박는 표현이므로 단순 과거 opened가 옳습니다. 현재완료 has opened는 이런 부사와 함께 쓸 수 없습니다.",
+          "trapTags": ["past-marker"]
+        },
+        {
+          "id": "u11-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Membership fees at the club [[u:rose]] twice since the new director took office.",
+          "isCorrect": false,
+          "correction": "have risen",
+          "translation": "새 이사장이 취임한 이후 그 클럽의 회비는 두 차례 인상되었습니다.",
+          "explanation": "since + 과거시제 절(took office)이 과거의 출발점을 제시하므로 주절은 현재완료여야 합니다. 주어 Membership fees가 복수이므로 have risen이 옳습니다.",
+          "trapTags": ["since-perfect"]
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "단순 과거와 현재완료의 갈림길",
+      "columns": ["단순 과거", "현재완료"],
+      "rows": [
+        {
+          "criterion": "함께 오는 시간 단서",
+          "a": "ago / last year / in 1995 / yesterday",
+          "b": "since + 과거 시점 / so far / up to now / over the past decade"
+        },
+        {
+          "criterion": "시점의 성격",
+          "a": "이미 끝나 못 박힌 시점",
+          "b": "과거에서 시작해 현재까지 이어지는 기간"
+        },
+        {
+          "criterion": "현재와의 연결",
+          "a": "끊겨 있습니다",
+          "b": "이어져 있습니다"
+        },
+        {
+          "criterion": "함께 쓸 수 없는 것",
+          "a": "since + 과거 시점, so far",
+          "b": "ago, in + 과거 연도"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The council **rejected** the proposal last spring.",
+          "ko": "의회는 지난봄에 그 제안을 부결했습니다.",
+          "note": "last spring은 끝난 시점이므로 단순 과거입니다."
+        },
+        {
+          "en": "The council **has rejected** three proposals since last spring.",
+          "ko": "의회는 지난봄 이후로 세 건의 제안을 부결해 왔습니다.",
+          "note": "같은 last spring이라도 since가 붙으면 출발점이 되어 현재완료를 부릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 시간 표현이 어느 시제와 짝을 이루는지 분류하십시오.",
+      "buckets": [
+        { "id": "past", "label": "단순 과거와 짝" },
+        { "id": "perfect", "label": "현재완료와 짝" }
+      ],
+      "chips": [
+        { "text": "three years ago", "bucketId": "past", "why": "ago는 이미 끝난 과거 시점을 못 박습니다." },
+        { "text": "in 2003", "bucketId": "past", "why": "in + 과거 연도는 끝난 시점이므로 단순 과거를 부릅니다." },
+        { "text": "last Friday", "bucketId": "past", "why": "last + 시간 명사는 이미 지나간 시점입니다." },
+        { "text": "since 2003", "bucketId": "perfect", "why": "since + 시점은 과거의 출발점부터 지금까지를 뜻합니다." },
+        { "text": "so far", "bucketId": "perfect", "why": "so far는 기간의 끝을 현재에 고정합니다." },
+        { "text": "over the past five years", "bucketId": "perfect", "why": "과거의 한 시점부터 현재까지 이어지는 기간입니다." }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Since the treaty entered into force, member states ( reduce / reduced / have reduced ) their emissions by a fifth.",
+      "givenSteps": [
+        "① 시간 단서를 찾습니다 — 문두의 Since절이 유일한 시간 단서입니다.",
+        "② 단서의 성격을 판정합니다 — since절의 동사 entered가 과거시제이므로, 조약이 발효된 그 시점이 출발점입니다."
+      ],
+      "prompt": "③ 그렇다면 주절의 괄호에는 무엇이 들어가야 합니까?",
+      "options": [
+        "have reduced — 출발점부터 지금까지 이어진 결과이므로 현재완료입니다",
+        "reduced — since절의 동사가 과거이므로 주절도 과거로 맞춥니다",
+        "reduce — 조약이 지금도 유효하므로 현재시제로 씁니다"
+      ],
+      "answer": 0,
+      "explain": "since절은 과거시제로 출발점만 제시하고, 주절은 그 출발점부터 지금까지의 결과를 현재완료로 말합니다. since절의 과거에 끌려 주절까지 과거로 쓰면 방향이 뒤바뀝니다. 주어 member states가 복수이므로 have reduced입니다."
+    },
+    {
+      "id": "b16",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "짝이 다른 시간 표현 찾기",
+      "instruction": "각 줄에서 나머지와 짝을 이루는 시제가 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["since 2010", "so far", "over the past decade", "two years ago"],
+          "odd": 3,
+          "why": "앞의 셋은 지금까지 이어지는 흐름을 나타내어 현재완료와 짝을 이루지만, two years ago는 못 박힌 과거 시점이라 단순 과거와 짝을 이룹니다."
+        },
+        {
+          "words": ["last spring", "in 2005", "yesterday", "up to now"],
+          "odd": 3,
+          "why": "앞의 셋은 이미 끝난 과거 시점이라 단순 과거를 부르지만, up to now는 기간의 끝이 현재에 닿아 있어 현재완료를 부릅니다."
+        },
+        {
+          "words": ["ever since", "since the war ended", "in recent years", "the day before"],
+          "odd": 3,
+          "why": "앞의 셋은 과거의 한 시점부터 현재까지 이어지는 느낌이라 현재완료와 어울리지만, the day before는 특정 과거를 기준으로 그 하루 전을 가리키는 표현입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "시간·조건의 부사절에서는 미래의 일이라도 will을 쓰지 않고 현재시제로 씁니다.",
+      "examples": [
+        {
+          "en": "The findings will be released as soon as the review **is** complete.",
+          "ko": "검토가 끝나는 즉시 그 연구 결과가 공개될 것입니다.",
+          "note": "as soon as절은 시간의 부사절이므로 will be가 아니라 현재시제 is를 씁니다."
+        },
+        {
+          "en": "If the sensor **detects** smoke, the alarm will sound automatically.",
+          "ko": "센서가 연기를 감지하면 경보가 자동으로 울릴 것입니다.",
+          "note": "조건의 부사절이므로 will detect가 아니라 현재시제 detects를 씁니다. 주절에는 will이 그대로 남습니다."
+        },
+        {
+          "en": "No one knows when the committee **will announce** its decision.",
+          "ko": "그 위원회가 언제 결정을 발표할지는 아무도 모릅니다.",
+          "note": "이 when절은 knows의 목적어인 명사절입니다. 부사절이 아니므로 will을 그대로 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u11-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The publisher will announce the winner as soon as the jury {{blank}} its final vote.",
+          "options": ["completes", "will complete", "will have completed"],
+          "answer": 0,
+          "translation": "심사위원단이 최종 투표를 마치는 즉시 출판사가 수상자를 발표할 것입니다.",
+          "explanation": "as soon as가 이끄는 시간의 부사절에서는 미래의 일이라도 will을 쓰지 않고 현재시제로 씁니다. 따라서 completes가 옳습니다. will complete와 will have completed는 이 부사절 안에 올 수 없습니다.",
+          "trapTags": ["future-in-time-clause"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 completes를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "as soon as절이 시간의 부사절이므로, 미래의 일이라도 그 절 안에서는 현재시제를 쓰기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 미래를 나타내는 주절의 will과 부사절의 현재시제가 짝을 이룹니다."
+        },
+        {
+          "text": "투표가 이미 끝난 일이어서 현재시제가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "투표는 아직 끝나지 않은 미래의 일입니다. 현재시제를 쓰는 이유는 의미가 아니라 부사절이라는 자리 때문입니다."
+        },
+        {
+          "text": "주절과 종속절의 시제는 언제나 같아야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "시제가 언제나 같아야 하는 것은 아닙니다. since 구문처럼 주절과 종속절의 시제가 다른 경우가 오히려 흔합니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — since절의 과거시제에 주절이 끌려갑니다",
+      "body": "since절 안의 동사는 과거시제입니다. 이 과거형이 먼저 눈에 들어오면 주절까지 과거로 맞추게 됩니다. 그러나 since는 출발점만 제시할 뿐이고, 주절은 그 출발점부터 지금까지를 말하는 현재완료여야 합니다. 밑줄이 어느 절에 속한 동사인지부터 확인해야 합니다.",
+      "example": {
+        "en": "Since the border **reopened**, cross-border trade **has grown** by nearly a third.",
+        "ko": "국경이 다시 열린 이후 국경 무역은 3분의 1 가까이 증가했습니다.",
+        "note": "since절은 과거 reopened, 주절은 현재완료 has grown입니다. 두 절의 시제가 다른 것이 정상입니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The observatory [[1:opened]] in 1962, and it [[2:has recorded]] more than nine thousand meteors since then, though funding [[3:has been cut]] sharply three years ago and several instruments [[4:have remained]] out of service ever since.",
+      "answer": 3,
+      "correction": "was cut",
+      "rationales": [
+        "in 1962는 못 박힌 과거 시점이므로 단순 과거 opened가 옳습니다.",
+        "since then이 과거의 출발점부터 지금까지를 뜻하므로 현재완료 has recorded가 옳습니다.",
+        "three years ago는 이미 끝난 과거 시점이므로 현재완료와 함께 쓸 수 없습니다. was cut으로 고칩니다.",
+        "ever since가 지금까지 이어지는 기간을 나타내므로 현재완료 have remained가 옳습니다. 주어 several instruments가 복수이므로 have입니다."
+      ],
+      "ko": "그 천문대는 1962년에 문을 열었고 그 이후로 9천 개가 넘는 유성을 기록해 왔지만, 3년 전에 예산이 크게 삭감되었고 여러 장비가 그 이후로 가동되지 못한 상태입니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 시간 부사를 준 뒤 괄호 안의 동사를 알맞은 시제로 바꿔 쓰게 합니다. 단서 부사를 근거로 밝히면서 고쳐야 감점을 피할 수 있습니다.",
+          "sample": {
+            "en": "The tunnel (be) in use since it (open) to traffic in 2009.",
+            "ask": "괄호 안의 동사를 어법에 맞는 형태로 바꿔 쓰십시오.",
+            "answer": "has been / opened — since절은 과거(opened), 주절은 현재완료(has been)입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 주어 뒤에 수식어를 길게 끼워 시간 단서를 눈에서 멀어지게 한 뒤 밑줄 친 동사의 시제를 묻습니다. 밑줄이 속한 절과 그 절을 지배하는 시간 단서를 짝지어야 합니다.",
+          "sample": {
+            "en": "The catalogue of folk songs, compiled by a village schoolteacher over many summers, [[u:has appeared]] in print for the first time in 1938.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "appeared — in 1938은 못 박힌 과거 시점이므로 현재완료를 쓸 수 없습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Urban planners once treated rivers as little more than drains. Many European cities buried their waterways in concrete channels during the nineteenth century. [[u:Since Zurich began uncovering its streams in the late 1980s, dozens of other cities have restored buried rivers to the surface.]] The reclaimed channels cool the surrounding streets and give residents a place to gather.",
+      "instruction": "밑줄 친 문장에서 시간 단서를 찾고, 그것이 어느 절의 시제를 지배하는지 설명하십시오.",
+      "found": "시간 단서는 문두의 Since절입니다. since절은 과거시제 began으로 출발점을 제시하고, 주절은 그 출발점부터 지금까지의 결과를 현재완료 have restored로 말합니다. since절 안의 in the late 1980s는 since절에 속한 표현이므로 주절의 시제를 과거로 끌어내리지 못합니다.",
+      "gist": "취리히가 복개된 하천을 되살린 이후 여러 도시가 같은 시도를 이어 왔다는 내용입니다."
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "시제를 못 박는 시계탑지기",
+      "intro": "이 시계탑은 문장마다 '언제'를 묻습니다. 시간 단서를 못 읽는 자는 시제를 엉뚱하게 박고 탑 아래로 되돌아갑니다. 네 개의 문장으로 눈을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The archive {{blank}} its earliest records to researchers in 1974.",
+          "options": ["opened", "has opened"],
+          "answer": 0,
+          "why": "in 1974는 못 박힌 과거 시점이므로 현재완료를 쓸 수 없습니다. 단순 과거 opened가 옳습니다."
+        },
+        {
+          "prompt": "Water levels in the reservoir {{blank}} sharply since the drought began.",
+          "options": ["have dropped", "dropped"],
+          "answer": 0,
+          "why": "since + 과거시제 절(began)이 출발점을 제시하므로 주절은 현재완료입니다. 핵 주어 Water levels가 복수이므로 have dropped입니다."
+        },
+        {
+          "prompt": "The gallery will unveil the mural once the restoration {{blank}}.",
+          "options": ["is finished", "will be finished"],
+          "answer": 0,
+          "why": "once가 이끄는 시간의 부사절에서는 미래의 일이라도 will 없이 현재시제로 씁니다. is finished가 옳습니다."
+        },
+        {
+          "prompt": "Coastal wetlands {{blank}} by nearly a third over the past forty years.",
+          "options": ["have shrunk", "shrank"],
+          "answer": 0,
+          "why": "over the past forty years는 과거의 한 시점부터 지금까지 이어지는 기간이므로 현재완료 have shrunk가 옳습니다."
+        }
+      ],
+      "winText": "시계탑의 종이 울립니다. 이제 당신은 문장을 볼 때 동사보다 시간 단서를 먼저 봅니다. 단서가 시제를 못 박는 순간을 읽어내는 눈, 그것이 이 유닛의 열쇠입니다.",
+      "loseText": "시계탑지기가 문장을 되돌려줍니다. 네 문장 모두 물은 것은 하나였습니다. '이 단서는 시점을 못 박는가, 지금까지를 여는가.' 판단 절차 4단계를 다시 짚고 오면 종은 다시 울릴 준비가 되어 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "ago·last year처럼 ___ 시점을 못 박는 부사가 있으면 ___시제를 쓰고, since + 과거 시점처럼 지금까지 ___ 기간을 나타내면 ___를 씁니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "시제는 문장 안의 시간 단서가 결정합니다. 단서를 먼저 찾고, 그 단서가 지배하는 절을 확인합니다.",
+        "ago·last year·in + 과거 연도처럼 끝난 시점을 못 박는 부사는 단순 과거만 허용합니다. 현재완료와 함께 쓸 수 없습니다.",
+        "since + 과거 시점(또는 과거시제 절)·so far·over the past decade는 현재완료를 부릅니다. since절 자체는 과거시제입니다.",
+        "시간·조건의 부사절에서는 미래의 일이라도 will 없이 현재시제로 씁니다.",
+        "현재완료를 쓰기로 정했다면 마지막으로 핵 주어의 수를 보고 have와 has를 고릅니다."
+      ],
+      "keySentence": {
+        "en": "The population of the coastal village **has fallen** steadily since the fishing industry **collapsed**.",
+        "ko": "그 해안 마을의 인구는 어업이 붕괴한 이후로 꾸준히 줄어 왔습니다.",
+        "note": "since절은 과거, 주절은 현재완료입니다. 두 절의 시제가 다른 것이 이 구문의 정상 형태입니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u11-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Global sea levels {{blank}} by about twenty centimeters since reliable records began in 1880.",
+          "options": ["have risen", "rose"],
+          "answer": 0,
+          "translation": "믿을 만한 기록이 시작된 1880년 이후 전 세계 해수면은 약 20센티미터 상승했습니다.",
+          "explanation": "since + 과거시제 절(records began)이 출발점을 제시하므로 주절은 현재완료 have risen이 옳습니다. in 1880은 since절 안에 속한 표현이므로 주절의 시제를 과거로 끌어내리지 못합니다.",
+          "trapTags": ["since-perfect", "past-marker"]
+        },
+        {
+          "id": "u11-c4-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The treaty [[u:has entered]] into force in 2016, and the number of signatories has doubled since then.",
+          "isCorrect": false,
+          "correction": "entered",
+          "translation": "그 조약은 2016년에 발효되었고, 그 이후로 서명국의 수는 두 배가 되었습니다.",
+          "explanation": "in 2016은 못 박힌 과거 시점이므로 현재완료와 함께 쓸 수 없습니다. 앞 절은 단순 과거 entered여야 합니다. 뒤 절은 since then이라는 단서를 가지므로 현재완료 has doubled가 옳습니다.",
+          "trapTags": ["past-marker"]
+        },
+        {
+          "id": "u11-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The number of nesting pairs recorded on the island {{blank}} steadily since the rats were eradicated.",
+          "options": ["has grown", "grew", "had grown"],
+          "answer": 0,
+          "translation": "쥐가 박멸된 이후 그 섬에서 기록된 번식 쌍(둥지를 트는 한 쌍)의 수는 꾸준히 늘어 왔습니다.",
+          "explanation": "since + 과거시제 절(were eradicated)이 출발점을 제시하므로 주절은 현재완료입니다. 수식어 recorded on the island를 걷어내면 핵 주어는 The number이므로 단수 has grown이 옳습니다. grew는 지금까지라는 방향을 잃고, had grown은 기준이 되는 더 늦은 과거 시점이 없어 쓸 수 없습니다.",
+          "trapTags": ["since-perfect", "long-subject"]
+        }
+      ]
+    }
+  ]
+}

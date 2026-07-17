@@ -1,0 +1,177 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-error-not-mutated",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-correction-not-source-backed",
+    "grammar-underline-wide",
+    "grammar-underline-wide",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-too-long-hard",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch",
+    "wrong-option-explanation-count",
+    "grammar-correction-differs-from-source"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=f  (B):dec=b  (C):ANS=a  (D):dec=d  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 54,
+        "relPos": 0.054,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 100,
+        "relPos": 0.099,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 666,
+        "relPos": 0.661,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 881,
+        "relPos": 0.875,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.875,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+  "question": {
+    "direction": "다음 글에 제시된 (A)~(E) 중 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "break it up",
+        "isError": false,
+        "errorExpression": "break",
+        "surroundingText": "...... naturally and automatically break it up into shapes, colors, and concepts that we have learned ......",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "that we have learned",
+        "isError": false,
+        "errorExpression": "when we have learned",
+        "surroundingText": "...... into shapes, colors, and concepts that we have learned through education.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "reconstructing memories rather than retrieving",
+        "isError": true,
+        "correction": "reconstruct memories rather than retrieve",
+        "errorExpression": "reconstructing memories rather than retrieving",
+        "surroundingText": "We reconstructing memories rather than retrieving the video from memory.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "comes at a cost of seeing",
+        "isError": false,
+        "errorExpression": "comes at cost of seeing",
+        "surroundingText": "...... representing the world as abstract ideas and features comes at a cost of seeing the world as it is.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "rather than played back",
+        "isError": false,
+        "errorExpression": "rather than playing back",
+        "surroundingText": "...... our memories are reconstructed through abstract representations rather than played back like a movie ......",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "break it up"
+      },
+      {
+        "label": "(B)",
+        "text": "that we have learned"
+      },
+      {
+        "label": "(C)",
+        "text": "reconstructing memories rather than retrieving"
+      },
+      {
+        "label": "(D)",
+        "text": "comes at a cost of seeing"
+      },
+      {
+        "label": "(E)",
+        "text": "rather than played back"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "",
+      "(B)": "",
+      "(D)": "",
+      "(E)": ""
+    },
+    "explanation": "(C) \"reconstructing memories rather than retrieving\"는 어법상 틀린 표현이며 \"reconstruct memories rather than retrieve\"로 고쳐야 한다. 해설: (A) 'break it up'은 분리동사(phrasal verb)로, 목적어가 대명사 'it'일 때는 반드시 동사와 부사 사이에 위치해야 하는 올바른 표현입니다. 'break up it'은 어순이 틀린 표현입니다. (B) 선행사 'concepts'를 수식하는 관계대명사절입니다. 선행사가 무생물이므로 'that'을 사용할 수 있으며, 복수명사를 수식하므로 완료시제의 복수 동사 'have learned'가 올바르게 사용되었습니다. **(C) 정답:** 문장의 주어는 'We'이며, 이어서 동사가 필요한 자리입니다. 'reconstructing'은 동명사 또는 현재분사로서 단독 동사 역할을 할 수 없으므로, 주어진 문맥에서는 문법적 오류입니다. 'rather than'은 등위접속사로 쓰일 때 앞뒤의 형태가 일치해야 하므로, 'reconstruct(동사원형)... rather than retrieve(동사원형)'이 올바른 병렬 구조입니다. 만약 'rather than'을 전치사로 사용하려면 앞에도 동명사 'reconstruction'이나 'reconstructing'이 와야 하지만, 이 경우에도 주어 'We'에 대한 동사가 없어 문장이 성립하지 않습니다. (D) '~하는 데 비용을 치르다'라는 뜻으로 쓰이는 관용적 표현입니다. 'at the cost of'도 가능하지만, 'at a cost of' 역시 문법적으로 틀리지 않으며 본문의 의미인 '대가를 치르다'로 사용되었습니다. (E) 'are reconstructed'와 '(are) played back'의 병렬 구조입니다. 'rather than'이 등위접속사 기능을 하여 과거분사 'played'가 생략된 'are'에 연결되어 과거분사의 병렬을 이루고 있습니다.",
+    "keyPoints": [
+      "rather than의 병렬 구조(접속사로서 앞뒤 형태 일치)",
+      "분리동사의 대명사 목적어 위치",
+      "관계대명사 that의 사용",
+      "수동태 병렬 구조에서 조동사의 생략",
+      "관용구 at a cost of의 사용"
+    ],
+    "tags": [
+      "어법",
+      "rather than",
+      "병렬구조",
+      "분리동사",
+      "관계대명사",
+      "수능 ADVANCED"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "When we see something, we naturally and automatically __(A) break it up__ into shapes, colors, and concepts __(B) that we have learned__ through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features __(D) comes at a cost of seeing__ the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations __(E) rather than played back__ like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing."
+  }
+}

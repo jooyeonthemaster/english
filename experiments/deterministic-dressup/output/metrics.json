@@ -1,0 +1,306 @@
+{
+  "mesh": [
+    {
+      "model": "A",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": 4.076
+    },
+    {
+      "model": "A",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": 4.076
+    },
+    {
+      "model": "A",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": 4.076
+    },
+    {
+      "model": "A",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": 4.076
+    },
+    {
+      "model": "A",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": 4.076
+    },
+    {
+      "model": "B",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": 3.39
+    },
+    {
+      "model": "B",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": 3.39
+    },
+    {
+      "model": "B",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": 3.39
+    },
+    {
+      "model": "B",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": 3.39
+    },
+    {
+      "model": "B",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": 3.39
+    },
+    {
+      "model": "C",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": 3.162
+    },
+    {
+      "model": "C",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": 3.162
+    },
+    {
+      "model": "C",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": 3.162
+    },
+    {
+      "model": "C",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": 3.162
+    },
+    {
+      "model": "C",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": 3.162
+    },
+    {
+      "model": "D",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": 7.768
+    },
+    {
+      "model": "D",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": 7.768
+    },
+    {
+      "model": "D",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": 7.768
+    },
+    {
+      "model": "D",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": 7.768
+    },
+    {
+      "model": "D",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": 7.768
+    },
+    {
+      "model": "E",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": 7.773
+    },
+    {
+      "model": "E",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": 7.773
+    },
+    {
+      "model": "E",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": 7.773
+    },
+    {
+      "model": "E",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": 7.773
+    },
+    {
+      "model": "E",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": 7.773
+    }
+  ],
+  "rigid": [
+    {
+      "model": "A",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "A",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "A",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "A",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "A",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "B",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "B",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "B",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "B",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "B",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "C",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "C",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "C",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "C",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "C",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "D",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "D",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "D",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "D",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "D",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "E",
+      "outfit": "1 navy suit",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "E",
+      "outfit": "2 charcoal",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "E",
+      "outfit": "3 hoodie",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "E",
+      "outfit": "4 denim",
+      "flips": 0,
+      "stretch": null
+    },
+    {
+      "model": "E",
+      "outfit": "5 bomber",
+      "flips": 0,
+      "stretch": null
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "pid": "P010",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-wording",
+      "severity": "minor",
+      "evidence": "오답 해설 ④의 '도약의 충격을 완전히 위반한다'는 표현은 대상이 어색하다. 위반되는 것은 '충격'이 아니라 '스키마적 기대(schematic expectation)'이며, 선지 원문도 'violates the schematic expectation completely'다. 논지는 옳으나(세 번째 음은 기대를 충족시키는 역할이므로 반대) 용어 대응이 느슨하다. 사실 오류·오개념 수준은 아니므로 V4 실패로 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "방향 규칙 위반형 — gap fill 원리의 핵심(큰 도약 후 다음 음은 방향을 바꾼다)을 정반대로 뒤집은 함정 (causal/directional reversal)",
+      "temptingBecause": "지문의 'leap' 어휘를 그대로 재사용하고, 옥타브 도약이라는 인상적 사건의 연속처럼 읽힐 수 있다",
+      "decisiveFlaw": "지문이 명시한 'the next note should change direction'과 정면 충돌한다. 동일 도약을 반복하면 gap fill이 아니라 gap 확대다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'fills the gap'을 'closer and closer to our starting point' + 'back toward home again, but not by too much'와 결합해 '도약이 만든 거리를 좁힌다'로 정확히 추상화",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 부분 복귀(긴장 유지)와 gap fill을 동시에 만족하는 유일한 선지"
+    },
+    {
+      "label": "③",
+      "intent": "정도(degree) 오류형 — '복귀'라는 방향은 맞지만 정도를 과장한 half-truth",
+      "temptingBecause": "'return to the jumping-off point', 'harmonic home' 등 복귀 기대를 서술한 문장들과 표면적으로 일치해 가장 매력적인 경쟁 선지다",
+      "decisiveFlaw": "'but not by too much because he wants to continue to build tension'이 '단번에 완전 복귀(entirely, at once)'를 명시적으로 배제한다"
+    },
+    {
+      "label": "④",
+      "intent": "극성 반전형 — 지문 용어 'schematic violation'을 재사용하되 행위 주체를 바꿔치기한 함정 (actor swap + polarity reversal)",
+      "temptingBecause": "'This is a strong schematic violation'이라는 문장이 바로 앞에 있어 용어 매칭으로 찍는 학생을 노린다",
+      "decisiveFlaw": "스키마 위반은 옥타브 도약(1→2음)이 일으킨 것이고, 세 번째 음은 그 위반을 보상·해소하는(rewards and soothes) 역할이므로 정반대다"
+    },
+    {
+      "label": "⑤",
+      "intent": "범위 이탈형(scope shift) — 'stepwise motion'이라는 지문 용어를 끌어와 무관한 과잉 일반화를 유도",
+      "temptingBecause": "'stepwise motion'이 지문에 등장하는 실제 용어라 표면 근거(source anchor)는 있다",
+      "decisiveFlaw": "지문은 단계적 진행을 전형적 멜로디의 속성으로 서술할 뿐, 세 번째 음이 그 필요성을 제거한다는 논리는 어디에도 없다. 오히려 gap fill 이후 stepwise 복귀가 기대된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ④ '도약의 충격을 완전히 위반한다는 설명은 반대로 되어 있습니다' — '충격을 위반한다'는 목적어 선택이 부자연스럽고 선지의 'schematic expectation'과 어긋난다. '스키마적 기대를 완전히 위반한다'로 고치면 정확해진다",
+      "recommendation": "④ 해설의 '도약의 충격' → '스키마적 기대(도약 이후 복귀 기대)'로 용어 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설의 '다시 원래 위치로 되돌아가는 흐름'은 지문의 'back toward home again, but not by too much'보다 복귀 정도를 다소 강하게 읽힐 수 있다(③과의 경계가 흐려질 소지). 다만 같은 문장에서 '빈 공간을 메우게 됩니다'로 수렴 개념을 유지하므로 오설명은 아니다",
+      "recommendation": "'원래 위치 방향으로 일부 되돌아가는 흐름' 등 부분 복귀를 명시하면 ③ 배제 논리와 더 선명하게 정렬된다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문 대비 렌더 지문의 유일한 차이는 마지막 문장 'fills the gap.' → '_____.'(word-level diff로 확인). 접합 파손·중복·누락·고아 문장부호 없음. 라벨 ①~⑤와 선지 일치. V2: 다섯 선지 모두 3인칭 단수 동사구로 동일 통사 슬롯에 들어가 문법만으로 탈락하는 선지가 없고, 독립 검증 결과 ①(방향 규칙 위반), ③('not by too much'가 배제), ④(위반이 아니라 해소), ⑤(무근거 과잉 일반화)는 각각 명확한 결정적 결함으로 탈락, ②만 성립 — 단일 정답 확인. V3: 완성문 'The third note of this melody narrows the distance created by the leap.'는 문법적·자연스럽고 seam 비문 없음. V4: 해설의 gap fill 설명·옥타브 도약·부분 복귀 논리가 지문과 일치하며 환각·용어 오분석 없음(④ 해설의 '도약의 충격' 표현만 minor). V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음. 공예: 결론 문장의 핵심 논리(원리→사례 적용)를 묻고(C1=3), 네 오답이 방향 반전·정도 과장·극성 반전·범위 이탈로 서로 다른 함정을 구현하며(C2=3), ③·④가 실제 판단을 요구하는 경쟁 선지(C3=3). 다만 C4=2: 네 오답 모두 극단어(identical/entirely·at once/completely/eliminates)를 포함하는 반면 정답 ②만 온건한 표현이라, 지문을 읽지 않고 절대어 회피 전략만으로 정답을 좁힐 수 있는 단서 누출이 있다. C5=3: 두 단서('closer and closer' + 'not by too much') 결합을 요구하는 수준이 INTERMEDIATE에 부합(다소 평이한 편). C6=3: 해설이 정확하고 근거·함정 분리가 되어 있으나 ④ 해설 용어가 느슨함. 합계 17, 모든 V 통과, 최저 C=2 → B. 요청 난이도가 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(killerConditionsMet=false). 출하 가능하되, 선지 극단어 편중 완화(예: ③을 'restores the harmonic home in a single step' 대신 온건한 표현으로 재작성하거나 정답에 준하는 어조 균형)와 ④ 해설 용어 교정을 권고."
+}

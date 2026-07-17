@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'A bridge is normally constructed to last one hundred years' — passive voice of transitive 'construct' with the inanimate patient subject 'a bridge', followed by a purpose/result to-infinitive. Active 'constructing' would be deviant; passive is required and supplied. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a lasting mark that shows the evolution of society' — subject relative pronoun 'that' with antecedent 'mark' (or arguably 'presence... mark'; either way singular), and the relative-clause verb 'shows' agrees in 3sg. 'What' would be excluded because an overt antecedent exists. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong (the answer)",
+      "reason": "Sentence: 'one of the first qualities a bridge must exhibit concerning how it harmonizes with its surroundings.' The subject NP is 'one of the first qualities [(that) a bridge must exhibit]' — a head noun plus a reduced object relative. 'Exhibit' is the relative-clause verb, so the matrix clause still needs a finite verb, and 'concerning' (participle/preposition) cannot supply one. Exhaustive alternative parses fail: (i) 'concerning...' as a participial adjunct leaves a verbless matrix; (ii) 'concerning' as preposition 'regarding' likewise leaves a fragment; (iii) no inversion, ellipsis, or absolute construction rescues it. The unique one-token repair is finite 'concerns', agreeing in 3sg with the head 'one'. Ungrammatical as printed."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'(concerns) how it harmonizes with its surroundings' — 'how' heads an interrogative/free-relative noun clause functioning as the object of the intended verb 'concerns'; internal clause 'it harmonizes with its surroundings' is complete, so 'how' is an adjunct wh-word, which is licit ('what' would demand a gap that does not exist). No parse makes 'how' deviant while leaving (C) grammatical. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment' — 'but' coordinates two finite VPs inside the relative clause, both predicated of subject relative 'that' (= a bridge): 'is spectacular ... but spoils ...'. 3sg 'spoils' agrees; a bare participle 'spoiling' would break the finite parallelism with 'is'. Grammatical."
+    }
+  ],
+  "note": "Clean single-key item. The defect at (C) is a genuine long-distance one: the reduced object relative 'a bridge must exhibit' tempts solvers to treat 'exhibit' as the main verb and accept 'concerning' as a connective. Formal proof of ungrammaticality: every parse of the printed string lacks a finite matrix verb, and the sole minimal repair is 'concerns'. All distractors are independently verifiable as grammatical, including under adversarial alternative parses (reduced relatives, participial adjuncts, parallelism start-point at 'is' vs 'spectacular'). No second defensible label."
+}

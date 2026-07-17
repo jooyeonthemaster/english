@@ -1,0 +1,35 @@
+{
+  "pid": "P065",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'Evaluate based primarily on forthcoming academic results' contradicts the passage's explicit statement that 'results won't be apparent immediately,' and the teacher's example is non-evaluative (a gentle recast, not an assessment). No plug-in reading makes this fit."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong (strongest distractor)",
+      "reason": "Genuinely tempting: 'secure their future economic access' echoes the opening sentence about Standard English granting economic/educational opportunities. But 'firmly rectify' is precisely the 'rejection and correction' extreme the passage frames as one pole of opinion, while the example shows the teacher recasting without explicit correction. Culturally responsive teaching is presented as the middle path, not this pole."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "Plugged in: 'the approach... is to validate their existing linguistic habits as a stepping stone toward standard usage.' The example fits exactly — the teacher accepts the dialect utterance (validation, protecting attitudes toward school) while modeling the standard form ('Oh, you don't have a pencil.' = stepping stone toward standard usage). Covers both stated long-range benefits (language development + attitudes toward school) and occupies the middle ground between the two extremes the passage sets up. Grammar seam ('is to validate') is clean."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'Enduring replacement for formal language' is the 'complete acceptance' pole pushed further — it contradicts the premise that Standard English is worth teaching for access to opportunities, and contradicts the example where the teacher still models the standard form."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Self-contradictory in context: the blank defines the approach 'most consistent with culturally responsive teaching,' so it cannot be one that deprioritizes culturally responsive attitudes. 'Prioritize dialect modification' also lands on the correction pole, contradicted by the example."
+    }
+  ],
+  "note": "Clean single-answer item. Rhetorical structure (two extremes -> middle path named by blank -> concrete example -> long-range dual benefits) points decisively to option 3. Option 2 is a well-built attractive distractor recycling the opening sentence's economic-access framing, but 'firmly rectify' is falsified by the teacher's recasting example. No alternative construal rescues any other option."
+}

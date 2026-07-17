@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "kind": "deterministic-splits-remediation-reaudit-v8",
+  "verdict": "BLOCK",
+  "verdictRule": "Any sealed oracle mismatch => BLOCK",
+  "sealedCorpus": {
+    "sha256": "564064210a382bd41c54913d9cf6edbd4943385f968517a5dfba81827afcb08f",
+    "cases": 256,
+    "families": 8,
+    "perFamily": "16 normal / 16 defect"
+  },
+  "totals": {
+    "total": 256,
+    "pass": 163,
+    "fail": 93,
+    "falsePositive": 0,
+    "falseNegative": 93
+  },
+  "familyResults": {
+    "summary_complete_mc_answer_object_binding": {
+      "verdict": "BLOCK",
+      "total": 32,
+      "normalControls": 16,
+      "defectControls": 16,
+      "pass": 16,
+      "fail": 16,
+      "falsePositive": 0,
+      "falseNegative": 16,
+      "failedCaseIds": [
+        "SCB-01-D",
+        "SCB-02-D",
+        "SCB-03-D",
+        "SCB-04-D",
+        "SCB-05-D",
+        "SCB-06-D",
+        "SCB-07-D",
+        "SCB-08-D",
+        "SCB-09-D",
+        "SCB-10-D",
+        "SCB-11-D",
+        "SCB-12-D",
+        "SCB-13-D",
+        "SCB-14-D",
+        "SCB-15-D",
+        "SCB-16-D"
+      ],
+      "emittedTargetCodes": [],
+      "supportModes": [
+        "bounded production direction answer-object classifier"
+      ]
+    },
+    "blank_explanation_option_analysis": {
+      "verdict": "PASS",
+      "total": 32,
+      "normalControls": 16,
+      "defectControls": 16,
+      "pass": 32,
+      "fail": 0,
+      "falsePositive": 0,
+      "falseNegative": 0,
+      "failedCaseIds": [],
+      "emittedTargetCodes": [
+        "blank-explanation-step-numbering",
+        "blank-explanation-narrative-circled-numbering"
+      ],
+      "supportModes": [
+        "bounded circled-marker discourse classifier"
+      ]
+    },
+    "grammar_ghost_labels_unicode_rendered": {
+      "verdict": "BLOCK",
+      "total": 32,
+      "normalControls": 16,
+      "defectControls": 16,
+      "pass": 19,
+      "fail": 13,
+      "falsePositive": 0,
+      "falseNegative": 13,
+      "failedCaseIds": [
+        "GGL-01-D",
+        "GGL-02-D",
+        "GGL-04-D",
+        "GGL-05-D",
+        "GGL-06-D",
+        "GGL-07-D",
+        "GGL-08-D",
+        "GGL-09-D",
+        "GGL-10-D",
+        "GGL-11-D",
+        "GGL-13-D",
+        "GGL-14-D",
+        "GGL-15-D"
+      ],
+      "emittedTargetCodes": [
+        "grammar-keypoint-nonexistent-label"
+      ],
+      "supportModes": [
+        "bounded leading-label grammar normalizer"
+      ]
+    },
+    "grammar_free_text_rule_truth": {
+      "verdict": "BLOCK",
+      "total": 32,
+      "normalControls": 16,
+      "defectControls": 16,
+      "pass": 16,
+      "fail": 16,
+      "falsePositive": 0,
+      "falseNegative": 16,
+      "failedCaseIds": [
+        "GRT-01-D",
+        "GRT-02-D",
+        "GRT-03-D",
+        "GRT-04-D",
+        "GRT-05-D",
+        "GRT-06-D",
+        "GRT-07-D",
+        "GRT-08-D",
+        "GRT-09-D",
+        "GRT-10-D",
+        "GRT-11-D",
+        "GRT-12-D",
+        "GRT-13-D",
+        "GRT-14-D",
+        "GRT-15-D",
+        "GRT-16-D"
+      ],
+      "emittedTargetCodes": [],
+      "supportModes": [
+        "KNOWN_UNSUPPORTED_OPEN_ENDED_SEMANTIC_TRUTH"
+      ]
+    },
+    "sentence_order_body_duplicate_label_contamination": {
+      "verdict": "BLOCK",
+      "total": 32,
+      "normalControls": 16,
+      "defectControls": 16,
+      "pass": 16,
+      "fail": 16,
+      "falsePositive": 0,
+      "falseNegative": 16,
+      "failedCaseIds": [
+        "SOD-01-D",
+        "SOD-02-D",
+        "SOD-03-D",
+        "SOD-04-D",
+        "SOD-05-D",
+        "SOD-06-D",
+        "SOD-07-D",
+        "SOD-08-D",
+        "SOD-09-D",
+        "SOD-10-D",
+        "SOD-11-D",
+        "SOD-12-D",
+        "SOD-13-D",
+        "SOD-14-D",
+        "SOD-15-D",
+        "SOD-16-D"
+      ],
+      "emittedTargetCodes": [],
+      "supportModes": [
+        "bounded paragraph-body label detector"
+      ]
+    },
+    "sentence_order_dependent_fragments": {
+      "verdict": "BLOCK",
+      "total": 32,
+      "normalControls": 16,
+      "defectControls": 16,
+      "pass": 16,
+      "fail": 16,
+      "falsePositive": 0,
+      "falseNegative": 16,
+      "failedCaseIds": [
+        "SDF-01-D",
+        "SDF-02-D",
+        "SDF-03-D",
+        "SDF-04-D",
+        "SDF-05-D",
+        "SDF-06-D",
+        "SDF-07-D",
+        "SDF-08-D",
+        "SDF-09-D",
+        "SDF-10-D",
+        "SDF-11-D",
+        "SDF-12-D",
+        "SDF-13-D",
+        "SDF-14-D",
+        "SDF-15-D",
+        "SDF-16-D"
+      ],
+      "emittedTargetCodes": [],
+      "supportModes": [
+        "bounded dependent-opener completeness detector"
+      ]
+    },
+    "exact_transformed_answer_residue": {
+      "verdict": "PASS",
+      "total": 32,
+      "normalControls": 16,
+      "defectControls": 16,
+      "pass": 32,
+      "fail": 0,
+      "falsePositive": 0,
+      "falseNegative": 0,
+      "failedCaseIds": [],
+      "emittedTargetCodes": [
+        "blank-answer-residual-visible"
+      ],
+      "supportModes": [
+        "exact normalized residual visibility detector"
+      ]
+    },
+    "blank_inference_semantic_role_preservation": {
+      "verdict": "BLOCK",
+      "total": 32,
+      "normalControls": 16,
+      "defectControls": 16,
+      "pass": 16,
+      "fail": 16,
+      "falsePositive": 0,
+      "falseNegative": 16,
+      "failedCaseIds": [
+        "BSR-01-D",
+        "BSR-02-D",
+        "BSR-03-D",
+        "BSR-04-D",
+        "BSR-05-D",
+        "BSR-06-D",
+        "BSR-07-D",
+        "BSR-08-D",
+        "BSR-09-D",
+        "BSR-10-D",
+        "BSR-11-D",
+        "BSR-12-D",
+        "BSR-13-D",
+        "BSR-14-D",
+        "BSR-15-D",
+        "BSR-16-D"
+      ],
+      "emittedTargetCodes": [],
+      "supportModes": [
+        "NO_GENERAL_ACTOR_CONDITION_CAUSE_SCOPE_VERIFIER",
+        "narrow lexical polarity pattern only"
+      ]
+    }
+  },
+  "boundedPassFamilies": [
+    "blank_explanation_option_analysis",
+    "exact_transformed_answer_residue"
+  ],
+  "blockedFamilies": [
+    "summary_complete_mc_answer_object_binding",
+    "grammar_ghost_labels_unicode_rendered",
+    "grammar_free_text_rule_truth",
+    "sentence_order_body_duplicate_label_contamination",
+    "sentence_order_dependent_fragments",
+    "blank_inference_semantic_role_preservation"
+  ],
+  "novelty": {
+    "verdict": "PASS",
+    "semanticLiteralCount": 764,
+    "priorFileCount": 116,
+    "priorBytes": 6652373,
+    "matchCount": 0,
+    "comparisonUniverseSha256": "226335a1069e155aaab582b2576929ea513123a55843fe55d08342f90ee5c284"
+  },
+  "equalTokenSemanticRolePairs": {
+    "checked": 16,
+    "pass": true
+  },
+  "legacyTests": {
+    "command": "C:\\Program Files\\nodejs\\node.exe --test tests/unit/summary-mc-direction-split.test.mjs tests/unit/blank-explanation-step-numbering.test.mjs tests/unit/grammar-keypoint-core10.test.mjs tests/unit/sentence-order-quality.test.mjs tests/unit/wave1-integrity-gates.test.mjs tests/unit/blank-paraphrase-contract.test.mjs",
+    "status": 0,
+    "signal": null,
+    "pass": 80,
+    "fail": 0,
+    "durationMs": 4023,
+    "logSha256": "60750ab96e9c5ea329b30d074dafc79fa7b03f1385c81bfd8fb123a6221495a8",
+    "logBytes": 7211,
+    "skippedInCheckMode": false
+  },
+  "provenance": {
+    "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "sourceAndTestSha256": {
+      "src/lib/question-quality/index.ts": "2db502873ac6fbb295afdd8315fb166d5a6a408fdc213f3def1be1a300a4137f",
+      "src/lib/question-quality/dispatcher.ts": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "src/lib/question-quality/validators/summary/mc.ts": "f720d8d091b958c37e2ebb18942f7f64d52c50de8e4f7cded545d6c0be985cd4",
+      "src/lib/question-quality/validators/blank/inference.ts": "0e517dd2dde81f06cf20bab6c7bab90e2155ed7c9e239f07d02e3fb099ff8f60",
+      "src/lib/question-quality/validators/blank/paraphrase.ts": "d8a660b09e124744705111ea9413245648c18aa94f88ba20471afbd0d164df14",
+      "src/lib/question-quality/validators/grammar/shared.ts": "78c72f4d16ecda0f49b52035012115a9736b6024ca6acdd8e67d6f7ef8e2d2cb",
+      "src/lib/question-quality/validators/sentence-order.ts": "f7ca1abd81b46f3ce23db34c1d8676b1b8f3f186535f348081f97a2b0158aa08",
+      "tests/unit/summary-mc-direction-split.test.mjs": "b8af7a7deaf2051396cb2eac7d259598aa6246dc0dd1f27d46bc63ec1dcc9caa",
+      "tests/unit/blank-explanation-step-numbering.test.mjs": "d16dde74fe75a69c28cbbaa75150e4de07e4cb3b5397375b65e0269eb26033dc",
+      "tests/unit/grammar-keypoint-core10.test.mjs": "fec6106f91d8480a6332725a4b27d55e191d5717bdf2d5858472b5f26a3bbec4",
+      "tests/unit/sentence-order-quality.test.mjs": "18b3c6525f7ea705c6c9724e20071e36dcb46768e591fce8f05ed638e45ae177",
+      "tests/unit/wave1-integrity-gates.test.mjs": "83d866dbf64e24c9368357155ae12d45a9d3b959cc6103089118fb8329bf812b",
+      "tests/unit/blank-paraphrase-contract.test.mjs": "f0baa56c7ace7df2eb66ef81b3524ed11c0a158eae31d9daba628e89f4e63e4b"
+    }
+  },
+  "apiCandidatesConsumed": 0,
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "secretReads": 0
+  }
+}

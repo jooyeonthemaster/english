@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam is grammatical (based on + NP, 'they' = situations), but the logic fails: objectivity appears only in the final sentence as a remedy that reduces doubt ('When you see situations... more objectively, you are less likely to have doubt'). The passage never asserts that situations differ in stressfulness according to how much they foster objective self-reflection; the asserted determinant is doubt-activation. The option also inverts direction — more fostering of objectivity would predict LESS stress, so 'stressful based on the extent to which they foster objectivity' misstates the causal variable."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "Seam: 'based on whether + finite clause' is grammatical; 'they' correctly binds to 'situations'. Logic: the two cleft sentences immediately following the blank ('It's NOT the pressure to perform that creates your stress. Rather, it's the SELF-DOUBT that bothers you.') function as a direct elaboration of the blank sentence, explicitly identifying the person-specific differentiator as self-doubt. 'Trigger our inner sense of uncertainty' is a faithful paraphrase of activating one's self-doubt. Fully entailed by the passage."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "Seam is grammatical, but the content is flatly negated by the text: 'It's not the pressure to perform that creates your stress.' Additionally, 'limits our ACTUAL capacity' contradicts the passage's mechanism, which concerns perceived ability (doubt about one's ability), not any real limitation of capacity. Formally contradicted, not merely unsupported."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('based on how fiercely...'), but the logic reverses cause and effect: the passage states 'Doubt CAUSES you to see positive, neutral, and even genuinely negative experiences more negatively' — negative interpretation is an effect of doubt, not the basis on which situations become uniquely stressful. It also narrows the scope to 'positive events' where the passage lists positive, neutral, and negative experiences."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('based on whether we abandon...'), but 'abandoning the areas of concern we initially valued' is a fabricated concept with no textual basis. The passage discusses continuing to care about important areas while doubting one's ability in them; abandonment is never raised. Extraneous to the argument."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. The blank sentence is immediately glossed by a not-X-rather-Y cleft pair (not performance pressure, rather self-doubt), which uniquely forces a doubt-activation paraphrase. Option 2 is the only candidate entailed by the text; 3 is directly contradicted, 4 inverts causation, 1 misassigns the determinant (remedy vs cause), 5 is extraneous. No alternative construal rescues any distractor. Single defensible answer: 2."
+}

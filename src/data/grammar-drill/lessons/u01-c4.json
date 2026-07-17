@@ -1,0 +1,676 @@
+{
+  "id": "u01-c4",
+  "unitId": "u01",
+  "order": 4,
+  "title": "동형 함정 — 과거형인가 과거분사인가",
+  "oneLiner": "규칙동사는 과거형과 과거분사가 -ed 로 똑같아, 명사 뒤의 -ed 가 본동사인지 수식어인지 헷갈리게 만드는 함정입니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": ["TP01"],
+    "sourceRefs": [
+      "어법끝 5.0 TP01 동사 vs 준동사",
+      "천일문 고등 GRAMMAR U55(동사 vs 준동사)",
+      "SMOAT 어법 드릴 뱅크 u01-c4 문항군(trapTag: ed-ambiguity)"
+    ]
+  },
+  "lenses": ["L2", "L3", "L5"],
+  "confusableWith": ["u01-c2", "u01-c3", "u04-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The documents stored in the archive revealed a forgotten treaty.",
+        "The documents store in the archive revealed a forgotten treaty."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 store 를 과거분사 형태 stored 로 썼는지, 현재형 store 로 썼는지입니다. 옳은 문장에서는 명사 뒤의 stored(보관된)가 The documents 를 꾸미는 수식어이고 시제 동사는 revealed 하나입니다. store 를 쓰면 store 와 revealed 가 접속사 없이 시제 동사 둘이 되어 문장이 깨집니다. 이 레슨을 마치면 명사 뒤의 -ed 를 보는 순간 그것이 본동사인지 수식어인지 판정할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "과거분사(p.p.)",
+      "question": "-ed 로 끝나면 다 과거형 아닙니까? 왜 과거분사라는 것을 따로 배웁니까?",
+      "plain": "과거분사는 동사에서 나왔지만 시제가 없어 혼자 문장을 세우지 못합니다. '~된'이라는 뜻으로 명사를 뒤에서 꾸미며, 규칙동사에서는 그 형태가 과거형과 똑같은 -ed 입니다.",
+      "analogy": "규칙동사에서 과거형과 과거분사는 일란성 쌍둥이입니다. 얼굴(형태)이 똑같아서, 뒤에 진짜 본동사가 또 서 있는지를 봐야 누가 동사이고 누가 수식어인지 가려집니다.",
+      "whyItMatters": "수능 밑줄이 명사 뒤 -ed 에 그어지면 대개 '이것이 본동사냐 수식어냐'를 묻는 것입니다. 이 레슨의 판단 하나가 그 문항의 정답을 가릅니다. 판별 도구 \"동사 자리 카운팅\"이 여기서 다시 쓰입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "명사 뒤에 -ed 형태가 나오면 그것이 그 문장의 과거형 본동사입니다.",
+      "truth": "규칙동사는 과거형과 과거분사의 모양이 같습니다. 명사 바로 뒤의 -ed 는 본동사일 수도 있고, 앞 명사를 뒤에서 꾸미는 과거분사일 수도 있습니다. 문장 끝까지 읽어 시제 동사가 또 있는지 확인하기 전에는 결정할 수 없습니다.",
+      "counterExample": {
+        "en": "The report **released** by the agency **contradicted** earlier estimates.",
+        "ko": "그 기관이 발표한 보고서는 이전의 추정치와 어긋났습니다.",
+        "note": "released 를 본동사로 읽으면 뒤의 contradicted 가 설 자리가 없습니다. released 는 The report 를 꾸미는 과거분사이고 본동사는 contradicted 입니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "규칙동사는 과거형과 과거분사의 모양이 같으므로, -ed 라는 형태만으로는 본동사인지 수식어인지 알 수 없습니다.",
+      "examples": [
+        {
+          "en": "The committee **discussed** the proposal for two hours.",
+          "ko": "그 위원회는 두 시간 동안 그 제안을 논의했습니다.",
+          "note": "다른 시제 동사가 없고 뒤에 목적어가 이어집니다. 이 discussed 는 과거형 본동사입니다."
+        },
+        {
+          "en": "The proposal **discussed** for two hours **failed** to win support.",
+          "ko": "두 시간 동안 논의된 그 제안은 지지를 얻지 못했습니다.",
+          "note": "같은 discussed 이지만 여기서는 The proposal 을 꾸미는 과거분사이고, 본동사는 failed 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "동형 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 동형 함정은 결국 순간 판단입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "규칙동사는 과거형과 과거분사의 형태가 -ed 로 같습니다.",
+          "isTrue": true,
+          "why": "walk-walked-walked 처럼 동형입니다. 그래서 형태만으로는 본동사인지 수식어인지 알 수 없습니다."
+        },
+        {
+          "statement": "접속사가 없는데 명사 뒤 -ed 뒤에 시제 동사가 또 있으면, 그 -ed 는 수식어입니다.",
+          "isTrue": true,
+          "why": "시제 동사는 접속사 없이 하나뿐이어야 하므로, 뒤의 동사가 본동사이고 앞 -ed 는 과거분사 수식어입니다."
+        },
+        {
+          "statement": "occur·happen 같은 자동사도 '~된' 수동 과거분사로 명사를 꾸밀 수 있습니다.",
+          "isTrue": false,
+          "why": "자동사는 수동태가 없어 수동 후치 수식이 불가능합니다. 명사 뒤 occurred 는 본동사입니다."
+        },
+        {
+          "statement": "The report released by the agency contradicted the data. — 여기서 released 가 본동사입니다.",
+          "isTrue": false,
+          "why": "본동사 contradicted 가 따로 있으므로 released 는 The report 를 꾸미는 과거분사입니다."
+        },
+        {
+          "statement": "명사 바로 뒤의 written 은 과거형 본동사일 수 없어 수식어로 읽힙니다.",
+          "isTrue": true,
+          "why": "write 의 과거형은 wrote 이므로 written 은 과거분사이고, 명사 바로 뒤에서는 단순과거 본동사일 수 없어 수식어로 읽힙니다."
+        },
+        {
+          "statement": "명사 바로 뒤에 -ed 가 오면 언제나 그 문장의 본동사입니다.",
+          "isTrue": false,
+          "why": "뒤에 다른 시제 동사가 있으면 그 -ed 는 수식어입니다. 위치가 아니라 시제 동사 개수로 판정합니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "명사 뒤 -ed 판별 필기",
+      "intro": "명사 뒤의 -ed 를 만났을 때 짚어야 할 판단 단서들을 필기 한 장으로 모읍니다.",
+      "entries": [
+        {
+          "head": "판정의 첫걸음 — 끝까지 읽기",
+          "body": "명사 뒤 -ed 를 만나도 그 자리에서 본동사로 단정하지 말고 문장 끝까지 읽습니다. 뒤에 시제 동사가 또 있는지가 갈림길입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "자동사 단서 — 수동이 불가능한 동사",
+          "body": "occur·happen 같은 자동사는 수동태가 없어 '~된' 후치 수식이 아예 불가능합니다. 명사 뒤 -ed 가 이런 자동사라면 그것은 본동사입니다. (단, arrive·fall 은 완료 의미로 명사를 꾸밀 수 있는 예외이며, 바로 아래 항목에서 다룹니다.)",
+          "example": {
+            "en": "The accident **occurred** at a busy intersection during rush hour.",
+            "ko": "그 사고는 혼잡 시간대에 번잡한 교차로에서 발생했습니다.",
+            "note": "occur 는 자동사여서 '발생된 사고'라는 수동 수식이 불가능하므로 occurred 는 본동사입니다."
+          }
+        },
+        {
+          "head": "완료 자동사 예외 — fallen·arrived",
+          "body": "fallen leaves(떨어진 잎), the newly arrived guests(막 도착한 손님)처럼 소수의 자동사는 '완료' 의미로 명사를 꾸밉니다. 수동이 아니라 완료라는 점이 다릅니다.",
+          "example": {
+            "en": "The **fallen** leaves covered the entire garden path.",
+            "ko": "떨어진 잎들이 정원의 길 전체를 덮었습니다.",
+            "note": "fallen 은 자동사 fall 의 과거분사가 '완료(떨어져 있는)' 의미로 명사를 꾸민 예외적 경우입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "불규칙 즉답 — 형태가 갈리면 끝",
+          "body": "wrote/written, took/taken 처럼 과거형과 과거분사의 모양이 다른 동사는, 명사 바로 뒤에 온 written·taken 이 단순과거 본동사가 아님이 형태만으로 드러나 수식어로 즉시 판정됩니다. 동형 함정은 규칙동사에서만 생깁니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "-ed 가 둘인 문장의 해부",
+      "tokens": [
+        { "t": "The proposal", "role": "S" },
+        { "t": "submitted by the committee last week", "role": "M" },
+        { "t": "drew", "role": "V" },
+        { "t": "unusual attention", "role": "O" }
+      ],
+      "ko": "지난주에 위원회가 제출한 그 제안은 이례적인 관심을 끌었습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "submitted by the committee last week 는 행위자를 밝히는 by 구를 거느린 과거분사구입니다. '제출된 제안'이라는 수동 해석이 자연스러우므로 뼈대가 아니라 수식어입니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 핵 주어는 The proposal 입니다. 바로 앞의 the committee 를 주어로 착각하면 안 됩니다 — 그것은 by 구 안의 명사입니다."
+        },
+        {
+          "label": "③ 시제를 가진 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "접속사도 관계사도 없으므로 시제 동사는 하나여야 합니다. submitted 를 본동사로 읽으면 drew 가 설 자리가 없으므로 본동사는 drew 입니다."
+        },
+        {
+          "label": "④ 본동사가 부르는 성분을 확인합니다",
+          "roles": ["O"],
+          "note": "drew 는 목적어를 부르는 동사이고, unusual attention 이 그 목적어입니다."
+        }
+      ],
+      "conclusion": "submitted 와 drew 는 둘 다 과거형처럼 보이지만, 접속사가 없는 한 시제 동사는 하나뿐입니다. 그 하나가 drew 이므로 submitted 는 과거분사 수식어입니다."
+    },
+    {
+      "id": "b8",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "명사 뒤 -ed 를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "명사 바로 뒤의 -ed 를 만나도 그 자리에서 본동사로 단정하지 말고 문장 끝까지 읽습니다.",
+          "applyNote": "launched 에서 판단을 멈추지 않고 끝까지 읽으면 뒤에 mapped 가 나옵니다."
+        },
+        {
+          "text": "접속사·관계사의 개수를 셉니다. 하나도 없으면 시제 동사는 정확히 하나여야 합니다.",
+          "applyNote": "접속사도 관계사도 없으므로 이 문장의 시제 동사는 하나뿐입니다."
+        },
+        {
+          "text": "시제 동사 후보가 둘로 보이면, '~된'이라는 수동 해석이 자연스러운 -ed 를 수식어로 밀어냅니다.",
+          "applyNote": "'2019년에 발사된 위성'이라는 수동 해석이 자연스러운 launched 가 수식어이고, 남은 mapped 가 본동사입니다."
+        },
+        {
+          "text": "시제 동사 후보가 그 -ed 하나뿐이면 그것이 본동사입니다. 자동사이거나 뒤에 목적어가 이어지면 본동사임이 더 분명해집니다.",
+          "applyNote": "만약 mapped 가 없었다면 launched 가 유일한 시제 동사가 되어 본동사로 읽어야 합니다."
+        }
+      ],
+      "example": {
+        "en": "The satellite **launched** in 2019 **mapped** the ocean floor with unprecedented precision.",
+        "ko": "2019년에 발사된 그 위성은 전례 없는 정밀도로 해저를 관측했습니다.",
+        "note": "launched in 2019 를 괄호로 묶으면 뼈대는 The satellite … mapped the ocean floor 입니다."
+      }
+    },
+    {
+      "id": "b9",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The treaty ( signed / signs ) by the two governments in 1953 still shapes the region's politics.",
+      "steps": [
+        {
+          "title": "① 시제 동사 후보를 찾습니다",
+          "body": "문장 끝에 shapes 가 있습니다. signed 는 -ed 형태여서 과거형 본동사일 수도, 과거분사 수식어일 수도 있습니다."
+        },
+        {
+          "title": "② 접속사·관계사를 셉니다",
+          "body": "접속사도 관계사도 없습니다. 따라서 이 문장에는 시제 동사가 정확히 하나만 있어야 합니다."
+        },
+        {
+          "title": "③ 시제 동사 자리를 확정합니다",
+          "body": "shapes 가 이미 시제를 지고 있으므로 괄호는 시제 동사 자리가 아닙니다. 즉 괄호에는 수식어가 들어가야 합니다."
+        },
+        {
+          "title": "④ 능동·수동을 확인해 답을 확정합니다",
+          "body": "조약은 서명되는 쪽이므로 수동의 과거분사 signed 가 옳습니다. signs 를 넣으면 접속사 없이 시제 동사가 둘이 되어 문장이 깨집니다."
+        }
+      ],
+      "answer": "signed",
+      "ko": "1953년에 두 정부가 서명한 그 조약은 여전히 그 지역의 정치를 좌우합니다."
+    },
+    {
+      "id": "b10",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u01-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The books {{blank}} on the top shelf belong to the school library.",
+          "options": ["stored", "store"],
+          "answer": 0,
+          "translation": "맨 위 선반에 보관된 그 책들은 학교 도서관의 것입니다.",
+          "explanation": "본동사 belong 이 이미 있고 접속사가 없으므로 시제 동사가 둘일 수 없습니다. '선반에 보관된 책들'이라는 수동 해석이 자연스러우므로 빈칸은 과거분사 stored 자리입니다.",
+          "trapTags": ["ed-ambiguity", "double-verb"]
+        },
+        {
+          "id": "u01-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The photographs [[u:took]] during the expedition show a vanished glacier.",
+          "isCorrect": false,
+          "correction": "taken",
+          "translation": "그 탐험 중에 찍힌 사진들은 사라진 빙하를 보여 줍니다.",
+          "explanation": "본동사 show 가 따로 있으므로 밑줄은 The photographs 를 꾸미는 과거분사 자리입니다. take 는 과거형 took 와 과거분사 taken 의 모양이 다르므로 taken 으로 고쳐야 합니다.",
+          "trapTags": ["ed-ambiguity", "irregular-form"]
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "명사 뒤의 -ed 가 '~된'이라는 수동 해석으로 읽히고 뒤에 시제 동사가 따로 있으면, 그 -ed 는 관계사절이 줄어든 과거분사 수식어입니다.",
+      "examples": [
+        {
+          "en": "The bridge **damaged** by the flood **reopened** last month.",
+          "ko": "홍수로 손상된 그 다리는 지난달에 다시 개통되었습니다.",
+          "note": "damaged by the flood 는 which was damaged by the flood 가 줄어든 형태입니다. 본동사는 reopened 입니다."
+        },
+        {
+          "en": "The letters **written** by the composer **survive** in a private collection.",
+          "ko": "그 작곡가가 쓴 편지들은 개인 소장품으로 남아 있습니다.",
+          "note": "write 는 과거형 wrote 와 과거분사 written 의 모양이 다르므로, 명사 뒤의 written 은 단순과거 본동사일 수 없어 수식어로 읽힙니다. 본동사는 survive 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "과거형 본동사와 과거분사 수식어의 갈림길",
+      "columns": ["과거형 본동사", "과거분사 수식어"],
+      "rows": [
+        {
+          "criterion": "문장에서의 지위",
+          "a": "시제를 지고 절을 세운다",
+          "b": "앞 명사를 뒤에서 꾸민다(관계사절의 축약)"
+        },
+        {
+          "criterion": "해석",
+          "a": "~했다 (능동·과거)",
+          "b": "~된 (수동)"
+        },
+        {
+          "criterion": "다른 시제 동사",
+          "a": "그 절에 다른 시제 동사가 없다",
+          "b": "뒤에 본동사가 반드시 따로 나온다"
+        },
+        {
+          "criterion": "불규칙 동사의 형태",
+          "a": "wrote / hid / took / drew",
+          "b": "written / hidden / taken / drawn"
+        },
+        {
+          "criterion": "자동사에서의 가능 여부",
+          "a": "자동사도 쓰인다 (arrived, occurred)",
+          "b": "수동 후치 수식은 불가 (수동형이 없다. fallen leaves 류의 완료 분사는 예외)"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The engineer **checked** the sensors before every launch.",
+          "ko": "그 기술자는 발사 때마다 센서를 점검했습니다.",
+          "note": "다른 시제 동사가 없고 뒤에 목적어가 이어지므로 checked 는 과거형 본동사입니다."
+        },
+        {
+          "en": "The sensors **checked** before every launch **detect** tiny cracks.",
+          "ko": "발사 때마다 점검되는 그 센서들은 미세한 균열을 감지합니다.",
+          "note": "본동사 detect 가 따로 있으므로 checked 는 '점검되는 센서'를 뜻하는 과거분사 수식어입니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "수식어 -ed 사냥",
+      "instruction": "이 문장에서 명사를 뒤에서 꾸미는 과거분사(-ed 수식어)를 전부 탭하십시오. 시제를 가진 본동사는 사냥감이 아닙니다.",
+      "hitLabel": "수식어 과거분사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "samples", "hit": false },
+        { "t": "collected", "hit": true },
+        { "t": "yesterday", "hit": false },
+        { "t": "confirmed", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "theory", "hit": false },
+        { "t": "proposed", "hit": true },
+        { "t": "by", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "team.", "hit": false }
+      ],
+      "ko": "어제 수집된 그 표본들은 연구진이 제안한 이론을 입증했습니다.",
+      "explain": "접속사가 없으므로 시제 동사는 confirmed 하나뿐입니다. collected 는 The samples 를, proposed 는 the theory 를 꾸미는 과거분사 수식어입니다. 세 개의 -ed 중 본동사는 confirmed 이고, 사냥감은 수식어 둘(collected, proposed)입니다."
+    },
+    {
+      "id": "b14",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 문장에서 밑줄 없이 쓰인 과거형/과거분사 형태의 동사가 본동사인지 수식어인지 분류하십시오.",
+      "buckets": [
+        { "id": "v", "label": "과거형 본동사" },
+        { "id": "m", "label": "과거분사 수식어" }
+      ],
+      "chips": [
+        {
+          "text": "The council approved the budget in March.",
+          "bucketId": "v",
+          "why": "다른 시제 동사가 없고 뒤에 목적어가 이어지므로 approved 가 본동사입니다."
+        },
+        {
+          "text": "The budget approved in March funds three new libraries.",
+          "bucketId": "m",
+          "why": "본동사 funds 가 따로 있으므로 approved 는 The budget 을 꾸미는 과거분사입니다."
+        },
+        {
+          "text": "The storm damaged hundreds of roofs overnight.",
+          "bucketId": "v",
+          "why": "시제 동사가 이것뿐이고 목적어를 거느리므로 damaged 가 본동사입니다."
+        },
+        {
+          "text": "The roofs damaged by the storm need urgent repair.",
+          "bucketId": "m",
+          "why": "본동사 need 가 따로 있고 '피해를 입은 지붕'이라는 수동 해석이 자연스럽습니다."
+        },
+        {
+          "text": "The scandal occurred long before the election.",
+          "bucketId": "v",
+          "why": "occur 는 자동사여서 수동의 과거분사 수식이 불가능하므로 occurred 는 본동사입니다."
+        },
+        {
+          "text": "The paintings stolen in 1990 remain missing.",
+          "bucketId": "m",
+          "why": "stolen 은 과거분사 전용 형태이고(과거형은 stole) 본동사는 remain 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "불규칙 탈출구",
+      "target": "과거형과 과거분사가 다른 주요 불규칙 동사",
+      "why": "규칙동사(-ed 동형)에서만 함정이 생깁니다. 형태가 갈리는 불규칙 동사를 외워 두면, 그 동사가 나올 때는 형태만 보고 본동사인지 수식어인지 즉시 판정할 수 있습니다.",
+      "device": "짝을 리듬으로 붙여 외웁니다. '썼다-쓰인, 잡았다-잡힌, 그렸다-그려진, 숨겼다-숨겨진, 훔쳤다-도난된' — 과거분사에는 대체로 -n 꼬리가 붙습니다(written, taken, drawn, hidden, stolen).",
+      "items": [
+        { "cue": "write (쓰다)", "answer": "과거형 wrote / 과거분사 written" },
+        { "cue": "take (가지다)", "answer": "과거형 took / 과거분사 taken" },
+        { "cue": "draw (그리다)", "answer": "과거형 drew / 과거분사 drawn" },
+        { "cue": "hide (숨기다)", "answer": "과거형 hid / 과거분사 hidden" },
+        { "cue": "steal (훔치다)", "answer": "과거형 stole / 과거분사 stolen" },
+        { "cue": "give (주다)", "answer": "과거형 gave / 과거분사 given" }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "과거형과 과거분사 짝짓기",
+      "instruction": "왼쪽의 과거형과 오른쪽의 과거분사를 같은 동사끼리 연결하십시오. 형태가 갈리는 불규칙 동사는 이 짝만 외워 두면 명사 뒤에서 바로 판정됩니다.",
+      "pairs": [
+        {
+          "a": "wrote",
+          "b": "written",
+          "why": "write 의 과거형은 wrote, 과거분사는 written 입니다. 명사 뒤의 written 은 형태만으로 수식어임이 드러납니다."
+        },
+        {
+          "a": "took",
+          "b": "taken",
+          "why": "take 의 과거형은 took, 과거분사는 taken 입니다. 명사 뒤 taken 은 '~해진'이라는 뜻의 수식어입니다."
+        },
+        {
+          "a": "drew",
+          "b": "drawn",
+          "why": "draw 의 과거형은 drew, 과거분사는 drawn 입니다. 명사 뒤 drawn 은 '그려진'이라는 수식어입니다."
+        },
+        {
+          "a": "hid",
+          "b": "hidden",
+          "why": "hide 의 과거형은 hid, 과거분사는 hidden 입니다. 명사 뒤 hidden 은 '숨겨진'이라는 수식어입니다."
+        },
+        {
+          "a": "stole",
+          "b": "stolen",
+          "why": "steal 의 과거형은 stole, 과거분사는 stolen 입니다. 명사 뒤 stolen 은 '도난된'이라는 수식어입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The equipment ( installed / installs / installing ) last summer already needs replacement.",
+      "givenSteps": [
+        "① 시제 동사를 찾습니다 — needs 가 시제를 가진 동사입니다.",
+        "② 접속사·관계사를 셉니다 — 하나도 없습니다. 따라서 시제 동사는 needs 하나로 충분합니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "installed — 본동사 needs 가 이미 있으므로 괄호는 '설치된'이라는 뜻의 과거분사 수식어 자리입니다",
+        "installs — 괄호가 본동사이고 needs 가 수식어입니다",
+        "installing — 장비가 스스로 설치하는 능동이므로 -ing 가 옳습니다"
+      ],
+      "answer": 0,
+      "explain": "본동사 needs 가 이미 있고 접속사가 없으므로 괄호는 시제 동사 자리가 아닙니다. '지난여름에 설치된 장비'라는 수동 해석이 자연스러우므로 과거분사 installed 가 옳습니다. installs 를 넣으면 접속사 없이 시제 동사가 둘이 되고, installing 은 장비가 스스로 설치한다는 능동 의미가 되어 뜻이 어긋납니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u01-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The vaccine {{blank}} by a small research team in 1998 now protects millions of children.",
+          "options": ["developed", "was developed", "develops"],
+          "answer": 0,
+          "translation": "1998년에 소규모 연구진이 개발한 그 백신은 이제 수백만 명의 아이들을 보호합니다.",
+          "explanation": "본동사 protects 가 이미 있고 접속사·관계사가 없으므로 빈칸은 시제 동사 자리가 아닙니다. '개발된 백신'이라는 수동 해석에 맞는 과거분사 developed 가 옳습니다. was developed 나 develops 를 넣으면 접속사 없이 시제 동사가 둘이 됩니다.",
+          "trapTags": ["ed-ambiguity", "double-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 developed 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "본동사 protects 가 이미 있고 접속사·관계사가 없으므로 빈칸은 시제 동사 자리가 아니며, 수동 해석에 맞는 과거분사가 필요했습니다.",
+          "correct": true,
+          "feedback": "정확합니다. 시제 동사 자리가 남아 있는지를 먼저 세고, 그다음에 능동·수동을 확인하는 순서가 판단의 뼈대입니다."
+        },
+        {
+          "text": "백신은 스스로 개발할 수 없으므로 수동태 was developed 를 써야 하는데 그것이 developed 와 같은 뜻이기 때문입니다.",
+          "correct": false,
+          "feedback": "의미가 수동인 것은 맞지만 was developed 는 시제를 가진 동사구입니다. 이를 넣으면 접속사 없이 시제 동사가 둘이 되어 문장이 깨집니다."
+        },
+        {
+          "text": "1998년이라는 과거 표현이 있으므로 과거형을 써야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "시간 부사구는 형태 선택의 근거가 되지 못합니다. 여기서 developed 는 과거형이 아니라 과거분사이며, 주절의 시제는 현재(protects)입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "역방향 함정 — 수식어로 오해해 본동사를 지워 버리는 경우",
+      "body": "명사 뒤의 -ed 를 습관적으로 수식어로 처리하면, 정작 본동사가 그것뿐인 문장에서 시제 동사를 잃어버립니다. 수식어로 판정하려면 뒤에 다른 시제 동사가 반드시 있어야 합니다. 없으면 그 -ed 가 본동사입니다.",
+      "example": {
+        "en": "Many families **relocated** to the coast after the earthquake.",
+        "ko": "많은 가구가 지진 이후 해안 지역으로 이주했습니다.",
+        "note": "relocated 를 '이주된 가구들'로 읽고 본동사를 찾으면 남는 시제 동사가 없습니다. 다른 시제 동사가 없으므로 relocated 가 본동사입니다."
+      }
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The library [[1:acquired]] a rare atlas last spring, and the maps [[2:drew]] by early explorers [[3:reveal]] how slowly the coastline [[4:was charted]].",
+      "answer": 2,
+      "correction": "drawn",
+      "rationales": [
+        "등위절의 앞 절 본동사입니다. 뒤에 목적어 a rare atlas 가 이어지는 능동 과거형입니다.",
+        "본동사 reveal 이 따로 있으므로 이 자리는 the maps 를 꾸미는 과거분사여야 합니다. draw 는 과거형 drew 와 과거분사 drawn 의 모양이 다르므로 drawn 으로 고칩니다.",
+        "and 가 절을 하나 더 열었으므로 뒤 절에도 시제 동사가 필요합니다. 핵 주어 the maps 가 복수이므로 reveal 이 맞습니다.",
+        "how 가 연 절의 동사입니다. 해안선은 기록되는 쪽이므로 수동태가 옳습니다."
+      ],
+      "ko": "그 도서관은 지난봄에 희귀한 지도책을 입수했고, 초기 탐험가들이 그린 그 지도들은 해안선이 얼마나 더디게 기록되었는지를 보여 줍니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 -ed 만 두 번 나오고 시제 동사가 하나도 없는 조각문을 주고 고쳐 쓰게 합니다. 어느 -ed 가 수식어이고 어느 자리가 본동사여야 하는지를 밝혀야 만점입니다.",
+          "sample": {
+            "en": "The samples collected in the field stored in a cold room for a week.",
+            "ask": "어법에 맞는 문장이 되도록 고쳐 쓰십시오.",
+            "answer": "The samples collected in the field were stored in a cold room for a week."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 명사 뒤의 -ed 에 밑줄을 긋고 그것이 본동사여야 하는지 수식어여야 하는지를 묻습니다. 밑줄 뒤에 시제 동사가 또 있는지부터 세는 것이 첫 수입니다.",
+          "sample": {
+            "en": "A set of rules [[u:written]] by the founders of the club still governs its meetings.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — 본동사 governs 가 따로 있으므로 밑줄은 A set of rules 를 꾸미는 과거분사 자리이고, write 의 과거분사는 written 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Cities have long tried to protect themselves from rising rivers. [[u:The walls built along the waterfront in the last century now hold back the seasonal floods.]] Engineers argue that such barriers merely move the problem downstream, and several towns have begun to restore wetlands instead.",
+      "instruction": "밑줄 친 문장에서 -ed 형태가 본동사인지 수식어인지 판정하고, 문장의 본동사를 찾으십시오.",
+      "found": "built along the waterfront in the last century 는 The walls 를 꾸미는 과거분사구입니다. 접속사가 없는데 뒤에 시제 동사 hold 가 있고, '지난 세기에 지어진 벽'이라는 수동 해석이 자연스럽기 때문입니다. 따라서 본동사는 hold 이며 built 는 본동사가 아닙니다.",
+      "gist": "지난 세기에 지어진 방벽이 계절성 홍수를 막고 있지만 그 방식의 한계를 지적하는 견해도 있다는 내용입니다."
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "동형 함정의 위장술사",
+      "intro": "규칙동사의 -ed 는 저의 가장 완벽한 변장입니다. 과거형인 척하는 수식어, 수식어인 척하는 본동사 — 네 건을 내놓을 테니 가면 뒤의 진짜 얼굴을 짚어 보십시오.",
+      "questions": [
+        {
+          "prompt": "The statue {{blank}} from a single block of marble now stands in the museum's main hall.",
+          "options": ["carved", "carves"],
+          "answer": 0,
+          "why": "본동사 stands 가 이미 있고 접속사가 없으므로 빈칸은 수식어 자리입니다. '하나의 대리석 덩어리에서 조각된 조각상'이라는 수동 해석에 맞는 과거분사 carved 가 옳습니다."
+        },
+        {
+          "prompt": "The novel {{blank}} into twelve languages reached readers on every continent.",
+          "options": ["translated", "translates"],
+          "answer": 0,
+          "why": "본동사 reached 가 이미 있으므로 빈칸은 수식어입니다. '번역된 소설'이라는 수동 해석에 맞는 과거분사 translated 가 옳고, translates 를 넣으면 접속사 없이 시제 동사가 둘이 됩니다."
+        },
+        {
+          "prompt": "Several passengers {{blank}} on the crowded platform for more than an hour.",
+          "options": ["waited", "waiting"],
+          "answer": 0,
+          "why": "이 문장에는 다른 시제 동사가 없습니다. 시제 동사 자리가 비어 있으므로 빈칸은 본동사이고 waited 가 옳습니다. 명사 뒤 -ed 를 반사적으로 수식어로 처리하면 본동사를 잃습니다."
+        },
+        {
+          "prompt": "The manuscripts {{blank}} by the monks still survive in the abbey's library.",
+          "options": ["hidden", "hid"],
+          "answer": 0,
+          "why": "본동사 survive 가 따로 있으므로 빈칸은 수식어입니다. hide 의 과거분사는 hidden, 과거형은 hid 이므로 명사를 꾸미는 자리에는 hidden 이 옳습니다. hid 를 넣으면 접속사 없이 시제 동사가 둘이 됩니다."
+        }
+      ],
+      "winText": "가면이 전부 벗겨졌습니다. 규칙동사의 -ed 가 아무리 완벽하게 변장해도, 시제 동사가 몇 개 남는지를 세는 눈 앞에서는 정체가 드러납니다. 그 눈이 방금 당신의 것이 되었습니다.",
+      "loseText": "위장술사가 다시 가면을 고쳐 씁니다. 네 문제 모두 물은 것은 하나였습니다 — \"이 -ed 뒤에 시제 동사가 또 있는가.\" 판별 4단계를 다시 밟고 오면 가면은 그대로 기다리고 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "접속사·관계사가 없는데 명사 뒤의 -ed 뒤에 시제 동사가 또 있으면 ___이고, 시제 동사가 그것뿐이면 ___입니다. 불규칙 동사라면 ___만 보고도 판정할 수 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "규칙동사는 과거형과 과거분사의 모양이 같으므로 -ed 형태만으로는 역할을 알 수 없습니다.",
+        "명사 뒤의 -ed 뒤에 시제 동사가 또 있고 접속사가 없다면, 그 -ed 는 과거분사 수식어입니다.",
+        "문장 전체에 시제 동사 후보가 그 -ed 하나뿐이면 그것이 본동사입니다.",
+        "불규칙 동사(wrote/written, took/taken, drew/drawn)는 형태가 갈리므로 형태만으로 즉시 판정됩니다.",
+        "occur·happen 같은 자동사는 수동태가 없어 by 구를 거느린 수동 후치 수식이 불가능하므로, 명사 뒤의 -ed 가 이런 자동사라면 본동사입니다(단, arrive·fall 은 완료 의미의 수식이 가능한 예외입니다)."
+      ],
+      "keySentence": {
+        "en": "The proposal **submitted** by the committee last week **drew** unusual attention.",
+        "ko": "지난주에 위원회가 제출한 그 제안은 이례적인 관심을 끌었습니다.",
+        "note": "과거형처럼 보이는 것이 둘이어도 접속사가 없으므로 시제 동사는 drew 하나뿐이고, submitted 는 수식어입니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u01-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Several villages {{blank}} by the flood received emergency aid within a day.",
+          "options": ["affected", "affect"],
+          "answer": 0,
+          "translation": "홍수로 피해를 입은 여러 마을이 하루 만에 긴급 구호를 받았습니다.",
+          "explanation": "본동사 received 가 이미 있고 접속사가 없으므로 빈칸은 시제 동사 자리가 아닙니다. '홍수로 피해를 입은 마을들'이라는 수동 해석이 자연스러우므로 과거분사 affected 가 옳습니다.",
+          "trapTags": ["ed-ambiguity", "double-verb"]
+        },
+        {
+          "id": "u01-c4-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The earthquake [[u:occurred]] off the coast damaged several fishing towns.",
+          "isCorrect": false,
+          "correction": "that occurred",
+          "translation": "해안에서 발생한 그 지진은 몇몇 어촌에 피해를 입혔습니다.",
+          "explanation": "occur 는 목적어를 취하지 않는 자동사여서 수동의 과거분사 수식이 불가능합니다. 따라서 occurred 는 The earthquake 를 뒤에서 꾸밀 수 없고, 접속사 없이 시제 동사 damaged 와 나란히 설 수도 없습니다. 관계사를 살려 that occurred 로 고쳐야 합니다.",
+          "trapTags": ["ed-ambiguity", "intransitive"]
+        },
+        {
+          "id": "u01-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The novelist {{blank}} the manuscript for a decade before a small press finally accepted it.",
+          "options": ["revised", "revising", "having revised"],
+          "answer": 0,
+          "translation": "그 소설가는 한 작은 출판사가 마침내 그 원고를 받아들이기 전까지 10년 동안 원고를 고쳤습니다.",
+          "explanation": "접속사 before 가 절을 하나 열었으므로 시제 동사는 둘이어야 합니다. accepted 는 종속절의 동사이므로 주절에는 시제 동사가 따로 필요하며, 뒤에 목적어가 이어지는 과거형 본동사 revised 가 옳습니다. revising 과 having revised 는 시제가 없어 본동사가 되지 못합니다.",
+          "trapTags": ["ed-ambiguity", "missing-main-verb"]
+        }
+      ]
+    }
+  ]
+}

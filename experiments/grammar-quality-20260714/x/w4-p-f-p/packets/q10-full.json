@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-pointcode-span-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=c  (C):dec=e  (D):dec=g  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 125,
+        "relPos": 0.159,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 349,
+        "relPos": 0.443,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 700,
+        "relPos": 0.888,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 766,
+        "relPos": 0.972,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.972,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "hoping",
+        "isError": false,
+        "correction": "hoping",
+        "errorExpression": "hoping",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort will erase",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "aren't kept up",
+        "isError": false,
+        "correction": "aren't kept up",
+        "errorExpression": "aren't kept up",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "yourself",
+        "isError": false,
+        "correction": "yourself",
+        "errorExpression": "yourself",
+        "surroundingText": "just that it's more ideal not to let yourself fall out of touch in the first place.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "brings",
+        "isError": true,
+        "correction": "brings",
+        "errorExpression": "bringing",
+        "surroundingText": "Consistency always brings better results.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "hoping"
+      },
+      {
+        "label": "(C)",
+        "text": "aren't kept up"
+      },
+      {
+        "label": "(D)",
+        "text": "yourself"
+      },
+      {
+        "label": "(E)",
+        "text": "bringing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "주절 'We call people...' 뒤에서 부수적인 상황을 나타내는 분사구문을 이끌고 있습니다. 의미상 주어인 'We'가 능동적으로 바라는 행동이므로 현재분사인 'hoping'은 어법상 옳습니다.",
+      "(C)": "문장의 주어인 'relationships'가 유지하는 행위의 대상이므로, 수동 형태인 'aren't kept up'을 쓴 것은 어법상 옳습니다.",
+      "(A)": "선행사 'the distance'를 수식하는 관계대명사절을 이끌고 있으며, 주격 역할을 수행하므로 'that'은 어법상 옳습니다.",
+      "(D)": "의미상 주어인 to부정사의 행위 대상이 행위자 자신과 동일하므로, 재귀대명사 'yourself'를 사용한 것은 어법상 옳습니다."
+    },
+    "explanation": "문장의 주어인 'Consistency'에 이어지는 절의 본동사(정동사)가 필요한 위치입니다. 그러나 'bringing'과 같은 현재분사(준동사) 형태는 단독으로 술어 동사의 역할을 할 수 없으므로 비문이 됩니다. 따라서 3인칭 단수 주어와 현재 시제를 나타낼 수 있는 정동사인 'brings'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 정동사 vs 준동사 — 한 문장 내에서 본동사(술어)의 누락 여부를 판단하여 수일치가 적용된 정동사로 판정",
+      "(B) 분사구문의 능수동 — 의미상 주어와의 능동 관계를 확인하여 현재분사형으로 판정",
+      "(D) 대명사 vs 재귀대명사 — 의미상 주어와 목적어가 가리키는 대상이 동일하므로 재귀대명사로 판정"
+    ],
+    "tags": [
+      "정동사",
+      "분사구문",
+      "관계대명사",
+      "재귀대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance __(A) that__ has formed and we scramble to make repairs. We call people we haven't spoken to in ages, __(B) hoping__ that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships __(C) aren't kept up__ with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let __(D) yourself__ fall out of touch in the first place. Consistency always __(E) bringing__ better results."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'that'는 지시한정사로 명사 'process'를 수식하며, 선행 문장의 'a process embodied in a machine'을 지시한다. 'the nature of that process is repetitive'에서 주어 핵은 'nature'(단수)이고 동사 'is'와 일치한다. 지시한정사 용법으로 형식적으로 완전한 정문. 대안 해석(관계사 that 등)을 검토해도 여기서는 한정사 외의 독법이 필요 없고, 한정사 독법이 즉시 성립한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself over and over again'에서 재귀대명사 'itself'의 결속 선행사는 관계절 주어 'that'(= process, 3인칭 단수 무생물)이며, 같은 절 내 목적어 위치이므로 결속원리 A에 따라 재귀형이 의무적이다. 'repeat itself'는 표준 연어이기도 하다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'a clock that do not depend on a repetitive cycle'에서 관계대명사 'that'의 선행사는 단수 명사 'a clock'이므로 관계절 동사는 'does not depend'여야 한다. 'do'가 정당화될 대안 경로를 전수 검토: (1) 가정법 현재(mandative subjunctive)는 요구·제안·필요 술어(insist, demand, it is necessary that 등)가 지배할 때만 성립하는데 'impossible to think of'는 그런 술어가 아니고, 관계절은 애초에 mandative 보문이 아니다. (2) 선행사를 복수로 재해석할 명사구('events' 등)를 선행사로 삼으면 'a clock that'의 국소 결합과 의미('시계가 반복 주기에 의존한다')가 모두 붕괴한다. (3) 도치·생략 구조도 없음. 따라서 주어-동사 수일치 위반으로 어법상 틀림이 형식적으로 확정된다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'The only example that comes to mind readily is a candle...'에서 주어 핵은 'example'(단수). 관계절 'that comes to mind readily'는 후치 수식어일 뿐 주어 수에 영향을 주지 않으므로 본동사 'is'는 단수 일치로 정문. 관계절 내부의 'comes'도 단수 일치로 일관된다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'this too is an iterative process, although at first masked'는 양보 접속사 뒤에서 주절과 동일 주어·be동사가 생략된 축약 양보절 'although (it is) at first masked'로 분석된다. 접속사+과거분사(although masked / though hidden 등)는 표준적 생략 구문이며, 생략된 주어 'it'(= this iterative process)이 주절 주어와 일치하므로 정문. 의미상으로도 '처음에는 (반복성이) 가려져 있지만'으로 문맥에 정합."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (C)는 단수 선행사 'a clock'에 대한 관계절 동사 수일치 위반으로, subjunctive·복수 선행사 재해석·도치 등 어떤 대안 분석으로도 구제되지 않아 유일한 오류로 확정. 나머지 네 밑줄은 각각 지시한정사, 재귀결속, 단수 주어 일치, 축약 양보절로 모두 정문이며 경쟁 후보가 없다. 단일 정답 문항으로 판단."
+}

@@ -1,0 +1,112 @@
+{
+  "pid": "P045",
+  "validity": {
+    "V1": false,
+    "V2": false,
+    "V3": false,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V1-ERROR-NOT-INJECTED",
+      "severity": "critical",
+      "evidence": "렌더 지문의 (C) 문장은 'His confidence was, however, quickly changed to nervousness'로 원지문과 글자 단위로 동일하다. markedExpressions는 (C)에 isError:true를 선언했지만 errorExpression('changed')과 correction('changed')이 동일하여 의도된 오류 변형이 렌더에 전혀 주입되지 않았다. 오류 문항인데 오류가 존재하지 않는 렌더/구조 필드 불일치."
+    },
+    {
+      "code": "V2-EMPTY-ANSWER-SET",
+      "severity": "critical",
+      "evidence": "각 밑줄 독립 검증: (A) entered = 과거시제 타동사 + 목적어 'the lively shopping center', 정문. (B) look great = 연결동사 + 형용사 보어, 정문. (C) was ... changed = 렌더에 'was'가 그대로 존재하는 수동태로 원문과 동일한 정문. (D) was finished = 관용적 완결 표현 'be finished', 정문. (E) I've ever seen = 관계절 내 현재완료, 정문. 어법상 틀린 밑줄이 하나도 없어 실제 정답 집합이 공집합이며 선언된 단일 정답 (C)와 불일치."
+    },
+    {
+      "code": "V2-INVALID-POINT-ERGATIVE",
+      "severity": "critical",
+      "evidence": "설령 의도대로 'was'를 제거해 능동 'changed'를 노출했더라도, change는 대표적 자동사/능격동사이므로 'His confidence quickly changed to nervousness'는 완전한 정문이다. 해설의 '능동형 changed를 단독으로 사용하면 목적어가 없어 비문' 주장은 사실이 아니며, RUBRIC §C가 배제하는 '대안 분석이 가능한 자리'(문맥 선호이지 문법 판단이 아님)에 해당한다."
+    },
+    {
+      "code": "V3-TYPE-INTENT-MISMATCH",
+      "severity": "critical",
+      "evidence": "GRAMMAR_ERROR 유형은 정답 밑줄이 비문이어야 하나, 렌더된 (C)는 문법적이다. 지문·발문 자체는 문법적이지만 '오답(정답 밑줄)의 비문 여부가 유형 의도와 일치'하지 않으므로 V3 실패."
+    },
+    {
+      "code": "V4-EXPLANATION-MISDESCRIBES-SENTENCE",
+      "severity": "critical",
+      "evidence": "해설은 \"능동형인 'changed'를 단독으로 사용하면 행위의 목적어가 존재하지 않아 비문\"이라며 'was changed'로 고치라 하지만, 실제 렌더 문장에는 이미 'was ... changed'(수동태)가 존재한다. 존재하지 않는 문장 상태를 설명하는 사실성 오류이자, 자동사 change의 존재를 부정하는 문법 오개념."
+    },
+    {
+      "code": "V4-NONWORD-TERM",
+      "severity": "major",
+      "evidence": "(A) 오답 해설의 '접동사'는 존재하지 않는 손상된 문법 용어다(자동사/타동사/접속사 어느 것도 아님)."
+    },
+    {
+      "code": "V4-MISANALYSIS-E",
+      "severity": "major",
+      "evidence": "(E) 해설은 'seen'을 \"앞의 'best performance'를 수식하는 ... 명사를 꾸미는 과거분사\", '수동 완료 흐름'으로 설명하나, 실제로는 목적격 관계대명사가 생략된 관계절 'I've ever seen' 내부 현재완료의 과거분사일 뿐 명사를 직접 수식하는 형용사적 분사가 아니며 수동도 아니다."
+    },
+    {
+      "code": "V4-MUDDLED-D",
+      "severity": "minor",
+      "evidence": "(D) 해설은 '밴드가 공연을 완료한 주체이면서 ... 수동태'라고 하여 주체(능동)와 수동태 설명이 내부 모순된다. 'was finished'는 완결 상태의 관용 표현으로 설명해야 정확하다."
+    },
+    {
+      "code": "V5-CORRECTION-FIELD-CONTRADICTION",
+      "severity": "critical",
+      "evidence": "markedExpressions (C)의 correction('changed')이 해설이 제시한 교정형 'was changed'와 모순되고 errorExpression과 동일하다. 오류·교정 필드가 해설과 동기화되어 있지 않다."
+    },
+    {
+      "code": "V5-SURROUNDING-TEXT-TRUNCATION",
+      "severity": "minor",
+      "evidence": "(D) surroundingText가 원문 'Jeff approached Garcia.'를 'Jeff approached.'로 잘라 기재했다(학생 비노출 필드이므로 경미)."
+    }
+  ],
+  "craft": {
+    "C1": 1,
+    "C2": 2,
+    "C3": 0,
+    "C4": 0,
+    "C5": 0,
+    "C6": 0
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 as 뒤 과거시제 타동사 + 목적어 구조의 정오 판단",
+      "temptingBecause": "시제 일치(haven't waited와의 대비)를 의심하게 만들 수 있음",
+      "decisiveFlaw": "entered가 목적어 'the lively shopping center'를 직접 취하는 정상적 과거시제 타동사로 즉시 정문 확인 — 디코이로서 변별력이 거의 없는 필러에 가까움"
+    },
+    {
+      "label": "(B)",
+      "intent": "연결동사 look의 주격보어 자리 형용사 vs 부사 선택",
+      "temptingBecause": "동사 뒤라는 위치 때문에 부사 greatly를 기대하는 오개념을 자극",
+      "decisiveFlaw": "look은 2형식 연결동사이므로 형용사 great가 정확 — 표준적이고 건전한 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "선언된 정답: 능동 changed vs 수동 was changed 구별 의도",
+      "temptingBecause": "출제 의도상 학생이 태를 판단하게 하려 했음",
+      "decisiveFlaw": "치명 결함: 렌더 문장에 'was'가 그대로 남아 'was ... changed' 수동태로 이미 정문이므로 오류가 존재하지 않는다. 나아가 의도대로 능동 'changed'만 남겼더라도 change는 자동사로 쓰여 정문이므로 포인트 자체가 문법 판단이 아닌 문맥 선호(대안 분석 가능 자리)라 무효"
+    },
+    {
+      "label": "(D)",
+      "intent": "'be finished'의 완결 상태 표현 정오 판단(태 관련)",
+      "temptingBecause": "'밴드가 끝낸' 능동 주체인데 수동형처럼 보여 the band finished로 고치고 싶게 만듦 — 실제로는 정답 (C)와 동일 pointCode('e', 태)의 디코이로, 렌더 기준 정답보다 더 매력적이어서 정답을 가리는 구조",
+      "decisiveFlaw": "'be finished'는 완결 상태를 나타내는 관용 표현으로 정문 — 그러나 정답과 같은 포인트의 더 강한 디코이라는 설계 결함 존재"
+    },
+    {
+      "label": "(E)",
+      "intent": "목적격 관계대명사 생략 관계절 내 현재완료(I've ever seen)의 정오 판단",
+      "temptingBecause": "seen 앞 have의 축약('ve)이 눈에 잘 안 띄어 과거분사 단독 사용으로 오인 가능",
+      "decisiveFlaw": "최상급 + I've ever seen은 정형화된 현재완료 구문으로 정문 — 건전하나 (A)와 pointCode 중복('c')"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 실제 렌더 문장 상태('was ... changed' 존재)와 다른 가상의 문장(능동 changed 단독)을 설명함",
+    "'능동 changed 단독 사용 시 목적어 부재로 비문' 주장은 자동사 change의 존재를 부정하는 문법 오개념",
+    "(A) 해설의 '접동사'는 비단어(손상 용어)",
+    "(E) 해설이 관계절 내 현재완료의 과거분사를 '명사를 꾸미는 과거분사', '수동 완료 흐름'으로 오분석",
+    "(D) 해설이 '완료한 주체'와 '수동태' 설명을 모순되게 결합"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "출하 불가. 오류 주입 파이프라인 실패로 렌더 지문이 원지문과 완전히 동일하여(의도된 (C) 오류 미주입, correction==errorExpression) 어법상 틀린 밑줄이 존재하지 않는 문항이 되었다. 실제 정답 집합은 공집합으로 blind solve 불가능. 이중 결함: 설령 의도대로 'was'를 제거했더라도 change는 능격/자동사여서 능동형도 정문이므로 포인트 자체가 RUBRIC §C가 배제하는 대안 분석 가능 자리다. 해설은 존재하지 않는 문장 상태를 설명하고 비단어('접동사')와 (E) 오분석을 포함한다. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(false). 재출제 시 이 지문(서사문)에서는 (D) be finished류나 (E) 완료시제처럼 명확한 최소대립쌍이 가능한 자리를 정답 포인트로 삼아야 한다."
+}

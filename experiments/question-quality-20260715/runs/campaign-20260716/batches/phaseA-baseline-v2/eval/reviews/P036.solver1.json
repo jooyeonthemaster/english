@@ -1,0 +1,35 @@
+{
+  "pid": "P036",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "\"as they entered the lively shopping center\" — 선행 담화의 지시 대상은 Garcia와 Jeff 두 사람이므로 복수 대명사 they가 정확하다. 직전 문장의 화자 교대(Jeff 사과 → Garcia 응답) 흐름상 두 사람이 함께 입장하는 장면이라 단수로 바꿀 이유가 없다. 실전에서 1초 컷."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "\"a patterned red shirt and yellow pants he had found in the store\" — 축약 관계절(that 생략) 안의 과거완료. '가리키는(asked/pointing)' 시점 이전에 '발견'이 일어났으므로 대과거 had found는 시제 선후를 정확히 표시한다. 단순과거 found도 가능했겠지만 과거완료 역시 완전한 정문이라 오류가 아니다. 시제 밑줄이라 잠깐 검토하게 만들지만 유혹은 약하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "\"Don't you think these would look great on my brother?\" — 조동사 would 뒤 동사원형 look, look great on + 사람(옷이 ~에게 잘 어울리다) 관용 결합 모두 정상. 간접의문 어순도 아니고(think 뒤 평서 어순 유지) 문제없다. these(복수)와 look의 수일치도 성립."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "\"His confidence was quickly changed to nervousness what he thought of how many people would be there.\" — what이 이끄는 절이 문장 내에서 아무 문법적 기능을 얻지 못한다. what he thought of...를 자유관계사 명사절로 읽으려 해도 nervousness 뒤에 그것을 받아줄 자리(전치사·동격 허용 명사 등)가 없고, nervousness는 what 관계절의 수식을 받을 수 있는 선행사도 아니다. 시간 부사절 접속사 when(그 많은 인원을 생각했을 때)으로 바꿔야 정문. 대안 해석(nervousness [at] what... 의 전치사 탈락 상정)은 표기된 문면에서 성립하지 않는다. 명백한 오류."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "\"When the band was finished, the audience loudly cheered.\" — 최상위권도 여기서 한 번 멈추게 되는 매력 오답. '자동사 finish에 무슨 수동?'이라는 직관이 유혹하지만, be finished는 '(일을) 다 마친 상태다'를 뜻하는 형용사적 분사 구문으로 표준 용법이다(I'm finished / When you're finished...). 주어가 band(사람 집단)여서 완료 상태 의미가 자연스럽게 성립하므로 정문. 유혹을 견디고 (D)의 명백성과 비교하면 탈락."
+    }
+  ],
+  "note": "실전 순서로 A→E 스캔. (D) what은 절의 문법 기능 부재로 명백한 오류(when 필요). 최대 유혹 지점은 (E) was finished였으나 be finished='다 마치다' 형용사 용법으로 정문 판정. (B) had found도 시제 밑줄이라 검토 유도용이지만 대과거로 완전 성립. 정답 후보는 (D) 단일."
+}

@@ -1,0 +1,38 @@
+{
+  "pid": "P015",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "독립 재검증 결과 (E) fascinating 만이 어법 오류이고 (A)~(D)는 모두 형식적으로 증명 가능한 정문이므로 정답 유일성(V2)은 성립한다. 분쟁 요약에 '선언된 정답=(A)'로 기재되어 있으나, 원천 파일 eval/full/P015.md(26행 '## 선언된 정답 (E)')과 markedExpressions((E)만 isError:true, correction=fascinated)는 모두 (E)를 선언하고 있어 '(A)'는 오케스트레이터 요약 단계의 파싱 오류로 판정한다. 실제 분쟁은 존재하지 않으며 솔버1·솔버2·감사자·본 조정자의 판정이 모두 (E)로 일치한다. 두 솔버 모두 과잉 판정 없음: (A)~(D)에 대한 대안 해석 기각과 (E)의 구제 불가 판단이 각각 독립 검증에서 재확인되었다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "분쟁 요약상 선언된 정답 후보 — 'to help'가 어법 오류인가",
+      "verdict": "정문 (오류 아님)",
+      "evidence": "'he had asked Jeff to help him pick out new clothes' — ask는 5형식에서 'ask + 목적어 + to부정사' 보문만 허용하므로 to help가 유일 적법형이다. help 뒤 원형부정사 pick out도 표준 용법. (A)가 정답이 되려면 to help가 비문이어야 하나 어떤 규범 문법에서도 비문 근거가 없다. 따라서 요약의 '선언된 정답=(A)'는 문항 파일과 모순되며, 파일 원문(full/P015.md 26행)이 (E)를 선언하므로 요약 기재 오류로 확정."
+    },
+    {
+      "label": "(B)",
+      "claim": "'pointing'이 과거분사 pointed여야 하는가 (분사 능수동 대안 해석)",
+      "verdict": "정문 (오류 아님)",
+      "evidence": "'Garcia asked, pointing at ...' — 분사구문의 의미상 주어가 주절 주어 Garcia와 일치하고 Garcia가 가리키는 능동 주체이며 전치사구 보충어(at ...)가 이어지므로 현재분사가 옳다. pointed로 바꾸면 행위자 없는 수동 해석이 되어 오히려 비문. (E)와 같은 콤마+분사 표면 구조의 대조 디코이일 뿐 하자 없음."
+    },
+    {
+      "label": "(C)",
+      "claim": "'great'가 부사 greatly여야 하는가 (형용사/부사 자리 대안 해석)",
+      "verdict": "정문 (오류 아님)",
+      "evidence": "'these would look great on my brother' — look은 연결동사(2형식)로 형용사 주격보어를 취한다. great는 적법하고 greatly는 비문이 된다. 전형적 오개념 유도 미끼이나 규범상 논쟁 여지 없음."
+    },
+    {
+      "label": "(D)",
+      "claim": "'how'가 what/that 등으로 대체되어야 하는가 (의문사절 대안 해석)",
+      "verdict": "정문 (오류 아님)",
+      "evidence": "'thought of how many people would be there' — 전치사 of의 목적어로 간접의문절이 온 구조. 'how many + 명사'가 절 내 주어이고 평서 어순 would be there가 술부로 규범에 완전 부합. 'what many people'은 비문, that절은 수량 정도 의미를 잃으므로 how가 유일 적법. 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "claim": "선언된 정답(파일 기준) — 'fascinating'이 유일한 어법 오류인가",
+      "verdict": "오류 확정 (유일 정답 성립)",
+      "evidence": "'everyone fell silent, fascinating by the music' — 분사구문의 의미상 주어 everyone은 타동사 fascinate의 피동 경험자이고 행위자구 by the music이 명시되어 있으므로 과거분사 fascinated만 적법. 능동 fascinating 해석은 (1) 필수 목적어 결여, (2) by-행위자구는 수동 분사 하에서만 인가된다는 두 독립 근거로 붕괴한다. 서술 형용사 fascinating으로 읽는 구제 시도도 by the music이 해석 불가(처소 '음악 옆에서' 독해는 의미상 불성립)하여 실패. 어떤 정문 파스로도 구제 불가 — 유일한 오류로 확정."
+    }
+  ]
+}

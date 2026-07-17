@@ -1,0 +1,89 @@
+{
+  "pid": "P046",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "critical",
+      "evidence": "문장 귀속 오류: 렌더 지문의 밑줄 (A)는 'when you __(A) are__ happy'의 첫 번째 are(주어 you)인데, 오답 해설 (A)는 '주절의 복수 주어인 your critical thinking skills와 수일치를 이루는 복수 동사 are'라고 설명한다. 이는 같은 문장의 두 번째(밑줄 아님) are를 분석한 것으로, 해설이 실제 밑줄 토큰과 대응하지 않는다. keyPoints ①('복수 명사구 주어에 대응하는 복수 동사 are의 일치')도 동일한 오분석을 반복한다. 실제 밑줄 are의 주어는 2인칭 you이며 '복수 명사구 수일치' 포인트가 성립하지 않는다."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "(C) 해설의 '조동사 may에 연결된 to부정사의 부사적 용법 내에서'는 부정확하다. to부정사(to adapt)는 may가 아니라 동사 struggle에 연결된 보충어이며(may에 연결된 것은 struggle), '부사적 용법' 분류도 논쟁적이다. 핵심 주장(or에 의한 adapt–find 병렬, 원형 find 적법)은 맞다."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "정답 해설이 '④(D)'처럼 원문자 번호(④)와 알파벳 라벨((D))을 혼용한다. 매핑 자체는 4번째=(D)로 일치하지만 학생 노출 라벨 체계((A)~(E))와 다른 번호 체계가 섞인 템플릿 잔재다."
+    },
+    {
+      "code": "V5",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 surroundingText가 렌더형('to experiencing')이 아닌 교정형('to experience') 문장을 담고 있다. expression 필드도 원문형 'to experience'로, 다른 항목들(expression=표시형)과 규약이 엇갈린다. 정답 라벨·isError 플래그·선지 동기화 자체는 유지되어 V5 실패로는 판정하지 않음(정보성 지적)."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "수일치 디코이로 설계된 것으로 보이나(해설·keyPoints가 skills–are 일치를 설명), 실제 밑줄은 'when you are happy'의 are에 찍혀 설계 의도와 어긋난 필러가 되었다.",
+      "temptingBecause": "밑줄 그대로는 매력 요인이 사실상 없다. 주어 you 바로 뒤의 are를 의심할 근거가 없어 즉시 소거된다.",
+      "decisiveFlaw": "주어 you와 are의 일치는 자명하게 적법. (설계상 노리던 skills–are 포인트는 밑줄되지 않았음.)"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사절 접속사 that vs 관계대명사 what/불완전절 혼동 유도.",
+      "temptingBecause": "means that if... 처럼 that 뒤에 if절이 바로 이어지는 표면 배열이 낯설어 what이나 접속사 중복으로 오인할 수 있다.",
+      "decisiveFlaw": "means의 목적어인 명사절을 이끄는 접속사 that이며 뒤따르는 절(if 조건절 + you may struggle...)은 완전하다. 적법."
+    },
+    {
+      "label": "(C)",
+      "intent": "병렬구조 판단 — struggle to adapt ... or find 에서 원형 find가 to 공유 병렬임을 읽게 함.",
+      "temptingBecause": "find 앞에 to가 없어 finding이나 to find로 고쳐야 한다고 오인할 수 있다.",
+      "decisiveFlaw": "등위접속사 or가 to 이하의 adapt와 find를 병렬 연결하므로 원형 find가 적법(may와의 병렬로 읽어도 문법적)."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. be likely to(to부정사)의 to를 전치사로 오인해 동명사를 허용하는지 판단.",
+      "temptingBecause": "look forward to -ing, be used to -ing 류의 전치사 to 관용구와 표면이 유사하다.",
+      "decisiveFlaw": "likely to는 to부정사 구문이므로 to experiencing은 비문. to experience로 교정하면 정확히 원문이 복원된다(최소대립쌍 성립). 단, 'to experiencing'은 표면만으로 즉시 이상함이 드러나는 전형 포인트로 KILLER급 구조 독해를 요구하지 않는다."
+    },
+    {
+      "label": "(E)",
+      "intent": "부사절 내 주어–동사 수일치(some individuals–use) 확인.",
+      "temptingBecause": "as절 내부라 주어를 놓치면 uses로 고치고 싶어질 수 있다.",
+      "decisiveFlaw": "복수 주어 some individuals에 현재 복수형 use가 정확히 호응. 적법."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 (A)와 keyPoints ①이 밑줄되지 않은 두 번째 are(your critical thinking skills are)를 분석 — 실제 밑줄 토큰(when you are)과 귀속 불일치 (critical)",
+    "(C) 해설 '조동사 may에 연결된 to부정사' — to부정사는 struggle의 보충어이지 may에 연결된 것이 아님 (minor)",
+    "정답 해설의 '④(D)' 원문자·알파벳 라벨 혼용 (minor)",
+    "정답 해설 내 존댓말/평서체 혼재('틀린 표현이며 ~ 고쳐야 한다' 뒤에 '~입니다' 문체) — 문체 일관성 결여 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesJustified": false,
+    "answerRequiresStructuralReading": false,
+    "noShadowingEasyDecoy": true,
+    "detail": "정답 'to experiencing'은 likely 직후의 표면 형태만으로 즉시 이상함이 드러나는 정형 포인트라 '구조를 읽어야 하며 즉시 드러나지 않는다' 조건 위반. 또한 (A)는 밑줄 위치 오류로 point/why tempting이 성립하지 않는 필러여서 '5개 밑줄 각각 설명 가능' 조건도 위반."
+  },
+  "grade": "F",
+  "notes": "정답 유일성(V2)과 지문 무결성(V1)은 통과 — (D)만이 유일한 오류이고 교정 시 원문이 정확히 복원된다. 그러나 오답 해설 (A)와 keyPoints ①이 실제 밑줄(when you are의 are, 주어 you)과 다른 토큰(skills are)을 분석하는 문장 귀속 오류로 V4 치명 실패 → F. 밑줄 위치를 두 번째 are(your critical thinking skills __are__ greatly enhanced)로 옮기면 해설과 정합될 뿐 아니라 (A)가 실제 수일치 디코이로 기능한다. 난이도 면에서도 'to experiencing'은 표면 탐지형 전형 포인트로 KILLER 요청과 크게 불일치(C5=1). 해설 라벨 혼용(④(D))과 문체 혼재도 정리 필요."
+  }

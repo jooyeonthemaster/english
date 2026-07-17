@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Imperative seam is grammatical, but logically contradictory: (a) for a non-morning person the morning is not the energy peak, so deferring problems 'until the next morning' violates the stated task-to-energy matching principle; (b) the passage explicitly condemns delaying unpleasant tasks because procrastination wastes emotional energy. Double contradiction."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Grammatical imperative, but it prescribes the morning person's strategy (tackle hardest tasks right after waking) under the antecedent 'if you are NOT a morning person'. A non-morning person's energy is low after waking, so this directly contradicts the matching principle. Classic polarity-flip distractor."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Grammatical imperative; 'hours when your energy peaks' is a well-formed relative-adverb clause with antecedent 'hours'. Logically it is the exact universalization of the passage's principle: match demanding tasks to whenever your energy peaks. It correctly generalizes the author's personal morning routine to readers whose peak falls elsewhere, satisfying the conditional's antecedent."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammatical, but 'breaking down challenges into parts' is a strategy never introduced in the passage. It recycles the surface phrase 'wasting emotional energy' while ignoring the timing/energy-matching axis that the antecedent 'not a morning person' activates. Off-principle lexical-echo distractor."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Grammatical, and echoes passage wording ('analytical', 'free from distractions'), but omits the load-bearing variable of the conditional: energy level/timing. Being 'not a morning person' is about when energy peaks, not about distraction-freedom per se; it also improperly narrows 'different tasks' to 'analytical routines'. Does not answer what a non-morning person should do differently."
+    }
+  ],
+  "note": "Clean single-answer item. The conditional antecedent negates the author's own case (morning person), so the consequent must generalize the task-to-energy-peak matching principle; only option 3 does. Options 1 and 2 are polarity contradictions, 4 and 5 are lexical-echo distractors that miss the timing axis. All five options are grammatically well-formed imperatives at the seam, so discrimination is purely logical, which is appropriate for a blank item."
+}

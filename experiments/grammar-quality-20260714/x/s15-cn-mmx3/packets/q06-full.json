@@ -1,0 +1,171 @@
+{
+  "passageId": "ebsi_go1_20241015-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 135
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-marker-too-dense",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-correction-not-source-backed",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [
+    "grammar-explanation-too-long"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=b  (C):dec=c  (D):ANS=d  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 68,
+        "relPos": 0.081,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 202,
+        "relPos": 0.242,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 519,
+        "relPos": 0.622,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 758,
+        "relPos": 0.908,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.908,
+    "firstHalfShare": 0.5,
+    "notFoundCount": 1
+  },
+  "originalPassage": "For many of us, making time for exercise is a continuing challenge. Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout. But what if the workout came to you, right in the midst of your daily routine? That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity? For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. Incorporating quick exercises into your daily chores can improve your health.",
+  "question": {
+    "direction": "밑줄 친 부분 중, 어법상 옳지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout.",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "But what if the workout came to you, right in the midst of your daily routine?",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity?",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "For instance, practicing squats or engage in some wall push-ups as you wait for your morning kettle to boil.",
+        "isError": true,
+        "errorExpression": "practicing squats or engage in some wall push-ups",
+        "surroundingText": "",
+        "pointCode": "d",
+        "correction": "For instance, practicing squats or engage in some wall push-ups as you wait for your morning kettle to boil."
+      },
+      {
+        "label": "(E)",
+        "expression": "Incorporating quick exercises into your daily chores can improve your health.",
+        "isError": false,
+        "surroundingText": "",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout."
+      },
+      {
+        "label": "(B)",
+        "text": "But what if the workout came to you, right in the midst of your daily routine?"
+      },
+      {
+        "label": "(C)",
+        "text": "But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity?"
+      },
+      {
+        "label": "(D)",
+        "text": "practicing squats or engage in some wall push-ups"
+      },
+      {
+        "label": "(E)",
+        "text": "Incorporating quick exercises into your daily chores can improve your health."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "there's = there is의 축약형으로, 구어·문어 모두 허용되는 표준 표현이다. 'there's no room in ~ for ~'는 '~에 ~할 여유가 없다'는 관용적 표현으로, 어법상 문제없다.",
+      "(B)": "what if 가정법 과거 구문으로, '만약 ~라면 어쩌면 좋겠는가'라는 의미이다. 가정법 과거는 현재 사실의 반대를 나타낼 때 사용하며, 어법상 옳다.",
+      "(C)": "rather than 다음에는 동명사(-ing) 또는 부정사 모두 가능하다. 'rather than viewing chores as ~'는 '~로 보는 대신'이라는 의미로 표준 표현이다. 'why not + 동사원형'과의 대조 구문도 어법상 옳다.",
+      "(E)": "동명사(Incorporating)가 문장의 주어 역할을 하며, 단수 취급하여 'can improve'(조동사+동사원형)와 연결된다. 이는 표준 문법으로 어법상 옳다."
+    },
+    "explanation": "정답은 (D)이다. (D)에서 'practicing squats or engage in some wall push-ups'는 병렬구조(parallelism) 원칙을 위반한 비문이다. 'or'로 연결된 두 요소는 문법적 형태가 동일해야 하나, 'practicing'(동명사)과 'engage'(동사원형)의 형태가 일치하지 않는다. 정정 표현은 ① 'practicing squats or engaging in some wall push-ups' (모두 -ing) 또는 ② 'practice squats or engage in some wall push-ups' (모두 원형)이다. [오답 분석]\n(A) 'there's no room'은 there is의 축약형으로 표준 표현이며, 'there's no room in ~ for ~'는 관용적 표현으로 어법상 옳다. (B) 'what if + 가정법 과거' 구문은 현재 사실의 반대를 나타내는 표준 가정법 표현이다. (C) 'rather than + 동명사'와 'why not + 동사원형'은 모두 표준 문법으로, 서로 대조 구문을 이루며 어법상 옳다. (E) '동명사 주어 + 단수 동사' 구조로, 'Incorporating... can improve'는 표준 문법이다.",
+    "keyPoints": [
+      "병렬구조(parallelism): or/and/but 등 접속사로 연결된 요소는 형태 일치 필수",
+      "동명사 vs 동사원형 구별",
+      "rather than + -ing/to부정사 모두 가능",
+      "동명사 주어 + 단수 동사"
+    ],
+    "tags": [
+      "병렬구조",
+      "동명사",
+      "가정법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For many of us, making time for exercise is a continuing challenge. __(A) Between work commitments and family obligations, it often feels like there's no room in our packed schedules for a dedicated workout.__ __(B) But what if the workout came to you, right in the midst of your daily routine?__ That's where the beauty of integrating mini-exercises into household chores comes into play. Let's be realistic; chores are inevitable. Whether it's washing dishes or taking out the trash, these tasks are an essential part of daily life. __(C) But rather than viewing chores as purely obligatory activities, why not seize these moments as opportunities for physical activity?__ For instance, practice squats or engage in some wall push-ups as you wait for your morning kettle to boil. __(E) Incorporating quick exercises into your daily chores can improve your health.__"
+  }
+}

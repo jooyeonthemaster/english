@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "A",
+  "lens": "SOURCE_PASSAGE_INTEGRITY",
+  "sourceBindingHash": "6be6c1f29d0c6e6e2f0d0152fcbb175bf081dd281d1dde15f9beba1b8045a212",
+  "privateReviewSha256": "505e75e766ade8eecdf9ff0d8b36855d31f1157fc9673343c31a451779d9acd3",
+  "rowDecisionHash": "b28b7707d4c3e25b727ddcdb81a7e084e3d16ecb3af710f907eb02d8096110e2",
+  "reviewProtocol": {
+    "manualRowsReviewed": 59,
+    "samplingUsed": false,
+    "reviewerBArtifactsRead": false,
+    "criteria": [
+      "English text completeness",
+      "encoding and OCR integrity",
+      "sentence-boundary integrity",
+      "official blank-restoration fidelity",
+      "central inferential role",
+      "contextual support and answer uniqueness",
+      "historical and near-duplicate separation"
+    ]
+  },
+  "verdict": "FRAME_BLOCKED",
+  "verdictCounts": {
+    "PASS": 29,
+    "EXCLUDE": 3,
+    "DOMAIN_REVIEW": 27
+  },
+  "reasonCodeCounts": {
+    "PASS_ALL_LENS_A_CRITERIA": 29,
+    "RAW_RESTORATION_EVIDENCE_ABSENT": 27,
+    "NONCENTRAL_LOCAL_TARGET": 1,
+    "MULTI_QUESTION_CONTAINER": 1,
+    "CONNECTOR_MULTI_BLANK_NOT_INFERENCE": 2,
+    "ANSWER_FORM_CONFLICT": 1
+  },
+  "sourceEvidence": {
+    "rawBlankBearingRecordAvailable": 32,
+    "rawBlankBearingRecordAbsent": 27,
+    "fullRestoredTextExactMatch": 32,
+    "singleRestoredSpanLiteralMatch": 30,
+    "multiConnectorCombinedRecord": 2,
+    "passagesFileSha256": "4337bc34ba2f98cf9af708cdf27d27219fe7599bf30f03fb5fd4698e84347a6f",
+    "rawEvidenceFileSetSha256": "220e3a0360362f00d820a6ce465b0e45ff86f2501e50fa137e8934ea0d404303",
+    "encodingOrControlCharacterFailure": 0,
+    "incompleteOpeningOrTerminalBoundaryFailure": 0
+  },
+  "historyReplay": {
+    "pinnedSelectionRowsReproduced": 59,
+    "historicalIdCollision": 0,
+    "historicalExactOrNearDuplicate": 0,
+    "withinFrameExactOrNearDuplicate": 0
+  },
+  "authorization": {
+    "campaignEligibleRows": 0,
+    "status": "BLOCKED_PENDING_EXCLUSIONS_QUEUE_REDESIGN_AND_DOMAIN_REVIEW",
+    "rightsConclusion": "NOT_REVIEWED_AND_NOT_INFERRED"
+  },
+  "privacy": {
+    "passageTextIncluded": false,
+    "privateSourceIdentifiersIncluded": false,
+    "perRowPrivateNotesIncluded": false
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "campaignCandidates": 0
+  }
+}

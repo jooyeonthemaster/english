@@ -1,0 +1,72 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-CONVENTION-NOTE",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression 필드가 'fascinated'(원문형)이고 errorExpression이 'fascinating'(표시형)이다. 비오류 항목들은 expression==errorExpression==correction 이므로 필드 의미가 (E)에서만 갈라진다. 다만 surroundingText 역시 원문형('fascinated by the music')을 담고 있어 'expression=원문형, errorExpression=표시형' 컨벤션으로 내부 일관되며, 학생 노출 필드(렌더 지문·선지 (E) fascinating·정답 라벨·해설·keyPoints)는 전부 동기화되어 있으므로 V5 실패로 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "ask + 목적어 + to부정사 목적격보어 구조 판단 (원형부정사/동명사 오치환 유혹)",
+      "temptingBecause": "help가 바로 뒤에 원형부정사 패턴(help him pick)을 이끌어 'asked Jeff help'류 원형 표기가 맞다고 착각할 여지가 있다",
+      "decisiveFlaw": "ask는 5형식에서 to부정사 목적격보어만 취하므로 'to help'가 유일하게 적법 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "분사구문 능동/수동 판별 — 정답 (E)와 같은 계열(pointCode c)의 쉬운 대조 디코이",
+      "temptingBecause": "콤마 뒤 분사구문이라는 점이 (E)와 표면상 동일해 -ing/-ed 선택을 재검토하게 만든다",
+      "decisiveFlaw": "의미상 주어 Garcia가 직접 가리키는 능동 주체이고 목적어구(at ...)가 이어지므로 현재분사 pointing이 명백히 적법 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "감각동사 look의 주격보어 자리 형용사/부사 구별",
+      "temptingBecause": "동사 뒤 자리라 부사 greatly가 필요하다고 착각하는 전형적 오개념을 겨냥",
+      "decisiveFlaw": "look은 연결동사로 형용사 보어를 취하므로 great가 적법 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사 of의 목적어인 의문사절(how many + N + V) 구조 판단",
+      "temptingBecause": "전치사 뒤에 절이 오는 구조와 'how many people would be there'의 어순이 낯설어 what/however 등 대안을 떠올리게 한다",
+      "decisiveFlaw": "how many people이 절 내 주어이고 would be there(존재 서술)가 술부인 정상 간접의문문 어순 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "감정유발동사 분사의 능동/수동(경험자 주어 → 과거분사) — 선언된 정답",
+      "temptingBecause": "직전 (B)의 정상 능동 -ing 분사구문과 표면이 같아 -ing를 그대로 수용하기 쉽다",
+      "decisiveFlaw": "everyone은 음악에 매료되는 경험자이며 행위자 'by the music'이 명시되어 있어 fascinated(과거분사)만 적법. fascinating은 능동 해석이 불가능해 비문 — 유일 정답으로 성립"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "C6-WORDING",
+      "severity": "minor",
+      "evidence": "정답 해설 첫 문장 '주행동의 주체인 everyone이 ... 느끼는 대상이므로'가 주체/대상 용어를 한 문장에 섞어 다소 혼탁하고, '본문 속 분사구에서 학생들이 착각하기 쉬운 함정이지만'은 군더더기다. 오답 해설 (B) '주어 Garcia가 가리키는 능동적인 주체이므로'도 어색한 한국어(의도: Garcia가 pointing의 능동 주체). 문법 사실 자체는 전부 정확."
+    },
+    {
+      "code": "KEYPOINTS-PARTIAL",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E)(A)(C) 세 밑줄만 다루고 (B)(D)는 누락 — 모순은 아니나 완결성이 떨어진다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문 대비 렌더 지문 단어 단위 diff 결과 유일한 차이가 의도된 변형 fascinated→fascinating 하나뿐임을 확인(접합 파손·중복·누락·고아 문장부호 없음). 라벨 (A)~(E)와 선지 5개 일치. V2: 5개 밑줄 독립 검증 결과 (A)~(D)는 모두 명백히 적법하고 (E)만 비문 — 단일 정답 성립. 대안 분석 여지(valency·문맥 선호) 없는 명확한 문법 판단 지점. V3: 지문·발문 문법적, 의도된 오류 (E)만 비문이며 유형 의도와 일치. V4: ask+O+to부정사 목적격보어, 능동 주체 현재분사, 감각동사 주격보어 형용사, 전치사 목적어 의문사절 — 해설의 구조 분석이 실제 문장과 전부 부합. 오답 해설이 각 선지 내용과 정확히 대응. V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음(markedExpressions 필드 컨벤션 관련 사소한 노트만 있음). 공예: 정답 포인트(감정분사 능수동+by 행위자구)는 정전급이지만 by the music이 즉답 단서라 변별력(C3)은 2 — 훈련된 학생은 즉시 소거 가능하고 (A)(C)의 유혹 강도가 낮다. 요청 난이도 INTERMEDIATE에는 대체로 부합(쉬운 쪽 경계). 합계 17, 최저 2 → B(작은 수정: 디코이 유혹 강화·해설 문장 다듬기로 출제 가능). KILLER 요청이 아니므로 killerConditionsMet=false."
+}

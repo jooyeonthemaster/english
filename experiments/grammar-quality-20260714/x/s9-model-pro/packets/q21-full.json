@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go3_20150409_A-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2015,
+    "exam": "4월",
+    "origType": "제목",
+    "words": 150
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-answer-point-repeated",
+    "grammar-weak-filler-decoys",
+    "grammar-noun-clause-pronoun-mislabel"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):ANS=b  (C):dec=b  (D):dec=c  (E):dec=i",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 64,
+        "relPos": 0.076,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 306,
+        "relPos": 0.362,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 445,
+        "relPos": 0.526,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 557,
+        "relPos": 0.658,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 686,
+        "relPos": 0.811,
+        "sentenceIndex": 3,
+        "found": true
+      }
+    ],
+    "sentenceCount": 5,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.811,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers; the latest evidence suggests that while it isn't ideal, it might help. When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability of insulin to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation causes, which is encouraging given how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and making up for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "correction": "is",
+        "errorExpression": "is",
+        "surroundingText": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "during which",
+        "isError": true,
+        "correction": "during which",
+        "errorExpression": "which",
+        "surroundingText": "brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "that catch-up sleep may undo some but not all of the damage that sleep deprivation causes",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "given",
+        "isError": false,
+        "correction": "given",
+        "errorExpression": "given",
+        "surroundingText": "which is encouraging given how many adults don't get the hours they need each night.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "making up",
+        "isError": false,
+        "correction": "making up",
+        "errorExpression": "making up",
+        "surroundingText": "not ready to endorse the habit of sleeping less and making up for it later.",
+        "pointCode": "i"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "which"
+      },
+      {
+        "label": "(C)",
+        "text": "that"
+      },
+      {
+        "label": "(D)",
+        "text": "given"
+      },
+      {
+        "label": "(E)",
+        "text": "making up"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'Whether ~ sleep'의 명사절이 주어 역할을 하므로, 단수 동사 is를 쓴 것은 어법상 올바릅니다.",
+      "(C)": "the damage를 선행사로 수식하는 목적격 관계대명사 that이며, 뒤에 동사 causes의 목적어가 비어 있으므로 적절합니다.",
+      "(D)": "given은 '~을 고려해 볼 때'라는 의미를 지닌 전치사적 표현(또는 분사 출신 접속사)으로, 뒤에 명사절(how many ~)이 이어졌으므로 알맞은 쓰임입니다.",
+      "(E)": "전치사 of 뒤에 동명사 sleeping과 접속사 and로 연결된 병렬 구조이므로 making up의 형태는 어법상 정확합니다."
+    },
+    "explanation": "① 정답 문장의 골격 해부: 'a weekend of sleep'이 선행사이고, 이어지는 관계사절 내에서 주어는 they, 동사는 slept입니다. ② 밑줄 친 (B)의 which 뒤에는 'they slept about 10 hours per night'이라는 완전한 구조의 절이 옵니다. sleep은 여기서 목적어를 취하지 않는 자동사로 쓰였으므로, 목적격 관계대명사 which 단독으로는 올 수 없습니다. ③ 따라서 선행사 sleep을 수식하며 시간적 배경을 나타내기 위해서는 전치사가 결합된 during which 형태(또는 관계부사 when)로 고쳐야 합니다. ④ which 뒤에 'slept'가 타동사로 착각될 수 있으나, 10 hours는 목적어가 아니라 기간을 나타내는 부사구입니다.",
+    "keyPoints": [
+      "(B) 관계대명사 vs 전치사 + 관계대명사 — 관계사절 내부의 완전성 판정",
+      "(C) 관계대명사 that — 선행사 수식과 불완전한 문장 구조",
+      "(E) 병렬 구조 — 등위접속사 and가 연결하는 요소 파악"
+    ],
+    "tags": [
+      "어법",
+      "관계대명사",
+      "전치사+관계대명사",
+      "수동태와 구문이해",
+      "병렬구조"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Whether or not we can catch up on sleep - on the weekend, say - __(A) is__ a hotly debated topic among sleep researchers; the latest evidence suggests that while it isn't ideal, it might help. When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep __(B) which__ they slept about 10 hours per night, they showed improvements in the ability of insulin to process blood sugar. That suggests __(C) that__ catch-up sleep may undo some but not all of the damage that sleep deprivation causes, which is encouraging __(D) given__ how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and __(E) making up__ for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says."
+  }
+}

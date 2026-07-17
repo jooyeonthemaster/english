@@ -1,0 +1,848 @@
+{
+  "id": "b05-c3",
+  "unitId": "b05",
+  "order": 3,
+  "title": "재귀대명사",
+  "oneLiner": "목적어가 같은 절의 주어와 같은 대상이면 목적격이 아니라 -self 형태를 씁니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 대명사(중 ●)",
+      "docs/study-os-spec.md §2.3 b05 명사·관사·대명사",
+      "천일문 중등 — 대명사(재귀대명사의 재귀 용법·강조 용법) 단원"
+    ]
+  },
+  "lenses": ["L1", "L3"],
+  "confusableWith": ["b05-c2", "b05-c4", "b01-c2"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "We should not blame ourselves for a delay that no one could predict.",
+        "We should not blame us for a delay that no one could predict."
+      ],
+      "answer": 0,
+      "afterText": "주어가 we 인데 그 행동이 되돌아오는 대상도 we 입니다. 이 레슨을 마치면 왜 us 가 이 자리에 설 수 없는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "재귀대명사",
+      "question": "그런데 재귀대명사가 대체 무엇입니까?",
+      "plain": "재귀대명사는 주어가 한 행동이 주어 자신에게 되돌아올 때 쓰는 대명사입니다. myself·herself 처럼 -self(복수는 -selves)로 끝나며, 우리말 '자기 자신'에 해당합니다.",
+      "analogy": "공을 벽에 던지면 남에게 가지만, 부메랑을 던지면 던진 사람에게 되돌아옵니다. 목적격 대명사가 남에게 날아가는 공이라면, 재귀대명사는 주어에게 되돌아오는 부메랑입니다. 행동이 되돌아오는 순간 대명사는 -self 라는 옷으로 갈아입습니다.",
+      "whyItMatters": "시험은 blamed him 과 blamed himself 를 나란히 놓고 어느 쪽이 옳은지 묻습니다. 판단 기준은 \"이 목적어가 같은 절의 주어와 같은 대상인가\" 단 하나이므로, 기준을 아는 학생에게는 가장 빨리 점수가 되는 유형입니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "재귀대명사, 뼈대부터 필기",
+      "intro": "판단에 필요한 개념을 한 항목씩 적습니다. 각 항목의 예문에서 굵은 단어를 보십시오.",
+      "entries": [
+        {
+          "head": "재귀 — 행동이 주어에게 되돌아옵니다",
+          "body": "주어가 한 행동의 대상이 다시 주어 자신이면 목적어 자리에 재귀대명사를 씁니다. 대상이 남이면 보통의 목적격 대명사를 씁니다.",
+          "example": {
+            "en": "Anna blamed **herself** for the mistake.",
+            "ko": "안나는 그 실수에 대해 자신을 탓했습니다.",
+            "note": "탓한 사람도 안나, 탓받은 사람도 안나이므로 her 가 아니라 herself 입니다."
+          }
+        },
+        {
+          "head": "기준은 언제나 같은 절의 주어",
+          "body": "재귀인지 아닌지는 문장 전체가 아니라 그 대명사가 든 절의 주어와 비교해 정합니다. 절이 여러 개인 문장에서는 같은 절의 주어만 봅니다.",
+          "example": {
+            "en": "Leo thinks that Mia trusts **herself**.",
+            "ko": "레오는 미아가 스스로를 신뢰한다고 생각합니다.",
+            "note": "herself 의 기준은 주절의 Leo 가 아니라 같은 절의 주어 Mia 입니다. 그래서 himself 가 아니라 herself 입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "목적격은 같은 대상을 못 가리킵니다",
+          "body": "We blamed us 처럼 목적격이 같은 절의 주어와 같은 대상을 가리키는 문장은 성립하지 않습니다. \"같은 대상\"이라는 신호는 오직 -self 형태만 보낼 수 있습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "인칭과 수까지 맞춥니다",
+          "body": "가리키는 명사가 단수면 -self, 복수면 -selves 입니다. 주어의 인칭뿐 아니라 수까지 맞춰야 형태가 완성됩니다."
+        },
+        {
+          "head": "강조 용법 — 지워도 문장이 남습니다",
+          "body": "재귀대명사가 '직접'이라는 뜻으로 명사를 강조만 하기도 합니다. 이때는 문장 성분이 아니므로 지워도 문장이 완전하게 남습니다.",
+          "example": {
+            "en": "The mayor **himself** answered the phone.",
+            "ko": "시장이 직접 전화를 받았습니다.",
+            "note": "himself 를 지워도 문장이 완전하므로 강조 용법입니다."
+          },
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "재귀대명사 8형태 한 장 정리",
+      "columns": ["인칭", "만드는 법", "재귀대명사"],
+      "rows": [
+        {
+          "cells": ["1인칭 단수 (I)", "my + self", "myself"],
+          "example": {
+            "en": "I asked **myself** the same question.",
+            "ko": "저는 스스로에게 같은 질문을 던졌습니다.",
+            "note": "묻는 사람과 듣는 사람이 모두 I 입니다."
+          }
+        },
+        {
+          "cells": ["2인칭 단수 (you)", "your + self", "yourself"]
+        },
+        {
+          "cells": ["3인칭 남성 (he)", "him + self", "himself"]
+        },
+        {
+          "cells": ["3인칭 여성 (she)", "her + self", "herself"]
+        },
+        {
+          "cells": ["3인칭 사물 (it)", "it + self", "itself"],
+          "example": {
+            "en": "The machine shuts **itself** down when the temperature rises too high.",
+            "ko": "그 기계는 온도가 지나치게 올라가면 스스로 작동을 멈춥니다.",
+            "note": "가리키는 명사가 사물 단수이므로 itself 입니다."
+          }
+        },
+        {
+          "cells": ["1인칭 복수 (we)", "our + selves", "ourselves"]
+        },
+        {
+          "cells": ["2인칭 복수 (you)", "your + selves", "yourselves"]
+        },
+        {
+          "cells": ["3인칭 복수 (they)", "them + selves", "themselves"],
+          "example": {
+            "en": "The two candidates prepared **themselves** for the debate.",
+            "ko": "그 두 후보자는 토론을 위해 스스로를 준비시켰습니다.",
+            "note": "가리키는 명사가 복수이므로 -selves 형태입니다."
+          }
+        }
+      ],
+      "takeaway": "1·2인칭은 소유격(my·your·our)에, 3인칭은 목적격(him·her·it·them)에 꼬리를 붙입니다. 그래서 hisself·theirselves 는 애초에 존재하지 않는 형태입니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "재귀대명사 8형태",
+      "why": "판별 문제는 -self 를 쓸 자리인지 묻는 동시에 형태가 바른지도 함께 묻습니다. hisself·theirselves 같은 가짜 형태가 미끼로 나오는 순간, 8형태가 입에 붙어 있지 않은 학생은 흔들립니다. 표를 더듬지 않고 즉시 나와야 판별에 온전히 집중할 수 있습니다.",
+      "device": "\"소유격 팀 my·your·our, 목적격 팀 him·her·it·them\" — 1·2인칭은 소유격에, 3인칭은 목적격에 self 를 붙입니다. 그리고 하나면 self, 여럿이면 selves. 이 두 줄만 있으면 여덟 형태가 전부 복원됩니다.",
+      "items": [
+        { "cue": "I", "answer": "myself" },
+        { "cue": "you (한 명)", "answer": "yourself" },
+        { "cue": "he", "answer": "himself — hisself 는 없습니다" },
+        { "cue": "she", "answer": "herself" },
+        { "cue": "it", "answer": "itself" },
+        { "cue": "we", "answer": "ourselves" },
+        { "cue": "you (여러 명)", "answer": "yourselves" },
+        { "cue": "they", "answer": "themselves — theirselves 는 없습니다" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "형태의 관문",
+      "mission": "실제로 존재하는 재귀대명사만 전부 고르십시오. 사전에 없는 가짜 형태가 둘 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "myself",
+        "yourself",
+        "himself",
+        "hisself",
+        "herself",
+        "itself",
+        "ourselves",
+        "yourselves",
+        "theirselves",
+        "themselves"
+      ],
+      "answers": [
+        "myself",
+        "yourself",
+        "himself",
+        "herself",
+        "itself",
+        "ourselves",
+        "yourselves",
+        "themselves"
+      ],
+      "passText": "여덟 형태를 전부 가려냈습니다. hisself·theirselves 를 걸러 냈다면 \"3인칭은 목적격에 self\"라는 규칙이 이미 손에 붙은 것입니다. 관문이 열립니다.",
+      "retryText": "아깝습니다. 힌트 하나 — 3인칭은 소유격(his·their)이 아니라 목적격(him·them)에 꼬리를 붙입니다. 암기 카드의 두 줄을 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "핵심 규칙",
+      "rule": "한 절 안에서 목적어가 그 절의 주어와 같은 대상을 가리키면 목적격 대명사가 아니라 재귀대명사(-self·-selves)를 씁니다.",
+      "examples": [
+        {
+          "en": "I taught **myself** basic statistics during the summer.",
+          "ko": "저는 여름 동안 기초 통계학을 독학했습니다.",
+          "note": "가르친 사람과 배운 사람이 모두 주어 I 입니다. 그래서 me 가 아니라 myself 입니다."
+        },
+        {
+          "en": "The speaker introduced **herself** before the lecture began.",
+          "ko": "그 발표자는 강연이 시작되기 전에 자신을 소개했습니다.",
+          "note": "소개한 사람과 소개된 사람이 같은 대상이므로 her 가 아니라 herself 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "목적어 자리를 판정하는 해부",
+      "tokens": [
+        { "t": "The young scientist", "role": "S" },
+        { "t": "in the video", "role": "M" },
+        { "t": "introduced", "role": "V" },
+        { "t": "herself", "role": "O" },
+        { "t": "to the audience", "role": "M" }
+      ],
+      "ko": "영상 속의 그 젊은 과학자는 청중에게 자신을 소개했습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "in the video 와 to the audience 는 전치사구입니다. 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 이 절의 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The young scientist 입니다. 재귀대명사의 판단 기준은 언제나 같은 절의 주어입니다."
+        },
+        {
+          "label": "③ 본동사가 목적어를 부르는지 봅니다",
+          "roles": ["V"],
+          "note": "introduce 는 목적어를 반드시 부르는 동사입니다. 따라서 동사 뒤 자리는 목적어 자리입니다."
+        },
+        {
+          "label": "④ 목적어와 주어가 같은 대상인지 판정합니다",
+          "roles": ["O"],
+          "note": "소개된 사람이 주어와 같은 사람이므로 목적격 her 가 아니라 재귀대명사 herself 를 씁니다."
+        }
+      ],
+      "conclusion": "판단은 두 단계뿐입니다. 이 자리가 목적어 자리인가, 그 목적어가 같은 절의 주어와 같은 대상인가. 둘 다 그렇다면 -self 형태입니다."
+    },
+    {
+      "id": "b9",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "재귀대명사 사냥",
+      "instruction": "이 문장에서 재귀대명사를 전부 찾아 탭하십시오. -self·-selves 로 끝나는 형태가 사냥 대상입니다.",
+      "hitLabel": "재귀대명사",
+      "tokens": [
+        { "t": "After", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "storm,", "hit": false },
+        { "t": "we", "hit": false },
+        { "t": "reminded", "hit": false },
+        { "t": "ourselves", "hit": true },
+        { "t": "that", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "town", "hit": false },
+        { "t": "had", "hit": false },
+        { "t": "rebuilt", "hit": false },
+        { "t": "itself", "hit": true },
+        { "t": "before,", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "history", "hit": false },
+        { "t": "reminded", "hit": false },
+        { "t": "us", "hit": false },
+        { "t": "of", "hit": false },
+        { "t": "that", "hit": false },
+        { "t": "strength.", "hit": false }
+      ],
+      "ko": "폭풍이 지나간 뒤 우리는 그 도시가 전에도 스스로를 재건했다는 사실을 스스로에게 상기시켰고, 역사는 우리에게 그 저력을 일깨워 주었습니다.",
+      "explain": "ourselves 는 reminded 의 목적어로 주어 we 와 같은 대상이고, itself 는 rebuilt 의 목적어로 그 절의 주어 the town 과 같은 대상이므로 재귀대명사입니다. 마지막 us 도 같은 우리를 가리키지만 그 절의 주어가 history 이므로 목적격이 옳습니다 — -self 는 오직 같은 절의 주어와 같은 대상일 때만 씁니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "전치사의 목적어 자리",
+      "rule": "전치사의 목적어도 그 절의 주어와 같은 대상이면 재귀대명사를 씁니다. be proud of oneself, argue among themselves 처럼 행위나 감정이 주어에게 되돌아가는 전치사 자리가 그렇습니다.",
+      "examples": [
+        {
+          "en": "The runner was proud of **herself** for finishing the race.",
+          "ko": "그 주자는 경주를 완주한 것에 대해 자신을 자랑스러워했습니다.",
+          "note": "전치사 of 의 목적어가 주어 The runner 와 같은 사람이므로 her 가 아니라 herself 입니다."
+        },
+        {
+          "en": "The scientists argued among **themselves** about the unexpected result.",
+          "ko": "그 과학자들은 예상하지 못한 결과를 두고 자기들끼리 논쟁했습니다.",
+          "note": "전치사 among 의 목적어가 주어와 같은 집단이므로 them 이 아니라 themselves 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "재귀대명사를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 친 대명사가 어느 동사 또는 전치사의 목적어인지 확인합니다.",
+          "applyNote": "앞 절의 himself 는 blamed 의 목적어이고, 뒤 절의 him 도 blame 의 목적어입니다."
+        },
+        {
+          "text": "그 대명사가 속한 절의 주어를 찾습니다. 주절과 종속절이 섞여 있으면 같은 절의 주어만 봅니다.",
+          "applyNote": "앞 절의 주어는 The manager 이고, 뒤 절의 주어는 his colleagues 입니다."
+        },
+        {
+          "text": "주어와 그 대명사가 같은 대상을 가리키면 재귀대명사, 다른 대상을 가리키면 목적격 대명사입니다.",
+          "applyNote": "앞 절은 탓한 사람과 탓받은 사람이 같으므로 himself, 뒤 절은 서로 다르므로 him 입니다."
+        },
+        {
+          "text": "-self 를 지워 보십시오. 문장이 여전히 완전하면 그것은 목적어가 아니라 강조 용법이므로 자리(강조하는 명사 뒤·문장 끝)만 맞으면 옳습니다. 문장이 불완전해지면 목적어이므로 1~3단계의 동일 지시 판정을 적용합니다.",
+          "applyNote": "앞 절에서 himself 를 지우면 blamed 의 목적어가 사라집니다. 따라서 강조가 아니라 재귀 용법입니다."
+        }
+      ],
+      "example": {
+        "en": "The manager blamed **himself** for the delay, but his colleagues did not blame **him**.",
+        "ko": "그 관리자는 지연에 대해 자신을 탓했지만, 동료들은 그를 탓하지 않았습니다.",
+        "note": "같은 동사 blame 이라도 주어가 바뀌면 목적어의 형태가 바뀝니다. 형태를 결정하는 것은 동사가 아니라 주어와의 동일 지시입니다."
+      }
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Because we had no coach, we had to train ( us / ourselves ) for the regional contest.",
+      "steps": [
+        {
+          "title": "① 자리를 확인합니다",
+          "body": "괄호에는 대명사가 들어가야 하고, 그 자리는 동사 train 바로 뒤입니다. 대명사가 동사 바로 뒤에 놓이면 그것은 train 의 목적어입니다(train 은 We had to train for the contest 처럼 목적어 없이도 쓰이지만, 여기서는 대명사가 놓이므로 목적어 자리입니다)."
+        },
+        {
+          "title": "② 같은 절의 주어를 찾습니다",
+          "body": "괄호가 들어 있는 절의 주어는 we 입니다. 앞의 because 절은 다른 절이므로 여기서는 보지 않습니다."
+        },
+        {
+          "title": "③ 같은 대상인지 판정합니다",
+          "body": "훈련시키는 주체도 우리이고 훈련받는 대상도 우리입니다. 주어와 목적어가 같은 대상입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "목적격 us 는 주어 we 와 같은 대상을 가리킬 수 없습니다. 따라서 재귀대명사 ourselves 가 옳습니다."
+        }
+      ],
+      "answer": "ourselves",
+      "ko": "우리에게는 코치가 없었기 때문에 우리는 지역 대회를 위해 스스로를 훈련시켜야 했습니다."
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b05-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "I could not forgive {{blank}} for forgetting the deadline.",
+          "options": ["myself", "me"],
+          "answer": 0,
+          "translation": "저는 마감일을 잊은 것에 대해 자신을 용서할 수 없었습니다.",
+          "explanation": "forgive 의 목적어가 주어 I 와 같은 사람입니다. 목적격 me 는 주어 I 와 같은 대상을 가리킬 수 없으므로 재귀대명사 myself 가 옳습니다.",
+          "trapTags": ["reflexive-object", "same-referent"]
+        },
+        {
+          "id": "b05-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The two interns introduced [[u:themselves]] to the department on their first day.",
+          "isCorrect": true,
+          "translation": "그 두 인턴은 첫날에 부서에 자신들을 소개했습니다.",
+          "explanation": "소개한 주체와 소개된 대상이 모두 주어 The two interns 입니다. 주어가 복수이므로 -selves 형태인 themselves 가 옳습니다.",
+          "trapTags": ["reflexive-object", "number-agreement"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "RULE",
+      "tier": 2,
+      "title": "강조 용법",
+      "rule": "재귀대명사가 목적어가 아니라 특정 명사(대개 주어)를 강조하는 자리에 쓰이면 강조 용법입니다. 문장 성분이 아니므로 지워도 문장이 그대로 성립합니다.",
+      "examples": [
+        {
+          "en": "The director **himself** apologized to the audience.",
+          "ko": "그 감독이 직접 청중에게 사과했습니다.",
+          "note": "himself 를 지워도 The director apologized to the audience 로 완전합니다. 따라서 강조 용법입니다."
+        },
+        {
+          "en": "The author wrote every chapter **herself**.",
+          "ko": "그 작가는 모든 장을 직접 썼습니다.",
+          "note": "herself 는 문장 끝에 있지만 강조하는 대상은 목적어 every chapter 가 아니라 주어 The author 입니다(= 남이 아니라 작가가 직접 썼다)."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "재귀 용법과 강조 용법",
+      "columns": ["재귀 용법(목적어)", "강조 용법(강조어)"],
+      "rows": [
+        {
+          "criterion": "문장에서의 역할",
+          "a": "동사·전치사의 목적어입니다",
+          "b": "문장 성분이 아니라 특정 명사(대개 주어)를 강조합니다"
+        },
+        {
+          "criterion": "지우면 어떻게 되는가",
+          "a": "목적어가 사라져 문장이 불완전해집니다",
+          "b": "지워도 문장이 그대로 성립합니다"
+        },
+        {
+          "criterion": "놓이는 자리",
+          "a": "동사·전치사 바로 뒤의 목적어 자리",
+          "b": "강조하는 명사 바로 뒤 또는 문장 끝"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The engineer taught **herself** to write code.",
+          "ko": "그 기술자는 코드 작성법을 독학했습니다.",
+          "note": "herself 는 taught 의 목적어입니다. 지우면 목적어가 사라지므로 재귀 용법입니다."
+        },
+        {
+          "en": "The engineer **herself** wrote the code for the sensor.",
+          "ko": "그 기술자가 직접 그 센서의 코드를 작성했습니다.",
+          "note": "herself 를 지워도 문장이 완전합니다. 목적어는 the code 이므로 이것은 강조 용법입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "주어와 형태 연결하기",
+      "instruction": "왼쪽 문장의 빈칸에 들어갈 형태를 오른쪽에서 찾아 연결하십시오. 빈칸이 가리키는 대상이 그 절의 주어와 같은지부터 보십시오.",
+      "pairs": [
+        {
+          "a": "I forgave ___ for the mistake.",
+          "b": "myself",
+          "why": "용서한 사람도, 용서받은 사람도 I 이므로 재귀대명사를 씁니다."
+        },
+        {
+          "a": "The robot repairs ___ at night.",
+          "b": "itself",
+          "why": "고치는 주체와 고쳐지는 대상이 모두 The robot(사물 단수)입니다."
+        },
+        {
+          "a": "The twins trust only ___.",
+          "b": "themselves",
+          "why": "주어가 복수이므로 -selves 형태를 씁니다."
+        },
+        {
+          "a": "We must prepare ___ for winter.",
+          "b": "ourselves",
+          "why": "준비시키는 주체와 대상이 모두 we 입니다."
+        },
+        {
+          "a": "The actress admired ___ in the mirror.",
+          "b": "herself",
+          "why": "거울 속에서 바라본 대상이 주어 자신입니다."
+        },
+        {
+          "a": "His rivals respected ___. (대상은 그)",
+          "b": "him",
+          "why": "존경받은 사람은 주어 His rivals 가 아니라 다른 사람(그)이므로 목적격을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 문장에서 -self 형태가 목적어인지(재귀 용법) 강조어인지(강조 용법) 분류하십시오.",
+      "buckets": [
+        { "id": "reflex", "label": "재귀 용법(목적어)" },
+        { "id": "emph", "label": "강조 용법(생략 가능)" }
+      ],
+      "chips": [
+        {
+          "text": "She hurt herself while climbing the rocks.",
+          "bucketId": "reflex",
+          "why": "herself 는 hurt 의 목적어입니다. 지우면 다친 대상이 사라집니다."
+        },
+        {
+          "text": "The mayor himself opened the exhibition.",
+          "bucketId": "emph",
+          "why": "himself 를 지워도 문장이 완전합니다. 앞의 명사를 강조할 뿐입니다."
+        },
+        {
+          "text": "We prepared ourselves for the interview.",
+          "bucketId": "reflex",
+          "why": "ourselves 는 prepared 의 목적어이며 주어 we 와 같은 대상입니다."
+        },
+        {
+          "text": "I fixed the old printer myself.",
+          "bucketId": "emph",
+          "why": "목적어는 the old printer 입니다. myself 는 문장 끝에서 주어를 강조합니다."
+        },
+        {
+          "text": "The system shut itself down after the error.",
+          "bucketId": "reflex",
+          "why": "itself 는 shut 의 목적어이며 주어 The system 과 같은 대상입니다."
+        },
+        {
+          "text": "The proposal itself was reasonable.",
+          "bucketId": "emph",
+          "why": "itself 를 지워도 The proposal was reasonable 로 완전합니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "정중하게 말할 때는 주어 자리에도 myself 를 쓸 수 있습니다.",
+      "truth": "재귀대명사는 주어가 될 수 없습니다. 재귀대명사는 목적어이거나 주어 등 특정 명사를 강조하는 강조어일 때만 나타납니다. 주어 자리에는 주격 I·we 를 씁니다.",
+      "counterExample": {
+        "en": "**Myself** and my adviser attended the conference in Vienna.",
+        "ko": "저와 제 지도교수는 빈에서 열린 학회에 참석했습니다.",
+        "note": "주어 자리이므로 My adviser and I attended the conference in Vienna 가 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b19",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "재귀 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 기준은 언제나 같은 절의 주어입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "목적어가 같은 절의 주어와 같은 대상이면 재귀대명사를 씁니다.",
+          "isTrue": true,
+          "why": "재귀대명사의 존재 이유 그 자체입니다. 되돌아오는 행동에는 -self 를 씁니다."
+        },
+        {
+          "statement": "hisself 는 himself 의 격식 있는 형태입니다.",
+          "isTrue": false,
+          "why": "hisself 는 존재하지 않는 형태입니다. 3인칭은 목적격 him 에 -self 를 붙여 himself 로 씁니다."
+        },
+        {
+          "statement": "재귀대명사를 지워도 문장이 완전하면 그것은 강조 용법입니다.",
+          "isTrue": true,
+          "why": "강조 용법은 문장 성분이 아니므로 지워도 문장이 성립합니다. 지웠을 때 무너지면 재귀 용법입니다."
+        },
+        {
+          "statement": "The manager blamed him. 에서 him 은 the manager 자신을 가리킬 수 있습니다.",
+          "isTrue": false,
+          "why": "목적격은 같은 절의 주어와 같은 대상을 가리키지 못합니다. 자신을 탓했다는 뜻이라면 himself 여야 합니다."
+        },
+        {
+          "statement": "주어가 복수면 재귀대명사는 -selves 로 끝납니다.",
+          "isTrue": true,
+          "why": "ourselves·yourselves·themselves 처럼 인칭에 수까지 맞춰야 형태가 완성됩니다."
+        },
+        {
+          "statement": "재귀대명사는 문장의 주어 자리에도 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "재귀대명사는 주어가 될 수 없습니다. 주어 자리에는 주격 대명사를 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "주어와 다른 대상에 -self 를 쓰는 오류",
+      "body": "재귀대명사는 같은 절의 주어와 같은 대상일 때만 씁니다. 가리키는 대상이 주어가 아니라 다른 사람이면, -self 형태가 정중하게 들린다는 이유로 써서는 안 되며 목적격 대명사를 써야 합니다.",
+      "example": {
+        "en": "My tutor explained the rule to **myself** after class.",
+        "ko": "제 선생님이 수업 후에 저에게 그 규칙을 설명해 주었습니다.",
+        "note": "설명을 들은 사람은 주어 My tutor 가 아니라 저이므로 myself 가 아니라 me 를 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "title": "직접 배열해 봅니다",
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 섞여 있습니다.",
+      "ko": "그 학생들은 그 실수에 대해 자신을 탓했습니다.",
+      "answer": ["The students", "blamed", "themselves", "for the mistake"],
+      "tiles": [
+        "The students",
+        "blamed",
+        "themselves",
+        "for the mistake",
+        "them",
+        "theirselves"
+      ],
+      "explanation": "탓한 주체와 탓받은 대상이 모두 주어 The students 이므로 목적격 them 은 쓸 수 없습니다. blame 은 목적어를 반드시 요구하므로 themselves 는 동사 바로 뒤 목적어 자리에 놓입니다. 또한 theirselves 라는 형태는 영어에 존재하지 않습니다."
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "위치·동반의 전치사구는 목적격을 씁니다",
+      "body": "모든 전치사가 재귀를 부르는 것은 아닙니다. 위치·방향·동반을 나타내는 전치사구(behind·beside·around·with)에서는 목적어가 주어와 같은 대상이어도 관용적으로 목적격을 씁니다. 행위가 되돌아가는 자리인지, 단순히 위치를 그리는 자리인지 보십시오.",
+      "example": {
+        "en": "The hiker closed the gate behind **him** and kept the map with **him**.",
+        "ko": "그 등산객은 등 뒤로 문을 닫고 지도를 몸에 지니고 있었습니다.",
+        "note": "behind·with 는 위치와 동반을 그릴 뿐 행위가 되돌아가는 자리가 아니므로 himself 가 아니라 him 을 씁니다."
+      }
+    },
+    {
+      "id": "b23",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "굳어진 관용표현",
+      "columns": ["표현", "뜻"],
+      "rows": [
+        {
+          "cells": ["by oneself", "혼자 힘으로 · 홀로"],
+          "example": {
+            "en": "The travelers cooked dinner by **themselves** without any help.",
+            "ko": "그 여행자들은 아무 도움 없이 혼자 힘으로 저녁을 지었습니다.",
+            "note": "by oneself 는 '남의 도움 없이'라는 뜻이며, 주어와 같은 대상이므로 by them 으로 쓰지 않습니다."
+          }
+        },
+        {
+          "cells": ["for oneself", "남에게 기대지 않고 스스로"],
+          "example": {
+            "en": "Read the report and judge **for yourself**.",
+            "ko": "보고서를 읽고 스스로 판단하십시오.",
+            "note": "직접 확인하고 판단한다는 뜻의 관용표현입니다."
+          }
+        },
+        {
+          "cells": ["in itself", "그 자체로"],
+          "example": {
+            "en": "The discovery was not important **in itself**, but it changed later research.",
+            "ko": "그 발견은 그 자체로는 중요하지 않았지만, 이후의 연구를 바꾸어 놓았습니다.",
+            "note": "in itself 는 '다른 요소를 빼고 그것만 놓고 보면'이라는 뜻의 부사구로, 여기서는 형용사 important 를 한정합니다."
+          }
+        },
+        {
+          "cells": ["help oneself to", "마음껏 집어 먹다 · 가져다 쓰다"],
+          "example": {
+            "en": "Please help **yourself** to the salad.",
+            "ko": "샐러드를 마음껏 드십시오.",
+            "note": "권유의 관용표현으로, yourself 자리는 덩어리째 익힙니다."
+          }
+        }
+      ],
+      "takeaway": "관용표현 속 -self 는 규칙을 따져 만들지 말고 덩어리째 익힙니다. 시험은 by oneself 의 oneself 자리를 목적격으로 바꿔 놓고 틀린 곳을 찾게 합니다."
+    },
+    {
+      "id": "b24",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b05-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The committee could not agree, so the chair had to decide the matter {{blank}}.",
+          "options": ["himself", "him", "his"],
+          "answer": 0,
+          "translation": "위원회가 합의하지 못했기 때문에 의장이 그 문제를 직접 결정해야 했습니다.",
+          "explanation": "목적어는 이미 the matter 이므로 빈칸은 목적어 자리가 아닙니다. 주어를 강조하는 강조 용법 자리이며, 이 자리에는 목적격 him 이나 소유격 his 가 올 수 없고 재귀대명사 himself 가 옳습니다.",
+          "trapTags": ["emphatic-use", "case-confusion"]
+        },
+        {
+          "id": "b05-c3-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Since no one helped us, we had to move all the equipment by [[u:us]].",
+          "isCorrect": false,
+          "correction": "ourselves",
+          "translation": "아무도 우리를 돕지 않았기 때문에 우리는 모든 장비를 혼자 힘으로 옮겨야 했습니다.",
+          "explanation": "전치사 by 의 목적어가 주어 we 와 같은 대상이므로 목적격 us 를 쓸 수 없습니다. by ourselves 가 옳으며, 이는 '남의 도움 없이'라는 뜻의 관용표현이기도 합니다.",
+          "trapTags": ["reflexive-object", "preposition-object"]
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 by us 를 by ourselves 로 고친 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "전치사 by 의 목적어가 그 절의 주어 we 와 같은 대상이므로 목적격 us 가 아니라 재귀대명사여야 합니다.",
+          "correct": true,
+          "feedback": "정확합니다. 판단 근거는 자리(전치사의 목적어)와 동일 지시(주어와 같은 대상) 두 가지입니다."
+        },
+        {
+          "text": "전치사 by 뒤에는 언제나 재귀대명사가 오기 때문입니다.",
+          "correct": false,
+          "feedback": "그렇지 않습니다. The report was written by him 처럼 by 뒤에 주어와 다른 대상이 오면 목적격을 씁니다. 형태를 결정하는 것은 by 가 아니라 주어와의 동일 지시입니다. 다만 위치·동반을 나타내는 전치사구(He took the map with him)는 주어와 같은 대상이어도 목적격을 씁니다."
+        },
+        {
+          "text": "us 는 격식 없는 말에서만 쓰는 형태이므로 글에서는 ourselves 로 바꾸어야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "us 는 표준 목적격 대명사입니다. 문제는 격식이 아니라, 그 자리가 주어와 같은 대상을 가리킨다는 구조적 사실입니다."
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "When the storm cut the power, we kept [[1:ourselves]] warm with blankets, and my brother [[2:himself]] built a small fire, which allowed us to dry [[3:us]] before dawn; by morning the neighbors had already checked on [[4:us]].",
+      "answer": 3,
+      "correction": "ourselves",
+      "rationales": [
+        "kept 의 목적어가 주어 we 와 같은 대상이므로 재귀대명사 ourselves 가 옳습니다.",
+        "목적어는 a small fire 이므로 이 자리는 강조 용법입니다. 지워도 문장이 완전하므로 himself 는 옳습니다.",
+        "dry 의 의미상 주어는 allow 의 목적어인 us 이고, 말리는 대상도 같은 사람들입니다. 따라서 목적격 us 가 아니라 ourselves 여야 합니다.",
+        "checked on 의 목적어는 주어 the neighbors 와 다른 대상이므로 목적격 us 가 옳습니다."
+      ],
+      "ko": "폭풍으로 전기가 끊겼을 때 우리는 담요로 몸을 따뜻하게 유지했고, 제 형이 직접 작은 불을 피워 덕분에 우리는 새벽이 되기 전에 몸을 말릴 수 있었으며, 아침이 되자 이웃들이 이미 우리를 살피러 와 있었습니다."
+    },
+    {
+      "id": "b27",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 목적격 대명사를 넣어 둔 문장을 주고 어법상 틀린 부분을 고쳐 쓰게 합니다. 주어와 같은 대상을 가리키는 자리임을 지적하고 -self 형태로 고쳐야 만점입니다.",
+          "sample": {
+            "en": "As no guide was available, the tourists had to find the museum by them.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "them → themselves — 전치사 by 의 목적어가 주어 the tourists 와 같은 대상이므로 재귀대명사를 씁니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서는 밑줄 친 대명사가 같은 절의 주어와 같은 대상인지를 묻습니다. 밑줄이 목적격인데 그 절의 주어와 같은 대상을 가리키면 그것이 정답입니다.",
+          "sample": {
+            "en": "Species that cannot defend [[u:them]] against predators often rely on camouflage.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "themselves — 방어하는 주체와 방어되는 대상이 모두 관계절의 주어(= Species)이므로 재귀대명사여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b28",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "거울 미궁의 수문장",
+      "intro": "이 미궁의 거울은 행동이 누구에게 되돌아가는지를 비춥니다. 목적격과 -self 를 눈감고도 가르지 못한다면 거울 속에서 길을 잃을 것입니다. 네 번의 판단으로 출구를 여십시오.",
+      "questions": [
+        {
+          "prompt": "Alone on the empty beach, the lifeguard reminded {{blank}} to stay calm and alert.",
+          "options": ["himself", "him", "hisself"],
+          "answer": 0,
+          "why": "해변에 혼자 있으므로 상기시킨 대상은 주어 The lifeguard 자신일 수밖에 없어 재귀대명사 himself 를 씁니다. him 은 주어와 다른 사람을 가리킬 때 쓰는데 여기에는 그럴 사람이 없고, hisself 는 존재하지 않는 형태입니다."
+        },
+        {
+          "prompt": "The children set the table {{blank}} to surprise their parents.",
+          "options": ["themselves", "them"],
+          "answer": 0,
+          "why": "목적어는 이미 the table 이고, 빈칸은 주어 The children 을 강조하는 자리입니다. 강조 자리에 목적격 them 은 올 수 없습니다."
+        },
+        {
+          "prompt": "Proud of {{blank}}, the players celebrated all night.",
+          "options": ["themselves", "theirselves"],
+          "answer": 0,
+          "why": "자랑스러워한 주체와 그 대상이 모두 the players 이므로 전치사 of 의 목적어 자리에도 재귀대명사 themselves 를 씁니다. theirselves 는 영어에 존재하지 않는 형태입니다."
+        },
+        {
+          "prompt": "Everyone praised the intern, and her mentor praised {{blank}} most warmly.",
+          "options": ["her", "herself"],
+          "answer": 0,
+          "why": "칭찬받은 사람은 그 절의 주어 her mentor 가 아니라 다른 사람(인턴)이므로 목적격 her 가 옳습니다. herself 를 쓰면 멘토가 자기 자신을 칭찬했다는 뜻이 됩니다."
+        }
+      ],
+      "winText": "거울들이 일제히 길을 비춥니다. 행동이 되돌아가는 자리와 그렇지 않은 자리를 네 번 모두 정확히 갈랐습니다. 이제 어떤 문장이 와도 기준은 하나 — 같은 절의 주어입니다.",
+      "loseText": "수문장은 아직 비켜서지 않습니다. 오답이 나온 자리를 보십시오 — 전부 \"이 대명사가 같은 절의 주어와 같은 대상인가\"를 묻고 있었습니다. 판정 4단계를 다시 밟고 오면 거울은 길을 엽니다."
+    },
+    {
+      "id": "b29",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "목적어가 같은 절의 ___와 같은 대상이면 ___ 대신 -self 를 쓰고, -self 를 지워도 문장이 완전하면 그것은 ___ 용법입니다."
+    },
+    {
+      "id": "b30",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "목적어(동사의 목적어·전치사의 목적어)가 같은 절의 주어와 같은 대상이면 목적격이 아니라 재귀대명사를 씁니다.",
+        "목적격 대명사는 (위치·방향을 나타내는 전치사구를 제외하면) 같은 절의 주어와 같은 대상을 가리킬 수 없습니다. 이것이 판단의 근거입니다.",
+        "-self 를 지워도 문장이 완전하면 그것은 목적어가 아니라 강조 용법이며, 강조 용법은 생략할 수 있습니다.",
+        "재귀대명사는 주어가 될 수 없고, hisself·theirselves 같은 형태도 없습니다. by oneself·in itself 는 관용표현으로 익힙니다.",
+        "위치·방향·동반을 나타내는 전치사구(behind him, with him)에서는 주어와 같은 대상이어도 목적격을 씁니다."
+      ],
+      "keySentence": {
+        "en": "The manager blamed **himself** for the delay, but his colleagues did not blame **him**.",
+        "ko": "그 관리자는 지연에 대해 자신을 탓했지만, 동료들은 그를 탓하지 않았습니다.",
+        "note": "같은 동사라도 주어가 바뀌면 목적어의 형태가 바뀝니다. 기준은 언제나 같은 절의 주어입니다."
+      }
+    },
+    {
+      "id": "b31",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b05-c3-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Since the sponsor withdrew, we had to organize the entire event {{blank}}.",
+          "options": ["ourselves", "us"],
+          "answer": 0,
+          "translation": "후원사가 철수했기 때문에 우리는 그 행사 전체를 직접 준비해야 했습니다.",
+          "explanation": "목적어는 이미 the entire event 이므로 빈칸은 주어 we 를 강조하는 자리입니다. 목적격 us 는 이 자리에 올 수 없고 재귀대명사 ourselves 가 옳습니다.",
+          "trapTags": ["emphatic-use", "case-confusion"]
+        },
+        {
+          "id": "b05-c3-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The negotiators talked among [[u:them]] before returning to the table.",
+          "isCorrect": false,
+          "correction": "themselves",
+          "translation": "그 협상가들은 협상 테이블로 돌아가기 전에 자기들끼리 이야기했습니다.",
+          "explanation": "전치사 among 의 목적어가 주어 The negotiators 와 같은 집단이므로 목적격 them 을 쓸 수 없습니다. among themselves 가 옳습니다.",
+          "trapTags": ["reflexive-object", "preposition-object"]
+        },
+        {
+          "id": "b05-c3-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The theory was elegant, but the experiment {{blank}} produced no clear evidence.",
+          "options": ["itself", "its", "it"],
+          "answer": 0,
+          "translation": "그 이론은 정연했지만, 실험 자체는 뚜렷한 증거를 내놓지 못했습니다.",
+          "explanation": "the experiment 가 이미 주어이고 produced 의 목적어도 no clear evidence 로 채워져 있으므로, 빈칸은 앞의 명사를 강조하는 자리입니다. 소유격 its 나 주격 it 은 이 자리에 올 수 없고 재귀대명사 itself 가 옳습니다.",
+          "trapTags": ["emphatic-use", "case-confusion"]
+        }
+      ]
+    }
+  ]
+}

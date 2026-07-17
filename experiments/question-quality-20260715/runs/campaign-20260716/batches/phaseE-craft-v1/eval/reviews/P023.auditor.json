@@ -1,0 +1,85 @@
+{
+  "pid": "P023",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-GERUND-MISANALYSIS",
+      "severity": "critical",
+      "evidence": "(C) 오답 해설: \"접속사 when 뒤에 'we are'가 생략된 분사구문의 형태이거나 접속사가 명시된 동명사 관용 표현으로\" — 'when solving'은 'we are' 생략 분사구문(현재분사)으로 분석되는 구조이며 동명사가 아니다. 'when'은 전치사가 아니므로 동명사를 취할 수 없고, '접속사가 명시된 동명사 관용 표현'이라는 구성은 존재하지 않는다. 분사를 동명사로 부르는 용어 오분석(루브릭 V4의 '명사절 that을 관계대명사로 부르는 류'와 동급)."
+    },
+    {
+      "code": "V4-EXPLANATION-REDUNDANCY",
+      "severity": "minor",
+      "evidence": "본 해설이 '선행사가 복수이므로 관계사절 내의 동사도 복수 형태' / '선행사와의 수일치를 위해 단수 형태인 leads는 복수 형태인 lead로' 로 동일 내용을 반복 진술. 사실 오류는 아니나 장황."
+    },
+    {
+      "code": "V5-SURROUNDINGTEXT-CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 surroundingText가 렌더 문장('that leads')이 아닌 교정문('prevents us from detecting the connections that lead to creative insights.')을 담고 있어 다른 항목(렌더=원문 일치)과 관례가 불일치. 렌더 지문 자체는 정상이므로 학생 노출 필드 모순은 아님 — V5 실패로는 미판정."
+    },
+    {
+      "code": "KILLER-ADJACENT-AGREEMENT",
+      "severity": "major",
+      "evidence": "정답 (D)는 선행사 'the connections' 바로 뒤에 'that leads'가 붙어 있는 인접 단순 수일치로, 루브릭 §C 'KILLER 정답은 구조를 읽어야 하며 …붙어 있는 단순 수일치로 즉시 드러나지 않는다' 조건을 정면 위반. 개재 명사구·삽입절 없이 즉시 노출."
+    },
+    {
+      "code": "KILLER-FILLER-DECOY",
+      "severity": "major",
+      "evidence": "(A) 'In contrast'는 문법 판단이 아닌 담화 연결어 적절성(의미) 판단으로, 어법 문항 디코이로서 필러. §C '설명이 안 되는 디코이는 필러다' 및 문법 판단 요건 위반. keyPoints에도 (A)·(B)의 포인트 서술이 없음."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 3,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "연결어(담화 논리) 적절성 — 어법 포인트가 아닌 필러 디코이",
+      "temptingBecause": "두 문장의 관계를 오독하면 대조 연결어가 부적절해 보일 수 있음",
+      "decisiveFlaw": "1문장(마음이 편할 때→내향 주의)과 2문장(집중할 때→외향 주의)이 명백한 대조라 즉시 적절 판정. 문법 판단 요소가 전무해 유혹력 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "형용사/부사 구별 — 분사형 형용사 focused 수식",
+      "temptingBecause": "be동사 뒤라서 보어 자리 형용사(diligent)로 착각할 여지",
+      "decisiveFlaw": "수식 대상이 명사가 아니라 과거분사(형용사) focused이므로 부사 diligently가 표준적. 흔한 패턴이라 상급 학생에게 즉시 소거됨"
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사 유지 분사구문의 태(능동/수동) — solving vs solved",
+      "temptingBecause": "when 뒤에 주어 없이 바로 V-ing가 와서 구조 파악이 필요",
+      "decisiveFlaw": "의미상 주어 we가 문제를 능동적으로 푸는 주체이므로 solving이 명백. 'when V-ing'는 매우 흔한 패턴이라 판별 부담 낮음"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 주격 관계대명사절 내 동사와 선행사의 수일치 (source-correct 'lead' → displayed-wrong 'leads' 최소대립쌍, 교정 시 정확히 원문 복원)",
+      "temptingBecause": "단수 주어에 익숙한 학생이 leads를 자연스럽다고 넘길 수 있음",
+      "decisiveFlaw": "선행사 the connections(복수)가 that 바로 앞에 인접해 있어 lead여야 함. 개재 요소가 없어 KILLER급 구조 독해 없이 즉시 검출됨"
+    },
+    {
+      "label": "(E)",
+      "intent": "대명사 지시 — 복수 명사 직후의 단수 대명사 it",
+      "temptingBecause": "직전 명사 warm showers가 복수라 they가 맞다고 착각 가능",
+      "decisiveFlaw": "it은 개별 명사가 아니라 '따뜻한 샤워를 하는 것'이라는 상황/행위를 받으므로 단수가 자연스러움. 디코이 중 유일하게 실질 유혹력 보유"
+    }
+  ],
+  "explanationIssues": [
+    "(C) 해설의 '접속사가 명시된 동명사 관용 표현' — 존재하지 않는 구성에 대한 용어 오분석(분사를 동명사로 오호칭). V4 실패 사유",
+    "본 해설의 수일치 근거 서술이 동일 내용 2회 반복으로 장황",
+    "keyPoints가 (D)(E)(C) 3개만 수록되어 (A)(B) 밑줄의 point 서술 부재 — §C '5개 밑줄 각각에 point/why tempting/why correct' 요건 미충족"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과, 정답 유일성 자체는 견고(단일 오류 (D), 최소대립쌍, 교정 시 원문 복원). 그러나 (C) 오답 해설의 동명사 오분석으로 V4 실패 → F. 난이도 정합도 심각: KILLER 요청에 대해 선행사 인접형 단순 수일치(개재 요소 0)를 정답으로 배치해 §C KILLER 조건('붙어 있는 단순 수일치로 즉시 드러나지 않는다')을 정면 위반하고, (A)는 어법 판단이 아닌 필러 디코이. 실질 난이도는 중하위권용. 수리 방향: (1) (C) 해설에서 '동명사 관용 표현' 구절 삭제, (2) KILLER 유지 시 정답 포인트를 개재 명사구/삽입절이 있는 구조 독해형으로 재설계, (3) (A)를 실제 문법 판단 디코이로 교체, (4) keyPoints 5개 밑줄 전체로 확장."
+}

@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20231219-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "주장",
+    "words": 146
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=d  (C):ANS=a  (D):dec=f  (E):dec=i",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 175,
+        "relPos": 0.215,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 300,
+        "relPos": 0.369,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 398,
+        "relPos": 0.489,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 572,
+        "relPos": 0.703,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 670,
+        "relPos": 0.823,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.823,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race laid out for them. They do well enough in school to keep advancing. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey ends with college. They have checked all the boxes in the life that was laid out for them and now lack a road map describing the right ways to move forward and continue to grow. In truth, that's when the journey really begins. When school is finished, your growth becomes voluntary. Like healthy eating habits or a regular exercise program, you need to commit to it and devote thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "advancing",
+        "isError": false,
+        "correction": "advancing",
+        "errorExpression": "advancing",
+        "surroundingText": "They do well enough in school to keep advancing.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "ends",
+        "isError": false,
+        "correction": "ends",
+        "errorExpression": "ends",
+        "surroundingText": "But so many think and act as if their learning journey ends with college.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "lack",
+        "isError": true,
+        "correction": "lack",
+        "errorExpression": "lacking",
+        "surroundingText": "They have checked all the boxes in the life that was laid out for them and now lack a road map",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "voluntary",
+        "isError": false,
+        "correction": "voluntary",
+        "errorExpression": "voluntary",
+        "surroundingText": "When school is finished, your growth becomes voluntary.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "devote",
+        "isError": false,
+        "correction": "devote",
+        "errorExpression": "devote",
+        "surroundingText": "you need to commit to it and devote thought, time, and energy to it.",
+        "pointCode": "i"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "advancing"
+      },
+      {
+        "label": "(B)",
+        "text": "ends"
+      },
+      {
+        "label": "(C)",
+        "text": "lacking"
+      },
+      {
+        "label": "(D)",
+        "text": "voluntary"
+      },
+      {
+        "label": "(E)",
+        "text": "devote"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "동사 'keep'은 동명사를 목적어로 취하는 동사이므로 'advancing'이 적절합니다.",
+      "(B)": "접속사 'as if' 절의 단수 주어 'their learning journey'에 수일치하여 단수 동사 'ends'를 쓴 것은 올바릅니다.",
+      "(D)": "불완전 자동사 'becomes'의 주격 보어 자리이므로 형용사 'voluntary'를 쓰는 것이 옳습니다.",
+      "(E)": "조동사 'need' 뒤의 to부정사구 내에서 동사원형 'commit'과 접속사 and로 병렬 연결되는 자리이므로 동사원형 'devote'가 적절합니다."
+    },
+    "explanation": "주어 'They'에 대하여 등위접속사 and가 앞선 동사구 'have checked ~'와 뒤의 동사구를 병렬로 연결하는 구조입니다. 즉, and 뒤에는 주어의 또 다른 상태를 나타내는 정동사가 위치해야 합니다. 이 자리에 lacking을 쓰면 정동사가 없어 절이 성립하지 않는 비문이 됩니다. 따라서 lacking을 정동사 lack으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 정동사 vs 준동사 — 등위접속사 and로 연결된 병렬 구조 파악",
+      "(E) 병렬 구조 — to부정사구 내의 동사원형 병렬 판단",
+      "(D) 형용사 vs 부사 — 2형식 동사 뒤 주격 보어 자리 판단"
+    ],
+    "tags": [
+      "동사구 병렬구조",
+      "정동사 vs 준동사",
+      "구조 파악"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "Unfortunately, many people don't take personal responsibility for their own growth. Instead, they simply run the race laid out for them. They do well enough in school to keep __(A) advancing__. Maybe they manage to get a good job at a well-run company. But so many think and act as if their learning journey __(B) ends__ with college. They have checked all the boxes in the life that was laid out for them and now __(C) lacking__ a road map describing the right ways to move forward and continue to grow. In truth, that's when the journey really begins. When school is finished, your growth becomes __(D) voluntary__. Like healthy eating habits or a regular exercise program, you need to commit to it and __(E) devote__ thought, time, and energy to it. Otherwise, it simply won't happen - and your life and career are likely to stop progressing as a result."
+  }
+}

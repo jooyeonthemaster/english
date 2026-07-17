@@ -1,0 +1,84 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OK",
+      "severity": "info",
+      "evidence": "렌더 지문은 원지문에서 'promotes constructive conflict resolution' 구간만 빈칸으로 치환했고 나머지는 문자 단위로 동일함(em-dash, 'i.e. cooperate' 등 보존). 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 1~5와 정답 라벨 3 일치."
+    },
+    {
+      "code": "V2-OK",
+      "severity": "info",
+      "evidence": "각 선지 독립 검증: ①은 'solely...individual needs'가 'their own needs as well as the needs of others (i.e. cooperate)'와 모순, ②는 갈등 완화라는 본문 논지와 인과 반전, ④는 'express emotions...accurately'와 정면 모순, ⑤는 같은 문장의 주어 'Appreciation of differences'와 자기모순. 정답 집합은 정확히 {3} 하나."
+    },
+    {
+      "code": "V3-MINOR-TAIL",
+      "severity": "minor",
+      "evidence": "정답 완성문 'creates an arena for open communication and leads to productive settlements of disagreements and improved group functioning'은 문법적·자연스러움(원문도 동일한 이중 and 구조). 다만 잔여 tail 'and improved group functioning' 때문에 ②('escalates...and improved group functioning')·④('forces members to hide...and improved group functioning')는 통사 슬롯에는 들어가나 의미적으로 파탄난 접합을 만든다. V3 게이트(정답 완성문 기준)는 통과하나 D조건 위반의 근거가 됨."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 1,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "half-truth / scope 왜곡 — 'accommodate their own needs'의 절반만 차용하고 타인의 요구·협력 절반을 삭제",
+      "temptingBecause": "본문 어휘 'needs'를 직접 앵커로 사용",
+      "decisiveFlaw": "'solely'가 'as well as the needs of others (i.e. cooperate)'와 정면 모순. 추가로 'academic'은 co-worker/집단 맥락과 무관한 도메인 이탈어로 즉시 소거 단서가 되고, 부정 극성이 tail 'and improved group functioning'과 어울리지 않아 폴라리티만으로도 탈락."
+    },
+    {
+      "label": "2",
+      "intent": "극성/인과 반전 — 갈등 완화를 갈등 격화로 뒤집음",
+      "temptingBecause": "'emotional', 'confronting'이 group conflict situation의 어휘장과 겹침",
+      "decisiveFlaw": "본문은 감정 이해가 건설적 해결로 이어진다는 논지이므로 정반대. tail과 접합 시 'escalates ... and improved group functioning'이라는 의미 파탄 문장이 되어 지문을 읽지 않아도 소거 가능."
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 'promotes constructive conflict resolution'의 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 'settlements of disagreements' = 'conflict resolution', 'productive' = 'constructive'의 거의 1:1 투명 치환",
+      "decisiveFlaw": "없음. 다만 다섯 선지 중 유일한 긍정 극성 선지라 추상화·변별 기능이 약함."
+    },
+    {
+      "label": "4",
+      "intent": "극성 반전 — 감정 표현을 감정 은폐로 뒤집음",
+      "temptingBecause": "'true feelings'가 본문 감정 어휘(emotions, feelings, moods)와 겹침",
+      "decisiveFlaw": "'express emotions, feelings and moods accurately'라는 본문 전제와 정면 모순. tail과 접합 시 'hide their true feelings and improved group functioning'이라는 비정합 접합. ②·⑤와 동일한 '반대' 함정의 중복."
+    },
+    {
+      "label": "5",
+      "intent": "극성 반전 — 주어의 안티토님(appreciation ↔ ignores)",
+      "temptingBecause": "본문 핵심어 'differences'를 재사용",
+      "decisiveFlaw": "같은 문장의 주어가 'Appreciation of differences'이므로 'ignores differences'는 문장 내부 자기모순 — 지문 독해 없이 그 문장 하나만으로 즉시 소거됨. 가장 약한 디코이."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "메인 해설은 ①·⑤만 명시적으로 기각하고 ②·④는 오답 해설 JSON에만 존재함(필드 간 상호보완으로 V5는 통과)."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ②의 '감정을 직면한다는 본문 뉘앙스를 역용해'는 다소 과장 — 본문은 confront를 권하는 것이 아니라 표현·관점 취하기를 말하므로 '뉘앙스 역용'이라는 기제 설명이 느슨함. 사실 오류 수준은 아님."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 스스로 ②와 ⑤를 모두 '극성 반전'으로 명명 — 함정 유형 중복(②·④·⑤ 모두 사실상 opposite)을 제작 단계에서 자인한 셈. 해설 사실성 문제는 아니고 설계 결함의 증거."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V 게이트는 전부 통과(정답 유일·무결·해설 사실). 그러나 KILLER 요청 대비 실제 난이도는 최하급. 결정적 결함: (1) 빈칸 뒤 잔여 tail 'and improved group functioning'과 주어 'Appreciation of differences'가 긍정 극성을 이중으로 누설하는데, 긍정 극성 선지가 ③ 하나뿐이라 극성 스캔만으로 정답 확정 — RUBRIC §D '극성 하나로 정답을 찍을 수 없다' 정면 위반. (2) ⑤는 같은 문장 주어와 자기모순이라 지문 독해 자체가 불필요. (3) 오답 ②·④·⑤가 전부 동일한 '반대' 함정으로 §D의 '서로 다른 함정(scope shift, causal reversal, half-truth, actor swap, condition loss)' 요건 미충족(①만 half-truth). (4) 정답이 'conflict resolution → settlements of disagreements'의 거의 투명한 동의어 치환이라 KILLER급 추상화 부재, 두 문장/두 단서 연결도 요구되지 않음. (5) ①의 'academic'은 직장(co-workers) 맥락 이탈로 추가 메타 누설. killerConditionsMet=false. C 합계 9(C1=3, C2=1, C3=1, C4=1, C5=0, C6=3) — 재설계 필요, 등급 C."
+}

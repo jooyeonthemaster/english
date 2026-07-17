@@ -1,0 +1,66 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 삭제 span 'to explore uncertainties'의 의미 보존 패러프레이즈",
+      "temptingBecause": "지문 전반의 관용적 독자상(put up with obscurities, struggle to interpret)과 정확히 정합하며, 병렬 to부정사 슬롯에 자연스럽게 들어간다",
+      "decisiveFlaw": "(정답 — 결함 없음)"
+    },
+    {
+      "label": "②",
+      "intent": "polarity reversal — 'flout principles of efficient communication'을 앵커로 규칙 위반 언어에 대한 독자 태도를 반전",
+      "temptingBecause": "지문에 규칙/위반 관련 어휘(flout, principles)가 실제로 등장해 표면 어휘가 겹친다",
+      "decisiveFlaw": "지문은 독자가 규칙을 벗어난 언어를 거부하지 않고 오히려 해석하려 분투한다고 명시하므로 정반대 극성이다"
+    },
+    {
+      "label": "③",
+      "intent": "polarity reversal — 'complications of language'와 대조되는 단순성 요구로 반전",
+      "temptingBecause": "'narratives'가 서두의 'narrative display texts'와 표면적으로 호응한다",
+      "decisiveFlaw": "지문은 언어적 복잡성이 소통 목적을 가진다고 보고 독자가 이를 수용한다고 하므로 예측 가능·단순화 요구는 문맥과 정면 충돌한다"
+    },
+    {
+      "label": "④",
+      "intent": "actor/scope shift — 출판·검토·재판이라는 제도적 선별 과정(published, reviewed, reprinted)을 독자의 독서 중 행위로 전가",
+      "temptingBecause": "'institutional label'과 선별 과정 앵커가 지문에 실재해 표면적으로 그럴듯하며, 유일하게 극성 반전이 아닌 오답이라 실제 판단을 요구한다",
+      "decisiveFlaw": "해당 내용은 독자가 작품에 접근하기 전의 배경 보증이지, 빈칸이 속한 '독서 중 해석적 인내' 3항 병렬(willingness to pay attention / ___ / not immediately ask)의 요소가 아니다"
+    },
+    {
+      "label": "⑤",
+      "intent": "직접 모순 — 빈칸 바로 뒤 'not immediately ask'의 반전",
+      "temptingBecause": "'immediate/clarification'이 인접 절의 어휘와 거의 그대로 겹쳐 표면 매칭을 유도한다",
+      "decisiveFlaw": "빈칸에 넣으면 같은 문장 안에서 '즉각적 해명을 요구하면서 즉시 묻지는 않는다'는 자기모순이 발생해 꼬리절만으로 즉시 탈락한다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "AWKWARD_PHRASING",
+      "severity": "minor",
+      "evidence": "해설의 '성급한 소거 태도'는 ②·⑤의 결함(관용적 태도의 극성 반전)을 가리키는 표현으로는 부정확하게 읽힐 수 있는 어색한 용어 선택이나, 사실 오류는 아니다"
+    },
+    {
+      "code": "IMPRECISE_ATTRIBUTION",
+      "severity": "minor",
+      "evidence": "③ 오답 해설의 '문학 작가나 독자가 복잡한 언어적 난관을 헤쳐나가는 과정' — 지문의 해석 주체는 독자이며 작가를 병기한 것은 다소 부정확하지만 판정에 영향 없다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 렌더 지문은 원지문에서 'to explore uncertainties'만 빈칸으로 치환했고 나머지는 전 문장 일치, 문장부호 손상·중복·누락 없음, 라벨 ①~⑤ 정합. V2: 각 선지를 빈칸에 독립 대입 검증한 결과 정답은 ① 유일 — ②③⑤는 극성 모순, ④는 행위 주체/범위 전가로 탈락. V3: 다섯 선지 모두 to부정사로 동일 통사 슬롯에 들어가며 완성문은 문법적·병렬 정합. V4: 해설의 span 지목('to explore uncertainties'), 오답 앵커 인용 모두 실제 지문과 일치, 환각·오분석 없음(minor 표현 문제 2건만). V5: 라벨·선지·해설·keyPoints 동기화. 공예 결함: 정답 ①이 유일한 긍정 극성 선지이고 ②③⑤가 동일 유형(극성 반전) 함정이라 극성 스캔만으로 풀리며(C3=2, C4=2), 빈칸 직후 꼬리절 'and not immediately ask...'가 ⑤를 즉시 소거시키고 정답 극성을 누출한다. 요청 난이도 INTERMEDIATE 대비 실제 체감은 easy 쪽으로 기울어 C5=2. 합계 14 < 17이므로 모든 V 통과에도 B 미달 → C. 오답 세트를 half-truth·condition loss 등 이질적 함정으로 재설계하고 긍정 극성 오답을 최소 1개 포함해야 출하 가능 수준이 된다. KILLER 아님 → killerConditionsMet=false."
+}

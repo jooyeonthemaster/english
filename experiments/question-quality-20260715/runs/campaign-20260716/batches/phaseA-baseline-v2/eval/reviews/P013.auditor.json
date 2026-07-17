@@ -1,0 +1,71 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-COHESION-MINOR",
+      "severity": "minor",
+      "evidence": "정답 ① 삽입 시 후속 문장 'It tries to ensure...'의 지시어가 원문에서는 직전의 'the law'(단수)를 받았으나, ①의 주어는 'legal codes'(복수)여서 엄밀한 수 일치 선행사가 사라진다. 지문 앞부분의 'the law'로 담화상 회복 가능하므로 치명은 아니지만 응집성이 원문보다 저하된다."
+    },
+    {
+      "code": "D1-SLOT-HOMOGENEITY",
+      "severity": "major",
+      "evidence": "①②③은 '종속절+주절' 완전 절 복합체인데 ④(since...)와 ⑤(because...)는 주절 없는 종속절 단독이라 콜론 뒤 슬롯에서 통사적으로 불완전하다. 내용을 읽지 않아도 문법/형식만으로 두 선지가 소거된다. RUBRIC §D는 KILLER 조건이고 본 문항은 INTERMEDIATE이므로 V게이트 실패는 아니지만 C3·C4를 깎는 공예 결함이다."
+    },
+    {
+      "code": "POLARITY-CUE-LEAK",
+      "severity": "minor",
+      "evidence": "빈칸 직전에 'an important difference'가 예고되는데 ④는 'both disciplines', ⑤는 'work together'로 공통성을 진술하여 극성 단서 하나로 즉시 탈락한다. 실질 변별은 ①과 ② 사이에서만 일어나며, 마지막 문장 'The law obsessively tries to suppress affects... whereas cinema introduces us to our affects'가 정답을 거의 그대로 재진술해 난이도 상한을 낮춘다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 span 'while cinema expresses man's affective life, the law keeps it in check'의 등가 패러프레이즈(expresses affective life→vividly reflect human emotion, keeps it in check→strive to control)",
+      "temptingBecause": "빈칸 앞의 '차이' 예고와 뒤따르는 '법=억압(suppress affects)/영화=직면(introduces us to our affects)' 정교화에 유일하게 정합한다.",
+      "decisiveFlaw": "없음(정답). 단, 삽입 후 후속 'It'의 선행사가 'legal codes'(복수)와 수 불일치하는 minor seam이 있다."
+    },
+    {
+      "label": "②",
+      "intent": "actor/polarity reversal — 법과 영화의 역할을 정반대로 뒤바꾼 극성 반전 함정",
+      "temptingBecause": "정답과 동일한 'whereas 대조' 구조와 동일 어휘장(desires, rules, release)을 사용해 표면 형태가 정답과 가장 유사하다.",
+      "decisiveFlaw": "마지막 문장 'The law obsessively tries to suppress affects..., whereas cinema introduces us to our affects'가 법=억압, 영화=표출임을 명시하여 정면 모순."
+    },
+    {
+      "label": "③",
+      "intent": "topic-adjacent scope shift — 지문 전반부의 공통점 서술('what it means to be human', 'our existence')을 재활용하되 대조축을 '이성/존재 정의'로 이탈시킨 소재 연상형",
+      "temptingBecause": "유일하게 ④⑤와 달리 실제로 '차이'를 진술하고(they define existence differently), 'existence'가 지문 어휘를 그대로 반향한다.",
+      "decisiveFlaw": "'both fields highly praise human reason'은 본문 어디에도 근거가 없고, 핵심 대조축(정서의 표출 vs 억제)과 무관해 후속 'It tries to ensure...desires and drives'와 논리적으로 연결되지 않는다."
+    },
+    {
+      "label": "④",
+      "intent": "condition loss + 무근거 과확장 — '차이' 슬롯에 공통성을 넣고 본문에 없는 '도덕 판단의 완전 유보'를 주장",
+      "temptingBecause": "'both disciplines'가 지문 전반부의 'Both disciplines struggle...' 구문을 표면 반향한다.",
+      "decisiveFlaw": "'difference'를 예고한 자리에 공통성 진술이라 즉시 모순이고, 법은 'commands and prohibitions'로 통제를 지향하므로 내용도 반대이며, 'since' 종속절 단독이라 콜론 뒤에서 통사적으로도 불완전하다(문법 소거 가능)."
+    },
+    {
+      "label": "⑤",
+      "intent": "half-truth / 협동 왜곡 — 대립적 메커니즘을 협력 관계로 뒤바꾼 함정",
+      "temptingBecause": "'psychological suppression'이 'suppress affects'를 어휘적으로 반향하고, 영화가 억압된 정서를 직면·해소하게 한다는 절반의 진실을 담는다.",
+      "decisiveFlaw": "지문은 두 분야를 'whereas'로 대립시키지 협동시키지 않으며, '차이' 슬롯에 'work together'는 극성 모순이고, 'because' 종속절 단독이라 통사적으로도 불완전하다(문법 소거 가능)."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 블랭크는 지문의 thesis 대조 문장 전체를 정조준하여 출제 가치가 높고(C1=4), 정답 패러프레이즈와 오답 해설의 함정 유형 라벨링(극성 반전·소재 연상·과확장·절반-진실)도 정확하다(V4 통과, C6=3). 그러나 변별 설계가 약하다: ④⑤는 'difference' 예고와 'both/together' 극성 단서, 그리고 콜론 뒤 종속절 단독이라는 통사 이질성 세 겹으로 내용을 읽지 않고도 소거되고, 실질 경쟁자는 ② 하나뿐인데 마지막 문장이 정답을 거의 verbatim 재진술해 해소된다(C3=2, C4=2). INTERMEDIATE 라벨에는 대체로 부합하나 쉬운 쪽이다(C5=3). 수정 제안: ④⑤를 'while/whereas + 주절' 완전 절 구조로 재작성하고 'both/together' 표면 단서를 제거하면 A 후보. 합계 17, 최저 2 → B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

@@ -1,0 +1,44 @@
+{
+  "pid": "P018",
+  "finalV2": true,
+  "winningAnswer": "(E)",
+  "reason": "독립 재검증 결과 (A)~(D)는 모두 정문이고 (E) resulting만 비문으로, 정답 유일성이 성립한다. full 파일(선언된 정답 란)과 markedExpressions(isError:true는 (E)뿐)가 모두 (E)를 정답으로 선언하고 있고, 솔버1·솔버2 모두 (E) 단독 정답으로 수렴했다. 분쟁 요약의 '선언된 정답=③'은 오케스트레이터의 라벨→번호 변환 오류로 판단된다 — (E)는 다섯 번째 선지(⑤에 해당)이며 원본 파일 어디에도 (C)/③을 정답으로 선언한 기록이 없다. 따라서 실질적 분쟁은 존재하지 않으며, 선언된 정답 (E)는 유일한 정답이다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "made가 정동사 자리 오류이거나 능동 making이어야 한다는 잠재적 이의",
+      "verdict": "정문 — 이의 불성립",
+      "evidence": "'mistakes __made__ by organizations'는 축약 수동 관계절(= mistakes that are made by organizations). by-행위자구가 수동을 명시하고, 문장의 정동사는 뒤의 is이므로 made를 정동사로 볼 필요가 없다. 능동 making은 의미상 불가(실수는 조직'에 의해 저질러지는' 대상)."
+    },
+    {
+      "label": "(B)",
+      "claim": "긴 주어부의 복수 명사(mistakes/organizations)에 이끌려 are여야 한다는 잠재적 이의",
+      "verdict": "정문 — 이의 불성립",
+      "evidence": "핵심 주어는 문두의 단수 대명사 One. 'of the most common mistakes made by organizations'는 후치 수식, 'when they first consider ...'는 부사절로 모두 수일치 지배 밖. 'One ... is that-절' 구조가 정확하다. 전형적 장거리 수일치 디코이일 뿐 실제 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "claim": "begin(복수) 또는 준동사여야 한다는 잠재적 이의",
+      "verdict": "정문 — 이의 불성립",
+      "evidence": "that절 내부 주어는 동명사구 'creating a social media program'으로 단수 취급 → 3인칭 단수 begins가 정확. 'begins not with X but with Y' 상관구조도 begin with와 정합. 대안 해석(creating을 분사로 읽어 begins의 주어 부재를 주장)은 that절에 달리 주어가 없어 성립 불가."
+    },
+    {
+      "label": "(D)",
+      "claim": "managing 등 다른 형태여야 한다는 잠재적 이의",
+      "verdict": "정문 — 이의 불성립",
+      "evidence": "'a vague need __to manage__ a presence'는 명사 need가 to부정사 보충어를 취하는 확립된 결합(need to-V). to 뒤 동사원형 manage는 형식적으로 정확하며, 대안형(of managing)이 존재해도 to manage가 틀린 것이 되지 않는다."
+    },
+    {
+      "label": "(E)",
+      "claim": "resulting이 분사구문/동명사/생략 구문으로 정당화될 수 있다는 잠재적 이의 (성립 시 정답 소멸)",
+      "verdict": "비문 확정 — 유일 정답",
+      "evidence": "'must either solve a problem ... or resulting in ...'에서 either가 원형 VP 'solve ...' 직전에 위치해 병렬 범주를 must 지배하의 동사원형으로 고정한다. (i) 분사구문 해석: resulting이 either...or의 or가 도입하는 등위항이므로 부가어(분사구)로 재분석 불가 — 범주 불일치; (ii) 동명사 해석: must는 동명사를 지배할 수 없음; (iii) 'be 생략' 해석: 첫 등위항에 be가 없어 생략 복원 근거 없음. 어떤 정문 재해석도 없으며 result로 교정 시 원지문과 정확히 일치(최소대립쌍). 어법상 틀린 것은 (E)가 유일."
+    },
+    {
+      "label": "선언 정답 표기(③ vs (E))",
+      "claim": "분쟁 요약이 '선언된 정답=③'이라 하여 솔버 답 (E)와 충돌한다는 외견상 분쟁",
+      "verdict": "외견상 분쟁 — 데이터 원본에서 불일치 없음",
+      "evidence": "full/P018.md 26행 '## 선언된 정답' 아래 값은 (E)이고, markedExpressions에서 isError:true인 항목도 (E)뿐이다. (E)는 5번째 선지이므로 번호 표기로는 ⑤가 되어야 하며, ③은 오케스트레이터 요약 단계의 라벨→번호 매핑 오류로 판단된다. 원본 데이터 기준 선언 정답과 솔버·감사자 판정은 모두 (E)로 완전히 일치한다."
+    }
+  ]
+}

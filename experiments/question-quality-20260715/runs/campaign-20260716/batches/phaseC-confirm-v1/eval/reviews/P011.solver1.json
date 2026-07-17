@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Originally born in France, Brunel escaped...' — 과거분사 born이 이끄는 분사구문이 주절 주어 Brunel을 수식(= As he was originally born in France). 수동 의미의 과거분사 분사구문으로 정확하다. 'Originally'와 'born'의 의미 중복은 문체 문제일 뿐 어법 오류가 아니다. 'being born'으로 바꿀 필요 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'machines for making boots' — 전치사 for 뒤 동명사 making. 교과서적 정문. 유혹 요소 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'imprisoned for several months because of his debt' — because of + 명사구(his debt) 결합으로 정확. 전형적 함정 방향(because+명사구 / because of+절)을 의식해 뒤 요소가 명사구임을 확인했고, 순간적으로 끌렸으나 정문으로 판정."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'London was very much divided by the River Thames' — 수동태 과거분사 + by 행위자구. very much가 수동 분사를 강조하는 것도 자연스럽다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "'needed more ways for people and goods moving across it' — 지배 패턴은 'ways for + 의미상 주어 + to부정사'(ways for people and goods TO MOVE across it). for people and goods는 to move의 의미상 주어. 구제 독해로 moving을 people and goods를 후치수식하는 축약 관계절('강을 건너 이동하는 사람과 물자를 위한 길')로 읽어 보았으나, 'needed more ways'(더 많은 수단/방법이 필요했다)라는 문맥 논리는 목적의 to부정사 보충을 요구하므로 분사 독해는 의미상 성립하지 않는다. moving → to move가 되어야 한다."
+    }
+  ],
+  "note": "정답은 (E)로 유일하게 수렴. 대안 해석 탐색: (E)의 축약 관계절 독해(moving이 people and goods 후치수식)가 유일한 구제 후보였으나 'needed more ways for X to V' 구문 논리에 의해 배제됨. 매력적 오답 체감: (C) because of가 가장 강한 미끼(because/because of 교체 함정 기대심리)였고 (A) born도 'Originally being born' 오교정 유혹이 있으나 둘 다 정문. 문항 성립에 문제 없음."
+}

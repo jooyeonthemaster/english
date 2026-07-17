@@ -1,0 +1,92 @@
+{
+  "pid": "P009",
+  "blindAnswer": "3",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-article",
+      "severity": "minor",
+      "evidence": "정답 ③을 넣은 완성문 '...stamina to gain psychological dominance along with physical edge in order to close out...'에서 'physical edge'는 가산 명사 관용('a physical edge')이므로 관형사 누락으로 약간 부자연스럽다. 의미 이해나 정답 판별에는 영향 없음 — 비문 수준은 아니라고 판단하여 V3 통과."
+    },
+    {
+      "code": "V4-minor-mistranslation",
+      "severity": "minor",
+      "evidence": "해설의 '골프 선수들이 체력 단련장과 웨이트 룸에서 훈련하여'에서 'practice range'(골프 연습장)를 '체력 단련장'으로 오역했다. 연습장(기술 훈련) vs 웨이트 룸(체력 훈련)의 대비가 해설에서 지워졌으나 정답 논리 자체는 훼손하지 않아 V4 통과."
+    },
+    {
+      "code": "V4-minor-keypoint-vocab",
+      "severity": "minor",
+      "evidence": "keyPoints의 핵심어휘 'mental game'은 렌더된 지문에 존재하지 않는다(빈칸으로 제거된 span 내부 어휘). 사후 해설 맥락에서는 허용 가능하나 렌더 지문 기준으로는 부정합."
+    },
+    {
+      "code": "V4-minor-flaw-mislabel",
+      "severity": "minor",
+      "evidence": "오답 해설 ②를 '과협소 오류'로 규정했으나 실제 결정적 결함은 수단-목적 범주 착오다: 'strength and stamina to balance their nutrition in order to close out opponents'는 체력이 영양 관리를 가능케 한다는 인과 역전/슬롯 부적합이지 범위 협소가 아니다. 사실 왜곡은 아니어서 V4 통과."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "half-truth / scope 과협소 — 지문의 훈련·stamina 소재를 연습 국면으로 좁힌 함정",
+      "temptingBecause": "'practice range', 'stamina'와 어휘적으로 직결되고, '피로 없이 견딘다'가 체력 서사와 자연스럽게 이어져 실제로 가장 경쟁력 있는 오답",
+      "decisiveFlaw": "빈칸의 목적절 'in order to close out their opponents in major tournaments'는 대회 중 발휘되는 역량을 요구하는데, 연습 지속력은 간접 수단일 뿐이며 지문의 귀결점(신체+정신 동시 우위)을 담지 못한다"
+    },
+    {
+      "label": "2",
+      "intent": "표면 어휘 anchor(nutrition) 재활용 함정",
+      "temptingBecause": "3번째 문장의 'proper nutrition'과 표면 일치",
+      "decisiveFlaw": "'strength and stamina to balance nutrition'은 수단-목적이 뒤집힌 범주 착오(영양은 체력의 투입이지 체력이 가능케 하는 대회 역량이 아님) — 국소 슬롯에서 즉시 탈락하며, 해설의 '과협소' 규정과도 어긋난다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 제거된 span 'win not just the physical game but the mental game'의 의미 보존 추상화",
+      "temptingBecause": "정답이므로 해당 없음 — 협상 예시(체력→정신적 승부 완주)와 최종 문장의 목적절을 종합하면 필연적으로 도달",
+      "decisiveFlaw": "없음. 단, 다섯 선지 중 유일하게 신체+정신 이중 범위를 갖는 '포괄형' 선지여서 시험 요령(가장 포괄적인 선지 고르기)만으로도 선택 가능한 표면 단서가 남는다"
+    },
+    {
+      "label": "4",
+      "intent": "causal reversal — 신체→정신 인과를 정신→신체로 역전",
+      "temptingBecause": "지문의 심신 테마를 공유하고 'mental game' 계열 연상을 자극",
+      "decisiveFlaw": "지문 논리는 신체 단련이 정신적 우위를 낳는다는 방향이며, 'strength and stamina to overcome bodily limits through willpower'는 완성문 자체가 자기모순(체력으로 의지력 극복을 한다는 구조)"
+    },
+    {
+      "label": "5",
+      "intent": "off-topic condition 도입 — 지문에 없는 '전략적 계획' 논점",
+      "temptingBecause": "골프/협상 맥락에서 '전략'이 그럴듯하게 들리는 배경지식 함정",
+      "decisiveFlaw": "본문에 source anchor가 전혀 없어 즉시 소거된다 — §D의 'source anchor' 요건을 충족하지 못하는 필러성 오답"
+    }
+  ],
+  "explanationIssues": [
+    "'practice range'를 '체력 단련장'으로 오역하여 연습장(기술)/웨이트 룸(체력) 대비가 해설에서 사라짐",
+    "본해설이 ①③④⑤만 다루고 ②는 오답 해설 JSON에서만 처리되어 서술 균형이 떨어짐",
+    "오답 ①과 ②를 모두 '과협소'로 규정하여 함정 유형이 중복 — ②의 실제 결함(수단-목적 역전)을 짚지 못함",
+    "keyPoints의 '빈칸 주변의 not just A but B 구문' 공략법은 렌더 지문에 남은 'not just on the practice range but in the weight room'을 가리키는데, 이 대비(연습장 vs 웨이트 룸)는 둘 다 신체 훈련이라 신체+정신 이중 범위 추론으로 직결되지 않아 다소 과장된 안내"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAnswer": true,
+    "allDistractorsAnchored": false,
+    "twoClueSynthesisRequired": false,
+    "distinctTrapTypes": false,
+    "detail": "①모든 선지가 동일 VP 슬롯에 들어가며 tail로 인한 문법 탈락은 없음(충족). ②정답은 source span 의미를 정확히 보존·추상화(충족). ③오답 ⑤는 source anchor 부재 — 해설 스스로 '본문에서 전혀 언급되지 않은'이라 인정(미충족). ④정답 ③이 유일한 '신체+정신 포괄' 선지라 두 단서 종합 없이 포괄성 휴리스틱만으로 선택 가능하고, ②⑤는 국소 슬롯에서 즉시 탈락해 실질 경쟁이 ①vs③ 양자택일로 축소(미충족). ⑤오답 ①·②가 같은 '과협소' 함정으로 중복(미충족). 더불어 KILLER는 A등급이 전제인데 본 문항은 C."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문에서 목표 span('win not just the physical game but the mental game')만 정확히 빈칸 치환했고 그 외 손상 없음. blind solve 결과 ③ 단독 정답(각 선지 독립 검증 완료, ①이 유일한 실질 경쟁 선지이나 목적절 정합성과 지문 귀결점에서 탈락). 그러나 공예가 KILLER 요청에 못 미친다: 실질 변별이 ①vs③ 양자택일로 좁고, ②⑤가 국소적으로 즉시 소거되며, 정답이 유일한 포괄형 선지라는 표면 단서가 남고, 오답 함정 유형이 중복된다(C2=C3=C4=C5=2). 해설도 오역·함정 유형 오규정 등 둔한 부분이 있다(C6=2). 합계 13/24 — 모든 V 통과이나 재설계 필요 수준의 공예 결함으로 C. KILLER 추가 조건은 §D 5개 중 3개 미충족으로 killerConditionsMet=false."
+}

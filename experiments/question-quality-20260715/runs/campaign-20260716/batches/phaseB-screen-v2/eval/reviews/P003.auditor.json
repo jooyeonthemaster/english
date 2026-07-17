@@ -1,0 +1,74 @@
+{
+  "pid": "P003",
+  "blindAnswer": "④",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문에서 결론문 주어 'Appreciation of differences'를 '_____'로 치환한 것 외에 변형·손상 없음. 문장 접합, em-dash(―), 'i.e. cooperate' 등 원문 표기 그대로 보존. 선지 라벨 ①~⑤와 정답·오답 해설 키 일치.",
+    "V2": "각 선지 독립 검증: ① 감정 억제는 'express emotions... accurately... facilitate clear communication'과 정면 모순 → 탈락. ② 자기 의견 강요는 'take the perspective of the other group members'와 모순 → 탈락. ③ 전문성 기반 업무 분담은 지문에 근거 없음(감정 이해 기제와 무관) → 탈락. ④ 'Valuing other people's distinct perspectives'는 원문 span 'Appreciation of differences'와 중반부 관점 수용 서술의 정확한 재진술 → 유일 정답. ⑤ 의견 충돌 원천 차단은 빈칸 뒤 'constructive conflict resolution'(갈등의 존재와 건설적 해결을 전제)과 모순 → 탈락. 정답 집합 = {④}, 선언과 일치.",
+    "V3": "다섯 선지 모두 동명사/명사구로 동일 통사 슬롯('___ creates ...', 단수 일치)에 적합하며 문법만으로 소거되는 선지 없음. ④ 삽입 완성문 'Valuing other people's distinct perspectives creates an arena for open communication...'은 문법적·자연스러움. 발문은 표준 수능 빈칸 발문. seam 비문·비단어·오탈자 없음.",
+    "V4": "해설이 인용한 'take the perspective of the other group members and understand why they are reacting'은 실제 지문과 일치. 결론부 종합이라는 구조 분석도 정확. 오답 해설의 인용('express how he feels', 'co-workers/cooperate', 'constructive conflict resolution')이 모두 실제 지문 span과 대응하며 각 선지의 실제 내용과 정확히 매칭됨. 오분석·환각·용어 오류 없음.",
+    "V5": "정답 라벨 ④, 선지 5개, 정답 해설, 오답 해설 4개(①②③⑤), keyPoints 3개가 상호 모순 없이 동기화됨. keyPoints의 'perspective-taking 패러프레이징', '본문 소재 활용 오답 매력도', '인과 관계 파악'이 실제 문항 설계와 일치."
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 단락 전체 논지(관점 수용 → 열린 소통 → 건설적 갈등 해결)를 종합하는 결론문 주어에 위치. 핵심 논리의 정전 포인트를 정확히 묻는다.",
+    "C2": "오답 4개가 각각 다른 함정(① 극성 반전-감정 억제, ② 방향 전도-자기 관점 강요, ③ scope shift-협업 어휘 half-truth, ⑤ 목표 혼동-예방 vs 건설적 해결)을 겨냥. 다만 ①과 ②는 '지문 방향과의 정면 모순'이라는 결정적 결함 메커니즘이 유사해 완전한 4는 아님.",
+    "C3": "①③⑤가 표면적 친사회성/어휘 중복으로 일정 매력을 가지나, 지문 요지(감정 표현·이해 긍정)를 파악한 학생에게 ①②⑤는 극성만으로 빠르게 소거됨. ③⑤가 실제 판단을 요구하는 수준.",
+    "C4": "메타 누출 없음. 선지 길이·문법 형태 균질. 빈칸 뒤 tail('constructive conflict resolution')이 근거를 제공하되 정답을 기계적으로 지목하지는 않음. 중반부 관점 수용 서술이 정답의 필연성을 담보.",
+    "C5": "INTERMEDIATE 요청. 한 단계 패러프레이즈(Appreciation of differences → Valuing distinct perspectives)와 중간 깊이 함정 구성이 라벨에 부합. 다소 쉬운 편이나 INTERMEDIATE 범위 내.",
+    "C6": "정답 근거(중반부 인용→재진술)와 오답별 함정을 지문 인용과 함께 분리 설명. 정확하나 다소 장황해 우아함 만점은 아님."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전 — 갈등 회피를 위한 감정 억제를 집단 화합 수단으로 오인하게 유도",
+      "temptingBecause": "'to avoid clashes'가 갈등 해결이라는 지문 소재와 표면적으로 맞닿고, emotions 어휘가 지문과 중복되며, 감정 자제가 친사회적이라는 상식적 직관에 호소",
+      "decisiveFlaw": "지문은 감정을 '정확히 표현'하는 것(express emotions... accurately)이 명확한 소통을 촉진한다고 주장 — 억제는 정반대 방향이며 open communication과 양립 불가"
+    },
+    {
+      "label": "②",
+      "intent": "방향 전도(actor swap) — 자기 표현 강조 부분만 읽고 자기 관점 관철로 오독하게 유도",
+      "temptingBecause": "'express how he feels about the problem'을 자기 주장 강화로 오독하면 그럴듯하고, members 등 지문 어휘와 중복",
+      "decisiveFlaw": "'take the perspective of the other group members'라는 상호 이해 논지와 정면 모순 — 강요는 열린 소통의 장을 만들 수 없음"
+    },
+    {
+      "label": "③",
+      "intent": "scope shift / half-truth — 협업 어휘를 미끼로 감정 이해 주제에서 업무 조직론으로 지엽 이탈 유도",
+      "temptingBecause": "co-workers, cooperate, group functioning 등 지문의 협업 어휘와 중복되어 집단 효율성 맥락에서 그럴듯함",
+      "decisiveFlaw": "업무 분담·전문성은 지문에 전혀 언급되지 않으며, 빈칸의 근거인 감정 이해·관점 수용 기제와 무관"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 원문 span 'Appreciation of differences'와 중반부 관점 수용 서술(take the perspective... understand why they are reacting)의 적정 추상화 재진술",
+      "temptingBecause": "(정답) 지문 중반부 두 문장의 내용을 정확히 보존하면서 난이도에 맞게 일반화",
+      "decisiveFlaw": "없음 — 유일하게 지문 논지와 정합하며 빈칸 뒤 결과절(open communication, constructive conflict resolution)과 인과적으로 연결됨"
+    },
+    {
+      "label": "⑤",
+      "intent": "목표 혼동(condition loss/overreach) — 갈등의 '건설적 해결'을 갈등의 '원천 예방'으로 치환하게 유도",
+      "temptingBecause": "갈등 없는 집단이 잘 기능한다는 상식적 직관에 호소하고, disagreement가 지문의 conflict 소재와 중복",
+      "decisiveFlaw": "빈칸 뒤 'constructive conflict resolution'은 갈등의 존재와 그것의 건설적 해결을 전제 — 예방으로 갈등 자체를 없애면 이 구절과 논리적으로 모순"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE이므로 KILLER 추가 조건(§D) 판정 대상 아님 → false. 참고로 §D 기본 위생 조건(동일 통사 슬롯, source span 의미 보존, 오답별 anchor/overlap/flaw)은 충족하나, 두 문장 이상 논리 단서 결합 강제·극성 단독 소거 차단 조건은 미충족(①②⑤가 극성으로 소거 가능)이라 KILLER였다면 불충족.",
+  "grade": "B",
+  "notes": "모든 V 통과. C 합계 19(전 축 3 이상)로 A 기준(합계 21)에 미달하여 B. 주요 개선점: (1) ①·②의 결정적 결함 메커니즘이 유사(지문 방향과 정면 모순)하여 함정 다양성이 다소 중복됨, (2) 요지 파악 후 극성만으로 ①②⑤가 소거되어 실질 경쟁이 ③·⑤에 국한됨 — 반(反)주제가 아닌 half-truth형 오답(예: 지문 일부만 참인 긍정 진술)을 1개 추가 투입하면 C2/C3 상승 여지. 출하 가능 수준의 견실한 INTERMEDIATE 문항."
+}

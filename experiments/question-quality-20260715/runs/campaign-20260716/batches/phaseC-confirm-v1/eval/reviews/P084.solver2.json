@@ -1,0 +1,35 @@
+{
+  "pid": "P084",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합(they + try to VP)은 정상이나, 지문은 불운 발생 이후의 재해석·극복을 논한다. 사전 예방(prevent beforehand)은 지문 전체에 근거가 전무하며, 'after their initial shock ... overcome their problem'의 사후 대응 프레임과 논리적으로 불일치."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합 정상. 'look for benefits within their setbacks'는 P2('look for some positive aspect in their misfortunes')와 P3('focus on what they can gain from their circumstance')의 정확한 재진술이고, 'every cloud has a silver lining' 믿음과 등위접속 and로 병렬되는 능동적 실천으로 논리적으로 완결된다. 유일하게 성립."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 정상이나 논리 모순. 판매원 일화는 약점을 숨긴 것이 아니라 공개적으로 드러내('I'll show you what the inside looks like') 불리함을 유리함으로 전환한 사례다. '숨김(hide)'은 turn disadvantage into advantage의 전유 논리와 정면 배치."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 정상이나 지문 주체는 'gather their resources, overcome their problem'으로 자력 극복을 수행한다. 타인의 보상(others to compensate)을 기대한다는 내용은 무근거이며 자립적 극복 서사와 모순."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 정상이나 수동적 체념(simply accept without any resistance)은 'overcome their problem', 'achieve remarkable feats', 'see opportunities'의 능동성과 모순. silver lining 믿음은 체념의 근거가 아니라 이득 탐색·극복의 동기로 제시된다."
+    }
+  ],
+  "note": "빈칸은 결론문에서 silver lining 믿음과 and로 병렬되는 실천 행위. ②가 P2·P3의 재진술로 유일 정합. ②가 앞 문장 'not only look for...'와 중복이라는 반론을 검토했으나 결론문은 요지 재확인이므로 재진술이 정합적이며, 타 선지는 모두 지문 논리와 모순되거나 무근거라 대안 성립 불가. 단일 정답."
+}

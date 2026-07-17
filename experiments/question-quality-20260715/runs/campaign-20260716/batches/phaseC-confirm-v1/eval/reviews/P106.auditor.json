@@ -1,0 +1,85 @@
+{
+  "pid": "P106",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor",
+      "severity": "minor",
+      "evidence": "오답 해설 ④에서 '신체적 은유인 직관'이라는 표현은 부정확하다. 지문에서 은유는 'a touch', 'a feel'과 같은 표현 방식이고 intuition은 은유가 가리키는 실체다. 또한 ④는 시간 관계(before)의 모순인데 해설은 이를 '인과관계는 모순됩니다'로 지칭했다. 판정을 뒤집을 수준의 오분석은 아니어서 V4는 통과로 유지한다.",
+      "recommendation": "④ 해설을 '숙련자는 이미 습관·경험으로 직관을 쌓은 상태에서 수행하므로, 직관을 발달시키기 전에 과업 범위를 확장했다는 시간 순서가 본문과 모순된다'로 정밀화."
+    },
+    {
+      "code": "V3-minor",
+      "severity": "minor",
+      "evidence": "완성문 '...tasks she can perform bypassing deliberate cognitive intervention'에서 perform 뒤 분사구가 쉼표 없이 이어져 다소 딱딱하지만, 분사 부가어로 문법적으로 성립하며 ①③⑤(분사/by 구)와 ④(before 절)가 모두 동일 부사 슬롯에 들어가므로 seam 비문 문제는 없다.",
+      "recommendation": "출하에는 지장 없음. 원하면 'while bypassing ...'으로 다듬을 수 있으나 필수는 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 지문의 핵심 명제(실천적 지식은 의식적 자각 없이 발휘된다)를 정확히 겨냥한다. 'without conscious awareness'는 글 전체 대조 구조(technical vs practical)의 귀결점이다. 4점.",
+    "C2": "네 오답이 각각 다른 함정을 겨냥한다 — ① 개념 스왑(기술적 지식 속성 이식), ③ 극성 역전, ④ 시간/순서 역전, ⑤ 은유 장치의 범위 왜곡. 모두 지문 내 anchor가 있으나 ③의 함정 깊이가 얕다. 3점.",
+    "C3": "①은 첫 문장 'formulated rules ... deliberately learned'와의 어휘 중첩으로 실제 매력이 있고 ②는 추상 paraphrase 해독을 요구한다. 다만 ③④⑤는 극성·순서 판단으로 비교적 빨리 소거되어 최상급 경쟁력은 아니다. 3점.",
+    "C4": "메타 누출 없음(정답이 최장 선지가 아니고 지문 어휘를 그대로 베끼지 않음). 'thinking less'와 'through habit'이라는 충분·필연적 근거가 있다. 인접 문장의 단서가 강해 근거 통합 부담이 크지 않은 점만 감안. 3점.",
+    "C5": "요청 난이도 INTERMEDIATE에 부합 — 단일 단서 paraphrase 추론 + 추상 어휘('deliberate cognitive intervention') 해독으로 중급 사고 단계에 맞다. 극성 소거로 2~3개 선지가 빨리 떨어져 상급은 아니며 그것이 오히려 라벨과 정합적. 3점.",
+    "C6": "본해설은 대조 구조 → 단서('without conscious awareness') → 정답 도출 순으로 정확하고 간결하다. 오답 해설도 각 선지 실제 내용과 대응하나 ④의 용어가 다소 부정확·둔탁('신체적 은유인 직관', '인과관계'). 3점."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "개념 스왑 — 기술적(책) 지식의 속성(formulated rules, deliberately learned)을 실천적 지식의 수행 방식으로 이식",
+      "temptingBecause": "지문 첫 문장의 'formulated rules which are, or may be, deliberately learned'와 어휘가 직접 겹쳐 표면 스캔 독자를 유인한다",
+      "decisiveFlaw": "빈칸 문장은 실천적 지식 숙련자에 대한 서술이며, 지문은 실천적 지식이 규칙 학습이 아니라 습관·경험으로 형성된다고 명시적으로 대조한다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 'without conscious awareness'의 추상 paraphrase",
+      "temptingBecause": "정답이므로 해당 없음",
+      "decisiveFlaw": "없음. 'she isn't thinking more; she is thinking less'와 'through habit'이 의식적 인지 개입의 우회를 필연적으로 지지한다"
+    },
+    {
+      "label": "③",
+      "intent": "극성 역전 — 사고 감소를 사고 증대로 뒤집음",
+      "temptingBecause": "'mental effort'가 직전 문장의 thinking 화제와 겹쳐 주제 연관성이 있어 보인다",
+      "decisiveFlaw": "'she isn't thinking more; she is thinking less'와 정면 모순 — 숙련은 정신적 노력을 유발하는 것이 아니라 줄인다"
+    },
+    {
+      "label": "④",
+      "intent": "시간/순서 역전 — 직관 형성 이전에 수행 범위를 확장했다는 전도",
+      "temptingBecause": "'intuition'이 지문의 'a feel for the game, an intuition'과 직접 겹친다",
+      "decisiveFlaw": "숙련자는 이미 습관과 경험으로 직관·기술 목록을 쌓은 뒤 과업 범위를 확장한 것이므로 'before developing physical intuition'은 순서가 뒤집혀 모순"
+    },
+    {
+      "label": "⑤",
+      "intent": "범위 왜곡 — 서술 장치(신체적 은유)를 숙련자의 수행 방법으로 오독시킴",
+      "temptingBecause": "'bodily metaphors'가 지문 표현을 그대로 가져와 표면 정합성이 높다",
+      "decisiveFlaw": "은유는 실천적 지식을 '말할 때' 쓰는 서술 도구일 뿐, 은유를 현실과 분리하는 행위가 과업 수행을 확장한다는 내용은 지문 어디에도 없다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "④ 해설의 '신체적 은유인 직관' — 은유(touch/feel)와 그것이 가리키는 직관을 동일시한 부정확한 표현. 또한 before의 시간 모순을 '인과관계' 모순으로 지칭.",
+      "recommendation": "시간 순서 모순으로 표현을 교정하고 은유/직관 구분을 명확히"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 'without conscious awareness'만 빈칸으로 치환했고 그 외 손상·중복·누락·고아 문장부호 없음(원문의 'activity - an ability' 하이픈 표기는 소스 그대로 계승). 라벨 ①~⑤와 선지 일치. V2: 블라인드 풀이 결과 ② 유일 정답, 각 선지 독립 검증 통과. 다섯 선지 모두 perform 뒤 동일 부사 슬롯에 들어가 문법 소거 불가(§D 조건 충족). V5: 정답 라벨·해설·오답 해설·keyPoints 전부 ②로 동기화. 등급 산정: 전 V 통과, C 전항 3 이상, 합계 19 → A 컷(21) 미달로 B. INTERMEDIATE 라벨에는 정확히 부합하며 작은 다듬기(해설 ④ 용어 정밀화)로 출제 가능. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

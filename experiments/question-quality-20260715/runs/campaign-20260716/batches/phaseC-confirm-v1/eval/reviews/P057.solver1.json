@@ -1,0 +1,35 @@
+{
+  "pid": "P057",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'rely on editors to verify the rescued animals' — 지문에서 편집자는 검증자가 아니라 '물먹었다(beaten)'고 기자를 질책하는 존재다. 검증(verify)은 오히려 이야기의 역학(허위라도 넣어야 안전)과 정반대. 문법 결합은 자연스러우나 논리 근거 전무."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'focus exclusively on the actual animal survivors' — 두 번째 난파에서는 고양이가 실제로 없었는데도(no cat) 다른 기자들이 고양이를 넣었고 그것이 보상받았다. 'actual'이 지문 사실과 정면 충돌. 'animal survivors'라는 어휘 반향 때문에 표면적 유혹은 있으나 논리에서 즉시 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "'invent a fictitious element to avoid being scolded' — 빈칸에 넣으면 'all of us invent a fictitious element to avoid being scolded'로 문법 결합(복수 주어 + 동사원형) 완벽. 논리도 정확: 고양이를 뺀 기자만 두 번 모두 질책당했으므로, 학습된 결과는 '고양이가 없어도 넣는다' = 허구적 요소를 지어내 질책을 피한다. 두 에피소드의 인과를 모두 요약하는 유일한 선지."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'criticize other reporters for making up stories' — 지문에서 날조는 비판받기는커녕 보상받았고, 사실대로 쓴 기자가 질책당했다. 인과 반전형 오답. 화자 자신도 이미 순응하는 흐름이므로 '비판한다'는 결말과 모순."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'leave out minor details to simplify the reports' — 지문에 'leaving out the cat'이 문자 그대로 등장해 어휘 매칭으로 가장 강하게 끌리는 함정. 그러나 고양이를 뺀 행위가 바로 '심하게 질책당한' 원인이므로, 모두가 학습한 행동은 '빼기'가 아니라 '넣기'다. 인과를 뒤집은 최상급 미끼."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 스키밍 시 ⑤('leaving out' 문자 반복)와 ②('animal survivors' 어휘 반향)에 순간적으로 끌리지만, 두 질책 에피소드의 공통 원인이 '고양이 누락'임을 확인하는 순간 ③으로 유일하게 수렴한다. 대안 해석(도치·축약 관계절 등)이 개입할 여지가 없는 순수 논리 빈칸이며, 모든 선지의 문법 seam은 동일하게 성립하므로 변별은 전적으로 담화 논리에서 발생. 복수 정답 여지 없음."
+}

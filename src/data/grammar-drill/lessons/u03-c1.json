@@ -1,0 +1,649 @@
+{
+  "id": "u03-c1",
+  "unitId": "u03",
+  "order": 1,
+  "title": "능·수동 기본 판단",
+  "oneLiner": "주어가 동작을 하면 능동, 받으면 수동이며 수동의 형태는 be+p.p.입니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 수동태(중 ●)",
+      "천일문 고등 GRAMMAR — 태(수동태의 형태와 의미)",
+      "어법끝 5.0 — 태(능동 vs 수동) 판별 파트"
+    ]
+  },
+  "lenses": ["L3", "L1"],
+  "confusableWith": ["u03-c2", "u03-c3", "u04-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The report examines the long-term effects of urban expansion.",
+        "The report is examined the long-term effects of urban expansion."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 동사가 능동이냐 수동이냐 하나뿐입니다. 이 레슨을 마치면 두 번째가 왜 성립하지 않는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "태(능동·수동)",
+      "question": "능동과 수동, 즉 '태'가 대체 무엇을 가르는 것입니까?",
+      "plain": "태는 주어가 동사의 동작을 '하는' 쪽인지 '받는' 쪽인지를 나타내는 동사의 형태입니다. 하는 쪽이면 능동, 받는 쪽이면 be동사와 과거분사를 묶은 수동입니다.",
+      "analogy": "같은 '전달'이라도 편지를 부치는 사람과 받는 사람은 처지가 정반대입니다. 태는 주어가 그 동작의 부치는 쪽인지 받는 쪽인지를 동사에 미리 표시해 두는 이름표입니다.",
+      "whyItMatters": "수능 어법은 밑줄 친 동사가 능동이어야 할 자리에 수동이 와 있는지, 또는 그 반대인지를 끊임없이 묻습니다. 그 판단은 전부 이 하나, 주어가 하는 쪽인가 받는 쪽인가에서 갈립니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "주어가 사람이 아니라 사물이면 동사는 수동태로 씁니다.",
+      "truth": "태를 결정하는 것은 주어의 생물·무생물 여부가 아니라 주어와 동사의 의미 관계입니다. 사물도 얼마든지 동작의 주체가 됩니다. 주어가 그 동작을 '하는' 쪽이면 사물이어도 능동입니다.",
+      "counterExample": {
+        "en": "The report **examines** the long-term effects of urban expansion.",
+        "ko": "그 보고서는 도시 확장의 장기적 영향을 검토합니다.",
+        "note": "The report 는 사물이지만 검토하는 주체이고, 동사 뒤에 목적어가 그대로 있습니다. 그러므로 능동 examines 가 옳습니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "능·수동 판별 필기",
+      "intro": "판별에 필요한 여섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "태 — 주어와 동사의 관계 도장",
+          "body": "주어가 동작을 하면 능동, 받으면 수동입니다. 사람이냐 사물이냐가 아니라 하는가 받는가로 갈립니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "능동 — 주어가 하는 쪽",
+          "body": "주어가 동작의 주체이고, 목적어를 하나 가지는 타동사라면 동사 뒤에 그 목적어가 그대로 남습니다.",
+          "example": {
+            "en": "The committee **rejected** the proposal.",
+            "ko": "그 위원회는 그 제안을 거절했습니다.",
+            "note": "주어가 거절하는 주체이고 목적어 the proposal 이 남아 있습니다."
+          }
+        },
+        {
+          "head": "수동 be+p.p. — 주어가 받는 쪽",
+          "body": "주어가 동작을 받는 대상일 때 동사는 be동사와 과거분사를 묶은 형태가 됩니다. 시제와 수는 be동사가 짊어집니다.",
+          "example": {
+            "en": "The proposal **was rejected** after a long debate.",
+            "ko": "그 제안은 오랜 논의 끝에 거절되었습니다.",
+            "note": "주어가 받는 대상이고 be+p.p. 형태이며 과거 시제는 was 가 집니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "목적어 신호 — 수동 뒤엔 목적어가 없다",
+          "body": "목적어를 하나 가지는 타동사가 수동이 되면 그 목적어가 주어 자리로 올라갑니다. 그래서 그런 수동태 동사 뒤에는 목적어가 남지 않습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "by 행위자 — 대개 생략된다",
+          "body": "행위자를 밝힐 필요가 없으면 by 구는 생략됩니다. 따라서 by 구가 없다는 이유만으로 능동이라고 판단해서는 안 됩니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "홀로 선 p.p. — 수식하는 분사일 뿐",
+          "body": "be동사 없이 홀로 쓰인 과거분사는 수동태 본동사가 아니라 앞의 명사를 뒤에서 꾸미는 분사입니다. 밑줄이 p.p.라면 그 앞에 be동사가 있는지부터 봅니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "주어가 동작을 하면 능동이고, 주어가 동작을 받으면 수동이며 수동의 형태는 be+p.p.입니다.",
+      "examples": [
+        {
+          "en": "The committee **rejected** the proposal after a long debate.",
+          "ko": "그 위원회는 오랜 논의 끝에 그 제안을 거절했습니다.",
+          "note": "주어 The committee 가 거절하는 주체이므로 능동입니다."
+        },
+        {
+          "en": "The proposal **was rejected** by the committee after a long debate.",
+          "ko": "그 제안은 오랜 논의 끝에 위원회에 의해 거절되었습니다.",
+          "note": "주어 The proposal 은 거절을 받는 대상이므로 be+p.p. 수동입니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "목적어를 하나 가지는 타동사가 수동이 되면 그 목적어가 주어 자리로 올라가므로, 수동태 동사 뒤에는 목적어가 남지 않습니다.",
+      "examples": [
+        {
+          "en": "Researchers **measured** the temperature of the lake every morning.",
+          "ko": "연구자들은 매일 아침 그 호수의 수온을 측정했습니다.",
+          "note": "능동 measured 뒤에 목적어 the temperature of the lake 가 있습니다."
+        },
+        {
+          "en": "The temperature of the lake **was measured** every morning.",
+          "ko": "그 호수의 수온은 매일 아침 측정되었습니다.",
+          "note": "목적어가 주어 자리로 올라갔으므로 수동태 뒤에는 목적어가 없고 부사구만 남습니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "수동태 문장의 해부",
+      "tokens": [
+        { "t": "The manuscripts", "role": "S" },
+        { "t": "kept in the monastery", "role": "M" },
+        { "t": "were copied", "role": "V" },
+        { "t": "by monks", "role": "M" },
+        { "t": "for centuries", "role": "M" }
+      ],
+      "ko": "수도원에 보관되던 그 필사본들은 여러 세기 동안 수도사들에 의해 필사되었습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "kept in the monastery 는 앞의 명사를 뒤에서 꾸미는 분사구이고, by monks 와 for centuries 는 부사구입니다. 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The manuscripts 입니다. 필사본은 필사하는 주체가 아니라 필사되는 대상입니다."
+        },
+        {
+          "label": "③ 본동사와 그 태를 확정합니다",
+          "roles": ["V"],
+          "note": "were copied 가 be+p.p. 형태의 수동태 본동사입니다. 뒤에 목적어가 없고 부사구만 이어지는 것도 수동과 일치합니다."
+        }
+      ],
+      "conclusion": "kept 도 p.p. 이지만 be동사가 없으므로 수식하는 분사일 뿐입니다. 수동태 본동사는 be동사를 거느린 were copied 하나뿐입니다."
+    },
+    {
+      "id": "b8",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "수동태 본동사 사냥",
+      "instruction": "이 문장에서 수동태를 이루는 be동사와 과거분사를 전부 탭하십시오. p.p.처럼 보여도 be동사가 없으면 사냥감이 아닙니다.",
+      "hitLabel": "수동태 본동사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "manuscripts", "hit": false },
+        { "t": "kept", "hit": false },
+        { "t": "in", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "library", "hit": false },
+        { "t": "were", "hit": true },
+        { "t": "copied", "hit": true },
+        { "t": "by", "hit": false },
+        { "t": "monks.", "hit": false }
+      ],
+      "ko": "도서관에 보관되던 그 필사본들은 수도사들에 의해 필사되었습니다.",
+      "explain": "수동태 본동사는 be동사 were 와 과거분사 copied 를 묶은 were copied 입니다. kept 는 be동사 없이 홀로 쓰인 분사여서 앞의 명사 The manuscripts 를 꾸밀 뿐, 본동사가 아닙니다."
+    },
+    {
+      "id": "b9",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "능동·수동을 가르는 4단계",
+      "steps": [
+        {
+          "text": "수식어를 걷어내고 그 동사의 주어가 무엇인지 확정합니다.",
+          "applyNote": "수식어 in the courtyard 를 걷어내면 주어는 The sculptures 입니다."
+        },
+        {
+          "text": "그 주어가 동작을 하는 쪽인지 받는 쪽인지 의미로 따집니다.",
+          "applyNote": "조각상은 옮기는 주체가 아니라 옮겨지는 대상입니다."
+        },
+        {
+          "text": "동사 뒤에 목적어가 남아 있는지 확인합니다. 목적어를 하나만 가지는 타동사라면, 목적어가 그대로 남아 있는 순간 능동입니다.",
+          "applyNote": "동사 뒤에는 to the new wing of the museum 이라는 전치사구뿐이고 목적어가 없습니다."
+        },
+        {
+          "text": "받는 쪽이고 목적어도 없으면 be+p.p.로, 하는 쪽이고 목적어가 있으면 능동으로 확정합니다.",
+          "applyNote": "두 조건이 모두 수동을 가리키므로 were moved 가 옳습니다."
+        }
+      ],
+      "example": {
+        "en": "The sculptures in the courtyard **were moved** to the new wing of the museum last winter.",
+        "ko": "안뜰에 있던 그 조각상들은 지난겨울 박물관의 새 별관으로 옮겨졌습니다.",
+        "note": "주어가 동작을 받는 쪽이고 동사 뒤에 목적어가 없으므로 수동태가 옳습니다."
+      }
+    },
+    {
+      "id": "b10",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The evidence collected at the site ( analyzed / was analyzed ) by two independent laboratories.",
+      "steps": [
+        {
+          "title": "① 주어를 확정합니다",
+          "body": "collected at the site 는 앞의 명사를 꾸미는 분사구입니다. 걷어내면 주어는 The evidence 입니다."
+        },
+        {
+          "title": "② 의미 관계를 따집니다",
+          "body": "증거는 분석하는 주체가 아니라 분석되는 대상입니다. 주어가 동작을 받는 쪽이므로 수동이 후보입니다."
+        },
+        {
+          "title": "③ 목적어가 남았는지 봅니다",
+          "body": "괄호 뒤에는 by two independent laboratories 라는 전치사구뿐이고 목적어가 없습니다. analyzed 를 능동 과거형으로 읽으면 타동사 analyze 의 목적어가 없어 문장이 성립하지 않습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "주어가 받는 쪽이고 목적어도 없으므로 be+p.p. 인 was analyzed 가 옳습니다."
+        }
+      ],
+      "answer": "was analyzed",
+      "ko": "현장에서 수집된 그 증거는 두 곳의 독립 실험실에서 분석되었습니다."
+    },
+    {
+      "id": "b11",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u03-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The old lighthouse {{blank}} by a local charity in 2015.",
+          "options": ["restored", "was restored"],
+          "answer": 1,
+          "translation": "그 낡은 등대는 2015년에 한 지역 자선단체에 의해 복원되었습니다.",
+          "explanation": "주어 The old lighthouse 는 복원하는 주체가 아니라 복원되는 대상이고, 빈칸 뒤에는 목적어 없이 by 구만 이어집니다. 따라서 be+p.p. 인 was restored 가 옳습니다.",
+          "trapTags": ["by-agent", "passive-basic"]
+        },
+        {
+          "id": "u03-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The article [[u:is described]] the daily routines of Arctic researchers.",
+          "isCorrect": false,
+          "correction": "describes",
+          "translation": "그 기사는 북극 연구자들의 일상을 서술합니다.",
+          "explanation": "밑줄 뒤에 목적어 the daily routines of Arctic researchers 가 그대로 남아 있습니다. 목적어 하나짜리 타동사 describe 의 수동태 뒤에는 목적어가 남을 수 없고, 주어 The article 은 서술하는 주체이므로 능동 describes 가 옳습니다.",
+          "trapTags": ["inanimate-subject", "passive-with-object"]
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "능동과 수동의 대조",
+      "columns": ["능동", "수동(be+p.p.)"],
+      "rows": [
+        {
+          "criterion": "주어의 역할",
+          "a": "동작을 하는 쪽입니다",
+          "b": "동작을 받는 쪽입니다"
+        },
+        {
+          "criterion": "동사 형태",
+          "a": "displays / displayed / has displayed",
+          "b": "is displayed / was displayed / has been displayed"
+        },
+        {
+          "criterion": "동사 뒤 목적어",
+          "a": "목적어가 그대로 있습니다",
+          "b": "(목적어가 하나인 타동사에서) 목적어가 주어 자리로 올라가 남지 않습니다"
+        },
+        {
+          "criterion": "by 행위자",
+          "a": "쓰지 않습니다",
+          "b": "필요할 때만 쓰고 대개 생략합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The museum **displays** three paintings in the east wing.",
+          "ko": "그 박물관은 동관에 세 점의 그림을 전시합니다.",
+          "note": "능동입니다. 동사 뒤에 목적어 three paintings 가 있습니다."
+        },
+        {
+          "en": "Three paintings **are displayed** in the east wing of the museum.",
+          "ko": "세 점의 그림이 그 박물관의 동관에 전시되어 있습니다.",
+          "note": "수동입니다. 목적어가 주어 자리로 올라갔으므로 동사 뒤에는 전치사구만 남습니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 문장의 동사가 능동인지 수동인지 분류하십시오.",
+      "buckets": [
+        { "id": "act", "label": "능동" },
+        { "id": "pas", "label": "수동(be+p.p.)" }
+      ],
+      "chips": [
+        {
+          "text": "The committee approved the plan.",
+          "bucketId": "act",
+          "why": "위원회가 승인하는 주체이고 동사 뒤에 목적어 the plan 이 있습니다."
+        },
+        {
+          "text": "The plan was approved last Friday.",
+          "bucketId": "pas",
+          "why": "계획은 승인을 받는 대상이고 동사 뒤에 목적어가 없습니다."
+        },
+        {
+          "text": "The new engine produces less noise.",
+          "bucketId": "act",
+          "why": "엔진은 사물이지만 소음을 내는 주체이고 목적어 less noise 를 거느립니다."
+        },
+        {
+          "text": "Less noise is produced by the new engine.",
+          "bucketId": "pas",
+          "why": "소음은 만들어지는 대상이고 행위자가 by 구로 밀려났습니다."
+        },
+        {
+          "text": "The author wrote the letters in 1892.",
+          "bucketId": "act",
+          "why": "작가가 쓰는 주체이고 목적어 the letters 가 그대로 있습니다."
+        },
+        {
+          "text": "The letters were written in 1892.",
+          "bucketId": "pas",
+          "why": "편지는 쓰이는 대상이고 be+p.p. 형태이며 목적어가 남아 있지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "능·수동 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 태 판별은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "주어가 동작을 받는 쪽이면 동사는 be+p.p. 수동입니다.",
+          "isTrue": true,
+          "why": "주어가 받는 대상일 때 수동이 됩니다. 수동의 정의 그 자체입니다."
+        },
+        {
+          "statement": "주어가 사물이면 동사는 반드시 수동태로 씁니다.",
+          "isTrue": false,
+          "why": "태는 주어의 사물 여부가 아니라 하는가 받는가로 갈립니다. 사물도 동작의 주체가 됩니다."
+        },
+        {
+          "statement": "목적어 하나짜리 타동사의 수동태 뒤에는 목적어가 남지 않습니다.",
+          "isTrue": true,
+          "why": "목적어가 주어 자리로 올라갔으므로 동사 뒤에는 목적어가 없습니다."
+        },
+        {
+          "statement": "by 구가 보이지 않으면 그 동사는 능동입니다.",
+          "isTrue": false,
+          "why": "by 행위자는 대개 생략됩니다. by 구의 유무로 태를 판단할 수 없습니다."
+        },
+        {
+          "statement": "be동사 없이 홀로 쓰인 p.p.도 수동태 본동사입니다.",
+          "isTrue": false,
+          "why": "홀로 선 p.p.는 명사를 꾸미는 분사일 뿐이고, be동사와 묶여야 수동태 본동사가 됩니다."
+        },
+        {
+          "statement": "수동태의 시제와 수는 be동사가 짊어집니다.",
+          "isTrue": true,
+          "why": "is·are·was·were 가 시제와 수를 표시하고, 과거분사는 형태가 변하지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The results of the experiment ( published / were published ) in a leading journal last year.",
+      "givenSteps": [
+        "① 수식어 of the experiment 를 걷어내면 핵 주어는 The results 입니다.",
+        "② 결과는 논문을 발표하는 주체가 아니라 발표되는 대상입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "were published — 주어가 동작을 받는 쪽이고 동사 뒤에 목적어도 없으므로 수동입니다",
+        "published — 지난해의 일이므로 과거형 능동이면 충분합니다",
+        "publishing — 결과가 계속 알려지고 있으므로 진행의 의미가 필요합니다"
+      ],
+      "answer": 0,
+      "explain": "publish 는 목적어를 필요로 하는 타동사입니다. published 를 능동 과거형으로 읽으면 목적어가 없어 문장이 성립하지 않습니다. publishing 은 시제가 없어 본동사가 되지 못합니다. 주어가 받는 쪽이고 목적어도 없으므로 were published 가 옳습니다."
+    },
+    {
+      "id": "b16",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "각 줄에서 태의 결이 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["was built", "were copied", "reduced the noise", "is stored"],
+          "odd": 2,
+          "why": "was built·were copied·is stored 는 모두 be+p.p. 수동입니다. reduced the noise 만 목적어를 거느린 능동입니다."
+        },
+        {
+          "words": ["examines the data", "displays three works", "produces less noise", "was rejected"],
+          "odd": 3,
+          "why": "앞의 셋은 목적어를 거느린 능동입니다. was rejected 만 be+p.p. 수동입니다."
+        },
+        {
+          "words": ["collected at the site", "kept in the museum", "written in 1892", "were analyzed twice"],
+          "odd": 3,
+          "why": "앞의 셋은 be동사 없이 홀로 쓰인 분사(수식어)입니다. were analyzed 만 be동사를 거느린 수동태 본동사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — p.p.만 보고 수동이라고 단정하는 경우",
+      "body": "p.p. 는 be동사와 결합할 때에만 수동태 본동사가 됩니다. be동사 없이 홀로 쓰인 p.p.는 앞의 명사를 뒤에서 꾸미는 수식어일 뿐입니다. 밑줄이 p.p. 라면 그 앞에 be동사가 있는지부터 확인해야 합니다. 단, give·send 류는 목적어가 둘이므로 수동태 뒤에도 목적어 하나가 남습니다(이 예외는 바로 다음 u03-c2에서 먼저 다루고, 4형식 수동의 형태 전반은 u09-c2에서 심화합니다).",
+      "example": {
+        "en": "The data **collected** during the survey **were stored** on a secure server.",
+        "ko": "설문 기간에 수집된 그 자료는 안전한 서버에 보관되었습니다.",
+        "note": "collected 는 be동사가 없으므로 수식하는 분사이고, 수동태 본동사는 were stored 하나뿐입니다."
+      }
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u03-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The theory that the two scholars proposed in 1970 {{blank}} by later experiments.",
+          "options": ["confirmed", "was confirmed", "confirming"],
+          "answer": 1,
+          "translation": "두 학자가 1970년에 제안한 그 이론은 이후의 실험들에 의해 확인되었습니다.",
+          "explanation": "proposed 는 관계절 안의 동사이므로 주절의 본동사 자리는 아직 비어 있습니다. 핵 주어 The theory 는 확인을 받는 대상이고 빈칸 뒤에는 목적어 없이 by 구만 있으므로 수동 was confirmed 가 옳습니다. confirming 은 시제가 없어 본동사가 되지 못합니다.",
+          "trapTags": ["relative-clause", "by-agent", "passive-basic"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 was confirmed 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "주절의 핵 주어 The theory 가 확인을 받는 쪽이고, 빈칸 뒤에 목적어 없이 by 구만 이어졌기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 의미 관계(받는 쪽인가)와 목적어 유무, 두 축이 모두 수동을 가리켰습니다."
+        },
+        {
+          "text": "뒤에 by 라는 단어가 보여서 수동태로 정했습니다.",
+          "correct": false,
+          "feedback": "by 구는 수동의 표지가 아닙니다. 수동에서도 대개 생략되고, by 는 수단·기한 같은 다른 뜻으로도 쓰입니다. 판단 근거는 주어와 동사의 의미 관계입니다."
+        },
+        {
+          "text": "1970년의 일을 말하고 있어서 과거 시제가 필요했기 때문입니다.",
+          "correct": false,
+          "feedback": "시제는 태를 결정하지 못합니다. confirmed 도 과거형이지만 능동이며, 능동이라면 뒤에 목적어가 있어야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The tomb [[1:was excavated]] by a small team in 1954, and the objects [[2:found]] inside it [[3:are kept]] in a national museum, where they [[4:are attracted]] thousands of visitors every year.",
+      "answer": 4,
+      "correction": "attract",
+      "rationales": [
+        "주어 The tomb 은 발굴되는 대상이고 동사 뒤에 목적어 없이 by 구만 있으므로 수동이 옳습니다.",
+        "be동사 없이 쓰인 p.p. 로, 앞의 명사 the objects 를 뒤에서 꾸미는 수식어입니다. 유물은 발견되는 쪽이므로 과거분사가 맞습니다.",
+        "주어 the objects 는 보관되는 대상이고 동사 뒤에 목적어가 없으므로 be+p.p. 가 옳습니다.",
+        "주어 they(= the objects)는 방문객을 끌어들이는 주체이고, 동사 뒤에 목적어 thousands of visitors 가 그대로 남아 있습니다. attract 는 목적어 하나짜리 타동사이므로 수동태 뒤에 목적어가 남을 수 없고, 따라서 능동 attract 로 고칩니다."
+      ],
+      "ko": "그 무덤은 1954년에 소규모 발굴단에 의해 발굴되었고, 그 안에서 발견된 유물들은 국립 박물관에 보관되어 있으며, 그곳에서 그것들은 해마다 수천 명의 방문객을 끌어들입니다."
+    },
+    {
+      "id": "b21",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 동사를 원형으로 제시하고 어법에 맞는 형태로 바꿔 쓰게 합니다. 주어가 동작을 받는 쪽임을 확인해 be동사의 시제와 수까지 맞춰야 만점입니다.",
+          "sample": {
+            "en": "The ancient walls surrounding the city (build) more than a thousand years ago.",
+            "ask": "괄호 안의 동사를 어법에 맞는 형태로 바꿔 쓰십시오.",
+            "answer": "were built — 성벽은 세워지는 대상이고 동사 뒤에 목적어가 없으므로 수동이며, 복수 주어와 과거 시점에 맞추어 were built 가 됩니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 주어를 긴 수식어로 가려 놓고 밑줄에 be+p.p. 를 놓습니다. 목적어 하나짜리 타동사라면 밑줄 뒤에 목적어가 그대로 남아 있는 순간 그 수동태는 오류입니다.",
+          "sample": {
+            "en": "The committee in charge of the budget [[u:was rejected]] the proposal without discussion.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "rejected — 밑줄 뒤에 목적어 the proposal 이 남아 있으므로 수동이 될 수 없고, 위원회가 거절하는 주체이므로 능동이어야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coral reefs support about a quarter of all marine species. [[u:Many of the reefs studied over the past decade have been damaged by rising sea temperatures.]] Scientists now grow young corals in nurseries and return them to the sea. Some reefs recover within a few years, but others never do.",
+      "instruction": "밑줄 친 문장에서 수식어를 걷어내고 핵 주어를 찾은 뒤, 본동사가 능동인지 수동인지 판단하십시오.",
+      "found": "수식어 studied over the past decade 를 걷어내면 핵 주어는 Many of the reefs 입니다. 산호초는 훼손하는 주체가 아니라 훼손을 받는 대상이고 동사 뒤에 목적어 없이 by 구만 있으므로 본동사 have been damaged 는 수동입니다. studied 는 be동사가 없으므로 본동사가 아니라 수식하는 분사입니다.",
+      "gist": "지난 10년간 연구된 산호초 상당수가 해수 온도 상승으로 훼손되었고, 과학자들이 어린 산호를 길러 바다로 돌려보내고 있으나, 몇 해 안에 회복되는 산호초가 있는 반면 끝내 회복되지 않는 산호초도 있다는 내용입니다."
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "능·수동 감별대의 심판관",
+      "intro": "이 감별대에는 능동인 척하는 수동, 수동인 척하는 능동이 매일 줄지어 들어옵니다. 주어가 하는 쪽인지 받는 쪽인지, 그 하나로 저울은 기웁니다. 네 번의 판정으로 그 눈을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The ancient bridge {{blank}} in the 1930s and still stands today.",
+          "options": ["was built", "built"],
+          "answer": 0,
+          "why": "다리는 세워지는 대상이고 빈칸 뒤에 목적어가 없으므로 be+p.p. 인 was built 가 옳습니다."
+        },
+        {
+          "prompt": "The new law {{blank}} the number of accidents at the crossing.",
+          "options": ["reduced", "was reduced"],
+          "answer": 0,
+          "why": "빈칸 뒤에 목적어 the number of accidents 가 남아 있고 법이 줄이는 주체이므로 능동 reduced 가 옳습니다."
+        },
+        {
+          "prompt": "The paintings that the artist finished in 1890 {{blank}} in a private collection.",
+          "options": ["are kept", "keep"],
+          "answer": 0,
+          "why": "핵 주어 The paintings 는 보관되는 대상이고 빈칸 뒤에 목적어가 없으므로 수동 are kept 가 옳습니다. finished 는 관계절의 동사입니다."
+        },
+        {
+          "prompt": "The samples collected during the survey {{blank}} on a secure server.",
+          "options": ["were stored", "stored"],
+          "answer": 0,
+          "why": "collected 는 수식하는 분사이고 주어 The samples 는 보관되는 대상입니다. 홀로 선 stored 는 본동사가 되지 못하므로 be동사를 거느린 were stored 가 옳습니다."
+        }
+      ],
+      "winText": "저울이 완벽히 균형을 잡았습니다. 하는 쪽과 받는 쪽을 한눈에 가르는 눈 — 이제 어떤 문장이 와도 태를 흔들리지 않고 읽어 냅니다.",
+      "loseText": "심판관이 저울을 다시 내려놓습니다. 네 판정 모두 물음은 하나였습니다. 주어는 하는 쪽인가, 받는 쪽인가. 판별 4단계를 다시 짚고 오면 저울은 그대로 기다립니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "주어가 동작을 ___ 쪽이면 능동이고, ___ 쪽이면 be+p.p. 수동입니다. 그리고 수동태 동사 뒤에는 ___가 남지 않습니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "주어가 동작을 하면 능동, 주어가 동작을 받으면 수동이며 수동의 형태는 be+p.p.입니다.",
+        "목적어를 하나만 가지는 타동사가 수동이 되면 그 목적어가 주어 자리로 올라가므로, 그런 수동태 동사 뒤에는 목적어가 남지 않습니다.",
+        "주어가 사물이라는 이유로 수동을 고르면 안 됩니다. 판단 근거는 주어와 동사의 의미 관계입니다.",
+        "be동사 없이 홀로 쓰인 p.p.는 수동태 본동사가 아니라 앞의 명사를 꾸미는 수식어입니다.",
+        "by 행위자는 대개 생략됩니다. by 구의 유무로 태를 판단해서는 안 됩니다."
+      ],
+      "keySentence": {
+        "en": "The manuscripts kept in the monastery **were copied** by monks for centuries.",
+        "ko": "수도원에 보관되던 그 필사본들은 여러 세기 동안 수도사들에 의해 필사되었습니다.",
+        "note": "p.p. 가 둘로 보이지만 be동사를 거느린 were copied 만이 수동태 본동사입니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u03-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The bridge {{blank}} after the flood damaged its foundations.",
+          "options": ["rebuilt", "was rebuilt"],
+          "answer": 1,
+          "translation": "그 다리는 홍수가 기초를 훼손한 뒤에 재건되었습니다.",
+          "explanation": "주어 The bridge 는 재건되는 대상이고 빈칸 뒤에는 목적어 없이 부사절만 이어집니다. rebuilt 를 능동 과거형으로 읽으면 타동사 rebuild 의 목적어가 없어 문장이 성립하지 않으므로 수동 was rebuilt 가 옳습니다.",
+          "trapTags": ["passive-basic", "no-object"]
+        },
+        {
+          "id": "u03-c1-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The new policy [[u:was reduced]] the number of accidents at the crossing.",
+          "isCorrect": false,
+          "correction": "reduced",
+          "translation": "그 새 정책은 그 건널목의 사고 건수를 줄였습니다.",
+          "explanation": "밑줄 뒤에 목적어 the number of accidents 가 그대로 남아 있습니다. 주어 The new policy 는 사고를 줄이는 주체이므로 수동이 아니라 능동 reduced 가 옳습니다.",
+          "trapTags": ["inanimate-subject", "passive-with-object"]
+        },
+        {
+          "id": "u03-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The letters that the scientist sent to his colleagues {{blank}} in an archive in Vienna.",
+          "options": ["preserve", "are preserved", "preserving"],
+          "answer": 1,
+          "translation": "그 과학자가 동료들에게 보낸 그 편지들은 빈의 한 기록보관소에 보존되어 있습니다.",
+          "explanation": "sent 는 관계절의 동사이므로 주절의 본동사 자리가 비어 있습니다. 핵 주어 The letters 는 보존되는 대상이고 빈칸 뒤에는 목적어 없이 전치사구만 있으므로 수동 are preserved 가 옳습니다. preserve 는 타동사여서 능동으로 쓰려면 목적어가 필요하고, preserving 은 시제가 없어 본동사가 되지 못합니다.",
+          "trapTags": ["relative-clause", "passive-basic", "no-object"]
+        }
+      ]
+    }
+  ]
+}

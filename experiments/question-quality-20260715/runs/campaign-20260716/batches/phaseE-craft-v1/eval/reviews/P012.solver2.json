@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "VALID (answer)",
+      "reason": "Seam is grammatical (don't + bare-VP). Logically it is the exact predicate the passage demands: the contagion metaphor ('spread like a virus'), 'don't damage yourself by adopting negative, unproductive attitudes', and 'be careful not to be overcome by the misfortune' all describe catching the other person's emotional response. 'Absorb their emotional distress' names precisely that, and its categorical form matches the categorical detachment injunction ('remaining detached and avoiding melodramatic reactions'). The caveat frame 'show kindness... just don't X' requires X to limit the sympathy, which this does."
+    },
+    {
+      "label": "2",
+      "verdict": "INVALID",
+      "reason": "Grammatical, but logically incoherent in the 'just don't ___' caveat slot: after 'show them kindness and give them a sympathetic ear', prohibiting 'ignoring their cries for help' is redundant reinforcement rather than a limiting caveat, and it reverses the passage's thesis, which warns against over-involvement, not under-involvement."
+    },
+    {
+      "label": "3",
+      "verdict": "INVALID",
+      "reason": "Grammatical, but the passage explicitly endorses analytical discrimination ('Remember to discriminate between events themselves and your interpretations of them'). Forbidding analysis of the cause contradicts the Stoic core of the passage; nothing in the text warns against analysis."
+    },
+    {
+      "label": "4",
+      "verdict": "INVALID (closest distractor)",
+      "reason": "Grammatical and superficially close to the intended idea of not being pulled down. Two formal defects: (a) referent shift - 'take on their burdens' denotes assuming practical responsibility for another's problems, a topic the passage never raises; the passage's mechanism is emotional/attitudinal contagion, not workload transfer; (b) the scalar adverb 'completely' generates the implicature that partial burden-taking is acceptable, whereas the passage's prohibition is categorical ('be careful not to be overcome', 'remaining detached'). Inferior to option 1 on both counts, so not co-defensible under strict reading."
+    },
+    {
+      "label": "5",
+      "verdict": "INVALID",
+      "reason": "Grammatical, but directly contradicted by the immediately preceding clause: 'if you find yourself in a conversation with someone who is depressed... show them kindness and give them a sympathetic ear' presupposes engaging in the conversation, so 'avoid any conversation with them entirely' is logically inconsistent with the host sentence itself."
+    }
+  ],
+  "note": "Passage is a Stoic (Epictetus-style) warning about emotional contagion. The blank sits in a concession+caveat frame ('show kindness...; just don't ___'), so the filler must limit sympathy by prohibiting infection with the other's distress. Option 1 uniquely satisfies both the seam and the contagion logic. Option 4 is the designed near-miss: defensible-sounding but fails on the burdens-as-practical-responsibility referent shift and the scalar hedge 'completely'. No multiple-defensible issue found."
+}

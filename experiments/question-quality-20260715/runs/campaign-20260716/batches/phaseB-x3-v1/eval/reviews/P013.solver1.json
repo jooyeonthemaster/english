@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어가 동명사구 'Recording an interview'이므로 단수 동사 is가 맞다. 직전 명사 'an interview'(단수)와 동명사 주어가 모두 단수라 유혹 강도 자체가 낮지만, 동명사 주어=단수 원칙 확인 지점. 뒤따르는 'and can be less unnerving'과의 병렬도 성립한다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'lasts a while'에서 while은 관사 a를 동반한 명사(한동안)로, 지속 동사 last의 시간 표현으로 적법하다. awhile(부사)와의 혼동을 노린 자리로 잠시 끌렸으나, a가 있으므로 명사형 while이 정확하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가주어 It - 진주어 to develop 구문의 보어 자리 비교급 형용사. than절이 명시되지 않았지만 앞 문맥(녹음 전체를 다시 듣는 방식)과의 암시적 비교로 성립하며, 비교급 자체의 형태·용법에 하자가 없다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong (정답)",
+      "reason": "'writing down the key answers ... so ___ they can be transcribed easily afterwards'는 목적의 부사절 'so that + 완전한 절'이 필요한 자리다. what은 불완전한 절(주어나 목적어 공백)을 이끌어야 하는데 'they can be transcribed easily afterwards'는 공백 없는 완전한 절이므로 what이 설 자리가 없다. 대안 해석(what 명사절, 의문사절 등)을 적극 탐색해도 절 내 공백이 없어 어떤 해석으로도 정문이 되지 않는다. so that → so what 치환의 전형적 출제."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'much easier and quicker'에서 much는 비교급 강조 부사로 적법(very는 불가). make + O + OC(비교급 형용사) 구조도 성립. 최상위권 기준 확인만 하고 지나가는 자리."
+    }
+  ],
+  "note": "정답 (D) 단독. so that의 that을 what으로 바꾼 전형적 접속사/관계사 구별 문항. 매력적 오답 후보는 (B) while(awhile 혼동)과 (E) much(very 혼동)였으나 둘 다 규칙 확인 시 명백히 정문. (D)를 정문으로 구제할 대안 구문 분석(축약 관계절·명사절 주어 등)을 탐색했으나 뒤 절이 완전절이어서 전부 불성립. 복수 정답 소지 없음."
+}

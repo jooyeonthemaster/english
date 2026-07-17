@@ -1,0 +1,35 @@
+{
+  "pid": "P066",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "빈칸은 'That is'로 첫 문장(속담을 한 민족의 세계관·심성의 표현으로 볼 때 신중해야 한다)을 재진술하는 자리다. 바로 뒤 문장이 'so many popular proverbs ... current in various cultures that it would be foolish to think of them as showing some imagined national character'로, 'imagined national character'가 1번의 'the illusion of a unique national essence'와 정확히 대응하고, '신중해야 한다'는 경고가 'definite judgments ... must be avoided'로 자연스럽게 구체화된다. 이후 'Nevertheless' 양보(빈도 높은 속담 사용은 다른 지표와 함께라면 어느 정도(to some degree) 태도를 반영할 수 있음)와도 모순 없이 공존한다 — 1번은 '단정적(definite) 판단'만 금지하므로 부분적 반영 인정과 양립한다. 문법 결합도 완결된 절로 매끄럽다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "고전·성서 속담이 언급되는 것은 '여러 문화권에 공통으로 퍼져 있어 특정 민족성의 증거가 될 수 없다'는 논거로서이지, 역사적 기원을 규명하라는 요구가 아니다. 빈칸에 넣으면 'That is' 재진술 관계가 성립하지 않고 뒷문장과의 논리 연결도 끊긴다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (매력적 오답)",
+      "reason": "첫 문장의 '신중해야 한다'는 경고 톤 때문에 실전에서 잠시 끌리는 선지다. 그러나 (a) 'any proverb'라는 전칭 부정은 지문의 'Nevertheless ... it does mirror at least to some degree'와 정면 충돌한다 — 지문은 전면 거부가 아니라 단정 회피를 주장한다. (b) 지문의 쟁점은 'national character/worldview'이지 'modern cultural values'가 아니어서 초점도 어긋난다. 실제로 넣어 보면 뒤의 양보 단락이 필자의 자기모순이 되어 탈락."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "지문은 속담의 빈번한 사용이 'other social and cultural indicators와 함께(together with)' 참고될 수 있다고 했지, 속담이 그런 지표들을 '결정한다(determine)'고 하지 않았다. 인과·주종 관계를 뒤집은 왜곡이며 'entire civilization'이라는 과장도 지문에 근거가 없다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong (매력적 오답)",
+      "reason": "마지막 문장(독일 속담의 빈번한 사용이 독일인의 태도를 어느 정도 반영)만 보면 끌린다. 그러나 그 반영은 'at least to some degree'이고 'together with other indicators'라는 조건부인데, 5번은 'precise insights'라는 단정으로 격상시켰고, 'so-called national character'는 지문이 'imagined'라며 어리석다고 배격한 개념이다. 무엇보다 빈칸은 'That is'로 '신중하라'는 경고를 풀어쓰는 자리라 정반대 방향의 진술은 결합 자체가 불가."
+    }
+  ],
+  "note": "빈칸이 담화표지 'That is' 뒤에 있어 첫 문장의 재진술이어야 하고, 뒤따르는 근거 문장('imagined national character' 배격)과 'Nevertheless' 양보 구조까지 모두 만족하는 선지는 1번뿐. 3번(전면 거부, 전칭 'any')과 5번(단정적 긍정, 'precise')이 각각 경고 톤과 마지막 문장을 미끼로 삼는 대칭적 오답으로 설계되어 있으나, 둘 다 지문의 '단정은 피하되 부분 반영은 인정' 이라는 중도 입장과 충돌해 옹호 불가. 단일 정답으로 수렴하는 깨끗한 문항."
+}

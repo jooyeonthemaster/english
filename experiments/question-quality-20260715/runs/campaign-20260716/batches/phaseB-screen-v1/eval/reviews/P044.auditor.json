@@ -1,0 +1,77 @@
+{
+  "pid": "P044",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints의 '분사능수동'은 '분사 능동/수동'의 압축 표기로 학생 노출 시 어색할 수 있으나 오개념은 아니다. 해설 본문의 통사 분석(동명사구 주어, 정동사 부재, not with A but with B 전치사구 병렬)은 모두 실제 구조와 일치한다."
+    },
+    {
+      "code": "V5-minor-field-convention",
+      "severity": "minor",
+      "evidence": "markedExpressions (B)의 expression 필드가 렌더 형태 'beginning'이 아닌 원문 형태 'begins'를 담고 있으나(errorExpression='beginning', correction='begins'), surroundingText도 원문 기준이라 스키마 내 일관성이 있고 정답 라벨·해설과 모순되지 않는다. 치명 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 4,
+    "C5": 3,
+    "C6": 4
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사 능·수동 — 명사 수식 과거분사(수동)와 현재분사(능동)의 구별 (pointCode c)",
+      "temptingBecause": "mistakes 뒤에 바로 이어져 'making'이어야 한다고 오인하거나, made를 본동사로 착각할 수 있다.",
+      "decisiveFlaw": "오답 아님 — mistakes는 organizations에 의해 '행해지는' 대상이므로 수동의 과거분사 made가 정확하고, 본동사는 뒤의 is가 따로 존재한다. 다만 훈련된 학생에게는 즉시 소거되는 약한 디코이."
+    },
+    {
+      "label": "(B)",
+      "intent": "정동사 vs 준동사 — that절 내부 동명사구 주어에 대응하는 정동사 자리 판별 (pointCode a, 정답)",
+      "temptingBecause": "'creating a social media program beginning...'을 분사 후치수식 명사구로 읽거나, 뒤따르는 'not with A but with B' 병렬이 술어를 대신한다고 착각하면 맞는 형태로 보인다.",
+      "decisiveFlaw": "that절의 주어가 동명사구 'creating a social media program'이므로 정동사가 필요한데 beginning은 준동사라 절이 술어 없이 붕괴한다. begins로 교정하면 정확히 원문이 된다(최소대립쌍)."
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사 because vs 전치사 because of — 뒤에 절이 오는지 명사구가 오는지 판별 (pointCode l)",
+      "temptingBecause": "인용부호로 감싸인 \"everyone else is doing it\"을 명사 덩어리로 오인하면 because of가 필요하다고 생각할 수 있다.",
+      "decisiveFlaw": "오답 아님 — 뒤에 주어(everyone else)+동사(is doing)를 갖춘 완전한 절이 오므로 접속사 because가 정확하다. 인용부호를 걷어내면 절임이 즉시 드러나 유혹 강도가 낮은 near-filler."
+    },
+    {
+      "label": "(D)",
+      "intent": "수일치 — 동명사구 주어의 단수 취급 (pointCode d)",
+      "temptingBecause": "'social media'의 media를 복수 명사로 오인하거나 Being...media 전체의 수를 media에 끌려 판단하면 serve로 고치고 싶어진다.",
+      "decisiveFlaw": "오답 아님 — 주어는 동명사구 'Being in social media' 전체이므로 단수 취급, serves가 정확하다. 정답 (B)와 짝을 이루는 '동명사구 주어' 계열이지만 point가 달라(수일치 vs 정·준동사) 정답을 가리지 않는다."
+    },
+    {
+      "label": "(E)",
+      "intent": "either A or B 병렬 — 조동사 must에 걸리는 동사원형 병렬 판별 (pointCode h)",
+      "temptingBecause": "주어 a social media presence가 3인칭 단수라 solves로 고쳐야 한다고 오인하거나, 멀리 떨어진 'or result'와의 병렬을 놓칠 수 있다.",
+      "decisiveFlaw": "오답 아님 — must 뒤 either solve ... or result 병렬의 첫 동사원형 자리이므로 solve가 정확하다. or result까지 확인해야 하는 실제 판단이 있는 준수한 디코이."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoints의 '분사능수동'은 표준 용어가 아닌 압축 표기('분사 능·수동').",
+      "recommendation": "'분사의 능동/수동'으로 풀어 쓰기."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설이 각 선지의 '왜 맞는가'만 서술하고 '왜 헷갈리는가(why tempting)'를 명시하지 않는다. KILLER 어법 조건(§C)의 5개 밑줄별 why-tempting 요건 미충족.",
+      "recommendation": "각 밑줄에 오인 경로(예: (C) 인용구를 명사구로 오독 → because of 유혹)를 한 줄씩 추가."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 유일 변형은 begins→beginning이며 교정 시 원문과 정확히 일치하는 최소대립쌍. 각 선지 독립 검증 결과 (B)만 오류로 정답 유일성 확보 — (A) 수동 과거분사, (C) 접속사+완전절, (D) 동명사구 주어 단수일치, (E) must+either 동사원형 병렬 모두 원문 그대로 정문. 해설의 구조 분석(동명사구 주어, 정동사 부재, not with A but with B 전치사구 병렬이 술어를 대체 불가)도 사실과 일치. 다만 요청 난이도 KILLER 대비: (1) 밑줄별 명시적 why-tempting 부재(§C 요건), (2) (C) because는 유혹 강도가 낮은 near-filler, (3) 'is that + 동명사구 주어 + V-ing' 패턴은 고빈도 기출 유형이라 상위권에게 비교적 빨리 드러남 → killerConditionsMet=false, C3=2, C5=3. 공예 합계 19, 최저 C3=2로 등급 B — 작은 수정(디코이 (C)를 더 깊은 함정으로 교체, why-tempting 보강)으로 출제 가능."
+}

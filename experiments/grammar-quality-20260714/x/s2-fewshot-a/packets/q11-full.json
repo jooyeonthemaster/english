@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20221123-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 153
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-obvious-local-agreement",
+    "grammar-obvious-pronoun-agreement",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=c  (C):dec=k  (D):dec=e  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 137,
+        "relPos": 0.15,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 323,
+        "relPos": 0.354,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 478,
+        "relPos": 0.524,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 639,
+        "relPos": 0.7,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 691,
+        "relPos": 0.757,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.757,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Our language helps to reveal our deeper assumptions. Think of these revealing phrases: When we accomplish something important, we say it took \"blood, sweat, and tears.\" We say important achievements are \"hard-earned.\" We recommend a \"hard day's work\" when \"day's work\" would be enough. When we talk of \"easy money,\" we are implying it was obtained through illegal or questionable means. We use the phrase \"That's easy for you to say\" as a criticism, usually when we are seeking to invalidate someone's opinion. It's like we all automatically accept that the \"right\" way is, inevitably, the harder one. In my experience this is hardly ever questioned. What would happen if you do challenge this sacred cow? We don't even pause to consider that something important and valuable could be made easy. What if the biggest thing keeping us from doing what matters is the false assumption that it has to take huge effort?",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "took",
+        "isError": false,
+        "errorExpression": "took",
+        "surroundingText": "When we accomplish something important, we say it took \"blood, sweat, and tears.\"",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "implying",
+        "isError": false,
+        "errorExpression": "implying",
+        "surroundingText": "When we talk of \"easy money,\" we are implying it was obtained through illegal or questionable means.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "to invalidate",
+        "isError": false,
+        "errorExpression": "to invalidate",
+        "surroundingText": "We use the phrase \"That's easy for you to say\" as a criticism, usually when we are seeking to invalidate someone's opinion.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "questioned",
+        "isError": false,
+        "errorExpression": "questioned",
+        "surroundingText": "In my experience this is hardly ever questioned. What would happen if you do challenge this sacred cow?",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "is",
+        "isError": true,
+        "correction": "is",
+        "errorExpression": "are",
+        "surroundingText": "What if the biggest thing keeping us from doing what matters is the false assumption that it has to take huge effort?",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "took"
+      },
+      {
+        "label": "(B)",
+        "text": "implying"
+      },
+      {
+        "label": "(C)",
+        "text": "to invalidate"
+      },
+      {
+        "label": "(D)",
+        "text": "questioned"
+      },
+      {
+        "label": "(E)",
+        "text": "are"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주절의 동사 say 뒤에 접속사 that이 생략된 명사절이 이어지며, 과거의 특정한 전제나 비유를 나타내기 위해 과거형 정동사 took가 올바르게 사용되었습니다.",
+      "(B)": "be동사 are 뒤에 결합하여 현재진행형(are implying)을 구성하고 있으며, 문맥상 의미상 주어인 we가 직접 '암시하고 있는' 능동의 관계이므로 현재분사인 implying은 어법상 적절합니다.",
+      "(C)": "seek는 목적어로 to부정사를 취하는 동사이므로, '타인의 의견을 무효화하는 것을 추구하다'라는 의미로 동사구 뒤에 이어진 to invalidate는 올바릅니다.",
+      "(D)": "주어인 지시대명사 this가 가리키는 대상(앞 문장의 통념)이 의문시되는 대상이므로, be동사 is 뒤에 쓰여 수동태(be questioned)를 형성하는 과거분사 questioned는 어법상 적절합니다."
+    },
+    "explanation": "(E) \"are\"는 어법상 틀린 표현이며 \"is\"로 고쳐야 한다. 문장의 주어 구조를 파악해 보면, What if 절 내부의 주어 핵은 단수 명사인 the biggest thing입니다. keeping us from doing what matters는 주어인 the biggest thing을 수식하는 분사구입니다. 따라서 수식 유무와 상관없이 이 주어 핵에 연결될 정동사는 단수형인 is가 되어야 합니다. 복수형 동사인 are를 사용한 것은 문장 구조상 잘못되었습니다. 따라서 are를 is로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 주어-동사 수일치 — 수식어구에 가려진 진짜 주어의 핵을 찾아 단복수를 일치시킴",
+      "(B) 현재분사 vs 과거분사 — 주어의 능동적 진행 행위를 뒤따르는 현재분사 구성 판단",
+      "(D) 능동태 vs 수동태 — 주어가 의문을 갖는 주체인지 질문을 받는 대상인지 수동 관계 판정"
+    ],
+    "tags": [
+      "수능 영단어",
+      "수일치",
+      "준동사",
+      "분사구문",
+      "수동태"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Our language helps to reveal our deeper assumptions. Think of these revealing phrases: When we accomplish something important, we say it __(A) took__ \"blood, sweat, and tears.\" We say important achievements are \"hard-earned.\" We recommend a \"hard day's work\" when \"day's work\" would be enough. When we talk of \"easy money,\" we are __(B) implying__ it was obtained through illegal or questionable means. We use the phrase \"That's easy for you to say\" as a criticism, usually when we are seeking __(C) to invalidate__ someone's opinion. It's like we all automatically accept that the \"right\" way is, inevitably, the harder one. In my experience this is hardly ever __(D) questioned__. What would happen if you do challenge this sacred cow? We don't even pause to consider that something important and valuable could be made easy. What if the biggest thing keeping us from doing what matters __(E) are__ the false assumption that it has to take huge effort?"
+  }
+}

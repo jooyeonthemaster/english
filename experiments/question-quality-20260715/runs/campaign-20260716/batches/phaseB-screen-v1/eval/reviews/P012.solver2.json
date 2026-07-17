@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'until it is presented as an individualist rhetoric for certain purposes' — 시제·수동태 결합은 정문이나, 'presented as a rhetoric'(수사법'으로서' 제시된다)은 의미상 어색한 명사 결합(rhetoric은 담론 양식이지 진리가 취하는 지위가 아님). 논리: 지문 전체가 개인주의적 수사(individualist rhetoric)를 '공적 행동의 근거가 될 수 없는 믿음'으로 기각하는 구조이므로, 과학적 진리가 개인주의 수사로 제시되어야 지위를 얻는다는 명제는 지문 논지와 정면 모순. 형식적으로 P(개인주의 수사 기각) ∧ Q(전문가 승인 필요)가 전제인데 ①은 ¬P를 요구. 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합: 'until it speaks too powerfully and too insistently to be silenced' — too~to 구문 정문. 그러나 이는 지문 2~3문장에 제시된 개인주의적 관점('they speak for themselves... too powerfully and too insistently for prejudiced humans to silence them')의 문구를 그대로 재활용한 미끼. 지문은 바로 그 관점을 'nature does not speak unambiguously'로 부정하며, 진리의 지위는 스스로 말함(자명성)이 아니라 전문가 공동체의 승인에서 나온다고 주장. 빈칸 문장은 부정된 관점이 아니라 지문의 결론부(규범적 관점)를 담아야 하므로 논리 모순."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 결합: 'until it is validated and accepted by the professional community' — 수동태 병렬(validated and accepted)이 by구와 정합, it은 a scientific truth를 지시. 정문. 논리: 직전 문장 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'와 동치 변환(authorized by disciplinary specialists ≡ validated and accepted by the professional community). 직후 문장 'What happens in somebody's laboratory is only one stage in its construction'과도 정합 — 실험실은 한 단계일 뿐이고 공동체 승인이 완성 단계라는 구조. 전제-결론 사슬이 형식적으로 완결됨. 유일한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 'until nature speaks unambiguously through the laboratory's findings' — 주어 교체(it→nature)도 until절로서 문법상 허용되는 정문. 그러나 논리: 지문이 명시적으로 'The norms of scientific communication presuppose that nature does not speak unambiguously'라고 단언 — ④는 이 전제의 직접 부정(¬)을 조건으로 삼음. 지문 체계 안에서 결코 충족될 수 없는 조건이며, 충족 불가능한 until절은 '진리가 영원히 지위를 못 얻는다'는 지문에 없는 귀결을 낳음. 명백한 모순 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 'until an inquiring and unbiased mind announces it at a press conference' — 주어·목적어 결합 정문. 논리: 지문은 전문가 검토 없이 기자회견에서 발견을 발표하는 과학자를 'automatically castigated as a publicity seeker'(자동으로 매도됨)라고 명시 — 기자회견 발표는 진리의 지위를 부여하기는커녕 박탈하는 행위로 규정됨. 'inquiring but unbiased mind'는 1~2문장의 개인주의 수사 어휘를 짜깁기한 미끼. 지문 논리와 정반대."
+    }
+  ],
+  "note": "렌즈(문법가/논리학자) 판정: 다섯 선지 모두 빈칸 삽입 시 문법 결합(seam)은 성립하므로 변별은 순수 논리 적합성에서 발생. 지문의 논증 구조는 [개인주의 수사 제시 → 그 수사의 공적 효력 부정 → 규범: 지식은 전문가 승인으로써 지식이 됨 → 빈칸(그 규범의 재진술) → 실험실은 구성의 한 단계일 뿐]. ③만이 직전 문장 'authorized by disciplinary specialists'의 동치 재진술로서 전후 문장과 무모순 정합. ①②④⑤는 모두 지문 전반부의 (부정된) 개인주의 관점 어휘를 재활용한 모순 미끼로, 각각 지문의 명시적 전제와 형식적 모순을 일으킴. 대안 해석(도치·축약 관계절 등)으로 구제될 여지 없음. 복수 정답 소지 없음."
+}

@@ -1,0 +1,966 @@
+{
+  "id": "b06-c1",
+  "unitId": "b06",
+  "order": 1,
+  "title": "형용사의 자리와 부사의 자리",
+  "oneLiner": "명사를 꾸미는 자리와 보어 자리는 형용사의 것이고, 그 밖의 수식은 전부 부사의 일입니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 형용사·부사의 수식과 보어(초·중 도입)",
+      "천일문 중등 GRAMMAR — 형용사와 부사의 쓰임",
+      "docs/study-os-spec.md §2.3 PART 0 b06 형용사·부사·비교"
+    ]
+  },
+  "lenses": [
+    "L1"
+  ],
+  "confusableWith": [
+    "b02-c1",
+    "b02-c4",
+    "b06-c4"
+  ],
+  "estimatedMinutes": 24,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The heavy rain made the mountain road dangerous.",
+        "The heavy rain made the mountain road dangerously."
+      ],
+      "answer": 0,
+      "afterText": "차이는 -ly 하나입니다. 이 레슨을 마치면 그 자리가 왜 형용사 자리인지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "보어",
+      "question": "형용사와 부사를 가르는 열쇠라는데, 보어가 대체 무엇입니까?",
+      "plain": "보어는 주어나 목적어의 상태를 설명해 문장을 완성하는 말입니다. 동사만으로는 뜻이 끝나지 않을 때 그 빈자리를 채웁니다.",
+      "analogy": "\"그 수프는 …하다\"까지만 말하고 멈추면 듣는 사람은 뒷말을 기다립니다. 그 기다림을 채우는 말이 보어입니다. 의자가 하나 비어 있는 식탁과 같아서, 그 자리가 채워지기 전에는 식사가 시작되지 않습니다.",
+      "whyItMatters": "형용사·부사 선택 문제의 정답은 전부 여기서 갈립니다. 빈자리가 보어이면 형용사, 문장이 이미 완전하면 부사입니다. 보어 자리를 알아보는 눈이 이 레슨의 전부입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "-ly 로 끝나면 부사이고, -ly 가 없으면 형용사입니다.",
+      "truth": "형태만으로는 판정할 수 없습니다. friendly·lovely·costly 는 -ly 로 끝나지만 형용사이고, hard·fast·late·early 는 -ly 없이도 부사로 쓰입니다. 판정 기준은 형태가 아니라 그 단어가 놓인 자리입니다.",
+      "counterExample": {
+        "en": "The new librarian is very **friendly** to first-year students.",
+        "ko": "새로 온 사서는 신입생들에게 매우 친절합니다.",
+        "note": "friendly 는 -ly 로 끝나지만 be동사의 보어 자리에 있는 형용사입니다. 보어 자리에는 부사가 올 수 없습니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "형용사와 부사, 관할 구역을 나눠 적습니다",
+      "intro": "두 품사의 구역을 항목별로 나누어 적습니다. 예문의 굵은 단어가 그 항목의 주인공입니다.",
+      "entries": [
+        {
+          "head": "형용사 자리 ① — 명사 앞",
+          "body": "형용사는 명사의 모양·성질·상태를 설명합니다. 명사 앞에 붙어 꾸미는 것이 첫 번째 자리입니다.",
+          "example": {
+            "en": "A **careful** reader notices the small contradictions in the argument.",
+            "ko": "주의 깊은 독자는 그 논증의 작은 모순들을 알아차립니다.",
+            "note": "careful 이 명사 reader 를 앞에서 꾸밉니다."
+          }
+        },
+        {
+          "head": "형용사 자리 ② — 보어",
+          "body": "be·seem 뒤에서 주어의 상태를, make·keep 의 목적어 뒤에서 목적어의 상태를 설명합니다. 시험이 가장 사랑하는 자리입니다.",
+          "example": {
+            "en": "The evidence in the second chapter is **convincing**.",
+            "ko": "두 번째 장에 있는 그 증거는 설득력이 있습니다.",
+            "note": "is 뒤에서 주어의 성질을 설명하는 보어입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "-thing 은 뒤에서 꾸밉니다",
+          "body": "something·anything·nothing 은 형용사가 뒤에 섭니다. 자리만 뒤일 뿐, 명사를 꾸민다는 일은 같습니다.",
+          "example": {
+            "en": "The researchers noticed **something unusual** in the data.",
+            "ko": "연구자들은 그 자료에서 특이한 점을 발견했습니다.",
+            "note": "-thing 으로 끝나는 대명사는 형용사가 뒤에서 꾸밉니다."
+          },
+          "pin": "팁"
+        },
+        {
+          "head": "부사 — 명사 빼고 다 꾸밉니다",
+          "body": "부사는 동사·형용사·다른 부사·문장 전체를 꾸밉니다. 문장이 이미 완전할 때 그 위에 얹히는 말입니다.",
+          "example": {
+            "en": "The committee debated the proposal **seriously**.",
+            "ko": "위원회는 그 제안을 진지하게 토의했습니다.",
+            "note": "seriously 는 동사 debated 를 꾸밉니다. 부사가 없어도 문장은 완전합니다."
+          }
+        },
+        {
+          "head": "부사의 출입 금지 구역",
+          "body": "부사는 명사를 꾸미지 못하고, 보어 자리에 서지 못합니다. 이 두 가지 금지가 이 레슨 모든 함정의 뿌리입니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "WORD_HUNT",
+      "tier": 1,
+      "title": "형용사 사냥",
+      "instruction": "이 문장에서 형용사를 전부 찾아 탭하십시오. 명사를 꾸미거나 보어 자리에 선 단어가 형용사입니다.",
+      "hitLabel": "형용사",
+      "tokens": [
+        {
+          "t": "The",
+          "hit": false
+        },
+        {
+          "t": "quiet",
+          "hit": true
+        },
+        {
+          "t": "library",
+          "hit": false
+        },
+        {
+          "t": "stayed",
+          "hit": false
+        },
+        {
+          "t": "cool",
+          "hit": true
+        },
+        {
+          "t": "during",
+          "hit": false
+        },
+        {
+          "t": "the",
+          "hit": false
+        },
+        {
+          "t": "long",
+          "hit": true
+        },
+        {
+          "t": "vacation",
+          "hit": false
+        }
+      ],
+      "ko": "그 조용한 도서관은 긴 방학 동안 시원했습니다.",
+      "explain": "quiet 와 long 은 명사 library·vacation 을 앞에서 꾸미는 형용사이고, cool 은 stayed 뒤 보어 자리에 선 형용사입니다. 자리는 셋 다 다르지만 직업은 같습니다. stayed 는 동사, during 은 전치사입니다."
+    },
+    {
+      "id": "b6",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "보어를 부르는 동사들",
+      "columns": [
+        "동사 무리",
+        "대표 선수",
+        "누구의 상태를 말하는가"
+      ],
+      "rows": [
+        {
+          "cells": [
+            "be 무리",
+            "be · become · seem · remain · stay",
+            "주어"
+          ],
+          "example": {
+            "en": "The audience remained **silent** during the lecture.",
+            "ko": "그 청중은 강연 내내 조용했습니다.",
+            "note": "remain 뒤의 보어 자리를 형용사 silent 가 채웁니다."
+          }
+        },
+        {
+          "cells": [
+            "감각동사",
+            "look · sound · taste · smell · feel",
+            "주어"
+          ],
+          "example": {
+            "en": "The metal surface felt **rough** to the touch.",
+            "ko": "그 금속 표면은 만졌을 때 거칠게 느껴졌습니다.",
+            "note": "feel 뒤는 보어 자리이므로 roughly 가 아니라 rough 입니다."
+          }
+        },
+        {
+          "cells": [
+            "목적격보어를 부르는 동사",
+            "make · keep · find · leave · consider",
+            "목적어"
+          ],
+          "example": {
+            "en": "The new filter keeps the water **clean** for several weeks.",
+            "ko": "그 새 필터는 몇 주 동안 물을 깨끗하게 유지합니다.",
+            "note": "목적어 the water 의 상태를 말하는 보어 — 형용사 clean 입니다."
+          }
+        }
+      ],
+      "takeaway": "이 세 무리 뒤의 빈자리는 수식 자리가 아니라 보어 자리입니다. 그 자리에 부사를 넣는 순간 문장이 무너집니다."
+    },
+    {
+      "id": "b7",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "보어를 부르는 동사 5·5·5",
+      "why": "시험은 이 동사들 뒤에 -ly 를 놓고 함정을 팝니다. 목록이 구구단처럼 즉시 나와야 밑줄을 본 순간 \"여기는 보어 자리\"라고 선언할 수 있습니다. 목록을 더듬는 순간 -ly 의 유혹에 넘어갑니다.",
+      "device": "세 무리로 끊습니다 — 되는 무리(be·become·seem·remain·stay), 느끼는 무리(look·sound·taste·smell·feel), 붙잡는 무리(make·keep·find·leave·consider). \"되고, 느끼고, 붙잡는다\"를 두 박자로 세 번 소리 내어 읽으십시오.",
+      "items": [
+        {
+          "cue": "되는 무리(5)",
+          "answer": "be · become · seem · remain · stay — 주어의 상태를 잇습니다"
+        },
+        {
+          "cue": "느끼는 무리(5)",
+          "answer": "look · sound · taste · smell · feel — 주어의 상태를 전합니다"
+        },
+        {
+          "cue": "붙잡는 무리(5)",
+          "answer": "make · keep · find · leave · consider — 목적어의 상태를 말합니다"
+        },
+        {
+          "cue": "세 무리 뒤의 빈자리",
+          "answer": "보어 자리 — 형용사만 들어갑니다"
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "보어 관문",
+      "mission": "보어를 부르는 동사만 전부 고르십시오. 보어 자리를 만들지 않는 침입자가 넷 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "become",
+        "seem",
+        "remain",
+        "stay",
+        "taste",
+        "feel",
+        "make",
+        "keep",
+        "arrive",
+        "enjoy",
+        "discuss",
+        "visit"
+      ],
+      "answers": [
+        "become",
+        "seem",
+        "remain",
+        "stay",
+        "taste",
+        "feel",
+        "make",
+        "keep"
+      ],
+      "passText": "여덟을 전부 가려냈습니다. 이제 이 동사들 뒤에서 -ly 를 만나면 반갑기는커녕 의심부터 하게 될 것입니다. 관문이 열립니다.",
+      "retryText": "아깝습니다. 힌트 하나 — \"되고, 느끼고, 붙잡는\" 세 무리를 떠올리십시오. 이 세 무리에 들지 않는 동사는 보어 자리를 만들지 않습니다."
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 1,
+      "title": "형용사가 서는 두 자리",
+      "rule": "형용사가 설 수 있는 자리는 두 곳뿐입니다. 명사를 꾸미는 자리와 보어 자리입니다.",
+      "examples": [
+        {
+          "en": "A **narrow** bridge connects the two old villages.",
+          "ko": "좁은 다리 하나가 그 두 오래된 마을을 잇습니다.",
+          "note": "narrow 가 명사 bridge 를 앞에서 꾸밉니다. 첫 번째 자리입니다."
+        },
+        {
+          "en": "The main argument of the paper remains **weak**.",
+          "ko": "그 논문의 핵심 논증은 여전히 빈약합니다.",
+          "note": "remains 뒤에서 주어의 상태를 설명하는 보어 자리입니다. 두 번째 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 1,
+      "title": "부사의 관할 구역",
+      "rule": "부사는 동사·형용사·다른 부사·문장 전체를 꾸밉니다. 명사를 꾸미지 못하고 보어도 되지 못합니다.",
+      "examples": [
+        {
+          "en": "The technicians checked every connection **carefully**.",
+          "ko": "기술자들은 모든 연결부를 주의 깊게 점검했습니다.",
+          "note": "carefully 는 동사 checked 를 꾸밉니다. 문장은 이미 완전하고 부사는 그 위에 얹힙니다."
+        },
+        {
+          "en": "The instructions were **unusually** clear.",
+          "ko": "그 설명서는 유난히 명확했습니다.",
+          "note": "보어는 형용사 clear 이고, 그 형용사를 꾸미는 것이 부사 unusually 입니다."
+        },
+        {
+          "en": "**Fortunately**, the backup system started without delay.",
+          "ko": "다행히 예비 장치가 지체 없이 작동했습니다.",
+          "note": "문장 전체를 꾸미는 부사입니다. 문장의 뼈대에는 관여하지 않습니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "보어 자리와 수식 자리를 갈라 봅니다",
+      "tokens": [
+        {
+          "t": "The audience",
+          "role": "S"
+        },
+        {
+          "t": "remained",
+          "role": "V"
+        },
+        {
+          "t": "completely",
+          "role": "M"
+        },
+        {
+          "t": "silent",
+          "role": "C"
+        },
+        {
+          "t": "during the lecture",
+          "role": "M"
+        }
+      ],
+      "ko": "그 청중은 강연 내내 완전히 조용했습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 걷어냅니다",
+          "roles": [
+            "M"
+          ],
+          "note": "during the lecture 는 전치사구 수식어이고, completely 는 뒤의 형용사를 꾸미는 부사입니다. 둘 다 문장의 뼈대가 아닙니다."
+        },
+        {
+          "label": "② 주어와 본동사를 확인합니다",
+          "roles": [
+            "S",
+            "V"
+          ],
+          "note": "주어는 The audience, 본동사는 remained 입니다. remain 은 혼자 서지 못하고 보어를 부르는 동사입니다."
+        },
+        {
+          "label": "③ 비어 있는 보어 자리를 채웁니다",
+          "roles": [
+            "C"
+          ],
+          "note": "보어 자리는 주어의 상태를 설명하는 자리이므로 형용사 silent 가 들어갑니다. silently 는 보어가 되지 못합니다."
+        }
+      ],
+      "conclusion": "같은 문장 안에서 completely 는 형용사를 꾸미는 부사이고, silent 는 보어 자리를 채우는 형용사입니다. 자리가 품사를 결정합니다."
+    },
+    {
+      "id": "b12",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "자리 판정 짝 맞추기",
+      "instruction": "왼쪽 표현이 짚는 단어가 선 자리를 오른쪽에서 찾아 연결하십시오. 형태가 아니라 자리를 보십시오.",
+      "pairs": [
+        {
+          "a": "remained calm 의 calm",
+          "b": "주격보어 — 형용사",
+          "why": "remain 은 주어의 상태를 잇는 동사이므로 뒤는 보어 자리입니다."
+        },
+        {
+          "a": "checked it carefully 의 carefully",
+          "b": "동사 수식 — 부사",
+          "why": "checked it 으로 문장이 완전하므로 남은 자리는 동사를 꾸미는 수식 자리입니다."
+        },
+        {
+          "a": "kept the room warm 의 warm",
+          "b": "목적격보어 — 형용사",
+          "why": "keep 이 목적어 뒤에 부른 보어 자리로, 방의 상태를 말합니다."
+        },
+        {
+          "a": "unusually clear 의 unusually",
+          "b": "형용사 수식 — 부사",
+          "why": "형용사 clear 를 꾸미는 일은 부사의 몫입니다."
+        },
+        {
+          "a": "something unusual 의 unusual",
+          "b": "명사(-thing) 수식 — 형용사",
+          "why": "-thing 대명사는 형용사가 뒤에서 꾸밉니다. 자리만 뒤일 뿐 명사 수식입니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "형용사·부사를 가르는 3단계",
+      "steps": [
+        {
+          "text": "판단할 자리를 잠시 지우고, 남은 문장이 완전한지 봅니다. 이때 문장이 성립하더라도 원문의 뜻(무엇이 어떤 상태인지)이 사라지면 그 자리는 수식어가 아니라 보어입니다.",
+          "applyNote": "dry 를 지우면 The researchers kept the samples … 가 남는데, 이때 kept 는 '보관했다'는 다른 뜻이 되어 원문의 '어떤 상태로 유지했다'가 사라집니다. 즉 dry 는 목적어의 상태를 말하는 자리입니다."
+        },
+        {
+          "text": "빠진 자리가 보어(주격보어·목적격보어)이면 형용사입니다.",
+          "applyNote": "kept 는 목적어 뒤에 목적격보어를 부르므로 그 자리는 형용사 dry 가 채웁니다. dryly 는 불가합니다."
+        },
+        {
+          "text": "문장이 이미 완전하면 그 자리는 수식어입니다. 명사를 꾸미면 형용사, 동사·형용사·부사·문장을 꾸미면 부사입니다.",
+          "applyNote": "completely 는 형용사 dry 를 꾸미는 자리이므로 부사이고, throughout the experiment 는 동사를 꾸미는 전치사구입니다."
+        },
+        {
+          "text": "-ly 가 붙었는지로 판정하지 않습니다. friendly 는 형용사이고 hard·fast 는 -ly 없이 부사로 쓰입니다.",
+          "applyNote": "형태가 아니라 자리를 먼저 확정한 뒤에 단어를 고릅니다."
+        }
+      ],
+      "example": {
+        "en": "The researchers kept the samples **completely dry** throughout the experiment.",
+        "ko": "연구자들은 실험 내내 표본을 완전히 건조한 상태로 유지했습니다.",
+        "note": "dry 는 목적격보어(형용사)이고, completely 는 그 형용사를 꾸미는 부사입니다."
+      }
+    },
+    {
+      "id": "b14",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The long argument in the final chapter seemed ( unnecessary / unnecessarily ) to most reviewers.",
+      "steps": [
+        {
+          "title": "① 괄호를 지우고 남은 문장을 봅니다",
+          "body": "The long argument … seemed … to most reviewers. seem 은 혼자 설 수 없는 동사이며 뒤에 보어를 요구합니다."
+        },
+        {
+          "title": "② 빠진 자리의 정체를 확인합니다",
+          "body": "seem 뒤의 빈자리는 주어의 성질을 설명하는 주격보어 자리입니다. 수식어를 넣을 자리가 아닙니다."
+        },
+        {
+          "title": "③ 보어가 될 수 있는 품사를 고릅니다",
+          "body": "보어가 될 수 있는 것은 형용사뿐입니다. 부사는 어떤 경우에도 보어 자리를 채우지 못합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "unnecessary 가 옳습니다. unnecessarily 를 쓰려면 그 뒤에 꾸밀 형용사가 있어야 합니다(seemed unnecessarily long)."
+        }
+      ],
+      "answer": "unnecessary",
+      "ko": "마지막 장의 그 긴 논증은 대부분의 심사자에게 불필요해 보였습니다."
+    },
+    {
+      "id": "b15",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b06-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The audience became {{blank}} after the sudden noise in the hall.",
+          "options": [
+            "silent",
+            "silently"
+          ],
+          "answer": 0,
+          "translation": "그 청중은 강당에서 난 갑작스러운 소음 뒤에 조용해졌습니다.",
+          "explanation": "become 은 주어의 상태를 설명하는 보어를 부르는 동사입니다. 보어 자리에는 형용사가 오므로 silent 가 옳습니다. 부사 silently 는 보어가 되지 못합니다.",
+          "trapTags": [
+            "linking-verb-complement"
+          ]
+        },
+        {
+          "id": "b06-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The soup that the chef prepared for the guests tasted [[u:wonderfully]].",
+          "isCorrect": false,
+          "correction": "wonderful",
+          "translation": "그 요리사가 손님들을 위해 준비한 수프는 맛이 훌륭했습니다.",
+          "explanation": "taste 는 주어의 성질을 설명하는 보어를 부르는 감각동사입니다. 보어 자리이므로 형용사 wonderful 이 와야 하며, 부사 wonderfully 는 꾸밀 대상이 없습니다.",
+          "trapTags": [
+            "sense-verb-adverb",
+            "linking-verb-complement"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "형용사와 부사의 관할 구역",
+      "columns": [
+        "형용사",
+        "부사"
+      ],
+      "rows": [
+        {
+          "criterion": "명사를 꾸미는가",
+          "a": "꾸밉니다 — a careful reader / something unusual",
+          "b": "꾸미지 못합니다"
+        },
+        {
+          "criterion": "보어가 될 수 있는가",
+          "a": "됩니다 — The water stays clean.",
+          "b": "되지 못합니다"
+        },
+        {
+          "criterion": "동사·형용사·문장을 꾸미는가",
+          "a": "꾸미지 못합니다",
+          "b": "꾸밉니다 — checked carefully / unusually clear"
+        },
+        {
+          "criterion": "-ly 와의 관계",
+          "a": "friendly·lovely·costly 처럼 -ly 로 끝나는 형용사가 있습니다",
+          "b": "hard·fast·late 처럼 -ly 없이 쓰이는 부사가 있습니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The engineers kept the room **cool** during the test.",
+          "ko": "기술자들은 시험 동안 그 방을 시원하게 유지했습니다.",
+          "note": "cool 은 목적격보어이므로 형용사입니다. coolly 를 쓰면 '침착하게 관리했다'는 뜻이 되어 '방을 시원한 상태로 유지했다'는 원문의 뜻이 사라집니다."
+        },
+        {
+          "en": "The engineers cooled the room **quickly** before the test.",
+          "ko": "기술자들은 시험 전에 그 방을 빠르게 식혔습니다.",
+          "note": "cooled the room 만으로 문장이 완전하므로 남은 자리는 동사를 꾸미는 부사 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 단어가 형용사인지 부사인지 분류하십시오. -ly 만 보고 고르면 함정에 빠집니다.",
+      "buckets": [
+        {
+          "id": "adj",
+          "label": "형용사입니다"
+        },
+        {
+          "id": "adv",
+          "label": "부사입니다"
+        }
+      ],
+      "chips": [
+        {
+          "text": "friendly",
+          "bucketId": "adj",
+          "why": "-ly 로 끝나지만 형용사입니다. 명사를 꾸미거나 보어가 됩니다."
+        },
+        {
+          "text": "lovely",
+          "bucketId": "adj",
+          "why": "-ly 로 끝나는 형용사입니다. 동사를 꾸미지 못합니다."
+        },
+        {
+          "text": "costly",
+          "bucketId": "adj",
+          "why": "-ly 로 끝나는 형용사이며 '값비싼'이라는 뜻입니다."
+        },
+        {
+          "text": "silent",
+          "bucketId": "adj",
+          "why": "보어와 명사 수식 자리에 오는 전형적인 형용사입니다."
+        },
+        {
+          "text": "carefully",
+          "bucketId": "adv",
+          "why": "동사를 꾸미는 부사입니다. 보어가 되지 못합니다."
+        },
+        {
+          "text": "quietly",
+          "bucketId": "adv",
+          "why": "동작이 이루어지는 방식을 꾸미는 부사입니다."
+        },
+        {
+          "text": "nearly",
+          "bucketId": "adv",
+          "why": "'거의'라는 뜻으로 형용사·부사·수량을 꾸미는 부사입니다."
+        },
+        {
+          "text": "hardly",
+          "bucketId": "adv",
+          "why": "'거의 ~않다'라는 뜻의 부사입니다. hard(열심히)와 뜻이 다릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 회의실은 발표 내내 완전히 조용했습니다.",
+      "answer": [
+        "The meeting room",
+        "stayed",
+        "completely",
+        "quiet",
+        "during the presentation"
+      ],
+      "tiles": [
+        "The meeting room",
+        "stayed",
+        "completely",
+        "quiet",
+        "during the presentation",
+        "quietly"
+      ],
+      "explanation": "stay 는 보어를 부르는 동사이므로 그 자리에는 형용사 quiet 이 옵니다. completely 는 그 형용사를 꾸미는 부사입니다. quietly 는 보어가 되지 못하므로 쓰이지 않습니다."
+    },
+    {
+      "id": "b19",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The judges considered the final performance ( flawless / flawlessly ).",
+      "givenSteps": [
+        "① 본동사는 considered 이고 목적어는 the final performance 입니다.",
+        "② consider 는 목적어 뒤에 목적격보어를 부르는 동사이므로, 괄호를 지우면 보어 자리가 비어 있습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "flawless — 목적격보어 자리이므로 형용사가 들어갑니다",
+        "flawlessly — 공연을 완벽하게 해냈다는 뜻이므로 부사가 들어갑니다",
+        "flawless 와 flawlessly 둘 다 들어갈 수 있습니다"
+      ],
+      "answer": 0,
+      "explain": "공연을 평가하는 뜻이 되려면 consider 는 목적어의 상태를 설명하는 목적격보어를 불러야 하고, 그 자리를 채울 수 있는 것은 형용사뿐입니다. 부사 flawlessly 를 넣으면 '심사위원이 흠 없이 심사했다'는 뜻이 되어 공연을 평가하지 못하므로, ③처럼 둘 다 가능하다고 볼 수 없습니다."
+    },
+    {
+      "id": "b20",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "자리 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 빈자리를 지우고 문장이 완전한지부터 보는 눈을 단련합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "보어 자리에는 형용사가 오고, 부사는 오지 못합니다.",
+          "isTrue": true,
+          "why": "보어는 주어·목적어의 상태를 설명하는 자리이므로 형용사의 몫입니다."
+        },
+        {
+          "statement": "감각동사 look·sound·taste 뒤의 빈자리에는 부사가 옵니다.",
+          "isTrue": false,
+          "why": "감각동사 뒤는 주어의 상태를 설명하는 보어 자리이므로 형용사가 옵니다."
+        },
+        {
+          "statement": "The fresh bread smells sweet. 은 어법상 옳습니다.",
+          "isTrue": true,
+          "why": "smell 뒤는 보어 자리이므로 형용사 sweet 이 옳습니다. sweetly 가 오히려 틀립니다."
+        },
+        {
+          "statement": "hardly 는 hard 의 부사형으로 '열심히'라는 뜻입니다.",
+          "isTrue": false,
+          "why": "hardly 는 '거의 ~않다'라는 전혀 다른 뜻의 부사입니다. '열심히'는 hard 가 맡습니다."
+        },
+        {
+          "statement": "friendly 는 -ly 로 끝나므로 부사입니다.",
+          "isTrue": false,
+          "why": "friendly 는 명사를 꾸미고 보어가 되는 형용사입니다. -ly 는 표지가 아니라 단서일 뿐입니다."
+        },
+        {
+          "statement": "make 의 목적어 뒤에서 목적어의 상태를 말하는 자리에는 형용사가 옵니다.",
+          "isTrue": true,
+          "why": "목적격보어 자리입니다. 부사는 그 자리에 서지 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "감각동사 뒤에 -ly 를 붙이는 함정",
+      "body": "look·sound·taste·smell·feel 은 '보다·듣다' 같은 동작이 아니라 주어의 상태를 설명하는 동사입니다. 뒤에 오는 것은 동작의 방식이 아니라 주어의 성질이므로, 부사가 아니라 형용사가 와야 합니다.",
+      "example": {
+        "en": "The fresh bread from the oven smells **sweetly**.",
+        "ko": "오븐에서 갓 나온 빵에서 달콤한 냄새가 납니다.",
+        "note": "smell 은 보어를 부르는 동사이므로 sweet 이 와야 합니다. sweetly 는 꾸밀 대상이 없어 문장이 성립하지 않습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "hard·hardly, late·lately, high·highly — 뜻이 다른 부사 짝",
+      "body": "-ly 가 붙으면 같은 뜻의 부사가 된다고 생각하면 안 됩니다. hard 는 '열심히', hardly 는 '거의 ~않다'입니다. late 는 '늦게', lately 는 '최근에'이고, high 는 '높이', highly 는 '매우'입니다. 자리는 둘 다 부사 자리이므로 형태가 아니라 의미로 골라야 합니다.",
+      "example": {
+        "en": "The team worked **hard** all week, but the results were **hardly** surprising.",
+        "ko": "그 팀은 일주일 내내 열심히 일했지만, 그 결과는 거의 놀랍지 않았습니다.",
+        "note": "hard 는 동사 worked 를 꾸미고, hardly 는 형용사 surprising 을 부정하는 뜻으로 꾸밉니다. 두 단어를 바꾸면 뜻이 뒤집힙니다."
+      }
+    },
+    {
+      "id": "b23",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나",
+      "instruction": "각 묶음에서 나머지와 결이 다른 하나를 찾아 탭하십시오. 형태(-ly)가 아니라 그 단어가 서는 자리를 보십시오.",
+      "rounds": [
+        {
+          "words": [
+            "seem",
+            "remain",
+            "taste",
+            "discuss"
+          ],
+          "odd": 3,
+          "why": "discuss 만 목적어를 데리고 서술하는 동사로 보어 자리를 만들지 않습니다. 나머지 셋은 뒤에 형용사 보어를 부릅니다."
+        },
+        {
+          "words": [
+            "friendly",
+            "lovely",
+            "costly",
+            "nearly"
+          ],
+          "odd": 3,
+          "why": "nearly 만 '거의'라는 뜻의 부사입니다. 나머지 셋은 -ly 로 끝나지만 명사를 꾸미거나 보어가 되는 형용사입니다."
+        },
+        {
+          "words": [
+            "silent",
+            "rough",
+            "convincing",
+            "carefully"
+          ],
+          "odd": 3,
+          "why": "carefully 만 부사로 보어 자리에 서지 못합니다. 나머지 셋은 보어 자리를 채울 수 있는 형용사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b06-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The long delay at the airport made the passengers in the terminal {{blank}}.",
+          "options": [
+            "restless",
+            "restlessly"
+          ],
+          "answer": 0,
+          "translation": "공항에서의 긴 지연은 터미널에 있던 승객들을 안절부절못하게 만들었습니다.",
+          "explanation": "make 는 목적어 the passengers 뒤에 목적격보어를 부릅니다. 그 자리는 목적어의 상태를 설명하는 자리이므로 형용사 restless 가 옳습니다. 부사 restlessly 는 보어가 되지 못합니다.",
+          "trapTags": [
+            "object-complement",
+            "long-subject"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 restless 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "made 가 목적어 뒤에 목적격보어를 부르는데, 보어 자리는 형용사만 채울 수 있기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 그 자리가 보어 자리인지 수식 자리인지가 판단의 유일한 근거입니다."
+        },
+        {
+          "text": "승객들이 스스로 안절부절못한 것이므로 능동의 의미가 필요하기 때문입니다.",
+          "correct": false,
+          "feedback": "능동·수동은 이 판단과 무관합니다. 형용사와 부사의 선택은 그 자리가 보어 자리인지로 갈립니다."
+        },
+        {
+          "text": "made 뒤에 부사를 놓으면 문장이 어색하게 들리기 때문입니다.",
+          "correct": false,
+          "feedback": "어색함은 근거가 되지 못합니다. 목적격보어 자리는 부사가 들어갈 수 없는 구조적 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The lecture hall stayed [[1:silent]] while the visiting scholar spoke [[2:calmly]] about a theory that had long seemed [[3:unnecessarily]] complex, and in the end the audience found her explanation [[4:convincingly]].",
+      "answer": 4,
+      "correction": "convincing",
+      "rationales": [
+        "stay 는 보어를 부르는 동사이므로 형용사 silent 가 옳습니다.",
+        "spoke 는 완전한 절을 이루고 있으므로 남은 자리는 동사를 꾸미는 부사 자리입니다. calmly 가 옳습니다.",
+        "보어는 형용사 complex 이고, unnecessarily 는 그 형용사를 꾸미는 부사입니다. 형용사를 꾸미는 자리이므로 옳습니다.",
+        "find 는 목적어 her explanation 뒤에 목적격보어를 부릅니다. 보어 자리이므로 형용사 convincing 으로 고쳐야 합니다."
+      ],
+      "ko": "방문 학자가 오랫동안 지나치게 복잡해 보였던 이론에 대해 차분하게 이야기하는 동안 강당은 조용했고, 결국 청중은 그 학자의 설명이 설득력 있다고 여겼습니다."
+    },
+    {
+      "id": "b27",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 감각동사·상태동사 뒤에 부사를 놓은 문장을 주고 고쳐 쓰게 합니다. 보어 자리라는 근거를 함께 써야 만점입니다.",
+          "sample": {
+            "en": "The concert hall remained quietly until the conductor appeared.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "quietly → quiet. remain 은 주어의 상태를 설명하는 보어를 부르므로 형용사가 와야 합니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 목적어 뒤 밑줄에 형용사·부사를 놓고, 그 자리가 목적격보어인지 동사를 꾸미는 수식어인지를 묻습니다. 밑줄을 지운 뒤 문장이 완전한지 확인하는 것이 판별 절차입니다.",
+          "sample": {
+            "en": "The unexpected findings made the whole experiment [[u:valuable]] to later researchers.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다. make + 목적어 + 목적격보어 구조이므로 보어 자리에는 형용사 valuable 이 와야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b28",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Urban planners have long argued that small design choices change how a street feels. [[u:A row of low trees along the sidewalk keeps the summer air noticeably cooler.]] Pedestrians walk more slowly there, and shop owners report longer visits.",
+      "instruction": "밑줄 친 문장에서 형용사가 놓인 자리와 부사가 놓인 자리를 각각 찾으십시오.",
+      "found": "keeps 는 목적어 the summer air 뒤에 목적격보어를 부르므로 그 자리를 형용사 cooler 가 채웁니다. noticeably 는 그 형용사를 꾸미는 부사입니다. 보어 자리는 형용사가, 형용사를 꾸미는 자리는 부사가 맡습니다.",
+      "gist": "보도를 따라 심은 낮은 나무들이 여름 공기를 눈에 띄게 서늘하게 유지한다는 내용입니다."
+    },
+    {
+      "id": "b29",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "-ly 가면의 상인",
+      "intro": "나는 모든 단어에 -ly 가면을 씌워 파는 상인입니다. 보어 자리에도, 수식 자리에도 같은 가면을 내밉니다. 네 번의 거래에서 가면을 전부 돌려보낼 수 있는지 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The garden looked {{blank}} after the storm.",
+          "options": [
+            "terrible",
+            "terribly"
+          ],
+          "answer": 0,
+          "why": "look 은 주어의 상태를 설명하는 감각동사이므로 뒤는 보어 자리입니다. 형용사 terrible 이 옵니다."
+        },
+        {
+          "prompt": "The editor read the manuscript {{blank}} before publication.",
+          "options": [
+            "thorough",
+            "thoroughly"
+          ],
+          "answer": 1,
+          "why": "read the manuscript 로 문장이 이미 완전합니다. 남은 자리는 동사를 꾸미는 부사 자리입니다."
+        },
+        {
+          "prompt": "Constant practice made her routine almost {{blank}}.",
+          "options": [
+            "perfect",
+            "perfectly"
+          ],
+          "answer": 0,
+          "why": "make 는 목적어 뒤에 목적격보어를 부릅니다. 루틴의 상태를 말하는 자리이므로 형용사 perfect 가 오고, almost 는 그 형용사를 꾸미는 부사입니다."
+        },
+        {
+          "prompt": "The committee remained {{blank}} skeptical of the plan.",
+          "options": [
+            "deep",
+            "deeply"
+          ],
+          "answer": 1,
+          "why": "보어는 형용사 skeptical 이 이미 맡고 있습니다. 빈칸은 그 형용사를 꾸미는 자리이므로 부사 deeply 가 옳습니다."
+        }
+      ],
+      "winText": "상인이 좌판을 접습니다. 빈자리를 지우고 문장의 완전성부터 보는 눈에는 -ly 가면이 더 이상 팔리지 않습니다. 이 눈이 수능 밑줄 앞에서도 그대로 통합니다.",
+      "loseText": "상인이 웃으며 가면을 다시 내밉니다. 거래마다 물으십시오 — 그 자리를 지웠을 때 문장이 완전했습니까, 아니면 상태를 말할 보어가 비어 있었습니까. 그 질문 하나면 다음 거래는 이길 수 있습니다."
+    },
+    {
+      "id": "b30",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "명사를 꾸미는 자리와 ___ 자리에는 형용사가 오고, 동사·형용사·문장을 꾸미는 자리에는 ___가 옵니다."
+    },
+    {
+      "id": "b31",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "형용사의 자리는 두 곳입니다. 명사를 꾸미는 자리와 보어(주격보어·목적격보어) 자리입니다.",
+        "부사는 동사·형용사·다른 부사·문장 전체를 꾸밉니다. 명사를 꾸미지 못하고 보어도 되지 못합니다.",
+        "be·become·seem·remain·stay 와 감각동사 뒤, 그리고 make·keep·find·consider 의 목적어 뒤는 보어 자리이므로 형용사입니다.",
+        "판단할 자리를 지우고 남은 문장이 완전하면 수식어 자리(부사), 보어가 비면 형용사 자리입니다.",
+        "-ly 형태는 근거가 되지 못합니다. friendly 는 형용사이고 hard·fast 는 -ly 없이 부사입니다."
+      ],
+      "keySentence": {
+        "en": "The audience remained **completely silent** during the lecture.",
+        "ko": "그 청중은 강연 내내 완전히 조용했습니다.",
+        "note": "silent 는 보어 자리의 형용사이고, completely 는 그 형용사를 꾸미는 부사입니다."
+      }
+    },
+    {
+      "id": "b32",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b06-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The instructions printed on the box seemed {{blank}} to most first-time users.",
+          "options": [
+            "confusing",
+            "confusingly"
+          ],
+          "answer": 0,
+          "translation": "상자에 인쇄된 그 설명은 처음 쓰는 사용자 대부분에게 혼란스러워 보였습니다.",
+          "explanation": "seem 은 주어의 성질을 설명하는 보어를 부르는 동사입니다. 보어 자리이므로 형용사 confusing 이 옳고, 부사 confusingly 는 그 자리를 채우지 못합니다.",
+          "trapTags": [
+            "linking-verb-complement"
+          ]
+        },
+        {
+          "id": "b06-c1-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The researchers kept the samples [[u:completely]] dry until the final measurement.",
+          "isCorrect": true,
+          "translation": "연구자들은 마지막 측정 때까지 표본을 완전히 건조한 상태로 유지했습니다.",
+          "explanation": "목적격보어 자리는 형용사 dry 가 채우고 있고, 밑줄 친 completely 는 그 형용사를 꾸미는 부사입니다. 형용사를 꾸미는 자리이므로 부사가 옳습니다.",
+          "trapTags": [
+            "object-complement",
+            "adverb-modifies-adjective"
+          ]
+        },
+        {
+          "id": "b06-c1-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The lecture was {{blank}} organized, and even beginners followed every step.",
+          "options": [
+            "clearly",
+            "clear"
+          ],
+          "answer": 0,
+          "translation": "그 강의는 명확하게 구성되어 있어서 초보자들도 모든 단계를 따라갔습니다.",
+          "explanation": "was organized 는 '구성되었다'는 뜻의 수동태 동사구로 그 자체로 완전합니다. 빈칸은 그 organized(과거분사)를 꾸미는 자리이므로 부사 clearly 가 옳습니다. 형용사 clear 는 동사·분사를 꾸미지 못합니다.",
+          "trapTags": [
+            "adverb-modifies-adjective"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P077",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "강력한 매력 오답. 앞부분의 'carefully mirrored her grandmother's actions'가 이 선지를 끌어당기지만, 빈칸 시점에서는 서사가 이미 전환됨 — Chloe는 'boldly chose the biscuit-looking thing before her grandmother'로 모방 패턴을 깼고, 할머니가 지금 막 크림과 잼을 바르는 중인데 Chloe의 스콘은 'mostly all in her mouth already'이므로 '할머니가 한 것을 그대로 따라했다'는 시간적·행위적으로 성립 불가."
+    },
+    {
+      "label": "2",
+      "verdict": "accept",
+      "reason": "삽입 시 'had already started to eat hers before she added any extra toppings; in fact, it was mostly all in her mouth already'로 문법 결합이 매끄럽고, 할머니가 크림·잼(토핑)을 바르는 격식 있는 방식과 대비되어 스콘 예절을 모르는 Chloe가 아무것도 바르지 않은 채 먹어치웠다는 서사와 정확히 부합. '; in fact' 이하가 이 내용을 증폭하는 구조. 'before she added'가 나중에 토핑을 발랐다는 미약한 함축을 남길 수 있으나 문맥상 '토핑 단계 이전에/토핑 없이'로 자연스럽게 읽힘."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "분사구로 문법적 부착은 가능하나, 차를 먼저 한 모금 마셨다는 내용은 'mostly all in her mouth already'와 아무 논리적 연결이 없고 앞의 'took a sip of the sweet tea'를 무의미하게 재활용한 표면 어휘 미끼."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "지문에 'all the sandwiches were eaten up'이 명시되어 샌드위치가 남아있지 않으므로 직접 모순."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "'it was mostly all in her mouth already'(거의 다 입에 넣음)와 직접 모순 — 남은 것을 할머니에게 권할 수 없음."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: ①이 유일한 실질 미끼로, 'mirrored her actions' 프라이밍에 실제로 끌렸으나 'boldly... before her grandmother'와 시간 순서(할머니는 지금 바르는 중, Chloe는 이미 다 먹음)가 이를 확정적으로 배제. ②는 세미콜론 뒤 'in fact' 증폭 구조와 완벽히 맞물리는 단일 정답. 대안 해석으로 정문이 되는 다른 선지는 없음."
+}

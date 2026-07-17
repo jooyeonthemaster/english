@@ -1,0 +1,40 @@
+{
+  "batchId": "phaseB-x2-v1",
+  "phase": "B",
+  "atKst": "2026-07-16T20:17:34.566+09:00",
+  "assignments": 20,
+  "slotsConsumed": 33,
+  "accepted": 8,
+  "modelCalls": 64,
+  "inputTokens": 463902,
+  "outputTokens": 71217,
+  "costUsd": 1.238161,
+  "ledgerAfter": {
+    "used": 277,
+    "cap": 1000,
+    "costUsd": 7.615933
+  },
+  "byArm": {
+    "G-X2": {
+      "n": 10,
+      "accepted": 3,
+      "gateRejected": 7,
+      "noCandidate": 0,
+      "slots": 18,
+      "costUsd": 0.801988
+    },
+    "B-X2": {
+      "n": 10,
+      "accepted": 5,
+      "gateRejected": 5,
+      "noCandidate": 0,
+      "slots": 15,
+      "costUsd": 0.436173
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 191789
+}

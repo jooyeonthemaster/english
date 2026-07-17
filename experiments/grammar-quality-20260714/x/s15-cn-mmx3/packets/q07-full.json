@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense",
+    "grammar-decoy-point-monotony",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [
+    "grammar-decoy-point-diversity",
+    "grammar-explanation-too-long"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=h  (B):dec=h  (C):dec=h  (D):ANS=h  (E):dec=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 173,
+        "relPos": 0.251,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 360,
+        "relPos": 0.522,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 579,
+        "relPos": 0.84,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 594,
+        "relPos": 0.862,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 655,
+        "relPos": 0.951,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.951,
+    "firstHalfShare": 0.2,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "hadn't noticed",
+        "isError": false,
+        "surroundingText": "...such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "By ceasing",
+        "isError": false,
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "that something",
+        "isError": false,
+        "surroundingText": "Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "woke",
+        "isError": true,
+        "correction": "woke",
+        "errorExpression": "woke -> woken",
+        "surroundingText": "people called the police in the middle of the night claiming that something woke them up.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(E)",
+        "expression": "used to run",
+        "isError": false,
+        "surroundingText": "They tended to call around the time the trains used to run past their apartments.",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "hadn't noticed"
+      },
+      {
+        "label": "(B)",
+        "text": "By ceasing"
+      },
+      {
+        "label": "(C)",
+        "text": "that something"
+      },
+      {
+        "label": "(D)",
+        "text": "woke -> woken"
+      },
+      {
+        "label": "(E)",
+        "text": "used to run"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "(A) hadn't noticed의 어법 판단: 'we hadn't noticed the sound while it was ongoing'에서 hadn't는 과거완료로 'had not'의 축약형이다. 문장 전체의 시제 기준시점이 'has just ceased'(현재완료)이므로 그보다 더 과거인 '지각하지 못했던' 상태를 나타내기에 적절하다. 과거완료는 'had + 과거분사' 구성이므로 hadn't noticed는 정확한 형태이다. 어법상 정답이다.",
+      "(B)": "(B) By ceasing의 어법 판단: 'By + V-ing'는 분사구문으로, 문장의 주어(it)가 ceasing이라는 동작을 수행하는 의미적 주체가 되어야 한다. 여기서 it(= the noise)이 ceasing(주체가 소음을 멈추다)의 행위주이므로 의미적 일치 관계가 성립한다. 분사구문은 '접속사+주어+동사'를 압축한 형태로 by+V-ing 자체가 문법적으로 완결되어 문제 없다.",
+      "(C)": "(C) that something의 어법 판단: 'claiming that something woke them up'에서 that은 claiming의 목적어 절을引导하는 접속사이며, something은 대명사 지시 관계에서의 주어이다. that이 명사절을 이끄는 것은 가장 기본적인 접속사 쓰임이며, 목적어 자리에 제대로 쓰여 있다. 어법상 정답이다.",
+      "(E)": "(E) used to run의 어법 판단: 'used to부정사'는 '예전에 ~했었다'의 의미로 과거의 습관적/지속적 상태를 나타내는 표현이다. 동사 run의 과거형이 run으로 동일하므로 'the trains used to run'이 문법적으로 정확하다. would+부정사와의 차이를 혼동할 수 있지만 used to run은 정통 표현이다."
+    },
+    "explanation": "(D) \"woke -> woken\"는 어법상 틀린 표현이며 \"woke\"로 고쳐야 한다. 【정답】(D)​ ​ [D] woke → woken이 어법상 옳다. 'claiming that something [woke/woken] them up'에서 'something'이 'them'(= them)을 깨운 것이므로 'something'이 행위자가 되어야 한다. 따라서 수동태 'something had woken them up' 또는 능동태 'something woke them up' 둘 다 가능하다. 단, 원문 의도가 수동 의미('them이 woken되었다')를 나타내는 get-type 수동 표현이거나, 보다 격식적인 표현을 의도했다면 woken이 옳다. 한편, 위 문맥은 'something(소리/사건)이 그들을 깨웠다'는 능동 의미로 해석하는 것이 자연스럽므로 woke 또한 문법적으로 허용된다. 그러나, 다음 단락에 나올 어법 오류의 전형적 패턴(get-type 수동과 혼동) 혹은 'something이 them을 woken'하는 수동 구문을 의도한 경우 woken이 정답으로 처리된다.",
+    "keyPoints": [
+      "had + 과거분사(hadn't noticed) - 과거완료 축약형",
+      "By + V-ing (By ceasing) - 주절의 주어와 의미적 일치 시 분사구문으로 사용 가능",
+      "that + 주어 + 동사 (claiming that something woke...) - 명사절을 이끄는 접속사 that",
+      "woke vs woken - 능동/수동 의미 구분, get-type 수동의 과거분사",
+      "used to + 동사원형 (used to run) - 과거 습관적/지속적 상태"
+    ],
+    "tags": [
+      "수능",
+      "어법",
+      "중급",
+      "get-수동태",
+      "과거완료",
+      "분사구문",
+      "접속사 that",
+      "used to"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we __(A) hadn't noticed__ the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. __(B) By ceasing__, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming __(C) that something__ __(D) woke -> woken__ them up. They tended to call around the time the trains __(E) used to run__ past their apartments."
+  }
+}

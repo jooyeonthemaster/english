@@ -1,0 +1,159 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=d  (C):ANS=a  (D):dec=k  (E):dec=m",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 60,
+        "relPos": 0.083,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 164,
+        "relPos": 0.227,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 420,
+        "relPos": 0.583,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 539,
+        "relPos": 0.748,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 683,
+        "relPos": 0.947,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.947,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "kept",
+        "isError": false,
+        "errorExpression": "kept",
+        "surroundingText": "a trait that kept us alive when we were living on the savannas",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "which explains why complaining is such a popular pastime",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "make",
+        "isError": true,
+        "correction": "make",
+        "errorExpression": "making",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "by sharing",
+        "isError": false,
+        "errorExpression": "by sharing",
+        "surroundingText": "start your conversations with friends by sharing a recent win",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "more reasons",
+        "isError": false,
+        "errorExpression": "more reasons",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "m"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "kept"
+      },
+      {
+        "label": "(B)",
+        "text": "is"
+      },
+      {
+        "label": "(C)",
+        "text": "making"
+      },
+      {
+        "label": "(D)",
+        "text": "by sharing"
+      },
+      {
+        "label": "(E)",
+        "text": "more reasons"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "선행사 a trait를 수식하는 주격 관계대명사 that절 내의 동사로, 과거의 역사적 사실이나 지속된 상태를 표현하고 있으므로 과거시제 동사 kept는 적절합니다.",
+      "(B)": "why가 이끄는 간접의문문 명사절 내에서 동명사 주어 complaining에 호응하는 단수 동사로, 현재의 일반적인 사실을 나타내므로 단수 현재형인 is는 어법상 적절합니다.",
+      "(D)": "전치사 by 뒤에 명사적 성격을 가지는 동명사 sharing이 이끄는 동명사구가 위치하여 수단을 올바르게 나타내고 있습니다.",
+      "(E)": "「the + 비교급 ~, the + 비교급 ...」 구문으로, 뒤따르는 주절에서 have의 목적어 역할을 하는 reasons가 비교급 형용사 more의 수식을 받아 the more reasons의 형태로 문두로 올바르게 이동하였습니다."
+    },
+    "explanation": "If로 시작하는 조건의 부사절(If you keep a calendar or a journal)이 끝난 뒤에는 주절이 이어져야 하며, 이 주절을 구성할 문장의 정동사(finite verb)가 반드시 필요합니다. 해당 문장에는 주어가 생략된 형태의 명령문이 와야 하므로, 준동사 형태인 making은 주절의 본동사 역할을 할 수 없어 비문이 됩니다. 따라서 making을 명령문을 이끄는 동사원형인 make로 고쳐야 합니다. 많은 학생들이 If절 뒤의 쉼표를 보고 분사구문 등의 준동사 자리가 올 수 있다고 오해하기 쉽지만, 주절 전체의 동사를 확보해야 한다는 문장 구조적 일관성을 기억해야 합니다.",
+    "keyPoints": [
+      "(C) 정동사 vs 준동사 — 부사절 뒤 주절을 이끄는 명령문 동사원형 판단",
+      "(A) 동사의 시제와 수일치 — 주격 관계대명사절 내 과거동사의 적절성 판단",
+      "(E) 비교구문 — 「the + 비교급, the + 비교급」 구조에서 수식받는 명사의 올바른 위치 판정"
+    ],
+    "tags": [
+      "어법",
+      "정·준동사",
+      "명령문",
+      "the 비교급",
+      "동명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that __(A) kept__ us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining __(B) is__ such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, __(C) making__ a point to write down what went well. If you're more of a verbal processor, start your conversations with friends __(D) by sharing__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the __(E) more reasons__ you have to celebrate it."
+  }
+}

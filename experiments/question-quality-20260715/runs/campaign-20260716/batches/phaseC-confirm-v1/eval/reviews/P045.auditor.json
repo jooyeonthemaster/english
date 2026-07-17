@@ -1,0 +1,82 @@
+{
+  "pid": "P045",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-B-misanalysis",
+      "severity": "critical",
+      "evidence": "렌더 지문에서 (B) 마커는 'This means __(B) that__ those brain activities...'의 첫 번째 that(동사 means의 목적어인 명사절을 이끄는 접속사)에 찍혀 있고 그 뒤의 절은 완전하다. 그러나 오답 해설 (B)는 '선행사 the workout을 수식하며, 뒤에 목적어가 빠진 불완전한 절을 연결하는 목적격 관계대명사'라고 설명한다. 이는 같은 문장의 두 번째(밑줄 없는) that('the workout today that they ...')에 대한 분석을 밑줄 친 첫 번째 that에 잘못 귀속한 오분석이다. keyPoints의 '(B) 관계대명사 — 선행사 수식과 불완전한 문장 연결'도 동일한 오류를 반복한다. 명사절 접속사 that을 관계대명사로 부르는 전형적 V4 실패 유형."
+    },
+    {
+      "code": "V4-B-marker-ambiguity",
+      "severity": "major",
+      "evidence": "markedExpressions (B)의 surroundingText('This means that those brain activities don't get the workout today that they did ...')에는 that이 두 번 등장해 마커 목표가 모호하다. 해설 내용으로 보면 출제 의도는 두 번째 that(관계대명사)이었을 가능성이 높은데, 렌더는 첫 번째 that에 마커를 찍었다. 학생 정답 판정에는 영향이 없으나(둘 다 어법상 옳음) 해설-지문 불일치의 근본 원인이다."
+    },
+    {
+      "code": "V2-E-debatable-agreement",
+      "severity": "minor",
+      "evidence": "(E) 'Their saturation in and early use of technology makes'는 등위 명사구 주어(saturation ... and ... use)여서 규범적으로는 복수 make를 기대할 수 있는 논쟁 여지 자리다. 원문이 makes로 attested이고 단일 개념 취급으로 방어 가능하므로 정답 유일성은 유지되지만, 이의제기 소지가 있는 디코이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 when이 남은 분사구문(부사절 축약)에서 현재분사 형태 판단",
+      "temptingBecause": "when 뒤에 주어+동사의 완전한 절이나 과거형 typed를 기대하는 학생이 형태를 의심할 수 있다",
+      "decisiveFlaw": "when (they were) typing의 축약으로 능동 의미의 현재분사 typing이 어법상 옳으므로 정답이 될 수 없다"
+    },
+    {
+      "label": "(B)",
+      "intent": "that의 용법 식별(명사절 접속사 vs 관계대명사)",
+      "temptingBecause": "같은 문장에 that이 두 번 등장해 역할 혼동을 유발하고, that의 완전/불완전 절 판단은 빈출 포인트다",
+      "decisiveFlaw": "밑줄 친 that은 means의 목적어인 완전한 명사절을 이끄는 접속사로 어법상 옳다. 다만 해설은 이를 관계대명사로 오분석했다(V4 실패)"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 대동사 판단: 일반동사구(get the workout)를 받는 자리에 be동사 불가, do 계열 필요",
+      "temptingBecause": "'that they were'는 국소적으로 자연스럽게 들리고, 앞 문맥에 weren't 등 be동사가 반복돼 표면 유추로 지나치기 쉽다",
+      "decisiveFlaw": "관계절 내 동사는 선행 일반동사구 get the workout을 대신해야 하므로 were는 비문이며 did로 교정하면 정확히 원문이 복원된다(source-correct → displayed-wrong 최소대립쌍)"
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사 목적어 자리의 동명사 병렬 구조 판단",
+      "temptingBecause": "and 뒤 형태가 scanning과 병렬인지, 본동사 자리인지 구조 확인을 요구한다",
+      "decisiveFlaw": "focused on의 목적어로 scanning과 병렬을 이루는 동명사 processing은 어법상 옳으므로 정답이 될 수 없다"
+    },
+    {
+      "label": "(E)",
+      "intent": "공유 보충어를 가진 등위 명사구 주어의 수일치 판단",
+      "temptingBecause": "saturation and use의 A and B 등위 주어로 보면 복수 make를 기대하게 된다",
+      "decisiveFlaw": "기술 몰입과 조기 사용을 하나의 현상으로 개념화한 단수 취급이며 원문도 makes로 attested — 다만 규범적으로 복수 해석도 가능한 논쟁 여지 자리(minor)"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "B-relative-pronoun-misanalysis",
+      "severity": "critical",
+      "evidence": "오답 해설 (B)와 keyPoints가 밑줄 친 명사절 접속사 that(This means that...)을 '선행사 the workout을 수식하는 목적격 관계대명사, 뒤에 목적어가 빠진 불완전한 절'로 설명 — 실제 밑줄 뒤 절은 완전하며 선행사가 없다. 문장 내 다른 that의 분석을 잘못 귀속했다."
+    },
+    {
+      "code": "C-proverb-explanation-ok",
+      "severity": "info",
+      "evidence": "(C) 본해설의 대동사 분석(get the workout을 do 계열로 대신, 과거 시제 did)은 실제 구조와 일치하며 정확하다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "지문 무결성(V1), 정답 유일성(V2), 문법성(V3), 필드 동기화(V5)는 통과. (C) were→did 대동사 포인트는 원문 복원형 최소대립쌍으로 출제 가치가 높고 INTERMEDIATE 난이도에 부합한다. 그러나 (B) 오답 해설이 밑줄 친 명사절 접속사 that을 관계대명사로 오분석하고 존재하지 않는 '불완전한 절'을 주장하는 치명적 V4 실패로 등급은 F. 수정 방향: (1) (B) 마커를 두 번째 that('the workout today that they did'의 that)으로 옮기거나, (2) 현 마커를 유지하고 해설을 '동사 means의 목적어인 완전한 명사절을 이끄는 접속사 that'으로 교체. 부가로 (E)는 등위 주어 수일치 논쟁 여지가 있어 이의제기 대비 설명 보강 권장. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

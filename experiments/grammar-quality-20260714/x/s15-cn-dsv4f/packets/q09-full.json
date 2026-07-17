@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go1_20191120-q21",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "함축의미",
+    "words": 155
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=g  (B):dec=k  (C):dec=l  (D):dec=b  (E):dec=l",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 78,
+        "relPos": 0.091,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 193,
+        "relPos": 0.226,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 248,
+        "relPos": 0.29,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 344,
+        "relPos": 0.402,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 546,
+        "relPos": 0.639,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 13,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.639,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "There is a critical factor that determines whether your choice will influence that of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found strolling in large groups toward the edge of the water in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, which likes to have penguins for a meal. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\"",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중 어법상 옳지 않은 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that of others",
+        "isError": true,
+        "correction": "that of others",
+        "errorExpression": "those of others",
+        "surroundingText": "There is a critical factor that determines whether your choice will influence (A) those of others: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found (B) strolling in large groups toward the edge of the water (C) in search of food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, (D) which likes to have penguins for a meal. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and (E) jumps in. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is ",
+        "pointCode": "g"
+      },
+      {
+        "label": "(B)",
+        "expression": "strolling",
+        "isError": false,
+        "correction": "strolling",
+        "errorExpression": "strolling",
+        "surroundingText": "They are often found (B) strolling in large groups toward the edge of the water (C) in search of food.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "in search of",
+        "isError": false,
+        "correction": "in search of",
+        "errorExpression": "in search of",
+        "surroundingText": "in search of food.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(D)",
+        "expression": "which likes",
+        "isError": false,
+        "correction": "which likes",
+        "errorExpression": "which likes",
+        "surroundingText": "There is the leopard seal, for one, (D) which likes to have penguins for a meal.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "jumps in",
+        "isError": false,
+        "correction": "jumps in",
+        "errorExpression": "jumps in",
+        "surroundingText": "until one of them gives up and (E) jumps in.",
+        "pointCode": "l"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "those of others"
+      },
+      {
+        "label": "(B)",
+        "text": "strolling"
+      },
+      {
+        "label": "(C)",
+        "text": "in search of"
+      },
+      {
+        "label": "(D)",
+        "text": "which likes"
+      },
+      {
+        "label": "(E)",
+        "text": "jumps in"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "(B) 'strolling'은 'found + 현재분사' 구문으로 올바릅니다. '걸어가는 모습이 발견되다'라는 의미로 적절합니다.",
+      "(C)": "(C) 'in search of'는 '~을 찾아서'라는 의미의 올바른 관용적 전치사구입니다.",
+      "(D)": "(D) 'which likes'는 선행사 'the leopard seal'(단수)을 수식하는 관계대명사절로, 주어-동사 수일치가 올바르게 이루어졌습니다.",
+      "(E)": "(E) 'jumps in'은 'one of them'이라는 단수 주어에 맞는 동사 형태입니다."
+    },
+    "explanation": "(A) 'those of others'는 'your choice'라는 단수 명사를 받는 대명사로 사용될 수 없습니다. 'that of others'가 올바른 표현입니다. 'that'은 앞서 언급된 단수 명사 'choice'를 받아 '다른 사람들의 선택'을 의미합니다. (B) 'strolling'은 'found + 현재분사' 구문으로 '걸어가는 모습이 발견되다'라는 의미를 자연스럽게 전달하므로 적절합니다. (C) 'in search of'는 '~을 찾아서'라는 의미의 관용적 전치사구로 올바릅니다. (D) 'which likes'는 선행사 'the leopard seal'(단수)을 수식하는 관계대명사절로, 주어-동사 수일치가 이루어졌습니다. (E) 'jumps in'은 'one of them'이라는 단수 주어에 맞는 동사 형태입니다. 따라서 (A)가 어법상 옳지 않습니다.",
+    "keyPoints": [
+      "대명사 'that'과 'those'의 구분: 단수 명사를 받을 때는 'that', 복수 명사를 받을 때는 'those'를 사용한다.",
+      "관용적 표현 'in search of'는 'in search for'가 아님에 주의한다.",
+      "관계대명사절과 주어-동사 수일치",
+      "분사구문의 용법"
+    ],
+    "tags": [
+      "어법",
+      "수능",
+      "killler",
+      "대명사",
+      "수일치",
+      "관용표현"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "There is a critical factor that determines whether your choice will influence __(A) those of others__: the visible consequences of the choice. Take the case of the Adélie penguins. They are often found __(B) strolling__ in large groups toward the edge of the water __(C) in search of__ food. Yet danger awaits in the icy-cold water. There is the leopard seal, for one, __(D) which likes__ to have penguins for a meal. What is an Adélie to do? The penguins' solution is to play the waiting game. They wait and wait and wait by the edge of the water until one of them gives up and __(E) jumps in__. The moment that occurs, the rest of the penguins watch with anticipation to see what happens next. If the pioneer survives, everyone else will follow suit. If it perishes, they'll turn away. One penguin's destiny alters the fate of all the others. Their strategy, you could say, is \"learn and live.\""
+  }
+}

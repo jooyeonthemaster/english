@@ -1,0 +1,3726 @@
+[
+  {
+    "itemId": "PG001",
+    "blindAnswer": "(B)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — (B) promoted만 infinitival subject 내부의 blog를 수식할 수 없어 promoting이 필요하다.",
+      "V3": "PASS — promoted→promoting 후 문장이 완결되고 나머지 네 표지는 모두 문맥상 정상이다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 2,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER지만 (B)는 to have 뒤 명사와 과거형 동사의 충돌로 국소 즉답된다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "where",
+        "validity": "VALID",
+        "pointAndCraft": "here is where: 보어 역할의 관계부사절로 자연스럽다."
+      },
+      {
+        "label": "(B)",
+        "text": "promoted",
+        "validity": "INVALID",
+        "pointAndCraft": "promoted는 blog 뒤 수식/분사 자리에 맞지 않으며 promoting으로 고쳐야 한다."
+      },
+      {
+        "label": "(C)",
+        "text": "is",
+        "validity": "VALID",
+        "pointAndCraft": "all (that) you're doing의 보어를 잇는 단수 is가 맞다."
+      },
+      {
+        "label": "(D)",
+        "text": "to",
+        "validity": "VALID",
+        "pointAndCraft": "be able to sell to에서 to는 부정사 표지이고 뒤 sell의 전치사 to는 문장 끝에 남는다."
+      },
+      {
+        "label": "(E)",
+        "text": "in",
+        "validity": "VALID",
+        "pointAndCraft": "be interested in의 필수 전치사다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER지만 (B)는 to have 뒤 명사와 과거형 동사의 충돌로 국소 즉답된다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG002",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 현재의 반복 행동 we call에 딸린 동시 상황은 hoped가 아니라 hoping이어야 한다.",
+      "V3": "PASS — hoped→hoping 후 주절과 분사구문의 시제·주체가 정합한다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE에는 맞지만 정답이 comma 뒤 시제 불일치로 빠르게 드러난다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "reaching out",
+        "validity": "VALID",
+        "pointAndCraft": "without은 전치사이므로 reaching out 동명사가 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "distance를 주어로 받는 제한적 관계대명사 that이 맞다."
+      },
+      {
+        "label": "(C)",
+        "text": "hoped",
+        "validity": "INVALID",
+        "pointAndCraft": "주절 call과 동시인 부가 상황이므로 hoping이 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "kept",
+        "validity": "VALID",
+        "pointAndCraft": "relationships가 유지되는 수동태 are kept up이 맞다."
+      },
+      {
+        "label": "(E)",
+        "text": "goes",
+        "validity": "VALID",
+        "pointAndCraft": "단수 주어 not too much time에 goes가 일치한다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE에는 맞지만 정답이 comma 뒤 시제 불일치로 빠르게 드러난다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG003",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — comma 뒤 결과·부가 분사구문에는 allowed가 아니라 allowing만 자연스럽다.",
+      "V3": "PASS — allowed→allowing 후 correlate 주절에 결과 분사구문이 정확히 붙는다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 2,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED 치고 시제 급변 allowed가 너무 눈에 띄며 구조 독해 경쟁이 약하다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "sending out",
+        "validity": "VALID",
+        "pointAndCraft": "shake와 동시인 능동 분사 sending out이 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "interpreted",
+        "validity": "VALID",
+        "pointAndCraft": "vibrations가 해석되는 대상이므로 수동 be interpreted가 맞다."
+      },
+      {
+        "label": "(C)",
+        "text": "allowed",
+        "validity": "INVALID",
+        "pointAndCraft": "앞 절 전체의 결과를 나타내는 allowing이 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "to resolve",
+        "validity": "VALID",
+        "pointAndCraft": "allow + 목적어 + to-infinitive 구조다."
+      },
+      {
+        "label": "(E)",
+        "text": "seek",
+        "validity": "VALID",
+        "pointAndCraft": "choose to retreat and seek의 병렬 원형이 맞다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED 치고 시제 급변 allowed가 너무 눈에 띄며 구조 독해 경쟁이 약하다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG004",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — his sculpture의 유한 서술어가 없으므로 transcending을 transcends로 바꿔야 한다.",
+      "V3": "PASS — transcending→transcends 후 but 뒤 절이 완결된다. media of sculpture는 다소 둔하지만 문법 오류는 아니다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 수준에는 맞지만 주절 동사 부재가 즉시 보인다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "shown",
+        "validity": "VALID",
+        "pointAndCraft": "attachment가 작품에 나타나는 수동태 is shown이 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "where",
+        "validity": "VALID",
+        "pointAndCraft": "Santa Fe를 장소로 받는 계속적 where절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "mastered",
+        "validity": "VALID",
+        "pointAndCraft": "created와 mastered가 과거형으로 병렬된다."
+      },
+      {
+        "label": "(D)",
+        "text": "transcending",
+        "validity": "INVALID",
+        "pointAndCraft": "주어 his sculpture의 본동사 transcends가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "be appreciated",
+        "validity": "VALID",
+        "pointAndCraft": "조동사 can 뒤 수동 원형 be appreciated가 맞다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 수준에는 맞지만 주절 동사 부재가 즉시 보인다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG005",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — gives up과 and로 병렬되는 유한동사는 jumping이 아니라 jumps다.",
+      "V3": "PASS — jumping→jumps 후 until절이 완결되고 나머지 표지는 정상이다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 2,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 gives up and jumping이라는 표면 비병렬이 정답을 노출한다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "strolling",
+        "validity": "VALID",
+        "pointAndCraft": "find + 목적어 + -ing의 진행 상태 보어로 strolling이 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "which",
+        "validity": "VALID",
+        "pointAndCraft": "leopard seal을 선행사로 하는 계속적 주격 which다."
+      },
+      {
+        "label": "(C)",
+        "text": "to play",
+        "validity": "VALID",
+        "pointAndCraft": "solution의 보어인 to-infinitive가 맞다."
+      },
+      {
+        "label": "(D)",
+        "text": "jumping",
+        "validity": "INVALID",
+        "pointAndCraft": "gives up과 병렬인 3인칭 단수 jumps가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "watch",
+        "validity": "VALID",
+        "pointAndCraft": "복수 주어 the rest of the penguins에 watch가 맞다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 gives up and jumping이라는 표면 비병렬이 정답을 노출한다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG006",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 현재 일반론 avoids 뒤 결과 분사구문에는 allowed가 아니라 allowing이 필요하다.",
+      "V3": "PASS — allowed→allowing 후 문장 구조와 의미가 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 2,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED보다 쉬운 시제/분사 대비이며 다른 네 표지는 경쟁하지 않는다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "be interpreted",
+        "validity": "VALID",
+        "pointAndCraft": "vibrations를 주어로 한 조동사 수동태다."
+      },
+      {
+        "label": "(B)",
+        "text": "to assess",
+        "validity": "VALID",
+        "pointAndCraft": "allow + invader + to assess 구조다."
+      },
+      {
+        "label": "(C)",
+        "text": "allowed",
+        "validity": "INVALID",
+        "pointAndCraft": "앞 절의 결과를 잇는 능동 분사 allowing이어야 한다."
+      },
+      {
+        "label": "(D)",
+        "text": "less contested",
+        "validity": "VALID",
+        "pointAndCraft": "territory를 꾸미는 비교급 과거분사 less contested가 맞다."
+      },
+      {
+        "label": "(E)",
+        "text": "reducing",
+        "validity": "VALID",
+        "pointAndCraft": "maintaining과 reducing이 전치사 for 뒤 병렬된다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED보다 쉬운 시제/분사 대비이며 다른 네 표지는 경쟁하지 않는다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG007",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — allow/insure 뒤 that절에는 serving이 아니라 유한동사 serve가 필요하다.",
+      "V3": "PASS — serving→serve 후 that절이 완결된다. insure that은 ensure보다 덜 선호되지만 용례상 가능하다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 2,
+      "C6": "PENDING",
+      "evidence": "유한동사 결손은 INTERMEDIATE에 적합하나 정답 경쟁은 약하다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "whether",
+        "validity": "VALID",
+        "pointAndCraft": "보어절의 양자 여부를 나타내는 whether or not이 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "get의 목적어인 융합관계사 what절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "rendered",
+        "validity": "VALID",
+        "pointAndCraft": "have + service + rendered의 목적격 보어 수동 관계다."
+      },
+      {
+        "label": "(D)",
+        "text": "paying",
+        "validity": "VALID",
+        "pointAndCraft": "진행형 are paying의 현재분사다."
+      },
+      {
+        "label": "(E)",
+        "text": "serving",
+        "validity": "INVALID",
+        "pointAndCraft": "that its people serve처럼 주어 뒤 유한동사가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "유한동사 결손은 INTERMEDIATE에 적합하나 정답 경쟁은 약하다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG008",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — People who...의 주절 유한동사가 없으므로 struggling은 struggle이어야 한다.",
+      "V3": "PASS — struggling→struggle 후 장거리 주어와 본동사가 정확히 연결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "긴 주어가 약간 가리지만 ADVANCED치고 본동사 부재가 단순하다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "recode의 목적어인 융합관계사 what절이다."
+      },
+      {
+        "label": "(B)",
+        "text": "retrieving",
+        "validity": "VALID",
+        "pointAndCraft": "reconstruct와 rather than 뒤 retrieving이 병렬되는 동명사적 용법이다."
+      },
+      {
+        "label": "(C)",
+        "text": "store",
+        "validity": "VALID",
+        "pointAndCraft": "way to store의 부정사 원형이다."
+      },
+      {
+        "label": "(D)",
+        "text": "struggling",
+        "validity": "INVALID",
+        "pointAndCraft": "복수 주어 People의 본동사 struggle이 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "undermined",
+        "validity": "VALID",
+        "pointAndCraft": "과거의 발견이 법적 위상을 훼손했다는 과거형으로 문맥상 가능하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "긴 주어가 약간 가리지만 ADVANCED치고 본동사 부재가 단순하다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG009",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — the rest of the penguins의 주절 동사가 없으므로 watching은 watch여야 한다.",
+      "V3": "PASS — watching→watch 후 해당 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 0,
+      "C4": 2,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER 정답이 독립절의 유한동사 부재라 거의 즉답이며 미끼 경쟁이 없다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "determines",
+        "validity": "VALID",
+        "pointAndCraft": "단수 factor를 받는 determines가 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "strolling",
+        "validity": "VALID",
+        "pointAndCraft": "are found strolling의 목적격 보어가 맞다."
+      },
+      {
+        "label": "(C)",
+        "text": "to play",
+        "validity": "VALID",
+        "pointAndCraft": "solution is to play의 보어다."
+      },
+      {
+        "label": "(D)",
+        "text": "watching",
+        "validity": "INVALID",
+        "pointAndCraft": "복수 주어 뒤 본동사 watch가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "perishes",
+        "validity": "VALID",
+        "pointAndCraft": "단수 대명사 it에 perishes가 일치한다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER 정답이 독립절의 유한동사 부재라 거의 즉답이며 미끼 경쟁이 없다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG010",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 관계절 which의 유한 서술어가 필요하므로 meaning은 meant여야 한다.",
+      "V3": "PASS — meaning→meant 후 계속적 관계절이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 which 바로 뒤 분사가 노출되어 경쟁력이 낮다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "called",
+        "validity": "VALID",
+        "pointAndCraft": "god를 수동 의미로 꾸미는 과거분사 called다."
+      },
+      {
+        "label": "(B)",
+        "text": "to create",
+        "validity": "VALID",
+        "pointAndCraft": "decide to create의 목적 부정사다."
+      },
+      {
+        "label": "(C)",
+        "text": "meaning",
+        "validity": "INVALID",
+        "pointAndCraft": "which의 본동사 meant가 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "having",
+        "validity": "VALID",
+        "pointAndCraft": "hate의 목적어로 동명사 having이 맞다."
+      },
+      {
+        "label": "(E)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "see의 목적어인 what the matter was 간접의문문이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 which 바로 뒤 분사가 노출되어 경쟁력이 낮다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG011",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — task는 완료되는 대상이므로 능동 completing이 아니라 수동 의미의 completed가 필요하다.",
+      "V3": "PASS — completing→completed 후 that one task completed가 축약 수동 후치수식으로 자연스럽다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 2,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 능동/수동 의미역이 국소적으로 드러나 경쟁력이 낮다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "was",
+        "validity": "VALID",
+        "pointAndCraft": "the first thing...was의 보어 연결이 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "were required",
+        "validity": "VALID",
+        "pointAndCraft": "require 목적어의 수동태 were required to make다."
+      },
+      {
+        "label": "(C)",
+        "text": "has been proven",
+        "validity": "VALID",
+        "pointAndCraft": "현재까지의 경험을 나타내는 현재완료 수동이다."
+      },
+      {
+        "label": "(D)",
+        "text": "to do",
+        "validity": "VALID",
+        "pointAndCraft": "encourage + 목적어 + to-infinitive다."
+      },
+      {
+        "label": "(E)",
+        "text": "completing",
+        "validity": "INVALID",
+        "pointAndCraft": "task는 행위자가 아니라 완료되는 대상이므로 completed가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 능동/수동 의미역이 국소적으로 드러나 경쟁력이 낮다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG012",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 주어 responding with a cool answer는 단수 동명사구이므로 are가 아니라 is가 필요하다.",
+      "V3": "PASS — are→is 후 문장이 완결되고 raised는 issue의 수동 후치수식으로 정상이다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 긴 주어의 핵이 동명사라는 단일 수일치 문제라 난이도 과장이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "lost",
+        "validity": "VALID",
+        "pointAndCraft": "things (that are) lost의 축약 수동 수식이다."
+      },
+      {
+        "label": "(B)",
+        "text": "to be angry",
+        "validity": "VALID",
+        "pointAndCraft": "get + 목적어 + to-infinitive다."
+      },
+      {
+        "label": "(C)",
+        "text": "intentionally",
+        "validity": "VALID",
+        "pointAndCraft": "designed를 수식하는 부사 intentionally가 맞다."
+      },
+      {
+        "label": "(D)",
+        "text": "raised",
+        "validity": "VALID",
+        "pointAndCraft": "issue (that is) raised의 축약 수동 관계다."
+      },
+      {
+        "label": "(E)",
+        "text": "are",
+        "validity": "INVALID",
+        "pointAndCraft": "단수 동명사구 responding...에는 is가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 긴 주어의 핵이 동명사라는 단일 수일치 문제라 난이도 과장이다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG013",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 조동사 can 뒤 작품이 감상되는 수동 의미이므로 appreciate 앞 be가 필수다.",
+      "V3": "PASS — appreciate→be appreciated 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 수준의 수동태 판단으로 적절하지만 오답은 즉시 보인다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "shown",
+        "validity": "VALID",
+        "pointAndCraft": "attachment가 드러나는 수동태다."
+      },
+      {
+        "label": "(B)",
+        "text": "where",
+        "validity": "VALID",
+        "pointAndCraft": "Santa Fe를 받는 장소 관계부사다."
+      },
+      {
+        "label": "(C)",
+        "text": "rooted",
+        "validity": "VALID",
+        "pointAndCraft": "be rooted in의 과거분사 보어다."
+      },
+      {
+        "label": "(D)",
+        "text": "transcends",
+        "validity": "VALID",
+        "pointAndCraft": "단수 sculpture에 현재형 transcends가 맞다."
+      },
+      {
+        "label": "(E)",
+        "text": "appreciate",
+        "validity": "INVALID",
+        "pointAndCraft": "can be appreciated의 수동 원형이 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 수준의 수동태 판단으로 적절하지만 오답은 즉시 보인다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG014",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 명령문 문맥에서 Choosing으로 시작하면 본동사 없는 단편이 되므로 Choose가 필요하다.",
+      "V3": "PASS — Choosing→Choose 후 명령문이 완결된다. 인용부호 주변 문장부호는 다소 혼잡하지만 별도 정답은 아니다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 2,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 명령형 포인트는 유효하나 fragment가 쉽게 보인다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "frequently",
+        "validity": "VALID",
+        "pointAndCraft": "use를 수식하는 빈도부사 frequently다."
+      },
+      {
+        "label": "(B)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "asked의 목적어인 간접의문 what절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "to express",
+        "validity": "VALID",
+        "pointAndCraft": "be used to express의 목적 부정사다."
+      },
+      {
+        "label": "(D)",
+        "text": "Choosing",
+        "validity": "INVALID",
+        "pointAndCraft": "독립 명령문이므로 원형 Choose가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "misunderstood",
+        "validity": "VALID",
+        "pointAndCraft": "words가 오해되는 수동태 won't be misunderstood다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 명령형 포인트는 유효하나 fragment가 쉽게 보인다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG015",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — and you'll...과 이어지는 명령문은 Focusing이 아니라 Focus로 시작해야 한다.",
+      "V3": "PASS — Focusing→Focus 후 명령문+and 결과절 구조가 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 명령문 단편을 찾는 국소 문제다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "piling",
+        "validity": "VALID",
+        "pointAndCraft": "have + 목적어 + piling의 지속 상태 보어다."
+      },
+      {
+        "label": "(B)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "전치사 to의 목적어인 융합관계사 what절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "Listen",
+        "validity": "VALID",
+        "pointAndCraft": "앞 명령문과 이어지는 명령형 Listen이다."
+      },
+      {
+        "label": "(D)",
+        "text": "done",
+        "validity": "VALID",
+        "pointAndCraft": "laundry가 수행되는 수동 축약 when (it is) done이다."
+      },
+      {
+        "label": "(E)",
+        "text": "Focusing",
+        "validity": "INVALID",
+        "pointAndCraft": "Focus..., and you'll...의 명령문 원형이 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 명령문 단편을 찾는 국소 문제다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG016",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "FAIL — 마커 5개와 옵션은 일치하지만 끝부분의 'fine -but'는 공백/대시가 깨진 가시적 표면 결함이다.",
+      "V2": "PASS — 전치사 after 뒤에는 tend가 아니라 tending이 필요하다.",
+      "V3": "PASS — tend→tending 후 통사 구조는 완결된다. singular they와 rather than attend는 표준적으로 가능하다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 2,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 어법 포인트와 디코이 범위는 비교적 적합하나 표면 QA를 통과하면 안 된다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "Giving",
+        "validity": "VALID",
+        "pointAndCraft": "Giving... 전체가 단수 주어이고 can be가 서술어다."
+      },
+      {
+        "label": "(B)",
+        "text": "attend",
+        "validity": "VALID",
+        "pointAndCraft": "try to comfort rather than attend에서 병렬 원형이 가능하다."
+      },
+      {
+        "label": "(C)",
+        "text": "feeling",
+        "validity": "VALID",
+        "pointAndCraft": "leave + 목적어 + feeling의 상태 보어다."
+      },
+      {
+        "label": "(D)",
+        "text": "appropriately",
+        "validity": "VALID",
+        "pointAndCraft": "met을 수식하는 부사 appropriately다."
+      },
+      {
+        "label": "(E)",
+        "text": "tend",
+        "validity": "INVALID",
+        "pointAndCraft": "after는 전치사이므로 동명사 tending이 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "'fine -but'가 학생 노출 본문에 그대로 남아 있다.",
+        "recommendation": "대시·공백 정규화와 렌더 스냅샷 검사를 추가하라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG017",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — not too much time이 단수 주어이므로 go가 아니라 goes가 필요하다.",
+      "V3": "PASS — go→goes 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 수일치 문항으로 적정하나 정답 경쟁은 약하다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "reaching out",
+        "validity": "VALID",
+        "pointAndCraft": "without 뒤 동명사 reaching out이 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "hoping",
+        "validity": "VALID",
+        "pointAndCraft": "주절 call과 동시인 부가 분사 hoping이다."
+      },
+      {
+        "label": "(C)",
+        "text": "kept up",
+        "validity": "VALID",
+        "pointAndCraft": "relationships를 주어로 한 수동 phrasal verb다."
+      },
+      {
+        "label": "(D)",
+        "text": "go",
+        "validity": "INVALID",
+        "pointAndCraft": "단수 time에 3인칭 단수 goes가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "calling",
+        "validity": "VALID",
+        "pointAndCraft": "bother는 동명사 calling을 목적어로 취할 수 있다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 수일치 문항으로 적정하나 정답 경쟁은 약하다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG018",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — people이 복수 주어이므로 tends가 아니라 tend가 필요하다.",
+      "V3": "PASS — tends→tend 후 that절이 완결된다. 후속 they는 singular/generic 용법으로도 문제없다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 바로 붙은 people–tends 수일치라 기본 수준이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to make",
+        "validity": "VALID",
+        "pointAndCraft": "way for patients to make의 부정사 수식이다."
+      },
+      {
+        "label": "(B)",
+        "text": "shows",
+        "validity": "VALID",
+        "pointAndCraft": "불가산 단수 research에 shows가 맞다."
+      },
+      {
+        "label": "(C)",
+        "text": "tends",
+        "validity": "INVALID",
+        "pointAndCraft": "복수 people에 원형 tend가 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "enriching",
+        "validity": "VALID",
+        "pointAndCraft": "satisfaction at 뒤 동명사 enriching이 맞다."
+      },
+      {
+        "label": "(E)",
+        "text": "where",
+        "validity": "VALID",
+        "pointAndCraft": "program을 장소/환경으로 받는 where절이 가능하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 바로 붙은 people–tends 수일치라 기본 수준이다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG019",
+    "blindAnswer": "(B)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 시간 부사절을 여는 접속사가 필요하므로 What은 When이어야 한다.",
+      "V3": "PASS — What→When 후 종속절과 주절 they showed가 정확히 연결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 0,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 What + 고유명사 + 동사의 즉각적 비문으로 경쟁이 없다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "while",
+        "validity": "VALID",
+        "pointAndCraft": "that절 안 양보 부사절을 여는 while이다."
+      },
+      {
+        "label": "(B)",
+        "text": "What",
+        "validity": "INVALID",
+        "pointAndCraft": "Peter Liu가 주어인 시간절에는 When이 필요하다."
+      },
+      {
+        "label": "(C)",
+        "text": "encouraging given",
+        "validity": "VALID",
+        "pointAndCraft": "which is encouraging given...의 형용사 보어와 전치사 given이다."
+      },
+      {
+        "label": "(D)",
+        "text": "making",
+        "validity": "VALID",
+        "pointAndCraft": "sleeping less와 making up이 of 뒤 병렬된다."
+      },
+      {
+        "label": "(E)",
+        "text": "telling",
+        "validity": "VALID",
+        "pointAndCraft": "It's like 뒤 동명사 telling이 맞다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 What + 고유명사 + 동사의 즉각적 비문으로 경쟁이 없다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG020",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 복수 주어 Sailors...에 has가 아니라 have가 필요하다.",
+      "V3": "PASS — has→have 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 긴 관계절 뒤 수일치 한 점만 묻는다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to prevent",
+        "validity": "VALID",
+        "pointAndCraft": "precautions의 목적을 나타내는 to prevent다."
+      },
+      {
+        "label": "(B)",
+        "text": "following",
+        "validity": "VALID",
+        "pointAndCraft": "drift와 동시인 분사구문 following이다."
+      },
+      {
+        "label": "(C)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "know의 목적어인 융합관계사 what절이다."
+      },
+      {
+        "label": "(D)",
+        "text": "driven",
+        "validity": "VALID",
+        "pointAndCraft": "we가 환경에 떠밀리는 수동 분사구문이다."
+      },
+      {
+        "label": "(E)",
+        "text": "has",
+        "validity": "INVALID",
+        "pointAndCraft": "복수 Sailors의 본동사 have가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 긴 관계절 뒤 수일치 한 점만 묻는다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG021",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — attraction은 smell의 목적어가 아니라 그 안에서 냄새를 맡는 장소이므로 which 대신 where/in which가 필요하다.",
+      "V3": "PASS — which→where 후 계속적 관계절이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 2,
+      "C3": 2,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "관계대명사/관계부사 구별은 의미역을 보지만 KILLER라기에는 which audiences smell의 비정상성이 크다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to stimulate",
+        "validity": "VALID",
+        "pointAndCraft": "be able to stimulate의 부정사다."
+      },
+      {
+        "label": "(B)",
+        "text": "immersed",
+        "validity": "VALID",
+        "pointAndCraft": "become의 과거분사 형용사 보어 immersed다."
+      },
+      {
+        "label": "(C)",
+        "text": "to feel",
+        "validity": "VALID",
+        "pointAndCraft": "allow + 목적어 + to-infinitive다."
+      },
+      {
+        "label": "(D)",
+        "text": "which",
+        "validity": "INVALID",
+        "pointAndCraft": "장소 attraction을 부사적으로 받는 where 또는 in which가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "they",
+        "validity": "VALID",
+        "pointAndCraft": "ways (that) they can simulate의 관계사 생략 구조다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "관계대명사/관계부사 구별은 의미역을 보지만 KILLER라기에는 which audiences smell의 비정상성이 크다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG022",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 조동사 might not 뒤에는 wanting이 아니라 원형 want가 필요하다.",
+      "V3": "PASS — wanting→want 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE의 조동사 포인트로 적절하지만 오답은 매우 국소적이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "due to",
+        "validity": "VALID",
+        "pointAndCraft": "원인을 나타내는 due to + 명사구다."
+      },
+      {
+        "label": "(B)",
+        "text": "buying",
+        "validity": "VALID",
+        "pointAndCraft": "instead of 뒤 동명사 buying이다."
+      },
+      {
+        "label": "(C)",
+        "text": "wanting",
+        "validity": "INVALID",
+        "pointAndCraft": "might 뒤 동사원형 want가 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "easily",
+        "validity": "VALID",
+        "pointAndCraft": "live를 수식하는 비교급 부사 more easily다."
+      },
+      {
+        "label": "(E)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "tell 목적어 뒤 내용절 접속사 that이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE의 조동사 포인트로 적절하지만 오답은 매우 국소적이다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG023",
+    "blindAnswer": "(A)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 선행 수원 목록을 이어 수식하려면 none of them이 아니라 none of which가 필요하다.",
+      "V3": "PASS — none of them→none of which 후 em-dash 안 보충 관계절이 완결된다. 조건문의 시제 선택은 현재 수자원 보유를 독립 사실로 제시한 것으로 해석 가능하다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 1,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER 정답이 관계사 자체보다 comma splice/punctuation seam을 보고 잡히며 함정의 우아함이 낮다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "none of them",
+        "validity": "INVALID",
+        "pointAndCraft": "앞 수원 목록에 통합되는 보충 관계절이므로 none of which가 필요하다."
+      },
+      {
+        "label": "(B)",
+        "text": "to advance",
+        "validity": "VALID",
+        "pointAndCraft": "start는 to advance와 advancing을 모두 취할 수 있다."
+      },
+      {
+        "label": "(C)",
+        "text": "recorded",
+        "validity": "VALID",
+        "pointAndCraft": "earthquake를 꾸미는 축약 수동 recorded다."
+      },
+      {
+        "label": "(D)",
+        "text": "sloshed",
+        "validity": "VALID",
+        "pointAndCraft": "과거 사건의 본동사 sloshed다."
+      },
+      {
+        "label": "(E)",
+        "text": "glaciated",
+        "validity": "VALID",
+        "pointAndCraft": "much of it glaciated의 독립분사/무동사 보충구조다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "정답이 em-dash 내부 comma seam에 과도하게 노출되고 관계사 외 네 표지는 경쟁하지 않는다.",
+        "recommendation": "KILLER 관계사 문항은 선행사 의미역과 절 내부 결손을 함께 읽게 설계하라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG024",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — road map 뒤 능동 수식에는 described가 아니라 describing이 필요하다.",
+      "V3": "PASS — described→describing 후 lack의 목적어 명사구가 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 능동/수동 분사 의미역이 바로 드러난다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "laid",
+        "validity": "VALID",
+        "pointAndCraft": "race (that is) laid out의 축약 수동 수식이다."
+      },
+      {
+        "label": "(B)",
+        "text": "to keep",
+        "validity": "VALID",
+        "pointAndCraft": "enough to keep advancing의 결과/정도 부정사다."
+      },
+      {
+        "label": "(C)",
+        "text": "as if",
+        "validity": "VALID",
+        "pointAndCraft": "think and act as if의 접속 표현이다."
+      },
+      {
+        "label": "(D)",
+        "text": "described",
+        "validity": "INVALID",
+        "pointAndCraft": "road map이 ways를 설명하는 능동이므로 describing이 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "In truth, that's...의 지시대명사+be 축약이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 능동/수동 분사 의미역이 바로 드러난다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG025",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — light가 눈에 등록되고 뇌에 의해 해석되는 병렬 수동이므로 interpreting은 interpreted여야 한다.",
+      "V3": "PASS — interpreting→interpreted 후 is registered and interpreted가 병렬된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 수동 병렬 포인트로 적합하지만 정답 노출은 빠르다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "view의 내용을 설명하는 동격 that절이다."
+      },
+      {
+        "label": "(B)",
+        "text": "because",
+        "validity": "VALID",
+        "pointAndCraft": "초록인 이유를 잇는 because절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "exists",
+        "validity": "VALID",
+        "pointAndCraft": "color 단수 주어에 exists가 일치한다."
+      },
+      {
+        "label": "(D)",
+        "text": "to see",
+        "validity": "VALID",
+        "pointAndCraft": "there to see it의 목적/가능 부정사다."
+      },
+      {
+        "label": "(E)",
+        "text": "interpreting",
+        "validity": "INVALID",
+        "pointAndCraft": "is registered와 병렬인 과거분사 interpreted가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 수동 병렬 포인트로 적합하지만 정답 노출은 빠르다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG026",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — tell friends and family 뒤에는 donates가 아니라 to donate가 필요하다.",
+      "V3": "PASS — donates→to donate 후 요청 구조가 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 1,
+      "C3": 0,
+      "C4": 3,
+      "C5": 2,
+      "C6": "PENDING",
+      "evidence": "tell 목적어 바로 뒤 단수형 donates가 지나치게 비정상적이라 INTERMEDIATE에서도 쉬운 편이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "their",
+        "validity": "VALID",
+        "pointAndCraft": "people을 복수 소유격 their로 받는다."
+      },
+      {
+        "label": "(B)",
+        "text": "while",
+        "validity": "VALID",
+        "pointAndCraft": "두 집단을 대조하는 while이다."
+      },
+      {
+        "label": "(C)",
+        "text": "donates",
+        "validity": "INVALID",
+        "pointAndCraft": "tell + 목적어 + to-infinitive이므로 to donate가 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "know의 내용절 접속사 that이다."
+      },
+      {
+        "label": "(E)",
+        "text": "easily",
+        "validity": "VALID",
+        "pointAndCraft": "live를 수식하는 비교급 부사 easily다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "tell 목적어 바로 뒤 단수형 donates가 지나치게 비정상적이라 INTERMEDIATE에서도 쉬운 편이다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG027",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — invite + 목적어 뒤에는 think가 아니라 to think가 필요하다.",
+      "V3": "FAIL — think→to think로 표적은 고쳐지지만 첫 문장 주어 끝의 불필요한 comma('story, is')가 남아 표면 문장이 완전하지 않다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "표적은 단순한 보문형이고, 비표적 문장부호 오류까지 있어 ADVANCED 출하 기준에 미달한다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "helping",
+        "validity": "VALID",
+        "pointAndCraft": "for 뒤 동명사 helping이다."
+      },
+      {
+        "label": "(B)",
+        "text": "found",
+        "validity": "VALID",
+        "pointAndCraft": "story (that is) found의 축약 수동이다."
+      },
+      {
+        "label": "(C)",
+        "text": "disturbs",
+        "validity": "VALID",
+        "pointAndCraft": "일반 가능성의 in case절에 현재 disturbs가 가능하다."
+      },
+      {
+        "label": "(D)",
+        "text": "think",
+        "validity": "INVALID",
+        "pointAndCraft": "invite children to think 구조가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "used",
+        "validity": "VALID",
+        "pointAndCraft": "hear + 목적어 + used의 수동 목적격 보어다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "첫 문장에서 주어와 동사 is 사이를 comma가 잘못 끊는다.",
+        "recommendation": "표적 교정 후에도 전체 지문의 punctuation lint를 통과시켜라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG028",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 주어 most men의 본동사가 없으므로 finding은 find여야 한다.",
+      "V3": "PASS — finding→find 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "긴 문맥에도 정답은 본동사 결손 하나라 ADVANCED보다 쉽다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to meet",
+        "validity": "VALID",
+        "pointAndCraft": "ability to meet의 부정사 수식이다."
+      },
+      {
+        "label": "(B)",
+        "text": "taking",
+        "validity": "VALID",
+        "pointAndCraft": "drift와 동시인 분사구문 taking이다."
+      },
+      {
+        "label": "(C)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "know의 목적어인 융합관계사 what절이다."
+      },
+      {
+        "label": "(D)",
+        "text": "finding",
+        "validity": "INVALID",
+        "pointAndCraft": "복수 주어 most men의 유한동사 find가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "driven",
+        "validity": "VALID",
+        "pointAndCraft": "Sailors가 몰리는 수동태 are driven이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "긴 문맥에도 정답은 본동사 결손 하나라 ADVANCED보다 쉽다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG029",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 독립 명령문이므로 Giving이 아니라 Give가 필요하다.",
+      "V3": "PASS — Giving→Give 후 이어지는 지시문들과 병렬된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED라기보다 명령문 fragment를 찾는 기본 문제다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "piling",
+        "validity": "VALID",
+        "pointAndCraft": "have us piling의 지속 상태 목적격 보어다."
+      },
+      {
+        "label": "(B)",
+        "text": "to popular belief",
+        "validity": "VALID",
+        "pointAndCraft": "contrary to의 고정 전치사구다."
+      },
+      {
+        "label": "(C)",
+        "text": "Giving",
+        "validity": "INVALID",
+        "pointAndCraft": "문장 본동사인 명령형 Give가 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "done",
+        "validity": "VALID",
+        "pointAndCraft": "laundry가 수행되는 when (it is) done 축약 수동이다."
+      },
+      {
+        "label": "(E)",
+        "text": "faster",
+        "validity": "VALID",
+        "pointAndCraft": "accomplish better와 병렬된 부사 비교급 faster다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED라기보다 명령문 fragment를 찾는 기본 문제다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG030",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — what-if절의 핵심 주어 the biggest thing이 단수이므로 are가 아니라 is가 필요하다.",
+      "V3": "PASS — are→is 후 표적이 교정된다. if you do challenge는 실제 도전 가능성을 강조하고 would는 결과를 가정하는 담화적 혼합으로 해석 가능하다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 2,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "표적 수일치는 단순하고 비표적 조건문 시제까지 흔들려 ADVANCED 품질이 아니다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to invalidate",
+        "validity": "VALID",
+        "pointAndCraft": "seek to invalidate의 부정사 목적어다."
+      },
+      {
+        "label": "(B)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "accept의 내용절 접속사 that이다."
+      },
+      {
+        "label": "(C)",
+        "text": "hardly",
+        "validity": "VALID",
+        "pointAndCraft": "ever questioned를 수식하는 빈도부사 hardly다."
+      },
+      {
+        "label": "(D)",
+        "text": "be made",
+        "validity": "VALID",
+        "pointAndCraft": "조동사 could 뒤 수동 원형 be made다."
+      },
+      {
+        "label": "(E)",
+        "text": "are",
+        "validity": "INVALID",
+        "pointAndCraft": "단수 주어 the biggest thing에 is가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "표적 수일치는 단순하고 비표적 조건문 시제까지 흔들려 ADVANCED 품질이 아니다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG031",
+    "blindAnswer": "(B)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 영상 의미의 project는 타동사이고 view는 투사되는 대상이므로 projects가 아니라 is projected가 필요하다.",
+      "V3": "PASS — projects→is projected 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 project의 태 한 점만 묻고 다른 표지가 경쟁하지 않는다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to stimulate",
+        "validity": "VALID",
+        "pointAndCraft": "be able to stimulate의 부정사다."
+      },
+      {
+        "label": "(B)",
+        "text": "projects",
+        "validity": "INVALID",
+        "pointAndCraft": "view가 screen에 투사되는 수동태 is projected가 필요하다."
+      },
+      {
+        "label": "(C)",
+        "text": "immersed",
+        "validity": "VALID",
+        "pointAndCraft": "become immersed의 과거분사 형용사 보어다."
+      },
+      {
+        "label": "(D)",
+        "text": "where",
+        "validity": "VALID",
+        "pointAndCraft": "attraction을 장소로 받는 where절이다."
+      },
+      {
+        "label": "(E)",
+        "text": "to experiment",
+        "validity": "VALID",
+        "pointAndCraft": "continue to experiment가 맞다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 project의 태 한 점만 묻고 다른 표지가 경쟁하지 않는다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG032",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — someone은 몰입된 상태이므로 immersing이 아니라 immersed가 필요하다.",
+      "V3": "PASS — immersing→immersed 후 see 목적어의 상태 보어가 자연스럽다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 능동/수동 의미역이 즉시 갈린다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "being left",
+        "validity": "VALID",
+        "pointAndCraft": "pleasure of 뒤 수동 동명사 being left다."
+      },
+      {
+        "label": "(B)",
+        "text": "who",
+        "validity": "VALID",
+        "pointAndCraft": "people을 받는 주격 관계대명사 who다."
+      },
+      {
+        "label": "(C)",
+        "text": "immersing",
+        "validity": "INVALID",
+        "pointAndCraft": "someone이 몰입한 상태이므로 과거분사 immersed가 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "in which",
+        "validity": "VALID",
+        "pointAndCraft": "reading group 안에서라는 in which절이다."
+      },
+      {
+        "label": "(E)",
+        "text": "is",
+        "validity": "VALID",
+        "pointAndCraft": "단수 동명사구 Reading...에 is가 맞다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 능동/수동 의미역이 즉시 갈린다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG033",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — ideas는 사용되는 대상이므로 hearing their ideas using이 아니라 used가 필요하다.",
+      "V3": "FAIL — using→used 후 표적은 고쳐지지만 첫 문장의 'story, is'가 주어와 동사를 부당하게 분리한다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "표적은 단순한 목적격 보어 태이고 비표적 punctuation 오류가 있어 ADVANCED 출하 불가다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "them",
+        "validity": "VALID",
+        "pointAndCraft": "ask + 목적어 + to-infinitive의 목적어 them이다."
+      },
+      {
+        "label": "(B)",
+        "text": "called",
+        "validity": "VALID",
+        "pointAndCraft": "story를 수동으로 꾸미는 called다."
+      },
+      {
+        "label": "(C)",
+        "text": "to be",
+        "validity": "VALID",
+        "pointAndCraft": "tell + 목적어 + to be다."
+      },
+      {
+        "label": "(D)",
+        "text": "including",
+        "validity": "VALID",
+        "pointAndCraft": "story를 부연하는 능동 분사 including이다."
+      },
+      {
+        "label": "(E)",
+        "text": "using",
+        "validity": "INVALID",
+        "pointAndCraft": "ideas가 사용되는 것이므로 과거분사 used가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "첫 문장의 subject–verb comma 오류가 표적 교정 뒤에도 남는다.",
+        "recommendation": "전체 passage punctuation lint를 V3 gate에 포함하라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG034",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — get + 목적어 뒤에는 bare lose가 아니라 to lose가 필요하다.",
+      "V3": "PASS — lose→to lose 후 causative 구조가 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER지만 get you lose가 기본 보문형 오류라 난이도에 맞지 않는다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "lost",
+        "validity": "VALID",
+        "pointAndCraft": "things (that are) lost의 축약 수동이다."
+      },
+      {
+        "label": "(B)",
+        "text": "to remember",
+        "validity": "VALID",
+        "pointAndCraft": "point to remember의 부정사 수식이다."
+      },
+      {
+        "label": "(C)",
+        "text": "designed",
+        "validity": "VALID",
+        "pointAndCraft": "be designed to annoy의 수동태다."
+      },
+      {
+        "label": "(D)",
+        "text": "lose",
+        "validity": "INVALID",
+        "pointAndCraft": "get you to lose의 to-infinitive가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "raised",
+        "validity": "VALID",
+        "pointAndCraft": "issue (that is) raised의 축약 수동이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER지만 get you lose가 기본 보문형 오류라 난이도에 맞지 않는다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG035",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — heard와 and로 병렬되는 유한 과거동사는 coming이 아니라 came이다.",
+      "V3": "PASS — coming→came 후 주절 병렬이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 and 직후 분사 비병렬이 즉답된다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "called",
+        "validity": "VALID",
+        "pointAndCraft": "god (who was) called의 축약 수동이다."
+      },
+      {
+        "label": "(B)",
+        "text": "to give",
+        "validity": "VALID",
+        "pointAndCraft": "wanted to give의 부정사다."
+      },
+      {
+        "label": "(C)",
+        "text": "which",
+        "validity": "VALID",
+        "pointAndCraft": "앞 절을 받는 계속적 which절이다."
+      },
+      {
+        "label": "(D)",
+        "text": "having",
+        "validity": "VALID",
+        "pointAndCraft": "hated의 목적어 동명사 having이다."
+      },
+      {
+        "label": "(E)",
+        "text": "coming",
+        "validity": "INVALID",
+        "pointAndCraft": "heard와 병렬인 과거형 came이 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 and 직후 분사 비병렬이 즉답된다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG036",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 사람 선행사 people의 주격 관계사는 which가 아니라 who/that이다.",
+      "V3": "PASS — which→who 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE의 관계사 기본 포인트로 적합하나 즉답형이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "view의 동격 내용절을 여는 that이다."
+      },
+      {
+        "label": "(B)",
+        "text": "exists",
+        "validity": "VALID",
+        "pointAndCraft": "but과 병렬되는 단수 exists다."
+      },
+      {
+        "label": "(C)",
+        "text": "colorless",
+        "validity": "VALID",
+        "pointAndCraft": "leaves의 형용사 보어 colorless다."
+      },
+      {
+        "label": "(D)",
+        "text": "which",
+        "validity": "INVALID",
+        "pointAndCraft": "사람 선행사에 주격 who 또는 that이 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "interpreted",
+        "validity": "VALID",
+        "pointAndCraft": "is registered and interpreted의 수동 병렬이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE의 관계사 기본 포인트로 적합하나 즉답형이다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG037",
+    "blindAnswer": "(B)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "FAIL — 마커/옵션은 정확하지만 끝부분 'fine -but'의 공백·대시 표면이 깨져 있다.",
+      "V2": "PASS — met을 수식해야 하므로 형용사 appropriate가 아니라 부사 appropriately가 필요하다.",
+      "V3": "PASS — appropriate→appropriately 후 통사는 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 2,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE의 품사 판단은 적절하나 렌더/문장부호 QA 실패다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "feeling",
+        "validity": "VALID",
+        "pointAndCraft": "leave them feeling의 목적격 보어다."
+      },
+      {
+        "label": "(B)",
+        "text": "appropriate",
+        "validity": "INVALID",
+        "pointAndCraft": "동사 met을 수식하는 부사 appropriately가 필요하다."
+      },
+      {
+        "label": "(C)",
+        "text": "valid",
+        "validity": "VALID",
+        "pointAndCraft": "needs의 형용사 보어 valid다."
+      },
+      {
+        "label": "(D)",
+        "text": "shout",
+        "validity": "VALID",
+        "pointAndCraft": "need to shout의 원형이다."
+      },
+      {
+        "label": "(E)",
+        "text": "tending",
+        "validity": "VALID",
+        "pointAndCraft": "after 뒤 동명사 tending이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "학생 노출 본문에 'fine -but'가 남아 있다.",
+        "recommendation": "대시와 주변 공백을 렌더 전 정규화하라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG038",
+    "blindAnswer": "NO_ANSWER",
+    "confidence": "high",
+    "alternativeAnswers": [
+      "(C) (출제 의도 추정: shows up)"
+    ],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "FAIL — (C)는 [a stranger [showing up with the same sandwich]]가 if절의 주어 명사구이고 offers가 본동사인 정상 축약 관계절 분석이 가능해 다섯 표지가 모두 문법적이다.",
+      "V3": "FAIL — 의도 교정 shows up은 가능하지만 displayed showing도 문법적이므로 어법상 틀린 표지가 없다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 1,
+      "C2": 1,
+      "C3": 0,
+      "C4": 0,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER가 대체 통사 파싱을 놓쳐 무정답이 된 치명적 문항이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to buy",
+        "validity": "VALID",
+        "pointAndCraft": "have no time to buy의 부정사 수식이다."
+      },
+      {
+        "label": "(B)",
+        "text": "buying",
+        "validity": "VALID",
+        "pointAndCraft": "by 뒤 동명사 buying이다."
+      },
+      {
+        "label": "(C)",
+        "text": "showing",
+        "validity": "VALID",
+        "pointAndCraft": "stranger를 꾸미는 능동 축약 관계절 showing up으로 읽히며 offers가 if절 본동사다."
+      },
+      {
+        "label": "(D)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "know의 목적어인 what kind of sandwich절이다."
+      },
+      {
+        "label": "(E)",
+        "text": "knowing",
+        "validity": "VALID",
+        "pointAndCraft": "worry about him knowing의 전치사 목적 동명사절이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "(C)가 reduced relative로 완전히 문법적이어서 정답이 없다.",
+        "recommendation": "치환 후 dependency parse를 복수로 생성해 유한동사 offers가 남는 대체 분석을 탐지하라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG039",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — the biggest thing 뒤 주격 관계사 생략은 불가능하므로 kept가 아니라 keeping이 필요하다.",
+      "V3": "PASS — kept→keeping 후 표적이 교정된다. if you do challenge는 실제 가능성 강조로 읽을 수 있어 별도 비문으로 보지 않는다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 2,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "표적 자체는 관계절 생략 가능성 판단이 있으나 비표적 오류 때문에 ADVANCED 출하 불가다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "That",
+        "validity": "VALID",
+        "pointAndCraft": "인용문 That's의 지시대명사+be 축약이다."
+      },
+      {
+        "label": "(B)",
+        "text": "is",
+        "validity": "VALID",
+        "pointAndCraft": "the right way의 단수 본동사 is다."
+      },
+      {
+        "label": "(C)",
+        "text": "hardly",
+        "validity": "VALID",
+        "pointAndCraft": "ever questioned를 수식하는 hardly다."
+      },
+      {
+        "label": "(D)",
+        "text": "be made",
+        "validity": "VALID",
+        "pointAndCraft": "could be made의 수동 원형이다."
+      },
+      {
+        "label": "(E)",
+        "text": "kept",
+        "validity": "INVALID",
+        "pointAndCraft": "thing을 능동으로 꾸미는 keeping이 필요하며 주격 that은 생략할 수 없다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "표적 자체는 관계절 생략 가능성 판단이 있으나 비표적 오류 때문에 ADVANCED 출하 불가다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG040",
+    "blindAnswer": "(A)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 선행 수원 목록을 보충 수식하려면 none of that이 아니라 none of which가 필요하다.",
+      "V3": "PASS — none of that→none of which 후 보충 관계절이 완결된다. none of that 자체는 절 안에서 가능하지만 이 comma 연결 위치에서는 관계형이 필수다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 1,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER 정답이 comma/punctuation seam에 크게 노출되고 나머지 표지는 경쟁하지 않는다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "none of that",
+        "validity": "INVALID",
+        "pointAndCraft": "앞 수원 목록을 관계절로 잇는 none of which가 필요하다."
+      },
+      {
+        "label": "(B)",
+        "text": "them",
+        "validity": "VALID",
+        "pointAndCraft": "blast의 목적격 대명사 them이다."
+      },
+      {
+        "label": "(C)",
+        "text": "recorded",
+        "validity": "VALID",
+        "pointAndCraft": "earthquake를 꾸미는 과거분사 recorded다."
+      },
+      {
+        "label": "(D)",
+        "text": "it",
+        "validity": "VALID",
+        "pointAndCraft": "much of it glaciated의 독립 보충구조다."
+      },
+      {
+        "label": "(E)",
+        "text": "have",
+        "validity": "VALID",
+        "pointAndCraft": "did가 조동사이므로 원형 have가 맞다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "정답이 em-dash 내부 comma seam에서 바로 드러난다.",
+        "recommendation": "KILLER 관계사 함정은 절 내부 역할과 선행사 해석을 함께 요구하도록 재설계하라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG041",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 문두 부정어구 Only by doing this 뒤에는 주어-조동사 도치 can you create가 필요하다.",
+      "V3": "PASS — you can create→can you create 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 3,
+      "C2": 2,
+      "C3": 2,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "도치 범위를 읽어야 하지만 표지가 구 전체라 KILLER보다는 ADVANCED에 가깝다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "promoting",
+        "validity": "VALID",
+        "pointAndCraft": "blog를 능동으로 꾸미는 promoting이다."
+      },
+      {
+        "label": "(B)",
+        "text": "is",
+        "validity": "VALID",
+        "pointAndCraft": "all (that) you're doing의 단수 보어 연결 is다."
+      },
+      {
+        "label": "(C)",
+        "text": "to keep",
+        "validity": "VALID",
+        "pointAndCraft": "reason to keep의 부정사 수식이다."
+      },
+      {
+        "label": "(D)",
+        "text": "you can create",
+        "validity": "INVALID",
+        "pointAndCraft": "Only + 부사구 문두화 뒤 can you create로 도치해야 한다."
+      },
+      {
+        "label": "(E)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "things를 목적격으로 받는 that절이며 전치사 in은 뒤에 남는다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "도치 범위를 읽어야 하지만 표지가 구 전체라 KILLER보다는 ADVANCED에 가깝다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG042",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 지시문 본동사가 필요하므로 training이 아니라 명령형 train이어야 한다.",
+      "V3": "PASS — training→train 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 명령형 포인트로 적정하나 즉답형이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "kept",
+        "validity": "VALID",
+        "pointAndCraft": "과거 생존 맥락의 kept다."
+      },
+      {
+        "label": "(B)",
+        "text": "what's",
+        "validity": "VALID",
+        "pointAndCraft": "focused on의 목적어인 what's going wrong절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "training",
+        "validity": "INVALID",
+        "pointAndCraft": "문장 본동사인 명령형 Train이 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "sharing",
+        "validity": "VALID",
+        "pointAndCraft": "by 뒤 동명사 sharing이다."
+      },
+      {
+        "label": "(E)",
+        "text": "have",
+        "validity": "VALID",
+        "pointAndCraft": "the more..., the more...에서 reasons you have의 유한동사다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 명령형 포인트로 적정하나 즉답형이다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG043",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — They가 주어인 and 뒤 병렬 서술어는 lacking이 아니라 lack이어야 한다.",
+      "V3": "PASS — lacking→lack 후 have checked ... and now lack가 병렬된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 and 뒤 유한동사 결손이 단순하다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "advancing",
+        "validity": "VALID",
+        "pointAndCraft": "keep advancing의 동명사 보어다."
+      },
+      {
+        "label": "(B)",
+        "text": "ends",
+        "validity": "VALID",
+        "pointAndCraft": "단수 journey에 ends가 맞다."
+      },
+      {
+        "label": "(C)",
+        "text": "lacking",
+        "validity": "INVALID",
+        "pointAndCraft": "주어 They의 병렬 본동사 lack이 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "voluntary",
+        "validity": "VALID",
+        "pointAndCraft": "becomes의 형용사 보어 voluntary다."
+      },
+      {
+        "label": "(E)",
+        "text": "devote",
+        "validity": "VALID",
+        "pointAndCraft": "need to commit and devote의 원형 병렬이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 and 뒤 유한동사 결손이 단순하다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG044",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 주어 핵 the beauty가 단수이므로 come이 아니라 comes가 필요하다.",
+      "V3": "PASS — come→comes 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 바로 앞 긴 of구를 걷어내는 기본 수일치다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "making",
+        "validity": "VALID",
+        "pointAndCraft": "making time 동명사구가 문장 주어다."
+      },
+      {
+        "label": "(B)",
+        "text": "packed",
+        "validity": "VALID",
+        "pointAndCraft": "schedules를 꾸미는 과거분사 형용사 packed다."
+      },
+      {
+        "label": "(C)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "가정 의문문 What if를 여는 what이다."
+      },
+      {
+        "label": "(D)",
+        "text": "come",
+        "validity": "INVALID",
+        "pointAndCraft": "단수 beauty에 comes가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "viewing",
+        "validity": "VALID",
+        "pointAndCraft": "rather than 뒤 동명사 viewing이 앞 동명사적 관점과 자연스럽다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 바로 앞 긴 of구를 걷어내는 기본 수일치다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG045",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 주어 people이 복수이므로 tends가 아니라 tend가 필요하다.",
+      "V3": "PASS — tends→tend 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 people과 tends가 가까워 기본 수일치 즉답이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to join",
+        "validity": "VALID",
+        "pointAndCraft": "way의 보어를 다시 설명하는 to join이다."
+      },
+      {
+        "label": "(B)",
+        "text": "engaged in",
+        "validity": "VALID",
+        "pointAndCraft": "be engaged in의 과거분사 형용사구다."
+      },
+      {
+        "label": "(C)",
+        "text": "tends",
+        "validity": "INVALID",
+        "pointAndCraft": "복수 people에 원형 tend가 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "is",
+        "validity": "VALID",
+        "pointAndCraft": "someone을 받는 단수 is다."
+      },
+      {
+        "label": "(E)",
+        "text": "where",
+        "validity": "VALID",
+        "pointAndCraft": "program을 환경으로 받는 where절이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 people과 tends가 가까워 기본 수일치 즉답이다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG046",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 열거 복수 주어 Our houses, roads, ...에 is가 아니라 are가 필요하다.",
+      "V3": "PASS — is→are 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 수일치 포인트로 적합하나 정답 경쟁은 낮다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "when",
+        "validity": "VALID",
+        "pointAndCraft": "know의 시간 간접의문절을 여는 when이다."
+      },
+      {
+        "label": "(B)",
+        "text": "based",
+        "validity": "VALID",
+        "pointAndCraft": "be based on의 과거분사다."
+      },
+      {
+        "label": "(C)",
+        "text": "it",
+        "validity": "VALID",
+        "pointAndCraft": "앞 need to predict를 받는 대명사 it이다."
+      },
+      {
+        "label": "(D)",
+        "text": "is",
+        "validity": "INVALID",
+        "pointAndCraft": "열거 복수 주어에 are가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "while",
+        "validity": "VALID",
+        "pointAndCraft": "England와 Australia를 대조하는 while이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 수일치 포인트로 적합하나 정답 경쟁은 낮다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG047",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 동명사구 representing...가 단수 주어이므로 본동사 comes가 필요하다.",
+      "V3": "PASS — coming→comes 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 본동사 결손과 단수 수일치가 단순하다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "recode의 목적어인 what절이다."
+      },
+      {
+        "label": "(B)",
+        "text": "retrieving",
+        "validity": "VALID",
+        "pointAndCraft": "rather than 뒤 retrieving이 병렬된다."
+      },
+      {
+        "label": "(C)",
+        "text": "struggle",
+        "validity": "VALID",
+        "pointAndCraft": "복수 People에 struggle이 맞다."
+      },
+      {
+        "label": "(D)",
+        "text": "coming",
+        "validity": "INVALID",
+        "pointAndCraft": "단수 동명사구 주어의 유한동사 comes가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "undermined",
+        "validity": "VALID",
+        "pointAndCraft": "과거 발견의 결과를 나타내는 undermined가 가능하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 본동사 결손과 단수 수일치가 단순하다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG048",
+    "blindAnswer": "NO_ANSWER",
+    "confidence": "high",
+    "alternativeAnswers": [
+      "(D) (출제 의도 추정: running)"
+    ],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "FAIL — stop to run은 '다른 행동을 멈추고 열차를 운행하려고 했다'는 뜻의 정상 stop + 목적부정사 구조라 다섯 표지가 모두 문법적이다.",
+      "V3": "FAIL — 문맥상 '운행을 중단했다'면 stopped running이 맞지만 이는 어법 오류가 아니라 의미 선택 오류다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 1,
+      "C2": 1,
+      "C3": 0,
+      "C4": 0,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 어법 문항이 stop의 두 정상 보문형을 혼동해 무정답이 되었다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "noticing",
+        "validity": "VALID",
+        "pointAndCraft": "experience of 뒤 동명사 noticing이다."
+      },
+      {
+        "label": "(B)",
+        "text": "while",
+        "validity": "VALID",
+        "pointAndCraft": "소리가 지속되는 동안의 while절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "attracted",
+        "validity": "VALID",
+        "pointAndCraft": "violated와 attracted가 과거로 병렬된다."
+      },
+      {
+        "label": "(D)",
+        "text": "to run",
+        "validity": "VALID",
+        "pointAndCraft": "stopped to run은 목적부정사로 문법적이며 단지 문맥상 뜻이 달라진다."
+      },
+      {
+        "label": "(E)",
+        "text": "used to run",
+        "validity": "VALID",
+        "pointAndCraft": "과거의 반복 운행을 나타내는 used to run이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "critical",
+        "evidence": "(D)는 stop to V의 정상 용법이라 어법상 틀린 선택지가 없다.",
+        "recommendation": "valency/보문형 치환은 문법성뿐 아니라 두 형식이 모두 허용되는 동사를 금지하거나 유형을 의미 문항으로 바꿔라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG049",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — people called... 뒤 부가 상황에는 claimed가 아니라 claiming이 필요하다.",
+      "V3": "PASS — claimed→claiming 후 주절과 분사구문이 연결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 분사구문 포인트로 적합하나 시제형 오답이 쉽게 보인다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "that",
+        "validity": "VALID",
+        "pointAndCraft": "noticing의 목적 내용절 접속사 that이다."
+      },
+      {
+        "label": "(B)",
+        "text": "while",
+        "validity": "VALID",
+        "pointAndCraft": "소리가 지속되는 동안의 while절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "didn't change",
+        "validity": "VALID",
+        "pointAndCraft": "과거 예측 맥락의 didn't change다."
+      },
+      {
+        "label": "(D)",
+        "text": "By ceasing",
+        "validity": "VALID",
+        "pointAndCraft": "noise가 멎음으로써 예측을 위반했다는 by + 동명사다."
+      },
+      {
+        "label": "(E)",
+        "text": "claimed",
+        "validity": "INVALID",
+        "pointAndCraft": "people called와 동시인 부가 분사 claiming이 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 분사구문 포인트로 적합하나 시제형 오답이 쉽게 보인다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG050",
+    "blindAnswer": "(B)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — When절의 본동사가 없으므로 bringing이 아니라 brought가 필요하다.",
+      "V3": "PASS — bringing→brought 후 시간절과 주절이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 When + 주어 뒤 본동사 결손이라 즉답된다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "suggests",
+        "validity": "VALID",
+        "pointAndCraft": "단수 evidence에 suggests가 맞다."
+      },
+      {
+        "label": "(B)",
+        "text": "bringing",
+        "validity": "INVALID",
+        "pointAndCraft": "When절 주어 Peter Liu의 과거 본동사 brought가 필요하다."
+      },
+      {
+        "label": "(C)",
+        "text": "to process",
+        "validity": "VALID",
+        "pointAndCraft": "ability of insulin to process의 부정사 수식이다."
+      },
+      {
+        "label": "(D)",
+        "text": "encouraging",
+        "validity": "VALID",
+        "pointAndCraft": "which is encouraging의 형용사 보어다."
+      },
+      {
+        "label": "(E)",
+        "text": "whatever",
+        "validity": "VALID",
+        "pointAndCraft": "eat의 목적어인 융합관계사 whatever절이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 When + 주어 뒤 본동사 결손이라 즉답된다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG051",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — encourage + 목적어 you 뒤에는 doing이 아니라 to do가 필요하다.",
+      "V3": "PASS — doing→to do 후 보문형이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 기본 동사 보문형 한 점이라 쉽다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "was",
+        "validity": "VALID",
+        "pointAndCraft": "the first thing...was의 보어 연결이다."
+      },
+      {
+        "label": "(B)",
+        "text": "to make",
+        "validity": "VALID",
+        "pointAndCraft": "were required to make의 수동 보문형이다."
+      },
+      {
+        "label": "(C)",
+        "text": "proven",
+        "validity": "VALID",
+        "pointAndCraft": "현재완료 수동 has been proven이다."
+      },
+      {
+        "label": "(D)",
+        "text": "doing",
+        "validity": "INVALID",
+        "pointAndCraft": "encourage you to do가 표준 보문형이다."
+      },
+      {
+        "label": "(E)",
+        "text": "completed",
+        "validity": "VALID",
+        "pointAndCraft": "task (that is) completed의 축약 수동 후치수식이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 기본 동사 보문형 한 점이라 쉽다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG052",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 독립문 Both의 유한동사가 없으므로 influencing은 influence여야 한다.",
+      "V3": "PASS — influencing→influence 후 문장이 완결된다. a thousand lines는 단일 코드 산출물/분량으로 묶어 singular qualifies가 가능하다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 문장 전체가 Both influencing으로 시작하는 fragment라 즉답된다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "qualifies",
+        "validity": "VALID",
+        "pointAndCraft": "a thousand lines를 하나의 코드 분량/산출물로 보아 singular qualifies가 가능하다."
+      },
+      {
+        "label": "(B)",
+        "text": "produced",
+        "validity": "VALID",
+        "pointAndCraft": "something useful (that is) produced의 축약 수동이다."
+      },
+      {
+        "label": "(C)",
+        "text": "responsible",
+        "validity": "VALID",
+        "pointAndCraft": "technologies responsible for의 형용사 후치수식이다."
+      },
+      {
+        "label": "(D)",
+        "text": "as much",
+        "validity": "VALID",
+        "pointAndCraft": "as much an invention as의 동등 비교다."
+      },
+      {
+        "label": "(E)",
+        "text": "influencing",
+        "validity": "INVALID",
+        "pointAndCraft": "독립 주어 Both의 본동사 influence가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 문장 전체가 Both influencing으로 시작하는 fragment라 즉답된다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG053",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 전치사 about 뒤 him을 의미상 주어로 둔 동명사 knowing이 필요하며 known은 불가능하다.",
+      "V3": "PASS — known→knowing 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 전치사 뒤 known의 형태 오류가 매우 노골적이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to buy",
+        "validity": "VALID",
+        "pointAndCraft": "have no time to buy의 부정사 수식이다."
+      },
+      {
+        "label": "(B)",
+        "text": "likely",
+        "validity": "VALID",
+        "pointAndCraft": "be likely to appreciate의 형용사 보어다."
+      },
+      {
+        "label": "(C)",
+        "text": "it",
+        "validity": "VALID",
+        "pointAndCraft": "offers의 직접목적어 it이다."
+      },
+      {
+        "label": "(D)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "know의 목적어인 what kind of sandwich절이다."
+      },
+      {
+        "label": "(E)",
+        "text": "known",
+        "validity": "INVALID",
+        "pointAndCraft": "about him knowing의 동명사절이 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 전치사 뒤 known의 형태 오류가 매우 노골적이다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG054",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 열거된 houses, roads, railways...가 복수 주어이므로 is가 아니라 are가 필요하다.",
+      "V3": "PASS — is→are 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 기본 수일치로 적절하지만 경쟁력은 낮다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "knowing",
+        "validity": "VALID",
+        "pointAndCraft": "operates on 뒤 동명사 knowing이다."
+      },
+      {
+        "label": "(B)",
+        "text": "when",
+        "validity": "VALID",
+        "pointAndCraft": "know의 시간 간접의문절 when이다."
+      },
+      {
+        "label": "(C)",
+        "text": "to predict",
+        "validity": "VALID",
+        "pointAndCraft": "need to predict의 부정사 수식이다."
+      },
+      {
+        "label": "(D)",
+        "text": "is",
+        "validity": "INVALID",
+        "pointAndCraft": "열거 복수 주어에 are가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "usually",
+        "validity": "VALID",
+        "pointAndCraft": "below를 수식하는 빈도부사 usually다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 기본 수일치로 적절하지만 경쟁력은 낮다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG055",
+    "blindAnswer": "(C)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 명령문의 목적어가 주어 자신이므로 you가 아니라 재귀대명사 yourself가 필요하다.",
+      "V3": "PASS — you→yourself 후 train yourself to acknowledge가 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 재귀대명사 포인트로 적정하나 답은 즉시 보인다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "kept",
+        "validity": "VALID",
+        "pointAndCraft": "과거 생존 맥락의 kept다."
+      },
+      {
+        "label": "(B)",
+        "text": "focused",
+        "validity": "VALID",
+        "pointAndCraft": "keep + 목적어 + focused의 상태 보어다."
+      },
+      {
+        "label": "(C)",
+        "text": "you",
+        "validity": "INVALID",
+        "pointAndCraft": "train의 목적어가 명령 대상과 동일해 yourself가 필요하다."
+      },
+      {
+        "label": "(D)",
+        "text": "sharing",
+        "validity": "VALID",
+        "pointAndCraft": "by 뒤 동명사 sharing이다."
+      },
+      {
+        "label": "(E)",
+        "text": "Where",
+        "validity": "VALID",
+        "pointAndCraft": "Where the mind goes의 장소/방향 부사절이다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 재귀대명사 포인트로 적정하나 답은 즉시 보인다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG056",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — can improve의 주어가 필요하므로 명령형 Incorporate가 아니라 동명사 Incorporating이어야 한다.",
+      "V3": "PASS — Incorporate→Incorporating 후 동명사구 주어가 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 문두 원형 뒤 can이라는 이중 서술어가 노골적이다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "packed",
+        "validity": "VALID",
+        "pointAndCraft": "schedules를 꾸미는 과거분사 형용사 packed다."
+      },
+      {
+        "label": "(B)",
+        "text": "integrating",
+        "validity": "VALID",
+        "pointAndCraft": "beauty of 뒤 동명사 integrating이다."
+      },
+      {
+        "label": "(C)",
+        "text": "inevitable",
+        "validity": "VALID",
+        "pointAndCraft": "chores의 형용사 보어 inevitable이다."
+      },
+      {
+        "label": "(D)",
+        "text": "washing",
+        "validity": "VALID",
+        "pointAndCraft": "Whether it's washing...의 동명사 보어다."
+      },
+      {
+        "label": "(E)",
+        "text": "Incorporate",
+        "validity": "INVALID",
+        "pointAndCraft": "can improve의 단수 주어인 동명사 Incorporating이 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 문두 원형 뒤 can이라는 이중 서술어가 노골적이다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG057",
+    "blindAnswer": "(B)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — If절 주어 a thousand lines의 서술어가 없으므로 qualifying은 finite qualifies여야 한다.",
+      "V3": "PASS — qualifying→qualifies 후 조건절이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 0,
+      "C6": "PENDING",
+      "evidence": "KILLER인데 If + 주어 다음 본동사 결손이라 즉답된다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "to think",
+        "validity": "VALID",
+        "pointAndCraft": "tend to think의 부정사 보문형이다."
+      },
+      {
+        "label": "(B)",
+        "text": "qualifying",
+        "validity": "INVALID",
+        "pointAndCraft": "If절의 본동사 qualifies가 필요하다."
+      },
+      {
+        "label": "(C)",
+        "text": "responsible",
+        "validity": "VALID",
+        "pointAndCraft": "technologies responsible for의 후치 형용사다."
+      },
+      {
+        "label": "(D)",
+        "text": "is",
+        "validity": "VALID",
+        "pointAndCraft": "단수 rendering에 is가 맞다."
+      },
+      {
+        "label": "(E)",
+        "text": "powerfully",
+        "validity": "VALID",
+        "pointAndCraft": "influence를 수식하는 부사 powerfully다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "KILLER인데 If + 주어 다음 본동사 결손이라 즉답된다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG058",
+    "blindAnswer": "(D)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 관계절 주어 that은 복수 words를 받으므로 expresses가 아니라 express가 필요하다.",
+      "V3": "PASS — expresses→express 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 3,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 수일치 포인트로 적절하나 정답은 가까운 선행사로 쉽게 판별된다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "frequently",
+        "validity": "VALID",
+        "pointAndCraft": "use를 수식하는 부사 frequently다."
+      },
+      {
+        "label": "(B)",
+        "text": "asked",
+        "validity": "VALID",
+        "pointAndCraft": "가정적 if절 과거형 asked와 might가 조응한다."
+      },
+      {
+        "label": "(C)",
+        "text": "used",
+        "validity": "VALID",
+        "pointAndCraft": "can be used의 수동 원형이다."
+      },
+      {
+        "label": "(D)",
+        "text": "expresses",
+        "validity": "INVALID",
+        "pointAndCraft": "복수 words를 받는 관계절에 express가 필요하다."
+      },
+      {
+        "label": "(E)",
+        "text": "to communicate",
+        "validity": "VALID",
+        "pointAndCraft": "intent is to communicate의 보어 부정사다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 수일치 포인트로 적절하나 정답은 가까운 선행사로 쉽게 판별된다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG059",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — 동명사구 Reading a book collaboratively가 단수 주어이므로 are가 아니라 is가 필요하다.",
+      "V3": "PASS — are→is 후 문장이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 1,
+      "C6": "PENDING",
+      "evidence": "ADVANCED치고 문두 동명사구 수일치 한 점이라 쉽다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "being left",
+        "validity": "VALID",
+        "pointAndCraft": "pleasure of 뒤 수동 동명사 being left다."
+      },
+      {
+        "label": "(B)",
+        "text": "struck",
+        "validity": "VALID",
+        "pointAndCraft": "주어 we의 상태를 나타내는 분사 struck다."
+      },
+      {
+        "label": "(C)",
+        "text": "who",
+        "validity": "VALID",
+        "pointAndCraft": "사람 선행사 people의 주격 who다."
+      },
+      {
+        "label": "(D)",
+        "text": "in which",
+        "validity": "VALID",
+        "pointAndCraft": "group 안에서라는 in which절이다."
+      },
+      {
+        "label": "(E)",
+        "text": "are",
+        "validity": "INVALID",
+        "pointAndCraft": "단수 동명사구 주어에 is가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "major",
+        "evidence": "ADVANCED치고 문두 동명사구 수일치 한 점이라 쉽다.",
+        "recommendation": "난이도 라벨에 맞게 여러 구조 단서를 결합하고 정답의 국소 형태 노출을 줄여라."
+      }
+    ],
+    "grade": "PENDING"
+  },
+  {
+    "itemId": "PG060",
+    "blindAnswer": "(E)",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "validity": {
+      "V1": "PASS — 가시 지문에 A–E 마커가 각 1회 있고 5개 옵션의 label/text가 마커와 정확히 일치한다.",
+      "V2": "PASS — in order for + NP 뒤에는 satisfactorily serving이 아니라 to satisfactorily serve가 필요하다.",
+      "V3": "PASS — satisfactorily serving→to satisfactorily serve 후 목적 구문이 완결된다.",
+      "V4": "PENDING — 해설·저장 정답이 봉인되어 2단계 전에는 평가하지 않음.",
+      "V5": "PENDING — 학생 노출 전체 필드·저장 키가 봉인되어 2단계 전에는 평가하지 않음."
+    },
+    "craft": {
+      "C1": 2,
+      "C2": 2,
+      "C3": 1,
+      "C4": 3,
+      "C5": 2,
+      "C6": "PENDING",
+      "evidence": "INTERMEDIATE 보문형 포인트로 가능하지만 긴 구 전체가 표지라 정답이 쉽게 보인다."
+    },
+    "optionAudit": [
+      {
+        "label": "(A)",
+        "text": "is",
+        "validity": "VALID",
+        "pointAndCraft": "단수 주어 one of the judgments의 본동사 is다."
+      },
+      {
+        "label": "(B)",
+        "text": "what",
+        "validity": "VALID",
+        "pointAndCraft": "get의 목적어인 what절이다."
+      },
+      {
+        "label": "(C)",
+        "text": "rendered",
+        "validity": "VALID",
+        "pointAndCraft": "have the service rendered의 수동 목적격 보어다."
+      },
+      {
+        "label": "(D)",
+        "text": "paying",
+        "validity": "VALID",
+        "pointAndCraft": "진행형 are paying의 현재분사다."
+      },
+      {
+        "label": "(E)",
+        "text": "satisfactorily serving",
+        "validity": "INVALID",
+        "pointAndCraft": "in order for a company to serve의 to-infinitive가 필요하다."
+      }
+    ],
+    "issues": [
+      {
+        "severity": "minor",
+        "evidence": "INTERMEDIATE 보문형 포인트로 가능하지만 긴 구 전체가 표지라 정답이 쉽게 보인다.",
+        "recommendation": "정답 외 네 표지도 실제 오개념을 유발하도록 경쟁력을 높여라."
+      }
+    ],
+    "grade": "PENDING"
+  }
+]

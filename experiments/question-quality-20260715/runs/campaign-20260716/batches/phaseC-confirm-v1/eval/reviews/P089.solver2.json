@@ -1,0 +1,35 @@
+{
+  "pid": "P089",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'A few shills ... prompted customers to demand ...'는 정문. 논리 결합: 지문 어디에도 매장 배치(store layouts)나 그것에 대한 논리적 설명 요구가 언급되지 않음. 오히려 지문의 핵심 대비는 '반복 광고·설명(논리적 설득)의 실패 vs. 모방 유도(사회적 증거)의 성공'이므로, 고객이 논리적 설명을 요구하게 만들었다는 진술은 후속문 'Within a few weeks shoppers readily accepted those carts'로 이어지는 인과를 성립시키지 못함. 논리 불성립."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합: 'relieved shoppers of the physical fatigue'는 relieve A of B 구문으로 정문. 논리 결합: 육체적 피로를 덜어 주는 주체는 카트 자체이지 shills가 아님. 또한 지문이 명시한 수용 실패의 원인은 피로가 아니라 심리적 저항(남성의 체면, 여성의 유모차 연상)이었고, shills의 기능은 시범·모방 유도였음. '위장한 바람잡이 몇 명이 직접(directly) 피로를 덜어 주었다'는 명제는 주어-술어 의미 결합이 지문 사실과 모순. 불성립."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법 결합: 'A few shills disguised as regular shoppers guided them to adopt the behavior of others rather than relying on reasoning' — guided의 목적어 them은 직전 담화의 the (regular) shoppers를 지시하며(주어 명사구 내부의 shills와 수·의미상 구별됨), 'others'는 카트를 미는 모델들을 지시. guide A to-V 구문 정문, rather than relying on reasoning의 -ing 병렬도 성립. 논리 결합: 지문의 전제(광고·설명이라는 이성적 설득의 실패)와 해결책(모델 고용 + 'everyone is using the carts'라는 사회적 증거 제시), 그리고 결과문('Within a few weeks shoppers readily accepted')을 정확히 매개함. 형식적으로 유일하게 전건-후건 인과가 닫히는 선지."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 'offered shoppers practical strategies'는 수여동사 이중목적어 구문으로 정문. 논리 결합: 쇼핑 예산 관리(budgets)는 지문에 단 한 번도 등장하지 않는 무관 소재. shills의 역할(카트 사용 시범)과도 무관하며 결과문과의 인과도 성립하지 않음. 불성립."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 'modified the store's advertisements without addressing ...'는 정문. 논리 결합: 이중 모순 — (a) shills는 광고를 수정하는 주체가 아니라 매장 안에서 행동 시범을 보인 사람들이고, (b) shill 전략은 바로 그 '심리적 불편(체면·유모차 연상)'을 정면으로 겨냥해 해소한 조치이므로 'without addressing the underlying psychological discomfort'는 지문 사실과 정반대. 또한 광고는 이미 실패한 수단으로 규정되어 있어 이 명제로는 결과문의 성공을 설명할 수 없음. 불성립."
+    }
+  ],
+  "note": "빈칸 문장의 주어(A few shills disguised as regular shoppers)와 결과문(수 주 내 수용)이 강한 형식적 제약을 형성. 다섯 선지 모두 과거시제 타동사구로 문법적 seam은 통과하지만, '이성적 설득 실패 → 사회적 증거로 성공'이라는 지문의 논증 구조를 매개하는 선지는 ③뿐. ③의 대명사 them은 shills로 오독될 표면적 여지가 있으나, guide의 의미역(행위 유도 주체=shills, 피유도자=shoppers)과 담화 맥락상 shoppers 지시가 유일하게 정합적이어서 결함으로 보기 어려움. 복수 정답 여지 없음."
+}

@@ -1,0 +1,96 @@
+{
+  "pid": "P008",
+  "blindAnswer": "(D)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "(E) 오답 해설이 \"앞의 'the same individual'을 지칭\"이라고 서술했으나, 실제 문장 'when they are feeling a different way, the same individual may make different choices'에서 the same individual은 they 뒤에 나오는 역행(cataphoric) 지시 대상이다. 선행사 위치 서술 오류."
+    },
+    {
+      "code": "V4",
+      "severity": "major",
+      "evidence": "keyPoints 3항이 they의 선행사 후보로 \"앞의 복수 명사 'circumstances, time, way' 전체\"를 제시하나, 'way'는 they 뒤의 'feeling a different way'에 나오는 방식 명사로 선행사가 될 수 없고, circumstances/time은 'are feeling'의 주어로 의미상 불가능하며 time·way는 단수 명사다. 존재하지 않는(불가능한) 선행사 지목형 오분석."
+    },
+    {
+      "code": "V4",
+      "severity": "minor",
+      "evidence": "(A) 해설의 \"상투적인 'to-v' 형태\" — '전형적인'의 오용으로 보이는 부적절한 용어 선택이며, 해당 디코이가 왜 매력적인지에 대한 설명이 사실상 부재하다."
+    },
+    {
+      "code": "V5",
+      "severity": "minor",
+      "evidence": "markedExpressions에서 (D)의 expression 필드가 교정형 'relates'로 기재되어 렌더 표기 'relating'과 불일치(다른 4개 항목은 expression=렌더 표기 패턴). errorExpression/correction은 정확하고 학생 노출 필드는 모두 동기화되어 있어 V5 자체는 통과로 판정하되 내부 필드 규약 불일치로 기록."
+    },
+    {
+      "code": "V2",
+      "severity": "minor",
+      "evidence": "(E) singular they 디코이는 원문 그대로이고 지문 자체가 'a person ... their'로 성중립 단수 용법을 이미 사용하므로 문법적으로 옳아 V2는 유지되나, 단수 선행사(the same individual)에 대한 they + 역행 지시라는 이중 시비 소지가 있어 규범 문법 관점의 이의 제기 리스크가 있는 디코이다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "learn의 to부정사 보어 자리 준동사 형태 판정 (pointCode k)",
+      "temptingBecause": "'rather than follow'와의 병렬에서 to 유무를 잠깐 고민하게 하는 정도 — 실질 유인력이 약한 필러에 가깝고 해설도 tempting 근거를 제시하지 못함",
+      "decisiveFlaw": "learn은 to부정사를 보어로 취하며 rather than 뒤 원형 follow 병렬은 표준 — 옳은 표현이므로 정답 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "동명사구 주어 + 수동태 정동사 판정 (pointCode e)",
+      "temptingBecause": "'being ethical'이라는 동명사구 주어와 수동태의 조합, 그리고 뒤따르는 acting과의 태 대비가 낯설게 보일 수 있음",
+      "decisiveFlaw": "define의 대상이 being ethical이므로 수동 is defined가 정확하고 단수 수일치도 옳음 — 정답 불가"
+    },
+    {
+      "label": "(C)",
+      "intent": "주어-동사 수일치 (pointCode d)",
+      "temptingBecause": "앞의 긴 인용구('in accordance with ... correct')가 주어 these principles와의 시야를 흐림",
+      "decisiveFlaw": "복수 주어 these principles에 복수 동사 vary — 옳으며, 인용구만 걷어내면 즉시 소거되는 쉬운 디코이"
+    },
+    {
+      "label": "(D)",
+      "intent": "명사절(자유관계절) 주어 뒤 정동사 vs 준동사 판정 — 선언된 정답 (pointCode a)",
+      "temptingBecause": "'values relating to ~'를 명사 values + 현재분사 수식('~에 관련된 가치들')으로 오독하기 쉬움 — relating to는 고빈도 연쇄",
+      "decisiveFlaw": "What a person values는 명사절 주어이고 relating을 두면 문장 전체에 정동사가 없는 fragment가 됨(values를 명사로 읽는 대안 해석에서도 동일). relates로 교정하면 정확히 원문 복원 — 유일 정답"
+    },
+    {
+      "label": "(E)",
+      "intent": "대명사 지시·수일치 — singular they (pointCode g)",
+      "temptingBecause": "단수 the same individual을 가리키는 복수형 they로 보여 수일치 위반처럼 보이고, 지시 대상이 뒤에 나오는 역행 지시라 더 어색하게 느껴짐",
+      "decisiveFlaw": "원문 그대로이며 성중립 단수 they로 문법적(지문이 'a person ... their'로 동일 용법을 이미 사용). 다만 RUBRIC §C가 정답 자리에서 배제하는 '대안 분석 가능(singular they)' 성격을 디코이가 띠어 이의 제기 소지 존재"
+    }
+  ],
+  "explanationIssues": [
+    "(E) 오답 해설: '앞의 the same individual' — 실제로는 they 뒤에 나오는 역행 지시이므로 위치 서술이 사실과 다름",
+    "keyPoints 3항: 'circumstances, time, way'를 they의 앞선 복수 선행사 후보로 제시 — way는 they 뒤에 위치하고 세 명사 모두 'are feeling'의 주어로 불가능하며 time·way는 단수 — 오분석",
+    "(A) 해설: '상투적인 to-v 형태' — 용어 오용, tempting 근거 부재로 §C 3항(디코이별 why tempting) 미충족",
+    "keyPoints 3항의 '대명사 수일치' 프레이밍이 (E) 오답 해설('어법상 적절')과 논조가 어긋나 학생에게 혼선 유발 가능"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": "충족 — relating→relates 교정 시 정확히 원문 복원",
+    "clearGrammarCall": "충족 — 정답 (D)는 정동사 부재라는 명확한 문법 판단이며 대안 분석 배제 자리 아님",
+    "allUnderlinesExplained": "미충족 — (A)는 why tempting 설명이 없는 필러 디코이(§C: 설명이 안 되는 디코이는 필러)",
+    "notInstantlyVisible": "부분 충족 — 구조를 읽어야 하나 'What절 주어 + 단수 정동사'는 고도로 드릴된 정형 패턴이라 상급자에게 빠르게 노출",
+    "noEasySamePointDecoyMasking": "충족 — (C) 수일치 디코이는 (D)의 핵심(정동사 자리 판정)과 포인트가 구분됨"
+  },
+  "grade": "F",
+  "notes": "정답 유일성(V2)·지문 무결성(V1)·문법성(V3)은 견고하고 정답 포인트 자체는 정전급이다. 그러나 해설 자료에 실제 오분석 2건이 존재한다: (E) 해설의 선행사 위치 오서술(역행 지시를 '앞의'로 기술), keyPoints의 불가능한 선행사 후보 제시('circumstances, time, way'). 보수적 판정 원칙에 따라 V4 실패 → F. 공예 측면에서는 (A) 필러 디코이와 (E)의 시비 소지, KILLER 요청 대비 정형 패턴(중상 난이도)인 정답 포인트로 C3=2, C5=2, C6=1. 수리 방향: (E)·keyPoints 해설 재작성(역행 지시 명시, 불가능 선행사 제거), (A)를 실질 유인력 있는 디코이로 교체, 필요시 정답 포인트를 덜 드릴된 구조로 심화하면 B 이상 회복 가능."
+}

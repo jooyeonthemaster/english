@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-15T03:52:47.4272705+09:00",
+  "source": {
+    "platform": "vercel",
+    "environment": "production",
+    "projectId": "prj_tV7f2Z0FAR6mJWcYiBMK376Q4J2w",
+    "deploymentId": "dpl_CKkd1eiFq2DeEidwSxQpFSgDm4ZD",
+    "method": "vercel env ls plus transient vercel env pull; only the explicit non-secret allowlist below was retained",
+    "rawOutputSuppressed": true,
+    "transientEnvFileRemoved": true
+  },
+  "allowlistedConfiguration": {
+    "GEMINI_QUESTION_MAX_RETRIES": {
+      "configured": "EMPTY",
+      "effective": 2,
+      "effectiveBasis": "readPositiveIntegerEnv fallback"
+    },
+    "GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS": {
+      "configured": "EMPTY",
+      "effective": 2,
+      "effectiveBasis": "readPositiveIntegerEnv fallback"
+    },
+    "OPENROUTER_STANDARD_MODEL": {
+      "configured": "EMPTY",
+      "effective": "google/gemini-3.5-flash",
+      "effectiveBasis": "ATLAS_STANDARD_MODEL_ID fallback"
+    },
+    "OPENROUTER_GEMINI_FLASH_MODEL": {
+      "configured": "ABSENT",
+      "effective": "google/gemini-3.5-flash",
+      "effectiveBasis": "ATLAS_STANDARD_MODEL_ID fallback"
+    },
+    "PREMIUM_QGEN_MODEL_ID": {
+      "configured": "ABSENT",
+      "effective": "google/gemini-3.1-pro-preview",
+      "effectiveBasis": "ATLAS_PREMIUM_QGEN_MODEL_ID fallback"
+    },
+    "GRAMMAR_PREMIUM_MODEL_ID": {
+      "configured": "ABSENT",
+      "effective": "google/gemini-3.1-pro-preview",
+      "effectiveBasis": "grammar premium ladder fallback"
+    },
+    "OPENROUTER_GEMINI_REASONING_EFFORT": {
+      "configured": "EMPTY",
+      "effective": "none",
+      "effectiveBasis": "atlasReasoningEffortFor Gemini fallback"
+    },
+    "ATLASCLOUD_GEMINI_REASONING_EFFORT": {
+      "configured": "ABSENT",
+      "effective": "none",
+      "effectiveBasis": "atlasReasoningEffortFor Gemini fallback"
+    },
+    "OPENROUTER_REASONING_EFFORT": {
+      "configured": "ABSENT",
+      "effective": "none",
+      "effectiveBasis": "Gemini-specific fallback takes precedence"
+    },
+    "ATLASCLOUD_REASONING_EFFORT": {
+      "configured": "ABSENT",
+      "effective": "none",
+      "effectiveBasis": "Gemini-specific fallback takes precedence"
+    }
+  },
+  "effectiveProductionQuestionGeneration": {
+    "standardModel": "google/gemini-3.5-flash",
+    "premiumGeneralModel": "google/gemini-3.1-pro-preview",
+    "premiumGrammarLadderModel": "google/gemini-3.1-pro-preview",
+    "geminiReasoning": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "wrapperOuterRetries": 2,
+    "emptyResultMaxAttempts": 2
+  },
+  "sourceHashes": {
+    "src/lib/atlas-ai.ts": "68a1664cd2fcdcddcd320f3e4f75cbcf655777a5774c480ac4991855d8ef1f5c",
+    "src/lib/concurrency-config.ts": "df0edfb5e84cafd6716251fc3fdebbf0473052ce870bc15a411ce5f20325b9d1",
+    "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts": "b42d0f10aaf2a3c874d5e349cff6405fb36d8cc3646a08f7c1f000c125779c2c"
+  },
+  "safety": {
+    "secretNamesOrValuesRetained": false,
+    "modelApiCalls": 0,
+    "browserCalls": 0,
+    "databaseWrites": 0
+  },
+  "qualification": "This attests the allowlisted Vercel production environment values and current local fallback logic. It does not by itself prove that the deployed dirty source bytes equal the current local source hashes; deployment-source closure is tracked separately."
+}

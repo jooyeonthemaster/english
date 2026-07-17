@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-point-monotony",
+    "grammar-underline-wide",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [
+    "difficulty-mismatch",
+    "grammar-decoy-point-diversity"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=h  (B):dec=h  (C):dec=h  (D):dec=h  (E):ANS=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 182,
+        "relPos": 0.181,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 395,
+        "relPos": 0.392,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 460,
+        "relPos": 0.457,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 584,
+        "relPos": 0.58,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 856,
+        "relPos": 0.85,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.85,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+  "question": {
+    "direction": "출제 및 해설은 한국어, 문제·선택지 표기는 수능 형식",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "everything we know",
+        "isError": false,
+        "surroundingText": "We recode what we see through the lens of everything we know.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "such as JPG, rather than storing",
+        "isError": false,
+        "surroundingText": "a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "who lack this ability and remember everything in perfect detail",
+        "isError": false,
+        "surroundingText": "People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "what they have learned",
+        "isError": false,
+        "surroundingText": "make connections between what they have learned.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(E)",
+        "expression": "abstract representations rather than played back like a movie",
+        "isError": true,
+        "errorExpression": "abstract representations rather than being played back like a movie",
+        "surroundingText": "The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony.",
+        "pointCode": "h",
+        "correction": "abstract representations rather than played back like a movie"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "everything we know"
+      },
+      {
+        "label": "(B)",
+        "text": "such as JPG, rather than storing"
+      },
+      {
+        "label": "(C)",
+        "text": "who lack this ability and remember everything in perfect detail"
+      },
+      {
+        "label": "(D)",
+        "text": "what they have learned"
+      },
+      {
+        "label": "(E)",
+        "text": "abstract representations rather than being played back like a movie"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "[해설 본문에서 작성]",
+      "(B)": "[해설 본문에서 작성]",
+      "(C)": "[해설 본문에서 작성]",
+      "(D)": "[해설 본문에서 작성]"
+    },
+    "explanation": "(E) \"abstract representations rather than being played back like a movie\"는 어법상 틀린 표현이며 \"abstract representations rather than played back like a movie\"로 고쳐야 한다. [해설 본문에서 작성]",
+    "keyPoints": [
+      "(E)는 'memories are reconstructed through X rather than played back' 구조로, X와 'played back' 모두 'memories'에 대한 술어로 병렬되어야 하므로 'played back' 앞에는 'being'이 와야 함."
+    ],
+    "tags": [
+      "분사구문",
+      "병렬구조",
+      "수동태",
+      "절경계"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of __(A) everything we know__. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm __(B) such as JPG, rather than storing__ a raw bitmap image file. People __(C) who lack this ability and remember everything in perfect detail__ struggle to generalize, learn, and make connections between __(D) what they have learned__. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through __(E) abstract representations rather than being played back like a movie__ completely undermined the legal primacy of eyewitness testimony. Seeing is not believing."
+  }
+}

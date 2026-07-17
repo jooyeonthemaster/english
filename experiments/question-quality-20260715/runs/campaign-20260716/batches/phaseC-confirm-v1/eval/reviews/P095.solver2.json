@@ -1,0 +1,35 @@
+{
+  "pid": "P095",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "incorrect",
+      "reason": "'real modern threats'가 지문의 핵심 명제 'There is no danger'와 정면 모순. 뇌가 위협으로 여기는 상황들(교통체증, 배우자와의 불쾌한 대화)은 실재하는 위협이 아니라고 지문이 명시한다. seam은 정문이나 논리 부적합."
+    },
+    {
+      "label": "②",
+      "verdict": "incorrect",
+      "reason": "뇌는 정확히 '측정(accurately measure)'하는 것이 아니라 오판한다. 마지막 문장 'sees a mortal danger that is not there'와 'accurately' 및 'actual Stone Age dangers'가 모두 모순. 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "incorrect",
+      "reason": "'immediate survival needs'의 직접 신호라는 주장은 'it does not threaten our lives'와 모순. 실제 생존 위협이 없으므로 생존 필요의 신호가 될 수 없다. 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "빈칸 주어(불쾌한 대화를 위험으로 여기는 뇌의 반응/판정)가 '인지 왜곡의 산물'이라는 진술은, 바로 다음 문장 'Our Stone Age brain sees a mortal danger that is not there'(없는 위험을 봄=인지 왜곡)와 완벽히 병렬·재진술 관계. 'There is no danger, but our brain rates it as such'(오평정)와도 정합. seam 정문, 논리 유일 적합."
+    },
+    {
+      "label": "⑤",
+      "verdict": "incorrect",
+      "reason": "'necessary flee-or-fight action to save us'가 바로 앞 문장 'we do not have to flee or fight'와 정면 모순. 구해야 할 실제 위험이 없으므로 필요한 투쟁-도피 반응이 아니다. 탈락."
+    }
+  ],
+  "note": "빈칸 문항. 다섯 선지 모두 통사적 seam(주어+is/triggers...)은 정문이라 문법만으로는 배제 불가. 판정은 전적으로 지문 논리에 의존한다. 지문의 반복 명제('There is no danger', 'does not threaten our lives', 'do not have to flee or fight')와 결론 문장('sees a mortal danger that is not there')이 일관되게 '실재하지 않는 위험에 대한 뇌의 오판'을 가리키므로 ④(cognitive distortion의 산물)만이 성립. ①③⑤는 '실제 위험 존재'를, ②는 '정확한 측정'을 전제해 모두 모순. 정답 ④로 명확히 좁혀지며 다중 정답 가능성 없음."
+}

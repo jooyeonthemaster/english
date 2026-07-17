@@ -1,0 +1,1447 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-14T17:23:49.821Z",
+  "mode": "offline-historical-descriptive",
+  "caveat": "Historical artifact codes were produced by different commits and are not causal estimates. Proposed classes require item-level adjudication before changing production policy.",
+  "filesScanned": 49,
+  "parseErrors": [],
+  "rowsWithAnyCurrentSalvageCode": 346,
+  "okRowsWithAnyCurrentSalvageCode": 346,
+  "okRowsWithProposedHardInvariant": 55,
+  "okRowsWithSplitOrRepairRequired": 8,
+  "uniqueOkQuestionsWithAnyCurrentSalvageCode": 287,
+  "uniqueOkQuestionsWithProposedHardInvariant": 46,
+  "uniqueOkQuestionsWithSplitOrRepairRequired": 6,
+  "currentSalvageCodeFrequency": {
+    "grammar-keypoint-choice-mismatch": 109,
+    "grammar-killer-generic-answer-point": 68,
+    "grammar-pointcode-span-mismatch": 49,
+    "grammar-killer-answer-point-repeated": 33,
+    "grammar-decoy-filler-span": 31,
+    "grammar-obvious-adjacent-sv-agreement": 29,
+    "grammar-decoy-point-monotony": 27,
+    "grammar-marker-too-dense": 25,
+    "grammar-answer-point-not-core": 23,
+    "grammar-shallow-participle-adjective-answer": 21,
+    "grammar-underline-too-long": 19,
+    "grammar-killer-overdrilled-answer": 18,
+    "grammar-decoy-point-diversity": 15,
+    "grammar-too-basic-decoys": 15,
+    "grammar-underline-punctuated-fragment": 13,
+    "grammar-killer-thin-answer": 11,
+    "grammar-obvious-noun-what-relative": 11,
+    "grammar-error-explanation-surface-order": 7,
+    "grammar-explanation-too-long-hard": 6,
+    "grammar-obvious-local-agreement": 6,
+    "grammar-obvious-to-gerund-after-verb": 6,
+    "grammar-shallow-nearby-passive-decoy": 6,
+    "grammar-answer-nonword-forced": 5,
+    "grammar-obvious-pronoun-agreement": 5,
+    "grammar-agreement-explanation-too-thin": 4,
+    "grammar-killer-thin-relative-animacy": 4,
+    "grammar-obvious-object-pronoun-subject": 4,
+    "grammar-weak-filler-decoys": 4,
+    "grammar-obvious-local-pronoun-agreement": 2,
+    "blank-paraphrase-difficulty-mismatch": 1,
+    "blank-paraphrase-target-trailing-function": 1,
+    "grammar-correction-form-exposed": 1,
+    "grammar-error-pos-change": 1,
+    "grammar-obvious-adverb-adjective": 1,
+    "grammar-obvious-intransitive-passive": 1
+  },
+  "proposedHardInvariantFrequency": {
+    "grammar-pointcode-span-mismatch": 49,
+    "grammar-answer-nonword-forced": 5,
+    "grammar-noun-clause-pronoun-mislabel": 5,
+    "wrong-option-explanation-count": 3,
+    "grammar-error-pos-change": 1
+  },
+  "proposedSplitOrRepairFrequency": {
+    "grammar-error-explanation-surface-order": 7,
+    "grammar-correction-form-exposed": 1
+  },
+  "currentSalvageCodeCount": 108,
+  "proposedHardInvariants": [
+    "combo-explanation-truncated",
+    "grammar-afford-modal-mislabel",
+    "grammar-answer-nonword-forced",
+    "grammar-appear-adverb-mislabel",
+    "grammar-appear-pointcode-voice-mismatch",
+    "grammar-category-mislabel",
+    "grammar-error-pos-change",
+    "grammar-gibberish-inversion-fragment",
+    "grammar-human-made-postmodifier-mislabel",
+    "grammar-look-like-complement-mislabel",
+    "grammar-noun-clause-pronoun-mislabel",
+    "grammar-phrasal-verb-mislabel",
+    "grammar-pointcode-span-mismatch",
+    "grammar-seem-to-complement-mislabel",
+    "grammar-seem-to-object-mislabel",
+    "grammar-that-way-adverb-mislabel",
+    "wrong-option-explanation-count"
+  ],
+  "proposedSplitOrRepairRequired": [
+    "blank-awkward-correct-option",
+    "blank-paraphrase-subject-slot-mismatch",
+    "grammar-correction-form-exposed",
+    "grammar-error-explanation-surface-order",
+    "grammar-explanation-lint",
+    "grammar-explanation-typo"
+  ],
+  "affectedRows": [
+    {
+      "file": "experiments/grammar-quality-20260714/p1-premium/results.jsonl",
+      "line": 1,
+      "questionHash": "4ec97da6061f926f5603dfc22ebe615da4734189a34d7fae2d6d29cbf88f3402",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/round-0/results.jsonl",
+      "line": 24,
+      "questionHash": "dbc51b812cd1d6b8b01b495851cc9d071cb0cf3372dddea65808e43a7304c56d",
+      "passageId": "ebsi_go3_20260507-q31",
+      "ok": true,
+      "attempts": 2,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/round-1/results.jsonl",
+      "line": 4,
+      "questionHash": "3c830a95d5cc554e7c4f5ce79f5dd81c2d6076564055fc3528a433301dcded06",
+      "passageId": "ebsi_go1_20241015-q21",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/round-1/results.jsonl",
+      "line": 15,
+      "questionHash": "11a46393802aa7c5d96f0b8a09d2810ef39ca451403c5a6c4567e72d20297251",
+      "passageId": "ebsi_go1_20180308-q35",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/round-3/results.jsonl",
+      "line": 23,
+      "questionHash": "c003a6b912a6cf2b54fe7ad8323623939188f8730cb344bd37bdbc77996f4489",
+      "passageId": "ebsi_go3_20150409_A-q22",
+      "ok": true,
+      "attempts": 5,
+      "qualityMode": "relaxed",
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/round-4/results.jsonl",
+      "line": 25,
+      "questionHash": "2f3e436c2c6cd57611b44a3d4bac7c9a9c273e7edd7f2701d5dfecd6785291b8",
+      "passageId": "ebsi_go1_20200312-q36",
+      "ok": true,
+      "attempts": 5,
+      "qualityMode": "relaxed",
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/round-5/results.jsonl",
+      "line": 14,
+      "questionHash": "9bfccc0325bc799679efa086a7d59147b54f99347ddfb60b3b57b17fa8c2c65b",
+      "passageId": "ebsi_go1_20231219-q21",
+      "ok": true,
+      "attempts": 5,
+      "qualityMode": "relaxed",
+      "codes": [
+        "grammar-answer-nonword-forced"
+      ],
+      "salvageCodes": [
+        "grammar-answer-nonword-forced"
+      ],
+      "hardInvariantCodes": [
+        "grammar-answer-nonword-forced"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/round-5/results.jsonl",
+      "line": 24,
+      "questionHash": "e2a019b919ab0806f0fbbbf37f06c83f4751142deefba263f69d813249564175",
+      "passageId": "ebsi_go1_20200312-q21",
+      "ok": true,
+      "attempts": 6,
+      "qualityMode": "relaxed",
+      "codes": [
+        "grammar-decoy-filler-span",
+        "grammar-explanation-lint",
+        "grammar-killer-answer-point-repeated",
+        "grammar-killer-overdrilled-answer",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-filler-span",
+        "grammar-killer-answer-point-repeated",
+        "grammar-killer-overdrilled-answer",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/round-6/results.jsonl",
+      "line": 24,
+      "questionHash": "79be66d9bbf5d75a6ce54f142032ed0c3679160b0fbde7fc6d4522ff2f3465e7",
+      "passageId": "ebsi_go3_20150409_A-q22",
+      "ok": true,
+      "attempts": 5,
+      "qualityMode": "relaxed",
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s11-reasoning-high/results.jsonl",
+      "line": 2,
+      "questionHash": "40491140676d0531fa3ecc762c90eab4569a46cc33f7449e450b9edc1f9a8f87",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s15-cn-dsv4f/results.jsonl",
+      "line": 2,
+      "questionHash": "27ace138ef14d8d6f7d9f4cb5ef0d32b98a4722a32ed378fb54b4e4c0ad24021",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-answer-in-wrong-explanations",
+        "grammar-explanation-lint",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "wrong-option-explanation-count"
+      ],
+      "salvageCodes": [
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s15-cn-dsv4f/results.jsonl",
+      "line": 6,
+      "questionHash": "0527dc0a2f6db0e130bb6a2ac2f20f749d3a1d7c90961e74de1cef885e7bd368",
+      "passageId": "ebsi_go1_20241015-q20",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-correction-differs-from-source",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-killer-answer-point-repeated",
+        "grammar-marker-too-dense",
+        "grammar-pointcode-span-mismatch",
+        "grammar-render-marker-count",
+        "grammar-source-expression-not-backed",
+        "grammar-surrounding-missing-marker",
+        "grammar-too-basic-decoys",
+        "grammar-underline-too-long"
+      ],
+      "salvageCodes": [
+        "grammar-keypoint-choice-mismatch",
+        "grammar-killer-answer-point-repeated",
+        "grammar-marker-too-dense",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys",
+        "grammar-underline-too-long"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s15-cn-dsv4p/results.jsonl",
+      "line": 7,
+      "questionHash": "b591d945902d7e22c888aac4107567cee1bfb71b7f3f6b8a724110dda2ae38dd",
+      "passageId": "ebsi_go1_20151117-q21",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-answer-in-wrong-explanations",
+        "grammar-correction-differs-from-source",
+        "grammar-correction-not-source-backed",
+        "grammar-error-not-mutated",
+        "grammar-explanation-too-long",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "grammar-render-marker-count",
+        "grammar-source-expression-not-backed",
+        "wrong-option-explanation-count"
+      ],
+      "salvageCodes": [
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s15-cn-glm52/results.jsonl",
+      "line": 4,
+      "questionHash": "a2b2c9c61f500e547e7dd8878f58642fd8fdaa8d0bd70b8897a00908b54970ee",
+      "passageId": "ebsi_go3_20191015-q20",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-explanation-lint",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "wrong-option-explanation-count"
+      ],
+      "salvageCodes": [
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results-w2.jsonl",
+      "line": 13,
+      "questionHash": "cad5c62c1fbfacb54ad6b8998eadf43a1b7fb1518a9e2da8d6540372a510bbe2",
+      "passageId": "ebsi_go1_20231219-q21",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-answer-nonword-forced",
+        "grammar-answer-point-not-core",
+        "grammar-explanation-lint"
+      ],
+      "salvageCodes": [
+        "grammar-answer-nonword-forced",
+        "grammar-answer-point-not-core"
+      ],
+      "hardInvariantCodes": [
+        "grammar-answer-nonword-forced"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results-w2.jsonl",
+      "line": 22,
+      "questionHash": "645ed2ad53cc957a97b58c432b9f96bcb2a698a32bac8c3a8d5a4e9a561dff4c",
+      "passageId": "ebsi_go3_20150409_A-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-explanation-lint",
+        "grammar-noun-clause-pronoun-mislabel",
+        "grammar-obvious-noun-what-relative",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys",
+        "grammar-weak-filler-decoys"
+      ],
+      "salvageCodes": [
+        "grammar-obvious-noun-what-relative",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys",
+        "grammar-weak-filler-decoys"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results-w2.jsonl",
+      "line": 23,
+      "questionHash": "1874f95ae5221564f864d5effda91a050bfe71f71c1d369e413849acafbd523b",
+      "passageId": "ebsi_go1_20200312-q36",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results-w2.jsonl",
+      "line": 30,
+      "questionHash": "32585e08f63a17c370de646b39f26962685799c068789b4f32c59d533e6f5113",
+      "passageId": "2019_06_5023285-q29",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-answer-point-not-core",
+        "grammar-correction-not-source-backed",
+        "grammar-error-not-mutated",
+        "grammar-pointcode-span-mismatch",
+        "grammar-source-expression-not-backed"
+      ],
+      "salvageCodes": [
+        "grammar-answer-point-not-core",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results.jsonl",
+      "line": 13,
+      "questionHash": "cad5c62c1fbfacb54ad6b8998eadf43a1b7fb1518a9e2da8d6540372a510bbe2",
+      "passageId": "ebsi_go1_20231219-q21",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-answer-nonword-forced",
+        "grammar-answer-point-not-core",
+        "grammar-explanation-lint"
+      ],
+      "salvageCodes": [
+        "grammar-answer-nonword-forced",
+        "grammar-answer-point-not-core"
+      ],
+      "hardInvariantCodes": [
+        "grammar-answer-nonword-forced"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results.jsonl",
+      "line": 22,
+      "questionHash": "645ed2ad53cc957a97b58c432b9f96bcb2a698a32bac8c3a8d5a4e9a561dff4c",
+      "passageId": "ebsi_go3_20150409_A-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-explanation-lint",
+        "grammar-noun-clause-pronoun-mislabel",
+        "grammar-obvious-noun-what-relative",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys",
+        "grammar-weak-filler-decoys"
+      ],
+      "salvageCodes": [
+        "grammar-obvious-noun-what-relative",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys",
+        "grammar-weak-filler-decoys"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results.jsonl",
+      "line": 23,
+      "questionHash": "1874f95ae5221564f864d5effda91a050bfe71f71c1d369e413849acafbd523b",
+      "passageId": "ebsi_go1_20200312-q36",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results.jsonl",
+      "line": 30,
+      "questionHash": "32585e08f63a17c370de646b39f26962685799c068789b4f32c59d533e6f5113",
+      "passageId": "2019_06_5023285-q29",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-answer-point-not-core",
+        "grammar-correction-not-source-backed",
+        "grammar-error-not-mutated",
+        "grammar-pointcode-span-mismatch",
+        "grammar-source-expression-not-backed"
+      ],
+      "salvageCodes": [
+        "grammar-answer-point-not-core",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s3-minimal/results.jsonl",
+      "line": 2,
+      "questionHash": "ed742337818170fc6550c1f13e0dc6f4d2269f9a60e2f8967ab8725b448f4943",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-explanation-lint",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s3-minimal/results.jsonl",
+      "line": 4,
+      "questionHash": "84c486a1d79cbfcb84c3eeecf67191630465b5014c9af68b86b10d5dc49c16cf",
+      "passageId": "ebsi_go3_20191015-q20",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-explanation-lint",
+        "grammar-marker-too-dense",
+        "grammar-obvious-noun-what-relative",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-marker-too-dense",
+        "grammar-obvious-noun-what-relative",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s4-two-stage/results.jsonl",
+      "line": 2,
+      "questionHash": "6da24adce4556fd5995e460be32abd19469b9f2292398eb5f28558d23b5d38d0",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 2,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-explanation-lint",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s6-best-of-3/results.jsonl",
+      "line": 2,
+      "questionHash": "efea8db146d021008948b087006890aab2b7f57cc2d7be671db3120b7b2ecd73",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 5,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s6-best-of-3/results.jsonl",
+      "line": 3,
+      "questionHash": "c4fe05fbef7f5271636994e48787c4f09f6f015f04a6339b1fcbfc10af2c0c26",
+      "passageId": "ebsi_go3_20191015-q22",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s7-self-critique/results.jsonl",
+      "line": 2,
+      "questionHash": "2b56b21333d2f52f50bd8ead1282c9ceb5cc63d0816a1a5fef247e9153b7db6c",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 4,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-answer-point-not-core",
+        "grammar-pointcode-span-mismatch",
+        "grammar-render-marker-count",
+        "grammar-too-basic-decoys"
+      ],
+      "salvageCodes": [
+        "grammar-answer-point-not-core",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s7-self-critique/results.jsonl",
+      "line": 9,
+      "questionHash": "3c860f0a24a0c8ee9751cc42ff2924bb2f39fa2c95d2aac781f1ecdac8630b27",
+      "passageId": "ebsi_go1_20191120-q21",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-explanation-lint",
+        "grammar-killer-answer-point-repeated",
+        "grammar-killer-overdrilled-answer",
+        "grammar-noun-clause-pronoun-mislabel",
+        "grammar-obvious-noun-what-relative",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-killer-answer-point-repeated",
+        "grammar-killer-overdrilled-answer",
+        "grammar-obvious-noun-what-relative",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s8-decoy-split/results-w2.jsonl",
+      "line": 12,
+      "questionHash": "e7d2050a800aff37b2d882c7983c6f1c4241db0560e793b90c5706326a2f4ad1",
+      "passageId": "ebsi_go1_20221123-q20",
+      "ok": true,
+      "attempts": 2,
+      "qualityMode": null,
+      "codes": [
+        "grammar-decoy-filler-span",
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-filler-span",
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s8-decoy-split/results.jsonl",
+      "line": 12,
+      "questionHash": "e7d2050a800aff37b2d882c7983c6f1c4241db0560e793b90c5706326a2f4ad1",
+      "passageId": "ebsi_go1_20221123-q20",
+      "ok": true,
+      "attempts": 2,
+      "qualityMode": null,
+      "codes": [
+        "grammar-decoy-filler-span",
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-filler-span",
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results-w2.jsonl",
+      "line": 2,
+      "questionHash": "c4f6b8a0c7a7a04a460eb88b8686b8ba75f9aecd9d5f3c55370e034ecfce16ff",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results-w2.jsonl",
+      "line": 14,
+      "questionHash": "8f262ee9858979b7d39e17ef37e3adb2c7d394292c95230fb88ed7af6402fad9",
+      "passageId": "ebsi_go1_20231219-q20",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-answer-nonword-forced",
+        "grammar-explanation-lint",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-obvious-pronoun-agreement"
+      ],
+      "salvageCodes": [
+        "grammar-answer-nonword-forced",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-obvious-pronoun-agreement"
+      ],
+      "hardInvariantCodes": [
+        "grammar-answer-nonword-forced"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results-w2.jsonl",
+      "line": 16,
+      "questionHash": "9df91dad7482ddd38c616277d8e277ec425fb537e3bce564f7718dc5ec690be0",
+      "passageId": "ebsi_go1_20150311-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results-w2.jsonl",
+      "line": 23,
+      "questionHash": "36c6d72f41ffd0588390e5516492e8d8f908929a301f2839bb09d2495ae9e172",
+      "passageId": "ebsi_go1_20200312-q36",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-noun-clause-pronoun-mislabel",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results.jsonl",
+      "line": 2,
+      "questionHash": "c4f6b8a0c7a7a04a460eb88b8686b8ba75f9aecd9d5f3c55370e034ecfce16ff",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results.jsonl",
+      "line": 14,
+      "questionHash": "8f262ee9858979b7d39e17ef37e3adb2c7d394292c95230fb88ed7af6402fad9",
+      "passageId": "ebsi_go1_20231219-q20",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-answer-nonword-forced",
+        "grammar-explanation-lint",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-obvious-pronoun-agreement"
+      ],
+      "salvageCodes": [
+        "grammar-answer-nonword-forced",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-obvious-pronoun-agreement"
+      ],
+      "hardInvariantCodes": [
+        "grammar-answer-nonword-forced"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results.jsonl",
+      "line": 16,
+      "questionHash": "9df91dad7482ddd38c616277d8e277ec425fb537e3bce564f7718dc5ec690be0",
+      "passageId": "ebsi_go1_20150311-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "grammar-too-basic-decoys"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s9-model-pro/results.jsonl",
+      "line": 23,
+      "questionHash": "36c6d72f41ffd0588390e5516492e8d8f908929a301f2839bb09d2495ae9e172",
+      "passageId": "ebsi_go1_20200312-q36",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-noun-clause-pronoun-mislabel",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-flash-ladder/results.jsonl",
+      "line": 22,
+      "questionHash": "35281cdb51166944b5595902f26a9f8248478b808db5bfe7f39414e48c1c713f",
+      "passageId": "ebsi_go3_20150409_A-q19",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-obvious-to-gerund-after-verb",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-obvious-to-gerund-after-verb",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-flash-ladder/results.jsonl",
+      "line": 23,
+      "questionHash": "6b078eff72fc9150b4fc087f46e2b9877c75ff4d7332a2c7a65ecba0ff77a29a",
+      "passageId": "ebsi_go1_20200312-q36",
+      "ok": true,
+      "attempts": 5,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch",
+        "grammar-shallow-participle-adjective-answer"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch",
+        "grammar-shallow-participle-adjective-answer"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-pro-fewshot-hardgate/results.jsonl",
+      "line": 12,
+      "questionHash": "e82cb85e3fcc7847f8e639ee3a3f4f52a379674670bdd8587070bec4f1b19601",
+      "passageId": "ebsi_go1_20221123-q20",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-decoy-filler-span",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-filler-span",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-pro-fewshot-hardgate/results.jsonl",
+      "line": 19,
+      "questionHash": "88635d2e51b95d99bebdef441a55b592e617138a45cee9f6a625369e439f45a7",
+      "passageId": "ebsi_go1_20220324-q23",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-decoy-filler-span",
+        "grammar-explanation-lint",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-filler-span",
+        "grammar-keypoint-choice-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-pro-fewshot-hardgate/results.jsonl",
+      "line": 21,
+      "questionHash": "8ef6eedd16d888fea3e936a16e0b411223cd157c98798dfb82322a94c042c1e3",
+      "passageId": "ebsi_go3_20150409_A-q22",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-killer-thin-answer",
+        "grammar-obvious-adjacent-sv-agreement",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-killer-thin-answer",
+        "grammar-obvious-adjacent-sv-agreement",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-triple-ladder/results-run1-100pct.jsonl",
+      "line": 2,
+      "questionHash": "2bce186ee8d8ff06bcec4d2c18bd31798b3a33c9a0a2f84f7375dfc935ed2813",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 4,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-triple-ladder/results-run1-100pct.jsonl",
+      "line": 3,
+      "questionHash": "0595f6324aa75b5d7065f942545ba9fb30a9a52907a14470839533f2505ea09a",
+      "passageId": "ebsi_go3_20191015-q22",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-pos-change",
+        "grammar-killer-generic-answer-point"
+      ],
+      "salvageCodes": [
+        "grammar-error-pos-change",
+        "grammar-killer-generic-answer-point"
+      ],
+      "hardInvariantCodes": [
+        "grammar-error-pos-change"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-triple-ladder/results-run1-100pct.jsonl",
+      "line": 5,
+      "questionHash": "4bd8155296c0ecaeac59a5472c3394f56d122d3b2bbcb5a4aaa3e775979af850",
+      "passageId": "ebsi_go1_20241015-q21",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-decoy-filler-span",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-filler-span",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-triple-ladder/results-run1-100pct.jsonl",
+      "line": 21,
+      "questionHash": "d267e1c8bf73dae742d8a0a56db8adf497198360523657e9e74a0fb87aece2e5",
+      "passageId": "ebsi_go3_20150409_A-q22",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-killer-generic-answer-point",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-triple-ladder/results-run1-100pct.jsonl",
+      "line": 25,
+      "questionHash": "9a0f2ef924793a6a1f08d97398d66957bdaac047585443508cdf67c160a40b0e",
+      "passageId": "ebsi_go3_20260507-q20",
+      "ok": true,
+      "attempts": 4,
+      "qualityMode": null,
+      "codes": [
+        "grammar-decoy-filler-span",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-filler-span",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w4-25p-all/results.jsonl",
+      "line": 2,
+      "questionHash": "f730389dfd805bed2f3a6c65724caf57ffe3b31d47beea70b6a24ec94f3537f1",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 6,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w4-25p-all/results.jsonl",
+      "line": 10,
+      "questionHash": "cd850f1f2f1b2b50d1a7ddd2413f36d0098f025b9da23f089907310af5f619e3",
+      "passageId": "ebsi_go1_20191120-q20",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w4-3f-all/results.jsonl",
+      "line": 3,
+      "questionHash": "bb6bb4286508cf052d3f334031d1b4024bc67e2b7563d6c0de0b7f4180c9c026",
+      "passageId": "ebsi_go3_20191015-q22",
+      "ok": true,
+      "attempts": 5,
+      "qualityMode": null,
+      "codes": [
+        "grammar-decoy-filler-span",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-filler-span",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w4-l-l-pr/results.jsonl",
+      "line": 4,
+      "questionHash": "d8c40f9dbe074a06bbddfb9c7c4bded89d1485e7844b7cf4503b9c374c414f4e",
+      "passageId": "ebsi_go3_20191015-q20",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w4-p-f-f/results.jsonl",
+      "line": 2,
+      "questionHash": "45df29121c1f67cf281fb7b05919812f822bd9c221022924894d4b123ebc49b7",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w4-p-f-p/results.jsonl",
+      "line": 10,
+      "questionHash": "b7cfa77416d2bbf66116ead72ee39496ccc72b3780e7f7cdb87ab50c61691b9b",
+      "passageId": "ebsi_go1_20191120-q20",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "hardInvariantCodes": [
+        "grammar-pointcode-span-mismatch"
+      ],
+      "splitOrRepairCodes": []
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s10-model-claude/results.jsonl",
+      "line": 3,
+      "questionHash": "537adfcfdb6d4d890e2430ed0619a03fa982e583f23e42666f8d32932869d8f4",
+      "passageId": "ebsi_go3_20191015-q22",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-obvious-adjacent-sv-agreement",
+        "grammar-underline-wide"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-obvious-adjacent-sv-agreement"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s13-examiner-persona/results.jsonl",
+      "line": 10,
+      "questionHash": "ff91caeacd7bf417fd907386889a6725679ae87cc9405da8229023fdcfc060d7",
+      "passageId": "ebsi_go1_20191120-q20",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-correction-form-exposed"
+      ],
+      "salvageCodes": [
+        "grammar-correction-form-exposed"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-correction-form-exposed"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s15-cn-dsv4p/results.jsonl",
+      "line": 2,
+      "questionHash": "8cb94e566e7ce413f2c26d566362477fc7e7df204c8e2a0bafed5c3ff3edb2e8",
+      "passageId": "ebsi_go3_20151013-q19",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "difficulty-mismatch",
+        "grammar-decoy-point-diversity",
+        "grammar-decoy-point-monotony",
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch"
+      ],
+      "salvageCodes": [
+        "grammar-decoy-point-diversity",
+        "grammar-decoy-point-monotony",
+        "grammar-error-explanation-surface-order",
+        "grammar-keypoint-choice-mismatch"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results-w2.jsonl",
+      "line": 27,
+      "questionHash": "01513f509769d5ec284509bdc328f6436bdfc4a7be613393edbd970df6548b01",
+      "passageId": "2015_06_3026346-q21",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/s2-fewshot-a/results.jsonl",
+      "line": 27,
+      "questionHash": "01513f509769d5ec284509bdc328f6436bdfc4a7be613393edbd970df6548b01",
+      "passageId": "2015_06_3026346-q21",
+      "ok": true,
+      "attempts": 1,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    },
+    {
+      "file": "experiments/grammar-quality-20260714/x/w3-triple-ladder/results-run1-100pct.jsonl",
+      "line": 10,
+      "questionHash": "60ed4cf2a925e8b13ca6fb93ce1fd20c23f321379cf568f17b177dc3c8109a8b",
+      "passageId": "ebsi_go1_20191120-q20",
+      "ok": true,
+      "attempts": 3,
+      "qualityMode": null,
+      "codes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-obvious-adjacent-sv-agreement"
+      ],
+      "salvageCodes": [
+        "grammar-error-explanation-surface-order",
+        "grammar-obvious-adjacent-sv-agreement"
+      ],
+      "hardInvariantCodes": [],
+      "splitOrRepairCodes": [
+        "grammar-error-explanation-surface-order"
+      ]
+    }
+  ]
+}

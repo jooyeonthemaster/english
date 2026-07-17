@@ -1,0 +1,161 @@
+{
+  "schemaVersion": "question-quality-s1-v6-durable-controller-fixture-public-v1.2",
+  "status": "DRY_RUN_ONLY_EXECUTION_BLOCKED",
+  "fixtureOnly": true,
+  "campaignSemanticSha256": "2fa28a072e52170b8f00e94ddd5878d050c05b77ac0369dc63533f2bdef3fb2a",
+  "durableBatchIdentitySha256": "a7aa4f930dcf59ec60a1e863d85d697cb7a900be7391512db7416dc436b2eadd",
+  "frozenPricingEnvelopeSha256": "483784144d1966abbbc2387437714fbf064197ed71875c41e247d4b1121f9f9d",
+  "sourceClosure": [
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/build-fixture.ts",
+      "sha256": "d4f3885da48ca99ddd1255668eaf804f0c9a93f6bd5c8cddce664b467ca3aa17"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/materialize.ts",
+      "sha256": "dd6496cf78629c8a97667a319c7c049c28f7ede0c2ea82aef8ea5138bb161771"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+      "sha256": "529bf8a63e794d3bc3c3d4eb834cd9ef48c720bc203190c5499cc8e613c58438"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/runtime.ts",
+      "sha256": "48e6a6b13027896c546bb7e2715aac58a58b8aa852efc52d0d8e45a4227362ca"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+      "sha256": "b8812dbe0dc89ee103961563698a5fa47ac97add6d637be94737e886c30e3511"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/ledger.ts",
+      "sha256": "8a1ad1b22daf4f449242c9f122c4271650cb18991d56040d54f5659e09d3833e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts",
+      "sha256": "658a08f5d0d61fb217e9da2d6d76f523e6c0c332c37e81b340c241f4d92d75f6"
+    },
+    {
+      "path": "experiments/question-quality-20260715/pricing/snapshot-openrouter-pricing.ts",
+      "sha256": "4a66910f0f3e60cb955c3558655c150821d9ce521d455103873a45a9c20aea9b"
+    },
+    {
+      "path": "src/lib/atlas-ai.ts",
+      "sha256": "c69d9115e834b9a379c80791653e3bd51aecef117dca3367391460aa2ff60922"
+    },
+    {
+      "path": "src/lib/atlas-fetch-scope-coordinator.ts",
+      "sha256": "fd58c3e226279045f9f53ee56d320cfb2a0739387ebe1abfbc1d8afa750ca874"
+    },
+    {
+      "path": "src/lib/atlas-production-assignment-fetch-boundary.ts",
+      "sha256": "aa042ea9181f6b5eb256bd4361738cc948c1bc41f27866b75bb9f2728a6b36d8"
+    },
+    {
+      "path": "src/lib/atlas-research-fetch-boundary.ts",
+      "sha256": "0aefa4a2ca66e0997f3f012d153dc273cae46f60cbdde4306c7aa2d8bce89e1d"
+    },
+    {
+      "path": "src/lib/question-generation-research-runtime.ts",
+      "sha256": "727905b19ba7003a0f7983310c65492a13f28257720c921be6fa60319009d10b"
+    }
+  ],
+  "sourceClosureSha256": "c52d7de68e7d9a7ea9e88a9ba74150f392e304640cc5861c7c13c460f72d88b5",
+  "tagBoundPricingSnapshotSha256": "7a3983b494e639ec1a7f411b055dc269a3441ddf1515863759d648a72703ed81",
+  "counts": {
+    "assignments": 180,
+    "registries": 180,
+    "registryEntries": 180,
+    "byPlan": {
+      "PREMIUM": 84,
+      "STANDARD": 96
+    },
+    "byType": {
+      "BLANK_INFERENCE": 84,
+      "GRAMMAR_ERROR": 96
+    },
+    "byDifficulty": {
+      "INTERMEDIATE": 90,
+      "KILLER": 90
+    },
+    "byProfile": {
+      "B0_CURRENT_CONTROL": 24,
+      "B1_TYPE_SCOPED_TAIL": 12,
+      "B2_POSITIVE_COMPACT": 24,
+      "B3_OPTION_INTENT_LEDGER": 24,
+      "G0_CURRENT_CONTROL": 24,
+      "G1_FINAL_CHECKLIST_ABLATION": 24,
+      "G2_POSITIVE_COMPACT": 24,
+      "G3_SITE_CERTIFICATE": 24
+    },
+    "distinctPassageTokens": 12,
+    "b1Premium": 0
+  },
+  "caps": {
+    "candidateOpportunityCap": 180,
+    "physicalFetchCap": 180,
+    "maxCostUsd": 39.332779274,
+    "oneDurableBatchOnly": true,
+    "queueTopUpAllowed": false
+  },
+  "transportPolicy": {
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "endpointSha256": "5c1332d5f9242f304584f5dca3e53a8afe9d1e0c9ea153e0ab73f27e4f341bce",
+    "providerRouting": {
+      "order": [
+        "google-vertex/global"
+      ],
+      "only": [
+        "google-vertex/global"
+      ],
+      "allow_fallbacks": false,
+      "require_parameters": true,
+      "data_collection": "deny",
+      "zdr": true
+    },
+    "providerRoutingSha256": "6086eda2be8a78e383e1dcb5d757a13e88fdb13ca62cb87a5a7aaa9cfe23b166",
+    "reasoning": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "routerMetadataHeader": "X-OpenRouter-Metadata: enabled",
+    "rawResponseCapturedPrivately": true,
+    "providerGenerationIdBoundToLedger": true,
+    "selectedTierTagReturnedByMetadata": false
+  },
+  "priceProof": {
+    "schemaVersion": 2,
+    "priceSnapshotId": "openrouter-tagged-fixture-20260715",
+    "snapshotSha256": "7a3983b494e639ec1a7f411b055dc269a3441ddf1515863759d648a72703ed81",
+    "fetchedAt": "2026-07-15T00:00:00.000Z",
+    "validThrough": "2026-07-15T00:15:00.000Z",
+    "maximumAgeMs": 900000,
+    "exactRouteTag": "google-vertex/global",
+    "admissionBasis": "EXACT_TAG_RATE",
+    "reservationBasis": "ALL_ACTIVE_ENDPOINT_EMERGENCY_CEILING"
+  },
+  "pricingRefreshPolicy": {
+    "rollingAttestationRequiredPerRuntime": true,
+    "frozenEnvelopeMayNeverIncrease": true,
+    "campaignAndBatchIdentityRemainStable": true,
+    "maximumAttestationAgeMs": 900000
+  },
+  "safety": {
+    "registries": 180,
+    "entriesPerRegistry": 1,
+    "maxUsesPerEntry": 1,
+    "maxPhysicalCallsPerAssignment": 1,
+    "maxCandidateOutputsPerAssignment": 1,
+    "externalNetworkCallsDuringMaterialization": 0,
+    "providerCallsDuringMaterialization": 0,
+    "apiCandidatesConsumedDuringMaterialization": 0
+  },
+  "executionHolds": [
+    "replace synthetic fixture with the independently audited v6 original corpus and exact-wire preflight",
+    "capture a fresh schema-v2 endpoint-tag pricing snapshot no older than 15 minutes",
+    "create a dedicated zero-use OPENROUTER_S1_API_KEY whose provider hard limit equals the local cap",
+    "seal account privacy/ZDR and live authorization evidence",
+    "run an independent materialization audit before any network dispatch"
+  ],
+  "publicArtifactSemanticSha256": "8a5a4956b1254adfd95c0c2aeb1389cc862f3b670cdf324f9be94c0519dcab57"
+}

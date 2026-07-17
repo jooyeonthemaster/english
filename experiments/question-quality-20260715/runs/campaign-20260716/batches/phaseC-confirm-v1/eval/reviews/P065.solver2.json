@@ -1,0 +1,35 @@
+{
+  "pid": "P065",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('The approach ... is to evaluate ...'), but logic fails: the passage explicitly states 'results won't be apparent immediately', so an approach defined by evaluating dialect usage 'based primarily on forthcoming academic results' is directly contradicted; nothing in the passage concerns evaluation of usage at all."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Grammatical, but 'firmly rectify nonstandard speech' instantiates the 'rejection and correction' pole, which the passage frames as one extreme on the opinion spectrum, not the culturally responsive middle ground. The worked example shows a gentle recast plus engagement with content ('What should you do, then?'), the formal negation of firm rectification."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Grammatical and logically entailed: culturally responsive teaching must lie between 'rejection and correction' and 'complete acceptance'. The teacher accepts (validates) the dialect utterance without correction while recasting it in standard form ('Oh, you don't have a pencil'), i.e., using the existing habit as a stepping stone toward standard usage. This uniquely satisfies both stated long-range benefits: language development (movement toward standard) and attitudes toward school (validation, no rejection)."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammatical, but 'enduring replacement for formal language' is the complete-acceptance pole pushed further, contradicting sentence 1: standard English is taught precisely because it grants educational/economic access. An approach abandoning standard English cannot be the endorsed middle path, and the teacher's recast into standard form disproves 'replacement'."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Grammatical, but self-contradictory in context: the blank is defined as 'the approach most consistent with culturally responsive teaching', so an approach that prioritizes dialect modification OVER culturally responsive attitudes negates its own frame. Also the example subordinates modification (implicit recast) to responsiveness, the reverse priority."
+    }
+  ],
+  "note": "All five options are to-infinitive predicates after 'The approach ... is', so every grammatical seam is well-formed; discrimination is purely semantic/logical. Options 2 and 4 are the two named poles of the opinion spectrum ('rejection and correction' / 'complete acceptance'), 1 and 5 contradict explicit passage statements, and 3 is the unique middle-ground reading instantiated by the teacher's recast example. No alternative construal (e.g., reading the recast as overt correction) makes 2 defensible, since 'firmly' and 'rejection' are excluded by the teacher's accepting follow-up question. Single defensible answer: 3."
+}

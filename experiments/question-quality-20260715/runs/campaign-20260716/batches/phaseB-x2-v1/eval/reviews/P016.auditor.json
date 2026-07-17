@@ -1,0 +1,85 @@
+{
+  "pid": "P016",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-stem-wording",
+      "severity": "minor",
+      "evidence": "발문이 '어법상 가장 틀린 것은?'으로, 정답이 유일 오류인 문항의 표준 발문 '어법상 틀린 것은?'과 다르다. '가장'은 복수 오류 가능성을 암시해 단일정답형 의도와 미세하게 어긋나지만, 실제 정답 집합은 (B) 하나로 유일하므로 유효성 실패는 아니다."
+    },
+    {
+      "code": "V5-minor-keypoints-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints가 (A)(B)(D)(E)만 다루고 (C)를 언급하지 않는다. 모순은 아니므로 V5 통과이나 완전성 측면에서 미비."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사절 내부 동사와 선행사(a lasting mark)의 수일치 판단",
+      "temptingBecause": "선행사와 동사 사이 거리가 짧아 함정 강도가 약하나, 'makes a lasting mark that shows'에서 주절 동사 makes와 혼동해 병렬로 오독할 여지가 약간 있다",
+      "decisiveFlaw": "선행사 'a lasting mark'가 단수이므로 shows는 명백히 옳다. (D)와 동일한 point(d)의 중복 디코이라 의도 밀도를 깎는다"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답. 조동사 must 지배 하의 'either A or B' 등위 상관 병렬 — 두 번째 등위항은 동사원형 reinforce여야 한다",
+      "temptingBecause": "'adapt to'의 to를 전치사로 파싱해 'to + 동명사(reinforcing)'가 가능하다고 오판하도록 유도한다(전치사 좌초 공유목적어 구조가 위장 역할)",
+      "decisiveFlaw": "either가 adapt 앞에 위치해 VP 등위가 강제되고 'or indeed'가 개재하므로 reinforcing은 to의 목적어가 될 수 없다. must의 지배를 받는 동사원형 reinforce만 가능 — reinforce로 교정하면 정확히 원문이 복원된다"
+    },
+    {
+      "label": "(C)",
+      "intent": "분사구문(Depending on ...) 뒤 주절 정동사 자리 판단으로 추정되나 의도가 불분명하다",
+      "temptingBecause": "사실상 유혹 요소가 없다. 'it is'는 즉시 옳다고 판정되는 자리로, 해설도 '주어 it에 연결된 정동사'라는 동어반복적 설명에 그친다",
+      "decisiveFlaw": "필러에 가까운 디코이. 오답으로서 겨냥하는 오개념을 특정할 수 없어 KILLER 조건 '설명이 안 되는 디코이는 필러' 위반"
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 관계대명사절 내부 동사와 선행사(an intrinsic beauty)의 수일치 판단",
+      "temptingBecause": "'its surroundings'라는 복수 명사가 동사 뒤에 인접해 있으나 위치상 견인 오류를 유발하기 어렵고, 오히려 문두 the bridge와의 거리로 약한 혼동만 준다",
+      "decisiveFlaw": "선행사 'an intrinsic beauty'가 단수이므로 works는 옳다. (A)와 pointCode(d)까지 동일한 중복 point"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사 in의 목적어로 절 주어와 동일 지시하는 재귀대명사 용법 판단",
+      "temptingBecause": "'in it'과의 구별을 요구하며, 관용 표현 'in itself'를 모르면 잠시 멈추게 한다 — 디코이 중 가장 실질적 판단을 유발",
+      "decisiveFlaw": "재귀사가 절 주어(that = a bridge)와 동일 지시하므로 itself가 필수적으로 옳다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(C) 오답 해설이 '주어 it에 연결되어 정동사 역할을 하므로 옳다'는 동어반복 수준으로, 학생이 왜 이 자리를 의심할 수 있는지(왜 매력적인지)를 설명하지 못한다.",
+      "recommendation": "(C)를 실제 함정이 있는 자리(예: being 대치, 도치, 분사 판단)로 교체하거나 해설에 유혹 포인트를 명시하라."
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설 말미 '조동사 뒤 동사원형 병렬이라는 기본 원칙을 잊지 않아야 합니다'는 훈계성 사족으로 우아함을 깎는다.",
+      "recommendation": "사족을 제거하고 'adapt to의 to를 전치사로 오파싱하는 함정' 언급을 추가하면 정답 근거와 함정 분리가 선명해진다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesExplainable": false,
+    "notImmediatelyRevealed": false,
+    "noEasySamePointDecoy": true,
+    "detail": "최소대립쌍(reinforce→reinforcing, 교정 시 원문 복원)과 명확한 문법 판단 조건은 충족. 그러나 (C)는 유혹 근거를 설명할 수 없는 필러이고 (A)/(D)는 동일 point 중복이라 '5개 밑줄 각각 point/why tempting' 조건 실패. 또한 정답이 밑줄 5개 중 유일한 -ing 형태로 표면 스캔만으로 이질성이 드러나며, either...or 국소 단서 1단계 확인으로 즉시 해결되므로 '구조를 읽어야 하며 즉시 드러나지 않는다' 조건도 실패."
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과한 건전한 문항이다. 정답 (B)는 유일 오류이며 교정 시 원문이 정확히 복원되고, 해설의 통사 분석(상관접속사 병렬, 선행사 지목, 재귀 용법)도 모두 사실과 일치한다. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 디코이 4개 중 (C)는 필러, (A)/(D)는 동일 point 중복이라 경쟁 선지가 사실상 (E) 하나뿐이고, 정답은 유일한 -ing 형태라는 표면 단서 + either...or 국소 확인으로 빠르게 확정된다(C5=1). 'adapt to'의 전치사 좌초가 주는 위장은 좋은 재료지만 이를 받쳐줄 깊은 디코이 설계가 없다. 합계 14점, C5<2로 B 기준 미달 — 재설계 필요 등급 C. KILLER 추가 조건은 5밑줄 설명 가능성과 즉시 노출 금지 두 항목에서 실패."
+}

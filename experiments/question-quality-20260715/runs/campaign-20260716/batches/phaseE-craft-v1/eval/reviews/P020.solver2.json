@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "정답 성립",
+      "reason": "형식: 'is to embrace ... to foster ...'는 be동사 보어 to부정사 + 목적의 to부정사로 문법 결합(seam)에 결함이 없다. 논리: (i) 지문 전제 P1 = 표준영어 교육의 일차적 이유는 기회 접근(∴ 표준영어 숙달은 목표로 유지되어야 함), (ii) P2 = 'rejection and correction'과 'complete acceptance'는 양극단으로 제시되고 culturally responsive teaching 은 그와 구별되는 제3의 접근이어야 함, (iii) 예시 = 학생의 방언 발화('I ain't got no pencil')를 거부하지 않고 그대로 받아 표준형('you don't have a pencil')을 리캐스트로 모델링. 예시는 '학생의 언어적 출발점을 수용하면서(embrace their linguistic starting point) 표준 숙달을 길러줌(foster standard proficiency)'의 정확한 사례이고, 마지막 문장의 'language development' 이득과도 정합. 전제·예시·결론 모두와 무모순으로 유일하게 성립한다."
+    },
+    {
+      "label": "2",
+      "verdict": "오답 확정",
+      "reason": "'prioritize direct correction'은 지문이 한쪽 극단으로 명시한 'rejection and correction'과 외연이 같다. 지문은 culturally responsive teaching 을 그 극단과 대비되는 접근으로 제시하므로 P2와 직접 모순. 또한 예시의 교사 발화는 오류 지적 없이 표준형을 자연스럽게 되받는 리캐스트여서 'direct correction'의 반례다. 문법적으로는 결합 가능하나 논리적으로 배제된다."
+    },
+    {
+      "label": "3",
+      "verdict": "오답 확정",
+      "reason": "'validate their native dialects as the ultimate educational objective'는 방언 인정을 '최종 교육 목표(ultimate objective)'로 격상시키는 명제다. 그러나 P1이 표준영어(기회 접근)를 가르치는 일차적 이유로 못박았고, 예시 교사도 표준형을 모델링하므로 목표는 표준 숙달이다. 이는 다른 쪽 극단인 'complete acceptance'에 해당하며, 지문이 배제한 극단이므로 모순. 'as the ultimate ...'라는 한정어가 결정적 결함."
+    },
+    {
+      "label": "4",
+      "verdict": "오답 확정",
+      "reason": "'assess their readiness for post-school opportunities by their dialect usage'는 방언 사용을 진단·평가 도구로 쓰라는 명제인데, 지문 어디에도 학생 평가(assessment) 개념이 없다. 'post-high school education' 언급은 학생이 표준영어의 효용을 깨닫는 계기일 뿐 교사의 평가 기준이 아니다. 예시(리캐스트 응답)와도 무관하여 지시 대상이 없는 무근거 선지. 문법 결합은 정상이나 논리 성립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "오답 확정",
+      "reason": "'separate standard English instruction from their existing linguistic background'는 학생의 기존 언어 배경을 수업에서 분리·배제하라는 명제다. 그러나 예시 교사는 학생의 방언 발화를 그대로 교수 장면의 재료로 삼아 표준형을 연결하므로, 분리가 아니라 통합의 사례다. culturally responsive teaching 의 정의(학생의 문화·언어 자원 활용)와도 정면 배치. 예시와 모순되어 배제된다."
+    }
+  ],
+  "note": "빈칸이 'is to ___' 구조라 다섯 선지 모두 to부정사 보어로 문법 결합은 균질하며, 판별은 순수 논리로 이뤄진다. 판정 논증: 지문은 (극단A: 거부·교정) vs (극단B: 완전 수용) 스펙트럼을 세우고 정답 접근을 제3항으로 요구한다. 선지 2는 극단A, 선지 3은 극단B를 재기술한 것이라 형식적으로 배제되고, 4는 지문에 근거 명제가 없으며, 5는 예시와 직접 모순. 선지 1만이 '수용(방언 출발점 인정) + 목표(표준 숙달)'의 이중 구조로 예시(리캐스트)와 결론(장기적 언어 발달·학교 태도 이득)을 동시에 만족한다. 원전은 culturally responsive teaching 문헌의 고전적 사례(recast 기법)로 보이며 지문 내적 정합성도 양호. 복수정답 소지 없음."
+}

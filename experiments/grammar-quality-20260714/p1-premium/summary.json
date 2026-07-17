@@ -1,0 +1,30 @@
+{
+  "round": "p1-premium",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "relaxed": 0,
+  "avgAttempts": 1.1,
+  "avgMs": 78506,
+  "avgLastMarkerRelPos": 0.835,
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "relaxed": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "relaxed": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "relaxed": 0
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P115",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "정답",
+      "reason": "형식 검증: 'A few shills ... easily brought about the results that theoretical persuasion could not achieve.' — 주어(A few shills, 복수) + 과거시제 타동사(brought about) + 목적어(the results) + 목적격 관계절(that ... could not achieve, achieve의 목적어 공백 = the results)로 문법 결합(seam)이 완전하다. 논리 검증: 지문 전반부가 'repeated advertisements and explanations'로도 설득 실패(= theoretical persuasion could not achieve)를 명시하고, 후반부가 모델 고용(사회적 증거) 직후 'That was the turning point' 및 'Within a few weeks shoppers readily accepted those carts'로 성공을 명시한다. 빈칸 문장은 이 대조(이론적 설득 실패 vs 위장 쇼핑객의 성공)를 정확히 요약하며, 뒤 문장(수용)과 인과적으로 정합한다. 'easily'는 광고로는 안 되던 일이 쉽게 이뤄졌다는 대비를 강화한다. 필요충분하게 성립."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "'easily could not overcome the negative perceptions held by the majority of shoppers' — 문법적으로는 부사 easily의 위치가 부정 조동사 앞에 놓여 어색하나(easily는 성공 함의 부사로 부정문과 의미 충돌: '*쉽게 극복하지 못했다') 결정적 결함은 논리다. 직후 문장 'That was the turning point... Within a few weeks shoppers readily accepted those carts'가 성공을 명시하므로, 부정 인식을 극복하지 못했다는 진술은 지문 결말과 정면 모순. 성립 불가."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'relied on the same logical approaches that had not persuaded the public' — 문법 결합은 성립(과거완료 관계절 포함)하나 논리적으로 거짓. 쉴(shill) 전략은 광고·설명이라는 논리적 접근이 실패한 뒤 채택된 사회적 증거(social proof) 전략으로, '동일한 논리적 접근에 의존했다'는 지문의 전략 전환 서사와 정면 배치된다. 또한 실패한 접근에 의존했다면 뒤 문장의 성공(수용)이 인과적으로 설명되지 않는다. 성립 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "'attracted only the elderly customers who could not walk without assistance' — 문법 결합은 성립하나 논리적으로 거짓. 지문에서 'only a few elderly shoppers'가 카트를 쓰던 것은 쉴 투입 이전 상태이며, 그 상태가 오히려 카트 매력을 떨어뜨렸다고 명시된다. 쉴 투입 후에는 'shoppers readily accepted' 즉 다수가 수용했으므로 '노인만 끌어들였다'는 결말과 모순. 또한 원문은 노인들이 '보행 보조가 필요했다'고 말한 적 없어 세부도 무근거. 성립 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'led to a complete structural redesign of all local retail stores' — 문법 결합은 성립하나 논리적으로 무관(non sequitur). 지문은 매장 구조 개조를 일절 언급하지 않으며, 쉴의 효과는 쇼핑객의 카트 수용(행동 변화)이지 점포 재설계가 아니다. 'all local retail stores'라는 과잉 일반화도 지문 범위(Goldman의 매장) 밖. 성립 불가."
+    }
+  ],
+  "note": "빈칸 문장은 지문의 핵심 대조 구조 — 이론적 설득(광고·설명)의 실패 vs 사회적 증거(위장 쇼핑객)의 성공 — 를 요약하는 자리다. ①만이 이 대조와 직후 결과 문장(수용)에 문법적·논리적으로 정합하며, ②③④는 결말과 모순, ⑤는 무관한 진술. 복수 정답 여지 없음. easily+부정(②)의 부사 배치 어색함 등 대안 해석 가능성도 검토했으나 어느 오답 선지도 정문·정합으로 구제되지 않는다."
+}

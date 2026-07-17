@@ -1,0 +1,91 @@
+{
+  "pid": "P002",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-META-LEAK",
+      "severity": "major",
+      "evidence": "학생 노출 해설 마지막 문장에 생성 파이프라인 메타데이터가 그대로 노출됨: '난이도 Killer 수준에 맞추어, polarity_flip(반대 극성)을 쓰지 않고 긍정적 흐름을 유지하는 매력적인 오답 후보를 구성했습니다.' 지문 분석과 무관한 출제 내부 용어(polarity_flip)와 설계 의도가 해설에 첨가된 '지문에 없는 내용'이며 학생용 해설로 출하 불가."
+    },
+    {
+      "code": "V4-QUOTE-GLOSS-MISATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설이 인용문 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists'를 '(학술지 전문 검토자들에 의해 공인되지 않으면...)'로 번역함. 'disciplinary specialists'는 분야 전문가이지 '학술지 전문 검토자'가 아니며, '학술지'는 지문 어디에도 없음. 다른 문장의 'expert reviewers'(언론 발표 문장)를 이 문장에 귀속시킨 번역·귀속 오류."
+    },
+    {
+      "code": "V4-DAMAGED-TERM",
+      "severity": "minor",
+      "evidence": "오답 ① 해설의 '학풍적 승인과는 거리가 멉니다' — '학풍적 승인'은 손상된 용어(의도는 '학술적/학문적 승인'으로 추정). 또한 모든 오답 해설에 'press conference을(를)' 류의 조사 템플릿 잔재가 남아 있음."
+    },
+    {
+      "code": "V4-EXCISED-SPAN-CITED",
+      "severity": "minor",
+      "evidence": "오답 ④ 해설이 '공동의 산물(collective product)'을 지문 근거처럼 인용하나, 해당 구는 빈칸으로 제거된 원문 span('becomes a collective product')이라 학생이 보는 렌더 지문에는 존재하지 않음. 원문 출처임을 명시하지 않은 채 본문 내용처럼 서술함."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "actor/route swap — 공인 경로를 대중 매체 주목으로 치환 (half-truth from anchor)",
+      "temptingBecause": "지문의 'press conference' 장면과 겹치고, '주목받아야 지위(standing)를 얻는다'는 일상 직관과 부합",
+      "decisiveFlaw": "지문에서 언론 발표를 통한 대중적 주목은 'publicity seeker'로 비난받는 대상으로 명시되어 공인과 정반대 경로"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 'authorized by disciplinary specialists'와 'becomes a collective product'의 의미 보존 패러프레이즈",
+      "temptingBecause": "n/a (정답)",
+      "decisiveFlaw": "없음 — 'undergoes validation by the scientific community'가 원문 span의 의미를 정확히 보존"
+    },
+    {
+      "label": "③",
+      "intent": "predicate/role distortion — 동일 행위자(disciplinary specialists)에 잘못된 술어(자금 지원) 결합",
+      "temptingBecause": "지문 문구 'disciplinary specialists'를 그대로 차용해 국소 어휘 일치가 강함",
+      "decisiveFlaw": "지문 어디에도 funding 언급이 없으며, 전문가의 역할은 검증·공인(authorize)이지 자금 제공이 아님"
+    },
+    {
+      "label": "④",
+      "intent": "scope shift — 집단적·제도적 공인을 '다른 사적 실험실의 복제'라는 개인주의 프레임 내 검증으로 축소",
+      "temptingBecause": "복제(replication)는 실제 과학 검증의 상식적 개념이고 'laboratory' 앵커가 지문과 겹침. 가장 강한 미끼",
+      "decisiveFlaw": "지문은 실험실에서 일어나는 일은 '단지 한 단계(only one stage)'라 하고 disciplinary specialists의 제도적 공인을 요구 — 또 하나의 '사적(private)' 실험실은 여전히 개인주의 수사 안에 있음"
+    },
+    {
+      "label": "⑤",
+      "intent": "condition swap — 지문이 부정한 '공적 맥락에서의 근거'를 지위 획득의 필수 조건으로 오전용",
+      "temptingBecause": "'public contexts'가 지문 표현과 verbatim으로 겹침",
+      "decisiveFlaw": "지문은 개인주의적 믿음이 공적 행동의 근거가 될 수 없다고 말할 뿐, 실용적 유용성 증명을 지식 공인의 조건으로 제시하지 않음"
+    }
+  ],
+  "explanationIssues": [
+    "메타 누출: 'polarity_flip(반대 극성)을 쓰지 않고... 오답 후보를 구성했습니다' — 출제 설계 코멘트가 학생용 해설에 잔존",
+    "번역·귀속 오류: 'disciplinary specialists'를 '학술지 전문 검토자들'로 옮김 — '학술지'는 지문에 없는 내용 첨가이며 다른 문장의 'expert reviewers'와 혼동",
+    "손상 용어: '학풍적 승인' (의도: 학술적/학문적 승인)",
+    "조사 템플릿 잔재: 'press conference을(를)', 'disciplinary specialists을(를)' 등 4개 오답 해설 전부",
+    "④ 해설이 빈칸으로 제거된 원문 span 'collective product'를 본문 근거처럼 인용",
+    "'독특한 이중 구조를 취하고 있습니다'는 다소 장황하나 사실 왜곡은 아님(개인주의 수사 vs 집단적 규범 대비로 방어 가능)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "distractorAnchorOverlapFlaw": true,
+    "requiresTwoClues": false,
+    "noSingleCueShortcut": true,
+    "detail": "다섯 선지 모두 'until it ___'의 3인칭 단수 현재 VP로 동일 슬롯 충족, 극성·길이·절대어 편향 없음. 그러나 정답 ②는 빈칸 직전 문장 'knowledge isn't knowledge unless it has been authorized by disciplinary specialists' 하나만으로 근접 패러프레이즈 선택이 가능해 '최소 두 문장/두 논리 단서 연결' 요건 미충족. 또한 오답 3개(③④⑤)가 지문 verbatim 구를 포함하는 반면 정답만 완전 패러프레이즈라 test-wise 단서가 약하게 존재(C4 3점 사유)."
+  },
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 모두 통과하고 선지 설계(C1=4, C2=4)는 우수한 문항이다. 그러나 학생 노출 해설에 생성 파이프라인 메타데이터(polarity_flip)가 누출되고, 인용문 번역에 지문에 없는 '학술지'가 첨가되는 귀속 오류, '학풍적 승인' 등 손상 용어가 있어 V4 실패 → F. 해설 재작성(메타 문장 삭제, 번역 교정, 용어·조사 정리)만으로 B 이상 회복 가능하나, 요청 난이도 KILLER 대비 실제 추론 거리는 인접 문장 패러프레이즈 수준이라 killer 요건은 미충족(C5=2). killer로 출하하려면 빈칸을 단서 문장에서 더 멀리 두거나 정답 추상화 수준을 높이는 재설계가 필요하다."
+}

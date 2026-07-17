@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'Use the same principle in planning activities for your team'가 미끼로 작동해 잠깐 끌리지만, 지문의 원리는 '각자의 신체 리듬 존중'이지 팀원과의 동기화가 아니다. 마지막 문장(대부분은 아침형이지만 늦게 피크인 사람도 있다)이 개인차 존중을 명시하므로 '팀원과 일과를 동기화하라'는 오히려 논지와 반대 방향."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'아침에 에너지가 많으면 어려운 활동을 그때 배치하라'는 조건문을 절대화한 과잉 일반화 미끼. 'all', 'at dawn', 'without fail'이 극단 표현이고, 마지막 문장이 늦은 시간에 컨디션이 오르는 사람의 존재를 명시해 직접 모순된다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "에너지 수준 모니터링 자체는 지문에 있으나 'solely to determine breaks'가 축소 왜곡. 지문의 핵심 활용처는 어려운/중요한 과업의 시간 배치이며 휴식 결정은 부수적 언급('productive time and breaks')에 불과하다. 'solely'가 결정적으로 지문 범위를 벗어난다."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'Schedule intervals of productive time and breaks'의 어휘를 재활용한 표면 매칭 미끼. 휴식 간격을 '연장(extending)'하는 것을 '우선(prioritize)'하라는 내용은 지문 어디에도 근거가 없고, 회의(meetings) 맥락도 지문의 appointments 언급과 결이 다르다."
+    },
+    {
+      "label": "5",
+      "verdict": "correct",
+      "reason": "빈칸 삽입 시 'is to match your critical tasks with your peak periods'로 문법 결합(to부정사 보어) 자연스럽다. 지문 전체 — 신체 리듬 파악, 에너지 ebbs/flows 주목, 아침 에너지 피크면 그때 어려운 활동 배치, 팀에도 동일 원리, 개인별 피크 시간 차이 존중 — 를 정확히 일반화한 주제문. 유일한 정답."
+    }
+  ],
+  "note": "빈칸이 첫 문장 주제문 위치라 뒤따르는 전개 전체가 근거가 되는 정석적 구조. 최상위권 실전 관점에서 ①(team 표면 매칭)과 ②(아침 배치 절대화)이 순간적으로 끌리는 미끼이나, ①은 개인차 존중 논지와 충돌, ②는 극단 표현(all/without fail)과 마지막 문장 반례로 즉시 소거된다. ③④는 부분 정보의 축소·왜곡. 복수 정답 여지 없음."
+}

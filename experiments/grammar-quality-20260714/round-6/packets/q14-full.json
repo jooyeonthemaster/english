@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=f  (C):dec=e  (D):dec=b  (E):ANS=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 17,
+        "relPos": 0.022,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 285,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 447,
+        "relPos": 0.573,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 517,
+        "relPos": 0.663,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 683,
+        "relPos": 0.876,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.876,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "are",
+        "isError": false,
+        "errorExpression": "are",
+        "surroundingText": "He tells you that he knows you are busy and he wants to help you out",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "likely",
+        "isError": false,
+        "errorExpression": "likely",
+        "surroundingText": "In this case, you are very likely to appreciate your friend's help.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "be confused",
+        "isError": false,
+        "errorExpression": "be confused",
+        "surroundingText": "Instead, you would be confused. You would likely think",
+        "pointCode": "e"
+      },
+      {
+        "label": "(D)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "how do you know what kind of sandwich I like to eat?",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "him",
+        "isError": true,
+        "correction": "him",
+        "errorExpression": "himself",
+        "surroundingText": "You trust your best friend so much that you won't worry about him knowing you too well",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "are"
+      },
+      {
+        "label": "(B)",
+        "text": "likely"
+      },
+      {
+        "label": "(C)",
+        "text": "be confused"
+      },
+      {
+        "label": "(D)",
+        "text": "what"
+      },
+      {
+        "label": "(E)",
+        "text": "himself"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "문맥상 종속절의 주어인 복수 대명사 'you'와 짝을 이루는 복수형 정동사 'are'는 수일치상 어법상 옳습니다.",
+      "(B)": "be동사 'are' 뒤에서 주격 보어로 쓰여 '~할 것 같다'라는 의미를 나타내는 형용사 'likely'는 어법상 옳습니다.",
+      "(C)": "주어인 'you'가 당황스러움을 명백히 느끼는 대상이므로, 조동사 'would' 뒤에 수동태 'be confused'가 쓰인 것은 어법상 옳습니다.",
+      "(D)": "의문형용사 역할을 하여 'what kind of sandwich'라는 의문사구를 이끌며 동사 'know'의 목적어 역할을 하는 명사절을 구성하므로 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 전치사 'about' 뒤에 동명사구인 'knowing you too well'이 이어지는 구조입니다. 동명사 앞에 위치한 'himself'는 동명사구의 의미상 주어 역할을 해야 하는데, 행동의 주체는 앞 문맥의 'your best friend'인 반면, 주절의 주어는 'You'입니다. 동명사의 의미상 주어가 주절의 주어와 일치하지 않으므로, 주어 자신을 가리키는 재귀대명사 'himself'는 쓸 수 없고 지시 대상인 친구를 의미하는 목적격 대명사 'him'이 와야 합니다. 따라서 'himself'를 'him'으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 대명사의 격과 재귀대명사 — 동명사의 의미상 주어가 주절 주어와 다를 때 재귀대명사 사용 제한",
+      "(A) 주어-동사의 수일치 — 종속절의 진짜 복수 주어와 동사의 일치",
+      "(C) 능동태 vs 수동태 — 감정을 나타내는 타동사의 수동형 표현"
+    ],
+    "tags": [
+      "동명사의 의미상 주어",
+      "재귀대명사",
+      "수일치",
+      "수동태",
+      "형용사 보어"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you __(A) are__ busy and he wants to help you out by buying you the sandwich. In this case, you are very __(B) likely__ to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would __(C) be confused__. You would likely think \"Who are you, and how do you know __(D) what__ kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about __(E) himself__ knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

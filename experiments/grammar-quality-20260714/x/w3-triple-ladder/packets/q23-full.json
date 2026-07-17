@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20200312-q36",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2020,
+    "exam": "4월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=k  (C):ANS=a  (D):dec=k  (E):dec=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 6,
+        "relPos": 0.007,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 252,
+        "relPos": 0.31,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 420,
+        "relPos": 0.516,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 481,
+        "relPos": 0.591,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 623,
+        "relPos": 0.765,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.765,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "A god called Moinee was defeated by a rival god called Dromerdeener in a terrible battle up in the stars. Moinee fell out of the stars down to Tasmania to die. Before he died, he wanted to give a last blessing to his final resting place, so he decided to create humans. But he was in such a hurry, knowing he was dying, that he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, which meant they couldn't sit down. Then he died. The people hated having kangaroo tails and no knees, and they cried out to the heavens for help. Dromerdeener heard their cry and came down to Tasmania to see what the matter was. He took pity on the people, gave them bendable knees and cut off their inconvenient kangaroo tails so they could all sit down at last. Then they lived happily ever after.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "called",
+        "isError": false,
+        "correction": "called",
+        "errorExpression": "called",
+        "surroundingText": "A god called Moinee was defeated by a rival god called Dromerdeener in a terrible battle up in the stars.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "to create",
+        "isError": false,
+        "correction": "to create",
+        "errorExpression": "to create",
+        "surroundingText": "Before he died, he wanted to give a last blessing to his final resting place, so he decided to create humans.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "meant",
+        "isError": true,
+        "correction": "meant",
+        "errorExpression": "meaning",
+        "surroundingText": "he absent-mindedly gave them big tails like kangaroos, which meant they couldn't sit down.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "having",
+        "isError": false,
+        "correction": "having",
+        "errorExpression": "having",
+        "surroundingText": "The people hated having kangaroo tails and no knees, and they cried out to the heavens for help.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "Dromerdeener heard their cry and came down to Tasmania to see what the matter was.",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "called"
+      },
+      {
+        "label": "(B)",
+        "text": "to create"
+      },
+      {
+        "label": "(C)",
+        "text": "meaning"
+      },
+      {
+        "label": "(D)",
+        "text": "having"
+      },
+      {
+        "label": "(E)",
+        "text": "what"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "명사 A god을 뒤에서 수식하는 과거분사입니다. 'Moinee라고 불리는 신'이라는 수동의 의미이므로 과거분사 called가 적절합니다.",
+      "(B)": "동사 decided의 목적어 역할을 하는 자리이므로 명사적 용법의 to부정사인 to create는 어법상 적절합니다.",
+      "(D)": "동사 hated의 목적어 역할을 하는 동명사(또는 명사적 용법의 준동사)가 와야 하는 자리이므로 동명사 having은 적절합니다.",
+      "(E)": "동사 see의 목적어 역할을 하는 간접의문문을 이끌면서 의문형용사(또는 의문대명사)로 쓰인 what은 적절합니다."
+    },
+    "explanation": "주격 관계대명사 which 다음에는 주절의 술어 역할을 할 수 있는 정동사가 와야 합니다. 밑줄 친 meaning은 준동사이므로 관계사절 내에서 동사 역할을 할 수 없어 비문이 됩니다. 따라서 정동사인 meant로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 정동사 vs 준동사 — 관계사절을 완성할 정동사 필요성 판단",
+      "(A) 능동 vs 수동 분사 — 명사를 수식하는 분사의 능수동 판별",
+      "(E) 의문사/관계대명사 what — 명사절을 이끄는 역할 및 내부 구조 판단"
+    ],
+    "tags": [
+      "정동사",
+      "준동사",
+      "관계대명사",
+      "어법"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "A god __(A) called__ Moinee was defeated by a rival god called Dromerdeener in a terrible battle up in the stars. Moinee fell out of the stars down to Tasmania to die. Before he died, he wanted to give a last blessing to his final resting place, so he decided __(B) to create__ humans. But he was in such a hurry, knowing he was dying, that he forgot to give them knees; and he absent-mindedly gave them big tails like kangaroos, which __(C) meaning__ they couldn't sit down. Then he died. The people hated __(D) having__ kangaroo tails and no knees, and they cried out to the heavens for help. Dromerdeener heard their cry and came down to Tasmania to see __(E) what__ the matter was. He took pity on the people, gave them bendable knees and cut off their inconvenient kangaroo tails so they could all sit down at last. Then they lived happily ever after."
+  }
+}

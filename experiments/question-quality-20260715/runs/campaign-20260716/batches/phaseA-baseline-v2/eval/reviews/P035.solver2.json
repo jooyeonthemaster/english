@@ -1,0 +1,35 @@
+{
+  "pid": "P035",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a process embodied in a machine'은 타동사 embody의 과거분사가 process를 후치 수식하는 축약 관계절(= a process which is embodied in a machine). process는 기계에 구현되는 피동 대상이므로 수동 분사 embodied가 정확하다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself'에서 repeats의 목적어는 관계절 주어 that(선행사 process)과 동일 지시이므로 재귀대명사 itself가 필수. 'repeat itself'는 표준적 결합이며 선행사 process(단수·무생물)와 수·성 일치. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'it is almost impossible to think of...'는 가주어 it + 진주어 to부정사 외치 구문의 전형. impossible은 to부정사 외치를 인허하는 형용사이며 think of의 목적어(a clock)도 완결. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'The only example that comes to mind'에서 that은 선행사 'the only example'을 받는 주격 관계대명사로 관계절 내 주어 공백을 채우고, only 수식 선행사 뒤에는 that이 표준. comes의 단수 일치도 성립. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'It seems to yield a smooth time scale but in fact is not'에서 후행절의 생략 대용을 인허할 선행 술어가 없다. 선행 VP의 핵은 일반동사 yield이므로 대용에는 do-지지가 필요: 'but in fact does not (yield a smooth time scale)'. be-생략(is not)이 성립하려면 선행부에 계사 술어(예: seems to be smooth)가 있어야 하나 smooth는 명사구 내부 한정 형용사일 뿐이라 인허 조건 불충족. 'is not [a smooth time scale]' 독법도 주어 It(방사성탄소 연대측정이라는 시계)이 time scale 자체가 아니어서 의미·통사 모두 실패. 비문 — is를 does로 교정해야 한다."
+    }
+  ],
+  "note": "정답 (E) 단독. VP-생략 인허 규칙(일반동사 선행 VP → do-지지 필수, be-생략은 계사 선행 술어 필요)에 의해 형식적으로 비문이 증명되며, (A)~(D)는 대안 독법을 적극 탐색해도 모두 정문으로만 성립. 복수정답 소지 없음."
+}

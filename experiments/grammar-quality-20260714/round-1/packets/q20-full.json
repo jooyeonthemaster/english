@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20190307-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "3월",
+    "origType": "요지",
+    "words": 118
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-killer-thin-answerx1",
+    "grammar-perception-complement-togglex1",
+    "grammar-obvious-double-ingx1"
+  ],
+  "layout": "(A):dec=k  (B):dec=f  (C):dec=g  (D):dec=d  (E):ANS=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 82,
+        "relPos": 0.118,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 185,
+        "relPos": 0.267,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 392,
+        "relPos": 0.565,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 511,
+        "relPos": 0.736,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 624,
+        "relPos": 0.899,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.899,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "According to professor Jacqueline Olds, there is one sure way for lonely patients to make a friend - to join a group that has a shared purpose. This may be difficult for people who are lonely, but research shows that it can help. Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier. Volunteers report a sense of satisfaction at enriching their social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who is lonely might benefit from helping others. Also, they might benefit from being involved in a voluntary program where they receive support and help to build their own social network.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "to make",
+        "isError": false,
+        "errorExpression": "to make",
+        "surroundingText": "there is one sure way for lonely patients to make a friend",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "lonely",
+        "isError": false,
+        "errorExpression": "lonely",
+        "surroundingText": "This may be difficult for people who are lonely,",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "their",
+        "isError": false,
+        "errorExpression": "their",
+        "surroundingText": "Volunteers report a sense of satisfaction at enriching their social network",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "First, someone who is lonely might benefit from helping others",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "where",
+        "isError": true,
+        "correction": "where",
+        "errorExpression": "which",
+        "surroundingText": "being involved in a voluntary program where they receive support and help",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "to make"
+      },
+      {
+        "label": "(B)",
+        "text": "lonely"
+      },
+      {
+        "label": "(C)",
+        "text": "their"
+      },
+      {
+        "label": "(D)",
+        "text": "is"
+      },
+      {
+        "label": "(E)",
+        "text": "which"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "명사 way를 수식하는 형용사적 용법의 to부정사 구문으로, 의미상 주어인 'for lonely patients'를 동반하며 뒤에 목적어를 취하므로 'to make'가 어법상 옳습니다.",
+      "(B)": "be동사 are 뒤에서 주격보어로 쓰여 주어인 people의 상태를 서술해 주는 형용사이므로 'lonely'가 어법상 옳습니다.",
+      "(D)": "관계사절 내의 동사로, 단수 대명사 'someone'을 선행사로 두고 지칭하는 주격 관계대명사 who의 수에 일치시켜 단수 동사 'is'를 쓴 것은 어법상 옳습니다.",
+      "(C)": "문장의 주어이자 문맥적 지칭 대상인 복수 명사 'Volunteers'를 받는 복수 소유격 대명사이므로 'their'가 어법상 옳습니다."
+    },
+    "explanation": "정답이 속한 문장은 선행사 'a voluntary program'을 두는 관계사절 구조입니다. 밑줄 친 (E) 뒤에는 주어 'they', 동사 'receive', 그리고 목적어 'support and help'가 모두 갖추어진 완전한 절이 이어지고 있습니다. 관계대명사 'which' 뒤에는 주어나 목적어가 결손된 불완전한 절이 와야 하므로, 이 자리에는 장소적 선행사를 수식하며 완전한 절을 이끄는 관계부사 'where'가 와야 합니다. 따라서 'which'는 틀렸으며 'where'로 고쳐야 합니다. 'program'이라는 사물 명사인 선행사만 보고 무심코 관계대명사 'which'를 맞는 것으로 오인하지 않도록 뒤 절의 구조적 완전성을 면밀히 파악해야 합니다.",
+    "keyPoints": [
+      "(E) 관계부사 vs 관계대명사 — 뒤 따라오는 완전한 절의 통사 구조 확인",
+      "(D) 주격 관계대명사절의 수일치 — 선행사 someone과의 단수 일치 여부 대조",
+      "(C) 대명사의 수일치 — 문맥상 지칭하는 선행사 복수 명사와의 성·수 일치 대조"
+    ],
+    "tags": [
+      "관계사",
+      "수일치",
+      "대명사",
+      "to부정사",
+      "어법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "According to professor Jacqueline Olds, there is one sure way for lonely patients __(A) to make__ a friend - to join a group that has a shared purpose. This may be difficult for people who are __(B) lonely__, but research shows that it can help. Studies reveal that people who are engaged in service to others, such as volunteering, tend to be happier. Volunteers report a sense of satisfaction at enriching __(C) their__ social network in the service of others. Volunteering helps to reduce loneliness in two ways. First, someone who __(D) is__ lonely might benefit from helping others. Also, they might benefit from being involved in a voluntary program __(E) which__ they receive support and help to build their own social network.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

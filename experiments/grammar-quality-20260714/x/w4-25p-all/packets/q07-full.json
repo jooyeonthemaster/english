@@ -1,0 +1,160 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=g  (C):dec=i  (D):ANS=a  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 52,
+        "relPos": 0.075,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 204,
+        "relPos": 0.296,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 404,
+        "relPos": 0.586,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 570,
+        "relPos": 0.827,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 655,
+        "relPos": 0.951,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.951,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "it",
+        "isError": false,
+        "errorExpression": "it",
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(C)",
+        "expression": "attracted",
+        "isError": false,
+        "errorExpression": "attracted",
+        "surroundingText": "By ceasing, it violated your prediction and attracted your attention.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(D)",
+        "expression": "claiming",
+        "isError": true,
+        "correction": "claiming",
+        "errorExpression": "claimed",
+        "surroundingText": "Right after New York City stopped running elevated trains, people called the police in the middle of the night claimed that something woke them up.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "used to run",
+        "isError": false,
+        "errorExpression": "used to run",
+        "surroundingText": "They tended to call around the time the trains used to run past their apartments.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "it"
+      },
+      {
+        "label": "(C)",
+        "text": "attracted"
+      },
+      {
+        "label": "(D)",
+        "text": "claimed"
+      },
+      {
+        "label": "(E)",
+        "text": "used to run"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "동사 noticing의 목적어 역할을 하는 명사절을 이끌기 위해 접속사 that을 사용한 것은 어법상 올바릅니다. that 뒤에는 주어(a source of constant background noise)와 동사(has just ceased)를 갖춘 완전한 절이 이어집니다.",
+      "(B)": "대명사 it은 문맥상 앞서 언급된 the noise를 가리키므로, 단수 대명사 it의 쓰임은 어법상 올바릅니다.",
+      "(C)": "접속사 and에 의해 문장의 동사 violated와 attracted가 병렬 구조로 연결되어 있습니다. 따라서 attracted는 어법상 올바른 형태입니다.",
+      "(E)": "‘과거에 ~하곤 했다’는 과거의 습관을 나타내는 조동사 표현인 「used to + 동사원형」의 형태가 올바르게 사용되었습니다."
+    },
+    "explanation": "문장의 주절은 people(주어) called(동사)로 이미 완전한 구조를 갖추고 있습니다. 이 뒤에 접속사 없이 또 다른 정동사 claimed가 올 수 없습니다. 이 자리에는 주어 people이 ‘~라고 주장하면서’ 경찰에 전화를 건 상황을 부연 설명하는 분사구문이 필요합니다. 문맥상 능동의 의미를 전달해야 하므로, 밑줄 친 claimed를 현재분사 claiming으로 고쳐야 어법에 맞습니다.",
+    "keyPoints": [
+      "(D) 정동사 vs 준동사 — 문장의 본동사를 찾고, 접속사 없이 동사가 또 나올 수 있는지 판단",
+      "(A) 접속사 vs 관계대명사 — 뒷문장의 완전성 여부로 판정",
+      "(C) 병렬 구조 — 등위접속사 앞뒤로 연결되는 요소들의 문법적 형태 확인"
+    ],
+    "tags": [
+      "어법",
+      "분사구문",
+      "정동사",
+      "준동사",
+      "병렬구조",
+      "접속사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing __(A) that__ a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid __(B) it__ no attention. By ceasing, it violated your prediction and __(C) attracted__ your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night __(D) claimed__ that something woke them up. They tended to call around the time the trains __(E) used to run__ past their apartments."
+  }
+}

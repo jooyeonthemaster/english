@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=l  (B):dec=m  (C):dec=c  (D):ANS=c  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 198,
+        "relPos": 0.287,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 299,
+        "relPos": 0.434,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 525,
+        "relPos": 0.762,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 570,
+        "relPos": 0.827,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 672,
+        "relPos": 0.975,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.975,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "while",
+        "isError": false,
+        "errorExpression": "while",
+        "surroundingText": "yet we hadn't noticed the sound while it was ongoing.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(B)",
+        "expression": "as long as",
+        "isError": false,
+        "errorExpression": "as long as",
+        "surroundingText": "moment after moment, and as long as the noise didn't change you",
+        "pointCode": "m"
+      },
+      {
+        "label": "(C)",
+        "expression": "called",
+        "isError": false,
+        "errorExpression": "called",
+        "surroundingText": "running elevated trains, people called the police in the middle of",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "claiming",
+        "isError": true,
+        "correction": "claiming",
+        "errorExpression": "claimed",
+        "surroundingText": "people called the police in the middle of the night claiming that something woke",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "their",
+        "isError": false,
+        "errorExpression": "their",
+        "surroundingText": "to call around the time the trains used to run past their apartments.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "while"
+      },
+      {
+        "label": "(B)",
+        "text": "as long as"
+      },
+      {
+        "label": "(C)",
+        "text": "called"
+      },
+      {
+        "label": "(D)",
+        "text": "claimed"
+      },
+      {
+        "label": "(E)",
+        "text": "their"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 전치사와 접속사의 구별을 묻는 자리로, 뒤에 주어와 동사를 갖춘 절(it was ongoing)이 뒤따르므로 접속사 'while'이 오는 것이 어법상 옳습니다.",
+      "(B)": "이 자리는 조건을 나타내는 부사절 접속사의 쓰임을 묻는 자리로, 뒤에 'the noise didn't change'라는 절을 이끌어 '~하는 한'이라는 의미를 나타내는 'as long as'는 적절합니다.",
+      "(C)": "이 자리는 문장의 정동사 자리로, 주어인 'people' 뒤에서 시제와 인칭에 맞는 연결을 보이며 문장 전체의 술어 역할을 수행하는 과거동사 'called'의 형태가 어법상 옳습니다.",
+      "(E)": "이 자리는 대명사의 수일치를 묻는 자리로, 선행하는 복수 명사 'the trains' 또는 문맥상의 'people'을 지칭하므로 복수 소유격 대명사인 'their'가 어법상 옳습니다."
+    },
+    "explanation": "이 문장은 'people called the police...'라는 주어와 정동사를 갖춘 완전한 주절로 시작하고 있습니다. 주절 뒤에서 동시상황이나 부연 설명을 나타내는 분사구문이 이어지는 구조인데, 밑줄 친 부분 뒤에 'that something woke them up'이라는 명사절 목적어가 직접 연결되어 있습니다. 목적어를 취하면서 능동의 의미를 나타내야 하므로 수동 의미의 과거분사인 'claimed'는 올 수 없고, 현재분사인 'claiming'을 써야 문장 구조상 올바릅니다. 주절인 'people called...'의 과거동사 형태에 낚여 접속사 없는 동사 병렬구조로 오해하지 않도록 유의해야 합니다.",
+    "keyPoints": [
+      "(D) 분사의 능수동 — 뒤에 목적어절을 동반하므로 수동태 분사가 아닌 능동태 분사가 필요함",
+      "(A) 전치사 vs 접속사 — 뒤에 주어+동사의 완전한 절이 이어지므로 접속사가 적절함",
+      "(E) 대명사 수일치 — 문맥상 지시하는 대상이 복수형이므로 소유격 대명사의 수가 일치함"
+    ],
+    "tags": [
+      "분사구문",
+      "능동태와 수동태",
+      "접속사",
+      "대명사 일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound __(A) while__ it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and __(B) as long as__ the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people __(C) called__ the police in the middle of the night __(D) claimed__ that something woke them up. They tended to call around the time the trains used to run past __(E) their__ apartments.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

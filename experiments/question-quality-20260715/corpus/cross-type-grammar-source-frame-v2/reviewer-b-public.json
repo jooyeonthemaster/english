@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "status": "SEALED_REVIEWER_B_SOURCE_REVIEW_NOT_CAMPAIGN_AUTHORIZATION",
+  "reviewer": "B",
+  "lens": "FOUR_DECOY_PAIRED_ITEM_KILLER_CLOSED_RULE_HEADROOM",
+  "bindingHash": "4ef61dc5cf515427fcb2de75e063282f2b4e84af8c52b048bf21ee10f6fd6ae1",
+  "protocolSha256": "a6202a731e4577b2370f5f8a5b9d1462cdd9cf94b344026c6dc074cb6a3d4fd8",
+  "privateReviewArtifactSha256": "af32e293d38c38d3d9ef458741ee2f2577e7bc53632377a406a1808ef3bc533e",
+  "aggregate": {
+    "boundRows": 186,
+    "personallyInspectedRows": 186,
+    "pass": 150,
+    "exclude": 26,
+    "domainReview": 10,
+    "unresolved": 0,
+    "campaignEligible": 0
+  },
+  "audit": {
+    "inspectionMode": "FULL_CENSUS_IN_FROZEN_QUEUE_ORDER",
+    "reviewerLens": "REVIEWER_B_ONLY",
+    "sampledRows": 0,
+    "dividedRows": 0,
+    "delegatedRows": 0,
+    "automatedSemanticClassificationRows": 0,
+    "replacementRows": 0,
+    "topUpRows": 0,
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretFileReads": 0,
+    "fullQuestionsGenerated": 0,
+    "otherReviewerArtifactsRead": 0,
+    "otherReviewerOutcomesRead": 0,
+    "reconciliationPerformed": false
+  },
+  "privacy": {
+    "containsPassageText": false,
+    "containsRowIdentifier": false,
+    "containsContentHash": false,
+    "containsSourceIdentifier": false,
+    "containsRowLevelDecision": false,
+    "containsCandidateSite": false,
+    "containsMutation": false,
+    "containsRowNotes": false,
+    "privateRowsGitIgnored": true
+  },
+  "authorization": {
+    "generationAuthorized": false,
+    "campaignEligibleRows": 0,
+    "reconciliationRequired": true,
+    "rightsReviewRequired": true,
+    "historyExposureRefreshRequired": true,
+    "providerControlsRequired": true,
+    "sealedGenerationAssignmentRequired": true
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P060",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to guide",
+      "verdict": "correct",
+      "reason": "부사적 용법(목적/결과)의 to부정사. 'evaluating these issues ... to guide how to respond'는 앞서 인용된 정의 'the identification and evaluation of evidence to guide decision-making'의 구조를 그대로 반복한다. guide의 목적어로 wh-부정사절 'how to respond'(자유관계절 상당의 NP)를 취하는 것도 정문. 대안 해석 필요 없음 — 표기 그대로 성립."
+    },
+    {
+      "label": "(B) that",
+      "verdict": "correct",
+      "reason": "추상명사 recognition 뒤의 동격 that절(recognition that S+V). 삽입된 양보절 'although being ethical is defined as ...'을 건너뛰면 that절의 본체는 'these principles vary both between and within individuals'로 완전한 절이다. that절 내부에 공백(gap)이 없으므로 관계대명사가 아닌 동격 접속사 that이 요구되며 표기가 옳다."
+    },
+    {
+      "label": "(C) What",
+      "verdict": "correct",
+      "reason": "자유관계사(선행사 포함 관계대명사) what. 'What a person values'는 values의 목적어 자리가 공백인 불완전절을 이끌며, 이 명사절 전체가 단수 취급되어 본동사 relates와 수 일치한다. 선행사가 없으므로 which/that로는 대체 불가 — What이 정확히 요구되는 자리다."
+    },
+    {
+      "label": "(D) meaning",
+      "verdict": "correct",
+      "reason": "앞 절 전체('Individual perspectives may also be context dependent')를 의미상 주어로 하는 분사구문(비제한적 결과 분사). 'X, meaning that S+V'는 표준 용법이며, meaning의 목적어로 that절이 이어져 정문. 'which means that'으로 환언 가능."
+    },
+    {
+      "label": "(E) recognized",
+      "verdict": "incorrect",
+      "reason": "전치사 alongside의 목적어 자리이며 뒤의 동명사 accepting과 and로 등위 접속되어 that절('that the factors ... may be different')을 공유 목적어로 취한다. 따라서 동명사 recognizing이어야 병렬이 성립한다. 대안 해석 검토: (i) 과거분사 형용사로 보려면 수식할 명사가 필요하나 'recognized and accepting that...'에는 피수식 명사가 없고, (ii) accepting은 능동 동명사로 that절을 취하므로 수동 분사 recognized와의 등위는 의미·통사 모두 불성립, (iii) 축약절·분사구문으로도 alongside(전치사) 뒤 정형 서술은 불가. 어떤 해석으로도 정문이 되지 않음 — 어법상 틀린 부분."
+    }
+  ],
+  "note": "정답 후보가 (E) 하나로 명확히 수렴. (A)~(D)는 각각 목적 to부정사, 동격 that절, 자유관계사 what, 결과 분사구문으로 모두 표준 정문이며 대안 해석을 동원할 필요조차 없다. (E)는 전치사 alongside + 동명사 병렬(recognizing and accepting) 규칙 위반으로, 병렬 시작점(alongside)과 등위 상대(accepting)라는 장거리 단서가 명확해 이의 제기 여지가 없다. 오답 시비 가능성 낮은 깨끗한 어법 문항."
+}

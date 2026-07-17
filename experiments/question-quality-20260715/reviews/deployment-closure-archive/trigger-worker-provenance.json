@@ -1,0 +1,191 @@
+{
+  "captureStatus": "CAPTURED_READ_ONLY",
+  "capturedAt": "2026-07-14T19:04:43.478Z",
+  "correlationToVercel": {
+    "bothDirty": true,
+    "sameCommitRef": true,
+    "sameCommitSha": true,
+    "sourceByteParity": "UNPROVEN_TRIGGER_API_EXPOSES_OPAQUE_BUNDLE_HASH_NOT_SOURCE_BYTES",
+    "triggerCreatedAfterVercelMs": 19586
+  },
+  "deployment": {
+    "commitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "contentHash": "ca6a9112457aafae9c6a3f1d0289ddf8",
+    "createdAt": "2026-07-14T14:55:24.121Z",
+    "deployedAt": "2026-07-14T14:56:15.023Z",
+    "errorDataKeys": [],
+    "errorDataSha256": null,
+    "externalBuildDataKeys": [
+      "buildId",
+      "buildToken",
+      "projectId"
+    ],
+    "externalBuildDataSha256": "8ee32dae99372ab9d4922202365d13b1af60752402614db0b15adc828565d620",
+    "git": {
+      "commitRef": "20260714jooyeon",
+      "commitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+      "dirty": true,
+      "source": "local"
+    },
+    "id": "deployment_hqeh6ndqz7hwx6vcvebkq",
+    "imagePlatform": "linux/amd64",
+    "imageReferenceSha256": "1373ffd5c3c4a954a8a43d0356d3b213aaa09d23248edeca89881087219db6b1",
+    "runtime": "node-22",
+    "runtimeVersion": "22.16.0",
+    "shortCode": "teiffxe9",
+    "status": "DEPLOYED",
+    "version": "20260714.1"
+  },
+  "environmentAttestation": "production credential prefix",
+  "limitations": [
+    "Trigger deployment contentHash is an opaque build/bundle hash; the API does not expose the uploaded source bytes or a per-source-file digest map.",
+    "The newest matching deployment may have been created with --skip-promotion; the deployment list/detail response does not expose promotion state.",
+    "Run metadata can attest only versions that actually executed; no payloads or outputs were requested or retained."
+  ],
+  "schemaVersion": 1,
+  "targetTaskRunObservation": {
+    "currentDeploymentVersionObserved": false,
+    "groups": [
+      {
+        "count": 40,
+        "earliestCreatedAt": "2026-06-06T07:21:28.865Z",
+        "latestCreatedAt": "2026-06-09T10:42:31.099Z",
+        "status": "COMPLETED",
+        "version": "20260605.5"
+      },
+      {
+        "count": 1,
+        "earliestCreatedAt": "2026-06-04T17:03:38.489Z",
+        "latestCreatedAt": "2026-06-04T17:03:38.489Z",
+        "status": "COMPLETED",
+        "version": "20260603.2"
+      },
+      {
+        "count": 28,
+        "earliestCreatedAt": "2026-05-21T08:46:06.940Z",
+        "latestCreatedAt": "2026-06-03T12:42:17.598Z",
+        "status": "COMPLETED",
+        "version": "20260521.6"
+      },
+      {
+        "count": 4,
+        "earliestCreatedAt": "2026-05-21T08:21:22.163Z",
+        "latestCreatedAt": "2026-05-21T08:23:27.492Z",
+        "status": "COMPLETED",
+        "version": "20260521.5"
+      },
+      {
+        "count": 15,
+        "earliestCreatedAt": "2026-05-21T06:14:57.136Z",
+        "latestCreatedAt": "2026-05-21T06:15:00.121Z",
+        "status": "COMPLETED",
+        "version": "20260521.4"
+      },
+      {
+        "count": 3,
+        "earliestCreatedAt": "2026-05-21T05:56:29.233Z",
+        "latestCreatedAt": "2026-05-21T05:56:29.253Z",
+        "status": "COMPLETED",
+        "version": "20260521.3"
+      },
+      {
+        "count": 4,
+        "earliestCreatedAt": "2026-05-21T05:31:36.879Z",
+        "latestCreatedAt": "2026-05-21T05:50:06.797Z",
+        "status": "COMPLETED",
+        "version": "20260521.2"
+      },
+      {
+        "count": 2,
+        "earliestCreatedAt": "2026-05-21T05:23:15.987Z",
+        "latestCreatedAt": "2026-05-21T05:24:14.834Z",
+        "status": "COMPLETED",
+        "version": "20260521.1"
+      },
+      {
+        "count": 3,
+        "earliestCreatedAt": "2026-05-21T05:06:09.759Z",
+        "latestCreatedAt": "2026-05-21T05:21:03.209Z",
+        "status": "COMPLETED",
+        "version": "20260519.3"
+      }
+    ],
+    "latestVersionObserved": "20260605.5",
+    "period": "90d",
+    "returnedRows": 100
+  },
+  "vercelDeploymentId": "dpl_CKkd1eiFq2DeEidwSxQpFSgDm4ZD",
+  "worker": {
+    "id": "worker_cmrkrx8ub2m2x0ioiqicbdveb",
+    "targetTaskPresent": true,
+    "tasks": [
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/extraction-daily-cleanup.ts",
+        "id": "task_qcphmpevj9o3p9wgu87t9",
+        "slug": "extraction-daily-cleanup"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/extraction-finalize.ts",
+        "id": "task_g5h7qfe5fv9qbwf1pdmur",
+        "slug": "extraction-finalize"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/extraction-orchestrator.ts",
+        "id": "task_1mggr4dj6pcj88osie2c3",
+        "slug": "extraction-orchestrator"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/extraction-orchestrator.ts",
+        "id": "task_duzuy2d2q9fycnq7eqdk1",
+        "slug": "extraction-page"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/extraction-reaper.ts",
+        "id": "task_ujpb47evfd4dwsjxekjex",
+        "slug": "extraction-reaper"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/gemini-health-check.ts",
+        "id": "task_7w67okno4rboz8dxepnyp",
+        "slug": "gemini-health-check"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/similar-exam-generation.ts",
+        "id": "task_i62kcjezav9m4c7j1a7dy",
+        "slug": "similar-exam-generation"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/tutor-program-generation.ts",
+        "id": "task_a7jaysua6pbyusnvc2cd4",
+        "slug": "tutor-program-generation"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/webtoon-generate.ts",
+        "id": "task_usbvd9xt4wkwi28ovaxq5",
+        "slug": "webtoon-generate"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/workbench-passage-analysis.ts",
+        "id": "task_acf6jw1fva31g2ftk33yt",
+        "slug": "workbench-passage-analysis"
+      },
+      {
+        "exportName": "@deprecated",
+        "filePath": "src/trigger/workbench-question-generation.ts",
+        "id": "task_ndbv3ma46cjtsrby2uvf1",
+        "slug": "workbench-question-generation"
+      }
+    ],
+    "version": "20260714.1"
+  }
+}

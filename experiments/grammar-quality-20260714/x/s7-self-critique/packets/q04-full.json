@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-noun-clause-pronoun-mislabel",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=a  (B):dec=b  (C):dec=h  (D):dec=f  (E):dec=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 60,
+        "relPos": 0.083,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.304,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 346,
+        "relPos": 0.48,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 452,
+        "relPos": 0.627,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 527,
+        "relPos": 0.731,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.731,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "kept us alive",
+        "isError": true,
+        "correction": "kept us alive",
+        "errorExpression": "keeping us alive",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "what's going wrong",
+        "isError": false,
+        "errorExpression": "what's going wrong",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime).",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "to acknowledge",
+        "isError": false,
+        "errorExpression": "to acknowledge",
+        "surroundingText": "To break out of this neural rut, train yourself to acknowledge when things go right.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "went well",
+        "isError": false,
+        "errorExpression": "went well",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": false,
+        "errorExpression": "it",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "keeping us alive"
+      },
+      {
+        "label": "(B)",
+        "text": "what's going wrong"
+      },
+      {
+        "label": "(C)",
+        "text": "to acknowledge"
+      },
+      {
+        "label": "(D)",
+        "text": "went well"
+      },
+      {
+        "label": "(E)",
+        "text": "it"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "전치사 on의 목적어 자리에 명사절을 이끄는 관계대명사 what이 쓰였습니다. 뒤에 주어가 없는 불완전한 문장이 이어지므로 what's going wrong은 어법상 적절합니다.",
+      "(C)": "5형식 동사 train은 목적격 보어로 to부정사를 취합니다. 따라서 목적어인 yourself 뒤에 목적격 보어로 쓰인 to acknowledge는 어법상 적절합니다.",
+      "(D)": "동사 went(go)를 수식하기 위해 부사 well이 쓰였으며, '일이 잘 진행되다'라는 의미를 나타내므로 어법상 성립합니다.",
+      "(E)": "대명사 it은 문맥상 단수 명사인 life를 가리킵니다. 동사 celebrate의 목적어 역할을 하는 대명사로 단수형인 it을 쓴 것은 어법상 적절합니다."
+    },
+    "explanation": "(A) \"keeping us alive\"는 어법상 틀린 표현이며 \"kept us alive\"로 고쳐야 한다. 이 문장의 대시(—) 뒤에 나오는 명사구 'a trait'은 앞 문장의 내용이나 threats를 부연 설명하는 동격 표현입니다. 이 명사구 뒤에는 이를 수식하는 주격 관계대명사절 'that kept us alive...'와 'but that can prevent...'가 등위접속사 but을 통해 병렬 구조로 연결되어 있습니다. 두 번째 관계대대명사 지시 관계에서에는 조동사 can과 본동사 prevent가 정상적으로 갖추어져 있으므로, 대등한 구조를 이루는 첫 번째 관계대대명사 지시 관계(that kept us alive~) 내에도 주어인 관계대명사 that 뒤에 과거 시제의 본동사(정동사)가 와야 합니다. 따라서 준동사인 'keeping'은 정동사 자리에 들어갈 수 없으므로, 과거 시제 동사인 'kept'로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(A) 정·준동사 — 관계대명사절 내의 병렬 구조와 본동사 자리 판정",
+      "(B) 관계사 — 전치사의 목적어 역할을 하는 명사절 관계대명사 what",
+      "(E) 대명사 — 명사의 단복수에 따른 대명사의 일치 (life vs. it)"
+    ],
+    "tags": [
+      "정동사와 준동사",
+      "관계대명사",
+      "대명사",
+      "병렬 구조"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that __(A) keeping us alive__ when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on __(B) what's going wrong__ (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself __(C) to acknowledge__ when things go right. If you keep a calendar or a journal, make a point to write down what __(D) went well__. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate __(E) it__."
+  }
+}

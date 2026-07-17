@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the lively shopping center' — -ly 어미가 부사 착시를 유발하지만 lively는 순수 형용사(활기찬)로 명사 'shopping center'를 수식하는 정상 구조. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'The clerk stopped her work and looked at the clothes' — stopped와 looked가 and로 병렬된 과거시제 정형동사. 병렬 시작점(stopped)과 시제 일치 확인. 뒤따르는 'quickly agreeing'은 분사구문으로 적법. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "문장 전체가 'His confidence was, however, quickly was changed to nervousness'로, 하나의 절 안에 정형동사 was가 두 번 겹침(이중 조동사). 삽입 부사구(however, quickly)가 위장막 역할을 해 훑어 읽으면 'was ... changed' 수동태로 보이지만, 밑줄 표기 그대로면 'was ... was changed'로 어떤 대안 해석(도치, 축약 관계절, 분사구문 등)으로도 정문이 될 수 없음. 'was, however, quickly changed'(수동) 또는 'confidence, however, quickly changed'(자동사)로 고쳐야 함. 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'When the band was finished' — 가장 매력적인 오답. 직관적으로는 'the band finished'(자동사 능동)가 자연스러워 수동태가 틀렸다고 끌리게 되지만, 'be finished'는 '(활동을) 마친 상태다'라는 관용적 형용사 서술('Are you finished?', 'When we were finished, we left')로 확립된 용법. 밴드가 연주를 마친 상태를 나타내는 정문으로 옹호 가능. (C)의 이중 was를 놓친 수험생의 답을 훔쳐갈 함정."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the best performance I've ever seen' — 최상급 + 현재완료 + ever 조합, 목적격 관계대명사 생략(접촉절). 교과서적 정문."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: (A)의 -ly 착시와 (D)의 수동태 위화감이 유혹 포인트였으나, (D)는 be finished 관용 형용사 용법으로 정문 옹호가 성립. (C)는 삽입 부사(however, quickly)로 위장된 이중 정형동사(was ... was changed)라 대안 해석 여지가 전혀 없는 유일한 비문. 정답 후보는 (C) 하나로 수렴."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "자유관계사 what이 create의 목적어절을 이끌며, 절 내부에서 call+O+OC 구조의 목적어 공백을 채운다('flashbulb' memories는 목적보어). that/which는 선행사가 없어 불가하므로 what이 정확하다. 순간 'call 뒤가 완전해 보인다'는 유혹이 있으나 목적어 공백이 실재함을 확인."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "memories를 수식하는 과거분사(= which are named for the vivid images...). memories는 이름이 '붙여지는' 대상이므로 수동 분사 named가 맞다. 능동 naming으로 바꿀 이유 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "가주어 it - 진주어 that절 구문. that절 내부가 완전한 절(the broad outlines ... are well remembered)이므로 접속사 that이 정확하다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "주어의 핵은 복수명사 memories ('Respondents' most emotional memories of their personal details at the time they learned of the attacks'). 긴 전치사구 수식이 단수 착시를 유도하는 장거리 수일치 함정이며, 보어도 복수 대명사 those이고 뒤이어 'the ones that have most changed'로 복수 지시가 이어져 주어의 복수성이 이중 확정된다. is → are 여야 하므로 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "be confident of + 명사 결합에서 전치사 of가 관계사 앞으로 전치된 형태(= those that they are most confident of). 'those which they are most confident'는 confident의 결합가가 비어 비문이므로 of which가 필수. 실전에서 가장 끌리는 매력적 오답이었으나('of가 군더더기 아닌가' 하는 유혹) 결합 검증 결과 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 정답 (D)는 긴 수식어구(details/the time/attacks 등 단수 명사로 끝나는 전치사구)로 단수 착시를 유도하는 전형적 수일치 함정으로, 근거가 명확하고 단일하다. 가장 강한 유혹 선지는 (E) of which였으나 confident of의 전치사 전치로 정문임이 확정된다. (D)를 정문으로 만들 대안 해석(주어 단수 재분석)은 보어 those와 후속 the ones의 복수 지시 때문에 성립 불가. 복수 정답 여지 없음."
+}

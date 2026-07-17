@@ -1,0 +1,165 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 8,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-generic-answer-point",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=c  (C):ANS=a  (D):dec=b  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 76,
+        "relPos": 0.097,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 233,
+        "relPos": 0.299,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 349,
+        "relPos": 0.447,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 517,
+        "relPos": 0.663,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 687,
+        "relPos": 0.881,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.881,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "to buy",
+        "isError": false,
+        "correction": "to buy",
+        "errorExpression": "to buy",
+        "surroundingText": "Suppose that you are busy working on a project one day and you have no time to buy lunch.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "buying",
+        "isError": false,
+        "correction": "buying",
+        "errorExpression": "buying",
+        "surroundingText": "he wants to help you out by buying you the sandwich.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "shows",
+        "isError": true,
+        "correction": "shows",
+        "errorExpression": "showing",
+        "surroundingText": "However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\"",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "knowing",
+        "isError": false,
+        "correction": "knowing",
+        "errorExpression": "knowing",
+        "surroundingText": "You trust your best friend so much that you won't worry about him knowing you too well",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "to buy"
+      },
+      {
+        "label": "(B)",
+        "text": "buying"
+      },
+      {
+        "label": "(C)",
+        "text": "showing"
+      },
+      {
+        "label": "(D)",
+        "text": "what"
+      },
+      {
+        "label": "(E)",
+        "text": "knowing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "명사 time을 수식하여 '점심을 살 시간'을 의미하는 형용사적 용법의 to 부정사로 올바르게 사용되었습니다.",
+      "(B)": "전치사 by의 목적어 자리이므로 동명사 buying의 형태가 적절합니다.",
+      "(D)": "타동사 know의 목적어 역할을 하는 명사절을 이끄는 의문형용사(또는 관계형용사)로, 뒤의 명사 kind of sandwich와 결합하여 적절하게 쓰였습니다.",
+      "(E)": "전치사 about의 목적어 구실을 하는 동명사(또는 현재분사)로, 앞에 있는 him이 의미상 주어 역할을 하며 능동 관계이므로 현재분사/동명사 형태가 맞습니다."
+    },
+    "explanation": "밑줄 친 (C)가 포함된 부분은 접속사 if가 이끄는 부사절입니다. 이 절에서 주어인 a stranger 뒤에는 동사 역할을 할 정동사가 필요합니다. showing과 같은 준동사를 사용하면 문장의 구조가 불완전해져 비문이 됩니다. 뒤에 등위 접속사 and로 연결된 또 다른 동사 offers를 볼 때, 3인칭 단수 주어에 맞춰 shows로 고쳐야 올바른 병렬 구조와 문장 형태를 갖추게 됩니다. 따라서 showing을 shows로 수정해야 합니다.",
+    "keyPoints": [
+      "(C) 정동사·준동사 자리 판별 — if 절 내부 정동사 필요",
+      "(D) 관계사·의문사 병별 — 명사절을 이끄는 의문사",
+      "(E) 동명사의 활용 — 전치사의 목적어 능동"
+    ],
+    "tags": [
+      "어법",
+      "정동사준동사",
+      "수능영어",
+      "고난도"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy working on a project one day and you have no time __(A) to buy__ lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by __(B) buying__ you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger __(C) showing__ up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know __(D) what__ kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him __(E) knowing__ you too well, but you certainly would not give the same level of trust to a stranger."
+  }
+}

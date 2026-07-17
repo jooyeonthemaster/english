@@ -1,0 +1,35 @@
+{
+  "pid": "P054",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "동명사 주어 병렬. 'Fear has helped..., expressing anger helps..., and expressing positive emotions helps us bond...' 세 절이 나열된 구조로, (A)는 바로 앞 절의 'expressing anger helps'와 완전히 평행한 동명사 주어다. 첫 절이 'Fear'(명사) 주어라서 병렬 불일치로 착각하게 유도하지만, 각 절은 독립절이므로 주어 형태가 서로 같을 필요가 없다. 'expressing positive emotions helps'(동명사구 단수 취급 + 단수 동사)도 정확하다. 실전에서 첫 절 'Fear has helped'와의 표면 불일치에 잠깐 눈이 가지만, 둘째 절과의 평행을 확인하면 즉시 해소되는 미끼다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주격 관계대명사 that. 선행사 'a kind of \"program\"'을 받아 삽입구 'when triggered'를 건너뛰고 동사 'directs'의 주어 역할을 한다. that 뒤에 콤마 삽입구가 이어져 '콤마+that은 불가'라는 암기 규칙을 오적용한 수험생을 유혹하는 장치다 — 그러나 금지되는 것은 계속적 용법(선행사, that)이지, that 뒤에 부사적 삽입구가 콤마로 끼어드는 것은 전혀 문제가 없다. 선행사가 사물이고 제한적 용법이므로 that은 정문. 가장 강한 매력적 오답이었으나 장거리 단서(directs의 주어 필요)를 확인하면 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "make + 목적어 + 형용사 목적격보어. 'fear makes us very attentive'에서 attentive는 us의 상태를 서술하는 보어이므로 형용사가 맞다. 부사 attentively로 바꿔야 한다는 유혹은 make의 5형식 구조를 확인하면 소거된다. 이어지는 'narrows..., will cause..., may cause...'가 makes와 병렬인 것도 자연스럽다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "the ways in which + 완전한 절. 'the specific ways in which they activate our systems'에서 관계절 내부는 주어(they)+동사(activate)+목적어(our systems)로 완전하므로 '전치사+관계대명사'가 어법상 옳다(= the ways that / the ways ∅ 와 교체 가능). 'in which 뒤 완전절' 확인으로 즉시 정문 판정."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "help + 목적어 + (to) 원형부정사 규칙 위반. 'they have helped us (as a species) surviving challenges'는 'helped us survive(또는 to survive) challenges'여야 한다. help는 목적격보어로 동명사/현재분사를 취하지 않는다. 대안 해석 탐색: (i) surviving을 us를 수식하는 축약 관계절('도전을 살아남고 있던 우리를 도왔다')로 보면 help가 목적격보어 없이 단독 목적어만 취하는 구조가 되지만, 문맥상 '감정이 우리가 도전에서 살아남도록 도왔기 때문에 존재한다'는 인과 서술이므로 보어 자리가 요구되고, 마지막 문장 'If they had not helped us adapt and survive'가 원형부정사 보어 구조를 명시적으로 재확인해 이 대안 해석은 성립하지 않는다. (ii) 분사구문으로 보는 해석도 의미상 주어가 they(emotions)가 되어 '감정이 살아남으면서'가 되므로 불가. 유일하게 옹호 불가능한 밑줄."
+    }
+  ],
+  "note": "정답 (E) 단일 수렴, 신뢰도 높음. 문항 내부에 자체 검증 단서가 존재: 마지막 문장 'If they had not helped us adapt and survive'가 help+O+원형부정사의 올바른 형태를 보여줘 (E)의 오류를 확정한다. 매력적 오답 서열: (B)가 최상위 미끼('that 뒤 콤마 삽입구'로 which 교체 착각 유도), (A)가 차순위(첫 절 Fear 주어와의 표면적 병렬 불일치 착각). (C),(D)는 기본기 확인용. 최상위권 실전 관점에서 함정 설계가 정석적이고 정답 시비 소지 없음."
+}

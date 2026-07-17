@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "deterministic-structural-v10-independent-prediction-seal-v1",
+  "predictionsFile": "predictions.json",
+  "predictionsSha256": "fc5a1dfe5fbc198eaf9488daf07f9c4c8745f2344a4cd29bdc142c06f37657f6",
+  "blindSha256": "6cffb121e362dd40fe19fdb71890824cee8851b7aab4a2f2b02795aae164a171",
+  "runnerSha256": "9586c15b3ac1eeb1eb36ea83ff1c7de89b15203982692196c286cb1b18ba9e79",
+  "caseCount": 200,
+  "productionSourceHashes": [
+    {
+      "path": "src/lib/question-quality/validators/summary/mc.ts",
+      "sha256": "200e497fd99c82d13db3ddb5e752722b150f39d3cf4428b46f81814ef369c00c"
+    },
+    {
+      "path": "src/lib/question-quality/validators/grammar/shared.ts",
+      "sha256": "fb57409f1695f10f8d3ba2fdf1ce9845f0c273b724b8711e5e17fefa9b99931b"
+    },
+    {
+      "path": "src/lib/question-quality/validators/sentence-order.ts",
+      "sha256": "dcb1314d70a9877716802cafe2037be43feebebb036f7608f29a104746be3bc5"
+    },
+    {
+      "path": "src/lib/question-quality/core.ts",
+      "sha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35"
+    },
+    {
+      "path": "src/lib/question-quality/validators/summary/killer-trap.ts",
+      "sha256": "1705ad8aca1e5b6f7428d924e9f2ed94139a02a5bdca6a81be5d4fae23d09174"
+    },
+    {
+      "path": "src/lib/passage-sentence-utils.ts",
+      "sha256": "572dc2dbab87731faee1caa15055a096b5a0695b216e836e63c0a1bc9f2f8aa6"
+    },
+    {
+      "path": "src/lib/question-postprocess/types.ts",
+      "sha256": "95d082598f8974b15ac26987f4090a8b94cd511603e5e1f5d0c1224cf45ab4b7"
+    }
+  ]
+}

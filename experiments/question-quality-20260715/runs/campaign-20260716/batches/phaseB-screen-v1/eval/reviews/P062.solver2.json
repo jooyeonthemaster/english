@@ -1,0 +1,35 @@
+{
+  "pid": "P062",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Grammatically the bare infinitive 'demand ... and clear messages' fits the 'willingness of readers to ___' frame, but logically it contradicts the passage twice: readers 'put up with many obscurities' (they do NOT demand clarity), and demanding clear messages is functionally identical to asking 'what do you mean by that?', which the coordinated clause 'and not immediately ask...' explicitly negates. Inserting it makes the sentence self-contradictory."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Seam check: 'willingness of readers to invest their cognitive efforts and tolerate ambiguities, and not immediately ask...' — three parallel bare infinitives under 'to', fully grammatical. Logic check: 'invest cognitive efforts' restates 'they struggle to interpret elements that flout principles of efficient communication'; 'tolerate ambiguities' restates 'we can put up with many obscurities and apparent irrelevancies'. Coheres with the negated clause (patient interpretation instead of immediate challenge). Uniquely satisfies the passage's argument."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed in the slot, but 'without deep reflection' directly contradicts 'they struggle to interpret elements...' — the passage describes effortful, reflective engagement, not intuitive low-effort reading. Also fails to explain why readers would refrain from asking 'what do you mean by that?' as part of an interpretive investment."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed, but topically unanchored: the passage never mentions historical context or author biographies. It is about the cooperative principle and readers' interpretive charity toward obscure language. No sentence in the passage supports this as the source of 'many of the features of literature'."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed, but antithetical to the passage: readers confronted with 'elements that flout principles of efficient communication' do NOT call them out; they assume a further communicative purpose and interpret charitably. 'Enforce grammatical rules and call out inefficiencies' is the behavior the passage says readers suspend, and it clashes with 'not immediately ask what do you mean by that?'."
+    }
+  ],
+  "note": "Passage is recognizably from Jonathan Culler's discussion of the 'hyper-protected cooperative principle' (Literary Theory: A Very Short Introduction). All five options are grammatically valid in the infinitive slot, so discrimination is purely logical. Option ② is the only candidate consistent with both halves of the passage's characterization of literary reading (effortful interpretation + tolerance of obscurity) and with the coordinated negative clause. Distractors ①/⑤ are polar opposites (attractive to inattentive readers via surface terms like 'communication/efficiency'), ③ is a half-contradiction, ④ is off-topic. Single defensible answer; clean item."
+}

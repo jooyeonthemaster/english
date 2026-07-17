@@ -1,0 +1,75 @@
+{
+  "pid": "P023",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TRAP-MISDESCRIPTION",
+      "severity": "major",
+      "evidence": "해설: '복수 명사인 tools와 channels가 주어 바로 뒤에 길게 이어져 있어 동사의 수일치를 혼동하기 쉽도록 유도한 함정입니다.' 실제 문장은 'creating a social media program begins not with insight into the latest social media tools and channels...'로, tools와 channels는 동사 begins(렌더에서는 begin) 뒤의 전치사구 내부에 위치한다. 주어와 동사 사이에는 복수 명사가 전혀 개입하지 않으며, 동사 바로 앞은 단수 명사 program이다. 해설이 주장하는 '주어-동사 사이 복수 명사에 의한 수일치 교란' 구조는 이 문장에 존재하지 않는다(인과 오설명)."
+    },
+    {
+      "code": "V4-KEYPOINT-MISANALYSIS",
+      "severity": "minor",
+      "evidence": "keyPoints의 '(A) 정·준동사 — 부사절 내 수식 분사의 능동·수동 판정': 'made by organizations'는 주절 주어 명사구 'One of the most common mistakes'를 수식하는 분사구이며 부사절 내부에 있지 않다. 오히려 when 부사절이 분사구 내부에 안겨 있다. 구조 귀속 오류."
+    },
+    {
+      "code": "V4-STYLE-NUMBERING",
+      "severity": "minor",
+      "evidence": "해설 서두 '이 글의 핵심 주어를 담고 있는 ②번 문장' — 선지 라벨은 (A)~(E)인데 원형 숫자 ②를 사용. '두 번째 문장'으로 읽으면 위치는 맞으나 라벨 체계와 불일치하며 '핵심 주어를 담고 있는'이라는 표현도 부자연스럽다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "정·준동사 및 태 판정 — 명사구를 수식하는 과거분사(수동) vs 현재분사/정동사",
+      "temptingBecause": "긴 주어 명사구 뒤에 when 부사절이 이어져 made를 정동사나 능동 분사(making)로 오인할 여지",
+      "decisiveFlaw": "mistakes는 '만들어지는' 대상이므로 수동 의미의 과거분사 made가 정확 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "수일치 — 동명사구 주어의 단수 취급 (선언된 정답)",
+      "temptingBecause": "출제 의도는 주변 복수 명사에 의한 교란이나, 실제로는 동사 바로 앞 명사 program이 단수여서 국소 단서만으로도 즉시 오류가 드러남",
+      "decisiveFlaw": "동명사구 주어 'creating a social media program'은 단수 취급이므로 begin은 비문 — begins로 교정하면 정확히 원문과 일치. 유일 정답 확인"
+    },
+    {
+      "label": "(C)",
+      "intent": "접속사 판정 — 절을 이끄는 because vs 전치사구 because of",
+      "temptingBecause": "because 뒤에 인용부호로 감싼 절이 와서 명사(인용구)를 목적어로 취한 것처럼 보여 because of를 떠올리게 함",
+      "decisiveFlaw": "뒤에 주어(everyone else)+동사(is doing)를 갖춘 완전한 절이 오므로 부사절 접속사 because가 정확 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "병렬 구조 — 조동사 must에 걸리는 either A or B의 동사원형 병렬",
+      "temptingBecause": "must와 solve 사이에 either가 개입하고 or 뒤 result와의 병렬을 확인해야 하므로 solves/solving을 기대할 수 있음",
+      "decisiveFlaw": "must either solve ... or result 구조에서 첫 동사원형 자리이므로 solve가 정확 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "품사 판정 — 대명사 one을 수식하는 형용사 vs 부사",
+      "temptingBecause": "괄호 삽입구 안 preferably(부사) 뒤라 부사형 measurably로 착각할 여지",
+      "decisiveFlaw": "부정대명사 one(=improvement)을 수식하므로 형용사 measurable이 정확 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    "함정 기제 오설명: tools/channels가 '주어 바로 뒤'에 있다고 했으나 실제로는 동사 뒤 전치사구 내부에 있어 주어-동사 수일치를 교란할 수 없는 위치다. 동사 직전 명사는 단수 program이라 오히려 국소 단서가 정답을 노출한다.",
+    "keyPoints (A)의 '부사절 내 수식 분사'는 구조 귀속 오류 — made by organizations는 주절 주어 NP를 수식하는 분사구이며 부사절 안에 있지 않다.",
+    "'②번 문장' 원형 숫자 표기가 (A)~(E) 라벨 체계와 불일치하고 '핵심 주어를 담고 있는'은 부정확한 표현이다."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 무결, begins→begin 단일 최소대립쌍 오류, 교정 시 원문 복원, 필드 동기화 정상. 그러나 V4 실패 — 해설이 존재하지 않는 '주어 뒤 복수 명사 교란' 구조를 함정 기제로 주장(실제 복수 명사는 동사 뒤 위치). KILLER 조건 미충족 — §C의 '붙어 있는 단순 수일치로 즉시 드러나지 않는다' 위반: 동사 begin 바로 앞이 단수 명사 program이라 구조 독해 없이 인접 수일치만으로 정답이 즉시 노출되며, 밑줄별 why-tempting 필드도 부재. 요청 난이도 KILLER 대비 실난이도는 하~중(C5=1). 재설계 방향: 주어-동사 사이에 복수 명사가 개입하는 문장(attractor 구조)으로 오류 지점을 옮기거나, 해설의 함정 기제 서술을 실제 구조에 맞게 교체."
+}

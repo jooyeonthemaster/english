@@ -1,0 +1,357 @@
+{
+  "schemaVersion": "question-quality-linux-ext4-execution-boundary-v1",
+  "artifactId": "linux-ext4-execution-boundary-v1",
+  "status": "DESIGN_ONLY_EXECUTION_BLOCKED",
+  "purpose": "Fail-closed boundary for a future C0 connectivity execution on WSL2 native ext4 without treating Windows DrvFs/9p as crash-durable storage.",
+  "scope": {
+    "designOnly": true,
+    "candidateExecutionAllowed": false,
+    "metadataNetworkAllowed": false,
+    "providerNetworkAllowed": false,
+    "databaseAccessAllowed": false,
+    "secretOrCredentialReadAllowed": false,
+    "privateArtifactReadAllowed": false,
+    "budgetLedgerMutationAllowed": false,
+    "repositoryCopyOrStageAllowed": false,
+    "packageInstallAllowed": false,
+    "authorFreezeOrBuildWriteAllowed": false
+  },
+  "publicBindings": {
+    "gitHeadObserved": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "candidateRegistry": {
+      "path": "experiments/question-quality-20260715/design/global-candidate-registry-v2/registry.json",
+      "bytes": 2113,
+      "sha256": "1e2fc90252de8790ebd7df86e81602825c3fd8b50f5fa96de237ec3cc8fdbab1",
+      "status": "DESIGN_ONLY_EXECUTION_BLOCKED",
+      "globalCap": 1000,
+      "observedUsed": 0,
+      "c0Cap": 2
+    },
+    "v6Protocol": {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6/protocol-v6.json",
+      "bytes": 15741,
+      "sha256": "068024e2594cadd24daacb2b6e015a401704836774f5222b0c44e6b8d6b96d58",
+      "liveExecutionAuthorized": false,
+      "windowsLiveExecutionAllowed": false,
+      "v6FrozenNodeVersion": "v24.7.0",
+      "v6FrozenPlatform": "win32"
+    },
+    "currentWorktreePublicSourceClosure": {
+      "path": "experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1/current-worktree-public-source-closure-v1.json",
+      "bytes": 19103,
+      "sha256": "69170f3f00b99c13e59ff796a672cd9658b92dbdba15435ca03af196014e51bb",
+      "setSha256": "4373bd4dd737c2e729170ed2ff57d9a4f5b862c4827a10d5a3225534a02cd85e",
+      "exactRows": 44,
+      "materializedOnLinux": false,
+      "executionComplete": false
+    }
+  },
+  "observedHost": {
+    "distro": "Ubuntu-24.04",
+    "wslVersion": 2,
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x86_64",
+    "nativeHomeMount": {
+      "probePath": "/home",
+      "mountTarget": "/",
+      "source": "/dev/sdd",
+      "filesystemType": "ext4",
+      "mountOptionsObserved": [
+        "rw",
+        "relatime",
+        "discard",
+        "errors=remount-ro",
+        "data=ordered"
+      ],
+      "statfsReportedType": "ext2/ext3",
+      "requiredLinuxMagicHex": "0xef53"
+    },
+    "windowsDriveMount": {
+      "probePath": "/mnt/d",
+      "mountTarget": "/mnt/d",
+      "source": "D:\\",
+      "filesystemType": "9p",
+      "statfsReportedType": "v9fs",
+      "crashDurabilityClaimAllowed": false,
+      "fsyncSuccessCountsAsCrashDurabilityEvidence": false
+    },
+    "wslNode": {
+      "version": "v22.22.0",
+      "modulesAbi": "127",
+      "napi": "10",
+      "v8": "12.4.254.21-node.33",
+      "platform": "linux",
+      "architecture": "x64"
+    },
+    "wslNpmVersion": "10.9.4",
+    "observationIsAuthorization": false,
+    "observationProvesCrashDurability": false,
+    "observationProvesDeploymentParity": false
+  },
+  "nativeExt4Gate": {
+    "futureExecutionRootPrefix": "/home",
+    "requiredFilesystemType": "ext4",
+    "requiredFilesystemMagicHex": "0xef53",
+    "requiredMountSourcePattern": "^/dev/",
+    "mustResolveOutsidePrefixes": [
+      "/mnt",
+      "/media",
+      "/run/user"
+    ],
+    "deniedFilesystemTypes": [
+      "9p",
+      "v9fs",
+      "drvfs",
+      "virtiofs",
+      "fuse",
+      "fuseblk",
+      "overlay",
+      "tmpfs",
+      "ramfs",
+      "nfs",
+      "cifs"
+    ],
+    "mostSpecificMountFromProcSelfMountinfoRequired": true,
+    "findmntAndStatfsAgreementRequired": true,
+    "canonicalRealDirectoryChainRequired": true,
+    "symlinkOrBindMountInExecutionAncestorsAllowed": false,
+    "sameDeviceRequiredFor": [
+      "authoritative-ledger",
+      "authority-epoch",
+      "executor-lock",
+      "private-run-journal",
+      "no-replay-markers",
+      "temporary-files",
+      "terminal-results"
+    ],
+    "writeFsyncFdReattestRenameFsyncParentReattestRequired": true,
+    "successfulFileFsyncAloneIsNeverSufficient": true,
+    "ninePProbeCanOnlyProduceDenyEvidence": true,
+    "preflightMustRunAgainImmediatelyBeforeReservation": true
+  },
+  "sourceTransfer": {
+    "currentManifestClass": "EXACT_PUBLIC_BOOTSTRAP_CLOSURE_ONLY",
+    "currentManifestIsExecutionComplete": false,
+    "futureExecutionManifestRequired": true,
+    "futureManifestMustBind": [
+      "every authorized v6 successor source and runtime entrypoint",
+      "independently recomputed production compiler closure",
+      "all immutable runtime data and public authorization manifests",
+      "package.json and package-lock.json",
+      "exact bytes, sha256, POSIX mode, and semantic kind for every regular file",
+      "zero unlisted files in the empty Linux materialization root"
+    ],
+    "transferSourceMustBeExactCurrentWorktreeBytes": true,
+    "destinationMustBeEmptyNativeExt4Directory": true,
+    "fdBoundExactReadAndPostReadIdentityRequired": true,
+    "sourceAndDestinationHashEqualityRequired": true,
+    "regularFilesOnly": true,
+    "hardlinkCountMustEqualOne": true,
+    "symlinksAllowed": false,
+    "archiveExtractionAllowed": false,
+    "recursiveRepositoryCopyAllowed": false,
+    "forbiddenPathSegments": [
+      ".git",
+      "node_modules",
+      "private",
+      ".next",
+      "dist",
+      "coverage"
+    ],
+    "forbiddenBasenamesOrPatterns": [
+      ".env",
+      ".env.*",
+      "*.pem",
+      "*.key",
+      "credentials.json",
+      "secrets.json",
+      "*.private.json",
+      "*raw-response*",
+      "*raw-request*"
+    ],
+    "windowsNodeModulesTransferAllowed": false,
+    "privateInputTransferByThisPackageAllowed": false,
+    "missingPrivateCompilerInputDisposition": "BLOCK_EXECUTION_UNTIL_SEPARATE_PRIVATE_INGRESS_IS_AUTHORIZED_AND_AUDITED",
+    "sourceDriftDisposition": "CREATE_NEW_MANIFEST_AND_NEW_AUDIT_NEVER_PATCH_ACCEPTED_HASHES"
+  },
+  "linuxNativeToolchainGate": {
+    "currentMaterializationStatus": "NOT_STARTED",
+    "npmCiAllowedNow": false,
+    "futureInstallMustRunOnNativeExt4": true,
+    "futureInstallMustStartWithNoNodeModules": true,
+    "exactPackageLockRequired": true,
+    "npmInstallForbidden": true,
+    "networkAndLifecycleScriptPolicyMustBeSeparatelyAuthorized": true,
+    "linuxNativePackageAndBinaryProvenanceRequired": true,
+    "windowsNativeBinaryReuseForbidden": true,
+    "linuxNativeFrozenBundlesMustBeNewArtifacts": true,
+    "windowsFrozenBundlesMayNotBeExecutedOrRebrandedAsLinux": true,
+    "freshIndependentToolchainAndBundleAuditRequired": true
+  },
+  "deploymentParityGate": {
+    "status": "UNKNOWN_BLOCKED",
+    "currentEvidence": {
+      "packageJsonNodeEnginePinned": false,
+      "vercelJsonNodeRuntimePinned": false,
+      "deployedCommitParityProven": false,
+      "wslNodeMatchesV6FrozenNode": false,
+      "v6FrozenRuntimePlatformMatchesLinux": false
+    },
+    "requiredBeforeAuthorization": [
+      "exact deployed Git commit and production type-binding closure",
+      "production Node full version, platform, architecture, modules ABI, N-API, V8, OpenSSL, ICU, and libc",
+      "exact Linux executor Node executable bytes and sha256",
+      "exact equality for all declared parity fields or an independently justified compatibility protocol",
+      "production environment feature flags that affect prompt compilation or route selection",
+      "fresh Linux-native exact-wire and runtime bundle hashes",
+      "separate independent parity audit"
+    ],
+    "unknownOrMismatchDisposition": "BLOCK_NO_BUILD_NO_RESERVATION_NO_DISPATCH"
+  },
+  "singleLedgerAuthority": {
+    "status": "NOT_MIGRATED_BLOCKED",
+    "logicalAuthorityCountRequired": 1,
+    "initialAuthority": "WINDOWS_REPOSITORY_LEDGER_READ_ONLY_ORIGIN_SNAPSHOT",
+    "futureAuthority": "NATIVE_EXT4_AUTHORITY_EPOCH_LEDGER",
+    "windowsJsonAfterAcceptance": "IMMUTABLE_NONAUTHORITATIVE_ARCHIVE_OR_PUBLIC_MIRROR",
+    "windowsJsonMayNeverBeLiveAuthorityDuringLinuxExecution": true,
+    "migrationMustBeOneWayAndSeparatelyAuthorized": true,
+    "migrationProtocol": [
+      "prove no executor or reservation is active and independently attest the origin ledger exact bytes, hash, schema, cap=1000, used=0, reserved=0",
+      "acquire the sole native-ext4 executor flock before creating an authority epoch",
+      "write the new ledger and authority-epoch acceptance record with exclusive create, fd fsync, identity/hash reattestation, rename, parent-directory fsync, and post-commit reattestation",
+      "make authority acceptance depend only on the durable ext4 acceptance record; do not require a Windows-side pointer commit",
+      "after acceptance, every authorized executor must bind the exact authority epoch id, ledger path, ledger bytes/hash, and lock identity",
+      "never mutate the Windows origin ledger; Windows copies are mirrors regenerated from ext4"
+    ],
+    "crashDecisionRule": {
+      "durableExt4AuthorityAcceptanceAbsent": "ORIGIN_REMAINS_AUTHORITY_EXT4_PARTIAL_STATE_QUARANTINED",
+      "durableExt4AuthorityAcceptancePresent": "EXT4_IS_SOLE_AUTHORITY_WINDOWS_ORIGIN_IS_NONAUTHORITATIVE"
+    },
+    "concurrencyControl": {
+      "required": true,
+      "mechanism": "KERNEL_FLOCK_HELD_FOR_FULL_PREFLIGHT_RESERVATION_DISPATCH_SETTLEMENT_EXPORT_LIFETIME",
+      "nonblockingExclusive": true,
+      "exactLinuxFlockExecutableProvenanceRequired": true,
+      "secondExecutorDisposition": "FAIL_BEFORE_LEDGER_READ_OR_NETWORK"
+    },
+    "c0Reservation": {
+      "candidateCount": 2,
+      "singleAtomicCapacityReservation": true,
+      "reserveBeforeAnyMetadataOrProviderNetwork": true,
+      "privateJournalIsReceiptEvidenceNotSecondCapacityAuthority": true,
+      "dualReservationLedgersForbidden": true,
+      "v6PrivateStoreReservationRequirementMustBeReconciledBySuccessorCodeAndAudit": true,
+      "reservationCommitUnknownDisposition": "NO_DISPATCH_MANUAL_RECOVERY_FROM_EXT4_AUTHORITY"
+    }
+  },
+  "crashRecoveryAndNoReplay": {
+    "restartBoundary": "WSL_DISTRO_TERMINATION_AND_RESTART_FROM_EXTERNAL_WINDOWS_HARNESS",
+    "restartTestAuthorizedNow": false,
+    "futureRestartTestMustUseNoNetworkSyntheticState": true,
+    "restartTestMustCover": [
+      "authority creation before and after acceptance",
+      "reservation before and after durable commit",
+      "dispatch-intent marker before send",
+      "terminal evidence before and after settlement",
+      "public export before and after Windows mirror copy"
+    ],
+    "states": {
+      "NO_AUTHORITY_ACCEPTANCE": "do not use ext4 partial state",
+      "AUTHORITY_ACCEPTED_NO_RESERVATION": "safe to reserve after full preflight",
+      "RESERVATION_COMMITTED_NO_DISPATCH_INTENT": "candidate was not sent; resume only under the same epoch and lock",
+      "DISPATCH_INTENT_DURABLE_NO_TERMINAL_EVIDENCE": "treat opportunity as sent-or-unknown, never replay, settle conservative/manual",
+      "TERMINAL_EVIDENCE_DURABLE_SETTLEMENT_PENDING": "settle from durable evidence, never call provider again",
+      "SETTLEMENT_COMMIT_UNKNOWN": "manual reconciliation from ext4 journal, never replay",
+      "SETTLED": "export mirrors only"
+    },
+    "networkSendRequiresPriorDurableNoReplayMarker": true,
+    "anyPostIntentCrashForbidsReplay": true,
+    "recoveryNeverInfersNoSendFromMissingResponse": true,
+    "gracefulWslRestartDoesNotProveHostPowerLossDurability": true
+  },
+  "handoffToWindowsResearchArtifacts": {
+    "windowsResearchTreeCanReceivePublicMirror": true,
+    "windowsResearchTreeCanBecomeLiveAuthority": false,
+    "privateArtifactCopyByDefault": false,
+    "exportSource": "SETTLED_NATIVE_EXT4_CONTENT_ADDRESSED_PUBLIC_BUNDLE",
+    "exportRequirements": [
+      "ext4 result and export receipt are durable before crossing /mnt/d",
+      "public bundle has an allowlist and forbidden-name scan",
+      "Windows destination filename includes the bundle sha256",
+      "copy uses exclusive temporary name, close, rename, and exact byte/hash readback",
+      "copy receipt is committed back on ext4 and binds Windows path, bytes, and hash",
+      "ext4 authority and source bundle are retained so a missing or corrupt Windows mirror is recreated"
+    ],
+    "ninePFsyncCanAuthorizeDeletionOrSettlement": false,
+    "windowsMirrorFailureCanChangeLedger": false,
+    "windowsMirrorFailureCanTriggerReplay": false
+  },
+  "publicPrivateBoundary": {
+    "publicOnWindowsAllowed": [
+      "protocols",
+      "manifests",
+      "hashes and byte counts",
+      "aggregate counters and cost",
+      "redacted route/parser evidence",
+      "independent audit verdicts"
+    ],
+    "privateMustRemainOnNativeExt4UnlessSeparatelyAuthorized": [
+      "credentials",
+      "exact wire bodies",
+      "passages and prompt payloads",
+      "raw provider requests and responses",
+      "question text, choices, answers, and explanations",
+      "provider request identifiers"
+    ],
+    "credentialPersistenceAllowed": false,
+    "privateArtifactNameOrHashDoesNotAuthorizeReadingContent": true
+  },
+  "requiredSuccessorArtifacts": [
+    "final audited v6 subject or immutable successor",
+    "complete execution-source transfer manifest and independent recomputation",
+    "separately authorized private input ingress",
+    "Linux-native npm-ci/toolchain provenance and bundle freeze",
+    "production deployment parity evidence",
+    "single-ledger authority-migration implementation and crash tests",
+    "WSL termination/restart recovery evidence",
+    "Linux execution authorization package and fresh independent hostile audit"
+  ],
+  "blockers": [
+    "B1_V6_FINAL_FREEZE_AND_INDEPENDENT_AUDIT_NOT_BOUND",
+    "B2_EXECUTION_SOURCE_CLOSURE_AND_PRIVATE_INPUT_INGRESS_INCOMPLETE",
+    "B3_LINUX_NATIVE_TOOLCHAIN_AND_BUNDLES_NOT_MATERIALIZED",
+    "B4_NODE_AND_PRODUCTION_DEPLOYMENT_PARITY_UNKNOWN",
+    "B5_SINGLE_EXT4_LEDGER_AUTHORITY_NOT_MIGRATED_OR_AUDITED",
+    "B6_WSL_RESTART_RECOVERY_NOT_EXECUTED",
+    "B7_LINUX_EXECUTION_AUTHORIZATION_AND_INDEPENDENT_AUDIT_ABSENT"
+  ],
+  "authorization": {
+    "sourceTransferMaterializationAuthorized": false,
+    "privateIngressAuthorized": false,
+    "toolchainInstallAuthorized": false,
+    "buildOrFreezeAuthorized": false,
+    "ledgerMigrationAuthorized": false,
+    "ledgerReservationAuthorized": false,
+    "metadataNetworkAuthorized": false,
+    "providerNetworkAuthorized": false,
+    "candidateExecutionAuthorized": false,
+    "dispatchCommandPresent": false
+  },
+  "activity": {
+    "networkCalls": 0,
+    "metadataNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "privateArtifactReads": 0,
+    "budgetLedgerReads": 0,
+    "budgetLedgerMutations": 0,
+    "sourceFilesCopiedOrStaged": 0,
+    "packageInstalls": 0,
+    "buildOrFreezeWrites": 0,
+    "wslRestartTests": 0
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P027",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the stream of remote associations coming from the right hemisphere'에서 coming은 associations(또는 stream)를 후치 수식하는 현재분사로, 'associations that come from...'의 축약 관계절과 등가. 연상(associations)이 우반구로부터 '오는' 능동 관계이므로 현재분사가 정확하다. 실전에서 (A)를 'that comes/come' 수 일치 문제로 착각하게 유도할 수 있으나 분사이므로 수 일치 자체가 쟁점이 아니다. 유혹도 낮음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'our attention tends to be directed outward'에서 attention은 방향이 '지향되는' 대상이므로 수동태 be directed가 옳다. 능동 directing으로 바꾸면 attention이 스스로 무언가를 향하게 하는 주체가 되어 목적어가 없어 비문. 첫 문장의 능동 'direct the spotlight of attention'과 대비되어 능동/수동 판단을 시험하지만, 장거리 단서(attention = 피동작주)로 명확히 정문. 유혹도 낮음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'While this pattern of attention is necessary..., it actually prevents us from detecting...'에서 주어 it의 선행사는 단수 명사구 this pattern of attention이므로 단수 동사 prevents가 옳다. 직전에 problems, connections 등 복수 명사가 깔려 있어 성급하게 복수 주어로 오인하면 prevent가 맞다고 착각할 수 있는, 실전에서 잠깐 끌리는 선지다. 그러나 it 자체가 단수 대명사이므로 prevents 확정. prevent A from -ing 구문도 정확히 detecting으로 이어짐."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'That's why so many insights happen during warm showers'는 That's why + 완전한 절 구조로 정문. why 뒤가 완전한 절(so many insights happen...)이므로 관계부사 why 사용이 옳다. 'That's because'와의 인과 방향 혼동을 노린 미끼일 수 있으나, 앞 문장(이완 시 내면 주의 → 통찰)이 원인이고 샤워 중 통찰이 결과이므로 why가 논리적으로도 맞다. 유혹도 중간 — because/why 방향을 한 번 검산하게 만들지만 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "'hear the quiet voices in the backs of our heads to tell us about the insight' — 지각동사 hear는 5형식에서 목적격 보어로 원형부정사(tell) 또는 현재분사(telling)를 취하며 to부정사는 불가. 대안 해석 검토: (1) 목적의 부사적 용법('말해주기 위해 듣는다')은 듣는 주체와 말하는 주체가 달라 의미상 성립 불가. (2) voices를 수식하는 형용사적 용법('말해줄 목소리')은 미래/당위의 뉘앙스로 'be to' 계열에서나 가능하며, 지각동사 hear의 목적어-보어 관계(목소리가 실제로 말하고 있는 것을 듣는다)가 문맥상 명백해 성립하지 않는다. 어느 대안 해석으로도 정문이 되지 않으므로 to tell → tell/telling 이 유일한 교정. 명백한 어법 오류."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 1회독에서 (E)의 지각동사+to부정사 위반이 즉시 눈에 들어옴. 매력적 오답으로 실제 잠깐 멈춘 곳은 (C) — 주변 복수 명사(problems, connections)에 끌려 수 일치를 재확인하게 만들지만 주어 it이 단수라 3초 내 해소 — 와 (D)의 why/because 방향 검산이었다. (A), (B)는 유혹도 낮음. 원문(Jonah Lehrer 계열 샤워 통찰 지문)에서도 해당 자리는 telling이며, 대안 해석을 적극 탐색해도 (E)를 정문으로 만들 경로가 없다. 정답 후보는 (E) 단일, 복수 정답 위험 없음."
+}

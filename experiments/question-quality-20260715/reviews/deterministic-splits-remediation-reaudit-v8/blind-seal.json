@@ -1,0 +1,53 @@
+{
+  "schema": "deterministic-question-quality-blind-seal/v8",
+  "sealed_utc": "2026-07-14T20:47:03Z",
+  "phase": "PRE_INSPECTION",
+  "case_count": 256,
+  "family_count": 8,
+  "balanced_controls": true,
+  "family_control_counts": {
+    "blank_explanation_option_analysis": {
+      "normal": 16,
+      "defect": 16
+    },
+    "blank_inference_semantic_role_preservation": {
+      "normal": 16,
+      "defect": 16
+    },
+    "exact_transformed_answer_residue": {
+      "normal": 16,
+      "defect": 16
+    },
+    "grammar_free_text_rule_truth": {
+      "normal": 16,
+      "defect": 16
+    },
+    "grammar_ghost_labels_unicode_rendered": {
+      "normal": 16,
+      "defect": 16
+    },
+    "sentence_order_body_duplicate_label_contamination": {
+      "normal": 16,
+      "defect": 16
+    },
+    "sentence_order_dependent_fragments": {
+      "normal": 16,
+      "defect": 16
+    },
+    "summary_complete_mc_answer_object_binding": {
+      "normal": 16,
+      "defect": 16
+    }
+  },
+  "sha256": {
+    "cases.json": "564064210a382bd41c54913d9cf6edbd4943385f968517a5dfba81827afcb08f",
+    "blind_corpus_author.py": "8aab3ac7f6d104f49ac9b57a3702c50074993af4fc4affdd1501108f3cbc6695",
+    "BLIND_PROTOCOL.md": "29ea4f0003e43dfaa4f4fb2d52086ffea166aab1157bacab7f78c8475e5089fa"
+  },
+  "forbidden_inputs_confirmed_unused": [
+    "production source",
+    "existing tests",
+    "prior deterministic audit/remediation artifacts",
+    "API/model/network/database/secrets"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립한다(produce + NP, 관계절 that demonstrate는 복수 선행사 models와 수일치 정상). 그러나 논리적으로 모순: 직전 문장이 'the goal should NOT be simply to utilize technology for its own sake'라고 명시했는데, '복잡한 소프트웨어 알고리즘을 과시하는 첨단 디지털 모델'은 정확히 기술 그 자체를 위한 기술 사용에 해당한다. Rather(대조 접속부사)가 요구하는 반전 방향과 정반대이므로 형식적으로 배제된다."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합 성립: produce distinctive artworks(타동사+목적어 NP), 관계절 that offer는 복수 선행사 artworks와 수일치 정상, offer fresh insights to audiences는 수여 구문의 to-변이형으로 정문. 논리 성립: 지문의 핵심 전제 'Great art challenges our perceptions ... and forever changes our thoughts and feelings'를 '청중에게 신선한 통찰을 주는 독창적 작품'으로 환언한 것으로, Rather 이하가 요구하는 '기술 자체가 아닌 위대한 예술의 산출'이라는 결론과 정확히 일치한다. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립한다. 그러나 논리 불성립: 지문 어디에도 시장성·상업적 성공·글로벌 소비자에 대한 언급이 없다. '위대한 예술 = 인식에 도전하고 사고와 감정을 바꾸는 것'이라는 정의와 무관한 상업적 기준을 도입하므로 전제로부터 도출 불가능하다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립한다. 그러나 논리적으로 명시적 모순: 지문은 'new technologies are nothing more than tools that can be used in the creative process'라고 하여 기술을 창작 과정에서 사용 가능한 도구로 긍정한다. '현대적 도구의 사용을 전적으로 거부하는(entirely reject) 전통 회화'는 이 전제와 양립 불가. 지문의 주장은 기술 배격이 아니라 기술의 수단화이므로 과잉 반전 미끼다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립한다(where 관계부사절, platforms를 장소적 선행사로 받는 정문). 그러나 논리 불성립: '타인의 작품을 편집하는 협업 플랫폼'은 도입부의 배경 서술(편집 기술의 보급)에서 소재만 재활용한 것으로, '예술가의 목표 = 위대한 예술 산출'이라는 결론 위치에 들어갈 내용이 아니다. 플랫폼 산출은 오히려 기술 활용 그 자체에 해당하여 Rather의 대조 방향과 어긋난다."
+    }
+  ],
+  "note": "빈칸은 Rather 이하 결론부로, '기술 자체를 위한 기술 사용'의 대안인 '위대한 예술(인식 도전·사고/감정 변화)'의 환언을 요구한다. ②만이 이 환언에 해당하며 나머지는 방향 모순(①,④), 무관 소재(③), 배경 소재 재활용(⑤)으로 형식적으로 배제된다. 복수정답 여지 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P037",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어 'Sweeping statements'(복수)에 현재완료 수동 'have been made'가 수일치. 뒤따르는 'the effect... of a child'의 단수 명사에 이끌려 단수로 착각하도록 유도하지만, 진짜 주어는 문두의 복수 명사구다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It has been said that ..., and that ...' 구조에서 두 번째 명사절을 여는 접속사 that. 병렬 시작점이 'said' 뒤의 that절 두 개이므로 반복된 that은 옳고 오히려 명료성을 위해 필요하다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong",
+      "reason": "문맥상 '가장 좋은 옷을 입고 있는 상태'(be dressed in)가 필요한데 진행형 능동 'was dressing'은 '옷을 입는 동작 중'을 뜻해 부적합. 지문 전체의 병렬 표현(better dressed / dressed like a cowboy / dressed in a cowboy outfit)이 모두 수동 상태 표현이며, 뒤의 'for a short period... by the end of the hour'는 착용 상태 지속 시나리오를 요구한다. 자동사 dress in(습관적으로 입다) 독해를 적극 탐색해도 과거진행형과 결합하면 '입는 중'으로만 읽혀 구제 불가. 'dressed'로 고쳐야 한다. 어법상 틀린 부분."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'whose mother stressed that...'의 정형 과거동사. 관계절 내 'was dressed'와 시제 평행이며 가정적 서술 틀에서 단순과거가 자연스럽다. 'stresses'나 'had stressed'를 요구한다고 착각할 수 있으나(매력 오답 포인트) 단순과거로 충분. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "사람 선행사 'the child'를 받아 관계절의 주어 역할을 하는 주격 관계대명사 who. 'is dressed'의 주어로 기능하므로 옳다. 정문."
+    }
+  ],
+  "note": "최상위권 실전 풀이 순서: (C)의 dressed/dressing 상태-동작 대립이 지문 내 3개의 평행 단서(better dressed, dressed like a cowboy, dressed in a cowboy outfit)로 강하게 지지되어 즉시 확정. 가장 끌리는 오답은 (A)(근접 단수명사 착시)와 (D)(시제 과잉교정 유혹)였으나 둘 다 장거리 단서 확인으로 해소. 대안 해석 탐색 결과 (C)를 정문으로 만드는 독해는 존재하지 않음. 정답 후보는 (C) 단일."
+}

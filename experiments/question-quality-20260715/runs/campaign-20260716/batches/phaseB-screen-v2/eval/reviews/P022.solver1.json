@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "매력적 오답. '갈등 예방'이라는 표면적 긍정 프레임에 순간 끌리지만, 지문의 핵심 주장은 감정을 '정확하게 표현(express emotions, feelings and moods accurately)'하는 것이다. suppress negative feelings(부정적 감정 억압)는 표현을 장려하는 지문 논지와 정면 충돌한다. 또한 지문은 갈등을 '예방'하는 것이 아니라 갈등 상황(group conflict situation) 안에서 감정 이해가 어떻게 작동하는지를 다루므로 'prevent any potential conflicts'도 방향이 틀렸다. 문법 결합(seam)은 자연스러우나 논리 불합격."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "지문 첫 문장이 'a diverse emotion vocabulary(다양한 감정 어휘)'를 명시적으로 강조하는데, 'exact same emotional vocabulary(완전히 동일한 감정 어휘)'를 강제한다는 것은 정반대 진술이다. 게다가 'Appreciation of differences(차이에 대한 인정)'라는 주어와 'forces every member to use the exact same...'라는 술어는 의미상 자기모순(차이 인정이 획일화를 강제?)이다. 즉시 소거."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "지문 전개: 감정 이해 능력 → 정확한 감정 표현 → 명확한 의사소통 → 자신과 타인의 필요를 모두 수용(cooperate) → 갈등 상황에서 자기 감정 표현 + 타인 관점 취하기(perspective-taking). 이 흐름의 자연스러운 귀결은 '차이에 대한 인정이 협력적 분위기를 조성하여 의견 불일치를 생산적인 팀 성과로 전환한다'는 것이다. 'collaborative climate'는 cooperate·accommodate needs와, 'turns disagreements into productive outcomes'는 group conflict situation의 긍정적 해결과 정확히 대응한다. 주어 'Appreciation of differences'와 동사 'establishes'의 수일치·의미 결합 모두 정문. 다만 실전 감각으로는 유일하게 전면 긍정적이고 가장 길어 정답 티가 다소 나는 편."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "매력적 오답 요소: '타인의 필요' 언급이 perspective-taking 대목과 표면적으로 닿는다. 그러나 지문은 'accommodate their own needs as well as the needs of others'라고 하여 자신과 타인의 필요를 '모두' 수용하는 균형을 말한다. 'strictly over one's own(자신의 것보다 엄격히 우선)'은 이 균형을 깨는 극단 진술로 지문과 모순. 'strictly'라는 절대어가 소거 단서."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "지문은 첫 문장부터 'particularly relevant in group settings(집단 상황에서 특히 유의미)'라고 못박는다. 'exclusively for completing independent tasks(오로지 독립 과제 수행을 위해)'는 집단 맥락을 정면 부정하며, 'analytical skills'도 지문의 감정 이해·소통·협력 주제와 무관. 즉시 소거."
+    }
+  ],
+  "note": "최상위권 실전 풀이 시뮬레이션: 빈칸 문장 주어 'Appreciation of differences'는 직전 문장의 perspective-taking(타인이 왜 그렇게 반응하는지 이해)을 받는 요약 주어이므로, 빈칸은 '차이 인정 → 갈등의 긍정적 해결'로 이어져야 한다. ②⑤는 지문 명시 어구(diverse vocabulary, group settings)와 정면 모순으로 즉시 소거, ①은 suppress가 express 논지와 충돌, ④는 strictly라는 극단어로 균형(own needs as well as others') 위반. ③만이 유일하게 논리·문법 모두 성립하며 대안 해석으로 다른 선지가 정문이 될 여지는 없다. 단일 정답 문항. 품질 소견: 오답 4개 중 ②⑤가 다소 쉽게 소거되는 하위 난도 미끼이고 ③이 유일한 긍정 진술이자 최장 선지라 변별력은 중간 수준이나, 정답 유일성·논리 정합성에는 결함 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립한다: 'If you prepare backup options exclusively for unpredictable emergencies' — 조건절 내 타동사+목적어 구조로 정문. 그러나 논리적으로 실패한다. (a) 지문의 논지는 '계획 변경을 미리 기대(expect)하라'이지 '예비 대안을 준비하라'가 아니다 — 준비(preparation)와 심적 기대(expectation)는 다른 행위 범주다. (b) 'exclusively for unpredictable emergencies'는 대비 범위를 '예측 불가능한 비상사태'로만 한정하는데, 직전 문장은 'a certain percentage of plans will change'라는 일반적·통계적 기대를 말하므로 정면 배치된다. (c) 후행절 'Here is one of those inevitabilities'의 지시사 those는 미리 기대해 둔 필연들의 집합을 전제하는데, '비상사태 전용 백업 준비'는 그 집합을 구성하지 못한다. 형식적으로: 전제(P: 일정 비율의 계획 변경은 필연) → 결론(C: 변경 발생 시 필연의 사례로 인식 가능)을 매개하려면 빈칸은 P의 내면화여야 하는데 ①은 P를 부정하는 한정사(exclusively, unpredictable)를 포함한다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'If you stick to your original arrangements with absolute determination' — 문법 정문(stick to + 명사구, 전치사구 부가). 그러나 논리적으로 모순 도출. 지문은 'you must prioritize flexibility over rigidity'라고 명시했는데 ②는 rigidity의 극단('absolute determination'으로 원래 계획 고수)이다. 또한 조건-귀결 연결이 붕괴한다: 계획을 절대 고수하는 사람은 계획 변경(it happens)을 '필연의 하나'로 수용하는 발화를 할 수 없다 — 조건절이 귀결절의 화용적 전제(변경 수용 태세)와 양립 불가. 명백한 반대 방향 오답."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'If you mentally accommodate the certainty of plan disruptions' — 문법: accommodate가 '(사실·상황을) 받아들이다/수용하다'의 타동 용법으로 추상 목적어 'the certainty of plan disruptions'를 취하는 정문이며, 부사 mentally가 내면적 수용임을 명시한다. 논리: 직전 문장 'expect that a certain percentage of plans will change'의 재진술(expect ≈ mentally accommodate, plans will change ≈ plan disruptions, a certain percentage ... will ≈ certainty)이고, 귀결절 'Here is one of those inevitabilities'의 inevitabilities가 certainty와 어휘적으로 정확히 호응한다. those의 지시 대상(미리 수용해 둔 필연들의 집합)도 조건절이 공급한다. 형식 검증: P(계획 변경의 필연성을 심적으로 수용) → 변경 발생 시 그것을 기수용 집합의 원소로 분류 가능(C). 타당. 사소한 흠: 지문은 'a certain percentage'(일부 계획)라 했는데 'the certainty of plan disruptions'는 강도가 다소 높아 보일 수 있으나, '일정 비율의 변경이 일어난다는 것 자체는 확실하다'로 읽으면 정확히 일치한다. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'If you compel yourself to fulfill work duties without compromise' — 문법 정문(compel + 재귀목적어 + to부정사). 논리적으로는 ②와 동형의 반대 방향 오답: 'Is it more important to stick to some rigid work schedule or to be available to my four-year-old?'라는 수사의문이 이미 rigid work schedule 고수를 열등한 선택지로 기각했다. 'without compromise'는 rigidity의 표지로, prioritize flexibility over rigidity와 모순. 귀결절과의 연결도 실패: 업무 완수를 강제하는 태도에서 계획 변경을 필연으로 수용하는 발화는 도출되지 않는다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'If you suppress any sense of frustration to maintain superficial peace' — 문법 정문(suppress + 목적어, to부정사 목적 부가). 논리 검증에서 이중으로 실패. (a) 기제 불일치: 지문의 처방은 좌절을 '억압(suppress)'하는 것이 아니라 변경을 '미리 기대(expect)'함으로써 좌절이 생기지 않게 하는 예방적 재구성이다. 억압은 이미 발생한 좌절의 사후 처리이므로 'expect that ... plans will change'의 재진술이 될 수 없다. (b) 가치 극성 불일치: 'superficial peace'는 자기폄하적 표지로, 지문이 지향하는 'a more peaceful person'(진정한 평화)과 반대 극성이다. 필자가 자신의 처방을 '피상적 평화 유지'라고 서술할 수는 없으므로 담화 정합성이 깨진다. 또한 귀결절의 'Here is one of those inevitabilities'는 인지적 재분류 발화이지 감정 억압의 산물이 아니다."
+    }
+  ],
+  "note": "전형적 필연성-수용(go with the flow) 논지의 빈칸 문항. 빈칸 문장은 직전 문장 'expect that a certain percentage of plans will change'의 조건절 재진술이어야 하며, 귀결절의 'those inevitabilities'와 어휘 호응(certainty↔inevitabilities)을 요구한다. ③만이 두 제약을 동시에 만족. ②·④는 rigidity 방향의 명시적 모순, ①은 한정사(exclusively/unpredictable)에 의한 범위 모순, ⑤는 기제(억압 vs 기대)와 극성(superficial vs genuine peace) 이중 불일치. 다섯 선지 모두 조건절 내 문법 결합(seam)은 정문이므로 변별은 순수 논리 층위에서 이루어진다 — 빈칸 문항으로서 구조 건전. 복수정답 소지 없음."
+}

@@ -1,0 +1,81 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-HALLUCINATED-STRUCTURE",
+      "severity": "critical",
+      "evidence": "정답 해설: \"복수 명사의 수식을 걷어내고 목적어가 빈 불완전한 절임을 파악하여 'What'으로 고쳐야 합니다\" — 해당 문장 'That he found was extraordinary'에는 걷어낼 복수 명사 수식 구조가 존재하지 않는다. (E) 선지('Those students who ... took')의 구조 설명이 정답 해설에 혼입된 환각으로, 학생에게 존재하지 않는 구조를 분석하라고 지시한다."
+    },
+    {
+      "code": "V4-CORRUPTED-TERMINOLOGY",
+      "severity": "major",
+      "evidence": "정답 해설: \"선행사를 포함하면서 대명사 지시 관계을 이끄는 관계대명사 'What'\" — '대명사 지시 관계을 이끄는'은 성립하지 않는 손상된 문법 용어이며 조사 오류('관계을')까지 포함한다. 관계대명사 what의 표준 기술('선행사를 포함하는 관계대명사')이 깨져 있다."
+    },
+    {
+      "code": "V4-MISANALYSIS-C",
+      "severity": "major",
+      "evidence": "(C) 오답 해설: \"과거분사 'wrinkled'가 명사를 후치 수식하는 구문\" — 실제 문장은 'the wrinkled face'로 wrinkled가 face를 전치 수식한다. 후치 수식이라는 기술은 실제 통사 구조와 불일치하는 오분석이다."
+    },
+    {
+      "code": "V5-STRUCT-FIELD-NOTE",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression 필드가 'What'(원형)으로 렌더 표기 'That'과 다르다. errorExpression('That')과 correction('What')으로 렌더·정답이 구분되고 학생 노출 필드(지문·선지·정답·해설)는 모두 동기화되어 있어 V5 실패로는 보지 않으나, 필드 의미 규약을 명시할 필요가 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 0
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "대명사 목적격·수 일치 (지시 대상 undergraduates와의 일치)",
+      "temptingBecause": "지시 대상이 앞 문장에 있어 단수 명사(a bunch)를 지시 대상으로 오인할 여지를 노린다.",
+      "decisiveFlaw": "present A with B 구문의 목적어 자리로 복수 목적격 them이 정확하다. 오인 여지가 거의 없는 즉시 소거 선지로, KILLER 디코이로는 필러에 가깝다."
+    },
+    {
+      "label": "(B)",
+      "intent": "등위접속사 and 병렬 — presented와 asked의 시제·형태 대등",
+      "temptingBecause": "and 뒤 동사 형태(asking/to ask 등 대안형)를 떠올리게 하는 병렬 판단.",
+      "decisiveFlaw": "주어 He에 걸리는 과거동사 presented와 asked의 병렬이 정확하다. 판단 단계가 한 단계뿐이라 소거가 빠르다."
+    },
+    {
+      "label": "(C)",
+      "intent": "분사의 능동(-ing) vs 수동(-ed) — 수식 명사 face와의 의미 관계",
+      "temptingBecause": "wrinkling/wrinkled 선택 판단을 유도하며, 인용문 내부라는 위치가 낯설다.",
+      "decisiveFlaw": "face는 주름이 지는 대상이므로 과거분사 wrinkled가 정확하다. 단, 해설이 이를 '후치 수식'으로 오기술했다(실제는 전치 수식)."
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 명사절 접속사 that vs 선행사 포함 관계대명사 what: 후속절의 완전/불완전 판별",
+      "temptingBecause": "That 바로 뒤에 주어-동사(he found)가 이어져 완전한 절처럼 보이고, 문두 대문자 That이 접속사처럼 자연스럽게 읽힌다.",
+      "decisiveFlaw": "타동사 found의 목적어가 비어 불완전한 절이므로 접속사 That은 불가하며 What이어야 한다. 교정 시 원문과 정확히 일치하는 최소대립쌍. 다만 'What ... was ...' 문두 패턴은 가장 많이 훈련되는 정형 포인트라 숙련 학생에게 즉시 노출된다."
+    },
+    {
+      "label": "(E)",
+      "intent": "관계사절을 사이에 둔 주어-동사 수일치·정동사 판별",
+      "temptingBecause": "주어 핵(Those students)과 동사(took) 사이에 관계사절과 'an \"elderly\" mix of words'(단수 명사)가 끼어 있어 근접 명사 일치 오류를 유도한다.",
+      "decisiveFlaw": "진짜 주어는 복수 Those students이고 과거형 took은 수 중립이라 실질 판단 부담이 낮다. 어법상 옳다."
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설의 '복수 명사의 수식을 걷어내고' — (D) 문장에 존재하지 않는 구조를 지목한 환각(critical, V4 실패 사유).",
+    "'대명사 지시 관계을 이끄는 관계대명사' — 손상된 비표준 용어 + 조사 오류.",
+    "(C) 해설의 '후치 수식' — 실제로는 전치 수식(the wrinkled face)인 오분석.",
+    "정답 해설이 '고난도 구조'라 자평하나 문두 What/That 판별은 최정형 기출 패턴으로 난이도 서술과 실제가 불일치."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1·V2·V3·V5는 통과: 렌더 지문은 의도된 What→That 치환 외 원지문과 완전 일치하고, 5개 밑줄 독립 검증 결과 (D)만 유일 오류이며 교정 시 원문이 정확히 복원되는 최소대립쌍이다. 그러나 V4가 3중으로 실패한다 — (1) 정답 해설에 (E)에서 혼입된 것으로 보이는 '복수 명사의 수식을 걷어내고'라는 존재하지 않는 구조 분석, (2) '대명사 지시 관계을 이끄는'이라는 손상 용어, (3) (C)의 전치 수식을 후치 수식으로 오기술. 치명 실패는 공예 점수로 상쇄되지 않으므로 F. KILLER 조건도 미충족: 문두 'That ... was' + found의 목적어 공백은 한국 수험가에서 가장 많이 훈련된 즉시 노출 패턴이라 '구조를 읽어야 하며 즉시 드러나지 않는다' 조건에 반하고, (A)는 필러에 가깝다. 요청 난이도 KILLER 대비 실제 난이도는 중하 수준(C5=1). 해설 오류 다수로 C6=0. 재사용하려면 해설 전면 재작성과 정답 포인트의 비정형 위치 재배치(문중 매몰형 what/that 등)가 필요하다."
+}

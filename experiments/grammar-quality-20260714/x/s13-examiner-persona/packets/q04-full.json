@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-noun-clause-pronoun-mislabel"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):ANS=b  (C):dec=a  (D):dec=b  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 19,
+        "relPos": 0.026,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 114,
+        "relPos": 0.158,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 245,
+        "relPos": 0.34,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 447,
+        "relPos": 0.62,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.752,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "wired",
+        "isError": false,
+        "correction": "wired",
+        "errorExpression": "wired",
+        "surroundingText": "The human brain is wired to look for threats",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "that can prevent",
+        "isError": true,
+        "correction": "that can prevent",
+        "errorExpression": "what can prevent",
+        "surroundingText": "a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "explains",
+        "isError": false,
+        "correction": "explains",
+        "errorExpression": "explains",
+        "surroundingText": "focused on what's going wrong (which explains why complaining is such a popular pastime).",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "what went",
+        "isError": false,
+        "correction": "what went",
+        "errorExpression": "what went",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "sharing",
+        "isError": false,
+        "correction": "sharing",
+        "errorExpression": "sharing",
+        "surroundingText": "start your conversations with friends by sharing a recent win",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "wired"
+      },
+      {
+        "label": "(B)",
+        "text": "what can prevent"
+      },
+      {
+        "label": "(C)",
+        "text": "explains"
+      },
+      {
+        "label": "(D)",
+        "text": "what went"
+      },
+      {
+        "label": "(E)",
+        "text": "sharing"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'be wired to-v'는 '~하도록 타고나다, 설정되다'라는 수동태 표현으로서, 인간의 뇌가 위협을 찾도록 설정되어 작동한다는 의미이므로 과거분사 wired는 적절합니다.",
+      "(C)": "괄호 안의 관계절에서 주어 역할을 하는 관계대명사 which가 앞선 절 내용 전체를 선행사로 받으므로, 단수 동사 explains를 쓴 구조는 정동사 자리에 적절합니다.",
+      "(D)": "타동사구 write down의 목적어절을 이끌면서 주어가 빠진 불완전한 절을 연결하고 선행사가 없으므로, 명사절을 이끄는 관계대명사 what은 어법상 올바릅니다.",
+      "(E)": "전치사 by 뒤에 동명사가 목적어로 와서 '~함으로써'라는 수단을 나타내므로, 동명사 형태인 sharing은 어법상 적절합니다."
+    },
+    "explanation": "명사구 'a trait'를 선행사로 삼아 수식하는 두 개의 관계대명사절이 등위접속사 but에 의해 병렬로 연결되어 있습니다. 첫 번째 관계절인 'that kept us alive...'와 병렬을 이루어 선행사 a trait를 꾸며야 하므로 주격 관계대명사 that이 들어갈 자리입니다. 따라서 선행사를 내포하는 관계대명사 'what can prevent'는 올 수 없으며, 주격 관계대명사인 'that can prevent'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(B) 관계대명사의 병렬 구조 — 선행사가 존재할 때 관계대명사 what의 중복 제한",
+      "(C) 정동사 vs 준동사 — 관계대명사절 안의 동사 자리 판단",
+      "(D) 관계대명사 what의 조건 — 선행사가 없고 뒤 문장이 불완전할 때 명사절 유도"
+    ],
+    "tags": [
+      "수능 어법",
+      "관계대명사",
+      "병렬 구조",
+      "동사/준동사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is __(A) wired__ to look for threats - a trait that kept us alive when we were living on the savannas but __(B) what can prevent__ happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which __(C) explains__ why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down __(D) what went__ well. If you're more of a verbal processor, start your conversations with friends by __(E) sharing__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it."
+  }
+}

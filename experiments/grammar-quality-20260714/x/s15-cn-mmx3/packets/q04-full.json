@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-point-monotony",
+    "grammar-underline-wide",
+    "grammar-underline-wide",
+    "grammar-underline-wide",
+    "grammar-underline-wide",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "grammar-decoy-point-diversity"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=b  (C):dec=a  (D):dec=b  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 47,
+        "relPos": 0.065,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 346,
+        "relPos": 0.48,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 420,
+        "relPos": 0.583,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 564,
+        "relPos": 0.782,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 705,
+        "relPos": 0.978,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.978,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "밑줄 (A)~(E) 중 어법상 옳지 않은 것 하나를 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "a trait that kept us alive",
+        "isError": false,
+        "surroundingText": "look for threats — a trait that kept us alive when we were living on the savannas",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "to acknowledge when things go right",
+        "isError": false,
+        "surroundingText": "train yourself to acknowledge when things go right",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "make a point to write down",
+        "isError": false,
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "anything that gives you that yesssss feeling",
+        "isError": false,
+        "surroundingText": "share a recent win (anything that gives you that yesssss feeling)",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "to celebrate it",
+        "isError": true,
+        "correction": "to celebrate it",
+        "errorExpression": "for celebrate it",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "a trait that kept us alive"
+      },
+      {
+        "label": "(B)",
+        "text": "to acknowledge when things go right"
+      },
+      {
+        "label": "(C)",
+        "text": "make a point to write down"
+      },
+      {
+        "label": "(D)",
+        "text": "anything that gives you that yesssss feeling"
+      },
+      {
+        "label": "(E)",
+        "text": "for celebrate it"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'trait'와 'kept us alive'를 연결하는 선행사 'that'은 제한적 관계대명사로, 뒤에 완전한 절이 오므로 문법적으로 정답.",
+      "(B)": "'acknowledge'는 완전자동사이며, 뒤의 'when절'은 명사절로 직접 목적어 역할을 하므로 'to acknowledge when...'은 문법적으로 정답.",
+      "(C)": "'make a point to + 동사원형'은 '일부러 ~하다'라는 의미의 관용 표현으로, 전형적 어법 항목.",
+      "(D)": "'anything'은 선행사이며 뒤에 완전한 절이 오므로 관계대명사 'that' 사용이 적절함."
+    },
+    "explanation": "(E) \"for celebrate it\"는 어법상 틀린 표현이며 \"to celebrate it\"로 고쳐야 한다. 정답은 (E)입니다. (E)가 'have for celebrate it'으로 제시되었는데, 전치사 'for' 뒤에는 명사·동명사만 올 수 있고 동사원형 'celebrate'는 올 수 없습니다. 따라서 'for celebrate it'은 어법상 명백한 오류이며, 원문대로 'to celebrate it'이 되어야 합니다.",
+    "keyPoints": [
+      "관용 표현 'make a point to V'(일부러 V하다)",
+      "선행사 + 완전한 절 → 관계대명사 'that'",
+      "'have reasons to V'(V할 이유가 있다) 전형 구조",
+      "the 비교급 + the 비교급 구문"
+    ],
+    "tags": [
+      "수능어법",
+      "관계대명사",
+      "전치사",
+      "to부정사",
+      "관용표현"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - __(A) a trait that kept us alive__ when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself __(B) to acknowledge when things go right__. If you keep a calendar or a journal, __(C) make a point to write down__ what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (__(D) anything that gives you that yesssss feeling__). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have __(E) for celebrate it__."
+  }
+}

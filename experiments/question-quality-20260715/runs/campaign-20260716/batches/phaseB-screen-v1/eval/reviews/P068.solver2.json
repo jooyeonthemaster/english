@@ -1,0 +1,35 @@
+{
+  "pid": "P068",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Fear has helped us avoid dangers' — 현재완료는 단독으로 완전히 정문이며, 담화 시제와도 일치한다(첫 문장 'they have contributed', 후반부 'they have helped'가 모두 현재완료). 뒤따르는 등위절들('expressing anger helps ...', 'expressing positive emotions helps ...')이 단순현재라 시제가 어긋나 보이지만, 등위접속된 독립절들은 각자 독립적으로 시제를 선택할 수 있고 병렬구조 규칙은 시제 일치를 강제하지 않는다. 문체상 불균형일 뿐 어법 오류가 아니다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'expressing anger helps us scare off threats' — 동명사구 주어(expressing anger)는 단수 취급이므로 단수동사 helps와 수 일치가 성립한다. 세 번째 절 'expressing positive emotions helps'와 완전한 병렬을 이루며, 'help + O + 원형부정사(scare)' 결합도 정문이다. 오류 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a kind of \"program\" that, when triggered, directs ...' — 축약 부사절 when (it is) triggered. 생략된 의미상 주어는 관계사절의 주어 that(= the program)이고, 프로그램은 '촉발되는' 대상이므로 수동 과거분사 triggered가 정확하다. 주절 동사 directs는 선행사 program(단수)과 수 일치. 오류 없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the specific ways in which they activate our systems' — 관계절 내부 'they activate our systems in the ways'가 완전문이므로 전치사+관계대명사 in which가 정확히 요구되는 자리다. the way(s) in which는 표준 결합. 오류 없음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'If they did not help us adapt and survive, they would not have evolved with us.' — 주절이 would not have evolved(과거 사실의 반대, 3형식 가정법 과거완료 귀결)이고, 조건의 내용은 바로 앞 문장이 'they have helped us ... survive challenges within our environment long ago'로 명시적으로 '먼 과거'에 고정한 과거 사건이다. 따라서 조건절은 If they had not helped여야 한다. 대안 해석으로 '현재의 일반적 속성 조건 + 과거 귀결'의 혼합가정법(If + 과거시제, would have p.p.)이 실제 영어에서 성립하는 패턴임을 검토했으나(예: If she didn't love him, she wouldn't have married him), 본문은 helping을 long ago의 과거 사건으로 못박고 있어 일반·현재 속성 독해가 문맥상 차단된다. 문맥 지배 하에서 did not help는 시제 오류 — 정답."
+    }
+  ],
+  "note": "(A)~(D)는 형식적으로 반박 불가능한 정문이므로 소거법으로도 (E)가 유일 후보. 유일한 잠재적 이의는 (E)를 혼합가정법(현재 일반 조건 → 과거 귀결)으로 옹호하는 독해인데, 직전 문장의 'long ago'가 조건을 과거 사건으로 고정하여 이 독해를 무력화한다. 학교문법·수능 관행 기준으로도 3형식 조건절의 단순과거 대체는 표준 오류 유형. 단일 정답으로 판정."
+}

@@ -1,0 +1,82 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "해설이 'direct'를 '복수형'이라 부름 — direct는 복수 주어와 호응하는 기본형(base form)이지 굴절된 복수형이 아니다. 학교문법 관행상 통용되는 표현이라 V4 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints가 help를 '사역동사'로 분류 — help는 준사역동사(bare/to-infinitive 둘 다 허용)다. 오답 해설 본문은 '동사원형 또는 to부정사'로 정확히 기술하고 있어 구조 오분석은 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "동명사구 주어 판별 — 분사구문/병렬 파괴로 오인하게 유도",
+      "temptingBecause": "같은 문장이 'Fear has helped...'(명사 주어·현재완료)로 시작한 뒤 'expressing anger helps...'(동명사 주어·현재형)로 전환되어, 병렬 불일치나 현수분사처럼 보일 수 있다.",
+      "decisiveFlaw": "'expressing anger'는 독립절의 주어인 동명사구이고 'helps'와 수·구조가 정확히 호응한다. 세 개의 독립절을 A, B, and C로 접속한 표준 구조라 어법상 흠이 없다."
+    },
+    {
+      "label": "(B)",
+      "intent": "help + 목적어 + 원형부정사 보어 허용 여부",
+      "temptingBecause": "목적어 뒤에 to 없는 동사원형이 바로 이어져, to부정사만 가능하다고 외운 학생에게 틀린 것처럼 보인다.",
+      "decisiveFlaw": "help는 목적격 보어로 원형부정사와 to부정사를 모두 허용하므로 bond는 적법하다."
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 주격 관계대명사절 동사와 단수 선행사의 수일치(삽입구 'when triggered'로 격리)",
+      "temptingBecause": "', when triggered,' 삽입이 that과 동사를 분리하고, 직후의 복수 명사 'many of our activities'가 복수 호응처럼 보이게 해 direct를 그대로 받아들이기 쉽다.",
+      "decisiveFlaw": "선행사 'a kind of \"program\"'은 단수이므로 관계절 동사는 directs여야 한다. direct는 유일한 어법 오류이며 교정 시 원문과 정확히 일치한다."
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사+관계대명사(in which) 뒤 완전절 판정",
+      "temptingBecause": "which 단독/where/that과의 선택 문제로 보이고, 'ways in which'가 익숙하지 않은 학생은 which만으로 충분하다고 오판할 수 있다.",
+      "decisiveFlaw": "후행절 'they activate our systems'가 완전절이므로 전치사+관계대명사 in which가 정확히 요구되는 자리다."
+    },
+    {
+      "label": "(E)",
+      "intent": "help + 목적어 + 원형부정사 보어 — (B)와 동일 포인트(pointCode h 중복)",
+      "temptingBecause": "'helped us (as a species) survive'에서 괄호 삽입이 목적어와 보어를 분리해 to survive가 필요해 보인다.",
+      "decisiveFlaw": "help의 목적격 보어로 원형부정사 survive가 적법하다. 다만 (B)와 겨냥 오개념이 동일해 독립 디코이로서 가치가 낮다(필러성)."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'복수형인 direct' — 기본형을 복수형으로 부르는 관행적·부정확 표현.",
+      "recommendation": "'주어가 복수일 때 쓰는 동사 원형(direct)'처럼 수 호응 관점으로 풀어 쓰기."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints의 '(B) 사역동사 help' — help는 준사역동사.",
+      "recommendation": "'준사역동사 help' 또는 'help의 목적격 보어(원형/to부정사 모두 가능)'로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "'when triggered는 삽입된 분사구문입니다' — 엄밀히는 접속사가 남은 축약 부사절(when it is triggered)이나, 학교문법에서 '접속사가 남은 분사구문'으로 통용되므로 허용 범위.",
+      "recommendation": "그대로 두어도 무방하나 '접속사 when이 남은 분사구문(수동)'으로 명시하면 더 정확."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 전부 통과한다. 렌더 지문은 directs→direct 단일 최소대립쌍 변형 외 손상이 없고(V1), 5개 밑줄을 독립 검증한 결과 오류는 (C) 하나뿐이며 선언 정답과 일치한다(V2). 교정 시 원문이 정확히 복원되고 지문·발문이 자연스럽다(V3). 해설의 구조 분석(주격 관계대명사 that, 단수 선행사, when triggered 삽입)은 실제 문장과 일치하고 오답 해설도 각 선지 내용과 대응한다(V4). 라벨·선지·해설·keyPoints·markedExpressions가 모순 없다(V5). 그러나 공예 측면에서 KILLER 요청과의 정합이 무너진다: 정답 포인트가 가장 훈련이 많이 된 '관계절 동사 수일치'이고 위장이 두 단어 삽입(', when triggered,')뿐이라 숙련 학생이 즉시 해소한다(C5=1). RUBRIC §C의 KILLER 조건 중 '단순 수일치로 즉시 드러나지 않는다'를 실질적으로 충족하지 못하며, (B)와 (E)가 동일 pointCode(h)로 같은 오개념을 겨냥해 5개 밑줄이 서로 다른 함정을 구성하지 못한다(C2=2, killerConditionsMet=false). 재설계 방향: (E)를 다른 포인트(예: 분사 태 판별, do-대동사, 도치)로 교체하고, 정답 포인트를 구조 독해가 필수인 자리(예: 병렬 내 시제/태, 명사절 vs 관계절 접속사)로 상향하거나 난이도 라벨을 중(中)으로 낮출 것. 현 상태는 중간 난이도 문항으로는 출하 가능한 품질이나 KILLER 라벨로는 부적합 — 등급 C."
+}

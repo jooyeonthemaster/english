@@ -1,0 +1,35 @@
+{
+  "pid": "P080",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법: 'there are those who differ and adjust...' — who 관계절 내 differ와 병렬되는 원형 복수 동사구로 결합은 정문. 논리: '엄격한 아침 루틴에 더 잘 적응한다'는 것은 아침에 생산적인 다수(most people)의 속성이지 'those who differ'의 속성이 아니다. 대조 구문(but ... differ)이 요구하는 반대 명제와 정면 모순되어 성립 불가."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "문법: 결합 정문(lose 복수 원형, differ와 병렬). 논리: 지문의 프레임은 에너지의 '시간대별 증감(ebbs and flows)'이지 에너지의 전면 상실이 아니다. 'entirely'는 리듬 프레임 자체를 벗어나며, 신체 리듬을 존중해 일정을 짜라는 조언과도 연결되지 않는다. 성립 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법: 결합 정문. 논리: 지문에 breaks 언급이 있어 표면적 어휘 반향은 있으나, 'most people are far more productive in the morning, but there are those who differ' 대조가 요구하는 것은 '생산성 정점 시간대가 다르다'는 명제다. 휴식 빈도는 시간대 대조를 완성하지 못하므로 빈칸 논증의 결론으로 부적합. 미끼 선지."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법: 결합 정문(refuse to-inf, 복수 원형). 논리: '중요한 과제 일정을 아예 거부한다'는 것은 신체 리듬에 맞춰 과제를 배치하라는 지문 전체 조언과 무관하고 불합리하다. differ의 내용(리듬 차이)을 특정하지도 못한다. 성립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "문법: 'those who differ and reach their peak performance in the evening' — differ와 reach의 관계절 내 병렬이 완전하며 복수 일치도 정문. 논리: 'most people are far more productive in the morning'의 정확한 반명제로서 'differ'의 내용을 명시(정점이 저녁)한다. 앞선 'If you have lots of energy early in the morning, that is when you should schedule difficult activities'의 조건부 일반화(리듬이 다르면 시간대도 다르다)와 정합. 유일하게 대조 구문을 완성하는 선지."
+    }
+  ],
+  "note": "빈칸 자리는 'there are those who [differ and ___]' — who 관계절 내부에서 differ와 병렬되는 원형 복수 동사구를 요구하며, 5개 선지 모두 이 형태 제약을 충족하므로 판별은 순수 논리로 이루어진다. but 대조가 지시하는 반명제(아침 정점 vs 다른 시간대 정점)를 완성하는 것은 ⑤뿐이다. ③은 breaks 어휘 반향을 이용한 미끼이나 시간대 대조를 완성하지 못한다. 복수 정답 여지 없음."
+}

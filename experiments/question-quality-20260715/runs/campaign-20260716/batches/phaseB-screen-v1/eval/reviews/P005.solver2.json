@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'The term ... originated from X'는 자동사 originate의 표준 용법. 주어 The term(단수)과 수 일치하고, 역사적 사실 서술이므로 과거시제가 적절하며, 자동사이므로 수동태(was originated)는 애초에 불가 — 능동 과거형이 유일한 정문 형태다. 'originate with'가 더 관용적일 수 있으나 이는 문체 선호이지 어법 오류가 아니다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "선행사는 총칭적 단수 'a person(’s)'. 총칭 단수 선행사를 받는 singular they(their)는 현대 표준 영어에서 정문으로 확립되어 있고 수능·평가원 지문 관행에서도 통용된다. 의미상 race/ethnicity의 소유자는 a person이므로 지시도 명확하다. his or her로의 교체는 선택이지 의무가 아니므로 오류로 판정할 수 없다. 미끼 선지."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "생략 부사절 'when + 분사'의 의미상 주어는 주절 주어 the nurse. 수동 해석 'when (she was) given him directions'를 형식적으로 검증하면: 수여동사 give의 수동태 주어는 수령자('she was given directions') 또는 대상('directions were given (to) him')만 가능한데, 여기서 간호사는 행위자(주는 쪽)이므로 수동 주어 자격이 없고, 두 목적어 him과 directions가 동시에 잔류하는 'was given him directions'는 어떤 수동 파생으로도 성립하지 않는 비문이다. 절대구문·축약 관계절·영국식 이중목적어 어순 등 대안 해석을 적극 탐색해도 '그에게 복약 지시를 주면서'라는 능동 의미를 구제할 경로가 없다. 유일한 정문은 능동 현재분사 'when giving him directions'. 어법상 틀렸다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "that절은 a hidden message의 동격절이며 'define A as B'의 수동형 'A is defined as B'가 형식적으로 완전하다. 주절 동사 implied(과거) 뒤에서도 동격절이 현재에도 유효한 일반적 통념을 진술하므로 현재시제 is는 시제일치 예외로 표준적이다. 단수 주어 a person과의 수 일치도 정확하다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "3음절 형용사 equitable의 비교급은 우언적 more equitable이 규범적으로 옳고, 'a + more equitable + future' 어순도 정문이다. 비교 대상(현재 상태)은 문맥상 함축되어 than 없이 성립하며, 뒤의 where 관계부사절이 future를 수식하는 구조에도 문제가 없다."
+    }
+  ],
+  "note": "단일 정답으로 유일하게 좁혀지는 문항. (C)는 행위자 주어에 대한 수여동사 수동 분사 + 이중 목적어 잔류라는, 어떤 대안 해석으로도 파생 불가능한 구조적 비문이다. 유일한 잠재 쟁점은 (B)의 singular they이나 이는 현대 표준 용법으로 확립되어 있어 방어 가능한 오답 시비가 되지 못한다."
+}

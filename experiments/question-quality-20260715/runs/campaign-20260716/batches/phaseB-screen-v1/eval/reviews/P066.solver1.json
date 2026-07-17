@@ -1,0 +1,35 @@
+{
+  "pid": "P066",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "True subject is plural 'Racial microaggressions'; the long appositive 'such as assumptions about a person's intelligence or work ethic based on their race or ethnicity' is an interrupting modifier (proximity trap with singular 'ethic'/'ethnicity'). Plural subject + 'are commonplace ... indignities' agrees. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Causative 'make + object + bare infinitive': 'make target groups feel unwelcome, isolated, and unsafe.' The object (target groups) actively experiences the feeling, so bare infinitive 'feel' is correct; 'to feel' or past participle 'felt' would be wrong. The felt/feel passive bait does not apply. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'I can hear you perfectly well' — adverb 'perfectly' functions as an intensifier modifying the adverb 'well'; adverbial form required, adjective 'perfect' would be ungrammatical here. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "error",
+      "reason": "Sentence: 'People raising their voices while speaking to him implying a hidden message that ...' — under every parse the sentence lacks a finite main verb. If 'People [who are] raising their voices while speaking to him' is the subject NP (reduced relative), 'implying' must be finite 'imply'; under the gerund-subject reading ('People('s) raising their voices...') it must be 'implies'. The 'that'-clause is only an appositive to 'message' and supplies no finite verb. No rescue via inversion, absolute construction, or ellipsis. 어법상 틀림 — should be 'imply/implies'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'they are nevertheless damaging to targets' — 'they' refers to the microaggressive actions, which cause harm, so the active participial adjective 'damaging' is correct; 'damaged' would wrongly cast the actions as the harmed party. Confirmed by the following causal clause 'because they result in harmful psychological consequences'. 정문."
+    }
+  ],
+  "note": "실전 풀이 관찰: 설계된 유혹은 (B) feel/felt 와 (E) damaging/damaged 의 능동·수동 판별, (A)의 긴 삽입구 수일치 근접성 함정. 셋 다 의미 주체 점검으로 깔끔히 해소된다. (D)는 문장 전체에 정동사가 없다는 구조적 결함이라 대안 해석(축약 관계절, 동명사 주어, 도치 등)을 적극 탐색해도 정문이 될 여지가 없다. 단일 정답 (D), 논쟁 여지 없음."
+}

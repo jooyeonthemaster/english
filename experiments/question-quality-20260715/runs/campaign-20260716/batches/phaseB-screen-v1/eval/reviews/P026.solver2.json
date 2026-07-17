@@ -1,0 +1,30 @@
+{
+  "pid": "P026",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Fear has helped us avoid dangers' — help + 목적어 + 원형부정사(bare infinitive)는 표준 정문 구성(help us (to) avoid 둘 다 허용). 이어지는 병렬 'expressing anger helps..., and expressing positive emotions helps...'도 각각 독립 정형절로 성립하므로 병렬 문제도 없다. 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a kind of program that, when triggered, directs...' — 축약 부사절 when (it is) triggered. 생략 주어는 주절 주어(관계대명사 that = program)와 동일 지시이며, program은 trigger의 피동작주이므로 과거분사(수동)가 정확히 요구된다. when triggering이면 오히려 비문. 어법상 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong",
+      "reason": "'the specific ways which they activate our systems' — 관계절 they activate our systems는 주어·동사·목적어가 모두 채워진 완전절로, 관계대명사 which가 요구하는 논항 공백(gap)이 없다. 선행사 ways는 방식 부사어로 연결되어야 하므로 in which, 관계부사적 that, 또는 무표지(the ways they activate)만 정문. activate가 ways를 목적어로 취하는 재분석 경로도 없다(이미 our systems가 목적어). 대안 해석(축약 관계절·삽입·도치)으로도 구제 불가. 어법상 틀림 — 유일한 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'If they had not helped us adapt and survive, they would not have evolved with us.' — 귀결절이 would not have evolved(would have p.p.)인 과거 반사실 조건문(3rd conditional)이므로 조건절 had p.p.가 정확히 요구된다. 과거 사실(감정이 실제로 적응을 돕고 진화했다)에 대한 반사실이라는 지문 논리와도 정합. help us adapt의 원형부정사도 정문. 어법상 옳음."
+    }
+  ],
+  "note": "정답은 (C)로 유일하게 좁혀진다. which 단독은 완전절 앞에서 인가되지 않으며 in which/that/무표지만 가능 — 형식적으로 명확한 gap 부재 오류로, 수능 어법 단골 포인트(관계대명사 vs 관계부사)에 정확히 부합한다. 나머지 세 밑줄은 각각 help+원형부정사, 수동 분사 축약절, 3rd conditional로 모두 견고한 정문이라 복수정답 시비 여지가 없다."
+}

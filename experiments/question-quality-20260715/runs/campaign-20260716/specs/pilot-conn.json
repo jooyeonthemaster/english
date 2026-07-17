@@ -1,0 +1,10 @@
+{
+  "batchId": "pilot-conn-v1",
+  "phase": "PILOT",
+  "note": "연결성 파일럿: 프로덕션 코어 + 연구 런타임(single-dispatch) end-to-end 검증. 어법1+빈칸1, STANDARD/INTERMEDIATE.",
+  "concurrency": 1,
+  "assignments": [
+    { "itemId": "pilot-g-01", "frameId": "grammar-frame-v2-006", "subType": "GRAMMAR_ERROR", "difficulty": "INTERMEDIATE", "plan": "STANDARD", "profile": null, "armId": "G-A0-STD" },
+    { "itemId": "pilot-b-01", "frameId": "blank-supply-v2-049", "subType": "BLANK_INFERENCE", "difficulty": "INTERMEDIATE", "plan": "STANDARD", "profile": null, "armId": "B-A0-STD" }
+  ]
+}

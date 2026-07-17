@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Imperative VP fits the seam grammatically, but 'focus solely on maximizing your daily work hours' contradicts P1 ('breaks are necessary') and P2 (scheduled breaks should already exist). The passage opposes UNSCHEDULED breaks, not breaks per se; 'instead' would falsely scope over all breaks. Logically inconsistent with the author's endorsement of scheduled breaks."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Grammatically fine as an imperative, but 'delay complex tasks until your energy is fully restored' is itself a canonical form of procrastination (deferral rationalized as recovery — exactly the coffee-cup pattern criticized). 'To prevent procrastination, procrastinate' is self-contradictory."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Imperative VP fits the seam; 'predetermined break policy' is coreferential with the 'scheduled breaks at appropriate times' of the passage, and the anaphor 'instead' resolves cleanly as 'instead of taking unscheduled breaks.' This is the exact positive restatement (contrapositive) of the passage's warning against unscheduled breaks. Unique logical fit."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatically fine, but the coffee break is the passage's paradigm example of a rationalized avoidance behavior ('you're just trying to avoid having to work'). Endorsing coffee breaks as a primary reward reverses the argument's evaluative stance."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatically fine, but 'spontaneous rest within flexible schedules' is extensionally identical to the 'unscheduled breaks' the passage declares 'unwarranted' and derailing. It is the direct antonym of the required conclusion — a classic polarity-reversal distractor."
+    }
+  ],
+  "note": "Seam analysis: the blank after 'So to prevent procrastination,' and before 'instead' requires a bare imperative VP; all five options satisfy this, so discrimination is purely logical. The anaphor 'instead' (= instead of unscheduled breaks) uniquely licenses ③. No alternative construal (ellipsis, scope shift, or reinterpretation of 'instead') rescues any other option. Single defensible answer; distractors are clean polarity reversals or self-contradictions."
+}

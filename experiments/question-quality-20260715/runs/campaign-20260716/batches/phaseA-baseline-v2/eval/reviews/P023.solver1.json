@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a process embodied in a machine'에서 embodied는 process를 후치 수식하는 과거분사(축약 관계절 'that is embodied'). process가 machine에 '구현되는' 수동 관계이므로 과거분사가 정확하다. embodying(능동)으로 착각하도록 유도할 수 있으나 embody의 의미상 process는 피구현 대상이므로 수동이 맞다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself over and over'에서 관계절의 주어(= process)와 목적어가 동일 지시이므로 재귀대명사 itself가 필수. it으로 쓰면 오히려 틀린다. 단수 선행사 process에 맞춘 itself도 수 일치가 맞다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "wrong (정답)",
+      "reason": "'it is almost impossible to think of a clock that do not depend on ...'에서 관계대명사 that의 선행사는 단수 명사 a clock이므로 관계절 동사는 does not depend여야 한다. 앞의 복수 명사구(quartz crystals, events 류 복수 이미지)와 관계절 내부 'a repetitive cycle of events'의 events가 시각적 교란을 주지만, 장거리 단서인 진짜 선행사 a clock이 단수임이 명백하다. do not depend는 수 일치 위반. 실전에서 (A)의 분사 태 판단이 잠깐 유혹적이었으나, (C)는 선행사 확인 즉시 확정되는 명백한 오류다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'The only example that comes to mind readily'에서 readily는 자동사구 comes to mind를 수식하는 부사. 형용사 ready로 바꿔야 할 자리(보어 자리)가 아니므로 부사가 맞다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'so this too is an iterative process, although at first masked'는 'although (it is) at first masked'의 주어+be 생략(분사/형용사 보어 앞 접속사 잔류) 구조로 표준 용법. 접속사 although 뒤 축약절이 성립하므로 정문. despite 등 전치사와의 혼동을 노린 선지지만 masked는 분사여서 although가 옳다."
+    }
+  ],
+  "note": "선행사 a clock(단수)과 관계절 동사 do의 수 불일치가 유일한 어법 오류. (C) 단독 정답으로 명확하며 복수 정답 소지 없음. (E)의 축약 양보절, (A)의 수동 분사 등 대안 해석을 검토했으나 모두 정문으로 성립."
+}

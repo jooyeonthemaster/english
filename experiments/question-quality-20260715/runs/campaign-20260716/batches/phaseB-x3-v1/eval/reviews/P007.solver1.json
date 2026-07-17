@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'personal, unbiased intuition'은 지문 서두의 개인주의적 수사(inspired patience, unbiased mind)를 그대로 반복한 것인데, 지문은 바로 그 관점이 공적 맥락의 행동 근거가 될 수 없다고 반박하는 구조다. 빈칸은 반박 이후의 실제 규범을 요구하므로 정반대 방향. 유혹 거의 없음."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'immediate public dissemination'은 전문가 검토 없이 기자회견으로 발표하는 과학자가 publicity seeker로 비난받는다는 문장과 정면 충돌. 'communication' 단어만 보고 고르면 걸리는 함정이지만 논리상 즉시 배제."
+    },
+    {
+      "label": "③",
+      "verdict": "correct",
+      "reason": "빈칸은 'presuppose that nature does not speak unambiguously, and that ___' 구조로, 자연이 스스로 명확히 말하지 않으므로 무언가 추가 절차가 필요하다는 내용이어야 한다. 앞의 expert reviewers 검토 요구, 뒤의 'A scientific truth has little standing until it becomes a collective product' / 'only one stage in its construction'과 정확히 호응하는 것은 집단적 동료 검증(collective peer validation) 없이는 유효한 지식 지위를 얻지 못한다는 ③뿐. 문법적으로도 등위 that절로 매끄럽게 결합."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'basis for action in public contexts' 구절에서 실용성(practical utility) 냄새를 맡고 끌릴 수 있으나, 그 구절은 개인주의적 믿음이 공적 행동의 근거가 못 된다는 뜻이지 실용적 효용이 타당성 기준이라는 주장이 아니다. 지문 어디에도 utility 기준 없음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "가장 강한 매력적 오답. 기자회견 사례에 편승해 '언론 발표 전 절차'라는 틀이 그럴듯하게 들린다. 실제로 잠시 끌렸으나, 지문이 요구하는 절차는 replication(재현)이 아니라 expert review/집단적 인증이고, 'flawlessly'는 지문에 근거 없는 극단 표현이며, 결정적으로 빈칸 뒤 'collective product' 문장과의 전방 결속을 만들지 못한다. 장거리 단서로 기각."
+    }
+  ],
+  "note": "빈칸 유형. 다섯 선지 모두 정형절이라 문법 결합(seam)으로는 배제 불가, 순수 논리 문제. 빈칸 앞(전문가 검토 규범)과 뒤(collective product, one stage in its construction) 양방향 단서가 모두 ③을 지목해 정답이 유일하게 수렴. 매력적 오답 서열: ⑤ > ④ > ② > ①. ⑤는 사례 표면에 편승한 좋은 미끼지만 핵심 개념(집단성)을 비껴가 옹호 불가."
+}

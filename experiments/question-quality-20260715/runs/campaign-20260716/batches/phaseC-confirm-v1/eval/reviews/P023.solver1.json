@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "C",
+  "multipleDefensible": false,
+  "defensibleLabels": ["C"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'learn how long the shortest war in recorded history lasted' is a well-formed embedded question: [how long] fronts the duration expression, followed by S + V ('the shortest war ... lasted', intransitive). No alternative (e.g. 'what') is required. Grammatical."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "Subject is a coordination of a noun clause and an NP: '[Why the war took place] and [the reason behind its brief duration]' — two conjoined subjects with 'and' take a plural verb, so 'are' is correct. This is the strongest attractor: a lone noun-clause subject would take 'is', and the nearest noun 'duration' is singular, tempting a proximity/singular-clause misjudgment. The coordinated-subject rule (long-distance cue) resolves it: 'are' stands."
+    },
+    {
+      "label": "C",
+      "verdict": "incorrect",
+      "reason": "'..., even chosen who the nation's leader would be' — the adjunct participle's implied subject is 'the United Kingdom', which actively chooses; the present participle 'choosing' is required ('even choosing who ...'). Alternative parses fail: (i) passive 'chosen' would mean the UK was chosen, contradicting the meaning and leaving the wh-clause unlicensed; (ii) bare 'chosen' cannot stand for the perfect participle 'having chosen'; (iii) no reduced-relative reading is available in this adverbial position. This is the grammatical error."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'ordered Zanzibar's new leader to step down' — 'order' takes object + to-infinitive complementation (order sb to do sth). 'to step' is correct."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'They soon began to attack the palace, quickly destroying the new leader's army.' — 'quickly' is an adverb modifying the participle 'destroying' in the participial adjunct. Adverb form is required and supplied. Correct."
+    }
+  ],
+  "note": "Clean single-answer item. Real-solve temptation log: (B) exerted the main pull — the noun-clause-subject-is-singular heuristic plus singular proximate noun 'duration' invite choosing 'are' as wrong, but the compound subject ('and') makes plural agreement correct. (A) briefly invites suspicion about 'how long ... lasted' but the embedded question is impeccable. (C) fails under every alternative parse actively tested (passive participle, elided 'having', reduced relative), so it is uniquely and defensibly the error."
+}

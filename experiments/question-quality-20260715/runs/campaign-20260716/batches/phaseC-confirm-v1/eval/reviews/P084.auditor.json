@@ -1,0 +1,81 @@
+{
+  "pid": "P084",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-wording",
+      "severity": "minor",
+      "evidence": "keyPoints 두 번째 항목 '(what they have lost) 기출 팽팽한 대비'의 '기출'은 문맥상 의미가 통하지 않는 잉여 어휘로 보이며, '잃어버린 상실'은 동어반복이다. 사실 오류·오분석은 아니므로 V4 실패로는 판정하지 않음(감점은 C6에 반영)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "condition/time shift — 사후 대응을 사전 예방으로 치환",
+      "temptingBecause": "'problems'가 본문 'overcome their problem'과 어휘상 겹치고, 긍정적·주도적 행동처럼 들린다",
+      "decisiveFlaw": "본문 인물들은 'After their initial shock' 이후에 대응하는 사후(reactive) 유형이므로 beforehand 예방은 시제·조건이 어긋난다"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 삭제된 원문 span 'actively seek the advantage in their disadvantage'의 패러프레이즈",
+      "temptingBecause": "advantage→benefits, disadvantage→setbacks, actively→intentionally로 정확히 대응하며 글 전체 논지(불리함 속 이점 찾기)를 요약한다",
+      "decisiveFlaw": "없음 (유일 정답). 단, 동일 논지가 지문에 세 차례 반복돼 정답이 과다 단서화되어 있다"
+    },
+    {
+      "label": "③",
+      "intent": "half-truth / surface anchor — '웃음' 소재를 약점 은폐로 왜곡",
+      "temptingBecause": "펜 상인 일화의 유머러스한 대처와 'cheerful attitude'가 표면적으로 연결된다",
+      "decisiveFlaw": "본문은 약점을 감추는 것이 아니라 불리함을 유리함으로 전환·기회를 포착하는 능동성을 말하므로 목적이 왜곡된다"
+    },
+    {
+      "label": "④",
+      "intent": "actor swap / agency loss — 자력 극복을 타인 의존으로 치환",
+      "temptingBecause": "'major losses'가 본문 'experienced a major loss'와 축자적으로 겹친다",
+      "decisiveFlaw": "'they gather their resources, overcome their problem'의 주체적 극복과 정면 배치되는 수동적 의존이다"
+    },
+    {
+      "label": "⑤",
+      "intent": "polarity reversal — 능동적 추구를 무저항 수용으로 반전",
+      "temptingBecause": "'silver lining' 클리셰가 불운을 받아들이는 태도처럼 읽힐 수 있다",
+      "decisiveFlaw": "'without any resistance'는 'actively seek'·'overcome their problem'과 정반대 극성이라 즉시 소거된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "keyPoints의 '기출 팽팽한 대비'는 의미가 통하지 않는 잉여/손상 어구로 보이고 '잃어버린 상실'은 동어반복. 오답 해설 ③의 '이면화한다'도 비표준 조어에 가깝다.",
+      "recommendation": "keyPoints 문구를 '원문 대비 — 상실이 아닌 획득에 포커싱' 식으로 정리하고 '이면화'를 '내세운다/가장한다'로 교체"
+    },
+    {
+      "severity": "minor",
+      "evidence": "정답 해설이 '그대로 패러프레이징'이라는 형용모순적 표현을 사용(패러프레이즈이면서 '그대로'일 수 없음). 내용 자체는 정확하다.",
+      "recommendation": "'거의 축자적으로 대응하도록 패러프레이징한' 등으로 수정"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAnswer": true,
+    "distractorsHaveAnchorOverlapFlaw": true,
+    "requiresTwoSentenceLinking": false,
+    "notSolvableBySingleCue": false,
+    "distinctTrapTypes": true,
+    "evidence": "빈칸 문장 내부의 'every cloud has a silver lining'(불운 속 이점이라는 관용구)만으로 정답이 도출되고, 앞 문장들('look for some positive aspect in their misfortunes', 'focus on what they can gain rather than what they have lost')이 논지를 축자적으로 두 번 더 반복한다. 또한 다섯 선지 중 능동·긍정 극성은 ② 하나뿐이라 극성 단서 하나로 찍을 수 있다. §D의 '두 문장/두 논리 단서 연결 필수'와 '극성 하나로 정답 불가' 조건을 모두 위반."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 무결(마지막 span만 빈칸화), 정답 ② 유일, 완성문 문법적, 해설 사실 정확, 필드 동기화 양호. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다. 논지가 지문에 3회 반복되고 빈칸 문장 자체의 silver lining 관용구가 정답을 직접 지시하며, 유일한 긍정·능동 극성 선지가 정답이라 단일 단서 풀이가 가능하다(C5=1, C4=2, C3=2). 오답 4개는 각기 다른 함정 유형(시점 전환·목적 왜곡·주체 교체·극성 반전)을 갖춰 설계 의도는 양호하나 매력도가 낮다. KILLER로 출하하려면 앞선 축자적 재진술을 지우거나 빈칸을 인과 문장('because they focus on ...' 부분)으로 옮기고, 능동·긍정 극성의 정교한 half-truth 디코이(예: 이점을 '만들어낸다', 남과 비교해 우위를 찾는다 등 scope shift)를 추가하는 재설계가 필요하다. 등급 C(모든 V 통과, 재설계 필요 공예 결함: C5=1로 B 기준 미달, 합계 14)."
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "reviewer-calibration-protocol-v2",
+  "artifactId": "reviewer-calibration-packet-v2",
+  "status": "GOLD_ADJUDICATION_PENDING",
+  "candidateAccounting": {
+    "newFullQuestionCandidates": 0,
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretReads": 0
+  },
+  "migration": {
+    "v1Status": "INVALIDATED_FOR_CERTIFICATION",
+    "v1PermittedUse": "CONTENT_AUDIT_INPUT_ONLY",
+    "v1GoldImported": false,
+    "freshBlindWorkflowRequired": true
+  },
+  "composition": {
+    "totalItems": 24,
+    "blocks": { "GRAMMAR": 8, "BLANK": 8, "NONFOCUS": 8 },
+    "directOriginalLocalRows": 24,
+    "authorHypothesisStrataPerBlock": { "F": 2, "C": 2, "B": 2, "A": 2 },
+    "authorHypothesesAreGold": false,
+    "truthfulAdjudicationMayMakeCompositionIneligible": true
+  },
+  "blindAnswerUnion": {
+    "variants": [
+      "SINGLE_LABEL",
+      "MULTIPLE_LABELS",
+      "SINGLE_TEXT",
+      "MULTIPLE_TEXTS",
+      "NO_ANSWER",
+      "UNEVALUABLE"
+    ],
+    "constructedSyntheticLabels": "FORBIDDEN",
+    "exactTextSha256": "REQUIRED",
+    "normalizedDuplicateGuard": "REQUIRED",
+    "answerSetHash": "SHA256_OF_DOMAIN_AND_SORTED_MEMBER_IDENTITIES",
+    "memberOrderAffectsSetIdentity": false,
+    "acceptedEquivalenceSets": "EXPLICIT_HASHED_ANSWER_UNION_SETS"
+  },
+  "bindingChain": [
+    "issuedSurface",
+    "exactBlindAnswer",
+    "perItemPhaseOneRecord",
+    "completeSubmission",
+    "seal",
+    "relabelMap",
+    "phase2Reveal",
+    "perItemReview",
+    "freshAdjudicatorSolve",
+    "finalGold",
+    "scorer",
+    "certificate"
+  ],
+  "goldProcedure": {
+    "independentRatersPerItem": 2,
+    "freshAdjudicatorsPerItem": 1,
+    "adjudicatorFreshSolveBeforeRationales": true,
+    "plannedGradeBalanceForced": false,
+    "certificateCompositionGate": "SEPARATE_FAIL_CLOSED_GATE"
+  },
+  "certificateHold": [
+    "GOLD_ADJUDICATION_PENDING",
+    "MISSING_OR_DUPLICATE_REVIEW_BINDING",
+    "ORACLE_INJECTION",
+    "NONCANONICAL_REVEAL",
+    "PACKET_COMPOSITION_INELIGIBLE",
+    "THRESHOLD_FAILURE"
+  ]
+}
+

@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "requires individuals to suppress their personal needs — 접합부: 뒤따르는 'and improved group functioning'이 밑줄 동사의 두 번째 목적어로 걸려야 하는데 'suppress ... needs and improved group functioning'(개선된 집단 기능을 억압한다)은 의미 붕괴. 논리: 지문은 'accommodate their own needs as well as the needs of others'라고 명시하므로 개인 욕구 억압은 직접 모순."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "forces other members to accept one's emotional stance — 접합부: 'accept one's stance and improved group functioning' 결합 불성립. 논리: 지문의 핵심은 타인의 관점 취하기(perspective-taking)와 협력이며, 자기 입장 강요는 정반대 방향."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "prevents any kind of emotional confrontation — 접합부: 'prevents ... and improved group functioning'으로 읽으면 '개선된 집단 기능을 막는다'가 되어 자기모순. 논리: 지문은 갈등 상황에서의 건설적 처리(표현+관점 이해)를 말하지 갈등의 원천 봉쇄를 말하지 않음. 'any kind of'는 과도한 절대 표현."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "fosters productive ways to resolve disagreements — 접합부: 주어 'Appreciation of differences'(단수)와 3인칭 단수 fosters 일치, 'fosters [productive ways to resolve disagreements] and [improved group functioning]'로 fosters의 이중 목적어 등위가 깔끔하게 성립하여 문장 전체가 'creates an arena for open communication and fosters X and Y' 구조로 완결됨. 논리: 갈등 상황에서 감정 표현+관점 이해 → 차이의 인정 → 열린 소통·생산적 갈등 해결·집단 기능 향상이라는 지문 전개와 정확히 부합."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "only focuses on analyzing the causes of negative emotions — 접합부: 'focuses on ... and improved group functioning' 결합이 어색하고, 'only'(오직 ~에만 집중)와 뒤에 추가 성과가 등위되는 문장 구조가 내적으로 모순. 논리: 지문은 감정의 원인과 '결과' 모두의 이해, 그리고 긍정적 집단 성과를 다루므로 '부정적 감정의 원인 분석에만'은 축소 왜곡."
+    }
+  ],
+  "note": "모든 선지가 3인칭 단수 현재 VP로 수 일치는 통과하므로 변별점은 (a) 밑줄 뒤 'and improved group functioning'이 밑줄 동사의 두 번째 목적어로 자연스럽게 걸리는가, (b) 지문 논리와의 정합. 'improved'를 과거시제 동사로 보는 대안 해석은 'creates/밑줄 현재시제'와의 시제 병렬 붕괴로 기각. 두 기준을 동시에 통과하는 것은 ④뿐이며 복수 정답 여지 없음."
+}

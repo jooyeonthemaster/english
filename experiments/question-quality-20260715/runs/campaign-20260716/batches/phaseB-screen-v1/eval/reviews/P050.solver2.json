@@ -1,0 +1,35 @@
+{
+  "pid": "P050",
+  "answer": "A",
+  "multipleDefensible": false,
+  "defensibleLabels": ["A"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "incorrect",
+      "reason": "'it must either adapt or indeed reinforce this balance'에서 either X or Y 병렬은 후행 목적어 'this balance'를 두 동사가 공유하는 구조로 읽히는데(선행 절 'must not upset the balance'와의 대용 연쇄가 이를 강제), 그러면 'adapt this balance'는 타동사 adapt(~을 개조하다)가 되어 '균형을 흐트러뜨려서는 안 된다'는 직전 진술과 논리적으로 모순된다. 의도된 의미 '이 균형에 순응하다'는 자동사 adapt + to가 필요하므로 'either adapt to or indeed reinforce this balance'가 정문. 대안 파스(adapt를 무보어 절대 자동사로 두고 this balance를 reinforce에만 귀속시키는 비공유 병렬)는 통사적으로 구성 가능하나, 정적 구조물인 교량에 무보어 adapt는 의미적으로 강한 무리이며 either...or가 목적어 공유 독법을 현저하게 만든다. 어법상 틀림."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'it is subordinate to the surroundings, or it makes a strong statement' — or로 연결된 두 번째 독립절의 단수 주어 it과 단수 현재 동사 makes 일치. 완전한 정문."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'an intrinsic beauty that works within its surroundings' — 관계대명사 that의 선행사는 단수 명사 beauty이고 관계절 동사 works가 단수 일치. 정문."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'a bridge that is spectacular in itself' — 재귀대명사 itself는 관계절 주어 that(= a bridge)와 동일 지시이며 관용 표현 in itself(그 자체로)로 성립. 정문."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'that is spectacular in itself but spoils its local environment' — 관계절 내부에서 but이 동사구 [is spectacular...]와 [spoils...]를 병렬 연결하며, 단수 선행사 a bridge에 맞춘 spoils의 수 일치도 정확. 분사(spoiling)로 바꿀 필요 없는 정문."
+    }
+  ],
+  "note": "정답은 A로 유일하게 옹호 가능. 다만 형식 문법 관점의 잠재 이의: 'either [adapt](절대 자동사) or [indeed reinforce this balance]'라는 비공유 병렬 파스가 통사적으로는 성립하여 A를 정문으로 방어하려는 시도가 가능하다. 그러나 직전 절 'must not upset the balance of the environment'와의 the balance→this balance 대용 연쇄, 그리고 either...or의 목적어 공유 독법의 현저성, 정적 구조물에 대한 무보어 adapt의 의미적 부적합성 때문에 이 대안 파스는 실질적 방어력이 약하다. B~E는 결함이 전혀 없어 소거로도 A가 확정된다. 원전 추정 표현은 'it must either adapt to or indeed reinforce this balance'(adapt to 삭제형 조작)로 판단됨."
+}

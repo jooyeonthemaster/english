@@ -1,0 +1,650 @@
+{
+  "id": "u02-c3",
+  "unitId": "u02",
+  "order": 3,
+  "title": "수량 표현의 수",
+  "oneLiner": "the number of는 단수, a number of는 복수, one of·each of는 단수, 나머지 부분 표현은 of 뒤 명사가 수를 정합니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": ["TP04"],
+    "sourceRefs": [
+      "어법끝 5.0 TP04 주어-동사 수일치",
+      "천일문 고등 GRAMMAR U58(수량 표현의 수일치)",
+      "별표4 #12 주어와 동사의 일치(중 ●)"
+    ]
+  },
+  "lenses": ["L5"],
+  "confusableWith": ["u02-c1", "u02-c2", "u02-c4"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The number of coastal villages that face flooding has grown every decade.",
+        "The number of coastal villages that face flooding have grown every decade."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 동사 하나입니다. 이 레슨을 마치면 왜 동사 앞의 복수 명사 villages 가 동사를 결정하지 못하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "수량 표현 속의 핵 주어",
+      "question": "핵 주어는 c1·c2에서 익혔습니다. 그런데 수량 표현에서는 왜 그 핵을 짚기가 유독 까다롭습니까?",
+      "plain": "핵 주어가 동사의 수를 정한다는 원리는 c1·c2에서 익힌 그대로입니다. 수량 표현에서 달라지는 것은 핵의 자리뿐입니다 — 핵이 of 뒤의 복수 명사 아래로 숨고, 앞의 관사 하나(the냐 a냐)가 핵의 위치를 바꿉니다.",
+      "analogy": "관사가 스위치와 같습니다. 같은 number of 앞이라도 the 가 놓이면 핵은 앞의 number 하나로, a 가 놓이면 핵은 of 뒤의 복수 명사로 넘어갑니다. 글자 하나가 수를 가릅니다.",
+      "whyItMatters": "수능 29번과 내신 수일치는 the number of 와 a number of 처럼 관사만 바꾼 표현을 나란히 놓고 동사를 고르게 합니다. 부류를 가려 핵을 집어내는 판별 도구 \"핵 주어 추출\"이 여기서도 그대로 시험됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "수량 표현 네 부류 필기",
+      "intro": "of 를 낀 수량 표현은 네 부류로 갈립니다. 부류마다 핵이 어디에 있는지를 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "the number of + 복수 명사 — 핵은 number, 단수",
+          "body": "'~의 수'라는 수치 하나를 가리키므로 핵은 단수 number 입니다. of 뒤에 복수 명사가 와도 동사는 단수입니다.",
+          "example": {
+            "en": "The number of tourists visiting the island **has** dropped sharply.",
+            "ko": "그 섬을 찾는 관광객의 수가 급격히 감소했습니다.",
+            "note": "핵은 The number 이므로 단수 has 입니다. visiting the island 은 tourists 를 꾸미는 분사구입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "a number of + 복수 명사 — 핵은 복수 명사, 복수",
+          "body": "many 와 같은 뜻으로 뒤의 복수 명사를 꾸밉니다. 핵은 of 뒤의 복수 명사이므로 동사도 복수입니다.",
+          "example": {
+            "en": "A number of experiments **have** produced the same result.",
+            "ko": "다수의 실험이 같은 결과를 냈습니다.",
+            "note": "a number of 는 many 의 뜻이므로 핵은 복수 experiments 입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "one of·each of·every one of — 핵은 하나, 단수",
+          "body": "여럿 가운데 '하나'를 집어내는 표현이므로 핵이 단수입니다. of 뒤의 복수 명사는 미끼입니다.",
+          "example": {
+            "en": "Each of the reports **contains** a short summary.",
+            "ko": "각 보고서에는 짧은 요약이 담겨 있습니다.",
+            "note": "each of 의 핵은 '하나'이므로 단수 contains 입니다. reports 는 미끼입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "부분·비율 표현(most·some·half·분수·percent) — of 뒤 명사가 결정",
+          "body": "표현 자체에는 수가 없습니다. of 바로 뒤 명사가 단수·불가산이면 단수, 복수이면 복수입니다.",
+          "example": {
+            "en": "Half of the equipment in the lab **needs** to be replaced.",
+            "ko": "그 실험실 장비의 절반은 교체되어야 합니다.",
+            "note": "부분 표현 half of 의 수는 of 뒤 명사가 정합니다. equipment 는 불가산 단수이므로 needs 입니다."
+          },
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "네 부류를 손에 붙입니다",
+      "target": "수량 표현 네 부류의 수 판정",
+      "why": "판정 기준을 매번 처음부터 따지면 시험장에서 시간을 잃습니다. 표현을 보는 순간 부류가 떠올라야 미끼 명사에 끌리지 않습니다.",
+      "device": "세 칸으로 나눕니다 — '고정 단수'(the number of·one of·each of), '고정 복수'(a number of), '남에게 맡김'(most·half·분수 = of 뒤 명사). 관사 the 냐 a 냐가 number 부류의 단·복을 가릅니다.",
+      "items": [
+        { "cue": "the number of", "answer": "단수 (핵 = number, '~의 수' 하나)" },
+        { "cue": "a number of", "answer": "복수 (= many, 핵 = of 뒤 복수 명사)" },
+        { "cue": "one of / each of / every one of", "answer": "단수 (핵 = '하나')" },
+        { "cue": "most of / half of / 분수 of", "answer": "of 뒤 명사의 수를 그대로 따름" },
+        { "cue": "동사 바로 앞의 명사", "answer": "미끼 — 핵이 아니다" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "고정 단수 관문",
+      "mission": "핵이 언제나 단수인 수량 표현을 전부 고르십시오. 순서는 상관없습니다.",
+      "mode": "SET",
+      "pool": [
+        "the number of",
+        "one of",
+        "each of",
+        "every one of",
+        "a number of",
+        "most of"
+      ],
+      "answers": ["the number of", "one of", "each of", "every one of"],
+      "passText": "관사와 '하나'를 손이 먼저 알아봅니다. 관문이 열립니다.",
+      "retryText": "a number of 는 many, most of 는 of 뒤에게 판단을 넘깁니다. 이 둘을 빼고 다시 골라 보십시오."
+    },
+    {
+      "id": "b6",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "of 앞에 있는 말이 언제나 주어의 핵이므로, 그 말의 수에 동사를 맞추면 됩니다.",
+      "truth": "of 를 포함한 수량 표현이라고 다 같지 않습니다. the number of·one of·each of 는 앞말이 핵이지만, a number of 는 뒤의 복수 명사가, most·half·분수는 of 뒤 명사가 핵입니다. 어느 부류인지부터 가려야 합니다.",
+      "counterExample": {
+        "en": "Most of the equipment in the old laboratory **were** replaced last summer.",
+        "ko": "그 낡은 실험실의 장비 대부분은 지난여름에 교체되었습니다.",
+        "note": "most 는 스스로 수를 갖지 않습니다. of 뒤의 equipment 가 불가산 단수이므로 was 여야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "the number of + 복수 명사는 '~의 수' 하나를 가리키는 단수 주어이므로, 동사도 단수를 씁니다.",
+      "examples": [
+        {
+          "en": "The number of registered voters **has** increased since the last election.",
+          "ko": "등록 유권자의 수는 지난 선거 이후로 증가했습니다.",
+          "note": "늘어난 것은 유권자들이 아니라 그 '수' 하나입니다. 그래서 단수 has 입니다."
+        },
+        {
+          "en": "The number of languages spoken in the region **has** declined over the past century.",
+          "ko": "그 지역에서 사용되는 언어의 수는 지난 한 세기 동안 감소했습니다.",
+          "note": "핵은 The number 이므로 단수 has 입니다. spoken in the region 은 languages 를 꾸미는 분사구입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "관사 하나가 가르는 두 표현",
+      "columns": ["the number of + 복수 명사", "a number of + 복수 명사"],
+      "rows": [
+        {
+          "criterion": "의미",
+          "a": "~의 수 (수치 하나)",
+          "b": "많은 ~ (many 와 동의)"
+        },
+        {
+          "criterion": "주어의 핵",
+          "a": "number (단수)",
+          "b": "of 뒤의 복수 명사"
+        },
+        {
+          "criterion": "동사",
+          "a": "단수 동사",
+          "b": "복수 동사"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The number of endangered species on the island **is** still rising.",
+          "ko": "그 섬의 멸종 위기종의 수는 여전히 증가하고 있습니다.",
+          "note": "핵은 The number 입니다. 증가하는 것은 종들이 아니라 그 수입니다."
+        },
+        {
+          "en": "A number of endangered species on the island **are** protected by law.",
+          "ko": "그 섬의 여러 멸종 위기종이 법으로 보호받고 있습니다.",
+          "note": "핵은 species 입니다. a number of 는 many 처럼 앞에서 꾸미는 수량 표현일 뿐입니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 주어가 단수 동사를 부르는지 복수 동사를 부르는지 분류하십시오.",
+      "buckets": [
+        { "id": "sg", "label": "단수 동사" },
+        { "id": "pl", "label": "복수 동사" }
+      ],
+      "chips": [
+        {
+          "text": "The number of complaints",
+          "bucketId": "sg",
+          "why": "the number of 는 '~의 수' 하나를 가리키므로 단수입니다."
+        },
+        {
+          "text": "A number of complaints",
+          "bucketId": "pl",
+          "why": "a number of 는 many 의 뜻이므로 핵은 복수 명사 complaints 입니다."
+        },
+        {
+          "text": "One of the complaints",
+          "bucketId": "sg",
+          "why": "one of + 복수 명사의 핵은 One 이므로 단수입니다."
+        },
+        {
+          "text": "Each of the complaints",
+          "bucketId": "sg",
+          "why": "each of + 복수 명사도 하나하나를 가리키므로 단수입니다."
+        },
+        {
+          "text": "Most of the complaints",
+          "bucketId": "pl",
+          "why": "부분 표현은 of 뒤 명사를 따릅니다. complaints 가 복수이므로 복수입니다."
+        },
+        {
+          "text": "Most of the evidence",
+          "bucketId": "sg",
+          "why": "같은 most of 라도 of 뒤의 evidence 가 불가산 단수이므로 단수입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "most·some·half·분수·percent 같은 부분 표현은 그 자체에 수가 없어, of 바로 뒤 명사의 수를 그대로 따릅니다.",
+      "examples": [
+        {
+          "en": "Two-thirds of the energy released by the reactor **is** lost as heat.",
+          "ko": "그 원자로에서 방출되는 에너지의 3분의 2는 열로 손실됩니다.",
+          "note": "of 뒤의 energy 가 불가산 단수이므로 동사도 단수 is 입니다."
+        },
+        {
+          "en": "Two-thirds of the delegates at the conference **were** absent from the final vote.",
+          "ko": "그 회의에 참석한 대표단의 3분의 2는 최종 표결에 불참했습니다.",
+          "note": "같은 분수 표현이지만 of 뒤의 delegates 가 복수이므로 동사도 복수 were 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "수량 표현이 이끄는 긴 주어의 해부",
+      "tokens": [
+        { "t": "The number", "role": "S" },
+        { "t": "of applicants for the national scholarship", "role": "M" },
+        { "t": "has risen", "role": "V" },
+        { "t": "sharply", "role": "X" }
+      ],
+      "ko": "국가 장학금 지원자의 수가 급격히 증가했습니다.",
+      "layers": [
+        {
+          "label": "① of 이하 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "of applicants for the national scholarship 은 앞의 명사를 뒤에서 꾸미는 전치사구입니다. 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "괄호 밖에 남은 핵은 The number 입니다. 관사가 the 이므로 '~의 수' 하나를 가리키는 단수입니다."
+        },
+        {
+          "label": "③ 핵에 동사의 수를 맞춥니다",
+          "roles": ["V"],
+          "note": "핵이 단수이므로 단수 동사 has risen 이 옳습니다. 복수 명사 applicants 는 괄호 안의 미끼입니다."
+        }
+      ],
+      "conclusion": "동사 바로 앞의 명사가 아니라 괄호 밖에 남은 핵이 동사의 수를 결정합니다. 여기서 핵은 The number 입니다."
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "수량 표현의 수를 정하는 4단계",
+      "steps": [
+        {
+          "text": "주어가 of 를 포함한 수량 표현으로 시작하는지 확인하고, 표현 전체를 눈으로 묶습니다.",
+          "applyNote": "About forty percent of the electricity … → percent of 가 보이므로 수량 표현입니다."
+        },
+        {
+          "text": "the number of 이면 단수, a number of 이면 복수로 즉시 확정합니다. 관사 하나가 판단을 가릅니다.",
+          "applyNote": "이 문장은 number 가 아니라 percent 이므로 이 단계에 해당하지 않습니다."
+        },
+        {
+          "text": "one of·each of·every one of 이면 핵이 '하나'이므로 단수로 확정합니다.",
+          "applyNote": "이 문장은 one·each 도 아니므로 다음 단계로 넘어갑니다."
+        },
+        {
+          "text": "그 밖의 부분·비율 표현(most·some·half·the rest·분수·percent)이면 of 바로 뒤의 명사를 보고, 그 명사의 수를 그대로 따릅니다.",
+          "applyNote": "of 바로 뒤의 명사는 electricity 이고 불가산 단수이므로 동사는 comes 입니다."
+        }
+      ],
+      "example": {
+        "en": "About forty percent of the electricity used in this city **comes** from wind farms.",
+        "ko": "이 도시에서 사용되는 전력의 약 40퍼센트는 풍력 발전 단지에서 나옵니다.",
+        "note": "used in this city 는 electricity 를 꾸미는 분사구입니다. 수를 결정하는 것은 of 바로 뒤의 electricity 입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Nearly half of the books stored in the old library ( was / were ) damaged by the flood.",
+      "steps": [
+        {
+          "title": "① 수량 표현을 확인합니다",
+          "body": "주어는 half of 로 시작합니다. 이것은 부분 표현이므로 표현 자체에는 수가 없습니다."
+        },
+        {
+          "title": "② the number of·a number of·one of 인지 확인합니다",
+          "body": "셋 중 어느 것도 아닙니다. 따라서 단수·복수를 미리 확정할 수 없고, of 뒤 명사를 보아야 합니다."
+        },
+        {
+          "title": "③ of 바로 뒤의 명사를 찾습니다",
+          "body": "of 바로 뒤의 명사는 the books 입니다. stored in the old library 는 그 명사를 꾸미는 분사구이므로 괄호로 묶어 치웁니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "the books 가 복수이므로 동사도 복수여야 합니다. 따라서 were 가 옳습니다. 동사 바로 앞의 단수 명사 library 에 끌리면 안 됩니다."
+        }
+      ],
+      "answer": "were",
+      "ko": "그 낡은 도서관에 보관되어 있던 책의 거의 절반이 홍수로 훼손되었습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u02-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The number of visitors to the museum {{blank}} risen every year since the renovation.",
+          "options": ["have", "has"],
+          "answer": 1,
+          "translation": "그 박물관 방문객의 수는 재개관 이후 해마다 증가해 왔습니다.",
+          "explanation": "주어는 the number of + 복수 명사 구조로 '~의 수' 하나를 가리키므로 단수 취급합니다. 따라서 단수 동사 has 가 옳습니다. 복수 명사 visitors 는 of 뒤에 놓인 미끼입니다.",
+          "trapTags": ["the-number-of"]
+        },
+        {
+          "id": "u02-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "A number of scholars [[u:has]] questioned the traditional dating of the manuscript.",
+          "isCorrect": false,
+          "correction": "have",
+          "translation": "많은 학자가 그 필사본의 전통적인 연대 추정에 의문을 제기해 왔습니다.",
+          "explanation": "a number of 는 many 의 뜻으로 뒤의 복수 명사를 꾸미는 표현이므로 핵은 scholars 입니다. 복수이므로 have 로 고쳐야 합니다. the number of 와 혼동하면 단수로 잘못 판단하게 됩니다.",
+          "trapTags": ["a-number-of"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "부류 판정 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 부류를 아는 순간 판단은 순간입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "the number of experts 는 단수 동사를 부릅니다.",
+          "isTrue": true,
+          "why": "'~의 수' 하나를 가리키므로 핵은 단수 number 입니다."
+        },
+        {
+          "statement": "a number of experts 는 단수 동사를 부릅니다.",
+          "isTrue": false,
+          "why": "a number of 는 many 의 뜻이므로 핵은 복수 experts 입니다. 복수 동사를 씁니다."
+        },
+        {
+          "statement": "Most of the water 는 복수 동사를 부릅니다.",
+          "isTrue": false,
+          "why": "부분 표현은 of 뒤 명사를 따릅니다. water 는 불가산 단수이므로 단수입니다."
+        },
+        {
+          "statement": "Each of the doctors 는 단수 동사를 부릅니다.",
+          "isTrue": true,
+          "why": "each of 는 하나하나를 가리키므로 핵이 단수입니다."
+        },
+        {
+          "statement": "Two-thirds of the students 는 복수 동사를 부릅니다.",
+          "isTrue": true,
+          "why": "분수 표현은 of 뒤 명사를 따릅니다. students 가 복수이므로 복수입니다."
+        },
+        {
+          "statement": "동사 바로 앞의 명사가 언제나 동사의 수를 결정합니다.",
+          "isTrue": false,
+          "why": "동사 앞 명사는 대개 미끼입니다. 수를 정하는 것은 핵 주어입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Some of the pottery discovered at the site ( was / were ) made more than two thousand years ago.",
+      "givenSteps": [
+        "① 수량 표현을 확인합니다 — some of 는 부분 표현이므로 그 자체에는 수가 없습니다.",
+        "② of 바로 뒤의 명사를 찾습니다 — the pottery 이며, discovered at the site 는 그것을 꾸미는 분사구입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "were — 도자기 조각이 여러 개이므로 의미상 복수입니다",
+        "was — pottery 는 불가산 단수이므로 동사도 단수입니다",
+        "were — some 은 '여럿'을 뜻하므로 언제나 복수입니다"
+      ],
+      "answer": 1,
+      "explain": "부분 표현 some of 의 수는 of 뒤 명사가 결정합니다. pottery 는 불가산 명사이므로 단수 was 가 옳습니다. 의미상 개수를 세어 보거나 some 을 무조건 복수로 외우면 오답에 이릅니다."
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — one of the + 복수 명사 뒤에 관계사절이 붙는 경우",
+      "body": "one of the + 복수 명사 구조에서 동사가 두 개 등장하면 각각의 기준이 다릅니다. 주절의 동사는 핵 주어 one 에 맞추어 단수이지만, 관계사절의 동사는 선행사인 복수 명사에 맞추어 복수입니다. 두 자리를 같은 기준으로 맞추면 반드시 하나가 틀립니다.",
+      "example": {
+        "en": "One of the few communities that **have** preserved the old dialect **is** now a subject of research.",
+        "ko": "옛 방언을 보존해 온 몇 안 되는 공동체 중 하나가 지금은 연구의 대상입니다.",
+        "note": "관계사 that 의 선행사는 복수 communities 이므로 have 이고, 주절의 핵 주어는 One 이므로 is 입니다. 한 문장 안에서 두 동사의 기준이 서로 다릅니다."
+      }
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u02-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "One of the strategies that public health experts recommend {{blank}} to reduce the amount of salt in processed food.",
+          "options": ["are", "is"],
+          "answer": 1,
+          "translation": "공중보건 전문가들이 권고하는 전략 중 하나는 가공식품의 소금 양을 줄이는 것입니다.",
+          "explanation": "주절의 핵 주어는 One 입니다. of the strategies 와 관계사절 that public health experts recommend 는 모두 수식어이므로 괄호로 묶어 치웁니다. 핵이 단수이므로 단수 동사 is 가 옳습니다.",
+          "trapTags": ["one-of", "intervening-clause"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 is 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "동사 바로 앞의 recommend 가 현재형이라 뒤 동사도 현재 단수로 맞추었기 때문입니다.",
+          "correct": false,
+          "feedback": "관계사절의 시제는 주절 동사의 수를 결정하지 않습니다. 수일치의 기준은 언제나 핵 주어의 수입니다."
+        },
+        {
+          "text": "of the strategies 와 관계사절을 괄호로 묶으면 핵 주어가 One 만 남기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 수식어를 걷어내고 남은 핵의 수가 동사를 결정한다는 것이 이 판단의 근거입니다."
+        },
+        {
+          "text": "뒤에 오는 to부정사 보어가 하나이므로 동사도 단수가 되어야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "보어의 형태는 동사의 수를 결정하지 못합니다. 동사의 수는 보어가 아니라 주어의 핵이 정합니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The number of households [[1:that rely]] on public transport [[2:have]] grown steadily, and roughly a third of the daily commuters in this region [[3:depend]] on a single subway line that [[4:carries]] far more passengers than it was designed for.",
+      "answer": 2,
+      "correction": "has",
+      "rationales": [
+        "관계사 that 의 선행사는 복수 명사 households 이므로 관계사절의 동사는 복수 rely 가 옳습니다.",
+        "주절의 핵 주어는 The number 입니다. the number of 는 '~의 수' 하나를 가리키므로 단수 has 로 고쳐야 합니다.",
+        "a third of 는 부분 표현이므로 of 뒤의 명사 the daily commuters 가 수를 결정합니다. 복수이므로 depend 가 옳습니다.",
+        "관계사 that 의 선행사는 단수 명사 a single subway line 이므로 단수 carries 가 옳습니다."
+      ],
+      "ko": "대중교통에 의존하는 가구의 수가 꾸준히 늘어 왔으며, 이 지역 일일 통근자의 약 3분의 1은 설계 용량보다 훨씬 많은 승객을 실어 나르는 단일 지하철 노선에 의존합니다."
+    },
+    {
+      "id": "b21",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 the number of 와 a number of 를 나란히 주고 어법에 맞게 동사를 고쳐 쓰게 합니다. 두 표현의 뜻 차이를 함께 서술해야 만점입니다.",
+          "sample": {
+            "en": "A number of teachers in the district has volunteered for the program.",
+            "ask": "이 문장을 어법에 맞게 고쳐 쓰십시오.",
+            "answer": "A number of teachers in the district have volunteered for the program."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 부분 표현 뒤에 전치사구·분사구를 길게 붙여 동사 바로 앞에 반대 수의 명사를 놓습니다. 밑줄이 동사라면 of 바로 뒤의 명사까지 거슬러 올라가 수를 확인해야 합니다.",
+          "sample": {
+            "en": "Much of the information gathered from the surveys [[u:were]] later found to be unreliable.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "was — 부분 표현 much of 의 수는 of 뒤의 불가산 명사 information 이 결정하므로 단수여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Public libraries have changed more than most people realize. [[u:The number of books borrowed from city libraries has fallen for a decade, while most of the users now come for free internet access.]] Librarians say that the shift has forced them to redesign their spaces. What used to be a quiet reading hall is now a place for study groups and job training.",
+      "instruction": "밑줄 친 문장에서 두 동사의 수가 왜 서로 다른지 확인하십시오.",
+      "found": "앞 절의 핵 주어는 The number 이므로 단수 has fallen 입니다. 뒤 절의 주어는 부분 표현 most of 이며, of 뒤의 명사 the users 가 복수이므로 복수 come 입니다. 같은 문장 안에서도 표현의 부류가 다르면 판단 기준이 달라집니다.",
+      "gist": "도서 대출은 줄었지만 무료 인터넷을 이용하려는 방문객이 늘어 도서관의 역할이 바뀌고 있다는 내용입니다."
+    },
+    {
+      "id": "b23",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 도시의 학교들 중 하나는 매년 봄에 과학 축제를 엽니다.",
+      "answer": ["One", "of the city's schools", "holds", "a science festival", "every spring"],
+      "tiles": [
+        "One",
+        "of the city's schools",
+        "holds",
+        "a science festival",
+        "every spring",
+        "hold"
+      ],
+      "explanation": "of the city's schools 는 전치사구 수식어이고 핵 주어는 One 입니다. 핵이 단수이므로 동사는 holds 여야 하며, 복수 명사 schools 에 끌린 hold 는 쓰이지 않습니다."
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "of 안개의 수문장",
+      "intro": "이 문을 지키는 자는 동사 바로 앞에 미끼 명사를 흩뿌려 안개를 만듭니다. 핵 주어를 놓치면 안개에 삼켜집니다. 네 번의 판정으로 눈이 흐려지지 않았음을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The number of students enrolled in online courses {{blank}} doubled in five years.",
+          "options": ["has", "have"],
+          "answer": 0,
+          "why": "핵 주어는 The number 이므로 단수 has 입니다. enrolled in online courses 는 students 를 꾸미는 분사구이고, students 는 미끼입니다."
+        },
+        {
+          "prompt": "A number of researchers who study the glacier {{blank}} warned of its rapid retreat.",
+          "options": ["have", "has"],
+          "answer": 0,
+          "why": "a number of 는 many 의 뜻이므로 핵은 복수 researchers 입니다. 관계사절 who study the glacier 는 수식어이므로 복수 have 가 옳습니다."
+        },
+        {
+          "prompt": "Most of the funding for the project {{blank}} from private donors.",
+          "options": ["comes", "come"],
+          "answer": 0,
+          "why": "부분 표현 most of 의 수는 of 뒤 명사가 정합니다. funding 은 불가산 단수이므로 comes 입니다."
+        },
+        {
+          "prompt": "One of the theories that explain the extinction {{blank}} still debated today.",
+          "options": ["is", "are"],
+          "answer": 0,
+          "why": "주절의 핵 주어는 One 이므로 단수 is 입니다. that explain the extinction 은 선행사 theories 에 맞춘 관계사절이므로 그 안에서만 복수입니다."
+        }
+      ],
+      "winText": "of 안개가 걷혔습니다. 동사 앞에 아무리 미끼 명사를 흩뿌려도, 당신은 이제 핵을 먼저 봅니다. 수문장이 길을 내어 줍니다.",
+      "loseText": "수문장이 다시 안개를 드리웁니다. 네 문제 모두 물음은 하나였습니다 — \"이 주어의 핵은 무엇인가.\" 수량 표현 네 부류를 다시 확인하고 오면 문은 그대로 열려 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "the number of 는 ___ 취급이고 a number of 는 ___ 취급이며, most·half·percent 같은 부분 표현은 ___ 를 보고 수를 정합니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "the number of + 복수 명사는 '~의 수' 하나를 가리키므로 단수 동사를 씁니다.",
+        "a number of + 복수 명사는 many 의 뜻이므로 복수 동사를 씁니다. 관사 하나가 판단을 가릅니다.",
+        "one of·each of·every one of + 복수 명사의 핵은 '하나'이므로 단수 동사를 씁니다.",
+        "most·some·half·the rest·분수·percent 같은 부분 표현은 수가 없어, of 바로 뒤 명사의 수를 그대로 따릅니다.",
+        "of 뒤 명사에 붙은 전치사구·분사구·관계사절은 괄호로 묶어 치웁니다. 동사 바로 앞의 명사는 미끼입니다."
+      ],
+      "keySentence": {
+        "en": "The number of applicants for the national scholarship **has** risen sharply.",
+        "ko": "국가 장학금 지원자의 수가 급격히 증가했습니다.",
+        "note": "복수 명사 applicants 가 동사 앞에 있어도, 핵 주어 The number 가 단수이므로 has 입니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u02-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "A number of theories about the origin of language {{blank}} been proposed, but few can be tested directly.",
+          "options": ["have", "has"],
+          "answer": 0,
+          "translation": "언어의 기원에 관한 많은 이론이 제시되었지만, 직접 검증될 수 있는 것은 거의 없습니다.",
+          "explanation": "a number of 는 many 의 뜻이므로 핵은 복수 명사 theories 입니다. about the origin of language 는 전치사구 수식어이므로 괄호로 묶어 치우고, 복수 동사 have 를 씁니다.",
+          "trapTags": ["a-number-of", "intervening-pp"]
+        },
+        {
+          "id": "u02-c3-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Most of the evidence collected at the excavation site [[u:suggests]] that the settlement was abandoned suddenly.",
+          "isCorrect": true,
+          "translation": "그 발굴 현장에서 수집된 증거의 대부분은 그 정착지가 갑자기 버려졌음을 시사합니다.",
+          "explanation": "부분 표현 most of 의 수는 of 바로 뒤의 명사가 결정합니다. evidence 는 불가산 단수이므로 단수 동사 suggests 가 옳습니다. collected at the excavation site 는 분사구 수식어일 뿐이며, 복수처럼 보이는 미끼도 없습니다.",
+          "trapTags": ["partitive", "intervening-participle"]
+        },
+        {
+          "id": "u02-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Each of the volunteers who joined the coastal cleanup {{blank}} given a detailed map of the shoreline.",
+          "options": ["was", "were"],
+          "answer": 0,
+          "translation": "해안 정화 활동에 참여한 자원봉사자 각각에게는 해안선의 상세한 지도가 주어졌습니다.",
+          "explanation": "each of + 복수 명사의 핵은 Each 이므로 단수입니다. 관계사절 who joined the coastal cleanup 은 volunteers 를 꾸미는 수식어이므로 괄호로 묶어 치우고, 단수 동사 was 를 씁니다.",
+          "trapTags": ["each-of", "intervening-clause"]
+        }
+      ]
+    }
+  ]
+}

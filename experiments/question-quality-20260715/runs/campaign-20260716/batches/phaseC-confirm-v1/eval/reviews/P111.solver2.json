@@ -1,0 +1,35 @@
+{
+  "pid": "P111",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합: 'based on the external pressure imposed on your overall performance' — 과거분사 imposed가 pressure를 후치 수식하는 축약 관계절로 정문. 그러나 논리적으로 지문이 명시적으로 부정하는 명제와 정면 충돌한다. 빈칸 직후 문장 'It's not the pressure to perform that creates your stress'가 분열문(it-cleft)으로 압력(외적이든 내적이든 수행 압력)이 스트레스의 원천임을 형식적으로 배제한다. 또한 지문의 압력은 'The internal pressure you place on yourself'로 내적 압력이며 external과도 어긋난다. 이중으로 모순 — 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합: 'based on the extent to which they trigger your inner uncertainty' — 'to which' 관계절의 선행사 extent, 대명사 they의 선행사는 주절 주어 복수형 Situations로 일치. 정문. 논리: 지문의 핵심 논증 구조는 (i) 압력 자체는 normal and useful, (ii) 스트레스의 진짜 원천은 self-doubt ('Rather, it's the self-doubt that bothers you'), (iii) doubt가 경험 해석을 왜곡. 'inner uncertainty'는 self-doubt의 충실한 패러프레이즈이며, '상황이 각자에게 고유하게(uniquely for each of us) 스트레스가 되는 기준 = 그 상황이 개인의 내적 의심을 얼마나 촉발하는가'는 뒤따르는 두 문장(압력 부정 → 의심 긍정)이 정확히 부연하는 명제다. 유일하게 성립."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 결합: 'based on the objective evaluation you make about your strengths' — 목적격 관계대명사 생략 구조로 정문. 논리: 지문 말미 'When you see situations and your strengths more objectively, you are less likely to have doubt as the source of your distress'에서 객관적 평가는 스트레스를 낮추는 해독제로 제시된다. 상황별 스트레스의 개인차 기준을 '객관적 평가'로 두면, 객관성은 의심을 줄이는 방향으로만 작동하므로 '왜 상황이 스트레스가 되는가'의 근거가 아니라 그 반대 극이다. 마지막 문장의 어휘를 재활용한 전형적 미러링 오답 — 방향이 역전되어 성립 불가."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합: 'based on the variety of social areas that you deeply care about' — 관계절 that...about (전치사 잔류) 정문. 논리: 'care deeply'는 첫 문장의 조건부 전제(관심 영역에서 성공 능력에 더 큰 가치를 둠)를 재활용하나, 지문 어디에도 관심 영역의 '다양성/개수(variety)'가 스트레스의 개인차를 결정한다는 주장이 없다. 스트레스의 원천은 영역의 수가 아니라 그 영역에서의 자기 의심이다. 지문 어휘를 차용했지만 술어(variety) 자체가 무근거 — 성립 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합: 'based on how frequently you encounter genuinely negative experiences' — 의문부사절이 전치사 on의 목적어로 기능, 정문. 논리: 지문은 'Doubt causes you to see positive, neutral, and even genuinely negative experiences more negatively'라 하여, 부정적 경험의 객관적 빈도가 아니라 의심이라는 해석 렌즈가 스트레스를 만든다고 주장한다. 즉 genuinely negative라는 어구는 '경험의 실제 성질과 무관하게 doubt가 왜곡한다'는 맥락에서 등장하며, 빈도(frequency) 기반 설명은 이 논지의 정반대(외적 사건 → 스트레스)다. 성립 불가."
+    }
+  ],
+  "note": "빈칸 문장 'Situations are uniquely stressful for each of us based on _____'는 개인차의 판별 기준을 요구한다. 직후 두 문장이 분열문 대조 구조(It's not X ... Rather, it's Y)로 '압력이 아니라 자기 의심'을 명시하므로, 기준은 의심의 촉발 정도여야 한다. ②만이 이 대조 구조와 정합하며 they(=Situations) 대명사 결합도 문법적으로 완전하다. ①은 지문이 명시 부정한 명제, ③은 해독제를 원인으로 뒤집은 미러링, ④는 무근거 술어, ⑤는 해석 렌즈 논지를 외적 빈도로 치환한 오답. 복수 정답 여지 없음."
+}

@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-noun-clause-pronoun-mislabel"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=h  (B):dec=b  (C):dec=i  (D):ANS=c  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 42,
+        "relPos": 0.064,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 238,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 407,
+        "relPos": 0.624,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 490,
+        "relPos": 0.752,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 511,
+        "relPos": 0.784,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.784,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "piling",
+        "isError": false,
+        "correction": "piling",
+        "errorExpression": "piling",
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing on top of another.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "Give your whole focus to what you're doing at the moment no matter what it is.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "feel",
+        "isError": false,
+        "correction": "feel",
+        "errorExpression": "feel",
+        "surroundingText": "Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(D)",
+        "expression": "done",
+        "isError": true,
+        "correction": "done",
+        "errorExpression": "doing",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "pressed",
+        "isError": false,
+        "correction": "pressed",
+        "errorExpression": "pressed",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "piling"
+      },
+      {
+        "label": "(B)",
+        "text": "what"
+      },
+      {
+        "label": "(C)",
+        "text": "feel"
+      },
+      {
+        "label": "(D)",
+        "text": "doing"
+      },
+      {
+        "label": "(E)",
+        "text": "pressed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "사역·경험의 의미를 갖는 동사 has의 목적격 보어로 목적어(us)와 목적격 보어의 능동·진행 관계를 강조하기 위해 현재분사 piling을 쓴 것은 어법상 적절합니다.",
+      "(B)": "전치사 to의 목적어 역할을 하는 명사절을 이끌면서 동시에 관계절 내의 동사 doing의 목적어 역할을 하므로 선행사를 포함한 관계대명사/의문명사 what은 적절합니다.",
+      "(C)": "명령문의 동사원형 Listen과 등위접속사 and로 연결되는 병렬구조이므로 동사원형인 feel이 쓰인 것은 적절합니다.",
+      "(E)": "'with + 목적어 + 분사' 구조에서 목적어인 'your phone(휴대전화)'이 '귀에 대어지는(pressed)' 수동의 관계이므로 과거분사 pressed는 올바른 쓰임입니다."
+    },
+    "explanation": "문장의 주어인 It이 가리키는 대상을 파악하는 것이 중요합니다. 이 문장에서 It은 앞 문장에서 다룬 '빨래하기(doing the laundry)'를 의미하며, 접속사 when 뒤에 생략된 '주어 + be동사(it is)'와의 호응을 보아야 합니다. 빨래하기는 스스로 행동을 행하는 주체가 아니라 행해지는 대상이므로 수동의 의미를 나타내야 합니다. 따라서 능동의 형태를 가진 doing은 비문이며, 수동의 의미를 나타내는 과거분사 done으로 고쳐야 어법상 올바른 표현이 됩니다. 'with + 목적어 + 분사'로 이루어진 부대상황 구문(with your phone pressed)과의 혼동을 유도했으나, 분사구문의 주체 파악을 통해 쉽게 해결할 수 있습니다.",
+    "keyPoints": [
+      "(D) 분사구문의 능·수동 — 주어(it)와의 수동 관계를 따져 과거분사 선택",
+      "(A) 목적격 보어의 형태 — 사역동사 has의 능동·진행을 강조하는 현재분사 목적격 보어",
+      "(B) 관계대명사 what — 선행사를 포함하고 빈자리가 있는 불완전한 명사절 판단"
+    ],
+    "tags": [
+      "수능 어법",
+      "분사구문",
+      "수동태",
+      "사역동사",
+      "관계대명사 what"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "The fast pace of today's lifestyle has us __(A) piling__ one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to __(B) what__ you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and __(C) feel__ the clothes in your hand. It doesn't take up any more time than it would when __(D) doing__ with your phone __(E) pressed__ to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster."
+  }
+}

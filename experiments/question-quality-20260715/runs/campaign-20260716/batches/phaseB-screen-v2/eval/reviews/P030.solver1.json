@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "'the audience's inclination to engage deeply with ambiguity'를 넣으면 'inclination to engage ..., and not (to) immediately ask ...'로 빈칸 뒤 잔여 어구 'and not immediately ask'가 부정사 병렬로 정확히 결합한다(seam 성립). 의미상으로도 지문 전체 논지 — 독자가 모호함·명백한 비관련성을 참아내고(put up with obscurities), 작가가 비협조적이라 단정하는 대신 해석하려 애쓴다(struggle to interpret) — 를 그대로 재진술한다. 문법 결합과 논리 적합성 모두 유일하게 충족."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'즉각적 언어 명료성 요구'는 지문 논지의 정반대 — 명료성을 요구하는 독자라면 즉시 'what do you mean?'을 물을 것이므로 뒤의 'and not immediately ask'와 의미 충돌. 문법적으로도 'demand for X, and not immediately ask'는 병렬 기점(부정사)이 없어 seam이 깨진다. 꼬리 어구의 'immediately'를 표면적으로 재활용한 미끼로, 순간적으로 끌리지만 부정어(not ask)를 확인하면 즉시 배제된다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'빠른 독서 속도 적응'은 지문에 전혀 근거 없음. 'adaptation to faster reading speeds'의 to는 전치사이므로 'and not immediately ask'가 병렬할 부정사가 없어 문법 결합도 실패."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "지문은 효율적 의사소통 원리를 '위반(flout)'하는 요소를 독자가 해석하려 애쓴다는 내용 — 확립된 문법 규칙에 대한 무조건적 복종과는 오히려 반대 방향. 'obedience to rules, and not immediately ask'도 병렬 기점 부재로 seam 붕괴."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'문학 비평 전문 기술 습득'은 그럴듯한 전문가형 미끼(어려운 문학 해석 = 훈련 필요라는 통념)이나, 지문은 제도적 라벨('Literature')이 일반 독자에게 주는 신뢰(assurance)에서 관용적 독해가 나온다고 명시 — 전문 훈련은 언급조차 없음. 'skills in literary criticism, and not immediately ask'도 부정사 병렬 불가로 문법 결합 실패."
+    }
+  ],
+  "note": "빈칸 뒤 잔여 어구 'and not immediately ask \"what do you mean by that?\"'가 강력한 장거리 문법 단서: 빈칸 내부에 to부정사(①의 to engage)가 있어야만 병렬이 성립하며, ②~⑤는 모두 seam이 깨진다. 대안 해석으로 'and not ... ask'를 본동사 'follow'와 병렬시키는 파스를 검토했으나 주어(features of literature)가 ask의 행위자가 될 수 없어 성립 불가 — 어떤 재분석으로도 ② ~⑤는 구제되지 않는다. 원전은 Culler의 hyper-protected cooperative principle 논의로 추정되며, 원문 빈칸부는 'the willingness of readers to pay attention, to explore uncertainties of meaning' 구조였을 것으로 보인다. 정답 ① 단일 옹호 가능, 신뢰도 높음."
+}

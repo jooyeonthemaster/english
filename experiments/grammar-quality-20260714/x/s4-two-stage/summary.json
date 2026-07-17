@@ -1,0 +1,45 @@
+{
+  "strategy": "s4-two-stage",
+  "describe": "콜1 설계만(정답 자리 문장·오형·pointCode·미끼 4자리 — 소형 스키마) → 콜2 그 설계를 그대로 구현한 완성 문항",
+  "callPlan": "flash x2 (직렬: 설계→구현)",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 14388,
+  "avgAttempts": 2,
+  "avgCalls": 2,
+  "totalCostUsd": 0.24877,
+  "avgCostUsd": 0.02488,
+  "costRecordedCalls": 20,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 0.9,
+  "zeroErrorItems": 4,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.849,
+  "avgAnswerRelPos": 0.527,
+  "answerRelPosInBand": 7,
+  "models": {
+    "google/gemini-3.5-flash": 20
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 3
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 1
+    }
+  ]
+}

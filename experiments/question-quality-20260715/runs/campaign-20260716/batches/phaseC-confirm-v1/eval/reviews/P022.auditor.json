@@ -1,0 +1,76 @@
+{
+  "pid": "P022",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설이 'who'를 '주격/목적격 보어'라고 슬래시로 얼버무린다. 'who the nation's leader would be'에서 who는 be의 주격 보어(predicative complement)이며 목적격 보어 분석은 성립하지 않는다. 핵심 구조 파악(간접의문문, choosing의 목적어절)은 정확하므로 치명은 아니다."
+    },
+    {
+      "code": "V4-minor-register-leak",
+      "severity": "minor",
+      "evidence": "정답 해설 말미 \"(E)의 ... 완벽하게 복원되어 단일 정답이 굳어집니다\"는 출제·검수 메타 언어가 학생용 해설에 누출된 문장이다. 사실 오류는 아니나 해설 문체로 부적절하다."
+    },
+    {
+      "code": "V5-note-expression-field",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression 필드가 'forcing'(원문형)이고 errorExpression이 'forced'(표시형)이다. 스키마 관례상(비오류 항목은 세 필드 동일) expression=원문형으로 읽히므로 내부 일관성은 유지되나, 렌더 표시형과 필드명이 어긋나 보일 수 있어 기록해 둔다. 정답 라벨·선지·해설과의 모순은 없다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "간접의문문에서 의문부사구 'how long' 전치 + 주어-동사 어순 판단",
+      "temptingBecause": "의문사구 뒤 도치를 기대하거나 'how long' 뒤 긴 주어(the shortest war in recorded history) 때문에 어순이 낯설게 보일 수 있다",
+      "decisiveFlaw": "정답이 아닌 이유: 'learn [how long + S + lasted]'는 간접의문문의 표준 어순으로 완전히 문법적이다. 다만 매력도가 낮아 사실상 즉시 소거되는 필러에 가깝다"
+    },
+    {
+      "label": "(B)",
+      "intent": "be동사 보어 자리 의문대명사 선택(who vs whom/what)",
+      "temptingBecause": "타동사 choosing 바로 뒤라 목적격 'whom'이 필요하다고 오판할 수 있다",
+      "decisiveFlaw": "정답이 아닌 이유: who는 'the nation's leader would be ___'의 주격 보어로 표준 어법이다. choosing의 목적어는 who가 아니라 절 전체다"
+    },
+    {
+      "label": "(C)",
+      "intent": "order + 목적어 + to부정사 목적격 보어 구문",
+      "temptingBecause": "make/let/have류 사역동사와 혼동해 원형부정사를 기대할 수 있다",
+      "decisiveFlaw": "정답이 아닌 이유: order는 to부정사 목적격 보어를 취하는 대표 동사로 'ordered ... to step down'은 정확하다. 매우 기초적인 포인트라 상위권에게는 즉시 소거된다"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답. 접속사 없는 쉼표 뒤 정동사 vs 분사구문 판정(forcing→forced 최소대립쌍)",
+      "temptingBecause": "'killed ..., forced ...'가 과거 서사의 동사 나열처럼 읽혀 자연스러워 보인다",
+      "decisiveFlaw": "주절 정동사 killed 뒤에 등위접속사가 없어 정동사 forced는 comma splice가 되고, 과거분사로 보면 수동인데 명시적 목적어 'the new leader'를 취해 모순이다. forcing으로 고치면 정확히 원문이 복원된다. 모든 대안 해석에서 비문이므로 유일 정답"
+    },
+    {
+      "label": "(E)",
+      "intent": "to부정사 보어의 and 병렬 + 분리부정사 허용 판단",
+      "temptingBecause": "'to immediately surrender'의 분리부정사가 비표준처럼 보이고, and 뒤 명사구+to-v 구조가 낯설 수 있다",
+      "decisiveFlaw": "정답이 아닌 이유: 'to flee and (the country) to immediately surrender'는 force의 이중 목적어-보어 병렬로 문법적이며 분리부정사는 표준적으로 허용된다. 원문 그대로다"
+    }
+  ],
+  "explanationIssues": [
+    "(B) 해설의 '주격/목적격 보어' 슬래시 표기는 용어 얼버무림 — 실제로는 be의 주격 보어 단일 분석이 맞다",
+    "정답 해설 말미 '완벽하게 복원되어 단일 정답이 굳어집니다'는 학생용 해설에 출제 메타 언어가 누출된 문장",
+    "keyPoints의 '분사능수동'은 압축 조어로 표준 문법 용어가 아니다(분사의 능동/수동 판정 의도로는 이해 가능)",
+    "(E) 오답 해설이 'forcing의 목적격 보어'라 하여 교정 후 형태를 전제로 설명한다 — 관례상 허용되나 학생이 보는 지문에는 forced로 표시되어 있음을 명시하지 않는다"
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 forcing→forced 단일 의도 변형 외 원문과 완전 일치하고, 독립 풀이에서 (D)만 모든 파스에서 비문이며 교정 시 원문이 정확히 복원된다. 그러나 KILLER 요청 대비 난이도 정합(C5=1)이 크게 미달한다: 지문 자체가 평이한 서사문이고, 디코이 4개(how long 어순, who 보어, order+to-v, 분리부정사 병렬)가 모두 기초~중급 포인트라 즉시 소거되며, 정답 포인트(쉼표+V-ed+목적어 → V-ing)는 수능 어법 최다 훈련 패턴이라 숙련 학생이 패턴 매칭으로 즉답한다. §C KILLER 조건 중 최소대립쌍·명확한 문법 판단·동일 포인트 차폐 없음은 충족하나, 5개 밑줄 각각의 'why tempting'이 부재하고 함정 깊이가 KILLER에 못 미쳐 killerConditionsMet=false. 해설은 사실관계는 유지하나 용어 얼버무림('주격/목적격 보어'), 메타 언어 누출, 압축 조어('분사능수동')로 C6=2. 종합: V 통과 + C5=1(합계 14)로 등급 C — 중난도 문항으로는 출하 가능하나 KILLER 문항으로는 재설계 필요."
+}

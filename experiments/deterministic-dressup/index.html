@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Deterministic 2D Dress-up Warp Lab</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">NON-GENERATIVE / LANDMARK MESH TEST</p>
+      <h1>체형 5 × 의상 5 결정론적 워핑 실험</h1>
+      <p class="lede">사람별 재생성 없이, 같은 2D 의상 PNG를 고정 토폴로지 삼각 메시로 변형합니다.</p>
+    </div>
+    <div class="controls" aria-label="render controls">
+      <button data-mode="mesh" class="active">메시 워핑</button>
+      <button data-mode="rigid">단순 스케일</button>
+      <label><input id="showMesh" type="checkbox" /> 메시 보기</label>
+    </div>
+  </header>
+  <main>
+    <section class="legend">
+      <span><b>동일 에셋</b> 각 열의 PNG는 5명 모두 동일</span>
+      <span><b>맞춤 정보</b> 관절·허리·골반·다리 폭 좌표만 변경</span>
+      <span><b>생성 AI</b> 합성 단계에서는 사용하지 않음</span>
+    </section>
+    <section id="matrix" class="matrix" aria-live="polite"></section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

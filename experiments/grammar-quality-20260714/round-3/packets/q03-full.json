@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-explanation-lintx1"
+  ],
+  "layout": "(A):dec=a  (B):dec=b  (C):ANS=k  (D):dec=c  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 60,
+        "relPos": 0.083,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.304,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 433,
+        "relPos": 0.601,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 700,
+        "relPos": 0.971,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.971,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "kept",
+        "isError": false,
+        "errorExpression": "kept",
+        "surroundingText": "look for threats - a trait that kept us alive when we were living on",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "bias' can keep you focused on what's going wrong (which explains why",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "to write",
+        "isError": true,
+        "correction": "to write",
+        "errorExpression": "to writing",
+        "surroundingText": "a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "sharing",
+        "isError": false,
+        "errorExpression": "sharing",
+        "surroundingText": "start your conversations with friends by sharing a recent win (anything",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "have",
+        "isError": false,
+        "errorExpression": "have",
+        "surroundingText": "life, the more reasons you have to celebrate it.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "kept"
+      },
+      {
+        "label": "(B)",
+        "text": "what"
+      },
+      {
+        "label": "(C)",
+        "text": "to writing"
+      },
+      {
+        "label": "(D)",
+        "text": "sharing"
+      },
+      {
+        "label": "(E)",
+        "text": "have"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 주격 관계대명사 that절의 정동사 자리로, 과거 시제 동사 'kept'가 오는 것이 문법적으로 옳습니다.",
+      "(B)": "전치사 on의 목적어 역할을 하는 명사절을 이끌면서 동시에 뒤에 이어지는 절에서 주어 역할을 하므로, 선행사를 포함하는 관계대명사 'what'은 올바른 표현입니다.",
+      "(D)": "전치사 by 뒤에서 수식 장치나 행동의 수단을 나타내는 동명사 'sharing'이 오는 것은 문법적으로 합당합니다.",
+      "(E)": "이 문장은 'the + 비교급, the + 비교급' 구문으로, 주어 you에 호응하는 정동사 'have'의 수일치는 올바릅니다."
+    },
+    "explanation": "If로 시작하는 조건절 뒤의 주절 명령문 'make a point to write down'에서 'make a point to-v'는 '~을 규칙으로 삼다, 반드시 ~하다'라는 의미의 올바른 정형적 구조입니다. 표시된 (C) 'to writing'은 동사원형이 와야 할 부정사 to 뒤에 동명사가 잘못 결합하여 비문이 되므로, 'to write'로 고쳐야 합니다. 'make a point of -ing'라는 유사한 수어 표현과의 혼동을 의도한 함정에 빠지지 않도록 유의해야 합니다.",
+    "keyPoints": [
+      "(C) to-v vs v-ing — 준동사의 결합 형태 판정",
+      "(B) 관계사 — 명사절을 이끄는 관계대명사 what의 격과 역할",
+      "(E) 수일치 — 비교급 도치 구문 내 주어와 동사의 수일치"
+    ],
+    "tags": [
+      "수일치",
+      "준동사",
+      "관계사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that __(A) kept__ us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on __(B) what__'s going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point __(C) to writing__ down what went well. If you're more of a verbal processor, start your conversations with friends by __(D) sharing__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you __(E) have__ to celebrate it.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "간접의문문 'who their real parents are': 의문사+주어+동사 어순이 맞고, 복수 주어 'their real parents'에 복수동사 are가 수일치한다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'all their attempts ... are met with firm resistance': 복수 주어 attempts에 are + 과거분사 수동태. 능동 'meet X with resistance'의 수동형으로 확립된 관용 구성이며 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "Although절의 진짜 주어는 복수 명사 'restrictions'. 'against opening adoption files'는 전치사구 수식어이고 'adoption files'는 동명사 opening의 목적어일 뿐이다. 복수 주어에 단수 동사 makes는 수일치 위반(인접 명사 attraction 함정). 주절의 복수 조응 대명사 'they do not necessarily discourage...'가 restrictions가 주어임을 재확인한다. makes → make 이어야 함. 비문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'find what they want to know': what은 자유 관계사(선행사 포함 관계대명사)로 find의 목적어 명사절을 이끌고 절 내부에서 know의 목적어 공백을 채운다. 선행사가 없으므로 that/which 불가. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'devote A to B' 구문의 to는 전치사이므로 동명사 finding이 옳다. 부정사 find였다면 비문이 되는 자리. 'finding more about'은 문체상 'finding out more'가 더 자연스러우나 어법 오류는 아니다. 정문."
+    }
+  ],
+  "note": "정답 후보는 (C) 단일로 형식적으로 유일하게 결정된다. (C)는 수일치 위반이 지배 규칙(진짜 주어 식별) 수준에서 증명 가능하고, 나머지 네 밑줄은 대안 해석을 적극 탐색해도 모두 정문. (E)의 'finding more about'이 미세하게 비관용적이지만 어법(문법성) 판정 기준에서는 하자가 없어 복수정답 소지는 없다."
+}

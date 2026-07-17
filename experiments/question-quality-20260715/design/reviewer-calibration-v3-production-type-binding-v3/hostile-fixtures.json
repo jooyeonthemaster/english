@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "reviewer-calibration-v3-production-type-binding-v3-hostile-1",
+  "status": "SYNTHETIC_MUTATIONS_ONLY",
+  "fixtures": [
+    { "fixtureId": "H01_REPO_HEAD_CHANGED_SAME_SOURCE_BYTES", "mutation": "CHANGE_ACTUAL_REPO_HEAD_ONLY", "expectedReasonCode": "REPO_HEAD_DRIFT" },
+    { "fixtureId": "H02_REPO_TREE_CHANGED", "mutation": "CHANGE_ACTUAL_REPO_TREE_ONLY", "expectedReasonCode": "REPO_TREE_DRIFT" },
+    { "fixtureId": "H03_TRACKED_SOURCE_BECOMES_UNTRACKED", "mutation": "MAKE_ACTUAL_FIRST_SOURCE_UNTRACKED_AND_NULL", "expectedReasonCode": "SOURCE_TRACKING_INVALID" },
+    { "fixtureId": "H04_LAST_PATH_COMMIT_CHANGED", "mutation": "CHANGE_ACTUAL_FIRST_LAST_PATH_COMMIT", "expectedReasonCode": "LAST_PATH_COMMIT_DRIFT" },
+    { "fixtureId": "H05_EXACT_PATH_STATUS_CHANGED", "mutation": "CHANGE_ACTUAL_FIRST_PORCELAIN_STATUS", "expectedReasonCode": "PATH_STATUS_DRIFT" },
+    { "fixtureId": "H06_INDEX_BLOB_CHANGED", "mutation": "CHANGE_ACTUAL_FIRST_INDEX_STAGE", "expectedReasonCode": "INDEX_STAGE_DRIFT" },
+    { "fixtureId": "H07_ASSUME_UNCHANGED_FLAG", "mutation": "LOWERCASE_ACTUAL_FIRST_LSFILES_FLAG", "expectedReasonCode": "SOURCE_TRACKING_INVALID" },
+    { "fixtureId": "H08_CRLF_RAW_BLOB_DRIFT_WITH_FILTERED_CLEAN_STATE", "mutation": "CHANGE_ACTUAL_RAW_BLOB_KEEP_FILTERED_INDEX_AND_STATUS", "expectedReasonCode": "WORKTREE_RAW_GIT_BLOB_DRIFT" },
+    { "fixtureId": "H09_SAME_SIZE_MTIME_RAW_MUTATION_WITH_BLANK_STATUS", "mutation": "CHANGE_ACTUAL_RAW_SHA_AND_BLOB_KEEP_STATUS", "expectedReasonCode": "WORKTREE_SHA_DRIFT" },
+    { "fixtureId": "H10_ROUTE_DEFAULT_MODE_CHANGED", "mutation": "CHANGE_ROUTE_DEFAULT_MODE_TO_SET", "expectedReasonCode": "ROUTE_ENTRY_AST_BROKEN" },
+    { "fixtureId": "H11_PICKER_ALIAS_DETACHED", "mutation": "REPLACE_EXAM_ALIAS_WITH_EMPTY_ARRAY", "expectedReasonCode": "PICKER_ALIAS_AST_BROKEN" },
+    { "fixtureId": "H12_PANEL_ENGLISH_BRANCH_SWAPPED", "mutation": "SWAP_PANEL_NON_KOREAN_BRANCH", "expectedReasonCode": "PANEL_PICKER_AST_BROKEN" },
+    { "fixtureId": "H13_SECONDARY_FAST_ENDPOINT_CHANGED", "mutation": "CHANGE_SECONDARY_FAST_ENDPOINT", "expectedReasonCode": "SECONDARY_DISPATCH_AST_BROKEN" },
+    { "fixtureId": "H14_WORKSPACE_QUESTION_TYPE_DROPPED", "mutation": "CHANGE_WORKSPACE_QUESTION_TYPE_PROPERTY", "expectedReasonCode": "WORKSPACE_DISPATCH_AST_BROKEN" },
+    { "fixtureId": "H15_FAST_RUNTIME_CALL_REMOVED", "mutation": "RENAME_FAST_RUNTIME_CALL", "expectedReasonCode": "FAST_RUNTIME_AST_BROKEN" },
+    { "fixtureId": "H16_RUNTIME_SCHEMA_INDEX_DETACHED", "mutation": "CHANGE_RUNTIME_AI_SCHEMA_INDEX", "expectedReasonCode": "SCHEMA_DISPATCH_AST_BROKEN" },
+    { "fixtureId": "H17_CANONICAL_TYPE_OMITTED", "mutation": "REMOVE_LAST_CANONICAL_NONFOCUS_TYPE", "expectedReasonCode": "CANONICAL_BINDING_DRIFT" },
+    { "fixtureId": "H18_FAMILY_TYPE_DUPLICATED", "mutation": "DUPLICATE_TOPIC_IN_SECOND_FAMILY", "expectedReasonCode": "FAMILY_PARTITION_INVALID" },
+    { "fixtureId": "H19_MATERIALIZED_ROTATION_ROW_CHANGED", "mutation": "CHANGE_FIRST_SCHEDULE_HOLDOUT", "expectedReasonCode": "ROTATION_SCHEDULE_INVALID" },
+    { "fixtureId": "H20_CORRECTED_MATH_UPSTREAM_HASH_CHANGED", "mutation": "CORRUPT_V2_UPSTREAM_MANIFEST_HASH", "expectedReasonCode": "UPSTREAM_BINDING_DRIFT" }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "pid": "P026",
+  "finalV2": true,
+  "winningAnswer": "(C)",
+  "reason": "독립 재검증 결과 (C) 'transcribe'가 유일한 어법 오류로 확정된다. so that절의 주어 they의 유일한 복수 선행사는 the key answers(지문 전체에서 기자는 일관되게 you로 지칭되어 사람 복수 선행사가 없음)이고, 타동사 transcribe에 목적어가 없으며 answers는 전사 행위의 피동작주이므로 수동 'can be transcribed'가 요구된다(교정 시 원지문과 정확히 일치). 유일한 능동 방어 경로인 중간태(middle construction, 'this book reads easily' 유형)는 transcribe가 관습화된 중간태 동사가 아니고 조동사 can과의 결합('they can transcribe easily')이 표준 영어에서 성립하지 않아 기각된다. (A)(B)(D)(E)는 모두 정문임을 개별 확인했다. 분쟁 요약의 '선언된 정답=①'은 전체 파일(full/P026.md)의 '선언된 정답 (C)' 및 markedExpressions(isError:true는 (C) 단독)와 모순되며, (A)~(E) 라벨과 ①~⑤ 원문자 간 인덱스 변환 과정의 표기 아티팩트로 판단된다. 실질적으로 솔버1·솔버2·감사자·본 조정자 전원이 (C) 단일 정답에 일치하므로 정답 유일성(V2)은 성립한다.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "명사 while('a while')이 어법상 틀렸다는 대안 판정 가능성",
+      "verdict": "정문 — 기각",
+      "evidence": "'If the interview lasts a while'에서 last는 지속 기간 명사구를 보충어로 취하며 'a while'(관사+명사)은 표준 용법(cf. 'stay a while'). 접속사 while과의 혼동을 노린 미끼일 뿐 오류 요소 없음. 부사 awhile 대체 가능성도 검토했으나 명사구 표기가 오히려 더 표준적이며 어느 쪽도 비문이 아님."
+    },
+    {
+      "label": "(B)",
+      "claim": "형용사 보어 자리에 부사(more efficiently)가 필요하다는 대안 판정 가능성",
+      "verdict": "정문 — 기각",
+      "evidence": "가주어 It + be + 보어 + 진주어 to부정사 구조. be동사의 보어 자리이므로 형용사 비교급 more efficient가 옳고, 비교 대상은 앞 문장의 녹음 재청취 방식(time-consuming)으로 문맥상 성립. 'to develop을 수식하므로 부사'라는 독법은 통사 구조상 성립하지 않음."
+    },
+    {
+      "label": "(C)",
+      "claim": "선언된 정답. 능동 'can transcribe'가 중간태 등으로 정문 방어될 수 있는지",
+      "verdict": "비문 확정 — 유일 정답",
+      "evidence": "they의 선행사는 the key answers뿐(기자는 지문 전체에서 you로 지칭). 타동사 transcribe에 목적어가 없고 answers는 피동작주이므로 수동 'can be transcribed'가 필요하며, 교정 시 원지문과 정확히 일치(최소대립쌍 성립). 중간태 방어는 (1) transcribe가 read/sell/translate류의 관습화된 중간태 동사가 아니고 (2) 중간태의 전형은 총칭적 단순현재로 조동사 can 결합형은 비표준이어서 실패. 양 솔버의 기각 논증은 과잉 판정이 아니라 정당."
+    },
+    {
+      "label": "(D)",
+      "claim": "동명사 editing out 자리의 오류 가능성",
+      "verdict": "정문 — 기각",
+      "evidence": "전치사 of의 목적어 자리이므로 동명사가 필수. 구동사 edit out + 목적어(the material [you are not going to need] 접촉 관계절) 결합도 정상. 'as the interview proceeds'의 현재시제도 습관 문맥에서 자연스러움. 즉시 소거형 준필러 선지."
+    },
+    {
+      "label": "(E)",
+      "claim": "목적격보어 자리에 부사(more quickly)가 필요하다는 대안 판정 가능성",
+      "verdict": "정문 — 기각",
+      "evidence": "make + 목적어 + 형용사 목적보어 구조에 tough-구문(easier to handle: handle의 목적어 공백이 the material과 결속)이 결합된 정문. quicker는 easier와 병렬인 형용사 보어이며 much는 비교급 강화사로 적법. 'to handle을 수식하므로 부사'라는 독법은 병렬 시작점 확인으로 배제됨."
+    },
+    {
+      "label": "라벨 표기 분쟁(① vs (C))",
+      "claim": "분쟁 요약의 '선언된 정답=①'과 솔버 답 (C)의 불일치",
+      "verdict": "표기 아티팩트 — 실질 분쟁 없음",
+      "evidence": "권위 소스인 full/P026.md는 '## 선언된 정답 (C)'를 명시하고 markedExpressions에서 isError:true가 (C) 단독이며 해설도 (C) 수동태 교정을 서술. 솔버1·솔버2(각각 복수 방어 불가, 후보 [(C)])와 감사자 블라인드 답(C), 본 조정자 독립 검증이 모두 (C)로 일치. '①'은 (A)~(E)↔①~⑤ 인덱스 변환 버그로 추정되는 오케스트레이션 레이어의 표기 오류이며, 문항 자체의 정답 유일성에는 영향 없음."
+    }
+  ]
+}

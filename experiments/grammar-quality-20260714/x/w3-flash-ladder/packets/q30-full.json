@@ -1,0 +1,160 @@
+{
+  "passageId": "2019_06_5023285-q29",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2019,
+    "exam": "6월",
+    "origType": "함축의미",
+    "words": 146
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-obvious-object-pronoun-subject"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=j  (B):ANS=g  (C):dec=k  (D):dec=c  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 43,
+        "relPos": 0.05,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 197,
+        "relPos": 0.231,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 300,
+        "relPos": 0.352,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 473,
+        "relPos": 0.555,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 718,
+        "relPos": 0.842,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 11,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.842,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Here's an interesting thought. If glaciers started re-forming, they have a great deal more water now to draw on ― Hudson Bay, the Great Lakes, the hundreds of thousands of lakes of Canada, none of which existed to fuel the last ice sheet ― so they would grow very much quicker. And if they did start to advance again, what exactly would we do? Blast them with TNT or maybe nuclear missiles? Well, doubtless we would, but consider this. In 1964, the largest earthquake ever recorded in North America rocked Alaska with 200,000 megatons of concentrated might, the equivalent of 2,000 nuclear bombs. Almost 3,000 miles away in Texas, water sloshed out of swimming pools. A street in Anchorage fell twenty feet. The quake devastated 24,000 square miles of wilderness, much of it glaciated. And what effect did all this might have on Alaska's glaciers? None.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "started",
+        "isError": false,
+        "errorExpression": "started",
+        "surroundingText": "If glaciers started re-forming, they have a great deal more water now to draw on",
+        "pointCode": "j"
+      },
+      {
+        "label": "(B)",
+        "expression": "which",
+        "isError": true,
+        "correction": "which",
+        "errorExpression": "them",
+        "surroundingText": "they have a great deal more water now to draw on ― Hudson Bay, the Great Lakes, the hundreds of thousands of lakes of Canada, none of which existed to fuel the last ice sheet",
+        "pointCode": "g"
+      },
+      {
+        "label": "(C)",
+        "expression": "to advance",
+        "isError": false,
+        "errorExpression": "to advance",
+        "surroundingText": "And if they did start to advance again, what exactly would we do?",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "recorded",
+        "isError": false,
+        "errorExpression": "recorded",
+        "surroundingText": "In 1964, the largest earthquake ever recorded in North America rocked Alaska with 200,000 megatons of concentrated might",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "devastated",
+        "isError": false,
+        "errorExpression": "devastated",
+        "surroundingText": "The quake devastated 24,000 square miles of wilderness, much of it glaciated.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "started"
+      },
+      {
+        "label": "(B)",
+        "text": "them"
+      },
+      {
+        "label": "(C)",
+        "text": "to advance"
+      },
+      {
+        "label": "(D)",
+        "text": "recorded"
+      },
+      {
+        "label": "(E)",
+        "text": "devastated"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "If절에서 현재나 미래에 일어날 가능성이 희박한 가상의 상황을 표현하기 위해 'started'라는 과거 시제 형태를 쓴 가정법 구문으로 어법상 적절합니다.",
+      "(C)": "동사 start의 목적어로 쓰인 명사적 용법의 to부정사 구문이므로 'to advance'는 어법상 자연스럽습니다.",
+      "(D)": "주어 'the largest earthquake'와 수식자 'recorded'의 관계가 수동이며 북미에서 '기록된' 가장 큰 지진이라는 뜻이므로 과거분사인 'recorded'는 알맞은 쓰임입니다.",
+      "(E)": "지문에서 'The quake'를 주어로 삼고 그 뒤에 완전한 문장의 뼈대를 이루는 정동사가 필요한 자리이므로, 과거형 정동사 'devastated'는 어법상 맞습니다."
+    },
+    "explanation": "대시(―) 사이에 삽입된 구절에서 'none of' 뒤에 이어지는 대명사는 앞의 명사들을 선행사로 가지면서 문장을 연결하는 접속사 역할을 해야 합니다. 단순 대명사 them이 오면 두 절을 연결하는 장치가 없어 비문이 됩니다. 따라서 접속사 기능을 포함하는 관계대명사를 써야 합니다. 그러므로 'them'을 'which'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(B) 관계대명사 vs 대명사 — 절과 절을 연결하는 접속사의 유무를 확인",
+      "(C) to-v/v-ing — 동사의 목적어로 쓰인 부정사",
+      "(D) 분사능수동 — 수식받는 명사와의 능동/수동 관계 판단"
+    ],
+    "tags": [
+      "어법",
+      "관계대명사",
+      "준동사",
+      "가정법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Here's an interesting thought. If glaciers __(A) started__ re-forming, they have a great deal more water now to draw on ― Hudson Bay, the Great Lakes, the hundreds of thousands of lakes of Canada, none of __(B) them__ existed to fuel the last ice sheet ― so they would grow very much quicker. And if they did start __(C) to advance__ again, what exactly would we do? Blast them with TNT or maybe nuclear missiles? Well, doubtless we would, but consider this. In 1964, the largest earthquake ever __(D) recorded__ in North America rocked Alaska with 200,000 megatons of concentrated might, the equivalent of 2,000 nuclear bombs. Almost 3,000 miles away in Texas, water sloshed out of swimming pools. A street in Anchorage fell twenty feet. The quake __(E) devastated__ 24,000 square miles of wilderness, much of it glaciated. And what effect did all this might have on Alaska's glaciers? None."
+  }
+}

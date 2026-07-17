@@ -1,0 +1,35 @@
+{
+  "pid": "P066",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) are",
+      "verdict": "correct",
+      "reason": "True subject is the plural 'Racial microaggressions'; the intervening exemplifying phrase 'such as assumptions ... based on their race or ethnicity' (ending in singular 'ethnicity') is a proximity distractor only. Plural subject + plural copula 'are' + predicate nominal 'commonplace ... indignities' is fully grammatical."
+    },
+    {
+      "label": "(B) feel",
+      "verdict": "correct",
+      "reason": "Causative construction 'make + object + bare infinitive': 'make target groups feel unwelcome, isolated, and unsafe.' The bare infinitive is obligatory after causative 'make'; 'feel' correctly takes the coordinated adjectival complements. Grammatical."
+    },
+    {
+      "label": "(C) perfectly",
+      "verdict": "correct",
+      "reason": "'I can hear you perfectly well' — 'perfectly' is an adverb of degree modifying the adverb 'well' (which modifies 'hear'). Adverb-modifying-adverb is the required form; an adjective ('perfect') would be ungrammatical here. Grammatical."
+    },
+    {
+      "label": "(D) implying",
+      "verdict": "incorrect",
+      "reason": "Sentence: 'People raising their voices while speaking to him implying a hidden message that ...' — no finite verb exists under any parse. (i) If 'People' is head noun with reduced relative 'raising their voices while speaking to him', the main verb must be finite: 'imply'. (ii) If 'People raising their voices' is read as an acc-ing gerundive subject, a finite 'implies' is still required. (iii) An absolute-construction rescue fails because the string terminates with a period and there is no host clause. Every parse yields a verbless fragment, so 'implying' is ungrammatical; it must be 'imply' (or 'implies')."
+    },
+    {
+      "label": "(E) damaging",
+      "verdict": "correct",
+      "reason": "'they are nevertheless damaging to targets' — 'damaging' is a well-formed predicative adjective (= harmful) licensed with a 'to'-PP complement; parallel to 'harmful to'. A passive 'damaged' would wrongly make the microaggressions the harmed party. Grammatical."
+    }
+  ],
+  "note": "Clean single-answer item. (D) is a textbook dangling-participle/fragment error with no rescuing parse (no finite verb under relative-clause, gerundive-subject, or absolute readings). Distractors are standard but sound: (A) agreement across an appositive, (B) causative bare infinitive, (C) adverb stacking, (E) predicative -ing adjective. No second defensible label found."
+}

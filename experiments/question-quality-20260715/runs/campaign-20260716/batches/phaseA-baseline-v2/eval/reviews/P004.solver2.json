@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립한다: 'spend more time V-ing ... than [NP]' 비교에서 'the time required to delegate...'는 명사구로 정상 결합하며 'more time ... than the time'의 동종 비교도 형식적으로 문제없다. 그러나 논리가 붕괴한다. 지문 어디에도 위임(delegation)이라는 대안이 도입되지 않았고, '걱정 시간 > 위임에 드는 시간'이라는 명제는 후행 결론 'So for me, it'll always be the first thing I get done'(내가 직접 아침에 처리한다)을 전혀 지지하지 못한다. 위임이 더 싸다면 결론은 '위임하라'가 되어야 하므로 담화 정합 실패."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "결합 자체는 ④와 동형('more time ... than the effort needed to...')이라 형식적으로 허용 가능하나, 논리 오류가 이중이다. (i) 지문의 이메일은 'dealing with an unpleasant email' 즉 받은 불쾌한 메일 처리이지 '사과문 작성(apologetic email)'이 아니므로 참조 대상이 지문에 존재하지 않는다. (ii) 'long apologetic email'로 과제 자체의 비용을 크게 설정하면 '실제 처리 비용은 걱정 비용보다 작다'는 논증 구도가 약화된다. 또한 두 예시(고객 대화·이메일) 중 하나로만 축소되어 일반화 결론과 맞지 않는다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법적으로는 최상급 미끼다: 'worrying, talking, avoiding'과 동일한 동명사형이라 'spend more time V-ing than V-ing' 병렬이 완벽히 성립한다. 그러나 명제 내용이 논증과 무관하다. '걱정에 쓰는 시간 > 감정 에너지를 완충하는 데 쓰는 시간'이라는 비교는 지문의 핵심 대조(미루며 걱정하는 비용 vs 실제로 해치우는 비용)를 구성하지 못하고, 결론 '그래서 아침에 제일 먼저 해치운다'를 도출할 근거가 되지 않는다. 'waste emotional energy'라는 표층 어휘만 재활용한 논리 공전(空轉) 선지."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "정답. 결합: 'I'll spend more time worrying..., talking..., and avoiding it, than the actual time and effort needed to resolve the matter' — 비교급 생략 구문에서 'more time (and effort)'와 'the actual time and effort needed'의 동종 명사구 비교가 성립한다(엄밀히는 'spend more time than [the time]...'의 표준 용법). 논리: '과제를 미루며 걱정·회피에 쓰는 자원 > 실제 해결에 필요한 자원'이라는 명제는 (a) 앞문장 'I waste too much emotional energy'의 근거를 완성하고, (b) 'eating my problems for breakfast' 습관과 (c) 결론 'So for me, it'll always be the first thing I get done'을 필연적으로 도출한다. 두 예시(고객 대화·이메일)를 모두 포괄하는 유일한 일반화."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "동명사 병렬로 문법 결합은 성립하고, '걱정 시간 > 실제 대화 시간'이라는 의도된 대조에 표면상 가장 근접한 오답이다. 그러나 (i) 'prolonged(장시간의)'가 과제 비용을 의도적으로 부풀려 '실제 처리는 생각보다 싸다'는 논증 방향과 충돌하고 — 장시간 대화보다도 걱정이 더 길다는 극단 주장으로 읽히면 지문이 제시하지 않은 강한 전제가 필요하다 — (ii) 두 예시 중 고객 대화 하나로만 축소되어 이메일 사례와 결론의 일반성('the matter' 전체를 아침에 처리)을 커버하지 못한다. ④가 존재하는 한 열등한 후보로, 단독 옹호 불가."
+    }
+  ],
+  "note": "빈칸은 비교급 'more time ... than ___' 자리. 지문 논증(미루기의 걱정 비용 > 실제 해결 비용 → 아침에 먼저 처리)을 완성하는 것은 ④뿐. ③⑤는 동명사 병렬로 문법 미끼가 잘 설계되었으나 논리 정합 실패, ①②는 지문에 없는 개념(위임·사과문) 도입으로 담화 붕괴. 복수정답 소지 없음."
+}

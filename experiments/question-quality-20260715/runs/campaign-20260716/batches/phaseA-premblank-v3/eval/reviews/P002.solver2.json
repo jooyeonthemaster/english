@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "형식: 'creates an arena ... and focuses solely on asserting individual academic needs and improved group functioning'로 삽입 시, 3인칭 단수 동사구이므로 'creates'와 병렬은 성립하나 문미의 명사구 'improved group functioning'이 붙을 자리가 없다. 'asserting ... needs and improved group functioning'으로 붙이면 'focuses solely on improved group functioning'이 되어 'solely'와 자기모순(오직 개인적 필요에만 집중하면서 동시에 집단 기능 개선에도 집중)이다. 논리: 지문은 타인의 필요까지 수용하는 협력(cooperate)·조망수용을 논지로 하므로 '개인의 필요만 주장'은 정면 모순이며, 'academic'은 직장(co-workers) 맥락과 무관한 어휘로 지문 어디에도 근거가 없다."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "형식: 'creates ... and escalates emotional distress by confronting others and improved group functioning' — 문미 명사구 'improved group functioning'의 병렬 시작점이 없다. (a) 'escalates [emotional distress] and [improved group functioning]'으로 읽으면 '개선된 집단 기능을 격화시킨다'는 의미 불성립, (b) 'confronting others and improved group functioning'은 동명사구와 명사구의 범주 불일치 병렬로 비문에 준한다. 논리: 지문 전체가 감정 이해 능력의 긍정적 효과(명확한 소통, 협력, 조망수용)를 서술하고 빈칸 뒤가 'improved group functioning'이라는 긍정 결과이므로 '정서적 고통 격화'는 극성(polarity)이 반대다."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "형식: 'Appreciation of differences creates an arena for open communication and leads to productive settlements of disagreements and improved group functioning.' — 단수 주어 'Appreciation'에 3인칭 단수 'creates'와 'leads'가 정확히 병렬되고, 문미의 'improved group functioning'은 'leads to [productive settlements of disagreements] and [improved group functioning]'으로 전치사 to의 목적어 명사구 병렬에 자연스럽게 흡수된다. 다섯 선지 중 유일하게 문미 명사구의 병렬 착지점을 제공하는 결합(seam)이다. 논리: 지문의 인과 사슬(감정 이해 → 정확한 감정 표현 → 명확한 소통·협력 → 갈등 상황에서의 조망수용 → 차이의 인정)의 귀결로 '의견 불일치의 생산적 해결'은 갈등(group conflict) 화제를 직접 회수하며, 'improved group functioning'과 극성·층위가 일치한다."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "형식: 'creates ... and forces members to hide their true feelings and improved group functioning' — 문미 명사구의 착지점이 없다. 'hide [their true feelings] and [improved group functioning]'으로 읽으면 '개선된 집단 기능을 숨긴다'는 의미 불성립. 논리: 지문은 감정을 '정확히 표현(express emotions ... accurately)'하고 '자신이 어떻게 느끼는지 말할 수 있는(able to express how he feels)' 능력을 핵심으로 하므로 '진짜 감정을 숨기게 강제한다'는 정면 모순이며, 'open communication'과도 양립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "형식: 'creates ... and ignores differences to maintain a superficial peace and improved group functioning' — 문미 명사구가 'a superficial peace and improved group functioning'으로 maintain의 목적어 병렬로는 붙을 수 있어 순수 통사만으로는 성립 가능하나, 의미상 'superficial(피상적)'과 'improved(개선된)'의 평가 극성이 충돌해 동일 목적어 병렬로 부적합하다. 논리: 주어 자체가 'Appreciation of differences(차이의 인정)'이므로 '차이를 무시한다(ignores differences)'는 주어와 술어가 직접 모순되는 자기부정 명제다. 형식 논리상 성립 불가능한 결합."
+    }
+  ],
+  "note": "빈칸 문장 구조가 판정의 핵심: 'creates an arena for open communication and ___ and improved group functioning'에서 다섯 선지 모두 3인칭 단수 동사구라 'creates'와의 동사 병렬 자체는 전 선지 성립하지만, 문미에 남는 명사구 'improved group functioning'의 병렬 착지점을 의미까지 온전하게 제공하는 것은 3번('leads to A and B')이 유일하다. 극성 검사에서도 1·2·4·5는 지문의 긍정 논지(협력·개방적 소통·조망수용)와 반대이거나(2·4), 주어와 자기모순(5), 어휘적 근거 부재(1의 academic)로 배제된다. 정답 후보는 3번 하나로 유일하게 수렴하며 복수 정답 시비 여지 없음."
+}

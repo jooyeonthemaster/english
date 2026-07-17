@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸에 넣으면 'may help resolve differences by understanding others' viewpoints'. 뒤 문장들의 전개와 정확히 정합: (a) 'accommodate their own needs as well as the needs of others (i.e. cooperate)', (b) 갈등 상황 예시에서 'take the perspective of the other group members and understand why they are reacting in a certain manner'(= understanding others' viewpoints), (c) 결론부 'Appreciation of differences ... promotes constructive conflict resolution'(= resolve differences). 예시와 결론이 빈칸 내용을 그대로 구체화·재진술하는 구조라 논리 적합. 문법 결합도 'may + 동사원형 help resolve'로 매끄러움. 단 하나의 미세한 seam: 'thus'가 직접 잇는 선행 근거는 '감정을 정확히 표현하는 능력'인데 ①의 근거절은 '타인 관점 이해'여서 국소 인과가 약간 어긋나 보일 수 있으나, 첫 문장이 정의한 능력 자체가 'understand the causes and consequences of emotion'을 포함하고 예시 문장이 표현+관점취하기를 한 사람의 능력으로 묶어 서술하므로 지문 전체 층위에서는 문제없이 성립."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "'집단 규칙에 대한 엄격한 준수 강제'는 지문 어디에도 근거 없음. 지문의 방향은 개방적 소통·협력·건설적 갈등 해결이지 규칙 강제가 아님. 'group settings', 'team' 어휘만 표면적으로 겹치는 무근거 선지. 끌림 없음."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "'감정 표현 억제'는 빈칸 바로 앞 'are able to express emotions, feelings and moods accurately'와 정면 모순. 'thus' 뒤에 표현 억제가 오면 자기모순. '객관적 추론을 위해 감정을 억눌러야 한다'는 통념에 기대는 미끼로, 지문을 안 읽고 상식으로 풀면 잠깐 끌릴 수 있으나 앞 절과의 모순이 즉시 드러나 실전에서는 쉽게 배제됨."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "'타인의 사적 감정과 거리 두기'는 'take the perspective of the other group members and understand why they are reacting in a certain manner'와 정반대. 지문은 타인 감정에의 적극적 접근·이해를 요구함. 끌림 없음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'asserting their own ideas clearly'가 빈칸 앞 'express emotions ... accurately' 및 예시의 'express how he feels about the problem and why he feels this way'와 표면적으로 강하게 공명해 '정확한 표현 → 자기 생각을 분명히 주장'으로 이어 읽고 싶은 유혹이 실제로 있음. 그러나 핵심 동사 'dominate(토론 지배)'가 바로 다음 문장 'accommodate their own needs as well as the needs of others (i.e. cooperate)' 및 결론부 'open communication'과 충돌. 표현의 목적이 지배가 아니라 상호 이해·협력임을 확인하는 순간 배제됨."
+    }
+  ],
+  "note": "정답은 ①로 유일하게 옹호 가능. 지문 구조가 [주장(빈칸) → Furthermore 병렬 주장 → for example 구체화 → 결론 재진술]로 깔끔해 빈칸 내용이 예시·결론에서 이중으로 지지됨. 유일한 감점 요소는 'thus'의 국소 인과(정확한 감정 표현 → 타인 관점 이해로 갈등 해결)가 한 단계 건너뛰는 느낌을 주는 것인데, 첫 문장의 능력 정의(감정의 원인·결과 이해)가 이를 커버하므로 이의신청이 성립할 수준은 아님. 최상위권 기준 체감 난도는 낮은 편이며, 실질적 매력 오답은 ⑤ 하나(표현 정확성과의 표면 공명), ③은 통념 미끼지만 앞 절 모순으로 약함."
+}

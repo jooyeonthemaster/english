@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a lasting mark that shows the evolution of society' — 관계대명사 that의 선행사는 단수 명사 'a lasting mark'이므로 단수 동사 shows가 옳다. 선행사를 'Its presence'로 오인해도 여전히 단수라 결론은 동일. 유혹 요소가 거의 없는 안전한 밑줄."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "가장 매력적인 오답. 'one of the first qualities [a bridge must exhibit] concerns how...' 구조에서 진짜 주어는 'one'(단수)이고 'a bridge must exhibit'는 qualities를 수식하는 목적격 관계절(관계사 생략)이다. 직전의 복수 명사 qualities와 타동사 exhibit 때문에 'exhibit의 목적어가 없다' 혹은 '복수 주어에 concerns는 수일치 오류'로 착각하기 쉽다. 실제로 exhibit의 목적어 자리는 생략된 관계대명사가 채우고 있고, 주어 one에 concerns 단수 일치가 정확하다. 실전에서 잠깐 끌렸으나 주어 골격(one ... concerns)을 복원하면 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'it must either to adapt or indeed reinforce this balance' — 조동사 must 뒤에는 원형부정사가 와야 하는데 to adapt(to부정사)가 왔다. 병렬 구조로 봐도 either A or B의 A가 'to adapt', B가 '(indeed) reinforce'로 형태가 불일치하며, 어느 쪽으로 병렬 시작점을 잡아도 must + to adapt는 성립하지 않는다. 대안 해석(목적의 to부정사 삽입구 등)을 시도해도 must가 본동사를 잃어버려 문장이 붕괴하므로 구제 불가. 'it must either adapt to or indeed reinforce this balance'라야 정문. 명백한 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'it is subordinate to the surroundings' — be동사의 보어 자리에 형용사 subordinate가 왔고 subordinate to N 결합도 관용적으로 옳다. 뒤의 'or it makes a strong statement'와의 절 단위 병렬도 자연스럽다. 동사 subordinate(종속시키다)의 수동태 'is subordinated to'와 헷갈리게 하려는 미끼로 보이나, 형용사 용법이 표준이므로 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'spectacular in itself but spoils its local environment' — in itself(그 자체로)는 관용 표현이고 재귀대명사 itself는 주어 a bridge(that절 내 주어)를 가리키므로 옳다. it으로 바꿔 쓸 이유가 없다. 정문."
+    }
+  ],
+  "note": "실전 풀이 순서: (C)에서 must + to부정사가 즉시 눈에 띄어 1순위 후보로 확정. 가장 강한 유혹은 (B)로, 'qualities ... exhibit concerns'의 연쇄에서 수일치 착시(qualities→concern?)와 exhibit의 목적어 부재 착시가 동시에 걸리지만, 'one of + 복수명사 + (목적격 관계절) + 단수동사'라는 수능 단골 골격을 복원하면 정문으로 판정된다. (D)의 subordinate도 동사로 오인하면 'is subordinated'가 맞다고 착각할 수 있으나 형용사 subordinate to가 표준. 정답은 (C) 단독으로 옹호 가능하며 복수 정답 소지 없음."
+}

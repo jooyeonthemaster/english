@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "question-quality-s1-controller-preflight-public-v1",
+  "status": "OFFLINE_WIRE_COMPILED_EXECUTION_BLOCKED",
+  "campaignPublicArtifactSha256": "f4e2085c90736042329d4a921cc2d28bfc81fe47bf4b72f410253a688c8b909a",
+  "campaignPrivateQueueFileSha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+  "controllerPreflightSemanticSha256": "e72659dad93504a5aa96abdac38e0faedfc58934649f8c307a8cd8f1518c5446",
+  "sourceClosureSha256": "79b7449e5d6dd0a8fcfefd22c7a3f9abb78d89a79605020c31c47c13249d8cce",
+  "counts": {
+    "assignments": 180,
+    "interceptedFetches": 180,
+    "physicalFetchCap": 180,
+    "candidateOpportunityCap": 180,
+    "uniqueWireBodies": 180,
+    "byType": {
+      "BLANK_INFERENCE": 84,
+      "GRAMMAR_ERROR": 96
+    },
+    "byPlan": {
+      "PREMIUM": 84,
+      "STANDARD": 96
+    },
+    "byDifficulty": {
+      "INTERMEDIATE": 90,
+      "KILLER": 90
+    },
+    "byModel": {
+      "google/gemini-3.1-pro-preview": 84,
+      "google/gemini-3.5-flash": 96
+    },
+    "byProfile": {
+      "B0_CURRENT_CONTROL": 24,
+      "B1_TYPE_SCOPED_TAIL": 12,
+      "B2_POSITIVE_COMPACT": 24,
+      "B3_OPTION_INTENT_LEDGER": 24,
+      "G0_CURRENT_CONTROL": 24,
+      "G1_FINAL_CHECKLIST_ABLATION": 24,
+      "G2_POSITIVE_COMPACT": 24,
+      "G3_SITE_CERTIFICATE": 24
+    }
+  },
+  "wire": {
+    "endpointSha256": "5c1332d5f9242f304584f5dca3e53a8afe9d1e0c9ea153e0ab73f27e4f341bce",
+    "minimumBodyUtf8Bytes": 11258,
+    "maximumBodyUtf8Bytes": 94334,
+    "totalBodyUtf8Bytes": 7488887,
+    "strictJsonSchemaRows": 180,
+    "reasoningOffRows": 180,
+    "providerRequireParametersRows": 180,
+    "providerZdrRows": 180,
+    "providerDataCollectionDenyRows": 180,
+    "providerFallbackDisabledRows": 180,
+    "exactGoogleVertexGlobalOnlyRows": 180
+  },
+  "safety": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "compiledAssignments": 180,
+    "observedInterceptedFetches": 180,
+    "liveExecutionAuthorized": false,
+    "pricingAttached": false,
+    "rightsGateAttached": false,
+    "privacyGateAttached": false
+  },
+  "executionHolds": [
+    "local corpus-rights decision",
+    "provider privacy and retention decision",
+    "limited credential and provider-side hard spend ceiling",
+    "fresh maximum allowlisted-provider pricing proof no older than 15 minutes",
+    "sealed per-assignment durable controller registries and ledger",
+    "fresh independent preflight audit"
+  ],
+  "publicArtifactSemanticSha256": "1411c5299a7192b839df892c2cf509613125fed951407a5ff1bb4048586cafb3"
+}

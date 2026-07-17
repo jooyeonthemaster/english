@@ -1,0 +1,90 @@
+{
+  "pid": "P004",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TRAP-TYPE-MISLABEL",
+      "severity": "major",
+      "evidence": "오답 해설 ⑤: \"...지문 초반부(Rather than an abstract desire~)에서 명시적으로 부인된 내용이므로 인과가 역전된 오답입니다.\" — 선지 ⑤('both audiences and the law persistently pursue an abstract truth')에는 인과 주장이 전혀 없고 지문 해당 문장에도 역전될 인과 관계가 존재하지 않는다. 실제 함정은 '본문이 명시적으로 부정한 내용의 긍정 진술(극성 반전)'이며, 본해설 스스로 ⑤를 '본문이 부정한 내용을 긍정으로 속인 함정'이라고 올바르게 규정하고 있어 오답 해설과 본해설이 같은 선지를 서로 모순되게 설명한다. RUBRIC V4('오개념·환각·용어 오류 없음') 및 감사 절차의 '인과 오설명' 항목 위반."
+    },
+    {
+      "code": "V4-ANCHOR-PARAPHRASE-LOOSE",
+      "severity": "minor",
+      "evidence": "오답 해설 ④는 'horror of affects'를 '본문 개념'으로 승인했으나 지문 원문은 'fearing the horror of their consequences'(감정의 결과에 대한 공포)로, 선지가 이미 미세 왜곡한 표현이다. 또한 선지의 'isolates humans'를 '인간사회를 단절시킨다'로 확장 환언했다. 실질 판정(지문에 없는 인과)은 정확하므로 단독 치명은 아님."
+    },
+    {
+      "code": "CRAFT-LEXICAL-LEAK",
+      "severity": "major",
+      "evidence": "정답 ① 'regulates and suppresses such emotional impulses'의 핵심 동사 suppress가 빈칸 두 문장 뒤 'The law obsessively tries to suppress affects'에 원형 그대로 재출현한다. 인접 한 문장의 축자 매칭만으로 정답 도달이 가능해 KILLER 요건(두 문장/두 논리 단서 연결 필수, 단일 단서 해결 금지)을 무너뜨린다. V 게이트가 아닌 공예(C3/C4/C5)·KILLER 조건 실패 근거."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span 'the law keeps it in check'의 의미 보존 환언(법이 감정적 충동을 규제·억압). However/while 대조 구조와 후행 근거 문장('It tries to ensure that we are not overwhelmed...', 'The law obsessively tries to suppress affects')이 직접 지지.",
+      "temptingBecause": "(정답이므로 해당 없음) 후행 문장의 suppress와 축자 일치해 오히려 지나치게 쉽게 확인된다.",
+      "decisiveFlaw": "없음 — 유일 정답. 다만 'suppresses' 축자 재출현으로 KILLER 수준의 추상화 거리가 확보되지 않았다."
+    },
+    {
+      "label": "2",
+      "intent": "actor swap — 영화의 기능(cinema introduces us to our affects, forcing us to identify the most unbearable ones)을 법에 전가.",
+      "temptingBecause": "'hidden drives'가 지문의 'desires and drives'를, 'confront'가 'identify ... in ourselves'를 어휘·개념적으로 연상시킨다.",
+      "decisiveFlaw": "마지막 문장이 법=suppress affects, 영화=introduce/identify affects로 명시 대조하므로 주체 전도. 후행 'It tries to ensure that we are not overwhelmed...'과도 양립 불가."
+    },
+    {
+      "label": "3",
+      "intent": "half-truth/과확장 — 인간 본성 문장의 freedom·commands 소재를 재조합해 반대 결론 제시.",
+      "temptingBecause": "'man desires freedom'과 'a regime of commands and prohibitions'가 지문 4문장에 실재하는 앵커라 표면 정합성이 있다.",
+      "decisiveFlaw": "지문은 인간이 너무 폭력적이어서 명령·금지 체제가 필요하다는 취지로, 법이 '절대적 자유를 보장'한다는 진술은 논지 정면 위배. 절대어 'absolute'와 'absolute freedom through rigid commands'라는 준모순 표현 탓에 단일 단서로 즉시 소거 가능해 KILLER 디코이로는 얕다."
+    },
+    {
+      "label": "4",
+      "intent": "fabricated causation — 실제 앵커(horror)를 차용해 지문에 없는 도구적 인과(공포를 이용한 고립) 날조.",
+      "temptingBecause": "'horror of affects'가 'fearing the horror of their consequences'를 근사 인용해 표면 유사도가 높다.",
+      "decisiveFlaw": "지문에서 공포는 법이 감정의 결과를 '두려워하는' 심리이지 법이 '이용(utilizing)'하는 수단이 아니며, 인간을 '고립(isolates)'시킨다는 행위도 지문에 부재."
+    },
+    {
+      "label": "5",
+      "intent": "polarity flip — 지문 2문장에서 명시적으로 부인된 명제의 긍정 진술 + 차이 슬롯에 공통점 진술(담화 기능 위반) 유도.",
+      "temptingBecause": "'abstract truth'가 2문장의 실제 어구이고 'audience'가 1문장의 현저 어휘라, 대충 읽으면 지문 재진술처럼 보인다.",
+      "decisiveFlaw": "'Rather than an abstract desire for truth as a value in itself...'가 법의 추상적 진실 추구를 명시 부인. 또한 빈칸 문장은 'an important difference'를 도입하는 자리인데 ⑤는 'both...'로 공통점을 진술해 프레임 단서 하나로도 탈락한다. 부수: 복수 주어라 후행 'It tries to ensure...'의 지시가 어색해지는 tail 비대칭 존재(문법적 탈락 수준은 아님)."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TRAP-TYPE-MISLABEL",
+      "severity": "major",
+      "evidence": "오답 해설 ⑤ 말미의 '인과가 역전된 오답' — 실제로는 극성(부정→긍정) 함정. 본해설의 올바른 규정('부정한 내용을 긍정으로 속인 함정')과 내부 모순."
+    },
+    {
+      "code": "KEYPOINT-WEAK-MAPPING",
+      "severity": "minor",
+      "evidence": "keyPoints가 '본문의 구체적 어휘(suppress, command)를 추상적 개념으로 환언하는 능력'을 주장하나, 정답 ①의 suppress는 환언이 아니라 축자 재사용이고 command 계열 개념의 환언은 정답 선지에 사실상 없다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "sameSyntacticSlot": true,
+    "answerPreservesSourceMeaningWithAbstraction": "부분 충족 — 의미는 보존하나 'suppresses'가 후행 문장과 축자 일치해 난이도에 맞는 추상화 실패",
+    "distractorsHaveAnchorOverlapFlaw": true,
+    "requiresTwoSentenceSynthesis": "실패 — 인접 한 문장(The law obsessively tries to suppress affects... whereas cinema...)의 축자 매칭만으로 정답 도달 가능",
+    "noSingleCueElimination": "실패 — ③은 절대어 'absolute' 하나로, ⑤는 공통점/차이점 프레임 단서 하나로 즉시 소거 가능",
+    "distinctTrapTypes": true
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 의도된 빈칸 치환('the law keeps it in check' → _____) 외 원문과 완전 일치하고 고아 문장부호·중복·누락 없음(V1). 5개 선지 독립 대입 검증 결과 ①만 성립 — ② 주체 전도(후행 문장과 모순), ③ 논지 정반대+절대어 과확장, ④ 지문에 없는 도구적 인과, ⑤ 명시 부인 내용+공통점/차이점 프레임 위반(V2). 완성문·발문·지문 모두 문법적이고 다섯 선지가 동일 통사 슬롯(완전한 절)에 들어간다(V3). 정답 라벨·오답 해설 키·keyPoints 동기화 정상(V5). V4 실패: 오답 해설 ⑤가 인과 구조가 전혀 없는 선지를 '인과가 역전된 오답'으로 오설명하며, 본해설의 올바른 규정과 내부 모순 — 보수 원칙에 따라 치명 처리, 공예 점수로 상쇄 불가. 공예: 출제 지점은 지문의 핵심 대조 피벗으로 정전적(C1=4)이고 네 오답이 서로 다른 함정 기제를 갖지만(C2=4), 정답 동사 suppress의 축자 누출로 단일 문장 매칭 해결이 가능해 경쟁력·단서 경제성이 낮고(C3=2, C4=2), 요청 난이도 KILLER 대비 실제 난이도는 중 이하(C5=1), 해설은 대체로 선명하나 함정 유형 오기 포함(C6=1). KILLER 조건(§D) 미충족: 두 단서 연결 불요·단일 단서 소거 가능. 종합 F. 수리 방향: (1) ⑤ 오답 해설의 유형 라벨을 '명시 부정 내용의 긍정 진술'로 교정, (2) 정답 선지를 suppress 축자 없이 재추상화(예: 'the law works to hold such impulses under restraint' 류)해 후행 재진술 문장과의 어휘 충돌 해소, (3) ③의 'absolute' 절대어 완화 — 이 세 가지가 반영되면 상위 등급 재평가 여지가 크다."
+}

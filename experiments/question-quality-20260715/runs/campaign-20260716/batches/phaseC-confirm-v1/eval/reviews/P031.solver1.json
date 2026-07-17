@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "간접의문문 'who their real parents are'에서 진짜 주어는 복수 'their real parents'이므로 are가 정확. 'no idea who ... is'로 단수 착각을 유도하지만 주어가 복수라 흔들림 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'all their attempts ... are met with firm resistance' — 'be met with + 저항' 수동 관용 표현. 주어 attempts(사물)가 저항을 받는 대상이므로 수동태 met이 정문. 능동 'meet with'와의 혼동을 노린 선지지만 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "주어의 핵은 복수 'restrictions'이고 'against opening adoption files'는 전치사구 수식어이므로 동사는 make여야 함. 동명사구 'opening adoption files'를 주어로 착각하면 단수 makes가 옳아 보이는 것이 함정. 장거리 단서: 뒤 주절의 'they do not necessarily discourage'에서 they가 restrictions를 복수로 받아 복수 구조를 확정. makes는 어법상 틀림 → 정답."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'find what they want to know' — know의 목적어가 비어 있고 선행사가 없으므로 선행사 포함 관계대명사 what(자유관계절, find의 목적어 역할)이 정확. that이었다면 불완전절 + 선행사 부재로 오히려 비문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'devote A to B'의 to는 전치사이므로 동명사 finding이 정문. 'to + 동사원형'으로 끌리는 고전적 미끼라 실전에서 가장 유혹적이었으나 devote ... to -ing 규칙으로 기각. 'finding more about'이 'finding out more about'보다 다소 어색하다는 어휘 차원의 꼬투리는 있으나 밑줄의 어법 포인트(전치사 뒤 동명사)는 옳음."
+    }
+  ],
+  "note": "정답 후보는 (C) 단독. 함정 구도가 명확: (C)는 동명사구를 주어로 오인하게 하는 수일치 함정, (E)는 to부정사/전치사 to 구분 미끼, (B)는 수동 관용구 미끼. 최상위권 관점에서 (E)에 가장 크게 끌렸으나 devote to -ing로 즉시 해소. (C)는 후행 대명사 they가 복수 구조를 확정해 대안 해석(단수 구제)이 불가능. 유일한 사소한 흠은 (E)의 'finding more about'이 관용상 'finding out more about'이 자연스럽다는 점이지만 어법 판정에는 영향 없음."
+}

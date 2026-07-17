@@ -1,0 +1,364 @@
+{
+  "schemaVersion": 1,
+  "artifactId": "prompt-profiles-v1",
+  "capturedAt": "2026-07-15T00:00:00+09:00",
+  "scope": [
+    "GRAMMAR_ERROR",
+    "BLANK_INFERENCE"
+  ],
+  "execution": {
+    "externalModelCalls": 0,
+    "fullQuestionCandidatesUsed": 0,
+    "productionFilesEditedByThisArtifact": 0,
+    "productionDefaultChanged": false,
+    "authorization": "DESIGN_ONLY_NO_GO"
+  },
+  "productionDefaults": {
+    "standardModel": "google/gemini-3.5-flash",
+    "premiumQuestionModel": "google/gemini-3.1-pro-preview",
+    "premiumGrammarLadderModel": "google/gemini-3.1-pro-preview",
+    "geminiThinking": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "qualification": "Environment attestation plus source-pinned local call-path reconstruction; this is not compiled deployment byte parity."
+  },
+  "priorDecisions": {
+    "mustNotReintroduce": [
+      {
+        "id": "FLASH_PREMIUM_LADDER",
+        "result": "73.3% quality at about KRW 79; Pareto-inferior to the then-current STANDARD range of 63-77% at about KRW 36."
+      },
+      {
+        "id": "FLASH_DIET_LADDER_W5",
+        "result": "About KRW 73 with 6 defects remaining among 10 cases."
+      },
+      {
+        "id": "PRO_ONLY_IS_ENOUGH",
+        "result": "63.3%; model substitution alone did not reproduce the claimed result."
+      },
+      {
+        "id": "GROWING_BLACKLIST",
+        "result": "Repeatedly adding forbidden surfaces was previously tried and rolled back; profiles below use isolated ablations or positive artifacts instead."
+      }
+    ],
+    "neverClaim": [
+      "shorter prompt is inherently better",
+      "more constraints are inherently better",
+      "one-shot research mode is production parity",
+      "accepted by gate means exam-ready",
+      "historical 60/60 ok means 60 valid or beautiful items"
+    ]
+  },
+  "profiles": [
+    {
+      "id": "G0_CURRENT_CONTROL",
+      "type": "GRAMMAR_ERROR",
+      "level": "CONTROL",
+      "promptTreatment": "Current source-pinned prompt and schema bytes.",
+      "schemaTreatment": "Current getAiResponseSchema output.",
+      "screenCallPolicy": "ONE_CANDIDATE_REQUEST_NO_RETRY_REPAIR_OR_SOLVER",
+      "productionInteraction": "STANDARD uses the general path; eligible strict PREMIUM 5-marker/1-answer requests normally use the multi-stage premium grammar ladder.",
+      "productionParity": false
+    },
+    {
+      "id": "G1_FINAL_CHECKLIST_ABLATION",
+      "type": "GRAMMAR_ERROR",
+      "level": "MINIMAL",
+      "promptTreatment": "Only finalChecklist becomes the empty string; every other general-path prompt layer and the current schema are retained.",
+      "schemaTreatment": "None.",
+      "screenCallPolicy": "ONE_CANDIDATE_REQUEST_NO_RETRY_REPAIR_OR_SOLVER",
+      "productionInteraction": "This isolates a 512-character repeated self-check payload in the general path; removing it changes the rendered builder surface by 514 characters because the builder contributes two separator newlines. It is a no-op for the eligible PREMIUM ladder because that ladder does not consume the general prompt.",
+      "productionParity": false
+    },
+    {
+      "id": "G2_POSITIVE_COMPACT",
+      "type": "GRAMMAR_ERROR",
+      "level": "INTERMEDIATE",
+      "promptTreatment": "Use GRAMMAR_POSITIVE_CORE_PROMPT as the complete type prompt; omit type-quality rubric, candidate block, final checklist and type-settings prose. STANDARD retains the source-pinned type-scoped common contract; PREMIUM retains its common output wrapper.",
+      "schemaTreatment": "Current schema unchanged.",
+      "screenCallPolicy": "ONE_CANDIDATE_REQUEST_NO_RETRY_REPAIR_OR_SOLVER",
+      "productionInteraction": "Same treatment bytes are crossed with Flash and Pro to estimate model-by-prompt interaction.",
+      "productionParity": false
+    },
+    {
+      "id": "G3_SITE_CERTIFICATE",
+      "type": "GRAMMAR_ERROR",
+      "level": "STRUCTURED",
+      "promptTreatment": "G2 plus GRAMMAR_SITE_CERTIFICATE_DELTA.",
+      "schemaTreatment": "Replace internal errorDesign:string with siteCertificate:object before markedExpressions; adapt it back to serialized errorDesign before current post-process and gates.",
+      "screenCallPolicy": "ONE_CANDIDATE_REQUEST_NO_RETRY_REPAIR_OR_SOLVER",
+      "productionInteraction": "STANDARD can remain one original candidate-capable stage. PREMIUM confirmation replaces answerDesign only in the existing answer-only stage; the answer/add-decoy topology and downstream policies are unchanged, while realized retry/repair/solver/fallback counts remain measured outcomes rather than assumed equal.",
+      "productionParity": false
+    },
+    {
+      "id": "B0_CURRENT_CONTROL",
+      "type": "BLANK_INFERENCE",
+      "level": "CONTROL",
+      "promptTreatment": "Current source-pinned prompt and schema bytes.",
+      "schemaTreatment": "Current getAiResponseSchema output.",
+      "screenCallPolicy": "ONE_CANDIDATE_REQUEST_NO_RETRY_REPAIR_OR_SOLVER",
+      "productionInteraction": "Both plans use the general path, but STANDARD currently receives the legacy full cross-type contract tail while PREMIUM does not.",
+      "productionParity": false
+    },
+    {
+      "id": "B1_TYPE_SCOPED_TAIL",
+      "type": "BLANK_INFERENCE",
+      "level": "MINIMAL",
+      "promptTreatment": "STANDARD alone sets standardContractScope=force_type_scoped; all BLANK_INFERENCE-relevant contract lines are retained and unrelated type lines are removed. PREMIUM is byte-identical to B0 and is measured statically but not called.",
+      "schemaTreatment": "None.",
+      "screenCallPolicy": "STANDARD_ONE_CANDIDATE_REQUEST_NO_RETRY_REPAIR_OR_SOLVER; PREMIUM_EXCLUDED_AS_DUPLICATE_B0",
+      "productionInteraction": "Tests a measured 36.2% STANDARD character reduction without assuming direction of quality effect.",
+      "productionParity": false
+    },
+    {
+      "id": "B2_POSITIVE_COMPACT",
+      "type": "BLANK_INFERENCE",
+      "level": "INTERMEDIATE",
+      "promptTreatment": "Use BLANK_POSITIVE_CORE_PROMPT as the complete type prompt; omit type-quality rubric, candidate block and type-settings prose. STANDARD also uses force_type_scoped.",
+      "schemaTreatment": "Current schema unchanged.",
+      "screenCallPolicy": "ONE_CANDIDATE_REQUEST_NO_RETRY_REPAIR_OR_SOLVER",
+      "productionInteraction": "Crossed with Flash and Pro; it tests positive procedure compression, not prompt length alone.",
+      "productionParity": false
+    },
+    {
+      "id": "B3_OPTION_INTENT_LEDGER",
+      "type": "BLANK_INFERENCE",
+      "level": "STRUCTURED",
+      "promptTreatment": "B2 plus BLANK_OPTION_LEDGER_DELTA.",
+      "schemaTreatment": "Replace internal blankDesign:string with blankBlueprint containing answer meaning axis, evidence/slot contract and a five-row option-intent ledger; adapt it back to serialized blankDesign before current post-process and gates.",
+      "screenCallPolicy": "ONE_CANDIDATE_REQUEST_NO_RETRY_REPAIR_OR_SOLVER",
+      "productionInteraction": "Call count remains one for both plans; output tokens can increase and must be costed rather than called free.",
+      "productionParity": false
+    }
+  ],
+  "experimentalStrata": [
+    {
+      "id": "S0_ZERO_CALL_STATIC",
+      "purpose": "Compile schemas, render exact prompts, calculate hashes/lengths, and replay deterministic validators only.",
+      "candidateBudget": 0,
+      "parityClaim": "NONE"
+    },
+    {
+      "id": "S1_MATCHED_SINGLE_SHOT_SCREEN",
+      "purpose": "Isolate prompt/schema by holding one candidate-capable request, passage, plan, difficulty, provider settings and output cap fixed.",
+      "candidateBudgetByType": {
+        "GRAMMAR_ERROR": 96,
+        "BLANK_INFERENCE": 84
+      },
+      "allocationFormula": {
+        "GRAMMAR_ERROR": "4 profiles x 2 plans x 2 difficulties(INTERMEDIATE,KILLER) x 6 paired passage clusters = 96",
+        "BLANK_INFERENCE": "STANDARD: 4 profiles x 2 difficulties x 6 clusters = 48; PREMIUM: 3 distinct profiles(B0,B2,B3) x 2 difficulties x 6 clusters = 36; total 84. B1 is not called on PREMIUM because it is byte-identical to B0 there."
+      },
+      "sealedMaxOutputTokens": {
+        "GRAMMAR_ERROR": 6000,
+        "BLANK_INFERENCE": 4000
+      },
+      "frozenPerCallUsdCaps": {
+        "GRAMMAR_ERROR_STANDARD": 0.2,
+        "GRAMMAR_ERROR_PREMIUM": 0.43,
+        "BLANK_INFERENCE_STANDARD": 0.14,
+        "BLANK_INFERENCE_PREMIUM": 0.2
+      },
+      "capQualification": "Fixed ceilings derived from the pinned any-tier rates, high input-token sensitivity and sealed output caps. A fresh price/request preflight must fit inside these numbers; otherwise the unopened registry is blocked and must not auto-rescale.",
+      "parityClaim": "BOUNDED_RESEARCH_MODE_NOT_PRODUCTION_PARITY"
+    },
+    {
+      "id": "S2_FROZEN_HOLDOUT_CONFIRMATION",
+      "purpose": "Compare the frozen selected profile with its control on disjoint passages after profile selection is locked, using the current full topology for each plan rather than the single-shot screen topology.",
+      "targetAssignmentsPerType": 240,
+      "allocationFormulaPerType": "2 profiles x 2 plans x 3 difficulties x 20 paired passage clusters = 240 fixed ITT assignments; this is not a 240-candidate-slot claim because production retries/repair/ladder can emit more than one candidate-capable response.",
+      "grammarPremiumTopology": {
+        "control": "Current eligible PREMIUM grammar ladder: answer-only -> add-decoys -> current postprocess/validators -> hard regeneration/targeted repair policy -> current grammar solver; legacy fallback and salvage remain exactly as in the source-pinned control when triggered.",
+        "treatment": "The same topology and policies; replace only answerDesign with siteCertificate in the answer-only stage, adapt it for the locked add-decoys stage, and leave add-decoys prompt/schema, validation, repair, solver, fallback and salvage unchanged.",
+        "profileEligibility": "This mapping is defined only for G3. G1 and G2 are diagnostic S1 mechanisms with no frozen eligible-ladder treatment mapping; selecting either as the first safe screen arm yields a research result but S2 grammar remains NO_ARM until a new pre-unblinded design version maps and verifies it.",
+        "forbiddenControl": "G0 PREMIUM general-path single-shot is not the S2 control. It exists only in S1 as a non-parity mechanism control."
+      },
+      "otherTopologyMappings": {
+        "grammarStandard": "Control uses the current full STANDARD generation/finalize/validation/repair/solver/fallback/salvage topology. G3 changes only the original candidate-stage prompt/schema to the site-certificate profile and adapter; every downstream policy is held fixed.",
+        "blankStandardAndPremium": "Control uses the current full general-path topology for its plan. A selected B2/B3 treatment changes only its declared original candidate-stage prompt/schema surface; current finalize, PARAPHRASE forcing, validators, repair, fallback and salvage remain fixed. B1 is a STANDARD-only diagnostic with no distinct PREMIUM treatment, so it has no two-plan S2 mapping and cannot open the frozen holdout."
+      },
+      "candidateAndUsdAdmission": {
+        "currentStatus": "BLOCKED_PENDING_FRESH_CALLGRAPH",
+        "sourceTopologyEnvelopeStatus": "SOURCE_UNPINNED_BLOCK",
+        "provisionalUniversalPhysicalFetchCeiling": 675,
+        "provisionalUniversalCandidateSlotCeiling": 675,
+        "provisionalUniversalAssignmentUsdCaps": {
+          "STANDARD": 248.0,
+          "PREMIUM": 574.0
+        },
+        "provisionalPremiumGrammarPhysicalFetchCeiling": 378,
+        "provisionalPremiumGrammarCandidateSlotCeiling": 378,
+        "provisionalPremiumGrammarAssignmentUsdCap": 322.0,
+        "derivation": "Deliberately pessimistic no-execution ceilings. The last stale audit's largest per-assignment envelope was 675 physical fetches; treating every success as candidate-capable and bounding every call by 64k input + 12k output gives 0.3672 USD/call for Flash and 0.8496 USD/call for Pro, or rounded ceilings of 248 and 574 USD. The post-reasoning-fallback PREMIUM grammar arithmetic is separately capped at 378 fetches/candidate slots and 322 USD. These numbers prevent upward rescaling but cannot authorize execution because the underlying callgraph audit is stale. A fresh independently reviewed envelope must be no larger, source-bound, and make the whole queue fit the global caps.",
+        "fullQueueRule": "All 240 assignments/type must fit the global remaining candidate/physical/USD caps under a fresh independently audited envelope before S2 opens. Partial sequential admission is not a confirmatory substitute; if the whole frozen holdout cannot fit, S2 does not run and no production-topology quality claim is made."
+      },
+      "parityClaim": "SOURCE_TOPOLOGY_MAPPING_DEFINED_BUT_EXECUTION_BLOCKED_UNTIL_CALLGRAPH_ROUTE_AND_DEPLOYMENT_PROVENANCE_PASS"
+    }
+  ],
+  "budgetCompatibility": {
+    "singleShotScreenCandidates": {
+      "GRAMMAR_ERROR": 96,
+      "BLANK_INFERENCE": 84,
+      "total": 180
+    },
+    "holdoutTargetAssignments": {
+      "GRAMMAR_ERROR": 240,
+      "BLANK_INFERENCE": 240,
+      "total": 480,
+      "candidateSlotsGuaranteed": false
+    },
+    "currentSymbolicReducedRegistryAllocationPerFocusType": 342,
+    "qualification": "Only S1's 180 single-shot calls have fixed candidate arithmetic. S2 uses actual topology and is not arithmetically contained by 342/type or the 960-slot reduced registry until fresh envelopes prove the entire fixed holdout fits. The reduced single-shot registry and S2 production-topology registry must not be conflated or opened concurrently."
+  },
+  "randomization": {
+    "unit": "passage cluster",
+    "pairing": "Every admitted passage is crossed with all profiles in its stratum, both plans and the specified difficulties.",
+    "order": "Hash-seeded within-cluster order; queue frozen before calls.",
+    "noReplacement": "NO_SAFE_SITE, parse failure, timeout, gate rejection and budget_not_admitted remain intention-to-treat failures; no skip, reorder or top-up."
+  },
+  "estimands": {
+    "primary": [
+      "fatal-free rate under blind adjudication",
+      "A-or-B exam-ready rate",
+      "total provider USD per blind-adjudicated ship-ready item"
+    ],
+    "grammar": [
+      "unique defensible answer",
+      "certified-site binding rate",
+      "all four decoys are real structural decisions",
+      "explanation grammatical-fact accuracy",
+      "KILLER answer requires nonlocal structure"
+    ],
+    "blank": [
+      "all-five-option seam validity",
+      "unique answer and full-scope meaning preservation",
+      "four distinct intended single-axis distractors",
+      "no polarity/length/register giveaway",
+      "KILLER beautiful-trap score"
+    ],
+    "interactions": [
+      "profile x plan",
+      "profile x difficulty",
+      "profile x plan x difficulty"
+    ],
+    "unitOfInference": "passage cluster, not candidate row"
+  },
+  "selectionAndStopping": {
+    "maxScreenArmsPerType": 4,
+    "maxChallengerArmsAdvancedPerType": 1,
+    "screenSafetyStop": [
+      "schema parse success below 10/12 in any applicable plan after its full sealed plan block",
+      "new deterministic validity regression attributable to the profile",
+      "site/ledger binding mismatch above 2/24, counting parse failures as mismatches",
+      "actual or reserved USD for a call above its numeric S1 frozen per-call cap"
+    ],
+    "screenSelection": {
+      "efficacyDataUse": "Development A/B, beauty and point estimates are descriptive only and cannot rank arms at n=6 clusters.",
+      "fixedPriorityByType": {
+        "GRAMMAR_ERROR": ["G3_SITE_CERTIFICATE", "G2_POSITIVE_COMPACT", "G1_FINAL_CHECKLIST_ABLATION"],
+        "BLANK_INFERENCE": ["B3_OPTION_INTENT_LEDGER", "B2_POSITIVE_COMPACT", "B1_TYPE_SCOPED_TAIL"]
+      },
+      "eligibility": "An arm is eligible only if parse success is at least 10/12 in each applicable plan (for blank B1 only its 12 STANDARD rows apply), certificate/ledger binding mismatch is at most 2/24 grammar structured assignments or 2/24 blank structured assignments with every parse failure counted as a mismatch, it creates zero new deterministic validity regression, it has zero challenger-fatal/control-nonfatal discordances across its fully crossed applicable rows, and every call stays within its frozen USD cap.",
+      "decision": "Choose the first eligible arm in the fixed priority list as the screen result. If none qualifies, select NO_ARM. No raw craft point estimate, prompt length, or p-value breaks a tie; fixed priority eliminates data-dependent ties. Opening S2 additionally requires a frozen two-plan topology mapping: currently grammar can open only for G3 and blank only for B3/B2. A safe G2/G1 or B1 screen result is descriptive and leaves that type's S2 at NO_ARM.",
+      "controlFailure": "If control parse success is below 10/12 in either plan, adjudication is incomplete, or any sealed cell is absent rather than recorded as a terminal ITT outcome, select NO_ARM. A recorded timeout/failure is an ITT F; an absent cell is an orchestration failure."
+    },
+    "holdoutValidityNoninferiority": {
+      "marginAbsolutePercentagePoints": -5,
+      "confidence": "one-sided 95% passage-cluster interval",
+      "rule": "For each type, the challenger-minus-control fatal-free lower bound must be strictly greater than -0.05, and no new fatal defect family may appear. Failure or an interval crossing -0.05 is not success."
+    },
+    "holdoutEconomicGate": {
+      "costPerABRatioMargin": 1.25,
+      "rule": "The one-sided 95% upper confidence bound for challenger/control total provider USD per A-or-B item must be strictly <1.25. If either arm has zero A/B items or any started-call billing is missing/disputed, the economic gate fails; never simplify a finite/infinite ratio to zero."
+    },
+    "holdoutSuccess": "For a type to advance, its fatal-free noninferiority, A/B superiority, and economic ratio tests must each reject after Holm adjustment across the frozen six-test family; its ordinary one-sided bounds must also clear the strict numeric margins and no new fatal family may appear. An unrun/NO_ARM type contributes p=1 for its three tests. Report all intervals even when inconclusive.",
+    "noEarlyEfficacyStop": true,
+    "inconclusivePolicy": "Do not spend unallocated slots to chase significance. Preserve current default and report that the cap could not resolve the effect."
+  },
+  "holdout": {
+    "devPassageClustersPerType": 6,
+    "confirmatoryPassageClustersPerType": 20,
+    "disjoint": true,
+    "minimumEligibility": [
+      "source provenance accepted",
+      "original passage judged grammatical and coherent",
+      "type/difficulty feasible without forcing a target",
+      "no normalized-content overlap with dev or historical exemplars",
+      "no profile author sees holdout text before profile freeze"
+    ],
+    "supplyQualification": "The current strict blank supply is 59, so 26 unique crossed clusters are arithmetically possible but still require private binding and manual eligibility. Any shortfall blocks this design rather than silently relaxing the holdout."
+  },
+  "evaluation": {
+    "rubric": "rubric-v1.json",
+    "blindPacket": "Remove model, plan, profile, cost, retry and stored key. Randomize labels and item order while preserving the student-visible surface.",
+    "solvingOrder": "Each evaluator solves first, records NO_ANSWER/MULTIPLE when applicable, then sees the proposed key and explanation.",
+    "raters": "Two independent evaluators; a third fresh adjudicator resolves disagreements without seeing generator identity.",
+    "statisticalReporting": [
+      "paired passage-cluster differences",
+      "cluster bootstrap or exact paired intervals",
+      "Holm adjustment across the six-test locked primary family defined in rubric-v1.json",
+      "raw numerator/denominator and missingness by cell",
+      "no candidate-row independence claim"
+    ]
+  },
+  "primaryFamily": {
+    "familywiseAlpha": 0.05,
+    "testIds": [
+      "G_FATAL_NI",
+      "B_FATAL_NI",
+      "G_AB_SUP",
+      "B_AB_SUP",
+      "G_COST_NI",
+      "B_COST_NI"
+    ],
+    "holmTests": [
+      "GRAMMAR_ERROR fatal-free noninferiority, challenger-control margin -0.05, one-sided",
+      "BLANK_INFERENCE fatal-free noninferiority, challenger-control margin -0.05, one-sided",
+      "GRAMMAR_ERROR A-or-B superiority, challenger-control >0, one-sided",
+      "BLANK_INFERENCE A-or-B superiority, challenger-control >0, one-sided",
+      "GRAMMAR_ERROR cost-per-A-or-B ratio <1.25, one-sided",
+      "BLANK_INFERENCE cost-per-A-or-B ratio <1.25, one-sided"
+    ],
+    "holmRule": "Compute all six p-values and apply Holm step-down at familywise alpha 0.05. An unrun/NO_ARM type contributes p=1 for each absent test. Ordinary 95% bounds remain descriptive numeric gates and do not replace adjusted rejection.",
+    "clusterAlgorithm": "Paired passage-cluster bootstrap, seed 20260715, 100000 replicates, resampling whole passage clusters within type and recomputing arm totals. Any replicate with zero A/B in either arm has infinite cost ratio.",
+    "pValueAlgorithm": "For fatal-free and A/B endpoints, p=(1+number of bootstrap challenger-minus-control effects <= the frozen null margin)/(100000+1), with margins -0.05 and 0 respectively. For cost, p=(1+number of bootstrap challenger/control cost-per-A/B ratios >=1.25)/(100000+1); a zero-A/B or missing-billing replicate counts in that numerator. Apply Holm to these six raw p-values. Equality never passes a strict margin.",
+    "typePromotionGateIds": {
+      "GRAMMAR_ERROR": ["G_FATAL_NI", "G_AB_SUP", "G_COST_NI"],
+      "BLANK_INFERENCE": ["B_FATAL_NI", "B_AB_SUP", "B_COST_NI"]
+    },
+    "interactions": "Profile x plan, profile x difficulty and three-way interactions are secondary and cannot rescue a failed primary family."
+  },
+  "pricing": {
+    "snapshot": "experiments/question-quality-20260715/pricing/openrouter-pricing-snapshot.json",
+    "snapshotSha256": "4b8c0cf36d3bca226e6ce824fa566ef96e496c384cb37256a987247332cc73e3",
+    "staleForExecution": true,
+    "inputTokenEstimation": {
+      "calibrationCharsPerToken": 2.2696,
+      "sensitivityCharsPerToken": [
+        1.8,
+        3.0
+      ],
+      "qualification": "Calibration is one observed grammar request, not a Gemini tokenizer proof. Every sealed request must be tokenized or conservatively leased before execution."
+    },
+    "expectedCompletionTokens": {
+      "grammarSingleShot": 4000,
+      "blankSingleShot": 2500,
+      "premiumGrammarAnswerStage": 1200,
+      "premiumGrammarDecoyStage": 3500
+    },
+    "costRule": "Use the highest active endpoint rate and include every billed physical retry, parser repair, solver, fallback, salvage and failed call. Missing or disputed billing for any started call fails the economic gate; it is never dropped or silently imputed. Expected scenarios are planning estimates; only the numeric sealed S1 caps and independently audited S2 assignment envelope are admission constraints."
+  },
+  "nonFocusCoverage": {
+    "types": 23,
+    "symbolicSingleShotRowsPerType": 12,
+    "interpretation": "Coverage smoke and defect discovery only. Twelve rows/type do not support a type-level improvement rate, noninferiority claim, model comparison, or release conclusion. Any defect is an existence proof; absence of a defect is not evidence of safety."
+  },
+  "executionHolds": {
+    "providerJsonSchemaCompatibility": "UNTESTED_NO_GO",
+    "profileAdapterCompatibility": "UNTESTED_NO_GO",
+    "exactWireFixtures": "MISSING_NO_GO",
+    "rule": "Before any network call, zero-network fixtures must serialize every plan/profile/stage through the exact provider transform, prove the JSON schema is accepted by the local SDK/provider adapter shape, bind adapter output to the captured response bytes, and replay current postprocess/validators. Any unsupported union/order/schema keyword or adapter mismatch blocks that profile; no silent schema simplification is allowed after holdout freeze."
+  }
+}

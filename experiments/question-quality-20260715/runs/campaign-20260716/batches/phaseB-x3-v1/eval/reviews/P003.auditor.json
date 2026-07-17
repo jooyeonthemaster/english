@@ -1,0 +1,72 @@
+{
+  "pid": "P003",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-TYPO",
+      "severity": "minor",
+      "evidence": "해설 2문장: '에너지가 높고 주의가 산만하지 않아 집에 잘 집중할 수 있을 때' — '집에'는 '일에'(또는 삭제)의 오탈자. 원문(free from distractions and able to focus)에 'home'에 해당하는 내용이 없어 문자 그대로 읽으면 지문에 없는 내용이 되나, 명백한 단일 오타로 분석 실질(패러프레이즈 매핑, 정답 근거)은 정확하여 게이트 실패로는 판정하지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 아님 — 필자의 아침 일화('eating my problems for breakfast')를 연구 명제 자리에 오귀속시키는 일화-일반화 혼동 + 극성 반전 함정",
+      "temptingBecause": "지문에서 필자가 실제로 감정 소모적 과제를 아침에 가장 먼저 처리하므로 'first thing in the morning'이 강한 국소 앵커가 됨",
+      "decisiveFlaw": "'when our spirit is low'가 'I generally wake up energized'와 정면 모순이고, 빈칸 문장은 감정 과제가 아닌 분석적 과제(analytical tasks)에 대한 연구 명제임"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 삭제된 원문 span 'when our energy is high and we are free from distractions and able to focus'의 충실한 패러프레이즈(alertness peaks / concentrate without external interruptions)",
+      "temptingBecause": "해당 없음(정답). 직전 문장의 'matched to our energy level' 원리와 후속 'I generally wake up energized', 마지막 문장의 대비('not a morning person → later in the day')가 모두 수렴 지지",
+      "decisiveFlaw": "없음 — 유일 정답"
+    },
+    {
+      "label": "③",
+      "intent": "정답 아님 — 'free from distractions'를 '하루 종일 모든 소통 차단'으로 부풀린 극단화(overgeneralization) 함정",
+      "temptingBecause": "방해 없는 집중이라는 본문 소재와 표면적으로 겹침(blocking ~ interruptions 어휘 근접)",
+      "decisiveFlaw": "'all / throughout the entire day / for perfection'의 절대·과장 표현이 지문 근거를 초과하며, 에너지-과제 매칭이라는 명제의 예시로 기능하지 못함. tail 'for perfection'은 다소 어색하나 비문은 아님"
+    },
+    {
+      "label": "④",
+      "intent": "정답 아님 — 'worrying' 테마를 차용하되 대상을 '직장 내 타인과의 갈등'으로 바꾼 scope shift / half-truth 함정(가장 강한 오답)",
+      "temptingBecause": "지문의 정서적 에너지 소모·걱정(worrying about it) 서사와 어휘가 겹치고, unhappy client를 '직장 갈등'으로 오독할 여지가 있음",
+      "decisiveFlaw": "빈칸 문장은 '과제를 에너지 수준에 매칭하라'는 연구 명제의 예시인데 ④는 에너지 수준을 전혀 언급하지 않으며, '동료와의 갈등'은 지문에 없는 범위 이동임"
+    },
+    {
+      "label": "⑤",
+      "intent": "정답 아님 — 에너지 매칭 논리의 인과·전략 반전(causal/strategy reversal) 함정",
+      "temptingBecause": "마지막 문장 'schedule your difficult work later in the day'를 표면적으로 차용하여 '미루기'가 지문 조언처럼 보임",
+      "decisiveFlaw": "'until we are too exhausted to overthink'는 고에너지 시점에 집중 과제를 하라는 원리와 정반대이며, 지문은 미루기가 정서적 에너지 낭비를 낳는다고 명시함"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "TYPO",
+      "severity": "minor",
+      "evidence": "'집에 잘 집중할 수 있을 때'는 '일에 잘 집중할 수 있을 때'의 오탈자로 판단됨(학생 노출 텍스트 손상). 수정 필요."
+    },
+    {
+      "code": "FILLER",
+      "severity": "minor",
+      "evidence": "해설 말미 '이처럼 핵심 정보를 맥락에 맞추어 치환하면...'과 '오답들은 지문의 일부 단어를 왜곡하거나...'는 일반론적 채움 문장으로 정보 밀도가 낮음. 오답별 함정 유형은 오답 해설에서 구체적으로 다뤄져 상쇄됨."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 정확히 'when our energy is high ... able to focus' span만 제거했고 나머지 텍스트·구두점 동일, 라벨/마커 일치. V2: 5개 선지를 각각 삽입해 독립 검증한 결과 ②만 성립(①: 극성 모순+과제 유형 오귀속, ③: 절대어 과장, ④: 에너지 명제 미예시+범위 이동, ⑤: 논리 반전). V3: 다섯 선지 모두 'accomplished' 뒤 부사어 슬롯에 동일하게 들어가며 완성문 모두 문법적 — 일부 오답만 문법으로 탈락하는 문제 없음. V4: 구조 분석('전치사구 without having to worry', '전치사 뒤 동명사') 정확, 인용 span 정확, 오답 해설-선지 대응 정확. 유일 결함은 '집에' 오탈자(minor). V5: 정답 라벨·오답 해설 4건·keyPoints 모두 ② 기준으로 동기화. 공예: 4개 오답이 서로 다른 함정 기제(일화 혼동/극단화/scope shift/인과 반전)를 갖고 각자 source anchor가 있어 C2·C3 양호하나, ③⑤의 절대어 tail이 소거 단서를 다소 누출. INTERMEDIATE 요구 수준(1단계 패러프레이즈+맥락 확인)에 정합. C6는 오탈자와 채움 문장으로 2점. 합계 17, 최저 2 → B(작은 수정: 해설 오탈자 교정, 채움 문장 압축, ③의 'for perfection' tail 다듬기). 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님 → false."
+}

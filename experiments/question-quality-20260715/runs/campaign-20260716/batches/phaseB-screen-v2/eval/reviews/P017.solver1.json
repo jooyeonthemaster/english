@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Inserted: 'they demand immediate and straightforward answers that flout principles of efficient communication...'. Seam parses (plural 'answers' hosts 'that flout'), but it is doubly wrong: (a) the closing sentence explicitly says readers do NOT 'immediately ask what do you mean by that?', so demanding immediate answers is the exact opposite attitude; (b) 'straightforward answers that flout efficiency principles' is internally incoherent. Momentary pull from the phrase 'efficient communication' right after the blank, but the 'instead of imagining the writer is being uncooperative' contrast kills it."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Inserted: 'they prioritize efficient communication over poetic values that flout principles of efficient communication...'. Seam parses ('values that flout'), but the claim is self-defeating and reverses the argument: the hyper-protected cooperative principle means readers TOLERATE violations of efficiency ('put up with many obscurities and apparent irrelevancies'). Prioritizing efficiency is the non-literary contrast case the passage sets aside. Vocabulary-echo trap ('efficient communication'); polarity flip."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Inserted: 'they rely on other readers to explain the difficult parts that flout principles...'. Seam parses ('parts that flout'). This is the strongest lure — sentence 1 says 'others have found them well constructed and worth it', and I felt the pull. But the others' role is institutional selection (published, reviewed, reprinted) that grants up-front trust, not explanation of difficult parts. The blank sentence describes the reader's OWN interpretive stance, and the final sentence attributes the effort to 'the willingness of readers to pay attention, to explore uncertainties' — their own effort, not outsourcing. Off-target."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "Inserted: 'they make a patient effort to decipher complex meanings that flout principles of efficient communication in the interests of some further communicative goal.' Seam: plural 'meanings' hosts 'that flout' with correct agreement; the source text (Culler) has 'struggle to interpret elements that flout...', and this is a faithful paraphrase. Minor looseness: strictly the language elements, not the 'meanings', flout efficiency norms, but 'complex meanings' ≈ 'complications of language' keeps it acceptable. Logic matches every cue: 'put up with many obscurities', 'complications of language ultimately have a communicative purpose', 'explore uncertainties', 'not immediately ask what do you mean by that?'."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Inserted: 'they assume the author has failed to communicate that flout principles...'. Seam breaks outright: no plural noun for 'that flout' to attach to ('the author' is singular; 'communicate that flout' cannot parse as a noun clause since 'flout' lacks a subject — I checked alternative parses and none rescue it). Logic also directly contradicts 'instead of imagining that the speaker or writer is being uncooperative' and 'without assuming that this makes no sense'. Doubly eliminated (grammar + polarity)."
+    }
+  ],
+  "note": "Passage is Jonathan Culler's hyper-protected cooperative principle (Literary Theory: A Very Short Introduction); the original blank text is 'struggle to interpret elements'. The post-blank fragment 'that flout principles of efficient communication' is a strong long-distance grammar cue requiring a plural NP at the end of the inserted phrase — ①②③④ satisfy it, ⑤ does not. Semantics then uniquely select ④. As a top-tier examinee, the distractor I actually felt pulled toward was ③ (anchoring on 'others have found them well constructed' in sentence 1), with ② as the vocabulary-echo trap. 'Meanings that flout' is a hair less apt than the original 'elements that flout' but creates no second defensible answer. Stem is phrased in English ('According to the passage, fill in the blank...') — non-standard for KSAT format but unambiguous. Single defensible answer: ④."
+}

@@ -1,0 +1,18 @@
+{
+  "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "sourceAndTestSha256": {
+    "src/lib/question-quality/index.ts": "2db502873ac6fbb295afdd8315fb166d5a6a408fdc213f3def1be1a300a4137f",
+    "src/lib/question-quality/dispatcher.ts": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+    "src/lib/question-quality/validators/summary/mc.ts": "f720d8d091b958c37e2ebb18942f7f64d52c50de8e4f7cded545d6c0be985cd4",
+    "src/lib/question-quality/validators/blank/inference.ts": "0e517dd2dde81f06cf20bab6c7bab90e2155ed7c9e239f07d02e3fb099ff8f60",
+    "src/lib/question-quality/validators/blank/paraphrase.ts": "d8a660b09e124744705111ea9413245648c18aa94f88ba20471afbd0d164df14",
+    "src/lib/question-quality/validators/grammar/shared.ts": "78c72f4d16ecda0f49b52035012115a9736b6024ca6acdd8e67d6f7ef8e2d2cb",
+    "src/lib/question-quality/validators/sentence-order.ts": "f7ca1abd81b46f3ce23db34c1d8676b1b8f3f186535f348081f97a2b0158aa08",
+    "tests/unit/summary-mc-direction-split.test.mjs": "b8af7a7deaf2051396cb2eac7d259598aa6246dc0dd1f27d46bc63ec1dcc9caa",
+    "tests/unit/blank-explanation-step-numbering.test.mjs": "d16dde74fe75a69c28cbbaa75150e4de07e4cb3b5397375b65e0269eb26033dc",
+    "tests/unit/grammar-keypoint-core10.test.mjs": "fec6106f91d8480a6332725a4b27d55e191d5717bdf2d5858472b5f26a3bbec4",
+    "tests/unit/sentence-order-quality.test.mjs": "18b3c6525f7ea705c6c9724e20071e36dcb46768e591fce8f05ed638e45ae177",
+    "tests/unit/wave1-integrity-gates.test.mjs": "83d866dbf64e24c9368357155ae12d45a9d3b959cc6103089118fb8329bf812b",
+    "tests/unit/blank-paraphrase-contract.test.mjs": "f0baa56c7ace7df2eb66ef81b3524ed11c0a158eae31d9daba628e89f4e63e4b"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "pid": "P028",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-wording",
+      "severity": "minor",
+      "evidence": "해설의 \"'qualities'나 'exhibit' 또는 복수 명사들에 현혹되어\"는 동사 'exhibit'을 복수 명사 나열 속에 넣어 읽히게 하는 부주의한 표현이다. 실제 구조 오분석(관계대명사 오지목 등)은 아니어서 치명은 아니다."
+    },
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설의 \"술어 부 형용사\"는 '서술 형용사/술부의 형용사'가 깨진 표기로 읽히는 손상된 용어 표기다. 구조 설명 자체(가주어 It + 진주어 to부정사, 보어 형용사)는 정확하다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 전위수식 분사의 능·수동(현재분사 vs 과거분사) 판단",
+      "temptingBecause": "'makes a mark'에서 mark가 만들어지는 대상이므로 수동 관념('lasted')으로 착각할 여지를 노린다.",
+      "decisiveFlaw": "'last'는 자동사여서 과거분사 수식이 아예 성립하지 않고 'a lasting mark'는 관용적으로도 표준적이다. 어법상 옳으므로 정답이 될 수 없다."
+    },
+    {
+      "label": "(B)",
+      "intent": "관계대명사 생략 목적격 관계절 내부의 조동사+동사원형·능동태 판단",
+      "temptingBecause": "관계절 gap 때문에 'exhibit'이 목적어 없는 타동사처럼 보여 수동 'must be exhibited'를 기대하게 만든다.",
+      "decisiveFlaw": "목적어는 관계화된 'qualities'의 gap이므로 능동 'must exhibit'가 정확하다. 어법상 옳으므로 정답이 될 수 없다."
+    },
+    {
+      "label": "(C)",
+      "intent": "정답. 축약 관계절('a bridge must exhibit')을 건너뛴 핵명사 'one'과의 주어-동사 수일치",
+      "temptingBecause": "동사 바로 앞의 'a bridge must exhibit'와 복수 'qualities'가 근접 견인(attraction)으로 복수 일치를 유도한다.",
+      "decisiveFlaw": "주어부 핵은 단수 'one'이므로 'concern'은 비문이고 'concerns'로 고치면 정확히 원문이 복원된다. 대안 분석 없음 — 유일 정답."
+    },
+    {
+      "label": "(D)",
+      "intent": "가주어-진주어 구문에서 2형식 보어 자리의 형용사 vs 부사 판단",
+      "temptingBecause": "be동사 뒤 자리를 동사 수식으로 오인해 부사형('acceptably')을 기대하는 오개념을 노리지만, 그 오형이 실제로 그럴듯하지 않아 유인력이 약하다.",
+      "decisiveFlaw": "SVC 보어 자리에는 형용사가 정확하다. 어법상 옳으므로 정답이 될 수 없다. 다섯 밑줄 중 가장 필러에 가까운 약한 디코이."
+    },
+    {
+      "label": "(E)",
+      "intent": "관계절 내 'is'와의 병렬 및 선행사 'a bridge'와의 수일치 판단",
+      "temptingBecause": "'to create ... but spoil'로 to부정사와 병렬로 오독하면 원형 'spoil'을 기대하게 되는 실제적인 대안 파스가 존재한다.",
+      "decisiveFlaw": "'but'은 관계절 내부의 'is spectacular'와 'spoils'를 병렬하며 단수 선행사에 일치한 'spoils'가 정확하다. 어법상 옳으므로 정답이 될 수 없다."
+    }
+  ],
+  "explanationIssues": [
+    "\"'qualities'나 'exhibit' 또는 복수 명사들에 현혹되어\" — 동사 'exhibit'을 복수 명사 부류에 섞어 나열한 부정확한 표현(의도는 이해 가능하나 학생 오독 유발 소지).",
+    "(D) 해설의 \"술어 부 형용사\" — 띄어쓰기/용어가 깨진 표기.",
+    "keyPoints의 \"(A) 현재분사 vs. 과거분사 — 능수동 판단\"은 자동사 'last'에는 수동 대안 자체가 없어 프레이밍이 다소 인위적(사실 오류는 아님)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "모든 V 통과. V1: 원지문 대비 유일 변형이 의도된 concerns→concern이며 라벨·마커·선지 완전 일치. V2: 5개 밑줄 독립 검증 결과 (C)만 오류로 유일 정답. V3: 지문·발문·교정 완성문 모두 문법적. V4: 구조 분석(핵명사 one, 축약 관계절, 가주어-진주어, is/spoils 병렬) 모두 실제 문장과 일치, 경미한 표현 결함 2건. V5: 정답 라벨·markedExpressions(correction='concerns'가 원문 복원)·keyPoints 동기화. 치명 결함은 난이도 정합: 요청 난이도 KILLER이나 'one of the + 복수명사 + 단수동사' 수일치는 한국 EFL에서 가장 반복 훈련되는 정형 패턴으로 상위권 학생이 구조 독해 없이 패턴 매칭으로 즉시 해결한다. 게다가 (B) 'must exhibit' 밑줄이 (C) 바로 앞에 인접해 개입 절 구조를 사실상 표시해 준다. RUBRIC §C의 KILLER 조건 '구조를 읽어야 하며 단순 수일치로 즉시 드러나지 않는다'를 실질적으로 불충족 → killerConditionsMet=false, C5=1, C3=2. (D)는 그럴듯한 오형이 없는 약한 디코이. 최소대립쌍·교정 시 원문 복원·유일 정답 등 기본기는 충실하므로 중간 난이도 문항으로는 출하 가능하나 KILLER 요청 대비 재설계 필요 → grade C (V 전원 통과, C5<2로 B 불가, 합계 15)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'no matter how well you believe you are disguising yourself': wh-fronting from the embedded clause 'you are disguising yourself well'. The item modifies the verb 'are disguising', so the adverb 'well' is required and correct; long-distance extraction across 'you believe' is licit."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Causative 'make + object + bare infinitive': 'make them appear weak' correctly uses the bare infinitive 'appear' (not 'to appear'/'appearing'), and 'appear + adjective (weak)' is a valid linking-verb complement."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a culture where those subordinates did the same': relative adverb 'where' (= 'in which') with abstract antecedent 'culture' is standard. The relative clause is gapless/complete ('those subordinates did the same'), so 'where' rather than 'which' is required."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "Subject-verb agreement error. True subject is 'Some of the ways [(that) we helped the CEOs remove their masks]' — 'some of the + plural count noun (ways)' is unambiguously plural, so the verb must be 'were', not 'was'. The intervening object relative clause is a proximity-attraction distractor. No rescue reading exists: 'some' cannot take a singular mass reading with plural count 'ways', and no inversion/existential structure licenses singular agreement. Complements 'to name..., explore..., and ask...' parallel fine with 'were'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'costs of upholding them': plural pronoun 'them' correctly refers to 'the masks'/'their masks' (plural antecedent established by 'name the masks' and 'remove their masks'). Object pronoun after gerund 'upholding' is correct; it sits properly inside the second conjunct of the parallel triplet."
+    }
+  ],
+  "note": "Clean single-error item. (D) is a textbook subject-verb agreement trap with an intervening relative clause ('Some of the ways we helped the CEOs remove their masks was → were'). All other underlines are grammatical under their governing rules, and I found no alternative parse (reduced relative, inversion, etc.) that would make (D) a well-formed singular. Answer (D), high confidence."
+}

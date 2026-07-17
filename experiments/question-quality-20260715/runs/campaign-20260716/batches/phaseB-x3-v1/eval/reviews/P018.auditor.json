@@ -1,0 +1,77 @@
+{
+  "pid": "P018",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-MINOR-PUNCT",
+      "severity": "minor",
+      "evidence": "렌더 지문이 'follow from _____'로 끝나며 빈칸 뒤 문장 종결 마침표가 없다. 원문 손상은 아니고 렌더링 관례 문제. 그 외에는 원지문과 어절 단위로 완전 일치하며 빈칸이 원문 span('the willingness of readers to pay attention, to explore uncertainties, and not immediately ask ...')을 깨끗하게 대체한다."
+    },
+    {
+      "code": "V4-MINOR-TRANSLATION",
+      "severity": "minor",
+      "evidence": "해설 후반부가 원문 'pay attention'을 '기꺼이 대가를 치르고'로 재인용한다. 같은 해설 앞부분에서는 '주의를 기울이고'로 올바르게 번역했으므로 내부 불일치이자 느슨한 오역. 다만 통사·논리 분석 자체(flout principles 인용, 'worth it' 기대, 독자 태도 → 문학적 특징 인과)는 실제 지문과 정확히 일치하므로 V4 실패로는 보지 않는다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "핵심 논지(모호함 인내)의 극성 반전 — 명확성 선호로 뒤집기",
+      "temptingBecause": "지문의 'communicative purpose'를 '명확한 메시지 전달'로 오독한 학생, 그리고 'complications of language'라는 표면 어휘 앵커에 끌리는 학생을 겨냥",
+      "decisiveFlaw": "지문은 독자가 'put up with many obscurities and apparent irrelevancies'한다고 명시 — 복잡한 구조를 견디는 것이 논지이므로 명확한 메시지 선호는 정반대"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 제거된 원문 span의 3항 병렬을 충실히 추상화한 재진술",
+      "temptingBecause": "해당 없음(정답). pay attention→devote effort, explore uncertainties→embrace ambiguity, not immediately ask 'what do you mean by that?'→suspend immediate inquiry로 의미 보존 패러프레이즈",
+      "decisiveFlaw": "없음. 빈칸 완성문이 문법적·논리적으로 지문 전체 논지와 정합"
+    },
+    {
+      "label": "③",
+      "intent": "지문 어휘('efficient communication')를 역방향으로 재사용한 어휘 앵커 함정",
+      "temptingBecause": "'efficient communication'과 'communicative purpose'가 지문에 그대로 등장하므로 표면 매칭으로 찍는 학생을 유인",
+      "decisiveFlaw": "지문은 문학이 효율적 의사소통의 원칙을 'flout'하는 요소를 포함하며 독자가 이를 해석하려 애쓴다고 함 — 즉각 전달되는 효율적 소통은 문학의 특징과 배치"
+    },
+    {
+      "label": "④",
+      "intent": "행위자 교체(actor swap) + 범위 축소(scope shift) — 선별 제도를 평론가 권위로 좁힘",
+      "temptingBecause": "'reviewed', 'institutional label', \"worth it\" 등 도입부·후반부 앵커가 실제로 존재해 가장 매력적인 오답. ②와의 실질적 2파전을 형성",
+      "decisiveFlaw": "마지막 문장은 문학의 특징이 '독자의' willingness에서 비롯된다고 귀속하며, 선별 과정도 published/reviewed/reprinted 전체이지 평론가 단독 권위가 아님"
+    },
+    {
+      "label": "⑤",
+      "intent": "관용(tolerance) 논지의 극성 반전 — 규칙의 엄격 적용으로 뒤집기",
+      "temptingBecause": "'obscurities', 'principles', 'rules' 계열 어휘 앵커가 지문과 겹쳐 표면적 유사성이 있음",
+      "decisiveFlaw": "독자는 표준 규칙 위반(flouting)을 인내하고 더 깊은 소통 목적을 탐색한다는 것이 논지 — 규칙의 엄격 적용은 정반대"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MISTRANSLATED-QUOTE",
+      "severity": "minor",
+      "evidence": "해설 결론부 '원문의 기꺼이 대가를 치르고'는 원문 'pay attention'의 오역(대가 지불). 동일 해설 앞부분의 '주의를 기울이고'와 내부 불일치."
+    },
+    {
+      "code": "KEYPOINT-MAPPING-IMPRECISE",
+      "severity": "minor",
+      "evidence": "keyPoints가 'willingness'를 'readiness to devote effort'에 대응시키는데, 정확한 대응은 'willingness to pay attention' 전체 → 'readiness to devote effort'. 'pay attention'이 매핑에서 탈락함. 실질 오류는 아니나 정밀도 부족."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. V2 독립 검증: 5개 선지 모두 'follow from ___' 뒤 명사구 슬롯에 문법적으로 들어가며(문법만으로 탈락하는 선지 없음), 논리 검증에서 ②만 성립 — ①·⑤는 인내 논지의 극성 반전, ③은 flout 명시와 직접 모순, ④는 행위자 교체·범위 축소로 탈락. 유일 정답 확신 높음. 공예: 결론 문장 전체 tail을 빈칸화해 지문 핵심 논지 종합을 요구하는 좋은 출제 지점(C1=4)이나, ①③⑤가 모두 같은 극성 반전 계열이라 함정 다양성이 제한되고(C2=3), 요지만 잡으면 3개가 즉시 소거되어 실질 변별은 ②-④ 2파전(C3=3). ②가 유일한 3항 병렬 구조에 가장 긴 선지라는 경미한 길이·구조 누출(C4=3). INTERMEDIATE 라벨에는 대체로 부합하나 다소 쉬운 쪽으로 기움(C5=3). 해설은 span 인용이 정확하고 구조가 좋으나 '대가를 치르고' 오역과 장황함(C6=3). 합계 19: 모든 C≥3이지만 21 미만이므로 A 불가, B 판정. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

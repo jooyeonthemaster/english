@@ -1,0 +1,35 @@
+{
+  "pid": "P114",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "논리 역전. 'But' 이후 필자의 주장은 자기관리 방치의 누적 효과를 경계하라는 것인데, '단기 마감이 항상 우선되도록 보장하라'는 것은 누적 방치를 제도화하는 명제로, 담화 표지 But이 요구하는 대조 방향과 정면 충돌한다. 형식적으로: 지문은 (occasional sacrifice 허용) ∧ (habitual sacrifice 금지)를 주장하는데 ①은 habitual sacrifice의 보장을 요구한다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "화용적 비문. 'make sure that [해악이 발생한다]'는 보장 대상이 될 수 없는 명제(원치 않는 피해의 확보)라 결합이 성립하지 않으며, 예기치 못한 회의는 지문에서 방해 요인의 예시로 1회 언급될 뿐 장기 보장의 대상이 아니다. 또한 'in the long term' 부사구와 'immediate harm'의 시간 지시가 충돌한다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "지문 명제와 직접 모순. 'No matter how much we plan, we all occasionally have days when that happens'가 계획의 한계를 명시하므로, '자기관리는 끊임없는 일일 계획을 요구한다'를 장기적으로 보장하라는 결론은 지문이 이미 기각한 수단을 처방하는 셈이다. 아울러 'make sure that X demands Y'는 보장 가능한 상태 기술이 아니어서 seam이 어색하다."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "유일 정답. 조응사 'such neglect'가 같은 문장의 'not prioritizing self-care'에 완전 결속되고, 'occasional deviation'은 앞선 양보문 'we all occasionally have days when that happens'의 어휘를 재사용해 '가끔은 불가피하나 상습화되면 안 된다'는 논증 구조(양보→전환)를 정확히 완성한다. seam 검토: 'make sure that ... should remain'의 that절 내 should는 직설법 remains보다 잉여적이지만 ensure/make sure 뒤 mandative should는 (특히 영국 용법에서) 실증되는 정문 구성으로 비문이 아니다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "주제 이탈 + 내부 모순. 단락의 전환부는 '자기관리 보호'를 겨냥하지 '모든 일의 완수'를 겨냥하지 않으며, 지문 스스로 '아무리 계획해도 그런 날이 온다'고 인정하므로 '결국 모든 것을 끝낼 수 있도록 보장하라'는 양보 전제와 충돌한다. 또한 'in the long term'과 'ultimately'의 중복도 seam 결함이다. 매력적 오답이나 논리적으로 옹호 불가."
+    }
+  ],
+  "note": "빈칸 문항. 논증 구조가 (양보: 가끔의 자기관리 희생은 불가피/합리적) → (전환 But: 누적 방치의 위험 인식 + 장기 보장 요구)로 명확하여 빈칸은 '방치가 어쩌다 있는 일탈에 머물러야 한다'를 요구한다. ④만이 조응·어휘 재사용·논리 방향 모두 충족. ④의 that절 내 mandative should는 문체상 잉여지만 어법상 하자 아님. 대안 해석으로 정답이 흔들릴 여지는 발견하지 못함."
+}

@@ -1,0 +1,46 @@
+{
+  "batchId": "phaseC-smoke-v1",
+  "phase": "C-SMOKE",
+  "note": "합성 arm 스모크",
+  "atKst": "2026-07-17T00:30:07.242+09:00",
+  "gitSha": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "gitDirty": true,
+  "worstCaseReserved": 11,
+  "spec": {
+    "batchId": "phaseC-smoke-v1",
+    "phase": "C-SMOKE",
+    "note": "합성 arm 스모크",
+    "concurrency": 2,
+    "geminiReasoningEffort": "low",
+    "providerRouting": "none",
+    "assignments": [
+      {
+        "itemId": "SMK2-G-CX",
+        "frameId": "grammar-frame-v2-017",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "profile": null,
+        "armId": "G-CX"
+      },
+      {
+        "itemId": "SMK2-B-CX",
+        "frameId": "blank-supply-v2-052",
+        "subType": "BLANK_INFERENCE",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "profile": null,
+        "armId": "B-CX"
+      },
+      {
+        "itemId": "SMK2-G-LX",
+        "frameId": "grammar-frame-v2-050",
+        "subType": "GRAMMAR_ERROR",
+        "difficulty": "KILLER",
+        "plan": "PREMIUM",
+        "profile": null,
+        "armId": "G-LX"
+      }
+    ]
+  }
+}

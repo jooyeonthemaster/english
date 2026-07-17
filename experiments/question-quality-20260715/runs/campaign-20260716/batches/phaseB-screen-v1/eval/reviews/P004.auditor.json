@@ -1,0 +1,115 @@
+{
+  "pid": "P004",
+  "itemType": "GRAMMAR_ERROR",
+  "requestedDifficulty": "KILLER",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문을 원지문과 전문 문장 단위 대조: 유일한 차이는 의도된 오류 주입 concerns→concerning 하나뿐. 문장 접합 파손·중복·누락·고아 문장부호·오탈자 없음. 밑줄 라벨 (A)~(E)가 선택지 목록 및 markedExpressions와 일치. (C)와 (D)가 같은 문장에서 인접 단어('concerning how')로 연속 밑줄인 점은 이례적이나 손상은 아님.",
+    "V2": "각 밑줄 독립 검증: (A) is constructed — A bridge는 건설의 대상이므로 수동태 적법, 오류 아님. (B) that — 선행사 a lasting mark + 주어 공백절(shows...)을 이끄는 주격 관계대명사, 적법. (C) concerning — 모문 주어는 one (of the first qualities), 'a bridge must exhibit'은 목적격 관계대명사가 생략된 접촉 관계절이므로 exhibit은 모문 동사가 될 수 없다. concerning을 전치사(=regarding)로 읽든 분사로 읽든 모문 정동사가 없어 문장 전체가 명사구 fragment — 대안 해석 부재, 확정 오류. concerns로 교정 시 정확히 원문 복원. (D) how — 교정문에서는 concerns의 목적어 명사절, 오류 렌더 상태에서도 전치사 concerning의 wh-절 보어로 적법하여 어느 해석에서도 오류 아님((C)와 인접해도 판정 독립성 유지). (E) spoils — 관계절 내부에서 but이 is와 spoils를 병렬하고 주격 that(선행사 a bridge, 단수)에 수일치, 적법. 정답 집합 = {(C)} 정확히 하나, 선언과 일치.",
+    "V3": "발문 표준형. 원지문·(concerns를 넣은) 교정 완성문 모두 문법적·자연스러움. 비단어·seam 비문 없음. 유일한 비문은 유형 의도와 정확히 일치하는 (C) 오류 문장.",
+    "V4": "본해설의 구조 분석이 실제와 일치: 'a bridge must exhibit'를 관계사절로, 핵심 주어를 one으로 정확히 지목하고, 준동사 concerning 사용 시 본동사 부재로 비문이 됨과 단수 동사 concerns 교정을 올바르게 설명. 오답 해설 4건 모두 실제 통사와 대응 — (A) 수동 관계, (B) 주어 공백 불완전절+주격 관계대명사, (D) 완전절을 이끄는 의문부사 명사절, (E) is와의 병렬 및 단수 수일치. 오분석·환각·비단어 없음. 경미한 흠 3건(validityIssues 참조)은 사실 오류가 아니라 표현 문제.",
+    "V5": "선언 정답 (C) = markedExpressions isError:true 항목 = 본해설 교정형(concerns) = correction 필드, 오답해설 키 (A)(B)(D)(E) = 비오류 밑줄 집합, 선지 텍스트 = 렌더 밑줄 표현. 모순 없음. markedExpressions는 5개 항목 모두 expression=원문형/errorExpression=표시형 규약으로 내부 일관((C)만 두 값이 다름). keyPoints가 (B)(D)를 다루지 않으나 모순은 아님."
+  },
+  "validityIssues": [
+    {
+      "code": "V1-ADJACENT-UNDERLINES",
+      "severity": "minor",
+      "evidence": "(C) concerning과 (D) how가 같은 문장에서 인접 단어로 연속 밑줄. 손상은 아니나 해당 문장으로 주의를 집중시키는 약한 신호(C4에 반영)."
+    },
+    {
+      "code": "V4-TYPO",
+      "severity": "minor",
+      "evidence": "본해설 '단수 주어one에 맞추어' — 띄어쓰기 누락."
+    },
+    {
+      "code": "V4-PHRASING",
+      "severity": "minor",
+      "evidence": "(E) 해설 '선행사인 a bridge에 병렬 및 수일치된 형태' — 병렬 대상(is)과 수일치 대상(선행사 a bridge)을 한 구로 뭉뚱그려 서술이 흐림. (A) 해설 '건설되어지는'은 이중피동. 모두 오분석은 아님."
+    },
+    {
+      "code": "V4-FRAME-UNSTATED",
+      "severity": "minor",
+      "evidence": "(D) 해설이 how 절을 '타동사의 목적어'라 하여 (C)를 concerns로 교정한 후의 구조를 전제하나 그 프레임을 명시하지 않음. 렌더 상태에서는 전치사 concerning의 보어. 관행적 서술이라 오개념은 아님."
+    },
+    {
+      "code": "V5-KEYPOINTS-PARTIAL",
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(A)(E) 3개만 커버, (B)(D) 누락. (B)와 (D)는 pointCode 'b' 중복. 모순은 아니나 5개 밑줄 전수 문서화 미달(킬러 조건 판정에 반영)."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "지문의 주제문에서 접촉 관계절에 가려진 모문 정동사 유무를 묻는 정전 포인트. 'exhibit concerning(~에 관하여 보여주다)'이라는 자연스러운 오독 경로를 갖는 진짜 garden-path이며 최소대립쌍으로 정교하게 구성됨.",
+    "C2": "네 디코이가 태/주격 관계대명사/의문부사 명사절/병렬·수일치라는 서로 다른 오개념을 겨냥하고 전부 해설됨. 다만 (B)(D)가 pointCode 'b'를 공유하는 연결사+절 완전성 계열로 부분 중복이고 명시적 why-tempting 문서화가 없음.",
+    "C3": "실질 경쟁은 (C)vs(E) 구도. (A) 첫 문장 기초 수동태와 (B) 전형적 주격 관계대명사는 상위권 기준 즉시 소거, (D)도 완전절 확인으로 빠르게 탈락 — '다수 선지가 매력적' 기준 미달, 일부만 실제 판단.",
+    "C4": "발문·선지 형식에 메타 누출 없고 정답은 구조상 필연. 다만 한 문장에 (C)(D) 밑줄 2개가 몰려 해당 문장으로 의심을 모으는 약한 누출(양날이긴 하나 감점 요인).",
+    "C5": "요청 난이도 KILLER 대비 실측은 상(중상). 정답 포인트 자체는 오답률 높은 계열이나 'one of the+복수명사+접촉 관계절+정동사' 함정은 고빈도 훈련 패턴이라 상위권이 패턴 매칭으로 돌파하고, 디코이 함정 깊이가 킬러급 경쟁 밀도에 못 미침.",
+    "C6": "정확하고 비교적 간결하며 정답 근거(본동사 부재)가 선명. 그러나 왜 concerning이 매력적인지(전치사 독해 가능성)의 분리 제시가 없고 띄어쓰기 오탈·이중피동·(E) 표현 뭉개짐 등 둔한 부분."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "능동/수동태 판별 — 주어 A bridge와 construct의 의미상 피동 관계",
+      "temptingBecause": "뒤따르는 to last(능동 부정사)와의 연쇄가 능동 오인을 살짝 유도",
+      "decisiveFlaw": "정답 불가 — 다리는 건설되는 대상이므로 is constructed 수동태가 명백히 적법. 첫 문장의 기초 확인 항목이라 즉시 소거됨"
+    },
+    {
+      "label": "(B)",
+      "intent": "주격 관계대명사 vs 접속사 that 구별 — 후행절 완전성 판정",
+      "temptingBecause": "that의 정체(관계사/접속사) 판별을 위해 후행절의 완전/불완전 판단을 요구",
+      "decisiveFlaw": "정답 불가 — shows의 주어가 빠진 불완전절을 이끌고 선행사 a lasting mark를 수식하는 전형적 주격 관계대명사. 판별 부담이 매우 낮음"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 정동사/준동사 구별: 접촉 관계절(a bridge must exhibit)에 가려진 모문 정동사 자리 식별",
+      "temptingBecause": "must exhibit을 모문 동사로 오인하기 쉽고, concerning이 전치사 '~에 관하여'로 자연스럽게 읽혀 국소적으로는 무결해 보임 — 오류가 문장 전체 파싱 없이는 드러나지 않음",
+      "decisiveFlaw": "주어 핵 one에 호응할 정동사가 문장 어디에도 없어 전체가 명사구 fragment. concerning은 전치사/분사 어느 해석으로도 정동사가 될 수 없으며, concerns로 교정하면 정확히 원문 복원 — 어법상 틀린 유일한 밑줄"
+    },
+    {
+      "label": "(D)",
+      "intent": "의문부사 how + 완전절의 명사절 적법성(what/how 선택 판단)",
+      "temptingBecause": "정답 (C)와 같은 문장에 인접해 그 자리의 구조적 위화감이 how로 오귀속될 수 있고, 후행절 완전성 판단을 요구",
+      "decisiveFlaw": "정답 불가 — it harmonizes with its surroundings는 완전절이므로 how가 적법. concerns(교정형)의 목적어로든 concerning(표시형)의 보어로든 성립하여 어느 해석에서도 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "관계절 내 병렬(is ... but spoils)과 원거리 단수 수일치",
+      "temptingBecause": "상위의 to create와 병렬로 착각하면 원형 spoil을 기대하게 되고, 표면상 but이 형용사 spectacular와 동사 spoils를 잇는 것처럼 보이는 비대칭이 위화감을 줌",
+      "decisiveFlaw": "정답 불가 — but은 관계절 내부에서 is와 spoils를 병렬하며 주격 that(=a bridge, 단수)에 spoils가 정확히 수일치. 디코이 중 유일하게 실질 경쟁력 있는 선지"
+    }
+  ],
+  "explanationIssues": [
+    "본해설 띄어쓰기 오탈: '단수 주어one에'.",
+    "(A) 해설 '건설되어지는' — 이중피동 표현으로 부자연.",
+    "(E) 해설이 병렬 대상(is)과 수일치 대상(선행사 a bridge)을 '선행사인 a bridge에 병렬 및 수일치'로 뭉뚱그림 — 오분석은 아니나 부정확한 서술.",
+    "(D) 해설 '타동사의 목적어'는 (C) 교정 후 구조를 전제하나 프레임 명시 없음.",
+    "정답 해설에 '왜 concerning이 매력적인가'(전치사 독해 흡수)의 분리 제시 부재.",
+    "keyPoints가 (B)(D) 포인트 누락(모순은 아님)."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPairRestoresSource": "충족 — concerns↔concerning 최소대립쌍, 교정 시 정확히 원문 복원.",
+    "clearGrammarNotContextPreference": "충족 — 모문 정동사 유무는 문맥 선호가 아닌 명확한 문법 판단. valency·수여 구조·singular they·가정법류의 대안 분석 자리 아님.",
+    "allFiveUnderlinesDocumented": "미충족 — 5개 밑줄에 pointCode와 why correct/incorrect는 있으나 명시적 'why tempting'이 문항 필드에 없고, keyPoints도 3/5만 커버. (B)(D)는 pointCode 중복.",
+    "structuralNotSurface": "경계선 충족 — 철자·비단어·인접 단순 수일치가 아니라 접촉 관계절 구조 독해를 요구. 다만 고빈도 훈련 패턴이라 상위권에게 사실상 패턴 노출되고, (C)(D) 인접 밑줄이 해당 문장을 추가 지목.",
+    "noEasySamePointDecoy": "충족 — 정답 point(pointCode 'a', 정·준동사)의 디코이가 정답 외에 없어 가림 없음."
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과, 정답 (C) 유일성 확고(각 선지 독립 검증 완료). 정답 포인트 자체는 정전급 garden-path(C1=4)이나 디코이 (A)(B)(D)가 즉시 소거 수준이라 경쟁 밀도가 낮고(C3=2), 요청 난이도 KILLER 대비 실측은 상 수준(C5=2). 공예 합계 17, 최저 2 → B: (A)(B) 디코이를 실질 판단 부담 있는 자리로 교체, (C)(D) 인접 밑줄 분산, why-tempting 필드 보강, 해설 오탈 수정이면 출하 가능하며 킬러 승격 여지도 있음. §C 킬러 조건은 문서화 조건 미충족·구조 은닉 경계선으로 killerConditionsMet=false."
+}

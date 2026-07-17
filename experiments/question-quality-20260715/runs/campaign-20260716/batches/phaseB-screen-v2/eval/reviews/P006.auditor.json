@@ -1,0 +1,88 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": false,
+    "V4": false,
+    "V5": false
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SLOT-AGREEMENT",
+      "severity": "critical",
+      "evidence": "빈칸 자리의 주어는 'we'인데(원문: 'That means we cannot park cars there, but we can stop to pick up passengers.') 다섯 선지 전부가 3인칭 단수 규제동사구(allows/prohibits/requires/restricts/bans)다. 선언된 정답 ②를 넣으면 'That means we prohibits parking for extended periods, but we can stop to pick up passengers.'가 되어 주어-동사 수일치 비문이며, 어떤 선지를 넣어도 문법적인 완성문이 만들어지지 않는다. 선지 세트가 'the sign'류 주어를 전제로 설계되어 빈칸 슬롯과 통사적으로 호환되지 않는다."
+    },
+    {
+      "code": "V2-EMPTY-ANSWER-SET",
+      "severity": "critical",
+      "evidence": "수일치를 교정해 'we prohibit parking...'으로 읽어도 화자 we(운전자/승객, 피규제자)가 주차를 '금지하는' 규제 주체가 되어 명제적으로 거짓이다. 원문 'we cannot park cars there'는 we가 규제를 받는 쪽이다. 따라서 참이면서 문법적인 완성문을 만드는 선지의 실제 집합은 공집합이고, 선언된 단일정답 {②}와 불일치한다. ②는 표지판 의미('주차 금지') 층위에서 다섯 중 유일하게 근접할 뿐 유효한 정답 완성을 만들지 못한다."
+    },
+    {
+      "code": "V4-FALSE-PARAPHRASE-EQUIVALENCE",
+      "severity": "major",
+      "evidence": "해설은 \"빈칸에 들어갈 'cannot park cars there'는 '장시간 주차를 금지한다(prohibits parking for extended periods)'로 패러프레이즈할 수 있습니다\"라고 단정하지만, (a) 'we cannot park'(양상 술어, 행위자=we)와 'prohibits parking'(금지 행위자=표지판)은 주어 역할이 달라 해당 슬롯에서 동치 패러프레이즈가 아니고, (b) '장시간(for extended periods)' 한정은 지문에 없는 내용 첨가이며(친구의 발화는 단순히 'cannot park cars there'), (c) 정답을 넣은 완성문이 비문이 되는 사실을 어디에서도 다루지 않는다."
+    },
+    {
+      "code": "V5-STEM-IS-DESIGN-NOTE",
+      "severity": "critical",
+      "evidence": "발문 필드가 학생용 질문('다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?')이 아니라 출제 의도 서술문이다: '지문의 마지막 부분, 즉 Carol이 오해했던 교통 표지판의 실제 의미를 친구가 설명해 주는 부분의 핵심 표현을 빈칸으로 출제하여 ... 평가합니다.' 학생 노출 필드로서 미완성이며, 그대로 노출되면 정답 근거 위치(마지막 부분)와 'Carol이 오해했다'는 사실까지 메타 누출한다."
+    },
+    {
+      "code": "V4-TEMPLATE-ARTIFACT",
+      "severity": "minor",
+      "evidence": "오답 해설 4건 전부에 \"park cars을(를) 빌렸지만\"처럼 기계식 조사 템플릿 '을(를)'이 그대로 노출되어 있다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 1,
+    "C4": 0,
+    "C5": 0,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal): 금지를 허용으로 뒤집음",
+      "temptingBecause": "원문 어휘 'park cars'를 그대로 차용",
+      "decisiveFlaw": "표지판은 주차를 금지하는 것이므로 'allows cars to park all day'는 정반대이며 'all day'는 지문 근거가 전혀 없다. 'we allows'는 수일치 비문이기도 하다."
+    },
+    {
+      "label": "②",
+      "intent": "선언된 정답: 'cannot park cars there'의 추상화 패러프레이즈 의도",
+      "temptingBecause": "직후 절 'but we can stop to pick up passengers'와의 대조(주차 금지 vs 승객 승하차 일시 정차 허용)에 유일하게 부합하는 부정 극성 선지",
+      "decisiveFlaw": "정답으로서의 결함: 주어 'we'와 결합하면 'we prohibits...'로 수일치 비문이자 행위자 전도(금지 주체는 표지판이지 we가 아님)로 원문 명제 'we cannot park'를 보존하지 못한다. '장시간(for extended periods)' 한정도 지문에 근거가 없다."
+    },
+    {
+      "label": "③",
+      "intent": "조건 과잉 제한(over-restriction): 정차 자체 불가로 확대",
+      "temptingBecause": "원문 어휘 'stop'과 운전 맥락을 차용",
+      "decisiveFlaw": "직후 절 'but we can stop to pick up passengers'가 정차 허용을 명시하므로 정면 모순. 'we requires drivers to...'도 수일치·의미 비문."
+    },
+    {
+      "label": "④",
+      "intent": "행위자/대상 전도(actor swap): 규제 대상을 승객 승차 제한으로 왜곡",
+      "temptingBecause": "원문 어휘 'pick up passengers'를 그대로 차용",
+      "decisiveFlaw": "승객을 태우기 위한 정차가 명시적으로 허용되므로 사실관계 모순. 매력도가 낮은 준-넌센스 선지이며 'we restricts'도 비문."
+    },
+    {
+      "label": "⑤",
+      "intent": "범위 과잉/절대화(scope overreach): 일시 정차까지 전면 금지",
+      "temptingBecause": "'temporary vehicular stops'가 'stop to pick up passengers'와 표면적으로 겹치고, 'No Standing'의 실제 어감(정차 금지)과도 유사",
+      "decisiveFlaw": "직후 절 'but we can stop to pick up passengers'와 자기모순('bans any temporary stops'인데 stop 가능). 'we bans'도 수일치 비문."
+    }
+  ],
+  "explanationIssues": [
+    "해설이 ②를 빈칸에 넣은 완성문의 통사(주어 we + 3인칭 단수 동사)를 전혀 점검하지 않고 표지판 의미 층위에서만 패러프레이즈 동치를 주장함 — 행위자 전도를 은폐한 구조 오분석.",
+    "'장시간 주차하는 것을 금지하되'는 지문에 없는 '장시간' 한정을 첨가함(지문은 park 대 stop의 대립만 제시).",
+    "오답 해설 ①③④⑤의 함정축 기술 자체는 각 선지 내용과 대응하나, 모든 선지가 공유하는 슬롯 부적합(수일치) 문제를 어디에서도 언급하지 않음.",
+    "오답 해설 전건에 '...을(를) 빌렸지만' 기계식 조사 템플릿 노출.",
+    "발문 필드가 학생용 질문이 아닌 출제 의도 메타 서술이어서 그대로 노출 시 정답 근거 위치를 누설함."
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": "요청 난이도 KILLER이나 §D 조건 전면 미충족: (1) 다섯 선지가 실제 슬롯(주어 we)에 문법적으로 들어가지 않아 '동일 통사 슬롯' 조건 위반, (2) 정답이 source span('we cannot park cars there')의 의미를 행위자 층위에서 보존하지 못함, (3) 두 문장/두 논리 단서 종합이 불필요 — 빈칸 직후 'but we can stop to pick up passengers' 한 절과 부정 극성만으로 ①③④⑤가 즉시 소거됨, (4) 지문 자체가 중학 수준 일화로 KILLER 함정 깊이가 전무.",
+  "grade": "F",
+  "notes": "V1은 통과: 렌더 지문은 원지문과 빈칸('cannot park cars there' 대체) 외 완전 일치하고(손상·중복·누락·고아 문장부호 없음) 라벨 ①~⑤와 선언 정답 ②의 표기가 정합적이다. 그러나 빈칸 슬롯 설계가 근본적으로 실패했다 — 삭제된 span은 주어 'we'의 술부인데 선지 다섯 개 모두 표지판을 주어로 상정한 3인칭 단수 규제 VP여서, 어떤 선지도 문법적·명제적으로 올바른 완성문을 만들지 못한다(V2·V3 동시 실패). 해설은 이 슬롯 불일치를 인지하지 못한 채 의미 층위 패러프레이즈 동치만 주장하고 지문에 없는 '장시간' 한정을 첨가하며(V4 실패), 발문 필드는 학생용 발문이 아닌 출제 의도 서술로 정답 위치를 누설한다(V5 실패). 난이도 정합도 전무: KILLER 요청에 대해 단일 인접 절 대조만으로 풀리는 극저난도 문항(C5=0, C3=1, C4=0). 오답 함정축 설계(극성 반전·과잉 제한·행위자 전도·절대화)가 서로 구분되는 점만 인정(C2=3). 공예 합계 7/24이나 치명 결함은 공예로 상쇄되지 않는다 — 등급 F. 수리 방향: 빈칸을 표지판 의미를 서술하는 절(예: 'That means the sign _____') 쪽으로 옮기거나, 선지를 'cannot leave our cars parked there' 류의 we-술부 호환형으로 전면 교체하고, 발문을 표준 빈칸 발문으로 교체해야 한다."
+}

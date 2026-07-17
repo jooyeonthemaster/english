@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-public-manifest-2",
+  "artifactId": "reviewer-calibration-v4-production-bound-v2",
+  "status": "DESIGN_ONLY_UNISSUED_EXECUTION_BLOCKED",
+  "publicOnly": true,
+  "forbiddenPathComponents": ["private"],
+  "upstreams": [
+    {
+      "id": "evaluation-authority-v2-public-manifest",
+      "path": "experiments/question-quality-20260715/design/evaluation-authority-v2/public-manifest.json",
+      "expectedSha256": "c62fb02e27b0342ce31fe8fc38ec32034738bfe2ddadec9fe2861a1ae8e614bd",
+      "observedSha256": "c62fb02e27b0342ce31fe8fc38ec32034738bfe2ddadec9fe2861a1ae8e614bd"
+    },
+    {
+      "id": "evaluation-authority-v2-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/evaluation-authority-v2/MANIFEST.sha256",
+      "expectedSha256": "ac4ed7ee8bd5eb21bd45837f2a7396219142e6ccd3a1fe933916238e447f0180",
+      "observedSha256": "ac4ed7ee8bd5eb21bd45837f2a7396219142e6ccd3a1fe933916238e447f0180"
+    },
+    {
+      "id": "evaluation-authority-v2-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/evaluation-authority-v2-independent-audit-v1/MANIFEST.sha256",
+      "expectedSha256": "0cdf9d676bdec820e728a3b3890237b3b80d201caa2c20afc7af46ed6482adf5",
+      "observedSha256": "0cdf9d676bdec820e728a3b3890237b3b80d201caa2c20afc7af46ed6482adf5"
+    },
+    {
+      "id": "production-type-binding-v4-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4/MANIFEST.sha256",
+      "expectedSha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04",
+      "observedSha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04"
+    },
+    {
+      "id": "production-type-binding-v4-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1/MANIFEST.sha256",
+      "expectedSha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d",
+      "observedSha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-protocol",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+      "expectedSha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+      "observedSha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/MANIFEST.sha256",
+      "expectedSha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64",
+      "observedSha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64"
+    }
+  ],
+  "upstreamLineage": {
+    "directUpstreamBytes": 7,
+    "evaluationAuthorityNestedUpstreamBytes": 10,
+    "publicManifestRowsRehashed": 26,
+    "forbiddenManifestRowsOpened": 0,
+    "mismatches": 0,
+    "productionTypeBindingV4SnapshotSha256": "d126aa316d8c1457d71989441a49d7ca93676687b2032a738d4ea71cd6531967",
+    "productionTypeBindingV4BindingJsonSha256": "47df395f54179538d27a714ac0df4dc9e82f04b767bc82f45b8473c38d04cc3d"
+  },
+  "packageFiles": [
+    { "path": "event-schemas.json", "bytes": 15684, "sha256": "0569b2406f2eb244cc4c7b44a01c379b0af6bb3e72d79eaac6a5f7f510709511" },
+    { "path": "hostile-fixtures.json", "bytes": 11841, "sha256": "206ddcdfe2ab25c98977100f72faa09146fe8a350d56a2a346094d665e80f79f" },
+    { "path": "protocol.json", "bytes": 22804, "sha256": "d537cc551612951565bacd8293786b44a5b18276720f9b04e6ab21d932f074de" },
+    { "path": "PROTOCOL.md", "bytes": 5735, "sha256": "b12e2c0835c639a02081eea33498927c78b60dc0bd335468d228a8374b8b2611" },
+    { "path": "README.md", "bytes": 4119, "sha256": "32b19a8a3f5080b61858cac52bb4dcc89a7edef00c68bcebbaec5c72b926a8f9" },
+    { "path": "registries.json", "bytes": 9181, "sha256": "0ee8e767b6f712a946c3c5e94f271e07fd266ad2f0e1d14694bbf1851a5de6cc" },
+    { "path": "verify.mjs", "bytes": 40771, "sha256": "e46651bd24107abd4b910a6815f3012a36e3c3020acdf9042fc22d20c8958a56" }
+  ],
+  "authority": {
+    "designOnly": true,
+    "issued": false,
+    "executionAuthorized": false,
+    "evaluatorAuthorityGranted": false,
+    "scoringAuthorityGranted": false,
+    "authorizedReviewers": 0,
+    "authorizedAdjudicators": 0,
+    "eligibleSlots": 0,
+    "certificates": 0,
+    "activationEvents": 0
+  },
+  "emptyContent": {
+    "futureSlots": 60,
+    "filledSlots": 0,
+    "itemPayloads": 0,
+    "answerPayloads": 0,
+    "goldPayloads": 0,
+    "actorAssignments": 0,
+    "accessEvents": 0
+  },
+  "verification": {
+    "explicitMutationsPassed": 52,
+    "explicitMutationsTotal": 52,
+    "generatedMutationsPassed": 131,
+    "generatedMutationsTotal": 131,
+    "accessScenariosPassed": 12,
+    "accessScenariosTotal": 12
+  },
+  "activity": {
+    "privateReads": 0,
+    "itemReadsOrWrites": 0,
+    "answerReadsOrWrites": 0,
+    "goldReadsOrWrites": 0,
+    "actorReadsOrWrites": 0,
+    "envReads": 0,
+    "databaseCalls": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "ledgerReadsOrWrites": 0
+  }
+}

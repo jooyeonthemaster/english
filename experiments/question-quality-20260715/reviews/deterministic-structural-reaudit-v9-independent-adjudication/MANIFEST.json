@@ -1,0 +1,76 @@
+{
+  "manifest_version": "1.0.0",
+  "audit_id": "deterministic-structural-reaudit-v9-independent-adjudication",
+  "corpus_id": "deterministic-structural-reaudit-v9-blind-holdout",
+  "created_on": "2026-07-15",
+  "hash_algorithm": "SHA-256",
+  "scope": {
+    "disagreements": 60,
+    "paired_controls": 60,
+    "skipped": 0,
+    "blocked": 0,
+    "production_source_read": false,
+    "tests_read": false,
+    "v7_v8_artifacts_read": false,
+    "research_note_conclusions_read": false,
+    "author_messages_read": false,
+    "api_network_database_secrets_candidates_used": false
+  },
+  "counts": {
+    "CONFIRMED_ORACLE": 46,
+    "PRODUCT_CONTRACT_SCOPE_MISMATCH": 13,
+    "REDUNDANT_WRAPPER_EXPECTED": 1,
+    "AMBIGUOUS": 0
+  },
+  "inputs": {
+    "sealed/PROTOCOL.md": {
+      "path": "D:/Desktop/2026project/nara/experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v9/PROTOCOL.md",
+      "bytes": 4144,
+      "sha256": "6323f8d10846fd51592fa1c2ac9d8f15e1e86c9f12b2ef2d842ac6d75c40dccc"
+    },
+    "sealed/cases.json": {
+      "path": "D:/Desktop/2026project/nara/experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v9/cases.json",
+      "bytes": 238983,
+      "sha256": "64c8f3bdf16eafef1c8c6f11ad2a54799f2f9bcb1c1bd095800a7cebb6cd01ea"
+    },
+    "sealed/IMMUTABILITY.md": {
+      "path": "D:/Desktop/2026project/nara/experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v9/IMMUTABILITY.md",
+      "bytes": 1450,
+      "sha256": "fe5cf12047ca815e8c486a2dcbfb3052981a2c34688f27074a1c5b442f12e258"
+    },
+    "sealed/PRE_INSPECTION_MANIFEST.json": {
+      "path": "D:/Desktop/2026project/nara/experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v9/PRE_INSPECTION_MANIFEST.json",
+      "bytes": 1819,
+      "sha256": "2f8e98078388d74b1e3f2d84e6bab25ff337e63898cb4802e265049146aae1dc"
+    },
+    "sealed/PRE_INSPECTION_SEAL.sha256": {
+      "path": "D:/Desktop/2026project/nara/experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v9/PRE_INSPECTION_SEAL.sha256",
+      "bytes": 95,
+      "sha256": "f2ab695a99cbeee3e9e99fa52751cf4e5e5bf30fba0c9bd0d5efea2f7fa7487c"
+    },
+    "source_audit/results.json": {
+      "path": "D:/Desktop/2026project/nara/experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v9-source-aware-audit/results.json",
+      "bytes": 236234,
+      "sha256": "917156746a6f4434452c29bc79284c41051a70cbf3b394ec3a43b021d724b707"
+    },
+    "source_audit/AUDIT_SUMMARY.md": {
+      "path": "D:/Desktop/2026project/nara/experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v9-source-aware-audit/AUDIT_SUMMARY.md",
+      "bytes": 6708,
+      "sha256": "e65fc8d654fcb3427c3b7a3f3f0ff5d61d62e074bd1b303fab08b16420c9ddce"
+    }
+  },
+  "artifacts": {
+    "adjudications.private.json": {
+      "bytes": 54948,
+      "sha256": "931fdcbc1d8ddae88264b998ed14362e07cd27ba02f6809fea595a7243b12d71"
+    },
+    "PUBLIC_SUMMARY.md": {
+      "bytes": 4947,
+      "sha256": "a5279ccc77aae8e5c6d864b0e2ccea3b8b025cc24ee9961c3bf815668e22d206"
+    },
+    "verify_adjudication.py": {
+      "bytes": 20058,
+      "sha256": "1705e98eb5d56ab4da45f5b42a096825dc48d1c006352b0f950e376a10509344"
+    }
+  }
+}

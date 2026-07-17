@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=a  (C):ANS=b  (D):dec=k  (E):dec=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 43,
+        "relPos": 0.055,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 130,
+        "relPos": 0.165,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 189,
+        "relPos": 0.24,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 556,
+        "relPos": 0.706,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 693,
+        "relPos": 0.879,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.879,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중, 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "reaching out to",
+        "isError": false,
+        "correction": "reaching out to",
+        "errorExpression": "reaching out to",
+        "surroundingText": "We tend to go long periods of time without reaching out to the people we know.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "has formed",
+        "isError": false,
+        "correction": "has formed",
+        "errorExpression": "has formed",
+        "surroundingText": "we suddenly take notice of the distance that has formed and we scramble to make repairs",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "we haven't spoken to",
+        "isError": true,
+        "correction": "we haven't spoken to",
+        "errorExpression": "which we haven't spoken to",
+        "surroundingText": "We call people which we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "isn't to say",
+        "isError": false,
+        "correction": "isn't to say",
+        "errorExpression": "isn't to say",
+        "surroundingText": "This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "to let yourself",
+        "isError": false,
+        "correction": "to let yourself",
+        "errorExpression": "to let yourself",
+        "surroundingText": "just that it's more ideal not to let yourself fall out of touch in the first place",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "reaching out to"
+      },
+      {
+        "label": "(B)",
+        "text": "has formed"
+      },
+      {
+        "label": "(C)",
+        "text": "which we haven't spoken to"
+      },
+      {
+        "label": "(D)",
+        "text": "isn't to say"
+      },
+      {
+        "label": "(E)",
+        "text": "to let yourself"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 without 뒤에는 동명사가 와야 하므로 'reaching out to'는 올바른 형태이다.",
+      "(D)": "'This isn't to say that...'는 '~라는 말은 아니다'라는 의미의 to부정사 관용 표현으로 어법상 적절하다.",
+      "(E)": "사역동사 let은 목적격보어로 원형부정사를 취하므로 'let yourself fall out of touch'는 올바른 목적격보어 구조이다.",
+      "(B)": "과거에 시작되어 현재까지 영향을 미치는 상태를 나타내므로 현재완료 'has formed'는 시제상 적절하다."
+    },
+    "explanation": "밑줄 (C) 'which we haven't spoken to'는 선행사 people을 수식하는 목적격 관계절이다. 선행사 people은 사람이므로 사물을 가리키는 관계대명사 which를 쓸 수 없어 어법상 틀렸다. 사람 선행사에는 who(m) 또는 that을 쓰거나, 목적격 관계대명사이므로 생략하여 'people we haven't spoken to'로 써야 한다. 따라서 'which we haven't spoken to'를 'we haven't spoken to'(관계대명사 생략)로 고쳐야 한다. 관계대명사 자리에서 선행사의 종류(사람/사물)를 확인하지 않고 넘기기 쉬운 함정이다.",
+    "keyPoints": [
+      "(C) 관계사 — 선행사가 사람(people)이면 which를 쓸 수 없다",
+      "(B) 수일치·시제 — 현재완료 has formed는 과거부터 현재까지 지속된 상태를 나타내 적절하다",
+      "(A) 준동사 — 전치사 without 뒤에는 동명사가 와야 하므로 reaching out to가 적절하다"
+    ],
+    "tags": [
+      "관계대명사",
+      "선행사 일치",
+      "수능 어법",
+      "관계사절"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without __(A) reaching out to__ the people we know. Then, we suddenly take notice of the distance that __(B) has formed__ and we scramble to make repairs. We call people __(C) which we haven't spoken to__ in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This __(D) isn't to say__ that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not __(E) to let yourself__ fall out of touch in the first place. Consistency always brings better results."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P094",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'if students are quiet enough' — 복수 주어 students + 복수 동사 are, 형용사 보어 quiet. 주어-동사 사이 개입 요소 없음. 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'many pressed demands on a teacher's time' — 분사의 태 오류. demands는 교사의 시간을 '압박하는(press)' 행위의 주체이므로 능동 현재분사 pressing(긴급한)이 필요하다. 표준 연어는 'pressing demands on one's time'. 대안 해석 탐색: 'demands (that are) pressed on a teacher's time'(축약 관계절, press a demand on someone = 요구를 들이밀다)로 정문화 시도가 가능하나, 이 독법은 '이미 들이밀어진 요구들'이라는 어색한 의미가 되고 문맥('바로 그 순간 교사의 시간을 압박하는 급한 일들')과 맞지 않아 옹호 불가. 정답."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'more than ten minutes can disappear' — 조동사 can 뒤 원형 disappear로 어법상 옳다. 매력 오답 포인트: 'more than ten minutes'를 단수 시간 덩어리로 보고 수일치를 의심하게 유도하지만, 조동사가 있어 수일치 자체가 무관하다. 실제로 잠깐 끌렸으나 조동사 확인 후 배제."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'use the first ten minutes to get your class off to a great start' — use X to do Y 구문의 목적 부정사. 관용구 get ~ off to a great start도 온전. 어법상 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'if you are prepared for class' — be prepared for는 상태(준비된)를 나타내는 표준 과거분사/형용사 서술 용법. 주어 you가 준비'된' 상태이므로 -ed가 맞고 preparing이 아니다. (B)와 짝을 이루는 -ing/-ed 대조 선지이나 이쪽은 정문."
+    }
+  ],
+  "note": "출제 축은 -ing/-ed 분사 태 구분. (B) pressed→pressing이 유일한 오류로 명확하다. (C)의 수일치 유혹과 (E)의 분사 대조가 매력 오답 장치로 기능하지만 둘 다 규칙 확인으로 즉시 배제 가능. 복수 정답 여지 없음."
+}

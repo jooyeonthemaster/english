@@ -1,0 +1,169 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-point-monotony",
+    "grammar-surrounding-missing-marker",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-too-long-hard"
+  ],
+  "warnings": [
+    "grammar-decoy-point-diversity"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=f  (B):dec=f  (C):dec=f  (D):dec=f  (E):ANS=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 43,
+        "relPos": 0.062,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 148,
+        "relPos": 0.215,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 299,
+        "relPos": 0.434,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 360,
+        "relPos": 0.522,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 570,
+        "relPos": 0.827,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.827,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "noticing",
+        "isError": false,
+        "errorExpression": "to notice",
+        "surroundingText": "We have all had the experience of suddenly {A} that a source of constant background noise, such as a distant jackhammer or music from a store,",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "has just ceased",
+        "isError": false,
+        "errorExpression": "had just ceased",
+        "surroundingText": "{B} - yet we hadn't noticed the sound while it was ongoing.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "as long as",
+        "isError": false,
+        "errorExpression": "as far as",
+        "surroundingText": "Your auditory areas were predicting its continuation, moment after moment, and {C} the noise didn't change you paid it no attention.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "By ceasing",
+        "isError": false,
+        "errorExpression": "To cease",
+        "surroundingText": "{D}, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "claiming",
+        "isError": true,
+        "errorExpression": "claimed",
+        "surroundingText": "the night {E} that something woke them up.",
+        "pointCode": "f",
+        "correction": "claiming"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "noticing"
+      },
+      {
+        "label": "(B)",
+        "text": "has just ceased"
+      },
+      {
+        "label": "(C)",
+        "text": "as long as"
+      },
+      {
+        "label": "(D)",
+        "text": "By ceasing"
+      },
+      {
+        "label": "(E)",
+        "text": "claimed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'experience of'에서 'of'는 전치사이므로 뒤에 동명사가 와야 합니다. 따라서 원문인 noticing이 적절합니다. (to notice는 부정사이므로 부적절)",
+      "(B)": "주절의 동사가 현재완료(We have all had)이고, 뒤에 오는 경험의 내용을 설명하는 명사절의 시제는 현재완료(has just ceased)가 맞습니다. 뒤에 나오는 과거완료(hadn't noticed)에 영향을 받아 had just ceased로 고르지 않도록 주의해야 합니다.",
+      "(C)": "'as long as'는 '~하는 한(조건)'이라는 의미로 문맥상 적절합니다. 'as far as'(~하는 한, 범위)와 의미상 혼동하기 쉬운 자리입니다.",
+      "(D)": "소음이 멈춤으로써(by ceasing) 예측을 위반했다는 수단이나 원인을 나타내므로 전치사 By + 동명사 형태인 By ceasing이 적절합니다. To cease는 '~하기 위해서'라는 목적을 나타내므로 문맥에 맞지 않습니다."
+    },
+    "explanation": "We have all had the experience of suddenly (A)noticing that a source of constant background noise, such as a distant jackhammer or music from a store, (B)has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and (C)as long as the noise didn't change you paid it no attention. (D)By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night (E)claimed that something woke them up. They tended to call around the time the trains used to run past their apartments.\n\n정답: (E) claimed\n\n(A) 'experience of'에서 'of'는 전치사이므로 뒤에 동명사 noticing이 와야 합니다. (to notice X)\n(B) 주어 동사 시제가 현재완료(We have all had)이고, 경험의 내용을 설명하는 명사절 내 시제는 현재완료(has just ceased)가 적절합니다. (had just ceased X)\n(C) 'as long as'(~하는 한, 조건)이 문맥상 적절합니다. as far as(~하는 한, 범위)와 의미를 구별해야 합니다. (as far as X)\n(D) 소음이 멈춤으로써(by ceasing) 예측을 위반했다는 수단이나 원인을 나타내므로 By ceasing이 적절합니다. (To cease는 목적을 나타내므로 부적절)\n(E) 정답. 'people called the police in the middle of the night'는 주어(people)와 동사(called)가 있는 완전한 문장입니다. 따라서 뒤에 접속사 없이 또 다른 동사 claimed가 올 수 없습니다. 'woke them up'의 주체가 사람(people)이므로 현재분사 claiming이 와서 부대상황을 나타내는 분사구문으로 쓰여야 합니다. claimed는 문법상 비문입니다.",
+    "keyPoints": [
+      "분사구문(S+V+O 뒤에 접속사 없이 또 다른 V가 오는 비문) 식별",
+      "전치사 of 뒤 동명사 사용",
+      "현재완료와 과거완료의 시제 논리",
+      "유사 접속사(as long as vs as far as) 구별",
+      "수단(By V-ing)과 목적(To V)의 구별"
+    ],
+    "tags": [
+      "수능_영어",
+      "어법",
+      "중급",
+      "분사구문",
+      "시제",
+      "전치사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We have all had the experience of suddenly __(A) noticing__ that a source of constant background noise, such as a distant jackhammer or music from a store, __(B) has just ceased__ - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and __(C) as long as__ the noise didn't change you paid it no attention. __(D) By ceasing__, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night __(E) claimed__ that something woke them up. They tended to call around the time the trains used to run past their apartments."
+  }
+}

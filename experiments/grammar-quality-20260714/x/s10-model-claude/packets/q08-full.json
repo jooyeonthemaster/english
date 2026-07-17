@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-shallow-participle-adjective-answer",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=a  (C):ANS=c  (D):dec=i  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 35,
+        "relPos": 0.054,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 116,
+        "relPos": 0.178,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 511,
+        "relPos": 0.784,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 563,
+        "relPos": 0.863,
+        "sentenceIndex": 7,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 596,
+        "relPos": 0.914,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.914,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중, 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has us piling",
+        "isError": false,
+        "errorExpression": "has us piling",
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing on top of another.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "doesn't save",
+        "isError": false,
+        "errorExpression": "doesn't save",
+        "surroundingText": "you should know that multitasking doesn't save any time",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "pressed",
+        "isError": true,
+        "correction": "pressed",
+        "errorExpression": "pressing",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "Focus",
+        "isError": false,
+        "errorExpression": "Focus",
+        "surroundingText": "Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(E)",
+        "expression": "you'll accomplish",
+        "isError": false,
+        "errorExpression": "you'll accomplish",
+        "surroundingText": "Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has us piling"
+      },
+      {
+        "label": "(B)",
+        "text": "doesn't save"
+      },
+      {
+        "label": "(C)",
+        "text": "pressing"
+      },
+      {
+        "label": "(D)",
+        "text": "Focus"
+      },
+      {
+        "label": "(E)",
+        "text": "you'll accomplish"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "사역동사 have는 'have+목적어+동사원형/v-ing' 구조를 취하는데, 목적어 us와 pile의 관계가 능동(우리가 쌓는 것)이므로 v-ing 형태인 piling이 올바르게 쓰였다.",
+      "(B)": "주어 multitasking은 단수 취급되는 동명사 주어이므로 조동사 does의 부정형 doesn't와 동사원형 save가 결합한 doesn't save는 수일치상 올바르다.",
+      "(D)": "Focus on one task at a time은 명령문으로 동사원형 Focus로 시작하며, and로 이어진 you'll accomplish 절과 등위 연결되어 구조상 문제가 없다.",
+      "(E)": "조동사 will 뒤에는 동사원형이 와야 하므로 you'll accomplish는 will+accomplish의 형태로 어법상 올바르다."
+    },
+    "explanation": "밑줄 친 (C) pressing은 'with+명사+분사' 구문에서 명사 your phone과 분사의 의미관계를 나타낸다. your phone은 누르는 행위를 하는 주체가 아니라 귀에 눌려지는 대상이므로 수동관계이며, 능동형 v-ing인 pressing은 이 자리에서 비문이다. 따라서 과거분사 pressed로 고쳐 with your phone pressed to your ear(전화기가 귀에 눌린 채로)가 되어야 한다. 학생들은 with+명사+v-ing를 무조건 분사구문 공식으로 외워 능동형을 습관적으로 쓰기 쉬우므로 명사와 분사의 의미상 관계를 반드시 따져야 한다.",
+    "keyPoints": [
+      "(C) 분사의 능동·수동 판별 — with+명사+분사 구문에서 명사가 동작의 대상이면 과거분사를 써야 한다",
+      "(A) 사역동사 목적격보어 — have+목적어+v-ing는 목적어와 동작이 능동관계일 때 사용한다",
+      "(E) 조동사 뒤 동사원형 — will 뒤에는 반드시 동사원형이 와야 한다"
+    ],
+    "tags": [
+      "분사구문",
+      "능동수동",
+      "with 분사구문",
+      "수능어법",
+      "분사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "The fast pace of today's lifestyle __(A) has us piling__ one thing on top of another. But you should know that multitasking __(B) doesn't save__ any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone __(C) pressing__ to your ear. The same applies to your work. __(D) Focus__ on one task at a time, and __(E) you'll accomplish__ each task better, and probably faster."
+  }
+}

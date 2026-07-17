@@ -1,0 +1,35 @@
+{
+  "pid": "P021",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'less developed virtual realities have always been integral parts of human life' — 복수 주어 virtual realities + have + been(be의 과거분사) + 명사 보어. 현재완료 계속 용법으로 완전한 정문. 수동태 오독 유혹이 있으나 be동사 완료형으로 문제 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'What is new about cyberspace is its interactive nature' — 자유 관계절(선행사 포함 관계대명사)이 문장 주어를 이루고, 절 내부에서 What이 is new의 주어 공백을 채운다. That이면 절 내 주어가 없어 비문이 되므로 What이 정확."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a space where real people have actual interactions with other real people' — 관계사 뒤 절이 주어+타동사+목적어를 모두 갖춘 완전절이므로 관계부사 where(= in which)가 정확. which였다면 공백이 필요해 오히려 비문. 최상위권 체크 포인트(완전절 여부)로 즉시 해소."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'while being able to shape, or even create, their own and other people's personalities' — while 분사구문의 의미상 주어는 주절 주어 real people(복수)이므로 their 수 일치 정상. 'a space → its' 유혹이 있으나 shape/create의 행위 주체는 사람이므로 their가 맞음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'The move from passive imaginary reality to the interactive virtual reality of cyberspace are much more radical' — 진짜 주어는 단수 The move이고 'from A to B of cyberspace'는 전치사구 수식어 사슬. 따라서 is여야 하며 are는 수 일치 오류. 직전 명사 cyberspace도 단수라 근접 일치 착시로도 정당화 불가. 도치·병렬 등 어떤 대안 해석으로도 정문이 되지 않음."
+    }
+  ],
+  "note": "장거리 주어-동사 수 일치(The move ... is) 단일 오류 문항. (A)~(D)는 대안 해석을 적극 탐색해도 모두 정문으로 확정되어 정답이 (E) 하나로 유일하게 좁혀진다. 미끼 강도: (C) where/which 판별과 (D) 대명사 지시 대상이 중위권에게 유혹적이나 최상위권 기준 즉시 해소 가능."
+}

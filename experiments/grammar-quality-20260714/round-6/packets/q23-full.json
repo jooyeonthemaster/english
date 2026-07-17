@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go3_20260507-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2026,
+    "exam": "5월",
+    "origType": "주장",
+    "words": 158
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-explanation-lintx2",
+    "grammar-answer-nonword-forcedx1"
+  ],
+  "layout": "(A):dec=k  (B):dec=a  (C):ANS=c  (D):dec=f  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 110,
+        "relPos": 0.123,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 197,
+        "relPos": 0.221,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 269,
+        "relPos": 0.302,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 421,
+        "relPos": 0.473,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 661,
+        "relPos": 0.742,
+        "sentenceIndex": 3,
+        "found": true
+      }
+    ],
+    "sentenceCount": 5,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.742,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Giving kids an edible treat that you know they love after a tricky day to cheer them up or soothe them can be tempting but I advise you not to. When we try to comfort a child with food rather than attend to their physical and emotional needs, we leave them feeling not understood. Instead of learning that they'll receive appropriate comfort and attention, they receive the message that their needs can't or won't be met appropriately. Consequently, they understand one of the following: that their needs are not valid; that they are too much for their parent; that they are being silly; that next time they should keep quiet; or that they need to shout louder to be heard. If, after tending to your child's emotional and physical wounds you want to offer some chocolate, ice cream or a trip to a fast-food restaurant, that is, of course completely fine -but it must not replace the nurture.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "tempting",
+        "isError": false,
+        "errorExpression": "tempting",
+        "surroundingText": "cheer them up or soothe them can be tempting but I advise you not to. When",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "attend",
+        "isError": false,
+        "errorExpression": "attend",
+        "surroundingText": "comfort a child with food rather than attend to their physical and emotional needs,",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "understood",
+        "isError": true,
+        "correction": "understood",
+        "errorExpression": "understanding",
+        "surroundingText": "emotional needs, we leave them feeling not understood. Instead of learning that",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "appropriately",
+        "isError": false,
+        "errorExpression": "appropriately",
+        "surroundingText": "their needs can't or won't be met appropriately. Consequently, they understand one",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "to be heard",
+        "isError": false,
+        "errorExpression": "to be heard",
+        "surroundingText": "keep quiet; or that they need to shout louder to be heard. If, after tending to your",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "tempting"
+      },
+      {
+        "label": "(B)",
+        "text": "attend"
+      },
+      {
+        "label": "(C)",
+        "text": "understanding"
+      },
+      {
+        "label": "(D)",
+        "text": "appropriately"
+      },
+      {
+        "label": "(E)",
+        "text": "to be heard"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "조동사 뒤 be동사의 주격보어로 상황의 성질을 기술하는 형용사(현재분사) 'tempting'이 알맞게 쓰였습니다.",
+      "(B)": "유사 병렬 구조를 이끄는 'rather than' 뒤에서 'try to comfort'의 comfort와 대조 관계를 이루며 동사원형 'attend'가 바르게 쓰였습니다.",
+      "(D)": "수동태 동사구 'be met'을 수식하여 '적절하게 충족되다'의 의미를 구성하므로 부사 'appropriately'가 어법상 옳습니다.",
+      "(E)": "그들의 목소리가 남들에게 '들리게 되도록(듣게 만들기 위해)'이라는 수동의 의미이므로, to부정사의 수동형 'to be heard'는 어법상 옳습니다."
+    },
+    "explanation": "본동사 leave 뒤에서 목적어 them과 목적격보어 관계를 이루는 feeling의 보어 영역에서, 아이들(them)이 다른 사람에 의해 이해를 '받지 못하는' 대상이 되므로 수동의 관계를 나타내어야 합니다. 따라서 능동의 행위를 의미하는 'understanding'은 해당 위치에 올 수 없으며, 수동의 의미를 완성하는 과거분사형인 'understood'가 와야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(C) 분사의 능동 vs 수동 — 의미상 주어인 them과의 수동 관계로 판정",
+      "(A) to-v/v-ing — 보어 자리에서 유동적인 유혹을 나타내는 형용사구의 역할 판정",
+      "(E) 능수동태 — to부정사의 의미상 주어가 소리를 내어 남에게 들리는 수동 관계 판정"
+    ],
+    "tags": [
+      "분사의 태",
+      "목적격보어",
+      "수동태",
+      "부사수식"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Giving kids an edible treat that you know they love after a tricky day to cheer them up or soothe them can be __(A) tempting__ but I advise you not to. When we try to comfort a child with food rather than __(B) attend__ to their physical and emotional needs, we leave them feeling not __(C) understanding__. Instead of learning that they'll receive appropriate comfort and attention, they receive the message that their needs can't or won't be met __(D) appropriately__. Consequently, they understand one of the following: that their needs are not valid; that they are too much for their parent; that they are being silly; that next time they should keep quiet; or that they need to shout louder __(E) to be heard__. If, after tending to your child's emotional and physical wounds you want to offer some chocolate, ice cream or a trip to a fast-food restaurant, that is, of course completely fine -but it must not replace the nurture.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'mistakes __made__ by organizations'는 축약 관계절(= mistakes that are made by organizations)의 과거분사로, 'mistakes'를 수동 의미로 수식한다. by-행위자구가 뒤따르므로 수동 분사 made가 형식적으로 정확하다. making(능동)으로 볼 여지는 의미상 성립하지 않는다(실수가 무언가를 만드는 것이 아니라 조직에 의해 저질러지는 것). 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "문장 진짜 주어는 'One (of the most common mistakes ...)'로 단수. 'of the most common mistakes made by organizations'와 'when they first consider ...' 부사절은 모두 삽입 수식어이므로 주어-동사 일치의 지배 대상이 아니다. 단수 주어 One에 단수동사 is가 일치한다. 보어절 'that they focus ...'와의 결합도 정상(mistake is that-절). 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "보어절 내부 주어는 동명사구 'creating a social media program'으로, 동명사구 주어는 단수 취급이므로 begins가 일치한다. 뒤따르는 'not with X but with Y' 상관구조도 begin with와 정합적으로 결합한다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'a vague need __to manage__ a presence'에서 명사 need는 to부정사 보충어를 취하는 전형적 명사(need to-V). to manage는 형용사적 용법의 부정사로 정확하다. managing 등 대안형이 요구될 근거 없음. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'must either solve a problem ... or __resulting__ in an improvement'에서 상관접속사 either...or의 병렬 시작점은 조동사 must 뒤의 원형동사 solve이다. 따라서 or 뒤에도 must의 지배를 받는 원형 result가 와야 한다(must either solve ... or result in ...). 대안 해석 검토: (i) resulting을 분사구문으로 보려면 'or'가 두 절 또는 두 동일 범주를 이어야 하는데 or의 좌측 등위항이 원형 VP(solve a problem...)이므로 분사구 resulting은 범주 불일치로 성립 불가; (ii) either가 solve 앞에 위치하여 병렬 범주를 원형 VP로 고정하므로 'be동사 생략+진행형' 같은 재분석도 불가능. 어떤 정문 재해석도 존재하지 않는다. 어법상 틀림 — 정답."
+    }
+  ],
+  "note": "밑줄 5곳 중 (A)~(D)는 각각 축약 관계절 수동분사, One-of 단수 일치, 동명사구 주어 단수 일치, need+to부정사로 형식적으로 정문임을 증명 가능. (E)만 either...or 병렬(원형 solve ↔ result) 위반으로 유일하게 틀렸다. 단일 정답으로 수렴하는 깨끗한 문항."
+}

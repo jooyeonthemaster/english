@@ -1,0 +1,69 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-weak-rationale",
+      "severity": "minor",
+      "evidence": "오답 해설 ②는 '화난 고객과의 대화는 예시일 뿐'이라고만 설명하는데, 실제 결정적 결함은 지문이 회피(avoiding/procrastinating)를 명시적으로 비판한다는 점('I waste too much emotional energy', 'avoiding it')이다. 사실 오류는 아니나 근거가 약하고 핵심 함정을 놓친다."
+    },
+    {
+      "code": "C4-keyword-echo",
+      "severity": "minor",
+      "evidence": "정답 ⑤만 지문의 주제어 'energy'('energy level', 'energy is high')를 그대로 포함해, 키워드 매칭만으로 정답에 근접할 수 있는 약한 단서 누출이 있다. 다만 모든 오답도 지문 앵커(morning, unhappy clients, tired)를 갖고 있어 치명적이지는 않다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "저자 개인 사례의 과잉 일반화 (actor/example overgeneralization)",
+      "temptingBecause": "지문 대부분이 'I generally wake up energized', 'eating my problems for breakfast' 등 아침 처리의 이점을 서술하므로, 아침 기상 자체가 조언이라고 오독하기 쉽다.",
+      "decisiveFlaw": "빈칸 문장의 조건절은 '아침형 인간이 아닌 사람'을 대상으로 한다. 이들에게 일찍 일어나라는 것은 에너지-과제 매칭이라는 주제와 정반대이며, 지문은 기상 시간 변경이 아니라 과제 배치를 조언한다."
+    },
+    {
+      "label": "2",
+      "intent": "예시 소재의 결론 격상 + 극성 함정 (example-as-topic, polarity trap)",
+      "temptingBecause": "'unhappy client'가 지문에 문자 그대로 등장하는 앵커이며, 감정 에너지 낭비 언급과 표면적으로 연결된다.",
+      "decisiveFlaw": "지문은 불쾌한 만남을 '회피'하는 것이 감정 에너지를 낭비시킨다고 명시적으로 비판한다. 회피를 권하는 이 선지는 지문 논지와 극성이 반대이고, 과제 '배치' 전략과도 무관하다."
+    },
+    {
+      "label": "3",
+      "intent": "범위 전환 반쪽 진실 (scope shift, half-truth)",
+      "temptingBecause": "'에너지 낮을 때는 쉬운 일'이라는 명제는 에너지-과제 매칭 원리의 논리적 여집합처럼 보여, 주제를 이해한 학생도 잠시 고려하게 된다.",
+      "decisiveFlaw": "지문의 관심사는 시종일관 '어려운/분석적 과제를 언제 할 것인가'이며 쉬운 과제는 한 번도 논의되지 않는다. 결론 문장의 원문 스팬도 'your difficult work'의 배치에 관한 것이므로 논점 이탈이다."
+    },
+    {
+      "label": "4",
+      "intent": "조건 상실에 의한 직접 반전 (condition loss, polarity reversal)",
+      "temptingBecause": "지문의 화자는 어려운 일을 'the first thing I get done'으로 아침에 처리한다고 강조하므로, 조건절을 놓친 학생은 아침 배치를 그대로 답으로 고른다.",
+      "decisiveFlaw": "'If you know you are not a morning person'이라는 조건절 하에서 아침은 저에너지 시간대이므로, 중요한 일을 모두 아침에 하라는 것은 에너지 매칭 원리 및 원문 스팬('later in the day')과 정반대다."
+    },
+    {
+      "label": "5",
+      "intent": "정답 — 원문 스팬의 의미 보존 추상화",
+      "temptingBecause": "(정답) 첫 문장의 주제(과제-에너지 매칭)와 결론 조건절을 함께 통합한 유일한 선지.",
+      "decisiveFlaw": "결함 없음. 원문 'scheduling your difficult work later in the day'를 '어려운 과제를 에너지 최고조에 맞추기'로 일반화하며, 아침형이 아닌 사람의 피크가 늦은 시간대라는 문맥에서 의미가 정확히 보존된다."
+    }
+  ],
+  "explanationIssues": [
+    "오답 ②의 해설이 실제 결정적 결함(지문이 회피를 명시적으로 비판함)을 짚지 않고 '예시일 뿐'이라는 약한 근거만 제시함 (minor).",
+    "본해설은 ①·④만 다루고 ②·③은 오답 해설 JSON에서만 다룸 — 오류는 아니나 본해설-오답해설 간 커버리지가 비대칭임 (minor)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 빈칸은 결론 문장에서 주제 적용부를 도려냈고, 다섯 선지 모두 동일한 동명사 슬롯에 문법적으로 들어가 문법 소거가 불가능하다(§D 1조건 충족). ①·④가 지문의 '아침 예찬' 표면 단서로 실제 유혹력을 가지며, 변별은 조건절 'not a morning person'과 전체 주제의 결합으로 이루어진다 — INTERMEDIATE 난이도에 정확히 부합(C5=4). 감점 요인: (a) 정답만 주제어 'energy'를 그대로 포함하는 약한 키워드 누출, (b) 오답 ② 해설의 근거 약화, (c) ②는 회피 비판과 극성이 정면 충돌해 소거가 비교적 쉬움. 합계 19점, 모든 C ≥ 3 → B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

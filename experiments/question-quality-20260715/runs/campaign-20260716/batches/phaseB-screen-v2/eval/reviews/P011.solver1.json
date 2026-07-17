@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "'help artists overcome the limitations of their technological tools' — 기술이라는 표면 어휘를 재활용한 미끼. 지문은 기술의 '한계'가 아니라 '기술 활용 자체를 목적화하는 것'을 경계한다. 창작물이 도구의 한계 극복을 돕는다는 진술은 지문 어디에도 근거가 없고 논리적으로도 순환적. 문법 결합(creations that will help...)은 정상이나 의미 적합성 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "'appeal to the popular tastes of the modern consumer' — 지문에 대중성·소비자·상업성 언급이 전무하고, 'truly great art'(인식에 도전하는 예술)라는 핵심 논지와 정면 충돌. 유혹 강도 낮음."
+    },
+    {
+      "label": "③",
+      "verdict": "오답(최대 매력 오답)",
+      "reason": "'democratize artistic production for those without specialized training' — 첫 문장 'more people than ever before can produce artistic creations'을 되울려 실제로 끌리는 선지. 그러나 그 민주화 현상은 비평가들이 '위대한 예술의 기준 상실'을 우려하는 배경이지 예술가가 추구할 목표가 아니다. 빈칸 문장은 great art의 정의를 되받아야 하므로 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "정답",
+      "reason": "'provoke fresh perceptions and profound shifts in the audience' — 핵심 정의 문장 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'의 정확한 패러프레이즈(challenges perceptions ↔ provoke fresh perceptions, forever changes thoughts and feelings ↔ profound shifts in the audience). 'unique creations that will provoke...' 문법 결합 자연스럽고, 직전 대조 구문(기술 그 자체가 아니라 ~)의 논리 흐름에 정합."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'redefine aesthetic standards exclusively through digital platforms' — 'exclusively through digital platforms'가 '신기술은 도구일 뿐이며 그 자체를 목적으로 삼지 말라'는 직전 두 문장과 정면 모순. 기술 어휘로 유혹하지만 방향이 반대."
+    }
+  ],
+  "note": "빈칸이 글의 핵심 정의 문장을 패러프레이즈로 되받는 전형적 수능 빈칸 구조. ④가 유일하게 정의 문장의 두 요소(인식 도전 + 사고·감정 변화)를 모두 충족. 최대 매력 오답은 첫 문장을 되울리는 ③이나, 해당 내용은 비평가들의 우려 대상이므로 목표로 성립 불가. 대안 해석으로 정답이 흔들릴 여지 없음 — 단일 정답으로 수렴."
+}

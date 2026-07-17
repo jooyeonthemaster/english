@@ -1,0 +1,35 @@
+{
+  "pid": "P096",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Just as today some jobs are better than others, so would they have been in early societies' — the correlative 'Just as ..., so ...' licenses subject-auxiliary inversion (so + aux + S), and 'would have been' is appropriate past conjecture about prehistoric societies. Attractive distractor: the inversion plus perfect modal looks exotic and tempts a flag, but 'so did/would + S' after 'just as' is a standard inversion pattern. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "Inside the absolute construction 'with some roles (being) more dangerous and some ___ more plentiful access', the second conjunct must parallel the first small clause with a non-finite predicate: 'some having more plentiful access'. A finite 'have' cannot head a with-absolute. Rescue readings fail: treating 'and some have ...' as a coordinated finite clause breaks the tense frame (past conjecture 'would have been' vs present 'have') and leaves 'with some roles more dangerous' dangling as a broken coordination. This is the error — governing rule: with + NP + participle (absolute construction) parallelism."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Some individuals are buried with more precious goods' — passive voice (individuals are buried, not bury), descriptive/historical present consistent with the surrounding clauses ('some are in group graves'). Correct."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'still others don't even seem to be buried at all' — seem + to-infinitive passive; the referents undergo burial, so the passive infinitive is required and correctly formed. Correct."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "True subject is the plural head 'chemical and isotope analyses (of teeth and long bones)', so plural 'reveal' agrees. The usual proximity-attraction trap is defused because the nearest noun 'long bones' is also plural; either parse yields plural agreement. Correct."
+    }
+  ],
+  "note": "Solved blind as a top-tier examinee. Real-time pull check: (A) is the designed magnet — 'so would they have been' stacks inversion + modal perfect and momentarily reads as scrambled, but the 'just as ..., so + aux + S' rule resolves it cleanly. (E) briefly invites a singular/plural double-take that dissolves on locating the head noun 'analyses'. (B) is unambiguously wrong under the with-absolute rule and no alternative parse (reduced relative, new finite clause, ellipsis) rescues it. Single defensible answer: (B)."
+}

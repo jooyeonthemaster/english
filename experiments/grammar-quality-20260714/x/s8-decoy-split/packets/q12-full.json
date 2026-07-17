@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20221123-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-generic-answer-point",
+    "grammar-decoy-filler-span",
+    "grammar-pointcode-span-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=k  (C):dec=k  (D):ANS=a  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 65,
+        "relPos": 0.084,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 408,
+        "relPos": 0.53,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 535,
+        "relPos": 0.695,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 572,
+        "relPos": 0.743,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 590,
+        "relPos": 0.766,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.766,
+    "firstHalfShare": 0.2,
+    "notFoundCount": 0
+  },
+  "originalPassage": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "so that",
+        "isError": false,
+        "errorExpression": "so that",
+        "surroundingText": "You already have a business and you're about to launch your blog so that you can sell your product.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "writing",
+        "isError": false,
+        "errorExpression": "writing",
+        "surroundingText": "who is going to want to read the latest thing you're writing about?",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "keep",
+        "isError": false,
+        "errorExpression": "keep",
+        "surroundingText": "Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "can you",
+        "isError": true,
+        "correction": "can you",
+        "errorExpression": "you can",
+        "surroundingText": "Only by doing this can you create an interested audience that you will then be able to sell to.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "interested",
+        "isError": false,
+        "errorExpression": "interested",
+        "surroundingText": "So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "so that"
+      },
+      {
+        "label": "(B)",
+        "text": "writing"
+      },
+      {
+        "label": "(C)",
+        "text": "keep"
+      },
+      {
+        "label": "(D)",
+        "text": "you can"
+      },
+      {
+        "label": "(E)",
+        "text": "interested"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'so that + 주어 + 조동사/동사' 구문은 '~가 ...하기 위해서'라는 목적을 나타내는 접속사 표현입니다. 뒤에 완전한 절 'you can sell your product'가 이어지므로 'so that'의 사용은 어법상 적절합니다.",
+      "(B)": "관계대명사 목적격(that/which)이 생략된 'the latest thing (that) you're writing about'의 구조입니다. 전치사 'about'의 목적어 자리가 비어 있는 불완전한 절을 이끄는 현재진행형 동사의 일부로서 'writing'은 올바르게 쓰였습니다.",
+      "(C)": "to부정사의 형용사적 용법으로 명사 'a reason'을 수식하고 있습니다. 'reason to-v'는 '~할 이유'라는 뜻으로 올바른 부정사 표현입니다.",
+      "(E)": "독자층(your audience)이 무언가에 의해 흥미를 느끼게 되는 주체이므로, 수동의 감정을 나타내는 과거분사 'interested'가 보어 자리에 오는 것이 어법상 맞습니다."
+    },
+    "explanation": "문장의 뼈대를 살펴보면 부사적 한정 조건을 나타내는 'Only by doing this'가 문두로 전치되어 강조되고 있습니다. 부정어나 준부정어, 혹은 'Only + 부사구/부사절'이 문장의 맨 앞으로 나오게 되면, 주어와 동사는 의문문 형식으로 도치되어야 합니다. 따라서 평서문의 어순인 'you can'은 비문이며, 조동사 'can'을 주어 앞으로 보낸 'can you'로 교정해야 어법상 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(D) 정·준동사 — Only가 이끄는 부사구가 문두에 올 때의 주어-조동사 도치 판단",
+      "(B) to-v/v-ing — 관계절 내 현재진행시제 형성을 돕는 분사 어법",
+      "(E) 분사능수동 — 감정을 유발하는지(ing) 혹은 느끼게 되는지(ed)의 태 판정"
+    ],
+    "tags": [
+      "어법",
+      "도치구문",
+      "수능어법",
+      "Only도치"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "You already have a business and you're about to launch your blog __(A) so that__ you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're __(B) writing__ about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to __(C) keep__ coming back. Only by doing this __(D) you can__ create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be __(E) interested__ in."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-connective-example",
+      "severity": "minor",
+      "evidence": "keyPoints[1] cites \"rather, instead 등의 대조 연결어\" but 'instead' does not appear in the passage; only 'Rather' and 'In other words' do. Read as a generic category example it is not a factual misanalysis of the text, so not a V4 failure, but it is sloppy metadata."
+    },
+    {
+      "code": "V4-minor-location-loose",
+      "severity": "minor",
+      "evidence": "해설 says '글의 전반부에서' for the thesis sentence 'Great art challenges our perceptions...', which is actually sentence 3 of 6 (mid-passage). Loose localization, not a structural misanalysis."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "means/end confusion — treats mastering/overcoming the technological tool as the artistic goal",
+      "temptingBecause": "lexically anchored to 'new technologies are nothing more than tools that can be used in the creative process'; students who fixate on the tool discussion may pick it",
+      "decisiveFlaw": "the passage frames the goal as an effect on the public (new, eye-opening experiences), not as artists' relationship to their tools; nothing says creations should overcome tool limitations"
+    },
+    {
+      "label": "②",
+      "intent": "thesis polarity reversal — art as pleasing the audience instead of challenging it",
+      "temptingBecause": "'modern consumer' resonates with the internet-era mass-sharing context of sentence 1",
+      "decisiveFlaw": "directly contradicts 'Great art challenges our perceptions... and forever changes our thoughts and feelings'; eliminable on polarity alone, which weakens KILLER discrimination"
+    },
+    {
+      "label": "③",
+      "intent": "scope overextension / half-truth — promotes the opening background fact (democratized production) to the concluding goal",
+      "temptingBecause": "democratization of production IS truthfully stated in sentence 1, giving it a real source anchor",
+      "decisiveFlaw": "that fact is the phenomenon critics worry about, not the prescribed goal; the conclusion is about what artists should produce, not who can produce"
+    },
+    {
+      "label": "④",
+      "intent": "declared answer — paraphrase of the deleted span 'allow the public to have new, eye-opening experiences' combined with the thesis sentence",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none; uniquely correct. Note: repeats 'perceptions' verbatim from the thesis sentence and mirrors its two-part structure, making it findable by lexical matching — a cue-economy leak for KILLER"
+    },
+    {
+      "label": "⑤",
+      "intent": "surface-overlap + absolute-claim trap — tech vocabulary with an 'exclusively' restriction",
+      "temptingBecause": "'digital platforms' echoes 'digital material' and the passage's technology motif",
+      "decisiveFlaw": "'exclusively through digital platforms' contradicts 'technologies are nothing more than tools'; the absolute term makes it self-eliminating without reading the argument"
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints lists 'instead' as an example contrast connective though it does not occur in the passage (minor)",
+    "해설 locates the thesis sentence in '글의 전반부' when it is mid-passage (minor)",
+    "해설 is accurate but slightly verbose; it does not explicitly name the decisive cue-word overlap it relies on"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservedWithAbstraction": "partially — meaning preserved, but abstraction is minimal (near-direct synonym doublet of the source span/thesis)",
+    "distractorAnchorOverlapFlaw": true,
+    "twoClueRequirement": "FAIL — ④ is reachable from the single thesis sentence via the verbatim repeat of 'perceptions' and parallel two-part structure; no genuine multi-sentence synthesis is forced",
+    "noSingleCueElimination": "FAIL — ② falls to polarity alone and ⑤ to the absolute word 'exclusively' alone",
+    "distinctTrapTypes": "mostly — means/end confusion, polarity reversal, scope overextension, absolute/surface overlap"
+  },
+  "grade": "C",
+  "notes": "All five validity gates pass: the render is clean, ④ is uniquely correct, all options share the syntactic slot, and the explanation is factually sound apart from two minor metadata loosenesses. The item fails as a KILLER: the correct option repeats 'perceptions' verbatim and mirrors the thesis sentence's structure, so a word-matching strategy solves it in one step (C5=1, C4 leak), and two distractors (②, ⑤) are eliminable on polarity/absolute-word heuristics alone, violating RUBRIC §D. Craft total 16 with C5=1 places it below B threshold. A shippable mid-difficulty item, but it requires redesign (more abstracted answer wording, removal of the verbatim lexical repeat, harder near-miss distractors) to justify the KILLER label."
+}

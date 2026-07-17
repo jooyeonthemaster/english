@@ -1,0 +1,80 @@
+{
+  "pid": "P020",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-EXPLANATION-REFERENCES-ABSENT-TEXT",
+      "severity": "critical",
+      "evidence": "오답 해설 ①: \"본문에 나온 breakfast라는 표현을 글자 그대로 해석하여\" — 'breakfast'는 빈칸 처리된 span('eating my problems for breakfast') 내부에 있던 단어로, 학생에게 렌더된 지문 어디에도 존재하지 않는다. 학생이 지문에서 breakfast를 찾으면 없으므로 해설이 지문에 없는 내용을 사실처럼 서술한 것이다."
+    },
+    {
+      "code": "V4-MISDESCRIBES-ANSWER-AS-FIGURATIVE",
+      "severity": "major",
+      "evidence": "해설: \"빈칸이 포함된 문장은 ... 핵심적인 행동 전략을 비유적으로 제시하는 부분\", \"빈칸에 들어갈 비유적 표현의 의미를 종합하면\" — 실제 정답 선지 ② 'tackling the most challenging issues as the very first task'는 문자적(literal) 진술이며, 정답을 넣은 완성문에는 어떤 비유 표현도 없다. 해설이 렌더된 문항이 아니라 제거된 원문 span(eating my problems for breakfast)을 기준으로 작성되었다."
+    },
+    {
+      "code": "V4-KEYPOINTS-REFERENCE-BLANKED-SPAN",
+      "severity": "minor",
+      "evidence": "keyPoints 3번 항목이 학생에게 보이지 않는 'eating my problems for breakfast'를 직접 인용해 설명한다. 출제 근거 설명으로는 이해 가능하나 학생 노출 필드라면 지문에 없는 표현을 전제로 한 학습 포인트가 된다."
+    },
+    {
+      "code": "V3-QUOTE-RESIDUE-MINOR",
+      "severity": "minor",
+      "evidence": "원문 관용구를 감싸던 따옴표가 빈칸 주위에 그대로 남아('the habit of \"_____.\"') 문자적 선지 ②를 넣으면 인용부호가 다소 어색한 scare quotes가 된다. 문법 위반은 아니어서 V3는 통과로 판정."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "관용구의 문자적 오독 유도(breakfast → 실제 아침 식사) + 아침/에너지 표면 연상",
+      "temptingBecause": "'I generally wake up energized'와 아침 맥락이 신체 에너지·아침 루틴 프레임을 연상시킨다.",
+      "decisiveFlaw": "지문은 식사·체력에 대해 전혀 언급하지 않으며, 빈칸 뒤 전개는 꺼려지는 과제의 선제 처리에 관한 것이다. 설계상 앵커였던 'breakfast'가 빈칸 처리로 지문에서 사라져 이 미끼의 본래 유혹 기제 자체가 무력화되었고, 오답 해설도 이 사라진 앵커를 사실처럼 인용한다."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 제거된 관용구 'eating my problems for breakfast'의 문자적 패러프레이즈",
+      "temptingBecause": "(정답) 'So for me, it'll always be the first thing I get done' 및 미루기→감정 에너지 낭비의 인과 논리와 정확히 정합한다.",
+      "decisiveFlaw": "없음. 다만 'the very first task'가 지문의 'the first thing I get done'과 어휘적으로 거의 동일해 근사-베껴쓰기 수준의 단서를 제공한다(변별력 저하 요인)."
+    },
+    {
+      "label": "3",
+      "intent": "세부 정보 과잉 확대(half-truth / detail hijack)",
+      "temptingBecause": "'overthink different scenarios and conversations that haven't happened yet'의 어휘를 재사용한다.",
+      "decisiveFlaw": "오버싱킹은 이 습관이 제거하려는 낭비 그 자체이며, 'all day' 연습·리허설은 지문이 경고하는 온종일 걱정과 동일한 행동이라 습관의 내용이 될 수 없다."
+    },
+    {
+      "label": "4",
+      "intent": "극성 반전(causal/polarity reversal)",
+      "temptingBecause": "'unpleasant email'을 지문 그대로 재사용하고, 마지막 문장의 '어려운 일을 늦게 배치하라'는 조언과 표면적으로 겹친다.",
+      "decisiveFlaw": "'it'll always be the first thing I get done'과 정면 모순이며, 마지막 문장의 조언은 아침형이 아닌 사람에게만 해당한다. 극성만으로 즉시 소거되어 실질 경쟁력이 거의 없다."
+    },
+    {
+      "label": "5",
+      "intent": "수단 치환(condition/means substitution) — 그럴듯한 생산성 행동으로 대체",
+      "temptingBecause": "'be strategic about scheduling'의 계획 프레임과 일반적 문제 해결 상식에 편승한다.",
+      "decisiveFlaw": "지문의 습관은 계획·목록 작성이 아니라 즉각 실행('just take care of it', 'get done')이다. 목록 작성은 오히려 처리 지연에 가깝다."
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설 ①이 렌더 지문에 존재하지 않는 'breakfast'를 '본문에 나온 표현'으로 인용 — 빈칸 처리로 제거된 span 내부 단어를 학생 지문 소속으로 오귀속.",
+    "본 해설과 keyPoints가 정답 선지(문자적 진술)가 아니라 제거된 원문 관용구를 '비유적 표현'으로 지칭하며 설명 — 완성문 기준으로 사실과 불일치.",
+    "오답 해설 ③·④·⑤ 자체의 논리·귀속은 실제 선지 내용과 대응하며 오류 없음."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "지문 변형(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 모두 건전하나, 해설이 렌더된 문항이 아닌 원문 기준으로 작성되어 V4 실패. (1) 빈칸으로 제거된 'breakfast'를 본문 소재 표현으로 인용, (2) 문자적 정답 선지를 '비유적 표현'으로 반복 지칭. 이는 학생이 검증 불가능한 근거를 제시하는 치명 결함이며 공예 점수로 상쇄되지 않아 F. 부차적으로: 미끼 ①의 설계 앵커가 빈칸 처리로 소멸(C2 감점), 정답 ②가 지문 문구 'the first thing I get done'의 근사-복사라 변별력이 낮음(C3 감점), 빈칸 주위 잔존 따옴표는 minor 스타일 이슈. 수정 방향: 해설을 완성문 기준으로 재작성(breakfast·비유 언급 제거)하고, ① 미끼를 렌더 지문에 실재하는 앵커 기반으로 교체하거나 ②의 어휘 중복을 추상화하면 B 이상 가능."
+}

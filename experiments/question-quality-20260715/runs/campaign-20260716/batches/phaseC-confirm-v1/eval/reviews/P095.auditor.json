@@ -1,0 +1,80 @@
+{
+  "pid": "P095",
+  "validity": {
+    "V1": false,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1",
+      "severity": "critical",
+      "evidence": "렌더 지문이 원문 문장 'The danger is an illusion.' 전체를 '_____.'로 치환해 주어 'The danger'가 소실됐다. 그러나 다섯 선지 모두 정형 동사구('is an inevitable response...', 'helps us accurately measure...', 'is a direct signal...', 'is a product of...', 'triggers a necessary...')로 주어 잔존을 전제한다. 의도된 변형은 'The danger _____.'였음이 명백하므로 렌더 마커와 선지 슬롯이 불일치하는 렌더 손상이다."
+    },
+    {
+      "code": "V3",
+      "severity": "critical",
+      "evidence": "선언 정답 ④를 렌더된 빈칸에 그대로 넣으면 '...we do not have to flee or fight. is a product of cognitive distortion. Our Stone Age brain sees...'로 주어 없는 비문 단편이 된다. 다른 네 선지도 동일하게 비문이 되므로 빈칸 seam이 문법성 게이트를 통과하지 못한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 1,
+    "C3": 1,
+    "C4": 1,
+    "C5": 0,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(허상인 위험을 실재하는 현대적 위협에 대한 필연적 반응으로 격상)",
+      "temptingBecause": "지문이 실제로 'Our dangers today are, for example, high blood pressure or diabetes'라며 실재하는 현대적 위험을 언급하므로 'real modern threats'가 소재적으로 겹친다",
+      "decisiveFlaw": "빈칸 직전·직후 문맥은 'There is no danger', 'a mortal danger that is not there'로 위험의 비실재성을 단언하므로 'real threats'와 정면 모순"
+    },
+    {
+      "label": "②",
+      "intent": "정확성 반전 + 시대 오귀속(뇌가 위험을 '정확히 측정'한다고 뒤집고 대상도 '구석기 시대 위험'으로 치환)",
+      "temptingBecause": "'Stone Age'가 지문 핵심 어구('Stone Age brain')와 축자적으로 겹친다",
+      "decisiveFlaw": "지문의 요지는 뇌가 무해한 현대 상황을 위협으로 '오인'한다는 것이며, 측정 대상도 현대 상황이지 실재하는 구석기 위험이 아니다"
+    },
+    {
+      "label": "③",
+      "intent": "과확장(느껴지는 위험을 즉각적 생존 필요의 직접 신호로 연결)",
+      "temptingBecause": "'survival'이 지문 어휘('harmless to our survival')와 겹친다",
+      "decisiveFlaw": "지문이 해당 상황들을 'harmless to our survival'로 명시하므로 생존 필요의 '직접 신호'일 수 없다"
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 원문 'The danger is an illusion'의 추상화 패러프레이즈",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'There is no danger, but our brain rates it as such'와 후행문 'sees a mortal danger that is not there'가 직접 지지. 단, 렌더 seam 때문에 삽입 시 주어 없는 비문이 되는 형식 결함은 존재"
+    },
+    {
+      "label": "⑤",
+      "intent": "필요성 반전(불필요하다고 명시된 flee-or-fight 반응을 '필수적 구원 반응'으로 격상)",
+      "temptingBecause": "'flee-or-fight'가 지문에 두 번 등장하는 축자적 표현이라 표면 겹침이 크다",
+      "decisiveFlaw": "지문이 'we do not have to flee or fight'라고 빈칸 바로 앞 문장에서 명시적으로 부정"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "V4-minor",
+      "severity": "minor",
+      "evidence": "해설 자체의 통사·논리 분석과 오답 대응은 사실적으로 정확하나, 렌더 seam 결함(주어 소실)을 전제하지 않고 빈칸이 완전한 문장을 이루는 것처럼 서술한다. 또한 정답 근거 문장('The danger is an illusion')이 곧 빈칸 원문임을 그대로 노출하는 서술은 해설로서는 무해하다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAnalysis": {
+    "syntacticSlotUniformity": "실패 — 다섯 선지가 동일 슬롯이긴 하나 렌더 손상으로 전부 비문이 된다(§D 1항의 취지 위배)",
+    "abstractionOfSourceSpan": "통과 — ④는 'The danger is an illusion'을 'a product of cognitive distortion'으로 적절히 추상화",
+    "distractorAnchors": "부분 통과 — 각 오답에 source anchor와 표면 겹침은 있으나 결정적 결함이 사실상 전부 동일한 극성 반전",
+    "multiCueSynthesis": "실패 — 'There is no danger, but our brain rates it as such'와 직후 문장 'sees a mortal danger that is not there'가 정답을 사실상 축자적으로 재진술해 한 문장만 읽어도 풀린다",
+    "noSingleCueShortcut": "실패 — 오답 ①②③⑤가 모두 '위험이 실재/유효하다' 단일 극성이라 극성 하나로 ④를 즉시 선택 가능하며, ④가 가장 짧은 선지라 길이 단서도 겹친다",
+    "trapVariety": "실패 — scope shift·causal reversal·half-truth 등 상이한 함정이 아니라 사실상 균일한 random opposite"
+  },
+  "grade": "F",
+  "notes": "치명 결함은 렌더 seam: 원문 문장 전체가 블랭크로 치환됐는데 선지는 술부만 제공해, 어떤 선지를 넣어도 주어 없는 비문이 된다(V1·V3 실패 → F). 의미적 정답 유일성(V2)과 해설 사실성(V4), 필드 동기화(V5)는 유지된다. seam을 'The danger _____.'로 고치면 유효성은 회복되지만, KILLER 요청 대비 난이도가 심각하게 미달한다: 정답이 인접 두 문장에서 거의 축자적으로 재진술되고, 네 오답이 단일 극성이어서 극성·길이 단서만으로 즉답 가능하다. C5=0, C2·C3·C4=1. 출하하려면 seam 수리 + 오답 함정 다변화(scope shift, half-truth 등) + 단서 누출 문장 처리(예: 후행문 완화)가 필요하다."
+}

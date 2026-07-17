@@ -1,0 +1,35 @@
+{
+  "pid": "P101",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "선행사 'people'(사람·복수)을 받는 주격 관계대명사 who. 관계절 동사 'have been adopted'도 복수 일치. 대안 해석 불필요 — 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 복수 핵명사 'attempts'('all their attempts'). 'to discover this information'은 주어를 수식하는 형용사적 to부정사로 개입 성분일 뿐. 'be met with resistance' 수동 구문에서 복수 동사 are가 정확히 일치 — 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'tell + 간접목적어(them) + 직접목적어(nothing)'의 4형식 구조. 부정대명사 nothing이 직접목적어로 오는 것은 완전히 적법하며, 절 내에 다른 부정어가 없어 이중부정 문제도 없음 — 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "do-지원 부정 'do not necessarily' 뒤 원형 discourage가 규칙대로 옴. 주어 they = restrictions(복수)와 일치하고, 목적어 'those adoptees who want...'와 의미·구조 모두 성립 — 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "지배 규칙은 'devote + NP + to + NP/동명사'로, 이때 to는 devote의 필수 전치사 보충어이지 부정사 표지가 아님. 따라서 'to finding (out) more'가 되어야 함. 'to find'를 목적 부정사로 보는 대안 해석은 devote가 필수 to-보충어를 잃어 하위범주화가 불완전해지므로 성립 불가 — 어법상 틀린 밑줄."
+    }
+  ],
+  "note": "정답 후보는 (E) 하나로 유일하게 좁혀짐. (A)~(D)는 각각 관계대명사 일치, 장거리 주어-동사 수 일치, 4형식 목적어, do-지원 원형동사로 형식적으로 증명 가능한 정문. (E)는 'devote A to B(전치사)' 패턴 위반이 유일한 옹호 가능 판정. 목적 부정사 구제 해석을 적극 탐색했으나 devote의 필수 보충어 결여로 기각."
+}

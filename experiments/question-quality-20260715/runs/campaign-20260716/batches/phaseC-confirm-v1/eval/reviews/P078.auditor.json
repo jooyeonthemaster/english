@@ -1,0 +1,87 @@
+{
+  "pid": "P078",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-QUOTE-CORRUPTION",
+      "severity": "critical",
+      "evidence": "keyPoints[1]이 지문 근거를 '...the problem... is replacing them as human resources'로 인용하나, 원문은 'The problem, therefore, is not one about treating animals inhumanely, but instead one about understanding them as human resources.'이다. 'replacing them as human resources'는 지문에 존재하지 않는 손상 인용(understanding→replacing)이며 그 자체로 의미가 성립하지 않고, not A but B 대조 구조도 'the problem is replacing...'으로 왜곡한다. 정답 근거 필드의 인용 사실성 오류."
+    },
+    {
+      "code": "V4-NONWORD-TERM",
+      "severity": "minor",
+      "evidence": "오답 해설 ④의 '구제적인 법률'은 문맥상 성립하지 않는 손상 용어다. 선지 ④(historic legislation that has lost its practical law-enforcing power)에 대응하려면 '구시대적인' 또는 '규제적인'이어야 하며, '구제적(救濟的)'은 선지 내용과 무관하다."
+    },
+    {
+      "code": "V4-UNSUPPORTED-CLAIM",
+      "severity": "minor",
+      "evidence": "오답 해설 ②는 '인간과 동등한 도덕적·법적 지위 부여'가 동물 권리론자들이 지향하는 긍정적 지향점이라고 단정하나, 지문은 권리론자의 주장을 '동물은 인간이 이런 식으로 사용해도 되는 존재가 아니다'로만 제시할 뿐 동등 지위 부여를 목표로 명시하지 않는다. 결론(문제의 자리에 올 수 없음)은 유효하나 근거에 지문 외 내용이 첨가됐다."
+    },
+    {
+      "code": "V3-AWKWARD-DICTION-NOTED",
+      "severity": "minor",
+      "evidence": "정답 ③의 'interactive living beings'는 지문에 근거가 없는 어색한 수식어다(동물윤리 맥락의 관용 표현은 'sentient beings'). 완성문은 문법적으로 성립하므로 V3 자체는 통과로 판정하되, 정답 의미 보존의 순도를 떨어뜨리는 잡음으로 기록한다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "복지론적 관심(고통 최소화)을 권리론의 '근본 문제' 자리에 배치한 half-truth — not A but B 구조에서 부정된 A를 재제시",
+      "temptingBecause": "지문의 'human-inflicted pain', 'experimentation', 'curb the worst excesses'와 어휘적으로 강하게 앵커링되어 표면 대응으로 고르기 쉽다",
+      "decisiveFlaw": "빈칸 문장이 'not one about treating animals inhumanely'로 비인도적 처우 문제를 명시적으로 배제하므로, 고통 최소화 실패는 정확히 부정된 쪽(A)에 속한다"
+    },
+    {
+      "label": "②",
+      "intent": "지향점과 문제점의 극성 반전(polarity/role reversal) — 권리 담론의 어휘를 '문제'의 자리에 오배치",
+      "temptingBecause": "moral and legal status 등 권리 담론 어휘가 지문의 animal rights 논쟁 프레임과 겹쳐 보인다",
+      "decisiveFlaw": "빈칸은 권리론 관점에서 본 '문제'를 서술하는 자리인데, 동등 지위 부여는 권리론이 문제 삼는 대상이 아니라 오히려 옹호 방향이므로 자리 자체가 성립하지 않는다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'understanding them as human resources'의 추상화(도구적 관점 비판)",
+      "temptingBecause": "해당 없음(정답). 'animals are not the kinds of thing that humans should use in this way at all' 및 자원화 프레임과 정확히 대응",
+      "decisiveFlaw": "결정적 결함 없음. 단 'interactive'는 지문 비근거 수식어로 의미 보존의 순도를 떨어뜨리는 잡음(오답 사유는 아님)"
+    },
+    {
+      "label": "④",
+      "intent": "쟁점 치환(scope shift) — 철학적 적정성 논쟁을 법 집행력·실효성 문제로 전환",
+      "temptingBecause": "'legislation... in place for decades, even for centuries'와 'whether this kind of legislation is adequate'가 오래된 법·적정성이라는 표면 앵커를 제공한다",
+      "decisiveFlaw": "지문의 adequacy 논쟁은 복지 대 권리의 철학적 대립이며, 집행력 상실은 어디에도 논의되지 않는다. 권리론의 '문제'는 개념적(자원화)이지 행정적이지 않다"
+    },
+    {
+      "label": "⑤",
+      "intent": "영역 치환(domain shift) — 도덕적·법적 논쟁을 생물학적 구분 문제로 전환",
+      "temptingBecause": "human/non-human 대비 어휘가 지문의 인간-동물 구도와 표면적으로 겹친다",
+      "decisiveFlaw": "지문은 생물학적 구분을 전혀 다루지 않으며, 권리론의 문제 제기는 동물의 '사용' 자체에 대한 것이지 종 간 생물학적 차이의 부정 여부가 아니다. 앵커가 가장 약해 필러에 근접"
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints[1] 인용 손상: 'is replacing them as human resources'는 지문에 없음(원문: 'understanding them as human resources') — 정답 근거 인용의 사실성 오류(critical)",
+    "오답 해설 ④ '구제적인 법률' — 문맥상 비성립 손상 용어(추정 오타: '규제적인'/'구시대적인')",
+    "오답 해설 ② — 동등 지위 부여가 권리론자의 지향점이라는 지문 외 첨가",
+    "본해설 말미 '글의 흐름을 정확히 읽었다면 매력적인 오답에 빠지지 않고 정답을 고를 수 있는 문항입니다'는 근거·함정 분리에 기여하지 않는 상투 필러"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "sameSyntacticSlot": "충족 — 5개 선지 모두 'one about' 뒤 동명사구로 동일 슬롯이며 문법으로 탈락하는 오답 없음",
+    "meaningPreservation": "부분 충족 — ③은 원문 span을 적절히 추상화하나 'interactive'라는 비근거 수식어가 혼입되어 순수 보존이 아님",
+    "distinctTraps": "대체로 충족 — half-truth(①), polarity reversal(②), scope shift(④), domain shift(⑤)로 차별화. 단 ⑤ 앵커 약함",
+    "multiCueRequirement": "미충족 — 정답이 직전 콜론 문장('animals are not the kinds of thing that humans should use in this way at all')의 근접 패러프레이즈여서 인접 단일 문장 단서로 사실상 해결 가능. 최소 두 문장/두 논리 단서 연결 요건이 확실히 성립한다고 보기 어려움(보수적 판정)"
+  },
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 통과. 5개 선지 독립 검증 결과 ③만 성립하며 ①②는 실질적 매력, ④⑤는 약한 매력의 오답이다. 그러나 keyPoints[1]이 지문을 'replacing them as human resources'로 손상 인용해 V4(해설 사실성)에서 치명 실패 — 원문의 'understanding'을 의미 불성립 동사로 바꾸고 not A but B 구조도 왜곡했다. 오답 해설 ④의 손상 용어('구제적인'), ② 해설의 지문 외 첨가가 부수 결함. 공예 측면에서는 not A but B 정전 포인트를 겨냥한 좋은 골격(C1=4)이나, 정답이 직전 문장의 근접 패러프레이즈라 KILLER 요구 난이도에 미달(C5=2)하고 해설 오류로 C6=1. V 실패는 공예로 상쇄되지 않으므로 등급 F, killerConditionsMet=false. 수리 방향: keyPoints[1] 인용을 원문대로 교정, ④ 해설 용어 교정, ③의 'interactive'를 'sentient' 등 근거 있는 추상어로 교체하면 B 이상 재평가 여지."
+}

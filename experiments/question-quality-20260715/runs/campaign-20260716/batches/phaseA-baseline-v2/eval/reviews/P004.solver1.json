@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "빈칸에 넣으면 'more time worrying... than the time required to delegate the task' — 문법 결합은 성립하지만(명사구 비교) 논리가 붕괴한다. 지문 어디에도 위임(delegate)이라는 선택지는 등장하지 않고, 필자의 결론은 '내가 그 일을 아침에 직접 처리한다'(the first thing I get done)이다. 걱정 시간을 '위임에 드는 시간'과 비교할 이유가 전혀 없다. 'the time required to...'라는 형태적 평행성만 빌린 미끼."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "지문에 'an unpleasant email'이 나오므로 어휘 반향으로 끌린다. 실전에서 잠깐 눈이 갔던 선지다. 그러나 지문의 이메일은 '내가 처리해야 할 불쾌한 이메일'이지 '내가 써야 할 장문의 사과 이메일'이 아니다. 또 빈칸 문장은 고객 대화·이메일 두 사례를 일반화한 진술인데 ②는 한 사례(그것도 지문과 어긋난 변형)로 좁혀 버린다. 결론 문장('그래서 아침에 가장 먼저 해치운다')을 지지하지 못한다."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "가장 강한 매력 오답. 'waste too much emotional energy'의 어휘 반향이 있고, 문법 결합도 가장 매끄럽다(worrying/talking/avoiding과 동명사 병렬: 'more time worrying... than recharging...'). 실제로 끌렸다. 그러나 논리 검증에서 탈락: '걱정하는 데 재충전보다 더 많은 시간을 쓴다'는 비교는 지문의 핵심 논증 — '미루면 실제로 그 일을 해치우는 데 드는 비용보다 더 큰 비용을 치른다, 그러므로 아침에 먼저 한다' — 과 무관한 비문맥적 진술이 된다. 결론 문장 'So for me, it'll always be the first thing I get done'으로 이어지지 않는다."
+    },
+    {
+      "label": "④",
+      "verdict": "정답",
+      "reason": "'spend more time worrying about it, talking about it, and avoiding it, than the actual time and effort needed to resolve the matter' — 걱정·회피에 쓰는 시간이 실제 해결에 필요한 시간·노력보다 크다는 비교가 성립한다. 문법 결합도 정상('more time ... than + 명사구' 양 비교). 이것이 곧바로 결론 'So for me, it'll always be the first thing I get done'(그러니 아침에 먼저 해치운다)을 논리적으로 지지하며, '문제를 아침으로 먹는다(eating my problems for breakfast)'는 도입 습관과도 정합. 유일하게 일반화 수준(두 사례를 포괄하는 the matter)도 맞다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'an unhappy client' 어휘 반향 미끼. 대안 해석을 적극 시도해 보면 '걱정하는 시간이 (심지어) 길어진 고객 대화보다도 길다'로 읽어 반쯤 성립시킬 수는 있으나, (a) prolonged(길어진)는 '실제 처리는 생각보다 짧다'는 지문의 함의와 충돌하고, (b) 고객 대화 한 사례로만 좁혀 이메일 사례를 배제하며, (c) 결론 문장(아침에 먼저 해치우는 습관)의 근거가 되지 못한다. 동명사 병렬이라 문법 결합은 매끄럽지만 논리 적합성에서 탈락."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 빈칸 문장은 'more time A than B' 비교 구문 — B에는 '실제 해결 비용'이 와야 결론(아침에 먼저 처리)이 도출된다. ③이 어휘 반향(emotional energy)과 동명사 병렬로 가장 강하게 유혹하지만 논증 구조 검증에서 탈락. 정답 ④ 단독 옹호 가능, 복수정답 소지 없음."
+}

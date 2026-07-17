@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'seeing someone scribbling in a notebook' — 지각동사 see + 목적어 + 현재분사 구문으로 정문. bare infinitive(scribble)도 가능하지만 분사형 역시 완전히 표준적이다. 장거리 단서 불필요, 국소적으로 완결."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect",
+      "reason": "'If the interview lasts a while, listen to it again to select ... can be time-consuming' — (B)가 이끄는 구는 본동사 'can be time-consuming'의 진짜 주어다. 동사원형은 주어 명사구를 이끌 수 없으므로 동명사 'listening'이어야 한다. 매력 포인트: 문장 중간까지는 명령문('...다시 들어라')으로 읽혀 정문처럼 보이지만, 'can be time-consuming'에 도달하는 순간 주어가 사라져 명령문 해석이 붕괴한다. 지배 규칙은 장거리 단서인 본동사 can be."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'the quotes [that] you wish to use' — 접촉 관계절로 use의 목적어 공백을 선행사 quotes가 채운다. wish는 to부정사를 취하므로(wish using 불가) 'to use'가 옳다. 'to be used' 유혹 검토: use의 의미상 주어는 you이므로 능동이 맞다."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'This involves writing down the key answers' — involve는 동명사를 목적어로 취하는 동사. 'to write down' 이었다면 오히려 틀렸을 자리로, 현재 표기가 정확하다."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle afterwards' — tough 구문: 'the material is easy to handle'처럼 handle의 목적어 공백을 material이 채운다. 'to be handled'로 바꾸고 싶은 수동 유혹이 전형적 미끼지만 tough-movement는 능동 부정사+목적어 공백을 요구하므로 현재 표기가 정문."
+    }
+  ],
+  "note": "정답 후보는 (B) 단일. 명령문 대안 해석을 적극 탐색했으나 후행 본동사 'can be time-consuming'이 주어 자리를 요구해 성립 불가. (E)의 수동 부정사 미끼와 (B) 초반의 명령문 착시가 이 문항의 주요 유인 장치로 작동하며, 둘 다 규칙적으로 해소된다. 축약 관계절·분사구문·도치 등으로 (B)를 정문화할 경로 없음."
+}

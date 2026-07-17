@@ -1,0 +1,35 @@
+{
+  "pid": "P117",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "형식적 결함 2중. (1) 수 일치: 'an immediate boost ... are worthwhile' — 핵명사 boost는 단수이므로 복수 동사 are와 결합 불가. 삽입구 '― both for ... ―'는 괄호적 부가어라 주어의 수를 바꾸지 못한다. (2) 논리: 양보절 'Although results won't be apparent immediately'와 'an immediate boost'는 직접 모순(¬immediate ∧ immediate)."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법 결합 성립: 핵명사 outcomes(복수)가 are worthwhile과 수 일치. 논리 성립: 'enduring'(지속적)은 양보절 '즉각 드러나지 않는다'와 정합적 대비(단기 부재 → 장기 존재)를 이루고, 'growth and connection'은 뒤따르는 부가어 'both for language development and attitudes toward school'과 1:1 대응(growth↔언어 발달, connection↔학교에 대한 태도/유대)한다. 지문 주장(방언 수용 후 표준어를 쌓아 올리는 문화감응 교수법의 가치)의 결론으로 타당. 'in both ... ― both for ...'의 both 중복은 문체상 다소 잉여이나 비문은 아니다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "형식적 결함 2중. (1) 수 일치: 핵명사 freedom은 불가산 단수 — 'complete freedom ... are worthwhile'은 비문. (2) 논리: 지문은 표준영어 교육의 필요(교육·경제적 기회 접근)를 전제하고 '수용 후 표준형으로 확장'을 지지하므로, 표준 지침의 전면 거부는 지문 명제와 모순."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "형식적 결함 2중. (1) 수 일치: 'a disconnection ... are worthwhile' — 단수 주어와 are 결합 불가. (2) 논리: '언어와 정서적 성장의 단절이 가치 있다'는 명제는 지문의 긍정적 결론(언어 발달과 학교 태도 모두에 이롭다)과 정반대이며, 부가어 'both for language development and attitudes toward school'과도 의미 충돌."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립(advantages 복수 → are 일치)하나 논리 실패 2중. (1) 'short-term'은 양보절 'results won't be apparent immediately'와 모순 — 결과가 즉시 드러나지 않는데 단기 이점을 주장할 수 없다. (2) 부가어가 이점의 범위를 'language development and attitudes toward school'로 한정하는데 employment는 이 범주에 속하지 않아 동격 해석이 붕괴한다."
+    }
+  ],
+  "note": "빈칸은 'Although ..., _____ ― both for A and B ― are worthwhile'의 주어 자리. 형식 제약: (i) are와의 복수 일치, (ii) 양보절(즉각적 결과 부재)과의 비모순, (iii) 부가어 'both for language development and attitudes toward school'과의 동격 정합. 세 제약을 모두 통과하는 것은 ②뿐 — ①③④는 수 일치에서 즉시 탈락(①은 논리 모순까지 중복), ⑤는 수 일치는 통과하나 'short-term'이 양보절과 정면 모순. 대안 해석 탐색: 삽입구를 주어 일부로 보아 단수 선지를 구제하는 독법(예: 'a boost ... both for A and B'가 근접 병렬로 복수화)은 영문법상 성립하지 않음(괄호 삽입구는 수 일치에 관여하지 않음). 유일 정답 ②. 경미한 지적: ②를 넣으면 'in both growth and connection ― both for ...'로 both가 연속 중복되어 문체가 다소 어색하나 정답성에는 영향 없음. 또한 ①③④가 수 일치만으로 소거 가능해 문법 단서가 정답을 과도하게 노출하는 편(변별력 저하 소지)."
+}

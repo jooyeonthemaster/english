@@ -1,0 +1,77 @@
+{
+  "pid": "P098",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints의 '(C) 대동사 — 일반동사구 수식을 대신하는 대동사 did 판정'에서 '수식을'은 잘못 끼어든 어절(손상 표현)이다. 의도는 '일반동사구를 대신하는'으로 명확하나 문구 자체는 비문이다. 학생 노출 본해설은 정확하므로 V4 실패로는 보지 않음."
+    },
+    {
+      "code": "V4-minor-semantics",
+      "severity": "minor",
+      "evidence": "(E) 오답 해설의 '결과를 보충해 주는 부사적 용법'은 의미 기능 라벨이 다소 느슨하다. 'tuned to require'의 to부정사는 결과라기보다 tuned의 방향/내용을 한정하는 형용사 보충 용법에 가깝다. 통사 구조 자체(형용사 tuned를 보충하는 to부정사)는 올바르게 기술됨."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "콜론 뒤 동격 자리의 동명사 판별 (준동사 선택)",
+      "temptingBecause": "명사 task 뒤 콜론 동격 자리에 동사원형이나 to부정사(to write)를 기대하는 학생이 writing을 의심할 수 있다.",
+      "decisiveFlaw": "콜론 뒤 동격 명사구 자리에 행위를 명명하는 동명사 writing은 완전히 적법하며 원문과 동일하다."
+    },
+    {
+      "label": "(B)",
+      "intent": "의문사+to부정사 명사구의 전치사 목적어 기능 판별",
+      "temptingBecause": "'things like how to spell words'처럼 전치사 like 뒤에 wh+to부정사가 오는 구조가 낯설어 비문으로 오인하기 쉽다.",
+      "decisiveFlaw": "how to spell (words)는 명사구로 기능하는 의문사+to부정사이며 전치사 like의 목적어로 적법하다. 원문과 동일하다."
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 대동사: 관계절 내에서 일반동사구 get the workout을 대신하는 자리에 be동사 불가",
+      "temptingBecause": "'that they were'가 표면적으로는 주어+be동사로 자연스러워 보이고, 관계절 선행사(the workout)와의 연결을 읽어야만 오류가 드러난다.",
+      "decisiveFlaw": "관계절 'that they ___ for previous generations'의 빈 술어는 선행 일반동사구 get (the workout)을 대신해야 하므로 be동사 were는 비문이다. did로 고치면 정확히 원문이 복원된다(최소대립쌍 충족)."
+    },
+    {
+      "label": "(D)",
+      "intent": "능동태 vs 수동태 — be focused on 구조 판별",
+      "temptingBecause": "주어 brains가 스스로 '집중하는' 주체처럼 읽혀 능동형 focus/focusing을 기대할 수 있다.",
+      "decisiveFlaw": "be focused on은 표준적인 수동/분사형용사 구문으로 어법상 적법하며 원문과 동일하다."
+    },
+    {
+      "label": "(E)",
+      "intent": "형용사(분사) tuned를 보충하는 to부정사 판별 (to-v vs v-ing)",
+      "temptingBecause": "'tuned to require'가 낯선 연어여서 to requiring(전치사 to+동명사, be used to -ing 유추)으로 고쳐야 한다고 오인할 수 있다.",
+      "decisiveFlaw": "tuned + to부정사는 적법한 형용사 보충 구조이며 원문과 동일하다. 병렬 become도 to에 걸려 문제없다."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "keyPoints-garbled-phrase",
+      "severity": "minor",
+      "evidence": "keyPoints (C) 항목 '일반동사구 수식을 대신하는' — '수식을'이 불필요하게 삽입된 손상 문구."
+    },
+    {
+      "code": "E-function-label-loose",
+      "severity": "minor",
+      "evidence": "(E) 해설의 '결과를 보충해 주는'은 to부정사의 의미 기능 라벨로 다소 부정확(방향/내용 한정에 가까움). 구조 분석 자체는 정확."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "A",
+  "notes": "V1: 렌더 지문은 원지문과 (C) did→were 의도 변형 외 완전 일치. 마커 5개와 선지 라벨 동기화 확인. V2: 5개 밑줄 독립 검증 결과 (C)만 오류 — be동사 were는 관계절에서 일반동사구를 대신할 수 없고 대동사 did가 필요하며, 교정 시 정확히 원문 복원. (A)(B)(D)(E)는 모두 원문 그대로이며 적법. V3: 교정 완성문=원문, stem 표준. V4: 본해설의 관계절·대동사·시제 분석 모두 실제 구조와 일치. 경미한 문구 손상(keyPoints)과 의미 라벨 느슨함((E)) 2건은 minor. V5: 정답 라벨·markedExpressions·선지·해설·keyPoints 모순 없음. 공예: 정전 포인트(대동사)를 정확한 최소대립쌍으로 출제(C1=4), 오답들이 서로 다른 하위 포인트를 겨냥하나 (A)(B)(E)가 준동사 계열로 중첩(pointCode k 3개, C2=3), 변별력은 실질적이나 (A)(D)는 중위권도 빠르게 소거 가능(C3=3), 단서 누출 없음(C4=4), INTERMEDIATE 난이도 정합 양호(C5=4), 해설 간결·정확하나 소소한 흠(C6=3). 합계 21, 모든 V 통과, 모든 C≥3 → A. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

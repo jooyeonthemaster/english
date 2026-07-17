@@ -1,0 +1,346 @@
+{
+  "schemaVersion": "calibration-v3-production-type-binding-v2-independent-audit-evidence-1",
+  "artifactId": "calibration-v3-production-type-binding-v2-independent-audit-v1",
+  "target": {
+    "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v2",
+    "hashes": {
+      "REPORT.md": "cc6ddd0cd005a4707ab70f54fb31fb251f997be804f4621b45e76e82b9c72ce6",
+      "binding.json": "7ec4d2c302ce841bbc5de2ec3b6b5d1b33bfc30f867b5ff4dbaa06aeb7e42e4f",
+      "hostile-fixtures.json": "f999fa8544d41cc07e8f9e3413de1f38e17fc3d2fa7bdf6d193570a1da9ebb88",
+      "verify.mjs": "32276d69adff6df6ec3a520b40a52009230dfc7f110908527c9ce870b729729a",
+      "MANIFEST.sha256": "4e81452d0c74f3361cd01a59e5ec6406ea2fde729fd79f588dcdaf07c380de14"
+    },
+    "manifestEntriesValid": true,
+    "authorVerifierBaseline": {
+      "exitCode": 0,
+      "status": "PASS_V2_V1_EXECUTION_INVALID",
+      "checks": 128,
+      "passed": 128,
+      "failed": 0
+    }
+  },
+  "verdict": {
+    "mathComponent": "VALID_MATH_COMPONENT",
+    "currentBytes": "CURRENT_BYTES_MATCH",
+    "executionAuthority": "FAIL_CLOSED_EXECUTION_INELIGIBLE",
+    "certification": "NOT_ESTABLISHED"
+  },
+  "productionAuthority": {
+    "parser": "typescript-5.9.3 AST",
+    "chain": [
+      {
+        "path": "src/lib/question-type-ui.ts",
+        "symbol": "QUESTION_TYPE_GROUPS",
+        "fact": "three static groups of QUESTION_TYPE_UI references",
+        "groupSizes": [14, 8, 3]
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generate-page-types.ts",
+        "symbol": "EXAM_TYPE_GROUPS",
+        "fact": "initializer is identifier QUESTION_TYPE_GROUPS"
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+        "symbol": "panelTypeGroups",
+        "fact": "koPanel false branch is EXAM_TYPE_GROUPS and feeds rendered group.items"
+      },
+      {
+        "path": "src/app/api/ai/generate-question/route.ts",
+        "symbol": "schema dispatch",
+        "fact": "indexes AI_QUESTION_SCHEMAS[questionType] and QUESTION_SCHEMAS[questionType]"
+      }
+    ],
+    "uiTypeIdsInOrder": [
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR",
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "focusTypeIds": ["BLANK_INFERENCE", "GRAMMAR_ERROR"],
+    "nonfocusTypeIdsInUiOrder": [
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "registryDrift": {
+      "structuredSchemaCount": 26,
+      "aiSchemaCount": 26,
+      "filterCount": 26,
+      "legacyConstantCount": 24,
+      "schemaOnlyRelativeToUi": ["TOPIC_MAIN_IDEA"],
+      "filterOnlyRelativeToUi": ["TOPIC_MAIN_IDEA"],
+      "legacyMissingRelativeToUi": ["GRAMMAR_CHOICE_COMBO"],
+      "legacyExtraRelativeToUi": []
+    }
+  },
+  "correctedRotation": {
+    "mainFormula": "(epoch - 1) mod familySize",
+    "holdoutFormula": "(epoch - 1 + ceil(familySize / 2)) mod familySize",
+    "materializedRows": 32,
+    "materializedRowsExactAndOrdered": true,
+    "materializedRowKeysUnique": true,
+    "mainHoldoutCollisions": 0,
+    "sampleSchedules": {
+      "n2": [[0, 1], [1, 0], [0, 1], [1, 0]],
+      "n3": [[0, 2], [1, 0], [2, 1], [0, 2]],
+      "n4": [[0, 2], [1, 3], [2, 0], [3, 1]]
+    },
+    "coverage": {
+      "singleEpochCombinedDistinct": 16,
+      "twoEpochCombinedContact": 23,
+      "fourEpochMainOnlyContact": 23,
+      "minimumCombinedEpochs": 2,
+      "minimumMainOnlyEpochs": 4
+    },
+    "contactCertificationBoundary": {
+      "rotationContactIsCertification": false,
+      "claimContactEqualsCertification": false,
+      "gate": "Every one of the 23 canonical IDs must have a passed fresh main or activation-holdout coverage event; contact alone is insufficient.",
+      "certificationAchievedByThisArtifact": false
+    }
+  },
+  "v1InvalidProvenance": {
+    "resolvedPathExact": true,
+    "artifactIdExact": true,
+    "manifestSha256": "655bfc33ef47f06752fddde0c2ac4c3750ca7468d97d84a241dca28fefac1539",
+    "manifestLineCount": 3,
+    "manifestEntries": {
+      "REPORT.md": "730613f34f5d5d42645dc1670d4f41c5d79c0b85d7f3ca5b0a1d8cf6f9a14a82",
+      "binding.json": "f731f790413bb6fa7bb5ec9be797553032846e1d8902d3e94b46d75066702c18",
+      "verify.mjs": "36ff4873d80d01c5198e28e658f43ae429ddc99a7e26f033efd36e49e08b96c8"
+    },
+    "sourceSnapshotSha256": "e1bcb66ec8bea05a6feed8569eacc9f78a535580e6283b89a6676276d628bc60",
+    "failureCode": "V1_ROTATION_FORMULA_VERIFIER_DIVERGENCE",
+    "v1DeclaredMainFormula": "(2 * (epoch - 1)) mod familySize",
+    "v1VerifierMainOnlyFormula": "(epoch - 1) mod familySize",
+    "executableDivergentElementAccessFoundByAst": true,
+    "n4DeclaredMainIndices": [0, 2, 0, 2],
+    "distinct": 2,
+    "claimed": 4,
+    "v1ExecutionEligible": false
+  },
+  "executionBlockers": [
+    {
+      "id": "B-01",
+      "code": "DURABLE_GIT_PROVENANCE_FAIL_OPEN",
+      "currentBytesMatch": true,
+      "repositoryHeadReadByAuthorVerifier": false,
+      "lastPathCommitReadByAuthorVerifier": false,
+      "dirtyCheckGatedByRecordedHeadBlob": true,
+      "minimalTransition": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+        "before": {
+          "bytesChanged": false,
+          "clean": false,
+          "headBlob": null,
+          "lastPathCommit": null
+        },
+        "after": {
+          "bytesChanged": false,
+          "clean": true,
+          "headBlob": "non-null",
+          "lastPathCommit": "non-null",
+          "repositoryHeadChanged": true
+        },
+        "authorSourcePredicatePasses": true,
+        "independentExactPredicatePasses": false
+      }
+    },
+    {
+      "id": "B-02",
+      "code": "PRODUCTION_RUNTIME_AUTHORITY_NOT_SEMANTICALLY_VERIFIED",
+      "currentAuthorityAstValid": true,
+      "authorVerifierAstUses": {
+        "EXAM_TYPE_GROUPS": false,
+        "panelTypeGroups": false,
+        "AI_QUESTION_SCHEMAS": false
+      },
+      "independentVerifierAstUses": {
+        "EXAM_TYPE_GROUPS": true,
+        "panelTypeGroups": true,
+        "AI_QUESTION_SCHEMAS": true,
+        "QUESTION_SCHEMAS": true
+      }
+    }
+  ],
+  "sourceGitEvidence": {
+    "repositoryHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "records": [
+      {
+        "path": "src/lib/question-type-ui.ts",
+        "sha256": "19946584a591138a484034691230c2faa1b8d79ced811db96b5afed43f41e9f7",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "7a15f2feba4533a97a446a23ab17506609748f0d",
+        "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generate-page-types.ts",
+        "sha256": "bef8c1a9c9854b276807df02d06381927a005e6cc050dd3d2e1097769742a1a1",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "6a26b726935a947ccac16a385a3f699f7d23de30",
+        "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+      },
+      {
+        "path": "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+        "sha256": "b20357b0d224e096680c8dfe5a1915c816d30c4bf288569ac4a9a98696aa0a1e",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "5dc433eb6f42b108b292c7f29316227c74f28191",
+        "lastPathCommit": "b8cfd5f9845c638c82843e6fd4e10e14b95cf903"
+      },
+      {
+        "path": "src/lib/question-schemas.ts",
+        "sha256": "6037aaad366f029afc2b0ebf1b0194cdcc8874173002256baa24a95d15888a22",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "ebb1b92690d96861580e3ea9499c431083534fbd",
+        "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+      },
+      {
+        "path": "src/lib/question-ai-schemas-mc.ts",
+        "sha256": "c538452b7810e0efd8dd1d2c9345c3b1a64f8650a4590afc11850ce0d2bb5694",
+        "gitStatus": "M src/lib/question-ai-schemas-mc.ts",
+        "clean": false,
+        "headBlob": "1f04c99402d8a92ec770d82052e9bd1ae7c9a661",
+        "lastPathCommit": "3f155ca682baec204559d07d1516c847e13ba347"
+      },
+      {
+        "path": "src/lib/question-ai-schemas-vocab.ts",
+        "sha256": "71f041c8f073262db1a181c2c23c932a0fe24e0e130fb605adbaa6613503de4a",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "747b8f5eaf3da4781b09b7014a7eafb163abc105",
+        "lastPathCommit": "72418a0ce517a6fcf0ce2b883f4e80d81ecdda04"
+      },
+      {
+        "path": "src/app/api/ai/generate-question/route.ts",
+        "sha256": "afadfaf79d51657e546233c78ed9d092dfba9060cd89240ff9d2be3f0e03c1fa",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "fa5bcc0fb50ae3a8b9d4c8824f7f7f633fdd3641",
+        "lastPathCommit": "11163f32565fb2c7278a550138ec4f08e0475e01"
+      },
+      {
+        "path": "src/components/workbench/question-type-filter.tsx",
+        "sha256": "adaf0585b8e3f9a6d0232e2119d6fbd99ce9cafd373d90519dc55b8bd1fc2fd9",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "b4fecf97f3203169e9defe85a034ce847a9d37f1",
+        "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+      },
+      {
+        "path": "src/lib/constants.ts",
+        "sha256": "a826ee6070a1ccb957cb993d80a429f1bfbfbd50568638d34153d859d9d8c10f",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "f2d88069ab7036d2dc7384e61d2c4658ac2dc2fa",
+        "lastPathCommit": "867d3de8558f18a47ff9e960774e25bbca8692e2"
+      },
+      {
+        "path": "src/lib/question-ai-edit/type-edit-config.ts",
+        "sha256": "c9ffea7b5a156a863e097cf5aface8874d9296802580bd298045dc7987990cd9",
+        "gitStatus": "CLEAN",
+        "clean": true,
+        "headBlob": "2f27293f1cdd3eca009afde27e2517fd2ab882a6",
+        "lastPathCommit": "6530ef2a82a4670f0a96afa4f44465c466dc77a6"
+      },
+      {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+        "sha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+        "gitStatus": "?? experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+        "clean": false,
+        "headBlob": null,
+        "lastPathCommit": null
+      }
+    ]
+  },
+  "hostileMutations": [
+    { "name": "n2 holdout offset zero", "code": "MAIN_HOLDOUT_COLLISION", "rejected": true },
+    { "name": "n3 materialized row drift", "code": "FORMULA_ROW_DIVERGENCE", "rejected": true },
+    { "name": "n4 old stride-two main", "code": "MAIN_ONLY_COVERAGE_FALSE", "rejected": true },
+    { "name": "formula and verifier selector divergence", "code": "FORMULA_VERIFIER_DIVERGENCE", "rejected": true },
+    { "name": "schedule row deletion", "code": "SCHEDULE_ROW_COUNT", "rejected": true },
+    { "name": "schedule row duplicate", "code": "SCHEDULE_ROW_DUPLICATE", "rejected": true },
+    { "name": "schedule row order swap", "code": "SCHEDULE_ROW_ORDER", "rejected": true },
+    { "name": "canonical family duplicate", "code": "CANONICAL_MAPPING_DUPLICATE", "rejected": true },
+    { "name": "canonical family omission", "code": "CANONICAL_MAPPING_OMISSION", "rejected": true },
+    { "name": "focus injection", "code": "FOCUS_IN_FAMILY", "rejected": true },
+    { "name": "legacy injection", "code": "LEGACY_IN_FAMILY", "rejected": true },
+    { "name": "canonical array order swap", "code": "CANONICAL_ORDER_DRIFT", "rejected": true },
+    { "name": "superseded artifact path mutation", "code": "V1_PATH_DRIFT", "rejected": true },
+    { "name": "source path traversal", "code": "SOURCE_PATH_ESCAPE", "rejected": true },
+    { "name": "source byte mutation", "code": "SOURCE_HASH_DRIFT", "rejected": true },
+    { "name": "clean-state metadata flip", "code": "DIRTY_STATE_DRIFT", "rejected": true },
+    { "name": "untracked-to-tracked same-byte transition", "code": "UNTRACKED_TRANSITION", "rejected": true, "authorPredicateWouldPass": true },
+    { "name": "tracked HEAD blob nulled", "code": "HEAD_BLOB_DRIFT", "rejected": true },
+    { "name": "last-path-commit mutation", "code": "LAST_PATH_COMMIT_DRIFT", "rejected": true },
+    { "name": "repository HEAD mutation", "code": "REPOSITORY_HEAD_DRIFT", "rejected": true },
+    { "name": "target manifest hash mutation", "code": "MANIFEST_HASH_DRIFT", "rejected": true },
+    { "name": "target manifest duplicate entry", "code": "MANIFEST_DUPLICATE", "rejected": true },
+    { "name": "v1 manifest hash mutation", "code": "V1_MANIFEST_HASH_DRIFT", "rejected": true },
+    { "name": "rotation contact promoted to certification", "code": "CONTACT_CERTIFICATION_CONFLATION", "rejected": true },
+    { "name": "claim contact promoted to certification", "code": "CONTACT_CERTIFICATION_CONFLATION", "rejected": true },
+    { "name": "certification gate weakened to contact only", "code": "CERTIFICATION_GATE_WEAKENED", "rejected": true },
+    { "name": "commented alias semantic break", "code": "AUTHORITY_CHAIN_AST_MISMATCH", "rejected": true, "rawSubstringStillPresent": true },
+    { "name": "English panel branch reversal", "code": "PANEL_AUTHORITY_AST_MISMATCH", "rejected": true },
+    { "name": "runtime AI schema dispatch removal", "code": "RUNTIME_DISPATCH_AST_MISMATCH", "rejected": true },
+    { "name": "schema enum addition", "code": "SCHEMA_SET_DRIFT", "rejected": true },
+    { "name": "legacy enum removal", "code": "LEGACY_SET_DRIFT", "rejected": true },
+    { "name": "v1 counterexample provenance mutation", "code": "V1_PROVENANCE_DRIFT", "rejected": true }
+  ],
+  "activity": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0,
+    "ledgerReads": 0,
+    "ledgerWrites": 0
+  }
+}

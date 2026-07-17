@@ -1,0 +1,35 @@
+{
+  "pid": "P040",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "'효과가 입증된 도구·기술을 활용하라'는 첫 문장의 익숙한 접근 그 자체인데, 지문은 이 접근이 particularly novel한 문제에서는 'fails miserably'라고 명시한다. 빈칸은 그 실패에 대한 처방이므로 정반대 방향. 명백한 반대 미끼."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "빈칸 직후 문장 'In martial arts, this sense of looking freshly at something is known as beginner's mind'의 지시어 this sense가 빈칸 내용을 받아야 하며, 'completely unconditioned perspective로 접근'만이 'looking freshly'와 정확히 대응한다. 이후 초심자가 모든 세부를 흡수한다는 내용, 경험 필터가 본질을 잘못 걸러 실수를 낳는다는 내용이 모두 이를 지지. to 뒤 동사원형 결합도 자연스러움."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "숙련 마스터의 필터에 의존하라는 것은 지문 결말과 정면 충돌 — 'When that filter mistakenly screens out something essential, then even seasoned masters can make mistakes.' 지문 어휘(filter, irrelevant, master)를 재활용한 표면 매칭 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "실전에서 가장 끌리는 매력적 오답. 첫 두 문장의 '유사 문제 vs novel 문제' 구분 논리를 이어받는 메타 전략처럼 보여 잠시 유혹된다. 그러나 (a) 'In this circumstance'는 이미 particularly novel로 판정이 끝난 상황이라 유사성 분석은 시점상 뒤늦고, (b) 결정적으로 다음 문장의 'this sense of looking freshly at something'이 빈칸 내용을 지시해야 하는데 '유사성 분석'은 '새롭게 바라보기'가 아니어서 anaphora가 붕괴한다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'본질과 비본질의 분리에만 집중'은 경험자(experienced martial artists)의 필터 작동 방식이며, 지문은 novel 상황에서 바로 그 필터가 본질을 잘못 걸러낼 위험을 경고한다. 초심자는 오히려 중요/무관을 구분하지 못해 모든 세부를 흡수한다고 했으므로 beginner's mind와 반대. 지문 구절(separate the essential from the irrelevant)을 그대로 복사한 표면 매칭 미끼."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈. 빈칸 뒤 지시어 'this sense of looking freshly at something'이 결정적 장거리 단서로, 빈칸은 반드시 '새롭게/선입견 없이 보기'를 표현해야 한다. 이 anaphora 테스트를 통과하는 선지는 ②뿐. ④가 유일하게 실질적 유혹을 주는 매력적 오답이나 지시 연결 붕괴로 배제. 모든 선지가 to부정사 뒤 동사원형으로 문법 seam은 성립하므로 순수 논리 판별 문항. 복수 정답 여지 없음."
+}

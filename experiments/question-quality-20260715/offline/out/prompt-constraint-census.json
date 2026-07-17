@@ -1,0 +1,774 @@
+{
+  "schemaVersion": 1,
+  "externalCalls": 0,
+  "passageChars": 795,
+  "passageSha256": "bf3763cd41a8bafebf3b7d6c4ffe0fbc850d9ab8ac4f66cd48bc0dd94a8d3269",
+  "sourceFileSha256": {
+    "src/lib/question-schemas.ts": "6037aaad366f029afc2b0ebf1b0194cdcc8874173002256baa24a95d15888a22",
+    "src/lib/question-ai-schemas-mc.ts": "d01aeec3f2d79a013be4caebe98001d4ec164ccf59e42d6410a947a95bea149b",
+    "src/lib/question-quality/rubric.ts": "d27e3075ab988e06ee3361d81a23a6a2288c4112cd8732d0f2b540bf6a666844",
+    "src/lib/question-quality/candidate-blocks/index.ts": "4c9a91b2397d23450ffcbe477d920cabefa3c970fd2e92b6b8e3dd9e594a152e",
+    "src/lib/question-type-generation-settings/dispatchers.ts": "b52950f573546de0a144f2e9c89a6def29511f726a182f224371666fa14e4a8e",
+    "src/lib/question-generation-prompt-contract.ts": "5fcf0144529af8b5cc72616c25fd45535d5920098acc5434e7c7ec428e9cd354",
+    "src/app/api/ai/generate-questions-auto/_lib/constants.ts": "a58a825d8d768b8df81efdca7eccace5631bbd71ac2d61e817a73ef3028bcc7b",
+    "src/app/api/ai/generate-questions-auto/_lib/prompts.ts": "7d6f0d25e2933f122323dda29d3f65bacb03dafc62444f4cff72088e8422bf59"
+  },
+  "exclusions": [
+    "Private finalChecklist strings assembled inside run-question-generation.ts",
+    "Live diversity-history prompt blocks",
+    "Teacher intent, analysis context, custom user prompt and target points",
+    "Provider serialization overhead and tokenizer-specific token counts"
+  ],
+  "interpretation": "Character totals are production-layer lower bounds, not token or quality estimates.",
+  "rows": [
+    {
+      "type": "BLANK_INFERENCE",
+      "layerChars": {
+        "typePrompt": 5256,
+        "qualityRubric": 1047,
+        "typeSettings": 0,
+        "targetCandidateBlock": 3282,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2403,
+      "directiveLexemeCount": 12,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 43273,
+          "lowerBoundTotalChars": 45676
+        },
+        "PREMIUM": {
+          "systemChars": 10096,
+          "promptChars": 4588,
+          "lowerBoundTotalChars": 17087
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": 29141
+      }
+    },
+    {
+      "type": "GRAMMAR_ERROR",
+      "layerChars": {
+        "typePrompt": 13986,
+        "qualityRubric": 718,
+        "typeSettings": 0,
+        "targetCandidateBlock": 30093,
+        "structuredOutput": 259
+      },
+      "schemaChars": 4672,
+      "directiveLexemeCount": 89,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 57112,
+          "lowerBoundTotalChars": 61784
+        },
+        "PREMIUM": {
+          "systemChars": 18497,
+          "promptChars": 31399,
+          "lowerBoundTotalChars": 54568
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": 61784
+      }
+    },
+    {
+      "type": "GRAMMAR_CHOICE_COMBO",
+      "layerChars": {
+        "typePrompt": 4722,
+        "qualityRubric": 911,
+        "typeSettings": 0,
+        "targetCandidateBlock": 6101,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2942,
+      "directiveLexemeCount": 21,
+      "crossLayerNearDuplicateCount": 1,
+      "crossLayerNearDuplicates": [
+        {
+          "leftLayer": "qualityRubric",
+          "rightLayer": "targetCandidateBlock",
+          "similarity": 0.821,
+          "left": "each slot s correctexpression must be verbatim passage text the wrongexpression must be clearly ungrammatical in that position not a debatable stylistic preference or a tense only change",
+          "right": "each slot s correctexpression must be verbatim source text the wrongexpression must be clearly ungrammatical in that exact position never a tense only change or a debatable stylistic preference"
+        }
+      ],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 45422,
+          "lowerBoundTotalChars": 48364
+        },
+        "PREMIUM": {
+          "systemChars": 9426,
+          "promptChars": 7407,
+          "lowerBoundTotalChars": 19775
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "VOCAB_CHOICE",
+      "layerChars": {
+        "typePrompt": 2579,
+        "qualityRubric": 498,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2644,
+      "directiveLexemeCount": 3,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 36764,
+          "lowerBoundTotalChars": 39408
+        },
+        "PREMIUM": {
+          "systemChars": 6870,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 10818
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "SENTENCE_ORDER",
+      "layerChars": {
+        "typePrompt": 2081,
+        "qualityRubric": 1394,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2022,
+      "directiveLexemeCount": 14,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 37162,
+          "lowerBoundTotalChars": 39184
+        },
+        "PREMIUM": {
+          "systemChars": 7268,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 10594
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "SENTENCE_INSERT",
+      "layerChars": {
+        "typePrompt": 4892,
+        "qualityRubric": 1903,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2890,
+      "directiveLexemeCount": 12,
+      "crossLayerNearDuplicateCount": 1,
+      "crossLayerNearDuplicates": [
+        {
+          "leftLayer": "typePrompt",
+          "rightLayer": "qualityRubric",
+          "similarity": 0.733,
+          "left": "always output sourcesentencetoomit as the original verbatim passage sentence that was removed",
+          "right": "always provide sourcesentencetoomit as the original verbatim passage sentence that was removed from the displayed passage"
+        }
+      ],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 40482,
+          "lowerBoundTotalChars": 43372
+        },
+        "PREMIUM": {
+          "systemChars": 10588,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 14782
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "TOPIC",
+      "layerChars": {
+        "typePrompt": 565,
+        "qualityRubric": 536,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1500,
+      "directiveLexemeCount": 3,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 34788,
+          "lowerBoundTotalChars": 36288
+        },
+        "PREMIUM": {
+          "systemChars": 4894,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 7698
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "MAIN_IDEA",
+      "layerChars": {
+        "typePrompt": 515,
+        "qualityRubric": 577,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1504,
+      "directiveLexemeCount": 4,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 34779,
+          "lowerBoundTotalChars": 36283
+        },
+        "PREMIUM": {
+          "systemChars": 4885,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 7693
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "TITLE",
+      "layerChars": {
+        "typePrompt": 112,
+        "qualityRubric": 423,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1500,
+      "directiveLexemeCount": 3,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 34222,
+          "lowerBoundTotalChars": 35722
+        },
+        "PREMIUM": {
+          "systemChars": 4328,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 7132
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "IMPLIED_MEANING",
+      "layerChars": {
+        "typePrompt": 4553,
+        "qualityRubric": 1502,
+        "typeSettings": 0,
+        "targetCandidateBlock": 2733,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2388,
+      "directiveLexemeCount": 28,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 42476,
+          "lowerBoundTotalChars": 44864
+        },
+        "PREMIUM": {
+          "systemChars": 9848,
+          "promptChars": 4039,
+          "lowerBoundTotalChars": 16275
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "REFERENCE",
+      "layerChars": {
+        "typePrompt": 1699,
+        "qualityRubric": 1136,
+        "typeSettings": 0,
+        "targetCandidateBlock": 1052,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1800,
+      "directiveLexemeCount": 11,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 37575,
+          "lowerBoundTotalChars": 39375
+        },
+        "PREMIUM": {
+          "systemChars": 6628,
+          "promptChars": 2358,
+          "lowerBoundTotalChars": 10786
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "CONTENT_MATCH",
+      "layerChars": {
+        "typePrompt": 151,
+        "qualityRubric": 389,
+        "typeSettings": 845,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1592,
+      "directiveLexemeCount": 14,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 35097,
+          "lowerBoundTotalChars": 36689
+        },
+        "PREMIUM": {
+          "systemChars": 4333,
+          "promptChars": 2175,
+          "lowerBoundTotalChars": 8100
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "SUMMARY_COMPLETE_MC",
+      "layerChars": {
+        "typePrompt": 3110,
+        "qualityRubric": 1388,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2173,
+      "directiveLexemeCount": 11,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 38185,
+          "lowerBoundTotalChars": 40358
+        },
+        "PREMIUM": {
+          "systemChars": 8291,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 11768
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "IRRELEVANT",
+      "layerChars": {
+        "typePrompt": 5294,
+        "qualityRubric": 1604,
+        "typeSettings": 0,
+        "targetCandidateBlock": 4668,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1936,
+      "directiveLexemeCount": 38,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 45254,
+          "lowerBoundTotalChars": 47190
+        },
+        "PREMIUM": {
+          "systemChars": 10691,
+          "promptChars": 5974,
+          "lowerBoundTotalChars": 18601
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "CONDITIONAL_WRITING",
+      "layerChars": {
+        "typePrompt": 1642,
+        "qualityRubric": 462,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1146,
+      "directiveLexemeCount": 4,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 35791,
+          "lowerBoundTotalChars": 36937
+        },
+        "PREMIUM": {
+          "systemChars": 5897,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 8347
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "SENTENCE_TRANSFORM",
+      "layerChars": {
+        "typePrompt": 989,
+        "qualityRubric": 412,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1091,
+      "directiveLexemeCount": 2,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 35088,
+          "lowerBoundTotalChars": 36179
+        },
+        "PREMIUM": {
+          "systemChars": 5194,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 7589
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "FILL_BLANK_KEY",
+      "layerChars": {
+        "typePrompt": 760,
+        "qualityRubric": 403,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1017,
+      "directiveLexemeCount": 3,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 34850,
+          "lowerBoundTotalChars": 35867
+        },
+        "PREMIUM": {
+          "systemChars": 4956,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 7277
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "SUMMARY_COMPLETE",
+      "layerChars": {
+        "typePrompt": 218,
+        "qualityRubric": 419,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1017,
+      "directiveLexemeCount": 4,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 34324,
+          "lowerBoundTotalChars": 35341
+        },
+        "PREMIUM": {
+          "systemChars": 4430,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 6751
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "SUMMARY_WRITING",
+      "layerChars": {
+        "typePrompt": 5593,
+        "qualityRubric": 736,
+        "typeSettings": 3155,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 3475,
+      "directiveLexemeCount": 32,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 43196,
+          "lowerBoundTotalChars": 46671
+        },
+        "PREMIUM": {
+          "systemChars": 10122,
+          "promptChars": 4485,
+          "lowerBoundTotalChars": 18082
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "WORD_ORDER",
+      "layerChars": {
+        "typePrompt": 2115,
+        "qualityRubric": 891,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1154,
+      "directiveLexemeCount": 7,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 36693,
+          "lowerBoundTotalChars": 37847
+        },
+        "PREMIUM": {
+          "systemChars": 6799,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 9257
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "TOPIC_SENTENCE_WRITING",
+      "layerChars": {
+        "typePrompt": 2830,
+        "qualityRubric": 1654,
+        "typeSettings": 2420,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 3317,
+      "directiveLexemeCount": 35,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 40616,
+          "lowerBoundTotalChars": 43933
+        },
+        "PREMIUM": {
+          "systemChars": 8277,
+          "promptChars": 3750,
+          "lowerBoundTotalChars": 15344
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "GRAMMAR_CORRECTION",
+      "layerChars": {
+        "typePrompt": 1858,
+        "qualityRubric": 1024,
+        "typeSettings": 0,
+        "targetCandidateBlock": 18082,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2191,
+      "directiveLexemeCount": 41,
+      "crossLayerNearDuplicateCount": 1,
+      "crossLayerNearDuplicates": [
+        {
+          "leftLayer": "typePrompt",
+          "rightLayer": "targetCandidateBlock",
+          "similarity": 0.75,
+          "left": "direction 다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오",
+          "right": "use wording like 다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오"
+        }
+      ],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 54652,
+          "lowerBoundTotalChars": 56843
+        },
+        "PREMIUM": {
+          "systemChars": 6675,
+          "promptChars": 19388,
+          "lowerBoundTotalChars": 28254
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "CONTEXT_MEANING",
+      "layerChars": {
+        "typePrompt": 1678,
+        "qualityRubric": 761,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1802,
+      "directiveLexemeCount": 4,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 36126,
+          "lowerBoundTotalChars": 37928
+        },
+        "PREMIUM": {
+          "systemChars": 6232,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 9338
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "SYNONYM",
+      "layerChars": {
+        "typePrompt": 231,
+        "qualityRubric": 427,
+        "typeSettings": 0,
+        "targetCandidateBlock": 0,
+        "structuredOutput": 259
+      },
+      "schemaChars": 1731,
+      "directiveLexemeCount": 4,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 34345,
+          "lowerBoundTotalChars": 36076
+        },
+        "PREMIUM": {
+          "systemChars": 4451,
+          "promptChars": 1304,
+          "lowerBoundTotalChars": 7486
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    },
+    {
+      "type": "ANTONYM",
+      "layerChars": {
+        "typePrompt": 3097,
+        "qualityRubric": 813,
+        "typeSettings": 0,
+        "targetCandidateBlock": 3208,
+        "structuredOutput": 259
+      },
+      "schemaChars": 2423,
+      "directiveLexemeCount": 11,
+      "crossLayerNearDuplicateCount": 0,
+      "crossLayerNearDuplicates": [],
+      "planSurface": {
+        "STANDARD": {
+          "systemChars": 0,
+          "promptChars": 40806,
+          "lowerBoundTotalChars": 43229
+        },
+        "PREMIUM": {
+          "systemChars": 7703,
+          "promptChars": 4514,
+          "lowerBoundTotalChars": 14640
+        }
+      },
+      "researchProfiles": {
+        "standardTypeScopedLowerBoundChars": null
+      }
+    }
+  ]
+}

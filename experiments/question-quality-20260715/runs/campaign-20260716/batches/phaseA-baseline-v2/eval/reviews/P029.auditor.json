@@ -1,0 +1,92 @@
+{
+  "pid": "P029",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-GARBLED-GLOSS",
+      "severity": "minor",
+      "evidence": "정답 해설의 '수집된 감정이나 인식 행위를 명사화한 understanding' — 'understanding'의 의미를 '수집된 감정'의 명사화로 설명하는 부분은 무의미한 환각성 표현이다. 다만 통사 분석(명사 자리)·교정형(understanding)·정답 라벨은 모두 정확하여 치명으로 보지 않음."
+    },
+    {
+      "code": "V4-MINOR-TERM-LOOSE",
+      "severity": "minor",
+      "evidence": "'전치사 but with 뒤에서' — 전치사는 with이고 but은 not A but B의 상관접속사인데 둘을 묶어 전치사로 지칭한 느슨한 용어 사용."
+    },
+    {
+      "code": "V4-MINOR-KEYPOINT-MISLABEL",
+      "severity": "minor",
+      "evidence": "keyPoints의 '(C) 분사 능동 vs 수동'은 실제 포인트(관사+형용사 뒤 명사 자리에 분사 불가 = 품사 자리 판정)와 어긋난 범주 라벨. 같은 항목 후반 '명사적 성격을 띤 준동사의 품사 자리 판정'이 이를 부분 상쇄."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 자리 판정 — 명사 organizations 직후에 오는 when이 완전한 시간 부사절을 이끄는지 확인",
+      "temptingBecause": "선행 명사 바로 뒤라 관계사(which/where/that)를 기대하고 when을 의심할 수 있음",
+      "decisiveFlaw": "when 뒤가 주어+동사를 갖춘 완전한 절(they first consider...)이고 시간 부사절로 자연스러우므로 오류가 아님. 다만 판별이 빨라 변별력은 낮은 디코이."
+    },
+    {
+      "label": "(B)",
+      "intent": "주어-동사 수일치 — 긴 수식어구(made by organizations when...media)에 가려진 핵 주어 One 찾기",
+      "temptingBecause": "직전의 복수 명사(organizations, media)와 mistakes에 이끌려 are를 기대하기 쉬움",
+      "decisiveFlaw": "주어 핵이 One(단수)이므로 is가 정확. 고전적이고 실질적인 판단을 요구하는 좋은 디코이."
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 관사(a)+형용사(thorough) 뒤 명사 자리에 과거분사 불가, 명사형 understanding 필요(품사 자리 판정)",
+      "temptingBecause": "understand의 분사형이 익숙하고, 'goals가 이해되는' 수동 의미로 그럴듯하게 읽힐 수 있으며 -ing/-ed 선택 문제로 착각하기 쉬움",
+      "decisiveFlaw": "'a thorough ___ of...'는 전치사 with의 목적어인 명사 자리이므로 분사 understood는 불가. understanding으로 교정하면 정확히 원문 복원(source-correct → displayed-wrong 최소대립쌍 성립)."
+    },
+    {
+      "label": "(D)",
+      "intent": "재귀대명사 수·성 일치 — 동명사구 주어 'Being in social media'(단수·중성)를 가리키는 itself 판정 + 관용구 in and of itself",
+      "temptingBecause": "주변의 복수 명사(organizations, social networks)에 이끌려 themselves를 기대할 수 있음",
+      "decisiveFlaw": "지시 대상이 단수 추상 동명사구이고 in and of itself는 고정 관용구이므로 정확. 관용구라 즉시 소거되는 약한 디코이."
+    },
+    {
+      "label": "(E)",
+      "intent": "상관접속사 병렬 — either A or B가 조동사 must 뒤 두 동사원형구(solve.../result in...)를 병렬 연결하는지 확인",
+      "temptingBecause": "either의 위치(조동사 뒤)와 or의 병렬 대상을 문장 뒤쪽까지 추적해야 하므로 구조 확인 부담이 있음",
+      "decisiveFlaw": "solve a problem...과 result in...이 or로 정확히 병렬되어 있어 오류가 아님."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'수집된 감정이나 인식 행위를 명사화한'은 의미가 통하지 않는 생성 잔류물(환각성 수식). 삭제해야 함.",
+      "recommendation": "'인식 행위를 명사화한 understanding(이해)' 정도로 정리."
+    },
+    {
+      "severity": "minor",
+      "evidence": "해설 첫 문장은 '~한다'체, 이후는 '~합니다'체로 문체가 혼재되고, '명사여야 합니다'와 '명사형태인 understanding으로 고쳐야 합니다'가 사실상 중복 진술.",
+      "recommendation": "문체 통일 및 중복 문장 제거로 압축."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints '(C) 분사 능동 vs 수동'은 실제 판정(명사 자리 vs 분사)과 범주가 어긋남.",
+      "recommendation": "'(C) 품사 자리 판정 — 관사+형용사 뒤 명사 자리에 분사 불가'로 교체."
+    },
+    {
+      "severity": "minor",
+      "evidence": "(D) 해설의 '전치사의 목적으로'는 '전치사의 목적어로'의 오기로 보임.",
+      "recommendation": "용어 교정."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "블라인드 풀이 결과 정답 (C) 단일 확정, 선언 정답과 일치. 렌더 지문은 의도된 최소대립쌍(understanding→understood) 외 원지문과 완전 일치. 교정 시 원문이 정확히 복원되고 메타 누출 없음(C4=4). (B) 수일치·(E) 병렬은 실질 판단을 요구하나 (A)·(D)는 즉시 소거되는 약한 디코이이며, 정답 자리도 'a thorough ___ of'라는 국소 단서로 판별 가능해 변별력은 중간 수준 — INTERMEDIATE 라벨에는 대체로 부합. 해설은 통사 분석 자체는 정확하나 환각성 수식어·문체 혼재·중복·keyPoint 범주 오기로 다듬기가 필요(C6=2). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false. 종합: 모든 V 통과, C 최저 2, 합계 18 → B(작은 해설 수정으로 출제 가능)."
+}

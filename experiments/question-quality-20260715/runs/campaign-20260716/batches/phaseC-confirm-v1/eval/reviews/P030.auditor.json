@@ -1,0 +1,94 @@
+{
+  "pid": "P030",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-diction",
+      "severity": "minor",
+      "evidence": "해설의 정답 패러프레이즈 '자신의 능력 부족을 인지하게 정당화하는 증거'는 한국어로 비문에 가깝게 어색함('능력 부족 인지를 확증하는 증거'가 자연스러움). 다만 의도된 의미가 복원 가능하고 ①(evidence confirming your perceived lack of competence)과 내용상 일치하므로 오개념/환각/용어 오류에는 해당하지 않음."
+    },
+    {
+      "code": "V5-minor-keypoint-hidden-word",
+      "severity": "minor",
+      "evidence": "keyPoints가 'shortcomings가 본문의 doubt your ability와 동일한 맥락'이라 하나 shortcomings는 빈칸으로 제거된 원문 span의 단어라 학생에게 보이지 않음. 출제 분석용 메모로는 유효하나 학생 노출 관점 표현으로는 부정확."
+    },
+    {
+      "code": "V4-minor-meta-commentary",
+      "severity": "minor",
+      "evidence": "해설에 '극성만 살피는 풀이를 방지했으며' 등 출제 설계 의도를 서술하는 메타 문장이 포함됨. 사실 오류는 아니나 학생용 해설로는 군더더기."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 span 'a reflection of your own shortcomings'를 'evidence confirming your perceived lack of competence'로 보존·추상화. 'perceived'가 의심(doubt)의 주관성까지 정확히 반영.",
+      "temptingBecause": "정답이므로 해당 없음. S2('doubt your ability to succeed')와 S5('it's the self-doubt that bothers you')를 연결해야 확정됨.",
+      "decisiveFlaw": "없음(정답)."
+    },
+    {
+      "label": "②",
+      "intent": "인과 오귀속(denied-cause) 함정 — 본문이 명시적으로 부정한 원인을 채택하게 유도.",
+      "temptingBecause": "부정적 극성 + 'pressure' 어휘가 본문(S2, S4)과 겹침. 파괴적 결과라는 강한 부정 프레임.",
+      "decisiveFlaw": "S4가 'It's not the pressure to perform that creates your stress'로 압박 원인론을 명시적으로 부정. 게다가 본문의 압박은 'pressure you place on yourself'(내적)인데 선지는 'external pressure'로 상충."
+    },
+    {
+      "label": "③",
+      "intent": "주관→객관 scope shift 함정 — 왜곡(주관) 기제를 객관적 측정으로 뒤집음.",
+      "temptingBecause": "'genuinely negative experiences'와 'objectively'(마지막 문장)라는 실제 앵커 어휘 + 강한 부정 어휘('failure').",
+      "decisiveFlaw": "빈칸 문장은 '실제보다 더 부정적으로(more negatively)' 보는 주관적 왜곡을 서술하므로 'objective measurement'가 논리적으로 불가. 'objectively'는 본문에서 왜곡의 해독제로 쓰인 긍정 개념. 'actual irreversible'은 본문에 근거 없는 절대어."
+    },
+    {
+      "label": "④",
+      "intent": "극성 반전 half-truth 함정 — S2의 'normal and useful'(내적 압박에 대한 서술)을 차용해 훑어읽기 오답 유도.",
+      "temptingBecause": "'normal and useful'이 본문 표현 그대로라 표면 대조 시 안전해 보임.",
+      "decisiveFlaw": "빈칸은 doubt의 부정적 영향 자리인데 유일한 긍정 극성 선지라 논리가 정반대. 극성만으로 즉시 소거 가능 — 네 오답 중 가장 약한 미끼."
+    },
+    {
+      "label": "⑤",
+      "intent": "행위자 전환(actor swap) 함정 — 자기 자신의 판단을 타인의 판단으로 치환.",
+      "temptingBecause": "'do well socially', 'self-worth' 앵커와 겹치고 부정적 극성이라 사회적 평가 불안으로 오독한 학생을 포착.",
+      "decisiveFlaw": "본문의 판단 주체는 일관되게 자기 자신(doubt YOUR ability, YOUR self-worth, see YOUR strengths)이며 타인의 평가는 지문에 등장하지 않음. 마지막 문장도 '자신의 강점을 객관적으로 보라'로 자기 지각 문제임을 확정."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'자신의 능력 부족을 인지하게 정당화하는 증거' — 비문에 가까운 어색한 한국어 패러프레이즈.",
+      "recommendation": "'자신의 능력 부족에 대한 인식을 확증하는 증거'로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "'오답 ②, ③, ⑤는 정답처럼 선지의 편향을 부정적으로 구성하여 극성만 살피는 풀이를 방지했으며' — 출제 설계 메타 서술이 학생용 해설에 혼입.",
+      "recommendation": "설계 의도 서술을 제거하고 각 오답의 결정적 결함만 서술."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 빈칸으로 가려진 원문 단어 'shortcomings'를 학생이 포착해야 할 대상처럼 기술.",
+      "recommendation": "'빈칸 자리가 본문의 doubt your ability와 동일 맥락의 자기 귀인임을 추론해야 함'으로 재기술."
+    }
+  ],
+  "killerConditionsMet": true,
+  "killerConditionDetail": {
+    "sameSyntacticSlot": "다섯 선지 모두 'as ___' 뒤 명사구로 동일 슬롯에 문법적으로 들어가며 suffix/tail에 의한 문법 탈락 없음 — 충족",
+    "meaningPreservingAbstraction": "'a reflection of your own shortcomings' → 'evidence confirming your perceived lack of competence'로 의미 보존 + 'perceived' 추상화 — 충족",
+    "anchorOverlapFlaw": "네 오답 모두 source anchor(②pressure/S4, ③objectively·genuinely negative, ④normal and useful/S2, ⑤do well socially·self-worth), 겹침, 단일 결정 결함 보유 — 충족",
+    "multiCueNoSingleHeuristic": "①②③⑤가 모두 부정 극성이라 극성 단독 풀이 불가, ① 확정에는 S2+S4/S5 연결 필요 — 충족(경계선: ④는 극성만으로 소거되는 무료 소거)",
+    "distinctTrapTypes": "denied-cause(②), subjective→objective shift(③), polarity half-truth(④), actor swap(⑤) — 충족"
+  },
+  "grade": "B",
+  "notes": "V1~V5 전부 통과, 정답 ① 유일성 독립 검증 완료. §D KILLER 형식 조건은 모두 충족하나 실전 체감 난이도는 최상위 킬러에 살짝 못 미침: ④는 유일한 긍정 극성으로 즉시 소거되고 ②도 'external'이 본문의 'internal pressure you place on yourself'와 정면 충돌해 조기 탈락, 실질 경합이 ①vs③/⑤ 이파전임(C3=3, C5=3). 빈칸 지점 자체는 지문의 핵심 인과 기제를 정확히 겨냥(C1=4). 해설은 사실적으로 정확하지만 비문형 패러프레이즈·설계 메타 서술이 섞여 우아함이 떨어짐(C6=2). 합계 18, 모든 V 통과, C 최저 2 → B. 해설 한국어 문장 손질만으로 A 경계 재도전 가능."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P076",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Seam: 'one about maximizing their utility in experimental practices' — gerund after 'about', parallel with 'one about treating...', grammatically well-formed. Logic: fails. The rights view objects to animals being used at all ('animals are not the kinds of thing that humans should use in this way at all'); 'maximizing their utility' presupposes and endorses instrumental use, which is the opposite of the rights position. Also 'experimental practices' narrows to one use-type when the passage generalizes over food and experimentation."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Seam: gerund phrase, grammatically fine. Logic: fails by contrast structure. Improving physical surroundings (e.g., food and space) is precisely the WELFARE agenda the passage attributes to welfare advocates ('insufficient food and space'). The blank must state the rights view's more fundamental problem, explicitly contrasted with humane-treatment concerns ('not one about treating animals inhumanely, but instead...'). Option 2 restates the negated side of the contrast."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Seam: 'one about viewing them merely as instrumental entities for our utility' — gerund phrase parallel to 'one about treating animals inhumanely'; 'them' has a clear antecedent (animals); 'merely' echoes the passage's 'it merely tries to curb'. Logic: exact paraphrase of the rights-view thesis 'animals are not the kinds of thing that humans should use in this way at all' — i.e., the wrong is treating animals as instruments/means for human use (food, experimental subjects), not merely treating them inhumanely. The not-X-but-Y contrast is satisfied: X = humane-treatment/welfare concern, Y = objection to instrumental use per se."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Seam: gerund phrase, grammatically fine. Logic: fails. Delay of legal procedures is never mentioned; the debate is about the adequacy in principle of welfare legislation, not its procedural speed. Also 'basic protection' aligns with the welfare framing, not the rights view's categorical objection."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Seam: gerund phrase, grammatically fine. Logic: fails. Funding for welfare enforcement is an implementation detail of the welfare paradigm; the rights view rejects the paradigm itself. Nothing in the passage mentions funding, and this cannot be 'more fundamental than' inhumane treatment in the sense the passage develops."
+    }
+  ],
+  "note": "Blank-completion item with a not-X-but-instead-Y contrast frame. All five options are gerund phrases, so the grammatical seam does not discriminate; discrimination is purely logical. The passage's own thesis sentence ('animals are not the kinds of thing that humans should use in this way at all') uniquely licenses option 3 (instrumental-use objection). Options 1/2/5 are welfare-paradigm or instrumental-use-endorsing distractors; option 4 is off-topic procedural. No alternative reading makes any other option defensible. Single clear answer: 3."
+}

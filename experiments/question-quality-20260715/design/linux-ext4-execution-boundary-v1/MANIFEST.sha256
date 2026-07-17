@@ -1,0 +1,7 @@
+69170f3f00b99c13e59ff796a672cd9658b92dbdba15435ca03af196014e51bb  experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1/current-worktree-public-source-closure-v1.json
+a61f3b25e22cacdb10d9ab0cff585cd728d9b0cc98568d85f327ccb792f6babb  experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1/hostile-mutations.mjs
+2028c357ad7320a418a7895810b6b92653e83a782a1e3ba00506b20a89adbb8a  experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1/observed-host-v1.json
+7a53f465ebce28500e7bcb675be79e5025c482d8ff028fe2e76aaa882c4980ed  experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1/protocol-v1.json
+2604e6019c489f2becff841e6b5ad1c537539f14347e2314496e57e354dc6c74  experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1/README.md
+4fb7040f1d2f8cc050234763bb8437199e3ca4277e123cbe06f9b0ea3c90c2b7  experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1/THREAT-MODEL.md
+920a63998e1e7e37a8ddf0f36329e2ba6e2235daca1c5ce5ca6aee5eb7e0d584  experiments/question-quality-20260715/design/linux-ext4-execution-boundary-v1/verify.mjs

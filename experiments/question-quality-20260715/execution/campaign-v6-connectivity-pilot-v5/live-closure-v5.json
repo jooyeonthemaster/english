@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-live-closure-v5",
+  "algorithm": "TYPESCRIPT_AST_TRANSITIVE_IMPORTS_PLUS_DECLARED_RUNTIME_DATA_V1",
+  "entrypoints": [
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/capture-price-snapshot.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/live-child.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/operator-wrapper.mts",
+    "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/production-runner.ts"
+  ],
+  "files": [
+    {
+      "path": "experiments/question-quality-20260715/budget-ledger.json",
+      "kind": "mutable_runtime_data_precondition",
+      "bytes": 509,
+      "sha256": "9a05a64ed97c4746b7fe56933374d2179178885bd3e1db93f830f938bafdea1e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/author-freeze-gate.ts",
+      "kind": "source",
+      "bytes": 609,
+      "sha256": "052fe4bf30c46b77d7ffa59f812dda5ed018b4de7abddf2c0180a1d880df7db6"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/bounded-response-body.ts",
+      "kind": "source",
+      "bytes": 5762,
+      "sha256": "78984761076df90dcc27d3244569bc968bc2ee4eba08c5562405ed940766ea88"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/capture-output-boundary.ts",
+      "kind": "source",
+      "bytes": 1990,
+      "sha256": "1f25086121c16722fbf61eb2a4f38c1d2b64224b4a2865abfb9b6e9c125e7ee6"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/capture-price-snapshot.mts",
+      "kind": "source",
+      "bytes": 5926,
+      "sha256": "b8c1195e13180ccac3b299d96d551242d7a987b28931a43b3e5fdd3acb4e5369"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/credential-file-boundary.ts",
+      "kind": "source",
+      "bytes": 5055,
+      "sha256": "a1c93df99cba6577365af4699cf10e2209db882be1e341ab78c6049a88a424c9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/capture-price-snapshot-v5.bundle.mjs",
+      "kind": "immutable_runtime_artifact",
+      "bytes": 97279,
+      "sha256": "82443b490e1158add2b3f41dd6e4e43231418dcf240fb46d3f4331b993a74709"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/live-child-v5.bundle.mjs",
+      "kind": "immutable_runtime_artifact",
+      "bytes": 192695,
+      "sha256": "baa8fbb4872d9ada9371f4460613b60ce67854b056a01eaf0eefa988dbf5158a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-live/operator-wrapper-v5.bundle.mjs",
+      "kind": "immutable_runtime_artifact",
+      "bytes": 115027,
+      "sha256": "3d1d253870392d7ff7713e8d45ac7b40e1ebc22bc11e65cd7bf2d36c6a34909a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-runtime-core.ts",
+      "kind": "source",
+      "bytes": 13259,
+      "sha256": "448dfc963f7f8da7865a19411f43be182ee90612e4a7356b450e524fad73cedc"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/frozen-runtime-v5.json",
+      "kind": "immutable_runtime_artifact",
+      "bytes": 4246,
+      "sha256": "92269c3a91934d93ffd8eddec8351ab3869c2f1fd9c00a0b7aed26c30b29d236"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/live-child.mts",
+      "kind": "source",
+      "bytes": 4204,
+      "sha256": "00b94eee5bb4d2906fdc09dc7fc2e116d9fb1501dfafb9e8bb89b33365e6d9c8"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/live-environment.ts",
+      "kind": "source",
+      "bytes": 3750,
+      "sha256": "26bd35bd9067dec762b82be2c8d955203ea8a178ead0fce0eb3b8faf07d69e6d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/live-io.ts",
+      "kind": "source",
+      "bytes": 16618,
+      "sha256": "69a3158dc7764e2d79dbf1606e01883aa562ca0012095669d7ae74217fe4f52d"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/operator-wrapper.mts",
+      "kind": "source",
+      "bytes": 8231,
+      "sha256": "d909d9f83d8807c89bb3439f90ae2f833b98d745476ae92d6ff1761744145ade"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/price-snapshot-core.ts",
+      "kind": "source",
+      "bytes": 23947,
+      "sha256": "69b8b7d24f40d23c4ae501f3b80375d9a578e7091fdce30bed8b402ff8e96a32"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/private/exact-wire-v5.private.json",
+      "kind": "immutable_runtime_data",
+      "bytes": 129050,
+      "sha256": "f27e851c6dcf4072bc3fd17b33115e422edfd9e7f19861dc96bf721083d659da"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/production-runner.ts",
+      "kind": "source",
+      "bytes": 49647,
+      "sha256": "d238cd362a16528601d888f6d8da15dd662f9f93494caa93306297d5987314a9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/protocol-core.ts",
+      "kind": "source",
+      "bytes": 47916,
+      "sha256": "40a8c40e3d30b713eddf63df913a0349cbeb91af3987a6def5524cb334efa1d1"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/protocol-v5.json",
+      "kind": "immutable_runtime_data",
+      "bytes": 14092,
+      "sha256": "0110dd37d475d3c16af6203774ddc77f0b560f803cf5a98c75455a452287ff0e"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/response-parser.ts",
+      "kind": "source",
+      "bytes": 21856,
+      "sha256": "8c5f2d6181cef027e8bce1b65b3b769c7281c0d1a614159b154852e15fce46d9"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/strict-json-observer.ts",
+      "kind": "source",
+      "bytes": 11266,
+      "sha256": "c33318150c24a6858afd7a5433fd7bf7e44c4e64b50cca978f452936ddf8273a"
+    },
+    {
+      "path": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v5/terminal-reconciliation-core.ts",
+      "kind": "source",
+      "bytes": 19817,
+      "sha256": "8c31f2583bbb79498da942c1e9d2b3bab09c7496bb8facaeb4843f946a6bf5b3"
+    }
+  ],
+  "exactFileSetAndBytesSha256": "560b79f71ef26f555311b676b61b87506db33322a53613bdced8d88b57ba46a3",
+  "externalRuntimeFiles": [
+    {
+      "path": "C:\\Program Files\\nodejs\\node.exe",
+      "kind": "external_node_executable",
+      "bytes": 89578992,
+      "sha256": "c1b274a8d0a23e060fc42ce71c3cdfa1569b83d91ba82cc59fa907da97a425e9",
+      "nodeVersion": "v24.7.0",
+      "modulesAbi": "137",
+      "v8Version": "13.6.233.10-node.26",
+      "platform": "win32",
+      "arch": "x64"
+    }
+  ],
+  "runtimeInterfaces": {
+    "dynamicPrivateAttestedJsonReads": 4,
+    "dynamicPrivateAttestedJsonContract": "canonical direct real private file; fd-bound exact-size pre/open/post identity read <=306184192 bytes; duplicate-free fatal UTF-8 without BOM; three raw bounded HTTP bodies reproduce the normalized schema-v5 snapshot; capture file SHA and bundle SHA handed to live child from same operator memory; <=15 minutes old",
+    "secretSourceReads": 1,
+    "secretSourceContract": "repository-direct .env.local must be a stable real regular file read exactly by fd with pre/open/post identity and hard EOF only after authorization; duplicate assignment rejected; only OPENROUTER_API_KEY retained; temporary bytes zeroed; value/length/hash never committed",
+    "privateOutputContract": "exclusive real v5/private/runs/run directory with no symlink/junction ancestors; response and append-only journal never public",
+    "executableRuntimeContract": "three exact plain-ESM bundle byte hashes plus exact Node executable realpath/version/ABI/V8/platform/arch/bytes/hash; no tsx or external package at live runtime"
+  },
+  "completeness": {
+    "localStaticImportsIncluded": true,
+    "localExportsIncluded": true,
+    "literalDynamicImportsIncluded": true,
+    "literalRequireIncluded": true,
+    "nonliteralDynamicImportsRejected": true,
+    "immutableRuntimeDataIncludedWithExactBytes": true,
+    "mutableResearchLedgerIncludedWithExactPreconditionBytes": true,
+    "secretAndDynamicPrivateInputsExplicitlyClassified": true,
+    "minimumCountAcceptanceUsed": false,
+    "testSupportExcluded": true
+  },
+  "closureSemanticSha256": "a128a21d41dbe2f6a37e07eefe7087c21872b6de0bda27e317570c449f8747ff"
+}

@@ -1,0 +1,66 @@
+{
+  "pid": "P025",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SEAM-UNGRAMMATICAL",
+      "severity": "critical",
+      "evidence": "빈칸 프레임은 'points to the fact that _____.' 로, 보문소 that 뒤에는 정형절(주어+술어)이 와야 한다. 원지문에서 제거된 span 은 실제로 정형절 'different tasks should ideally be matched to our energy level' 이다. 그러나 선지 5개 전부가 동명사구(NP)여서, 선언된 정답 ①을 넣은 완성문 'Research in the science of peak performance and motivation points to the fact that aligning specific duties with personal vitality patterns.' 은 that-절에 술어가 없는 비문(fragment)이 된다. 'the fact that + NP' 는 어떤 대안 해석으로도 구제되지 않는다(that 을 지시사로 읽어도 비문). 프레임을 'points to the importance of ___' 류로 바꾸거나 선지를 절 형태로 바꿔야만 문법적이다."
+    },
+    {
+      "code": "V3-SEAM-DESIGN-CONFIRMED",
+      "severity": "major",
+      "evidence": "keyPoints 첫 항목이 '…을 구와 절의 구조를 바꾸어 aligning specific duties with personal vitality patterns로 추상화하여 패러프레이징' 이라고 명시해, 절→구 변환이 의도된 설계였음을 자인한다. 절 슬롯에 구를 넣는 변환은 렌더 사고가 아니라 출제 설계 단계의 오류이며, 다섯 선지가 모두 같은 비문 유형을 공유하므로 차별적 문법 소거는 발생하지 않지만(§D 조건 1의 '일부 오답만 문법 탈락' 위반은 아님) 완성문 문법성(V3) 자체가 깨진다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 주제문 span 'different tasks should ideally be matched to our energy level' 의 추상화 패러프레이즈 (tasks→specific duties, energy level→personal vitality patterns, matched→aligning)",
+      "temptingBecause": "For example 이하의 전개(분석 과업=고에너지 시간대, 아침형 아니면 늦게 배치)가 모두 이 일반 원리를 지지한다",
+      "decisiveFlaw": "의미상 결함 없음. 단 통사적으로 that-절 슬롯에 동명사구가 들어가 완성문이 비문이 된다(V3 이슈, 전 선지 공통)"
+    },
+    {
+      "label": "②",
+      "intent": "half-truth / scope shift — 'waste too much emotional energy' 언급을 감정 '억제' 처방으로 왜곡",
+      "temptingBecause": "불쾌한 고객·이메일에서 감정 에너지가 낭비된다는 서술이 실제로 존재하고 professional 맥락과 표면 중첩된다",
+      "decisiveFlaw": "지문의 처방은 감정 기복 억제가 아니라 과업-에너지 시간대 매칭이다. 'suppressing' 과 'professional relationships' 라는 초점 모두 지문에 근거 없음"
+    },
+    {
+      "label": "③",
+      "intent": "condition loss / overgeneralization — 필자 개인 습관('eating my problems for breakfast')을 보편 규칙으로 절대화",
+      "temptingBecause": "'first thing I get done', 아침에 문제를 먼저 처리한다는 개인 사례가 지문 중반을 지배해 강하게 끌린다",
+      "decisiveFlaw": "마지막 문장이 아침형이 아니면 어려운 일을 '늦은 시간대에' 배치하라고 권해 'as early as humanly possible' 의 보편 주장과 정면 배치된다. 또한 빈칸은 연구가 가리키는 일반 원리 자리이지 개인 사례 자리가 아니다"
+    },
+    {
+      "label": "④",
+      "intent": "unsupported comparison / scope shift — 분석 과업과 감정 과업 간 절대적 우선순위 설정",
+      "temptingBecause": "analytical tasks 와 emotional energy 라는 두 핵심 어휘가 모두 지문에 등장한다",
+      "decisiveFlaw": "지문은 과업 유형별로 적합한 에너지 시간대가 다르다는 매칭 원리를 말할 뿐, 분석 과업이 감정 과업보다 우위라는 서열은 어디에도 없다"
+    },
+    {
+      "label": "⑤",
+      "intent": "peripheral detail inflation — 'talking with an unhappy client' 라는 예시 하나를 글 전체 주제로 승격",
+      "temptingBecause": "고객 대화·소통 장면이 등장해 social/communication 표면 앵커가 있다",
+      "decisiveFlaw": "고객 대화는 감정 소모형 불쾌 과업의 예시일 뿐이며 'social stamina 유지' 나 'cooperative communication' 은 지문의 논지와 무관하다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 렌더 지문은 빈칸 치환(주제문 절 제거) 외에 원지문과 완전 일치 — 접합 파손·중복·누락·고아 문장부호 없음, 라벨 ①~⑤ 와 선지 동기화 정상. V2: 의미 층위에서 ①이 유일 정답 — ②는 억제 처방 왜곡, ③은 마지막 문장과 모순, ④는 근거 없는 서열화, ⑤는 예시의 주제 승격으로 각각 독립 배제 가능. V3: 실패 — that-절 슬롯에 동명사구 선지를 넣어 정답 완성문이 비문(상세는 validityIssues). V4: 해설의 구조·논리 서술(주제문 역할, 분석 과업-고에너지 대응, 마지막 문장의 권고, ③의 모순 지적 등)이 실제 지문과 전부 일치하고 오답 해설도 각 선지 내용과 정확히 대응, 용어 오류·환각 없음. V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음. 공예: 주제문 원리를 묻고(C1=3) 오답들이 서로 다른 함정 유형을 겨냥하며(C2=3) ③이 실질 변별을 만들고(C3=3) 메타 누출 없이(C4=3) INTERMEDIATE 난이도에 부합하고(C5=3) 해설이 정확·무난(C6=3), 합계 18. 그러나 V3 치명 결함은 공예로 상쇄되지 않으므로 등급 F. 수리 방향: 빈칸 프레임을 'the fact that ___' 절 슬롯 그대로 두려면 선지 5개를 정형절로 재작성, 또는 프레임을 명사구 슬롯('the importance of ___' 등)으로 바꾸되 원지문 무결성(V1) 훼손 없이 처리해야 한다. KILLER 아님(요청 난이도 INTERMEDIATE) → killerConditionsMet=false."
+}

@@ -1,0 +1,82 @@
+{
+  "pid": "P065",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-SEAM-TAIL-LEAK",
+      "severity": "critical",
+      "evidence": "빈칸이 원문 'the willingness of readers to pay attention, to explore uncertainties'만 제거하고 꼬리 ', and not immediately ask \"what do you mean by that?\"'를 남겼다. 이 꼬리는 부정사 병렬 conjunct(원문에서는 willingness ... to pay attention, to explore uncertainties, and [to] not immediately ask)이므로 빈칸 안에 부정사 앵커가 있어야만 문법적이다. ③('readiness to endure ambiguity and actively engage')만 to-부정사를 제공하고, ①②④⑤는 순수 NP라서 'features ... follow from [NP], and not immediately ask ...'가 되어 비문이다(bare 'not ask'는 정형동사 'follow'와 병렬 불가, do-support 필요). BLANK_INFERENCE에서 오답은 문법적으로 슬롯에 들어가고 의미로 갈려야 하는데 4개 오답 전부가 통사적으로 탈락하므로 유형 의도와 불일치."
+    },
+    {
+      "code": "V4-NONWORD",
+      "severity": "major",
+      "evidence": "해설 본문에 비단어 '어성하게'(\"효율적 의사소통 원칙을 어성하게 무시하는\")가 존재한다. '어긋나게'류의 손상으로 보이는 비단어다. 또한 정답 번역 '자발적인 기꺼이 함'은 한국어로 성립하지 않는 손상 표현이며, keyPoints 첫 항목의 '문학 독딩이'도 비단어('독자'/'독서'의 오탈자)다."
+    },
+    {
+      "code": "V4-SENTENCE-ATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설이 'struggle to interpret'를 '다섯째 문장'에 귀속시켰으나 실제로는 넷째 문장('Readers assume that in literature ... communicative goal.')에 있다. 다섯째 문장은 \"'Literature' is an institutional label ...\"이다. 문장 귀속 오류."
+    },
+    {
+      "code": "V3-OPTION-UNIDIOMATIC",
+      "severity": "minor",
+      "evidence": "④의 'the publishing cover'는 영어로 관용적이지 않은 표현이다(book cover/publisher와 혼성된 부자연스러운 명사구)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 1,
+    "C4": 0,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 반전(polarity reversal) — 수용/인내를 '즉각적 거부'로 뒤집음",
+      "temptingBecause": "readers, artistic details 등 지문 소재를 재사용하고 'immediately'가 마지막 문장의 'not immediately ask'와 표면적으로 겹친다",
+      "decisiveFlaw": "지문은 독자가 모호함을 참고(put up with) 해석에 애쓴다(struggle to interpret)고 했으므로 거부는 정반대. 추가로 NP라서 꼬리 'and not immediately ask'와 병렬이 깨져 비문이 된다"
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전 — 신뢰(assume ... communicative purpose)를 '깊은 불신'으로 뒤집음",
+      "temptingBecause": "writer's purpose가 넷째 문장의 communicative purpose 논의와 어휘적으로 겹친다",
+      "decisiveFlaw": "지문은 독자가 작가를 비협조적이라 여기지 않고 목적이 있다고 가정한다고 명시 — 불신은 논리 반대. 역시 NP라 꼬리와 결합 시 비문"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'the willingness of readers to pay attention, to explore uncertainties'의 패러프레이즈(willingness→voluntary readiness, explore uncertainties→endure ambiguity and actively engage)",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 단, 유일하게 to-부정사를 포함해 꼬리 'and not immediately ask'와 문법적으로 연결되는 선지라서 통사만으로 정답이 노출된다(단서 경제성 파괴)"
+    },
+    {
+      "label": "④",
+      "intent": "앵커 왜곡/과협소(scope shift) — 앞부분의 선별 제도(published, reviewed, institutional label)를 출판사 권위로 비틈",
+      "temptingBecause": "지문 첫 문장과 institutional label 문장의 소재를 직접 연상시킨다",
+      "decisiveFlaw": "빈칸 문장의 주어는 독자의 태도에서 기인하는 문학의 특징이며 출판 주체의 권위가 아님. 'publishing cover'는 비관용적 표현이고, NP라 꼬리와 결합 시 비문"
+    },
+    {
+      "label": "⑤",
+      "intent": "무관 소재 연상(random association) — reading efforts에서 '성찰적 습관'을 임의 확장",
+      "temptingBecause": "self-reflective habits가 독서 행위의 내면적 노력과 표면적으로 유사해 보인다",
+      "decisiveFlaw": "'administrative training'은 지문에 앵커가 전혀 없는 임의 개념으로 사실상 필러. NP라 꼬리와 결합 시 비문"
+    }
+  ],
+  "explanationIssues": [
+    "비단어 '어성하게' — '효율적 의사소통 원칙을 어성하게 무시하는'(해설 본문)",
+    "문장 귀속 오류 — 'struggle to interpret'는 넷째 문장인데 '다섯째 문장'으로 지목",
+    "손상 한국어 — 정답 번역 '자발적인 기꺼이 함'",
+    "keyPoints 비단어 '문학 독딩이'",
+    "해설이 오답 4개가 통사적으로도 탈락한다는 사실(seam 결함)을 인지하지 못하고 의미 함정만 설명 — 실제 문항의 결정적 결함과 해설이 어긋남"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "요청 난이도 INTERMEDIATE, 유형 BLANK_INFERENCE. 치명 결함 2건: (1) 빈칸 seam — 남긴 꼬리 'and not immediately ask'가 부정사 병렬을 요구해 정답 ③만 문법적으로 성립하고 오답 4개는 비문이 됨(통사만으로 풀리는 문항, V3 실패·C4=0). 원문에서 'and not immediately ask'까지 함께 블랭킹했거나 모든 선지에 부정사 구조를 갖췄어야 함. (2) 해설/keyPoints의 비단어('어성하게', '독딩'), 손상 번역('자발적인 기꺼이 함'), 문장 귀속 오류(다섯째→실제 넷째 문장)로 V4 실패. 의미 차원에서는 정답 유일성(V2)과 렌더 무결성(V1), 필드 동기화(V5)는 유지되고 출제 지점(C1=3)도 지문 결론부의 핵심(willingness)을 정확히 겨냥했으나, ①②가 동일한 극성 반전 함정을 중복 사용하고 ⑤가 무앵커 필러라 C2=2, C3=1. V 실패는 공예 점수로 상쇄되지 않으므로 F."
+}

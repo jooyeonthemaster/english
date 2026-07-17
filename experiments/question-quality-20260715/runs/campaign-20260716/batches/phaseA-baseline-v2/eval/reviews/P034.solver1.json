@@ -1,0 +1,35 @@
+{
+  "pid": "P034",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "try to push beyond your limits — 지문의 핵심 주장(draw the line, exercise some moderation)과 정면으로 반대. 한계를 넘어서라는 권고는 '절제하라'는 결론 문장(So ... and make sure you ___)에 삽입하면 논리가 붕괴한다. 문법 결합(make sure you try to ...)은 정상이지만 논리 부적합. 실전에서 끌릴 요소 없음."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "avoid taking on too many responsibilities — 'don't know where to draw the line', 'Joining too many clubs', 'exercise some moderation' 세 개의 단서가 모두 수렴하는 결론. 앞절 'get involved in the activities that are most meaningful to you'(선택적 참여)와 and로 병렬되어 '의미 있는 것만 골라 하고, 과부하는 피하라'는 자연스러운 이중 권고가 완성된다. 문법 결합(make sure you avoid -ing)도 정상."
+    },
+    {
+      "label": "③",
+      "verdict": "오답(매력적 오답)",
+      "reason": "prioritize perfect results over active participation — 지문 중 'making sure the paper is as perfect as you want it to be'와 어휘가 겹쳐 표면 매칭으로 실제로 한 번 끌린다. 그러나 그 예시는 완벽주의를 권장하는 것이 아니라 마감기 시간 잠식(스트레스 원인)의 사례로 제시된 것. 완벽한 결과를 우선하라는 권고는 오히려 스트레스를 키우는 방향이라 'moderation' 결론과 모순. 어휘 재활용형 미끼로 판정."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "focus on expanding your social networks — 지문에 사교/인맥 확장 언급이 전혀 없음. 동아리 활동이라는 소재에서 연상 가능한 배경지식형 미끼일 뿐, 텍스트 근거 제로. 문법 결합은 정상."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "keep a daily record of your club activities — 'Pacing is important'에서 시간 관리 연상으로 약하게 끌 수 있으나, 지문의 처방은 기록·관리가 아니라 활동 개수 자체의 절제. 결론 문장의 요지(과다 참여 방지)와 층위가 다른 구체 행동이라 부적합."
+    }
+  ],
+  "note": "단서 3중 수렴(draw the line / too many clubs / moderation)으로 ② 단독 정답. ③이 'perfect' 어휘 재활용으로 가장 매력적인 오답이며 예시의 기능(스트레스 원인 예시)을 권고로 오독해야만 선택된다. 복수정답 소지 없음."
+}

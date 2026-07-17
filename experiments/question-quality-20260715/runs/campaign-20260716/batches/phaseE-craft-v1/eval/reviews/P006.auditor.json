@@ -1,0 +1,66 @@
+{
+  "pid": "P006",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-distractor-seam",
+      "severity": "minor",
+      "evidence": "Option 1 contains 'cautiously' while the stem already has 'carefully', producing 'She carefully tried spreading cream and jam cautiously' — stylistically redundant. Grammatical, and confined to a distractor, so not a gate failure; noted per D-condition (suffix/tail should not differentially degrade distractors)."
+    },
+    {
+      "code": "V5-minor-keypoint-hidden-word",
+      "severity": "minor",
+      "evidence": "keyPoints gloss 'mirror', a word that appears only in the removed original span, not in the rendered passage. Acceptable in post-solve explanation (the 해설 quotes the original span), but could momentarily confuse a student scanning the rendered text."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "actor swap + timeline shift: grandmother's later cream-and-jam action reassigned to Chloe at the blank moment",
+      "temptingBecause": "cream and jam are salient, memorable passage material ('as she spread cream and jam on hers')",
+      "decisiveFlaw": "cream/jam appear only later with the scones, are the grandmother's action, and Chloe explicitly eats hers WITHOUT cream and jam; at the blank she is starting a sandwich"
+    },
+    {
+      "label": "2",
+      "intent": "timeline repetition: recycles an event already completed before the blank",
+      "temptingBecause": "'winked back' appears verbatim earlier ('Chloe winked back'), giving a strong lexical anchor",
+      "decisiveFlaw": "the wink exchange happened two sentences earlier; the blank must describe the action after waiting for the grandmother's first move that leads into starting the sandwich"
+    },
+    {
+      "label": "3",
+      "intent": "correct answer: paraphrase of removed span 'mirrored her grandmother's actions'",
+      "temptingBecause": "n/a (correct)",
+      "decisiveFlaw": "none — entailed by 'waited for her grandmother to make the first move' before the blank and reinforced by the later contrast 'boldly chose the biscuit-looking thing before her grandmother'"
+    },
+    {
+      "label": "4",
+      "intent": "agency/polarity reversal: inverts who initiates",
+      "temptingBecause": "later in the passage Chloe genuinely does act first ('boldly chose ... before her grandmother'), so a skimming reader can project that forward",
+      "decisiveFlaw": "at the blank moment she has just 'waited for her grandmother to make the first move' — taking the lead contradicts the immediately preceding sentence"
+    },
+    {
+      "label": "5",
+      "intent": "fabrication with source anchor: turns internal uncertainty and the grandmother's question into Chloe's questioning",
+      "temptingBecause": "Chloe is visibly unfamiliar with the food ('Scones, was that what they were called?'), so asking questions seems plausible",
+      "decisiveFlaw": "Chloe never asks anything — the only question is the grandmother's ('Aren't the scones lovely, dear?'); Chloe silently observes and imitates"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "All V gates pass. Render differs from source only by the intended single-span blank; option 3 is the unique correct completion, independently verified per option. Explanation and per-option 오답해설 are factually anchored to real passage spans with no misattribution. Main craft limitation is C3: the answer is heavily cued by the immediately adjacent sentence ('waited for her grandmother to make the first move'), so competition collapses quickly for careful readers — appropriate for INTERMEDIATE but leaves no headroom. Distractor set is well-differentiated (actor swap, repetition, agency reversal, fabrication). C totals 17 with min 2 → B: shippable at INTERMEDIATE with small polish (drop 'cautiously' from option 1; consider not glossing 'mirror' in keyPoints since it only exists in the removed span). Requested difficulty is INTERMEDIATE, not KILLER, so killerConditionsMet=false by definition."
+}

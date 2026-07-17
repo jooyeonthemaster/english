@@ -1,0 +1,112 @@
+{
+  "pid": "P005",
+  "itemType": "GRAMMAR_ERROR",
+  "requestedDifficulty": "INTERMEDIATE",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": false
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문을 원지문과 전수 대조한 결과 의도된 변형('in which' -> 'which', (C) 자리) 외에 문장 접합 파손·중복·누락·고아 문장부호·오탈자가 없다. 밑줄 라벨 (A)~(D)가 선택지 목록(avoid/threatening/which/had not helped)과 정확히 일치한다. 통과.",
+    "V2": "각 밑줄 독립 검증 — (A) 'has helped us avoid': help+O+원형부정사는 표준 용법(to avoid도 허용되지만 원형이 오류가 아님), 적법. (B) 'threatening stimuli': stimuli가 위협을 가하는 능동 주체이므로 현재분사 수식이 적법('threatened'가 아님). (C) 'the specific ways which they activate our systems': 관계사절 'they activate our systems'가 S+V+O 완전절로 which가 채울 통사적 공백이 없음. 'ways'를 수식하려면 'in which'(또는 that/무관계사)가 필요 — 명확한 오류이며 교정 시 정확히 원문 복원. (D) 'If they had not helped ..., they would not have evolved': 과거 사실 반대 가정법 과거완료로 주절과 정합, 적법. 실제 오류 집합 = {(C)} 단일 → 정답 유일성 성립. 통과.",
+    "V3": "지문·발문이 문법적이고 자연스러우며, 유일한 비문은 (C) 자리로 유형 의도(어법상 틀린 것 고르기)와 정확히 일치한다. 비단어·오탈자 없음. 통과.",
+    "V4": "본 해설의 (C) 분석(관계사 뒤 절 완전성 → in which 교정)은 실제 통사 구조와 일치해 정확하다. 그러나 오답 해설 \"(C)\" 항목은 '상관접속사 either A or B 구조에서 to face와 병렬을 이루는 동사원형 avoid'를 설명한다 — 이는 (C) 밑줄('which')이 아니라 렌더 지문에서 밑줄조차 없는 'either to face ... or avoid it'의 avoid에 대한 해설이며, 결론도 '어법상 옳습니다'로 선언 정답과 정면 모순이다. 해설-선지 귀속 오류 + 정답 여부 허위 진술 → 실패.",
+    "V5": "선언 정답 (C)=오류인데 오답 해설 키 \"(C)\"는 (C)를 '어법상 옳다'고 진술 — 학생 노출 필드 간 직접 모순. 정답 라벨이 오답 해설 키 집합에 포함된 것 자체가 비동기이며, 그 내용은 존재하지 않는 5번째 밑줄의 잔재로 보인다. → 실패."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-WRONG-OPTION-ATTRIBUTION",
+      "severity": "critical",
+      "evidence": "오답 해설 \"(C)\": \"상관접속사 'either A or B' 구조에서 앞의 to face와 병렬을 이루어 to가 생략된 채 동사원형 'avoid'로 쓰인 구조이므로 어법상 옳습니다.\" — 실제 (C) 밑줄은 'which'이고, 'or avoid it'의 avoid는 밑줄이 아니다. 5밑줄 체계에서 축약되며 해설 키가 밀린 정황."
+    },
+    {
+      "code": "V5-ANSWER-EXPLANATION-CONTRADICTION",
+      "severity": "critical",
+      "evidence": "선언 정답 (C)('which'가 틀림)와 오답 해설 \"(C)\"('어법상 옳습니다')가 정면 모순. 정답 선지에 오답 해설 키가 존재하고 정작 (C) 'which'에 대한 오답-관점 해설은 부재."
+    },
+    {
+      "code": "FORMAT-FOUR-UNDERLINES",
+      "severity": "major",
+      "evidence": "밑줄이 (A)~(D) 4개로 수능 어법 표준 5밑줄에서 벗어난다. 오답 해설 (C)의 내용이 'either...or avoid' 포인트를 가리키는 것으로 보아 5번째 밑줄 소실의 잔재로 추정. 렌더·라벨·선지 자체는 내부 일관되므로 V1 실패로는 처리하지 않는다."
+    },
+    {
+      "code": "META-MARKEDEXPRESSION-CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (C).expression='in which'(원문/교정형)인데 렌더 표시형은 'which'. (A)(B)(D)는 expression=표시형이라 필드 규약이 비대칭 — 소비 코드가 오독할 여지. 학생 노출은 아니므로 minor."
+    },
+    {
+      "code": "KEYPOINTS-COVERAGE-GAP",
+      "severity": "minor",
+      "evidence": "keyPoints가 (C)(A)(D)만 다루고 (B) 분사 능동/수동 포인트를 누락. 모순은 아니어서 커버리지 결손으로만 기록."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 0
+  },
+  "craftNotes": {
+    "C1": "관계사 뒤 절 완전성 판정(which vs in which)은 수능 어법 정전 포인트. source-correct -> displayed-wrong 최소대립쌍이 정확하고 교정 시 원문이 그대로 복원된다.",
+    "C2": "디코이 (A)(B)(D)가 각기 다른 오개념(help 보어 형태 / 분사 능수동 / 가정법 과거완료 시제)을 겨냥해 의도가 분화되어 있다. 다만 밑줄 4개로 밀도 상한이 깎인다.",
+    "C3": "(A)(D)는 어느 정도 실제 판단을 요구하지만 세 디코이 모두 교과서 표준형이라 훈련된 학생은 빠르게 소거하고 (C)로 수렴한다. 4밑줄이라 경쟁 선지 수 자체도 부족 — 2점.",
+    "C4": "메타 누출·꼬리 소거 단서 없음. 'ways + 완전절'이라는 충분하고 필연적인 근거로 정답이 확정된다.",
+    "C5": "관계사 완전성 1단계 판정 + 중급 표준 디코이 구성으로 요청 난이도 INTERMEDIATE와 정합.",
+    "C6": "본 해설 자체는 짧고 정확하며 함정('선행사가 ways라고 무조건 which')을 분리했으나, 오답 해설 (C)가 존재하지 않는 밑줄을 설명하며 정답을 '옳다'고 단언하는 치명 오류를 포함 — 해설 세트 기준 0점."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "준사역동사 help의 목적격보어 형태(원형부정사/to부정사 허용) 판정",
+      "temptingBecause": "'helped us avoid'에서 to avoid나 avoiding을 기대한 학생이 원형 avoid를 오류로 착각할 수 있다",
+      "decisiveFlaw": "help + O + (to) 동사원형은 표준 용법이므로 어법상 옳다 — 정답 불가"
+    },
+    {
+      "label": "(B)",
+      "intent": "명사 수식 분사의 능동(-ing)/수동(-ed) 판별",
+      "temptingBecause": "stimuli가 사물이라 수동 threatened를 떠올리기 쉽다",
+      "decisiveFlaw": "stimuli가 위협을 '가하는' 능동 주체이므로 현재분사 threatening이 옳다 — 정답 불가"
+    },
+    {
+      "label": "(C)",
+      "intent": "선언된 정답. 관계대명사 which vs 전치사+관계대명사 in which — 관계사절 완전성 판정",
+      "temptingBecause": "선행사 ways 뒤 which가 표면상 자연스러워 절 완전성을 검사하지 않으면 지나치기 쉽다",
+      "decisiveFlaw": "'they activate our systems'가 완전절이라 공백을 요구하는 which는 불가 — 'in which'로 교정하면 정확히 원문 복원. 독립 풀이로 유일 정답 확인. 단, 오답 해설 (C) 항목이 이 밑줄이 아닌 'either...or avoid' 병렬을 설명하며 '옳다'고 단언해 정답 라벨과 모순(치명)."
+    },
+    {
+      "label": "(D)",
+      "intent": "가정법 과거완료(과거 사실 반대) 조건절 시제 판정",
+      "temptingBecause": "주절 would not have evolved와의 시제 대응을 헷갈리면 had p.p.를 오류로 볼 수 있다",
+      "decisiveFlaw": "과거 사실 반대 가정이므로 If + had p.p.가 정확하다 — 정답 불가"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "MISATTRIBUTED-DISTRACTOR-NOTE",
+      "severity": "critical",
+      "evidence": "오답 해설 \"(C)\"가 실제 (C) 밑줄('which')이 아닌, 밑줄되지 않은 'either to face ... or avoid it'의 avoid 병렬 구조를 설명한다 — 해설-선지 내용 불일치(귀속 오류)."
+    },
+    {
+      "code": "ANSWER-DECLARED-CORRECT-IN-DISTRACTOR-NOTES",
+      "severity": "critical",
+      "evidence": "정답 (C)에 대한 오답 해설이 '어법상 옳습니다'로 끝나 정답 선언을 부정하는 자기모순 해설로 학생에게 노출된다."
+    },
+    {
+      "code": "MAIN-EXPLANATION-ACCURATE",
+      "severity": "minor",
+      "evidence": "본 해설(관계사 뒤 완전절 → in which 교정)과 (A)(B)(D) 오답 해설의 통사 분석은 실제 문장과 일치하며 오분석·비단어·환각이 없다. '방법의 부사 역할을 하도록 부사구를 형성'이라는 표현이 다소 투박하나 오류는 아니다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerNote": "요청 난이도가 INTERMEDIATE이므로 KILLER 추가 조건(§C) 판정 대상이 아니다 — false. 참고로 §C의 '5개 밑줄' 요건 자체도 미충족(4개)이다.",
+  "grade": "F",
+  "notes": "문항 본체는 견실하다: 'in which'→'which' 최소대립쌍, 교정 시 원문 정확 복원, 독립 검증으로 (C) 유일 정답 확인, 디코이 (A)(B)(D)가 서로 다른 문법 포인트를 겨냥. 그러나 오답 해설 \"(C)\" 항목이 소실된 5번째 밑줄('or avoid' 병렬)의 해설을 물려받아 정답 선지를 '어법상 옳다'고 단언하는 치명적 필드 비동기(V4·V5 동시 실패)가 있다. 치명 결함은 공예 점수로 상쇄되지 않으므로 F. 수리 방향: (1) 오답 해설 (C) 항목 제거 또는 본 해설과 일치하는 내용으로 교체, (2) 가능하면 'or avoid'를 5번째 밑줄로 복원해 표준 5지선다 형식 회복, (3) markedExpressions (C).expression을 표시형 'which'로 정정, (4) keyPoints에 (B) 분사 포인트 보강."
+}

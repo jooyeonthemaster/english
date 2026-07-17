@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'readers' preference for clear-cut messages over complex structures' contradicts the passage directly: readers are said to 'put up with many obscurities and apparent irrelevancies' and to assume complications of language have a communicative purpose. Grammatically the NP fits the 'follow from ___' slot, but logically it inverts the argument."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "'readers' readiness to devote effort, embrace ambiguity, and suspend immediate inquiry' maps one-to-one onto the passage: 'struggle to interpret' = devote effort; 'put up with many obscurities' = embrace ambiguity; refusing to instantly conclude 'this makes no sense' or that the writer is uncooperative = suspend immediate inquiry. The final sentence asks what the features of literature follow from, and the argued mechanism is exactly this hyper-protected cooperative stance of readers. Parallel infinitive triad ('to devote..., embrace..., and suspend...') is grammatically clean; seam after 'follow from' is well-formed."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'efficient communication designed to instantly deliver the author's purpose' is antithetical: the passage explicitly says literary elements 'flout principles of efficient communication in the interests of some further communicative goal'. Features of literature cannot follow from the very principle they flout."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'literary critics' authority to decide whether a text is worth reading' echoes the selection-process background (published, reviewed, reprinted) but misidentifies the causal source: the passage attributes literature's features to readers' interpretive willingness under the hyper-protected cooperative principle, not to critics' gatekeeping. The passage also says 'others' generically, never critics specifically. Surface-plausible distractor, logically unsupported at the blank."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'the strict application of standard linguistic rules to resolve obscurities' reverses the passage's point: obscurities are tolerated and charitably interpreted toward a further communicative goal, not resolved by strict rule application. Logically fails despite grammatical fit."
+    }
+  ],
+  "note": "Blank-fill item; all five options are well-formed NPs after 'follow from', so the discriminator is purely logical. The passage argues a single mechanism (readers' hyper-protected cooperative stance), and only ② names it. Option ④ is the strongest distractor (leverages the opening selection-process sentence) but fails because the final sentence's causal claim is about reader behavior, not institutional gatekeepers. Source-recognizable as Culler-style argument; the canonical continuation ('the willingness of readers to pay attention, to explore uncertainties of meaning, and not immediately to ask what do you mean by that') matches ② nearly verbatim in paraphrase. Single defensible answer."
+}

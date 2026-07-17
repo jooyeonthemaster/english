@@ -1,0 +1,754 @@
+{
+  "schemaVersion": "evaluation-authority-v2",
+  "artifactId": "evaluation-authority-v2",
+  "status": "DESIGN_ONLY_EXECUTION_BLOCKED",
+  "permanentDesignBoundary": {
+    "evaluatorAuthorityGranted": false,
+    "scoringAuthorityGranted": false,
+    "authorizedReviewers": 0,
+    "authorizedAdjudicators": 0,
+    "generationAuthorized": false,
+    "s1ResultAccessAuthorized": false,
+    "s1ScoringAuthorized": false,
+    "profileSelectionAuthorized": false,
+    "releaseClaimAuthorized": false,
+    "mutationRule": "THIS_DESIGN_ARTIFACT_NEVER_TRANSITIONS; A_SEPARATE_IMMUTABLE_EXECUTION_EVIDENCE_PACKAGE_IS_REQUIRED"
+  },
+  "publicOnlyBoundary": {
+    "allowed": "EXACT_PUBLIC_FILES_LISTED_IN_UPSTREAMS_ONLY",
+    "forbidden": [
+      "ANY_PATH_COMPONENT_NAMED_PRIVATE",
+      "TRUSTED_OR_PENDING_GOLD_CONTENT",
+      "ANSWER_OR_REVEAL_PAYLOAD",
+      "ENV_OR_SECRET",
+      "DATABASE",
+      "NETWORK",
+      "MODEL_OR_API",
+      "BUDGET_LEDGER"
+    ],
+    "activity": {
+      "privateReads": 0,
+      "goldReads": 0,
+      "revealReads": 0,
+      "envReads": 0,
+      "databaseCalls": 0,
+      "networkCalls": 0,
+      "modelCalls": 0,
+      "ledgerReadsOrWrites": 0
+    }
+  },
+  "upstreams": [
+    {
+      "id": "all-types-evaluation-rubric-v1-rubric",
+      "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/rubric.json",
+      "sha256": "17960b41393df681a3626786aa638bd4b001a9fc39e6f838c6eb5a4942c86d3a",
+      "authority": "TYPE_RUBRIC_AND_FATAL_CRAFT_SEMANTICS"
+    },
+    {
+      "id": "all-types-evaluation-rubric-v1-manifest",
+      "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/MANIFEST.sha256",
+      "sha256": "9067d8641e463a5c955a5b73af162bf63fd181289f0ce67e95911c2c5beadf4d",
+      "authority": "PUBLIC_SOURCE_CLOSURE"
+    },
+    {
+      "id": "global-candidate-registry-v2-registry",
+      "path": "experiments/question-quality-20260715/design/global-candidate-registry-v2/registry.json",
+      "sha256": "1e2fc90252de8790ebd7df86e81602825c3fd8b50f5fa96de237ec3cc8fdbab1",
+      "authority": "EXACT_1000_CANDIDATE_ALLOCATION"
+    },
+    {
+      "id": "global-candidate-registry-v2-manifest",
+      "path": "experiments/question-quality-20260715/design/global-candidate-registry-v2/MANIFEST.sha256",
+      "sha256": "13f5fdb997c616694b297c6e3c22c22a2f60b97668bbe549589807a3acdd3f1e",
+      "authority": "PUBLIC_SOURCE_CLOSURE"
+    },
+    {
+      "id": "campaign-v6-s1-current-source-v2-plan",
+      "path": "experiments/question-quality-20260715/design/campaign-v6-s1-current-source-v2/campaign-v6-s1-current-source-v2.json",
+      "sha256": "3fdff5bcbb6cc24f981dd09f3c53a0d2418c6089287fea906223b104097339a2",
+      "authority": "S1_EXACT_PUBLIC_ASSIGNMENT_AND_CURRENT_SOURCE_PLAN"
+    },
+    {
+      "id": "campaign-v6-s1-current-source-v2-manifest",
+      "path": "experiments/question-quality-20260715/design/campaign-v6-s1-current-source-v2/MANIFEST.sha256",
+      "sha256": "8554231197d0e2a5194ef9a44c36750e820333183cb3ce6c4299d5e69c307d43",
+      "authority": "PUBLIC_SOURCE_CLOSURE"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-protocol",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+      "sha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+      "authority": "TAXONOMY_AND_CALIBRATION_SEMANTICS_ONLY"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/MANIFEST.sha256",
+      "sha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64",
+      "authority": "PUBLIC_SOURCE_CLOSURE"
+    },
+    {
+      "id": "reviewer-calibration-v3-production-type-binding-v4-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4/MANIFEST.sha256",
+      "sha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04",
+      "authority": "PRODUCTION_TYPE_BINDING_SUBJECT"
+    },
+    {
+      "id": "reviewer-calibration-v3-production-type-binding-v4-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d",
+      "authority": "INDEPENDENT_PASS_NO_BLOCKERS"
+    }
+  ],
+  "upstreamAuthorityBoundary": {
+    "allTypesRubric": "RUBRIC_SEMANTICS_NOT_REVIEWER_AUTHORIZATION",
+    "globalRegistry": "EXACT_ALLOCATION_NOT_EXECUTION_AUTHORIZATION",
+    "s1CurrentSource": "PUBLIC_PLAN_AND_QUEUE_BINDING_NOT_RESULT_ACCESS_AUTHORIZATION",
+    "calibrationV3": "TAXONOMY_SEMANTICS_NOT_A_CERTIFICATE_OR_SCORING_AUTHORITY",
+    "productionTypeBindingV4": {
+      "subjectManifestSha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04",
+      "independentAuditManifestSha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d",
+      "auditVerdict": "PASS_NO_BLOCKERS",
+      "grantsEvaluatorAuthority": false,
+      "grantsScoringAuthority": false
+    }
+  },
+  "supersession": {
+    "artifactId": "blind-adjudication-power-v1",
+    "status": "SUPERSEDED_NO_SCORING_OR_ALLOCATION_AUTHORITY",
+    "legacyAllocationExplicitlyRejected": {
+      "scheduledRows": 998,
+      "connectivityRows": 2,
+      "disposition": "REPLACED_BY_GLOBAL_CANDIDATE_REGISTRY_V2_EXACT_1000_STAGE_REGISTRY"
+    },
+    "legacySingletonFieldsExplicitlyRejected": [
+      "pointFamily",
+      "primaryIntentAxis",
+      "divergentAxes"
+    ],
+    "replacementSemantics": {
+      "grammar": "SEALED_ACCEPTED_POINT_FAMILY_SET_AND_CORRECTION_EQUIVALENCE_GROUPS",
+      "blank": "SEVEN_AXIS_RELATION_VECTOR_WITH_ONE_OR_TWO_DECISIVE_AXES_AND_MECHANISM_TAG_SET",
+      "allocation": "C0_2_S1_180_S2_480_S3_92_S4_144_S5_102"
+    },
+    "scoringAuthorityGranted": false
+  },
+  "exactCandidateAllocation": {
+    "cap": 1000,
+    "currentUsed": 0,
+    "C0_CONNECTIVITY": 2,
+    "S1_FOCUS_PROFILE_SCREEN": 180,
+    "S2_FOCUS_HELDOUT": 480,
+    "S3_NONFOCUS_SENTINELS": 92,
+    "S4_ROUTE_PARITY": 144,
+    "S5_FOCUS_RISK_GRID": 102,
+    "sum": 1000,
+    "outcomeDrivenReallocationAllowed": false,
+    "replacementOrTopupAllowed": false
+  },
+  "taxonomySemantics": {
+    "source": "reviewer-calibration-v3-replacement-v1",
+    "grammar": {
+      "displayedGrammaticality": [
+        "GRAMMATICAL",
+        "UNGRAMMATICAL",
+        "GENUINELY_CONTESTED"
+      ],
+      "diagnosis": [
+        "ANSWER_ERROR",
+        "VALID_DECOY",
+        "INVALID_SITE"
+      ],
+      "acceptedPointFamilies": "NONEMPTY_SEALED_SET_FOR_ERROR_EMPTY_ONLY_FOR_VALID_DECOY",
+      "acceptedCorrectionEquivalenceSets": "ONE_OR_MORE_SEALED_SEMANTIC_EQUIVALENCE_GROUPS",
+      "nonCompensableFields": [
+        "displayedGrammaticality",
+        "diagnosis",
+        "correctionRestoresSource",
+        "explanationClaimsAccurate"
+      ],
+      "singletonPointFamilyRequired": false,
+      "exactCorrectionStringRequired": false,
+      "postIssueExpansionAllowed": false
+    },
+    "blank": {
+      "propositionAxes": [
+        "actorOrTarget",
+        "polarity",
+        "conditionOrModality",
+        "causalRelationAndDirection",
+        "scopeOrQuantifier",
+        "stance",
+        "temporalRelation"
+      ],
+      "axisRelations": [
+        "PRESERVED",
+        "REVERSED",
+        "NARROWED",
+        "BROADENED",
+        "OMITTED",
+        "UNSUPPORTED_ADDITION",
+        "SHIFTED",
+        "NOT_APPLICABLE"
+      ],
+      "everyOptionHasAllSevenAxes": true,
+      "decisiveAxesMinimum": 1,
+      "decisiveAxesMaximum": 2,
+      "irreducibleCompoundDisposition": "REJECT_IF_MORE_THAN_TWO_DECISIVE_AXES",
+      "singletonIntentRequired": false,
+      "slotGrammarCompatibleNonCompensable": true,
+      "uniqueAnswerNonCompensable": true,
+      "postIssueExpansionAllowed": false
+    },
+    "nonfocus": {
+      "familyCount": 8,
+      "mainAnchors": 8,
+      "claimBoundary": "CONSTRUCT_FAMILY_TRANSFER_ONLY_NOT_INDEPENDENT_ACCURACY_FOR_23_TYPES",
+      "allTypeAuthorization": "REQUIRES_EACH_BOUND_TYPE_IN_FRESH_MAIN_OR_HOLDOUT_WITH_OWN_ANSWER_AND_FATAL_CHECKS"
+    },
+    "responseAndGrade": {
+      "fatalOverridesCraft": true,
+      "F": "ANY_ADJUDICATED_FATAL_CODE",
+      "C": "NO_FATAL_BUT_AT_LEAST_ONE_ZERO_CRAFT_DIMENSION_OR_MAJOR_REMEDIABLE_WEAKNESS",
+      "B": "VALID_COMPETENT_NO_ZERO_DIMENSION_NO_UNRESOLVED_MAJOR_WEAKNESS",
+      "A": "VALID_ALL_DIMENSIONS_AT_LEAST_TWO_AT_LEAST_THREE_DIMENSIONS_AT_THREE_NO_CHEAP_GIVEAWAY_OR_EXTRANEOUS_EXPLANATION",
+      "authorTargetGradeIsEvidence": false,
+      "storedAnswerIsAuthority": false,
+      "majorityVoteIsAuthority": false
+    }
+  },
+  "calibrationSequence": {
+    "exactOrder": [
+      {
+        "phase": "TAXONOMY_PILOT",
+        "freshItems": 12,
+        "blocks": {
+          "GRAMMAR": 4,
+          "BLANK": 4,
+          "NONFOCUS": 4
+        }
+      },
+      {
+        "phase": "MAIN_CERTIFICATION",
+        "freshItems": 24,
+        "blocks": {
+          "GRAMMAR": 8,
+          "BLANK": 8,
+          "NONFOCUS": 8
+        }
+      },
+      {
+        "phase": "INDEPENDENT_TRUSTED_GOLD_AUDIT",
+        "freshItems": 0,
+        "independent": true
+      },
+      {
+        "phase": "ACTIVATION_HOLDOUT",
+        "freshItems": 24,
+        "blocks": {
+          "GRAMMAR": 8,
+          "BLANK": 8,
+          "NONFOCUS": 8
+        }
+      }
+    ],
+    "pairwiseDisjoint": true,
+    "taxonomyRevisionAfterAnyLaterPacketOpen": false,
+    "retroactivePass": false,
+    "thresholdRelaxationAfterOpening": false,
+    "failedItemReplay": false,
+    "trustedGoldAuditBoundary": "AUDITS_PRESEALED_TRUTH_AND_PHASE_INTEGRITY; DOES_NOT_GRANT_PRODUCTION_SCORING_AUTHORITY"
+  },
+  "roles": {
+    "requiredForActivation": {
+      "certifiedReviewers": 2,
+      "freshAdjudicators": 1
+    },
+    "freshness": {
+      "reviewersMustBeDistinct": true,
+      "adjudicatorMustBeDistinctFrom": [
+        "PACKET_AUTHOR",
+        "TRUSTED_GOLD_AUDITOR",
+        "CERTIFIED_REVIEWER_1",
+        "CERTIFIED_REVIEWER_2",
+        "ANY_PRIOR_S1_RESULT_VIEWER"
+      ]
+    },
+    "roleIncompatibilities": [
+      [
+        "PACKET_AUTHOR",
+        "TAXONOMY_PILOT_RATER"
+      ],
+      [
+        "PACKET_AUTHOR",
+        "MAIN_CERTIFICATION_RATER"
+      ],
+      [
+        "PACKET_AUTHOR",
+        "TRUSTED_GOLD_AUDITOR"
+      ],
+      [
+        "PACKET_AUTHOR",
+        "ACTIVATION_HOLDOUT_RATER"
+      ],
+      [
+        "PACKET_AUTHOR",
+        "S1_REVIEWER"
+      ],
+      [
+        "PACKET_AUTHOR",
+        "S1_ADJUDICATOR"
+      ],
+      [
+        "TRUSTED_GOLD_AUDITOR",
+        "TAXONOMY_PILOT_RATER"
+      ],
+      [
+        "TRUSTED_GOLD_AUDITOR",
+        "MAIN_CERTIFICATION_RATER"
+      ],
+      [
+        "TRUSTED_GOLD_AUDITOR",
+        "ACTIVATION_HOLDOUT_RATER"
+      ],
+      [
+        "TRUSTED_GOLD_AUDITOR",
+        "S1_REVIEWER"
+      ],
+      [
+        "TRUSTED_GOLD_AUDITOR",
+        "S1_ADJUDICATOR"
+      ],
+      [
+        "S1_REVIEWER",
+        "S1_ADJUDICATOR"
+      ],
+      [
+        "S1_RESULT_CUSTODIAN",
+        "S1_REVIEWER"
+      ],
+      [
+        "S1_RESULT_CUSTODIAN",
+        "S1_ADJUDICATOR"
+      ]
+    ],
+    "samePersonAcrossIncompatibleRolesAllowed": false,
+    "saltedPseudonymRegistryRequired": true
+  },
+  "accessControl": {
+    "currentState": "PRE_ACCESS_UNAUTHORIZED",
+    "stateOrder": [
+      "PRE_ACCESS_UNAUTHORIZED",
+      "TAXONOMY_PILOT_12_ISSUED",
+      "TAXONOMY_PILOT_12_PASSED_SEALED",
+      "MAIN_CERTIFICATION_24_ISSUED",
+      "MAIN_CERTIFICATION_24_PASSED_SEALED",
+      "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED",
+      "ACTIVATION_HOLDOUT_24_ISSUED",
+      "ACTIVATION_HOLDOUT_24_PASSED_SEALED",
+      "EVALUATOR_AUTHORITY_GRANTED"
+    ],
+    "immutableAccessEventSchema": {
+      "requiredFields": [
+        "eventId",
+        "eventOrdinal",
+        "priorEventSha256",
+        "occurredAtRfc3339",
+        "actorPseudonym",
+        "actorRole",
+        "phase",
+        "action",
+        "artifactId",
+        "artifactSha256",
+        "packetSha256",
+        "resourceSha256",
+        "visibleSurfaceSha256",
+        "capabilityTokenSha256",
+        "authorizationEventSha256",
+        "authorizedAtRfc3339",
+        "openedAtRfc3339",
+        "closedAtRfc3339",
+        "decision",
+        "reasonCode",
+        "eventSha256"
+      ],
+      "hashAlgorithm": "SHA-256",
+      "appendOnly": true,
+      "ordinalStartsAt": 1,
+      "priorHashGenesis": "0000000000000000000000000000000000000000000000000000000000000000",
+      "eventKinds": [
+        "AUTHORIZATION",
+        "ACCESS_RECEIPT",
+        "DENIAL"
+      ],
+      "decisions": [
+        "ALLOW",
+        "DENY"
+      ],
+      "timeOrder": "authorizedAtRfc3339 < openedAtRfc3339 <= closedAtRfc3339",
+      "receiptBinding": [
+        "PRIOR_ALLOW_AUTHORIZATION_EVENT_SHA256",
+        "ACTOR_PSEUDONYM_AND_ROLE",
+        "PHASE",
+        "RESOURCE_SHA256",
+        "VISIBLE_SURFACE_SHA256",
+        "CAPABILITY_TOKEN_SHA256"
+      ],
+      "constraints": [
+        "AUTHORIZATION_EVENT_MUST_PRECEDE_THE_BOUND_ACCESS_RECEIPT_IN_THE_APPEND_ONLY_CHAIN",
+        "AUTHORIZED_AT_MUST_BE_STRICTLY_EARLIER_THAN_OPENED_AT",
+        "OPENED_AT_MUST_BE_EARLIER_THAN_OR_EQUAL_TO_CLOSED_AT",
+        "ACCESS_RECEIPT_MUST_BIND_PRIOR_ALLOW_EVENT_ACTOR_PHASE_RESOURCE_VISIBLE_SURFACE_AND_CAPABILITY_TOKEN",
+        "AUTHORIZATION_EVENT_SHA256_MUST_RESOLVE_TO_THE_PRIOR_ALLOW_EVENT",
+        "DENY_EVENT_MUST_HAVE_NULL_AUTHORIZATION_EVENT_OPENED_AT_CLOSED_AT_AND_NO_ACCESS_RECEIPT",
+        "EVENT_ORDINAL_TIMESTAMP_AND_PRIOR_HASH_CHAIN_FORBID_RETROACTIVE_INSERTION_OR_REWRITE"
+      ],
+      "deniedAttemptsMustBeRecorded": true,
+      "denyHasOpenReceipt": false,
+      "retroactiveEventsAllowed": false,
+      "deletionOrRewriteAllowed": false
+    },
+    "observedAccessEvents": [],
+    "denySets": {
+      "PRE_ACCESS_UNAUTHORIZED": [
+        "TAXONOMY_PILOT_REVEAL",
+        "MAIN_CERTIFICATION_PACKET_OR_REVEAL",
+        "TRUSTED_GOLD",
+        "ACTIVATION_HOLDOUT_PACKET_OR_REVEAL",
+        "S1_RESULT_OR_SCORE",
+        "PROFILE_OR_GENERATOR_IDENTITY"
+      ],
+      "TAXONOMY_PILOT_12_ISSUED": [
+        "TAXONOMY_PILOT_REVEAL_UNTIL_OWN_RESPONSE_SEAL",
+        "OTHER_PILOT_RATER_RECORDS",
+        "MAIN_CERTIFICATION_PACKET_OR_REVEAL",
+        "TRUSTED_GOLD",
+        "ACTIVATION_HOLDOUT_PACKET_OR_REVEAL",
+        "S1_RESULT_OR_SCORE"
+      ],
+      "TAXONOMY_PILOT_12_PASSED_SEALED": [
+        "MAIN_CERTIFICATION_REVEAL_UNTIL_OWN_PHASE1_RESPONSE_SEAL",
+        "OTHER_MAIN_RATER_RECORDS",
+        "TRUSTED_GOLD",
+        "ACTIVATION_HOLDOUT_PACKET_OR_REVEAL",
+        "S1_RESULT_OR_SCORE"
+      ],
+      "MAIN_CERTIFICATION_24_ISSUED": [
+        "MAIN_CERTIFICATION_REVEAL_UNTIL_OWN_PHASE1_RESPONSE_SEAL",
+        "OTHER_MAIN_RATER_RECORDS_UNTIL_ALL_PHASE2_SEALS",
+        "TRUSTED_GOLD",
+        "ACTIVATION_HOLDOUT_PACKET_OR_REVEAL",
+        "S1_RESULT_OR_SCORE"
+      ],
+      "MAIN_CERTIFICATION_24_PASSED_SEALED": [
+        "TRUSTED_GOLD_TO_ANY_ROLE_EXCEPT_PREAUTHORIZED_INDEPENDENT_AUDITOR",
+        "ACTIVATION_HOLDOUT_PACKET_OR_REVEAL_UNTIL_AUDIT_PASS_SEAL",
+        "OTHER_RATER_IDENTITIES",
+        "S1_RESULT_OR_SCORE"
+      ],
+      "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED": [
+        "ACTIVATION_HOLDOUT_REVEAL_UNTIL_OWN_RESPONSE_SEAL",
+        "OTHER_HOLDOUT_RATER_RECORDS",
+        "TRUSTED_GOLD_TO_HOLDOUT_RATERS",
+        "S1_RESULT_OR_SCORE"
+      ],
+      "ACTIVATION_HOLDOUT_24_ISSUED": [
+        "ACTIVATION_HOLDOUT_REVEAL_UNTIL_OWN_RESPONSE_SEAL",
+        "OTHER_HOLDOUT_RATER_RECORDS_UNTIL_ALL_RESPONSE_SEALS",
+        "TRUSTED_GOLD_TO_HOLDOUT_RATERS",
+        "S1_RESULT_OR_SCORE"
+      ],
+      "ACTIVATION_HOLDOUT_24_PASSED_SEALED": [
+        "S1_RESULT_OR_SCORE_UNTIL_SEPARATE_AUTHORITY_ACTIVATION_SEAL",
+        "PROFILE_OR_GENERATOR_IDENTITY",
+        "OTHER_RATER_IDENTITIES"
+      ],
+      "EVALUATOR_AUTHORITY_GRANTED": [
+        "S1_RESULT_OR_SCORE_UNTIL_S1_BLIND_PACKET_SEAL_AND_BOUND_ALLOW_RECEIPT",
+        "S1_HIDDEN_COMMITMENT_CONTENT_DURING_PHASE1",
+        "OTHER_RATER_IDENTITIES"
+      ]
+    },
+    "accessRules": [
+      "EVERY_OPEN_REQUIRES_A_PRIOR_SEALED_ALLOW_AUTHORIZATION_AND_CAPABILITY_TOKEN",
+      "EVERY_COMPLETED_OPEN_REQUIRES_A_CLOSE_RECEIPT_WITH_AUTHORIZED_OPENED_CLOSED_TIME_ORDER",
+      "RECEIPT_BINDS_ACTOR_PHASE_RESOURCE_VISIBLE_SURFACE_CAPABILITY_AND_PRIOR_ALLOW_EVENT",
+      "DENIED_ATTEMPT_HAS_NO_OPEN_RECEIPT_AND_IS_STILL_APPEND_ONLY_RECORDED",
+      "RETROACTIVE_AUTHORIZATION_OR_EVENT_INSERTION_IS_FORBIDDEN",
+      "BLIND_PACKET_ACCESS_PRECEDES_OWN_RESPONSE_SEAL_ONLY",
+      "REVEAL_ACCESS_REQUIRES_OWN_BLIND_RESPONSE_SEAL",
+      "OTHER_RATER_RESPONSES_DENIED_UNTIL_ALL_PHASE_TWO_RECORDS_SEALED",
+      "TRUSTED_GOLD_ACCESS_LIMITED_TO_INDEPENDENT_AUDITOR_AFTER_MAIN_DECISION_SEAL",
+      "ACTIVATION_HOLDOUT_ACCESS_REQUIRES_INDEPENDENT_AUDIT_PASS_SEAL",
+      "S1_RESULT_ACCESS_REQUIRES_AUTHORITY_TWO_CERTIFIED_REVIEWERS_FRESH_ADJUDICATOR_AND_PRESEALED_S1_PACKET"
+    ],
+    "requiredPhaseSeals": [
+      "TAXONOMY_PILOT_PACKET_SHA256",
+      "TAXONOMY_PILOT_ALL_RESPONSE_SHA256S",
+      "TAXONOMY_PILOT_DECISION_SHA256",
+      "MAIN_PACKET_SHA256",
+      "MAIN_ALL_PHASE1_RESPONSE_SHA256S",
+      "MAIN_REVEAL_SHA256",
+      "MAIN_ALL_PHASE2_RESPONSE_SHA256S",
+      "MAIN_DECISION_SHA256",
+      "TRUSTED_GOLD_AUDIT_INPUT_SHA256",
+      "TRUSTED_GOLD_AUDIT_REPORT_SHA256",
+      "HOLDOUT_PACKET_SHA256",
+      "HOLDOUT_ALL_RESPONSE_SHA256S",
+      "HOLDOUT_DECISION_SHA256",
+      "AUTHORITY_ACTIVATION_SHA256",
+      "S1_BLIND_PACKET_SHA256_BEFORE_ANY_RESULT_ACCESS"
+    ],
+    "observedPhaseSeals": []
+  },
+  "stateMachine": {
+    "initial": "PRE_ACCESS_UNAUTHORIZED",
+    "transitions": [
+      {
+        "from": "PRE_ACCESS_UNAUTHORIZED",
+        "to": "TAXONOMY_PILOT_12_ISSUED",
+        "gates": [
+          "12_FRESH_TAXONOMY_ITEMS_PRESEALED",
+          "ROLE_REGISTRY_SEALED",
+          "ISSUE_ACCESS_EVENT_SEALED"
+        ]
+      },
+      {
+        "from": "TAXONOMY_PILOT_12_ISSUED",
+        "to": "TAXONOMY_PILOT_12_PASSED_SEALED",
+        "gates": [
+          "ALL_BLIND_RESPONSES_SEALED",
+          "THRESHOLDS_PASS",
+          "DECISION_AND_ACCESS_EVENTS_SEALED"
+        ]
+      },
+      {
+        "from": "TAXONOMY_PILOT_12_PASSED_SEALED",
+        "to": "MAIN_CERTIFICATION_24_ISSUED",
+        "gates": [
+          "24_FRESH_DISJOINT_MAIN_ITEMS_PRESEALED",
+          "PILOT_DECISION_HASH_BOUND",
+          "ISSUE_ACCESS_EVENT_SEALED"
+        ]
+      },
+      {
+        "from": "MAIN_CERTIFICATION_24_ISSUED",
+        "to": "MAIN_CERTIFICATION_24_PASSED_SEALED",
+        "gates": [
+          "PHASE1_BEFORE_REVEAL",
+          "ALL_PHASE2_RECORDS_SEALED",
+          "TWO_REVIEWERS_PASS",
+          "MAIN_DECISION_SEALED"
+        ]
+      },
+      {
+        "from": "MAIN_CERTIFICATION_24_PASSED_SEALED",
+        "to": "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED",
+        "gates": [
+          "AUDITOR_ROLE_FRESH_AND_COMPATIBLE",
+          "TRUSTED_GOLD_ACCESS_EVENTS_SEALED",
+          "AUDIT_PASS_REPORT_SEALED"
+        ]
+      },
+      {
+        "from": "INDEPENDENT_TRUSTED_GOLD_AUDIT_PASSED_SEALED",
+        "to": "ACTIVATION_HOLDOUT_24_ISSUED",
+        "gates": [
+          "24_FRESH_DISJOINT_HOLDOUT_ITEMS_PRESEALED",
+          "AUDIT_PASS_HASH_BOUND",
+          "ISSUE_ACCESS_EVENT_SEALED"
+        ]
+      },
+      {
+        "from": "ACTIVATION_HOLDOUT_24_ISSUED",
+        "to": "ACTIVATION_HOLDOUT_24_PASSED_SEALED",
+        "gates": [
+          "ONE_TIME_BLIND_RESPONSES_SEALED",
+          "TWO_REVIEWERS_PASS",
+          "HOLDOUT_DECISION_SEALED"
+        ]
+      },
+      {
+        "from": "ACTIVATION_HOLDOUT_24_PASSED_SEALED",
+        "to": "EVALUATOR_AUTHORITY_GRANTED",
+        "gates": [
+          "TWO_DISTINCT_CURRENT_CERTIFICATES_BOUND",
+          "ONE_FRESH_ADJUDICATOR_BOUND",
+          "ALL_ACCESS_EVENTS_AND_PHASE_SEALS_VERIFIED",
+          "SEPARATE_ACTIVATION_ARTIFACT_INDEPENDENTLY_AUDITED"
+        ]
+      }
+    ],
+    "skippedOrReorderedTransitionAllowed": false,
+    "transitionWithoutImmutableEvidenceAllowed": false,
+    "currentCompletedTransitions": 0
+  },
+  "s1EvaluationGate": {
+    "upstreamPlanArtifact": "campaign-v6-s1-current-source-v2",
+    "allocation": {
+      "total": 180,
+      "grammar": 96,
+      "blank": 84,
+      "standard": 96,
+      "premium": 84,
+      "intermediate": 90,
+      "killer": 90
+    },
+    "minimumCellN": 6,
+    "inferenceUnit": "PASSAGE_CLUSTER",
+    "permittedPurpose": [
+      "MECHANISM_SCREEN",
+      "BINDING_AND_DETERMINISTIC_SAFETY_SCREEN",
+      "YIELD_AND_COST_ENVELOPE_SCREEN",
+      "NEW_FATAL_FAMILY_DISCOVERY"
+    ],
+    "forbiddenAtN6": [
+      "ARM_RANKING",
+      "PROFILE_WINNER_SELECTION",
+      "SUPERIORITY_OR_NONINFERIORITY_CLAIM",
+      "P_VALUE_OR_CONFIDENCE_INTERVAL_RANKING",
+      "RELEASE_OR_MODEL_QUALITY_CLAIM"
+    ],
+    "s1BlindPacketMustSealBeforeAnyResultAccess": true,
+    "s1BlindPacketRequiredBindings": [
+      "ALL_180_ASSIGNMENT_IDS_AND_CLUSTER_HASHES",
+      "TYPE_PLAN_DIFFICULTY_PROFILE_CELL",
+      "PACKET_ORDER_AND_RELABEL_MAP",
+      "RUBRIC_AND_TAXONOMY_HASHES",
+      "REVIEWER_PSEUDONYMS_AND_ROLE_REGISTRY_HASH",
+      "REVEAL_POLICY_AND_PHASE_ORDER"
+    ],
+    "phase1VisibleSurface": {
+      "allowOnly": [
+        "blindedItemId",
+        "packetOrdinal",
+        "blindedOptionLabelsAndRelabelMapSurface",
+        "studentVisibleDirections",
+        "studentVisiblePassage",
+        "studentVisibleStem",
+        "studentVisibleUnderlinesOrMarkers",
+        "studentVisibleOptions",
+        "studentVisibleResponseSpace"
+      ],
+      "hiddenClasses": [
+        "PLAN",
+        "MODEL_PROVIDER_ROUTE",
+        "PROFILE_PROMPT_ARM",
+        "COST_TOKEN_USAGE",
+        "STORED_ANSWER_KEY",
+        "EXPLANATION_KEYPOINTS_WRONG_OPTION_EXPLANATIONS",
+        "AUTHOR_TARGET_GRADE",
+        "GENERATION_METADATA"
+      ],
+      "hiddenFieldExamples": {
+        "PLAN": [
+          "plan",
+          "tier"
+        ],
+        "MODEL_PROVIDER_ROUTE": [
+          "model",
+          "provider",
+          "providerOrder",
+          "route",
+          "endpoint"
+        ],
+        "PROFILE_PROMPT_ARM": [
+          "profileId",
+          "promptArm",
+          "treatment",
+          "controlOrChallenger"
+        ],
+        "COST_TOKEN_USAGE": [
+          "cost",
+          "price",
+          "inputTokens",
+          "outputTokens",
+          "usage",
+          "latency"
+        ],
+        "STORED_ANSWER_KEY": [
+          "answer",
+          "answerKey",
+          "correctLabel",
+          "acceptedAnswerSets"
+        ],
+        "EXPLANATION_KEYPOINTS_WRONG_OPTION_EXPLANATIONS": [
+          "explanation",
+          "keyPoints",
+          "wrongOptionExplanations"
+        ],
+        "AUTHOR_TARGET_GRADE": [
+          "authorHypothesis",
+          "targetGrade",
+          "authorGrade"
+        ],
+        "GENERATION_METADATA": [
+          "runId",
+          "candidateId",
+          "generatedAt",
+          "retryCount",
+          "rawResponse",
+          "generationTrace"
+        ]
+      },
+      "studentVisibleOnly": true,
+      "blindedIdentityOrderAndRelabelOnly": true,
+      "leakageDisposition": "QUARANTINE_PACKET_REVOKE_CAPABILITY_RECORD_DENY_EVENT_NO_RESULT_ACCESS"
+    },
+    "hiddenCommitment": {
+      "separateFromPhase1VisibleSurface": true,
+      "sealedBeforePacketIssue": true,
+      "hashAlgorithm": "SHA-256",
+      "requiredBindings": [
+        "PLAN_MODEL_PROVIDER_ROUTE",
+        "PROFILE_PROMPT_ARM",
+        "COST_TOKEN_USAGE",
+        "STORED_ANSWER_KEY",
+        "EXPLANATION_KEYPOINTS_WRONG_OPTION_EXPLANATIONS",
+        "AUTHOR_TARGET_GRADE",
+        "GENERATION_METADATA",
+        "VISIBLE_SURFACE_SHA256",
+        "PACKET_ORDER_AND_RELABEL_COMMITMENT"
+      ],
+      "commitmentContentVisibleInPhase1": false,
+      "revealRequiresOwnPhase1ResponseSealAndBoundAllowReceipt": true
+    },
+    "resultAccessRequires": [
+      "EVALUATOR_AUTHORITY_GRANTED",
+      "TWO_CERTIFIED_REVIEWERS",
+      "ONE_FRESH_ADJUDICATOR",
+      "S1_BLIND_PACKET_SEALED_BEFORE_FIRST_RESULT_ACCESS",
+      "IMMUTABLE_ALLOW_EVENT_FOR_EACH_ACCESS"
+    ],
+    "preAuthorityClaims": {
+      "itemScoresAllowed": false,
+      "aggregateScoresAllowed": false,
+      "armRankingAllowed": false,
+      "profileSelectionAllowed": false,
+      "releaseClaimAllowed": false
+    },
+    "eligibleAssignments": 0
+  },
+  "activationSnapshot": {
+    "currentState": "PRE_ACCESS_UNAUTHORIZED",
+    "evaluatorAuthorityGranted": false,
+    "authorizedReviewers": 0,
+    "requiredReviewers": 2,
+    "authorizedAdjudicators": 0,
+    "requiredFreshAdjudicators": 1,
+    "accessEventCount": 0,
+    "phaseSealCount": 0,
+    "s1PacketSealed": false,
+    "s1ResultAccessAuthorized": false,
+    "status": "PRE_ACCESS_UNAUTHORIZED"
+  },
+  "claims": {
+    "deterministicDesignContractOnly": true,
+    "scoringAuthority": "NONE",
+    "evaluatorAuthority": "NONE",
+    "reviewerCertificate": "NONE",
+    "adjudicatorAuthorization": "NONE",
+    "s1QualityScore": "NONE",
+    "profileSelection": "NONE",
+    "release": "NONE"
+  }
+}

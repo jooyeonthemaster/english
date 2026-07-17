@@ -1,0 +1,35 @@
+{
+  "pid": "P017",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Garcia stood outside ..., waiting for his brother' — 주절 주어 Garcia가 waiting의 의미상 주어이며 능동 관계인 분사구문. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'Garcia asked, pointing at a patterned red shirt ...' — Garcia가 가리키는 능동 분사구문. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'The clerk stopped her work and looked at the clothes, quickly agreeing with Jeff's choice.' — 'stopped and looked' 병렬에 맞춰 and agreed로 써야 한다는 유혹이 최상위권에게도 잠깐 발생하나, 콤마 뒤 연속·결과 동작 분사구문(= and quickly agreed)은 완전한 정문. 유혹 기각."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong",
+      "reason": "'His confidence was, however, quickly was changed to nervousness' — 삽입구 however를 걷어내면 'His confidence was quickly was changed'로 be동사가 이중 출현. 도치·축약 관계절 등 어떤 대안 해석으로도 구제 불가능한 명백한 비문. 밑줄이 과거분사 'changed'였다면 'was quickly changed'로 정문. 어법상 틀린 것."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'everyone fell silent, fascinated by the music' — fascinating/fascinated 고전 미끼. everyone이 감정을 느끼는 주체이므로 과거분사 fascinated + by 행위자 구조가 정확. 정문."
+    }
+  ],
+  "note": "실전 풀이 순서: 밑줄 다섯 곳 중 (A)(B)(C)는 모두 분사구문, (E)는 감정 과거분사로 문법 포인트가 정석적. 매력적 오답 유혹은 (C)의 병렬 착시와 (E)의 -ing/-ed 감정분사 미끼였으나 둘 다 정문으로 확정. (D)는 문장 재조립 시 'was ... was changed'의 이중 be동사로 논쟁 여지 없는 비문이라 정답이 (D) 하나로 좁혀짐. 다만 오류 유형이 태(voice) 판단이 아니라 단순 동사 중복이어서, 삽입구(however)만 걷어내면 기계적으로 발견되는 다소 투박한 오류라는 점은 품질 관찰 사항."
+}

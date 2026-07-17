@@ -1,0 +1,35 @@
+{
+  "pid": "P007",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "지문의 핵심 논지는 'draw the line' → 'Pacing is important' → 'exercise some moderation'으로 3중 반복되는 '과외활동의 절제'다. 빈칸은 'get involved in the activities that are most meaningful to you, and ___' 구조의 두 번째 명령문으로, 'avoid taking on more than you can handle'을 넣으면 명령문 병렬(and + 동사원형) seam이 자연스럽고 절제 논지를 정확히 요약·완결한다. 유일하게 논리적으로 옹호 가능."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "명령문 병렬로 문법 결합은 성립하나, 사회적 인맥(social connections) 확대는 지문에 전혀 등장하지 않는 화제이고 'maximize'는 오히려 참여 확대 방향이라 절제 논지와 정반대. 표면 유혹도 거의 없음."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "주된 매력적 오답. 지문의 신문부 'deadline' 예시와 어휘가 겹쳐 실전에서 순간적으로 끌린다. 그러나 실제로 넣어보면 (1) 지문의 마감은 과외활동(학교신문)의 마감이지 'academic'(학업) 마감이 아니고, (2) 'every deadline을 다 맞추는 데 집중하라'는 것은 절제·완급 조절이 아니라 과부하를 감수하라는 방향이라 'The point is this' 문장의 moderation 처방과 어긋난다. 어휘 반향에 낚이면 고르게 되지만 논지 검증 한 번에 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "극단 선지. 첫 문장 'Participating in extracurricular activities is a very good thing'과 빈칸 직전 병렬절 'get involved in the activities that are most meaningful to you'가 참여 자체를 권장하므로 '전부 없애라'는 자기모순. 'eliminate all ... entirely'라는 극단 표지로 즉시 배제되어 변별력 기여가 낮다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "보조 미끼. 지문의 'stressed out'과 어휘가 겹쳐 약한 끌림이 있으나, 스트레스는 절제 실패의 '결과'로 제시된 것이고 글의 처방은 활동량 조절(원인 차단)이지 일상 스트레스로부터의 '도피'가 아니다. 논지 방향이 다르고 지나치게 막연해 논리 검증에서 탈락."
+    }
+  ],
+  "note": "최상위권 실전 풀이 시점: 'draw the line → Pacing → moderation' 3중 신호를 잡으면 빈칸이 절제 요약임이 즉시 확정된다. 실제 끌림 순위는 ③(deadline 어휘 재활용) > ⑤(stress 어휘 재활용) > ②·④ 순이었으나 모두 논지 검증 1회로 배제 가능. 대안 해석(도치·축약 관계절 등)으로 다른 선지가 정문·정답이 될 여지는 없음 — 다섯 선지 모두 문법 seam은 성립하고 오직 논리로만 갈리는 구조. 복수 정답 여지 없음. 다만 ④의 극단성이 노골적이고 정답 도출 경로가 짧아 최상위권 기준 난이도는 평이(중~중하)한 문항."
+}

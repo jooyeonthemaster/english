@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'lacking strict legal penalties for inflicting extreme pain' is a welfare-side concern (pain, legal penalties). The sentence explicitly contrasts away from the inhumane-treatment framing ('not one about treating animals inhumanely'), so a penalties-for-pain answer restates the rejected pole. Contradicts the rights view's claim that the problem is more fundamental than treatment quality."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong (strong distractor)",
+      "reason": "Lexical bait: 'fundamental rights' echoes 'more fundamental' and 'rights view', and I felt the pull on first pass. But inserted into the seam it reads 'the problem is one about advocating their fundamental rights' — logically inverted, since advocating rights is the rights camp's solution, not the problem being diagnosed. Additionally 'rights to suffer no harm' is still a suffering/welfare framing, not the no-use-at-all thesis."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong (distractor)",
+      "reason": "'overlooking the human responsibility to improve their living standards' echoes the welfare example 'insufficient food and space', but improving living conditions is precisely the welfare-legislation agenda the rights view says does not go far enough. Still a treatment-quality issue, which the final sentence explicitly excludes."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'granting humans selective permission based on animals' intelligence' introduces an intelligence-based criterion that appears nowhere in the passage. No textual support."
+    },
+    {
+      "label": "5",
+      "verdict": "correct",
+      "reason": "Directly paraphrases the rights view's core claim: 'animals are not the kinds of thing that humans should use in this way at all' and 'animals may be used by humans for food and as experimental subjects'. 'Viewing them merely as instruments for mankind's ends' captures the fundamental use-as-means objection, completing the not-X-but-Y contrast (not inhumane treatment, but instrumentalization). Grammar seam clean: 'one about + gerund', 'them' = animals."
+    }
+  ],
+  "note": "Solved blind from passage and options only. Single clearly defensible answer (5). Main trap is option 2's 'fundamental rights' lexical echo, which collapses under the seam test (the problem cannot be 'advocating rights'); secondary trap is option 3's welfare-condition echo. Blank logic requires the Y-pole of a not-X-but-Y contrast where X = inhumane treatment (welfare) and Y = using animals as means at all (rights)."
+}

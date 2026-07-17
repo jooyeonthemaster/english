@@ -1,0 +1,70 @@
+{
+  "pid": "P088",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-STRUCTURE-MISDESCRIPTION",
+      "severity": "major",
+      "evidence": "정답 해설 ④ '선행사와 멀리 떨어진 동사의 수를 일치시켜야 하므로 leads로 쓰인 함정에 유의해야 합니다' — 실제 문장은 'the connections that leads'로 선행사(the connections)와 동사(leads) 사이에 관계대명사 that 하나뿐인 인접 수일치 구조다. 원거리 수일치 함정은 이 문장에 존재하지 않으며, 지문에 없는 구조적 특징을 첨가한 오설명이다. 해설 ①~③의 핵심 분석 자체는 정확하다."
+    },
+    {
+      "code": "V5-SURROUNDING-TEXT-SOURCE-FORM",
+      "severity": "minor",
+      "evidence": "markedExpressions (C)의 surroundingText가 렌더형 'leads'가 아닌 원문 교정형 'the connections that lead to creative insights.'를 담고 있다. expression=lead/errorExpression=leads/correction=lead 컨벤션(expression=교정형)으로 읽으면 내적 일관이므로 V5 실패로 보지 않으나, 렌더 기준 필드로 소비되면 불일치를 유발할 수 있다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 2,
+    "C3": 1,
+    "C4": 3,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사구 후치수식 분사의 능동/수동 판별 (pointCode c)",
+      "temptingBecause": "수식 대상이 'the stream of remote associations'로 길어 come의 주체 파악에 한 단계 사고가 필요하고, comes/that come 대안을 떠올리게 함",
+      "decisiveFlaw": "associations(또는 stream)가 능동적으로 '오는' 관계이므로 현재분사 coming이 정확 — 오류 아님. 분사라 수일치도 무관"
+    },
+    {
+      "label": "(B)",
+      "intent": "분사(형용사) 수식어의 품사 판별 — 부사 vs 형용사 (pointCode f)",
+      "temptingBecause": "be동사 뒤라 보어 자리 형용사(diligent)로 착각할 여지가 있음",
+      "decisiveFlaw": "수식 대상이 명사가 아닌 분사 focused이므로 부사 diligently가 정확 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 주격 관계대명사절 내 동사와 선행사의 수일치 (pointCode d)",
+      "temptingBecause": "단수 취급 요소(detecting, it, this pattern)가 문장 앞부분에 있어 성급한 학생이 leads를 수용할 수 있음",
+      "decisiveFlaw": "선행사 the connections(복수)가 that 바로 앞에 인접해 있어 leads는 확정 오류, lead로 교정하면 정확히 원문이 됨. 다만 인접 노출 수일치라 상위권에게 즉시 드러나 KILLER 정답으로는 부적합"
+    },
+    {
+      "label": "(D)",
+      "intent": "It is not until ~ that 강조구문의 that 구조 판별 (pointCode b)",
+      "temptingBecause": "삽입구(unable to check our e-mail)가 It ~ that 사이를 벌려 놓아 구문 골격 인식이 필요하고, when/관계사 대안을 떠올리게 함",
+      "decisiveFlaw": "'It's not until X that Y' 강조구문의 that으로 적법 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "명사 후치수식/지각동사 보어 분사의 능동 판별 (pointCode c — (A)와 중복)",
+      "temptingBecause": "hear의 목적어와 분사 사이에 전치사구(in the backs of our heads)가 끼어 수식 관계 추적이 필요함",
+      "decisiveFlaw": "voices가 능동적으로 '말해주는' 관계이므로 telling이 정확 — 오류 아님. (A)와 동일 포인트의 중복 디코이로 C2 감점 요인"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설 ④가 '선행사와 멀리 떨어진 동사의 수일치 함정'이라고 기술하나 실제로는 선행사 직후 인접 수일치(connections that leads)로, 존재하지 않는 함정 구조를 첨가한 오설명 (V4 실패 근거)",
+    "오답 해설 (A)(B)(D)(E)는 실제 선지 내용·통사 구조와 정확히 대응하며 용어 오류 없음",
+    "keyPoints 3개는 (C)(D)(A)의 실제 포인트와 일치"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V2는 견고하다: 5개 밑줄 독립 검증 결과 (C)만 유일 오류이고 대안 분석 여지가 없다. 그러나 두 가지 결함으로 KILLER 출하 불가. (1) V4 실패: 정답 해설 ④가 이 문장에 존재하지 않는 '원거리 수일치 함정'을 기술 — 실제로는 선행사 바로 옆 인접 수일치다. (2) KILLER 조건 위반: RUBRIC §C 'KILLER 정답은 붙어 있는 단순 수일치로 즉시 드러나지 않는다'에 정면 저촉 — 'connections that leads'는 복수 선행사가 바로 인접해 상위권 학생이 즉시 판별한다. 최소대립쌍(lead↔leads, 교정 시 원문 복원)·명확한 문법 판단·5개 밑줄 포인트 설명 존재는 충족하나 핵심 조건 미달. 추가로 (A)/(E)가 동일 pointCode c 중복 디코이라 의도 밀도 저하(C2=2), 정답 즉시 노출로 경쟁력 붕괴(C3=1), 요청 난이도 KILLER 대비 실제 난이도 하~중(C5=1). 수리 방향: 정답 포인트를 원거리 수일치(예: 삽입구 뒤 동사)나 구조 독해형 포인트로 교체하고 해설 ④를 실제 구조에 맞게 재작성, (E)를 다른 포인트의 디코이로 교체."
+}

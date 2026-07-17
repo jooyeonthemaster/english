@@ -1,0 +1,700 @@
+{
+  "schemaVersion": "blind-adjudication-power-v1",
+  "artifactId": "question-quality-blind-adjudication-power-v1",
+  "capturedAt": "2026-07-15T00:00:00+09:00",
+  "status": "DESIGN_ONLY_EXECUTION_BLOCKED",
+  "apiAccounting": {
+    "newFullQuestionCandidatesConsumed": 0,
+    "globalCandidateCap": 1000,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "privatePassageRowsIncluded": 0
+  },
+  "scope": {
+    "focusTypes": ["GRAMMAR_ERROR", "BLANK_INFERENCE"],
+    "activeEnglishTypes": [
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR",
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "excludedRegisteredLegacyTypes": ["TOPIC_MAIN_IDEA"],
+    "plans": ["STANDARD", "PREMIUM"],
+    "confirmatoryDifficulties": ["INTERMEDIATE", "KILLER"],
+    "coverageDifficulties": ["BASIC", "INTERMEDIATE", "KILLER"]
+  },
+  "sourceAwareIndependence": {
+    "observedFacts": [
+      "The current active UI exposes 25 English types; registered-only TOPIC_MAIN_IDEA is not an active generation type.",
+      "Current production validators contain extensive deterministic grammar and blank guards, but deterministic acceptance is not a human validity or craft verdict.",
+      "Historical generated rows mix code generations and repeated passage clusters; candidate rows cannot be treated as independent passages.",
+      "The current 180-row S1 arithmetic has six development passage clusters per profile cell and is a mechanism screen, not an efficacy sample.",
+      "The selected v5 passages lack row-level proof of external-model processing rights, so this design contains no selected text and authorizes no call.",
+      "The existing generic OpenRouter credential is not a dedicated zero-usage hard-capped campaign credential.",
+      "A local exact-wire preflight proves request construction only; it does not prove rights, account policy, fresh price, durable execution, or item quality."
+    ],
+    "independentChangesFromPriorDesign": [
+      "Separates zero-observed-fatal acceptance from craft superiority instead of allowing a weighted total score.",
+      "Defines a difficulty-aware primary craft success: B-or-A for INTERMEDIATE and A for KILLER.",
+      "Powers the common focus-type effect across plans while treating plan-specific effects as mandatory harm guards, because four separately powered superiority claims do not fit the 1,000-candidate cap alongside the screen and all-type sentinels.",
+      "Uses exact group-sequential alpha spending and reports explicit paired-discordance power scenarios.",
+      "Requires at least 86 evaluable zero-fatal items in each of four type-by-plan cells for a simultaneous fatal-rate upper bound below five percent.",
+      "Operationalizes marked-site point-worthiness, blank seam compatibility, semantic near misses, non-duplicated distractor intent, answer uniqueness, explanation correctness, and reviewer drift."
+    ]
+  },
+  "claimBoundary": {
+    "s1MechanismScreenTopology": "DIRECT_SINGLE_DISPATCH_SINGLE_CANDIDATE",
+    "productionCoreWireRootClaim": "OFFLINE_REQUEST_CONSTRUCTION_REPLAY_ONLY",
+    "fullProductionTopologyParityClaimed": false,
+    "premiumGrammarLadderPolicyParityClaimed": false,
+    "productionRetryRepairFallbackPolicyParityClaimed": false,
+    "productionQualityParityClaimed": false,
+    "requiredBeforeAnyParityClaim": "A separate versioned topology audit must bind the admitted live Premium grammar ladder and every retry, repair, fallback, solver, and candidate-producing branch, including its worst-case candidate and cost multiplier."
+  },
+  "commonReviewContract": {
+    "nonCompensatoryLayers": ["validity", "craft"],
+    "fatalDomains": {
+      "taskAndRender": "The student-facing surface asks the registered task, is complete, and is usable without internal fields or ghost labels.",
+      "sourceLineage": "All copied, removed, marked, reordered, transformed, and restored spans round-trip to the authorized source contract.",
+      "answerSpace": "The independently defensible answer set exactly equals the declared key cardinality or the constructed-response acceptance boundary.",
+      "surfaceLanguage": "All visible language is grammatical and natural except the sole intentionally erroneous surface demanded by the task.",
+      "alternativeReading": "No standard alternative parse, interpretation, referent, ordering, completion, or scoring response creates another valid answer.",
+      "explanationTruth": "Every linguistic, textual, causal, and scoring claim in the explanation is factually correct and binds to the displayed surface.",
+      "synchronization": "Key, labels, options, markers, correction, explanation, renderer, and scoring contract agree.",
+      "leakage": "No length, polarity, morphology, label, copied phrase, hint, generation metadata, or formatting shortcut materially predicts the key without the intended reasoning."
+    },
+    "craftDimensions": {
+      "pedagogicalPointWorthiness": {
+        "range": [0, 4],
+        "anchors": {
+          "0": "No valid teachable decision or the target is invalid.",
+          "1": "Mechanical recognition, trivia, spelling, or a glaring local break.",
+          "2": "Legitimate one-step curriculum decision with limited discrimination.",
+          "3": "Meaningful structural or discourse decision with a plausible misconception.",
+          "4": "High-value, non-obscure, multi-cue decision that remains unequivocal."
+        }
+      },
+      "evidencePathEconomy": {
+        "range": [0, 4],
+        "definition": "How directly the necessary evidence converges, without irrelevant scavenger hunting or a one-token giveaway."
+      },
+      "visibleIntentCoverage": {
+        "range": [0, 4],
+        "definition": "The proportion and distinctness of visible options, markers, conditions, or chips that instantiate a real misconception or reasoning step."
+      },
+      "competitivePlausibility": {
+        "range": [0, 4],
+        "definition": "How many non-key elements remain plausible until the intended evidence is applied."
+      },
+      "shortcutResistance": {
+        "range": [0, 4],
+        "definition": "Resistance to answer prediction from surface artifacts rather than the intended construct."
+      },
+      "difficultyCalibration": {
+        "range": [0, 4],
+        "definition": "Match between requested level and the number, distance, interaction, and abstraction of required decisions."
+      },
+      "surfaceNaturalness": {
+        "range": [0, 4],
+        "definition": "Native-like wording, parallelism, register, and absence of AI-shaped awkwardness."
+      },
+      "explanationEconomy": {
+        "range": [0, 4],
+        "definition": "All decisive evidence and exclusions are present once; no unsupported claim, repetitive passage summary, or ornamental lecture remains."
+      }
+    },
+    "gradeDerivation": {
+      "F": "Any fatal domain is failed, unresolved, or unevaluable.",
+      "C": "Fatal-free, but any material craft dimension is below 2, a material shortcut exists, or the item is not exam-ready.",
+      "B": "Fatal-free; every craft dimension is at least 2, median at least 3, intent coverage at least 0.75, no material shortcut, and explanation economy at least 2.",
+      "A": "B plus every craft dimension at least 3, pedagogical point worthiness and shortcut resistance equal 4, intent coverage equals 1.0, the evidence path is elegant, and every visible component has a distinct realized purpose."
+    },
+    "humanJudgmentRule": "The numeric thresholds are necessary audit checks, not a formula allowed to override a reviewer's evidenced holistic defect. An adjudicator may lower a grade with a coded material reason, never raise an item over a fatal.",
+    "primarySuccessByDifficulty": {
+      "INTERMEDIATE": ["B", "A"],
+      "KILLER": ["A"]
+    },
+    "shipReady": "Adjudicated grade B or A.",
+    "beautiful": "Adjudicated grade A. Beautiful KILLER additionally requires the focus-type KILLER contract."
+  },
+  "grammarModule": {
+    "appliesTo": "GRAMMAR_ERROR",
+    "calibrationCertificateSurfaceScope": {
+      "code": "EXACT_5_MARKERS_1_INVALID",
+      "declaredMarkerCount": 5,
+      "declaredInvalidCount": 1,
+      "reuseRule": "A certificate is reusable only for this exact student-facing surface contract; it does not silently transfer to multi-answer, variable-marker, correction, or choice-combination grammar tasks."
+    },
+    "markedSiteRequiredFields": [
+      "label",
+      "isKey",
+      "sourceCorrect",
+      "displayedGrammaticality",
+      "correctionRestoresSource",
+      "pointCode",
+      "pointFamily",
+      "governingRule",
+      "governorEvidenceRefs",
+      "dependencySpanTokens",
+      "minimalMutation",
+      "alternativeParseConsidered",
+      "diagnosis",
+      "pointWorthiness",
+      "explanationAccurate"
+    ],
+    "fatalRules": [
+      "Every keyed displayed form must be unequivocally ungrammatical under standard exam English.",
+      "Every non-key displayed form must be grammatical in its exact sentence.",
+      "The correction must restore the authorized source form and preserve intended meaning.",
+      "The marked dependency and its governor must be visible enough to solve.",
+      "Any false rule name, wrong clause diagnosis, wrong correction, or decoy misanalysis in the explanation is fatal.",
+      "Contested grammaticality is not averaged; it is fatal until resolved by fresh adjudication."
+    ],
+    "pointWorthinessOperationalization": {
+      "0": "Not a grammar point, defensible displayed form, or false diagnosis.",
+      "1": "Nonce word, spelling, glaring auxiliary chain, adjacent agreement, or decorative marker.",
+      "2": "Valid local rule with one immediate cue.",
+      "3": "Nonlocal governor, clause boundary, real attractor, voice/complement relation, or interacting structure.",
+      "4": "Two or more structurally separated constraints must be integrated; the point is canonical and educationally valuable, not obscure or stylistic."
+    },
+    "beautifulKillerRules": [
+      "Each keyed site has pointWorthiness 4.",
+      "Each decoy has pointWorthiness at least 2 and requires a real grammatical judgment.",
+      "At least three distinct point families are represented among visible sites.",
+      "The keyed point family is not duplicated as an easier decoy cue.",
+      "The sole mutation is minimal and natural-looking, not a nonword or visual break.",
+      "The concise explanation states the displayed form, correction, bounded rule, governor evidence, and accurate decoy diagnoses without repeating the passage."
+    ],
+    "aggregateMetrics": [
+      "keyed-surface invalidity rate",
+      "decoy grammaticality rate",
+      "marked-site diagnosis completeness",
+      "distinct point-family count",
+      "mean and minimum point-worthiness",
+      "explanation factual-error rate",
+      "beautiful KILLER yield"
+    ]
+  },
+  "blankModule": {
+    "appliesTo": "BLANK_INFERENCE",
+    "completedSentenceSeam": {
+      "construction": "exact left context + option text + exact right context",
+      "requiredChecks": [
+        "constituent category",
+        "finiteness",
+        "number and agreement",
+        "determiner and article frame",
+        "preposition duplication or omission",
+        "connector duplication",
+        "attachment",
+        "native collocation"
+      ],
+      "fatalRule": "Every option must be grammatical in the same exact slot. Semantic falsity is permitted; grammatical incompatibility is not."
+    },
+    "answerUniqueness": {
+      "propositionAxes": [
+        "actorOrTarget",
+        "polarity",
+        "conditionOrModality",
+        "causalRelationAndDirection",
+        "scopeOrQuantifier",
+        "stance",
+        "temporalRelation"
+      ],
+      "rule": "The key preserves every passage-supported axis and is selected independently by both blind raters. Any alternative option matching all required axes is fatal."
+    },
+    "semanticNearMiss": {
+      "requiredPerWrongOption": [
+        "at least one exact evidence reference",
+        "one passage concept that creates temptation",
+        "one primary decisive flaw",
+        "zero cheap grammatical or formatting giveaway",
+        "explicit overlapping and divergent proposition axes"
+      ],
+      "primaryIntentAxes": [
+        "scope_shift",
+        "causal_reversal",
+        "half_truth",
+        "actor_swap",
+        "condition_loss",
+        "polarity_shift",
+        "temporal_shift",
+        "stance_shift",
+        "unsupported_addition",
+        "category_error"
+      ],
+      "nearMissStrengthRange": [0, 4]
+    },
+    "orthogonalDistractorIntent": {
+      "definition": "Wrong options have non-duplicated primary decisive axes; this is operational distinctness, not a claim of mathematical vector orthogonality.",
+      "metric": "unique primary decisive axes divided by wrong-option count",
+      "intermediateMinimum": 0.75,
+      "beautifulKillerMinimum": 1.0
+    },
+    "beautifulKillerRules": [
+      "The key requires at least two separated evidence links and full proposition-axis preservation.",
+      "All four wrong options have nearMissStrength at least 3 and are passage-grounded.",
+      "All four primary decisive axes are distinct.",
+      "Each wrong option has exactly one dominant teachable semantic flaw and no second cheap giveaway.",
+      "Option length, register, abstraction, polarity, and passage vocabulary overlap do not identify the key.",
+      "The explanation makes the key inevitable by linking evidence and names each wrong option's actual single decisive flaw without a redundant lecture."
+    ],
+    "aggregateMetrics": [
+      "all-five seam compatibility rate",
+      "unique answer rate",
+      "full-axis fidelity rate",
+      "passage-grounded near-miss rate",
+      "primary-intent distinctness",
+      "shortcut materiality rate",
+      "explanation factual-error rate",
+      "beautiful KILLER yield"
+    ]
+  },
+  "allTypeEvidenceContract": {
+    "bindingArtifact": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/rubric.json",
+    "bindingArtifactObservedSha256": "17960b41393df681a3626786aa638bd4b001a9fc39e6f838c6eb5a4942c86d3a",
+    "commonRule": "Every active type uses the common fatal and craft layers. The bound type contract adds task-specific fatal, craft, KILLER, and explanation evidence; it never weakens a common fatal.",
+    "minimumIndependentEvidenceByFamily": {
+      "marked_selection": "Audit every marked occurrence in its exact sentence and reconstruct key/label order.",
+      "option_selection": "Map every option to source evidence, intended temptation, and decisive exclusion; independently solve answer cardinality.",
+      "ordering_or_insertion": "Reconstruct the source round-trip and audit every alternative ordering or gap for the first decisive cohesion failure.",
+      "closed_constructed": "Generate at least three valid accepted responses and three boundary-invalid responses; verify the scoring surface separates them.",
+      "open_constructed": "Separate required propositions and structures from optional wording; test at least three natural responses and three meaning/condition boundary failures.",
+      "correction": "Locate every error, prove minimal correction and meaning preservation, and test alternative defensible corrections.",
+      "lexical": "Perform exact-context substitution and distinguish denotation, semantic axis, register, collocation, polarity, and inflection."
+    },
+    "typeFamily": {
+      "BLANK_INFERENCE": "option_selection",
+      "GRAMMAR_ERROR": "marked_selection",
+      "GRAMMAR_CHOICE_COMBO": "marked_selection",
+      "VOCAB_CHOICE": "marked_selection",
+      "SENTENCE_ORDER": "ordering_or_insertion",
+      "SENTENCE_INSERT": "ordering_or_insertion",
+      "TOPIC": "option_selection",
+      "MAIN_IDEA": "option_selection",
+      "TITLE": "option_selection",
+      "IMPLIED_MEANING": "option_selection",
+      "REFERENCE": "option_selection",
+      "CONTENT_MATCH": "option_selection",
+      "SUMMARY_COMPLETE_MC": "option_selection",
+      "IRRELEVANT": "ordering_or_insertion",
+      "CONDITIONAL_WRITING": "open_constructed",
+      "SENTENCE_TRANSFORM": "open_constructed",
+      "FILL_BLANK_KEY": "closed_constructed",
+      "SUMMARY_COMPLETE": "closed_constructed",
+      "SUMMARY_WRITING": "open_constructed",
+      "WORD_ORDER": "closed_constructed",
+      "TOPIC_SENTENCE_WRITING": "open_constructed",
+      "GRAMMAR_CORRECTION": "correction",
+      "CONTEXT_MEANING": "lexical",
+      "SYNONYM": "lexical",
+      "ANTONYM": "lexical"
+    }
+  },
+  "blindReview": {
+    "independentRaters": 2,
+    "freshAdjudicator": 1,
+    "blindFields": [
+      "model",
+      "plan",
+      "profile",
+      "prompt",
+      "stored key",
+      "explanation before blind solve",
+      "validator result",
+      "cost",
+      "latency",
+      "retry count",
+      "intent ledger",
+      "site certificate",
+      "generator identity"
+    ],
+    "sequence": [
+      "solve student surface",
+      "record answer set, NO_ANSWER or MULTIPLE, confidence and shortcut path",
+      "reveal authorized source binding, stored key, explanation and scoring contract",
+      "complete fatal domains and type-specific evidence",
+      "score craft only when fatal-free",
+      "adjudicate every material disagreement"
+    ],
+    "materialDisagreementTriggers": [
+      "any fatal-domain disagreement",
+      "independent answer-set disagreement",
+      "F/C versus B/A boundary disagreement",
+      "grade distance of two or more",
+      "beautiful versus non-beautiful disagreement",
+      "grammar displayed grammaticality or governing-rule disagreement",
+      "blank seam, proposition-axis, near-miss, intent-axis, or uniqueness disagreement",
+      "explanation factual-accuracy disagreement"
+    ],
+    "adjudicatorProcedure": "The adjudicator first solves a fresh relabeled surface without either rationale, seals answer and fatal judgment, then sees both anonymous evidence records and produces one reason-coded decision.",
+    "unresolvedPolicy": "Unresolved material disagreement is F for release and remains explicitly unresolved; no majority or mean score may hide it.",
+    "immutability": "Both original records, adjudicator record, reveal timestamps, surface hash, and evidence references remain immutable and linked."
+  },
+  "reviewerCalibration": {
+    "packetSize": 24,
+    "composition": {
+      "GRAMMAR": { "items": 8, "fatal": 2, "nonfatal": 6, "gradeF": 2, "gradeC": 2, "gradeB": 2, "gradeA": 2 },
+      "BLANK": { "items": 8, "fatal": 2, "nonfatal": 6, "gradeF": 2, "gradeC": 2, "gradeB": 2, "gradeA": 2 },
+      "NONFOCUS": { "items": 8, "fatal": 2, "nonfatal": 6, "gradeF": 2, "gradeC": 2, "gradeB": 2, "gradeA": 2 },
+      "global": { "items": 24, "fatal": 6, "nonfatal": 18, "gradeF": 6, "gradeC": 6, "gradeB": 6, "gradeA": 6 }
+    },
+    "packetRule": "Calibration material is disjoint from development and confirmation, carries no generator identity, and ships GOLD_ADJUDICATION_PENDING until two independent record hashes plus a fresh adjudicator pre-rationale solve hash and final labels are bound. Each private per-reviewer scoring row binds the expected type, surfaceSha256, relabelMapSha256, and sealed phase-one record hash, plus one or more adjudicated acceptedAnswerSets. No synthetic fixture is a gold judgment.",
+    "calibrationReviewState": {
+      "plan": "CALIBRATION_NOT_APPLICABLE",
+      "statusAtReview": "UNASSESSED",
+      "certifiedAtReview": false,
+      "reason": "The packet creates the evidence used to decide certification; requiring a pre-existing certificate would be circular."
+    },
+    "goldAdjudication": {
+      "initialState": "GOLD_ADJUDICATION_PENDING",
+      "requiredBindings": [
+        "independentReviewRecordSha256A",
+        "independentReviewRecordSha256B",
+        "freshAdjudicatorPreRationaleSolveSha256",
+        "freshAdjudicatorFinalLabelsSha256",
+        "oracleSha256"
+      ],
+      "noFakeReviews": true
+    },
+    "certificateScope": {
+      "perReviewer": true,
+      "focusBlocks": ["GRAMMAR", "BLANK"],
+      "evidenceFamilies": ["marked_selection", "option_selection", "ordering_or_insertion", "closed_constructed", "open_constructed", "correction", "lexical"],
+      "allActiveTypesCertified": false,
+      "familyRule": "The certificate lists only evidence families actually represented by sealed gold items. NONFOCUS coverage does not certify every one of the 23 non-focus types.",
+      "grammarSurfaceContract": "EXACT_5_MARKERS_1_INVALID",
+      "blankAxes": ["actorOrTarget", "polarity", "conditionOrModality", "causalRelationAndDirection", "scopeOrQuantifier", "stance", "temporalRelation"]
+    },
+    "metricContract": {
+      "unit": "one reviewer compared directly with private adjudicated gold; pair consensus and reviewer-to-reviewer agreement are never substitutes",
+      "confusionCounts": {
+        "TP": "review fatal AND gold fatal",
+        "TN": "review nonfatal AND gold nonfatal",
+        "FP": "review fatal AND gold nonfatal",
+        "FN": "review nonfatal AND gold fatal"
+      },
+      "formulas": {
+        "blindSolveExactAgreement": "number of phase-one answer sets exactly equal to at least one adjudicated acceptedAnswerSets entry / required gold items; answer labels are compared as a set and constructed responses by their sealed content hash",
+        "exactFatalAgreement": "(TP + TN) / (TP + TN + FP + FN)",
+        "fatalSensitivity": "TP / (TP + FN)",
+        "fatalSpecificity": "TN / (TN + FP)",
+        "gwetAc1Fatal": "Let N=TP+TN+FP+FN, A=TP+TN, S=2*TP+FP+FN. AC1=[2*A*N-S*(2*N-S)]/[2*N*N-S*(2*N-S)].",
+        "quadraticWeightedKappaGrade": "Order F=0,C=1,B=2,A=3. Let O=sum((i-j)^2*n_ij), E=sum((i-j)^2*row_i*col_j). QWK=(E-O*N)/E; the common /9 quadratic weight cancels.",
+        "focusFieldCompleteness": "strictly validated completed required atomic focus fields / packet-declared required atomic focus fields; NONFOCUS contributes exactly zero to both counts",
+        "grammarSiteAgreement": "gold-equal values / required values across displayedGrammaticality, diagnosis, pointFamily, correctionRestoresSource and explanationAccurate for every one of five sites",
+        "blankOptionAgreement": "gold-equal values / required values across slotGrammarCompatible, passageGrounded, primaryIntentAxis, divergentAxes and singleDecisiveFlaw for every option",
+        "blankAxisAgreement": "gold-equal answerPreserved values / seven required proposition axes"
+      },
+      "denominatorRule": "Every certificate reports the unreduced raw counts and the exact integer numerator/denominator for every metric. A zero denominator yields metric=null and certification failure.",
+      "missingnessRule": "A missing, duplicate, schema-invalid, internally incoherent, or unmatched required record yields FAIL_INCOMPLETE and metrics=null; available-case deletion is forbidden.",
+      "bindingRule": "Before metric scoring, every record must equal its gold row's expected type, surface hash, relabel-map hash, and sealed phase-one record hash. Cross-item reuse or a missing/invalid binding yields FAIL_INCOMPLETE. acceptedAnswerSets are sealed adjudicated alternatives, not post-score exceptions.",
+      "comparisonRule": "Thresholds are compared by exact integer cross multiplication on raw fractions. No rounded or displayed value participates in a decision.",
+      "displayRule": "display4 is round-half-up to four decimals for presentation only."
+    },
+    "passThresholds": {
+      "global": {
+        "blindSolveExactAgreement": { "numerator": 9, "denominator": 10 },
+        "exactFatalAgreement": { "numerator": 9, "denominator": 10 },
+        "gwetAc1Fatal": { "numerator": 4, "denominator": 5 },
+        "fatalSensitivity": { "numerator": 9, "denominator": 10 },
+        "fatalSpecificity": { "numerator": 17, "denominator": 20 },
+        "quadraticWeightedKappaGrade": { "numerator": 7, "denominator": 10 },
+        "focusFieldCompleteness": { "numerator": 1, "denominator": 1 },
+        "grammarSiteAgreement": { "numerator": 19, "denominator": 20 },
+        "blankOptionAgreement": { "numerator": 19, "denominator": 20 },
+        "blankAxisAgreement": { "numerator": 1, "denominator": 1 }
+      },
+      "eachBlock": {
+        "blindSolveExactAgreement": { "numerator": 7, "denominator": 8 },
+        "exactFatalAgreement": { "numerator": 7, "denominator": 8 },
+        "fatalSensitivity": { "numerator": 1, "denominator": 1 },
+        "fatalSpecificity": { "numerator": 5, "denominator": 6 },
+        "quadraticWeightedKappaGrade": { "numerator": 3, "denominator": 5 },
+        "focusFieldCompletenessWhenApplicable": { "numerator": 1, "denominator": 1 },
+        "grammarSiteAgreementWhenApplicable": { "numerator": 19, "denominator": 20 },
+        "blankOptionAgreementWhenApplicable": { "numerator": 19, "denominator": 20 },
+        "blankAxisAgreementWhenApplicable": { "numerator": 1, "denominator": 1 }
+      }
+    },
+    "drift": {
+      "hiddenDuplicateFraction": 0.1,
+      "checkpointEveryScoredRows": 50,
+      "minimumDuplicateExactFatalAgreement": 0.9,
+      "minimumDuplicateWeightedKappa": 0.7,
+      "failureAction": "Pause reviewer, recertify, and independently re-review all rows since the last passing checkpoint."
+    },
+    "rareEventQualification": "Report raw agreement, positive and negative agreement, prevalence, and Gwet AC1; do not rely on Cohen kappa alone when fatal prevalence is low."
+  },
+  "sampling": {
+    "candidateBudget": {
+      "S0_CONNECTIVITY_RUN_IN": 2,
+      "S0_FOCUS_BASIC_SENTINELS": 4,
+      "S1_SCREEN": 180,
+      "S2_FOCUS_FIRST_LOOK": 480,
+      "S3_ALL_TYPE_SENTINELS": 92,
+      "S4_FOCUS_EXTENSION": 240,
+      "LOCKED_UNUSED": 2,
+      "TOTAL_SCHEDULED_MAX": 998,
+      "GLOBAL_CAP": 1000
+    },
+    "S0_CONNECTIVITY_RUN_IN": {
+      "candidateOpportunities": 2,
+      "allocation": "One Standard row and one Premium row through the sealed connectivity controller, both using the disposable original source corpus/original-connectivity-pilot-v1 OCVP-B01.",
+      "analysisEligibility": "NONE",
+      "exclusion": "Outputs, passage clusters, latency, success/failure, and any reviewer impression are excluded from S1 selection, calibration, quality estimation, S2/S3/S4, and every hypothesis test. The two rows count permanently against the global candidate cap."
+    },
+    "S0_FOCUS_BASIC_SENTINELS": {
+      "candidateOpportunities": 4,
+      "allocation": "GRAMMAR_ERROR and BLANK_INFERENCE x STANDARD and PREMIUM x BASIC, one row per cell.",
+      "analysisEligibility": "DEFECT_DISCOVERY_ONLY",
+      "exclusion": "No BASIC rate, plan effect, profile effect, or release claim; a found fatal is an existence proof and opens remediation. Passage clusters are disjoint from every other stage."
+    },
+    "S1_SCREEN": {
+      "purpose": "Mechanism, binding, deterministic safety, yield and cost-envelope screening only.",
+      "allocation": {
+        "GRAMMAR_ERROR": "4 profiles x 2 plans x 2 difficulties x 6 passages = 96",
+        "BLANK_INFERENCE": "STANDARD 4 profiles x 2 difficulties x 6 = 48; PREMIUM 3 distinct profiles x 2 difficulties x 6 = 36; total 84"
+      },
+      "minimumCellN": 6,
+      "statisticalClaim": "NONE",
+      "selection": "Use a frozen priority order among arms with complete cells, acceptable binding/yield, zero new fatal family, and cost-cap compliance. Do not rank six-cluster point estimates or p-values."
+    },
+    "S2_FOCUS_FIRST_LOOK": {
+      "assignmentUnit": "one candidate opportunity",
+      "inferenceUnit": "one unique passage cluster containing one control/challenger pair",
+      "passageClustersPerTypePlan": 60,
+      "candidateOpportunitiesPerTypePlan": 120,
+      "typePlanCells": 4,
+      "totalCandidateOpportunities": 480,
+      "difficultyBalancePerCell": {
+        "INTERMEDIATE": 30,
+        "KILLER": 30
+      },
+      "passageReuse": "No passage or exact/near-duplicate cluster crosses focus type, plan, development, sentinel, or extension strata.",
+      "pairing": "Within a passage, control and challenger use identical source, plan, model, difficulty, settings, output cap, provider policy, and frozen execution envelope; only the registered treatment differs.",
+      "itt": "Every randomized row remains. No candidate is primarySuccess=false and shipReady=false; it is not silently replaced."
+    },
+    "S3_ALL_TYPE_SENTINELS": {
+      "nonFocusTypeCount": 23,
+      "rowsPerType": 4,
+      "cellPattern": [
+        "STANDARD_BASIC",
+        "STANDARD_KILLER",
+        "PREMIUM_BASIC",
+        "PREMIUM_KILLER"
+      ],
+      "totalCandidateOpportunities": 92,
+      "interpretation": "Defect discovery only. No clean-rate, plan comparison, or release inference."
+    },
+    "S4_FOCUS_EXTENSION": {
+      "additionalPassageClustersPerTypePlan": 30,
+      "additionalCandidateOpportunitiesPerTypePlan": 60,
+      "totalCandidateOpportunities": 240,
+      "maximumPassageClustersPerTypePlan": 90,
+      "maximumPooledPassagePairsPerType": 180,
+      "difficultyBalanceAtMaximumPerCell": {
+        "INTERMEDIATE": 45,
+        "KILLER": 45
+      },
+      "noTransfer": "Unused rows remain unused and may not be moved between types, plans, difficulties, or failed cells."
+    },
+    "randomization": {
+      "freezeBeforeCalls": [
+        "source and rights record",
+        "content and near-duplicate cluster hash",
+        "type, plan and difficulty stratum",
+        "control/challenger assignment IDs",
+        "within-pair call order",
+        "review packet order and relabel map",
+        "price and physical/candidate/USD envelope"
+      ],
+      "method": "Publicly specified hash seed, permuted blocks within type x plan x difficulty x genre x length band.",
+      "reviewPresentation": "Control/challenger order and answer labels are independently randomized; paired identity is hidden from raters."
+    },
+    "supplyGate": "S2/S4 require 360 unique, rights-clear, PII-free focus passage clusters: 90 for each of four type-by-plan cells. Connectivity, focus BASIC, S1, and non-focus sentinel passages are additional disjoint disposable/development clusters. The currently designed 12-passage original development corpus is enough only for S1 and does not satisfy this gate."
+  },
+  "sequentialDecision": {
+    "earlyOperationalStops": [
+      "rights, privacy, credential, price, source, wire, candidate, physical-call, or USD admission failure",
+      "unknown-after-send without a reserved and reconcilable ledger entry",
+      "review blinding or immutable packet breach",
+      "candidate cap arithmetic above 1000"
+    ],
+    "interimLook": {
+      "when": "After all fixed S2 rows and adjudication are complete; never on a convenient partial sample.",
+      "efficacyAlphaPerFocusType": 0.005,
+      "noEarlyRelease": true,
+      "continueTypeOnlyIf": [
+        "zero confirmed challenger fatal items in both plans",
+        "each plan cell can still reach 86 evaluable items within its fixed remaining 30 assignments",
+        "interim primary p-value is at most 0.005 or conditional power under pImprove=0.25, pHarm=0.10 is at least 0.20",
+        "no plan has a negative paired primary-success point difference",
+        "the final economic gate remains mathematically attainable"
+      ],
+      "futility": "If a condition fails, that type does not receive S4. Reserved rows remain unused. Other independently preregistered types may continue."
+    },
+    "finalLook": {
+      "efficacyAlphaPerFocusType": 0.02,
+      "requiredTypePlanEvaluableN": 86,
+      "requiredChallengerFatalCount": 0,
+      "primaryCraftTest": "One-sided exact paired McNemar test across the two independent plan strata within a focus type, aggregating discordant directions because passages are not reused across plans.",
+      "planHarmGuard": "Within each plan, challenger-only primary successes must be at least control-only primary successes; pooled success cannot hide a directionally harmful plan.",
+      "killerBeautyProductGate": "Within every focus type-by-plan cell, at least 18 of the 45 fixed KILLER ITT rows must be adjudicated A and the paired A difference must be nonnegative.",
+      "decision": "Advance only when fatal acceptance, primary craft, plan-harm, KILLER beauty, reviewer integrity, and economics all pass. Otherwise preserve the current default."
+    }
+  },
+  "inference": {
+    "primaryHypotheses": [
+      "GRAMMAR_ERROR challenger improves difficulty-aware primary success over control across plans.",
+      "BLANK_INFERENCE challenger improves difficulty-aware primary success over control across plans."
+    ],
+    "familywiseAlpha": 0.05,
+    "alphaSpending": {
+      "perTypeInterim": 0.005,
+      "perTypeFinal": 0.02,
+      "proof": "2 focus types x (0.005 + 0.020) = 0.050 by the union bound."
+    },
+    "fatalAcceptance": {
+      "cells": 4,
+      "perCellOneSidedAlpha": 0.0125,
+      "familywiseConfidence": 0.95,
+      "minimumEvaluableNPerCell": 86,
+      "maximumAssignedNPerCell": 90,
+      "acceptedFatalCount": 0,
+      "interpretation": "Zero observed confirmed fatal items and a simultaneous upper bound below 0.05; never described as proof of zero true risk."
+    },
+    "powerDesignAlternatives": [
+      {
+        "pChallengerOnlySuccess": 0.3,
+        "pControlOnlySuccess": 0.1,
+        "interimPowerN120Alpha005": 0.8086140788616096,
+        "finalPowerN180Alpha020": 0.9880030907990245
+      },
+      {
+        "pChallengerOnlySuccess": 0.25,
+        "pControlOnlySuccess": 0.1,
+        "interimPowerN120Alpha005": 0.5444061935012657,
+        "finalPowerN180Alpha020": 0.9064070517085746
+      },
+      {
+        "pChallengerOnlySuccess": 0.25,
+        "pControlOnlySuccess": 0.05,
+        "interimPowerN120Alpha005": 0.9391810660191193,
+        "finalPowerN180Alpha020": 0.9991158402788769
+      }
+    ],
+    "secondaryFamilies": {
+      "focusMechanisms": "Within each focus type, apply Holm at 0.05 to prespecified component outcomes such as seam validity, explanation accuracy, point-worthiness, intent distinctness, and A rate. These results are mechanism evidence and cannot rescue a failed primary gate.",
+      "interactions": "Plan, difficulty, genre, and length interactions are estimated with passage-cluster robust intervals and Holm within their labeled family. They are exploratory unless a future separately powered campaign preregisters them as primary.",
+      "nonFocus": "No hypothesis tests. Report exact rows and defects only."
+    },
+    "clusterRule": "The passage/near-duplicate cluster is the largest independent unit. Repeated generations, reviewers, options, markers, and plan reuse within a cluster never increase n.",
+    "missingness": "Report assigned, provider-started, response-received, parsed, evaluable, adjudicated, fatal-free, ship-ready and primary-success counts. Missingness is never excluded from ITT quality yield.",
+    "effectReporting": [
+      "paired risk difference",
+      "discordant counts in both directions",
+      "exact one-sided p-value",
+      "two-sided 95% interval for descriptive effect size",
+      "plan and difficulty stratum estimates",
+      "raw numerators and denominators"
+    ]
+  },
+  "economics": {
+    "costBoundary": "Every physical provider call and candidate-capable response, including retry, repair, solver, fallback, timeout, failure, and unknown-after-send reservation, is attributed to the randomized assignment.",
+    "unknownCostPolicy": "Use the sealed worst-case reservation cap until billing is reconciled. Missing cost never becomes zero.",
+    "reportedMetrics": [
+      "settled or conservatively reserved USD per assigned row",
+      "physical calls per assigned row",
+      "candidate opportunities per assigned row",
+      "parsed yield",
+      "fatal-free yield",
+      "ship-ready B/A yield",
+      "difficulty-aware primary-success yield",
+      "beautiful A yield",
+      "USD per parsed candidate",
+      "USD per fatal-free candidate",
+      "USD per ship-ready candidate",
+      "USD per primary success",
+      "USD per beautiful candidate",
+      "latency p50 and p95"
+    ],
+    "zeroDenominator": "Cost per zero successes is positive infinity.",
+    "economicGate": {
+      "pooledByFocusType": "One-sided 97.5% passage-cluster bootstrap upper bound for challenger/control USD per primary success is strictly below 1.25.",
+      "planGuard": "Each plan's point cost ratio is finite and no greater than 1.25.",
+      "callGuard": "The treatment cannot increase the sealed candidate or physical-call envelope.",
+      "pareto": "A challenger is rejected if another eligible arm is no worse on fatal acceptance, primary-success yield, and cost per primary success and strictly better on at least one."
+    },
+    "bootstrap": {
+      "seed": 20260715,
+      "replicates": 100000,
+      "unit": "whole passage pair within type and plan",
+      "stratification": "resample within plan and difficulty; aggregate assignment costs and successes before computing ratios"
+    }
+  },
+  "releaseBoundary": {
+    "necessary": [
+      "all execution holds closed before the first call",
+      "candidate schedule fits the remaining global cap under worst-case candidate arithmetic",
+      "reviewer calibration and blinding pass",
+      "zero fatal acceptance and minimum evaluable n in every focus type-by-plan cell",
+      "focus-type primary craft test passes alpha spending",
+      "no plan-level directional harm",
+      "KILLER beauty product gate passes",
+      "economic and Pareto gates pass",
+      "all-type sentinels reveal no unresolved fatal in the affected release surface",
+      "route-parity and deployment regression checks pass under a reversible feature flag"
+    ],
+    "neverSufficient": [
+      "deterministic validator pass alone",
+      "six-cluster S1 point estimate",
+      "zero defects in four non-focus sentinel rows",
+      "mean craft score hiding a fatal",
+      "pooled improvement hiding plan harm",
+      "higher quality bought by unbounded retries",
+      "local exact-wire preflight without rights, privacy, credential, price and durable ledger closure"
+    ]
+  },
+  "executionHolds": [
+    "documented rights for every passage sent externally",
+    "PII-free original or authorized source corpus",
+    "provider/account privacy and exact endpoint allow-list attestation",
+    "dedicated zero-usage credential with provider-side hard cap",
+    "fresh worst-case endpoint pricing",
+    "exact model, thinking-off, schema, output-cap and one-candidate wire registry",
+    "durable candidate, physical-call and USD ledger",
+    "360 unique confirmation passage clusters before S2/S4",
+    "independent review of packet builder, randomization and blinding"
+  ],
+  "limitations": [
+    "The 1,000-candidate cap cannot simultaneously power four plan-specific craft superiority claims, retain the 180-row eight-profile screen, cover all 23 non-focus types and all difficulty levels, and reserve connectivity. This design powers two focus-type common effects, uses plan-specific harm guards, and treats BASIC rows as defect-discovery sentinels.",
+    "The fatal acceptance bound below five percent is not proof that the true fatal rate is zero.",
+    "Four BASIC/KILLER sentinel rows per non-focus type and four focus BASIC rows are existence-of-defect probes only.",
+    "Reviewer calibration metrics reduce but do not eliminate expert-judgment error.",
+    "The schedule is valid only under one candidate opportunity per assignment. A production candidate multiplier above one blocks or shrinks the design and therefore shrinks its claims.",
+    "No currently available 12-passage development corpus supplies the 360 unique confirmation clusters; S2/S4 are supply-blocked.",
+    "No actual candidate has been generated or evaluated by this artifact."
+  ]
+}

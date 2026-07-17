@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):ANS=b  (C):dec=a  (D):dec=l  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 42,
+        "relPos": 0.064,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 238,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 250,
+        "relPos": 0.383,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 371,
+        "relPos": 0.569,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 490,
+        "relPos": 0.752,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.752,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "piling",
+        "isError": false,
+        "correction": "piling",
+        "errorExpression": "piling",
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing on top of another.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": true,
+        "correction": "what",
+        "errorExpression": "that",
+        "surroundingText": "Give your whole focus to that you're doing at the moment no matter what it is.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "doing",
+        "isError": false,
+        "correction": "doing",
+        "errorExpression": "doing",
+        "surroundingText": "While doing the laundry, just do the laundry",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "as",
+        "isError": false,
+        "correction": "as",
+        "errorExpression": "as",
+        "surroundingText": "Listen to the sound of the water as it fills the washing machine",
+        "pointCode": "l"
+      },
+      {
+        "label": "(E)",
+        "expression": "done",
+        "isError": false,
+        "correction": "done",
+        "errorExpression": "done",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "piling"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "doing"
+      },
+      {
+        "label": "(D)",
+        "text": "as"
+      },
+      {
+        "label": "(E)",
+        "text": "done"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "사역동사 has의 목적어인 us와 목적격 보어의 관계가 능동이므로 현재분사 piling은 어법상 적절합니다.",
+      "(C)": "접속사 While 뒤에 주어와 be동사(you are)가 생략된 분사구문으로, 빨래를 '하는' 능동의 의미이므로 현재분사 doing은 적절합니다.",
+      "(D)": "뒤에 주어(it)와 동사(fills)가 있는 완전한 절이 오므로 접속사 as('~할 때')의 사용은 어법상 맞습니다.",
+      "(E)": "접속사 when 뒤에 it is가 생략된 형태로, 빨래가 '행해지는' 수동의 의미이므로 과거분사 done은 적절합니다."
+    },
+    "explanation": "① 정답 문장의 골격 해부: 전치사 to의 목적어 역할을 명사절이 해야 하는 자리입니다. \n② 밑줄 표현 `that`이 있는 절은 전치사 `to`의 목적어로 쓰였는데, 뒤에 동사 `doing`의 목적어가 빠진 불완전한 절이 이어집니다. 접속사 that은 불완전한 절을 이끌 수 없고 전치사 뒤에 쓰이지 않으며, 관계대명사 that 역시 전치사 바로 뒤에 쓸 수 없고 선행사도 없습니다. \n③ 따라서 선행사를 포함하며 명사절을 이끄는 관계대명사 `what`으로 고쳐야 합니다. \n④ 전치사 뒤에는 명사절이 와야 하고, 불완전한 절을 이끌 수 있는 명사절 접속사(관계대명사)는 what임을 기억하세요.",
+    "keyPoints": [
+      "(B) 관계대명사 what vs that — 전치사의 목적어 자리와 불완전한 절",
+      "(A) 현재분사 — 사역동사의 목적어와 목적격 보어의 능동 관계",
+      "(E) 과거분사 — 접속사 뒤 생략된 주어와의 수동 관계"
+    ],
+    "tags": [
+      "관계대명사",
+      "명사절",
+      "분사구문",
+      "사역동사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The fast pace of today's lifestyle has us __(A) piling__ one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to __(B) that__ you're doing at the moment no matter what it is. While __(C) doing__ the laundry, just do the laundry: Listen to the sound of the water __(D) as__ it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when __(E) done__ with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster."
+  }
+}

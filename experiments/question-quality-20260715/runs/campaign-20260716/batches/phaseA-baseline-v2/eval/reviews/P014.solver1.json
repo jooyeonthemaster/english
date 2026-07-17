@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'the nature of that process' — 지시형용사 that이 바로 앞 문장의 'a process embodied in a machine'을 받아 단수 명사 process를 한정한다. 지시 대상이 명확한 단수이므로 that은 정문. this로 바꿔도 되지만 that 자체에 어법 오류 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'any process that repeats itself over and over again' — 관계절의 주어 that(선행사 process)과 목적어가 동일 지시 대상이므로 재귀대명사 itself가 필수. 선행사 process가 단수 사물이므로 itself가 정확하다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'The only example that comes to mind readily are a candle...' — 진짜 주어는 단수 'The only example'이고, 'that comes to mind readily'는 example을 수식하는 관계절일 뿐이다. 보어 'a candle'도 단수여서 복수 동사를 정당화할 어떤 해석(근접 일치, 도치, 집합명사 등)도 성립하지 않는다. are → is 여야 함. 관계절 내부 동사 comes가 이미 단수 일치를 보여 주어 장거리 단서도 일관된다. 명백한 수일치 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'this too is an iterative process, although at first masked' — 양보 접속사 뒤 주어+be 생략 구문(although (it is) at first masked). 생략된 주어 it이 주절 주어 this(= iterative process)와 동일 지시이므로 표준적 축약 양보절로 정문. 처음에는 이 축약이 어색해 보여 끌릴 수 있으나(밑줄 뒤에 절이 아닌 과거분사만 오는 형태), 'though/although + 분사/형용사' 축약은 완전히 규범적인 구문이다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the decay of atoms of carbon-14 is repetitive' — 주어의 핵은 단수 the decay이고 'of atoms of carbon-14'는 전치사구 수식어다. 가장 매력적인 오답: 동사 바로 앞의 복수 명사 atoms/carbon-14에 이끌려 are를 기대하게 만드는 근접 일치 함정이지만, 핵명사 일치 원칙상 is가 정확하다. 정문."
+    }
+  ],
+  "note": "실전 풀이 시 (E)의 근접 복수명사(atoms)와 (D)의 축약 양보절이 매력적 오답으로 기능하지만, (C)는 단수 주어 The only example(+관계절 내 comes의 단수 일치, 단수 보어 a candle)로 인해 are가 옹호 불가능한 유일한 오류. 정답이 (C) 하나로 깨끗하게 좁혀지는 정상 문항."
+}

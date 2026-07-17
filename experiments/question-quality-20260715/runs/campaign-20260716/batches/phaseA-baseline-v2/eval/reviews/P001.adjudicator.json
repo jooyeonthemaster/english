@@ -1,0 +1,38 @@
+{
+  "pid": "P001",
+  "finalV2": false,
+  "winningAnswer": "(D)",
+  "reason": "지문에 실제 밑줄된 4개 선지 (B)(C)(D)(E) 기준으로는 (D) avoiding 이 유일한 어법 오류임을 독립 재검증으로 확인했다(either to face ... or (to) avoid 병렬 강제 + cause+O+to-V 보문 규칙, 분사구문 대안 해석은 either...or 상관접속에 의해 차단). 그러나 (A)가 3중으로 파손되어 있다: (1) 렌더 지문에 (A) 밑줄 마커가 아예 없어 발문('밑줄 친 부분 중')상 학생이 (A)를 특정할 수 없고, (2) 선지 표기 'has contributed'가 지문 문자열 'have contributed'와 불일치하며, (3) 선지 인쇄대로 'has contributed'를 밑줄 내용으로 판정하면 복수 주어 they(=Our emotions)와의 수일치 위반으로 제2정답이 되어 실제 정답 집합이 {(A),(D)}가 된다. 렌더된 문항 그대로는 정답 유일성이 판정 불능이거나 붕괴하므로 V2=false. 솔버 1·2의 (D) 판정과 각 선지 통사 분석 자체는 정확하며 과잉 판정 없음 — 두 솔버 모두 note에서 동일 결함을 이미 경고했고, multipleDefensible=false 는 '지문 인쇄본(have) 기준'이라는 조건부 판정이었다. 감사자의 V2=false 가 문항 실물 기준으로 옳다. (A) 밑줄을 지문에 'have contributed'로 정확히 렌더하고 선지·구조필드·해설을 동기화하면 (D) 단일 정답으로 V2 성립 가능.",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "솔버들: 지문 기준 'have contributed'는 정문이므로 (A)는 오답 선지 — 단 표기 불일치 결함 경고. 감사자: 선지 인쇄대로면 수일치 위반으로 제2정답, 마커 부재로 판정 불능 → V2 실패",
+      "verdict": "감사자 지지 — 유일성 붕괴 확정",
+      "evidence": "렌더 지문 1문장은 'because they have contributed to our survival'로 밑줄/마커 없이 인쇄됨(blind/P001.md 4행). 선지 목록은 '(A) has contributed'(blind/P001.md 10행)로 지문 문자열과 불일치. markedExpressions의 (A)도 expression='has contributed' vs surroundingText='...they have contributed...'로 자기모순(full/P001.md). 문법 판정: 주어 they(=Our emotions, 복수)에는 have가 옳으므로 지문 텍스트는 정문이지만, 선지 인쇄 텍스트 'has contributed'를 밑줄 내용으로 삼으면 수일치 위반의 확정적 비문 → 정답 집합 {(A),(D)}. 발문이 '밑줄 친 부분 중'인데 (A) 밑줄이 지문에 없으므로 문항 실물로는 (A) 판정 자체가 불능. 어느 해석으로도 '선언된 정답 1개 = 실제 정답 집합'을 보증할 수 없다."
+    },
+    {
+      "label": "(B)",
+      "claim": "양 솔버·감사자 일치: when triggered 는 축약 부사절의 수동 과거분사로 정문",
+      "verdict": "성립(정문) 확정",
+      "evidence": "'a kind of \"program\" that, when triggered, directs ...' = when (it is) triggered 의 축약. 의미상 주어는 관계대명사 that(= program/emotion)이며 촉발되는 대상이므로 수동 관계 성립, 과거분사 triggered 가 옳다. 능동 triggering 은 촉발 행위자 주어를 요구하므로 불성립. 오류로 볼 대안 해석 없음."
+    },
+    {
+      "label": "(C)",
+      "claim": "양 솔버·감사자 일치: cause + O + to부정사 구조로 to remember 는 정문",
+      "verdict": "성립(정문) 확정",
+      "evidence": "'may cause us to remember an experience more acutely' — cause 는 목적격보어로 to부정사만 허용하는 5형식 동사. 같은 문장 앞의 'cause us either to face'와도 동일 패턴. 인접한 (D) avoiding 이 -ing 통일 착시를 유발하나 이는 미끼 설계일 뿐, to remember 를 비문으로 만드는 해석은 존재하지 않는다."
+    },
+    {
+      "label": "(D)",
+      "claim": "선언된 정답. 양 솔버: either to face ... or 병렬 위반 + cause 보문 규칙 위반의 이중 비문으로 유일 오류",
+      "verdict": "오류(비문) 확정 — 밑줄 4개 중 유일 오류",
+      "evidence": "'will cause us either to face a situation (fight) or avoiding it (flight)' — 상관접속사 either A or B 에서 A=to face(부정사)이므로 B는 to avoid 또는 to 생략형 avoid 여야 한다. avoiding 은 (1) 병렬 등위 붕괴, (2) cause+O+to-V 보문 형식 위반의 이중 비문. 대안 해석 검토: avoiding 을 분사구문/동명사로 읽는 시도는 either...or 가 등위 접속을 통사적으로 강제하고 (fight)/(flight) 대비가 병렬 보어를 의미적으로 요구하므로 전부 차단됨. avoid 로 교정 시 원지문이 정확히 복원됨(full/P001.md 원지문 대조). 솔버들의 판정에 과잉 없음."
+    },
+    {
+      "label": "(E)",
+      "claim": "양 솔버·감사자 일치: 완전절을 이끄는 전치사+관계대명사 in which 는 정문",
+      "verdict": "성립(정문) 확정",
+      "evidence": "'the specific ways in which they activate our systems' — in the ways 에서 도출된 전치사+관계대명사 구조. 관계절 내부가 S(they)+V(activate)+O(our systems)의 완전절로 공백이 없으므로 in which 가 옳다. ways that / ways in which 모두 표준 용법이며 비문 해석 불가."
+    }
+  ]
+}

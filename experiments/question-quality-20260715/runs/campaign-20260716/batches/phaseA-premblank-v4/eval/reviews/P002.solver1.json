@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'apply strict principles of fast communication'은 빈칸 뒤 문장 'they struggle to interpret elements that flout principles of efficient communication'과 정면 충돌. 문학 독서는 효율적 소통 원리를 유예하는 태도이므로 반대 방향. seam은 문법적으로 성립하나 논리 부적합."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "'tolerate confusing and seemingly unrelated details'를 대입하면 후행 'without assuming that this makes no sense'의 this가 '혼란스럽고 무관해 보이는 세부'를 자연스럽게 지시. 뒤 문장의 complications of language에 소통 목적이 있다고 가정하고 해석하려 애쓴다는 부연, 마지막 문장의 'explore uncertainties, not immediately ask what do you mean'과 완전 정합. hyper-protected cooperative principle의 귀결로서 유일하게 성립. (원전 Culler의 'put up with obscurity or apparent irrelevance'의 정확한 패러프레이즈이기도 함.)"
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'demand instant clarification'은 마지막 문장 'not immediately ask what do you mean by that?'이 명시적으로 부정하는 태도. 정반대 방향이라 탈락."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'doubt the exact value of exploring uncertainties'는 마지막 문장의 'willingness ... to explore uncertainties'와 정반대. 'exploring uncertainties'라는 지문 어휘를 그대로 재활용한 어휘 매칭형 미끼로, 훑어 읽으면 낯익어 순간 끌리지만 방향이 뒤집혀 있음. this의 지시 대상도 어색."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'focus only on carefully reviewed narratives'는 첫 문장 'published, reviewed, and reprinted'의 표면 어휘를 재활용한 가장 유혹적인 미끼. 그러나 빈칸 문장은 독자가 무엇을 견디는가(독해 태도)에 관한 것이고, 대입 시 'without assuming that this makes no sense'의 this가 지시할 혼란/모호 대상이 없어 seam이 깨짐. 지문 논리도 '검증된 것만 읽어라'가 아니라 '검증됐기에 난해함도 견딘다'."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 첫 문장 선별 프레임에 갇히면 5에, 마지막 문장 어휘만 스캔하면 4에 끌린다. 그러나 빈칸 뒤 'without assuming that this makes no sense'의 this 지시성 검사와 직후 문장의 부연 관계(complications에 소통 목적 가정, flout 요소 해석 노력)를 확인하면 2로 유일 수렴. 지문은 Jonathan Culler, Literary Theory: A Very Short Introduction의 cooperative principle 구절과 구조 일치(원문: 'We can put up with obscurity or apparent irrelevance'). 복수 정답 여지 없음."
+}

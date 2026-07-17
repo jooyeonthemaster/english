@@ -1,0 +1,202 @@
+{
+  "schemaVersion": "reviewer-calibration-v4-production-bound-hostile-fixtures-4",
+  "artifactId": "reviewer-calibration-v4-production-bound-v4",
+  "status": "SYNTHETIC_PUBLIC_MUTATION_SPEC_ONLY_NO_ITEMS_GOLD_ACTORS_OR_EVENTS",
+  "minimums": {
+    "structuralMutations": 3000,
+    "semanticBypasses": 1500,
+    "totalHostileCases": 4500,
+    "allMustBeDetectedOrRejected": true
+  },
+  "requiredBlockerFamilies": [
+    {
+      "code": "B1",
+      "attacks": [
+        "remove PACKET_AUTHOR role",
+        "remove ITEM_AUTHOR role",
+        "remove GOLD_AUTHOR role",
+        "allow trusted-gold auditor to share each author role",
+        "omit audited item/gold/packet author registries",
+        "omit auditor artifact-authorship exclusion proof"
+      ]
+    },
+    {
+      "code": "B2",
+      "attacks": [
+        "remove each activation-auditor incompatibility",
+        "activation auditor equals candidate author",
+        "activation auditor equals certificate author",
+        "activation auditor equals gold auditor",
+        "activation auditor equals custodian or prior result viewer",
+        "activation auditor audits its own report or candidate"
+      ]
+    },
+    {
+      "code": "B3",
+      "attacks": [
+        "FOCUS_ONLY missing either exact focus type",
+        "FOCUS_ONLY coverage count other than two",
+        "ALL_25 missing each canonical ID in turn",
+        "ALL_25 missing each per-type passed coverage-event hash in turn",
+        "epoch-1 16 contact events presented as 25 passed coverage events",
+        "candidate scope wider than either reviewer certificate"
+      ]
+    },
+    {
+      "code": "B4",
+      "attacks": [
+        "candidate grants authority",
+        "candidate contains future audit hash",
+        "audit report omits exact candidate event or bytes hash",
+        "audit report embeds the hash of its own future package manifest",
+        "audit report grants authority",
+        "grant omits preexisting PASS audit report or manifest",
+        "result access before final grant",
+        "state skip candidate or audit phase"
+      ]
+    },
+    {
+      "code": "B5",
+      "attacks": [
+        "remove each hidden commitment",
+        "remove explanation, author hypothesis, rejection or surplus history",
+        "remove rights/PII or rotation epoch",
+        "use alias type ID",
+        "use unknown family ID",
+        "use a valid type in the wrong binding-v4 family",
+        "use main or holdout type not selected for epoch"
+      ]
+    },
+    {
+      "code": "B6",
+      "attacks": [
+        "remove each normalized fingerprint component",
+        "duplicate across pilot/main/holdout",
+        "reuse failed fingerprint",
+        "reuse rejected fingerprint",
+        "reuse previously issued fingerprint",
+        "change surface without new collision check",
+        "reduce pairwise comparison count below 1770"
+      ]
+    },
+    {
+      "code": "B7",
+      "attacks": [
+        "authorization missing current state",
+        "authorization missing resource class",
+        "authorization missing policy/allowlist/deny-set digest or proof",
+        "denial missing the same bindings",
+        "phase-1 answer reveal authorization",
+        "phase-1 trusted-gold authorization",
+        "resource allowed in a different state",
+        "empty state deny set including post-grant"
+      ]
+    },
+    {
+      "code": "B8",
+      "attacks": [
+        "skip OPEN",
+        "skip CAPABILITY_CONSUME",
+        "ordinal gap or reorder",
+        "prior-hash mismatch",
+        "backdated authorization",
+        "content released before OPEN or CONSUME seal",
+        "capability useOrdinal greater than one",
+        "duplicate authorization or consume for capability",
+        "close without consume",
+        "timestamp or occurredAt mismatch"
+      ]
+    }
+  ],
+  "freshAuditBlockerFamilies": [
+    {
+      "code": "V3-B1B2-ACTOR_IDENTITY_ALIAS_NOT_MATERIALLY_BOUND",
+      "attacks": [
+        "case, whitespace, and Unicode-normalized aliases representing one principal",
+        "one canonical source commitment mapped to multiple principals",
+        "one principal commitment mapped to multiple authoritative sources",
+        "pseudonym collision across principals",
+        "self-issued, untrusted-key, or invalid-Ed25519 custodian attestation",
+        "incompatible roles assigned through two aliases of one principal"
+      ]
+    },
+    {
+      "code": "V3-B3-PASSED_EVENT_NOT_BOUND_TO_MATERIALIZED_SLOT",
+      "attacks": [
+        "passed event with missing or wrong materialization event",
+        "slot, type, family, phase, fingerprint, or terminal-decision mismatch",
+        "one materialization reused for multiple canonical types",
+        "one slot reused for multiple canonical types",
+        "materialization map missing, reordered, forged, or inconsistent",
+        "certificate, candidate, and grant coverage recomputation roots diverge"
+      ]
+    },
+    {
+      "code": "V3-B4-CANONICAL_BYTES_HASH_DOMAIN_UNDEFINED",
+      "attacks": [
+        "unknown kind or wrong typed profile",
+        "missing or unexpected exact payload field",
+        "duplicate JSON key, trailing bytes, lone surrogate, nonfinite number, sparse array, or cycle",
+        "self-digest inserted into its own canonical payload",
+        "wrong domain, version, kind, profile, framing length, or recomputed digest",
+        "candidate or audit prior-payload digest changed before grant"
+      ]
+    },
+    {
+      "code": "V3-B6-FINGERPRINTS_NOT_DERIVED_FROM_COMMITTED_CONTENT",
+      "attacks": [
+        "mutate each of seven claimed components independently",
+        "mutate each committed private input independently",
+        "change full text, visible surface, author principal, type, family, or epoch while reusing claim",
+        "supply arbitrary unique bundles for an identical visible surface",
+        "normalization-equivalent bytes without a changed raw input root",
+        "replay failed, rejected, reserved, or previously issued composite"
+      ]
+    },
+    {
+      "code": "V3-B7-POLICY_MATRIX_OMITS_ALLOWED_ROLES",
+      "attacks": [
+        "empty allowedRoles or deniedRoles on any tuple",
+        "allowed and denied role overlap or incomplete role partition",
+        "actor role not active for the exact principal",
+        "role active under another pseudonym but another principal",
+        "denied role attempts every allowed resource tuple",
+        "authorization mutates any sealed role, resource, allow, deny, or transition root"
+      ]
+    },
+    {
+      "code": "V3-B7-GRANT_NOT_BOUND_TO_NONEMPTY_POLICY_STATE",
+      "attacks": [
+        "empty policy rows, state deny sets, resource proofs, transition proofs, or post scope",
+        "unready or unsealed policy registry",
+        "grant mutates sealed registry root or any component root",
+        "grant asserts policy ready or sealed without recomputation",
+        "candidate or audit grants authority before final grant",
+        "grant binds a wrong candidate or audit canonical payload digest",
+        "audit report or manifest ordinal is not materialized before grant"
+      ]
+    }
+  ],
+  "crossCuttingAttacks": [
+    "upstream or predecessor pin drift",
+    "predecessor FAIL promoted to authority",
+    "author evidence mislabeled as independent PASS",
+    "nonzero actor/item/access/certificate/candidate/grant counter",
+    "legacy v2 execution",
+    "private path read",
+    "package manifest drift"
+  ],
+  "expectedDisposition": "AUTHOR_EVIDENCE_COMPLETE_PENDING_FRESH_INDEPENDENT_AUDIT_NO_PASS_OR_AUTHORITY",
+  "activity": {
+    "privateReads": 0,
+    "itemAnswerGoldReadsOrWrites": 0,
+    "actorReadsOrWrites": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "ledgerReadsOrWrites": 0,
+    "questionGeneration": 0
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "deterministic-structural-v10-independent-test-results-v1",
+  "authorSealVerification": {
+    "command": "& .\\experiments\\question-quality-20260715\\reviews\\deterministic-structural-reaudit-v10\\verify_author_seal.ps1",
+    "runs": 2,
+    "status": "PASS",
+    "seal": "2ddce4ecbebdcbb5d411a812185f2613d3639a727ab4ded3e8aa594c231fbc03"
+  },
+  "scopedTypeScript": {
+    "command": "tsc -p experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v10-independent-audit/tsconfig.audit.json --pretty false",
+    "status": "PASS",
+    "exitCode": 0
+  },
+  "eslint": {
+    "command": "npx --no-install eslint run_blind_predictions.ts verify_audit.mjs build_manifest.mjs src/lib/question-quality/validators/summary/mc.ts src/lib/question-quality/validators/grammar/shared.ts src/lib/question-quality/validators/sentence-order.ts --max-warnings 0",
+    "status": "PASS",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "relevantUnitTests": {
+    "command": "node --test tests/unit/summary-mc-direction-split.test.mjs tests/unit/grammar-keypoint-core10.test.mjs tests/unit/sentence-order-quality.test.mjs tests/unit/question-validity-invariants.test.mjs",
+    "status": "PASS",
+    "exitCode": 0,
+    "tests": 42,
+    "passed": 42,
+    "failed": 0
+  },
+  "predictionReplay": {
+    "status": "PASS",
+    "freshProcess": true,
+    "executedRunnerSha256": "9586c15b3ac1eeb1eb36ea83ff1c7de89b15203982692196c286cb1b18ba9e79",
+    "predictionsSha256": "fc5a1dfe5fbc198eaf9488daf07f9c4c8745f2344a4cd29bdc142c06f37657f6",
+    "caseCount": 200,
+    "predictionArrayExactMatch": true,
+    "networkAttempts": 0,
+    "apiCalls": 0,
+    "databaseCalls": 0,
+    "estimatedCostUsd": 0
+  },
+  "globalTypeScript": {
+    "command": "tsc --noEmit --pretty false",
+    "status": "PASS",
+    "exitCode": 0,
+    "auditRunnerErrors": 0,
+    "observedErrors": [],
+    "scopeNote": "A prior run was temporarily blocked by unrelated concurrent worktree errors; after their owner fixed them, the final global rerun passed."
+  },
+  "finalArtifactVerifier": {
+    "command": "node experiments/question-quality-20260715/reviews/deterministic-structural-reaudit-v10-independent-audit/verify_audit.mjs",
+    "status": "PASS",
+    "rawScore": "125/200",
+    "confirmedProductContract": 34,
+    "oracleScopeMismatch": 41,
+    "ambiguous": 0,
+    "redundantUpstream": 0
+  }
+}

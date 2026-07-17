@@ -1,0 +1,35 @@
+{
+  "pid": "P112",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "오답",
+      "reason": "'고용하는 지역 경제에 영구적으로 기여한다'는 지문과 정면 충돌. 지문은 'no local taxes are paid', 'no offices or factories need to be built'라며 기업이 현지에 아무것도 남기지 않음을 강조한다. 'hire from'이라는 표면 어휘(freelancer in Nairobi/New Delhi 고용)로 끌어당기는 미끼지만, 방향이 정반대(기여 vs 무기여)라 실제 유혹 강도는 낮다. 빈칸에 넣으면 문법 결합은 자연스러우나 논리가 붕괴한다."
+    },
+    {
+      "label": "2",
+      "verdict": "오답",
+      "reason": "'현지 디지털 인프라 구축 비용 증가'는 'No offices or factories need to be built' 및 '이메일 몇 통, 버튼 클릭만으로 생산 네트워크 전환'이라는 서술과 직접 모순. 비용이 늘기는커녕 물리적 투자 자체가 사라진다는 것이 요지. 문법 결합은 정상이나 논리 부적합."
+    },
+    {
+      "label": "3",
+      "verdict": "정답",
+      "reason": "지문 전체의 결론 문장으로 완벽히 수렴. 첫 문장 'made a lot of work less sticky'(끈적임=장소 고착성 감소), 'ties between service work and particular places can be disconnected', 사무실·공장 불필요, 현지 규제·세금 회피, 클릭만으로 전환 — 모든 근거가 '기업이 특정 장소에 대한 물리적 결속(physical attachments)을 유지할 필요에서 해방된다'로 귀결된다. 'in this way'가 앞의 이메일/클릭 전환 방식을 받아 결과를 진술하는 구조와도 정합. 'freed from retaining any physical attachments'의 'any'가 다소 강하게 들릴 수 있으나(최상위권이 잠시 머뭇거릴 지점), 지문이 'no offices, no regulations, no local taxes'로 전면 부정을 이미 깔아 두었으므로 강도도 정당화된다."
+    },
+    {
+      "label": "4",
+      "verdict": "오답",
+      "reason": "'개발도상국에 중앙집중식 콜센터를 엄격히 유지'는 1990년대 아웃소싱(콜센터 이전) 모델을 cloudwork가 대체·변화시켰다는 지문 흐름과 모순. 콜센터는 구모델의 예시로만 등장하며, 신모델은 오히려 탈중앙·탈장소적. 'call centres'라는 지문 재활용 어휘로 끄는 표면 미끼 — 지문을 대충 읽고 키워드 매칭하는 수험생을 노린 선지이나, 'in this way' 뒤 결론 자리에 구모델 유지를 넣는 순간 시제·논리 모두 어긋난다."
+    },
+    {
+      "label": "5",
+      "verdict": "오답",
+      "reason": "'국제 노동기구에 의해 엄격히 규제된다'는 'no local regulations are observed'와 정면 충돌. 지문은 규제 부재·회피를 서술하지 규제 강화를 말하지 않는다. 오히려 지문 내용의 반대 방향(당위적 비판 독해를 한 수험생이 '규제되어야 한다'로 오독할 여지)을 노린 선지이나, 빈칸은 사실 서술 자리이므로 부적합."
+    }
+  ],
+  "note": "실전 풀이 관점: 빈칸이 'And, in this way, ___'로 지문 전체의 결론을 요구하는 전형적 요지-수렴형. 첫 문장의 'less sticky' 은유와 'ties ... can be disconnected'를 잡으면 3번으로 즉시 수렴한다. 매력적 오답으로 설계된 흔적은 4번(콜센터 어휘 재활용)과 1번('hire from' 어휘 재활용)이지만, 둘 다 명시적 부정 근거(no taxes / cloudwork가 콜센터 모델을 변화시킴)가 지문에 있어 유혹 강도는 중하 수준. 2·5번은 명백한 반대 진술. 정답 유일성 확실, 복수 정답 소지 없음. 어법 결합(seam)도 다섯 선지 모두 자연스러워 문법 단서 누출 없음."
+}

@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20221123-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-killer-generic-answer-point",
+    "grammar-decoy-filler-span",
+    "grammar-pointcode-span-mismatch",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=c  (B):dec=f  (C):dec=d  (D):dec=k  (E):ANS=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 227,
+        "relPos": 0.295,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 266,
+        "relPos": 0.345,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 311,
+        "relPos": 0.404,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 535,
+        "relPos": 0.695,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 572,
+        "relPos": 0.743,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.743,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "promoting",
+        "isError": false,
+        "errorExpression": "promoting",
+        "surroundingText": "Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.'",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "strictly",
+        "isError": false,
+        "errorExpression": "strictly",
+        "surroundingText": "Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.'",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "keep",
+        "isError": false,
+        "errorExpression": "keep",
+        "surroundingText": "so that people have a reason to keep coming back.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "can you create",
+        "isError": true,
+        "correction": "can you create",
+        "errorExpression": "you can create",
+        "surroundingText": "Only by doing this can you create an interested audience that you will then be able to sell to.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "promoting"
+      },
+      {
+        "label": "(B)",
+        "text": "strictly"
+      },
+      {
+        "label": "(C)",
+        "text": "is"
+      },
+      {
+        "label": "(D)",
+        "text": "keep"
+      },
+      {
+        "label": "(E)",
+        "text": "you can create"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "앞의 명사 'a successful business blog'를 수식하는 현재분사로 뒤에 목적어 'a product'가 있으므로 능동의 의미인 promoting이 맞습니다.",
+      "(B)": "동사 'stay' 뒤에서 'on the topic'이라는 전치사구를 수식하는 부사 strictly는 어법상 적절합니다.",
+      "(C)": "의문대명사 who가 주어로 쓰였으므로 단수 취급하여 is를 쓰는 것이 맞습니다.",
+      "(D)": "명사 a reason을 수식하는 to부정사구의 일부로 to keep이 적절하게 쓰였습니다."
+    },
+    "explanation": "문장 맨 앞에 'Only by doing this'라는 한정 의미를 지닌 'Only + 부사구'가 왔습니다. 이처럼 Only가 이끄는 부사구가 문두에 위치하면 주절에서는 [조동사(또는 be동사/do동사) + 주어 + 동사]의 도치 어순이 되어야 합니다. 따라서 'you can create'를 'can you create'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 부정어/한정어 도치 — Only 구문 문두 위치 시 조동사 도치",
+      "(A) 현재분사 vs 과거분사 — 수식받는 명사와의 능수동 관계 및 목적어 유무",
+      "(C) 주어와 동사의 수 일치 — 의문대명사 주어의 단수 취급"
+    ],
+    "tags": [
+      "도치",
+      "수일치",
+      "분사",
+      "수능어법",
+      "KILLER"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog __(A) promoting__ a product, they have to stay __(B) strictly__ 'on the topic.' If all you're doing __(C) is__ shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to __(D) keep__ coming back. Only by doing this __(E) you can create__ an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in."
+  }
+}

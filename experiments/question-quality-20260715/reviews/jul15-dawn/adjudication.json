@@ -1,0 +1,371 @@
+[
+  {
+    "itemId": "Q002",
+    "finalValidity": {
+      "V1": false,
+      "V2": true,
+      "V3": true,
+      "V4": true,
+      "V5": true
+    },
+    "finalGrade": "F",
+    "finalAnswer": "③",
+    "adjudicatedIssues": [
+      {
+        "severity": "critical",
+        "failedGate": "V1",
+        "finding": "The student-visible first sentence ends with the duplicated punctuation 'as well..' in both questionText and passageWithBlank."
+      }
+    ],
+    "rater1Position": {
+      "answer": "3",
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": false,
+        "V4": true,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Treated the duplicated period as both a source/render defect and a V3 grammatical-naturalness failure."
+    },
+    "rater2Position": {
+      "answer": "3",
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Confined the duplicated period to V1 because the completed sentence is otherwise grammatical and natural."
+    },
+    "decisionReason": "Option ③ is uniquely entailed and every stored answer field agrees. The doubled full stop is a mechanical source/render corruption governed by V1; it does not create a second syntactic defect in the otherwise grammatical completed sentence, so V3 passes. V1 alone requires F.",
+    "confidence": "high",
+    "sourceUrls": []
+  },
+  {
+    "itemId": "Q005",
+    "finalValidity": {
+      "V1": false,
+      "V2": true,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "finalGrade": "F",
+    "finalAnswer": "⑤",
+    "adjudicatedIssues": [
+      {
+        "severity": "critical",
+        "failedGate": "V1",
+        "finding": "The student-visible opening sentence contains the duplicated punctuation 'as well..'."
+      },
+      {
+        "severity": "critical",
+        "failedGate": "V4",
+        "finding": "The explanation repeatedly renders the passage's general legal framework/legal order as '사법 체계' and '사법 질서', terminology that narrows the claim to the judiciary rather than Kant's binding legal institutions."
+      }
+    ],
+    "rater1Position": {
+      "answer": "5",
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": false,
+        "V4": true,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Failed V1 and V3 for the duplicated period, but regarded the narrower Korean legal terminology as nonfatal."
+    },
+    "rater2Position": {
+      "answer": "5",
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Confined punctuation to V1 and failed V4 for the judiciary-specific terminology."
+    },
+    "decisionReason": "Option ⑤ uniquely preserves both the institutional means and the peace-producing end, and the answer fields synchronize. As in Q002, the doubled period is a V1 mechanical defect rather than a separate V3 syntax defect. Under the rubric's no-terminology-error rule, however, the repeated substitution of judiciary-specific '사법' for the broader legal framework is a substantive V4 failure. V1 and V4 each independently require F.",
+    "confidence": "high",
+    "sourceUrls": []
+  },
+  {
+    "itemId": "Q008",
+    "finalValidity": {
+      "V1": true,
+      "V2": true,
+      "V3": false,
+      "V4": true,
+      "V5": true
+    },
+    "finalGrade": "F",
+    "finalAnswer": "①",
+    "adjudicatedIssues": [
+      {
+        "severity": "critical",
+        "failedGate": "V3",
+        "finding": "The retained suffix 'that are part of conversation' does not fit every option in the same syntactic slot. Option ② yields no plausible plural antecedent for 'that are', and option ④ forces a different, strained attachment; the tail therefore supplies a grammar/attachment shortcut in a meaning-inference item."
+      }
+    ],
+    "rater1Position": {
+      "answer": "1",
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": true,
+        "V5": true
+      },
+      "grade": "C",
+      "summary": "Recognized uneven suffix attachment as a craft defect but passed every validity gate."
+    },
+    "rater2Position": {
+      "answer": "1",
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Failed V3 for nonuniform suffix grammar and V4 because the explanation did not audit that seam."
+    },
+    "decisionReason": "① remains the unique semantic answer, and its plural coordination can license the retained relative clause despite clumsy wording. The rubric's blank-specific rule is categorical, though: all five completions must enter the same slot without some distractors being eliminated by the tail. Because ② and ④ fail that uniformity, V3 fails and the grade is F. The explanation's semantic claims are accurate; omission of the separate seam defect does not itself introduce a false syntactic claim, so V4 passes.",
+    "confidence": "high",
+    "sourceUrls": []
+  },
+  {
+    "itemId": "Q010",
+    "finalValidity": {
+      "V1": false,
+      "V2": false,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "finalGrade": "F",
+    "finalAnswer": "NO_UNIQUE_ANSWER (intended: 4)",
+    "adjudicatedIssues": [
+      {
+        "severity": "critical",
+        "failedGate": "V1",
+        "finding": "Visible underline markers occur as (e), (a), (b), (c), (d), while the answer list uses 1-5; this is a render/marker presentation defect."
+      },
+      {
+        "severity": "critical",
+        "failedGate": "V2",
+        "finding": "'Maintain the imbalance' is contextually defensible after the explicit statement that the process is 'not a matter of natural balance'; the displayed item therefore permits a no-error/no-answer reading."
+      },
+      {
+        "severity": "critical",
+        "failedGate": "V4",
+        "finding": "The explanation asserts that 'imbalance' conflicts with continuing reciprocal competition but does not address the immediately preceding wording that licenses an imbalance reading."
+      }
+    ],
+    "rater1Position": {
+      "answer": "4, with a defensible no-error alternative",
+      "validity": {
+        "V1": false,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Passed V5 because the stored fields map to the same word, but also failed V3 on the substantive target defect."
+    },
+    "rater2Position": {
+      "answer": "4, with NO_ANSWER as an alternative",
+      "validity": {
+        "V1": false,
+        "V2": false,
+        "V3": true,
+        "V4": false,
+        "V5": false
+      },
+      "grade": "F",
+      "summary": "Kept V3 for grammatical form but failed V5 because marker, option, and explanation labels use different namespaces."
+    },
+    "decisionReason": "The raw/display/scoring answer path is substantively synchronized: storedAnswer, question.correctAnswer, and structuredData.correctAnswer are all '4'; displayed option 4 is 'imbalance'; markedWords identifies that same word as marker (d); and the explanation omits (d) while explaining the four nonanswers. The scrambled visible marker presentation remains a V1 defect, but it does not make the scoring key point to a different word, so V5 passes. 'Maintain the imbalance' is grammatical and natural enough, so V3 passes; its contextual defensibility instead defeats uniqueness under V2 and exposes the V4 explanation error. The item is F.",
+    "confidence": "high",
+    "sourceUrls": []
+  },
+  {
+    "itemId": "Q011",
+    "finalValidity": {
+      "V1": true,
+      "V2": false,
+      "V3": false,
+      "V4": false,
+      "V5": true
+    },
+    "finalGrade": "F",
+    "finalAnswer": "NO_ANSWER (intended: (E))",
+    "adjudicatedIssues": [
+      {
+        "severity": "critical",
+        "failedGate": "V2",
+        "finding": "English licenses retained-object passives with permit ('be permitted something'), so (E) has a defensible parse rather than being categorically ungrammatical. No other underlined expression is erroneous."
+      },
+      {
+        "severity": "critical",
+        "failedGate": "V3",
+        "finding": "The intended active sentence is much more natural, but the item treats a licensed though pragmatically strained passive/metonymic reading as an invariant grammar error; distractor grammaticality therefore does not match the item type."
+      },
+      {
+        "severity": "critical",
+        "failedGate": "V4",
+        "finding": "The explanation states the false absolute rule that a following noun phrase forces active voice and also calls the subject-bearing predicate '비인칭'."
+      }
+    ],
+    "rater1Position": {
+      "answer": "E",
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Rejected the retained-object passive and failed only V4 for the '비인칭' terminology."
+    },
+    "rater2Position": {
+      "answer": "E, with NO_ANSWER as an alternative",
+      "validity": {
+        "V1": true,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Accepted the licensed be-permitted-plus-noun-phrase frame and therefore failed uniqueness, type alignment, and explanation accuracy."
+    },
+    "decisionReason": "Oxford explicitly lists 'be permitted something' and gives 'We were not permitted any contact with each other.' That directly refutes the explanation's claim that a postverbal noun phrase makes passive voice impossible. In Q011, 'writing' requires a strained metonymic recipient reading and the active source is plainly preferable, but preference is not categorical ungrammaticality. Because (E) remains syntactically defensible and A-D are correct, NO_ANSWER is defensible; V2, V3, and V4 fail and the item is F.",
+    "confidence": "high",
+    "sourceUrls": [
+      "https://www.oxfordlearnersdictionaries.com/us/definition/english/permit_1"
+    ]
+  },
+  {
+    "itemId": "Q013",
+    "finalValidity": {
+      "V1": false,
+      "V2": true,
+      "V3": true,
+      "V4": false,
+      "V5": true
+    },
+    "finalGrade": "F",
+    "finalAnswer": "③",
+    "adjudicatedIssues": [
+      {
+        "severity": "critical",
+        "failedGate": "V1",
+        "finding": "The unblanked conclusion says that without art it is 'unlikely' that displays would be awkward imitations, reversing the passage's intended evidentiary claim."
+      },
+      {
+        "severity": "critical",
+        "failedGate": "V4",
+        "finding": "The explanation presents reliance on non-textile art as indispensable but never reconciles the displayed conclusion, which states the opposite proposition."
+      }
+    ],
+    "rater1Position": {
+      "answer": "3",
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Counted the conclusion's polarity reversal under V1, V3, and V4."
+    },
+    "rater2Position": {
+      "answer": "3",
+      "validity": {
+        "V1": false,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Treated the conclusion as grammatically well formed but logically corrupted, assigning the defect to V1 and V4."
+    },
+    "decisionReason": "The evidence gap and repeated cross-media examples uniquely select ③, and all answer fields agree. The final sentence is syntactically well formed, so V3 passes; its reversed polarity is a source/body integrity failure under V1 and an unreconciled actual-logic failure under V4. Either failed gate requires F.",
+    "confidence": "high",
+    "sourceUrls": []
+  },
+  {
+    "itemId": "Q014",
+    "finalValidity": {
+      "V1": true,
+      "V2": false,
+      "V3": false,
+      "V4": false,
+      "V5": true
+    },
+    "finalGrade": "F",
+    "finalAnswer": "2 (preferred), but 4 is also grammatically defensible",
+    "adjudicatedIssues": [
+      {
+        "severity": "critical",
+        "failedGate": "V2",
+        "finding": "Option 2 is the source-natural reading, but option 4 permits a reduced passive: 'New variations, [having been] shaded into entire new forms and adaptations, maintain the stalemate.' The implicit cause can be evolutionary pressure, so grammar alone does not eliminate 4."
+      },
+      {
+        "severity": "critical",
+        "failedGate": "V3",
+        "finding": "The option matrix labels 'shaded' as ungrammatical even though authoritative dictionaries record both intransitive gradual-change and transitive gradual-change senses of shade; the intended wrong form therefore does not align with an invariant grammar error."
+      },
+      {
+        "severity": "critical",
+        "failedGate": "V4",
+        "finding": "The explanation gives only the preferred intransitive reading and does not exclude the transitive reduced passive. It also says the antecedent of plural 'help' may be preceding sentential content, which would instead require singular 'helps'."
+      }
+    ],
+    "rater1Position": {
+      "answer": "2",
+      "validity": {
+        "V1": true,
+        "V2": true,
+        "V3": true,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Treated shade-into as intransitive in this sense and failed only V4 for the agreement-incompatible antecedent explanation."
+    },
+    "rater2Position": {
+      "answer": "2, with 4 as an alternative",
+      "validity": {
+        "V1": true,
+        "V2": false,
+        "V3": false,
+        "V4": false,
+        "V5": true
+      },
+      "grade": "F",
+      "summary": "Accepted a transitive/reduced-passive parse of shaded and failed uniqueness, option-type alignment, and the explanation."
+    },
+    "decisionReason": "Oxford and Collins show that the idiomatic phrasal-verb reading 'shade into' is normally intransitive, which makes 2 more natural. However, Cambridge's American entry marks the gradual-change sense I/T, and Merriam-Webster separately records a transitive sense 'to change by gradual transition or qualification.' A regular reduced passive can therefore support option 4 under a caused-change reading. Since the stem asks what is grammatically correct rather than what is stylistically preferred, this defensible alternative defeats V2 and V3; the categorical explanation also fails V4. The item is F.",
+    "confidence": "medium",
+    "sourceUrls": [
+      "https://www.oxfordlearnersdictionaries.com/us/definition/english/shade-into",
+      "https://dictionary.cambridge.org/us/dictionary/english/shade",
+      "https://www.merriam-webster.com/dictionary/shade",
+      "https://www.collinsdictionary.com/dictionary/english/shade"
+    ]
+  }
+]

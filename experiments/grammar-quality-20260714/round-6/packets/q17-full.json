@@ -1,0 +1,177 @@
+{
+  "passageId": "ebsi_go1_20221123-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 5,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-decoy-filler-span"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-decoy-filler-spanx2",
+    "grammar-keypoint-choice-mismatchx2",
+    "grammar-render-marker-countx1",
+    "grammar-killer-generic-answer-pointx1",
+    "grammar-pointcode-span-mismatchx1"
+  ],
+  "layout": "(A):dec=c  (B):dec=h  (C):dec=k  (D):dec=f  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 227,
+        "relPos": 0.295,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 261,
+        "relPos": 0.339,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 408,
+        "relPos": 0.53,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 498,
+        "relPos": 0.647,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 572,
+        "relPos": 0.743,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.743,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "promoting",
+        "isError": false,
+        "errorExpression": "promoting",
+        "surroundingText": "Most people believe that to have a successful business blog promoting a product, they have to",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "stay",
+        "isError": false,
+        "errorExpression": "stay",
+        "surroundingText": "Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.'",
+        "pointCode": "h"
+      },
+      {
+        "label": "(C)",
+        "expression": "writing",
+        "isError": false,
+        "errorExpression": "writing",
+        "surroundingText": "who is going to want to read the latest thing you're writing about? Instead",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "free",
+        "isError": false,
+        "errorExpression": "free",
+        "surroundingText": "you need to give some useful or entertaining information away for free so that",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "can you",
+        "isError": true,
+        "correction": "can you",
+        "errorExpression": "you can",
+        "surroundingText": "keep coming back. Only by doing this can you create an interested audience that you will",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "promoting"
+      },
+      {
+        "label": "(B)",
+        "text": "stay"
+      },
+      {
+        "label": "(C)",
+        "text": "writing"
+      },
+      {
+        "label": "(D)",
+        "text": "free"
+      },
+      {
+        "label": "(E)",
+        "text": "you can"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "이 자리는 당위나 의무를 나타내는 'have to' 뒤에 조동사의 본뜻을 받는 동사원형 'stay'가 어법상 올바르게 쓰인 구조입니다.",
+      "(A)": "문맥상 '제품을 홍보하는 성공적인 비즈니스 블로그'로 명사구 a successful business blog를 능동으로 수식하므로 현재분사 'promoting'이 적절합니다.",
+      "(C)": "the latest thing을 수식하는 형용사절 내부의 진행형 시제(are writing)를 구성하는 현재분사 'writing'은 어법상 옳습니다.",
+      "(D)": "전치사의 목적어 자리에 '공짜로'라는 의미의 전치사구 관용 표현 'for free'가 쓰였으므로 형용사 형태인 'free'가 명백히 옳습니다."
+    },
+    "explanation": "이 문장은 부사 구절이 문두로 이동하면서 발생한 도치 구조를 묻고 있습니다. 'Only + 부사구(by doing this)'가 강조를 위해 문장의 맨 앞으로 나왔으므로 주어와 조동사의 순서가 의문문 어순으로 도치되어야 합니다. 따라서 평서문 순서로 쓰인 'you can'은 오답이며, 조동사가 주어 앞으로 나간 'can you'로 교정해야 합니다. 문두의 Only 한정 어구에 의한 도치 규칙을 놓치기 쉬우니 주의해야 합니다.",
+    "keyPoints": [
+      "(E) 수일치 — 문두 Only 부사구 도치에 의한 조동사-주어 어순 일치 여부",
+      "(A) 분사능수동 — 명사를 후치 수식하는 현재분사 수식 구조의 능동 의미 판정",
+      "(B) 목적격보어 — 준조동사 'have to' 뒤에 이어지는 원형 동사 보호 구조 판정"
+    ],
+    "tags": [
+      "어법",
+      "도치문",
+      "수식어구 수일치",
+      "현재분사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog __(A) promoting__ a product, they have to __(B) stay__ strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're __(C) writing__ about? Instead, you need to give some useful or entertaining information away for __(D) free__ so that people have a reason to keep coming back. Only by doing this __(E) you can__ create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-decoy-filler-span",
+        "message": "Decoy underline (B) is a decorative filler span — a bare verb (\"stay\") directly after \"to\" leaves no alternative form to weigh — only the base form is possible there. Replace only this decoy with a structural grammar judgment site (a different pointCode from the answer) where students genuinely weigh whether the form is correct."
+      }
+    ],
+    "_qualityMode": "relaxed"
+  }
+}

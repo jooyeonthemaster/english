@@ -1,0 +1,658 @@
+{
+  "id": "u11-c3",
+  "unitId": "u11",
+  "order": 3,
+  "title": "대동사 do vs be",
+  "oneLiner": "대동사의 종류는 원본 동사가 정합니다 — 일반동사는 do 계열로, be동사는 be동사로, 조동사는 그 조동사를 그대로 되풀이합니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고2",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 대동사(앞에 나온 동사구를 무엇으로 받는가)",
+      "천일문 고등 GRAMMAR — 비교구문의 반복 요소 대치와 생략",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 비교 표현(중 ●)"
+    ]
+  },
+  "lenses": ["L4", "L5"],
+  "confusableWith": ["u11-c4", "u12-c1", "u12-c3", "b03-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The new engine consumes far less fuel than the older model does.",
+        "The new engine consumes far less fuel than the older model is."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 마지막 단어 하나입니다. 이 레슨을 마치면 무엇이 그 단어를 결정하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "대동사",
+      "question": "대동사가 대체 무엇입니까?",
+      "plain": "대동사는 앞에 이미 나온 동사(구)를 되풀이하지 않으려 그 자리에 대신 세우는 동사입니다. than·as 뒤에서 do·is·have 처럼 짧게 받는 그 한 단어가 바로 대동사입니다.",
+      "analogy": "앞사람이 한 말을 '나도.'로 받는 것과 같습니다. '나도 매일 달린다'를 다 말하지 않고 '나도 그렇다'로 줄이듯, 대동사는 앞 동사구를 do·is·have 같은 짧은 한 단어로 대신 받습니다.",
+      "whyItMatters": "than·as 비교절 끝의 대동사에 밑줄을 긋고 형태를 묻는 문항은 수능·내신 서술형의 단골입니다. 원본 동사가 무엇으로 시작하는지만 짚으면 do·be동사·조동사가 자동으로 갈립니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "than·as 뒤의 동사 자리는 대체로 do 계열을 넣으면 됩니다.",
+      "truth": "대동사의 종류를 정하는 것은 비교 구문이 아니라 앞 절의 원본 동사입니다. 원본이 be동사면 be동사로, 조동사를 품고 있으면 그 조동사로 받아야 하며, do 계열은 순수한 일반동사를 대신할 때만 씁니다.",
+      "counterExample": {
+        "en": "The northern trail is much steeper than the southern one **does**.",
+        "ko": "북쪽 등산로는 남쪽 등산로보다 훨씬 더 가파릅니다.",
+        "note": "앞 절의 원본 동사가 be동사 is 이므로 does 로 받을 수 없습니다. than the southern one is 가 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "대동사 판별 필기",
+      "intro": "대동사를 고를 때 필요한 것들을 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "대동사 — 앞 동사(구)를 대신 받는 말",
+          "body": "than·as 뒤나 so·neither 뒤에서 앞 절의 동사를 되풀이하지 않으려 세웁니다. 무엇으로 받느냐는 오직 원본 동사의 종류가 정합니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "원본이 일반동사 → do·does·did",
+          "body": "travel·solved 처럼 순수한 일반동사는 do 계열로 받습니다. 이때 do 는 동사 하나가 아니라 그 동사가 이끄는 동사구 전체를 대신합니다.",
+          "example": {
+            "en": "Bees navigate back to their hives far more accurately than wasps **do**.",
+            "ko": "꿀벌은 말벌보다 훨씬 더 정확하게 벌집으로 돌아옵니다.",
+            "note": "원본이 일반동사 navigate 이므로 do 로 받습니다."
+          }
+        },
+        {
+          "head": "원본이 be동사 → be동사",
+          "body": "원본이 is·was 이거나 수동태(be+p.p.)이면 그 be동사를 그대로 남깁니다. do 로 받으면 문장을 세우던 be동사가 사라집니다.",
+          "example": {
+            "en": "The exam was far harder this year than it **was** last spring.",
+            "ko": "올해 시험은 지난봄보다 훨씬 더 어려웠습니다.",
+            "note": "원본이 be동사 was 이므로 be동사로 받습니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "원본에 조동사가 있으면 → 그 조동사 그대로",
+          "body": "have·will·can·should 등이 들어 있으면 그것을 그대로 되풀이합니다. 완료형 have+p.p.는 완료 조동사 have 로 받습니다.",
+          "example": {
+            "en": "Coastal cities have invested far more in flood defenses than inland towns **have**.",
+            "ko": "해안 도시들은 내륙 도시들보다 홍수 방어 시설에 훨씬 더 많이 투자해 왔습니다.",
+            "note": "원본이 완료형 have invested 이므로 완료 조동사 have 로 받습니다."
+          }
+        },
+        {
+          "head": "형태(수·시제)는 대동사 자신의 몫",
+          "body": "종류는 원본이 정하지만, 수와 시제는 대동사 자신의 주어와 그 절이 가리키는 시간에 맞춥니다. 원본이 현재라도 대동사 절이 과거를 가리키면 did 입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "시간 단서와 시제 — u11-c4 예고",
+          "body": "이 레슨에서는 today·과거 연도·이미 과거로 적힌 동사처럼 시점이 자명한 단서만 씁니다. 어떤 시간 단서가 어떤 시제를 부르는지는 다음 레슨 u11-c4(시제 호응)에서 정식으로 다룹니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "앞에 나온 순수한 일반동사를 되풀이하지 않으려 do·does·did 로 대신 받습니다.",
+      "examples": [
+        {
+          "en": "Migrating geese travel far greater distances each night than resident ducks **do**.",
+          "ko": "이동하는 기러기는 텃새 오리보다 매일 밤 훨씬 더 먼 거리를 이동합니다.",
+          "note": "원본 동사는 일반동사 travel 입니다. do 는 travel … distances each night 라는 동사구를 대신합니다. 비교의 정도를 나타내는 far greater 는 대동사가 대신하는 범위에 들어가지 않습니다."
+        },
+        {
+          "en": "Ancient farmers stored grain in sealed clay jars, just as their ancestors **did**.",
+          "ko": "고대 농부들은 그들의 조상이 그랬던 것처럼 곡물을 밀봉한 토기 항아리에 저장했습니다.",
+          "note": "원본 동사가 일반동사의 과거형 stored 이므로 did 로 받습니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "대동사 세 갈래 암기 카드",
+      "target": "원본 동사 종류 → 대동사 대응 세 갈래",
+      "why": "받을 때마다 규칙을 처음부터 따지면 비교절 문항에서 시간을 잃습니다. 세 갈래 대응을 손에 붙여 두면 원본의 첫 단어만 보고 즉시 대동사를 꺼낼 수 있습니다.",
+      "device": "be동사는 be동사로, 조동사는 그 조동사로, 순수한 일반동사만 do 계열로 받습니다. 앞의 둘은 '그대로 되울리기', 나머지만 do 로 바꾼다고 외웁니다.",
+      "items": [
+        { "cue": "원본이 is · was · are", "answer": "be동사로 받는다 (is·was·are)" },
+        { "cue": "원본이 were built (수동태)", "answer": "be동사로 받는다 (첫 단어 were)" },
+        { "cue": "원본이 has done · will go (조동사)", "answer": "그 조동사를 그대로 (has·will)" },
+        { "cue": "원본이 travel · solved (일반동사)", "answer": "do 계열로 (do·does·did)" },
+        { "cue": "대동사의 수·시제는 무엇이 정하는가", "answer": "대동사 자신의 주어와 그 절이 가리키는 시간" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "do 계열 관문",
+      "mission": "순수한 일반동사를 대신하는 대동사 형태를 전부 고르십시오. be동사·조동사를 되울리는 형태는 미끼입니다.",
+      "mode": "SET",
+      "pool": ["do", "does", "did", "is", "was", "have", "will"],
+      "answers": ["do", "does", "did"],
+      "passText": "do 계열이 손에 붙었습니다. 이제 원본이 일반동사인지만 가리면 절반은 끝난 셈입니다.",
+      "retryText": "is·was·have·will 은 원본이 be동사·조동사일 때 되울리는 형태입니다. 순수한 일반동사를 받는 세 형태만 다시 짚어 보십시오."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "원본 동사가 be동사이면 대동사도 be동사여야 합니다. 수동태(be+p.p.)를 대신할 때도 그 be동사를 그대로 남깁니다.",
+      "examples": [
+        {
+          "en": "The exam was far harder this year than it **was** last spring.",
+          "ko": "올해 시험은 지난봄보다 훨씬 더 어려웠습니다.",
+          "note": "원본은 be동사 was 입니다(it was hard 의 생략). be동사는 be동사로 받으므로 did 를 쓸 수 없습니다."
+        },
+        {
+          "en": "The eastern wall was rebuilt far more hastily than the western one **was**.",
+          "ko": "동쪽 벽은 서쪽 벽보다 훨씬 더 성급하게 재건되었습니다.",
+          "note": "원본 동사구가 수동태 was rebuilt 이므로, 그 첫 단어인 be동사 was 로 받습니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "비교절의 대동사 해부",
+      "tokens": [
+        { "t": "The updated model", "role": "S" },
+        { "t": "processes", "role": "V" },
+        { "t": "satellite images", "role": "O" },
+        { "t": "far more quickly", "role": "M" },
+        { "t": "than", "role": "CONJ" },
+        { "t": "its bulky predecessor", "role": "S" },
+        { "t": "does", "role": "V" }
+      ],
+      "ko": "개선된 모델은 육중한 이전 모델보다 위성 영상을 훨씬 더 빠르게 처리합니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 걷어냅니다",
+          "roles": ["M"],
+          "note": "far more quickly 는 비교의 정도를 나타내는 수식어입니다. 대동사 판단에는 관여하지 않으므로 먼저 치웁니다."
+        },
+        {
+          "label": "② 비교의 축을 가릅니다",
+          "roles": ["CONJ"],
+          "note": "than 이 두 축을 잇습니다. 앞 축은 The updated model … processes … 이고, 뒤 축은 its bulky predecessor … 입니다."
+        },
+        {
+          "label": "③ 두 축의 동사를 대조합니다",
+          "roles": ["V"],
+          "note": "앞 축의 본동사는 일반동사 processes 입니다. 뒤 축의 동사 자리는 그것을 대신하는 대동사이므로 do 계열로 받습니다."
+        },
+        {
+          "label": "④ 대동사의 형태를 정합니다",
+          "roles": ["S"],
+          "note": "형태는 대동사 자신의 주어가 정합니다. 강조된 두 주어 중 형태를 정하는 것은 대동사 바로 앞의 its bulky predecessor 이며, 이것이 단수·현재이므로 does 입니다."
+        }
+      ],
+      "conclusion": "원본 동사가 일반동사 processes 이므로 do 계열로 받고, 대동사의 주어가 단수 현재이므로 does 가 됩니다. is 로 받으면 원본 동사가 사라집니다."
+    },
+    {
+      "id": "b10",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "대동사를 고르는 4단계",
+      "steps": [
+        {
+          "text": "than·as·so·neither·부가의문문 뒤의 동사 자리를 확인하고, 그것이 대신하는 원본 동사(구)를 앞 절에서 찾습니다.",
+          "applyNote": "than 뒤의 the old windmills 에 붙는 동사 자리입니다. 앞 절에서 대응하는 원본 동사(구)는 generate electricity 입니다. far more 는 비교의 정도를 나타내는 부분이라 대동사가 대신하는 범위에서 빠집니다."
+        },
+        {
+          "text": "원본 동사구의 첫 단어를 봅니다. be동사인지, 조동사(have·will·can 등)인지, 순수한 일반동사인지 가릅니다.",
+          "applyNote": "generate 는 be동사도 조동사도 아닌 순수한 일반동사입니다."
+        },
+        {
+          "text": "be동사면 be동사로, 조동사가 있으면 그 조동사를 그대로, 일반동사면 do 계열로 받습니다.",
+          "applyNote": "일반동사이므로 do 계열로 받습니다. 여기서 are 나 have 를 쓰면 원본 동사가 사라집니다."
+        },
+        {
+          "text": "형태(수·시제)는 원본이 아니라 대동사 자신의 주어와 그 절의 시간 표현에 맞춥니다. 그 시간 표현이 왜 특정 시제를 부르는지는 u11-c4에서 다루며, 여기서는 시점이 자명한 단서만 씁니다.",
+          "applyNote": "before they were dismantled 가 과거를 가리키므로 did 입니다. 원본이 현재형 generate 라는 사실은 형태를 정하지 않습니다."
+        }
+      ],
+      "example": {
+        "en": "The new turbines generate far more electricity than the old windmills **did** before they were dismantled.",
+        "ko": "새 터빈은 해체되기 전의 옛 풍차보다 훨씬 더 많은 전기를 생산합니다.",
+        "note": "원본은 일반동사 generate 이므로 do 계열로 받고, 시간 표현이 과거이므로 did 가 됩니다."
+      }
+    },
+    {
+      "id": "b11",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Interest in the exhibition is far stronger now than it ( did / was ) when the museum first announced the program.",
+      "steps": [
+        {
+          "title": "① 대동사 자리를 확인합니다",
+          "body": "than 뒤의 주어 it 에 붙는 동사 자리입니다. 이 자리는 앞 절의 동사를 되풀이하지 않기 위한 대동사 자리입니다."
+        },
+        {
+          "title": "② 원본 동사를 찾습니다",
+          "body": "앞 절의 뼈대는 Interest … is far stronger 입니다. 원본 동사는 be동사 is 이며, stronger 는 그 보어입니다."
+        },
+        {
+          "title": "③ 대동사의 종류를 정합니다",
+          "body": "원본이 be동사이므로 대동사도 be동사여야 합니다. did 를 넣으면 be동사가 사라져 보어 자리를 세울 동사가 없어집니다."
+        },
+        {
+          "title": "④ 형태를 확정합니다",
+          "body": "when the museum first announced the program 이 과거를 가리키므로 be동사의 과거형 was 가 옳습니다."
+        }
+      ],
+      "answer": "was",
+      "ko": "그 전시에 대한 관심은 박물관이 프로그램을 처음 발표했을 때보다 지금 훨씬 더 높습니다."
+    },
+    {
+      "id": "b12",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u11-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "Owls hunt more successfully on moonless nights than hawks {{blank}}.",
+          "options": ["do", "are"],
+          "answer": 0,
+          "translation": "올빼미는 달 없는 밤에 매보다 더 성공적으로 사냥합니다.",
+          "explanation": "빈칸은 앞 절의 일반동사 hunt 를 대신하는 대동사 자리입니다. 일반동사는 do 계열로 받으므로 do 가 옳습니다. 원본이 be동사가 아니므로 are 로 받을 수 없습니다.",
+          "trapTags": ["do-vs-be"]
+        },
+        {
+          "id": "u11-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The river is far shallower in late summer than it [[u:does]] in spring.",
+          "isCorrect": false,
+          "correction": "is",
+          "translation": "그 강은 봄보다 늦여름에 훨씬 더 얕습니다.",
+          "explanation": "앞 절의 원본 동사는 be동사 is 입니다(it is shallow 의 생략). be동사는 be동사로 받아야 하므로 does 를 is 로 고칩니다.",
+          "trapTags": ["do-vs-be"]
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "원본과 대동사 짝짓기",
+      "instruction": "앞 절의 원본 동사(구)를 그것을 되받는 알맞은 대동사와 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "resembles (일반동사)",
+          "b": "does",
+          "why": "순수한 일반동사이므로 do 계열로 받고, 주어가 단수 현재이면 does 입니다."
+        },
+        {
+          "a": "solved (일반동사 과거)",
+          "b": "did",
+          "why": "일반동사의 과거이므로 do 계열이며, 과거이므로 did 입니다."
+        },
+        {
+          "a": "is fragile (be동사)",
+          "b": "is",
+          "why": "동사구가 be동사로 시작하므로 be동사를 그대로 되울립니다."
+        },
+        {
+          "a": "were built (수동태)",
+          "b": "were",
+          "why": "수동태의 첫 단어가 be동사이므로 be동사로 받습니다."
+        },
+        {
+          "a": "has improved (완료형)",
+          "b": "has",
+          "why": "완료형이므로 완료 조동사 has 를 그대로 되풀이합니다."
+        },
+        {
+          "a": "will succeed (조동사)",
+          "b": "will",
+          "why": "조동사 will 이 있으므로 will 을 그대로 되울립니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "무엇으로 받는가",
+      "columns": ["원본이 일반동사", "원본이 be동사·조동사"],
+      "rows": [
+        {
+          "criterion": "대동사의 형태",
+          "a": "do / does / did",
+          "b": "is·are·was·were / have·has·had / will·can 등 그 조동사 그대로"
+        },
+        {
+          "criterion": "판단 근거",
+          "a": "앞 절의 동사구가 순수한 일반동사로 시작합니다",
+          "b": "앞 절의 동사구가 be동사나 조동사로 시작합니다"
+        },
+        {
+          "criterion": "수동태·완료형",
+          "a": "해당하지 않습니다",
+          "b": "were built → were, has improved → has 로 받습니다"
+        },
+        {
+          "criterion": "잘못 받으면",
+          "a": "be동사로 받으면 원본의 일반동사가 사라집니다",
+          "b": "do 로 받으면 원본의 be동사·조동사가 사라집니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "Bees navigate back to their hives far more accurately than wasps **do**.",
+          "ko": "꿀벌은 말벌보다 훨씬 더 정확하게 벌집으로 돌아옵니다.",
+          "note": "원본이 일반동사 navigate 이므로 do 로 받습니다."
+        },
+        {
+          "en": "The June samples were stored far more carefully than the earlier batch **was**.",
+          "ko": "6월의 표본은 앞선 표본군보다 훨씬 더 신중하게 보관되었습니다.",
+          "note": "원본이 수동태 were stored 이므로 be동사 was 로 받습니다. 대동사의 주어가 단수이므로 were 가 아니라 was 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Nineteenth-century readers consumed novels far more slowly than modern audiences ( do / are / did ).",
+      "givenSteps": [
+        "① than 이 잇는 두 축을 가릅니다 — 앞 축은 Nineteenth-century readers consumed novels 이고, 뒤 축은 modern audiences 입니다.",
+        "② 원본 동사를 확인합니다 — 앞 축의 본동사는 일반동사 consumed 이므로 do 계열로 받아야 합니다."
+      ],
+      "prompt": "③ 그렇다면 괄호에는 어떤 형태가 들어가야 합니까?",
+      "options": [
+        "do — 뒤 축이 가리키는 것은 현재의 독자이므로 현재형입니다",
+        "are — 비교 대상이 사람이므로 be동사가 자연스럽습니다",
+        "did — 원본 동사가 과거형이므로 대동사도 과거형이어야 합니다"
+      ],
+      "answer": 0,
+      "explain": "원본이 일반동사 consumed 이므로 do 계열이 맞습니다. 다만 형태는 원본의 시제가 아니라 대동사 자신의 절이 가리키는 시간이 정합니다. modern audiences 는 현재의 독자를 말하므로 do 가 옳습니다."
+    },
+    {
+      "id": "b16",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "대동사 반사신경",
+      "instruction": "명제가 옳으면 ○, 틀리면 ×를 제한시간 안에 누르십시오. 대동사 판단은 결국 반사 속도입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "원본 동사가 순수한 일반동사이면 대동사는 do 계열로 받습니다.",
+          "isTrue": true,
+          "why": "일반동사를 되받는 대동사는 do·does·did 입니다. 형태는 대동사 자신의 주어와 시간이 정합니다."
+        },
+        {
+          "statement": "원본이 be동사여도 대동사는 do 로 받는 것이 자연스럽습니다.",
+          "isTrue": false,
+          "why": "원본이 be동사이면 be동사로 받아야 합니다. do 로 받으면 문장을 세우던 be동사가 사라집니다."
+        },
+        {
+          "statement": "완료형 has done 은 대동사 has 로 받습니다.",
+          "isTrue": true,
+          "why": "완료 조동사 have 계열이 있으므로 그것을 그대로 되풀이합니다. do 로 바꾸지 않습니다."
+        },
+        {
+          "statement": "대동사의 시제는 언제나 원본 동사의 시제를 그대로 따릅니다.",
+          "isTrue": false,
+          "why": "종류만 원본이 정합니다. 수·시제는 대동사 자신의 주어와 그 절이 가리키는 시간이 정합니다."
+        },
+        {
+          "statement": "수동태 were built 는 대동사 were 로 받습니다.",
+          "isTrue": true,
+          "why": "수동태의 첫 단어가 be동사이므로 그 be동사로 받습니다. 주어의 수에 따라 was·were 가 갈립니다."
+        },
+        {
+          "statement": "조동사 will 이 든 동사구는 대동사 do 로 받습니다.",
+          "isTrue": false,
+          "why": "조동사가 있으면 그 조동사를 그대로 되울립니다. will 은 will 로 받아야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 수동태·완료형을 do 로 뭉개는 경우",
+      "body": "비교절 앞에 수식어가 길게 끼면 원본 동사구가 be동사나 완료 조동사를 품고 있다는 사실을 놓치고 습관적으로 do 계열을 씁니다. 대동사를 고르기 전에 원본 동사구의 첫 단어가 무엇인지부터 확인해야 합니다.",
+      "example": {
+        "en": "The samples collected in June were stored far more carefully than the ones from the earlier trial **did**.",
+        "ko": "6월에 채집된 표본은 앞선 실험의 표본보다 훨씬 더 신중하게 보관되었습니다.",
+        "note": "원본 동사구는 수동태 were stored 입니다. 첫 단어가 be동사이므로 were 로 받아야 하며 did 는 쓸 수 없습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b18",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "so·neither 로 앞 문장을 이어받을 때는 대동사와 주어가 도치됩니다. 이때도 대동사의 종류는 앞 문장의 동사가 정합니다.",
+      "examples": [
+        {
+          "en": "The report cites three unpublished studies, and **so does** the rebuttal.",
+          "ko": "그 보고서는 미발표 연구 세 편을 인용하며, 반박문 또한 그렇습니다.",
+          "note": "앞 문장의 동사가 일반동사 cites 이므로 does 로 받고, so 뒤에서 주어와 도치됩니다."
+        },
+        {
+          "en": "The first draft was not persuasive, and **neither was** the revision.",
+          "ko": "첫 초고는 설득력이 없었고, 수정본 또한 그러하지 못했습니다.",
+          "note": "앞 문장의 동사가 be동사 was 이므로 neither 뒤에도 was 가 오며 주어와 도치됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u11-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Few writers of that period revised their manuscripts as obsessively as Flaubert {{blank}}.",
+          "options": ["did", "was", "had"],
+          "answer": 0,
+          "translation": "그 시대의 작가 중 플로베르만큼 집요하게 원고를 고쳐 쓴 사람은 거의 없었습니다.",
+          "explanation": "앞 절의 원본 동사는 일반동사의 과거형 revised 입니다. 일반동사는 do 계열로 받고 시제가 과거이므로 did 가 옳습니다. 원본이 be동사도 완료형도 아니므로 was 와 had 는 쓸 수 없습니다.",
+          "trapTags": ["do-vs-be", "comparison-ellipsis"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 did 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "원본 동사가 일반동사 revised 여서 do 계열로 받아야 했고, 그 절이 가리키는 시간이 과거였기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 대동사의 종류는 원본 동사가, 형태는 대동사 자신의 주어와 시간이 정합니다."
+        },
+        {
+          "text": "Flaubert 가 한 사람이므로 단수에 맞는 형태가 필요했기 때문입니다.",
+          "correct": false,
+          "feedback": "do 계열에서 주어의 수가 형태를 가르는 것은 현재형(do/does)일 때뿐입니다. 과거형은 주어의 수와 무관하게 did 하나이므로 이것은 판단 근거가 되지 못합니다."
+        },
+        {
+          "text": "as ~ as 구문 뒤에는 관용적으로 did 를 쓰기 때문입니다.",
+          "correct": false,
+          "feedback": "비교 구문의 종류가 대동사를 정하지 않습니다. 같은 as ~ as 구문이라도 원본이 be동사면 was 가, 완료형이면 had 가 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The archives that the museum opened last year [[1:contain]] far more early photographs than the city library [[2:does]], and the prints stored there [[3:are]] far better preserved than those in private collections [[4:do]].",
+      "answer": 4,
+      "correction": "are",
+      "rationales": [
+        "관계절 that the museum opened last year 를 걷어내면 핵 주어는 복수인 The archives 입니다. 따라서 본동사는 contain 이 옳습니다.",
+        "앞 절의 원본 동사가 일반동사 contain 이므로 do 계열로 받습니다. 대동사의 주어 the city library 가 단수 현재이므로 does 가 옳습니다.",
+        "the prints stored there are better preserved 는 be동사가 이끄는 동사구입니다. 핵 주어가 복수 the prints 이므로 are 가 옳습니다.",
+        "이 자리는 앞 절의 동사구 are better preserved 를 대신하는 대동사 자리입니다. 원본이 be동사로 시작하므로 do 로 받을 수 없고, 주어 those 가 복수이므로 are 로 고칩니다."
+      ],
+      "ko": "그 박물관이 작년에 개방한 기록보관소는 시립 도서관보다 훨씬 더 많은 초기 사진을 소장하고 있으며, 그곳에 보관된 인화물은 개인 소장품에 있는 것들보다 훨씬 더 잘 보존되어 있습니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 비교절의 대동사를 틀리게 준 문장을 주고 '어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오'로 묻습니다. 원본 동사가 무엇인지 밝히고 그 종류에 맞는 형태로 고쳐야 만점입니다.",
+          "sample": {
+            "en": "The southern slope receives more sunlight in winter than the northern slope is.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "is → does (원본 동사가 일반동사 receives 이므로 do 계열로 받아야 합니다)"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 비교절 끝의 대동사에 밑줄을 긋고, 앞 절의 원본 동사와 종류가 어긋나는 형태를 선지로 만듭니다. 밑줄의 대동사 종류가 앞 절 원본 동사의 종류와 어긋나면(원본이 일반동사인데 be동사로 받거나, 원본이 be동사·완료형인데 do 로 받는 경우 모두) 그것이 정답입니다.",
+          "sample": {
+            "en": "Coral reefs recover from bleaching far more slowly than seagrass meadows [[u:are]].",
+            "ask": "밑줄 친 부분을 어법에 맞게 고치십시오.",
+            "answer": "are → do (원본 동사가 일반동사 recover 이므로 do 계열로 받습니다)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Cities have begun to plant trees along their hottest streets. [[u:A row of young maples cools the pavement far less effectively than a mature canopy does, but it costs a fraction as much.]] Planners therefore accept the slower payoff. Over two decades the young trees close much of the gap.",
+      "instruction": "밑줄 친 문장에서 대동사가 대신하는 원본 동사를 찾고, 그 형태가 왜 does 인지 설명하십시오.",
+      "found": "대동사 does 는 앞 절의 일반동사 cools 를 대신합니다. 원본이 일반동사이므로 do 계열로 받고, 대동사의 주어 a mature canopy 가 단수 현재이므로 does 입니다. is 로 받으면 원본 동사가 사라집니다.",
+      "gist": "어린 가로수는 성숙한 수관보다 포장도로를 식히는 효과가 훨씬 약하지만 비용이 적게 든다는 내용입니다."
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "비교 협곡의 되울림꾼",
+      "intro": "이 협곡에서는 앞서 나온 동사가 그대로 메아리쳐 돌아옵니다. 일반동사를 be동사로 되울리거나 완료형을 do 로 뭉개는 순간, 메아리는 어긋나 흩어집니다. 네 번의 되울림으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "Desert foxes endure the midday heat far better than domestic dogs {{blank}}.",
+          "options": ["do", "are"],
+          "answer": 0,
+          "why": "원본 동사가 일반동사 endure 이므로 do 계열로 받습니다. 대동사의 주어 domestic dogs 가 복수 현재이므로 do 이며, are 로 받으면 원본 동사가 사라집니다."
+        },
+        {
+          "prompt": "The bronze statues were cleaned far more thoroughly than the marble ones {{blank}}.",
+          "options": ["were", "did"],
+          "answer": 0,
+          "why": "원본 동사구가 수동태 were cleaned 이므로 그 첫 단어인 be동사로 받습니다. 주어 the marble ones 가 복수이므로 were 이며, did 로 받으면 be동사가 사라집니다."
+        },
+        {
+          "prompt": "Coastal towns have prepared for storms far more thoroughly than inland villages {{blank}}.",
+          "options": ["have", "did"],
+          "answer": 0,
+          "why": "원본 동사구가 완료형 have prepared 이므로 완료 조동사 have 를 그대로 되풀이합니다. do 로 받으면 완료의 의미를 진 조동사가 사라집니다."
+        },
+        {
+          "prompt": "Today's satellites capture far sharper images than the probes of the 1970s {{blank}}.",
+          "options": ["did", "do"],
+          "answer": 0,
+          "why": "종류는 원본(일반동사 capture)이 정해 do 계열이지만, 형태는 대동사 절이 가리키는 시간이 정합니다. 1970년대를 가리키므로 과거형 did 입니다."
+        }
+      ],
+      "winText": "네 번의 메아리가 정확히 되울렸습니다. 원본이 무엇으로 시작했는지 짚어내는 귀 — 그것이 비교절 대동사 문항의 열쇠이며, 방금 당신의 것이 되었습니다.",
+      "loseText": "메아리가 어긋났습니다. 네 번 모두 물은 것은 하나였습니다 — '원본 동사구는 무엇으로 시작하는가.' be동사·조동사·일반동사를 가르는 첫 단어만 다시 짚고 오면 협곡은 다시 열립니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "대동사의 종류는 ___ 이 정하고, 대동사의 수·시제는 ___ 이 정합니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "대동사는 앞에 나온 동사(구)를 되풀이하지 않기 위해 세우는 대체 동사입니다.",
+        "원본이 순수한 일반동사면 do·does·did 로, be동사면 be동사로, 조동사(have·will·can 등)를 품고 있으면 그 조동사를 그대로 되풀이합니다.",
+        "수동태(be+p.p.)와 완료형(have+p.p.)은 각각 be동사와 have 로 받습니다. do 로 받을 수 없습니다.",
+        "대동사의 수·시제는 원본이 아니라 대동사 자신의 주어와 그 절이 가리키는 시간이 정합니다.",
+        "so·neither 로 이어받을 때는 대동사와 주어가 도치되지만, 종류를 정하는 기준은 똑같습니다."
+      ],
+      "keySentence": {
+        "en": "Modern telescopes gather far more light than the instruments of Galileo's era **did**.",
+        "ko": "현대의 망원경은 갈릴레오 시대의 기구가 모았던 것보다 훨씬 더 많은 빛을 모읍니다.",
+        "note": "종류는 원본 동사 gather 가 정하고(do 계열), 형태는 대동사가 가리키는 과거가 정합니다(did)."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u11-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Wind turbines built in the 1990s produced far less power than the newest models {{blank}} today.",
+          "options": ["do", "are"],
+          "answer": 0,
+          "translation": "1990년대에 세워진 풍력 터빈은 오늘날의 최신 모델보다 훨씬 적은 전력을 생산했습니다.",
+          "explanation": "원본 동사가 일반동사 produced 이므로 do 계열로 받습니다. 형태는 대동사가 가리키는 시간이 정하는데, today 가 현재를 가리키므로 do 가 옳습니다. 원본이 be동사가 아니므로 are 는 불가합니다.",
+          "trapTags": ["do-vs-be", "tense-shift"]
+        },
+        {
+          "id": "u11-c3-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Rainfall has increased more sharply in the highlands over the past decade than it [[u:has]] anywhere else in the region.",
+          "isCorrect": true,
+          "translation": "고지대의 강수량은 지난 10년간 그 지역의 다른 어느 곳보다 더 가파르게 증가했습니다.",
+          "explanation": "앞 절의 원본 동사구가 완료형 has increased 이므로 대동사도 완료 조동사 has 로 받습니다. do 로 받으면 완료 조동사를 버리는 셈이 되므로, 밑줄의 has 는 옳습니다.",
+          "trapTags": ["do-vs-be", "perfect-aux"]
+        },
+        {
+          "id": "u11-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The manuscripts kept in the abbey were copied far more carefully than those in the royal workshop {{blank}}.",
+          "options": ["were", "did", "have"],
+          "answer": 0,
+          "translation": "그 수도원에 보관된 필사본은 왕실 공방에 있던 것들보다 훨씬 더 정성스럽게 필사되었습니다.",
+          "explanation": "원본 동사구가 수동태 were copied 이므로 그 첫 단어인 be동사로 받아야 하고, 대동사의 주어 those 가 복수이므로 were 가 옳습니다. 원본이 일반동사도 완료형도 아니므로 did 와 have 는 쓸 수 없습니다.",
+          "trapTags": ["do-vs-be", "passive-substitute"]
+        }
+      ]
+    }
+  ]
+}

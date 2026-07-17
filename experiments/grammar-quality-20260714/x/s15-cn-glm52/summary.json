@@ -1,0 +1,45 @@
+{
+  "strategy": "s15-cn-glm52",
+  "describe": "minimal 동일 프롬프트, 모델만 z-ai/glm-5.2 — Z.AI GLM 5.2 (유저 지명)",
+  "callPlan": "z-ai/glm-5.2 x1",
+  "total": 10,
+  "ok": 8,
+  "failed": 2,
+  "avgMs": 90541,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.14421,
+  "avgCostUsd": 0.01803,
+  "costRecordedCalls": 8,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 2,
+  "avgErrorCount": 4.63,
+  "zeroErrorItems": 0,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.811,
+  "avgAnswerRelPos": 0.424,
+  "answerRelPosInBand": 3,
+  "models": {
+    "z-ai/glm-5.2": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 2,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 2,
+      "zeroError": 0
+    }
+  ]
+}

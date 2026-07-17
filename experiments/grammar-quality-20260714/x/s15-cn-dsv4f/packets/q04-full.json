@@ -1,0 +1,171 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-error-not-mutated",
+    "grammar-source-expression-not-backed",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-answer-in-wrong-explanations"
+  ],
+  "warnings": [
+    "wrong-option-explanation-count",
+    "grammar-correction-differs-from-source"
+  ],
+  "topReject": [],
+  "layout": "(D):ANS=e  (A):dec=a  (B):dec=b  (C):dec=c  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 55,
+        "relPos": 0.076,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 114,
+        "relPos": 0.158,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.304,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 331,
+        "relPos": 0.459,
+        "sentenceIndex": 2,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.459,
+    "firstHalfShare": 1,
+    "notFoundCount": 1
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중에서 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(D)",
+        "expression": "which explain why",
+        "isError": true,
+        "correction": "explain",
+        "errorExpression": "explain",
+        "surroundingText": "which explain why complaining is such a popular pastime",
+        "pointCode": "e"
+      },
+      {
+        "label": "(A)",
+        "expression": "that kept us alive",
+        "isError": false,
+        "correction": "that kept",
+        "errorExpression": "that kept",
+        "surroundingText": "a trait that kept us alive when we were living on the savannas",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "that can prevent happiness",
+        "isError": false,
+        "correction": "that can prevent",
+        "errorExpression": "that can prevent",
+        "surroundingText": "but that can prevent happiness in our modern lives",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "what's going wrong",
+        "isError": false,
+        "correction": "what's going wrong",
+        "errorExpression": "what's going wrong",
+        "surroundingText": "focused on what's going wrong",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "train yourself",
+        "isError": false,
+        "correction": "train yourself",
+        "errorExpression": "train yourself",
+        "surroundingText": "train yourself to acknowledge when things go right",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(D)",
+        "text": "explain"
+      },
+      {
+        "label": "(A)",
+        "text": "that kept us alive"
+      },
+      {
+        "label": "(B)",
+        "text": "that can prevent happiness"
+      },
+      {
+        "label": "(C)",
+        "text": "what's going wrong"
+      },
+      {
+        "label": "(E)",
+        "text": "train yourself"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(D)": "(A)는 'that kept'로, 선행사 'a trait'를 수식하는 관계절이며 과거 시제가 적절하여 올바릅니다.",
+      "(A)": "(B)는 'that can prevent'로, 'but'으로 연결된 병렬 구조에서 'that kept'와 동일한 선행사를 받으며 현재 시제가 자연스러워 올바릅니다.",
+      "(B)": "(C)는 'what's going wrong'으로, 'what is going wrong'의 축약형이며 전치사 'on'의 목적어 역할을 하는 명사절로 올바릅니다.",
+      "(E)": "(E)는 'train yourself'로, 명령문의 동사 원형으로 올바릅니다."
+    },
+    "explanation": "(D)에서 'which'는 앞 문장 전체를 선행사로 하는 관계대명사로서 단수 취급되므로, 동사는 'explains'가 되어야 합니다. 'which explain'은 주어-동사 수일치 오류입니다. (A)의 'that kept'는 선행사 'a trait'를 수식하는 관계절로 과거 시제가 적절합니다. (B)의 'that can prevent'는 'but'으로 연결된 병렬 구조로, 'that kept'와 동일한 선행사를 받으며 현재 시제가 자연스럽습니다. (C)의 'what's going wrong'은 'what is going wrong'의 축약형으로, 전치사 'on'의 목적어 역할을 하는 명사절로 올바릅니다. (E)의 'train yourself'는 명령문으로, 동사 원형이 적절합니다. 따라서 정답은 (D)입니다.",
+    "keyPoints": [
+      "관계대명사 which의 수 일치",
+      "주어-동사 일치"
+    ],
+    "tags": [
+      "수능",
+      "어법",
+      "관계대명사",
+      "수일치",
+      "중급"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait __(A) that kept us alive__ when we were living on the savannas but __(B) that can prevent happiness__ in our modern lives. This so-called \"negativity bias\" can keep you focused on __(C) what's going wrong__ (which explains why complaining is such a popular pastime). To break out of this neural rut, __(E) train yourself__ to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it."
+  }
+}

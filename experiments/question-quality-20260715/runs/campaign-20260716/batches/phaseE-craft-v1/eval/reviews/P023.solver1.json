@@ -1,0 +1,35 @@
+{
+  "pid": "P023",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) In contrast",
+      "verdict": "correct",
+      "reason": "앞 문장(마음이 편안할 때 → 주의가 내부로, 우반구의 원격 연상으로)과 뒤 문장(집중할 때 → 주의가 외부로, 문제의 세부사항으로)이 정확히 대조 관계다. 연결어 'In contrast'는 문맥상 적절하고, 문두 부사구로서 형태도 어법상 문제 없음. 실전에서 연결어 밑줄은 보통 문맥 판정용인데 대조가 너무 선명해서 유혹조차 되지 않았다."
+    },
+    {
+      "label": "(B) diligently",
+      "verdict": "correct",
+      "reason": "부사 diligently가 과거분사형 형용사 focused를 수식하는 구조(we are diligently focused). 형용사/부사 구분 함정을 노린 밑줄이지만 분사(형용사)를 수식하는 것은 부사가 맞으므로 정문. 순간 'diligent focused여야 하나?' 하는 반사적 의심이 들 수 있으나 be동사의 보어 focused를 꾸미는 것은 부사여야 하므로 즉시 기각. 의미상으로도 '부지런히(열심히) 집중할 때'로 자연스럽다."
+    },
+    {
+      "label": "(C) solving",
+      "verdict": "correct",
+      "reason": "when (we are) solving problems analytically — 접속사 뒤 '주어+be' 생략(축약 부사절) 구문. 주절 주어 개념(we/this pattern of attention이 아니라 일반 주어 we가 문맥상 회복됨)과 solving의 능동 관계가 성립하므로 정문. 'when solved'와의 태 대비를 노린 밑줄로 보이는데, we가 문제를 '푸는' 능동 주체이므로 solving이 맞다."
+    },
+    {
+      "label": "(D) leads",
+      "verdict": "incorrect (정답)",
+      "reason": "the connections that leads to creative insights — 관계대명사 that의 선행사는 복수 명사 connections이므로 관계절 동사는 lead여야 한다. 장거리 단서 확인: prevents의 단수는 주어 it(this pattern of attention)과 일치해 정상이고, 이것이 leads의 단수를 정당화하지 못한다. 대안 해석 탐색 — (1) that의 선행사를 동명사구 'detecting the connections' 전체로 보아 단수 취급? 표준 어법에서 절/동명사구를 받는 계속적 관계는 which를 쓰며, 제한적 that이 선행 동명사구 전체를 받는 해석은 성립하지 않는다. (2) that을 지시대명사로 새 절 시작? 접속사 없이 절이 이어질 수 없어 불가. 따라서 leads는 어법상 틀림."
+    },
+    {
+      "label": "(E) it",
+      "verdict": "correct",
+      "reason": "가장 매력적인 오답. 직전 명사가 복수 warm showers라서 '복수 선행 표현 → 단수 it 불일치 아닌가?' 하는 유혹이 실제로 강하게 온다. 그러나 여기서 it은 특정 복수 명사의 대용이 아니라 '따뜻한 샤워(를 하는 시간)'라는 총칭적/사건적 지시로, 'it's the most relaxing part of the day'(하루 중 가장 편안한 시간)라는 단수 보어와 자연스럽게 결합한다. 구어 인용문 맥락에서 완전히 관용적인 용법이므로 정문. they로 바꾸면 오히려 'the most relaxing part'와 수가 충돌한다."
+    }
+  ],
+  "note": "실전 풀이 순서: 밑줄만 훑으며 수일치·품사·태 후보를 스캔 → (D)에서 복수 선행사 connections + 단수 leads의 원거리 수일치 오류를 즉시 포착. 유혹 기록: (E)의 warm showers(복수) 뒤 it(단수)이 15초가량 진지하게 끌렸으나, 총칭적 사건 지시 + 단수 보어(part) 결합으로 정문임을 확인하고 기각. (B)의 부사+분사 수식도 반사적 의심을 유발하지만 표준 구조. 정답은 (D) 하나로 수렴하며 복수 정답 소지 없음. 지문 논리(이완 → 내부 주의 → 원격 연상 → 통찰)도 일관적."
+}

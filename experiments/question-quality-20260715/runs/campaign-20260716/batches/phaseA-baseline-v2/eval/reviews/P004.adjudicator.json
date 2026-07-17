@@ -1,0 +1,38 @@
+{
+  "pid": "P004",
+  "finalV2": true,
+  "winningAnswer": "④",
+  "reason": "빈칸 문장은 'I'll spend more time worrying about it, talking about it, and avoiding it, than ___' 비교 구문이며, 직후 결론 'So for me, it'll always be the first thing I get done'이 성립하려면 than 뒤에는 '그 일을 실제로 처리하는 데 드는 비용'이 와야 한다. ④ 'the actual time and effort needed to resolve the matter'는 삭제된 원문 'it would actually take to just take care of it'의 의미 보존 재진술로, 두 예시(고객 대화·이메일)를 포괄하는 일반화 수준까지 정확히 맞으며 유일하게 결론을 논리적으로 도출한다. ①②③⑤는 모두 문법적으로는 than-슬롯에 결합 가능하나(명사구 비교 또는 동명사 병렬) 담화 논리에서 각각 붕괴한다: ①은 지문에 없는 '위임' 도입으로 결론('내가 직접 아침에 처리')과 방향이 정반대, ②는 지문에 근거 없는 '사과 이메일 작성'으로의 왜곡·과협소이며 'long'이 과제 비용을 부풀려 논증 방향과 충돌, ③은 '걱정 시간 > 재충전 시간'이라는 논증 무관 비교로 So-결론을 지지하지 못하고, ⑤는 'prolonged'가 '실제 처리는 걱정보다 싸다'는 요지와 충돌하는 무근거 세부인 데다 고객 대화 한 사례로 과협소하다. 솔버 양측의 판정에 과잉(성립하지 않는 대안 해석을 성립한다고 주장한 사례)이나 누락은 발견되지 않았다. 감사자가 지적한 V4 결함(오답해설 ③이 존재하지 않는 '본문과의 모순'을 근거로 제시한 오설명)은 실재하는 해설 품질 문제이지만 정답 유일성(V2)에는 영향이 없다. 따라서 선언된 정답 ④는 유일 정답이며 finalV2=true.",
+  "perDispute": [
+    {
+      "label": "①",
+      "claim": "the time required to delegate the task to someone else — than+NP 결합으로 성립 가능성 검토",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "문법 결합은 성립('spend more time ... than [the time required to ...]'). 그러나 지문 어디에도 위임이라는 대안이 도입되지 않으며, '걱정 비용 > 위임 비용'이라는 명제가 참이라면 도출될 결론은 '위임하라'인데 실제 결론은 'it'll always be the first thing I get done'(내가 직접 아침에 처리) 및 'eating my problems for breakfast'(직접 해치우는 습관)이다. 담화 방향이 정반대라 대안 해석으로 성립 불가."
+    },
+    {
+      "label": "②",
+      "claim": "the effort needed to draft a long apologetic email — ④와 동형 결합('than the effort needed to...')으로 성립 가능성 검토",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "형식 결합은 ④와 동형이라 문법으로는 탈락하지 않는다. 그러나 (i) 지문의 이메일은 'dealing with an unpleasant email' 즉 받은 메일 처리이지 '장문의 사과 이메일 작성'이 아니어서 참조 대상이 지문에 부재하고, (ii) 'long'이 과제 비용을 크게 설정해 '실제 처리 비용 < 걱정 비용' 논증 구도를 약화시키며, (iii) 고객 대화·이메일 두 사례를 하나(그것도 왜곡된 변형)로 축소해 일반화 결론을 지지하지 못한다."
+    },
+    {
+      "label": "③",
+      "claim": "recharging my emotional energy to its full capacity — worrying/talking/avoiding과의 동명사 병렬로 가장 매끄럽게 결합하는 최강 미끼, 대안 정답 가능성 검토",
+      "verdict": "불성립(오답 확정, 단 공식 오답해설의 결함 근거는 오설명)",
+      "evidence": "문법: 'spend more time V-ing ... than V-ing' 병렬이 완벽히 성립하고 'emotional energy' 어휘 반향도 있어 다섯 선지 중 표면 유혹이 가장 강하다. 논리: 그러나 '걱정에 쓰는 시간 > 에너지 완충에 쓰는 시간'이라는 비교는 '미루기의 걱정 비용 > 실제 해결 비용 → 그러므로 아침에 먼저 해치운다'는 논증을 구성하지 못하는 무관 명제로, So-결론이 도출되지 않는다. 별건: 공식 오답해설이 ③을 '에너지가 완전히 재충전된다는 진술'로 오독해 존재하지 않는 '본문과의 모순'을 결함 근거로 제시한 것은 감사자 지적대로 V4 오설명이 맞다 — in-situ 의미는 본문과 모순되지 않으며 실제 결함은 비교 대상의 담화 역할 부적합이다. 이는 해설 수정 사안일 뿐 ③이 정답이 될 수 있다는 뜻이 아니므로 V2에는 무영향."
+    },
+    {
+      "label": "④",
+      "claim": "the actual time and effort needed to resolve the matter — 선언된 정답의 성립 검증",
+      "verdict": "성립(유일 정답)",
+      "evidence": "원문 'than it would actually take to just take care of it'의 의미 보존 재진술. 문법: 비교급 생략 구문에서 'more time ... than [the actual time and effort needed ...]'의 명사구 비교가 표준적으로 성립한다. 논리: '걱정·회피에 쓰는 자원 > 실제 해결에 필요한 자원'이 (a) 앞문장 'I waste too much emotional energy'를 완성하고 (b) 'eating my problems for breakfast' 습관과 정합하며 (c) So-결론을 필연적으로 도출한다. 'the matter'가 고객 대화·이메일 두 사례를 모두 포괄하는 유일한 일반화 수준이라는 양 솔버의 판단도 타당하다."
+    },
+    {
+      "label": "⑤",
+      "claim": "engaging in a prolonged conversation with an unhappy client — 동명사 병렬 + 'unhappy client' 어휘 앵커로 의도된 대조에 가장 근접한 오답, 복수정답 가능성 검토",
+      "verdict": "불성립(오답 확정)",
+      "evidence": "문법 결합은 매끄럽다(동명사 병렬). 대안 해석으로 '걱정 시간이 (심지어) 길어진 대화보다도 길다'는 읽기를 시도할 수 있으나, (i) 'prolonged'는 '실제 처리는 생각보다 짧고 싸다'는 지문 함의와 정면 충돌하는 무근거 세부여서 지문이 제공하지 않은 강한 전제를 요구하고, (ii) 고객 대화 한 사례로만 축소되어 이메일 사례와 'the first thing I get done'의 일반성을 커버하지 못한다. '가장 적절한 것' 기준에서 ④가 존재하는 한 단독 옹호 불가능하며 복수정답 소지 없음."
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "pid": "P054",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "EXPL_OVERSTATED_VALENCY",
+      "severity": "minor",
+      "evidence": "해설 3문장: 'us를 후위수식하는 분사로 강제 해석하려 해도 help 동사의 필수적인 보어 자리가 비게 되어 문장 구조상 성립하지 않습니다.' help의 목적격 보어는 필수 논항이 아니다('They have helped us'만으로 완결). 대안 해석이 실패하는 실제 이유는 대명사 us가 제한적 분사 후위수식을 허용하지 않고(콤마 없는 비제한 수식도 불가) 의미상('감정이 우리를 도왔다' 주체와 '시련을 살아남은' 주체 불일치 해소 불가) 성립하지 않기 때문이다. 결론(분사 해석 불가·정답 유일성)은 옳고 용어는 표준적이므로 V4 실패가 아닌 경미 결함으로 판정하나, 예리한 학생의 이의제기('He helped me도 보어 없이 성립')에 취약한 문구이므로 재작성 권고."
+    },
+    {
+      "code": "MARKED_EXPR_FIELD_CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (E)의 expression='survive'·surroundingText가 원문(교정형) 기준인 반면 (A)~(D)는 렌더 표시형 기준으로 기재되어 필드 관례가 엇갈린다. errorExpression='surviving'·correction='survive'·isError=true는 정답 라벨·해설과 모두 일치하므로 학생 노출 모순은 없다(내부 데이터 위생 수준)."
+    },
+    {
+      "code": "DECOY_POINT_OVERLAP",
+      "severity": "minor",
+      "evidence": "(B)와 (D)가 동일 pointCode 'b'(관계사 계열)를 공유. 하위 기술은 다르나(콤마 삽입구를 낀 주격 관계대명사 vs 전치사+관계대명사의 완전절 검증) 오개념 분포가 관계사에 2/4로 쏠림."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "동사 helps의 주어로 쓰인 동명사구 핵 판별 — 분사구문/병렬 착시 유도",
+      "temptingBecause": "앞의 'Fear has helped us…, expressing anger helps…'와 병렬로 이어져, 분사구문이나 시제 일치 문제로 오인하거나 expressed 등 다른 형태를 기대하게 만든다.",
+      "decisiveFlaw": "정답 불가: 'expressing positive emotions'는 helps의 주어 역할을 하는 동명사구로 완전히 적법하며, 앞 절 'expressing anger helps'와 정확히 같은 구조다."
+    },
+    {
+      "label": "(B)",
+      "intent": "콤마 삽입구(when triggered)를 낀 주격 관계대명사 that의 적법성 판단",
+      "temptingBecause": "'that,' 직후에 콤마가 와서 '콤마 뒤 that 불가' 류의 기계적 규칙을 적용한 학생이 which로 고쳐야 한다고 오판하기 쉽다.",
+      "decisiveFlaw": "정답 불가: that의 선행사는 a kind of \"program\"이고 콤마쌍은 삽입구 when triggered를 감싼 것일 뿐, that은 directs의 주어인 주격 관계대명사로 적법하다."
+    },
+    {
+      "label": "(C)",
+      "intent": "사역동사 make의 목적격 보어 자리 품사(형용사 vs 부사) 판별",
+      "temptingBecause": "'makes us very ___'에서 동사 수식으로 착각해 attentively(부사)를 기대하게 만든다.",
+      "decisiveFlaw": "정답 불가: make(5형식)의 목적격 보어는 목적어 us의 상태를 서술하는 형용사 attentive가 맞고 부사는 불가하다."
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사+관계대명사(in which) 뒤 절의 완전성 검증",
+      "temptingBecause": "in which/which/that 교체 여부를 묻는 전형 포인트로, 뒤 절 구조를 끝까지 확인하지 않으면 which나 that으로 고쳐야 한다고 오판할 수 있다.",
+      "decisiveFlaw": "정답 불가: 선행사 the specific ways 뒤에서 'they activate our systems'는 완전한 절이므로 in which(=how 상당)가 적법하다."
+    },
+    {
+      "label": "(E)",
+      "intent": "준사역동사 help의 목적격 보어 형태(원형부정사/to부정사) 판별 — 선언된 정답",
+      "temptingBecause": "목적어 us와 보어 사이에 삽입된 '(as a species)'가 시야를 끊고, surviving이 뒤의 challenges를 목적어로 자연스럽게 취하는 것처럼 보여 분사 수식으로 오독하게 만든다.",
+      "decisiveFlaw": "실제 오류: help+목적어의 보어는 원형부정사(survive) 또는 to부정사(to survive)여야 하며 -ing형은 불가. 교정하면 정확히 원문 'helped us (as a species) survive'가 된다. 같은 지문 앞부분의 'has helped us avoid dangers'가 내부 대조 근거."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "정답 해설 3문장이 help의 목적격 보어를 '필수적인 보어 자리'라고 일반화 — help는 보어 없이 3형식('They have helped us')으로도 완결되므로 문법 사실로서 부정확. 분사 해석 배제의 근거를 '대명사에 대한 제한적 분사 후위수식 불가 + 의미 불성립'으로 교체 권고.",
+      "recommendation": "3문장을 '대명사 us는 제한적 분사 수식을 받을 수 없고, 문맥상 시련을 살아남은 주체는 우리이므로 분사 수식 해석은 성립하지 않는다' 정도로 재작성."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문을 원지문과 전문 대조 — 유일한 변형은 survive→surviving(의도된 오류 주입)이며 접합 파손·중복·누락·고아 문장부호 없음, (A)~(E) 라벨·선지 일치. V2: 5개 밑줄 독립 검증 결과 (A) 동명사 주어, (B) 삽입구 낀 주격 관계대명사, (C) make의 형용사 보어, (D) in which+완전절 모두 적법하고 (E)만 오류 — 단일 정답 확정, blind solve 일치(high). 분사 후위수식 대안 해석은 대명사 제한 수식 불가와 의미 불일치로 배제되어 정답 포인트는 문맥 선호가 아닌 명확한 문법 판단. V3: 지문·발문·교정 완성문(=원문) 모두 문법적('long ago'+현재완료의 어색함은 원지문 고유로 문항 책임 아님). V4: 용어(동명사·주격 관계대명사·목적격 보어·전치사+관계대명사) 및 구조 분석 전반 정확, 오답 해설 4건 모두 실제 선지 내용과 대응. 단 정답 해설의 'help 필수 보어' 일반화는 부정확한 문구로 경미 결함 — 결론이 옳고 정답 판정에 영향이 없어 V4 통과로 판정하되 재작성 권고. V5: 정답 라벨·선지·오답 해설 키(A~D)·keyPoints·markedExpressions.isError 상호 모순 없음. 공예: 정전 포인트(준사역 help 보어)를 삽입구로 은폐한 견실한 INTERMEDIATE 문항, 오답 4개 모두 서로 다른 유혹 근거 보유(관계사 2개 중복은 감점 요인), 지문 내 'helped us avoid' 병렬 단서로 정답 필연성 확보. C6=2(해설 3문장 부정확)로 합계 17, 전 V 통과 → B(해설 한 문장 수정으로 출하 가능). 요청 난이도 INTERMEDIATE이므로 killerConditionsMet=false."
+}

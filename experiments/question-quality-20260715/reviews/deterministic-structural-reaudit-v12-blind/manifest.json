@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "study": "deterministic-structural-reaudit-v12-blind",
+  "verdict": "PARTIAL",
+  "caseCount": 384,
+  "familyCount": 64,
+  "corpusSha256": "8695bc1b7c0539594ec08e57c6b107e52a943c85c13b460879c845e22f90ca52",
+  "oracleSha256": "8096ca7e386b7fc146eb4837e2d6d06b284e36efcde15481d983a1900ecf7573",
+  "files": {
+    "README.md": {
+      "sha256": "1feb128d3852ffdb5e5be8f72b08fc4f846d85e0bbfa853383e1a51eb5f620c8",
+      "bytes": 4062
+    },
+    "REPORT.md": {
+      "sha256": "f9a32bf1607fed6ec8e99e72add98421f33bfac5ce1613e8613714b704428c34",
+      "bytes": 9403
+    },
+    "build-corpus.mjs": {
+      "sha256": "fb3506703407642d31cbd5c57a36207c4e60c9cf352425951e3b7314f474b72c",
+      "bytes": 31303
+    },
+    "run-audit.mts": {
+      "sha256": "bccccc37c0e217db44ac7d0c149af204a05e2a597e3d331f6b889991e2923ce0",
+      "bytes": 23454
+    },
+    "audit.test.mjs": {
+      "sha256": "c243e7cc22f8bde59f38abd78b31d699790ec2c6bdb1e106d7c4006a99f0e8cd",
+      "bytes": 5152
+    },
+    "verify.mjs": {
+      "sha256": "ee9b3d174e0867bd04ef28960b350342ab19b275091d37ba3eba6d6533f753e7",
+      "bytes": 2620
+    },
+    "finalize-manifest.mjs": {
+      "sha256": "f35c3cfecd21c89d7d027c08dfeb14a0b2f83dc909cb1a0587f32b5e86a700cd",
+      "bytes": 1361
+    },
+    "tsconfig.json": {
+      "sha256": "3908f5a84e8d6a2976353d5ab367afd5973ea5938da6404a1439fa83a78d27f6",
+      "bytes": 190
+    },
+    "corpus.json": {
+      "sha256": "8695bc1b7c0539594ec08e57c6b107e52a943c85c13b460879c845e22f90ca52",
+      "bytes": 842817
+    },
+    "oracle.json": {
+      "sha256": "8096ca7e386b7fc146eb4837e2d6d06b284e36efcde15481d983a1900ecf7573",
+      "bytes": 88323
+    },
+    "seal.json": {
+      "sha256": "c32fcc7637ec9b10300a51ba4cff6f27fa63586cdbd1138ce8807e4b3a454299",
+      "bytes": 386
+    },
+    "results.json": {
+      "sha256": "6ded1eb1a66027e4eaa94f1bf6b7750a03e09ac8dcd8fe605a9a29bbfa895460",
+      "bytes": 707209
+    }
+  }
+}

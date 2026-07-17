@@ -1,0 +1,72 @@
+{
+  "pid": "P014",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-ATTACHMENT-AMBIGUITY",
+      "severity": "minor",
+      "evidence": "In 'skills like walking, running, and jumping that is necessary', a low-attachment parse (relative clause modifying only 'jumping') is syntactically conceivable, which would make singular 'is' defensible. However the clause semantically defines the plural appositive head 'skills' (elaborating 'physical abilities'), and 'jumping that is necessary for everyday living' is semantically anomalous; under standard exam convention the antecedent is unambiguously 'skills'. Does not threaten answer uniqueness, noted for completeness."
+    },
+    {
+      "code": "V5-EXPRESSION-FIELD-SEMANTICS",
+      "severity": "minor",
+      "evidence": "markedExpressions (D) stores expression='are' (source form) while the rendered/underlined token is 'is' (stored in errorExpression). This is internally consistent with the schema pattern used by the non-error entries (expression=source, errorExpression=displayed, correction=corrected) and matches the rendered passage and option list, so it is not a sync failure, but renderers must read errorExpression, not expression, for the displayed token."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "Subject-verb agreement with 'A as well as B' subject: verb agrees with the first noun (Animals, plural), not the nearer noun.",
+      "temptingBecause": "The noun nearest the verb is singular 'humans', and students often misremember whether 'as well as' phrases affect agreement, inviting the judgment that 'engages' is required.",
+      "decisiveFlaw": "Head subject is plural 'Animals'; 'as well as humans' is a parenthetical addition that does not change agreement, so plural 'engage' is correct — not an error."
+    },
+    {
+      "label": "(B)",
+      "intent": "Preposition + relative pronoun ('in which') vs. bare relative/relative adverb before a complete clause.",
+      "temptingBecause": "Students may expect 'which' or 'that' alone after 'a way', or doubt whether 'in which' can substitute for 'that/how'.",
+      "decisiveFlaw": "The following clause 'children learn about the world and their place in it' is complete (no gap), so 'in which' (= where/how) modifying 'a way' is correct — not an error."
+    },
+    {
+      "label": "(C)",
+      "intent": "Gerund as object of a preposition ('for developing').",
+      "temptingBecause": "Learners may consider 'developed' (participle modifying 'abilities') or an infinitive after 'training ground for'; temptation is comparatively low.",
+      "decisiveFlaw": "'for' requires a nominal object and 'developing physical abilities' is the natural gerund phrase — correct as written, not an error."
+    },
+    {
+      "label": "(D)",
+      "intent": "Verb number agreement inside a subject relative clause: agreement with the true antecedent 'skills', not the nearest noun.",
+      "temptingBecause": "The nearest candidate antecedent is the singular gerund 'jumping' at the end of the list, and the plural head 'skills' sits before the enumeration 'like walking, running, and jumping', making singular 'is' look plausible on a local read.",
+      "decisiveFlaw": "The relative clause modifies plural 'skills' (dash-appositive restating 'physical abilities'), so the verb must be 'are'; displayed 'is' is the single error, and correcting it restores the source exactly."
+    },
+    {
+      "label": "(E)",
+      "intent": "To-infinitive parallelism: 'to try out and learn ... and to acquire ...' coordinated under 'allows children'.",
+      "temptingBecause": "The first conjunct 'to try out and learn' contains its own internal coordination and an intervening object ('social behaviors'), obscuring what 'and to acquire' is parallel to; students may expect bare 'acquire' or 'acquiring'.",
+      "decisiveFlaw": "'to acquire' correctly parallels 'to try out' as a second complement of 'allows children' — not an error."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "A-EXPLANATION-SHALLOW",
+      "severity": "minor",
+      "evidence": "The (A) note says only that 'engage' is the finite verb linked to the subject 'Animals as well as humans'; it never states the operative rule (agreement follows the first noun in 'A as well as B'), which is the very reason the decoy is tempting. Factually correct but pedagogically incomplete."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "All validity gates pass. V1: only intended change is are->is at (D); everything else verbatim, labels/markers aligned. V2: independent per-option verification confirms exactly one error, (D); the low-attachment quibble at (D) is semantically non-viable. V3: passage/stem/corrected sentence all grammatical; the sole ungrammaticality is the intended error. V4: explanation's antecedent identification (plural 'skills' after the hyphen), correction (is->are), and all four distractor analyses match the actual syntax. V5: answer label, options, explanations, keyPoints, markedExpressions mutually consistent. Craft: a clean, canonical intermediate agreement item (C5=4, difficulty fit is precise); held below A by a very standard point (C1=3), a low-temptation (C) decoy (C2/C3=3), and an (A) note that omits the as-well-as rule (C6=3). Sum 19 -> Grade B: shippable with small polish (strengthen the (A) explanation, optionally swap (C) for a sharper decoy). Requested difficulty is INTERMEDIATE, so KILLER conditions do not apply (false)."
+}

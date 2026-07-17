@@ -1,0 +1,77 @@
+{
+  "pid": "P081",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "오답 해설 (A): \"문장의 주체가 'flashbulb memories'이고\" — 실제 문장 주어는 'National tragedies'이고 memories는 create의 목적어다. 분사 named의 의미상 주어(수식 대상)를 가리키려는 의도로 선해 가능하고 결론(수동 관계 → 과거분사 적절)은 정확하므로 치명 아님."
+    },
+    {
+      "code": "V1-note-source-discourse",
+      "severity": "minor",
+      "evidence": "원지문 자체에 'numerous studies ... including surveys' 직후 'In this study'라는 단수 지시가 등장하는 담화적 어색함이 있으나, 이는 원문에 이미 존재하며 렌더링 손상이 아니다. 렌더 지문은 (E)에서 'of which'→'which' 의도 변형 외에 원문과 완전 일치."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 4,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사의 능·수동 판별 (과거분사 vs 현재분사)",
+      "temptingBecause": "콤마 뒤 분사구가 주절 주어 'National tragedies'와 걸리는 것으로 오독하면 능동 naming으로 고치고 싶어진다.",
+      "decisiveFlaw": "수식 대상은 직전 명사 'flashbulb memories'이고 memories는 이름 붙여지는 대상(수동)이므로 named가 정확하다. 오답(정답 아님)."
+    },
+    {
+      "label": "(B)",
+      "intent": "형용사 vs 부사 — 분사 수식",
+      "temptingBecause": "명사 catastrophes 바로 뒤라 명사를 수식하는 형용사 thorough 자리로 착각할 수 있다.",
+      "decisiveFlaw": "thoroughly는 과거분사 reported를 수식하므로 부사가 맞다. 오답(정답 아님)."
+    },
+    {
+      "label": "(C)",
+      "intent": "be동사 주격보어 자리 형용사 vs 부사(precisely)",
+      "temptingBecause": "동사 뒤 자리를 기계적으로 부사 자리로 판단하는 학생을 겨냥.",
+      "decisiveFlaw": "be의 주격보어이므로 형용사 precise가 맞다. 다소 쉬운 디코이. 오답(정답 아님)."
+    },
+    {
+      "label": "(D)",
+      "intent": "전치사화된 분사 including의 용법",
+      "temptingBecause": "주어(studies)와의 능·수동을 따져 included로 교정하고 싶어질 수 있다.",
+      "decisiveFlaw": "including은 '~을 포함하여'라는 전치사 용법으로 명사구 목적어(surveys...)를 취하므로 적절하다. 오답(정답 아님)."
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사+관계대명사 vs 단순 관계대명사 — 관계절 완전성 판단",
+      "temptingBecause": "선행사 those 뒤에 관계대명사 which가 오는 표면 형태 자체는 매우 자연스러워 보이고, 뒤의 병렬 'the ones that have most changed'가 gapped 관계절이라 유추 오염을 일으킨다.",
+      "decisiveFlaw": "후행절 'they are most confident'에는 which가 채울 공백이 없다. confident는 'be confident of ~' 보충어 구조가 필요하므로 of which로 고쳐야 하며, 교정 시 정확히 원문이 된다. 유일한 정답."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "(A) 오답 해설의 '문장의 주체가 flashbulb memories' — 문장 주어는 National tragedies. '분사의 수식 대상/의미상 주어'로 표현했어야 정확.",
+      "recommendation": "'문장의 주체' → '분사가 수식하는 명사(의미상 주어)'로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (E),(A),(B) 3개만 다루고 (C),(D)는 누락 — 모순은 아니나 커버리지가 부분적.",
+      "recommendation": "keyPoints에 (C) 보어 자리 형용사, (D) 전치사 including 항목 추가 고려."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 변형은 (E) 'of which'→'which' 단 하나이며 minimal pair 성립, 교정 시 원문 복원. 각 밑줄 독립 검증 결과 (A)~(D)는 모두 어법상 적절하고 (E)만 유일하게 틀림(단일정답 확정). 해설의 통사 분석(완전한 절 + confident of 보충어 필요 + 선행사 those)은 실제 구조와 일치. 공예: 정답 포인트(전치사+관계대명사, 관계절 완전성)는 정전급이며 병렬 'the ones that...'와의 대비로 구조 독해를 요구해 C4=4, INTERMEDIATE 난이도에 정확히 부합해 C5=4. 다만 디코이 중 (B),(C)가 즉시 소거 수준으로 쉬워 C3=3에 그치고, 해설 (A)의 '문장의 주체' 용어 느슨함으로 C6=3. 합계 20으로 A 기준(21)에 1점 미달 → B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

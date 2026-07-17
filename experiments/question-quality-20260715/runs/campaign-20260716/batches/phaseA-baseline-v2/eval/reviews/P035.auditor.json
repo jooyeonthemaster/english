@@ -1,0 +1,94 @@
+{
+  "pid": "P035",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-wording-C",
+      "severity": "minor",
+      "evidence": "(C) 오답 해설 '문장의 가주어 it을 대신하여 ... 진주어가 필요하므로'는 대치 방향이 뒤집힌 서술이다(표준 기술은 '가주어 it이 진주어 to부정사를 대신한다'). 구조 식별 자체(it=가주어, to think=진주어)는 정확하므로 치명 아님."
+    },
+    {
+      "code": "V4-minor-wording-D",
+      "severity": "minor",
+      "evidence": "(D) 해설이 제한적 관계절('The only example that comes to mind')을 '부연 설명하는 관계사절'로 지칭. 제한(한정) 용법을 계속적 용법 뉘앙스의 용어로 부른 경미한 용어 느슨함. 주격 관계대명사+동사 comes라는 핵심 판정은 정확."
+    },
+    {
+      "code": "V4-minor-wording-E",
+      "severity": "minor",
+      "evidence": "(E) 주해설 '접속사 but 뒤에 이어진 절에서'는 실제로는 주어 It을 공유하는 술부 등위접속(seems to yield ... but in fact does not)이며 완전한 절이 아님. 또한 '대신받는'은 '대신하는'의 오기성 표현. 대동사 판정 논리 자체는 정확."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "분사의 능·수동 판정 (현재분사 vs 과거분사)",
+      "temptingBecause": "명사 뒤 분사 후치수식 자리에서 능동 -ing(embodying)을 기대하거나, 'a process ... in a machine'의 관계를 능동으로 오독할 수 있다.",
+      "decisiveFlaw": "embody는 타동사이고 process는 기계에 '구현되는' 대상이므로 수동 과거분사 embodied가 정확 — 오류 아님."
+    },
+    {
+      "label": "(B)",
+      "intent": "재귀대명사 vs 인칭대명사 (절 내 주어-목적어 동일 지시)",
+      "temptingBecause": "관계사절 목적어 자리에 it을 기대하거나, 재귀형이 과잉이라고 느낄 수 있다.",
+      "decisiveFlaw": "관계사절 주어(that = any process)와 repeats의 목적어가 동일 지시이므로 재귀대명사 itself가 필수 — 오류 아님."
+    },
+    {
+      "label": "(C)",
+      "intent": "가주어 it - 진주어 to부정사 구문",
+      "temptingBecause": "impossible 뒤에서 동명사(thinking of)나 전치사 구문과 혼동할 수 있다.",
+      "decisiveFlaw": "it is (almost) impossible to-V는 표준 가주어-진주어 구문으로 to think가 정확 — 오류 아님."
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 관계대명사 that (선행사 존재 + 절 내 주어 공백)",
+      "temptingBecause": "what/관계부사 대체 가능성을 잠깐 검토하게 하나, 선행사가 명시적이고 구조가 단순해 매력도가 낮다(준필러).",
+      "decisiveFlaw": "선행사 The only example이 있고 관계사절 내 주어가 비어 있으며 동사 comes가 바로 이어지므로 주격 that이 정확 — 오류 아님."
+    },
+    {
+      "label": "(E)",
+      "intent": "대동사 do vs be (VP 생략의 선행사 복원) — 정답",
+      "temptingBecause": "직전 문장의 'appears to be like this'와 be동사 흐름, seems 뒤 be 연상 때문에 is not이 자연스러워 보일 수 있다.",
+      "decisiveFlaw": "생략된 선행 술어가 일반동사구 'yield a smooth time scale'이므로 be형 생략은 복원할 선행사가 없어 비문 — does not이어야 하며 교정 시 원문과 정확히 일치하는 최소대립쌍. ('is not [like this]'로의 구제 독해는 문장 경계를 넘는 데다 지문 내용(그것도 like this임)과 모순되어 성립 불가.)"
+    }
+  ],
+  "explanationIssues": [
+    "(C) 해설: '가주어 it을 대신하여 진주어가 필요' — 대치 방향 반전 표현. '의미상 주체의 동작을 나타내는'도 불필요한 군더더기.",
+    "(D) 해설: 제한적 관계절을 '부연 설명하는'으로 지칭 — 용법 용어 느슨함.",
+    "(E) 주해설: '접속사 but 뒤에 이어진 절' — 실제로는 술부 등위접속. '대신받는' — 비표준 표현."
+  ],
+  "issues": [
+    {
+      "severity": "minor",
+      "evidence": "(D) that은 선행사와 comes가 인접해 즉시 확인 가능한 준필러 수준의 디코이로, 5지 중 실질 경합 선지는 (A)(B)(E) 정도다.",
+      "recommendation": "(D)를 병렬 구조나 접속사/관계사 경계처럼 실제 판단이 필요한 자리로 교체하면 C2/C3가 상승한다."
+    },
+    {
+      "severity": "minor",
+      "evidence": "'It seems to X but in fact ___ not' 틀은 do-대동사 포인트를 패턴 학습자에게 다소 전형적으로 노출한다.",
+      "recommendation": "INTERMEDIATE 라벨에서는 허용 가능. 상위 난이도 재활용 시 생략 구조를 덜 전형적인 위치로 옮길 것."
+    },
+    {
+      "severity": "minor",
+      "evidence": "(C)/(D)/(E) 해설의 용어·방향 표현 느슨함 3건 (validityIssues 참조).",
+      "recommendation": "해설 문구를 표준 문법 기술로 교정 (가주어 it이 진주어를 대신 / 수식·한정하는 관계사절 / 술부 등위접속)."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "블라인드 풀이 정답 (E)로 선언 정답과 일치. is→does 교정 시 원지문과 정확히 일치하는 source-correct → displayed-wrong 최소대립쌍이며, 대동사 판정은 문맥 선호가 아닌 명확한 문법 판단(VP 생략 선행사가 일반동사구)이다. V1~V5 전부 통과. 렌더 지문은 의도된 is 치환 외 원지문과 완전 일치. 네 디코이가 각기 다른 문법점(분사 능수동/재귀대명사/가주어-진주어/주격 관계사)을 겨냥해 의도 밀도는 양호하나 (D)의 매력도가 낮고, 해설에 경미한 용어·표현 느슨함이 3건 있어 C6=2. 합계 17, 최저 C=2 → B (작은 해설 수정으로 출하 가능). 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님."
+}

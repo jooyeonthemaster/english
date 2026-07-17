@@ -1,0 +1,69 @@
+{
+  "pid": "P072",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-unsupported-addition",
+      "severity": "minor",
+      "evidence": "해설 첫 문장의 '쇼핑카트 무료 시범단을 통한 마케팅 성공'에서 '무료'는 지문 어디에도 근거가 없다. 지문은 'He hired several models'로 모델들을 고용했다고 명시하며, 무료라는 속성은 언급되지 않는다. 다만 인과·구조 분석 자체는 정확하므로 V4 실패로 보지 않고 경미한 첨가로 기록한다."
+    },
+    {
+      "code": "V2-note-verbatim-answer",
+      "severity": "minor",
+      "evidence": "정답 ④ 'what logic, explanations, and advertisements failed to do'는 원지문 삭제 span의 축자 복사본이다. 정답 유일성 자체는 성립하지만(각 선지 독립 검증 결과 ④만 통사·의미 양면에서 성립), 추상화가 전무하여 빈칸 문항으로서의 설계 가치가 낮다. validity 실패는 아니며 C3/C4/C5 감점 근거."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "지엽 세부(노인 소수 사용자)로의 scope shift — 문제 해결 서사와 무관한 주변 인물 디테일 겨냥",
+      "temptingBecause": "'elderly shoppers'가 지문에 축자 등장하고, 'heavy groceries'는 초반의 'buy as much as they wanted without getting tired'와 연상 연결된다.",
+      "decisiveFlaw": "빈칸은 바람잡이(shills)가 '이뤄낸 것'이어야 하는데 노인들의 식료품 처리 방식은 성취 대상이 아니며 서사와 무관하다. 또한 'accomplished + how 의문절'은 accomplish의 NP 목적어 요구를 충족하지 못해 통사적으로도 어색하다."
+    },
+    {
+      "label": "②",
+      "intent": "actor swap — 남성(약해 보임 우려)과 여성(유모차 연상)의 거부 이유를 교차 결합한 세부 왜곡",
+      "temptingBecause": "'men were reluctant'와 'baby carriages'가 모두 지문 축자 표현이라 훑어 읽은 학생에게 그럴듯하다.",
+      "decisiveFlaw": "유모차를 연상한 것은 여성이고 남성이 꺼린 대상은 카트다(주어-대상 오결합). 게다가 '꺼린 이유'는 바람잡이가 성취한 것일 수 없고, 'accomplished + why 의문절'도 통사적으로 성립하지 않는다."
+    },
+    {
+      "label": "③",
+      "intent": "causal contradiction — 실패했다고 명시된 광고가 '마침내 성공했다'는 인과 왜곡",
+      "temptingBecause": "'advertisements', 'persuaded', 'customers'가 지문 어휘와 겹치고, '결국 광고가 통했다'는 통념적 서사가 그럴듯하다.",
+      "decisiveFlaw": "지문이 'in spite of his repeated advertisements and explanations, he could not persuade'로 광고 실패를 명시하며, 전환점은 바람잡이 고용이었다. 'accomplished + when 의문절'도 통사적으로 부적격이다."
+    },
+    {
+      "label": "④",
+      "intent": "정답 — 이성적 설득(logic, explanations, advertisements)의 실패와 사회적 증거(shills)의 성공이라는 핵심 인과 대조를 복원",
+      "temptingBecause": "해당 없음(정답). accomplished의 NP 목적어가 되는 자유관계절(what절)로 유일하게 통사·의미 양면에서 성립한다.",
+      "decisiveFlaw": "없음. 단, 원지문 span의 축자 복사라 추상화가 전무하다는 설계상 약점이 있다."
+    },
+    {
+      "label": "⑤",
+      "intent": "polarity/causal reversal — 바람잡이의 성과(수용 유도)를 정반대 결과(매력 저하)로 뒤집은 함정",
+      "temptingBecause": "정답과 동일한 'what' 자유관계절 형태라 통사적으로 성립하고, 'less attractive'가 지문 축자 표현이다.",
+      "decisiveFlaw": "직후 문장 'Within a few weeks shoppers readily accepted those carts'가 성공 극성을 못박으므로 정반대 흐름이다. '매력을 떨어뜨린 것'의 원인은 바람잡이가 아니라 그 이전의 노인 소수 사용이었다."
+    }
+  ],
+  "explanationIssues": [
+    "해설 첫 문장 '쇼핑카트 무료 시범단을 통한 마케팅 성공'의 '무료'는 지문에 근거 없는 첨가다(모델들은 고용됨, 'He hired several models').",
+    "본 해설이 다소 장황하며(빈칸 요구·인용·결론이 한 단락에 중첩), '가장 매력적인 오답 ③' 지목은 타당하나 근거 서술이 반복적이다."
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과. 정답 유일성은 견고하다: ④만이 accomplished의 NP 목적어(자유관계절)로 통사적으로 성립하면서 '설득 실패 vs 사회적 증거 성공'의 인과 대조를 충족하고, ①②③은 의문절이라 통사적으로도 어색하며 의미상 각각 지엽/actor swap/인과 모순, ⑤는 극성 역전으로 탈락한다. 그러나 공예 결함이 뚜렷하다: (1) 정답이 원문 span의 축자 복사라 추상화·재구성 단계가 전혀 없다. (2) 직후 문장의 'readily accepted'가 성공 극성을 노출해 ③⑤가 즉시 소거되고, ①②③은 accomplish의 통사 선택제한만으로도 걸러져 실질 경쟁 선지가 거의 없다. (3) 'advertisements', 'explanations'가 지문 앞부분에 축자 등장해 어휘 매칭만으로 정답 도달이 가능하다(단서 누출). 오답들의 함정 유형 자체는 scope shift/actor swap/causal contradiction/polarity reversal로 다양하게 설계되어 C2는 양호하나, 체감 난이도가 INTERMEDIATE 하한 이하로 쉬워 C5도 감점. C 합계 14(<17)로 등급 C — 출하하려면 정답의 추상화(예: 'what rational persuasion could not achieve' 수준의 재표현)와 극성 단서 완화가 필요하다. KILLER 요청이 아니므로 killerConditionsMet=false."
+}

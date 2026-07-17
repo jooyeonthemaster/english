@@ -1,0 +1,646 @@
+{
+  "id": "u03-c3",
+  "unitId": "u03",
+  "order": 3,
+  "title": "자동사는 수동 불가",
+  "oneLiner": "목적어가 없는 자동사(occur·happen·appear·arise·remain)는 수동태로 쓸 수 없습니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "SMOAT 어법 커리큘럼 백본 u03 능동 vs 수동(태) — src/lib/grammar-drill/curriculum.ts",
+      "SMOAT 어법 드릴 문항 뱅크 u03-c3 (u03-choice.json)",
+      "2015 개정 교육과정 [별책14] 별표4 언어형식 — 수동태(중 ●)"
+    ]
+  },
+  "lenses": ["L3", "L5"],
+  "confusableWith": ["u03-c1", "u03-c2", "u03-c4"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "A serious accident occurred at the intersection last night.",
+        "A serious accident was occurred at the intersection last night."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 be동사 하나입니다. 이 레슨을 마치면 왜 두 번째가 애초에 존재할 수 없는 형태인지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "자동사와 타동사",
+      "question": "자동사와 타동사가 무엇이고, 그게 수동태와 무슨 상관입니까?",
+      "plain": "타동사는 뒤에 목적어(동작의 대상)를 데려오고, 자동사는 목적어 없이 주어의 움직임만으로 끝납니다. 수동태는 그 목적어를 주어로 끌어올리는 장치이므로, 목적어가 없는 자동사에는 아예 만들 수 없습니다.",
+      "analogy": "수동태는 뒤에 있던 물건을 무대 앞으로 옮겨 세우는 일과 같습니다. 타동사에게는 옮길 물건(목적어)이 있지만, 자동사에게는 옮길 물건이 처음부터 없어 무대를 바꿀 수가 없습니다.",
+      "whyItMatters": "수능 어법은 발생·출현·존재 계열 동사에 be+p.p.를 슬쩍 씌워 오답을 유도합니다. 이 동사가 목적어를 데려오는 동사인지부터 보는 눈이 있으면 그 함정은 즉시 무너집니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "주어가 사물이고 동사 뒤에 목적어가 보이지 않으면 수동태로 써야 합니다.",
+      "truth": "목적어가 없다는 것은 수동의 신호가 아닙니다. 그 동사가 애초에 목적어를 취하지 않는 자동사라는 신호일 수 있습니다. 자동사는 수동태로 바꿀 목적어 자체가 없으므로 be+p.p. 결합이 불가능합니다.",
+      "counterExample": {
+        "en": "The accident **was happened** near the old bridge.",
+        "ko": "그 사고는 낡은 다리 근처에서 발생했습니다.",
+        "note": "happen 은 목적어를 취하지 않는 자동사입니다. was happened 는 어떤 문맥에서도 성립하지 않으며 happened 로 써야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "수동이 불가능한 동사와 가능한 동사",
+      "columns": ["자동사 — 수동 불가", "타동사 — 수동 가능"],
+      "rows": [
+        {
+          "criterion": "구조",
+          "a": "뒤에 목적어가 오지 않는다 (부사어·보어만 온다)",
+          "b": "뒤에 목적어가 온다"
+        },
+        {
+          "criterion": "대표 동사",
+          "a": "occur, happen, take place, arise, emerge, appear, disappear, exist, remain, last, consist of",
+          "b": "cause, hold, produce, introduce, compose, complete, remove"
+        },
+        {
+          "criterion": "be + p.p. 결합",
+          "a": "불가능하다 — was occurred, is consisted of 는 비문",
+          "b": "가능하다 — was caused, is composed of 는 정문"
+        },
+        {
+          "criterion": "짝을 이루는 동사",
+          "a": "rise, lie, arise (자동사 쪽)",
+          "b": "raise, lay, arouse (타동사 쪽)"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The committee **consists of** twelve elected members.",
+          "ko": "그 위원회는 선출된 열두 명의 위원으로 구성됩니다.",
+          "note": "consist of 는 자동사 표현이므로 능동형만 존재합니다."
+        },
+        {
+          "en": "The committee **is composed of** twelve elected members.",
+          "ko": "그 위원회는 선출된 열두 명의 위원으로 구성됩니다.",
+          "note": "compose 는 목적어를 취하는 타동사이므로 be composed of 라는 수동이 정문입니다. 뜻은 같지만 형태의 근거가 다릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "태 판별 필기",
+      "intro": "태를 고르기 전에 반드시 확인할 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "자동사 — 목적어 없이 끝나는 동사",
+          "body": "동작이 주어에서 시작해 주어에서 끝납니다. 뒤에 목적어를 두지 않으므로 수동으로 돌릴 대상이 아예 없습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "타동사 — 목적어를 데리고 다니는 동사",
+          "body": "동작이 주어에서 나와 뒤의 대상에 가 닿습니다. 이 목적어를 주어 자리로 끌어올린 것이 수동태입니다.",
+          "example": {
+            "en": "The council **removed** the old parking rules.",
+            "ko": "그 의회는 낡은 주차 규정을 없앴습니다.",
+            "note": "remove 는 목적어 the old parking rules 를 취하는 타동사이므로 were removed 라는 수동이 가능합니다."
+          }
+        },
+        {
+          "head": "수동태의 성립 조건 — 목적어의 존재",
+          "body": "be+p.p.는 목적어를 주어로 끌어올릴 때만 만들어집니다. 목적어가 없으면 be+p.p. 라는 형태 자체가 성립하지 않습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "무수동 자동사 — 발생·출현·존재·소멸·지속 계열",
+          "body": "occur, arise, appear, exist, remain, last 처럼 스스로 일어나고 스스로 존재하는 동사들입니다. 수능은 이 계열에 be+p.p.를 씌워 함정으로 씁니다.",
+          "example": {
+            "en": "A sharp dispute **arose** between the two teams.",
+            "ko": "두 팀 사이에 첨예한 분쟁이 생겨났습니다.",
+            "note": "arise 는 스스로 생겨나는 자동사이므로 was arisen 이라는 형태는 존재하지 않습니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "짝 동사 — 형태가 닮은 자동사·타동사",
+          "body": "rise/raise, lie/lay, arise/arouse 는 한두 글자 차이입니다. 목적어가 있으면 타동사, 없으면 자동사로 먼저 가른 뒤에 태를 판단합니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "무수동 자동사 다섯 계열",
+      "columns": ["계열", "대표 동사", "핵심 뜻"],
+      "rows": [
+        {
+          "cells": ["발생·개최", "occur, happen, take place", "사건이 스스로 일어나다"],
+          "example": {
+            "en": "The general election **took place** in early spring.",
+            "ko": "그 총선은 이른 봄에 치러졌습니다.",
+            "note": "take place 는 발생·개최를 뜻하는 자동사 표현이므로 was taken place 는 비문입니다."
+          }
+        },
+        {
+          "cells": ["출현·소멸", "appear, emerge, disappear, vanish", "저절로 나타나거나 사라지다"]
+        },
+        {
+          "cells": ["존재·지속", "exist, remain, last, persist", "그대로 있거나 계속되다"]
+        },
+        {
+          "cells": ["구성·소속", "consist of, belong to", "~로 이루어지다 / ~에 속하다"],
+          "example": {
+            "en": "The panel **consists of** five independent experts.",
+            "ko": "그 위원단은 다섯 명의 독립 전문가로 구성됩니다.",
+            "note": "consist of 는 자동사 표현이라 능동만 있습니다. 수동으로 쓰려면 타동사 compose 를 써서 be composed of 로 합니다."
+          }
+        },
+        {
+          "cells": ["자·타 짝(자동)", "rise, lie, arise", "스스로 오르내리다 / 놓여 있다"]
+        }
+      ],
+      "takeaway": "이 계열은 전부 목적어가 없어 be+p.p.가 불가능합니다. 밑줄에 be+p.p.가 보이면 먼저 이 목록을 떠올리십시오."
+    },
+    {
+      "id": "b7",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "instruction": "넷 중 결이 다른 하나를 찾으십시오. 나머지 셋과 수동 가능 여부가 갈리는 동사가 이단아입니다.",
+      "rounds": [
+        {
+          "words": ["occur", "arise", "cause", "appear"],
+          "odd": 2,
+          "why": "occur·arise·appear 은 목적어 없이 스스로 일어나는 자동사입니다. cause 만 목적어를 취하는 타동사라 be caused 라는 수동이 가능합니다."
+        },
+        {
+          "words": ["remain", "exist", "hold", "last"],
+          "odd": 2,
+          "why": "remain·exist·last 는 상태가 그대로 이어지는 자동사입니다. hold 만 목적어(행사·회의 등)를 취하는 타동사여서 be held 가 됩니다."
+        },
+        {
+          "words": ["rise", "lie", "arise", "raise"],
+          "odd": 3,
+          "why": "rise·lie·arise 는 스스로 움직이는 자동사입니다. raise 만 목적어를 올리는 타동사라 be raised 가 가능합니다. 자·타 짝은 한두 글자 차이로 갈립니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "무수동 자동사 암기 카드",
+      "target": "무수동 자동사 목록",
+      "why": "수능은 이 동사들에만 be+p.p.를 씌워 함정을 놓습니다. 목록이 머리에 박혀 있으면 밑줄을 보는 순간 태를 검토할 것도 없이 능동으로 확정할 수 있습니다.",
+      "device": "b6의 다섯 계열을 '발·출·존·구·짝'으로 묶습니다. 발(발생) occur·happen, 출(출현·소멸) appear·disappear, 존(존재·지속) exist·remain·last, 구(구성) consist of, 짝(자·타 짝) rise·lie·arise. 마지막 짝 칸까지 넣어야 목록이 빈틈없이 완성됩니다.",
+      "items": [
+        { "cue": "발 — 발생 계열", "answer": "occur, happen, take place" },
+        { "cue": "출 — 출현·소멸 계열", "answer": "appear, emerge, disappear, vanish" },
+        { "cue": "존 — 존재·지속 계열", "answer": "exist, remain, last, persist" },
+        { "cue": "구 — 구성·소속 계열", "answer": "consist of, belong to" },
+        { "cue": "짝 — 자·타 짝의 자동사", "answer": "rise, lie, arise" }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "무수동 자동사 관문",
+      "mission": "수동태로 쓸 수 없는 자동사를 전부 골라내십시오. 목적어를 데려오는 타동사는 함정입니다.",
+      "mode": "SET",
+      "pool": [
+        "occur",
+        "arise",
+        "remain",
+        "appear",
+        "consist of",
+        "cause",
+        "hold",
+        "produce",
+        "raise",
+        "introduce"
+      ],
+      "answers": ["occur", "arise", "remain", "appear", "consist of"],
+      "passText": "발·출·존·구·짝이 손에 붙었습니다. 자동사에 be+p.p.는 없습니다 — 관문이 열립니다.",
+      "retryText": "타동사 하나가 섞여 들어왔거나 자동사 하나가 빠졌습니다. 목적어를 데려올 수 있는 동사인지만 다시 보고 오면 됩니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "수동태(be+p.p.)는 목적어를 취하는 타동사에서만 만들어집니다. 목적어를 취하지 않는 자동사는 수동태 자체가 성립하지 않습니다.",
+      "examples": [
+        {
+          "en": "Serious delays rarely **occur** on this railway line.",
+          "ko": "이 철도 노선에서는 심각한 지연이 거의 발생하지 않습니다.",
+          "note": "occur 는 발생하다라는 뜻의 자동사입니다. 목적어가 없는 것이 정상이며 are occurred 라는 형태는 존재하지 않습니다."
+        },
+        {
+          "en": "The ceremony **took place** in the main hall.",
+          "ko": "그 기념식은 대강당에서 열렸습니다.",
+          "note": "take place 는 발생·개최를 뜻하는 자동사 표현입니다. 우리말이 수동으로 옮겨지더라도 was taken place 는 비문입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "형태가 닮은 자동사·타동사 짝(rise/raise, lie/lay, arise/arouse)에서는 자동사 쪽만 수동이 불가능합니다. 문장에 목적어가 있는지로 어느 쪽 동사인지부터 확정합니다.",
+      "examples": [
+        {
+          "en": "Sea levels **have risen** steadily over the past century.",
+          "ko": "지난 한 세기 동안 해수면이 꾸준히 상승했습니다.",
+          "note": "rise 는 목적어를 취하지 않는 자동사이므로 have been risen 은 비문입니다. 해수면이 스스로 오른 것이므로 능동 완료형이 옳습니다."
+        },
+        {
+          "en": "Interest rates **were raised** twice during the same period.",
+          "ko": "같은 기간에 금리가 두 차례 인상되었습니다.",
+          "note": "raise 는 목적어를 취하는 타동사입니다. 금리는 누군가에 의해 올려지는 대상이므로 수동 were raised 가 정문입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "긴 주어 뒤의 자동사 해부",
+      "tokens": [
+        { "t": "Concerns", "role": "S" },
+        { "t": "about the safety of the new tunnel", "role": "M" },
+        { "t": "arose", "role": "V" },
+        { "t": "soon after the inspection.", "role": "M" }
+      ],
+      "ko": "새 터널의 안전성에 대한 우려가 점검 직후에 생겨났습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "about the safety of the new tunnel 은 주어를 꾸미는 전치사구이고, soon after the inspection 은 시점을 나타내는 부사어입니다. 둘 다 뼈대가 아닙니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 핵 주어는 Concerns 이고, 태를 판정할 대상은 이 주어에 걸리는 본동사 arose 하나입니다."
+        },
+        {
+          "label": "③ 본동사의 성질을 판정합니다",
+          "roles": ["V"],
+          "note": "arise 는 생겨나다라는 뜻으로 목적어를 취하지 않는 자동사입니다. 태를 고르기 전에 이 성질부터 확인합니다."
+        },
+        {
+          "label": "④ 동사 뒤에 목적어가 있는지 확인합니다",
+          "roles": ["V"],
+          "note": "arose 뒤에 남은 것은 부사어뿐이며 목적어가 없습니다. 목적어가 없다는 사실은 수동의 근거가 아니라 자동사의 정상 형태입니다."
+        }
+      ],
+      "conclusion": "자동사에는 수동으로 돌릴 목적어가 없으므로 were arisen 같은 형태는 존재하지 않습니다. 능동 arose 가 옳습니다."
+    },
+    {
+      "id": "b13",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "태를 판단하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 동사의 뜻을 먼저 확인하고, 그 동사가 목적어를 취할 수 있는지 판단합니다.",
+          "applyNote": "arise 는 생겨나다라는 뜻입니다. 무엇을 생겨나게 하는 것이 아니라 스스로 생겨나는 동사이므로 목적어를 취하지 않습니다."
+        },
+        {
+          "text": "목적어를 취할 수 없는 자동사라면 be+p.p. 는 검토할 것도 없이 오류입니다.",
+          "applyNote": "was arisen 은 형태 자체가 성립하지 않으므로 능동 arose 로 확정합니다."
+        },
+        {
+          "text": "목적어를 취할 수 있는 타동사라면, 그때 비로소 동사 뒤에 목적어가 있는지 세어 능동과 수동을 가릅니다. 다만 관계절·의문사절에서 목적어가 앞으로 빠진 자리는 제외합니다.",
+          "applyNote": "new rules 는 도입되는 대상이고 이 절에는 introduce 의 목적어가 없으므로 수동 were introduced 가 옳습니다. 단, 관계절처럼 목적어가 앞으로 빠져나간 자리는 목적어가 보이지 않아도 능동입니다(u03-c2)."
+        },
+        {
+          "text": "한 문장 안에 여러 동사가 있으면 태는 동사마다 따로 판단합니다. 옆 절의 수동태는 근거가 되지 않습니다.",
+          "applyNote": "앞 절이 능동이라고 뒤 절이 능동이어야 하는 것은 아닙니다. arise 는 자동사라 능동, introduce 는 타동사라 수동입니다."
+        }
+      ],
+      "example": {
+        "en": "A dispute over water rights **arose** last spring, and new rules **were introduced** soon afterward.",
+        "ko": "지난봄에 물 사용권을 둘러싼 분쟁이 생겨났고, 곧이어 새 규정이 도입되었습니다.",
+        "note": "한 문장 안에서 자동사 arise 는 능동, 타동사 introduce 는 수동입니다. 태는 동사의 성질이 결정합니다."
+      }
+    },
+    {
+      "id": "b14",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Several small earthquakes ( occurred / were occurred ) in the region after the reservoir was filled.",
+      "steps": [
+        {
+          "title": "① 동사의 뜻과 성질을 봅니다",
+          "body": "occur 는 발생하다라는 뜻입니다. 무엇을 발생시키는 것이 아니라 사건이 스스로 일어나는 동사이므로 목적어를 취하지 않습니다."
+        },
+        {
+          "title": "② 자동사이면 수동은 후보에서 지웁니다",
+          "body": "목적어가 없으므로 수동으로 돌릴 대상이 없습니다. were occurred 는 존재하지 않는 형태이므로 즉시 지웁니다."
+        },
+        {
+          "title": "③ 옆 절의 수동태에 이끌리지 않습니다",
+          "body": "뒤 절의 was filled 는 타동사 fill 의 정당한 수동입니다. 저수지는 채워지는 대상이기 때문입니다. 그러나 이것은 앞 절 동사의 태와 무관합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "occur 는 자동사이고 지진은 스스로 발생한 사건이므로 능동 과거형 occurred 가 옳습니다."
+        }
+      ],
+      "answer": "occurred",
+      "ko": "저수지에 물이 채워진 뒤 그 지역에서 여러 차례의 작은 지진이 발생했습니다."
+    },
+    {
+      "id": "b15",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u03-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "A minor error {{blank}} during the first round of testing.",
+          "options": ["occurred", "was occurred"],
+          "answer": 0,
+          "translation": "첫 번째 시험 단계에서 사소한 오류가 발생했습니다.",
+          "explanation": "occur 는 목적어를 취하지 않는 자동사이므로 수동태가 성립하지 않습니다. 따라서 능동 과거형 occurred 가 옳으며, was occurred 는 어떤 문맥에서도 비문입니다.",
+          "trapTags": ["intransitive-passive"]
+        },
+        {
+          "id": "u03-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The annual festival [[u:is taken place]] in the old square every autumn.",
+          "isCorrect": false,
+          "correction": "takes place",
+          "translation": "그 연례 축제는 매년 가을 옛 광장에서 열립니다.",
+          "explanation": "take place 는 발생·개최를 뜻하는 자동사 표현이므로 목적어가 없고 수동태도 만들 수 없습니다. 우리말이 열리다로 옮겨진다는 이유로 수동을 쓰면 비문이 되며, 능동 takes place 가 옳습니다.",
+          "trapTags": ["intransitive-passive", "korean-passive-transfer"]
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "수동 불가 자동사 사냥",
+      "instruction": "이 문장에서 수동태로 쓸 수 없는 자동사를 전부 탭하십시오. 뒤에 목적어를 데려오지 않는 동사가 사냥감입니다.",
+      "hitLabel": "수동 불가 자동사",
+      "tokens": [
+        { "t": "A", "hit": false },
+        { "t": "sudden", "hit": false },
+        { "t": "storm", "hit": false },
+        { "t": "arose", "hit": true },
+        { "t": "at", "hit": false },
+        { "t": "sea,", "hit": false },
+        { "t": "and", "hit": false },
+        { "t": "several", "hit": false },
+        { "t": "small", "hit": false },
+        { "t": "boats", "hit": false },
+        { "t": "vanished", "hit": true },
+        { "t": "before", "hit": false },
+        { "t": "a", "hit": false },
+        { "t": "rescue", "hit": false },
+        { "t": "team", "hit": false },
+        { "t": "was", "hit": false },
+        { "t": "dispatched.", "hit": false }
+      ],
+      "ko": "갑작스러운 폭풍이 바다에서 일었고, 작은 배 여러 척이 사라진 뒤 구조대가 파견되었습니다.",
+      "explain": "arise 와 vanish 는 스스로 일어나고 사라지는 자동사라 목적어가 없어 수동형이 존재하지 않습니다. 반면 was dispatched 는 타동사 dispatch 의 정당한 수동이므로 사냥감이 아닙니다. 태는 동사의 성질마다 따로 판단합니다."
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The tension between the two teams ( arose / was arisen ) after the referee's final decision.",
+      "givenSteps": [
+        "① 동사의 뜻을 확인합니다 — arise 는 생겨나다라는 뜻입니다.",
+        "② 목적어를 취할 수 있는지 봅니다 — arise 는 목적어를 취하지 않는 자동사입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "arose — 자동사는 수동으로 돌릴 목적어가 없으므로 능동 과거형이 옳습니다",
+        "was arisen — 긴장은 스스로 생긴 것이 아니라 판정 때문에 생긴 것이므로 수동입니다",
+        "was arised — 의미가 수동이므로 과거분사를 규칙 변화로 만들어 붙입니다"
+      ],
+      "answer": 0,
+      "explain": "arise 는 자동사이므로 be+p.p. 결합 자체가 불가능합니다. 무엇 때문에 생겼는지는 전치사구 after the referee's final decision 이 나타낼 뿐이며, 원인이 있다고 해서 태가 수동이 되는 것은 아닙니다. 덧붙여 arise 의 과거분사는 arisen 이며 arised 라는 형태는 존재하지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 옆 절의 정당한 수동태에 끌려가는 오답",
+      "body": "한 문장 안에 진짜 수동태가 함께 놓이면 밑줄 동사도 수동이어야 할 것 같은 착시가 생깁니다. 태는 문장 단위로 맞추는 것이 아니라 동사 하나하나의 성질로 결정됩니다. 밑줄 동사가 자동사라면 옆에 수동태가 몇 개 있든 능동이 옳습니다.",
+      "example": {
+        "en": "Serious complaints **arose** after the safety report **was released** to the public.",
+        "ko": "안전 보고서가 대중에게 공개된 뒤 심각한 항의가 제기되었습니다.",
+        "note": "release 는 타동사이고 보고서는 공개되는 대상이므로 was released 가 정문입니다. 그러나 arise 는 자동사이므로 were arisen 은 불가능하며 능동 arose 가 옳습니다."
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u03-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Rumors that the factory would close {{blank}} long before the official statement was made.",
+          "options": ["persisted", "were persisted", "have been persisted"],
+          "answer": 0,
+          "translation": "공장이 문을 닫을 것이라는 소문은 공식 발표가 나오기 훨씬 전부터 계속되었습니다.",
+          "explanation": "핵 주어는 Rumors 이고 that the factory would close 는 그 내용을 밝히는 동격절입니다. persist 는 계속되다라는 뜻의 자동사이므로 수동태가 성립하지 않아 능동 persisted 가 옳습니다. 뒤 절의 was made 는 타동사 make 의 정당한 수동일 뿐, 밑줄 동사의 태를 결정하지 않습니다.",
+          "trapTags": ["intransitive-passive", "adjacent-passive"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 persisted 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "persist 가 목적어를 취하지 않는 자동사여서 be+p.p. 와 결합할 수 없기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 태 판단은 그 동사가 목적어를 취할 수 있는가에서 시작합니다."
+        },
+        {
+          "text": "소문이 남에 의해 퍼진 것이 아니라 스스로 계속된 것이므로 의미가 능동이기 때문입니다.",
+          "correct": false,
+          "feedback": "결론은 같지만 근거가 다릅니다. 의미가 능동으로 느껴지는지가 아니라 persist 가 목적어를 취할 수 없는 자동사라는 형태적 사실이 판단 근거입니다. 의미로만 고르면 The tension was arisen 같은 함정에 걸립니다."
+        },
+        {
+          "text": "뒤 절의 was made 가 이미 수동이라 앞 절은 능동이어야 균형이 맞기 때문입니다.",
+          "correct": false,
+          "feedback": "태는 절끼리 균형을 맞추는 것이 아니라 동사마다 따로 결정됩니다. 답은 우연히 같지만 근거가 틀렸습니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The heat wave that [[1:was recorded]] last August [[2:was lasted]] for nearly three weeks, and thousands of residents [[3:were moved]] to shelters that [[4:had been built]] for emergencies.",
+      "answer": 2,
+      "correction": "lasted",
+      "rationales": [
+        "record 는 목적어를 취하는 타동사이고 폭염은 기록되는 대상이므로 수동 was recorded 가 옳습니다.",
+        "last 는 지속되다라는 뜻의 자동사이므로 수동태가 성립하지 않습니다. 뒤의 for nearly three weeks 는 목적어가 아니라 기간을 나타내는 부사어이므로 능동 lasted 로 고쳐야 합니다.",
+        "move 는 목적어를 취하는 타동사이고 주민들은 옮겨지는 대상이므로 수동 were moved 가 옳습니다.",
+        "build 는 목적어를 취하는 타동사이고 대피소는 지어지는 대상이므로 완료 수동 had been built 가 옳습니다."
+      ],
+      "ko": "지난 8월에 기록된 그 폭염은 거의 3주 동안 이어졌고, 수천 명의 주민이 비상용으로 지어진 대피소로 옮겨졌습니다."
+    },
+    {
+      "id": "b22",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 자동사에 be+p.p. 를 씌운 문장을 주고 틀린 부분을 찾아 고쳐 쓰게 합니다. 자동사라는 근거를 함께 밝히고 능동형으로 고쳐야 만점입니다.",
+          "sample": {
+            "en": "The accident was occurred while the driver was talking on the phone.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "occurred — occur 는 목적어를 취하지 않는 자동사이므로 수동태로 쓸 수 없습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 정당한 수동태가 함께 놓인 문장의 자동사에 밑줄을 그어, 옆의 수동태에 이끌려 오답을 고르게 만듭니다. 밑줄 동사가 목적어를 취할 수 있는 동사인지부터 확인해야 합니다.",
+          "sample": {
+            "en": "New species [[u:are emerged]] in isolated habitats where competition is reduced.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "emerge — emerge 는 자동사이므로 수동이 불가능합니다. 뒤 절의 is reduced 는 타동사 reduce 의 정당한 수동이지만 밑줄의 태와는 무관합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Ecologists have long asked why remote islands hold so many unique species. [[u:Unusual traits appear in populations that remain isolated for thousands of years.]] Once a natural barrier is removed, those traits often spread to the mainland.",
+      "instruction": "밑줄 친 문장에서 태를 판단해야 할 동사를 모두 찾고, 각각이 왜 능동인지 설명하십시오.",
+      "found": "밑줄 문장의 동사는 appear 와 remain 이며 둘 다 목적어를 취하지 않는 자동사이므로 수동태가 불가능합니다. remain isolated 의 isolated 는 목적어가 아니라 주격보어로 쓰인 형용사이며, is remained 라는 형태는 존재하지 않습니다. 반면 마지막 문장의 is removed 는 타동사 remove 의 정당한 수동입니다.",
+      "gist": "오랫동안 고립된 개체군에서 특이한 형질이 나타나며, 장벽이 사라지면 그 형질이 본토로 퍼진다는 내용입니다."
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "가짜 수동태 검문소의 심사관",
+      "intro": "이 검문소에는 be동사와 p.p.를 몰래 붙인 위조 수동태가 매일 들어옵니다. 자동사에는 애초에 수동이 없다는 사실을 아는 눈만 이 문을 통과합니다. 네 건의 서류로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "A serious accident {{blank}} at the crossing just before midnight.",
+          "options": ["occurred", "was occurred"],
+          "answer": 0,
+          "why": "occur 는 목적어를 취하지 않는 자동사이므로 be+p.p. 가 성립하지 않습니다. 능동 과거형 occurred 가 옳습니다."
+        },
+        {
+          "prompt": "The annual book fair {{blank}} in the central library every November.",
+          "options": ["takes place", "is taken place"],
+          "answer": 0,
+          "why": "take place 는 개최·발생을 뜻하는 자동사 표현이라 목적어가 없고 수동이 불가능합니다. 우리말이 열리다로 옮겨져도 능동 takes place 가 옳습니다."
+        },
+        {
+          "prompt": "Tensions {{blank}} between the two nations while the treaty was being negotiated.",
+          "options": ["arose", "were arisen"],
+          "answer": 0,
+          "why": "arise 는 자동사라 be+p.p. 가 없습니다. 옆 절의 was being negotiated 는 타동사 negotiate 의 정당한 수동일 뿐, 밑줄 동사의 태를 결정하지 않습니다."
+        },
+        {
+          "prompt": "The old church {{blank}} untouched for more than two centuries.",
+          "options": ["has remained", "has been remained"],
+          "answer": 0,
+          "why": "remain 은 목적어를 취하지 않는 자동사이고 뒤의 untouched 는 주격보어입니다. 자동사에는 수동이 없으므로 능동 완료형 has remained 가 옳으며 has been remained 라는 형태는 존재하지 않습니다."
+        }
+      ],
+      "winText": "위조 서류가 전부 걸러졌습니다. '이 동사가 목적어를 데려오는가'라는 질문 하나가 수동태의 진위를 가른다는 것 — 그 감별안이 방금 당신 손에 들어왔습니다.",
+      "loseText": "심사관이 서류를 돌려줍니다. 네 건이 물은 것은 결국 하나였습니다 — '이 동사에 목적어가 있는가.' 목적어가 없으면 수동은 처음부터 없습니다. 판단 절차를 한 번 더 짚고 오면 통로는 열려 있습니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "목적어를 취하지 못하는 ___ 는 수동으로 돌릴 대상이 없어 be+p.p. 로 쓸 수 없으며, 대표적으로 ___ 같은 동사가 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "수동태는 목적어를 가진 타동사에서만 만들어집니다. 자동사는 수동으로 돌릴 목적어가 없어 be+p.p. 가 불가능합니다.",
+        "발생·존재·출현·소멸·지속 계열(occur, happen, take place, arise, emerge, appear, disappear, exist, remain, last, consist of)이 반복 출제되는 무수동 자동사입니다.",
+        "목적어가 보이지 않는다는 사실은 수동의 근거가 아닙니다. 자동사의 정상 형태일 수 있으므로 동사의 성질부터 확인합니다.",
+        "rise/raise, lie/lay, arise/arouse 처럼 짝을 이루는 동사는 목적어의 유무로 어느 쪽인지 확정한 뒤 태를 판단합니다.",
+        "태는 문장 단위가 아니라 동사마다 따로 결정됩니다. 옆 절의 수동태는 판단 근거가 되지 않습니다."
+      ],
+      "keySentence": {
+        "en": "A dispute over water rights **arose** last spring, and new rules **were introduced** soon afterward.",
+        "ko": "지난봄에 물 사용권을 둘러싼 분쟁이 생겨났고, 곧이어 새 규정이 도입되었습니다.",
+        "note": "자동사 arise 는 능동, 타동사 introduce 는 수동입니다. 같은 문장 안에서도 태는 동사의 성질을 따릅니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u03-c3-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The strange lights {{blank}} above the hills for several minutes and then faded.",
+          "options": ["appeared", "were appeared"],
+          "answer": 0,
+          "translation": "그 이상한 불빛들은 몇 분 동안 언덕 위에 나타났다가 이내 사라졌습니다.",
+          "explanation": "appear 는 나타나다라는 뜻의 자동사로 목적어를 취하지 않으므로 수동태가 성립하지 않습니다. 따라서 능동 appeared 가 옳으며, 뒤의 faded 역시 자동사의 능동형입니다.",
+          "trapTags": ["intransitive-passive"]
+        },
+        {
+          "id": "u03-c3-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The disagreement between the two ministries [[u:was remained]] unresolved even after the third round of talks.",
+          "isCorrect": false,
+          "correction": "remained",
+          "translation": "두 부처 사이의 이견은 세 번째 협상 뒤에도 해소되지 않은 채 남아 있었습니다.",
+          "explanation": "remain 은 목적어를 취하지 않는 자동사이며, 뒤의 unresolved 는 목적어가 아니라 주격보어로 쓰인 형용사입니다. 자동사는 수동태가 불가능하므로 was remained 를 능동 remained 로 고쳐야 합니다.",
+          "trapTags": ["intransitive-passive", "subject-complement"]
+        },
+        {
+          "id": "u03-c3-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The water level in the reservoir {{blank}} by nearly two meters while the storm continued.",
+          "options": ["rose", "was risen", "has been risen"],
+          "answer": 0,
+          "translation": "폭풍이 계속되는 동안 저수지의 수위가 거의 2미터 올랐습니다.",
+          "explanation": "핵 주어는 The water level 이고 in the reservoir 는 수식하는 전치사구입니다. rise 는 목적어를 취하지 않는 자동사이므로 be+p.p. 와 결합할 수 없어 능동 과거형 rose 가 옳습니다. 목적어를 취해 무엇을 올리는 동사는 raise 이며, 그 경우에만 was raised 같은 수동이 가능합니다.",
+          "trapTags": ["intransitive-passive", "rise-raise"]
+        }
+      ]
+    }
+  ]
+}

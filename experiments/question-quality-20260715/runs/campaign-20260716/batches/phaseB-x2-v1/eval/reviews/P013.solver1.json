@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "매력적 오답. 'No Standing'을 글자 그대로 읽은 Carol의 오해('사람이 서서 기다리면 안 된다')를 그대로 재진술한 선지라서, 표면 어휘(standing→wait)만 좇으면 순간 끌린다. 그러나 빈칸 발화자는 친구이고, 바로 앞 문장에서 'Of course you can stand there'라고 Carol의 해석을 명시적으로 부정했다. 친구가 'That means 보행자는 동행을 기다리면 안 된다'라고 말하면 자기 발언과 정면 모순. 또한 뒤따르는 'but we can stop to pick up passengers'의 주어 we는 차를 모는 쪽(정차 주체)이므로, 빈칸은 차량 규제 의미여야 대조(but)가 성립한다. 탈락."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "'물리적으로 위험하다'는 안전 경고 해석은 지문 어디에도 근거가 없고, 'but we can stop to pick up passengers'와의 대조도 성립하지 않는다(위험하다면서 승객 승차를 위한 정차는 괜찮다는 연결이 비논리적). 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "'active walking is required to bypass the street'는 Carol이 실제로 한 행동(왔다 갔다 걷기)을 연상시켜 표면적 유혹이 약간 있으나, 친구의 설명으로서 의미 불명이고('거리를 우회하려면 활발히 걸어야 한다'?) 교통 표지의 실제 의미와 무관하며 but 이하와의 대조도 없다. 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "정답",
+      "reason": "빈칸에 넣으면 'That means vehicles are prohibited from being left unattended, but we can stop to pick up passengers.' — 표지가 사람이 아니라 차량에 대한 규제라는 것이 이 일화의 핵심 반전이고, we(운전자)가 승객을 태우기 위한 일시 정차는 가능하다는 but 대조가 정확히 성립한다. 유일하게 차량을 주어로 삼은 선지로 문맥·문법 결합 모두 자연스럽다. 단, 미국 교통법 엄밀 기준으로는 'No Standing'은 운전자가 차에 타고 있어도 대기 자체가 금지(attended 여부 무관)이고 'left unattended' 금지는 오히려 'No Parking'의 정의에 가깝다는 사실적 흠결이 있다. 그러나 일반인 화자의 설명 수준에서는 자연스럽고, 다른 선지가 전부 성립 불가라 정답 지위는 흔들리지 않는다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "대중교통 접근 금지는 지문에 전혀 등장하지 않는 소재이고, 오히려 'we can stop to pick up passengers'(승객 승차 가능)와 정면으로 충돌한다. 탈락."
+    }
+  ],
+  "note": "실전 풀이: 반전 구조(보행자 규칙으로 오해 → 실은 차량 표지)만 잡으면 빈칸은 '차량에 대한 금지'여야 하고, 차량이 주어인 선지는 ④뿐이라 소거가 빠르다. 최대 유혹 선지는 ①(Carol의 오해 재진술)이지만 발화자·but 대조로 즉시 배제된다. 사실성 관점의 소수 흠결: 'No Standing'의 법적 정의는 '(승객 승하차 외) 정차 대기 금지'이며 'left unattended 금지'는 No Parking 쪽 정의라 ④의 표현이 엄밀히는 부정확하나, 문항 성립을 위협할 수준은 아님. 복수정답 소지 없음."
+}

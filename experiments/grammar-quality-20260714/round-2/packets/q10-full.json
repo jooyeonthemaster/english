@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-render-marker-countx1",
+    "grammar-obvious-noun-what-relativex1"
+  ],
+  "layout": "(A):dec=l  (B):ANS=e  (C):dec=a  (D):dec=f  (E):dec=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 35,
+        "relPos": 0.044,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 130,
+        "relPos": 0.165,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 192,
+        "relPos": 0.244,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 410,
+        "relPos": 0.52,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 693,
+        "relPos": 0.879,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.879,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "without reaching",
+        "isError": false,
+        "correction": "without reaching",
+        "errorExpression": "without reaching",
+        "surroundingText": "We tend to go long periods of time without reaching out to the people we know.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(B)",
+        "expression": "has formed",
+        "isError": true,
+        "correction": "has formed",
+        "errorExpression": "has been formed",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "haven't spoken",
+        "isError": false,
+        "correction": "haven't spoken",
+        "errorExpression": "haven't spoken",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "regular",
+        "isError": false,
+        "correction": "regular",
+        "errorExpression": "regular",
+        "surroundingText": "They're kept up with regular maintenance, like a car.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "to let",
+        "isError": false,
+        "correction": "to let",
+        "errorExpression": "to let",
+        "surroundingText": "just that it's more ideal not to let yourself fall out of touch",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "without reaching"
+      },
+      {
+        "label": "(B)",
+        "text": "has been formed"
+      },
+      {
+        "label": "(C)",
+        "text": "haven't spoken"
+      },
+      {
+        "label": "(D)",
+        "text": "regular"
+      },
+      {
+        "label": "(E)",
+        "text": "to let"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 'without' 뒤에 명사 상당어구인 동명사구 'reaching out~'이 연결되는 구조이므로 'without reaching'은 어법상 옳습니다.",
+      "(C)": "선행사 people을 수식하며 목적격 관계대명사가 생략된 절의 정동사 자리로, 과거부터 현재까지 이야기 나누지 못했다는 시제를 드러내는 현재완료 시제 'haven't spoken'은 형태상 적절합니다.",
+      "(D)": "명사 'maintenance'를 앞에서 수식하는 형용사 자리이므로 형용사 'regular'는 어법상 옳습니다.",
+      "(E)": "가주어 'it'에 대응하는 진주어 구문이며, 부정어 'not'의 수식을 받는 to부정사구 'not to let~'의 구조를 이루므로 'to let'은 어법상 옳습니다."
+    },
+    "explanation": "해당 문장에서는 관계대명사 'that'이 이끄는 절 안에서 거리(distance)가 이미 발생하여 생겨났다는 완료를 의미하고 있습니다. 여기서 'form'은 목적어가 필요 없는 자동사로 쓰여 '형성되다', '생기다'라는 뜻을 나타내므로 수동태를 구성할 수 없습니다. 따라서 'has been formed'는 어동 주체의 완료 사실을 단순히 나타내는 자동사 현재완료 형태인 'has formed'로 고치는 것이 올바릅니다. 자동사의 성질과 완료 동사의 태 선택을 구분하는 영문법의 핵심을 묻는 문제입니다.",
+    "keyPoints": [
+      "(B) 능동태 vs 수동태 — 자동사 form의 성질과 현재완료 수동 오용 판정",
+      "(A) 전치사 vs 접속사 — 전치사 뒤 동명사 목적어 판단",
+      "(E) 목적격보어 형태 — 가주어-진주어 구조에서 to부정사 진주어 판단"
+    ],
+    "tags": [
+      "수동태",
+      "자동사",
+      "동명사",
+      "진주어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time __(A) without reaching__ out to the people we know. Then, we suddenly take notice of the distance that __(B) has been formed__ and we scramble to make repairs. We call people we __(C) haven't spoken__ to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with __(D) regular__ maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not __(E) to let__ yourself fall out of touch in the first place. Consistency always brings better results.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "batchId": "phaseB-smoke-v1",
+  "phase": "B-SMOKE",
+  "atKst": "2026-07-16T19:50:12.486+09:00",
+  "assignments": 10,
+  "slotsConsumed": 10,
+  "accepted": 3,
+  "modelCalls": 17,
+  "inputTokens": 69570,
+  "outputTokens": 15588,
+  "costUsd": 0.231983,
+  "ledgerAfter": {
+    "used": 94,
+    "cap": 1000,
+    "costUsd": 2.150121
+  },
+  "byArm": {
+    "G-V1": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.056637
+    },
+    "G-D1": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.028603
+    },
+    "G-X1": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.018115
+    },
+    "B-V1": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.022481
+    },
+    "B-D1": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.017626
+    },
+    "B-T1": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.017091
+    },
+    "G-G2": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 1,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.027039
+    },
+    "G-G3": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 1,
+      "costUsd": 0.025761
+    },
+    "B-B2": {
+      "n": 1,
+      "accepted": 1,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 1,
+      "costUsd": 0.01863
+    },
+    "B-B3": {
+      "n": 1,
+      "accepted": 0,
+      "gateRejected": 0,
+      "noCandidate": 1,
+      "slots": 1,
+      "costUsd": 0
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 88239
+}

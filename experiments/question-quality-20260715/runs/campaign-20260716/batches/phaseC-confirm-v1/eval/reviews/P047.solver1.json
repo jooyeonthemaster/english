@@ -1,0 +1,35 @@
+{
+  "pid": "P047",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'quietly accept their misfortunes as an inevitable part of life' — 문법 결합은 자연스러우나 수동적 체념은 'gather their resources, overcome their problem, and see opportunities'라는 능동적 극복 서사와 정면 충돌. 지문은 불운의 '수용'이 아니라 '활용'을 말한다."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'patiently wait for their circumstances to improve on their own' — 저절로 나아지기를 기다리는 수동성은 'go one step further'와 자원 결집·기회 포착이라는 능동적 행위 묘사와 모순. 유혹 강도 낮음."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "'strive to extract positive potential from their setbacks' — 'focus on what they can gain from their circumstance rather than on what they have lost'와 silver lining 클리셰의 능동적 재진술. 문법 결합(they strive to ...)과 지문 논리 모두 완벽 적합. 유일한 정답."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "'perfectly replicate the remarkable feats achieved by others' — 지문의 'achieve remarkable feats'를 재활용한 어휘 미끼. 그러나 지문은 상실을 겪은 이들이 '자신의' 위업을 이루는 것이지 타인의 위업을 모방하는 것이 아님. 훑어 읽으면 끌리지만 재독 시 붕괴."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'generously laugh off the mistakes made by those around them' — 도입부 일화의 'laughter'를 재활용한 최강 표면 미끼. 그러나 지문의 웃음은 '자신의' 불리함을 유리함으로 전환하는 도구이지 '타인의 실수'에 대한 관용이 아님. 지시 대상 전환(자기 불운 → 남의 실수)으로 논리 부적합."
+    }
+  ],
+  "note": "빈칸 문항. 마지막 문장 병렬 구조(They believe ... and they ___)에 앞선 'focus on what they can gain' 논지를 능동형으로 재진술하는 ③만 성립. ⑤(laughter 재활용)와 ④(remarkable feats 재활용)가 어휘 반복형 매력 오답으로 설계되어 있으나 둘 다 지시 대상/행위 주체가 지문과 어긋나 옹호 불가. 복수정답 소지 없음."
+}

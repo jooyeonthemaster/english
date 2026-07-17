@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "deterministic-structural-v10-independent-extraction-receipt-v1",
+  "authorSeal": "2ddce4ecbebdcbb5d411a812185f2613d3639a727ab4ded3e8aa594c231fbc03",
+  "sourcePath": "D:\\Desktop\\2026project\\nara\\experiments\\question-quality-20260715\\reviews\\deterministic-structural-reaudit-v10\\cases.json",
+  "sourceSha256": "002ed425202c28f3dc7476d9381a6b65bce8e66f0616ebbeddb000d56221a222",
+  "extractorPath": "D:\\Desktop\\2026project\\nara\\experiments\\question-quality-20260715\\reviews\\deterministic-structural-reaudit-v10-independent-audit\\extract_blind.mjs",
+  "extractorSha256": "c5699c0126f79c50ad2a88b0718e9423f87ea70a22f0ede070d664e799c294c0",
+  "blindPath": "D:\\Desktop\\2026project\\nara\\experiments\\question-quality-20260715\\reviews\\deterministic-structural-reaudit-v10-independent-audit\\blinded-cases.json",
+  "blindSha256": "6cffb121e362dd40fe19fdb71890824cee8851b7aab4a2f2b02795aae164a171",
+  "mappingPath": "D:\\Desktop\\2026project\\nara\\experiments\\question-quality-20260715\\reviews\\deterministic-structural-reaudit-v10-independent-audit\\sealed-blind-map.json",
+  "mappingSha256": "20bb2ded29e1ffc5316b72dc02efc01cb5937ff9eb30374c87b8a88fec91e225",
+  "caseCount": 200,
+  "projectionFields": [
+    "blindId",
+    "family",
+    "language",
+    "fixture"
+  ],
+  "removedTopLevelFields": [
+    "id",
+    "pairId",
+    "expected",
+    "oracleReason"
+  ],
+  "removedFixtureAnalysisFields": [
+    "unitAnalysis",
+    "leadingReference",
+    "carrier.quotedText",
+    "renderedLabelInventory.state"
+  ],
+  "authoringOrderRemoved": true
+}

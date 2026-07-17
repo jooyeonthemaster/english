@@ -1,0 +1,58 @@
+{
+  "shots": [
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/r04-picker-open.png",
+      "state": "픽커 열림 — 콘솔 팝오버/1컬럼 판독용"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/r06-phrase.png",
+      "state": "3토큰 드래그 — pill 연속성 판독용"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/r08-after-done.png",
+      "state": "'선택 완료' 후 — 문항 수/배지 판독용"
+    },
+    {
+      "file": "D:/Desktop/2026project/nara/experiments/point-picker-verify/r09-reenter.png",
+      "state": "푸터 칩 클릭 후 — 픽커 재진입 판독용"
+    }
+  ],
+  "findings": [],
+  "blockers": [],
+  "consoleErrors": [],
+  "domChecks": {
+    "r04": {
+      "detailPopoverOpen": 0,
+      "visibleGrids": 3,
+      "gridColumns": [
+        1,
+        1,
+        1
+      ]
+    },
+    "r06": {
+      "chipCount": 1,
+      "points": {
+        "96:118": {
+          "segments": 5,
+          "tokens": 3,
+          "gaps": 2,
+          "maxPixelGapBetweenSegments": 0,
+          "sameLine": true,
+          "text": "①Psychologist  George  M."
+        }
+      }
+    },
+    "r08": {
+      "tile": true,
+      "stepperCount": "1",
+      "pointBadgeText": "포인트 1"
+    },
+    "r09": {
+      "footerChipText": "포인트 1개 반영",
+      "reentered": true,
+      "selCount": 5,
+      "chipCount": 1
+    }
+  }
+}

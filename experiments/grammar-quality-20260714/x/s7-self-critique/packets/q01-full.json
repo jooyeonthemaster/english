@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go3_20151013-q26",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "내용일치",
+    "words": 152
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=b  (B):dec=b  (C):dec=c  (D):dec=i  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 215,
+        "relPos": 0.229,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 337,
+        "relPos": 0.359,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 440,
+        "relPos": 0.469,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 607,
+        "relPos": 0.646,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 903,
+        "relPos": 0.962,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.962,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Allan Houser created contemporary Apache sculpture. As a child, he listened to his father's stories about the adventures of Chief Geronimo. This gave him a deep attachment to his ancestral background, an attachment that is shown in his artwork. Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, where he worked as a freelance artist. During World War II, he traveled to California, where he became interested in the media of sculpture. He created works in a variety of styles and mastered bronze, metal, and stone sculpture. Houser's designs are modern, yet firmly rooted in the special tradition of his Native American forefathers. He drew inspiration from both past and present, but like all successful artists, his sculpture transcends race and language. The sculpture Reverie shows a distinct Native American influence, but it can be appreciated by anyone, regardless of his or her background.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that is shown",
+        "isError": true,
+        "correction": "that is shown",
+        "errorExpression": "what is shown",
+        "surroundingText": "This gave him a deep attachment to his ancestral background, an attachment rooted in his memory what is shown in his artwork.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "where",
+        "isError": false,
+        "errorExpression": "where",
+        "surroundingText": "Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, where he worked as a freelance artist.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "interested",
+        "isError": false,
+        "errorExpression": "interested",
+        "surroundingText": "During World War II, he traveled to California, where he became interested in the media of sculpture.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "rooted",
+        "isError": false,
+        "errorExpression": "rooted",
+        "surroundingText": "Houser's designs are modern, yet firmly rooted in the special tradition of his Native American forefathers.",
+        "pointCode": "i"
+      },
+      {
+        "label": "(E)",
+        "expression": "regardless",
+        "isError": false,
+        "errorExpression": "regardless",
+        "surroundingText": "The sculpture Reverie shows a distinct Native American influence, but it can be appreciated by anyone, regardless of his or her background.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "what is shown"
+      },
+      {
+        "label": "(B)",
+        "text": "where"
+      },
+      {
+        "label": "(C)",
+        "text": "interested"
+      },
+      {
+        "label": "(D)",
+        "text": "rooted"
+      },
+      {
+        "label": "(E)",
+        "text": "regardless"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "Santa Fe를 선행사로 지정하고 지리적 공간을 수식하며, 뒤에 'he worked as a freelance artist'라는 문장 성분이 완비된 독립형 절이 오므로 계속적 용법의 관계부사 where는 어법상 적절합니다.",
+      "(C)": "2형식 동사 became 뒤에서 주어인 he의 심리 상태를 묘사하는 주격보어 과거분사 interested가 쓰여, 흥미를 '느끼게 된' 수동적 감정을 올바르게 표현하고 있습니다.",
+      "(D)": "are 뒤에 걸리는 보어로서 형용사인 modern과 등위접속사 yet을 통해 대등하게 연결되는 과거분사구입니다. '전통에 뿌리를 두고 있는' 수동의 상태를 바르게 나타냅니다.",
+      "(E)": "특정 대상의 성질을 서술하는 보어 자리가 아닌, 'regardless of ~'라는 하나의 독립된 부사적 성격의 양보 전치사구를 구성하므로 부사 형태인 regardless가 유기적으로 잘 기능합니다."
+    },
+    "explanation": "(A) \"what is shown\"는 어법상 틀린 표현이며 \"that is shown\"로 고쳐야 한다. 문장의 구조적 선행사 명확화와 수식어 샌드위치를 파악해야 하는 세련된 문항입니다. 이 문장의 뼈대를 살펴보면, 'an attachment'라는 핵심 명사 뒤에 과거분사구인 'rooted in his memory'가 삽입되어 수식하고 있으며, 여전히 본래의 수식어가 이어져야 하는 상태입니다. 따라서 뒤의 절은 선행사 'an attachment'를 실질적으로 수식하는 형용사절 역할을 해야 합니다. 그러나 명사 선행사가 이처럼 엄연히 앞부분에 존재하는 구조에서는 자체적으로 명사를 포함하여 명사절 역할을 수행하는 관계대명사인 'what'이 이 자리에 올 수 없습니다. 따라서 'an attachment rooted in his memory what'을 선행사를 정상적으로 수식할 수 있도록 주격 관계대명사인 'that' 혹은 'which'로 변경해야 문장 구조상 완전해집니다.",
+    "keyPoints": [
+      "(A) 관계사 — 선행사 'an attachment'와 분사 수식구의 삽입 속에서 선행사의 존부에 따른 what과 that의 판정",
+      "(B) 관계사 — 뒤가 완전한 절일 때 관계부사 where의 적절성 판정",
+      "(E) 형용사 vs 부사 — 전치사구의 구성 성분으로서 부사적으로 사용되는 regardless of 구조의 쓰임 판정"
+    ],
+    "tags": [
+      "어법",
+      "관계대명사 what",
+      "관계부사 where",
+      "과거분사 수식",
+      "수능영어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Allan Houser created contemporary Apache sculpture. As a child, he listened to his father's stories about the adventures of Chief Geronimo. This gave him a deep attachment to his ancestral background, an attachment __(A) what is shown__ in his artwork. Houser studied at the Indian School in Santa Fe, New Mexico, and then remained in Santa Fe, __(B) where__ he worked as a freelance artist. During World War II, he traveled to California, where he became __(C) interested__ in the media of sculpture. He created works in a variety of styles and mastered bronze, metal, and stone sculpture. Houser's designs are modern, yet firmly __(D) rooted__ in the special tradition of his Native American forefathers. He drew inspiration from both past and present, but like all successful artists, his sculpture transcends race and language. The sculpture Reverie shows a distinct Native American influence, but it can be appreciated by anyone, __(E) regardless__ of his or her background."
+  }
+}

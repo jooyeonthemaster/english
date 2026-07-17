@@ -1,0 +1,35 @@
+{
+  "pid": "P004",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'A bridge is normally constructed to last one hundred years' — 다리는 건설되는 대상이므로 수동태 is constructed가 옳고, to last는 목적/결과의 부정사로 자연스럽다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a lasting mark that shows...' — 선행사 a lasting mark(단수)를 받는 주격 관계대명사 that이며 관계절 동사 shows가 단수 일치. which로 바꿔도 되지만 that 자체는 어법상 완전한 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'one of the first qualities (that) a bridge must exhibit ___ how it harmonizes...' — 주어 one of the first qualities에 축약 목적격 관계절 a bridge must exhibit이 붙은 뒤 문장의 본동사가 와야 할 자리인데 concerning(전치사/분사)이 오면 주절에 정형동사가 없는 fragment가 된다. 대안 해석 탐색: concerning을 전치사('~에 관하여')로 읽어 exhibit에 붙여도, 분사구문으로 읽어도 주절 서술어 부재는 해소되지 않는다. concerns(단수 주어 one과 일치)여야 한다. 어떤 해석으로도 정문이 될 수 없어 유일한 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "concerns의 목적어로 오는 의문사 명사절 'how it harmonizes with its surroundings' — how 뒤에 완전한 절이 오므로 적절. (C)의 concerning을 전치사로 오독하면 (D)가 어색해 보이는 연쇄 착시가 유혹 포인트지만, 그 독법 자체가 문장을 무동사 fragment로 만들므로 결함의 근원은 (C)다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'a bridge that is spectacular in itself but spoils its local environment' — 병렬 시작점은 관계대명사 that 뒤의 정형동사이므로 is와 spoils가 but으로 병렬되고, 주어 that(=a bridge, 단수)에 spoils 단수 일치 정문. 매력적 오답: 앞의 to create와 병렬로 착각해 원형 spoil이어야 한다고 끌릴 수 있으나, but 앞 짝이 정형동사 is이므로 to부정사 병렬이 아니다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 정답 (C)는 '주어+축약 관계절 뒤 본동사 자리' 장거리 단서를 요구하는 전형적 고난도 포인트로, concerning이 전치사로도 읽혀 표면상 그럴듯해 보이는 좋은 함정. 매력적 오답 (E)(to create와의 거짓 병렬)와 (D)((C) 오독 시 연쇄 착시)에 실제로 끌려봤으나 둘 다 정문으로 확정됨. 정답이 (C) 하나로 명확히 좁혀지는 깔끔한 문항."
+}

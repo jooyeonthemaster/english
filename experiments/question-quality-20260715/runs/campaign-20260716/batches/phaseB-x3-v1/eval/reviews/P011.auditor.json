@@ -1,0 +1,86 @@
+{
+  "pid": "P011",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OK",
+      "severity": "info",
+      "evidence": "렌더 지문은 원지문에서 'suppress affects'를 빈칸으로 치환한 것 외에 문장 접합 파손·중복·누락·오탈자가 없음(전 문장 대조 완료). 선지 라벨 ①~⑤와 선언 정답 ②가 본문·해설과 일치."
+    },
+    {
+      "code": "V2-OK-WITH-NOTE",
+      "severity": "minor",
+      "evidence": "각 선지 독립 검증 결과 ②만 성립. ①은 'while cinema expresses man's affective life, the law keeps it in check'와 직접 모순(역할 전도). ③은 법이 state of nature의 폭력성을 명령·금지 체제로 막는 존재라는 진술과 정반대. ④는 'messiness of human relations'를 'messiness of cinema'로 바꾼 무관 결합. ⑤ 'eliminate our fears and desires'는 극성은 맞으나 원문의 'suppress'/'keeps it in check'(억제·통제)와 달리 '원천 제거'로 정도를 과장해 탈락 — 다만 유일한 실질 경쟁 선지로 ②와의 거리가 '정도 차이' 하나에 의존함. 단일 정답성 자체는 유지되어 V2 통과."
+    },
+    {
+      "code": "V3-OK",
+      "severity": "info",
+      "evidence": "정답 ②를 넣은 완성문 'The law obsessively tries to subdue emotional impulses, fearing the horror of their consequences, ...'는 문법적·자연스러움. 'their'가 'emotional impulses'를 자연스럽게 받음. 발문·지문에 비단어·오탈자 없음."
+    },
+    {
+      "code": "TAIL-PRONOUN-LEAK",
+      "severity": "minor",
+      "evidence": "빈칸 뒤 잔여 tail 'fearing the horror of their consequences'의 'their'는 빈칸 목적어를 선행사로 받는 것이 가장 자연스러움. 복수 명사구를 제공하는 ②·⑤만 매끄럽고 ①(affective life)·③(the state of nature)·④(the messiness of cinema)는 단수 목적어라 직전 문장의 'desires and drives'로 우회 해석해야 함. 문법적 하드 탈락까지는 아니나 tail이 선지군을 2개로 좁히는 연성 누출(RUBRIC §D 1항·C4 관련)."
+    },
+    {
+      "code": "V4-OK",
+      "severity": "info",
+      "evidence": "해설의 대조 구조 분석('영화는 표현, 법은 통제'), 'keep in check'-'suppress affects'-'subdue emotional impulses' 연결, ①=영화 기능·③=자연상태 유지 아님·⑤=과도한 도약 판정 모두 실제 지문 내용과 일치. 오분석·환각·용어 오류 없음. 오답 해설이 각 선지 실제 문면과 대응."
+    },
+    {
+      "code": "V5-OK",
+      "severity": "info",
+      "evidence": "정답 라벨 ②, 선지 5개, 본해설, 오답해설(①③④⑤ 전부 존재), keyPoints가 상호 모순 없이 동기화됨."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "역할 전도(actor swap): 영화의 기능을 법에 귀속",
+      "temptingBecause": "지문 문구 'expresses man's affective life'를 그대로 재사용해 표면 일치가 높음",
+      "decisiveFlaw": "빈칸 문장 자체가 'whereas cinema introduces us to our affects'로 법-영화를 대조하고, 앞 문장 'while cinema expresses..., the law keeps it in check'가 정반대 역할을 명시 — 즉시 소거 가능"
+    },
+    {
+      "label": "②",
+      "intent": "정답: 'suppress affects'/'keeps it in check'의 적정 추상화 재진술",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'subdue emotional impulses'는 원 span 의미를 보존하며 'their'의 선행사도 자연스럽게 성립"
+    },
+    {
+      "label": "③",
+      "intent": "개념 관계 반전: 법과 state of nature의 관계를 뒤집음",
+      "temptingBecause": "지문의 핵심 개념어 'state of nature'를 그대로 차용",
+      "decisiveFlaw": "지문은 인간이 명령·금지 체제 없이는 자연 상태에서 존속 불가할 만큼 폭력적이라고 명시 — 법은 자연 상태를 유지가 아니라 극복하는 장치. 'their' 선행사도 부자연"
+    },
+    {
+      "label": "④",
+      "intent": "키워드 무관 결합(mashup) — 사실상 필러에 가까움",
+      "temptingBecause": "'messiness'와 'cinema' 두 지문 어휘를 결합해 표면 친숙성 확보",
+      "decisiveFlaw": "원문의 messiness는 'human relations'의 속성이고 법이 영화를 조사한다는 진술은 지문 어디에도 근거가 없음. 'fearing the horror of their consequences'와도 의미 연결 불가 — 즉시 소거"
+    },
+    {
+      "label": "⑤",
+      "intent": "정도 과장(half-truth/overreach): 통제·억제를 '제거'로 격상",
+      "temptingBecause": "극성이 정답과 동일(법이 정서를 누른다)하고 지문 어휘 'fearing'·'desires'를 재사용 — 유일한 실질 경쟁 선지",
+      "decisiveFlaw": "원문은 'keeps it in check'·'suppress'·'ensure that we are not overwhelmed'로 일관되게 '억제·통제'이지 원천 제거가 아님. eliminate는 정도 초과"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과로 출하 게이트 자체는 넘으나, KILLER 요청 대비 실제 난이도가 크게 미달한다. (1) §D-4 위반: 정답이 빈칸 직전 문장의 명시적 동의 표현 'keeps it in check'와 빈칸 문장 내부의 'whereas cinema introduces us to our affects' 대조 하나만으로 국소 도출 가능 — 두 문장 이상의 논리 단서 연결이 강제되지 않음. (2) §D-1 부분 위반: 잔여 tail의 'their'가 복수 목적어를 요구하는 방향으로 작동해 ①③④를 연성 탈락시키고 후보를 ②⑤로 좁힘. (3) ④는 스스로의 오답 해설조차 '무관한 내용'으로 인정하는 준필러라 실질 경쟁 선지가 ⑤ 하나뿐 — C3 저하. C1(핵심 대조 지점 출제)과 해설 정확성(C6)은 우수하나, C5=1(KILLER 라벨과 실제 요구 사고 단계 불일치)로 재설계 필요. 개선 방향: 빈칸을 'keeps it in check' 문장 쪽으로 옮기거나 tail을 빈칸에 포함시켜 'their' 누출 제거, ④를 실제 오독을 겨냥한 선지로 교체."
+}

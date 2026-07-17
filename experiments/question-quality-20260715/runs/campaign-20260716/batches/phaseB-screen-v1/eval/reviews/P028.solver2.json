@@ -1,0 +1,35 @@
+{
+  "pid": "P028",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) are",
+      "verdict": "correct",
+      "reason": "관계절 수 일치: 'exchanges that are put-downs'에서 관계대명사 that의 선행사는 복수 명사 exchanges(수식 형용사 나열 subtle, stunning, often automatic, and nonverbal은 수 일치와 무관). 복수 선행사 → 복수 동사 are. 형식적으로 정문."
+    },
+    {
+      "label": "(B) whether",
+      "verdict": "correct",
+      "reason": "'indignities, whether intentional or unintentional, that communicate...'의 whether intentional or unintentional은 주어+be가 생략된 표준 축약 양보절(= whether they are intentional or unintentional). whether ... or ... 상관 구조와 형용사 병렬(intentional/unintentional)이 온전하며, 명사와 관계절 사이 삽입 위치도 허용된다. 정문."
+    },
+    {
+      "label": "(C) feel",
+      "verdict": "correct",
+      "reason": "사역동사 구문 make + 목적어(target groups) + 원형부정사(feel). make는 목적격 보어로 원형부정사를 요구하므로 feel이 옳고, feel 뒤 보어 unwelcome, isolated, and unsafe의 형용사 병렬도 성립. 정문."
+    },
+    {
+      "label": "(D) implying",
+      "verdict": "incorrect",
+      "reason": "정형동사 부재 증명: 문장 'People raising their voices while speaking to him implying a hidden message that a person with a disability is defined as lesser...'에서 (i) People을 주어로 하고 raising...him을 축약 관계절(현재분사 후치수식)로 읽으면 본동사 자리에 비정형 implying만 남아 파편(fragment)이 된다 — imply가 필요. (ii) People('s) raising their voices...를 동명사구 주어로 읽어도 정형동사 implies가 필요하다. (iii) 절대구문으로 재분석하려 해도 부착될 주절이 존재하지 않는다(is defined는 message의 동격 that절 내부의 동사일 뿐). 도치·수동태 잔류 목적어 등 어떤 대안 해석으로도 정형동사를 복원할 수 없다. 따라서 implying은 어법상 틀렸고 imply(People 주어) 또는 implies(동명사구 주어)로 고쳐야 한다."
+    },
+    {
+      "label": "(E) damaging",
+      "verdict": "correct",
+      "reason": "'they are nevertheless damaging to targets'의 damaging은 be의 주격 보어로 쓰인 서술 형용사(분사형 형용사)이며 'damaging to + NP' 결합은 표준적(harmful to와 평행). 주어 they(= these actions)가 해를 가하는 주체이므로 능동 의미 -ing형이 의미상으로도 옳다(damaged라면 오히려 오류). 정문."
+    }
+  ],
+  "note": "정답은 (D)로 유일하게 좁혀진다. (D) 문장은 축약 관계절·동명사 주어·절대구문 등 어떤 대안 해석을 적용해도 매트릭스절 정형동사가 부재한 파편이 되어 구제 불가능하므로, 오류가 선호 문제가 아니라 형식적으로 증명된다. 나머지 네 밑줄은 각각 관계절 수 일치(A), 축약 양보절(B), 사역 make+원형부정사(C), 서술 형용사(E)로 모두 성립하며 경쟁 후보가 없다. 해설 작성 시 (D)의 교정형이 imply/implies 두 가지 모두 가능하다는 점만 명시하면 좋다."
+}

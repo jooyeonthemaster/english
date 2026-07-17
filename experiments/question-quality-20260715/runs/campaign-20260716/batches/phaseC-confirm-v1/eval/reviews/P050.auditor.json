@@ -1,0 +1,75 @@
+{
+  "pid": "P050",
+  "validity": {
+    "V1": true,
+    "V2": false,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2_CONTESTABLE_ANSWER_VALENCY",
+      "severity": "critical",
+      "evidence": "선언 정답 (D) 'issuing'은 'with six of his nine U.S. patents issuing then'에서 자동사 해석이 가능하다. 'issue'는 자동사 용법이 사전에 등재되어 있고(Merriam-Webster: 'to appear or become available through being officially put forth or distributed'), 특히 미국 특허 영어에서 'the patent issued on [date]', 'patents issuing from an application'은 표준 관용이다. 지문이 바로 U.S. patents를 다루므로 이 자동사 독법이 정확히 적용되며, 그 경우 with-절대구문 'with + NP + 자동사 V-ing'(cf. 'with the sun rising')으로 문법적이 되어 오류가 0개가 된다. 정답의 오답성이 명확한 문법 판단이 아닌 어휘 결합가(valency) 논쟁 지점에 걸려 있어 이의신청에 취약하다. 선언된 정답 집합(1개)과 실제 확정 가능한 오류 집합이 일치한다고 보증할 수 없다."
+    },
+    {
+      "code": "V4_DAMAGED_TERM",
+      "severity": "major",
+      "evidence": "(A) 오답 해설의 '홑형태 일치를 반드시 시키지 않아도 어법상 맞습니다'에서 '홑형태 일치'는 존재하지 않는 손상된 문법 용어다. 의도는 '등위된 동사구가 동일 시제 형태일 필요는 없다'로 추정되나 학생이 해독할 수 없는 비단어 수준 표현이다."
+    },
+    {
+      "code": "V4_OVERSTATED_CLAIM",
+      "severity": "minor",
+      "evidence": "본해설의 \"'issuing'은 비문입니다\" 단정은 자동사 'issue'의 등재 용법(특허 관용 포함)을 무시한 과잉 단정으로, V2 이슈와 연동되는 사실성 약점이다. 구조 분석(with + 목적어 + 분사, 수동 관계, 교정형 'being issued') 자체는 문장과 일치한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "등위접속 병렬에서 시제 형태 불일치(과거완료 had conceptualized + 과거진행 was attempting)를 오류로 오판하게 유도",
+      "temptingBecause": "and 앞뒤 동사 형태가 달라 기계적 병렬 점검을 하는 학생에게 오류처럼 보임",
+      "decisiveFlaw": "등위된 동사구는 동일 시제 형태일 필요가 없고, '14세까지 이미 구상을 마쳤고 (그 시점에) 판매를 시도하고 있었다'는 의미상 두 시제가 모두 자연스러움 — 적법"
+    },
+    {
+      "label": "(B)",
+      "intent": "과거 습관·반복의 조동사 would를 가정법 would로 오판하게 유도",
+      "temptingBecause": "if절 없는 would가 가정법 잔재처럼 보일 수 있음",
+      "decisiveFlaw": "'Over the course of his inventing career'라는 과거 기간 표현과 결합한 과거 습관/반복의 would로 적법. 다만 중위권에게도 소거가 빠른 약한 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계대명사 that vs 접속사 that — 완전/불완전 절 판단",
+      "temptingBecause": "선행사 the first invention 뒤 절이 부사(successfully)와 긴 목적어구로 길어져 목적어 공백을 놓치기 쉬움",
+      "decisiveFlaw": "sold의 목적어 자리가 비어 있는 불완전한 절이므로 목적격 관계대명사 that으로 적법"
+    },
+    {
+      "label": "(D)",
+      "intent": "[선언 정답] with 분사구문에서 명사(patents)와 분사의 능동/수동 관계 판정 — 특허는 발급되는 대상이므로 being issued가 출제 의도상 교정형",
+      "temptingBecause": "V-ing가 표면상 자연스럽고, with + NP + V-ing 자체는 흔한 적법 패턴이라 수동 관계 판정을 건너뛰기 쉬움",
+      "decisiveFlaw": "출제 의도상으로는 수동 관계 위반이나, 자동사 'issue'(특허 관용: 'the patent issued')가 사전 등재 용법이어서 'patents issuing then'이 문법적으로 성립 가능 — 오답성이 결정적이지 않음(치명 결함, V2 참조)"
+    },
+    {
+      "label": "(E)",
+      "intent": "One of + 복수명사 주어부의 수일치 — 근접 복수명사에 끌린 오판 유도",
+      "temptingBecause": "동사 직전의 patents(복수)에 끌려 were로 고치고 싶어짐",
+      "decisiveFlaw": "주어부의 핵은 단수 대명사 One이므로 단수 동사 was가 적법 — 고전적이고 유효한 디코이"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설의 '홑형태 일치'는 비표준·손상 용어로 학생이 해독 불가 (V4_DAMAGED_TERM)",
+    "본해설의 ''issuing'은 비문입니다' 단정은 자동사 용법을 고려하면 과잉 단정 (V4_OVERSTATED_CLAIM)",
+    "본해설이 '과거분사 혹은 being p.p.' 두 교정형을 언급한 것 자체는 정확하며, 교정형 'being issued'는 원문과 정확히 일치함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V3/V5는 깨끗하다: 렌더 지문은 원지문 대비 (D) 'being issued'→'issuing' 단일 의도 변형만 있고, 라벨·마커·선지·markedExpressions·keyPoints가 전부 동기화되어 있다. 디코이 4개도 서로 다른 문법 포인트(시제 병렬/과거 습관 would/목적격 관계대명사/수일치)를 겨냥해 공예 골격은 준수하다. 치명 결함은 정답 자리의 동사 선택이다: 'issue'는 특허 도메인에서 자동사로 표준 사용되므로('the patent issued on ...') 'with six of his nine U.S. patents issuing then'이 적법한 대안 분석을 가지며, 이는 RUBRIC §C가 명시적으로 배제하라는 valency 대안 분석 자리에 해당한다. INTERMEDIATE라 §C가 등급 조건은 아니지만 V2(정답 유일성) 자체가 흔들리므로 보수적으로 V2 실패 판정. 추가로 (A) 해설의 손상 용어 '홑형태 일치'로 V4 실패. 수리 방향: (D)의 오류 동사를 자동사 독법이 불가능한 동사로 교체(예: with six of his nine U.S. patents granting then → being granted 교정형)하거나 오류 지점을 다른 문장으로 이동하고, (A) 해설 용어를 표준 표현으로 재작성하면 B 이상 회복 가능."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P068",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'Fear has helped us avoid dangers'는 그 자체로 완결된 독립절이며 현재완료는 첫 문장의 'have contributed'와 시제 흐름이 일치한다. 뒤따르는 'expressing anger helps... and expressing positive emotions helps...'와 시제가 달라 병렬 불일치처럼 보이는 매력적 오답이지만, 세 절은 각각 주어+정동사를 갖춘 독립절의 등위접속이므로 시제 통일이 문법적으로 강제되지 않는다. 실전에서 가장 먼저 끌렸던 선지였으나 '문체적 어색함 ≠ 어법 오류'로 판정하고 배제했다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "동명사구 'expressing anger'가 주어이고 단수 취급하여 'helps'로 수일치가 맞다. 뒤의 'expressing positive emotions helps'와도 완전한 병렬. 문제 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a kind of program that, when triggered, directs...'에서 'when triggered'는 'when (it is) triggered'의 주어+be 생략(축약 부사절)으로, 생략된 주어가 관계절 주어(= program/emotion)와 일치하고 program은 trigger의 대상이므로 과거분사 수동이 옳다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the specific ways in which they activate our systems'에서 관계절 내 'activate'는 목적어 'our systems'를 이미 갖춘 완전한 절이므로 전치사+관계대명사 'in which'(= the ways in which ~)가 옳다. 'ways that/in which/how' 계열의 표준 용법. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "주절이 'they would not have evolved with us'로 과거 사실의 반대(가정법 과거완료) 귀결인데, 조건절의 도움 시점 역시 바로 앞 문장에서 'they have helped us ... long ago'로 명백히 과거에 위치한다. 따라서 조건절은 'If they had not helped us adapt and survive'가 되어야 하며 가정법 과거 'did not help'는 시제 불일치 오류다. '현재 조건→과거 귀결'의 혼합가정(mixed conditional)으로 옹호하려는 대안 해석을 적극 검토했으나, 지문이 도움을 'long ago'의 과거 사건으로 못박고 있어 일반적·현재적 조건으로 읽을 근거가 약하다. 어법상 틀린 것으로 확정."
+    }
+  ],
+  "note": "실전 풀이 순서: (A)의 has helped vs helps 병렬 불일치가 가장 강한 미끼로 작동했다(약 30초 유혹). 그러나 등위된 세 절이 각각 완전한 정형절이므로 시제 상이는 어법 오류가 아니라고 판정. (E)는 주절 would not have evolved(과거완료 귀결)와 조건절 did not help(가정법 과거)의 고전적 시제 짝 불일치로, 직전 문장의 'long ago'가 장거리 단서로 과거완료를 강제한다. 유일한 잠재 논쟁점은 'emotions가 지금도 우리를 돕는다'는 일반 진술로 읽어 mixed conditional(If I didn't love you, I wouldn't have married you 유형)로 정문화하는 해석인데, 지문 맥락이 진화적 과거를 명시하므로 이 방어는 성립하기 어렵다고 보아 multipleDefensible=false로 보고한다."
+}

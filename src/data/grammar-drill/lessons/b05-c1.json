@@ -1,0 +1,736 @@
+{
+  "id": "b05-c1",
+  "unitId": "b05",
+  "order": 1,
+  "title": "가산명사·불가산명사와 관사",
+  "oneLiner": "명사를 셀 수 있는지부터 판정합니다. 그 답이 a/an·복수형·동사의 수를 전부 결정합니다.",
+  "gradeStamp": {
+    "introduced": "초5",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 관사·명사의 수(초등 도입, 중등 확장)",
+      "docs/study-os-spec.md §2.3 b05 명사·관사·대명사",
+      "판별 연결: 불가산명사는 단수 취급이므로 핵 주어 수일치(u02-c1) 판별의 전제가 됩니다"
+    ]
+  },
+  "lenses": ["L5"],
+  "confusableWith": ["b05-c2", "b06-c4", "u02-c1"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 1,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The professor gave the students a piece of advice about their essays.",
+        "The professor gave the students an advice about their essays."
+      ],
+      "answer": 0,
+      "afterText": "차이는 advice 앞의 자리 하나입니다. 이 레슨을 마치면 왜 an advice 가 불가능한지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "가산명사·불가산명사",
+      "question": "명사를 셀 수 있다, 없다는 것이 대체 무슨 말입니까?",
+      "plain": "가산명사는 하나, 둘 하고 개수를 셀 수 있는 이름이고, 불가산명사는 경계가 없어 개수로 셀 수 없는 이름입니다. 영어는 이 구분에 따라 명사 앞뒤에 붙는 것이 전부 달라집니다.",
+      "analogy": "사과는 한 알, 두 알 셀 수 있지만 물은 그렇게 세지 못합니다. 물을 세려면 한 컵, 두 병처럼 그릇을 빌려야 합니다. 영어의 불가산명사가 a piece of 라는 그릇을 빌리는 것도 같은 이치입니다.",
+      "whyItMatters": "a/an 을 붙일지, -s 를 붙일지, 동사를 단수로 쓸지가 전부 이 판정 하나에서 갈립니다. 수능은 이 판정을 핵 주어 수일치 문제로 바꾸어 묻습니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "가산·불가산 기본 노트",
+      "intro": "판정 기준부터 그 결과까지 일곱 항목으로 정리합니다.",
+      "entries": [
+        {
+          "head": "가산명사 — 개수를 세는 이름",
+          "body": "student·question 처럼 하나, 둘 셀 수 있는 명사입니다. 복수형 -s 를 만들 수 있다는 것이 가산의 표지입니다.",
+          "example": {
+            "en": "The visitor asked **two questions** at the front desk.",
+            "ko": "그 방문객은 안내 데스크에서 두 가지 질문을 했습니다.",
+            "note": "question 은 셀 수 있으므로 two questions 가 가능합니다."
+          }
+        },
+        {
+          "head": "단수 가산명사는 홀로 서지 못합니다",
+          "body": "단수 가산명사 앞에는 a/an·the·my 같은 한정사가 원칙적으로 필요합니다. 관사 없이 맨몸으로 세우면 문장이 성립하지 않습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "불가산명사 — 덩어리·개념의 이름",
+          "body": "information·water 처럼 경계가 없는 재료·개념·활동의 이름입니다. 개수가 아니라 양으로 파악합니다.",
+          "example": {
+            "en": "The report contains useful **information**.",
+            "ko": "그 보고서는 유용한 정보를 담고 있습니다.",
+            "note": "information 은 덩어리이므로 개수로 세지 않습니다."
+          }
+        },
+        {
+          "head": "불가산에는 a/an 도 -s 도 금지",
+          "body": "불가산명사는 하나로 셀 수 없으므로 a/an 이 붙지 못하고, 복수형도 없습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "세고 싶으면 단위를 빌립니다",
+          "body": "a piece of advice, two cups of water 처럼 단위 표현에 수를 붙입니다. 명사 자체는 형태를 바꾸지 않습니다.",
+          "example": {
+            "en": "She gave me **two pieces of advice** before the interview.",
+            "ko": "그녀는 면접 전에 저에게 두 가지 조언을 해 주었습니다.",
+            "note": "수는 단위 pieces 에 붙고 advice 는 그대로입니다."
+          }
+        },
+        {
+          "head": "불가산 주어는 단수 동사와 호응합니다",
+          "body": "불가산명사는 언제나 단수 취급이므로 주어로 서면 동사도 단수형입니다. 이것이 수능 수일치 판별의 전제입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "관용 표현은 관사를 버리기도 합니다",
+          "body": "go to school·by bus 처럼 굳어진 표현에서는 단수 가산명사가 관사 없이 섭니다. 규칙의 예외이므로 표현째 익힙니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "RULE",
+      "tier": 1,
+      "title": "가산명사의 규칙",
+      "rule": "가산명사는 단수일 때 관사·한정사를 반드시 데리고 서고, 여럿이면 복수형 -s(children 같은 불규칙 포함)를 만듭니다.",
+      "examples": [
+        {
+          "en": "**A student** raised **a question** during the lecture.",
+          "ko": "한 학생이 강의 중에 질문 하나를 했습니다.",
+          "note": "student 와 question 은 가산명사입니다. 단수로 쓰였으므로 각각 a 가 붙었습니다."
+        },
+        {
+          "en": "**Students** asked several **questions** during the lecture.",
+          "ko": "학생들이 강의 중에 여러 질문을 했습니다.",
+          "note": "복수형 -s 를 만들 수 있다는 것이 가산명사의 표지입니다."
+        },
+        {
+          "en": "**Student** asked **question** during the lecture.",
+          "ko": "학생이 강의 중에 질문을 했다는 뜻이지만, 문장이 성립하지 않습니다.",
+          "note": "일반적인 경우 단수 가산명사는 관사나 한정사 없이 홀로 설 수 없습니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 명사가 가산인지 불가산인지 분류하십시오.",
+      "buckets": [
+        { "id": "c", "label": "가산명사" },
+        { "id": "u", "label": "불가산명사" }
+      ],
+      "chips": [
+        { "text": "suggestion", "bucketId": "c", "why": "제안 하나·둘을 셀 수 있어 a suggestion, suggestions 가 모두 가능합니다." },
+        { "text": "machine", "bucketId": "c", "why": "개별 기계를 가리키므로 a machine, machines 가 가능합니다." },
+        { "text": "device", "bucketId": "c", "why": "개별 장치를 가리키므로 a device, devices 가 가능합니다." },
+        { "text": "advice", "bucketId": "u", "why": "복수형이 없습니다. 세려면 a piece of advice 로 단위를 빌립니다." },
+        { "text": "furniture", "bucketId": "u", "why": "가구 전체를 덩어리로 가리키는 말이라 a furniture, furnitures 가 불가능합니다." },
+        { "text": "evidence", "bucketId": "u", "why": "증거 전체를 가리키므로 복수형이 없고 little 과 호응합니다." }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "title": "불가산명사의 규칙",
+      "rule": "불가산명사는 셀 수 없는 덩어리이므로 a/an 도 복수형 -s 도 붙지 못하며, 수를 세려면 a piece of 같은 단위 표현을 빌립니다.",
+      "examples": [
+        {
+          "en": "The report contains useful **information** about the local economy.",
+          "ko": "그 보고서는 지역 경제에 관한 유용한 정보를 담고 있습니다.",
+          "note": "information 은 불가산명사입니다. an information 도 informations 도 불가능합니다."
+        },
+        {
+          "en": "The teacher offered **two pieces of advice** before the exam.",
+          "ko": "그 교사는 시험 전에 두 가지 조언을 해 주었습니다.",
+          "note": "불가산명사를 세려면 단위 표현 piece of 를 빌려 그 단위에 수를 붙입니다."
+        },
+        {
+          "en": "The teacher offered **two advices** before the exam.",
+          "ko": "두 가지 조언을 해 주었다는 뜻이지만, 형태가 성립하지 않습니다.",
+          "note": "advice 는 복수형이 없으므로 advices 라고 쓸 수 없습니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "시험에 자주 나오는 불가산명사 8개",
+      "why": "이 여덟 개는 한국어로는 자연스럽게 세어지기 때문에 감으로 풀면 반드시 틀립니다. 시험장에서 목록을 더듬을 시간은 없으므로, 명사를 보는 순간 \"복수형 없음\"이 반사적으로 나와야 도구가 됩니다.",
+      "device": "주고받는 것 셋 — information·advice·evidence(정보·조언·증거), 뭉텅이로 옮기는 것 셋 — equipment·furniture·luggage(장비·가구·짐), 쌓이는 것 둘 — homework·knowledge(숙제·지식). \"주고받고, 옮기고, 쌓인다\"의 세 박자로 끊어 외우십시오.",
+      "items": [
+        { "cue": "정보", "answer": "information — an information ✕, informations ✕" },
+        { "cue": "조언", "answer": "advice — 세려면 a piece of advice" },
+        { "cue": "증거", "answer": "evidence — little evidence 로 양을 말합니다" },
+        { "cue": "장비", "answer": "equipment — equipments 라는 복수형이 없습니다" },
+        { "cue": "가구", "answer": "furniture — 세려면 a piece of furniture" },
+        { "cue": "짐", "answer": "luggage — 짐이 여러 개여도 luggage 그대로입니다" },
+        { "cue": "숙제", "answer": "homework — many ✕, much homework ○" },
+        { "cue": "지식", "answer": "knowledge — 언제나 단수 취급입니다" }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "암기 관문 — 셀 수 없는 여덟",
+      "mission": "방금 외운 불가산명사만 전부 고르십시오. 하나·둘로 셀 수 있는 가산명사 침입자가 넷 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "information",
+        "suggestion",
+        "advice",
+        "evidence",
+        "machine",
+        "equipment",
+        "furniture",
+        "chair",
+        "luggage",
+        "homework",
+        "coin",
+        "knowledge"
+      ],
+      "answers": [
+        "information",
+        "advice",
+        "evidence",
+        "equipment",
+        "furniture",
+        "luggage",
+        "homework",
+        "knowledge"
+      ],
+      "passText": "여덟 개가 전부 그물에 걸렸습니다. 이제 이 명사들 앞에서는 a 를 붙이려던 손이 저절로 멈춥니다.",
+      "retryText": "아직 그물에 구멍이 있습니다. 힌트 하나 — 침입자 넷은 전부 하나, 둘 하고 셀 수 있는 물건입니다. \"주고받고, 옮기고, 쌓인다\"의 세 박자를 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b9",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b05-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The guide gave the tourists useful {{blank}} about the ruins.",
+          "options": ["information", "informations"],
+          "answer": 0,
+          "translation": "그 안내인은 관광객들에게 그 유적에 관한 유용한 정보를 주었습니다.",
+          "explanation": "information 은 불가산명사이므로 복수형이 없습니다. 여러 건이라도 형태는 information 그대로입니다.",
+          "trapTags": ["uncountable-plural"]
+        },
+        {
+          "id": "b05-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The committee published [[u:a research]] on air pollution last year.",
+          "isCorrect": false,
+          "correction": "research",
+          "translation": "그 위원회는 작년에 대기 오염에 관한 연구를 발표했습니다.",
+          "explanation": "research 는 불가산명사이므로 a 를 붙일 수 없습니다. 한 편을 가리키려면 a piece of research 또는 가산명사 a study 로 씁니다.",
+          "trapTags": ["uncountable-article"]
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "a 와 an 은 소리가 정합니다",
+      "rule": "a 와 an 은 철자가 아니라 뒤따르는 첫 소리로 결정되어, 모음 소리로 시작하면 an, 자음 소리로 시작하면 a 를 씁니다.",
+      "examples": [
+        {
+          "en": "The meeting lasted **an hour**, and the committee reached **a unanimous** decision.",
+          "ko": "그 회의는 한 시간 동안 이어졌고, 위원회는 만장일치의 결정에 이르렀습니다.",
+          "note": "hour 는 h 가 발음되지 않아 모음 소리로 시작하므로 an 을 씁니다. unanimous 는 자음 소리 [j]로 시작하므로 a 를 씁니다."
+        },
+        {
+          "en": "**An honest** witness is **a useful** source of testimony.",
+          "ko": "정직한 증인은 증언의 유용한 출처입니다.",
+          "note": "honest 의 h 는 묵음이므로 an, useful 은 [j] 소리로 시작하므로 a 입니다. 철자가 아니라 소리가 기준입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "title": "뜻이 바뀌면 셈법도 바뀝니다",
+      "rule": "같은 명사도 재료·개념 전체를 가리키면 불가산, 개별 사물·사례 하나를 가리키면 가산이 되어, 뜻이 바뀌면 셈법도 함께 바뀝니다.",
+      "examples": [
+        {
+          "en": "The factory recycles **paper**, while the researcher published **a paper** on urban history.",
+          "ko": "그 공장은 종이를 재활용하고, 그 연구자는 도시사에 관한 논문 한 편을 발표했습니다.",
+          "note": "재료로서의 paper 는 불가산이고, 논문 한 편을 뜻하는 a paper 는 가산입니다."
+        },
+        {
+          "en": "**Work** begins at dawn, and the gallery displays the **works** of a local sculptor.",
+          "ko": "작업은 새벽에 시작되고, 그 미술관은 지역 조각가의 작품들을 전시합니다.",
+          "note": "노동·작업을 뜻하면 불가산이고, 작품을 뜻하면 works 로 셉니다."
+        },
+        {
+          "en": "The candidate has little **experience**, but the expedition was **an experience** he never forgot.",
+          "ko": "그 지원자는 경험이 거의 없지만, 그 탐사는 그가 결코 잊지 못한 하나의 체험이었습니다.",
+          "note": "축적된 경험은 불가산이고, 개별 체험 하나는 가산입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "셈법이 다른 하나",
+      "instruction": "각 묶음에서 결이 다른 하나를 찾아 탭하십시오. 형태가 아니라 셀 수 있는지를 보십시오.",
+      "rounds": [
+        {
+          "words": ["suggestion", "question", "advice", "machine"],
+          "odd": 2,
+          "why": "advice 만 불가산명사입니다. 나머지 셋은 a 를 붙이고 복수형을 만들 수 있는 가산명사입니다."
+        },
+        {
+          "words": ["information", "furniture", "evidence", "device"],
+          "odd": 3,
+          "why": "device 만 가산명사입니다. 나머지 셋은 a/an 도 복수형도 갖지 못하는 불가산명사입니다."
+        },
+        {
+          "words": ["equipment", "luggage", "knowledge", "chair"],
+          "odd": 3,
+          "why": "chair 만 가산명사입니다. 하나·둘로 세어 a chair, chairs 가 되지만, 나머지 셋은 복수형도 a/an 도 없는 불가산명사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "불가산 주어를 가진 문장의 해부",
+      "tokens": [
+        { "t": "The information", "role": "S" },
+        { "t": "collected from the two surveys", "role": "M" },
+        { "t": "explains", "role": "V" },
+        { "t": "the sudden change", "role": "O" }
+      ],
+      "ko": "두 설문에서 수집된 그 정보는 그 갑작스러운 변화를 설명합니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "collected from the two surveys 는 앞의 명사를 뒤에서 꾸미는 분사구입니다. 안에 surveys 라는 복수명사가 있지만 뼈대가 아니므로 통째로 치웁니다."
+        },
+        {
+          "label": "② 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "남은 핵 주어는 The information 입니다. information 은 불가산명사이므로 복수형이 없고 언제나 단수로 취급합니다."
+        },
+        {
+          "label": "③ 본동사를 핵 주어에 맞춥니다",
+          "roles": ["V"],
+          "note": "핵 주어가 단수 취급이므로 본동사는 explains 입니다. 바로 앞의 surveys 에 끌려 explain 을 쓰면 오류입니다."
+        }
+      ],
+      "conclusion": "수식어 안의 복수명사는 동사의 수를 결정하지 못합니다. 불가산명사가 핵 주어이면 동사는 단수입니다."
+    },
+    {
+      "id": "b14",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "명사 앞자리를 채우는 4단계",
+      "steps": [
+        {
+          "text": "그 명사가 셀 수 있는지 먼저 판정합니다. 하나·둘로 셀 수 있으면 가산, 덩어리·개념이면 불가산입니다.",
+          "applyNote": "equipment 는 개별 기계를 하나둘 세는 말이 아니라 장비 전체를 가리키는 덩어리이므로 불가산입니다."
+        },
+        {
+          "text": "가산이면 단수일 때 관사·한정사를 반드시 붙이고, 여럿이면 복수형 -s 를 붙입니다.",
+          "applyNote": "laboratory 는 가산이므로 the laboratory 처럼 한정사가 필요합니다."
+        },
+        {
+          "text": "불가산이면 a/an 과 -s 를 모두 버립니다. 수를 세야 하면 단위 표현을 빌립니다.",
+          "applyNote": "an equipment 도 equipments 도 불가능합니다. 세려면 two pieces of equipment 로 씁니다."
+        },
+        {
+          "text": "그 명사가 주어이면 마지막으로 동사의 수를 맞춥니다. 불가산명사는 단수 취급입니다.",
+          "applyNote": "핵 주어 The equipment 가 불가산이므로 본동사는 needs 입니다."
+        }
+      ],
+      "example": {
+        "en": "The **equipment** in the laboratory **needs** regular inspection.",
+        "ko": "그 실험실의 장비는 정기적인 점검을 필요로 합니다.",
+        "note": "equipment 는 불가산이므로 복수형이 없고 단수 동사 needs 와 호응합니다."
+      }
+    },
+    {
+      "id": "b15",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 절차대로 이유를 확인하십시오.",
+      "stem": "The museum offers visitors ( a useful information / useful information ) about the excavation.",
+      "steps": [
+        {
+          "title": "① 판단할 명사를 특정합니다",
+          "body": "괄호가 감싸는 명사는 information 입니다. useful 은 그것을 꾸미는 형용사일 뿐이므로 판단의 대상이 아닙니다."
+        },
+        {
+          "title": "② 가산 여부를 판정합니다",
+          "body": "information 은 정보라는 내용 전체를 가리키는 덩어리이고, 하나둘로 세지 않습니다. 불가산명사입니다."
+        },
+        {
+          "title": "③ 불가산이면 a/an 을 버립니다",
+          "body": "불가산명사에는 a/an 이 붙지 못합니다. 따라서 a useful information 은 탈락합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "useful information 이 옳습니다. 굳이 하나로 세고 싶다면 a piece of useful information 처럼 단위 표현을 빌려야 합니다."
+        }
+      ],
+      "answer": "useful information",
+      "ko": "그 박물관은 방문객에게 발굴에 관한 유용한 정보를 제공합니다."
+    },
+    {
+      "id": "b16",
+      "type": "CHECK",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b05-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The furniture in the reading room {{blank}} donated by a local company.",
+          "options": ["was", "were"],
+          "answer": 0,
+          "translation": "그 열람실의 가구는 지역 회사가 기증한 것입니다.",
+          "explanation": "핵 주어는 The furniture 이고, furniture 는 불가산명사이므로 단수 취급입니다. 따라서 was 가 옳습니다. in the reading room 은 수식어일 뿐입니다.",
+          "trapTags": ["uncountable-agreement", "head-subject"]
+        },
+        {
+          "id": "b05-c1-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "A great deal of information [[u:were]] gathered from the two surveys.",
+          "isCorrect": false,
+          "correction": "was",
+          "translation": "두 설문에서 많은 정보가 수집되었습니다.",
+          "explanation": "information 은 불가산명사이고 a great deal of 는 불가산명사와 쓰이므로 단수 동사 was 가 옳습니다. 뒤의 surveys 에 끌리면 안 됩니다.",
+          "trapTags": ["uncountable-agreement", "head-subject"]
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "The furniture in the reading room ( was / were ) donated by a local company. 에서 was 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "핵 주어 furniture 가 불가산명사여서 언제나 단수로 취급되기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 가산 여부가 곧 수 취급을 결정하고, 수 취급이 동사의 형태를 결정합니다."
+        },
+        {
+          "text": "바로 앞에 있는 room 이 단수여서 동사도 단수가 된 것입니다.",
+          "correct": false,
+          "feedback": "동사는 전치사구 안의 명사가 아니라 핵 주어에 맞춥니다. 수식어를 걷어내면 주어는 furniture 입니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어서 was 가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "was 와 were 는 둘 다 과거형이므로 시제는 판단 근거가 되지 못합니다. 근거는 핵 주어의 수입니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "가산과 불가산은 무엇이 다릅니까",
+      "columns": ["가산명사", "불가산명사"],
+      "rows": [
+        {
+          "criterion": "관사 a/an",
+          "a": "단수형에 붙습니다 (a device)",
+          "b": "붙지 못합니다 (an equipment ✕)"
+        },
+        {
+          "criterion": "복수형 -s",
+          "a": "만들 수 있습니다 (devices)",
+          "b": "없습니다 (equipments ✕)"
+        },
+        {
+          "criterion": "수량 표현",
+          "a": "many, a few, few, a number of",
+          "b": "much, a little, little, a great deal of"
+        },
+        {
+          "criterion": "주어일 때 동사",
+          "a": "단수·복수에 따라 갈립니다",
+          "b": "언제나 단수 동사와 호응합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "**Few** students noticed the error, and **little** evidence supported the claim.",
+          "ko": "그 오류를 알아챈 학생은 거의 없었고, 그 주장을 뒷받침하는 증거도 거의 없었습니다.",
+          "note": "few 는 가산 복수명사와, little 은 불가산명사와 호응합니다."
+        },
+        {
+          "en": "**A number of** visitors **were** waiting outside, and **a great deal of** money **was** spent on the repair.",
+          "ko": "많은 방문객이 밖에서 기다리고 있었고, 수리에 많은 돈이 쓰였습니다.",
+          "note": "a number of 는 가산 복수와 쓰여 복수 동사를 부르고, a great deal of 는 불가산과 쓰여 단수 동사를 부릅니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "셈법 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 명사를 보는 순간 셀 수 있는지가 반사적으로 나와야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "information 은 복수형 informations 를 만들 수 없습니다.",
+          "isTrue": true,
+          "why": "information 은 불가산명사이므로 복수형이 없습니다. 정보가 여러 건이어도 형태는 information 그대로입니다."
+        },
+        {
+          "statement": "advice 를 하나로 세려면 an advice 로 씁니다.",
+          "isTrue": false,
+          "why": "advice 는 불가산명사여서 a/an 이 붙지 못합니다. 하나로 세려면 a piece of advice 로 단위를 빌립니다."
+        },
+        {
+          "statement": "much 는 불가산명사와 호응하는 수량 표현입니다.",
+          "isTrue": true,
+          "why": "much 와 little·a little 은 불가산명사와, many 와 few·a few 는 가산 복수명사와 호응합니다."
+        },
+        {
+          "statement": "evidence 가 핵 주어이면 동사를 복수형으로 씁니다.",
+          "isTrue": false,
+          "why": "evidence 는 불가산명사여서 언제나 단수 취급이므로 동사도 단수형을 씁니다."
+        },
+        {
+          "statement": "hour 앞에는 소리 때문에 an 을 씁니다.",
+          "isTrue": true,
+          "why": "hour 의 h 는 발음되지 않아 모음 소리로 시작하므로 an hour 로 씁니다. 기준은 철자가 아니라 소리입니다."
+        },
+        {
+          "statement": "furniture 는 여러 점일 때 furnitures 로 씁니다.",
+          "isTrue": false,
+          "why": "furniture 는 불가산명사여서 복수형이 없습니다. 여러 점을 밝히려면 several pieces of furniture 로 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "수량 표현 짝 맞추기",
+      "instruction": "왼쪽 수량 표현을, 그 표현으로만 문법적으로 완성되는 오른쪽 절과 연결하십시오. 명사의 가산·불가산과 동사의 수까지 맞아떨어지는 짝은 각각 하나뿐입니다.",
+      "pairs": [
+        {
+          "a": "a number of",
+          "b": "visitors were waiting outside",
+          "why": "a number of 는 가산 복수명사와 쓰여 복수 동사를 부릅니다. 복수 visitors 에 복수 were 가 맞는 짝은 이 표현뿐입니다."
+        },
+        {
+          "a": "a great deal of",
+          "b": "money was spent on the repair",
+          "why": "a great deal of 는 불가산명사 전용이며 단수 동사를 부릅니다. 불가산 money 에 단수 was 가 맞는 짝은 이 표현뿐입니다."
+        },
+        {
+          "a": "one of the",
+          "b": "paintings was stolen last night",
+          "why": "one of the 뒤에는 복수명사가 오지만 핵은 one 이라 동사는 단수입니다. 복수 paintings 에 단수 was 가 붙는 짝은 이 표현뿐입니다."
+        },
+        {
+          "a": "every",
+          "b": "ticket was sold before noon",
+          "why": "every 는 단수 가산명사와만 쓰이고 동사도 단수입니다. 단수 ticket 에 단수 was 가 맞는 짝은 이 표현뿐입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "한국어에서는 세지만 영어에서는 못 세는 명사",
+      "body": "한국어로는 '정보들·조언 두 개·장비들'처럼 자연스럽게 세어지는 말이 영어에서는 불가산입니다. information, advice, evidence, equipment, furniture, luggage, homework, research, knowledge, progress 가 대표적입니다. 이들에는 a/an 도 -s 도 붙지 않고, 주어일 때는 단수 동사와 호응합니다.",
+      "example": {
+        "en": "The company bought new **equipments** for the two laboratories.",
+        "ko": "그 회사가 두 실험실에 새 장비를 구입했다는 뜻이지만, 형태가 성립하지 않습니다.",
+        "note": "equipment 는 복수형이 없으므로 new equipment 로 써야 합니다. 여러 대임을 밝히려면 several pieces of equipment 로 씁니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b22",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 사서는 그 학생에게 유용한 조언 한 마디를 해 주었습니다.",
+      "answer": ["The librarian", "gave", "the student", "a piece of", "useful advice"],
+      "tiles": [
+        "The librarian",
+        "gave",
+        "the student",
+        "a piece of",
+        "useful advice",
+        "an advice"
+      ],
+      "explanation": "advice 는 불가산명사이므로 an advice 라고 쓸 수 없습니다. 하나로 세려면 단위 표현 a piece of 를 앞에 세워야 합니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 불가산명사에 a/an 이나 -s 가 붙은 문장을 주고 고쳐 쓰게 합니다. 어떤 명사가 불가산인지 알아야 수량 표현까지 함께 바로잡을 수 있습니다.",
+          "sample": {
+            "en": "The professor gave us many useful advices about our researches.",
+            "ask": "이 문장을 어법에 맞게 고쳐 쓰십시오.",
+            "answer": "The professor gave us much useful advice about our research. — advice 와 research 는 불가산이므로 복수형을 버리고, 수량 표현도 many 대신 much 를 씁니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서는 관사 자체보다, 불가산명사를 핵 주어로 둔 문장의 수일치로 판별됩니다. 주어 뒤 수식어 안에 복수명사가 들어 있어 동사를 복수로 끌어당기는 형태가 자주 쓰입니다.",
+          "sample": {
+            "en": "The evidence gathered from several excavation sites [[u:suggest]] that the settlement was much older.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "suggests — 핵 주어 The evidence 가 불가산명사여서 단수 취급이므로 단수 동사가 필요합니다. sites 는 수식어 안의 명사일 뿐입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The museum recently purchased [[1:new equipment]] for its laboratory, and the staff received [[2:several advices]] from an outside expert, but [[3:little evidence]] shows that the old machines [[4:were]] beyond repair.",
+      "answer": 2,
+      "correction": "several pieces of advice",
+      "rationales": [
+        "equipment 는 불가산명사이므로 복수형 없이 new equipment 로 씁니다. 옳습니다.",
+        "advice 는 불가산명사이므로 advices 라는 복수형이 없습니다. 수를 세려면 several pieces of advice 로 단위 표현을 빌려야 합니다.",
+        "evidence 는 불가산명사이므로 가산과 쓰는 few 가 아니라 little 과 호응합니다. 옳습니다.",
+        "the old machines 는 가산 복수 주어이므로 복수 동사 were 가 옳습니다."
+      ],
+      "ko": "그 박물관은 최근 실험실에 새 장비를 구입했고 직원들은 외부 전문가에게서 여러 조언을 받았지만, 그 낡은 기계들이 수리할 수 없는 상태라는 증거는 거의 없습니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "셀 수 없는 것들의 세관장",
+      "intro": "이 세관은 명사가 지날 때마다 셀 수 있는지부터 검사합니다. a 한 글자, -s 한 글자라도 서류가 어긋나면 통과는 없습니다. 네 건의 심사를 준비하십시오.",
+      "questions": [
+        {
+          "prompt": "The counselor gave me {{blank}} about my career.",
+          "options": ["useful advice", "a useful advice"],
+          "answer": 0,
+          "why": "advice 는 불가산명사이므로 a 를 붙일 수 없습니다. 형용사 useful 이 붙어도 사정은 같습니다."
+        },
+        {
+          "prompt": "The movers carried {{blank}} up the narrow stairs.",
+          "options": ["three pieces of furniture", "three furnitures"],
+          "answer": 0,
+          "why": "furniture 는 복수형이 없으므로 단위 표현 pieces of 에 수를 붙여 셉니다."
+        },
+        {
+          "prompt": "She was accepted by {{blank}} in London.",
+          "options": ["a university", "an university"],
+          "answer": 0,
+          "why": "university 는 철자는 모음 u 로 시작하지만 소리는 자음 [j]로 시작하므로 a 를 씁니다."
+        },
+        {
+          "prompt": "The equipment in the new laboratories {{blank}} checked every month.",
+          "options": ["is", "are"],
+          "answer": 0,
+          "why": "핵 주어 equipment 가 불가산명사이므로 단수 취급입니다. laboratories 는 수식어 안의 명사일 뿐입니다."
+        }
+      ],
+      "winText": "세관장이 도장을 찍어 줍니다. 관사와 복수형 서류가 네 건 모두 완벽했습니다. 이제 어떤 명사가 와도 셀 수 있는지부터 검사하는 눈이 생겼습니다.",
+      "loseText": "세관장이 서류를 돌려보냅니다. 반려된 서류의 공통점을 보십시오 — 전부 \"이 명사를 셀 수 있는가\"라는 첫 질문을 건너뛰었습니다. 암기 카드의 여덟 명사를 다시 확인하면 문은 열립니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "불가산명사에는 ___ 와 ___ 를 붙일 수 없고, 주어로 쓰이면 동사를 ___ 로 맞춥니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "가산명사는 단수일 때 관사·한정사가 필요하고, 복수형 -s 를 만들 수 있습니다.",
+        "불가산명사는 a/an 도 -s 도 붙지 않으며, 수를 세려면 a piece of 같은 단위 표현을 빌립니다.",
+        "a 와 an 은 철자가 아니라 첫 소리로 정합니다. an hour, a unanimous decision 이 그 증거입니다.",
+        "같은 명사도 뜻이 바뀌면 가산·불가산이 바뀝니다(paper, work, experience).",
+        "불가산명사가 핵 주어이면 동사는 언제나 단수입니다. 수식어 안의 복수명사에 끌리지 않습니다."
+      ],
+      "keySentence": {
+        "en": "The **information** collected from the two surveys **explains** the sudden change.",
+        "ko": "두 설문에서 수집된 그 정보는 그 갑작스러운 변화를 설명합니다.",
+        "note": "핵 주어가 불가산명사이므로 본동사는 단수 explains 입니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b05-c1-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The office needs {{blank}} before the new employees arrive next week.",
+          "options": ["a few chairs", "a few furnitures"],
+          "answer": 0,
+          "translation": "그 사무실은 다음 주에 새 직원들이 오기 전에 의자 몇 개가 필요합니다.",
+          "explanation": "furniture 는 불가산명사여서 복수형이 없으므로 a few furnitures 가 성립하지 않습니다. chair 는 가산명사이므로 a few chairs 가 옳습니다.",
+          "trapTags": ["uncountable-plural", "quantifier-agreement"]
+        },
+        {
+          "id": "b05-c1-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The knowledge accumulated by earlier generations [[u:have]] shaped modern medicine.",
+          "isCorrect": false,
+          "correction": "has",
+          "translation": "앞선 세대들이 축적한 지식이 현대 의학을 형성해 왔습니다.",
+          "explanation": "accumulated by earlier generations 는 수식하는 분사구입니다. 이를 걷어내면 핵 주어는 불가산명사 The knowledge 이므로 단수 동사 has 가 옳습니다. generations 에 끌리면 안 됩니다.",
+          "trapTags": ["uncountable-agreement", "head-subject"]
+        },
+        {
+          "id": "b05-c1-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The researcher published {{blank}} on the migration of birds last spring.",
+          "options": ["a paper", "a research", "an information"],
+          "answer": 0,
+          "translation": "그 연구자는 지난봄에 새의 이동에 관한 논문 한 편을 발표했습니다.",
+          "explanation": "research 와 information 은 불가산명사이므로 a/an 을 붙일 수 없습니다. 논문 한 편은 가산명사 paper 로 세므로 a paper 가 옳습니다.",
+          "trapTags": ["uncountable-article"]
+        }
+      ]
+    }
+  ]
+}

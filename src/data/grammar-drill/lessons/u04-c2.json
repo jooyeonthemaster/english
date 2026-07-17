@@ -1,0 +1,691 @@
+{
+  "id": "u04-c2",
+  "unitId": "u04",
+  "order": 2,
+  "title": "감정동사 분사",
+  "oneLiner": "감정을 일으키는 쪽이면 -ing, 감정을 느끼는 쪽이면 p.p.입니다.",
+  "gradeStamp": {
+    "introduced": "중2",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 분사의 능동·수동(감정동사 분사)",
+      "천일문 고등 GRAMMAR — 현재분사와 과거분사의 구별",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L3 의미상 주어 대조",
+      "SMOAT 어법 드릴 뱅크 u04-c2 문항 35개(choice 12·reading 5·support 18, trapTag: emotion-participle, person-as-cause)"
+    ]
+  },
+  "lenses": ["L3"],
+  "confusableWith": ["u04-c1", "u04-c3", "u04-c4", "u03-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Most of the students found the long lecture boring.",
+        "Most of the students found the long lecture bored."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 분사의 방향 하나입니다. 이 레슨을 마치면 왜 강의가 bored 일 수 없는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "감정동사",
+      "question": "감정동사가 대체 무엇이고, 왜 같은 단어가 -ing 와 p.p. 두 갈래로 갈립니까?",
+      "plain": "감정동사는 남의 감정을 '일으키는' 타동사입니다. surprise 는 '놀라다'가 아니라 '놀라게 하다'라는 뜻이고, 이 방향 때문에 같은 단어가 두 갈래로 갈립니다.",
+      "analogy": "감정을 전기에 비유하면, 발전소는 전기를 일으키는 쪽이고 전구는 전기를 받아 빛나는 쪽입니다. -ing 는 발전소, p.p.는 전구에 해당합니다.",
+      "whyItMatters": "수능·내신에서 -ing 와 p.p. 중 하나를 고르라는 밑줄은 거의 이 감정동사에서 나옵니다. 방향만 정확히 물으면 사람·사물이라는 겉모습에 속지 않습니다. 판별 도구 '의미상 주어 대조'가 여기서 훈련됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "사람에게는 과거분사(p.p.)를, 사물에게는 현재분사(-ing)를 붙입니다.",
+      "truth": "기준은 사람이냐 사물이냐가 아닙니다. 감정을 일으키는 원인이면 -ing, 감정을 느끼는 주체이면 p.p.입니다. 사람도 얼마든지 남의 감정을 일으키는 원인이 될 수 있습니다.",
+      "counterExample": {
+        "en": "The **amusing** tour guide kept the whole group laughing for two hours.",
+        "ko": "그 재미있는 관광 가이드는 두 시간 동안 일행 전체를 계속 웃게 했습니다.",
+        "note": "guide 는 사람이지만 즐거움을 일으키는 원인입니다. 그래서 -ing 형인 amusing 이 옳습니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "감정동사 분사 판별 필기",
+      "intro": "판정에 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "감정동사 — 남의 감정을 일으키는 타동사",
+          "body": "surprise·bore·interest·satisfy 처럼 뜻이 '~하게 만들다'인 동사입니다. '놀라다'가 아니라 '놀라게 하다'라는 방향을 항상 먼저 확인합니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "-ing — 감정을 일으키는 쪽",
+          "body": "그 분사가 설명하는 대상(그 분사의 의미상 주어)이 감정의 원인이면 -ing 를 씁니다. 사건·작품·상황은 물론 사람도 원인이 될 수 있습니다.",
+          "example": {
+            "en": "The **surprising** results changed the whole plan.",
+            "ko": "그 놀라운 결과가 계획 전체를 바꾸었습니다.",
+            "note": "결과가 놀라움을 일으키는 원인이므로 -ing 형입니다."
+          }
+        },
+        {
+          "head": "p.p. — 감정을 느끼는 쪽",
+          "body": "그 분사가 설명하는 대상이 감정을 겪는 경험자이면 p.p.를 씁니다. 경험자는 감정을 느낄 수 있는 대상, 대개 사람이나 동물입니다.",
+          "example": {
+            "en": "The researchers were **surprised** at the results.",
+            "ko": "연구자들은 그 결과에 놀랐습니다.",
+            "note": "연구자들이 놀라움을 느끼는 쪽이므로 p.p. 형입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "자리는 달라도 기준은 하나",
+          "body": "보어는 주어·목적어의 상태를 채워 설명하는 자리로, 주격 보어는 주어를 목적격 보어는 목적어를 설명합니다(다음 레슨에서 정식으로 다룹니다). 명사 수식이든 이 보어 자리이든 그 분사가 설명하는 대상부터 지목하고 원인인지 경험자인지만 묻습니다."
+        },
+        {
+          "head": "전치사구는 p.p.의 신호",
+          "body": "뒤에 by·at·with·in 으로 감정의 원인이 따로 제시되어 있으면 앞의 분사는 그 감정을 받는 쪽, 즉 p.p.입니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현에서 분사가 꾸미는 명사가 감정을 일으키는 쪽인지, 느끼는 쪽인지 분류하십시오.",
+      "buckets": [
+        { "id": "cause", "label": "감정을 일으키는 쪽 (-ing)" },
+        { "id": "exp", "label": "감정을 느끼는 쪽 (p.p.)" }
+      ],
+      "chips": [
+        { "text": "the news (shock)", "bucketId": "cause", "why": "뉴스가 충격을 일으키는 원인입니다." },
+        { "text": "the residents (shock)", "bucketId": "exp", "why": "주민들은 충격을 느끼는 쪽입니다." },
+        { "text": "the host (entertain)", "bucketId": "cause", "why": "진행자는 사람이지만 즐거움을 일으키는 원인입니다." },
+        { "text": "the passengers (annoy)", "bucketId": "exp", "why": "승객들은 짜증을 느끼는 쪽입니다." },
+        { "text": "the result (satisfy)", "bucketId": "cause", "why": "결과가 만족을 일으키는 원인입니다." },
+        { "text": "the runners (exhaust)", "bucketId": "exp", "why": "주자들은 피로를 느끼는 쪽입니다." }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "감정동사는 '~하게 만들다'라는 뜻의 타동사입니다. 그 감정을 일으키는 쪽에는 -ing 를, 그 감정을 느끼는 쪽에는 p.p.를 씁니다.",
+      "examples": [
+        {
+          "en": "The results of the experiment were **surprising**.",
+          "ko": "그 실험의 결과는 놀라웠습니다.",
+          "note": "surprise 는 '놀라게 하다'입니다. 결과가 놀라움을 일으키는 원인이므로 -ing 형입니다."
+        },
+        {
+          "en": "The researchers were **surprised** at the results of the experiment.",
+          "ko": "연구자들은 그 실험의 결과에 놀랐습니다.",
+          "note": "같은 동사이지만 이번에는 연구자들이 놀라움을 느끼는 쪽이므로 p.p. 형입니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "분사가 놓이는 자리(명사 앞·뒤 수식, 주격 보어, 목적격 보어)가 달라도 판단 기준은 하나입니다. 그 분사가 설명하는 대상이 원인인지 경험자인지만 봅니다.",
+      "examples": [
+        {
+          "en": "The committee found the new proposal **confusing**.",
+          "ko": "위원회는 그 새 제안이 혼란스럽다고 여겼습니다.",
+          "note": "목적격 보어이므로 목적어 the new proposal 을 설명합니다. 제안이 혼란을 일으키는 원인이므로 -ing 형입니다."
+        },
+        {
+          "en": "The organizers kept the audience **entertained** until the last act.",
+          "ko": "주최 측은 마지막 순서까지 관객이 즐거움을 느끼도록 했습니다.",
+          "note": "같은 목적격 보어 자리이지만 목적어 the audience 는 즐거움을 느끼는 쪽이므로 p.p. 형입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "뒤에서 꾸미는 감정동사 분사의 해부",
+      "tokens": [
+        { "t": "Travelers", "role": "S" },
+        { "t": "confused", "role": "VERBAL" },
+        { "t": "by the sudden change in the schedule", "role": "VERBAL" },
+        { "t": "crowded", "role": "V" },
+        { "t": "around the information desk", "role": "M" }
+      ],
+      "ko": "갑작스러운 일정 변경에 혼란을 느낀 여행객들이 안내 데스크 주위로 몰려들었습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "본동사 crowded 에 걸리는 around the information desk 만 괄호로 걷어냅니다. by the sudden change in the schedule 은 분사 confused 에 딸린 원인 표지이므로 분사구의 일부로 남겨 둡니다."
+        },
+        {
+          "label": "② 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 Travelers 입니다. 이 분사가 설명하는 대상도 바로 이 명사입니다."
+        },
+        {
+          "label": "③ 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "시제를 가진 동사는 crowded 하나입니다. confused 는 본동사가 아니라 주어를 뒤에서 꾸미는 분사입니다."
+        },
+        {
+          "label": "④ 분사의 방향을 판정합니다",
+          "roles": ["VERBAL"],
+          "note": "여행객은 혼란을 느끼는 쪽이고, 혼란의 원인은 by구에 이미 나와 있습니다. 따라서 p.p. 형 confused 가 옳습니다."
+        }
+      ],
+      "conclusion": "confusing 을 넣으면 여행객이 남을 혼란스럽게 만드는 원인이 되어 뒤의 by구와 충돌합니다. 분사가 설명하는 명사가 원인인지 경험자인지가 유일한 기준입니다."
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "감정의 원인이 by·at·with·in 같은 전치사구로 뒤에 밝혀져 있으면, 그 앞의 분사는 감정을 받는 쪽이므로 p.p.입니다.",
+      "examples": [
+        {
+          "en": "Many viewers were **shocked** by the ending of the documentary.",
+          "ko": "많은 시청자가 그 다큐멘터리의 결말에 충격을 받았습니다.",
+          "note": "충격을 느끼는 쪽은 viewers 이고, 충격의 원인은 by구가 밝혀 줍니다."
+        },
+        {
+          "en": "The judges were **impressed** with the young violinist's control of tone.",
+          "ko": "심사위원들은 그 어린 바이올리니스트의 음색 조절에 깊은 인상을 받았습니다.",
+          "note": "인상을 받는 쪽은 judges 이고, 원인은 with구에 담겨 있습니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "감정동사와 짝을 이루는 전치사",
+      "columns": ["감정동사", "함께 쓰는 전치사", "뜻"],
+      "rows": [
+        {
+          "cells": ["interest", "be interested in", "~에 흥미를 느끼다"],
+          "example": {
+            "en": "The students were **interested** in the experiment.",
+            "ko": "학생들은 그 실험에 흥미를 느꼈습니다.",
+            "note": "in 이 흥미의 원인을 가리키므로 interested(p.p.)입니다."
+          }
+        },
+        {
+          "cells": ["satisfy", "be satisfied with", "~에 만족하다"]
+        },
+        {
+          "cells": ["surprise", "be surprised at / by", "~에 놀라다"],
+          "example": {
+            "en": "The teacher was **surprised** at the sudden question.",
+            "ko": "선생님은 그 갑작스러운 질문에 놀랐습니다.",
+            "note": "at 이 놀라움의 원인을 가리키므로 surprised(p.p.)입니다."
+          }
+        },
+        {
+          "cells": ["shock", "be shocked at / by", "~에 충격을 받다"]
+        },
+        {
+          "cells": ["disappoint", "be disappointed with / at", "~에 실망하다"]
+        },
+        {
+          "cells": ["bore", "be bored with / by", "~을 지루해하다"]
+        }
+      ],
+      "takeaway": "전치사가 원인을 가리키는 표현은 전부 p.p. 쪽입니다. 짝을 통째로 외워 두면 방향 판단이 즉시 끝납니다."
+    },
+    {
+      "id": "b11",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "전치사 짝 맞추기",
+      "instruction": "왼쪽의 감정동사 표현과 오른쪽의 뜻을 짝지으십시오. 전치사가 원인을 가리키므로 모두 p.p. 쪽 표현입니다.",
+      "pairs": [
+        {
+          "a": "be interested in",
+          "b": "~에 흥미를 느끼다",
+          "why": "흥미의 원인을 in 이 가리키므로 interested(p.p.)입니다."
+        },
+        {
+          "a": "be satisfied with",
+          "b": "~에 만족하다",
+          "why": "만족의 원인을 with 가 가리키므로 satisfied(p.p.)입니다."
+        },
+        {
+          "a": "be surprised at",
+          "b": "~에 놀라다",
+          "why": "놀라움의 원인을 at 이 가리키므로 surprised(p.p.)입니다."
+        },
+        {
+          "a": "be shocked by",
+          "b": "~에 충격을 받다",
+          "why": "충격의 원인을 by 가 가리키므로 shocked(p.p.)입니다."
+        },
+        {
+          "a": "be disappointed with",
+          "b": "~에 실망하다",
+          "why": "실망의 원인을 with 가 가리키므로 disappointed(p.p.)입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "감정동사 분사를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "그 분사의 원형이 '~하게 만들다'라는 뜻의 감정동사인지 확인합니다(surprise·bore·interest·puzzle·satisfy 등).",
+          "applyNote": "puzzle 은 '어리둥절하게 만들다'라는 뜻의 감정동사입니다. 그러므로 이 판단 절차의 대상입니다."
+        },
+        {
+          "text": "그 분사가 설명하는 대상을 찾습니다. 명사 수식이면 그 명사, 주격 보어이면 주어, 목적격 보어이면 목적어입니다.",
+          "applyNote": "puzzled 는 left 의 목적격 보어이므로 목적어 many readers 를 설명합니다."
+        },
+        {
+          "text": "그 대상이 감정을 '일으키는 원인'인지 '느끼는 주체'인지 한국어로 소리 내어 물어봅니다.",
+          "applyNote": "독자는 어리둥절함을 만들어 내는 쪽이 아니라 느끼는 쪽입니다. 어리둥절함을 만든 것은 소설의 결말입니다."
+        },
+        {
+          "text": "원인이면 -ing, 주체이면 p.p.로 확정합니다. 사람인지 사물인지는 근거가 되지 못합니다.",
+          "applyNote": "readers 는 감정을 느끼는 주체이므로 p.p. 형 puzzled 가 옳습니다."
+        }
+      ],
+      "example": {
+        "en": "The unexpected ending of the novel left many readers **puzzled**.",
+        "ko": "그 소설의 예상 밖의 결말은 많은 독자를 어리둥절하게 만들었습니다.",
+        "note": "감정을 일으킨 원인은 the unexpected ending 이고, 느낀 쪽은 many readers 입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The audience found the second half of the performance ( boring / bored ), and several people left early.",
+      "steps": [
+        {
+          "title": "① 감정동사인지 확인합니다",
+          "body": "bore 는 '지루하게 만들다'라는 뜻의 감정동사입니다. 따라서 -ing 와 p.p. 중 하나를 고르는 판단이 필요합니다."
+        },
+        {
+          "title": "② 분사가 설명하는 대상을 찾습니다",
+          "body": "find + 목적어 + 목적격 보어 구조입니다. 괄호는 목적격 보어이므로 목적어 the second half of the performance 를 설명합니다. 주어 The audience 가 아닙니다."
+        },
+        {
+          "title": "③ 원인인지 경험자인지 묻습니다",
+          "body": "공연의 후반부가 지루함을 느낄 수는 없습니다. 지루함을 일으키는 쪽은 공연이고, 느끼는 쪽은 관객입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "괄호가 설명하는 대상이 감정의 원인이므로 -ing 형 boring 이 옳습니다. bored 를 넣으면 공연 후반부가 지루함을 느낀다는 뜻이 되어 성립하지 않습니다."
+        }
+      ],
+      "answer": "boring",
+      "ko": "관객은 그 공연의 후반부가 지루하다고 느꼈고, 몇몇 사람은 일찍 자리를 떴습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u04-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The children were completely {{blank}} by the magician's final trick.",
+          "options": ["amazed", "amazing"],
+          "answer": 0,
+          "translation": "아이들은 그 마술사의 마지막 마술에 완전히 놀랐습니다.",
+          "explanation": "amaze 는 '놀라게 하다'라는 감정동사입니다. 주격 보어 자리이므로 주어 The children 을 설명하는데, 아이들은 놀라움을 느끼는 쪽이고 원인은 by구에 나와 있습니다. 따라서 과거분사 amazed 가 옳습니다.",
+          "trapTags": ["emotion-participle"]
+        },
+        {
+          "id": "u04-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The engineers were deeply [[u:satisfying]] with the results of the final test.",
+          "isCorrect": false,
+          "correction": "satisfied",
+          "translation": "기술자들은 최종 시험 결과에 크게 만족했습니다.",
+          "explanation": "satisfy 는 '만족시키다'라는 감정동사입니다. 기술자들은 만족을 느끼는 쪽이고 만족의 원인은 with구가 밝히고 있으므로, 밑줄은 과거분사 satisfied 여야 합니다.",
+          "trapTags": ["emotion-participle", "linking-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "-ing 와 p.p. 의 역할 분담",
+      "columns": ["-ing (감정을 일으키는 쪽)", "p.p. (감정을 느끼는 쪽)"],
+      "rows": [
+        {
+          "criterion": "설명하는 대상",
+          "a": "감정의 원인 — 사건·작품·상황·사람 모두 가능",
+          "b": "감정의 경험자 — 감정을 느낄 수 있는 대상"
+        },
+        {
+          "criterion": "능동·수동으로 바꾸면",
+          "a": "The lecture **bores** the class. (하는 쪽)",
+          "b": "The class **is bored** by the lecture. (당하는 쪽)"
+        },
+        {
+          "criterion": "감정의 원인 표시",
+          "a": "자기 자신이 원인이므로 전치사구가 따로 필요하지 않습니다",
+          "b": "원인을 밝히려면 by·at·with 등의 전치사구를 붙입니다"
+        },
+        {
+          "criterion": "판단 질문",
+          "a": "이 대상이 감정을 만들어 냅니까",
+          "b": "이 대상이 감정을 겪습니까"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The lecture was **boring**, and half of the class stopped taking notes.",
+          "ko": "그 강의는 지루했고, 학급의 절반이 필기를 멈추었습니다.",
+          "note": "강의가 지루함을 일으키는 원인이므로 -ing 형입니다."
+        },
+        {
+          "en": "Half of the class already looked **bored** before the lecture ended.",
+          "ko": "학급의 절반은 강의가 끝나기도 전에 이미 지루해 보였습니다.",
+          "note": "학생들은 지루함을 느끼는 쪽이므로 p.p. 형입니다. 같은 동사가 자리에 따라 두 방향으로 갈립니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "방향이 다른 하나",
+      "instruction": "넷 중 방향이 다른 하나를 찾으십시오. 감정을 일으키는 쪽(-ing)과 느끼는 쪽(p.p.)이 섞여 있습니다.",
+      "rounds": [
+        {
+          "words": ["boring", "exciting", "amazed", "shocking"],
+          "odd": 2,
+          "why": "boring·exciting·shocking 은 감정을 일으키는 -ing 쪽이고, amazed 만 감정을 느끼는 p.p. 쪽입니다."
+        },
+        {
+          "words": ["frightened", "satisfied", "annoying", "exhausted"],
+          "odd": 2,
+          "why": "frightened·satisfied·exhausted 는 감정을 느끼는 p.p. 쪽이고, annoying 만 감정을 일으키는 -ing 쪽입니다."
+        },
+        {
+          "words": ["terrified", "amazed", "boring", "delighted"],
+          "odd": 2,
+          "why": "terrified·amazed·delighted 는 감정을 느끼는 p.p. 쪽이고, boring 만 감정을 일으키는 -ing 쪽입니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The spectators were ( terrifying / terrified ) by the sudden collapse of the stage.",
+      "givenSteps": [
+        "① terrify 는 '겁에 질리게 하다'라는 뜻의 감정동사입니다.",
+        "② 괄호는 be동사 뒤의 주격 보어 자리이므로 주어 The spectators 를 설명합니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "terrified — 관중은 공포를 느끼는 쪽이고, 공포의 원인은 by구가 밝히고 있습니다",
+        "terrifying — 관중이 남을 겁에 질리게 하는 원인이므로 능동입니다",
+        "terrify — be동사 뒤의 보어 자리에는 동사원형을 씁니다"
+      ],
+      "answer": 0,
+      "explain": "관중은 감정을 느끼는 경험자이고, 공포를 일으킨 원인은 by구에 담긴 무대 붕괴입니다. 따라서 과거분사 terrified 가 옳습니다. terrifying 을 고르면 관중 자신이 남을 겁에 질리게 하는 원인이 되어 by구와 충돌하고, be동사 뒤에 동사원형은 올 수 없습니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "'사람이면 p.p.' 라는 암기 공식",
+      "body": "사람은 감정을 느끼는 쪽이 되는 경우가 많을 뿐, 항상 그런 것은 아닙니다. 강연자·배우·가이드처럼 남의 감정을 만들어 내는 사람은 -ing 를 받습니다. 사람인지 사물인지를 보지 말고, 그 대상이 감정을 만드는지 겪는지를 물어야 합니다.",
+      "example": {
+        "en": "The **boring** speaker repeated the same anecdote three times.",
+        "ko": "그 지루한 강연자는 같은 일화를 세 번이나 되풀이했습니다.",
+        "note": "speaker 는 사람이지만 지루함을 일으키는 원인입니다. bored 를 쓰면 강연자 자신이 지루함을 느낀다는 다른 뜻이 됩니다."
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u04-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The speaker, who himself seemed completely {{blank}} by the topic, still managed to hold everyone's attention.",
+          "options": ["bored", "boring"],
+          "answer": 0,
+          "translation": "정작 자신은 그 주제에 완전히 싫증이 난 듯 보였던 그 강연자는 그래도 모두의 주의를 붙잡아 두었습니다.",
+          "explanation": "빈칸 뒤의 by the topic 이 감정의 원인을 밝히고 있으므로, 빈칸이 설명하는 the speaker 는 감정을 느끼는 쪽입니다. 따라서 과거분사 bored 가 옳습니다. boring 을 넣으면 원인을 가리키는 by구와 충돌합니다.",
+          "trapTags": ["emotion-participle", "person-as-cause"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "방향 판정 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 방향 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "감정을 일으키는 원인에는 -ing 를 씁니다.",
+          "isTrue": true,
+          "why": "원인은 -ing, 경험자는 p.p. — 감정동사 분사의 기준 그 자체입니다."
+        },
+        {
+          "statement": "사람을 설명하는 분사는 언제나 p.p.입니다.",
+          "isTrue": false,
+          "why": "boring speaker 처럼 사람도 감정을 일으키는 원인이면 -ing 를 받습니다."
+        },
+        {
+          "statement": "The movie was **excited**. 는 어법상 옳습니다.",
+          "isTrue": false,
+          "why": "영화는 흥분을 일으키는 원인이므로 exciting 이어야 합니다."
+        },
+        {
+          "statement": "뒤에 by·with 로 원인이 밝혀져 있으면 앞의 분사는 p.p.입니다.",
+          "isTrue": true,
+          "why": "원인이 전치사구로 제시된다는 것은 앞 대상이 감정을 받는 쪽이라는 신호입니다."
+        },
+        {
+          "statement": "The tourists were **amazing** at the view. 는 어법상 옳습니다.",
+          "isTrue": false,
+          "why": "관광객은 놀라움을 느끼는 쪽이고 at 이 원인을 가리키므로 amazed 여야 합니다."
+        },
+        {
+          "statement": "감정동사 분사의 방향은 사람·사물이 아니라 원인·경험자로 가릅니다.",
+          "isTrue": true,
+          "why": "겉모습이 아니라 감정을 만드는지 겪는지가 유일한 기준입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 bored 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "by the topic 이 감정의 원인을 따로 밝히고 있으므로, 분사가 설명하는 the speaker 는 감정을 느끼는 경험자입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 원인이 전치사구로 제시되어 있다는 것은 앞의 대상이 그 감정을 받는 쪽이라는 신호입니다."
+        },
+        {
+          "text": "the speaker 가 사람이므로 사람에게는 과거분사를 씁니다.",
+          "correct": false,
+          "feedback": "사람이라는 사실은 근거가 되지 못합니다. 같은 사람 명사라도 boring speaker 처럼 -ing 를 받는 경우가 있습니다."
+        },
+        {
+          "text": "강연자가 주의를 붙잡아 두었으므로 문맥상 부정적인 형태가 어울리기 때문입니다.",
+          "correct": false,
+          "feedback": "문맥의 분위기는 형태 선택의 근거가 아닙니다. 판단 근거는 그 대상이 감정을 만드는가 겪는가입니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The [[1:disappointing]] election results left many volunteers [[2:discouraging]], but the campaign manager, who remained [[3:calm]], gave a short and [[4:encouraging]] speech.",
+      "answer": 2,
+      "correction": "discouraged",
+      "rationales": [
+        "명사 results 를 앞에서 꾸미는 감정동사 분사입니다. 결과가 실망을 일으키는 원인이므로 -ing 형이 옳습니다.",
+        "left 의 목적격 보어이므로 목적어 many volunteers 를 설명합니다. 자원봉사자들은 낙담을 느끼는 쪽이므로 discouraged 로 고쳐야 합니다.",
+        "remain 뒤의 주격 보어 자리에 온 형용사입니다. 감정동사 분사가 아니므로 형태가 그대로입니다.",
+        "명사 speech 를 꾸미는 감정동사 분사입니다. 연설이 격려의 감정을 일으키는 원인이므로 -ing 형이 옳습니다."
+      ],
+      "ko": "실망스러운 선거 결과는 많은 자원봉사자를 낙담하게 했지만, 침착함을 유지한 선거 운동 책임자는 짧고 격려가 되는 연설을 했습니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 감정동사의 원형을 괄호에 넣어 두고 알맞은 분사 형태로 바꿔 쓰게 합니다. 분사가 설명하는 대상을 먼저 지목하고 그 대상이 원인인지 경험자인지 쓰면 근거 점수까지 받습니다.",
+          "sample": {
+            "en": "The lecture on urban planning was so ( bore ) that several students fell asleep.",
+            "ask": "괄호 안의 단어를 어법에 맞는 형태로 고쳐 쓰십시오.",
+            "answer": "boring — 주격 보어가 설명하는 주어 The lecture 가 지루함을 일으키는 원인이므로 현재분사입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 감정동사 분사에 밑줄을 긋고, 그 분사가 설명하는 대상을 문장 앞쪽에 멀리 떨어뜨려 놓습니다. 밑줄 뒤에 by·at·with 로 원인이 제시되어 있는지도 함께 확인해야 합니다.",
+          "sample": {
+            "en": "Faced with data that seemed to contradict their model, the researchers were deeply [[u:puzzling]] by the pattern they had found.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "puzzled — 연구자들은 어리둥절함을 느끼는 쪽이고 원인은 by구에 제시되어 있으므로 과거분사여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Museums have begun to redesign their exhibits with younger visitors in mind. [[u:Curators who once found interactive displays annoying now describe them as the most engaging part of the collection.]] Children who used to look bored in the quiet galleries stay for hours. The shift has been slow, but it is visible in almost every major city.",
+      "instruction": "밑줄 친 문장에서 감정동사 분사가 설명하는 대상을 각각 찾고, 그 대상이 원인인지 경험자인지 판정하십시오.",
+      "found": "annoying 은 found 의 목적격 보어로 interactive displays 를 설명합니다. 전시물이 짜증을 일으키는 원인이므로 -ing 형입니다. engaging 은 명사 part 를 앞에서 꾸미며, describe A as B 구조에서 그 part 가 곧 displays 를 가리키므로 결국 전시물이 매력을 일으키는 원인이라는 뜻이 됩니다. 짜증을 느끼는 쪽인 curators 에게 붙었다면 annoyed 가 되었을 것입니다.",
+      "gist": "박물관이 어린 관람객을 염두에 두고 전시를 바꾸면서, 예전에 거슬려 하던 상호작용형 전시물이 이제는 가장 매력적인 요소로 평가된다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 3,
+      "bossName": "감정 방향을 뒤섞는 극장 지배인",
+      "intro": "제 극장에서는 배우가 관객이 되고 관객이 배우가 되는 일이 흔합니다. -ing 와 p.p.를 뒤바꿔 걸어 둔 네 개의 간판 중에서 방향이 맞는 것을 골라 보십시오. 겉모습에 속으면 막이 내리지 않습니다.",
+      "questions": [
+        {
+          "prompt": "The final scene of the play left the whole audience {{blank}}.",
+          "options": ["moved", "moving"],
+          "answer": 0,
+          "why": "관객은 감동을 느끼는 쪽이므로 목적격 보어는 p.p. 형 moved 입니다. 감동을 일으킨 원인은 마지막 장면입니다."
+        },
+        {
+          "prompt": "The lead actor was so {{blank}} that the front rows could not stop laughing.",
+          "options": ["amusing", "amused"],
+          "answer": 0,
+          "why": "배우가 즐거움을 일으키는 원인이므로 -ing 형 amusing 입니다. 사람이라도 원인이면 -ing 입니다."
+        },
+        {
+          "prompt": "Many critics were deeply {{blank}} by the director's bold choices.",
+          "options": ["impressed", "impressing"],
+          "answer": 0,
+          "why": "비평가들은 인상을 받는 쪽이고 원인은 by구에 있으므로 p.p. 형 impressed 입니다."
+        },
+        {
+          "prompt": "The plot twist was {{blank}}, and no one in the theater saw it coming.",
+          "options": ["shocking", "shocked"],
+          "answer": 0,
+          "why": "반전이 충격을 일으키는 원인이므로 -ing 형 shocking 입니다. shocked 를 쓰면 반전 자체가 충격을 느낀다는 뜻이 됩니다."
+        }
+      ],
+      "winText": "막이 오르고 박수가 쏟아집니다. 이제 당신은 배우와 관객을, 원인과 경험자를 한눈에 가릅니다. 사람이든 사물이든 방향 하나만 물으면 되는 눈 — 그것이 방금 손에 들어왔습니다.",
+      "loseText": "지배인이 다시 간판을 내겁니다. 네 문제 모두 물음은 하나였습니다 — 이 대상이 감정을 만드는가, 겪는가. 원인이면 -ing, 경험자면 p.p. 이 한 줄만 들고 다시 오면 막은 오릅니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "감정동사 분사는 그 분사가 설명하는 대상이 감정을 ___ 쪽이면 -ing, 감정을 ___ 쪽이면 p.p. 입니다. 사람인지 사물인지는 ___ 되지 못합니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "감정동사는 '~하게 만들다'라는 타동사입니다. 원인에는 -ing, 경험자에는 p.p.를 씁니다.",
+        "명사 수식·주격 보어·목적격 보어 어느 자리든 기준은 같습니다. 그 분사가 설명하는 대상부터 지목합니다.",
+        "'사람이면 p.p.'는 공식이 아닙니다. boring speaker 처럼 사람도 감정의 원인이 될 수 있습니다.",
+        "뒤에 by·at·with·in 같은 전치사구로 원인이 제시되어 있으면 앞의 분사는 감정을 받는 쪽, 즉 p.p.입니다."
+      ],
+      "keySentence": {
+        "en": "The **exhausting** schedule left the volunteers **exhausted**.",
+        "ko": "그 고된 일정은 자원봉사자들을 지치게 만들었습니다.",
+        "note": "같은 동사가 원인(schedule)에는 -ing 로, 경험자(volunteers)에는 p.p.로 갈라 붙습니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u04-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The final chapter of the novel was so {{blank}} that readers discussed it for weeks.",
+          "options": ["intriguing", "intrigued"],
+          "answer": 0,
+          "translation": "그 소설의 마지막 장은 너무나 흥미로워서 독자들이 몇 주 동안 그것을 논했습니다.",
+          "explanation": "intrigue 는 '강한 흥미를 불러일으키다'라는 감정동사입니다. 주격 보어가 설명하는 주어 The final chapter 는 흥미를 일으키는 원인이므로 현재분사 intriguing 이 옳습니다. intrigued 를 쓰면 장(章) 자체가 흥미를 느낀다는 뜻이 되어 성립하지 않습니다.",
+          "trapTags": ["emotion-participle"]
+        },
+        {
+          "id": "u04-c2-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The trainer kept the exhausted team [[u:motivated]] until the final whistle.",
+          "isCorrect": true,
+          "translation": "그 트레이너는 지친 팀이 최종 휘슬이 울릴 때까지 동기를 잃지 않게 했습니다.",
+          "explanation": "밑줄은 keep 의 목적격 보어이므로 목적어 the exhausted team 을 설명합니다. 선수들은 동기를 부여받는 쪽이므로 과거분사 motivated 가 옳습니다. motivating 을 쓰면 팀이 남에게 동기를 부여하는 원인이 되어 문맥과 어긋납니다.",
+          "trapTags": ["emotion-participle", "object-complement"]
+        },
+        {
+          "id": "u04-c2-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The professor, who seemed genuinely {{blank}} in his students' objections, invited them to speak longer.",
+          "options": ["interested", "interesting"],
+          "answer": 0,
+          "translation": "학생들의 반론에 진심으로 흥미를 느끼는 듯했던 그 교수는 그들에게 더 길게 말해 보라고 청했습니다.",
+          "explanation": "빈칸 뒤의 in his students' objections 가 흥미의 원인을 밝히고 있으므로, 빈칸이 설명하는 The professor 는 흥미를 느끼는 쪽입니다. 따라서 be interested in 의 과거분사 interested 가 옳습니다. interesting 은 남에게 흥미를 일으키는 쪽에 붙는 형태이므로 in구와 결합하지 못합니다.",
+          "trapTags": ["emotion-participle", "person-as-cause"]
+        }
+      ]
+    }
+  ]
+}

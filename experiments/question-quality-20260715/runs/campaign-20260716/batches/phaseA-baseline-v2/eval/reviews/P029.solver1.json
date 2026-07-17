@@ -1,0 +1,35 @@
+{
+  "pid": "P029",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) when",
+      "verdict": "correct",
+      "reason": "'mistakes made by organizations when they first consider...'에서 when은 시간 부사절 접속사로 정상. 과거분사구 'made by organizations'가 mistakes를 수식하고 when절이 시점을 한정하는 구조로 흠 없음."
+    },
+    {
+      "label": "(B) is",
+      "verdict": "correct",
+      "reason": "진짜 주어는 문두의 'One of the most common mistakes'로 단수. 주어-동사 사이에 organizations, social media 등 복수 명사가 끼어 are로 끌리게 하는 장거리 수일치 미끼이나, 핵심 명사 One에 일치하는 단수 is가 옳다. 실전에서 잠깐 mistakes에 끌렸으나 규칙 확인으로 해소."
+    },
+    {
+      "label": "(C) understood",
+      "verdict": "incorrect (정답)",
+      "reason": "'a thorough understood of ...'에서 관사 a + 형용사 thorough 뒤에는 명사가 필요한데 understood는 과거분사/형용사일 뿐 명사가 아니다. 'a thorough understanding of ~'가 되어야 한다. 축약 관계절 등 어떤 대안 독법으로도 정문이 되지 않음 — 명사 'understood'는 영어에 존재하지 않는다."
+    },
+    {
+      "label": "(D) itself",
+      "verdict": "correct",
+      "reason": "'Being in social media serves no purpose in and of itself'에서 주어는 동명사구(단수 취급)이므로 재귀대명사 itself가 정확. 'in and of itself'는 확립된 관용구. 직전 복수 명사 social networks에 끌려 themselves를 떠올릴 수 있으나 지배 선행사는 동명사구."
+    },
+    {
+      "label": "(E) either",
+      "verdict": "correct",
+      "reason": "'must either solve a problem ... or result in an improvement' — either A or B 상관접속사가 조동사 must 뒤 동사원형 solve/result를 병렬로 정확히 연결. 병렬 시작점 정렬에 흠 없음."
+    }
+  ],
+  "note": "정답 (C) 단독. 명사 자리(a thorough ___ of)에 과거분사 understood가 온 명백한 품사 오류로, understanding이어야 한다. (B)의 장거리 수일치가 가장 매력적인 오답 유혹이었으나 One(단수)으로 명확히 해소됨. 복수정답 여지 없음."
+}

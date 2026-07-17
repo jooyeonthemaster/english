@@ -1,0 +1,111 @@
+{
+  "pid": "P037",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4_BROKEN_TERMINOLOGY",
+      "severity": "critical",
+      "evidence": "해설 (A) 부분: \"명사구(human perception and behavior)를 주어로 삼아 수동 부사(influenced)의 수식을 받는 완결성 있는 수동태 구조\" — 'influenced'는 과거분사인데 존재하지 않는 용어 '수동 부사'로 지칭했고, be influenced(조동사 can + be + 과거분사 수동태 서술)를 분사가 '수식하는' 구조로 오분석했다. 학생 노출 해설의 손상 용어·구조 오분석으로 V4 실패."
+    },
+    {
+      "code": "FORMAT_SIX_UNDERLINES",
+      "severity": "major",
+      "evidence": "밑줄·선지가 (A)~(F) 6개다. 수능 어법 문항 표준은 밑줄 5개(①~⑤)이며 RUBRIC §C도 '5개 밑줄'을 전제한다. 라벨-선지-해설 내부 동기화는 유지되나 실전 출제 형식에서 벗어나 KILLER 조건 판정에서 탈락 사유가 된다."
+    },
+    {
+      "code": "V5_SURROUNDING_TEXT_SOURCE_FORM",
+      "severity": "minor",
+      "evidence": "markedExpressions (F)의 surroundingText가 렌더 텍스트('like if')가 아닌 원문('as if they were 50 years older')을 담고 있다. (A)~(E)는 렌더=원문이라 구분이 안 되지만 (F)에서 필드 의미가 갈라진다. 학생 노출 필드(지문·선지·정답·해설)는 동기화되어 있어 V5 자체는 통과 처리."
+    },
+    {
+      "code": "ANSWER_SURFACE_SALIENT",
+      "severity": "major",
+      "evidence": "정답 'like if'는 표준 영어에 존재하지 않는 준-비단어 연쇄로, 구조 독해 없이 훑어보기만으로 이상함이 드러난다. 최소대립쌍(as if→like if, 교정 시 정확히 원문 복원)은 성립하지만 KILLER §C '철자·비단어류로 즉시 드러나지 않아야 한다' 조건과 충돌하고 C3/C4/C5를 끌어내린다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "조동사 can 뒤 수동태(be + p.p.) 판단 — 주어가 영향의 대상임을 읽는지",
+      "temptingBecause": "showing 뒤 접속사 that이 생략된 축약 구조라 주어-동사 관계 파악이 한 단계 필요하고, can 뒤 원형 be와 수동 결합이 낯설 수 있다",
+      "decisiveFlaw": "human perception and behavior는 외부 요인에 의해 영향을 '받는' 대상이므로 수동태가 정확 — 정답이 될 수 없다"
+    },
+    {
+      "label": "(B)",
+      "intent": "tell + 간접목적어 + that절(명사절 접속사)에서 that의 정체 판별 — 관계대명사 오인 유도",
+      "temptingBecause": "선행 명사구(a bunch of healthy undergraduates) 직후의 that이라 관계대명사로 오독하면 뒤 절의 완전성 판단이 꼬인다",
+      "decisiveFlaw": "he was testing their language abilities는 성분 결손 없는 완전한 절이므로 직접목적어 명사절을 이끄는 접속사 that이 정문"
+    },
+    {
+      "label": "(C)",
+      "intent": "ask + 목적어 + 목적격보어(to부정사) 형태 규칙",
+      "temptingBecause": "presented them with ~ and asked them ~ 병렬 속에서 creating 등 동명사형과의 혼동을 노린다",
+      "decisiveFlaw": "ask는 목적격보어로 to부정사를 취하므로 to create가 정문"
+    },
+    {
+      "label": "(D)",
+      "intent": "주격 관계대명사 + 과거완료 수동태의 이중 판단(관계사 선택·시제·태)",
+      "temptingBecause": "had been exposed의 시제 적절성과 who/which 선택을 동시에 검토해야 해 가장 판단 부하가 큰 디코이",
+      "decisiveFlaw": "선행사 Those students는 사람이고, 노출 시점이 복도를 걷는(took) 시점보다 앞서므로 who + 과거완료 수동이 정문"
+    },
+    {
+      "label": "(E)",
+      "intent": "with + 명사 + 분사 부대상황 구문에서 능동(bending) vs 수동(bent) 판정",
+      "temptingBecause": "bent가 원형/과거형과 동형이라 형태 식별이 필요하고, 어깨가 굽히는 주체처럼 보일 수 있다",
+      "decisiveFlaw": "their shoulders는 굽혀지는 대상이므로 과거분사 bent가 정문"
+    },
+    {
+      "label": "(F)",
+      "intent": "정답 — 완전한 절을 이끄는 가정 접속사 자리에 as if 대신 like if 배치",
+      "temptingBecause": "구어에서 like가 접속사처럼 쓰이는 용법에 익숙한 학생은 자연스럽게 넘길 수 있다",
+      "decisiveFlaw": "표준 어법상 절을 이끄는 가정 접속사는 as if/as though이며 like if는 비문 — 교정하면 정확히 원문 as if로 복원되는 유일 오류. 다만 like if 자체가 표면적으로 이질적이라 구조 독해 없이도 즉시 포착된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "NONWORD_TERM",
+      "severity": "critical",
+      "evidence": "해설 (A): '수동 부사(influenced)의 수식을 받는 완결성 있는 수동태 구조' — '수동 부사'는 비존재 용어(과거분사의 오기로 추정)이며 be + p.p.를 수식 관계로 기술한 것도 오분석. 같은 밑줄의 오답해설('수동태인 be influenced는 어법상 옳습니다')과 품질이 어긋난다"
+    },
+    {
+      "code": "CONVOLUTED_ANSWER_RATIONALE",
+      "severity": "minor",
+      "evidence": "해설 (F): '전치사적 성격과 조건절 접속사가 혼종된'— 장황하고 모호한 기술로, 'like는 절을 이끌 수 없고 접속사 as if가 필요하다'는 핵심을 흐린다"
+    },
+    {
+      "code": "CONTENT_DRIFT",
+      "severity": "minor",
+      "evidence": "오답해설 (E): '신체 구조상 구부러진 상태' — 지문은 점화 효과로 인한 일시적 자세 묘사이지 신체 구조가 아님. 경미한 내용 첨가"
+    },
+    {
+      "code": "GARBLED_PHRASING",
+      "severity": "minor",
+      "evidence": "오답해설 (D): '실험실을 떠나기 전 과거보다 더 이전에' — 시제 설명 어구가 뒤틀려 있음(의도: 걷는 시점 이전의 노출). 사실관계는 맞으나 문장이 손상됨"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionsDetail": {
+    "minimalPairRestoresSource": true,
+    "clearGrammarJudgmentNotPreference": true,
+    "fiveUnderlinesEachDocumented": false,
+    "answerRequiresStructuralReading": false,
+    "noEasyDecoySamePoint": true,
+    "reason": "밑줄이 6개(§C는 5개 전제)이고, 정답 like if는 준-비단어 연쇄로 표면 스캔만으로 즉시 드러나 '구조를 읽어야 한다' 조건을 충족하지 못한다. 또한 등급이 F이므로 beautiful KILLER의 전제(A등급) 자체가 성립하지 않는다."
+  },
+  "grade": "F",
+  "notes": "지문 무결성(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 통과. 각 밑줄 독립 검증 결과 (F) like if만이 오류이고 교정 시 원문과 정확히 일치한다. 그러나 해설 (A)의 '수동 부사' 손상 용어와 be+p.p.를 수식 관계로 기술한 구조 오분석으로 V4 실패 — 치명은 공예 점수로 상쇄되지 않으므로 F. 공예 측면에서도 요청 난이도 KILLER 대비 실제 난이도가 크게 낮다: 정답이 어휘·연어 차원에서 즉시 드러나고(as if는 고교 필수 암기 표현), 디코이 5개는 각기 다른 정전 포인트를 겨냥해 의도 밀도는 양호하나 실제 견인력이 약하다. 재출하려면 (1) 해설 (A) 용어·구조 기술 교정, (2) 밑줄 5개 표준 형식으로 축소, (3) KILLER 라벨이라면 구조 독해가 필요한 오류점(도치·병렬 파손·관계사 격 등)으로 정답 포인트 교체가 필요하다."
+}

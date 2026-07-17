@@ -1,0 +1,35 @@
+{
+  "pid": "P036",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'they'는 직전 담화에 등장한 Garcia와 Jeff 두 사람을 지시하는 복수 대명사. 'as they entered the lively shopping center'에서 주어 자리의 복수 대명사로 수·격 모두 일치. 지배 규칙(선행사 조응) 위반 없음 — 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'a patterned red shirt and yellow pants (that) he had found in the store' — 목적격 관계대명사가 생략된 축약 관계절. '찾아 놓은' 시점이 '가리키며 물은(asked, pointing)' 과거 시점보다 앞서므로 과거완료 had found는 대과거 규칙에 정확히 부합 — 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Don't you think these would look great on my brother?' — think의 목적어 명사절 내에서 these(복수) + 조동사 would + 원형 look, look은 연결동사로 형용사 보어 great를 취하고, 'look great on + 사람'은 표준 관용 결합. 어법상 결함 없음 — 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'His confidence was ... changed to nervousness what he thought of how many people would be there.' 주절('His confidence was changed to nervousness')이 이미 완전한 문장이므로 뒤에는 부사절(시간)을 이끄는 종속접속사 when/as가 와야 한다. what은 (i) 선행사를 포함한 관계대명사(명사절)로 쓰이려면 명사 자리가 필요하나 여기엔 그런 자리가 없고, (ii) nervousness를 선행사로 하는 관계절이라면 절 내에 공백(gap)이 있어야 하나 'he thought of how many...'는 완전한 절이어서 성립 불가. 동격절 해석도 명사절 접속사 that을 요구하므로 배제. 형식적으로 어떤 대안 해석으로도 정문이 되지 않음 — 어법상 틀림. when으로 교정해야 함."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'When the band was finished' — be finished는 '(일을) 마친 상태이다'를 뜻하는 확립된 형용사적 용법(= had finished)으로, 유정 주어와도 표준적으로 결합한다(예: 'When I was finished, I left.'). 수동태 오용이 아니라 상태 서술 구문으로 정문."
+    }
+  ],
+  "note": "정답은 (D) 하나로 유일하게 좁혀짐. 완전절 앞의 what은 어떤 대안 구문 분석(융합 관계사·동격·간접의문)으로도 구제 불가. 나머지 네 밑줄은 각각 대명사 조응, 대과거, 연결동사+형용사 보어, be finished 상태 구문으로 모두 형식적으로 정문."
+}

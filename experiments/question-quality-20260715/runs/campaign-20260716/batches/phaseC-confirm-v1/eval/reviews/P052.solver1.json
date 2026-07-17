@@ -1,0 +1,35 @@
+{
+  "pid": "P052",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸 직후 'For example' 예시가 동일한 마감(1월)을 'next year' 대신 'this winter'로 재명명하라는 내용 — 즉 기한 자체가 아니라 시간 프레임에 대한 '사고방식'을 바꾸라는 것. 결론 문장(view deadlines as a challenge ... within a period that's imminent)과도 정확히 정합. 'What you need to do is + 원형부정사' 결합도 문법적으로 정상."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "지문은 마감을 제거하라는 것이 아니라 마감을 임박한 도전으로 인식해 제때 착수하라는 것. 'a challenge that you have to meet'과 정면 충돌. 예시(마감은 그대로 1월)와도 불합치."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "매력적 오답 — 지문에 'New Year'가 등장해 표면 어휘가 끌어당김. 그러나 요지는 break를 중심으로 일정을 짜라가 아니라, break가 만드는 심리적 원근 착시(마감이 멀어 보임)를 재프레이밍으로 우회하라는 것. break를 기준점으로 삼는 것은 오히려 지문이 경계하는 사고방식."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "가장 강한 유혹 — 'internal mental barrier'가 지문의 'break' 개념과 공명한다. 그러나 방향이 반대: 마감을 barrier 너머로 미는 것은 마감을 더 remote하게 만드는 행위이고, 지문은 마감을 barrier 안쪽(this winter, imminent period)으로 끌어들여 인식하라고 함. 예시와 결론 모두와 불합치."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "마지막 문장의 'the stress is more manageable'을 표면 재활용한 미끼. 지문에서 스트레스가 관리 가능해지는 것은 재프레이밍의 '결과'이지 기다림의 결과가 아니며, 지문 취지는 jump into action / starting in good time — 기다리라는 ⑤와 정반대."
+    }
+  ],
+  "note": "빈칸 뒤 'For example'과 결론 문장이 이중 장거리 단서로 ①을 유일 정답으로 고정. ④가 어휘 공명('mental barrier'~'break')으로 가장 매력적이나 방향성이 정반대라 옹호 불가. 문법 결합(seam)은 5개 선지 모두 pseudo-cleft 뒤 원형부정사/동사구로 정상이므로 변별은 순수 논리 적합성에서 발생. 복수 정답 소지 없음."
+}

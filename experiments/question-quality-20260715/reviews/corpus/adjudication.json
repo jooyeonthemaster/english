@@ -1,0 +1,4379 @@
+{
+  "adjudicatedOn": "2026-07-15",
+  "adjudicator": "fresh-eyes-corpus-adjudicator",
+  "aggregate": {
+    "blankSuitability": {
+      "central": 96,
+      "local": 8,
+      "unsuitable": 16
+    },
+    "bySplit": {
+      "dev": {
+        "blankSuitability": {
+          "central": 51,
+          "local": 2,
+          "unsuitable": 7
+        },
+        "grammarRichness": {
+          "normal": 10,
+          "rich": 50
+        },
+        "origin": {
+          "db-real": {
+            "replacementsForCertifiedPass": 20,
+            "status": {
+              "DOMAIN_REVIEW": 7,
+              "EXCLUDE": 13,
+              "PASS": 10
+            },
+            "total": 30
+          },
+          "repo-official": {
+            "replacementsForCertifiedPass": 8,
+            "status": {
+              "DOMAIN_REVIEW": 4,
+              "EXCLUDE": 4,
+              "PASS": 22
+            },
+            "total": 30
+          }
+        },
+        "replacementsRequired": {
+          "forSixtyCertifiedPassages": 28,
+          "ifAllDomainReviewsAreLaterCleared": 17
+        },
+        "status": {
+          "DOMAIN_REVIEW": 11,
+          "EXCLUDE": 17,
+          "PASS": 32
+        },
+        "total": 60
+      },
+      "holdout": {
+        "blankSuitability": {
+          "central": 45,
+          "local": 6,
+          "unsuitable": 9
+        },
+        "grammarRichness": {
+          "normal": 7,
+          "rich": 52,
+          "scarce": 1
+        },
+        "origin": {
+          "db-real": {
+            "replacementsForCertifiedPass": 26,
+            "status": {
+              "DOMAIN_REVIEW": 4,
+              "EXCLUDE": 22,
+              "PASS": 4
+            },
+            "total": 30
+          },
+          "repo-official": {
+            "replacementsForCertifiedPass": 9,
+            "status": {
+              "DOMAIN_REVIEW": 6,
+              "EXCLUDE": 3,
+              "PASS": 21
+            },
+            "total": 30
+          }
+        },
+        "replacementsRequired": {
+          "forSixtyCertifiedPassages": 35,
+          "ifAllDomainReviewsAreLaterCleared": 25
+        },
+        "status": {
+          "DOMAIN_REVIEW": 10,
+          "EXCLUDE": 25,
+          "PASS": 25
+        },
+        "total": 60
+      }
+    },
+    "duplicateClusters": {
+      "count": 16,
+      "droppedMembers": 33,
+      "keptRepresentatives": 12,
+      "memberRecords": 45
+    },
+    "focusHoldoutEligibility": {
+      "blank": 19,
+      "byOrigin": {
+        "db-real": {
+          "blank": 4,
+          "grammar": 4,
+          "jointGrammarBlank": 4
+        },
+        "repo-official": {
+          "blank": 15,
+          "grammar": 15,
+          "jointGrammarBlank": 11
+        }
+      },
+      "grammar": 19,
+      "jointGrammarBlank": 15,
+      "policy": {
+        "blank": "finalDecision=PASS and blankSuitability=central",
+        "domainReviewTreatment": "DOMAIN_REVIEW is ineligible until independently cleared",
+        "grammar": "finalDecision=PASS and grammarRichness=rich",
+        "jointGrammarBlank": "finalDecision=PASS, grammarRichness=rich, blankSuitability=central"
+      }
+    },
+    "grammarRichness": {
+      "normal": 17,
+      "rich": 102,
+      "scarce": 1
+    },
+    "status": {
+      "DOMAIN_REVIEW": 21,
+      "EXCLUDE": 42,
+      "PASS": 57
+    },
+    "total": 120
+  },
+  "decisionPolicy": {
+    "domainReview": "표면·논리 구조는 사용 가능하지만 사실·문화·의학·정책 검토 전에는 투입 금지",
+    "duplicatePolicy": "5-token Jaccard는 신호로만 사용하고 원문을 cluster 단위로 판정했다. holdout은 cross-split 문서 계열도 보수적으로 제외했다.",
+    "exclude": "질문/선지 잔존, 병합, OCR·문법·문장부호·논리 손상, 또는 중복/holdout 누출",
+    "pass": "표면·논리·출처가 깨끗하고 독립 표본으로 즉시 사용 가능"
+  },
+  "duplicateClusters": [
+    {
+      "basis": "동일 숫자 미신 원문의 OCR·관사·문구 변형본",
+      "crossSplit": true,
+      "id": "DUP-NUMBER-SUPERSTITION",
+      "keep": "cmqanec030005ic04e2e7rryn",
+      "manualSemanticFamily": false,
+      "memberCount": 4,
+      "members": [
+        "cmqanec030005ic04e2e7rryn",
+        "cmpnwuz3l00bnmmyk39jucvka",
+        "cmqkuogfd0001jd0b65526r18",
+        "cmq2capq3000ammm8iftgy9tp"
+      ]
+    },
+    {
+      "basis": "동일 Jackie gig-economy 문항의 표식·OCR·뜻풀이 표 변형본",
+      "crossSplit": true,
+      "id": "DUP-GIG-WORKER",
+      "keep": null,
+      "manualSemanticFamily": false,
+      "memberCount": 3,
+      "members": [
+        "cmpyx7b260001jp04vjeholew",
+        "cmq23oovd0015mmcsd9fjq8gf",
+        "cmq20um9t000mmmcs8wc3qpj3"
+      ]
+    },
+    {
+      "basis": "Jaccard 임계값 아래지만 정의→건축→교통→패션으로 연속되는 동일 문서 계열",
+      "crossSplit": true,
+      "id": "DUP-UNIVERSAL-DESIGN-DOCUMENT",
+      "keep": "cmpnzxhf000ebmmykkcjht729",
+      "manualSemanticFamily": true,
+      "memberCount": 4,
+      "members": [
+        "cmpnzxhf000ebmmykkcjht729",
+        "cmpnzw5sd00d9mmykdtoiyyb9",
+        "cmpchv9xq0003ky0484e1e7y4",
+        "cmpnzw9ay00dbmmykw8e1lclh"
+      ]
+    },
+    {
+      "basis": "동일 gestural foreshadowing 원문의 오염본·정상본·문장순서 변형본",
+      "crossSplit": true,
+      "id": "DUP-GESTURE-THOUGHT",
+      "keep": "cmpcjkklg0007mmekwcm6abax",
+      "manualSemanticFamily": false,
+      "memberCount": 3,
+      "members": [
+        "cmqespvyu001cmm1wqpn5spu6",
+        "cmpcjkklg0007mmekwcm6abax",
+        "cmpv7gfl00001mmbc0u8d49ep"
+      ]
+    },
+    {
+      "basis": "동일 향신료 항균·기후 가설의 관사/전치사 변형본",
+      "crossSplit": true,
+      "id": "DUP-SPICE-EVOLUTION",
+      "keep": "cmpx1dv0o0001l404hw03gfmr",
+      "manualSemanticFamily": false,
+      "memberCount": 3,
+      "members": [
+        "cmpx1dv0o0001l404hw03gfmr",
+        "cmpr52qe10003k40442ys37jt",
+        "cmpaqf99o000dl204pyve3pdv"
+      ]
+    },
+    {
+      "basis": "동일 shared taste 원문의 삽입 교란문 변형과 정상본이 dev/holdout에 걸침",
+      "crossSplit": true,
+      "id": "DUP-SHARED-FOOD",
+      "keep": null,
+      "manualSemanticFamily": false,
+      "memberCount": 2,
+      "members": [
+        "cmpaqf9e5000zl2049ba7eosv",
+        "cmpaqf96q0001l204lnt7f5y9"
+      ]
+    },
+    {
+      "basis": "동일 random variation/nonrandom selection 지문의 논리 변형본",
+      "crossSplit": true,
+      "id": "DUP-BODY-DEVELOPMENT",
+      "keep": "cmpqvdzht0001mmu80piqom02",
+      "manualSemanticFamily": false,
+      "memberCount": 3,
+      "members": [
+        "cmpaqf9ey0013l204nnoouqbe",
+        "cmpqvdzht0001mmu80piqom02",
+        "cmpaqf9a4000fl2042odbrdj0"
+      ]
+    },
+    {
+      "basis": "동일 perfect-vs-good 정책 지문의 clean water 문장부호 변형본",
+      "crossSplit": true,
+      "id": "DUP-WATER-POLICY",
+      "keep": "cmpczyrsu000emmfkzbyivz87",
+      "manualSemanticFamily": false,
+      "memberCount": 2,
+      "members": [
+        "cmpczyrsu000emmfkzbyivz87",
+        "cmpaqf97v0005l204xjjvssdr"
+      ]
+    },
+    {
+      "basis": "동일 recall/recognition 지문의 정상·번호·선지부착·확장 변형본",
+      "crossSplit": true,
+      "id": "DUP-MEMORY-RECALL",
+      "keep": "cmpr7xftn0013mm3cad44usfx",
+      "manualSemanticFamily": false,
+      "memberCount": 5,
+      "members": [
+        "cmq5hc1u3000fmmsgd1dr5yp5",
+        "cmpr6wbbt0002mm3coikj9suy",
+        "cmpr7xftn0013mm3cad44usfx",
+        "cmpaqf97g0003l204jhi59d8z",
+        "cmq742ju90015mm1gk4pzfggd"
+      ]
+    },
+    {
+      "basis": "Bayesian updating 문단의 문장부호만 다른 토큰 동일본",
+      "crossSplit": false,
+      "id": "DUP-BAYESIAN-UPDATING",
+      "keep": "cmpaqf9dr000xl204fygq66tv",
+      "manualSemanticFamily": false,
+      "memberCount": 2,
+      "members": [
+        "cmpaqf9dr000xl204fygq66tv",
+        "cmq5hc0l8000dmmsgr6tozs5b"
+      ]
+    },
+    {
+      "basis": "동일 stress/hippocampus/cortisol 설명의 동사 변형본",
+      "crossSplit": true,
+      "id": "DUP-STRESS-HIPPOCAMPUS",
+      "keep": "cmpnwv10r00brmmykiusnyi5u",
+      "manualSemanticFamily": false,
+      "memberCount": 2,
+      "members": [
+        "cmpnwv10r00brmmykiusnyi5u",
+        "cmpaqf997000bl204g2nptcrl"
+      ]
+    },
+    {
+      "basis": "동일 data tombs/data mining 지문의 의역·문장부호 변형본",
+      "crossSplit": true,
+      "id": "DUP-DATA-MINING",
+      "keep": "cmpvm7wwx0010mmbcwneeym36",
+      "manualSemanticFamily": false,
+      "memberCount": 3,
+      "members": [
+        "cmpvm7wwx0010mmbcwneeym36",
+        "cmq56mbbc0001mm6cabjbecw8",
+        "cmpaqf9fr0017l204rcz69oyr"
+      ]
+    },
+    {
+      "basis": "dev 병합 지문 후반과 holdout 독립본이 동일하며 양쪽 모두 표면 손상",
+      "crossSplit": true,
+      "id": "DUP-WINNING-WATCHED",
+      "keep": null,
+      "manualSemanticFamily": false,
+      "memberCount": 2,
+      "members": [
+        "cmpwuhv4u001nmm1ch5ypzx9f",
+        "cmpaqf9ay000jl204pew667f2"
+      ]
+    },
+    {
+      "basis": "동일 fruit/brain-volume 지문의 절단·선지부착본과 정상본",
+      "crossSplit": false,
+      "id": "DUP-FRUIT-BRAIN",
+      "keep": "cmpaqf9aj000hl20466bzeiga",
+      "manualSemanticFamily": false,
+      "memberCount": 2,
+      "members": [
+        "cmq5c5cip001lmmrwty0eg9zg",
+        "cmpaqf9aj000hl20466bzeiga"
+      ]
+    },
+    {
+      "basis": "동일 reason/emotion 지문 뒤에 선지들이 붙은 두 오염본",
+      "crossSplit": false,
+      "id": "DUP-REASON-EMOTION",
+      "keep": null,
+      "manualSemanticFamily": false,
+      "memberCount": 2,
+      "members": [
+        "cmq50ifrc003ummm8xv9ppk4g",
+        "cmq5gpplq0001mmsg2fi1puqg"
+      ]
+    },
+    {
+      "basis": "동일 sharing-economy 지문의 문항 스캐폴드 두 본과 정제 본",
+      "crossSplit": false,
+      "id": "DUP-SHARING-ECONOMY",
+      "keep": "cmqb48s000001l70497mch8x0",
+      "manualSemanticFamily": false,
+      "memberCount": 3,
+      "members": [
+        "cmq23op900017mmcsgdlfr18c",
+        "cmq20ulw9000kmmcsd6rn4vv1",
+        "cmqb48s000001l70497mch8x0"
+      ]
+    }
+  ],
+  "integrity": {
+    "errors": [],
+    "manualSemanticClusterCount": 1,
+    "passed": true,
+    "privateManifestRecordCount": 120,
+    "publicManifestRecordCount": 120,
+    "rater1RecordCount": 120,
+    "rater2RecordCount": 120,
+    "recomputedPublicManifestSha256": "04f62969e292febc184ecd7c08f9b943acc63f17ea9d2c8fb4cce69c3a886e41",
+    "storedPublicManifestSha256": "04f62969e292febc184ecd7c08f9b943acc63f17ea9d2c8fb4cce69c3a886e41",
+    "tokenFiveGramSignalsReviewed": 38,
+    "uniqueContentHashes": 120,
+    "uniqueIds": 120
+  },
+  "records": [
+    {
+      "blankSuitability": "central",
+      "contentHash": "718fe7ae7e688dd19bd3ef3e35dfceebaadde33755d573dff56cd77d189d7c92",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "normal",
+      "id": "repo:2006_SN_3000977-q44",
+      "issueCodes": [
+        "DISPUTED_SENTENCE_FRAGMENT",
+        "GRAMMAR_USAGE",
+        "SENSITIVE_OR_OUTDATED_TERM",
+        "SOURCE_FRAGMENT"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "DISPUTED_SENTENCE_FRAGMENT",
+          "GRAMMAR_USAGE"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "SOURCE_FRAGMENT",
+          "SENSITIVE_OR_OUTDATED_TERM"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "대시 뒤가 독립절 없는 수사적 단편이고 집단명도 현재 사용 기준에 민감하다. 중심 논리는 읽히지만 깨끗한 생성 원문 요건에는 미달하므로 제외한다.",
+      "sequence": 1,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "dc41e90fb8ede2075f701df74b16e0bac497d5552977e5a219dc5246e584b0ff",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2027_06_5095396-q24",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 1950년대 관광업의 분절에서 통합으로의 변화를 일관되게 설명하고 ‘growth of tour operators’가 중심 전환축이다. 시제·분사·비교 구조가 다양하며 중심문장 공란의 문법 접합도 안정적이다.",
+      "sequence": 2,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "175d4de2810df43d6cf417011da4e7c41c83f494a3d140a9bd577aa775592d30",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20221012-q40",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 햄스터와 소음 내는 아이 일화가 외적 보상이 내적 동기를 소거한다는 동일 논지를 뒷받침한다. 복합문과 인용문이 풍부하고 ‘original motivation ... extinguished’ 주변의 중심 공란 접합이 명료하다.",
+      "sequence": 3,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "0d5ec269b3f33bda901c607388b1763c813ab3dcc7cd817ee0b1b98ac4169030",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:2012_SN_3001002-q34",
+      "issueCodes": [
+        "DOMAIN_GENERALIZATION",
+        "FACTUAL_OVERSIMPLIFICATION"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_OVERSIMPLIFICATION",
+          "DOMAIN_GENERALIZATION"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "생리적 항상성에서 습관·사고·삶의 질의 고정성으로 곧바로 확장하는 인과가 강하다. 표면과 중심성은 양호하나 과학적 범위 확인 전에는 투입하지 않는다.",
+      "sequence": 4,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "02821003dcfab2c22b79f729e54d2f5c39a57c320d7ef7a0096f7ce8c6171229",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:2011_SN_3000996-q45",
+      "issueCodes": [
+        "DISPUTED_USAGE",
+        "DOMAIN_GENERALIZATION"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "DOMAIN_GENERALIZATION",
+          "DISPUTED_USAGE"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "‘the primitive society/man’이 다양한 사회를 단일 범주로 일반화하고 표현도 시대 의존적이다. 구조는 풍부하므로 문화·인류학 검토 대상으로 남긴다.",
+      "sequence": 5,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "6524c852cfcfc5598216afd9446ef87bee8c0eb55e4e1338592a380351c33358",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20131114-q30",
+      "issueCodes": [
+        "GRAMMAR_USAGE",
+        "PUNCTUATION_MINOR"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_USAGE",
+          "PUNCTUATION_MINOR"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘the first African-American woman who entered’는 ‘to enter’가 더 자연스럽고 ‘retired in 1996 remaining’에는 쉼표가 바람직하다. 전기는 연대상 완결되지만 사건 나열형이라 공란 추론은 개별 경력 문장 수준이며 분사 접합을 피해야 한다.",
+      "sequence": 6,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "9ec41d9c336bc3a91297fb8e8aeda74dfbcffe2ec9df7b6d8f94ef1522320271",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20251014-q23",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 뉴턴 이론의 성공을 보존하면서 아인슈타인이 더 넓은 설명을 제공했다는 논리가 처음부터 끝까지 연결된다. 조건절·관계절이 풍부하고 새 이론의 수용 조건을 담은 중심 공란도 자연스럽게 접합된다.",
+      "sequence": 7,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "344f925217cd0d3a6692455f1ca2ca676270c632f40d953e081abfaedb54dd3d",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20240904-q23",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 예술의 문화 의존성과 과학의 객관성/역사성 논쟁을 명확히 대비해 독립 지문으로 완결된다. 삽입·분사·관계 구조가 풍부하며 ‘Others, however’ 축의 중심 공란 접합도 안전하다.",
+      "sequence": 8,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "e0953f8aae52b7e41e9e9f8b3eb4b1b567009b5120306ab5da112a4669af4072",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:2025_09_5087695-q20",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 소셜 미디어의 허위정보가 지식 축적을 위협하므로 이용자가 검증 책임을 져야 한다는 흐름이 완결된다. 문법 신호는 보통 수준이고 책임을 제시하는 결론 문장을 중심 공란으로 삼기 쉽다.",
+      "sequence": 9,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "09a21271a58ffdc862a2862954c6508596c7d3c2bb019162d003c045b3de93d9",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2014_SN_3022251_B-q26",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 좌석이 없는 어머니에게 화자가 표를 양보하는 문제-해결 서사가 인과적으로 완결된다. 인용·분사·조건절이 다양하고 해결 행동을 잇는 중심 공란에도 지시어 단절 위험이 낮다.",
+      "sequence": 10,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "f450c0385502047f479fde899cc24a7fa9f7be42e70f8c3c8de7b61f4c640f24",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go1_20260324-q26",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. Graffman의 유년기·수상·오른손 장애·교육 활동이 시간순으로 완결된다. 분사와 관계절은 풍부하지만 전기 나열형이라 공란은 ‘focused on works for the left hand’ 같은 국소 사건 추론이 적합하다.",
+      "sequence": 11,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c35a6bdd76af1ca4954f682c56ecd3f0fc7442c2bc1273a76084a54473b84164",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20140710_A-q20",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 구체적 합의 요약이 이해 확인을 넘어 책임 약속을 만든다는 실용 논지가 예시와 결론으로 닫힌다. 인용·간접의문·조건 구조가 풍부하며 ‘checking for commitment’ 중심 공란도 안정적이다.",
+      "sequence": 12,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "aa84aab3d1eb6c1eef1df34235cdadb5985d781e49223d260e6536341e426083",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2013_09_3011547-q40",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 문화가 연애·졸업·출산의 암묵적 시간표를 만들고 또래 대비 자기평가를 압박한다는 ‘social clock’ 설명이 완결된다. 조건·양보 구조가 충분하고 중심 정의문 공란의 문법 접합도 안정적이다.",
+      "sequence": 13,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5e2109ca40e6f284ed84add0f86befe7d09b7d1bfd4957b1eabb1e06b6bae330",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20241015-q40",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 시가 철학적 탐구가 되려면 명제적 의미와 의역 가능성이 필요하다는 반대 논증이 단계적으로 전개된다. 조건절·동격·수동 구조가 풍부하고 ‘Poetry resists paraphrase’로 수렴하는 중심 공란이 명료하다.",
+      "sequence": 14,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ee195b26d4185349bad5e777ad6b47ed455afd09c405674052cc4c1ce2937538",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go2_20091117-q37",
+      "issueCodes": [
+        "DOMAIN_GENERALIZATION",
+        "FACTUAL_SCOPE_ERROR"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "FACTUAL_SCOPE_ERROR",
+          "DOMAIN_GENERALIZATION"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "여러 안경원숭이 종을 소개한 뒤 전 종의 임박한 멸종처럼 단정하고 눈·뇌 비교도 확인이 필요하다. 논리는 온전하지만 생물학 검토 전에는 보류한다.",
+      "sequence": 15,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "9cfb3a8de41605d76a83ed142da5b0a81e094bdbcc50cf516fc6246d3e6981d5",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20201027-q21",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 수면 부족이 생산성을 낮춰 더 늦게 일하고 다시 덜 자는 악순환을 비유와 인과로 설명한다. 비교·관계·분사 구조가 풍부하고 ‘negative feedback loop’ 중심 공란 접합이 안전하다.",
+      "sequence": 16,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5ebbe160063f9cf00d0aab4cf2fe13a7d5e68abfcfe79ef5d8693315fff0109d",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2021_06_5049916-q40",
+      "issueCodes": [
+        "PUNCTUATION_MINOR"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PUNCTUATION_MINOR"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 화석의 보존·발견 편향 때문에 출현/절멸 시점을 보수적으로 해석해야 한다는 논리가 일관된다. 마지막 ‘first appearance datum, and’의 쉼표는 불필요하지만 의미 훼손은 없고 중심 공란도 안정적이다.",
+      "sequence": 17,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "6fef09a662f475563fe8b32701f93a95eb51c5559c4033707d7e3544b93188fa",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go2_20180308-q30",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 아버지가 일부러 체스에서 이기기 시작하자 아이가 패배를 받아들이게 된 변화가 마지막 농담으로 확인된다. 문법 복잡도는 보통이며 완벽주의 완화의 전환문을 중심 공란으로 복원할 수 있다.",
+      "sequence": 18,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "7de0d274124be149a26f8bf62c29e24dca4138dfe4953b9125cb74907d0bab6b",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20190604-q24",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 수프 선택에서 과도한 자료를 신체 반응이 가치 요약으로 바꾼다는 예시가 결론 ‘feel the data’로 수렴한다. 조건·분사·병렬 구조가 풍부하며 중심 설명문 공란 접합이 자연스럽다.",
+      "sequence": 19,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "413dc3acd3894ce9f84dc4188a727bff4cd43544e69fe015ed980231b9407bdb",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20171017-q21",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 개발 말기에만 의견을 묻는 갈등과 초기 공공 참여의 이점을 대비해 결론까지 완결한다. 영국식 집합명사 ‘the public become’은 허용 범위이며 중심 전환 공란도 문법적으로 안전하다.",
+      "sequence": 20,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "cdab92872c70905307c3a667afec8593e0bb14183f58c07beb9857c91f88f5b0",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2024_SN_5086091-q24",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 장소를 경계가 고정된 용기로 보는 전제가 도시·국가 수준의 overtourism에는 부족하다는 비판이 일관된다. 의문문·분사·비교 구조가 풍부하고 물리적 수용력에서 복합 요인으로 전환하는 중심 공란이 좋다.",
+      "sequence": 21,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "8feb42f9014fde247685a0735270ade7fcbd433f01b0d3951f85b55a55acf43f",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go2_20140612-q19",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 고통 속에서도 그림을 그린 Renoir의 답과 말년 작품이 ‘beauty remains’라는 주제를 완결한다. 인용 중심의 보통 문법 난도이며 핵심 응답 또는 지속 행동을 중심 공란으로 복원할 수 있다.",
+      "sequence": 22,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "30452628bb82d4e4fb937bec78f2b66e6a951fa8fc4b2ff1e7c6cb8ba70d3041",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "repo:2024_09_5085155-q40",
+      "issueCodes": [
+        "GRAMMAR_ERROR_IDIOM",
+        "PUNCTUATION_COMMA_SPLICE",
+        "SOURCE_GRAMMAR_ERROR"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_ERROR_IDIOM",
+          "PUNCTUATION_COMMA_SPLICE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "‘had strongly held the strict academic standards’의 결합 오류와 두 독립절의 comma splice가 원문에 이미 있다. 생성기가 새 오류를 하나만 설계해야 하는 실험 원문으로는 제외한다.",
+      "sequence": 23,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "d3846b8cf6e42ab792ef4dbcfc2622c4fc1f0fc53760ea7a0b50d32e21e4da80",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20230906-q24",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 기업의 환경·공정거래 기록을 조사하고 지갑으로 투표하라는 주장이 화장지 사례와 결론으로 뒷받침된다. 의문·관계·분사 구조가 풍부하고 소비자 권한 문장을 중심 공란으로 두기 쉽다.",
+      "sequence": 24,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "84eae23dd627c2d87d3439b44519c463e0a51d9b5fc2cd603758f90740928039",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20190307-q25",
+      "issueCodes": [
+        "INTERNAL_FACT_CONTRADICTION"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "INTERNAL_FACT_CONTRADICTION"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "1882년 출생·1974년 사망과 ‘age eighty-two’가 산술적으로 모순된다. 전기문 전체의 사실 기반을 훼손하므로 제외한다.",
+      "sequence": 25,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "90b4b7bd041bc4c2c3fae2ad7d4090311931cb74040edca2cc1b0dd1dfdebdef",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20230906-q23",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 조리 외주화의 부정적 함의를 묻고 여성의 부담·가정 갈등·시간·식단 다양화라는 이점을 답해 논지가 닫힌다. 복합·분사 구조가 풍부하고 장단점 전환의 중심 공란 접합이 안정적이다.",
+      "sequence": 26,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "f112a111b5b9fb4c5cc567943aa11bb42a1cd766ef80364c7b935e28d7e573c0",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "repo:2021_SN_5061633-q22",
+      "issueCodes": [
+        "LEXICAL_ERROR",
+        "SOURCE_LEXICAL_ERROR"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "LEXICAL_ERROR"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "발매 전 음원을 뜻하는 자리의 ‘advanced releases’는 ‘advance releases’가 맞다. 기존 어휘 오류가 정답 수와 설명을 오염시키므로 제외한다.",
+      "sequence": 27,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "46d8adcad5bb3e2872f46bb5de5252e70f45311c5e44318fe84309e12dd5821b",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:2021_SN_5061633-q40",
+      "issueCodes": [
+        "CULTURAL_DOMAIN_REVIEW"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CULTURAL_DOMAIN_REVIEW"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rationale": "Amazonia의 정치 리더십·통제·여성 지배를 넓게 일반화한다. 논증과 표면은 좋지만 문화인류학 확인 전에는 보류한다.",
+      "sequence": 28,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "0f1d60825696e14177dc1ac930373e64e7f950800698e95758666f827c96da9e",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go2_20200916-q24",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. Black Friday의 환경 비용과 Green Friday의 대안적 소비를 대비해 행동 촉구로 끝난다. 문법 난도는 보통이고 운동의 목적을 설명하는 중심문장 공란 접합이 명료하다.",
+      "sequence": 29,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "4ecad99feb9a97ed0719bba5b17cf5cc48537ed6dce95d70101d1e7107b65772",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2018_06_5013302-q21",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 앉기·뻗기·이동의 운동 발달이 환경 통제와 인지 이해를 넓힌다는 설명이 예시와 결론으로 완결된다. 관계·분사·비교 구조가 풍부하며 중심 일반화 공란에 지시어 위험이 낮다.",
+      "sequence": 30,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "d6d67c8a69922e4063db55dab72f571cfadb2f84be1f6ecdd5c729569e7373d0",
+      "duplicateCluster": {
+        "basis": "동일 recall/recognition 지문의 정상·번호·선지부착·확장 변형본",
+        "disposition": "DROP",
+        "id": "DUP-MEMORY-RECALL",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.758
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "normal",
+      "id": "cmq5hc1u3000fmmsgd1dr5yp5",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "DUPLICATED_WORD",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FRAGMENTED_OPTIONS",
+        "NEAR_DUPLICATE",
+        "SOURCE_CONTAMINATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_CONTAMINATION",
+          "DUPLICATED_WORD",
+          "FRAGMENTED_OPTIONS"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "ANSWER_OPTIONS_APPENDED",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 완결된 회상/재인 설명 뒤에 ‘convert abstract ideas ... concrete concrete ... a restore’라는 선택지 잔재가 문장 경계 없이 붙었다. 본문 문법은 풍부하지만 오염으로 전체 완결성이 사라져 공란 문항에는 부적합하다.",
+      "sequence": 31,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "bac707d4a6906eed222f287cdc522a73b5b4509702d523a9da53fa9e89f33c13",
+      "duplicateCluster": {
+        "basis": "동일 숫자 미신 원문의 OCR·관사·문구 변형본",
+        "disposition": "KEEP",
+        "id": "DUP-NUMBER-SUPERSTITION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.956
+      },
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmqanec030005ic04e2e7rryn",
+      "issueCodes": [
+        "FACTUAL_CONCERN",
+        "TERMINOLOGY_ERROR"
+      ],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_CONCERN",
+          "TERMINOLOGY_ERROR"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "숫자 미신 원문 군집에서 표면이 가장 온전한 dev 본을 남긴다. 다만 astrology를 science/nature의 근거처럼 묶고 ‘Norwegian mythology’·13의 보편성을 단정해 문화사 검토가 필요하다.",
+      "sequence": 32,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "691198660ab2be3e0a41a50aa9dc04ea566bb80d872b20e0d9d534dc138cd3ea",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmpbepm5s006bmmagu1g6yb7a",
+      "issueCodes": [
+        "GRAMMAR_USAGE",
+        "LOGIC_INCONSISTENCY",
+        "POLICY_CLAIM_RISK",
+        "POLICY_DOMAIN_REVIEW"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "LOGIC_INCONSISTENCY",
+          "GRAMMAR_USAGE",
+          "POLICY_CLAIM_RISK"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "POLICY_DOMAIN_REVIEW"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘insuring that’는 문맥상 ‘ensuring’이 자연스럽고, 수입 안정화를 강조하면서 ‘reduce excessive dependence on foreign sources’라고 끝내 정책 논리가 긴장된다. 완결된 글이나 한국 식량정책 결론은 전문가 검토가 필요하다.",
+      "sequence": 33,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "72c5fed708116775aa3b671165107c9a8f204727ef47723857982371caf0195f",
+      "duplicateCluster": {
+        "basis": "동일 숫자 미신 원문의 OCR·관사·문구 변형본",
+        "disposition": "DROP",
+        "id": "DUP-NUMBER-SUPERSTITION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.968
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpnwuz3l00bnmmyk39jucvka",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FACTUAL_CONCERN",
+        "NEAR_DUPLICATE",
+        "OCR_CORRUPTION",
+        "PUNCTUATION_MISSING",
+        "TYPO"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "TYPO",
+          "PUNCTUATION_MISSING",
+          "FACTUAL_CONCERN"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "OCR_CORRUPTION",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘yoursideas’가 붙었고 ‘seven ages Every’ 사이 마침표가 누락되었다. 숫자 미신 글은 전체적으로 완결되고 중심 공란은 가능하지만 명백한 원문 오염과 ‘Norwegian mythology’ 등의 사실 우려가 겹친다.",
+      "sequence": 34,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "3356e61661c5492499cd351a7433d8348e6c0265fa07ea3432ef8e5482b15930",
+      "duplicateCluster": {
+        "basis": "dev 병합 지문 후반과 holdout 독립본이 동일하며 양쪽 모두 표면 손상",
+        "disposition": "DROP",
+        "id": "DUP-WINNING-WATCHED",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.503
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpwuhv4u001nmm1ch5ypzx9f",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "MERGED_UNRELATED_PASSAGES",
+        "PASSAGE_CONCATENATION",
+        "TOPIC_DISCONTINUITY"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PASSAGE_CONCATENATION",
+          "TOPIC_DISCONTINUITY"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "MERGED_UNRELATED_PASSAGES"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 조류 vagrancy의 생태적 중요성 설명이 끝나자 예고 없이 ‘Winning often brings’라는 성공 심리 글이 붙는다. 두 글 각각 구조는 풍부하지만 주제·지시 관계가 완전히 단절돼 단일 지문 완결성과 공란 추론이 성립하지 않는다.",
+      "sequence": 35,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "920b245f8ea7801f57bef019592a35233e0ef2e812718d7c6508ab58b9801a2b",
+      "duplicateCluster": {
+        "basis": "동일 Jackie gig-economy 문항의 표식·OCR·뜻풀이 표 변형본",
+        "disposition": "DROP",
+        "id": "DUP-GIG-WORKER",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.703
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpyx7b260001jp04vjeholew",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "NEAR_DUPLICATE",
+        "OCR_CORRUPTION",
+        "QUESTION_MARKUP_REMAINS",
+        "SOURCE_ANNOTATION_ARTIFACT"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_ANNOTATION_ARTIFACT",
+          "OCR_CORRUPTION"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "QUESTION_MARKUP_REMAINS",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘@hypothetical’, ‘Dentry-level’, ‘Coutpaces’, ‘@maintenance’처럼 정답 표식/OCR 문자가 단어에 섞였다. gig 노동의 비용 논리는 완결되지만 표식이 문법 정답을 누설하고 공란 접합을 오염시킨다.",
+      "sequence": 36,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "0af5c2b9eda3d6693c84074336147a991f3e3539c79afe2a1a25343ff7c83632",
+      "duplicateCluster": {
+        "basis": "동일 숫자 미신 원문의 OCR·관사·문구 변형본",
+        "disposition": "DROP",
+        "id": "DUP-NUMBER-SUPERSTITION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.974
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmqkuogfd0001jd0b65526r18",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FACTUAL_CONCERN",
+        "GRAMMAR_ERROR_ARTICLE",
+        "GRAMMAR_ERROR_IN_SOURCE",
+        "NEAR_DUPLICATE",
+        "TERMINOLOGY_ERROR"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_ERROR_ARTICLE",
+          "FACTUAL_CONCERN",
+          "TERMINOLOGY_ERROR"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "NEAR_DUPLICATE",
+          "GRAMMAR_ERROR_IN_SOURCE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "동일 숫자 미신 원문의 중복본이며 ‘have basis’ 관사 누락도 있다. 군집 대표본을 별도로 남겼으므로 제외한다.",
+      "sequence": 37,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c6a3cd3a1b254542f979f299598fc2165c1fa66ad089280940d1aa9da7a15727",
+      "duplicateCluster": {
+        "basis": "Jaccard 임계값 아래지만 정의→건축→교통→패션으로 연속되는 동일 문서 계열",
+        "disposition": "KEEP",
+        "id": "DUP-UNIVERSAL-DESIGN-DOCUMENT",
+        "manualSemanticFamily": true,
+        "maxObservedTokenFiveGramJaccard": null
+      },
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "cmpnzxhf000ebmmykkcjht729",
+      "issueCodes": [],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "건축의 경사로·자동문·점자블록이 접근성이라는 단일 개념을 지지한다. 동일 universal-design 문서 계열에서는 이 dev 단락 하나만 대표로 유지한다.",
+      "sequence": 38,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "33e8b1f6b7a4458d08a25083a4e23d98bce293817d8d60df812800a82566e8a1",
+      "duplicateCluster": {
+        "basis": "동일 gestural foreshadowing 원문의 오염본·정상본·문장순서 변형본",
+        "disposition": "DROP",
+        "id": "DUP-GESTURE-THOUGHT",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.713
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmqespvyu001cmm1wqpn5spu6",
+      "issueCodes": [
+        "ANSWER_LIKE_SUMMARY_APPENDED",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "PASSAGE_CONCATENATION",
+        "SENTENCE_FRAGMENT",
+        "SOURCE_CONTAMINATION",
+        "UNRELATED_SENTENCE_APPENDED"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PASSAGE_CONCATENATION",
+          "SOURCE_CONTAMINATION",
+          "SENTENCE_FRAGMENT"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "UNRELATED_SENTENCE_APPENDED",
+          "ANSWER_LIKE_SUMMARY_APPENDED"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 몸짓-발화 글 뒤에 표본 크기 문장과 ‘The significant contribution ...’ 제목형 단편이 붙어 주제가 단절된다. 본래 단락은 풍부하지만 오염된 전체는 독립 완결성이 없고 공란 정답 범위를 정할 수 없다.",
+      "sequence": 39,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "73ae3025adc80fe8400230bded63df05c68651e67e756c9ea5d345b7431e989c",
+      "duplicateCluster": {
+        "basis": "동일 향신료 항균·기후 가설의 관사/전치사 변형본",
+        "disposition": "KEEP",
+        "id": "DUP-SPICE-EVOLUTION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.924
+      },
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmpx1dv0o0001l404hw03gfmr",
+      "issueCodes": [
+        "CAUSAL_OVERCLAIM",
+        "FACTUAL_SCOPE_ERROR",
+        "GRAMMAR_ERROR_IN_SOURCE",
+        "NEAR_DUPLICATE"
+      ],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_SCOPE_ERROR",
+          "CAUSAL_OVERCLAIM"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_ERROR_IN_SOURCE",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "향신료 군집에서 관사와 문장 표면이 가장 온전한 dev 본이다. 항균 상관을 진화적 생존 기원으로 확대하는 주장은 전문 확인 전까지 DOMAIN_REVIEW로 둔다.",
+      "sequence": 40,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "e91ad1d1962172285ca6ef575c53559ce95fad60f89ed4a3381f9941c9ed0293",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "normal",
+      "id": "cmq272ubl001ummcsjq36tqew",
+      "issueCodes": [
+        "GRAMMAR_USAGE",
+        "LOGIC_CONTRADICTION",
+        "LOGIC_CORRUPTION",
+        "MALFORMED_SENTENCE",
+        "PUNCTUATION_MISSING"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "LOGIC_CONTRADICTION",
+          "PUNCTUATION_MISSING",
+          "GRAMMAR_USAGE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "LOGIC_CORRUPTION",
+          "MALFORMED_SENTENCE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘your policy never covers theft’라면서 곧 회사가 해외로 돈을 보낼 때까지 기다린다고 해 보상 여부가 내부 모순이다. 쉼표도 빠진 핵심 조건문이므로 보험 조언의 완결성이 무너지고 공란 접합도 위험하다.",
+      "sequence": 41,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b8970b1638bdd257490bd4a98c189c9034cdeb2ef7c845537e236678dccb81e4",
+      "duplicateCluster": {
+        "basis": "동일 gestural foreshadowing 원문의 오염본·정상본·문장순서 변형본",
+        "disposition": "KEEP",
+        "id": "DUP-GESTURE-THOUGHT",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.872
+      },
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpcjkklg0007mmekwcm6abax",
+      "issueCodes": [],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 몸짓이 단어 인출·유창성·설명을 선행 지원한다는 연구 설명이 결론 ‘leading edge of our thought’로 수렴한다. 시간절·분사·병렬 구조가 풍부하고 중심 공란의 지시어 접합도 명확하다.",
+      "sequence": 42,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "396213f817b8ef47f5d5d0fb4b229bfbc33c2d0dd2783cdb4404e5bb812610a2",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "normal",
+      "id": "cmq272tkj001qmmcsvh7zb296",
+      "issueCodes": [
+        "FACTUAL_ERROR_RISK"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_ERROR_RISK"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "Eric의 Norway 추방 사유가 부친 이력과 혼동됐을 가능성과 Greenland plague 서술을 직접 확인해야 한다. 시간 흐름은 온전하므로 역사 검토 대상으로 둔다.",
+      "sequence": 43,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "cbe130e246644385a900620f1e0f2f97a6c6a741edea89c69950c1f47acc5c99",
+      "duplicateCluster": {
+        "basis": "동일 shared taste 원문의 삽입 교란문 변형과 정상본이 dev/holdout에 걸침",
+        "disposition": "DROP",
+        "id": "DUP-SHARED-FOOD",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.673
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9e5000zl2049ba7eosv",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "INSERTED_DISTRACTOR_SENTENCE",
+        "LOGICAL_SUPPORT_WEAK",
+        "NEAR_DUPLICATE"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "LOGICAL_SUPPORT_WEAK"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "INSERTED_DISTRACTOR_SENTENCE",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "공유된 미각이 평화를 만든다는 흐름에 논거로 통합되지 않는 반대 문장이 삽입돼 바로 뒤 결론과 충돌한다. holdout 정상본과도 겹쳐 양쪽 모두 제외한다.",
+      "sequence": 44,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "59f433c2c42987b38e239cbeb8315a24c817f6472d94483de2027de67ba067e6",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmq2410r40001jo04k2iz5yp1",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 변화 감지는 인간이, 안정적 과거 패턴은 통계모형이 보완해 합성 예측이 더 정확해진다는 실험 논리가 완결된다. 삽입·분사·비교 구조가 풍부하고 합성의 이점을 담은 중심 공란도 안정적이다.",
+      "sequence": 45,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "8f21c16ccda142960c5a7b1abcc4403d666d9b0eb89a11a16e029a8deefddc5d",
+      "duplicateCluster": {
+        "basis": "동일 향신료 항균·기후 가설의 관사/전치사 변형본",
+        "disposition": "DROP",
+        "id": "DUP-SPICE-EVOLUTION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.938
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpr52qe10003k40442ys37jt",
+      "issueCodes": [
+        "CAUSAL_OVERCLAIM",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FACTUAL_SCOPE_ERROR",
+        "GRAMMAR_ERROR_ARTICLE",
+        "GRAMMAR_ERROR_IN_SOURCE",
+        "NEAR_DUPLICATE"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_ERROR_ARTICLE",
+          "FACTUAL_SCOPE_ERROR",
+          "CAUSAL_OVERCLAIM"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_ERROR_IN_SOURCE",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "동일 향신료 지문의 중복본이고 ‘has evolutionary root’에 관사가 빠졌다. 대표 dev 본 외에는 제외한다.",
+      "sequence": 46,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ad68cb28ba66384d3f393d305eaaab93d67926717bf4f5db295bdf586d7fe1a8",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpcjkl72000bmmekh9qerp2m",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 미국 시트콤이 편견 있는 인물을 웃음거리로 만들어 진보적 가치를 수용시켰다는 설명과 요약이 일치한다. 수동·분사·관계 구조가 풍부하고 핵심 메커니즘 공란도 안정적이다.",
+      "sequence": 47,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "9f38946debe0e2593ddbc83fe8c349fb8876aa1854b81542bf5c33452d9ded01",
+      "duplicateCluster": {
+        "basis": "동일 random variation/nonrandom selection 지문의 논리 변형본",
+        "disposition": "DROP",
+        "id": "DUP-BODY-DEVELOPMENT",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.89
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9ey0013l204nnoouqbe",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FACTUAL_CONCERN",
+        "INTERNAL_LOGIC_ERROR"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "INTERNAL_LOGIC_ERROR",
+          "FACTUAL_CONCERN"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "‘selection favors some cells and preserves others’가 뒤의 제거 논리와 어긋나며 정상 교정본과 중복된다. 교정된 dev 대표본만 유지한다.",
+      "sequence": 48,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "872b9fa8c3ddbc45b7d4cabcb92f92eec991517a0e1a34740dbb0b3e10303863",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmqjjnqp6000wkz04f6gbsna2",
+      "issueCodes": [
+        "DOMAIN_OVERGENERALIZATION"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "DOMAIN_OVERGENERALIZATION"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "무의식적 위험 감지에서 ‘most human decisions’가 감정적으로 결정된다는 전면적 일반화로 확장한다. 표면은 양호하나 심리학적 범위 검토 전에는 보류한다.",
+      "sequence": 49,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ea52a3eab92aae53efcb71cc2d14a6ea1eb3931afc61863fcf123161505761ae",
+      "duplicateCluster": {
+        "basis": "Jaccard 임계값 아래지만 정의→건축→교통→패션으로 연속되는 동일 문서 계열",
+        "disposition": "DROP",
+        "id": "DUP-UNIVERSAL-DESIGN-DOCUMENT",
+        "manualSemanticFamily": true,
+        "maxObservedTokenFiveGramJaccard": null
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpnzw5sd00d9mmykdtoiyyb9",
+      "issueCodes": [
+        "DOCUMENT_FAMILY_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "교통 단락 자체는 온전하지만 건축·정의·패션 단락과 한 문서의 연속 계열이다. 표본 독립성을 위해 dev에서는 건축 대표본만 남기고 제외한다.",
+      "sequence": 50,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c1bbf1e33510cf6251a9475497dbdf359d299effa7dead0c48f92a89f0a674c1",
+      "duplicateCluster": {
+        "basis": "동일 perfect-vs-good 정책 지문의 clean water 문장부호 변형본",
+        "disposition": "KEEP",
+        "id": "DUP-WATER-POLICY",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpczyrsu000emmfkzbyivz87",
+      "issueCodes": [],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 완벽한 법안이 아니어도 깨끗한 물 접근을 조금 개선하는 것이 낫다는 사례가 첫 원칙과 결론을 지지한다. 조건·양보·비교 구조가 풍부하고 ‘move the needle’ 중심 공란도 접합이 좋다.",
+      "sequence": 51,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "a03260ea9005fb3aab697c27f29c3c6b5e763d05519144c49480bd6866f04339",
+      "duplicateCluster": {
+        "basis": "동일 recall/recognition 지문의 정상·번호·선지부착·확장 변형본",
+        "disposition": "DROP",
+        "id": "DUP-MEMORY-RECALL",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpr6wbbt0002mm3coikj9suy",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "NEAR_DUPLICATE",
+        "SENTENCE_NUMBERING_REMAINS",
+        "SOURCE_NUMBERING"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_NUMBERING"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SENTENCE_NUMBERING_REMAINS",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 모든 문장 앞에 1~11의 문항용 번호가 남아 독립 passage 원문이 아니라는 출처 오염이 분명하다. 회상/재인 논지는 완결되고 중심 공란도 가능하지만 번호가 정답 위치를 누설하거나 생성 형식을 방해한다.",
+      "sequence": 52,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "bf5243f8c4a6ef65eb963e25daee7a6cf0f94153c773ea2b88b83e5eab7401ef",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpnzx9ra00e5mmykfthbdaj9",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 가상세계의 지속적 사회 가치가 충분한 참여자 규모에 의존한다는 논지를 소규모 게임과 대비해 완결한다. 비교·조건 구조가 풍부하고 사회 임계치 문장을 중심 공란으로 두기 쉽다.",
+      "sequence": 53,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ae482a9441221088112528fc5450dff45e632465566b2dced08add9ecf86138a",
+      "duplicateCluster": {
+        "basis": "동일 recall/recognition 지문의 정상·번호·선지부착·확장 변형본",
+        "disposition": "KEEP",
+        "id": "DUP-MEMORY-RECALL",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpr7xftn0013mm3cad44usfx",
+      "issueCodes": [],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 회상은 단서 없이 재구성하고 재인은 제시된 단서와 기억을 대조한다는 차이를 두 디지털 비유로 완결한다. 비교·조건·삽입 구조가 풍부하고 단서 유무를 요약하는 중심 공란도 자연스럽다.",
+      "sequence": 54,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "a0b45651b3a93c205f42d4801d1db9f03de15bc19fa5183055f7e01a6b2458bc",
+      "duplicateCluster": {
+        "basis": "Bayesian updating 문단의 문장부호만 다른 토큰 동일본",
+        "disposition": "KEEP",
+        "id": "DUP-BAYESIAN-UPDATING",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9dr000xl204fygq66tv",
+      "issueCodes": [
+        "FACTUAL_OVERSIMPLIFICATION",
+        "TERMINOLOGY_CONCERN"
+      ],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_OVERSIMPLIFICATION",
+          "TERMINOLOGY_CONCERN"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "동일 Bayesian 문단 중 한 dev 본만 보존한다. Bayesian updating을 경쟁 변형의 반복 시험으로 축약한 설명은 통계 검토 전에는 사용하지 않는다.",
+      "sequence": 55,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "8c6f7a971cb2b29afddf3e5b02a6b25521fb6298dddd50c1d8159660808ebb64",
+      "duplicateCluster": {
+        "basis": "동일 random variation/nonrandom selection 지문의 논리 변형본",
+        "disposition": "KEEP",
+        "id": "DUP-BODY-DEVELOPMENT",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.944
+      },
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpqvdzht0001mmu80piqom02",
+      "issueCodes": [
+        "NEAR_DUPLICATE"
+      ],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "같은 신체 발달 군집 중 ‘eliminates others’로 선택 논리가 일관된 dev 본이다. cross-split 및 결함 변형본은 제거하고 이 대표본만 유지한다.",
+      "sequence": 56,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b62b4b588fe50791fda9d7e89b93e87537bc3a4e2ff57bdf87861e8c8becb521",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpnzwb3o00ddmmyk13z8u5d0",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 유아기 직접 진정은 유익하지만 청소년기에는 자율성을 침해할 수 있어 수용적·간접 지원이 적절하다는 발달 논리가 완결된다. 대조·분사·관계 구조가 풍부하고 연령별 전환의 중심 공란도 안정적이다.",
+      "sequence": 57,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "a40a5bfa656122e27c1726d1d95c0e089653a4c5ad8f8c8395ced7a42435162b",
+      "duplicateCluster": {
+        "basis": "Bayesian updating 문단의 문장부호만 다른 토큰 동일본",
+        "disposition": "DROP",
+        "id": "DUP-BAYESIAN-UPDATING",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq5hc0l8000dmmsgr6tozs5b",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FACTUAL_OVERSIMPLIFICATION",
+        "NEAR_DUPLICATE",
+        "TERMINOLOGY_CONCERN"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_OVERSIMPLIFICATION",
+          "TERMINOLOGY_CONCERN"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "Bayesian 문단이 dev 대표본과 토큰 수준에서 사실상 동일하다. 사실 검토 여부와 무관하게 독립 표본이 아니므로 제외한다.",
+      "sequence": 58,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "337a3c3bec9daca7f528979b929289f02454151687a52ec026f5abe170c088da",
+      "duplicateCluster": {
+        "basis": "동일 stress/hippocampus/cortisol 설명의 동사 변형본",
+        "disposition": "KEEP",
+        "id": "DUP-STRESS-HIPPOCAMPUS",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.882
+      },
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmpnwv10r00brmmykiusnyi5u",
+      "issueCodes": [
+        "CAUSAL_OVERCLAIM",
+        "MEDICAL_CLAIM_RISK",
+        "MEDICAL_DOMAIN_REVIEW"
+      ],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "MEDICAL_CLAIM_RISK",
+          "CAUSAL_OVERCLAIM"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "MEDICAL_DOMAIN_REVIEW"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. hippocampus가 교감·부교감 신경계를 ‘duties of regulating’하고 만성 스트레스가 cortisol 신호를 단순히 on으로 돌린다는 설명은 신경내분비 인과를 과장할 수 있다. 완결·풍부하지만 의학 검토가 필요하다.",
+      "sequence": 59,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b501039c33ded5331fb86951cb43f2c49c92cf084c89853606ca7e1e22d0d02e",
+      "duplicateCluster": {
+        "basis": "동일 data tombs/data mining 지문의 의역·문장부호 변형본",
+        "disposition": "KEEP",
+        "id": "DUP-DATA-MINING",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.529
+      },
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpvm7wwx0010mmbcwneeym36",
+      "issueCodes": [
+        "GRAMMAR_NUMBER_USAGE"
+      ],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_NUMBER_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘expert system and knowledge-based technologies’는 병렬상 ‘expert systems’ 또는 복합형 표기가 자연스럽다. 방대한 data tomb를 지식으로 바꿀 도구가 필요하다는 논지는 완결되고 구조가 풍부해 오류 문항과 중심 공란 모두 가능하다.",
+      "sequence": 60,
+      "split": "dev"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "d231e0f932d27130cbc66c0f45c8c6e20d2a75077663a8934777e532c2943113",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:2022_06_5063572-q26",
+      "issueCodes": [
+        "LEXICAL_USAGE"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "LEXICAL_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘won second place’는 ‘finished/came in second’가 더 관용적이지만 의미는 명료하다. Zátopek의 올림픽 3관왕과 Clarke에게 메달을 준 일화가 완결되며 전기형이므로 공란은 국소 사건 수준이 적합하다.",
+      "sequence": 1,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "907d3c22ae3b25cb96a8caf3e59c8e5cc4d0da786179a5d806c2684123e6d8a4",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20141007-q29",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. Benny가 크리스마스 새벽까지 club feet가 있는 아이의 특수 신발을 만들어 주고 기쁨을 얻는 서사가 완결된다. 대화·분사·시간절이 풍부하고 희생 행동을 잇는 중심 공란도 자연스럽다.",
+      "sequence": 2,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "7db8ce2037b98d296cf62e8e7508062bbea59e14a36307c84c18e863832a655d",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2021_09_5050886-q22",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 노래·악기 경험이 어린이를 다양한 문화의 언어·관습·가치와 연결한다는 논지가 편견 형성 전 노출의 이점으로 완결된다. 분사·관계·시간 구조가 풍부하고 중심 공란의 접합도 안정적이다.",
+      "sequence": 3,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "2bfa5b6713508071fff9d961f711c17d7c5b8afb77fa30e58bf9dc84e3649a95",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2005_YB_5006647-q48-49-50",
+      "issueCodes": [
+        "GRAMMAR_USAGE"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘Regaining my strength, I could finish’는 ‘was able to finish’가 더 자연스럽지만 주어 연결은 성립한다. 두 친구가 서로 포기를 막고 삶의 유혹으로 일반화하는 서사는 완결되며 문법 구조와 중심 공란이 풍부하다.",
+      "sequence": 4,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "6846806b9d02886d74e287872da01ced42b068c3fedcbb6e05c369cbc7e657b7",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20181121-q25",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. Beebe의 조류 연구에서 bathysphere 심해 잠수와 Trinidad 연구소까지 연대기가 완결된다. 첫 문장은 길지만 문법적으로 성립하고, 전기 나열형이므로 기록 잠수 같은 국소 사건 공란이 적합하다.",
+      "sequence": 5,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "51e891581c5ef3a6a403873eda3859c51e978b75e377b6af3d40580029d9cd19",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2018_SN_5019793-q40",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 동질적인 온라인 과학 네트워크가 정보 과잉은 줄이지만 지식 다양성과 우연한 발견도 줄인다는 도서관 대비가 완결된다. 조건·분사·비교 구조가 풍부하고 overfiltering의 중심 공란도 안정적이다.",
+      "sequence": 6,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "6bddb198a4061b29a40e6fa586b6455fe4fbacb1c50113b0edb3333f881a6901",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "repo:2027_06_5095396-q20",
+      "issueCodes": [
+        "GRAMMAR_ERROR_REFERENT",
+        "GRAMMAR_NUMBER_USAGE",
+        "SOURCE_NUMBER_USAGE",
+        "SOURCE_REFERENT_ERROR"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_ERROR_REFERENT",
+          "GRAMMAR_NUMBER_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "‘If participants understand ..., it enables them’의 it은 명확한 선행사가 없고 ‘improves their performances’도 수 용법이 불안정하다. frozen holdout에는 기존 오류가 없는 원문만 남기므로 제외한다.",
+      "sequence": 7,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "1dc9422616e30f84e83283a30e69e2f3caf3492ded1df6185f5659150444c1c9",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20251014-q23",
+      "issueCodes": [
+        "PUNCTUATION_CORRUPTION",
+        "PUNCTUATION_MISSING"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PUNCTUATION_MISSING"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "introductory 전치사구 뒤 주어 앞 쉼표가 없어 ‘redevelopment towns’로 잘못 결합되고 문장 골격이 흔들린다. holdout 표면 무결성 기준으로 제외한다.",
+      "sequence": 8,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "89b3ce21b702f51b6619144530b97e8182f709f2d940505530d81c0de235fd0b",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "repo:2005_09_3001156-q48-49-50",
+      "issueCodes": [
+        "LEXICAL_USAGE",
+        "SOURCE_LEXICAL_ERROR"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "LEXICAL_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "‘log in details’는 이 문맥에서 타동사 ‘log details’가 맞다. 기존 결합 오류가 있는 holdout은 문항 생성의 정답 유일성을 해칠 수 있어 제외한다.",
+      "sequence": 9,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "17e01cadebf532d311f3b17b05260946bfbc1057925e9dfd28fd18f04de6a822",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20191120-q22",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 외부 압력보다 태도가 기분과 행동의 통제권을 좌우한다는 동기 글이 정의·효과·결론으로 닫힌다. 양보·관계·병렬 구조가 다양하고 태도 정의문을 중심 공란으로 복원하기 쉽다.",
+      "sequence": 10,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "697c79ba3fd6193f2c19fc65fc5822d25a84501cf30562268e1c9870ab978988",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go1_20170601-q25",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. Nauru의 위치·수도·인구·부족·언어를 짧게 소개해 독립 정보문으로 완결된다. 문법 구조는 보통이고 항목 나열형이어서 정부 소재지나 언어 같은 국소 사실 공란이 알맞다.",
+      "sequence": 11,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "33bd5e650e5b0e5956421a1ba261c61851a07176bedf52b4fa3ba60831137624",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2007_SN_3000983-q49-50",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 과일 껍질의 섬유질·폐기물 감소 이점과 농약·식감·소화 우려를 Person A/B가 대조해 독립적으로 완결한다. 양보·인과·관계 구조가 풍부하고 두 관점의 핵심 공란도 접합이 자연스럽다.",
+      "sequence": 12,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "d7bc08b3c5fc80d6b93d0bb42fb2020cecf186807be5c5d75ceddb5e75eb6474",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20201118-q21",
+      "issueCodes": [
+        "FACTUAL_MISCHARACTERIZATION"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_MISCHARACTERIZATION"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "Newton의 연금술을 ‘failed laws’ 및 단순한 납→금 시도로 묶는 서술은 과학사적 왜곡 소지가 있다. 중심 논리는 좋으나 역사 검토 전까지 보류한다.",
+      "sequence": 13,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "d39709eeeb00c7c257aa3cce5ee4d47c8bebcdac42a3c1178a64bde0d639cb17",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go1_20150902-q20",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 상투어는 말에서는 생생하고 경제적일 수 있지만 글에서는 익숙함 때문에 독자에게 튕겨 나가 효과를 약화한다는 논지가 완결된다. 예시·대조·조건 구조가 충분하고 중심 공란도 명료하다.",
+      "sequence": 14,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "707496c4845dd233a250c8c1bfb783f97515ee363872caad44d876b56f40e505",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2005_06_3001149-q48-49-50",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 샘 관리인을 해고하자 물과 마을 경제가 망가지고 재고용 후 회복되는 인과 서사가 완결된다. 시간·분사·관계 구조가 풍부하고 해고라는 전환 또는 결과 문장을 중심 공란으로 두기 좋다.",
+      "sequence": 15,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "20abadcb12fcaa65c7dfc2b77ad0f049d46901f847e324007b0a84c46569e658",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20210831-q24",
+      "issueCodes": [
+        "FACTUAL_CONCERN",
+        "GRAMMAR_REDUNDANCY"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_CONCERN",
+          "GRAMMAR_REDUNDANCY"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "Wheatfield의 면적·수확량·기부 경로와 ‘return ... back’ 표현을 확인해야 한다. 서사는 온전하지만 미술사 사실 검토 전에는 사용하지 않는다.",
+      "sequence": 16,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "0865a2a429656eff7bd43aad610acce3153bd22eef97a2e99e035c8452498605",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2011_09_3001251-q19",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 통행료가 2.50달러인데 50센트만 있던 소녀가 장미를 2달러에 팔아 부족분을 해결하는 계산과 대화가 일관된다. 분사·인용 구조가 풍부하고 해결 행동의 중심 공란도 명료하다.",
+      "sequence": 17,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "45c4303f65dd4011e2dfba8afe86d1300d3a9e685ec2b44b53a637a5a5f63d27",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:2025_06_5086961-q22",
+      "issueCodes": [
+        "CULTURAL_DOMAIN_REVIEW",
+        "DISPUTED_USAGE",
+        "DOMAIN_GENERALIZATION"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "DOMAIN_GENERALIZATION",
+          "DISPUTED_USAGE"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CULTURAL_DOMAIN_REVIEW"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 말하기 접근이 고대의 평등·공유재산 윤리를 만들었다는 인과가 매우 넓고 ‘act controllingly’는 비표준적으로 들린다. 논증은 끝까지 이어지고 중심 공란도 가능하지만 인류학적 근거와 용례 확인이 필요하다.",
+      "sequence": 18,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "039ee2f59b38f2e4c6f1aa9e7b1d79e09aa4f72d01abfd7ee21a6bd7b33e372c",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20210707-q26",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. Haffkine의 학업·콜레라 백신 자가시험·인도 활동·은퇴를 시간순으로 제시해 완결된다. 문법은 다양하지만 전기 나열형이므로 자가시험이나 임명 같은 국소 공란이 더 적합하다.",
+      "sequence": 19,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "088549edc120cc86ea621932df5b3ceeb4c0340fbb292afad4e5b2c6997edff7",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go1_20190604-q20",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 테니스와 서예 도구는 살 수 있어도 숙련의 기쁨은 연습해야 얻듯 행복도 길러야 한다는 비유가 선명하다. 반복 중심의 보통 난도이며 최종 일반화 공란이 자연스럽게 접합된다.",
+      "sequence": 20,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ab513657d0fc03843e10ef93c58222eb6b8f309298eff94cf3bcc2715ba3bcef",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2010_06_3001224-q49-50",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 장난으로 손목을 부러뜨린 아이들에게 교장이 결과를 설명하고 정학·사과까지 이어지는 책임 교육 서사가 완결된다. 양보·분사·간접화법이 풍부하며 결과 인식의 중심 공란이 안정적이다.",
+      "sequence": 21,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "local",
+      "contentHash": "1d675848d384976f3148331c5868a55b9d4134babb6eab7a5d622c3740d525a2",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20191120-q26",
+      "issueCodes": [
+        "GRAMMAR_USAGE"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "local",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘completed her master studies as one of the first women in the school’은 표현이 다소 어색하지만 의미는 복구된다. Laserstein의 교육·망명·모델이 시간순으로 완결되며 전기형이라 국소 사건 공란이 적합하다.",
+      "sequence": 22,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "72227044f103d8e3bea3f3a8fd2a32b509b2ab8e6fd3dee5c46f0ae23a2aa274",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2021_SN_5061633-q24",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 손바닥의 정지 물체는 식별하기 어렵지만 손가락을 움직이면 즉시 알아보는 실험으로 촉각의 시간성을 설명한다. 명령·조건·관계 구조가 풍부하고 움직임이 시간을 더한다는 중심 공란도 안정적이다.",
+      "sequence": 23,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "3761807cb1852e6a7222de9aecb17cb2228678fa9db78c0de5f554f084a528a8",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go3_20241015-q20",
+      "issueCodes": [
+        "CAUSAL_OVERCLAIM",
+        "EVIDENCE_SCOPE_RISK"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CAUSAL_OVERCLAIM",
+          "EVIDENCE_SCOPE_RISK"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "유아 음악 연습이 열거된 역량을 모두 발달시키며 최우선 개입이라는 인과는 연구 범위를 넘을 수 있다. 교육·발달 전문가 확인 전에는 보류한다.",
+      "sequence": 24,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "2c3ffd187ff4f9d654a546f4718a52e1b3958eab7eefd16d08094c3a8e3e12a2",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go1_20130903-q40",
+      "issueCodes": [
+        "DOMAIN_CLAIM_RISK",
+        "MISSING_NUMERIC_CONTEXT"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "MISSING_NUMERIC_CONTEXT",
+          "DOMAIN_CLAIM_RISK"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "복리 예시의 은퇴 시점·복리 주기가 생략돼 숫자를 독립 검증하기 어렵다. 논지는 온전하지만 금융 수치 확인 전에는 보류한다.",
+      "sequence": 25,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "a540069c0eb98af59db454cba3432a3b9796697d8971a3a6de398fe3279131b7",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "repo:2019_SN_5031122-q23",
+      "issueCodes": [
+        "CLIMATE_POLICY_DOMAIN_REVIEW",
+        "GRAMMAR_NUMBER_ERROR",
+        "OUTDATED_STATISTIC_RISK",
+        "POLICY_CLAIM_RISK"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_NUMBER_ERROR",
+          "OUTDATED_STATISTIC_RISK",
+          "POLICY_CLAIM_RISK"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CLIMATE_POLICY_DOMAIN_REVIEW"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘several hundred billions of dollars’는 ‘several hundred billion dollars’가 맞고, 산림파괴가 배출의 20%라는 수치와 OECD 보조금 규모는 시점 의존적이다. 기후정의 논지는 완결·풍부하지만 정책 통계 검토가 필요하다.",
+      "sequence": 26,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "f0c4e69a0301c2056c6ea22d11b17626f4ad6d5cd33c400ecd8bf6b1ca1bd1f6",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go2_20160901-q21",
+      "issueCodes": [
+        "LEXICAL_USAGE"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "LEXICAL_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘do volunteer activity’는 ‘volunteer activities/work’가 자연스럽지만 의미는 명료하다. 기업 봉사가 조직 몰입을 약화하기보다 높인다는 반론 구조가 완결되고 중심 공란도 복원 가능하다.",
+      "sequence": 27,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "7b3df089a04ee06a8910d06b0c1d5c77f4b9b16403653f2061553e1483103f07",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:2005_YB_5006647-q46-47",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 맞벌이가 된 부부가 가사를 나누고 Frank가 요리를 배운 변화가 첫 실패와 현재의 즐거움으로 완결된다. 대화·시간절·관계 구조가 풍부하며 역할 변화의 중심 공란도 자연스럽다.",
+      "sequence": 28,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "993b5cf8a0c61b9e9cc0414d6fa194e73db8211adcd103719269018f91f284e3",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "repo:ebsi_go2_20260324-q21",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 오답을 안전하게 드러내야 오개념을 교정하고 학생이 해법을 방어한다는 수업 공동체 논리가 일관된다. 조건·관계·분사 구조가 풍부하고 교사의 ‘blank face’ 역할을 잇는 중심 공란도 안정적이다.",
+      "sequence": 29,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5fcc6ce9a539c909c5cc504b2234c7f33f6d5acc2093b6fe4a94148148fba0b3",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "normal",
+      "id": "repo:ebsi_go1_20230601-q22",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "repo-official",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 컴퓨터가 잡무를 없앨 것이라는 약속과 달리 예약·체크인·계산 노동이 소비자에게 이전됐다는 예시가 명료하다. 문법 난도는 보통이고 약속/현실 대비의 중심 공란이 적합하다.",
+      "sequence": 30,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "40a269a5fae183609a6c7f466d726feabcb129080a2cba3ef4e46007489c6886",
+      "duplicateCluster": {
+        "basis": "동일 숫자 미신 원문의 OCR·관사·문구 변형본",
+        "disposition": "DROP",
+        "id": "DUP-NUMBER-SUPERSTITION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.974
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq2capq3000ammm8iftgy9tp",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FACTUAL_CONCERN",
+        "TERMINOLOGY_ERROR"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_CONCERN",
+          "TERMINOLOGY_ERROR"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CROSS_SPLIT_NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "dev 숫자 미신 대표본과 거의 동일해 holdout 독립성이 없다. holdout은 더 보수적으로 제거한다.",
+      "sequence": 31,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "e200693ad0fe69c61a74bcc7d04dd669580cbfd0bb7f2d73006f6774e797c113",
+      "duplicateCluster": {
+        "basis": "동일 reason/emotion 지문 뒤에 선지들이 붙은 두 오염본",
+        "disposition": "DROP",
+        "id": "DUP-REASON-EMOTION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.934
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq50ifrc003ummm8xv9ppk4g",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "DUPLICATED_TEXT",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "MALFORMED_OPTIONS",
+        "NEAR_DUPLICATE",
+        "SOURCE_CONTAMINATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_CONTAMINATION",
+          "DUPLICATED_TEXT",
+          "MALFORMED_OPTIONS"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "ANSWER_OPTIONS_APPENDED",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 본문 뒤에 서로 모순되는 선택지들이 붙고 ‘after /after’, ‘should Emotional’처럼 편집 표식과 중복이 남았다. 이성/감정 논의의 원래 단락은 완결됐지만 오염된 전체는 문법·공란 문항 모두 부적합하다.",
+      "sequence": 32,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "d6605167a600feaf35c926331b11d9398a4ae678695ea060e0eb0a00c4f9272e",
+      "duplicateCluster": {
+        "basis": "동일 Jackie gig-economy 문항의 표식·OCR·뜻풀이 표 변형본",
+        "disposition": "DROP",
+        "id": "DUP-GIG-WORKER",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.96
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq23oovd0015mmcsd9fjq8gf",
+      "issueCodes": [
+        "ANSWER_TABLE_REMAINS",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FULL_QUESTION_SCAFFOLD",
+        "NEAR_DUPLICATE",
+        "OCR_CORRUPTION",
+        "SOURCE_ANNOTATION_ARTIFACT",
+        "SOURCE_CONTAMINATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_CONTAMINATION",
+          "SOURCE_ANNOTATION_ARTIFACT",
+          "ANSWER_TABLE_REMAINS"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FULL_QUESTION_SCAFFOLD",
+          "OCR_CORRUPTION",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘16. Which one...’ 문항 지시, ‘@hypothetical’, ‘Dentry-level’ 표식과 Word/Phrase/Meaning 선택지 표가 모두 남았다. 본문 논리는 복구 가능하지만 독립 passage가 아니며 정답 누설과 접합 오염이 심하다.",
+      "sequence": 33,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "220f8817d0a321e58a5d3bb5b81b0a08f5bc2eeb4dc7583502a20888a9b508e3",
+      "duplicateCluster": {
+        "basis": "동일 Jackie gig-economy 문항의 표식·OCR·뜻풀이 표 변형본",
+        "disposition": "DROP",
+        "id": "DUP-GIG-WORKER",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.96
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq20um9t000mmmcs8wc3qpj3",
+      "issueCodes": [
+        "ANSWER_TABLE_REMAINS",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FULL_QUESTION_SCAFFOLD",
+        "NEAR_DUPLICATE",
+        "OCR_CORRUPTION",
+        "SOURCE_ANNOTATION_ARTIFACT",
+        "SOURCE_CONTAMINATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_CONTAMINATION",
+          "SOURCE_ANNOTATION_ARTIFACT",
+          "ANSWER_TABLE_REMAINS",
+          "OCR_CORRUPTION"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FULL_QUESTION_SCAFFOLD",
+          "OCR_CORRUPTION",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 문항 지시와 뜻풀이 표가 붙고 ‘Coutpaces’, ‘@maintenance’, 고립된 ‘6’까지 단어에 섞였다. gig 노동 본문은 완결 가능하나 현재 텍스트는 문항 원문 오염으로 어떤 독립 생성에도 부적합하다.",
+      "sequence": 34,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "7631a174c99bcee7f202e6252b31f845ff1f502ca3ac17c65232d5a8ccc1e75b",
+      "duplicateCluster": {
+        "basis": "동일 fruit/brain-volume 지문의 절단·선지부착본과 정상본",
+        "disposition": "DROP",
+        "id": "DUP-FRUIT-BRAIN",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.732
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "scarce",
+      "id": "cmq5c5cip001lmmrwty0eg9zg",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "BLANK_MARKUP_REMAINS",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "GRAMMAR_WORD_ORDER",
+        "SOURCE_CONTAMINATION",
+        "TRUNCATED_SOURCE",
+        "TRUNCATED_START"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "TRUNCATED_START",
+          "SOURCE_CONTAMINATION",
+          "GRAMMAR_WORD_ORDER"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "scarce",
+        "issueCodes": [
+          "TRUNCATED_SOURCE",
+          "BLANK_MARKUP_REMAINS",
+          "ANSWER_OPTIONS_APPENDED"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘sweet fruit could there possibly be’로 시작해 질문 앞부분이 누락됐고 (A), ‘direct 2 unexpected inverse’ 답 잔재가 남았다. ‘saw similar a relationship’도 어순 비문이어서 내용·문법·공란 모두 독립 사용 불가다.",
+      "sequence": 35,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "8654ea86fbd9b865e93bf72f3d274fe9af723bd6de3271f1415edb3d6eab5591",
+      "duplicateCluster": {
+        "basis": "동일 sharing-economy 지문의 문항 스캐폴드 두 본과 정제 본",
+        "disposition": "DROP",
+        "id": "DUP-SHARING-ECONOMY",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq23op900017mmcsgdlfr18c",
+      "issueCodes": [
+        "DELIBERATE_ERROR_REMAINS",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FULL_QUESTION_SCAFFOLD",
+        "GRAMMAR_SUBJECT_VERB",
+        "NEAR_DUPLICATE",
+        "PUNCTUATION_ERROR",
+        "SOURCE_CONTAMINATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_CONTAMINATION",
+          "PUNCTUATION_ERROR",
+          "GRAMMAR_SUBJECT_VERB"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FULL_QUESTION_SCAFFOLD",
+          "DELIBERATE_ERROR_REMAINS",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. [13-14] 지시·삽입 위치·문항 질문이 붙고 ‘(©)’, ‘@’, 밑줄 표식 및 ‘players ... is’가 남았다. 첫 인용의 닫는 따옴표도 없어 passage 자체가 아니며 공란 접합을 판정할 수 없다.",
+      "sequence": 36,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "fe1637edcf53eff326b04a337c96552b296ee310fc50b563a4b665dbcaf63572",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpbeploy0069mmag6t6caoiu",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 측정하기 쉬운 proxy를 목표로 최적화하면 본래 목적을 잃는 Goodhart 법칙을 예시적 범주와 결론으로 설명한다. 관계·조건·분사 구조가 풍부하고 법칙 정의의 중심 공란도 안정적이다.",
+      "sequence": 37,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "8eb195031ee874946ec49b406a42698d1f2d3d7724d73ea067e1daee1b643aba",
+      "duplicateCluster": {
+        "basis": "동일 sharing-economy 지문의 문항 스캐폴드 두 본과 정제 본",
+        "disposition": "DROP",
+        "id": "DUP-SHARING-ECONOMY",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq20ulw9000kmmcsd6rn4vv1",
+      "issueCodes": [
+        "DELIBERATE_ERROR_REMAINS",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FULL_QUESTION_SCAFFOLD",
+        "GRAMMAR_SUBJECT_VERB",
+        "NEAR_DUPLICATE",
+        "PUNCTUATION_ERROR",
+        "SOURCE_CONTAMINATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_CONTAMINATION",
+          "PUNCTUATION_ERROR",
+          "GRAMMAR_SUBJECT_VERB"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FULL_QUESTION_SCAFFOLD",
+          "DELIBERATE_ERROR_REMAINS",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. [13-14] 안내, (A)/(B)/(©)/@ 표식과 ‘grammatically INCORRECT?’ 질문이 본문에 합쳐졌고 ‘sharing_economy is’ 오류도 노출된다. 생성용 독립 지문이 아니므로 제외한다.",
+      "sequence": 38,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b42cf83a0841f5043369e09c7ad5d77612acc3f969c2fdd537755338f46f68f2",
+      "duplicateCluster": {
+        "basis": "동일 향신료 항균·기후 가설의 관사/전치사 변형본",
+        "disposition": "DROP",
+        "id": "DUP-SPICE-EVOLUTION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.938
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf99o000dl204pyve3pdv",
+      "issueCodes": [
+        "CAUSAL_OVERCLAIM",
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FACTUAL_SCOPE_ERROR"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "FACTUAL_SCOPE_ERROR",
+          "CAUSAL_OVERCLAIM"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CROSS_SPLIT_NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "dev 향신료 대표본과 사실상 동일한 cross-split 변형이다. 전문 사실 여부와 별개로 frozen holdout 누출을 막기 위해 제외한다.",
+      "sequence": 39,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "f81792bff8e500e39764302d7de1e3b4c987a2b8e9c6712a112194064d35c2a0",
+      "duplicateCluster": null,
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq272sfm001kmmcsay23lmyc",
+      "issueCodes": [
+        "GRAMMAR_ERROR_ADVERB",
+        "SOURCE_GRAMMAR_ERROR"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_ERROR_ADVERB"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "‘doing it all perfect’는 부사 ‘perfectly’가 필요한 기존 문법 오류다. holdout에서 생성기가 만든 오류와 경쟁할 수 있으므로 제외한다.",
+      "sequence": 40,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "5f6141ba762adbca9ec45c71fa929b443fdf66132b7775797042add3768682e3",
+      "duplicateCluster": {
+        "basis": "dev 병합 지문 후반과 holdout 독립본이 동일하며 양쪽 모두 표면 손상",
+        "disposition": "DROP",
+        "id": "DUP-WINNING-WATCHED",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.503
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9ay000jl204pew667f2",
+      "issueCodes": [
+        "BLANK_JOIN_RISK",
+        "CROSS_SPLIT_TEXT_LEAK",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "PUNCTUATION_CORRUPTION",
+        "PUNCTUATION_ERROR"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PUNCTUATION_ERROR",
+          "BLANK_JOIN_RISK"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PUNCTUATION_CORRUPTION",
+          "CROSS_SPLIT_TEXT_LEAK"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "대시 두 곳이 유실돼 삽입구와 주절 경계가 깨지고, dev 병합 레코드 후반과 같은 텍스트다. 표면·독립성 모두 미달해 제외한다.",
+      "sequence": 41,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5e46fb6e5a5d2a3086b3ababd4f4498cb6ea31dfa5a0e4f2a900cf4db31ff702",
+      "duplicateCluster": {
+        "basis": "동일 shared taste 원문의 삽입 교란문 변형과 정상본이 dev/holdout에 걸침",
+        "disposition": "DROP",
+        "id": "DUP-SHARED-FOOD",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.673
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf96q0001l204lnt7f5y9",
+      "issueCodes": [
+        "CROSS_SPLIT_DOCUMENT_LEAK",
+        "DUPLICATE_OR_DOCUMENT_LEAK"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "문단 자체는 깨끗하지만 dev의 삽입 교란 변형과 같은 원문이어서 튜닝/검수 노출 가능성이 있다. 보수적 holdout 원칙에 따라 양쪽 모두 제외한다.",
+      "sequence": 42,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "7224cb1ea6a626fa46bbffdd3fdd8042944a49c4b60e43e693b58fd70c71c05d",
+      "duplicateCluster": {
+        "basis": "동일 data tombs/data mining 지문의 의역·문장부호 변형본",
+        "disposition": "DROP",
+        "id": "DUP-DATA-MINING",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq56mbbc0001mm6cabjbecw8",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "GRAMMAR_NUMBER_USAGE"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "GRAMMAR_NUMBER_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CROSS_SPLIT_NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "dev 데이터 마이닝 대표본의 강한 의역 준중복이다. frozen holdout의 독립 표본으로 인정하지 않는다.",
+      "sequence": 43,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "3e8cd2c1577582f3fa4660a734aea29e3d4e599fc8c2f8beb325f7ada47f7799",
+      "duplicateCluster": {
+        "basis": "동일 recall/recognition 지문의 정상·번호·선지부착·확장 변형본",
+        "disposition": "DROP",
+        "id": "DUP-MEMORY-RECALL",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf97g0003l204jhi59d8z",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "PUNCTUATION_ERROR"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PUNCTUATION_ERROR"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CROSS_SPLIT_NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "dev recall/recognition 대표본과 토큰열이 동일하고 대시도 하이픈으로 손상됐다. holdout에서 제외한다.",
+      "sequence": 44,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "12976b2165fc710a77f8f0450a15bb32c195f5cef78e8f7720023a5c65b69c75",
+      "duplicateCluster": {
+        "basis": "동일 random variation/nonrandom selection 지문의 논리 변형본",
+        "disposition": "DROP",
+        "id": "DUP-BODY-DEVELOPMENT",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.944
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9a4000fl2042odbrdj0",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CROSS_SPLIT_NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "dev 신체 발달 대표본과 거의 동일하다. 문장 자체는 온전하지만 cross-split 누출 때문에 제외한다.",
+      "sequence": 45,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "d0261be75d49a681b21f4573e964d449cb2c099f98ffeb09c037559706d29c23",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "normal",
+      "id": "cmq272t6z001ommcsbneh6fby",
+      "issueCodes": [
+        "FACTUAL_OVERSTATEMENT"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [
+          "FACTUAL_OVERSTATEMENT"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "normal",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "1875년 ping을 전기로 전송된 ‘최초의 sound’로 단정하는 표현은 전신 역사와 범주 정의를 확인해야 한다. 표면은 온전하므로 역사 검토 대상으로 둔다.",
+      "sequence": 46,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "6e695417470285daf06a97318e349b86edf9fa6cb56c68db79c59073ddd736a6",
+      "duplicateCluster": {
+        "basis": "동일 perfect-vs-good 정책 지문의 clean water 문장부호 변형본",
+        "disposition": "DROP",
+        "id": "DUP-WATER-POLICY",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf97v0005l204xjjvssdr",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "PUNCTUATION_CORRUPTION",
+        "TYPO_PUNCTUATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "TYPO_PUNCTUATION"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CROSS_SPLIT_NEAR_DUPLICATE",
+          "PUNCTUATION_CORRUPTION"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘a clean water. act’에서 명사구 한가운데 잘못된 마침표가 들어가 문장이 인위적으로 절단됐다. 불완전한 정책도 진전이라는 논지는 완결되고 문법도 풍부하지만 명백한 원문 오염을 보존한 채 쓰면 안 된다.",
+      "sequence": 47,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c73936758b2a6baafa87a6a44b9e4601a4162d2bbbe14c1753674a5158593614",
+      "duplicateCluster": {
+        "basis": "동일 fruit/brain-volume 지문의 절단·선지부착본과 정상본",
+        "disposition": "KEEP",
+        "id": "DUP-FRUIT-BRAIN",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.732
+      },
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9aj000hl20466bzeiga",
+      "issueCodes": [
+        "CAUSAL_OVERCLAIM",
+        "MEDICAL_CLAIM_RISK",
+        "MEDICAL_DOMAIN_REVIEW"
+      ],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "MEDICAL_CLAIM_RISK",
+          "CAUSAL_OVERCLAIM"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "MEDICAL_DOMAIN_REVIEW"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 관찰상 과일 섭취와 뇌 부피의 역상관을 소개한 뒤 고당 과일이 가공 탄수화물만큼 인지 문제를 ‘cause’할 수 있다고 확장한다. 의학·영양 인과로 쓰기에는 교란요인 검토가 필요하며 글 자체는 완결·풍부하다.",
+      "sequence": 48,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "ea5b502237e5c7a5414210eae274792ade3580f6ca835cfdd5e9346e0d7453ec",
+      "duplicateCluster": {
+        "basis": "동일 data tombs/data mining 지문의 의역·문장부호 변형본",
+        "disposition": "DROP",
+        "id": "DUP-DATA-MINING",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 1
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf9fr0017l204rcz69oyr",
+      "issueCodes": [
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "GRAMMAR_NUMBER_USAGE",
+        "NEAR_DUPLICATE",
+        "PUNCTUATION_CORRUPTION",
+        "PUNCTUATION_MISSING"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PUNCTUATION_MISSING",
+          "GRAMMAR_NUMBER_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "NEAR_DUPLICATE",
+          "PUNCTUATION_CORRUPTION"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "다른 data-mining 본과 중복되고 ‘data tombs’ 뒤 대시/쉼표가 유실됐다. holdout 독립성과 표면 무결성 모두 미달한다.",
+      "sequence": 49,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "568154d8bc4d522eef680080676fc047611f66f7742f0300633af91ebd37c088",
+      "duplicateCluster": {
+        "basis": "동일 stress/hippocampus/cortisol 설명의 동사 변형본",
+        "disposition": "DROP",
+        "id": "DUP-STRESS-HIPPOCAMPUS",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.882
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpaqf997000bl204g2nptcrl",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FACTUAL_OVERSIMPLIFICATION",
+        "MEDICAL_CLAIM_RISK"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "MEDICAL_CLAIM_RISK",
+          "FACTUAL_OVERSIMPLIFICATION"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CROSS_SPLIT_NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "dev 스트레스·해마 문단의 준중복이며 신경내분비 인과도 검토 대상이다. holdout에서는 중복을 우선 사유로 제외한다.",
+      "sequence": 50,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "dd13c3b0479f50ac7de6e2f6584225d684446d2467b1dc6b9f06b0e1c67cf33c",
+      "duplicateCluster": {
+        "basis": "동일 sharing-economy 지문의 문항 스캐폴드 두 본과 정제 본",
+        "disposition": "KEEP",
+        "id": "DUP-SHARING-ECONOMY",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.766
+      },
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmqb48s000001l70497mch8x0",
+      "issueCodes": [
+        "LOGICAL_PIVOT_UNMARKED"
+      ],
+      "keepOrDrop": "KEEP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "LOGICAL_PIVOT_UNMARKED"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 공유경제의 사회적 이점을 길게 제시한 뒤 ‘Most of the major players ... for-profit’로 전환하면서 however가 생략돼 피벗이 다소 급하다. 그래도 상업화 비판까지 논지는 완결되고 중심 공란 복원이 가능하다.",
+      "sequence": 51,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "c9aa67aba49a7e63b1064e1f772fb19e371717736dd98612d3f73e5577079aeb",
+      "duplicateCluster": {
+        "basis": "동일 recall/recognition 지문의 정상·번호·선지부착·확장 변형본",
+        "disposition": "DROP",
+        "id": "DUP-MEMORY-RECALL",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.614
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq742ju90015mm1gk4pzfggd",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "DUPLICATED_WORD",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "FRAGMENTED_OPTIONS",
+        "NEAR_DUPLICATE",
+        "SOURCE_CONTAMINATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_CONTAMINATION",
+          "DUPLICATED_WORD",
+          "FRAGMENTED_OPTIONS"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "ANSWER_OPTIONS_APPENDED",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 완결된 회상/재인 설명 뒤에 ‘concrete concrete’, ‘a restore’ 등이 포함된 선택지 묶음이 문장 경계 없이 붙었다. 본문은 풍부하지만 전체는 독립 완결성이 없고 공란 정답 범위를 정할 수 없다.",
+      "sequence": 52,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b020c669017ca57a360621b65c2b92baf721c27164633ffebfda2cc33a41033b",
+      "duplicateCluster": {
+        "basis": "Jaccard 임계값 아래지만 정의→건축→교통→패션으로 연속되는 동일 문서 계열",
+        "disposition": "DROP",
+        "id": "DUP-UNIVERSAL-DESIGN-DOCUMENT",
+        "manualSemanticFamily": true,
+        "maxObservedTokenFiveGramJaccard": null
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpchv9xq0003ky0484e1e7y4",
+      "issueCodes": [
+        "CROSS_SPLIT_DOCUMENT_FAMILY",
+        "DISPUTED_USAGE",
+        "DUPLICATE_OR_DOCUMENT_LEAK"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "DISPUTED_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "정의→건축→교통→패션으로 이어지는 universal-design 동일 문서 계열이 dev에 이미 있다. Jaccard가 낮아도 frozen holdout의 문서 단위 누출로 보고 제외한다.",
+      "sequence": 53,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "unsuitable",
+      "contentHash": "edb3d4a283cfe08b1d54a74b8afe0171a7866c17536d0a65215d9e0b2ffa3f4f",
+      "duplicateCluster": {
+        "basis": "동일 reason/emotion 지문 뒤에 선지들이 붙은 두 오염본",
+        "disposition": "DROP",
+        "id": "DUP-REASON-EMOTION",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.934
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmq5gpplq0001mmsg2fi1puqg",
+      "issueCodes": [
+        "ANSWER_OPTIONS_APPENDED",
+        "CONTRADICTORY_OPTIONS",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "NEAR_DUPLICATE",
+        "SOURCE_CONTAMINATION"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "SOURCE_CONTAMINATION",
+          "CONTRADICTORY_OPTIONS"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rater2": {
+        "blankSuitability": "unsuitable",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "ANSWER_OPTIONS_APPENDED",
+          "NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. 이성과 감정의 상호의존을 설명한 본문 뒤에 ‘Emotional responses should be eliminated’, ‘reasoning is sufficient’ 등 상충하는 선택지들이 구분 없이 붙었다. 독립 지문 완결성이 없어 두 문항 유형 모두 부적합하다.",
+      "sequence": 54,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "977d6bc2d6945fa183236f67ab485199953020bba284841017df14d48e962adf",
+      "duplicateCluster": {
+        "basis": "Jaccard 임계값 아래지만 정의→건축→교통→패션으로 연속되는 동일 문서 계열",
+        "disposition": "DROP",
+        "id": "DUP-UNIVERSAL-DESIGN-DOCUMENT",
+        "manualSemanticFamily": true,
+        "maxObservedTokenFiveGramJaccard": null
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpnzw9ay00dbmmykw8e1lclh",
+      "issueCodes": [
+        "CROSS_SPLIT_DOCUMENT_FAMILY",
+        "DUPLICATE_OR_DOCUMENT_LEAK",
+        "LEXICAL_USAGE"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "LEXICAL_USAGE"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "universal-design 동일 문서의 후속 패션 단락이며 앞선 건축·교통 내용을 직접 참조한다. holdout 독립성을 위해 제외한다.",
+      "sequence": 55,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "b50f599d06dde2703b827c0c08959f252d74d2033814465e63ac501498abd063",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpnzxg1100e7mmykv46al2g6",
+      "issueCodes": [],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. dot-com 회사의 광고 공간 맞교환이 현금이나 순이익 없이 양쪽 매출·비용만 기록해 매출을 부풀린다는 설명이 완결된다. 조건·수동·삽입 구조가 풍부하고 회계 원칙 결론의 중심 공란도 안정적이다.",
+      "sequence": 56,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "c60a3a1a0020f9afce966b355a41339ec7dc557c26134ffe57487ed84c4d800f",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmqg66544000emm60nvhh17iu",
+      "issueCodes": [
+        "CAUSAL_OVERCLAIM",
+        "EVIDENCE_SCOPE_RISK"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CAUSAL_OVERCLAIM",
+          "EVIDENCE_SCOPE_RISK"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "손필기만의 neural network 활성과 디지털 전환의 숨은 인지 비용을 강하게 인과화한다. 표면·중심성은 좋지만 교육·신경과학 검토 전에는 보류한다.",
+      "sequence": 57,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "1e369ebc778684fbe2f6bbae552dfe062e001f573ac6a280c0d14aa8d6dc4765",
+      "duplicateCluster": {
+        "basis": "동일 gestural foreshadowing 원문의 오염본·정상본·문장순서 변형본",
+        "disposition": "DROP",
+        "id": "DUP-GESTURE-THOUGHT",
+        "manualSemanticFamily": false,
+        "maxObservedTokenFiveGramJaccard": 0.872
+      },
+      "finalDecision": "EXCLUDE",
+      "grammarRichness": "rich",
+      "id": "cmpv7gfl00001mmbc0u8d49ep",
+      "issueCodes": [
+        "CROSS_SPLIT_NEAR_DUPLICATE",
+        "DUPLICATE_OR_DOCUMENT_LEAK"
+      ],
+      "keepOrDrop": "DROP",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "CROSS_SPLIT_NEAR_DUPLICATE"
+        ],
+        "status": "EXCLUDE"
+      },
+      "rationale": "dev gesture 대표본과 거의 동일하고 일부 문장 순서만 바뀌었다. cross-split 독립성이 없으므로 제외한다.",
+      "sequence": 58,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "5c86912f2c0d4c08137b6c1d756844cfc6e13d29478079900b80c0290cec851c",
+      "duplicateCluster": null,
+      "finalDecision": "PASS",
+      "grammarRichness": "rich",
+      "id": "cmpwtrzov0001jd0b5z38rzdv",
+      "issueCodes": [
+        "PUNCTUATION_PARALLELISM"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "PUNCTUATION_PARALLELISM"
+        ],
+        "status": "PASS"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "원문을 직접 재검토해 두 평가자의 공통 판정을 확인했다. ‘reacting to the immediate environment, the brightest colors or loudest sounds’는 병렬상 to가 반복되거나 콜론이 있으면 더 명료하다. 비판적 사고가 자극·감정 반응에서 해방한다는 논지는 완결되고 중심 공란도 충분하다.",
+      "sequence": 59,
+      "split": "holdout"
+    },
+    {
+      "blankSuitability": "central",
+      "contentHash": "e047f728febca8b85e829c7de7fbb5f84d1674a8ea0d13a12ff5ce7860673b99",
+      "duplicateCluster": null,
+      "finalDecision": "DOMAIN_REVIEW",
+      "grammarRichness": "rich",
+      "id": "cmqfkcut40032mmzcjq5riqxl",
+      "issueCodes": [
+        "METHODOLOGY_CONFLATION",
+        "STATISTICAL_CLAIM_RISK"
+      ],
+      "keepOrDrop": "NOT_CLUSTERED",
+      "origin": "db-real",
+      "rater1": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [
+          "METHODOLOGY_CONFLATION",
+          "STATISTICAL_CLAIM_RISK"
+        ],
+        "status": "DOMAIN_REVIEW"
+      },
+      "rater2": {
+        "blankSuitability": "central",
+        "grammarRichness": "rich",
+        "issueCodes": [],
+        "status": "PASS"
+      },
+      "rationale": "측정오차와 공간 대표성·표본오차를 섞고 평균이 국소 조건을 ‘neutralize’한다고 단정한다. 통계적 개념 확인 전에는 보류한다.",
+      "sequence": 60,
+      "split": "holdout"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": {
+    "databaseWrites": 0,
+    "externalCalls": 0,
+    "productionCodeChanges": 0,
+    "recordCount": 120,
+    "reviewedSplits": [
+      "dev",
+      "holdout"
+    ],
+    "sourcesDeliberatelyNotUsed": [
+      "research-note.md",
+      "experiment result files"
+    ],
+    "sourcesUsed": [
+      "corpus/private/manifest-private.json",
+      "corpus/manifest-public.json",
+      "reviews/corpus/rater-1.json",
+      "reviews/corpus/rater-2.json"
+    ]
+  }
+}

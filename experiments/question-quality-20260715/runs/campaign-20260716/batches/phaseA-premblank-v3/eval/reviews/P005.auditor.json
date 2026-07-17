@@ -1,0 +1,85 @@
+{
+  "pid": "P005",
+  "blindAnswer": "2",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OK",
+      "severity": "info",
+      "evidence": "단어 단위 diff 결과 원지문과 렌더 지문의 차이는 'keeps it in check.' → '_____.' 단 하나뿐. 문장 접합 파손, 중복, 누락, 고아 문장부호, 오탈자 없음. 선지 라벨 1~5와 선언 정답 라벨 2 일치."
+    },
+    {
+      "code": "V3-MINOR-PRONOUN-TELL",
+      "severity": "minor",
+      "evidence": "선지 1을 빈칸에 넣으면 'the law encourages them to be freely expressed'인데 직전 절의 선행사는 단수 'man's affective life'라 'them'의 수가 불일치한다(뒤 문장의 'affects'에 대한 후방조응으로 겨우 읽힘). 구조적 비문은 아니어서 V3 통과로 판정하나, 정답만 'it'을 써서 의미 처리 없이 대명사 일치만으로 1을 소거할 수 있는 약한 문법 텔이다."
+    },
+    {
+      "code": "V4-MINOR-TRAPLABEL",
+      "severity": "minor",
+      "evidence": "오답 해설 3이 'punishes every specific human action physically'를 '과협소'로 분류했으나 'every ... action'은 전칭(과확장) 성분이고 'physically/specific'만 과협소 성분이다. 함정 유형 라벨이 절반만 정확하다. 통사 오분석·사실 오류는 아니므로 V4 실패 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(polarity reversal) — 법이 감정을 억제한다는 핵심 논지를 정반대(표출 장려)로 뒤집음",
+      "temptingBecause": "'freely expressed'가 앞 절의 'cinema expresses man's affective life'와 어휘적으로 공명하여, 대조(while) 구조를 병렬로 오독한 학생이 고를 수 있음",
+      "decisiveFlaw": "빈칸 직후 두 문장('It tries to ensure that we are not overwhelmed and destroyed...', 'The law obsessively tries to suppress affects')이 법의 기능을 억제로 명시하여 정면 모순. 부수적으로 'them'이 단수 선행사 'affective life'와 수 불일치."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 원문 span 'keeps it in check'의 의미 보존 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 'attempts to control and restrain it'이 'keeps it in check'와 동치이고 'it'이 'man's affective life'를 정확히 받음",
+      "decisiveFlaw": "없음. 빈칸 뒤 'It tries to ensure...'와 'obsessively tries to suppress affects' 두 문장이 이중으로 직접 지지하는 유일한 선지."
+    },
+    {
+      "label": "3",
+      "intent": "스코프 이동 + 과잉 구체화(scope shift) — 억제 대상을 감정(affects)에서 '모든 구체적 행위에 대한 물리적 처벌'로 치환",
+      "temptingBecause": "본문의 'a regime of commands and prohibitions'가 법=강제·처벌이라는 배경 스키마를 자극함",
+      "decisiveFlaw": "본문에 처벌·물리성 언급이 전무하고 법이 다루는 것은 행위가 아니라 affects다. 'every ... physically'의 절대·극단 표현으로 정독 없이도 즉시 소거 가능한 점이 오히려 공예상 결점."
+    },
+    {
+      "label": "4",
+      "intent": "행위자 전도 + 과확장(actor swap / overextension) — '욕망이 우리를 파괴할 수 있고 법이 이를 막는다'를 '법이 관계를 파괴한다'로 반전",
+      "temptingBecause": "'destroyed'와 'human relations'가 본문에 실재하는 어휘라 표면 앵커가 있음",
+      "decisiveFlaw": "본문은 법이 'ensure that we are not overwhelmed and destroyed'하는 파괴 방지 주체라고 명시. 'all ... completely'의 절대어도 즉각적 소거 단서."
+    },
+    {
+      "label": "5",
+      "intent": "소재 연상(lexical association) — 첫 문장의 'subjects and audience'를 재조합한 무관 진술",
+      "temptingBecause": "지문 도입부의 핵심 명사 두 개를 그대로 포함해 훑어 읽은 학생에게 친숙하게 보임",
+      "decisiveFlaw": "첫 문장이 둘이 subjects와 audience를 '공유한다(share)'고 명시하여 직접 모순이며, 빈칸 자리의 대조(감정 표현 vs 억제) 논리와 무관. 'perfectly' 절대어도 소거 단서."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 3의 함정 라벨 '과협소'가 선지의 전칭 표현 'every specific human action'과 절반만 대응한다(과확장 성분 미포착). 본해설의 '③과 ④는 구체화되거나 과대포장된'과도 결이 어긋남.",
+      "recommendation": "'억제 대상을 감정이 아닌 모든 행위에 대한 물리적 처벌로 치환한 사실 무근의 왜곡'으로 라벨 교정"
+    },
+    {
+      "severity": "minor",
+      "evidence": "'과대포장된 사실 무근의 내용', '매력 없는 오답' 등 표현이 다소 구어적·자평적이나 사실 오류는 없음.",
+      "recommendation": "학생 노출용 문체로 다듬기"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 전문 단어 단위 대조로 'keeps it in check'→빈칸 치환 외 무손상 확인. V2: 다섯 선지 독립 대입 결과 정답 집합 {2} 유일 — 1 극성 반전, 3 처벌/물리성 무근, 4 파괴 방지 기능의 반전, 5 공유 명시와 모순. V3: 정답 완성문 문법적·자연스럽고 빈칸 뒤 tail이 없어 전 선지가 동일 통사 슬롯에 들어감(선지 1의 대명사 수 불일치는 minor). V4: 대조 구조 분석, 'suppress affects' 근거 인용, 함정 분류가 실제 지문·선지와 일치하고 오개념·환각 없음(3번 라벨 절반 부정확은 minor). V5: 정답 라벨·선지·본해설·오답 해설 키(1,3,4,5)·keyPoints 동기화. 공예: 출제 지점은 지문 중심 대조의 축이라 가치가 높으나(C1=4), (a) 빈칸 직후 두 문장이 답을 사실상 재진술해 잉여 단서가 과다하고(C3=2), (b) 오답 3·4·5가 every/all/completely/perfectly 절대어를 포함하고 정답만 헤지형('attempts to')이라 꼬리 소거 누출이 있으며(C4=2), (c) 선지 1의 대명사 텔이 있다. INTERMEDIATE 요청 난이도에는 하한선 쪽으로 부합(C5=3). 합계 17, 최저 2, 전 V 통과 → B(3·4·5 절대어 완화, 1의 them→it 통일, 3번 함정 라벨 교정이면 출제 가능). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

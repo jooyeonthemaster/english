@@ -1,0 +1,35 @@
+{
+  "pid": "P063",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "present A with B 구문의 A 자리 목적격 대명사. 선행사는 복수 'healthy undergraduates'이므로 them이 정확하다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "매력적 오답 — 직전 복수명사 words에 이끌려 them으로 고치고 싶은 유혹이 강하다. 그러나 'create a coherent sentence from ___'의 원천은 단수 핵 명사 'a list (of words)' 전체이고 of words는 수식어일 뿐이다. 단수 it이 옳다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'One of the lists'의 진짜 주어는 단수 One. 근접 복수 lists에 이끌린 were 착각을 유도하는 전형적 수일치 함정이나 단수 was가 옳다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "be interested in — 감정 과거분사 형용사의 표준 용법. 주어 Bargh(사람)이 흥미를 느끼는 쪽이므로 interested가 맞고, 뒤의 'how long it took...' 간접의문문 연결도 문제없다. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "'That he found was extraordinary'에서 found는 타동사인데 목적어가 없어 절이 불완전하다. 명사절 접속사 that은 완전한 절을 이끌어야 하므로 불가하며, 선행사를 포함한 관계대명사 What이어야 한다(What he found was extraordinary). 대안 해석 검토: that을 지시대명사로 보고 'That, he found, was extraordinary'(삽입절)로 읽는 구제 가능성을 탐색했으나 원문에 콤마가 없고 직전 문맥(실험 설계 서술)에 that이 가리킬 단수 지시 대상도 없어 성립하지 않는다. 동격절로 볼 명사도 없다. 어법상 틀림."
+    }
+  ],
+  "note": "정답 후보는 (E) 단독. What/That 구분(불완전 절 → what)은 수능 어법의 대표 포인트이며 지문 내 장거리 단서 없이도 절 내부 결합만으로 확정된다. 실전 유혹 기록: (B)의 근접 복수명사 words, (C)의 one of + 복수명사 수일치가 의도된 미끼로 보이나 둘 다 지배 규칙(핵 명사·진짜 주어) 확인으로 해소된다. 복수 정답 시비 소지 없음."
+}

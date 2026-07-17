@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "빈칸에 넣으면 '문학의 특징들은 독자가 복잡한 구조보다 명료한 메시지를 선호하는 데서 나온다'가 되는데, 지문은 정반대로 독자가 obscurities와 apparent irrelevancies를 견디며(put up with) 효율적 소통 원리를 어기는(flout) 요소들을 해석하려 애쓴다고 명시한다. 문법 결합은 자연스럽지만 논지와 정면 충돌하는 반의어형 오답."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "지문 전체가 이 선지의 세 요소를 정확히 지지한다. (1) devote effort — 'they struggle to interpret', 'the results of our reading efforts will be worth it'; (2) embrace ambiguity — 'We can put up with many obscurities and apparent irrelevancies'; (3) suspend immediate inquiry — 화자가 비협조적이라고 즉각 단정하는 대신(instead of imagining that the speaker or writer is being uncooperative) 더 큰 소통 목적을 상정하고 해석을 유예·지속한다는 'hyper-protected cooperative principle' 논지와 일치. 'follow from readers' readiness to devote..., embrace..., and suspend...'의 병렬 결합도 문법적으로 완전하다. 원전(Culler, Literary Theory)의 'the willingness of readers to pay attention, to explore uncertainties, and not immediately demand what it means'와도 부합."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "지문은 문학이 'principles of efficient communication'을 flout하는 요소를 담고 있고 독자가 그것을 해석하려 노력한다고 했으므로, '저자의 의도를 즉시 전달하도록 설계된 효율적 소통'은 명백한 반대 진술. 지문의 어휘(efficient communication)를 재활용해 훑어읽는 수험생을 노린 미끼이나, 'instantly'가 지문의 해석 노력·유예와 충돌해 최상위권에게는 유혹이 약하다."
+    },
+    {
+      "label": "④",
+      "verdict": "오답(가장 매력적인 오답)",
+      "reason": "첫 문장의 'published, reviewed, and reprinted'라는 선별 과정과 'institutional label'이라는 표현 때문에 실제로 끌리는 선지다. '문학의 특징이 제도적 선별에서 나온다'는 독해로 순간 정당화가 가능해 보인다. 그러나 (1) 지문에서 선별의 주체는 '비평가의 권위'가 아니라 익명의 'others'(독자 공동체)이고, (2) 선별·라벨은 독자의 기대(reasonable expectation)를 형성하는 전제일 뿐, 빈칸 문장이 요구하는 것은 'many of the features of literature'(언어적 복잡성, 모호성 등 작품 내부 특징)가 무엇으로부터 따라 나오는가이다. 지문 중반부 전체가 그 원천을 독자의 해석 노력·관용으로 지목하므로, 특징의 직접 원천을 비평가 권위로 치환하면 논증 구조가 끊긴다. 유혹을 느꼈으나 최종적으로 옹호 불가."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "지문은 모호성을 표준 언어 규칙으로 '해소'하는 것이 아니라, 더 높은 소통 목적을 상정하고 견디며 해석한다고 말한다. 'strict application of standard linguistic rules'는 오히려 flout되는 대상인 효율적 소통 원리 쪽에 가까워 논지와 반대. 문법 결합은 성립하나 의미상 배제."
+    }
+  ],
+  "note": "출전은 Jonathan Culler, Literary Theory: A Very Short Introduction의 hyper-protected cooperative principle 대목. 실전 풀이 순서: 빈칸 문장('문학의 많은 특징은 ___에서 따라 나온다')을 먼저 읽고 지문에서 원천을 찾으면, 중반부의 put up with obscurities / struggle to interpret / reading efforts가 곧바로 ②의 3항 병렬(devote effort / embrace ambiguity / suspend immediate inquiry)과 1:1 대응된다. ④는 첫 문장 소재 재활용형 매력 오답으로 잠깐 끌리지만 '특징의 원천'이라는 빈칸 요구와 어긋난다. 정답은 ② 단독으로 옹호 가능, 복수정답 소지 없음."
+}

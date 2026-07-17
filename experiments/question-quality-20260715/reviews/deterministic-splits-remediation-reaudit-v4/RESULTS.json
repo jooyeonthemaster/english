@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "auditDateKst": "2026-07-15",
+  "auditKind": "deterministic-splits-remediation-reaudit-v4",
+  "verdict": "BLOCK",
+  "summary": {
+    "total": 520,
+    "pass": 482,
+    "fail": 38,
+    "base242": {
+      "total": 242,
+      "pass": 242,
+      "fail": 0,
+      "failedCaseIds": []
+    },
+    "extra": {
+      "total": 278,
+      "pass": 240,
+      "fail": 38,
+      "categories": {
+        "summary-direction-v4": {
+          "total": 44,
+          "pass": 19,
+          "fail": 25
+        },
+        "blank-circled-v4": {
+          "total": 24,
+          "pass": 15,
+          "fail": 9
+        },
+        "grammar-ghost-v4": {
+          "total": 48,
+          "pass": 46,
+          "fail": 2
+        },
+        "blank-residual-v4": {
+          "total": 42,
+          "pass": 42,
+          "fail": 0
+        },
+        "grammar-terminology-v4": {
+          "total": 38,
+          "pass": 36,
+          "fail": 2
+        },
+        "sentence-order-cf-v4": {
+          "total": 82,
+          "pass": 82,
+          "fail": 0
+        }
+      },
+      "generatedCfCodePointCount": 65
+    },
+    "failedCaseIds": [
+      "v4-direction-independent-en-01",
+      "v4-direction-independent-en-02",
+      "v4-direction-independent-en-03",
+      "v4-direction-independent-en-04",
+      "v4-direction-independent-en-06",
+      "v4-direction-independent-en-07",
+      "v4-direction-independent-en-08",
+      "v4-direction-independent-en-09",
+      "v4-direction-independent-en-10",
+      "v4-direction-independent-en-11",
+      "v4-direction-independent-en-12",
+      "v4-direction-independent-en-13",
+      "v4-direction-independent-en-14",
+      "v4-direction-independent-en-15",
+      "v4-direction-independent-en-16",
+      "v4-direction-independent-ko-02",
+      "v4-direction-independent-ko-03",
+      "v4-direction-independent-ko-05",
+      "v4-direction-independent-ko-06",
+      "v4-direction-independent-ko-07",
+      "v4-direction-independent-ko-08",
+      "v4-direction-independent-ko-09",
+      "v4-direction-independent-ko-10",
+      "v4-direction-independent-ko-11",
+      "v4-direction-independent-ko-12",
+      "v4-circled-terminal-03",
+      "v4-circled-terminal-04",
+      "v4-circled-terminal-05",
+      "v4-circled-terminal-06",
+      "v4-circled-terminal-08",
+      "v4-circled-terminal-09",
+      "v4-circled-terminal-10",
+      "v4-circled-terminal-11",
+      "v4-circled-terminal-12",
+      "v4-ghost-decoration-22",
+      "v4-ghost-decoration-23",
+      "v4-terminology-positive-13",
+      "v4-terminology-positive-14"
+    ]
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "browserCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "productionEdits": 0,
+    "existingTestEdits": 0
+  },
+  "provenance": {
+    "auditScriptSha256": "3e4cddb00bf6ffb868b9512aa6588d55b2eb42dbcd455a5c6d61027f96f98320",
+    "baseHarnessSha256": "07dd5df02b085942142a30e6b19a8cd1c97ca1f7f227846e270c0fb1c318f3d8",
+    "baseHarnessReportedSha256": "07dd5df02b085942142a30e6b19a8cd1c97ca1f7f227846e270c0fb1c318f3d8",
+    "auditedSourceAndTestSha256": {
+      "src/lib/question-quality/core.ts": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+      "src/lib/question-quality/dispatcher.ts": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "src/lib/question-quality/validators/sentence-order.ts": "14963483d7a66e8cd3f376aed2701616c963ff1c778a6165a671becfa25b0de3",
+      "src/lib/question-quality/validators/summary/mc.ts": "aa9623c9a00f5e1886dec565eb1f83bba768e263fa55f946ca68e7b4f7ee5f0b",
+      "src/lib/question-quality/validators/blank/inference.ts": "b1509998dc2c2bfe7b4aa361e8c98f6dfcdf690128001c14f5b2acc613431bd9",
+      "src/lib/question-quality/validators/grammar/shared.ts": "1b59618b2e103d53b8c6cad90d235f46ca62430de8dd516c92cf1b969bae460c",
+      "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts": "a672875d20315667b7a662737930f63c76328136656bbb635c014d5f1ed24bff",
+      "tests/unit/sentence-order-quality.test.mjs": "9501144bcc8dde4a4258136dc260d3ffe5a652f99121a5b0c8a22c76935197d0",
+      "tests/unit/summary-mc-direction-split.test.mjs": "a48f8b374bc3a81854d49e2d222892fc99b8e7d0d2162a2d079fec0ec83a36db",
+      "tests/unit/blank-explanation-step-numbering.test.mjs": "30072ea6255f69850f278226516871ef8603be04307ddfd42b779b7d10327703",
+      "tests/unit/question-validity-invariants.test.mjs": "73c74c3274c48fafe9712b198e61077b662e79fc14caa2b09f813015cd167aed",
+      "tests/unit/grammar-keypoint-core10.test.mjs": "1922a38b14d21a9248cf28364d8bad8f202d7f41cc3a81982ecc24e9f050783f",
+      "tests/unit/grammar-killer-overdrilled.test.mjs": "aea5da8371252feda91a62ad7a6106b8eb1b0b6cab6afbeabc5e76a335261a24",
+      "tests/unit/summary-mc-collocation-severity-split.test.mjs": "1644b66882c16927f396dad73afa2f155db0ee94d77b2ac49f48fea768dee2db"
+    },
+    "frozenV3BlockManifestSha256": "ef1d6e20dcb366b42a4fe268ea6e09e291b79b2b8f30f82166dc20800c2ad4f7"
+  },
+  "policy": {
+    "inheritedViolations": []
+  },
+  "caseLedger": {
+    "inheritedLedgerSha256": "5c24f6d4b79b9ab800560437fb821d0401402d80f7718f5dbaf0bb94bc703384",
+    "extraAllCaseIdsSha256": "3acded0452ecaa651754d8a0d932eaf361e86babe3aef867caa938beddb1f5f2",
+    "extraPassedCaseIdsSha256": "ed48c6675dd061bf75321f8d3e49c9c83f34b59a732f1fb01a4a4c870e049aae"
+  },
+  "failures": [
+    {
+      "id": "v4-direction-independent-en-01",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) and also decide which underlined clause is grammatically unacceptable."
+    },
+    {
+      "id": "v4-direction-independent-en-02",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B); afterward, select the highlighted sentence that contains a grammar error."
+    },
+    {
+      "id": "v4-direction-independent-en-03",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) — separately, identify the boldfaced phrase that is grammatically incorrect."
+    },
+    {
+      "id": "v4-direction-independent-en-04",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) / independently, choose the numbered expression whose grammar is wrong."
+    },
+    {
+      "id": "v4-direction-independent-en-06",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) (in addition, choose the heading that best captures the text.)"
+    },
+    {
+      "id": "v4-direction-independent-en-07",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) and also state the central idea of the passage."
+    },
+    {
+      "id": "v4-direction-independent-en-08",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B); afterward, identify which claim is unsupported according to the passage."
+    },
+    {
+      "id": "v4-direction-independent-en-09",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) — separately, choose the numbered sentence that is irrelevant to the flow."
+    },
+    {
+      "id": "v4-direction-independent-en-10",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) / independently, determine where the supplied sentence should be inserted."
+    },
+    {
+      "id": "v4-direction-independent-en-11",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) while you also arrange the following paragraphs into their logical order."
+    },
+    {
+      "id": "v4-direction-independent-en-12",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) (in addition, identify what the highlighted pronoun refers to.)"
+    },
+    {
+      "id": "v4-direction-independent-en-13",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) and also select the contextually inappropriate highlighted word."
+    },
+    {
+      "id": "v4-direction-independent-en-14",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B); afterward, choose the statement that contradicts the text."
+    },
+    {
+      "id": "v4-direction-independent-en-15",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) — separately, locate the sentence that disrupts the argument's coherence."
+    },
+    {
+      "id": "v4-direction-independent-en-16",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "Complete the summary for (A) and (B) / independently, write the best title for the reading passage."
+    },
+    {
+      "id": "v4-direction-independent-ko-02",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성한 뒤 강조된 문장 중 문법적으로 잘못된 것을 고르시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-03",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성하는 것에 더하여 본문의 빈칸에 들어갈 별도의 어구를 고르시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-05",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성하고, 이와 별개로 본문의 중심 생각을 진술하시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-06",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성한 다음 글의 내용과 모순되는 진술을 찾으시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-07",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성할 뿐 아니라 흐름을 방해하는 문장도 고르시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-08",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성하면서 주어진 문장이 삽입될 위치도 정하시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-09",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성하고 이어질 단락의 논리적 순서를 별도로 배열하시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-10",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성한 후 강조된 대명사가 가리키는 대상을 찾으시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-11",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성하는 데 이어 문맥상 부적절한 강조 낱말을 고르시오."
+    },
+    {
+      "id": "v4-direction-independent-ko-12",
+      "category": "summary-direction-v4",
+      "expected": true,
+      "observed": false,
+      "input": "요약문의 (A), (B)를 완성하는 한편 본문에 근거하지 않은 주장을 고르시오."
+    },
+    {
+      "id": "v4-circled-terminal-03",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 오답이라고 본다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 오답이라고 본다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-circled-terminal-04",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 오답으로 보인다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 오답으로 보인다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-circled-terminal-05",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 오답임이 분명하다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 오답임이 분명하다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-circled-terminal-06",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 오답으로 확정된다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 오답으로 확정된다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-circled-terminal-08",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 오답이라고 결론짓는다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 오답이라고 결론짓는다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-circled-terminal-09",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 오답임이 확실하다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 오답임이 확실하다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-circled-terminal-10",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 부적절하다고 판단한다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 부적절하다고 판단한다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-circled-terminal-11",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 오답으로 귀결된다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 오답으로 귀결된다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-circled-terminal-12",
+      "category": "blank-circled-v4",
+      "expected": false,
+      "observed": true,
+      "input": "① 먼저 이 선지는 범위를 지나치게 넓힌 선택지이므로 오답이라고 판정한다. ② 다음으로 이 선지는 인과 방향을 뒤집은 선택지이므로 오답이라고 판정한다. ③ 마지막으로 이 선지는 지문의 결론과 정확히 일치하므로 정답이라고 판단한다."
+    },
+    {
+      "id": "v4-ghost-decoration-22",
+      "category": "grammar-ghost-v4",
+      "expected": true,
+      "observed": false,
+      "input": "​• (F) 분사 선택을 확인한다."
+    },
+    {
+      "id": "v4-ghost-decoration-23",
+      "category": "grammar-ghost-v4",
+      "expected": true,
+      "observed": false,
+      "input": "☑️ (F) 분사 선택을 확인한다."
+    },
+    {
+      "id": "v4-terminology-positive-13",
+      "category": "grammar-terminology-v4",
+      "expected": true,
+      "observed": false,
+      "input": "영계사 같은 전문 용어는 학생용 해설에서 피한다."
+    },
+    {
+      "id": "v4-terminology-positive-14",
+      "category": "grammar-terminology-v4",
+      "expected": true,
+      "observed": false,
+      "input": "의사계사 같은 전문 용어는 학생용 해설에서 피한다."
+    }
+  ]
+}

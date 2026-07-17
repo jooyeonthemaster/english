@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20150311-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 112
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-too-basic-decoys",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=a  (C):dec=k  (D):ANS=f  (E):dec=b",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 36,
+        "relPos": 0.058,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 70,
+        "relPos": 0.113,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 276,
+        "relPos": 0.444,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 453,
+        "relPos": 0.729,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 560,
+        "relPos": 0.902,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.902,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Some people need money more than we do. For example, some people have lost their homes due to natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family to donate money to a charity instead of buying us presents. I know that some kids might not want to give up their birthday presents, and I understand. However, remember that we can live without new toys or games more easily than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "do",
+        "isError": false,
+        "errorExpression": "do",
+        "surroundingText": "Some people need money more than we do.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "lost",
+        "isError": false,
+        "errorExpression": "lost",
+        "surroundingText": "For example, some people have lost their homes due to natural disasters or war",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "buying",
+        "isError": false,
+        "errorExpression": "buying",
+        "surroundingText": "let's tell our friends and family to donate money to a charity instead of buying us presents.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "easily",
+        "isError": true,
+        "correction": "easily",
+        "errorExpression": "easy",
+        "surroundingText": "However, remember that we can live without new toys or games more easily than someone can live without food, clothing, or shelter.",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "do"
+      },
+      {
+        "label": "(B)",
+        "text": "lost"
+      },
+      {
+        "label": "(C)",
+        "text": "buying"
+      },
+      {
+        "label": "(D)",
+        "text": "easy"
+      },
+      {
+        "label": "(E)",
+        "text": "that"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "앞의 일반동사구인 need money를 대신하는 대동사 자리이므로 do를 쓴 것은 어법상 적절합니다.",
+      "(B)": "조동사 have 뒤에 과거분사 lost가 이어져 현재완료(have lost) 시제를 올바르게 형성하고 있습니다.",
+      "(C)": "전치사구인 instead of 다음에 동명사 목적어가 와야 하므로 buying은 어법상 적절합니다.",
+      "(E)": "동사 tell의 직무(간접목적어 뒤의 직접목적어)를 이끄는 접속사로서, 뒤에 완전한 절이 오므로 명사절 접속사 that은 적절합니다."
+    },
+    "explanation": "문장의 동사구인 can live를 수식하는 수식어 자리이므로, 형용사 easy가 오면 올바른 통사적 수식을 이룰 수 없습니다. 동사구의 행위를 수식하기 위해서는 부사형태인 easily가 와야 올바릅니다. 따라서 easy를 easily로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 형용사 vs 부사 — 동사(can live)를 수식하므로 부사 형태가 필요함",
+      "(A) 대동사 — 일반동사구(need money)의 반복을 피하기 위해 do가 적절하게 쓰임",
+      "(C) 준동사 — 전치사 of의 목적어 자리에 명사 역할을 하는 동명사(buying)가 쓰임"
+    ],
+    "tags": [
+      "부사",
+      "대동사",
+      "동명사",
+      "명사절 접속사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Some people need money more than we __(A) do__. For example, some people have __(B) lost__ their homes due to natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family to donate money to a charity instead of __(C) buying__ us presents. I know that some kids might not want to give up their birthday presents, and I understand. However, remember that we can live without new toys or games more __(D) easy__ than someone can live without food, clothing, or shelter. So, we should tell our friends and family __(E) that__, for our birthdays this year, we want to give to others."
+  }
+}

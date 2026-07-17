@@ -1,0 +1,72 @@
+{
+  "pid": "P112",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-hedge-drop",
+      "severity": "minor",
+      "evidence": "해설은 '특정 장소와의 유대가 끊어졌다'고 단정하지만 원문은 'ties ... can be disconnected'로 가능성으로 서술한다. 논지 왜곡 수준은 아니어서 V4 실패로는 판정하지 않음."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "polarity reversal — 기업이 지역 경제에 영속적으로 기여한다는 극성 반전",
+      "temptingBecause": "'local economies they hire from'이 나이로비·뉴델리 고용 사례와 어휘적으로 겹쳐 지문 소재를 재활용한 것처럼 보인다",
+      "decisiveFlaw": "'no local taxes are paid'와 'leaves behind no material traces'(원문 스팬)에 정면으로 모순 — 기업은 기여가 아니라 흔적 자체를 남기지 않는다"
+    },
+    {
+      "label": "2",
+      "intent": "explicit-detail contradiction — 지역 인프라 건설 비용 증가라는 본문 명시 내용 위배",
+      "temptingBecause": "'building ... locally', 'infrastructure'가 사무실·공장 건설 소재와 연상적으로 연결된다",
+      "decisiveFlaw": "'No offices or factories need to be built'와 'simply sending some emails or clicking some buttons'가 비용·건설 부담의 부재를 명시한다"
+    },
+    {
+      "label": "3",
+      "intent": "정답 — 원문 스팬 'the employer leaves behind no material traces in the places where it was once an employer'의 충실한 추상화",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음 — no offices/no regulations/no taxes → 물리적 애착으로부터의 해방이라는 귀결이 유일하게 성립"
+    },
+    {
+      "label": "4",
+      "intent": "temporal scope confusion / half-truth — 1990년대 아웃소싱 모델을 현재의 결론으로 오귀속",
+      "temptingBecause": "'call centres', 'developing countries'급 어휘가 지문 중반(cheap and distant labour markets)에 실제로 등장한다",
+      "decisiveFlaw": "지문은 While 대조로 콜센터 이전(구모델)과 cloudwork(신모델)를 구별하며, 'Nairobi one day and New Delhi the next'는 centralized 유지가 아니라 유동적 전환을 보여준다"
+    },
+    {
+      "label": "5",
+      "intent": "polarity reversal — 국제기구의 엄격한 규제라는 규제 극성 반전",
+      "temptingBecause": "규제·노동이라는 지문 화제 어휘를 차용하고, 규제 부재에 대한 규범적 기대(당연히 규제되어야 한다는 상식)에 편승한다",
+      "decisiveFlaw": "'no local regulations are observed'와 정반대이며, 국제기구 규제는 지문에 등장조차 하지 않는 무근거 첨가"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "본 해설은 ①⑤를 묶고 ②만 별도 언급하여 ④의 함정(90년대 모델 오귀속)은 본 해설에서 다루지 않는다. 오답 해설 블록에는 정확히 서술되어 있어 사실성 문제는 없으나 본 해설 단독으로는 커버리지가 불완전하다.",
+      "recommendation": "본 해설에 ④ 한 줄 요약(구모델과의 대조) 추가"
+    },
+    {
+      "severity": "minor",
+      "evidence": "'can be disconnected'(가능)를 '끊어졌다'(완료 단정)로 옮긴 미세한 강도 상승.",
+      "recommendation": "'끊어질 수 있다'로 완화"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문과 최종절 치환('the employer leaves behind no material traces...' → '_____') 외 완전 동일, 접합·중복·누락 없음, 선지 라벨 1~5 일치. V2: 5개 선지를 각각 빈칸에 넣어 독립 검증 — ③만 성립, ①②④⑤는 각각 본문 명시 문장('no local taxes', 'No offices... built', While 대조, 'no local regulations')에 결정적으로 모순되어 단일정답 확정. V3: 모든 선지가 동일 통사 슬롯(정형절)에 들어가고 ③ 완성문 문법·자연스러움 문제 없음, seam 비문·비단어 없음. V4: 구조 분석(귀결 문장, 근거 사슬)이 실제 지문과 일치, 오답 해설이 실제 선지 내용과 대응. V5: 정답 라벨·선지·해설·keyPoints 동기화. 공예: 결론 문장을 겨냥한 출제 지점은 우수(C1=4)하나, ①②⑤가 모두 명시 문장과의 극성 모순형이라 함정 다양성이 낮고 'no X' 국소 단서만으로 즉시 소거 가능해 변별력이 약함(C3=2). 'strictly'가 ④⑤에 중복 등장하는 절대어 신호는 경미한 누출. INTERMEDIATE 요청 난이도에는 대체로 부합(다소 쉬운 편). 합계 18, 전 V 통과, 최저 C=2 → B(작은 수정 — 오답 함정 다변화 — 로 출하 가능). KILLER 요청이 아니므로 killerConditionsMet=false."
+}

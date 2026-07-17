@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go1_20220324-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2022,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 134
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=k  (C):ANS=h  (D):dec=c  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 7,
+        "relPos": 0.01,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 183,
+        "relPos": 0.267,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 486,
+        "relPos": 0.709,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 555,
+        "relPos": 0.81,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 639,
+        "relPos": 0.933,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.933,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect was our bed. It was a simple task, but every morning we were required to make our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been proven to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you to do another task and another. By the end of the day, that one task completed will have turned into many tasks completed. If you can't do little things right, you will never do the big things right.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "was",
+        "isError": false,
+        "correction": "was",
+        "errorExpression": "was",
+        "surroundingText": "the first thing they would inspect was our bed.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "to make",
+        "isError": false,
+        "correction": "to make",
+        "errorExpression": "to make",
+        "surroundingText": "we were required to make our bed to perfection.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "to do",
+        "isError": true,
+        "correction": "to do",
+        "errorExpression": "doing",
+        "surroundingText": "it will encourage you to do another task and another.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "completed",
+        "isError": false,
+        "correction": "completed",
+        "errorExpression": "completed",
+        "surroundingText": "that one task completed will have turned into many tasks",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "right",
+        "isError": false,
+        "correction": "right",
+        "errorExpression": "right",
+        "surroundingText": "If you can't do little things right, you will never",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "was"
+      },
+      {
+        "label": "(B)",
+        "text": "to make"
+      },
+      {
+        "label": "(C)",
+        "text": "doing"
+      },
+      {
+        "label": "(D)",
+        "text": "completed"
+      },
+      {
+        "label": "(E)",
+        "text": "right"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "문장의 주어는 'the first thing'이므로 단수 동사 was는 어법상 적절합니다.",
+      "(B)": "수동태 'were required' 뒤에 목적격보어였던 to부정사가 남아 'to make'로 쓰인 것은 올바릅니다.",
+      "(D)": "명사 'task'를 뒤에서 수식하는 과거분사로, 임무가 완료되는 수동의 의미를 나타내므로 completed는 맞습니다.",
+      "(E)": "부사로 쓰여 '올바르게'라는 의미로 동사구 'do little things'를 수식하므로 right 형태는 올바릅니다."
+    },
+    "explanation": "① 정답 문장의 골격은 'it(주어) + will encourage(정동사) + you(목적어) + 목적격보어' 형태입니다.\n② 동사 encourage는 목적격보어로 to부정사를 취합니다. 따라서 목적어인 you 뒤에 이어지는 목적격보어 자리에 v-ing 형태인 doing을 쓰는 것은 비문입니다.\n③ 따라서 doing을 to do로 고쳐야 합니다.\n④ (C) doing과 같이 분사나 동명사로 착각하기 쉽지만, 이 자리에는 명사(구) 목적어의 행위를 설명하는 목적격 보어로서 to 부정사가 와야 합니다.",
+    "keyPoints": [
+      "(C) 목적격보어 — 동사 encourage의 쓰임 판단",
+      "(A) 주어-동사 수일치 — 관계사절 수식을 받는 단수 주어 파악",
+      "(D) 분사의 능동/수동 판단 — 수식받는 명사와의 능수동 관계 파악"
+    ],
+    "tags": [
+      "어법",
+      "목적격보어",
+      "to부정사",
+      "encourage"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "When I was in the army, my instructors would show up in my barracks room, and the first thing they would inspect __(A) was__ our bed. It was a simple task, but every morning we were required __(B) to make__ our bed to perfection. It seemed a little ridiculous at the time, but the wisdom of this simple act has been proven to me many times over. If you make your bed every morning, you will have accomplished the first task of the day. It will give you a small sense of pride and it will encourage you __(C) doing__ another task and another. By the end of the day, that one task __(D) completed__ will have turned into many tasks completed. If you can't do little things __(E) right__, you will never do the big things right."
+  }
+}

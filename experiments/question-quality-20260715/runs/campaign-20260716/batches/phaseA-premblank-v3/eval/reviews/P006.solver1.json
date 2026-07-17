@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "삽입 시 'make sure you avoid taking on more than you can handle' — seam 완전 정문(make sure + 절, avoid + 동명사 taking on). 논리적으로 지문의 장거리 단서와 전부 정합: 'don't know where to draw the line' → 'Joining too many clubs can reduce...free time' → 'Pacing is important' → 'exercise some moderation'. 결론 명령문이 and 병렬 구조여서 앞부분 'get involved in the activities that are most meaningful to you'(선택)와 빈칸(절제)이 '의미 있는 것만 골라 하되 감당 범위를 넘기지 말라'는 양면 결론을 완성한다. moderation 논지의 자연스러운 재진술로 유일하게 옹호 가능."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "seam은 정문(make sure you try to join...). 그러나 '가능한 한 많은 클럽 활동에 가입하라'는 'Joining too many clubs can reduce a large amount of your free time'이 명시적으로 경고하는 행동 그 자체로 논지 정반대. 첫 문장 'a very good thing'만 읽은 학생용 미끼 — 최상위권 기준 유혹 없음, 즉시 소거."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "seam 정문. 그러나 school paper는 crunch time의 부정적 '예시'일 뿐이고, 저녁·주말까지 신문을 완벽하게 만드는 상황은 지문이 경계하는 과몰입 사례다. '모든 자유시간을 신문 완성에 바쳐라'는 pacing/moderation 논지와 정면 충돌. 지문 표면 어휘(school paper, perfect) 재활용형 미끼로, 예시를 결론으로 승격시키는 오독을 노리지만 논리 방향이 반대라 방어 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "seam 정문. 가장 매력적인 오답으로 실제로 잠시 끌렸다 — 지문이 'you can become awfully stressed out'으로 스트레스를 핵심 결과로 지목하므로 스트레스 관련 결론이 그럴듯해 보인다. 그러나 (a) 지문의 처방은 활동량의 moderation이지 스트레스 '완전 제거'가 아니고, (b) 'eliminate ALL stress COMPLETELY'는 이중 절대어로 'some moderation'의 온건한 논조와 불일치하며, (c) 필수 과제(tasks you absolutely need to complete)에 수반되는 스트레스 자체를 없애라는 주장은 지문에 없다. 결과(스트레스)를 처방(절제) 자리에 넣은 절대어 미끼 — 검증 거치면 탈락, 옹호 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "seam 정문. 그러나 'spend evenings and even weekends'는 마감에 몰린 과부하의 부정적 묘사이지 권장이 아니다. '주말 내내 일에 집중하라'는 moderation 논지와 정반대. 표면 어휘(weekends)만 회수한 미끼 — 유혹 없음."
+    }
+  ],
+  "note": "단일 정답 문항으로 깨끗하다. 5개 선지 모두 문법 seam 결함 없음(전부 make sure you + 동사원형으로 자연 결합)이라 판별은 순수 논리 적합성 싸움. 실질 경합은 4번 하나뿐이었고 절대어(all/completely) 신호와 처방-결과 혼동으로 배제됨. 2·3·5는 논지 정반대 + 표면어휘 회수형이라 최상위권 기준 즉시 소거. 지문이 'The point is this:'로 논지를 명시 요약해 주어 추론 부담이 낮음 — 체감 난도는 수능 빈칸 3점보다 쉬운 2점급(하~중하). 문항 성립성 문제 없음."
+}

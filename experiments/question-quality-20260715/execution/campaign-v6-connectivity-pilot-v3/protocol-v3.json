@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "question-quality-v6-connectivity-pilot-protocol-v3",
+  "artifactId": "campaign-v6-connectivity-pilot-v3",
+  "status": "OFFLINE_AUTHOR_FREEZE_LIVE_EXECUTION_BLOCKED_PENDING_INDEPENDENT_AUDIT",
+  "lineage": {
+    "preserves": "campaign-v6-connectivity-pilot-v2",
+    "replacesExecutionPackage": true,
+    "v2Unmodified": true,
+    "v2AuditDisposition": "REJECTED_TEST_TRANSPORT_SEAM_AND_INCOMPLETE_LIVE_CLOSURE"
+  },
+  "fixedProductionInput": {
+    "sourcePublicId": "OCVP-B01",
+    "questionType": "BLANK_INFERENCE",
+    "profileId": "B0_CURRENT_CONTROL",
+    "difficulty": "INTERMEDIATE",
+    "schoolType": "고등학교",
+    "gradeInfo": "2학년",
+    "count": 1,
+    "qualityMode": "strict",
+    "attemptIndex": 0,
+    "teacherIntentBlock": "",
+    "analysisContext": "",
+    "customPrompt": "",
+    "targetPoints": []
+  },
+  "providerContract": {
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "exactEndpointTag": "google-vertex/global",
+    "order": [
+      "google-vertex/global"
+    ],
+    "only": [
+      "google-vertex/global"
+    ],
+    "allowFallbacks": false,
+    "requireParameters": true,
+    "dataCollection": "deny",
+    "zdr": true,
+    "reasoning": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "completionCount": 1,
+    "strictJsonSchema": true
+  },
+  "durableBounds": {
+    "sharedCandidateCap": 2,
+    "sharedPhysicalFetchCap": 2,
+    "sharedCompletionCap": 2,
+    "concurrency": 1,
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "perAssignmentCandidateCap": 1,
+    "perAssignmentPhysicalFetchCap": 1,
+    "perAssignmentCompletionCap": 1,
+    "retryAllowed": false,
+    "repairAllowed": false,
+    "fallbackAllowed": false,
+    "replacementAllowed": false,
+    "topUpAllowed": false,
+    "failureTimeoutUnknownTerminal": true,
+    "reserveBeforeNetwork": true,
+    "assignments": [
+      {
+        "ordinal": 1,
+        "plan": "STANDARD",
+        "modelId": "google/gemini-3.5-flash",
+        "exactWireBodyUtf8Bytes": 53354,
+        "exactWireBodySha256": "5c68b632eff4f3f0e963b13c3697b41ebaf7772a9088836da54ba0f027ee2003",
+        "maxOutputTokens": 4000,
+        "emergencyInputUsdPer1M": 2.7,
+        "emergencyOutputUsdPer1M": 16.2,
+        "calculatedWorstCaseUsdCap": 0.241906501,
+        "timeoutMs": 60000
+      },
+      {
+        "ordinal": 2,
+        "plan": "PREMIUM",
+        "modelId": "google/gemini-3.1-pro-preview",
+        "exactWireBodyUtf8Bytes": 24943,
+        "exactWireBodySha256": "aed07356a5f580be158490ef12d8cf5555a7ea910a5ccc397e53356fa295e643",
+        "maxOutputTokens": 4000,
+        "emergencyInputUsdPer1M": 7.2,
+        "emergencyOutputUsdPer1M": 32.4,
+        "calculatedWorstCaseUsdCap": 0.372548881,
+        "timeoutMs": 180000
+      }
+    ],
+    "sharedCostCapUsd": 0.614455382
+  },
+  "pricingEvidenceContract": {
+    "schemaVersion": "question-quality-openrouter-public-price-snapshot-v3",
+    "maximumAgeMs": 900000,
+    "exactEndpointCardinality": 1,
+    "requiredParameters": [
+      "response_format",
+      "structured_outputs"
+    ],
+    "canonicalSlugRequired": true,
+    "allActiveEndpointsAndOverridesRequired": true,
+    "chargeDimensionsRequired": true,
+    "contentHashRequired": true,
+    "serverTokenOverheadUpperBound": 4096,
+    "safetyMultiplier": 1.1
+  },
+  "exactWireCommitment": {
+    "privateArtifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/private/exact-wire-v3.private.json",
+    "privateArtifactSha256": "754144b8ea8cd4c5f4cda1c4aab591cec9caae44db6f39c7bf9f870b136f7dcb",
+    "publicArtifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/offline-exact-wire-seal-v3.json",
+    "publicArtifactSha256": "cf20076d6f023a200f65366eff2627016fed127fe4060f0a8f85dcf6dd3f433b",
+    "locallyInterceptedProductionCompilerFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0
+  },
+  "globalResearchLedger": {
+    "path": "experiments/question-quality-20260715/budget-ledger.json",
+    "globalCap": 1000,
+    "requiredPreAuthorUsed": 0,
+    "requiredPreAuthorReserved": 0,
+    "liveReservation": 2,
+    "authorFreezeMutationAllowed": false,
+    "privateStoreReservationAlsoRequired": true,
+    "atomicLockRequired": true
+  },
+  "liveClosureContract": {
+    "artifactPath": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v3/live-closure-v3.json",
+    "algorithm": "TYPESCRIPT_AST_TRANSITIVE_IMPORTS_PLUS_DECLARED_RUNTIME_DATA_V1",
+    "exactEntrypointSetRequired": true,
+    "exactTransitiveFileSetRequired": true,
+    "exactBytesAndSha256Required": true,
+    "literalDynamicImportsIncluded": true,
+    "runtimeDataReadsClassified": true,
+    "minimumCountChecksForbidden": true,
+    "testSupportExcluded": true
+  },
+  "privatePersistence": {
+    "exclusiveNewRunDirectory": true,
+    "durableEventJournal": true,
+    "rawRequestAndResponsePrivateOnly": true,
+    "credentialNeverPersisted": true,
+    "unknownAfterSendNeverReplay": true,
+    "publicAllowlistOnly": true
+  },
+  "publicResultContract": {
+    "allowlist": [
+      "schemaVersion",
+      "status",
+      "startedAssignments",
+      "settledAssignments",
+      "successfulAssignments",
+      "candidateOpportunitiesConsumed",
+      "physicalFetches",
+      "completionsRequested",
+      "actualCostUsd",
+      "effectiveCostUsd",
+      "usageEvidenceComplete",
+      "routeEvidenceComplete",
+      "parserEvidenceComplete",
+      "serialOrderComplete",
+      "globalReservationBound",
+      "executionArtifactSha256"
+    ],
+    "forbiddenNamePattern": "prompt|passage|question|option|answer|explanation|response|generation|credential|providerRequestId|raw",
+    "requiresTwoSuccessfulAssignments": true,
+    "requiresUsageRouteParserEvidence": true,
+    "twoRowsNotQualityComparison": true
+  },
+  "authorization": {
+    "liveExecutionAuthorized": false,
+    "hostileAuditPassed": false,
+    "dispatchCommandPresent": false
+  },
+  "authorFreezeActivity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "productionDatabaseCalls": 0,
+    "realCredentialValuesRead": 0,
+    "globalLedgerReservationMutations": 0
+  }
+}

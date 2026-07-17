@@ -1,0 +1,80 @@
+{
+  "pid": "P024",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-collocation",
+      "severity": "minor",
+      "evidence": "선지 ③ 'the leap must exactly construct an entire octave'에서 'construct an octave'는 비관용적 연어(자연스러운 표현은 'span/cover an octave'). 오답 선지 한정이며 슬롯 문법성은 유지되어 V3 실패로 보지 않음."
+    },
+    {
+      "code": "V4-minor-attribution",
+      "severity": "minor",
+      "evidence": "해설이 '앞선 문장에서 이론가들이 ... 설명했고', '빈칸 다음 문장들이 ... 덧붙였습니다'라고 했으나, 인용된 두 근거('want to return to the jumping-off point', 'closer and closer to our starting point')는 모두 빈칸이 포함된 동일 문장 내부의 절이다. 절을 '문장(들)'로 부른 귀속 단위 부정확 — 내용 자체는 지문과 일치하므로 minor."
+    },
+    {
+      "code": "V4-minor-option5-embellishment",
+      "severity": "minor",
+      "evidence": "오답해설 ⑤가 '즉각적이고 동일한 크기의 반대 도약'이라 했으나 선지 원문 'an immediate opposite leap'에는 '동일한 크기(same magnitude)' 명시가 없음. 함정 기제 설명(과확장) 자체는 타당."
+    },
+    {
+      "code": "V5-minor-keypoint-quote",
+      "severity": "minor",
+      "evidence": "keyPoints의 'That is, to return to the jumping-off point'는 지문의 서로 다른 두 구간('that is, adjacent tones...'의 that is와 'to \"want\" to return to the jumping-off point')을 접합한 부정확 인용. 교사용 메타 필드로 학생 노출 필드 동기화에는 영향 없음."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전 (polarity reversal)",
+      "temptingBecause": "'continue to build tension' 등 지속 어휘와 도약의 이미지에 끌린 학생이 '도약 운동이 계속 유지된다'로 오독할 수 있음.",
+      "decisiveFlaw": "지문은 도약 후 멜로디가 출발점으로 '돌아가려' 하며 뒤따르는 음들이 출발지로 점점 가까워진다고 명시 — 유지가 아니라 복귀 기대이므로 정반대."
+    },
+    {
+      "label": "2",
+      "intent": "정답 — source span 'the leap was only temporary'의 패러프레이즈",
+      "temptingBecause": "(정답) 'departure from the original pitch' = 도약, 'would not last long' = temporary. 빈칸 앞 절(출발점 복귀 경향)과 뒤 절(closer and closer to our starting point) 양쪽 모두와 정합.",
+      "decisiveFlaw": "없음 — 유일 정답."
+    },
+    {
+      "label": "3",
+      "intent": "과협소/예시의 부당 일반화 (scope error)",
+      "temptingBecause": "'octave'가 후반부 'Over the Rainbow' 예시에서 두드러지게 등장하여 키워드 매칭 학생을 유인.",
+      "decisiveFlaw": "옥타브는 하나의 예시일 뿐이며, 빈칸은 모든 큰 도약에 대한 일반적 기대를 재진술하는 자리 — 도약이 '정확히 옥타브를 구성해야 한다'는 요구는 지문 어디에도 없음."
+    },
+    {
+      "label": "4",
+      "intent": "소재 연상 + 인과 왜곡 (topic-word association / causal distortion)",
+      "temptingBecause": "'tension'이 지문 후반에 실제 등장하는 소재라 표면 중첩이 있음.",
+      "decisiveFlaw": "지문은 작곡가가 'wants to continue to build tension'이라며 긴장을 유지·구축한다고 말함 — 급격한 전환이 긴장을 '필연적으로 제거'한다는 주장은 본문과 정면 모순이고 gap fill 기대와도 무관."
+    },
+    {
+      "label": "5",
+      "intent": "과확장 (over-extension of 'the next note should change direction')",
+      "temptingBecause": "gap fill 정의부의 'the next note should change direction'이라는 국소 단서와 직접 겹쳐 가장 매력적인 오답.",
+      "decisiveFlaw": "기대되는 것은 'closer and closer', 'back toward home again, but not by too much'가 보여주는 점진적 복귀이지 '즉각적인 반대 방향 도약'이 아님. 또한 'our brains expect that our auditory expectation demands...'는 의미상 동어반복적."
+    }
+  ],
+  "explanationIssues": [
+    "해설의 근거 귀속 단위 부정확: 두 인용 근거 모두 빈칸 포함 문장 내부의 절인데 '앞선 문장'/'빈칸 다음 문장들'로 표기 (minor).",
+    "오답해설 ⑤가 선지에 없는 '동일한 크기의'를 덧붙여 선지 내용을 약간 과잉 서술 (minor).",
+    "keyPoints의 접합 인용 'That is, to return to the jumping-off point' (minor)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 모두 통과. 렌더 지문은 source span('the leap was only temporary')만 깨끗하게 빈칸 치환했고 나머지는 원지문과 동일. 다섯 선지 모두 expect that 뒤 동일한 정형절 슬롯에 들어가며 문법만으로 탈락하는 오답 없음 — 소거는 전부 의미·논리 기반(§D 조건과 정합). 정답 ②는 빈칸 앞뒤 양쪽 절에서 이중 근거를 받아 필연적. 오답 4개가 서로 다른 함정 기제(극성 반전·예시 일반화·소재 연상 인과왜곡·과확장)를 겨냥해 C2=4. 다만 ①④는 신중한 독자에게 즉시 소거 가능하고, 오답 3개의 절대어('must exactly', 'inevitably', 'demands immediate')가 test-wiseness 소거 단서를 주며, 빈칸이 앞뒤로 이중 큐잉되어 상위권에게는 즉답 — INTERMEDIATE 라벨에는 부합(C5=3)하나 A 기준(합계 21)에는 미달. 합계 19, 등급 B: 절대어 완화와 해설 귀속 표현 교정 등 작은 수정으로 출제 가능."
+}

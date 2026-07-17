@@ -1,0 +1,386 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smoat.invalid/schemas/reviewer-calibration-v3-replacement-1.json",
+  "title": "Reviewer calibration v3 replacement sealed records",
+  "oneOf": [
+    { "$ref": "#/$defs/anchorTruth" },
+    { "$ref": "#/$defs/raterSubmission" },
+    { "$ref": "#/$defs/adjudicationRecord" }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "block": {
+      "enum": ["GRAMMAR", "BLANK", "NONFOCUS"]
+    },
+    "grade": {
+      "enum": ["A", "B", "C", "F"]
+    },
+    "answerDiscriminant": {
+      "enum": [
+        "SINGLE_LABEL",
+        "MULTIPLE_LABELS",
+        "SINGLE_TEXT",
+        "MULTIPLE_TEXTS",
+        "NO_ANSWER",
+        "UNEVALUABLE"
+      ]
+    },
+    "axisRelation": {
+      "enum": [
+        "PRESERVED",
+        "REVERSED",
+        "NARROWED",
+        "BROADENED",
+        "OMITTED",
+        "UNSUPPORTED_ADDITION",
+        "SHIFTED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "axisName": {
+      "enum": [
+        "actorOrTarget",
+        "polarity",
+        "conditionOrModality",
+        "causalRelationAndDirection",
+        "scopeOrQuantifier",
+        "stance",
+        "temporalRelation"
+      ]
+    },
+    "relationVector": {
+      "type": "object",
+      "required": [
+        "actorOrTarget",
+        "polarity",
+        "conditionOrModality",
+        "causalRelationAndDirection",
+        "scopeOrQuantifier",
+        "stance",
+        "temporalRelation"
+      ],
+      "properties": {
+        "actorOrTarget": { "$ref": "#/$defs/axisRelation" },
+        "polarity": { "$ref": "#/$defs/axisRelation" },
+        "conditionOrModality": { "$ref": "#/$defs/axisRelation" },
+        "causalRelationAndDirection": { "$ref": "#/$defs/axisRelation" },
+        "scopeOrQuantifier": { "$ref": "#/$defs/axisRelation" },
+        "stance": { "$ref": "#/$defs/axisRelation" },
+        "temporalRelation": { "$ref": "#/$defs/axisRelation" }
+      },
+      "additionalProperties": false
+    },
+    "answerSet": {
+      "type": "object",
+      "required": ["discriminant", "normalizedMembers", "memberHashes"],
+      "properties": {
+        "discriminant": { "$ref": "#/$defs/answerDiscriminant" },
+        "normalizedMembers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "memberHashes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sha256" },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "craftScores": {
+      "type": "object",
+      "required": [
+        "intentionality",
+        "distractorPlausibility",
+        "diagnosticSeparation",
+        "difficultyCalibration",
+        "surfaceNaturalness",
+        "explanationEconomyAndTruth"
+      ],
+      "properties": {
+        "intentionality": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "distractorPlausibility": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "diagnosticSeparation": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "difficultyCalibration": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "surfaceNaturalness": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "explanationEconomyAndTruth": { "type": "integer", "minimum": 0, "maximum": 3 }
+      },
+      "additionalProperties": false
+    },
+    "grammarSiteTruth": {
+      "type": "object",
+      "required": [
+        "siteId",
+        "displayedGrammaticality",
+        "diagnosis",
+        "acceptedPointFamilies",
+        "acceptedCorrectionEquivalenceSets",
+        "correctionRestoresSource",
+        "explanationClaimsAccurate"
+      ],
+      "properties": {
+        "siteId": { "type": "string", "minLength": 1 },
+        "displayedGrammaticality": {
+          "enum": ["GRAMMATICAL", "UNGRAMMATICAL", "GENUINELY_CONTESTED"]
+        },
+        "diagnosis": {
+          "enum": ["ANSWER_ERROR", "VALID_DECOY", "INVALID_SITE"]
+        },
+        "acceptedPointFamilies": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+          "uniqueItems": true
+        },
+        "acceptedCorrectionEquivalenceSets": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/sha256" },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "uniqueItems": true
+        },
+        "correctionRestoresSource": { "type": "boolean" },
+        "explanationClaimsAccurate": { "type": "boolean" },
+        "evidence": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "blankOptionTruth": {
+      "type": "object",
+      "required": [
+        "optionId",
+        "slotGrammarCompatible",
+        "groundedInPassage",
+        "relationVector",
+        "decisiveAxes",
+        "mechanismTags",
+        "cheapGiveaway"
+      ],
+      "properties": {
+        "optionId": { "type": "string", "minLength": 1 },
+        "slotGrammarCompatible": { "type": "boolean" },
+        "groundedInPassage": { "type": "boolean" },
+        "relationVector": { "$ref": "#/$defs/relationVector" },
+        "decisiveAxes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/axisName" },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "mechanismTags": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "studentPlausibilityEvidence": { "type": "string", "minLength": 1 },
+        "cheapGiveaway": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "roleAssignment": {
+      "type": "object",
+      "required": ["role", "pseudonymHash"],
+      "properties": {
+        "role": { "type": "string", "minLength": 1 },
+        "pseudonymHash": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "anchorTruth": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "recordType",
+        "itemId",
+        "block",
+        "boundProductionTypeId",
+        "candidatePoolOrdinal",
+        "surfaceSha256",
+        "codebookSha256",
+        "answer",
+        "fatal",
+        "fatalCodes",
+        "craftScores",
+        "grade",
+        "focusTruth",
+        "roleAssignments",
+        "sealedAt",
+        "sealedBundleSha256"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "reviewer-calibration-anchor-truth-v3-1" },
+        "recordType": { "const": "ANCHOR_TRUTH" },
+        "itemId": { "type": "string", "pattern": "^RCAL3-[A-Z0-9-]+$" },
+        "block": { "$ref": "#/$defs/block" },
+        "boundProductionTypeId": { "type": "string", "minLength": 1 },
+        "nonfocusFamilyId": { "type": ["string", "null"] },
+        "candidatePoolOrdinal": { "type": "integer", "minimum": 1 },
+        "surfaceSha256": { "$ref": "#/$defs/sha256" },
+        "codebookSha256": { "$ref": "#/$defs/sha256" },
+        "answer": { "$ref": "#/$defs/answerSet" },
+        "fatal": { "type": "boolean" },
+        "fatalCodes": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+          "uniqueItems": true
+        },
+        "craftScores": { "$ref": "#/$defs/craftScores" },
+        "grade": { "$ref": "#/$defs/grade" },
+        "focusTruth": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": ["kind", "sites"],
+              "properties": {
+                "kind": { "const": "GRAMMAR" },
+                "sites": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/grammarSiteTruth" },
+                  "minItems": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": ["kind", "mandatoryAxes", "correctOptionId", "options"],
+              "properties": {
+                "kind": { "const": "BLANK" },
+                "mandatoryAxes": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/axisName" },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "correctOptionId": { "type": "string", "minLength": 1 },
+                "options": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/blankOptionTruth" },
+                  "minItems": 2,
+                  "uniqueItems": true
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": ["kind", "constructFamilyId", "answerEvidence", "fatalEvidence"],
+              "properties": {
+                "kind": { "const": "NONFOCUS" },
+                "constructFamilyId": { "type": "string", "pattern": "^NF-F[1-8]-" },
+                "answerEvidence": { "type": "string", "minLength": 1 },
+                "fatalEvidence": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "roleAssignments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/roleAssignment" },
+          "minItems": 6
+        },
+        "sealedAt": { "type": "string", "format": "date-time" },
+        "sealedBundleSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "raterSubmission": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "recordType",
+        "itemId",
+        "raterPseudonym",
+        "phase",
+        "itemSurfaceSha256",
+        "packetSha256",
+        "codebookSha256",
+        "revealSha256",
+        "answer",
+        "fatal",
+        "fatalCodes",
+        "craftScores",
+        "grade",
+        "focusResponse",
+        "sealedAt",
+        "submissionSha256"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "reviewer-calibration-rater-submission-v3-1" },
+        "recordType": { "const": "RATER_SUBMISSION" },
+        "itemId": { "type": "string", "pattern": "^RCAL3-[A-Z0-9-]+$" },
+        "raterPseudonym": { "type": "string", "minLength": 1 },
+        "phase": { "type": "integer", "minimum": 1, "maximum": 3 },
+        "itemSurfaceSha256": { "$ref": "#/$defs/sha256" },
+        "packetSha256": { "$ref": "#/$defs/sha256" },
+        "codebookSha256": { "$ref": "#/$defs/sha256" },
+        "revealSha256": { "$ref": "#/$defs/sha256" },
+        "answer": { "$ref": "#/$defs/answerSet" },
+        "fatal": { "type": "boolean" },
+        "fatalCodes": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+          "uniqueItems": true
+        },
+        "craftScores": { "$ref": "#/$defs/craftScores" },
+        "grade": { "$ref": "#/$defs/grade" },
+        "focusResponse": { "type": "object" },
+        "sealedAt": { "type": "string", "format": "date-time" },
+        "submissionSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "adjudicationRecord": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "recordType",
+        "itemId",
+        "classification",
+        "evidence",
+        "counterevidence",
+        "decision",
+        "originalSubmissionsPreserved",
+        "adjudicatorBindings",
+        "sealedAt",
+        "recordSha256"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "reviewer-calibration-adjudication-v3-1" },
+        "recordType": { "const": "ADJUDICATION" },
+        "itemId": { "type": "string", "pattern": "^RCAL3-[A-Z0-9-]+$" },
+        "classification": {
+          "enum": [
+            "RATER_ERROR",
+            "GOLD_EQUIVALENCE_OMISSION",
+            "TAXONOMY_AMBIGUITY",
+            "ITEM_AMBIGUITY",
+            "BINDING_OR_HASH_ERROR"
+          ]
+        },
+        "evidence": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "counterevidence": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "decision": { "type": "string", "minLength": 1 },
+        "originalSubmissionsPreserved": { "const": true },
+        "adjudicatorBindings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sha256" },
+          "minItems": 2,
+          "uniqueItems": true
+        },
+        "sealedAt": { "type": "string", "format": "date-time" },
+        "recordSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

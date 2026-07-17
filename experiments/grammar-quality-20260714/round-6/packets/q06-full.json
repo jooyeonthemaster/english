@@ -1,0 +1,180 @@
+{
+  "passageId": "ebsi_go1_20241015-q21",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2024,
+    "exam": "10월",
+    "origType": "함축의미",
+    "words": 161
+  },
+  "attempts": 6,
+  "relaxedFallback": true,
+  "errors": [
+    "grammar-obvious-adjacent-sv-agreement"
+  ],
+  "warnings": [],
+  "topReject": [
+    "grammar-obvious-adjacent-sv-agreementx2",
+    "grammar-error-not-mutatedx2",
+    "grammar-decoy-filler-spanx1",
+    "grammar-pointcode-span-mismatchx1",
+    "grammar-tense-only-errorx1"
+  ],
+  "layout": "(A):dec=f  (B):dec=b  (C):ANS=d  (D):dec=k  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 40,
+        "relPos": 0.04,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 460,
+        "relPos": 0.457,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 666,
+        "relPos": 0.661,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 685,
+        "relPos": 0.68,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 830,
+        "relPos": 0.824,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 10,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.824,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "When we see something, we naturally and automatically break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People who lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features comes at a cost of seeing the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories are reconstructed through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "automatically",
+        "isError": false,
+        "errorExpression": "automatically",
+        "surroundingText": "When we see something, we naturally and automatically break it up",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "who",
+        "isError": false,
+        "errorExpression": "who",
+        "surroundingText": "People who lack this ability and remember everything",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "comes",
+        "isError": true,
+        "correction": "comes",
+        "errorExpression": "come",
+        "surroundingText": "representing the world as abstract ideas and features comes at a cost",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "seeing",
+        "isError": false,
+        "errorExpression": "seeing",
+        "surroundingText": "When we see something, we naturally and automatically break it up",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "are reconstructed",
+        "isError": false,
+        "errorExpression": "are reconstructed",
+        "surroundingText": "The discovery that our memories are reconstructed through abstract representations",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "automatically"
+      },
+      {
+        "label": "(B)",
+        "text": "who"
+      },
+      {
+        "label": "(C)",
+        "text": "come"
+      },
+      {
+        "label": "(D)",
+        "text": "seeing"
+      },
+      {
+        "label": "(E)",
+        "text": "are reconstructed"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(D)": "부정사의 부사적 용법 또는 지각을 나타내는 문맥에서 'seeing'은 유효한 준동사 형태이며, 부사절 접속사 When 뒤의 정동사 'see'와 자연스럽게 연결되므로 어법상 옳습니다.",
+      "(A)": "이 자리는 동사구 'break it up'을 수식하는 부사 자리이므로 부사 형태인 'automatically'가 어법상 옳습니다.",
+      "(B)": "선행사인 복수 대명사 'People'을 수식하며 주어가 빠진 불완전한 절을 이끄는 주격 관계대명사로서 'who'는 어법상 옳습니다.",
+      "(E)": "동격의 that절 내부에서 주어인 'our memories'가 재구성되는 대상을 가리키므로 수동태인 'are reconstructed'는 어법상 옳습니다."
+    },
+    "explanation": "문장의 주어는 동명사구인 'representing the world as abstract ideas and features'입니다. 동명사구 주어는 단수 취급하므로, 술어 동사는 단수 형태인 'comes'가 되어야 합니다. 복수 명사 'features'가 동사 바로 앞에 인접해 있어 복수 동사인 '(C) come'을 쓰기 쉬우나, 이는 주어의 핵이 아니므로 '(C) come'은 틀린 형태이며 'comes'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 주어-동사 수일치 — 수식어를 제외한 동명사구 주어 핵에 단수 동사 일치",
+      "(A) 형용사 vs 부사 — 동사구 수식에 따른 부사 선택",
+      "(B) 관계사 — 선행사 인칭명사에 따른 주격 관계대명사 선택"
+    ],
+    "tags": [
+      "어법",
+      "수일치",
+      "동명사구",
+      "관계대명사",
+      "부사"
+    ],
+    "difficulty": "ADVANCED",
+    "passageWithMarkers": "When we see something, we naturally and __(A) automatically__ break it up into shapes, colors, and concepts that we have learned through education. We recode what we see through the lens of everything we know. We reconstruct memories rather than retrieving the video from memory. This is a useful trait. It's a more efficient way to store information - a bit like an optimal image compression algorithm such as JPG, rather than storing a raw bitmap image file. People __(B) who__ lack this ability and remember everything in perfect detail struggle to generalize, learn, and make connections between what they have learned. But representing the world as abstract ideas and features __(C) come__ at a cost of __(D) seeing__ the world as it is. Instead, we see the world through our assumptions, motivations, and past experiences. The discovery that our memories __(E) are reconstructed__ through abstract representations rather than played back like a movie completely undermined the legal primacy of eyewitness testimony. Seeing is not believing.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD",
+    "_qualityWarnings": [
+      {
+        "severity": "warning",
+        "code": "grammar-obvious-adjacent-sv-agreement",
+        "message": "GRAMMAR_ERROR answer \"come\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun."
+      }
+    ],
+    "_qualityMode": "relaxed",
+    "_reviewRecommended": true,
+    "_generationNotice": "여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — 일부 포인트가 평이할 수 있음. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다."
+  }
+}

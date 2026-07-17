@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-v4-author-gate-reproduction-v1",
+  "target": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4",
+  "verdict": "PASS",
+  "independentVerdictAuthority": false,
+  "note": "These author gates were reproduced separately; they are corroboration only and do not determine the hostile-audit verdict.",
+  "controlledEnvironmentNames": [
+    "COMSPEC",
+    "NODE_DISABLE_COMPILE_CACHE",
+    "PATH",
+    "PATHEXT",
+    "SystemRoot",
+    "TEMP",
+    "TMP",
+    "TSX_DISABLE_CACHE",
+    "WINDIR"
+  ],
+  "hostileCompilerProbeUsesSyntheticNonsecretValuesOnly": true,
+  "transcriptNormalization": "CRLF_TO_LF_AND_ALL_NODE_TEST_TIMINGS_V2",
+  "wallClockDurationsPersisted": false,
+  "inheritedEnvironmentValuesReadOrForwarded": 0,
+  "credentialValuesRead": 0,
+  "gates": [
+    {
+      "id": "author-build-check",
+      "executable": "current-node-executable",
+      "arguments": [
+        "node_modules/tsx/dist/cli.mjs",
+        "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/build-offline.mts",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "stdoutSha256": "c71fd63c54d606534a7842d09edd4bd033920f92ab4e4ef4479cc0fb6e3fc3f6",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSummary": [
+        "  \"externalNetworkCalls\": 0,",
+        "  \"providerCalls\": 0,",
+        "  \"modelCalls\": 0,",
+        "  \"apiCandidatesConsumed\": 0,",
+        "  \"productionDatabaseCalls\": 0,",
+        "  \"realCredentialValuesRead\": 0,",
+        "  \"globalLedgerReservationMutations\": 0",
+        "}"
+      ],
+      "stderrSummary": [
+        ""
+      ],
+      "injectedEnvironmentNames": []
+    },
+    {
+      "id": "author-verifier",
+      "executable": "current-node-executable",
+      "arguments": [
+        "node_modules/tsx/dist/cli.mjs",
+        "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/verify.mts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "stdoutSha256": "4ff2cd6a5b06d0db0198d4558c3ec7b6c4d9c9f89ca9488ecfbdd0e18263231f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSummary": [
+        "  \"externalNetworkCalls\": 0,",
+        "  \"providerCalls\": 0,",
+        "  \"modelCalls\": 0,",
+        "  \"apiCandidatesConsumed\": 0,",
+        "  \"productionDatabaseCalls\": 0,",
+        "  \"realCredentialValuesRead\": 0,",
+        "  \"globalLedgerReservationMutations\": 0",
+        "}"
+      ],
+      "stderrSummary": [
+        ""
+      ],
+      "injectedEnvironmentNames": []
+    },
+    {
+      "id": "scoped-tsc",
+      "executable": "current-node-executable",
+      "arguments": [
+        "node_modules/typescript/lib/tsc.js",
+        "-p",
+        "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/tsconfig.json",
+        "--pretty",
+        "false"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSummary": [
+        ""
+      ],
+      "stderrSummary": [
+        ""
+      ],
+      "injectedEnvironmentNames": []
+    },
+    {
+      "id": "author-offline-tests",
+      "executable": "current-node-executable",
+      "arguments": [
+        "node_modules/tsx/dist/cli.mjs",
+        "--test",
+        "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/offline.test.ts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "stdoutSha256": "09738d52391455c33d5d3186ccb80709273dac14455e77bc59b357f773cf7442",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSummary": [
+        "ℹ tests 27",
+        "ℹ suites 0",
+        "ℹ pass 27",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0",
+        "ℹ todo 0",
+        "ℹ duration_ms <NORMALIZED>"
+      ],
+      "stderrSummary": [
+        ""
+      ],
+      "injectedEnvironmentNames": []
+    },
+    {
+      "id": "independent-hostile-nonsecret-env-compiler-parity",
+      "executable": "current-node-executable",
+      "arguments": [
+        "node_modules/tsx/dist/cli.mjs",
+        "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/build-offline.mts",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "stdoutSha256": "c71fd63c54d606534a7842d09edd4bd033920f92ab4e4ef4479cc0fb6e3fc3f6",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSummary": [
+        "  \"externalNetworkCalls\": 0,",
+        "  \"providerCalls\": 0,",
+        "  \"modelCalls\": 0,",
+        "  \"apiCandidatesConsumed\": 0,",
+        "  \"productionDatabaseCalls\": 0,",
+        "  \"realCredentialValuesRead\": 0,",
+        "  \"globalLedgerReservationMutations\": 0",
+        "}"
+      ],
+      "stderrSummary": [
+        ""
+      ],
+      "injectedEnvironmentNames": [
+        "GRAMMAR_PREMIUM_MODEL_ID",
+        "NEXT_PUBLIC_ENABLE_LONG_PASSAGE_SETS",
+        "NEXT_PUBLIC_SHOW_CREDIT_TOP_UP",
+        "NEXT_PUBLIC_SHOW_MODEL_SELECTOR",
+        "PREMIUM_QUESTION_GENERATION_TIMEOUT_MS",
+        "QUESTION_GENERATION_APPLICATION_MAX_RETRIES",
+        "QUESTION_GENERATION_SDK_MAX_RETRIES",
+        "QUESTION_GENERATION_TIMEOUT_MS",
+        "TRIGGER_WORKBENCH_QUESTION_CONCURRENCY",
+        "TRIGGER_WORKBENCH_QUESTION_PER_ACADEMY",
+        "TRIGGER_WORKBENCH_QUESTION_QUEUE_NAME"
+      ]
+    }
+  ],
+  "invariants": {
+    "targetBytesUnchanged": true,
+    "globalLedgerSha256Before": "9a05a64ed97c4746b7fe56933374d2179178885bd3e1db93f830f938bafdea1e",
+    "globalLedgerSha256After": "9a05a64ed97c4746b7fe56933374d2179178885bd3e1db93f830f938bafdea1e",
+    "globalLedgerMutations": 0,
+    "v2ManifestSha256Before": "8234032c53b742648345c06020f37f3f069dd60d883cf490076cc5dde7c18ea2",
+    "v2ManifestSha256After": "8234032c53b742648345c06020f37f3f069dd60d883cf490076cc5dde7c18ea2",
+    "v3ManifestSha256Before": "f5baacde25a267e6a6413a5f21380f1ed735308b39213099393eab1d4c78b192",
+    "v3ManifestSha256After": "f5baacde25a267e6a6413a5f21380f1ed735308b39213099393eab1d4c78b192",
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "browserCalls": 0
+  }
+}

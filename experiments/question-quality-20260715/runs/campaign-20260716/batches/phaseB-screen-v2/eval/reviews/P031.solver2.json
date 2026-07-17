@@ -1,0 +1,35 @@
+{
+  "pid": "P031",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('we can forbid anyone from exiting the vehicle'), but logically incoherent: a 'No Standing' sign confers no permission to forbid passengers from exiting, and the scene is the opposite — Carol getting INTO the car. Fails the contrast with 'we cannot park cars there, but...'."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Grammatical, but contradicts the rule being explained: for a vehicle, remaining completely stationary is exactly what 'No Standing' prohibits, so 'cannot park, but can remain completely stationary' is self-contradictory. If reinterpreted as pedestrians standing, 'inside designated areas' has no antecedent or textual support."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Grammatical, but a non sequitur: after 'That means we cannot park cars there, but we can...', the permitted act must concern vehicle behavior under the sign. Walking for exercise is irrelevant to the sign's legal meaning; Carol's pacing was anxious avoidance, not exercise, so the modifier is unmotivated."
+    },
+    {
+      "label": "④",
+      "verdict": "accept",
+      "reason": "Grammatically clean (bare VP after 'can'; purpose infinitive 'to let'; causative 'let someone get in' with bare infinitive) and logically exact: US 'No Standing' prohibits stopping/waiting a vehicle but permits a brief stop to pick up or discharge passengers — precisely what the friend did when Carol got into her car. Completes the cannot-park/can-X contrast correctly."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Seam parses, but deixis is broken: inside the friend's own quoted speech, 'her friend's car' would denote the speaker's own car referred to in third person — referentially incoherent. Also logically irrelevant: searching for a car is not a permission granted by a 'No Standing' sign."
+    }
+  ],
+  "note": "Single clean answer. The blank contrasts prohibited 'parking' with the permitted act under a 'No Standing' sign: a brief halt to pick up passengers (④), mirroring the story's pick-up scene. ② is the strongest decoy but asserts the very act (vehicle remaining stationary) the sign forbids, and its 'designated areas' is textually unanchored. All options attach grammatically to modal 'can', so discrimination is purely logical/pragmatic — as intended for a blank-inference item. No alternative construal (ellipsis, pedestrian reading, reported-speech shift) makes any competitor defensible."
+}

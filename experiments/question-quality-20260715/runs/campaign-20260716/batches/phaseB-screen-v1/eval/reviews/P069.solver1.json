@@ -1,0 +1,35 @@
+{
+  "pid": "P069",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'cave drawings made by our Stone Age ancestors'는 축약 수동 관계절(drawings that were made by...). 수식받는 명사 drawings가 make의 피동 대상이므로 과거분사 made가 정확하다. including 뒤 분사 후치수식은 표준 구문이며 정동사가 필요하지 않다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주어 cyberspace(단수) + does + 동사원형 offer. 수일치와 do-지원 모두 옳다. 문맥상으로도 '완전히 새로운 차원을 제공하지는 않는다'는 부정이 앞뒤 논리(가상성 자체는 새롭지 않다)와 일치한다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'What is new about cyberspace'는 선행사를 포함한 자유 관계절로 문장 전체의 주어 역할을 하고, What은 절 내부에서 is new의 주어다. 선행사가 없으므로 That이 아닌 What이 필수. 전형적인 That/What 미끼 위치지만 여기서는 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'while being able to shape...'는 접속사를 남긴 분사구문. 의미상 주어가 주절 주어 real people과 일치하므로 성립한다. 'being able'이 장황하게 느껴져 수험생이 의심하기 쉬운 매력적 오답 위치지만, 장황함은 어법 오류가 아니며 while (they are) being able로 복원 가능한 정문. 실제로 잠시 끌렸으나 의미상 주어 일치 확인 후 배제."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "주어 명사구의 핵은 'The move'(단수)이고 'from passive imaginary reality to the interactive virtual reality of cyberspace'는 전치사구 수식일 뿐이다. 따라서 동사는 is여야 하는데 are로 표기되어 수일치 오류. 긴 전치사구와 인접 복수 어감 명사(movies 등)가 만드는 근접성 함정이지만 명백한 오류. from A to B는 등위 주어가 아니므로 복수 해석 불가."
+    }
+  ],
+  "note": "정답 (E) 단독. 대안 해석 탐색 결과 (E)를 정문으로 만드는 독해는 없음(The move는 단수 핵, from-to 사슬은 전치사구). 매력적 오답은 (D) being(장황함 착시)과 (C) What(That/What 반사 의심)이나 둘 다 정문. 최상위권 실전 풀이 기준 이견 없이 하나로 수렴하는 깨끗한 문항. 지문은 Aaron Ben-Ze'ev의 사이버공간 논의 계열 기출 지문과 동일 계통으로 보이며 원문 표준형도 is."
+}

@@ -1,0 +1,92 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-NONWORD-TERM",
+      "severity": "major",
+      "evidence": "오답 해설 ①: '본문의 심리적 일입(immerse, become)과 정반대되는…' — '일입'은 이 문맥에서 존재하지 않는 비단어/손상 용어다(표준국어대사전의 '일입(日入)'은 '해가 짐'뿐이며 심리 용어가 아님). 의도된 단어는 '몰입' 또는 '(감정) 이입'으로 추정된다. 학생 노출 해설의 손상 용어는 V4 실패 범주(비단어·손상 용어)에 해당한다."
+    },
+    {
+      "code": "V4-TERMINOLOGY-MINOR",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤: 'identity'를 '본래 신분'으로 옮김 — 'identity'의 정확한 대응은 '정체성'이며 '신분'(사회적 지위)은 오역에 가깝다. 또한 'without recovering it'을 '영원히'로 의역했으나 의미 왜곡 수준은 아니다."
+    },
+    {
+      "code": "V4-WORDING-MINOR",
+      "severity": "minor",
+      "evidence": "본 해설 첫 문장 '각종 변화를 감수하는 궁극적 목표(결과)를 설명합니다' — 괄호의 '(결과)'가 목표(goal)와 결과(result) 개념을 혼동시킬 소지가 있다. 원문의 'with the ultimate goal of'는 목적을 나타내며 결과가 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "극성 반전(polarity reversal) — 몰입의 정반대인 '객관적 거리 유지' 제시",
+      "temptingBecause": "'객관적 거리'가 일반적 연기론(브레히트식 거리두기 등)에서 그럴듯하게 들리고, 전문 배우의 태도처럼 보일 수 있다",
+      "decisiveFlaw": "지문 전체가 'completely immerse themselves', 'seem to actually become the characters'로 몰입을 명시하므로 정면 모순. 단, 비교적 즉시 소거 가능한 평면적 반대 선지"
+    },
+    {
+      "label": "2",
+      "intent": "정답 — 원문 span 'truly feeling the emotions that are written in the script rather than faking them'의 충실한 paraphrase",
+      "temptingBecause": "해당 없음(정답). 'genuinely experiencing ↔ truly feeling', 'instead of pretending ↔ rather than faking them'의 대응이 정확하고, 앞(become the characters)·뒤(watching real people) 문맥과 정합",
+      "decisiveFlaw": "없음. 유일 정답으로 검증됨"
+    },
+    {
+      "label": "3",
+      "intent": "어휘 앵커 차용(lexical anchor) — 원문 span에 있는 'script'만 빌려온 논리 무관 선지",
+      "temptingBecause": "삭제된 span에 실제로 'written in the script'가 들어 있어 표면 단어 겹침이 정답처럼 보인다",
+      "decisiveFlaw": "지문의 요지는 대본 문구에 대한 기계적 의존이 아니라 대본에 쓰인 감정의 진정한 체험이다. 'relying strictly on the exact words'는 지문 어디서도 지지되지 않는다"
+    },
+    {
+      "label": "4",
+      "intent": "수단-목적 혼동/과협소(means-as-goal, over-narrow) — 같은 문장의 수단을 목적 자리에 재진술",
+      "temptingBecause": "빈칸 문장 자체에 'change their sleeping patterns'가 명시되어 있어 표면 재현이 안전해 보인다",
+      "decisiveFlaw": "'수면 패턴을 바꾸는 것의 궁극적 목표가 수면 패턴을 바꾸는 것'이 되는 순환 구조라 자기모순적으로 즉시 소거된다. 변별 기여가 낮은 선지"
+    },
+    {
+      "label": "5",
+      "intent": "과확장(overextension) — 부작용/위험을 목표로 격상하고 절대어('completely', 'without recovering')를 부가",
+      "temptingBecause": "지문의 'explore a whole new identity', 'psychological and behavioral changes', 'emotional trauma' 키워드와 강하게 공명한다",
+      "decisiveFlaw": "지문에서 정체성 변화·트라우마는 'It can cause…'로 제시된 가능 결과(위험)이지 목표가 아니며, '영구적 상실(without recovering it)'은 본문 범위를 초과한다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "NONWORD",
+      "severity": "major",
+      "evidence": "오답 해설 ① '심리적 일입' — 비단어/손상 용어(의도: '몰입' 또는 '이입')"
+    },
+    {
+      "code": "MISTRANSLATION",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤ 'identity' → '신분' (정확한 용어는 '정체성')"
+    },
+    {
+      "code": "CONCEPT-WOBBLE",
+      "severity": "minor",
+      "evidence": "본 해설 '궁극적 목표(결과)' — 목표와 결과를 병기해 개념 혼동 소지"
+    },
+    {
+      "code": "OMISSION",
+      "severity": "minor",
+      "evidence": "오답 해설 ④가 '지엽적 과협소'만 언급하고 결정적 결함인 순환성(수단을 목적 자리에 재진술)을 짚지 않음 — 오류는 아니나 우아함 손실"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "출제 설계 자체는 견실하다: 빈칸이 지문의 핵심 명제('진짜 감정 체험 vs 연기')에 정확히 놓였고, 정답 ②는 유일하며(각 선지 독립 검증 완료), 다섯 선지가 동일 통사 슬롯(동명사구)에 들어가 문법 소거가 발생하지 않는다. 오답들도 극성 반전·어휘 앵커·수단-목적 혼동·과확장으로 서로 다른 함정을 겨냥한다. 다만 ①·④가 즉시 소거 가능해 경쟁력(C3)은 INTERMEDIATE 하한 수준. 치명 결함은 해설이다: 학생 노출 오답 해설 ①의 '심리적 일입'은 비단어/손상 용어로 V4 실패이며(루브릭상 공예 점수로 상쇄 불가), '신분' 오역·'목표(결과)' 병기 등 minor 용어 문제가 겹친다. 해설 용어 3곳('일입'→'몰입', '신분'→'정체성', '(결과)' 삭제)만 수정하면 B 이상으로 재판정될 가능성이 높다. 요청 난이도가 INTERMEDIATE이므로 KILLER 추가 조건은 적용 대상 아님(killerConditionsMet=false)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a clock is really a process embodied in a machine' — 축약 관계절(= a process that is embodied in a machine). embody는 타동사이고 process는 기계에 '구현되는' 대상이므로 수동 과거분사가 옳다. 'embodying'이면 목적어가 필요해 오히려 비문. 1차 필터에서 -ed/-ing 방향성 유혹이 있으나 타동성 확인으로 해소. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'almost any process that repeats itself over and over again' — 주격 관계대명사 that의 선행사는 단수 process이므로 3인칭 단수 repeats 일치가 정확하고, 재귀대명사 itself도 옳다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'to think of a clock that does not depend on a repetitive cycle of events' — 주격 관계대명사 that + 정동사 does. 선행사 a clock(단수)과 일치. what 대체 유혹도 없고(선행사 존재) 구조 완결. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "error",
+      "reason": "'another, much longer scale clock that also appearing to be like this' — 주격 관계대명사 that이 이끄는 관계절에 정동사(finite verb)가 없다. 준동사 appearing은 절의 서술어가 될 수 없으므로 appears여야 한다. 대안 해석 적극 탐색: (i) that을 지시대명사로 보고 appearing을 분사구문으로 → that이 고립되어 성립 불가, (ii) that 없이 'clock, also appearing...'이었다면 분사 후치수식으로 정문이 됐겠지만 that이 명시되어 있어 불가, (iii) 도치·절대구문 해석도 불성립. 어떤 해석으로도 구제되지 않는 유일한 비문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'It seems to yield a smooth time scale but in fact does not' — do-대용: does not = does not [yield a smooth time scale]. 병렬 시작점이 seems to yield이므로 대동사 does가 lexical verb yield구를 정확히 대신한다. 'seems가 앞에 있으니 is not이어야 하나'라는 순간적 유혹이 이 문항 최대의 매력 오답 지점이지만, 생략 복원이 완전하게 자연스러워 정문 확정."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 정답 (D) 단일 수렴, 복수정답 위험 없음. (D)는 관계절 정동사 결여라는 구조적(장거리 단서) 오류로 명백하다. 실제로 끌려본 매력 오답은 1순위 (E)의 do-대용(does vs is) 지점, 2순위 (A)의 분사 태(-ed vs -ing) 지점이었으나 둘 다 규칙 적용으로 깔끔히 해소된다. 밑줄 5개 체제로 수능 어법 문항 형식과 동형이며 문항 성립에 하자 없음."
+}

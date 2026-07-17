@@ -1,0 +1,85 @@
+{
+  "pid": "P002",
+  "blindAnswer": "(E)",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-ANTECEDENT-NONEXISTENT",
+      "severity": "major",
+      "evidence": "(B) 오답 해설이 '문맥상 앞 문장의 복수 명사인 adoptees를 가리키므로'라고 선행사를 지목하지만, (B) 이전의 어떤 문장에도 명사 adoptees는 존재하지 않는다. 직전 문장은 'They have no idea ... government.'이고, 실제 선행사는 첫 문장의 'people who have been adopted'(및 대명사 They)다. 단어 adoptees는 (B) 이후 문장('many adoptees have publicly protested')에서 처음 등장한다. RUBRIC V4가 명시적으로 금지하는 '존재하지 않는 선행사 지목'에 해당하며, 학생이 앞 문장에서 adoptees를 찾으려 하면 실패한다."
+    },
+    {
+      "code": "V4-TERM-MISLABEL",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 'this information'을 '뒤의 단수형 수식어'라고 부른다. 실제로 attempts를 수식하는 것은 to부정사구 'to discover this information' 전체이고, this information은 그 부정사구 내부에서 discover의 목적어다. this information 자체는 수식어가 아니므로 통사 기술이 부정확하다."
+    },
+    {
+      "code": "V4-KEYPOINT-STRUCTURE-MISMATCH",
+      "severity": "minor",
+      "evidence": "keyPoints의 (A) 항목 '수일치 — 전명구와 수식어가 결합된 긴 주어구의 핵 명사 파악': 실제 주어구 'all their attempts to discover this information'에는 전명구(전치사+명사구) 수식이 없고 to부정사구 수식만 있다. 존재하지 않는 구조(전명구)를 지목한 오기술."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "긴 주어(핵명사 attempts + to부정사 수식어) 뒤 동사의 수일치 판단",
+      "temptingBecause": "동사 바로 앞의 단수 명사 this information을 주어 핵으로 착각하면 is로 고치고 싶어진다",
+      "decisiveFlaw": "주어 핵은 복수 attempts이므로 are는 올바름 — 오류 아님. 독립 검증 결과 대안 해석 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "목적격 대명사의 수·격 조응 판단",
+      "temptingBecause": "지시 대상이 두 문장 앞의 주어(people who have been adopted)라 거리가 있어 단수/타 대상 혼동을 노림",
+      "decisiveFlaw": "tell의 간접목적어로 복수 지시 대상을 받는 them은 올바름 — 오류 아님. 다만 매력도가 낮은 편(즉시 소거 가능성 높음)"
+    },
+    {
+      "label": "(C)",
+      "intent": "be동사 보어 자리의 형용사 vs 부사 판단",
+      "temptingBecause": "뒤의 to find를 보고 동사를 수식하는 부사 desperately가 필요하다고 착각할 수 있음",
+      "decisiveFlaw": "관계절 내 are의 주격 보어이므로 형용사 desperate가 올바름 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "선행사를 포함한 관계대명사 what vs that/which 판단(후속 절 완전성 분석)",
+      "temptingBecause": "find의 목적어 자리에 접속사 that(완전한 절)을 기대하거나 별도 선행사를 찾으려 하면 흔들림",
+      "decisiveFlaw": "know의 목적어가 빠진 불완전한 절을 이끌며 find의 목적어 명사절을 형성하므로 what이 올바름 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "devote A to B의 to(전치사) vs to부정사 판별 — 선언된 정답",
+      "temptingBecause": "직전의 'are willing to devote', 'desperate to find' 등 to부정사 연쇄가 동사원형을 자연스럽게 보이게 함",
+      "decisiveFlaw": "devote ... to의 to는 전치사이므로 동명사 finding이어야 함. find는 비문 — 유일 정답 확인. 교정 시 원지문과 정확히 일치"
+    }
+  ],
+  "explanationIssues": [
+    "(B) 해설: '앞 문장의 복수 명사인 adoptees' — 앞 문장에 adoptees라는 명사가 존재하지 않음(실제 선행사는 people who have been adopted / They). 존재하지 않는 선행사 지목",
+    "(A) 해설: 'this information'을 '수식어'로 오분류 — 실제로는 수식어(to부정사구) 내부의 목적어",
+    "keyPoints (A): '전명구와 수식어가 결합된 긴 주어구' — 주어구에 전명구 수식이 없음(부정사구 수식만 존재)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "minimalPair": "충족 — finding→find 최소대립쌍이며 교정하면 정확히 원문 복원",
+    "clearGrammarJudgment": "충족 — 전치사 to 뒤 동명사는 문맥 선호가 아닌 명확한 문법 판단",
+    "allFiveUnderlinesDocumented": "부분 미충족 — (B)·(C)에 명시적 'why tempting'이 해설에 없음(적절 근거만 서술)",
+    "structuralDepth": "미충족 — devote A to B(to+동명사)는 look forward to/be used to류의 암기 목록형 포인트로, 구조를 읽지 않아도 연어 회상만으로 즉시 드러난다. KILLER가 요구하는 구조 독해 깊이에 못 미침",
+    "noShadowingDecoy": "충족 — 동일 포인트(to-v vs v-ing)의 다른 밑줄이 없어 정답을 가리지 않음"
+  },
+  "grade": "F",
+  "notes": "V1/V2/V3/V5는 통과: 렌더 지문은 (E) finding→find 단일 의도 변형 외 손상이 없고, 5개 밑줄 독립 검증 결과 (E)만 비문으로 단일 정답이 성립하며, 필드 동기화도 일관된다. 그러나 V4에서 (B) 오답 해설이 앞 문장에 존재하지 않는 명사 adoptees를 선행사로 지목하는 명백한 사실 오류(루브릭이 명시한 위반 유형)가 있어 치명 실패 — 공예 점수로 상쇄 불가, F. 부수적으로 (A) 해설과 keyPoints의 통사 용어 오기술 2건. 공예 측면: 오답 5종이 서로 다른 포인트(수일치/대명사/형용사보어/관계사 what/전치사 to)를 겨냥해 의도 밀도는 양호하나, 정답 포인트가 암기형 정전 연어라 요청 난이도 KILLER에 미달(C5=2). 해설은 구성 자체는 명료하나 사실 오류 포함으로 C6=1. 수정 방향: (B) 해설의 선행사 기술을 'people who have been adopted(=입양인들)'로 교정, (A) 해설·keyPoints의 구조 기술 교정, KILLER 유지 시 구조 독해형 포인트로 정답 교체 검토."
+}

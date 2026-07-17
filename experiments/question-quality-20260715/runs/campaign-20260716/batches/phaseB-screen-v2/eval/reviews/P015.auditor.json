@@ -1,0 +1,78 @@
+{
+  "pid": "P015",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문에서 정확히 'prioritize flexibility over rigidity most of the time' 구간만 빈칸으로 치환했고, 나머지 모든 문장·구두점이 원문과 축자 일치한다. 접합 파손·중복·누락·고아 문장부호 없음. 'important -'의 하이픈은 원지문에도 동일하게 존재하므로 손상이 아니다. 선지 라벨 ①~⑤와 본문 마커 일치.",
+    "V2": "각 선지를 'you must _____.'에 독립 대입 검증. ① 구조화된 루틴 확립 = 지문이 반대하는 rigidity 진영이므로 극성 반전으로 탈락. ② 'value adaptability over strict adherence to predefined schedules'는 원문 span 'prioritize flexibility over rigidity'의 의미 보존 paraphrase이며 앞문장(go with the flow)·뒷문장(expect plans will change) 모두와 정합 — 유일 정답. ③ 우선순위 변동 이유 규명은 지문이 권하는 '불가피성 수용'과 다른 분석적 행위로 탈락. ④ 자녀 돌봄은 예시일 뿐이며 'entirely'가 과잉 절대화 — 일반 원리가 아니므로 탈락. ⑤ 'only when you can predict'는 변화의 예측불가능한 불가피성 전제와 직접 모순으로 탈락. 정답 집합 = {②}, 선언과 일치.",
+    "V3": "다섯 선지 모두 조동사 must 뒤 동사원형 VP로 동일 통사 슬롯에 적합. ② 대입 완성문 'Clearly, to become a more peaceful person, you must value adaptability over strict adherence to predefined schedules.'는 문법적·자연스럽다. seam 비문·비단어·오탈자 없음. 발문은 표준 빈칸 발문.",
+    "V4": "해설의 담화 분석(전반부: 의문문 형식으로 go with the flow 강조 / 후반부: 계획 변경의 불가피성 수용 조언)이 실제 지문 구조와 일치. ① 해설(구조화 루틴 = 엄격함 범주), ③ 해설(전체 흐름과 무관한 이유 규명), ④ 해설(예시 vs 일반 원리), ⑤ 해설(예측불가 불가피성과 모순) 모두 해당 선지의 실제 내용과 정확히 대응. 문법 용어 오분석·환각·비단어·문장 귀속 오류 없음.",
+    "V5": "선언 정답 ②, 본해설 논증 대상 ②, 오답 해설 키 {①,③,④,⑤}로 정확히 여집합, keyPoints(rigidity/flexibility 대조, go with the flow, 일반 결론 vs 구체 예시 구분)가 해설과 모순 없음. 전 필드 동기화."
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "빈칸이 글의 주제문(우선시해야 할 태도 = flexibility over rigidity)을 정조준. 핵심 논리 지점.",
+    "C2": "네 오답이 각기 다른 함정 유형을 겨냥: ① polarity reversal(변화 '관리'로 위장한 rigidity), ③ scope shift(수용 대신 원인 진단), ④ half-truth/specific-for-general(예시의 일반화), ⑤ condition loss/false condition(예측 가능 조건 추가). 각자 source anchor 보유.",
+    "C3": "①(manage changes efficiently가 적응적으로 들림)과 ④(자녀 예시 직접 언급)는 실제 판단을 요구하나, ③은 즉시 소거 가능하고 ④'entirely'·⑤'only'의 절대어가 꼬리 소거를 허용해 만점 미달.",
+    "C4": "정답 근거는 충분하고 필연적이며 메타 누출은 없으나, 빈칸 직전 문장(go with the flow)이 정답을 거의 직결로 지시하고 절대어 tell이 약한 누출로 작동.",
+    "C5": "요청 난이도 KILLER 대비 명백한 하향 불일치. 빈칸 직전 한 문장의 paraphrase 인식만으로 풀리는 중하 난이도 문항. 함정 깊이·요구 사고 단계가 KILLER에 크게 미달.",
+    "C6": "해설은 정확하고 정답 근거와 핵심 함정(①)을 분리해 제시하나 다소 장황('결론이자 핵심 담화 역할' 등)하여 우아함 만점은 아님."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "polarity reversal — 지문이 배격하는 rigidity를 '변화의 효율적 관리'로 위장",
+      "temptingBecause": "'manage changes efficiently'가 지문의 'plans change' 문제의식에 대한 해법처럼 들리고, 계획 관리 담론에서 상식적으로 그럴듯함",
+      "decisiveFlaw": "structured routine 확립은 'stick to some rigid work schedule' 진영이며 'learning to go with the flow'와 정반대 극성"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 원문 span 'prioritize flexibility over rigidity most of the time'의 의미 보존 paraphrase",
+      "temptingBecause": "(정답) 앞문장의 go with the flow, 뒷문장의 expect plans will change 양쪽 단서와 정합",
+      "decisiveFlaw": "없음 — 유일 정답. 단, 추상화 수준이 원문의 근사 동의어 치환에 그쳐 KILLER 요구 대비 낮음"
+    },
+    {
+      "label": "③",
+      "intent": "scope shift — 불가피성 '수용'을 원인 '진단'이라는 분석적 행위로 치환",
+      "temptingBecause": "'priorities'가 지문의 'what your priorities are'를 축자 반향",
+      "decisiveFlaw": "지문은 우선순위 변동의 이유 규명을 어디서도 권하지 않으며, 결론은 변화의 수용이지 분석이 아님"
+    },
+    {
+      "label": "④",
+      "intent": "half-truth / specific-for-general — 일회성 예시를 일반 원리로 승격",
+      "temptingBecause": "'four-year-old' 예시가 지문에 직접 등장하고 필자가 가치 있게 여기는 선택지로 제시됨",
+      "decisiveFlaw": "자녀 가용성은 유연성의 예시일 뿐 일반 결론이 아니며 'entirely'가 과잉 절대화 — 절대어 tell로 소거 가능"
+    },
+    {
+      "label": "⑤",
+      "intent": "condition loss / false condition — 무조건적 수용에 예측 가능성 조건을 추가",
+      "temptingBecause": "'make allowances'를 지문에서 축자 재사용하여 표면 중첩이 큼",
+      "decisiveFlaw": "지문은 변화가 예측 불가한 불가피성이기 때문에 미리 여지를 두라는 것 — 'only when you can predict'는 그 전제와 직접 모순이며 'only'가 절대어 tell"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservedWithAbstraction": "부분 충족 — 의미는 보존하나 'flexibility→adaptability, rigidity→strict adherence to schedules'의 근사 동의어 치환 수준으로 KILLER급 추상화 미달",
+    "eachDistractorAnchorOverlapFlaw": true,
+    "twoSentenceCueRequired": "실패 — 빈칸 직전 문장 'learning to go with the flow?' 단일 단서만으로 정답 확정 가능",
+    "noSingleCuePick": "실패 — ④ 'entirely', ⑤ 'only'의 절대어 하나로 소거 가능",
+    "distinctTrapTypes": true
+  },
+  "grade": "C",
+  "notes": "유효성 5개 게이트는 모두 통과하는 깨끗한 문항이나, 요청 난이도 KILLER에 대한 정합이 결정적으로 실패한다. (1) 정답이 빈칸 직전 문장의 단일 단서 paraphrase로 즉시 도출되어 §D의 '최소 두 문장/두 논리 단서 연결' 조건 위반, (2) 정답 선지가 원문 span의 근사 동의어 치환이라 추상화 깊이 부족, (3) ④·⑤의 절대어(entirely/only)가 꼬리 소거를 허용. C5=1로 B 등급 최저선(C 최저 2)에 미달하여 등급 C. 오답 설계 자체(4종 상이 함정·anchor 보유)는 우수하므로, KILLER로 살리려면 빈칸 위치를 담화 재구성이 필요한 지점으로 옮기거나 정답의 추상화 수준을 올리고 절대어 tell을 제거하는 재설계가 필요하다."
+}

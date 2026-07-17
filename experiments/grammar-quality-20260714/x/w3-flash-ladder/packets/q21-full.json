@@ -1,0 +1,157 @@
+{
+  "passageId": "ebsi_go3_20150409_A-q22",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2015,
+    "exam": "4월",
+    "origType": "제목",
+    "words": 150
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=c  (C):ANS=b  (D):dec=a  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 64,
+        "relPos": 0.076,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 246,
+        "relPos": 0.291,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 306,
+        "relPos": 0.362,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 528,
+        "relPos": 0.624,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 677,
+        "relPos": 0.8,
+        "sentenceIndex": 3,
+        "found": true
+      }
+    ],
+    "sentenceCount": 5,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.8,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers; the latest evidence suggests that while it isn't ideal, it might help. When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability of insulin to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation causes, which is encouraging given how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping less and making up for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "Whether or not we can catch up on sleep - on the weekend, say - is a hotly debated topic among sleep researchers",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "sleep-restricted",
+        "isError": false,
+        "errorExpression": "sleep-restricted",
+        "surroundingText": "When Peter Liu, a UCLA sleep researcher, brought chronically sleep-restricted people into the lab",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "during which",
+        "isError": true,
+        "correction": "during which",
+        "errorExpression": "which",
+        "surroundingText": "for a weekend of sleep during which they slept about 10 hours per night, they showed improvements in the ability",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "causes",
+        "isError": false,
+        "errorExpression": "causes",
+        "surroundingText": "undo some but not all of the damage that sleep deprivation causes, which is encouraging",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "less",
+        "isError": false,
+        "errorExpression": "less",
+        "surroundingText": "Still, Liu isn't ready to endorse the habit of sleeping less and making up for it later.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "is"
+      },
+      {
+        "label": "(B)",
+        "text": "sleep-restricted"
+      },
+      {
+        "label": "(C)",
+        "text": "which"
+      },
+      {
+        "label": "(D)",
+        "text": "causes"
+      },
+      {
+        "label": "(E)",
+        "text": "less"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "Whether or not 명사절이 문장의 주어로 기능하므로 단수 취급을 하여 단수 동사인 is를 쓴 것은 어법상 맞습니다.",
+      "(B)": "명사 people을 수식하며 '수면이 제한된'이라는 수동의 의미를 나타내므로 과거분사 형용사인 sleep-restricted는 어법상 맞습니다.",
+      "(D)": "관계대명사 that절 안에서 주어인 단수 명사구 sleep deprivation에 호응하는 3인칭 단수 정동사 causes는 어법상 적절합니다.",
+      "(E)": "동명사 sleeping의 행위 정도나 상태를 수식하는 부사적 성격의 비교급 표현으로 less를 사용한 것은 어법상 적절합니다."
+    },
+    "explanation": "문장의 구조를 분석해 보면 'a weekend of sleep'을 수식하는 관계절이 이어지고 있습니다. 밑줄 친 부분 뒤의 절 'they slept about 10 hours per night'는 주어(they)와 완전한 자동사(slept)가 포함된 완전한 절입니다. 따라서 관계대명사 which만으로는 뒤의 완전한 절을 이끌 수 없으며, 시간의 의미를 나타내는 전치사를 더한 'during which'로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(C) 관계대명사 vs 전치사+관계대명사 — 뒤에 이르는 절의 완전성 여부로 판정",
+      "(A) 주어-동사 수일치 — 명사절 주어는 단수 동사를 취함",
+      "(B) 현재분사 vs 과거분사 — 수식받는 명사와의 능동·수동 관계 파악"
+    ],
+    "tags": [
+      "관계사",
+      "수일치",
+      "분사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Whether or not we can catch up on sleep - on the weekend, say - __(A) is__ a hotly debated topic among sleep researchers; the latest evidence suggests that while it isn't ideal, it might help. When Peter Liu, a UCLA sleep researcher, brought chronically __(B) sleep-restricted__ people into the lab for a weekend of sleep __(C) which__ they slept about 10 hours per night, they showed improvements in the ability of insulin to process blood sugar. That suggests that catch-up sleep may undo some but not all of the damage that sleep deprivation __(D) causes__, which is encouraging given how many adults don't get the hours they need each night. Still, Liu isn't ready to endorse the habit of sleeping __(E) less__ and making up for it later. \"It's like telling people you only need to eat healthy during the weekends, but during the week you can eat whatever you like,\" he says."
+  }
+}

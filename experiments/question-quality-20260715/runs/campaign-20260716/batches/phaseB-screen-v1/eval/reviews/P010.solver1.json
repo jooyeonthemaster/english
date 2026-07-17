@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "①",
+  "multipleDefensible": false,
+  "defensibleLabels": ["①"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "correct",
+      "reason": "빈칸은 'not simply to utilize technology for its own sake. Rather, it should be ___'의 대조 구문으로, 기술 사용의 진짜 목적 = 위대한 예술의 본질이 와야 한다. 지문이 정의한 'Great art challenges our perceptions of the world and forever changes our thoughts and feelings'를 'profound insights that challenge their conventional worldviews'로 정확히 패러프레이즈. seam(it should be + to부정사)도 자연스럽고 논리 적합성 완벽."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "대중 참여 확대와 편집 소프트웨어 접근성은 지문 도입부의 '현상' 서술이지 예술가의 목표가 아니며, 오히려 비평가들이 우려하는 상황이다. 첫 문장 어휘(digital editing, produce and share)를 재활용한 표면 매칭 미끼로 초반 스캔 시 실제로 눈이 갔지만, 빈칸이 묻는 것은 '예술가의 goal'이므로 현상/목표 혼동으로 탈락."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "최첨단 기술 매체의 숙달·기교 과시는 바로 앞 문장이 부정한 'utilize technology for its own sake'의 재진술이므로 'not A, Rather A'의 모순이 된다. '현대 예술가는 기술을 마스터해야 한다'는 상식 스키마에 기대는 유혹적 미끼 — Rather 대조 표지를 놓친 수험생을 정확히 겨냥한다."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "지문은 신기술을 'tools that can be used in the creative process'로 긍정적으로 규정했으므로 '디지털 기기의 간섭을 일절 배제(avoiding any interference)'는 지문과 정면 모순. 비평가의 우려를 읽고 반기술 결론으로 비약하면 잠깐 끌리지만 극단 표현(strictly, any)이 결정적 탈락 근거."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "비평가는 우려의 주체로만 등장하며, 예술의 목표가 '비평가의 요구 충족'이라는 논리는 지문에 없다. '보수적 미의 기준으로의 회귀(reverting to conservative standards of beauty)' 역시 무근거 — 지문은 전통 회귀가 아니라 기술을 도구 삼아 인식에 도전하는 예술을 지향하라고 말한다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 'not A. Rather B' 대조 표지 + 지문 내 great art 정의 문장(challenges our perceptions / changes our thoughts and feelings)을 잡으면 ①로 즉시 수렴. 유혹 기록 — ②는 도입부 어휘 표면 매칭으로 초반에 끌렸고(현상↔목표 혼동 미끼), ③은 '기술 시대 예술가 = 기술 마스터' 스키마로 끌렸으나 for its own sake의 재진술임을 확인하고 배제. ④⑤는 극단·무근거 표현으로 상위권 기준 즉시 배제. 대안 해석 적극 탐색: ②를 '기술 민주화 자체가 예술적 목적'으로 옹호 시도 → 지문이 이를 비평가 우려의 대상으로 제시해 성립 불가; ④를 '위대한 예술 수호 = 전통 회귀'로 옹호 시도 → 'tools that can be used' 명시와 모순되어 성립 불가. 다섯 선지 모두 to부정사로 문법 결합(seam) 이상 없음 — 변별은 순수 논리. 단일 정답 ①로 옹호 가능, 문항 품질 양호."
+}

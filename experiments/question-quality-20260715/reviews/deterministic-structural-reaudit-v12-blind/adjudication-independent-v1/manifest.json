@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "study": "deterministic-structural-reaudit-v12-blind/adjudication-independent-v1",
+  "verdict": "PASS",
+  "files": {
+    "README.md": {
+      "sha256": "49e92b0bdff26a1e2a01db9b28c83c61e89d93ed6c3af6f1d97ce9880a59649e",
+      "bytes": 6978
+    },
+    "adjudication.json": {
+      "sha256": "cafab240581e4656ce2c4d1bf17f160e6d8278a13a035660892780206eefab12",
+      "bytes": 145435
+    },
+    "build-adjudication.mjs": {
+      "sha256": "ff6a0ed91a5e474131a30361fdf972bdd6c555e5ebae5a59074ea625f2b303f9",
+      "bytes": 23326
+    },
+    "finalize-manifest.mjs": {
+      "sha256": "48004c24f61d9402e46421bef427b4fee003a4f29d610868099501aadaf1b847",
+      "bytes": 1021
+    },
+    "production-certificates.mts": {
+      "sha256": "a13c5a75c6976f6689311f345d51c4fba7654cfbf704b680572f2ca70a508ea2",
+      "bytes": 23980
+    },
+    "tsconfig.json": {
+      "sha256": "5eef9e4f9265f26d1c6d75ad93990305f617b39c7c547a63716aced6fca13c83",
+      "bytes": 167
+    },
+    "verify.mjs": {
+      "sha256": "5e26449c639d04c231de3ce07d4475d416236c402984a9549c5f40935002cab5",
+      "bytes": 15264
+    }
+  }
+}

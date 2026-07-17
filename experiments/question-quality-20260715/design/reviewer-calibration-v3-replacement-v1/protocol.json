@@ -1,0 +1,537 @@
+{
+  "schemaVersion": "reviewer-calibration-v3-replacement-protocol-1",
+  "artifactId": "reviewer-calibration-v3-replacement-v1",
+  "status": "DESIGN_ONLY_UNISSUED",
+  "purpose": "Qualify production-question reviewers to identify answer truth, fatal validity defects, craft quality, grammar diagnostics with accepted equivalence, and blank-option proposition relations without leaking author intent.",
+  "sourceBoundary": {
+    "allowedInputs": [
+      {
+        "path": "../evaluator-rubric-identifiability-v1/REPORT.md",
+        "sha256": "2444a6431dbf686fcb8c726ce555f8aa480dc1954568226107777d4a51a36442"
+      },
+      {
+        "path": "../evaluator-rubric-identifiability-v1/rubric-v3-proposal.json",
+        "sha256": "d0fb4df70881617bb04ecde4b4fc35cec0ab61d8f56986e7ccee47e3516356fd"
+      },
+      {
+        "path": "../reviewer-calibration-packet-v2/packet-public.json",
+        "sha256": "cb84231ce1c070b855542acf51159ebded6e231ff89816eb32d0cf7e869d2533"
+      },
+      {
+        "path": "../reviewer-calibration-packet-v2/private/issued/adjudicator-c/phase3/report.json",
+        "sha256": "9d679aeaf4839a0ab39e7be11dbe680182c39db7e31e91f170a8ae3ce748fcfe"
+      }
+    ],
+    "ignoredEvenIfPresentInAllowedInput": [
+      "/composition/authorHypothesisByBlock",
+      "/rows/*/authorHypothesis",
+      "/itemSummary/*/authorHypothesis"
+    ],
+    "forbiddenInputs": [
+      "trusted gold",
+      "pending gold",
+      "final-gold proposal contents",
+      "author hypotheses",
+      "private question surfaces",
+      "secrets"
+    ]
+  },
+  "observedV2Evidence": {
+    "finalComposition": {
+      "GRAMMAR": { "A": 2, "B": 2, "C": 2, "F": 2 },
+      "BLANK": { "A": 2, "B": 2, "C": 2, "F": 2 },
+      "NONFOCUS": { "A": 0, "B": 0, "C": 3, "F": 5 }
+    },
+    "compositionEligible": false,
+    "blankOptionAgreementByRater": [0.88, 0.685, 0.735],
+    "blankAxisAgreementByRater": [1, 1, 1],
+    "nonfocusBlindSolveAgreementByRater": [0.625, 0.875, 1],
+    "interpretation": "Correct-answer and fatal constructs were more identifiable than free-form option diagnostics; nonfocus outcome balance could not be treated as author-controlled truth."
+  },
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0,
+    "estimatedProviderCostUsd": 0
+  },
+  "responseContract": {
+    "answerDiscriminants": [
+      "SINGLE_LABEL",
+      "MULTIPLE_LABELS",
+      "SINGLE_TEXT",
+      "MULTIPLE_TEXTS",
+      "NO_ANSWER",
+      "UNEVALUABLE"
+    ],
+    "answerRules": {
+      "constructedSyntheticLabelsForbidden": true,
+      "exactTextHashesBound": true,
+      "normalizedDuplicateTextRejected": true,
+      "answerSetOrderInsensitive": true,
+      "multipleAnswersMustBeExplicitlyRepresented": true
+    },
+    "fatalCodes": [
+      "NO_VALID_ANSWER",
+      "MULTIPLE_VALID_ANSWERS_UNDISCLOSED",
+      "SOURCE_OR_STEM_CONTRADICTION",
+      "UNGRAMMATICAL_REQUIRED_ANSWER",
+      "INVALID_MARKED_SITE",
+      "EXPLANATION_REVERSES_OR_INVENTS_RULE",
+      "ANSWER_EXPLANATION_DESYNCHRONIZED",
+      "UNAUTHORIZED_SOURCE_OR_PII",
+      "UNRENDERABLE_RESPONSE_SPACE"
+    ],
+    "craftDimensions": [
+      "intentionality",
+      "distractorPlausibility",
+      "diagnosticSeparation",
+      "difficultyCalibration",
+      "surfaceNaturalness",
+      "explanationEconomyAndTruth"
+    ],
+    "craftScale": {
+      "min": 0,
+      "max": 3,
+      "anchors": {
+        "0": "defective or construct-irrelevant",
+        "1": "valid but conspicuously weak",
+        "2": "competent and purposeful",
+        "3": "exceptionally clean, discriminating, and economical"
+      }
+    },
+    "gradeDecision": {
+      "authorReceivesTargetGrade": false,
+      "authorHypothesisIsEvidence": false,
+      "F": "Any adjudicated fatal code.",
+      "C": "No fatal code, but at least one craft dimension is 0 or the item has a major remediable weakness.",
+      "B": "Valid and competent, with no dimension 0 and no unresolved major weakness.",
+      "A": "Valid, all dimensions at least 2, at least three dimensions at 3, and no cheap giveaway or verbose/extraneous explanation.",
+      "boundaryRule": "Adjudicators record dimension evidence first and assign the grade last; they may not change evidence to fill a composition cell."
+    }
+  },
+  "grammarConstruct": {
+    "siteFields": {
+      "displayedGrammaticality": ["GRAMMATICAL", "UNGRAMMATICAL", "GENUINELY_CONTESTED"],
+      "diagnosis": ["ANSWER_ERROR", "VALID_DECOY", "INVALID_SITE"],
+      "acceptedPointFamilies": "non-empty sealed set for a diagnosed error; empty only for a valid decoy",
+      "acceptedCorrectionEquivalenceSets": "sealed set of one or more semantic-equivalence groups",
+      "correctionRestoresSource": "boolean",
+      "explanationClaimsAccurate": "boolean"
+    },
+    "nonCompensableFields": [
+      "displayedGrammaticality",
+      "diagnosis",
+      "correctionRestoresSource",
+      "explanationClaimsAccurate"
+    ],
+    "equivalenceRules": {
+      "singletonPointFamilyRequired": false,
+      "exactCorrectionStringRequired": false,
+      "acceptedFamilyScoring": "A rater response passes when its normalized family is a member of the item-sealed accepted set.",
+      "acceptedCorrectionScoring": "A correction passes only when it is a member of a sealed group and preserves source meaning while repairing the diagnosed form.",
+      "normalizationMayChangeMeaning": false,
+      "postIssueExpansionAllowed": false
+    },
+    "anchorCoverage": {
+      "certificationItems": 8,
+      "minimumDistinctPointFamilySets": 5,
+      "minimumMultiFamilyAcceptedItems": 2,
+      "minimumMultiCorrectionEquivalenceItems": 2,
+      "invalidSiteAnchorsMinimum": 1,
+      "genuinelyContestedAnchorsMaximum": 1
+    }
+  },
+  "blankConstruct": {
+    "propositionAxes": [
+      "actorOrTarget",
+      "polarity",
+      "conditionOrModality",
+      "causalRelationAndDirection",
+      "scopeOrQuantifier",
+      "stance",
+      "temporalRelation"
+    ],
+    "axisRelationEnum": [
+      "PRESERVED",
+      "REVERSED",
+      "NARROWED",
+      "BROADENED",
+      "OMITTED",
+      "UNSUPPORTED_ADDITION",
+      "SHIFTED",
+      "NOT_APPLICABLE"
+    ],
+    "optionFields": [
+      "slotGrammarCompatible",
+      "groundedInPassage",
+      "relationVector",
+      "decisiveAxes",
+      "mechanismTags",
+      "studentPlausibilityEvidence",
+      "cheapGiveaway"
+    ],
+    "mechanismTagRegistry": [
+      "scope_shift",
+      "causal_reversal",
+      "actor_swap",
+      "polarity_reversal",
+      "condition_drop",
+      "modality_inflation",
+      "unsupported_specificity",
+      "half_truth",
+      "temporal_shift",
+      "stance_shift",
+      "lexical_echo",
+      "category_error"
+    ],
+    "rules": {
+      "singletonPrimaryIntentRequired": false,
+      "everyOptionHasAllSevenAxes": true,
+      "decisiveAxesMin": 1,
+      "decisiveAxesMax": 2,
+      "moreThanTwoDecisiveAxes": "REJECT_AS_IRREDUCIBLE_COMPOUND",
+      "correctAnswerPreservesAllMandatoryAxes": true,
+      "eachDistractorDivergesOnAtLeastOneDecisiveAxis": true,
+      "slotGrammarCompatibleIsNonCompensable": true,
+      "uniqueAnswerIsNonCompensable": true,
+      "postIssueEquivalenceExpansionAllowed": false
+    },
+    "anchorCoverage": {
+      "certificationItems": 8,
+      "allSevenAxesMustAppearAsDecisiveAcrossPacket": true,
+      "minimumMultiDecisiveDistractors": 8,
+      "minimumDistinctMechanismTags": 8,
+      "killerItemsWithNoLexicalGiveawayMinimum": 2
+    }
+  },
+  "nonfocusConstruct": {
+    "claimBoundary": "Eight anchors qualify construct-family transfer, not independent accuracy for each of 23 production types.",
+    "productionBinding": {
+      "requiredBeforeAuthoring": true,
+      "source": "frozen production question-type registry",
+      "exactCount": 23,
+      "missingOrDuplicateBinding": "BLOCK_ISSUANCE",
+      "outcomeAwareRemappingForbidden": true
+    },
+    "families": [
+      {
+        "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+        "logicalTypes": ["PURPOSE", "CLAIM", "GIST", "TOPIC", "TITLE"]
+      },
+      {
+        "familyId": "NF-F2-LOCAL_EVIDENCE_SELECTION",
+        "logicalTypes": ["CONTENT_MATCH", "CONTENT_MISMATCH", "INFERENCE"]
+      },
+      {
+        "familyId": "NF-F3-DATA_AND_FUNCTIONAL_TEXT",
+        "logicalTypes": ["CHART", "PRACTICAL_INFO"]
+      },
+      {
+        "familyId": "NF-F4-AFFECT_AND_LEXIS",
+        "logicalTypes": ["MOOD", "VOCABULARY_CONTEXT", "SYNONYM"]
+      },
+      {
+        "familyId": "NF-F5-DISCOURSE_STRUCTURE",
+        "logicalTypes": ["IRRELEVANT_SENTENCE", "SENTENCE_ORDER", "SENTENCE_INSERTION"]
+      },
+      {
+        "familyId": "NF-F6-COMPRESSION_AND_TRANSFORMATION",
+        "logicalTypes": ["SUMMARY_COMPLETION", "SENTENCE_TRANSFORM"]
+      },
+      {
+        "familyId": "NF-F7-LANGUAGE_FORM_CONSTRUCTION",
+        "logicalTypes": ["GRAMMAR_CHOICE_COMBO", "GRAMMAR_CORRECTION", "WORD_ORDER"]
+      },
+      {
+        "familyId": "NF-F8-OPEN_OR_COMPOSITE_RESPONSE",
+        "logicalTypes": ["SHORT_ANSWER", "MULTI_ITEM_COMPOSITE"]
+      }
+    ],
+    "eightAnchorRepresentation": {
+      "rule": "Exactly one independently authored anchor from each family.",
+      "withinFamilySelection": "Choose the least-recently represented bound production type; break ties by precommitted SHA-256 order.",
+      "rotationLedgerRequired": true,
+      "allTypeAuthorization": "No all-23-type claim until every bound type has appeared in a fresh main or holdout anchor and passed its own answer/fatal checks.",
+      "maximumEpochsToTouchAllLogicalTypesIfTwoFreshRepresentativesPerFamilyPerEpoch": 3
+    }
+  },
+  "roleSeparation": {
+    "roles": [
+      "AUTHOR",
+      "PREFLIGHT_SCHEMA_RIGHTS",
+      "PREFLIGHT_DOMAIN",
+      "BLIND_PILOT_SOLVER_1",
+      "BLIND_PILOT_SOLVER_2",
+      "ANCHOR_ADJUDICATOR_1",
+      "ANCHOR_ADJUDICATOR_2",
+      "ANCHOR_TIEBREAKER",
+      "CERTIFICATION_RATER_1",
+      "CERTIFICATION_RATER_2",
+      "CERTIFICATION_RATER_3"
+    ],
+    "incompatibilities": [
+      ["AUTHOR", "PREFLIGHT_DOMAIN"],
+      ["AUTHOR", "BLIND_PILOT_SOLVER_1"],
+      ["AUTHOR", "BLIND_PILOT_SOLVER_2"],
+      ["AUTHOR", "ANCHOR_ADJUDICATOR_1"],
+      ["AUTHOR", "ANCHOR_ADJUDICATOR_2"],
+      ["AUTHOR", "ANCHOR_TIEBREAKER"],
+      ["AUTHOR", "CERTIFICATION_RATER_1"],
+      ["AUTHOR", "CERTIFICATION_RATER_2"],
+      ["AUTHOR", "CERTIFICATION_RATER_3"],
+      ["BLIND_PILOT_SOLVER_1", "CERTIFICATION_RATER_1"],
+      ["BLIND_PILOT_SOLVER_2", "CERTIFICATION_RATER_2"],
+      ["ANCHOR_ADJUDICATOR_1", "CERTIFICATION_RATER_1"],
+      ["ANCHOR_ADJUDICATOR_2", "CERTIFICATION_RATER_2"]
+    ],
+    "identitySaltedPseudonyms": true,
+    "authorIdentityVisibleToRaters": false
+  },
+  "anchorAcquisition": {
+    "appliesToBlocks": ["GRAMMAR", "BLANK", "NONFOCUS"],
+    "requiredFinalAnchorsPerBlock": 8,
+    "initialCandidatePoolPerBlock": 16,
+    "maximumCandidatesAdjudicatedPerBlockPerVersion": 64,
+    "candidateOrder": "Commit candidate IDs and SHA-256 order before any blind-pilot response or grade is opened.",
+    "stages": [
+      "independent original authoring from a construct/risk brief that contains no target grade",
+      "schema, rights, PII, answer-space, and rendering preflight",
+      "independent domain preflight without author diagnosis",
+      "two-solver blind answer and focus-diagnostic pilot",
+      "evidence adjudication without majority vote or author authority",
+      "seal answer sets, fatal evidence, craft evidence, grammar equivalences, and blank vectors",
+      "apply deterministic first-to-fill composition selection"
+    ],
+    "preflightRejectCodes": [
+      "SCHEMA_INVALID",
+      "RIGHTS_OR_PII_RISK",
+      "DUPLICATE_OR_TOPIC_LEAKAGE",
+      "RESPONSE_SPACE_UNRENDERABLE",
+      "AUTHOR_DIAGNOSIS_LEAKED",
+      "PRODUCTION_TYPE_UNBOUND",
+      "BLIND_SOLVERS_FIND_UNRESOLVABLE_AMBIGUITY",
+      "EQUIVALENCE_SET_NOT_SEALABLE"
+    ],
+    "revisionRule": "Any surface, answer, explanation, or diagnostic edit creates a new candidate ID at the tail; in-place repair is forbidden.",
+    "rejectedCandidateLedgerPublicMetadata": [
+      "candidateIdHash",
+      "block",
+      "poolOrdinal",
+      "stage",
+      "reasonCode",
+      "replacementIdHash"
+    ]
+  },
+  "compositionSampling": {
+    "mainCertificationTargetPerBlock": { "A": 2, "B": 2, "C": 2, "F": 2 },
+    "fatalCountPerBlock": 2,
+    "selectionRule": "Within each block and adjudicated grade, take the first two eligible candidates in the precommitted hash order.",
+    "surplusRule": "Log and exclude surplus candidates; never relabel, rewrite, or move evidence to another grade.",
+    "missingCellRule": "Issue a new grade-neutral construct/risk brief, append new candidates after the frozen pool tail, and repeat preflight and blind pilot.",
+    "attemptLimitRule": "If any block lacks two anchors in any grade after 64 adjudicated candidates, fail this packet version; do not loosen truth or thresholds.",
+    "prevalenceDisclaimer": "The resulting 2/2/2/2 spectrum is outcome-stratified calibration sampling and must never estimate production grade prevalence."
+  },
+  "taxonomyPilot": {
+    "items": 12,
+    "byBlock": { "GRAMMAR": 4, "BLANK": 4, "NONFOCUS": 4 },
+    "raters": 3,
+    "disjointFromMainAndHoldout": true,
+    "acceptedEquivalenceSetsSealedBeforeIssue": true,
+    "authorHypothesesExcluded": true,
+    "thresholdsPerRater": {
+      "blindAnswerExactMinimum": { "numerator": 11, "denominator": 12 },
+      "fatalExactMinimum": { "numerator": 11, "denominator": 12 },
+      "fatalSensitivity": { "numerator": 3, "denominator": 3 },
+      "gradeQuadraticWeightedKappaMinimum": 0.8,
+      "grammarNonCompensableExactMinimum": 0.95,
+      "grammarAcceptedFamilyMembershipMinimum": 0.9,
+      "blankRelationCellExactMinimum": 0.9,
+      "blankDecisiveAxesMeanJaccardMinimum": 0.8,
+      "blankMechanismTagsMeanJaccardMinimum": 0.75,
+      "focusFieldCompleteness": 1
+    },
+    "groupThresholds": {
+      "pairwiseAnswerAgreementMinimum": 0.9,
+      "pairwiseFatalAgreementMinimum": 0.9,
+      "minimumPairwiseGradeQwk": 0.75,
+      "systematicSameNovelLabelCountAllowed": 0
+    },
+    "revisionLoop": {
+      "maximumPilotVersions": 2,
+      "allowedRevision": "Clarify construct definitions, split demonstrably overloaded labels, and add non-item-specific examples.",
+      "forbiddenRevision": "Change an issued item truth, add a response to an issued accepted set, or tune wording to a named rater.",
+      "failureAction": "Freeze the failed evidence, issue a new version with 12 fresh anchors, and rerun all three raters; a second failure blocks certification."
+    }
+  },
+  "mainCertification": {
+    "items": 24,
+    "byBlock": { "GRAMMAR": 8, "BLANK": 8, "NONFOCUS": 8 },
+    "raters": 3,
+    "freshAfterTaxonomyPilot": true,
+    "acceptedEquivalenceSetsSealedBeforeIssue": true,
+    "blindPhases": [
+      "phase 1: solve from surface only and cryptographically seal response",
+      "phase 2: reveal stored answer/explanation as evidence and record diagnostics without other raters",
+      "phase 3: evidence adjudication only after all phase-2 records are sealed"
+    ],
+    "thresholdsPerRater": {
+      "blindAnswerExactMinimum": { "numerator": 23, "denominator": 24 },
+      "eachBlockBlindAnswerExactMinimum": { "numerator": 7, "denominator": 8 },
+      "fatalExactMinimum": { "numerator": 23, "denominator": 24 },
+      "fatalSensitivity": { "numerator": 6, "denominator": 6 },
+      "fatalSpecificityMinimum": { "numerator": 17, "denominator": 18 },
+      "eachBlockFatalSensitivity": { "numerator": 2, "denominator": 2 },
+      "gradeQuadraticWeightedKappaMinimum": 0.8,
+      "eachBlockGradeQwkMinimum": 0.65,
+      "exactGradeMinimum": { "numerator": 20, "denominator": 24 },
+      "focusFieldCompleteness": 1,
+      "grammarNonCompensableExact": 1,
+      "grammarAcceptedFamilyMembershipMinimum": { "numerator": 7, "denominator": 8 },
+      "grammarAcceptedCorrectionMembershipMinimum": { "numerator": 7, "denominator": 8 },
+      "blankMandatoryAnswerAxisExact": 1,
+      "blankRelationCellExactMinimum": 0.95,
+      "blankDecisiveAxesMeanJaccardMinimum": 0.85,
+      "blankMechanismTagsMeanJaccardMinimum": 0.8,
+      "craftDimensionMeanAbsoluteErrorMaximum": 0.5,
+      "craftDimensionAbsoluteErrorAboveOneAllowed": 0
+    },
+    "groupThresholds": {
+      "gwetAc1FatalMinimum": 0.85,
+      "minimumPairwiseGradeQwk": 0.7,
+      "pairwiseAnswerAgreementMinimum": 0.9,
+      "pairwiseFatalAgreementMinimum": 0.9
+    },
+    "certificateScope": "A passing reviewer is provisionally qualified at construct-family level only; activation requires the fresh holdout."
+  },
+  "freshActivationHoldout": {
+    "items": 24,
+    "byBlock": { "GRAMMAR": 8, "BLANK": 8, "NONFOCUS": 8 },
+    "fatalRiskEnrichment": { "fatal": 12, "nonfatal": 12, "fatalPerBlock": 4 },
+    "disjointFromPilotMainAndPriorHoldouts": true,
+    "disjointnessChecks": [
+      "normalized exact text",
+      "hashed eight-word windows",
+      "topic tag",
+      "scenario entity tuple",
+      "author identity",
+      "surface template fingerprint"
+    ],
+    "oneTimeIssuePerRater": true,
+    "taxonomyRevisionAfterOpeningForbidden": true,
+    "thresholdsPerRater": {
+      "blindAnswerExactMinimum": { "numerator": 23, "denominator": 24 },
+      "fatalExactMinimum": { "numerator": 23, "denominator": 24 },
+      "fatalSensitivity": { "numerator": 12, "denominator": 12 },
+      "fatalSpecificityMinimum": { "numerator": 11, "denominator": 12 },
+      "gradeQuadraticWeightedKappaMinimum": 0.8,
+      "focusFieldCompleteness": 1,
+      "grammarNonCompensableExact": 1,
+      "blankMandatoryAnswerAxisExact": 1,
+      "blankRelationCellExactMinimum": 0.95
+    },
+    "failureAction": "Do not activate the certificate. Remediate against aggregate error classes only, then use a fully fresh holdout version; never replay failed items."
+  },
+  "powerAndLimits": {
+    "mainAnyErrorDetectionProbability": {
+      "n": 24,
+      "atTrueErrorRate0.05": 0.7080109757,
+      "atTrueErrorRate0.10": 0.9202335569,
+      "atTrueErrorRate0.15": 0.9797672825,
+      "atTrueErrorRate0.20": 0.9952776335
+    },
+    "mainPlusHoldoutAnyErrorDetectionProbability": {
+      "n": 48,
+      "atTrueErrorRate0.05": 0.914742409,
+      "atTrueErrorRate0.10": 0.9936373146,
+      "atTrueErrorRate0.15": 0.9995904705,
+      "atTrueErrorRate0.20": 0.9999776993
+    },
+    "fatalMissDetectionProbabilityAcross18FatalAnchors": {
+      "n": 18,
+      "atTrueMissRate0.10": 0.8499053647,
+      "atTrueMissRate0.15": 0.9463535905,
+      "atTrueMissRate0.20": 0.9819856015
+    },
+    "perBlockMainPlusHoldoutDetectionProbability": {
+      "n": 16,
+      "atTrueErrorRate0.10": 0.8146979811,
+      "atTrueErrorRate0.15": 0.9257487571,
+      "atTrueErrorRate0.20": 0.9718525023
+    },
+    "limitations": [
+      "Twenty-four main anchors cannot establish type-specific accuracy for 23 nonfocus types.",
+      "Outcome-stratified composition cannot estimate production prevalence.",
+      "Small fatal counts justify zero-miss gates but not a narrow confidence interval on sensitivity.",
+      "Production authorization therefore also requires rotating type coverage and ongoing fresh audits."
+    ]
+  },
+  "adjudication": {
+    "majorityVoteIsAuthority": false,
+    "storedAnswerIsAuthority": false,
+    "authorExplanationIsAuthority": false,
+    "evidenceClasses": [
+      "RATER_ERROR",
+      "GOLD_EQUIVALENCE_OMISSION",
+      "TAXONOMY_AMBIGUITY",
+      "ITEM_AMBIGUITY",
+      "BINDING_OR_HASH_ERROR"
+    ],
+    "protocol": [
+      "Canonicalize responses without exposing identities.",
+      "Resolve answer truth and noncompensable validity from passage, stem, and response space.",
+      "Evaluate grammar corrections by sealed semantic-equivalence groups and blank options by the sealed seven-axis vectors.",
+      "Record evidence and counterevidence before final label.",
+      "Use a fresh tiebreaker only when two adjudicators give incompatible evidence findings.",
+      "Preserve every original response and every superseded decision in an append-only ledger."
+    ],
+    "goldDefectRule": "A valid response omitted from a pre-sealed accepted set invalidates that anchor for scoring. It may not be silently added after issue.",
+    "systematicDisagreementRule": "The same novel response from at least two raters triggers gold-defect review, not automatic acceptance and not automatic rater failure."
+  },
+  "failureProtocol": {
+    "failClosedConditions": [
+      "hash or binding mismatch",
+      "role-separation violation",
+      "author-hypothesis leakage",
+      "unsealed equivalence or relation vectors",
+      "composition cell missing after the attempt limit",
+      "post-issue item or codebook mutation",
+      "packet overlap with pilot, main, holdout, or production evaluation sample",
+      "taxonomy pilot fails twice"
+    ],
+    "packetLevelFailure": "No reviewer certificate is issued; increment protocol version and use fresh items.",
+    "individualRaterFailure": "Do not certify that rater; remediation may use only aggregate taxonomy error classes, followed by a fresh packet.",
+    "noRetroactivePass": true,
+    "noThresholdRelaxationAfterOpening": true,
+    "noRejectedCandidateDeletion": true
+  },
+  "sealingAndLeakage": {
+    "preIssueSealedArtifacts": [
+      "surface bundle",
+      "answer-equivalence bundle",
+      "fatal and craft evidence bundle",
+      "grammar point-family and correction-equivalence bundle",
+      "blank seven-axis and decisive-set bundle",
+      "candidate-order and rejection ledger",
+      "production-type binding and rotation ledger",
+      "codebook and thresholds"
+    ],
+    "hashAlgorithm": "SHA-256",
+    "blindPacketExcludes": [
+      "stored answer",
+      "author explanation",
+      "author hypothesis",
+      "target grade",
+      "other rater responses",
+      "accepted sets",
+      "relation vectors",
+      "rejection history"
+    ],
+    "phaseBinding": "Each response binds item hash, packet hash, codebook hash, reveal hash, rater pseudonym, and phase number.",
+    "leakageResponse": "Quarantine the affected rater and packet; do not substitute another rater into the opened packet."
+  }
+}

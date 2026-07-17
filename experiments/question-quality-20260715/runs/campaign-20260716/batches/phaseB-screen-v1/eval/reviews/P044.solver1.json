@@ -1,0 +1,35 @@
+{
+  "pid": "P044",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'One of the most common mistakes made by organizations...'에서 made는 mistakes를 수식하는 과거분사(축약 관계절 which are made). 문장의 진짜 정동사는 뒤의 is이므로 'is made'로 바꿀 필요가 없다. 순간적으로 'mistakes (which are) made... is'의 수일치를 의심하게 만드는 미끼지만, One of + 복수명사 구조에서 주어 핵은 One이므로 is가 맞고 made는 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "that절 내부 구조: 주어는 동명사구 'creating a social media program'이고 그 뒤에 정동사가 와야 한다. beginning을 두면 that절 전체에 정동사가 없어 비문이 된다. begins로 고쳐 'creating a social media program begins not with A but with B'가 되어야 함. 대안 해석 검토: beginning을 program을 수식하는 현재분사로 읽으면 that절이 'that + 명사구'로 끝나 술어가 사라지므로 어떤 해석으로도 정문이 되지 않는다. not with A but with B 병렬이 begin with와 자연스럽게 결합하는 것도 begins를 지지."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "because 뒤에 완전한 절 \"everyone else is doing it\"이 오므로 접속사 because가 어법상 옳다. because of(전치사구)와의 구별을 노린 자리이나 뒤가 절이므로 문제없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "주어 \"Being in social media\"는 동명사구로 단수 취급 → 단수동사 serves가 맞다. 인용부호 속 -ing 주어를 보고 복수/원형을 떠올리게 하는 수일치 미끼지만 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "must either solve ... or result in ...: 조동사 must 뒤 either A or B 병렬에서 두 원형동사 solve/result가 정확히 대구를 이룬다. 병렬 시작점이 must 바로 뒤이므로 원형 solve가 옳다. 'a social media presence must ... solves'류의 수일치 착각을 유도하나 조동사 뒤 원형이 규칙."
+    }
+  ],
+  "note": "최상위권 실전 풀이 관점: 가장 유혹적인 오답은 (A)(축약 관계절 made를 본동사로 착각)와 (D)(동명사 주어 수일치)였으나, 각각 지배 규칙(선행사 수식 분사, 동명사구 단수 취급)을 확인하면 정문으로 확정된다. (B)는 that절의 진짜 주어(creating...program)에 대응하는 정동사가 부재하다는 장거리 단서로 유일하게 비문. 정답이 (B) 하나로 명확히 좁혀지는 깨끗한 문항. 참고로 이 지문/구조는 실제 수능 기출(2016학년도 수능 어법)과 동일한 소재로 보이며, 그 문항에서도 begins 자리가 정답이었다."
+}

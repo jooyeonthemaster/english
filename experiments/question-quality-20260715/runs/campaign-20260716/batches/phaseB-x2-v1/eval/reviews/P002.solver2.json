@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 seam은 성립(it = 습관/첫 과업, be의 보어 명사구)하나 논리 인과가 역전된다. 지문에서 아침의 높은 에너지는 습관의 전제조건('I generally wake up energized')이지 습관이 만들어내는 결과가 아니다. 또한 지문이 다루는 것은 미루기로 인한 emotional energy 낭비 방지이지 physical energy 증진이 아니므로 'So'가 이끄는 결론 자리에서 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법: 단수 명사구 'the most demanding problem' + 제한적 관계절 'that needs prompt resolution'(선행사 단수 일치 needs 정상)이 be 보어 자리에 정상 결합. 논리: 'eating my problems for breakfast' 은유(최고 에너지 시간대인 아침에 가장 어려운 문제를 즉시 처리)와 정확히 정합하고, 미루면 실제 처리 시간보다 걱정·회피에 더 많은 감정 에너지를 쓴다는 논증에서 'So'로 자연 도출되며, 마지막 문장 'be strategic about scheduling your difficult work later in the day'의 대조(비아침형은 늦게 ↔ 필자는 가장 먼저)와도 평행 대응. 유일 성립."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "협상(negotiating) 개념이 지문에 전혀 없고, 'avoid'는 오히려 저자가 에너지 낭비의 원인으로 비판하는 행동이다(avoiding it이 낭비 목록에 포함). 'unhappy client' 표면 어휘를 재활용한 미끼로, 주제(에너지 수준-과업 매칭)와 무관."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "지문 논지와 정면 모순. 저자는 미루기(procrastinate)가 감정 에너지를 낭비하고 실제 처리 비용보다 더 큰 비용을 낳는다고 논증했으므로 '어려운 선택을 미루는 기술이 더 나은 결과를 낳는다'는 명제는 'So' 뒤 결론 자리에서 논리적으로 성립 불가능한 반의 미끼."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'a simple task'가 핵심 전제(분석적·부담스러운 과업을 최고 에너지 시간대에 배치)와 모순. 'unpleasant email' 표면 어휘를 재활용했으나 지문의 요점은 '불쾌해서 미루게 되는 demanding한 문제'이지 단순 일정 관리·회신 작업이 아니며, 마지막 문장의 difficult work 대응도 깨진다."
+    }
+  ],
+  "note": "빈칸 문장 'So for me, it'll always be ___'의 it은 은유상 '아침으로 먹는 것(=하루의 첫 과업)'으로 해소되며, ② 삽입 시 '내가 가장 먼저 처리할 것은 언제나 즉시 해결이 필요한 가장 부담스러운 문제'로 문법·논리 모두 매끄럽다. 결정적 장거리 단서는 마지막 대조 문장(비아침형 → difficult work를 늦게 배치)으로, 필자는 difficult work를 가장 먼저 처리한다는 내용만 빈칸에 적합. it의 지시 대상 재설정, 축약 관계절 등 대안 해석을 적극 탐색해도 ①③④⑤가 정합이 되는 경로는 없음. 단일 정답 수렴, 복수 옹호 가능 정답 없음."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Plural subject 'Inefficient teachers' + plural finite verb 'overlook' with direct object 'the potential power...'. Subject-verb agreement and transitivity both satisfied; no alternative parse makes it deviant."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "In 'there are many pressing demands on a teacher's time', 'pressing' is an active attributive participial adjective ('urgent') modifying the plural head 'demands'. Active participle is semantically required (demands press on one's time); '-ed' form would be deviant. Well-formed."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Extraposition idiom 'It's no wonder that + finite clause': 'that' correctly heads the complement clause of predicate nominal 'no wonder'. Fully licensed complementizer use."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'they have few reason to be on time': the quantifier 'few' selects a plural count noun, but its head 'reason' is singular. Hard selectional violation. Repairs: 'few reasons' (count) or 'little reason' (mass). No dialectal, elliptical, or alternative parse licenses 'few + singular reason'. Ungrammatical as written."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'prepare to focus on learning new material': 'prepare' licenses a subject-control to-infinitive; 'focus on + gerund' is the correct complementation. Coordination with 'make ... transitions ... and prepare ...' is parallel and well-formed."
+    }
+  ],
+  "note": "Single clean error at (D): few vs. little/plural count selection, a classic quantifier-countability item. All other underlines are provably grammatical under their governing rules with no rescuing alternative parses needed or possible. The distractor error is local (adjacent noun 'reason'), so it tests a lexical selectional rule rather than a long-distance dependency, but it is unambiguous. One editorial quibble: the error could equally be located in the noun ('reason' should be 'reasons'), but underlining the determiner is standard KSAT practice and does not create a second defensible answer."
+}

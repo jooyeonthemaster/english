@@ -1,0 +1,638 @@
+{
+  "id": "u05-c4",
+  "unitId": "u05",
+  "order": 4,
+  "title": "전치사+동명사 병렬",
+  "oneLiner": "전치사의 목적어 자리, 그리고 접속사가 잇는 병렬의 두 항은 모두 동명사여야 합니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고2",
+    "csatPoints": [],
+    "sourceRefs": [
+      "커리큘럼 백본 u05-c4(전치사+동명사 병렬) — src/lib/grammar-drill/curriculum.ts",
+      "기존 드릴 뱅크 u05-choice(u05-c4-ch-001~012) — trapTag: prep-gerund·comparison-parallel·distant-parallel",
+      "어법끝 5.0 — 병렬구조(접속사가 잇는 항의 형태 일치)와 전치사의 목적어",
+      "천일문 고등 GRAMMAR — 동명사(전치사의 목적어)",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 동명사·전치사(중 ●)",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L4 병렬 축 찾기"
+    ]
+  },
+  "lenses": ["L4", "L2"],
+  "confusableWith": ["u05-c1", "u05-c2", "u05-c3"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The report focuses less on predicting disasters and more on preparing for them.",
+        "The report focuses less on predicting disasters and more on to prepare for them."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 뒤 항의 형태 하나입니다. 이 레슨을 마치면 왜 뒤 항이 그 형태여야 하는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "전치사의 목적어",
+      "question": "전치사 뒤에 동사를 두어야 할 때, 왜 동사원형을 그대로 쓰지 못합니까?",
+      "plain": "전치사는 뒤에 목적어(명사)를 반드시 부르는 말입니다. 그 자리에 동사를 넣으려면 명사처럼 바꾼 형태, 곧 동명사(-ing)로 써야 합니다.",
+      "analogy": "전치사는 명사석에만 손님을 앉히는 좌석 안내원입니다. 동사가 그 자리에 앉으려면 -ing 라는 명사 복장으로 갈아입어야 입장할 수 있습니다.",
+      "whyItMatters": "by -ing·in -ing·for -ing 처럼 전치사 뒤 동명사는 수능 어법과 내신 서술형에 꾸준히 나옵니다. 판별 도구 \"병렬 축 찾기\"도 결국 이 자리 감각에서 시작합니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "전치사 뒤 첫 항만 -ing 로 쓰면 되고, and 뒤 항은 동사원형으로 돌아가도 됩니다.",
+      "truth": "병렬의 짝은 가장 가까운 동사가 아니라 같은 전치사에 걸리는 항입니다. 전치사의 목적어 자리에는 동사원형이 올 수 없고 동명사가 와야 합니다.",
+      "counterExample": {
+        "en": "The city reduced waste by recycling bottles and **collect** food scraps separately.",
+        "ko": "그 도시는 병을 재활용하고 음식물 쓰레기를 따로 수거함으로써 폐기물을 줄였습니다.",
+        "note": "collect 는 전치사 by 의 목적어 자리이므로 collecting 이어야 합니다. 참고로 collected 로 쓰면 by 구가 아니라 reduced 와 병렬을 이루는 별개의 문장이 되어 뜻이 달라집니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "전치사 뒤 형태 반사판정",
+      "instruction": "명제가 옳으면 ○, 틀리면 ×를 제한시간 안에 누르십시오. 전치사 뒤 형태 판단은 결국 속도 싸움입니다.",
+      "timeLimitSec": 9,
+      "rounds": [
+        {
+          "statement": "전치사의 목적어 자리에 동사가 오면 동명사(-ing)로 씁니다.",
+          "isTrue": true,
+          "why": "전치사의 목적어는 보통 명사이고, 그 자리에 동사를 넣을 때에는 동명사로 씁니다. 이 개념의 출발점입니다."
+        },
+        {
+          "statement": "전치사 by 뒤에 동사원형을 그대로 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "by 는 전치사이므로 목적어 자리에 동명사가 옵니다. 동사원형은 오지 못합니다."
+        },
+        {
+          "statement": "look forward to 의 to 뒤에는 동사원형이 옵니다.",
+          "isTrue": false,
+          "why": "look forward to 의 to 는 전치사입니다. 그 뒤에는 동명사가 옵니다."
+        },
+        {
+          "statement": "and 로 이어진 두 항이 하나의 전치사에 걸리면 형태를 맞춥니다.",
+          "isTrue": true,
+          "why": "같은 전치사에 걸린 항은 모두 동명사여야 합니다."
+        },
+        {
+          "statement": "decide to 뒤에는 동명사가 옵니다.",
+          "isTrue": false,
+          "why": "decide to 의 to 는 to부정사의 to 이므로 뒤에 동사원형이 옵니다."
+        },
+        {
+          "statement": "than 이 견주는 두 항은 형태가 달라도 됩니다.",
+          "isTrue": false,
+          "why": "비교의 두 항도 형태가 같아야 합니다. 앞이 동명사구면 뒤도 동명사구입니다."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "전치사+동명사 병렬 필기",
+      "intro": "판별에 필요한 다섯 가지를 필기 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "전치사 뒤 — 동사는 -ing 로",
+          "body": "전치사는 뒤에 목적어(명사)를 부릅니다. 그 자리에 동사를 넣으려면 동명사(-ing)로 써야 하며, 동사원형과 to부정사는 오지 못합니다.",
+          "example": {
+            "en": "Researchers begin by **reading** the earliest records.",
+            "ko": "연구자들은 가장 이른 기록을 읽는 것으로 시작합니다.",
+            "note": "전치사 by 의 목적어가 동명사 reading 입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "병렬의 짝 — 가까운 동사가 아니다",
+          "body": "and·or 가 잇는 뒤 항의 짝은 바로 앞의 시제 동사가 아니라 같은 전치사에 걸린 앞 항입니다. 전치사를 먼저 찾고 그 목적어끼리 형태를 맞춥니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "전치사 반복이든 공유든",
+          "body": "전치사가 항마다 반복되든 앞 항에서 한 번만 쓰이든, 하나의 전치사에 걸린 모든 항은 동명사여야 합니다.",
+          "example": {
+            "en": "Museums survive by **attracting** new visitors and **retaining** old members.",
+            "ko": "박물관은 새 관람객을 끌어들이고 기존 회원을 유지함으로써 살아남습니다.",
+            "note": "전치사 by 가 뒤 항까지 공유됩니다. retaining 도 by 의 목적어이므로 동명사입니다."
+          }
+        },
+        {
+          "head": "비교 구문도 형태를 맞춘다",
+          "body": "than 이나 as ~ as 가 두 항을 견줄 때에도 앞 항이 동명사구이면 뒤 항도 동명사구여야 합니다.",
+          "example": {
+            "en": "**Designing** an experiment is harder than **running** it.",
+            "ko": "실험을 설계하는 것은 그것을 실행하는 것보다 더 어렵습니다.",
+            "note": "비교가 견주는 두 항이 모두 동명사구입니다."
+          }
+        },
+        {
+          "head": "예외 — but·except 뒤",
+          "body": "전치사 but·except·save 뒤에는 원형부정사가 오기도 합니다(do nothing but wait). 수가 적고 관용적이므로 따로 외웁니다.",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "TABLE",
+      "tier": 2,
+      "title": "to부정사의 to 와 전치사의 to",
+      "columns": ["대표 표현", "to의 정체", "to 뒤 형태"],
+      "rows": [
+        {
+          "cells": ["decide to, want to, refuse to, be able to", "to부정사의 to", "동사원형"],
+          "example": {
+            "en": "Volunteers **decided to repair** the flooded library first.",
+            "ko": "자원봉사자들은 침수된 도서관을 먼저 수리하기로 결정했습니다.",
+            "note": "decide to 의 to 는 to부정사의 to 이므로 뒤에 동사원형 repair 가 옵니다."
+          }
+        },
+        {
+          "cells": ["look forward to, object to", "전치사 to", "동명사"],
+          "example": {
+            "en": "The residents **objected to building** a highway through the park.",
+            "ko": "주민들은 공원을 관통하는 고속도로를 건설하는 것에 반대했습니다.",
+            "note": "object to 의 to 는 전치사이므로 뒤에 동명사 building 이 옵니다."
+          }
+        },
+        {
+          "cells": ["be committed to, contribute to", "전치사 to", "동명사"]
+        },
+        {
+          "cells": ["in addition to, when it comes to", "전치사 to", "동명사"]
+        }
+      ],
+      "takeaway": "to 뒤에 명사를 넣어도 자연스러우면 전치사 to 이고, 그 자리에는 동명사가 옵니다."
+    },
+    {
+      "id": "b7",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "성격이 다른 to 하나 골라내기",
+      "instruction": "각 줄에서 to 뒤 형태가 나머지와 다른 하나를 고르십시오. 전치사 to 뒤에는 동명사가, to부정사의 to 뒤에는 동사원형이 옵니다.",
+      "rounds": [
+        {
+          "words": ["refuse to", "look forward to", "object to", "contribute to"],
+          "odd": 0,
+          "why": "look forward to·object to·contribute to 의 to 는 전치사이므로 뒤에 동명사가 옵니다. refuse to 의 to 는 to부정사의 to 이므로 뒤에 동사원형이 옵니다. 성격이 다른 하나는 refuse to 입니다."
+        },
+        {
+          "words": ["be committed to", "in addition to", "be able to", "when it comes to"],
+          "odd": 2,
+          "why": "be committed to·in addition to·when it comes to 의 to 는 전치사이므로 뒤에 동명사가 옵니다. be able to 의 to 는 to부정사의 to 이므로 뒤에 동사원형이 옵니다. 성격이 다른 하나는 be able to 입니다."
+        },
+        {
+          "words": ["decide to", "want to", "object to", "be able to"],
+          "odd": 2,
+          "why": "decide to·want to·be able to 의 to 는 to부정사의 to 이므로 뒤에 동사원형이 옵니다. object to 의 to 는 전치사이므로 뒤에 동명사가 옵니다. 성격이 다른 하나는 object to 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "전치사 to 여섯 표현 암기",
+      "target": "전치사 to 를 취하는 대표 표현",
+      "why": "to 만 보면 동사원형이 먼저 떠오릅니다. 전치사 to 표현을 외워 두지 않으면 병렬의 뒤 항을 동사원형으로 잘못 쓰게 됩니다.",
+      "device": "\"기대·반대·헌신·기여, 게다가·관한 한.\" look forward to·object to·be committed to·contribute to·in addition to·when it comes to — 이 여섯의 to 는 전치사이므로 뒤에 동명사를 겁니다.",
+      "items": [
+        { "cue": "look forward to", "answer": "전치사 to → 동명사 (기대하다)" },
+        { "cue": "object to", "answer": "전치사 to → 동명사 (반대하다)" },
+        { "cue": "be committed to", "answer": "전치사 to → 동명사 (전념하다)" },
+        { "cue": "contribute to", "answer": "전치사 to → 동명사 (기여하다)" },
+        { "cue": "in addition to", "answer": "전치사 to → 동명사 (게다가)" },
+        { "cue": "when it comes to", "answer": "전치사 to → 동명사 (~에 관한 한)" }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "전치사 to 관문",
+      "mission": "to 뒤에 동명사가 오는 전치사 to 표현을 전부 고르십시오. 동사원형을 부르는 to부정사 표현이 미끼로 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "look forward to",
+        "object to",
+        "be committed to",
+        "contribute to",
+        "in addition to",
+        "when it comes to",
+        "decide to",
+        "refuse to",
+        "be able to"
+      ],
+      "answers": [
+        "look forward to",
+        "object to",
+        "be committed to",
+        "contribute to",
+        "in addition to",
+        "when it comes to"
+      ],
+      "passText": "전치사 to 여섯이 손에 붙었습니다. 이제 to 를 보아도 반사적으로 동사원형을 쓰지 않습니다. 관문이 열립니다.",
+      "retryText": "to부정사 표현이 한둘 섞였습니다. 전치사 to 는 뒤에 명사를 넣어도 자연스러운 쪽이라는 점을 떠올리고 다시 골라 보십시오."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "전치사의 목적어 자리에 동사가 오면 동명사(-ing)로 씁니다. 동사원형과 to부정사는 이 자리에 오지 못합니다.",
+      "examples": [
+        {
+          "en": "Researchers begin by **reading** the earliest records.",
+          "ko": "연구자들은 가장 이른 기록을 읽는 것으로 시작합니다.",
+          "note": "전치사 by 의 목적어는 동명사 reading 입니다."
+        },
+        {
+          "en": "The committee insisted on **revising** the original plan.",
+          "ko": "그 위원회는 원래의 계획을 수정할 것을 주장했습니다.",
+          "note": "insist on 의 on 은 전치사이므로 그 뒤에는 동명사가 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "and·or 로 이어진 항들이 하나의 전치사에 걸릴 때에는, 전치사가 항마다 반복되든 앞 항에서 한 번만 쓰이든 모든 항이 동명사여야 합니다.",
+      "examples": [
+        {
+          "en": "Museums survive by **attracting** new visitors and by **retaining** old members.",
+          "ko": "박물관은 새 관람객을 끌어들이고 기존 회원을 유지함으로써 살아남습니다.",
+          "note": "전치사 by 가 항마다 반복되었습니다. 두 항 모두 by 의 목적어이므로 동명사입니다."
+        },
+        {
+          "en": "The teacher succeeded in **simplifying** the theory and **linking** it to daily life.",
+          "ko": "그 교사는 이론을 단순화하고 그것을 일상생활과 연결하는 데 성공했습니다.",
+          "note": "전치사 in 이 뒤 항까지 공유됩니다. linking 도 in 의 목적어이므로 동명사여야 합니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Good editors help writers by cutting weak sentences and by ( sharpen / sharpening ) the ones that remain.",
+      "steps": [
+        {
+          "title": "① 병렬의 축을 찾습니다",
+          "body": "축은 and 입니다. 이제 and 가 무엇과 무엇을 잇는지 확인합니다."
+        },
+        {
+          "title": "② 뒤 항이 걸리는 전치사를 확인합니다",
+          "body": "괄호 바로 앞에 by 가 반복되어 있습니다. 따라서 괄호는 전치사 by 의 목적어 자리입니다."
+        },
+        {
+          "title": "③ 앞 항의 형태를 확인합니다",
+          "body": "앞 항은 by cutting weak sentences 입니다. 전치사 by 의 목적어가 동명사 cutting 입니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "전치사의 목적어 자리에 동사원형 sharpen 은 올 수 없습니다. 앞 항과 형태가 같은 동명사 sharpening 이 옳습니다."
+        }
+      ],
+      "answer": "sharpening",
+      "ko": "훌륭한 편집자는 약한 문장을 잘라내고 남은 문장을 다듬음으로써 필자를 돕습니다."
+    },
+    {
+      "id": "b13",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "반복된 전치사가 만드는 두 항의 해부",
+      "tokens": [
+        { "t": "The museum", "role": "S" },
+        { "t": "survived", "role": "V" },
+        { "t": "by", "role": "X" },
+        { "t": "lowering ticket prices", "role": "VERBAL" },
+        { "t": "and", "role": "CONJ" },
+        { "t": "by", "role": "X" },
+        { "t": "opening its galleries at night", "role": "VERBAL" }
+      ],
+      "ko": "그 박물관은 입장료를 낮추고 밤에 전시실을 개방함으로써 살아남았습니다.",
+      "layers": [
+        {
+          "label": "① 문장의 뼈대를 세웁니다",
+          "roles": ["S", "V"],
+          "note": "핵 주어는 The museum, 시제를 가진 본동사는 survived 입니다. 나머지는 방법을 나타내는 부가 요소입니다."
+        },
+        {
+          "label": "② 병렬의 축을 표시합니다",
+          "roles": ["CONJ"],
+          "note": "and 가 무엇과 무엇을 잇는지부터 정해야 합니다. 축을 정하지 않으면 형태 판단이 시작되지 않습니다."
+        },
+        {
+          "label": "③ 각 항이 걸리는 전치사를 확인합니다",
+          "roles": ["X"],
+          "note": "전치사 by 가 항마다 반복되었습니다. 따라서 두 항은 각각 by 의 목적어입니다."
+        },
+        {
+          "label": "④ 두 항의 형태를 겹쳐 봅니다",
+          "roles": ["VERBAL"],
+          "note": "lowering 과 opening 은 둘 다 동명사입니다. 전치사의 목적어 자리라는 조건을 두 항이 모두 지키고 있습니다."
+        }
+      ],
+      "conclusion": "두 항이 모두 by 의 목적어인 동명사이므로 병렬이 성립합니다. 두 번째 by 뒤에 opened 를 쓰면 전치사의 목적어 자리에 시제 동사가 놓여 문장이 무너집니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u05-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The library cuts costs by pooling databases and by {{blank}} equipment with nearby schools.",
+          "options": ["share", "sharing"],
+          "answer": 1,
+          "translation": "그 도서관은 데이터베이스를 공동으로 이용하고 인근 학교들과 장비를 공유함으로써 비용을 줄입니다.",
+          "explanation": "and 뒤에 전치사 by 가 반복되어 있으므로 빈칸은 by 의 목적어 자리입니다. 전치사의 목적어 자리에는 동사원형이 올 수 없으므로, 앞 항 pooling 과 형태가 같은 동명사 sharing 이 옳습니다.",
+          "trapTags": ["prep-gerund"]
+        },
+        {
+          "id": "u05-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The novelist is known for observing small habits and [[u:to record]] them in a notebook.",
+          "isCorrect": false,
+          "correction": "recording",
+          "translation": "그 소설가는 사소한 습관을 관찰하고 그것을 공책에 기록하는 것으로 알려져 있습니다.",
+          "explanation": "전치사 for 가 and 뒤 항까지 공유되는 병렬입니다. 전치사의 목적어 자리에는 to부정사가 올 수 없으므로, observing 과 나란한 동명사 recording 이어야 합니다.",
+          "trapTags": ["prep-gerund", "to-infinitive"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "전치사 병렬을 판별하는 4단계",
+      "steps": [
+        {
+          "text": "and·or·but 을 찾아 병렬의 축을 표시합니다.",
+          "applyNote": "The startup grew by hiring local engineers and by expanding into overseas markets — 축은 and 입니다."
+        },
+        {
+          "text": "축 뒤의 항이 어느 전치사에 걸리는지 확인합니다. 전치사가 반복되었으면 그 전치사이고, 반복되지 않았으면 앞 항이 걸린 전치사가 뒤 항에도 공유됩니다.",
+          "applyNote": "뒤 항 앞에 by 가 반복되어 있으므로 뒤 항은 by 의 목적어입니다."
+        },
+        {
+          "text": "같은 전치사에 걸린 앞 항의 형태를 확인합니다. 앞 항이 동명사구라면 뒤 항도 동명사구여야 합니다.",
+          "applyNote": "앞 항은 hiring local engineers 로 동명사구입니다."
+        },
+        {
+          "text": "뒤 항이 동사원형·시제 동사·to부정사이면 그것이 오류입니다. 동명사로 고칩니다.",
+          "applyNote": "expanding 은 동명사이므로 옳습니다. expand 나 to expand 였다면 오류입니다."
+        }
+      ],
+      "example": {
+        "en": "The startup grew by **hiring** local engineers and by **expanding** into overseas markets.",
+        "ko": "그 신생 기업은 현지 엔지니어를 고용하고 해외 시장으로 확장함으로써 성장했습니다.",
+        "note": "두 항 모두 전치사 by 의 목적어인 동명사입니다."
+      }
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "Success in coastal restoration depends on removing invasive plants and ( replant / replanting / to replant ) native species.",
+      "givenSteps": [
+        "① 병렬의 축은 and 입니다.",
+        "② and 뒤에는 전치사가 반복되지 않았지만, 앞 항이 걸린 전치사 on 이 뒤 항에도 공유됩니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "replanting — 전치사 on 의 목적어이므로 removing 과 같은 동명사여야 합니다",
+        "replant — 전치사 뒤에도 동사원형을 쓸 수 있습니다",
+        "to replant — 전치사 뒤에 to부정사를 쓸 수 있습니다"
+      ],
+      "answer": 0,
+      "explain": "전치사 on 이 and 뒤 항까지 공유되므로 괄호는 on 의 목적어 자리입니다. 전치사의 목적어 자리에는 동사원형도 to부정사도 올 수 없습니다. 따라서 removing 과 나란한 동명사 replanting 이 옳습니다."
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "멀리 떨어진 짝 — 가까운 동사에 붙이려는 유혹",
+      "body": "전치사구 안에 수식어가 길게 끼어들면 뒤 항을 가장 가까운 시제 동사에 붙이고 싶어집니다. 그러나 뒤 항이 걸리는 것은 앞에 있는 전치사입니다. 전치사를 먼저 찾은 뒤 그 목적어끼리 짝을 맞춰야 합니다.",
+      "example": {
+        "en": "The agency improved air quality by restricting old diesel trucks in the city center and **subsidizing** electric buses.",
+        "ko": "그 기관은 도심에서 노후 경유 트럭을 제한하고 전기 버스를 지원함으로써 대기질을 개선했습니다.",
+        "note": "전치사 by 가 반복되지 않아 뒤 항이 improved 에 붙는 것처럼 보이지만, subsidizing 은 앞 항이 걸린 by 의 목적어입니다. subsidized 로 쓰면 뜻이 달라진 별개의 문장이 됩니다."
+      }
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u05-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Scholars describe literacy as a practice that grows through reading widely and {{blank}} about what one reads.",
+          "options": ["write", "writing", "to write"],
+          "answer": 1,
+          "translation": "학자들은 문해력을 널리 읽고 읽은 것에 대해 쓰는 과정을 통해 자라나는 실천으로 기술합니다.",
+          "explanation": "전치사 through 가 and 뒤 항까지 공유되는 병렬입니다. 빈칸은 through 의 목적어 자리이므로 reading 과 나란한 동명사 writing 이 옳습니다. 동사원형 write 와 to부정사 to write 는 전치사의 목적어가 되지 못합니다.",
+          "trapTags": ["prep-gerund", "distant-parallel"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 writing 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "and 뒤 항이 앞 항과 함께 전치사 through 의 목적어이므로, reading 과 같은 동명사여야 하기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 짝은 가까운 동사가 아니라 같은 전치사에 걸린 항입니다."
+        },
+        {
+          "text": "문장이 지금도 이어지는 일을 말하고 있어 -ing 형이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제나 어감은 형태 선택의 근거가 되지 못합니다. 판단 근거는 그 자리가 전치사의 목적어인가입니다."
+        },
+        {
+          "text": "and 앞뒤의 길이를 비슷하게 맞추어야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "병렬은 길이를 맞추는 규칙이 아니라 같은 자리에 같은 형태를 두는 규칙입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The training program succeeds by [[1:pairing]] beginners with mentors, by [[2:offering]] short daily tasks, and by [[3:reward]] steady effort rather than [[4:comparing]] students with one another.",
+      "answer": 3,
+      "correction": "rewarding",
+      "rationales": [
+        "첫 번째 by 의 목적어인 동명사입니다. 병렬의 첫 항으로 옳습니다.",
+        "두 번째 by 의 목적어인 동명사입니다. 첫 항과 형태가 같습니다.",
+        "세 번째 by 뒤이므로 전치사의 목적어 자리입니다. 동사원형은 전치사의 목적어가 될 수 없으므로 rewarding 으로 고칩니다.",
+        "rather than 이 잇는 항으로, 앞의 동명사구와 형태가 같습니다. 옳습니다."
+      ],
+      "ko": "그 훈련 프로그램은 초보자를 멘토와 짝지어 주고, 짧은 일일 과제를 제공하며, 학생들을 서로 비교하기보다 꾸준한 노력에 보상함으로써 성공합니다."
+    },
+    {
+      "id": "b21",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 어법상 틀린 부분을 찾아 고쳐 쓰라고 요구합니다. 전치사 뒤 항이 동사원형이나 to부정사로 되어 있는지 확인하고, 그 항이 어느 전치사에 걸리는지까지 근거로 적어야 만점입니다.",
+          "sample": {
+            "en": "Cities can lower energy use by insulating old buildings and to replace outdated boilers.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "to replace → replacing (전치사 by 의 목적어 자리이므로 insulating 과 나란한 동명사여야 합니다)"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 전치사구 병렬의 뒤 항에 밑줄을 긋고 동사원형이나 시제 동사를 넣어 둡니다. 밑줄 앞의 전치사를 찾아 그 목적어 자리인지 확인하면 판단이 끝납니다.",
+          "sample": {
+            "en": "Ecologists assess a river's health by counting the species it supports and by [[u:measure]] how quickly the water flows.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳지 않습니다. measure → measuring — 반복된 전치사 by 의 목적어 자리이므로 동명사여야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 회사는 폐기물을 줄이고 물을 재사용함으로써 비용을 절감했습니다.",
+      "answer": ["The company", "cut costs", "by reducing waste", "and", "reusing water"],
+      "tiles": [
+        "The company",
+        "cut costs",
+        "by reducing waste",
+        "and",
+        "reusing water",
+        "reuse water"
+      ],
+      "explanation": "전치사 by 가 and 뒤 항까지 공유되므로 뒤 항도 by 의 목적어여야 합니다. 따라서 reuse water 가 아니라 동명사 reusing water 가 옳습니다."
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "병렬 저울의 문지기",
+      "intro": "이 저울은 접속사가 잇는 두 항을 양팔에 올려 형태를 견줍니다. 한쪽이 동명사인데 다른 쪽이 동사원형이나 to부정사면 저울이 기울고 문은 닫힙니다. 네 번의 저울질을 견뎌 보십시오.",
+      "questions": [
+        {
+          "prompt": "The museum draws crowds by lowering fees and by ___ evening tours.",
+          "options": ["offering", "offer"],
+          "answer": 0,
+          "why": "and 뒤에 전치사 by 가 반복되었으므로 빈칸은 by 의 목적어 자리입니다. lowering 과 나란한 동명사 offering 이 옳습니다."
+        },
+        {
+          "prompt": "Residents look forward to ___ the new riverside park next spring.",
+          "options": ["visiting", "visit", "to visit"],
+          "answer": 0,
+          "why": "look forward to 의 to 는 전치사입니다. 그 뒤에는 동명사가 오므로 visiting 이 옳습니다."
+        },
+        {
+          "prompt": "The essay is less about ___ facts and more about interpreting them.",
+          "options": ["listing", "list"],
+          "answer": 0,
+          "why": "less about A and more about B 의 두 항은 전치사 about 의 목적어입니다. interpreting 과 형태가 같은 동명사 listing 이 옳습니다."
+        },
+        {
+          "prompt": "Reading a map is not as hard as ___ one from scratch.",
+          "options": ["drawing", "draw", "to draw"],
+          "answer": 0,
+          "why": "as ~ as 가 견주는 두 항은 형태가 같아야 합니다. 앞 항이 동명사구 Reading a map 이므로 뒤도 동명사 drawing 입니다."
+        }
+      ],
+      "winText": "저울이 완벽하게 수평을 이룹니다. 전치사 뒤에서도, 접속사 양옆에서도 형태를 맞추는 눈 — 그 눈이 방금 당신의 것이 되었습니다. 문이 열립니다.",
+      "loseText": "저울이 기울어 문이 닫혔습니다. 네 번 모두 물은 것은 하나였습니다 — 이 항은 어느 전치사·접속사에 걸리고 그 짝은 어떤 형태인가. 판별 4단계를 다시 짚고 오면 저울은 그대로 기다립니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "전치사 뒤에 동사가 오면 ___ 형태여야 하고, and 뒤 항의 짝은 가까운 동사가 아니라 ___ 에 걸린 항입니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "전치사의 목적어 자리에는 동사원형도 to부정사도 올 수 없고 동명사가 옵니다.",
+        "and·or 로 이어진 항이 하나의 전치사에 걸릴 때, 전치사가 반복되든 공유되든 모든 항은 동명사여야 합니다.",
+        "짝은 가장 가까운 시제 동사가 아니라 같은 전치사에 걸린 항입니다. 전치사를 먼저 찾습니다.",
+        "look forward to·object to·be committed to 의 to 는 전치사이므로 그 뒤의 항들도 동명사입니다.",
+        "than·as ~ as 로 견주는 두 항도 형태가 같아야 합니다."
+      ],
+      "keySentence": {
+        "en": "The report focuses less on **predicting** disasters and more on **preparing** for them.",
+        "ko": "그 보고서는 재난을 예측하는 것보다 그것에 대비하는 것에 더 초점을 둡니다.",
+        "note": "반복된 전치사 on 의 목적어 자리이므로 두 항 모두 동명사입니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u05-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The charity grew by training local leaders and by {{blank}} its budget public every year.",
+          "options": ["make", "making"],
+          "answer": 1,
+          "translation": "그 자선단체는 지역 지도자들을 양성하고 해마다 예산을 공개함으로써 성장했습니다.",
+          "explanation": "and 뒤에 전치사 by 가 반복되었으므로 빈칸은 by 의 목적어 자리입니다. 전치사의 목적어 자리에는 동사원형이 올 수 없으므로 training 과 나란한 동명사 making 이 옳습니다.",
+          "trapTags": ["prep-gerund"]
+        },
+        {
+          "id": "u05-c4-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Farmers are now committed to rotating crops and [[u:restoring]] soil that decades of plowing had exhausted.",
+          "isCorrect": true,
+          "translation": "농부들은 이제 작물을 돌려짓고 수십 년의 경작이 고갈시킨 토양을 되살리는 데 전념하고 있습니다.",
+          "explanation": "be committed to 의 to 는 전치사이므로 그 목적어 자리에는 동명사가 옵니다. rotating 과 나란한 restoring 은 옳은 형태입니다.",
+          "trapTags": ["prep-gerund", "to-infinitive"]
+        },
+        {
+          "id": "u05-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "Historians reconstruct the past not by trusting a single account but by {{blank}} many records against one another.",
+          "options": ["compare", "comparing", "to compare"],
+          "answer": 1,
+          "translation": "역사가들은 하나의 기록을 신뢰함으로써가 아니라 여러 기록을 서로 대조함으로써 과거를 재구성합니다.",
+          "explanation": "not A but B 의 두 항이 모두 전치사 by 로 시작합니다. 빈칸은 반복된 by 의 목적어 자리이므로 trusting 과 나란한 동명사 comparing 이 옳습니다. 동사원형과 to부정사는 전치사의 목적어가 되지 못합니다.",
+          "trapTags": ["prep-gerund", "correlative"]
+        }
+      ]
+    }
+  ]
+}

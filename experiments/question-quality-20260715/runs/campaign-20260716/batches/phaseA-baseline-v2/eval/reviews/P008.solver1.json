@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "세 독립절 병렬(Fear has helped..., expressing anger helps..., and expressing positive emotions helps...)에서 두 번째 절의 동명사구 주어. 동명사구 주어는 단수 취급되어 helps와 호응하므로 정문. 유혹 포인트: 첫 절 주어가 명사(Fear)이고 시제도 has helped라서 병렬 깨짐으로 몰고 가고 싶지만, 절 단위 병렬이므로 각 절의 주어 형태가 달라도 무방하고, 과거 기여(현재완료)와 일반 현상(현재)의 시제 차이도 의미상 정당하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "helps us bond with others — help + 목적어 + 원형부정사는 표준 용법(to bond도 가능하나 원형 완전 허용). 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "a kind of 'program' that, when triggered, direct... — 관계대명사 that의 선행사는 단수 a kind of 'program'(kind/program 모두 단수). 삽입 분사구 when triggered가 주어-동사 거리를 벌린 장거리 수일치 함정으로, directs가 되어야 한다. emotions/activities 등 복수 선행사로 읽을 대안이나 direct를 형용사로 읽을 대안 모두 구조상 불성립. 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "the specific ways in which they activate our systems — 선행사 ways 뒤에 완전한 절이 오므로 전치사+관계대명사(in which = how)가 정확한 자리. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "have helped us (as a species) survive challenges — help + 목적어 + 원형부정사. 삽입구 (as a species)가 거리를 벌리지만 구조는 불변. 정문."
+    }
+  ],
+  "note": "정답 (C) 단일 확정. 삽입구(when triggered)로 가린 단수 선행사 수일치 함정이 핵심이며, (A)의 병렬/시제 유혹과 (E)의 삽입구 유혹은 모두 정문으로 해소된다. 복수정답 소지 없음."
+}

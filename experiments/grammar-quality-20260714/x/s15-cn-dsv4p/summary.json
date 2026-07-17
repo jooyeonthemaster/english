@@ -1,0 +1,45 @@
+{
+  "strategy": "s15-cn-dsv4p",
+  "describe": "minimal 동일 프롬프트, 모델만 deepseek/deepseek-v4-pro — DeepSeek V4 Pro",
+  "callPlan": "deepseek/deepseek-v4-pro x1",
+  "total": 10,
+  "ok": 8,
+  "failed": 2,
+  "avgMs": 113262,
+  "avgAttempts": 1,
+  "avgCalls": 1,
+  "totalCostUsd": 0.11475,
+  "avgCostUsd": 0.01275,
+  "costRecordedCalls": 9,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 1,
+  "avgErrorCount": 5.38,
+  "zeroErrorItems": 0,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.841,
+  "avgAnswerRelPos": 0.722,
+  "answerRelPosInBand": 3,
+  "models": {
+    "deepseek/deepseek-v4-pro": 10
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 1,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    }
+  ]
+}

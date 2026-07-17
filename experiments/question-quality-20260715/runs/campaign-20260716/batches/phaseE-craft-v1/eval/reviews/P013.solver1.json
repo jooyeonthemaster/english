@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'Proves how ancient wisdom is perfectly preserved across different cultures'는 지문의 논지와 어긋난다. 여러 문화에 공통 속담이 존재한다는 언급은 국민성 추론을 반박하기 위한 근거였지 보존에 관한 주장이 아니며, 'proves'와 'perfectly'의 단정적 어조는 지문의 신중한 hedging('could be used')과 충돌한다. 유혹 강도: 낮음-중간(다문화 공통 속담 언급을 표면적으로 재활용)."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 지문의 핵심 어구 'national character'를 그대로 담아 훑어 읽은 수험생을 끌어당긴다. 그러나 첫 두 문장이 'no fixed conclusions about national character should be drawn'이라고 명시적으로 금지한 바로 그 결론이며, 'absolute'와 'unchanging'은 저자의 유보적 태도와 정반대. Nevertheless 이후의 양보 논리도 '다른 지표와 함께 부분적으로'이지 절대적 근거가 아니다."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "'Partial indicator'가 'used together with other social and cultural indicators'를, 'specific cultural tendencies within that society'가 'the frequent use of certain proverbs in a particular culture...form some common concepts'를 정확히 재진술한다. Nevertheless-Thus의 양보 후 제한적 긍정 구조와 완벽히 일치. 문법 결합도 자연스럽다(it = the frequent use of the proverb). 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "두 번째로 매력적인 오답. 서두의 경고('We must be careful...')만 읽고 멈춘 수험생이 고를 수 있다. 그러나 'Nevertheless...could be used...Thus'의 전환 구조상 빈칸은 제한적이나마 긍정적 주장이어야 한다. 'fails to offer any meaningful insight'는 Nevertheless 문장을 정면으로 부정한다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'Traditional sayings obscure the modern values'라는 개념(속담이 현대적 가치를 가린다)은 지문 어디에도 등장하지 않는 무근거 선지. 텍스트 앵커가 전혀 없어 최상위권에게는 유혹이 없다."
+    }
+  ],
+  "note": "논리 구조가 명확한 양질의 빈칸 문항. 경고(국민성 단정 금지) → Nevertheless 양보(다른 지표와 함께라면 부분적 활용 가능) → Thus 적용(독일 사례)의 3단 구조에서 빈칸은 양보 명제의 재진술이어야 하며 3번만 이를 충족. 오답 2(핵심어 재활용+과잉단정)와 4(서두만 읽은 반대 방향 극단)가 대칭적 미끼로 잘 설계됨. 대안 해석으로 정답이 흔들릴 여지 없음. 복수정답 소지 없음."
+}

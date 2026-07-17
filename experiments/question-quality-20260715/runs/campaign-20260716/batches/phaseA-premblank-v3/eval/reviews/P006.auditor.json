@@ -1,0 +1,101 @@
+{
+  "pid": "P006",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-sentence-attribution",
+      "severity": "minor",
+      "evidence": "해설이 '본문 두 번째 문장에서 너무 많은 동아리에 가입하면 자유 시간이 줄어들 수 있다고 경고'라고 하나, 엄밀한 계수로는 두 번째 문장이 수사적 파편 'The result?'이고 해당 경고는 세 번째 문장(Joining too many clubs can reduce...)이다. 'The result? Joining...'을 한 수사 단위로 보면 허용 가능하고 내용 귀속 자체는 정확하므로 V4 실패로 판정하지 않음."
+    },
+    {
+      "code": "V4-minor-option5-characterization",
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤ '논지와 무관한 소재 연상' — 주말 근무는 지문에서 과잉 활동의 부정적 결과로 제시된 세부이므로 '무관'이 아니라 '논지의 처방과 상반되는 세부의 오용'이 정확하다. 함정 규명에 큰 지장은 없어 minor."
+    },
+    {
+      "code": "V3-note-source-awkwardness",
+      "severity": "minor",
+      "evidence": "'Joining too many clubs can reduce a large amount of your free time'는 collocation이 다소 어색하나(자연스럽게는 take up / cut into), 원지문에 동일하게 존재하는 소스 차원 표현으로 변형에 의한 손상이 아니므로 V3 실패 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 2,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — source span 'don't overextend yourself'의 의미 보존 패러프레이즈(감당 한도 초과 금지)",
+      "temptingBecause": "해당 없음(정답). 'draw the line', 'moderation', 'Pacing is important'와 결론 명령문 구조('The point is this: ...')가 모두 이 선지를 필연화한다.",
+      "decisiveFlaw": "없음. 완성문 'make sure you avoid taking on more than you can handle'는 문법적·자연스럽고 원문 의미를 정확히 보존한다."
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전(polarity reversal) — 첫 문장의 '활동 참여는 좋은 것'만 취해 결론을 뒤집음",
+      "temptingBecause": "도입부가 과외 활동을 긍정('a very good thing')하므로 첫 문장만 읽은 학생을 겨냥",
+      "decisiveFlaw": "글 전체가 과잉 가입을 경고('draw the line', 'Joining too many clubs can reduce...', 'moderation')하므로 논지 정반대. 'as many ... as possible' 절대 표현으로 즉시 소거 가능."
+    },
+    {
+      "label": "3",
+      "intent": "과협소(scope narrowing) — 신문사 예시 세부를 일반 결론 자리에 승격",
+      "temptingBecause": "'school paper', 'as perfect as you want it to be' 등 지문 표층 어휘와 강하게 겹침",
+      "decisiveFlaw": "빈칸은 글 전체 요지의 일반 명제 자리인데 특정 예시에 국한되며, 'dedicate all your free time'은 자유 시간 감소 경고 및 pacing 권고와 정면 충돌."
+    },
+    {
+      "label": "4",
+      "intent": "절대화/과확장(absolutization) — 'moderation'을 '스트레스 완전 제거'로 승격",
+      "temptingBecause": "'awfully stressed out' 언급과 어휘적으로 직접 연결되어 스트레스 관리가 글의 처방이라고 오독한 학생을 겨냥 — 실질적으로 가장 경쟁력 있는 오답",
+      "decisiveFlaw": "지문의 처방은 활동량의 절제(moderation)이지 스트레스의 완전 제거가 아님. 'eliminate all stress completely'의 이중 절대어가 지문 근거 없이 과도하며 행동 지침의 대상(활동량 조절 vs 스트레스 자체 제거)도 어긋남."
+    },
+    {
+      "label": "5",
+      "intent": "세부 소재 오귀속(detail mis-association) — 부정적 결과 예시(주말 근무)를 처방으로 전환",
+      "temptingBecause": "'spend evenings and even weekends'라는 지문 표층 표현과 직접 겹침",
+      "decisiveFlaw": "주말 근무는 마감 압박이 초래하는 부정적 결과로 제시된 것이지 권고가 아님. 'Pacing is important'와 결론의 처방(무리하지 말 것)에 정면으로 역행."
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'본문 두 번째 문장에서' — 엄밀한 문장 계수로는 세 번째 문장('The result?'가 두 번째). 내용 귀속은 정확.",
+      "recommendation": "'본문 초반에서' 등 문장 번호를 피하는 표현으로 수정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "본해설이 ②③⑤만 언급하고 ④를 누락(오답 해설 블록에는 ④ 존재하므로 V5 모순은 아님). ④가 가장 경쟁력 있는 오답이라는 점에서 아쉬움.",
+      "recommendation": "본해설에 ④의 절대화 함정 소거 근거를 한 구 추가."
+    },
+    {
+      "severity": "minor",
+      "evidence": "오답 해설 ⑤의 '논지와 무관한 소재 연상' — 실제로는 부정적 결과로 제시된 세부를 처방으로 뒤집은 함정에 가까움.",
+      "recommendation": "'부정적 결과로 제시된 세부를 처방으로 전환한 함정'으로 정정."
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints의 'overextend' 어휘 주석은 빈칸 치환으로 렌더 지문·선지 어디에도 등장하지 않는 원문 span 어휘를 설명함. 해설이 원문 표현을 인용하므로 맥락상 유효하나 학생이 지문에서 찾을 수 없는 단어임.",
+      "recommendation": "keyPoints에 '원문 빈칸 자리의 표현'임을 병기."
+    }
+  ],
+  "blindSolve": {
+    "answer": "1",
+    "confidence": "high",
+    "alternativeAnswers": [],
+    "note": "빈칸 직전의 명시적 요지 신호('The point is this: If you don't exercise some moderation...')와 도입부 'draw the line'이 정답을 필연적으로 결정. 다섯 선지 모두 'make sure you' 뒤 동일 통사 슬롯(원형 VP)에 들어가 문법으로 탈락하는 선지 없음."
+  },
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문과 축자 일치하며 유일한 변형은 결론 명령문의 'don't overextend yourself'를 빈칸으로 치환한 것. 접합 파손·중복·누락·고아 문장부호·오탈자 없음, 선지 라벨 1~5와 선언 정답 1, 오답 해설 키(2·3·4·5) 일치. V2: 각 선지를 빈칸에 독립 삽입 검증한 결과 ①만 논리 정합 — ②(극성 반전) ③(과협소, 자유 시간 경고와 충돌) ④(절대화 과확장) ⑤(부정적 결과의 처방 전환) 모두 결정적 결함으로 탈락, 단일 정답 확정. V3: seam 비문 없음, ① 완성문 자연스러움. V4: 문장 번호 오귀속·⑤ 성격 규정 등 minor 부정확만 존재, 구조·논리 분석은 정확. V5: 정답 라벨·선지·해설·keyPoints 상호 모순 없음. §D 빈칸 조건: 다섯 선지 동일 통사 슬롯 충족, 정답은 source span 의미 보존, 네 오답이 polarity reversal / scope narrowing / absolutization / detail mis-association으로 서로 다른 함정 기제 사용. 공예: 빈칸이 글의 요지를 담는 결론 명령문에 위치(C1=3), 오답 의도 밀도 양호(C2=3), ③④⑤가 표층 앵커로 실제 국소 유혹 제공(C3=3). 최대 약점은 C4=2: 정답 ①만 유일하게 완화된(hedged) 표현이고 ② 'as many as possible', ③ 'all your free time', ④ 'all ... completely', ⑤ 'throughout the weekends' 전부 절대·극단 표현을 포함해, 지문을 읽지 않고 '유일한 온건 선지'를 고르는 test-wise 꼬리 소거가 가능한 메타 누출이 있다. 또한 빈칸 직전 문장이 답을 사실상 제시해 필요 추론이 1단계에 그침. C5=3: INTERMEDIATE 요청 대비 다소 쉬운 편이나 결론 패러프레이즈 유형으로 대체로 정합. C6=3: 정답 근거와 함정을 분리하나 minor 부정확 수 건. 합계 17, 모든 V 통과, 최저 C=2 → B(오답 선지의 절대 표현 일부 완화, 해설 문장 귀속 교정이라는 작은 수정으로 출제 가능). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

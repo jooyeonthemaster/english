@@ -1,0 +1,2694 @@
+{
+  "schemaVersion": 1,
+  "study": "deterministic-structural-reaudit-v12-blind",
+  "cases": [
+    {
+      "id": "generic-option-count-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-option-count-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-option-count-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-option-count-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-option-count-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-option-count-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-duplicate-label-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-duplicate-label-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-duplicate-label-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-duplicate-label-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-duplicate-label-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-duplicate-label-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-duplicate-text-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-duplicate-text-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-duplicate-text-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-duplicate-text-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-duplicate-text-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-duplicate-text-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-empty-text-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-empty-text-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-empty-text-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-empty-text-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-empty-text-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-empty-text-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-answer-mismatch-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-answer-mismatch-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-answer-mismatch-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-answer-mismatch-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-answer-mismatch-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-answer-mismatch-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-answer-count-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-answer-count-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-answer-count-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-answer-count-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-answer-count-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-answer-count-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-multi-direction-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-multi-direction-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-multi-direction-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-multi-direction-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-multi-direction-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-multi-direction-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-foreign-field-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-foreign-field-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-foreign-field-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-foreign-field-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "generic-foreign-field-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "generic-foreign-field-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-punctuation-chip-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-punctuation-chip-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-punctuation-chip-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-punctuation-chip-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-punctuation-chip-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-punctuation-chip-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-already-solved-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-already-solved-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-already-solved-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-already-solved-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-already-solved-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-already-solved-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-near-order-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-near-order-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-near-order-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-near-order-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-near-order-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-near-order-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-unreconstructable-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-unreconstructable-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-unreconstructable-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-unreconstructable-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-unreconstructable-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-unreconstructable-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-source-copy-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-source-copy-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-source-copy-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-source-copy-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "word-source-copy-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "word-source-copy-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-missing-marker-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-missing-marker-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-missing-marker-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-missing-marker-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-missing-marker-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-missing-marker-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-multiple-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-multiple-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-multiple-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-multiple-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-multiple-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-multiple-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-residual-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-residual-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-residual-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-residual-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-residual-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-residual-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-frame-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-frame-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-frame-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-frame-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "fbk-frame-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "fbk-frame-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-missing-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-missing-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-missing-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-missing-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-missing-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-missing-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-marker-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-marker-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-marker-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-marker-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-marker-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-marker-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-answer-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-answer-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-answer-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-answer-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-answer-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-answer-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-language-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-language-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-language-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-language-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-language-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-language-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-leak-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-leak-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-leak-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-leak-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "summary-leak-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "summary-leak-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-missing-given-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-missing-given-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-missing-given-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-missing-given-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-missing-given-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-missing-given-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-given-label-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-given-label-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-given-label-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-given-label-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-given-label-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-given-label-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-paragraph-count-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-paragraph-count-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-paragraph-count-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-paragraph-count-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-paragraph-count-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-paragraph-count-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-empty-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-empty-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-empty-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-empty-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-empty-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-empty-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-body-label-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-body-label-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-body-label-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-body-label-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-body-label-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-body-label-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-dependent-fragment-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-dependent-fragment-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-dependent-fragment-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-dependent-fragment-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-dependent-fragment-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-dependent-fragment-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-labels-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-labels-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-labels-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-labels-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-labels-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-labels-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-too-short-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-too-short-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-too-short-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-too-short-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-too-short-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-too-short-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-too-thin-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-too-thin-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-too-thin-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-too-thin-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-too-thin-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-too-thin-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-option-shape-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-option-shape-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-option-shape-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-option-shape-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-option-shape-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-option-shape-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-option-duplicate-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-option-duplicate-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-option-duplicate-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-option-duplicate-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-option-duplicate-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-option-duplicate-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-unscrambled-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-unscrambled-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-unscrambled-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-unscrambled-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-unscrambled-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-unscrambled-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-answer-key-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-answer-key-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-answer-key-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-answer-key-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-answer-key-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-answer-key-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-source-backed-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-source-backed-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-source-backed-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-source-backed-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "order-source-backed-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "order-source-backed-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-count-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-count-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-count-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-count-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-count-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-count-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-label-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-label-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-label-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-label-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-label-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-label-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-expression-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-expression-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-expression-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-expression-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-expression-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-expression-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-source-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-source-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-source-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-source-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-source-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-source-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-passage-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-passage-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-passage-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-passage-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-passage-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-passage-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-marker-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-marker-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-marker-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-marker-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-marker-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-marker-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-visible-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-visible-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-visible-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-visible-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-visible-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-visible-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-option-values-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-option-values-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-option-values-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-option-values-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-option-values-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-option-values-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-duplicate-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-duplicate-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-duplicate-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-duplicate-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-duplicate-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-duplicate-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-correct-mismatch-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-correct-mismatch-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-correct-mismatch-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-correct-mismatch-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "multi-correct-mismatch-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "multi-correct-mismatch-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-missing-answer-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-missing-answer-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-missing-answer-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-missing-answer-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-missing-answer-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-missing-answer-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-residual-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-residual-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-residual-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-residual-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-residual-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-residual-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-list-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-list-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "craft-warning",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-list-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-list-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "craft-warning",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-list-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-list-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "craft-warning",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-explanation-numbering-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-explanation-numbering-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-explanation-numbering-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-explanation-numbering-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "blank-explanation-numbering-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "blank-explanation-numbering-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-marker-count-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-marker-count-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-marker-count-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-marker-count-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-marker-count-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-marker-count-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-error-count-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-error-count-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-error-count-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-error-count-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-error-count-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-error-count-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-answer-label-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-answer-label-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-answer-label-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-answer-label-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-answer-label-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-answer-label-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-not-mutated-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-not-mutated-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-not-mutated-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-not-mutated-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "grammar-not-mutated-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "grammar-not-mutated-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-segments-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-segments-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-segments-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-segments-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-segments-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-segments-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-error-count-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-error-count-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-error-count-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-error-count-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-error-count-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-error-count-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-part-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-part-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-part-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-part-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-part-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-part-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-answer-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-answer-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-answer-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-answer-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "correction-answer-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "correction-answer-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-given-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-given-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-given-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-given-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-given-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-given-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-passage-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-passage-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-passage-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-passage-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-passage-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-passage-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-markers-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-markers-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-markers-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-markers-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-markers-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-markers-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-source-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-source-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-source-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-source-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-source-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-source-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-visible-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-visible-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-visible-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-visible-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-visible-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-visible-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-answer-v1-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-answer-v1-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-answer-v2-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-answer-v2-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    },
+    {
+      "id": "insert-answer-v3-control",
+      "expectedTargetPresent": false,
+      "expectedProductionBlocking": false,
+      "expectedProductionDisposition": "pass",
+      "expectedControlSourceValid": true
+    },
+    {
+      "id": "insert-answer-v3-defect",
+      "expectedTargetPresent": true,
+      "expectedProductionBlocking": true,
+      "expectedProductionDisposition": "blocking-error",
+      "expectedControlSourceValid": false
+    }
+  ]
+}

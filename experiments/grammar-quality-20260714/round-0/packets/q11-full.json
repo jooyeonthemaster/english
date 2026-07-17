@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20221123-q20",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2022,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=f  (C):dec=k  (D):ANS=d  (E):dec=c",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 123,
+        "relPos": 0.16,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 266,
+        "relPos": 0.345,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 532,
+        "relPos": 0.691,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 572,
+        "relPos": 0.743,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 590,
+        "relPos": 0.766,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.766,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is where a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay strictly 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason to keep coming back. Only by doing this can you create an interested audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "where",
+        "isError": false,
+        "correction": "where",
+        "errorExpression": "where",
+        "surroundingText": "Unfortunately, here is where a 'business mind' can be a bad thing.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "strictly",
+        "isError": false,
+        "correction": "strictly",
+        "errorExpression": "strictly",
+        "surroundingText": "blog promoting a product, they have to stay strictly 'on the topic.'",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "to keep",
+        "isError": false,
+        "correction": "to keep",
+        "errorExpression": "to keep",
+        "surroundingText": "information away for free so that people have a reason to keep coming",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "can",
+        "isError": true,
+        "correction": "can",
+        "errorExpression": "does",
+        "surroundingText": "Only by doing this can you create an interested audience that you will",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "interested",
+        "isError": false,
+        "correction": "interested",
+        "errorExpression": "interested",
+        "surroundingText": "Only by doing this can you create an interested audience that you will",
+        "pointCode": "c"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "where"
+      },
+      {
+        "label": "(B)",
+        "text": "strictly"
+      },
+      {
+        "label": "(C)",
+        "text": "to keep"
+      },
+      {
+        "label": "(D)",
+        "text": "does"
+      },
+      {
+        "label": "(E)",
+        "text": "interested"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 보어 역할을 하는 명사절을 이끄는 관계부사 'where'가 쓰인 자리로, 뒤에 완전한 절(a 'business mind' can be a bad thing)이 이어지므로 어법상 옳습니다.",
+      "(B)": "이 자리는 전치사구인 'on the topic'을 수식하는 부사 'strictly'의 자리이므로 어법상 옳습니다.",
+      "(E)": "수식을 받는 대상인 명사 audience가 흥미를 '느끼는' 대상이므로 수동의 감정을 나타내는 과거분사 'interested'가 어법상 옳습니다.",
+      "(C)": "앞에 있는 명사 reason을 수식하여 형용사적 용법으로 쓰인 to부정사 구문인 'to keep'은 어법상 옳습니다."
+    },
+    "explanation": "(D) \"does\"는 어법상 틀린 표현이며 \"can\"로 고쳐야 한다. Only가 이끄는 부사구(Only by doing this)가 문장의 앞부분에 위치하면 주어와 동사의 도치가 일어납니다. 주어인 'you'가 2인칭 대명사이므로 일반동사 create와 함께 도치 문장을 형성할 때는 수일치에 따라 조동사 'do'를 쓰거나 의미상 본래 조동사였던 'can'을 빌려야 합니다. 2인칭 주어 'you' 앞에 3인칭 단수형 조동사 'does'를 사용하는 것은 수일치 규칙에 완전히 어긋나므로 비문입니다. 따라서 'does'를 원문의 조동사인 'can'으로 고쳐야 합니다. 문두의 부사구를 확인하지 못하고 단순히 일반 동사의 도치 형태만 보면 수일치 오류를 놓치기 쉽습니다.",
+    "keyPoints": [
+      "(D) 부정어구 도치와 수일치 — Only 부사구 문두 도치 시 조동사 수일치 확인",
+      "(A) 관계사 — 관계부사 뒤 완전한 절의 통사 구조 판정",
+      "(E) 분사의 태 — 수식받는 명사와의 감정 능수동 관계 판정"
+    ],
+    "tags": [
+      "어법",
+      "도치구문",
+      "수일치",
+      "관계부사",
+      "과거분사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "You already have a business and you're about to launch your blog so that you can sell your product. Unfortunately, here is __(A) where__ a 'business mind' can be a bad thing. Most people believe that to have a successful business blog promoting a product, they have to stay __(B) strictly__ 'on the topic.' If all you're doing is shamelessly promoting your product, then who is going to want to read the latest thing you're writing about? Instead, you need to give some useful or entertaining information away for free so that people have a reason __(C) to keep__ coming back. Only by doing this __(D) does__ you create an __(E) interested__ audience that you will then be able to sell to. So, the best way to be successful with a business blog is to write about things that your audience will be interested in.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

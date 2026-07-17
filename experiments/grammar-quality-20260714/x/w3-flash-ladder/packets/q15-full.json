@@ -1,0 +1,158 @@
+{
+  "passageId": "ebsi_go1_20180308-q35",
+  "difficulty": "KILLER",
+  "meta": {
+    "year": 2018,
+    "exam": "3월",
+    "origType": "글의순서",
+    "words": 152
+  },
+  "attempts": 4,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=d  (C):dec=f  (D):dec=b  (E):ANS=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 26,
+        "relPos": 0.033,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 123,
+        "relPos": 0.158,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 450,
+        "relPos": 0.577,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 517,
+        "relPos": 0.663,
+        "sentenceIndex": 6,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 683,
+        "relPos": 0.876,
+        "sentenceIndex": 8,
+        "found": true
+      }
+    ],
+    "sentenceCount": 9,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.876,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Suppose that you are busy working on a project one day and you have no time to buy lunch. All of a sudden your best friend shows up with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be confused. You would likely think \"Who are you, and how do you know what kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "working",
+        "isError": false,
+        "errorExpression": "working",
+        "surroundingText": "Suppose that you are busy working on a project one day and you have no time to buy lunch.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "shows up",
+        "isError": false,
+        "errorExpression": "shows up",
+        "surroundingText": "All of a sudden your best friend shows up with your favorite sandwich.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "confused",
+        "isError": false,
+        "errorExpression": "confused",
+        "surroundingText": "Instead, you would be confused. You would likely think",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "\"Who are you, and how do you know what kind of sandwich I like to eat?\"",
+        "pointCode": "b"
+      },
+      {
+        "label": "(E)",
+        "expression": "him",
+        "isError": true,
+        "correction": "him",
+        "errorExpression": "himself",
+        "surroundingText": "You trust your best friend so much that you won't worry about him knowing you too well, but you certainly would not give the same level of trust to a stranger.",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "working"
+      },
+      {
+        "label": "(B)",
+        "text": "shows up"
+      },
+      {
+        "label": "(C)",
+        "text": "confused"
+      },
+      {
+        "label": "(D)",
+        "text": "what"
+      },
+      {
+        "label": "(E)",
+        "text": "himself"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "'be busy -ing' 구문으로, '~하느라 바쁘다'라는 의미를 나타내는 동명사의 관용적 표현인 working이 어법상 올바르게 쓰였습니다.",
+      "(B)": "문장의 주어가 single(단수) 명사인 your best friend이므로 이에 맞춰 3인칭 단수 현재 시제 형태인 shows up이 주어-동사 수일치상 올바르게 쓰였습니다.",
+      "(C)": "주어인 'you(당신)'가 유발하는 감정이 아니라 낯선 상황에 의해 느끼게 되는 감정이므로, 감정형용사(과거분사)인 confused가 보어 자리에 오는 것이 어법상 자연스럽습니다.",
+      "(D)": "know의 목적어로 쓰인 간접의문문 명사절에서 kind of sandwich를 수식하는 의문형용사 what이 이끄는 절이 완전하게 잘 이어졌습니다."
+    },
+    "explanation": "about의 목적어로 쓰인 동명사구(knowing you too well)의 의미상 주어를 나타내는 대명사 자리입니다. 문맥상 걱정의 대상은 절의 주어인 'you'가 아니라, 당신을 너무나도 잘 알고 있는 대상인 'your best friend'입니다. 문장의 주어(you)와 동명사의 의미상 주어(친구)가 일치하지 않으므로 재귀대명사 himself를 쓸 수 없으며, 일반 목적격 대명사인 him(또는 소유격 his)을 써야 어법상 올바릅니다.",
+    "keyPoints": [
+      "(E) 대명사 vs 재귀대명사 — 주어와 가리키는 대상의 일치 여부로 판정",
+      "(A) 정·준동사 — 'be busy v-ing' 관용 표현 분석",
+      "(C) 분사의 형용사 쓰임 — 주어의 감정 상태(수동 감정) 판정"
+    ],
+    "tags": [
+      "대명사",
+      "재귀대명사",
+      "동명사의 의미상 주어",
+      "수일치"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "Suppose that you are busy __(A) working__ on a project one day and you have no time to buy lunch. All of a sudden your best friend __(B) shows up__ with your favorite sandwich. He tells you that he knows you are busy and he wants to help you out by buying you the sandwich. In this case, you are very likely to appreciate your friend's help. However, if a stranger shows up with the same sandwich and offers it to you, you won't appreciate it. Instead, you would be __(C) confused__. You would likely think \"Who are you, and how do you know __(D) what__ kind of sandwich I like to eat?\" The key difference between these two cases is the level of trust. You trust your best friend so much that you won't worry about __(E) himself__ knowing you too well, but you certainly would not give the same level of trust to a stranger."
+  }
+}

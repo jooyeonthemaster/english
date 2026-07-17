@@ -1,0 +1,35 @@
+{
+  "pid": "P013",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'only + 전치사구(only through music)'가 문두로 전치되면 주어-조동사 도치가 의무적이다. 'only through music are we able to ...'는 규칙에 정확히 부합하는 도치문. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "타동사 separate의 수동태 'cannot be separated from'. 주어 musical 'meaning'이 분리 행위의 대상이므로 수동이 옳다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "전치사+관계대명사 비제한절 'without which'. 선행사는 동명사구 'making it present here and now'(= presenting music)로 명사성 선행사가 존재하며, '그것 없이는 음악이 전혀 아니게 된다'는 논리도 성립. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'uses the past to make sense of the present' — 목적을 나타내는 부사적 to부정사. 규칙·의미 모두 성립. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "error",
+      "reason": "'the emphasis is still on pupils to absorb ...' — 전치사 on의 목적어는 명사 상당어구여야 하므로 'on pupils absorbing'(의미상 주어+동명사)이 옳다. to부정사를 목적 부사구나 pupils 후치 수식(축약 관계절)으로 읽어도 'emphasis on pupils' 자체가 의미 불성립이라 구제되지 않으며, 앞 문장의 병렬 단서 'involve all pupils working directly with music'도 동명사형을 요구한다. 비문 — 정답."
+    }
+  ],
+  "note": "정답 후보는 (E) 단독. (A)~(D)를 비문으로 만들 대안 독법 없음, (E)를 정문으로 구제할 독법 없음. 문항 성립에 문제 없음."
+}

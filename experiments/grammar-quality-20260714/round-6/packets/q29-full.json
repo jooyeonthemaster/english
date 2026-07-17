@@ -1,0 +1,166 @@
+{
+  "passageId": "2015_06_3026346-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "6월",
+    "origType": "주장",
+    "words": 142
+  },
+  "attempts": 4,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-shallow-participle-adjective-answerx2",
+    "grammar-obvious-to-gerund-after-verbx2",
+    "grammar-noun-clause-pronoun-mislabelx2"
+  ],
+  "layout": "(A):dec=b  (B):dec=c  (C):dec=i  (D):dec=d  (E):ANS=g",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 183,
+        "relPos": 0.228,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 266,
+        "relPos": 0.331,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 348,
+        "relPos": 0.433,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 518,
+        "relPos": 0.645,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 648,
+        "relPos": 0.807,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.807,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Obviously, one of the judgments the public has of us is whether or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get what they want. That, however, is not all they want. They want to have the service rendered to them in a manner that pleases them; they want not only efficiency but courtesy and consideration; and they are in a position to get what they want. They are in the driver's seat; they are paying the bills; and an understanding of that fact is a real and fundamental basis of public relations. In order, therefore, for a great company to satisfactorily serve the public, it must have a philosophy and a method of doing business which will allow and insure that its people serve the public efficiently and in a pleasing manner.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "what",
+        "isError": false,
+        "errorExpression": "what",
+        "surroundingText": "efficiently and promptly, they get what they want. That, however, is not",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "rendered",
+        "isError": false,
+        "errorExpression": "rendered",
+        "surroundingText": "They want to have the service rendered to them in a manner that pleases them;",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "courtesy",
+        "isError": false,
+        "errorExpression": "courtesy",
+        "surroundingText": "they want not only efficiency but courtesy and consideration; and they are",
+        "pointCode": "i"
+      },
+      {
+        "label": "(D)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "the bills; and an understanding of that fact is a real and fundamental basis",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "it",
+        "isError": true,
+        "correction": "it",
+        "errorExpression": "they",
+        "surroundingText": "satisfactorily serve the public, it must have a philosophy and a method",
+        "pointCode": "g"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "what"
+      },
+      {
+        "label": "(B)",
+        "text": "rendered"
+      },
+      {
+        "label": "(C)",
+        "text": "courtesy"
+      },
+      {
+        "label": "(D)",
+        "text": "is"
+      },
+      {
+        "label": "(E)",
+        "text": "they"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 타동사 get의 목적어 역할을 하는 명사절 자리로, 선행사가 없고 뒤에 목적어가 빠진 불완전한 절(they want)을 이끌고 있으므로 관계대명사 'what'은 어법상 옳습니다.",
+      "(B)": "이 자리는 사역의 의미를 가지는 동사 have의 목적격보어 자리로, 목적어인 'the service'가 제공되는(render) 대상이므로 수동의 관계를 나타내는 과거분사 'rendered'는 어법상 옳습니다.",
+      "(C)": "상관접속사 'not only A but B' 구문에서 명사구인 'efficiency'와 대등하게 연결되는 명사 'courtesy'가 쓰여 병렬구조를 이루고 있으므로 어법상 옳습니다.",
+      "(D)": "이 자리는 and 뒤에 이어지는 절의 정동사 자리로, 주어부 'an understanding of that fact'의 핵심 주어 핵이 단수인 'an understanding'이므로 단수동사 'is'는 어법상 옳습니다."
+    },
+    "explanation": "주절의 술어동사인 'must have' 앞의 주어 자리에 쓰인 대명사가 무엇을 가리키는지 문맥상 파악해야 하는 문제입니다. 앞부분의 'for a great company to satisfactorily serve the public'에서 to부정사구의 의미상 주어가 'a great company'(단수 명사구)이고, '따라서 위대한 기업이 대중을 봉사하기 위해서는, 그 기업이 철학을 가져야 한다'라는 논리적 흐름이 되므로 이를 지칭하는 대명사는 단수형이어야 합니다. 따라서 복수 대명사인 'they'는 올 수 없으며, 단수 대명사인 'it'으로 고쳐야 어법상 올바른 문장이 됩니다. 의미상 주어인 단수 명사구를 파악하지 못하고 주변의 다른 복수 명사들에 현혹되지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      "(E) 대명사 일치 — 앞선 의미상 주어 단수 구문과의 성격 일치",
+      "(B) 분사 능동 vs 수동 — 목적어와의 수동적 대상 관계 판정",
+      "(D) 주어-동사의 수일치 — 수식어를 제외한 핵심 명사구 판정"
+    ],
+    "tags": [
+      "대명사 일치",
+      "수일치",
+      "과거분사",
+      "명사절 what",
+      "병렬구조"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Obviously, one of the judgments the public has of us is whether or not our telephone service is good. Technically, if they get their calls through, efficiently and promptly, they get __(A) what__ they want. That, however, is not all they want. They want to have the service __(B) rendered__ to them in a manner that pleases them; they want not only efficiency but __(C) courtesy__ and consideration; and they are in a position to get what they want. They are in the driver's seat; they are paying the bills; and an understanding of that fact __(D) is__ a real and fundamental basis of public relations. In order, therefore, for a great company to satisfactorily serve the public, __(E) they__ must have a philosophy and a method of doing business which will allow and insure that its people serve the public efficiently and in a pleasing manner.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

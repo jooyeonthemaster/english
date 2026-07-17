@@ -1,0 +1,92 @@
+{
+  "pid": "P062",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "렌더 지문은 원지문에서 'first accept the dialect and then build on it' 구간만 '_____' 로 치환한 것 외에 완전 동일(문장 접합·중복·누락·고아 문장부호 없음, em-dash 등 부호 보존). 선지 라벨 ①~⑤와 오답해설 키가 일치.",
+    "V2": "각 선지를 'is to ___' 슬롯에 독립 대입 검증. ①은 지문이 스펙트럼의 한 극단으로 제시한 'rejection and correction'에 해당하고 빈칸 뒤 recast 예시와 모순. ②는 방언 제거(=거부 극단)로 수용 전제와 배치. ④는 'complete acceptance' 극단이며 첫 문장의 표준어 교육 목적 및 예시의 표준형 안내('you don't have a pencil')와 모순. ⑤의 또래 교정은 지문에 부재(주체는 교사). ③만 예시·논지와 정합 — 정답 유일.",
+    "V3": "다섯 선지 모두 동사원형 VP로 'is to ___' 슬롯에 문법적으로 적합(suffix/tail 로 인한 비대칭 탈락 없음). ③ 대입 완성문은 원문과 동일하여 자연스러움. 비단어·오탈자 없음.",
+    "V4": "실패. (1) 해설이 '지문 내에서는 ... 우선 수용하고 이를 토대로 삼을 것을 명시하고 있습니다'라고 주장하나, 학생에게 보이는 렌더 지문에서 해당 내용은 빈칸으로 제거되어 어디에도 명시돼 있지 않음 — 빈칸 내용 자체를 지문 근거로 인용하는 순환 논증이자 렌더 지문 기준 사실 불일치. (2) '빈칸 바로 앞 문장에서는 문화적으로 반응하는 교수법과 가장 일치하는 접근법을 묻고 있습니다' — 빈칸 바로 앞 문장은 실제로는 'Opinions vary from rejection and correction to complete acceptance.'이며, 서술된 내용은 빈칸 포함 문장의 것이고 그 문장은 묻지 않고 진술함(의문문은 두 문장 앞의 'So, what should teachers do...') — 이중 문장 귀속 오류.",
+    "V5": "선언 정답 ③ = 해설의 ③, 오답해설 키 {①,②,④,⑤}가 실제 오답 집합과 일치하고 각 해설 내용이 해당 선지 실제 내용과 대응. keyPoints 도 정답·근거와 모순 없음."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CIRCULAR-CITATION",
+      "severity": "critical",
+      "evidence": "해설: '지문 내에서는 이에 대한 구체적인 방법으로 비표준 방언을 우선 수용하고 이를 토대로 삼을 것을 명시하고 있습니다' — 해당 내용은 렌더 지문에서 빈칸으로 제거된 구간('first accept the dialect and then build on it') 자체로, 학생이 보는 지문 어디에도 명시돼 있지 않음. 빈칸 정답을 지문에 존재하는 진술처럼 인용한 순환 논증."
+    },
+    {
+      "code": "V4-SENTENCE-ATTRIBUTION",
+      "severity": "major",
+      "evidence": "해설: '빈칸 바로 앞 문장에서는 문화적으로 반응하는 교수법과 가장 일치하는 접근법을 묻고 있습니다' — 빈칸 바로 앞 문장은 'Opinions vary from rejection and correction to complete acceptance.'이고, 서술된 내용은 빈칸 포함 문장의 것이며 그 문장은 의문문이 아니라 평서문(실제 의문문은 두 문장 앞). 문장 귀속·문형 서술 모두 부정확."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 1,
+    "C5": 1,
+    "C6": 1
+  },
+  "craftRationale": {
+    "C1": "빈칸이 지문의 핵심 주장(문화감응 교수법의 권장 접근)에 정확히 걸려 있어 출제 가치는 있음.",
+    "C2": "오답이 각각 거부 극단(①), 목적-수단 half-truth(②), 수용 극단(④), actor swap(⑤)으로 서로 다른 함정을 겨냥 — 의도 밀도는 양호.",
+    "C3": "①②④에 지문 앵커가 있으나 네 오답 모두 극단 표현으로 빠르게 소거 가능. 실제 판단은 일부에 그침.",
+    "C4": "치명적 단서 경제성 결함: 정답 ③만 절대어가 없는 중용 선지이고 오답 4개가 모두 극단 어휘(strict/immediately/eliminate/fully/ultimate/완전 배제)를 포함해 지문을 읽지 않아도 찍힘. 정답이 원문 span 그대로(verbatim)여서 추상화가 전무하고 keyPoints 조차 이를 자인.",
+    "C5": "요청 난이도 KILLER 대비 실제 난이도는 쉬움~중간. 다중 단서 통합이 불필요하고 극성 휴리스틱 한 개로 풀림 — 라벨 불일치.",
+    "C6": "해설이 순환 인용·문장 귀속 오류를 포함하고, '지문의 표현을 그대로 담고 있는 ③'이라는 메타 누출성 서술까지 있음."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "지문이 배제한 'rejection and correction' 극단을 권장 접근처럼 제시 (condition loss / 극단화)",
+      "temptingBecause": "첫 문장의 표준어 교육 목적(교육·경제 기회)과 지문에 실재하는 어구 'rejection and correction'이 앵커로 작용",
+      "decisiveFlaw": "즉각적·엄격한 교정 요구는 지문이 스펙트럼의 한 극단으로만 언급한 태도이며, 빈칸 뒤 예시의 부드러운 recast('Oh, you don't have a pencil')와 정면 모순"
+    },
+    {
+      "label": "②",
+      "intent": "half-truth — 목적(경제적 기회)은 지문과 일치시키되 수단(방언 제거)을 반대로 뒤집음",
+      "temptingBecause": "첫 문장 'economic opportunities'를 직접 재사용해 표면 겹침이 큼",
+      "decisiveFlaw": "문화감응 교수법은 방언의 일차 수용을 전제하므로 '제거(eliminate)'는 거부 극단에 해당 — 지문 핵심 방향성과 배치"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 span 'first accept the dialect and then build on it'의 축자 복원",
+      "temptingBecause": "정답이므로 해당 없음. 다만 verbatim 복원이라 원문 노출 학습자에게 즉시 식별됨",
+      "decisiveFlaw": "없음(정답). 빈칸 뒤 예시(수용 후 표준형 안내)와 장기 이득 문장이 근거"
+    },
+    {
+      "label": "④",
+      "intent": "반대 극단 — 'complete acceptance'를 최종 학습 목표로 격상 (scope shift / 극단화)",
+      "temptingBecause": "'complete acceptance'가 지문에 명시된 스펙트럼의 끝이라 표면 앵커 존재",
+      "decisiveFlaw": "비표준형을 '궁극적 학습 목표(ultimate learning goal)'로 삼는 것은 표준어 교육의 목적(첫 문장) 및 'build on it' 단계(예시의 표준형 안내)와 모순"
+    },
+    {
+      "label": "⑤",
+      "intent": "actor swap — 교정 주체를 교사에서 또래로 치환",
+      "temptingBecause": "교실 내 상호작용·교정이라는 소재 유사성",
+      "decisiveFlaw": "또래 교정은 지문 어디에도 없음. 예시의 유일한 교정 주체는 교사"
+    }
+  ],
+  "explanationIssues": [
+    "해설이 빈칸으로 제거된 내용('우선 수용하고 이를 토대로 삼을 것')을 '지문 내에 명시'된 것으로 인용 — 렌더 지문 기준 존재하지 않는 진술을 근거로 삼는 순환 논증 (critical)",
+    "'빈칸 바로 앞 문장에서 ... 묻고 있습니다' — 실제 바로 앞 문장은 'Opinions vary...'이고, 서술 내용은 빈칸 포함 문장(평서문)의 것 — 문장 귀속 및 문형 오류 (major)",
+    "'지문의 표현을 그대로 담고 있는 ③' — 정답이 원문 verbatim 임을 자인하는 서술로, 학생 노출 시 출제 방식 메타 누출이자 C4 결함의 방증 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "syntacticSlotUniformity": "충족 — 다섯 선지 모두 동일 슬롯('is to' + 원형 VP)에 문법적으로 삽입 가능",
+    "meaningPreservationWithAbstraction": "불충족 — 정답이 source span 축자 복사로 추상화가 전혀 없음 (§D '난이도에 맞게 추상화' 위반)",
+    "distractorAnchorOverlapFlaw": "부분 충족 — ①②④는 anchor/overlap/flaw 구조를 갖추었으나 ⑤는 source anchor 가 사실상 없음",
+    "twoClueSynthesis": "불충족 — 빈칸 뒤 예시 한 곳만으로 충분히 풀리며 두 문장/두 논리 단서 통합이 강제되지 않음",
+    "noSingleHeuristicShortcut": "불충족 — 오답 4개 전부 절대어·극단 표현(strict/immediately/eliminate/fully/ultimate)을 포함하고 정답만 중용 표현이라 극성 휴리스틱 하나로 정답 선택 가능 (§D 'KILLER는 극성·절대어 하나로 찍을 수 없다' 위반)"
+  },
+  "grade": "F",
+  "notes": "V1·V2·V3·V5 는 통과. 그러나 해설이 렌더 지문에 존재하지 않는(빈칸으로 제거된) 진술을 '지문에 명시'된 근거로 인용하는 순환 논증과 이중 문장 귀속 오류를 포함해 V4 실패 — 치명은 공예로 상쇄되지 않으므로 F. 설령 V4 를 통과시키더라도 KILLER 요청 대비 정답 verbatim 복사·극성 단서 단독 소거 가능성으로 C4=1, C5=1 이라 B 미만이며 재설계 필요. 수리 방향: (1) 해설을 '빈칸 뒤 예시와 스펙트럼 문장에서 추론' 구조로 재작성하고 귀속 오류 제거, (2) 정답을 의미 보존 추상화 paraphrase 로 교체(예: 'acknowledge the student's home language before guiding them toward the standard form'류), (3) 오답의 절대어 밀도를 낮춰 극성 휴리스틱 차단."
+}

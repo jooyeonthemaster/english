@@ -1,0 +1,70 @@
+{
+  "pid": "P012",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "validityEvidence": {
+    "V1": "Character-level diff between original and rendered passage shows exactly one change: 'keeps it in check' -> '_____'. No sentence-join damage, duplication, omission, orphan punctuation, or typos. Option labels 1-5 render correctly and declared answer label 1 exists among options.",
+    "V2": "Independent per-option insertion into 'while cinema expresses man's affective life, the law ___.': (1) 'attempts to regulate and restrain it' is a faithful paraphrase of the removed span 'keeps it in check', confirmed by two following sentences ('tries to ensure that we are not overwhelmed...', 'obsessively tries to suppress affects'); (2) contradicts suppression (polarity reversal); (3) 'permanently eradicate all human desires' overshoots 'keep in check/suppress' - the law controls affects, it does not eliminate them, and the passage presupposes desire persists; (4) the law does not 'depict' anything (depiction is cinema's function) and 'exclusively ... violent crimes' has no textual support; (5) 'provides a medium for releasing hidden emotions' is cinema's role ('cinema introduces us to our affects') - actor swap. Exactly one defensible answer: 1.",
+    "V3": "Passage and stem are grammatical. All five options are VPs agreeing with singular subject 'the law'; every completed sentence is grammatical with no seam artifacts or tail mismatches. The anaphor 'it' in options 1/2 resolves naturally to 'man's affective life', matching the source.",
+    "V4": "Explanation correctly describes the common-ground-then-contrast structure, correctly cites 'keeps it in check' as the source span the answer restates, and quotes real passage phrases accurately. Each distractor rationale (polarity reversal / overextension / over-narrowing / topic-association with cinema) matches the actual content of that option. No grammatical-term misuse (none needed for this family), no hallucinated evidence.",
+    "V5": "Declared answer 1, options 1-5, per-option explanations keyed 2-5, and the three keyPoints (shared subject matter; cinema expresses affect; law controls/suppresses it) are mutually consistent with the passage and the correct answer."
+  },
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 2,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "The blank sits exactly on the passage's pivotal rhetorical move - the cinema-expresses vs law-restrains contrast that the entire second half elaborates. This is the core logical point, not a peripheral detail.",
+    "C2": "Four distinct trap intents: polarity reversal (2), absolute overextension (3), scope narrowing / function confusion (4), actor swap (5). However option 4's anchor is thin - only the word 'violent' from 'too violent to exist in a state of nature'; the law 'depicting' anything is a category error no careful reader would entertain, so it functions close to filler.",
+    "C3": "Low competitive tension. The two sentences immediately after the blank restate the answer nearly verbatim ('tries to ensure that we are not overwhelmed', 'obsessively tries to suppress affects, whereas cinema...'), so one-sentence lookahead resolves the item. Options 3 and 4 are eliminable on absolute wording alone; only 2 and 5 require any real judgment, and both are quick.",
+    "C4": "Weak leakage: 'permanently ... all' (3) and 'exclusively' (4) are classic absolute-word tells, and the correct option is the only hedged one ('attempts to'), enabling test-wise elimination without reading the passage. Evidence sufficiency itself is fine - the answer is necessitated by the text.",
+    "C5": "Requested INTERMEDIATE, but the item plays as EASY: the key is a near-literal, low-abstraction paraphrase of the removed span, redundantly restated twice right after the blank, with shallow trap depth. Only 'mostly aligned' at best.",
+    "C6": "Accurate, quotes the right evidence, cleanly names each trap type in the per-option rationales. Slightly verbose in the main explanation and its summary line ('반대로 설명하거나 영화의 특성을 가져와') under-describes traps 3 and 4, but the keyed rationales cover them."
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "correct answer - paraphrase of removed span 'keeps it in check'",
+      "temptingBecause": "n/a (correct); 'regulate and restrain' abstracts the idiom at low-moderate distance",
+      "decisiveFlaw": "none - entailed by 'keeps it in check', 'tries to ensure that we are not overwhelmed and destroyed by our desires', and 'obsessively tries to suppress affects'"
+    },
+    {
+      "label": "2",
+      "intent": "polarity reversal",
+      "temptingBecause": "reuses the 'express/affective life' vocabulary from the cinema clause immediately before the blank",
+      "decisiveFlaw": "directly contradicts the stated contrast: the law suppresses affects, it does not encourage their free expression"
+    },
+    {
+      "label": "3",
+      "intent": "absolute overextension (half-truth)",
+      "temptingBecause": "correct polarity - aligns with 'obsessively tries to suppress affects', so a suppression-direction skimmer may bite",
+      "decisiveFlaw": "'permanently eradicate all human desires' exceeds 'keep in check/suppress'; the passage frames law as containing desire (man still 'desires freedom'), not eliminating it; absolute wording also makes it a test-wise elimination"
+    },
+    {
+      "label": "4",
+      "intent": "scope narrowing / function confusion",
+      "temptingBecause": "'violent' anchors to 'too violent to exist in a state of nature' and law's anxiety about human violence",
+      "decisiveFlaw": "the law does not 'depict' anything - depiction is cinema's function - and 'exclusively ... violent crimes' has zero textual support; 'exclusively' is an additional absolute tell"
+    },
+    {
+      "label": "5",
+      "intent": "actor swap",
+      "temptingBecause": "'releasing hidden emotions' overlaps heavily with the passage's affect vocabulary ('introduces us to our affects', 'identify the most unbearable ones')",
+      "decisiveFlaw": "describes cinema's role, not the law's; inserting it destroys the 'while cinema ..., the law ...' contrast the sentence is built on"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "All validity gates pass: the render is a clean single-span blanking, the answer set is exactly {1}, all completions are grammatical, and the explanation is factually sound and synchronized. The item fails at craft, not validity. Requested INTERMEDIATE but plays as EASY: the removed idiom 'keeps it in check' is restated almost verbatim in the next two sentences, and the correct option is a low-abstraction paraphrase. Two of four distractors (3, 4) carry absolute-word tells ('permanently/all', 'exclusively') and the key is the only hedged option ('attempts to'), enabling test-wise elimination. Craft total 16 (C1=4, C2=3, C3=2, C4=2, C5=2, C6=3) falls below the B threshold (17). Redesign directions: move the blank away from the doubly-restated span or prune one restatement, raise the key's abstraction level, and rebuild distractors 3/4 without absolute wording (e.g., condition-loss or causal-reversal traps anchored to the state-of-nature sentence). killerConditionsMet=false because KILLER was not requested."
+}

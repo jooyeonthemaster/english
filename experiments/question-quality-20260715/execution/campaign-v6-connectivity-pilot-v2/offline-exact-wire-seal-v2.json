@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "question-quality-v6-connectivity-pilot-exact-wire-public-v2",
+  "status": "OFFLINE_PRODUCTION_CORE_EXACT_WIRE_EXECUTION_BLOCKED",
+  "originalProtocolSha256": "b6eba782e92a16c8bba3b6b3b4c5a633449fba117fcf0b5e51a3dbf3f1e8b1f2",
+  "protocolV2AuthoritySemanticSha256": "b09a67eb46387861aa72d64154a0d4f659a697e2468f43a876ccd157b0f82008",
+  "publicCorpusSha256": "465e3d6d17bd6c2748fb69d05f3947f96ecc42d0abf71bd56f4e3dbb969933f6",
+  "privateArtifactSha256": "9f82b1d2934beafac2f32d4daa1d7328870b8928a11ab2a502f4a8f26f8fae49",
+  "sourceClosureSha256": "26725e6f8b90368fdd168a491117414f56689f964506a430e2b405fd12d3796b",
+  "counts": {
+    "assignments": 2,
+    "locallyInterceptedFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0
+  },
+  "wire": {
+    "serialOrder": [
+      "STANDARD",
+      "PREMIUM"
+    ],
+    "bodyUtf8BytesByPlan": {
+      "STANDARD": 53354,
+      "PREMIUM": 24943
+    },
+    "maxOutputTokensEach": 4000,
+    "completionCountEach": 1,
+    "semanticCandidateCapEach": 1,
+    "exactProviderTag": "google-vertex/global",
+    "strictJsonSchemaRows": 2,
+    "exactRouteRows": 2,
+    "reasoningOffRows": 2
+  },
+  "privacy": {
+    "exactPromptExposed": false,
+    "exactPassageExposed": false,
+    "questionOrExplanationExposed": false,
+    "providerGenerationIdExposed": false,
+    "credentialValueExposedOrHashed": false
+  },
+  "safety": {
+    "productionModulesImportedAfterFetchDenyGuard": true,
+    "importTimeNetworkAttempts": 0,
+    "locallyInterceptedFetches": 2,
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "realCredentialValuesRead": 0,
+    "apiCandidatesConsumed": 0,
+    "liveExecutionAuthorized": false
+  },
+  "executionHolds": [
+    "fresh schema-v2 exact-tag pricing and endpoint-capability evidence",
+    "explicit v2 cost-cap amendment derived from these exact body byte counts",
+    "two one-entry durable registries and one shared two-slot batch",
+    "independent hostile audit and explicit dispatch authorization"
+  ],
+  "publicSemanticSha256": "21940bf6c91ab3542479ea566ca03f872d5f51cc62bae5a7b9b901148604984e"
+}

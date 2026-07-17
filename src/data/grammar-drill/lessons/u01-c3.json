@@ -1,0 +1,713 @@
+{
+  "id": "u01-c3",
+  "unitId": "u01",
+  "order": 3,
+  "title": "동사 개수 = 접속사·관계사 개수 + 1",
+  "oneLiner": "한 문장의 시제 동사 수는 연결어(접속사·관계사) 수보다 정확히 하나 많습니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": ["TP01"],
+    "sourceRefs": [
+      "어법끝 5.0 TP01 동사 vs 준동사",
+      "천일문 고등 GRAMMAR U55(동사 vs 준동사)",
+      "별표4 #10 문장의 형식(중 ●)"
+    ]
+  },
+  "lenses": ["L2", "L1"],
+  "confusableWith": ["u01-c1", "u01-c2", "u01-c4"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The committee approved the plan, but the mayor rejected it a week later.",
+        "The committee approved the plan, the mayor rejected it a week later."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 단어 하나입니다. 이 레슨을 마치면 시제 동사와 연결어의 개수를 세어 그 차이를 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "연결어",
+      "question": "연결어가 대체 무엇이고, 왜 동사 개수를 셀 때 그것부터 찾습니까?",
+      "plain": "연결어는 절과 절을 하나로 잇는 말입니다. 접속사(and·because)와 관계사(who·which·that)가 여기에 속하며, 연결어 하나가 붙을 때마다 절이 하나씩 늘어납니다.",
+      "analogy": "기차를 떠올리면 쉽습니다. 객차(절)를 한 칸 더 붙이려면 연결고리(연결어)가 하나 필요합니다. 그래서 객차가 셋이면 연결고리는 둘입니다.",
+      "whyItMatters": "이 원리를 등식으로 바꾸면 '시제 동사 수 = 연결어 수 + 1'입니다. 앞의 두 레슨이 본동사를 짚고 준동사를 걷어내는 두 축으로 예고한 판별 도구 \"동사 자리 카운팅\"이, 이 등식으로 비로소 완성됩니다. 수능 어법이 밑줄로 묻는 동사·준동사 판별은 대부분 이 도구로 개수를 세어 맞는지 확인하는 문제입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "한 문장에 시제 동사가 두 개 보이면 그 문장은 틀린 것입니다.",
+      "truth": "동사가 둘이어도 접속사·관계사가 하나 있으면 옳습니다. 판단 기준은 동사의 개수 자체가 아니라 동사의 수와 연결어의 수가 맞아떨어지는가입니다.",
+      "counterExample": {
+        "en": "The tide **rose** quickly, **and** the fishing boats **returned** to the harbor before noon.",
+        "ko": "물이 빠르게 차올랐고, 고깃배들은 정오가 되기 전에 항구로 돌아왔습니다.",
+        "note": "시제 동사는 rose·returned 로 둘이지만 접속사 and 가 하나 있습니다. 2 = 1 + 1 이므로 옳은 문장입니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "동사 개수 계산의 원리",
+      "intro": "동사 개수를 세는 판단은 다음 네 가지 위에 서 있습니다.",
+      "entries": [
+        {
+          "head": "절 하나 = 시제 동사 하나",
+          "body": "완전한 절에는 시제를 가진 동사가 정확히 하나 있습니다. 절이 문장의 기본 단위이고, 그 단위마다 서술의 축인 동사가 하나씩 놓입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "절을 늘리려면 연결어가 하나",
+          "body": "절을 하나 더 붙이려면 접속사나 관계사가 하나 필요합니다. 연결어 없이 두 절을 그냥 이어 붙일 수는 없습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "그래서 등식이 성립합니다",
+          "body": "시제 동사 수는 연결어 수보다 정확히 하나 많습니다. 즉 '시제 동사 = 연결어 + 1'이며, 이 등식이 어긋나는 자리가 오류입니다.",
+          "example": {
+            "en": "Snow **covered** the runway, **so** every flight **was** delayed that morning.",
+            "ko": "눈이 활주로를 덮어서 그날 아침 모든 항공편이 지연되었습니다.",
+            "note": "시제 동사 covered·was 로 둘, 연결어 so 로 하나입니다. 2 = 1 + 1 이 성립합니다."
+          }
+        },
+        {
+          "head": "등위접속사는 절을 이을 때만 센다",
+          "body": "and·but·or 이 단어나 구를 이을 때(salt and sugar)는 절이 늘지 않으므로 세지 않습니다. 절과 절을 이을 때만 연결어로 셉니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "동사 셈 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 동사 세기는 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "완전한 문장의 시제 동사 수는 연결어 수보다 정확히 하나 많습니다.",
+          "isTrue": true,
+          "why": "'시제 동사 = 연결어 + 1' 등식 그 자체입니다."
+        },
+        {
+          "statement": "접속사·관계사도 세미콜론도 하나도 없으면 시제 동사는 하나여야 합니다.",
+          "isTrue": true,
+          "why": "연결·구두점 신호가 0개이면 절은 하나이고, 절 하나에는 시제 동사가 하나뿐입니다."
+        },
+        {
+          "statement": "접속사·관계사 없이 한 절에 시제 동사가 두 개 있어도 됩니다.",
+          "isTrue": false,
+          "why": "연결어가 없으면 절이 늘지 않으므로 두 번째 시제 동사가 설 자리가 없습니다."
+        },
+        {
+          "statement": "and 가 salt and sugar 처럼 단어를 이을 때도 연결어로 세야 합니다.",
+          "isTrue": false,
+          "why": "단어·구를 이을 때는 절이 늘지 않으므로 연결어로 세지 않습니다."
+        },
+        {
+          "statement": "관계사 that 이 하나 있으면 시제 동사는 둘까지 정당합니다.",
+          "isTrue": true,
+          "why": "관계사도 절을 하나 여는 연결어입니다. 1 + 1 = 2 입니다."
+        },
+        {
+          "statement": "시제 동사가 셋인데 연결어가 하나뿐이면 그 문장은 어딘가 틀린 것입니다.",
+          "isTrue": true,
+          "why": "3 = 1 + 1 이 성립하지 않습니다. 동사 하나가 준동사여야 하거나 연결어가 하나 더 필요합니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "연결어의 세 부류",
+      "columns": ["연결어 부류", "대표 어휘", "무엇을 여는가"],
+      "rows": [
+        {
+          "cells": ["등위접속사", "and · but · or · so · yet", "대등한 두 절을 잇습니다"],
+          "example": {
+            "en": "The tide **rose** fast, **and** the boats **returned** early.",
+            "ko": "물이 빠르게 차올랐고, 배들은 일찍 돌아왔습니다.",
+            "note": "and 하나에 시제 동사 rose·returned 둘입니다."
+          }
+        },
+        {
+          "cells": ["종속접속사", "when · because · if · although · that", "종속절 하나를 붙입니다"],
+          "example": {
+            "en": "**Although** the harbor **froze**, the ships **stayed** at sea.",
+            "ko": "항구가 얼어붙었지만, 배들은 바다에 머물렀습니다.",
+            "note": "Although 하나에 시제 동사 froze·stayed 둘입니다."
+          }
+        },
+        {
+          "cells": ["관계사", "who · which · that · where · when", "명사를 꾸미는 절을 엽니다"],
+          "example": {
+            "en": "The report **that** critics **praised won** a major prize.",
+            "ko": "비평가들이 상찬한 그 보고서는 큰 상을 받았습니다.",
+            "note": "that 하나에 시제 동사 praised·won 둘입니다."
+          }
+        },
+        {
+          "cells": ["의문사 명사절", "how · why · what · whether", "명사절 하나를 엽니다"]
+        }
+      ],
+      "takeaway": "네 부류 모두 절을 하나씩 여는 연결어이므로, 하나 셀 때마다 시제 동사가 하나 더 정당해집니다."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "완전한 문장에서 시제를 가진 동사의 수는 연결어(접속사·관계사)의 수보다 정확히 하나 많습니다.",
+      "examples": [
+        {
+          "en": "The report **that** the committee **released** last week **changed** the debate.",
+          "ko": "위원회가 지난주에 공개한 그 보고서는 논쟁의 방향을 바꾸었습니다.",
+          "note": "관계사 that 하나에 시제 동사는 released·changed 로 둘입니다. 2 = 1 + 1 입니다."
+        },
+        {
+          "en": "Researchers **announced that** the vaccine **reduced** infections by half.",
+          "ko": "연구자들은 그 백신이 감염을 절반으로 줄였다고 발표했습니다.",
+          "note": "명사절을 여는 접속사 that 하나에 시제 동사는 announced·reduced 로 둘입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "문장 속 연결어 사냥",
+      "instruction": "이 문장에서 두 절을 잇는 연결어(접속사·관계사)를 전부 탭하십시오. 전치사·부사는 사냥감이 아닙니다.",
+      "hitLabel": "연결어",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "drought", "hit": false },
+        { "t": "lasted", "hit": false },
+        { "t": "for", "hit": false },
+        { "t": "years,", "hit": false },
+        { "t": "and", "hit": true },
+        { "t": "farmers", "hit": false },
+        { "t": "left", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "land", "hit": false },
+        { "t": "that", "hit": true },
+        { "t": "their", "hit": false },
+        { "t": "families", "hit": false },
+        { "t": "had", "hit": false },
+        { "t": "farmed.", "hit": false }
+      ],
+      "ko": "가뭄이 여러 해 이어졌고, 농부들은 자기 가족이 경작해 온 땅을 떠났습니다.",
+      "explain": "연결어는 등위접속사 and 와 관계사 that, 둘입니다. for 는 전치사여서 절을 잇지 못하므로 사냥감이 아닙니다. 시제 동사 lasted·left·had farmed 셋 = 연결어 2 + 1, 계산이 정확히 맞습니다."
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "however·therefore 같은 접속부사는 뜻만 이어 줄 뿐 절을 잇지 못하므로, 연결어로 세지 않습니다.",
+      "examples": [
+        {
+          "en": "The experiment **failed** twice, **however** the team **published** the results anyway.",
+          "ko": "그 실험은 두 번 실패했지만, 연구진은 그래도 결과를 발표했습니다.",
+          "note": "however 는 접속부사여서 절을 잇지 못합니다. 시제 동사가 둘인데 연결어가 0개이므로 계산이 어긋납니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "절을 잇는 말과 잇지 못하는 말",
+      "columns": ["연결어 — 절을 잇는다", "접속부사·전치사 — 절을 잇지 못한다"],
+      "rows": [
+        {
+          "criterion": "대표 어휘",
+          "a": "and, but, or, so, yet, because, although, when, if, that, who, which",
+          "b": "however, therefore, as a result, moreover, despite, in addition"
+        },
+        {
+          "criterion": "품사",
+          "a": "접속사 · 관계사",
+          "b": "부사(접속부사) 또는 전치사"
+        },
+        {
+          "criterion": "동사 개수 계산",
+          "a": "하나 셀 때마다 시제 동사가 하나 더 허용됩니다",
+          "b": "세지 않습니다. 세면 계산이 어긋납니다"
+        },
+        {
+          "criterion": "두 절 사이에 쓸 때",
+          "a": "등위접속사는 '콤마 + 접속사'로 두 절을 잇습니다. 종속접속사·관계사는 그 앞에 콤마를 찍지 않는 것이 원칙이며(제한적 관계절 앞에는 콤마 금지), 종속절을 문장 앞에 세울 때만 그 뒤에 콤마를 찍습니다",
+          "b": "콤마만으로는 잇지 못하며 세미콜론이나 마침표가 필요합니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The experiment **failed** twice, **but** the team **published** the results anyway.",
+          "ko": "그 실험은 두 번 실패했지만, 연구진은 그래도 결과를 발표했습니다.",
+          "note": "but 은 접속사이므로 콤마 하나로 두 절을 잇습니다. 2 = 1 + 1 이 성립합니다."
+        },
+        {
+          "en": "The experiment **failed** twice, **however** the team **published** the results anyway.",
+          "ko": "그 실험은 두 번 실패했지만, 연구진은 그래도 결과를 발표했습니다.",
+          "note": "however 는 접속부사여서 절을 잇지 못합니다. 시제 동사가 둘인데 연결어가 0개이므로 계산이 어긋납니다.",
+          "wrong": true
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "연결어가 아닌 하나",
+      "instruction": "네 낱말 중 절을 잇지 못하는 하나를 고르십시오. 나머지 셋은 시제 동사를 하나 더 허용하는 연결어입니다.",
+      "rounds": [
+        {
+          "words": ["because", "although", "however", "when"],
+          "odd": 2,
+          "why": "however 는 접속부사입니다. 뜻만 이어 줄 뿐 절을 잇지 못합니다. 나머지 셋은 종속접속사입니다."
+        },
+        {
+          "words": ["who", "which", "that", "despite"],
+          "odd": 3,
+          "why": "despite 는 전치사여서 뒤에 명사구만 옵니다. 나머지 셋은 절을 여는 관계사입니다. 절을 이으려면 although 를 써야 합니다."
+        },
+        {
+          "words": ["and", "but", "therefore", "or"],
+          "odd": 2,
+          "why": "therefore 는 접속부사입니다. 나머지 셋은 두 절을 대등하게 잇는 등위접속사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "연결어 두 개, 동사 세 개인 문장의 해부",
+      "tokens": [
+        { "t": "The scientists", "role": "S" },
+        { "t": "who", "role": "REL" },
+        { "t": "studied", "role": "V" },
+        { "t": "the glacier", "role": "O" },
+        { "t": "reported", "role": "V" },
+        { "t": "that", "role": "CONJ" },
+        { "t": "the ice", "role": "S" },
+        { "t": "was melting", "role": "V" },
+        { "t": "faster", "role": "M" }
+      ],
+      "ko": "그 빙하를 연구한 과학자들은 얼음이 더 빠르게 녹고 있다고 보고했습니다.",
+      "layers": [
+        {
+          "label": "① 연결어를 먼저 셉니다",
+          "roles": ["REL", "CONJ"],
+          "note": "관계사 who 와 명사절 접속사 that, 둘입니다. 연결어가 둘이면 시제 동사는 셋이어야 합니다."
+        },
+        {
+          "label": "② 시제 동사를 셉니다",
+          "roles": ["V"],
+          "note": "studied·reported·was melting 으로 셋입니다. was melting 은 be동사가 시제를 지고 있으므로 동사구 전체가 시제 동사입니다."
+        },
+        {
+          "label": "③ 각 동사의 주어를 짝지어 봅니다",
+          "roles": ["S", "REL"],
+          "note": "studied 의 주어는 관계사 who, reported 의 주어는 The scientists, was melting 의 주어는 the ice 입니다. 주인 없는 동사가 없습니다."
+        }
+      ],
+      "conclusion": "연결어 2개 + 1 = 3, 시제 동사 3개. 계산이 정확히 맞으므로 이 문장은 옳습니다."
+    },
+    {
+      "id": "b13",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "동사 자리 카운팅 — 4단계",
+      "steps": [
+        {
+          "text": "문장에서 시제를 가진 동사를 모두 찾아 셉니다. be·have·조동사가 앞에 붙은 동사구(was melting, had supported, was rebuilt)는 앞의 조동사가 시제를 지므로 동사구 전체를 하나로 셉니다. 조동사 없이 홀로 쓰인 -ing·to부정사·p.p.만 세지 않습니다.",
+          "applyNote": "closed·lost·had supported 로 셋입니다."
+        },
+        {
+          "text": "접속사·관계사·의문사를 모두 찾아 셉니다. 생략된 관계대명사와 that 도 반드시 셉니다.",
+          "applyNote": "When 과 that 으로 둘입니다."
+        },
+        {
+          "text": "'시제 동사 수 = 연결어 수 + 1' 이 성립하는지 대조합니다.",
+          "applyNote": "3 = 2 + 1 이므로 계산이 맞습니다. 이 문장은 옳습니다."
+        },
+        {
+          "text": "동사가 남으면 그중 하나가 준동사여야 하고, 동사가 모자라면 밑줄 친 준동사가 본동사로 바뀌어야 합니다.",
+          "applyNote": "만약 had supported 가 supporting 이었다면 관계절 that 에 시제 동사가 없어져 계산이 하나 모자랍니다."
+        }
+      ],
+      "example": {
+        "en": "**When** the factory **closed**, the town **lost** the jobs **that** **had supported** it for generations.",
+        "ko": "그 공장이 문을 닫자, 그 마을은 여러 세대를 지탱해 온 일자리를 잃었습니다.",
+        "note": "접속사 When 과 관계사 that 이 절을 둘 더 열었으므로 시제 동사는 셋이어야 합니다."
+      }
+    },
+    {
+      "id": "b14",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The historian who examined the archive ( argues / arguing ) that the treaty ended a longer war.",
+      "steps": [
+        {
+          "title": "① 시제 동사를 셉니다",
+          "body": "괄호 밖에서 시제를 가진 동사는 examined 와 ended 로 둘입니다. 괄호가 세 번째 동사 자리 후보입니다."
+        },
+        {
+          "title": "② 연결어를 셉니다",
+          "body": "관계사 who 와 명사절 접속사 that, 둘입니다. 생략된 연결어는 보이지 않습니다."
+        },
+        {
+          "title": "③ 공식을 대조합니다",
+          "body": "연결어가 둘이므로 시제 동사는 셋이어야 합니다. 지금 확정된 시제 동사는 둘뿐이므로 하나가 비어 있습니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "비어 있는 자리는 주절의 본동사입니다. 따라서 시제를 가진 argues 가 옳습니다. arguing 을 넣으면 주절에 본동사가 없어 문장이 무너집니다."
+        }
+      ],
+      "answer": "argues",
+      "ko": "그 문서고를 조사한 그 역사가는 그 조약이 더 긴 전쟁을 끝냈다고 주장합니다."
+    },
+    {
+      "id": "b15",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u01-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The trial ended quickly because both sides {{blank}} on the key facts.",
+          "options": ["agreed", "agreeing"],
+          "answer": 0,
+          "translation": "양측이 핵심 사실에 합의했기 때문에 그 재판은 빠르게 끝났습니다.",
+          "explanation": "접속사 because 가 하나 있으므로 시제 동사는 두 개여야 합니다. 지금은 ended 하나뿐이므로 because절에도 시제 동사가 필요하며, 시제를 가진 agreed 가 옳습니다. agreeing 은 시제가 없어 절을 완성하지 못합니다.",
+          "trapTags": ["no-main-verb"]
+        },
+        {
+          "id": "u01-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "Rain fell all night, and the river [[u:rose]] above its banks by morning.",
+          "isCorrect": true,
+          "translation": "밤새 비가 내렸고, 아침 무렵 강물이 둑 위로 넘쳤습니다.",
+          "explanation": "시제 동사는 fell·rose 로 둘이고 등위접속사 and 가 하나 있으므로 2 = 1 + 1 이 성립합니다. 동사가 둘이라는 이유만으로 틀렸다고 판단해서는 안 됩니다.",
+          "trapTags": ["double-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 단어가 두 절을 잇는 연결어인지 분류하십시오.",
+      "buckets": [
+        { "id": "conn", "label": "절을 잇는다" },
+        { "id": "no", "label": "절을 잇지 못한다" }
+      ],
+      "chips": [
+        { "text": "because", "bucketId": "conn", "why": "종속접속사입니다. 뒤에 '주어 + 동사'를 갖춘 절이 옵니다." },
+        { "text": "which", "bucketId": "conn", "why": "관계대명사입니다. 절을 하나 열므로 시제 동사가 하나 더 허용됩니다." },
+        { "text": "although", "bucketId": "conn", "why": "종속접속사입니다. 뒤에 절이 옵니다." },
+        { "text": "and", "bucketId": "conn", "why": "등위접속사입니다. 두 절을 대등하게 잇습니다." },
+        { "text": "however", "bucketId": "no", "why": "접속부사입니다. 의미만 이어 줄 뿐 절을 잇지 못합니다." },
+        { "text": "therefore", "bucketId": "no", "why": "접속부사입니다. 두 절 사이에 쓰려면 앞에 세미콜론이나 마침표가 필요합니다." },
+        { "text": "despite", "bucketId": "no", "why": "전치사입니다. 뒤에 명사구만 옵니다. 절을 이으려면 although 를 써야 합니다." },
+        { "text": "in addition", "bucketId": "no", "why": "부사구입니다. 절을 잇는 힘이 없습니다." }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "목적격 관계대명사와 접속사 that 은 생략되어도 절을 나누므로, 눈에 보이지 않아도 연결어로 세야 합니다.",
+      "examples": [
+        {
+          "en": "The reforms the government **introduced** last year still **shape** local policy.",
+          "ko": "정부가 작년에 도입한 그 개혁안은 지금도 지역 정책을 좌우합니다.",
+          "note": "명사 The reforms 뒤에 '주어 + 동사'가 곧바로 오므로 관계대명사가 생략된 것입니다. 보이지 않는 연결어 하나에 시제 동사는 introduced·shape 로 둘입니다."
+        },
+        {
+          "en": "The captain **believed** the storm **had passed** by dawn.",
+          "ko": "그 선장은 새벽 무렵 폭풍이 지나갔다고 믿었습니다.",
+          "note": "believed 뒤에 접속사 that 이 생략되어 명사절을 잇습니다. 보이지 않는 that 하나에 시제 동사는 believed·had passed 로 둘입니다. 2 = 1 + 1 이 성립합니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 ① — 접속부사를 접속사로 착각하는 경우",
+      "body": "however·therefore·as a result·moreover 는 뜻만 이어 줄 뿐 절을 잇지 못합니다. 이것들을 연결어로 세면 시제 동사가 하나 더 허용된다고 착각하게 됩니다. 두 절 사이에는 세미콜론이나 마침표, 또는 진짜 접속사가 있어야 합니다.",
+      "example": {
+        "en": "The data **were** incomplete, **therefore** the team **repeated** the survey.",
+        "ko": "자료가 불완전했기 때문에 연구진은 조사를 다시 실시했습니다.",
+        "note": "시제 동사는 were·repeated 로 둘인데 접속사는 0개입니다. therefore 는 부사이므로 셀 수 없습니다. incomplete 뒤의 콤마를 세미콜론으로 바꾸어야 옳은 문장이 됩니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 ② — 보이지 않는 연결어를 세지 못하는 경우",
+      "body": "목적격 관계대명사와 접속사 that 은 자주 생략됩니다. 눈에 접속사가 보이지 않는다고 연결어가 0개인 것은 아닙니다. 명사 바로 뒤에 '주어 + 동사'가 오거나, believe·think·say 뒤에 '주어 + 동사'가 오면 연결어가 하나 지워진 것입니다.",
+      "example": {
+        "en": "Most economists **believe** the policy the government **adopted** last year **slowed** inflation.",
+        "ko": "대다수 경제학자는 정부가 작년에 채택한 그 정책이 물가 상승을 늦추었다고 봅니다.",
+        "note": "believe 뒤의 that 과 the policy 뒤의 관계대명사가 각각 생략되어 있습니다. 보이지 않는 연결어가 둘이므로 시제 동사 believe·adopted·slowed 셋이 모두 정당합니다."
+      }
+    },
+    {
+      "id": "b20",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The novel that the critic praised ( became / becoming ) a bestseller within a month.",
+      "givenSteps": [
+        "① 시제 동사를 셉니다 — praised 가 관계절의 동사이고, 괄호가 남은 동사 자리 후보입니다.",
+        "② 연결어를 셉니다 — 관계사 that 하나뿐입니다. 따라서 시제 동사는 두 개여야 합니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "became — 연결어가 하나이므로 시제 동사가 둘 필요한데 주절의 본동사 자리가 비어 있습니다",
+        "becoming — 관계절에 이미 praised 가 있으므로 주절은 준동사로 충분합니다",
+        "becoming — 주어가 길어서 동사를 둘 세우면 문장이 무거워지기 때문입니다"
+      ],
+      "answer": 0,
+      "explain": "관계사 that 이 하나이므로 시제 동사는 둘이어야 합니다. praised 는 관계절의 동사이므로 주절의 본동사가 아직 없습니다. 따라서 괄호에는 시제를 가진 became 이 와야 합니다. becoming 을 넣으면 주절에 본동사가 없는 조각문이 됩니다."
+    },
+    {
+      "id": "b21",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "폭풍이 다가오고 있었기 때문에 그 항구는 일찍 문을 닫았습니다.",
+      "answer": ["The harbor", "closed", "early", "because", "a storm", "was approaching"],
+      "tiles": [
+        "The harbor",
+        "closed",
+        "early",
+        "because",
+        "a storm",
+        "was approaching",
+        "approaching"
+      ],
+      "explanation": "접속사 because 가 하나 있으므로 시제 동사는 두 개여야 합니다. 주절의 closed 에 더해 because절에도 시제를 가진 was approaching 이 필요하므로, 시제가 없는 approaching 은 쓰이지 않습니다."
+    },
+    {
+      "id": "b22",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u01-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The letters the museum acquired last spring {{blank}} how the writer spent her final years.",
+          "options": ["reveal", "revealing", "to reveal"],
+          "answer": 0,
+          "translation": "박물관이 지난봄에 입수한 그 편지들은 그 작가가 말년을 어떻게 보냈는지를 드러냅니다.",
+          "explanation": "명사 The letters 뒤에 '주어 + 동사'(the museum acquired)가 곧바로 오므로 관계대명사가 생략되어 있습니다. 생략된 관계사와 의문사 how 까지 연결어는 둘이므로 시제 동사는 셋이어야 하는데 acquired·spent 둘뿐입니다. 따라서 빈칸은 주절의 본동사 자리이며 reveal 이 옳습니다.",
+          "trapTags": ["omitted-relative", "no-main-verb"]
+        },
+        {
+          "id": "u01-c3-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Although the committee met three times, the members [[u:reaching]] no agreement before the deadline.",
+          "isCorrect": false,
+          "correction": "reached",
+          "translation": "위원회가 세 번 모였지만, 위원들은 마감 전에 어떤 합의에도 이르지 못했습니다.",
+          "explanation": "접속사 Although 가 하나이므로 시제 동사는 두 개여야 하는데 met 하나뿐입니다. 주절의 주어 the members 에 본동사가 없으므로 reaching 을 시제를 가진 reached 로 고쳐야 계산이 맞습니다.",
+          "trapTags": ["no-main-verb", "double-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 reaching 을 reached 로 고친 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "접속사 Although 가 하나이므로 시제 동사가 둘 필요한데 met 하나뿐이어서 주절의 본동사 자리가 비어 있었습니다.",
+          "correct": true,
+          "feedback": "정확합니다. '시제 동사 수 = 연결어 수 + 1' 이라는 대조가 판단의 근거입니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어서 -ing 형보다 과거형이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제의 자연스러움은 형태 선택의 근거가 되지 못합니다. 판단 근거는 그 절에 시제 동사가 있는가입니다."
+        },
+        {
+          "text": "reaching 은 no agreement 라는 목적어를 받을 수 없기 때문입니다.",
+          "correct": false,
+          "feedback": "-ing 형도 목적어를 받습니다. 문제는 목적어가 아니라 주절에 시제 동사가 하나도 없다는 점입니다."
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "Because the drought [[1:lasted]] three years, farmers [[2:abandoned]] the fields their families [[3:farming]] for generations, and many villages [[4:disappeared]] from the map.",
+      "answer": 3,
+      "correction": "had farmed",
+      "rationales": [
+        "접속사 Because 가 이끄는 절의 본동사입니다. 시제를 가진 과거형이므로 옳습니다.",
+        "주절의 주어 farmers 의 본동사입니다. 시제를 가진 과거형이므로 옳습니다.",
+        "the fields 뒤에 '주어 + 동사'(their families …)가 곧바로 오므로 관계대명사가 생략된 관계절입니다. 그 절에도 시제 동사가 필요하므로 farming 을 had farmed 로 고쳐야 합니다.",
+        "등위접속사 and 가 절을 하나 더 열었으므로 그 절의 본동사입니다. 시제를 가진 과거형이므로 옳습니다."
+      ],
+      "ko": "가뭄이 3년 동안 이어졌기 때문에 농부들은 자기 가족이 여러 세대에 걸쳐 경작해 온 밭을 버렸고, 많은 마을이 지도에서 사라졌습니다."
+    },
+    {
+      "id": "b25",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 접속사 없이 두 절을 콤마로만 붙인 문장을 주고 고쳐 쓰게 합니다. 시제 동사가 둘인데 연결어가 없다는 점을 지적하고 접속사를 넣거나 세미콜론으로 바꾸어야 만점입니다.",
+          "sample": {
+            "en": "The storm damaged the harbor, the fishing fleet remained in port for a week.",
+            "ask": "두 절의 연결이 어법에 맞도록 문장을 고쳐 쓰십시오.",
+            "answer": "The storm damaged the harbor, and the fishing fleet remained in port for a week."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 주어 뒤에 관계절을 끼워 넣어 그 안의 동사를 주절 동사처럼 보이게 만든 뒤, 주절 자리에 준동사를 놓습니다. 밑줄이 준동사인데 연결어 수보다 시제 동사가 모자라면 그 밑줄이 정답입니다.",
+          "sample": {
+            "en": "The drought that struck the region in 2011 [[u:destroying]] most of the wheat crop that year.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "destroyed — 관계사 that 이 하나이므로 시제 동사는 둘이어야 하는데 struck 하나뿐입니다. 밑줄이 주절의 본동사가 되어야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 세어 봅니다",
+      "passage": "Coastal cities have begun to rethink how they handle rising seas. [[u:Engineers who once relied on concrete walls now argue that softer defenses work better.]] Marshes absorb wave energy, and they recover on their own after a storm. The cost, however, falls unevenly across neighborhoods.",
+      "instruction": "밑줄 친 문장에서 시제 동사와 연결어를 각각 세어 공식이 성립하는지 확인하십시오.",
+      "found": "시제 동사는 relied·argue·work 로 셋이고, 연결어는 관계사 who 와 접속사 that 으로 둘입니다. 3 = 2 + 1 이 성립하므로 옳은 문장입니다. relied 를 주절의 동사로 착각하면 argue 가 설 자리를 잃습니다.",
+      "gist": "해안 도시들이 콘크리트 방벽 대신 습지 같은 완충 지형을 활용하는 쪽으로 방향을 바꾸고 있다는 내용입니다."
+    },
+    {
+      "id": "b27",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "문장 계수소의 감사관",
+      "intro": "이 계수소에 들어온 문장은 예외 없이 장부를 펼쳐야 합니다. 시제 동사의 수와 연결어의 수가 '동사 = 연결어 + 1'로 맞아떨어지지 않으면 통과는 없습니다. 네 건의 장부로 셈이 맞음을 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The soil eroded badly, {{blank}} the farmers planted trees along the slope.",
+          "options": ["so", "however"],
+          "answer": 0,
+          "why": "두 절 the soil eroded 와 the farmers planted 를 이으려면 절을 잇는 연결어가 필요합니다. so 는 등위접속사이고, however 는 절을 잇지 못하는 접속부사입니다."
+        },
+        {
+          "prompt": "Because the river froze early, the boats {{blank}} in the harbor until spring.",
+          "options": ["remained", "remaining"],
+          "answer": 0,
+          "why": "접속사 Because 가 하나이므로 시제 동사는 둘이어야 합니다. froze 하나뿐이라 주절에 시제 동사 remained 가 필요합니다. remaining 은 시제가 없습니다."
+        },
+        {
+          "prompt": "The theory the scientist proposed decades ago {{blank}} widely accepted today.",
+          "options": ["is", "being"],
+          "answer": 0,
+          "why": "명사 The theory 뒤에 '주어 + 동사'(the scientist proposed)가 오므로 관계대명사가 생략되어 있습니다. 보이지 않는 연결어 하나에 시제 동사는 둘이어야 하는데 proposed 하나뿐이라 본동사 is 가 필요합니다."
+        },
+        {
+          "prompt": "The play that the audience loved {{blank}} several awards that season.",
+          "options": ["received", "receiving"],
+          "answer": 0,
+          "why": "관계사 that 이 하나이므로 시제 동사는 둘이어야 합니다. loved 는 관계절의 동사이므로 주절의 본동사 received 가 필요합니다. receiving 은 시제가 없어 주절을 세우지 못합니다."
+        }
+      ],
+      "winText": "장부가 맞아떨어졌습니다. 시제 동사와 연결어를 나란히 세워 셈하는 눈 — 그것이 이 유닛 전체를 관통하는 계산법이고, 방금 당신 장부에 등록되었습니다.",
+      "loseText": "감사관이 장부를 되돌려 줍니다. 네 건 모두 물은 것은 하나였습니다 — '이 문장에서 시제 동사와 연결어의 수가 맞는가.' 판별 절차 4단계를 다시 짚고 오면 도장은 그대로 준비되어 있습니다."
+    },
+    {
+      "id": "b28",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "시제 동사가 ___개이면 접속사·관계사는 ___개여야 하고, 계산이 어긋나면 ___를 고칩니다."
+    },
+    {
+      "id": "b29",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "판별 도구 \"동사 자리 카운팅\"의 셈법은 '시제 동사 수 = 접속사·관계사 수 + 1'입니다(세미콜론도 연결어 한 자리로 셉니다). 이 계산이 맞으면 옳고, 어긋나면 그 자리가 오류입니다. 단, 등위접속사가 절이 아니라 단어·구를 이을 때는 세지 않습니다.",
+        "연결어는 등위접속사·종속접속사·관계사이며, 의문사가 이끄는 명사절도 하나로 셉니다.",
+        "however·therefore·as a result 는 접속부사여서 절을 잇지 못합니다. 연결어로 세면 안 됩니다.",
+        "목적격 관계대명사와 접속사 that 은 생략될 수 있으므로, 보이지 않는 연결어도 세어야 합니다.",
+        "동사가 남으면 하나가 준동사여야 하고, 모자라면 밑줄 친 준동사가 본동사로 바뀌어야 합니다."
+      ],
+      "keySentence": {
+        "en": "The scientists **who** **studied** the glacier **reported** **that** the ice **was melting** faster.",
+        "ko": "그 빙하를 연구한 과학자들은 얼음이 더 빠르게 녹고 있다고 보고했습니다.",
+        "note": "연결어 who·that 둘, 시제 동사 studied·reported·was melting 셋입니다. 3 = 2 + 1 이 성립합니다."
+      }
+    },
+    {
+      "id": "b30",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u01-c3-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Traffic slowed to a crawl when heavy fog {{blank}} the highway.",
+          "options": ["covered", "covering"],
+          "answer": 0,
+          "translation": "짙은 안개가 고속도로를 뒤덮자 차량 흐름이 기어가듯 느려졌습니다.",
+          "explanation": "접속사 when 이 하나 있으므로 시제 동사는 두 개여야 합니다. 지금은 slowed 하나뿐이므로 when절에도 시제 동사가 필요하며 covered 가 옳습니다. covering 은 시제가 없어 절을 완성하지 못합니다.",
+          "trapTags": ["no-main-verb"]
+        },
+        {
+          "id": "u01-c3-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The essay the professor assigned last week [[u:examines]] how cities adapt to extreme heat.",
+          "isCorrect": true,
+          "translation": "교수가 지난주에 부과한 그 과제물은 도시가 극심한 더위에 어떻게 적응하는지를 살핍니다.",
+          "explanation": "The essay 뒤에 '주어 + 동사'가 곧바로 오므로 관계대명사가 생략되어 있고, 의문사 how 가 명사절을 엽니다. 연결어가 둘이므로 시제 동사는 assigned·examines·adapt 로 셋이어야 하며 계산이 맞습니다. 따라서 examines 는 주절의 본동사로 옳습니다.",
+          "trapTags": ["omitted-relative", "double-verb"]
+        },
+        {
+          "id": "u01-c3-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The bridge was rebuilt twice, yet cracks {{blank}} in the concrete within a few years.",
+          "options": ["appeared", "appearing", "to appear"],
+          "answer": 0,
+          "translation": "그 다리는 두 번 재건되었지만, 몇 년 안에 콘크리트에 균열이 나타났습니다.",
+          "explanation": "등위접속사 yet 이 두 절을 잇고 있으므로 시제 동사는 두 개여야 합니다. 앞 절의 was rebuilt 에 이어 뒤 절에도 시제 동사가 필요하므로 appeared 가 옳습니다. appearing·to appear 는 시제가 없어 뒤 절을 완성하지 못합니다.",
+          "trapTags": ["coordination", "no-main-verb"]
+        }
+      ]
+    }
+  ]
+}

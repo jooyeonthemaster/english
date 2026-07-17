@@ -1,0 +1,724 @@
+{
+  "id": "u09-c4",
+  "unitId": "u09",
+  "order": 4,
+  "title": "독립분사구문과 with 부대상황",
+  "oneLiner": "분사의 의미상 주어는 원칙적으로 주절 주어이지만, 다르면 분사 앞에 남기고 with+O+분사는 O가 기준입니다.",
+  "gradeStamp": {
+    "introduced": "고1",
+    "judged": "고2",
+    "csatPoints": [],
+    "sourceRefs": [
+      "커리큘럼 백본 u09-c4(독립분사구문과 with 부대상황) — src/lib/grammar-drill/curriculum.ts",
+      "SMOAT 어법 드릴 뱅크 u09-choice·u09-support(u09-c4 문항 30개) — trapTag: with-absolute, retained-subject, absolute-construction, intransitive-participle",
+      "천일문 고등 GRAMMAR — 분사구문(독립분사구문·with+명사+분사)",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 분사(고 ●)",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L3 의미상 주어 대조"
+    ]
+  },
+  "lenses": ["L3", "L2"],
+  "confusableWith": ["u09-c1", "u09-c2", "u09-c3", "u04-c3"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "She waited outside the hall with her fingers crossed.",
+        "She waited outside the hall with her fingers crossing."
+      ],
+      "answer": 0,
+      "afterText": "판단의 기준은 문장의 주어 She 가 아닙니다. 이 레슨을 마치면 왜 기준이 her fingers 인지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "분사의 의미상 주어",
+      "question": "의미상 주어는 주절의 주어라고 배웠는데, 방금 앞 문장에서는 판단 기준이 주어 She 가 아니라 her fingers 였습니다. 무엇이 달라진 것입니까?",
+      "plain": "분사의 의미상 주어는 원칙적으로 주절의 주어이지만, 다를 때가 있습니다. 그럴 때 영어는 그 주어를 분사 바로 앞에 남기거나(독립분사구문), with 뒤의 목적어로 판단 기준을 옮깁니다(with 부대상황).",
+      "analogy": "판단의 닻은 평소 주절 주어에 내려져 있습니다. 그러나 분사 바로 앞에 명사가 남거나 with 가 나타나면 그 닻은 새 명사로 옮겨 갑니다. 닻이 어디에 내렸는지를 먼저 확인해야 능동·수동이 뒤집히지 않습니다.",
+      "whyItMatters": "수능은 주절 주어가 사람인 문장에 with 를 붙여, 그 사람에게 판단 기준이 있는 듯한 착시를 만듭니다. 기준이 갈라지는 자리를 알아보면 -ing 와 p.p. 를 정확히 가릅니다. 판별 도구 「의미상 주어 대조」가 앞 레슨의 기본형에서 이 갈라짐으로 확장됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "분사 앞에 명사가 하나 더 있으면 주어가 둘이므로 틀린 문장입니다.",
+      "truth": "분사구문의 의미상 주어가 주절 주어와 다를 때는 그 주어를 분사 앞에 일부러 남깁니다. 이것이 독립분사구문이며, 남아 있는 명사는 오류가 아니라 필수 장치입니다.",
+      "counterExample": {
+        "en": "**The fog being** too thick for the ferry to sail, the islanders waited another day in the harbor.",
+        "ko": "안개가 여객선이 다니기에는 너무 짙어서, 섬 주민들은 항구에서 하루를 더 기다렸습니다.",
+        "note": "being 의 의미상 주어는 The fog 이고 주절 주어는 the islanders 입니다. 둘이 다르므로 The fog 를 남긴 것이며, 이 문장은 옳습니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "의미상 주어를 찾는 세 자리",
+      "intro": "의미상 주어를 어디서 찾는지가 이 레슨의 전부입니다. 세 자리를 순서대로 필기합니다.",
+      "entries": [
+        {
+          "head": "원칙 — 주절의 주어",
+          "body": "분사 앞에 아무것도 없으면 의미상 주어는 주절의 주어입니다. 걷는 주체, 놀란 주체가 곧 문장의 주어입니다.",
+          "example": {
+            "en": "**Opening** the old letter, he recognized the handwriting at once.",
+            "ko": "그 오래된 편지를 열었을 때 그는 곧바로 그 필체를 알아보았습니다.",
+            "note": "분사 앞이 비어 있으므로 여는 주체는 주절 주어 he 입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "예외 1 — 분사 앞에 남은 명사(독립분사구문)",
+          "body": "의미상 주어가 주절 주어와 다르면 그 주어를 지우지 않고 분사 바로 앞에 남깁니다. 이렇게 남은 명사가 판단 기준이 됩니다.",
+          "example": {
+            "en": "**The sun having set**, the hikers pitched their tent by the lake.",
+            "ko": "해가 지자 등산객들은 호숫가에 텐트를 쳤습니다.",
+            "note": "진 주체 The sun 이 주절 주어 the hikers 와 달라 분사 앞에 남았습니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "예외 2 — with 뒤의 목적어(부대상황)",
+          "body": "with+목적어+분사에서 의미상 주어는 언제나 with 바로 뒤의 목적어입니다. 주절 주어가 사람이어도 기준은 그 목적어입니다.",
+          "example": {
+            "en": "She waited with her fingers **crossed**.",
+            "ko": "그녀는 손가락을 꼰 채 기다렸습니다.",
+            "note": "기준은 she 가 아니라 her fingers 이고, 손가락은 꼬이는 쪽이므로 p.p. 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "형태 — 능동은 -ing, 수동은 p.p.",
+          "body": "찾아낸 의미상 주어가 동작을 하는 쪽이면 -ing, 당하는 쪽이면 p.p. 입니다. Being·Having been 은 생략될 수 있습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "함정 — 목적어 유무로 능·수동을 정하지 않습니다",
+          "body": "자동사는 목적어가 없어도 능동 -ing 입니다. 목적어가 없다고 수동으로 단정하면 rise·lie 같은 자동사에서 반드시 틀립니다.",
+          "example": {
+            "en": "the ballots still **lying** on the long table",
+            "ko": "긴 탁자 위에 아직 놓여 있는 투표용지",
+            "note": "lie 는 자동사라 목적어가 없어도 능동 -ing 입니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "의미상 주어 사냥",
+      "instruction": "이 문장에는 분사가 둘 있습니다. 각 분사의 의미상 주어가 되는 명사를 전부 탭하십시오. 주절의 주어는 사냥감이 아닙니다.",
+      "hitLabel": "의미상 주어",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "storm", "hit": true },
+        { "t": "having", "hit": false },
+        { "t": "passed,", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "sailors", "hit": false },
+        { "t": "returned", "hit": false },
+        { "t": "with", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "sails", "hit": true },
+        { "t": "still", "hit": false },
+        { "t": "folded.", "hit": false }
+      ],
+      "ko": "폭풍이 지나가자, 선원들은 돛을 아직 접어 둔 채 돌아왔습니다.",
+      "explain": "having passed 의 의미상 주어는 앞에 남은 storm 이고, folded 의 의미상 주어는 with 뒤의 sails 입니다. 주절 주어 sailors 는 returned 의 주어일 뿐 어느 분사의 의미상 주어도 아닙니다. 폭풍은 스스로 지나가므로 능동 완료, 돛은 접히는 쪽이므로 수동 p.p. 입니다."
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "분사 앞에 아무것도 남아 있지 않으면, 분사의 의미상 주어는 주절의 주어입니다.",
+      "examples": [
+        {
+          "en": "**Walking** along the shore at dawn, she found a rusted key in the sand.",
+          "ko": "새벽에 해변을 걷다가 그녀는 모래 속에서 녹슨 열쇠 하나를 발견했습니다.",
+          "note": "걷는 주체는 주절 주어 she 입니다. 의미상 주어가 같으므로 분사 앞에 주어를 쓰지 않습니다."
+        },
+        {
+          "en": "**Startled** by the sudden noise, the deer bolted into the woods.",
+          "ko": "갑작스러운 소리에 놀란 그 사슴은 숲속으로 달아났습니다.",
+          "note": "놀라는 쪽은 주절 주어 the deer 입니다. 주어가 같고 놀람을 당하는 관계이므로 p.p. 를 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "분사의 의미상 주어가 주절 주어와 다르면, 그 주어를 분사 바로 앞에 남깁니다(독립분사구문).",
+      "examples": [
+        {
+          "en": "**The tide rising** quickly, the fishermen pulled their boats onto the shore.",
+          "ko": "조수가 빠르게 밀려들자 어부들은 배를 물가로 끌어올렸습니다.",
+          "note": "밀려드는 주체는 the tide 이고 주절 주어는 the fishermen 입니다. 조수가 스스로 오르는 능동 관계이므로 -ing 입니다."
+        },
+        {
+          "en": "**The bridge destroyed** by the flood, the villagers crossed the river by boat for months.",
+          "ko": "다리가 홍수로 파괴되어, 마을 사람들은 몇 달 동안 배로 강을 건넜습니다.",
+          "note": "다리는 파괴되는 쪽이므로 Being 이 생략된 수동 분사 destroyed 입니다. by the flood 라는 행위자 표시가 수동 관계를 확인해 줍니다."
+        },
+        {
+          "en": "**The negotiations having collapsed** at midnight, both delegations flew home without a joint statement.",
+          "ko": "협상이 자정에 결렬되자, 양측 대표단은 공동 성명 없이 귀국길에 올랐습니다.",
+          "note": "결렬이 귀국보다 앞선 일이므로 완료형입니다. collapse 는 자동사이므로 수동형이 아니라 능동 완료형 having collapsed 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "DIAGRAM",
+      "tier": 3,
+      "title": "독립분사구문의 해부 — 주어가 둘로 보이는 문장",
+      "tokens": [
+        { "t": "The rain", "role": "S" },
+        { "t": "having stopped,", "role": "VERBAL" },
+        { "t": "the crew", "role": "S" },
+        { "t": "resumed", "role": "V" },
+        { "t": "work", "role": "O" },
+        { "t": "on the leaking roof.", "role": "M" }
+      ],
+      "ko": "비가 그치자 작업반은 물이 새는 지붕 작업을 재개했습니다.",
+      "layers": [
+        {
+          "label": "① 시제를 가진 동사를 셉니다",
+          "roles": ["V"],
+          "note": "시제 동사는 resumed 하나뿐입니다. 접속사도 관계사도 없으므로 시제 동사는 하나여야 하고, having stopped 는 시제가 없는 준동사입니다."
+        },
+        {
+          "label": "② 주어처럼 보이는 명사가 둘입니다",
+          "roles": ["S"],
+          "note": "The rain 과 the crew 가 모두 주어 자리에 있습니다. 앞의 것은 분사의 의미상 주어이고 뒤의 것은 주절의 주어이며, 둘이 서로 다릅니다."
+        },
+        {
+          "label": "③ 준동사의 주인을 확정합니다",
+          "roles": ["VERBAL"],
+          "note": "having stopped 의 주인은 바로 앞의 The rain 입니다. 주절 주어와 다르기 때문에 지우지 않고 남긴 것입니다."
+        },
+        {
+          "label": "④ 남은 성분을 주절에 배정합니다",
+          "roles": ["O", "M"],
+          "note": "work 은 resumed 의 목적어이고 on the leaking roof 는 수식어입니다. 주절은 성분이 모두 채워져 완전합니다."
+        }
+      ],
+      "conclusion": "명사가 둘이라서 틀린 문장이 아니라, 주어가 다르기 때문에 하나를 남긴 정상 문장입니다. 여기서 having stopped 를 had stopped 로 바꾸면 접속사 없이 절 두 개가 콤마로 이어져 비문이 됩니다."
+    },
+    {
+      "id": "b9",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The seats ( arranged / arranging ) in a wide circle, the workshop began with a short introduction.",
+      "steps": [
+        {
+          "title": "① 이 자리가 분사 자리인지 확인합니다",
+          "body": "콤마 뒤에 the workshop began 이라는 완전한 절이 있고, 접속사도 관계사도 없습니다. 따라서 괄호에 시제 동사를 넣을 수 없으며 이 자리는 분사 자리입니다."
+        },
+        {
+          "title": "② 의미상 주어를 찾습니다",
+          "body": "분사 바로 앞에 The seats 가 남아 있습니다. 주절 주어 the workshop 과 다르므로, 남아 있는 The seats 가 이 분사의 의미상 주어입니다."
+        },
+        {
+          "title": "③ 능동인지 수동인지 판단합니다",
+          "body": "의자는 스스로 배열되지 않고 누군가에 의해 배열되는 쪽입니다. 수동 관계이므로 Being 이 생략된 과거분사가 필요합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "arranging 을 넣으면 의자가 무언가를 배열한다는 능동이 되어 뜻이 성립하지 않습니다. arranged 가 옳습니다."
+        }
+      ],
+      "answer": "arranged",
+      "ko": "의자가 넓은 원형으로 배열된 채, 워크숍은 짧은 소개로 시작되었습니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "with+목적어+분사에서 분사의 의미상 주어는 주절 주어가 아니라 with 바로 뒤의 목적어입니다.",
+      "examples": [
+        {
+          "en": "The captain listened to the complaint with his arms **folded** across his chest.",
+          "ko": "선장은 팔짱을 낀 채 그 항의를 들었습니다.",
+          "note": "판단 기준은 the captain 이 아니라 his arms 입니다. 팔은 접히는 쪽이므로 p.p. 입니다."
+        },
+        {
+          "en": "He left the study with the desk lamp still **burning** beside the window.",
+          "ko": "그는 창가의 탁상등이 여전히 켜진 채로 서재를 나섰습니다.",
+          "note": "탁상등이 계속 켜져 빛을 내고 있는(자동사·능동) 관계이므로 -ing 입니다. 주절 주어 he 를 기준으로 삼으면 판단이 뒤집힙니다."
+        },
+        {
+          "en": "The dog slept by the door with its head **on** its front paws.",
+          "ko": "그 개는 앞발에 머리를 얹은 채 문 옆에서 잠들었습니다.",
+          "note": "with 뒤에는 분사뿐 아니라 형용사·부사·전치사구도 올 수 있습니다. 여기서는 전치사구 on its front paws 가 그 자리를 채웁니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "with 부대상황의 해부",
+      "tokens": [
+        { "t": "She", "role": "S" },
+        { "t": "stood", "role": "V" },
+        { "t": "calmly at the podium", "role": "M" },
+        { "t": "with", "role": "X" },
+        { "t": "her notes", "role": "O" },
+        { "t": "hidden inside the tablet cover.", "role": "VERBAL" }
+      ],
+      "ko": "그녀는 발표 원고를 태블릿 커버 안에 감춘 채 연단에 차분히 서 있었습니다.",
+      "layers": [
+        {
+          "label": "① 주절의 뼈대를 먼저 확정합니다",
+          "roles": ["S", "V"],
+          "note": "주절은 She stood 로 이미 완결되어 있습니다. with 이하는 뼈대가 아니라 부대상황을 얹는 덩어리입니다."
+        },
+        {
+          "label": "② with 뒤의 목적어를 찾습니다",
+          "roles": ["O"],
+          "note": "with 바로 뒤의 her notes 가 분사의 의미상 주어입니다. 판단의 기준을 주절 주어 She 에서 이 명사로 옮깁니다."
+        },
+        {
+          "label": "③ 목적어와 분사의 관계를 봅니다",
+          "roles": ["VERBAL"],
+          "note": "원고는 스스로 감추지 못하고 감춰지는 쪽입니다. 수동 관계이므로 과거분사 hidden 이 옳습니다."
+        }
+      ],
+      "conclusion": "감추는 행동을 한 사람은 She 이지만, 분사의 의미상 주어는 with 뒤의 her notes 입니다. 기준을 옮기지 않으면 hiding 을 골라 능·수동이 뒤집힙니다."
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "의미상 주어를 찾는 4단계",
+      "steps": [
+        {
+          "text": "밑줄이 분사 자리인지 먼저 확인합니다. 콤마로 이어진 덩어리에 접속사·관계사가 없다면 그 자리는 시제 동사가 아니라 분사여야 합니다.",
+          "applyNote": "The lights … dimmed, with the audience … settling → 접속사가 없고 시제 동사는 dimmed 하나뿐이므로 settling 자리는 분사입니다."
+        },
+        {
+          "text": "분사 바로 앞을 봅니다. with 가 있으면 with 뒤의 목적어, 명사만 남아 있으면 그 명사가 의미상 주어입니다. 아무것도 없으면 주절 주어가 의미상 주어입니다.",
+          "applyNote": "with 뒤의 목적어는 the audience 입니다. 주절 주어 The lights 가 아니라 이 명사가 기준입니다."
+        },
+        {
+          "text": "그 의미상 주어가 동작을 하는 쪽이면 -ing, 받는 쪽이면 p.p. 입니다. Being·Having been 은 생략될 수 있습니다.",
+          "applyNote": "관객은 스스로 자리에 앉는 쪽입니다. 능동 관계이므로 settling 이 옳습니다."
+        },
+        {
+          "text": "목적어가 없다고 수동으로 단정하지 않습니다. 자동사는 목적어가 없어도 -ing 로 능동·진행을 나타냅니다.",
+          "applyNote": "settle 은 여기서 자동사로 쓰였고, still 이 진행 중임을 알리므로 진행의 -ing 인 settling 이 옳습니다. (자동사의 p.p. settled 는 '이미 다 앉은 상태'를 뜻해 still 과 충돌합니다.)"
+        }
+      ],
+      "example": {
+        "en": "The lights in the hall dimmed, with the audience still **settling** into their seats.",
+        "ko": "관객이 아직 자리에 앉는 중인 가운데 강당의 조명이 어두워졌습니다.",
+        "note": "with 뒤의 the audience 가 분사의 의미상 주어이고, 앉는 동작을 스스로 하므로 능동 -ing 입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u09-c4-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "He drove home slowly with the car windows {{blank}} to let in the cool night air.",
+          "options": ["lowered", "lowering"],
+          "answer": 0,
+          "translation": "그는 서늘한 밤공기가 들어오도록 차창을 내린 채 천천히 집으로 차를 몰았습니다.",
+          "explanation": "with+목적어+분사에서 의미상 주어는 with 뒤의 the car windows 입니다. 창문은 스스로 내려가지 않고 내려지는 쪽이므로 수동 p.p. 인 lowered 가 옳습니다. 주절 주어 He 가 창을 내렸다는 사실에 끌려 lowering 을 고르면 기준을 잘못 잡은 것입니다.",
+          "trapTags": ["with-absolute"]
+        },
+        {
+          "id": "u09-c4-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The last train [[u:having left]], the two travelers looked for a hotel near the station.",
+          "isCorrect": true,
+          "translation": "막차가 이미 떠나서 두 여행자는 역 근처에서 호텔을 찾았습니다.",
+          "explanation": "having left 의 의미상 주어는 바로 앞의 The last train 으로, 주절 주어 the two travelers 와 다르기 때문에 남긴 독립분사구문입니다. 떠난 일이 호텔을 찾은 일보다 앞서므로 완료형이 적절하고, leave 가 자동사로 쓰였으므로 능동 완료형이 옳습니다.",
+          "trapTags": ["absolute-construction", "perfect-participle"]
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "독립분사구문과 with 부대상황",
+      "columns": ["독립분사구문 (명사 + 분사)", "with 부대상황 (with + 목적어 + 분사)"],
+      "rows": [
+        {
+          "criterion": "분사의 의미상 주어",
+          "a": "분사 바로 앞에 남아 있는 명사",
+          "b": "with 바로 뒤의 목적어"
+        },
+        {
+          "criterion": "표지",
+          "a": "표지가 없고 콤마로 주절과 이어집니다",
+          "b": "with 가 표지가 되어 동시 상황임을 알립니다"
+        },
+        {
+          "criterion": "분사 자리에 올 수 있는 것",
+          "a": "-ing / p.p. / being · having (been)",
+          "b": "-ing / p.p. 외에 형용사 · 부사 · 전치사구"
+        },
+        {
+          "criterion": "본동사로 바꾸면",
+          "a": "접속사 없이 절이 둘이 되어 비문이 됩니다",
+          "b": "with 뒤에는 절이 올 수 없으므로 비문이 됩니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "**The votes counted**, the committee announced the result that same evening.",
+          "ko": "표가 모두 집계되자 위원회는 바로 그날 저녁에 결과를 발표했습니다.",
+          "note": "표는 집계되는 쪽이므로 Being 이 생략된 p.p. 입니다. 남은 주어 The votes 가 판단 기준입니다."
+        },
+        {
+          "en": "The committee announced the result **with the ballots still lying** on the long table.",
+          "ko": "위원회는 투표용지가 아직 긴 탁자 위에 놓여 있는 채로 결과를 발표했습니다.",
+          "note": "with 뒤의 the ballots 가 기준입니다. lie 는 자동사이므로 목적어가 없어도 능동 -ing 입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 문장에서 분사의 의미상 주어가 무엇인지 분류하십시오.",
+      "buckets": [
+        { "id": "main", "label": "주절의 주어" },
+        { "id": "own", "label": "분사 앞 · with 뒤에 따로 있는 명사" }
+      ],
+      "chips": [
+        {
+          "text": "Walking along the shore, she found a rusted key.",
+          "bucketId": "main",
+          "why": "분사 앞에 남은 명사가 없으므로 걷는 주체는 주절 주어 she 입니다."
+        },
+        {
+          "text": "The tide rising quickly, the fishermen pulled the boats ashore.",
+          "bucketId": "own",
+          "why": "밀려드는 주체는 분사 앞에 남은 The tide 이며, 주절 주어 the fishermen 과 다릅니다."
+        },
+        {
+          "text": "He read the report with his glasses pushed up on his forehead.",
+          "bucketId": "own",
+          "why": "with 뒤의 his glasses 가 분사의 의미상 주어이며, 안경은 밀어 올려지는 쪽입니다."
+        },
+        {
+          "text": "Having missed the last bus, the intern walked to the office.",
+          "bucketId": "main",
+          "why": "버스를 놓친 주체는 주절 주어 the intern 이므로 분사 앞에 주어를 남기지 않습니다."
+        },
+        {
+          "text": "The last guest having left, the host locked the front gate.",
+          "bucketId": "own",
+          "why": "떠난 주체는 The last guest 이고 잠근 주체는 the host 입니다. 주어가 달라 앞에 남겼습니다."
+        },
+        {
+          "text": "Praised for her research, the young scholar received a grant.",
+          "bucketId": "main",
+          "why": "칭찬을 받는 쪽은 주절 주어 the young scholar 이므로 의미상 주어는 주절 주어입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "의미상 주어 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 의미상 주어를 반사적으로 짚어야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "with 구문에서 분사의 의미상 주어는 with 바로 뒤의 목적어입니다.",
+          "isTrue": true,
+          "why": "주절 주어가 사람이어도 판단 기준은 언제나 with 뒤의 목적어입니다."
+        },
+        {
+          "statement": "의미상 주어가 동작을 받는 쪽이면 -ing 를 씁니다.",
+          "isTrue": false,
+          "why": "받는 쪽은 p.p. 입니다. -ing 는 동작을 하는 쪽에 씁니다."
+        },
+        {
+          "statement": "분사 앞에 명사가 남아 있으면 주어가 둘이라 언제나 비문입니다.",
+          "isTrue": false,
+          "why": "주어가 달라 남긴 독립분사구문이라면 정상 문장입니다."
+        },
+        {
+          "statement": "자동사는 목적어가 없어도 능동 -ing 가 될 수 있습니다.",
+          "isTrue": true,
+          "why": "rise·lie 처럼 목적어가 없어도 능동입니다. 목적어 유무는 능·수동의 근거가 아닙니다."
+        },
+        {
+          "statement": "수동·완료의 Being 과 Having been 은 생략될 수 있습니다.",
+          "isTrue": true,
+          "why": "being·having been 은 흔히 생략되고 뒤의 p.p. 만 남습니다."
+        },
+        {
+          "statement": "with+목적어 뒤에는 분사만 올 수 있고 형용사나 전치사구는 올 수 없습니다.",
+          "isTrue": false,
+          "why": "with+목적어 뒤에는 분사뿐 아니라 형용사·부사·전치사구도 올 수 있습니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The final report ( submitted / submitting ), the committee turned to next year's budget.",
+      "givenSteps": [
+        "① 시제 동사를 셉니다 — turned 하나뿐이고, 접속사도 관계사도 없습니다.",
+        "② 따라서 괄호에는 시제 동사를 넣을 수 없으며, 이 자리는 분사 자리입니다.",
+        "③ 분사 앞에 The final report 가 남아 있고, 주절 주어 the committee 와 다릅니다."
+      ],
+      "prompt": "④ 그렇다면 괄호에는 어떤 형태가 들어가야 합니까?",
+      "options": [
+        "submitted — 보고서는 제출되는 쪽이므로 Being 이 생략된 수동 분사입니다",
+        "submitting — 보고서가 예산 논의를 시작했으므로 능동입니다",
+        "submitting — 뒤에 목적어가 없으므로 -ing 를 써야 합니다"
+      ],
+      "answer": 0,
+      "explain": "남은 주어 The final report 가 분사의 의미상 주어입니다. 보고서는 스스로 제출하지 못하고 제출되는 쪽이므로 수동 관계이며, Being 이 생략된 과거분사 submitted 가 옳습니다. 목적어의 유무는 능·수동의 근거가 되지 못합니다."
+    },
+    {
+      "id": "b18",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — with 구문에서 주절 주어에 끌려가는 오류",
+      "body": "with 구문의 문장은 대개 사람이 주절 주어이고, 그 사람이 실제로 동작을 한 것처럼 읽힙니다. 그러나 분사의 의미상 주어는 언제나 with 바로 뒤의 목적어입니다. 기준을 옮기지 않으면 능동과 수동이 정확히 반대로 뒤집힙니다.",
+      "example": {
+        "en": "The captain listened to the long complaint with his arms **folding** across his chest.",
+        "ko": "선장은 팔짱을 낀 채 그 기나긴 항의를 들었습니다.",
+        "note": "선장이 팔짱을 끼는 능동 행동에 끌린 오류입니다. 분사의 의미상 주어는 his arms 이고 팔은 접히는 쪽이므로 folded 여야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u09-c4-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "{{blank}} no objection raised during the hearing, the proposal moved to a final vote.",
+          "options": ["There being", "There was", "There is"],
+          "answer": 0,
+          "translation": "심리 중에 제기된 이의가 없었으므로 그 안건은 최종 표결로 넘어갔습니다.",
+          "explanation": "콤마 뒤에 the proposal moved 라는 완전한 절이 있고 접속사가 없으므로, 앞 덩어리에는 시제 동사가 올 수 없습니다. There 를 그대로 둔 채 be동사를 분사로 바꾼 독립분사구문 There being 이 옳습니다. There was·There is 를 넣으면 접속사 없이 절 두 개가 콤마로만 이어지는 비문이 됩니다.",
+          "trapTags": ["absolute-construction", "double-verb"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 There being 을 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "접속사 없이 두 덩어리가 콤마로 이어져 있어 앞쪽에는 시제 동사가 올 수 없으므로, be동사를 분사로 바꾼 독립분사구문이 필요했기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 동사 개수 = 접속사·관계사 개수 + 1 이라는 카운팅이 먼저이고, 능·수동 판단은 그다음입니다."
+        },
+        {
+          "text": "심리가 이미 끝난 과거의 일이므로 과거형 There was 보다 진행의 느낌을 주는 형태가 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "시제의 자연스러움은 형태 선택의 근거가 되지 못합니다. There was 가 배제된 이유는 의미가 아니라 접속사 없이 시제 동사가 둘이 되기 때문입니다."
+        },
+        {
+          "text": "there 는 진짜 주어가 아니므로 그 뒤에는 어떤 형태든 자유롭게 올 수 있기 때문입니다.",
+          "correct": false,
+          "feedback": "there 가 형식상의 주어 자리라는 것은 맞지만, 그렇다고 형태가 자유로워지지는 않습니다. 이 자리는 분사 자리이므로 being 으로 고정됩니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "instruction": "각 묶음에서 결이 다른 하나를 찾으십시오.",
+      "rounds": [
+        {
+          "words": ["조수가 밀려들다", "탁상등이 타다", "다리가 파괴되다", "폭풍이 지나가다"],
+          "odd": 2,
+          "why": "'다리가 파괴되다'만 의미상 주어가 동작을 당하는 수동 관계라 destroyed(p.p.)가 됩니다. 나머지 셋은 스스로 하는 능동 관계이므로 -ing 입니다."
+        },
+        {
+          "words": [
+            "조수가 밀려들자 어부들이 나섰다",
+            "막차가 떠나 여행자들이 헤맸다",
+            "소음에 놀라 사슴이 달아났다",
+            "표가 집계되자 위원회가 발표했다"
+          ],
+          "odd": 2,
+          "why": "'소음에 놀라 사슴이 달아났다'는 놀란 주체가 주절 주어 사슴이라 분사 앞에 남길 주어가 없는 일반 분사구문입니다. 나머지 셋은 의미상 주어가 주절 주어와 달라 명사를 따로 남긴 독립분사구문입니다."
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "With the renovation finally [[1:completed]], the museum reopened last month, its new wing [[2:attracting]] long lines every weekend. The curators, [[3:encouraged]] by the response, [[4:extending]] the opening hours until nine.",
+      "answer": 4,
+      "correction": "extended",
+      "rationales": [
+        "with+목적어+분사 구문입니다. 의미상 주어는 the renovation 이고 보수 공사는 완료되는 쪽이므로 과거분사가 옳습니다.",
+        "주절 주어 the museum 과 다른 주어를 남긴 독립분사구문입니다. 새 부속 건물이 줄을 끌어들이는 능동 관계이므로 -ing 인 attracting 이 옳습니다.",
+        "the curators 를 뒤에서 설명하는 삽입 분사구입니다. 큐레이터는 격려를 받는 쪽이므로 과거분사가 옳습니다.",
+        "뒤 문장에는 시제를 가진 동사가 하나도 없으므로, 준동사 extending 은 본동사가 될 수 없습니다. 시제 동사 extended 로 고쳐야 문장이 성립합니다."
+      ],
+      "ko": "보수 공사가 마침내 끝난 상태로 그 박물관은 지난달 재개관했고, 새 부속 건물은 주말마다 긴 줄을 끌어들였으며, 큐레이터들은 그 반응에 고무되어 개관 시간을 아홉 시까지 연장했습니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 분사구문 문장을 주고 '어법상 틀린 부분을 찾아 고쳐 쓰시오'로 물어봅니다. 분사 앞에 남은 명사를 의미상 주어로 지목하고, 능·수동을 근거로 형태를 고쳐야 만점입니다.",
+          "sample": {
+            "en": "The equipment installing at last, the laboratory could finally run its own experiments.",
+            "ask": "이 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "installed — 남은 주어 The equipment 는 설치되는 쪽이므로 Being 이 생략된 수동 분사 installed 가 옳습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 with 구문의 분사에 밑줄을 긋고, 주절 주어가 사람인 문장을 붙여 판단 기준을 흔듭니다. 밑줄 앞의 with 를 보는 순간 기준을 with 뒤의 목적어로 옮겨야 합니다.",
+          "sample": {
+            "en": "The report noted that the ice sheet was thinning, with the loss of mass [[u:accelerating]] since the late 1990s.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — with 뒤의 목적어 the loss of mass 가 스스로 가속되는 능동 관계이므로 -ing 가 맞습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coral reefs recover slowly after a bleaching event. [[u:The water temperature having fallen back to normal, the surviving polyps begin to rebuild their colonies, with new algae settling into the bleached tissue.]] Recovery still takes years, and a second heat wave can undo the progress within weeks.",
+      "instruction": "밑줄 친 문장에서 두 분사의 의미상 주어를 각각 찾고, 왜 그 형태가 되었는지 설명하십시오.",
+      "found": "having fallen 의 의미상 주어는 앞에 남은 The water temperature 로, 주절 주어 the surviving polyps 와 다르기 때문에 남긴 독립분사구문입니다. settling 의 의미상 주어는 with 뒤의 new algae 이며, 조류가 스스로 자리를 잡는 능동 관계이므로 -ing 입니다. 시제를 가진 동사는 주절의 begin 하나뿐입니다.",
+      "gist": "수온이 정상으로 돌아온 뒤에야 산호가 군체를 재건하기 시작하며, 회복에는 여러 해가 걸린다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "기준을 훔치는 부대상황의 문지기",
+      "intro": "이 문 앞에서 학생들은 늘 같은 실수를 합니다. 눈앞의 주절 주어에 홀려 판단 기준을 그리로 옮기는 것입니다. 나는 그 기준을 훔쳐 능동과 수동을 뒤집습니다. 네 문장으로 진짜 의미상 주어를 짚어 보이십시오.",
+      "questions": [
+        {
+          "prompt": "The general reviewed the troops with his hands ( clasped / clasping ) behind his back.",
+          "options": ["clasped", "clasping"],
+          "answer": 0,
+          "why": "with 뒤의 목적어 his hands 가 의미상 주어입니다. 손은 맞잡히는 쪽이므로 수동 clasped 입니다. 장군이 손을 맞잡는 능동에 끌리면 clasping 을 골라 뒤집힙니다."
+        },
+        {
+          "prompt": "The power ( having failed / having been failed ), the surgeons worked by flashlight.",
+          "options": ["having failed", "having been failed"],
+          "answer": 0,
+          "why": "the power 가 의미상 주어이고 fail 은 여기서 자동사입니다. 자동사는 수동형이 없으므로 능동 완료 having failed 가 옳으며, having been failed 는 존재하지 않는 형태입니다."
+        },
+        {
+          "prompt": "( Praised for the design / The design praising ), the young architect received a national award.",
+          "options": ["Praised for the design", "The design praising"],
+          "answer": 0,
+          "why": "칭찬받은 주체이자 상을 받은 주체가 the young architect 로 같으므로, 분사 앞에 명사를 남기지 않고 주절 주어를 꾸미는 과거분사 Praised 로 시작합니다. The design 을 남기면 설계가 분사의 별개 의미상 주어가 되는데, 설계는 스스로 칭찬하는 것이 아니라 칭찬받는 쪽이므로 능동 praising 은 능·수동이 뒤집힌 오류입니다."
+        },
+        {
+          "prompt": "She read on the porch with the evening light slowly ( fading / faded ).",
+          "options": ["fading", "faded"],
+          "answer": 0,
+          "why": "with 뒤의 the evening light 가 의미상 주어입니다. 빛은 스스로 사그라드는 자동사·능동 관계이고 slowly 가 진행을 알리므로 fading 이 옳습니다. faded 는 이미 다 스러진 상태를 뜻해 slowly 와 충돌합니다."
+        }
+      ],
+      "winText": "기준이 제자리로 돌아왔습니다. 주절 주어가 아무리 요란해도 당신의 눈은 이제 분사 바로 옆의 진짜 임자를 먼저 봅니다. 이 눈이 있으면 어떤 부대상황도 당신을 속이지 못합니다.",
+      "loseText": "문지기가 미소 짓습니다. 네 문장 모두 물음은 하나였습니다 — 이 분사의 진짜 임자는 누구인가. 주절 주어에 홀리지 말고 분사 바로 옆과 with 뒤부터 보고 다시 오십시오. 문은 늘 열려 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 두 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "분사 앞에 명사가 남아 있으면 그 명사가 ___이고, with 뒤에 목적어가 있으면 ___이 판단 기준입니다. 그 기준 명사가 동작을 하면 ___, 받으면 ___를 씁니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "분사구문의 의미상 주어는 원칙적으로 주절 주어이지만, 다르면 그 주어를 분사 앞에 남깁니다(독립분사구문).",
+        "with+목적어+분사에서는 with 바로 뒤의 목적어가 의미상 주어입니다. 주절 주어가 사람이어도 기준은 그 목적어입니다.",
+        "기준 명사가 동작을 하면 -ing, 받으면 p.p. 입니다. Being·Having been 은 생략될 수 있고, 자동사는 목적어가 없어도 능동입니다.",
+        "콤마로 이어진 두 덩어리에 접속사가 없으면 앞쪽에는 시제 동사가 올 수 없습니다. 본동사를 넣으면 비문이 됩니다.",
+        "Generally speaking, Judging from ~ 처럼 말하는 사람이 논리적 주어인 무인칭 분사구문은 주절 주어와 달라도 허용됩니다. All things considered 는 남은 주어 All things 가 그대로 살아 있는(고려되는 쪽이므로 p.p.) 독립분사구문이 굳어진 표현입니다."
+      ],
+      "keySentence": {
+        "en": "**The rain having stopped**, the crew resumed work **with the ladders leaning** against the wall.",
+        "ko": "비가 그치자 작업반은 사다리를 벽에 기대어 놓은 채 작업을 재개했습니다.",
+        "note": "having stopped 의 기준은 앞에 남은 The rain 이고, leaning 의 기준은 with 뒤의 the ladders 입니다. 시제 동사는 resumed 하나뿐입니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u09-c4-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The storm having passed, the ferry left the harbor with the last passengers still {{blank}} aboard.",
+          "options": ["climbing", "climbed"],
+          "answer": 0,
+          "translation": "폭풍이 지나가자, 마지막 승객들이 아직 배에 오르는 중인 채로 여객선은 항구를 떠났습니다.",
+          "explanation": "with+목적어+분사에서 의미상 주어는 the last passengers 입니다. 승객은 스스로 배에 오르는 능동 관계이므로 -ing 인 climbing 이 옳습니다. climbed 를 넣으면 승객이 누군가에 의해 태워진다는 수동이 되어 성립하지 않습니다.",
+          "trapTags": ["with-absolute", "intransitive-participle"]
+        },
+        {
+          "id": "u09-c4-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The committee members [[u:disagreeing]] on the final wording, the vote was postponed until the following Friday.",
+          "isCorrect": true,
+          "translation": "위원들이 최종 문구를 두고 의견이 갈려서, 표결은 다음 주 금요일로 연기되었습니다.",
+          "explanation": "disagreeing 의 의미상 주어는 앞에 남은 The committee members 로, 주절 주어 the vote 와 다르기 때문에 남긴 독립분사구문입니다. 위원들이 스스로 의견을 달리하는 능동 관계이고 disagree 는 자동사이므로 -ing 가 옳습니다.",
+          "trapTags": ["absolute-construction", "intransitive-participle"]
+        },
+        {
+          "id": "u09-c4-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "All things {{blank}}, the second plan proved far more practical than the original one.",
+          "options": ["considered", "considering"],
+          "answer": 0,
+          "translation": "모든 점을 고려할 때, 두 번째 계획이 원래 계획보다 훨씬 더 실용적인 것으로 드러났습니다.",
+          "explanation": "All things considered 는 남은 주어 All things 가 고려되는 쪽인 수동 관계의 독립분사구문이며, 이 형태로 굳어진 표현입니다. considering 을 쓰면 모든 것이 무언가를 고려한다는 능동이 되어 성립하지 않습니다.",
+          "trapTags": ["absolute-construction", "retained-subject"]
+        }
+      ]
+    }
+  ]
+}

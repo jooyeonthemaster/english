@@ -1,0 +1,74 @@
+{
+  "pid": "P056",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "keyPoints (E): \"'be confident of'의 구조에서 전치사가 관계대명사 앞으로 이동한 'of which'의 격 변화\" — 'of which'에서 which의 형태 변화(격 변화)는 표면에 드러나지 않으므로 '격 변화'라는 표현은 부정확한 군더더기다. 다만 구조 분석 자체(confident of + 전치사+관계대명사, 뒤 완전절)는 정확하여 V4 실패로는 보지 않는다."
+    },
+    {
+      "code": "V4-minor-terse-citation",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설이 '뒤에 완전한 절(we were)'로 인용을 축약했다. 실제 절은 'we were when we got the news'이며, where가 부사 슬롯을 채워 완전하다는 학교문법 표준 분석 자체는 옳다. 인용 축약만 다소 거칠다."
+    },
+    {
+      "code": "source-inherited-incoherence",
+      "severity": "minor",
+      "evidence": "원지문 자체가 'numerous studies ... including surveys(복수)' 직후 'In this study(단수)'로 받는 지시 불일치를 갖고 있으나, 이는 원문에서 그대로 온 것으로 렌더 손상이 아니다(V1 무관)."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "콜론 뒤 동격 명사절을 이끄는 의문부사 where + 뒤 절의 완전성 판단",
+      "temptingBecause": "콜론 뒤에 wh-절이 나열되는 구조가 낯설고, 'where we were'만 보면 절 완전성 판단이 애매해 보인다",
+      "decisiveFlaw": "where가 부사 슬롯을 채우는 의문부사로서 'we were (when we got the news)'는 완전한 절이며, the vivid images의 내용을 나열하는 동격 명사절로 적법하다"
+    },
+    {
+      "label": "(B)",
+      "intent": "삽입 분사구('thoroughly reported in the media')를 건너뛴 주어-동사 수일치 (정답)",
+      "temptingBecause": "동사 직전의 최근접 명사 media가 단수처럼 보여 근접 일치로 is를 옳다고 착각하기 쉽다",
+      "decisiveFlaw": "주어 핵은 복수 명사 outlines('the broad outlines of such catastrophes')이므로 is는 비문이며 are로 고치면 정확히 원문이 된다 — 어법상 틀린 것"
+    },
+    {
+      "label": "(C)",
+      "intent": "명사 후치 수식 분사의 태(현재분사 vs 과거분사) 판단",
+      "temptingBecause": "circumstances가 무생물이라 surrounded(수동)로 고쳐야 한다는 착각을 유도한다",
+      "decisiveFlaw": "circumstances가 the events를 능동적으로 둘러싸는 관계이므로 현재분사 surrounding이 적법하다"
+    },
+    {
+      "label": "(D)",
+      "intent": "be + 과거분사 수동태 판단",
+      "temptingBecause": "무생물 주어 memories와 동사 survey의 관계를 따져야 하고, 능동 surveying과의 혼동을 노린다",
+      "decisiveFlaw": "memories는 조사되는 대상이므로 were surveyed 수동태가 적법하다"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사+관계대명사(of which) 뒤 완전절 판단",
+      "temptingBecause": "of which 구조가 생소하고 be confident of의 결합을 재구성해야 하므로 다섯 밑줄 중 가장 판단 부담이 크다",
+      "decisiveFlaw": "선행사 those(= memories)가 'they are most confident of those'로 환원되고 of which 뒤 절이 완전하므로 적법하다"
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints (E)의 '격 변화'는 표면에 드러나지 않는 현상을 지칭하는 부정확한 표현 (minor)",
+    "(A) 오답 해설의 완전절 인용 '(we were)'가 지나치게 축약됨 — 실제로는 'we were when we got the news' (minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 (B) are→is 단일 의도 변형 외 원지문과 완전 일치하며, 블라인드 풀이 결과 정답 집합은 정확히 {(B)} 단일이다. 정답은 source-correct→displayed-wrong 최소대립쌍이고 교정 시 원문 복원. 네 개의 디코이가 각각 의문부사 완전절/분사 태/수동태/전치사+관계대명사라는 서로 다른 포인트를 겨냥해 의도 밀도가 좋고, 근접 명사 media(단수 착시)가 정답 은폐 장치로 작동해 INTERMEDIATE 난이도에 정확히 부합한다(C5=4). 다만 삽입구 수일치는 고도로 정형화된 정전 패턴이라 상위권에게는 빠르게 소거되어 C1/C3는 3에 머문다. 해설은 정확하고 간결하나 keyPoints (E)의 '격 변화' 등 소소한 용어 거칠기가 있어 C6=3. 합계 19로 A 기준(21)에 미달, 모든 C가 3 이상이므로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

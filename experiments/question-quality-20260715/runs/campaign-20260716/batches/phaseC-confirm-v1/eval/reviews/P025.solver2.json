@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "지배 규칙: order + O + to-infinitive (5형식 to부정사 보어 요구 동사). 'orders Daniel first to wax his car'에서 'first'가 목적어와 to부정사 사이에 삽입된 것은 부사 위치로 허용되며, order는 원형부정사를 취하지 않으므로 to wax가 유일한 정문 형태. 어법상 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'in precisely opposed circular motions'에서 opposed는 과거분사의 한정적(attributive) 용법으로 '서로 반대 방향으로 맞놓인' 원운동(wax on/wax off의 시계·반시계 방향)을 수식한다. 'diametrically opposed views'처럼 상호적 대립을 나타낼 때 -ed형 opposed는 표준 용법이며, precisely(부사)가 분사형용사 opposed를 수식하는 구조도 정문. 'opposing'이 더 흔하다는 빈도 차이는 있으나 opposed가 어법상 틀렸다고 형식적으로 증명할 수 없다. 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "지배 규칙: 사역동사 make + O + 원형부정사. 'makes Daniel hammer nails'는 정확히 이 패턴이며 hammer(원형)가 요구된다. to hammer나 hammering이면 오히려 비문. 어법상 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'he can defend himself'에서 defend의 목적어가 절의 주어 he(=Daniel)와 동일 지시이므로 재귀대명사 himself가 의무적(binding principle A: 재귀사는 같은 절 내 선행사와 결속). him이면 오히려 비문. 어법상 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "ERROR",
+      "reason": "'Miyagi physically attacks Daniel, who without thought or hesitation defending himself...'에서 who는 계속적 용법 관계절의 주어이므로 관계절 내에 정형(finite) 동사가 필수인데, defending은 비정형 분사라 관계절에 술어 동사가 없다. 대안 해석 검토: (i) 축약 관계절은 who 없이만 가능('Daniel, defending himself, ...'), who가 명시된 이상 축약 불가; (ii) 'who ... defending'을 분사구문으로 보더라도 그 뒤에 주절 동사가 전혀 없어 관계절이 술어 결핍으로 붕괴; (iii) 도치·생략 등 어떤 정문 파생도 성립하지 않는다. 정형 동사 defends(현재시제 서사 흐름 일치)여야 한다. 어법상 틀림 — 유일한 오답 후보."
+    }
+  ],
+  "note": "장거리 단서 핵심: (E)는 관계대명사 who(주격) 뒤 'without thought or hesitation'이라는 전치사구가 삽입되어 주어-동사 인접성을 끊어 놓은 전형적 함정으로, 관계절의 정형 동사 요구가 지배 규칙. (B)의 opposed는 -ing/-ed 분사 선택을 노린 미끼로 보이나 상호 대립 의미의 opposed는 표준적 정문이라 오답 후보가 되지 못한다. 정답은 (E) 하나로 유일하게 좁혀진다."
+}

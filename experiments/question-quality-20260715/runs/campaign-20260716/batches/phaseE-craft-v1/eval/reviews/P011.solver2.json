@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Grammar: valid free relative ('what the physical redesign ... had promised' as object of 'accomplished'). Logic: presupposition failure — the passage records no physical redesign of the carts at any point; the device stayed the same and only the social framing changed. Nothing in the text can serve as the antecedent event, so the clause asserts a nonexistent promise."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Grammar seam: 'accomplished expanding the promotional advertising ...' is marginal — 'accomplish' selects a task/feat NP, not an -ing clausal complement of this kind; the combination reads as ill-formed or at best degraded. Logic: doubly wrong — the shills did not expand advertising, and advertising was precisely the method already shown to fail ('in spite of his repeated advertisements ... he could not persuade')."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Grammar: perfect free relative — 'what' is the object of 'achieve', and the whole clause is the object of 'accomplished'; tense sequence (past 'accomplished' vs. 'could not achieve') is coherent. Logic: exact anaphoric match to 'in spite of his repeated advertisements and explanations, he could not persuade his shoppers' — advertisements = marketing campaigns, explanations = rational persuasion. The sentence then states the pivot of the whole passage: manufactured social proof (shills) easily did what rational persuasion could not, and the next sentence ('Within a few weeks shoppers readily accepted those carts') confirms the accomplishment."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Grammar: well-formed (gerund phrase 'relying on group conformity' as subject inside the free relative). Logic: self-contradictory in context — the shill tactic IS an exploitation of group conformity, and it succeeded; the passage never depicts anyone relying on group conformity and failing. If anything, conformity had previously worked AGAINST the carts (only the elderly used them, making them less attractive), but that was an unmanaged social dynamic, not a strategy that was 'relied on'. Keyword-bait distractor using the passage's conceptual theme with inverted polarity."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Grammar: strained but parseable ('what [highlighting ...] intended', with the gerund as subject of 'intended'). Logic: fails — the resemblance to baby carriages was the women shoppers' private objection, never a strategy anyone employed or highlighted; 'highlighting' it would have deepened the rejection, and no such intention exists in the text to be accomplished."
+    }
+  ],
+  "note": "Clean single-answer cloze. The blank sentence is the passage's thesis-pivot: social proof via shills vs. failed rational persuasion. Option 3 is the only choice that is both grammatically seamless and anaphorically grounded ('repeated advertisements and explanations' -> 'rational persuasion and marketing campaigns'). Distractor 4 is the strongest trap (reuses the conformity concept but with inverted logic: conformity succeeded rather than failed). Alternative-parse search (reduced relatives, participial readings) found no reading rescuing options 1, 2, or 5. Lens: grammarian/logician, blind solve."
+}

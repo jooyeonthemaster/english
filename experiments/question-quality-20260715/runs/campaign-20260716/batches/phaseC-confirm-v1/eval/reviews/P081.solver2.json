@@ -1,0 +1,35 @@
+{
+  "pid": "P081",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'named' is a reduced passive relative (= 'which are named for the vivid images...') modifying 'flashbulb memories'. The head NP 'memories' is the logical patient of 'name' (memories are named/so called), so the past participle is required, not the -ing form. 'named for X' (= named after/because of X) is an established collocation. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'thoroughly' is an adverb modifying the passive participle 'reported' inside the reduced relative 'thoroughly reported in the media' (= 'which are thoroughly reported...'), which parenthetically modifies 'the broad outlines of such catastrophes'. A participle must be modified by an adverb, not an adjective ('thorough'), so the adverbial form is exactly right. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'precise' is a predicative adjective complement of the copula 'be' ('your memory ... may not necessarily be precise'), predicated of the subject 'your memory'. An adjective, not an adverb ('precisely'), is required after 'be' here. Semantically apt (memory accuracy). Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'including' functions as a preposition introducing an exemplifying NP ('including surveys of ...'), attached to 'numerous studies of this phenomenon'. The set-member relation holds (the surveys are among the studies), and no finite verb or agreement issue arises. The passive alternative 'included' would be wrong here; 'including' is standard. Grammatical."
+    },
+    {
+      "label": "(E)",
+      "verdict": "wrong",
+      "reason": "In 'those which they are most confident', the relative clause must contain a gap licensed by some head, but 'confident' is an adjective and cannot take a bare NP object; it requires a preposition ('confident of/in/about something'). Since no preposition is present (neither pied-piped 'of which' nor stranded '... confident of'), the relative pronoun 'which' has no grammatical function inside the clause. The formally correct version is 'those of which they are most confident' (or '... that they are most confident about'). No rescue parse exists: 'which' cannot be a complementizer of an adverbial clause here, and 'they are most confident' is not a complete clause modifying 'those' appositively. Ungrammatical — this is the error."
+    }
+  ],
+  "note": "Long-distance checks performed: (A) patient relation between 'memories' and 'name' licenses the passive participle; (B) parenthetical reduced relative on 'the broad outlines' with subject-verb agreement 'outlines ... are' intact; (E) the coordination 'those [of] which they are most confident and ... the ones that have most changed' confirms the intended structure — the second conjunct 'that have most changed' has a subject gap and is fine, while the first requires 'of which' because 'confident' subcategorizes for a PP. Exactly one defensible answer: (E)."
+}

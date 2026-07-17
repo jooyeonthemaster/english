@@ -1,0 +1,35 @@
+{
+  "pid": "P107",
+  "answer": "B",
+  "multipleDefensible": false,
+  "defensibleLabels": ["B"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "with-절대구문 'with some roles more dangerous and some having more plentiful access...'에서 'with + NP + 형용사구'는 표준 구문이다(being 생략형: with some roles [being] more dangerous). 뒤따르는 'some having...'과의 병렬도 'with NP + XP' 패턴 안에서 형용사구/현재분사구가 각각 서술어 역할을 하므로 성립한다. 어법상 옳다."
+    },
+    {
+      "label": "B",
+      "verdict": "incorrect",
+      "reason": "'The archeological record shows that soon after ..., some burials starting to look different from others.'에서 접속사 that이 명시되어 있으므로 that-절 내부에는 정형동사(finite verb)가 반드시 필요하다. 그런데 'some burials starting to look...'에는 정형동사가 없어 절이 성립하지 않는다. 'show + NP + V-ing'(The record shows some burials starting to look...) 같은 지각동사류 구문은 that이 없을 때만 가능하며, that이 있는 현 문맥에서는 구제 불가능하다. started(과거) 또는 start(현재 서술)로 고쳐야 한다. 어법상 틀렸다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'Some individuals are buried with more precious goods'는 bury의 수동태로, 매장의 대상인 individuals가 주어이므로 be buried가 맞다. 지문 전체가 고고학 기록을 현재시제로 서술하는 흐름과도 일치한다. 어법상 옳다."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'some are in group graves and some by themselves'에서 'by themselves'(홀로/단독으로)는 관용 표현이며, 재귀대명사 themselves는 절의 주어 'some (individuals)'(복수)와 일치한다. 앞의 'some are in group graves'와 be동사 생략 병렬('some [are] by themselves')도 성립한다. 어법상 옳다."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'The bones ... start to show us differences'에서 start는 to부정사와 동명사를 모두 목적어로 취하는 동사이므로 'start to show'는 정문이다. show + 간접목적어(us) + 직접목적어(differences)의 4형식 결합도 정상이다. 어법상 옳다."
+    }
+  ],
+  "note": "정답은 (B) 하나로 명확히 수렴한다. 핵심 지배 규칙: 명시적 that-보문절은 정형동사를 요구하는데 starting은 비정형이라 절의 본동사가 부재한다. 대안 해석(show+NP+V-ing 지각구문)은 that이 명시된 이상 성립 불가하며, starting을 축약 관계절로 보더라도 that-절에 본동사가 남지 않아 역시 비문이다. 나머지 밑줄(A: with 절대구문의 형용사 서술어, C: 수동태, D: by oneself 관용구+수 일치, E: start to-V)은 모두 장거리 단서까지 확인해도 정문."
+}

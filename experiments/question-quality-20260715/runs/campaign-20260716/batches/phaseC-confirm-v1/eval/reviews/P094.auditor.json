@@ -1,0 +1,70 @@
+{
+  "pid": "P094",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CORRUPTED-TERM",
+      "severity": "major",
+      "evidence": "(A) 오답 해설: '복수 주어 students에 맞추어 복수형 비동사 are를 사용' — '비동사'는 'be동사'의 손상 표기(비단어)이며, 표기 그대로는 非동사(동사가 아닌 것)로 읽혀 are를 동사가 아니라고 설명하는 사실 오류가 된다. RUBRIC V4의 '용어 오류가 없다' 조건 위반. 학생 노출 필드이므로 출하 불가."
+    },
+    {
+      "code": "V4-CONTEXT-DEPENDENT-JUSTIFICATION",
+      "severity": "minor",
+      "evidence": "(B) 정답 해설이 '문맥상 그리고 어법상 적절'이라고 스스로 서술하듯, pressing/pressed 판정 근거가 부분적으로 어휘 연어('pressing demands')와 문맥 선호에 의존한다. V2 자체는 통과하나(pressed는 이 결합에서 비관용·비문), KILLER용 '명확한 문법 판단' 요건을 약화시키는 서술이다."
+    }
+  ],
+  "craft": {
+    "C1": 2,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "수일치 — if절 내 복수 주어 students와 be동사 대응 (pointCode d)",
+      "temptingBecause": "두 개의 if절이 연쇄되고 뒤에 there are 구문이 이어져 주어-동사 대응을 순간적으로 흐리게 한다",
+      "decisiveFlaw": "students는 명백한 복수 주어이므로 are가 정확 — 상위권 학생에게는 즉시 소거되는 약한 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "분사의 태/의미 — 명사를 수식하는 현재분사 vs 과거분사 선택 (pointCode c) [선언된 정답]",
+      "temptingBecause": "명사 앞 과거분사 수식(-ed + N)이 흔한 패턴이라 pressed demands가 표면상 자연스러워 보인다",
+      "decisiveFlaw": "demands는 교사의 시간을 압박하는 능동 주체이므로 pressing이어야 하며 교정 시 정확히 원문 복원 — 유일 오류로 확인. 단, 국소 연어 지식으로 즉시 판별되어 구조 독해를 요구하지 않는다"
+    },
+    {
+      "label": "(C)",
+      "intent": "자동사의 수동 불가 + 조동사 뒤 동사원형 (pointCode e)",
+      "temptingBecause": "'사라지다'라는 결과적 의미를 수동(be disappeared)으로 오인할 여지",
+      "decisiveFlaw": "disappear는 자동사이고 can 뒤 원형이 정확 — 교과서적 포인트라 소거가 빠르다"
+    },
+    {
+      "label": "(D)",
+      "intent": "to부정사의 부사적 용법(목적) — use X to-inf 구조 (pointCode a)",
+      "temptingBecause": "use 뒤에서 동명사(getting)나 전치사구와의 혼동 유도",
+      "decisiveFlaw": "use the first ten minutes to get은 표준 목적 부정사 — 판단 부담이 거의 없다"
+    },
+    {
+      "label": "(E)",
+      "intent": "과거분사 보어 — be prepared for 상태 표현 (pointCode f)",
+      "temptingBecause": "뒤따르는 have taught와의 병렬 및 능동 preparing과의 혼동을 유도, 정답 (B)와 같은 분사 계열이라 상호 간섭 효과",
+      "decisiveFlaw": "be prepared for는 관용적 상태 서술로 명백히 정문 — (B)를 가릴 만큼 강하지는 않다"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설의 '복수형 비동사'는 'be동사'의 오기로, 비단어/손상 용어가 학생 노출 해설에 그대로 실렸다 (V4 실패 사유).",
+    "(B) 해설이 판단 근거를 '문맥상 그리고 어법상'으로 병기해 순수 문법 판단이라는 인상을 스스로 약화시킨다. KILLER 어법 조건('문맥 선호가 아닌 명확한 문법 판단')과 긴장 관계.",
+    "keyPoints가 (A)(B)(C)만 다루고 (D)(E) 포인트는 누락 — 동기화 모순은 아니나 완결성이 떨어진다."
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1/V2/V3/V5 통과: 렌더 지문은 pressing→pressed 단일 의도 변형 외 손상이 없고, 5개 밑줄 독립 검증 결과 정답 집합은 정확히 {(B)}이며, 필드 간 동기화도 일치한다((B) markedExpressions: isError true, correction 'pressing'; surroundingText가 원문 기준인 것은 전 라벨 공통 관례). 치명 결함은 V4: (A) 해설의 '복수형 비동사'라는 손상 용어로, RUBRIC의 비타협 게이트 '용어 오류가 없다'를 위반해 등급은 F(공예 점수로 상쇄 불가). 공예 측면에서는 요청 난이도 KILLER 대비 심각한 미달이 별도 문제다: 정답 (B)는 pressing demands라는 잘 알려진 연어의 분사 태 포인트로 국소 단서만으로 즉시 판별되고(§C 'KILLER 정답은 구조를 읽어야 한다' 위반), (A)(C)(D)는 상위권에게 즉시 소거되는 약한 디코이라 C3=2, C5=1. killerConditionsMet=false. '비동사'→'be동사' 교정 후에도 난이도 재설계 없이는 KILLER로 출하 불가하며, 중상 난이도 문항으로 재라벨링하면 B급 수준으로 회복 가능하다."
+}

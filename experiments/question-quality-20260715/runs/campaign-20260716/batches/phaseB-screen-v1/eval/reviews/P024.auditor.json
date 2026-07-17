@@ -1,0 +1,70 @@
+{
+  "pid": "P024",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "validityEvidence": {
+    "V1": "렌더 지문과 원지문을 전문 대조한 결과 유일한 차이는 (E) 자리의 does→is 치환(의도된 변형)뿐이다. 대시(―)·세미콜론·콜론 등 문장부호 손상 없음, 중복·누락 문장 없음, 밑줄 라벨 (A)~(E)가 선택지 목록과 정확히 일치한다.",
+    "V2": "각 밑줄 독립 검증: (A) repeats는 주격 관계대명사 that의 선행사 'any process'(단수)에 일치하는 단수동사로 정문(대안 선행사 없음). (B) regularly는 자동사 vibrate를 수식하는 부사로 정문. (C) marked는 'a candle'을 후치수식하는 과거분사(초가 표시되는 수동 관계)로 정문. (D) to yield는 seem+to부정사 구문으로 정문. (E) is는 선행 일반동사구 'yield a smooth time scale'을 대신해야 하는 대동사 자리이므로 does가 필요해 유일한 오류. 대안 해석 'is not [like this]'는 직전 병렬 대상이 to부정사 VP이고, 'smooth'는 한정 용법이라 서술적 생략의 선행사가 될 수 없어 성립하지 않는다. 교정 시 정확히 원문으로 복원된다.",
+    "V3": "지문은 의도된 오류 (E) 외에 비문 없음. 발문은 표준 어법 발문. 정답 교정형(does not)을 넣은 완성문은 원문과 동일하며 문법적·자연스럽다. 비단어·오탈자 없음.",
+    "V4": "해설의 대동사 분석(be동사는 일반동사구를 대신할 수 없고 does not 뒤에 'yield a smooth time scale'이 생략)은 실제 통사 구조와 정확히 일치한다. 오답 해설 4건 모두 실제 해당 밑줄의 구조(관계절 수일치·부사 수식·과거분사 후치수식·seem to-v)와 대응하며 오분석·환각·비단어 없음. (D)의 to부정사를 seems의 보어로 부르는 것은 학교문법상 통용되는 분석이다.",
+    "V5": "선언 정답 (E) = 해설 ⑤(E) = markedExpressions의 isError:true 항목 = keyPoints 첫 항목이 모두 일치. markedExpressions는 expression/correction=원문형(does), errorExpression=표시형(is) 규약으로 내부 일관적이며 렌더 지문의 '(E) is'와 동기화됨. 오답 해설 키 (A)~(D)가 선택지와 일치."
+  },
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "대동사 do vs be는 정전급 어법 포인트이고, 지문 논리의 전환점 문장(seems to yield ~ but in fact does not)에 정확히 얹혀 있다. 다만 포인트 자체는 매우 표준적인 단일 지점이라 4는 아님.",
+    "C2": "네 오답이 각각 관계절 수일치·부사/형용사·분사 태·seem 보어형이라는 서로 다른 오개념을 겨냥하고 모두 개별 해설이 존재한다. 의도 없는 필러는 없으나 각 밑줄의 why-tempting까지 설계된 흔적은 약함.",
+    "C3": "(B) regularly와 (D) to yield는 거의 즉시 소거되는 낮은 매력도의 검증 지점이고, 실제 판단이 필요한 것은 (A)·(C)와 정답 (E) 정도다. 정답 자체는 구조 독해(선행 VP의 품사 판별)를 요구하지만 선지 간 경쟁은 '일부 실제 판단' 수준.",
+    "C4": "메타 누출·꼬리 소거 단서 없음. 최소대립쌍이 깨끗하고 교정하면 정확히 원문이 되며, 콜론 이하의 부연이 정답의 필연적 근거를 제공한다.",
+    "C5": "INTERMEDIATE 요청에 대해 정답 포인트(대동사)의 사고 단계와 디코이 깊이가 중급 실전 어법 문항의 전형에 부합한다. 일부 디코이가 다소 쉬운 편이라 4는 유보.",
+    "C6": "정답 해설은 짧고 정확하며 교정형·생략 구조까지 제시한다. 다만 'is'가 왜 매력적인지(직전 문장 appears to be like this의 be 프라이밍, 후행절 is repetitive와의 표면 병렬)라는 핵심 함정 분리가 없어 4는 아님."
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사절 내 동사의 선행사 수일치 판단",
+      "temptingBecause": "'almost any process that ...' 구조에서 선행사 확정이 필요하고, 뒤따르는 재귀대명사 itself·빈도 부가어가 검증 부담을 더한다",
+      "decisiveFlaw": "선행사 'any process'는 단수이므로 단수동사 repeats가 정확하다 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "동사 수식 자리의 부사 vs 형용사 구별",
+      "temptingBecause": "자동사 뒤 위치가 보어 자리(형용사)로 오인될 여지가 있다",
+      "decisiveFlaw": "vibrate는 동작 자동사이고 수식 대상이 동사이므로 부사 regularly가 정확하다 — 오류 아님. 다만 매력도가 낮아 즉시 소거에 가깝다"
+    },
+    {
+      "label": "(C)",
+      "intent": "명사 후치수식 분사의 능동/수동 판단",
+      "temptingBecause": "'a candle marked in hours'에서 현재분사 marking과의 태 선택을 강제하고, 문미 masked와의 표면 유사성이 있다",
+      "decisiveFlaw": "초는 시간 단위로 '표시되는' 대상이므로 과거분사 marked가 정확하다 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "seem의 보어 형태(to부정사) 판단",
+      "temptingBecause": "yielding 등 동명사/분사 대안형을 떠올릴 수 있다",
+      "decisiveFlaw": "seem은 to부정사를 취하는 표준 구문이므로 to yield가 정확하다 — 오류 아님. 검증이 매우 빨라 매력도 낮음"
+    },
+    {
+      "label": "(E)",
+      "intent": "일반동사구를 대신·부정하는 대동사 does vs be동사 구별 (정답)",
+      "temptingBecause": "직전 문장의 'appears to be like this'가 be를 프라이밍하고, 콜론 뒤 'the decay ... is repetitive'와의 표면 병렬이 is를 자연스러워 보이게 한다",
+      "decisiveFlaw": "생략된 선행 VP가 일반동사구 'yield a smooth time scale'이므로 be동사로 대신할 수 없고 does not이어야 한다 — 유일 오류, 교정 시 원문과 정확히 일치"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과. 원지문 대비 유일 변형이 (E) does→is 최소대립쌍이며 교정 시 원문 복원. 정답 유일성은 각 밑줄 독립 분석과 대안 해석(is not [like this], 서술적 생략) 배제로 확인. 공예 합계 18(C3=2가 최저): (B)·(D)가 즉시 소거급이라 선지 경쟁력이 제한적이고, 해설이 정답의 매력 요인(be 프라이밍)을 짚지 않는다. INTERMEDIATE 요청 난이도에는 부합하므로 B — (B)나 (D)를 실제 판단이 필요한 디코이로 교체하면 A 후보. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

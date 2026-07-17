@@ -1,0 +1,35 @@
+{
+  "pid": "P014",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "주어가 동명사구 'being ethical'(단수)이고 'be defined as ~ing'는 관용적 수동 구문. 'although being ethical is defined as acting...'에서 수일치·태 모두 정상. 장거리 단서(진짜 주어=동명사구) 확인 완료."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'vary both between and within individuals'는 상관접속사 both A and B가 전치사 between/within을 병렬하고 목적어 individuals를 공유하는 표준적 공유생략(shared-completion) 구조. 'and' 뒤가 비어 보여 매력적 오답으로 끌리는 지점이나, 뒤 문장('the same individual may make different choices')이 within individuals(개인 내 변이)의 의미를 지지하므로 문법·논리 모두 정상."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "주어는 자유관계절(명사절) 'What a person values'로 기본 단수 취급 → 'relates'가 되어야 함. 구제 해석을 적극 탐색: (1) what절 복수 일치('What I need are books')는 보어가 복수 명사구일 때만 논의되는데 여기 술부는 'relate to their beliefs'(전치사구)라 성립 불가, (2) 'values'를 명사로 읽는 대안 파스는 'a person values'가 한정사-수 불일치로 NP가 될 수 없어 불가. 따라서 주어-동사 수일치 오류가 확정적."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "조동사 may 뒤 동사원형 make + 목적어 different choices. 주어 'the same individual'과의 결합도 자연스럽고 문맥(맥락 의존적 선택 변이)에 부합."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'recognizing and accepting that + 절'에서 that은 병렬 동명사(recognizing/accepting)의 공동 목적어인 명사절을 이끄는 접속사. 뒤따르는 'the factors that drive...'의 관계사 that과 겹쳐 파싱 부담을 주는 미끼이지만 각각 독립적으로 정당(보문소 + 제한적 관계사). 정상."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 1차 통독에서 (C)의 what절 단수 일치 위반이 즉시 포착됨. 가장 강한 유혹은 (B)('both between and'가 절단된 듯 보임)와 (E)(that 3연쇄 파싱 부담)였으나, (B)는 공유목적어 생략 표준 구조, (E)는 보문소로 각각 정문 확정. (C)에 대한 대안 정문 해석(복수 일치, values 명사 파스)을 적극 탐색했으나 모두 실패 → 단일 정답으로 수렴. 문항 성립성 양호."
+}

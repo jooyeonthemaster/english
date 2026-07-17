@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "auditDateKst": "2026-07-15",
+  "auditKind": "deterministic-splits-remediation-reaudit-v7",
+  "verdict": "BLOCK",
+  "summary": {
+    "total": 1160,
+    "pass": 1069,
+    "fail": 91,
+    "v6CurrentSemanticReplay": {
+      "total": 904,
+      "pass": 904,
+      "fail": 0,
+      "verdict": "PASS",
+      "failedCaseIds": []
+    },
+    "newHoldout": {
+      "total": 256,
+      "pass": 165,
+      "fail": 91,
+      "minimumRequired": 224,
+      "blindCaseCount": 224,
+      "postBlindTargetedSupplementCount": 32,
+      "families": {
+        "blank_explanation_step_numbering": {
+          "total": 32,
+          "pass": 16,
+          "fail": 16,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 0,
+          "observedNegative": 32,
+          "falseNegative": 16,
+          "falsePositive": 0
+        },
+        "blank_paraphrase_residual_visibility": {
+          "total": 32,
+          "pass": 32,
+          "fail": 0,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 16,
+          "observedNegative": 16,
+          "falseNegative": 0,
+          "falsePositive": 0
+        },
+        "grammar_keypoint_nonexistent_label": {
+          "total": 32,
+          "pass": 18,
+          "fail": 14,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 2,
+          "observedNegative": 30,
+          "falseNegative": 14,
+          "falsePositive": 0
+        },
+        "grammar_terminology_accuracy": {
+          "total": 32,
+          "pass": 16,
+          "fail": 16,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 0,
+          "observedNegative": 32,
+          "falseNegative": 16,
+          "falsePositive": 0
+        },
+        "sentence_order_paragraph_integrity": {
+          "total": 32,
+          "pass": 19,
+          "fail": 13,
+          "expectedPositive": 16,
+          "expectedNegative": 16,
+          "observedPositive": 3,
+          "observedNegative": 29,
+          "falseNegative": 13,
+          "falsePositive": 0
+        },
+        "summary_mc_direction_answer_object": {
+          "total": 96,
+          "pass": 64,
+          "fail": 32,
+          "expectedPositive": 48,
+          "expectedNegative": 48,
+          "observedPositive": 44,
+          "observedNegative": 52,
+          "falseNegative": 18,
+          "falsePositive": 14
+        }
+      },
+      "controlBalance": {
+        "positive": 128,
+        "negative": 128
+      },
+      "summaryDirection": {
+        "positive": 48,
+        "negative": 48,
+        "hardNegativeCount": 35,
+        "requiredSourceVariantCounts": {
+          "본문상": 8,
+          "지문으로 볼 때": 8,
+          "글에 비추어": 8,
+          "제시 근거상": 8
+        },
+        "markerStyleSummary": {
+          "explicit_AB": {
+            "positive": 32,
+            "negative": 32
+          },
+          "unlabeled_two_blanks": {
+            "positive": 16,
+            "negative": 16
+          }
+        }
+      }
+    }
+  },
+  "oraclePolicy": {
+    "mismatchRule": "One expected/observed mismatch blocks the audit; no tolerance, warning credit, majority vote, or post-run oracle change is allowed.",
+    "positiveDefinition": "A positive is an unambiguous fatal surface defect in the named family and requires that family's deterministic fatal split.",
+    "negativeDefinition": "A negative is a legitimate lexical/structural look-alike for which that family split must stay silent.",
+    "unrelatedIssuePolicy": "Only the named split code or a documented same-family structural equivalent is scored; unrelated diagnostics cannot create pass credit.",
+    "ambiguityExclusion": "Ambiguous candidates were discarded during blind authoring and were never assigned an id or included in the sealed 224-case corpus.",
+    "failureEvidenceLocator": "Resolve each compact failure id to blind-holdout-cases.mjs or targeted-summary-answer-object-cases.mjs for its immutable input and oracle."
+  },
+  "noveltyAndBlinding": {
+    "blindSeal": {
+      "schemaVersion": 1,
+      "sealedAtUtc": "2026-07-14T20:15:14.1813684Z",
+      "gitHeadAtSeal": "467c6d107137a91088d3eba1620ba4036a63d709",
+      "holdoutFile": "blind-holdout-cases.mjs",
+      "holdoutSha256": "d74721aafa909a641bd69de236ef1c7dcbc921b327e363ecbf93b65bbe921fdd",
+      "semanticCaseCount": 224,
+      "blindingStatement": "No v4-v6 audit script, result, narrative, manifest, verifier, or unit-test body was opened before this seal. Only production validator filenames/exports and the external audit brief were used.",
+      "oraclePolicy": "Ambiguous cases were excluded before sealing. expectedFlag=true requires the named fatal split; expectedFlag=false is a legitimate look-alike that must not trigger it."
+    },
+    "blindHoldoutSha256": "d74721aafa909a641bd69de236ef1c7dcbc921b327e363ecbf93b65bbe921fdd",
+    "blindSealSha256": "9f7b60997cc4c92e0b862a43c66db58cdefab161a9c1098b88185f610e1e9bc9",
+    "targetedSupplementSha256": "4a1b8a9b6933ec1fd6ebef1b0d18cb3887a69210309a1921bdba743fa4840478",
+    "blindedCaseCount": 224,
+    "transparentlyPostBlindTargetedCaseCount": 32,
+    "priorAuditLiteralCollisionIds": [],
+    "uniqueIdCount": 256,
+    "uniquePrimaryInputCount": 256,
+    "newCaseIdsSha256": "316c4ae6aeb1bc2b513be5aa5c4849b4767054189a3aca19c980d01c330597b6",
+    "newPrimaryInputsSha256": "a2c25803d41a521dbdd1186bfc975fcc01c4083040e58aa473481c6185e2a158",
+    "passedCaseIdsSha256": "a6d630984098a796e7aef6f1e1a0d208036658f27de2e7f7a50b9594eb4a7af2"
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "browserCalls": 0,
+    "networkCalls": 0,
+    "databaseReads": 0,
+    "databaseWrites": 0,
+    "productionEdits": 0,
+    "existingTestEdits": 0
+  },
+  "provenance": {
+    "auditScriptSha256": "de6c6b25217abc772561834d360509798172a3a08a3c2430dc1ec9beadb75029",
+    "frozenV6": {
+      "immutableVerdict": "BLOCK",
+      "immutableSummary": {
+        "total": 904,
+        "pass": 894,
+        "fail": 10,
+        "failedCaseIdsSha256": "8d788db213dfb439ab7ee23427678b4a4cabff3611b4e619aae8f545e82d4c05"
+      },
+      "manifestSha256": "99f7472df3f71a8a7c00c0856b622726284370b65a155a5a4b1d3efaa9e8af56",
+      "manifestEntries": [
+        {
+          "expectedHash": "bbc9f60edf29a72d395bde970f6b0892df01596c36f36516a0949989e1774a67",
+          "relativePath": "AUDIT.md"
+        },
+        {
+          "expectedHash": "feae16b10378de3881f3ee62372bbda733b7956627e3ebe687495f82cac62707",
+          "relativePath": "RESULTS.json"
+        },
+        {
+          "expectedHash": "f557fb04ccf4eb83758b13b7a09a63209343ad8aaaf1658204cc4daf861653a7",
+          "relativePath": "audit.mts"
+        },
+        {
+          "expectedHash": "d596879962541d03bd48d4e7f6c91184dd1fbeea8470554f4863ce4f1a9e45e3",
+          "relativePath": "verify.mjs"
+        }
+      ],
+      "auditScriptSha256": "f557fb04ccf4eb83758b13b7a09a63209343ad8aaaf1658204cc4daf861653a7",
+      "sourceAndTestProvenance": {
+        "src/lib/question-quality/index.ts": {
+          "frozenSha256": "2db502873ac6fbb295afdd8315fb166d5a6a408fdc213f3def1be1a300a4137f",
+          "currentSha256": "2db502873ac6fbb295afdd8315fb166d5a6a408fdc213f3def1be1a300a4137f",
+          "matchesFrozen": true
+        },
+        "src/lib/question-quality/core.ts": {
+          "frozenSha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+          "currentSha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+          "matchesFrozen": true
+        },
+        "src/lib/question-quality/dispatcher.ts": {
+          "frozenSha256": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+          "currentSha256": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+          "matchesFrozen": true
+        },
+        "src/lib/question-quality/validators/summary/mc.ts": {
+          "frozenSha256": "059bffea483afe0ee0903f7a9001d7de9b5b69346bf933c285a59cb9f8b2b5e0",
+          "currentSha256": "cbee499c23802fcf931a104585e57ec91e4a0176800162009a8ae13370bf776d",
+          "matchesFrozen": false
+        },
+        "src/lib/question-quality/validators/blank/inference.ts": {
+          "frozenSha256": "383a8b557097184e62ae6a924e47e682cb0224893db314a1c11d542a6e77dc99",
+          "currentSha256": "383a8b557097184e62ae6a924e47e682cb0224893db314a1c11d542a6e77dc99",
+          "matchesFrozen": true
+        },
+        "src/lib/question-quality/validators/grammar/shared.ts": {
+          "frozenSha256": "f1eb1dc3b1e8d9596bf9dd8f9dcc1766753538be0e1c4462d16d93cb38c842c5",
+          "currentSha256": "f1eb1dc3b1e8d9596bf9dd8f9dcc1766753538be0e1c4462d16d93cb38c842c5",
+          "matchesFrozen": true
+        },
+        "src/lib/question-quality/validators/sentence-order.ts": {
+          "frozenSha256": "14963483d7a66e8cd3f376aed2701616c963ff1c778a6165a671becfa25b0de3",
+          "currentSha256": "14963483d7a66e8cd3f376aed2701616c963ff1c778a6165a671becfa25b0de3",
+          "matchesFrozen": true
+        },
+        "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts": {
+          "frozenSha256": "a672875d20315667b7a662737930f63c76328136656bbb635c014d5f1ed24bff",
+          "currentSha256": "a672875d20315667b7a662737930f63c76328136656bbb635c014d5f1ed24bff",
+          "matchesFrozen": true
+        },
+        "tests/unit/sentence-order-quality.test.mjs": {
+          "frozenSha256": "9501144bcc8dde4a4258136dc260d3ffe5a652f99121a5b0c8a22c76935197d0",
+          "currentSha256": "9501144bcc8dde4a4258136dc260d3ffe5a652f99121a5b0c8a22c76935197d0",
+          "matchesFrozen": true
+        },
+        "tests/unit/summary-mc-direction-split.test.mjs": {
+          "frozenSha256": "3d0390682f2f290271beed6cfdd8a03ed6b11221d20e2cbc8ce2ce87dcc6c1a1",
+          "currentSha256": "61e1bacec6bda701d1d540a09ae70824b84bd14ca8fc1aa07e0d1ab8a77633ae",
+          "matchesFrozen": false
+        },
+        "tests/unit/blank-explanation-step-numbering.test.mjs": {
+          "frozenSha256": "6b79576842650b2abcf129b4aed4d7e9d35d8fccf26409eceacc5a06a811c324",
+          "currentSha256": "6b79576842650b2abcf129b4aed4d7e9d35d8fccf26409eceacc5a06a811c324",
+          "matchesFrozen": true
+        },
+        "tests/unit/question-validity-invariants.test.mjs": {
+          "frozenSha256": "73c74c3274c48fafe9712b198e61077b662e79fc14caa2b09f813015cd167aed",
+          "currentSha256": "73c74c3274c48fafe9712b198e61077b662e79fc14caa2b09f813015cd167aed",
+          "matchesFrozen": true
+        },
+        "tests/unit/grammar-keypoint-core10.test.mjs": {
+          "frozenSha256": "894458f6bc9a467f14125fd9e9459e73e77541e6dd096192b16e1f76751fa2bc",
+          "currentSha256": "894458f6bc9a467f14125fd9e9459e73e77541e6dd096192b16e1f76751fa2bc",
+          "matchesFrozen": true
+        },
+        "tests/unit/grammar-killer-overdrilled.test.mjs": {
+          "frozenSha256": "aff501d56a409a64874898c1c35b50a81f9161fc64091c503a77df2e583ccdca",
+          "currentSha256": "aff501d56a409a64874898c1c35b50a81f9161fc64091c503a77df2e583ccdca",
+          "matchesFrozen": true
+        },
+        "tests/unit/summary-mc-collocation-severity-split.test.mjs": {
+          "frozenSha256": "1644b66882c16927f396dad73afa2f155db0ee94d77b2ac49f48fea768dee2db",
+          "currentSha256": "1644b66882c16927f396dad73afa2f155db0ee94d77b2ac49f48fea768dee2db",
+          "matchesFrozen": true
+        }
+      }
+    },
+    "currentV6ReplayAuditScriptSha256": "f557fb04ccf4eb83758b13b7a09a63209343ad8aaaf1658204cc4daf861653a7"
+  },
+  "failureIndex": {
+    "falseNegativeIds": [
+      "v7-blank-step-pos-01",
+      "v7-blank-step-pos-02",
+      "v7-blank-step-pos-03",
+      "v7-blank-step-pos-04",
+      "v7-blank-step-pos-05",
+      "v7-blank-step-pos-06",
+      "v7-blank-step-pos-07",
+      "v7-blank-step-pos-08",
+      "v7-blank-step-pos-09",
+      "v7-blank-step-pos-10",
+      "v7-blank-step-pos-11",
+      "v7-blank-step-pos-12",
+      "v7-blank-step-pos-13",
+      "v7-blank-step-pos-14",
+      "v7-blank-step-pos-15",
+      "v7-blank-step-pos-16",
+      "v7-grammar-label-pos-01",
+      "v7-grammar-label-pos-02",
+      "v7-grammar-label-pos-03",
+      "v7-grammar-label-pos-04",
+      "v7-grammar-label-pos-05",
+      "v7-grammar-label-pos-08",
+      "v7-grammar-label-pos-09",
+      "v7-grammar-label-pos-10",
+      "v7-grammar-label-pos-11",
+      "v7-grammar-label-pos-12",
+      "v7-grammar-label-pos-13",
+      "v7-grammar-label-pos-14",
+      "v7-grammar-label-pos-15",
+      "v7-grammar-label-pos-16",
+      "v7-grammar-term-pos-01",
+      "v7-grammar-term-pos-02",
+      "v7-grammar-term-pos-03",
+      "v7-grammar-term-pos-04",
+      "v7-grammar-term-pos-05",
+      "v7-grammar-term-pos-06",
+      "v7-grammar-term-pos-07",
+      "v7-grammar-term-pos-08",
+      "v7-grammar-term-pos-09",
+      "v7-grammar-term-pos-10",
+      "v7-grammar-term-pos-11",
+      "v7-grammar-term-pos-12",
+      "v7-grammar-term-pos-13",
+      "v7-grammar-term-pos-14",
+      "v7-grammar-term-pos-15",
+      "v7-grammar-term-pos-16",
+      "v7-order-pos-01",
+      "v7-order-pos-02",
+      "v7-order-pos-03",
+      "v7-order-pos-04",
+      "v7-order-pos-05",
+      "v7-order-pos-06",
+      "v7-order-pos-07",
+      "v7-order-pos-08",
+      "v7-order-pos-12",
+      "v7-order-pos-13",
+      "v7-order-pos-14",
+      "v7-order-pos-15",
+      "v7-order-pos-16",
+      "v7-summary-direction-pos-01",
+      "v7-summary-direction-pos-04",
+      "v7-summary-direction-pos-08",
+      "v7-summary-direction-pos-09",
+      "v7-summary-direction-pos-12",
+      "v7-summary-direction-pos-16",
+      "v7-summary-direction-pos-17",
+      "v7-summary-direction-pos-18",
+      "v7-summary-direction-pos-19",
+      "v7-summary-direction-pos-20",
+      "v7-summary-direction-pos-21",
+      "v7-summary-direction-pos-22",
+      "v7-summary-direction-pos-23",
+      "v7-summary-direction-pos-24",
+      "v7-summary-direction-pos-25",
+      "v7-summary-direction-pos-28",
+      "v7-summary-direction-pos-32",
+      "v7-summary-targeted-pos-09"
+    ],
+    "falsePositiveIds": [
+      "v7-summary-targeted-neg-01",
+      "v7-summary-targeted-neg-02",
+      "v7-summary-targeted-neg-03",
+      "v7-summary-targeted-neg-04",
+      "v7-summary-targeted-neg-05",
+      "v7-summary-targeted-neg-06",
+      "v7-summary-targeted-neg-08",
+      "v7-summary-targeted-neg-09",
+      "v7-summary-targeted-neg-10",
+      "v7-summary-targeted-neg-11",
+      "v7-summary-targeted-neg-13",
+      "v7-summary-targeted-neg-14",
+      "v7-summary-targeted-neg-15",
+      "v7-summary-targeted-neg-16"
+    ],
+    "allFailureIdsSha256": "10fe20ac6ef4ed524d2a5bc171ac1a0d9d79d0ebbae0e6c43271547ce71fe27b",
+    "evidenceLocator": "Case ids resolve to blind-holdout-cases.mjs or targeted-summary-answer-object-cases.mjs; exact replay recomputes observed issue codes."
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-render-marker-count",
+    "grammar-marker-too-dense",
+    "grammar-decoy-point-monotony",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-too-long-hard"
+  ],
+  "warnings": [
+    "difficulty-mismatch",
+    "grammar-decoy-point-diversity"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=f  (B):dec=f  (C):ANS=f  (D):dec=f  (E):dec=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 78,
+        "relPos": 0.12,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 139,
+        "relPos": 0.213,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 213,
+        "relPos": 0.327,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": -1,
+        "relPos": null,
+        "sentenceIndex": -1,
+        "found": false
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 438,
+        "relPos": 0.672,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.672,
+    "firstHalfShare": 0.75,
+    "notFoundCount": 1
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "출제 방향",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "But you should know that multitasking doesn't save any time.",
+        "isError": false,
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing on top of another. ",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "Very often, multitasking only slows you down, contrary to popular belief.",
+        "isError": false,
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. ",
+        "pointCode": "f"
+      },
+      {
+        "label": "(C)",
+        "expression": "Give your whole focus to what you're doing at the moment no matter what it is.",
+        "isError": true,
+        "errorExpression": "Give your whole focus to whatever you're doing at the moment no matter what it is.",
+        "surroundingText": "Very often, multitasking only slows you down, contrary to popular belief. ",
+        "pointCode": "f",
+        "correction": "Give your whole focus to what you're doing at the moment no matter what it is."
+      },
+      {
+        "label": "(D)",
+        "expression": "Listen to the sound of the water as it fills the the washing machine and feel the clothes in your hand.",
+        "isError": false,
+        "surroundingText": "While doing the laundry, just do the laundry: ",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "isError": false,
+        "surroundingText": "Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. ",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "But you should know that multitasking doesn't save any time."
+      },
+      {
+        "label": "(B)",
+        "text": "Very often, multitasking only slows you down, contrary to popular belief."
+      },
+      {
+        "label": "(C)",
+        "text": "Give your whole focus to whatever you're doing at the moment no matter what it is."
+      },
+      {
+        "label": "(D)",
+        "text": "Listen to the sound of the water as it fills the the washing machine and feel the clothes in your hand."
+      },
+      {
+        "label": "(E)",
+        "text": "It doesn't take up any more time than it would when done with your phone pressed to your ear."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "「주절 + that절」 구문으로, you should know가 완전한 절이고 that절이 know의 목적어 역할을 하므로 문법적으로 타당합니다.",
+      "(B)": "contrary to ~는 전치사 구로, 문장 끝에 붙여 '~와는 달리'의 의미로 쓰이는慣用 표현입니다. 어법상 문제 없이 문법적으로 올바릅니다.",
+      "(D)": "as는 시간의 양상을 나타내는 접속사 '~하면서'로 쓰여 Listen과 fill을 동시에 수행하는 동작을 나타냅니다. 어법상 문제 없이 타당한 문장입니다.",
+      "(E)": "than 비교구문 안에서 when절은 시간을 나타내는 부속절이고, done은 '전화기를 귀에 대고 (빨래를 하는) 상태로'의 의미로 이해되어 어법적으로 적절합니다."
+    },
+    "explanation": "(C) \"Give your whole focus to whatever you're doing at the moment no matter what it is.\"는 어법상 틀린 표현이며 \"Give your whole focus to what you're doing at the moment no matter what it is.\"로 고쳐야 한다. [정답] C - 'whatever you're doing' → 'what you're doing' [] 'what ~'과 'whatever ~'의 뉘앙스 차이 및 문맥상 적절성 파악 능력을 평가합니다. [해설] 'what you're doing'은 '당신이 하고 있는 것(특정한 것)'이라는 의미로, no matter what it is와 짝을 이루어 '그것이 무엇이든 간에'라는 뜻이 됩니다. 즉, '당신이 지금 하고 있는 것이 무엇이든 그것에 전적으로 집중하라'는 의미가 되어 문맥상 자연스럽습니다. 반면, 'whatever you're doing'은 '당신이 무엇을 하든 상관없이'라는 양보의 의미로, no matter what it is와 중복되어 어색한 문장이 됩니다. 또한 whatever는 단수 취급을 하므로 '...의 전부(whole)'를 동사로 표현한 Give your whole focus의 목적어로 쓰이는 것도 자연스럽지 않습니다. 따라서 'Give your whole focus to what you're doing at the moment no matter what it is.'는 '당신이 지금 하고 있는 것이 무엇이든 그것에 전적으로 집중하라'는 의미가 되며, 어법적으로 타당한 문장입니다.",
+    "keyPoints": [
+      "what + 절 vs whatever + 절 구분: what은 '특정한 것' 또는 선행사를 포함하는 명사절, whatever는 '무엇이든 양보의 의미가 강한 양보부사절'로 사용됩니다.",
+      "no matter what과 whatever의 의미 중복: no matter what(whatever)는 이미 양보의 의미를 담고 있으므로, whatever와 no matter what it is가 함께 쓰이는 것은 의미상 중복으로 어색합니다.",
+      "절 경계 파악: Give your whole focus to [what you're doing] [at the moment] [no matter what it is]에서 각 절과 구의 경계를 정확히 구분해야 합니다."
+    ],
+    "tags": [
+      "명사절",
+      "what vs whatever",
+      "양보절",
+      "절 경계 파악",
+      "수식어 위치"
+    ],
+    "difficulty": "BASIC",
+    "passageWithMarkers": "The fast pace of today's lifestyle has us piling one thing on top of another. __(A) But you should know that multitasking doesn't save any time.__ __(B) Very often, multitasking only slows you down, contrary to popular belief.__ __(C) Give your whole focus to whatever you're doing at the moment no matter what it is.__ While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. __(E) It doesn't take up any more time than it would when done with your phone pressed to your ear.__ The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster."
+  }
+}

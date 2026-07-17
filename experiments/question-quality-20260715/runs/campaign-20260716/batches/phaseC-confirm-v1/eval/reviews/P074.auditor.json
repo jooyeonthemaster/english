@@ -1,0 +1,66 @@
+{
+  "pid": "P074",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-note",
+      "severity": "minor",
+      "evidence": "markedExpressions (B)의 expression 필드가 소스형 'to paint', errorExpression이 표시형 'paint'로 되어 있음. 다른 밑줄은 expression=표시형인데 (B)만 소스형이라 필드 의미가 항목 간 비대칭이나, isError/correction/해설과 모순은 없어 스키마 관례로 판단 — 실패 아님."
+    },
+    {
+      "code": "V1-note",
+      "severity": "minor",
+      "evidence": "원지문 대비 렌더 지문의 유일한 변형은 (B) 'to paint'→'paint' (의도된 오류 주입). 나머지 4개 밑줄은 원문 그대로이며 접합 파손·중복·누락·고아 문장부호 없음. 라벨 (A)~(E)와 선택지 목록 일치."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 4,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "부사 vs 형용사 — 분사형 형용사(opposed)를 수식하는 부사 자리 판별",
+      "temptingBecause": "'precisely opposed circular motions'에서 명사구(motions)를 수식한다고 오독하면 형용사 precise가 와야 한다고 착각할 수 있음",
+      "decisiveFlaw": "precisely는 바로 뒤 분사형 형용사 opposed를 수식하는 부사로 적법 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — tell + O + to부정사 목적격 보어 (source-correct 'to paint' → displayed-wrong 'paint' 최소대립쌍)",
+      "temptingBecause": "바로 다음 문장의 'makes Daniel hammer'(원형 보어)와 유추하면 tell 뒤 원형도 가능하다고 착각할 수 있음",
+      "decisiveFlaw": "tell은 목적격 보어로 to부정사만 취함. 'tells Daniel paint'는 비문이며 'to paint'로 교정하면 정확히 원문이 됨 — 유일 정답"
+    },
+    {
+      "label": "(C)",
+      "intent": "사역동사 make + O + 원형부정사 — 정답 (B)와 같은 보어 선택 포인트의 대조 디코이",
+      "temptingBecause": "(B)에서 to부정사가 필요함을 안 학생이 과잉일반화하여 'to hammer'가 필요하다고 판단할 수 있음",
+      "decisiveFlaw": "사역 make는 원형부정사 보어를 취하므로 hammer는 적법 — 오류 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "be finished + V-ing 관용 표현의 동명사 형태 판별",
+      "temptingBecause": "'is finished' 뒤에 to restore(부정사)나 restored(수동 병렬)가 와야 한다고 착각할 수 있음",
+      "decisiveFlaw": "be finished ~ing는 표준 관용 표현으로 restoring이 적법 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "관계대명사의 격 — 비제한 관계절에서 주격 who 판별",
+      "temptingBecause": "선행사 Daniel이 주절에서 attacks의 목적어이므로 whom이 와야 한다고 착각할 수 있고, who와 동사 defends 사이에 부사구(without thought or hesitation)가 끼어 주어 역할 파악을 방해함",
+      "decisiveFlaw": "who는 관계절 내에서 defends의 주어이므로 주격이 맞음 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 정답 (B)는 tell+O+to-V의 정전급 포인트이며, 지문 내 'orders Daniel first to wax'(to부정사)와 'makes Daniel hammer'(원형)의 자연 발생 3중 대비가 출제 가치를 높임(C1=3). 5개 밑줄이 각각 부사수식/보어형태(정답)/사역원형/관용동명사/관계사 격으로 서로 다른 오개념을 겨냥(C2=3). (C)가 같은 pointCode(h)의 대조 디코이지만 정답보다 쉬운 자리가 아니어서 정답을 가리지 않음. 다만 명사 목적어 직후의 원형동사는 규칙을 몰라도 표면 감각으로 어색함이 드러나는 편이라 변별의 상한이 있음(C3=3). 메타 누출 없고 지문 내 'orders...to wax' 병렬이 정답의 필연성을 담보(C4=3). 함정 깊이·사고 단계가 INTERMEDIATE 라벨에 정확히 정합(C5=4). 해설은 짧고 정확하나 (B) 해설이 (C) make와의 대비 함정을 본문에서 명시적으로 분리해 주지는 않음(C6=3). 합계 19 — 모든 C≥3이나 21 미만이므로 A 불가, B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

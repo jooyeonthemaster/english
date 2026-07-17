@@ -1,0 +1,38 @@
+{
+  "checks": {
+    "closureGraphRecomputed": true,
+    "deployedSecretValueAbsentFromPublicArtifacts": true,
+    "everyClosureByteReconstructed": true,
+    "everyClosureUidVerified": true,
+    "privateArchiveHasNoUnreferencedRawBlobs": true,
+    "privateBytesUntracked": true,
+    "secretInventoryRecomputed": true,
+    "sourceIndexPathUidBinding": true,
+    "triggerEvidenceSanitized": true
+  },
+  "closureManifestSha256": "9a3364beaf64fa205e8226a2c5328e4bd6dfc967dd72b3b4430677dd71947124",
+  "counts": {
+    "closureEdges": 722,
+    "closureFiles": 245,
+    "computedReferences": 0,
+    "gitReconstructable": 241,
+    "privateArchiveBytes": 58036,
+    "privateArchiveUniqueBlobs": 4,
+    "privateBlobsRequired": 4,
+    "secretPatternMatches": 0,
+    "sourceInputFiles": 4410,
+    "unresolvedStatic": 0
+  },
+  "deploymentId": "dpl_CKkd1eiFq2DeEidwSxQpFSgDm4ZD",
+  "privateArchiveIndexSha256": "208da5aff9bd508790e8e51ba01070cd779e9c4a3c57345b8d37800a69963f1b",
+  "schemaVersion": 1,
+  "secretInventorySha256": "9103bb837f9b5aff0f038ce4b97d99b6cd29471be60fae664e01cd46d3515798",
+  "sourceIndexSha256": "655f1b42d53e9c19a6a4b0cba703a8fc42242ea9a19af97ee756c2f848be2008",
+  "tooling": {
+    "captureScriptSha256": "69bf8d357a78ffbb2a59b49ac5bce3fa48f86d4e93b31bfeb42b87359025a032",
+    "librarySha256": "b05683ce4daba1605a488095f7df1fcc34f63116832db81746ceb9882fbb4669",
+    "verifierScriptSha256": "40b78b5b708fbea91a6e85ccff75da265e905822c14c97635ed5a2665aec9625"
+  },
+  "triggerProvenanceSha256": "51dfcf1bf500c18060b82ab0abb16e9297462deba3d08d5d0e155f477b38df11",
+  "verdict": "PASS"
+}

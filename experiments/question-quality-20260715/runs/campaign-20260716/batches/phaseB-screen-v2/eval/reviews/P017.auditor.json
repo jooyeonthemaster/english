@@ -1,0 +1,77 @@
+{
+  "pid": "P017",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": false,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-TAIL-UNGRAMMATICAL-OPTION",
+      "severity": "critical",
+      "evidence": "빈칸이 원문 span 'struggle to interpret elements'를 통째로 제거하면서 관계절 tail 'that flout principles of efficient communication...'의 선행사(elements)까지 삼켰다. 따라서 모든 선지는 복수 명사로 끝나 선행사를 공급해야 한다. ①(answers) ②(values) ③(parts) ④(meanings)는 충족하지만 ⑤ 'assume the author has failed to communicate'는 동사로 끝나, 완성문 'they assume the author has failed to communicate that flout principles of efficient communication...'이 비문이 된다('that flout'의 복수 선행사 부재 — 'the author'는 단수; 보문 해석도 'that flout...'에 주어가 없어 불가). 오답 ⑤가 의미 판단 없이 문법만으로 탈락하므로 BLANK_INFERENCE의 유형 의도(오답은 문법적으로 삽입 가능하되 의미로 틀림)와 불일치 — V3 둘째 조항 위반이며 §D-1이 금지하는 suffix/tail 문법 탈락 유형."
+    },
+    {
+      "code": "V3-MINOR-GOLD-SEAM-NATURALNESS",
+      "severity": "minor",
+      "evidence": "정답 완성문 '...make a patient effort to decipher complex meanings that flout principles of efficient communication...'은 문법적으로 성립하나, 원문에서 flout의 주체는 'elements(언어 요소)'였는데 변형 후 'meanings(의미)'가 원칙을 위배하는 것이 되어 의미역이 미세하게 어긋난다. 게이트 실패 사유는 아니고 어색함 수준."
+    },
+    {
+      "code": "STEM-META-HINT",
+      "severity": "minor",
+      "evidence": "발문 '...the most appropriate expression that describes the behavior/attitude of readers of literary works'가 빈칸 내용이 '독자의 행동/태도'라는 메타 정보를 누출하고, 'behavior/attitude' 슬래시 표기가 수능 표준 발문 관례에서 벗어난다. V5 실패까지는 아니나 C4 감점 요인."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 1,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "극성 역전(polarity reversal): 지문 말미 'not immediately ask what do you mean by that?'의 부정을 탈락시켜 즉답 요구로 뒤집음",
+      "temptingBecause": "'immediate/answers'가 지문의 'immediately ask' 및 질문-응답 프레임과 표면 어휘로 겹침",
+      "decisiveFlaw": "지문은 독자가 모호함을 감내하고(put up with many obscurities) 즉각 묻지 않는다고 명시 — 정면 모순이라 즉시 소거 가능, 매력도 낮음"
+    },
+    {
+      "label": "②",
+      "intent": "half-truth/개념 차용: 핵심 구 'principles of efficient communication'을 빌려 효율 우선 태도로 왜곡",
+      "temptingBecause": "빈칸 뒤 tail의 핵심 구를 그대로 재사용해 국소 단서 일치가 강함",
+      "decisiveFlaw": "지문은 독자가 효율 원칙의 위배를 '더 큰 소통 목적(further communicative goal)'을 위한 것으로 수용한다고 하므로 효율 우선은 논지 반대. 삽입 시 'efficient communication'이 한 문장에 두 번 등장해 부자연스러움도 노출"
+    },
+    {
+      "label": "③",
+      "intent": "행위자 전가(actor swap): 선별 과정에서의 '타인의 검증'을 '타인에게 해석 의존'으로 치환",
+      "temptingBecause": "'others have found them well constructed'라는 실제 source anchor가 있어 타인 개입이라는 표면 인상과 부합 — 네 오답 중 유일하게 실질적 판단을 요구",
+      "decisiveFlaw": "타인의 역할은 작품 가치의 사전 보증일 뿐이며 해석 노력의 주체는 독자 자신('they struggle to interpret')이라고 지문이 명시"
+    },
+    {
+      "label": "④",
+      "intent": "정답: source span 'struggle to interpret elements'의 의미 보존 패러프레이즈",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'put up with obscurities', 'explore uncertainties', 'struggle to interpret'과 삼중 정합. 단, 5지 중 유일하게 능동적·긍정적 노력 극성의 선지라 어조만으로 추측 가능한 누출이 있고, 'meanings'가 flout의 주체가 되는 미세한 의미역 어색함이 있음"
+    },
+    {
+      "label": "⑤",
+      "intent": "조건 소실/극성 역전: 'instead of imagining that the speaker or writer is being uncooperative'에서 지문이 명시적으로 기각한 전제를 정답처럼 제시",
+      "temptingBecause": "빈칸 직전 절의 'uncooperative' 및 소통 실패 어휘와 표면 겹침",
+      "decisiveFlaw": "지문이 'instead of'로 명시적으로 배제한 태도라 의미상 모순. 치명 결함: 삽입 시 'communicate that flout principles...'로 비문이 되어 의미 판단 없이 문법만으로 탈락 — V3 실패의 직접 원인"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "STYLE-FORMULAIC",
+      "severity": "minor",
+      "evidence": "오답 해설 4건이 모두 '~을(를) 빌렸지만' 템플릿을 기계적으로 반복하고 'others have found them well constructed을(를)'처럼 영어구+한국어 조사 결합이 어색하다. 사실 오류는 없음 — 인용 앵커 4건('not immediately ask...', 'principles of efficient communication', 'others have found them well constructed', 'instead of imagining...uncooperative') 모두 지문에 실재하고 각 선지의 실제 내용과 정확히 대응하며, 본해설의 'struggle to interpret elements' 인용과 구조 설명도 실제 문장과 일치한다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "출처는 Jonathan Culler의 hyper-protected cooperative principle 논의. V1 통과: 렌더 지문은 빈칸 치환 외 원지문과 완전 일치하고 고아 문장부호·중복·누락 없음, 라벨 ①~⑤와 정답 ④·오답해설 키(①②③⑤) 동기화. V2 통과: 5개 선지 독립 검증 결과 ④만이 'struggle to interpret elements'의 의미를 보존하며 ①⑤(극성 모순), ②(효율 우선 모순), ③(행위자 오귀속)은 각각 단독 결정적 결함으로 배제 — 유일 정답 성립. V4 통과: 해설의 인용·논리 설명이 실제 지문과 일치하고 오답 해설이 각 선지 내용과 대응. V5 통과. 그러나 V3 실패: 빈칸 span이 관계절 선행사 'elements'까지 삼켜 tail 'that flout...'이 남았고, ⑤가 문법만으로 탈락하는 비문 완성문이 됨 — 치명이므로 공예 점수로 상쇄 불가, F. 공예 합계 15(C1=3: 핵심 논지를 겨냥하나 span 경계 선택이 정교하지 못함, C2=3: 오답들이 서로 다른 함정축을 가지나 ①⑤ 극성 반전 중복 기미, C3=2: ③만 실질 매력 오답이고 ①②⑤는 투명한 반전이라 변별 얕음, C4=1: 꼬리 소거(⑤ 문법 탈락)+발문 메타 힌트+정답 유일 긍정 극성의 삼중 누출, C5=3: INTERMEDIATE 요구 사고 단계에 대체로 부합하나 다소 쉬운 쪽, C6=3: 정확하고 앵커 분리가 선명하나 템플릿 반복으로 둔함). 수리 방향: (a) 빈칸 경계를 'struggle to interpret'로 좁혀 'elements'를 지문에 남기거나, (b) 빈칸을 tail 포함 문말까지 확장하거나, (c) ⑤를 복수 명사로 끝나는 표현(예: 'dismiss as mere failures the expressions')으로 교체. 요청 난이도 INTERMEDIATE이므로 KILLER 조건 판정 대상 아님(killerConditionsMet=false)."
+}

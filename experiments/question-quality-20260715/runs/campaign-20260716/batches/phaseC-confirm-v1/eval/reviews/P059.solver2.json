@@ -1,0 +1,35 @@
+{
+  "pid": "P059",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'they are controlled by Denmark': 주어 they(=the Faroe Islands)는 control의 피동작주이고 'are + p.p. + by-agent'의 정상적인 수동태. 능동 controlling이면 목적어가 없어 비문이 되므로 controlled가 옳다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'they have their own government': 소유한정사 their가 복수 선행사 they(the Faroe Islands)와 인칭·수 일치. 'one's own + N' 관용 구조도 정상."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'Most of the whale meat and blubber distributing for free to the local community, although some is sold...': 주절 주어(Most of the whale meat and blubber)에 정형동사가 없다. 유일한 정형동사 is sold는 although 종속절 내부에 있으므로 주절은 동사 결핍으로 비문. 대안 해석 탐색 — (1) 분사구문/절대구문으로 보아도 주절 동사 부재는 해소되지 않음, (2) 축약 관계절(meat [that is] distributing)으로 보아도 여전히 주절 동사가 없고, distribute는 외부 행위자를 요구하는 타동사라 고기가 스스로 '분배하는' 능동 진행 해석도 의미상 불가. 정형은 'is distributed (for free)'. 따라서 어법상 틀린 항목."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'must take place as quickly and efficiently as possible': 자동사구 take place를 수식하므로 부사 quickly가 옳고, 'as + adv + as possible' 동등비교 틀과 quickly and efficiently 병렬(부사-부사)도 정상. 형용사 quick이면 비문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'question whether this practice should be allowed to continue': 동사 question은 의문 보문절을 취하며 whether가 이를 정상적으로 이끈다. 뒤에 완결된 절이 이어지므로 if/whether 선택 문제도 없고, that로 바꾸면 '~인지 의문시하다'의 의미가 성립하지 않는다."
+    }
+  ],
+  "note": "정답이 (C)로 유일하게 수렴. (C)는 주절 정형동사 부재라는 구조적 결함으로, 어떤 대안 해석(분사구문·축약 관계절·절대구문)으로도 정문화되지 않는다. 나머지 4개 밑줄은 각각 수동태, 소유격 일치, 부사 병렬 동등비교, 의문 보문소로 모두 형식적으로 성립한다. 복수 정답 여지 없음."
+}

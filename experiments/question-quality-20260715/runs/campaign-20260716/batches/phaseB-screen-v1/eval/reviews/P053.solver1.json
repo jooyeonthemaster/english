@@ -1,0 +1,35 @@
+{
+  "pid": "P053",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "when은 완전한 시간 부사절 'they first consider experimenting with social media'를 이끄는 접속사. 주어 'One of the most common mistakes'와 동사 is 사이에 삽입된 수식부 구조로 정문. 'made by organizations'는 축약 관계절(과거분사)로 별개 성립."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "장거리 수일치: 진짜 주어는 단수 'One'이며 'of the most common mistakes made by organizations when...'은 전부 수식부. 직전의 복수명사(mistakes, organizations) 때문에 are로 끌리는 매력적 오답 자리지만 One → is가 정확. 보어는 that절."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'a thorough ___ of the organization's own goals' — 관사 a + 형용사 thorough 뒤이자 of구의 수식을 받는 자리이므로 명사 understanding이 필요. understood는 과거분사/과거형으로 명사 기능이 불가하며, 분사 수식으로 볼 피수식 명사도 존재하지 않는다. 대안 해석(명사화, 축약 관계절 등)으로도 정문화 불가. 어법상 틀림."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "재귀대명사 itself의 선행사는 동명사구 주어 'Being in social media'(단수 취급). 관용 표현 'in and of itself'(그 자체로는)로 정확. themselves 유인은 약함."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "상관접속사 either A or B: must 뒤에서 either solve(동사원형) ... or result(동사원형)로 병렬 시작점 일치. 조동사 뒤 either 배치는 표준 어순이며 병렬 구조 결함 없음."
+    }
+  ],
+  "note": "정답 후보는 (C) 하나로 유일. 실전 풀이에서 가장 강한 유혹은 (B)의 장거리 수일치(직전 복수명사 mistakes/organizations에 끌려 are를 기대)였으나 진짜 주어 One 확인으로 해소. (E)의 either 위치도 잠깐 점검 대상이었으나 조동사 뒤 배치+동사원형 병렬로 무결. (C)는 품사 오류(명사 자리에 과거분사)로 명백하며 대안 해석의 여지가 없다. 문항 성립성 양호."
+}

@@ -1,0 +1,770 @@
+{
+  "schemaVersion": 1,
+  "studyId": "retry-cost-pareto-v1-20260715",
+  "warning": "This is a structural cost frontier, not a quality Pareto frontier. No profile has prospective quality observations in this offline study.",
+  "nonDominanceInterpretation": [
+    "ONE_TRANSIENT_SDK_RETRY preserves one retry at the transport layer and current quality-stage counts while removing whole-wrapper application replay.",
+    "ONE_SDK_PLUS_ONE_PARSE_APPLICATION_ATTEMPT is justified only if classified parse/schema telemetry shows same-attempt repair is insufficient.",
+    "ONE_APPLICATION_RETRY_ONLY has equal wrapper physical multiplier to one SDK retry but more logical regeneration opportunities; it may help parse failures but is a poorer semantic match for transport failures.",
+    "Ladder and outer-pass reductions alter quality/craft opportunities and stay experimental until blinded held-out non-inferiority evidence exists.",
+    "T=1 is acceptable only as provider-work deduplication backed by durable idempotency/enforcement, not by silently removing task recovery."
+  ],
+  "profiles": [
+    {
+      "profileId": "CURRENT_SOURCE_CEILING",
+      "rationale": "Sealed v2 source topology with Trigger crash replay ceiling.",
+      "sdkRetries": 2,
+      "applicationAttempts": 3,
+      "triggerExecutions": 2,
+      "outerMode": "current",
+      "ladder": {
+        "cycles": 3,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 2
+      },
+      "evidenceStatus": "SOURCE_BOUND_ONLY",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 432,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 1296,
+          "outputReservationTokens": 25961472,
+          "outputOnlyUsdAtStaleEmergencyRates": 420.5758464,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 108,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 324,
+          "outputReservationTokens": 6932736,
+          "outputOnlyUsdAtStaleEmergencyRates": 224.6206464,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 324,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 126,
+          "physicalProviderFetches": 1350,
+          "outputReservationTokens": 30025152,
+          "outputOnlyUsdAtStaleEmergencyRates": 486.4074624,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 252,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 90,
+          "physicalProviderFetches": 1026,
+          "outputReservationTokens": 22888512,
+          "outputOnlyUsdAtStaleEmergencyRates": 370.7938944,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 252,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 90,
+          "physicalProviderFetches": 1026,
+          "outputReservationTokens": 23299776,
+          "outputOnlyUsdAtStaleEmergencyRates": 377.4563712,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 192,
+          "designLogicalResponses": 24,
+          "evaluationLogicalResponses": 36,
+          "physicalProviderFetches": 756,
+          "outputReservationTokens": 15049728,
+          "outputOnlyUsdAtStaleEmergencyRates": 453.7575936,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 144,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 36,
+          "physicalProviderFetches": 540,
+          "outputReservationTokens": 12457728,
+          "outputOnlyUsdAtStaleEmergencyRates": 369.7767936,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 6318,
+        "outputReservationTokens": 136615104,
+        "outputOnlyUsdAtStaleEmergencyRates": 2703.388608
+      }
+    },
+    {
+      "profileId": "ONE_TRANSIENT_SDK_RETRY",
+      "rationale": "Keep one SDK retry for classified transient transport failures; remove generic wrapper application replay while preserving current outer quality topology and ladder craft topology.",
+      "sdkRetries": 1,
+      "applicationAttempts": 1,
+      "triggerExecutions": 2,
+      "outerMode": "current",
+      "ladder": {
+        "cycles": 3,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 2
+      },
+      "evidenceStatus": "PARETO_CANDIDATE_NEEDS_PROSPECTIVE_VALIDATION",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 144,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 288,
+          "outputReservationTokens": 5769216,
+          "outputOnlyUsdAtStaleEmergencyRates": 93.4612992,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 36,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 72,
+          "outputReservationTokens": 1540608,
+          "outputOnlyUsdAtStaleEmergencyRates": 49.9156992,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 108,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 42,
+          "physicalProviderFetches": 300,
+          "outputReservationTokens": 6672256,
+          "outputOnlyUsdAtStaleEmergencyRates": 108.0905472,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 84,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 30,
+          "physicalProviderFetches": 228,
+          "outputReservationTokens": 5086336,
+          "outputOnlyUsdAtStaleEmergencyRates": 82.3986432,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 84,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 30,
+          "physicalProviderFetches": 228,
+          "outputReservationTokens": 5177728,
+          "outputOnlyUsdAtStaleEmergencyRates": 83.8791936,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 96,
+          "designLogicalResponses": 24,
+          "evaluationLogicalResponses": 12,
+          "physicalProviderFetches": 264,
+          "outputReservationTokens": 4496384,
+          "outputOnlyUsdAtStaleEmergencyRates": 138.1598208,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 48,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 12,
+          "physicalProviderFetches": 120,
+          "outputReservationTokens": 2768384,
+          "outputOnlyUsdAtStaleEmergencyRates": 82.1726208,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 1500,
+        "outputReservationTokens": 31510912,
+        "outputOnlyUsdAtStaleEmergencyRates": 638.077824
+      }
+    },
+    {
+      "profileId": "ONE_SDK_PLUS_ONE_PARSE_APPLICATION_ATTEMPT",
+      "rationale": "Conditional fallback if telemetry shows a material parse/schema class remains after same-attempt repair. It keeps one SDK retry and one application replay, so the wrapper multiplier is four rather than current nine.",
+      "sdkRetries": 1,
+      "applicationAttempts": 2,
+      "triggerExecutions": 2,
+      "outerMode": "current",
+      "ladder": {
+        "cycles": 3,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 2
+      },
+      "evidenceStatus": "CONDITIONAL_PARETO_CANDIDATE",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 288,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 576,
+          "outputReservationTokens": 11538432,
+          "outputOnlyUsdAtStaleEmergencyRates": 186.9225984,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 72,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 144,
+          "outputReservationTokens": 3081216,
+          "outputOnlyUsdAtStaleEmergencyRates": 99.8313984,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 216,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 84,
+          "physicalProviderFetches": 600,
+          "outputReservationTokens": 13344512,
+          "outputOnlyUsdAtStaleEmergencyRates": 216.1810944,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 168,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 60,
+          "physicalProviderFetches": 456,
+          "outputReservationTokens": 10172672,
+          "outputOnlyUsdAtStaleEmergencyRates": 164.7972864,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 168,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 60,
+          "physicalProviderFetches": 456,
+          "outputReservationTokens": 10355456,
+          "outputOnlyUsdAtStaleEmergencyRates": 167.7583872,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 144,
+          "designLogicalResponses": 24,
+          "evaluationLogicalResponses": 24,
+          "physicalProviderFetches": 384,
+          "outputReservationTokens": 7264768,
+          "outputOnlyUsdAtStaleEmergencyRates": 220.3324416,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 96,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 24,
+          "physicalProviderFetches": 240,
+          "outputReservationTokens": 5536768,
+          "outputOnlyUsdAtStaleEmergencyRates": 164.3452416,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 2856,
+        "outputReservationTokens": 61293824,
+        "outputOnlyUsdAtStaleEmergencyRates": 1220.168448
+      }
+    },
+    {
+      "profileId": "ONE_APPLICATION_RETRY_ONLY",
+      "rationale": "Comparator: no SDK retry and one whole application replay. It has the same wrapper physical multiplier as ONE_TRANSIENT_SDK_RETRY but twice the wrapper logical responses and a different failure-recovery meaning.",
+      "sdkRetries": 0,
+      "applicationAttempts": 2,
+      "triggerExecutions": 2,
+      "outerMode": "current",
+      "ladder": {
+        "cycles": 3,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 2
+      },
+      "evidenceStatus": "COMPARATOR_NOT_DEFAULT_RECOMMENDATION",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 288,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 288,
+          "outputReservationTokens": 5769216,
+          "outputOnlyUsdAtStaleEmergencyRates": 93.4612992,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 72,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 72,
+          "outputReservationTokens": 1540608,
+          "outputOnlyUsdAtStaleEmergencyRates": 49.9156992,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 216,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 84,
+          "physicalProviderFetches": 300,
+          "outputReservationTokens": 6672256,
+          "outputOnlyUsdAtStaleEmergencyRates": 108.0905472,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 168,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 60,
+          "physicalProviderFetches": 228,
+          "outputReservationTokens": 5086336,
+          "outputOnlyUsdAtStaleEmergencyRates": 82.3986432,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 168,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 60,
+          "physicalProviderFetches": 228,
+          "outputReservationTokens": 5177728,
+          "outputOnlyUsdAtStaleEmergencyRates": 83.8791936,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 144,
+          "designLogicalResponses": 24,
+          "evaluationLogicalResponses": 24,
+          "physicalProviderFetches": 192,
+          "outputReservationTokens": 3632384,
+          "outputOnlyUsdAtStaleEmergencyRates": 110.1662208,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 96,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 24,
+          "physicalProviderFetches": 120,
+          "outputReservationTokens": 2768384,
+          "outputOnlyUsdAtStaleEmergencyRates": 82.1726208,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 1428,
+        "outputReservationTokens": 30646912,
+        "outputOnlyUsdAtStaleEmergencyRates": 610.084224
+      }
+    },
+    {
+      "profileId": "DURABLY_DEDUPED_TRIGGER",
+      "rationale": "Same one-SDK layer, but a single provider-work execution after durable idempotent resume/enforcing budget prevents crash replay duplication. Trigger task retry may remain enabled; T=1 describes provider work, not necessarily task invocations.",
+      "sdkRetries": 1,
+      "applicationAttempts": 1,
+      "triggerExecutions": 1,
+      "outerMode": "current",
+      "ladder": {
+        "cycles": 3,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 2
+      },
+      "evidenceStatus": "REQUIRES_DURABLE_IDEMPOTENCY_AND_UNIVERSAL_ENFORCEMENT",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 72,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 144,
+          "outputReservationTokens": 2884608,
+          "outputOnlyUsdAtStaleEmergencyRates": 46.7306496,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 18,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 36,
+          "outputReservationTokens": 770304,
+          "outputOnlyUsdAtStaleEmergencyRates": 24.9578496,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 54,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 21,
+          "physicalProviderFetches": 150,
+          "outputReservationTokens": 3336128,
+          "outputOnlyUsdAtStaleEmergencyRates": 54.0452736,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 42,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 15,
+          "physicalProviderFetches": 114,
+          "outputReservationTokens": 2543168,
+          "outputOnlyUsdAtStaleEmergencyRates": 41.1993216,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 42,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 15,
+          "physicalProviderFetches": 114,
+          "outputReservationTokens": 2588864,
+          "outputOnlyUsdAtStaleEmergencyRates": 41.9395968,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 48,
+          "designLogicalResponses": 12,
+          "evaluationLogicalResponses": 6,
+          "physicalProviderFetches": 132,
+          "outputReservationTokens": 2248192,
+          "outputOnlyUsdAtStaleEmergencyRates": 69.0799104,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 24,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 6,
+          "physicalProviderFetches": 60,
+          "outputReservationTokens": 1384192,
+          "outputOnlyUsdAtStaleEmergencyRates": 41.0863104,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 750,
+        "outputReservationTokens": 15755456,
+        "outputOnlyUsdAtStaleEmergencyRates": 319.038912
+      }
+    },
+    {
+      "profileId": "LADDER_SINGLE_PARSE_ATTEMPT",
+      "rationale": "Experimental Premium-grammar-only removal of the second parse fire per ladder stage; outer passes, three cycles, and one soft repair per cycle remain.",
+      "sdkRetries": 1,
+      "applicationAttempts": 1,
+      "triggerExecutions": 2,
+      "outerMode": "current",
+      "ladder": {
+        "cycles": 3,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 1
+      },
+      "evidenceStatus": "HELD_OUT_EXPERIMENT_ONLY",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 144,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 288,
+          "outputReservationTokens": 5769216,
+          "outputOnlyUsdAtStaleEmergencyRates": 93.4612992,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 36,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 72,
+          "outputReservationTokens": 1540608,
+          "outputOnlyUsdAtStaleEmergencyRates": 49.9156992,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 108,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 42,
+          "physicalProviderFetches": 300,
+          "outputReservationTokens": 6672256,
+          "outputOnlyUsdAtStaleEmergencyRates": 108.0905472,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 84,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 30,
+          "physicalProviderFetches": 228,
+          "outputReservationTokens": 5086336,
+          "outputOnlyUsdAtStaleEmergencyRates": 82.3986432,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 84,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 30,
+          "physicalProviderFetches": 228,
+          "outputReservationTokens": 5177728,
+          "outputOnlyUsdAtStaleEmergencyRates": 83.8791936,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 72,
+          "designLogicalResponses": 12,
+          "evaluationLogicalResponses": 12,
+          "physicalProviderFetches": 192,
+          "outputReservationTokens": 3632384,
+          "outputOnlyUsdAtStaleEmergencyRates": 110.1662208,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 48,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 12,
+          "physicalProviderFetches": 120,
+          "outputReservationTokens": 2768384,
+          "outputOnlyUsdAtStaleEmergencyRates": 82.1726208,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 1428,
+        "outputReservationTokens": 30646912,
+        "outputOnlyUsdAtStaleEmergencyRates": 610.084224
+      }
+    },
+    {
+      "profileId": "LADDER_TWO_CYCLES_SINGLE_PARSE",
+      "rationale": "More aggressive Premium grammar experiment: two cycles, repair retained, one parse attempt. This changes craft opportunity and cannot be selected from cost arithmetic alone.",
+      "sdkRetries": 1,
+      "applicationAttempts": 1,
+      "triggerExecutions": 2,
+      "outerMode": "current",
+      "ladder": {
+        "cycles": 2,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 1
+      },
+      "evidenceStatus": "HELD_OUT_EXPERIMENT_ONLY",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 144,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 288,
+          "outputReservationTokens": 5769216,
+          "outputOnlyUsdAtStaleEmergencyRates": 93.4612992,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 36,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 72,
+          "outputReservationTokens": 1540608,
+          "outputOnlyUsdAtStaleEmergencyRates": 49.9156992,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 108,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 42,
+          "physicalProviderFetches": 300,
+          "outputReservationTokens": 6672256,
+          "outputOnlyUsdAtStaleEmergencyRates": 108.0905472,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 84,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 30,
+          "physicalProviderFetches": 228,
+          "outputReservationTokens": 5086336,
+          "outputOnlyUsdAtStaleEmergencyRates": 82.3986432,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 84,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 30,
+          "physicalProviderFetches": 228,
+          "outputReservationTokens": 5177728,
+          "outputOnlyUsdAtStaleEmergencyRates": 83.8791936,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 64,
+          "designLogicalResponses": 8,
+          "evaluationLogicalResponses": 12,
+          "physicalProviderFetches": 168,
+          "outputReservationTokens": 3344384,
+          "outputOnlyUsdAtStaleEmergencyRates": 100.8350208,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 48,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 12,
+          "physicalProviderFetches": 120,
+          "outputReservationTokens": 2768384,
+          "outputOnlyUsdAtStaleEmergencyRates": 82.1726208,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 1404,
+        "outputReservationTokens": 30358912,
+        "outputOnlyUsdAtStaleEmergencyRates": 600.753024
+      }
+    },
+    {
+      "profileId": "CURRENT_STRICT_ONLY",
+      "rationale": "Cost sensitivity row that retains the current number of strict passes but removes relaxed/scarce/salvage generation. It changes availability and final-quality selection behavior.",
+      "sdkRetries": 1,
+      "applicationAttempts": 1,
+      "triggerExecutions": 2,
+      "outerMode": "strictOnly",
+      "ladder": {
+        "cycles": 3,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 2
+      },
+      "evidenceStatus": "HELD_OUT_EXPERIMENT_ONLY",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 120,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 240,
+          "outputReservationTokens": 4807680,
+          "outputOnlyUsdAtStaleEmergencyRates": 77.884416,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 24,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 48,
+          "outputReservationTokens": 1027072,
+          "outputOnlyUsdAtStaleEmergencyRates": 33.2771328,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 72,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 36,
+          "physicalProviderFetches": 216,
+          "outputReservationTokens": 4757760,
+          "outputOnlyUsdAtStaleEmergencyRates": 77.075712,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 48,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 24,
+          "physicalProviderFetches": 144,
+          "outputReservationTokens": 3171840,
+          "outputOnlyUsdAtStaleEmergencyRates": 51.383808,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 48,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 24,
+          "physicalProviderFetches": 144,
+          "outputReservationTokens": 3232768,
+          "outputOnlyUsdAtStaleEmergencyRates": 52.3708416,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 72,
+          "designLogicalResponses": 24,
+          "evaluationLogicalResponses": 12,
+          "physicalProviderFetches": 216,
+          "outputReservationTokens": 3344384,
+          "outputOnlyUsdAtStaleEmergencyRates": 100.8350208,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 24,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 12,
+          "physicalProviderFetches": 72,
+          "outputReservationTokens": 1616384,
+          "outputOnlyUsdAtStaleEmergencyRates": 44.8478208,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 1080,
+        "outputReservationTokens": 21957888,
+        "outputOnlyUsdAtStaleEmergencyRates": 437.674752
+      }
+    },
+    {
+      "profileId": "ONE_STRICT_ONLY",
+      "rationale": "Lower-bound sensitivity row, not a recommendation: one strict pass and no fallback generation.",
+      "sdkRetries": 1,
+      "applicationAttempts": 1,
+      "triggerExecutions": 2,
+      "outerMode": "oneStrictOnly",
+      "ladder": {
+        "cycles": 3,
+        "softRepairPerCycle": 1,
+        "parseAttemptsPerStage": 2
+      },
+      "evidenceStatus": "ARITHMETIC_LOWER_BOUND_ONLY",
+      "cells": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+          "candidateCapableLogicalResponses": 12,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 24,
+          "outputReservationTokens": 480768,
+          "outputOnlyUsdAtStaleEmergencyRates": 7.7884416,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_BLANK_INFERENCE": {
+          "candidateCapableLogicalResponses": 12,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 0,
+          "physicalProviderFetches": 24,
+          "outputReservationTokens": 513536,
+          "outputOnlyUsdAtStaleEmergencyRates": 16.6385664,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+          "candidateCapableLogicalResponses": 12,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 6,
+          "physicalProviderFetches": 36,
+          "outputReservationTokens": 792960,
+          "outputOnlyUsdAtStaleEmergencyRates": 12.845952,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_INTERMEDIATE": {
+          "candidateCapableLogicalResponses": 12,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 6,
+          "physicalProviderFetches": 36,
+          "outputReservationTokens": 792960,
+          "outputOnlyUsdAtStaleEmergencyRates": 12.845952,
+          "totalUsdCeiling": null
+        },
+        "STANDARD_GRAMMAR_ERROR_KILLER_RESCUE": {
+          "candidateCapableLogicalResponses": 12,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 6,
+          "physicalProviderFetches": 36,
+          "outputReservationTokens": 808192,
+          "outputOnlyUsdAtStaleEmergencyRates": 13.0927104,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+          "candidateCapableLogicalResponses": 36,
+          "designLogicalResponses": 12,
+          "evaluationLogicalResponses": 6,
+          "physicalProviderFetches": 108,
+          "outputReservationTokens": 1672192,
+          "outputOnlyUsdAtStaleEmergencyRates": 50.4175104,
+          "totalUsdCeiling": null
+        },
+        "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+          "candidateCapableLogicalResponses": 12,
+          "designLogicalResponses": 0,
+          "evaluationLogicalResponses": 6,
+          "physicalProviderFetches": 36,
+          "outputReservationTokens": 808192,
+          "outputOnlyUsdAtStaleEmergencyRates": 22.4239104,
+          "totalUsdCeiling": null
+        }
+      },
+      "allCellAggregate": {
+        "physicalProviderFetches": 300,
+        "outputReservationTokens": 5868800,
+        "outputOnlyUsdAtStaleEmergencyRates": 136.0530432
+      }
+    }
+  ]
+}

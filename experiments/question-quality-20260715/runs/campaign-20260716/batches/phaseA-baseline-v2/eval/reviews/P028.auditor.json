@@ -1,0 +1,72 @@
+{
+  "pid": "P028",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-typo",
+      "severity": "minor",
+      "evidence": "해설 중 '생각과 감정을 바꾼다고 밀하였고' — '말하였고'의 오탈자. 문법 분석 오류는 아니어서 V4 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-term",
+      "severity": "minor",
+      "evidence": "해설이 '인과적 결론이 도출되며'라고 표현하나 실제 연결은 'Rather'에 의한 대조·재진술 관계이지 인과가 아님. 통사 오분석 수준은 아니므로 minor."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "필자가 명시적으로 경계한 '기술 그 자체의 활용'을 목표로 제시하는 표적 오답 (기술 소재 어휘 연상)",
+      "temptingBecause": "지문 전반의 'digital material', 'new technology' 등 기술 어휘와 표면적으로 강하게 겹침",
+      "decisiveFlaw": "빈칸 직전 문장 'should not be simply to utilize technology for its own sake'와 정면 충돌 — 기술 시연 자체가 목적이 되는 내용"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — source span 'unique creations that will allow the public to have new, eye-opening experiences'의 충실한 paraphrase",
+      "temptingBecause": "N/A (정답)",
+      "decisiveFlaw": "없음. unique→distinctive, creations→artworks, new eye-opening experiences→fresh insights, the public→audiences 로 의미 보존"
+    },
+    {
+      "label": "③",
+      "intent": "심미적 경험을 상업적 성공으로 치환하는 scope shift / 과확장 오답",
+      "temptingBecause": "'the public'과 'share them with the world'를 '글로벌 소비자에 대한 호소'로 오독할 여지",
+      "decisiveFlaw": "지문 어디에도 마케팅·상업적 성공에 대한 언급이 없음 — 무근거 확장"
+    },
+    {
+      "label": "④",
+      "intent": "'기술을 목적으로 삼지 말라'를 '현대 도구 전면 거부'로 과격화하는 극성 왜곡(polarity distortion) 오답",
+      "temptingBecause": "지문의 기술 비판적 논조를 피상적으로 읽으면 반기술적 결론으로 오독 가능",
+      "decisiveFlaw": "'new technologies are nothing more than tools that can be used in the creative process'가 도구로서의 사용을 명시적으로 인정 — 'entirely reject'와 모순"
+    },
+    {
+      "label": "⑤",
+      "intent": "첫 문장의 지엽 소재(편집 기술·공유)를 결론 자리로 끌어오는 detail-as-conclusion 오답",
+      "temptingBecause": "'editing digital material', 'share them with the world'와 어휘가 직접 겹침",
+      "decisiveFlaw": "협업 플랫폼 제작은 첫 문장의 배경 서술일 뿐, 예술가의 궁극적 목표라는 결론 슬롯의 논리와 무관"
+    }
+  ],
+  "explanationIssues": [
+    "오탈자: '밀하였고' → '말하였고'",
+    "'인과적 결론'이라는 표현 — 실제로는 Rather에 의한 대조·재진술 관계로, 인과 명명은 부정확 (minor)",
+    "'한계를 지었습니다'는 다소 어색한 한국어 표현 ('선을 그었습니다' 등이 자연스러움) (minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 빈칸이 지문의 결론 명제(핵심 논지)를 정확히 겨냥하고(C1=4), 5개 선지가 동일 통사 슬롯(produce+NP)에 들어가 문법 소거가 불가능하며, 오답 4개가 각기 다른 함정 유형(기술목적화·상업 과확장·극성 과격화·지엽 소재 회귀)을 가짐. 다만 ①과 ⑤가 '지엽적 기술 소재'로 부분 중첩되고(C2=3), 정답 ②만이 긍정적 예술 가치 어휘(distinctive/insights)를 담고 있어 test-wise 학생에게 약한 메타 단서가 됨(C4=3). paraphrase가 near-synonym 수준으로 투명해 INTERMEDIATE에 부합하나 다소 쉬운 편(C5=3). 해설은 정확하지만 오탈자 1건과 '인과' 오명명, 다소 장황함(C6=3). 합계 19 — 모든 C≥3이나 21 미만으로 A 불충족, B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

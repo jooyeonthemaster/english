@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "빈칸에 넣으면 'make sure you focus only on maximizing your study hours'로 문법 결합은 자연스럽지만, 지문은 공부 시간 확보가 아니라 '과외활동 자체의 절제(moderation)·페이스 조절(pacing)'을 논한다. free time 감소가 언급되긴 하나 study hours는 지문에 등장하지 않는 개념이며 'only'라는 극단 표현이 마지막 문장의 'get involved in the activities that are most meaningful to you'(활동 참여 자체는 긍정)와 정면 충돌한다. 최상위권 기준 유혹 강도 낮음."
+    },
+    {
+      "label": "②",
+      "verdict": "오답",
+      "reason": "'push your limits by taking on more clubs'는 'Joining too many clubs can reduce...', 'exercise some moderation'이라는 지문 핵심 주장과 정반대. 지문 어휘(clubs)를 재활용한 명백한 반대 방향 미끼로, 대의만 잡으면 즉시 배제된다."
+    },
+    {
+      "label": "③",
+      "verdict": "정답",
+      "reason": "'learn to prioritize and portion your commitments'는 'draw the line', 'Pacing is important', 'exercise some moderation'을 정확히 재진술한다. prioritize는 'activities that are most meaningful to you'(우선순위 선별)와, portion은 moderation/pacing(할당량 조절)과 대응. 'make sure you learn to...' 문법 결합도 자연스럽다. 마지막 문장이 '의미 있는 활동에 참여하되 + 절제하라'는 지문 전체 요지의 결론이므로 유일하게 논리적으로 완결된다."
+    },
+    {
+      "label": "④",
+      "verdict": "오답(최대 매력 오답)",
+      "reason": "실전에서 가장 끌리는 선지. 지문에 'deadline is approaching'이 명시적으로 등장해 deadline 앵커링을 유발한다. 그러나 신문 마감은 crunch time의 '예시'일 뿐이고, 지문의 처방은 마감 연기가 아니라 활동량 절제다. 오히려 지문은 'tasks you absolutely need to complete'라 하여 해야 할 일은 완수해야 함을 전제하므로 마감을 미루라는 처방은 요지와 어긋난다. 또한 school newspaper 마감을 'teachers'와 협상한다는 결합도 어색하다. 예시 어휘 재활용형 미끼로 판정하고 배제."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "'stressed out'이라는 지문 어휘에서 stress→anxiety 연상을 유도하는 미끼. 그러나 지문의 스트레스는 과도한 활동 참여의 결과이지 'social anxiety'가 아니며, 'eliminate all sources'는 실현 불가능한 극단 표현으로 수능 오답의 전형적 표지다. 처방의 층위(활동량 조절)와도 불일치."
+    }
+  ],
+  "note": "요지(절제·페이싱·우선순위)가 지문 중반 'The point is this' 문장에 명시되어 있어 정답 ③이 일의적으로 결정된다. 매력 오답은 예시 어휘(deadline)를 재활용한 ④와 결과 어휘(stress)를 재활용한 ⑤이나, 둘 다 예시/결과 층위에 머물러 처방 층위의 요지와 어긋나므로 옹호 불가. 복수정답·무정답 소지 없음. 빈칸 문법 결합은 5개 선지 모두 성립(모두 동사원형 시작으로 'make sure you ___'에 결합 가능)하여 문법 단서로 배제되는 선지는 없고 순수 논리 문항으로 기능한다."
+}

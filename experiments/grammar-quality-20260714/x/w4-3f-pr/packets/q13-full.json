@@ -1,0 +1,159 @@
+{
+  "passageId": "ebsi_go1_20231219-q21",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2023,
+    "exam": "12월",
+    "origType": "함축의미",
+    "words": 158
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=b  (B):dec=a  (C):dec=d  (D):dec=f  (E):ANS=i",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 38,
+        "relPos": 0.046,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 172,
+        "relPos": 0.207,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 312,
+        "relPos": 0.376,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 456,
+        "relPos": 0.55,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 804,
+        "relPos": 0.97,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.97,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Many people take the commonsense view that color is an objective property of things, or of the light that bounces off them. They say a tree's leaves are green because they reflect green light - a greenness that is just as real as the leaves. Others argue that color doesn't inhabit the physical world at all but exists only in the eye or mind of the viewer. They maintain that if a tree fell in a forest and no one was there to see it, its leaves would be colorless - and so would everything else. They say there is no such thing as color; there are only the people who see it. Both positions are, in a way, correct. Color is objective and subjective - \"the place,\" as Paul Cézanne put it, \"where our brain and the universe meet.\" Color is created when light from the world is registered by the eyes and interpreted by the brain.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "Many people take the commonsense view that color is an objective property of things, or of the light that bounces off them.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "reflect",
+        "isError": false,
+        "errorExpression": "reflect",
+        "surroundingText": "They say a tree's leaves are green because they reflect green light - a greenness that is just as real as the leaves.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "exists",
+        "isError": false,
+        "errorExpression": "exists",
+        "surroundingText": "Others argue that color doesn't inhabit the physical world at all but exists only in the eye or mind of the viewer.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "colorless",
+        "isError": false,
+        "errorExpression": "colorless",
+        "surroundingText": "They maintain that if a tree fell in a forest and no one was there to see it, its leaves would be colorless",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "interpreted",
+        "isError": true,
+        "correction": "interpreted",
+        "errorExpression": "interpreting",
+        "surroundingText": "Color is created when light from the world is registered by the eyes and interpreted by the brain.",
+        "pointCode": "i"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "reflect"
+      },
+      {
+        "label": "(C)",
+        "text": "exists"
+      },
+      {
+        "label": "(D)",
+        "text": "colorless"
+      },
+      {
+        "label": "(E)",
+        "text": "interpreting"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "선행사(the light)를 수식하며 뒤에 주어가 빠진 불완전한 문장을 이끄는 주격 관계대명사 that은 어법상 적절합니다.",
+      "(B)": "접속사 because가 이끄는 절 안에서 주어(they)에 대응하는 정동사(reflect) 자리로, 시제와 태가 올바르게 쓰였습니다.",
+      "(C)": "but으로 연결된 절의 주어인 color는 단수이므로, 단수 동사 exists를 사용한 수일치는 적절합니다.",
+      "(D)": "상태 변화를 나타내는 be동사의 보어 자리이므로 형용사인 colorless를 쓰는 것이 어법상 옳습니다."
+    },
+    "explanation": "문장의 마지막 절에서 진짜 주어인 light 뒤의 동사부가 수동태(is + p.p. and p.p.)를 이루며 등위접속사 and로 연결되는 병렬 구조입니다. 맥락상 주어 light가 뇌에 의해 '해석되는' 수동의 의미이고 앞에 위치한 분사 registered와 짝을 이루어야 하므로 능동을 의미하는 interpreting은 이 자리에 쓰일 수 없습니다. 따라서 interpreted로 고쳐야 합니다. (이어진 전치사구 by the brain을 보고 수동 관계임을 쉽게 파악할 수 있습니다.)",
+    "keyPoints": [
+      "(E) 병렬 구조와 태 — 등위접속사 and에 연결된 두 분사의 형태와 태 일치 여부 판정",
+      "(A) 관계대명사 vs 접속사 — 선행사의 유무와 뒷문장의 완전성 판정",
+      "(C) 주어-동사 수일치 — 멀리 떨어진 주어의 핵을 찾아 단수/복수 판단"
+    ],
+    "tags": [
+      "어법",
+      "수능영어",
+      "병렬구조",
+      "수동태",
+      "수일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Many people take the commonsense view __(A) that__ color is an objective property of things, or of the light that bounces off them. They say a tree's leaves are green because they __(B) reflect__ green light - a greenness that is just as real as the leaves. Others argue that color doesn't inhabit the physical world at all but __(C) exists__ only in the eye or mind of the viewer. They maintain that if a tree fell in a forest and no one was there to see it, its leaves would be __(D) colorless__ - and so would everything else. They say there is no such thing as color; there are only the people who see it. Both positions are, in a way, correct. Color is objective and subjective - \"the place,\" as Paul Cézanne put it, \"where our brain and the universe meet.\" Color is created when light from the world is registered by the eyes and __(E) interpreting__ by the brain."
+  }
+}

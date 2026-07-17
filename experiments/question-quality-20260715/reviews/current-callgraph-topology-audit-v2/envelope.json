@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 2,
+  "auditId": "current-callgraph-topology-audit-v2-20260715",
+  "snapshot": {
+    "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "worktreeState": "dirty_preexisting",
+    "scope": "current worktree; static and offline",
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "apiCalls": 0,
+    "databaseCalls": 0,
+    "secretOrEnvironmentValueReads": 0
+  },
+  "counting": {
+    "assignment": "one runQuestionGenerationWithEmptyRetry engine invocation, one subtype, route count=1, excluding the legacy auto-planner",
+    "candidateCapableLogicalResponse": "one explicit AI-SDK generateObject/generateText invocation whose wire can return or reconstruct a complete student-facing question; SDK retries are not new logical responses",
+    "designLogicalResponse": "one premium-grammar answer-only AI-SDK invocation",
+    "evaluationLogicalResponse": "one grammar-solver AI-SDK invocation",
+    "physicalProviderFetch": "one fetch at the Atlas custom-fetch boundary, including every AI-SDK retry",
+    "warning": "ordinary question arrays have no schema max; logical response opportunities are bounded, but exact question-object cardinality on one ordinary wire response is not structurally fixed"
+  },
+  "sourceCaps": {
+    "applicationMaxRetries": 2,
+    "applicationAttempts": 3,
+    "sdkMaxRetries": 2,
+    "physicalFetchesPerExplicitSdkInvocation": 3,
+    "outerRequestedAttemptHardCap": 2,
+    "triggerAttemptHardCap": 2,
+    "defaultsEqualSourceMaxima": true,
+    "notes": [
+      "Application, SDK, caller-requested outer attempts, and Trigger attempts now have source hard caps.",
+      "Subtype floors still create 4, 5, 6, or 10 strict passes for STANDARD; the outer request hard cap does not lower those floors.",
+      "PREMIUM takes min(raw floor, 5, normalized requested attempts), so its current source maximum is two strict passes."
+    ]
+  },
+  "atomic": {
+    "ordinaryFullSchemaWrapper": {
+      "applicationAttempts": 3,
+      "perApplicationCompatibleMaxRoute": [
+        "structured generateObject",
+        "masked/compiled provider rejection",
+        "prompt-JSON generateText",
+        "invalid non-empty JSON",
+        "continuation JSON-repair generateText"
+      ],
+      "candidateOrEvaluationLogicalResponses": 9,
+      "physicalProviderFetches": 27,
+      "formula": "(R+1) * 3 explicit SDK invocations * (SDKmaxRetries+1) = 3*3*3",
+      "premiumStructuredRepairCompatibility": "experimental_repairText follows a successfully returned parse-invalid structured response; the longer masked-provider-error branch uses prompt JSON plus continuation repair, so it is not added as a fourth child in the same application attempt",
+      "forceJsonFallbackPhysicalFetches": 18
+    },
+    "premiumGrammarLadder": {
+      "cycles": 3,
+      "hardRegenerations": 2,
+      "answerOnlyStages": 3,
+      "addDecoyStages": 3,
+      "softRepairStages": 3,
+      "stages": 9,
+      "parseFiresPerStage": 2,
+      "physicalFetchesPerFire": 3,
+      "designLogicalResponses": 6,
+      "candidateLogicalResponses": 12,
+      "physicalProviderFetches": 54,
+      "formula": "3 cycles * (answer + add-decoys + one soft repair) * 2 parse fires * 3 SDK fetches",
+      "historicalValues": {
+        "42": "incorrectly permits only one soft repair across the entire ladder; current source resets repairedThisCycle after each hard regeneration",
+        "81": "stale three-fire-per-stage topology that included a removed reasoning fallback",
+        "current": 54
+      }
+    }
+  },
+  "perAttemptEnvelopeCount1": {
+    "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": {
+      "strictPasses": 10,
+      "relaxedPasses": 1,
+      "scarcePasses": 0,
+      "salvagePasses": 1,
+      "candidateWrapperInvocations": 24,
+      "candidateLogicalResponses": 216,
+      "designLogicalResponses": 0,
+      "evaluationLogicalResponses": 0,
+      "physicalProviderFetches": 648,
+      "minimalFirstSuccessPhysicalFetches": 1
+    },
+    "PREMIUM_BLANK_INFERENCE": {
+      "strictPasses": 2,
+      "relaxedPasses": 0,
+      "scarcePasses": 0,
+      "salvagePasses": 1,
+      "candidateWrapperInvocations": 6,
+      "candidateLogicalResponses": 54,
+      "designLogicalResponses": 0,
+      "evaluationLogicalResponses": 0,
+      "physicalProviderFetches": 162,
+      "minimalFirstSuccessPhysicalFetches": 1
+    },
+    "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": {
+      "settingsBasis": "markerCount>5 or answerCount>1, producing the six-pass STANDARD class",
+      "strictPasses": 6,
+      "relaxedPasses": 1,
+      "scarcePasses": 1,
+      "salvagePasses": 1,
+      "candidateWrapperInvocations": 18,
+      "solverWrapperInvocations": 7,
+      "candidateLogicalResponses": 162,
+      "designLogicalResponses": 0,
+      "evaluationLogicalResponses": 63,
+      "physicalProviderFetches": 675,
+      "minimalFirstSuccessPhysicalFetches": 2
+    },
+    "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_OR_KILLER": {
+      "strictPasses": 4,
+      "totalCandidatePasses": 7,
+      "solverEligiblePasses": 5,
+      "candidateWrapperInvocations": 14,
+      "solverWrapperInvocations": 5,
+      "candidateLogicalResponses": 126,
+      "designLogicalResponses": 0,
+      "evaluationLogicalResponses": 45,
+      "physicalProviderFetches": 513,
+      "minimalFirstSuccessPhysicalFetches": 2
+    },
+    "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": {
+      "eligibility": "English, strict, count=1, 5 markers, 1 answer, no research single-shot, teacher point, custom prompt, or teacher-intent block",
+      "strictPasses": 2,
+      "scarcePasses": 1,
+      "salvagePasses": 1,
+      "ladderRuns": 2,
+      "legacyCandidateWrapperInvocations": 8,
+      "solverWrapperInvocations": 2,
+      "candidateLogicalResponses": 96,
+      "designLogicalResponses": 12,
+      "evaluationLogicalResponses": 18,
+      "physicalProviderFetches": 378,
+      "minimalFirstSuccessPhysicalFetches": 3
+    },
+    "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": {
+      "strictPasses": 2,
+      "scarcePasses": 1,
+      "salvagePasses": 1,
+      "candidateWrapperInvocations": 8,
+      "solverWrapperInvocations": 2,
+      "candidateLogicalResponses": 72,
+      "designLogicalResponses": 0,
+      "evaluationLogicalResponses": 18,
+      "physicalProviderFetches": 270,
+      "minimalFirstSuccessPhysicalFetches": 2
+    }
+  },
+  "remainingEnglishTypeClassesCount1": {
+    "STANDARD_DEFAULT": {
+      "strictPasses": 4,
+      "extraPasses": "one relaxed plus at most one universal salvage generation",
+      "physicalProviderFetches": 324
+    },
+    "STANDARD_SUMMARY_WRITING": {
+      "strictPasses": 5,
+      "extraPasses": 2,
+      "physicalProviderFetches": 378
+    },
+    "STANDARD_EXTENDED": {
+      "members": "SUMMARY_COMPLETE_MC, GRAMMAR_CHOICE_COMBO, IRRELEVANT slotCount>5, and other source predicates in hasExtendedRetryType; grammar is reported separately",
+      "strictPasses": 6,
+      "extraPasses": 2,
+      "physicalProviderFetches": 432
+    },
+    "STANDARD_BLANK_KILLER_SINGLE": {
+      "strictPasses": 10,
+      "extraPasses": 2,
+      "physicalProviderFetches": 648
+    },
+    "PREMIUM_NON_GRAMMAR": {
+      "strictPasses": 2,
+      "extraPasses": "one universal salvage generation",
+      "physicalProviderFetches": 162
+    },
+    "assumption": "Every pass reaches one parsed candidate eligible for one repair, and each full-schema wrapper takes its compatible 27-fetch route. These are adversarial source ceilings, not averages. KO types differ because candidate repair is disabled and selected strict types can add a KO solver."
+  },
+  "routeAndReplay": {
+    "fast": {
+      "requestCountConstraint": "exactly 1",
+      "engineBudgetWrapper": true,
+      "automaticCrashReplayMultiplierProvenBySource": 1,
+      "deadlineMs": 270000
+    },
+    "trigger": {
+      "requestRouteAllowsCountUpTo": 50,
+      "auditedCount": 1,
+      "engineBudgetWrapper": true,
+      "configuredTaskAttempts": 2,
+      "claimAllowsSameRunProcessingReentry": true,
+      "crashReplayMultiplier": 2,
+      "deadlineMsPerAttempt": 540000,
+      "note": "A normal caught failure marks the job terminal before rethrow. The twofold multiplier is for a crash/kill or failed terminal write after provider work, while the job remains PROCESSING for the same run."
+    },
+    "triggerCrashReplayPhysicalFetches": {
+      "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": 1296,
+      "PREMIUM_BLANK_INFERENCE": 324,
+      "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": 1350,
+      "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_OR_KILLER": 1026,
+      "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": 756,
+      "PREMIUM_GRAMMAR_ERROR_LADDER_INELIGIBLE": 540
+    },
+    "legacyAutoPlanner": {
+      "excludedFromAssignmentCells": true,
+      "additionalPlannerWrapperPhysicalFetchesForOnePlannerInvocation": 27,
+      "budgetWrapper": false
+    }
+  },
+  "durableAssignmentBudget": {
+    "defaultMode": "OFF",
+    "OFF": "no durable row, no ALS scope, and no physical-call or USD enforcement",
+    "AUDIT": "observational; caps are null and enrollment outage may run unscoped",
+    "SHADOW": "records leases/reservations but does not enforce maxPhysicalCalls or cost",
+    "CANARY_ENFORCE": "enforces only selected job buckets; non-canary jobs become SHADOW",
+    "ENFORCE": "durably enforces job-wide physical-call and reserved-cost caps across Trigger attempts",
+    "workbenchCoverage": [
+      "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+      "src/trigger/workbench-question-generation.ts"
+    ],
+    "engineConsumersNotCovered": [
+      "src/app/api/ai/generate-questions-auto/route.ts",
+      "src/app/api/ai/generate-question/route.ts",
+      "src/lib/tutor/program-generation.ts",
+      "src/lib/similar-exam-generation/question-analysis/generator.ts",
+      "src/lib/similar-exam-generation/generation.ts",
+      "src/lib/question-sets/generate-set.ts",
+      "src/lib/custom-question-types/generator.ts",
+      "src/lib/korean/sets/generate.ts"
+    ],
+    "coverageVerdict": "PASS for the two current Workbench engine executions; FAIL as a universal guard over every production consumer of the shared engine"
+  },
+  "modelsAndPricing": {
+    "sourceDefaultModels": {
+      "STANDARD": "google/gemini-3.5-flash",
+      "PREMIUM_QGEN": "google/gemini-3.1-pro-preview",
+      "PREMIUM_GRAMMAR_LADDER": "google/gemini-3.1-pro-preview",
+      "GRAMMAR_SOLVER": "STANDARD plan / google/gemini-3.5-flash source default"
+    },
+    "overrideWarning": "The effective deployed Standard, Premium-qgen, and ladder IDs are environment-overridable. This no-secret audit did not read environment values and therefore attests source defaults, not deployment-effective IDs.",
+    "localPricingEvidence": {
+      "path": "experiments/question-quality-20260715/pricing/openrouter-pricing-snapshot.json",
+      "fetchedAt": "2026-07-14T16:57:52.373Z",
+      "snapshotSha256Field": "9e5557f0fa0c69105ade2668a1c84468b1ab8644b8adab167a8507cdb2a17869",
+      "fileSha256": "4b8c0cf36d3bca226e6ce824fa566ef96e496c384cb37256a987247332cc73e3",
+      "allActiveEmergencyUsdPerMillion": {
+        "google/gemini-3.5-flash": { "input": 2.7, "output": 16.2 },
+        "google/gemini-3.1-pro-preview": { "input": 7.2, "output": 32.4 }
+      },
+      "freshForShipReadyAdmission": false
+    },
+    "outputOnlyEmergencyDiagnostics": {
+      "status": "NOT_A_SHIP_READY_TOTAL_COST_CAP",
+      "wrapperMaxOutputTokenReservationFormula": "W(m)=9*m+504000 for structured maxOutputTokens m<=24000, using three application attempts, three SDK physical attempts, 32000 prompt-JSON cap, and 24000 continuation-repair floor",
+      "wrapperReservations": {
+        "m4096": 540864,
+        "m8192": 577728,
+        "m12288": 614592,
+        "m20000": 684000,
+        "solverM2048": 522432,
+        "fullPremiumGrammarLadder": 648000
+      },
+      "perAttemptUsdAtStaleEmergencyOutputRates": {
+        "STANDARD_BLANK_INFERENCE_KILLER_SINGLE": 210.2879232,
+        "PREMIUM_BLANK_INFERENCE_WORST_TOKEN_FLOOR": 115.893504,
+        "STANDARD_GRAMMAR_ERROR_EXTENDED_SETTINGS": 258.6981888,
+        "STANDARD_GRAMMAR_ERROR_FIVE_MARKER_OR_KILLER": 197.448192,
+        "PREMIUM_GRAMMAR_ERROR_LADDER_ELIGIBLE": 236.2099968
+      },
+      "limitations": [
+        "Input request bytes are not bounded by the ordinary engine or the Workbench request schema; DB passage text and prompt additions have no source-level byte cap.",
+        "The price snapshot is stale for admission and covers source-default models only.",
+        "The reservation multiplies each physical attempt by its output cap; it is conservative, not a claim that every retry can simultaneously bill the full cap.",
+        "Input cost, provider fixed charges, deployment overrides, and any pricing change are excluded."
+      ]
+    },
+    "shipReadyCostVerdict": "NOT_PROVABLE_WITH_CURRENT_DEFAULT_OFF_SOURCE: finite physical calls do not create a finite USD bound without a request-byte cap, a fresh applicable price snapshot, effective-model attestation, and an enforcing assignment policy"
+  },
+  "verdict": {
+    "ordinaryPerEngineExecutionPhysicalCalls": "FINITE_AND_SOURCE_BOUNDED",
+    "triggerCrashReplay": "FINITE_AT_TWO_TASK_ATTEMPTS_BUT_DOUBLES_THE_PER_ATTEMPT_ENVELOPE_WHEN_BUDGET_IS_NOT_ENFORCING",
+    "durableBudgetDefault": "OFF",
+    "universalProductionCoverage": "NO",
+    "shipReadyUsdCap": "NOT_PROVEN",
+    "premiumGrammarLadderPhysicalFetches": 54
+  }
+}

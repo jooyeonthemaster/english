@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "관계절 'that __ itself over and over again'의 진짜 주어는 선행사 'almost any process'(단수). 단수 주어에 대해 3인칭 단수 현재형 repeats가 정확히 일치하며, 재귀대명사 itself와도 수 일치가 성립한다. 어법상 옳음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'quartz crystals vibrate regularly'에서 regularly는 완전자동사 vibrate를 수식하는 부사. vibrate는 보어를 취하는 연결동사가 아니므로 형용사 regular가 올 자리가 아니다. 부사 사용이 형식적으로 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'a candle marked in hours'는 축약 관계절(= a candle that is marked in hours). candle은 mark 행위의 대상(피동)이므로 과거분사 marked가 옳다. 현재분사 marking이라면 candle이 표시를 하는 주체가 되어 의미상 성립하지 않는다. 어법상 옳음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'It seems to yield a smooth time scale'에서 seem은 to부정사 보어를 취하는 상승(raising) 동사로, seem + to-V는 표준 구문. 주어 It(= the use of radiocarbon dating ~ clock)과의 결합도 문제없다. 어법상 옳음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'It seems to yield a smooth time scale but in fact is not'에서 생략(ellipsis)의 선행 동사구는 어휘동사 yield가 이끄는 'yield a smooth time scale'이다. 어휘동사구를 받는 부정 생략에는 대동사 do가 필요하므로 'but in fact does not (yield a smooth time scale)'이어야 한다. be동사 is not이 성립하려면 선행부에 be 술어(예: seems to BE smooth)가 있어야 하는데 존재하지 않고, 'is not [a smooth time scale]'로 읽으려 해도 주어 It(방사성탄소연대측정이라는 시계)이 time scale 자체가 아니어서 서술 관계가 붕괴한다. 진행형·수동태 등 is가 조동사로 기능할 대안 해석도 불가능하다. 어법상 틀림 — 정답."
+    }
+  ],
+  "note": "형식 검증: (E)의 오류는 VP-ellipsis에서 선행사 동사구의 핵이 어휘동사(yield)일 때 do-지지(do-support)가 강제된다는 규칙 위반으로 증명된다. is가 정문이 되는 대안 해석(보어 생략, 조동사 be, 도치 등)을 전수 탐색했으나 모두 선행사 부재 또는 주어-술어 불일치로 기각. 나머지 4개 밑줄은 각각 수일치(A), 부사 수식(B), 축약 수동 관계절(C), raising 동사 보문(D)으로 정문임이 확인되어 정답 후보는 (E) 단일로 좁혀진다."
+}

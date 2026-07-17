@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "question-quality-s1-v6-exact-wire-preflight-public-v1",
+  "status": "OFFLINE_PRODUCTION_CORE_REPLAY_EXECUTION_BLOCKED",
+  "campaignPublicArtifactSha256": "357bb6aceb68cec6e200c47938d211d5aeaeb1d4a11ef2151404b0c0dd1d4c20",
+  "campaignPrivateQueueFileSha256": "6b7a8ee4aa05f089ccfe992b83547449d1923b2b65cf93ed36785f0330774971",
+  "privatePreflightArtifactSha256": "96318916c4ef714ae55febab3a63b992e93d6e2911f03235698487f40601ca7a",
+  "preflightSemanticSha256": "3f8ae187dfe8015e76b9ff4ae2abc588fa4e3d1fbbd0ef65dbf723e95a7b6549",
+  "sourceClosureSha256": "9f4bf35df2ab8be25376bab0f1251029b0b267f63faad3244f3d8ecefddc70e0",
+  "profileEvidence": {
+    "historicalIntegrationAuditRole": "HISTORICAL_BASELINE_ONLY",
+    "currentNegativeEvidenceAuditVerdict": "PASS_REMEDIATED_OFFLINE",
+    "currentNegativeEvidenceClosureSha256": "aeccb1754df93f9691f6fed73e5f335af81926d55de9f9afec9378e9298db1cb",
+    "currentNegativeEvidenceResultsSha256": "427aa0156bf6b8994936034f522204afb0fa0b33166cb1ee0ce91dc62c05ba25",
+    "liveQualityImprovementClaimed": false
+  },
+  "claimBoundary": {
+    "provenSurface": "OFFLINE_PRODUCTION_CORE_REQUEST_CONSTRUCTION_REPLAY",
+    "candidateTopology": "DIRECT_SINGLE_DISPATCH_SINGLE_CANDIDATE_MECHANISM_SCREEN",
+    "productionCoreWireRootReplayed": true,
+    "fullProductionTopologyParityClaimed": false,
+    "premiumGrammarLadderPolicyParityClaimed": false,
+    "productionRetryRepairFallbackPolicyParityClaimed": false,
+    "productionQualityParityClaimed": false,
+    "parityRequiresSeparateVersionedTopologyAudit": true
+  },
+  "counts": {
+    "assignments": 180,
+    "locallyInterceptedFetches": 180,
+    "externalNetworkCalls": 0,
+    "physicalFetchCap": 180,
+    "candidateOpportunityCap": 180,
+    "uniqueWireBodies": 180,
+    "uniqueRequestEnvelopes": 180,
+    "byType": {
+      "BLANK_INFERENCE": 84,
+      "GRAMMAR_ERROR": 96
+    },
+    "byPlan": {
+      "PREMIUM": 84,
+      "STANDARD": 96
+    },
+    "byDifficulty": {
+      "INTERMEDIATE": 90,
+      "KILLER": 90
+    },
+    "byModel": {
+      "google/gemini-3.1-pro-preview": 84,
+      "google/gemini-3.5-flash": 96
+    },
+    "byProfile": {
+      "B0_CURRENT_CONTROL": 24,
+      "B1_TYPE_SCOPED_TAIL": 12,
+      "B2_POSITIVE_COMPACT": 24,
+      "B3_OPTION_INTENT_LEDGER": 24,
+      "G0_CURRENT_CONTROL": 24,
+      "G1_FINAL_CHECKLIST_ABLATION": 24,
+      "G2_POSITIVE_COMPACT": 24,
+      "G3_SITE_CERTIFICATE": 24
+    },
+    "b1PremiumAssignments": 0
+  },
+  "wire": {
+    "endpointSha256": "5c1332d5f9242f304584f5dca3e53a8afe9d1e0c9ea153e0ab73f27e4f341bce",
+    "providerRoutingSha256": "6086eda2be8a78e383e1dcb5d757a13e88fdb13ca62cb87a5a7aaa9cfe23b166",
+    "totalBodyUtf8Bytes": 7562124,
+    "totalBodyUtf8BytesDesignCeiling": 9000000,
+    "totalOutputTokens": 912000,
+    "profileArtifactSetSha256": "a842a7b6fb0b31e45bcd44ada3e7790d41dd201ed127180a6661fe86d87576d9",
+    "profileArtifactManifestSha256": "851418a42f90e5d292c02b4eb5f429599989475646ae116c25f596669f576bd1",
+    "schemaArtifactSetSha256": "31d58368175aa60968facfa67cbff1a994fa8468713cd6865399cbdb90869386",
+    "gateArtifactSetSha256": "f54feb7d7338ac641ca09c60239857f0c8e4f807efb2fd1730a2e33c83ffdb7a",
+    "policyArtifactSetSha256": "9ca7ebdc6fd20fa07f4333c4cb178e3a185f48d1a8e65ce0281e6c9650398a25",
+    "rightsAndPiiRecordSetSha256": "304322ac6f067000e2106999a001ff3a7babb90d63fe1f39c443a1519b050bba",
+    "strictJsonSchemaRows": 180,
+    "completionCountOneRows": 180,
+    "candidateOutputsOneRows": 180,
+    "currentModelRows": 180,
+    "currentProfileBoundRows": 180,
+    "currentDifficultyBoundRows": 180,
+    "schemaBoundRows": 180,
+    "tokenCapBoundRows": 180,
+    "exactRoutingRows": 180,
+    "reasoningOffRows": 180,
+    "rightsBoundRows": 180
+  },
+  "costPlanningCheck": {
+    "executionPricingAttached": false,
+    "staleV5FlatCapsUsed": false,
+    "illustrativeEmergencyRatesAreExecutionAuthority": false,
+    "emergencyRatesUsdPer1M": {
+      "STANDARD": {
+        "input": 2.7,
+        "output": 16.2
+      },
+      "PREMIUM": {
+        "input": 7.2,
+        "output": 32.4
+      }
+    },
+    "bodyBytesByPlan": {
+      "STANDARD": 4433256,
+      "PREMIUM": 3128868
+    },
+    "outputTokensByPlan": {
+      "STANDARD": 480000,
+      "PREMIUM": 432000
+    },
+    "serverTokenOverheadUpperBoundPerAssignment": 4096,
+    "safetyMultiplier": 1.1,
+    "aggregateModelStratifiedMaximumUsd": 65.79032328,
+    "illustrativeMaximumUsd": 65.79032337,
+    "designCeilingUsd": 100,
+    "withinDesignCeiling": true,
+    "executionAuthority": "Attach a fresh schema-v2 exact-tag proof and materialize through campaign-v6-s1-durable-controller-v1; block if its calculated campaign cap exceeds $100."
+  },
+  "durableControllerBinding": {
+    "materializerInputType": "S1MaterializationInput",
+    "exactWireRowType": "S1ExactWireRow",
+    "structurallyTypeCheckedRows": 180,
+    "semanticallyMaterializedRowsWithOfflineSyntheticPriceFixture": 180,
+    "semanticMaterializerStatus": "DRY_RUN_ONLY_EXECUTION_BLOCKED",
+    "semanticMaterializerConservativeMaxCostUsd": 65.79032337,
+    "semanticValidationSyntheticPricingIsExecutionAuthority": false,
+    "materializerInputSchemaVersion": "question-quality-s1-v6-materializer-input-v1.2",
+    "profileArtifactManifestSha256": "851418a42f90e5d292c02b4eb5f429599989475646ae116c25f596669f576bd1",
+    "profileArtifactAliasesAllowed": false,
+    "profileArtifactCount": 8,
+    "syntheticPricingSchemaVersion": 2,
+    "syntheticCanonicalSlugBindings": [
+      {
+        "modelId": "google/gemini-3.1-pro-preview",
+        "canonicalSlug": "google/gemini-3.1-pro-preview-20260219"
+      },
+      {
+        "modelId": "google/gemini-3.5-flash",
+        "canonicalSlug": "google/gemini-3.5-flash-20260519"
+      }
+    ],
+    "syntheticExactRouteProviders": [
+      "Google"
+    ],
+    "syntheticServedModelAllowlistHashSetSha256": "20451afd2bcc09a8c69c6d48856b0c4a46e589e52adefa52da5b64e86832595b",
+    "durableBindingSourceClosureSha256": "03276e5a5d3c43703269e13ecd6360c9e42f179880e5e9af8b71341989bcbcb9",
+    "unpricedBindingPresentPrivately": true,
+    "pricingPlaceholderPresent": false,
+    "designAuthorizationStatus": "BLOCKED_FIXTURE",
+    "liveMaterializationAuthorized": false
+  },
+  "safety": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "realSecretReads": 0,
+    "apiCandidatesConsumed": 0,
+    "compiledAssignments": 180,
+    "locallyInterceptedFetches": 180,
+    "unexpectedFetchAttempts": 0,
+    "blockedNonFetchTransportAttempts": 0,
+    "liveExecutionAuthorized": false,
+    "corpusRightsPiiScopeAttached": true,
+    "routePrivacyRequestAttached": true,
+    "independentProviderPrivacyReviewAttached": false,
+    "pricingAttached": false,
+    "dedicatedCredentialAttached": false
+  },
+  "publicPrivacy": {
+    "exactPassageTextExposed": false,
+    "rowMembershipExposed": false,
+    "assignmentIdsExposed": false,
+    "exactWireDigestsExposed": false
+  },
+  "executionHolds": [
+    "fresh schema-v2 exact google-vertex/global tag price proof no older than 15 minutes",
+    "durable controller materialization with calculated campaign maximum <= $100",
+    "dedicated zero-usage OPENROUTER_S1_API_KEY and matching provider hard limit",
+    "current provider privacy/retention review",
+    "fresh independent pre-dispatch audit and explicit authorization"
+  ],
+  "publicArtifactSemanticSha256": "b4bbe7fdede1015c00341b50c46d79f7271935a8cd3b6ca605f3276b2cdb4efa"
+}

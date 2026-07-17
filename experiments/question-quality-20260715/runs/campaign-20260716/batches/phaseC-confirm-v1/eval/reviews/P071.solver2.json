@@ -1,0 +1,35 @@
+{
+  "pid": "P071",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) what",
+      "verdict": "correct",
+      "reason": "'know'의 목적어로 wh-절 두 개가 병렬: 'where we are headed and what we want to do'. 'what'은 자유관계사/간접의문사로서 타동사 'do'의 목적어 공백을 채운다(do __ 의 목적어 = what). 'do'가 목적어를 요구하므로 접속사 'that'이 아니라 'what'이 필수. 형식적으로 완전 성립."
+    },
+    {
+      "label": "(B) had planned",
+      "verdict": "correct",
+      "reason": "'things do not go as we had planned'에서 주절이 습관적 현재이지만, 과거완료는 '일이 어긋나는 시점' 이전에 이미 완료된 계획이라는 선시성(anteriority)을 표시하는 관용적 용법으로 성립한다('as (we had) planned'는 굳어진 연어). 'as we planned/have planned'도 가능하나 'had planned'가 비문이 되는 것은 아니다. 어법상 옳음."
+    },
+    {
+      "label": "(C) unpredictable",
+      "verdict": "correct",
+      "reason": "'life is unpredictable' — 연결동사 'is'의 주격 보어 자리에 형용사가 온 정상 구조. 부사 'unpredictably'라면 오히려 비문. 형태·품사 모두 옳다."
+    },
+    {
+      "label": "(D) spending",
+      "verdict": "correct",
+      "reason": "'end up + V-ing'는 고정 패턴(end up doing). 'you end up spending a few relaxing hours'는 이 패턴에 정확히 부합. to부정사(end up to spend)는 비문이므로 동명사가 옳다."
+    },
+    {
+      "label": "(E) to awake",
+      "verdict": "incorrect (정답)",
+      "reason": "'keep + 목적어 + 보어' 구문에서 목적격 보어는 형용사(awake)여야 한다: 'keeping us awake'. 'keep O to-V' 패턴은 영어에 존재하지 않으며(keep은 목적격 보어로 to부정사를 취하지 않음), 'awake'를 동사로 읽어도 'to awake'가 이 자리에 들어갈 통사적 경로가 없다. 대안 해석(축약 관계절, 목적 부사구 등)을 탐색해도 'keeping us to awake'를 정문으로 만드는 파생은 불가능. 명백한 어법 오류."
+    }
+  ],
+  "note": "정답은 (E) 하나로 유일하게 좁혀진다. (B)의 과거완료가 현재 습관 문맥과 결합해 다소 튀어 보일 수 있으나 선시성 표시로 옹호 가능한 정문이며, 실제 원문 표현으로 보이는 관용적 연어('as we had planned')이므로 경쟁 후보가 되지 못한다. 'not only are curveballs...' 도치도 옳게 처리되어 있어 (E) 외 오류 없음."
+}

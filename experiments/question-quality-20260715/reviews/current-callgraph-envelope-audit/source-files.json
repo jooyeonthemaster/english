@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "auditId": "current-callgraph-envelope-audit-20260715",
+  "gitHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "hashAlgorithm": "sha256",
+  "scopeNote": "Hashes bind the dirty current-worktree files actually audited, including installed SDK runtime code. Existing experiment conclusions were consulted only after the production/research source, tests, and package closure had been traced.",
+  "files": [
+    {
+      "path": "package.json",
+      "sha256": "bfc9c68a6d0df116f969b5349131fc6bc0e2f9edfe9f9c105d5b2abb8f2be7d8",
+      "role": "declared SDK dependencies"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "69df7075b9a70cb1740531a24cc787d396d735ac2977a359b7700fd0701253be",
+      "role": "locked dependency versions"
+    },
+    {
+      "path": "node_modules/ai/package.json",
+      "sha256": "0765dee25104f9194b1bbcb1d34997e01e5ae07907e33d4344e6c09f4d4a00ae",
+      "role": "installed AI SDK version"
+    },
+    {
+      "path": "node_modules/ai/dist/index.js",
+      "sha256": "7dd36753c2c85a8b6da84309831237acad2568ad2b68fe4d3f097e4db3a41b98",
+      "role": "installed retry and generateObject implementation"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/package.json",
+      "sha256": "dbb3c1855b5dd36804d968b962521bd424511b070ce72233dc83f46ffa30750d",
+      "role": "installed provider package version"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/dist/index.js",
+      "sha256": "4f3a232f9f98f225bf0ee3ac5a264e05e975233c8b74c5bdd50b38576e02eef1",
+      "role": "HTTP retryability defaults"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/package.json",
+      "sha256": "ac4b0ad5a29fca00ee0128ccc92d857deca4460fe917675db7f4aa72c85add03",
+      "role": "installed OpenAI-compatible provider version"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/dist/index.js",
+      "sha256": "54ba9c8bc38050792ca6dcf7f36a088ed0863f91d96b4d4b1572ad99a3d10506",
+      "role": "installed Atlas/OpenAI-compatible request path"
+    },
+    {
+      "path": "src/lib/concurrency-config.ts",
+      "sha256": "df0edfb5e84cafd6716251fc3fdebbf0473052ce870bc15a411ce5f20325b9d1",
+      "role": "dynamic retry defaults and missing hard maxima"
+    },
+    {
+      "path": "src/lib/question-generation-llm.ts",
+      "sha256": "3eb35777d48cf9b86925efc53441c17d1472e4e06903496a7114fc2f0456546b",
+      "role": "application retry, structured generation, fallback, JSON repair, research downgrade block"
+    },
+    {
+      "path": "src/lib/question-generation-research-runtime.ts",
+      "sha256": "e25b1fd8e030b61ef5b934be281bbd26b2a3d191ebfcb067cbff9c351b85c616",
+      "role": "research stage taxonomy and sealed count runtime"
+    },
+    {
+      "path": "src/lib/question-generation-research-schema.ts",
+      "sha256": "50efd7bb633272d72657378b00cccdb19e6f03ba3081ca93cf9fec2012198766",
+      "role": "ordinary unbounded versus research exact questions array"
+    },
+    {
+      "path": "src/lib/atlas-ai.ts",
+      "sha256": "17264619ecb3536f65061147527ff1a5e37e28cd6b74f073d75a7426cfe5153b",
+      "role": "Atlas provider, research fetch, structured require_parameters transform"
+    },
+    {
+      "path": "src/lib/atlas-research-fetch-boundary.ts",
+      "sha256": "c00056c9e1ef91aa0ca5bfe31a97c251e43d2e11a073f5f406999804b0148682",
+      "role": "physical fetch lease boundary and structural cardinality parser"
+    },
+    {
+      "path": "src/lib/question-ai-schemas-mc.ts",
+      "sha256": "3d8d576e768b7e679caed57ff225c6c3662497dcc695ba4e072b467f7ae3c31a",
+      "role": "dynamic English response schemas routed through research exact wrapper"
+    },
+    {
+      "path": "src/lib/question-type-ui.ts",
+      "sha256": "19946584a591138a484034691230c2faa1b8d79ced811db96b5afed43f41e9f7",
+      "role": "active English UI groups and legacy exclusion"
+    },
+    {
+      "path": "src/lib/question-schemas.ts",
+      "sha256": "6037aaad366f029afc2b0ebf1b0194cdcc8874173002256baa24a95d15888a22",
+      "role": "registered English and merged Korean schemas"
+    },
+    {
+      "path": "src/lib/korean/registry/index.ts",
+      "sha256": "ad6f8095578634bd31139ea8a8054f793aff56ec7355a46b32b64114168253cc",
+      "role": "38 registered Korean modules"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+      "sha256": "a3da1036a72d7f9ec0e9ebc7036d07d0d2cf2128fb2420d24a6b5baaff5e41ec",
+      "role": "production pass graph, ladder, candidate repair, solver, retry, scarce and salvage"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/generate-with-retry.ts",
+      "sha256": "46b6151bbde80a7b149be5f1f6d266cb640f5ad8366901072e237bca22e7ae8b",
+      "role": "full-schema wrapper retry parameter forwarding"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/question-repair.ts",
+      "sha256": "811702366ba41f36310d2a80963ad35076c37ed4a695f1eac3b69d4dbc4729dc",
+      "role": "one candidate-repair wrapper and research child stage"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-premium-ladder.ts",
+      "sha256": "40141d5ecf0c713f1d706cbedf434f2a7eef86d44fa3ddd22142ddba3f3c22a3",
+      "role": "current nine-stage premium ladder without reasoning fallback call"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/grammar-solver-gate.ts",
+      "sha256": "be7a80c1e4e9833f5b05352c532375534b5a1f19102b12f6fea89b9f5310da88",
+      "role": "English grammar evaluation-only wrapper"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-helpers.ts",
+      "sha256": "bda4f9f2c10a7284a74424b16799024ff07e3956cc5357292b4ce9416cc549d4",
+      "role": "salvage pool admission and setting helpers"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-constants.ts",
+      "sha256": "a672875d20315667b7a662737930f63c76328136656bbb635c014d5f1ed24bff",
+      "role": "quality and salvage code sets"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation-types.ts",
+      "sha256": "085e6f52b1a91e4aba83beb0d2ed085d4f96377be9acd65ddbea5fb38a0b1009",
+      "role": "generation input and rejection types"
+    },
+    {
+      "path": "src/app/api/ai/generate-questions-auto/route.ts",
+      "sha256": "50e5d715ac2a59d77e2e4a150e3bcb5afc5d874c32fe04e3eb6599571bd98813",
+      "role": "legacy auto planner plus engine callsite"
+    },
+    {
+      "path": "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+      "sha256": "3837ad82bd443686da11bbd2717687b90500a43c3720164e8731e8fd70e1663d",
+      "role": "active fast route count=1 and deadline"
+    },
+    {
+      "path": "src/app/(director)/director/workbench/generate/use-generation-handlers.ts",
+      "sha256": "77ef54a97aac885bf6b45a88395e019f0dd0c2d43d5530ad64a1c0e59082b5f7",
+      "role": "active UI decomposition into count=1 units"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/question-generation-phase-c-runner.ts",
+      "sha256": "73c4a41c68e38c5bfab00edf87e28a6b9ebb4d31ae06bf504d5e967050f0d860",
+      "role": "actual Phase-C engine runner and missing SDK/application retry override"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts",
+      "sha256": "de53b1f2d23873779f2975a9472c61ec55909d418fff1743eb24eef1097cb765",
+      "role": "sealed root/repeat/child registry mapping"
+    },
+    {
+      "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+      "sha256": "f8bfd56e07fcf1f9cb7a75d2962909530abadda934b7d7fefe697773530b1f60",
+      "role": "candidate entry fixed-cardinality invariant and physical budgets"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts",
+      "sha256": "7fd0280365494aba0d333dda179b52044d83648c8d6b6e83c723e8336955aa2e",
+      "role": "one-cell Phase-C masked-400 fixture"
+    },
+    {
+      "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts",
+      "sha256": "6c30cbe3c32717311ae88da014acee3acd0f9b680a3dfae50077643407fdfd4b",
+      "role": "zero-network exact wire cardinality tests"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/campaign-v4/campaign-v4.json",
+      "sha256": "5e3b2b2cd80ba12dbc192a1660efb15084f0c80cc40fd77783d7f9589eef8983",
+      "role": "design-only reduced single-shot claims and zero authorization"
+    },
+    {
+      "path": "tests/unit/atlas-research-fetch-boundary.test.ts",
+      "sha256": "2cdee0ff0a830f76f973163ea3e053dcf4840e47692f255865f15a0fdfac8b0d",
+      "role": "physical retry leasing and boundary tests"
+    },
+    {
+      "path": "tests/unit/atlas-ai.test.mjs",
+      "sha256": "a97d25fc249815b8615eb1d75ca58c6e8277b2423722573b2d7b8761f821a42c",
+      "role": "Atlas request transform tests"
+    },
+    {
+      "path": "tests/unit/grammar-premium-reasoning-off.test.mjs",
+      "sha256": "4de0315afc79b46b5d0c62d141f800ae4a6a0ed7dca8421d67af7b1719dffe64",
+      "role": "current premium ladder reasoning-off regression test"
+    },
+    {
+      "path": "tests/unit/fallback-json-null-promotion.test.mjs",
+      "sha256": "d7ab305302f3be0b96de6b6d0ac2b025ecaa50f001275fbd707eb3e70693d005",
+      "role": "client fallback parser behavior"
+    }
+  ]
+}

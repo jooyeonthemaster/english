@@ -1,0 +1,163 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-noun-clause-pronoun-mislabel",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=c  (C):ANS=b  (D):dec=k  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 60,
+        "relPos": 0.083,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 208,
+        "relPos": 0.288,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 219,
+        "relPos": 0.304,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 640,
+        "relPos": 0.888,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.888,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "kept",
+        "isError": false,
+        "errorExpression": "kept",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "focused",
+        "isError": false,
+        "errorExpression": "focused",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "what",
+        "isError": true,
+        "correction": "what",
+        "errorExpression": "that",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "sharing",
+        "isError": false,
+        "errorExpression": "sharing",
+        "surroundingText": "If you're more of a verbal processor, start your conversations with friends by sharing a recent win",
+        "pointCode": "k"
+      },
+      {
+        "label": "(E)",
+        "expression": "follows",
+        "isError": false,
+        "errorExpression": "follows",
+        "surroundingText": "Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "kept"
+      },
+      {
+        "label": "(B)",
+        "text": "focused"
+      },
+      {
+        "label": "(C)",
+        "text": "that"
+      },
+      {
+        "label": "(D)",
+        "text": "sharing"
+      },
+      {
+        "label": "(E)",
+        "text": "follows"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주격 관계대명사 that 뒤에서 선사 시대 사바나에서의 삶이라는 과거 사실을 서술하는 정동사인 과거시제 kept는 어법상 적절합니다.",
+      "(B)": "keep의 목적격보어 자리로, 목적어인 you가 '눈길과 마음을 두게 되는' 대상이므로 수동의 관계를 지닌 과거분사 focused는 어법상 적절합니다.",
+      "(D)": "수단과 방법을 나타내는 전치사 by의 목적어로 이어지는 자리에 목적어 a recent win을 취하고 있는 동명사 sharing은 어법상 적절합니다.",
+      "(E)": "Where the mind goes라는 부사절의 수식을 받는 단수 명사 주어 reality에 호응하는 단수 동사 follows는 어법상 적절합니다."
+    },
+    "explanation": "(C) \"that\"는 어법상 틀린 표현이며 \"what\"로 고쳐야 한다. 타동사구 write down의 목적어에 해당하는 명사절을 이끌며, 해당 명사절 내에서 주어 역할을 수행하는 관계대명사가 필요한 자리입니다. 따라서 수식할 선행사가 존재하지 않으면서 주어가 빠진 불완전한 문장을 이끌 수 있도록 선행사를 포함하는 관계대명사인 what이 와야 합니다. 반면, 틀린 표현인 that은 선행사 없이 불완전한 문장을 이끄는 관계대명사나 명사절 접속사로 기능할 수 없으므로 비문이 됩니다. 따라서 that을 what으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(C) 관계대명사 vs 접속사 — 선행사 유무와 관계절 내의 문장 구조 완전성 판정",
+      "(B) 분사의 태 — 목적어가 동작을 받는지 행하는지 준동사의 수동 관계 판정",
+      "(E) 주어-동사 수일치 — 유도된 수식 구문을 제외하고 진주어의 핵을 분리하여 수 수치 검사"
+    ],
+    "tags": [
+      "통사구조",
+      "관계대명사",
+      "명사절 접속사",
+      "수일치",
+      "분사구문",
+      "동명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that __(A) kept__ us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you __(B) focused__ on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down __(C) that__ went well. If you're more of a verbal processor, start your conversations with friends by __(D) sharing__ a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality __(E) follows__. The more you appreciate life, the more reasons you have to celebrate it."
+  }
+}

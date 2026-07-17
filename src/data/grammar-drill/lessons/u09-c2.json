@@ -1,0 +1,683 @@
+{
+  "id": "u09-c2",
+  "unitId": "u09",
+  "order": 2,
+  "title": "분사구문의 능·수동",
+  "oneLiner": "분사 앞에 주절 주어를 복원해, 그 주어가 동작을 하면 -ing, 받으면 p.p.(Being 생략)입니다.",
+  "gradeStamp": {
+    "introduced": "고1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 준동사(분사구문, 고 ●)",
+      "어법끝 5.0 — 분사구문의 능동·수동(Being 생략)",
+      "천일문 고등 GRAMMAR — 분사구문의 의미상 주어와 태",
+      "docs/study-os-spec.md §2.5 판별 렌즈 L3 의미상 주어 대조",
+      "SMOAT 어법 드릴 뱅크 u09-c2 문항 38개(choice 12 · reading 8 · support 18) — trapTag: dangling-subject, passive-with-object, intransitive-participle, emotion-participle, participle-voice, ed-ambiguity"
+    ]
+  },
+  "lenses": ["L3", "L2"],
+  "confusableWith": ["u09-c1", "u09-c3", "u09-c4", "u04-c1", "u04-c2"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Filmed over three years, the documentary captures the life of a fishing village.",
+        "Filming over three years, the documentary captures the life of a fishing village."
+      ],
+      "answer": 0,
+      "afterText": "분사의 형태를 결정한 것은 콤마 뒤의 주어입니다. 이 레슨을 마치면 그 주어를 찾아 -ing 와 p.p. 중 하나를 확정하는 절차를 갖게 됩니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "의미상 주어",
+      "question": "분사 맨 앞에는 주어가 보이지 않는데, 무엇을 기준으로 -ing 와 p.p. 중 하나를 고릅니까?",
+      "plain": "분사구문에는 자기 주어가 없습니다. 그 동작을 실제로 하거나 받는 주인은 주절의 주어이며, 이 주인을 의미상 주어라고 부릅니다.",
+      "analogy": "그림자는 자기 몸이 없지만 반드시 어떤 사람의 그림자입니다. 분사도 자기 주어가 없지만, 그 동작의 주인은 언제나 주절의 주어입니다.",
+      "whyItMatters": "밑줄 친 분사가 -ing 인지 p.p. 인지 묻는 수능 어법 문항은 결국 이 의미상 주어가 동작을 하는지 받는지 하나로 갈립니다. 판별 도구 「의미상 주어 대조」가 여기서 출발합니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "분사 뒤에 명사가 보이면 그 분사는 언제나 능동입니다.",
+      "truth": "목적어의 유무는 보조 단서일 뿐입니다. offer·give·grant 처럼 목적어를 둘 취하는 동사는 수동이 되어도 목적어 하나가 뒤에 남습니다. 최종 판단은 언제나 의미상 주어가 그 동작을 하는가, 받는가로 내립니다.",
+      "counterExample": {
+        "en": "**Offered** a permanent post at the institute, the researcher chose to return to fieldwork.",
+        "ko": "연구소의 정규직 자리를 제안받았지만 그 연구자는 현장 조사로 돌아가기를 택했습니다.",
+        "note": "Offered 뒤에 a permanent post 라는 명사가 남아 있지만 수동입니다. 연구자는 자리를 제안하는 쪽이 아니라 제안받는 쪽이며, 원래 문장은 The researcher was offered a permanent post 입니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "능·수동 판별 필기",
+      "intro": "형태를 가르는 여섯 가지를 필기 한 장으로 정리합니다. 판단은 언제나 의미상 주어에서 시작합니다.",
+      "entries": [
+        {
+          "head": "의미상 주어 — 분사 앞에 숨은 주어",
+          "body": "분사구문에는 주어가 없지만 그 동작의 주인은 주절의 주어입니다. 분사 앞에 그 주어를 복원해 넣고 읽는 것이 모든 판별의 출발점입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "능동이면 -ing",
+          "body": "복원한 의미상 주어가 그 동작을 스스로 하는 쪽이면 현재분사를 씁니다.",
+          "example": {
+            "en": "**Holding** a lantern, the guide led the visitors into the cave.",
+            "ko": "등불을 들고서 그 안내인은 방문객들을 동굴 안으로 이끌었습니다.",
+            "note": "안내인이 등불을 드는 쪽이므로 능동의 현재분사입니다."
+          }
+        },
+        {
+          "head": "수동이면 p.p. — Being 이 생략된 자리",
+          "body": "의미상 주어가 그 동작을 받는 쪽이면 과거분사를 씁니다. 과거분사 앞에는 Being 이 생략되어 있어, 문장 첫머리에 p.p. 가 홀로 설 수 있습니다.",
+          "example": {
+            "en": "**Written** in haste, the memo contained several errors.",
+            "ko": "급하게 작성된 그 메모에는 오류가 몇 군데 있었습니다.",
+            "note": "메모는 작성되는 쪽이고, Being written 에서 Being 이 생략되었습니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "자동사는 언제나 -ing",
+          "body": "rise·arrive 같은 자동사는 목적어도 수동태도 없습니다. 목적어가 보이지 않아도 과거분사를 쓰면 틀리며, 언제나 현재분사가 옳습니다.",
+          "example": {
+            "en": "**Arriving** at dawn, the delegation went straight to the hall.",
+            "ko": "새벽에 도착한 그 대표단은 곧장 회의장으로 향했습니다.",
+            "note": "arrive 는 자동사여서 수동형이 없으므로 언제나 현재분사입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "감정동사는 느끼면 p.p.",
+          "body": "주절 주어가 감정을 느끼는 쪽이면 과거분사, 감정을 일으키는 쪽이면 현재분사입니다.",
+          "example": {
+            "en": "**Disappointed** by the answers, the reporters left early.",
+            "ko": "답변에 실망한 기자들은 일찍 자리를 떴습니다.",
+            "note": "기자들은 실망을 느끼는 쪽이므로 과거분사입니다."
+          }
+        },
+        {
+          "head": "수여동사는 수동이어도 목적어가 남는다",
+          "body": "offer·give·grant 는 목적어를 둘 취해, 수동이 되어도 하나가 분사 뒤에 남습니다. 목적어가 보인다고 능동이라 단정하면 함정에 빠집니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "분사구문의 의미상 주어(주절 주어)가 동작을 하면 현재분사(-ing), 동작을 받으면 과거분사(p.p.)를 씁니다.",
+      "examples": [
+        {
+          "en": "**Holding** a lantern, the guide led the visitors deep into the cave.",
+          "ko": "등불을 들고서 그 안내인은 방문객들을 동굴 깊숙이 이끌었습니다.",
+          "note": "의미상 주어는 주절 주어 the guide 입니다. 안내인이 등불을 드는 쪽이므로 능동의 -ing 를 씁니다."
+        },
+        {
+          "en": "**Carved** from a single block of marble, the statue survived two earthquakes.",
+          "ko": "하나의 대리석 덩어리에서 조각된 그 조각상은 두 차례의 지진을 견뎌 냈습니다.",
+          "note": "의미상 주어는 the statue 입니다. 조각상은 조각하는 쪽이 아니라 조각되는 쪽이므로 과거분사를 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "수동 분사구문은 Being p.p. 에서 Being 이 생략된 형태여서, 과거분사가 문장 첫머리에 홀로 설 수 있습니다.",
+      "examples": [
+        {
+          "en": "**Written** in haste, the memo contained several factual errors.",
+          "ko": "급하게 작성된 그 메모에는 사실관계 오류가 몇 군데 있었습니다.",
+          "note": "원래 형태는 Being written in haste 이며, Being 이 생략되어 과거분사로 시작합니다. 메모는 작성되는 쪽입니다."
+        },
+        {
+          "en": "**Left** unattended for years, the orchard produced almost no fruit.",
+          "ko": "수년간 방치된 그 과수원은 열매를 거의 맺지 못했습니다.",
+          "note": "Being left unattended 에서 Being 이 생략되었습니다. 과수원은 방치되는 쪽이므로 수동입니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "수동 분사구문의 해부",
+      "tokens": [
+        { "t": "Trained", "role": "VERBAL" },
+        { "t": "by professional coaches,", "role": "M" },
+        { "t": "the young athletes", "role": "S" },
+        { "t": "improved", "role": "V" },
+        { "t": "their records.", "role": "O" }
+      ],
+      "ko": "전문 코치들에게 훈련받은 그 어린 선수들은 자신들의 기록을 향상시켰습니다.",
+      "layers": [
+        {
+          "label": "① 분사구를 통째로 묶습니다",
+          "roles": ["VERBAL", "M"],
+          "note": "Trained by professional coaches 는 분사구문입니다. 주절의 뼈대가 아니므로 콤마까지 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 주절의 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "남은 주어는 the young athletes 이며, 이것이 분사 Trained 의 의미상 주어입니다."
+        },
+        {
+          "label": "③ 주절의 본동사와 목적어를 확인합니다",
+          "roles": ["V", "O"],
+          "note": "본동사는 improved 이고 목적어는 their records 입니다. 분사 Trained 뒤에는 목적어가 없고 행위자 by 구만 따라옵니다."
+        },
+        {
+          "label": "④ 의미상 주어와의 관계로 태를 확정합니다",
+          "roles": ["VERBAL", "S"],
+          "note": "선수들은 훈련을 시키는 쪽이 아니라 받는 쪽입니다. 따라서 Being 이 생략된 과거분사 Trained 가 옳습니다."
+        }
+      ],
+      "conclusion": "분사 앞에 주절 주어 the young athletes 를 복원해 넣어 보면 they were trained 라는 수동 관계가 드러납니다. 그래서 과거분사입니다."
+    },
+    {
+      "id": "b8",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "능·수동 반사 판정",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 판별은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "분사구문의 의미상 주어는 주절의 주어입니다.",
+          "isTrue": true,
+          "why": "분사 앞에 주절 주어를 복원해 넣고 읽는 것이 판별의 출발입니다."
+        },
+        {
+          "statement": "의미상 주어가 동작을 받는 쪽이면 과거분사를 씁니다.",
+          "isTrue": true,
+          "why": "받는 쪽이면 Being 이 생략된 과거분사입니다. 하는 쪽이면 현재분사입니다."
+        },
+        {
+          "statement": "분사 뒤에 목적어가 남아 있으면 그 분사는 언제나 능동입니다.",
+          "isTrue": false,
+          "why": "offer·grant 같은 수여동사는 수동이 되어도 목적어가 하나 남습니다. 목적어는 보조 단서일 뿐입니다."
+        },
+        {
+          "statement": "자동사는 목적어가 없으므로 과거분사로 분사구문을 만듭니다.",
+          "isTrue": false,
+          "why": "자동사는 수동태 자체가 없어 목적어가 없어도 언제나 현재분사를 씁니다."
+        },
+        {
+          "statement": "수동 분사구문의 과거분사 앞에는 Being 이 생략되어 있습니다.",
+          "isTrue": true,
+          "why": "Being p.p. 에서 Being 이 생략되어 과거분사가 홀로 문두에 섭니다."
+        },
+        {
+          "statement": "감정동사는 주절 주어가 감정을 느끼는 쪽이면 현재분사를 씁니다.",
+          "isTrue": false,
+          "why": "느끼는 쪽이면 과거분사입니다. 현재분사는 감정을 일으키는 쪽에 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "능·수동을 확정하는 4단계",
+      "steps": [
+        {
+          "text": "콤마를 기준으로 분사가 이끄는 덩어리와 주절을 갈라 놓습니다.",
+          "applyNote": "Built on soft ground 가 분사구이고, the tower leans slightly to the south 가 주절입니다."
+        },
+        {
+          "text": "주절의 주어를 찾아 분사 앞에 복원합니다. 이것이 의미상 주어입니다.",
+          "applyNote": "주절 주어는 the tower 입니다. 분사 앞에 the tower 를 넣고 읽습니다."
+        },
+        {
+          "text": "그 동사가 자동사인지 확인하고, 타동사라면 분사 뒤에 목적어가 남았는지 봅니다.",
+          "applyNote": "build 는 타동사이지만 분사 뒤에 목적어가 없습니다. 뒤따르는 on soft ground 는 전치사구입니다."
+        },
+        {
+          "text": "의미상 주어가 그 동작을 하는지 받는지로 최종 판정합니다. 받는 쪽이면 Being 이 생략된 과거분사입니다.",
+          "applyNote": "탑은 스스로 짓는 것이 아니라 지어지는 쪽입니다. 따라서 Built 가 옳고 Building 은 틀립니다."
+        }
+      ],
+      "example": {
+        "en": "**Built** on soft ground, the tower leans slightly to the south.",
+        "ko": "무른 지반 위에 지어진 그 탑은 남쪽으로 약간 기울어 있습니다.",
+        "note": "의미상 주어 the tower 를 복원하면 the tower was built 라는 수동 관계가 됩니다."
+      }
+    },
+    {
+      "id": "b10",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "( Damaging / Damaged ) by the flood, the old stone bridge remained closed for six months.",
+      "steps": [
+        {
+          "title": "① 분사구와 주절을 가릅니다",
+          "body": "괄호부터 the flood 까지가 분사구이고, the old stone bridge remained closed for six months 가 주절입니다."
+        },
+        {
+          "title": "② 의미상 주어를 복원합니다",
+          "body": "주절 주어는 the old stone bridge 입니다. 이것이 분사의 의미상 주어입니다."
+        },
+        {
+          "title": "③ 목적어와 행위자를 확인합니다",
+          "body": "damage 는 타동사인데 분사 뒤에 목적어가 없고, 대신 행위자를 나타내는 by the flood 가 있습니다. 수동의 신호입니다."
+        },
+        {
+          "title": "④ 태를 확정합니다",
+          "body": "다리는 홍수에 피해를 입히는 쪽이 아니라 입는 쪽입니다. 따라서 Being 이 생략된 과거분사 Damaged 가 옳습니다."
+        }
+      ],
+      "answer": "Damaged",
+      "ko": "홍수로 피해를 입은 그 낡은 돌다리는 여섯 달 동안 폐쇄된 채로 있었습니다."
+    },
+    {
+      "id": "b11",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u09-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "{{blank}} in the sixteenth century, the fortress still guards the harbor.",
+          "options": ["Built", "Building"],
+          "answer": 0,
+          "translation": "16세기에 지어진 그 요새는 여전히 항구를 지키고 있습니다.",
+          "explanation": "의미상 주어는 주절 주어 the fortress 입니다. 요새는 짓는 쪽이 아니라 지어지는 쪽이므로 Being 이 생략된 과거분사 Built 가 옳습니다.",
+          "trapTags": ["dangling-subject"]
+        },
+        {
+          "id": "u09-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "[[u:Comparing]] the two maps carefully, the surveyor noticed a missing road.",
+          "isCorrect": true,
+          "translation": "두 지도를 꼼꼼히 비교하다가 그 측량사는 빠진 도로 하나를 발견했습니다.",
+          "explanation": "의미상 주어는 주절 주어 the surveyor 입니다. 측량사가 지도를 비교하는 쪽이고 분사 뒤에 목적어 the two maps 가 남아 있으므로 능동의 현재분사가 옳습니다.",
+          "trapTags": ["passive-with-object"]
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "-ing 와 p.p. 를 가르는 축",
+      "columns": ["-ing (능동)", "p.p. (수동)"],
+      "rows": [
+        {
+          "criterion": "의미상 주어와의 관계",
+          "a": "주절 주어가 동작을 합니다",
+          "b": "주절 주어가 동작을 받습니다"
+        },
+        {
+          "criterion": "분사 뒤 목적어",
+          "a": "타동사면 목적어가 그대로 남습니다",
+          "b": "목적어가 남지 않습니다(수여동사는 예외)"
+        },
+        {
+          "criterion": "생략된 요소",
+          "a": "생략된 것이 없습니다",
+          "b": "Being 이 생략된 자리입니다"
+        },
+        {
+          "criterion": "감정동사일 때",
+          "a": "감정을 일으키는 쪽입니다",
+          "b": "감정을 느끼는 쪽입니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "**Collecting** samples from every river, the team mapped the spread of the pollutant.",
+          "ko": "모든 강에서 시료를 채집하면서 그 연구진은 오염 물질의 확산 경로를 지도로 그렸습니다.",
+          "note": "the team 이 채집하는 쪽이고 분사 뒤에 목적어 samples 가 있으므로 현재분사입니다."
+        },
+        {
+          "en": "**Collected** from every river, the samples revealed an unexpected pattern.",
+          "ko": "모든 강에서 채집된 그 시료들은 예상 밖의 경향을 드러냈습니다.",
+          "note": "주어가 the samples 로 바뀌자 시료는 채집되는 쪽이 되므로 과거분사입니다. 같은 동사라도 주어가 바뀌면 태가 뒤집힙니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "주절 주어와 동사의 관계를 보고, 분사구문에 어떤 형태가 와야 하는지 분류하십시오.",
+      "buckets": [
+        { "id": "ing", "label": "-ing (능동)" },
+        { "id": "pp", "label": "p.p. (수동)" }
+      ],
+      "chips": [
+        {
+          "text": "the report / publish",
+          "bucketId": "pp",
+          "why": "보고서는 스스로 발행하지 못하고 발행되는 쪽이므로 수동입니다."
+        },
+        {
+          "text": "the doctor / review the results",
+          "bucketId": "ing",
+          "why": "의사가 결과를 검토하는 쪽이고 분사 뒤에 목적어가 남으므로 능동입니다."
+        },
+        {
+          "text": "the village / surround by forest",
+          "bucketId": "pp",
+          "why": "마을은 숲에 둘러싸이는 쪽이고 행위자 by 구가 있으므로 수동입니다."
+        },
+        {
+          "text": "the sun / rise over the hills",
+          "bucketId": "ing",
+          "why": "rise 는 자동사이므로 목적어가 없어도 능동입니다."
+        },
+        {
+          "text": "the audience / shock",
+          "bucketId": "pp",
+          "why": "관객은 충격을 느끼는 쪽이므로 감정동사의 과거분사를 씁니다."
+        },
+        {
+          "text": "the film / shock the audience",
+          "bucketId": "ing",
+          "why": "영화는 충격을 일으키는 쪽이고 분사 뒤에 목적어가 남으므로 현재분사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "ODD_ONE_OUT",
+      "tier": 2,
+      "title": "결이 다른 하나를 찾습니다",
+      "instruction": "주어와 동사의 관계로 볼 때, 넷 중 분사 형태가 다른 하나를 골라 탭하십시오.",
+      "rounds": [
+        {
+          "words": [
+            "the tower / build",
+            "the memo / write",
+            "the guide / hold a lantern",
+            "the statue / carve"
+          ],
+          "odd": 2,
+          "why": "안내인은 등불을 드는 쪽이라 현재분사(-ing)이고, 나머지는 모두 동작을 받는 쪽이라 과거분사(p.p.)입니다."
+        },
+        {
+          "words": [
+            "the report / publish",
+            "the village / surround",
+            "the river / rise",
+            "the door / lock"
+          ],
+          "odd": 2,
+          "why": "rise 는 자동사여서 언제나 현재분사이고, 나머지는 주어가 동작을 받는 타동사라 과거분사입니다."
+        },
+        {
+          "words": [
+            "the audience / bore",
+            "the reporters / disappoint",
+            "the lecture / puzzle",
+            "the tourists / amaze"
+          ],
+          "odd": 2,
+          "why": "강연은 혼란을 일으키는 쪽이라 현재분사이고, 나머지 사람 주어들은 감정을 느끼는 쪽이라 과거분사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "( Ignoring / Ignored ) the warning signs, the climbing party continued the descent.",
+      "givenSteps": [
+        "① 분사구와 주절을 갈랐습니다 — 주절은 the climbing party continued the descent 입니다.",
+        "② 의미상 주어를 복원했습니다 — 주절 주어 the climbing party 가 분사의 의미상 주어입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "Ignoring — 등반대가 경고 신호를 무시하는 쪽이고, 분사 뒤에 목적어 the warning signs 가 남아 있습니다",
+        "Ignored — 등반대가 무시당하는 쪽이므로 수동입니다",
+        "Ignored — 뒤의 the warning signs 는 목적어가 아니라 수동이 되고도 남은 잔여 목적어입니다"
+      ],
+      "answer": 0,
+      "explain": "의미상 주어 the climbing party 는 경고 신호를 무시하는 주체입니다. 게다가 분사 뒤에 목적어 the warning signs 가 그대로 남아 있으므로 능동의 현재분사 Ignoring 이 옳습니다. ignore 는 목적어를 하나만 취하는 타동사이므로, 수동이 되면 뒤에 목적어가 남을 수 없습니다."
+    },
+    {
+      "id": "b16",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 수동인데 뒤에 목적어가 남는 경우",
+      "body": "분사 뒤의 목적어를 능동의 확증으로 삼으면 수여동사에서 무너집니다. give·grant·offer·award 처럼 목적어를 둘 취하는 동사는 수동이 되어도 직접목적어가 뒤에 남습니다. 목적어 유무는 보조 단서일 뿐이며, 최종 판단은 의미상 주어가 동작을 하는가 받는가로 내립니다.",
+      "example": {
+        "en": "**Given** a second chance by the committee, the young pianist practiced ten hours a day.",
+        "ko": "위원회로부터 두 번째 기회를 받은 그 젊은 피아니스트는 하루에 열 시간씩 연습했습니다.",
+        "note": "Given 뒤에 a second chance 라는 목적어가 남아 있어도 수동입니다. 피아니스트는 기회를 주는 쪽이 아니라 받는 쪽이고, 행위자 by the committee 가 그것을 확인해 줍니다."
+      }
+    },
+    {
+      "id": "b17",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "여러 언어로 번역되어 그 소설은 새로운 독자들에게 가 닿았습니다.",
+      "answer": ["Translated", "into several languages,", "the novel", "reached", "new readers"],
+      "tiles": [
+        "Translated",
+        "into several languages,",
+        "the novel",
+        "reached",
+        "new readers",
+        "Translating"
+      ],
+      "explanation": "의미상 주어는 주절 주어 the novel 입니다. 소설은 번역하는 쪽이 아니라 번역되는 쪽이므로 Being 이 생략된 과거분사 Translated 를 씁니다. Translating 은 쓰이지 않습니다."
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u09-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The manuscript, {{blank}} in a monastery library for six centuries, finally reached the public last year.",
+          "options": ["kept", "keeping", "to keep"],
+          "answer": 0,
+          "translation": "여섯 세기 동안 한 수도원 도서관에 보관되어 있던 그 필사본은 지난해 마침내 대중에게 공개되었습니다.",
+          "explanation": "문중 삽입 분사구문의 의미상 주어도 주절 주어 The manuscript 입니다. 필사본은 보관하는 쪽이 아니라 보관되는 쪽이므로 과거분사 kept 가 옳습니다. keep 은 타동사인데 뒤에 목적어가 없다는 점도 수동의 신호입니다.",
+          "trapTags": ["dangling-subject", "passive-with-object"]
+        },
+        {
+          "id": "u09-c2-ls-007",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "[[u:Remained]] silent throughout the meeting, the intern later sent a long email.",
+          "isCorrect": false,
+          "correction": "Remaining",
+          "translation": "회의 내내 침묵을 지킨 그 인턴은 나중에 긴 이메일을 보냈습니다.",
+          "explanation": "remain 은 자동사여서 수동태가 없으므로 과거분사로는 분사구문을 만들 수 없습니다. 인턴이 침묵을 지키는 쪽이므로 능동의 현재분사 Remaining 이 옳습니다.",
+          "trapTags": ["intransitive-participle"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 kept 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "의미상 주어인 주절 주어 The manuscript 가 보관되는 쪽이고, 타동사 keep 뒤에 목적어가 없기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 의미상 주어와의 관계가 주된 근거이고, 목적어의 부재가 그것을 뒷받침합니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어서 과거형인 kept 가 어울리기 때문입니다.",
+          "correct": false,
+          "feedback": "분사는 시제를 가지지 않습니다. kept 는 과거시제가 아니라 과거분사이며, 형태를 결정한 것은 시간이 아니라 태입니다."
+        },
+        {
+          "text": "콤마 사이에 낀 자리에는 언제나 과거분사가 오기 때문입니다.",
+          "correct": false,
+          "feedback": "위치는 근거가 되지 못합니다. 콤마 사이라도 의미상 주어가 동작을 하는 쪽이면 현재분사가 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "[[1:Designed]] by a young architect, the museum [[2:opened]] in 1998, and, [[3:praising]] by critics for its bold design, it [[4:draws]] visitors from across the country.",
+      "answer": 3,
+      "correction": "praised",
+      "rationales": [
+        "의미상 주어는 주절 주어 the museum 입니다. 미술관은 설계되는 쪽이므로 Being 이 생략된 과거분사 Designed 가 옳습니다.",
+        "주절의 본동사입니다. 1998년이라는 과거 시점을 말하고 있으므로 과거형 opened 가 옳습니다.",
+        "이 분사의 의미상 주어는 뒤 절의 주어 it, 곧 the museum 입니다. 미술관은 비평가들을 칭찬하는 쪽이 아니라 칭찬받는 쪽이고 행위자 by critics 도 있으므로 과거분사 praised 여야 합니다.",
+        "등위접속사 and 가 이은 두 번째 절의 본동사입니다. 주어 it 이 단수이므로 draws 가 옳습니다."
+      ],
+      "ko": "한 젊은 건축가가 설계한 그 미술관은 1998년에 문을 열었고, 대담한 설계로 비평가들의 찬사를 받으며 전국에서 방문객을 끌어들이고 있습니다."
+    },
+    {
+      "id": "b21",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 두 형태를 괄호로 제시하고 고른 근거까지 함께 쓰게 합니다. 의미상 주어가 주절 주어라는 점과 그 주어가 동작을 받는다는 점을 모두 적어야 만점입니다.",
+          "sample": {
+            "en": "The song, ( writing / written ) in a single night, became an international hit.",
+            "ask": "괄호 안에서 어법상 옳은 것을 고르고 그 근거를 쓰십시오.",
+            "answer": "written — 의미상 주어는 주절 주어 The song 이고, 노래는 쓰이는 쪽이므로 Being 이 생략된 과거분사입니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 주어와 분사 사이를 길게 벌려 놓고 분사에 밑줄을 칩니다. 밑줄 앞의 명사가 아니라 주절의 주어를 찾아 복원해야 태가 결정됩니다.",
+          "sample": {
+            "en": "The report on insect populations in twelve European countries, [[u:basing]] on data collected over thirty years, warns of a sharp decline.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "based — 밑줄 바로 앞의 countries 가 아니라 핵 주어 The report 가 의미상 주어이며, 보고서는 자료에 근거를 두게 되는 쪽이므로 be based on 의 과거분사형이 옳습니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Coral reefs support about a quarter of all marine species. [[u:Weakened by warmer water and rising acidity, the reefs lose their color and eventually die.]] Scientists now transplant heat-resistant corals onto damaged sites. The results remain modest, but they offer a rare source of hope.",
+      "instruction": "밑줄 친 문장에서 분사의 의미상 주어를 복원하고, 그 형태가 왜 과거분사인지 설명하십시오.",
+      "found": "분사구문 Weakened by warmer water and rising acidity 의 의미상 주어는 주절 주어 the reefs 입니다. 산호초는 수온과 산성도를 약화시키는 쪽이 아니라 그것들에 의해 약해지는 쪽이므로 Being 이 생략된 과거분사가 쓰였습니다.",
+      "gist": "따뜻해진 바닷물과 높아진 산성도 때문에 산호초가 약해지고 있으며, 과학자들이 열에 강한 산호를 이식하고 있다는 내용입니다."
+    },
+    {
+      "id": "b23",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "의미상 주어를 지우는 그림자 마술사",
+      "intro": "이 무대의 마술은 단순합니다. 분사 앞에서 주어를 지워 능동인지 수동인지 알 수 없게 만드는 것입니다. 지워진 주어를 복원해 태를 맞히면 마술은 풀립니다. 네 번의 시도로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "____ from recycled steel, the sculpture drew crowds to the plaza.",
+          "options": ["Made", "Making"],
+          "answer": 0,
+          "why": "의미상 주어 the sculpture 는 만드는 쪽이 아니라 만들어지는 쪽입니다. 따라서 Being 이 생략된 과거분사 Made 가 옳습니다."
+        },
+        {
+          "prompt": "____ the ancient scrolls with great care, the monk revealed a hidden map.",
+          "options": ["Unrolling", "Unrolled"],
+          "answer": 0,
+          "why": "수도승이 두루마리를 펼치는 쪽이고 분사 뒤에 목적어 the ancient scrolls 가 남아 있으므로 능동의 현재분사입니다."
+        },
+        {
+          "prompt": "____ over the ridge just after dawn, the sun flooded the valley with light.",
+          "options": ["Rising", "Risen"],
+          "answer": 0,
+          "why": "rise 는 자동사여서 수동형이 없습니다. 목적어가 없어도 언제나 현재분사 Rising 입니다."
+        },
+        {
+          "prompt": "____ a rare grant by the foundation, the lab expanded its research overnight.",
+          "options": ["Awarded", "Awarding"],
+          "answer": 0,
+          "why": "award 는 수여동사라 수동이 되어도 목적어 a rare grant 가 뒤에 남습니다. 연구실은 보조금을 받는 쪽이므로 과거분사 Awarded 가 옳습니다."
+        }
+      ],
+      "winText": "지워졌던 주어가 전부 제자리로 돌아왔습니다. 분사 앞에 주절 주어를 세우고 태를 맞히는 눈 — 그것이 -ing 와 p.p. 를 가르는 유일한 열쇠이며, 방금 당신 손에 들어왔습니다.",
+      "loseText": "마술사가 다시 주어를 지웁니다. 네 문제 모두 물은 것은 하나였습니다 — 복원한 의미상 주어가 이 동작을 하는가, 받는가. 판별 4단계를 짚고 오면 무대는 다시 열려 있습니다."
+    },
+    {
+      "id": "b24",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "분사구문의 의미상 주어는 ___이고, 그 주어가 동작을 ___면 -ing, ___면 p.p.를 씁니다."
+    },
+    {
+      "id": "b25",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "분사구문의 의미상 주어는 주절의 주어입니다. 분사 앞에 그 주어를 복원해 넣고 읽습니다.",
+        "복원한 주어가 동작을 하면 현재분사, 동작을 받으면 과거분사입니다. 과거분사 앞에는 Being 이 생략되어 있습니다.",
+        "분사 뒤의 목적어와 행위자 by 구는 보조 단서입니다. 자동사는 목적어가 없어도 능동이고, 수여동사는 수동이어도 목적어가 남습니다.",
+        "감정동사는 주절 주어가 감정을 느끼면 과거분사, 감정을 일으키면 현재분사입니다."
+      ],
+      "keySentence": {
+        "en": "**Trained** by professional coaches, the young athletes improved their records.",
+        "ko": "전문 코치들에게 훈련받은 그 어린 선수들은 자신들의 기록을 향상시켰습니다.",
+        "note": "의미상 주어 the young athletes 를 복원하면 they were trained 라는 수동 관계가 드러납니다."
+      }
+    },
+    {
+      "id": "b26",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u09-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "{{blank}} by the sudden applause, the young pianist bowed twice.",
+          "options": ["Embarrassed", "Embarrassing"],
+          "answer": 0,
+          "translation": "갑작스러운 박수에 당황한 그 젊은 피아니스트는 두 번 고개 숙여 인사했습니다.",
+          "explanation": "의미상 주어는 주절 주어 the young pianist 입니다. 피아니스트는 당황을 느끼는 쪽이므로 감정동사의 과거분사 Embarrassed 가 옳습니다. 감정을 일으키는 것은 박수이며, 행위자 by 구가 그것을 확인해 줍니다.",
+          "trapTags": ["emotion-participle"]
+        },
+        {
+          "id": "u09-c2-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The chef prepared a tasting menu, [[u:using]] only ingredients grown within ten kilometers.",
+          "isCorrect": true,
+          "translation": "그 요리사는 10킬로미터 이내에서 재배된 재료만을 사용해 시식 메뉴를 준비했습니다.",
+          "explanation": "문미 분사구문의 의미상 주어도 주절 주어 The chef 입니다. 요리사가 재료를 사용하는 쪽이고 분사 뒤에 목적어 only ingredients 가 남아 있으므로 능동의 현재분사가 옳습니다.",
+          "trapTags": ["passive-with-object"]
+        },
+        {
+          "id": "u09-c2-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "{{blank}} a modest budget by the city council, the theater company staged three new plays.",
+          "options": ["Granted", "Granting"],
+          "answer": 0,
+          "translation": "시의회로부터 소액의 예산을 받은 그 극단은 새 연극 세 편을 무대에 올렸습니다.",
+          "explanation": "grant 는 목적어를 둘 취하는 수여동사입니다. 극단은 예산을 주는 쪽이 아니라 받는 쪽이므로 수동이며, 수동이 되어도 직접목적어 a modest budget 가 뒤에 남습니다. 행위자 by the city council 도 수동의 신호입니다.",
+          "trapTags": ["passive-with-object", "dangling-subject"]
+        }
+      ]
+    }
+  ]
+}

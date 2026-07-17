@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'express man's affective life' is the role the passage explicitly assigns to cinema ('cinema expresses man's affective life'). Inserting it into the law's slot destroys the 'whereas cinema introduces us to our affects' contrast — the sentence would assert law and cinema do the same thing while marking them as opposed. Also 'their consequences' loses a natural local plural antecedent ('man's affective life' is singular). Logically contradictory."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Formally sound on both axes. Semantics: 'subdue' is a faithful restatement of 'keeps it in check' and 'ensure that we are not overwhelmed and destroyed by our desires and drives'; 'emotional impulses' matches 'affective life / desires and drives / affects'. Grammar seam: plural 'emotional impulses' provides the antecedent for 'their consequences'. Discourse: preserves the law-vs-cinema contrast signalled by 'whereas'. Unique defensible answer."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Direct contradiction: the passage states man is 'too violent to exist in a state of nature without a regime of commands and prohibitions' — i.e., law exists to supersede the state of nature, not maintain it. 'their' also has no antecedent inside the phrase ('the state of nature' is singular), forcing a strained long-distance binding that still yields nonsense."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Category error. The passage says law deals with 'the messiness of human relations', not of cinema; law is never described as investigating cinema. 'fearing the horror of their consequences' cannot coherently attach ('the messiness of cinema' is singular, and consequences of messiness-of-cinema is meaningless in context). Incoherent both grammatically (antecedent) and logically."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Strongest distractor: 'fears and desires' is plural, so 'their consequences' binds grammatically, and 'desires' echoes 'desires and drives'. But two formal failures: (1) intensity overreach — 'keeps it in check' and 'not overwhelmed and destroyed' denote restraint/control, never elimination of affect; (2) wrong object — 'fears' is the law's own motive state ('fearing the horror', 'anxiety about human nature'), not the target of its control; the law fears consequences, it does not set out to eliminate fear. Hence not defensible against ②."
+    }
+  ],
+  "note": "Blank slot is doubly constrained: it must paraphrase 'keeps it in check' (restraint of affective life) and supply a plural antecedent for 'their consequences' while sustaining the 'whereas'-contrast with cinema. Only ② satisfies all three constraints. ⑤ passes the antecedent test but fails on lexical intensity (eliminate ≠ keep in check) and on target ('fears' belongs to the law as agent, not patient). Actively checked for alternative readings that could rescue ①/③/④/⑤; none exist. Clean single-key item."
+}

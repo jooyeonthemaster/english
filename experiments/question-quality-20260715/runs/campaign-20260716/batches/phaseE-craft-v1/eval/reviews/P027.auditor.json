@@ -1,0 +1,80 @@
+{
+  "pid": "P027",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-KEYPOINT-REFERENT",
+      "severity": "minor",
+      "evidence": "keyPoints[2]는 '핵심 어구(this)가 가리키는 바를 정확히 찾아내는 읽기 전략'을 평가요소로 내세우지만, 'this'는 원지문의 빈칸화된 span('this is the exception rather than the norm') 내부에 있어 렌더 지문에는 존재하지 않는다. 학생은 'this'를 볼 수 없으므로 문면 그대로는 수행 불가능한 전략 기술이다. 출제자 관점의 근거 설명으로는 이해 가능하고 정답·해설과 모순되지는 않아 minor로 판정."
+    },
+    {
+      "code": "V3-PERSON-SHIFT",
+      "severity": "minor",
+      "evidence": "지문 전체는 we/our/us 인칭인데 정답 선지는 'sacrificing your well-being'으로 generic you로 전환된다. 완성문은 문법적으로 성립하고 자연 영어에서 허용되는 전환이지만 seam에서 인칭 레지스터가 미세하게 어긋난다."
+    },
+    {
+      "code": "V3-COLLOCATION",
+      "severity": "minor",
+      "evidence": "선지 3의 'is offset by continuous hobbies'는 문법적으로는 성립하나 'continuous hobbies'가 부자연스러운 연어(취미가 continuous할 수 없음; 'continued engagement in hobbies' 류가 자연스러움)여서 오답이 의미 이전에 어색함으로 표가 난다."
+    },
+    {
+      "code": "V4-WORDING",
+      "severity": "minor",
+      "evidence": "해설의 '교체된 오답들은…' 표현은 문맥상 '구성된/배치된 오답들'을 의도한 것으로 보이는 어색한 한국어이며 사실 오류는 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'this is the exception rather than the norm'을 '웰빙 희생이 습관적 패턴이 되지 않게 한다'로 추상화 재진술",
+      "temptingBecause": "해당 없음(정답). 직전 절 'cumulative impact of not prioritizing self-care'와 양보-역접(But) 구조가 근거를 제공한다.",
+      "decisiveFlaw": "없음. 단, 다섯 선지 중 유일한 부정 구문(does not become)이라 형태 단서가 정답 쪽으로 약하게 샌다."
+    },
+    {
+      "label": "2",
+      "intent": "정도/관계 왜곡(condition loss) — 저자의 친(親)자기관리 입장을 극단화",
+      "temptingBecause": "극성이 저자 주장(장기 건강 우선)과 같아 대충 읽은 학생이 고르기 쉽고 long-term health가 빈칸 앞 'in the long term'과 어휘 호응한다.",
+      "decisiveFlaw": "'constantly suspended'가 극단어. 저자는 단기적으로 마감이 우선일 수 있음을 명시적으로 인정하므로(5번째 문장) 단기 의무의 상시 유보 주장과 모순. 절대어 하나로 소거 가능."
+    },
+    {
+      "label": "3",
+      "intent": "half-truth/허구적 상쇄 관계 — 본문 키워드 재조합",
+      "temptingBecause": "'deadline'과 'woodworking class(취미)'라는 5번째 문장의 소재를 그대로 사용해 키워드 매칭형 학생을 유인한다.",
+      "decisiveFlaw": "본문 어디에도 취미가 마감 실패의 후과를 '상쇄(offset)'한다는 관계가 없으며, 5번째 문장은 오히려 마감 실패의 타격이 더 클 수 있다고 말한다. 'continuous hobbies'의 어색한 연어도 표가 난다."
+    },
+    {
+      "label": "4",
+      "intent": "인과 역전 + 시간 프레임 모순",
+      "temptingBecause": "self-care와 urgent tasks라는 두 핵심 개체를 모두 포함해 표면적으로 본문과 밀착해 보인다.",
+      "decisiveFlaw": "본문 인과는 '업무 압박 → 자기관리 포기'인데 선지는 '자기관리 부재 → 업무 실패'로 역전했고, 'immediately'가 빈칸 앞 'in the long term,'과 정면 충돌해 문면 단서 하나로 즉시 소거된다."
+    },
+    {
+      "label": "5",
+      "intent": "scope shift/오도된 해결책 — 논점 이탈",
+      "temptingBecause": "3번째 문장의 'struggle to reprioritize'와 'deadlines'를 그대로 반향해 근거 문장이 있는 것처럼 보인다.",
+      "decisiveFlaw": "'strictly guarantees'라는 절대어 주장으로 본문 어디서도 지지되지 않으며, 글의 결론(자기관리 우선)이 아닌 일정 관리 효능 주장으로 논점을 벗어난다. 절대어 하나로 소거 가능."
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints[2]가 렌더 지문에 존재하지 않는(빈칸으로 제거된) 'this'의 지시 대상 추적을 평가요소로 기술함 — 출제자 시점 누출.",
+    "해설 '교체된 오답들' — 어색한 표현이나 사실 오류 아님.",
+    "본해설·오답해설의 담화 분석(양보→But 역접→결론), 정답 재진술 매핑, 오답별 왜곡 유형(정도 왜곡·상쇄 허구·인과 역전·논점 이탈) 명명은 모두 실제 선지 내용과 정확히 대응함."
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 렌더 지문은 원지문에서 마지막 절 'this is the exception rather than the norm'만 빈칸화했고 나머지는 자소 단위로 동일, 라벨 1~5와 선지 일치 — 통과. V2: 각 선지 독립 검증 결과 1만 성립(2 극단화 모순, 3 허구적 상쇄, 4 인과 역전+시간 모순, 5 무근거 절대 주장) — 단일 정답 확인, 통과. V3: 다섯 선지 모두 동일 절 슬롯에 문법적으로 삽입 가능, 완성문 성립 — 통과(인칭 전환·continuous hobbies는 minor). V4/V5: 해설·오답해설·정답 라벨·keyPoints 상호 모순 없음 — 통과(keyPoints의 'this' 언급은 minor 누출). 공예: 결론 문장 빈칸화와 추상화 재진술(C1=3), 오답별 상이한 함정 설계(C2=3)는 양호하나, 오답 2·4·5가 constantly/immediately/strictly guarantees라는 절대어·프레임 충돌 단서 하나로 소거되고 정답만 유일한 부정 구문이어서 경쟁력·단서 경제성이 약함(C3=2, C4=2). 요청 난이도 KILLER 대비 실제 요구 사고는 빈칸 직전 절만 읽어도 도달 가능한 중난도 수준으로 라벨과 불일치(C5=1). KILLER §D 조건 중 '극성·길이·절대어 하나로 정답/소거 불가' 및 '최소 두 문장 논리 단서 연결 필수' 요건 미충족 — killerConditionsMet=false. 모든 V 통과이나 C5=1로 B 기준(C 최저 2) 미달 → 등급 C(난이도 재설계 필요: 오답의 절대어 제거, 정답 외 부정 구문 추가, 빈칸 근거를 다문장 통합형으로 재배치 권고)."
+}

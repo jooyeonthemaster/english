@@ -1,0 +1,35 @@
+{
+  "pid": "P032",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) seeing",
+      "verdict": "correct",
+      "reason": "Comparative 'less unnerving ... than seeing someone scribbling': the gerund 'seeing' is parallel to the gerund subject 'Recording an interview' (X is less unnerving than Y, both gerund phrases). Well-formed; no alternative parse renders it deviant."
+    },
+    {
+      "label": "(B) is",
+      "verdict": "correct",
+      "reason": "Subject is the singular gerund phrase 'using a recorder'; 'has some disadvantages and is not always the best solution' coordinates two singular finite verbs sharing that subject. Agreement and parallelism both hold."
+    },
+    {
+      "label": "(C) to develop",
+      "verdict": "correct",
+      "reason": "Standard extraposition: expletive 'It' + 'is more efficient' + to-infinitive logical subject ('to develop the technique ... of selective note-taking'). The parenthetical does not disturb the construction. Well-formed."
+    },
+    {
+      "label": "(D) trying",
+      "verdict": "incorrect (the error)",
+      "reason": "Formal proof by exhaustion of parses: 'but' must coordinate like categories. (i) Parallel to extraposed 'to take down' requires '(to) try', not 'trying'. (ii) As a predicate complement of 'It is' the string 'it is ... trying to get into the habit' is not a coherent copular reading and the shared 'sensible' cannot license a gerund conjunct. (iii) As a free participial adjunct it lacks a referential host subject (the matrix subject is expletive 'it'). (iv) As a gerund subject it never meets a finite predicate before the period — 'as the interview proceeds' is only a subordinate clause — leaving a verbless fragment. All parses fail; the required form is imperative 'try' (or 'to try'). Ungrammatical."
+    },
+    {
+      "label": "(E) much",
+      "verdict": "correct",
+      "reason": "'much' is a licensed degree intensifier of comparatives: 'much easier and quicker to handle'. ('very' would be ungrammatical here; 'much' is the correct choice.) Also 'It' has a felicitous antecedent (the editing habit). Well-formed."
+    }
+  ],
+  "note": "Clean item. Exactly one underline is indefensible under every available parse: (D) 'trying' creates a predicate-less fragment after 'but'; the intended form is the imperative 'try' (advice register, matching 'It is sensible to ...'). No competing underline admits even a marginal error reading, so the key is unique. Lens: grammarian/logician — each verdict established by exhausting alternative parses (reduced relatives, participial adjuncts, gerund-subject readings) rather than by guessing item intent."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "어휘 미끼(carefully~cautiously, cream and jam 지문 그대로 재등장)로 끌리지만, 크림·잼은 뒤의 스콘 장면 소재이고 빈칸 시점에는 샌드위치로 시작한다. 결정적으로 지문이 'Chloe had already started to eat hers WITHOUT the cream and jam'이라고 명시해 직접 모순. 시간순서와 명시적 부정 둘 다에 걸려 탈락."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "윙크 답례는 이미 두 문장 앞에서 완료된 행동(Chloe winked back). 빈칸은 '할머니의 첫 수를 기다린 뒤' 이어지는 새로운 행동이어야 하는데 시간적으로 중복되며, 'carefully winked'라는 결합도 의미상 부자연. 지문 표면 어구 재활용형 미끼."
+    },
+    {
+      "label": "3",
+      "verdict": "correct",
+      "reason": "직전 문장 'waited for her grandmother to make the first move'와 정확히 연결: 첫 수를 기다렸다가 그대로 따라 하고 샌드위치부터 시작. 이후 'boldly chose ... BEFORE her grandmother'와의 대비(모방을 멈추자 스콘을 크림·잼 없이 먹는 실수)까지 설명하는 유일한 선지. 문법 결합(copied what ... and started ...)도 자연스러움."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "직전 문장 '할머니가 먼저 움직이길 기다렸다'와 정면 모순. 뒤에 나오는 'before her grandmother'는 빈칸 시점이 아니라 나중의 태도 전환(대비) 장면이라 위치가 어긋난다. 후반부 단서를 앞으로 끌어오는 위치 전이형 미끼로 실전에서 순간 끌릴 수 있으나 장거리 단서가 배제."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Chloe는 스콘이라는 이름조차 몰랐지만 묻지 않고 조용히 관찰로 해결하는 인물. '끝없이 질문했다'는 행동 양상은 지문 전체의 침묵·관찰 전략 및 'carefully'와 충돌. 지지 근거 전무."
+    }
+  ],
+  "note": "빈칸 직전의 장거리 단서(waited for her grandmother to make the first move)가 3을 강제하고, 후반부 boldly/before her grandmother 및 'without the cream and jam' 명시가 1·4를 각각 배제한다. 1(어휘 표면 일치)과 4(후반 단서 위치 전이)가 매력적 오답으로 설계된 것으로 보이나 둘 다 명시적 텍스트 모순이 있어 이의신청 여지 없음. 복수정답 불성립."
+}

@@ -1,0 +1,166 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=b  (C):dec=l  (D):ANS=a  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 35,
+        "relPos": 0.054,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 238,
+        "relPos": 0.365,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 292,
+        "relPos": 0.448,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 490,
+        "relPos": 0.752,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 541,
+        "relPos": 0.83,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.83,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "has",
+        "isError": false,
+        "correction": "has",
+        "errorExpression": "has",
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing on top of another.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "what",
+        "isError": false,
+        "correction": "what",
+        "errorExpression": "what",
+        "surroundingText": "Give your whole focus to what you're doing at the moment no matter what it is.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "While",
+        "isError": false,
+        "correction": "While",
+        "errorExpression": "While",
+        "surroundingText": "While doing the laundry, just do the laundry: Listen to the sound of the water",
+        "pointCode": "l"
+      },
+      {
+        "label": "(D)",
+        "expression": "done",
+        "isError": true,
+        "correction": "done",
+        "errorExpression": "did",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "applies",
+        "isError": false,
+        "correction": "applies",
+        "errorExpression": "applies",
+        "surroundingText": "The same applies to your work. Focus on one task at a time",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "has"
+      },
+      {
+        "label": "(B)",
+        "text": "what"
+      },
+      {
+        "label": "(C)",
+        "text": "While"
+      },
+      {
+        "label": "(D)",
+        "text": "did"
+      },
+      {
+        "label": "(E)",
+        "text": "applies"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "단수 명사구인 'The fast pace of today's lifestyle'이 주어이므로, 단수 동사인 'has'를 쓴 것은 수일치상 올바릅니다.",
+      "(B)": "전치사 to의 목적어 역할을 하는 명사절을 이끄는 관계대명사이며, 뒤에 이어지는 절(you're doing)에 목적어가 비어 있는 불완전한 구조이므로 'what'은 올바릅니다.",
+      "(C)": "뒤에 '주어+be동사'가 생략된 분사구 형태인 'doing the laundry'를 이끌며 양보나 시간의 의미를 명확하게 해주는 접속사이므로 'While'은 올바릅니다.",
+      "(E)": "문장의 주어 'The same'에 대응하여 '적용되다'라는 의미를 나타내는 완전한 정동사 자리이며, 현재 시제 단수 동사형인 'applies'는 문법적으로 올바릅니다."
+    },
+    "explanation": "(D) \"did\"는 어법상 틀린 표현이며 \"done\"로 고쳐야 한다. 주절과 비교를 나타내는 부사절 'when done with...'에서 접속사 when 뒤에 '주어 + be동사(it is)'가 생략된 분사구문 형태가 와야 합니다. 과거분사 done은 의미상 주어인 'it(빨래하기)'이 수행되는(done) 수동의 관계를 나타내기에 적절합니다. 따라서 'did'를 수동 의미의 분사인 'done'으로 고쳐야 합니다.",
+    "keyPoints": [
+      "(D) 정동사 vs 준동사 — 접속사 뒤 주어가 생략된 분사구문 자리에서 정동사 사용 불가 판단",
+      "(A) 주어-동사 수일치 — 단수 주어 핵에 대응하는 단수 동사 확인",
+      "(B) 관계대명사 what — 전치사의 목적어 역할을 하는 명사절에서 선행사를 포함한 관계사 판단"
+    ],
+    "tags": [
+      "수능 영단어",
+      "분사구문",
+      "수일치",
+      "관계대명사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "The fast pace of today's lifestyle __(A) has__ us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to __(B) what__ you're doing at the moment no matter what it is. __(C) While__ doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when __(D) did__ with your phone pressed to your ear. The same __(E) applies__ to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster."
+  }
+}

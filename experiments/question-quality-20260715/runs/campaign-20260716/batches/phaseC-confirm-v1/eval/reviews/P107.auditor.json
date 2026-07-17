@@ -1,0 +1,70 @@
+{
+  "pid": "P107",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-scope",
+      "severity": "minor",
+      "evidence": "정답 해설의 '문장 전체에 정동사가 존재하지 않는 비문이 됩니다'는 문자 그대로는 거짓 — 모문 동사 shows가 정동사로 존재하며, 정동사 부재는 that 명사절 내부에 국한된다. 직전 문장이 '접속사 that이 이끄는 명사절 내부에서'로 범위를 잡아 핵심 분석(명사절 주어 some burials + 본동사 필요 + start 교정)은 정확하므로 V4 실패로는 보지 않되 범위 표현 수정 필요."
+    },
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "(D) 오답 해설의 '행위자인 some (individuals)를 지칭' — 'by themselves'는 수동태 행위자 by구가 아니라 '홀로/제각각'이라는 관용 표현이므로 '행위자' 명명은 부정확. 같은 해설이 의미('그들 스스로, 제각각')는 올바르게 제시함."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "with 부대상황 구문(with + NP + 형용사구)에서 보어 형태 판단 (pointCode f)",
+      "temptingBecause": "with 뒤에 분사(being/having)나 부사 dangerously를 기대하는 학생이 'more dangerous'라는 비교급 형용사 단독 보어를 어색하게 느낄 수 있고, 뒤따르는 'some having...'과의 비대칭이 의심을 부추긴다.",
+      "decisiveFlaw": "함정 아님 — with + NP + AdjP는 표준 부대상황 구문이며 'some roles [being] more dangerous'로 완전히 문법적. 정답이 될 수 없다."
+    },
+    {
+      "label": "(B)",
+      "intent": "접속사 that 명사절 내 정동사 유무(정·준동사) 판정 (pointCode a) — 선언된 정답",
+      "temptingBecause": "'soon after the appearance of towns, agriculture, and surpluses'라는 긴 부사구가 주어와 밑줄 사이 거리를 벌려 'starting'을 분사 수식어로 착각하게 유도한다.",
+      "decisiveFlaw": "that절 주어 'some burials'에 연결되는 정동사가 없어 절이 성립하지 않음. start로 교정하면 정확히 원문 복원. 유일 정답 확인."
+    },
+    {
+      "label": "(C)",
+      "intent": "능·수동태 — 주어와 동사의 의미 관계 판단 (pointCode e)",
+      "temptingBecause": "bury의 태 판단을 요구하나, 'individuals are buried'는 의미 관계가 투명해 유혹 강도가 낮다.",
+      "decisiveFlaw": "함정 아님 — 매장되는 대상이 주어이므로 수동태 are buried가 필수적이고 올바름."
+    },
+    {
+      "label": "(D)",
+      "intent": "재귀대명사의 지칭 대상·수 일치 판단 (pointCode g)",
+      "temptingBecause": "by them/by themselves 선택과 'some'의 수 판단을 흔들 수 있으나 'by themselves'(홀로)는 고빈도 관용구라 즉시 소거된다.",
+      "decisiveFlaw": "함정 아님 — 'some (individuals)'를 지칭하는 복수 재귀형 themselves가 관용구 by oneself 패턴에 정확히 부합."
+    },
+    {
+      "label": "(E)",
+      "intent": "동사 start의 보충어(부정사/동명사) 선택 판단 (pointCode k)",
+      "temptingBecause": "start+동명사만 암기한 학생을 겨냥하나 start는 양쪽 모두 허용함이 널리 알려져 유혹 강도가 낮다.",
+      "decisiveFlaw": "함정 아님 — start to-V는 표준. 오히려 'The bones from the burials start to show'가 (B)의 교정형('some burials start to look')과 동일 구조 병렬을 지문 내에 노출해 정답 단서를 누출한다(C4 감점 요인)."
+    }
+  ],
+  "explanationIssues": [
+    "'문장 전체에 정동사가 존재하지 않는' — 모문 shows가 정동사이므로 범위 오기술. 'that절 내에 정동사가 없는'으로 수정 필요 (minor).",
+    "(D) 해설의 '행위자인 some (individuals)' — by themselves는 행위자 by구가 아닌 관용 표현. '행위자' 표현 부정확 (minor).",
+    "keyPoints가 (A)·(E)를 다루지 않아 5개 밑줄 각각의 point·why-tempting 문서화가 미비 — KILLER §C 조건 3 미충족 (killer 조건 판정에 반영)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 무결(유일 변형 start→starting), 정답 유일성 독립 검증 완료, 해설 핵심 분석 정확(경미한 범위·용어 흠 2건). 그러나 KILLER 요청 대비 공예 미달 — (1) 정답 포인트가 '주어 + -ing, 본동사 부재'라는 최고빈도 전형 패턴이라 구조 독해 없이 패턴 매칭으로 즉시 드러남(§C 조건 4 위반), (2) 밑줄 (E)의 'start to show'가 (B) 교정형과 동일한 지문 내 병렬 구조를 노출해 정답을 직접 누설(C4=2), (3) 디코이 (C)(D)(E)의 유혹 강도가 낮아 실질 변별은 (A)-(B) 2지선다로 수렴(C3=2), (4) 난이도 정합 C5=1로 KILLER 라벨과 불일치. 합계 13, C 최저 1 → 등급 C(재설계 필요): 정답 포인트를 도치·병렬 축약·삽입절 경유 등 구조 의존형으로 교체하고 (E) 병렬 누출 제거, 디코이별 why-tempting 문서화 보강 권고."
+}

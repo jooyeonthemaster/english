@@ -1,0 +1,35 @@
+{
+  "pid": "P046",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Temporal clause 'when you are happy': subject 'you' + adjectival predicate 'happy' requires finite copula agreeing with 2nd person -> 'are'. No alternative parse (ellipsis, inversion, reduced clause) changes the requirement. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'That means that [if you feel lonely..., you may struggle...]' - underlined 'that' is the complementizer introducing the object noun clause of 'means'; the embedded conditional sentence is complete. Complementizer before an if-initial object clause is standard and aids parsing. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "Coordination start-point check: either 'to [adapt ... or find ...]' (shared infinitival 'to' -> base form) or 'may [struggle ... or find ...]' (parallel to modal 'may' -> base form). Under every licit parse the bare form 'find' is required, so 'find' is correct. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the error)",
+      "reason": "'be more likely to experiencing': the adjective 'likely' selects a to-infinitive complement (be likely to + V-base). Here 'to' is the infinitival marker, not a preposition, so a gerund is impossible. Searched for rescuing parses: no idiom 'likely to V-ing' exists; 'to' after 'likely' cannot be prepositional (contrast 'look forward to', 'be accustomed to'). Ungrammatical under all parses; must be 'to experience'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'as some individuals use alcohol or drugs to cope': causal conjunction 'as' + plural subject 'individuals' + finite generic present 'use'; tense/register matches the passage's generic statements. Grammatical."
+    }
+  ],
+  "note": "Clean item under the grammarian/logician lens. Exactly one underline ((D)) is ungrammatical, and its violation ('likely to + gerund') is categorical with no defensible alternative reading. All distractors are robustly grammatical even under adversarial parsing (parallelism start-points for (C), complementizer status for (B)). Single defensible answer: (D)."
+}

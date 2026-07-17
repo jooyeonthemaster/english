@@ -1,0 +1,11 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "README.md": "2a581c1d687a7ad4b08e24864878a93591509ea109f785de0b7b906a57ed0067",
+    "finalize-manifest.mjs": "8932ff9f56637778c10ae57b5ea329c039d1fb6737a4d8871cab7c93aeb9045b",
+    "integration.mts": "213d838b401f27c57b7c6d54124bff1d88bf4c1cc88864ba51d06070dd9c317a",
+    "results.json": "2b8cc1eeafd06c3347afb162bb01379d867ce7e4ec5fc9435e8411484459779e",
+    "setup-workbench.sql": "fc540d40bb0d4f9a0d33cfdd22ce6e34115f14150b5bad87d3ef4d44b7430702",
+    "verify.mjs": "3d378121ce5e93368a96b7326f019461245a741a3d73ff91df9b1e618bcad47c"
+  }
+}

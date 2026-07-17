@@ -1,0 +1,35 @@
+{
+  "pid": "P039",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) seeing",
+      "verdict": "correct",
+      "reason": "비교 구문 'Recording an interview ... less unnerving than seeing someone scribbling'에서 동명사 주어 'Recording'과 동명사구 'seeing'이 병렬을 이룬다. 형식적 병렬(gerund vs gerund) 성립, 의미상도 '녹음하는 것' 대 '(인터뷰이가) 필기 장면을 보는 것'의 비교로 정합. 정문."
+    },
+    {
+      "label": "(B) have",
+      "verdict": "incorrect",
+      "reason": "주어가 동명사구 'using a recorder'로 단수 취급이 필수이므로 'has'여야 한다. 결정적 장거리 단서: 같은 주어를 공유하는 등위 술어가 'and is not always the best solution'으로 단수 일치를 보이므로 'have ... and is'는 내부 모순. 복수 일치를 정당화할 대안 분석(도치·축약 관계절·근접 일치 등)이 존재하지 않는다. 어법상 틀림."
+    },
+    {
+      "label": "(C) wish",
+      "verdict": "correct",
+      "reason": "'the quotes [that] you wish to use' — 목적격 관계대명사가 생략된 관계절. 관계절 내 주어 'you'에 대한 현재시제 일치 'wish'가 정확하고, wish + to부정사 결합도 표준. 정문."
+    },
+    {
+      "label": "(D) easily",
+      "verdict": "correct",
+      "reason": "'so that they can be transcribed easily afterwards' — 수동태 동사구 'be transcribed'를 수식하는 자리이므로 부사가 필수. 형용사 easy라면 오히려 비문이 된다. 정문."
+    },
+    {
+      "label": "(E) try to get",
+      "verdict": "correct",
+      "reason": "'It is sensible to take down more..., but try to get into the habit of...' — 평서절과 명령절의 등위접속(but + imperative)은 조언 담화에서 완전히 허용되는 표준 구조. 'try to get into the habit of editing out'의 to부정사 및 of -ing 지배 관계도 모두 정합. 정문."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. (B)는 동명사 주어 단수 일치 위반이 유일하게 형식적으로 증명 가능한 오류이며, 등위 술어 'is'가 모순을 확정하는 내부 증거를 제공한다. 나머지 네 밑줄은 대안 파싱을 적극 탐색해도 비문화 경로가 없다. 단일 정답으로 수렴 — 이의신청 여지 낮음."
+}

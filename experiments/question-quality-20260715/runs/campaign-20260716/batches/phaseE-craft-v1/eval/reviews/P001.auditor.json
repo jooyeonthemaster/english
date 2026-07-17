@@ -1,0 +1,97 @@
+{
+  "pid": "P001",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V2-ALT-PARSE",
+      "severity": "major",
+      "evidence": "(D) 'finding'은 'adapt to [new information or finding creative solutions]'처럼 전치사 to의 목적어(NP or 동명사구 병렬)로 읽는 대안 통사 분석이 가능하며, 이 파스 자체는 문법적이다. 다만 담화 문맥(첫 문장 'ability to creatively solve problems', 직전 'these skills suffer')이 'struggle to ... find solutions' 병렬 독해를 강제하고 'adapt to finding solutions' 독해는 의미적으로 비정합이므로, 시험 관행상 정답 유일성은 유지된다고 판단해 V2는 통과 처리. 그러나 순수 문법 판단만으로 정답이 필연적이지 않아 KILLER 기준(RUBRIC §C 2항 '대안 분석이 가능한 자리는 제외')에는 정면 저촉된다."
+    },
+    {
+      "code": "V4-TERM-LOOSE",
+      "severity": "minor",
+      "evidence": "해설이 'struggle'의 '목적어로 to adapt'가 온다고 기술. struggle은 want/decide류의 to부정사 목적어 타동사 목록에 속하지 않으며 자동사+to부정사 보충 구조로 보는 것이 표준. 정답 판정에는 영향 없음."
+    },
+    {
+      "code": "V4-NOTATION",
+      "severity": "minor",
+      "evidence": "해설의 병렬 표기 'struggle (to) adapt ~ or (to) find ~'에서 adapt 앞의 to는 생략 불가함에도 괄호로 처리되어 'struggle adapt'가 가능하다는 오해 소지가 있음. 바로 앞 문장의 구조 기술 자체는 정확."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "접속사 because vs 전치사구 because of 판별 — 뒤따르는 성분이 절인지 명사구인지 확인",
+      "temptingBecause": "'This is because ~' 구문에서 because 뒤 구조를 명사구로 순간 오인할 여지가 있으나 유인력은 낮음",
+      "decisiveFlaw": "뒤에 주어(social connections)+동사(are)를 갖춘 완전한 절이 오므로 접속사 because가 정확 — 오류가 될 수 없음"
+    },
+    {
+      "label": "(B)",
+      "intent": "형용사 vs 부사 — 수동태 과거분사(enhanced) 수식어 품사 판별",
+      "temptingBecause": "be동사 뒤라서 보어 자리 형용사(great)로 착각하도록 유도하나, 전형적 패턴이라 유인력 매우 낮음",
+      "decisiveFlaw": "are enhanced라는 동사(수동태)를 수식하므로 부사 greatly가 정확 — 오류가 될 수 없음"
+    },
+    {
+      "label": "(C)",
+      "intent": "과거분사 vs 현재분사 — feel의 보어 자리에서 수동/능동 의미 판정",
+      "temptingBecause": "feel 뒤 보어로 -ing형(rejecting)이 어울린다고 착각하거나, 형용사 lonely와의 병렬을 근거로 형태를 의심할 수 있음",
+      "decisiveFlaw": "주어 you가 거절을 '당하는' 대상이므로 수동 의미의 rejected가 정확 — 오류가 될 수 없음"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — or 병렬구조에서 공유된 to에 걸리는 동사원형(find) 판별 + 'adapt to'의 전치사 to 목적어(동명사) 오인 함정",
+      "temptingBecause": "직전의 'adapt to'의 to를 전치사로 보아 finding을 그 목적어(동명사)로 파싱하면 옳아 보임 — 실제로 이 병렬 파스는 통사적으로 성립 가능",
+      "decisiveFlaw": "문맥상 '해결책을 찾는 능력이 저하된다'는 의미가 강제되어 struggle to [adapt ~ or find ~] 병렬만 정합적이며, 원문도 find. 교정 시 정확히 원문 복원. 단, 대안 파스가 문법적으로 존재해 순수 문법 판단으로는 필연성이 약함(KILLER 부적격 사유)"
+    },
+    {
+      "label": "(E)",
+      "intent": "목적을 나타내는 to부정사(부사적 용법) vs 동명사/원형 판별",
+      "temptingBecause": "'use A to B' 패턴에서 coping 등 대체형이 떠오를 수 있으나 전형적이라 유인력 낮음",
+      "decisiveFlaw": "'대처하기 위해'라는 목적의 부사적 to부정사로 정확 — 오류가 될 수 없음"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "severity": "minor",
+      "evidence": "'그 목적어로 to adapt ~가 연결' — struggle을 to부정사 목적어를 취하는 동사로 기술한 비표준 valency 라벨",
+      "recommendation": "'struggle 뒤에 to부정사가 이어지고, or로 (to) find가 병렬 연결된다'로 용어 중립화"
+    },
+    {
+      "severity": "minor",
+      "evidence": "'struggle (to) adapt ~ or (to) find ~' 표기 — adapt 앞 to는 생략 불가인데 괄호 처리되어 오해 소지",
+      "recommendation": "'struggle to [adapt ~ or (to) find ~]'로 공유 to의 위치를 정확히 표기"
+    },
+    {
+      "severity": "minor",
+      "evidence": "'동명사형을 고르는 함정에 빠지지 않도록' — 실제 함정은 finding을 옳다고 판단하여 (D)를 정답에서 배제하는 것이므로 표현이 모호",
+      "recommendation": "'finding을 전치사 to의 목적어로 오인해 옳다고 판단하는 함정'으로 명료화"
+    },
+    {
+      "severity": "minor",
+      "evidence": "(C) 해설의 '감정을 나타내는 분사' — reject는 excite/bore류 전형적 감정동사 분류가 아니며, feel의 보어로 쓰인 수동 의미 과거분사로 설명하는 것이 정확",
+      "recommendation": "'주어가 거절당하는 대상이므로 수동 의미의 과거분사'로만 설명"
+    },
+    {
+      "severity": "minor",
+      "evidence": "keyPoints가 (D),(A),(C)만 다루고 (B),(E)의 포인트는 누락 — 모순은 아니나 커버리지 불완전",
+      "recommendation": "(B) 부사 수식, (E) 목적 to부정사 포인트 추가"
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1: 원지문 대비 변형은 (D) find→finding 단 하나이며 마커 5개가 선택지·markedExpressions와 완전 일치, 접합 파손·중복·누락 없음. V2: 블라인드 풀이 결과 (A)(B)(C)(E)는 독립적으로 명백히 정문이고 (D)만 오류로 판정 — 단 (D)는 '전치사 to의 목적어 병렬'이라는 문법적 대안 파스가 존재하며 문맥 배제에 의존하므로 유일성의 질이 낮음(major 이슈로 기록, 시험 관행 기준으로 통과 처리). V3: 지문·발문·교정 완성문 모두 문법적. V4: 구조 기술의 골자(may+struggle, to adapt~or find 병렬)는 정확하나 용어·표기 4건의 minor 이슈. V5: 정답 라벨·선지·해설·markedExpressions 동기화 완전. KILLER 판정: §C 1항(최소대립쌍·원문 복원) 충족, 5항(동일 포인트 쉬운 디코이 없음) 충족. 그러나 2항(대안 분석 가능 자리 제외) 위반, 3항(각 밑줄의 why tempting 명시 — 오답 해설은 why correct만 제공) 미충족, 4항(구조 독해 요구는 하나 'or+‑ing' 병렬은 훈련된 학생에게 즉시 드러나는 정형 포인트) 미달 → killerConditionsMet=false. C5=1: KILLER 요청 대비 실제 난이도는 중위권 표준 병렬 문항으로 명백한 불일치. C3=2: (A)(B)(E)가 즉시 소거되어 실질 경합은 (C)(D) 둘뿐. 종합: V 전부 통과하나 난이도 정합 실패와 경쟁력 부족으로 재설계 필요 — 등급 C."
+}

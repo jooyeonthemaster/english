@@ -1,0 +1,35 @@
+{
+  "pid": "P019",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a kind and magnitude not seen before'는 축약 관계절((which have) not (been) seen before). 선행 명사구가 see의 피동 대상이므로 과거분사 seen이 어법상 옳다. 'of a kind not seen before'는 표준 구조."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'have always been integral parts'는 현재완료 계속 용법. always가 have와 been 사이에 삽입된 정상 어순이며, 시간 부사 always와 완료상이 정합. been이 유일하게 가능한 형태."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "'That is new about cyberspace is its interactive nature'에서 주절 동사(두 번째 is)의 주어로 명사절이 필요하고, 절 내부 주어 공백('__ is new about cyberspace')까지 채우려면 자유관계사 What이어야 한다. 대안 해석 전수 검토: (i) 접속사 that — that절 내부 주어 공백을 채울 수 없음(접속사는 논항이 아님); (ii) 지시대명사 That — 'That is new about cyberspace.'로 문장이 완결되어 뒤의 'is its interactive nature'가 주어 없는 고아 술부가 됨; (iii) 관계대명사 that — 선행사 부재로 불성립. 모든 정문화 경로가 실패하므로 형식적으로 비문임이 증명된다. What으로 교정해야 한다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'while being able to shape...'는 접속사가 잔류한 분사구문. 의미상 주어가 주절 주어 'real people'과 일치하고, '~하면서 동시에'라는 논리 관계도 문맥에 적합하다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'The move from A to B' 상관 전치사 구조. 문장 후반 'the move from photographs to movies'와 정확히 병렬 대구를 이루므로 to가 옳다."
+    }
+  ],
+  "note": "정답 후보는 (C) 단독. 자유관계사 What 자리에 That을 둔 전형적 오류로, 지시대명사/접속사/관계대명사 어떤 해석으로도 정문이 되지 않음을 확인했다. 나머지 네 밑줄은 모두 장거리 단서(축약 관계절 피동, 완료상+부사 삽입, 분사구문 의미상 주어, from-to 병렬)까지 점검해 정문으로 판정."
+}

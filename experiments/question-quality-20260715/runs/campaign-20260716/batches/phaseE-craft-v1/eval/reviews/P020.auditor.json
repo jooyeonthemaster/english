@@ -1,0 +1,82 @@
+{
+  "pid": "P020",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-keypoints-hidden-span",
+      "severity": "minor",
+      "evidence": "keyPoints 2번 항목이 \"비유적이고 맥락적인 표현(build on it)을 ... 해석하는 추론력\"이라고 기술하나, 'build on it'은 빈칸으로 제거된 원문 span의 일부라 학생에게 보이지 않는다. 학생의 실제 과제는 그 표현의 해석이 아니라 주변 단서(1문장+예시)로부터 빈칸 내용을 역추론하는 것이므로 평가요소 기술이 부정확하다. 오답해설 ⑤의 '발전(build on it)시키라는 본문 논지' 인용도 같은 성격이나, 해설은 원문 span 공개가 관례이므로 치명 아님."
+    },
+    {
+      "code": "V4-minor-overstatement",
+      "severity": "minor",
+      "evidence": "오답해설 ②의 \"본문이 비판하는 '즉각적 교정'\"은 과진술. 본문은 'rejection and correction'을 스펙트럼의 한 극단으로 중립 제시하고 culturally responsive teaching과 대비시킬 뿐 명시적으로 '비판'하지 않는다. 논지 방향은 일치하므로 치명 아님."
+    },
+    {
+      "code": "V3-minor-compression",
+      "severity": "minor",
+      "evidence": "정답 선지의 'standard proficiency'는 'proficiency in Standard English'의 압축형으로, 고립 시 'standard level of proficiency'로도 읽힐 수 있는 경미한 축약. 지문 맥락상 해소되므로 비문 아님."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'first accept the dialect and then build on it'을 '출발점 수용(embrace their linguistic starting point)+표준 숙달 육성(foster standard proficiency)'으로 추상화. 1문장(표준어 교육의 목적)과 빈칸 뒤 예시(recast) 두 단서의 종합을 요구.",
+      "temptingBecause": "해당 없음(정답).",
+      "decisiveFlaw": "없음. 예시(수용+표준형 모델링)와 1문장(표준어 숙달 목표)을 유일하게 동시에 만족."
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전(polarity reversal) — 스펙트럼의 극단 'rejection and correction'을 1문장의 경제적 기회 명분과 결합해 긍정적 방법론으로 위장.",
+      "temptingBecause": "1문장의 'economic opportunities'와 어휘가 직접 공명하고, 표준어 교육의 당위 자체는 지문이 인정하므로 순간 그럴듯함.",
+      "decisiveFlaw": "빈칸 뒤 예시의 교사는 직접 교정 대신 간접 recast('Oh, you don't have a pencil')를 사용 — 'prioritize direct correction'은 지문이 대비시키는 극단A와 외연이 같아 배제."
+    },
+    {
+      "label": "3",
+      "intent": "과확장/half-truth — '수용'이라는 참인 절반을 '최종 교육 목표(ultimate educational objective)'로 격상.",
+      "temptingBecause": "'complete acceptance' 및 culturally responsive teaching의 수용적 뉘앙스와 겹쳐 가장 강력한 경쟁 선지. 예시의 수용 장면과도 표면상 부합.",
+      "decisiveFlaw": "1문장이 표준영어 숙달(기회 접근)을 교육의 일차적 이유로 명시 — 방언 인정은 출발점이지 최종 목표가 아니며, 예시 교사도 표준형을 모델링한다. 'ultimate'라는 절대어가 결함이자 test-wise 소거 단서."
+    },
+    {
+      "label": "4",
+      "intent": "무근거 인과/조건 날조(fabricated causal) — 지문 어휘('post-high school education', 기회)를 차용해 존재하지 않는 '방언 사용 기반 준비도 평가'를 생성.",
+      "temptingBecause": "'post-school opportunities'가 2문장 어휘와 표면 매칭되어 훑어 읽는 학생에게 근거 있는 것처럼 보임.",
+      "decisiveFlaw": "지문에 학생 평가(assessment) 개념이 전무. 'post-high school' 언급은 학생이 표준어 효용을 깨닫는 계기일 뿐 교사의 평가 척도가 아님."
+    },
+    {
+      "label": "5",
+      "intent": "조건 상실/분리(condition loss) — 'accept then build on' 연결 구조의 정반대인 분리 명제.",
+      "temptingBecause": "'standard English instruction'과 'linguistic background' 등 지문 핵심 어휘로 구성되어 표면적 지문 정합성이 있어 보임. 다만 네 오답 중 source anchor가 가장 약함.",
+      "decisiveFlaw": "예시 교사는 학생의 방언 발화를 그대로 교수 재료로 삼아 표준형을 연결 — 분리가 아니라 통합이 지문 논지이므로 정면 모순."
+    }
+  ],
+  "explanationIssues": [
+    "keyPoints가 빈칸으로 제거된 span의 표현('build on it')을 학생이 '해석'해야 할 지문 내 표현처럼 기술 (minor, 위 V4-minor-keypoints-hidden-span 참조)",
+    "오답해설 ②의 '본문이 비판하는' 표현은 지문의 중립적 스펙트럼 제시 대비 경미한 과진술 (minor)",
+    "본해설이 정확하고 오답 4개를 함정 유형별로 모두 커버하나 다소 장황함 — '두 가지의 종합' 논리는 선명함"
+  ],
+  "killerConditionsMet": true,
+  "killerConditionsDetail": {
+    "sameSyntacticSlot": "충족 — 5개 선지 모두 'is to + 원형동사구'로 동일 슬롯, tail로 인한 부분 문법 탈락 없음",
+    "meaningPreservingAbstraction": "충족 — 원문 'first accept the dialect and then build on it'의 의미를 보존하며 1문장에서 추론 가능한 목표(표준 숙달)를 결합해 추상화",
+    "anchorOverlapFlaw": "대체로 충족 — ②③④는 anchor/overlap/decisive flaw 명확, ⑤는 anchor가 어휘 차용 수준으로 약함(marginal)",
+    "twoCueRequirement": "충족 — 수용 방향 판별에 예시 문장, ①vs③ 최종 판별에 1문장이 필요해 최소 두 단서 연결 필수. 다만 ③의 'ultimate' 절대어가 test-wise 소거를 다소 도움(정답 단독 확정은 불가하므로 통과)",
+    "distinctTrapTypes": "충족 — polarity reversal(②), half-truth/overextension(③), fabricated causal/condition(④), condition loss/separation(⑤)"
+  },
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 목표 span('first accept the dialect and then build on it')만 빈칸 치환했고 나머지 전 구간 일치, 라벨·마커 정상. V2: 각 선지 독립 검증 결과 ①만 성립 — ②는 예시(간접 recast)가 직접 반증, ③은 1문장(표준어 교육 목적)과 모순, ④는 지문에 평가 개념 부재, ⑤는 통합 논지와 정면 충돌. 두 독립 솔버도 고확신 ① 단독 판정으로 수렴. V3: 5개 선지 모두 seam 무결, 완성문 자연스러움. V4: 본해설의 구조 분석(빈칸=주제문, 1문장+후속 예시의 종합) 정확, 오답 해설 4건 모두 실제 선지 내용과 대응 — minor 이슈 2건은 치명 아님. V5: 정답 라벨(1)·선지·오답해설 키(2~5)·keyPoints 동기화 정상. 공예: 빈칸이 지문의 주제문(제3의 접근)을 겨냥해 출제 가치 높고(C1=4) 오답 4개가 서로 다른 함정 유형을 분담(C2=4). 다만 빈칸 직후 'For example' 예시가 강한 단서라 ②⑤가 빨리 소거되고 실질 경쟁은 ③ 하나로 수렴하며(C3=3), ①이 유일한 '양극 종합형' 선지라는 메타 휴리스틱 및 ③의 'ultimate' 절대어가 경미한 누출(C4=3), 실제 난이도는 KILLER 요청 대비 상~최상 사이(C5=3). 해설은 정확하나 장황+keyPoints 흠결(C6=3). 합계 20 — 모든 V 통과·최저 C 3·합계 17 이상이나 21 미만이므로 B. 개선 포인트: ⑤의 source anchor 강화, ③의 'ultimate' 절대어 완화, keyPoints의 'build on it' 기술 수정, 해설 압축."
+}

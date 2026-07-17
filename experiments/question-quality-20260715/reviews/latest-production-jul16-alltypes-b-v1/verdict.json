@@ -1,0 +1,354 @@
+{
+  "schemaVersion": "latest-production-jul16-alltypes-independent-content-audit-b-v1",
+  "reviewer": {
+    "role": "independent-content-reviewer-b",
+    "reviewedAt": "2026-07-16T17:15:47+09:00",
+    "readPriorResearchNotes": false,
+    "readOtherReviewerVerdicts": false
+  },
+  "subject": {
+    "script": "scripts/_audit-jul16-latest-content.ts",
+    "windowUtc": {
+      "from": "2026-07-16T06:36:00.000Z",
+      "to": "2026-07-16T06:42:00.000Z"
+    },
+    "rowCount": 12,
+    "contentSha256": "1f63bd340521da8a76ce13529834c8523fc3a0e79a4763aa3b68c16c0acd9f7b"
+  },
+  "controls": {
+    "databaseMode": "read-only",
+    "databaseWrites": 0,
+    "apiCalls": 0,
+    "modelCalls": 0,
+    "providerCalls": 0
+  },
+  "verdict": "FAIL_REJECT",
+  "aggregate": {
+    "A": 0,
+    "B": 2,
+    "C": 2,
+    "F": 8,
+    "publishableAorB": 2,
+    "publishableRate": 0.1667,
+    "fatalRejects": 8,
+    "fatalRejectRate": 0.6667,
+    "beautifulAItems": 0
+  },
+  "passageClustering": {
+    "grade": "F",
+    "distinctPassages": 3,
+    "distribution": [
+      {
+        "passageIdSuffix": "3ab42p",
+        "count": 9,
+        "share": 0.75
+      },
+      {
+        "passageIdSuffix": "7uxjzk",
+        "count": 2,
+        "share": 0.1667
+      },
+      {
+        "passageIdSuffix": "mdez51",
+        "count": 1,
+        "share": 0.0833
+      }
+    ]
+  },
+  "lineage": {
+    "qualityCommit": "448488cae9abe95e0895f10a35d86fed297ddcbb",
+    "productionDeployCommit": "8151305c490732e39f9cb3d243788045cbc2e670",
+    "qualityCommitIsAncestor": true,
+    "commitsAfterQualityThroughDeploy": 5,
+    "coreQuestionGenerationQualityDiffCount": 0,
+    "coreScope": [
+      "src/app/api/ai/generate-questions-auto/**",
+      "src/app/api/workbench/ai-jobs/question-generation/**",
+      "src/lib/atlas-ai.ts",
+      "src/lib/grammar-point-catalog.ts",
+      "src/lib/question-generation-llm.ts",
+      "src/lib/question-generation-plans.ts",
+      "src/lib/question-generation-prompt-contract.ts",
+      "src/lib/question-prompts-mc.ts",
+      "src/lib/question-quality/**"
+    ],
+    "broadGenerationNameMatchedDiffCount": 17,
+    "qualification": "The generator-quality prompt/model/validator core is unchanged, but workbench generate UI/point-picker and passage transform/suggest paths did change; a blanket claim that every generation-named file was unchanged is false."
+  },
+  "items": [
+    {
+      "idSuffix": "vy6wtk",
+      "subType": "BLANK_INFERENCE",
+      "oneRowSha256": "5a77a4b0b37aff7253b0aa064e940c1129b5de9f176bc213ac123867b81e3261",
+      "independentAnswer": "⑤",
+      "storedAnswer": "⑤",
+      "overall": "F",
+      "domains": {
+        "answerUniqueness": "A",
+        "sourceRenderIntegrity": "F",
+        "distractorCraft": "F",
+        "difficultyCalibration": "F",
+        "explanationTruthConcision": "C",
+        "wrongOptionExplanationMapping": "A",
+        "typoGrammar": "F",
+        "passageClustering": "A"
+      },
+      "fatalDomains": [
+        "source_render_integrity",
+        "typo_grammar"
+      ],
+      "evidence": "Duplicated sentences, missing spaces and letters, glued examples, and orphan closing quote after the blank; all four distractors are obvious negative reversals."
+    },
+    {
+      "idSuffix": "mjxpe6",
+      "subType": "BLANK_INFERENCE",
+      "oneRowSha256": "0ee86675bd2df9be0f08491d6a37129812cc2265ad73409f2a6e039158049f92",
+      "independentAnswer": "②",
+      "storedAnswer": "②",
+      "overall": "F",
+      "domains": {
+        "answerUniqueness": "A",
+        "sourceRenderIntegrity": "C",
+        "distractorCraft": "F",
+        "difficultyCalibration": "C",
+        "explanationTruthConcision": "B",
+        "wrongOptionExplanationMapping": "A",
+        "typoGrammar": "F",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [
+        "typo_grammar",
+        "distractor_craft"
+      ],
+      "evidence": "Option ① contains 'to spent' and semantic nonsense; ③/④ are invented scenarios and ⑤ is an obvious polarity reversal."
+    },
+    {
+      "idSuffix": "o42a1y",
+      "subType": "TITLE",
+      "oneRowSha256": "3ad467a3515b39d3c930711b79ed78f413e2f74ad117a88c2762dca6126f3cd3",
+      "independentAnswer": "5",
+      "storedAnswer": "5",
+      "overall": "C",
+      "domains": {
+        "answerUniqueness": "A",
+        "sourceRenderIntegrity": "C",
+        "distractorCraft": "C",
+        "difficultyCalibration": "C",
+        "explanationTruthConcision": "C",
+        "wrongOptionExplanationMapping": "A",
+        "typoGrammar": "B",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [],
+      "evidence": "Correct title is clear, but all four distractors are remote, unsupported, or polarity-reversed; no competitive near-miss."
+    },
+    {
+      "idSuffix": "1l55a0",
+      "subType": "GRAMMAR_CHOICE_COMBO",
+      "oneRowSha256": "8fc355849910a85d4616327211d809006e917f60c2c77664af2a515c03a8fa61",
+      "independentAnswer": "5",
+      "storedAnswer": "5",
+      "overall": "B",
+      "domains": {
+        "answerUniqueness": "A",
+        "sourceRenderIntegrity": "C",
+        "distractorCraft": "B",
+        "difficultyCalibration": "C",
+        "explanationTruthConcision": "B",
+        "wrongOptionExplanationMapping": "A",
+        "typoGrammar": "B",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [],
+      "evidence": "that/is/to take is unique and explanations map correctly; points are textbook-easy and source retains a culture.DJs spacing defect."
+    },
+    {
+      "idSuffix": "34lxl9",
+      "subType": "VOCAB_CHOICE",
+      "oneRowSha256": "3d8eea49ae14866e058d226258872fafba07d312f23016996db66fcbfefe0f5b",
+      "independentAnswer": "4",
+      "storedAnswer": "4",
+      "overall": "C",
+      "domains": {
+        "answerUniqueness": "A",
+        "sourceRenderIntegrity": "C",
+        "distractorCraft": "C",
+        "difficultyCalibration": "C",
+        "explanationTruthConcision": "B",
+        "wrongOptionExplanationMapping": "A",
+        "typoGrammar": "B",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [],
+      "evidence": "unwelcome is the direct opposite of source anticipated while the other four words are unchanged, transparently correct source words."
+    },
+    {
+      "idSuffix": "q9yrh7",
+      "subType": "TOPIC",
+      "oneRowSha256": "c7e6057d838719562dbf9e7e82c33febcbf62e7247fd6d3e5cfb324ab2d73ea1",
+      "independentAnswer": "2",
+      "storedAnswer": "2",
+      "overall": "F",
+      "domains": {
+        "answerUniqueness": "A",
+        "sourceRenderIntegrity": "C",
+        "distractorCraft": "B",
+        "difficultyCalibration": "B",
+        "explanationTruthConcision": "F",
+        "wrongOptionExplanationMapping": "C",
+        "typoGrammar": "F",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [
+        "explanation_truth",
+        "typo_grammar"
+      ],
+      "evidence": "Explanation says MCing(lapping) and conflates the cause of MCing with Kool Herc's break-extension technique; repeated malformed Korean option-explanation syntax."
+    },
+    {
+      "idSuffix": "j9i10h",
+      "subType": "GRAMMAR_ERROR",
+      "oneRowSha256": "bf829b0513ee2ba140f88561f417706e3f28a8329abb3bd606869fed00a501a0",
+      "independentAnswer": "intended (E), but no unique grammatical error",
+      "storedAnswer": "(E)",
+      "overall": "F",
+      "domains": {
+        "answerUniqueness": "F",
+        "sourceRenderIntegrity": "C",
+        "distractorCraft": "F",
+        "difficultyCalibration": "F",
+        "explanationTruthConcision": "F",
+        "wrongOptionExplanationMapping": "B",
+        "typoGrammar": "F",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [
+        "answer_uniqueness",
+        "grammar_analysis"
+      ],
+      "evidence": "'a friend taking the role ...' can parse as a noun phrase with a reduced relative clause, so taking is not obligatorily an invalid object complement."
+    },
+    {
+      "idSuffix": "pdekjt",
+      "subType": "SENTENCE_INSERT",
+      "oneRowSha256": "4d4fdbfb16e87968bfe09cd8e78a65a7b81cbfaca386a94d1e2e83ecbbbabdad",
+      "independentAnswer": "intended ③; ④ also coherent",
+      "storedAnswer": "③",
+      "overall": "F",
+      "domains": {
+        "answerUniqueness": "F",
+        "sourceRenderIntegrity": "B",
+        "distractorCraft": "F",
+        "difficultyCalibration": "F",
+        "explanationTruthConcision": "B",
+        "wrongOptionExplanationMapping": "F",
+        "typoGrammar": "A",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [
+        "answer_uniqueness",
+        "wrong_option_mapping",
+        "distractor_craft"
+      ],
+      "evidence": "Gap ④ preserves a coherent influence→concrete benefit→anticipated break chain; all four wrong-gap explanations describe shifted or nonexistent positions."
+    },
+    {
+      "idSuffix": "uelp2h",
+      "subType": "BLANK_INFERENCE",
+      "oneRowSha256": "8ad9b01d1141679678c632d69a828527fc722bec78d5ceabb8dc41eed40100d2",
+      "independentAnswer": "intended ④; keyed completion is malformed",
+      "storedAnswer": "④",
+      "overall": "F",
+      "domains": {
+        "answerUniqueness": "A",
+        "sourceRenderIntegrity": "F",
+        "distractorCraft": "F",
+        "difficultyCalibration": "C",
+        "explanationTruthConcision": "C",
+        "wrongOptionExplanationMapping": "A",
+        "typoGrammar": "F",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [
+        "keyed_completion_grammar",
+        "source_render_integrity"
+      ],
+      "evidence": "With ④ inserted, the subject Herc's party dangles over by not restricting his performance; single playback is also unnatural and underspecified."
+    },
+    {
+      "idSuffix": "bcuwuy",
+      "subType": "SENTENCE_ORDER",
+      "oneRowSha256": "1a5b67c261953d02ea5f6c8e6aba007c28e258344761309c3656dd6181be3922",
+      "independentAnswer": "3",
+      "storedAnswer": "3",
+      "overall": "B",
+      "domains": {
+        "answerUniqueness": "A",
+        "sourceRenderIntegrity": "A",
+        "distractorCraft": "B",
+        "difficultyCalibration": "B",
+        "explanationTruthConcision": "A",
+        "wrongOptionExplanationMapping": "A",
+        "typoGrammar": "A",
+        "passageClustering": "F"
+      },
+      "fatalDomains": [],
+      "evidence": "these parties→full DJ Kool Herc introduction→Herc's party/technique→style/effects yields a unique B-C-A chain with correct explanations."
+    },
+    {
+      "idSuffix": "m53vfp",
+      "subType": "TOPIC",
+      "oneRowSha256": "3db886cc2aaeb8e7717824cd2dec959973d141b7726f5d375b920489b710a0b6",
+      "independentAnswer": "2 is closest but flawed",
+      "storedAnswer": "2",
+      "overall": "F",
+      "domains": {
+        "answerUniqueness": "C",
+        "sourceRenderIntegrity": "A",
+        "distractorCraft": "C",
+        "difficultyCalibration": "C",
+        "explanationTruthConcision": "C",
+        "wrongOptionExplanationMapping": "A",
+        "typoGrammar": "F",
+        "passageClustering": "C"
+      },
+      "fatalDomains": [
+        "typo_grammar",
+        "answer_semantic_fidelity"
+      ],
+      "evidence": "Correct option contains Commmunity and overstates hip-hop as the catalyst for peace although the treaty precedes hip-hop's birth as part of a peace culture."
+    },
+    {
+      "idSuffix": "aiqijc",
+      "subType": "GRAMMAR_CHOICE_COMBO",
+      "oneRowSha256": "4884babb9bfa5d6c92bf5ed67a2f1ec7aad80d9602f188366d0f56403fb42193",
+      "independentAnswer": "intended 2; 1 also grammatical",
+      "storedAnswer": "2",
+      "overall": "F",
+      "domains": {
+        "answerUniqueness": "F",
+        "sourceRenderIntegrity": "A",
+        "distractorCraft": "F",
+        "difficultyCalibration": "F",
+        "explanationTruthConcision": "F",
+        "wrongOptionExplanationMapping": "C",
+        "typoGrammar": "F",
+        "passageClustering": "C"
+      },
+      "fatalDomains": [
+        "answer_uniqueness",
+        "explanation_truth",
+        "grammar_analysis"
+      ],
+      "evidence": "Never again do they use violence is grammatical emphatic present inversion, so options 1 and 2 can both work; explanation falsely names programs as which's antecedent."
+    }
+  ],
+  "requiredRemediationSignals": [
+    "Reject corrupted source passages and orphan punctuation before generation.",
+    "Run full English grammaticality checks on every option and on the sentence completed with the keyed blank.",
+    "For grammar items, adversarially search for alternate legal parses, not only the intended parse.",
+    "For sentence insertion, test the given sentence in every gap and semantically revalidate every wrong-gap explanation after postprocessing.",
+    "Block user-facing explanation typos and causal/grammatical misanalysis.",
+    "Enforce passage-diversity sampling before using a batch as type-wide quality evidence."
+  ]
+}

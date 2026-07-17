@@ -1,0 +1,72 @@
+{
+  "pid": "P020",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-idiom",
+      "severity": "minor",
+      "evidence": "정답 ③의 'portion your commitments'는 'portion out'이 더 관용적이며 단독 타동사 portion은 다소 어색하다. 다만 문법적으로 성립하고 의미 전달에 문제가 없어 V3 실패는 아니다."
+    },
+    {
+      "code": "V3-minor-redundancy",
+      "severity": "minor",
+      "evidence": "③을 넣은 완성문에서 'prioritize'가 선행절 'get involved in the activities that are most meaningful to you'(가장 의미 있는 활동 선택 = 우선순위화)와 부분적으로 중복되어 문장이 약간 잉여적이다. 모순은 아니므로 유효성 실패는 아니다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "scope shift — 과외활동 조절이라는 논지를 '공부 시간 극대화'라는 인접 주제로 좁혀치기",
+      "temptingBecause": "본문의 'tasks you absolutely need to complete'가 학업 과제를 연상시켜, 활동을 줄이고 공부에 집중하라는 조언처럼 읽힐 수 있다",
+      "decisiveFlaw": "'focus only'가 선행절 'get involved in the activities that are most meaningful to you'와 정면 충돌하며, 본문 어디에도 study hours 극대화 권고가 없다"
+    },
+    {
+      "label": "②",
+      "intent": "polarity reversal — 절제 권고를 확장 권고로 뒤집기",
+      "temptingBecause": "clubs, limits 등 본문 핵심 어휘를 그대로 재사용해 표면 겹침이 크다",
+      "decisiveFlaw": "'draw the line', 'exercise some moderation', 'Joining too many clubs can reduce...free time'과 전면 모순되는 정반대 극성이라 즉시 소거된다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — source span 'don't overextend yourself'의 의미 보존 환언",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 'Pacing is important' + 'exercise some moderation' 두 단서가 우선순위화·배분이라는 결론을 필연적으로 지지한다"
+    },
+    {
+      "label": "④",
+      "intent": "peripheral example anchor — 예시(신문사 deadline)를 결론으로 승격시킨 지엽 왜곡",
+      "temptingBecause": "본문에 deadline이 명시적으로 등장해 국소 어휘 단서가 강하고, '마감 부담 해소'가 스트레스 감소라는 논지와 표면적으로 이어진다",
+      "decisiveFlaw": "deadline은 crunch time의 예시일 뿐이며 본문의 해결책은 활동량 조절이지 교사와의 마감 협상이 아니다; 'delay deadlines with your teachers'라는 결합도 다소 어색하다"
+    },
+    {
+      "label": "⑤",
+      "intent": "overgeneralization + topic shift — 과잉활동 스트레스를 사교 불안 전반으로 확장하고 절대어 사용",
+      "temptingBecause": "본문의 'stressed out'과 감정 어휘가 겹쳐 스트레스 관리 조언처럼 보인다",
+      "decisiveFlaw": "본문 스트레스의 원인은 과잉 참여(over-commitment)이지 social anxiety가 아니며, 'eliminate all sources'라는 절대적 요구는 본문의 '적절한 조절(moderation)' 논지와 층위가 다르다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "V4-minor-gloss",
+      "severity": "minor",
+      "evidence": "⑤ 오답 해설이 'social anxiety'를 '인간관계 스트레스 전반'으로 다소 넓게 옮겼으나 선지 내용과의 대응 자체는 유지되어 사실성 위반은 아니다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 원지문에서 결론절 'don't overextend yourself'만 빈칸으로 치환한 무손상 변형이며, 다섯 선지는 모두 'make sure you ___' 슬롯에 문법적으로 동일하게 들어가 문법만으로 탈락하는 오답이 없다(빈칸 조건 D1 충족). 정답 ③은 'Pacing is important'와 'exercise some moderation' 두 단서에 의해 유일하게 지지되고, 나머지 네 선지는 각각 scope shift/polarity reversal/peripheral anchor/overgeneralization이라는 서로 다른 함정 의도를 갖는다(D5 충족). 다만 ②와 ⑤가 극성·절대어로 거의 즉시 소거되어 실질 경합이 ③ vs ④(및 약하게 ①)로 좁혀지는 점이 C3=2의 근거다. INTERMEDIATE 요청 난이도에는 사고 단계(결론부 1단계 추론 + 명시 단서 연결)가 적절히 부합한다(C5=3). 해설은 인용 앵커가 전부 실제 지문과 일치하고 오분석이 없으나 다소 장황하다(C6=3). 합계 17, 최저 C 2로 B — ②·⑤의 매력도를 높이는 작은 수정(예: ⑤를 절대어 없이 본문 어휘에 더 밀착시키기)으로 A 접근 가능. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

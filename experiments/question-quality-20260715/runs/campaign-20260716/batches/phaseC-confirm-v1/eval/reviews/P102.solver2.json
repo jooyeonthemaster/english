@@ -1,0 +1,35 @@
+{
+  "pid": "P102",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "논리 방향이 정반대다. 지문은 위양성(false positive) — 무해한 상황을 위협으로 오판 — 을 논증하며('many situations are considered a threat by our brains, although they are harmless'), 실제 물리적 위협을 놓친다는 위음성 주장은 어디에도 없다. 오히려 첫 문장이 '현대 세계에는 실제 물리적 위협 자체가 거의 없다'고 전제하므로 '실제 물리적 위협을 인식하지 못한다'는 결론은 전제와 충돌한다. 문법 결합(fails to + 원형)은 정문이나 논리 부적합."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "'We do not have to worry about starving'과 직접 모순. 기아와 현대 질병 간 우선순위 비교는 지문 어디에도 없다. 결합 문법은 정문이나 지문 논리와 무관한 허구적 대조."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "지문 핵심의 정확한 형식화. 'harmless to our survival'(비치명적) + 'considered a threat / rates it as such [danger]'(치명적 위협으로 지각) + flee-or-fight 프레임(생존 수준 반응)이 'perceives non-lethal situations as fatal threats'로 일대일 대응된다. 교통체증·불쾌한 대화 두 사례가 모두 '생명을 위협하지 않지만(does not threaten our lives) 뇌는 위험으로 평가한다'는 구조로 이 일반화를 지지한다. 문법: perceive X as Y 구문, 주어(단수 brain)-동사(perceives) 일치 정문."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "논제('a Stone Age brain that lives in a modern world' — 부적응 불일치)와 정면 모순. 지문 전체가 뇌가 현대 안전에 적응하지 못했음을 논증한다. 결합 문법은 정문."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "범주 오류. flee/fight는 지각된 상황적 위협(교통체증, 말다툼)에 대한 반응이며, 고혈압·당뇨 같은 신체 질환으로부터 '도망치라고 부추긴다'는 진술은 지문에 근거가 없고 의미상 성립하지 않는다. 결합 문법은 정문이나 논리 부적합."
+    }
+  ],
+  "note": "빈칸은 'The danger is an illusion' 뒤의 결론 일반화 자리로, 지문의 위양성 오판 논지를 요약하는 ③만이 성립한다. ①은 위음성 주장으로 방향이 반대이며 '현대 세계는 거의 무해하다'는 전제와도 충돌해 옹호 불가. ③의 'fatal'은 다소 강한 어휘이나 지문의 'threat to our survival'·'threaten our lives'·flee-or-fight 프레임이 생존/생명 수준 위협 지각을 명시하므로 정당화된다. 단일 정답, 높은 확신."
+}

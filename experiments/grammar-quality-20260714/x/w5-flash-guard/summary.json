@@ -1,0 +1,45 @@
+{
+  "strategy": "w5-flash-guard",
+  "describe": "STANDARD 라인 후보: flash 단일 콜(few-shot(s2)×미니멀 규칙, 미끼분리 없음) + finalize 게이트 — 하드블록/결정론 error 시 전체 재생성 ≤2회(표적수리 콜 금지), 예산 소진 시 잔존 수용, 최종 수용 직전 difficulty 동기화",
+  "callPlan": "flash x1 (+전체 재생성 최대 2회, 수리 콜 없음)",
+  "total": 10,
+  "ok": 10,
+  "failed": 0,
+  "avgMs": 27220,
+  "avgAttempts": 2.5,
+  "avgCalls": 2.5,
+  "totalCostUsd": 0.51808,
+  "avgCostUsd": 0.05181,
+  "costRecordedCalls": 25,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 1.2,
+  "zeroErrorItems": 4,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.849,
+  "avgAnswerRelPos": 0.581,
+  "answerRelPosInBand": 8,
+  "models": {
+    "google/gemini-3.5-flash": 25
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 4,
+      "ok": 4,
+      "zeroError": 3
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 0
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 3,
+      "ok": 3,
+      "zeroError": 1
+    }
+  ]
+}

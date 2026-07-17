@@ -1,0 +1,77 @@
+{
+  "pid": "P009",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-SOURCE-DISCOURSE",
+      "severity": "minor",
+      "evidence": "원지문 자체가 'There have been numerous studies ... including surveys' (복수) 직후 'In this study' (단수)로 받는 담화 불일치를 갖고 있으나, 이는 원문 유래 특성이며 렌더 과정의 손상이 아니다. 렌더 지문은 (D) are→is 의도 변형 외에 원지문과 완전 일치한다."
+    },
+    {
+      "code": "V5-KEYPOINTS-PARTIAL",
+      "severity": "minor",
+      "evidence": "keyPoints가 (D)/(A)/(B) 3개 밑줄만 다루고 (C)/(E)는 누락. 모순은 아니므로 V5 통과이나 완전성 측면에서 아쉬움."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "선행사 포함 관계대명사 what vs 접속사 that 판별 — 뒤따르는 절의 완전/불완전 판단",
+      "temptingBecause": "call 뒤에 명사구 'flashbulb memories'가 바로 이어져 절이 완전해 보이므로, 5형식 목적어 gap을 못 읽은 학생은 that이어야 한다고 착각할 수 있다",
+      "decisiveFlaw": "call은 [목적어 gap] + 목적보어('flashbulb' memories) 구조로 불완전절이며, what절 전체가 create의 목적어이므로 what이 정확히 옳다 — 오류 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "분사의 태 판정 — 수식받는 명사와 분사의 능동/수동 관계",
+      "temptingBecause": "naming과의 능동/수동 선택 지점으로, 분사구문 앞 콤마 구조에서 태 판단을 요구한다",
+      "decisiveFlaw": "memories는 '이름 지어지는' 대상(수동)이므로 과거분사 named가 옳다 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "형식주어 it + 진주어 that절 구조에서 접속사 that의 적법성 — 완전절 판단",
+      "temptingBecause": "that절 내부에 삽입구('thoroughly reported in the media')가 끼어 있어 절의 완전성 판단을 한 단계 흐린다",
+      "decisiveFlaw": "'the broad outlines ... are well remembered'는 주어+동사를 갖춘 완전절이며 it에 조응하는 진주어이므로 접속사 that이 옳다 — 오류 아님. 다만 'it is true that'은 관용도가 높아 판별이 비교적 빠르다"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 개입 수식어구(of their personal details / at the time they learned of the attacks)를 사이에 둔 주어-동사 수일치",
+      "temptingBecause": "주어 핵 memories와 동사 사이가 길고, 수식어구 내 단수 명사 'the time'이 가짜 주어로 작동하여 단수 is가 자연스러워 보인다",
+      "decisiveFlaw": "주어부 핵은 복수 memories이므로 are여야 한다. is→are로 교정하면 정확히 원문이 복원되는 최소대립쌍이다. 단, 직후의 복수 보어 'those'가 'is those'라는 국소 위화감을 만들어 전체 주어 분석 없이도 탐지가 가능한 점은 함정 깊이를 다소 낮춘다"
+    },
+    {
+      "label": "(E)",
+      "intent": "전치사 + 관계대명사(pied-piping) 적법성 — of which의 성립 근거 판단",
+      "temptingBecause": "'those of which they are most confident'는 형태가 생소하고, of의 귀속처(be confident of)를 재구성해야 하므로 in which/that 등과의 혼동을 유발한다",
+      "decisiveFlaw": "they are confident of those → those of which they are most confident로 정확히 도출되며 선행사 those가 of의 목적어이므로 적법하다 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "E-STYLE",
+      "severity": "minor",
+      "evidence": "오답 해설 (E)의 '관계절의 동사이하 어구', (B)의 '수동의 의미적 관여를 맺고 있으므로' 등 표현이 어색하고 학교문법 표준 용어에서 벗어난 문체다. 내용 자체는 사실과 일치한다."
+    },
+    {
+      "code": "E-ATTRACTOR-CHOICE",
+      "severity": "minor",
+      "evidence": "본 해설이 지목한 가짜 주어 'the time'(단수)은 타당한 함정 설명이나, 동사 직전 최근접 명사는 attacks(복수)여서 근접성 함정으로는 오히려 are를 지지한다. 함정 서술이 틀린 것은 아니지만 함정 구조가 이중적이라는 점은 언급되지 않았다."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 유일 변형은 (D) are→is의 최소대립쌍이며 교정 시 원문이 정확히 복원된다. 5개 밑줄이 각각 what/분사 태/진주어 that/수일치/of which라는 상이한 포인트를 겨냥하고 모든 오답에 사실적 해설이 존재한다. 다만 (A)(C)(E)가 pointCode 'b'로 묶여 관계사·접속사 계열에 편중되고, (C) 'it is true that'은 관용도가 높아 즉시 소거에 가깝다. 정답 (D)는 'is + those(복수 보어)'라는 국소 단서로 전체 주어 파싱 없이도 탐지될 수 있어 함정 깊이가 INTERMEDIATE 상한보다는 중간 수준 — 요청 난이도 INTERMEDIATE와는 정합. 합계 18로 A 기준(21)에 미달, 모든 C가 3 이상이고 V 전부 통과이므로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

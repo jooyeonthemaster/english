@@ -1,0 +1,35 @@
+{
+  "pid": "P022",
+  "answer": "D",
+  "multipleDefensible": false,
+  "defensibleLabels": ["D"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'learn how long the shortest war ... lasted' is an indirect question: 'how long' is the fronted duration adverbial of 'lasted' and the embedded clause correctly keeps declarative S+V order. Grammatical."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'choosing who the nation's leader would be' embeds a wh-clause where the wh-word is the predicate complement of copular 'would be' ('the leader would be X'). Nominative 'who' is the standard form for a copular complement (and the unmarked modern choice regardless). Grammatical."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'ordered Zanzibar's new leader to step down' instantiates the licensed pattern order + object + to-infinitive. Grammatical."
+    },
+    {
+      "label": "D",
+      "verdict": "incorrect (the answer)",
+      "reason": "As a finite verb, 'forced' would coordinate with 'killed' ('it killed ..., forced ...') via a bare comma with no conjunction; the sentence's only 'and' is already consumed coordinating the two small-clause complements of 'forced' ('the new leader to flee' and 'the country to immediately surrender' — the latter is NP + to-infinitive and can only be a complement of 'forced', never a third top-level VP conjunct). So the top-level VP coordination is asyndetic and ungrammatical. Alternative rescues fail: a reduced relative on 'Zanzibaris' would need a subject-gap -ing form ('forcing') and is semantically absurd (the victims forcing the leader to flee); a passive-participle reading ('Zanzibaris forced to flee') is blocked because 'forced' governs its own object 'the new leader'. The required form is the resultative participle 'forcing', matching 'quickly destroying' earlier in the passage."
+    },
+    {
+      "label": "E",
+      "verdict": "correct",
+      "reason": "'to immediately surrender' is a split infinitive inside the parallel complement structure 'forc(ing) the new leader to flee and the country to (immediately) surrender'. Split infinitives are fully acceptable in modern English and are not treated as errors; the small-clause parallelism is intact. Grammatical."
+    }
+  ],
+  "note": "Unique defensible answer is (D): 'forced' must be the participle 'forcing' to attach as a resultative adjunct; otherwise the sentence exhibits asyndetic (conjunction-less) coordination of two finite VPs, which no alternative parse (reduced relative, passive participle, three-item list) can repair. All other underlines are formally licensed. Lens: grammarian/logician blind solve; no answer key consulted."
+}

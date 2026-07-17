@@ -1,0 +1,64 @@
+{
+  "pid": "P017",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-circularity",
+      "severity": "minor",
+      "evidence": "해설 첫 문장 '글의 첫 문장에서 ... 하루 중 적절한 시간에 적절한 일을 하는 것이라고 설명합니다'는 빈칸으로 가려진 원문 내용을 학생에게 보이는 것처럼 서술한다. 정답을 넣은 완성문 기준으로는 사실이므로 V4 실패는 아니나, 근거 제시가 다소 순환적이다. 실제 결정 근거(본문 전체의 신체리듬-업무 배치 조언)는 바로 다음 문장에 정확히 제시되어 있다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "actor/scope shift — 개인 리듬 원칙을 팀원과의 일정 동기화로 치환",
+      "temptingBecause": "'Use the same principle in planning activities for your team'가 팀을 직접 언급하고, 'scheduling appointments'도 협업 뉘앙스를 준다.",
+      "decisiveFlaw": "본문은 'respect their own body rhythms'와 'there are those who differ'로 개인차 존중을 강조한다. 팀원들과 루틴을 동기화하는 것은 개인 리듬 존중 원칙과 정면으로 충돌한다."
+    },
+    {
+      "label": "2",
+      "intent": "overgeneralization/absolutization — 아침형 예시를 무조건 규칙으로 절대화",
+      "temptingBecause": "'If you have lots of energy early in the morning ... schedule difficult activities'와 'most people are far more productive in the morning'이 표면적으로 겹친다.",
+      "decisiveFlaw": "'all ... at dawn without fail'의 절대 표현이 조건문('If you have ...')과 마지막 문장의 예외('hit their stride later in the day')에 의해 명시적으로 반박된다."
+    },
+    {
+      "label": "3",
+      "intent": "purpose narrowing / condition loss — 에너지 관찰의 목적을 휴식 결정으로만 축소",
+      "temptingBecause": "'pay attention to how your energy level ebbs and flows'와 'Schedule intervals of productive time and breaks'가 모두 본문에 실재한다.",
+      "decisiveFlaw": "'solely'가 결정적 결함이다. 에너지 관찰의 1차 목적은 어려운 활동을 정점 시간대에 배치하는 것이며 휴식은 부수 요소다."
+    },
+    {
+      "label": "4",
+      "intent": "detail elevation / half-truth — 지엽(휴식)을 전체 요지로 격상",
+      "temptingBecause": "'Schedule intervals of productive time and breaks'와 'scheduling appointments'가 휴식·회의 소재의 앵커를 제공한다.",
+      "decisiveFlaw": "본문에서 휴식은 'so that you get the most from people'이라는 생산성 수단으로만 등장하며, 휴식 연장을 우선하라는 주장은 어디에도 없다. 요지는 업무-에너지 정점의 결합이다."
+    },
+    {
+      "label": "5",
+      "intent": "정답 — source span 'do the right thing at the right time of day'의 정확한 추상화",
+      "temptingBecause": "정답이므로 해당 없음. right thing→critical tasks, right time→peak periods 패러프레이즈.",
+      "decisiveFlaw": "없음. 본문 전 문장(신체리듬 파악→정점 시간대에 어려운 활동 배치→개인차 존중)이 일관되게 지지하는 유일 정답."
+    }
+  ],
+  "explanationIssues": [
+    "해설 도입부가 빈칸으로 가려진 원문 내용을 '글의 첫 문장에서 설명합니다'라고 기술하여 근거 제시가 순환적으로 읽힐 수 있음(사실 오류는 아님, minor).",
+    "오답 4 해설의 '회의 사이에'는 선지의 'between meetings'와 대응하나, 본문의 실제 표현은 'scheduling appointments'이므로 앵커가 약간 느슨함(minor)."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "모든 V 통과. 정답 5는 유일하며 다섯 선지 모두 'is to + 동사원형' 슬롯에 문법적으로 들어가 문법 탈락 선지가 없다(RUBRIC §D 슬롯 조건 충족). 오답 4종이 서로 다른 함정(actor shift/절대화/목적 축소/지엽 격상)을 쓰는 점은 우수하나, ②의 'all/without fail'과 ③의 'solely' 같은 절대어 때문에 훈련된 학생은 두 선지를 어휘 단서만으로 소거할 수 있어 C3=2. 또한 정답 5만 극단 한정어가 없는 선지라는 약한 누출이 있어 C4=3. 요청 난이도 INTERMEDIATE에는 사고 단계(본문 종합→첫 문장 패러프레이즈 매칭)가 잘 부합(C5=3). 합계 17, 최저 2 → B(작은 수정으로 출하 가능: ②③의 절대어를 완화하고 ④의 앵커를 본문 표현에 맞추면 C3·C4 개선 여지). KILLER 요청이 아니므로 killerConditionsMet=false."
+}

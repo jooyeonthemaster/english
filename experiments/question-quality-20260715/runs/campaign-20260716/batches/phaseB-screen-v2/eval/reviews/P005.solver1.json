@@ -1,0 +1,35 @@
+{
+  "pid": "P005",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "Although절의 주어 cyberspace는 단수 불가산 명사이므로 단수 동사 involves가 옳다. 목적어 'imaginary characters and events of a kind and magnitude not seen before'와의 결합도 자연스럽다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'cave drawings made by our Stone Age ancestors'는 축약 관계절(which were made)의 과거분사. drawings는 그려지는 대상이므로 수동 의미의 made가 옳다. making으로 바꾸면 능동이 되어 비문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "주어 cyberspace(단수)에 대해 does not offer로 수일치가 옳고, 'In this sense' 이하 논지(덜 발달된 가상현실은 늘 존재했으므로 완전히 새로운 차원은 아니다)와 의미상 정합한다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "wrong (정답)",
+      "reason": "새 절의 주어는 단수 추상명사 'this interactivity' 하나뿐이므로 have made는 수일치 위반 — has made여야 한다. 앞의 'its interactive nature and this interactivity'를 병렬 복수 주어로 읽어 have를 정당화하려는 대안 해석을 시도했으나, 'What is new about cyberspace is its interactive nature'가 완결된 절이고 and 뒤에 새 절이 시작되므로 병렬 주어 해석은 성립하지 않는다. 도치·집합명사·가정법 등 have를 살릴 다른 경로도 없다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "선행사 a space(장소) 뒤에 완전한 절 'real people have actual interactions with other real people'이 이어지므로 관계부사 where가 옳다. which였다면 틀렸을 자리로, 최상위권이 가장 오래 검토하게 되는 매력적 미끼이지만 정문이다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 수일치 문항의 전형. (D)의 have made는 주어-동사 거리가 짧아 오히려 쉽게 잡히며, 시간을 끄는 미끼는 (E) where(완전절 확인 필요)와 (B) made(수동 분사 확인)이다. (D)를 정문으로 만들 수 있는 대안 해석을 적극 탐색했으나 전부 기각 — 정답이 (D) 하나로 깨끗하게 수렴하는 건전한 문항."
+}

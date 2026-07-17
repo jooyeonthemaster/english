@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=b  (C):ANS=c  (D):dec=e  (E):dec=a",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 43,
+        "relPos": 0.055,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 125,
+        "relPos": 0.159,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 356,
+        "relPos": 0.452,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 578,
+        "relPos": 0.734,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.734,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "reaching",
+        "isError": false,
+        "correction": "reaching",
+        "errorExpression": "reaching",
+        "surroundingText": "We tend to go long periods of time without reaching out to the people we know.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "correction": "that",
+        "errorExpression": "that",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "hoping",
+        "isError": true,
+        "correction": "hoping",
+        "errorExpression": "hoped",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "kept up",
+        "isError": false,
+        "correction": "kept up",
+        "errorExpression": "kept up",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "shouldn't bother",
+        "isError": false,
+        "correction": "shouldn't bother",
+        "errorExpression": "shouldn't bother",
+        "surroundingText": "This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch.",
+        "pointCode": "a"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "reaching"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "hoped"
+      },
+      {
+        "label": "(D)",
+        "text": "kept up"
+      },
+      {
+        "label": "(E)",
+        "text": "shouldn't bother"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 'without' 뒤에 동명사 'reaching'이 목적어로 잘 쓰였습니다.",
+      "(B)": "주격 관계대명사 'that'이 선행사 'the distance'를 수식하며 뒤에 'has formed'라는 동사가 이어지는 알맞은 구조입니다.",
+      "(D)": "주어 'relationships'가 유지되는 대상이므로 수동태 'are kept up'을 사용하는 것이 문맥상 적절합니다.",
+      "(E)": "조동사 'shouldn't' 뒤에 동사원형 'bother'가 왔으며, '~하는 데 신경 쓰지 말아야 한다'는 의미로 바르게 쓰였습니다."
+    },
+    "explanation": "정답인 (C)가 포함된 문장의 본동사는 'call'이며, 뒤에 접속사 없이 컴마가 찍힌 후 뒤의 문장 내용(that절)을 수행하는 상황을 묘사하고 있습니다. 따라서 주절의 주어인 'We(우리)'가 뒤의 행위를 능동적으로 수행하는 분사구문을 써야 하므로, 과거분사인 'hoped'가 아닌 현재분사 'hoping'을 써야 합니다. 정동사와 준동사의 자리를 구분하는 것은 수능 어법의 기본입니다.",
+    "keyPoints": [
+      "(C) 정동사 vs 준동사 — 문장의 본동사 유무 확인 후 분사구문 여부 판정",
+      "(A) 전치사 vs 접속사 — 전치사 뒤에 오는 동명사 및 관용 표현 쓰임",
+      "(B) 관계대명사 vs 접속사 — 관계대명사 that의 격과 선행사 수식 관계"
+    ],
+    "tags": [
+      "수능어법",
+      "분사구문",
+      "정동사준동사",
+      "관계대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without __(A) reaching__ out to the people we know. Then, we suddenly take notice of the distance __(B) that__ has formed and we scramble to make repairs. We call people we haven't spoken to in ages, __(C) hoped__ that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't __(D) kept up__ with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you __(E) shouldn't bother__ calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results."
+  }
+}

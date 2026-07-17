@@ -1,0 +1,35 @@
+{
+  "pid": "P020",
+  "answer": "2",
+  "multipleDefensible": false,
+  "defensibleLabels": ["2"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "wrong",
+      "reason": "'boosting physical stamina through a healthy morning meal' — 지문 어디에도 식사·체력 관련 내용이 없다. '아침에 에너지가 높다'는 표면 단서만 차용한 무관 선지. seam(the habit of + 동명사)은 성립하지만 논리적 근거 전무."
+    },
+    {
+      "label": "2",
+      "verdict": "correct",
+      "reason": "'tackling the most challenging issues as the very first task' — 결정적 근거는 'So for me, it'll always be the first thing I get done'(불쾌한 과제를 미루면 하루 종일 감정 에너지를 낭비하므로 가장 먼저 처리). 도입부의 '에너지 수준과 과제 매칭'+'나는 아침에 에너지가 높다'와 결합해 '어려운 일을 맨 먼저'라는 습관(eat-the-frog)이 유일하게 정합. 마지막 문장(아침형이 아니면 어려운 일을 늦게 배치하라)도 '어려운 일 = 고에너지 시간대'라는 동일 원리의 역방향 적용으로 뒷받침. the habit of + 동명사 seam도 자연스럽다."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'practicing and rehearsing difficult social scenarios all day' — 가장 매력적인 오답. 'overthink different scenarios and conversations that haven't happened yet'의 어휘를 그대로 재활용해 표면 일치로 끌어당긴다. 실제로 잠시 끌렸으나, 지문에서 시나리오 반추는 습관이 해결하려는 '문제'(에너지 낭비)이지 습관 자체가 아니며, 'all day'는 'the first thing I get done'과 정면 충돌한다. 습관의 내용은 걱정을 연장하는 게 아니라 즉시 처리해 끝내는 것."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'delaying unpleasant emails until the end of the working hours' — 정답의 정반대(anti-habit). 지문은 미루기(procrastinate)가 감정 에너지 낭비를 낳는다고 명시. 마지막 문장 'schedule your difficult work later in the day'만 대충 읽은 수험생을 노린 미끼지만, 그 조언은 '아침형이 아닌 사람'에게 해당하고 필자는 아침형(I generally wake up energized)이므로 적용 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'writing down all potential solutions and schedules on a list' — 리스트 작성·기록 행위는 지문에 전혀 등장하지 않는다. 생산성 글에서 그럴듯하게 들리는 일반 상식형 오답일 뿐, 'the first thing I get done'과의 연결 고리가 없다."
+    }
+  ],
+  "note": "블라인드 풀이. 정답은 2로 명확히 단일 수렴. 빈칸 뒤 'So for me, it'll always be the first thing I get done'이 사실상 정답을 재진술하는 강한 장거리 단서라 최상위권에게는 평이한 편. 매력 오답 서열: 3(어휘 표면 재활용) > 4(마지막 문장 오독 유도) > 5 > 1. 다만 3·4 모두 지문 논리('미루기/반추 = 낭비')와 정면 충돌해 정독 시 소거가 확실하다. 모든 선지가 동명사구로 the habit of 뒤 seam은 균질."
+}

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "campaign-v6-connectivity-pilot-v6-system-independent-audit-v1",
+  "subject": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v6",
+  "scope": "NON_OBSERVER_SYSTEM_BOUNDARY_ONLY",
+  "verdict": "FAIL_BLOCKERS",
+  "executionAuthorityGranted": false,
+  "freezeAuthorityGranted": false,
+  "providerAuthorityGranted": false,
+  "modelAuthorityGranted": false,
+  "resultAuthorityGranted": false,
+  "blockerCodes": [
+    "S1_PRIVATE_RUN_ANCESTOR_DIRECTORY_ENTRY_NOT_DURABLE",
+    "S2_AUTHOR_AND_COMPILER_TSX_TRANSFORMER_UNSEALED",
+    "S3_OPERATOR_BOOTSTRAP_PRELOAD_ENVIRONMENT_UNSEALED",
+    "S4_CASE_ALIAS_ENVIRONMENT_POLICY_BYPASS",
+    "S5_DEPLOYED_NODE_RUNTIME_PARITY_UNBOUND",
+    "S6_NO_CURRENT_FROZEN_SUBJECT_OR_MANIFEST"
+  ],
+  "matrix": {
+    "total": 388,
+    "passed": 388,
+    "failed": 0,
+    "independentOfAuthorTests": true
+  },
+  "subjectBinding": {
+    "exactNonObserverTopLevelFiles": 36,
+    "snapshotSha256": "e70ea9adb77a75a7034e1804bd569b70f057506a7395d9533ba3bcb36287cb85",
+    "subjectManifest": "SUBJECT.sha256",
+    "excludedBehavioralAuthority": [
+      "offline.test.ts",
+      "strict-json-observer.ts"
+    ]
+  },
+  "requiredSuccessorCorrections": [
+    "fsync the exact privateRoot after creating runsRoot and fsync the exact runsRoot after creating runRoot before claiming the reservation marker survives a crash",
+    "seal and independently attest every TypeScript execution transformer used by author build and isolated compiler, or replace those paths with a plain-Node independently derivable build",
+    "launch the operator from a trusted exact-environment bootstrap that prevents preloads before module evaluation",
+    "normalize forbidden environment names case-insensitively and reject alias spellings before any controlled child is launched",
+    "bind a tracked production/deployment Node runtime contract; ignored local project metadata is not parity authority",
+    "materialize and seal a successor manifest, frozen bundles, closure artifacts, and exact Node runtime only after the preceding blockers close"
+  ],
+  "accessCounters": {
+    "network": 0,
+    "metadata": 0,
+    "provider": 0,
+    "model": 0,
+    "api": 0,
+    "database": 0,
+    "credentials": 0,
+    "subjectPrivateReads": 0,
+    "subjectPrivateWrites": 0,
+    "globalLedgerReads": 0,
+    "globalLedgerWrites": 0,
+    "subjectWrites": 0,
+    "freezeWrites": 0
+  }
+}

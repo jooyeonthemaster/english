@@ -1,0 +1,77 @@
+{
+  "pid": "P018",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-framing",
+      "severity": "minor",
+      "evidence": "해설 마지막 문장 '주어 뒤 조동사와 연결되는 진짜 동사자리 파악이 핵심입니다'는 병렬(either A or B) 포인트를 정동사 자리 문제처럼 프레이밍한다. 오분석까지는 아니어서 V4 실패로 보지 않으나 표현이 느슨하다."
+    },
+    {
+      "code": "V5-minor-keypoints-coverage",
+      "severity": "minor",
+      "evidence": "keyPoints가 (E)(B)(C)만 다루고 (A) 분사 수식·(D) to부정사 포인트는 누락. 필드 간 모순은 없으므로 V5 통과, 완전성 관점의 사소한 결손."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 2,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "명사 후치수식 과거분사(관계절 축약) vs 정동사 혼동",
+      "temptingBecause": "주어부 초입 'mistakes made by organizations'에서 made를 문장의 정동사로 오인하면 뒤의 is와 충돌한다고 착각할 수 있다",
+      "decisiveFlaw": "mistakes (which were) made by ~ 의 수동 축약 수식으로 완전히 문법적 — 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "one of + 복수명사 긴 주어의 수일치",
+      "temptingBecause": "동사 직전 명사가 'social media'이고 주어가 매우 길어 복수 mistakes/organizations에 이끌려 are로 고치고 싶어진다",
+      "decisiveFlaw": "핵심 주어는 단수 One이므로 is가 정확 — 전형적 강력 디코이"
+    },
+    {
+      "label": "(C)",
+      "intent": "동명사구 주어에 대한 정동사(단수) 판단",
+      "temptingBecause": "that절 안에서 creating을 분사로 읽으면 begins의 주어를 못 찾거나, program에 이끌려 수일치를 재점검하게 된다",
+      "decisiveFlaw": "동명사구 'creating a social media program'이 단수 취급 주어 — begins 정확"
+    },
+    {
+      "label": "(D)",
+      "intent": "명사 need를 수식하는 형용사적 to부정사(to + 동사원형)",
+      "temptingBecause": "need to 뒤 형태(managing 등) 고민을 유도하려는 자리이나 실질적 유인력이 낮다",
+      "decisiveFlaw": "need to-V는 확립된 구문으로 즉시 소거됨 — 필러에 가까운 약한 디코이"
+    },
+    {
+      "label": "(E)",
+      "intent": "정답: must 뒤 either A or B 병렬 — 동사원형 solve와 병치되어야 하는 자리",
+      "temptingBecause": "'resulting in'이 분사구문/연쇄로 매우 흔한 표현이라 국소적으로 자연스럽게 읽힌다",
+      "decisiveFlaw": "either가 must의 두 동사원형 VP를 묶으므로 resulting은 무주지 비문 — result로 교정하면 정확히 원문 복원(최소대립쌍)"
+    }
+  ],
+  "explanationIssues": [
+    "오답 해설이 각 디코이의 '왜 정답처럼 보이는가(why tempting)'를 제시하지 않고 '왜 맞는가'만 설명 — KILLER §C 3항 요건 미충족",
+    "정답 해설 말미의 '진짜 동사자리 파악' 프레이밍이 병렬 포인트 서술로는 부정확(오류는 아님)"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allUnderlinesHavePointTemptingWhy": false,
+    "notImmediatelyVisible": false,
+    "noShadowingDecoy": true,
+    "reason": "명시적 either 단서가 병렬 오류를 빠르게 노출해 '구조를 읽어야 즉시 드러나지 않는다' 요건에 미달하고, 디코이별 why-tempting 설명이 부재"
+  },
+  "grade": "B",
+  "notes": "모든 V 통과. 유일 오류 (E) resulting→result는 원문 정확 복원되는 최소대립쌍이고 (A)~(D)는 독립 검증 결과 모두 문법적. 디코이 (B)(C)는 실제 판단을 요구하는 양질의 함정이나 (D)는 필러 수준. 요청 난이도 KILLER 대비 either...or 병렬은 명시적 표지가 있는 중상 난도 포인트라 C5=2(난이도 미달). 공예 합계 17, 최저 2 → B. KILLER 추가 조건은 why-tempting 부재와 즉시성 문제로 미충족."
+}

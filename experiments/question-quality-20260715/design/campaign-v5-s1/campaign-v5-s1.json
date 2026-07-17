@@ -1,0 +1,355 @@
+{
+  "schemaVersion": "question-quality-s1-campaign-v5-public-v1",
+  "artifactId": "campaign-v5-s1",
+  "status": "DESIGN_COMPLETE_EXECUTION_BLOCKED",
+  "designDate": "2026-07-15",
+  "estimand": "Bounded matched single-shot prompt/schema mechanism screen; not production-topology parity and not an efficacy claim at six passage clusters.",
+  "upstream": {
+    "sourceClosureSha256": "6f090968109ec26e8301cb89df726fae570e73ad7c3a1528ef8e4bcc492914a2",
+    "files": [
+      {
+        "role": "blank_reconciliation_manifest",
+        "path": "experiments/question-quality-20260715/corpus/cross-type-blank-source-frame-v2/RECONCILIATION-MANIFEST.sha256",
+        "bytes": 1379,
+        "sha256": "b3b9fefd73c4e33bae1909aeb783910d9601a170848f3629852ea1a21f94e27f"
+      },
+      {
+        "role": "blank_reconciliation_summary",
+        "path": "experiments/question-quality-20260715/corpus/cross-type-blank-source-frame-v2/reviewer-reconciliation-summary.json",
+        "bytes": 4008,
+        "sha256": "404b58f8a992e96853aa3489eb581ee4f4e301aa0f69e4f2bdcb8331140a4e3d"
+      },
+      {
+        "role": "grammar_reconciliation_manifest",
+        "path": "experiments/question-quality-20260715/corpus/cross-type-grammar-source-frame-v2/RECONCILIATION-MANIFEST.sha256",
+        "bytes": 375,
+        "sha256": "ce735aed8eb7f9174e2df7b57ec8de2d0e1c8a110e697a6a62d36214de059af9"
+      },
+      {
+        "role": "grammar_reconciliation_summary",
+        "path": "experiments/question-quality-20260715/corpus/cross-type-grammar-source-frame-v2/reviewer-reconciliation-summary.json",
+        "bytes": 8993,
+        "sha256": "d4dd65eaab8c7da465a3cd9b32ed40f2d87e4a774454832c83d3ac9716b186fe"
+      },
+      {
+        "role": "history_manifest",
+        "path": "experiments/question-quality-20260715/corpus/selected-source-history-v1/runs/baseline-20260715-0745-MANIFEST.sha256",
+        "bytes": 682,
+        "sha256": "8239f106e6164419c06e572a2e12065bf43baae32e80ccd37553529e2b403632"
+      },
+      {
+        "role": "history_public",
+        "path": "experiments/question-quality-20260715/corpus/selected-source-history-v1/runs/baseline-20260715-0745-public.json",
+        "bytes": 2977,
+        "sha256": "ba997edd6ec0b24b1a350c2e42529a9c273193bc79c79f82a07b3e6364fa3c5c"
+      },
+      {
+        "role": "profile_design_manifest",
+        "path": "experiments/question-quality-20260715/design/prompt-profiles-v1/manifest.json",
+        "bytes": 1648,
+        "sha256": "c801d8a3babbafe3a0234bb652db9c269d44f15d65c7a85b2aeead9b1570426a"
+      },
+      {
+        "role": "profile_integration_audit_manifest",
+        "path": "experiments/question-quality-20260715/reviews/prompt-profile-integration-audit-v2/MANIFEST.sha256",
+        "bytes": 654,
+        "sha256": "481031ce4fd6023682a6d986c5030ac171f9f4a7fd7c578944824b7a2527b60e"
+      },
+      {
+        "role": "profile_integration_audit_results",
+        "path": "experiments/question-quality-20260715/reviews/prompt-profile-integration-audit-v2/results.json",
+        "bytes": 2568,
+        "sha256": "a4e9477a3438ff0e405c996a42a28acae0fe30d42937cd7123a3ebdf0109e819"
+      },
+      {
+        "role": "production_fast_callsite",
+        "path": "src/app/api/workbench/ai-jobs/question-generation/fast/route.ts",
+        "bytes": 27668,
+        "sha256": "b8c8181691f897bfc7cc782d50efe194c2bbda91aded20a81c3ba4ed548a7b4e"
+      },
+      {
+        "role": "production_trigger_callsite",
+        "path": "src/trigger/workbench-question-generation.ts",
+        "bytes": 18297,
+        "sha256": "cfc44b01c039c095759ffa1204f8e77b9cf5d62e6b1386ba9ff8d2a6beaa66be"
+      },
+      {
+        "role": "difficulty_constants",
+        "path": "src/app/api/ai/generate-questions-auto/_lib/constants.ts",
+        "bytes": 6744,
+        "sha256": "a58a825d8d768b8df81efdca7eccace5631bbd71ac2d61e817a73ef3028bcc7b"
+      },
+      {
+        "role": "type_setting_dispatch",
+        "path": "src/lib/question-type-generation-settings/index.ts",
+        "bytes": 6555,
+        "sha256": "fd05afade45fee9ff933dbaba749dd25af05a37732193b7b5aa1438bc5e3be4d"
+      },
+      {
+        "role": "type_setting_grammar",
+        "path": "src/lib/question-type-generation-settings/grammar.ts",
+        "bytes": 3669,
+        "sha256": "49ba3d1f8a417388308eb6ec0986e89e881540476bc4cdcb7f3a8a0fe4792566"
+      },
+      {
+        "role": "type_setting_blank",
+        "path": "src/lib/question-type-generation-settings/blank-inference.ts",
+        "bytes": 4213,
+        "sha256": "5f9d95d393073c1fc33d6ce8cf612bcfe6a27e4b7d43180a54c1841d941589c8"
+      },
+      {
+        "role": "research_profiles",
+        "path": "src/lib/question-generation-research-profiles.ts",
+        "bytes": 29339,
+        "sha256": "6fe9d5b81e0e18e4cc18f6483d340cc738eda424f580132ad980aa37520e8c6f"
+      },
+      {
+        "role": "production_atlas_entry",
+        "path": "src/lib/atlas-ai.ts",
+        "bytes": 17718,
+        "sha256": "c69d9115e834b9a379c80791653e3bd51aecef117dca3367391460aa2ff60922"
+      },
+      {
+        "role": "production_assignment_fetch_boundary",
+        "path": "src/lib/atlas-production-assignment-fetch-boundary.ts",
+        "bytes": 25368,
+        "sha256": "aa042ea9181f6b5eb256bd4361738cc948c1bc41f27866b75bb9f2728a6b36d8"
+      },
+      {
+        "role": "research_fetch_boundary",
+        "path": "src/lib/atlas-research-fetch-boundary.ts",
+        "bytes": 50778,
+        "sha256": "7e20acd2bd45a7e8141b66c1a58c347e6bf2e24cfe0b69710bd2327db7d84a7d"
+      },
+      {
+        "role": "fetch_scope_coordinator",
+        "path": "src/lib/atlas-fetch-scope-coordinator.ts",
+        "bytes": 588,
+        "sha256": "fd58c3e226279045f9f53ee56d320cfb2a0739387ebe1abfbc1d8afa750ca874"
+      },
+      {
+        "role": "assignment_budget_runtime",
+        "path": "src/lib/question-generation-assignment-budget.ts",
+        "bytes": 18719,
+        "sha256": "7effc7b7fc954f5b84936a32fa28302eec08927e9a255cee9f6d5fec20ef4f48"
+      },
+      {
+        "role": "assignment_budget_policy",
+        "path": "src/lib/question-generation-assignment-budget-policy.ts",
+        "bytes": 20830,
+        "sha256": "2d0674e224fa182b0d16bfa8b8443b65987763c3022340bb9e27db56934dda85"
+      },
+      {
+        "role": "research_runtime",
+        "path": "src/lib/question-generation-research-runtime.ts",
+        "bytes": 7447,
+        "sha256": "727905b19ba7003a0f7983310c65492a13f28257720c921be6fa60319009d10b"
+      },
+      {
+        "role": "generation_llm_wire",
+        "path": "src/lib/question-generation-llm.ts",
+        "bytes": 42254,
+        "sha256": "90776f0304ef9fddcbb60a92563904f8ce3213b26036d8357b3eeedb7ccf5c46"
+      },
+      {
+        "role": "production_generation_engine",
+        "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts",
+        "bytes": 106853,
+        "sha256": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2"
+      },
+      {
+        "role": "research_phase_runner",
+        "path": "experiments/question-quality-20260715/harness/question-generation-phase-c-runner.ts",
+        "bytes": 3520,
+        "sha256": "584016b73215427ac3ebf2d30bb1ad3d3d3a179b81f783e201da36f9d67f56cb"
+      },
+      {
+        "role": "research_callsite_adapter",
+        "path": "experiments/question-quality-20260715/harness/question-generation-callsite-adapter.ts",
+        "bytes": 19747,
+        "sha256": "658a08f5d0d61fb217e9da2d6d76f523e6c0c332c37e81b340c241f4d92d75f6"
+      },
+      {
+        "role": "content_normalization_source",
+        "path": "experiments/question-quality-20260715/corpus/selector-core.ts",
+        "bytes": 33096,
+        "sha256": "a58a86533a06f17946e6abbbb985e9cc51caddcecfd83c5b810251c0f2104c35"
+      }
+    ],
+    "profileIntegrationVerdict": "PASS_LOCAL_INTEGRATION",
+    "profileCampaignExecutionVerdict": "NO_GO",
+    "historyBaseline": {
+      "label": "baseline-20260715-0745",
+      "selectedRows": 76,
+      "historyCleanRows": 76,
+      "exposedRows": 0,
+      "exactDevelopmentRowsJoined": 12,
+      "publicArtifactSha256": "ba997edd6ec0b24b1a350c2e42529a9c273193bc79c79f82a07b3e6364fa3c5c",
+      "publicManifestSha256": "8239f106e6164419c06e572a2e12065bf43baae32e80ccd37553529e2b403632"
+    },
+    "sourceReconciliation": {
+      "grammar": {
+        "developmentDualPassRows": 6,
+        "publicManifestSha256": "ce735aed8eb7f9174e2df7b57ec8de2d0e1c8a110e697a6a62d36214de059af9"
+      },
+      "blank": {
+        "developmentDualPassRows": 6,
+        "publicManifestSha256": "b3b9fefd73c4e33bae1909aeb783910d9601a170848f3629852ea1a21f94e27f"
+      },
+      "selectedPassagesContentDisjoint": true,
+      "exactPassageBytesStoredOnlyInPrivateQueue": true
+    }
+  },
+  "fixedWorkbenchInputContract": {
+    "derivation": "Current fast and Trigger callsites both pass Korean school/grade labels and DIFF_DESCRIPTION[diffLabel]. S1 fixes the exact wire-tested high-school/grade-2 values across every paired cell.",
+    "schoolType": "고등학교",
+    "gradeInfo": "2학년",
+    "difficulties": [
+      "INTERMEDIATE",
+      "KILLER"
+    ],
+    "difficultyInstructionSource": "src/app/api/ai/generate-questions-auto/_lib/constants.ts::DIFF_DESCRIPTION",
+    "emptyTeacherIntentBlock": true,
+    "emptyAnalysisContext": true,
+    "emptyCustomPrompt": true,
+    "emptyTargetPoints": true,
+    "typeSettingsOmitted": true,
+    "koPassageKindOmitted": true
+  },
+  "queue": {
+    "seed": "question-quality-s1-campaign-v5-20260715-v1",
+    "order": "Global ascending SHA-256(seed|order|type|private-frame|profile|plan|difficulty), then assignment key; frozen before outcomes.",
+    "privateQueueFile": "private/s1-queue-v5.json",
+    "privateQueueFileBytes": 422141,
+    "privateQueueFileSha256": "ba2e64ea9989d594147019c3cf88b066266bbeff11eefb74cb8299732af52583",
+    "privateQueueSemanticSha256": "c120ebcc5aea5f83c1c9e97447c2913b0ebf76932e2a0cf91d2e10887a86225e",
+    "distinctDevelopmentPassages": 12,
+    "assignmentRows": 180,
+    "candidateOpportunities": 180,
+    "physicalFetchCap": 180,
+    "semanticFullQuestionCap": 180,
+    "candidateBudgetDebitRule": "A started assignment consumes its one global full-question opportunity whether it succeeds, times out, fails parsing, or is rejected.",
+    "replacementOrTopUpAllowed": false,
+    "retryReplayAllowed": false
+  },
+  "allocation": {
+    "byType": {
+      "GRAMMAR_ERROR": 96,
+      "BLANK_INFERENCE": 84
+    },
+    "grammarFormula": "4 profiles x 2 plans x 2 difficulties x 6 development passages = 96",
+    "blankFormula": "STANDARD 4 profiles x 2 difficulties x 6 = 48; PREMIUM B0/B2/B3 x 2 difficulties x 6 = 36; total 84",
+    "b1PremiumAssignments": 0,
+    "byPlan": {
+      "STANDARD": 96,
+      "PREMIUM": 84
+    },
+    "byDifficulty": {
+      "INTERMEDIATE": 90,
+      "KILLER": 90
+    },
+    "byProfile": {
+      "B0_CURRENT_CONTROL": 24,
+      "B1_TYPE_SCOPED_TAIL": 12,
+      "B2_POSITIVE_COMPACT": 24,
+      "B3_OPTION_INTENT_LEDGER": 24,
+      "G0_CURRENT_CONTROL": 24,
+      "G1_FINAL_CHECKLIST_ABLATION": 24,
+      "G2_POSITIVE_COMPACT": 24,
+      "G3_SITE_CERTIFICATE": 24
+    },
+    "byModel": {
+      "google/gemini-3.1-pro-preview": 84,
+      "google/gemini-3.5-flash": 96
+    },
+    "pairing": "Each admitted type-specific development passage is crossed with every applicable frozen profile-plan-difficulty cell."
+  },
+  "wireAndTopology": {
+    "standardModel": "google/gemini-3.5-flash",
+    "premiumModel": "google/gemini-3.1-pro-preview",
+    "reasoning": {
+      "enabled": false,
+      "effort": "none",
+      "exclude": true
+    },
+    "providerRequireParameters": true,
+    "questionCount": 1,
+    "questionSchemaMinItems": 1,
+    "questionSchemaMaxItems": 1,
+    "maxOutputTokens": {
+      "GRAMMAR_ERROR": 6000,
+      "BLANK_INFERENCE": 4000
+    },
+    "candidateOpportunitiesPerAssignment": 1,
+    "physicalFetchesPerAssignment": 1,
+    "outerAttemptsPerAssignment": 1,
+    "sdkRetriesPerAssignment": 0,
+    "childCandidateStages": 0,
+    "directResearchRunner": "experiments/question-quality-20260715/harness/question-generation-phase-c-runner.ts",
+    "productionParityClaim": false
+  },
+  "costReservation": {
+    "currency": "USD",
+    "frozenPerCallCaps": {
+      "GRAMMAR_ERROR_STANDARD": 0.2,
+      "GRAMMAR_ERROR_PREMIUM": 0.43,
+      "BLANK_INFERENCE_STANDARD": 0.14,
+      "BLANK_INFERENCE_PREMIUM": 0.2
+    },
+    "cellReservations": {
+      "GRAMMAR_ERROR_STANDARD": {
+        "calls": 48,
+        "usd": 9.6
+      },
+      "GRAMMAR_ERROR_PREMIUM": {
+        "calls": 48,
+        "usd": 20.64
+      },
+      "BLANK_INFERENCE_STANDARD": {
+        "calls": 48,
+        "usd": 6.72
+      },
+      "BLANK_INFERENCE_PREMIUM": {
+        "calls": 36,
+        "usd": 7.2
+      }
+    },
+    "totalHardReservationUsd": 44.16,
+    "providerSideHardSpendCeilingRequired": true,
+    "priceSnapshotMaxAgeMinutesAtAdmission": 15,
+    "rule": "Any exact request whose fresh worst-case price exceeds its frozen per-call cap blocks the unopened registry; caps and sample size never auto-rescale."
+  },
+  "executionHolds": {
+    "sourceRights": "BLOCKED_PENDING_DOCUMENTED_PROVIDER_PROCESSING_RIGHTS",
+    "providerPrivacy": "BLOCKED_PENDING_CURRENT_ENDPOINT_RETENTION_PRIVACY_AND_PROVIDER_ALLOWLIST_ATTESTATION",
+    "limitedCredential": "BLOCKED_PENDING_SEPARATE_LIMITED_KEY_AND_PROVIDER_SIDE_HARD_SPEND_CAP_NOT_ABOVE_44_16_USD",
+    "freshPrice": "BLOCKED_PENDING_EXACT_ENDPOINT_PRICE_CAPTURE_WITHIN_15_MINUTES_OF_REGISTRY_ADMISSION",
+    "exactWireRegistry": "BLOCKED_PENDING_MATERIALIZED_180_ROW_CONTROLLER_REGISTRY_AND_EXACT_REQUEST_PREFLIGHT",
+    "independentAudit": "BLOCKED_PENDING_FRESH_INDEPENDENT_REVIEW_OF_V5_PRIVATE_BINDING_PUBLIC_PRIVACY_AND_ADMISSION_ARITHMETIC"
+  },
+  "authorization": {
+    "campaignEligibleAssignments": 0,
+    "generationAuthorized": false,
+    "apiCandidateCount": 0,
+    "globalCandidateLimit": 1000,
+    "thisDesignWouldReserveIfAuthorized": 180
+  },
+  "privacy": {
+    "publicContainsFrameIds": false,
+    "publicContainsRowContentHashes": false,
+    "publicContainsPassageText": false,
+    "publicContainsSourceIdentifiers": false,
+    "publicContainsPerRowSplitMembership": false,
+    "exactQueueGitIgnored": true,
+    "publicContainsOnlyAggregateCountsAndArtifactHashesForPrivateBinding": true
+  },
+  "safety": {
+    "modelApiCalls": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "secretAccesses": 0,
+    "fullQuestionCandidatesGenerated": 0,
+    "apiCandidateCount": 0,
+    "productionFilesEditedByBuilder": 0
+  }
+}

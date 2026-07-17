@@ -1,0 +1,35 @@
+{
+  "pid": "P057",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'If the interview lasts a while' — last는 지속 기간을 나타내는 명사구를 직접 목적어처럼 취한다(lasts an hour / lasts a while). 'a while'은 관사+명사로 정문. 실전에서 'for a while이어야 하지 않나?' 하고 잠깐 끌렸으나, lasts a while은 표준 용법이고 부사 awhile(관사 없음)과의 구별 함정일 뿐이다. 여기서는 관사가 있으므로 명사구로서 문제 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop ...' — 가주어 It + 비교급 보어 + 진주어 to부정사 구조. 비교 대상(녹음기 사용 대비)이 문맥상 명확하며 more efficient는 어법상 정확하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'writing down the key answers ... so that they can ...' — 목적의 so that절. 접속사 that은 완전한 절(they can ...)을 이끌며 정문. so ~ that(정도) 구문과 혼동시키려는 배치이나 여기서는 so that(목적)으로 자연스럽다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'so that they can transcribe easily afterwards' — they의 선행사는 the key answers(핵심 답변들). 답변은 옮겨 적는 행위의 대상이지 주체가 아니므로 수동태 be transcribed가 되어야 한다. 대안 해석으로 중간태(middle construction: 'this recording transcribes easily')를 적극 검토했다: 중간태는 wash/read/sell 등 관습화된 동사에 한정되고, 통상 단순현재로 사물의 내재적 속성을 서술하며 조동사 can과의 결합('can transcribe easily')은 잉여적·비관습적이다. transcribe는 중간태 동사로 확립되어 있지 않아 이 표기는 정문으로 옹호되지 않는다. 어법상 틀린 곳은 (D)."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle' — much는 비교급(easier and quicker) 강조 부사로 적법. very는 비교급 앞에 못 오지만 much는 가능. tough-구문(easy to handle)의 목적어 공백도 the material과 정합."
+    }
+  ],
+  "note": "최상위권 실전 순서: 밑줄 스캔에서 태(voice) 단서인 (D)를 최우선 검증 — 무생물 주어 they(=key answers)+타동사 transcribe 능동은 목적어 부재로 즉시 결함 확인. 매력적 오답 체감: (A)에서 'a while vs awhile/for a while'로 15초가량 끌렸으나 lasts+명사구 기간 표현으로 해소, (E)의 much+비교급도 반사적으로 점검했으나 정문. 중간태 성립 가능성까지 탐색했으나 transcribe는 중간태 관습군이 아니고 can과의 결합도 부자연스러워 (D) 단독 정답으로 수렴. 단일 정답, 논쟁 여지 낮음."
+}

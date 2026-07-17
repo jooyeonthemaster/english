@@ -1,0 +1,35 @@
+{
+  "pid": "P024",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "오답",
+      "reason": "지문의 핵심 논지와 정반대. 독자는 효율적 소통 원리를 '위반(flout)'하는 요소조차 더 높은 소통 목표를 위한 것으로 보고 해석하려 애쓴다고 했다. 작가에게 효율적 소통 원리의 엄격한 준수를 '요구'한다는 것은 hyper-protected cooperative principle의 취지(위반 허용)와 충돌한다. 빈칸 문법 결합(willingness ... to pay attention, to require ...)은 성립하나 의미상 배제."
+    },
+    {
+      "label": "②",
+      "verdict": "정답",
+      "reason": "지문 전체의 요지 재진술. 'We can put up with many obscurities and apparent irrelevancies'(모호함 감내) + 'they struggle to interpret elements ... in the interests of some further communicative goal'(기저의 소통 의도 탐색)를 그대로 압축한다. 'to pay attention, to tolerate ... and seek ...'의 병렬 to부정사 결합도 자연스럽다. 실제 원전(Culler)의 'to explore uncertainties of meaning'과도 방향이 일치한다."
+    },
+    {
+      "label": "③",
+      "verdict": "오답",
+      "reason": "지문이 명시적으로 부정한 내용. 'instead of imagining that the speaker or writer is being uncooperative'라고 하여, 언어적 복잡성을 비협조 신호로 간주하지 '않는' 것이 문학 독서의 특징이라 했다. 정확히 반대 진술이므로 배제. 지문 어휘(complications of language, cooperative)를 재활용해 표면적으로 끌리게 만든 매력적 오답이다."
+    },
+    {
+      "label": "④",
+      "verdict": "오답",
+      "reason": "가장 매력적인 오답. 'institutional label'이 지문에 실제로 등장하고, 라벨이 독자의 신뢰를 뒷받침한다는 점까지는 맞다. 그러나 지문에서 라벨은 해석 노력이 '보상받을 것'이라는 기대를 주어 오히려 독자가 해석에 '더 애쓰게(struggle to interpret)' 만드는 근거다. 해석 노력을 '우회(bypass)'한다는 서술은 인과를 뒤집은 왜곡이며, 빈칸 직전의 'willingness to pay attention'(주의를 기울이려는 자발성)과도 정면 충돌한다. 실전에서 institutional label이라는 어휘 일치 때문에 잠깐 끌렸으나, bypass가 struggle과 모순됨을 확인하고 배제했다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "오답",
+      "reason": "지문 도입부의 선별 과정(published, reviewed, reprinted)을 소재로 한 왜곡. 재판(reprint) 횟수는 문학이 선별을 거쳤다는 배경 설명의 한 요소일 뿐, 독자가 텍스트를 '평가하는 기준'으로 제시된 바 없다. 게다가 빈칸은 독자의 해석 태도(willingness to pay attention)를 이어받는 자리이므로 평가 기준 진술은 문맥 기능상도 부적합. 또한 지문은 literary works를 'other narrative display texts'와 구별하는데 ⑤는 narrative display texts 일반을 평가 대상으로 삼아 범주도 어긋난다."
+    }
+  ],
+  "note": "지문은 Jonathan Culler의 hyper-protected cooperative principle 논의로, 논지 전개가 일관되고 빈칸이 요지 압축 자리에 정확히 놓였다. ②만이 '모호함 감내 + 기저 소통 의도 탐색'이라는 양대 논지를 모두 담는다. 매력적 오답은 ④(지문 어휘 institutional label 재활용, 인과 역전)와 ③(지문 어휘 재활용, 명시적 부정 내용의 긍정 진술). 병렬 구조(to pay attention, to ___)의 문법 결합은 모든 선지에서 성립하므로 변별은 순수하게 의미·논리로 이루어진다. 복수 정답 소지 없음."
+}

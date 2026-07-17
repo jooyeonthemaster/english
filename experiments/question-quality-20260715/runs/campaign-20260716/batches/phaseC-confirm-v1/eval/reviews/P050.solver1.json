@@ -1,0 +1,35 @@
+{
+  "pid": "P050",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "had conceptualized ... and was attempting 병렬: 14세까지 착상을 완료(과거완료)했고 그 시점에 마케팅을 시도 중(과거진행)이라는 시제 조합이 자연스럽다. 'By + 시점' 때문에 had been attempting으로 통일해야 한다는 유혹이 있으나, 과거진행 병치는 정문이다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "would + 동사원형 = 과거의 반복적 습관('~하곤 했다'). Over the course of his inventing career라는 기간 부사구와 정합. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "선행사 the first invention을 받는 목적격 관계대명사 that (sold의 목적어 공백 확인). 선행사에 the first가 붙어 that이 오히려 선호되는 환경. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "with + 명사 + 분사 부대상황 구문에서 patents는 issue(발급하다)의 대상이므로 수동 분사 (being) issued가 필요하다. 능동 현재분사 issuing은 부적절. 대안 해석으로 미국 특허법률 영어의 자동사 용법('the patent issued in 1936')을 적극 검토했으나, 지문 자체가 앞 문장에서 'His first patent was issued...'로 수동태를 사용해 내적 일관성이 수동을 지시하고, 학교문법 기준에서 issue는 타동사로 취급되므로 자동사 해석은 정문 근거로 기각. 어법상 틀림."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "One of + 복수명사(these patents)의 주어 핵은 One이므로 단수 동사 was가 맞다. 직전 복수명사 patents에 이끌려 were를 기대하게 하는 전형적 수일치 함정이나 표기는 정문."
+    }
+  ],
+  "note": "실전 풀이 순서: (E)의 수일치 함정과 (A)의 시제 병렬이 매력적 오답으로 시선을 끌지만 모두 정문으로 판정됨. (D)는 with 분사구문의 태(voice) 판정 문제로, 자동사 issue라는 전문 법률 용법이 이론상 존재하나 지문 내 'was issued' 수동태 사용과 학교문법 관행상 옹호 불가. 정답 후보는 (D) 단일."
+}

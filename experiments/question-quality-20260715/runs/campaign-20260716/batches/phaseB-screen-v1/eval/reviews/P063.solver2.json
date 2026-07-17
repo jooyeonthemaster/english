@@ -1,0 +1,35 @@
+{
+  "pid": "P063",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) them",
+      "verdict": "correct",
+      "reason": "'He presented them with a list of words'에서 them은 앞 문장의 복수 선행사 'a bunch of healthy undergraduates'를 받는 목적격 대명사. 'present + 사람 + with + 사물' 구문의 사람 자리이므로 목적격 복수 them이 형식적으로 정확하다. 대안 해석 불필요 — 어떤 분석에서도 결함 없음."
+    },
+    {
+      "label": "(B) it",
+      "verdict": "correct",
+      "reason": "'create a coherent sentence from it'의 it은 단수 명사구 'a list of words'(핵어 list, 단수)를 지시한다. 문장을 만드는 재료는 '그 목록'이므로 지시 대상 선택도 논리적으로 자연스럽고, 단수 대명사 일치도 성립한다. words를 받으려면 them이어야 한다는 반론이 가능하나, list를 받는 it이 정문이므로 오류로 판정할 수 없다."
+    },
+    {
+      "label": "(C) was",
+      "verdict": "correct",
+      "reason": "'One of the lists was ...'에서 진짜 주어는 One(단수)이고 of the lists는 후치 수식 전치사구다. 근접 명사 lists(복수)에 이끌린 견인 일치(were)가 오히려 오류이며, 단수 동사 was가 규범적으로 옳다."
+    },
+    {
+      "label": "(D) was interested",
+      "verdict": "correct",
+      "reason": "'Bargh was interested in how long it took...'는 'be interested in + 명사절(간접의문문 how long it took...)' 구조. interested는 감정 형용사화된 과거분사로 사람 주어와 결합하는 것이 옳고(interesting이면 오류), 시제(과거)도 서사 전체의 과거 시제와 일치한다. 정문."
+    },
+    {
+      "label": "(E) That",
+      "verdict": "incorrect",
+      "reason": "'That he found was extraordinary'가 정문이려면 (i) That이 접속사로서 완전한 절을 이끌거나 (ii) That이 지시대명사이고 he found가 접촉 관계절이어야 한다. (i) 접속사 that절 분석: found는 타동사인데 목적어가 없어 'he found'는 불완전절 — that은 절 내 공백을 채울 수 없으므로 실패. (ii) 지시대명사 + 축약(접촉) 관계절 분석: 목적어 공백 관계절에서 관계대명사 생략 자체는 가능하지만, 지시대명사 that을 핵으로 하는 경우 표준 영어에서는 'that which he found' 형태로 관계대명사를 반드시 표기해야 하며 'that he found'(핵 that + 무표지 관계절)는 비문이다. 따라서 두 분석 모두 실패. 유일한 정문화 방안은 융합 관계대명사 What(= the thing which)으로 교체하는 것: 'What he found was extraordinary'. 어법상 틀린 밑줄은 (E)."
+    }
+  ],
+  "note": "빈칸 아닌 어법 유형. 각 밑줄의 지배 규칙(선행사 일치, One-of 단수 일치, 감정분사 태, 융합관계사 vs 접속사 that의 완전/불완전절 구분)을 형식적으로 검증한 결과 (E)만이 어떤 대안 해석(접속사절, 지시대명사+접촉 관계절)으로도 구제 불가능한 유일한 비문이다. 나머지 4개는 모두 반박 불가능한 정문으로, 정답이 단일하게 (E)로 수렴한다."
+}

@@ -1,0 +1,6835 @@
+[
+ {
+  "pid": "P001",
+  "itemId": "C-B-A0-09",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-040",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-target-too-wide",
+    "message": "PARAPHRASE blank originalExpression is too broad; choose a compact semantic unit (the head predicate of the sentence) instead of a long clause."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 15,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-NONWORD-TERM",
+    "severity": "major",
+    "evidence": "오답 해설 ①: '본문의 심리적 일입(immerse, become)과 정반대되는…' — '일입'은 이 문맥에서 존재하지 않는 비단어/손상 용어다(표준국어대사전의 '일입(日入)'은 '해가 짐'뿐이며 심리 용어가 아님). 의도된 단어는 '몰입' 또는 '(감정) 이입'으로 추정된다. 학생 노출 해설의 손상 용어는 V4 실패 범주(비단어·손상 용어)에 해당한다."
+   },
+   {
+    "code": "V4-TERMINOLOGY-MINOR",
+    "severity": "minor",
+    "evidence": "오답 해설 ⑤: 'identity'를 '본래 신분'으로 옮김 — 'identity'의 정확한 대응은 '정체성'이며 '신분'(사회적 지위)은 오역에 가깝다. 또한 'without recovering it'을 '영원히'로 의역했으나 의미 왜곡 수준은 아니다."
+   },
+   {
+    "code": "V4-WORDING-MINOR",
+    "severity": "minor",
+    "evidence": "본 해설 첫 문장 '각종 변화를 감수하는 궁극적 목표(결과)를 설명합니다' — 괄호의 '(결과)'가 목표(goal)와 결과(result) 개념을 혼동시킬 소지가 있다. 원문의 'with the ultimate goal of'는 목적을 나타내며 결과가 아니다."
+   }
+  ]
+ },
+ {
+  "pid": "P002",
+  "itemId": "C-G-LX-04",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-035",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-pointcode-span-mismatch",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 1
+  },
+  "craftSum": 15,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-ANTECEDENT-NONEXISTENT",
+    "severity": "major",
+    "evidence": "(B) 오답 해설이 '문맥상 앞 문장의 복수 명사인 adoptees를 가리키므로'라고 선행사를 지목하지만, (B) 이전의 어떤 문장에도 명사 adoptees는 존재하지 않는다. 직전 문장은 'They have no idea ... government.'이고, 실제 선행사는 첫 문장의 'people who have been adopted'(및 대명사 They)다. 단어 adoptees는 (B) 이후 문장('many adoptees have publicly protested')에서 처음 등장한다. RUBRIC V4가 명시적으로 금지하는 '존재하지 않는 선행사 지목'에 해당하며, 학생이 앞 문장에서 adoptees를 찾으려 하면 실패한다."
+   },
+   {
+    "code": "V4-TERM-MISLABEL",
+    "severity": "minor",
+    "evidence": "(A) 오답 해설이 'this information'을 '뒤의 단수형 수식어'라고 부른다. 실제로 attempts를 수식하는 것은 to부정사구 'to discover this information' 전체이고, this information은 그 부정사구 내부에서 discover의 목적어다. this information 자체는 수식어가 아니므로 통사 기술이 부정확하다."
+   },
+   {
+    "code": "V4-KEYPOINT-STRUCTURE-MISMATCH",
+    "severity": "minor",
+    "evidence": "keyPoints의 (A) 항목 '수일치 — 전명구와 수식어가 결합된 긴 주어구의 핵 명사 파악': 실제 주어구 'all their attempts to discover this information'에는 전명구(전치사+명사구) 수식이 없고 to부정사구 수식만 있다. 존재하지 않는 구조(전명구)를 지목한 오기술."
+   }
+  ]
+ },
+ {
+  "pid": "P003",
+  "itemId": "C-B-CX-13",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-091",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-angle",
+    "severity": "minor",
+    "evidence": "오답 ⑤ 해설이 '타인의 감정 전염으로부터 스스로를 보호하자'는 자기보호 프레임으로 결함을 설명하는데, ⑤의 1차 결함은 오히려 자신의 우울을 상대에게 전염시켜 '타인에게 좋은 서비스'가 되지 못한다는 방향 역전이다. 사실 오류는 아니며 각도만 다소 부정확한 수준이라 V4 실패로 보지 않음."
+   }
+  ]
+ },
+ {
+  "pid": "P004",
+  "itemId": "C-G-A0-19",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-164",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 16,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-SUBJECT-MISATTRIBUTION",
+    "severity": "major",
+    "evidence": "해설 ①: \"주절의 주어 'he'가 분사구문의 의미상 주어 역할을 합니다.\" 실제로 'while playing cowboys'가 부가된 절은 'the child who is dressed in a cowboy outfit might be very noisy ...'이며 그 주어는 'the child'다. 'he'는 'but' 뒤 두 번째 등위절('but he might soon change ...')의 주어로, 분사구문이 붙은 절의 주어가 아니다. 지시 대상(그 아이)은 동일해 문법 판정 자체는 무너지지 않으나, 구조 기술이 실제 문장과 불일치하는 문장 귀속 오류다."
+   },
+   {
+    "code": "V4-LOOSE-TERMINOLOGY-C",
+    "severity": "minor",
+    "evidence": "(C) 오답 해설의 \"뒤이어 완전한 명사구가 연결되므로\" — whose 뒤에는 명사 'mother'가 오고 그 뒤로 술어('stressed that ...')가 이어지는 절 구조다. whose+명사가 관계절의 주어 명사구를 이루고 절이 완결된다는 취지로 보이나, '완전한 명사구가 연결된다'는 기술은 부정확하다."
+   },
+   {
+    "code": "FIELD-CONVENTION-D-EXPRESSION",
+    "severity": "minor",
+    "evidence": "markedExpressions (D)의 expression 필드가 'playing'(원문형)인 반면 렌더/선지 토큰은 'played'다. errorExpression='played', correction='playing'으로 최소대립쌍은 복원 가능하므로 V5 실패로는 보지 않으나, expression 필드의 의미(원문형 vs 표시형)가 배치 내에서 일관되는지 확인이 필요하다."
+   }
+  ]
+ },
+ {
+  "pid": "P005",
+  "itemId": "C-B-X3-05",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-028",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 2,
+   "C5": 2,
+   "C6": 2
+  },
+  "craftSum": 13,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-garbled-korean",
+    "severity": "minor",
+    "evidence": "오답 해설 ②의 '이미 할머니가 스콘에 크림과 잼을 바르는 설명하기도 전에'는 목적어/조사가 누락된 비문('바르는 법을 설명하기도 전에' 의도로 추정). 사실 관계 자체는 지문과 일치하므로 V4 실패로는 판정하지 않음."
+   }
+  ]
+ },
+ {
+  "pid": "P006",
+  "itemId": "C-G-CX-14",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-133",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-adjacent-sv-agreement",
+  "correctAnswer": "(C)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 2
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V5-minor-field-convention",
+    "severity": "minor",
+    "evidence": "markedExpressions (C)의 expression·surroundingText가 교정형 'lead'를 담고 있는 반면 학생 렌더는 'leads'다. errorExpression='leads'가 표시형을 담고 있어 '원문형 저장' 관례로 해석 가능하며 비오류 항목(A/B/D/E)은 세 필드가 동일해 모순은 아니다. 다만 필드 의미가 문서화되지 않으면 하류 소비자가 혼동할 수 있다."
+   },
+   {
+    "code": "V5-minor-typo-internal",
+    "severity": "minor",
+    "evidence": "markedExpressions (B) surroundingText: 'analytically,it actually' — 쉼표 뒤 공백 누락. 내부 필드라 학생 노출 없음."
+   },
+   {
+    "code": "V4-minor-phrasing",
+    "severity": "minor",
+    "evidence": "정답 해설의 '(C)가 단수 동사 leads로 주어져 있다면'은 조건문 어투이나 실제로 leads로 렌더되어 있다. 사실 오류는 아니고 어색한 서술."
+   },
+   {
+    "code": "V4-minor-ellipsis-claim",
+    "severity": "minor",
+    "evidence": "(B) 오답 해설이 'when 뒤에 we are가 생략'이라 주장하나 주절 주어는 'this pattern of attention'이다. 'when solving'은 일반 행위자 축약(관용적 dangling)으로 원문 자체가 정문이며, 'we' 지목은 문맥상 의미적으로 타당한 통상적 교수법 서술이라 V4 실패로는 보지 않는다."
+   },
+   {
+    "code": "V4-minor-cleft-wording",
+    "severity": "minor",
+    "evidence": "(E) 해설 '시간의 부사절을 강조하여 이끄는 접속사 that'은 that이 시간 부사절 자체를 이끈다고 읽힐 여지가 있다(실제로는 until절이 강조 초점, that은 나머지 절을 도입). 핵심 판단(강조구문 that 적법)은 정확."
+   }
+  ]
+ },
+ {
+  "pid": "P007",
+  "itemId": "C-B-A0-18",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-119",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-order",
+    "severity": "minor",
+    "evidence": "해설이 '고양이를 넣지 않은 필자가 문책을 당하고, 다른 기자들은 혼날 위험을 감수하지 않기 위해... 지어냈음이 연속적으로 제시됩니다'라고 서술하나, 지문의 실제 순서는 두 번째 난파에서 다른 기자들이 먼저 고양이를 지어 넣고(did not wish to take a chance, and put the cat in) 그 다음 필자가 고양이를 뺐다가 문책당한다(severely scolded). 사실 자체는 모두 참이고 인과 왜곡은 없어 V4 실패로 보지 않음."
+   }
+  ]
+ },
+ {
+  "pid": "P008",
+  "itemId": "C-G-A0-20",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-174",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 4,
+   "C3": 3,
+   "C4": 4,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 21,
+  "finalGrade": "A",
+  "beautifulKiller": true,
+  "auditorGrade": "A",
+  "validityIssues": []
+ },
+ {
+  "pid": "P009",
+  "itemId": "C-G-CX-03",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-021",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-decoy-point-monotony,grammar-obvious-local-agreement",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V1-SOURCE-DISCOURSE",
+    "severity": "minor",
+    "evidence": "원지문 자체가 'There have been numerous studies ... including surveys' (복수) 직후 'In this study' (단수)로 받는 담화 불일치를 갖고 있으나, 이는 원문 유래 특성이며 렌더 과정의 손상이 아니다. 렌더 지문은 (D) are→is 의도 변형 외에 원지문과 완전 일치한다."
+   },
+   {
+    "code": "V5-KEYPOINTS-PARTIAL",
+    "severity": "minor",
+    "evidence": "keyPoints가 (D)/(A)/(B) 3개 밑줄만 다루고 (C)/(E)는 누락. 모순은 아니므로 V5 통과이나 완전성 측면에서 아쉬움."
+   }
+  ]
+ },
+ {
+  "pid": "P010",
+  "itemId": "C-B-CX-15",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-097",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 2,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-wording",
+    "severity": "minor",
+    "evidence": "오답 해설 ④의 '도약의 충격을 완전히 위반한다'는 표현은 대상이 어색하다. 위반되는 것은 '충격'이 아니라 '스키마적 기대(schematic expectation)'이며, 선지 원문도 'violates the schematic expectation completely'다. 논지는 옳으나(세 번째 음은 기대를 충족시키는 역할이므로 반대) 용어 대응이 느슨하다. 사실 오류·오개념 수준은 아니므로 V4 실패로 보지 않는다."
+   }
+  ]
+ },
+ {
+  "pid": "P011",
+  "itemId": "C-G-A0-17",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-146",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V2-note",
+    "severity": "minor",
+    "evidence": "(E) 'ways for people and goods moving across it'에는 moving을 people and goods를 수식하는 축약 관계절로 읽는 대안 파스가 표면상 존재하나, 그 해석에서는 ways가 보어(무엇을 위한 ways인지) 없이 남아 의미가 성립하지 않으므로 정답 유일성은 유지된다. 기계적 diff로 원지문 대비 변형이 (E) 'to move'->'moving' 단 한 곳임을 확인했고, 교정 시 정확히 원문이 복원된다."
+   }
+  ]
+ },
+ {
+  "pid": "P012",
+  "itemId": "C-B-X3-11",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-056",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "오답 해설 ②가 함정 유형을 '인과적 왜곡'이라 명명했으나 실제로는 인과 전도가 아니라 필자 조언(미루기 방지)에 대한 직접 모순이다. 선지 내용 자체의 대응은 정확하므로 V4 실패로 보지 않는다."
+   },
+   {
+    "code": "V4-minor-typography",
+    "severity": "minor",
+    "evidence": "오답 해설 ①에서 '에너지 충전과 Stamina 회복'처럼 한국어 문장 중간에 영단어가 대문자 S로 표기됨. 사실 오류는 아니며 표기 결함."
+   }
+  ]
+ },
+ {
+  "pid": "P013",
+  "itemId": "C-G-LX-11",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-096",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 4,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 20,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5-MINOR-FIELD-CONVENTION",
+    "severity": "minor",
+    "evidence": "markedExpressions (E) has expression=\"absorbing\" (corrected/source form) while (A)-(D) use the displayed form for expression; the displayed form \"to absorb\" is only in errorExpression. Rendered passage and option list are correct and consistent, so no student-facing desync — internal field convention inconsistency only."
+   }
+  ]
+ },
+ {
+  "pid": "P014",
+  "itemId": "C-G-A0-15",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-134",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-correction-form-exposed",
+    "message": "The corrected form of answer d is echoed verbatim elsewhere in the passage (\"that are necessary\") — students can find the answer by direct comparison. Choose an answer spot whose corrected form is not repeated elsewhere in the passage."
+   }
+  ],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V2-ATTACHMENT-AMBIGUITY",
+    "severity": "minor",
+    "evidence": "In 'skills like walking, running, and jumping that is necessary', a low-attachment parse (relative clause modifying only 'jumping') is syntactically conceivable, which would make singular 'is' defensible. However the clause semantically defines the plural appositive head 'skills' (elaborating 'physical abilities'), and 'jumping that is necessary for everyday living' is semantically anomalous; under standard exam convention the antecedent is unambiguously 'skills'. Does not threaten answer uniqueness, noted for completeness."
+   },
+   {
+    "code": "V5-EXPRESSION-FIELD-SEMANTICS",
+    "severity": "minor",
+    "evidence": "markedExpressions (D) stores expression='are' (source form) while the rendered/underlined token is 'is' (stored in errorExpression). This is internally consistent with the schema pattern used by the non-error entries (expression=source, errorExpression=displayed, correction=corrected) and matches the rendered passage and option list, so it is not a sync failure, but renderers must read errorExpression, not expression, for the displayed token."
+   }
+  ]
+ },
+ {
+  "pid": "P015",
+  "itemId": "C-B-CX-07",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-035",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 16,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-topic-sentence-claim",
+    "severity": "minor",
+    "evidence": "해설이 '이 글의 빈칸은 ... 주제문에 위치하고 있습니다'라고 하나, 주제문은 첫 문장(A way to get things done more efficiently ... right time of day)이고 빈칸은 두 번째 문장의 병렬 명령문(지지 문장)에 있다. 구조 오분석 수준은 아니어서 V4 실패로는 보지 않음."
+   },
+   {
+    "code": "V4-minor-attribution-wording",
+    "severity": "minor",
+    "evidence": "오답 해설 ②의 '단서에서 언급했으므로'는 어색한 귀속이다. 'pay attention to how your energy level ebbs and flows'는 별도의 단서가 아니라 빈칸과 같은 문장의 본문 표현이다. 내용 자체는 정확."
+   },
+   {
+    "code": "C4-residual-restatement-clue",
+    "severity": "minor",
+    "evidence": "지문 후반 'I always ask people to respect their own body rhythms'가 삭제된 원문 span(respect your internal clock)을 거의 그대로 재진술하여, 빈칸 추론 없이도 정답을 회수할 수 있는 강한 잔여 단서로 작동한다. 원지문 고유의 중복이라 V 실패는 아니나 난이도를 끌어내린다."
+   },
+   {
+    "code": "V5-minor-keypoint-nondiscriminating",
+    "severity": "minor",
+    "evidence": "keyPoints 세 번째 항목이 '명령형 병렬 구조(Know ~, align ~, and pay ~)의 문법적 조화 확인'을 풀이 포인트로 제시하나, 다섯 선지가 모두 동일한 동사원형 VP 슬롯에 들어가므로 병렬 구조는 변별 단서가 되지 못한다. 사실 오류는 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P016",
+  "itemId": "C-G-A0-06",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-058",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+   },
+   {
+    "severity": "error",
+    "code": "grammar-explanation-lint",
+    "message": "explanation: 어투 혼용 — 첫 문장이 해라체(\"(B) \"have\"는 어법상 틀린 표현이며 \"having\"로 고쳐야 한다.\")로 끝나는데 같은 필드에 합니다체 문장이 섞여 있습니다. 전체를 합니다체로 통일하세요."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 17,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-A-clause-mislabel",
+    "severity": "major",
+    "evidence": "(A) 오답 해설이 'Just as today some jobs are better than others'를 '시간과 조건을 나타내는 접속사절'이라고 설명한다. 실제 구조는 'Just as ..., so + 도치(would they have been)'의 상관 비교 구문이며 시간절도 조건절도 아니다. 수일치 결론(복수 주어 some jobs → are)은 맞지만 절 유형 분석이 사실과 불일치한다 — 명사절 that을 관계대명사로 부르는 류와 동급의 구조 오분석."
+   },
+   {
+    "code": "V4-D-corrupted-misexplanation",
+    "severity": "major",
+    "evidence": "(D) 오답 해설의 '주어인 some 뼈대와 관련 없이'는 손상된 표현('some 뼈대'는 (B) 해설의 뼈대 서술이 새어 들어간 비문적 용어)이며 내용도 오설명이다. 'by themselves'의 재귀대명사는 바로 그 절의 주어 some (individuals)를 선행사로 결속되어 올바른 것인데, 해설은 '주어와 관련 없이' 쓰였다고 반대로 설명한다."
+   },
+   {
+    "code": "V4-B-loose-terminology",
+    "severity": "minor",
+    "evidence": "(B) 정답 해설 ①이 'with + 명사 + 분사/형용사' 구문을 '독립 분사구문'이라 부른다. 정확히는 with 부대상황(with-absolute) 구문이며, 독립분사구문은 통상 with 없이 의미상 주어를 갖는 분사구문을 가리킨다. 한국 교육 관행상 'with 분사구문'으로 통용되는 수준의 느슨함이라 minor."
+   },
+   {
+    "code": "V3-stem-awkward",
+    "severity": "minor",
+    "evidence": "발문 '다음 글의 밑줄 친 부분 단어의 쓰임이 어법상 틀린 것은?'에서 '부분 단어의 쓰임이'는 비표준적 접합('밑줄 친 부분 중, 어법상 틀린 것은?'이 정형). 의미 전달은 되므로 V3 실패까지는 아니라고 판단."
+   },
+   {
+    "code": "V5-keypoints-partial",
+    "severity": "minor",
+    "evidence": "keyPoints가 (A)(B)(E)만 다루고 (C)(D)는 없다. 정답 라벨·선지·해설과 모순은 없어 V5는 통과이나 커버리지가 불완전하다."
+   }
+  ]
+ },
+ {
+  "pid": "P017",
+  "itemId": "C-G-A0-11",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-096",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-antecedent-imprecision",
+    "severity": "minor",
+    "evidence": "(C) 오답 해설이 '앞문장의 내용을 선행사로 받는 which'라고 하나, 실제 선행사는 같은 문장 내 대시로 삽입된 동명사구 'making it present here and now'(음악을 지금 여기서 현재화하는 행위)다. 직전 문장('Musical meaning cannot be separated...')의 내용이 아니다. 전치사+관계대명사라는 문법 판단 자체는 정확하므로 치명은 아님."
+   },
+   {
+    "code": "V4-minor-frame-conflation",
+    "severity": "minor",
+    "evidence": "정답 해설이 'all pupils 뒤에 이어지는 수식어 자리'(분사 수식 프레임)와 'involve는 to부정사를 허용하지 않는다'(동사 보충어 패턴 프레임)를 한 문단에 섞어 논거가 이중화되어 있다. 두 분석 모두 통용되고 핵심 판단(involve + O + -ing)은 정확하므로 오개념 유발 수준은 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P018",
+  "itemId": "C-B-A0-15",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-097",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "4",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   }
+  ],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "해설이 세미콜론으로 이어진 같은 문장의 앞 절('theorists describe a tendency ... jumping-off point')을 '앞 문장', 등위접속된 뒤 절('and tones that follow ...')을 '바로 뒤 문장'이라고 지칭. 실제로는 동일 문장 내부의 절이다. 구조 오분석은 아니며 논리 설명 자체는 정확하므로 V4 통과로 유지."
+   }
+  ]
+ },
+ {
+  "pid": "P019",
+  "itemId": "C-G-CX-19",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-164",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-keypoint-choice-mismatch,grammar-explanation-lint,cx-explanation-verify-failed",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": true,
+  "validity": {
+   "V1": true,
+   "V2": false,
+   "V3": false,
+   "V4": false,
+   "V5": false
+  },
+  "craft": {
+   "C1": 1,
+   "C2": 3,
+   "C3": 1,
+   "C4": 1,
+   "C5": 1,
+   "C6": 0
+  },
+  "craftSum": 7,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V2",
+    "severity": "critical",
+    "evidence": "표시형 (D) 'would have acted'는 비문이 아니다. 'by the end of the hour the child would have forgotten his clothes and would have acted as he would in old clothes'는 문법적으로 성립하며, 오히려 'by + 시점' 부사구는 완료상(would have p.p.)을 표준적으로 지지해 'would have forgotten'과의 완료 병렬이 자연스럽다. 원문의 'would be acting'(그 시점의 진행 상태)은 문맥·상(aspect) 선호일 뿐 유일한 문법적 선택이 아니므로, 다섯 밑줄 중 '어법상 틀린 것'이 존재하지 않는다. 선언된 정답 (D)가 정답으로 성립하지 않음."
+   },
+   {
+    "code": "V3",
+    "severity": "critical",
+    "evidence": "GRAMMAR_ERROR 유형 의도는 렌더 지문에 정확히 하나의 비문 밑줄이 존재하는 것인데, 렌더 지문의 다섯 밑줄이 모두 문법적으로 성립한다. 지문·발문·교정 완성문 자체는 문법적이나 '비문 여부가 유형 의도와 정확히 일치' 조건 불충족."
+   },
+   {
+    "code": "V4",
+    "severity": "critical",
+    "evidence": "해설이 자기모순: 첫 문장은 \"(D) 'would have acted'는 어법상 틀린 표현이며 'would be acting'로 고쳐야 한다\"고 선언한 뒤, 곧바로 밑줄 (D)가 'would be acting'을 가리킨다고 오인하고 \"(D)는 어법상 완벽한 문장 구조를 이룹니다\"라고 결론한다. 렌더 지문의 실제 밑줄 형태(would have acted)를 오식별했으며, \"문제 오류 등으로 ... 정답 및 밑줄 위치 조정이 필요할 수 있으나\"라는 파이프라인 메타 발언이 학생 노출 해설에 그대로 유출됨."
+   },
+   {
+    "code": "V5",
+    "severity": "critical",
+    "evidence": "(1) 해설 본문이 선언된 정답 라벨 (D)와 정면 모순(해설이 (D)를 '어법상 완벽'하다고 판정). (2) markedExpressions (D)의 expression='would be acting'이 선택지/렌더의 'would have acted'와 불일치하고 surroundingText도 원문형('would be acting')이라 렌더 지문에서 매칭 불가. (3) keyPoints 3개(①수일치/태, ②분사구문, ③관계사)가 (A)(B)(C) 디코이 포인트만 다루고 정작 출제 포인트인 (D)의 조동사+완료/진행상 판단이 통째로 누락됨. (4) keyPoints ③에 손상 용어 '소유 격계'(→'소유 관계'의 오탈자) 존재."
+   }
+  ]
+ },
+ {
+  "pid": "P020",
+  "itemId": "C-G-CX-13",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-120",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-noun-what-relative,grammar-shallow-nearby-passive-decoy",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 2
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-TERM-MINOR",
+    "severity": "minor",
+    "evidence": "(B) 오답 해설의 '부분을 나타내는 의존 명사구 Most of' — '의존 명사구'는 국어 문법 용어(것/수/데 류)로, 영어 부분 표현 most of에 붙이는 것은 용어 오적용이다. 표준 표현은 '부분 표현(부분사)'. 수일치 결론 자체(단수 is)는 원문과 일치하며 옳다."
+   },
+   {
+    "code": "V4-WORDING-MINOR",
+    "severity": "minor",
+    "evidence": "정답 해설의 '...를 이끌어 넘겨야 하므로'는 손상/어색한 한국어 표현(의도는 '완전한 절을 이끌어야 하므로'로 추정). keyPoints의 '(E) ... 뒤의 구성 요소가 완전한 절을 이끌 때는'도 혼란스러운 표현(의도는 '뒤에 완전한 절이 이어질 때는'). 문법 사실 자체는 정확하므로 치명 아님."
+   },
+   {
+    "code": "V2-APPEAL-RISK-MINOR",
+    "severity": "minor",
+    "evidence": "(B) 'Most of the whale meat and blubber is distributed'는 같은 지문 앞부분의 'whale meat and blubber are important parts'와 수일치가 표면상 엇갈린다. 단일 한정사 the 아래 결합된 물질명사 연쇄를 단일 질량으로 보는 단수 일치는 어법상 허용되고 원문 그대로이므로 제2정답은 아니지만, 이의신청 소지가 있는 디코이다."
+   },
+   {
+    "code": "V4-RULE-OVERSIMPLIFICATION",
+    "severity": "minor",
+    "evidence": "(B) 해설이 'the whale meat and blubber가 불가산 명사이므로 단수 취급'이라고 단정하나, and로 결합된 불가산 명사구는 구성 방식에 따라 단·복수 모두 가능하다(같은 지문의 'are important parts'가 반례). 해당 문장에 대한 결론은 옳으나 규칙 진술이 과도하게 일반화됨."
+   }
+  ]
+ },
+ {
+  "pid": "P021",
+  "itemId": "C-G-LX-09",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-079",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5-KEYPOINTS-PARTIAL",
+    "severity": "minor",
+    "evidence": "keyPoints가 (C)·(A)·(B)만 다루고 (D) 수동태, (E) 관계대명사 포인트가 누락됨. 모순은 없으나 완전성 관점에서 불완전. 오답 해설 자체는 4개 디코이를 전부 커버하므로 V5 실패로는 보지 않음."
+   },
+   {
+    "code": "V5-SCHEMA-CONVENTION",
+    "severity": "minor",
+    "evidence": "markedExpressions에서 비오류 항목은 expression=표시형인데 (C)만 expression='hammer'(교정형)이고 표시형은 errorExpression='to hammer'에 있음. 렌더·선지('to hammer')와 실질 모순은 없으나 필드 관례가 항목 간 비대칭."
+   },
+   {
+    "code": "V4-B-PASSIVE-LABEL",
+    "severity": "minor",
+    "evidence": "(B) 해설의 \"'서로 반대되는'이라는 수동의 의미\"는 의미상 상호(reciprocal)·형용사화된 분사에 가까워 '수동'이라는 명명이 다소 느슨함. 다만 과거분사의 명사 수식이라는 구조 분석 자체는 정확하고 학교문법 관례 범위 내이므로 치명 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P022",
+  "itemId": "C-G-LX-12",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-115",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 2
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "(B) 오답 해설이 'who'를 '주격/목적격 보어'라고 슬래시로 얼버무린다. 'who the nation's leader would be'에서 who는 be의 주격 보어(predicative complement)이며 목적격 보어 분석은 성립하지 않는다. 핵심 구조 파악(간접의문문, choosing의 목적어절)은 정확하므로 치명은 아니다."
+   },
+   {
+    "code": "V4-minor-register-leak",
+    "severity": "minor",
+    "evidence": "정답 해설 말미 \"(E)의 ... 완벽하게 복원되어 단일 정답이 굳어집니다\"는 출제·검수 메타 언어가 학생용 해설에 누출된 문장이다. 사실 오류는 아니나 해설 문체로 부적절하다."
+   },
+   {
+    "code": "V5-note-expression-field",
+    "severity": "minor",
+    "evidence": "markedExpressions (D)의 expression 필드가 'forcing'(원문형)이고 errorExpression이 'forced'(표시형)이다. 스키마 관례상(비오류 항목은 세 필드 동일) expression=원문형으로 읽히므로 내부 일관성은 유지되나, 렌더 표시형과 필드명이 어긋나 보일 수 있어 기록해 둔다. 정답 라벨·선지·해설과의 모순은 없다."
+   }
+  ]
+ },
+ {
+  "pid": "P023",
+  "itemId": "C-G-A0-12",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-115",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-keypoint-choice-mismatch",
+    "message": "Grammar keyPoints are not grounded in this item's actual choices: keyPoint 3 (d, pointCode k) does not describe that choice's grammar topic — generic filler points are forbidden. Rewrite exactly 3 key points, each starting with a real underline label, the first covering the answer."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 13,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-TERMINOLOGY-MISANALYSIS-A",
+    "severity": "major",
+    "evidence": "(A) 오답 해설: '의문부사 how가 의문형용사 역할을 하며 뒤에 형용사 long과 함께 올바르게 쓰였습니다.' — how는 정도를 묻는 의문부사로서 long을 수식할 뿐, 의문형용사(what/which/whose+명사) 역할을 하지 않는다. 또한 'how long the shortest war lasted'에서 long은 동사 lasted를 수식하는 부사로 보는 것이 표준 분석이므로 '형용사 long' 진술도 부정확하다. 명사절 that을 관계대명사로 부르는 류의 용어 오분석에 해당한다."
+   },
+   {
+    "code": "V4-TERMINOLOGY-MISANALYSIS-E",
+    "severity": "major",
+    "evidence": "(E) 오답 해설: '동명사(또는 분사) destroying을 수식하기 위해 부사 quickly가 올바르게 쓰였습니다.' — 'They soon began to attack the palace, quickly destroying...'의 destroying은 분사구문의 현재분사이며 동명사가 아니다. '동명사(또는 분사)' 병기는 학생에게 오개념을 심는 용어 오류다."
+   },
+   {
+    "code": "V4-AWKWARD-PHRASING-ANSWER",
+    "severity": "minor",
+    "evidence": "정답 해설 ②: '영국의 주도로 잔지바르의 지도자가 정해졌다는 능동의 의미가 되어야 하므로' — '지도자가 정해졌다'는 피동 서술과 '능동의 의미'가 충돌하는 어색한 문장. 사실 오류는 아니나('영국이 지도자를 정했다는 능동의 의미'가 정확) 해설 명료성을 해친다."
+   },
+   {
+    "code": "LABEL-FORMAT-NOTE",
+    "severity": "minor",
+    "evidence": "선지 라벨이 수능 규격 ①~⑤가 아닌 (A)~(E)다. 지문 마커와 선지 라벨은 서로 일치하므로 V1 실패는 아니며 포맷 관찰 사항으로만 기록한다."
+   }
+  ]
+ },
+ {
+  "pid": "P024",
+  "itemId": "C-B-X3-06",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-031",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 1
+  },
+  "craftSum": 16,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-MISQUOTE",
+    "severity": "minor",
+    "evidence": "해설이 원문 span을 'form some some common concepts'로 인용 — 'some'이 중복된 손상 인용. 원지문은 'form some common concepts'."
+   },
+   {
+    "code": "V4-ACTOR-MISATTRIBUTION",
+    "severity": "major",
+    "evidence": "해설: '속담의 빈번한 사용이 다른 사회문화적 지표와 결합할 때 공동체 구성원들의 공통된 개념을 형성할 수 있다고 언급하였고' — 원문 'the frequent use ... could be USED together with other indicators TO FORM some common concepts'는 도구적 수동 구문으로, 관찰자/분석자가 그 문화에 대한 일반 개념을 형성한다는 뜻이다. Thus-문장('it does mirror ... the German attitude')이 이 독해를 확정한다. 개념 형성의 주체를 '공동체 구성원들'로 귀속한 것은 지문에 없는 내용 첨가이자 행위자 오귀속."
+   },
+   {
+    "code": "V4-OVERREACH-MIRROR-VS-SHAPE",
+    "severity": "minor",
+    "evidence": "keyPoints[0] '태도를 어떻게 반영하고 형성하는지' 및 오답해설 ⑤ '공통의 사고관을 반영하고 형성하는지' — 지문은 mirror(반영)만 주장하며 속담이 태도를 '형성'한다는 주장은 지문에 없다."
+   }
+  ]
+ },
+ {
+  "pid": "P025",
+  "itemId": "C-G-CX-09",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-079",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 16,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4_TERM_MISLABEL_RELATIVE_PRONOUN",
+    "severity": "major",
+    "evidence": "정답 해설 말미 '선행사이자 관계사절의 주어 역할을 하는 3인칭 단수인 who에 맞추어' — who를 '선행사'로 지칭. 선행사는 Daniel이고 who는 관계대명사다. 같은 해설 첫 문장('선행사 Daniel을 부가적으로 설명하는 주격 관계대명사 who')과 내부 모순. RUBRIC V4가 예시한 역할 오칭(명사절 that을 관계대명사로 부르는 류)에 해당."
+   },
+   {
+    "code": "V4_NONEXISTENT_MODIFICATION",
+    "severity": "major",
+    "evidence": "(C) 오답 해설 '사역동사 make의 목적격보어 자리에 수식을 받는 Daniel과의 능동 관계' — Daniel은 이 문장에서 어떤 수식도 받지 않는다(make의 목적어일 뿐). 존재하지 않는 수식 관계를 지목한 손상 용어."
+   },
+   {
+    "code": "V4_TERM_MISLABEL_COMPLEMENT",
+    "severity": "minor",
+    "evidence": "(A) 오답 해설 'to부정사를 목적격보어로 취하는 수식 구조이므로' — 목적격보어(보충어) 구조를 '수식 구조'로 오칭."
+   },
+   {
+    "code": "V4_GARBLED_PHRASING",
+    "severity": "minor",
+    "evidence": "(D) 오답 해설 '주어 he와 동사 defend의 목적어가 지칭 대상이 서로 대명사적으로 일치하므로' — 취지(동일 지시 → 재귀대명사)는 맞으나 '대명사적으로 일치'는 손상된 비표준 표현."
+   }
+  ]
+ },
+ {
+  "pid": "P026",
+  "itemId": "C-B-CX-19",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-120",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:blank-killer-polarity-shortcut",
+  "correctAnswer": "③",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 16,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-MINOR-QUOTE-PARAPHRASE",
+    "severity": "minor",
+    "evidence": "오답 해설 ④가 원문 \"no local taxes are paid\"를 'local taxes are not paid'로 재구성한 문자열을 인용부호 안에 제시함. 의미는 동일하나 직접 인용 형식으로는 부정확."
+   },
+   {
+    "code": "V4-MINOR-AWKWARD-PHRASING",
+    "severity": "minor",
+    "evidence": "정답 해설 말미 \"⑤의 경우 본문의 'No factories need to be built'와 정면으로 대치되어 함정을 피할 수 있습니다\"는 주어가 불명확한 어색한 문장(학생이 함정을 피할 수 있다는 의도로 보이나 표면상 ⑤가 주어처럼 읽힘). 사실 오류는 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P027",
+  "itemId": "C-G-A0-14",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-133",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V5-META-MINOR",
+    "severity": "minor",
+    "evidence": "markedExpressions (E)의 expression 필드와 surroundingText('...heads telling us about the insight.')가 렌더된 형태(to tell)가 아닌 원문/교정형(telling)을 담고 있다. 학생 노출 필드(지문·선택지·정답·해설·keyPoints)는 모두 동기화되어 있어 V5 실패는 아니지만, 구조 메타데이터 규약이 (A)-(D)(표시형=expression)와 (E)(원문형=expression)에서 비일관적이다."
+   },
+   {
+    "code": "V4-HEAD-ATTACH-MINOR",
+    "severity": "minor",
+    "evidence": "(A) 오답 해설이 분사 coming의 피수식어를 'remote associations'로 지목하나 통사적으로는 'the stream (of remote associations)'이 머리명사일 가능성이 더 높다. 두 해석 모두 능동 현재분사 판정에는 영향이 없어 사실성 실패는 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P028",
+  "itemId": "C-G-CX-08",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-074",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-shallow-participle-adjective-answer,grammar-killer-generic-answer-point,grammar-noun-clause-pronoun-mislabel",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 4,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 16,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": []
+ },
+ {
+  "pid": "P029",
+  "itemId": "C-B-X3-07",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-035",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-MINOR-OVERSTATEMENT",
+    "severity": "minor",
+    "evidence": "해설이 '마지막 문장에서도 ... 이를 일정에 반영해야 한다고 설명합니다'라고 하나, 마지막 문장(In my experience, most people are far more productive in the morning, but there are those who differ...)은 개인차라는 사실만 진술하고 '일정에 반영하라'는 처방은 빈칸 문장 맥락에서의 추론이다. 사실 오류 수준은 아니어서 V4 실패로 보지 않음."
+   },
+   {
+    "code": "V4-COVERAGE-ASYMMETRY",
+    "severity": "minor",
+    "evidence": "본 해설이 ①②⑤만 언급하고 ④를 생략함. 별도 오답 해설에서 ④가 정확히 다뤄지므로 필드 동기화(V5)나 사실성 실패는 아니지만 해설 완결성이 다소 비대칭."
+   }
+  ]
+ },
+ {
+  "pid": "P030",
+  "itemId": "C-B-A0-16",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-098",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-diction",
+    "severity": "minor",
+    "evidence": "해설의 정답 패러프레이즈 '자신의 능력 부족을 인지하게 정당화하는 증거'는 한국어로 비문에 가깝게 어색함('능력 부족 인지를 확증하는 증거'가 자연스러움). 다만 의도된 의미가 복원 가능하고 ①(evidence confirming your perceived lack of competence)과 내용상 일치하므로 오개념/환각/용어 오류에는 해당하지 않음."
+   },
+   {
+    "code": "V5-minor-keypoint-hidden-word",
+    "severity": "minor",
+    "evidence": "keyPoints가 'shortcomings가 본문의 doubt your ability와 동일한 맥락'이라 하나 shortcomings는 빈칸으로 제거된 원문 span의 단어라 학생에게 보이지 않음. 출제 분석용 메모로는 유효하나 학생 노출 관점 표현으로는 부정확."
+   },
+   {
+    "code": "V4-minor-meta-commentary",
+    "severity": "minor",
+    "evidence": "해설에 '극성만 살피는 풀이를 방지했으며' 등 출제 설계 의도를 서술하는 메타 문장이 포함됨. 사실 오류는 아니나 학생용 해설로는 군더더기."
+   }
+  ]
+ },
+ {
+  "pid": "P031",
+  "itemId": "C-G-CX-04",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-035",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-adjacent-sv-agreement,grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(C)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-keypoint-function-label",
+    "severity": "minor",
+    "evidence": "keyPoints (A)가 wh절을 '타동사 명사절 목적어 역할을 하는 의문사절'로 기술했으나, 'They have no idea who their real parents are'에서 wh절은 타동사의 직접목적어가 아니라 명사 idea의 보문(동격적 내용절)이다. 오답 해설 본문('간접의문문 명사절에서 주어 뒤에 동사 are가 오는 평서문 어순')은 정확하므로 시험 포인트(어순) 자체의 오분석은 아님 — 기능 명칭의 교육적 축약 수준의 부정확성."
+   },
+   {
+    "code": "V4-minor-formatting",
+    "severity": "minor",
+    "evidence": "해설에 '복수형 동사인`make`로' — 백틱 잔재와 공백 누락. 또한 ''against opening adoption files'는 restrictions를 수반하는 수식어구'에서 '수반하는'은 '수식하는'의 오용에 가까운 어색한 표현(구조 판단 자체는 정확)."
+   },
+   {
+    "code": "V5-note-expression-field",
+    "severity": "minor",
+    "evidence": "markedExpressions (C)의 expression 필드는 교정형 'make'(원문형)를, errorExpression은 표시형 'makes'를 담고 있어 나머지 4개 항목(expression=errorExpression=표시형)과 필드 의미가 비대칭이나, source-correct→displayed-wrong 스킴 내에서 내적으로 일관되고 렌더 지문과 모순 없음."
+   }
+  ]
+ },
+ {
+  "pid": "P032",
+  "itemId": "C-B-A0-13",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-091",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 14,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4",
+    "severity": "major",
+    "evidence": "오답 1 해설 극성 오분석: 해설은 '글은 타인을 완전히 무시하라고 한 적이 없으며, 친절하게 공감해주라고 언급했습니다. 극성 반전 함정입니다'라고 하지만, 빈칸은 'just don't _____' 안에 있으므로 선지 1을 넣은 완성문은 'just don't shut them completely out of your thoughts' = '타인을 무시하지 말라'가 된다. 완성문은 무시를 유도하지 않고 오히려 그 반대를 말하므로, 해설이 제시한 오답 사유(무시 유도)는 완성문의 실제 의미와 대응하지 않는다. 실제 결함은 '앞의 kindness 절과 중복되어 caveat 기능을 못하고 자기보호 경고를 담지 못함'인데 해설은 이를 설명하지 않는다."
+   },
+   {
+    "code": "V4",
+    "severity": "major",
+    "evidence": "오답 3 해설 동일 극성 오분석: '힘든 동료와의 모든 교류를 끊으라는 것은 본문의 범위를 벗어난 과확장'이라고 하지만, 완성문은 'just don't avoid any interaction with troubled colleagues' = '교류를 끊지 말라'이다. 완성문은 교류 단절을 주장하지 않으므로 해설이 지목한 결함(단절 과확장)은 부정어 슬롯을 무시한 채 선지 원문만 분석한 오설명이다."
+   },
+   {
+    "code": "V4",
+    "severity": "minor",
+    "evidence": "본해설 총괄 문장 '반면에 오답들은 타인을 완전히 무시하거나 과도한 상호작용 단절을 유도하는 함정으로 지문의 논리에 어긋납니다'는 (a) 선지 4(원인 간과)·5(과잉 감정 반응)에는 전혀 해당하지 않는 일괄 서술이고, (b) 선지 1·3에 대해서도 위와 같은 부정어 슬롯 극성 오류를 반복한다."
+   },
+   {
+    "code": "V4",
+    "severity": "minor",
+    "evidence": "오답 4 해설의 '지협적인'은 비단어(오탈자, '지엽적인'의 오기)."
+   },
+   {
+    "code": "V4",
+    "severity": "minor",
+    "evidence": "오답 5 해설의 \"'감정 전염에 휘말리지 말라'는 빈칸 뒤의 논리\"는 존재하지 않는 위치를 지목한다 — 빈칸은 지문 마지막 어구이며 빈칸 뒤에는 아무 내용도 없다. '빈칸에 들어갈 논리'라고 해야 정확하다."
+   }
+  ]
+ },
+ {
+  "pid": "P033",
+  "itemId": "C-G-A0-10",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-093",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-debatable-retained-object-passive",
+    "message": "Do not use active→passive voice as the answer with \"teach\": English can license a retained-object passive (for example, \"be permitted something\" or \"be given something\"), so the displayed form may remain grammatical under another parse. Choose an invariant structural error instead."
+   }
+  ],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": false,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": false
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 12,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V1",
+    "severity": "critical",
+    "evidence": "마커 (A)가 잘못된 토큰에 렌더링됨. 렌더 지문은 'if students __(A) are__ quiet enough'로 첫 번째 'are'(주어 students)에 밑줄을 쳤으나, 문항의 오답해설 (A)('유도부사 there 구문에서 진짜 주어는 뒤에 온 복수명사 many pressing demands')와 pointCode 'd'는 같은 문장의 두 번째 'are'('there are many pressing demands')를 겨냥한다. surroundingText가 두 'are'를 모두 포함하는 중복 토큰 상황에서 첫 번째 일치 위치에 마커가 붙은 렌더 결함으로, 렌더된 마커가 의도된 출제 지점과 일치하지 않는다."
+   },
+   {
+    "code": "V4",
+    "severity": "critical",
+    "evidence": "오답 해설 (A)가 실제 밑줄 친 구조를 사실과 다르게 설명한다. 학생에게 밑줄로 보이는 'are'의 주어는 'students'(단순 복수 주어-동사 수일치)인데, 해설은 유도부사 there 구문과 진짜 주어 'many pressing demands'를 설명한다. 학생 관점에서 해설이 밑줄 친 부분과 대응하지 않는 오분석이다."
+   },
+   {
+    "code": "V5",
+    "severity": "critical",
+    "evidence": "필드 간 비동기화: 렌더 마커 (A)의 위치(students 뒤 are)와 오답해설 (A)·pointCode 'd'가 가리키는 토큰(there 뒤 are)이 서로 다른 토큰을 참조한다. markedExpressions의 surroundingText는 두 절을 모두 포함해 어느 'are'인지 특정하지 못하며, 결과적으로 선지 (A)·마커·해설이 서로 모순된다. 근본 원인은 V1의 마커 오배치와 동일하다."
+   }
+  ]
+ },
+ {
+  "pid": "P034",
+  "itemId": "C-G-LX-17",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-146",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V1-note",
+    "severity": "info",
+    "evidence": "원지문 대비 렌더 지문의 유일한 차이는 (D) 위치 it→them(의도된 오류 주입). 접합 파손·중복·누락·고아 문장부호 없음. 라벨 (A)~(E)와 선지 목록 일치. em-dash(1769—1849) 등 표기도 원문 그대로 보존."
+   },
+   {
+    "code": "V2-note",
+    "severity": "info",
+    "evidence": "5개 밑줄 독립 검증 결과 (D)만 오류. (A) 수동 분사구문 옳음, (B) for+동명사 옳음, (C) was imprisoned 수동 옳음, (E) despite+동명사 옳음. (D) them의 선행사 후보 중 의미상 성립하는 것은 the River Thames(단수)뿐 — people and goods는 이동 주체, ways는 건너는 대상이 될 수 없음. 대안 분석으로 복수 해석이 성립할 여지 없어 단일 정답 확정."
+   },
+   {
+    "code": "V5-note",
+    "severity": "info",
+    "evidence": "markedExpressions의 (D) expression 필드가 표시형(them)이 아닌 원문형(it)을 담고 있으나, errorExpression=them/correction=it 이며 비오류 항목들도 동일 관례(expression=원문형)를 따르므로 스키마 내 일관 — 동기화 모순 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P035",
+  "itemId": "C-G-LX-10",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-093",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-keypoint-taxonomy",
+    "severity": "minor",
+    "evidence": "keyPoints가 (E)를 '분사능수동'(분사의 능동/수동)으로 분류하지만, 선언된 교정은 developed→to develop(분사→to부정사, 목적)이며 developing(능동 분사)이 아니다. '목적어 유무로 판정'이라는 판별법 자체는 해설과 일치하므로 구조 오분석은 아니나 포인트 분류가 해설의 교정형과 어긋난다. 또한 '분사능수동'은 비표준 축약 용어다."
+   },
+   {
+    "code": "V4-minor-keypoint-overstated-trap",
+    "severity": "minor",
+    "evidence": "keyPoints의 '(A) 수일치 — 진짜 주어 파악'은 함정을 과장한다. 실제 문장은 'Inefficient teachers overlook ...'으로 주어와 동사 사이에 개입 명사구가 전혀 없어 '진짜 주어 파악'이라는 사고 과정이 요구되지 않는다."
+   }
+  ]
+ },
+ {
+  "pid": "P036",
+  "itemId": "C-G-CX-18",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-148",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-generic-answer-point,grammar-explanation-lint",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 4,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5",
+    "severity": "minor",
+    "evidence": "markedExpressions의 (E) 필드에서 'expression':'Should'로 기재되어(다른 비오류 항목은 expression에 표시형을 담는 관례) 표시형(Would)이 아닌 교정형이 들어가 있음. errorExpression='Would', correction='Should'로 의미는 일관되나 필드 규약이 항목마다 다름. 학생 노출 필드(정답 라벨 (E)·선지·해설·keyPoints)는 모두 동기화되어 있어 실질 오류는 아님."
+   },
+   {
+    "code": "V4",
+    "severity": "minor",
+    "evidence": "keyPoints의 (E) 항목이 '정·준동사'로 라벨링되어 있으나 실제 포인트는 조건절 if 생략에 따른 주어-조동사 도치(inversion). 다만 라벨 뒤 서술('조건절 if 생략에 따른 주어-조동사 도치 규칙')이 정확히 구조를 기술하므로 오분석은 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P037",
+  "itemId": "C-G-LX-19",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-164",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 4,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-semantic-gloss",
+    "severity": "minor",
+    "evidence": "해설이 'would have p.p.'를 '과거의 추측'으로 규정하나, 본문 'by the end of the hour the child would have forgotten his clothes'는 가상 예측 프레임(we would predict) 안에서 특정 시점까지의 완료(미래완료 상당)를 나타낸다. 과거 사실에 대한 추측이 아니므로 의미 기능 라벨이 부정확하다. 단, 형태 판정(have 뒤 p.p. 필수)과 교정형(forgotten)은 정확하여 V4 실패로는 보지 않는다."
+   },
+   {
+    "code": "V4-minor-circular-wording",
+    "severity": "minor",
+    "evidence": "해설 첫 문장 '조동사 뒤에 완료형인 would have p.p.가 와야'는 순환적 표현이다(would 자체가 조동사). '조동사 would 뒤에 have p.p.가 와야'로 써야 정확하다. 구조 오분석은 아니고 표현상 결함."
+   },
+   {
+    "code": "V5-minor-keypoint-category",
+    "severity": "minor",
+    "evidence": "keyPoints '(B) 관계사 — 접속사 that의 쓰임'에서 범주명(관계사)과 실제 포인트(명사절 접속사 that)가 표면상 충돌한다. 오답 해설 본문은 '진주어절을 이끄는 접속사 that'으로 정확히 기술하므로 학생 오도 위험은 낮다고 판단해 V5 통과로 처리하되 기록한다. 유사하게 '(D) 정동사/준동사' 범주도 실제 포인트(완료조동사 뒤 분사 형태)와 어긋나는 느슨한 버킷명이다."
+   }
+  ]
+ },
+ {
+  "pid": "P038",
+  "itemId": "C-B-CX-06",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-031",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": false,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 1,
+   "C4": 0,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 10,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V3-TAIL-SEAM-DISTRACTOR-UNGRAMMATICAL",
+    "severity": "critical",
+    "evidence": "빈칸이 'mirror at least to some degree the German attitude'만 도려내고 꼬리 'towards getting up early'를 남겼다. 완성문 기준으로 ③ 'stem directly from classical and medieval literature towards getting up early', ④ '...other cultural indicators towards getting up early', ⑤ '...personal observations towards getting up early'는 꼬리 PP가 어디에도 부착되지 못해 비문/의미 불성립이며, ① 'national character towards getting up early'도 'character + towards V-ing' 연어가 성립하지 않는다. BLANK_INFERENCE의 유형 의도는 다섯 선지가 모두 문법적으로 삽입 가능하고 의미로만 갈리는 것인데, 오답의 비문 여부가 유형 의도와 불일치한다(RUBRIC V3 둘째 문장, §D 첫째 조건 위반)."
+   },
+   {
+    "code": "V3-ANSWER-SEAM-AWKWARD",
+    "severity": "major",
+    "evidence": "정답 ②를 넣은 완성문 'it does reflect specific behavioral tendencies to a certain extent towards getting up early'는 부사구 'to a certain extent'가 명사 'tendencies'와 그 보충어 PP 'towards getting up early' 사이에 끼어들어 부자연스럽다. 원문은 'mirror at least to some degree the German attitude towards...'처럼 부사구가 목적어 앞에 위치해 자연스러웠으나, 선지 어순은 seam에서 어색한 분리 구조를 만든다."
+   }
+  ]
+ },
+ {
+  "pid": "P039",
+  "itemId": "C-B-A0-03",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-015",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-MINOR-ATTRIBUTION",
+    "severity": "minor",
+    "evidence": "해설: '지문의 첫 문장과 두 번째 문장에서는 실천적 지식이 가르치거나 배울 수 없고 오직 전달되며 획득된다고 강조합니다.' 실제로 이 진술은 두 번째 문장에만 있고, 첫 문장은 technical/book knowledge 의 정의다. 두 문장이 대조 쌍을 이루므로 내용 왜곡은 아니나 문장 귀속이 부정확하다."
+   },
+   {
+    "code": "V4-MINOR-TAG-MISMATCH",
+    "severity": "minor",
+    "evidence": "본해설은 오답 ①을 '(과협소)'로 태깅했으나 오답 해설 ①의 실제 근거는 '이론적(technical) 지식의 특징이라 논리에 어긋난다'(개념 혼동)이다. 함정 분류 라벨과 실제 근거가 어긋난다. 사실 오류는 아니므로 minor."
+   },
+   {
+    "code": "V3-NOTE-SEAM",
+    "severity": "minor",
+    "evidence": "완성문 'an ability to perform the task with perfect physical intuition'에서 정관사 'the task'의 선행 명사가 없다('doing some activity'로부터 느슨하게 복원됨). 비문은 아니고 자연성 감점 수준이라 V3 는 통과로 판정."
+   }
+  ]
+ },
+ {
+  "pid": "P040",
+  "itemId": "C-B-CX-08",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-038",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:blank-killer-span-too-wide,cx-explanation-verify-failed",
+  "correctAnswer": "②",
+  "gateIssues": null,
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 13,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-CORRUPTED-TERM",
+    "severity": "major",
+    "evidence": "오답 해설 ④: \"새로운 문제가 이전 결공식과 유사한지 분석하라는 내용은...\" — '결공식'은 한국어에 존재하지 않는 비단어(손상 용어)다. 선지 ④의 실제 내용은 'analyze whether the new problem is similar to a previously solved one'(이전에 해결된 문제와 유사한지 분석)이므로 해설이 선지 내용을 손상된 형태로 잘못 옮겼다. 학생 노출 해설의 비단어·손상 용어는 V4 실패 사유다."
+   }
+  ]
+ },
+ {
+  "pid": "P041",
+  "itemId": "C-G-LX-07",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-069",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P042",
+  "itemId": "C-B-X3-16",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-098",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 12,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-EXPL-SELF-DEFEATING",
+    "severity": "critical",
+    "evidence": "오답 해설 ④: \"자신의 강점을 '과대평가'하는 것은 상황과 강점을 객관적으로 바라보는 본문의 설명과 정반대되는 모순된 내용\" — 그러나 선지는 'less likely to ___' 프레임 안에 들어간다. 과대평가가 객관적 시각과 모순된다면, 객관적으로 볼수록 과대평가를 '덜' 하게 된다는 뜻이 되어 해설의 논리 자체가 ④가 빈칸에 들어맞음을 지지해 버린다. 실제 결정적 결함(본문의 의심 편향은 부정적 방향의 과소평가이며, 결론 문장은 '의심이 고통의 근원'이라는 주제를 마무리해야 함)과 다른, 자기모순적 인과 오설명이다."
+   },
+   {
+    "code": "V4-TERM-ERROR",
+    "severity": "major",
+    "evidence": "keyPoints #3: \"준동사구 less likely to 뒤에 … 연결\" — 'less likely'는 형용사(비교급 부사+형용사)구이고 준동사구는 to부정사구 'to allow self-doubt ~' 쪽이다. 'less likely to'를 준동사구로 명명한 것은 문법 범주 오류이며, 'to'를 부정사에서 분리해 잘못 묶었다. '이중 부정 효과'라는 표현도 엄밀하지 않다(less likely는 부정어가 아니라 하향 정도 표현)."
+   },
+   {
+    "code": "V4-FABRICATED-QUOTE",
+    "severity": "minor",
+    "evidence": "해설 말미: \"본문에 언급된 '내적 압박(internal pressure)'이나 '설득력 있는 인과'를 교묘히 비튼 선택지들\" — '설득력 있는 인과'는 본문에 존재하지 않는 표현인데 인용 부호로 '본문에 언급된' 것처럼 제시되어 있고 구문 자체도 손상되어 의미가 통하지 않는다."
+   },
+   {
+    "code": "V4-STRUCTURE-MISDESCRIPTION",
+    "severity": "minor",
+    "evidence": "오답 해설 ①: \"빈칸 뒤에 이어지기에 인과관계가 맞지 않습니다\" — 빈칸은 지문 최종 문장의 말미(지문 끝)에 있어 빈칸 '뒤에 이어지는' 것이 없다. 선지는 빈칸 안에 들어가는 것이므로 문항 구조를 잘못 기술했다."
+   },
+   {
+    "code": "V2-RISK-NEAR-TAUTOLOGY",
+    "severity": "minor",
+    "evidence": "④를 넣은 완성문 \"When you see … your strengths more objectively, you are less likely to overestimate your strengths …\"은 준(準)분석적으로 참인 문장이 된다. 본문 근거(의심은 '더 부정적으로' 보게 함 = 과소평가 방향) 및 결론 문장의 담화 역할 때문에 '가장 적절한' 기준으로는 ②가 유일 최선이라 V2는 통과시키되, 참인 문장을 만들어내는 오답은 유일성 방어력을 약화시키는 설계 결함으로 기록한다."
+   }
+  ]
+ },
+ {
+  "pid": "P043",
+  "itemId": "C-G-LX-08",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-074",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-shallow-participle-adjective-answer,grammar-killer-generic-answer-point",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V5-MINOR-FIELD-CONVENTION",
+    "severity": "minor",
+    "evidence": "markedExpressions (D)의 expression 필드가 'reduced'(원문형)로, 비오류 항목들의 expression(=렌더 표시형)과 규약이 다르다. errorExpression='reducing', correction='reduced'와는 내적으로 일관되어 동기화 실패는 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P044",
+  "itemId": "C-G-LX-18",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-148",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated,grammar-killer-generic-answer-point,grammar-killer-thin-answer,grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 4,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P045",
+  "itemId": "C-G-A0-01",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-002",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-keypoint-choice-mismatch",
+    "message": "Grammar keyPoints are not grounded in this item's actual choices: keyPoint 1 (c, pointCode a) does not describe that choice's grammar topic — generic filler points are forbidden. Rewrite exactly 3 key points, each starting with a real underline label, the first covering the answer."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 16,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-B-misanalysis",
+    "severity": "critical",
+    "evidence": "렌더 지문에서 (B) 마커는 'This means __(B) that__ those brain activities...'의 첫 번째 that(동사 means의 목적어인 명사절을 이끄는 접속사)에 찍혀 있고 그 뒤의 절은 완전하다. 그러나 오답 해설 (B)는 '선행사 the workout을 수식하며, 뒤에 목적어가 빠진 불완전한 절을 연결하는 목적격 관계대명사'라고 설명한다. 이는 같은 문장의 두 번째(밑줄 없는) that('the workout today that they ...')에 대한 분석을 밑줄 친 첫 번째 that에 잘못 귀속한 오분석이다. keyPoints의 '(B) 관계대명사 — 선행사 수식과 불완전한 문장 연결'도 동일한 오류를 반복한다. 명사절 접속사 that을 관계대명사로 부르는 전형적 V4 실패 유형."
+   },
+   {
+    "code": "V4-B-marker-ambiguity",
+    "severity": "major",
+    "evidence": "markedExpressions (B)의 surroundingText('This means that those brain activities don't get the workout today that they did ...')에는 that이 두 번 등장해 마커 목표가 모호하다. 해설 내용으로 보면 출제 의도는 두 번째 that(관계대명사)이었을 가능성이 높은데, 렌더는 첫 번째 that에 마커를 찍었다. 학생 정답 판정에는 영향이 없으나(둘 다 어법상 옳음) 해설-지문 불일치의 근본 원인이다."
+   },
+   {
+    "code": "V2-E-debatable-agreement",
+    "severity": "minor",
+    "evidence": "(E) 'Their saturation in and early use of technology makes'는 등위 명사구 주어(saturation ... and ... use)여서 규범적으로는 복수 make를 기대할 수 있는 논쟁 여지 자리다. 원문이 makes로 attested이고 단일 개념 취급으로 방어 가능하므로 정답 유일성은 유지되지만, 이의제기 소지가 있는 디코이다."
+   }
+  ]
+ },
+ {
+  "pid": "P046",
+  "itemId": "C-G-LX-02",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-003",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-explanation-lint,cx-explanation-verify-failed",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 2,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 11,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4",
+    "severity": "critical",
+    "evidence": "문장 귀속 오류: 렌더 지문의 밑줄 (A)는 'when you __(A) are__ happy'의 첫 번째 are(주어 you)인데, 오답 해설 (A)는 '주절의 복수 주어인 your critical thinking skills와 수일치를 이루는 복수 동사 are'라고 설명한다. 이는 같은 문장의 두 번째(밑줄 아님) are를 분석한 것으로, 해설이 실제 밑줄 토큰과 대응하지 않는다. keyPoints ①('복수 명사구 주어에 대응하는 복수 동사 are의 일치')도 동일한 오분석을 반복한다. 실제 밑줄 are의 주어는 2인칭 you이며 '복수 명사구 수일치' 포인트가 성립하지 않는다."
+   },
+   {
+    "code": "V4",
+    "severity": "minor",
+    "evidence": "(C) 해설의 '조동사 may에 연결된 to부정사의 부사적 용법 내에서'는 부정확하다. to부정사(to adapt)는 may가 아니라 동사 struggle에 연결된 보충어이며(may에 연결된 것은 struggle), '부사적 용법' 분류도 논쟁적이다. 핵심 주장(or에 의한 adapt–find 병렬, 원형 find 적법)은 맞다."
+   },
+   {
+    "code": "V4",
+    "severity": "minor",
+    "evidence": "정답 해설이 '④(D)'처럼 원문자 번호(④)와 알파벳 라벨((D))을 혼용한다. 매핑 자체는 4번째=(D)로 일치하지만 학생 노출 라벨 체계((A)~(E))와 다른 번호 체계가 섞인 템플릿 잔재다."
+   },
+   {
+    "code": "V5",
+    "severity": "minor",
+    "evidence": "markedExpressions (D)의 surroundingText가 렌더형('to experiencing')이 아닌 교정형('to experience') 문장을 담고 있다. expression 필드도 원문형 'to experience'로, 다른 항목들(expression=표시형)과 규약이 엇갈린다. 정답 라벨·isError 플래그·선지 동기화 자체는 유지되어 V5 실패로는 판정하지 않음(정보성 지적)."
+   }
+  ]
+ },
+ {
+  "pid": "P047",
+  "itemId": "C-B-X3-04",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-017",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": []
+ },
+ {
+  "pid": "P048",
+  "itemId": "C-G-CX-02",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-003",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 2,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 13,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V5-minor-markedExpressions-form",
+    "severity": "minor",
+    "evidence": "markedExpressions (E)의 expression 필드가 'like'(원문형)인데, 비오류 항목 4개는 expression에 렌더 표시형을 담고 있어 필드 의미가 엔트리 간 불일치. 다만 학생 노출 필드(렌더 지문 'alike', 선지 '(E) alike', 정답 라벨, 해설의 alike→like 교정)는 전부 동기화되어 있어 치명 아님."
+   },
+   {
+    "code": "V4-minor-keyPoints-category-label",
+    "severity": "minor",
+    "evidence": "keyPoints가 (E)를 '형용사 vs 부사'로 분류했으나 실제 판정은 '전치사(like) vs 서술형용사/부사(alike)' — 설명문 자체('명사구를 목적어로 취하는 전치사 자리 판정')는 정확하므로 카테고리 라벨만 어긋난 경미한 태깅 오류. (A)도 같은 카테고리 라벨을 공유."
+   },
+   {
+    "code": "V1-note-clean-diff",
+    "severity": "minor",
+    "evidence": "원지문 대비 렌더 지문 전수 대조 결과 의도된 변형(like→alike) 외 접합 파손·중복·누락·오탈자 없음. 라벨 (A)~(E)와 선지 텍스트 완전 일치. 문제 없음을 확인한 기록."
+   }
+  ]
+ },
+ {
+  "pid": "P049",
+  "itemId": "C-B-A0-12",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-077",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-MINOR-TYPO",
+    "severity": "minor",
+    "evidence": "오답 해설 1의 '단순 기술 훈련(스잉)'에서 '스잉'은 '스윙(swing)'의 오탈자(비단어). 의미 복원이 즉각 가능하고 구조·논리 분석 자체는 정확하므로 V4 실격이 아닌 경미 결함으로 기록."
+   },
+   {
+    "code": "V3-MINOR-REDUNDANCY",
+    "severity": "minor",
+    "evidence": "정답 완성문 'they have the strength and stamina to gain a psychological edge alongside their bodily strength...'에서 strength가 주절과 선지에 중복되어 문체상 어색함(준순환적). 문법적으로는 성립하며 의미 전달에 지장 없음 — 비문 아님."
+   },
+   {
+    "code": "V4-MINOR-LOOSE-SUMMARY",
+    "severity": "minor",
+    "evidence": "본 해설 말미 '오답들은 ... 인과 역전이나 단순 기술훈련으로 축소하는 함정으로 설계되었습니다'는 오답 4(절대화·조건 상실)와 5(대체 관계 왜곡)를 포괄하지 못하는 느슨한 총평. 다만 오답별 개별 해설은 각 선지 내용과 정확히 대응하므로 사실성 위반은 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P050",
+  "itemId": "C-G-CX-05",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-049",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-double-ing,grammar-obvious-passive-to-gap-ing",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": true,
+  "validity": {
+   "V1": true,
+   "V2": false,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 2,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 16,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V2_CONTESTABLE_ANSWER_VALENCY",
+    "severity": "critical",
+    "evidence": "선언 정답 (D) 'issuing'은 'with six of his nine U.S. patents issuing then'에서 자동사 해석이 가능하다. 'issue'는 자동사 용법이 사전에 등재되어 있고(Merriam-Webster: 'to appear or become available through being officially put forth or distributed'), 특히 미국 특허 영어에서 'the patent issued on [date]', 'patents issuing from an application'은 표준 관용이다. 지문이 바로 U.S. patents를 다루므로 이 자동사 독법이 정확히 적용되며, 그 경우 with-절대구문 'with + NP + 자동사 V-ing'(cf. 'with the sun rising')으로 문법적이 되어 오류가 0개가 된다. 정답의 오답성이 명확한 문법 판단이 아닌 어휘 결합가(valency) 논쟁 지점에 걸려 있어 이의신청에 취약하다. 선언된 정답 집합(1개)과 실제 확정 가능한 오류 집합이 일치한다고 보증할 수 없다."
+   },
+   {
+    "code": "V4_DAMAGED_TERM",
+    "severity": "major",
+    "evidence": "(A) 오답 해설의 '홑형태 일치를 반드시 시키지 않아도 어법상 맞습니다'에서 '홑형태 일치'는 존재하지 않는 손상된 문법 용어다. 의도는 '등위된 동사구가 동일 시제 형태일 필요는 없다'로 추정되나 학생이 해독할 수 없는 비단어 수준 표현이다."
+   },
+   {
+    "code": "V4_OVERSTATED_CLAIM",
+    "severity": "minor",
+    "evidence": "본해설의 \"'issuing'은 비문입니다\" 단정은 자동사 'issue'의 등재 용법(특허 관용 포함)을 무시한 과잉 단정으로, V2 이슈와 연동되는 사실성 약점이다. 구조 분석(with + 목적어 + 분사, 수동 관계, 교정형 'being issued') 자체는 문장과 일치한다."
+   }
+  ]
+ },
+ {
+  "pid": "P051",
+  "itemId": "C-B-CX-05",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-028",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-characterization",
+    "severity": "minor",
+    "evidence": "오답해설 ④가 할머니의 발화 \"Aren't the scones lovely, dear?\"를 '혼잣말 같은 질문'이라고 서술하나, 호칭 'dear'가 있어 클로이에게 직접 건넨 질문이다. 다만 '클로이가 이름을 직접 물어보지 않았다'는 핵심 배제 근거 자체는 사실과 일치하므로 V4 실패로 보지 않는다."
+   }
+  ]
+ },
+ {
+  "pid": "P052",
+  "itemId": "C-B-CX-01",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-002",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-MINOR-GLOSS",
+    "severity": "minor",
+    "evidence": "해설 first sentence glosses 'break' as \"장벽(break)\" (barrier); the word means a temporal boundary/단절 in this passage. The 해설 does append '단절' right after, so the analysis itself is not wrong, but the double gloss '장벽(break) 단절 너머' reads awkwardly and could momentarily mislead a student on the metaphor."
+   }
+  ]
+ },
+ {
+  "pid": "P053",
+  "itemId": "C-B-A0-14",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-092",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 2
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-typo",
+    "severity": "minor",
+    "evidence": "해설 본문에 띄어쓰기 오탈자 '우리의 뇌는싸우거나' — 학생 노출 텍스트의 사소한 표기 오류이나 사실성 훼손은 아님."
+   },
+   {
+    "code": "V4-minor-trap-label",
+    "severity": "minor",
+    "evidence": "오답 해설 4번이 함정 기제를 '인과를 뒤집은 오답'으로 명명했으나 실제 기제는 '실재하지 않는 필요(need)를 전제하는 극성/전제 오류'다. 다만 왜 틀렸는지에 대한 실질 분석('무해한 상황에서 싸우거나 도망칠 필요가 전혀 없음에도 뇌가 생존 본능을 발동')은 지문과 정확히 일치하므로 V4 실패로 보지 않음."
+   }
+  ]
+ },
+ {
+  "pid": "P054",
+  "itemId": "C-G-CX-20",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-174",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated,grammar-killer-generic-answer-point",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 4,
+   "C3": 3,
+   "C4": 4,
+   "C5": 4,
+   "C6": 4
+  },
+  "craftSum": 23,
+  "finalGrade": "A",
+  "beautifulKiller": true,
+  "auditorGrade": "A",
+  "validityIssues": []
+ },
+ {
+  "pid": "P055",
+  "itemId": "C-B-X3-08",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-038",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V1-TYPOGRAPHY-MINOR",
+    "severity": "minor",
+    "evidence": "선지 ①은 curly apostrophe(beginner’s)를 쓰는 반면 지문 본문은 straight apostrophe('beginner's mind')를 사용한다. 렌더 손상은 아니며 표기 일관성 문제에 불과하다."
+   },
+   {
+    "code": "V2-ABSTRACTION-DRIFT-MINOR",
+    "severity": "minor",
+    "evidence": "정답 ③은 원문 span '그 필터가 실수로 본질적인 것을 걸러낼 때'(메커니즘)를 '확립된 인지 프레임워크가 매우 독특한 요구를 수용하지 못할 때'(상위 원인)로 추상화한다. 지문 2문장(particularly novel)과 필터 문장을 연결하면 논리적으로 지지되므로 정답 유일성은 유지되지만, 직접 환언이 아닌 원인-단계 추상화라는 점은 기록해 둔다."
+   },
+   {
+    "code": "V4-WORDING-MINOR",
+    "severity": "minor",
+    "evidence": "오답 해설 ⑤의 '새로운 자극의 핵심적인 면을 오용하여 놓치는'에서 '오용'은 부정확한 어휘 선택이다(의도는 '잘못 걸러내어/오판하여'). 사실 오류는 아니나 표현이 어색하다."
+   }
+  ]
+ },
+ {
+  "pid": "P056",
+  "itemId": "C-G-LX-03",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-021",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "keyPoints (E): \"'be confident of'의 구조에서 전치사가 관계대명사 앞으로 이동한 'of which'의 격 변화\" — 'of which'에서 which의 형태 변화(격 변화)는 표면에 드러나지 않으므로 '격 변화'라는 표현은 부정확한 군더더기다. 다만 구조 분석 자체(confident of + 전치사+관계대명사, 뒤 완전절)는 정확하여 V4 실패로는 보지 않는다."
+   },
+   {
+    "code": "V4-minor-terse-citation",
+    "severity": "minor",
+    "evidence": "(A) 오답 해설이 '뒤에 완전한 절(we were)'로 인용을 축약했다. 실제 절은 'we were when we got the news'이며, where가 부사 슬롯을 채워 완전하다는 학교문법 표준 분석 자체는 옳다. 인용 축약만 다소 거칠다."
+   },
+   {
+    "code": "source-inherited-incoherence",
+    "severity": "minor",
+    "evidence": "원지문 자체가 'numerous studies ... including surveys(복수)' 직후 'In this study(단수)'로 받는 지시 불일치를 갖고 있으나, 이는 원문에서 그대로 온 것으로 렌더 손상이 아니다(V1 무관)."
+   }
+  ]
+ },
+ {
+  "pid": "P057",
+  "itemId": "C-B-CX-18",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-119",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P058",
+  "itemId": "C-B-A0-04",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-017",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "5",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 12,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-NONWORD",
+    "severity": "critical",
+    "evidence": "오답 해설 3번: \"은학이나 손실을 외면하는 무조건적 긍정을 묘사하여\" — '은학'은 존재하지 않는 단어(손상 토큰)이며 학생 노출 필드에 그대로 포함되어 있다. 문맥상 '불행' 류의 어휘가 의도된 것으로 보이나 현재 상태로는 비단어다."
+   },
+   {
+    "code": "V4-TRAP-MISLABEL",
+    "severity": "major",
+    "evidence": "오답 해설 4번이 함정 유형을 '주체-대상 전도'로 규정했으나, 선지 4 'readily give up their resources'와 원문 'they gather their resources'는 주어(they)와 목적어(resources)가 동일하고 동사 행위만 반전된 극성/행위 반전(action reversal)이다. 주체-대상이 뒤바뀐 곳이 없어 함정 유형 분석이 실제 선지 구조와 불일치한다."
+   },
+   {
+    "code": "V4-CAUSAL-MISLABEL",
+    "severity": "minor",
+    "evidence": "본 해설에서 오답 1번을 '사실을 부인하도록 인과를 비틀었고'라고 설명했으나, 선지 1 'try to conceal their unexpected failures from the crowd'는 인과 관계 반전이 아니라 본문 행동(실패를 공개해 기회로 삼음)의 극성 반전이다. '숨긴다(conceal)'를 '부인(denial)'으로 서술한 것도 정확한 대응이 아니다."
+   }
+  ]
+ },
+ {
+  "pid": "P059",
+  "itemId": "C-G-LX-13",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-120",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-explanation-lint,cx-explanation-verify-failed",
+  "correctAnswer": "(C)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 16,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V1-OK",
+    "severity": "info",
+    "evidence": "원지문과 렌더 지문을 문장 단위 전수 대조: 유일한 차이는 의도된 변형 'is distributed' → '(C) distributing'뿐. 접합 파손·중복·누락·고아 문장부호 없음. 밑줄 라벨 (A)~(E)와 선택지 텍스트(controlled/their/distributing/quickly/whether) 완전 일치."
+   },
+   {
+    "code": "V2-OK",
+    "severity": "info",
+    "evidence": "각 밑줄 독립 검증 결과 정답 집합 = {(C)} 정확히 하나. (A) be+p.p. 수동 적법, (B) 선행 they 호응 복수 소유격 적법, (C) 주절 정동사 부재로 비문(although절은 종속절이므로 주절을 완결하지 못함), (D) 자동사구 take place 수식 부사 적법, (E) question의 목적어 명사절 접속사 적법. 'distributing'을 분사 수식으로 읽는 대안 해석을 시도해도 주절 본동사가 없어 비문이 유지되므로 정답 유일성 확고."
+   },
+   {
+    "code": "V4-MINOR-TERMS",
+    "severity": "minor",
+    "evidence": "해설의 핵심 분석(정동사 자리 준동사, is distributed 교정)은 정확하나 경미한 용어·표현 결함이 다수 존재(explanationIssues 참조). 구조 오분석·환각 수준은 아니므로 V4는 통과로 판정."
+   }
+  ]
+ },
+ {
+  "pid": "P060",
+  "itemId": "C-B-CX-12",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-077",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 2,
+   "C6": 1
+  },
+  "craftSum": 14,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-EXPL-INCOHERENT-METALEAK",
+    "severity": "critical",
+    "evidence": "해설 마지막 문장: '가장 결함이 강하면서 매력적인 함정인 ③은 체력 훈련 자체보다 정신력 기술을 무조건 더 우위에 놓는 우선순위 오류(causal reversal)를 부각하여 오답을 방지하도록 돕습니다.' — 오답을 유도하는 장치(함정)가 '오답을 방지하도록 돕는다'는 자기모순 진술로, 문장 자체가 손상되어 있다. 또한 '함정', '매력적' 등 문항 설계 메타 언어가 학생 노출 해설로 누출되었다."
+   },
+   {
+    "code": "V4-TERM-MISMATCH",
+    "severity": "major",
+    "evidence": "'우선순위 오류(causal reversal)' — 우선순위 역전(priority inversion)을 인과 역전(causal reversal)으로 명명한 용어 불일치. ③ 오답 해설의 '인과관계가 역전되었으므로'도 동일하게, ③의 실제 결함(정신 기술을 신체 단련보다 우위에 두는 우선순위 전도)을 인과 역전이라는 부정확한 용어로 규정한다. 진짜 인과 역전이라면 '정신적 승리가 신체 단련을 낳는다'는 방향 전환이어야 한다."
+   },
+   {
+    "code": "V4-OVERSTATEMENT",
+    "severity": "minor",
+    "evidence": "해설 첫 문장 '…절체절명의 정신적 싸움에서도 승리를 담보한다는 사실을 입증합니다' — 원문은 'often wins'라는 개연성 진술인데 해설은 '담보(보장)·입증'으로 강도를 과장했다."
+   }
+  ]
+ },
+ {
+  "pid": "P061",
+  "itemId": "C-G-LX-05",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-049",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-phrasing",
+    "severity": "minor",
+    "evidence": "(A) 해설 '앞선 had conceptualized와 접속사 and를 통해 내용상 병렬로 이어지지만 형태적으로는 was attempting 구조를 이루므로'는 표현이 다소 모호하다. 실제 병렬은 정동사구 'had conceptualized'와 'was attempting' 간의 VP 병렬이며 해설의 결론(어법상 맞음)과 구조 분석 자체는 사실과 일치하므로 V4 실패는 아니다. 'was'를 '조동사'로 부른 것은 진행형 조동사(auxiliary be)로서 용어상 허용 범위."
+   },
+   {
+    "code": "V5-schema-note",
+    "severity": "minor",
+    "evidence": "markedExpressions에서 (D)만 expression='began'(원문형), errorExpression='beginning'(렌더형)으로 비오류 항목(expression=errorExpression=렌더형)과 필드 의미가 다르게 보이나, 'expression=원천형/errorExpression=표시형' 규약으로 읽으면 전 항목 일관 — 모순 아님(정보성 기록)."
+   }
+  ]
+ },
+ {
+  "pid": "P062",
+  "itemId": "C-B-CX-20",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-134",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-killer-target-too-easy",
+    "message": "KILLER BLANK_INFERENCE target is too local or surface-level; choose a central claim, relation, contrast, or evaluative turn with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 1,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 11,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-CIRCULAR-CITATION",
+    "severity": "critical",
+    "evidence": "해설: '지문 내에서는 이에 대한 구체적인 방법으로 비표준 방언을 우선 수용하고 이를 토대로 삼을 것을 명시하고 있습니다' — 해당 내용은 렌더 지문에서 빈칸으로 제거된 구간('first accept the dialect and then build on it') 자체로, 학생이 보는 지문 어디에도 명시돼 있지 않음. 빈칸 정답을 지문에 존재하는 진술처럼 인용한 순환 논증."
+   },
+   {
+    "code": "V4-SENTENCE-ATTRIBUTION",
+    "severity": "major",
+    "evidence": "해설: '빈칸 바로 앞 문장에서는 문화적으로 반응하는 교수법과 가장 일치하는 접근법을 묻고 있습니다' — 빈칸 바로 앞 문장은 'Opinions vary from rejection and correction to complete acceptance.'이고, 서술된 내용은 빈칸 포함 문장의 것이며 그 문장은 의문문이 아니라 평서문(실제 의문문은 두 문장 앞). 문장 귀속·문형 서술 모두 부정확."
+   }
+  ]
+ },
+ {
+  "pid": "P063",
+  "itemId": "C-B-CX-09",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-040",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 2,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V1-OK",
+    "severity": "info",
+    "evidence": "렌더 지문은 원지문에서 마지막 문장의 span 'watching real people doing real things'만 빈칸으로 치환했고 그 외 전 문장이 원문과 일치한다. 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 ①~⑤가 오답 해설·keyPoints 라벨과 일치한다."
+   },
+   {
+    "code": "V2-OK",
+    "severity": "info",
+    "evidence": "독립 풀이: ①은 'rather than faking them'과 정면 모순(배우는 감정을 꾸며내지 않음), ③은 comfort zone에서 벗어나는 주체가 배우이지 관객이 아님, ④는 emotional trauma가 배우의 심리 변화이지 관객 경험이 아님, ⑤는 새 정체성 탐색 주체가 배우임. ②만이 source span 'watching real people doing real things'의 의미를 보존하며 tail 'not just fictional characters'와의 대조도 성립한다. 정답 집합 = {②}로 유일."
+   },
+   {
+    "code": "V3-OK",
+    "severity": "info",
+    "evidence": "②를 넣은 완성문 'audiences feel like they are observing genuine individuals engaged in authentic situations, not just fictional characters in a movie'는 문법적·자연스럽다. 지문·발문에 비문/비단어/오탈자 없음. 오답 완성문은 의미적으로 부적합할 뿐 통사적으로는 성립하여 빈칸 유형 의도와 일치한다(단, ③④⑤의 tail 병렬 약화는 공예 이슈로 별도 기록)."
+   },
+   {
+    "code": "V4-OK",
+    "severity": "info",
+    "evidence": "해설의 근거 인용('rather than faking' → 실제 감정, 마지막 문장 유의어 대응)이 실제 지문 구조와 일치. 오답 해설 4건 모두 해당 선지의 실제 내용(①=faking 모순, ③=comfort zone 주체, ④=trauma 주체, ⑤=identity 주체)과 정확히 대응. 오분석·환각·비단어 용어 없음."
+   },
+   {
+    "code": "V5-OK",
+    "severity": "info",
+    "evidence": "선언 정답 ②, 해설의 ② 지목, 오답 해설 키 {①,③,④,⑤}, keyPoints의 (②)/(①,③,④,⑤) 라벨이 전부 동기화되어 있고 모순 없음."
+   }
+  ]
+ },
+ {
+  "pid": "P064",
+  "itemId": "C-G-LX-15",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-134",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(A)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V2-note-attachment-ambiguity",
+    "severity": "minor",
+    "evidence": "In '(A) a way of learning and practicing skills and behaviors that __is__ necessary for future survival', a high-attachment parse ('a way ... that is necessary') is theoretically available, under which 'is' would be grammatical. Judged non-fatal: nearest-NP attachment is strongly preferred, the source text has 'are' (low attachment intended), and the parallel sentence '(D) ... jumping that are necessary for everyday living' fixes the intended construction. V2 kept true, but this is exactly the kind of '대안 분석 가능 자리' RUBRIC §C bans for KILLER items."
+   },
+   {
+    "code": "V4-note-loose-terminology",
+    "severity": "minor",
+    "evidence": "해설 phrase '선행사를 수식하는 동사로 단수형 is를 쓰는 것' is imprecise — a verb does not modify the antecedent; the relative clause does. The opening sentence ('주격 관계대명사 that이 이끄는 관계절 내의 동사 자리') is structurally correct, so this is sloppy wording, not a misanalysis. V4 kept true."
+   }
+  ]
+ },
+ {
+  "pid": "P065",
+  "itemId": "C-B-A0-20",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-134",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V3-minor-pronoun",
+    "severity": "minor",
+    "evidence": "선지 ①③의 'their'가 빈칸 문장 내 선행사가 없고 두 문장 앞의 'a student'(단수)를 일반화 지시함. 완성문 'The approach ... is to validate their existing linguistic habits ...'에서 지시가 다소 느슨하나 관행상 허용 범위로 판단, V3 통과 유지."
+   },
+   {
+    "code": "V-none-critical",
+    "severity": "minor",
+    "evidence": "렌더 지문은 원지문에서 'to first accept the dialect and then build on it' 스팬만 정확히 빈칸 처리했고 나머지는 문자 단위 동일(인용부호, em-dash, 'rejection and correction' 작은따옴표 보존). 정답 ③ 유일성 각 선지 독립 검증 통과."
+   }
+  ]
+ },
+ {
+  "pid": "P066",
+  "itemId": "C-B-A0-06",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-031",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 4,
+   "C3": 3,
+   "C4": 4,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 21,
+  "finalGrade": "A",
+  "beautifulKiller": true,
+  "auditorGrade": "A",
+  "validityIssues": []
+ },
+ {
+  "pid": "P067",
+  "itemId": "C-B-X3-09",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-040",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": false,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 1,
+   "C5": 2,
+   "C6": 1
+  },
+  "craftSum": 12,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V3-BLANK-SEAM-INCOHERENT-KEY",
+    "severity": "critical",
+    "evidence": "원문은 'audiences feel like they are watching real people doing real things, not just fictional characters in a movie'로, tail의 'not just fictional characters'가 watching의 목적어 'real people doing real things'와 대조된다. 그런데 블랭크가 'feel like ... real things' 전체를 삭제하면서 대조 tail을 남겼고, 정답 ②를 넣은 완성문 'audiences witness authentic individuals rather than merely observing fictional portrayals, not just fictional characters in a movie'는 ② 내부의 'rather than merely observing fictional portrayals'와 tail의 'not just fictional characters in a movie'가 이중 대조를 이뤄 중복·비정합 문장이 된다. 조합적으로 읽으면 tail이 'fictional portrayals'에 걸려 '단순한 가상 인물만이 아니라 가상 묘사를 관찰한다'는 의도 반전 해석까지 발생한다. 정답을 넣은 완성문이 자연스러운 문법적 문장이 아니므로 V3 실패."
+   },
+   {
+    "code": "D-COND-TAIL-ASYMMETRY",
+    "severity": "major",
+    "evidence": "RUBRIC §D 1조건(남은 suffix/tail 때문에 일부 선지만 문법으로 탈락하지 않아야 함)의 역방향 위반: tail ', not just fictional characters in a movie'에 가장 매끄럽게 접합되는 것은 오답 ⑤('pay more attention to X and Y, not just Z' 구조)이고, 정답 ②는 접합 시 가장 어색하다. 삽입 검증을 시도하는 학생이 문법 신호와 의미 신호가 상충하는 결함 문항이 된다."
+   },
+   {
+    "code": "V4-MINOR-GARBLED-KO",
+    "severity": "minor",
+    "evidence": "오답 ④ 해설의 '주어진 글의 근거를 완전히 대상을 이탈하여 과장한 도약입니다'는 목적어가 중복된 비문(손상 문장)이다. 의미('근거 없는 과장된 도약')는 복원 가능하므로 사실 오류는 아니나 해설 품질 결함."
+   },
+   {
+    "code": "C4-META-LEAK",
+    "severity": "minor",
+    "evidence": "정답 해설에 '정답 선지와 형태적 대조성을 맞춰 매력적인 유사 오답으로 구성했으나'라는 출제 과정 메타 서술이 학생 노출 해설에 그대로 남아 있다. 오답 설계 의도를 노출하는 것은 해설 우아함·단서 경제성 결함."
+   }
+  ]
+ },
+ {
+  "pid": "P068",
+  "itemId": "C-G-LX-20",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-174",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P069",
+  "itemId": "C-B-A0-08",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-038",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 16,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": []
+ },
+ {
+  "pid": "P070",
+  "itemId": "C-B-A0-02",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-012",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 2
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4",
+    "severity": "major",
+    "evidence": "keyPoint 1('빈칸 문장의 문맥상 지시어(this)가 가리키는 바를 파악한다')과 오답해설 4('this가 지칭하는 바와 연결되지 않으며')가 지시어 'this'를 학생의 풀이 단서로 지시하지만, 'this'는 빈칸으로 대체된 span('this is the exception rather than the norm') 내부에 있어 렌더 지문에서 학생에게 보이지 않는다. 원지문 기준으로는 사실이고 referent(자기 돌봄 포기) 규정도 정확하므로 오분석은 아니나, 학생 관점에서 실행 불가능한 지침이다. V4 실패로는 판정하지 않되 수정 필요."
+   },
+   {
+    "code": "V4",
+    "severity": "minor",
+    "evidence": "해설 말미 '선지 ②, ④와 같이 부정 극성을 띤 오답들이 있으나' — 정답 ①(does not) 역시 부정 극성이므로 극성만으로 오답을 특징짓는 서술이 모호하다. 사실 오류는 아니며 극성 단서로 정답을 못 찍는다는 취지 자체는 유효."
+   }
+  ]
+ },
+ {
+  "pid": "P071",
+  "itemId": "C-G-A0-07",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-069",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-tense-shorthand",
+    "severity": "minor",
+    "evidence": "(B) 해설이 '일이 진행되지 않는 시점보다 계획 시점이 앞서므로 과거완료'라고 설명하지만 주절 'things do not go'는 현재시제다. 현재 기준의 선행은 원칙상 현재완료로 설명되므로 시제 기준점 서술이 느슨하다. 다만 had planned 자체는 원문 그대로의 관용적 용법이고 (B)는 정답이 아니므로 오분석 수준은 아님."
+   },
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "(A) 해설의 '목적어절을 이끄는 관계 자리'라는 표현이 명사절/관계사 프레임을 뒤섞어 다소 모호하다. 실질 분석(what = do의 목적어이자 know의 목적어절 유도)은 정확하다."
+   },
+   {
+    "code": "C3-conspicuous-error",
+    "severity": "minor",
+    "evidence": "정답 오류 'keeping us to awake'는 표면상 즉시 어색하게 읽혀 구조 독해 없이도 눈에 띄기 쉽다. INTERMEDIATE 라벨 내에서는 허용되나 난이도 하단에 위치한다."
+   }
+  ]
+ },
+ {
+  "pid": "P072",
+  "itemId": "C-B-CX-17",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-109",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:blank-paraphrase-answer-not-transformed,blank-killer-polarity-shortcut,blank-paraphrase-answer-not-transformed",
+  "correctAnswer": "④",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 2,
+   "C6": 2
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-unsupported-addition",
+    "severity": "minor",
+    "evidence": "해설 첫 문장의 '쇼핑카트 무료 시범단을 통한 마케팅 성공'에서 '무료'는 지문 어디에도 근거가 없다. 지문은 'He hired several models'로 모델들을 고용했다고 명시하며, 무료라는 속성은 언급되지 않는다. 다만 인과·구조 분석 자체는 정확하므로 V4 실패로 보지 않고 경미한 첨가로 기록한다."
+   },
+   {
+    "code": "V2-note-verbatim-answer",
+    "severity": "minor",
+    "evidence": "정답 ④ 'what logic, explanations, and advertisements failed to do'는 원지문 삭제 span의 축자 복사본이다. 정답 유일성 자체는 성립하지만(각 선지 독립 검증 결과 ④만 통사·의미 양면에서 성립), 추상화가 전무하여 빈칸 문항으로서의 설계 가치가 낮다. validity 실패는 아니며 C3/C4/C5 감점 근거."
+   }
+  ]
+ },
+ {
+  "pid": "P073",
+  "itemId": "C-G-A0-16",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-136",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-shallow-participle-adjective-answer",
+    "message": "INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"perceived\" -> \"perceiving\" before a noun; require deeper structure."
+   },
+   {
+    "severity": "error",
+    "code": "grammar-killer-generic-answer-point",
+    "message": "KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5-minor-schema-note",
+    "severity": "minor",
+    "evidence": "markedExpressions에서 (C)의 expression 필드가 표시형(perceiving)이 아닌 교정형(perceived)로 기록됨. 다른 4개 항목은 expression=표시형. errorExpression/correction과는 정합하므로 동기화 실패는 아니나 스키마 일관성이 떨어짐."
+   }
+  ]
+ },
+ {
+  "pid": "P074",
+  "itemId": "C-G-A0-09",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-079",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5-note",
+    "severity": "minor",
+    "evidence": "markedExpressions (B)의 expression 필드가 소스형 'to paint', errorExpression이 표시형 'paint'로 되어 있음. 다른 밑줄은 expression=표시형인데 (B)만 소스형이라 필드 의미가 항목 간 비대칭이나, isError/correction/해설과 모순은 없어 스키마 관례로 판단 — 실패 아님."
+   },
+   {
+    "code": "V1-note",
+    "severity": "minor",
+    "evidence": "원지문 대비 렌더 지문의 유일한 변형은 (B) 'to paint'→'paint' (의도된 오류 주입). 나머지 4개 밑줄은 원문 그대로이며 접합 파손·중복·누락·고아 문장부호 없음. 라벨 (A)~(E)와 선택지 목록 일치."
+   }
+  ]
+ },
+ {
+  "pid": "P075",
+  "itemId": "C-G-CX-12",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-115",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 2
+  },
+  "craftSum": 14,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-nonword-term",
+    "severity": "major",
+    "evidence": "(C) 오답 해설: \"수수식어인 'a small African island nation'과...\" — '수수식어'는 존재하지 않는 용어(비단어). '피수식어'의 오탈자로 추정되나 RUBRIC V4는 비단어·손상 용어를 명시적 실패 사유로 규정한다."
+   },
+   {
+    "code": "V4-structural-misattribution",
+    "severity": "major",
+    "evidence": "(C) 오답 해설이 수동 관계를 'a small African island nation'과 'Zanzibar' 사이의 관계로 기술했다. 실제 수동 관계는 피수식 명사(nation)와 분사 call(ed) 사이에 성립한다(the nation is called Zanzibar). Zanzibar는 call의 보어이지 수동 관계의 상대항이 아니다 — 구조 오분석."
+   },
+   {
+    "code": "V4-compressed-term",
+    "severity": "minor",
+    "evidence": "keyPoints의 '(E) 분사능수동'은 비표준 압축 용어('분사의 능동/수동' 추정). 학생 노출 시 손상 용어로 읽힐 수 있다."
+   },
+   {
+    "code": "V2-alternative-analysis-note",
+    "severity": "minor",
+    "evidence": "V2 실패는 아님(정답 유일성은 유지). 다만 'it killed hundreds of Zanzibaris, forced the new leader to flee...'는 저널리즘 문체의 무접속 VP 병렬(asyndeton: 'killed dozens, forced thousands to flee')로 읽힐 여지가 실제 영어에 존재한다. 수능 관례상 접속사 없는 제2 정동사는 오류로 확립되어 있어 유일 정답은 성립하나, RUBRIC §C의 '대안 분석이 가능한 자리 제외' 기준을 완전히 만족한다고 보기 어렵다."
+   },
+   {
+    "code": "C-pointcode-duplication",
+    "severity": "minor",
+    "evidence": "markedExpressions에서 정답 (E)와 디코이 (C)가 동일 pointCode 'c'(분사 계열)를 공유한다. (C)는 같은 분사 계열의 쉬운 디코이로, §C '정답과 같은 point의 쉬운 디코이' 조건에 저촉될 소지가 있다."
+   }
+  ]
+ },
+ {
+  "pid": "P076",
+  "itemId": "C-B-A0-10",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-041",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 13,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4_DISTRACTOR_RATIONALE_MISEXPLANATION",
+    "severity": "major",
+    "evidence": "오답 1 해설: '실험에서의 효용성을 극대화한다는 것은 동물 권리론자들이 비판하는 바로 그 행위를 조장하는 극성 반전 오답입니다.' 그러나 빈칸 프레임은 'The problem ... is not one about treating animals inhumanely, but instead one about ___'이므로, 선지 1을 넣으면 'maximizing their utility in experimental practices'가 문제점으로 지목(비판)되는 문장이 되지 조장(promote)되는 문장이 되지 않는다. 앞 병렬항 'one about treating animals inhumanely'가 '그 행위 자체가 문제'라는 독법을 강제한다. 실제 결정적 결함(과잉/처우 수준의 프레이밍 + 실험으로의 과협소화로, 권리론이 말하는 '더 근본적인' 지위 차원의 문제와 불일치)은 해설에 없다. '극성 반전' 분류 자체도 완성문 기준으로는 오적용이다. 학생에게 오답 소거의 잘못된 논리 모델을 제공하는 담화 기능·인과 오설명이므로 V4 실패."
+   }
+  ]
+ },
+ {
+  "pid": "P077",
+  "itemId": "C-B-A0-05",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-028",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "2",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V2-note",
+    "severity": "minor",
+    "evidence": "정답 ② 'before she added any extra toppings'는 before-절의 비함의(non-veridical) 특성상 토핑을 실제로 얹었음을 전제하지 않아 원문 'without the cream and jam'과 의미 동치로 성립한다. 단 'extra'는 기본 토핑이 존재함을 약하게 암시해 표현이 완벽히 정밀하지는 않다(치명 아님)."
+   },
+   {
+    "code": "V3-note",
+    "severity": "minor",
+    "evidence": "오답 ③④를 삽입한 완성문('eat hers taking a sip... first' 등)은 쉼표 없는 분사 부가어로 다소 어색하나 비문은 아니며, 소거는 의미 기반으로 이루어져 유형 의도와 일치한다."
+   }
+  ]
+ },
+ {
+  "pid": "P078",
+  "itemId": "C-B-X3-10",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-041",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:x3-explanation-verify-failed",
+  "correctAnswer": "③",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 1
+  },
+  "craftSum": 16,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-QUOTE-CORRUPTION",
+    "severity": "critical",
+    "evidence": "keyPoints[1]이 지문 근거를 '...the problem... is replacing them as human resources'로 인용하나, 원문은 'The problem, therefore, is not one about treating animals inhumanely, but instead one about understanding them as human resources.'이다. 'replacing them as human resources'는 지문에 존재하지 않는 손상 인용(understanding→replacing)이며 그 자체로 의미가 성립하지 않고, not A but B 대조 구조도 'the problem is replacing...'으로 왜곡한다. 정답 근거 필드의 인용 사실성 오류."
+   },
+   {
+    "code": "V4-NONWORD-TERM",
+    "severity": "minor",
+    "evidence": "오답 해설 ④의 '구제적인 법률'은 문맥상 성립하지 않는 손상 용어다. 선지 ④(historic legislation that has lost its practical law-enforcing power)에 대응하려면 '구시대적인' 또는 '규제적인'이어야 하며, '구제적(救濟的)'은 선지 내용과 무관하다."
+   },
+   {
+    "code": "V4-UNSUPPORTED-CLAIM",
+    "severity": "minor",
+    "evidence": "오답 해설 ②는 '인간과 동등한 도덕적·법적 지위 부여'가 동물 권리론자들이 지향하는 긍정적 지향점이라고 단정하나, 지문은 권리론자의 주장을 '동물은 인간이 이런 식으로 사용해도 되는 존재가 아니다'로만 제시할 뿐 동등 지위 부여를 목표로 명시하지 않는다. 결론(문제의 자리에 올 수 없음)은 유효하나 근거에 지문 외 내용이 첨가됐다."
+   },
+   {
+    "code": "V3-AWKWARD-DICTION-NOTED",
+    "severity": "minor",
+    "evidence": "정답 ③의 'interactive living beings'는 지문에 근거가 없는 어색한 수식어다(동물윤리 맥락의 관용 표현은 'sentient beings'). 완성문은 문법적으로 성립하므로 V3 자체는 통과로 판정하되, 정답 의미 보존의 순도를 떨어뜨리는 잡음으로 기록한다."
+   }
+  ]
+ },
+ {
+  "pid": "P079",
+  "itemId": "C-B-X3-03",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-015",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 15,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-CIRCULAR-EVIDENCE",
+    "severity": "critical",
+    "evidence": "해설: \"빈칸 직전에서 누군가가 어떤 활동을 하는 데 있어 'touch'가 있다는 것은 피아노 건반을 딱 알맞은 힘과 속도로 치는 능력이라 명시하고 있습니다\" — 이 내용('hit the right piano key with just enough force and pace')은 빈칸으로 제거된 span 그 자체다. 렌더 지문 어디에도(빈칸 직전에도) 명시돼 있지 않다. 제거된 원문을 학생이 볼 수 있는 근거인 것처럼 인용한 순환 논증이자 지문 사실성 오류(문장 귀속 오류)."
+   },
+   {
+    "code": "V4-OPTION1-EXPL-MISMATCH",
+    "severity": "major",
+    "evidence": "오답해설 ①: \"본문의 piano와 key라는 단어를 활용하여 그럴듯하게 유혹\" — 렌더 지문에는 'piano'도 'key'도 존재하지 않고(둘 다 빈칸 span과 함께 제거됨), 선지 ① 자체에도 두 단어가 없다('musical instrument'). 해설이 실제 지문·실제 선지 텍스트 어느 쪽과도 대응하지 않는 이중 사실 오류."
+   },
+   {
+    "code": "V4-OPTION5-EXPL-CONTEXT",
+    "severity": "minor",
+    "evidence": "오답해설 ⑤: \"피아노 건반을 치는 실천적 행위자의 관점이 아니라\" — 렌더 지문에 없는 피아노 맥락을 전제로 대비를 설명함. 논지 자체(수동 감상 vs 능동 실행)는 타당하나 근거 서술이 학생 가시 지문과 불일치."
+   }
+  ]
+ },
+ {
+  "pid": "P080",
+  "itemId": "C-B-A0-07",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-035",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "5",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   }
+  ],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 2
+  },
+  "craftSum": 16,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-MINOR-OPTION2-TIME-ADDED",
+    "severity": "minor",
+    "evidence": "오답 해설 2번이 '오후에 집중력을 잃는다는 것은'이라고 서술하나 선지 ②(lose their focus and energy entirely)에는 시간 표현이 없음. 빈칸 문맥상 '아침 이후'라는 추론은 가능하므로 치명적 오귀속은 아니지만, 선지에 없는 시간 한정어를 선지 내용처럼 서술함."
+   },
+   {
+    "code": "V4-MINOR-OPTION3-FLAW-MISLABEL",
+    "severity": "minor",
+    "evidence": "오답 해설 3번이 ③의 결함을 '과협소'로 규정하나 실제 결함은 대조의 축(생산성 고점 시간대)에서 휴식 빈도로의 화제 이탈(topic shift)임. 판정 결과(오답)는 맞으나 결함 명명이 부정확."
+   },
+   {
+    "code": "V4-MINOR-OPTION4-MUDDLED",
+    "severity": "minor",
+    "evidence": "오답 해설 4번 '일정 조정에 대한 언급은 과도한 확장이므로, 오후에 높은 성과를 낸다는 본래 의미를 왜곡한 논리적 비약'은 문장이 뒤엉켜 있음. ④가 scheduling 어휘를 재활용한 왜곡이라는 취지는 맞으나 인과 연결('~이므로')이 논리적으로 성립하지 않아 학생에게 혼란 여지."
+   },
+   {
+    "code": "V2-NOTE-ABSTRACTION-NARROWING",
+    "severity": "minor",
+    "evidence": "정답 ⑤ 'in the evening'은 원문 'later in the day'보다 좁은 표현(원문은 오후도 포함 가능). 빈칸 추론 유형의 통상 허용 범위 내 패러프레이즈로 판단해 V2 실패로는 보지 않음."
+   }
+  ]
+ },
+ {
+  "pid": "P081",
+  "itemId": "C-G-A0-03",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-021",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 4,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 20,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "오답 해설 (A): \"문장의 주체가 'flashbulb memories'이고\" — 실제 문장 주어는 'National tragedies'이고 memories는 create의 목적어다. 분사 named의 의미상 주어(수식 대상)를 가리키려는 의도로 선해 가능하고 결론(수동 관계 → 과거분사 적절)은 정확하므로 치명 아님."
+   },
+   {
+    "code": "V1-note-source-discourse",
+    "severity": "minor",
+    "evidence": "원지문 자체에 'numerous studies ... including surveys' 직후 'In this study'라는 단수 지시가 등장하는 담화적 어색함이 있으나, 이는 원문에 이미 존재하며 렌더링 손상이 아니다. 렌더 지문은 (E)에서 'of which'→'which' 의도 변형 외에 원문과 완전 일치."
+   }
+  ]
+ },
+ {
+  "pid": "P082",
+  "itemId": "C-G-A0-13",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-120",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(A)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5-minor-keypoints-partial",
+    "severity": "minor",
+    "evidence": "keyPoints가 (A)(B)(C) 세 밑줄만 다루고 (D) 부사 병렬, (E) be allowed to-V는 누락. 모순은 아니어서 V5 실패로는 보지 않으나 필드 완전성 관점에서 아쉬움."
+   },
+   {
+    "code": "V4-minor-loose-terminology",
+    "severity": "minor",
+    "evidence": "keyPoints의 '(B) 정동사 및 시제 — 과거분사가 만드는 현재완료'에서 done은 정동사가 아니라 have와 결합해 정동사구를 이루는 과거분사임. 오답 해설 (B)도 '능동의 의미이므로 과거분사 done 적절'로 능수동 논거와 시제 논거가 헐겁게 연결되어 있으나(have been done과의 대비 미명시), 사실 오류 수준은 아님."
+   }
+  ]
+ },
+ {
+  "pid": "P083",
+  "itemId": "C-G-LX-01",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-002",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": false
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 16,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-HEAD-MISANALYSIS",
+    "severity": "major",
+    "evidence": "오답 해설 (B): \"checking이라는 동명사를 핵심어로 가지는 'the process of checking'이 단수 주어이므로\" — 주어 NP 'the process of checking'의 핵심어(head)는 'process'이고 'of checking'은 전치사구 수식어다. 동명사 'checking'을 핵심어로 지목한 것은 구조 오분석이며, (B)가 겨냥하는 함정(전치사구 간섭 수일치)의 올바른 분석과 정반대다. 결론(was 단수)은 우연히 일치하지만 근거 분석이 틀렸다. 문항 자체의 keyPoints ②(\"전치사구의 수식을 받는 명사구 'the process'의 수에 맞추어\")와도 정면 모순."
+   },
+   {
+    "code": "V5-KEYPOINT-LABEL-MISMATCH",
+    "severity": "major",
+    "evidence": "keyPoints가 원문자 라벨 ⑤/②/③을 사용하나 문항의 선지 라벨 체계는 (A)~(E)다. 학생 노출 필드 기준으로 keyPoints가 존재하지 않는 라벨을 참조한다(⑤→(E), ②→(B), ③→(C)로 내용상 추정 가능하나 라벨 동기화 실패). 또한 keyPoint ②와 오답 해설 (B)가 수일치 지배 명사(핵심어)에 대해 서로 모순된 분석을 제시한다."
+   },
+   {
+    "code": "V4-AGREEMENT-OVERCLAIM",
+    "severity": "minor",
+    "evidence": "정답 해설: \"주어를 3인칭 단수 형태로 받아 ... 'makes'로 고쳐야\" — 주어 'Their saturation in and early use of technology'는 등위 명사구여서 표준 분석으로는 복수 'make'도 가능하다(원문이 단일 개념 취급으로 makes를 썼으므로 원문 복원 교정 자체는 유효하고, 출제 포인트인 정동사 부재 판단에는 영향 없음). 다만 '3인칭 단수여야 한다'는 단정은 논쟁 여지가 있는 수일치 주장이다."
+   }
+  ]
+ },
+ {
+  "pid": "P084",
+  "itemId": "C-B-CX-04",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-017",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-wording",
+    "severity": "minor",
+    "evidence": "keyPoints 두 번째 항목 '(what they have lost) 기출 팽팽한 대비'의 '기출'은 문맥상 의미가 통하지 않는 잉여 어휘로 보이며, '잃어버린 상실'은 동어반복이다. 사실 오류·오분석은 아니므로 V4 실패로는 판정하지 않음(감점은 C6에 반영)."
+   }
+  ]
+ },
+ {
+  "pid": "P085",
+  "itemId": "C-B-X3-12",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-077",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-MINOR-RATIONALE-OVERREACH",
+    "severity": "minor",
+    "evidence": "② 오답해설이 '본문 전반부의 비즈니스 협상(negotiations) 사례와 골프의 정신적 게임을 통합적으로 설명하지 못하는 과협소 오류'라고 하나, 빈칸 슬롯은 골퍼의 strength and stamina가 가능하게 하는 바만을 묻는 자리여서 협상 사례 통합은 정답의 필요조건이 아니다. 실제 결정적 결함('solely ... athletic rules'로 mental game 차원 배제)도 함께 서술되어 있어 치명은 아님."
+   },
+   {
+    "code": "V3-MINOR-SEAM-REDUNDANCY",
+    "severity": "minor",
+    "evidence": "정답 ③ 삽입 완성문 'the strength and stamina to translate sheer bodily endurance into ultimate psychological dominance'는 stamina로 endurance를 변환한다는 경미한 동어반복 seam이 있으나 문법적·의미적으로 성립한다."
+   },
+   {
+    "code": "KILLER-COND-FAIL",
+    "severity": "major",
+    "evidence": "요청 난이도 KILLER 대비: ①⑤는 부정/도피 극성 하나로, ④는 화제 이탈로, ②는 절대어 'solely'로 즉시 소거 가능하여 극성·절대어 단일 단서 소거가 성립한다(§D 위반). ④'unlimited creative energy'와 ⑤'external pressure'는 지문 내 source anchor가 약하거나 부재하고, ①과 ⑤는 동일한 극성 반전 함정 유형의 중복이다. 요구 추론도 마지막 문장 국소 독해로 대부분 해결된다."
+   }
+  ]
+ },
+ {
+  "pid": "P086",
+  "itemId": "C-B-X3-13",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-091",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 2,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 13,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-POLARITY-OPT3",
+    "severity": "major",
+    "evidence": "오답 해설 ③은 '바로 앞 문장의 show them kindness와 상충합니다'라고 주장하지만, 발문 slot이 'just don't ___'이므로 ③을 넣은 완성문은 'just don't avoid engaging in any social interactions with them' = '교류를 회피하지 말라'가 되어 친절 권고와 상충하지 않고 오히려 일치한다. 해설이 선지를 부정어 없이 단독으로 평가하여 완성문의 실제 극성을 오설명했다. ③의 실제 결함은 '앞 절의 친절 권고를 중복 재진술할 뿐 slot이 요구하는 대조적 경고(감정 전염 주의)를 담지 못함'이다."
+   },
+   {
+    "code": "V4-POLARITY-OPT5",
+    "severity": "major",
+    "evidence": "오답 해설 ⑤는 '공감 자체를 억제하라는 주장은 본문과 대치됩니다'라고 하지만, 완성문은 'just don't suppress your own desire to show basic human empathy' = '공감을 억누르지 말라'로 본문 주장과 일치한다. 대치되기는커녕 본문 친화적 진술이 된다. 실제 오답 사유(경고 기능 부재·앞 절과의 중복)를 제시하지 못하고 극성을 뒤집은 잘못된 소거 논리를 학생에게 제공한다."
+   },
+   {
+    "code": "V4-SENTENCE-ATTRIBUTION",
+    "severity": "minor",
+    "evidence": "정답 해설이 'We do a good service to others by remaining detached...'를 '다섯 번째 문장'이라 지목하나, 실제 문장 순서는 1) Other people's views... 2) Don't damage yourself... 3) If you encounter... 4) Remember to discriminate... 5) Remind yourself: \"What hurts...\" 6) We do a good service... 로 여섯 번째 문장이다. 문장 귀속 오류."
+   }
+  ]
+ },
+ {
+  "pid": "P087",
+  "itemId": "C-G-A0-05",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-049",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(D)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-shallow-participle-adjective-answer",
+    "message": "INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"proved\" -> \"proving\" before a noun; require deeper structure."
+   }
+  ],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 4
+  },
+  "craftSum": 20,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5-minor-field-semantics",
+    "severity": "minor",
+    "evidence": "markedExpressions (D)의 expression 필드가 'proved'(교정형)로, 비오류 항목들의 관례(expression=표시형)와 다르다. 다만 errorExpression='proving', correction='proved'가 정확하고 렌더 지문도 'proving'으로 올바르게 표시되어 학생 노출 필드에는 영향이 없다."
+   }
+  ]
+ },
+ {
+  "pid": "P088",
+  "itemId": "C-G-LX-14",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-133",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-obvious-adjacent-sv-agreement,grammar-noun-clause-pronoun-mislabel,grammar-explanation-lint",
+  "correctAnswer": "(C)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 2,
+   "C2": 2,
+   "C3": 1,
+   "C4": 3,
+   "C5": 1,
+   "C6": 1
+  },
+  "craftSum": 10,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-STRUCTURE-MISDESCRIPTION",
+    "severity": "major",
+    "evidence": "정답 해설 ④ '선행사와 멀리 떨어진 동사의 수를 일치시켜야 하므로 leads로 쓰인 함정에 유의해야 합니다' — 실제 문장은 'the connections that leads'로 선행사(the connections)와 동사(leads) 사이에 관계대명사 that 하나뿐인 인접 수일치 구조다. 원거리 수일치 함정은 이 문장에 존재하지 않으며, 지문에 없는 구조적 특징을 첨가한 오설명이다. 해설 ①~③의 핵심 분석 자체는 정확하다."
+   },
+   {
+    "code": "V5-SURROUNDING-TEXT-SOURCE-FORM",
+    "severity": "minor",
+    "evidence": "markedExpressions (C)의 surroundingText가 렌더형 'leads'가 아닌 원문 교정형 'the connections that lead to creative insights.'를 담고 있다. expression=lead/errorExpression=leads/correction=lead 컨벤션(expression=교정형)으로 읽으면 내적 일관이므로 V5 실패로 보지 않으나, 렌더 기준 필드로 소비되면 불일치를 유발할 수 있다."
+   }
+  ]
+ },
+ {
+  "pid": "P089",
+  "itemId": "C-B-X3-17",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-109",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:x3-explanation-verify-failed",
+  "correctAnswer": "③",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V5-MINOR-TYPO",
+    "severity": "minor",
+    "evidence": "keyPoints 첫 항목에 '타인의 행동 행동 모방을 통해'로 '행동'이 중복(dittography)되어 있다. 의미 왜곡은 없으나 학생/교사 노출 필드의 오탈자."
+   },
+   {
+    "code": "V4-MINOR-PHRASING",
+    "severity": "minor",
+    "evidence": "해설의 '바람잡이 모델들이 카트를 빌려 쓰는 모습을 직접 보여주자'에서 '빌려 쓰는'은 지문 내용(고용된 모델들이 카트를 끌며 쇼핑하는 모습을 연출)과 미세하게 어긋난 표현이다. 사실 오분석 수준은 아니어서 V4 실패로는 보지 않음."
+   },
+   {
+    "code": "V3-MINOR-PRONOUN",
+    "severity": "minor",
+    "evidence": "정답 ③ 삽입 완성문 'A few shills disguised as regular shoppers guided them to adopt...'에서 'them'의 선행사가 문장 내부에 없고 직전 문장의 'the regular shoppers'에 의존한다. 문맥상 해석은 명확하나 seam이 완전히 매끄럽지는 않다. 또한 ③만 유일하게 대명사 'them'을 쓰고 나머지 선지는 'customers/shoppers'를 명시해 미세한 표면 비대칭이 있다."
+   }
+  ]
+ },
+ {
+  "pid": "P090",
+  "itemId": "C-G-LX-16",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-136",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:wrong-option-explanation-count,grammar-decoy-point-monotony,grammar-killer-answer-point-repeated,grammar-killer-generic-answer-point,grammar-keypoint-choice-mismatch,cx-explanation-verify-failed",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V5-minor-label-style",
+    "severity": "minor",
+    "evidence": "선택지는 (A)~(E) 라벨인데 오답 해설 키는 '① (A)' 식의 원문자+알파벳 혼용이다. 매핑은 무결(①=A…⑤=E, 정답 ④=(D) 생략)하므로 실패는 아니나 표기 체계가 이원화되어 있다."
+   }
+  ]
+ },
+ {
+  "pid": "P091",
+  "itemId": "C-B-X3-15",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-097",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 20,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P092",
+  "itemId": "C-B-CX-10",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-041",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "오답 해설 ④가 'equal legal subjects in legislation'을 '동등한 입법 주체'로 지칭한다. 'legal subjects'는 '법적 주체'이지 입법 행위의 주체가 아니다. 핵심 논거(본문에서 도출 불가, 맥락 불일치)는 정확하므로 게이트 실패는 아니지만 용어가 부정확하다."
+   },
+   {
+    "code": "V3-minor-style",
+    "severity": "minor",
+    "evidence": "선지 ②의 'inhuman slaughtering'은 'inhumane'이 표준적이며, ⑤의 'without scientific purposes'는 'without scientific purpose'가 더 자연스럽다. 둘 다 문법 오류는 아니고 어색함 수준."
+   }
+  ]
+ },
+ {
+  "pid": "P093",
+  "itemId": "C-G-CX-17",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-146",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-decoy-filler-span",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P094",
+  "itemId": "C-G-CX-10",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-093",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-decoy-filler-span",
+  "correctAnswer": "(B)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 2,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 2
+  },
+  "craftSum": 13,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-CORRUPTED-TERM",
+    "severity": "major",
+    "evidence": "(A) 오답 해설: '복수 주어 students에 맞추어 복수형 비동사 are를 사용' — '비동사'는 'be동사'의 손상 표기(비단어)이며, 표기 그대로는 非동사(동사가 아닌 것)로 읽혀 are를 동사가 아니라고 설명하는 사실 오류가 된다. RUBRIC V4의 '용어 오류가 없다' 조건 위반. 학생 노출 필드이므로 출하 불가."
+   },
+   {
+    "code": "V4-CONTEXT-DEPENDENT-JUSTIFICATION",
+    "severity": "minor",
+    "evidence": "(B) 정답 해설이 '문맥상 그리고 어법상 적절'이라고 스스로 서술하듯, pressing/pressed 판정 근거가 부분적으로 어휘 연어('pressing demands')와 문맥 선호에 의존한다. V2 자체는 통과하나(pressed는 이 결합에서 비관용·비문), KILLER용 '명확한 문법 판단' 요건을 약화시키는 서술이다."
+   }
+  ]
+ },
+ {
+  "pid": "P095",
+  "itemId": "C-B-X3-14",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-092",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   }
+  ],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": false,
+   "V2": true,
+   "V3": false,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 1,
+   "C3": 1,
+   "C4": 1,
+   "C5": 0,
+   "C6": 3
+  },
+  "craftSum": 9,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V1",
+    "severity": "critical",
+    "evidence": "렌더 지문이 원문 문장 'The danger is an illusion.' 전체를 '_____.'로 치환해 주어 'The danger'가 소실됐다. 그러나 다섯 선지 모두 정형 동사구('is an inevitable response...', 'helps us accurately measure...', 'is a direct signal...', 'is a product of...', 'triggers a necessary...')로 주어 잔존을 전제한다. 의도된 변형은 'The danger _____.'였음이 명백하므로 렌더 마커와 선지 슬롯이 불일치하는 렌더 손상이다."
+   },
+   {
+    "code": "V3",
+    "severity": "critical",
+    "evidence": "선언 정답 ④를 렌더된 빈칸에 그대로 넣으면 '...we do not have to flee or fight. is a product of cognitive distortion. Our Stone Age brain sees...'로 주어 없는 비문 단편이 된다. 다른 네 선지도 동일하게 비문이 되므로 빈칸 seam이 문법성 게이트를 통과하지 못한다."
+   }
+  ]
+ },
+ {
+  "pid": "P096",
+  "itemId": "C-G-CX-06",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-058",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-answer-point-repeated,grammar-killer-generic-answer-point",
+  "correctAnswer": "(B)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": []
+ },
+ {
+  "pid": "P097",
+  "itemId": "C-G-A0-02",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-003",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(B)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 15,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": []
+ },
+ {
+  "pid": "P098",
+  "itemId": "C-G-CX-01",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-002",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-decoy-point-monotony,grammar-keypoint-choice-mismatch",
+  "correctAnswer": "(C)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 4,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 21,
+  "finalGrade": "A",
+  "beautifulKiller": false,
+  "auditorGrade": "A",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "keyPoints의 '(C) 대동사 — 일반동사구 수식을 대신하는 대동사 did 판정'에서 '수식을'은 잘못 끼어든 어절(손상 표현)이다. 의도는 '일반동사구를 대신하는'으로 명확하나 문구 자체는 비문이다. 학생 노출 본해설은 정확하므로 V4 실패로는 보지 않음."
+   },
+   {
+    "code": "V4-minor-semantics",
+    "severity": "minor",
+    "evidence": "(E) 오답 해설의 '결과를 보충해 주는 부사적 용법'은 의미 기능 라벨이 다소 느슨하다. 'tuned to require'의 to부정사는 결과라기보다 tuned의 방향/내용을 한정하는 형용사 보충 용법에 가깝다. 통사 구조 자체(형용사 tuned를 보충하는 to부정사)는 올바르게 기술됨."
+   }
+  ]
+ },
+ {
+  "pid": "P099",
+  "itemId": "C-G-A0-18",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-148",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [
+   {
+    "severity": "error",
+    "code": "grammar-agreement-explanation-too-thin",
+    "message": "Long-distance subject-verb agreement answer needs an explanation naming the intervening modifier/relative/appositive phrase and the true subject head."
+   }
+  ],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": true,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 4,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P100",
+  "itemId": "C-B-A0-11",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-056",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "1",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P101",
+  "itemId": "C-G-A0-04",
+  "armId": "G-A0",
+  "frameId": "grammar-frame-v2-035",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(E)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-wording",
+    "severity": "minor",
+    "evidence": "해설의 \"학생들은 'be willing to' 구조에 익숙하여 'to find'를 동사원형으로 착각하기 쉽지만\"에서 'to find'는 to부정사이지 동사원형이 아니다. 의도(부정사 to로 착각)는 전달되지만 용어가 부정확하다. 구조 오분석은 아니므로 V4 실패로는 판정하지 않음."
+   },
+   {
+    "code": "V5-internal-field",
+    "severity": "minor",
+    "evidence": "markedExpressions (E)의 expression 필드가 원문형 'to finding'이고 errorExpression이 표시형 'to find'다. 다른 4개 항목은 expression=표시형과 일치(비오류라 동형)하므로 'expression=원문형' 컨벤션으로 해석하면 자기일관적이며, 렌더 지문·선지·정답·해설 등 학생 노출 필드는 모두 'to find'로 동기화되어 있어 V5 통과. 단, 렌더러가 expression 필드를 표시용으로 쓰는 구현이라면 잠재적 불일치이므로 스키마 컨벤션 확인 권장."
+   }
+  ]
+ },
+ {
+  "pid": "P102",
+  "itemId": "C-B-CX-14",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-092",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-killer-polarity-shortcut",
+    "message": "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 16,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": []
+ },
+ {
+  "pid": "P103",
+  "itemId": "C-G-CX-15",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-134",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "(C)",
+  "gateIssues": [],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 4,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-embellishment",
+    "severity": "minor",
+    "evidence": "(B) 오답 해설이 '인류학자나 외부 관찰자에 의해 여겨지는'이라고 행위자를 특정하지만 지문에는 행위 주체가 명시되지 않음. 통사 분석(완료 수동태 적합) 자체는 정확하므로 V4 실패로 보지 않고 minor로 기록."
+   },
+   {
+    "code": "V4-minor-phrasing",
+    "severity": "minor",
+    "evidence": "정답 해설의 '고쳐 써야 안전하고 유효한 어법이 됩니다'는 비표준적 표현. 사실 오류는 아니며 문체 문제."
+   }
+  ]
+ },
+ {
+  "pid": "P104",
+  "itemId": "C-B-CX-11",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-056",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": []
+ },
+ {
+  "pid": "P105",
+  "itemId": "C-G-CX-07",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-069",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-too-basic-decoys,grammar-pointcode-span-mismatch",
+  "correctAnswer": "(C)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "(D) 오답 해설이 'not only가 문두로 도치되면서'라고 서술하나, not only는 문장 첫머리가 아니라 Remember that 이하 종속절의 절두에 위치한다. 도치 메커니즘(be동사가 주어 curveballs 앞으로 이동)과 수일치 설명 자체는 정확하므로 치명 아님."
+   },
+   {
+    "code": "V4-minor-hedged-term",
+    "severity": "minor",
+    "evidence": "정답 해설의 '동명사를 목적어 또는 부사적 보충어로 취해야 합니다'에서 '부사적 보충어'는 표준 학교문법 용어가 아닌 모호한 표현. end up + V-ing 요구라는 핵심 판단은 정확."
+   },
+   {
+    "code": "V4-minor-inconsistent-label",
+    "severity": "minor",
+    "evidence": "(A)의 what은 '의문대명사', (B)의 what은 '관계대명사'로 서로 다르게 명명. 각각 독립적으로는 방어 가능한 분석(간접의문 vs 자유관계절)이라 오류는 아니나 용어 일관성이 떨어짐."
+   }
+  ]
+ },
+ {
+  "pid": "P106",
+  "itemId": "C-B-CX-03",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-015",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-difficulty-mismatch",
+    "message": "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 19,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor",
+    "severity": "minor",
+    "evidence": "오답 해설 ④에서 '신체적 은유인 직관'이라는 표현은 부정확하다. 지문에서 은유는 'a touch', 'a feel'과 같은 표현 방식이고 intuition은 은유가 가리키는 실체다. 또한 ④는 시간 관계(before)의 모순인데 해설은 이를 '인과관계는 모순됩니다'로 지칭했다. 판정을 뒤집을 수준의 오분석은 아니어서 V4는 통과로 유지한다.",
+    "recommendation": "④ 해설을 '숙련자는 이미 습관·경험으로 직관을 쌓은 상태에서 수행하므로, 직관을 발달시키기 전에 과업 범위를 확장했다는 시간 순서가 본문과 모순된다'로 정밀화."
+   },
+   {
+    "code": "V3-minor",
+    "severity": "minor",
+    "evidence": "완성문 '...tasks she can perform bypassing deliberate cognitive intervention'에서 perform 뒤 분사구가 쉼표 없이 이어져 다소 딱딱하지만, 분사 부가어로 문법적으로 성립하며 ①③⑤(분사/by 구)와 ④(before 절)가 모두 동일 부사 슬롯에 들어가므로 seam 비문 문제는 없다.",
+    "recommendation": "출하에는 지장 없음. 원하면 'while bypassing ...'으로 다듬을 수 있으나 필수는 아니다."
+   }
+  ]
+ },
+ {
+  "pid": "P107",
+  "itemId": "C-G-LX-06",
+  "armId": "G-LX",
+  "frameId": "grammar-frame-v2-058",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-killer-generic-answer-point",
+  "correctAnswer": "(B)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": true,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 2
+  },
+  "craftSum": 13,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-scope",
+    "severity": "minor",
+    "evidence": "정답 해설의 '문장 전체에 정동사가 존재하지 않는 비문이 됩니다'는 문자 그대로는 거짓 — 모문 동사 shows가 정동사로 존재하며, 정동사 부재는 that 명사절 내부에 국한된다. 직전 문장이 '접속사 that이 이끄는 명사절 내부에서'로 범위를 잡아 핵심 분석(명사절 주어 some burials + 본동사 필요 + start 교정)은 정확하므로 V4 실패로는 보지 않되 범위 표현 수정 필요."
+   },
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "(D) 오답 해설의 '행위자인 some (individuals)를 지칭' — 'by themselves'는 수동태 행위자 by구가 아니라 '홀로/제각각'이라는 관용 표현이므로 '행위자' 명명은 부정확. 같은 해설이 의미('그들 스스로, 제각각')는 올바르게 제시함."
+   }
+  ]
+ },
+ {
+  "pid": "P108",
+  "itemId": "C-G-CX-11",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-096",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-too-basic-decoys,grammar-explanation-lint",
+  "correctAnswer": "(D)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 3,
+   "C6": 1
+  },
+  "craftSum": 16,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-CORRUPTED-TERM",
+    "severity": "major",
+    "evidence": "오답 해설 (A): \"주어인 복수 명사구 'no two performances'에 연결되는 복수 비동사 are의 수일치는 올바릅니다.\" — '비동사'는 존재하지 않는 문법 용어로, 'be동사'의 손상형이다. 한국어로는 '非동사(동사가 아님)'로 읽혀 학생에게 적극적으로 오해를 유발할 수 있는 학생 노출 필드의 용어 손상이며, RUBRIC V4의 '비단어·손상 용어' 금지 조건에 해당한다."
+   },
+   {
+    "code": "V4-SPACING-TYPO",
+    "severity": "minor",
+    "evidence": "오답 해설 (C): \"조동사/본동사 역할을 하는does의 주어는\" — '하는'과 'does' 사이 공백 누락. 내용 분석 자체(삽입구 제외 시 단수 주어 the necessity와 does의 수일치)는 정확함."
+   },
+   {
+    "code": "V4-IMPRECISE-CLAIM",
+    "severity": "minor",
+    "evidence": "정답 해설: \"이 문장은 가주어 'it'과 진주어 'to acknowledge' 구조로 시작합니다\" — 해당 문장은 실제로 If 부사절(If we want music to have a role in general education)로 시작하고, 가주어 it은 주절의 시작이다. 구조 분석의 본질(가주어-진주어, to부정사 병렬)은 정확하나 '시작합니다'는 부정확한 진술."
+   },
+   {
+    "code": "V4-GARBLED-KEYPOINT",
+    "severity": "minor",
+    "evidence": "keyPoints 세 번째 항목: \"(E) to-v/v-ing — 전치사 뒤의 동명사와 의미상 주어의 수식\" — 의미상 주어는 동명사를 '수식'하는 관계가 아니므로 '수식'은 용어 오용. '결합' 또는 '의미상 주어를 동반한 동명사' 등이 정확하다."
+   }
+  ]
+ },
+ {
+  "pid": "P109",
+  "itemId": "C-G-CX-16",
+  "armId": "G-CX",
+  "frameId": "grammar-frame-v2-136",
+  "subType": "GRAMMAR_ERROR",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:grammar-tense-only-error,grammar-explanation-lint",
+  "correctAnswer": "(E)",
+  "gateIssues": null,
+  "solverAnswers": [
+   "5",
+   "5"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": false,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 2,
+   "C6": 1
+  },
+  "craftSum": 14,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V4-NONWORD-TERM",
+    "severity": "critical",
+    "evidence": "(A) 오답 해설: 'be동사(are)와 결합하여 현재진행형 수로동사를 이루므로' — '수로동사'는 존재하지 않는 손상 용어(문맥상 '술어동사'의 오염으로 추정). 학생 노출 해설의 비단어로 V4 실패."
+   },
+   {
+    "code": "V4-GARBLED-TERM",
+    "severity": "major",
+    "evidence": "(C) 오답 해설: 'those subordinates(주어)가 did the same(목적어격 서술구)으로' — '목적어격'은 실제 문법 용어가 아니며, did(동사)+the same(목적어)인 서술부를 가리키려다 손상된 표현. 절 완전성 판정 자체는 옳으나 용어가 오염됨."
+   },
+   {
+    "code": "STYLE-REGISTER-MIX",
+    "severity": "minor",
+    "evidence": "정답 해설이 '고쳐야 한다'(반말)로 시작해 'were입니다'(존댓말)로 전환되는 등 문체가 혼재."
+   },
+   {
+    "code": "FIELD-SURROUNDING-SOURCE-FORM",
+    "severity": "minor",
+    "evidence": "(E) markedExpressions.surroundingText가 렌더형('and asked')이 아닌 교정/원문형('and ask the CEOs to reflect')을 보여줌. expression 필드가 원문형을 담는 관례와는 일관되므로 모순은 아니나, 렌더 문맥 대조용으로는 혼동 소지."
+   },
+   {
+    "code": "KILLER-MISSING-WHY-TEMPTING",
+    "severity": "minor",
+    "evidence": "§C 조건 3: 5개 밑줄 각각에 point·why tempting·why correct가 있어야 하나, (A)~(D) 디코이에는 why-correct만 있고 why-tempting 근거가 어디에도 없음."
+   }
+  ]
+ },
+ {
+  "pid": "P110",
+  "itemId": "C-B-X3-19",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-120",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "gate_rejected:blank-killer-polarity-shortcut",
+  "correctAnswer": "③",
+  "gateIssues": null,
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 2,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 16,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V4-minor-terminology",
+    "severity": "minor",
+    "evidence": "해설 첫 문장이 주체를 '소유주'로 지칭하나 지문·선지의 주체는 'the employer(고용주)'다. 사실 왜곡은 아니나 용어가 느슨하다. 또한 '모든 고용 과정이 전환된다'는 표현은 원문 'the switch in the production network of work'보다 다소 과장된 환언이다."
+   },
+   {
+    "code": "V2-note-answer-nuance",
+    "severity": "minor",
+    "evidence": "정답 ③ 'eliminates its physical footprint'는 원문 'leaves behind no material traces'의 환언으로 유일 정답이 맞다. 다만 원문은 '흔적을 남기지 않는다'(처음부터 물리적 실체가 없음)인 반면 'eliminates'는 존재하던 발자국을 '제거'하는 뉘앙스라 미세한 의미 편차가 있다. 유일성은 훼손하지 않으므로 V2 통과."
+   }
+  ]
+ },
+ {
+  "pid": "P111",
+  "itemId": "C-B-CX-16",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-098",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-missing-answer-logic",
+    "message": "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 2,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V3-minor-person-shift",
+    "severity": "minor",
+    "evidence": "정답 완성문 'Situations are uniquely stressful for each of us based on the extent to which they trigger your inner uncertainty.'에서 주절은 'each of us'인데 빈칸 내부는 'your'로 인칭이 전환된다. 원문은 'our doubt'로 인칭을 유지했다. 지문 전체가 us/you를 혼용하므로 비문은 아니지만 자연스러움이 소폭 떨어진다."
+   },
+   {
+    "code": "V4-minor-loose-terminology-causal",
+    "severity": "minor",
+    "evidence": "해설이 ①을 '인과관계를 반대로 왜곡한 함정'이라 부르나, ①은 원인과 결과를 뒤바꾼 것이 아니라 지문이 명시적으로 부정한 원인(pressure)을 그대로 원인으로 내세운 '부정된 원인 대입(contradiction)'이다. 오답 해설 자체('본문과 정반대의 주장')는 정확하므로 구조 오분석 수준은 아니다."
+   },
+   {
+    "code": "V4-minor-loose-syntax-description",
+    "severity": "minor",
+    "evidence": "해설의 '주어부 뒤의 전치사 목적어 자리'는 부정확한 위치 기술이다. 빈칸은 술부 부가어 'based on'의 전치사 목적어이며 주어부 바로 뒤가 아니다. 명사절/관계절 오분류 같은 범주 오류는 아니어서 minor로 처리."
+   }
+  ]
+ },
+ {
+  "pid": "P112",
+  "itemId": "C-B-A0-19",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-120",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "3",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-target-too-wide",
+    "message": "PARAPHRASE blank originalExpression is too broad; choose a compact semantic unit (the head predicate of the sentence) instead of a long clause."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 3,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 18,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-minor-hedge-drop",
+    "severity": "minor",
+    "evidence": "해설은 '특정 장소와의 유대가 끊어졌다'고 단정하지만 원문은 'ties ... can be disconnected'로 가능성으로 서술한다. 논지 왜곡 수준은 아니어서 V4 실패로는 판정하지 않음."
+   }
+  ]
+ },
+ {
+  "pid": "P113",
+  "itemId": "C-B-X3-18",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-119",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "③",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-weak-distractors",
+    "message": "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap."
+   }
+  ],
+  "solverAnswers": [
+   "3",
+   "3"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": false,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 1,
+   "C5": 1,
+   "C6": 2
+  },
+  "craftSum": 13,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V3-SEAM-SUBJECTLESS-FRAGMENT",
+    "severity": "critical",
+    "evidence": "원문 발췌 구간은 주어를 포함한 완전한 절이다('Now when there is a shipwreck ALL OF US ALWAYS put in the cat.'). 그러나 다섯 선지 모두 주어 없는 동사구(focus.../seek.../write.../advocate.../emphasize...)여서, 정답 ③을 넣은 완성문 'Now when there is a shipwreck write stories with the same fabricated element to avoid blame.'는 평서문으로는 주어가 없는 비문이며, 유일한 문법적 해석은 명령문인데 이는 기자의 1인칭 고백 담화와 양립 불가능하다. 빈칸 seam 문법성 위반."
+   },
+   {
+    "code": "V4-MINOR-TERM-AND-TYPO",
+    "severity": "minor",
+    "evidence": "keyPoints의 '매커니즘'은 '메커니즘'의 오기이고, 'beaten, take a chance 등의 ... 관형적 표현'은 '관용적 표현'(idiomatic)을 의도한 용어 오용이다('관형적'=adnominal은 해당 표현과 무관). 해설 본문의 구조·인과 분석 자체는 정확하여 V4 실패로는 판정하지 않고 경미 이슈로 기록."
+   },
+   {
+    "code": "C4-POLARITY-LEAK",
+    "severity": "major",
+    "evidence": "①②④⑤는 모두 긍정적·규범적 행위(사실적 묘사, 검증 강화, 동물복지 옹호, 유대 강조)이고 ③만 부정적·자조적 고백('fabricated', 'avoid blame')이다. 지문이 명백한 악습 고백이므로 내용 독해 없이 극성 하나로 정답 선택이 가능하다. RUBRIC §D KILLER 조건('극성 하나로 정답을 찍을 수 없다') 직접 위반. 유효성 실패는 아니나 KILLER 부적합의 핵심 근거."
+   },
+   {
+    "code": "C6-MINOR-INCONSISTENT-RATIONALE",
+    "severity": "minor",
+    "evidence": "해설 말미 '①, ②, ⑤ 등은 본문의 어휘를 무작위로 활용했으나'는 각 오답을 설계된 함정으로 설명하는 오답 해설과 서술이 어긋나고 ④를 누락 언급한다(오답 해설 자체에는 ④ 존재). 사실 오류는 아니며 서술 품질 문제."
+   }
+  ]
+ },
+ {
+  "pid": "P114",
+  "itemId": "C-B-CX-02",
+  "armId": "B-CX",
+  "frameId": "blank-supply-v2-012",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "gate_rejected:blank-killer-polarity-shortcut",
+  "correctAnswer": "④",
+  "gateIssues": null,
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 1,
+   "C6": 3
+  },
+  "craftSum": 14,
+  "finalGrade": "C",
+  "beautifulKiller": false,
+  "auditorGrade": "C",
+  "validityIssues": [
+   {
+    "code": "V3-seam-modality",
+    "severity": "minor",
+    "evidence": "정답 ④를 넣은 완성문 'make sure that in the long term, such neglect should remain an occasional deviation'은 원문의 직설법('this is the exception')과 달리 make sure that 절 안에 should를 중첩시켜 이중 당위가 된다. putative should로 해석 가능해 문법 오류는 아니나 원문 대비 다소 부자연스럽다(통과, 경미)."
+   }
+  ]
+ },
+ {
+  "pid": "P115",
+  "itemId": "C-B-A0-17",
+  "armId": "B-A0",
+  "frameId": "blank-supply-v2-109",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "PREMIUM",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "①",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-target-trailing-function",
+    "message": "PARAPHRASE blank originalExpression ends with a modal/auxiliary/function tail; choose a cleaner semantic unit so options do not become grammar-tail variants."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-target-list-like",
+    "message": "BLANK_INFERENCE should not target a long, punctuated, or list-like span."
+   }
+  ],
+  "solverAnswers": [
+   "1",
+   "1"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 2,
+   "C4": 2,
+   "C5": 3,
+   "C6": 3
+  },
+  "craftSum": 17,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V3-seam-minor",
+    "severity": "minor",
+    "evidence": "선지 ②를 빈칸에 넣으면 'A few shills ... easily could not overcome ...'가 되어, 부사 easily가 부정 조동사구(could not) 앞에 놓이는 의미적으로 부자연스러운 결합('쉽게 ~하지 못했다')이 생긴다. 엄밀한 비문은 아니어서 V3 실패로는 판정하지 않으나, 학생이 의미 판단 없이 형태 어색함만으로 ②를 소거할 여지가 있다."
+   }
+  ]
+ },
+ {
+  "pid": "P116",
+  "itemId": "C-B-X3-01",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-002",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "INTERMEDIATE",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "④",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-explanation-step-numbering",
+    "message": "Explanation may be using circled digits (①②③…) as prose structure rather than option references. Prefer 먼저/이어서/따라서 and reserve ①~⑤ for citing options."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-target-too-wide",
+    "message": "PARAPHRASE blank originalExpression is too broad; choose a compact semantic unit (the head predicate of the sentence) instead of a long clause."
+   }
+  ],
+  "solverAnswers": [
+   "4",
+   "4"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": true,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 4,
+   "C2": 3,
+   "C3": 3,
+   "C4": 3,
+   "C5": 4,
+   "C6": 3
+  },
+  "craftSum": 20,
+  "finalGrade": "B",
+  "beautifulKiller": false,
+  "auditorGrade": "B",
+  "validityIssues": [
+   {
+    "code": "V4-SPAN-LEAK-MINOR",
+    "severity": "minor",
+    "evidence": "오답 ① 해설이 \"본문이 강조하는 '도전 과제로 보고 실행에 돌입하라'는 취지\"라고 쓰는데, '도전 과제(challenge)'는 빈칸으로 제거된 원문 span의 표현이라 학생에게 보이는 지문(④ 삽입 완성문 포함)에는 존재하지 않는다. '실행에 돌입(jump into action)'과 논지 자체는 지문에 실재하므로 논리 오류는 아니고 귀속 표현의 사소한 부정확이다."
+   },
+   {
+    "code": "V4-DICTION-MINOR",
+    "severity": "minor",
+    "evidence": "오답 ③ 해설의 '장기적이고 포괄적인 도정이나 경력 계획'에서 '도정'은 어색한 어휘 선택('여정/로드맵'이 자연스러움). 비단어는 아니며 의미 전달에는 지장 없음."
+   },
+   {
+    "code": "V2-GLOBAL-EXCLUSION-NOTE",
+    "severity": "minor",
+    "evidence": "⑤를 넣은 완성 단락은 마지막 문장과 국소적으로는 자연스럽게 이어진다(일일 계획 → 스트레스 관리 가능). 배제는 전역 근거(본문 어디에도 세부 일정 분할 지지 없음 + S1이 '시간을 단위로 쪼개는 것'을 문제의 원인으로 제시)에 의존한다. 이는 정답 유일성을 해치지 않는 정상적 강미끼 설계이며 V2 통과."
+   }
+  ]
+ },
+ {
+  "pid": "P117",
+  "itemId": "C-B-X3-20",
+  "armId": "B-X3",
+  "frameId": "blank-supply-v2-134",
+  "subType": "BLANK_INFERENCE",
+  "difficulty": "KILLER",
+  "plan": "STANDARD",
+  "profile": null,
+  "sourceKind": "accepted",
+  "correctAnswer": "②",
+  "gateIssues": [
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-killer-too-easy",
+    "message": "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+   },
+   {
+    "severity": "warning",
+    "code": "blank-paraphrase-option-imbalance",
+    "message": "PARAPHRASE blank options are too uneven in length (3-8 words)."
+   }
+  ],
+  "solverAnswers": [
+   "2",
+   "2"
+  ],
+  "solverMatch": [
+   true,
+   true
+  ],
+  "multipleDefensible": false,
+  "adjudicated": false,
+  "validity": {
+   "V1": true,
+   "V2": true,
+   "V3": false,
+   "V4": true,
+   "V5": true
+  },
+  "craft": {
+   "C1": 3,
+   "C2": 3,
+   "C3": 1,
+   "C4": 1,
+   "C5": 0,
+   "C6": 3
+  },
+  "craftSum": 11,
+  "finalGrade": "F",
+  "beautifulKiller": false,
+  "auditorGrade": "F",
+  "validityIssues": [
+   {
+    "code": "V3_SLOT_GRAMMAR_ELIMINATION",
+    "severity": "critical",
+    "evidence": "빈칸 뒤에 남은 tail이 '― both for language development and attitudes toward school ― are worthwhile'로 복수 동사 are를 포함한다. ① 'an immediate boost'(단수), ③ 'complete freedom'(단수), ④ 'a disconnection'(단수)을 넣으면 주어-동사 수일치가 깨져 완성문이 비문이 된다. BLANK_INFERENCE 유형의 의도는 모든 선지가 동일 통사 슬롯에 문법적으로 들어가고 의미로만 변별되는 것인데, 오답 3개가 문법만으로 즉시 탈락한다(V3 두 번째 조항 '오답의 비문 여부가 유형 의도와 정확히 일치' 위반). 남는 것은 ②/⑤뿐이고 ⑤는 'short-term' 한 단어로 탈락하므로 지문을 읽지 않고도 정답에 도달할 수 있다."
+   },
+   {
+    "code": "C4_APPOSITIVE_CONTENT_LEAK",
+    "severity": "major",
+    "evidence": "빈칸 직후에 원문의 동격 삽입구 'both for language development and attitudes toward school'가 그대로 남아 빈칸 내용의 두 차원(언어 발달·학교에 대한 태도)을 사전에 명시한다. 정답 ②의 'in both growth and connection'은 이 삽입구의 'both'를 어휘적으로 반향하여(both…both) 메타 단서를 추가로 누출한다."
+   },
+   {
+    "code": "STYLE_BOTH_REDUNDANCY",
+    "severity": "minor",
+    "evidence": "정답 ②를 넣은 완성문은 'enduring positive outcomes in both growth and connection ― both for language development and attitudes toward school ―'로 both가 연속 중복되어 문법적이긴 하나 부자연스럽다. 또한 'growth and connection'은 원문 span('language development and attitudes toward school')의 추상화로 다소 모호하다."
+   }
+  ]
+ }
+]

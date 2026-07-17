@@ -1,0 +1,35 @@
+{
+  "pid": "P049",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam 'So for me, it is wiser to delay difficult work...' is grammatical, but logically contradicts the passage: the author wakes up energized, 'eats problems for breakfast', and the closing conditional ('If you know you are NOT a morning person... schedule your difficult work later') presupposes the author does the opposite (handles it early). Delaying is exactly what the passage argues against for the author."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Grammatically clean: 'it is essential to tackle those stressful tasks right after waking up' — extraposed subject infinitive, and the demonstrative anaphor 'those stressful tasks' has explicit antecedents (talking with an unhappy client, dealing with an unpleasant email). Logically entailed by four converging premises: (a) analytical/hard tasks best when energy is high; (b) 'I generally wake up energized'; (c) the 'eating my problems for breakfast' habit; (d) procrastination wastes emotional energy all day. The contrastive final sentence (non-morning people should schedule difficult work later) confirms the author's rule is 'do it right after waking'."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Grammatical seam, but introduces an unsupported proposition: delegation/seeking help from colleagues appears nowhere in the passage. The argument concerns WHEN to do tasks relative to energy levels, not WHO does them. Fails logical relevance."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatical seam, but semantically inverted: the passage's thesis is that avoiding/ignoring tasks makes them 'hang over my head' and waste more energy than 'just taking care of it'. Ignoring is the criticized behavior, not the recommendation; also nothing frames the tasks as 'minor'."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatical seam, but endorses the pathology the author explicitly self-criticizes: 'I'm someone who tends to overthink different scenarios... that haven't happened yet' and 'I'll spend more time worrying about it... than it would actually take to just take care of it'. Deep reflection before action is the wasteful pattern, not the solution."
+    }
+  ],
+  "note": "Lens: grammarian/logician. All five options are grammatically well-formed in the seam 'So for me, it is ADJ to VP', so discrimination is purely logical. Only ② is consistent with all premises and with the contrastive closing conditional, which functions as a near-explicit paraphrase of the blank (author = morning person -> difficult work right after waking). No alternative construal (e.g., reading 'eating my problems for breakfast' non-temporally) rescues any distractor. Single defensible answer; well-formed item."
+}

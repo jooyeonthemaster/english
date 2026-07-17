@@ -1,0 +1,35 @@
+{
+  "pid": "P047",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "seam: 'exercise maximum efforts'는 collocation상 exert가 더 자연스러우나 비문은 아님. 그러나 부정 조건문에 대입하면 '여러 영역에서 최대 노력을 행사하지 않으면 스트레스를 받는다'가 되어, 'don't know where to draw the line', 'don't overextend yourself'라는 지문 전체의 절제 논지와 정면 모순. 논리적으로 성립 불가."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "seam: 'exercise reasonable limits on your level of involvement'는 exercise+추상명사(restraint/limits) 정상 결합, on-전치사구도 적격. 논리: '참여 수준에 합리적 한계를 행사하지 않으면 → 반드시 완수해야 할 과제에 극심한 스트레스'는 'draw the line', 'Pacing is important', 'don't overextend yourself'와 형식적으로 동치인 유일한 명제. 완전 성립."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "seam: 'exercise fair competition'은 결합 가능하나, 또래 집단과의 경쟁이라는 개념 자체가 지문에 전무. 스트레스의 원인은 과다 참여이지 경쟁 방식이 아니므로 논리적 근거 0. 탈락."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "seam: 'exercise frequent estimation of exact time savings'는 exercise와의 결합이 부자연스럽고, 논리적으로도 '정확한 시간 절감량의 빈번한 추산'은 지문 어디에도 대응물이 없음. 자유시간 감소 언급은 절감량 추산과 무관. 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "seam: 결합은 가능하나, 대입 시 '부담스러운 책무를 전면 회피하지 않으면 스트레스를 받는다' → 전면 회피를 처방하는 명제가 됨. 지문은 'tasks you absolutely need to complete'의 완수를 전제하고 'get involved in the activities that are most meaningful'로 참여를 권장하므로 total avoidance는 과잉 일반화로 논지와 모순. 절제(moderation)와 회피(avoidance)를 구분하는 전형적 극단 미끼. 탈락."
+    }
+  ],
+  "note": "빈칸은 부정 조건문 'If you don't exercise X, you become stressed' 안에 있어 X는 스트레스 예방 장치(절제)여야 한다. 'draw the line'(도입), 'Pacing is important'(중간), 'don't overextend yourself'(결론)의 3중 장거리 단서가 모두 ②를 유일하게 지시한다. ①은 반대 방향, ⑤는 극단화 미끼로 각각 논리 모순이 형식적으로 증명되므로 복수정답 여지 없음. 문항 성립 양호."
+}

@@ -1,0 +1,123 @@
+{
+  "pid": "P030",
+  "blindAnswer": "②",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V1-OK",
+      "severity": "info",
+      "evidence": "렌더 지문은 원지문과 단어 단위로 동일하며, 유일한 변형은 마지막 문장의 'allow the public to have new, eye-opening experiences'를 'will _____.'의 빈칸으로 치환한 것뿐이다. 문장 접합 파손·중복·누락·고아 문장부호 없음. 빈칸 뒤 마침표 정상, 선지 번호 ①~⑤와 정답 라벨 일치."
+    },
+    {
+      "code": "V2-OK",
+      "severity": "info",
+      "evidence": "각 선지를 'creations that will ___'에 독립 대입 검증: ①은 '기술 활용 자체'를 목적으로 만들어 'should not be simply to utilize technology for its own sake'와 정면 충돌(또한 '창작물이 예술가의 편집을 돕는다'는 행위주 논리도 어색), ③은 Rather로 부정된 기술-활용 내용의 재진술이라 대조 구조상 불가, ④는 '비평가가 우려를 표하게 해 준다'가 창작물의 목적으로 논리적으로 성립 불가(비평가 우려는 문제 제기이지 지향점이 아님), ⑤는 'strictly relying on digital editing tools'가 '기술은 도구일 뿐'이라는 주제와 정반대. ②만이 'challenges our perceptions ... forever changes our thoughts and feelings'(3문장) 및 원문 span 'new, eye-opening experiences'의 의미를 보존한다. 단일 정답 ② 확인."
+    },
+    {
+      "code": "V3-OK",
+      "severity": "info",
+      "evidence": "완성문 'Rather, it should be to produce unique creations that will provoke cognitive shifts and reshape viewers' perspectives.'는 문법적·자연스럽다. 다섯 선지 모두 will 뒤 동사원형 VP로 동일 통사 슬롯에 들어가며 seam 비문 없음. 비단어·오탈자 없음."
+    },
+    {
+      "code": "V4-OK",
+      "severity": "info",
+      "evidence": "해설이 인용한 'challenges our perceptions of the world and forever changes our thoughts and feelings'는 실제 3문장과 정확히 일치하고, ②와의 재진술 관계 설명이 사실이다. 오답 해설이 지목한 키워드(① edit digital material/creative process, ③ internet/technology/share/artistic creations, ④ critics/express concern, ⑤ public/digital editing tools)는 모두 해당 선지와 지문에 실제로 존재한다. 문법 용어 오분석 없음. 단, 메인 해설의 총괄 문장('①③④⑤는 수단이나 오도된 기술 의존을 담고 있다')은 ④(논점 이탈/행위주 전환 오답, 기술 의존 아님)에는 부정확하게 뭉뚱그려진 표현 — 개별 오답 해설이 이를 정확히 보정하므로 치명은 아니고 minor."
+    },
+    {
+      "code": "V5-OK",
+      "severity": "info",
+      "evidence": "선언 정답 ② = 해설 결론 ② = 오답 해설 커버리지(①③④⑤) = keyPoints('reshape viewers' perspectives' 재진술 관계 언급) 모두 동기화. 학생 노출 필드 완전."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "수단-목적 혼동(기술 활용 자체를 예술의 목적으로 격상) + 1·4문장 어휘 verbatim 재활용",
+      "temptingBecause": "'edit digital material'과 'creative process'가 지문 표현 그대로라 표면 대조만 하는 학생에게 익숙하게 보인다",
+      "decisiveFlaw": "직전 문장이 명시적으로 부정한 내용('not simply to utilize technology for its own sake')의 재진술이라 Rather 대조 구조상 즉시 탈락. 부수적으로 '창작물이 예술가의 편집을 돕는다'는 행위주 논리도 성립하지 않음"
+    },
+    {
+      "label": "②",
+      "intent": "정답 — 3문장의 위대한 예술 정의('challenges our perceptions / changes thoughts and feelings')와 원문 빈칸 span('new, eye-opening experiences')의 추상화 재진술",
+      "temptingBecause": "정답이므로 해당 없음",
+      "decisiveFlaw": "없음(유일 정답)"
+    },
+    {
+      "label": "③",
+      "intent": "협소 scope 함정 — 배경 사실(1문장, 공유의 대중화)을 예술가의 궁극 목표로 승격",
+      "temptingBecause": "'internet technology', 'share artistic creations'가 도입부 어휘와 강하게 겹친다",
+      "decisiveFlaw": "이 역시 Rather가 부정한 '기술 활용' 계열 내용이며, 공유는 글이 문제 상황으로 제시한 배경이지 필자가 제시하는 지향점이 아님"
+    },
+    {
+      "label": "④",
+      "intent": "행위주 전환(actor swap)/논점 이탈 — 비평가의 우려(2문장)를 창작물의 목적 자리로 이식",
+      "temptingBecause": "'critics', 'express concern'이 지문 표현 그대로라 기억 대조로는 그럴듯하다",
+      "decisiveFlaw": "비평가의 우려는 글의 문제 제기이지 예술가가 산출해야 할 결과가 아니며, '창작물이 비평을 가능하게 한다'는 목적문 자체가 글의 논지와 무관"
+    },
+    {
+      "label": "⑤",
+      "intent": "극성 역전(half-truth) — 'satisfy the public'으로 목적처럼 위장하되 경로를 도구 의존으로 뒤집음",
+      "temptingBecause": "'public'이 원문 빈칸 span의 실제 수혜자와 일치해 앞부분만 읽으면 정답처럼 보인다",
+      "decisiveFlaw": "'strictly relying on digital editing tools'가 '기술은 도구일 뿐'이라는 4~5문장 핵심 주장과 정반대"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "EXPL-BLANKET-IMPRECISE",
+      "severity": "minor",
+      "evidence": "메인 해설의 '①, ③, ④, ⑤는 ... 수단이나 오도된 기술 의존을 담고 있으므로 오답'이라는 총괄 서술은 ④(비평가 행위주 전환 오답)에는 들어맞지 않는다. 개별 오답 해설(④: '인과 및 논점 자체가 무관')이 정확히 보정하고 있어 사실성 치명은 아님"
+    },
+    {
+      "code": "EXPL-VERBOSE",
+      "severity": "minor",
+      "evidence": "해설 첫 문장이 근거 제시 전에 총평으로 장황하게 시작하며, '문맥적 착시' 같은 수사적 표현이 채점 근거의 선명도를 다소 흐린다"
+    }
+  ],
+  "issues": [
+    {
+      "severity": "major",
+      "code": "C5-DIFFICULTY-MISMATCH",
+      "evidence": "요청 난이도 KILLER이나 실제로는 단일 극성 단서로 풀린다. 5·6문장('should not be simply to utilize technology... Rather')만 읽으면 기술/도구/비평가를 언급하는 ①③④⑤가 한꺼번에 소거되고 유일하게 긍정 방향·추상 어휘인 ②가 남는다. RUBRIC §D의 '극성 하나로 정답을 찍을 수 없다' 조건 위반",
+      "recommendation": "정답 방향과 같은 극성(긍정적 예술 가치)을 가진 정교한 half-truth 오답을 최소 2개 배치하거나(예: 감상 편의·미적 즐거움 등 '눈뜨게 하는 경험'과 미묘하게 다른 긍정 가치), 빈칸을 두 논리 단서의 결합 없이는 좁힐 수 없는 위치로 옮겨야 KILLER 성립"
+    },
+    {
+      "severity": "major",
+      "code": "C4-META-LEAK",
+      "evidence": "오답 4개는 지문 키워드를 verbatim 재활용한 반면 정답 ②만 유일하게 추상적 paraphrase('cognitive shifts', 'reshape perspectives')다. '베낀 선지는 오답, 바꿔 쓴 선지가 정답'이라는 메타 규칙으로 지문 이해 없이도 정답 가능",
+      "recommendation": "오답 일부에도 paraphrase층을 입히고, 정답에도 지문 어휘 한두 개를 남겨 표면 신호를 균질화"
+    },
+    {
+      "severity": "minor",
+      "code": "C2-TRAP-OVERLAP",
+      "evidence": "①·③·⑤가 모두 '기술=수단' 계열의 같은 소거 기준을 공유해, 겨냥한 오개념이 사실상 하나(수단-목적 혼동)로 수렴한다. scope shift(③)·polarity(⑤)로 명목상 분화했지만 학생 관점의 소거 경로는 동일",
+      "recommendation": "함정 유형을 causal reversal, condition loss 등으로 실질적으로 분산"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": true,
+    "meaningPreservingAbstraction": true,
+    "distractorAnchorOverlapFlaw": true,
+    "requiresTwoCuesNoSingleCueShortcut": false,
+    "distinctTrapTypes": false,
+    "note": "완전 검증에는 3문장(정의)과 6문장(결론)의 연결이 필요하지만, 단일 극성/화제 단서(기술 언급 여부)만으로 정답을 찍는 지름길이 존재해 §D의 KILLER 조건을 충족하지 못한다. ①③⑤의 함정 유형도 실질적으로 한 계열로 수렴"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과하는 유효한 문항이며 정답 유일성·해설 사실성도 견고하다. 그러나 요청 난이도 KILLER에 대해 실제 난이도는 중하위권도 한 단계 추론으로 푸는 수준(C5=1): 오답 4개가 '기술/수단' 단일 소거 기준으로 동반 탈락하고, 정답만 유일한 추상 paraphrase라는 메타 누출(C4=2)까지 겹쳐 변별력이 낮다(C3=2). 출제 지점 자체는 글의 핵심 논리(수단-목적 대조 + 위대한 예술의 정의 재진술)로 우수하다(C1=4). 합계 15/24, C 최저 1 — 재설계(동일 극성 half-truth 오답 도입, 표면 신호 균질화) 없이는 KILLER로 출하 불가. 등급 C."
+}

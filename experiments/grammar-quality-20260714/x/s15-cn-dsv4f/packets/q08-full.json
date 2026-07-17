@@ -1,0 +1,170 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "mid-word-marker",
+    "grammar-render-marker-count",
+    "grammar-marker-adjacent-duplicate",
+    "grammar-error-not-mutated",
+    "grammar-underline-wide",
+    "grammar-underline-wide",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-answer-point-not-core"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=l  (B):dec=c  (C):dec=m  (D):ANS=m  (E):dec=h",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 185,
+        "relPos": 0.284,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 292,
+        "relPos": 0.448,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 457,
+        "relPos": 0.701,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 471,
+        "relPos": 0.722,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 500,
+        "relPos": 0.767,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 3,
+    "lastMarkerRelPos": 0.767,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것을 고르시오.",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "contrary to popular belief",
+        "isError": false,
+        "errorExpression": "contrary to popular belief",
+        "surroundingText": "Very often, multitasking only slows you down, contrary to popular belief.",
+        "pointCode": "l"
+      },
+      {
+        "label": "(B)",
+        "expression": "While doing the laundry",
+        "isError": false,
+        "errorExpression": "While doing the laundry",
+        "surroundingText": "While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "any more time than it would",
+        "isError": false,
+        "errorExpression": "any more time than it would",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "m"
+      },
+      {
+        "label": "(D)",
+        "expression": "than it would when done",
+        "isError": true,
+        "errorExpression": "than it would when done",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "m"
+      },
+      {
+        "label": "(E)",
+        "expression": "your phone pressed to your ear",
+        "isError": false,
+        "errorExpression": "your phone pressed to your ear",
+        "surroundingText": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "h"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "contrary to popular belief"
+      },
+      {
+        "label": "(B)",
+        "text": "While doing the laundry"
+      },
+      {
+        "label": "(C)",
+        "text": "any more time than it would"
+      },
+      {
+        "label": "(D)",
+        "text": "than it would when done"
+      },
+      {
+        "label": "(E)",
+        "text": "your phone pressed to your ear"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(C)": "'any more time than it would'는 비교급 'more'와 부정문 'any'가 결합한 정상 표현으로, '그것이 (할) 시간보다 더 많은 시간'이라는 의미를 전달하므로 어법상 문제가 없습니다.",
+      "(A)": "'contrary to popular belief'는 전치사구로서 '대중의 믿음과는 반대로'라는 의미로 부사구 역할을 하며, 문장 내에서 정상적으로 사용되었습니다.",
+      "(E)": "'your phone pressed to your ear'는 'with + 목적어 + 과거분사(pressed)' 구문으로, '전화기를 귀에 댄 채로'라는 의미의 부대상황을 나타내는 정상적인 표현입니다.",
+      "(B)": "'While doing the laundry'는 'While you are doing the laundry'에서 주어와 be동사가 생략된 분사구문으로, 주절의 주어(you)와 능동 관계를 이루므로 어법상 올바릅니다."
+    },
+    "explanation": "(D) 밑줄 'than it would when done'은 비교구문에서 오류입니다. 이 문장의 골격은 'It doesn't take up any more time than it would (take up time) when (you are) done with your phone pressed to your ear'로, 'it'은 'doing the laundry'를 가리키며 비교 대상은 '세탁 시간'입니다. 그러나 'done'은 수동 분사로서 'it'이 '완료되다'는 의미를 강제하는데, 이는 '세탁이 시간을 차지하다(take up time)'라는 능동 동작과 충돌합니다. 따라서 'than it would when done'은 비문이며, 올바르게 고치려면 'than it does when you are doing it' 또는 능동 분사구문 'than it would when doing it'을 써야 합니다.",
+    "keyPoints": [
+      "(D) 비교구문에서 수동 분사 'done'의 오용 — 능동 의미의 동작을 수동태로 표현한 비문",
+      "(E) 'with + 목적어 + 과거분사' 구문 — 부대상황 표현의 정상적인 구조 이해",
+      "(B) 분사구문의 주어 일치 — 주절 주어와의 능동 관계 확인"
+    ],
+    "tags": [
+      "수능 영어",
+      "어법",
+      "비교구문",
+      "분사구문",
+      "수동태",
+      "advance"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, __(A) contrary to popular belief__. Give your whole focus to what you're doing at the moment no matter what it is. __(B) While doing the laundry__, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up __(C) any more time than it would__ would when done__ with __(E) your phone pressed to your ear__. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster."
+  }
+}

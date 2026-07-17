@@ -1,0 +1,80 @@
+{
+  "pid": "P009",
+  "blindAnswer": "(C)",
+  "confidence": "high",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-overstatement",
+      "severity": "minor",
+      "evidence": "해설 말미의 '동사구 중간에 삽입되어 있는 부사들로 인해 병렬의 짝을 놓치기 쉬운 함정' — 해당 VP(it must either to adapt or indeed reinforce this balance)에 삽입된 부사는 'indeed' 하나뿐이므로 복수형 '부사들'은 사실 과장이다. 또한 오류 지점(must 바로 뒤 to-부정사)은 병렬 짝을 확인하기 전에 국소적으로 드러나므로 '놓치기 쉬운 함정'이라는 난이도 서술도 과장이다. 오분석 수준은 아니어서 V4 실패로는 판정하지 않음."
+    },
+    {
+      "code": "V4-minor-loose-phrasing",
+      "severity": "minor",
+      "evidence": "(B) 오답 해설 'a bridge must exhibit가 수식하는 문장의 진짜 주어 핵은…' — 접촉 관계절 'a bridge must exhibit'가 수식하는 것은 '문장'이 아니라 명사 'the first qualities'다. 핵심 판단(주어 핵 'one' → 단수 concerns)은 정확하므로 minor."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 2,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "주격 관계대명사절 내 동사 수일치 (pointCode d)",
+      "temptingBecause": "'Its presence makes … mark that shows'에서 절 경계를 놓치면 주절 주어(Its presence)나 뒤따르는 목적어구와 혼동해 수일치를 의심할 수 있다",
+      "decisiveFlaw": "선행사는 단수 'a lasting mark'이므로 shows는 적법 — 오류 아님. 다만 (B)와 동일한 수일치 계열(pointCode 'd' 중복)이라 의도 밀도가 낮다"
+    },
+    {
+      "label": "(B)",
+      "intent": "'one of + 복수명사 + 접촉 관계절' 뒤의 주어-동사 수일치 (pointCode d)",
+      "temptingBecause": "동사 직전의 'qualities … exhibit'와 복수 명사들이 개입해 concern(복수형)을 기대하게 만든다",
+      "decisiveFlaw": "주어 핵은 단수 'one'이므로 concerns가 적법 — 오류 아님. (A)와 point 중복"
+    },
+    {
+      "label": "(C)",
+      "intent": "정답 — 조동사 must 뒤 either A or B 병렬에서 동사원형 요구 (pointCode i)",
+      "temptingBecause": "정답 선지로서, either 병렬과 'adapt to'의 전치사 배치가 겹쳐 표면이 낯설게 보인다",
+      "decisiveFlaw": "'it must either to adapt or …'는 조동사 뒤에 to-부정사가 와서 비문. 'either adapt to or'로 고치면 정확히 원문 복원. 단, must 바로 뒤 한 단어(either) 건너에 to-V가 노출되어 병렬 짝(or indeed reinforce)을 읽지 않고도 국소 4단어 창에서 즉시 판별된다 — KILLER 심도 미달"
+    },
+    {
+      "label": "(D)",
+      "intent": "be동사 주격보어 자리의 형용사 적법성 (pointCode f)",
+      "temptingBecause": "'is subordinate to'가 수동태(is subordinated to)처럼 보여 동사형을 기대할 수 있다",
+      "decisiveFlaw": "be의 보어 자리에 형용사 subordinate는 적법 — 오류 아님"
+    },
+    {
+      "label": "(E)",
+      "intent": "재귀대명사 itself vs 인칭대명사 it (pointCode g)",
+      "temptingBecause": "관계절 내부라 지시 대상(a bridge)이 멀어 보이고 'in it'과의 교체 가능성을 저울질하게 한다",
+      "decisiveFlaw": "'spectacular in itself'는 관용적이며 관계절 주어(= a bridge)와 동일 지시이므로 재귀형이 적법 — 오류 아님"
+    }
+  ],
+  "explanationIssues": [
+    "'부사들'(복수) — 실제 삽입 부사는 'indeed' 하나뿐 (minor 사실 과장)",
+    "(B) 오답 해설의 '…가 수식하는 문장의' 표현 — 관계절이 수식하는 것은 명사 'qualities'이지 문장이 아님 (minor 용어 느슨함)",
+    "해설이 '병렬의 짝을 놓치기 쉬운 함정'이라 주장하나 오류는 must+to-V로 병렬 확인 이전에 국소적으로 판별됨 — 난이도 서술 과장"
+  ],
+  "killerConditionsMet": false,
+  "killerConditionNotes": {
+    "minimalPair": true,
+    "clearGrammarJudgment": true,
+    "allFiveUnderlinesDocumented": false,
+    "structuralNotSurface": false,
+    "noShadowingDecoy": true,
+    "detail": "① 교정 시 정확히 원문 복원(either to adapt or → either adapt to or) 충족. ② 조동사+동사원형은 명확한 문법 판단 충족. ③ 각 밑줄의 point(pointCode)와 why-correct는 있으나 명시적 why-tempting 필드가 없고, (A)/(B)가 동일 pointCode 'd'로 중복. ④ KILLER 조건 '철자·비단어·단순 표면 오류로 즉시 드러나지 않아야' 미충족 — 'must either to adapt'는 or-병렬 구조를 읽지 않아도 조동사 직후 to-부정사라는 국소 단서만으로 즉시 판별되는 기초·중급 수준 오류다. ⑤ 동일 point의 쉬운 디코이 없음."
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 (C) 스팬의 의도된 변형(adapt to↔to adapt) 외 원지문과 완전 일치하고, 각 선지 독립 검증 결과 (C)만이 비문으로 단일 정답이 유일하며, 필드 간 동기화(정답 라벨·markedExpressions·keyPoints·해설)도 모순 없음. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 정답 오류가 조동사 must 직후 1단어 건너에 to-부정사가 노출되는 극히 국소적·표면적 유형이라 병렬 구조 독해 없이 즉시 소거된다(C5=1). 오답 (A)/(B)가 동일한 수일치 계열(pointCode 'd')로 중복되어 의도 밀도가 낮고(C2=2), 디코이 전반이 검증이 쉬워 실질 변별이 약하다(C3=2). 해설은 정확하나 '부사들' 복수 과장과 (B) 해설의 느슨한 수식 관계 서술 등 minor 흠결이 있다. 모든 V 통과 + C5<2 + 합계 14/24 → 등급 C(재설계 필요: 오류 지점을 조동사에서 더 멀리 떨어뜨리거나 병렬 2번째 항에 배치하는 등 구조 독해를 강제해야 KILLER 성립). killerConditionsMet=false."
+}

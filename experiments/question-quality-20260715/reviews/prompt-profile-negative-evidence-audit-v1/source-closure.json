@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "root": "D:/Desktop/2026project/nara",
+  "files": [
+    { "path": "src/lib/question-generation-research-profiles.ts", "bytes": 33970, "sha256": "aad875be9e4cc678f345d38f670d3b6fe51b8d579a46b503a937dfa162c0f094" },
+    { "path": "src/lib/question-generation-research-schema.ts", "bytes": 2256, "sha256": "a507b40880ad83940c754687a9bb04db00490bdf8b7ad554f7f34d9cdad1d7e5" },
+    { "path": "src/lib/question-generation-research-runtime.ts", "bytes": 7447, "sha256": "727905b19ba7003a0f7983310c65492a13f28257720c921be6fa60319009d10b" },
+    { "path": "src/lib/question-generation-llm.ts", "bytes": 42254, "sha256": "90776f0304ef9fddcbb60a92563904f8ce3213b26036d8357b3eeedb7ccf5c46" },
+    { "path": "src/lib/atlas-ai.ts", "bytes": 17718, "sha256": "c69d9115e834b9a379c80791653e3bd51aecef117dca3367391460aa2ff60922" },
+    { "path": "src/app/api/ai/generate-questions-auto/_lib/run-question-generation.ts", "bytes": 106853, "sha256": "fadf7d70a15ebe74fffd526b4b6f02e0b9cefe25be7f5f810f096770381f37c2" },
+    { "path": "src/lib/question-ai-schemas-mc.ts", "bytes": 49303, "sha256": "c538452b7810e0efd8dd1d2c9345c3b1a64f8650a4590afc11850ce0d2bb5694" },
+    { "path": "src/lib/question-postprocess/processors/blank-inference.ts", "bytes": 11636, "sha256": "2655e85d000cb57046680db5a3c548db07e1b18c0dd9d6b56f3aff10d9786716" },
+    { "path": "src/lib/question-quality/validators/blank/inference.ts", "bytes": 35315, "sha256": "0e517dd2dde81f06cf20bab6c7bab90e2155ed7c9e239f07d02e3fb099ff8f60" },
+    { "path": "src/lib/question-quality/validators/blank/seam.ts", "bytes": 10932, "sha256": "890869a6d1f210ec957b6eea81f304fde6b8f3a245f803503a5debce0aa85783" },
+    { "path": "tests/unit/question-generation-research-profiles.test.ts", "bytes": 18614, "sha256": "560b10b28f562f61d382f9d7257e3a6c84276093f8d518bf3f8c1a48c7c3a04c" },
+    { "path": "tests/unit/question-generation-research-profile-response.test.ts", "bytes": 20966, "sha256": "9a2c3bf66bf00b486fb1d0e96ba3615bec431fa2b2fc7a43ec4422fce6217099" },
+    { "path": "tests/unit/question-generation-research-profile-wire.test.ts", "bytes": 17932, "sha256": "b14f0330e8ee984f81727b4c75e3998393441fbc0395d07d11b1192507d0165a" },
+    { "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/actual-entrypoint-campaign.test.ts", "bytes": 13942, "sha256": "02d69b6ccda5a4fccd22470601767e7c48bb45b8fccc0e4f9a5724cfdd11f4c8" },
+    { "path": "experiments/question-quality-20260715/reviews/provider-callsite-phase-c/structured-cardinality-wire.test.ts", "bytes": 7420, "sha256": "67b5e5dda19c39e37f4de1337a135dadabd7b82584306120f76bf764b18675c9" },
+    { "path": "package.json", "bytes": 4402, "sha256": "bfc9c68a6d0df116f969b5349131fc6bc0e2f9edfe9f9c105d5b2abb8f2be7d8" },
+    { "path": "package-lock.json", "bytes": 799539, "sha256": "69df7075b9a70cb1740531a24cc787d396d735ac2977a359b7700fd0701253be" },
+    { "path": "tsconfig.json", "bytes": 829, "sha256": "5299d015fae444ed81fbe2b86153266420251a0994a1dedb97c4726c385b844e" }
+  ]
+}

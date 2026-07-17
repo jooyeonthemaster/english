@@ -1,0 +1,168 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense",
+    "grammar-obvious-noun-what-relative",
+    "grammar-pointcode-span-mismatch",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=b  (B):dec=a  (C):dec=g  (D):dec=a  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 55,
+        "relPos": 0.076,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 60,
+        "relPos": 0.083,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 337,
+        "relPos": 0.467,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 452,
+        "relPos": 0.627,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 640,
+        "relPos": 0.888,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.888,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": true,
+        "correction": "that",
+        "errorExpression": "what",
+        "surroundingText": "a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "kept",
+        "isError": false,
+        "correction": "kept",
+        "errorExpression": "kept",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "yourself",
+        "isError": false,
+        "correction": "yourself",
+        "errorExpression": "yourself",
+        "surroundingText": "To break out of this neural rut, train yourself to acknowledge when things go right.",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "went",
+        "isError": false,
+        "correction": "went",
+        "errorExpression": "went",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "follows",
+        "isError": false,
+        "correction": "follows",
+        "errorExpression": "follows",
+        "surroundingText": "Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "what"
+      },
+      {
+        "label": "(B)",
+        "text": "kept"
+      },
+      {
+        "label": "(C)",
+        "text": "yourself"
+      },
+      {
+        "label": "(D)",
+        "text": "went"
+      },
+      {
+        "label": "(E)",
+        "text": "follows"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "kept는 과거의 역사적 사실(사바나에서 살았을 때)을 기술하므로 과거시제 동사 kept는 어법상 자연스럽습니다.",
+      "(C)": "명령문 train의 주어는 생략된 주어인 you이므로, 목적어 자리에 주어와 동일 대상을 가리키는 재귀대명사 yourself를 쓴 것은 적절합니다.",
+      "(D)": "계획표나 일기에 '잘 진행되었던 일'을 적는 것이므로 과거 일어난 상황을 진술하는 정동사 went는 어법상 적절합니다.",
+      "(E)": "주어인 reality가 3인칭 단수이므로, 이에 호응하는 현재형 단수 동사 follows는 수일치상 적절합니다."
+    },
+    "explanation": "(A) \"what\"는 어법상 틀린 표현이며 \"that\"로 고쳐야 한다. 본문에서 대시(-) 뒤의 'a trait'는 동격명사구의 핵심어(선행사) 역할을 합니다. 이 선행사에 걸리는 두 개의 주격 관계대명사절이 등위접속사 but으로 병렬 구성되어 있습니다. 즉, 'that kept us alive ~'와 'that can prevent happiness ~'가 병렬되어야 하므로, 선행사 'a trait'가 존재하는 한 관계대명사는 선행사를 포함한 관계사인 what이 될 수 없습니다. 따라서 학생들에게 보인 틀린 표현인 'what'을, 선행사를 수식하는 주격 관계대명사인 'that'(또는 which)으로 고쳐야 어법상 올바른 구조가 됩니다.",
+    "keyPoints": [
+      "(A) 관계사 — 선행사 유무에 따른 that과 what의 선택",
+      "(C) 대명사 — 명령문 주어(you)와 일치하는 재귀대명사의 사용",
+      "(E) 수일치 — 단수 주어에 부합하는 정동사의 단수형 수일치 판정"
+    ],
+    "tags": [
+      "수능어법",
+      "관계대명사",
+      "병렬구조",
+      "재귀대명사",
+      "수일치"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait __(A) what__ __(B) kept__ us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train __(C) yourself__ to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what __(D) went__ well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality __(E) follows__. The more you appreciate life, the more reasons you have to celebrate it."
+  }
+}

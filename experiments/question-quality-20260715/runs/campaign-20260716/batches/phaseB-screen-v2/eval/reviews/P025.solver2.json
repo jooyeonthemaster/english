@@ -1,0 +1,35 @@
+{
+  "pid": "P025",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 seam은 정문('make sure you expand...')이나 논리 모순. 지문의 핵심 명제 'Joining too many clubs can reduce a large amount of your free time' 및 'exercise some moderation'과 정면 배치되는 반(反)명제. 형식적으로 P(절제하라)와 ¬P(최대한 확장하라)의 관계."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "'make sure you avoid taking on more commitments than you can manage' — 문법 결합 정문(avoid + 동명사, than 비교절의 manage 목적어 공백도 정상). 논리적으로 'don't know where to draw the line'(선 긋기 실패 경계), 'exercise some moderation'(절제), 'Pacing is important'의 직접 재진술로서 결론부 일반 원칙 자리에 정확히 부합. 앞 절 'get involved in the most meaningful activities'와도 '참여하되 한도 내에서'라는 정합적 접속을 이룬다."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법 정문이나 논리 부적합. '성적 향상 활동'이라는 선택 기준은 지문 전체에 대응 명제가 없고, 지문이 명시한 기준은 'most meaningful to you'. 'exclusively'는 등위접속된 앞 절(의미 있는 활동 참여)과 충돌 가능해 접속 정합성도 깨진다."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 정문이나 담화 층위 오류. 학교신문 마감은 'For example'로 도입된 특수 예시일 뿐이며, 'The point is this' 이후 결론 문장은 지문 논지의 일반화 자리다. 일반 원칙 자리에 예시 층위 명제를 넣으면 결론이 특수 사례로 부당 축소된다. 또한 지문은 '마감 전에 일찍 끝내라'가 아니라 '애초에 과다 참여를 피하라'를 논증한다."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 seam은 성립하나 의미론적으로 공허. 'tasks that require zero free time to accomplish'(완수에 자유시간이 전혀 들지 않는 과제)를 우선시하라는 명제는 지문의 어떤 전제로부터도 도출되지 않으며, 지문 논지(절제·페이싱)와 무관한 사이비 진술. 'free time' 어휘만 표면적으로 재활용한 미끼."
+    }
+  ],
+  "note": "5개 선지 모두 'make sure you + 동사원형' seam에서 문법적으로 결합 가능하므로 판별축은 순수 논리 적합성. 결론부(So...)는 'moderation' 논지의 일반화를 요구하며 ②만 유일하게 충족. ①은 반명제, ③⑤는 무근거 명제, ④는 예시 층위로의 부당 축소. 대안 해석으로도 ② 외 옹호 불가 — 단일 정답으로 수렴하는 건전한 문항."
+}

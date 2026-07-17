@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "deterministic-structural-v11-blocking-fp-adjudication-manifest-v1",
+  "auditId": "deterministic-structural-reaudit-v11-fresh-adjudication-v1",
+  "verdict": "PASS_ORACLE_CONTROL_INVALID_12_OF_12",
+  "scope": {
+    "reportedBlockingFalsePositives": 12,
+    "trueValidatorFalsePositives": 0,
+    "oracleControlInvalid": 12,
+    "productionChanges": 0,
+    "fixtureChanges": 0,
+    "apiCalls": 0,
+    "databaseCalls": 0,
+    "networkCalls": 0
+  },
+  "sealedParents": {
+    "../corpus.json": "8c4c6a5d41488b433bccde5b08acbdff198a089273a6e4c0b5e6ce45607777ab",
+    "../oracle.json": "30961d05f6020bc87cf8528f72abd19cf8f70055b5ce515ef1e0b13bd5595f9f",
+    "../results.json": "480fd1037fbe29d7c5b382c8f84900f52edf4e80e2e4f3e4cc9b8e9172555ea7"
+  },
+  "artifacts": {
+    "README.md": "28034edc99dd7575404cef647e56a8319948d4216c1a8aa5c091926ab25f858f",
+    "adjudication.json": "aef96b5ce574c4bf687ca23fa847d83c8b32233c3df432b6ac67837a1a6b975a",
+    "verify.mjs": "c002593053307393e81cedd269fef02942a239d98c4555a0c800ac1d5f1ecae6"
+  }
+}

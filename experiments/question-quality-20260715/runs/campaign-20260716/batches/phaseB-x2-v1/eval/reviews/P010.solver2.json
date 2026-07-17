@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) when",
+      "verdict": "correct",
+      "reason": "'made by organizations when they first consider experimenting...'에서 when은 과거분사구 'made by organizations'에 걸리는 시간 부사절 접속사로 정상 기능한다. 뒤에 완전한 절(they first consider experimenting with social media)이 따르므로 접속사 when의 결합 조건을 충족한다. 문장 전체 골격은 'One of the most common mistakes ... is that ...'로, when절은 삽입 수식일 뿐 주어-동사 일치(One ... is)에도 영향이 없다. 어법상 옳다."
+    },
+    {
+      "label": "(B) understood",
+      "verdict": "incorrect (정답)",
+      "reason": "'with a thorough understood of the organization's own goals'에서 부정관사 a + 형용사 thorough + ___ + of구 라는 환경은 명사 핵(head noun)을 요구한다. understood는 understand의 과거분사(동사형)로, 이 자리에서 명사로 기능할 수 없다. 'the understood'류의 절대적 용법도 부정관사·of 보충어와는 결합 불가능하며, 축약 관계절이나 분사 수식으로 읽을 대안 구문도 성립하지 않는다(수식받을 명사가 없음). 'not with insight into A but with a thorough ___ of B'의 병렬 구조상 insight에 대응하는 명사가 필요하므로 동명사 파생 명사 understanding이 유일한 정문 형태다. 어법상 틀렸다."
+    },
+    {
+      "label": "(C) itself",
+      "verdict": "correct",
+      "reason": "'serves no purpose in and of itself'는 고정 관용구 'in and of itself'(그 자체로는)이며, 재귀대명사 itself의 선행사는 단수 주어 \"Being in social media\"(동명사구, 단수 취급)로 수·인칭 일치가 성립한다. 어법상 옳다."
+    },
+    {
+      "label": "(D) solve",
+      "verdict": "correct",
+      "reason": "'must either solve a problem ... or result in ...'에서 병렬 시작점은 조동사 must 뒤의 원형이다. either A or B 상관접속 구조에서 A(solve)와 B(result)가 모두 동사원형으로 정확히 병렬된다. 주어 'a social media presence'가 3인칭 단수이지만 조동사 must 뒤이므로 원형 solve가 맞다. 어법상 옳다."
+    },
+    {
+      "label": "(E) measurable",
+      "verdict": "correct",
+      "reason": "'preferably a measurable one'에서 measurable은 대명사 one(= improvement)을 수식하는 형용사로, 관사 a + 형용사 + one 구조가 정상 성립한다. 의미상으로도 '측정 가능한 개선'으로 문맥에 부합한다. measurably(부사)로 쓸 이유가 없다. 어법상 옳다."
+    }
+  ],
+  "note": "정답 후보는 (B) 단독. 'a thorough understood of'는 관사-형용사-of 보충어 환경에서 명사 핵이 요구되는 자리에 과거분사를 둔 명백한 오류로, 어떤 대안 해석(축약 관계절, 분사구문, 도치 등)으로도 정문화되지 않는다. 나머지 네 밑줄은 각각 접속사 결합, 관용 재귀구, either-or 병렬, 형용사+one 수식으로 모두 형식적으로 증명 가능한 정문이다. 단일 정답으로 깔끔하게 좁혀지는 문항."
+}

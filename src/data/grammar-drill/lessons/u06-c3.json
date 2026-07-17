@@ -1,0 +1,668 @@
+{
+  "id": "u06-c3",
+  "unitId": "u06",
+  "order": 3,
+  "title": "콤마+which 계속적 용법",
+  "oneLiner": "콤마 뒤 관계사 자리에는 that·what이 올 수 없고, which는 앞 절 전체까지 선행사로 받습니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": ["TP10", "TP13"],
+    "sourceRefs": [
+      "어법끝 5.0 TP10 관계대명사 격 — 계속적 용법(콤마+관계사)",
+      "어법끝 5.0 TP13 that/what/which",
+      "docs/grammar-test-points.md 계속적 용법 — ', that' ', what' 불가 / ', which'는 절 전체를 선행사로 받음",
+      "천일문 고등 GRAMMAR 관계사 CH(계속적 용법)"
+    ]
+  },
+  "lenses": ["L1", "L2"],
+  "confusableWith": ["u06-c1", "u06-c2", "u06-c4", "u07-c1"],
+  "estimatedMinutes": 22,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "Sea levels rose faster than expected, which alarmed the coastal cities.",
+        "Sea levels rose faster than expected, that alarmed the coastal cities."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 콤마 뒤의 관계사 하나뿐입니다. 이 레슨을 마치면 왜 콤마 뒤에 that 이 설 수 없는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "계속적 용법",
+      "question": "관계사 앞에 콤마 하나가 찍혔을 뿐인데, 무엇이 그렇게 달라집니까?",
+      "plain": "계속적 용법은 콤마를 찍어 관계사절을 덧붙이는 방식입니다. 어떤 대상인지 이미 정해 놓고, 그 대상에 정보를 보태기만 합니다.",
+      "analogy": "제한적 용법이 여럿 중 하나를 '이 사람!' 하고 골라 주는 손가락이라면, 계속적 용법은 이미 한 사람을 정해 놓고 '그 사람, 참고로 부산에 삽니다' 하고 각주를 다는 것입니다.",
+      "whyItMatters": "콤마 뒤 that·which 를 밑줄로 흔드는 문항이 수능 어법의 단골입니다. 콤마 하나가 후보 관계사를 절반으로 줄여 주는 판별의 스위치이므로, 이 스위치를 알면 절반은 이미 푼 셈입니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "that 은 which 와 who 를 대신하는 만능 관계대명사이므로 콤마 뒤에서도 쓸 수 있습니다.",
+      "truth": "that 이 which·who 를 대신할 수 있는 것은 콤마가 없는 제한적 용법에서뿐입니다. 콤마가 붙은 계속적 용법 자리에는 that 도 what 도 올 수 없습니다. 이 자리에 설 수 있는 것은 which·who(m)·whose·when·where 입니다.",
+      "counterExample": {
+        "en": "The report, **that** the committee released last week, changed the whole debate.",
+        "ko": "위원회가 지난주에 공개한 그 보고서는 논의 전체를 바꾸어 놓았습니다.",
+        "note": "콤마 뒤에 that 이 왔으므로 어법상 틀립니다. which 로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "콤마 뒤 관계사 필기",
+      "intro": "콤마 뒤 관계사를 판별하는 데 필요한 다섯 가지를 필기 한 장으로 모읍니다.",
+      "entries": [
+        {
+          "head": "콤마 = 계속적 용법의 신호",
+          "body": "관계사 앞에 콤마가 있으면 계속적 용법입니다. 이 자리에는 that 과 what 이 오지 못하고, which·who(m)·whose·when·where 만 남습니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "which 는 앞 절 전체를 받습니다",
+          "body": "콤마+which 는 앞의 명사 하나만이 아니라 앞 절 전체를 선행사로 받을 수 있습니다. 절 전체를 받으면 관계절의 동사는 단수형입니다.",
+          "example": {
+            "en": "The company relocated its head office abroad, **which** worries the local workforce.",
+            "ko": "그 회사는 본사를 해외로 옮겼는데, 이는 지역 노동자들을 불안하게 합니다.",
+            "note": "which 가 받는 것은 office 가 아니라 '본사를 해외로 옮겼다'는 앞 절 전체이며, 그래서 동사가 단수 worries 입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "목적격이라도 생략 불가",
+          "body": "제한적 용법의 목적격 관계대명사는 생략할 수 있지만, 콤마 뒤 계속적 용법에서는 목적격이라도 생략하지 못합니다.",
+          "example": {
+            "en": "The manuscript, **which** the archivist discovered last year, is now on display.",
+            "ko": "그 기록물 관리자가 작년에 발견한 그 필사본은 지금 전시되어 있습니다.",
+            "note": "discovered 의 목적어 자리가 비어 있는 목적격이지만, 콤마 뒤에서는 which 를 생략하지 못합니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "수량 표현 뒤에는 of + which·whom",
+          "body": "접속사 없이 콤마로만 두 절이 이어질 때는 most of them 이 아니라 most of which·many of whom 을 씁니다. 대명사는 두 절을 잇지 못하기 때문입니다.",
+          "example": {
+            "en": "The library holds two thousand manuscripts, most of **which** have never been digitized.",
+            "ko": "그 도서관은 필사본 2천 점을 소장하고 있는데, 그 대부분은 아직 디지털화된 적이 없습니다.",
+            "note": "most of them 을 쓰면 두 절을 이어 줄 접속사나 관계사가 없어 콤마만으로 문장 둘이 붙는 비문이 됩니다."
+          }
+        },
+        {
+          "head": "맨 which 는 빈자리를 요구합니다",
+          "body": "which 는 관계절 안의 주어·목적어 빈자리를 차지하므로, 뒤 절이 이미 완전하면 which 대신 where·when 이 필요합니다(전치사+which 는 예외).",
+          "pin": "팁"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 관계사가 콤마 바로 뒤(계속적 용법) 자리에 올 수 있는지 분류하십시오.",
+      "buckets": [
+        { "id": "ok", "label": "콤마 뒤에 올 수 있다" },
+        { "id": "no", "label": "콤마 뒤에 올 수 없다" }
+      ],
+      "chips": [
+        { "text": "which", "bucketId": "ok", "why": "계속적 용법의 대표 관계사이며, 명사구와 앞 절 전체를 모두 받을 수 있습니다." },
+        { "text": "who", "bucketId": "ok", "why": "선행사가 사람일 때 계속적 용법으로 쓸 수 있습니다." },
+        { "text": "whose", "bucketId": "ok", "why": "소유격 관계대명사는 계속적 용법으로 쓸 수 있습니다." },
+        { "text": "where", "bucketId": "ok", "why": "장소를 보충 설명하는 관계부사로 계속적 용법이 가능합니다." },
+        { "text": "that", "bucketId": "no", "why": "that 은 콤마가 없는 제한적 용법에서만 쓰입니다." },
+        { "text": "what", "bucketId": "no", "why": "what 은 선행사를 스스로 포함하므로 앞에 선행사가 있는 계속적 용법 자리에 올 수 없습니다." }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "title": "콤마 뒤 출입 통제",
+      "target": "콤마 뒤에 올 수 없는 관계사",
+      "why": "판별의 순간에 후보를 즉시 지우려면, 콤마 뒤에 못 오는 관계사가 손끝에 붙어 있어야 합니다. 목록을 더듬는 순간 속도가 무너집니다.",
+      "device": "'댓·왓 출입금지'로 외웁니다. 콤마라는 성문 뒤로는 that 과 what, 이 둘만 들여보내지 않습니다. 나머지 wh- 관계사(which·who·whom·whose·when·where)는 전원 통과입니다.",
+      "items": [
+        { "cue": "콤마 뒤에 올 수 없는 관계사 두 개는?", "answer": "that 과 what" },
+        { "cue": "콤마 뒤, 사물 선행사를 받는 관계사는?", "answer": "which" },
+        { "cue": "콤마 뒤, 사람 선행사를 받는 관계사는?", "answer": "who 또는 whom" },
+        { "cue": "'그때'처럼 시간을 보충 설명하는 관계부사는?", "answer": "when" },
+        { "cue": "'그곳'처럼 장소를 보충 설명하는 관계부사는?", "answer": "where" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "성문 통과 시험",
+      "mission": "콤마 뒤(계속적 용법) 자리에 설 수 있는 관계사를 전부 고르십시오. 못 오는 것은 건너뜁니다.",
+      "mode": "SET",
+      "pool": ["which", "who", "whom", "whose", "when", "where", "that", "what"],
+      "answers": ["which", "who", "whom", "whose", "when", "where"],
+      "passText": "관문이 열립니다. that 과 what 을 걸러 낸 그 눈이 곧 이 개념의 핵심입니다.",
+      "retryText": "that 이나 what 이 섞여 들어갔습니다. 콤마 뒤 성문은 이 둘만 돌려보낸다는 것을 떠올리고 다시 시도하십시오."
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "콤마 뒤(계속적 용법)의 관계사 자리에는 that 과 what 을 쓸 수 없습니다.",
+      "examples": [
+        {
+          "en": "The novel, **which** was written in exile, has never been translated.",
+          "ko": "망명 중에 쓰인 그 소설은 한 번도 번역된 적이 없습니다.",
+          "note": "콤마 뒤 which 가 앞의 명사 The novel 을 보충 설명합니다. 이 자리에 that 을 쓰면 틀립니다."
+        },
+        {
+          "en": "The new bridge, **which** engineers completed in three years, shortened the trip to the island.",
+          "ko": "기술자들이 3년 만에 완공한 그 새 다리는 섬까지의 이동 시간을 줄였습니다.",
+          "note": "which 는 completed 의 목적어 자리를 메웁니다. 콤마 뒤이므로 that 은 후보가 되지 못합니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "콤마+which 는 앞의 명사구뿐 아니라 앞 절 전체를 선행사로 받을 수 있고, 절 전체를 받을 때 동사는 단수형입니다.",
+      "examples": [
+        {
+          "en": "The city banned cars from the old district, **which** has made the streets far quieter.",
+          "ko": "그 도시는 구시가지에서 차량을 금지했는데, 이는 거리를 훨씬 조용하게 만들었습니다.",
+          "note": "which 가 받는 것은 cars 나 the old district 가 아니라 '차량을 금지했다'는 앞 절 전체입니다. 그래서 동사가 단수 has made 입니다."
+        },
+        {
+          "en": "Snow fell for three straight days, **which** forced the airport to cancel dozens of flights.",
+          "ko": "사흘 연속으로 눈이 내렸고, 그 일이 공항으로 하여금 수십 편의 항공편을 취소하게 만들었습니다.",
+          "note": "which 뒤에 주어가 없으므로 which 자체가 forced 의 주어이며, 그 내용은 앞 절 전체입니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "앞 절 전체를 받는 which 의 해부",
+      "tokens": [
+        { "t": "The museum", "role": "S" },
+        { "t": "now", "role": "M" },
+        { "t": "opens", "role": "V" },
+        { "t": "on Mondays,", "role": "M" },
+        { "t": "which", "role": "REL" },
+        { "t": "pleases", "role": "V" },
+        { "t": "teachers and parents alike", "role": "O" }
+      ],
+      "ko": "그 박물관은 이제 월요일에도 문을 여는데, 이는 교사와 학부모 모두를 만족시킵니다.",
+      "layers": [
+        {
+          "label": "① 콤마와 관계사를 표시합니다",
+          "roles": ["REL"],
+          "note": "콤마 바로 뒤에 관계사가 있습니다. 이 자리는 계속적 용법이므로 that·what 은 후보에서 즉시 지웁니다."
+        },
+        {
+          "label": "② 시제 동사를 셉니다",
+          "roles": ["V"],
+          "note": "시제 동사는 opens 와 pleases 둘입니다. 관계사가 하나 있으므로 동사가 둘인 것이 맞습니다(동사 수 = 접속사·관계사 수 + 1)."
+        },
+        {
+          "label": "③ which 가 무엇을 받는지 확인합니다",
+          "roles": ["S", "V", "M"],
+          "note": "점등된 The museum now opens on Mondays 가 which 의 선행사입니다. 이때 함께 켜진 pleases 는 앞 절의 동사가 아니라, which 를 주어로 삼는 관계절의 동사이므로 선행사에는 포함되지 않습니다(같은 시제 동사라 함께 점등될 뿐입니다). which 뒤에 주어가 없어 which 가 pleases 의 주어인데, 바로 앞의 Mondays 는 복수여서 단수 동사 pleases 와 호응하지 못합니다. 그래서 which 가 받는 것은 '박물관이 월요일에도 문을 연다'는 앞 절 전체입니다."
+        }
+      ],
+      "conclusion": "콤마+which 는 앞의 명사 하나가 아니라 앞 절 전체를 선행사로 받을 수 있고, 그때 관계절의 동사는 단수형입니다."
+    },
+    {
+      "id": "b11",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u06-c3-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The mayor canceled the parade, {{blank}} upset thousands of residents.",
+          "options": ["which", "that"],
+          "answer": 0,
+          "translation": "시장이 그 행진을 취소했고, 그 일은 수천 명의 주민을 화나게 했습니다.",
+          "explanation": "빈칸 앞에 콤마가 있으므로 계속적 용법 자리이며, that 은 이 자리에 올 수 없습니다. which 가 앞 절 전체를 받아 upset 의 주어 노릇을 합니다.",
+          "trapTags": ["comma-which", "clause-antecedent"]
+        },
+        {
+          "id": "u06-c3-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The old theater, [[u:that]] the city restored last year, now hosts free concerts.",
+          "isCorrect": false,
+          "correction": "which",
+          "translation": "그 도시가 작년에 복원한 그 낡은 극장은 이제 무료 공연을 엽니다.",
+          "explanation": "콤마 두 개 사이에 삽입된 관계절이므로 계속적 용법입니다. 계속적 용법에는 that 을 쓸 수 없으므로 목적격 which 로 고쳐야 합니다.",
+          "trapTags": ["comma-which", "that-vs-which"]
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "콤마 뒤 관계사 자리를 판정하는 4단계",
+      "steps": [
+        {
+          "text": "밑줄이나 빈칸 바로 앞에 콤마가 있는지부터 확인합니다.",
+          "applyNote": "public 뒤에 콤마가 있습니다. 계속적 용법 자리입니다."
+        },
+        {
+          "text": "콤마가 있으면 that 과 what 을 후보에서 즉시 지웁니다.",
+          "applyNote": "남는 후보는 which 뿐입니다. 선행사가 사람이면 who(m) 이 남습니다."
+        },
+        {
+          "text": "관계사 뒤 절에서 빠진 자리(주어·목적어)를 찾습니다. 관계대명사는 그 빈자리를 메웁니다.",
+          "applyNote": "surprised its investors 에는 주어가 없습니다. which 가 그 주어 자리를 메웁니다."
+        },
+        {
+          "text": "선행사를 정합니다. 콤마 앞의 명사구인지, 앞 절 전체인지를 동사의 수와 의미로 확인합니다.",
+          "applyNote": "투자자들을 놀라게 한 것은 code 나 the public 이 아니라 '코드를 공개했다'는 앞 절 전체입니다."
+        }
+      ],
+      "example": {
+        "en": "The startup released its code to the public, **which** surprised its investors.",
+        "ko": "그 신생 기업은 자사의 코드를 공개했는데, 이는 투자자들을 놀라게 했습니다.",
+        "note": "콤마 뒤 which 가 앞 절 전체를 받아 surprised 의 주어 노릇을 합니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The committee released the data early, ( that / which ) reporters had requested for months.",
+      "steps": [
+        {
+          "title": "① 콤마를 확인합니다",
+          "body": "괄호 바로 앞에 콤마가 있습니다. 따라서 이 자리는 제한적 용법이 아니라 계속적 용법입니다."
+        },
+        {
+          "title": "② 후보를 지웁니다",
+          "body": "계속적 용법 자리에는 that 이 올 수 없습니다. 목적격이든 주격이든 마찬가지입니다. that 을 지우면 which 만 남습니다."
+        },
+        {
+          "title": "③ 뒤 절의 빈자리를 확인합니다",
+          "body": "reporters had requested 뒤에 목적어가 없습니다. 관계대명사가 그 목적어 자리를 메우므로 절이 성립합니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "선행사는 the data 이고, 관계사는 목적격 which 입니다. 콤마 뒤이므로 생략할 수도 없습니다."
+        }
+      ],
+      "answer": "which",
+      "ko": "그 위원회는 자료를 앞당겨 공개했는데, 기자들이 몇 달째 요청해 온 자료였습니다."
+    },
+    {
+      "id": "b14",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "계속적 용법만 골라내기",
+      "instruction": "이 문장에서 계속적 용법(콤마 뒤)으로 쓰인 관계사를 전부 탭하십시오. 콤마 없이 명사를 한정하는 제한적 용법의 관계사는 사냥감이 아닙니다.",
+      "hitLabel": "계속적 용법 관계사",
+      "tokens": [
+        { "t": "The", "hit": false },
+        { "t": "scholar", "hit": false },
+        { "t": "who", "hit": false },
+        { "t": "wrote", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "book,", "hit": false },
+        { "t": "which", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "press", "hit": false },
+        { "t": "had", "hit": false },
+        { "t": "rejected,", "hit": false },
+        { "t": "later", "hit": false },
+        { "t": "won", "hit": false },
+        { "t": "a", "hit": false },
+        { "t": "prize,", "hit": false },
+        { "t": "which", "hit": true },
+        { "t": "surprised", "hit": false },
+        { "t": "everyone.", "hit": false }
+      ],
+      "ko": "그 책을 쓴 학자는 나중에 상을 받았는데, 그 책은 출판사가 거절했던 것이고, 상을 받은 그 일은 모두를 놀라게 했습니다.",
+      "explain": "콤마 뒤에서 앞 내용을 보충하는 which 두 개가 계속적 용법의 관계사입니다. 반면 첫머리의 who 는 콤마 없이 the scholar 를 한정하는 제한적 용법이므로 사냥감이 아닙니다. 계속적 용법을 가르는 신호는 결국 콤마 하나입니다."
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "콤마가 없을 때와 있을 때",
+      "columns": ["제한적 용법 (콤마 없음)", "계속적 용법 (콤마 있음)"],
+      "rows": [
+        {
+          "criterion": "쓸 수 있는 관계사",
+          "a": "which / who(m) / whose / when / where / that",
+          "b": "which / who(m) / whose / when / where — that·what 만 불가"
+        },
+        {
+          "criterion": "목적격 관계대명사 생략",
+          "a": "생략할 수 있습니다",
+          "b": "생략할 수 없습니다"
+        },
+        {
+          "criterion": "선행사",
+          "a": "바로 앞의 명사(구)만 받습니다",
+          "b": "명사(구)뿐 아니라 앞 절 전체도 받습니다"
+        },
+        {
+          "criterion": "의미",
+          "a": "여럿 중 어느 것인지 한정합니다",
+          "b": "이미 정해진 대상에 정보를 덧붙입니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "His brother who lives in Busan sent the package.",
+          "ko": "부산에 사는 그의 형이 그 소포를 보냈습니다.",
+          "note": "콤마가 없으므로 형이 여럿이고 그중 부산에 사는 형을 한정합니다."
+        },
+        {
+          "en": "His brother, **who** lives in Busan, sent the package.",
+          "ko": "그의 형이 그 소포를 보냈는데, 그 형은 부산에 삽니다.",
+          "note": "콤마가 있으므로 형은 한 명이며, 부산에 산다는 정보를 덧붙일 뿐입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "콤마 뒤 반사신경",
+      "instruction": "명제가 옳으면 ○, 틀리면 ×를 제한시간 안에 누르십시오. 판별은 결국 속도 싸움입니다.",
+      "timeLimitSec": 10,
+      "rounds": [
+        {
+          "statement": "콤마 뒤 관계사 자리에는 that 을 쓸 수 없습니다.",
+          "isTrue": true,
+          "why": "콤마는 계속적 용법의 신호이고, 그 자리에는 that 도 what 도 오지 못합니다."
+        },
+        {
+          "statement": "콤마+which 는 앞 절 전체를 선행사로 받을 수 있습니다.",
+          "isTrue": true,
+          "why": "앞의 명사 하나가 아니라 앞 절 전체를 받으며, 그때 관계절의 동사는 단수형입니다."
+        },
+        {
+          "statement": "계속적 용법에서는 목적격 관계대명사를 생략할 수 있습니다.",
+          "isTrue": false,
+          "why": "제한적 용법과 달리 콤마 뒤에서는 목적격이라도 생략하지 못합니다."
+        },
+        {
+          "statement": "접속사 없이 콤마로 두 절을 이을 때 most of them 을 쓸 수 있습니다.",
+          "isTrue": false,
+          "why": "them 은 두 절을 잇지 못합니다. 관계대명사를 쓴 most of which·many of whom 이 옳습니다."
+        },
+        {
+          "statement": "콤마 뒤 what 도 앞 절 전체를 선행사로 받을 수 있습니다.",
+          "isTrue": false,
+          "why": "what 은 선행사를 스스로 포함하므로 앞에 선행사가 있는 계속적 용법 자리에 오지 못합니다."
+        },
+        {
+          "statement": "콤마 뒤 which 다음 절이 완전하면 where·when 등이 필요합니다.",
+          "isTrue": true,
+          "why": "맨 which 는 주어·목적어 빈자리를 요구합니다. 완전한 절 뒤에는 관계부사가 옵니다(전치사+which 는 예외)."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 콤마 뒤에 '맨 which'가 오는데 절이 완전하면 which 자리가 아닙니다",
+      "body": "which 는 관계절 안에서 주어나 목적어 자리를 직접 차지합니다. 콤마 뒤 절에 주어·목적어가 이미 다 채워져 있으면 which 가 들어갈 빈자리가 없습니다. 이때는 관계부사 where·when 이나 접속사가 필요합니다. 단, 전치사가 앞에 붙은 during which·in which·most of which 는 which 가 전치사의 목적어 자리를 메우므로 뒤 절이 완전해도 옳습니다. 이 함정은 전치사 없이 which 만 온 경우에 적용됩니다.",
+      "example": {
+        "en": "She grew up in Jeju, **which** the winters are mild.",
+        "ko": "그녀는 제주에서 자랐는데, 그곳은 겨울이 온화합니다.",
+        "note": "the winters are mild 는 주어와 보어가 모두 갖춰진 완전한 절입니다. which 가 들어갈 자리가 없으므로 where 로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b18",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u06-c3-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The council rejected the proposal three times, {{blank}} the developers had never expected.",
+          "options": ["which", "that", "what"],
+          "answer": 0,
+          "translation": "의회가 그 제안을 세 차례 부결했는데, 이는 개발업자들이 전혀 예상하지 못한 일이었습니다.",
+          "explanation": "콤마 뒤이므로 that 과 what 은 올 수 없습니다. had never expected 의 목적어 자리가 비어 있고, 그 자리를 메우는 which 가 앞 절 전체를 선행사로 받습니다.",
+          "trapTags": ["comma-which", "clause-antecedent", "that-vs-what"]
+        },
+        {
+          "id": "u06-c3-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The archive stores ten thousand letters, most of [[u:them]] have never been read.",
+          "isCorrect": false,
+          "correction": "which",
+          "translation": "그 기록관은 편지 1만 통을 보관하고 있는데, 그 대부분은 한 번도 읽힌 적이 없습니다.",
+          "explanation": "접속사가 하나도 없는데 시제 동사는 stores 와 have been read 둘입니다. them 은 절을 잇지 못하므로 관계대명사 which 를 써서 most of which 로 고쳐야 합니다.",
+          "trapTags": ["quantifier-of-which", "comma-splice"]
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞의 CHOICE 문항(의회가 제안을 세 차례 부결한 문장)에서 which 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "빈칸 앞에 콤마가 있어 계속적 용법 자리이므로 that·what 이 배제되고, 뒤 절의 목적어 자리가 비어 있어 관계대명사 which 가 그 자리를 메우기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 콤마로 후보를 지우고, 뒤 절의 빈자리로 관계대명사임을 확인하는 것이 판단 절차입니다."
+        },
+        {
+          "text": "우리말로 '이는 ~한 일이었다'로 해석되므로 '것'을 뜻하는 관계사를 써야 하기 때문입니다.",
+          "correct": false,
+          "feedback": "해석에 기대면 what 을 고르게 됩니다. what 은 선행사를 포함하므로 앞에 절이나 명사가 있는 자리에는 오지 못합니다. 판단 근거는 해석이 아니라 콤마와 빈자리입니다."
+        },
+        {
+          "text": "선행사가 사물이므로 사물을 받는 관계사를 골라야 하고, that 은 사람만 받기 때문입니다.",
+          "correct": false,
+          "feedback": "that 은 사람과 사물을 모두 받습니다. that 이 배제된 이유는 선행사의 종류가 아니라 콤마, 즉 계속적 용법이라는 점입니다."
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The museum extended its opening hours, [[1:which]] the staff had requested for years, and it now opens on Mondays, [[2:that]] pleases parents and teachers alike. The extra hours raised costs, [[3:which]] the city council [[4:agreed]] to cover in full.",
+      "answer": 2,
+      "correction": "which",
+      "rationales": [
+        "콤마 뒤 관계절에서 had requested 의 목적어 자리가 비어 있습니다. 목적격 관계대명사 which 가 그 자리를 메우므로 옳습니다.",
+        "콤마 뒤 계속적 용법 자리이므로 that 은 올 수 없습니다. 앞 절 전체를 받아 pleases 의 주어가 되는 which 로 고쳐야 합니다.",
+        "the city council agreed to cover 에서 cover 의 목적어 자리가 비어 있고 선행사는 costs 입니다. 콤마 뒤이므로 which 가 옳습니다.",
+        "관계절의 시제 동사입니다. 관계사 which 가 절을 하나 열었으므로 이 절에는 시제 동사가 하나 있어야 하며, 과거의 사실을 서술하는 agreed 는 옳습니다."
+      ],
+      "ko": "그 박물관은 개관 시간을 늘렸는데, 직원들이 여러 해 동안 요청해 온 일이었고, 이제는 월요일에도 문을 열어 학부모와 교사 모두를 만족시킵니다. 늘어난 개관 시간은 비용을 증가시켰는데, 시의회가 그 비용을 전액 부담하기로 했습니다."
+    },
+    {
+      "id": "b21",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 콤마 뒤에 that 을 쓴 문장을 주고 '어법상 틀린 부분을 찾아 고쳐 쓰시오'로 물어봅니다. 콤마가 계속적 용법을 표시한다는 점을 근거로 들어야 만점입니다.",
+          "sample": {
+            "en": "The town built a new library, that the residents had asked for.",
+            "ask": "어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "that → which (콤마 뒤 계속적 용법에는 that 을 쓸 수 없습니다)"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 콤마 뒤 which 에 밑줄을 그어 놓고, 앞에 단수 명사가 없어 선행사를 찾지 못하게 만듭니다. which 가 앞 절 전체를 받을 수 있다는 것을 알면 옳은 선지로 판정할 수 있습니다.",
+          "sample": {
+            "en": "Rainfall in the region dropped by half last summer, [[u:which]] left the reservoirs at record lows.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "옳습니다 — which 가 앞 절 전체를 선행사로 받아 left 의 주어 노릇을 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Summer heat has become a public health problem in dense cities. [[u:Last year the city repainted hundreds of rooftops white, which has lowered indoor temperatures across the district.]] Officials now plan to extend the program to schools. Researchers, however, warn that paint alone cannot solve the problem.",
+      "instruction": "밑줄 친 문장에서 which 의 선행사가 무엇인지 밝히고 그 근거를 말하십시오.",
+      "found": "which 뒤에 주어가 없으므로 which 가 has lowered 의 주어입니다. 바로 앞의 명사구 hundreds of rooftops 는 복수여서 단수 동사 has lowered 와 호응하지 못합니다. 따라서 선행사는 '지붕 수백 개를 흰색으로 칠했다'는 앞 절 전체입니다. 콤마가 있으므로 이 자리에 that 을 쓸 수는 없습니다.",
+      "gist": "도시가 지붕을 흰색으로 칠해 실내 기온을 낮추었다는 내용입니다."
+    },
+    {
+      "id": "b23",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The conference drew four hundred researchers, ( many of them / many of whom ) had traveled from abroad.",
+      "givenSteps": [
+        "① 콤마를 확인합니다 — 콤마 뒤에서 두 번째 절이 시작됩니다.",
+        "② 접속사를 셉니다 — and·but 같은 접속사가 하나도 없습니다. 그런데 시제 동사는 drew 와 had traveled 둘입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "many of whom — 두 절을 이으려면 접속사 노릇을 겸하는 관계대명사가 필요합니다",
+        "many of them — 대명사가 앞의 명사를 그대로 받으므로 자연스럽습니다",
+        "many of that — 콤마 뒤에도 that 을 쓸 수 있습니다"
+      ],
+      "answer": 0,
+      "explain": "them 은 대명사일 뿐 절을 잇지 못합니다. 접속사 없이 콤마만으로 두 절이 붙으면 비문이 됩니다. 선행사가 사람이므로 전치사 of 의 목적어 자리에 whom 을 써서 두 절을 하나로 잇습니다."
+    },
+    {
+      "id": "b24",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 회사는 공장을 폐쇄했는데, 이는 수백 명의 노동자를 놀라게 했습니다.",
+      "answer": ["The company", "closed the factory,", "which", "surprised hundreds of workers"],
+      "tiles": [
+        "The company",
+        "closed the factory,",
+        "which",
+        "surprised hundreds of workers",
+        "that"
+      ],
+      "explanation": "콤마 뒤 계속적 용법 자리이므로 that 은 쓰이지 않습니다. which 가 앞 절 전체를 받아 surprised 의 주어 노릇을 합니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "쉼표 성문의 문지기",
+      "intro": "이 성문 앞에는 that 과 what 이 매일 위조 통행증을 들고 줄을 섭니다. 콤마 하나로 이 둘을 가려내고, which 가 무엇을 받는지까지 짚어야 문이 열립니다. 네 건으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The treaty, {{blank}} both nations signed in 1985, still shapes the region today.",
+          "options": ["which", "that"],
+          "answer": 0,
+          "why": "콤마 뒤 계속적 용법 자리이므로 that 은 배제되고, signed 의 목적어 자리를 메우는 목적격 which 가 옳습니다."
+        },
+        {
+          "prompt": "The senator withdrew from the race, {{blank}} stunned her own party.",
+          "options": ["which", "what"],
+          "answer": 0,
+          "why": "which 가 앞 절 전체를 받아 stunned 의 주어가 됩니다. what 은 선행사를 스스로 포함하므로 앞에 절이 있는 이 자리에 오지 못합니다."
+        },
+        {
+          "prompt": "The firm holds twelve patents, most of {{blank}} have already expired.",
+          "options": ["them", "which"],
+          "answer": 1,
+          "why": "접속사가 없어 them 으로는 두 절을 잇지 못합니다. 전치사 of 의 목적어 자리에 관계대명사 which 를 써야 두 절이 하나로 이어집니다."
+        },
+        {
+          "prompt": "He settled in a quiet coastal town, {{blank}} the winters are short and mild.",
+          "options": ["which", "where"],
+          "answer": 1,
+          "why": "뒤 절이 주어와 보어를 모두 갖춘 완전한 절이라 맨 which 가 들어갈 빈자리가 없습니다. 장소를 보충 설명하는 where 가 옳습니다."
+        }
+      ],
+      "winText": "성문이 열립니다. 콤마 뒤에서 that 과 what 을 걸러 내고, which 가 앞 절 전체까지 받는다는 것을 짚어 낸 눈 — 그 눈이 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 통행증을 돌려줍니다. 네 문제 모두 물은 것은 하나였습니다 — '이 콤마 뒤에 무엇이 설 수 있는가.' 판정 4단계를 다시 짚고 오면 성문은 그대로 있습니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "콤마 뒤 관계사 자리에는 ___ 과 ___ 을 쓸 수 없고, which 는 앞의 명사뿐 아니라 ___ 까지 선행사로 받을 수 있습니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "콤마 뒤 관계사 자리(계속적 용법)에는 that 과 what 이 올 수 없습니다. which·who(m)·whose·when·where 만 가능합니다.",
+        "콤마+which 는 앞의 명사구뿐 아니라 앞 절 전체를 선행사로 받으며, 절을 받을 때 관계절의 동사는 단수형입니다.",
+        "계속적 용법의 관계대명사는 목적격이라도 생략하지 못합니다.",
+        "수량 표현 뒤에는 most of them 이 아니라 most of which·many of whom 을 씁니다. 대명사는 두 절을 잇지 못하기 때문입니다.",
+        "콤마 뒤에 which 만 홀로 왔는데 뒤 절이 이미 완전하면 which 가 들어갈 빈자리가 없습니다(전치사+which 는 예외). 그때는 where·when 등을 씁니다."
+      ],
+      "keySentence": {
+        "en": "The museum now opens on Mondays, **which** pleases teachers and parents alike.",
+        "ko": "그 박물관은 이제 월요일에도 문을 여는데, 이는 교사와 학부모 모두를 만족시킵니다.",
+        "note": "which 가 앞 절 전체를 받아 단수 동사 pleases 의 주어 노릇을 합니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u06-c3-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Her first novel, {{blank}} critics ignored at the time, is now a classic.",
+          "options": ["which", "that"],
+          "answer": 0,
+          "translation": "당시 평론가들이 외면했던 그녀의 첫 소설은 이제 고전이 되었습니다.",
+          "explanation": "콤마 두 개 사이에 삽입된 계속적 용법의 관계절입니다. 이 자리에는 that 을 쓸 수 없으므로 목적격 which 가 옳습니다.",
+          "trapTags": ["comma-which", "that-vs-which"]
+        },
+        {
+          "id": "u06-c3-ls-006",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The bridge reopened after ten years, [[u:which]] the local businesses had long awaited.",
+          "isCorrect": true,
+          "translation": "그 다리가 10년 만에 다시 개통되었는데, 지역 상인들이 오래 기다려 온 일이었습니다.",
+          "explanation": "콤마 뒤 계속적 용법 자리이며, had long awaited 의 목적어 자리가 비어 있습니다. which 가 앞 절 전체를 받아 그 목적어 자리를 메우므로 어법상 옳습니다.",
+          "trapTags": ["comma-which", "clause-antecedent"]
+        },
+        {
+          "id": "u06-c3-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The scientist observed the glacier for a decade, during {{blank}} it lost half its mass.",
+          "options": ["which", "that", "what"],
+          "answer": 0,
+          "translation": "그 과학자는 10년 동안 그 빙하를 관찰했는데, 그 기간에 빙하는 질량의 절반을 잃었습니다.",
+          "explanation": "전치사 during 의 목적어 자리이므로 that 과 what 은 올 수 없고, 콤마 뒤 계속적 용법이라는 점에서도 that 은 배제됩니다. 선행사 a decade 를 받는 which 가 옳습니다.",
+          "trapTags": ["comma-which", "preposition-plus-which"]
+        }
+      ]
+    }
+  ]
+}

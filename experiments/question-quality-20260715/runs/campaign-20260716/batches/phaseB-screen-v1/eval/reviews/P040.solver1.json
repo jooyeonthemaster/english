@@ -1,0 +1,35 @@
+{
+  "pid": "P040",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'He presented them with a list of words' — 'present + 사람 + with + 사물' 구문이 정확하고, them은 앞의 healthy undergraduates를 받는 목적격 대명사로 어법상 옳다. 유혹 요소 거의 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'One of the lists was ...' — 근접 명사 lists(복수) 때문에 were로 끌리는 전형적 수일치 함정이며 실제로 첫 독해에서 멈칫하게 만드는 매력적 오답. 그러나 진짜 주어는 단수 One이므로 was가 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the wrinkled face' — 얼굴은 '주름진(상태·결과)' 대상이므로 과거분사 wrinkled가 형용사로 face를 수식하는 것이 옳다. wrinkling(현재분사)과의 태 구분 포인트이나 wrinkled가 정확하다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'Bargh was interested in how long it took the students to leave' — 사람 주어 + be interested in은 표준 표현이고, in의 목적어인 간접의문문 'how long it took ... to leave'(가주어 it + take + 목적어 + to부정사)도 어순·구조 모두 정확하다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'That he found was extraordinary.' — 구제 가능한 대안 해석을 적극 탐색했으나 모두 실패: (1) 접속사 that로 보면 명사절 'he found'에 found의 목적어가 없어 불완전절이라 성립 불가. (2) 지시대명사 that + 목적격 관계대명사 생략(contact clause)으로 보려 해도, 표준 영어에서 지시대명사 that은 zero relative의 선행사가 될 수 없다(that which he found 형태가 필요). found는 타동사인데 목적어가 문장 어디에도 없으므로, 문장의 주어 역할과 found의 목적어 역할을 동시에 수행하는 선행사 포함 관계대명사 What만이 가능하다. 'What he found was extraordinary'로 고쳐야 하므로 어법상 틀림 — 정답."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: (B)의 One of the 복수명사 + 단수동사 수일치가 유일하게 실질적으로 끌리는 함정이었으나 지배 규칙(진짜 주어 One) 확인으로 즉시 해소. (E)는 불완전절(목적어 결여)이라는 장거리 단서 하나로 확정되며, 대안 정문 해석(지시대명사+접촉절, 동격절 등)이 모두 성립하지 않아 단일 정답. 문항 자체는 깔끔하며 복수 정답 소지 없음. 참고: 지문은 Bargh의 노인 점화(priming) 실험을 다룬 널리 알려진 텍스트로, 원문도 'What he found was extraordinary' 형태로 알려져 있다."
+}

@@ -1,0 +1,160 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-pointcode-span-mismatch",
+    "grammar-keypoint-choice-mismatch",
+    "grammar-explanation-lint"
+  ],
+  "warnings": [
+    "wrong-option-explanation-count"
+  ],
+  "topReject": [],
+  "layout": "(A):ANS=d  (B):dec=b  (C):dec=a  (D):dec=a  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 68,
+        "relPos": 0.094,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 199,
+        "relPos": 0.276,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 226,
+        "relPos": 0.313,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 578,
+        "relPos": 0.802,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 626,
+        "relPos": 0.868,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.868,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 (A)~(E) 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "alive",
+        "isError": true,
+        "errorExpression": "living",
+        "surroundingText": "a trait that kept us **living** when we were living on the savannas",
+        "pointCode": "d",
+        "correction": "alive"
+      },
+      {
+        "label": "(B)",
+        "expression": "keep",
+        "isError": false,
+        "errorExpression": "keep",
+        "surroundingText": "can **keep** you focused",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "going",
+        "isError": false,
+        "errorExpression": "going",
+        "surroundingText": "what's **going** wrong",
+        "pointCode": "a"
+      },
+      {
+        "label": "(D)",
+        "expression": "gives",
+        "isError": false,
+        "errorExpression": "gives",
+        "surroundingText": "anything that **gives** you that yesssss feeling",
+        "pointCode": "a"
+      },
+      {
+        "label": "(E)",
+        "expression": "goes",
+        "isError": false,
+        "errorExpression": "goes",
+        "surroundingText": "Where the mind **goes**, reality follows.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "living"
+      },
+      {
+        "label": "(B)",
+        "text": "keep"
+      },
+      {
+        "label": "(C)",
+        "text": "going"
+      },
+      {
+        "label": "(D)",
+        "text": "gives"
+      },
+      {
+        "label": "(E)",
+        "text": "goes"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(C)": "going은 what이 주어 자리로 들어가 'what is going wrong'(무엇이 잘못되고 있는지)으로 문법적으로 적절합니다.",
+      "(D)": "gives는 관계대명사 that의 선행사 anything을 수식하는 형태로, anything that gives you ~는 어법상 완벽합니다.",
+      "(E)": "goes는 관계부사 Where의 선행사 자리(격)에 맞지 않으며, 원문 그대로 유지되었습니다."
+    },
+    "explanation": "(A) \"living\"는 어법상 틀린 표현이며 \"alive\"로 고쳐야 한다. (A)의 'alive'입니다. 본문은 'kept us alive'(우리를 살아 있게 했다)라는 완료/상태의 의미를 나타내기 위해 형용사 alive를 쳤습니다. 하지만 오답형태인 'living'은 진행형이나 형용사적 의미의 '살고 있는'으로 쓰일 때는 keep 목적격 보어 자리에 쓰이기 어렵습니다. 특히 'keep + 목적어 + living'은 '계속 살게 하다'라는 의미로 쓰일 수 있지만, 문맥상 '위협을 찾는 특성이 우리를 생존하게 했다'는 자연스러운 표현인 'alive'가 적절합니다. 따라서 (A)가 어법상 틀린 표현입니다.",
+    "keyPoints": [
+      "keep + 목적격 보어(형용사): keep us alive"
+    ],
+    "tags": [
+      "문법",
+      "보어",
+      "keep + 목적격 보어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that kept us __(A) living__ when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can __(B) keep__ you focused on what's __(C) going__ wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that __(D) gives__ you that yesssss feeling). Where the mind __(E) goes__, reality follows. The more you appreciate life, the more reasons you have to celebrate it."
+  }
+}

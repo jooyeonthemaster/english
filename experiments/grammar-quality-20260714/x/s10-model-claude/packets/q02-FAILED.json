@@ -1,0 +1,49 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "difficulty": "ADVANCED",
+  "strategy": "s10-model-claude",
+  "ok": false,
+  "ms": 51483,
+  "attempts": 2,
+  "calls": 2,
+  "callLog": [
+    {
+      "purpose": "generate",
+      "modelId": "anthropic/claude-sonnet-5",
+      "ms": 26158,
+      "attempts": 1,
+      "inputTokens": 3689,
+      "outputTokens": 2014,
+      "costUsd": 0.027518,
+      "costSource": "openrouter-recorded"
+    },
+    {
+      "purpose": "generate-retry",
+      "modelId": "anthropic/claude-sonnet-5",
+      "ms": 25323,
+      "attempts": 1,
+      "inputTokens": 3689,
+      "outputTokens": 2015,
+      "costUsd": 0.027528,
+      "costSource": "openrouter-recorded"
+    }
+  ],
+  "models": [
+    "anthropic/claude-sonnet-5"
+  ],
+  "costUsd": 0.055046,
+  "costSource": "openrouter-recorded",
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "error": "claude prompt-JSON parse/schema failed twice; head={\"direction\":\"다음 글의 밑줄 친 (A)~(E) 중, 어법상 틀린 것은?\", \"errorDesign\":\"정답 자리는 'suddenly struck by the quiet, the absence of others'에서 struck을 struck 그대로 두되 분사구문의 태를 뒤바꾸는 대신, we lift our heads and look around 뒤에 이어지는 분사구문 struck을 striking으로 바꾸어 능동 형태로 변형한다(pointCode c). we가 놀라게 하는 주체가 아니라 놀람을 당하는 대상이므로 수동 분",
+  "question": null,
+  "passageText": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience."
+}

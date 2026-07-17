@@ -1,0 +1,35 @@
+{
+  "pid": "P015",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) to teach",
+      "verdict": "correct",
+      "reason": "ask + 목적어 + to부정사 (asks Mr. Miyagi to teach him karate)는 표준 5형식 구문. 목적어 'the wise Mr. Miyagi' 뒤 to부정사 목적격보어로 완전히 정문. 유혹 요소 없음."
+    },
+    {
+      "label": "(B) opposed",
+      "verdict": "correct",
+      "reason": "매력적 오답. 실전에서 'opposing circular motions가 아닌가?' 하고 잠시 끌렸다. 그러나 opposed는 'diametrically opposed'처럼 '서로 반대 방향의'라는 뜻의 분사형 형용사로 명사 수식이 가능하다. wax-on/wax-off의 시계·반시계 방향 원운동은 서로 '반대되는(opposed)' 동작이므로 'precisely opposed circular motions'는 의미·형태 모두 정문. opposing으로도 쓸 수 있지만 opposed가 틀린 것은 아니다."
+    },
+    {
+      "label": "(C) to hammer",
+      "verdict": "incorrect (정답)",
+      "reason": "사역동사 make는 능동태에서 목적격보어로 원형부정사를 취한다: makes Daniel hammer nails. 'makes Daniel to hammer'는 어법상 틀림. 수동태(Daniel is made to hammer)라면 to부정사가 살아나지만 여기는 능동. 대안 해석 탐색: 고어체(He maketh me to lie down)에서 make+to-V가 존재하나 현대 표준 영어·수능 기준으로는 허용되지 않으며, 문맥상 그런 문체적 정당화 근거도 없다. 앞 문장들의 'orders Daniel to wax', 'tells Daniel to paint'와의 병렬 착시(모두 to-V였으니 make도 to-V?)가 오히려 함정 장치로, 동사가 order/tell에서 make로 바뀐 것이 지배 규칙 전환점이다."
+    },
+    {
+      "label": "(D) limited",
+      "verdict": "correct",
+      "reason": "be limited to N('~에 국한되다')의 수동 구문. Daniel이 집안일에 '국한되는' 대상이므로 과거분사 limited가 옳다. limiting으로 끌릴 여지를 점검했으나 주어 he가 제한을 '당하는' 쪽이므로 수동이 명백. to가 전치사(household chores 명사구)라는 점도 정합."
+    },
+    {
+      "label": "(E) who",
+      "verdict": "correct",
+      "reason": "계속적 용법의 관계대명사 who. 선행사 Daniel(사람), 관계절 내 'without thought or hesitation'이 주어와 동사(defends) 사이에 삽입되어 who가 주격임이 한눈에 안 들어오게 만든 매력적 오답 장치. 삽입구를 걷어내면 who ... defends himself로 주격 who가 정확하다. whom이나 관계부사로 바꿀 이유 없음. 실전에서 삽입구 때문에 두 번 읽게 되는 유혹이 있었으나 구조 확인 후 정문 판정."
+    }
+  ],
+  "note": "정답은 (C) 하나로 명확히 수렴. 풀이 순서: 사역동사 make 지배 규칙(원형부정사)이 가장 확실한 위반이라 (C)를 먼저 확정한 뒤, 나머지 4개가 모두 정문임을 교차 확인. 최대 유혹 지점은 (B) opposed(opposing 대체 가능성으로 인한 흔들림)와 (E) who(삽입구로 인한 주격 판별 지연)였으나 둘 다 정문으로 옹호 가능. (C)의 archaic make+to-V 대안 해석은 현대 표준·수능 기준에서 성립하지 않아 정답성 훼손 없음. 단일 정답, 신뢰도 높음."
+}

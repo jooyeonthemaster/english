@@ -1,0 +1,35 @@
+{
+  "pid": "P070",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "Seam: 'make sure that in the long term, such negligence does not become a habitual practice' — the that-clause takes a finite present-tense verb after 'make sure', grammatically flawless. Anaphora check: 'such negligence' has a fully recoverable antecedent — the just-mentioned act of giving up self-care ('not prioritizing self-care', 'our self-care activities are the first thing to be given up'). Logic: the passage concedes occasional lapses are inevitable ('No matter how much we plan, we all occasionally have days when that happens') and then pivots on 'cumulative impact' + 'in the long term'. The only proposition that completes this contrast formally is: occasional lapse (tolerable) must not become habitual (cumulatively harmful). 'habitual practice' is the exact lexical complement of 'cumulative impact'. Valid on both grammatical and logical axes."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "Inserted: 'make sure that in the long term, postponing self-care fails to relieve immediate stress.' Logically incoherent on two counts: (a) 'make sure that X fails' asserts the author wants postponement to be ineffective, a goal the passage never entertains; (b) 'in the long term ... immediate stress' is an internal temporal contradiction. The passage never claims people postpone self-care in order to relieve stress, so the proposition also lacks an antecedent claim to negate. Grammatical but logically unbound."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "Inserted: 'make sure that in the long term, personal well-being is temporarily suspended for short-term goals.' Direct contradiction of the argument: the whole point of 'recognize the cumulative impact of not prioritizing self-care' is to protect well-being long-term, not to guarantee its suspension. Also self-contradictory at the seam: 'in the long term, ... temporarily ... for short-term goals' collapses the passage's short-term/long-term opposition. This is the polarity-reversal decoy."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "Inserted: 'make sure that in the long term, personal time is not constantly disrupted by sudden deadlines.' Superficially topical, but it fails the passage's own concession: 'No matter how much we plan, we all occasionally have days when that happens' — the author stipulates that disruptions by deadlines/meetings are inevitable and not the target of control. The recommended control variable is one's own prioritization habit (internal), not the occurrence of external interruptions. Making 'sure' external sudden deadlines don't disrupt personal time is precisely what the passage says cannot be guaranteed. Also misses the 'cumulative impact' hinge: the blank must be about accumulation of one's own negligence, not frequency of external interruptions. Plausible distractor, not defensible."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "Inserted: 'make sure that in the long term, self-care completely overtakes professional productivity.' Extreme reversal: the passage seeks balance (self-care should not be chronically sacrificed), never the supremacy of self-care over work — it explicitly grants that missing a grant deadline can matter more in the short term. 'completely overtakes' is an absolutist claim with no textual support. Grammatical but logically indefensible."
+    }
+  ],
+  "note": "Clean single-answer item. The argumentative skeleton is: occasional lapse is conceded as inevitable -> pivot on 'cumulative impact' + 'in the long term' -> therefore ensure the lapse stays occasional, i.e., does not become habitual. Only option 1 instantiates this; 'such negligence' resolves anaphorically without strain and 'habitual' is the formal antonym of 'occasional' set up by the passage. Option 4 is the strongest decoy but is refuted by the passage's explicit concession that disruptions cannot be prevented by planning. Options 2/3/5 fail on internal contradiction or polarity reversal. No alternative reading makes any competitor defensible."
+}

@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "blind-adjudication-source-closure-v1",
+  "observedAt": "2026-07-15T00:00:00+09:00",
+  "repositoryHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+  "qualification": "These are hashes observed while deriving the design from a dirty shared worktree. The artifact seals this observation; it does not claim the external files remain unchanged after capture.",
+  "sources": [
+    {
+      "path": "src/lib/question-type-ui.ts",
+      "role": "active 25-type UI registry and group membership",
+      "sha256": "19946584a591138a484034691230c2faa1b8d79ced811db96b5afed43f41e9f7",
+      "workingTreeState": "tracked-clean-at-observation"
+    },
+    {
+      "path": "src/lib/question-quality/rubric.ts",
+      "role": "current production type-quality rubric surface",
+      "sha256": "d27e3075ab988e06ee3361d81a23a6a2288c4112cd8732d0f2b540bf6a666844",
+      "workingTreeState": "tracked-clean-at-observation"
+    },
+    {
+      "path": "src/lib/question-quality/dispatcher.ts",
+      "role": "current production quality dispatcher and focus-type deterministic guards",
+      "sha256": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "workingTreeState": "tracked-modified-at-observation"
+    },
+    {
+      "path": "src/lib/question-quality/validators/grammar/shared.ts",
+      "role": "shared grammar structural and point-depth validation",
+      "sha256": "fb57409f1695f10f8d3ba2fdf1ce9845f0c273b724b8711e5e17fefa9b99931b",
+      "workingTreeState": "tracked-modified-at-observation"
+    },
+    {
+      "path": "src/lib/question-quality/validators/grammar/nonword-filler.ts",
+      "role": "grammar nonword, no-answer and filler deterministic guards",
+      "sha256": "60725a70a5d3f53a0cb9cf8cbdea2cc888122d972aa5d609e4c16f31b40945af",
+      "workingTreeState": "tracked-clean-at-observation"
+    },
+    {
+      "path": "src/lib/question-generation-prompt-contract.ts",
+      "role": "current generation contract and focus-type prompt constraints",
+      "sha256": "5fcf0144529af8b5cc72616c25fd45535d5920098acc5434e7c7ec428e9cd354",
+      "workingTreeState": "tracked-modified-at-observation"
+    },
+    {
+      "path": "experiments/question-quality-20260715/research-note.md",
+      "role": "failure chronology, cluster corrections, cost accounting and execution holds",
+      "sha256": "4c07751bc97e26e5ed0138b2afee2521469c4b565bd034d31e759e02d31be38c",
+      "workingTreeState": "untracked-at-observation"
+    },
+    {
+      "path": "experiments/question-quality-20260715/TYPE-AUDIT-MATRIX.md",
+      "role": "existing human audit semantics across active types",
+      "sha256": "4bfc82227ebcc54b770e7062f35aa8f4ff195f9d1cf6e5736dc73c1ead65805f",
+      "workingTreeState": "untracked-at-observation"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/rubric.json",
+      "role": "bound task-specific fatal, craft, KILLER and explanation contract for all 25 active types",
+      "sha256": "4c708524cfb5ec61d27457a45196747f5f2a73c98bffb763bde44b914cee41ca",
+      "workingTreeState": "untracked-at-observation"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/prompt-profiles-v1/profile-spec.json",
+      "role": "existing eight-profile S1 allocation and prior statistical claim boundary",
+      "sha256": "4e0af3095def9a503be1bee4a76b98ab2305a0ca576fc2b0dba452752d92f8ef",
+      "workingTreeState": "untracked-at-observation"
+    }
+  ],
+  "relevantGitHistory": [
+    {
+      "commit": "448488ca",
+      "subject": "grammar quality overhaul and Premium Gemini 3.1 Pro transition",
+      "use": "historical code generation boundary; not treated as proof of current output quality"
+    },
+    {
+      "commit": "5701cfc8",
+      "subject": "question-quality monolith split into modules",
+      "use": "validator lineage and source-routing context"
+    },
+    {
+      "commit": "08bb5332",
+      "subject": "GRAMMAR_CHOICE_COMBO type introduced",
+      "use": "active-type lineage"
+    },
+    {
+      "commit": "f2e8cc99",
+      "subject": "blank transformation generation quality strengthened",
+      "use": "blank prompt/validator lineage"
+    },
+    {
+      "commit": "eee1e372",
+      "subject": "KILLER blank structure and paraphrase mode introduced",
+      "use": "difficulty and blank-answer-mode lineage"
+    }
+  ],
+  "privacy": {
+    "actualPassages": 0,
+    "actualQuestions": 0,
+    "databaseIdentifiers": 0,
+    "credentials": 0,
+    "networkCalls": 0,
+    "databaseCalls": 0,
+    "apiCandidates": 0
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "consider + O + to be + C 5형식 구문. 긴 목적어 'the virtual, or imaginative, nature of cyberspace' 뒤의 to be는 표준 용법. consider X Y(무 to be)·consider X as Y와의 혼동을 유도하는 미끼지만, to be형 역시 완전한 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "cave drawings (which were) made by our Stone Age ancestors — 축약 관계절의 과거분사. drawings는 만들어지는 대상이므로 수동 의미의 made가 어법상 옳음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (정답)",
+      "reason": "자유관계사절 'What ___ new about cyberspace'에서 what이 절 내 주어이고 보어가 형용사 new. 주절 동사가 is, 주절 보어가 단수 'its interactive nature'로 단수 정체를 못박는다. what절이 복수 취급되는 대안 해석(What are needed are X and Y형)을 적극 탐색해도, 보어를 'its interactive nature and this interactivity'로 복수 등위로 읽으면 뒤의 'has made it...'의 주어가 사라져 문장이 붕괴하므로 성립 불가 — and는 두 독립절을 잇는다. 따라서 are는 틀리고 is여야 한다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "It(= cyberspace) is a space where real people have actual interactions — 단수 주어-동사 수일치 정상, 장소 선행사 space + 관계부사 where 정합."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "while being able to shape... — 분사구문의 의미상 주어가 주절 주어 real people과 일치(while (they are) able to...의 잔존형). 'while + 분사' 축약 구문으로 정문. being 생략형이 더 흔해 어색해 보이는 매력적 오답 1순위지만 being 잔존형도 표준."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: 첫 통독에서 (E) 'while being'과 (A) 'consider O to be C'가 순간적 유혹을 주지만, 의미상 주어 일치와 5형식 표준 용법 확인으로 각각 배제. (C)는 what절 수일치(단수 원칙) + 주절 동사 is + 단수 보어라는 삼중 장거리 단서로 유일하게 확정. 복수 정답 소지 없음."
+}

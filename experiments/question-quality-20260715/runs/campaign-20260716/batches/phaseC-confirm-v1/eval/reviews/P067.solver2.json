@@ -1,0 +1,35 @@
+{
+  "pid": "P067",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Inserted: 'audiences focus on analyzing the emotional structure of the written script, not just fictional characters in a movie.' The stem tail 'not just fictional characters' demands an NP contrast partner of the same category (people seen on screen); 'the emotional structure of the written script' is a category mismatch, so the seam fails. Logically, the passage never claims audiences analyze scripts — script analysis belongs to the actors' preparation, not the audience's experience. Fails both grammar-seam and logic tests."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "Inserted: 'audiences witness authentic individuals rather than merely observing fictional portrayals, not just fictional characters in a movie.' The object 'authentic individuals' contrasts exactly with the tail 'fictional characters in a movie', satisfying the seam. Logic follows the passage's causal chain: method actors truly become their characters and genuinely feel the scripted emotions ('truly feeling the emotions ... rather than faking them', 'seem to actually become the characters'), so 'As a result' audiences see real human beings, not mere fictions. Stylistic flaw noted: the option's internal 'rather than merely observing fictional portrayals' duplicates the stem tail's contrast, producing a redundant double contrast in the combined sentence; grammatically the tail can still parse as an appositive elaboration of 'fictional portrayals', so the sentence remains well-formed. The redundancy is a quality defect, not a validity defect."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "Inserted: 'audiences easily notice the artificial setup rather than believing the characters are real, not just fictional characters in a movie.' Directly contradicts the passage: method acting eliminates artificiality (actors genuinely feel emotions, become the characters). Also the tail 'not just fictional characters' has no coherent contrast partner ('the artificial setup' vs 'fictional characters' is not the intended real/fake polarity — it inverts it). Anti-thematic distractor."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Inserted: 'audiences desire to replace the actors and perform the roles themselves, not just fictional characters in a movie.' The tail NP 'fictional characters in a movie' finds no parallel object to contrast with ('desire to replace the actors' offers no slot where 'not just fictional characters' attaches sensibly — replacing actors vs fictional characters is incoherent). No textual support anywhere for audience desire to perform. Seam collapses; logic unsupported."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Inserted: 'audiences pay more attention to the actors' physical struggles and schedule changes, not just fictional characters in a movie.' The seam is marginally parseable ('attention to X, not just (to) fictional characters'), though the missing 'to' before the tail is slightly off. Logically it fails: sleeping-pattern and appearance changes are cited as the actors' off-screen preparation means, invisible to audiences; the passage's 'As a result' conclusion concerns perceived authenticity of the performance, not audience awareness of behind-the-scenes hardship. Plausible-sounding lexical-recycle distractor, not defensible."
+    }
+  ],
+  "note": "Single defensible answer: ②. One craftsmanship issue for the item bank: option ②'s internal contrast 'rather than merely observing fictional portrayals' semantically duplicates the stem tail 'not just fictional characters in a movie', yielding a redundant double contrast when inserted. This does not create answer ambiguity (no other option survives seam+logic testing) but slightly weakens sentence naturalness of the keyed completion. Alternative-parse search (reduced relatives, participial adjuncts, inversion) found no reading that rescues any distractor."
+}

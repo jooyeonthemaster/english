@@ -1,0 +1,35 @@
+{
+  "pid": "P079",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "Seam is grammatical ('an ability to master...'), but 'master the logical structure' encodes explicit, analyzable rule-knowledge — the passage's TECHNICAL pole ('formulated rules... deliberately learned') — whereas the blank must instantiate a bodily metaphor for tacit practical knowledge. It also over-narrows the generic 'a touch for doing some activity' to a musical instrument. Logically contradicts the technical/practical dichotomy."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "Grammatically fine, but 'adhere strictly to formulated textbook guidelines' is a near-verbatim restatement of technical/book knowledge ('formulated rules'), the explicit contrast class to practical knowledge. Inserting it makes the sentence define practical knowledge by its stated antonym — a formal contradiction with the passage's governing dichotomy."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "Seam clean: 'an ability to execute physical actions with precise intensity and tempo.' Logically, 'touch' is exactly the bodily metaphor for calibrated pressure/force and timing (cf. a pianist's touch); 'physical actions' matches 'bodily metaphors', and finely calibrated execution acquired through habit matches 'repertoire of skills... without conscious awareness' and 'exists only in practice'. 'Precise' here denotes embodied calibration, not deliberate rule-following, so no tension with 'thinking less'. Uniquely satisfies all constraints."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "Grammatical, but 'analytical calmness' imports deliberate analysis, directly contradicting 'she isn't thinking more; she is thinking less' and the non-deliberative character of practical knowledge. Also semantically disconnected from 'touch', which denotes fine motor calibration, not emotional regulation under stress."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "Grammatical, but 'passively appreciate' is receptive, not agentive: it contradicts 'a touch for DOING some activity' and 'It exists only in practice.' Practical knowledge is a capacity for performance, not spectatorship; appreciation of auditory beauty is neither a skill built through habit nor performed 'without conscious awareness' in the passage's sense."
+    }
+  ],
+  "note": "Blank-type item. All five options are syntactically well-formed after 'an ability to', so discrimination is purely logical. The blank must gloss the bodily metaphor 'touch' within the technical-vs-practical knowledge dichotomy (source resembles David Brooks, The Social Animal). Only ③ instantiates embodied, tacit, calibrated execution; ①/② fall on the technical pole, ④ contradicts 'thinking less', ⑤ is passive rather than practical. No alternative reading (ambiguity of 'precise', metaphorical stretch of 'touch') rescues another option. Single defensible answer: ③."
+}

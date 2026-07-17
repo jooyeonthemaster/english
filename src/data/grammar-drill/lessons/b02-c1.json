@@ -1,0 +1,714 @@
+{
+  "id": "b02-c1",
+  "unitId": "b02",
+  "order": 1,
+  "title": "1형식 SV · 2형식 SVC",
+  "oneLiner": "동사 뒤에 남은 말이 주어를 설명하는 보어인지, 걷어내도 되는 수식어인지를 가립니다.",
+  "gradeStamp": {
+    "introduced": "중1",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 문장의 형식(주어+동사 / 주어+동사+보어)",
+      "천일문 중등 — 문장의 5형식 중 1형식·2형식",
+      "docs/study-os-spec.md §2.3 PART 0 b02 문장의 다섯 형식"
+    ]
+  },
+  "lenses": ["L1", "L5"],
+  "confusableWith": ["b02-c2", "b02-c4", "b06-c1"],
+  "estimatedMinutes": 24,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The soup in the pot tastes salty.",
+        "The soup in the pot tastes saltily."
+      ],
+      "answer": 0,
+      "afterText": "두 문장의 차이는 어미 -ly 하나입니다. 이 레슨을 마치면 동사 뒤 자리가 보어인지 수식어인지 스스로 판정할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "보어",
+      "question": "그런데 보어가 대체 무엇입니까?",
+      "plain": "보어는 동사 뒤에서 주어가 무엇인지, 어떤 상태인지 설명을 보태 주는 말이며, 주어를 설명하므로 주격보어라고 부릅니다. 보어가 빠지면 문장의 뜻이 완결되지 않습니다. 뒤에서 목적어를 설명하는 목적격보어와 짝을 이루는데, 이는 5형식에서 다룹니다.",
+      "analogy": "\"그 국은 …하다\"까지만 말하고 입을 닫으면 듣는 사람은 답답해집니다. 그 빈자리를 채워 문장을 끝내 주는 말이 보어입니다. 반대로 \"물이 언다\"는 그것만으로 이미 할 말이 끝난 문장입니다.",
+      "whyItMatters": "동사 뒤에 남은 말이 보어인지 수식어인지를 가리는 것이 1형식과 2형식을 가르는 기준입니다. 시험에서 형용사와 부사 중 하나를 고르게 하는 문항의 판단 근거가 바로 이 자리 구분입니다."
+    },
+    {
+      "id": "b3",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "형식 판별 필기노트",
+      "intro": "일곱 항목이면 이 레슨의 뼈대가 전부 잡힙니다. 예문의 굵은 부분이 판단의 핵심입니다.",
+      "entries": [
+        {
+          "head": "형식 — 동사가 정하는 문장의 모양",
+          "body": "문장의 형식은 동사가 뒤에 무엇을 부르는지로 정해집니다. 그래서 형식 판별은 언제나 동사에서 출발합니다."
+        },
+        {
+          "head": "1형식 SV — 주어와 동사로 완결",
+          "body": "주어와 동사만으로 뜻이 섭니다. 뒤에 붙는 부사·전치사구는 걷어내도 되는 수식어입니다.",
+          "example": {
+            "en": "The bell **rang** at noon.",
+            "ko": "종이 정오에 울렸습니다.",
+            "note": "at noon 을 걷어내도 The bell rang 은 완전한 문장입니다."
+          }
+        },
+        {
+          "head": "2형식 SVC — 보어가 있어야 완결",
+          "body": "동사 뒤에 주어를 설명하는 보어(주격보어)가 와야 뜻이 완성됩니다. 보어를 지우면 문장이 끊긴 느낌이 남습니다.",
+          "example": {
+            "en": "The room **grew dark**.",
+            "ko": "방이 어두워졌습니다.",
+            "note": "dark 를 지우면 The room grew 는 \"방이 자랐다\"가 되어 뜻이 무너집니다."
+          }
+        },
+        {
+          "head": "보어 자리 — 형용사와 명사만",
+          "body": "보어 자리에는 형용사나 명사가 옵니다. 부사는 주어를 설명하지 못하므로 보어가 되지 못합니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "수식어 — 형식 계산에서 제외",
+          "body": "부사와 전치사구는 아무리 길어도 형식에 끼지 못합니다. 괄호로 묶어 걷어낸 뒤에 남는 것만 셉니다.",
+          "pin": "팁"
+        },
+        {
+          "head": "be 가 '있다'일 때 — 장소 표현이 온다",
+          "body": "be 동사가 '있다(존재)'의 뜻이면 뒤에 here·at home 같은 장소 표현이 올 수 있습니다. 이때 그 표현은 보어가 아니라 주어의 소재를 말하는 말입니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "같은 동사, 다른 형식",
+          "body": "grow·smell·feel 같은 동사는 뜻에 따라 1형식도 되고 2형식도 됩니다. 동사 이름이 아니라 뒤에 남은 말이 형식을 알려 줍니다.",
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "type": "TABLE",
+      "tier": 1,
+      "title": "보어를 부르는 동사 한 장 정리",
+      "columns": ["동사 가족", "뜻", "동사 뒤에 오는 것"],
+      "rows": [
+        {
+          "cells": ["be · become", "~이다 · ~이 되다", "형용사·명사 보어"],
+          "example": {
+            "en": "The hall **is empty** on weekends.",
+            "ko": "그 강당은 주말에는 비어 있습니다.",
+            "note": "empty 가 주어 The hall 의 상태를 설명하는 보어입니다."
+          }
+        },
+        {
+          "cells": ["remain · stay", "~인 채로 있다", "형용사 보어"],
+          "example": {
+            "en": "The store **stays open** until midnight.",
+            "ko": "그 가게는 자정까지 문을 연 채로 있습니다.",
+            "note": "open 은 주어의 상태를 말하는 형용사 보어입니다. until midnight 은 수식어입니다."
+          }
+        },
+        {
+          "cells": ["seem", "~해 보이다", "형용사 보어 (반드시 필요)"],
+          "example": {
+            "en": "The argument **seems weak** at first glance.",
+            "ko": "그 논증은 얼핏 보기에 약해 보입니다.",
+            "note": "weak 가 보어입니다. seem 은 보어 없이 문장을 끝내지 못합니다."
+          }
+        },
+        {
+          "cells": ["look · sound · smell · taste · feel", "오감으로 ~하게 느껴지다", "형용사 보어 (명사는 like+명사)"],
+          "example": {
+            "en": "The plan **sounds risky** to the investors.",
+            "ko": "그 계획은 투자자들에게 위험하게 들립니다.",
+            "note": "우리말은 '위험하게'이지만 주어를 설명하는 자리이므로 형용사 risky 가 옵니다."
+          }
+        },
+        {
+          "cells": ["rise · arrive · disappear 등", "동작이 그 자체로 완결", "아무것도 — 뒤는 전부 수식어"],
+          "example": {
+            "en": "The fog **disappeared** before noon.",
+            "ko": "안개는 정오 전에 사라졌습니다.",
+            "note": "before noon 은 수식어입니다. 뼈대는 The fog disappeared 로 이미 끝났습니다."
+          }
+        }
+      ],
+      "takeaway": "위 네 줄의 동사가 보이면 눈은 곧장 \"동사 뒤에 남은 말이 주어를 설명하는가\"를 묻습니다. 마지막 줄의 동사라면 뒤에 무엇이 있어도 수식어입니다."
+    },
+    {
+      "id": "b5",
+      "type": "MNEMONIC",
+      "tier": 1,
+      "target": "보어를 부르는 2형식 동사 목록",
+      "why": "형식 판별의 첫 물음은 \"이 동사가 보어를 부르는가\"입니다. 목록이 즉시 나오지 않으면 매 문장을 해석으로 더듬게 되고, 시험장에는 그럴 시간이 없습니다. 구구단처럼 나와야 도구가 됩니다.",
+      "device": "be·become·remain·stay·seem 은 '이다·되다·남다·머물다·보이다'의 상태 5인방, look·sound·smell·taste·feel 은 '보고·듣고·맡고·맛보고·만지는' 오감 5인방입니다. \"상태 다섯, 오감 다섯 — 열 동사 뒤는 형용사의 자리\"라고 두 박자로 세 번 소리 내어 읽으십시오.",
+      "items": [
+        { "cue": "be · become", "answer": "~이다 · ~이 되다 — 형용사·명사 보어를 부릅니다" },
+        { "cue": "remain · stay", "answer": "~인 채로 있다 — 형용사 보어를 부릅니다" },
+        { "cue": "seem", "answer": "~해 보이다 — 보어 없이는 문장이 끝나지 않습니다" },
+        { "cue": "look · sound", "answer": "~해 보인다 · ~하게 들린다 — 형용사 보어" },
+        { "cue": "smell · taste · feel", "answer": "냄새·맛·감촉이 ~하다 — 형용사 보어" },
+        { "cue": "rise · arrive · disappear", "answer": "1형식 — 보어 없이 홀로 완결됩니다" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "MEMORY_GATE",
+      "tier": 1,
+      "title": "형식의 관문",
+      "mission": "주어를 설명하는 보어를 부를 수 있는 동사만 전부 고르십시오. 보어 없이 홀로 완결되는 1형식 침입자가 셋 섞여 있습니다.",
+      "mode": "SET",
+      "pool": [
+        "become",
+        "remain",
+        "seem",
+        "stay",
+        "look",
+        "sound",
+        "smell",
+        "taste",
+        "feel",
+        "rise",
+        "arrive",
+        "disappear"
+      ],
+      "answers": [
+        "become",
+        "remain",
+        "seem",
+        "stay",
+        "look",
+        "sound",
+        "smell",
+        "taste",
+        "feel"
+      ],
+      "passText": "아홉을 전부 가려냈습니다. rise·arrive·disappear 는 홀로 완결되는 1형식의 주민이라는 것까지 보였다면, 이 레슨의 절반은 이미 끝났습니다.",
+      "retryText": "아깝습니다. 힌트 하나 — \"주어가 ~한 상태다\"로 이어지는 동사는 보어를 부르고, 움직임이 그 자체로 끝나는 동사는 부르지 않습니다. 상태 5인방과 오감 5인방을 다시 떠올려 보십시오."
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 1,
+      "title": "1형식 SV — 동사 뒤에 아무것도 필요하지 않습니다",
+      "rule": "1형식은 주어와 동사만으로 뜻이 완결되는 문장입니다. 동사 뒤의 부사나 전치사구는 수식어이므로 걷어내도 문장이 남습니다.",
+      "examples": [
+        {
+          "en": "Water **freezes** at zero degrees Celsius.",
+          "ko": "물은 섭씨 0도에서 업니다.",
+          "note": "at zero degrees Celsius 는 전치사구 수식어입니다. 걷어내도 Water freezes 만으로 문장이 성립합니다."
+        },
+        {
+          "en": "The sun **rises** slowly over the eastern hills.",
+          "ko": "해가 동쪽 언덕 위로 천천히 떠오릅니다.",
+          "note": "slowly 와 over the eastern hills 는 모두 수식어입니다. rise 는 보어를 부르지 않는 동사입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "RULE",
+      "tier": 1,
+      "title": "2형식 SVC — 동사 뒤가 주어를 설명합니다",
+      "rule": "be·become·remain·stay·seem 같은 동사는 뒤에 주어를 설명하는 보어를 부릅니다. 보어 자리에는 형용사나 명사가 오며, 부사는 올 수 없습니다.",
+      "examples": [
+        {
+          "en": "The laboratory **remained quiet** all morning.",
+          "ko": "그 실험실은 아침 내내 조용했습니다.",
+          "note": "quiet 는 주어 The laboratory 의 상태를 설명하는 형용사 보어입니다. all morning 은 수식어입니다."
+        },
+        {
+          "en": "She **became a researcher** after graduation.",
+          "ko": "그녀는 졸업 후에 연구원이 되었습니다.",
+          "note": "보어 자리에는 형용사뿐 아니라 주어의 신분을 말하는 명사도 올 수 있습니다."
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "SORT",
+      "tier": 1,
+      "instruction": "각 표현이 2형식 동사 뒤의 보어 자리에 들어갈 수 있는지 분류하십시오.",
+      "buckets": [
+        { "id": "c", "label": "보어 자리에 올 수 있습니다" },
+        { "id": "nc", "label": "보어 자리에 올 수 없습니다" }
+      ],
+      "chips": [
+        { "text": "quiet", "bucketId": "c", "why": "형용사이므로 주어의 상태를 설명하는 보어가 됩니다." },
+        { "text": "a teacher", "bucketId": "c", "why": "명사도 주어의 신분을 말하는 보어가 될 수 있습니다." },
+        { "text": "empty", "bucketId": "c", "why": "형용사이므로 보어 자리에 들어갑니다." },
+        { "text": "quietly", "bucketId": "nc", "why": "부사는 주어를 설명하지 못하므로 보어가 되지 못합니다." },
+        { "text": "carefully", "bucketId": "nc", "why": "부사는 동사를 꾸밀 뿐이어서 보어 자리를 채우지 못합니다." },
+        { "text": "suddenly", "bucketId": "nc", "why": "부사이므로 보어가 아니라 수식어입니다." }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "감각동사는 형용사를 부릅니다",
+      "rule": "look·sound·smell·taste·feel 이 '~해 보인다·들린다·느껴진다'는 뜻일 때는 2형식 감각동사이므로 뒤에 형용사 보어가 옵니다. 보어 자리에 명사를 두려면 like 를 앞에 세웁니다.",
+      "examples": [
+        {
+          "en": "The proposal **sounds reasonable** to the committee.",
+          "ko": "그 제안은 위원회에 합리적으로 들립니다.",
+          "note": "우리말로는 '합리적으로'이지만, 영어에서는 주어를 설명하는 자리이므로 형용사 reasonable 이 옵니다."
+        },
+        {
+          "en": "The old library **smelled like** dust and paper.",
+          "ko": "그 오래된 도서관에서는 먼지와 종이 냄새가 났습니다.",
+          "note": "보어 자리에 명사를 두려면 smell like 처럼 like 가 필요합니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "긴 주어를 가진 2형식 문장의 해부",
+      "tokens": [
+        { "t": "The results", "role": "S" },
+        { "t": "of the second experiment", "role": "M" },
+        { "t": "seemed", "role": "V" },
+        { "t": "inconsistent", "role": "C" }
+      ],
+      "ko": "두 번째 실험의 결과는 일관되지 않아 보였습니다.",
+      "layers": [
+        {
+          "label": "① 수식어를 괄호로 걷어냅니다",
+          "roles": ["M"],
+          "note": "of the second experiment 는 앞의 명사를 꾸미는 전치사구입니다. 뼈대가 아니므로 통째로 묶어 치웁니다."
+        },
+        {
+          "label": "② 남은 핵 주어를 확인합니다",
+          "roles": ["S"],
+          "note": "수식어를 걷어내면 주어는 The results 입니다. experiment 는 전치사의 목적어일 뿐 주어가 아닙니다."
+        },
+        {
+          "label": "③ 본동사를 찾습니다",
+          "roles": ["V"],
+          "note": "시제를 가진 동사는 seemed 하나입니다. seem 은 뒤에 보어를 부르는 동사입니다."
+        },
+        {
+          "label": "④ 동사 뒤에 남은 말의 정체를 판정합니다",
+          "roles": ["C"],
+          "note": "inconsistent 는 주어 The results 의 상태를 설명합니다. 따라서 수식어가 아니라 보어이며, 이 문장은 2형식입니다."
+        }
+      ],
+      "conclusion": "수식어를 걷어내면 뼈대는 The results seemed inconsistent 입니다. 보어 자리이므로 inconsistently 는 들어갈 수 없습니다."
+    },
+    {
+      "id": "b12",
+      "type": "PAIR_MATCH",
+      "tier": 1,
+      "title": "표현과 판정 연결하기",
+      "instruction": "왼쪽의 동사 표현이 어떤 판정을 받는지 오른쪽에서 찾아 연결하십시오.",
+      "pairs": [
+        {
+          "a": "stayed bright",
+          "b": "2형식 — bright 는 주어를 설명하는 보어",
+          "why": "stay 는 상태를 잇는 동사이므로 bright 가 주어를 설명하는 보어입니다."
+        },
+        {
+          "a": "rises slowly",
+          "b": "1형식 — slowly 는 수식어",
+          "why": "rise 는 보어를 부르지 않는 동사이고, slowly 는 걷어내도 되는 부사입니다."
+        },
+        {
+          "a": "became a researcher",
+          "b": "2형식 — 명사 보어가 신분을 설명",
+          "why": "become 은 주어가 무엇이 되었는지 말하는 명사 보어를 부릅니다."
+        },
+        {
+          "a": "tastes salty",
+          "b": "2형식 — 감각동사 뒤의 형용사 보어",
+          "why": "taste 는 오감 동사이므로 주어를 설명하는 형용사 salty 가 옵니다."
+        },
+        {
+          "a": "disappeared quickly",
+          "b": "1형식 — quickly 를 걷어내도 완결",
+          "why": "disappear 는 홀로 완결되는 동사이고 quickly 는 사라진 방식을 꾸미는 수식어입니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "1형식인지 2형식인지 가리는 절차",
+      "steps": [
+        {
+          "text": "전치사구와 부사를 괄호로 묶어 수식어를 걷어냅니다.",
+          "applyNote": "The lights (in the old theater) stayed bright (until midnight) — 괄호 두 개가 수식어입니다."
+        },
+        {
+          "text": "남은 뼈대에서 핵 주어와 시제를 가진 본동사를 찾습니다.",
+          "applyNote": "핵 주어는 The lights 이고 본동사는 stayed 입니다."
+        },
+        {
+          "text": "본동사 뒤에 남은 말이 없으면 1형식입니다.",
+          "applyNote": "여기서는 bright 가 남아 있으므로 1형식이 아닙니다."
+        },
+        {
+          "text": "남은 말이 주어를 설명하면 보어이므로 2형식이며, 그 자리에는 형용사나 명사가 옵니다.",
+          "applyNote": "bright 는 The lights 의 상태를 설명하므로 보어입니다. brightly 를 쓰면 보어 자리가 비어 문장이 무너집니다."
+        }
+      ],
+      "example": {
+        "en": "The lights in the old theater **stayed bright** until midnight.",
+        "ko": "그 오래된 극장의 조명은 자정까지 밝게 켜져 있었습니다.",
+        "note": "수식어를 걷어낸 뼈대는 The lights stayed bright 이며, bright 는 주어를 설명하는 보어입니다."
+      }
+    },
+    {
+      "id": "b14",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The night air on the mountain ( felt cold / felt coldly ) even in early summer.",
+      "steps": [
+        {
+          "title": "① 수식어를 걷어냅니다",
+          "body": "on the mountain 과 even in early summer 는 전치사구 수식어입니다. 괄호로 묶어 치웁니다."
+        },
+        {
+          "title": "② 뼈대를 확인합니다",
+          "body": "남은 뼈대는 The night air felt … 입니다. 핵 주어는 The night air 이고 본동사는 felt 입니다."
+        },
+        {
+          "title": "③ 동사가 무엇을 부르는지 봅니다",
+          "body": "feel 은 주어의 성질을 말하는 2형식 감각동사입니다. 따라서 뒤에는 주어를 설명하는 보어가 와야 합니다. (feel 은 5형식 지각동사로도 쓰여 동사원형 보어를 부르는데, 이는 5형식에서 다룹니다.)"
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "cold 는 The night air 의 상태를 설명하는 형용사이므로 보어가 됩니다. coldly 는 부사여서 보어 자리에 들어갈 수 없습니다."
+        }
+      ],
+      "answer": "felt cold",
+      "ko": "산의 밤공기는 초여름에도 차갑게 느껴졌습니다."
+    },
+    {
+      "id": "b15",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "b02-c1-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The old bridge looks {{blank}} after the repair work.",
+          "options": ["safe", "safely"],
+          "answer": 0,
+          "translation": "그 오래된 다리는 보수 공사 후에 안전해 보입니다.",
+          "explanation": "look 은 주어의 성질을 말하는 2형식 동사이므로 뒤에 보어가 옵니다. 빈칸은 주어 The old bridge 를 설명하는 자리이므로 형용사 safe 가 옳고, 부사 safely 는 보어가 될 수 없습니다.",
+          "trapTags": ["linking-verb", "complement-slot"]
+        },
+        {
+          "id": "b02-c1-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The new policy seems [[u:reasonably]] to most of the teachers.",
+          "isCorrect": false,
+          "correction": "reasonable",
+          "translation": "그 새 정책은 대부분의 교사에게 합리적으로 보입니다.",
+          "explanation": "seem 은 반드시 보어를 부르는 2형식 동사입니다. 밑줄 자리는 주어 The new policy 를 설명하는 보어 자리이므로 부사 reasonably 가 아니라 형용사 reasonable 이어야 합니다.",
+          "trapTags": ["complement-slot", "adverb-for-adjective"]
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "1형식과 2형식의 갈림길",
+      "columns": ["1형식 SV — 보어가 없습니다", "2형식 SVC — 보어가 필요합니다"],
+      "rows": [
+        {
+          "criterion": "동사 뒤에 오는 말",
+          "a": "수식어(부사·전치사구) — 걷어내도 문장이 남습니다",
+          "b": "보어 — 없애면 뜻이 완결되지 않습니다"
+        },
+        {
+          "criterion": "그 자리를 채우는 품사",
+          "a": "부사 (quickly, late, sharply)",
+          "b": "형용사·명사 (impatient, a researcher)"
+        },
+        {
+          "criterion": "그 뜻으로 쓰일 때의 대표 동사",
+          "a": "rise, arrive, disappear, freeze",
+          "b": "be, become, remain, seem, look"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The tree in the courtyard **grew quickly** in the first year.",
+          "ko": "안뜰의 그 나무는 첫해에 빠르게 자랐습니다.",
+          "note": "여기서 grow 는 '자라다'라는 1형식 동사이고 quickly 는 자라는 방식을 꾸미는 부사입니다."
+        },
+        {
+          "en": "The travelers **grew impatient** during the long delay.",
+          "ko": "그 여행자들은 긴 지연 동안 조바심이 났습니다.",
+          "note": "같은 grow 이지만 여기서는 '~한 상태가 되다'라는 2형식 동사이므로 형용사 보어 impatient 가 옵니다. 동사가 아니라 뒤에 남은 말이 형식을 알려 줍니다."
+        }
+      ]
+    },
+    {
+      "id": "b17",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "형식 반사신경 단련",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 동사 뒤에 남은 말의 정체를 눈으로 먼저 판정해야 합니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "seem 은 보어 없이 문장을 끝낼 수 없습니다.",
+          "isTrue": true,
+          "why": "seem 은 반드시 주어를 설명하는 보어를 불러야 하는 2형식 동사입니다."
+        },
+        {
+          "statement": "The bell rang loudly. 에서 loudly 는 보어입니다.",
+          "isTrue": false,
+          "why": "ring 은 보어를 부르지 않는 동사이고, loudly 는 울리는 방식을 꾸미는 부사 수식어입니다."
+        },
+        {
+          "statement": "become 뒤에는 명사 보어도 올 수 있습니다.",
+          "isTrue": true,
+          "why": "She became a researcher 처럼 주어의 신분을 말하는 명사도 보어가 됩니다."
+        },
+        {
+          "statement": "감각동사 taste 의 보어 자리에는 부사가 옵니다.",
+          "isTrue": false,
+          "why": "감각동사의 보어 자리에는 형용사가 옵니다. tastes salty 가 옳고 tastes saltily 는 오류입니다."
+        },
+        {
+          "statement": "Water freezes. 는 이대로 완결된 문장입니다.",
+          "isTrue": true,
+          "why": "freeze 는 주어와 동사만으로 뜻이 서는 1형식 동사입니다."
+        },
+        {
+          "statement": "보어를 지워도 2형식 문장의 뜻은 완결됩니다.",
+          "isTrue": false,
+          "why": "보어는 뼈대입니다. The room grew dark 에서 dark 를 지우면 뜻이 무너집니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The soil under the thick layer of leaves stays ( moist / moistly ) even in summer.",
+      "givenSteps": [
+        "① 수식어를 걷어냅니다 — under the thick layer of leaves 와 even in summer 는 전치사구 수식어입니다.",
+        "② 뼈대를 확인합니다 — 핵 주어는 The soil 이고 본동사는 stays 입니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리에는 무엇이 들어가야 합니까?",
+      "options": [
+        "moist — 괄호는 주어 The soil 을 설명하는 보어 자리이므로 형용사가 옵니다",
+        "moistly — 동사 stays 를 꾸며야 하므로 부사가 옵니다",
+        "moisture — 흙이 곧 수분이므로 명사가 자연스럽습니다"
+      ],
+      "answer": 0,
+      "explain": "stay 는 주어의 상태를 말하는 2형식 동사이므로 뒤에 보어가 옵니다. 보어는 주어를 설명하는 자리여서 형용사 moist 가 옳습니다. 부사 moistly 는 보어가 될 수 없고, 명사 moisture 는 흙이 곧 수분이라는 뜻이 되어 의미가 성립하지 않습니다."
+    },
+    {
+      "id": "b19",
+      "type": "TRAP",
+      "tier": 2,
+      "trapTitle": "우리말 '~하게'에 이끌려 -ly 를 붙이는 오류",
+      "body": "우리말 해석이 '아름답게 들린다'처럼 부사로 나오면 영어에서도 -ly 를 붙이고 싶어집니다. 그러나 판단 근거는 해석이 아니라 자리입니다. 그 말이 주어를 설명하면 보어이고, 보어 자리에는 형용사만 들어갑니다.",
+      "example": {
+        "en": "The music from the next room sounds **beautifully**.",
+        "ko": "옆방에서 들려오는 그 음악이 아름답게 들립니다.",
+        "note": "sound 는 보어를 부르는 동사입니다. beautifully 는 부사여서 보어가 되지 못하므로 beautiful 로 고쳐야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b20",
+      "type": "GENERATE",
+      "tier": 1,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 하나 섞여 있습니다.",
+      "ko": "그 오래된 시계는 수리 후에도 여전히 정확합니다.",
+      "answer": ["The old clock", "remains", "accurate", "even after the repair"],
+      "tiles": [
+        "The old clock",
+        "remains",
+        "accurate",
+        "even after the repair",
+        "accurately"
+      ],
+      "explanation": "remain 은 주어의 상태를 말하는 2형식 동사이므로 보어가 필요합니다. 보어 자리에는 주어 The old clock 을 설명하는 형용사 accurate 가 들어가며, 부사 accurately 는 쓰이지 않습니다."
+    },
+    {
+      "id": "b21",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "b02-c1-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The conclusions drawn from the two experiments seemed {{blank}} at first.",
+          "options": ["contradictory", "contradictorily"],
+          "answer": 0,
+          "translation": "두 실험에서 도출된 그 결론들은 처음에는 서로 모순되어 보였습니다.",
+          "explanation": "drawn from the two experiments 는 앞의 명사를 꾸미는 분사구 수식어입니다. 이를 걷어내면 뼈대는 The conclusions seemed … 이며, seem 은 보어를 부르므로 빈칸은 주어를 설명하는 형용사 자리입니다.",
+          "trapTags": ["complement-slot", "long-subject", "adverb-for-adjective"]
+        }
+      ]
+    },
+    {
+      "id": "b22",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 contradictory 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "seem 이 보어를 부르는 동사이고, 빈칸이 주어 The conclusions 를 설명하는 보어 자리이기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 동사가 보어를 부르는가, 그 자리가 주어를 설명하는가가 판단의 근거입니다."
+        },
+        {
+          "text": "문장이 과거의 일을 말하고 있어 -ly 가 붙은 형태는 어울리지 않기 때문입니다.",
+          "correct": false,
+          "feedback": "시제는 형용사와 부사의 선택과 무관합니다. 과거 문장에도 부사는 얼마든지 쓰입니다."
+        },
+        {
+          "text": "contradictorily 라는 부사는 실제로 존재하지 않는 단어이기 때문입니다.",
+          "correct": false,
+          "feedback": "그 부사는 존재합니다. 문제는 단어의 존재 여부가 아니라 보어 자리에 부사가 들어갈 수 없다는 자리 규칙입니다."
+        }
+      ]
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 보어 자리에 부사를 넣은 문장을 주고 틀린 부분을 찾아 고쳐 쓰게 합니다. 동사가 보어를 부른다는 점을 근거로 형용사로 바꿔야 만점입니다.",
+          "sample": {
+            "en": "The instructions on the label became clearly only after the diagram appeared.",
+            "ask": "이 문장에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰십시오.",
+            "answer": "clearly → clear (become 은 보어를 부르는 2형식 동사이므로 형용사가 와야 합니다)"
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법에서는 긴 수식어를 끼워 넣어 보어 자리를 흐린 뒤 형용사와 부사 중 하나에 밑줄을 칩니다. 수식어를 걷어내고 그 말이 주어를 설명하는지만 확인하면 판정됩니다.",
+          "sample": {
+            "en": "The surface of the frozen lake, seen from the opposite shore, looks [[u:smooth]] in the winter light.",
+            "ask": "밑줄 친 부분이 어법상 옳은지 판단하십시오.",
+            "answer": "옳습니다 — look 이 부르는 보어 자리이므로 주어 The surface 를 설명하는 형용사 smooth 가 맞습니다. smoothly 였다면 틀립니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "빈자리의 심판관",
+      "intro": "동사 뒤에 남은 한 자리 — 그것이 보어인지 수식어인지에 따라 문장의 운명이 갈립니다. 해석의 감이 아니라 자리의 눈으로, 네 번의 판정을 통과해 보십시오.",
+      "questions": [
+        {
+          "prompt": "The auditorium remained {{blank}} during the entire ceremony.",
+          "options": ["silent", "silently"],
+          "answer": 0,
+          "why": "remain 은 주어의 상태를 잇는 2형식 동사입니다. 보어 자리이므로 주어를 설명하는 형용사 silent 가 옵니다."
+        },
+        {
+          "prompt": "The old machine stopped {{blank}} after the power cut.",
+          "options": ["sudden", "suddenly"],
+          "answer": 1,
+          "why": "여기서 stop 은 보어를 부르지 않는 1형식 동사입니다. 멈춘 방식을 꾸미는 자리이므로 부사 suddenly 가 옵니다."
+        },
+        {
+          "prompt": "Her voice sounded {{blank}} over the phone.",
+          "options": ["nervous", "nervously"],
+          "answer": 0,
+          "why": "sound 는 감각동사이므로 주어 Her voice 를 설명하는 형용사 보어 nervous 가 옵니다."
+        },
+        {
+          "prompt": "After ten years of study, he finally became {{blank}}.",
+          "options": ["a licensed architect", "professionally"],
+          "answer": 0,
+          "why": "become 은 주어의 신분을 말하는 명사 보어를 부릅니다. 부사는 보어가 되지 못하므로 문장을 끝내지 못합니다."
+        }
+      ],
+      "winText": "심판관이 문을 엽니다. 동사 뒤의 빈자리를 해석이 아니라 구조로 읽는 눈이 네 번 모두 흔들리지 않았습니다. 이 눈이 3형식·4형식·5형식까지 그대로 이어집니다.",
+      "loseText": "심판관은 아직 자리를 지킵니다. 오답의 공통점은 하나 — 동사가 보어를 부르는 동사인지 먼저 묻지 않았다는 것입니다. 상태 5인방과 오감 5인방의 목록을 다시 확인하면 문은 열립니다."
+    },
+    {
+      "id": "b25",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "동사 뒤에 남은 말이 주어를 ___하면 보어이고, 보어 자리에는 ___ 가 오며 ___ 는 올 수 없습니다."
+    },
+    {
+      "id": "b26",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "1형식은 주어와 동사만으로 뜻이 완결되며, 동사 뒤의 부사·전치사구는 걷어내도 되는 수식어입니다.",
+        "2형식은 동사 뒤에 주어를 설명하는 보어가 필요하며, 그 자리에는 형용사나 명사가 옵니다.",
+        "보어를 부르는 동사는 상태 5인방 be·become·remain·stay·seem 과 오감 5인방 look·sound·smell·taste·feel 입니다.",
+        "보어 자리에 부사(-ly)를 넣는 것은 오류입니다. 우리말 해석이 아니라 '주어를 설명하는가'로 판정합니다."
+      ],
+      "keySentence": {
+        "en": "The results of the second experiment **seemed inconsistent**.",
+        "ko": "두 번째 실험의 결과는 일관되지 않아 보였습니다.",
+        "note": "수식어를 걷어내면 The results seemed inconsistent 가 뼈대이며, inconsistent 는 주어를 설명하는 보어입니다."
+      }
+    },
+    {
+      "id": "b27",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "b02-c1-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The symbols carved on the stone seemed {{blank}} to the new visitors.",
+          "options": ["confusing", "confusingly"],
+          "answer": 0,
+          "translation": "돌에 새겨진 그 기호들은 새 방문객들에게 혼란스러워 보였습니다.",
+          "explanation": "carved on the stone 은 앞의 명사를 꾸미는 분사구 수식어입니다. seem 은 보어를 부르므로 빈칸은 주어 The symbols 를 설명하는 형용사 자리이며 confusing 이 옳습니다.",
+          "trapTags": ["complement-slot", "long-subject"]
+        },
+        {
+          "id": "b02-c1-ls-005",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The temperature in the desert drops [[u:sharply]] after sunset.",
+          "isCorrect": true,
+          "translation": "사막의 기온은 해가 진 뒤에 급격히 떨어집니다.",
+          "explanation": "drop 이 '떨어지다'의 뜻으로 쓰인 이 문장에서는 보어가 필요 없습니다. 밑줄 자리는 떨어지는 방식을 꾸미는 수식어 자리이므로 부사 sharply 가 옳습니다.",
+          "trapTags": ["intransitive", "adverb-modifier"]
+        },
+        {
+          "id": "b02-c1-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The path along the northern ridge remained [[u:narrowly]] for several kilometers.",
+          "isCorrect": false,
+          "correction": "narrow",
+          "translation": "북쪽 능선을 따라 난 그 길은 몇 킬로미터에 걸쳐 좁은 채로 이어졌습니다.",
+          "explanation": "along the northern ridge 는 수식어이고 핵 주어는 The path 입니다. remain 은 주어의 상태를 설명하는 보어를 부르므로 밑줄 자리는 형용사 narrow 여야 하며, 부사 narrowly 는 보어가 될 수 없습니다.",
+          "trapTags": ["complement-slot", "long-subject", "adverb-for-adjective"]
+        }
+      ]
+    }
+  ]
+}

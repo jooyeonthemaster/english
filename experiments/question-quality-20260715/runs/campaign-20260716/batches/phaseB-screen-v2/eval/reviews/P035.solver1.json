@@ -1,0 +1,35 @@
+{
+  "pid": "P035",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "'limit the total number of clubs the school can offer'는 주체가 학생이 아니라 학교로 바뀌어 지문 논지(개인의 과다 가입 → 개인적 결과)와 무관. 뒤의 예시(신문부 마감에 저녁·주말 소모)와도 전혀 연결되지 않음."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "'Joining too many clubs can leave you with very little personal time.' 바로 뒤 예시가 저녁·주말까지 활동에 바쳐야 하는 시간 소모를 구체적으로 보여주고, 'Pacing is important', 'don't overextend yourself', 'awfully stressed out about the tasks you absolutely need to complete'와 전부 정합. 문법 결합(can + leave A with B)도 정문. 유일하게 옹호 가능한 정답."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "'어떤 특별활동에도 참여할 수 없게 만든다'는 과도하게 극단적이며 자기모순적(클럽에 가입했다는 전제와 충돌). 지문은 참여 불가가 아니라 시간 부족·스트레스를 결과로 제시함."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "매력적 오답. '과다 가입 → 번아웃 → 흥미 상실'이라는 상식 스토리로 실전에서 순간 끌리지만, 지문 어디에도 흥미 상실 언급이 없음. 오히려 예시는 'as perfect as you want it to be'로 열의가 유지됨을 전제하며, 지문이 명시한 결과는 시간 소모와 스트레스임. 근거 부재로 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "'우수한 성적을 보장한다'는 긍정적 결과로, 'don't know where to draw the line' 뒤에 오는 부정적 결과 자리와 논지 정면 배치. 즉시 탈락."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: 빈칸 뒤 예시(저녁·주말 소모)가 결과의 내용을 직접 특정해 주는 전형적 easy-medium 빈칸. 유일한 유혹은 ④(흥미 상실)였으나 지문 텍스트 근거가 전무해 3초 내 배제 가능. 복수정답 소지 없음, 문항 성립."
+}

@@ -1,0 +1,49 @@
+{
+  "passageId": "ebsi_go1_20151117-q21",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "제목",
+    "words": 117
+  },
+  "difficulty": "INTERMEDIATE",
+  "strategy": "w4-p-f-p",
+  "ok": false,
+  "ms": 7176,
+  "attempts": 2,
+  "calls": 2,
+  "callLog": [
+    {
+      "purpose": "answer-only#failed",
+      "modelId": "google/gemini-3.1-pro-preview",
+      "ms": 4254,
+      "attempts": 1,
+      "inputTokens": null,
+      "outputTokens": null,
+      "costUsd": null,
+      "costSource": "unknown"
+    },
+    {
+      "purpose": "answer-only-parse-retry#failed",
+      "modelId": "google/gemini-3.1-pro-preview",
+      "ms": 2922,
+      "attempts": 1,
+      "inputTokens": null,
+      "outputTokens": null,
+      "costUsd": null,
+      "costSource": "unknown"
+    }
+  ],
+  "models": [
+    "google/gemini-3.1-pro-preview"
+  ],
+  "costUsd": null,
+  "costSource": "unknown",
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "error": "No object generated: could not parse the response.",
+  "question": null,
+  "passageText": "We have all had the experience of suddenly noticing that a source of constant background noise, such as a distant jackhammer or music from a store, has just ceased - yet we hadn't noticed the sound while it was ongoing. Your auditory areas were predicting its continuation, moment after moment, and as long as the noise didn't change you paid it no attention. By ceasing, it violated your prediction and attracted your attention. Here's a historical example. Right after New York City stopped running elevated trains, people called the police in the middle of the night claiming that something woke them up. They tended to call around the time the trains used to run past their apartments."
+}

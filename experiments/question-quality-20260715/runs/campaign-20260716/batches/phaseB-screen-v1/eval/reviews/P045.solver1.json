@@ -1,0 +1,35 @@
+{
+  "pid": "P045",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'as they entered the lively shopping center' — enter is transitive and takes a direct object without a preposition. The classic trap would be 'entered into'; the given form is standard."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'these would look great on my brother' — look is a linking verb taking an adjective complement (great), not an adverb. Correct as written."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect (the answer)",
+      "reason": "'His confidence was, however, quickly changed to nervousness when he thought of...' — the shift of an emotion here is spontaneous/agentless, requiring the ergative intransitive: 'His confidence quickly changed to nervousness.' The passive 'was changed to' demands an agent acting on the object (cf. 'the name was changed to X'), but no agentive frame or by-phrase exists; the when-clause is temporal, not agentive. I actively tried a rescue reading (implied agent = the thought of the crowd) and it fails to license a natural passive — non-native and ungrammatical in context."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct (attractive distractor)",
+      "reason": "'When the band was finished, the audience loudly cheered.' — Tempting for solvers drilled on 'intransitives cannot be passivized' (expecting 'when the band finished'). I felt this pull. However, 'finished' here is the standard adjectival predicate meaning 'done' ('Are you finished?', 'When you're finished...'), fully idiomatic with an animate/collective subject. Defensible as correct; not the error."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'the best performance I've ever seen' — superlative antecedent + present perfect with 'ever' inside a contact relative clause; 'seen' is the correct past participle."
+    }
+  ],
+  "note": "Clean single-answer item. Real discrimination is between (C) and (D): (D) is the designed temptation but is rescued by the well-attested adjectival 'be finished' = 'be done', while (C) has no defensible parse — passive 'be changed to' needs an agentive frame that the context (spontaneous emotional shift, temporal when-clause) does not provide. (A)/(B)/(E) are routine correct fillers (transitive enter, linking verb + adjective, present perfect participle). Solved blind; answer (C) with high confidence."
+}

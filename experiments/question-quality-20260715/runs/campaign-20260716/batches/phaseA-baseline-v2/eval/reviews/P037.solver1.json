@@ -1,0 +1,35 @@
+{
+  "pid": "P037",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "지각동사 구문 'seeing someone scribbling in a notebook': see + 목적어 + 현재분사. someone이 scribble의 능동 주체이므로 -ing 분사는 정문(원형 scribble도 가능하나 -ing 역시 표준). 유혹 요소 거의 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop ...' 가주어 it + be + 보어 + 진주어 to부정사 구조. 보어 자리이므로 형용사 efficient가 옳다. 부사 efficiently로 바꿔야 한다는 착각을 유도하지만 be동사 뒤 보어 자리 확인으로 해소."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'This involves writing down the key answers': involve는 동명사를 목적어로 취하는 동사이므로 writing이 정문. to write였다면 오답이 될 자리."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'the key answers ... so that they can be transcribed easily afterwards': they의 선행사는 the key answers(장거리 단서). 답변은 옮겨 적히는 대상이므로 수동태 be transcribed가 옳다. 최상위권에게 가장 매력적인 오답 자리 — they를 필기자로 순간 오독하면 능동 transcribe로 끌리지만 선행사 확인으로 수동 확정."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'as the interview proceeding': as는 '~하는 동안/함에 따라'의 접속사이므로 정동사 proceeds가 필요. 대안 해석 전수 검토 — (1) as 전치사 + 명사구 '인터뷰 진행으로서'는 의미 불성립, (2) 독립분사구문은 as와 결합 불가('the interview proceeding' 단독 또는 with 구조여야 함), (3) as [it is] proceeding 축약은 주어 the interview가 명시돼 있어 불가. 어떤 해석으로도 정문화되지 않아 어법상 틀림."
+    }
+  ],
+  "note": "정답 (E) 단독 확정. 접속사 as 뒤 정동사 결여(proceeding→proceeds)로 명확한 오류. (D)가 수동태 장거리 선행사 확인을 요구하는 가장 매력적인 오답 자리로 기능하며, (B)의 형용사/부사 유혹도 적절. 복수정답 소지 없음."
+}

@@ -1,0 +1,68 @@
+{
+  "pid": "P013",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-minor-surroundingText-source-form",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 surroundingText가 렌더 형태('so what')가 아닌 원문 형태('from an interview so that they can be transcribed easily afterwards.')를 담고 있다. 내부 필드 관례로 보이며 학생 노출 필드가 아니므로 V5 실패로 보지 않음."
+    },
+    {
+      "code": "V4-minor-terminology",
+      "severity": "minor",
+      "evidence": "해설이 'easily afterwards'(별개의 부사 2개)를 단일 '부사구'로 지칭. 구조 오분석은 아니고 용어 단순화 수준."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "동명사구 주어의 수일치 (Recording an interview → 단수 is)",
+      "temptingBecause": "주어를 'an interview'가 아닌 다른 성분으로 오인하거나, Recording을 분사 수식으로 오독하면 동사 수를 의심하게 됨",
+      "decisiveFlaw": "동명사구 주어는 단수 취급이므로 is가 정확히 옳다 — 오답 아님"
+    },
+    {
+      "label": "(B)",
+      "intent": "품사 판별 — 접속사로만 익숙한 while의 명사 용법 (a while)",
+      "temptingBecause": "while을 접속사로만 알고 있으면 'lasts a while'에서 부정관사+while 결합이 비문처럼 보임",
+      "decisiveFlaw": "'a while'은 '잠시'라는 명사구로 last의 지속 보충어로 정확히 옳다 — 오답 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "형용사 vs 부사 — be동사 주격 보어 자리의 비교급 형용사",
+      "temptingBecause": "동사 뒤 위치라 부사 more efficiently가 필요하다고 오판할 수 있음",
+      "decisiveFlaw": "가주어 It + be의 주격 보어 자리이므로 형용사 비교급 more efficient가 정확히 옳다 — 오답 아님"
+    },
+    {
+      "label": "(D)",
+      "intent": "관계대명사 what vs 접속사 that — 완전한 절을 이끄는 so that 목적 구문 (정답)",
+      "temptingBecause": "'writing down the key answers' 뒤라 명사절/선행사 포함 관계사 자리로 오인할 여지가 있음",
+      "decisiveFlaw": "뒤 절(they can be transcribed easily afterwards)이 완전하므로 불완전 절을 요구하는 what은 불가. so ___ + 완전절 목적 구문이므로 that로 교정해야 하며, 교정 시 정확히 원문이 된다"
+    },
+    {
+      "label": "(E)",
+      "intent": "비교급 강조 부사 much (vs very)",
+      "temptingBecause": "very로 강조해야 한다고 혼동하거나 much를 명사 수식 한정사로 오독할 수 있음",
+      "decisiveFlaw": "비교급 easier and quicker를 강조하는 부사 much는 정확히 옳다 — 오답 아님"
+    }
+  ],
+  "explanationIssues": [
+    "해설에서 'easily afterwards'를 단일 '부사구'로 지칭 — 실제로는 부사 2개의 연쇄이나 학습자용 단순화로 허용 가능한 수준 (minor)"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1~V5 전부 통과. 유일 변형은 (D) that→what이며 교정 시 원문과 정확히 일치하는 최소대립쌍. 각 밑줄 독립 검증 결과 정답 집합은 정확히 {(D)} 하나. 디코이 4개가 서로 다른 오개념(수일치·품사판별·형/부·비교급강조)을 겨냥하고 pointCode도 전부 상이해 C2=4, 단서 누출 없고 교정이 필연적이라 C4=4. 다만 'so what'이라는 bigram 자체가 국소적으로 매우 눈에 띄어 절 완전성 분석 없이도 정답을 찍을 수 있는 여지가 있어 INTERMEDIATE 밴드 내에서 다소 쉬운 편(C5=3, C3=3). 합계 20으로 A 기준(21) 미달, 모든 C≥3·모든 V 통과로 B. 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

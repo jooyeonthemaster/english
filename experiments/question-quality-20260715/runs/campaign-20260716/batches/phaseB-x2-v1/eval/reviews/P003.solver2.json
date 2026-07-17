@@ -1,0 +1,35 @@
+{
+  "pid": "P003",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'If the interview lasts a while' — last는 기간 명사구를 보충어로 취하는 동사(last an hour / last a while)이며 'a while'은 관사+명사의 표준 duration NP. 부사 awhile과의 혼동 여지도 없는 자리. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop...' — 가주어 It + 계사 be의 보어 자리이므로 형용사 비교급 more efficient가 적법(부사형이면 오히려 비문). 비교 대상은 앞 문맥의 'using a recorder'(time-consuming)로 담화상 명확히 회복 가능. 형태·논리 모두 성립."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "같은 문장에서 가주어 It의 진주어로 기능하는 to부정사(외치 구문 'It is + Adj + to-V'). 삽입구 '(using a recorder as backup if you wish)'를 걷어내도 'develop the technique ... of selective note-taking' 연결이 유지됨. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect",
+      "reason": "'writing down the key answers ... so what they can be transcribed easily afterwards' — 후행절 'they can be transcribed easily afterwards'는 주어(they)·조동사+수동 동사(can be transcribed)·부사류가 완비된 완전절로 명사 공백(gap)이 없다. what은 자유관계사/의문사로서 자신이 이끄는 절 내부에 NP 공백을 형식적으로 요구하므로 결합 불가하고, so가 wh-절을 보충어로 취하는 통사 틀도 존재하지 않는다('So what?'은 독립 감탄 의문일 뿐 종속절 도입 기능 없음). 도치·축약 관계절 등 어떤 재분석으로도 정문화 불가. 목적 부사절 접속사 so that이 유일한 정문화 경로. what → that. 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'makes the material much easier and quicker to handle afterwards' — make + O + 형용사 보어(5형식)에 tough-구문이 결합된 구조로, handle의 이해상 목적어 공백이 the material과 연쇄됨('the material is easy to handle'과 동형). much는 비교급 강조 부사로 적법하고 easier and quicker 병렬은 양쪽 모두 비교급 형용사로 정합. 정문."
+    }
+  ],
+  "note": "형식 판정상 (D)만 유일한 비문. 결정 규칙은 국지적이지만 절대적: what-절은 내부 명사 공백을 요구하나 후행절이 완전절이므로 배제되고, so that(목적) 접속사가 요구되는 자리. 나머지 네 밑줄은 last+duration NP, 가주어-진주어 외치(형용사 보어·진주어 to부정사), tough-구문+비교급 강조 등 표준 구문으로, 대안 해석을 적극 탐색해도 비문화 가능성이 발견되지 않아 복수 정답 여지 없음."
+}

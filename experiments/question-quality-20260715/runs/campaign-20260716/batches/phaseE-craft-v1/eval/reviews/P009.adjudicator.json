@@ -1,0 +1,44 @@
+{
+  "pid": "P009",
+  "finalV2": true,
+  "winningAnswer": "3",
+  "reason": "선언된 정답 ③이 유일한 최선의 답으로 확정. 두 솔버는 ③을 (i) 순환논법, (ii) 심리적 차원의 무근거 도입이라는 두 근거로 기각하고 ①을 채택했으나, 두 근거 모두 재검증에서 기각된다. (i) 'strength and stamina'는 내재적 속성이고 'physical edge'는 상대(opponents) 대비 경쟁 우위라는 관계적 개념이므로, 역량→경쟁 우위 전환은 원문 span 'stamina to win the physical game'과 동일한 비순환 구조다. (ii) 협상 예시('wins in negotiations, because he has the physical stamina to see the deal through')는 신체 단련이 정신적 성격의 승부(협상)를 이기게 한다는 명시적 주장으로, 빈칸의 심리적 우위 추론을 정당하게 라이선스한다. 반면 ①은 (a) 지문의 유일한 명시 기제(협상 병렬: 체력은 '승부 중'에 발휘됨)와 목적절 'in order to close out their opponents in major tournaments'가 요구하는 대회 내 역량이 아니라 '연습' 국면으로 보상을 이전시키고, (b) 'not just on the practice range but in the weight room'이 웨이트 룸을 연습 이상의 차별 요소로 강조하는 수사 구조를 역행하여 보상을 다시 연습량으로 회귀시키며 — 이는 우월성의 원인을 '몸 상태'로 명시한 지문 인과와 충돌하고, (c) 상대 대비 우위 내용이 전무해 'close out their opponents'를 충족하지 못한다. 따라서 ①은 강력한 자석형 오답이지만 동등 방어 가능하지 않다. ②④⑤는 전원 일치로 오답이며 재검증에서도 확정. 솔버들의 판정은 과잉 기각(③)과 과잉 수용(①)의 결합 오류로 판단한다. 감사자의 V2=true 유지. 단, ①이 상위권 솔버 2인을 실제로 끌어들일 만큼 강한 자석이라는 점은 변별 설계(공예) 결함으로 감사자의 C 등급 평가와 정합적이나, 정답 유일성(V2) 자체는 훼손하지 않는다.",
+  "perDispute": [
+    {
+      "label": "3",
+      "claim": "솔버 1·2: 'strength and stamina to gain ... physical edge'는 순환(체력이 곧 physical edge이므로 자기 자신을 획득하는 구조)이라 성립 불가",
+      "verdict": "기각 (과잉 판정)",
+      "evidence": "strength/stamina는 선수 내재적 속성, 'physical edge'는 'their opponents' 대비 관계적 우위. 내재 역량이 경기에서 상대 대비 우위로 발현된다는 서술은 비순환적이며, 원문 제거 span 'the strength and stamina to win not just the physical game'과 동일한 역량→성과 구조다. 또한 선지의 핵심 목적어는 'psychological dominance'이고 'along with physical edge'는 수반 부가어이므로 순환 시비의 대상 자체가 부차적이다."
+    },
+    {
+      "label": "3",
+      "claim": "솔버 1·2: 지문(렌더본)에 정신/심리 차원 언급이 전무하므로 'psychological dominance'는 무근거 도입(unlicensed premise)",
+      "verdict": "기각 (과잉 판정)",
+      "evidence": "협상 예시가 라이선스를 제공한다: 'the individual who is in the best physical shape often wins in negotiations, because he has the physical stamina to see the deal through'는 신체 단련이 정신적 성격의 승부(협상)를 끝까지 이겨내게 한다는 명시적 주장이다. 여기에 총체적 삶의 명제('missing the mark of what life is all about')와 포괄적 우월 표현('head and shoulders above')을 종합하면, 체력이 신체적 우위와 더불어 심리적 우위까지 견인한다는 추론은 지문이 요구하는 정당한 일반화다. 빈칸 추론 유형에서 정답이 문면 재진술이 아닌 추상화·일반화인 것은 결함이 아니라 설계 의도다."
+    },
+    {
+      "label": "1",
+      "claim": "솔버 1·2: ①이 유일하게 방어 가능한 정답 (multipleDefensible=false, 후보=[1])",
+      "verdict": "기각 (과잉 수용)",
+      "evidence": "세 가지 독립 결함이 수렴한다. (a) 병렬 파괴: 지문의 유일한 명시 기제인 협상 병렬은 체력이 '승부 도중'('see the deal through') 발휘됨을 말하는데, ①은 보상을 대회가 아닌 연습 국면으로 이전시켜 목적절 'in order to close out their opponents in major tournaments'가 요구하는 대회 내 역량과 어긋난다. (b) 수사 구조 역행: 'not just on the practice range but in the weight room'은 웨이트 룸(체력)을 연습 이상의 차별 요소로 강조하는데, ①은 웨이트 룸의 의미를 다시 '연습 지속력'으로 회귀시켜 강조 방향을 뒤집는다. 이 경우 인과 사슬이 '체력→연습량→승리'가 되어, 우월성의 원인을 연습량이 아닌 '몸 상태'('in so much better shape') 자체로 명시한 지문 논지와 충돌한다. (c) 상대 대비 요소 부재: 'close out their opponents'는 상대를 제압하는 국면인데 ①에는 상대 대비 우위 내용이 없다. 어휘 중복(practice/stamina/fatigue)이 높고 논리 적합성이 낮은 전형적 자석형 오답이며, '가장 적절한 것' 기준에서 ③과 동등 방어 가능하지 않다."
+    },
+    {
+      "label": "2",
+      "claim": "전원 일치: 오답 (수단-목적 역전)",
+      "verdict": "확정 (오답)",
+      "evidence": "지문에서 영양은 체력의 투입('through proper nutrition, exercise, and rest')이지 체력이 가능케 하는 산출이 아니다. 'stamina to balance their nutrition ... in order to close out their opponents'는 수단-목적 범주 착오로 국소 슬롯에서 즉시 탈락. 감사자 지적대로 원 해설의 '과협소' 규정은 결함 유형 오분류이나 오답 판정 자체는 옳다."
+    },
+    {
+      "label": "4",
+      "claim": "전원 일치: 오답 (인과 역전)",
+      "verdict": "확정 (오답)",
+      "evidence": "지문 논지는 신체 단련→성취인데 ④는 의지력→신체 한계 극복으로 인과를 역전시키며, 완성문 'strength and stamina to overcome bodily limits mainly through willpower'는 신체 역량으로 의지력 기제를 구동한다는 자기모순 구조. 웨이트 룸 전제도 설명적으로 무력화된다."
+    },
+    {
+      "label": "5",
+      "claim": "전원 일치: 오답 (무관 논점 도입)",
+      "verdict": "확정 (오답)",
+      "evidence": "'a lack of strategic planning'은 지문 어디에도 주장·함축되지 않은 결핍을 전제(presupposition failure)하며, 체력이 전략 부재를 보완한다는 교환 관계도 본문에 부재. source anchor 없는 필러성 오답."
+    }
+  ]
+}

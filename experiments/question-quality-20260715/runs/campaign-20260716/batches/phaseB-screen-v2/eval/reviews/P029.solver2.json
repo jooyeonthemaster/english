@@ -1,0 +1,35 @@
+{
+  "pid": "P029",
+  "answer": "③",
+  "multipleDefensible": false,
+  "defensibleLabels": ["③"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법적으로는 'points to the fact that + 정형절' 결합이 성립하나, 논리적으로 마지막 문장('If you know you are not a morning person, ... schedule your difficult work later in the day')과 정면 모순. 보편 양화 'must always ... early in the morning'은 아침형이 아닌 사람에게는 거짓이 되므로, 지문 전체를 포괄하는 연구 결론이 될 수 없다. 필자의 개인 사례(아침에 문제 해결)만 보고 고르게 유도하는 매력적 오답."
+    },
+    {
+      "label": "②",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립. 그러나 지문은 감정 에너지 낭비를 '전략적 스케줄링이 필요한 이유'로 제시할 뿐, 감정 안정이 스케줄링보다 우선한다는 위계('takes priority over')를 주장하지 않는다. 오히려 스케줄링 자체가 지문의 처방이므로 비교 구도가 지문 논리와 어긋난다."
+    },
+    {
+      "label": "③",
+      "verdict": "accept",
+      "reason": "문법: 'the fact that' 뒤 정형절로 결합 무결('workload demands ought to be aligned with ...'). 논리: (a) 'For example, analytical tasks are best accomplished when our energy is high'가 곧바로 이 일반 명제의 예시로 기능하고, (b) 필자(아침형)의 사례와 (c) 마지막 문장(비아침형은 하루 늦게 배치)이 모두 '업무 부하를 개인별 에너지 변동에 맞추라'는 명제의 사례로 포섭된다. 지문 전 증거를 유일하게 포괄하는 일반화."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립. 그러나 지문은 어려운 과제의 '회피'가 감정 에너지를 낭비시킨다며 즉시 처리를 옹호하므로, 어려운 과제 관여를 최소화하라는 명제는 지문 논지와 정반대."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 결합은 성립. 그러나 'client'는 불쾌한 과제의 한 예시(an unhappy client)로만 등장하며, 고객 선호에 맞춘 협업 일정 조율은 지문 어디에도 논의되지 않는다. 소재 단어 재활용형 오답."
+    }
+  ],
+  "note": "빈칸은 'points to the fact that' 뒤 동격절 자리로 다섯 선지 모두 문법적 seam은 무결하여 판별은 순수 논리 적합성으로 귀결된다. 마지막 조건문이 결정적 장거리 단서로 ①(항상 아침)을 배제하고 ③(개인 에너지 리듬 정렬)으로 유일하게 수렴시킨다. 대안 해석(①을 '일반론+예외 허용'으로 읽는 시도)은 'must always'의 보편 양화 때문에 성립 불가. 단일 정답 문항으로 판정."
+}

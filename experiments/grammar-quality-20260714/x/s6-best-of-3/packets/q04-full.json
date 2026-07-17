@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-shallow-participle-adjective-answer"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):ANS=c  (B):dec=a  (C):dec=k  (D):dec=d  (E):dec=m",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": true,
+        "charPos": 208,
+        "relPos": 0.288,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 452,
+        "relPos": 0.627,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 542,
+        "relPos": 0.752,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 578,
+        "relPos": 0.802,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 649,
+        "relPos": 0.9,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.9,
+    "firstHalfShare": 0.2,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "focused",
+        "isError": true,
+        "correction": "focused",
+        "errorExpression": "focusing",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "went",
+        "isError": false,
+        "errorExpression": "went",
+        "surroundingText": "If you keep a calendar or a journal, make a point to write down what went well.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "sharing",
+        "isError": false,
+        "errorExpression": "sharing",
+        "surroundingText": "start your conversations with friends by sharing a recent win",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "gives",
+        "isError": false,
+        "errorExpression": "gives",
+        "surroundingText": "start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling).",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "The more",
+        "isError": false,
+        "errorExpression": "The more",
+        "surroundingText": "Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "m"
+      }
+    ],
+    "correctAnswers": [
+      "(A)"
+    ],
+    "correctAnswer": "(A)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "focusing"
+      },
+      {
+        "label": "(B)",
+        "text": "went"
+      },
+      {
+        "label": "(C)",
+        "text": "sharing"
+      },
+      {
+        "label": "(D)",
+        "text": "gives"
+      },
+      {
+        "label": "(E)",
+        "text": "The more"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(B)": "문맥상 과거에 일어났던 일이나 잘 진행된 일을 의미하므로, 관계대명사 what 절 안에서 과거시제 동사인 went를 쓴 것은 어법상 적절합니다.",
+      "(D)": "선행사인 부정대명사 anything이 단수이므로, 관계절의 동사 역시 단수 격식인 gives로 수일치한 것은 적절합니다.",
+      "(C)": "전치사 by의 목적어로 동명사 sharing이 이끄는 동명사구가 오는 것은 어법상 올바른 구조입니다.",
+      "(E)": "'The + 비교급, the + 비교급' 구문으로, '인생을 더 감사히 여길수록, 그것을 축하할 더 많은 이유를 갖게 된다'는 비례 관계를 나타내는 자연스러운 표현입니다."
+    },
+    "explanation": "5형식 동사구 'keep + 목적어(you) + 목적격보어'의 구조에서 목적어인 you가 '무엇에 집중하게 되는(초점이 맞추어지는)' 대상이므로 목적격보어 자리에는 수동의 의미를 갖는 과거분사가 와야 합니다. 따라서 능동 의미인 focusing을 수동태 형태의 분사인 focused로 고쳐야 올바른 문장이 됩니다. 목적어(you)가 focus의 행위자로서 직접 다른 목적어를 취하는 구조가 아니므로 능동형 분사는 올 수 없습니다.",
+    "keyPoints": [
+      "(A) 분사의 능동 vs 수동 — 목적어(you)가 집중의 대상이 되므로 과거분사(focused)가 적절함",
+      "(D) 주태・수일치 — 단수 부정대명사(anything)를 수식하는 관계절 동사의 단수 수일치",
+      "(E) 비교구문 — 'the + 비교급, the + 비교급'의 구조적 병렬과 의미적 연결"
+    ],
+    "tags": [
+      "5형식",
+      "목적격보어",
+      "과거분사",
+      "수일치",
+      "더비더비"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you __(A) focusing__ on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what __(B) went__ well. If you're more of a verbal processor, start your conversations with friends by __(C) sharing__ a recent win (anything that __(D) gives__ you that yesssss feeling). Where the mind goes, reality follows. __(E) The more__ you appreciate life, the more reasons you have to celebrate it."
+  }
+}

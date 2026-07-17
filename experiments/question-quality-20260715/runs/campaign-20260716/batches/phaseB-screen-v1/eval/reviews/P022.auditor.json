@@ -1,0 +1,83 @@
+{
+  "pid": "P022",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-register",
+      "severity": "minor",
+      "evidence": "정답 ③을 넣은 완성문 'we are forbidden to park our vehicles but are allowed a momentary halt to pick up passengers'는 문법적으로는 완전하나, 웃음을 터뜨리며 말하는 캐주얼한 대화 인용문 안에 법조문식 격식체(forbidden/momentary halt)가 들어가 화용적 자연스러움이 떨어진다. 원문 'cannot park cars there, but we can stop'의 구어 톤과 레지스터가 어긋난다."
+    },
+    {
+      "code": "V4-minor-circularity",
+      "severity": "minor",
+      "evidence": "해설이 '차량의 지속적인 주차는 불가능하지만 ... 허용된다고 언급합니다'라고 서술하는데, 이 내용은 렌더 지문에서는 빈칸으로 제거된 span 자체다. 원지문 기준 설명으로는 사실이지만 학생이 보는 지문에는 존재하지 않는 문장을 '언급'된 것처럼 지시해 다소 순환적이다. 사실 오류는 아니므로 V4 실패로는 판정하지 않는다."
+    },
+    {
+      "code": "D-slot-tail-attachment",
+      "severity": "minor",
+      "evidence": "잔여 tail 'to pick up passengers'의 부착 지점이 선지별로 달라진다: ③은 'halt to pick up'(의도된 부착), ②는 'someone is waiting to pick up'(대기자가 승객을 태우는 주체로 바뀜), ④는 'wait for someone to pick up passengers'(제3자가 태우는 행위자 교란). 모두 문법적이라 문법만으로 탈락하는 선지는 없으나 §D의 동일 통사 슬롯 조건을 완전하게는 만족하지 못한다."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 2,
+    "C5": 1,
+    "C6": 2
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "actor swap + half-truth: 캐롤의 오해를 뒤집어 '사람 대기 허용 / 차량 정지 전면 금지'로 재구성",
+      "temptingBecause": "전반부 'are allowed to wait on the corner'는 친구의 발화 'Of course you can stand there'와 정확히 일치하는 참 진술이고, ③과 동일한 'A but B' 대조 구조를 갖춰 표면 형태가 정답과 유사하다",
+      "decisiveFlaw": "후반부 'cannot let any car stop'이 서사 사실(친구의 차가 방금 그 코너에 정차해 캐롤을 태움)과 표지판의 실제 의미(정차 허용) 모두에 정면 모순된다"
+    },
+    {
+      "label": "②",
+      "intent": "condition loss + extreme: 지문 핵심 어휘 waiting을 재활용하며 감속조차 금지되는 극단 규제로 확대",
+      "temptingBecause": "'No Standing'을 차량에 적용한다는 방향 전환 자체는 올바르게 수행했고, waiting이라는 지문 표층 어휘가 앵커로 작동한다",
+      "decisiveFlaw": "'without any deceleration even when'의 절대 극단 진술이며, 친구가 실제로 정차해 캐롤을 태운 사건 및 'we can stop' 취지와 모순된다. 절대어 단서만으로도 소거 가능해 변별 기여가 낮다"
+    },
+    {
+      "label": "③",
+      "intent": "정답: 원문 span 'cannot park cars there, but we can stop'의 금지/허용 대조를 forbidden to park / allowed a momentary halt로 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 장기 주차 금지와 일시 정차 허용의 이중 극성을 유일하게 온전히 보존한다",
+      "decisiveFlaw": "없음. 다만 패러프레이즈 추상화 수준이 원문에 거의 축자적이고, 절대어 선지 소거 후 유일한 균형 대조 구조라는 형태 단서만으로 도달 가능해 KILLER 변별로는 약하다"
+    },
+    {
+      "label": "④",
+      "intent": "condition twist: '운전자가 차내 잔류하면 주차 허용'이라는 조건부 예외를 날조",
+      "temptingBecause": "실제 미국 교통 표지 체계에서 No Parking/No Standing 구분을 아는 학생에게 그럴듯하게 들리는 현실 배경지식 훅이 있고, park/wait 등 지문 어휘를 재조합했다. 5개 중 유일하게 실질적 판단을 요구하는 경쟁 선지다",
+      "decisiveFlaw": "금지 표지판('No Standing')의 의미 설명 자리에 순수 허용 진술을 넣어 담화 기능이 성립하지 않으며, 원문이 주차를 무조건 금지하는 것과 모순된다. tail 결합 'wait for someone to pick up passengers'도 행위자가 뒤틀린 어색한 독해를 낳는다"
+    },
+    {
+      "label": "⑤",
+      "intent": "polar reversal + absolute: 핵심 허용 조건(can stop to pick up)을 전면 금지로 반전",
+      "temptingBecause": "load passengers가 pick up passengers의 동의 표현으로 지문 앵커와 겹치고, 금지 표지판이니 금지 진술이 어울린다는 표면 직관에 부합한다",
+      "decisiveFlaw": "'under any circumstances'라는 절대어로 즉시 의심 가능하고, 친구가 방금 그 자리에서 정차해 태운 사건과 정면 모순된다. ②와 함정 유형(절대 극단)이 중복된다"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "C6-verbose",
+      "severity": "minor",
+      "evidence": "⑤ 오답 해설의 '우회 대조를 이뤄 정반대의 거짓을 도출합니다'는 의미가 불투명한 우회적 표현이고, 본해설의 '담화적 결론부' 등 용어 선택이 장황하다. 사실 오류는 없으나 정답 근거와 함정의 분리가 둔하다"
+    }
+  ],
+  "killerConditionsMet": false,
+  "killerConditionAudit": {
+    "sameSyntacticSlot": "부분 충족 — 5개 선지 모두 문법적으로 삽입 가능하나 tail 'to pick up passengers'의 부착 지점이 ②④에서 달라진다",
+    "meaningPreservingAbstraction": "미충족 — ③은 원문 span의 거의 축자적 치환(forbidden to park≈cannot park, momentary halt≈stop)으로 KILLER급 추상화가 없다",
+    "distractorAnatomy": "대체로 충족 — 각 오답에 source anchor/tempting overlap/decisive flaw가 존재하나 ②⑤가 동일한 절대 극단 함정으로 중복된다",
+    "multiClueRequirement": "미충족 — 절대어(②⑤) 소거 후 균형 대조 구조라는 극성/형태 단서 하나로 ③을 특정할 수 있어 '극성·절대어 하나로 정답을 찍을 수 없다' 조건을 위반한다. 지문 자체도 일화형 쉬운 서사로 두 문장 이상 논리 결합을 강제하지 않는다"
+  },
+  "grade": "C",
+  "notes": "V1~V5 전부 통과, 정답 유일성 확보. 그러나 요청 난이도 KILLER 대비 실제 난이도가 크게 미달한다: 지문이 초급 일화 서사이고, ①②⑤가 '친구의 차가 방금 그 코너에 정차해 태웠다'는 단일 관찰로 일괄 소거되며, 절대어 선지 배제 후 유일한 균형 대조 선지(③)를 형태 단서만으로 특정할 수 있다(C5=1, C4=2, C3=2). 실질 경쟁 선지는 ④ 하나뿐이다. 해설은 사실 정확하나 장황(C6=2). 합계 13, C5<2로 B 기준 미달 — 출하하려면 KILLER 슬롯이 아닌 하위 난이도로 재라벨하거나, 추상도 높은 지문·다중 단서 결합형 빈칸으로 재설계가 필요하다."
+}

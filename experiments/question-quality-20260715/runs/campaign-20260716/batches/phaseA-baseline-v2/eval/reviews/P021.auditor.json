@@ -1,0 +1,70 @@
+{
+  "pid": "P021",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-CAUSAL-MISEXPLANATION",
+      "severity": "major",
+      "evidence": "해설: '바로 앞에 있는 단수 명사 cyberspace 등에 수일치 함정을 파서 동사 자리에 (E) are를 제시했으나' — 단수 명사 cyberspace 에 견인(attraction)되면 학생은 'is'를 택하게 되므로 복수형 'are'가 매력적일 이유가 될 수 없다. 실제 문장에서 동사 앞의 모든 명사(reality, reality, cyberspace)가 단수여서 'are'를 지지하는 복수 견인 요소 자체가 존재하지 않는다. 함정 기제에 대한 인과 설명이 실제 통사 구조와 정반대다."
+    },
+    {
+      "code": "V4-TERMINOLOGY-TYPO",
+      "severity": "minor",
+      "evidence": "(A) 오답 해설의 '현재완료 수술어를 이루므로' — '수술어'는 존재하지 않는 문법 용어(서술어/술어의 오탈자로 추정). 학생 노출 해설 내 비단어."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "have + 과거분사(현재완료) 형태 판단",
+      "temptingBecause": "have 와 been 사이에 부사 always 가 개입해 완료 구성이 한눈에 안 들어올 수 있음",
+      "decisiveFlaw": "없음(정형) — 복수 주어 'less developed virtual realities' + have + p.p. 구성으로 been 이 옳다. 다만 been 자체가 오답으로 의심될 여지가 거의 없어 디코이로서 견인력이 약함"
+    },
+    {
+      "label": "(B)",
+      "intent": "선행사 포함 관계대명사 what vs that/which (절 완전성 판단)",
+      "temptingBecause": "문두 wh-절이 문장 주어로 쓰여 that 절/의문사절과 혼동 가능",
+      "decisiveFlaw": "없음(정형) — 뒤따르는 절에 주어가 없고 선행사도 없으므로 What 이 옳다"
+    },
+    {
+      "label": "(C)",
+      "intent": "관계부사 where vs 관계대명사 which (절 완전성 판단)",
+      "temptingBecause": "선행사 a space 뒤라 which 로 바꿔야 한다는 착각을 유도",
+      "decisiveFlaw": "없음(정형) — 뒤 절이 주어·목적어를 모두 갖춘 완전한 절이므로 where 가 옳다. 단, (B)와 동일한 pointCode 'b'(절 완전성)를 공유해 의도 축이 겹침"
+    },
+    {
+      "label": "(D)",
+      "intent": "소유격 대명사의 수 일치(지시 대상 특정)",
+      "temptingBecause": "가까운 단수 명사 a space / It 을 지시 대상으로 오독하면 its 로 고치고 싶어짐",
+      "decisiveFlaw": "없음(정형) — 의미상 주어 real people(복수)을 지칭하므로 their 가 옳다"
+    },
+    {
+      "label": "(E)",
+      "intent": "긴 전치사구 수식으로 분리된 주어 핵(The move, 단수)과 동사의 수일치 — 선언된 정답",
+      "temptingBecause": "주어부가 길어 핵 명사 특정이 필요하다는 설계 의도이나, 동사 직전까지의 모든 명사(reality, reality, cyberspace)가 단수라 'are'를 지지하는 복수 견인자가 없음 — 국소 스캔만으로도 이상함이 드러나 견인력이 설계 의도보다 약함",
+      "decisiveFlaw": "주어 핵 The move 가 단수이므로 are 는 비문, is 로 교정하면 정확히 원문이 된다 (source-correct → displayed-wrong 최소대립쌍 성립)"
+    }
+  ],
+  "explanationIssues": [
+    "정답 해설이 함정 기제를 '바로 앞의 단수 명사 cyberspace 에 수일치 함정'이라고 설명하나, 단수 견인은 is 선택으로 이어지므로 복수 are 제시의 근거가 될 수 없음 — 인과 오설명",
+    "(A) 해설의 '현재완료 수술어' — 비단어/용어 오탈자",
+    "keyPoints 는 (E)(B)(C)만 다루고 (A)(D)는 누락 — 모순은 아니나 커버리지 불균형"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "무결성(V1)·정답 유일성(V2)·문법성(V3)·필드 동기화(V5)는 모두 통과. 렌더 지문은 원지문 대비 (E) is→are 단일 변형만 존재하고 5개 밑줄 모두 독립 검증 결과 (E)만 오류로 유일 정답이 확인된다. 그러나 정답 해설의 함정 기제 설명이 실제 통사 구조와 정반대(단수 견인으로 복수 are 를 정당화)여서 V4 실패 → 등급 F. 공예 측면: 출제 포인트 자체(수식구로 분리된 주어 핵 수일치)는 정전급이고 INTERMEDIATE 라벨에 부합하나, 오류 문장 내 복수 견인자가 전무해 정답이 국소 단서로 쉽게 드러나며(C3=2), (B)/(C)가 pointCode 를 공유하고 (A)는 견인력이 약한 필러성 밑줄이다. 해설의 인과 오설명·오탈자 수정 및 keyPoints 보강만으로 B 이상 회복 가능한 문항."
+}

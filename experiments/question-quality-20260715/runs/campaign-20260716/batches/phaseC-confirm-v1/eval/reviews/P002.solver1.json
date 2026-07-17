@@ -1,0 +1,35 @@
+{
+  "pid": "P002",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 복수 'all their attempts'이고 'to discover this information'은 attempts를 수식하는 부정사구. 밑줄 직전의 단수 명사 this information에 끌려 is로 판단하게 만드는 근접 일치 함정이지만, 복수 주어-복수 동사(are met) 일치가 옳고 수동태(attempts are met with resistance)도 자연스럽다. 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "tell + 간접목적어(them) + 직접목적어(nothing)의 4형식 구조. them은 앞 문장의 입양인들(they/their)을 받는 복수 목적격으로 지시·수 일치 모두 옳다. 재귀대명사가 요구되는 환경도 아니다. 정문."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "be동사(are)의 보어 자리이므로 형용사 desperate가 옳고, 'desperate to-V'(~하고 싶어 절박한) 관용 결합도 정확하다. 부사 desperately가 필요한 자리가 아니다. 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'find __ they want to know'에서 know의 목적어가 비어 있는 불완전한 절 → 선행사를 포함한 관계대명사(자유관계절) what이 정확하다. 선행 명사가 없어 관계대명사 that은 불가하고, 접속사 that이면 뒤 절이 완전해야 하므로 배제된다. that으로 끌릴 수 있으나 절의 불완전성이 즉시 배제해 주는 함정. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "'devote A to B'는 to가 전치사인 고정 구문이므로 to 뒤에는 동명사(finding)가 와야 한다. '찾기 위해'라는 목적 부정사 독법을 적극 검토했으나, devote는 to-보어를 필수 논항으로 요구하는 동사라 to구를 목적 부정사로 떼어내면 'devote all their time and energy'만 남아 문장이 완결되지 않으므로 부정사 독법은 방어 불가. find → finding. 어법상 틀림."
+    }
+  ],
+  "note": "정답 (E) 하나로 명확히 수렴. 최상위권 실전 풀이 기준 매력적 오답 유혹: (A)는 단수 명사(this information) 직후 밑줄이라는 근접 일치 함정, (D)는 know의 목적어 공백 확인을 생략하면 that으로 착각 가능한 함정 — 둘 다 장거리 단서(진짜 주어, 절의 완전성) 확인으로 정문 판정. (E)의 'find more about'은 'find out more about'이 더 자연스럽다는 어휘 차원의 어색함이 있으나 출제 포인트(전치사 to + 동명사)와는 별개이며 정답 판정에 영향 없음."
+}

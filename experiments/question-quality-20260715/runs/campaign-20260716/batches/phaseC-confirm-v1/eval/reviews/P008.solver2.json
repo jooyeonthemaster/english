@@ -1,0 +1,35 @@
+{
+  "pid": "P008",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'living about 400,000 years ago'는 주어 'the common ancestor'를 수식하는 삽입된 축약 관계절(= who was living / who lived)이다. 조상이 '살고 있던' 능동 관계이므로 현재분사 living이 어법상 옳다. 본동사는 뒤의 'may have already been using'이므로 분사 사용이 정당하다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'language is based on genes'는 'be based on'(~에 기반하다)의 관용적 수동 구문이다. language는 gene 위에 '기반이 놓이는' 대상이므로 과거분사 based가 옳다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "대명사 them은 앞의 복수 명사 'new habits'를 가리킨다. 'genes ... changed more in response to new habits than as causes of them(=new habits)' — 복수 선행사와 수 일치하며 지시가 명확하다. 어법상 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'cooking selected mutations ...'에서 동명사 주어 cooking(단수 취급)에 대한 문장의 본동사가 과거시제 selected이다. 뒤 문장 'milk drinking selected for mutations'와 병렬을 이루며 시제·태 모두 옳다. selected는 반드시 필요한 정형동사이므로 분사로 바꿀 수 없다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect",
+      "reason": "핵심 명사 'a genetic change'가 진화를 '몰아가는(drive)' 능동 주체이므로, 이를 수식하는 분사는 능동의 현재분사 driving이어야 한다('a genetic change driving evolution' = 진화를 추동하는 유전적 변화). 과거분사 driven을 쓰면 'a genetic change'가 driven의 목적어가 될 대상이 되어 능동 관계가 깨진다. 문맥상(top-down 오류 = 유전이 진화를 몰아간다는 주장) 능동이 요구되므로 driven → driving이 되어야 한다. 따라서 어법상 틀린 것."
+    }
+  ],
+  "note": "정답은 (E). driven → driving. 유일한 오답이며 나머지 넷은 모두 정문. 유일하게 검토한 대안 해석은 'genetic-change-driven evolution'(유전적 변화에 의해 추동된 진화)이라는 복합 전치수식어(compound premodifier) 독해로, 이 경우 driven이 성립할 수 있다. 그러나 (1) 표준 영어에서 그런 3어 복합 수식어는 하이픈(genetic-change-driven)을 요구하는데 표기에는 하이픈이 없어 부자연스럽고, (2) 기본 파싱은 핵심어 'a genetic change'에 분사구가 걸리는 구조여서 능동 driving이 자연스럽다. 이 대안은 억지 재해석에 가까워 인쇄된 driven을 자연스러운 정문으로 구제하지 못한다. 나머지 네 선지가 명백히 옳으므로 오답 후보는 (E)로 유일하게 좁혀진다."
+}

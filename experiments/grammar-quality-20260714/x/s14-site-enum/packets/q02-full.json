@@ -1,0 +1,162 @@
+{
+  "passageId": "ebsi_go3_20151013-q19",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 143
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-decoy-filler-span"
+  ],
+  "warnings": [
+    "difficulty-mismatch"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=e  (B):dec=b  (C):dec=l  (D):ANS=c  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 29,
+        "relPos": 0.036,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 323,
+        "relPos": 0.401,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 453,
+        "relPos": 0.563,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 540,
+        "relPos": 0.671,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 660,
+        "relPos": 0.82,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.82,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We all enjoy the pleasure of being left alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people who are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner at the other end of the sofa. Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody takes turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "being left",
+        "isError": false,
+        "errorExpression": "being left",
+        "surroundingText": "We all enjoy the pleasure of being left alone with a good book.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "who",
+        "isError": false,
+        "errorExpression": "who",
+        "surroundingText": "The solution is to read in the company of other people who are reading",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "at",
+        "isError": false,
+        "errorExpression": "at",
+        "surroundingText": "with your reading friend or partner at the other end of the sofa",
+        "pointCode": "l"
+      },
+      {
+        "label": "(D)",
+        "expression": "immersed",
+        "isError": true,
+        "correction": "immersed",
+        "errorExpression": "immersing",
+        "surroundingText": "Next time you look up, you'll see someone else similarly immersed, and you won't feel alone at all.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "takes",
+        "isError": false,
+        "errorExpression": "takes",
+        "surroundingText": "Consider joining a reading group in which everybody takes turns reading aloud from a novel.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "being left"
+      },
+      {
+        "label": "(B)",
+        "text": "who"
+      },
+      {
+        "label": "(C)",
+        "text": "at"
+      },
+      {
+        "label": "(D)",
+        "text": "immersing"
+      },
+      {
+        "label": "(E)",
+        "text": "takes"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 of의 목적어로 동명사가 왔으며, 주어인 we가 혼자 남겨지는 대상이므로 수동태 동명사형인 being left는 어법상 자연스럽습니다.",
+      "(B)": "선행사 other people을 수식하며 바로 뒤에 동사 are가 이어지므로, 주격 관계대명사 who는 어법상 적절합니다.",
+      "(C)": "소파의 맞은편이라는 특정한 지점을 나타내는 전치사이므로 at은 어법상 적절하게 쓰였습니다.",
+      "(E)": "관계절 내의 주어인 부정대명사 everybody는 단수 취급하므로 단수 동사 takes는 수일치상 올바릅니다."
+    },
+    "explanation": "지각동사 see의 목적격보어 분석: 이 문장에서 see는 지각동사이며 목적어는 someone else, 목적격보어는 이 목적어의 상태를 설명하는 분사 자리입니다. 목적어인 '다른 누군가(someone else)'는 책에 깊이 빠져 구경받는 대상, 즉 수동적으로 '몰두된' 상태이므로 목적어와 목적격보어는 수동 관계를 이룹니다. 따라서 능동의 의미를 지니는 현재분사형인 immersing은 비문이며, 수동의 의미를 나타내는 과거분사 immersed로 고쳐야 올바릅니다.",
+    "keyPoints": [
+      "(D) 분사의 능수동 — 목적어와 목적격보어의 관계가 수동이므로 과거분사 사용",
+      "(A) 능동태 vs 수동태 — 의미상 주어가 대상이 되므로 수동형 동명사가 적절함",
+      "(E) 주어와 동사의 수일치 — 부정대명사 everybody는 단수 취급하여 단수 동사 매칭"
+    ],
+    "tags": [
+      "분사의 능수동",
+      "지각동사의 목적격보어",
+      "독해 유도",
+      "수능 어법"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "We all enjoy the pleasure of __(A) being left__ alone with a good book. But sometimes after several hours of immersion we lift our heads and look around, suddenly struck by the quiet, the absence of others. In this situation, we are suffering from reading-induced loneliness. The solution is to read in the company of other people __(B) who__ are reading - whether in a public space such as a café or a library, or in your own home, with your reading friend or partner __(C) at__ the other end of the sofa. Next time you look up, you'll see someone else similarly __(D) immersing__, and you won't feel alone at all. Reading can be sociable. Consider joining a reading group in which everybody __(E) takes__ turns reading aloud from a novel. Reading a book collaboratively is a wonderful way to share an otherwise internal and solitary experience."
+  }
+}

@@ -1,0 +1,806 @@
+{
+  "id": "u12-c2",
+  "unitId": "u12",
+  "order": 2,
+  "title": "가정법",
+  "oneLiner": "현재 사실의 반대는 if+과거형과 would+동사원형, 과거 사실의 반대는 if+had p.p.와 would have p.p.가 짝입니다. without·but for와 if 생략 도치는 시간 단서로 시점을 정해 판정합니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고2",
+    "csatPoints": [],
+    "sourceRefs": [
+      "어법끝 5.0 — 가정법(가정법 과거·과거완료·혼합, if 생략 도치)",
+      "천일문 고등 GRAMMAR — 가정법 과거·과거완료, without/but for 구문",
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 가정법 조건문 예시문"
+    ]
+  },
+  "lenses": ["L2"],
+  "confusableWith": ["u12-c1", "b03-c2", "b04-c2"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "If the river were cleaner, the city would open a swimming area next summer.",
+        "If the river would be cleaner, the city would open a swimming area next summer."
+      ],
+      "answer": 0,
+      "afterText": "두 문장은 if절의 동사 하나만 다릅니다. 이 레슨을 마치면 조건절과 주절의 형태가 왜 짝으로 움직이는지 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "가정법",
+      "question": "가정법이 대체 무엇이고, 왜 시제를 일부러 어긋나게 씁니까?",
+      "plain": "가정법은 실제 사실과 반대되거나 실현 가능성이 없는 일을 '만약 ~라면'으로 상상해 말하는 방식입니다. 핵심 표시는 동사의 시제를 사실보다 한 칸 뒤로 물리는 것입니다.",
+      "analogy": "가정법은 게임의 '만약에' 세이브 파일과 같습니다. 실제로 벌어진 본편은 그대로 두고, 다른 선택을 했다면 어땠을지 따로 돌려 보는 평행 세계이며, 동사를 한 칸 물리는 것이 그 평행 세계로 들어가는 표시입니다.",
+      "whyItMatters": "수능 어법은 이 평행 세계의 문법이 조건절과 주절에서 짝을 이루는지를 밑줄로 묻습니다. 형태의 짝과 시간 단서, 이 두 축만 잡으면 가정법 문항은 계산 문제가 됩니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "가정법이 보이면 would have p.p.로 답하면 대체로 맞습니다.",
+      "truth": "주절의 형태는 조건절의 동사 형태와 결과가 가리키는 시점, 두 가지가 함께 정합니다. 조건이 과거라도 결과가 현재이면 주절은 would+동사원형입니다.",
+      "counterExample": {
+        "en": "If the tunnel had opened on schedule, the commuters **would have saved** an hour every morning now.",
+        "ko": "그 터널이 예정대로 개통되었더라면 통근자들은 지금 매일 아침 한 시간을 아끼고 있을 것입니다.",
+        "note": "now가 현재를 가리키므로 결과는 현재의 상태입니다. 주절은 would save 여야 하며 would have saved 는 틀립니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "가정법 필기 한 장",
+      "intro": "가정법의 뼈대를 다섯 항목으로 정리합니다. 형태가 짝으로 움직인다는 점만 붙잡으면 됩니다.",
+      "entries": [
+        {
+          "head": "가정법 과거 — 현재 사실의 반대",
+          "body": "지금의 사실과 반대되는 일을 상상합니다. if절은 과거형(be는 인칭과 무관하게 were), 주절은 would·could·might + 동사원형입니다.",
+          "example": {
+            "en": "If I **knew** her address, I **would send** the invitation today.",
+            "ko": "그녀의 주소를 안다면 오늘 초대장을 보낼 것입니다. 실제로는 주소를 모릅니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "가정법 과거완료 — 과거 사실의 반대",
+          "body": "이미 지나간 일이 반대였다면 어땠을지 상상합니다. if절은 had p.p., 주절은 would·could·might + have p.p.입니다.",
+          "example": {
+            "en": "If the driver **had slowed** down, the accident **would not have happened**.",
+            "ko": "그 운전자가 속도를 줄였더라면 그 사고는 일어나지 않았을 것입니다."
+          },
+          "pin": "암기"
+        },
+        {
+          "head": "혼합 가정법 — 시점이 어긋날 때",
+          "body": "조건은 과거인데 결과가 지금이면 형태를 따로 씁니다. if절은 had p.p., 주절은 would + 동사원형이며 now·today·still이 결과를 현재로 못 박습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "without · but for — 없었다면",
+          "body": "if it were not for(현재) 또는 if it had not been for(과거)로 풀어 판정합니다. 형태만으로는 시점이 안 보이므로 시간 단서가 정합니다.",
+          "example": {
+            "en": "**Without** the night shift, the port **would come** to a standstill.",
+            "ko": "야간 근무조가 없다면 그 항구는 멈춰 설 것입니다."
+          },
+          "pin": "팁"
+        },
+        {
+          "head": "if 생략 도치 — if가 사라지면",
+          "body": "if를 생략하면 were·had·should가 주어 앞으로 나옵니다. 형태는 바뀌어도 뜻은 그대로입니다.",
+          "example": {
+            "en": "**Had** the alarm sounded earlier, everyone **would have escaped**.",
+            "ko": "경보가 더 일찍 울렸더라면 모두가 빠져나왔을 것입니다."
+          },
+          "pin": "주의"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "조건과 주절의 짝을 잇습니다",
+      "instruction": "왼쪽의 가정법 유형과 오른쪽의 주절 형태를 짝지으십시오. 주절 형태는 조건절의 형태와 결과의 시간 단서를 함께 보아야 정해집니다 — 특히 조건이 had p.p.여도 결과가 now·today이면 주절이 달라집니다.",
+      "pairs": [
+        {
+          "a": "가정법 과거 · 현재 사실의 반대",
+          "b": "if + 과거형(be는 were) → 주절 would·could·might + 동사원형",
+          "why": "현재의 사실을 뒤집는 상상이므로 시제를 한 칸 물린 과거형과 would+동사원형이 짝입니다."
+        },
+        {
+          "a": "가정법 과거완료 · 과거 사실의 반대",
+          "b": "if + had p.p. → 주절 would·could·might + have p.p.",
+          "why": "이미 끝난 일의 반대이므로 두 칸 물린 had p.p.와 would have p.p.가 짝입니다."
+        },
+        {
+          "a": "혼합 가정법 · 과거 조건에 현재 결과",
+          "b": "if + had p.p. → 주절 would + 동사원형 (now·today)",
+          "why": "조건은 과거이지만 결과가 지금이므로 조건절과 주절의 형태를 각각의 시점에 맞춥니다."
+        },
+        {
+          "a": "Should 도치 · 가능성 낮은 미래 조건",
+          "b": "주절에 will·would + 동사원형 또는 명령문",
+          "why": "사실의 반대가 아니라 일어날 수도 있는 미래이므로 주절에 will·would+동사원형을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "TABLE",
+      "tier": 3,
+      "title": "겉모습을 원래 조건절로 되돌립니다",
+      "columns": ["나타난 형태", "원래 조건절로 풀면", "가리키는 시점"],
+      "rows": [
+        {
+          "cells": ["Were it not for ~", "if it were not for ~", "현재 사실의 반대"]
+        },
+        {
+          "cells": ["Had it not been for ~", "if it had not been for ~", "과거 사실의 반대"],
+          "example": {
+            "en": "**Had it not been for** the map, the hikers **would have lost** their way.",
+            "ko": "그 지도가 없었더라면 등산객들은 길을 잃었을 것입니다.",
+            "note": "if it had not been for 의 도치형이므로 과거 사실의 반대이고 주절은 would have p.p.입니다."
+          }
+        },
+        {
+          "cells": ["Without / But for ~ (+ now·today)", "if it were not for ~", "현재"]
+        },
+        {
+          "cells": ["Without / But for ~ (+ 과거 시간 단서)", "if it had not been for ~", "과거"]
+        },
+        {
+          "cells": ["Were + 주어 ~", "if + 주어 + were ~", "현재(가정법 과거)"]
+        },
+        {
+          "cells": ["Had + 주어 + p.p. ~", "if + 주어 + had p.p. ~", "과거(가정법 과거완료)"]
+        },
+        {
+          "cells": ["Should + 주어 + 동사원형 ~", "if + 주어 + should + 동사원형 ~", "가능성 낮은 미래"],
+          "example": {
+            "en": "**Should** the results **arrive** late, the board **will postpone** the vote.",
+            "ko": "혹시 결과가 늦게 도착한다면 이사회는 표결을 미룰 것입니다.",
+            "note": "should 도치는 사실의 반대가 아니라 가능성이 낮은 미래이므로 주절에 will+동사원형을 씁니다."
+          }
+        }
+      ],
+      "takeaway": "겉모습이 달라도 원래 조건절로 되돌리면 셋 중 하나입니다. 되돌린 형태와 시간 단서로 주절을 정하면 됩니다."
+    },
+    {
+      "id": "b7",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "짝과 도치를 손에 붙입니다",
+      "target": "가정법 세 짝과 도치 형태",
+      "why": "형태의 짝을 외우지 못하면 문장마다 처음부터 따져야 하고, 그러면 제한시간 안에 판정할 수 없습니다. 짝을 통째로 손에 붙여 두면 남는 일은 시간 단서 확인뿐입니다.",
+      "device": "'현재는 한 칸, 과거는 두 칸'으로 외웁니다. 사실보다 시제를 한 칸 물리면 가정법 과거, 두 칸 물리면 가정법 과거완료입니다. 도치는 'if를 지우면 조동사 were·had·should가 앞으로 튀어나온다'로 기억합니다.",
+      "items": [
+        {
+          "cue": "가정법 과거 — if절 / 주절",
+          "answer": "if + 과거형(be는 were) / would·could·might + 동사원형"
+        },
+        {
+          "cue": "가정법 과거완료 — if절 / 주절",
+          "answer": "if + had p.p. / would·could·might + have p.p."
+        },
+        {
+          "cue": "혼합 — 과거 조건 + 현재 결과(now·today)",
+          "answer": "if + had p.p. / would + 동사원형"
+        },
+        {
+          "cue": "without · but for (현재)",
+          "answer": "if it were not for → 도치하면 Were it not for"
+        },
+        {
+          "cue": "without · but for (과거)",
+          "answer": "if it had not been for → 도치하면 Had it not been for"
+        },
+        {
+          "cue": "if 생략 도치의 신호",
+          "answer": "were · had · should 가 주어 앞으로 나옵니다"
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "과거의 짝을 골라 봅니다",
+      "mission": "과거 사실의 반대, 곧 가정법 과거완료와 짝을 이루는 조각을 모두 고르십시오.",
+      "mode": "SET",
+      "pool": [
+        "if + had p.p.",
+        "would have p.p.",
+        "Had it not been for",
+        "if + 과거형",
+        "would + 동사원형",
+        "Were it not for"
+      ],
+      "answers": ["if + had p.p.", "would have p.p.", "Had it not been for"],
+      "passText": "과거의 문이 열립니다. had p.p.와 would have p.p., 그리고 Had it not been for가 한 묶음으로 손에 붙었습니다.",
+      "retryText": "현재의 짝과 과거의 짝이 섞였습니다. Were it not for는 현재, Had it not been for는 과거입니다. 한 번 더 골라 보십시오."
+    },
+    {
+      "id": "b9",
+      "type": "RULE",
+      "tier": 1,
+      "title": "가정법 과거 — 현재 사실의 반대",
+      "rule": "현재 사실의 반대를 가정할 때에는 if절에 과거형을 쓰고, 주절에 would·could·might + 동사원형을 씁니다.",
+      "examples": [
+        {
+          "en": "If the museum **were** free, far more residents **would visit** it every week.",
+          "ko": "그 박물관이 무료라면 훨씬 더 많은 주민이 매주 방문할 것입니다.",
+          "note": "실제로는 무료가 아니라는 현재 사실의 반대입니다. if절 were 와 주절 would visit 이 짝을 이룹니다."
+        },
+        {
+          "en": "If we **had** a reliable bus network, commuters **could reach** the industrial park in twenty minutes.",
+          "ko": "우리에게 믿을 만한 버스망이 있다면 통근자들은 20분 만에 산업 단지에 도달할 수 있을 것입니다.",
+          "note": "지금 그런 노선이 없다는 사실의 반대이므로 과거형 had 와 could+원형이 짝을 이룹니다."
+        }
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 2,
+      "title": "가정법 과거완료 — 과거 사실의 반대",
+      "rule": "과거 사실의 반대를 가정할 때에는 if절에 had p.p.를 쓰고, 주절에 would·could·might + have p.p.를 씁니다.",
+      "examples": [
+        {
+          "en": "If the crew **had checked** the fuel line, the flight **would not have been** delayed for six hours.",
+          "ko": "승무원들이 연료관을 점검했더라면 그 항공편은 여섯 시간 지연되지 않았을 것입니다.",
+          "note": "점검하지 않았고 지연되었다는 과거 사실의 반대입니다. had checked 와 would not have been 이 짝입니다."
+        },
+        {
+          "en": "If the archive **had survived** the fire, scholars **could have traced** the family's entire history.",
+          "ko": "그 기록 보관소가 화재에서 살아남았더라면 학자들은 그 가문의 역사 전체를 추적할 수 있었을 것입니다.",
+          "note": "살아남지 못했다는 과거 사실의 반대이므로 could have p.p.가 옵니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "짝 판정 반사신경",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 판별은 결국 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "가정법 과거는 지금의 사실과 반대되는 일을 상상하는 형태입니다.",
+          "isTrue": true,
+          "why": "if절은 과거형, 주절은 would+동사원형을 써서 현재 사실의 반대를 나타냅니다."
+        },
+        {
+          "statement": "가정법 과거완료의 if절에는 과거형을 씁니다.",
+          "isTrue": false,
+          "why": "과거 사실의 반대이므로 if절은 had p.p.를 씁니다. 과거형은 가정법 과거의 형태입니다."
+        },
+        {
+          "statement": "가정법에서는 조건절에도 would 를 넣어야 짝이 맞습니다.",
+          "isTrue": false,
+          "why": "would·could·might 는 주절에만 씁니다. 조건절에 would 를 넣으면 형태가 겹쳐 틀립니다."
+        },
+        {
+          "statement": "가정법 과거의 be동사는 주어가 단수여도 were 를 씁니다.",
+          "isTrue": true,
+          "why": "If I were·If he were 처럼 인칭·수와 무관하게 were 를 씁니다."
+        },
+        {
+          "statement": "결과가 now·today 로 현재를 가리키면 주절은 would + 동사원형입니다.",
+          "isTrue": true,
+          "why": "조건이 과거라도 결과가 현재이면 혼합 가정법이므로 주절은 would+동사원형입니다."
+        },
+        {
+          "statement": "Should 도치 문장은 언제나 would have p.p.와 짝을 이룹니다.",
+          "isTrue": false,
+          "why": "Should 도치는 가능성이 낮은 미래의 조건이므로 주절은 will·would+동사원형을 씁니다."
+        }
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "RULE",
+      "tier": 3,
+      "title": "혼합 가정법 — 조건과 결과의 시점이 다를 때",
+      "rule": "조건이 가리키는 시점과 결과가 가리키는 시점이 다르면, 조건절과 주절의 형태를 각각의 시점에 맞춰 따로 씁니다.",
+      "examples": [
+        {
+          "en": "If the company **had patented** the design in 1995, it **would control** the entire market **now**.",
+          "ko": "그 회사가 1995년에 그 디자인을 특허로 등록했더라면 지금 시장 전체를 장악하고 있을 것입니다.",
+          "note": "조건은 1995년의 과거, 결과는 now 가 가리키는 현재입니다. 그래서 would control 입니다."
+        },
+        {
+          "en": "If she **had accepted** the scholarship, she **would be** teaching at the institute today.",
+          "ko": "그녀가 그 장학금을 받아들였더라면 오늘 그 연구소에서 가르치고 있을 것입니다.",
+          "note": "today 가 결과의 시점을 현재로 못 박습니다. would have been 을 쓰면 시간 단서와 어긋납니다."
+        }
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "DIAGRAM",
+      "tier": 3,
+      "title": "혼합 가정법 문장의 해부",
+      "tokens": [
+        { "t": "If", "role": "CONJ" },
+        { "t": "the city", "role": "S" },
+        { "t": "had preserved", "role": "V" },
+        { "t": "the old canal,", "role": "O" },
+        { "t": "tourists", "role": "S" },
+        { "t": "would still visit", "role": "V" },
+        { "t": "the district", "role": "O" },
+        { "t": "today.", "role": "M" }
+      ],
+      "ko": "그 도시가 옛 운하를 보존했더라면 관광객들이 오늘도 그 구역을 찾을 것입니다.",
+      "layers": [
+        {
+          "label": "① 조건절과 주절의 경계를 나눕니다",
+          "roles": ["CONJ"],
+          "note": "If 가 조건절을 열고 콤마 뒤부터 주절입니다. 두 절의 동사 형태를 따로 읽어야 합니다."
+        },
+        {
+          "label": "② 두 동사의 형태를 나란히 읽습니다",
+          "roles": ["V"],
+          "note": "조건절은 had preserved(가정법 과거완료), 주절은 would still visit(would+동사원형)입니다. 표준 짝이라면 주절이 would have visited 여야 하므로 여기서 판단이 멈춥니다."
+        },
+        {
+          "label": "③ 시간 부사를 확인해 결과의 시점을 정합니다",
+          "roles": ["M"],
+          "note": "today 가 결과의 시점을 현재로 못 박습니다. 조건은 과거, 결과는 현재이므로 주절이 would+동사원형인 것이 옳습니다."
+        }
+      ],
+      "conclusion": "조건절의 형태만 보고 주절을 정하면 would have visited 로 잘못 고칩니다. 시간 단서 today 까지 읽어야 혼합 가정법이라는 판정이 나옵니다."
+    },
+    {
+      "id": "b14",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "가정법을 판정하는 4단계",
+      "steps": [
+        {
+          "text": "조건 쪽(if절·without·but for·도치)의 동사 형태를 읽어 어느 가정법인지 정합니다. 과거형이면 가정법 과거, had p.p.이면 가정법 과거완료입니다.",
+          "applyNote": "Had the company diversified 는 if 가 생략된 도치이므로 원래 형태는 If the company had diversified 입니다. 조건은 가정법 과거완료입니다."
+        },
+        {
+          "text": "결과 쪽의 시간 단서(now·today·still / yesterday·last year·in the 1990s)를 찾아 주절이 가리키는 시점을 정합니다.",
+          "applyNote": "주절에 today's market 이 있으므로 결과는 현재의 상황입니다."
+        },
+        {
+          "text": "조건의 시점과 결과의 시점이 같으면 표준 짝을 씁니다. 과거-과거는 would have p.p., 현재-현재는 would+동사원형입니다.",
+          "applyNote": "여기서는 조건이 과거, 결과가 현재이므로 표준 짝이 아닙니다."
+        },
+        {
+          "text": "시점이 서로 다르면 혼합 가정법입니다. 조건절은 조건의 시점, 주절은 결과의 시점에 맞춰 형태를 따로 씁니다.",
+          "applyNote": "조건절은 had diversified 그대로 두고, 주절은 현재의 결과이므로 would not be struggling 이 옳습니다."
+        }
+      ],
+      "example": {
+        "en": "**Had** the company **diversified** its products in the 1990s, it **would not be** struggling in today's market.",
+        "ko": "그 회사가 1990년대에 제품을 다변화했더라면 오늘날의 시장에서 고전하고 있지 않을 것입니다.",
+        "note": "조건은 1990년대의 과거, 결과는 today 가 가리키는 현재입니다. 도치를 풀고 시간 단서를 읽으면 혼합 가정법이 보입니다."
+      }
+    },
+    {
+      "id": "b15",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u12-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "If the science museum {{blank}} free today, far more families would visit it.",
+          "options": ["were", "had been"],
+          "answer": 0,
+          "translation": "그 과학관이 오늘 무료라면 훨씬 더 많은 가족이 방문할 것입니다.",
+          "explanation": "today 와 주절의 would visit 이 현재 사실의 반대, 곧 가정법 과거임을 알려 줍니다. 가정법 과거의 if절은 과거형을 쓰고 be동사는 인칭과 무관하게 were 이므로 were 가 옳습니다. had been 은 가정법 과거완료의 형태여서 주절 would have p.p.와 짝을 이루어야 합니다.",
+          "trapTags": ["subjunctive"]
+        },
+        {
+          "id": "u12-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "[[u:Was]] the evidence stronger, the prosecutor would file charges immediately.",
+          "isCorrect": false,
+          "correction": "Were",
+          "translation": "증거가 더 강력하다면 검사는 즉시 기소할 것입니다.",
+          "explanation": "주절의 would file 은 현재 사실의 반대를 나타내는 가정법 과거입니다. if 가 생략되면 be동사가 주어 앞으로 나오는데, 가정법 과거의 be동사는 주어가 단수여도 were 이므로 Were 로 고쳐야 합니다.",
+          "trapTags": ["subjunctive", "inversion"]
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "Had the museum not raised its entrance fee, far more families ( would visit / would have visited ) it during the summer festival last year.",
+      "steps": [
+        {
+          "title": "① 조건 쪽의 형태를 읽습니다",
+          "body": "문두의 Had the museum not raised 는 if 가 생략되어 Had 가 주어 앞으로 나온 도치입니다. 원래 형태는 If the museum had not raised 이므로 조건은 가정법 과거완료입니다."
+        },
+        {
+          "title": "② 결과 쪽의 시간 단서를 찾습니다",
+          "body": "주절에 last year 가 있습니다. 결과가 가리키는 시점은 지난해, 곧 과거입니다."
+        },
+        {
+          "title": "③ 두 시점을 대조합니다",
+          "body": "조건도 과거이고 결과도 과거입니다. 시점이 같으므로 혼합 가정법이 아니라 표준 짝을 씁니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "과거-과거의 표준 짝은 had p.p. 와 would have p.p.입니다. would visit 을 넣으면 결과가 현재라는 뜻이 되어 last year 와 충돌합니다."
+        }
+      ],
+      "answer": "would have visited",
+      "ko": "그 박물관이 입장료를 올리지 않았더라면 훨씬 더 많은 가족이 지난해 여름 축제 기간에 그곳을 방문했을 것입니다."
+    },
+    {
+      "id": "b17",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "직설법 조건문과 가정법의 갈림길",
+      "columns": ["직설법 조건(실현 가능)", "가정법(사실의 반대)"],
+      "rows": [
+        {
+          "criterion": "화자의 태도",
+          "a": "일어날 수 있는 일로 봅니다",
+          "b": "사실이 아니라고 전제합니다"
+        },
+        {
+          "criterion": "if절의 동사",
+          "a": "현재형(조건 부사절에서는 현재형이 미래를 대신합니다)",
+          "b": "과거형(be는 were) 또는 had p.p."
+        },
+        {
+          "criterion": "주절의 동사",
+          "a": "will·can+동사원형",
+          "b": "would·could·might+동사원형 또는 would·could·might+have p.p."
+        }
+      ],
+      "examples": [
+        {
+          "en": "If the shipment **arrives** tomorrow, the factory **will resume** production.",
+          "ko": "그 화물이 내일 도착하면 그 공장은 생산을 재개할 것입니다.",
+          "note": "도착이 실제로 가능하다고 보는 열린 조건입니다. 조건 부사절이므로 현재형 arrives 가 미래를 대신합니다."
+        },
+        {
+          "en": "If the factory **had** a second production line, it **would meet** the deadline easily.",
+          "ko": "그 공장에 두 번째 생산 라인이 있다면 마감을 쉽게 맞출 것입니다.",
+          "note": "두 번째 라인이 없다는 현재 사실의 반대입니다. 과거형 had 와 would meet 이 짝을 이룹니다."
+        }
+      ]
+    },
+    {
+      "id": "b18",
+      "type": "SORT",
+      "tier": 2,
+      "instruction": "각 조건절이 어느 가정법인지 분류하십시오. 판단 근거는 동사의 형태입니다.",
+      "buckets": [
+        { "id": "past", "label": "가정법 과거(현재 사실의 반대)" },
+        { "id": "pperf", "label": "가정법 과거완료(과거 사실의 반대)" }
+      ],
+      "chips": [
+        {
+          "text": "If I knew her address",
+          "bucketId": "past",
+          "why": "동사가 과거형 knew 이므로 현재 사실의 반대입니다. 주절은 would+동사원형입니다."
+        },
+        {
+          "text": "If the soil were richer",
+          "bucketId": "past",
+          "why": "가정법 과거의 be동사는 인칭과 무관하게 were 입니다. 현재 사실의 반대입니다."
+        },
+        {
+          "text": "Were it not for the subsidy",
+          "bucketId": "past",
+          "why": "if it were not for 에서 if 가 생략된 도치입니다. 현재 사실의 반대이므로 가정법 과거입니다."
+        },
+        {
+          "text": "If the flight had been delayed",
+          "bucketId": "pperf",
+          "why": "동사가 had p.p.이므로 과거 사실의 반대입니다. 주절은 would have p.p.가 기본 짝입니다."
+        },
+        {
+          "text": "Had they left an hour earlier",
+          "bucketId": "pperf",
+          "why": "If they had left 에서 if 가 생략되고 Had 가 주어 앞으로 나온 형태입니다."
+        },
+        {
+          "text": "Had it not been for the subsidy",
+          "bucketId": "pperf",
+          "why": "if it had not been for 의 도치형입니다. 과거 사실의 반대이므로 가정법 과거완료입니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "WORD_HUNT",
+      "tier": 2,
+      "title": "시간 단서 사냥",
+      "instruction": "이 문장에서 시제 판정의 근거가 되는 시간 단서를 전부 탭하십시오. 조건의 시점을 정하는 것과 결과의 시점을 정하는 것이 각각 하나씩 있습니다.",
+      "hitLabel": "시간 단서",
+      "tokens": [
+        { "t": "If", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "city", "hit": false },
+        { "t": "had", "hit": false },
+        { "t": "planted", "hit": false },
+        { "t": "more", "hit": false },
+        { "t": "trees", "hit": false },
+        { "t": "in", "hit": false },
+        { "t": "the", "hit": false },
+        { "t": "past,", "hit": true },
+        { "t": "the", "hit": false },
+        { "t": "streets", "hit": false },
+        { "t": "would", "hit": false },
+        { "t": "feel", "hit": false },
+        { "t": "cooler", "hit": false },
+        { "t": "now.", "hit": true }
+      ],
+      "ko": "그 도시가 과거에 나무를 더 심었더라면 지금 거리가 더 시원할 것입니다.",
+      "explain": "past 는 조건의 시점을 과거로, now 는 결과의 시점을 현재로 정합니다. 조건은 과거이고 결과는 현재이므로 혼합 가정법이며, 주절은 would+동사원형인 would feel 이 옳습니다."
+    },
+    {
+      "id": "b20",
+      "type": "GENERATE",
+      "tier": 2,
+      "instruction": "다음 뜻이 되도록 어절을 순서대로 배열하십시오. 필요 없는 타일이 섞여 있습니다.",
+      "ko": "갑작스러운 폭풍이 없었더라면 그 연구선은 예정대로 그 섬에 도착했을 것입니다.",
+      "answer": [
+        "Had it not been for",
+        "the sudden storm,",
+        "the research vessel",
+        "would have reached",
+        "the island on schedule."
+      ],
+      "tiles": [
+        "Had it not been for",
+        "the sudden storm,",
+        "the research vessel",
+        "would have reached",
+        "the island on schedule.",
+        "If it were not for",
+        "would reach"
+      ],
+      "explanation": "도착하지 못한 것은 이미 지나간 과거의 일이므로 과거 사실의 반대입니다. 조건은 if it had not been for 의 도치형인 Had it not been for 이고, 주절은 그 짝인 would have reached 입니다. If it were not for 와 would reach 는 현재 사실의 반대를 말할 때 쓰는 형태여서 여기에 맞지 않습니다."
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 1 — 조건절에 would·will 을 넣는 오류",
+      "body": "가정법의 조건절은 동사의 형태를 한 칸 물려 쓰는 것으로 이미 '사실이 아님'을 표시합니다. 여기에 would·will 을 다시 넣으면 형태가 겹쳐 틀립니다. 주절에서만 would·could·might 를 씁니다.",
+      "example": {
+        "en": "If the residents **would have known** about the leak, they would have reported it at once.",
+        "ko": "주민들이 그 누출을 알았더라면 즉시 신고했을 것입니다.",
+        "note": "조건절에는 would 를 쓰지 않습니다. had known 으로 고쳐야 옳습니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b22",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 2 — without·but for 에서 시간 단서를 놓치는 오류",
+      "body": "without·but for 자체에는 시제가 없습니다. 그래서 형태만 보고는 어느 가정법인지 알 수 없습니다. 주절의 동사가 밑줄 친 판정 대상이면 그것은 근거가 될 수 없고, 판정 근거는 문장 안의 시간 단서와 그 사건이 이미 끝난 일인지 지금의 상태인지, 이 두 가지뿐입니다. 시간 단서를 먼저 찾고 형태를 정하십시오.",
+      "example": {
+        "en": "Without the fire brigade's quick response **last night**, the warehouse **would burn** to the ground.",
+        "ko": "어젯밤 소방대의 신속한 대응이 없었더라면 그 창고는 전소되었을 것입니다.",
+        "note": "last night 이 과거를 가리키므로 과거 사실의 반대입니다. 주절은 would have burned 여야 합니다.",
+        "wrong": true
+      }
+    },
+    {
+      "id": "b23",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u12-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "If the two companies had merged in 2010, they {{blank}} the market today.",
+          "options": ["would dominate", "would have dominated"],
+          "answer": 0,
+          "translation": "그 두 회사가 2010년에 합병했더라면 오늘날 시장을 장악하고 있을 것입니다.",
+          "explanation": "조건절 had merged in 2010 은 과거 사실의 반대이지만, 주절의 시간 단서 today 는 결과가 현재의 상황임을 못 박습니다. 조건과 결과의 시점이 다른 혼합 가정법이므로 주절은 would+동사원형인 would dominate 가 옳습니다.",
+          "trapTags": ["subjunctive", "mixed-conditional"]
+        },
+        {
+          "id": "u12-c2-ls-004",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "But for the pilot's calm decision during the storm, the passengers [[u:would not survive]] the emergency landing.",
+          "isCorrect": false,
+          "correction": "would not have survived",
+          "translation": "폭풍 속에서 조종사의 침착한 판단이 없었더라면 승객들은 그 비상 착륙에서 살아남지 못했을 것입니다.",
+          "explanation": "during the storm 과 the emergency landing 은 이미 지나간 사건을 가리킵니다. 따라서 but for 는 if it had not been for 로 풀리는 과거 사실의 반대이며, 주절은 would have p.p.인 would not have survived 여야 합니다.",
+          "trapTags": ["subjunctive", "without-butfor"]
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 would dominate 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "조건은 2010년의 과거를 가정하지만 today 가 결과의 시점을 현재로 못 박았으므로, 주절만 현재의 형태인 would+동사원형을 쓴 것입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 조건절의 형태와 결과의 시간 단서를 따로 읽는 것이 혼합 가정법 판단의 핵심입니다."
+        },
+        {
+          "text": "would have dominated 가 문장이 너무 길어져 어색하게 들리기 때문입니다.",
+          "correct": false,
+          "feedback": "길이나 어감은 어법 판단의 근거가 되지 못합니다. 판단은 조건절의 형태와 시간 단서에서만 나옵니다."
+        },
+        {
+          "text": "합병은 실제로 일어나지 않은 일이므로 주절에는 언제나 would+동사원형을 쓰기 때문입니다.",
+          "correct": false,
+          "feedback": "사실의 반대라는 점만으로는 주절의 형태가 정해지지 않습니다. 결과가 과거였다면 would have dominated 가 옳습니다."
+        }
+      ]
+    },
+    {
+      "id": "b25",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "If the museum [[1:had acquired]] the painting in 1980, it [[2:would be]] the centerpiece of the collection today, and visitors [[3:would travel]] from abroad to see it. Without the bequest that built its modern wing, the museum [[4:would have remained]] a minor regional gallery even now.",
+      "answer": 4,
+      "correction": "would remain",
+      "rationales": [
+        "in 1980 이라는 과거 시점의 반대를 가정하고 있으므로 조건절은 had p.p.가 옳습니다.",
+        "시간 단서 today 가 결과의 시점을 현재로 정합니다. 혼합 가정법이므로 would+동사원형이 옳습니다.",
+        "앞 절과 같은 현재의 결과를 말하고 있으므로 would+동사원형이 옳습니다.",
+        "even now 가 현재를 가리키므로 이 without 구문은 현재 사실의 반대입니다. 주절은 would have p.p.가 아니라 would remain 이어야 합니다."
+      ],
+      "ko": "그 박물관이 1980년에 그 그림을 사들였더라면 오늘 그것이 소장품의 중심이 되어 방문객들이 그것을 보러 해외에서 찾아올 것입니다. 현대관을 지어 준 그 기증이 없다면 그 박물관은 지금도 지방의 작은 미술관에 머물러 있을 것입니다."
+    },
+    {
+      "id": "b26",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 if 를 생략한 도치 문장으로 바꿔 쓰게 하거나, 두 문장을 가정법 한 문장으로 합치게 합니다. were·had·should 중 무엇을 주어 앞으로 보내는지가 채점 포인트입니다.",
+          "sample": {
+            "en": "If the tunnel had opened on schedule, the commuters would save an hour every morning now.",
+            "ask": "이 문장에서 if 를 생략한 도치 문장으로 바꿔 쓰십시오.",
+            "answer": "Had the tunnel opened on schedule, the commuters would save an hour every morning now."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 29번에서는 without·but for 구문이나 도치된 조건절에 밑줄을 긋고 주절의 동사 형태를 묻습니다. 시간 단서를 먼저 찾아 결과의 시점을 정한 뒤 형태를 판정해야 합니다.",
+          "sample": {
+            "en": "Without the coral reefs that break the incoming waves, the low islands [[u:would have eroded]] far more quickly today.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "would erode — today 가 현재를 가리키므로 이 without 구문은 현재 사실의 반대이며, 주절은 would+동사원형이어야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b27",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Historians often ask how close the Apollo program came to failure. [[u:Had the onboard computer not rebooted itself during the final descent, the lunar module would have aborted its landing.]] The engineers who wrote that software had prepared for overloads they could not test on the ground. Their caution decided the mission.",
+      "instruction": "밑줄 친 문장에서 조건절의 형태와 주절의 형태가 어떻게 짝을 이루는지 확인하십시오.",
+      "found": "문두의 Had the onboard computer not rebooted 는 if 가 생략된 도치이며 원래 형태는 If the onboard computer had not rebooted 입니다. 조건이 had p.p.이고 결과도 착륙 직전이라는 과거의 순간이므로 주절은 그 짝인 would have aborted 가 옳습니다.",
+      "gist": "착륙 직전 컴퓨터가 스스로 재시동하지 않았다면 착륙이 중단되었을 것이라는 내용입니다."
+    },
+    {
+      "id": "b28",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "가지 않은 길의 문지기",
+      "intro": "이곳에는 실제로 일어나지 않은 일들만 접수됩니다. 형태를 한 칸(과거는 두 칸) 물리는 규칙과 시간 단서를 함께 읽지 못하면, 있지도 않은 세계의 문법에 걸려 넘어집니다. 네 개의 반사실로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "If the small clinic were open at night, the town {{blank}} on the distant hospital far less.",
+          "options": ["would rely", "would have relied"],
+          "answer": 0,
+          "why": "if절이 were 인 현재 사실의 반대(가정법 과거)입니다. 주절은 그 짝인 would+동사원형이므로 would rely 가 옳습니다."
+        },
+        {
+          "prompt": "If the archivist had labeled the boxes, the researchers {{blank}} weeks of searching last year.",
+          "options": ["would have saved", "would save"],
+          "answer": 0,
+          "why": "last year 가 결과의 시점을 과거로 정합니다. 조건도 결과도 과거이므로 표준 짝인 would have p.p.를 씁니다."
+        },
+        {
+          "prompt": "If the founders had accepted the buyout in 2008, they {{blank}} this company today.",
+          "options": ["would not own", "would not have owned"],
+          "answer": 0,
+          "why": "조건은 2008년의 과거이지만 today 가 결과를 현재로 못 박습니다. 혼합 가정법이므로 주절은 would+동사원형입니다."
+        },
+        {
+          "prompt": "Should the supplier miss the deadline, the factory {{blank}} an alternative at once.",
+          "options": ["will seek", "would have sought"],
+          "answer": 0,
+          "why": "Should 도치는 사실의 반대가 아니라 가능성이 낮은 미래의 조건입니다. 주절은 will+동사원형이며 would have p.p.는 미끼입니다."
+        }
+      ],
+      "winText": "네 개의 세계가 모두 당신의 판정에 무너졌습니다. 형태만 보지 않고 시간 단서까지 읽는 눈 — 그것이 가정법 문항 앞에서 흔들리지 않는 유일한 무기이며, 방금 당신 손에 들어왔습니다.",
+      "loseText": "문지기가 반사실의 문을 다시 닫습니다. 네 문제가 물은 것은 언제나 두 가지였습니다 — 조건이 가리키는 시점은 언제이고, 결과가 가리키는 시점은 언제인가. 시간 단서를 먼저 찾는 습관을 챙겨 다시 오십시오."
+    },
+    {
+      "id": "b29",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "조건절이 과거형이면 주절은 ___이고, 조건절이 had p.p.이면 주절은 ___입니다. 다만 주절에 ___ 같은 시간 단서가 있으면 형태를 ___로 바꿉니다."
+    },
+    {
+      "id": "b30",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "가정법 과거는 현재 사실의 반대입니다. if + 과거형(be는 were)과 주절 would·could·might + 동사원형이 짝입니다.",
+        "가정법 과거완료는 과거 사실의 반대입니다. if + had p.p.와 주절 would·could·might + have p.p.가 짝입니다.",
+        "조건의 시점과 결과의 시점이 다르면 혼합 가정법입니다. 결과가 지금의 상태이면(now·today·still 이 그 상태를 가리킬 때) 주절은 would+동사원형, 결과가 이미 끝난 일이면 would have p.p.입니다.",
+        "without·but for 는 if it were not for(현재) 또는 if it had not been for(과거)로 되돌린 뒤 판정합니다. if 를 생략하면 were·had·should 가 주어 앞으로 나옵니다.",
+        "조건절에는 would 를 쓰지 않습니다. 판단은 언제나 조건절의 동사 형태와 시간 단서, 두 축으로 합니다."
+      ],
+      "keySentence": {
+        "en": "If the city **had preserved** the old canal, tourists **would still visit** the district today.",
+        "ko": "그 도시가 옛 운하를 보존했더라면 관광객들이 오늘도 그 구역을 찾을 것입니다.",
+        "note": "조건은 과거, 결과는 현재입니다. 시간 단서 today 가 주절의 형태를 would still visit 으로 정합니다."
+      }
+    },
+    {
+      "id": "b31",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u12-c2-ls-005",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "Were it not for the underground springs, this desert town {{blank}} its population.",
+          "options": ["could not sustain", "could not have sustained"],
+          "answer": 0,
+          "translation": "지하 샘이 없다면 이 사막 마을은 그 인구를 지탱할 수 없을 것입니다.",
+          "explanation": "Were it not for 는 if it were not for 의 도치형으로 현재 사실의 반대를 나타냅니다. 그 짝인 주절은 조동사+동사원형이므로 could not sustain 이 옳습니다. could not have sustained 는 Had it not been for 와 짝을 이루는 형태입니다.",
+          "trapTags": ["subjunctive", "inversion", "without-butfor"]
+        },
+        {
+          "id": "u12-c2-ls-006",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "Should the volcano erupt again, the nearby observatory [[u:would evacuate]] its staff within hours.",
+          "isCorrect": true,
+          "translation": "그 화산이 다시 분화한다면 인근 관측소는 몇 시간 안에 직원들을 대피시킬 것입니다.",
+          "explanation": "Should the volcano erupt 는 if 가 생략되어 should 가 주어 앞으로 나온 형태로, 가능성이 낮은 미래의 조건을 나타냅니다. 이때 주절은 would·will+동사원형을 쓰므로 would evacuate 는 옳습니다. 도치가 보인다는 이유만으로 would have p.p.를 기대하면 미끼에 걸린 것입니다.",
+          "trapTags": ["subjunctive", "inversion"]
+        },
+        {
+          "id": "u12-c2-ls-007",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "{{blank}} the archive been destroyed in the fire, historians would have lost the only record of the trial.",
+          "options": ["Had", "Have", "If"],
+          "answer": 0,
+          "translation": "그 기록 보관소가 화재로 파괴되었더라면 역사가들은 그 재판의 유일한 기록을 잃었을 것입니다.",
+          "explanation": "주절의 would have lost 는 과거 사실의 반대인 가정법 과거완료입니다. 조건절은 If the archive had been destroyed 이며, if 를 생략하면 had 가 주어 앞으로 나오므로 Had 가 옳습니다. Have 는 형태가 맞지 않고, If 를 넣으면 조건절에 had 가 없어 문장이 성립하지 않습니다.",
+          "trapTags": ["subjunctive", "inversion"]
+        }
+      ]
+    }
+  ]
+}

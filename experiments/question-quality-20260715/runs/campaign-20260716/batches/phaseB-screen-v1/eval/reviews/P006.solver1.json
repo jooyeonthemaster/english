@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "동명사구 주어 'expressing anger' + 단수동사 'helps'로 정문. 세 독립절 나열(Fear has helped..., expressing anger helps..., and expressing positive emotions helps...)에서 세 번째 절 'expressing positive emotions helps'와 정확히 병렬. 유혹 포인트: 첫 절 주어가 명사 'Fear'라 'Anger helps'로의 병렬을 기대하고 어색하게 느낄 수 있으나, 절 단위 병렬에서 각 절이 자체 주어-동사를 갖추면 주어 형태까지 일치할 필요는 없고 3절과는 완전 병렬이므로 문제없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "주어 'fear'를 공유하는 정형동사 나열: makes..., narrows..., will cause..., and may cause.... 'narrows'는 makes와 병렬인 3인칭 단수 현재형으로 수일치 정확. 유혹 포인트: 'makes us very attentive' 직후라 분사 'narrowing'을 기대하거나 will/may와 조동사 유무가 달라 병렬 위반으로 착각하기 쉬움. 그러나 사슬 뒤쪽의 'will cause'/'may cause'라는 장거리 단서가 이것이 동일 주어의 정형동사 병렬 사슬임을 확정하며, 조동사 혼재는 문법적으로 허용됨."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'will cause us either to face a situation (fight) or avoiding it (flight)': cause+목적어+to부정사 구문에서 상관접속사 either A or B는 형태 병렬을 요구하므로 'either to face ... or (to) avoid it'이어야 함. 대안 해석 탐색 — 'avoiding it'을 분사구문(부대상황)으로 보면 '(flight)' 동격 표지 및 fight/flight 대비 의미와 충돌하고, cause는 동명사 보어를 취하지 못하며, 열린 either...or 상관구조가 or 뒤 요소를 to부정사(또는 to 생략 원형)로 강제하므로 어떤 파싱으로도 구제 불가. 어법상 틀린 유일한 밑줄."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'remember an experience more acutely': 동사 remember를 수식하는 부사 acutely의 비교급(more acutely)으로 정문. remember가 여기서 목적보어를 취하는 구조가 아니므로 형용사 acute가 올 자리가 아님. 'more acute (experience)' 착시 유혹은 약하며 의미상 '더 선명하게 기억하다'로 동사 수식이 맞음."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'If they had not helped us adapt and survive, they would not have evolved with us': 과거 사실 반대 가정법 과거완료(If + had p.p., would have p.p.)로 주절과 정확히 호응. 유혹 포인트: '지금도 함께 진화해 있지 않을 것'이라는 혼합가정(would not be)으로 읽고 had not helped를 의심할 수 있으나, 주절이 'would not have evolved'(would have p.p.)이므로 표기 그대로 정문. help+목적어+원형부정사(adapt and survive)도 정상."
+    }
+  ],
+  "note": "최상위권 실전 풀이 동선: 밑줄 순서대로 훑을 때 (A)의 'Fear vs expressing anger' 표면 비병렬과 (B)의 'narrowing 분사 착시'가 1·2차 미끼로 작동하지만, 각각 3절과의 완전 병렬, will/may cause 장거리 단서로 해소된다. (E)는 혼합가정 유혹이 있으나 주절 형태가 결정적 단서. 정답 (C)는 either...or 상관 병렬 + cause+O+to-V 이중 규칙 위반으로 명확하며 대안 해석으로 구제되지 않는다. 정답이 하나로 수렴하는 깨끗한 문항."
+}

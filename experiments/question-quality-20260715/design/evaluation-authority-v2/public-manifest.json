@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "evaluation-authority-v2-public-manifest",
+  "artifactId": "evaluation-authority-v2",
+  "status": "DESIGN_ONLY_EXECUTION_BLOCKED",
+  "publicOnly": true,
+  "forbiddenPathComponents": [
+    "private"
+  ],
+  "upstreams": [
+    {
+      "id": "all-types-evaluation-rubric-v1-rubric",
+      "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/rubric.json",
+      "sha256": "17960b41393df681a3626786aa638bd4b001a9fc39e6f838c6eb5a4942c86d3a",
+      "authority": "TYPE_RUBRIC_AND_FATAL_CRAFT_SEMANTICS",
+      "observedSha256": "17960b41393df681a3626786aa638bd4b001a9fc39e6f838c6eb5a4942c86d3a"
+    },
+    {
+      "id": "all-types-evaluation-rubric-v1-manifest",
+      "path": "experiments/question-quality-20260715/design/all-types-evaluation-rubric-v1/MANIFEST.sha256",
+      "sha256": "9067d8641e463a5c955a5b73af162bf63fd181289f0ce67e95911c2c5beadf4d",
+      "authority": "PUBLIC_SOURCE_CLOSURE",
+      "observedSha256": "9067d8641e463a5c955a5b73af162bf63fd181289f0ce67e95911c2c5beadf4d"
+    },
+    {
+      "id": "global-candidate-registry-v2-registry",
+      "path": "experiments/question-quality-20260715/design/global-candidate-registry-v2/registry.json",
+      "sha256": "1e2fc90252de8790ebd7df86e81602825c3fd8b50f5fa96de237ec3cc8fdbab1",
+      "authority": "EXACT_1000_CANDIDATE_ALLOCATION",
+      "observedSha256": "1e2fc90252de8790ebd7df86e81602825c3fd8b50f5fa96de237ec3cc8fdbab1"
+    },
+    {
+      "id": "global-candidate-registry-v2-manifest",
+      "path": "experiments/question-quality-20260715/design/global-candidate-registry-v2/MANIFEST.sha256",
+      "sha256": "13f5fdb997c616694b297c6e3c22c22a2f60b97668bbe549589807a3acdd3f1e",
+      "authority": "PUBLIC_SOURCE_CLOSURE",
+      "observedSha256": "13f5fdb997c616694b297c6e3c22c22a2f60b97668bbe549589807a3acdd3f1e"
+    },
+    {
+      "id": "campaign-v6-s1-current-source-v2-plan",
+      "path": "experiments/question-quality-20260715/design/campaign-v6-s1-current-source-v2/campaign-v6-s1-current-source-v2.json",
+      "sha256": "3fdff5bcbb6cc24f981dd09f3c53a0d2418c6089287fea906223b104097339a2",
+      "authority": "S1_EXACT_PUBLIC_ASSIGNMENT_AND_CURRENT_SOURCE_PLAN",
+      "observedSha256": "3fdff5bcbb6cc24f981dd09f3c53a0d2418c6089287fea906223b104097339a2"
+    },
+    {
+      "id": "campaign-v6-s1-current-source-v2-manifest",
+      "path": "experiments/question-quality-20260715/design/campaign-v6-s1-current-source-v2/MANIFEST.sha256",
+      "sha256": "8554231197d0e2a5194ef9a44c36750e820333183cb3ce6c4299d5e69c307d43",
+      "authority": "PUBLIC_SOURCE_CLOSURE",
+      "observedSha256": "8554231197d0e2a5194ef9a44c36750e820333183cb3ce6c4299d5e69c307d43"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-protocol",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+      "sha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+      "authority": "TAXONOMY_AND_CALIBRATION_SEMANTICS_ONLY",
+      "observedSha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162"
+    },
+    {
+      "id": "reviewer-calibration-v3-replacement-v1-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/MANIFEST.sha256",
+      "sha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64",
+      "authority": "PUBLIC_SOURCE_CLOSURE",
+      "observedSha256": "ea73ff0796f73065f701a294c5ee3b768a9f8ff8d8ffb79979fbe72abe64ba64"
+    },
+    {
+      "id": "reviewer-calibration-v3-production-type-binding-v4-subject-manifest",
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v4/MANIFEST.sha256",
+      "sha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04",
+      "authority": "PRODUCTION_TYPE_BINDING_SUBJECT",
+      "observedSha256": "715818a82951a8c51460a3216b81d46c3184a1db934cc96e27602bc666024f04"
+    },
+    {
+      "id": "reviewer-calibration-v3-production-type-binding-v4-independent-audit-manifest",
+      "path": "experiments/question-quality-20260715/reviews/reviewer-calibration-v3-production-type-binding-v4-independent-audit-v1/MANIFEST.sha256",
+      "sha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d",
+      "authority": "INDEPENDENT_PASS_NO_BLOCKERS",
+      "observedSha256": "796adc11ef8c4a07b0536aee6f0e60d732b09c40ac7e39d704b70a8a6ed9032d"
+    }
+  ],
+  "packageFiles": [
+    {
+      "path": "authority-core.mts",
+      "bytes": 39003,
+      "sha256": "06c087f3192ac3a7e3caa0b5917250e53686bc8150136c472cc3396f8b1afe31"
+    },
+    {
+      "path": "build.mts",
+      "bytes": 1485,
+      "sha256": "c797601da5debc5321730c7cdf31e84d2b3b2d880ab0b8c01a9ec4f62d7b1d9d"
+    },
+    {
+      "path": "verify.mts",
+      "bytes": 3204,
+      "sha256": "59e5449cf5726638593eb0f8a78a58387f29d3096dd1b34b85eb1873d1905b62"
+    },
+    {
+      "path": "hostile-tests.mts",
+      "bytes": 8239,
+      "sha256": "c1e7dbe61b86bb08aca2d4133556166bbc16d78837296cec1edc01fb2b66ac6f"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 391,
+      "sha256": "7ceaba44c8c8ad0f8a7f3b19e97b2267dc302f4d976a21e2944591903b66aa68"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2145,
+      "sha256": "ebe37782f71e33c4785930ee80f06b24776b59a6cafd74c64c9f745b5d4aeb34"
+    },
+    {
+      "path": "protocol.json",
+      "bytes": 25194,
+      "sha256": "149228ef8ce2273f143a8a265c070a69735124d5a140e2e0ca2bca3d88b479fa"
+    },
+    {
+      "path": "PROTOCOL.md",
+      "bytes": 3614,
+      "sha256": "23034a9b14064167d3523c46fa3cfd2ae28a9cb882e8afbf017eb7e39572c95c"
+    }
+  ],
+  "authority": {
+    "evaluatorAuthorityGranted": false,
+    "scoringAuthorityGranted": false,
+    "authorizedReviewers": 0,
+    "authorizedAdjudicators": 0
+  },
+  "activity": {
+    "privateReads": 0,
+    "goldReads": 0,
+    "revealReads": 0,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "databaseCalls": 0,
+    "ledgerReadsOrWrites": 0
+  }
+}

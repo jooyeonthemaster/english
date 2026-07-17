@@ -1,0 +1,35 @@
+{
+  "pid": "P012",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'attempts to regulate and restrain it'에서 it은 앞 절의 man's affective life를 받아 결합이 매끄럽다. 빈칸 직후 'It tries to ensure that we are not overwhelmed and destroyed by our desires and drives'와 마지막 문장 'The law obsessively tries to suppress affects'가 regulate/restrain을 직접 뒷받침한다. cinema(표현) vs law(규제·억제)의 대조 구조와 정확히 호응."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'자유롭게 표현하도록 장려한다'는 영화의 역할이지 법의 역할이 아니다. However가 이끄는 대조 구조(cinema expresses vs law ___)를 파괴하며, 후행 문장의 suppress affects와 정면 모순."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 'obsessively tries to suppress affects, fearing the horror of their consequences'라는 강한 어조에 끌려 근절(eradicate)로 확대 해석하고 싶어진다. 그러나 빈칸 직후 문장이 법의 목적을 '욕망에 압도·파괴되지 않도록 보장'으로 한정하므로 목표는 통제이지 영구 근절이 아니다. 'permanently eradicate ALL human desires'는 전형적 과잉 극단화이며, 지문 전제(man desires freedom)와도 충돌. suppress ≠ eradicate."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "'depicting violent crimes'는 법이 아니라 영화의 행위 영역이고, 지문 어디에도 법이 폭력 범죄 '묘사'에 집중한다는 내용이 없다. 'exclusively'도 무근거. violence 언급(man is too violent)에서 단어만 회수한 표면 미끼."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'숨은 감정을 방출하는 매개를 제공한다'는 'cinema introduces us to our affects'에 해당하는 영화의 기능이다. 빈칸에 넣으면 cinema와 law의 대조가 소멸하고, suppress affects라는 후행 진술과 모순."
+    }
+  ],
+  "note": "빈칸 직후 대명사 문장(It tries to ensure...)과 마지막 문장의 suppress affects가 이중으로 ①을 고정하는 견고한 문항. ③이 어조의 강함(obsessively, horror)을 이용한 극단화 미끼로 기능하나 'permanently eradicate all'이 명백히 과잉이라 옹호 불가. 단일 정답 ①."
+}

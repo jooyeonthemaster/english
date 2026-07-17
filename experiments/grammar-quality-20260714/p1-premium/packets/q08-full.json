@@ -1,0 +1,167 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=k  (B):dec=d  (C):dec=c  (D):dec=e  (E):ANS=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 43,
+        "relPos": 0.055,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 130,
+        "relPos": 0.165,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 356,
+        "relPos": 0.452,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 509,
+        "relPos": 0.646,
+        "sentenceIndex": 5,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.646,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "reaching out",
+        "isError": false,
+        "correction": "reaching out",
+        "errorExpression": "reaching out",
+        "surroundingText": "We tend to go long periods of time without reaching out to the people we know.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "has formed",
+        "isError": false,
+        "correction": "has formed",
+        "errorExpression": "has formed",
+        "surroundingText": "Then, we suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "hoping",
+        "isError": false,
+        "correction": "hoping",
+        "errorExpression": "hoping",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "kept up",
+        "isError": false,
+        "correction": "kept up",
+        "errorExpression": "kept up",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "goes by",
+        "isError": true,
+        "correction": "goes by",
+        "errorExpression": "go by",
+        "surroundingText": "In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "reaching out"
+      },
+      {
+        "label": "(B)",
+        "text": "has formed"
+      },
+      {
+        "label": "(C)",
+        "text": "hoping"
+      },
+      {
+        "label": "(D)",
+        "text": "kept up"
+      },
+      {
+        "label": "(E)",
+        "text": "go by"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "전치사 'without' 뒤에 전치사의 목적어 역할을 하는 동명사 'reaching out'이 온 것은 어법상 적절합니다.",
+      "(B)": "주격 관계대명사 'that'의 선행사는 단수 명사인 'the distance'이므로 단수 동사 'has formed'를 쓴 것은 어법상 적절합니다.",
+      "(C)": "주어 'We'가 희망하는 능동적 주체이므로 현재분사 형태의 분사구문 'hoping'을 쓴 것은 어법상 적절합니다.",
+      "(D)": "주어인 'relationships'가 유지되는 수동의 대상이므로 be동사 뒤에 과거분사 'kept up'을 쓴 것은 어법상 적절합니다."
+    },
+    "explanation": "밑줄 친 (E) 부분이 속한 that 명사절을 살펴보면, 주어는 'not too much time'입니다. 'time'은 물리적인 시간을 나타낼 때 셀 수 없는 명사(불가산 명사)로 쓰이므로 단수 취급해야 합니다. 주어가 3인칭 단수이므로 동사는 'go by'가 아니라 'goes by' 형태를 취해야 올바릅니다. 따라서 'go by'를 'goes by'로 고쳐야 합니다.",
+    "keyPoints": [
+      "(E) 단수/복수 주어의 수일치 — 불가산 명사 주어 판별",
+      "(B) 관계사절 내 동사의 수일치 — 선행사에 일치",
+      "(C) 현재분사 vs 과거분사 판별 — 분사구문 주어와의 능/수동 관계"
+    ],
+    "tags": [
+      "수일치",
+      "불가산명사",
+      "조동사/동사",
+      "관계대명사",
+      "분사구문",
+      "수동태"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without __(A) reaching out__ to the people we know. Then, we suddenly take notice of the distance that __(B) has formed__ and we scramble to make repairs. We call people we haven't spoken to in ages, __(C) hoping__ that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't __(D) kept up__ with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time __(E) go by__ between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "PREMIUM"
+  }
+}

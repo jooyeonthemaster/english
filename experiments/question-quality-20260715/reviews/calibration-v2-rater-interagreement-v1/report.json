@@ -1,0 +1,877 @@
+{
+  "schemaVersion": "question-quality-calibration-v2-rater-interagreement-v1",
+  "status": "SOURCE_BINDING_DEFECTS_MECHANICALLY_REBOUND_INTER_RATER_DISAGREEMENT_NOT_GOLD",
+  "scope": "Two independently sealed reviewer judgments only; no author hypothesis, adjudicator result, or gold is an input. Derived bundles change only scorer-binding hashes.",
+  "inputArtifacts": {
+    "A": {
+      "phase1.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/phase1.json",
+        "bytesSha256": "2b7395ae96d1be745035e2a34be1ce97905ca50e446e441306981c3cf6a03fe3"
+      },
+      "submission.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/submission.json",
+        "bytesSha256": "db163b7a4f4404020f9fc4674974d8d1a4a3558754ef0629c110b38357076aa2"
+      },
+      "seal.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/seal.json",
+        "bytesSha256": "76289e827d6caf0a942ba2281cb0d67cafff50fd2ee7c2212da573c66494b660"
+      },
+      "private-map.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/private-map.json",
+        "bytesSha256": "b3acad636673295755501a23e2d6ff771a6c130f6a6acfb9badbdb6da5652494"
+      },
+      "reveal.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/reveal.json",
+        "bytesSha256": "d514902040919cbccc8565ab3fff0ec0011e68650977a986cf051cb973af9084"
+      },
+      "review-records.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-a/review-records.json",
+        "bytesSha256": "417278502b572787eef1871b416779bed5de39aa976528193740ff562c8a45bb"
+      }
+    },
+    "B": {
+      "phase1.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/phase1.json",
+        "bytesSha256": "947a4ec0614a118491e1ee2e7733dd9dadb4d246f0bf116c9346522c7e3abc4d"
+      },
+      "submission.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/submission.json",
+        "bytesSha256": "9c3743e71f8ecfa38bfe4bcd6b3834de48529f278949bdd862adcf999c3ab37f"
+      },
+      "seal.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/seal.json",
+        "bytesSha256": "44997d6d716ebb40dd845eda30ee296564e61461b7b50776aa81106bc6c58f55"
+      },
+      "private-map.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/private-map.json",
+        "bytesSha256": "55cffdf9dd6abeb2692fb1818f81669f7889889551826fb40e402fe5a96d31eb"
+      },
+      "reveal.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/reveal.json",
+        "bytesSha256": "fe7d78e4f4ef8529dc113ee77922c2fb922f43e7695ff0dc10224acf2f3f556e"
+      },
+      "review-records.json": {
+        "path": "experiments/question-quality-20260715/design/reviewer-calibration-packet-v2/private/issued/rater-b/review-records.json",
+        "bytesSha256": "5ecb7f458897cd372445a7fecb7d49e18d9c67d216c5962de65bd65edf06b7a6"
+      }
+    }
+  },
+  "sourceBindingAudit": {
+    "A": {
+      "items": 24,
+      "sourceRelabelMapBinding": {
+        "ROW_CORRECT": 24
+      },
+      "sourcePhase2RevealBinding": {
+        "ROW_INCORRECT": 24
+      },
+      "mechanicallyChangedFieldCounts": {
+        "relabelMapSha256": 0,
+        "phase2RevealSha256": 24
+      }
+    },
+    "B": {
+      "items": 24,
+      "sourceRelabelMapBinding": {
+        "BUNDLE_INCORRECT": 24
+      },
+      "sourcePhase2RevealBinding": {
+        "BUNDLE_CORRECT": 24
+      },
+      "mechanicallyChangedFieldCounts": {
+        "relabelMapSha256": 24,
+        "phase2RevealSha256": 0
+      }
+    }
+  },
+  "mechanicallyReboundArtifacts": {
+    "A": {
+      "path": "private/rater-a-review-records-score-bound.json",
+      "bytesSha256": "fa4c957556759badba59c8bccdeb159bdc55fd184d8bc321238b3fb4e832dd56",
+      "semanticSha256": "4d790eea8bfc5e924ff6981adca127586d488af3afe391bebf526ca2f464d8af"
+    },
+    "B": {
+      "path": "private/rater-b-review-records-score-bound.json",
+      "bytesSha256": "dbd3f6b5dc55ff6b59616dcbe5451cfea8516bc210a29af1b09fd699a97e6202",
+      "semanticSha256": "0ceef33a32dfe609ccb303af9404bd1305c0bf93f0873cdb12bb3f093ebae83d"
+    },
+    "permittedChangedFields": [
+      "relabelMapSha256",
+      "phase2RevealSha256"
+    ],
+    "judgmentMutationAllowed": false
+  },
+  "aggregate": {
+    "items": 24,
+    "blindAnswerExact": {
+      "numerator": 21,
+      "denominator": 24,
+      "value": 0.875
+    },
+    "fatalFlagExact": {
+      "numerator": 23,
+      "denominator": 24,
+      "value": 0.9583333333333334
+    },
+    "fatalDomainSetExact": {
+      "numerator": 18,
+      "denominator": 24,
+      "value": 0.75
+    },
+    "gradeExact": {
+      "numerator": 20,
+      "denominator": 24,
+      "value": 0.8333333333333334
+    },
+    "typeDiagnosticExact": {
+      "numerator": 8,
+      "denominator": 24,
+      "value": 0.3333333333333333
+    },
+    "quadraticWeightedKappaGrade": 0.8803418803418803,
+    "gradeConfusionAByB": {
+      "F": {
+        "F": 8,
+        "C": 0,
+        "B": 1,
+        "A": 0
+      },
+      "C": {
+        "F": 0,
+        "C": 4,
+        "B": 0,
+        "A": 0
+      },
+      "B": {
+        "F": 0,
+        "C": 3,
+        "B": 4,
+        "A": 0
+      },
+      "A": {
+        "F": 0,
+        "C": 0,
+        "B": 0,
+        "A": 4
+      }
+    },
+    "fatalConfusionAByB": {
+      "fatal_fatal": 8,
+      "fatal_nonfatal": 1,
+      "nonfatal_fatal": 0,
+      "nonfatal_nonfatal": 15
+    }
+  },
+  "byBlock": {
+    "GRAMMAR": {
+      "items": 8,
+      "blindAnswerExact": {
+        "numerator": 8,
+        "denominator": 8,
+        "value": 1
+      },
+      "fatalFlagExact": {
+        "numerator": 8,
+        "denominator": 8,
+        "value": 1
+      },
+      "fatalDomainSetExact": {
+        "numerator": 6,
+        "denominator": 8,
+        "value": 0.75
+      },
+      "gradeExact": {
+        "numerator": 6,
+        "denominator": 8,
+        "value": 0.75
+      },
+      "typeDiagnosticExact": {
+        "numerator": 0,
+        "denominator": 8,
+        "value": 0
+      },
+      "quadraticWeightedKappaGrade": 0.9,
+      "gradeConfusionAByB": {
+        "F": {
+          "F": 2,
+          "C": 0,
+          "B": 0,
+          "A": 0
+        },
+        "C": {
+          "F": 0,
+          "C": 0,
+          "B": 0,
+          "A": 0
+        },
+        "B": {
+          "F": 0,
+          "C": 2,
+          "B": 2,
+          "A": 0
+        },
+        "A": {
+          "F": 0,
+          "C": 0,
+          "B": 0,
+          "A": 2
+        }
+      },
+      "fatalConfusionAByB": {
+        "fatal_fatal": 2,
+        "fatal_nonfatal": 0,
+        "nonfatal_fatal": 0,
+        "nonfatal_nonfatal": 6
+      }
+    },
+    "BLANK": {
+      "items": 8,
+      "blindAnswerExact": {
+        "numerator": 8,
+        "denominator": 8,
+        "value": 1
+      },
+      "fatalFlagExact": {
+        "numerator": 8,
+        "denominator": 8,
+        "value": 1
+      },
+      "fatalDomainSetExact": {
+        "numerator": 6,
+        "denominator": 8,
+        "value": 0.75
+      },
+      "gradeExact": {
+        "numerator": 8,
+        "denominator": 8,
+        "value": 1
+      },
+      "typeDiagnosticExact": {
+        "numerator": 0,
+        "denominator": 8,
+        "value": 0
+      },
+      "quadraticWeightedKappaGrade": 1,
+      "gradeConfusionAByB": {
+        "F": {
+          "F": 2,
+          "C": 0,
+          "B": 0,
+          "A": 0
+        },
+        "C": {
+          "F": 0,
+          "C": 2,
+          "B": 0,
+          "A": 0
+        },
+        "B": {
+          "F": 0,
+          "C": 0,
+          "B": 2,
+          "A": 0
+        },
+        "A": {
+          "F": 0,
+          "C": 0,
+          "B": 0,
+          "A": 2
+        }
+      },
+      "fatalConfusionAByB": {
+        "fatal_fatal": 2,
+        "fatal_nonfatal": 0,
+        "nonfatal_fatal": 0,
+        "nonfatal_nonfatal": 6
+      }
+    },
+    "NONFOCUS": {
+      "items": 8,
+      "blindAnswerExact": {
+        "numerator": 5,
+        "denominator": 8,
+        "value": 0.625
+      },
+      "fatalFlagExact": {
+        "numerator": 7,
+        "denominator": 8,
+        "value": 0.875
+      },
+      "fatalDomainSetExact": {
+        "numerator": 6,
+        "denominator": 8,
+        "value": 0.75
+      },
+      "gradeExact": {
+        "numerator": 6,
+        "denominator": 8,
+        "value": 0.75
+      },
+      "typeDiagnosticExact": {
+        "numerator": 8,
+        "denominator": 8,
+        "value": 1
+      },
+      "quadraticWeightedKappaGrade": 0.375,
+      "gradeConfusionAByB": {
+        "F": {
+          "F": 4,
+          "C": 0,
+          "B": 1,
+          "A": 0
+        },
+        "C": {
+          "F": 0,
+          "C": 2,
+          "B": 0,
+          "A": 0
+        },
+        "B": {
+          "F": 0,
+          "C": 1,
+          "B": 0,
+          "A": 0
+        },
+        "A": {
+          "F": 0,
+          "C": 0,
+          "B": 0,
+          "A": 0
+        }
+      },
+      "fatalConfusionAByB": {
+        "fatal_fatal": 4,
+        "fatal_nonfatal": 1,
+        "nonfatal_fatal": 0,
+        "nonfatal_nonfatal": 3
+      }
+    }
+  },
+  "focusDiagnosticFieldAgreement": {
+    "grammarSites": {
+      "comparisons": 40,
+      "fields": {
+        "displayedGrammaticality": {
+          "numerator": 24,
+          "denominator": 40,
+          "value": 0.6
+        },
+        "diagnosis": {
+          "numerator": 24,
+          "denominator": 40,
+          "value": 0.6
+        },
+        "pointFamily": {
+          "numerator": 11,
+          "denominator": 40,
+          "value": 0.275
+        },
+        "correctionSha256": {
+          "numerator": 8,
+          "denominator": 40,
+          "value": 0.2
+        },
+        "correctionRestoresSource": {
+          "numerator": 40,
+          "denominator": 40,
+          "value": 1
+        },
+        "explanationAccurate": {
+          "numerator": 36,
+          "denominator": 40,
+          "value": 0.9
+        }
+      }
+    },
+    "blankOptions": {
+      "comparisons": 40,
+      "fields": {
+        "slotGrammarCompatible": {
+          "numerator": 40,
+          "denominator": 40,
+          "value": 1
+        },
+        "passageGrounded": {
+          "numerator": 29,
+          "denominator": 40,
+          "value": 0.725
+        },
+        "primaryIntentAxis": {
+          "numerator": 10,
+          "denominator": 40,
+          "value": 0.25
+        },
+        "divergentAxes": {
+          "numerator": 2,
+          "denominator": 40,
+          "value": 0.05
+        },
+        "singleDecisiveFlaw": {
+          "numerator": 20,
+          "denominator": 40,
+          "value": 0.5
+        }
+      }
+    },
+    "blankAxes": {
+      "comparisons": 56,
+      "fields": {
+        "answerPreserved": {
+          "numerator": 56,
+          "denominator": 56,
+          "value": 1
+        }
+      }
+    }
+  },
+  "disagreementItems": [
+    {
+      "itemId": "RCAL2-B01",
+      "block": "BLANK",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": false,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "explanationTruth",
+          "synchronization"
+        ]
+      },
+      "raterB": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "explanationTruth"
+        ]
+      }
+    },
+    {
+      "itemId": "RCAL2-B02",
+      "block": "BLANK",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": false,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "explanationTruth",
+          "synchronization"
+        ]
+      },
+      "raterB": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "explanationTruth"
+        ]
+      }
+    },
+    {
+      "itemId": "RCAL2-B03",
+      "block": "BLANK",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "C",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "C",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-B04",
+      "block": "BLANK",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "C",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "C",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-B05",
+      "block": "BLANK",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-B06",
+      "block": "BLANK",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-B07",
+      "block": "BLANK",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "A",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "A",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-B08",
+      "block": "BLANK",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "A",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "A",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-G01",
+      "block": "GRAMMAR",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": false,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "explanationTruth",
+          "synchronization"
+        ]
+      },
+      "raterB": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "explanationTruth"
+        ]
+      }
+    },
+    {
+      "itemId": "RCAL2-G02",
+      "block": "GRAMMAR",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": false,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "explanationTruth",
+          "synchronization"
+        ]
+      },
+      "raterB": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "explanationTruth"
+        ]
+      }
+    },
+    {
+      "itemId": "RCAL2-G03",
+      "block": "GRAMMAR",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": false,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "C",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-G04",
+      "block": "GRAMMAR",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": false,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "C",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-G05",
+      "block": "GRAMMAR",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-G06",
+      "block": "GRAMMAR",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-G07",
+      "block": "GRAMMAR",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "A",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "A",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-G08",
+      "block": "GRAMMAR",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": false,
+      "raterA": {
+        "grade": "A",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "A",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-N02",
+      "block": "NONFOCUS",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": false,
+      "gradeExact": true,
+      "typeDiagnosticExact": true,
+      "raterA": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "leakage",
+          "taskAndRender"
+        ]
+      },
+      "raterB": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "leakage"
+        ]
+      }
+    },
+    {
+      "itemId": "RCAL2-N04",
+      "block": "NONFOCUS",
+      "blindAnswerExact": true,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": false,
+      "typeDiagnosticExact": true,
+      "raterA": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      },
+      "raterB": {
+        "grade": "C",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    },
+    {
+      "itemId": "RCAL2-N05",
+      "block": "NONFOCUS",
+      "blindAnswerExact": false,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": true,
+      "raterA": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "alternativeReading",
+          "answerSpace"
+        ]
+      },
+      "raterB": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "alternativeReading",
+          "answerSpace"
+        ]
+      }
+    },
+    {
+      "itemId": "RCAL2-N06",
+      "block": "NONFOCUS",
+      "blindAnswerExact": false,
+      "fatalFlagExact": true,
+      "fatalDomainSetExact": true,
+      "gradeExact": true,
+      "typeDiagnosticExact": true,
+      "raterA": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "alternativeReading",
+          "answerSpace"
+        ]
+      },
+      "raterB": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "alternativeReading",
+          "answerSpace"
+        ]
+      }
+    },
+    {
+      "itemId": "RCAL2-N07",
+      "block": "NONFOCUS",
+      "blindAnswerExact": false,
+      "fatalFlagExact": false,
+      "fatalDomainSetExact": false,
+      "gradeExact": false,
+      "typeDiagnosticExact": true,
+      "raterA": {
+        "grade": "F",
+        "anyFatal": true,
+        "fatalDomains": [
+          "alternativeReading",
+          "answerSpace"
+        ]
+      },
+      "raterB": {
+        "grade": "B",
+        "anyFatal": false,
+        "fatalDomains": []
+      }
+    }
+  ],
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0
+  },
+  "reportSemanticSha256": "0f23161f40e6a7bd02e42d2e8ccf10325af558f085d10015c8bb9fc7487dd5c8"
+}

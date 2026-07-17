@@ -1,0 +1,481 @@
+{
+ "batchId": "phaseD-sentinel-v1",
+ "phase": "D",
+ "note": "전 유형 sentinel: 26유형×2플랜, I1/I5 적용 + E-gate warn 모드(어법·빈칸만 해당). 결함 탐지용 — 품질률 표본 아님.",
+ "concurrency": 3,
+ "geminiReasoningEffort": "low",
+ "providerRouting": "none",
+ "env": {
+  "EXPLANATION_VERIFY_GATE_MODE": "warn"
+ },
+ "assignments": [
+  {
+   "itemId": "D-STA-BLANK_INFERENC-00",
+   "frameId": "grammar-frame-v2-039",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-GRAMMAR_ERROR-01",
+   "frameId": "grammar-frame-v2-062",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-GRAMMAR_CHOICE-02",
+   "frameId": "grammar-frame-v2-087",
+   "subType": "GRAMMAR_CHOICE_COMBO",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-VOCAB_CHOICE-03",
+   "frameId": "grammar-frame-v2-088",
+   "subType": "VOCAB_CHOICE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-SENTENCE_ORDER-04",
+   "frameId": "grammar-frame-v2-095",
+   "subType": "SENTENCE_ORDER",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-SENTENCE_INSER-05",
+   "frameId": "grammar-frame-v2-103",
+   "subType": "SENTENCE_INSERT",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-TOPIC-06",
+   "frameId": "grammar-frame-v2-128",
+   "subType": "TOPIC",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-MAIN_IDEA-07",
+   "frameId": "grammar-frame-v2-176",
+   "subType": "MAIN_IDEA",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-TOPIC_MAIN_IDE-08",
+   "frameId": "blank-supply-v2-063",
+   "subType": "TOPIC_MAIN_IDEA",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-TITLE-09",
+   "frameId": "blank-supply-v2-070",
+   "subType": "TITLE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-IMPLIED_MEANIN-10",
+   "frameId": "blank-supply-v2-083",
+   "subType": "IMPLIED_MEANING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-REFERENCE-11",
+   "frameId": "blank-supply-v2-090",
+   "subType": "REFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-CONTENT_MATCH-12",
+   "frameId": "blank-supply-v2-122",
+   "subType": "CONTENT_MATCH",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-SUMMARY_COMPLE-13",
+   "frameId": "blank-supply-v2-135",
+   "subType": "SUMMARY_COMPLETE_MC",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-IRRELEVANT-14",
+   "frameId": "blank-supply-v2-137",
+   "subType": "IRRELEVANT",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-CONDITIONAL_WR-15",
+   "frameId": "blank-supply-v2-146",
+   "subType": "CONDITIONAL_WRITING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-SENTENCE_TRANS-16",
+   "frameId": "grammar-frame-v2-039",
+   "subType": "SENTENCE_TRANSFORM",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-FILL_BLANK_KEY-17",
+   "frameId": "grammar-frame-v2-062",
+   "subType": "FILL_BLANK_KEY",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-SUMMARY_COMPLE-18",
+   "frameId": "grammar-frame-v2-087",
+   "subType": "SUMMARY_COMPLETE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-SUMMARY_WRITIN-19",
+   "frameId": "grammar-frame-v2-088",
+   "subType": "SUMMARY_WRITING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-WORD_ORDER-20",
+   "frameId": "grammar-frame-v2-095",
+   "subType": "WORD_ORDER",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-TOPIC_SENTENCE-21",
+   "frameId": "grammar-frame-v2-103",
+   "subType": "TOPIC_SENTENCE_WRITING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-GRAMMAR_CORREC-22",
+   "frameId": "grammar-frame-v2-128",
+   "subType": "GRAMMAR_CORRECTION",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-CONTEXT_MEANIN-23",
+   "frameId": "grammar-frame-v2-176",
+   "subType": "CONTEXT_MEANING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-SYNONYM-24",
+   "frameId": "blank-supply-v2-063",
+   "subType": "SYNONYM",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-STA-ANTONYM-25",
+   "frameId": "blank-supply-v2-070",
+   "subType": "ANTONYM",
+   "difficulty": "INTERMEDIATE",
+   "plan": "STANDARD",
+   "profile": null,
+   "armId": "SENT-STANDARD"
+  },
+  {
+   "itemId": "D-PRE-BLANK_INFERENC-00",
+   "frameId": "grammar-frame-v2-176",
+   "subType": "BLANK_INFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-GRAMMAR_ERROR-01",
+   "frameId": "blank-supply-v2-063",
+   "subType": "GRAMMAR_ERROR",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-GRAMMAR_CHOICE-02",
+   "frameId": "blank-supply-v2-070",
+   "subType": "GRAMMAR_CHOICE_COMBO",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-VOCAB_CHOICE-03",
+   "frameId": "blank-supply-v2-083",
+   "subType": "VOCAB_CHOICE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-SENTENCE_ORDER-04",
+   "frameId": "blank-supply-v2-090",
+   "subType": "SENTENCE_ORDER",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-SENTENCE_INSER-05",
+   "frameId": "blank-supply-v2-122",
+   "subType": "SENTENCE_INSERT",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-TOPIC-06",
+   "frameId": "blank-supply-v2-135",
+   "subType": "TOPIC",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-MAIN_IDEA-07",
+   "frameId": "blank-supply-v2-137",
+   "subType": "MAIN_IDEA",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-TOPIC_MAIN_IDE-08",
+   "frameId": "blank-supply-v2-146",
+   "subType": "TOPIC_MAIN_IDEA",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-TITLE-09",
+   "frameId": "grammar-frame-v2-039",
+   "subType": "TITLE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-IMPLIED_MEANIN-10",
+   "frameId": "grammar-frame-v2-062",
+   "subType": "IMPLIED_MEANING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-REFERENCE-11",
+   "frameId": "grammar-frame-v2-087",
+   "subType": "REFERENCE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-CONTENT_MATCH-12",
+   "frameId": "grammar-frame-v2-088",
+   "subType": "CONTENT_MATCH",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-SUMMARY_COMPLE-13",
+   "frameId": "grammar-frame-v2-095",
+   "subType": "SUMMARY_COMPLETE_MC",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-IRRELEVANT-14",
+   "frameId": "grammar-frame-v2-103",
+   "subType": "IRRELEVANT",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-CONDITIONAL_WR-15",
+   "frameId": "grammar-frame-v2-128",
+   "subType": "CONDITIONAL_WRITING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-SENTENCE_TRANS-16",
+   "frameId": "grammar-frame-v2-176",
+   "subType": "SENTENCE_TRANSFORM",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-FILL_BLANK_KEY-17",
+   "frameId": "blank-supply-v2-063",
+   "subType": "FILL_BLANK_KEY",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-SUMMARY_COMPLE-18",
+   "frameId": "blank-supply-v2-070",
+   "subType": "SUMMARY_COMPLETE",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-SUMMARY_WRITIN-19",
+   "frameId": "blank-supply-v2-083",
+   "subType": "SUMMARY_WRITING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-WORD_ORDER-20",
+   "frameId": "blank-supply-v2-090",
+   "subType": "WORD_ORDER",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-TOPIC_SENTENCE-21",
+   "frameId": "blank-supply-v2-122",
+   "subType": "TOPIC_SENTENCE_WRITING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-GRAMMAR_CORREC-22",
+   "frameId": "blank-supply-v2-135",
+   "subType": "GRAMMAR_CORRECTION",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-CONTEXT_MEANIN-23",
+   "frameId": "blank-supply-v2-137",
+   "subType": "CONTEXT_MEANING",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-SYNONYM-24",
+   "frameId": "blank-supply-v2-146",
+   "subType": "SYNONYM",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  },
+  {
+   "itemId": "D-PRE-ANTONYM-25",
+   "frameId": "grammar-frame-v2-039",
+   "subType": "ANTONYM",
+   "difficulty": "INTERMEDIATE",
+   "plan": "PREMIUM",
+   "profile": null,
+   "armId": "SENT-PREMIUM"
+  }
+ ]
+}

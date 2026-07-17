@@ -1,0 +1,35 @@
+{
+  "pid": "P016",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'a lasting mark that shows the evolution of society' — 관계대명사 that의 선행사는 단수 명사 a lasting mark이므로 단수 동사 shows가 옳다. 선행사를 절 전체로 보는 대안 해석을 시도해도 단수 취급이라 문제 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "wrong",
+      "reason": "'it must either adapt to or indeed reinforcing this balance' — 상관접속사 either...or...가 조동사 must 뒤에서 시작하므로 두 병렬항 모두 원형부정사여야 한다(adapt to ... or reinforce ...). reinforcing을 정당화할 전치사·진행형 조동사·분사구문 해석이 전혀 성립하지 않는다(or가 adapt to와 같은 목적어 this balance를 공유하는 등위항을 요구). 명백한 병렬 구조 위반으로 reinforce가 되어야 한다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'Depending on the type of bridge and the site, it is subordinate to the surroundings, or it makes a strong statement.' — depending on은 관용화된 전치사적 분사로 현수분사 문제가 없고, 주어 it(=the bridge) 단수에 is 일치. 'can be'나 'either is'를 기대하게 만드는 유혹이 있으나 단순 현재 is도 완전히 정문."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'an intrinsic beauty that works within its surroundings' — 선행사 beauty(단수)에 단수 동사 works 일치. 옳다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'spectacular in itself' — in itself는 '그 자체로'라는 표준 관용구이며 재귀대명사가 주어 a bridge에 결속된다. 뒤따르는 but spoils도 관계절 내 is spectacular와의 병렬로 정문이어서 (E) 자체에는 하자가 없다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: (B)는 must either A or B 병렬에서 즉시 검출되는 명백한 오류. 매력적 오답으로는 (A)/(D)의 관계절 수일치(선행사 착각 유도)와 (C)의 'depending on... it is' 구조(조동사 기대 유도)가 배치되어 있으나 모두 정문임이 장거리 단서로 확정된다. 대안 해석(분사구문, 축약 관계절 등)으로 (B)를 구제할 경로를 적극 탐색했으나 존재하지 않음. 정답 후보는 (B) 단일."
+}

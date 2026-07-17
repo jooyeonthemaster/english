@@ -1,0 +1,55 @@
+{
+  "pid": "P008",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 4,
+    "C2": 4,
+    "C3": 3,
+    "C4": 4,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "현재분사가 명사를 능동으로 후치수식 — 'the common ancestor ..., living about 400,000 years ago'에서 조상이 '살고 있던' 능동 의미.",
+      "temptingBecause": "밑줄 친 분사는 학생이 태/시제를 의심하게 만든다(과거형 'lived'가 맞지 않을까?). (E)와 같은 pointCode(c)라 정답과 헷갈릴 수 있다.",
+      "decisiveFlaw": "결함 없음. 조상이 능동적으로 '살던' 것이므로 현재분사 living이 정확하다. 정답이 아니라 변별용 정답 foil이다."
+    },
+    {
+      "label": "(B)",
+      "intent": "수동 관용구 'be based on' — 언어가 유전자에 '기반을 둔다'는 수동 의미.",
+      "temptingBecause": "과거분사 형태라 다른 형태(base/basing)가 맞아 보일 수 있다.",
+      "decisiveFlaw": "결함 없음. 'language is based on genes'는 올바른 수동 구조로 오류가 아니다."
+    },
+    {
+      "label": "(C)",
+      "intent": "복수 대명사의 수 일치 — 선행 복수명사 'new habits' 지시.",
+      "temptingBecause": "대명사 지시 대상의 모호함(단수 'it'이 맞지 않을까)이 의심을 유발한다.",
+      "decisiveFlaw": "결함 없음. 선행사 'new habits'가 복수이므로 'them'이 정확하다. 오류가 아니다."
+    },
+    {
+      "label": "(D)",
+      "intent": "동명사 주어 'cooking'에 대한 정동사(본동사) 자리 판정 — 정동사 vs 준동사.",
+      "temptingBecause": "동명사 주어 + 분사처럼 보이는 동사가 정/준동사 혼동(selecting?)을 유발하는 고전 함정이다.",
+      "decisiveFlaw": "결함 없음. 'cooking'이 주어이고 절에는 정동사가 필요하므로 과거형 정동사 'selected'가 정확하다. 오류가 아니다."
+    },
+    {
+      "label": "(E)",
+      "intent": "분사의 태 판정 — 뒤따르는 직접목적어 유무로 능동(현재분사)/수동(과거분사) 결정.",
+      "temptingBecause": "'a genetic change'를 후치수식하는 분사 위치가 다른 정상 분사들과 병렬처럼 보여 정오 판단을 흐린다. 문장의 진짜 본동사가 'gets'임을 파악해야 한다.",
+      "decisiveFlaw": "분사가 직접목적어 'evolution'을 취하며 '진화를 이끄는(능동)' 유전적 변화를 의미하므로 현재분사 'driving'이어야 한다. 과거분사 'driven'은 목적어를 취할 수 없어 비문 — 이것이 정답(유일 오류)이다."
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": true,
+  "grade": "A",
+  "notes": "V1~V5 전부 통과. 렌더 지문은 원지문에서 (E) driving→driven 최소대립쌍 주입 외 손상 없음(문장 접합·구두점·라벨 모두 정상). 정답은 (E)로 유일: 나머지 4개 밑줄은 독립 통사 분석상 모두 정문(A 능동 현재분사, B 수동 관용구, C 복수 대명사, D 동명사 주어의 정동사). 해설은 태 판정 근거(목적어 유무)와 각 오답의 실제 구조를 정확히 서술하며 오분석·환각·용어 오류 없음. 필드 전부 동기화. 공예: 분사 태라는 정전 포인트를 정밀 출제(C1=4), 오답 4개가 서로 다른 문법 개념(현재분사 능동수식/수동관용구/대명사 수/정동사)을 겨냥(C2=4), 변별력은 (D)가 주 경쟁 미끼로 양호하나 다수 선지 동시 매력은 아님(C3=3), 단서 누출 없음·정답 필연(C4=4). KILLER 조건(§C) 충족: 최소대립쌍·명확한 문법판단(문맥선호 아님)·5밑줄 근거 완비·구조 파싱 요구(본동사 gets 식별)·동일 point 쉬운 foil(A)이 정답 미가림. 다만 '과거분사+직접목적어'는 잘 훈련된 최상위 학생에게 비교적 salient한 패턴이라 KILLER 중에서는 접근성이 다소 높은 편(C5=3). 합계 21 → 모든 V 통과 + 모든 C≥3 + 합계≥21 = A, beautiful KILLER."
+}

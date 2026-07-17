@@ -1,0 +1,44 @@
+{
+  "pid": "P010",
+  "finalV2": true,
+  "winningAnswer": "③",
+  "reason": "분쟁 자체가 오보고로 판정된다. 분쟁 요약은 '선언된 정답=①'이라 했으나 권위 소스인 eval/full/P010.md(26행)의 선언된 정답은 ③이며, 원지문의 빈칸화 span 'obsessively tries to suppress affects'의 패러프레이즈도 정확히 ③이다(①/③ 원문자 파싱 오류로 추정). 실제 상태는 선언=③, 솔버1=③, 솔버2=③, 감사자 V2=true로 전원 일치. 독립 재검증 결과 ③만이 (1) fearing 분사구문의 의미상 주어(The law) 일치, (2) 'their'의 복수 선행사(our emotional impulses) 공급, (3) 직전 문장 'keeps it in check' / 'not overwhelmed and destroyed by our desires and drives'의 재진술, (4) whereas 이하 'cinema introduces us to our affects'와의 대조 완성을 모두 만족한다. ①②④⑤는 각각 무근거 개념 도입(계약), 검열 프레임 날조, 관계 왜곡+선행사 부재, 극성 반전으로 성립하지 않는다. 정답 유일성 성립, finalV2=true.",
+  "perDispute": [
+    {
+      "label": "(메타) 선언된 정답 표기",
+      "claim": "분쟁 요약: 선언된 정답이 ①이다",
+      "verdict": "기각 — 선언된 정답은 ③",
+      "evidence": "eval/full/P010.md '## 선언된 정답' 섹션에 ③ 명기. 해설·keyPoints 모두 ③('strives to contain our emotional impulses')을 정답으로 전제하며, 원지문 대조 시 빈칸화된 span은 'obsessively tries to suppress affects'로 ③의 직접 패러프레이즈다. 요약의 ①은 원문자 인코딩/파싱 오류로 판단."
+    },
+    {
+      "label": "③",
+      "claim": "solver1·solver2: 유일 정답으로 성립",
+      "verdict": "확정(정답)",
+      "evidence": "삽입문 'The law strives to contain our emotional impulses, fearing the horror of their consequences'에서 fearing의 의미상 주어=The law, their=our emotional impulses(복수)로 문법 이음새 무결. 논리적으로 'the law keeps it(=man's affective life) in check' 및 'tries to ensure that we are not overwhelmed and destroyed by our desires and drives'의 정확한 재진술이고, whereas 뒤 영화의 정동 노출과 완전한 대구를 이룬다. 원문 span과도 의미 동치."
+    },
+    {
+      "label": "①",
+      "claim": "성립 가능성 검토: 'defines human relationships through cold contracts'",
+      "verdict": "불성립",
+      "evidence": "'contracts' 개념은 지문에 부재하며, 지문은 오히려 법이 추상적 진리가 아닌 인간관계의 messiness를 다룬다고 명시해 '차가운 계약' 프레임과 어긋난다. 빈칸은 whereas 대조의 법 측 항(정동 억제)이어야 하는데 계약적 정의는 이 축과 무관하고, 'fearing the horror of their consequences'가 계약/관계의 결과 공포가 되면 앞 문장의 desires and drives 인과와 단절된다. 솔버들의 기각은 과잉 판정이 아님."
+    },
+    {
+      "label": "②",
+      "claim": "성립 가능성 검토: 'strictly regulates artistic channels to filter out sensitive images'",
+      "verdict": "불성립",
+      "evidence": "지문의 대비는 '법이 영화를 규제한다'가 아니라 '영화는 정동을 표현, 법은 정동을 억제'라는 병렬 대비다('while cinema expresses man's affective life, the law keeps it in check'의 it=man's affective life). 법의 억제 대상은 인간 내부의 affects/desires and drives이지 예술 매체·이미지가 아니므로 검열 해석은 본문에 없는 관계의 날조다. their=sensitive images로 읽어도 직전 문장과의 재진술 관계가 붕괴한다."
+    },
+    {
+      "label": "④",
+      "claim": "성립 가능성 검토: 'attempts to supervise how cinema captures anxiety'",
+      "verdict": "불성립",
+      "evidence": "이중 실패: (1) 문법 — 선지 내부에 their의 복수 선행사가 없다(cinema·anxiety 모두 단수/불가산). (2) 논리 — 지문의 anxiety는 'foundational to law is its anxiety about human nature', 즉 법 자신이 인간 본성에 갖는 불안이지 영화가 포착하는 대상이 아니며, 법이 영화를 감독한다는 관계 진술은 지문에 전혀 없다. 표면 핵심어(cinema·anxiety) 재조합 미끼."
+    },
+    {
+      "label": "⑤",
+      "claim": "성립 가능성 검토: 'welcomes affective expressions as a vital key'",
+      "verdict": "불성립",
+      "evidence": "'the law keeps it in check'와 정면 모순인 극성 반전. 정동을 환영하면 whereas로 대조되는 영화와의 '중요한 차이(However... an important difference)'가 소멸하고, '환영하면서 그 결과의 공포를 두려워한다(fearing the horror of their consequences)'는 내적 비정합까지 발생한다."
+    }
+  ]
+}

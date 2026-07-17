@@ -1,0 +1,668 @@
+{
+  "id": "u03-c2",
+  "unitId": "u03",
+  "order": 2,
+  "title": "목적어 유무 판단법과 관계절 함정",
+  "oneLiner": "동사 뒤에 목적어가 남아 있으면 능동입니다. 단, 관계절에서 목적어가 앞으로 빠진 빈자리는 능동을 유지합니다.",
+  "gradeStamp": {
+    "introduced": "중3",
+    "judged": "고1",
+    "csatPoints": [],
+    "sourceRefs": [
+      "2015 개정 영어과 교육과정 [별책14] 별표4 언어형식 — 수동태(중 ●), 관계대명사(중 ●)",
+      "천일문 고등 GRAMMAR — 태(능동·수동)와 관계대명사절",
+      "어법끝 5.0 — 태 판별 파트(목적어 유무 검사)"
+    ]
+  },
+  "lenses": ["L1", "L3"],
+  "confusableWith": ["u03-c1", "u03-c3", "u06-c1"],
+  "estimatedMinutes": 20,
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "HOOK",
+      "tier": 2,
+      "prompt": "둘 중 어법상 옳은 문장은 무엇입니까? 설명은 아직 보지 않습니다.",
+      "options": [
+        "The paintings that the collector donated hang in the west gallery.",
+        "The paintings that the collector was donated hang in the west gallery."
+      ],
+      "answer": 0,
+      "afterText": "donated 뒤에는 목적어가 보이지 않습니다. 그런데도 능동이 옳습니다. 이 레슨을 마치면 그 이유를 한 문장으로 설명할 수 있습니다."
+    },
+    {
+      "id": "b2",
+      "type": "CONCEPT_INTRO",
+      "tier": 1,
+      "term": "목적어 검사 — 태를 가르는 첫 도구",
+      "question": "능동인지 수동인지, 동사의 무엇을 가장 먼저 봅니까?",
+      "plain": "이 레슨의 도구는 '동사 뒤 목적어 자리'입니다. 목적어를 하나 취하는 타동사가 능동이면 그 목적어가 동사 뒤에 그대로 남고, 수동이 되면 목적어가 주어 자리로 올라가 동사 뒤가 빕니다. 그래서 동사 뒤에 목적어가 남았는지를 보고 능·수동을 가릅니다.",
+      "analogy": "동사 뒤 목적어 자리는 지정 좌석과 같습니다. 능동이면 목적어가 그 좌석에 앉아 있고, 수동이면 목적어가 주어석으로 옮겨 가 좌석이 빕니다. 다만 관계절에서는 목적어가 문장 앞으로 잠시 나가 앉아 그 좌석이 비어 보일 뿐, 좌석 자체는 목적어의 것입니다.",
+      "whyItMatters": "수능 어법은 밑줄 친 동사가 능동인지 수동인지를 반복해 묻고, 그 첫 판단 도구가 바로 이 목적어 자리 읽기입니다. 특히 목적격 관계절에서는 목적어가 앞으로 빠져 자리가 비어 보이는데, 이 빈자리를 '목적어 없음'으로 오해하면 함정에 걸립니다."
+    },
+    {
+      "id": "b3",
+      "type": "MISCONCEPTION",
+      "tier": 2,
+      "myth": "동사 뒤에 목적어가 보이지 않으면 그 동사는 수동이어야 합니다.",
+      "truth": "목적어가 '없는' 것과 목적어가 '앞으로 빠져나간' 것은 다릅니다. 목적격 관계대명사절에서는 목적어가 선행사 자리로 올라가 동사 뒤가 비어 보일 뿐입니다. 그 빈자리는 목적어가 있던 자리이므로 동사는 능동 그대로 둡니다.",
+      "counterExample": {
+        "en": "The paintings that the collector **donated** hang in the west gallery.",
+        "ko": "그 수집가가 기증한 그 그림들은 서관에 걸려 있습니다.",
+        "note": "donated 뒤가 비어 보이지만, 그 자리는 선행사 The paintings 가 빠져나간 목적어 자리입니다. 그래서 능동 donated 가 옳습니다."
+      }
+    },
+    {
+      "id": "b4",
+      "type": "NOTEBOOK",
+      "tier": 1,
+      "title": "목적어 검사 필기",
+      "intro": "태를 가르는 첫 도구는 '동사 뒤 목적어'입니다. 판단에 필요한 개념을 한 장으로 정리합니다.",
+      "entries": [
+        {
+          "head": "능동 — 주어가 동작을 한다",
+          "body": "주어가 동사의 동작을 직접 수행합니다. 타동사라면 동사 뒤에 그 동작의 대상, 즉 목적어가 그대로 남습니다.",
+          "example": {
+            "en": "The engineer **designed** the bridge in only six months.",
+            "ko": "그 기술자는 그 다리를 단 6개월 만에 설계했습니다.",
+            "note": "동사 뒤에 목적어 the bridge 가 남아 있으므로 능동입니다."
+          }
+        },
+        {
+          "head": "수동 — 주어가 동작을 당한다",
+          "body": "주어가 동작을 받는 대상입니다. 형태는 be+p.p.이고, 목적어가 주어로 올라갔으므로 동사 뒤에는 목적어가 남지 않습니다.",
+          "pin": "주의"
+        },
+        {
+          "head": "목적어 검사 — 태를 가르는 첫 도구",
+          "body": "타동사 뒤에 목적어가 그대로 있으면 능동, 없으면 수동을 의심합니다. 이 한 가지 검사가 태 판단의 출발점입니다.",
+          "pin": "암기"
+        },
+        {
+          "head": "목적어의 정체 — 명사구만이 아니다",
+          "body": "that절·의문사절·to부정사구·동명사구도 목적어입니다. 이런 성분이 동사 뒤에 있으면 그 동사는 능동입니다.",
+          "example": {
+            "en": "The report **explains** how the disease spread across three continents.",
+            "ko": "그 보고서는 그 질병이 어떻게 세 대륙으로 퍼졌는지를 설명합니다.",
+            "note": "의문사절 how the disease spread … 가 explains 의 목적어입니다. 명사구가 아니어도 목적어입니다."
+          },
+          "pin": "주의"
+        },
+        {
+          "head": "빠진 자리 — 목적어가 앞으로 나간 경우",
+          "body": "목적격 관계절에서는 목적어가 선행사 자리로 빠집니다. 동사 뒤가 비어도 그 자리는 목적어 자리이므로 능동을 유지합니다.",
+          "pin": "암기"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "SPEED_OX",
+      "tier": 2,
+      "title": "능동·수동 즉석 판정",
+      "instruction": "제한시간 안에 명제가 옳으면 ○, 틀리면 ×를 누르십시오. 태 판별은 결국 목적어 자리를 읽는 속도 싸움입니다.",
+      "timeLimitSec": 8,
+      "rounds": [
+        {
+          "statement": "목적어를 하나 가지는 타동사는 동사 뒤에 목적어가 그대로 남아 있으면 능동입니다.",
+          "isTrue": true,
+          "why": "목적어를 하나 가지는 타동사가 수동이 되면 목적어가 주어로 올라가므로, 동사 뒤에 목적어가 그대로 남아 있다면 능동입니다."
+        },
+        {
+          "statement": "동사 뒤에 목적어가 안 보이면 그 동사는 예외 없이 수동입니다.",
+          "isTrue": false,
+          "why": "목적격 관계절처럼 목적어가 선행사 자리로 빠진 경우가 있으므로 예외가 존재합니다."
+        },
+        {
+          "statement": "that절도 동사의 목적어가 될 수 있습니다.",
+          "isTrue": true,
+          "why": "that절은 명사구가 아니어도 동사의 목적어가 될 수 있습니다. 목적어를 하나 취하는 타동사 뒤에 that절이 남아 있으면 능동의 신호입니다."
+        },
+        {
+          "statement": "관계사 뒤에 주어가 따로 있는 목적격 관계절의 동사는 수동이어야 합니다.",
+          "isTrue": false,
+          "why": "선행사가 목적어로 빠진 자리이므로 그 동사는 능동을 유지합니다."
+        },
+        {
+          "statement": "수동태의 기본 형태는 be+p.p.입니다.",
+          "isTrue": true,
+          "why": "be동사와 과거분사의 결합이 수동태의 기본 형태입니다."
+        },
+        {
+          "statement": "의문사절(how·why…)도 동사의 목적어가 될 수 있습니다.",
+          "isTrue": true,
+          "why": "의문사절도 목적어입니다. 동사 뒤에 있으면 그 동사는 능동입니다."
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "RULE",
+      "tier": 1,
+      "rule": "목적어를 하나 가지는 타동사는 동사 뒤에 그 목적어가 그대로 남아 있으면 능동입니다.",
+      "examples": [
+        {
+          "en": "The city council **approved** the new bus routes last month.",
+          "ko": "시의회는 지난달 새 버스 노선을 승인했습니다.",
+          "note": "동사 뒤에 목적어 the new bus routes 가 그대로 있으므로 능동입니다."
+        },
+        {
+          "en": "The new bus routes **were approved** by the city council last month.",
+          "ko": "새 버스 노선은 지난달 시의회에 의해 승인되었습니다.",
+          "note": "목적어가 주어 자리로 올라갔으므로 수동태 동사 뒤에는 목적어가 남지 않고 by 구와 부사구만 이어집니다."
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "RULE",
+      "tier": 2,
+      "rule": "명사구뿐 아니라 that절·의문사절·to부정사구·동명사구도 목적어입니다. 목적어를 하나 취하는 타동사 뒤에 이런 성분이 남으면 그 동사는 능동입니다. 다만 tell·inform 같은 보고동사는 수동태 뒤에도 that절이 남으므로 예외입니다.",
+      "examples": [
+        {
+          "en": "The survey **shows** that most residents prefer shorter working hours.",
+          "ko": "그 설문은 대부분의 주민이 더 짧은 근로 시간을 선호한다는 것을 보여 줍니다.",
+          "note": "that절이 shows 의 목적어입니다. 목적어가 남아 있으므로 능동입니다."
+        },
+        {
+          "en": "The committee **postponed** announcing the results until spring.",
+          "ko": "그 위원회는 봄까지 결과를 발표하는 것을 미루었습니다.",
+          "note": "동명사구 announcing the results 가 postponed 의 목적어입니다. 명사구가 아니어도 목적어이므로 능동입니다."
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "MNEMONIC",
+      "tier": 2,
+      "title": "목적어의 다섯 얼굴",
+      "target": "목적어가 될 수 있는 다섯 성분",
+      "why": "학생들은 명사가 안 보이면 목적어가 없다고 착각해 수동으로 고칩니다. that절·의문사절 같은 성분도 목적어라는 것을 외워 두어야 이 착각을 막습니다. 다만 이 검사는 목적어를 하나 취하는 타동사에 적용합니다. tell·inform 같은 보고동사나 give 류 수여동사는 수동태 뒤에도 that절·명사가 남으므로 예외입니다.",
+      "device": "다섯 목적어를 '명-that-의-to-ing' 다섯 박자로 읊습니다. '명사구·that절·의문사절·to부정사구·동명사구' — 명사가 안 보여도 이 다섯 중 하나가 있으면 목적어가 있는 것입니다.",
+      "items": [
+        {
+          "cue": "명사가 안 보이는데 that절이 동사 뒤에 있다",
+          "answer": "that절이 목적어이므로 그 자리에 목적어가 있는 것입니다"
+        },
+        {
+          "cue": "의문사절(how·why…)이 동사 뒤에 있다",
+          "answer": "의문사절이 목적어이므로 목적어가 있는 것입니다"
+        },
+        {
+          "cue": "to부정사구가 동사 뒤에 있다",
+          "answer": "to부정사구가 목적어이므로 목적어가 있는 것입니다"
+        },
+        {
+          "cue": "동명사구(-ing…)가 동사 뒤에 있다",
+          "answer": "동명사구가 목적어이므로 목적어가 있는 것입니다"
+        },
+        {
+          "cue": "동사 뒤에 아무 목적어도 없고 by 구만 있다",
+          "answer": "목적어가 없으므로 수동을 의심합니다"
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "MEMORY_GATE",
+      "tier": 2,
+      "title": "목적어 성분 관문",
+      "mission": "동사 뒤에 있으면 그 동사를 능동으로 만드는 '목적어' 성분을 전부 고르십시오.",
+      "mode": "SET",
+      "pool": [
+        "명사구",
+        "that절",
+        "의문사절",
+        "to부정사구",
+        "동명사구",
+        "전치사구",
+        "by 행위자구",
+        "부사구"
+      ],
+      "answers": ["명사구", "that절", "의문사절", "to부정사구", "동명사구"],
+      "passText": "다섯 목적어가 손에 붙었습니다. 이제 명사가 안 보여도 흔들리지 않습니다.",
+      "retryText": "아직 몇 개가 빠져나갔습니다. 목적어는 '명-that-의-to-ing' 다섯 덩어리라는 것만 다시 떠올리고 오면 됩니다."
+    },
+    {
+      "id": "b10",
+      "type": "RULE",
+      "tier": 3,
+      "rule": "목적격 관계절에서는 목적어가 선행사 자리로 빠지므로, 동사 뒤가 비어 있어도 능동을 유지합니다.",
+      "examples": [
+        {
+          "en": "The methods that the researchers **developed** in the 1970s remain useful today.",
+          "ko": "그 연구자들이 1970년대에 개발한 그 방법들은 오늘날에도 유용합니다.",
+          "note": "developed 의 목적어는 선행사 The methods 이며, 그 자리가 관계사 that 으로 앞당겨졌습니다. 그래서 능동입니다."
+        },
+        {
+          "en": "The materials the architect **chose** for the roof still look new.",
+          "ko": "그 건축가가 지붕에 선택한 그 재료들은 여전히 새것처럼 보입니다.",
+          "note": "관계사가 생략되었지만 구조는 같습니다. chose 뒤의 빈자리는 선행사 The materials 가 빠져나간 목적어 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "DIAGRAM",
+      "tier": 2,
+      "title": "목적격 관계절이 낀 문장의 해부",
+      "tokens": [
+        { "t": "The instruments", "role": "S" },
+        { "t": "that", "role": "REL" },
+        { "t": "the museum", "role": "S" },
+        { "t": "restored", "role": "V" },
+        { "t": "( ___ )", "role": "X" },
+        { "t": "attract", "role": "V" },
+        { "t": "many visitors", "role": "O" }
+      ],
+      "ko": "그 박물관이 복원한 그 악기들은 많은 방문객을 끌어들입니다.",
+      "layers": [
+        {
+          "label": "① 관계사가 연 절의 경계를 긋습니다",
+          "roles": ["REL"],
+          "note": "that 은 관계절을 엽니다. that 뒤에 the museum 이라는 주어가 따로 있으므로 이 that 은 주격이 아니라 목적격 관계대명사입니다."
+        },
+        {
+          "label": "② 관계절 안에서 빠진 목적어 자리를 확인합니다",
+          "roles": ["X"],
+          "note": "restored 바로 뒤의 ( ___ ) 가 선행사 The instruments 가 빠져나간 목적어 자리입니다. 그 자리는 목적어 자리이므로 관계절의 동사 restored 는 능동 그대로입니다. was restored 로 바꾸면 선행사가 들어갈 자리가 사라집니다."
+        },
+        {
+          "label": "③ 두 주어를 가려 핵 주어를 확정합니다",
+          "roles": ["S"],
+          "note": "주어가 둘 켜집니다. 관계절 안의 주어는 the museum 이고, 문장 전체를 이끄는 핵 주어는 The instruments 입니다. 관계절을 걷어내면 핵 주어 The instruments 만 남습니다."
+        },
+        {
+          "label": "④ 두 동사의 태를 확정합니다",
+          "roles": ["V", "O"],
+          "note": "동사는 restored 와 attract 둘입니다. 본동사 attract 뒤에는 목적어 many visitors 가 그대로 남아 능동이고, 관계절의 restored 는 목적어가 앞으로 빠져 능동입니다."
+        }
+      ],
+      "conclusion": "한 문장 안에서 동사 두 개가 모두 능동입니다. restored 는 목적어가 앞으로 빠져서, attract 는 목적어가 뒤에 남아서 능동입니다."
+    },
+    {
+      "id": "b12",
+      "type": "ALGORITHM",
+      "tier": 2,
+      "title": "목적어 유무로 태를 가르는 4단계",
+      "steps": [
+        {
+          "text": "밑줄 친 동사가 어느 절에 속하는지 확정합니다. 관계사·접속사가 절의 경계입니다.",
+          "applyNote": "관계사 that 이 절을 열었으므로 adopted 는 관계절의 동사입니다."
+        },
+        {
+          "text": "그 동사 뒤에 목적어가 있는지 봅니다. 명사구뿐 아니라 that절·의문사절·to부정사구·동명사구도 목적어입니다.",
+          "applyNote": "adopted 뒤에는 in a crisis 라는 전치사구뿐이고 목적어가 보이지 않습니다."
+        },
+        {
+          "text": "목적어가 보이지 않으면, 그 절이 목적격 관계절인지 확인합니다. 선행사가 그 동사의 목적어로 읽히면 빈자리는 목적어가 빠진 자리입니다.",
+          "applyNote": "선행사 The strategies 는 adopt 의 목적어로 읽힙니다. 즉 목적어가 앞으로 빠진 것이므로 능동을 유지합니다."
+        },
+        {
+          "text": "빠진 자리가 아니고 주어가 동작을 받는 쪽이면 그때에만 be+p.p.로 확정합니다.",
+          "applyNote": "주절의 주어 The strategies 는 바꾸는 주체이고 have changed 뒤에 목적어가 있으므로 주절도 능동입니다."
+        }
+      ],
+      "example": {
+        "en": "The strategies that the company **adopted** in a crisis **have changed** the entire industry.",
+        "ko": "그 회사가 위기 속에서 채택한 그 전략들은 산업 전체를 바꾸어 놓았습니다.",
+        "note": "adopted 의 목적어는 선행사로 빠졌고, have changed 의 목적어 the entire industry 는 뒤에 남았습니다. 두 동사 모두 능동입니다."
+      }
+    },
+    {
+      "id": "b13",
+      "type": "WORKED",
+      "tier": 2,
+      "title": "같이 풀어 봅니다",
+      "question": "괄호 안에서 어법상 옳은 것을 고르고, 그 이유를 절차대로 확인하십시오.",
+      "stem": "The songs that the choir ( performed / was performed ) at the festival are on the new album.",
+      "steps": [
+        {
+          "title": "① 절의 경계를 긋습니다",
+          "body": "관계사 that 이 절을 열었고, 그 뒤에 the choir 라는 주어가 따로 있습니다. 괄호는 이 관계절의 동사 자리입니다."
+        },
+        {
+          "title": "② 목적어가 있는지 봅니다",
+          "body": "괄호 뒤에는 at the festival 이라는 전치사구뿐입니다. 명사구도 that절도 없으므로 목적어가 보이지 않습니다."
+        },
+        {
+          "title": "③ 빠진 자리인지 확인합니다",
+          "body": "선행사 The songs 는 perform 의 목적어로 읽힙니다. 즉 목적어가 관계사 자리로 앞당겨진 것이지, 목적어가 없는 것이 아닙니다."
+        },
+        {
+          "title": "④ 답을 확정합니다",
+          "body": "was performed 를 넣으면 관계절 안에 빠진 자리가 없어져 선행사가 들어갈 곳이 사라지고, 주어 the choir 도 갈 곳을 잃습니다. 목적어가 앞으로 빠진 능동절이므로 performed 가 옳습니다."
+        }
+      ],
+      "answer": "performed",
+      "ko": "그 합창단이 축제에서 부른 그 노래들은 새 앨범에 실려 있습니다."
+    },
+    {
+      "id": "b14",
+      "type": "CHECK",
+      "tier": 1,
+      "items": [
+        {
+          "id": "u03-c2-ls-001",
+          "type": "CHOICE",
+          "difficulty": 1,
+          "stem": "The researchers {{blank}} the samples in a cold room for three months.",
+          "options": ["stored", "were stored"],
+          "answer": 0,
+          "translation": "그 연구자들은 그 표본들을 석 달 동안 냉장실에 보관했습니다.",
+          "explanation": "빈칸 뒤에 목적어 the samples 가 그대로 남아 있습니다. 수동태 뒤에는 이 목적어가 남을 수 없으므로 능동 stored 가 옳습니다.",
+          "trapTags": ["object-test", "passive-with-object"]
+        },
+        {
+          "id": "u03-c2-ls-002",
+          "type": "OX",
+          "difficulty": 2,
+          "sentence": "The novel that she [[u:was written]] during the war became a classic.",
+          "isCorrect": false,
+          "correction": "wrote",
+          "translation": "그녀가 전쟁 중에 쓴 그 소설은 고전이 되었습니다.",
+          "explanation": "that 뒤에 주어 she 가 따로 있으므로 that 은 목적격 관계대명사이고, 밑줄 뒤의 빈자리는 선행사 The novel 이 빠져나간 목적어 자리입니다. 목적어가 빠진 능동절이므로 wrote 로 고쳐야 합니다.",
+          "trapTags": ["relative-clause", "object-gap"]
+        }
+      ]
+    },
+    {
+      "id": "b15",
+      "type": "CONTRAST",
+      "tier": 2,
+      "title": "목적어가 빠진 자리 vs 목적어가 아예 없는 자리",
+      "columns": ["목적어가 앞으로 빠진 자리(능동)", "목적어가 없는 자리(수동)"],
+      "rows": [
+        {
+          "criterion": "동사 앞의 모습",
+          "a": "관계사(that·which) 또는 생략된 관계사 + 주어가 있습니다",
+          "b": "그 동사의 주어가 곧 문장의 주어입니다"
+        },
+        {
+          "criterion": "선행사와의 관계",
+          "a": "선행사가 그 동사의 목적어로 읽힙니다",
+          "b": "주어가 그 동사의 동작을 받는 대상입니다"
+        },
+        {
+          "criterion": "동사의 형태",
+          "a": "능동 그대로 둡니다",
+          "b": "be+p.p. 로 씁니다"
+        }
+      ],
+      "examples": [
+        {
+          "en": "The report that the agency **released** last week lists ten priorities.",
+          "ko": "그 기관이 지난주에 공개한 그 보고서는 열 가지 우선 과제를 열거합니다.",
+          "note": "released 의 목적어가 선행사 The report 로 빠졌으므로 능동입니다."
+        },
+        {
+          "en": "The report **was released** last week without any comment.",
+          "ko": "그 보고서는 지난주에 아무런 논평 없이 공개되었습니다.",
+          "note": "관계사도 다른 주어도 없습니다. 주어 The report 가 공개되는 대상이므로 수동입니다."
+        }
+      ]
+    },
+    {
+      "id": "b16",
+      "type": "COMPLETION",
+      "tier": 2,
+      "title": "마지막 판단만 하십시오",
+      "stem": "The species that the team ( discovered / was discovered ) in the cave has no eyes at all.",
+      "givenSteps": [
+        "① 관계사 that 뒤에 the team 이라는 주어가 따로 있습니다. 따라서 that 은 목적격 관계대명사입니다.",
+        "② 괄호 뒤에는 in the cave 라는 전치사구뿐이고 목적어가 보이지 않습니다."
+      ],
+      "prompt": "③ 그렇다면 괄호 자리는 무엇이어야 합니까?",
+      "options": [
+        "discovered — 선행사 The species 가 목적어로 빠진 자리이므로 능동을 유지합니다",
+        "was discovered — 동사 뒤에 목적어가 없으므로 수동이어야 합니다",
+        "discovering — 발견하는 동작이 계속되었으므로 진행의 의미가 필요합니다"
+      ],
+      "answer": 0,
+      "explain": "동사 뒤가 비어 있다는 사실만으로 수동을 고르면 안 됩니다. 이 관계절의 주어는 the team 이고, 빈자리는 선행사 The species 가 빠져나간 목적어 자리입니다. 그러므로 능동 discovered 가 옳습니다. discovering 은 시제가 없어 관계절의 본동사가 되지 못합니다."
+    },
+    {
+      "id": "b17",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "킬러 — 관계사가 생략되어 명사 둘이 붙어 보이는 경우",
+      "body": "목적격 관계대명사는 생략될 수 있습니다. 그러면 선행사와 관계절의 주어가 바로 붙어 명사가 둘 연달아 나온 것처럼 보입니다. 이때 뒤 동사의 빈자리를 목적어 없음으로 오해해 수동으로 고치면 문장이 무너집니다. 명사 두 개가 붙어 있으면 그 사이에 관계사가 생략되었는지부터 의심해야 합니다.",
+      "example": {
+        "en": "The advice the doctor **gave** completely **changed** my father's daily habits.",
+        "ko": "그 의사가 해 준 그 조언은 제 아버지의 일상 습관을 완전히 바꾸어 놓았습니다.",
+        "note": "The advice 와 the doctor 사이에 목적격 관계사가 생략되었습니다. gave 뒤가 비어 보이지만 그 자리는 선행사 The advice 가 빠져나간 목적어 자리이므로 gave 는 능동이고, 주절의 본동사는 changed 입니다."
+      }
+    },
+    {
+      "id": "b18",
+      "type": "PAIR_MATCH",
+      "tier": 2,
+      "title": "태 판정 짝짓기",
+      "instruction": "각 문장의 밑줄 없는 동사가 능동인지 수동인지, 그 판정과 근거를 짝지으십시오.",
+      "pairs": [
+        {
+          "a": "The team that the club hired won the title.",
+          "b": "능동 — 목적어가 선행사로 빠진 자리입니다",
+          "why": "hired 의 목적어는 선행사 The team 이므로 능동입니다."
+        },
+        {
+          "a": "The bridge was built in only two years.",
+          "b": "수동 — 목적어 없이 부사구만 남습니다",
+          "why": "다리는 지어지는 대상이고 동사 뒤에 목적어가 없으므로 수동입니다."
+        },
+        {
+          "a": "The guide explained how the machine worked.",
+          "b": "능동 — 의문사절이 목적어입니다",
+          "why": "how the machine worked 가 explained 의 목적어이므로 능동입니다."
+        },
+        {
+          "a": "The letters the archivist found lay in a box.",
+          "b": "능동 — 관계사가 생략된 목적어 자리입니다",
+          "why": "found 의 목적어는 선행사 The letters 이며 관계사가 생략되었습니다."
+        }
+      ]
+    },
+    {
+      "id": "b19",
+      "type": "CHECK",
+      "tier": 3,
+      "items": [
+        {
+          "id": "u03-c2-ls-003",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The proposals that the board {{blank}} last month have already changed the company's hiring.",
+          "options": ["approved", "were approved", "approving"],
+          "answer": 0,
+          "translation": "이사회가 지난달 승인한 그 제안들은 이미 그 회사의 채용 방식을 바꾸어 놓았습니다.",
+          "explanation": "that 뒤에 주어 the board 가 따로 있으므로 that 은 목적격 관계대명사이고, 빈칸 뒤의 빈자리는 선행사 The proposals 가 빠져나간 목적어 자리입니다. 목적어가 앞당겨진 능동절이므로 approved 가 옳습니다. were approved 를 넣으면 the board 가 주어 자리를 잃고, approving 은 시제가 없어 관계절의 본동사가 되지 못합니다.",
+          "trapTags": ["relative-clause", "object-gap", "object-test"]
+        }
+      ]
+    },
+    {
+      "id": "b20",
+      "type": "SELF_EXPLAIN",
+      "tier": 2,
+      "question": "앞 문항에서 approved 를 고른 이유로 가장 정확한 것은 무엇입니까?",
+      "options": [
+        {
+          "text": "that 뒤에 주어 the board 가 따로 있어 목적격 관계절이고, 빈자리는 선행사가 빠져나간 목적어 자리이기 때문입니다.",
+          "correct": true,
+          "feedback": "정확합니다. 목적어가 '없는' 것이 아니라 '앞으로 빠진' 것이라는 판단이 근거입니다."
+        },
+        {
+          "text": "동사 뒤에 명사가 보이지 않지만 문맥상 이사회가 승인하는 것이 자연스럽기 때문입니다.",
+          "correct": false,
+          "feedback": "의미의 자연스러움만으로는 근거가 약합니다. 어법 판단은 관계절 안에 빠진 자리가 있는지를 구조로 확인하는 데에서 나옵니다."
+        },
+        {
+          "text": "last month 라는 과거 표현이 있어 과거형 능동이 필요하기 때문입니다.",
+          "correct": false,
+          "feedback": "시제는 태를 결정하지 못합니다. were approved 를 넣으면 관계절 안에 선행사 The proposals 가 들어갈 목적어 자리가 사라지고 the board 도 갈 곳을 잃습니다. 근거는 시제가 아니라 빠진 목적어 자리입니다."
+        }
+      ]
+    },
+    {
+      "id": "b21",
+      "type": "TRAP",
+      "tier": 3,
+      "trapTitle": "함정 — 수동태 뒤에도 명사가 남는 예외",
+      "body": "목적어 검사는 목적어를 하나 가지는 타동사에 적용하는 규칙입니다. give·send·offer·award 처럼 목적어를 둘 가지는 동사는 하나가 주어로 올라가도 다른 하나가 뒤에 남습니다. make·call·leave 처럼 목적격보어를 가지는 동사도 수동 뒤에 보어가 남습니다. 이 경우 뒤의 명사를 목적어로 착각해 능동으로 고치면 안 됩니다. 이러한 4형식·5형식 수동의 형태 전반은 u09-c2에서 더 깊이 다룹니다.",
+      "example": {
+        "en": "The winners **were given** a small trophy at the closing ceremony.",
+        "ko": "수상자들은 폐회식에서 작은 트로피를 받았습니다.",
+        "note": "give 는 목적어를 둘 가지므로 간접목적어가 주어로 올라가도 직접목적어 a small trophy 가 뒤에 남습니다. 뒤에 명사가 있어도 이 문장은 수동으로 옳습니다."
+      }
+    },
+    {
+      "id": "b22",
+      "type": "ERROR_HUNT",
+      "tier": 3,
+      "instruction": "밑줄 친 부분 중 어법상 틀린 것을 고르고 바르게 고치십시오.",
+      "text": "The masks that the village elders [[1:were carved]] long ago [[2:are displayed]] in the main hall, where visitors [[3:are allowed]] to touch a few replicas, and the guide explains how the craftsmen [[4:shaped]] them centuries ago.",
+      "answer": 1,
+      "correction": "carved",
+      "rationales": [
+        "that 뒤에 주어 the village elders 가 따로 있는 목적격 관계절입니다. 빈자리는 선행사 The masks 가 빠져나간 목적어 자리이므로 수동 were carved 는 틀리고 능동 carved 로 고쳐야 합니다.",
+        "주절의 주어 The masks 는 전시되는 대상이고 동사 뒤에 목적어 없이 전치사구만 이어지므로 수동 are displayed 가 옳습니다.",
+        "allow 는 목적격보어로 to부정사를 가지는 동사입니다. 방문객은 허락을 받는 쪽이고 수동 뒤에 남은 to touch 는 보어이므로 옳습니다.",
+        "동사 뒤에 목적어 them 이 그대로 남아 있습니다. 장인들은 만드는 주체이므로 능동 shaped 가 옳습니다."
+      ],
+      "ko": "마을 어른들이 오래전에 새긴 그 가면들은 본관 전시실에 전시되어 있으며, 그곳에서 방문객들은 복제품 몇 점을 만져 볼 수 있고, 안내인은 장인들이 수백 년 전에 그것들을 어떻게 빚었는지 설명합니다."
+    },
+    {
+      "id": "b23",
+      "type": "EXAM",
+      "tier": 3,
+      "scenes": [
+        {
+          "scope": "SCHOOL",
+          "how": "내신 서술형에서는 관계절이 낀 문장을 주고 괄호 안의 동사를 어법에 맞는 형태로 바꿔 쓰게 합니다. 관계절 안에 빠진 목적어 자리가 있는지 지적하고 능동으로 써야 만점입니다.",
+          "sample": {
+            "en": "The photographs that the reporter (take) in the mountains won an international prize.",
+            "ask": "괄호 안의 동사를 어법에 맞는 형태로 바꿔 쓰십시오.",
+            "answer": "took — that 뒤에 주어 the reporter 가 있는 목적격 관계절이고 빈자리는 선행사 The photographs 가 빠져나간 목적어 자리이므로 능동 과거형 took 이 옳습니다."
+          }
+        },
+        {
+          "scope": "CSAT",
+          "how": "수능 어법 문항에서는 목적격 관계절의 동사에 밑줄을 긋고 be+p.p. 를 넣어 둡니다. 관계사 뒤에 주어가 따로 있다면 그 절에는 빠진 목적어 자리가 있으므로 그 수동태가 오류입니다.",
+          "sample": {
+            "en": "The strategies that the coach [[u:was adopted]] during the final season changed the team's reputation.",
+            "ask": "밑줄 친 부분이 어법상 옳습니까?",
+            "answer": "adopted — 관계사 뒤에 주어 the coach 가 따로 있으므로 목적격 관계절이며, 빈자리는 선행사가 빠져나간 목적어 자리이므로 능동이어야 합니다."
+          }
+        }
+      ]
+    },
+    {
+      "id": "b24",
+      "type": "TRANSFER",
+      "tier": 3,
+      "title": "지문 속에서 찾아봅니다",
+      "passage": "Museums today rely on more than glass cases. [[u:The tools that ancient farmers used in these valleys tell us how people fed themselves.]] Visitors handle replicas in a workshop, and children build small models of their own. The original objects are kept behind glass.",
+      "instruction": "밑줄 친 문장에서 관계절의 동사와 주절의 본동사를 찾고, 각각이 왜 능동인지 목적어 자리를 근거로 설명하십시오.",
+      "found": "관계절의 동사 used 는 뒤가 비어 보이지만, 그 자리는 선행사 The tools 가 빠져나간 목적어 자리이므로 능동입니다. 주절의 본동사 tell 은 뒤에 us 와 의문사절 how people fed themselves 를 목적어로 거느리고 있으므로 능동입니다.",
+      "gist": "고대 농부들이 쓰던 도구가 당시 사람들의 생활을 알려 준다는 내용입니다."
+    },
+    {
+      "id": "b25",
+      "type": "BOSS",
+      "tier": 2,
+      "bossName": "목적어 자리의 세관원",
+      "intro": "이 국경에서는 동사마다 목적어가 제자리에 있는지, 앞으로 빠져나갔는지, 아예 없는지를 검사합니다. 빈자리만 보고 성급히 수동 도장을 찍으면 통과할 수 없습니다. 네 건의 문장으로 증명하십시오.",
+      "questions": [
+        {
+          "prompt": "The committee {{blank}} the annual budget without any changes.",
+          "options": ["approved", "was approved"],
+          "answer": 0,
+          "why": "동사 뒤에 목적어 the annual budget 이 그대로 남아 있으므로 능동 approved 가 옳습니다."
+        },
+        {
+          "prompt": "The house that the architect {{blank}} overlooks the whole bay.",
+          "options": ["designed", "was designed"],
+          "answer": 0,
+          "why": "that 뒤에 주어 the architect 가 따로 있는 목적격 관계절입니다. 빈자리는 선행사 The house 가 빠져나간 목적어 자리이므로 능동 designed 가 옳습니다."
+        },
+        {
+          "prompt": "The ancient scrolls {{blank}} in a sealed jar for two thousand years.",
+          "options": ["were kept", "kept"],
+          "answer": 0,
+          "why": "두루마리는 보관되는 대상이고 동사 뒤에 목적어 없이 전치사구만 이어지므로 수동 were kept 가 옳습니다."
+        },
+        {
+          "prompt": "The study {{blank}} why the population declined so sharply.",
+          "options": ["explains", "is explained"],
+          "answer": 0,
+          "why": "의문사절 why the population declined so sharply 가 목적어이므로 능동 explains 가 옳습니다."
+        }
+      ],
+      "winText": "네 건 모두 통과 도장을 받았습니다. 빈자리를 보고도 '누가 빠져나갔는가'를 먼저 묻는 눈 — 그것이 태 판별의 핵심이고, 방금 당신의 것이 되었습니다.",
+      "loseText": "세관원이 서류를 돌려줍니다. 네 문장이 물은 것은 하나였습니다 — '동사 뒤 빈자리는 목적어가 없는 것인가, 앞으로 빠진 것인가.' 목적어 검사 4단계를 다시 짚고 오면 도장은 그대로 기다립니다."
+    },
+    {
+      "id": "b26",
+      "type": "NOTE",
+      "tier": 2,
+      "prompt": "이 개념을 내 말로 한 문장으로 적어 두십시오. 선생님이 이 필기를 확인합니다.",
+      "scaffold": "동사 뒤에 목적어가 남아 있으면 ___이고, 목적어가 안 보이더라도 관계사 뒤에 주어가 따로 있으면 그 빈자리는 ___가 빠진 자리이므로 ___을 유지합니다."
+    },
+    {
+      "id": "b27",
+      "type": "SUMMARY",
+      "tier": 2,
+      "bullets": [
+        "목적어를 하나 가지는 타동사는, 동사 뒤에 목적어가 남아 있으면 능동입니다.",
+        "명사구뿐 아니라 that절·의문사절·to부정사구·동명사구도 목적어입니다. 이런 성분이 뒤에 있으면 능동입니다.",
+        "목적격 관계절에서는 목적어가 선행사 자리로 빠집니다. 동사 뒤가 비어 있어도 능동을 유지합니다.",
+        "관계사 뒤에 주어가 따로 있으면 그 절은 목적격 관계절입니다. 관계사가 생략되어 명사가 둘 붙어 보일 때도 마찬가지입니다.",
+        "give·make 류처럼 목적어를 둘 가지거나 목적격보어를 가지는 동사는 수동 뒤에도 명사가 남을 수 있습니다."
+      ],
+      "keySentence": {
+        "en": "The instruments that the museum **restored** last year **attract** many visitors.",
+        "ko": "그 박물관이 지난해 복원한 그 악기들은 많은 방문객을 끌어들입니다.",
+        "note": "restored 는 목적어가 앞으로 빠져서, attract 는 목적어가 뒤에 남아서 둘 다 능동입니다."
+      }
+    },
+    {
+      "id": "b28",
+      "type": "RECAP",
+      "tier": 2,
+      "items": [
+        {
+          "id": "u03-c2-ls-004",
+          "type": "CHOICE",
+          "difficulty": 2,
+          "stem": "The questions that the reporter {{blank}} at the press conference made the mayor uncomfortable.",
+          "options": ["asked", "were asked"],
+          "answer": 0,
+          "translation": "그 기자가 기자회견에서 던진 그 질문들은 시장을 불편하게 만들었습니다.",
+          "explanation": "that 뒤에 주어 the reporter 가 따로 있으므로 목적격 관계절이고, 빈칸 뒤의 빈자리는 선행사 The questions 가 빠져나간 목적어 자리입니다. 따라서 능동 asked 가 옳습니다.",
+          "trapTags": ["relative-clause", "object-gap"]
+        },
+        {
+          "id": "u03-c2-ls-005",
+          "type": "OX",
+          "difficulty": 3,
+          "sentence": "The data that the committee reviewed [[u:were published]] in a public report last spring.",
+          "isCorrect": true,
+          "translation": "그 위원회가 검토한 그 자료는 지난봄 공개 보고서로 발표되었습니다.",
+          "explanation": "관계절의 동사 reviewed 는 목적어가 선행사로 빠진 능동입니다. 밑줄은 주절의 본동사이고, 핵 주어 The data 는 발표되는 대상이며 뒤에 목적어 없이 전치사구만 이어지므로 수동 were published 가 옳습니다.",
+          "trapTags": ["relative-clause", "object-test"]
+        },
+        {
+          "id": "u03-c2-ls-006",
+          "type": "CHOICE",
+          "difficulty": 3,
+          "stem": "The village elders explained how the ancient canals {{blank}} water to the distant fields for centuries.",
+          "options": ["carried", "were carried", "carrying"],
+          "answer": 0,
+          "translation": "마을 어른들은 그 고대 수로가 수백 년 동안 어떻게 먼 밭까지 물을 실어 날랐는지 설명했습니다.",
+          "explanation": "빈칸 뒤에 목적어 water 가 그대로 남아 있습니다. 수동태 뒤에는 이 목적어가 남을 수 없고 수로가 물을 나르는 주체이므로 능동 carried 가 옳습니다. carrying 은 시제가 없어 의문사절의 본동사가 되지 못합니다.",
+          "trapTags": ["object-test", "passive-with-object"]
+        }
+      ]
+    }
+  ]
+}

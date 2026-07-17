@@ -1,0 +1,9 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "README.md": "7b32daaee760fc555a8350c289867e46eaae1a682240563d2ec447cbd6aecb34",
+    "finalize-manifest.mjs": "e60470533ff967f8c40d0c67c2019591be8a037d8096d16037a484905eb36e0b",
+    "summary.json": "fe932abd89dd5c7d7d0fa372c5d600f253fddc775bc0bc5df872d9826e817d74",
+    "verify.mjs": "043d3de795a557c74f933aeba1afaf4c7321614225ed9665a7fb3374becf9d60"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "pid": "P036",
+  "finalV2": true,
+  "winningAnswer": "(B)",
+  "reason": "독립 재검증 결과 (B)가 유일한 어법 오류다. that절 내부에서 절 전체에 작용역을 갖는 초점 부사어 'only through music'이 절두로 전치되면 주어-조동사 도치가 의무적이며(내포절에도 동일 적용), 비도치 어순 'we are'는 표준 영문법상 비문이다. 교정형 'are we'는 원지문과 정확히 일치하는 최소대립쌍이다. 나머지 네 밑줄 (A) 보어 형용사, (C) 구/행위 선행사를 받는 전치사+관계대명사(뒤 완전절), (D) 주격 관계대명사, (E) 전치사 목적어 자리 대격 의미상 주어+동명사는 모두 대안 독법까지 검토해도 적법하다. 솔버 1·2의 판정에 과잉 판정이나 누락된 대안 해석은 발견되지 않았고, 감사자 V2=true 판정도 타당하다. 정답 단일 — (B).",
+  "perDispute": [
+    {
+      "label": "(A)",
+      "claim": "identical이 어법 오류인가 (부사형 identically가 필요한가)",
+      "verdict": "오류 아님 — 정문",
+      "evidence": "'no two performances are identical'에서 identical은 계사 are의 주격 보어이므로 형용사가 필수다. 부사가 요구되는 통사 환경이 아니며 어떤 독법으로도 오류가 성립하지 않는다."
+    },
+    {
+      "label": "(B)",
+      "claim": "선언된 정답 — 'only through music we are'의 비도치 어순이 비문인가",
+      "verdict": "오류 맞음 — 유일 정답 확정",
+      "evidence": "초점 부사어 'only+전치사구'가 절두로 전치되고 절 전체에 작용역을 가지면 주어-조동사 도치가 의무적이다: 'only through music ARE WE able to realize the present.' 이 규칙은 pointed out의 목적어 that절 내부에서도 동일하게 적용된다. only가 주어를 수식하는 도치 면제 사례가 아니고, 부사구가 절두가 아니라고 볼 여지도 없어 'we are'를 정문으로 구제하는 대안 해석은 존재하지 않는다. 원지문이 'are we'로 도치되어 있어 source-correct → displayed-wrong 최소대립쌍이 성립한다."
+    },
+    {
+      "label": "(C)",
+      "claim": "without which가 오류인가 (선행사가 명사가 아닌 동명사구라 관계사 성립이 의심됨) — 최강 디코이",
+      "verdict": "오류 아님 — 정문",
+      "evidence": "which의 선행사는 행위/구 선행사 'making it present here and now'(음악의 현전화)이며, which가 구/절 단위 선행사를 취하는 비제한 관계절은 정규 문법이다. 뒤따르는 절 'it will not be music at all'이 완전하므로 전치사+관계대명사 형태가 요구되는 자리이고, 복원 검사 'without making it present here and now, it will not be music at all'도 논리적으로 성립한다. 원지문에도 동일 형태로 존재한다."
+    },
+    {
+      "label": "(D)",
+      "claim": "주격 관계대명사 that이 오류인가 (that/what 혼동 유도)",
+      "verdict": "오류 아님 — 정문",
+      "evidence": "선행사 activities가 존재하고 that이 관계절 동사 will involve의 주어 공백을 채운다. 이중 주어 없음, 콤마 없는 제한적 용법으로 that 적법. 즉시 소거 가능한 약한 디코이."
+    },
+    {
+      "label": "(E)",
+      "claim": "absorbing이 오류인가 (수동 absorbed 또는 소유격 pupils' 요구 주장)",
+      "verdict": "오류 아님 — 정문",
+      "evidence": "'on pupils absorbing factual information'은 전치사 on의 목적어인 동명사에 대격 의미상 주어 pupils가 결합한 표준 acc-ing 구성이다. 목적어 factual information을 직접 취하므로 능동형이 필수이고, 명사+현재분사 후치수식으로 분석해도 정문이다. 소유격 동명사(pupils')는 문체적 선호일 뿐 대격형을 비문으로 만들지 못한다."
+    }
+  ]
+}

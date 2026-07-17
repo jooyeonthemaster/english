@@ -1,0 +1,161 @@
+{
+  "passageId": "ebsi_go1_20150311-q19",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2015,
+    "exam": "3월",
+    "origType": "주장",
+    "words": 112
+  },
+  "attempts": 5,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=d  (B):dec=a  (C):dec=h  (D):dec=g  (E):ANS=f",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 12,
+        "relPos": 0.019,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 70,
+        "relPos": 0.113,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 236,
+        "relPos": 0.38,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 344,
+        "relPos": 0.554,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": true,
+        "charPos": 453,
+        "relPos": 0.729,
+        "sentenceIndex": 4,
+        "found": true
+      }
+    ],
+    "sentenceCount": 6,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.729,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "Some people need money more than we do. For example, some people have lost their homes due to natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family to donate money to a charity instead of buying us presents. I know that some kids might not want to give up their birthday presents, and I understand. However, remember that we can live without new toys or games more easily than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "need",
+        "isError": false,
+        "correction": "need",
+        "errorExpression": "need",
+        "surroundingText": "Some people need money more than we do.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(B)",
+        "expression": "lost",
+        "isError": false,
+        "correction": "lost",
+        "errorExpression": "lost",
+        "surroundingText": "For example, some people have lost their homes due to natural disasters or war",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "to donate",
+        "isError": false,
+        "correction": "to donate",
+        "errorExpression": "to donate",
+        "surroundingText": "let's tell our friends and family to donate money to a charity instead of buying us presents.",
+        "pointCode": "h"
+      },
+      {
+        "label": "(D)",
+        "expression": "their",
+        "isError": false,
+        "correction": "their",
+        "errorExpression": "their",
+        "surroundingText": "I know that some kids might not want to give up their birthday presents",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "easily",
+        "isError": true,
+        "correction": "easily",
+        "errorExpression": "easy",
+        "surroundingText": "However, remember that we can live without new toys or games more easily than someone can live without food, clothing, or shelter.",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "need"
+      },
+      {
+        "label": "(B)",
+        "text": "lost"
+      },
+      {
+        "label": "(C)",
+        "text": "to donate"
+      },
+      {
+        "label": "(D)",
+        "text": "their"
+      },
+      {
+        "label": "(E)",
+        "text": "easy"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어인 복수 명사 Some people에 호응하는 복수 동사 형태로 쓰인 need는 어법상 자연스럽습니다.",
+      "(B)": "조동사 have 뒤에 과거분사 형태로 결합하여 현재완료 시제(have lost)를 이루고 있으며, 문맥상 과거의 분실이나 유실 상태가 현재까지 영향을 미침을 나타내므로 올바른 동사 형태입니다.",
+      "(C)": "5형식 동사 tell은 목적격보어 자리에 to부정사를 취하므로, 'tell our friends and family' 뒤에 이어진 to donate는 어법상 적절합니다.",
+      "(D)": "앞에 언급된 복수 명사 some kids를 가리키는 소유격 인칭대명사로 used로서 standard English에서 지시 대상의 수와 성에 맞게 올바르게 사용되었습니다."
+    },
+    "explanation": "remember 뒤에 명사절을 이끄는 접속사 that이 생략되지 않고 이어지고 있으며, 그 뒤의 절에서 'more easy'는 동사구 'live without new toys or games'를 수식해야 하는 자리입니다. 1형식 완전자동사인 live를 문장 구조상 수식하기 위해서는 형용사인 easy가 아닌 부사 형태가 와야 합니다. 따라서 easy를 부사인 easily로 고쳐야 올바른 문장이 됩니다.",
+    "keyPoints": [
+      "(E) 형용사 vs 부사 — 완전자동사를 수식하는 부사 자리 판정",
+      "(A) 주어-동사 수일치 — 복수 명사 주어에 따른 동사의 수일치 확인",
+      "(D) 대명사의 일치 — 복수 대상 지칭에 따른 소유격 대명사 판단"
+    ],
+    "tags": [
+      "형용사부사",
+      "수일치",
+      "대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "Some people __(A) need__ money more than we do. For example, some people have __(B) lost__ their homes due to natural disasters or war, while others don't have enough food or clothing. So this year, for our birthdays, let's tell our friends and family __(C) to donate__ money to a charity instead of buying us presents. I know that some kids might not want to give up __(D) their__ birthday presents, and I understand. However, remember that we can live without new toys or games more __(E) easy__ than someone can live without food, clothing, or shelter. So, we should tell our friends and family that, for our birthdays this year, we want to give to others."
+  }
+}

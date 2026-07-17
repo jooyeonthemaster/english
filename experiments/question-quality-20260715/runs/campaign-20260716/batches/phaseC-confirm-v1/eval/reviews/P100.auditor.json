@@ -1,0 +1,66 @@
+{
+  "pid": "P100",
+  "blindAnswer": "1",
+  "confidence": "high",
+  "alternativeAnswers": [],
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "1",
+      "intent": "정답 — 원문 span 'commit to having no random breaks'의 의미 보존 패러프레이즈(random breaks → unscheduled pauses, commit → pledge, having no → eliminate any)",
+      "temptingBecause": "지문 핵심어 'unscheduled'와 직접 어휘 중첩이 있어 논지를 이해한 학생에게 필연적으로 선택된다",
+      "decisiveFlaw": "해당 없음(정답). 빈칸 삽입 시 'pledge to eliminate any unscheduled pauses instead'로 문법·의미 모두 성립하며 원문과 정확히 동치"
+    },
+    {
+      "label": "2",
+      "intent": "극성 반전(polarity reversal) — 주제와 정반대 행동 제시",
+      "temptingBecause": "'breaks are necessary'라는 도입부만 읽은 학생이 휴식 자체를 긍정하는 방향으로 오독할 수 있다",
+      "decisiveFlaw": "'unscheduled breaks derail you'·'commit to having no random breaks'와 정면 충돌. 계획 없는 휴식은 지문이 명시적으로 금지하는 대상이라 즉시 소거 가능"
+    },
+    {
+      "label": "3",
+      "intent": "소재 연상(detail association) — 지문의 커피 예시를 처방으로 격상",
+      "temptingBecause": "'getting a cup of coffee to keep yourself alert'가 지문에 실제로 등장해 표면 매칭이 강하다",
+      "decisiveFlaw": "커피는 'you're just trying to avoid having to work'라는 자기합리화(핑계)의 예시로 비판된 소재이지 권고가 아니다. 문맥 극성이 반대"
+    },
+    {
+      "label": "4",
+      "intent": "과확장(scope shift) — 금지 대상을 unscheduled에서 scheduled로 확장",
+      "temptingBecause": "'휴식을 없애라'는 결론 방향 자체는 맞고 'scheduled'라는 지문 핵심어를 포함해 대조 구조를 덜 파악한 학생에게 매력적",
+      "decisiveFlaw": "지문은 'Breaks are necessary'·'you should already have scheduled breaks'로 예정된 휴식을 명시적으로 옹호한다. 없앨 대상은 unscheduled 쪽만이다"
+    },
+    {
+      "label": "5",
+      "intent": "과협소(over-literal narrowing) — 책상 언급을 물리적 착석 의무로 곡해",
+      "temptingBecause": "'work on a task at your desk'라는 지문 세부와 연결되고 '미루지 말라'는 방향성도 일치한다",
+      "decisiveFlaw": "'constantly'가 지문이 필요하다고 인정한 scheduled breaks와 모순되며, 지문의 처방은 착석이 아니라 무계획 휴식 제거다"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": {
+    "V1": "렌더 지문은 원지문에서 결론절 'commit to having no random breaks'만 빈칸으로 치환했고 나머지는 문자 단위로 동일. 문장 접합 파손·중복·누락·고아 문장부호 없음. 선지 라벨 1~5와 선언 정답 1이 본문과 일치.",
+    "V2": "5개 선지 전부 독립 검증. 모두 명령문 동사구로 동일 통사 슬롯에 삽입 가능하나 논리적으로는 1만 성립: 2는 극성 반전, 3은 비판된 예시의 처방화, 4는 지문이 옹호한 scheduled breaks 취소, 5는 scheduled breaks와 모순되는 'constantly'. 단일 정답 확정.",
+    "V3": "지문·발문 문법적. 완성문 'So to prevent procrastination, pledge to eliminate any unscheduled pauses instead.'는 seam 없이 자연스럽고 'instead'(무계획 휴식 대신)도 정합. 비단어·오탈자 없음.",
+    "V4": "해설의 구조 분석(결론부 수렴, scheduled vs unscheduled 대조, 커피=핑계)이 실제 지문과 일치. 오답 해설 4건 모두 해당 선지의 실제 내용·함정 유형과 대응. 용어 오류·환각 없음.",
+    "V5": "정답 라벨(1)·선지 텍스트·해설 인용('pledge to eliminate any unscheduled pauses')·오답 해설 키(2~5)·keyPoints 3건이 상호 모순 없이 동기화.",
+    "craftRationale": "C1=3: 결론부 논지 수렴 지점을 묻는 유의미한 표적이나 가장 정형적인 빈칸 위치. C2=3: 4개 오답이 서로 다른 함정(극성 반전/소재 연상/과확장/과협소)을 겨냥하지만 2번은 사실상 random opposite에 가까워 의도 밀도가 낮음. C3=3: 1 vs 4(scheduled/unscheduled 구분), 3·5(합리화 문장 독해)에서 실제 판단이 발생하나 2는 즉시 소거되고 정답이 지문 핵심어 'unscheduled'를 그대로 포함해 어휘 매칭 지름길 존재. C4=3: 길이·극성 단서 누출은 없고 근거는 충분하나 'unscheduled' 표면 중첩이 약한 누출. C5=3: INTERMEDIATE 요청에 부합 — 핵심 대조 1개 파악으로 해결되는 중급 적정 난이도, 다만 중급 하단에 가까움. C6=3: 해설이 정확하고 함정 유형을 명명해 분리하나 다소 장황.",
+    "summary": "V1~V5 전부 통과, 합계 18점(전 항목 3점) → B. 출하 가능하나 A 승격에는 (1) 2번 선지를 단순 반대가 아닌 half-truth형으로 교체, (2) 정답 선지의 'unscheduled' 직접 재사용을 더 추상적인 패러프레이즈로 완화하는 소수정이 필요."
+  }
+}

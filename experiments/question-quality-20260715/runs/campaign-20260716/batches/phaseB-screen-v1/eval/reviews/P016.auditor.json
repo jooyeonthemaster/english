@@ -1,0 +1,69 @@
+{
+  "pid": "P016",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V3-minor-distractor-idiom",
+      "severity": "minor",
+      "evidence": "선지 ⑤ 'Suppression of difference in opinions'는 관용상 'differences of opinion'이 표준이어서 다소 어색하다. 오답 선지의 표기 문제일 뿐 지문·정답 완성문에는 영향이 없어 V3 실패로 보지 않음."
+    },
+    {
+      "code": "V4-minor-overgeneralization",
+      "severity": "minor",
+      "evidence": "본해설이 ①②⑤를 일괄 '글의 방향과 정반대'로 묶었으나 ②는 표현(expression) 자체는 지문이 권장하는 바이고 수식어 'Uncompromising'만 논지와 충돌한다. 오답해설 ②가 이 뉘앙스를 정확히 보정하고 있어 사실성 실패는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "갈등 '해결'을 갈등 '회피'로 바꾼 극성/방향 반전 함정",
+      "temptingBecause": "지문 키워드 'conflict', 'emotional'을 재조합하여 갈등 상황 문맥과 표면적으로 어울린다",
+      "decisiveFlaw": "빈칸 뒤 tail 'promotes constructive conflict resolution'과 내적으로 모순 — 회피는 건설적 해결·열린 소통을 만들 수 없고, 지문은 감정을 표현하고 관점을 취하라고 요구한다"
+    },
+    {
+      "label": "②",
+      "intent": "지문이 권장하는 '감정 표현'에 반논지 수식어를 붙인 half-truth 함정",
+      "temptingBecause": "'express emotions, feelings and moods'라는 지문 핵심 표현과 직접 겹친다",
+      "decisiveFlaw": "'Uncompromising(타협 없는)'이 'accommodate the needs of others (i.e. cooperate)' 및 역지사지(take the perspective) 논지와 정면 충돌한다"
+    },
+    {
+      "label": "③",
+      "intent": "정답 — 원문 'Appreciation of differences'의 의미 보존 재진술",
+      "temptingBecause": "해당 없음(정답)",
+      "decisiveFlaw": "없음. 직전 문장 'take the perspective of the other group members'와 유기적으로 연결되며 tail의 긍정적 결과(열린 소통·건설적 갈등 해결)와 정합"
+    },
+    {
+      "label": "④",
+      "intent": "첫 문장의 지엽 소재(감정 어휘)로 범위를 좁힌 scope shift 함정",
+      "temptingBecause": "'understand emotions', 'diverse emotion vocabulary' 등 도입부 핵심 어휘를 그대로 노출하고, 지문이 어휘력→명확한 소통을 실제로 언급한다",
+      "decisiveFlaw": "결론문은 갈등 예시·관점 취하기 논의를 일반화하는 자리인데 어휘력 자체가 갈등 해결과 집단 기능 개선을 만든다는 인과는 지문이 주장한 바가 아니며 범위가 지나치게 협소하다"
+    },
+    {
+      "label": "⑤",
+      "intent": "'differences' 키워드에 반대 극성 명사를 결합한 polarity reversal 함정",
+      "temptingBecause": "원문 빈칸 자리의 실제 키워드 'differences'를 포함해 표면 일치도가 높다",
+      "decisiveFlaw": "차이의 '억제(Suppression)'는 차이의 '존중(Appreciation)'과 정반대 극성이고, 열린 소통의 장을 만든다는 tail과 논리적으로 모순된다"
+    }
+  ],
+  "explanationIssues": [
+    "본해설이 ①②⑤를 '정반대' 함정으로 일괄 서술한 것은 ②에 대해 다소 과잉 일반화(오답해설에서 보정됨) — minor",
+    "본해설이 다소 장황하나 anchor 문장, 원문 span(Appreciation of differences), tail 근거를 모두 정확히 인용함"
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 렌더 지문은 원지문에서 결론문 주어구 'Appreciation of differences'만 빈칸 처리한 것 외에 전 문장·문장부호(― 포함)가 원문과 동일하며 라벨·마커 정합. V2: 5개 선지를 각각 빈칸에 대입해 독립 검증한 결과 정답은 ③으로 유일 — ①⑤는 tail과의 극성 모순, ②는 'Uncompromising'과 협력 논지 충돌, ④는 결론문 일반화 자리에 부적합한 지엽적 인과로 각각 탈락. V3: 다섯 선지 모두 동일 통사 슬롯(단수 취급 명사구 주어 + creates)에 문법적으로 들어가 문법만으로 탈락하는 선지가 없고 ③ 완성문이 자연스러움(⑤의 'difference in opinions'만 관용상 미세하게 어색). V4: 해설의 인용·구조 분석이 실제 지문과 일치하고 각 오답 해설이 해당 선지 내용과 정확히 대응. V5: 정답 라벨·선지·해설·오답해설(4개 전부)·keyPoints 동기화. 공예: 결론 명제를 묻는 정당한 표적(C1=3)이나, 오답 3개(①②⑤)가 극성 반전 계열로 기제가 겹치고 빈칸 뒤 긍정 극성 tail 하나로 빠르게 소거되어 실질 경합이 ③ vs ④로 좁혀짐(C3=2, C4=3). 요청 난이도 INTERMEDIATE에는 1단계 재진술 + 강한 소재 함정 1개 구성이 대체로 부합(C5=3). 합계 17, 전 V 통과, 최저 C=2 → B. KILLER 아님 → killerConditionsMet=false. 개선 제안: ① 또는 ⑤ 중 하나를 극성은 긍정이되 scope/인과가 어긋나는 함정(예: causal reversal)으로 교체하면 C3 상승 여지."
+}

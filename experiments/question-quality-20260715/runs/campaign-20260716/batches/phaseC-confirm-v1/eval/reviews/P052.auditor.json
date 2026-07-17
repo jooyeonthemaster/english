@@ -1,0 +1,82 @@
+{
+  "pid": "P052",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityEvidence": {
+    "V1": "Rendered passage is identical to the source except the intended blank replacing the span 'find another way to think about the timeframe' inside 'What you need to do in that situation is ___.' Sentence-final period preserved, no duplicated/missing sentences, no orphan punctuation, no typos introduced. Labels ①-⑤ present and the declared answer label ① exists.",
+    "V2": "All five options are bare-infinitive VPs fitting the pseudo-cleft slot after 'is'; elimination is purely logical. Independent solve: ① is uniquely supported by the following example ('this winter' rather than 'next year') and the conclusion ('a challenge that you have to meet within a period that's imminent'). ② contradicts keeping deadlines as challenges; ③ treats the break (stated as the cause of perceived remoteness) as a planning anchor; ④ reverses polarity (pushing the deadline beyond the break is what creates remoteness); ⑤ reverses causal order (manageable stress is the result of reframing and prompt action, not a precondition to wait for). Exactly one correct answer.",
+    "V3": "Completed sentence 'What you need to do in that situation is find another way to think about the timeframe.' is a grammatical pseudo-cleft with bare infinitive. Stem is standard. No blank-seam ungrammaticality, no non-words, no typos. All distractors are grammatical in the slot, which matches BLANK_INFERENCE type intent.",
+    "V4": "Both quoted spans in the explanation ('tell yourself you have to get it done \"this winter\" rather than \"next year.\"' and 'view deadlines as a challenge that you have to meet within a period that's imminent.') appear verbatim in the passage. The ④ trap analysis (pushing the deadline further away worsens procrastination) matches ④'s actual content, and the ⑤ analysis correctly states the passage's causal order ('That way the stress is more manageable'). Minor gloss imprecision: 해설 writes \"장벽(break)\" (barrier) though 'break' means a temporal unit boundary; the 해설 immediately adds '단절', so it is a wording blemish, not a structural misanalysis.",
+    "V5": "Declared answer ①, main explanation argues for ①, distractor-explanation keys ②-⑤ each correspond to their option's actual content, keyPoints (break up time into units / reframe / imminent) align with the passage and the answer rationale. No contradictions."
+  },
+  "validityIssues": [
+    {
+      "code": "V4-MINOR-GLOSS",
+      "severity": "minor",
+      "evidence": "해설 first sentence glosses 'break' as \"장벽(break)\" (barrier); the word means a temporal boundary/단절 in this passage. The 해설 does append '단절' right after, so the analysis itself is not wrong, but the double gloss '장벽(break) 단절 너머' reads awkwardly and could momentarily mislead a student on the metaphor."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "craftRationale": {
+    "C1": "Blank sits on the topic-solution sentence — the rhetorical pivot that the example and 'best approach' sentence then unpack. Meaningful core point, though the answer being the verbatim source span (no abstraction) keeps it short of maximal craft.",
+    "C2": "Each distractor targets a distinct misreading: ② absolute overextension/condition loss, ③ surface-anchor lure (New Year), ④ directional/polarity reversal, ⑤ causal-order half-truth with verbatim lexical overlap. Deliberate design, but ②'s temptation is weak (throwaway extreme).",
+    "C3": "④ and ⑤ force genuine multi-sentence judgment (break psychology; stress causality). ② is quickly eliminated by its absolute wording and ③ by recalling the break's role, so competitiveness is real but uneven.",
+    "C4": "Sufficient basis exists (example + 'imminent' conclusion) and the answer is necessary. Mild leak: ① is the only 'perception/thinking' option among four 'action' options, and ②'s 'all ... completely' flags itself.",
+    "C5": "INTERMEDIATE requested. Two-step inference (connect example and conclusion back to the blank) with a verbatim-span answer is well matched to intermediate; would be too easy for ADVANCED/KILLER.",
+    "C6": "Explanation is accurate, cites the two decisive evidence spans, and singles out the key trap ④. Slightly wordy and the 장벽 gloss is imprecise, keeping it below elegant."
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "correct answer — verbatim source span stating the solution (reframe the timeframe)",
+      "temptingBecause": "directly cashed out by the following example ('this winter' vs 'next year') and the 'period that's imminent' conclusion",
+      "decisiveFlaw": "none — it is the declared and verified answer"
+    },
+    {
+      "label": "②",
+      "intent": "absolute overextension / condition loss (remove deadlines instead of reframing them)",
+      "temptingBecause": "the passage frames deadlines and time units as the source of the procrastination problem, inviting 'just remove the pressure'",
+      "decisiveFlaw": "text explicitly keeps deadlines — 'view deadlines as a challenge that you have to meet' — only the perception of the timeframe changes; 'all ... completely' contradicts this"
+    },
+    {
+      "label": "③",
+      "intent": "surface-anchor lure misusing a verbatim passage detail (New Year)",
+      "temptingBecause": "'New Year' appears verbatim in the passage and the example is set across the New Year",
+      "decisiveFlaw": "the New Year break is cited as the cause of perceiving the deadline as remote; the advice is to reframe across the break ('this winter'), not to organize plans around the break"
+    },
+    {
+      "label": "④",
+      "intent": "directional/polarity reversal of the break psychology",
+      "temptingBecause": "reuses 'deadline' plus a barrier concept echoing the passage's 'break', sounding like sophisticated mental management",
+      "decisiveFlaw": "pushing the deadline beyond the mental barrier is precisely what makes it feel remote and delays action — the opposite of making the period imminent"
+    },
+    {
+      "label": "⑤",
+      "intent": "causal-order reversal / half-truth using verbatim overlap",
+      "temptingBecause": "'the stress is more manageable' appears almost verbatim in the final sentence",
+      "decisiveFlaw": "manageable stress is the consequence of reframing and starting promptly ('That way the stress is more manageable'), not a precondition; waiting contradicts 'jump into action' and 'starting ... in good time'"
+    }
+  ],
+  "explanationIssues": [
+    {
+      "code": "GLOSS-IMPRECISION",
+      "severity": "minor",
+      "evidence": "\"시간 단위의 '장벽(break)' 단절 너머\" — 'break' glossed as 장벽(barrier) before 단절; awkward double gloss, though the subsequent analysis is factually correct."
+    }
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "All validity gates pass. Blind solve yields ① uniquely; all options share the same syntactic slot so no suffix-based grammatical elimination. Craft sum 18 with minimum 3: solid intermediate item whose distractors have distinct anchors and flaws, but the verbatim source-span answer, the weak ② decoy, and the thinking-vs-action asymmetry of ① keep it below A (needs sum ≥ 21). Requested difficulty is INTERMEDIATE, so §D KILLER conditions do not apply (killerConditionsMet=false). Recommended touch-ups if promoted: abstract the correct answer slightly away from the verbatim span, strengthen ② into a subtler condition-loss trap, and fix the 장벽(break) gloss in the 해설."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P064",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A) seen",
+      "verdict": "correct",
+      "reason": "'imaginary characters and events of a kind and magnitude not __seen__ before'에서 seen은 축약 관계절(= a kind and magnitude that has not been seen before)의 과거분사. 피수식 명사 'a kind and magnitude'는 see의 대상이므로 수동 관계가 성립하고, 'not + 과거분사 + before'는 정문. seeing(능동)으로 바꾸면 오히려 비문이 된다. 어법상 옳음."
+    },
+    {
+      "label": "(B) involves",
+      "verdict": "incorrect",
+      "reason": "진짜 주어는 'All forms of art'로, 핵명사 forms가 복수. 삽입구 'including cave drawings made by our Stone Age ancestors'는 전치사구 수식어일 뿐 주어의 수에 영향을 주지 않는다. 따라서 단수 동사 involves는 주어-동사 수일치 위반이며 involve가 되어야 한다. 'All forms of art'를 단수 집합으로 재해석해 involves를 정당화할 수 있는 표준 문법 규칙은 존재하지 않는다(all + 복수명사 → 복수 취급). 어법상 틀림 — 정답."
+    },
+    {
+      "label": "(C) What",
+      "verdict": "correct",
+      "reason": "'__What__ is new about cyberspace is its interactive nature'에서 What은 선행사를 포함한 자유 관계대명사로 주어 명사절 'What is new about cyberspace'를 이끈다. 절 내부에서 What이 주어 역할(불완전한 절)을 하므로 성립. That으로 바꾸면 뒤 절이 불완전해 비문. 어법상 옳음."
+    },
+    {
+      "label": "(D) where",
+      "verdict": "correct",
+      "reason": "'It is a space __where__ real people have actual interactions with other real people'에서 선행사는 장소 명사 space이고, 뒤따르는 절 'real people have actual interactions...'는 주어·목적어가 모두 갖춰진 완전한 절이므로 관계부사 where(= in which)가 정확하다. which였다면 절 내 공백이 필요해 비문. 어법상 옳음."
+    },
+    {
+      "label": "(E) being",
+      "verdict": "correct",
+      "reason": "'while __being__ able to shape...'는 접속사를 남긴 분사구문(while + V-ing). 의미상 주어는 주절 주어 'real people'로 일치하며(real people ... while they are able to shape...), 능동·상태 의미이므로 being이 적절. 'while able to'로의 생략도 가능하지만 being을 남긴 형태 역시 완전한 정문이다. 어법상 옳음."
+    }
+  ],
+  "note": "명백한 단일 정답 문항. (B)는 장거리 수일치 함정(주어 'All forms of art'와 동사 사이에 including 삽입구 배치)으로 설계된 전형적 오류 지점이며, 나머지 네 밑줄은 각각 축약 관계절 과거분사(A), 자유 관계대명사(C), 완전절 앞 관계부사(D), 접속사 잔류 분사구문(E)으로 모두 형식적으로 정문임을 확인했다. 대안 해석(집합명사 단수 취급 등)으로 (B)를 정문화할 여지는 없다."
+}

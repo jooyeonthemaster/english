@@ -1,0 +1,35 @@
+{
+  "pid": "P009",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "감정 억제는 지문과 정면 모순. 지문은 감정을 정확히 '표현'하는 것('express emotions... accurately', 'express how he feels about the problem and why')이 명확한 소통과 갈등 해결의 전제라고 명시한다. 갈등 상황에서 '중립적 태도'가 그럴듯해 보이는 표면 유혹은 있으나 논리적으로 즉시 배제된다."
+    },
+    {
+      "label": "②",
+      "verdict": "correct",
+      "reason": "빈칸 직전 문장 'take the perspective of the other group members and understand why they are reacting in a certain manner'의 직접 환언. 관점 취하기가 열린 소통의 장(arena for open communication)과 건설적 갈등 해결로 이어진다는 지문 흐름과 정확히 일치. 동명사구 주어 + 단수 동사 creates 문법 결합도 완전. 'diverse'는 첫 문장 'diverse emotion vocabulary'와 공명. 유일한 흠은 '자기 감정 표현' 축이 명시되지 않은 점이나, 빈칸 직전 초점이 관점 취하기이므로 요약 지시로 자연스럽다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "매력 오답 — 'cooperate', 'improved group functioning' 때문에 실전에서 잠깐 끌린다. 그러나 지문은 'accommodate their own needs as well as the needs of others'라고 하여 개인 필요와 집단 필요의 '양립'을 협력의 정의로 삼는다. 'Unconditionally prioritizing collective goals over individual needs'(개인 필요의 무조건적 희생)는 이와 정면 모순."
+    },
+    {
+      "label": "④",
+      "verdict": "wrong",
+      "reason": "어휘 반향형 미끼 — 'clear communication', 'emotion vocabulary'와 표면적으로 공명하나, 지문의 어휘력은 감정을 명명·이해하는 능력이지 '표준화된 언어 규칙 수립'이 아니다. 범주 이탈로 탈락."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "'conflict resolution' 반향형 미끼 — 그러나 지문은 갈등의 '회피'가 아니라 '건설적 해결(constructive conflict resolution)'을 말한다. 갈등 원천을 회피하는 것은 open communication(열린 소통)과도 모순. 탈락."
+    }
+  ],
+  "note": "빈칸은 주어 자리(동명사구 + creates)라 5개 선지 모두 문법 결합은 성립하며 판별은 순수 논리 적합성. ①③⑤는 지문 명제와 직접 모순, ④는 범주 이탈, ②만 직전 문장(관점 취하기)의 환언으로 옹호 가능. 복수 정답 여지 없음. 매력 오답 강도는 ③>⑤>④>① 순으로 체감."
+}

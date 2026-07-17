@@ -1,0 +1,35 @@
+{
+  "pid": "P099",
+  "answer": "E",
+  "multipleDefensible": false,
+  "defensibleLabels": ["E"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "A",
+      "verdict": "correct",
+      "reason": "'Such species, called keystone species, are vital...' — called는 과거분사가 삽입된 축약 관계절/분사구(which are called keystone species)로 species를 후치 수식한다. keystone species라고 '불리는' 종이므로 수동 의미의 과거분사 called가 적절. 어법상 옳다."
+    },
+    {
+      "label": "B",
+      "verdict": "correct",
+      "reason": "'The fact that other species depend on or are greatly affected by the keystone species is revealed...' — that는 The fact와 동격을 이루는 동격 명사절 접속사다. 뒤에 완전한 절(other species depend on ... or are ... affected)이 이어지므로 관계대명사가 아니라 동격 that이 맞다. 어법상 옳다."
+    },
+    {
+      "label": "C",
+      "verdict": "correct",
+      "reason": "'fig trees become important in sustaining fruit-eating vertebrates' — 전치사 in의 목적어로 동명사 sustaining이 왔다. 'in -ing(~하는 데 있어)' 구조로 어법상 옳다."
+    },
+    {
+      "label": "D",
+      "verdict": "correct",
+      "reason": "'Should the fig trees disappear, most of the fruit-eating vertebrates would be eliminated.' — 가정법 도치(Should ~) 주절의 would be + 과거분사 수동태. vertebrates가 '제거되는' 대상이므로 수동태 eliminated가 적절. 어법상 옳다."
+    },
+    {
+      "label": "E",
+      "verdict": "incorrect",
+      "reason": "'Protecting fig trees in such tropical rainforest ecosystems are an important conservation goal' — 진짜 주어는 동명사구 'Protecting fig trees ...'로 단수 취급이므로 동사는 is여야 한다. 복수 명사 ecosystems는 전치사 in의 목적어일 뿐 주어가 아니다(수 일치 미끼). 따라서 are는 어법상 틀리다. 뒤 이어지는 대명사 it(=Protecting)도 단수를 확인해 준다."
+    }
+  ],
+  "note": "지배 규칙: (E)의 진짜 주어는 동명사구 Protecting fig trees...(단수)이므로 are→is. 근접 복수명사 ecosystems가 수 일치 오답을 유도하는 미끼. 나머지 A(과거분사 후치수식), B(동격 that), C(전치사+동명사), D(가정법 도치 수동태)는 모두 정문. 정답은 명확히 (E) 하나로 좁혀진다."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P001",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'This is because S+V' is a standard copular construction in which the because-clause functions as predicative complement of 'is'. Logic holds: prior sentence gives the effect (connections affect creative problem-solving), the because-clause the cause (connections -> happiness -> enhanced critical thinking)."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'are greatly enhanced' - the adverb 'greatly' modifies the passive participle 'enhanced'; adverb is the required category (adjective 'great' would be ungrammatical). Well-formed."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'feel lonely or rejected' - linking verb 'feel' takes adjectival subject complements; participial adjective 'rejected' is legitimately coordinated with 'lonely', and the passive orientation is right (the experiencer is the one rejected). Echoed later by 'loneliness or rejection'."
+    },
+    {
+      "label": "(D)",
+      "verdict": "ERROR",
+      "reason": "Governing structure: 'you may struggle to [adapt to new information] or [(to) find creative solutions to problems]' - the coordination point is the infinitival complement of 'struggle', so bare/to-infinitive 'find' is required; 'finding' breaks the parallelism. Rescue parse actively tested: 'finding' as gerund object of the preposition 'to' in 'adapt to', coordinated with the NP 'new information' ('adapt to [new information or finding creative solutions]'), is syntactically constructible but semantically incoherent - the passage asserts unhappiness impairs two abilities (adapting to new information; finding creative solutions), not difficulty 'adapting to the act of finding solutions'; the opening sentence ('ability to creatively solve problems') confirms 'find' is a second complement of 'struggle'. Hence 'finding' is ungrammatical in context; must be 'find'."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'use alcohol or drugs to cope with the stress' - purpose infinitive in the canonical 'use X to do Y' frame; collocation 'cope with' intact. Well-formed."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Single uncontested error at (D) via broken infinitival parallelism after 'struggle'. The only parse that could legitimize 'finding' (gerund under prepositional 'to' of 'adapt to') was searched for and rejected on semantic/logical grounds rather than by deferring to presumed item intent. All other underlines are provably well-formed with no defensible error reading, so the key is uniquely (D)."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P011",
+  "answer": "(D)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(D)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'He presented them with a list of words' — ditransitive frame 'present X with Y'. Objective-case plural pronoun correctly refers back to 'healthy undergraduates'. Grammatical."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "Parallel coordination: 'presented them with ... and asked them to create ...'. 'asked' is a finite past verb coordinated with 'presented' under subject 'He'; 'ask + O + to-infinitive' is the licensed complementation. Grammatical."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'the lonely old man with the wrinkled face' — attributive past participle with passive/resultative sense (the face has been wrinkled). '-ing' form (wrinkling) would be wrong; '-ed' is correct. Grammatical."
+    },
+    {
+      "label": "(D)",
+      "verdict": "incorrect (the error)",
+      "reason": "'That he found was extraordinary.' The sentence needs a free relative supplying both the subject of 'was' and the missing object of transitive 'found': 'What he found was extraordinary.' Complementizer 'that' introduces a complete clause, but 'he found' lacks an object, so the that-clause is defective. Rescue readings fail: intransitive 'find' is archaic/biblical and contextually incoherent (the discourse is about what Bargh discovered); demonstrative 'That' cannot head a zero restrictive relative ('That [which] he found') in standard modern English — 'that which' or 'what' would be required. Ungrammatical as written."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'Those students who had been exposed ... took almost 40 percent longer to walk ...' — long-distance subject 'students' (plural) governs 'took'; simple past matches the narrative frame; past perfect in the relative clause correctly marks anteriority; 'take + duration + to-inf' is the licensed construction. Grammatical."
+    }
+  ],
+  "note": "Classic What/That free-relative item. The error is unambiguous: 'found' is object-less, so only a fused relative 'What' can simultaneously satisfy the matrix subject slot and the embedded object slot. No alternative parse (reduced relative, inversion, intransitive find) renders (D) well-formed in this context. All other underlines are demonstrably grammatical, so the item has exactly one defensible key."
+}

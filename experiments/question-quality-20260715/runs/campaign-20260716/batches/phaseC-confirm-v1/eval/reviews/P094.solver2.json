@@ -1,0 +1,35 @@
+{
+  "pid": "P094",
+  "answer": "(B)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(B)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'if students are quiet enough': 복수 주어 students + are 주술 일치 성립, quiet는 be동사의 형용사 보어로 적법. 오류로 만들 해석 경로 없음."
+    },
+    {
+      "label": "(B)",
+      "verdict": "incorrect",
+      "reason": "'many pressed demands on a teacher's time': demands와 press의 관계는 능동(요구가 시간을 압박함)이므로 현재분사 pressing(긴급한)이 요구됨. 과거분사 pressed는 '눌린 요구'라는 수동 해석만 산출해 의미상 비문. 관용구 'be pressed for time'은 사람 주어 서술 용법이라 명사 한정 수식으로 전용 불가하고, 축약 관계절 'demands (that are) pressed'로 읽어도 정문이 되지 않음. 유일한 어법 오류."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "'more than ten minutes can disappear': 조동사 can 뒤 동사원형 disappear로 적법. 조동사 구문이므로 수 일치 쟁점 자체가 발생하지 않으며 자동사 disappear의 능동 사용도 문제없음."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'use the first ten minutes to get ...': 본동사 use + 목적어 + 목적의 to부정사 표준 구문. be used to -ing(익숙하다)와 무관한 환경이며 'get one's class off to a great start' 결합도 관용적으로 성립."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'If you are prepared for class and have taught ...': be prepared for는 형용사화된 과거분사의 표준 용법(대비가 되어 있다). 뒤의 have taught와 (are prepared) and (have taught) 병렬도 성립."
+    }
+  ],
+  "note": "문법가/논리학자 렌즈 블라인드 풀이. 오류는 (B) 하나로 유일하게 수렴 — 능동/수동 분사 구분(pressing vs pressed) 문항. 나머지 선지는 대안 해석(축약 관계절, 관용구 전용 등)을 적극 탐색해도 오류화 불가, (B)는 어떤 해석으로도 정문화 불가. 복수 정답 여지 없음."
+}

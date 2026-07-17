@@ -1,0 +1,35 @@
+{
+  "pid": "P083",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "demonstrate가 간접의문절을 목적어로 취하는 구조. 'how our minds have adapted'는 how+완전절로 성립하며 '어떻게 적응해 왔는지'라는 문맥 의미에도 부합. that과의 교체 유혹이 있으나 how도 정문."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "진짜 주어는 단수 명사 the process(of checking은 수식 전치사구)이므로 was로 단수 일치가 옳다. 직전 절의 복수 주어 reference materials weren't에 이끌려 were를 기대하게 하는 거리 함정이지만 정문. 시제(과거)도 서사와 일치."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "when (they were) typing의 접속사 뒤 주어+be 생략 구문. 생략된 의미상 주어가 주절 주어 they와 일치하고 능동 관계이므로 현재분사 typing이 옳다."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "it-cleft 강조 구문에서 강조 대상 the young(= the+형용사, 복수 보통명사 '젊은이들')이 사람이므로 관계사 who 사용 가능하고 are도 복수 일치. cleft에서 that만 가능하다는 착각을 유도하는 매력 오답이지만 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "주어부 'Their saturation in and early use of technology'(technology를 공유하는 병렬 명사구) 뒤에 정동사가 없어 making이면 술어 없는 단편이 된다. 뒤의 'but everyone's brains are changing'은 등위접속사 but로 연결된 별도 절이므로 앞에 완전한 절이 필요하다. 독립분사구문으로 구제하려 해도 but가 절-절 대등 연결을 요구해 성립 불가. makes(또는 is making/has made)로 고쳐야 한다."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: (B)의 근접 복수 함정과 (D)의 cleft 관계사 함정이 실제로 끌리는 매력 오답이었으나, 장거리 단서(진짜 주어 the process, 선행사 the young)를 확인하면 모두 정문으로 해소된다. (E)는 문장 전체를 스캔해 정동사 부재를 확인해야 잡히는 fragment 유형으로, 정답이 하나로 명확히 수렴한다."
+}

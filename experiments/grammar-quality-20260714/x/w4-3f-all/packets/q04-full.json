@@ -1,0 +1,164 @@
+{
+  "passageId": "ebsi_go3_20191015-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "10월",
+    "origType": "주장",
+    "words": 128
+  },
+  "attempts": 3,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-obvious-adjacent-sv-agreement"
+  ],
+  "warnings": [],
+  "topReject": [],
+  "layout": "(A):dec=f  (B):dec=a  (C):dec=f  (D):ANS=d  (E):dec=d",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 19,
+        "relPos": 0.026,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 60,
+        "relPos": 0.083,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 280,
+        "relPos": 0.388,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": true,
+        "charPos": 578,
+        "relPos": 0.802,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 700,
+        "relPos": 0.971,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 7,
+    "distinctSentences": 4,
+    "lastMarkerRelPos": 0.971,
+    "firstHalfShare": 0.6,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you have to celebrate it.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "wired",
+        "isError": false,
+        "correction": "wired",
+        "errorExpression": "wired",
+        "surroundingText": "The human brain is wired to look for threats - a trait that kept us alive when we were living on the savannas",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "kept",
+        "isError": false,
+        "correction": "kept",
+        "errorExpression": "kept",
+        "surroundingText": "a trait that kept us alive when we were living on the savannas but that can prevent happiness in our modern lives.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(C)",
+        "expression": "popular",
+        "isError": false,
+        "correction": "popular",
+        "errorExpression": "popular",
+        "surroundingText": "This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a popular pastime).",
+        "pointCode": "f"
+      },
+      {
+        "label": "(D)",
+        "expression": "gives",
+        "isError": true,
+        "correction": "gives",
+        "errorExpression": "give",
+        "surroundingText": "start your conversations with friends by sharing a recent win (anything that gives you that yesssss feeling).",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "have",
+        "isError": false,
+        "correction": "have",
+        "errorExpression": "have",
+        "surroundingText": "The more you appreciate life, the more reasons you have to celebrate it.",
+        "pointCode": "d"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "wired"
+      },
+      {
+        "label": "(B)",
+        "text": "kept"
+      },
+      {
+        "label": "(C)",
+        "text": "popular"
+      },
+      {
+        "label": "(D)",
+        "text": "give"
+      },
+      {
+        "label": "(E)",
+        "text": "have"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주어의 상태를 설명하는 주격 보어 자리에 '타고난'이라는 의미의 형용사적 성격인 wired가 쓰인 것은 적절합니다.",
+      "(B)": "관계대명사 that절 내에서 과거형(kept) 주동사로 쓰여 선행사 a trait을 설명하고 있으므로 어법상 맞습니다.",
+      "(C)": "관사(+부사)와 명사(pastime) 사이에서 명사를 수식하는 형용사 popular는 올바른 형태입니다.",
+      "(E)": "비교급 구문 내에서 주어인 you와 호응하는 1인칭/2인칭/복수형 동사 have는 수일치가 올바르게 되어 있습니다."
+    },
+    "explanation": "괄호 안의 구조를 분석해 보면 anything이라는 대명사를 선행사로 하는 주격 관계대명사절이 이어지고 있습니다. 주격 관계대명사 뒤에 이어지는 동사의 수는 선행사의 수에 일치시켜야 합니다. 선행사인 anything은 -thing으로 끝나는 부정대명사로 언제나 단수 취급을 하므로, 동사 역시 단수형인 gives로 표현되어야 합니다. 따라서 복수형인 give는 이 자리에 올 수 없는 비문입니다.",
+    "keyPoints": [
+      "(D) 주격 관계대명사의 수일치 — 선행사가 단수(anything)인 경우 단수 동사 사용",
+      "(B) 정동사 vs 준동사 — 관계절 내에 시제와 인칭을 갖춘 동사(kept)가 필요한 자리",
+      "(E) 비교급 구문의 수일치 — 'the + 비교급' 절 내부의 주어-동사 호응 확인"
+    ],
+    "tags": [
+      "어법",
+      "수일치",
+      "관계대명사",
+      "부정대명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "The human brain is __(A) wired__ to look for threats - a trait that __(B) kept__ us alive when we were living on the savannas but that can prevent happiness in our modern lives. This so-called \"negativity bias\" can keep you focused on what's going wrong (which explains why complaining is such a __(C) popular__ pastime). To break out of this neural rut, train yourself to acknowledge when things go right. If you keep a calendar or a journal, make a point to write down what went well. If you're more of a verbal processor, start your conversations with friends by sharing a recent win (anything that __(D) give__ you that yesssss feeling). Where the mind goes, reality follows. The more you appreciate life, the more reasons you __(E) have__ to celebrate it."
+  }
+}

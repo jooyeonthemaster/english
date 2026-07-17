@@ -1,0 +1,45 @@
+{
+  "strategy": "w3-triple-ladder",
+  "describe": "본명 조합: pro(s9 폴백) × few-shot(s2) × 미끼분리 2단(s8) → finalize 게이트 사다리 — 하드블록은 전체 재생성(최대 2회), 그 외 error/배치위반은 표적수리 1콜, 수리 후 error 잔존 시 재생성 회송(예산 공유), 최종 수용 직전 difficulty 요청값 동기화",
+  "callPlan": "gemini-3.1-pro x2 (+재생성 최대 2회·표적수리 사이클당 1콜)",
+  "total": 30,
+  "ok": 30,
+  "failed": 0,
+  "avgMs": 87556,
+  "avgAttempts": 4.87,
+  "avgCalls": 4.87,
+  "totalCostUsd": 3.03421,
+  "avgCostUsd": 0.10114,
+  "costRecordedCalls": 146,
+  "costEstimatedCalls": 0,
+  "costUnknownCalls": 0,
+  "avgErrorCount": 0.33,
+  "zeroErrorItems": 23,
+  "postProcessFallbacks": 0,
+  "avgLastMarkerRelPos": 0.839,
+  "avgAnswerRelPos": 0.588,
+  "answerRelPosInBand": 27,
+  "models": {
+    "google/gemini-3.1-pro-preview": 146
+  },
+  "byDifficulty": [
+    {
+      "difficulty": "INTERMEDIATE",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 10
+    },
+    {
+      "difficulty": "ADVANCED",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 10
+    },
+    {
+      "difficulty": "KILLER",
+      "n": 10,
+      "ok": 10,
+      "zeroError": 3
+    }
+  ]
+}

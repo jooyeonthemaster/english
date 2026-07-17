@@ -1,0 +1,35 @@
+{
+  "pid": "P010",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "'are falsely evaluated as life-threatening emergencies by our primitive minds' — 빈칸 뒤 'although they are harmless to our survival'와 완벽히 병치된다. 지문의 핵심 논지('Stone Age brain', 'our brain considers this a danger', 'our brain rates it as such', 'The danger is an illusion', 'Our Stone Age brain sees a mortal danger that is not there')를 모두 요약한다. 'falsely'='illusion', 'life-threatening emergencies'='mortal danger', 'primitive minds'='Stone Age brain'로 어휘 대응이 정확하다. 문법 seam도 정문: 복수 주어 'many situations'+'are'+과거분사 수동태."
+    },
+    {
+      "label": "2",
+      "verdict": "incorrect",
+      "reason": "'are provoking genuine physical diseases like diabetes to prepare us for fighting' — 상황이 실제 질병을 '유발한다'는 것은 지문과 정면 배치. 지문은 위험이 '환상(illusion)'이고 생존에 해롭지 않다고 명시한다. diabetes는 현대적 위험의 예시로 언급됐을 뿐 상황이 이를 유발한다는 인과는 없다. 매력적 오답이지만(diabetes 단어 재활용) 논리가 반대."
+    },
+    {
+      "label": "3",
+      "verdict": "incorrect",
+      "reason": "'are mistakenly attributed to the lack of modern biological adaptations' — 상황이 '현대적 생물학적 적응의 결핍 탓으로 잘못 돌려진다'는 진술은 지문에 근거 없음. 지문은 상황이 위험으로 오인된다고 말할 뿐, 상황의 원인을 적응 결핍으로 귀속시키지 않는다. 'Stone Age brain'을 떠올리게 하는 미끼이나 논리 구조가 다르다."
+    },
+    {
+      "label": "4",
+      "verdict": "incorrect",
+      "reason": "'are successfully managed by the flee-or-fight responses embedded in our genes' — 지문은 뇌가 위험을 과대평가해 불필요하게 반응한다고 말하지, 상황이 투쟁-도피 반응으로 '성공적으로 관리된다'고 말하지 않는다. 오히려 반응이 부적절/과잉이라는 취지. flee/fight 어휘 재활용 미끼."
+    },
+    {
+      "label": "5",
+      "verdict": "incorrect",
+      "reason": "'are treated as triggers that spontaneously suppress our outdated survival instincts' — 뇌는 생존 본능을 '억제'하는 게 아니라 오히려 '작동/발동'시킨다. 방향이 정반대이며 'suppress'가 논지와 충돌한다."
+    }
+  ],
+  "note": "전형적 빈칸 요지 추론. 빈칸 뒤 양보절 'although they are harmless to our survival'와 지문 반복 진술('brain considers this a danger', 'rates it as such', 'danger is an illusion', 'mortal danger that is not there')이 1번을 강하게 지지한다. 오답들은 지문 어휘(diabetes, Stone Age, flee/fight, survival instincts)를 재활용해 만든 표면 매력형 미끼이나 모두 논리 방향이 반대이거나 근거 없음. 정답 1로 단일하게 좁혀지며 문법 seam도 정문. 이의제기 여지 없음."
+}

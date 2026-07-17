@@ -1,0 +1,75 @@
+{
+  "pid": "P007",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-minor-grouping",
+      "severity": "minor",
+      "evidence": "본해설의 '지엽적인 단어를 활용해 관계를 넓히라거나 학업 마감일에 집중하라는 등의 선지들' 부분이 ②와 ③을 '지엽적 단어 활용' 유형으로 묶었으나, ② 'social connections'는 지문에 대응 어휘(anchor)가 없어 이 규정이 ②에는 부정확하다(③ deadline에만 정확). 오답 해설 본문은 ②를 극성 반전으로 올바르게 분류하고 있어 구조 분석 오류는 아니며 V4 실패로 보지 않음."
+    },
+    {
+      "code": "V4-minor-keypoint-causality",
+      "severity": "minor",
+      "evidence": "keyPoints 1번 'extracurricular activities와 moderation 사이의 인과 관계 이해하기'는 표현이 부정확 — 지문의 인과는 과다 참여→자유시간 감소·스트레스이고 moderation은 그에 대한 처방이다. 개념 왜곡 수준은 아니어서 치명 아님."
+    },
+    {
+      "code": "V5-minor-keypoint-source-span",
+      "severity": "minor",
+      "evidence": "keyPoints 2번이 빈칸으로 제거된 원문 표현 'overextend yourself'를 전제하나, 렌더 지문에는 이 표현이 노출되지 않고 해설 본문도 한국어 번역('한계를 초과하여 무리하게 활동을 넓히지 말라')으로만 언급한다. 학습 메타데이터로 방어 가능한 경미한 비동기."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 3,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "①",
+      "intent": "정답 — 원문 span 'make sure you don't overextend yourself'의 의미 보존 패러프레이즈",
+      "temptingBecause": "해당 없음(정답). 'draw the line', 'exercise some moderation', 'Pacing is important' 세 단서가 모두 절제·한계 인식으로 수렴하며 'taking on more than you can handle'이 overextend의 정확한 재표현이다.",
+      "decisiveFlaw": "없음 — 완성문 'get involved in the activities that are most meaningful to you, and avoid taking on more than you can handle'이 문법·논리 모두 성립한다."
+    },
+    {
+      "label": "②",
+      "intent": "극성 반전 — 절제·축소 권고를 확장(maximize) 권고로 뒤집는 함정",
+      "temptingBecause": "동아리·과외 활동이라는 소재에서 '관계를 넓혀라'가 통념적 조언처럼 들릴 수 있다.",
+      "decisiveFlaw": "지문 전체가 활동량 절제를 주장하는데 관계 극대화는 정반대 방향이며, 'social connections'는 지문에 anchor 어휘 자체가 없어 근거가 전무하다."
+    },
+    {
+      "label": "③",
+      "intent": "과협소(scope narrowing) — 신문사 deadline 예시를 결론으로 승격시키는 함정",
+      "temptingBecause": "'deadline'이 지문에 명시적으로 등장하고 'tasks you absolutely need to complete'와도 연상 연결된다.",
+      "decisiveFlaw": "deadline은 crunch time의 한 예시일 뿐이며 결론 조언은 과외 활동량의 절제다. 'every academic deadline'으로 범위도 과외 활동에서 학업으로 이탈한다."
+    },
+    {
+      "label": "④",
+      "intent": "극단화(over-generalization) — '줄여라'를 '전부 없애라'로 과장하는 함정",
+      "temptingBecause": "지문이 과다한 동아리 가입의 폐해를 경고하므로 축소 방향성 자체는 공유한다.",
+      "decisiveFlaw": "같은 문장 앞부분 'get involved in the activities that are most meaningful to you'와 직접 모순 — 참여하라면서 전부 없애라는 자기모순으로 문장 내부 단서만으로 즉시 소거된다. 'all ... entirely' 절대어도 노출(변별력 저하 요인)."
+    },
+    {
+      "label": "⑤",
+      "intent": "소재 연상(word association) — 본문 단어 'stressed out'을 재활용한 표면 어휘 함정",
+      "temptingBecause": "지문이 'awfully stressed out'을 명시적 폐해로 제시하므로 스트레스 해소가 자연스러운 처방처럼 보인다.",
+      "decisiveFlaw": "지문의 처방은 사후 스트레스 탈출이 아니라 사전적 활동량 절제이며, 'daily stress'로 일상 전반으로 scope shift 하여 과외 활동 조절이라는 논지에서 이탈한다."
+    }
+  ],
+  "explanationIssues": [
+    "본해설의 '지엽적인 단어를 활용해' 묶음 서술이 ②에는 사실과 어긋남(②는 지문 anchor가 없는 극성 반전형; ③에만 정확).",
+    "'조절 페이스(pacing)'는 한국어로 어색한 표현('페이스 조절'이 자연스러움). 사실 오류는 아님.",
+    "keyPoints가 렌더 지문에 노출되지 않는 원문 표현 'overextend yourself'를 영어 인용 없이 전제함."
+  ],
+  "killerConditionsMet": false,
+  "grade": "B",
+  "notes": "V1: 원지문 대비 마지막 절 'make sure you don't overextend yourself'만 빈칸 치환, 나머지 전 구간 문자 단위 동일, 접합부 깨끗함. V2: 각 선지 독립 삽입 검증 결과 정답 집합 = {①} 유일(②극성반전·③과협소·④자기모순 극단화·⑤인과방향 이탈로 각각 탈락). V3: 다섯 선지 모두 명령문 등위 동사구라는 동일 통사 슬롯에 문법적으로 삽입되어 문법 비대칭 소거 불가 — 빈칸 유형 의도와 정합. V4·V5: 해설의 구조·논지 분석 정확, 라벨·오답해설·keyPoints 동기화(경미한 흠 3건은 validityIssues 참조). 공예상 약점은 변별력(C3=2): ④가 같은 문장 내 자기모순으로 즉시 소거되고 ②도 anchor 부재로 쉽게 탈락해 실질 경합이 ③⑤ 수준이며, 'draw the line'·'moderation'·'Pacing' 삼중 단서로 정답이 상당히 투명함. INTERMEDIATE 요청 대비 난이도는 하단이나 1단계 패러프레이즈 추론 요구로 대체로 정합(C5=3). 합계 17, 전 V 통과, 최저 C=2 → B(작은 수정으로 출하 가능: ④를 문장 내 모순 없는 극단화 오답으로 교체, ②에 지문 anchor 부여, 본해설 묶음 문장 수정 권장). 요청 난이도가 KILLER가 아니므로 killerConditionsMet=false."
+}

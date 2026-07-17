@@ -1,0 +1,86 @@
+{
+  "pid": "P016",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": false,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V4-A-clause-mislabel",
+      "severity": "major",
+      "evidence": "(A) 오답 해설이 'Just as today some jobs are better than others'를 '시간과 조건을 나타내는 접속사절'이라고 설명한다. 실제 구조는 'Just as ..., so + 도치(would they have been)'의 상관 비교 구문이며 시간절도 조건절도 아니다. 수일치 결론(복수 주어 some jobs → are)은 맞지만 절 유형 분석이 사실과 불일치한다 — 명사절 that을 관계대명사로 부르는 류와 동급의 구조 오분석."
+    },
+    {
+      "code": "V4-D-corrupted-misexplanation",
+      "severity": "major",
+      "evidence": "(D) 오답 해설의 '주어인 some 뼈대와 관련 없이'는 손상된 표현('some 뼈대'는 (B) 해설의 뼈대 서술이 새어 들어간 비문적 용어)이며 내용도 오설명이다. 'by themselves'의 재귀대명사는 바로 그 절의 주어 some (individuals)를 선행사로 결속되어 올바른 것인데, 해설은 '주어와 관련 없이' 쓰였다고 반대로 설명한다."
+    },
+    {
+      "code": "V4-B-loose-terminology",
+      "severity": "minor",
+      "evidence": "(B) 정답 해설 ①이 'with + 명사 + 분사/형용사' 구문을 '독립 분사구문'이라 부른다. 정확히는 with 부대상황(with-absolute) 구문이며, 독립분사구문은 통상 with 없이 의미상 주어를 갖는 분사구문을 가리킨다. 한국 교육 관행상 'with 분사구문'으로 통용되는 수준의 느슨함이라 minor."
+    },
+    {
+      "code": "V3-stem-awkward",
+      "severity": "minor",
+      "evidence": "발문 '다음 글의 밑줄 친 부분 단어의 쓰임이 어법상 틀린 것은?'에서 '부분 단어의 쓰임이'는 비표준적 접합('밑줄 친 부분 중, 어법상 틀린 것은?'이 정형). 의미 전달은 되므로 V3 실패까지는 아니라고 판단."
+    },
+    {
+      "code": "V5-keypoints-partial",
+      "severity": "minor",
+      "evidence": "keyPoints가 (A)(B)(E)만 다루고 (C)(D)는 없다. 정답 라벨·선지·해설과 모순은 없어 V5는 통과이나 커버리지가 불완전하다."
+    }
+  ],
+  "craft": {
+    "C1": 4,
+    "C2": 3,
+    "C3": 3,
+    "C4": 3,
+    "C5": 3,
+    "C6": 1
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "부사 today가 주어 앞에 끼어든 자리에서 some jobs(복수)와의 수일치 판정",
+      "temptingBecause": "'Just as today some jobs are'에서 today 삽입과 도치 상관구문(so would they)이 시야를 흐려 단수 오인 가능",
+      "decisiveFlaw": "주어 some jobs는 명백한 복수라 확인 즉시 소거되는 비교적 쉬운 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "정답 — with + 의미상주어 + 분사(부대상황) 병렬 내부에서 정동사 have 불가, 현재분사 having이어야 함",
+      "temptingBecause": "'and some have more plentiful access'가 표면상 새 주어+동사의 완전한 절처럼 읽혀 정문으로 오인하기 쉬움",
+      "decisiveFlaw": "with구 내부의 두 번째 병렬 성분(with some roles more dangerous and some ___)이므로 정동사가 올 수 없음. have→having 교정 시 원문과 정확히 일치하는 최소대립쌍"
+    },
+    {
+      "label": "(C)",
+      "intent": "shows의 목적어 명사절을 이끄는 접속사 that(완전한 절) 판정",
+      "temptingBecause": "that 뒤에 긴 부사구(soon after the appearance of towns, agriculture, and surpluses)가 먼저 와서 절의 완전성 확인에 실제 독해 부담이 있음",
+      "decisiveFlaw": "뒤에 some burials start to look different라는 결핍 없는 완전한 절이 있으므로 접속사 that이 옳음"
+    },
+    {
+      "label": "(D)",
+      "intent": "관용구 by themselves(혼자서)의 재귀대명사 적합성 판정",
+      "temptingBecause": "선행사가 생략된 some (individuals)이어서 대명사 결속 확인을 요구",
+      "decisiveFlaw": "주어 some (individuals)와 일치하는 by themselves가 관용적으로 올바름 — 확인이 쉬운 편인 디코이"
+    },
+    {
+      "label": "(E)",
+      "intent": "were getting 과거진행(능동)에서 현재분사 getting의 적합성 판정",
+      "temptingBecause": "reveal that절 내부의 긴 주어(some members of groups) 뒤라 be동사와의 결합을 놓치면 분사 자리로 오인 가능",
+      "decisiveFlaw": "were + getting이 목적어(more protein or minerals)를 취하는 능동 과거진행으로 명백히 정문"
+    }
+  ],
+  "explanationIssues": [
+    "(A) 해설: 'Just as ..., so + 도치' 상관 비교 구문을 '시간과 조건을 나타내는 접속사절'로 오분석 (V4 실패의 1차 근거)",
+    "(D) 해설: '주어인 some 뼈대와 관련 없이'라는 손상된 표현 + 재귀대명사가 주어와 무관하다는 반대 방향 오설명 (실제로는 주어 some이 결속 선행사)",
+    "(B) 해설 ①: with 부대상황 구문을 '독립 분사구문'으로 지칭 — 관행상 통용되는 수준의 용어 느슨함 (minor)",
+    "keyPoints가 (C)(D) 포인트를 다루지 않아 §C의 '5개 밑줄 각각에 point/why tempting' 요건과 함께 커버리지가 불완전"
+  ],
+  "killerConditionsMet": false,
+  "grade": "F",
+  "notes": "V1: 마커 제거 후 원지문과 전산 diff — 유일한 변경이 (B) having→have이고 5개 마커가 선지와 정확히 일치, 접합 파손·중복·누락 없음. V2: 5개 밑줄 독립 검증 결과 (B)만 비문(with 부대상황 병렬 내부의 정동사)이고 나머지 4개는 대안 해석으로도 오류가 되지 않아 단일 정답 확정. V3: 영어 지문·교정 완성문 모두 정문, 발문의 '부분 단어의 쓰임이'만 어색(minor). V4 실패: (A) 절 유형 오분석('시간과 조건' — 실제는 just as~so 상관 비교)과 (D)의 손상 표현 'some 뼈대' + 재귀대명사 결속 오설명. 치명 규칙에 따라 공예 점수와 무관하게 F. 정답 포인트 자체는 최소대립쌍·구조 판독 요구·비표면성 등 KILLER 조건 다수를 충족하나, 디코이별 명시적 why-tempting 부재로 §C 3항 미충족 + A등급 전제 탈락으로 killerConditionsMet=false. 해설의 (A)/(D) 오류만 수정하면 정답 설계 자체는 견고한 문항."
+}

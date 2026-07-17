@@ -1,0 +1,35 @@
+{
+  "pid": "P104",
+  "answer": "④",
+  "multipleDefensible": false,
+  "defensibleLabels": ["④"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "wrong",
+      "reason": "매력적 오답. 지문의 인용구 'free time'을 그대로 재활용해 끌림이 있었으나, 지문에서 'free time' 느낌은 미루기를 유발하는 착각(메커니즘)이지 활용할 자원이 아니다. 또한 지문은 휴식이 재충전에 '필요하다'고 명시하므로 휴식 시간을 잔업무로 채우라는 처방은 지문 논지와 어긋난다. 'instead'(비계획적 휴식 대신)와의 연결도 지문이 제시한 대안(계획된 휴식 준수)과 불일치."
+    },
+    {
+      "label": "②",
+      "verdict": "wrong",
+      "reason": "첫 문장 'Breaks are necessary to revive your energy levels'와 정면 모순. 비계획적 휴식 제거는 절반만 맞지만 'both scheduled and'가 계획된 휴식까지 없애라고 하여 지문의 핵심 대비(계획된 휴식=전략적 자기강화)를 파괴한다."
+    },
+    {
+      "label": "③",
+      "verdict": "wrong",
+      "reason": "안티 정답. 'spontaneous breaks'는 곧 unscheduled breaks이며, 지문은 이를 'unwarranted', 'derail you from your goal', 'procrastination trap'으로 명시적으로 비판한다. 정반대 처방."
+    },
+    {
+      "label": "④",
+      "verdict": "correct",
+      "reason": "'premeditated downtime schedule' = 지문이 옹호하는 scheduled breaks('strategic, re-energizing methods of self-reinforcement', 'keep you on track'). 결론부 'instead'는 '비계획적 휴식을 취하는 대신'을 뜻하므로 계획된 휴식 일정 고수가 유일하게 논리적으로 맞물린다. 문법 결합도 정문: 'So to prevent procrastination, stick to your premeditated downtime schedule instead.' (명령문, to부정사 목적구와 자연스럽게 연결)."
+    },
+    {
+      "label": "⑤",
+      "verdict": "wrong",
+      "reason": "휴식의 '길이/충분한 회복'은 지문에서 전혀 다루지 않는 축. 지문의 유일한 변별 축은 계획됨 vs 비계획됨이며, 길이를 보장하라는 처방은 'instead'가 요구하는 대체 행동(비계획적 휴식의 대안)도 되지 못한다."
+    }
+  ],
+  "note": "최상위권 실전 풀이 렌즈: 결론 문장의 'instead'가 강력한 앵커로, 빈칸은 '비계획적 휴식 대신 할 일'이어야 한다. ①이 지문 어휘('free time') 재활용으로 가장 강한 유혹을 주지만 지문이 휴식 자체의 필요성을 전제하므로 논리 검증에서 탈락. 모든 선지가 명령형 동사구로 문법 결합(seam)은 전 선지 성립하여 변별은 순수 논리로 이루어짐. 정답 ④ 단독 옹호 가능, 이의신청 여지 없음."
+}

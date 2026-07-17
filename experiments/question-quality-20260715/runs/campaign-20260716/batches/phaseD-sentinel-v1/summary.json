@@ -1,0 +1,40 @@
+{
+  "batchId": "phaseD-sentinel-v1",
+  "phase": "D",
+  "atKst": "2026-07-17T01:16:59.622+09:00",
+  "assignments": 52,
+  "slotsConsumed": 62,
+  "accepted": 50,
+  "modelCalls": 75,
+  "inputTokens": 416981,
+  "outputTokens": 70942,
+  "costUsd": 1.42837,
+  "ledgerAfter": {
+    "used": 565,
+    "cap": 1000,
+    "costUsd": 15.918169
+  },
+  "byArm": {
+    "SENT-STANDARD": {
+      "n": 26,
+      "accepted": 24,
+      "gateRejected": 1,
+      "noCandidate": 1,
+      "slots": 32,
+      "costUsd": 0.805275
+    },
+    "SENT-PREMIUM": {
+      "n": 26,
+      "accepted": 26,
+      "gateRejected": 0,
+      "noCandidate": 0,
+      "slots": 30,
+      "costUsd": 0.623095
+    }
+  },
+  "models": {
+    "standard": "google/gemini-3.5-flash",
+    "premiumQgen": "google/gemini-3.1-pro-preview"
+  },
+  "durationMs": 298171
+}

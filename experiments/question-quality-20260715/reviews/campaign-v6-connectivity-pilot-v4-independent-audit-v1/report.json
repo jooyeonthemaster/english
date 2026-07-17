@@ -1,0 +1,207 @@
+{
+  "schemaVersion": "question-quality-connectivity-pilot-v4-independent-hostile-audit-report-v1",
+  "target": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4",
+  "verdict": "FAIL",
+  "highestBlockerSeverity": "critical",
+  "scope": "OFFLINE_STRUCTURE_ONLY",
+  "liveDisposition": "offline structure only; separate authorized version required",
+  "authorClaimsTreatedAsAuthority": false,
+  "independentlyComputed": {
+    "compilerClosure": {
+      "astSource": 192,
+      "declaredData": 4,
+      "advertisedTotal": 196,
+      "literalReadInputsMissingFromAdvertisedClosure": 3,
+      "actualUniqueFileInputs": 199,
+      "exactEquality": false
+    },
+    "liveClosure": {
+      "source": 8,
+      "runtimeData": 3,
+      "total": 11,
+      "exactEquality": true
+    },
+    "semanticAndByteBindings": true,
+    "v2V3BytePreservation": true,
+    "parserCases": 172
+  },
+  "blockers": [
+    {
+      "id": "V4-CLOSURE-004",
+      "severity": "critical",
+      "blocker": true,
+      "title": "Claimed 192+4 compiler closure omits three literal file inputs read by the inherited compiler",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v2/compile-exact-wire.mts:58",
+      "evidence": {
+        "claimedRows": 196,
+        "actualUniqueFileInputs": 199,
+        "omitted": [
+          "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+          "experiments/question-quality-20260715/harness/atlas-controller.ts",
+          "experiments/question-quality-20260715/harness/ledger.ts"
+        ],
+        "mutationRegressions": [
+          {
+            "path": "experiments/question-quality-20260715/execution/campaign-v6-s1-durable-controller-v1/openrouter-question-parser.ts",
+            "authorCompilerClosureCommitmentChanges": false,
+            "upstreamLiteralClosureCommitmentChanges": true,
+            "upstreamPrivateSemanticChanges": true,
+            "v4PrivateSemanticChanges": true
+          },
+          {
+            "path": "experiments/question-quality-20260715/harness/atlas-controller.ts",
+            "authorCompilerClosureCommitmentChanges": false,
+            "upstreamLiteralClosureCommitmentChanges": true,
+            "upstreamPrivateSemanticChanges": true,
+            "v4PrivateSemanticChanges": true
+          },
+          {
+            "path": "experiments/question-quality-20260715/harness/ledger.ts",
+            "authorCompilerClosureCommitmentChanges": false,
+            "upstreamLiteralClosureCommitmentChanges": true,
+            "upstreamPrivateSemanticChanges": true,
+            "v4PrivateSemanticChanges": true
+          }
+        ]
+      },
+      "impact": "Each omitted byte input changes the inherited sourceClosure hash, inherited private semantic hash, and v4 private semantic artifact while the advertised compiler-closure commitment remains unchanged."
+    },
+    {
+      "id": "V4-CLI-001",
+      "severity": "critical",
+      "blocker": true,
+      "title": "Price-snapshot live entrypoint bypasses the three authorization flags",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/capture-price-snapshot.mts:42",
+      "evidence": "The direct CLI guard invokes main(); main performs one models GET and two model-endpoint GETs without loading or checking protocol authorization. Static source has no authorization reference.",
+      "impact": "A direct command can cause three real external requests while liveExecutionAuthorized, hostileAuditPassed, and dispatchCommandPresent are all false."
+    },
+    {
+      "id": "V4-COST-005",
+      "severity": "major",
+      "blocker": true,
+      "title": "Post-send failure paths can settle finite positive billed usage cost as zero",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts:446",
+      "evidence": [
+        {
+          "id": "sent-http-200-valid-usage-parser-failure",
+          "sent": true,
+          "rawUsageCostUsd": 0.123456,
+          "parserRejected": true,
+          "assignmentEvidencePersistedByRunner": false,
+          "runnerStateActualCostUsd": 0,
+          "globalSettlementCostUsd": 0,
+          "underreportedUsd": 0.123456
+        },
+        {
+          "id": "sent-http-200-valid-parser-evidence-cost-cap-failure",
+          "sent": true,
+          "rawUsageCostUsd": 0.251906501,
+          "parserAccepted": true,
+          "capFailureOccursBeforeAssignmentEvidencePersistence": true,
+          "assignmentEvidencePersistedByRunner": false,
+          "runnerStateActualCostUsd": 0,
+          "globalSettlementCostUsd": 0,
+          "underreportedUsd": 0.251906501
+        },
+        {
+          "id": "sent-http-non-ok-body-with-valid-usage",
+          "sent": true,
+          "rawUsageCostUsd": 0.045,
+          "responseOk": false,
+          "parserInvokedByRunner": false,
+          "assignmentEvidencePersistedByRunner": false,
+          "runnerStateActualCostUsd": 0,
+          "globalSettlementCostUsd": 0,
+          "underreportedUsd": 0.045
+        }
+      ],
+      "impact": "HTTP-status, response-parser, and cost-cap failures do not persist response usage evidence; the final global settlement aggregates only success evidence and state.actualCostUsd, underreporting already-sent/billed calls."
+    }
+  ],
+  "nonblockingFindings": [
+    {
+      "id": "V4-PARSER-002",
+      "severity": "minor",
+      "blocker": false,
+      "title": "Defense-in-depth gap: parser ignores a coexisting message.tool_calls field",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/response-parser.ts:130",
+      "evidence": [
+        {
+          "id": "standard:message-tool-calls-coexists",
+          "expected": "reject",
+          "observed": "accept"
+        },
+        {
+          "id": "premium:message-tool-calls-coexists",
+          "expected": "reject",
+          "observed": "accept"
+        }
+      ],
+      "impact": "The required finish_reason=tool_calls negative case is correctly rejected. This separate provider-envelope condition is outside the sealed content-schema contract, but exact message-envelope hardening would reject it explicitly."
+    },
+    {
+      "id": "V4-LEDGER-003",
+      "severity": "major",
+      "blocker": false,
+      "title": "One post-reservation pre-try journal fault can leave a fail-closed global reservation unsettled",
+      "where": "experiments/question-quality-20260715/execution/campaign-v6-connectivity-pilot-v4/production-runner.ts:501",
+      "evidence": "If the initial DUAL_RESERVATION_COMMITTED journal append throws, the global reservation has committed but execution has not entered the settle-finally region; this leaks a fail-closed reservation without network dispatch.",
+      "impact": "No network overrun occurs, but the global two-candidate reservation can be stranded and the private/global state pair is not durably coupled for that fault point."
+    }
+  ],
+  "sourceListHashes": {
+    "compilerSourceListSha256": "be116d49c0a06c179d9f61714082cf53fa728ab4b5aa77447ee551778d2083f6",
+    "compilerExactClosureSetAndBytesSha256": "392d53c829803775987a6585976a8011ff0659feaf65f70e539ddf6f7f34c19f",
+    "actualCompilerFileInputListSha256": "74a6458f6c439bf4319acb8fd8254145ff309ba264bd2a3102d272175956cd71",
+    "actualCompilerFileInputSetAndBytesSha256": "eb032a8e56d7177132cba106d9114edc690f3b355d8d07b7dca56d65879d73c0",
+    "liveSourceListSha256": "f2c8fc158cfe860973ae41fc7882155dec86fa0be3937ab3b7d3fd846af5ed2c",
+    "liveExactSetAndBytesSha256": "b557909aedf6bc7910750a3bf4da77755ee16587f86e33915b9d5d7268efe6ef",
+    "targetManifestSha256": "33a7cd93fdf4bb5af4cb8bf8f320e79203c7365bf257896f9fb67a8c05d3d37d",
+    "v2ManifestSha256": "8234032c53b742648345c06020f37f3f069dd60d883cf490076cc5dde7c18ea2",
+    "v3ManifestSha256": "f5baacde25a267e6a6413a5f21380f1ed735308b39213099393eab1d4c78b192"
+  },
+  "activity": {
+    "externalNetworkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "productionDatabaseCalls": 0,
+    "browserCalls": 0,
+    "realCredentialValuesRead": 0,
+    "environmentFileContentsRead": 0,
+    "globalLedgerReservationMutations": 0,
+    "liveExecutionAuthorizedOrPerformed": false
+  },
+  "qualifications": [
+    "No quality, reliability, or comparative-performance conclusion follows from two sealed connectivity rows.",
+    "No live call, public metadata capture, credential read, database access, browser access, or ledger mutation was authorized or performed.",
+    "A PASS was not issued because the actual compiler file-input closure is incomplete, the price-capture CLI bypasses authorization, and post-send failure costs can be settled as zero."
+  ],
+  "authorGateReproduction": {
+    "artifactSha256": "5b0346fb581b5cd12381484061fee8b4fc17e56a10882d7e29651ee8cbf613b0",
+    "verdict": "PASS",
+    "gates": [
+      {
+        "id": "author-build-check",
+        "exitCode": 0
+      },
+      {
+        "id": "author-verifier",
+        "exitCode": 0
+      },
+      {
+        "id": "scoped-tsc",
+        "exitCode": 0
+      },
+      {
+        "id": "author-offline-tests",
+        "exitCode": 0
+      },
+      {
+        "id": "independent-hostile-nonsecret-env-compiler-parity",
+        "exitCode": 0
+      }
+    ],
+    "usedAsVerdictAuthority": false
+  }
+}

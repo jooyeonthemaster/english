@@ -1,0 +1,35 @@
+{
+  "pid": "P018",
+  "answer": "1",
+  "multipleDefensible": false,
+  "defensibleLabels": ["1"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "correct",
+      "reason": "빈칸은 'somebody has a touch for doing some activity — an ability to ___' 구조로, 신체 은유 'touch'가 뜻하는 바를 풀어쓰는 자리다. 'touch'는 활동 수행에서의 섬세한 신체 제어를 가리키므로 'perform a learned physical action with finely tuned bodily control'이 정확히 대응한다. 뒤따르는 'a feel for the game', 'thinking less', 'perform without conscious awareness'와도 정합. seam(문법 결합)도 an ability to + 동사원형으로 자연스럽다. 유일한 잔가시: 지문이 practical knowledge는 'cannot be taught or learned'라고 했는데 선지에 'learned'가 들어 있다는 점. 그러나 learned가 수식하는 것은 physical action(활동 자체, 예: 피아노 연주법)이지 touch(실천지) 자체가 아니며, 지문의 대비도 'deliberately learned rules' vs 'acquired through practice'이므로 치명적 모순은 아니다."
+    },
+    {
+      "label": "2",
+      "verdict": "wrong",
+      "reason": "'analyze the theoretical mechanics'는 formulated rules 기반의 technical/book knowledge 쪽 특성이다. 지문은 빈칸 문장부터 practical knowledge의 신체 은유를 설명하는 흐름이므로 정반대 극에 해당. 또한 expert는 'thinking less'라고 명시되어 분석적 사고와 충돌한다. 첫 문장만 훑은 수험생을 노린 극성 반전 미끼."
+    },
+    {
+      "label": "3",
+      "verdict": "wrong",
+      "reason": "'memorize step-by-step formulated rules'는 첫 문장의 'formulated rules which are deliberately learned'를 그대로 재활용한 표면 어휘 미끼. 지문은 practical knowledge가 바로 그런 규칙 학습이 '아니라고' 대비시키고 있으므로 빈칸(=practical knowledge의 touch)에 넣으면 논리 전복."
+    },
+    {
+      "label": "4",
+      "verdict": "wrong",
+      "reason": "가장 매력적인 오답. 마지막 문장 'passed along through shared experience'와 둘째 문장 'transmitted'를 조합해 만든 선지라 끝까지 읽은 수험생이 오히려 끌린다. 실제로 잠깐 유혹됨. 그러나 빈칸은 'a touch for doing some activity'의 동격 풀이 자리 — 즉 개인이 활동을 '수행'하는 능력이지 타인에게 감각을 '전달'하는 능력이 아니다. 병렬 항목들('a feel for the game', 'an intuition', 'an awareness')도 모두 개인의 수행 감각이지 소통 능력이 아님. 지식의 전수는 지문 말미의 별도 논점이지 'touch'의 정의가 아니다."
+    },
+    {
+      "label": "5",
+      "verdict": "wrong",
+      "reason": "'consciously observe'는 'she isn't thinking more; she is thinking less' 및 'perform without conscious awareness'와 정면 충돌. 'habits' 어휘를 재활용했지만 극성이 반대인 명백한 오답."
+    }
+  ],
+  "note": "실전 풀이 순서: 첫 두 문장에서 technical(규칙·의도적 학습) vs practical(전수·습득, 실천 속에만 존재) 대비 파악 → 빈칸 문장이 'touch'라는 신체 은유의 동격 설명임을 확인 → 후반부 'thinking less', 'without conscious awareness'로 극성 고정. ④는 지문 마지막 문장을 그대로 반향해 상당히 유혹적이었으나, 빈칸의 문법적 위치(touch의 동격)가 수행 능력을 요구하므로 배제. ①의 'learned'는 'cannot be learned'와 표면 충돌처럼 보일 수 있으나 learned의 피수식어가 action이므로 옹호 가능 범위. 정답 후보는 ① 단독."
+}

@@ -1,0 +1,35 @@
+{
+  "pid": "P081",
+  "answer": "(E)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(E)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "축약 관계절(= which are named for the vivid images...). memories는 '명명되는' 대상이므로 수동 과거분사 named가 정문. 'named for' = 'named after' 관용 표현도 자연스럽다. naming으로 끌릴 여지는 명명 주체로 오독할 때뿐이며 문맥상 성립하지 않는다."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "삽입 분사구 'thoroughly reported in the media'에서 부사 thoroughly가 분사 reported를 수식. 분사 수식은 부사가 맞으므로 정문. 형용사 thorough(outlines 수식)로 착각하게 만드는 매력적 미끼지만 구조상 부사가 정확하다."
+    },
+    {
+      "label": "(C)",
+      "verdict": "correct",
+      "reason": "may not necessarily be precise — be동사의 주격보어 자리이므로 형용사 precise가 정문. 부사 precisely였다면 오류."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "numerous studies ..., including surveys of ... — 전치사적 분사 including이 예시를 도입하는 표준 용법. 정문."
+    },
+    {
+      "label": "(E)",
+      "verdict": "incorrect (정답)",
+      "reason": "those which they are most confident — 관계절 내부를 복원하면 they are most confident *(of/about/in)* those인데, 형용사 confident는 전치사 없이 목적어를 취할 수 없다. 절 내에 좌초 전치사도 없고 of which도 아니므로 which가 문법적 자리를 얻지 못한다. 정문이 되려면 'those of which they are most confident' 또는 'those (that) they are most confident about'이어야 한다. 축약 관계절·잔류 목적어·도치 등 대안 해석으로도 구제 불가."
+    }
+  ],
+  "note": "최상위권 실전 렌즈: (B)에서 '형용사 thorough여야 하나' 하는 순간적 유혹, (A)에서 naming 능동 오독 유혹이 설계되어 있으나 둘 다 구조 확인으로 즉시 해소된다. (E)는 confident의 필수 전치사 결여라는 장거리 단서(관계절 복원) 기반 오류로, 후보가 (E) 하나로 깔끔하게 수렴한다. 복수 정답 소지 없음."
+}

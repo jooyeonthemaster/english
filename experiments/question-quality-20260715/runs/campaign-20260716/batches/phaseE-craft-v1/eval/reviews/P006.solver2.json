@@ -1,0 +1,35 @@
+{
+  "pid": "P006",
+  "answer": "3",
+  "multipleDefensible": false,
+  "defensibleLabels": ["3"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "Grammatical seam holds (tried V-ing ... and started, parallel past tense), but logic fails on two long-range cues: (a) the ending explicitly states Chloe ate her scone 'without the cream and jam', and cream/jam only enter the narrative at the scone stage via the grandmother — they are anachronistic at the sandwich stage; (b) adverb doubling 'carefully ... cautiously' is redundant. Contradicted by the text, not defensible."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "Grammatically well-formed, but 'Chloe winked back' already occurred two sentences earlier — inserting it here makes the same act happen twice with no narrative motivation. 'Carefully winked back' is also a strained collocation, and a wink has no causal link to 'and started with a small, delicate sandwich'. Redundant and causally inert."
+    },
+    {
+      "label": "3",
+      "verdict": "accept",
+      "reason": "Perfect fit. The immediately preceding sentence states she 'waited for her grandmother to make the first move'; 'She carefully copied what her grandmother was doing and started with a small, delicate sandwich' completes the wait -> imitate -> begin causal chain. The past progressive in the what-clause agrees with observing the grandmother's ongoing first move. It is further reinforced by the later contrast 'boldly chose the biscuit-looking thing BEFORE her grandmother' (imitation early, boldness later), and by her ignorance of scones/cream-and-jam (she only mimics what she has seen). Grammar and logic both provable."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "Direct contradiction with the preceding sentence: one who 'waited for her grandmother to make the first move' cannot simultaneously 'take the lead to show how to eat'. Chloe is also depicted as the novice (does not know what scones are, eats them wrong), so she has no 'how to eat' to demonstrate. The later 'boldly ... before her grandmother' cannot rescue it because the blank is temporally anchored at the moment of waiting."
+    },
+    {
+      "label": "5",
+      "verdict": "reject",
+      "reason": "Grammatically fine, but 'carefully' clashes semantically with 'endless questions', and the later line 'Scones, was that what they were called?' (internal monologue, not spoken) proves she asked nothing about the food. The whole scene depicts silent observation and imitation, not questioning."
+    }
+  ],
+  "note": "Blind solve, grammarian/logician lens. Single defensible answer: 3. The blank is doubly anchored: backward by 'waited for her grandmother to make the first move' (forces an imitative act) and forward by 'started with a small, delicate sandwich' (the imitated act's outcome), with the later 'boldly ... before her grandmother' providing a contrastive arc that only option 3 sustains. Options 1 and 4 are textually contradicted; 2 is redundant repetition; 5 is contradicted by her unvoiced ignorance. No alternative parse makes any distractor viable."
+}

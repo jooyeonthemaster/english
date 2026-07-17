@@ -1,0 +1,173 @@
+{
+  "passageId": "ebsi_go1_20151117-q20",
+  "difficulty": "ADVANCED",
+  "meta": {
+    "year": 2015,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 121
+  },
+  "attempts": 1,
+  "relaxedFallback": false,
+  "errors": [
+    "grammar-marker-too-dense",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-too-long",
+    "grammar-underline-punctuated-fragment",
+    "grammar-keypoint-choice-mismatch"
+  ],
+  "warnings": [
+    "difficulty-mismatch",
+    "grammar-explanation-too-long"
+  ],
+  "topReject": [],
+  "layout": "(A):dec=a  (B):dec=c  (C):ANS=d  (D):dec=c  (E):dec=e",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 0,
+        "relPos": 0,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": false,
+        "charPos": 139,
+        "relPos": 0.213,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": true,
+        "charPos": 338,
+        "relPos": 0.518,
+        "sentenceIndex": 4,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 438,
+        "relPos": 0.672,
+        "sentenceIndex": 5,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 563,
+        "relPos": 0.863,
+        "sentenceIndex": 7,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.863,
+    "firstHalfShare": 0.4,
+    "notFoundCount": 0
+  },
+  "originalPassage": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear. The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중 어법상 옳지 않은 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "The fast pace of today's lifestyle has us piling one thing on top of another.",
+        "isError": false,
+        "errorExpression": "The fast pace of today's lifestyle has us piling one thing on top of another.",
+        "surroundingText": "The fast pace of today's lifestyle has us piling one thing on top of another. But you should know that multitasking doesn't save any time.",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "Very often, multitasking only slows you down, contrary to popular belief.",
+        "isError": false,
+        "errorExpression": "Very often, multitasking only slows you down, contrary to popular belief.",
+        "surroundingText": "But you should know that multitasking doesn't save any time. Very often, multitasking only slows you down, contrary to popular belief. Give your whole focus to what you're doing at the moment no matter what it is.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(C)",
+        "expression": "Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand.",
+        "isError": true,
+        "errorExpression": "Listen to the sound of the water as it fills the washing machine and feels the clothes in your hand.",
+        "surroundingText": "While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand.",
+        "pointCode": "d",
+        "correction": "Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand."
+      },
+      {
+        "label": "(D)",
+        "expression": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "isError": false,
+        "errorExpression": "It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "surroundingText": "While doing the laundry, just do the laundry: Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand. It doesn't take up any more time than it would when done with your phone pressed to your ear.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(E)",
+        "expression": "Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+        "isError": false,
+        "errorExpression": "Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+        "surroundingText": "The same applies to your work. Focus on one task at a time, and you'll accomplish each task better, and probably faster.",
+        "pointCode": "e"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "The fast pace of today's lifestyle has us piling one thing on top of another."
+      },
+      {
+        "label": "(B)",
+        "text": "Very often, multitasking only slows you down, contrary to popular belief."
+      },
+      {
+        "label": "(C)",
+        "text": "Listen to the sound of the water as it fills the washing machine and feels the clothes in your hand."
+      },
+      {
+        "label": "(D)",
+        "text": "It doesn't take up any more time than it would when done with your phone pressed to your ear."
+      },
+      {
+        "label": "(E)",
+        "text": "Focus on one task at a time, and you'll accomplish each task better, and probably faster."
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "‘have + 목적어 + 현재분사’ 구조는 ‘∼하게 하다, ∼하도록 만들다’는 사역(使役) 의미를 나타내며, here ‘has us piling’은 ‘우리가 한 가지 일을 계속 쌓아가게 만든다’는 뜻으로 어법상 완전히 적절합니다.",
+      "(B)": "‘contrary to popular belief’(널리 받아들여지는 믿음과는 반대로)는 부사어로 문장을 전체적으로 수식하는 관용적 표현이며, comma로 분리해도 어법상 전혀 문제가 없습니다.",
+      "(D)": "‘when done...’ 절은 ‘when it is done...’의 축약형으로, 수식어가 뒤따르는 수동태 분사구문이며, ‘with + 목적어 + 과거분사(pressed)’ 또한 독립주격구로 자연스럽게 쓰입니다.",
+      "(E)": "‘and’로 연결된 두 문장은 조건·결과 관계를 나타내며, ‘better, and probably faster’처럼 두 부사가 and로 연결된 것도 어법상 전혀 무리가 없습니다."
+    },
+    "explanation": "(C) \"Listen to the sound of the water as it fills the washing machine and feels the clothes in your hand.\"는 어법상 틀린 표현이며 \"Listen to the sound of the water as it fills the washing machine and feel the clothes in your hand.\"로 고쳐야 한다. 정답은 (C)입니다. 원래 지문에서 ‘Listen to the sound... and feel the clothes...’는 ‘you’를 주어로 생략한 명령문 두 개가 and로 연결된 병렬 구조입니다. 하지만 오답지인 ‘...and feels the clothes...’로 바꾸면 ‘it’(the water)이 ‘feel’의 주어가 되어 ‘물이 옷을 느낀다’는 부자연스러운 의미가 되고, 문법적으로도 ‘Listen’(명령문)과 ‘feels’(3인칭 단수 현재형)는 병렬 구조를 이룰 수 없습니다. 따라서 (C)는 어법상 명백한 비문입니다.",
+    "keyPoints": [
+      "병렬구조(parallelism) 파악",
+      "명령문 imperative의 주어 생략 구조",
+      "3인칭 단수 주어와 동사 일치 오류",
+      "지시대명사 it의 선행사 파악"
+    ],
+    "tags": [
+      "Advanced",
+      "Parallelism",
+      "Imperative Mood",
+      "Subject-Verb Agreement",
+      "Pronoun Reference"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "__(A) The fast pace of today's lifestyle has us piling one thing on top of another.__ But you should know that multitasking doesn't save any time. __(B) Very often, multitasking only slows you down, contrary to popular belief.__ Give your whole focus to what you're doing at the moment no matter what it is. While doing the laundry, just do the laundry: __(C) Listen to the sound of the water as it fills the washing machine and feels the clothes in your hand.__ __(D) It doesn't take up any more time than it would when done with your phone pressed to your ear.__ The same applies to your work. __(E) Focus on one task at a time, and you'll accomplish each task better, and probably faster.__"
+  }
+}

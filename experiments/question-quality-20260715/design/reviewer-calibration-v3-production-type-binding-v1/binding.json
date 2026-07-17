@@ -1,0 +1,322 @@
+{
+  "schemaVersion": "reviewer-calibration-v3-production-type-binding-1",
+  "artifactId": "reviewer-calibration-v3-production-type-binding-v1",
+  "status": "BINDING_VALID_PRIOR_PROTOCOL_STANDALONE_BLOCKED",
+  "freeze": {
+    "date": "2026-07-15",
+    "repositoryHead": "467c6d107137a91088d3eba1620ba4036a63d709",
+    "sourcePolicy": "Current worktree bytes are authoritative for semantic extraction; Git HEAD blobs and clean/modified state are recorded separately.",
+    "activity": {
+      "externalNetworkCalls": 0,
+      "providerCalls": 0,
+      "modelCalls": 0,
+      "apiCandidatesConsumed": 0,
+      "databaseCalls": 0,
+      "secretReads": 0,
+      "trustedGoldReads": 0,
+      "trustedGoldWrites": 0
+    }
+  },
+  "sources": [
+    {
+      "path": "src/lib/question-type-ui.ts",
+      "role": "Canonical English new-generation picker registry; QUESTION_TYPE_GROUPS is the 25-type authority.",
+      "worktreeSha256": "19946584a591138a484034691230c2faa1b8d79ced811db96b5afed43f41e9f7",
+      "headBlobSha1": "7a15f2feba4533a97a446a23ab17506609748f0d",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+    },
+    {
+      "path": "src/app/(director)/director/workbench/generate/generate-page-types.ts",
+      "role": "Binds EXAM_TYPE_GROUPS directly to QUESTION_TYPE_GROUPS.",
+      "worktreeSha256": "bef8c1a9c9854b276807df02d06381927a005e6cc050dd3d2e1097769742a1a1",
+      "headBlobSha1": "6a26b726935a947ccac16a385a3f699f7d23de30",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+    },
+    {
+      "path": "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
+      "role": "Consumes EXAM_TYPE_GROUPS for the English generation UI.",
+      "worktreeSha256": "b20357b0d224e096680c8dfe5a1915c816d30c4bf288569ac4a9a98696aa0a1e",
+      "headBlobSha1": "5dc433eb6f42b108b292c7f29316227c74f28191",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "b8cfd5f9845c638c82843e6fd4e10e14b95cf903"
+    },
+    {
+      "path": "src/lib/question-schemas.ts",
+      "role": "Structured response schema registry; contains 26 English-compatible schema IDs.",
+      "worktreeSha256": "6037aaad366f029afc2b0ebf1b0194cdcc8874173002256baa24a95d15888a22",
+      "headBlobSha1": "ebb1b92690d96861580e3ea9499c431083534fbd",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+    },
+    {
+      "path": "src/lib/question-ai-schemas-mc.ts",
+      "role": "AI generation schema registry for multiple-choice and essay types; worktree contains unrelated quality changes but the type registry is semantically extracted.",
+      "worktreeSha256": "c538452b7810e0efd8dd1d2c9345c3b1a64f8650a4590afc11850ce0d2bb5694",
+      "headBlobSha1": "1f04c99402d8a92ec770d82052e9bd1ae7c9a661",
+      "cleanAtFreeze": false,
+      "lastPathCommit": "3f155ca682baec204559d07d1516c847e13ba347"
+    },
+    {
+      "path": "src/lib/question-ai-schemas-vocab.ts",
+      "role": "AI generation schema registry for vocabulary types.",
+      "worktreeSha256": "71f041c8f073262db1a181c2c23c932a0fe24e0e130fb605adbaa6613503de4a",
+      "headBlobSha1": "747b8f5eaf3da4781b09b7014a7eafb163abc105",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "72418a0ce517a6fcf0ce2b883f4e80d81ecdda04"
+    },
+    {
+      "path": "src/app/api/ai/generate-question/route.ts",
+      "role": "Production dispatcher selects AI_QUESTION_SCHEMAS or QUESTION_SCHEMAS by requested type.",
+      "worktreeSha256": "afadfaf79d51657e546233c78ed9d092dfba9060cd89240ff9d2be3f0e03c1fa",
+      "headBlobSha1": "fa5bcc0fb50ae3a8b9d4c8824f7f7f633fdd3641",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "11163f32565fb2c7278a550138ec4f08e0475e01"
+    },
+    {
+      "path": "src/components/workbench/question-type-filter.tsx",
+      "role": "Stored-question filter compatibility list; includes the legacy TOPIC_MAIN_IDEA ID and is not the new-generation picker authority.",
+      "worktreeSha256": "adaf0585b8e3f9a6d0232e2119d6fbd99ce9cafd373d90519dc55b8bd1fc2fd9",
+      "headBlobSha1": "b4fecf97f3203169e9defe85a034ce847a9d37f1",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "27372abb9742fcdffbdb3003dd9d9e61dd083dd3"
+    },
+    {
+      "path": "src/lib/constants.ts",
+      "role": "Legacy QUESTION_SUBTYPES list; 24 entries and not authoritative for the current generation picker.",
+      "worktreeSha256": "a826ee6070a1ccb957cb993d80a429f1bfbfbd50568638d34153d859d9d8c10f",
+      "headBlobSha1": "f2d88069ab7036d2dc7384e61d2c4658ac2dc2fa",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "867d3de8558f18a47ff9e960774e25bbca8692e2"
+    },
+    {
+      "path": "src/lib/question-ai-edit/type-edit-config.ts",
+      "role": "Explicitly classifies TOPIC_MAIN_IDEA as a legacy integrated type.",
+      "worktreeSha256": "c9ffea7b5a156a863e097cf5aface8874d9296802580bd298045dc7987990cd9",
+      "headBlobSha1": "2f27293f1cdd3eca009afde27e2517fd2ab882a6",
+      "cleanAtFreeze": true,
+      "lastPathCommit": "6530ef2a82a4670f0a96afa4f44465c466dc77a6"
+    },
+    {
+      "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+      "role": "Prior design-only logical universe whose execution binding is being replaced.",
+      "worktreeSha256": "4c27307bf83586a5ffb5301f4aaa6915ca5da8ec4e985f9a259185da8495e162",
+      "headBlobSha1": null,
+      "cleanAtFreeze": false,
+      "lastPathCommit": null
+    }
+  ],
+  "authority": {
+    "canonicalNewGenerationChain": [
+      "src/lib/question-type-ui.ts#QUESTION_TYPE_GROUPS",
+      "src/app/(director)/director/workbench/generate/generate-page-types.ts#EXAM_TYPE_GROUPS",
+      "src/app/(director)/director/workbench/generate/generation-config-panel.tsx#panelTypeGroups when koPanel=false"
+    ],
+    "schemaSupportChain": [
+      "src/lib/question-ai-schemas-mc.ts#AI_QUESTION_SCHEMAS",
+      "src/lib/question-ai-schemas-vocab.ts#AI_VOCAB_QUESTION_SCHEMAS",
+      "src/lib/question-schemas.ts#QUESTION_SCHEMAS",
+      "src/app/api/ai/generate-question/route.ts#schema dispatch"
+    ],
+    "nonAuthoritativeCompatibilityLists": [
+      "src/components/workbench/question-type-filter.tsx#TYPE_SUBTYPE_MAP",
+      "src/lib/constants.ts#QUESTION_SUBTYPES"
+    ]
+  },
+  "canonicalUniverse": {
+    "uiTypeCount": 25,
+    "uiTypeIdsInOrder": [
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR",
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ],
+    "focusTypeIds": ["BLANK_INFERENCE", "GRAMMAR_ERROR"],
+    "nonfocusTypeCount": 23,
+    "nonfocusTypeIdsInUiOrder": [
+      "GRAMMAR_CHOICE_COMBO",
+      "VOCAB_CHOICE",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "TOPIC",
+      "MAIN_IDEA",
+      "TITLE",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "SENTENCE_TRANSFORM",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "WORD_ORDER",
+      "TOPIC_SENTENCE_WRITING",
+      "GRAMMAR_CORRECTION",
+      "CONTEXT_MEANING",
+      "SYNONYM",
+      "ANTONYM"
+    ]
+  },
+  "semanticDigests": {
+    "uiTypeIdsInOrderSha256": "18ce7318787975fd382247bd6e2c5667efe64067eb2ad2397e2cb23215c6184e",
+    "nonfocusTypeIdsInUiOrderSha256": "e0b340c84931e1979b5667f0844df2144f0d188a4320f1f396813872d7298cea",
+    "familiesSha256": "0c61b690ab3fa45b84a0473b8a46c5d5d246d9814f324ef91cdd18436b945c31",
+    "schemaAndUiDriftSha256": "ffeedb17c4bb775708181999c190f06e0870ec5197c748d901e543b54bce1142",
+    "rotationSha256": "5fe733b8ada56ea1fb10da01b857ce82b95c734147be9301e97d0011dbd914ef"
+  },
+  "schemaAndUiDrift": {
+    "structuredSchemaTypeCount": 26,
+    "aiSchemaTypeCount": 26,
+    "filterTypeCount": 26,
+    "legacyQuestionSubtypesCount": 24,
+    "schemaOnlyRelativeToNewGenerationUi": ["TOPIC_MAIN_IDEA"],
+    "filterOnlyRelativeToNewGenerationUi": ["TOPIC_MAIN_IDEA"],
+    "legacyQuestionSubtypesMissingRelativeToUi": ["GRAMMAR_CHOICE_COMBO"],
+    "legacyQuestionSubtypesExtraRelativeToUi": [],
+    "classification": [
+      {
+        "typeId": "TOPIC_MAIN_IDEA",
+        "status": "LEGACY_SCHEMA_AND_FILTER_COMPATIBILITY_ONLY",
+        "newGenerationUiEligible": false,
+        "calibrationCanonicalEligible": false,
+        "automaticAliasRewriteAllowed": false,
+        "semanticSuccessors": ["TOPIC", "MAIN_IDEA"],
+        "reason": "The schema metadata calls it a legacy question and edit configuration calls it a legacy integrated type. It remains readable/renderable but is not offered by the current 25-type generation picker. Historical rows retain the original ID; no automatic split is truth-preserving."
+      },
+      {
+        "typeId": "GRAMMAR_CHOICE_COMBO",
+        "status": "CANONICAL_UI_AND_SCHEMA_LEGACY_CONSTANT_MISSING",
+        "newGenerationUiEligible": true,
+        "calibrationCanonicalEligible": true,
+        "automaticAliasRewriteAllowed": false,
+        "semanticSuccessors": [],
+        "reason": "It is in the canonical picker and both schema registries; omission from QUESTION_SUBTYPES is legacy-list drift, not deprecation."
+      }
+    ],
+    "failClosedRule": "Any new set difference, count change, or change to either classified exception fails verification until a new binding version is reviewed."
+  },
+  "families": [
+    {
+      "familyId": "NF-F1-GLOBAL_MEANING_SELECTION",
+      "rotationOrder": ["TOPIC", "MAIN_IDEA", "TITLE"]
+    },
+    {
+      "familyId": "NF-F2-LOCAL_INFERENCE_AND_REFERENCE",
+      "rotationOrder": ["IMPLIED_MEANING", "REFERENCE", "CONTENT_MATCH"]
+    },
+    {
+      "familyId": "NF-F3-DISCOURSE_STRUCTURE",
+      "rotationOrder": ["SENTENCE_ORDER", "SENTENCE_INSERT", "IRRELEVANT"]
+    },
+    {
+      "familyId": "NF-F4-GRAMMAR_FORM_DIAGNOSIS",
+      "rotationOrder": ["GRAMMAR_CHOICE_COMBO", "GRAMMAR_CORRECTION"]
+    },
+    {
+      "familyId": "NF-F5-LEXICAL_SEMANTICS",
+      "rotationOrder": ["VOCAB_CHOICE", "CONTEXT_MEANING", "SYNONYM", "ANTONYM"]
+    },
+    {
+      "familyId": "NF-F6-SUMMARY_AND_COMPRESSION",
+      "rotationOrder": ["SUMMARY_COMPLETE_MC", "SUMMARY_COMPLETE", "SUMMARY_WRITING"]
+    },
+    {
+      "familyId": "NF-F7-CONTROLLED_REWRITE_AND_ORDER",
+      "rotationOrder": ["CONDITIONAL_WRITING", "SENTENCE_TRANSFORM", "WORD_ORDER"]
+    },
+    {
+      "familyId": "NF-F8-TARGETED_CONSTRUCTED_EXPRESSION",
+      "rotationOrder": ["FILL_BLANK_KEY", "TOPIC_SENTENCE_WRITING"]
+    }
+  ],
+  "rotation": {
+    "epochIsOneBased": true,
+    "mainIndexFormula": "(2 * (epoch - 1)) mod familySize",
+    "holdoutIndexFormula": "(2 * (epoch - 1) + 1) mod familySize",
+    "oneMainAndOneHoldoutPerFamilyPerEpoch": true,
+    "mainAndHoldoutMustBeDifferentWithinEpoch": true,
+    "failureDoesNotAdvanceRotation": true,
+    "outcomeAwareSkippingForbidden": true,
+    "pilotDoesNotCountTowardCoverage": true,
+    "singleEpochDistinctCanonicalTypes": 16,
+    "singleEpochAllTypeClaimAllowed": false,
+    "mainPlusHoldoutEpochsToTouchAll23": 2,
+    "mainOnlyEpochsToTouchAll23": 4,
+    "allTypeClaimGate": "Every one of the 23 canonical IDs must have a passed fresh main or activation-holdout anchor in the append-only coverage ledger; family transfer alone is insufficient."
+  },
+  "priorDesignMismatch": {
+    "severity": "BLOCKER",
+    "code": "PRIOR_V3_LOGICAL_UNIVERSE_NOT_PRODUCTION_BOUND",
+    "priorProtocolPath": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+    "priorLogicalTypeCount": 23,
+    "exactIntersectionCount": 9,
+    "priorOnlyLogicalIds": [
+      "PURPOSE",
+      "CLAIM",
+      "GIST",
+      "CONTENT_MISMATCH",
+      "INFERENCE",
+      "CHART",
+      "PRACTICAL_INFO",
+      "MOOD",
+      "VOCABULARY_CONTEXT",
+      "IRRELEVANT_SENTENCE",
+      "SENTENCE_INSERTION",
+      "SUMMARY_COMPLETION",
+      "SHORT_ANSWER",
+      "MULTI_ITEM_COMPOSITE"
+    ],
+    "productionOnlyCanonicalIds": [
+      "VOCAB_CHOICE",
+      "SENTENCE_INSERT",
+      "MAIN_IDEA",
+      "IMPLIED_MEANING",
+      "REFERENCE",
+      "SUMMARY_COMPLETE_MC",
+      "IRRELEVANT",
+      "CONDITIONAL_WRITING",
+      "FILL_BLANK_KEY",
+      "SUMMARY_COMPLETE",
+      "SUMMARY_WRITING",
+      "TOPIC_SENTENCE_WRITING",
+      "CONTEXT_MEANING",
+      "ANTONYM"
+    ],
+    "standalonePriorProtocolIssuanceEligible": false,
+    "resolutionCondition": "A future v3 execution packet must hash-bind this artifact and use canonicalUniverse plus families from this artifact instead of the prior logicalTypes arrays. The prior artifact remains unmodified."
+  },
+  "issuance": {
+    "thisBindingArtifactSemanticallyValid": true,
+    "priorProtocolStandaloneEligible": false,
+    "combinedExecutionEligibleWhen": [
+      "this manifest verifies against unchanged source bytes and extracted registries",
+      "the execution packet records this binding artifact and manifest hashes",
+      "all 23 production type bindings are consumed from this artifact",
+      "the prior logical universe is not used for authoring or coverage claims"
+    ]
+  }
+}

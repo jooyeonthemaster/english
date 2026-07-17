@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "5",
+  "multipleDefensible": false,
+  "defensibleLabels": ["5"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "1",
+      "verdict": "reject",
+      "reason": "문법 결합: 'all of us cling to the actual narrative ... indiscriminately'는 통사적으로 정문(cling to + NP, 부사 후치). 그러나 논리 모순: 두 번째 난파선에는 고양이가 없었으므로('there was no cat') 기자들이 넣는 고양이는 'actual narrative'가 아니라 허구다. 'actual(실제의)'이 지문의 핵심 전제(사실이 아닌 세부를 삽입)와 정면 충돌하므로 성립 불가. 'heroic crew' 역시 첫 사건에만 해당하며 일반화 근거 없음."
+    },
+    {
+      "label": "2",
+      "verdict": "reject",
+      "reason": "문법 결합: 'collaborate with rivals to make ... more plausible' 정문. 논리 판정: 지문 어디에도 기자들 간 공모·협업의 단서가 없다. 각 기자는 독립적으로 편집자의 질책을 피하려는 유인에 반응했을 뿐이다('did not wish to take a chance'). 수렴 행동(모두 고양이를 넣음)은 협업의 결과가 아니라 동일한 유인 구조의 병렬 반응이므로 collaborate는 지문이 지지하지 않는 인과를 도입한다. 성립 불가."
+    },
+    {
+      "label": "3",
+      "verdict": "reject",
+      "reason": "문법 결합: 'wait for the editors' explicit instructions before mentioning the animal' 정문. 논리 판정: 편집자는 사후에 질책('called down', 'severely scolded')만 했을 뿐 사전 지시를 내린 사실이 없고, 기자들의 행동 원리는 지시 대기라 아니라 선제적 위험 회피다. '지시를 기다린다'는 오히려 지문이 묘사하는 '묻지도 않고 미리 넣는' 행동과 반대 방향이므로 성립 불가."
+    },
+    {
+      "label": "4",
+      "verdict": "reject",
+      "reason": "문법 결합: 'prioritize dramatic rescue narratives regardless of what the editors want' 정문. 논리 판정: 전반부(극적 구조 서사 우선시)는 결과 기술로는 그럴듯하나, 'regardless of what the editors want'가 치명적 모순이다. 기자들이 고양이를 넣는 유일한 동기가 바로 편집자의 질책 회피, 즉 편집자가 원하는 것에 대한 순응이기 때문이다. 인과의 방향을 정반대로 뒤집으므로 성립 불가."
+    },
+    {
+      "label": "5",
+      "verdict": "accept",
+      "reason": "문법 결합: 'all of us fabricate the anticipated detail just to escape being reprimanded' — fabricate(타동사)+NP, 'just to' 목적 부정사, 'escape + 동명사(being reprimanded, 수동 동명사)' 모두 정문. 논리 판정: (a) 'fabricate'는 두 번째 사건에서 고양이가 없는데도 넣은 행위('there was no cat ... put the cat in')의 일반화, (b) 'the anticipated detail'은 편집자·독자가 기대하게 된 고양이 디테일을 정확히 지시, (c) 'to escape being reprimanded'는 'called down', 'severely scolded for being beaten'의 반복 패턴에서 도출되는 유일한 동기와 일치. 화자 자신도 두 번 질책당한 뒤 합류했다는 서사('Now ... all of us')와 완전 정합. 유일하게 성립하는 선지."
+    }
+  ],
+  "note": "고전적 저널리즘 일화(난파선 고양이) 기반 빈칸 문항. 5개 선지 모두 통사적으로는 빈칸에 결합 가능하므로 변별은 순수하게 논리 적합성에서 발생한다. 1은 'actual'이 허구 삽입이라는 전제와 모순, 2는 지문에 없는 공모 인과 도입, 3은 사후 질책을 사전 지시로 왜곡, 4는 'regardless of what the editors want'가 동기 구조를 정반대로 뒤집음. 5만이 행위(허구 삽입)·대상(기대된 디테일)·동기(질책 회피)를 모두 지문 근거로 뒷받침한다. 복수 정답 여지 없음."
+}

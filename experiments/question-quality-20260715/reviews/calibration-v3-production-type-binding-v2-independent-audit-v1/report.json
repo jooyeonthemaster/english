@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "calibration-v3-production-type-binding-v2-independent-audit-report-1",
+  "artifactId": "calibration-v3-production-type-binding-v2-independent-audit-v1",
+  "date": "2026-07-15",
+  "status": "FAIL_CLOSED_EXECUTION_INELIGIBLE",
+  "auditedArtifact": {
+    "path": "experiments/question-quality-20260715/design/reviewer-calibration-v3-production-type-binding-v2",
+    "hashes": {
+      "REPORT.md": "cc6ddd0cd005a4707ab70f54fb31fb251f997be804f4621b45e76e82b9c72ce6",
+      "binding.json": "7ec4d2c302ce841bbc5de2ec3b6b5d1b33bfc30f867b5ff4dbaa06aeb7e42e4f",
+      "hostile-fixtures.json": "f999fa8544d41cc07e8f9e3413de1f38e17fc3d2fa7bdf6d193570a1da9ebb88",
+      "verify.mjs": "32276d69adff6df6ec3a520b40a52009230dfc7f110908527c9ce870b729729a",
+      "MANIFEST.sha256": "4e81452d0c74f3361cd01a59e5ec6406ea2fde729fd79f588dcdaf07c380de14"
+    }
+  },
+  "verdicts": {
+    "correctedMath": {
+      "status": "VALID_MATH_COMPONENT",
+      "reason": "The corrected selector, 32 ordered materialized rows, n=2/n=3/n=4 schedules, and 16/23/23 contact counts reproduce exactly."
+    },
+    "currentByteObservation": {
+      "status": "CURRENT_BYTES_MATCH",
+      "reason": "Current source SHA, HEAD blobs, porcelain state, last path commits, v1 provenance hashes, and target manifest match their recorded values."
+    },
+    "executionAuthority": {
+      "status": "FAIL_CLOSED_EXECUTION_INELIGIBLE",
+      "reason": "The author gate does not durably bind repository/Git provenance or semantically validate the production picker-to-runtime authority chain."
+    },
+    "certification": {
+      "status": "NOT_ESTABLISHED",
+      "reason": "Contact is explicitly not certification and no coverage ledger was accessed."
+    }
+  },
+  "executionBlockers": [
+    {
+      "id": "B-01",
+      "severity": "BLOCKER",
+      "code": "DURABLE_GIT_PROVENANCE_FAIL_OPEN",
+      "currentBytesMatch": true,
+      "summary": "Repository HEAD and lastPathCommit are unread, while dirty-state checking is skipped whenever the recorded HEAD blob is null.",
+      "minimalCounterexample": {
+        "source": "experiments/question-quality-20260715/design/reviewer-calibration-v3-replacement-v1/protocol.json",
+        "frozenState": "untracked, headBlob=null, lastPathCommit=null, bytes H",
+        "mutatedLiveState": "tracked and committed with identical bytes H",
+        "authorSourcePredicatePasses": true,
+        "independentExactGitPredicatePasses": false
+      }
+    },
+    {
+      "id": "B-02",
+      "severity": "BLOCKER",
+      "code": "PRODUCTION_RUNTIME_AUTHORITY_NOT_SEMANTICALLY_VERIFIED",
+      "currentBytesMatch": true,
+      "summary": "The author verifier does not AST-bind EXAM_TYPE_GROUPS, the English GenerationConfigPanel branch, rendered consumption, or runtime schema dispatch.",
+      "missingAuthorAstIdentifiers": [
+        "EXAM_TYPE_GROUPS",
+        "panelTypeGroups",
+        "AI_QUESTION_SCHEMAS"
+      ]
+    }
+  ],
+  "majorVerifierGaps": [
+    {
+      "id": "M-01",
+      "code": "CONTACT_CERTIFICATION_GATE_PARTIALLY_UNREAD",
+      "summary": "The author verifier checks claims.contactEqualsCertification but not rotation.contactIsCertification or allTypeClaimGate."
+    },
+    {
+      "id": "M-02",
+      "code": "MANIFEST_DUPLICATE_COLLAPSE",
+      "summary": "The author manifest parser overwrites duplicate file names in a Map and does not enforce the original line count."
+    },
+    {
+      "id": "M-03",
+      "code": "SUPERSEDES_AND_V1_PROVENANCE_FIELDS_PARTIALLY_UNREAD",
+      "summary": "Exact superseded path/artifact semantics and several v1 provenance fields are not asserted by the author verifier."
+    }
+  ],
+  "independentlyConfirmed": {
+    "productionUiCount": 25,
+    "focusCount": 2,
+    "canonicalNonfocusCount": 23,
+    "structuredSchemaCount": 26,
+    "aiSchemaCount": 26,
+    "filterCount": 26,
+    "legacyQuestionSubtypesCount": 24,
+    "schemaOnlyRelativeToUi": ["TOPIC_MAIN_IDEA"],
+    "filterOnlyRelativeToUi": ["TOPIC_MAIN_IDEA"],
+    "legacyMissingRelativeToUi": ["GRAMMAR_CHOICE_COMBO"],
+    "legacyExtraRelativeToUi": [],
+    "familyCount": 8,
+    "mappedUniqueCount": 23,
+    "materializedScheduleRows": 32,
+    "singleEpochCombinedDistinct": 16,
+    "twoEpochCombinedContact": 23,
+    "fourEpochMainOnlyContact": 23,
+    "minimumCombinedContactEpochs": 2,
+    "minimumMainOnlyContactEpochs": 4,
+    "contactIsCertification": false
+  },
+  "v1InvalidProvenance": {
+    "status": "EXACTLY_BOUND_AND_REPRODUCED",
+    "manifestSha256": "655bfc33ef47f06752fddde0c2ac4c3750ca7468d97d84a241dca28fefac1539",
+    "sourceSnapshotSha256": "e1bcb66ec8bea05a6feed8569eacc9f78a535580e6283b89a6676276d628bc60",
+    "code": "V1_ROTATION_FORMULA_VERIFIER_DIVERGENCE",
+    "n4DeclaredMainIndices": [0, 2, 0, 2],
+    "distinct": 2,
+    "claimed": 4
+  },
+  "hostileMutationSuite": {
+    "execution": "in-memory",
+    "scenarioCount": 32,
+    "rejectedByIndependentChecks": 32,
+    "sourceOriginalsModified": false,
+    "targetArtifactModified": false,
+    "v1Modified": false,
+    "v3Modified": false
+  },
+  "authorVerifierBaseline": {
+    "command": "node design/reviewer-calibration-v3-production-type-binding-v2/verify.mjs --check-manifest",
+    "status": "PASS_V2_V1_EXECUTION_INVALID",
+    "checks": 128,
+    "passed": 128,
+    "failed": 0,
+    "usedAsApprovalEvidence": false
+  },
+  "method": {
+    "sourceParsing": "TypeScript compiler AST with strict static array/object extraction and executable-node relationship checks",
+    "setComparison": "independent ordered-list and mathematical set operations",
+    "gitState": "repository HEAD plus per-path porcelain, HEAD blob including null, and last path commit including null",
+    "rotation": "independent formula execution, ordered row materialization, and minimum-epoch coverage",
+    "mutationMode": "in-memory clones only"
+  },
+  "activity": {
+    "networkCalls": 0,
+    "providerCalls": 0,
+    "modelCalls": 0,
+    "apiCandidatesConsumed": 0,
+    "databaseCalls": 0,
+    "secretReads": 0,
+    "trustedGoldReads": 0,
+    "trustedGoldWrites": 0,
+    "ledgerReads": 0,
+    "ledgerWrites": 0
+  }
+}

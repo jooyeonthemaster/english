@@ -1,0 +1,170 @@
+{
+  "passageId": "ebsi_go1_20191120-q20",
+  "difficulty": "INTERMEDIATE",
+  "meta": {
+    "year": 2019,
+    "exam": "11월",
+    "origType": "주장",
+    "words": 140
+  },
+  "attempts": 2,
+  "relaxedFallback": false,
+  "errors": [],
+  "warnings": [],
+  "topReject": [
+    "grammar-render-marker-countx1",
+    "grammar-error-not-mutatedx1",
+    "grammar-source-expression-not-backedx1",
+    "grammar-correction-not-source-backedx1"
+  ],
+  "layout": "(A):dec=k  (B):ANS=b  (C):dec=c  (D):dec=e  (E):dec=k",
+  "positions": {
+    "markers": [
+      {
+        "label": "(A)",
+        "isError": false,
+        "charPos": 43,
+        "relPos": 0.055,
+        "sentenceIndex": 0,
+        "found": true
+      },
+      {
+        "label": "(B)",
+        "isError": true,
+        "charPos": 125,
+        "relPos": 0.159,
+        "sentenceIndex": 1,
+        "found": true
+      },
+      {
+        "label": "(C)",
+        "isError": false,
+        "charPos": 219,
+        "relPos": 0.278,
+        "sentenceIndex": 2,
+        "found": true
+      },
+      {
+        "label": "(D)",
+        "isError": false,
+        "charPos": 356,
+        "relPos": 0.452,
+        "sentenceIndex": 3,
+        "found": true
+      },
+      {
+        "label": "(E)",
+        "isError": false,
+        "charPos": 595,
+        "relPos": 0.755,
+        "sentenceIndex": 6,
+        "found": true
+      }
+    ],
+    "sentenceCount": 8,
+    "distinctSentences": 5,
+    "lastMarkerRelPos": 0.755,
+    "firstHalfShare": 0.8,
+    "notFoundCount": 0
+  },
+  "originalPassage": "We tend to go long periods of time without reaching out to the people we know. Then, we suddenly take notice of the distance that has formed and we scramble to make repairs. We call people we haven't spoken to in ages, hoping that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't kept up with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother calling someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "reaching out",
+        "isError": false,
+        "correction": "reaching out",
+        "errorExpression": "reaching out",
+        "surroundingText": "We tend to go long periods of time without reaching out to the people we know.",
+        "pointCode": "k"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": true,
+        "correction": "that",
+        "errorExpression": "where",
+        "surroundingText": "suddenly take notice of the distance that has formed and we scramble to make repairs.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "hoping",
+        "isError": false,
+        "correction": "hoping",
+        "errorExpression": "hoping",
+        "surroundingText": "We call people we haven't spoken to in ages, hoping that one small effort will erase",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "kept up",
+        "isError": false,
+        "correction": "kept up",
+        "errorExpression": "kept up",
+        "surroundingText": "However, this rarely works: relationships aren't kept up with big one-time fixes.",
+        "pointCode": "e"
+      },
+      {
+        "label": "(E)",
+        "expression": "calling",
+        "isError": false,
+        "correction": "calling",
+        "errorExpression": "calling",
+        "surroundingText": "say that you shouldn't bother calling someone just because it's been a while",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(B)"
+    ],
+    "correctAnswer": "(B)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "reaching out"
+      },
+      {
+        "label": "(B)",
+        "text": "where"
+      },
+      {
+        "label": "(C)",
+        "text": "hoping"
+      },
+      {
+        "label": "(D)",
+        "text": "kept up"
+      },
+      {
+        "label": "(E)",
+        "text": "calling"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 전치사 without 뒤의 목적어 자리이므로 동명사인 'reaching out'이 어법상 힘을 얻어 알맞게 쓰였습니다.",
+      "(C)": "이 자리는 주절(We call people...) 뒤에서 부가적인 동작을 나타내는 분사구문으로, 주어인 We가 스스로 희망하는(hope) 주체이므로 능동 의미의 현재분사 'hoping'이 어법상 옳습니다.",
+      "(D)": "이 자리는 주어인 relationships가 유지 관리하는 행위자가 아니라 유지 관리되는 대상이므로, aren't와 함께 수동태를 구성하는 과거분사 'kept up'이 어법상 옳습니다.",
+      "(E)": "bother 동사는 목적어로 동명사와 to부정사를 모두 취할 수 있으므로, 동명사 'calling'이 적법하게 사용되었습니다."
+    },
+    "explanation": "이 문장에서는 선행사인 the distance를 수식하는 형용사절이 이어지고 있습니다. 관계절 내에는 주어가 결손된 동사구 'has formed'가 뒤따르고 있으므로, 이 자리는 관계사절 뒤가 불완전한 상태입니다. 따라서 완전한 절을 요구하는 관계부사 where는 이 자리에 결코 올 수 없으며, 주격 관계대명사인 'that' 혹은 which로 고쳐 써야 문장 구조상 올바른 문장이 성립합니다. 선행사가 장소 등의 추상적 의미를 띤다고 해서 섣불리 관계부사를 선택해 넘어가지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      "(B) 관계사 — 뒤따르는 절에 주어가 결손된 불완전한 문장이 오므로 관계대명사 사용",
+      "(C) 분사구문 능동 vs 수동 — 앞선 주절의 주어와 분사 동작의 주동적 관계 확인",
+      "(D) 능동태 vs 수동태 — 주어와 동사의 행위-대상 관계 및 목적어 유무 판단"
+    ],
+    "tags": [
+      "관계사",
+      "수동태",
+      "분사구문",
+      "동명사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "We tend to go long periods of time without __(A) reaching out__ to the people we know. Then, we suddenly take notice of the distance __(B) where__ has formed and we scramble to make repairs. We call people we haven't spoken to in ages, __(C) hoping__ that one small effort will erase the months and years of distance we've created. However, this rarely works: relationships aren't __(D) kept up__ with big one-time fixes. They're kept up with regular maintenance, like a car. In our relationships, we have to make sure that not too much time goes by between oil changes, so to speak. This isn't to say that you shouldn't bother __(E) calling__ someone just because it's been a while since you've spoken; just that it's more ideal not to let yourself fall out of touch in the first place. Consistency always brings better results.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  }
+}

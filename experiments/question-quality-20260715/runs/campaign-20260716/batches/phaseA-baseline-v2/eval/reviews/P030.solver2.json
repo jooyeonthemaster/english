@@ -1,0 +1,35 @@
+{
+  "pid": "P030",
+  "answer": "②",
+  "multipleDefensible": false,
+  "defensibleLabels": ["②"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "①",
+      "verdict": "reject",
+      "reason": "문법 결합은 정문(that 주격 관계절 + will help + O + 원형부정사)이나, '창작물이 예술가의 디지털 편집을 돕는다'는 기술-도구 층위의 진술로 직전 문장의 'the goal should not be simply to utilize technology for its own sake'와 정면 충돌. 창작의 목표가 다시 기술 활용으로 회귀하므로 논리 불성립."
+    },
+    {
+      "label": "②",
+      "verdict": "accept",
+      "reason": "문법: will 뒤 provoke/reshape 동사원형 병렬 정문. 논리: 지문의 great art 정의 문장 'challenges our perceptions of the world and forever changes our thoughts and feelings'의 이중 술어를 'reshape viewers' perspectives'(≙ challenges our perceptions)와 'provoke cognitive shifts'(≙ changes our thoughts and feelings)로 1:1 패러프레이즈. 'Rather, it should be to produce unique creations that will ___'의 결론 슬롯에 정확히 부합."
+    },
+    {
+      "label": "③",
+      "verdict": "reject",
+      "reason": "문법상 정문이나 'the goal should not be simply to utilize technology for its own sake'라는 명시적 부정 진술을 그대로 뒤집는 직접 모순. 도입부 어휘(internet, share, creations)를 재활용한 표면 매력 미끼."
+    },
+    {
+      "label": "④",
+      "verdict": "reject",
+      "reason": "문법 정문(enable + O + to-inf). 논리: 비평가의 우려는 문제 제기의 배경 서술이지 예술가가 지향할 창작 목표가 아님. '비평을 쉽게 하도록 돕는 창작물'은 화용적으로 부조리하며 지문 어디에도 목적-결과 근거 없음."
+    },
+    {
+      "label": "⑤",
+      "verdict": "reject",
+      "reason": "문법 정문(by + 동명사 부사구). 논리: 'strictly relying on digital editing tools'는 기술 의존을 오히려 강제하는 내용으로 '기술은 도구일 뿐'이라는 규범 진술과 모순. 'satisfy the public'도 지문에 근거 없는 무관 요소."
+    }
+  ],
+  "note": "빈칸은 great art 정의 문장의 되받기 슬롯. ②만 정의 문장과 형식적·의미적 1:1 대응이 성립하고, ①③⑤는 명시적 부정('not for its own sake')과 충돌, ④는 부조리. 대안 해석으로 구제되는 오답 없음. 단일 정답 ②."
+}

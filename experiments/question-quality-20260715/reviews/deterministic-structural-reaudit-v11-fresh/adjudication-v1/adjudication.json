@@ -1,0 +1,226 @@
+{
+  "schemaVersion": "deterministic-structural-v11-blocking-fp-adjudication-v1",
+  "auditId": "deterministic-structural-reaudit-v11-fresh-adjudication-v1",
+  "verdict": "ORACLE_CONTROLS_INVALID_NO_TRUE_VALIDATOR_FP",
+  "classificationDefinitions": {
+    "TRUE_VALIDATOR_FP": "The sealed control satisfies the current reachable product, prompt, validator, and renderer contract, so the emitted production blocking error is overbroad.",
+    "ORACLE_CONTROL_INVALID": "The sealed oracle marks a control globally valid even though the exact control independently violates another current production blocking contract; the production block is therefore correct.",
+    "AMBIGUOUS": "The sealed input and current source closure do not establish either validity or invalidity with a bounded literal test.",
+    "REDUNDANT_UPSTREAM": "The disputed target is not caught at its intended boundary, but a separate current blocking invariant distinguishes the paired defect from its valid control and makes the target miss operationally redundant. An invariant that rejects both sides does not qualify."
+  },
+  "methodology": {
+    "reportedBlockingFalsePositivesReviewed": 12,
+    "caseLevelReviewComplete": true,
+    "sealedCorpusOrOracleModified": false,
+    "productionCodeOrFixturesModified": false,
+    "apiCalls": 0,
+    "databaseCalls": 0,
+    "networkCalls": 0
+  },
+  "parentEvidence": {
+    "corpusSha256": "8c4c6a5d41488b433bccde5b08acbdff198a089273a6e4c0b5e6ce45607777ab",
+    "oracleSha256": "30961d05f6020bc87cf8528f72abd19cf8f70055b5ce515ef1e0b13bd5595f9f",
+    "resultsSha256": "480fd1037fbe29d7c5b382c8f84900f52edf4e80e2e4f3e4cc9b8e9172555ea7",
+    "reportedBlockingConfusionMatrix": {
+      "tp": 144,
+      "tn": 132,
+      "fp": 12,
+      "fn": 0
+    }
+  },
+  "summary": {
+    "total": 12,
+    "byClassification": {
+      "TRUE_VALIDATOR_FP": 0,
+      "ORACLE_CONTROL_INVALID": 12,
+      "AMBIGUOUS": 0,
+      "REDUNDANT_UPSTREAM": 0
+    },
+    "byType": {
+      "WORD_ORDER": 6,
+      "SENTENCE_ORDER": 6
+    },
+    "byRootCause": {
+      "WORD_ORDER_EXACT_SOURCE_ANSWER_LEAK": 6,
+      "SENTENCE_ORDER_PARAGRAPH_C_BELOW_24_WORDS": 6
+    }
+  },
+  "sourceClosure": [
+    {
+      "path": "src/lib/question-prompts-essay.ts",
+      "sha256": "d81f03c313ec027dba1dd6ba794863a1417ffd90f39955994bef2040d0571136",
+      "lines": [69, 89],
+      "relevance": "WORD_ORDER requires a real source transformation, forbids a continuous six-word source copy, and requires reconstruction from shuffled chunks."
+    },
+    {
+      "path": "src/lib/question-quality/dispatcher.ts",
+      "sha256": "408a23d9a37acb5b035ccd1b12c12ba21d7d1660211cc3b46998f8b0ba738e99",
+      "lines": [1012, 1071],
+      "relevance": "Student-visible source-answer leakage is checked and a six-token / 80%-coverage whole copy emits writing-answer-verbatim-copy as an error."
+    },
+    {
+      "path": "src/components/exams/paper-builder/passage-policy.ts",
+      "sha256": "218a3892c5f286e3a7d4e91e06ad3fe56e4b3de32db6b89a3c8dc0c5b8fb4364",
+      "lines": [12, 71],
+      "relevance": "WORD_ORDER is a source-flow and inline-source subtype."
+    },
+    {
+      "path": "src/components/workbench/question-type-renderers.tsx",
+      "sha256": "bb50d6ad990c77ab3f370e4adece4cf1253e90f393e3e3842b3345501cae8493",
+      "lines": [73, 84, 596, 622],
+      "relevance": "WordOrderRenderer displays SourcePassageBlock before the scrambled chunks."
+    },
+    {
+      "path": "src/lib/question-quality/core.ts",
+      "sha256": "e0d7903dfe7330d12111b46d8dc4fb6688e02a74dd3fa46ad0c46e1b0d60fa35",
+      "lines": [100, 103, 336, 340],
+      "relevance": "SENTENCE_ORDER minimums are two sentences and 24 words; countWords supplies the literal count."
+    },
+    {
+      "path": "src/lib/question-quality/validators/sentence-order.ts",
+      "sha256": "6a0229491f01e9c90e623fd290938fd23a76987e603510e70cbbca8d16f421db",
+      "lines": [21, 204],
+      "relevance": "Each paragraph below the 24-word minimum emits sentence-order-paragraph-too-thin as an error."
+    },
+    {
+      "path": "src/lib/question-prompts-mc.ts",
+      "sha256": "56b736e9f5fa639146d30c811589182099708eba06d0f9e3b4338c0a098e0206",
+      "lines": [346, 381],
+      "relevance": "SENTENCE_ORDER uses exactly three balanced, complete paragraph blocks and renders their literal texts."
+    }
+  ],
+  "rows": [
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v1-a",
+      "typeId": "WORD_ORDER",
+      "familyId": "EN-WORD-ORDER-RECONSTRUCT",
+      "variant": 1,
+      "emittedBlockingCode": "writing-answer-verbatim-copy",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "WORD_ORDER_EXACT_SOURCE_ANSWER_LEAK",
+      "boundedFacts": { "modelAnswerTokenCount": 9, "exactModelAnswerOccurrencesInPassage": 1, "namedTargetAbsent": "word-order-unreconstructable" },
+      "reason": "The chunks can reconstruct the answer, but the nine-word answer is the passage's exact first sentence. Because the source is student-visible and production forbids a six-token whole-copy answer, the control is globally invalid."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v1-a",
+      "typeId": "WORD_ORDER",
+      "familyId": "EN-WORD-ORDER-UNSOLVED",
+      "variant": 1,
+      "emittedBlockingCode": "writing-answer-verbatim-copy",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "WORD_ORDER_EXACT_SOURCE_ANSWER_LEAK",
+      "boundedFacts": { "modelAnswerTokenCount": 9, "exactModelAnswerOccurrencesInPassage": 1, "namedTargetAbsent": "scrambled-already-solved" },
+      "reason": "The chunks are not in answer order, but the nine-word answer is the passage's exact first sentence. The clean shuffle dimension does not cure the student-visible answer leak."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v1-a",
+      "typeId": "SENTENCE_ORDER",
+      "familyId": "EN-ORDER-PARAGRAPH-COUNT",
+      "variant": 1,
+      "emittedBlockingCode": "sentence-order-paragraph-too-thin",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "SENTENCE_ORDER_PARAGRAPH_C_BELOW_24_WORDS",
+      "boundedFacts": { "paragraphCount": 3, "paragraphWordCounts": [24, 25, 22], "thinLabel": "(C)", "namedTargetAbsent": "sentence-order-paragraph-count" },
+      "reason": "The control has exactly three paragraphs, but (C) has 22 words against the current 24-word production minimum."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v1-a",
+      "typeId": "SENTENCE_ORDER",
+      "familyId": "EN-ORDER-SOURCE-BACKING",
+      "variant": 1,
+      "emittedBlockingCode": "sentence-order-paragraph-too-thin",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "SENTENCE_ORDER_PARAGRAPH_C_BELOW_24_WORDS",
+      "boundedFacts": { "paragraphCount": 3, "paragraphWordCounts": [24, 25, 22], "thinLabel": "(C)", "allParagraphsSourceBacked": true, "namedTargetAbsent": "sentence-order-paragraph-not-source-backed" },
+      "reason": "All three blocks are source-backed, but source backing does not waive the 24-word minimum; (C) has only 22 words."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v2-a",
+      "typeId": "WORD_ORDER",
+      "familyId": "EN-WORD-ORDER-RECONSTRUCT",
+      "variant": 2,
+      "emittedBlockingCode": "writing-answer-verbatim-copy",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "WORD_ORDER_EXACT_SOURCE_ANSWER_LEAK",
+      "boundedFacts": { "modelAnswerTokenCount": 9, "exactModelAnswerOccurrencesInPassage": 1, "namedTargetAbsent": "word-order-unreconstructable" },
+      "reason": "The chunks can reconstruct the answer, but the exact nine-word answer remains visible in the source passage."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v2-a",
+      "typeId": "WORD_ORDER",
+      "familyId": "EN-WORD-ORDER-UNSOLVED",
+      "variant": 2,
+      "emittedBlockingCode": "writing-answer-verbatim-copy",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "WORD_ORDER_EXACT_SOURCE_ANSWER_LEAK",
+      "boundedFacts": { "modelAnswerTokenCount": 9, "exactModelAnswerOccurrencesInPassage": 1, "namedTargetAbsent": "scrambled-already-solved" },
+      "reason": "The shuffle is unsolved as intended, but the exact nine-word answer remains visible in the source passage."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v2-a",
+      "typeId": "SENTENCE_ORDER",
+      "familyId": "EN-ORDER-PARAGRAPH-COUNT",
+      "variant": 2,
+      "emittedBlockingCode": "sentence-order-paragraph-too-thin",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "SENTENCE_ORDER_PARAGRAPH_C_BELOW_24_WORDS",
+      "boundedFacts": { "paragraphCount": 3, "paragraphWordCounts": [24, 25, 22], "thinLabel": "(C)", "namedTargetAbsent": "sentence-order-paragraph-count" },
+      "reason": "The control has exactly three paragraphs, but (C) is two words below the production minimum."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v2-a",
+      "typeId": "SENTENCE_ORDER",
+      "familyId": "EN-ORDER-SOURCE-BACKING",
+      "variant": 2,
+      "emittedBlockingCode": "sentence-order-paragraph-too-thin",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "SENTENCE_ORDER_PARAGRAPH_C_BELOW_24_WORDS",
+      "boundedFacts": { "paragraphCount": 3, "paragraphWordCounts": [24, 25, 22], "thinLabel": "(C)", "allParagraphsSourceBacked": true, "namedTargetAbsent": "sentence-order-paragraph-not-source-backed" },
+      "reason": "The source-backed control still violates the independent 24-word minimum at (C)."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-RECONSTRUCT-v3-a",
+      "typeId": "WORD_ORDER",
+      "familyId": "EN-WORD-ORDER-RECONSTRUCT",
+      "variant": 3,
+      "emittedBlockingCode": "writing-answer-verbatim-copy",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "WORD_ORDER_EXACT_SOURCE_ANSWER_LEAK",
+      "boundedFacts": { "modelAnswerTokenCount": 9, "exactModelAnswerOccurrencesInPassage": 1, "namedTargetAbsent": "word-order-unreconstructable" },
+      "reason": "The reconstruction dimension is valid, but the exact source-answer copy makes the overall control invalid."
+    },
+    {
+      "caseId": "EN-WORD-ORDER-UNSOLVED-v3-a",
+      "typeId": "WORD_ORDER",
+      "familyId": "EN-WORD-ORDER-UNSOLVED",
+      "variant": 3,
+      "emittedBlockingCode": "writing-answer-verbatim-copy",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "WORD_ORDER_EXACT_SOURCE_ANSWER_LEAK",
+      "boundedFacts": { "modelAnswerTokenCount": 9, "exactModelAnswerOccurrencesInPassage": 1, "namedTargetAbsent": "scrambled-already-solved" },
+      "reason": "The chunks are properly shuffled, but the exact source-answer copy makes the overall control invalid."
+    },
+    {
+      "caseId": "EN-ORDER-PARAGRAPH-COUNT-v3-a",
+      "typeId": "SENTENCE_ORDER",
+      "familyId": "EN-ORDER-PARAGRAPH-COUNT",
+      "variant": 3,
+      "emittedBlockingCode": "sentence-order-paragraph-too-thin",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "SENTENCE_ORDER_PARAGRAPH_C_BELOW_24_WORDS",
+      "boundedFacts": { "paragraphCount": 3, "paragraphWordCounts": [24, 25, 22], "thinLabel": "(C)", "namedTargetAbsent": "sentence-order-paragraph-count" },
+      "reason": "The paragraph count is correct, but (C) is 22 words and therefore not a valid production control."
+    },
+    {
+      "caseId": "EN-ORDER-SOURCE-BACKING-v3-a",
+      "typeId": "SENTENCE_ORDER",
+      "familyId": "EN-ORDER-SOURCE-BACKING",
+      "variant": 3,
+      "emittedBlockingCode": "sentence-order-paragraph-too-thin",
+      "classification": "ORACLE_CONTROL_INVALID",
+      "rootCause": "SENTENCE_ORDER_PARAGRAPH_C_BELOW_24_WORDS",
+      "boundedFacts": { "paragraphCount": 3, "paragraphWordCounts": [24, 25, 22], "thinLabel": "(C)", "allParagraphsSourceBacked": true, "namedTargetAbsent": "sentence-order-paragraph-not-source-backed" },
+      "reason": "All blocks are verbatim source splits, but (C) remains below the independent production length floor."
+    }
+  ]
+}

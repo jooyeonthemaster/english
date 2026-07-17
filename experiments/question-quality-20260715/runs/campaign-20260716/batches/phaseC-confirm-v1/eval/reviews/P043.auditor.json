@@ -1,0 +1,61 @@
+{
+  "pid": "P043",
+  "validity": {
+    "V1": true,
+    "V2": true,
+    "V3": true,
+    "V4": true,
+    "V5": true
+  },
+  "validityIssues": [
+    {
+      "code": "V5-MINOR-FIELD-CONVENTION",
+      "severity": "minor",
+      "evidence": "markedExpressions (D)의 expression 필드가 'reduced'(원문형)로, 비오류 항목들의 expression(=렌더 표시형)과 규약이 다르다. errorExpression='reducing', correction='reduced'와는 내적으로 일관되어 동기화 실패는 아님."
+    }
+  ],
+  "craft": {
+    "C1": 3,
+    "C2": 3,
+    "C3": 2,
+    "C4": 3,
+    "C5": 1,
+    "C6": 3
+  },
+  "optionAudit": [
+    {
+      "label": "(A)",
+      "intent": "be credited with(수동태 과거분사) 판별 — 능동 crediting과의 혼동 유도",
+      "temptingBecause": "credit A with B 구문을 모르면 explorer가 행위 주체처럼 보여 능동형을 떠올릴 수 있음",
+      "decisiveFlaw": "explorer는 '인정받는' 대상이므로 is credited 수동태가 유일하게 옳다 — 훈련된 학생에게는 즉시 소거되는 약한 디코이"
+    },
+    {
+      "label": "(B)",
+      "intent": "동명사 주어 판별 — 문두 considering 분사구와의 표면 유사성으로 혼동 유도",
+      "temptingBecause": "쉼표 앞 considering...과 나란히 있어 honoring도 분사(비문 후보)로 오독하기 쉬움; -ing형이 정답 (D)와 표면 형태가 같음",
+      "decisiveFlaw": "honoring the explorer는 주절의 주어(동명사구)이고 뒤에 정동사 does가 있으므로 문법적으로 완전 — 오류 아님"
+    },
+    {
+      "label": "(C)",
+      "intent": "등위접속 병렬(killed and enslaved) 판별 — 분사형 enslaving과의 혼동 유도",
+      "temptingBecause": "After arriving의 -ing이 앞에 있어 병렬 대상을 잘못 잡으면 enslaving을 기대할 수 있음",
+      "decisiveFlaw": "and가 과거 정동사 killed와 병렬 연결하므로 enslaved가 유일하게 옳다 — 병렬 추적이 짧고 쉬움"
+    },
+    {
+      "label": "(D)",
+      "intent": "정답 — 관계절(that Columbus and other Europeans brought with them)이 주어와 동사 사이에 삽입된 문장에서 본동사 자리 판별",
+      "temptingBecause": "brought가 정동사처럼 보여 문장에 동사가 이미 있다고 착각하기 쉽고, severely reducing이 분사구처럼 자연스럽게 읽힘",
+      "decisiveFlaw": "주어 the diseases에 대응하는 정동사가 없어 문장이 파편이 됨. reducing → reduced로 고치면 정확히 원문 복원(최소대립쌍). 절대구문 등 대안 해석으로도 주절 동사 부재를 구제할 수 없어 오류가 유일·확정적"
+    },
+    {
+      "label": "(E)",
+      "intent": "주격 관계대명사 that 판별 — what/전치사+which 등과의 혼동 유도",
+      "temptingBecause": "that 뒤 절의 완전/불완전 판단을 요구하는 정형 포인트",
+      "decisiveFlaw": "선행사 a new holiday 뒤에서 주어 없는 불완전절(honors...and remembers)을 이끄는 주격 that으로 명백히 옳음 — 즉시 소거 가능한 약한 디코이"
+    }
+  ],
+  "explanationIssues": [],
+  "killerConditionsMet": false,
+  "grade": "C",
+  "notes": "V1~V5 전부 통과: 렌더 지문은 원지문 대비 의도된 최소대립쌍(reduced→reducing) 외 손상 없음; (A)(B)(C)(E) 독립 검증 결과 모두 명백히 문법적이어서 정답 (D) 유일; 해설의 구조 분석(주어 the diseases + 목적격 관계절 삽입 + 정동사 필요)은 실제 통사구조와 정확히 일치하고 오답 해설 4건도 각 선지 실제 구조와 대응. 그러나 요청 난이도 KILLER 대비 심각한 난이도 미달(C5=1): 지문이 중학 수준의 평이한 서사이고, 출제 포인트가 한국 교재에서 가장 많이 훈련되는 '삽입 관계절 뒤 본동사 자리' 정형 패턴이며 주어-동사 거리도 짧아 상위권 학생은 즉시 적발한다. (A)(E)는 즉시 소거형 약한 디코이로 실질 경쟁 선지가 (B)(C)뿐(C3=2). KILLER 추가 조건도 미충족: 밑줄별 명시적 'why tempting' 서술 부재(오답 해설은 '왜 옳은가'만 설명), 정답 은닉도가 KILLER 기준(구조를 읽어야만 드러나는 깊이)에 못 미침. 문항 자체는 중(中)난이도용으로는 출하 가능한 견고한 품질이나, KILLER 슬롯용으로는 재설계 필요 → C."
+}

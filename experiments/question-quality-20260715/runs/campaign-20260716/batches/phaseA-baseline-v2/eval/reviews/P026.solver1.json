@@ -1,0 +1,35 @@
+{
+  "pid": "P026",
+  "answer": "(C)",
+  "multipleDefensible": false,
+  "defensibleLabels": ["(C)"],
+  "confidence": "high",
+  "perOption": [
+    {
+      "label": "(A)",
+      "verdict": "correct",
+      "reason": "'If the interview lasts a while'에서 last는 지속 기간을 나타내는 명사구 목적어(a while)를 취하는 자동사적 용법으로 완전히 정문. 'a while'(관사+명사) 표기도 표준적이며 부사 'awhile'로 써도 되는 자리라 함정처럼 보이지만 둘 다 허용된다. 실전에서 'a while vs awhile' 혼동으로 잠깐 눈이 가지만(유혹 강도: 약) 어느 쪽도 오류가 아니므로 기각."
+    },
+    {
+      "label": "(B)",
+      "verdict": "correct",
+      "reason": "'It is often more efficient to develop ...'는 가주어 it + 비교급 형용사 보어 + 진주어 to부정사 구조. 비교 대상(녹음기 사용 대비)이 문맥상 암시되어 비교급 사용도 자연스럽다. 오류 요소 없음."
+    },
+    {
+      "label": "(C)",
+      "verdict": "incorrect",
+      "reason": "'writing down the key answers ... so that they can transcribe easily afterwards'에서 they의 선행사는 the key answers(받아 적은 핵심 답변). answers는 transcribe(옮겨 적다)의 행위 주체가 될 수 없고 옮겨 적히는 대상이므로 수동태 'can be transcribed easily'가 되어야 한다. 대안 해석으로 중간태(middle voice: 'this book reads easily', 'the poem translates well')를 적극 검토했으나, transcribe는 read/sell/translate처럼 중간태가 관용적으로 굳어진 동사가 아니어서('the notes transcribe easily'는 극히 주변적 표현) 정문 방어가 성립하지 않는다. 장거리 단서(선행사 the key answers)와 의미역 확인으로 확정. 어법상 틀린 것."
+    },
+    {
+      "label": "(D)",
+      "verdict": "correct",
+      "reason": "'get into the habit of editing out ...'는 전치사 of 뒤 동명사로 정확하다. 구동사 edit out의 목적어(the material you are not going to need)도 정상 결합. 실전에서 'as the interview proceeds'와의 시제 결합을 의심해 볼 수 있으나(유혹 강도: 약) 습관 형성 문맥의 현재시제로 자연스럽다."
+    },
+    {
+      "label": "(E)",
+      "verdict": "correct",
+      "reason": "'It makes the material much easier and quicker to handle afterwards'는 make + 목적어 + 형용사 보어 구조에 tough-구문(easy to handle)이 결합된 정문. much는 비교급 강조 부사로 적법. 실전 최대 유혹 지점: 'quicker'를 동사 수식으로 착각해 'more quickly'가 필요하다고 느끼기 쉽다(유혹 강도: 중). 그러나 quicker는 easier와 병렬로 material을 서술하는 형용사 보어이므로 정문. 병렬 시작점(easier and quicker) 확인으로 기각."
+    }
+  ],
+  "note": "정답 (C) 단독. they(=the key answers)는 transcribe의 대상이므로 수동태 be transcribed가 필요. 중간태 방어 가능성을 검토했으나 transcribe는 중간태 관용 동사가 아니어서 기각. 최대 매력 오답은 (E)(quicker를 부사 자리로 오인)와 (A)(a while/awhile 혼동)였으나 모두 정문으로 판정."
+}
