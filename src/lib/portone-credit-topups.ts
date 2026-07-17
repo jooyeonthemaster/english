@@ -88,6 +88,16 @@ type RuntimeConfig = {
   channelKey: string;
 };
 
+type PortOneV1RestCredentials = {
+  key: string;
+  secret: string;
+};
+
+type CancellationRequestResult = {
+  cancellation: PaymentCancellation;
+  cancelledPayment: CancelledPayment | PartialCancelledPayment | null;
+};
+
 type RecognizedPortOnePayment =
   | PaidPayment
   | ReadyPayment
@@ -411,35 +421,43 @@ export async function cancelPortOneCreditTopUp(params: {
   }
 
   const currentCancellableAmount = getCancellableAmount(payment);
-  if (currentCancellableAmount < topUp.price) {
+  if (
+    currentCancellableAmount !== null &&
+    currentCancellableAmount < topUp.price
+  ) {
     throw new PortOneTopUpError(
       "PAYMENT_NOT_CANCELLABLE",
       "The PortOne payment does not have enough cancellable amount left.",
     );
   }
 
-  const response = await getPortOneClient().payment.cancelPayment({
-    paymentId: topUp.paymentId,
+  const cancellationResult = await cancelPortOnePaymentAndFetchLatest({
+    topUp: {
+      id: topUp.id,
+      paymentId: topUp.paymentId,
+      paymentMethod: topUp.paymentMethod,
+      price: topUp.price,
+    },
+    payment,
     storeId,
     reason,
-    requester: "ADMIN",
-    currentCancellableAmount,
-    ...(params.refundAccount ? { refundAccount: params.refundAccount } : {}),
+    refundAccount: params.refundAccount,
   });
 
-  if (isUnrecognizedPaymentCancellation(response.cancellation)) {
+  const cancellation = cancellationResult.cancellation;
+  if (isUnrecognizedPaymentCancellation(cancellation)) {
     throw new PortOneTopUpError(
       "PAYMENT_NOT_CANCELLABLE",
-      `Unrecognized cancellation status: ${String(response.cancellation.status)}`,
+      `Unrecognized cancellation status: ${String(cancellation.status)}`,
     );
   }
 
-  if (response.cancellation.status !== "SUCCEEDED") {
+  if (cancellation.status !== "SUCCEEDED") {
     await prisma.creditTopUp.update({
       where: { id: topUp.id },
       data: {
         failureMessage:
-          response.cancellation.status === "REQUESTED"
+          cancellation.status === "REQUESTED"
             ? "포트원 결제 취소 요청이 접수되었습니다. 취소 완료 웹훅 수신 후 상태가 동기화됩니다."
             : "포트원 결제 취소가 실패했습니다.",
         verifiedAt: new Date(),
@@ -448,15 +466,21 @@ export async function cancelPortOneCreditTopUp(params: {
     return {
       topUpId: topUp.id,
       paymentId: topUp.paymentId,
-      cancellation: response.cancellation,
+      cancellation,
       synced: false,
       status: topUp.status,
       balanceAfter: balance.balance,
     };
   }
 
-  const cancelledPayment = await fetchPortOnePayment(topUp.paymentId);
-  const result = await syncPortOnePaymentToTopUp(cancelledPayment, {
+  if (!cancellationResult.cancelledPayment) {
+    throw new PortOneTopUpError(
+      "PAYMENT_NOT_CANCELLABLE",
+      "포트원 취소 요청은 성공했지만 최신 결제 상태가 아직 취소로 반영되지 않았습니다. 잠시 후 재조회해 주세요.",
+    );
+  }
+
+  const result = await syncPortOnePaymentToTopUp(cancellationResult.cancelledPayment, {
     source: "admin_retry",
     adminId: params.adminId,
   });
@@ -464,11 +488,278 @@ export async function cancelPortOneCreditTopUp(params: {
   return {
     topUpId: topUp.id,
     paymentId: topUp.paymentId,
-    cancellation: response.cancellation,
+    cancellation,
     synced: true,
     status: result.status,
     balanceAfter: result.balanceAfter,
   };
+}
+
+async function cancelPortOnePaymentAndFetchLatest(params: {
+  topUp: {
+    id: string;
+    paymentId: string;
+    paymentMethod: string | null;
+    price: number;
+  };
+  payment: PaidPayment;
+  storeId: string;
+  reason: string;
+  refundAccount?: PortOneRefundAccount;
+}): Promise<CancellationRequestResult> {
+  try {
+    const response = await getPortOneClient().payment.cancelPayment({
+      paymentId: params.topUp.paymentId,
+      storeId: params.storeId,
+      reason: params.reason,
+      requester: "ADMIN",
+      ...(params.refundAccount ? { refundAccount: params.refundAccount } : {}),
+    });
+
+    if (isUnrecognizedPaymentCancellation(response.cancellation)) {
+      throw new PortOneTopUpError(
+        "PAYMENT_NOT_CANCELLABLE",
+        `Unrecognized cancellation status: ${String(response.cancellation.status)}`,
+      );
+    }
+
+    if (response.cancellation.status !== "SUCCEEDED") {
+      return {
+        cancellation: response.cancellation,
+        cancelledPayment: null,
+      };
+    }
+
+    const latestPayment = await fetchPortOnePayment(params.topUp.paymentId);
+    return {
+      cancellation:
+        latestPayment.status === "CANCELLED" ||
+        latestPayment.status === "PARTIAL_CANCELLED"
+          ? getLatestPaymentCancellation(latestPayment)
+          : response.cancellation,
+      cancelledPayment: toCancelledPayment(latestPayment),
+    };
+  } catch (err) {
+    if (err instanceof PortOneTopUpError) {
+      throw err;
+    }
+
+    if (isPortOneV1DanalCardPayment(params.topUp, params.payment)) {
+      await cancelPortOneV1Payment({
+        payment: params.payment,
+        topUp: params.topUp,
+        reason: params.reason,
+        originalError: err,
+      });
+      const latestPayment = await fetchPortOnePayment(params.topUp.paymentId);
+      const cancelledPayment = toCancelledPayment(latestPayment);
+      if (!cancelledPayment) {
+        throw new PortOneTopUpError(
+          "PAYMENT_NOT_CANCELLABLE",
+          "포트원 V1 취소 요청은 성공했지만 최신 결제 상태가 아직 취소로 반영되지 않았습니다. 잠시 후 재조회해 주세요.",
+        );
+      }
+      return {
+        cancellation: getLatestPaymentCancellation(cancelledPayment),
+        cancelledPayment,
+      };
+    }
+
+    throw toPortOneCancelTopUpError(err);
+  }
+}
+
+function toCancelledPayment(
+  payment: RecognizedPortOnePayment,
+): CancelledPayment | PartialCancelledPayment | null {
+  if (payment.status === "CANCELLED" || payment.status === "PARTIAL_CANCELLED") {
+    return payment;
+  }
+  return null;
+}
+
+function isPortOneV1DanalCardPayment(
+  topUp: {
+    paymentMethod: string | null;
+  },
+  payment: PaidPayment,
+) {
+  return (
+    getPortOnePgProvider() === "danal_tpay" &&
+    topUp.paymentMethod === "CARD" &&
+    typeof payment.transactionId === "string" &&
+    payment.transactionId.startsWith("imp_")
+  );
+}
+
+async function cancelPortOneV1Payment(params: {
+  payment: PaidPayment;
+  topUp: {
+    paymentId: string;
+    price: number;
+  };
+  reason: string;
+  originalError: unknown;
+}) {
+  const credentials = getPortOneV1RestCredentials();
+  if (!credentials) {
+    throw new PortOneTopUpError(
+      "PAYMENT_NOT_CANCELLABLE",
+      `포트원 V2 취소 요청이 실패했고, 다날 V1 결제 취소 fallback에 필요한 V1 REST API 키가 설정되어 있지 않습니다. PORTONE_V1_REST_API_KEY와 PORTONE_V1_REST_API_SECRET을 설정해 주세요. 원인: ${getPortOneErrorMessage(params.originalError)}`,
+    );
+  }
+
+  const accessToken = await getPortOneV1AccessToken(credentials);
+  const response = await fetch("https://api.iamport.kr/payments/cancel", {
+    method: "POST",
+    headers: {
+      Authorization: accessToken,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      imp_uid: params.payment.transactionId,
+      merchant_uid: params.topUp.paymentId,
+      amount: params.topUp.price,
+      checksum: params.topUp.price,
+      reason: params.reason,
+    }),
+  });
+  const data = await parsePortOneV1Json(response);
+  const code = getPortOneV1Code(data);
+
+  if (!response.ok || code !== 0) {
+    throw new PortOneTopUpError(
+      "PAYMENT_NOT_CANCELLABLE",
+      `포트원 V1 취소 요청이 실패했습니다: ${getPortOneV1Message(data)}`,
+    );
+  }
+}
+
+async function getPortOneV1AccessToken(credentials: PortOneV1RestCredentials) {
+  const response = await fetch("https://api.iamport.kr/users/getToken", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      imp_key: credentials.key,
+      imp_secret: credentials.secret,
+    }),
+  });
+  const data = await parsePortOneV1Json(response);
+  const token =
+    data &&
+    typeof data === "object" &&
+    "response" in data &&
+    data.response &&
+    typeof data.response === "object" &&
+    "access_token" in data.response &&
+    typeof data.response.access_token === "string"
+      ? data.response.access_token
+      : null;
+
+  if (!response.ok || getPortOneV1Code(data) !== 0 || !token) {
+    throw new PortOneTopUpError(
+      "PAYMENT_NOT_CANCELLABLE",
+      `포트원 V1 인증에 실패했습니다: ${getPortOneV1Message(data)}`,
+    );
+  }
+
+  return `Bearer ${token}`;
+}
+
+function getPortOneV1RestCredentials(): PortOneV1RestCredentials | null {
+  const key =
+    process.env.PORTONE_V1_REST_API_KEY ??
+    process.env.PORTONE_REST_API_KEY ??
+    process.env.IAMPORT_REST_API_KEY ??
+    process.env.IMP_REST_API_KEY;
+  const secret =
+    process.env.PORTONE_V1_REST_API_SECRET ??
+    process.env.PORTONE_REST_API_SECRET ??
+    process.env.IAMPORT_REST_API_SECRET ??
+    process.env.IMP_REST_API_SECRET;
+
+  if (!key || !secret) return null;
+  return { key: key.trim(), secret: secret.trim() };
+}
+
+async function parsePortOneV1Json(response: Response) {
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
+function getPortOneV1Code(data: unknown) {
+  return data &&
+    typeof data === "object" &&
+    "code" in data &&
+    typeof data.code === "number"
+    ? data.code
+    : null;
+}
+
+function getPortOneV1Message(data: unknown) {
+  if (data && typeof data === "object") {
+    if ("message" in data && typeof data.message === "string" && data.message) {
+      return data.message;
+    }
+    if (
+      "response" in data &&
+      data.response &&
+      typeof data.response === "object" &&
+      "message" in data.response &&
+      typeof data.response.message === "string" &&
+      data.response.message
+    ) {
+      return data.response.message;
+    }
+  }
+  return "unknown_error";
+}
+
+function toPortOneCancelTopUpError(err: unknown) {
+  return new PortOneTopUpError(
+    "PAYMENT_NOT_CANCELLABLE",
+    getPortOneErrorMessage(err),
+  );
+}
+
+function getPortOneErrorMessage(err: unknown) {
+  const data = getErrorData(err);
+  if (data) {
+    if (
+      "pgMessage" in data &&
+      typeof data.pgMessage === "string" &&
+      data.pgMessage
+    ) {
+      const pgCode =
+        "pgCode" in data && typeof data.pgCode === "string"
+          ? ` (${data.pgCode})`
+          : "";
+      return `PG사 취소 거절: ${data.pgMessage}${pgCode}`;
+    }
+    if ("message" in data && typeof data.message === "string" && data.message) {
+      return data.message;
+    }
+    if ("type" in data && typeof data.type === "string") {
+      return `포트원 취소 요청이 실패했습니다: ${data.type}`;
+    }
+  }
+  return err instanceof Error ? err.message : "포트원 취소 요청이 실패했습니다.";
+}
+
+function getErrorData(err: unknown): Record<string, unknown> | null {
+  if (
+    err &&
+    typeof err === "object" &&
+    "data" in err &&
+    err.data &&
+    typeof err.data === "object"
+  ) {
+    return err.data as Record<string, unknown>;
+  }
+  return null;
 }
 
 export async function closePortOneVirtualAccountTopUp(params: {

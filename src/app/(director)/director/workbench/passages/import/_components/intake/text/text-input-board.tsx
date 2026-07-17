@@ -468,7 +468,7 @@ export function TextInputBoard({
               className={
                 // 모바일(<lg)은 '지문 추가' 버튼까지 한 화면에 들어오도록 본문을
                 // 화면에 맞는 고정 높이로 둔다(스크롤 없이). PC(lg)는 flex-1로 채운다.
-                "min-h-0 flex-1 resize-none rounded-md border-2 bg-white px-3 py-3 text-[13px] leading-6 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 max-lg:h-[26vh] max-lg:min-h-[128px] max-lg:flex-none lg:leading-7 lg:px-4 " +
+                "min-h-0 flex-1 resize-none rounded-md border-2 bg-white px-3 py-3 text-[13px] leading-6 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 max-lg:h-[26vh] max-lg:!min-h-[128px] max-lg:!flex-none lg:leading-7 lg:px-4 " +
                 // 비어 있으면 파란 테두리로 입력을 유도, 내용이 있으면 회색.
                 (draftText
                   ? "border-slate-200 focus:border-blue-400"

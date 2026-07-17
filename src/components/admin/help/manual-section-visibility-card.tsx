@@ -2,7 +2,8 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { setManualSectionVisibility } from "@/actions/admin-settings";
-import { Eye, EyeOff, RotateCcw, Save } from "lucide-react";
+import { MANUAL_CANVA_EDIT_LINKS } from "@/lib/manual/canva-links";
+import { Eye, EyeOff, ExternalLink, RotateCcw, Save } from "lucide-react";
 import { toast } from "sonner";
 
 interface ManualSectionVisibilityGroup {
@@ -80,7 +81,8 @@ export function ManualSectionVisibilityCard({
         <div>
           <h2 className="text-[15px] font-bold text-gray-950">목차별 노출 설정</h2>
           <p className="mt-1 text-[12px] leading-5 text-gray-400">
-            숨긴 항목은 원장 사용 매뉴얼 목차와 상세 좌측 메뉴에서 보이지 않습니다.
+            숨긴 항목은 원장 사용 매뉴얼 목차와 상세 좌측 메뉴에서 보이지 않습니다. 슬라이드
+            내용 수정은 Canva 편집 링크에서 진행합니다 (편집 후 별도 반영 배포 필요).
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
@@ -134,21 +136,34 @@ export function ManualSectionVisibilityCard({
                 </p>
               </div>
 
-              <button
-                type="button"
-                role="switch"
-                aria-checked={visible}
-                onClick={() => setGroupVisible(group.slug, !visible)}
-                disabled={isPending}
-                className={`inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-xl px-3 text-[12px] font-bold transition disabled:opacity-50 ${
-                  visible
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-                }`}
-              >
-                {visible ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
-                {visible ? "공개" : "숨김"}
-              </button>
+              <div className="flex shrink-0 items-center gap-2">
+                {MANUAL_CANVA_EDIT_LINKS[group.slug] ? (
+                  <a
+                    href={MANUAL_CANVA_EDIT_LINKS[group.slug]}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-violet-200 px-3 text-[12px] font-semibold text-violet-700 transition hover:bg-violet-50"
+                  >
+                    <ExternalLink className="size-3.5" />
+                    Canva 편집
+                  </a>
+                ) : null}
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={visible}
+                  onClick={() => setGroupVisible(group.slug, !visible)}
+                  disabled={isPending}
+                  className={`inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-xl px-3 text-[12px] font-bold transition disabled:opacity-50 ${
+                    visible
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  }`}
+                >
+                  {visible ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+                  {visible ? "공개" : "숨김"}
+                </button>
+              </div>
             </div>
           );
         })}

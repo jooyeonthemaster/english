@@ -1023,6 +1023,7 @@ model Question {
   @@index([customTypeId])
   @@index([academyId, deletedAt, createdAt])
   @@index([deletedAt])
+  @@index([deletedAt, createdAt])
   @@map("questions")
 }
 
@@ -1444,6 +1445,7 @@ model ExamQuestion {
   @@unique([examId, orderNum])
   @@unique([examId, questionId])
   @@index([examId])
+  @@index([questionId])
   @@map("exam_questions")
 }
 
@@ -1627,6 +1629,7 @@ model WrongAnswerLog {
 
   @@unique([studentId, questionId])
   @@index([studentId, category])
+  @@index([questionId])
   @@map("wrong_answer_logs")
 }
 
@@ -1815,6 +1818,7 @@ model QuestionCollectionItem {
 
   @@unique([collectionId, questionId])
   @@index([collectionId])
+  @@index([questionId])
   @@map("question_collection_items")
 }
 
@@ -2618,6 +2622,7 @@ model SubscriptionPayment {
   @@index([subscriptionId, createdAt])
   @@index([billingKeyId])
   @@index([status])
+  @@index([status, paidAt])
   @@index([scheduledAt])
   @@index([periodEnd])
   @@map("subscription_payments")
@@ -2857,6 +2862,7 @@ model CreditTopUp {
   @@index([academyId])
   @@index([academyId, status, createdAt])
   @@index([status])
+  @@index([status, completedAt])
   @@index([portoneStatus])
   @@map("credit_top_ups")
 }

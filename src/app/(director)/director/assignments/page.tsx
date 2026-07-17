@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { getAssignments } from "@/actions/assignments";
-import { getClassesForFilter } from "@/actions/exam-questions";
+import { getClassesForFilter } from "@/actions/exams";
 import { AssignmentsPageClient } from "@/components/assignments/assignments-page-client";
 import { UserResultsDisabled } from "@/components/shared/user-results-disabled";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";

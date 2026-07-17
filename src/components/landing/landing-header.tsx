@@ -64,13 +64,17 @@ export function LandingHeader({
           <Link href="/" className="group flex items-center gap-2.5">
             {/* shrink-0 + rounded-full — 플렉스 압축으로 찌그러지지 않는 완전한 원 */}
             <BrandIcon className="shrink-0 rounded-full group-hover:bg-blue-600" />
-            <span className="text-[18px] font-black tracking-normal text-slate-950 transition-colors group-hover:text-blue-600">
+            <span
+              className={`text-[18px] font-black tracking-normal transition-colors group-hover:text-blue-600 ${
+                scrolled ? "text-slate-950" : "text-slate-950 lg:text-white"
+              }`}
+            >
               SMOAT
             </span>
           </Link>
 
           {showNav ? (
-          <nav className="hidden items-center gap-0.5 rounded-full border border-white/80 bg-white/68 p-1 text-[12px] font-black text-slate-300 shadow-[0_18px_52px_-38px_rgba(15,23,42,0.7)] backdrop-blur-2xl lg:flex">
+          <nav className="hidden items-center gap-0.5 rounded-full border border-white/80 bg-white/68 p-1 text-[12px] font-black text-slate-700 shadow-[0_18px_52px_-38px_rgba(15,23,42,0.7)] backdrop-blur-2xl lg:flex">
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.href}
@@ -87,14 +91,22 @@ export function LandingHeader({
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-transparent px-3 text-[13px] font-black text-slate-700 transition hover:border-slate-200 hover:bg-white/80 hover:text-slate-950 sm:px-4"
+              className={`inline-flex h-10 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-transparent px-3 text-[13px] font-black transition sm:px-4 ${
+                scrolled
+                  ? "text-slate-700 hover:border-slate-200 hover:bg-white/80 hover:text-slate-950"
+                  : "text-slate-700 hover:border-slate-200 hover:bg-white/80 hover:text-slate-950 lg:text-slate-200 lg:hover:border-white/30 lg:hover:bg-white/10 lg:hover:text-white"
+              }`}
             >
               <LogIn className="size-4" />
               <span>로그인</span>
             </button>
             <Link
               href="/register"
-              className="inline-flex h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-slate-950 px-4 text-[13px] font-black text-white shadow-[0_16px_40px_-24px_rgba(15,23,42,0.8)] transition hover:-translate-y-0.5 hover:bg-blue-600"
+              className={`inline-flex h-10 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 text-[13px] font-black transition hover:-translate-y-0.5 ${
+                scrolled
+                  ? "bg-slate-950 text-white shadow-[0_16px_40px_-24px_rgba(15,23,42,0.8)] hover:bg-blue-600"
+                  : "bg-slate-950 text-white shadow-[0_16px_40px_-24px_rgba(15,23,42,0.8)] hover:bg-blue-600 lg:bg-white lg:text-slate-950 lg:shadow-none lg:hover:bg-blue-50"
+              }`}
             >
               <span>회원 가입</span>
               <ArrowRight className="size-4" />

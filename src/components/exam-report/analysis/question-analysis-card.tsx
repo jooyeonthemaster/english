@@ -108,21 +108,22 @@ export function QuestionAnalysisCard({
             {questionText || <span className="text-slate-400">발문 없음</span>}
           </span>
           <span className="mt-1 flex flex-wrap items-center gap-1.5">
+            {/* 뱃지 — 문제 카드/보드 공통 soft 규약(border + bg-50 + text-700) */}
             {failed ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-600">
+              <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10.5px] font-bold text-rose-700">
                 <AlertTriangle className="h-3 w-3" />
                 분석 실패
               </span>
             ) : (
               <>
-                <span className="whitespace-nowrap rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+                <span className="whitespace-nowrap rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10.5px] font-bold text-blue-700">
                   {analysis.typeLabel || "유형 미상"}
                 </span>
                 <DifficultyStars value={analysis.difficulty} />
               </>
             )}
             {isConfirmed && !failed && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-600">
+              <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10.5px] font-bold text-emerald-700">
                 <Check className="h-3 w-3" />
                 검수 완료
               </span>
@@ -201,7 +202,7 @@ export function QuestionAnalysisCard({
 
           {analysis.keyConcepts.length > 0 && (
             <div>
-              <div className="mb-1.5 text-xs font-medium text-slate-500">핵심 개념</div>
+              <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">핵심 개념</div>
               <div className="flex flex-wrap gap-1.5">
                 {analysis.keyConcepts.map((concept, i) => (
                   <span
@@ -217,7 +218,7 @@ export function QuestionAnalysisCard({
 
           {analysis.trapDesign && analysis.trapDesign.length > 0 && (
             <div>
-              <div className="mb-1.5 text-xs font-medium text-slate-500">오답 설계</div>
+              <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">오답 설계</div>
               <div className="overflow-hidden rounded-md border border-slate-200">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 text-slate-500">

@@ -67,13 +67,16 @@ export function ExamMapTable({
   return (
     <section className="flex min-w-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
-        <div className="flex items-center gap-2 text-sm text-slate-500">
-          채점 지도{" "}
-          <span className="font-medium text-slate-700">{sorted.length}문항</span>
-          <span className="text-slate-300">·</span>
-          <span className="tabular-nums text-slate-500">{totalPoints}점</span>
+        {/* 섹션 헤더 — 워크벤치 표준(볼드 타이틀 + slate-400 보조) 톤 */}
+        <div className="flex items-center gap-2">
+          <h3 className="text-[14px] font-bold text-slate-900">채점 지도</h3>
+          <span className="text-xs text-slate-400">
+            <span className="font-semibold text-slate-600">{sorted.length}문항</span>
+            <span className="mx-1 text-slate-300">·</span>
+            <span className="tabular-nums">{totalPoints}점</span>
+          </span>
           {lowCount > 0 && (
-            <span className="ml-1 inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+            <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10.5px] font-bold text-blue-700">
               확인 필요 {lowCount}
             </span>
           )}
@@ -103,12 +106,14 @@ export function ExamMapTable({
               정답·배점 확인 완료
             </span>
           ) : (
+            // 검수(확인) 버튼 = 초록(워크벤치 버튼 색 규칙)
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={onConfirmAll}
               disabled={disabled || sorted.length === 0}
+              className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800"
             >
               <CheckCheck className="h-3.5 w-3.5" />
               정답·배점 확인 완료

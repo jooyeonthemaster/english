@@ -1,6 +1,6 @@
 import { requireStaffAuth } from "@/lib/auth";
 import { getMaterials } from "@/actions/materials";
-import { getClassesForFilter } from "@/actions/exam-questions";
+import { getClassesForFilter } from "@/actions/exams";
 import { MaterialsPageClient } from "./materials-page-client";
 
 export default async function MaterialsPage() {

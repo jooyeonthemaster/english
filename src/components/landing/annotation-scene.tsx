@@ -8,6 +8,7 @@ import { Minus, Square, X } from "lucide-react";
 import { HERO_PASSAGE, HERO_ANNOTATIONS, ANALYSIS_LINES } from "./shared/mock-data";
 import { MarkByKind, ANNOTATION_COLORS, ANNOTATION_LABEL } from "./shared/annotation-marks";
 import { Reveal } from "./shared/reveal";
+import { Accent, GRID_INK, SceneGhost, SceneKicker } from "./shared/scene-ui";
 import { DemoGate } from "./demo/demo-gate";
 
 // 실제 분석 리포트 데모 — PC(≥lg)에서 뷰포트 근접 시에만 청크 로드.
@@ -80,26 +81,24 @@ export function AnnotationScene() {
   const step = STEP;
 
   return (
-    <section ref={ref} id="annotation" className="relative w-full border-t border-blue-100/50 bg-[#F8FAFC] py-8 sm:py-12 lg:flex lg:min-h-[100svh] lg:items-center lg:pb-10 lg:pt-28">
+    <section ref={ref} id="annotation" className={`relative w-full bg-[#F8FAFC] pt-8 pb-8 sm:pt-12 sm:pb-12 lg:flex lg:min-h-[100svh] lg:items-center lg:pb-10 lg:pt-28 ${GRID_INK}`}>
       {/* PC(≥lg): 카피(좌) | 데모(우) 한 화면 배치. 모바일은 세로 스택 그대로. */}
       <div className="mx-auto w-full max-w-[1480px] px-5 sm:px-6 lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-8 lg:px-10 xl:px-16">
-        <div className="mb-4 max-w-[900px] lg:mb-0">
-          <Reveal className="mb-3 flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] sm:text-[13px] sm:tracking-[0.25em] justify-center lg:justify-start" y={16}>
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
-            Feature · 학습지 생성
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8 lg:hidden" />
+        <div className="relative mb-4 max-w-[900px] lg:mb-0">
+          <SceneGhost n="02" className="-top-7 right-0 lg:-top-2 lg:-left-4 lg:right-auto" />
+          <Reveal className="relative mb-3 lg:mb-4" y={16}>
+            <SceneKicker className="justify-center lg:justify-start">
+              FEATURE · 학습지 생성
+            </SceneKicker>
           </Reveal>
           <Reveal delay={0.08}>
             <h2
-              className="text-[25px] font-extrabold leading-[1.2] text-gray-900 sm:text-[30px] lg:text-[34px] lg:leading-[1.3]"
+              className="relative text-[25px] font-black leading-[1.2] text-slate-900 sm:text-[30px] lg:text-[38px] lg:leading-[1.24]"
               style={{ wordBreak: "keep-all" }}
             >
               어떤 지문이든,
               <br />
-              <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-4 underline-offset-[3px] sm:underline-offset-[5px] lg:underline-offset-[7px]">
-                바로 수업 가능한 학습지
-              </span>
-              가
+              <Accent>바로 수업 가능한 학습지</Accent>가
               <br />
               1초만에 나옵니다.
             </h2>

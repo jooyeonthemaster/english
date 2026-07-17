@@ -334,7 +334,7 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
 
   return (
     // 모바일: 하단 고정 스텝 네비에 가리지 않게 네비 높이만큼 아래 여백 예약.
-    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 max-lg:pb-[96px] sm:px-6 xl:px-8">
+    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 max-lg:!pb-[96px] sm:px-6 xl:px-8">
       <main className="mx-auto flex w-full min-w-0 max-w-[1400px] flex-col gap-4">
         {/* ── 모바일 전용 진행 스텝 — 공용 스텝 헤더(문제 생성과 동일) ── */}
         <div className="lg:hidden">

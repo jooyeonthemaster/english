@@ -29,6 +29,10 @@ export function ReportsTable({
 }: ReportsTableProps) {
   return (
     <div className="border border-gray-200 rounded-xl overflow-hidden">
+      {/* 좁은 화면(모바일)에서 고정 6열 그리드가 잘리지 않도록 가로 스크롤.
+          데스크톱은 컨테이너가 min-w 보다 넓어 스크롤이 생기지 않아 동일하게 렌더된다. */}
+      <div className="overflow-x-auto">
+        <div className="min-w-[560px]">
       {/* Table Header */}
       <div className="grid grid-cols-[40px_1fr_80px_80px_100px_120px] gap-2 px-4 py-3 bg-gray-50 text-xs font-semibold text-gray-500">
         <div className="flex items-center">
@@ -134,6 +138,8 @@ export function ReportsTable({
           );
         })
       )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -34,7 +34,8 @@ function SectionTitle({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-slate-500 uppercase">
+    // 워크벤치 공통 eyebrow(uppercase tracking) 규약과 동일 스케일
+    <div className="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
       <Icon className="h-3.5 w-3.5" />
       {children}
     </div>

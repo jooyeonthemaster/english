@@ -12,6 +12,8 @@ import { ArrowLeft, FileText, Info, Loader2 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { cn } from "@/lib/utils";
 import type { ResponseDataLevel } from "@/lib/exam-report/types";
 import type { ExamAnalysisDetail, ExamStudentDetail } from "../ui-contracts";
@@ -170,7 +172,12 @@ export function ReportStep({
             ) : (
               <FileText className="h-4 w-4" />
             )}
-            {status === "FAILED" ? "리포트 다시 생성 · 5크레딧" : "리포트 생성 · 5크레딧"}
+            {status === "FAILED" ? "리포트 다시 생성" : "리포트 생성"}
+            {/* 과금 표기 — 생성 CTA 공통 CreditCostChip(bg-white/20 pill) */}
+            <CreditCostChip
+              amount={CREDIT_COSTS.EXAM_STUDENT_REPORT}
+              className="ml-0.5 shrink-0 gap-1 rounded-lg bg-white/20 px-2 py-1 text-[11px] text-white"
+            />
           </button>
         </div>
       </div>

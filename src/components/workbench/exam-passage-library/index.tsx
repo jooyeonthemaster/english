@@ -148,7 +148,7 @@ export function ExamPassageLibrary({
         className={
           "min-h-0 flex-1 overflow-y-auto px-3 py-3" +
           // 하단 고정 바(장바구니 + 담기 버튼)에 마지막 카드가 가리지 않게 여백 예약.
-          (mobileFixedFooter ? " max-lg:pb-32" : "")
+          (mobileFixedFooter ? " max-lg:!pb-32" : "")
         }
       >
         {api.loading ? (

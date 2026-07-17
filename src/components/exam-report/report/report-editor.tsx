@@ -236,7 +236,7 @@ function RollbackButton({ onConfirm }: { onConfirm: () => void }) {
       <AlertDialogTrigger asChild>
         <button
           type="button"
-          className="inline-flex h-8 items-center gap-1.5 rounded-md border border-violet-200 px-3 text-sm font-medium text-violet-600 transition-colors hover:bg-violet-50"
+          className="inline-flex h-8 items-center gap-1.5 rounded-md border border-slate-200 px-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-800"
         >
           <RotateCcw className="h-4 w-4" />
           이전 버전

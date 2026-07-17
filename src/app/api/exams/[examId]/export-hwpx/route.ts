@@ -157,8 +157,13 @@ export async function GET(
     const url = new URL(request.url);
     const includeAnswers = url.searchParams.get("answers") === "true";
 
-    const exam = await prisma.exam.findUnique({
-      where: { id: examId },
+    const staff = await getStaffSession().catch(() => null);
+    if (!staff) {
+      return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
+    }
+
+    const exam = await prisma.exam.findFirst({
+      where: { id: examId, academyId: staff.academyId },
       include: {
         questions: {
           // 휴지통(soft delete) 가드 — 삭제된 문제는 HWPX 출력물에 절대 포함 금지.
@@ -237,11 +242,10 @@ export async function GET(
     }
 
     // 관리자 활동 타임라인용 — printCount는 행위자/시각이 없어 별도 기록
-    const staff = await getStaffSession().catch(() => null);
     await logAppEvent({
       academyId: exam.academyId,
       actorType: "STAFF",
-      actorId: staff?.id ?? null,
+      actorId: staff.id ?? null,
       eventType: "EXAM_EXPORT",
       resourceType: "EXAM",
       resourceId: exam.id,

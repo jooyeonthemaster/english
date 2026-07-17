@@ -217,7 +217,7 @@ export function IntakeSurface({
       <div
         className={
           "relative flex min-h-0 flex-1 flex-col" +
-          (overlay ? " max-lg:min-h-[55vh]" : "")
+          (overlay ? " max-lg:!min-h-[55vh]" : "")
         }
       >
         {/* Upload stays mounted (hidden when inactive) so its in-flight extraction

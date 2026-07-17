@@ -677,7 +677,7 @@ export function UploadPanel({
                   className={
                     // 모바일(<lg)은 우측 '추출될 지문' 패널을 접고 드롭존만 크게 —
                     // 문제 생성 파일업로드와 동일(최소 45vh).
-                    "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors max-lg:min-h-[45vh] " +
+                    "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors max-lg:!min-h-[45vh] " +
                     (dragActive
                       ? "border-sky-500 bg-sky-50"
                       : "border-slate-200 bg-slate-50/70")

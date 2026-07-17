@@ -2,9 +2,8 @@
 
 import { OPERATION_LABELS } from "@/lib/credit-costs";
 import type { OperationType } from "@/lib/credit-costs";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Banknote, Check, CheckCircle2, Clock, Coins, Copy, CreditCard, Flame, Landmark, MessageSquare, ReceiptText, Sparkles, Smartphone, WalletCards } from "lucide-react";
+import { Banknote, Check, CheckCircle2, ChevronDown, Clock, Coins, Copy, CreditCard, Flame, Landmark, MessageSquare, ReceiptText, Sparkles, Smartphone, WalletCards } from "lucide-react";
 import { OPERATION_COLORS, OPERATION_ICONS } from "./credit-overview";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -154,12 +153,6 @@ export const VISIBLE_PAY_METHOD_OPTIONS = [
   ),
   ...(BANK_DEPOSIT_ENABLED ? [BANK_DEPOSIT_OPTION] : []),
 ];
-
-const TOP_UP_GRANT_TEXT = BANK_DEPOSIT_ENABLED
-  ? "결제 승인 또는 무통장입금 확인 후 잔고에 즉시 지급됩니다."
-  : VISIBLE_TOP_UP_PAY_METHODS.includes("VIRTUAL_ACCOUNT")
-    ? "결제 승인 또는 가상계좌 입금 확인 후 잔고에 즉시 지급됩니다."
-    : "신용카드 결제 승인 확인 후 잔고에 즉시 지급됩니다.";
 
 const EASY_PAY_PROVIDER_OPTIONS: Array<{
   value: EasyPayProvider;
@@ -315,6 +308,7 @@ export function TopUpPanel({
   disabled?: boolean;
 }) {
   const productDeals = computeProductDeals(products);
+  const [showCostTable, setShowCostTable] = useState(false);
 
   return (
     <div
@@ -333,59 +327,44 @@ export function TopUpPanel({
           disabled && "pointer-events-none select-none opacity-45 grayscale",
         )}
       >
-      <div className="px-5 py-4 border-b border-blue-50">
+      <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-blue-50">
         <h2 className="text-[15px] font-semibold text-gray-900">크레딧 충전</h2>
-        <p className="text-[12px] text-gray-400 mt-0.5">
-          충전할 상품을 선택하면 결제 수단(카드·무통장입금)을 고를 수 있어요
-        </p>
-      </div>
-      <div className="border-b border-blue-50 bg-slate-50/60 px-5 py-3">
-        <div className="flex flex-col gap-3 text-[12px] leading-5 text-slate-500 xl:flex-row xl:items-start xl:justify-between">
-          <div className="space-y-1">
-            <p className="font-semibold text-slate-700">SMOAT 크레딧</p>
-            <p>
-              문제 생성, 자동 출제, 학습지 생성, OCR, 해설 생성 등 SMOAT 내부 AI
-              기능을 이용하기 위한 디지털 이용권입니다. 배송이 없는 상품이며{" "}
-              {TOP_UP_GRANT_TEXT}
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-wrap items-center gap-2 font-semibold text-blue-600">
-            <Link
-              href="/credits/products"
-              target="_blank"
-              rel="noreferrer"
-              className="transition hover:text-blue-700"
-            >
-              상품 정보
-            </Link>
-            <span className="text-slate-300">·</span>
-            <Link
-              href="/terms"
-              target="_blank"
-              rel="noreferrer"
-              className="transition hover:text-blue-700"
-            >
-              이용약관
-            </Link>
-            <span className="text-slate-300">·</span>
-            <Link
-              href="/privacy"
-              target="_blank"
-              rel="noreferrer"
-              className="transition hover:text-blue-700"
-            >
-              개인정보처리방침
-            </Link>
-            <span className="text-slate-300">·</span>
-            <Link
-              href="/refund-policy"
-              target="_blank"
-              rel="noreferrer"
-              className="transition hover:text-blue-700"
-            >
-              환불 정책
-            </Link>
-          </div>
+        <div className="flex shrink-0 flex-wrap items-center gap-2 text-[12px] font-semibold text-blue-600">
+          <Link
+            href="/credits/products"
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-blue-700"
+          >
+            상품 정보
+          </Link>
+          <span className="text-slate-300">·</span>
+          <Link
+            href="/terms"
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-blue-700"
+          >
+            이용약관
+          </Link>
+          <span className="text-slate-300">·</span>
+          <Link
+            href="/privacy"
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-blue-700"
+          >
+            개인정보처리방침
+          </Link>
+          <span className="text-slate-300">·</span>
+          <Link
+            href="/refund-policy"
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-blue-700"
+          >
+            환불 정책
+          </Link>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-y-1.5 divide-y divide-blue-50 md:grid-cols-4 md:gap-y-1.5 md:[grid-template-rows:repeat(7,auto)] md:divide-y-0 md:divide-x">
@@ -564,15 +543,29 @@ export function TopUpPanel({
         })}
       </div>
       <div className="border-t border-blue-50 px-5 py-4">
-        <div className="mb-3 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => setShowCostTable((v) => !v)}
+          aria-expanded={showCostTable}
+          className="flex w-full items-center justify-between"
+        >
           <h3 className="text-[13px] font-semibold text-gray-800">
             크레딧 사용 가능 기능 및 차감 기준
           </h3>
-          <span className="text-[11px] text-gray-400">
+          <span className="flex items-center gap-1.5 text-[11px] text-gray-400">
             구매 단가와 별도 적용
+            <ChevronDown
+              className={cn(
+                "size-3.5 transition-transform",
+                showCostTable && "rotate-180",
+              )}
+              strokeWidth={2}
+            />
           </span>
-        </div>
-        <p className="mb-3 text-[11px] leading-5 text-gray-400">
+        </button>
+        {showCostTable && (
+        <>
+        <p className="mt-3 mb-3 text-[11px] leading-5 text-gray-400">
           큰 단위로 충전하면 1C당 구매 단가는 낮아질 수 있지만, 같은 기능을
           실행할 때 차감되는 크레딧 수는 동일합니다.
         </p>
@@ -617,6 +610,8 @@ export function TopUpPanel({
             );
           })}
         </div>
+        </>
+        )}
       </div>
       </div>
     </div>
@@ -632,7 +627,6 @@ export function TopUpMethodDialog({
   depositorName,
   onDepositorNameChange,
   payingCredits,
-  cardEnabled,
   heldCoupons = [],
   selectedCouponId = null,
   onSelectCoupon,
@@ -647,7 +641,6 @@ export function TopUpMethodDialog({
   depositorName: string;
   onDepositorNameChange: (name: string) => void;
   payingCredits: number | null;
-  cardEnabled: boolean;
   heldCoupons?: HeldCoupon[];
   selectedCouponId?: string | null;
   onSelectCoupon?: (couponId: string | null) => void;
@@ -657,15 +650,6 @@ export function TopUpMethodDialog({
   const isBank = payMethod === "BANK_TRANSFER";
   const bankNeedsName = isBank && depositorName.trim().length === 0;
   const loading = payingCredits !== null;
-  // 카드(PG) = BANK_TRANSFER 외 결제수단. 허용 계정이 아니면 비활성화한다.
-  const payMethodDisabled = payMethod !== "BANK_TRANSFER" && !cardEnabled;
-
-  // 카드가 비활성화된 계정에서 모달이 열리면 무통장입금으로 자동 선택.
-  useEffect(() => {
-    if (product && !cardEnabled && payMethod !== "BANK_TRANSFER") {
-      onPayMethodChange("BANK_TRANSFER");
-    }
-  }, [product, cardEnabled, payMethod, onPayMethodChange]);
 
   return (
     <Dialog
@@ -693,27 +677,16 @@ export function TopUpMethodDialog({
             {VISIBLE_PAY_METHOD_OPTIONS.map((option) => {
               const Icon = option.icon;
               const active = payMethod === option.value;
-              const optDisabled = option.value !== "BANK_TRANSFER" && !cardEnabled;
               return (
                 <button
                   key={option.value}
                   type="button"
-                  onClick={() => {
-                    if (optDisabled) {
-                      toast.info(
-                        "해당 기능은 현재 준비중입니다. 준비가 완료될 때까지 무통장입금을 사용해주세요.",
-                      );
-                      return;
-                    }
-                    onPayMethodChange(option.value);
-                  }}
+                  onClick={() => onPayMethodChange(option.value)}
                   className={cn(
                     "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl border text-[13px] font-semibold transition",
-                    optDisabled
-                      ? "border-gray-100 bg-gray-50 text-gray-300 hover:bg-gray-100"
-                      : active
-                        ? "border-blue-500 bg-blue-50 text-blue-700"
-                        : "border-gray-200 bg-white text-gray-500 hover:border-blue-200 hover:text-blue-600",
+                    active
+                      ? "border-blue-500 bg-blue-50 text-blue-700"
+                      : "border-gray-200 bg-white text-gray-500 hover:border-blue-200 hover:text-blue-600",
                   )}
                 >
                   <Icon className="size-4" strokeWidth={2} />
@@ -812,7 +785,7 @@ export function TopUpMethodDialog({
           </button>
           <button
             type="button"
-            disabled={loading || bankNeedsName || payMethodDisabled}
+            disabled={loading || bankNeedsName}
             onClick={onConfirm}
             className="inline-flex h-10 items-center justify-center gap-1 rounded-xl bg-blue-600 px-4 text-[13px] font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >

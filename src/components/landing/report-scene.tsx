@@ -3,7 +3,9 @@
 import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 import { Item, Reveal, Stagger } from "./shared/reveal";
+import { Accent, GRID_INK, SceneGhost, SceneKicker } from "./shared/scene-ui";
 import { DemoGate } from "./demo/demo-gate";
 
 // 실제 시험 리포트 문서 데모 — PC(≥lg)에서 뷰포트 근접 시에만 청크 로드.
@@ -38,7 +40,7 @@ export function ReportScene() {
     <section
       ref={ref}
       id="report"
-      className="relative w-full border-t border-blue-100/50 bg-[#F8FAFC] py-6 sm:py-10 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10"
+      className={`relative w-full bg-white pt-6 pb-6 sm:pt-10 sm:pb-10 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10 ${GRID_INK}`}
     >
       <div className="mx-auto grid w-full max-w-[1600px] grid-cols-1 items-center gap-4 px-5 sm:gap-8 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-10 lg:px-16">
         {/* PC: 실제 리포트 문서 데모(우) / 모바일·로드 전: 기존 리포트 목업 */}
@@ -52,20 +54,21 @@ export function ReportScene() {
         </DemoGate>
 
         {/* Copy — PC 에선 좌측(order-1) */}
-        <div className="max-w-[600px] lg:order-1">
-          <Reveal className="mb-2 flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] sm:mb-4 sm:text-[13px] sm:tracking-[0.25em] justify-center lg:justify-start" y={16}>
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
-            Feature · 시험 리포트
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8 lg:hidden" />
+        <div className="relative max-w-[600px] lg:order-1">
+          <SceneGhost n="05" className="-top-7 right-0 lg:-top-2 lg:-left-4 lg:right-auto" />
+          <Reveal className="relative mb-2 sm:mb-4" y={16}>
+            <SceneKicker className="justify-center lg:justify-start">
+              FEATURE · 시험 리포트
+            </SceneKicker>
           </Reveal>
           <Reveal delay={0.08}>
             <h2
-              className="text-[25px] font-extrabold leading-[1.18] text-gray-900 sm:text-[30px] sm:leading-[1.25] lg:text-[34px] lg:leading-[1.3]"
+              className="relative text-[25px] font-black leading-[1.18] text-slate-900 sm:text-[30px] sm:leading-[1.25] lg:text-[38px] lg:leading-[1.24]"
               style={{ wordBreak: "keep-all" }}
             >
               시험이 끝나면,
               <br />
-              <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-[3px] underline-offset-[3px] sm:decoration-4 sm:underline-offset-[5px] lg:underline-offset-[7px]">학생별 분석 리포트</span>가 완성됩니다.
+              <Accent>학생별 분석 리포트</Accent>가 완성됩니다.
             </h2>
           </Reveal>
           <Reveal delay={0.16}>
@@ -77,15 +80,20 @@ export function ReportScene() {
             </p>
           </Reveal>
 
-          <Stagger className="mt-3 grid grid-cols-3 gap-2 sm:mt-6 sm:flex sm:flex-col sm:gap-4 sm:border-l-[3px] sm:border-[#BFDBFE] sm:pl-6" delay={0.25}>
+          <Stagger className="mt-3 grid grid-cols-3 gap-2 sm:mt-6 sm:flex sm:flex-col sm:gap-4" delay={0.25}>
             {[
               { k: "유형별 취약점 분석", v: "취약 유형과 다음 학습 방향이 한눈에" },
               { k: "학부모 상담용 리포트", v: "6가지 테마 · 그대로 인쇄해 전달" },
               { k: "출제와 이어지는 보완 학습", v: "취약 유형으로 변형문제 바로 재출제" },
             ].map((row) => (
-              <Item key={row.k} className="flex min-h-[52px] flex-col justify-center rounded-xl border border-blue-100 bg-white/70 px-2.5 py-2 sm:min-h-0 sm:justify-start sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0" y={18}>
-                <div className="text-center text-[11.5px] font-extrabold leading-tight text-gray-900 sm:text-left sm:text-[15px] sm:tracking-wide">{row.k}</div>
-                <div className="hidden text-[13.5px] font-medium leading-[1.6] text-gray-600 sm:block">{row.v}</div>
+              <Item key={row.k} className="flex min-h-[52px] flex-col justify-center rounded-xl border border-blue-100 bg-white/70 px-2.5 py-2 sm:min-h-0 sm:flex-row sm:items-start sm:justify-start sm:gap-3 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0" y={18}>
+                <span className="mt-0.5 hidden size-[22px] shrink-0 items-center justify-center rounded-full bg-blue-600 text-white sm:flex" aria-hidden>
+                  <Check className="size-3" strokeWidth={3.5} />
+                </span>
+                <div className="min-w-0">
+                  <div className="text-center text-[11.5px] font-extrabold leading-tight text-gray-900 sm:text-left sm:text-[15px] sm:tracking-wide">{row.k}</div>
+                  <div className="hidden text-[13.5px] font-medium leading-[1.6] text-gray-600 sm:block">{row.v}</div>
+                </div>
               </Item>
             ))}
           </Stagger>

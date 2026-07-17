@@ -466,7 +466,7 @@ export function CropCanvas({
                       className={
                         "absolute z-10 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-[2px] border border-white bg-blue-600 shadow-sm " +
                         // 터치 그리기 모드에선 핸들도 더 크게(터치 타깃 확보).
-                        (touchDraw ? "touch-none max-lg:size-4 " : "")
+                        (touchDraw ? "touch-none max-lg:!size-4 " : "")
                       }
                       aria-hidden="true"
                     />

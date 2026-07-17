@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { isSuperAdmin } from "@/actions/admin-members/_shared";
+import { toClientErrorMessage } from "@/lib/client-error";
 import { uploadManual } from "@/lib/manual/storage";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
     const publicUrl = await uploadManual(path, buffer);
     return NextResponse.json({ url: publicUrl });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "업로드에 실패했습니다";
+    const message = toClientErrorMessage(err, "업로드에 실패했습니다");
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

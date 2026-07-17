@@ -58,11 +58,14 @@ export const FEATURE_FLAGS = {
    * Enable the credit top-up purchase controls on the director credit page.
    * When false, the page and credit balance remain visible, but the top-up
    * section is shaded and non-interactive.
+   *
+   * 26-07-15 PG 실연동 출시로 기본값 ON. 긴급 차단이 필요하면
+   * NEXT_PUBLIC_SHOW_CREDIT_TOP_UP=false 로 내릴 수 있다.
    */
   SHOW_CREDIT_TOP_UP: publicBooleanFlag(
     process.env.NEXT_PUBLIC_SHOW_CREDIT_TOP_UP ??
       process.env.NEXT_PUBLIC_SHOW_CREDIT_PAYMENTS,
-    false,
+    true,
   ),
 
   /**

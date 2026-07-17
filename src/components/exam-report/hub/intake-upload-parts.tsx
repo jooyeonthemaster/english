@@ -28,6 +28,8 @@ import {
   X,
 } from "lucide-react";
 import { EXAM_ANALYSIS_MIN_CREDITS } from "@/lib/exam-report/types";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { UploadMetaChip } from "@/components/workbench/shared/upload-meta-chip";
 import type { UploadSlot } from "./upload-helpers";
 
@@ -65,7 +67,7 @@ export function UploadDropzone({
   return (
     <div
       className={
-        "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors max-lg:min-h-[45vh] " +
+        "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors max-lg:!min-h-[45vh] " +
         (dragging ? "border-blue-300 bg-blue-50" : "border-slate-200 bg-slate-50/70")
       }
     >
@@ -127,7 +129,7 @@ export function PageWorkbench({
   );
   const current = slots[currentIndex];
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white max-lg:min-h-[45vh] lg:flex-row">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white max-lg:!min-h-[45vh] lg:flex-row">
       {/* 썸네일 레일 — PC 세로 96px / 모바일 가로 스트립 */}
       <div className="flex shrink-0 flex-row gap-1.5 overflow-x-auto border-b border-slate-100 bg-slate-50 p-1.5 lg:w-24 lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:border-b-0 lg:border-r">
         {slots.map((slot, i) => {
@@ -416,7 +418,7 @@ export function RailResizeHandle({
   );
 }
 
-// ── 풀폭 CTA — text-input-board StartButton 미러 + 과금 뱃지 ────────────────
+// ── 풀폭 CTA — 문제/학습지 생성 CTA 표준 레시피(rounded-xl + 파랑 그림자) ────
 export function IntakeCta({
   disabled,
   busy,
@@ -440,28 +442,41 @@ export function IntakeCta({
       // 막힌 사유(페이지 없음/제목 없음)를 안내한다.
       aria-disabled={disabled}
       className={
-        "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
+        "inline-flex h-12 w-full items-center justify-center rounded-xl px-3 text-[14px] font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
         (busy
-          ? "cursor-wait border-blue-600 bg-blue-600"
+          ? "cursor-wait bg-blue-600 text-white"
           : disabled
-            ? "cursor-not-allowed border-blue-200 bg-blue-300"
-            : "cursor-pointer border-blue-600 bg-blue-600 hover:bg-blue-700")
+            ? "cursor-not-allowed bg-slate-200 text-slate-400"
+            : "cursor-pointer bg-blue-600 text-white shadow-md shadow-blue-200/50 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200/60")
       }
     >
       {busy ? (
-        <>
-          <Loader2 className="mr-2 size-5 animate-spin" aria-hidden="true" />
-          {busyLabel}
-        </>
+        <span className="flex min-w-0 items-center justify-center gap-2">
+          <Loader2 className="size-5 shrink-0 animate-spin" aria-hidden="true" />
+          <span className="min-w-0 truncate">{busyLabel}</span>
+        </span>
+      ) : pageCount === 0 ? (
+        // 빈 상태는 다음 행동을 라벨로 안내(문제 생성 CTA "지문을 선택하세요" 미러).
+        <span className="flex min-w-0 items-center justify-center gap-2">
+          <UploadCloud className="size-5 shrink-0" aria-hidden="true" />
+          <span className="min-w-0 truncate">시험지 페이지를 추가하세요</span>
+        </span>
       ) : (
         <>
-          <PlayCircle className="mr-2 size-5" aria-hidden="true" />
-          {isError ? "다시 시도" : "등록하고 분석 시작"}
-          {pageCount > 0 ? ` (${pageCount}페이지)` : ""}
-          {/* 과금 안내 — CreditCostChip 은 고정액 전용이라 동일 룩의 span 으로 표기.
-              단가는 lib/exam-report/types 의 계약(문항당 1cr · 최소 15cr)을 따른다. */}
-          <span className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-semibold">
-            문항당 ◈1 · 최소 {EXAM_ANALYSIS_MIN_CREDITS}
+          <span className="flex min-w-0 items-center justify-center gap-2">
+            <PlayCircle className="size-5 shrink-0" aria-hidden="true" />
+            {/* 좁은 레일에서 줄바꿈 대신 truncate(생성 CTA 라벨 구조 미러) */}
+            <span className="min-w-0 truncate">
+              {isError ? "다시 시도" : "등록하고 분석 시작"}
+              {` (${pageCount}페이지)`}
+            </span>
+          </span>
+          {/* 과금 안내 — 생성 CTA 의 bg-white/20 CreditCostChip pill 미러.
+              단가는 CREDIT_COSTS.EXAM_ANALYSIS(문항당) · 최소 EXAM_ANALYSIS_MIN_CREDITS. */}
+          <span className="ml-2 inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-lg bg-white/20 px-2 py-1 text-[11px] font-semibold">
+            문항당
+            <CreditCostChip amount={CREDIT_COSTS.EXAM_ANALYSIS} className="text-white" />
+            · 최소 {EXAM_ANALYSIS_MIN_CREDITS}
           </span>
         </>
       )}

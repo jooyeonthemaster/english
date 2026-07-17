@@ -56,7 +56,8 @@ test("EN-REG-1: generationMaxTokens 에 PREMIUM 16_384 바닥 절이 없다(HEAD
 
 for (const [label, segs] of [
   ["exams/questions.ts", ["src", "actions", "exams", "questions.ts"]],
-  ["exam-questions.ts (데드카피)", ["src", "actions", "exam-questions.ts"]],
+  // exam-questions.ts (레거시 데드카피)는 테넌트 격리 미스코프 이슈로 삭제됨.
+  // 정본 exams/questions.ts 만 가드한다.
 ]) {
   test(`EN-REG-2: addQuestionsToExam(${label}) 배점 승계가 KO 게이트를 탄다`, () => {
     const src = read(...segs);

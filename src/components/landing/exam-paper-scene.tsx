@@ -3,8 +3,9 @@
 import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { Minus, Square, X } from "lucide-react";
+import { Check, Minus, Square, X } from "lucide-react";
 import { Item, Reveal, Stagger } from "./shared/reveal";
+import { Accent, GRID_INK, SceneGhost, SceneKicker } from "./shared/scene-ui";
 import { DemoGate } from "./demo/demo-gate";
 
 // 실제 시험지 조판 데모 — PC(≥lg)에서 뷰포트 근접 시에만 청크 로드.
@@ -32,21 +33,22 @@ export function ExamPaperScene() {
   const ref = useRef<HTMLElement>(null);
 
   return (
-    <section ref={ref} id="paper" className="relative w-full overflow-hidden border-t border-blue-100 bg-[#EFF6FF] py-7 sm:py-10 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10">
+    <section ref={ref} id="paper" className={`relative w-full overflow-hidden bg-white pt-7 pb-7 sm:pt-10 sm:pb-10 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-28 lg:pb-10 ${GRID_INK}`}>
       {/* 모바일: 카피 → 문제지 목업 → 데모 버튼. PC(≥lg): 카피(좌) | 데모(우). */}
       <div className="mx-auto grid w-full max-w-[1600px] grid-cols-1 items-center gap-5 px-5 sm:gap-8 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-10 lg:px-16">
         {/* Copy — 모바일과 PC 모두 먼저 읽히고, PC 에선 좌측에 배치. */}
-        <div className="max-w-[600px] lg:order-1">
-          <Reveal className="mb-2 flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] sm:mb-4 sm:text-[13px] sm:tracking-[0.25em] justify-center lg:justify-start" y={16}>
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
-            Feature · 1초 만에 시험지 파일로
-            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8 lg:hidden" />
+        <div className="relative max-w-[600px] lg:order-1">
+          <SceneGhost n="03" className="-top-7 right-0 lg:-top-2 lg:-left-4 lg:right-auto" />
+          <Reveal className="relative mb-2 sm:mb-4" y={16}>
+            <SceneKicker className="justify-center lg:justify-start">
+              FEATURE · 1초 만에 시험지 파일로
+            </SceneKicker>
           </Reveal>
           <Reveal delay={0.08}>
-            <h2 className="text-[24px] font-extrabold leading-[1.2] text-gray-900 sm:text-[30px] sm:leading-[1.25] lg:text-[34px] lg:leading-[1.3]" style={{ wordBreak: "keep-all" }}>
+            <h2 className="relative text-[24px] font-black leading-[1.2] text-slate-900 sm:text-[30px] sm:leading-[1.25] lg:text-[38px] lg:leading-[1.24]" style={{ wordBreak: "keep-all" }}>
               웹에서 바로 편집하는 시험지!
               <br />
-              <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-[3px] underline-offset-[3px] sm:decoration-4 sm:underline-offset-[5px] lg:underline-offset-[7px]">워드(DOCX), 한글(HWPX),PDF</span>로도
+              <Accent>워드(DOCX), 한글(HWPX), PDF</Accent>로도
               <br />
               바로 다운가능!
             </h2>
@@ -59,16 +61,21 @@ export function ExamPaperScene() {
             </p>
           </Reveal>
 
-          <Stagger className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-col sm:gap-3 sm:border-l-[3px] sm:border-[#BFDBFE] sm:pl-6" delay={0.25}>
+          <Stagger className="mt-3 grid grid-cols-2 gap-2 sm:mt-4 sm:flex sm:flex-col sm:gap-3" delay={0.25}>
             {[
               { k: "100% 편집 가능", v: "로고 삽입·문항 수정 자유" },
               { k: "워드 · 한글 · PDF 출력", v: "워드 안정 지원 · 한글(HWPX) 베타 · 인쇄(PDF)" },
               { k: "자동 조판 시스템", v: "웹 미리보기와 1:1 완성형 조판" },
               { k: "정답 및 해설지 동시 생성", v: "학생용·강사용 해설지 분리 생성" },
             ].map((row) => (
-              <Item key={row.k} className={`flex flex-col gap-0.5 rounded-xl border border-blue-100/80 bg-white/65 px-3 py-2 sm:gap-1 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0${row.k === "100% 편집 가능" ? " lg:[@media(max-height:820px)]:hidden" : ""}`} y={18}>
-                <div className="text-[12.5px] font-extrabold text-gray-900 sm:text-[15px]">{row.k}</div>
-                <div className="hidden text-[13.5px] font-medium leading-[1.6] text-gray-600 sm:block">{row.v}</div>
+              <Item key={row.k} className={`flex flex-col gap-0.5 rounded-xl border border-blue-100/80 bg-white/65 px-3 py-2 sm:flex-row sm:items-start sm:gap-3 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0${row.k === "100% 편집 가능" ? " lg:[@media(max-height:820px)]:hidden" : ""}`} y={18}>
+                <span className="mt-0.5 hidden size-[22px] shrink-0 items-center justify-center rounded-full bg-blue-600 text-white sm:flex" aria-hidden>
+                  <Check className="size-3" strokeWidth={3.5} />
+                </span>
+                <div className="min-w-0">
+                  <div className="text-[12.5px] font-extrabold text-gray-900 sm:text-[15px]">{row.k}</div>
+                  <div className="hidden text-[13.5px] font-medium leading-[1.6] text-gray-600 sm:block">{row.v}</div>
+                </div>
               </Item>
             ))}
           </Stagger>
