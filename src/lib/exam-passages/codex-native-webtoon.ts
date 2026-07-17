@@ -278,7 +278,7 @@ function compactExactPhrase(text: string, span: SourceSpan): string {
 }
 
 function compactPhraseScore(value: string): number {
-  const words = value.toLowerCase().match(/[a-z0-9']+/g) ?? [];
+  const words: string[] = value.toLowerCase().match(/[a-z0-9']+/g) ?? [];
   const first = words[0] ?? "";
   const last = words.at(-1) ?? "";
   const contentWords = words.filter((word) => !PHRASE_EDGE_STOP_WORDS.has(word)).length;
